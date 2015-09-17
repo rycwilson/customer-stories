@@ -11,7 +11,12 @@
 // about supported directives.
 //
 //= require jquery/dist/jquery.min
+//= require jquery-ujs/src/rails
 //= require angular/angular.min
 //= require bootstrap-sass/assets/javascripts/bootstrap.min
 //= require bootstrap-validator/dist/validator.min
 //= require_tree .
+
+
+
+

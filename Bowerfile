@@ -2,6 +2,7 @@
 # Check out https://github.com/42dev/bower-rails#ruby-dsl-configuration for more options
 
 asset 'jquery'
+asset 'jquery-ujs'
 asset 'angular'
 asset 'bootstrap-sass'
 asset 'bootstrap-validator'
