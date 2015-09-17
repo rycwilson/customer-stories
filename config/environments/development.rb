@@ -15,10 +15,10 @@ Rails.application.configure do
 
   # by default, emails won't send in development environment
   # change this:
-  config.action_mailer.perform_deliveries = true
+  # config.action_mailer.perform_deliveries = true
 
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.raise_delivery_errors = false
 
   # Devise
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }

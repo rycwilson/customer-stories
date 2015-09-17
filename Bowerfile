@@ -1,8 +1,11 @@
 # A sample Bowerfile
 # Check out https://github.com/42dev/bower-rails#ruby-dsl-configuration for more options
 
+# NOTE: Using turbolinks for now, but may not be appropriate if implementing angular
+
 asset 'jquery'
 asset 'jquery-ujs'
+asset 'rails-turbolinks'
 asset 'angular'
 asset 'bootstrap-sass'
 asset 'bootstrap-validator'

@@ -3,6 +3,7 @@
   "dependencies": {
     "jquery": "latest",
     "jquery-ujs": "latest",
+    "rails-turbolinks": "latest",
     "angular": "latest",
     "bootstrap-sass": "latest",
     "bootstrap-validator": "latest"
