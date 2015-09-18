@@ -11,6 +11,9 @@
  * file per style scope.
  *
  *= require bootstrap-sass/assets/stylesheets/_bootstrap.scss
+ *= require fontawesome/css/font-awesome.min.css
+ *= require mvpready-landing.css
+ *= require animate.css/animate.min.css
  *= require_tree .
  *= require_self
  */

@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  root 'site#index'
+  root 'site#index_mvp'
 
   devise_for :users
 

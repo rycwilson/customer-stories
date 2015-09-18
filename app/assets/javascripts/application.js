@@ -15,6 +15,9 @@
 //= require angular/angular.min
 //= require bootstrap-sass/assets/javascripts/bootstrap.min
 //= require bootstrap-validator/dist/validator.min
+//= require mvpready-core
+//= require mvpready-helpers
+//= require mvpready-landing
 //= require_tree .
 
 

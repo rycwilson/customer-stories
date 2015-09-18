@@ -9,3 +9,5 @@ asset 'rails-turbolinks'
 asset 'angular'
 asset 'bootstrap-sass'
 asset 'bootstrap-validator'
+
+
