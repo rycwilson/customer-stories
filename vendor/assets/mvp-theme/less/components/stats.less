@@ -1,0 +1,183 @@
+//* !Progress Stats */
+//* ----------------------------------------------- */
+
+.progress-stat {
+  margin-bottom: 3em;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.progress-stat-value {
+  float: right;
+
+  width: 50%;
+
+  color: #666;
+
+  font-size: 14px;
+  font-weight: 600;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+.progress-stat-label {
+  float: left;
+
+  width: 50%;
+
+  color: #999;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.progress-stat .progress {
+  clear: both;
+
+  position: relative;
+  top: .5em;
+}
+
+.lt-ie9 {
+  .progress-stat-value {
+    font-size: 13px;
+  }
+}
+
+
+
+.row-stat {
+  padding: 17px 13px 21px;
+  margin-bottom: 1.25em;
+
+  border: 1px solid #ddd;
+
+  .border-top-radius (3px);
+  .border-bottom-radius (3px);
+}
+
+.row-stat-label {
+  color: #999;
+
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.row-stat-value {
+  display: inline-block;
+
+  margin-right: .25em;
+  margin-bottom: 0;
+}
+
+.row-stat-badge {
+  position: relative;
+  top: -3px;
+
+  font-size: 85%;
+}
+
+.row-stat {
+  position: relative;
+}
+.row-stat:after,
+.row-stat:before {
+  content: '';
+  position: absolute;
+  display: block;
+  height: 1px;
+  bottom: -3px;
+  left: 3px;
+  right: 3px;
+  background-color: #ffffff;
+  -webkit-border-radius: 0 0 3px 3px;
+  -moz-border-radius: 0 0 3px 3px;
+  border-radius: 0 0 3px 3px;
+  border: 1px solid #ddd;
+  border-top: 0;
+}
+.row-stat:before {
+  bottom: -5px;
+  left: 6px;
+  right: 6px;
+
+}
+
+
+
+
+
+
+//* !Key/Value Table */
+//* ----------------------------------------------- */
+
+
+.keyvalue-table {
+  & > tbody {
+    & > tr {
+      & >td {
+        vertical-align: middle;
+
+        padding-top: 11px;
+        padding-bottom: 11px;
+
+        border-top: none;
+        border-bottom: 1px solid #ddd;
+      }
+    }
+  }
+}
+
+.kv-key {
+  color: #555;
+
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.kv-icon {
+  position: relative;
+  top: 1px;
+
+  width: 30px;
+  height: 30px;
+
+  margin-right: .75em;
+
+  color: #444;
+
+  font-size: 15px;
+  text-align: center;
+  line-height: 30px;
+
+  background-color: #eee;
+
+  .border-top-radius (4px);
+  .border-bottom-radius (4px);
+}
+
+.kv-icon-default { background-color: #fff; color: #555; border: 1px solid #ccc; }
+.kv-icon-primary { background-color: @brand-primary; color: #fff; }
+.kv-icon-secondary { background-color: @brand-secondary; color: #fff; }
+.kv-icon-tertiary { background-color: @brand-tertiary; color: #fff; }
+
+.kv-icon-success { background-color: @brand-success; color: #fff; }
+.kv-icon-info { background-color: @brand-info; color: #fff; }
+.kv-icon-danger { background-color: @brand-danger; color: #fff; }
+.kv-icon-warning { background-color: @brand-warning; color: #fff; }
+
+.kv-value {
+  font-size: 18px;
+  font-weight: 600;
+  text-align: right;
+}
+
+.lt-ie9 {
+  .kv-value {
+    font-size: 15px;
+  }
+}

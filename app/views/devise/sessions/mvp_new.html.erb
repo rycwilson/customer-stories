@@ -1,0 +1,345 @@
+<!-- TODO: Keep this file as a reference, remove when no longer needed -->
+
+<div id="wrapper">
+
+  <header class="navbar" role="banner">
+
+    <div class="container">
+
+      <div class="navbar-header">
+        <a href="./" class="navbar-brand navbar-brand-img">
+          <%= image_tag 'mvp-landing/logo.png', { alt:'' } %>
+        </a>
+
+        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Toggle navigation</span>
+          <i class="fa fa-bars"></i>
+        </button>
+      </div> <!-- /.navbar-header -->
+
+      <nav class="collapse navbar-collapse" role="navigation">
+
+        <ul class="nav navbar-nav navbar-right mainnav-menu">
+
+          <li class="dropdown ">
+            <a href="./page-faq.html">
+              FAQ
+            </a>
+          </li>
+
+          <li class="dropdown ">
+            <a href="./page-pricing.html">
+              Pricing
+            </a>
+          </li>
+
+          <li class="dropdown ">
+            <a href="./page-contact.html">
+              Contact
+            </a>
+          </li>
+
+          <li class="dropdown ">
+
+            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+            Blog
+            <i class="fa fa-caret-down navbar-caret"></i>
+            </a>
+
+            <ul class="dropdown-menu" role="menu">
+              <li>
+                <a href="./page-blog.html">
+                <i class="fa fa-comments-o dropdown-icon"></i>
+                Blog Index
+                </a>
+              </li>
+
+              <li>
+                <a href="./page-blog-single.html">
+                <i class="fa fa-comments-o dropdown-icon"></i>
+                Blog Single
+                </a>
+              </li>
+            </ul>
+
+          </li>
+
+          <li class="dropdown active">
+
+            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+            Login
+            <i class="fa fa-caret-down navbar-caret"></i>
+            </a>
+
+            <ul class="dropdown-menu" role="menu">
+              <li>
+                <a href="./account-login.html">
+                <i class="fa fa-unlock dropdown-icon"></i>
+                Login
+                </a>
+              </li>
+
+              <li>
+                <a href="./account-login-social.html">
+                <i class="fa fa-unlock dropdown-icon"></i>
+                Login Social
+                </a>
+              </li>
+
+              <li>
+                <a href="./account-forgot.html">
+                <i class="fa fa-unlock dropdown-icon"></i>
+                Forgot Password
+                </a>
+              </li>
+
+              <li>
+                <a href="./account-signup.html">
+                <i class="fa fa-star dropdown-icon"></i>
+                Signup
+                </a>
+              </li>
+
+            </ul>
+
+          </li>
+
+          <li class="dropdown">
+
+            <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">
+            More
+            <i class="fa fa-caret-down navbar-caret"></i>
+            </a>
+
+            <ul class="dropdown-menu" role="menu">
+              <li>
+                <a href="../admin/">
+                <i class="fa fa-external-link dropdown-icon"></i>
+                Admin Template
+                </a>
+              </li>
+              <li>
+                <a href="../launch/">
+                <i class="fa fa-external-link dropdown-icon"></i>
+                Launch Template
+                </a>
+              </li>
+            </ul>
+          </li>
+
+        </ul>
+
+      </nav>
+
+    </div> <!-- /.container -->
+
+  </header>
+
+
+
+    <div class="masthead">
+
+      <div class="container">
+
+        <h1 class="masthead-subtitle">
+          Login
+        </h1>
+
+
+      </div> <!-- /.container -->
+
+    </div> <!-- /.masthead -->
+
+
+
+    <div class="content">
+
+      <div class="container">
+
+        <hr class="spacer-sm">
+
+        <div class="account-wrapper">
+
+          <div class="account-body">
+
+            <h3>Welcome back to MVP Ready.</h3>
+
+            <h5>Please sign in to get access.</h5>
+
+            <form class="form account-form" method="POST" action="../admin/index.html">
+
+              <div class="form-group">
+                <label for="login-username" class="placeholder-hidden">Username</label>
+                <input type="text" class="form-control" id="login-username" placeholder="Username" tabindex="1">
+              </div> <!-- /.form-group -->
+
+              <div class="form-group">
+                <label for="login-password" class="placeholder-hidden">Password</label>
+                <input type="password" class="form-control" id="login-password" placeholder="Password" tabindex="2">
+              </div> <!-- /.form-group -->
+
+              <div class="form-group clearfix">
+                <div class="pull-left">
+                  <label class="checkbox-inline">
+                  <input type="checkbox" class="" value="" tabindex="3"> <small>Remember me</small>
+                  </label>
+                </div>
+
+                <div class="pull-right">
+                  <small><a href="./account-forgot.html">Forgot Password?</a></small>
+                </div>
+              </div> <!-- /.form-group -->
+
+              <div class="form-group">
+                <button type="submit" class="btn btn-primary btn-block btn-lg" tabindex="4">
+                  Signin &nbsp; <i class="fa fa-play-circle"></i>
+                </button>
+              </div> <!-- /.form-group -->
+
+            </form>
+
+
+          </div> <!-- /.account-body -->
+
+          <div class="account-footer">
+            <p>
+            Don't have an account? &nbsp;
+            <a href="./account-signup.html" class="">Create an Account!</a>
+            </p>
+          </div> <!-- /.account-footer -->
+
+        </div> <!-- /.account-wrapper -->
+
+
+        <br><br><br>
+
+
+      </div> <!-- /.container -->
+
+    </div> <!-- /.content -->
+
+
+</div> <!-- /#wrapper -->
+
+<footer class="footer">
+
+  <div class="container">
+
+      <div class="row">
+
+        <div class="col-sm-3">
+
+          <div class="heading-block">
+            <h4>MVP Ready</h4>
+          </div> <!-- /.heading-block -->
+
+          <p>Aliquam fringilla, sapien egetferas scelerisque placerat, lorem libero cursus lorem, sed sodales lorem libero eu sapien. Nunc mattis feugiat justo vel faucibus. Nulla consequat feugiat malesuada.</p>
+
+          <p>Placerat, lorem libero cursus lorem, sed sodales lorem libero eu sapien</p>
+        </div> <!-- /.col -->
+
+
+        <div class="col-sm-3">
+
+          <div class="heading-block">
+            <h4>Keep In Touch</h4>
+          </div> <!-- /.heading-block -->
+
+          <ul class="icons-list">
+            <li>
+              <i class="icon-li fa fa-home"></i>
+              123 Northwest Way <br>
+              Las Vegas, NV 89183
+            </li>
+
+            <li>
+              <i class="icon-li fa fa-phone"></i>
+              +1 702 123 4567
+            </li>
+
+            <li>
+              <i class="icon-li fa fa-envelope"></i>
+              <a href="mailto:info@mvpready.com">info@mvpready.com</a>
+            </li>
+            <li>
+              <i class="icon-li fa fa-map-marker"></i>
+              <a href="javascript:;">View Map</a>
+            </li>
+          </ul>
+        </div> <!-- /.col -->
+
+
+        <div class="col-sm-3">
+
+          <div class="heading-block">
+            <h4>Connect With Us</h4>
+          </div> <!-- /.heading-block -->
+
+          <ul class="icons-list">
+
+            <li>
+              <i class="icon-li fa fa-facebook"></i>
+              <a href="javascript:;">Facebook</a>
+            </li>
+
+            <li>
+              <i class="icon-li fa fa-twitter"></i>
+              <a href="javascript:;">Twitter</a>
+            </li>
+
+            <li>
+              <i class="icon-li fa fa-soundcloud"></i>
+              <a href="javascipt:;">Sound Cloud</a>
+            </li>
+
+            <li>
+              <i class="icon-li fa fa-google-plus"></i>
+              <a href="javascript:;">Google Plus</a>
+            </li>
+          </ul>
+
+        </div> <!-- /.col -->
+
+
+        <div class="col-sm-3">
+
+          <div class="heading-block">
+            <h4>Stay Updated</h4>
+          </div> <!-- /.heading-block -->
+
+        <p>Get emails about new theme launches &amp;  future updates.</p>
+
+        <form action="/" class="form">
+
+          <div class="form-group">
+            <!-- <label>Email: <span class="required">*</span></label> -->
+            <input class="form-control" id="newsletter_email" name="newsletter_email" type="text" value="" required="" placeholder="Email Address">
+          </div> <!-- /.form-group -->
+
+          <div class="form-group">
+            <button class="btn btn-transparent">Subscribe Me</button>
+          </div> <!-- /.form-group -->
+
+        </form>
+
+      </div> <!-- /.col -->
+
+      </div> <!-- /.row -->
+
+  </div> <!-- /.container -->
+
+</footer>
+
+<footer class="copyright">
+  <div class="container">
+
+    <div class="row">
+
+      <div class="col-sm-12">
+        <p>Copyright &copy; 2013-15 <a href="javascript:;">Jumpstart Themes</a>.</p>
+      </div> <!-- /.col -->
+
+    </div> <!-- /.row -->
+
+  </div>
+</footer>
