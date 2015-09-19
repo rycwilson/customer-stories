@@ -1,26 +1,90 @@
-<h2>Log in</h2>
+<div id="wrapper">
 
-<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true %>
-  </div>
+  <%= render 'shared/mvp_landing_header' %>
 
-  <div class="field">
-    <%= f.label :password %><br />
-    <%= f.password_field :password, autocomplete: "off" %>
-  </div>
+  <div class="masthead">
 
-  <% if devise_mapping.rememberable? -%>
-    <div class="field">
-      <%= f.check_box :remember_me %>
-      <%= f.label :remember_me %>
-    </div>
-  <% end -%>
+    <div class="container">
 
-  <div class="actions">
-    <%= f.submit "Log in" %>
-  </div>
-<% end %>
+      <h1 class="masthead-subtitle">
+        Login
+      </h1>
 
-<%= render "devise/shared/links" %>
+    </div> <!-- /.container -->
+
+  </div> <!-- /.masthead -->
+
+  <div class="content">
+
+    <div class="container">
+
+      <hr class="spacer-sm">
+
+      <div class="account-wrapper">
+
+        <div class="account-body">
+
+          <h3>Welcome back to CSP</h3>
+
+          <h5>Please sign in</h5>
+
+          <%= form_for(resource, as: resource_name,
+              url: session_path(resource_name),
+              html: { id: 'fform', class: 'form account-form' }) do |f| %>
+
+            <div class='form-group'>
+              <%= f.label :email %><br />
+              <%= f.email_field :email, { autofocus: true,
+                class: 'form-control', id: 'login-username',
+                placeholder: 'email', tabindex: '1' } %>
+            </div>
+
+            <div class='form-group'>
+              <%= f.label :password %><br />
+              <%= f.password_field :password, { autocomplete: "off",
+                class: 'form-control', id: 'login-password',
+                placeholder: 'password', tabindex: '2' } %>
+            </div>
+
+            <% if devise_mapping.rememberable? -%>
+              <div class="form-group clearfix">
+                <div class='checkbox-inline pull-left'>
+                  <%= f.check_box :remember_me, { tabindex: '3' } %>
+                  <%= f.label :remember_me %>
+                </div>
+              </div>
+            <% end -%>
+
+            <div class="form-group">
+              <%= button_tag(type: 'submit', tabindex: '4',
+                  class: "btn btn-primary btn-block btn-lg") do %>
+                Sign in &nbsp; <i class="fa fa-play-circle"></i>
+              <% end %>
+            </div>
+
+          <% end %>
+
+        </div> <!-- /.account-body -->
+
+        <div class="account-footer">
+          <p>
+          Don't have an account? &nbsp;
+          <%= link_to 'Sign up', new_user_registration_path %>
+          </p>
+        </div> <!-- /.account-footer -->
+
+      </div> <!-- /.account-wrapper -->
+
+
+      <br><br><br>
+
+
+    </div> <!-- /.container -->
+
+  </div> <!-- /.content -->
+
+
+</div> <!-- /#wrapper -->
+
+<%= render 'shared/mvp_landing_footer' %>
+

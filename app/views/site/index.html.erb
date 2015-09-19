@@ -1,11 +1,696 @@
-<% content_for :top_content do %>
-  <div class="jumbotron">
-    <div class="container">
-      <h1>Welcome!</h1>
-      <p>Register to get started.</p>
-      <p>
-        <%= link_to 'Register', new_user_registration_path, class: 'btn btn-primary btn-lg' %>
-      </p>
-    </div>
-  </div>
-<% end %>
+<div id="wrapper">
+
+  <%= render "shared/mvp_landing_header" %>
+
+  <div class="masthead">
+
+      <!-- starts carousel -->
+
+      <div id="masthead-carousel" class="carousel slide carousel-fade masthead-carousel">
+        <div class="carousel-inner">
+
+          <div class="item active" style="background-color: #354b5e; background-image: url(<%= asset_path 'mvp-global/bg/black-lozenge.png' %>);">
+
+            <hr class="spacer-md hidden-xs">
+            <hr class="spacer-sm visible-xs">
+
+            <div class="container">
+
+              <div class="row">
+
+                <div class="col-md-6 masthead-text animated fadeInDownBig">
+                  <h4 class="masthead-title">Don't feel limited to color schemes provided.</h4>
+
+                  <p>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nisi ut aliquip ex ea commodo consequat.
+                  </p>
+
+                  <br>
+
+                  <div class="masthead-actions">
+                    <a href="javascript:;" class="btn btn-transparent btn-jumbo">
+                    Learn More
+                    </a>
+
+                    <a href="./account-signup.html" class="btn btn-primary btn-jumbo">
+                    Create an Account
+                    </a>
+
+                  </div> <!-- /.masthead-actions -->
+
+                </div> <!-- /.masthead-text -->
+
+                <hr class="spacer-sm visible-xs visible-sm">
+
+                <div class="col-md-6 masthead-img animated fadeInUpBig">
+                  <%= image_tag 'mvp-landing/masthead/mobile.png',
+                    { alt: 'slide2', class: 'img-responsive' } %>
+                </div> <!-- /.masthead-img -->
+
+              </div> <!-- /.row -->
+
+            </div> <!-- /.container -->
+
+          </div> <!-- /.item -->
+
+          <div class="item" style="height: 775px; background-color: #354b5e;
+              background-image:
+                url(<%= asset_path 'mvp-global/bg/shattered.png' %>);">
+            <hr class="spacer-md hidden-xs">
+            <hr class="spacer-sm visible-xs">
+
+            <div class="container">
+
+              <div class="row">
+
+                <div class="col-md-10 col-md-offset-1 masthead-text text-center animated fadeIn">
+                  <h2 class="masthead-title">Create an Awesome, Engaging Landing Page for Your Next Project!</h2>
+
+                  <div class="masthead-actions">
+                    <a href="javascript:;" class="btn btn-transparent btn-jumbo">
+                    Take a Tour
+                    </a>
+
+                    <a href="./account-signup.html" class="btn btn-primary btn-jumbo">
+                    Get Started Today
+                    </a>
+
+                  </div> <!-- /.masthead-actions -->
+
+
+                  <hr class="spacer-sm">
+                  <hr class="spacer-xs">
+
+                </div> <!-- /.masthead-text -->
+
+                <div class="col-md-12 masthead-img animated fadeInUpBig">
+                  <%= image_tag 'mvp-landing/masthead/browser.png',
+                    { alt: 'slide2', class: 'img-responsive' } %>
+                </div> <!-- /.masthead-img -->
+
+              </div> <!-- /.row -->
+
+            </div> <!-- /.container -->
+
+          </div> <!-- /.item -->
+
+          <div class="item  " style="background-color: #B74444;
+              background-image:
+                url(<%= asset_path 'mvp-global/bg/bright-squares.png' %>);">
+            <hr class="spacer-md hidden-xs">
+            <hr class="spacer-sm visible-xs">
+
+            <div class="container">
+
+              <div class="row">
+
+                <div class="col-md-6 masthead-text animated fadeInLeftBig">
+                  <h4 class="masthead-title">Don't feel limited to color schemes provided.</h4>
+
+                  <p>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nisi ut aliquip ex ea commodo consequat.
+                  </p>
+
+                  <br>
+
+                  <div class="masthead-actions">
+                    <a href="javascript:;" class="btn btn-transparent btn-jumbo">
+                    Learn More
+                    </a>
+                  </div> <!-- /.masthead-actions -->
+                </div> <!-- /.masthead-text -->
+
+                <hr class="spacer-sm visible-xs visible-sm">
+
+                <div class="col-md-6 masthead-img animated fadeInRightBig">
+                  <form class="form masthead-form well">
+
+                    <h3 class="text-center">Start Your Free Trial!</h3>
+
+                    <p class="text-center">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloribus, earum.</p>
+
+                    <br>
+
+                    <div class="form-group">
+                      <!-- <label class="" for="full_name">Full Name</label> -->
+                      <input type="text" id="full_name" placeholder="Your Name" class="form-control">
+                    </div> <!-- /.form-group -->
+
+                    <div class="form-group">
+                      <!-- <label class="" for="email_address">Email Address</label> -->
+                      <input type="text" id="email_address" placeholder="Your Email" class="form-control">
+                    </div> <!-- /.form-group -->
+
+                    <div class="form-group">
+                      <!-- <label class="" for="organization">Organization</label> -->
+                      <input type="text" id="organization" placeholder="Organization Name" class="form-control">
+                    </div> <!-- /.form-group -->
+
+                    <div class="form-group">
+                      <button type="submit" class="btn btn-secondary btn-jumbo btn-block">Get Started Today!</button>
+                    </div> <!-- /.form-group -->
+
+                  </form>
+
+                  <hr class="spacer-md">
+                  <hr class="spacer-xs">
+                </div> <!-- /.masthead-img -->
+
+              </div> <!-- /.row -->
+
+            </div> <!-- /.container -->
+
+          </div> <!-- /.item -->
+
+          <div class="item " style="background-color: #354b5e;
+              background-image:
+                url(<%= asset_path 'mvp-global/bg/dark-mosaic.png' %>);">
+
+            <hr class="spacer-md hidden-xs">
+            <hr class="spacer-sm visible-xs">
+
+            <div class="container">
+
+              <div class="row">
+
+                <div class="col-md-6 masthead-text animated fadeInDownBig">
+                  <h4 class="masthead-title">Don't feel limited to color schemes provided.</h4>
+
+                  <p>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Nisi ut aliquip ex ea commodo consequat.
+                  </p>
+
+                  <br>
+
+                  <div class="masthead-actions">
+                    <a href="javascript:;" class="btn btn-transparent btn-jumbo">
+                    Learn More
+                    </a>
+
+                    <a href="./account-signup.html" class="btn btn-primary btn-jumbo">
+                    Create an Account
+                    </a>
+                  </div> <!-- /.masthead-actions -->
+
+                </div> <!-- /.masthead-text -->
+
+                <hr class="spacer-sm visible-xs visible-sm">
+
+                <div class="col-md-6 masthead-img animated pulse">
+                  <iframe src="http://player.vimeo.com/video/57175742?title=0&amp;byline=0&amp;portrait=0&amp;color=e2007a" style="width: 85%; height: 325px;"></iframe>
+
+                  <hr class="spacer-md">
+                  <hr class="spacer-xs">
+
+                </div> <!-- /.masthead-img -->
+
+              </div> <!-- /.row -->
+
+            </div> <!-- /.container -->
+
+          </div> <!-- /.item -->
+
+        </div>  <!-- /.carousel-inner -->
+        <!-- Carousel nav -->
+
+
+        <div class="container">
+          <div class="carousel-controls">
+            <a class="carousel-control left" href="#masthead-carousel" data-slide="prev">&lsaquo;</a>
+            <a class="carousel-control right" href="#masthead-carousel" data-slide="next">&rsaquo;</a>
+          </div>
+        </div>
+
+      </div> <!-- /.masthead-carousel -->
+
+  </div> <!-- /.masthead -->
+
+
+
+  <div class="content">
+
+    <section id="section-features" class="home-section">
+
+      <div class="container">
+
+        <div class="heading-block heading-minimal heading-center">
+          <h1>
+            Why Choose MVP Ready?
+          </h1>
+        </div> <!-- /.heading-block -->
+
+
+
+
+        <div class="feature-lg">
+
+          <div class="row">
+
+            <div class="col-sm-6">
+              <hr class="spacer-sm">
+              <figure class="feature-figure">
+                <%= image_tag 'mvp-landing/features/product01.png',
+                    { alt: '', class: 'img-responsive' } %>
+              </figure>
+            </div><!-- /.col -->
+
+            <div class="col-sm-6">
+              <div class="feature-content">
+                <h5>Consent accullignis dentibea.</h5>
+                <h3>Fully flexible user interface</h3>
+                <p>Magnis modipsae que lib voloratati andigen daepeditem quiate ut reporemni aut labor. Laceaque quiae sitiorem rest non restibusaes es tumquam core posae volor remped.</p>
+                <ul class="icons-list">
+                  <li>
+                    <i class="icon-li fa fa-check text-primary"></i>
+                    Voloratati andigen daepeditem quiate
+                  </li>
+                  <li>
+                    <i class="icon-li fa fa-check text-primary"></i>
+                    Laceaque quiae sitiorem
+                  </li>
+                  <li>
+                    <i class="icon-li fa fa-check text-primary"></i>
+                    Tumquam core posae
+                  </li>
+                </ul>
+                <a href="#" class="btn btn-default">Check out the functions</a>
+              </div> <!-- /.feature-content -->
+            </div><!-- /.col -->
+
+          </div> <!-- /.row -->
+
+        </div> <!-- /.feature-lg -->
+
+
+        <hr class="spacer-lg">
+
+
+        <div class="feature-lg figure-right">
+
+          <div class="row">
+
+            <div class="col-sm-6 col-sm-push-6 ">
+              <hr class="spacer-sm">
+              <figure class="feature-figure">
+                <%= image_tag 'mvp-landing/features/product02.jpg',
+                    { alt: '', class: 'img-responsive' } %>
+              </figure>
+            </div><!-- /.col -->
+
+            <div class="col-sm-6 col-sm-pull-6">
+              <div class="feature-content">
+                <h5>Incim resto explabo.</h5>
+                <h3>Over 14,000 designs available</h3>
+                <p>Magnis modipsae que lib voloratati andigen daepeditem quiate es reporemus aut labor. Laceaque quiae sitiorem rest non restibusaes dem tumquam core posae volor remped modis volor. Doloreiur quia commolu ptatemp dolupta oreprerum tibusam eumenis et consent accullignis lib dentibea autem inisita.</p>
+                <ul class="icons-list">
+                  <li>
+                    <i class="icon-li fa fa-check text-primary"></i>
+                    Tumquam core posae volor remped modis volor
+                  </li>
+                  <li>
+                    <i class="icon-li fa fa-check text-primary"></i>
+                    Non restibusaes dem tumquam
+                  </li>
+                  <li>
+                    <i class="icon-li fa fa-check text-primary"></i>
+                    Modipsae que lib voloratati andigen daepeditem
+                  </li>
+                </ul>
+                <a href="#" class="btn btn-default">Visit the showroom</a>
+              </div> <!-- /.feature-content -->
+            </div><!-- /.col -->
+
+          </div> <!-- /.row -->
+
+        </div> <!-- /.feature-lg -->
+
+
+        <hr class="spacer-lg">
+
+
+        <div class="feature-lg">
+
+          <div class="row">
+
+            <div class="col-sm-6">
+              <hr class="spacer-xs">
+              <iframe src="http://www.youtube.com/embed/ySJhFCtVTUQ?list=UUvNBXWGykQrWb7kPAn5eLUQ" style="width: 95%; height: 315px;"></iframe>
+            </div><!-- /.col -->
+
+            <div class="col-sm-6">
+              <div class="feature-content">
+                <h5>Volor remped modis volor.</h5>
+                <h3>Social media made even easier</h3>
+                <p>Magnis modipsae que lib voloratati andigen daepeditem quiate ut reporemni aut labor. Laceaque quiae sitiorem rest non restibusaes es tumquam core posae volor remped modis volor. Doloreiur qui commolu ptatemp.</p>
+                <ul class="icons-list">
+                  <li>
+                    <i class="icon-li fa fa-check text-primary"></i>
+                    Tumquam core posae volor remped modis volor
+                  </li>
+                  <li>
+                    <i class="icon-li fa fa-check text-primary"></i>
+                    Non restibusaes dem tumquam
+                  </li>
+                  <li>
+                    <i class="icon-li fa fa-check text-primary"></i>
+                    Modipsae que lib voloratati andigen daepeditem
+                  </li>
+                </ul>
+                <a href="#" class="btn btn-default">Learn more about it</a>
+              </div> <!-- /.feature-content -->
+            </div><!-- /.col -->
+
+          </div> <!-- /.row -->
+
+        </div> <!-- /.feature-lg -->
+
+        </div> <!-- /.container -->
+
+      </section>
+
+
+
+
+      <section id="section-benefits" class="home-section" style="background-color: #f3f3f3;">
+
+        <div class="container">
+
+          <div class="heading-block heading-minimal heading-center">
+            <h1>
+              Greate Features & Benefits
+            </h1>
+          </div> <!-- /.heading-block -->
+
+
+          <div class="row">
+
+            <div class="col-sm-4">
+              <div class="feature-sm">
+                <i class="fa fa-anchor feature-sm-icon text-secondary"></i>
+
+                <h3 class="feature-sm-label">Consectetur adipisicing</h3>
+
+                <p class="feature-sm-content">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                  quis nostrud exercitation.
+                </p>
+              </div> <!-- /.feature-sm -->
+            </div> <!-- /.col -->
+
+            <div class="col-sm-4">
+              <div class="feature-sm">
+                <i class="fa fa-ils feature-sm-icon text-secondary"></i>
+
+                <h3 class="feature-sm-label">Dolore magna aliqua</h3>
+
+                <p class="feature-sm-content">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                  quis nostrud exercitation.
+                </p>
+              </div> <!-- /.feature-sm -->
+            </div> <!-- /.col -->
+
+            <div class="col-sm-4">
+              <div class="feature-sm">
+                <i class="fa fa-gift feature-sm-icon text-secondary"></i>
+
+                <h3 class="feature-sm-label">Minim veniam</h3>
+
+                <p class="feature-sm-content">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                  quis nostrud exercitation.
+                </p>
+              </div> <!-- /.feature-sm -->
+            </div> <!-- /.col -->
+
+          </div> <!-- /.row -->
+
+
+
+          <div class="row">
+
+            <div class="col-sm-4">
+              <div class="feature-sm">
+                <i class="fa fa-code feature-sm-icon text-secondary"></i>
+
+                <h3 class="feature-sm-label">Nostrud exercitation</h3>
+
+                <p class="feature-sm-content">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                  quis nostrud exercitation.
+                </p>
+              </div> <!-- /.feature-sm -->
+            </div> <!-- /.col -->
+
+            <div class="col-sm-4">
+              <div class="feature-sm">
+                <i class="fa fa-comments-o feature-sm-icon text-secondary"></i>
+
+                <h3 class="feature-sm-label">Sed do eiusmod</h3>
+
+                <p class="feature-sm-content">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                  quis nostrud exercitation.
+                </p>
+              </div> <!-- /.feature-sm -->
+            </div> <!-- /.col -->
+
+            <div class="col-sm-4">
+              <div class="feature-sm">
+                <i class="fa fa-cloud-download feature-sm-icon text-secondary"></i>
+
+                <h3 class="feature-sm-label">Adipisicing elit</h3>
+
+                <p class="feature-sm-content">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                  quis nostrud exercitation.
+                </p>
+              </div> <!-- /.feature-sm -->
+            </div> <!-- /.col -->
+
+          </div> <!-- /.row -->
+
+
+
+          <div class="row">
+
+            <div class="col-sm-4">
+              <div class="feature-sm">
+                <i class="fa fa-crosshairs feature-sm-icon text-secondary"></i>
+
+                <h3 class="feature-sm-label">Quis nostrud exercitation</h3>
+
+                <p class="feature-sm-content">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                  quis nostrud exercitation.
+                </p>
+              </div> <!-- /.feature-sm -->
+            </div> <!-- /.col -->
+
+            <div class="col-sm-4">
+              <div class="feature-sm">
+                <i class="fa fa-rocket feature-sm-icon text-secondary"></i>
+
+                <h3 class="feature-sm-label">Incididunt ut labore</h3>
+
+                <p class="feature-sm-content">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                  quis nostrud exercitation.
+                </p>
+              </div> <!-- /.feature-sm -->
+            </div> <!-- /.col -->
+
+            <div class="col-sm-4">
+              <div class="feature-sm">
+                <i class="fa fa-star feature-sm-icon text-secondary"></i>
+
+                <h3 class="feature-sm-label">Enim ad minim</h3>
+
+                <p class="feature-sm-content">
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                  tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                  quis nostrud exercitation.
+                </p>
+              </div> <!-- /.feature-sm -->
+            </div> <!-- /.col -->
+
+          </div> <!-- /.row -->
+
+      </div> <!-- /.container -->
+
+    </section>
+
+
+
+    <section id="section-testimonials" class="home-section">
+
+      <div class="container">
+
+        <div class="heading-block heading-minimal heading-center">
+          <h1>
+            Trusted by Thousands
+          </h1>
+        </div> <!-- /.heading-block -->
+
+        <ul class="clients-list">
+          <li>
+            <%= image_tag 'mvp-global/clients/logo1-grayscale.png',
+                class: 'img-responsive', alt: 'Client Logo' %>
+          </li>
+          <li>
+            <%= image_tag 'mvp-global/clients/logo2-grayscale.png',
+                class: 'img-responsive', alt: 'Client Logo' %>
+          </li>
+          <li>
+            <%= image_tag 'mvp-global/clients/logo3-grayscale.png',
+                class: 'img-responsive', alt: 'Client Logo' %>
+          </li>
+          <li>
+            <%= image_tag 'mvp-global/clients/logo4-grayscale.png',
+                class: 'img-responsive', alt: 'Client Logo' %>
+          </li>
+        </ul>
+
+        <hr class="spacer-md">
+
+
+        <div class="row">
+
+          <div class="col-sm-4">
+
+            <div class="testimonial">
+
+              <div class="testimonial-icon bg-secondary">
+                <i class="fa fa-quote-left"></i>
+              </div> <!-- /.testimonial-icon -->
+
+              <div class="testimonial-content">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat. Duis aute irure dolor in reprehenderit.
+              </div> <!-- /.testimonial-content -->
+
+              <div class="testimonial-author">
+                <div class="testimonial-image">
+                  <%= image_tag 'mvp-global/avatars/avatar-3-md.jpg', alt:'' %>
+                </div>
+
+                <div class="testimonial-author-info">
+                  <h5><a href="#">Adelle Charles</a></h5> @adellecharles
+                </div>
+              </div> <!-- /.testimonial-author -->
+
+            </div> <!-- /.testimonial -->
+
+            <hr class="spacer-sm">
+
+          </div> <!-- /.col -->
+
+          <div class="col-sm-4">
+
+            <div class="testimonial">
+
+              <div class="testimonial-icon bg-secondary">
+                <i class="fa fa-quote-left"></i>
+              </div> <!-- /.testimonial-icon -->
+
+              <div class="testimonial-content">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat. Duis aute irure dolor in reprehenderit.
+              </div> <!-- /.testimonial-content -->
+
+              <div class="testimonial-author">
+                <div class="testimonial-image">
+                  <%= image_tag 'mvp-global/avatars/avatar-4-md.jpg', alt:'' %>
+                </div>
+
+                <div class="testimonial-author-info">
+                  <h5><a href="#">Peter Landt</a></h5> @peterlandt
+                </div>
+              </div> <!-- /.testimonial-author -->
+
+            </div> <!-- /.testimonial -->
+
+            <hr class="spacer-sm">
+
+          </div> <!-- /.col -->
+
+          <div class="col-sm-4">
+
+            <div class="testimonial">
+
+              <div class="testimonial-icon bg-secondary">
+                <i class="fa fa-quote-left"></i>
+              </div> <!-- /.testimonial-icon -->
+
+              <div class="testimonial-content">
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+                consequat. Duis aute irure dolor in reprehenderit.
+              </div> <!-- /.testimonial-content -->
+
+              <div class="testimonial-author">
+                <div class="testimonial-image">
+                  <%= image_tag 'mvp-global/avatars/avatar-5-md.jpg', alt:'' %>
+                </div>
+
+                <div class="testimonial-author-info">
+                  <h5><a href="#">Enda Nasution</a></h5> @enda
+                </div>
+              </div> <!-- /.testimonial-author -->
+
+            </div> <!-- /.testimonial -->
+
+          </div> <!-- /.col -->
+
+        </div> <!-- /.row -->
+
+      </div> <!-- /.container -->
+
+    </section>
+
+
+
+    <section id="section-contact" class="home-section" style="background-color: #f3f3f3;">
+
+      <div class="container">
+
+        <div class="heading-block heading-minimal heading-center">
+          <h1>
+            Want to work with us?
+          </h1>
+        </div> <!-- /.heading-block -->
+
+        <div class="row">
+          <div class="col-md-8 col-md-offset-2">
+            <p class="text-center text-xl">
+              <em>Magnis modipsae que voloratati andigen daepeditem quiate re porem aut labor. Laceaque quiae sitiorem rest.</em>
+            <br><br>
+            <a href="./page-contact.html" class="btn btn-primary btn-lg">Get In Touch</a>
+            </p>
+          </div>
+        </div>
+
+        <br><br>
+
+      </div> <!-- /.container -->
+
+    </section>
+
+  </div> <!-- /.content -->
+
+</div> <!-- /#wrapper -->
+
+<%= render "shared/mvp_landing_footer" %>
