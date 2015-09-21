@@ -11,10 +11,53 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150914021612) do
+ActiveRecord::Schema.define(version: 20150921211408) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "companies", force: :cascade do |t|
+    t.string   "name"
+    t.string   "logo_img"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "customers", force: :cascade do |t|
+    t.string   "name"
+    t.string   "logo_img"
+    t.integer  "company_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "customers", ["company_id"], name: "index_customers_on_company_id", using: :btree
+
+  create_table "stories", force: :cascade do |t|
+    t.string   "title"
+    t.text     "quote"
+    t.text     "quot_attr"
+    t.string   "embed_url"
+    t.text     "situation"
+    t.text     "challenge"
+    t.text     "solution"
+    t.text     "results"
+    t.integer  "success_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "stories", ["success_id"], name: "index_stories_on_success_id", using: :btree
+
+  create_table "successes", force: :cascade do |t|
+    t.boolean  "approved?",   default: false
+    t.boolean  "published?",  default: false
+    t.integer  "customer_id"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
+  add_index "successes", ["customer_id"], name: "index_successes_on_customer_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -45,4 +88,7 @@ ActiveRecord::Schema.define(version: 20150914021612) do
   add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
 
+  add_foreign_key "customers", "companies"
+  add_foreign_key "stories", "successes"
+  add_foreign_key "successes", "customers"
 end
