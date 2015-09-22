@@ -5,8 +5,8 @@
 * ========================================================
 *
 * File: mvpready-landing.js
-* Theme Version: 2.0.0
-* Bootstrap Version: 3.3.1
+* Theme Version: 2.1.0
+* Bootstrap Version: 3.3.5
 * Author: Jumpstart Themes
 * Website: http://mvpready.com
 *
@@ -58,6 +58,8 @@ var mvpready_landing = function () {
 			mvpready_helpers.initAccordions ()
 			mvpready_helpers.initTooltips ()
 			mvpready_core.initBackToTop ()
+      mvpready_helpers.initLightbox ()
+      
 		}
 	}
 
