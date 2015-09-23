@@ -1,8 +1,10 @@
 class Company < ActiveRecord::Base
 
-  validates :name, uniqueness: true
+  validates :name, presence: true, uniqueness: true
 
   has_many :customers, dependent: :destroy
   has_many :successes, through: :customers
+  has_many :industry_categories, dependent: :destroy
+  has_many :product_categories, dependent: :destroy
 
 end
