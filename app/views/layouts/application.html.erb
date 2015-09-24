@@ -17,20 +17,18 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,600italic,800,800italic">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald:400,300,700">
 </head>
-<body class="">
+<body>
 
-  <div class='container'>
-    <% flash.each do |type, msg| %>
-      <!-- type: success, info, warning, danger -->
-      <% if msg.is_a?(String) %>
-        <div class="alert alert-<%= type == "notice" ? "success" : "danger" %>">
-          <button type="button" class="close" data-dismiss="alert"
-                  aria-hidden="true">&times;</button>
-          <%= content_tag :div, msg, :id => "flash_#{type}" %>
-        </div>
-      <% end %>
+  <% flash.each do |type, msg| %>
+    <!-- type: success, info, warning, danger -->
+    <% if msg.is_a?(String) %>
+      <div class="alert alert-<%= type == "notice" ? "success" : "danger" %>">
+        <button type="button" class="close" data-dismiss="alert"
+                aria-hidden="true">&times;</button>
+        <%= content_tag :div, msg, :id => "flash_#{type}" %>
+      </div>
     <% end %>
-  </div>
+  <% end %>
 
   <%= yield %>
 
