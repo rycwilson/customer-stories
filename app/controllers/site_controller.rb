@@ -1,6 +1,6 @@
 class SiteController < ApplicationController
 
-  def welcome
+  def index
   end
 
 end

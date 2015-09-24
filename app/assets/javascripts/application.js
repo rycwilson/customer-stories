@@ -18,7 +18,9 @@
 //= require mvpready-core
 //= require mvpready-helpers
 //= require mvpready-landing
+//= require angular/companies
 //= require_tree .
+
 
 
 
