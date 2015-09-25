@@ -6,6 +6,8 @@ class ApplicationController < ActionController::Base
   # Devise - whitelist User params
   before_action :configure_permitted_parameters, if: :devise_controller?
 
+# DL added a test comment here 
+
   protected
 
   def configure_permitted_parameters
