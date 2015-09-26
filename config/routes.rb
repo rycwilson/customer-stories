@@ -5,7 +5,8 @@ Rails.application.routes.draw do
   get '/account', to: 'companies#show', as: 'company'
 
   devise_for :users, controllers: {
-        sessions: 'users/sessions'
+        sessions: 'users/sessions',
+        registrations: 'users/registrations'
       }
 
   # The priority is based upon order of creation: first created -> highest priority.

@@ -10,8 +10,9 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
- *= require bootstrap-sass/assets/stylesheets/_bootstrap.scss
+ *  TODO: http://stackoverflow.com/questions/24710277/turbolinks-and-controller-specific-assets
+ *
  *= require fontawesome/css/font-awesome.min.css
- *= require animate.css/animate.min.css
+ *= require bootstrap-sass/assets/stylesheets/_bootstrap.scss
  *= require_self
  */

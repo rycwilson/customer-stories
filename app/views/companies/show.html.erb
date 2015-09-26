@@ -1,48 +1,50 @@
-<%= render 'shared/mvp_main_navbar' %>
+<div id='wrapper'>
+  <%= render 'shared/mvp_main_navbar' %>
 
-<div ng-app="CspApp" class='container'>
-  <div ng-controller="MainCtrl">
-    <section ng-init="tab = 1">
-      <ul class="nav nav-tabs">
-        <li ng-class="{ active:tabSelected(1) }">
-          <a ng-click="selectTab(1)"> Stories </a>
-        </li>
-        <li ng-class="{ active:tabSelected(2) }">
-          <a ng-click="selectTab(2)"> Customers </a>
-        </li>
-        <li ng-class="{ active:tabSelected(3) }">
-          <a ng-click="selectTab(3)"> Products </a>
-        </li>
-        <li ng-class="{ active:tabSelected(4) }">
-          <a ng-click="selectTab(4)"> Partners </a>
-        </li>
-      </ul>
-      <!-- tab content panels -->
-      <div class="panel panel-default" ng-show="tabSelected(1)">
-        <div class='panel-body'>
+  <div ng-app="CspApp" class='container'>
+    <div ng-controller="MainCtrl">
+      <section ng-init="tab = 1">
+        <ul class="nav nav-tabs">
+          <li ng-class="{ active:tabSelected(1) }">
+            <a ng-click="selectTab(1)"> Stories </a>
+          </li>
+          <li ng-class="{ active:tabSelected(2) }">
+            <a ng-click="selectTab(2)"> Customers </a>
+          </li>
+          <li ng-class="{ active:tabSelected(3) }">
+            <a ng-click="selectTab(3)"> Products </a>
+          </li>
+          <li ng-class="{ active:tabSelected(4) }">
+            <a ng-click="selectTab(4)"> Partners </a>
+          </li>
+        </ul>
+        <!-- tab content panels -->
+        <div class="panel panel-default" ng-show="tabSelected(1)">
+          <div class='panel-body'>
 
+          </div>
         </div>
-      </div>
 
-      <div class="panel panel-default" ng-show="tabSelected(2)">
-        <div class='panel-body'>
+        <div class="panel panel-default" ng-show="tabSelected(2)">
+          <div class='panel-body'>
 
+          </div>
         </div>
-      </div>
 
-      <div class="panel panel-default" ng-show="tabSelected(2)">
-        <div class='panel-body'>
+        <div class="panel panel-default" ng-show="tabSelected(2)">
+          <div class='panel-body'>
 
+          </div>
         </div>
-      </div>
 
-      <div class="panel panel-default" ng-show="tabSelected(2)">
-        <div class='panel-body'>
+        <div class="panel panel-default" ng-show="tabSelected(2)">
+          <div class='panel-body'>
 
+          </div>
         </div>
-      </div>
 
-    </section>
+      </section>
 
+    </div>
   </div>
 </div>

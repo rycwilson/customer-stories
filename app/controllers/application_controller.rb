@@ -6,7 +6,7 @@ class ApplicationController < ActionController::Base
   # Devise - whitelist User params
   before_action :configure_permitted_parameters, if: :devise_controller?
 
-# DL added a test comment here 
+# DL added a test comment here
 
   protected
 
@@ -17,6 +17,7 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.for(:account_update) << :last_name
   end
 
+  # change devise redirect on sign in
   def after_sign_in_path_for(resource)
     company_path
   end

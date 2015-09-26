@@ -10,7 +10,7 @@
         <i class="fa fa-cog"></i>
       </button>
 
-      <%= image_tag 'mvp-global/csp_logo.png',
+      <%= image_tag 'mvp-admin/csp_logo.png',
           { class: 'navbar-brand navbar-brand-img', alt: 'CSP Logo' } %>
 
     </div> <!-- /.navbar-header -->
@@ -19,11 +19,26 @@
 
     <ul class="nav navbar-nav navbar-right">
 
+        <li>
+          <button class='btn' style="background-color: #d74b4b; color: white">
+            Register your company
+          </button>
+        </li>
+
+    <!--     <li>
+          <a href="javsacript:;">Projects</a>
+        </li>
+
+        <li>
+          <a href="javascript:;">Support</a>
+        </li> -->
+
         <li class="dropdown navbar-profile">
+
           <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
             <%= image_tag 'mvp-global/avatars/avatar-4-sm.jpg',
-              { class: 'navabar-profile-avatar', alt: '' } %>
-            <span id='email' class="visible-xs-inline">
+              { class: 'navbar-profile-avatar', alt: '' } %>
+            <span class="visible-xs-inline">
               <%= current_user.email %> &nbsp;
             </span>
             <i class="fa fa-caret-down"></i>
