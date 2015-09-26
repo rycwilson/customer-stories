@@ -20,7 +20,9 @@
     <ul class="nav navbar-nav navbar-right">
 
         <li>
-          <button class='btn' style="background-color: #d74b4b; color: white">
+          <button class='btn'
+              style="background-color: #d74b4b; color: white;
+              margin-top: 10px; margin-right: 10px">
             Register your company
           </button>
         </li>
@@ -36,12 +38,12 @@
         <li class="dropdown navbar-profile">
 
           <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
-            <%= image_tag 'mvp-global/avatars/avatar-4-sm.jpg',
-              { class: 'navbar-profile-avatar', alt: '' } %>
-            <span class="visible-xs-inline">
+            <span class="visible-xs-inline" style="display: inline !important">
               <%= current_user.email %> &nbsp;
             </span>
             <i class="fa fa-caret-down"></i>
+            <%= image_tag 'mvp-global/avatars/avatar-4-sm.jpg',
+              { class: 'navbar-profile-avatar', alt: '' } %>
           </a>
 
           <ul class="dropdown-menu" role="menu">
