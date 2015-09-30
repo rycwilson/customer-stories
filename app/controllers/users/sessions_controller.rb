@@ -1,3 +1,5 @@
+# http://stackoverflow.com/questions/6234045/how-do-you-access-devise-controllers
+
 class Users::SessionsController < Devise::SessionsController
 # before_filter :configure_sign_in_params, only: [:create]
 

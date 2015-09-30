@@ -30,7 +30,7 @@
 //= require mvpready-admin
 
 // Angular
-//= require angular/companies
+
 //= require_tree .
 
 

@@ -1,3 +1,4 @@
+console.log('account js');
 
 var app = angular.module("CspApp", []);
 
