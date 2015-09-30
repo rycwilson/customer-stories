@@ -1,4 +1,14 @@
-console.log('account js');
+//= require angular/angular.min
+
+// MVP plug-ins
+//= require slimscroll/jquery.slimscroll.min
+//= require flot/excanvas.min
+//= require flot/jquery.flot
+//= require flot/jquery.flot.pie
+//= require flot/jquery.flot.resize
+//= require flot/jquery.flot.time
+//= require flot.tooltip/js/jquery.flot.tooltip
+//= require mvpready-admin
 
 var app = angular.module("CspApp", []);
 

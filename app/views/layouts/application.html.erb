@@ -6,9 +6,12 @@
 <html>
 <head>
   <title>Customer Stories</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
+  <!-- controller-specific stylesheets -->
   <%= stylesheet_link_tag params[:controller] %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <!-- controller-specific js -->
+  <%= javascript_include_tag params[:controller] %>
   <%= csrf_meta_tags %>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
