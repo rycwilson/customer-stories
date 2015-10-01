@@ -23,21 +23,6 @@
 </head>
 <body>
 
-  <!-- TODO:
-  Here's some flash messaging that assumes only bootstrap alert classes
-  What about <%#= bootstrap_flash %> ... not in bootstrap-sass gem? -->
-  <!-- Flash messaging -->
-<!--   <#% flash.each do |type, msg| %>
-    type: success, info, warning, danger
-    <#% if msg.is_a?(String) %>
-      <div class="text-center alert alert-<%#= type %>" role="alert">
-        <button type="button" class="close" data-dismiss="alert"
-                aria-hidden="true">&times;</button>
-        <#%= content_tag :div, msg, :id => "flash_#{type}" %>
-      </div>
-    <#% end %>
-  <#% end %> -->
-
   <!-- Flash messaging -->
   <% flash.each do |type, msg| %>
     <!-- type: success, info, warning, danger -->

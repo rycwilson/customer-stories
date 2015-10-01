@@ -42,6 +42,7 @@ group :development, :test do
 
   gem 'pry-rails'
   gem 'better_errors'
+  gem 'ffaker'
   gem 'rspec-rails'
   gem 'capybara-rails'
 
