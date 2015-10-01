@@ -4,6 +4,14 @@ Rails.application.routes.draw do
 
   get '/account', to: 'companies#show', as: 'company'
 
+  get '/stories', to: 'stories#show'
+
+  resources :companies, shallow: true do
+    resources :customers do
+      resources :stories
+    end
+  end
+
   devise_for :users, controllers: {
         sessions: 'users/sessions',
         registrations: 'users/registrations'

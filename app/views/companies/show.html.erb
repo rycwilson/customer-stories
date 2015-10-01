@@ -68,8 +68,13 @@
                       <tr>
                         <td>
                           <div class="thumbnail">
-                            <div class="thumbnail-view">
-                              <img src="http://logo.clearbit.com/acme.com" width="60" alt="Company Logo" />
+                            <div class="thumbnail-view" ng-init="custo">
+
+                              <%= link_to customer_stories_path do %>
+                                <img src="http://logo.clearbit.com/acme.com"
+                                width="60" alt="Company Logo" />
+                              <% end %>
+
                             </div>
                           </div> <!-- /.thumbnail -->
                         </td>
