@@ -68,7 +68,7 @@
                         <th>Customer</th>
                         <th>Title</th>
                         <th>Publish Date</th>
-                        <th>Status <small>(click to view/preview)</small></th>
+                        <th>Status</th>
                         <th>Actions</th>
                       </tr>
 
@@ -76,12 +76,12 @@
                     <tbody>
                       <tr ng-repeat="story in currentCompany.stories | orderBy:'created_at':true">
 
-                        <td>
-                          <p>{{ findCustomer(story.id) }}</p>
+                        <td class="valign-middle">
+                          {{ findCustomer(story.id) }}
                         </td>
 
                         <td class="valign-middle">
-                          <p>{{ story.title }}</p>
+                          {{ story.title }}
                         </td>
 
                         <td class="valign-middle">
@@ -95,7 +95,7 @@
                           <% url_escaped_href = story_path('{{ story.id }}')
                               my_href = URI::unescape(url_escaped_href) %>
                           <a ng-href="<%= my_href %>">
-                            Pending
+                            Pending Curation
                           </a>
                         </td>
 
