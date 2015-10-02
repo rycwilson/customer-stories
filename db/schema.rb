@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150923070535) do
+ActiveRecord::Schema.define(version: 20151001233434) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,7 +54,7 @@ ActiveRecord::Schema.define(version: 20150923070535) do
   create_table "stories", force: :cascade do |t|
     t.string   "title"
     t.text     "quote"
-    t.text     "quot_attr"
+    t.text     "quote_attr"
     t.string   "embed_url"
     t.text     "situation"
     t.text     "challenge"

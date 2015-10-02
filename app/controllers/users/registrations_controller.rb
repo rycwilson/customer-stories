@@ -52,9 +52,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # The path used after sign up.
   # TODO: If user must confirm via email, what's the point of this?
-  def after_sign_up_path_for(resource)
-    company_path
-  end
+  # def after_sign_up_path_for(resource)
+  #   # a page to direct them to check their email
+  # end
 
   # The path used after sign up for inactive accounts.
   # def after_inactive_sign_up_path_for(resource)
