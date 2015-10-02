@@ -3,7 +3,7 @@ class CreateStories < ActiveRecord::Migration
     create_table :stories do |t|
       t.string :title
       t.text :quote
-      t.text :quot_attr
+      t.text :quote_attr
       t.string :embed_url
       t.text :situation
       t.text :challenge

@@ -2,9 +2,12 @@ Rails.application.routes.draw do
 
   root 'site#index'
 
-  get '/account', to: 'companies#show', as: 'company'
-
-  get '/stories', to: 'stories#show'
+  # TODO: this is a generic route for single test user (Company Admin)
+  # Once there is a page for registered users who have not yet
+  # specified/registered their company, then this route will
+  # be company-specific, i.e. company_path(@company)
+  # Remember to change account_path in application.rb
+  get '/account', to: 'companies#show', as: 'account'
 
   resources :companies, shallow: true do
     resources :customers do
