@@ -37,6 +37,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'bower-rails'
 gem 'devise'
+gem 'responders'
 
 group :development, :test do
 

@@ -5,6 +5,7 @@ class Company < ActiveRecord::Base
   has_many :users
   has_many :customers, dependent: :destroy
   has_many :successes, through: :customers
+  has_many :stories, through: :successes
   has_many :industry_categories, dependent: :destroy
   has_many :product_categories, dependent: :destroy
 

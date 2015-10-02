@@ -12,7 +12,7 @@ Story.destroy_all
 
 cisco = Company.create(name:'Cisco')
 
-User.find_by(email:'joe@mail.com').company = cisco
+cisco.users << User.find_by(email:'joe@mail.com')
 
 Customer.create(name:'Ebay')
 Customer.create(name:'Google')

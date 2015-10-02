@@ -10,7 +10,6 @@
 //= require flot.tooltip/js/jquery.flot.tooltip
 //= require mvpready-admin
 
-console.log('companies.js');
 var app = angular.module("CspApp", []);
 
 // Required to POST/PUT/PATCH to Rails
@@ -26,7 +25,21 @@ app.controller("MainCtrl", ['$scope', '$http', 'companyFactory',
   function ($scope, $http, companyFactory, customerFactory,
     productFactory, partnerFactory) {
 
+  $scope.currentCompany= {};
+  $scope.err = null;
   $scope.tab = 1;
+  $scope.currentCompany = getCurrentCompany();
+
+  function getCurrentCompany() {
+    companyFactory.getCurrentCompany()
+      .success(function(company) {
+        $scope.currentCompany = company;
+        console.log(company);
+      })
+      .error(function(error) {
+        $scope.err = error.message;
+    });
+  }
 
   $scope.tabSelected = function(checkTab) {
     return $scope.tab === checkTab;
@@ -41,6 +54,9 @@ app.controller("MainCtrl", ['$scope', '$http', 'companyFactory',
 
 app.factory('companyFactory', ['$http', function ($http) {
   var companyFactory = {};
+  companyFactory.getCurrentCompany = function() {
+    return $http.get("/account.json");
+  };
   return companyFactory;
 }]);
 
