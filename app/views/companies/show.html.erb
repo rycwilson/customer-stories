@@ -37,59 +37,68 @@
 
       </div>  <!-- mainnav -->
 
-
-
       <div class="content" ng-show="tabSelected(1)">
         <div class='container'>
+
           <a href="javascript:;" class="btn btn-secondary"
               style="margin-top: -25px; margin-bottom: 14px">
-            Create new story
+            New story
+          </a>&nbsp&nbsp&nbsp
+
+          <!-- interesting! check server console -->
+          <%# url_escaped_href = company_stories_path('{{ currentCompany.id }}')
+              puts "*** #{url_escaped_href}"
+              my_href = URI::unescape(url_escaped_href)
+              puts "*** #{my_href}" %>
+          <% url_escaped_href = company_stories_path('{{ currentCompany.id }}')
+              my_href = URI::unescape(url_escaped_href) %>
+          <a ng-href="<%= my_href %>" class="btn btn-secondary"
+              style="margin-top: -25px; margin-bottom: 14px">
+            Public stories index
           </a>
+
           <div class='row'>
             <div class='portlet portlet-default '>
-              <!-- <div class='portlet-header'>
-                <a href="javascript:;" class='btn btn-primary'>
-                  Create New Story
-                </a>
-              </div> -->
               <div class='portlet-body'>
                 <div class='table-responsive'>
                   <table class="table table-striped table-bordered thumbnail-table">
                     <thead>
+
                       <tr>
-                        <th style="width: 85px">Customer</th>
+                        <th>Customer</th>
                         <th>Title</th>
                         <th>Publish Date</th>
-                        <th>Status</th>
+                        <th>Status <small>(click to view/preview)</small></th>
                         <th>Actions</th>
                       </tr>
+
                     </thead>
                     <tbody>
-                      <tr>
+                      <tr ng-repeat="story in currentCompany.stories | orderBy:'created_at':true">
+
                         <td>
-                          <div class="thumbnail">
-                            <div class="thumbnail-view">
-
-                              <%#= link_to customer_stories_path do %>
-                        <!--         <img src="http://logo.clearbit.com/acme.com"
-                                width="60" alt="Company Logo" /> -->
-                          <!--     <#% end %> -->
-
-                            </div>
-                          </div> <!-- /.thumbnail -->
+                          <p>{{ findCustomer(story.id) }}</p>
                         </td>
+
                         <td class="valign-middle">
-                          <p>
-                            <%= FFaker::Lorem.sentence %>
-                          </p>
+                          <p>{{ story.title }}</p>
                         </td>
+
                         <td class="valign-middle">
+                          <!-- TODO: Story (or Success) needs a publish_date -->
+                          <!-- dummy data for now -->
                           <%= Date.parse(FFaker::Time.date).strftime("%m/%d/%Y") %>
                         </td>
+
                         <td class="valign-middle">
-                          <a href="javascript:;">Published</a>
-                          (link to story page)
+                          <!-- TODO: Replace 'Pending' with actual status -->
+                          <% url_escaped_href = story_path('{{ story.id }}')
+                              my_href = URI::unescape(url_escaped_href) %>
+                          <a ng-href="<%= my_href %>">
+                            Pending
+                          </a>
                         </td>
+
                         <td class="text-center valign-middle">
                           <button class="btn btn-xs btn-primary">
                             <i class="fa fa-pencil"></i>
@@ -100,13 +109,6 @@
                         </td>
 
                       </tr>
-
-                      <tr>
-
-                      </tr>
-                      <tr></tr>
-                      <tr></tr>
-                      <tr></tr>
                     </tbody>
                   </table>
                 </div>  <!-- table-responsive -->

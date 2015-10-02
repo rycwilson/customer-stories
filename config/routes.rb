@@ -9,11 +9,9 @@ Rails.application.routes.draw do
   # Remember to change account_path in application.rb
   get '/account', to: 'companies#show', as: 'account'
 
-  resources :companies, shallow: true do
-    resources :customers do
-      resources :stories
-    end
-  end
+  get '/companies/:id/stories', to: 'stories#index', as: 'company_stories'
+
+  get '/stories/:id', to: 'stories#show', as: 'story'
 
   devise_for :users, controllers: {
         sessions: 'users/sessions',

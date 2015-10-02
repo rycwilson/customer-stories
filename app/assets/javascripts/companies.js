@@ -30,6 +30,25 @@ app.controller("MainCtrl", ['$scope', '$http', 'companyFactory',
   $scope.tab = 1;
   $scope.currentCompany = getCurrentCompany();
 
+  $scope.findCustomer = function (story_id) {
+    success = $.grep($scope.currentCompany.successes, function (success) {
+      return success.id === story_id;
+    })[0];
+    customer = $.grep($scope.currentCompany.customers, function (customer) {
+      return customer.id === success.customer_id;
+    })[0];
+    return customer.name;
+  };
+
+  $scope.tabSelected = function (checkTab) {
+    return $scope.tab === checkTab;
+  };
+
+  $scope.selectTab = function (setTab) {
+    $scope.tab = setTab;
+    console.log(setTab);
+  };
+
   function getCurrentCompany() {
     companyFactory.getCurrentCompany()
       .success(function(company) {
@@ -40,15 +59,6 @@ app.controller("MainCtrl", ['$scope', '$http', 'companyFactory',
         $scope.err = error.message;
     });
   }
-
-  $scope.tabSelected = function(checkTab) {
-    return $scope.tab === checkTab;
-  };
-
-  $scope.selectTab = function(setTab) {
-    $scope.tab = setTab;
-    console.log(setTab);
-  };
 
 }]);
 

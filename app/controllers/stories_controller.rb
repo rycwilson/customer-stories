@@ -1,7 +1,7 @@
 class StoriesController < ApplicationController
 
   def index
-
+    @stories = Company.find(params[:id]).stories
   end
 
   def new
