@@ -10,77 +10,95 @@
 //= require flot.tooltip/js/jquery.flot.tooltip
 //= require mvpready-admin
 
-var app = angular.module("CspApp", []);
+(function() {
 
-// Required to POST/PUT/PATCH to Rails
-app.config(["$httpProvider", function ($httpProvider) {
-  $httpProvider.
-    defaults.headers.common["X-CSRF-TOKEN"] =
+  var app = angular.module("Company", []);
+
+  // Required to POST/PUT/PATCH to Rails
+  app.config(["$httpProvider", function ($httpProvider) {
+    $httpProvider.defaults.headers.common["X-CSRF-TOKEN"] =
       $("meta[name=csrf-token]").attr("content");
-}]);
-//
+  }]);
 
-app.controller("MainCtrl", ['$scope', '$http', 'companyFactory',
-  'customerFactory', 'productFactory', 'partnerFactory',
-  function ($scope, $http, companyFactory, customerFactory,
-    productFactory, partnerFactory) {
+  app.controller("CompanyController", ['$http', 'companyFactory',
+    function ($http, companyFactory) {
 
-  $scope.currentCompany= {};
-  $scope.err = null;
-  $scope.tab = 1;
-  $scope.currentCompany = getCurrentCompany();
+    this.id = null;
+    this.name = null;
+    this.customers = [];
+    this.successes = [];
+    this.stories = [];
+    this.err = null;
+    this.tab = 1;
 
-  $scope.findCustomer = function (story_id) {
-    success = $.grep($scope.currentCompany.successes, function (success) {
-      return success.id === story_id;
-    })[0];
-    customer = $.grep($scope.currentCompany.customers, function (customer) {
-      return customer.id === success.customer_id;
-    })[0];
-    return customer.name;
-  };
+    getCurrentCompany(this);
 
-  $scope.tabSelected = function (checkTab) {
-    return $scope.tab === checkTab;
-  };
+    this.getStoryCustomer = function (story) {
+      success = $.grep(this.successes, function (success) {
+        return success.id === story.success_id;
+      })[0];
+      customer = $.grep(this.customers, function (customer) {
+        return customer.id === success.customer_id;
+      })[0];
+      return customer.name;
+    };
 
-  $scope.selectTab = function (setTab) {
-    $scope.tab = setTab;
-    console.log(setTab);
-  };
+    this.tabSelected = function (checkTab) {
+      return this.tab === checkTab;
+    };
 
-  function getCurrentCompany() {
-    companyFactory.getCurrentCompany()
-      .success(function(company) {
-        $scope.currentCompany = company;
-        console.log(company);
-      })
-      .error(function(error) {
-        $scope.err = error.message;
-    });
-  }
+    this.selectTab = function (setTab) {
+      this.tab = setTab;
+    };
 
-}]);
+    function getCurrentCompany(scope) {
+      companyFactory.getCurrentCompany()
+        .success(function (company) {
+          scope.id = company.id;
+          scope.name = company.name;
+          scope.customers = company.customers;
+          scope.successes = company.successes;
+          scope.stories = company.stories;
+        })
+        .error(function (error) {
+          scope.err = error.message;
+        });
+    }
 
-app.factory('companyFactory', ['$http', function ($http) {
-  var companyFactory = {};
-  companyFactory.getCurrentCompany = function() {
-    return $http.get("/account.json");
-  };
-  return companyFactory;
-}]);
+  }]);
 
-app.factory('customerFactory', ['$http', function ($http) {
-  var customerFactory = {};
-  return customerFactory;
-}]);
+  app.factory('companyFactory', ['$http', function ($http) {
+    var companyFactory = {};
+    companyFactory.getCurrentCompany = function() {
+      return $http.get("/account.json");
+    };
+    return companyFactory;
+  }]);
 
-app.factory('productFactory', ['$http', function ($http) {
-  var productFactory = {};
-  return productFactory;
-}]);
 
-app.factory('partnerFactory', ['$http', function ($http) {
-  var partnerFactory = {};
-  return partnerFactory;
-}]);
+// Data-binding debugging tool
+// Uncomment all this and whenever an expression {{ }} is evaluated,
+// results will log to the console.
+// app.config(['$provide', function ($provide) {
+//   $provide.decorator("$interpolate", ['$delegate', function ($delegate) {
+//     var interpolateWrap = function() {
+//       var interpolationFn = $delegate.apply(this, arguments);
+//         if(interpolationFn) {
+//           return interpolationFnWrap(interpolationFn, arguments);
+//         }
+//     };
+//     var interpolationFnWrap = function(interpolationFn, interpolationArgs) {
+//       return function() {
+//         var result = interpolationFn.apply(this, arguments);
+//         var log = result ? console.log : console.warn;
+//         log.call(console, "interpolation of  " + interpolationArgs[0].trim(),
+//             ":", result.trim());
+//         return result;
+//       };
+//     };
+//     angular.extend(interpolateWrap, $delegate);
+//     return interpolateWrap;
+//   }]);
+// }]);
+
+})();

@@ -3,8 +3,8 @@
 
   <%= render 'shared/mvp_admin_navbar' %>
 
-  <div ng-app="CspApp">
-    <div ng-controller="MainCtrl" ng-init="tab = 1">
+  <div ng-app="Company">
+    <div ng-controller="CompanyController as company">
       <div class='mainnav'>
 
         <div class='container'>
@@ -18,17 +18,17 @@
           <nav class="collapse mainnav-collapse" role="navigation">
 
             <ul class="nav mainnav-menu">
-              <li ng-class="{ active:tabSelected(1) }">
-                <a ng-click="selectTab(1)"> Stories </a>
+              <li ng-class="{ active:company.tabSelected(1) }">
+                <a ng-click="company.selectTab(1)"> Stories </a>
               </li>
-              <li ng-class="{ active:tabSelected(2) }">
-                <a ng-click="selectTab(2)"> Company Settings </a>
+              <li ng-class="{ active:company.tabSelected(2) }">
+                <a ng-click="company.selectTab(2)"> Company Settings </a>
               </li>
-              <li ng-class="{ active:tabSelected(3) }">
-                <a ng-click="selectTab(3)"> Promote </a>
+              <li ng-class="{ active:company.tabSelected(3) }">
+                <a ng-click="company.selectTab(3)"> Promote </a>
               </li>
-              <li ng-class="{ active:tabSelected(4) }">
-                <a ng-click="selectTab(4)"> Reporting </a>
+              <li ng-class="{ active:company.tabSelected(4) }">
+                <a ng-click="company.selectTab(4)"> Reporting </a>
               </li>
             </ul>
           </nav>
@@ -37,7 +37,7 @@
 
       </div>  <!-- mainnav -->
 
-      <div class="content" ng-show="tabSelected(1)">
+      <div class="content" ng-show="company.tabSelected(1)">
         <div class='container'>
 
           <a href="javascript:;" class="btn btn-secondary"
@@ -45,12 +45,12 @@
             New story
           </a>&nbsp&nbsp&nbsp
 
-          <!-- interesting! check server console -->
+          <!-- http://stackoverflow.com/questions/27846985 -->
           <%# url_escaped_href = company_stories_path('{{ currentCompany.id }}')
               puts "*** #{url_escaped_href}"
               my_href = URI::unescape(url_escaped_href)
               puts "*** #{my_href}" %>
-          <% url_escaped_href = company_stories_path('{{ currentCompany.id }}')
+          <% url_escaped_href = company_stories_path('{{ company.id }}')
               my_href = URI::unescape(url_escaped_href) %>
           <a ng-href="<%= my_href %>" class="btn btn-secondary"
               style="margin-top: -25px; margin-bottom: 14px">
@@ -74,10 +74,10 @@
 
                     </thead>
                     <tbody>
-                      <tr ng-repeat="story in currentCompany.stories | orderBy:'created_at':true">
+                      <tr ng-repeat="story in company.stories | orderBy:'created_at':true">
 
                         <td class="valign-middle">
-                          {{ findCustomer(story.id) }}
+                          {{ company.getStoryCustomer(story) }}
                         </td>
 
                         <td class="valign-middle">
@@ -117,7 +117,7 @@
           </div>  <!-- row -->
         </div>  <!-- container -->
       </div>  <!-- content -->
-      <div class='content' ng-show="tabSelected(2)">
+      <div class='content' ng-show="company.tabSelected(2)">
         <div class='container'>
           <div class='row'>
             <div class='portlet portlet-default'>
@@ -128,7 +128,7 @@
           </div>  <!-- row -->
         </div>  <!-- container -->
       </div>  <!-- content -->
-      <div class='content' ng-show="tabSelected(3)">
+      <div class='content' ng-show="company.tabSelected(3)">
         <div class='container'>
           <div class='row'>
             <div class='portlet portlet-default'>
@@ -139,7 +139,7 @@
           </div>  <!-- row -->
         </div>  <!-- container -->
       </div>  <!-- content -->
-      <div class='content' ng-show="tabSelected(4)">
+      <div class='content' ng-show="company.tabSelected(4)">
         <div class='container'>
           <div class='row'>
             <div class='portlet portlet-default'>
