@@ -5,6 +5,7 @@
     "jquery-ujs": "latest",
     "rails-turbolinks": "latest",
     "angular": "latest",
+    "angular-ui-router": "latest",
     "bootstrap-sass": "latest",
     "bootstrap-validator": "latest",
     "fontawesome": "~4.4.0",

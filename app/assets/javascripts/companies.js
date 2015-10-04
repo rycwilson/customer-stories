@@ -20,18 +20,20 @@
       $("meta[name=csrf-token]").attr("content");
   }]);
 
-  app.controller("CompanyController", ['$http', 'companyFactory',
-    function ($http, companyFactory) {
+  app.controller("CompanyController", ['$http', 'companyService',
+    function ($http, companyService) {
 
-    this.id = null;
-    this.name = null;
-    this.customers = [];
-    this.successes = [];
-    this.stories = [];
-    this.err = null;
-    this.tab = 1;
+    var company = this;
 
-    getCurrentCompany(this);
+    company.id = null;
+    company.name = null;
+    company.customers = [];
+    company.successes = [];
+    company.stories = [];
+    company.err = null;
+    company.tab = 1;
+
+    getCompany();
 
     this.getStoryCustomer = function (story) {
       success = $.grep(this.successes, function (success) {
@@ -51,28 +53,34 @@
       this.tab = setTab;
     };
 
-    function getCurrentCompany(scope) {
-      companyFactory.getCurrentCompany()
-        .success(function (company) {
-          scope.id = company.id;
-          scope.name = company.name;
-          scope.customers = company.customers;
-          scope.successes = company.successes;
-          scope.stories = company.stories;
+    function getCompany() {
+      companyService.getCompany()
+        .success(function (data) {
+          company.id = data.id;
+          company.name = data.name;
+          company.customers = data.customers;
+          company.successes = data.successes;
+          company.stories = data.stories;
         })
         .error(function (error) {
-          scope.err = error.message;
+          company.err = error.message;
         });
     }
 
   }]);
 
-  app.factory('companyFactory', ['$http', function ($http) {
-    var companyFactory = {};
-    companyFactory.getCurrentCompany = function() {
-      return $http.get("/account.json");
+  app.factory('companyService', ['$http', function ($http) {
+    var companyService = {
+      company: [],
+      getCompany: getCompany
     };
-    return companyFactory;
+    return companyService;
+    function getCompany () {
+      return $http.get("/account.json")
+        .success(function (data) {
+          companyService.company = data;
+      });
+    }
   }]);
 
 

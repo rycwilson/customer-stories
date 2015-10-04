@@ -7,6 +7,7 @@ asset 'jquery'
 asset 'jquery-ujs'
 asset 'rails-turbolinks'
 asset 'angular'
+asset 'angular-ui-router'
 asset 'bootstrap-sass'
 asset 'bootstrap-validator'
 
