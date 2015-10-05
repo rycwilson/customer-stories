@@ -7,11 +7,21 @@ Rails.application.routes.draw do
   # specified/registered their company, then this route will
   # be company-specific, i.e. company_path(@company)
   # Remember to change account_path in application.rb
-  get '/account', to: 'companies#show', as: 'account'
 
-  get '/companies/:id/stories', to: 'stories#index', as: 'company_stories'
+  # json request
+  # this route needs to be separate from 'get companies/:id' because
+  # the angular js code doesn't initially know anything about the company
+  get   '/account', to: 'companies#show'
+  post  '/account', to: 'companies#create'
 
-  get '/stories/:id', to: 'stories#show', as: 'story'
+  post  '/companies', to: 'companies#create'
+  get   '/companies/new', to: 'companies#show', as: 'new_company'
+  # angular route
+  get   '/companies/:id', to: 'companies#show', as: 'company'
+  patch '/companies/:id', to: 'companies#update'
+
+  get   '/companies/:id/stories', to: 'stories#index', as: 'company_stories'
+  get   '/stories/:id', to: 'stories#show', as: 'story'
 
   devise_for :users, controllers: {
         sessions: 'users/sessions',

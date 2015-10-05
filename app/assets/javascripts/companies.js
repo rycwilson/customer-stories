@@ -30,40 +30,59 @@
     company.customers = [];
     company.successes = [];
     company.stories = [];
-    company.err = null;
     company.tab = 1;
 
     getCompany();
 
-    this.getStoryCustomer = function (story) {
-      success = $.grep(this.successes, function (success) {
+    company.create = function () {
+      companyService.createCompany(company.name)
+        .success(function (data, status) {
+          console.log('createCompany success: ', data, status);
+          company.id = data.id;
+          company.name = data.name;
+          company.tab = 1;
+        })
+        .error(function (data, status) {
+          console.log('createCompany error: ', data, status);
+        });
+      $('#new-company-submit').blur();
+    };
+
+    company.getStoryCustomer = function (story) {
+      success = $.grep(company.successes, function (success) {
         return success.id === story.success_id;
       })[0];
-      customer = $.grep(this.customers, function (customer) {
+      customer = $.grep(company.customers, function (customer) {
         return customer.id === success.customer_id;
       })[0];
       return customer.name;
     };
 
-    this.tabSelected = function (checkTab) {
-      return this.tab === checkTab;
+    company.tabSelected = function (checkTab) {
+      return company.tab === checkTab;
     };
 
-    this.selectTab = function (setTab) {
-      this.tab = setTab;
+    company.selectTab = function (setTab) {
+      company.tab = setTab;
     };
 
     function getCompany() {
       companyService.getCompany()
         .success(function (data) {
-          company.id = data.id;
-          company.name = data.name;
-          company.customers = data.customers;
-          company.successes = data.successes;
-          company.stories = data.stories;
+          if (!data.id) {
+            // new company
+            company.tab = 2;
+          }
+          else {
+            company.id = data.id;
+            company.name = data.name;
+            company.customers = data.customers;
+            company.successes = data.successes;
+            company.stories = data.stories;
+          }
         })
         .error(function (error) {
-          company.err = error.message;
+          console.log(error);
         });
     }
 
@@ -72,14 +91,21 @@
   app.factory('companyService', ['$http', function ($http) {
     var companyService = {
       company: [],
-      getCompany: getCompany
+      getCompany: getCompany,
+      createCompany: createCompany
     };
     return companyService;
     function getCompany () {
       return $http.get("/account.json")
         .success(function (data) {
           companyService.company = data;
-      });
+        });
+    }
+    function createCompany (name) {
+      return $http.post("/account.json", { company: { name: name }})
+        .success(function (data) {
+          companyService.company = data;
+        });
     }
   }]);
 

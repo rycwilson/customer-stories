@@ -6,8 +6,6 @@ class ApplicationController < ActionController::Base
   # Devise - whitelist User params
   before_action :configure_permitted_parameters, if: :devise_controller?
 
-# DL added a test comment here
-
   protected
 
   def configure_permitted_parameters
@@ -23,8 +21,9 @@ class ApplicationController < ActionController::Base
   end
 
   # change devise redirect on sign in
-  def after_sign_in_path_for(resource)
-    account_path
+  def after_sign_in_path_for(user)
+    return company_path(user.company_id) if user.company_id
+    new_company_path
   end
 
 end

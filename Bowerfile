@@ -2,6 +2,7 @@
 # Check out https://github.com/42dev/bower-rails#ruby-dsl-configuration for more options
 
 # NOTE: Using turbolinks for now, but may not be appropriate if implementing angular
+# http://stackoverflow.com/questions/14797935
 
 asset 'jquery'
 asset 'jquery-ujs'
