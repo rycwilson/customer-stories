@@ -50,11 +50,10 @@
     getCompany();
 
     company.create = function () {
+      console.log('company.create: ', company.industryTags);
       companyService.createCompany(company.name, company.industryTags)
         .success(function (data, status) {
-          console.log('createCompany success: ', data, status);
-          company.id = data.id;
-          company.name = data.name;
+          console.log(data, status);
           company.tab = 1;
         })
         .error(function (data, status) {
@@ -118,8 +117,9 @@
         });
     }
     function createCompany (name, industryTags) {
+      console.log('createCompany: ', industryTags);
       return $http.post("/account.json",
-          { company: { name: name, industry_tags: industryTags }})
+          { company: { name: name }, industry_tags: industryTags })
         .success(function (data) {
           companyService.company = data;
         });

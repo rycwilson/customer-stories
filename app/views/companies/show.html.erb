@@ -157,7 +157,7 @@
                       <ui-select multiple tagging
                           id='ind-cat-tag' class='form-control'
                           theme='bootstrap' ng-disabled="disabled"
-                          ng-model="company.industry_categories">
+                          ng-model="company.industryTags">
 
                         <ui-select-match
                             placeholder='Select from the list or type in your own' style='width:100%'>
@@ -170,6 +170,7 @@
                         </ui-select-choices>
 
                       </ui-select>
+                      {{ company.industryTags }}
                     </div>
                   </div>
 

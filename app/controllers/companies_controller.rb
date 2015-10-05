@@ -28,8 +28,17 @@ class CompaniesController < ApplicationController
   end
 
   def create
+    binding.pry
     @company = Company.new company_params
     if @company.save
+      # create the industry tags if any were entered
+      # no validations are run on these
+      if params[:industry_tags]
+        params[:industry_tags].each do |tag|
+          new_category = IndustryCategory.create(name: tag)
+          @company.industry_categories << new_category
+        end
+      end
       @company.users << current_user
       # TODO: How to display flash message with json response?
       respond_with @company
