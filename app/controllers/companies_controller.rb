@@ -19,17 +19,19 @@ class CompaniesController < ApplicationController
 
     else
       # user without registered company
-      # TODO: sending an empty object seems kinda pointless
+      # TODO: sending an empty company object seems kinda pointless
       # is there a more explicit "empty response" that's more appropriate?
       @company = Company.new
     end
-    respond_with @company, include: [:customers, :successes, :stories]
+    respond_with @company,
+      include: [:customers, :successes, :stories, :industry_categories]
   end
 
   def create
     @company = Company.new company_params
     if @company.save
       @company.users << current_user
+      # TODO: How to display flash message with json response?
       respond_with @company
     else
       render json: { error: @company.errors.messages }

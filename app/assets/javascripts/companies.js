@@ -1,5 +1,10 @@
 //= require angular/angular.min
 
+// Angular plug-ins
+//= require angular-ui-router/release/angular-ui-router.min
+//= require angular-sanitize/angular-sanitize.min
+//= require angular-ui-select/dist/select.min
+
 // MVP plug-ins
 //= require slimscroll/jquery.slimscroll.min
 //= require flot/excanvas.min
@@ -12,13 +17,21 @@
 
 (function() {
 
-  var app = angular.module("Company", []);
+  // TODO: move company settings to its own module/controller
+  var app = angular.module("Company", ['ui.router', 'ui.select', 'ngSanitize']);
 
   // Required to POST/PUT/PATCH to Rails
   app.config(["$httpProvider", function ($httpProvider) {
     $httpProvider.defaults.headers.common["X-CSRF-TOKEN"] =
       $("meta[name=csrf-token]").attr("content");
   }]);
+
+  // angular-ui-select options
+  // app.config(function (uiSelectConfig) {
+  //   uiSelectConfig.theme = 'bootstrap';
+  //   uiSelectConfig.resetSearchInput = true;
+  //   uiSelectConfig.appendToBody = true;
+  // });
 
   app.controller("CompanyController", ['$http', 'companyService',
     function ($http, companyService) {
@@ -30,12 +43,14 @@
     company.customers = [];
     company.successes = [];
     company.stories = [];
-    company.tab = 1;
+    company.industryTags = [];
+    company.preDefIndTags = ['Education', 'Government', 'Financial Services', 'Healthcare', 'Hospitality', 'Manufacturing', 'Media and Entertainment', 'Service Provider', 'Technology', 'IT', 'Telecommunications'];
+    company.tab = 2;
 
     getCompany();
 
     company.create = function () {
-      companyService.createCompany(company.name)
+      companyService.createCompany(company.name, company.industryTags)
         .success(function (data, status) {
           console.log('createCompany success: ', data, status);
           company.id = data.id;
@@ -70,7 +85,7 @@
       companyService.getCompany()
         .success(function (data) {
           if (!data.id) {
-            // new company
+            // new company, go to registration tab
             company.tab = 2;
           }
           else {
@@ -79,6 +94,7 @@
             company.customers = data.customers;
             company.successes = data.successes;
             company.stories = data.stories;
+            company.industryTags = data.industry_categories;
           }
         })
         .error(function (error) {
@@ -101,8 +117,9 @@
           companyService.company = data;
         });
     }
-    function createCompany (name) {
-      return $http.post("/account.json", { company: { name: name }})
+    function createCompany (name, industryTags) {
+      return $http.post("/account.json",
+          { company: { name: name, industry_tags: industryTags }})
         .success(function (data) {
           companyService.company = data;
         });

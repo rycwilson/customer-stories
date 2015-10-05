@@ -121,18 +121,55 @@
             <div class='portlet portlet-default'>
               <div class='portlet-body'>
 
+                <!-- TODO: client-side validation -->
                 <form name="new-company-form" class='form-horizontal col-md-6'
                     ng-submit="company.create()">
 
                   <h3>Please register your company</h3><br>
 
                   <div class='form-group'>
-                    <label for="company-name" class='col-md-3 control-label'>
+                    <label for="new-company-name" class='col-md-3 control-label'>
                       Company Name
                     </label>
                     <div class='col-md-9'>
-                      <input type="text" class="form-control" id="company-name"
+                      <input type="text" class="form-control" id="new-company-name"
                           ng-model="company.name" required>
+                    </div>
+                  </div>
+
+                  <!-- <div class='form-group'>
+                    <label for="new-company-name" class='col-md-3 control-label'>
+                      Target Industries
+                    </label>
+                    <div class='col-md-9'>
+                      <input type="text" class="form-control" id="new-company-name"
+                          ng-model="company.name" required>
+                    </div>
+                  </div> -->
+
+                  <!-- TODO: The autofill feature is a bit buggy but this will do for now -->
+                  <div class='form-group'>
+                    <label for="ind-cat-tag" class='col-md-3 control-label'>
+                      Industries Served
+                    </label>
+                    <div class='col-md-9'>
+
+                      <ui-select multiple tagging
+                          id='ind-cat-tag' class='form-control'
+                          theme='bootstrap' ng-disabled="disabled"
+                          ng-model="company.industry_categories">
+
+                        <ui-select-match
+                            placeholder='Select from the list or type in your own' style='width:100%'>
+                          {{ $item }}
+                        </ui-select-match>
+
+                        <ui-select-choices
+                            repeat="tag in company.preDefIndTags | filter: $select.search">
+                          {{ tag }}
+                        </ui-select-choices>
+
+                      </ui-select>
                     </div>
                   </div>
 
