@@ -45,7 +45,7 @@
     company.stories = [];
     company.industryTags = [];
     company.preDefIndTags = ['Education', 'Government', 'Financial Services', 'Healthcare', 'Hospitality', 'Manufacturing', 'Media and Entertainment', 'Service Provider', 'Technology', 'IT', 'Telecommunications'];
-    company.tab = 2;
+    company.tab = 1;
 
     getCompany();
 
