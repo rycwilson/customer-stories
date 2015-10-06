@@ -26,6 +26,29 @@
       $("meta[name=csrf-token]").attr("content");
   }]);
 
+  // TODO: angular-ui-router
+  app.config(["$stateProvider", "$urlRouterProvider",
+      function ($stateProvider, $urlRouterProvider) {
+    // $urlRouterProvider.otherwise('/home');
+
+    // $stateProvider
+    //     // HOME STATES AND NESTED VIEWS ========================================
+    //     .state('dashboard', {
+    //         url: '/account',
+    //         templateUrl: 'companies/show.html.erb'
+    //     })
+    //     // ABOUT PAGE AND MULTIPLE NAMED VIEWS =================================
+    //     .state('show-stories', {
+    //         // we'll get to this in a bit
+    //     })
+    //     .state('show-story', {
+    //         // we'll get to this in a bit
+    //     })
+    //     .state('edit-story', {
+    //         // we'll get to this in a bit
+    //     });
+  }]);
+
   // angular-ui-select options
   // app.config(function (uiSelectConfig) {
   //   uiSelectConfig.theme = 'bootstrap';
@@ -50,7 +73,6 @@
     getCompany();
 
     company.create = function () {
-      console.log('company.create: ', company.industryTags);
       companyService.createCompany(company.name, company.industryTags)
         .success(function (data, status) {
           console.log(data, status);
@@ -117,7 +139,6 @@
         });
     }
     function createCompany (name, industryTags) {
-      console.log('createCompany: ', industryTags);
       return $http.post("/account.json",
           { company: { name: name }, industry_tags: industryTags })
         .success(function (data) {

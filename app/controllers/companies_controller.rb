@@ -9,14 +9,13 @@ class CompaniesController < ApplicationController
       # returning user / regstered company
       @company = Company.find params[:id]
 
-    # TODO: allow angular app to access instance variables,
+    # TODO (maybe): allow angular app to access instance variables,
     # so the current_user.company check isn't necessary,
-    # i.e. no json get request for an unregistered company
+    # i.e. no json GET request for an unregistered company (pointless)
     # http://spin.atomicobject.com/2013/11/22/pass-rails-data-angularjs/
     elsif params[:format] == 'json' && current_user.company
-      # json request. TODO: auth token
+      # json request/response. TODO: auth token
       @company = current_user.company
-
     else
       # user without registered company
       # TODO: sending an empty company object seems kinda pointless
@@ -30,15 +29,14 @@ class CompaniesController < ApplicationController
   def create
     @company = Company.new company_params
     if @company.save
+      @company.users << current_user
       # create the industry tags if any were entered
       # no validations are run on these
       if params[:industry_tags]
         params[:industry_tags].each do |tag|
-          new_category = IndustryCategory.create(name: tag)
-          @company.industry_categories << new_category
+          @company.industry_categories << IndustryCategory.create(name: tag)
         end
       end
-      @company.users << current_user
       # TODO: How to display flash message with json response?
       respond_with @company
     else
