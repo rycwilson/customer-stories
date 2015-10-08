@@ -181,16 +181,17 @@
                   </label>
                   <div class='col-md-9'>
                     <div class='row'>
-                      <div class='col-md-6'>
+                      <div class='col-md-5'>
                         <input type="file" id='new-company-logo'
                             ng-model='company.newLogo' base-sixty-four-input>
                       </div>
-                      <div class='col-md-6'>
+                      <div class='col-md-7'>
 
                         <!-- if the logo has changed, display the scope data: -->
                         <div ng-show='company.newLogo'>
-                          <img data-ng-src="data:image/png;base64,{{company.newLogo.base64}}"
-                              alt="" style='width:100px; border:1px solid #CCC'>
+                          <img data-ng-src="data:image/png;base64,
+                              {{company.newLogo.base64}}" alt=""
+                              style='width:100px; border:1px solid #CCC'>
                         </div>
 
                         <!-- if no change, let Rails display it: -->
@@ -199,6 +200,7 @@
                           <%= image_tag @company.logo.url(:thumb),
                               style:'border: 1px solid #CCC' %>
                         </div>
+
                       </div>
                   </div>
 
