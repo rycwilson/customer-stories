@@ -21,4 +21,5 @@ class StoriesController < ApplicationController
 
   def destroy
   end
+
 end

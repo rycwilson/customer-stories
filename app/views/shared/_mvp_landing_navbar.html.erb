@@ -3,23 +3,30 @@
 
     <div class="navbar-header">
 
-      <%= image_tag 'mvp-admin/csp_logo.png',
+      <%= image_tag 'mvp-landing/csp_logo.png',
           { class: 'navbar-brand navbar-brand-img', alt: 'CSP Logo' } %>
 
       <button class="navbar-toggle" type="button"
               data-toggle="collapse" data-target=".navbar-collapse">
         <span class="sr-only">Toggle navigation</span>
-        <i class="fa fa-cog"></i>
+        <i class="fa fa-bars"></i>
       </button>
 
     </div> <!-- /.navbar-header -->
 
     <nav class="collapse navbar-collapse" role="navigation">
 
-      <%= render '/shared/mvp_admin_navbar_nav' %>
+      <% if current_user %>
+
+        <%= render '/shared/mvp_admin_navbar_nav' %>
+
+      <% else %>
+
+        <%= render '/shared/mvp_landing_navbar_nav' %>
+
+      <% end %>
 
     </nav>
 
   </div> <!-- /.container -->
-
 </header>
