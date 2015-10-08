@@ -22,13 +22,20 @@ class CompaniesController < ApplicationController
       # is there a more explicit "empty response" that's more appropriate?
       @company = Company.new
     end
+    # @response = {
+    #   company: @company,
+    #   logo: @logo
+    # }
     respond_with @company,
       include: [:customers, :successes, :stories, :industry_categories]
   end
 
   def create
-    @company = Company.new company_params
+    @company = Company.new
+    @company.name = company_params[:name]
+    @company.logo = decode_base64
     if @company.save
+      binding.pry
       @company.users << current_user
       # create the industry tags if any were entered
       # no validations are run on these
@@ -50,7 +57,25 @@ class CompaniesController < ApplicationController
   private
 
   def company_params
-    params.require(:company).permit(:name)
+    params.require(:company).permit(:name, :logo)
+  end
+
+  def decode_base64
+    # decode base64 string
+    Rails.logger.info 'decoding base64 file'
+    decoded_data = Base64.decode64(params[:company][:logo][:base64])
+    # create 'file' understandable by Paperclip
+    data = StringIO.new(decoded_data)
+    data.class_eval do
+      attr_accessor :content_type, :original_filename
+    end
+
+    # set file properties
+    data.content_type = params[:company][:logo][:filetype]
+    data.original_filename = params[:company][:logo][:filename]
+
+    # return data to be used as the attachment file (paperclip)
+    data
   end
 
 end

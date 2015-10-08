@@ -11,6 +11,7 @@ asset 'angular'
 asset 'angular-ui-router'
 asset 'angular-sanitize'
 asset 'angular-ui-select'
+asset 'angular-base64-upload'
 asset 'bootstrap-sass'
 asset 'bootstrap-validator'
 

@@ -38,6 +38,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 gem 'bower-rails'
 gem 'devise'
 gem 'responders'
+gem "paperclip", "~> 4.3"
 
 group :development, :test do
 

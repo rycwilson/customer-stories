@@ -4,6 +4,7 @@
 //= require angular-ui-router/release/angular-ui-router.min
 //= require angular-sanitize/angular-sanitize.min
 //= require angular-ui-select/dist/select.min
+//= require angular-base64-upload/src/angular-base64-upload
 
 // MVP plug-ins
 //= require slimscroll/jquery.slimscroll.min
@@ -17,8 +18,8 @@
 
 (function() {
 
-  // TODO: move company settings to its own module/controller
-  var app = angular.module("Company", ['ui.router', 'ui.select', 'ngSanitize']);
+  var app = angular.module("Company", ['ui.router', 'ui.select', 'ngSanitize',
+            'naif.base64']);
 
   // Required to POST/PUT/PATCH to Rails
   app.config(["$httpProvider", function ($httpProvider) {
@@ -56,13 +57,14 @@
   //   uiSelectConfig.appendToBody = true;
   // });
 
-  app.controller("CompanyController", ['$http', 'companyService',
-    function ($http, companyService) {
+  app.controller("CompanyController",
+      ['companyFactory', function (companyFactory) {
 
     var company = this;
 
     company.id = null;
     company.name = null;
+    company.logo = null;
     company.customers = [];
     company.successes = [];
     company.stories = [];
@@ -70,15 +72,23 @@
     company.preDefIndTags = ['Education', 'Government', 'Financial Services', 'Healthcare', 'Hospitality', 'Manufacturing', 'Media and Entertainment', 'Service Provider', 'Technology', 'IT', 'Telecommunications'];
     company.tab = 1;
 
+    company.newLogo = null;
+
     getCompany();
 
     company.create = function () {
-      companyService.createCompany(company.name, company.industryTags)
+      console.log('company.newLogo: ', company.newLogo);
+      companyFactory.createCompany(company.name,
+                                   company.newLogo,
+                                   company.industryTags)
         .success(function (data, status) {
-          console.log(data, status);
+          console.log('createCompany success: ', data, status);
           company.tab = 1;
+          company.newLogo = null;
         })
         .error(function (data, status) {
+          // this returns null (data) and -1 (status)
+          // TODO: send helpful error response from server
           console.log('createCompany error: ', data, status);
         });
       $('#new-company-submit').blur();
@@ -103,19 +113,26 @@
     };
 
     function getCompany() {
-      companyService.getCompany()
+      companyFactory.getCompany()
         .success(function (data) {
           if (!data.id) {
             // new company, go to registration tab
             company.tab = 2;
           }
           else {
+            console.log('data: ', data);
             company.id = data.id;
             company.name = data.name;
+            company.logo = data.logo_file_name;
             company.customers = data.customers;
             company.successes = data.successes;
             company.stories = data.stories;
             company.industryTags = data.industry_categories;
+
+            // $scope.$watch(company.logo, function (newValue, oldValue) {
+            //   console.log('logo changed');
+            //   company.newLogo = true;
+            // }, true);
           }
         })
         .error(function (error) {
@@ -125,24 +142,25 @@
 
   }]);
 
-  app.factory('companyService', ['$http', function ($http) {
-    var companyService = {
-      company: [],
+  app.factory('companyFactory', ['$http', function ($http) {
+    var companyFactory = {
+      company: {},
       getCompany: getCompany,
-      createCompany: createCompany
+      createCompany: createCompany,
     };
-    return companyService;
+    return companyFactory;
     function getCompany () {
       return $http.get("/account.json")
         .success(function (data) {
-          companyService.company = data;
+          companyFactory.company = data;
         });
     }
-    function createCompany (name, industryTags) {
+    function createCompany (name, logo, industryTags) {
       return $http.post("/account.json",
-          { company: { name: name }, industry_tags: industryTags })
+          { company: { name: name, logo: logo },
+             industry_tags: industryTags })
         .success(function (data) {
-          companyService.company = data;
+          companyFactory.company = data;
         });
     }
   }]);
