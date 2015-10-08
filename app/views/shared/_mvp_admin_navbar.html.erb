@@ -3,8 +3,18 @@
 
     <div class="navbar-header">
 
-      <%= image_tag 'mvp-admin/csp_logo.png',
-          { class: 'navbar-brand navbar-brand-img', alt: 'CSP Logo' } %>
+      <% if current_user.company.logo_file_name %>
+
+        <%= image_tag current_user.company.logo.url(:thumb),
+            { class: 'navbar-brand navbar-brand-img',
+                alt: 'Company Logo' } %>
+
+      <% else %>
+
+        <%= image_tag 'mvp-admin/csp_logo.png',
+            { class: 'navbar-brand navbar-brand-img', alt: 'CSP Logo' } %>
+
+      <% end %>
 
       <button class="navbar-toggle" type="button"
               data-toggle="collapse" data-target=".navbar-collapse">
@@ -21,5 +31,4 @@
     </nav>
 
   </div> <!-- /.container -->
-
 </header>

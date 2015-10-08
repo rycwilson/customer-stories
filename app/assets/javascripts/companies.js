@@ -1,6 +1,6 @@
-//= require angular/angular.min
 
 // Angular plug-ins
+//= require angular/angular.min
 //= require angular-ui-router/release/angular-ui-router.min
 //= require angular-sanitize/angular-sanitize.min
 //= require angular-ui-select/dist/select.min
@@ -8,12 +8,7 @@
 
 // MVP plug-ins
 //= require slimscroll/jquery.slimscroll.min
-//= require flot/excanvas.min
-//= require flot/jquery.flot
-//= require flot/jquery.flot.pie
-//= require flot/jquery.flot.resize
-//= require flot/jquery.flot.time
-//= require flot.tooltip/js/jquery.flot.tooltip
+//= require magnific-popup/dist/jquery.magnific-popup.min
 //= require mvpready-admin
 
 (function() {

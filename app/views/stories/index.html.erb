@@ -1,28 +1,36 @@
 <div id='wrapper'>
-<%= render 'shared/mvp_landing_navbar' %>
+<%= render 'shared/mvp_admin_navbar' %>
 <div class="content">
 <div class="container">
 
-<div class="masthead">
-  <div class="container">
-    <h1 class="masthead-subtitle">
-      Customers
-    </h1>
-  </div>
+<!-- .mainnav class puts the fading graphic underneath the headline -->
+<div class="mainnav" style="color:#999999; margin-top:20px">
+  <h2 style="margin-left:20px">Customers</h2>
 </div>
 
+<div class="portlet portlet-default">
+  <div class="portlet-body">
 
-      </div> <!-- /.container -->
+    <% @stories.each_slice(5) do |stories_row| %>
+      <div class='container row' style='margin: 0 auto'>
+        <% stories_row.each do |story| %>
 
-    </div> <!-- /.masthead -->
+          <div class="col-md-2 text-center" style='margin-left:26px'>
+            <div class="thumbnail">
+              <!-- <div class="thumbnail-view"> -->
 
-  <div class="portlet portlet-default">
-    <div class="portlet-header">
-      <div class="portlet-body">
+               <img src="https://logo.clearbit.com/<%= story.success.customer.name %>.com" >
 
-      </div>
-    </div>
-  </div>
+              <!-- </div> -->
+            </div> <!-- /.thumbnail -->
+          </div> <!-- /.col -->
+
+        <% end %>
+      </div><br><br>
+    <% end %>
+
+  </div>  <!-- portlet-body -->
+</div>  <!-- portlet -->
 
 </div>  <!-- container -->
 </div>  <!-- content -->
