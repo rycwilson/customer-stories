@@ -11,15 +11,19 @@
 <div class="portlet portlet-default">
   <div class="portlet-body">
 
+    <!-- TODO: Make this responsive -->
     <% @stories.each_slice(5) do |stories_row| %>
       <div class='container row' style='margin: 0 auto'>
         <% stories_row.each do |story| %>
 
           <div class="col-md-2 text-center" style='margin-left:26px'>
-            <div class="thumbnail">
+            <div class="thumbnail" style='position:relative'>
               <!-- <div class="thumbnail-view"> -->
 
-               <img src="https://logo.clearbit.com/<%= story.success.customer.name %>.com" >
+              <img src="<%= asset_path('video.png') %>" alt="video tag"
+                  style='position:absolute; height:25px; left:130px'>
+
+              <img src="https://logo.clearbit.com/<%= story.success.customer.name %>.com" style='height:95px'  >
 
               <!-- </div> -->
             </div> <!-- /.thumbnail -->
