@@ -3,18 +3,11 @@
 
     <div class="navbar-header">
 
-      <% if current_user.company.logo_file_name %>
+      <% if current_user.company_id %>
 
         <%= image_tag current_user.company.logo.url(:thumb),
             { class: 'navbar-brand navbar-brand-img',
                 alt: 'Company Logo' } %>
-
-      <!-- this one is temporary for demo only -->
-      <% elsif current_user.company.name == 'Cisco' %>
-
-        <%= image_tag 'https://logo.clearbit.com/cisco.com',
-            { class: 'navbar-brand navbar-brand-img',
-                alt: 'Cisco Logo' } %>
 
       <% else %>
 

@@ -35,7 +35,6 @@ class CompaniesController < ApplicationController
     @company.name = company_params[:name]
     @company.logo = decode_base64
     if @company.save
-      binding.pry
       @company.users << current_user
       # create the industry tags if any were entered
       # no validations are run on these

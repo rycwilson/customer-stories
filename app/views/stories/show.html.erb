@@ -1,1 +1,40 @@
 <%= render 'shared/mvp_admin_navbar' %>
+
+<div class='container'>
+
+  <%= render 'shared/social_sharing' %>
+
+  <div class= 'col-md-3' style='margin-top:15px'>
+    <div class='row'>
+      <div class='col-md-11 text-center'>
+        <img src="https://logo.clearbit.com/<%= @story.success.customer.name %>.com"    style="height:180px; width:180px">
+      </div>
+    </div>
+  </div>
+
+  <div class= 'col-md-5' style='margin-top:15px'>
+    <div class='row'>
+      <div class='col-md-11'>
+        <div class='content'>
+          <!-- <div class='heading-block heading-minimal heading-center'> -->
+            <p class='lead'><em>
+              "<%= @story.quote %>"
+            </em></p><br>
+            <div class='row'>
+              <div class='col-md-11 text-right'>
+                <p>- <%= @story.quote_attr %></p>
+              </div>
+            </div>
+          <!-- </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class= 'col-md-4' style='margin-top:15px'>
+    <div class='row'>
+      <iframe width="320" height="180" src="<%= @story.embed_url %>" frameborder="0" allowfullscreen></iframe>
+    </div>
+  </div>
+
+</div>

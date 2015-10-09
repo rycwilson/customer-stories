@@ -6,13 +6,15 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-Company.destroy_all
+# Company.destroy_all
 Customer.destroy_all
 Story.destroy_all
 
-cisco = Company.create(name:'Cisco')
+# cisco = Company.create(name:'Cisco')
 
-cisco.users << User.find_by(email:'joe@mail.com')
+# cisco.users << User.find_by(email:'joe@mail.com')
+
+cisco = Company.find_by(name:'Cisco')
 
 Customer.create(name:'Ebay')
 Customer.create(name:'Google')
@@ -32,12 +34,13 @@ Customer.all.each do |customer|
     customer.successes << success
     success.story = Story.create(
                  title:FFaker::Lorem.sentence,
-                 quote:FFaker::Company.bs,
+                 quote:FFaker::Lorem.sentences.join(" "),
             quote_attr:FFaker::Name.name << ", " << FFaker::Company.position,
              situation:FFaker::Lorem.paragraph,
              challenge:FFaker::Lorem.paragraph,
               solution:FFaker::Lorem.paragraph,
-               results:FFaker::Lorem.paragraph)
+               results:FFaker::Lorem.paragraph,
+             embed_url:"https://www.youtube.com/embed/hecXupPpE9o")
   end
 end
 
