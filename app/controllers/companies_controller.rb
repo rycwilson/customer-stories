@@ -1,6 +1,6 @@
 class CompaniesController < ApplicationController
 
-  respond_to :html, :json
+  # respond_to :html, :json
 
   # GET /company/:id.html (open Company Admin dashboard - Angular SPA)
   # GET /account.json (serve up company/account data)
@@ -26,8 +26,15 @@ class CompaniesController < ApplicationController
     #   company: @company,
     #   logo: @logo
     # }
-    respond_with @company,
-      include: [:customers, :successes, :stories, :industry_categories]
+    respond_to do |format|
+      format.html
+      format.json { render json: @company.to_json(
+                     methods: [:logo_url],
+                     include: [:customers, :successes, :stories,
+                               :industry_categories, :product_categories] ) }
+    end
+    # respond_with @company,
+    #   include: [:customers, :successes, :stories, :industry_categories]
   end
 
   def create
@@ -43,8 +50,18 @@ class CompaniesController < ApplicationController
           @company.industry_categories << IndustryCategory.create(name: tag)
         end
       end
+      if params[:product_tags]
+        params[:product_tags].each do |tag|
+          @company.product_categories << ProductCategory.create(name: tag)
+        end
+      end
       # TODO: How to display flash message with json response?
-      respond_with @company
+      # Note: respond_to format is necessary here, else the response is:
+      #   NoMethodError at /account.json
+      #   -> due to the inclusion of the logo_url method
+      respond_to do |format|
+        format.json { render json: @company.to_json(methods: [:logo_url]) }
+      end
     else
       render json: { error: @company.errors.messages }
     end
@@ -55,8 +72,10 @@ class CompaniesController < ApplicationController
 
   private
 
+  # Note the syntax necessary for logo (nested attributes)
   def company_params
-    params.require(:company).permit(:name, :logo)
+    params.require(:company).permit(:name,
+        logo: [:filetype, :filename, :filesize, :base64])
   end
 
   def decode_base64

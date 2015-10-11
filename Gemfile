@@ -37,7 +37,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'bower-rails'
 gem 'devise'
-gem 'responders'
+gem 'omniauth'
+gem 'omniauth-linkedin'
 gem "paperclip", "~> 4.3"
 
 group :development, :test do
@@ -45,6 +46,7 @@ group :development, :test do
   gem 'pry-rails'
   gem 'better_errors'
   gem 'ffaker'
+  gem 'figaro'
   gem 'rspec-rails'
   gem 'capybara-rails'
 
