@@ -4,7 +4,8 @@
 *
 * ========================================================
 *
-* File: mvpready-landing.css, mvpready-landing-*.css
+* File: mvpready-
+anding.css, mvpready-landing-*.css
 * Theme Version: 2.1.0
 * Bootstrap Version: 3.3.5
 * Author: Jumpstart Themes
@@ -15,7 +16,7 @@ body {
   padding: 0;
   margin: 0;
   font-family: 'Open Sans', 'Trebuchet MS', arial, sans-serif;
-  font-size: 13px;
+  font-size: 15px;
 }
 p {
   line-height: 1.7em;
@@ -2317,6 +2318,8 @@ ul.blog-stats > li > a:hover .blog-stats-mark {
   padding: 0 10px;
   margin-bottom: 30px;
   padding-left: 60px;
+  /*csp add*/
+  font-size: 20px;
 }
 .feature-sm-icon {
   position: absolute;
@@ -2324,8 +2327,19 @@ ul.blog-stats > li > a:hover .blog-stats-mark {
   left: 0;
   font-size: 40px;
 }
+/*CSP add*/
+.feature-lg-icon {
+  margin: auto;
+  width: 60%;
+  font-size: 80px;
+  padding: 40px;
+}
 .feature-sm-label {
   font-size: 18px;
+}
+.feature-lg-label {
+  /*csp changed from 36px to 40px*/
+    font-size: 40px;
 }
 .feature-sm-content {
   color: #777;
@@ -2956,7 +2970,8 @@ br.xs-100 {
   width: 100%;
   padding-top: 0;
   padding-bottom: 0;
-  background-color: #314657;
+/* csp add.  Old was: background-color: #314657;*/
+ background-color: #85CEE6;
   border-bottom: 1px solid #ddd;
 }
 .masthead iframe {
@@ -2971,6 +2986,7 @@ h6.masthead-title {
   font-family: 'Open Sans', 'Trebuchet MS', arial, sans-serif;
   font-weight: 600;
   letter-spacing: -1px;
+  
 }
 h1.masthead-title {
   font-size: 56px;
@@ -3126,7 +3142,8 @@ h6.masthead-title {
 .footer {
   padding: 35px 0 0;
   color: #ffffff;
-  background: #314657;
+  /*csp add*/
+  background: #85CEE6;
 }
 .footer a {
   color: #93acc2;
@@ -3156,9 +3173,11 @@ h6.masthead-title {
 }
 .copyright {
   padding: 20px 0;
-  color: #ffffff;
+ /*csp add*/
+  color: #8ba6bd;
   line-height: 59px;
-  background: #2d3f4f;
+  /*csp add*/
+  background: #ffffff;
 }
 .copyright:before,
 .copyright:after {
