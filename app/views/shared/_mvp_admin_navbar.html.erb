@@ -6,7 +6,7 @@
       <!-- this conditional logic is necessary until all routes are
       encapsulated in the angular app -->
       <% if params[:controller] == 'companies' %>
-
+        <!-- angular -->
         <img ng-show="company.logo_path"
             ng-src="{{ company.logo_path }}" alt="paperclip logo"
             class='navbar-brand navbar-brand-img'
@@ -16,7 +16,7 @@
             style='height:54px'>
 
       <% else %>
-
+        <!-- no angular -->
         <%= image_tag current_user.company.logo.url(:thumb),
             { class: 'navbar-brand navbar-brand-img', alt: 'CSP Logo' } %>
 
@@ -29,6 +29,8 @@
       </button>
 
     </div> <!-- /.navbar-header -->
+
+    <%= render 'shared/flash' %>
 
     <nav class="collapse navbar-collapse" role="navigation">
 

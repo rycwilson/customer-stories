@@ -14,7 +14,7 @@
 
 (function() {
 
-  var app = angular.module("Company", ['ui.router', 'ui.select', 'ngSanitize',
+  var app = angular.module("CspApp", ['ui.router', 'ui.select', 'ngSanitize',
             'naif.base64']);
 
   // Required to POST/PUT/PATCH to Rails
@@ -53,7 +53,7 @@
   //   uiSelectConfig.appendToBody = true;
   // });
 
-  app.controller("CompanyController",
+  app.controller("MainCtrl",
       ['companyFactory', function (companyFactory) {
 
     var company = this;

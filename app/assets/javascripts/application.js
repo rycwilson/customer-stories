@@ -15,6 +15,12 @@
 //= require bootstrap-sass/assets/javascripts/bootstrap.min
 //= require mvpready-core
 //= require mvpready-helpers
+//= require_self
+
+// flash messaging
+setTimeout(function () {
+  $('#flash').slideUp();
+}, 3000);
 
 
 
