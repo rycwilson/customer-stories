@@ -1,8 +1,9 @@
 <div id='wrapper' ng-app="Company">
 
-  <%= render 'shared/mvp_admin_navbar' %>
-
   <div ng-controller="CompanyController as company">
+
+    <%= render 'shared/mvp_admin_navbar' %>
+
     <div class='mainnav'>
       <div class='container'>
 
@@ -122,7 +123,7 @@
             <div class='portlet-body'>
 
               <!-- TODO: client-side validation -->
-              <form name="new-company-form" class='form-horizontal col-md-6'
+              <form name="new-company-form" class='form-horizontal col-md-7'
                   ng-submit="company.create()">
 
                 <h3>Please register your company</h3><br>
@@ -176,6 +177,35 @@
                   </div>
                 </div>
 
+                <!-- TODO: The autofill feature is a bit buggy but this will do for now -->
+                <div class='form-group'>
+                  <label for="prod-cat-tag" class='col-md-3 control-label'>
+                    Product Categories
+                  </label>
+                  <div class='col-md-9'>
+
+                    <ui-select multiple tagging
+                        id='prod-cat-tag' class='form-control'
+                        theme='bootstrap' ng-disabled="disabled"
+                        ng-model="company.productTags">
+
+                      <ui-select-match
+                          placeholder='Select from the list or type in your own' style='width:100%'>
+                        <!-- $item.name is the model -->
+                        <!-- $item is from preDefIndTags[...] -->
+                        {{ $item.name || $item }}
+                      </ui-select-match>
+
+                      <ui-select-choices
+                          repeat="tag in company.preDefProdTags | filter: $select.search">
+                        {{ tag }}
+                      </ui-select-choices>
+
+                    </ui-select>
+
+                  </div>
+                </div>
+
                 <div class='form-group'>
                   <label for="new-company-logo" class='col-md-3 control-label'>
                     Logo
@@ -187,19 +217,20 @@
                             ng-model='company.newLogo' base-sixty-four-input>
                       </div>
                       <div class='col-md-7'>
-
-                        <!-- if the logo has changed, display the scope data: -->
-                        <div ng-show='company.newLogo'>
+                        <!-- if a new logo has been selected, display it -->
+                        <div ng-show="company.newLogo">
                           <img data-ng-src="data:image/png;base64,
-                              {{company.newLogo.base64}}" alt=""
+                              {{ company.newLogo.base64 }}" alt="uploaded logo"
                               style='width:100px; border:1px solid #CCC'>
                         </div>
 
-                        <!-- if no change, let Rails display it: -->
-                        <!-- only display when editing company settings -->
-                        <div ng-show='!company.newLogo'>
-                          <%= image_tag @company.logo.url(:thumb),
-                              style:'border: 1px solid #CCC' %>
+                        <!-- display the existing logo -->
+                        <div ng-hide='company.newLogo'>
+                          <img ng-src="{{ company.logo_path }}" alt="paperclip logo"
+                              ng-show="company.logo_path"
+                              style='width:100px; border: 1px solid #CCC'>
+                          <img ng-hide="company.logo_path"
+                            ng-src="<%= asset_path 'companies/thumb/missing_logo.png' %>">
                         </div>
 
                       </div>

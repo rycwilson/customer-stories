@@ -4,6 +4,7 @@
 //= require angular-ui-router/release/angular-ui-router.min
 //= require angular-sanitize/angular-sanitize.min
 //= require angular-ui-select/dist/select.min
+//= require ng-tags-input/ng-tags-input
 //= require angular-base64-upload/src/angular-base64-upload
 
 // MVP plug-ins
@@ -60,25 +61,34 @@
     company.id = null;
     company.name = null;
     company.logo = null;
+    company.logo_path = null;
     company.customers = [];
     company.successes = [];
     company.stories = [];
     company.industryTags = [];
     company.preDefIndTags = ['Education', 'Government', 'Financial Services', 'Healthcare', 'Hospitality', 'Manufacturing', 'Media and Entertainment', 'Service Provider', 'Technology', 'IT', 'Telecommunications'];
+    company.productTags = [];
+    company.preDefProdTags = [];
     company.tab = 1;
 
     company.newLogo = null;
 
     getCompany();
 
+    company.checkLogoPath = function () {
+      return company.logo_path;
+    };
+
     company.create = function () {
-      console.log('company.newLogo: ', company.newLogo);
       companyFactory.createCompany(company.name,
                                    company.newLogo,
-                                   company.industryTags)
+                                   company.industryTags,
+                                   company.productTags)
         .success(function (data, status) {
           console.log('createCompany success: ', data, status);
           company.tab = 1;
+          company.logo_path = data.logo_url;
+          console.log('logo_path: ', company.logo_path);
           company.newLogo = null;
         })
         .error(function (data, status) {
@@ -119,10 +129,13 @@
             company.id = data.id;
             company.name = data.name;
             company.logo = data.logo_file_name;
+            company.logo_path = data.logo_url;
+            console.log('logo_path: ', company.logo_path);
             company.customers = data.customers;
             company.successes = data.successes;
             company.stories = data.stories;
             company.industryTags = data.industry_categories;
+            company.productTags = data.product_categories;
 
             // $scope.$watch(company.logo, function (newValue, oldValue) {
             //   console.log('logo changed');
@@ -150,10 +163,11 @@
           companyFactory.company = data;
         });
     }
-    function createCompany (name, logo, industryTags) {
+    function createCompany (name, logo, industryTags, productTags) {
       return $http.post("/account.json",
           { company: { name: name, logo: logo },
-             industry_tags: industryTags })
+             industry_tags: industryTags,
+             product_tags: productTags })
         .success(function (data) {
           companyFactory.company = data;
         });
@@ -164,6 +178,7 @@
 // Data-binding debugging tool
 // Uncomment all this and whenever an expression {{ }} is evaluated,
 // results will log to the console.
+// WARNING: This can sometimes break things
 // app.config(['$provide', function ($provide) {
 //   $provide.decorator("$interpolate", ['$delegate', function ($delegate) {
 //     var interpolateWrap = function() {
