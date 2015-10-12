@@ -88,7 +88,6 @@
           console.log('createCompany success: ', data, status);
           company.tab = 1;
           company.logo_path = data.logo_url;
-          console.log('logo_path: ', company.logo_path);
           company.newLogo = null;
         })
         .error(function (data, status) {
@@ -130,7 +129,6 @@
             company.name = data.name;
             company.logo = data.logo_file_name;
             company.logo_path = data.logo_url;
-            console.log('logo_path: ', company.logo_path);
             company.customers = data.customers;
             company.successes = data.successes;
             company.stories = data.stories;
