@@ -1,7 +1,5 @@
 class CompaniesController < ApplicationController
 
-  # respond_to :html, :json
-
   # GET /company/:id.html (open Company Admin dashboard - Angular SPA)
   # GET /account.json (serve up company/account data)
   def show
@@ -22,10 +20,6 @@ class CompaniesController < ApplicationController
       # is there a more explicit "empty response" that's more appropriate?
       @company = Company.new
     end
-    # @response = {
-    #   company: @company,
-    #   logo: @logo
-    # }
     respond_to do |format|
       format.html
       format.json { render json: @company.to_json(
@@ -33,8 +27,6 @@ class CompaniesController < ApplicationController
                      include: [:customers, :successes, :stories,
                                :industry_categories, :product_categories] ) }
     end
-    # respond_with @company,
-    #   include: [:customers, :successes, :stories, :industry_categories]
   end
 
   def create
@@ -74,8 +66,8 @@ class CompaniesController < ApplicationController
 
   # Note the syntax necessary for logo (nested attributes)
   def company_params
-    params.require(:company).permit(:name,
-        logo: [:filetype, :filename, :filesize, :base64])
+    params.require(:company)
+          .permit(:name, logo: [:filetype, :filename, :filesize, :base64])
   end
 
   def decode_base64

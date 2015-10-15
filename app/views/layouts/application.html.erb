@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
-<html>
+<html ng-app="CspApp">
 <head>
   <title>Customer Stories</title>
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
@@ -21,21 +21,16 @@
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,600italic,800,800italic">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald:400,300,700">
 </head>
-<body>
+<body ng-controller="MainCtrl as company">
 
-  <!-- Flash messaging -->
-  <% flash.each do |type, msg| %>
-    <!-- type: success, info, warning, danger -->
-    <!-- devise uses built-in types notice and alert -->
-    <% if msg.is_a?(String) %>
-      <% type = 'success' if type == 'notice' %>
-      <% type = 'danger' if type == 'alert' %>
-      <div class="text-center alert alert-<%= type %>" role="alert">
-        <button type="button" class="close" data-dismiss="alert"
-                aria-hidden="true">&times;</button>
-        <%= content_tag :div, msg, :id => "flash_#{type}" %>
-      </div>
-    <% end %>
+  <% if current_user %>  <!-- mvp admin -->
+
+    <%= render 'shared/mvp_admin_navbar' %>
+
+  <% else %>  <!-- mvp landing -->
+
+    <%= render 'shared/mvp_landing_navbar' %>
+
   <% end %>
 
   <%= yield %>

@@ -1,0 +1,19 @@
+<!-- flash messaging -->
+<% flash.each do |type, msg| %>
+  <!-- type: success, info, warning, danger -->
+  <!-- devise uses built-in types notice and alert,
+        map those to bootstrap -->
+  <% if msg.is_a?(String) %>
+    <% type = 'success' if type == 'notice' %>
+    <% type = 'danger' if type == 'alert' %>
+    <div id='flash'
+         class="col-md-6 col-md-offset-2 text-center alert alert-<%= type %>"
+         role="alert"
+         style='z-index:1; position:fixed; width:55%'>
+      <button type="button" class="close" data-dismiss="alert"
+              aria-hidden="true">&times;</button>
+      <%= content_tag :div, msg, :id => "flash_#{type}" %>
+    </div>
+  <% end %>
+
+<% end %>
