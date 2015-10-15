@@ -1573,7 +1573,7 @@ fieldset[disabled] .btn-transparent.active {
   height: 70px;
   padding: 15px 5px;
   text-align: center;
-  background-color: #344a5c;
+  background-color: #85CEE6;
   border-bottom: solid 1px #dddddd;
 }
 .pricing-table-head-title {
@@ -2333,6 +2333,13 @@ ul.blog-stats > li > a:hover .blog-stats-mark {
   width: 60%;
   font-size: 80px;
   padding: 40px;
+}
+/*CSP add*/
+.feature-linkedin {
+  position: relative;
+  padding:  15px;
+  margin-bottom: 0px;
+  padding-left: 0px;
 }
 .feature-sm-label {
   font-size: 18px;

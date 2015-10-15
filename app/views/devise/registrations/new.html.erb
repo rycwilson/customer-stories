@@ -6,12 +6,7 @@
   <%= render 'shared/mvp_landing_navbar' %>
 
   <div class="masthead">
-    <div class="container">
-      <h1 class="masthead-subtitle">
-        Signup
-      </h1>
-    </div> <!-- /.container -->
-  </div> <!-- /.masthead -->
+
 
   <div class="content">
     <div class="container">
@@ -21,7 +16,6 @@
 
           <h3>Get Started with a Free Account.</h3>
 
-          <h5>Sign up in 30 seconds. No credit card required.</h5>
 
           <%= form_for(resource, as: resource_name,
                       url: registration_path(resource_name),
@@ -73,11 +67,16 @@
               </label>
             </div> --> <!-- /.form-group -->
 
+
             <div class="form-group">
               <%= button_tag(type: 'submit', tabindex: '6',
                   class: "btn btn-secondary btn-block btn-lg") do %>
                 Create My Account &nbsp; <i class="fa fa-play-circle"></i>
               <% end %>
+            </div>
+
+            <div class="form-group">
+              Please review the <a href="/tos">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>. By creating an account you are agreeing to these terms and conditions.
             </div>
 
           <% end %>
@@ -91,11 +90,12 @@
         </div> <!-- /.account-footer -->
 
       </div> <!-- /.account-wrapper -->
-      <br><br><br>
+   
     </div> <!-- /.container -->
   </div> <!-- /.content -->
 </div> <!-- /#wrapper -->
 
-<%= render "devise/shared/links" %>
 
+<%= render "devise/shared/links" %>
+</div>
 <%= render 'shared/csp_landing_footer' %>

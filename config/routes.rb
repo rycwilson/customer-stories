@@ -1,7 +1,16 @@
 Rails.application.routes.draw do
 
   root 'site#index'
-
+  get '/product' => 'site#product'
+  get '/plans' => 'site#plans'
+  get '/csp' => 'site#csp'
+  get '/team' => 'site#team'
+  get '/tos' => 'site#tos'
+  get '/privacy' => 'site#privacy'
+      
+  
+  
+  
   # json request...
   # this route needs to be separate from 'get companies/:id' because
   # the angular js code doesn't initially know anything about the company
