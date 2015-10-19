@@ -9,6 +9,7 @@
 # Company.destroy_all
 Customer.destroy_all
 Story.destroy_all
+Story_visitors.destroy_all
 
 # cisco = Company.create(name:'Cisco')
 
@@ -29,15 +30,9 @@ Customer.create(name:'Sprint')
 
 Customer.all.each do |customer|
   cisco.customers << customer
-
+  10.times do
     success = Success.create()
     customer.successes << success
-            10.times do
-            success.visitors << Visitor.create(
-                    organization: FFaker::Company.name,
-                    city: FFaker::AddressUS.city,
-                    state: FFaker::AddressUS.state_abbr )    
-              end
     success.story = Story.create(
                  title:FFaker::Lorem.sentence,
                  quote:FFaker::Lorem.sentences.join(" "),
@@ -47,10 +42,16 @@ Customer.all.each do |customer|
               solution:FFaker::Lorem.paragraphs.join(" "),
                results:FFaker::Lorem.paragraphs.join(" "),
              embed_url:"https://www.youtube.com/embed/hecXupPpE9o")
- 
-
-
+  end
+    100.times do
+    visitor = Visitor.create()
+    successes.vistors << visitor
+    visitor.success = Visitor.create(
+            organization:FFaker::Company.name,
+            location:FFaker::AddressUS.city << ", " << FFaker::Address.state_abbr)
+  end
 end
+
 
 
 
