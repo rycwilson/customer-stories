@@ -48,4 +48,8 @@ Rails.application.configure do
 
   # paperclip search path
   Paperclip.options[:command_path] = "/usr/local/bin/"
+  
+  # allow render on local network
+  config.web_console.whitelisted_ips = '73.231.35.0/16'
+  
 end

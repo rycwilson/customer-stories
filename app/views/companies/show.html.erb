@@ -12,7 +12,7 @@
 
         <ul class="nav mainnav-menu">
           <li ng-class="{ active:company.tabSelected(1) }">
-            <a ng-click="company.selectTab(1)"> Stories </a>
+            <a ng-click="company.selectTab(1)"> Curate </a>
           </li>
           <li ng-class="{ active:company.tabSelected(2) }"
               class='pull-right'>
@@ -22,7 +22,7 @@
             <a ng-click="company.selectTab(3)"> Promote </a>
           </li>
           <li ng-class="{ active:company.tabSelected(4) }">
-            <a ng-click="company.selectTab(4)"> Reporting </a>
+            <a ng-click="company.selectTab(4)"> Measure </a>
           </li>
         </ul>
 
@@ -264,7 +264,64 @@
       <div class='row'>
         <div class='portlet portlet-default'>
           <div class='portlet-body'>
-            Reporting
+                  <div class="portlet portlet-default">
+
+
+<!-- Section for Measure and Reporting -->
+        <div class="portlet-header">
+          <h4 class="portlet-title">
+            <u>Customer Story Readers</u>
+          </h4>
+        </div> <!-- /.portlet-header -->
+
+        <div class="portlet-body">
+
+          <table 
+            class="table table-striped table-bordered table-hover ui-datatable" 
+            data-ajax="https://jumpstartthemes.com/demo/v/2.1.0/global/js/demos/json/table_data.json"
+            data-global-search="true"
+            data-length-change="true"
+            data-info="true"
+            data-paging="true"
+            data-page-length="10"
+          >
+            <thead>
+              <tr>
+                <th data-filterable="text">Name</th>
+                <th data-filterable="select" data-sortable="true" data-sort-order="2">Position</th>
+                <th data-filterable="select" data-sortable="true" data-sort-order="2">Office</th>
+                <th>Extn</th>
+                <th data-sortable="true">Start Date</th>
+                <th data-sortable="true" data-sort-order="1" data-direction="desc">Salary</th>
+              </tr>
+            </thead>
+            <tbody>
+              
+            </tbody>
+            <tfoot>
+              <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Extn</th>
+                <th>Start Date</th>
+                <th>Salary</th>
+              </tr>
+            </tfoot>
+          </table>
+
+        </div> <!-- /.portlet-body -->
+
+<!-- END Section for Measure and Reporting -->
+
+      </div> <!-- /.portlet -->
+
+
+
+      <br>
+            
+            
+            
           </div>
         </div>
       </div>  <!-- row -->
