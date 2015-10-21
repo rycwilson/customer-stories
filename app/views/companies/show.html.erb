@@ -11,7 +11,7 @@
       <nav class="collapse mainnav-collapse" role="navigation">
 
         <ul class="nav mainnav-menu">
-          <li ng-class="{ active:company.tabSelected(1) }">
+          <li ng-class="{ active:company.tabSelected(5) }">
             <a ng-click="company.selectTab(5)"> Pipeline </a>
           </li>
           <li ng-class="{ active:company.tabSelected(1) }">
@@ -314,6 +314,64 @@
           </table>
 
         </div> <!-- /.portlet-body -->
+
+      <div class='row'>
+        <div class='portlet portlet-default '>
+          <div class='portlet-body'>
+            <div class='table-responsive'>
+              <table class="table table-striped table-bordered thumbnail-table">
+                <thead>
+
+                  <tr>
+                    <th>Organization</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Visit Date</th>
+                    <th>Actions</th>
+                  </tr>
+
+                </thead>
+                <tbody>
+                  <tr ng-repeat="visitor in company.visitors | orderBy:'created_at':true">
+
+                    <td class="valign-middle">
+                      {{ company.getVisitorOrganization(visitor) }}
+                    </td>
+
+                    <td class="valign-middle">
+                      {{ visitor.city }}
+                    </td>
+
+                    <td class="valign-middle">
+                      {{ visitor.state }}
+                    </td>
+
+                    <td class="valign-middle">
+                      <!-- TODO: Story (or Success) needs a publish_date -->
+                      <!-- dummy data for now -->
+                      <%= Date.parse(FFaker::Time.date).strftime("%m/%d/%Y") %>
+                    </td>
+
+                    
+                    <td class="text-center valign-middle">
+                      <button class="btn btn-xs btn-primary">
+                        <i class="fa fa-pencil"></i>
+                      </button>&nbsp;
+                      <button class="btn btn-xs btn-secondary">
+                        <i class="fa fa-times"></i>
+                      </button>
+                    </td>
+
+                  </tr>
+                </tbody>
+              </table>
+            </div>  <!-- table-responsive -->
+          </div>  <!-- portlet-body -->
+        </div>  <!-- portlet -->
+      </div>  <!-- row -->
+    </div>  <!-- container -->
+
+
 
 <!-- END Section for Measure and Reporting -->
 

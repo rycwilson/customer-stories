@@ -11,6 +11,7 @@
 //= require slimscroll/jquery.slimscroll.min
 //= require magnific-popup/dist/jquery.magnific-popup.min
 //= require mvpready-admin
+//= require datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min
 
 (function() {
 

@@ -232,7 +232,7 @@ DEPENDENCIES
   omniauth
   omniauth-linkedin
   paperclip (~> 4.3)
-  pg
+  pg (~> 0.18.2)
   pry-rails
   rails (= 4.2.1)
   rspec-rails
