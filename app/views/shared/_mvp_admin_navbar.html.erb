@@ -1,23 +1,15 @@
 <header class="navbar" role="banner">
   <div class="container">
-
     <div class="navbar-header">
 
-      <!-- this conditional logic is necessary until all routes are
-      encapsulated in the angular app -->
-      <% if params[:controller] == 'companies' %>
-        <!-- angular -->
-        <img ng-show="company.logo_path"
-            ng-src="{{ company.logo_path }}" alt="paperclip logo"
-            class='navbar-brand navbar-brand-img'
-            style='height:54px'>
-        <img ng-hide="company.logo_path"
-            ng-src="<%= asset_path 'companies/thumb/missing_logo.png' %>"
-            style='height:54px'>
+      <% if current_user.company_id %>  <!-- company is registered -->
+
+        <%= image_tag current_user.company.logo.url(:thumb),
+              { class: 'navbar-brand navbar-brand-img', alt: 'Company Logo' } %>
 
       <% else %>
-        <!-- no angular -->
-        <%= image_tag current_user.company.logo.url(:thumb),
+
+        <%= image_tag "mvp-admin/csp_logo.png",
             { class: 'navbar-brand navbar-brand-img', alt: 'CSP Logo' } %>
 
       <% end %>
@@ -37,6 +29,5 @@
       <%= render '/shared/mvp_admin_navbar_nav' %>
 
     </nav>
-
   </div> <!-- /.container -->
 </header>

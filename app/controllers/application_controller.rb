@@ -13,11 +13,6 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.for(:account_update) << :first_name
     devise_parameter_sanitizer.for(:sign_up) << :last_name
     devise_parameter_sanitizer.for(:account_update) << :last_name
-    # TODO: not sure if company_id really necessary here
-    # not present when signing up (but may be in future versions)
-    # User will likely need to create new account if change companies
-    devise_parameter_sanitizer.for(:sign_up) << :company_id
-    devise_parameter_sanitizer.for(:account_update) << :company_id
   end
 
   # change devise redirect on sign in

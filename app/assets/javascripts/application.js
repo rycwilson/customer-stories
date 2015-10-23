@@ -10,12 +10,12 @@
 // Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
 // about supported directives.
 //
-//= require jquery/dist/jquery.min
+//= require jquery/dist/jquery
 //= require jquery-ujs/src/rails
-//= require bootstrap-sass/assets/javascripts/bootstrap.min
+//= require rails-turbolinks/lib/assets/javascripts/turbolinks
+//= require bootstrap-sass/assets/javascripts/bootstrap
 //= require mvpready-core
 //= require mvpready-helpers
-//= require_self
 
 // flash messaging
 setTimeout(function () {

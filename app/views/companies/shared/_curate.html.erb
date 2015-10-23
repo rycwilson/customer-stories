@@ -1,0 +1,63 @@
+<!-- curate -->
+<div role='tabpanel' class='tab-pane content active' id='curate'>
+  <div class='container'>
+
+    <%= link_to 'New story', new_story_path,
+        { class: 'btn btn-secondary',
+          style: 'margin-top: -25px; margin-bottom: 14px' }  %>
+
+    <%= link_to 'Public stories index', company_stories_path(@company),
+        { class: 'btn btn-secondary',
+          style: 'margin-top: -25px; margin-bottom: 14px' } %>
+
+    <div class='row'>
+      <div class='portlet portlet-default '>
+        <div class='portlet-body'>
+          <div class='table-responsive'>
+            <table class="table table-striped table-bordered thumbnail-table">
+              <thead>
+                <tr>
+                  <th>Customer</th>
+                  <th>Title</th>
+                  <th>Publish Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+
+                <% @company.stories.each do |story| %>
+
+                  <tr>
+                    <td class='valign-middle'>
+                      <%= story.success.customer.name %>
+                    </td>
+                    <td class='valign-middle'>
+                      <%= story.title %>
+                    </td>
+                    <td class='valign-middle'>
+                      TODO: publish_date
+                    </td>
+                    <td class='valign-middle'>
+                      <%= link_to 'Pending curation', story_path(story) %>
+                    </td>
+                    <td class="text-center class='valign-middle'">
+                      <button class="btn btn-xs btn-primary">
+                        <i class="fa fa-pencil"></i>
+                      </button>&nbsp;
+                      <button class="btn btn-xs btn-secondary">
+                        <i class="fa fa-times"></i>
+                      </button>
+                    </td>
+                  </tr>
+
+                <% end %>
+
+              </tbody>
+            </table>
+          </div>  <!-- table-responsive -->
+        </div>  <!-- portlet-body -->
+      </div>  <!-- portlet -->
+    </div>  <!-- row -->
+  </div>  <!-- container -->
+</div>  <!-- curate -->

@@ -3,7 +3,7 @@
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
 <!--[if gt IE 8]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
-<html ng-app="CspApp">
+<html>
 <head>
   <title>Customer Stories</title>
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
@@ -20,10 +20,8 @@
   <!-- Google Font: Open Sans -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,600italic,800,800italic">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald:400,300,700">
-  
-  
 </head>
-<body ng-controller="MainCtrl as company">
+<body>
 
   <% if current_user %>  <!-- mvp admin -->
 
