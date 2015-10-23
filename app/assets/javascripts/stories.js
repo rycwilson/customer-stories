@@ -1,3 +1,3 @@
 //
-//= require slimscroll/jquery.slimscroll.min
+//= require slimscroll/jquery.slimscroll
 //= require mvpready-admin

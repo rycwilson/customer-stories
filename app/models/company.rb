@@ -15,9 +15,4 @@ class Company < ActiveRecord::Base
   has_attached_file :logo, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: "companies/:style/missing_logo.png"
   validates_attachment_content_type :logo, content_type: /\Aimage\/.*\Z/
 
-  # this method is needed to include the logo image with json response
-  def logo_url
-    logo.url(:thumb)
-  end
-
 end

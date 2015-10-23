@@ -32,12 +32,12 @@ Customer.all.each do |customer|
 
     success = Success.create()
     customer.successes << success
-            10.times do
-            success.visitors << Visitor.create(
-                    organization: FFaker::Company.name,
-                    city: FFaker::AddressUS.city,
-                    state: FFaker::AddressUS.state_abbr )    
-              end
+      10.times do
+      success.visitors << Visitor.create(
+              organization: FFaker::Company.name,
+              city: FFaker::AddressUS.city,
+              state: FFaker::AddressUS.state_abbr )
+      end
     success.story = Story.create(
                  title:FFaker::Lorem.sentence,
                  quote:FFaker::Lorem.sentences.join(" "),
@@ -47,8 +47,6 @@ Customer.all.each do |customer|
               solution:FFaker::Lorem.paragraphs.join(" "),
                results:FFaker::Lorem.paragraphs.join(" "),
              embed_url:"https://www.youtube.com/embed/hecXupPpE9o")
- 
-
 
 end
 

@@ -1,0 +1,46 @@
+<!-- pipeline -->
+<div role='tabpanel' class='tab-pane content' id='pipeline'>
+  <div class='container'>
+    <div class='row'>
+      <div class='portlet portlet-default'>
+
+        <div class="portlet-header">
+          <h4 class="portlet-title">
+            <u>Successes</u>
+          </h4>
+        </div> <!-- /.portlet-header -->
+
+        <div class='portlet-body'>
+
+          <% @company.successes.each do |success| %>
+
+            <table class="table table-striped table-bordered">
+              <thead>
+
+                <tr>
+                  <th>Customer</th>
+                  <th>Create Date</th>
+                  <th>Approved?</th>
+                  <th>Published?</th>
+                </tr>
+
+              </thead>
+              <tbody>
+
+                <tr>
+                  <td><%= success.customer.name %></td>
+                  <td><%= success.created_at %></td>
+                  <td><%= success.approved? %></td>
+                  <td><%= success.published? %></td>
+                </tr>
+
+              </tbody>
+            </table>
+
+          <% end %>
+
+        </div>
+      </div>  <!-- portlet -->
+    </div>  <!-- row -->
+  </div>  <!-- container -->
+</div>  <!-- pipeline
