@@ -1,0 +1,55 @@
+<!-- measure -->
+<div role='tabpanel' class='tab-pane content' id='measure'>
+  <div class='container'>
+    <div class='row'>
+      <div class='portlet portlet-default'>
+
+        <div class="portlet-header">
+          <h4 class="portlet-title">
+            <u>Story Visitors</u>
+          </h4>
+        </div>
+
+        <div class="portlet-body">
+
+          <table
+              class="table table-striped table-bordered table-hover ui-datatable"
+              data-ajax="../../global/js/demos/json/table_data.json"
+              data-global-search="true"
+              data-length-change="true"
+              data-info="true"
+              data-paging="true"
+              data-page-length="10">
+
+            <thead>
+              <tr>
+                <th data-filterable="text">Name</th>
+                <th data-filterable="select" data-sortable="true" data-sort-order="2">Position</th>
+                <th data-filterable="select" data-sortable="true" data-sort-order="2">Office</th>
+                <th>Extn</th>
+                <th data-sortable="true">Start Date</th>
+                <th data-sortable="true" data-sort-order="1" data-direction="desc">Salary</th>
+              </tr>
+            </thead>
+
+            <tbody>
+            </tbody>
+
+            <tfoot>
+              <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Extn</th>
+                <th>Start Date</th>
+                <th>Salary</th>
+              </tr>
+            </tfoot>
+
+          </table>
+
+        </div>
+      </div> <!-- portlet -->
+    </div>  <!-- row -->
+  </div>  <!-- container -->
+</div>  <!-- measure -->

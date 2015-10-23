@@ -1,20 +1,11 @@
 # A sample Bowerfile
 # Check out https://github.com/42dev/bower-rails#ruby-dsl-configuration for more options
 
-# NOTE: Using turbolinks for now, but may not be appropriate if implementing angular
-# http://stackoverflow.com/questions/14797935
-
 asset 'jquery'
 asset 'jquery-ujs'
 asset 'rails-turbolinks'
-asset 'angular'
-asset 'angular-ui-router'
-asset 'angular-sanitize'
-asset 'angular-ui-select'
-asset 'ng-tags-input'
-asset 'angular-base64-upload'
-asset 'bootstrap-sass'
-asset 'bootstrap-validator'
+asset 'select2', '~4.0.0'
+asset 'bootstrap-sass', '~> 3.3.5'
 
 # dependencies for MVP theme
 asset 'fontawesome', '~4.4.0'

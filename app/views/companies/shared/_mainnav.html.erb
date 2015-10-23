@@ -1,0 +1,67 @@
+<!-- go to Company Settings tab if new company -->
+<!-- go to Curate tab by default -->
+<% if @company.new_record? %>
+  <!-- not sure why, but <%#= javascript_tag defer: 'defer' do %> apparently
+  failed to hold off execution until DOM loaded ($ methods below weren't working)
+  using $(function () { ... }) instead seems to work -->
+  <%= javascript_tag do %>
+    $(function () {
+      $('#pipelineTab').css('pointer-events', 'none');
+      $('#curateTab').css('pointer-events', 'none');
+      $('#promoteTab').css('pointer-events', 'none');
+      $('#measureTab').css('pointer-events', 'none');
+    });
+  <% end %>
+
+<% end %>
+
+<div class='mainnav'>
+  <div class='container'>
+
+    <a class="mainnav-toggle"
+        data-toggle="collapse" data-target=".mainnav-collapse">
+      <span class="sr-only">Toggle navigation</span>
+      <i class="fa fa-bars"></i>
+    </a>
+
+    <nav class="collapse mainnav-collapse" role="navigation">
+      <ul class='nav nav-tabs mainnav-menu' role='tablist'>
+
+        <li class='navTab' id='pipelineTab' role='presentation'>
+          <a href='#pipeline' role='tab' data-toggle='tab' aria-controls='pipeline'>
+            Pipeline
+          </a>
+        </li>
+
+        <li class="<%= @company.new_record? ? 'navTab' : 'navTab active' %>"
+            id='curateTab' role='presentation'</li>
+          <a href='#curate' role='tab' data-toggle='tab' aria-controls='curate'>
+            Curate
+          </a>
+        </li>
+
+        <li class='navTab' id='promoteTab' role='presentation'>
+          <a href='#promote' role='tab' data-toggle='tab' aria-controls='promote'>
+            Promote
+          </a>
+        </li>
+
+        <li class='navTab' id='measureTab'role='presentation'>
+          <a href='#measure' role='tab' data-toggle='tab' aria-controls='measure'>
+            Measure
+          </a>
+        </li>
+
+        <li class="<%= @company.new_record? ? 'navTab active pull-right' : 'navTab pull-right' %>"
+            id='curateTab' role='presentation'</li>
+        <!-- <li class='navTab pull-right' id='settingsTab' role='presentation'> -->
+          <a href='#company-settings' role='tab' data-toggle='tab'
+              aria-controls='company-settings'>
+            Company Settings
+          </a>
+        </li>
+
+      </ul>
+    </nav>
+  </div>  <!-- container -->
+</div>  <!-- mainnav -->
