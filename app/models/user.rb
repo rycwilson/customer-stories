@@ -2,10 +2,11 @@
 # use Bootstrap Validator on client side if necessary
 class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
+  # :lockable, :timeoutable and :omniauthable
+  #  removed  :confirmable, so it works on heroku until we have email service set up
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
-         :confirmable, :lockable
+        :lockable
 
   belongs_to :company
 end

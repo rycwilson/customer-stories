@@ -21,16 +21,16 @@ class CompaniesController < ApplicationController
       @company.users << current_user
       # create the industry tags if any were entered
       # no validations are run on these
-      unless params[:industry_tags].empty?
-        params[:industry_tags].each do |tag|
-          @company.industry_categories << IndustryCategory.create(name: tag)
-        end
-      end
-      unless params[:product_tags].empty?
-        params[:product_tags].each do |tag|
-          @company.product_categories << ProductCategory.create(name: tag)
-        end
-      end
+   #   unless params[:industry_tags].empty?
+    #    params[:industry_tags].each do |tag|
+     #     @company.industry_categories << IndustryCategory.create(name: tag)
+      #  end
+    #  end
+    #  unless params[:product_tags].empty?
+    #    params[:product_tags].each do |tag|
+     #     @company.product_categories << ProductCategory.create(name: tag)
+      #  end
+    #  end
       redirect_to company_path(@company), flash: { success: "Registered company ok" }
     else
       flash.now[:danger] = "There was a problem"

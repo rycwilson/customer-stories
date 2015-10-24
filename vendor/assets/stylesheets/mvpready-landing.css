@@ -2331,7 +2331,7 @@ ul.blog-stats > li > a:hover .blog-stats-mark {
 .feature-lg-icon {
   margin: auto;
   width: 60%;
-  font-size: 80px;
+  font-size: 300%;
   padding: 40px;
 }
 /*CSP add*/
