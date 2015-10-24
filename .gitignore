@@ -13,5 +13,6 @@
 /tmp
 
 vendor/assets/bower_components
-config/database.yml
+# including db yml file for C9 to Heroku postgres deploy
+# config/database.yml
 public/system
