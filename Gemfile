@@ -4,7 +4,6 @@ source 'https://rubygems.org'
 #  see Bowerfile
 #  run rake bower:install to install assets listed in Bowerfile
 
-
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.1'
 # Use postgresql as the database for Active Record
@@ -17,19 +16,16 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.1.0'
 
 gem 'bower-rails'
+gem 'figaro'
 gem 'devise'
 gem 'omniauth'
 gem 'omniauth-linkedin'
 gem "paperclip", "~> 4.3"
 gem 'ffaker'
 
-
 group :production do
 
   gem 'rails_12factor'
-
-  # Use Capistrano for deployment
-  # gem 'capistrano-rails', group: :development
 
 end
 
@@ -37,9 +33,6 @@ group :development, :test do
 
   gem 'pry-rails'
   gem 'better_errors'
-  gem 'figaro'
-  gem 'rspec-rails'
-  gem 'capybara-rails'
 
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'

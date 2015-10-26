@@ -3,7 +3,6 @@
 //= require magnific-popup/dist/jquery.magnific-popup
 //= require datatables-plugins/integration/bootstrap/3/dataTables.bootstrap
 //= require mvpready-admin
-//= require datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min
 
 // Industry and Product tagging inputs
 //= require select2/dist/js/select2
