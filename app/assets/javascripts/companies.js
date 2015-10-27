@@ -1,7 +1,7 @@
 // MVP plug-ins
 //= require slimscroll/jquery.slimscroll
 //= require magnific-popup/dist/jquery.magnific-popup
-//= require datatables/media/js/jquery.dataTables.js
+//= require datatables/media/js/jquery.dataTables
 //= require datatables-plugins/integration/bootstrap/3/dataTables.bootstrap
 //= require mvpready-admin
 
