@@ -7,7 +7,6 @@ Rails.application.routes.draw do
   get '/team' => 'site#team'
   get '/tos' => 'site#tos'
   get '/privacy' => 'site#privacy'
-  get '/beta' => 'site#beta'
 
   post  '/companies', to: 'companies#create'
   get   '/companies/new', to: 'companies#new', as: 'new_company'
