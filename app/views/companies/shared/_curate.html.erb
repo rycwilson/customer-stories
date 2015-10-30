@@ -2,9 +2,12 @@
 <div role='tabpanel' class='tab-pane content active' id='curate'>
   <div class='container'>
 
-    <%= link_to 'New story', new_story_path,
-        { class: 'btn btn-secondary',
-          style: 'margin-top: -25px; margin-bottom: 14px' }  %>
+    <!-- new story modal -->
+    <button type="button" class="btn btn-secondary"
+        style='margin-top: -25px; margin-bottom: 14px'
+        data-toggle="modal" data-target="#new-story-modal">
+      New story
+    </button>
 
     <%= link_to 'Public stories index', company_stories_path(@company),
         { class: 'btn btn-secondary',
@@ -61,3 +64,65 @@
     </div>  <!-- row -->
   </div>  <!-- container -->
 </div>  <!-- curate -->
+
+<!-- new story modal -->
+<!-- NOTE tabIndex = -1 must be removed for select2 to work in the modal -->
+<div class="modal fade" id="new-story-modal" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">New Customer Story</h4>
+      </div>
+      <div class="modal-body">
+
+        <%= form_tag company_stories_path, class: 'form-horizontal' do %>
+
+          <div class='form-group required-input' style=''>
+            <%= label_tag 'Customer', nil, class: 'col-md-3 control-label' %>
+            <div class='col-md-9'>
+
+              <!-- select with javascript -->
+              <%#= javascript_tag do %>
+               <!--  $(function () {
+                  $(".new-story-customer").select2({
+                    data: <%#= raw @customers_select %>
+                  });
+                }); -->
+              <%# end %>
+              <!--  <select id='customer' class='new-story-customer form-control'>
+              </select> -->
+
+              <!-- select with ruby/rails -->
+              <%= select_tag :customer,
+                  options_for_select(@customers_select),
+                  class: 'new-story-customer form-control',
+                  placeholder: 'Select a customer',
+                  style: 'width: 100%' %>
+
+            </div>
+          </div>
+
+          <div class='form-group required-input'>
+            <%= label_tag :title, nil, class: 'col-md-3 control-label' %>
+            <div class='col-md-9'>
+              <%= text_field_tag :title, nil, class: 'form-control' %>
+            </div>
+          </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+          Cancel
+        </button>
+
+          <%= submit_tag 'Create Story', class: 'btn btn-primary' %>
+
+        <% end %>  <!-- form_for -->
+
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal

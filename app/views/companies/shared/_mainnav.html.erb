@@ -27,36 +27,38 @@
     <nav class="collapse mainnav-collapse" role="navigation">
       <ul class='nav nav-tabs mainnav-menu' role='tablist'>
 
-        <li class='navTab' id='pipelineTab' role='presentation'>
+        <li class='navTab' id='pipelineTab' role='presentation'
+            style='margin-bottom: 0px'>
           <a href='#pipeline' role='tab' data-toggle='tab' aria-controls='pipeline'>
             Pipeline
           </a>
         </li>
 
         <li class="<%= @company.new_record? ? 'navTab' : 'navTab active' %>"
-            id='curateTab' role='presentation'</li>
+            id='curateTab' role='presentation' style='margin-bottom: 0px'>
           <a href='#curate' role='tab' data-toggle='tab' aria-controls='curate'>
             Curate
           </a>
         </li>
 
-        <li class='navTab' id='promoteTab' role='presentation'>
+        <li class='navTab' id='promoteTab' role='presentation'
+            style='margin-bottom: 0px'>
           <a href='#promote' role='tab' data-toggle='tab' aria-controls='promote'>
             Promote
           </a>
         </li>
 
-        <li class='navTab' id='measureTab'role='presentation'>
+        <li class='navTab' id='measureTab'role='presentation'
+            style='margin-bottom: 0px'>
           <a href='#measure' role='tab' data-toggle='tab' aria-controls='measure'>
             Measure
           </a>
         </li>
 
-        <li class="<%= @company.new_record? ? 'navTab active pull-right' : 'navTab pull-right' %>"
-            id='curateTab' role='presentation'</li>
-        <!-- <li class='navTab pull-right' id='settingsTab' role='presentation'> -->
+        <li class="<%= @company.new_record? ? 'navTab active pull-right' : 'navTab  pull-right' %>"
+            id='curateTab' role='presentation' style='margin-bottom: 0px'>
           <a href='#company-settings' role='tab' data-toggle='tab'
-              aria-controls='company-settings'>
+              aria-controls='company-settings '>
             Company Settings
           </a>
         </li>

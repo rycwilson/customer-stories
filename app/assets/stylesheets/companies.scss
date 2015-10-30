@@ -7,8 +7,12 @@
 *= require mvpready-admin
 *= require datatables-plugins/integration/bootstrap/3/dataTables.bootstrap
 *= require select2/dist/css/select2
+*= require select2-bootstrap-theme/dist/select2-bootstrap
 */
 
-.nav-tabs > li {
-  margin-bottom: 0px;
+.required-input label:after {
+
+  color: #D9534F;
+  content: " *";
+
 }

@@ -10,7 +10,17 @@ class CompaniesController < ApplicationController
 
   # GET /companies/:id
   def show
-    @company = Company.includes({ successes: [:customer] }, :stories).find params[:id]
+    @company = Company.includes(:customers, :successes, :stories).find params[:id]
+
+    # options for new story customer select
+    @customers_select = @company.customers.map do |customer|
+      [ customer.name, customer.id ]
+    end
+    # necessary for placeholder to have an empty option in front
+    @customers_select.unshift( ["", ""] )
+    # if sending the options to javascript use .to_json:
+    # .to_json
+
     # hard-coded industry tags (for now)
     @industry_cats = ['Education', 'Government', 'Financial Services', 'Healthcare', 'Hospitality', 'Manufacturing', 'Media and Entertainment', 'Service Provider', 'Technology', 'IT', 'Telecommunications'];
   end
