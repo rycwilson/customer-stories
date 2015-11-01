@@ -4,6 +4,13 @@
 <div id="wrapper">
 
   <div class="masthead">
+            <div class="container">
+      <hr class="spacer-sm">
+    <div class="col-md-10 masthead-text animated fadeInDownBig col-lg-offset-1">
+                <h5 class="masthead-title">Customer Stories is in beta.  For more information please <a href="mailto:info@customerstories.net" class="btn btn-primary">Contact Us</a></h5>
+
+</div>
+      </div> <!-- /.container -->
 
 
   <div class="content">
@@ -38,6 +45,12 @@
               <%= f.text_field :last_name, { class: 'form-control',
                   id: 'signup-last-name', tabindex: '3' } %>
             </div>
+            
+            <div class="form-group">
+                <%= f.label :Beta_signup_code %><br />
+              <%= f.text_field :sign_up_code, { class: 'form-control',
+                  id: 'sign_up_code', tabindex: '3' } %>
+            </div>
 
             <div class="form-group">
               <%= f.label :password %>
@@ -56,7 +69,7 @@
                   id: 'signup-pw-conf', tabindex: '5', autocomplete: "off" } %>
             </div>
 
-            <!-- <div class="form-group">
+        <!--     <div class="form-group">
               <label class="checkbox-inline">
               <input type="checkbox" name="agree" tabindex="6"> I agree to the
               <a href="javascript:;" target="_blank">Terms of Service</a>

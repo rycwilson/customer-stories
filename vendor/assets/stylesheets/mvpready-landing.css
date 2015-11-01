@@ -1570,7 +1570,8 @@ fieldset[disabled] .btn-transparent.active {
   margin-bottom: 3em;
 }
 .pricing-table-head {
-  height: 70px;
+ /* # CSP change from 70 to 80 */
+  height: 80px;
   padding: 15px 5px;
   text-align: center;
   background-color: #85CEE6;
@@ -1610,7 +1611,8 @@ fieldset[disabled] .btn-transparent.active {
   line-height: 0px;
 }
 .pricing-table-index {
-  margin-top: 120px;
+  /* CSP changed from 120 to 130 */
+  margin-top: 130px;
   font-weight: 600;
 }
 .pricing-table-index .pricing-table-content {
@@ -2331,7 +2333,7 @@ ul.blog-stats > li > a:hover .blog-stats-mark {
 .feature-lg-icon {
   margin: auto;
   width: 60%;
-  font-size: 80px;
+  font-size: 300%;
   padding: 40px;
 }
 /*CSP add*/

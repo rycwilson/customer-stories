@@ -8,7 +8,6 @@ Rails.application.routes.draw do
   get '/tos' => 'site#tos'
   get '/privacy' => 'site#privacy'
 
-
   post  '/companies', to: 'companies#create'
   get   '/companies/new', to: 'companies#new', as: 'new_company'
   get   '/companies/:id', to: 'companies#show', as: 'company'
