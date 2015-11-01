@@ -1,6 +1,9 @@
 class ProductCategory < ActiveRecord::Base
 
+  validates :name, presence: true, uniqueness: true
+
   belongs_to :company
-  validates :company, presence: true
+  has_many :product_cats_successes
+  has_many :successes, through: :product_cats_successes
 
 end

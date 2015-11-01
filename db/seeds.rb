@@ -9,45 +9,50 @@
 # Company.destroy_all
 Customer.destroy_all
 Story.destroy_all
+Product.destroy_all
+ProductCategory.destroy_all
+IndustryCategory.destroy_all
 
-# cisco = Company.create(name:'Cisco')
-
-# cisco.users << User.find_by(email:'joe@mail.com')
+# Cisco must be registered before running this...
 
 cisco = Company.find_by(name:'Cisco')
 
-Customer.create(name:'Ebay')
-Customer.create(name:'Google')
-Customer.create(name:'Microsoft')
-Customer.create(name:'Twitter')
-Customer.create(name:'IBM')
-Customer.create(name:'Amazon')
-Customer.create(name:'Facebook')
-Customer.create(name:'Verizon')
-Customer.create(name:'ATT')
-Customer.create(name:'Sprint')
+# Cisco's target industries...
+['Automotive', 'Education', 'Energy', 'Financial Services', 'Government', 'Healthcare', 'Hospitality', 'Life Sciences', 'Manufacturing', 'Retail', 'Sports and Entertainment', 'Transportation'].each do |industry_category|
+  cisco.industry_categories << IndustryCategory.create(name: industry_category)
+end
 
-Customer.all.each do |customer|
+# Cisco's product categories and products...
+['Servers', 'Switches', 'Routers', 'Networking Software', 'Security', 'Storage', 'Video'].each do |category_name|
+  cisco.product_categories << ProductCategory.create(name: category_name)
+end
+['UCS C3160', 'Nexus 7004', 'Catalyst 6807', 'ISR 4400', 'ASR 1001', 'IOS XR 5.1', 'AnyConnect 4.1', 'MDS 9500'].each do |product_name|
+  cisco.products << Product.create(name: product_name)
+end
+
+# Customers...
+['Ebay', 'Google', 'Microsoft', 'Twitter', 'IBM', 'Amazon', 'Facebook', 'Verizon', 'ATT', 'Sprint'].each do |customer_name|
+  customer = Customer.create(name: customer_name)
   cisco.customers << customer
-
-    success = Success.create()
-    customer.successes << success
-      10.times do
-      success.visitors << Visitor.create(
-              organization: FFaker::Company.name,
-              city: FFaker::AddressUS.city,
-              state: FFaker::AddressUS.state_abbr )
-      end
-    success.story = Story.create(
-                 title:FFaker::Lorem.sentence,
-                 quote:FFaker::Lorem.sentences.join(" "),
-            quote_attr:FFaker::Name.name << ", " << FFaker::Company.position,
-             situation:FFaker::Lorem.paragraphs.join(" "),
-             challenge:FFaker::Lorem.paragraphs.join(" "),
-              solution:FFaker::Lorem.paragraphs.join(" "),
-               results:FFaker::Lorem.paragraphs.join(" "),
-             embed_url:"https://www.youtube.com/embed/hecXupPpE9o")
-
+  success = Success.create()
+  customer.successes << success
+  # each success has some visitors
+  10.times do
+    success.visitors << Visitor.create(
+          organization: FFaker::Company.name,
+          city: FFaker::AddressUS.city,
+          state: FFaker::AddressUS.state_abbr )
+  end
+  # each success has a story
+  success.story = Story.create(
+               title:FFaker::Lorem.sentence,
+               quote:FFaker::Lorem.sentences.join(" "),
+          quote_attr:FFaker::Name.name << ", " << FFaker::Company.position,
+           situation:FFaker::Lorem.paragraphs.join(" "),
+           challenge:FFaker::Lorem.paragraphs.join(" "),
+            solution:FFaker::Lorem.paragraphs.join(" "),
+             results:FFaker::Lorem.paragraphs.join(" "),
+           embed_url:"https://www.youtube.com/embed/hecXupPpE9o")
 end
 
 

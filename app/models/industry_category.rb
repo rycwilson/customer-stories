@@ -1,6 +1,8 @@
 class IndustryCategory < ActiveRecord::Base
 
   belongs_to :company
-  validates :company, presence: true
+
+  has_many :industries_successes
+  has_many :successes, through: :industries_successes
 
 end

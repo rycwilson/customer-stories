@@ -10,15 +10,20 @@
 
 $(function () {
 
-  $(".new-story-customer").select2({
+  $(".new-story").select2({
     theme: "bootstrap",
-    placeholder: "Select a customer",
     allowClear: true
-  });
+  }).select2('val', '0');  // default selection is an empty entry
 
   $(".tags").select2({
     theme: "bootstrap",
     tags: true
+  });
+
+  // reset new story modal form
+  $('.modal').on('hidden.bs.modal', function () {
+    $(this).find('form')[0].reset();  // clears the title field
+    $('.new-story').select2('val', '0');  // clears the select2 inputs
   });
 
 });

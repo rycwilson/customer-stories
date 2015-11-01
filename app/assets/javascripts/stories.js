@@ -1,5 +1,11 @@
 //= require slimscroll/jquery.slimscroll
 //= require mvpready-admin
+//= require bootstrap-switch/dist/js/bootstrap-switch
 
-// Company select input
-//= require select2/dist/js/select2
+$(function () {
+
+  $('#publish-logo').bootstrapSwitch();
+  $('#publish-story').bootstrapSwitch();
+
+});
+

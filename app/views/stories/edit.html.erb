@@ -1,2 +1,30 @@
-<h1>Stories#edit</h1>
-<p>Find me in app/views/stories/edit.html.erb</p>
+<div class='container'>
+<%= console %>
+  <div class='row text-center'>
+
+    <div class="col-md-8 text-right">
+      <%= link_to 'Preview', story_path(@story),
+          class: 'btn btn-secondary', style: 'margin-top: 15px' %>
+    </div>
+
+    <div class="col-md-4">
+
+    </div>
+  </div>
+
+  <div class= 'col-md-3' style='margin-top:15px'>
+    <div class='row'>
+      <div class='col-md-11 text-center'>
+        <img src="https://logo.clearbit.com/<%= @story.success.customer.name %>.com"
+            style="height:180px; width:180px">
+      </div>
+    </div>
+  </div>
+
+  <input type="checkbox" id='publish-logo'>
+
+  <input type="checkbox" id='publish-story'>
+</div>
+
+
+
