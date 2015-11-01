@@ -42,8 +42,8 @@ class StoriesController < ApplicationController
   private
 
   # Only necessary for mass assignment on db action create or update
-  # def tale_params
-  #   params.require(:tale).permit(:customer, :title,
+  # def story_params
+  #   params.require(:story).permit(:customer, :title,
   #       # note the tag arrays explicitly set as such, else they won't be permitted
   #       industry_tags: [], product_cat_tags: [], product_tags: [])
   # end
