@@ -12,6 +12,18 @@
 !/log/.keep
 /tmp
 
+# front-end dependencies
 vendor/assets/bower_components
-# config/database.yml
+
+# database configuration (environment-specific)
+config/database.yml
+
+# figaro-managed credentials
+config/application.yml
+
+# paperclip images
 public/system
+
+# pre-compiled assets
+public/assets
+tmp/cache
