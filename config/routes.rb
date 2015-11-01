@@ -21,7 +21,7 @@ Rails.application.routes.draw do
 
   devise_for :users, controllers: {
       sessions: 'users/sessions',
-      registrations: 'users/registrations'
+      registrations: 'users/registrations',
     }
 
   get     '/profile', to: 'profile#show'

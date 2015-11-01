@@ -9,11 +9,4 @@ $(document).on 'page:change', ->
     clicky.log( document.location.pathname + document.location.search, document.title, 'pageview' );
 
     
-    // Javascript
-$(document).on('page:change', function() {
- if (window._gaq != null) {
-  return _gaq.push(['_trackPageview']);
- } else if (window.pageTracker != null) {
-  return pageTracker._trackPageview();
- }
-});
+
