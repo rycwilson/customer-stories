@@ -1,8 +1,10 @@
 class Product < ActiveRecord::Base
 
-  belongs_to :company
-
   validates :name, presence: true, uniqueness: true
-  validates :description, presence: true
+  # validates :description, presence: true
+
+  belongs_to :company
+  has_many :products_successes
+  has_many :successes, through: :products_successes
 
 end

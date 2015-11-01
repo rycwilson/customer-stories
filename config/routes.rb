@@ -15,9 +15,10 @@ Rails.application.routes.draw do
   get   '/companies/:id/edit', to: 'companies#edit', as: 'edit_company'
 
   get   '/companies/:id/stories', to: 'stories#index', as: 'company_stories'
-
-  get   '/stories/new', to: 'stories#new', as: 'new_story'
+  post  '/companies/:id/stories', to: 'stories#create'
+  get   '/companies/:id/stories/new', to: 'stories#new', as: 'new_company_story'
   get   '/stories/:id', to: 'stories#show', as: 'story'
+  get   '/stories/:id/edit', to: 'stories#edit', as: 'edit_story'
 
   devise_for :users, controllers: {
       sessions: 'users/sessions',

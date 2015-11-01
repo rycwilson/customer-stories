@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151019181439) do
+ActiveRecord::Schema.define(version: 20151031203742) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,6 +36,16 @@ ActiveRecord::Schema.define(version: 20151019181439) do
 
   add_index "customers", ["company_id"], name: "index_customers_on_company_id", using: :btree
 
+  create_table "industries_successes", force: :cascade do |t|
+    t.integer  "industry_category_id"
+    t.integer  "success_id"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+  end
+
+  add_index "industries_successes", ["industry_category_id"], name: "index_industries_successes_on_industry_category_id", using: :btree
+  add_index "industries_successes", ["success_id"], name: "index_industries_successes_on_success_id", using: :btree
+
   create_table "industry_categories", force: :cascade do |t|
     t.string   "name"
     t.integer  "company_id"
@@ -54,6 +64,16 @@ ActiveRecord::Schema.define(version: 20151019181439) do
 
   add_index "product_categories", ["company_id"], name: "index_product_categories_on_company_id", using: :btree
 
+  create_table "product_cats_successes", force: :cascade do |t|
+    t.integer  "success_id"
+    t.integer  "product_category_id"
+    t.datetime "created_at",          null: false
+    t.datetime "updated_at",          null: false
+  end
+
+  add_index "product_cats_successes", ["product_category_id"], name: "index_product_cats_successes_on_product_category_id", using: :btree
+  add_index "product_cats_successes", ["success_id"], name: "index_product_cats_successes_on_success_id", using: :btree
+
   create_table "products", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
@@ -63,6 +83,16 @@ ActiveRecord::Schema.define(version: 20151019181439) do
   end
 
   add_index "products", ["company_id"], name: "index_products_on_company_id", using: :btree
+
+  create_table "products_successes", force: :cascade do |t|
+    t.integer  "success_id"
+    t.integer  "product_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "products_successes", ["product_id"], name: "index_products_successes_on_product_id", using: :btree
+  add_index "products_successes", ["success_id"], name: "index_products_successes_on_success_id", using: :btree
 
   create_table "stories", force: :cascade do |t|
     t.string   "title"
@@ -133,9 +163,15 @@ ActiveRecord::Schema.define(version: 20151019181439) do
   add_index "visitors", ["success_id"], name: "index_visitors_on_success_id", using: :btree
 
   add_foreign_key "customers", "companies"
+  add_foreign_key "industries_successes", "industry_categories"
+  add_foreign_key "industries_successes", "successes"
   add_foreign_key "industry_categories", "companies"
   add_foreign_key "product_categories", "companies"
+  add_foreign_key "product_cats_successes", "product_categories"
+  add_foreign_key "product_cats_successes", "successes"
   add_foreign_key "products", "companies"
+  add_foreign_key "products_successes", "products"
+  add_foreign_key "products_successes", "successes"
   add_foreign_key "stories", "successes"
   add_foreign_key "successes", "customers"
   add_foreign_key "users", "companies"
