@@ -16,10 +16,10 @@
 vendor/assets/bower_components
 
 # database configuration (environment-specific)
-# config/database.yml
+config/database.yml
 
 # figaro-managed credentials
-# config/application.yml
+config/application.yml
 
 # paperclip images
 public/system
