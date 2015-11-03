@@ -4,6 +4,7 @@
 
 $(function () {
 
+  console.log('hey');
   $('#publish-logo').bootstrapSwitch();
   $('#publish-story').bootstrapSwitch();
 
