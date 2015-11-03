@@ -45,9 +45,10 @@
                       <%= link_to 'Pending curation', story_path(story) %>
                     </td>
                     <td class="text-center class='valign-middle'">
-                      <button class="btn btn-xs btn-primary">
+                      <%= link_to edit_story_path(story),
+                          class: "btn btn-xs btn-primary" do %>
                         <i class="fa fa-pencil"></i>
-                      </button>&nbsp;
+                      <% end %>
                       <button class="btn btn-xs btn-secondary">
                         <i class="fa fa-times"></i>
                       </button>
