@@ -17,19 +17,28 @@ class StoriesController < ApplicationController
   # -> due to the way form parameters are name-spaced
   def create
     @company = Company.find params[:id]
-    @success = Success.new customer_id: params[:story][':customer']
-    if @success.save
-      @story = Story.new title: params[:story][':title'], success_id: @success.id
-      if @story.save
-        assign_tags @story, params[:story]
-        redirect_to edit_story_path @story
+    if params[:story][':customer'].is_a? Numeric  # existing customer
+      success = Success.new customer_id: params[:story][':customer']
+    else  # new customer
+      customer = Customer.new name: params[:story][':customer'], company_id: @company.id
+      if customer.save
+        success = Success.new customer_id: customer.id
       else
-        # problem creating story
-        # TODO: wire up some flash messaging, possible to re-render the modal??
-        puts 'problem creating success'
+        puts 'problem creating customer'
       end
-    else
-      puts 'problem creating story'
+      if success.save
+        @story = Story.new title: params[:story][':title'], success_id: success.id
+        if @story.save
+          assign_tags @story, params[:story]
+          redirect_to edit_story_path @story
+        else
+          # problem creating story
+          # TODO: wire up some flash messaging, possible to re-render the modal??
+          puts 'problem creating success'
+        end
+      else
+        puts 'problem creating story'
+      end
     end
   end
 
@@ -42,15 +51,20 @@ class StoriesController < ApplicationController
   private
 
   # Only necessary for mass assignment on db action create or update
-  # def tale_params
-  #   params.require(:tale).permit(:customer, :title,
+  # def story_params
+  #   params.require(:story).permit(:customer, :title,
   #       # note the tag arrays explicitly set as such, else they won't be permitted
   #       industry_tags: [], product_cat_tags: [], product_tags: [])
   # end
 
   def assign_tags story, story_params
     story_params[':industry_tags'].each do |id|
-      story.success.industry_categories << IndustryCategory.find(id)
+      if !id.is_a? Numeric  # generic tag
+        # create a new company industry category based on the generic tag
+        story.success.industry_categories << IndustryCategory.create(name: id)
+      else
+        story.success.industry_categories << IndustryCategory.find(id)
+      end
     end
     story_params[':product_cat_tags'].each do |id|
       story.success.product_categories << ProductCategory.find(id)

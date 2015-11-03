@@ -3,8 +3,8 @@ class CompaniesController < ApplicationController
   # GET /companies/new
   def new
     @company = Company.new
-    # default industry categories
-    @industry_cats = ['Education', 'Government', 'Financial Services', 'Healthcare', 'Hospitality', 'Manufacturing', 'Media and Entertainment', 'Service Provider', 'Technology', 'IT', 'Telecommunications'];
+    # default industry tags
+    @industries = INDUSTRIES
     render :show
   end
 
@@ -24,25 +24,25 @@ class CompaniesController < ApplicationController
   end
 
   def create
-    @company = Company.create company_params
+    @company = Company.new company_params
     if @company.save
       @company.users << current_user
-      # create the industry tags if any were entered
-      # no validations are run on these
-      unless params[:industry_tags].empty?
-        params[:industry_tags].each do |tag|
-          @company.industry_categories << IndustryCategory.create(name: tag)
-        end
+      # create tags if any were entered
+      if params[:industry_tags]
+        create_industry_categories params[:industry_tags]
       end
-      unless params[:product_tags].empty?
-        params[:product_tags].each do |tag|
-          @company.product_categories << ProductCategory.create(name: tag)
-        end
+      if params[:product_cat_tags]
+        create_product_categories params[:product_cat_tags]
+      end
+      if params[:products]
+        create_products params[:products]
       end
       redirect_to company_path(@company), flash: { success: "Registered company ok" }
     else
-      flash.now[:danger] = "There was a problem"
-      @company = Company.new
+      # back to form, try again (only validation is presence of name)
+      flash.now[:danger] = "#{@company.errors.full_messages}"
+      # default industry categories
+      @industries = INDUSTRIES
       render :show
     end
 
@@ -59,32 +59,60 @@ class CompaniesController < ApplicationController
 
   def customers_select_options company_customers
     @customers_select = company_customers.map do |customer|
+      # name will appear as a selection, while its id will be the value submitted
       [ customer.name, customer.id ]
     end
-    .unshift( ["", 0] )  # empty option makes placeholder possible
+    .unshift( [""] )  # empty option makes placeholder possible (only needed for single select)
     # if sending the options to javascript use .to_json:
     # .to_json
+  end
+
+  # company-specific categories (if any) listed first,
+  # followed by generic categories
+  def industries_select_options company_industries
+    @industries_select = company_industries.map do |industry|
+      [ industry.name, industry.id ]
+    end
+    .concat(
+      INDUSTRIES.map do |category|
+        # value = the category itself (pass this through so a company
+        # category can be created based on the generic category)
+        [ category, category ]
+      end
+    )
+    .uniq { |industry| industry[0] }  # get rid of duplicates
   end
 
   def product_cats_select_options company_product_cats
     @product_cats_select = company_product_cats.map do |category|
       [ category.name, category.id ]
     end
-    .unshift( ["", 0] )
+    # .unshift( ["", 0] )
   end
 
   def products_select_options company_products
     @products_select = company_products.map do |product|
       [ product.name, product.id ]
     end
-    .unshift( ["", 0] )
+    # .unshift( ["", 0] )
   end
 
-  def industries_select_options company_industries
-    @industries_select = company_industries.map do |industry|
-      [ industry.name, industry.id ]
+  def create_industry_categories tags
+    tags.each do |tag|
+      @company.industry_categories << IndustryCategory.create(name: tag)
     end
-    .unshift( ["", 0] )
+  end
+
+  def create_product_categories tags
+    tags.each do |tag|
+      @company.product_categories << ProductCategory.create(name: tag)
+    end
+  end
+
+  def create_products products
+    products.each do |product|
+      @company.products << Product.create(name: product)
+    end
   end
 
 end
