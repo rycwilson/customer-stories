@@ -14,7 +14,8 @@ $(function () {
 
   // reset new story modal form
   $('.modal').on('hidden.bs.modal', function () {
-    $(this).find('form')[0].reset();  // form inputs to default values
+    // form inputs to default values... (in this case just title)
+    $(this).find('form')[0].reset();
     // select2 inputs to default values...
     $('.new-story-customer').select2('val', '');  // single select
     $('.new-story-tags').val('').trigger('change');  // multiple select
@@ -36,7 +37,7 @@ function configSelect2 () {
       $(".new-story-customer").select2({  // single select
         theme: "bootstrap",
         tags: true,  // to allow new company creation
-        placeholder: 'select or add new',
+        placeholder: 'select or add a new customer',
         // allowClear: true
       });
     }
@@ -46,7 +47,7 @@ function configSelect2 () {
     // TODO: enable new tags from here?
     $(".new-story-tags").select2({
       theme: 'bootstrap',
-      placeholder: 'add tags'
+      placeholder: 'select tags'
     });
 
   }
@@ -54,7 +55,7 @@ function configSelect2 () {
   $(".industry-tags").select2({
     theme: 'bootstrap',
     tags: true,
-    placeholder: 'select industries or add your own'
+    placeholder: 'select or add new industries'
   });
 
   // company registration
