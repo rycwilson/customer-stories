@@ -6,15 +6,15 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-# Company.destroy_all
+Company.destroy_all
 Customer.destroy_all
 Story.destroy_all
 Product.destroy_all
 ProductCategory.destroy_all
 IndustryCategory.destroy_all
 
-# Cisco must be registered before running this...
-
+cisco = Company.create(name:'Cisco')
+cisco.users << User.find_by(email:'joe@mail.com')
 cisco = Company.find_by(name:'Cisco')
 
 # Cisco's target industries...

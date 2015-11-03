@@ -16,6 +16,7 @@
 //= require bootstrap-sass/assets/javascripts/bootstrap
 //= require mvpready-core
 //= require mvpready-helpers
+//= require analytics.js
 
 // flash messaging
 setTimeout(function () {

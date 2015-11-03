@@ -1,3 +1,18 @@
+<div id="wrapper">
+  <div class="masthead">
+
+
+
+  <div class="content">
+
+    <div class="container">
+
+      <hr class="spacer-sm">
+
+      <div class="account-wrapper">
+
+        <div class="account-body">
+
 <h2>Resend confirmation instructions</h2>
 
 <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
@@ -13,4 +28,25 @@
   </div>
 <% end %>
 
-<%= render "devise/shared/links" %>
+        </div> <!-- /.account-body -->
+
+        <div class="account-footer">
+          <p>
+          Don't have an account? &nbsp;
+          <%= link_to 'Sign up', new_user_registration_path %>
+          </p>
+        </div> <!-- /.account-footer -->
+
+      </div> <!-- /.account-wrapper -->
+
+
+      <br><br><br>
+
+
+    </div> <!-- /.container -->
+  </div> <!-- /.content -->
+ </div> <!-- /.masthead -->
+</div> <!-- /#wrapper -->
+
+<%= render 'shared/csp_landing_footer' %>
+

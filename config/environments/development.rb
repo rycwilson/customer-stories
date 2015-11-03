@@ -6,6 +6,7 @@ Rails.application.configure do
   # since you don't have to restart the web server when you make code changes.
   config.cache_classes = false
 
+
   # Do not eager load code on boot.
   config.eager_load = false
 
@@ -15,13 +16,29 @@ Rails.application.configure do
 
   # by default, emails won't send in development environment
   # change this:
-  # config.action_mailer.perform_deliveries = true
+   config.action_mailer.perform_deliveries = true
 
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+#  config.action_mailer.raise_delivery_errors = false
 
   # Devise
-  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+#  config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
+ # config.action_mailer.default_url_options = { host: 'csp-dlindblodev.c9.io' }
+
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.delivery_method = :smtp
+  host = 'csp-dlindblodev.c9.io'
+  config.action_mailer.default_url_options = { host: host }
+  ActionMailer::Base.smtp_settings = {
+    :address        => 'smtp.sendgrid.net',
+    :port           => '2525',
+    :authentication => :plain,
+    :user_name      => 'app42836101@heroku.com',
+    :password       => '***REMOVED***',
+    :domain         => 'heroku.com',
+    :enable_starttls_auto => true
+  }
+
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log

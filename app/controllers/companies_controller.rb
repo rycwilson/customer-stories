@@ -87,14 +87,12 @@ class CompaniesController < ApplicationController
     @product_cats_select = company_product_cats.map do |category|
       [ category.name, category.id ]
     end
-    # .unshift( ["", 0] )
   end
 
   def products_select_options company_products
     @products_select = company_products.map do |product|
       [ product.name, product.id ]
     end
-    # .unshift( ["", 0] )
   end
 
   def create_industry_categories tags
