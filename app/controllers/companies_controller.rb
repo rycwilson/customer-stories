@@ -57,44 +57,6 @@ class CompaniesController < ApplicationController
     params.require(:company).permit(:name, :logo)
   end
 
-  def customers_select_options company_customers
-    @customers_select = company_customers.map do |customer|
-      # name will appear as a selection, while its id will be the value submitted
-      [ customer.name, customer.id ]
-    end
-    .unshift( [""] )  # empty option makes placeholder possible (only needed for single select)
-    # if sending the options to javascript use .to_json:
-    # .to_json
-  end
-
-  # company-specific categories (if any) listed first,
-  # followed by generic categories
-  def industries_select_options company_industries
-    @industries_select = company_industries.map do |industry|
-      [ industry.name, industry.id ]
-    end
-    .concat(
-      INDUSTRIES.map do |category|
-        # value = the category itself (pass this through so a company
-        # category can be created based on the generic category)
-        [ category, category ]
-      end
-    )
-    .uniq { |industry| industry[0] }  # get rid of duplicates
-  end
-
-  def product_cats_select_options company_product_cats
-    @product_cats_select = company_product_cats.map do |category|
-      [ category.name, category.id ]
-    end
-  end
-
-  def products_select_options company_products
-    @products_select = company_products.map do |product|
-      [ product.name, product.id ]
-    end
-  end
-
   def create_industry_categories tags
     tags.each do |tag|
       @company.industry_categories << IndustryCategory.create(name: tag)

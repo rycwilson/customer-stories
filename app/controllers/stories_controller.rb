@@ -10,6 +10,15 @@ class StoriesController < ApplicationController
 
   def edit
     @story = Story.find params[:id]
+    @company = current_user.company
+    # options for new story customer select
+    customers_select_options @company.customers
+    # options for product categories select (multiple select)
+    product_cats_select_options @company.product_categories
+    # options for products select (single select for now)
+    products_select_options @company.products
+    # options for industries select (multiple select)
+    industries_select_options @company.industry_categories
   end
 
   # TODO: allow for new Customer creation
@@ -17,28 +26,31 @@ class StoriesController < ApplicationController
   # -> due to the way form parameters are name-spaced
   def create
     @company = Company.find params[:id]
-    if params[:story][':customer'].is_a? Numeric  # existing customer
-      success = Success.new customer_id: params[:story][':customer']
-    else  # new customer
-      customer = Customer.new name: params[:story][':customer'], company_id: @company.id
+    new_story = params[:story]
+    # was a new customer entered? ...
+    new_customer = new_story[':customer'] if new_story[':customer'].to_i == 0
+    if new_customer
+      customer = Customer.new name: new_customer, company_id: @company.id
       if customer.save
         success = Success.new customer_id: customer.id
       else
-        puts 'problem creating customer'
+        puts 'problem creating Customer'
       end
-      if success.save
-        @story = Story.new title: params[:story][':title'], success_id: success.id
-        if @story.save
-          assign_tags @story, params[:story]
-          redirect_to edit_story_path @story
-        else
-          # problem creating story
-          # TODO: wire up some flash messaging, possible to re-render the modal??
-          puts 'problem creating success'
-        end
+    else  # existing customer
+      success = Success.new customer_id: new_story[':customer']
+    end
+    if success.save
+      @story = Story.new title: new_story[':title'], success_id: success.id
+      if @story.save
+        assign_tags @story, new_story
+        redirect_to edit_story_path @story
       else
-        puts 'problem creating story'
+        # problem creating story
+        # TODO: wire up some flash messaging, possible to re-render the modal??
+        puts 'problem creating Story'
       end
+    else
+      puts 'problem creating Success'
     end
   end
 
@@ -57,20 +69,27 @@ class StoriesController < ApplicationController
   #       industry_tags: [], product_cat_tags: [], product_tags: [])
   # end
 
-  def assign_tags story, story_params
-    story_params[':industry_tags'].each do |id|
-      if !id.is_a? Numeric  # generic tag
-        # create a new company industry category based on the generic tag
-        story.success.industry_categories << IndustryCategory.create(name: id)
-      else
-        story.success.industry_categories << IndustryCategory.find(id)
+  def assign_tags story, new_story
+
+    if new_story[':industry_tags']
+      new_story[':industry_tags'].each do |id|
+        if !id.is_a? Numeric  # generic tag
+          # create a new company industry category based on the generic tag
+          story.success.industry_categories << IndustryCategory.create(name: id)
+        else
+          story.success.industry_categories << IndustryCategory.find(id)
+        end
       end
     end
-    story_params[':product_cat_tags'].each do |id|
-      story.success.product_categories << ProductCategory.find(id)
+    if new_story[':product_cat_tags']
+      new_story[':product_cat_tags'].each do |id|
+        story.success.product_categories << ProductCategory.find(id)
+      end
     end
-    story_params[':product_tags'].each do |id|
-      story.success.products << Product.find(id)
+    if new_story[':prodcut_tags']
+      new_story[':product_tags'].each do |id|
+        story.success.products << Product.find(id)
+      end
     end
   end
 
