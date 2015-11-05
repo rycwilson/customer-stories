@@ -23,6 +23,8 @@ gem 'omniauth'
 gem 'omniauth-linkedin'
 gem "paperclip", "~> 4.3"
 gem 'ffaker'
+gem 'pry-rails'
+gem 'better_errors'
 
 group :production do
 
@@ -31,9 +33,6 @@ group :production do
 end
 
 group :development, :test do
-
-  gem 'pry-rails'
-  gem 'better_errors'
 
   # Access an IRB console on exception pages or by using <%= console %> in views
   gem 'web-console', '~> 2.0'
