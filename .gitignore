@@ -16,16 +16,19 @@
 vendor/assets/bower_components
 
 # figaro-managed credentials (uncomment for github push, comment for heroku)
-#config/application.yml
+config/application.yml
 
 # paperclip images
 public/system
 
 # pre-compiled assets (uncomment for github push, comment for heroku)
-#public/assets
-#tmp/cache
+public/assets
+tmp/cache
 
-# user-specific stuff (uncomment for github push, comment for heroku)
-#db/seeds.rb
-#app/models/user.rb
-#config/database.yml
+# user-specific (uncomment for github push, comment for heroku)
+db/seeds.rb
+config/database.yml
+app/models/user.rb
+app/views/devise/passwords/new.html.erb
+app/views/devise/registrations/new.html.erb
+app/views/devise/sessions/new.html.erb
