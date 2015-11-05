@@ -12,8 +12,6 @@ Product.destroy_all
 ProductCategory.destroy_all
 IndustryCategory.destroy_all
 
-# cisco = Company.create(name:'Cisco')
-# cisco.users << User.find_by(email:'***REMOVED***')
 cisco = Company.find_by(name:'Cisco')
 
 # Cisco's target industries...

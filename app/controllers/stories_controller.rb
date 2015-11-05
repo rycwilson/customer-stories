@@ -72,25 +72,29 @@ class StoriesController < ApplicationController
   def assign_tags story, new_story
 
     if new_story[':industry_tags']
-      new_story[':industry_tags'].each do |id|
-        if !id.is_a? Numeric  # generic tag
+      new_story[':industry_tags'].each do |selection|
+        if selection.to_i == 0   # generic tag
           # create a new company industry category based on the generic tag
-          story.success.industry_categories << IndustryCategory.create(name: id)
-        else
-          story.success.industry_categories << IndustryCategory.find(id)
+          story.success.industry_categories << IndustryCategory.create(
+              name: selection, company_id: current_user.company.id)
+        else  # selection is the id of an existing company industry category
+          story.success.industry_categories << IndustryCategory.find(selection)
         end
       end
     end
+
     if new_story[':product_cat_tags']
-      new_story[':product_cat_tags'].each do |id|
-        story.success.product_categories << ProductCategory.find(id)
+      new_story[':product_cat_tags'].each do |selection|
+        story.success.product_categories << ProductCategory.find(selection)
       end
     end
+
     if new_story[':prodcut_tags']
-      new_story[':product_tags'].each do |id|
-        story.success.products << Product.find(id)
+      new_story[':product_tags'].each do |selection|
+        story.success.products << Product.find(selection)
       end
     end
+
   end
 
 end

@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
 
   #
   # Below: methods used by companies and stories controllers to
-  # populate select2 boxes...
+  # populate select2 boxes for story tagging...
   #
   def customers_select_options company_customers
     @customers_select = company_customers.map do |customer|
