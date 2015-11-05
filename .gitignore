@@ -15,15 +15,17 @@
 # front-end dependencies
 vendor/assets/bower_components
 
-# database configuration (environment-specific)
-config/database.yml
-
-# figaro-managed credentials
-config/application.yml
+# figaro-managed credentials (uncomment for github push, comment for heroku)
+#config/application.yml
 
 # paperclip images
 public/system
 
-# pre-compiled assets
-# public/assets
-# tmp/cache
+# pre-compiled assets (uncomment for github push, comment for heroku)
+#public/assets
+#tmp/cache
+
+# user-specific stuff (uncomment for github push, comment for heroku)
+#db/seeds.rb
+#app/models/user.rb
+#config/database.yml

@@ -1,7 +1,7 @@
+<!-- Resend Confirmation emails -->
+
 <div id="wrapper">
   <div class="masthead">
-
-
 
   <div class="content">
 
@@ -13,19 +13,25 @@
 
         <div class="account-body">
 
-<h2>Resend confirmation instructions</h2>
+<h2>Resend confirmation</h2>
 
 <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
   <%= devise_error_messages! %>
 
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %> 
-  </div>
+ 
 
-  <div class="actions">
-    <%= f.submit "Resend confirmation instructions" %>
+  <div class="form group">
+  <%= f.email_field :email, { autofocus: true,
+  class: 'form-control', id: 'login-username',
+  placeholder: 'email', tabindex: '1' } %>
   </div>
+<br>
+  <div class="form-group">
+              <%= button_tag(type: 'Resend Confirmation', tabindex: '4',
+                  class: "btn btn-primary btn-block btn-lg") do %>
+                Resend Confirmation &nbsp; <i class="fa fa-play-circle"></i>
+              <% end %>
+            </div>
 <% end %>
 
         </div> <!-- /.account-body -->
@@ -35,12 +41,14 @@
           Don't have an account? &nbsp;
           <%= link_to 'Sign up', new_user_registration_path %>
           </p>
+         <p>Already confirmed? &nbsp;
+          <%= link_to 'Sign in', new_user_session_path %>
+          </p>
         </div> <!-- /.account-footer -->
 
       </div> <!-- /.account-wrapper -->
 
 
-      <br><br><br>
 
 
     </div> <!-- /.container -->

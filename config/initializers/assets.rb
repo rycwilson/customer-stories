@@ -14,6 +14,8 @@ Rails.application.config.assets.precompile += %w(
   site.js site.css
   users/sessions.js users/sessions.css
   users/registrations.js users/registrations.css
+  users/passwords.js  users/passwords.css
+  users/confirmations.js users/confirmations.css
   companies.js companies.css
   stories.js stories.css
   profile.js profile.css
