@@ -1,6 +1,9 @@
 <!-- TODO: confirm validations -->
 <!-- TODO: provide an option to create Username? -->
 <!-- TODO: Wire up TOS and Privacy Policy modals -->
+
+<!-- New user signup -->
+
 <div id="wrapper">
 
   <div class="masthead">
@@ -98,6 +101,14 @@
           <p>Already have an account? &nbsp;
             <%= link_to 'Sign in', new_user_session_path %>
           </p>
+          <p>
+          Forgot password? &nbsp;
+          <%= link_to 'Reset', new_user_password_path %>
+          </p>
+           <p>
+          Didn't get confirmation? &nbsp;
+          <%= link_to 'Resend email', new_user_confirmation_path %>
+          </p>
         </div> <!-- /.account-footer -->
 
       </div> <!-- /.account-wrapper -->
@@ -107,6 +118,5 @@
 </div> <!-- /#wrapper -->
 
 
-<%= render "devise/shared/links" %>
 </div>
 <%= render 'shared/csp_landing_footer' %>

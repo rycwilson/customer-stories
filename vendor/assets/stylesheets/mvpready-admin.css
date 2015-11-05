@@ -2973,7 +2973,7 @@ table.dataTable-helper td.highlight {
 .navbar-nav > .navbar-profile .dropdown-toggle {
   padding-left: 50px;
 }
-.navbar-nav > .navbar-profile .dropdown-toggle:hover .navbar-profile-avatar,
+ -nav > .navbar-profile .dropdown-toggle:hover .navbar-profile-avatar,
 .navbar-nav > .navbar-profile.open .navbar-profile-avatar {
   border-color: #ffffff;
 }
@@ -2990,8 +2990,11 @@ table.dataTable-helper td.highlight {
   }
 }
 .navbar {
+/* CSP: changing nav bar to white
   background-color: #2b3d4c;
-  border-color: #2b3d4c;
+  border-color: #2b3d4c; */
+  background-color: #FFFFFF;
+  border-color: #FFFFFF;
 }
 .navbar .navbar-brand {
   color: #87a3bc;
