@@ -25,5 +25,5 @@ config/application.yml
 public/system
 
 # pre-compiled assets
-public/assets
-tmp/cache
+# public/assets
+# tmp/cache
