@@ -1,0 +1,122 @@
+<!-- TODO: confirm validations -->
+<!-- TODO: provide an option to create Username? -->
+<!-- TODO: Wire up TOS and Privacy Policy modals -->
+
+<!-- New user signup -->
+
+<div id="wrapper">
+
+  <div class="masthead">
+            <div class="container">
+      <hr class="spacer-sm">
+    <div class="col-md-10 masthead-text animated fadeInDownBig col-lg-offset-1">
+                <h5 class="masthead-title">Customer Stories is in beta.  For more information please <a href="mailto:info@customerstories.net" class="btn btn-primary">Contact Us</a></h5>
+
+</div>
+      </div> <!-- /.container -->
+
+
+  <div class="content">
+    <div class="container">
+      <hr class="spacer-sm">
+      <div class="account-wrapper">
+        <div class="account-body">
+
+          <h3>Get Started with a Free Account.</h3>
+
+
+          <%= form_for(resource, as: resource_name,
+                      url: registration_path(resource_name),
+                     html: { class: 'form account-form' }) do |f| %>
+
+            <%= devise_error_messages! %>
+
+            <div class="form-group">
+              <%= f.label :email %><br />
+              <%= f.email_field :email, { class: 'form-control',
+                  id: 'signup-email', tabindex: '1', autofocus: true } %>
+            </div>
+
+            <div class="form-group">
+              <%= f.label :first_name %><br />
+              <%= f.text_field :first_name, { class: 'form-control',
+                  id: 'signup-first-name', tabindex: '2' } %>
+            </div>
+
+            <div class="form-group">
+              <%= f.label :last_name %><br />
+              <%= f.text_field :last_name, { class: 'form-control',
+                  id: 'signup-last-name', tabindex: '3' } %>
+            </div>
+
+            <div class="form-group">
+                <%= f.label :Beta_signup_code %><br />
+              <%= f.text_field :sign_up_code, { class: 'form-control',
+                  id: 'sign_up_code', tabindex: '3' } %>
+            </div>
+
+            <div class="form-group">
+              <%= f.label :password %>
+              <%= f.password_field :password, { class: 'form-control',
+                  id: 'signup-pw', tabindex: '4', autocomplete: "off" } %>
+              <% if @validatable %>
+                <span class="help-block">
+                  <%= @minimum_password_length %> characters minimum
+                </span>
+              <% end %>
+            </div>
+
+            <div class="form-group">
+              <%= f.label :password_confirmation %><br />
+              <%= f.password_field :password, { class: 'form-control',
+                  id: 'signup-pw-conf', tabindex: '5', autocomplete: "off" } %>
+            </div>
+
+        <!--     <div class="form-group">
+              <label class="checkbox-inline">
+              <input type="checkbox" name="agree" tabindex="6"> I agree to the
+              <a href="javascript:;" target="_blank">Terms of Service</a>
+              &amp;
+              <a href="javascript:;" target="_blank">Privacy Policy</a>
+              </label>
+            </div> --> <!-- /.form-group -->
+
+
+            <div class="form-group">
+              <%= button_tag(type: 'submit', tabindex: '6',
+                  class: "btn btn-secondary btn-block btn-lg") do %>
+                Create My Account &nbsp; <i class="fa fa-play-circle"></i>
+              <% end %>
+            </div>
+
+            <div class="form-group">
+              Please review the <a href="/tos">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>. By creating an account you are agreeing to these terms and conditions.
+            </div>
+
+          <% end %>
+
+        </div> <!-- /.account-body -->
+
+        <div class="account-footer">
+          <p>Already have an account? &nbsp;
+            <%= link_to 'Sign in', new_user_session_path %>
+          </p>
+          <p>
+          Forgot password? &nbsp;
+          <%= link_to 'Reset', new_user_password_path %>
+          </p>
+           <p>
+          Didn't get confirmation? &nbsp;
+          <%#= link_to 'Resend email', new_user_confirmation_path %>
+          </p>
+        </div> <!-- /.account-footer -->
+
+      </div> <!-- /.account-wrapper -->
+
+    </div> <!-- /.container -->
+  </div> <!-- /.content -->
+</div> <!-- /#wrapper -->
+
+
+</div>
+<%= render 'shared/csp_landing_footer' %>

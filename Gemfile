@@ -26,6 +26,8 @@ gem 'ffaker'
 gem 'pry-rails'
 gem 'better_errors'
 
+gem 'best_in_place', '~> 3.0.1'
+
 group :production do
 
   gem 'rails_12factor'

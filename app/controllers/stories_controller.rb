@@ -40,10 +40,10 @@ class StoriesController < ApplicationController
       success = Success.new customer_id: new_story[':customer']
     end
     if success.save
-      @story = Story.new title: new_story[':title'], success_id: success.id
-      if @story.save
+      story = Story.new title: new_story[':title'], success_id: success.id
+      if story.save
         assign_tags @story, new_story
-        redirect_to edit_story_path @story
+        redirect_to edit_story_path story
       else
         # problem creating story
         # TODO: wire up some flash messaging, possible to re-render the modal??
@@ -55,6 +55,7 @@ class StoriesController < ApplicationController
   end
 
   def update
+    binding.pry
   end
 
   def destroy
@@ -62,12 +63,10 @@ class StoriesController < ApplicationController
 
   private
 
-  # Only necessary for mass assignment on db action create or update
-  # def story_params
-  #   params.require(:story).permit(:customer, :title,
-  #       # note the tag arrays explicitly set as such, else they won't be permitted
-  #       industry_tags: [], product_cat_tags: [], product_tags: [])
-  # end
+  def story_params
+    params.require(:story).permit(:title, :quote, :quote_attr, :embed_url, :situation,
+        :challenge, :solution, :results)
+  end
 
   def assign_tags story, new_story
 

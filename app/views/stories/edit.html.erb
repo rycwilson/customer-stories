@@ -53,24 +53,34 @@
 
 
     </div>  <!-- form -->
-  </div>
+  </div>  <!-- row -->
 
 
 
-  <!-- </div>  row -->
+  <div class='row' style='margin-top:15px'>
 
-  <div class= 'col-md-3' style='margin-top:15px'>
-    <div class='row'>
-      <div class='col-md-11 text-center'>
-        <img src="https://logo.clearbit.com/<%= @story.success.customer.name %>.com"
-            style="height:180px; width:180px">
+    <div class= 'col-md-3'>
+      <div class='row'>
+        <div class='col-md-11 text-center'>
+          <img src="https://logo.clearbit.com/<%= @story.success.customer.name %>.com"
+              style="height:180px; width:180px">
+        </div>
       </div>
     </div>
+
+    <div class="col-md-4 well">
+      <div>
+        <%= best_in_place @story, :quote, as: :textarea, url: story_path(@story),
+          place_holder: "Add a customer quote...", activator: '#edit-story-quote',
+          ok_button: "Save", cancel_button: "Cancel" %>
+      </div>
+      <div>
+        <span class='glyphicon glyphicon-pencil' id='edit-story-quote'
+              style='position:absolute; right:5px; top:5px'>
+        </span>
+      </div>
   </div>
 
-
-
-  <input type="checkbox" id='publish-logo'>
 </div>
 
 
