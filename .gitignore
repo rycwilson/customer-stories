@@ -19,14 +19,9 @@ vendor/assets/bower_components
 # run these commands in terminal and then commit/push:
 #
 # git rm --cached config/application.yml
+# git rm --cached config/database.yml
 # git rm -r --cached public/assets
 # git rm -r --cached tmp/cache
-# git rm --cached db/seeds.rb
-# git rm --cached config/database.yml
-# git rm --cached app/models.user.rb
-# git rm --cached app/views/devise/passwords/new.html.erb
-# git rm --cached app/views/devise/registrations/new.html.erb
-# git rm --cached app/views/devise/sessions/new.html.erb
 
 # figaro-managed credentials (uncomment for github push, comment for heroku)
 config/application.yml
@@ -39,10 +34,6 @@ public/assets
 tmp/cache
 
 # user-specific (uncomment for github push, comment for heroku)
-#db/seeds.rb
 config/database.yml
-#app/models/user.rb
-#app/views/devise/passwords/new.html.erb
-#app/views/devise/registrations/new.html.erb
-#app/views/devise/sessions/new.html.erb
+
 
