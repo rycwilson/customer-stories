@@ -39,10 +39,10 @@ public/assets
 tmp/cache
 
 # user-specific (uncomment for github push, comment for heroku)
-db/seeds.rb
+#db/seeds.rb
 config/database.yml
-app/models/user.rb
-app/views/devise/passwords/new.html.erb
-app/views/devise/registrations/new.html.erb
-app/views/devise/sessions/new.html.erb
+#app/models/user.rb
+#app/views/devise/passwords/new.html.erb
+#app/views/devise/registrations/new.html.erb
+#app/views/devise/sessions/new.html.erb
 
