@@ -68,18 +68,49 @@
       </div>
     </div>
 
-    <div class="col-md-4 well">
-      <div>
-        <%= best_in_place @story, :quote, as: :textarea, url: story_path(@story),
-          place_holder: "Add a customer quote...", activator: '#edit-story-quote',
-          ok_button: "Save", cancel_button: "Cancel" %>
-      </div>
-      <div>
-        <span class='glyphicon glyphicon-pencil' id='edit-story-quote'
-              style='position:absolute; right:5px; top:5px'>
-        </span>
-      </div>
-  </div>
+    <div class="col-md-4 well" id='story-quote-well'>
+
+      <div class='container-fluid'>
+
+        <div class="row">
+
+          <div id='edit-story-quote' class='col-md-2 pull-right'
+              style='margin-top:-2px'>
+            <span class='glyphicon glyphicon-pencil bip-clickable'></span>
+          </div>
+
+          <div id='story-quote' class="col-md-10">
+            <!-- http://stackoverflow.com/questions/13561533 -->
+            <%= best_in_place @story, :quote, as: :textarea, url: story_path(@story),
+              display_with: lambda { |text| story_quote(text) }, sanitize: false,
+              html_attrs: { style: 'width: 100%' },
+              activator: '#edit-story-quote', place_holder: "Add a customer quote..."
+              %>
+          </div>
+
+        </div>  <!-- row --> <br>
+
+        <div class="row">
+
+          <div id='edit-story-quote-attr' class='col-md-2 pull-right'
+              style='margin-top:-4px'>
+
+            <span class='glyphicon glyphicon-pencil bip-clickable'></span>
+
+          </div>
+
+          <div id='story-quote-attr' class='col-md-10'>
+
+            <%= best_in_place @story, :quote_attr, url: story_path(@story),
+              activator: '#edit-story-quote-attr', place_holder: "Quote attribution...",
+              html_attrs: { style: 'width: 100%' } %>
+
+          </div>
+
+        </div> <!-- row -->
+
+      </div>  <!-- container -->
+    </div>  <!-- well -->
 
 </div>
 

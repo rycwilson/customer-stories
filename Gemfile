@@ -15,6 +15,8 @@ gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.1.0'
 
+gem 'pry-rails'
+gem 'better_errors'
 gem 'bower-rails'
 gem 'font-awesome-rails'
 gem 'figaro'
@@ -23,8 +25,6 @@ gem 'omniauth'
 gem 'omniauth-linkedin'
 gem "paperclip", "~> 4.3"
 gem 'ffaker'
-gem 'pry-rails'
-gem 'better_errors'
 
 gem 'best_in_place', '~> 3.0.1'
 

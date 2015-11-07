@@ -55,7 +55,16 @@ class StoriesController < ApplicationController
   end
 
   def update
-    binding.pry
+    @story = Story.find params[:id]
+    respond_to do |format|
+      if @story.update story_params
+        # format.html { redirect_to(@story, :notice => 'Story was successfully updated.') }
+        format.json { respond_with_bip(@story) }
+      else
+        # format.html { render :action => "edit" }
+        format.json { respond_with_bip(@story) }
+      end
+    end
   end
 
   def destroy

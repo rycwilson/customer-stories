@@ -13,3 +13,33 @@
 // correctly if .css isn't specified here
 *= require social-sharing.css
 */
+
+.bip-clickable {
+  border: 1px solid #e3e3e3;
+  border-radius: 3px;
+  font-size: 1.5em;
+  padding: 5px;
+}
+
+#edit-story-quote:hover + #story-quote {
+  border-left: 2px solid #87a3bc;
+}
+
+#edit-story-quote-attr:hover + #story-quote-attr {
+  border-left: 2px solid #87a3bc;
+}
+
+
+.bip-clickable:hover {
+  color: white;
+  background-color: #87a3bc;
+}
+
+/*
+a transparent input
+input {
+
+  background-color: rgba(0,0,0,0);
+  border: none;
+}
+*/
