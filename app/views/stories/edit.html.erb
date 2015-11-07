@@ -1,19 +1,143 @@
 <div class='container'>
-  <div class='row' style='margin-top: 15px'>
 
-    <div class="col-md-2">
-
-      <div>
-        <label for="publish-story">Publish</label>
-        <input type="checkbox" id='publish-story'>
-      </div>
-
-      <div class='row text-center'>
-        <%= link_to 'Preview', story_path(@story),
-          class: 'btn btn-primary' %>
-      </div class='row'>
-
+<!--   <div class='row' style='margin-top:15px'>
+    <div class='col-md-4'>
+      <h4 class='lead'>Story Title</h4>
     </div>
+    <div class='col-md-4'>
+      <h5>Customer Quote</h5>
+    </div>
+    <div class='col-md-4'>
+      <h5>Video</h5>
+    </div>
+  </div> -->
+
+  <div class='row' style='margin-top:15px'>
+
+    <div class='col-md-4'>
+
+      <p class='lead'>Story Title</p>
+
+      <div class='row'>
+
+        <div class='well'>
+          <div class="container-fluid">
+            <div class="row">
+
+              <div id='edit-story-title'
+                  style='position:absolute; right:20px; margin-top:-3px'>
+                <span class='glyphicon glyphicon-pencil bip-clickable'></span>
+              </div>
+
+              <div id='story-title' class='col-md-11'>
+                <%= best_in_place @story, :title, as: :textarea, url: story_path(@story),
+                    html_attrs: { style: 'width:100%' },
+                    activator: '#edit-story-title', place_holder: "Add a title..." %>
+              </div>
+
+            </div>
+          </div>
+        </div>  <!-- well -->
+
+      </div>  <!-- row -->
+
+      <div class='row'>
+
+        <div class='col-md-4 text-center'>
+          <img src="https://logo.clearbit.com/<%= @story.success.customer.name %>.com"
+              style="height:100px"> <br><br>
+        </div>
+
+        <div class='col-md-8'>
+          <label for="publish-story">Publish Story</label>
+          <input type="checkbox" id='publish-story'>
+          <label for="publish-logo" style='margin-top: 15px'>Publish Logo</label>
+          <input type="checkbox" id='publish-logo'>
+          <%= link_to 'Preview', story_path(@story),
+              class: 'btn btn-primary', style: "margin-top:15px" %>
+        </div>
+
+      </div>  <!-- row -->
+
+
+    </div>  <!-- col-md-4 -->
+
+
+
+    <div class="col-md-4">
+    <p class='lead'>Customer Quote</p>
+    <div class="well" id='story-quote-well' style='position:relative'>
+      <div class='container-fluid'>
+
+        <div class="row">
+
+          <div id='edit-story-quote'
+              style='position:absolute; right:20px; margin-top:-3px'>
+            <span class='glyphicon glyphicon-pencil bip-clickable'></span>
+          </div>
+
+          <div id='story-quote' class="col-md-11">
+            <!-- http://stackoverflow.com/questions/13561533 -->
+            <%= best_in_place @story, :quote, as: :textarea, url: story_path(@story),
+                display_with: lambda { |text| story_quote(text) }, sanitize: false,
+                html_attrs: { style: 'width:100%' },
+                activator: '#edit-story-quote', place_holder: "Add a customer quote..." %>
+          </div>
+
+        </div>  <!-- row --> <br>
+
+        <div class="row">
+
+          <div id='edit-story-quote-attr'
+              style='position:absolute; right:20px; margin-top:-3px'>
+            <span class='glyphicon glyphicon-pencil bip-clickable'></span>
+          </div>
+
+          <div id='story-quote-attr' class='col-md-11'>
+
+            <%= best_in_place @story, :quote_attr, url: story_path(@story),
+                activator: '#edit-story-quote-attr', place_holder: "Quote attribution...",
+                html_attrs: { style: 'width: 100%' } %>
+
+          </div>
+
+        </div> <!-- row -->
+
+      </div>  <!-- container -->
+    </div>  <!-- well -->
+    </div>
+
+    <div class='col-md-4'>
+      <p class='lead'>Video</p>
+      <div class='well' id='story-embed-well' style='position:relative'>
+
+
+        <!-- only load something if it's a video -->
+        <iframe id='embed-iframe' width="320" height="180"
+            src="<%= @story.embed_url %>" frameborder="0"></iframe> <br><br>
+
+        <div class="container-fluid">
+          <div class="row">
+            <div id='edit-story-embed'
+                style='position:absolute; right:20px; margin-top:-3px'>
+              <span class='glyphicon glyphicon-pencil bip-clickable'></span>
+            </div>
+
+            <div id='story-embed' class='col-md-10' style='overflow:auto'>
+              <%= best_in_place @story, :embed_url, url: story_path(@story),
+                  activator: '#edit-story-embed', html_attrs: { style: 'width:100%' } %>
+            </div>
+          </div> <br>
+          <p>NOTE: must be the embed url</p>
+        </div>
+
+
+      </div>  <!-- well -->
+    </div>  <!-- col-md-4 -->
+
+  </div>  <!-- row -->
+
+  <div class='row' style='margin-top: 15px'>
 
     <div class="form-inline">
 
@@ -54,63 +178,6 @@
 
     </div>  <!-- form -->
   </div>  <!-- row -->
-
-
-
-  <div class='row' style='margin-top:15px'>
-
-    <div class= 'col-md-3'>
-      <div class='row'>
-        <div class='col-md-11 text-center'>
-          <img src="https://logo.clearbit.com/<%= @story.success.customer.name %>.com"
-              style="height:180px; width:180px">
-        </div>
-      </div>
-    </div>
-
-    <div class="col-md-4 well" id='story-quote-well'>
-
-      <div class='container-fluid'>
-
-        <div class="row">
-
-          <div id='edit-story-quote' class='col-md-2 pull-right'
-              style='margin-top:-2px'>
-            <span class='glyphicon glyphicon-pencil bip-clickable'></span>
-          </div>
-
-          <div id='story-quote' class="col-md-10">
-            <!-- http://stackoverflow.com/questions/13561533 -->
-            <%= best_in_place @story, :quote, as: :textarea, url: story_path(@story),
-              display_with: lambda { |text| story_quote(text) }, sanitize: false,
-              html_attrs: { style: 'width: 100%' },
-              activator: '#edit-story-quote', place_holder: "Add a customer quote..."
-              %>
-          </div>
-
-        </div>  <!-- row --> <br>
-
-        <div class="row">
-
-          <div id='edit-story-quote-attr' class='col-md-2 pull-right'
-              style='margin-top:-4px'>
-
-            <span class='glyphicon glyphicon-pencil bip-clickable'></span>
-
-          </div>
-
-          <div id='story-quote-attr' class='col-md-10'>
-
-            <%= best_in_place @story, :quote_attr, url: story_path(@story),
-              activator: '#edit-story-quote-attr', place_holder: "Quote attribution...",
-              html_attrs: { style: 'width: 100%' } %>
-
-          </div>
-
-        </div> <!-- row -->
-
-      </div>  <!-- container -->
-    </div>  <!-- well -->
 
 </div>
 

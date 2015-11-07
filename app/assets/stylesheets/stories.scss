@@ -17,8 +17,16 @@
 .bip-clickable {
   border: 1px solid #e3e3e3;
   border-radius: 3px;
-  font-size: 1.5em;
   padding: 5px;
+}
+
+.bip-clickable:hover {
+  color: white;
+  background-color: #87a3bc;
+}
+
+#edit-story-title:hover + #story-title {
+  border-left: 2px solid #87a3bc;
 }
 
 #edit-story-quote:hover + #story-quote {
@@ -29,10 +37,8 @@
   border-left: 2px solid #87a3bc;
 }
 
-
-.bip-clickable:hover {
-  color: white;
-  background-color: #87a3bc;
+#edit-story-embed:hover + #story-embed {
+  border-left: 2px solid #87a3bc;
 }
 
 /*

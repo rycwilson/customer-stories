@@ -14,9 +14,17 @@ $(function () {
   configPlugins();
   stylingAdjustments();
 
+  console.log($('#embed-iframe')[0].src);
+
 });
 
 function initListeners () {
+
+  $(".best_in_place[data-bip-attribute='embed_url'").bind("ajax:success", function (data, status) {
+
+    $('#embed-iframe').attr('src', $(this)[0].textContent );
+
+  });
 
 }
 
@@ -25,8 +33,13 @@ function configPlugins () {
   // in-place editing
   $('.best_in_place').best_in_place();
 
-  // $('#publish-logo').bootstrapSwitch();
-  $('#publish-story').bootstrapSwitch();
+  $('#publish-story').bootstrapSwitch({
+    size: 'small'
+  });
+  $('#publish-logo').bootstrapSwitch({
+    size: 'small'
+  });
+
 
   $('.story-tags').select2({
     theme: 'bootstrap',
