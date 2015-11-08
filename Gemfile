@@ -28,6 +28,9 @@ gem 'better_errors'
 
 gem 'best_in_place', '~> 3.0.1'
 
+gem 'whenever', :require => false
+
+
 group :production do
 
   gem 'rails_12factor'
