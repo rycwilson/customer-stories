@@ -25,6 +25,7 @@ gem "paperclip", "~> 4.3"
 gem 'ffaker'
 gem 'pry-rails'
 gem 'better_errors'
+gem 'rails_admin'
 
 gem 'best_in_place', '~> 3.0.1'
 
