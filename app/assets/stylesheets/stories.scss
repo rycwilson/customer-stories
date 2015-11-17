@@ -14,10 +14,15 @@
 *= require social-sharing.css
 */
 
+.dirtyField {
+  color: #D9534F;
+}
+
 .bip-clickable {
   border: 1px solid #e3e3e3;
   border-radius: 3px;
   padding: 5px;
+  font-size: 1.2em;
 }
 
 .bip-clickable:hover {
@@ -26,19 +31,19 @@
 }
 
 #edit-story-title:hover + #story-title {
-  border-left: 2px solid #87a3bc;
+  border-left: 3px solid #87a3bc;
 }
 
 #edit-story-quote:hover + #story-quote {
-  border-left: 2px solid #87a3bc;
+  border-left: 3px solid #87a3bc;
 }
 
 #edit-story-quote-attr:hover + #story-quote-attr {
-  border-left: 2px solid #87a3bc;
+  border-left: 3px solid #87a3bc;
 }
 
 #edit-story-embed:hover + #story-embed {
-  border-left: 2px solid #87a3bc;
+  border-left: 3px solid #87a3bc;
 }
 
 /*

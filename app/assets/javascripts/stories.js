@@ -1,20 +1,14 @@
 //= require slimscroll/jquery.slimscroll
 //= require mvpready-admin
 //= require bootstrap-switch/dist/js/bootstrap-switch
-
-// Select2
 //= require select2/dist/js/select2
-
-// Best in Place
 //= require best_in_place
+//= require dirtyFields/jquery.dirtyFields.js
 
 $(function () {
 
   initListeners();
   configPlugins();
-  stylingAdjustments();
-
-  console.log($('#embed-iframe')[0].src);
 
 });
 
@@ -40,26 +34,26 @@ function configPlugins () {
     size: 'small'
   });
 
-
   $('.story-tags').select2({
     theme: 'bootstrap',
     placeholder: 'select tags'
   });
 
+  /*
+    need to modify the "for" label attributes to match the id attribute
+    of the corresponding input field.  this is required for dirtyFields()
+    plugin to highlight label when the input field changes value
+  */
+  $("label[for='Industry']").attr('for', 'story_industry_tags_');
+  $("label[for='Product_Category']").attr('for', 'story_product_cat_tags_');
+  $("label[for='Product']").attr('for', 'story_product_tags_');
+  $('#tags-form').dirtyFields();
+  $('#tags-form select').on('change', function (e) {
+    $('p.lead + button').toggleClass('hidden');
+  });
+
 }
 
-function stylingAdjustments () {
-  // var height = $('#story-quote-well').height();
-  // $('#edit-story-quote-attr').css('margin-top', height + 5 + 'px');
-
-  // o1 = $('#story-quote-well').offset();
-  // o2 = $(".best_in_place[data-bip-attribute='quote']").offset();
-  // o3 = $(".best_in_place[data-bip-attribute='quote_attr']").offset();
-  // $('#edit-story-quote').css('margin-top', ((o2.top - o1.top) - 5)  + 'px');
-  // $('#edit-story-quote-attr').css('margin-top', ((o3.top - o1.top) - 5) + 'px');
-  // console.log(o1, o2);
-
-}
 
 
 

@@ -11,14 +11,15 @@ class StoriesController < ApplicationController
   def edit
     @story = Story.find params[:id]
     @company = current_user.company
-    # options for new story customer select
-    customers_select_options @company.customers
-    # options for product categories select (multiple select)
-    product_cats_select_options @company.product_categories
-    # options for products select (single select for now)
-    products_select_options @company.products
     # options for industries select (multiple select)
     industries_select_options @company.industry_categories
+    industries_preselected_options @story.success.industry_categories
+    # options for product categories select (multiple select)
+    product_cats_select_options @company.product_categories
+    product_cats_preselected_options @story.success.product_categories
+    # options for products select (single select for now)
+    products_select_options @company.products
+    products_preselected_options @story.success.products
   end
 
   # TODO: allow for new Customer creation
@@ -42,7 +43,7 @@ class StoriesController < ApplicationController
     if success.save
       story = Story.new title: new_story[':title'], success_id: success.id
       if story.save
-        assign_tags @story, new_story
+        assign_tags story, new_story
         redirect_to edit_story_path story
       else
         # problem creating story
@@ -55,14 +56,21 @@ class StoriesController < ApplicationController
   end
 
   def update
-    @story = Story.find params[:id]
-    respond_to do |format|
-      if @story.update story_params
-        # format.html { redirect_to(@story, :notice => 'Story was successfully updated.') }
-        format.json { respond_with_bip(@story) }
-      else
-        # format.html { render :action => "edit" }
-        format.json { respond_with_bip(@story) }
+    story = Story.find params[:id]
+    if params[:story][:industry_tags]  # tags update
+      update_tags(story, params[:story])
+      respond_to do |format|
+        format.js
+      end
+    else
+      respond_to do |format|
+        if story.update story_params
+          # format.html { redirect_to(@story, :notice => 'Story was successfully updated.') }
+          format.json { respond_with_bip(story) }
+        else
+          # format.html { render :action => "edit" }
+          format.json { respond_with_bip(story) }
+        end
       end
     end
   end
@@ -81,7 +89,7 @@ class StoriesController < ApplicationController
 
     if new_story[':industry_tags']
       new_story[':industry_tags'].each do |selection|
-        if selection.to_i == 0   # generic tag
+        if selection.to_i == 0   # if it's a generic tag
           # create a new company industry category based on the generic tag
           story.success.industry_categories << IndustryCategory.create(
               name: selection, company_id: current_user.company.id)
@@ -97,12 +105,69 @@ class StoriesController < ApplicationController
       end
     end
 
-    if new_story[':prodcut_tags']
+    if new_story[':product_tags']
       new_story[':product_tags'].each do |selection|
         story.success.products << Product.find(selection)
       end
     end
 
+  end
+
+  def update_tags story, new_tags
+    old_industry_tags = story.success.industry_categories
+    old_product_cat_tags = story.success.product_categories
+    old_product_tags = story.success.products
+    # add new industry tags ...
+    new_tags[:industry_tags].each do |industry_id|
+      unless old_industry_tags.any? { |industry| industry.id == industry_id.to_i }
+        story.success.industry_categories << IndustryCategory.find(industry_id.to_i)
+      end
+    end
+    # remove deleted industry tags ...
+    old_industry_tags.each do |industry|
+      unless new_tags[:industry_tags].include? industry.id.to_s
+        IndustriesSuccess.where("success_id = ? AND industry_category_id = ?",
+                                  story.success.id, industry.id)[0].destroy
+      end
+    end
+    # add new product category tags ...
+    new_tags[:product_cat_tags].each do |product_cat_id|
+      unless old_product_cat_tags.any? { |product_cat| product_cat.id == product_cat_id.to_i }
+        story.success.product_categories << ProductCategory.find(product_cat_id.to_i)
+      end
+    end
+    # remove deleted product category tags ...
+    old_product_cat_tags.each do |product_cat|
+      unless new_tags[:product_cat_tags].include? product_cat.id.to_s
+        ProductCatsSuccess.where("success_id = ? AND product_category_id = ?",
+                                  story.success.id, product_cat.id)[0].destroy
+      end
+    end
+    # add new product tags ...
+    new_tags[:product_tags].each do |product_id|
+      unless old_product_tags.any? { |product| product.id == product_id.to_i }
+        story.success.products << Product.find(product_id.to_i)
+      end
+    end
+    # remove deleted product tags ...
+    old_product_tags.each do |product|
+      unless new_tags[:product_tags].include? product.id.to_s
+        ProductsSuccess.where("success_id = ? AND product_id = ?",
+                                  story.success.id, product.id)[0].destroy
+      end
+    end
+  end
+
+  def industries_preselected_options story_industry_categories
+    @industries_preselect = story_industry_categories.map { |category| category.id }
+  end
+
+  def product_cats_preselected_options story_product_categories
+    @product_cats_preselect = story_product_categories.map { |category| category.id }
+  end
+
+  def products_preselected_options story_products
+    @products_preselect = story_products.map { |category| category.id }
   end
 
 end

@@ -1,22 +1,49 @@
 <div class='container'>
 
-<!--   <div class='row' style='margin-top:15px'>
-    <div class='col-md-4'>
-      <h4 class='lead'>Story Title</h4>
-    </div>
-    <div class='col-md-4'>
-      <h5>Customer Quote</h5>
-    </div>
-    <div class='col-md-4'>
-      <h5>Video</h5>
-    </div>
-  </div> -->
-
   <div class='row' style='margin-top:15px'>
 
-    <div class='col-md-4'>
+    <div class='col-md-4'>  <!-- story settings -->
 
-      <p class='lead'>Story Title</p>
+      <p class='lead'>Story Settings</p>
+      <div class='row'>
+
+        <div class='col-md-4 text-center'>
+          <img src="https://logo.clearbit.com/<%= @story.success.customer.name.downcase %>.com"
+              style="height:100px">
+        </div>
+
+        <div class='col-md-8 text-center'>
+
+        <%= link_to 'Preview Story Page', story_path(@story),
+                class: 'btn btn-secondary' %> <br><br>
+
+          <div class="form-horizontal">
+
+            <div class="form-group">
+              <label for="publish-story" class='col-md-6 control-label'>Publish Story</label>
+              <div class="col-md-6 text-left" style='padding-left:0'>
+                <input type="checkbox" id='publish-story' class='form-control'>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="publish-logo" class='col-md-6 control-label'>Publish Logo</label>
+              <div class="col-md-6 text-left" style='padding-left:0'>
+                <input type="checkbox" id='publish-logo' class='form-control'>
+              </div>
+            </div>
+
+          </div>  <!-- form -->
+
+        </div>
+
+      </div>  <!-- row -->
+
+    </div>  <!-- story settings -->
+
+    <div class="col-md-4">  <!-- title and quote -->
+
+      <p class='lead'>Title</p>
 
       <div class='row'>
 
@@ -39,78 +66,60 @@
           </div>
         </div>  <!-- well -->
 
-      </div>  <!-- row -->
+      </div>  <!-- title row -->
+
+      <p class='lead'>Customer Quote</p>
 
       <div class='row'>
 
-        <div class='col-md-4 text-center'>
-          <img src="https://logo.clearbit.com/<%= @story.success.customer.name %>.com"
-              style="height:100px"> <br><br>
-        </div>
 
-        <div class='col-md-8'>
-          <label for="publish-story">Publish Story</label>
-          <input type="checkbox" id='publish-story'>
-          <label for="publish-logo" style='margin-top: 15px'>Publish Logo</label>
-          <input type="checkbox" id='publish-logo'>
-          <%= link_to 'Preview', story_path(@story),
-              class: 'btn btn-primary', style: "margin-top:15px" %>
-        </div>
+        <div class="well" id='story-quote-well' style='position:relative'>
+          <div class='container-fluid'>
 
-      </div>  <!-- row -->
+            <div class="row">
 
+              <div id='edit-story-quote'
+                  style='position:absolute; right:20px; margin-top:-3px'>
+                <span class='glyphicon glyphicon-pencil bip-clickable'></span>
+              </div>
 
-    </div>  <!-- col-md-4 -->
+              <div id='story-quote' class="col-md-11">
+                <!-- http://stackoverflow.com/questions/13561533 -->
+                <%= best_in_place @story, :quote, as: :textarea, url: story_path(@story),
+                    display_with: lambda { |text| story_quote(text) }, sanitize: false,
+                    html_attrs: { style: 'width:100%' },
+                    activator: '#edit-story-quote', place_holder: "Add a customer quote..." %>
+              </div>
 
+            </div>  <!-- row --> <br>
 
+            <div class="row">
 
-    <div class="col-md-4">
-    <p class='lead'>Customer Quote</p>
-    <div class="well" id='story-quote-well' style='position:relative'>
-      <div class='container-fluid'>
+              <div id='edit-story-quote-attr'
+                  style='position:absolute; right:20px; margin-top:-3px'>
+                <span class='glyphicon glyphicon-pencil bip-clickable'></span>
+              </div>
 
-        <div class="row">
+              <div id='story-quote-attr' class='col-md-11'>
 
-          <div id='edit-story-quote'
-              style='position:absolute; right:20px; margin-top:-3px'>
-            <span class='glyphicon glyphicon-pencil bip-clickable'></span>
-          </div>
+                <%= best_in_place @story, :quote_attr, url: story_path(@story),
+                    activator: '#edit-story-quote-attr', place_holder: "Quote attribution...",
+                    html_attrs: { style: 'width: 100%' } %>
 
-          <div id='story-quote' class="col-md-11">
-            <!-- http://stackoverflow.com/questions/13561533 -->
-            <%= best_in_place @story, :quote, as: :textarea, url: story_path(@story),
-                display_with: lambda { |text| story_quote(text) }, sanitize: false,
-                html_attrs: { style: 'width:100%' },
-                activator: '#edit-story-quote', place_holder: "Add a customer quote..." %>
-          </div>
+              </div>
 
-        </div>  <!-- row --> <br>
+            </div> <!-- row -->
 
-        <div class="row">
+          </div>  <!-- container -->
+        </div>  <!-- well -->
+      </div>  <!-- quote row -->
+    </div>  <!-- title and quote -->
 
-          <div id='edit-story-quote-attr'
-              style='position:absolute; right:20px; margin-top:-3px'>
-            <span class='glyphicon glyphicon-pencil bip-clickable'></span>
-          </div>
-
-          <div id='story-quote-attr' class='col-md-11'>
-
-            <%= best_in_place @story, :quote_attr, url: story_path(@story),
-                activator: '#edit-story-quote-attr', place_holder: "Quote attribution...",
-                html_attrs: { style: 'width: 100%' } %>
-
-          </div>
-
-        </div> <!-- row -->
-
-      </div>  <!-- container -->
-    </div>  <!-- well -->
-    </div>
-
-    <div class='col-md-4'>
+    <div class='col-md-4'>  <!-- video -->
       <p class='lead'>Video</p>
       <div class='well' id='story-embed-well' style='position:relative'>
 
+        <!-- http://stackoverflow.com/questions/13725683 -->
 
         <!-- only load something if it's a video -->
         <iframe id='embed-iframe' width="320" height="180"
@@ -127,59 +136,59 @@
               <%= best_in_place @story, :embed_url, url: story_path(@story),
                   activator: '#edit-story-embed', html_attrs: { style: 'width:100%' } %>
             </div>
-          </div> <br>
-          <p>NOTE: must be the embed url</p>
+          </div>
         </div>
 
 
       </div>  <!-- well -->
-    </div>  <!-- col-md-4 -->
+    </div>  <!-- video -->
 
-  </div>  <!-- row -->
+  </div>
 
-  <div class='row' style='margin-top: 15px'>
+  <div class="row">
 
-    <div class="form-inline">
+    <p class='lead' style='display:inline-block'>Tags</p>
+    <button type='submit' class='hidden btn btn-sm btn-primary'
+        style='display:inline-block' form='tags-form'>
+      Save changes
+    </button>
+    <%#= link_to 'Cancel',  %>
 
-      <div class="form-group col-md-3">
-        <%= label_tag 'Industry tags', nil, class: 'control-label' %>
-        <!-- Note the necessary '[]' notation below  -->
-        <!-- if not present, will only return a single value  -->
-        <%= select_tag "story[:industry_tags][]",
-            options_for_select(@industries_select),
-            { multiple: 'true', class: 'story-tags form-control',
-              style: 'width:100%'} %>
-      </div>
-    <!-- </div> -->
+    <div class="row">
 
-    <!-- <div class="form-inline"> -->
-      <div class="form-group col-md-3">
-        <%= label_tag 'Product Category tags', nil, class: 'control-label' %>
-        <%= select_tag "story[:product_cat_tags][]",
-            options_for_select(@product_cats_select),
-            { multiple: 'true', class: 'story-tags form-control',
-              style: 'width:100%'} %>
-      </div>
-    <!-- </div> -->
+      <%= form_tag story_path(@story), remote: true, method: "put",
+            id: 'tags-form', class: 'form-inline' do %>
 
-    <!-- <div class="form-inline"> -->
-      <div class="form-group col-md-3">
-        <%= label_tag 'Product tags', nil, class: 'control-label' %>
-        <%= select_tag "story[:product_tags][]",
-            options_for_select(@products_select),
-            { multiple: 'true', class: 'story-tags form-control',
-              style: 'width:100%'} %>
-      </div>
+        <div class="form-group col-md-4" style='margin-bottom:10px'>
+          <%= label_tag 'Industry', nil, class: 'control-label' %>
+          <!-- Note the necessary '[]' notation below  -->
+          <!-- if not present, will only return a single value  -->
+          <%= select_tag "story[industry_tags][]",
+              options_for_select(@industries_select, @industries_preselect),
+              { multiple: 'true', class: 'story-tags form-control',
+                style: 'width:100%'} %>
+        </div>
 
-      <!-- <div class="col-md-1">
-        <button>submit tags</button>
-      </div> -->
+        <div class="form-group col-md-4" style='margin-bottom:10px'>
+          <%= label_tag 'Product Category', nil, class: 'control-label' %>
+          <%= select_tag "story[product_cat_tags][]",
+              options_for_select(@product_cats_select, @product_cats_preselect),
+              { multiple: 'true', class: 'story-tags form-control',
+                style: 'width:100%'} %>
+        </div>
 
+        <div class="form-group col-md-4" style='margin-bottom:10px'>
+          <%= label_tag 'Product', nil, class: 'control-label' %>
+          <%= select_tag "story[product_tags][]",
+              options_for_select(@products_select, @products_preselect),
+              { multiple: 'true', class: 'story-tags form-control',
+                style: 'width:100%'} %>
+        </div>
 
-    </div>  <!-- form -->
-  </div>  <!-- row -->
+      <% end %>
+    </div>
+  </div>
 
 </div>
 
-
-
+<br><br><br><br><br><br><br><br>
