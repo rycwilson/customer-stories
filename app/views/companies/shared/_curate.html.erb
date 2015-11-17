@@ -85,14 +85,14 @@
 
               <% if @customers_select.length == 1 %>
 
-                <%= text_field_tag 'story[:customer]', nil,
+                <%= text_field_tag 'story[customer]', nil,
                   class: 'form-control',
                   style: 'width: 100%', autofocus: 'true',
                   placeholder: 'add a customer' %>
 
               <% else %>
 
-                <%= select_tag 'story[:customer]',
+                <%= select_tag 'story[customer]',
                     options_for_select(@customers_select),
                     class: 'new-story-customer form-control',
                     style: 'width: 100%' %>
@@ -105,7 +105,7 @@
           <div class='form-group required-input'>
             <%= label_tag 'Story title', nil, class: 'col-md-4 control-label' %>
             <div class='col-md-8'>
-              <%= text_field_tag 'story[:title]', nil, class: 'form-control',
+              <%= text_field_tag 'story[title]', nil, class: 'form-control',
                   placeholder: 'title' %>
             </div>
           </div>
@@ -116,7 +116,7 @@
             <div class='col-md-8'>
               <!-- Note the necessary '[]' notation below  -->
               <!-- if not present, will only return a single value  -->
-              <%= select_tag "story[:industry_tags][]",
+              <%= select_tag "story[industry_tags][]",
                   options_for_select(@industries_select),
                   { multiple: 'true', class: 'new-story-tags form-control',
                     style: 'width:100%'} %>
@@ -127,7 +127,7 @@
             <%= label_tag 'Product Category tags', nil,
                 class: 'col-md-4 control-label' %>
             <div class='col-md-8'>
-              <%= select_tag "story[:product_cat_tags][]",
+              <%= select_tag "story[product_cat_tags][]",
                   options_for_select(@product_cats_select),
                   { multiple: 'true', class: 'new-story-tags form-control',
                     style: 'width:100%'} %>
@@ -137,7 +137,7 @@
           <div class="form-group">
             <%= label_tag 'Product tags', nil, class: 'col-md-4 control-label' %>
             <div class='col-md-8'>
-              <%= select_tag "story[:product_tags][]",
+              <%= select_tag "story[product_tags][]",
                   options_for_select(@products_select),
                   { multiple: 'true', class: 'new-story-tags form-control',
                     style: 'width:100%'} %>
