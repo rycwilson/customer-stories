@@ -145,49 +145,52 @@
 
   </div>
 
+
+
+  <p class='lead' style='display:inline-block'>Tags</p>
+  <button type='submit' class='edit-tags hidden btn btn-sm btn-primary'
+      style='display:inline-block; margin-left:15px; margin-bottom:8px' form='tags-form'>
+    Save changes
+  </button>
+  <button id='edit-tags-cancel' class='edit-tags hidden btn btn-sm btn-default'
+      style='display:inline-block; margin-bottom:8px'>
+    Cancel
+  </button>
+
   <div class="row">
 
-    <p class='lead' style='display:inline-block'>Tags</p>
-    <button type='submit' class='hidden btn btn-sm btn-primary'
-        style='display:inline-block' form='tags-form'>
-      Save changes
-    </button>
-    <%#= link_to 'Cancel',  %>
+    <%= form_tag story_path(@story), remote: true, method: "put",
+          id: 'tags-form', class: 'form-inline' do %>
 
-    <div class="row">
+      <div class="form-group col-md-4" style='margin-bottom:10px'>
+        <%= label_tag 'Industry', nil, class: 'control-label' %>
+        <!-- Note the necessary '[]' notation below  -->
+        <!-- if not present, will only return a single value  -->
+        <%= select_tag "story[industry_tags][]",
+            options_for_select(@industries_select, @industries_preselect),
+            { multiple: 'true', class: 'story-tags form-control',
+              style: 'width:100%'} %>
+      </div>
 
-      <%= form_tag story_path(@story), remote: true, method: "put",
-            id: 'tags-form', class: 'form-inline' do %>
+      <div class="form-group col-md-4" style='margin-bottom:10px'>
+        <%= label_tag 'Product Category', nil, class: 'control-label' %>
+        <%= select_tag "story[product_cat_tags][]",
+            options_for_select(@product_cats_select, @product_cats_preselect),
+            { multiple: 'true', class: 'story-tags form-control',
+              style: 'width:100%'} %>
+      </div>
 
-        <div class="form-group col-md-4" style='margin-bottom:10px'>
-          <%= label_tag 'Industry', nil, class: 'control-label' %>
-          <!-- Note the necessary '[]' notation below  -->
-          <!-- if not present, will only return a single value  -->
-          <%= select_tag "story[industry_tags][]",
-              options_for_select(@industries_select, @industries_preselect),
-              { multiple: 'true', class: 'story-tags form-control',
-                style: 'width:100%'} %>
-        </div>
+      <div class="form-group col-md-4" style='margin-bottom:10px'>
+        <%= label_tag 'Product', nil, class: 'control-label' %>
+        <%= select_tag "story[product_tags][]",
+            options_for_select(@products_select, @products_preselect),
+            { multiple: 'true', class: 'story-tags form-control',
+              style: 'width:100%'} %>
+      </div>
 
-        <div class="form-group col-md-4" style='margin-bottom:10px'>
-          <%= label_tag 'Product Category', nil, class: 'control-label' %>
-          <%= select_tag "story[product_cat_tags][]",
-              options_for_select(@product_cats_select, @product_cats_preselect),
-              { multiple: 'true', class: 'story-tags form-control',
-                style: 'width:100%'} %>
-        </div>
-
-        <div class="form-group col-md-4" style='margin-bottom:10px'>
-          <%= label_tag 'Product', nil, class: 'control-label' %>
-          <%= select_tag "story[product_tags][]",
-              options_for_select(@products_select, @products_preselect),
-              { multiple: 'true', class: 'story-tags form-control',
-                style: 'width:100%'} %>
-        </div>
-
-      <% end %>
-    </div>
+    <% end %>
   </div>
+
 
 </div>
 
