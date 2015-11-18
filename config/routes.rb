@@ -20,7 +20,7 @@ Rails.application.routes.draw do
   get   '/stories/:id/edit', to: 'stories#edit', as: 'edit_story'
   get   '/stories/:id', to: 'stories#show', as: 'story'
   put   '/stories/:id', to: 'stories#update'
-  delete '/stories/:id', to: 'stories#delete'
+  delete '/stories/:id', to: 'stories#destroy'
 
   devise_for :users, controllers: {
       sessions: 'users/sessions',

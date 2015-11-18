@@ -2990,11 +2990,11 @@ table.dataTable-helper td.highlight {
   }
 }
 .navbar {
-/* CSP: changing nav bar to white
-  background-color: #2b3d4c;
-  border-color: #2b3d4c; */
+ /* CSP: changing nav bar to white
   background-color: #FFFFFF;
-  border-color: #FFFFFF;
+  border-color: #FFFFFF;*/
+  background-color: #2b3d4c;
+  border-color: #2b3d4c;
 }
 .navbar .navbar-brand {
   color: #87a3bc;

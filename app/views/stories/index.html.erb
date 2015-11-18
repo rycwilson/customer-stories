@@ -1,40 +1,49 @@
 <div id='wrapper'>
-<div class="content">
-<div class="container">
+  <div class="content">
+    <div class="container">
 
-<!-- .mainnav class puts the fading graphic underneath the headline -->
-<div class="mainnav" style="color:#999999; margin-top:20px">
-  <h2 style="margin-left:20px">Customers</h2>
-</div>
+      <%= link_to company_path(current_user.company), class: 'story-nav' do %>
+        <span class='glyphicon glyphicon-chevron-left'
+            style='color:#337ab7; margin-top:20px; margin-right:5px'>
+        </span><span>Curate Stories</span>
+      <% end %>
+      <hr>
 
-<div class="portlet portlet-default">
-  <div class="portlet-body">
+      <!-- .mainnav class puts the fading graphic underneath the headline -->
+      <div class="mainnav" style="color:#999999; margin-top:20px">
+        <h2 style="margin-left:20px">Customers</h2>
+      </div>
 
-    <!-- TODO: Make this responsive -->
-    <% @stories.each_slice(5) do |stories_row| %>
-      <div class='container row' style='margin: 0 auto'>
-        <% stories_row.each do |story| %>
+      <div class="portlet portlet-default">
+        <div class="portlet-body">
 
-          <div class="col-md-2 text-center" style='margin-left:26px'>
-            <div class="thumbnail" style='position:relative'>
-              <!-- <div class="thumbnail-view"> -->
+          <!-- TODO: Make this responsive -->
+          <% @stories.each_slice(5) do |stories_row| %>
+            <div class='container row' style='margin: 0 auto'>
+              <% stories_row.each do |story| %>
 
-              <img src="<%= asset_path('video.png') %>" alt="video tag"
-                  style='position:absolute; height:25px; left:130px'>
+                <div class="col-md-2 text-center" style='margin-left:26px'>
+                  <a href='/stories/<%= story.id %>'>
+                    <div class="thumbnail" style='position:relative'>
+                      <!-- <div class="thumbnail-view"> -->
 
-              <img src="https://logo.clearbit.com/<%= story.success.customer.name %>.com" style='height:95px' >
+                      <img src="<%= asset_path('video.png') %>" alt="video tag"
+                          style='position:absolute; height:25px; left:130px'>
 
-              <!-- </div> -->
-            </div> <!-- /.thumbnail -->
-          </div> <!-- /.col -->
+                      <img src="https://logo.clearbit.com/<%= story.success.customer.name.downcase %>.com" style='height:95px' >
 
-        <% end %>
-      </div><br><br>
-    <% end %>
+                      <!-- </div> -->
+                    </div> <!-- /.thumbnail -->
+                  </a>
+                </div> <!-- /.col -->
 
-  </div>  <!-- portlet-body -->
-</div>  <!-- portlet -->
+              <% end %>
+            </div><br><br>
+          <% end %>
 
-</div>  <!-- container -->
-</div>  <!-- content -->
+        </div>  <!-- portlet-body -->
+      </div>  <!-- portlet -->
+
+    </div>  <!-- container -->
+  </div>  <!-- content -->
 </div>  <!-- wrapper -->

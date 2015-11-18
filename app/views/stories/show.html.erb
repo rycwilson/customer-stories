@@ -1,5 +1,12 @@
 <div class='container'>
 
+  <%= link_to company_path(current_user.company), class: 'story-nav' do %>
+    <span class='glyphicon glyphicon-chevron-left'
+        style='color:#337ab7; margin-top:20px; margin-right:5px'>
+    </span><span>Curate Stories</span>
+  <% end %>
+  <hr>
+
   <%= render 'shared/social_sharing' %>
 
   <div class= 'col-md-3' style='margin-top:15px'>

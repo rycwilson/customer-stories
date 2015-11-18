@@ -88,6 +88,10 @@ class StoriesController < ApplicationController
   end
 
   def destroy
+    story = Story.find params[:id]
+    story.destroy
+    redirect_to company_path(current_user.company_id),
+        info: "Story '#{story.title}' was deleted"
   end
 
   private

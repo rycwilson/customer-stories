@@ -1,8 +1,8 @@
 <div class='container'>
 
-  <%= link_to company_path(current_user.company), id: 'story-edit-nav' do %>
+  <%= link_to company_path(current_user.company), class: 'story-nav' do %>
     <span class='glyphicon glyphicon-chevron-left'
-        style='color:#999999; margin-top:15px; margin-right:5px'>
+        style='color:#337ab7; margin-top:20px; margin-right:5px'>
     </span><span>Curate Stories</span>
   <% end %>
   <hr>
@@ -151,9 +151,8 @@
 
 
       </div>  <!-- well -->
-    </div>  <!-- video -->
-
-  </div>
+    </div>  <!-- video -->  <!-- settings, title, quote, video -->
+  </div>  <!-- settings, title, quote, video -->
 
   <p class='lead' style='display:inline-block'>Tags</p>
   <button type='submit' class='edit-tags hidden btn btn-sm btn-primary'
@@ -166,37 +165,44 @@
   </button>
 
   <div class="row" style='margin-bottom: 15px'>  <!-- tags form -->
+    <div class="col-md-12">
+      <div class="well">
+        <div class="container-fluid">
 
-    <%= form_tag story_path(@story), remote: true, method: "put",
-          id: 'tags-form', class: 'form-inline' do %>
+          <%= form_tag story_path(@story), remote: true, method: "put",
+                id: 'tags-form', class: 'form-inline' do %>
 
-      <div class="form-group col-md-4" style='margin-bottom:10px'>
-        <%= label_tag 'Industry', nil, class: 'control-label' %>
-        <!-- Note the necessary '[]' notation below  -->
-        <!-- if not present, will only return a single value  -->
-        <%= select_tag "story[industry_tags][]",
-            options_for_select(@industries_select, @industries_preselect),
-            { multiple: 'true', class: 'story-tags form-control',
-              style: 'width:100%'} %>
+            <div class="form-group col-md-4" style='margin-bottom:10px'>
+              <%= label_tag 'Industry', nil, class: 'control-label' %>
+              <!-- Note the necessary '[]' notation below  -->
+              <!-- if not present, will only return a single value  -->
+              <%= select_tag "story[industry_tags][]",
+                  options_for_select(@industries_select, @industries_preselect),
+                  { multiple: 'true', class: 'story-tags form-control',
+                    style: 'width:100%'} %>
+            </div>
+
+            <div class="form-group col-md-4" style='margin-bottom:10px'>
+              <%= label_tag 'Product Category', nil, class: 'control-label' %>
+              <%= select_tag "story[product_cat_tags][]",
+                  options_for_select(@product_cats_select, @product_cats_preselect),
+                  { multiple: 'true', class: 'story-tags form-control',
+                    style: 'width:100%'} %>
+            </div>
+
+            <div class="form-group col-md-4" style='margin-bottom:10px'>
+              <%= label_tag 'Product', nil, class: 'control-label' %>
+              <%= select_tag "story[product_tags][]",
+                  options_for_select(@products_select, @products_preselect),
+                  { multiple: 'true', class: 'story-tags form-control',
+                    style: 'width:100%'} %>
+            </div>
+
+          <% end %>
+
+        </div>
       </div>
-
-      <div class="form-group col-md-4" style='margin-bottom:10px'>
-        <%= label_tag 'Product Category', nil, class: 'control-label' %>
-        <%= select_tag "story[product_cat_tags][]",
-            options_for_select(@product_cats_select, @product_cats_preselect),
-            { multiple: 'true', class: 'story-tags form-control',
-              style: 'width:100%'} %>
-      </div>
-
-      <div class="form-group col-md-4" style='margin-bottom:10px'>
-        <%= label_tag 'Product', nil, class: 'control-label' %>
-        <%= select_tag "story[product_tags][]",
-            options_for_select(@products_select, @products_preselect),
-            { multiple: 'true', class: 'story-tags form-control',
-              style: 'width:100%'} %>
-      </div>
-
-    <% end %>
+    </div>
   </div>  <!-- tags form -->
 
   <div class="row">  <!-- content -->
