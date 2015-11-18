@@ -11,13 +11,13 @@ class StoriesController < ApplicationController
   def edit
     @story = Story.find params[:id]
     @company = current_user.company
-    # options for industries select (multiple select)
+    # populate options for industries select (multiple select)
     industries_select_options @company.industry_categories
     industries_preselected_options @story.success.industry_categories
-    # options for product categories select (multiple select)
+    # populate options for product categories select (multiple select)
     product_cats_select_options @company.product_categories
     product_cats_preselected_options @story.success.product_categories
-    # options for products select (single select for now)
+    # populate options for products select (single select for now)
     products_select_options @company.products
     products_preselected_options @story.success.products
   end
@@ -57,19 +57,31 @@ class StoriesController < ApplicationController
 
   def update
     story = Story.find params[:id]
-    if params[:story][:industry_tags]  # tags update
+    if params[:story][:industry_tags]  # if updating tags
       update_tags(story, params[:story])
       respond_to do |format|
         format.js
       end
-    else
+    elsif params[:story][:embed_url]  # if updating video url
+      youtube_id = params[:story][:embed_url].match(/v=(?<id>.*)/)[:id]
+      params[:story][:embed_url] = "https://www.youtube.com/embed/" + youtube_id
+      respond_to do |format|
+        if story.update story_params
+          # respond with json because we need to update the input field
+          # on client side with the modified url ...
+          format.json { render json: story.as_json(only: :embed_url) }
+        else
+          #
+        end
+      end
+    else  # all other updates
       respond_to do |format|
         if story.update story_params
           # format.html { redirect_to(@story, :notice => 'Story was successfully updated.') }
           format.json { respond_with_bip(story) }
         else
           # format.html { render :action => "edit" }
-          format.json { respond_with_bip(story) }
+          # format.json { respond_with_bip(story) }
         end
       end
     end

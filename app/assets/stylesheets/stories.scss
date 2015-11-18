@@ -24,15 +24,10 @@ p.lead {
 
 #story-edit-nav {
   color: #03c;
-  text-decoration: underline;
 }
 
 #story-edit-nav:hover {
-  color: #c00;
-}
-
-.dirtyField {
-  color: #D9534F;
+  text-decoration: underline;
 }
 
 .bip-clickable {
@@ -59,10 +54,13 @@ p.lead {
   border-left: 3px solid #87a3bc;
 }
 
-/*
-a transparent input
-input {
+.dirtyField {
+  color: #D9534F;
+}
 
+/*
+a transparent input - might come in handy at some point
+input {
   background-color: rgba(0,0,0,0);
   border: none;
 }

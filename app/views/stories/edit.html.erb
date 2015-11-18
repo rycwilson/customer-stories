@@ -66,7 +66,7 @@
               <div id='story-title' class='col-md-11'>
                 <%= best_in_place @story, :title, as: :textarea, url: story_path(@story),
                     html_attrs: { style: 'width:100%' },
-                    activator: '#edit-story-title', place_holder: "Add a title..." %>
+                    activator: '#edit-story-title', place_holder: "Add a title ..." %>
               </div>
 
             </div>
@@ -95,7 +95,8 @@
                 <%= best_in_place @story, :quote, as: :textarea, url: story_path(@story),
                     display_with: lambda { |text| story_quote(text) }, sanitize: false,
                     html_attrs: { style: 'width:100%' },
-                    activator: '#edit-story-quote', place_holder: "Add a customer quote..." %>
+                    activator: '#edit-story-quote',
+                    place_holder: "Add a customer quote ..." %>
               </div>
 
             </div>  <!-- row --> <br>
@@ -110,7 +111,8 @@
               <div id='story-quote-attr' class='col-md-11'>
 
                 <%= best_in_place @story, :quote_attr, url: story_path(@story),
-                    activator: '#edit-story-quote-attr', place_holder: "Quote attribution...",
+                    activator: '#edit-story-quote-attr',
+                    place_holder: "Add an attribution ...",
                     html_attrs: { style: 'width: 100%' } %>
 
               </div>
@@ -128,7 +130,6 @@
 
         <!-- http://stackoverflow.com/questions/13725683 -->
 
-        <!-- only load something if it's a video -->
         <iframe id='embed-iframe' width="320" height="180"
             src="<%= @story.embed_url %>" frameborder="0"></iframe> <br><br>
 
@@ -141,7 +142,9 @@
 
             <div id='story-embed' class='col-md-10' style='overflow:auto'>
               <%= best_in_place @story, :embed_url, url: story_path(@story),
-                  activator: '#edit-story-embed', html_attrs: { style: 'width:100%' } %>
+                  activator: '#edit-story-embed',
+                  place_holder: 'Add a video (Youtube URL) ...',
+                  html_attrs: { style: 'width:100%' } %>
             </div>
           </div>
         </div>
@@ -162,7 +165,7 @@
     Cancel
   </button>
 
-  <div class="row" style='margin-bottom: 15px'>
+  <div class="row" style='margin-bottom: 15px'>  <!-- tags form -->
 
     <%= form_tag story_path(@story), remote: true, method: "put",
           id: 'tags-form', class: 'form-inline' do %>
@@ -194,7 +197,7 @@
       </div>
 
     <% end %>
-  </div>
+  </div>  <!-- tags form -->
 
   <div class="row">  <!-- content -->
     <div class='col-md-8'>
@@ -212,7 +215,9 @@
             <div class='col-md-11' id='story-situation'>
               <strong>Situation:&nbsp&nbsp</strong>
               <%= best_in_place @story, :situation, as: :textarea, url: story_path(@story),
-                  activator: '#edit-story-situation', html_attrs: { style: 'width:100%' } %>
+                  activator: '#edit-story-situation',
+                  place_holder: 'Add story situation ...',
+                  html_attrs: { style: 'width:100%' } %>
             </div>
 
           </div> <br>
@@ -227,7 +232,9 @@
             <div class='col-md-11' id='story-challenge'>
               <strong>Challenge:&nbsp&nbsp</strong>
               <%= best_in_place @story, :challenge, as: :textarea, url: story_path(@story),
-                  activator: '#edit-story-challenge', html_attrs: { style: 'width:100%' } %>
+                  activator: '#edit-story-challenge',
+                  place_holder: 'Add story challenge ...',
+                  html_attrs: { style: 'width:100%' } %>
 
             </div>
           </div> <br>
@@ -242,7 +249,9 @@
             <div class='col-md-11' id='story-solution'>
               <strong>Solution:&nbsp&nbsp</strong>
               <%= best_in_place @story, :solution, as: :textarea, url: story_path(@story),
-                  activator: '#edit-story-solution', html_attrs: { style: 'width:100%' } %>
+                  activator: '#edit-story-solution',
+                  place_holder: 'Add story solution ...',
+                  html_attrs: { style: 'width:100%' } %>
 
             </div>
           </div> <br>
@@ -257,7 +266,9 @@
             <div class='col-md-11' id='story-results'>
               <strong>Results:&nbsp&nbsp</strong>
               <%= best_in_place @story, :results, as: :textarea, url: story_path(@story),
-                  activator: '#edit-story-results', html_attrs: { style: 'width:100%' } %>
+                  activator: '#edit-story-results',
+                  place_holder: 'Add story results ...',
+                  html_attrs: { style: 'width:100%' } %>
 
             </div>
           </div> <br>
@@ -266,5 +277,6 @@
       </div>  <!-- well -->
     </div>  <!-- col-md-8 -->
   </div>  <!-- content -->
+
 </div>  <!-- container -->
 
