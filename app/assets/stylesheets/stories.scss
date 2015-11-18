@@ -14,6 +14,23 @@
 *= require social-sharing.css
 */
 
+well {
+  margin-bottom: 15px
+}
+
+p.lead {
+  margin-bottom: 8px;
+}
+
+#story-edit-nav {
+  color: #03c;
+  text-decoration: underline;
+}
+
+#story-edit-nav:hover {
+  color: #c00;
+}
+
 .dirtyField {
   color: #D9534F;
 }
@@ -30,19 +47,15 @@
   background-color: #87a3bc;
 }
 
-#edit-story-title:hover + #story-title {
-  border-left: 3px solid #87a3bc;
-}
-
-#edit-story-quote:hover + #story-quote {
-  border-left: 3px solid #87a3bc;
-}
-
-#edit-story-quote-attr:hover + #story-quote-attr {
-  border-left: 3px solid #87a3bc;
-}
-
-#edit-story-embed:hover + #story-embed {
+/* make edit field stand out when hover over edit button */
+#edit-story-title:hover + #story-title,
+#edit-story-quote:hover + #story-quote,
+#edit-story-quote-attr:hover + #story-quote-attr,
+#edit-story-embed:hover + #story-embed,
+#edit-story-situation:hover + #story-situation,
+#edit-story-challenge:hover + #story-challenge,
+#edit-story-solution:hover + #story-solution,
+#edit-story-results:hover + #story-results {
   border-left: 3px solid #87a3bc;
 }
 

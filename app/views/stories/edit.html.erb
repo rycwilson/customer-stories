@@ -1,5 +1,12 @@
 <div class='container'>
 
+  <%= link_to company_path(current_user.company), id: 'story-edit-nav' do %>
+    <span class='glyphicon glyphicon-chevron-left'
+        style='color:#999999; margin-top:15px; margin-right:5px'>
+    </span><span>Curate Stories</span>
+  <% end %>
+  <hr>
+
   <div class='row' style='margin-top:15px'>
 
     <div class='col-md-4'>  <!-- story settings -->
@@ -145,8 +152,6 @@
 
   </div>
 
-
-
   <p class='lead' style='display:inline-block'>Tags</p>
   <button type='submit' class='edit-tags hidden btn btn-sm btn-primary'
       style='display:inline-block; margin-left:15px; margin-bottom:8px' form='tags-form'>
@@ -157,7 +162,7 @@
     Cancel
   </button>
 
-  <div class="row">
+  <div class="row" style='margin-bottom: 15px'>
 
     <%= form_tag story_path(@story), remote: true, method: "put",
           id: 'tags-form', class: 'form-inline' do %>
@@ -191,7 +196,75 @@
     <% end %>
   </div>
 
+  <div class="row">  <!-- content -->
+    <div class='col-md-8'>
+      <p class='lead'>Content</p>
+      <div class="well" style='position:relative'>
+        <div class="container-fluid">
 
-</div>
+          <div class="row" style='margin-top:10px'>
 
-<br><br><br><br><br><br><br><br>
+            <div id='edit-story-situation'
+                  style='position:absolute; right:20px; margin-top:-3px'>
+                <span class='glyphicon glyphicon-pencil bip-clickable'></span>
+            </div>
+
+            <div class='col-md-11' id='story-situation'>
+              <strong>Situation:&nbsp&nbsp</strong>
+              <%= best_in_place @story, :situation, as: :textarea, url: story_path(@story),
+                  activator: '#edit-story-situation', html_attrs: { style: 'width:100%' } %>
+            </div>
+
+          </div> <br>
+
+          <div class="row">
+
+            <div id='edit-story-challenge'
+                  style='position:absolute; right:20px; margin-top:-3px'>
+                <span class='glyphicon glyphicon-pencil bip-clickable'></span>
+            </div>
+
+            <div class='col-md-11' id='story-challenge'>
+              <strong>Challenge:&nbsp&nbsp</strong>
+              <%= best_in_place @story, :challenge, as: :textarea, url: story_path(@story),
+                  activator: '#edit-story-challenge', html_attrs: { style: 'width:100%' } %>
+
+            </div>
+          </div> <br>
+
+          <div class="row">
+
+            <div id='edit-story-solution'
+                  style='position:absolute; right:20px; margin-top:-3px'>
+                <span class='glyphicon glyphicon-pencil bip-clickable'></span>
+            </div>
+
+            <div class='col-md-11' id='story-solution'>
+              <strong>Solution:&nbsp&nbsp</strong>
+              <%= best_in_place @story, :solution, as: :textarea, url: story_path(@story),
+                  activator: '#edit-story-solution', html_attrs: { style: 'width:100%' } %>
+
+            </div>
+          </div> <br>
+
+          <div class="row">
+
+            <div id='edit-story-results'
+                  style='position:absolute; right:20px; margin-top:-3px'>
+                <span class='glyphicon glyphicon-pencil bip-clickable'></span>
+            </div>
+
+            <div class='col-md-11' id='story-results'>
+              <strong>Results:&nbsp&nbsp</strong>
+              <%= best_in_place @story, :results, as: :textarea, url: story_path(@story),
+                  activator: '#edit-story-results', html_attrs: { style: 'width:100%' } %>
+
+            </div>
+          </div> <br>
+
+        </div>
+      </div>  <!-- well -->
+    </div>  <!-- col-md-8 -->
+  </div>  <!-- content -->
+</div>  <!-- container -->
+
