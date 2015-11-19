@@ -30,7 +30,7 @@ config/application.yml
 public/system
 
 # pre-compiled assets (uncomment for github push, comment for heroku)
-public/assets
+#public/assets
 tmp/cache
 
 # user-specific (uncomment for github push, comment for heroku)
