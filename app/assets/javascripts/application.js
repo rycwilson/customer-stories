@@ -16,7 +16,9 @@
 //= require bootstrap-sass/assets/javascripts/bootstrap
 //= require mvpready-core
 //= require mvpready-helpers
-// require analytics.js (under construction)
+//= require flot/jquery.flot
+
+//= require_tree ./sitewide
 
 // flash messaging
 setTimeout(function () {

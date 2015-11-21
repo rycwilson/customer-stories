@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   root 'site#index'
   get '/product' => 'site#product'
   get '/plans' => 'site#plans'
@@ -34,4 +35,6 @@ Rails.application.routes.draw do
   delete  '/profile', to: 'profile#destroy'
   get     '/profile/edit', to: 'profile#edit'
 
+## TODO!!!  Add route for devise Admin scope to the RailsAdmin page(s) /admin
+  
 end

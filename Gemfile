@@ -25,8 +25,12 @@ gem 'omniauth'
 gem 'omniauth-linkedin'
 gem "paperclip", "~> 4.3"
 gem 'ffaker'
+gem 'rails_admin'
 
 gem 'best_in_place', '~> 3.0.1'
+
+gem 'whenever', :require => false
+
 
 group :production do
 
