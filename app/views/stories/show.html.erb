@@ -1,6 +1,6 @@
 <div class='container'>
 
-  <div class="row">
+  <div class="row">  <!-- nav links -->
     <div class='col-md-2'>
 
       <%= link_to company_path(current_user.company), class: 'story-nav' do %>
@@ -20,67 +20,74 @@
       <%= render 'shared/social_sharing' %>
 
     </div>
-  </div>
+  </div>  <!-- navlinks -->
   <hr style='margin-top:15px'>
 
-<div class="row">
-  <div class= 'col-md-3 text-center' style='margin-top:5px'>
-    <!-- <div class='row'>
-      <div class='col-md-11 text-center'> -->
-        <img src="https://logo.clearbit.com/<%= @story.success.customer.name.downcase %>.com"
-            style="height:120px; width:120px">
-    <!--   </div>
-    </div> -->
-  </div>
+  <div class="row">  <!-- logo, quote, video -->
+    <div class= 'col-md-3 text-center' style='margin-top:5px'>
 
-  <div class= 'col-md-5' style='margin-top:5px'>  <!-- quote -->
+      <img src="https://logo.clearbit.com/<%= @story.success.customer.name.downcase %>.com"
+          style="height:120px; width:120px">  <!-- logo -->
 
-    <p class='lead'><em>
-      "<%= @story.quote %>"
-    </em></p><br>
+    </div>  <!-- logo -->
 
-    <div class='row'>
-      <div class='col-md-11 text-right'>
+    <div class= 'col-md-5' style='margin-top:5px'>  <!-- quote -->
 
-        <p>- <%= @story.quote_attr %></p>
+      <p class='lead'><em>"<%= @story.quote %>"</em></p> <br>
+
+      <div class='row'>
+        <div class='col-md-11 text-right'>
+
+          <p>- <%= @story.quote_attr %></p>
+
+        </div>
+      </div>
+    </div>  <!-- quote -->
+
+    <div class= 'col-md-4' style='margin-top:5px'>
+      <iframe width="320" height="180" src="<%= @story.embed_url %>" frameborder="0" allowfullscreen></iframe>
+    </div>
+
+  </div>  <!-- logo, quote, video -->
+
+  <div class="row" style='margin-top:20px'>
+    <div class='col-md-8'>  <!-- content -->
+      <div class='well'>
+
+        <h3 class='text-center'><%= @story.title %></h3><br>
+
+        <p><strong>Situation: </strong><%= @story.situation %></p><br>
+
+        <p><strong>Challenge: </strong><%= @story.challenge %></p><br>
+
+        <p><strong>Solution: </strong><%= @story.solution %></p><br>
+
+        <p><strong>Results: </strong><%= @story.results %></p><br>
+
+      </div>
+    </div>  <!-- content -->
+
+    <div class='col-md-4'>
+      <div class='well text-center'>
+
+        <h3>Contributing Team</h3>
+
+        <script src="//platform.linkedin.com/in.js" type="text/javascript"></script>
+        <script type="IN/MemberProfile" data-id="https://www.linkedin.com/in/jeffhaslem" data-format="inline" data-related="false" data-width='200'></script>
+
+        <script src="//platform.linkedin.com/in.js" type="text/javascript"></script>
+        <script type="IN/MemberProfile" data-id="https://www.linkedin.com/pub/allan-lo/2/80/214" data-format="inline" data-related="false" data-width='200'></script>
+
+        <script src="//platform.linkedin.com/in.js" type="text/javascript"></script>
+        <script type="IN/MemberProfile" data-id="https://www.linkedin.com/pub/joakim-lindblom/0/4aa/999" data-format="inline" data-related="false" data-width='200'></script>
+
+        <script src="//platform.linkedin.com/in.js" type="text/javascript"></script>
+        <script type="IN/MemberProfile" data-id="https://www.linkedin.com/in/jeffweiner08" data-format="inline" data-related="false" data-width='200'></script>
+
+        <script src="//platform.linkedin.com/in.js" type="text/javascript"></script>
+        <script type="IN/MemberProfile" data-id="https://www.linkedin.com/in/christopher-burnley-0277b" data-format="inline" data-related="false" data-width='200'></script>
 
       </div>
     </div>
-  </div>  <!-- quote -->
-
-  <div class= 'col-md-4' style='margin-top:5px'>
-    <!-- <div class='row'> -->
-      <iframe width="320" height="180" src="<%= @story.embed_url %>" frameborder="0" allowfullscreen></iframe>
-    <!-- </div> -->
   </div>
-
-</div>
-
-  <div class='col-md-8'>
-    <div class='well'>
-
-      <h3 class='text-center'><%= @story.title %></h3><br>
-
-      <p><strong>Situation: </strong><%= @story.situation %></p><br>
-
-      <p><strong>Challenge: </strong><%= @story.challenge %></p><br>
-
-      <p><strong>Solution: </strong><%= @story.solution %></p><br>
-
-      <p><strong>Results: </strong><%= @story.results %></p><br>
-
-    </div>
-  </div>
-
-  <div class='col-md-4'>
-    <div class='well'>
-
-      <h3 class='text-center'>Contributing Team</h3>
-
-
-
-    </div>
-  </div>
-
-
 </div>
