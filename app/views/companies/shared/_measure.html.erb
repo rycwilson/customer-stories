@@ -109,7 +109,8 @@
                   <th>Customer</th>
                   <th>City</th>
                   <th>State</th>
-                  <th>Visit Date & Time</th>
+                  <th>Visit Date</th>
+                  <th>Visit time</th>
                 </tr>
 
               </thead>
@@ -120,8 +121,9 @@
                   <td><%= visitor.organization %></td>
                   <td><%= visitor.city %></td>
                   <td><%= visitor.state %></td>
-                  <td><%= visitor.created_at %></td>
-                </tr>
+                  <td><%= visitor.created_at.to_date %></td>
+                  <td><%= visitor.created_at.strftime("%I:%M%p") %></td>
+                  </tr>
 
               </tbody>
                  <% end %>
@@ -321,7 +323,7 @@ $(function() {
 
           </table>
 
-     
+     </div>
       </div> <!-- portlet -->
     </div>  <!-- row -->
   </div>  <!-- container -->
