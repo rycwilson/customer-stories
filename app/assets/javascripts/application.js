@@ -18,7 +18,7 @@
 //= require mvpready-helpers
 //= require flot/jquery.flot
 
-//= require_tree ./sitewide
+// require_tree ./sitewide (under construction)
 
 // flash messaging
 setTimeout(function () {

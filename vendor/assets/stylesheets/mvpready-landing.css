@@ -1820,7 +1820,7 @@ fieldset[disabled] .btn-transparent.active {
 }
 .account-body {
   position: relative;
-  padding: 35px 30px 10px;
+  padding: 25px 30px 10px;
   margin-bottom: 1em;
   color: #444444;
   background-color: #ffffff;
@@ -1841,6 +1841,10 @@ fieldset[disabled] .btn-transparent.active {
 }
 @media (min-width: 768px) {
   .account-wrapper {
+    width: 700px;
+    padding: 0;
+  }
+  .account-wrapper-login {
     width: 450px;
     padding: 0;
   }
@@ -2995,7 +2999,7 @@ h6.masthead-title {
   font-family: 'Open Sans', 'Trebuchet MS', arial, sans-serif;
   font-weight: 600;
   letter-spacing: -1px;
-  
+
 }
 h1.masthead-title {
   font-size: 56px;

@@ -1,47 +1,60 @@
 <div class='container'>
 
-  <%= link_to company_path(current_user.company), class: 'story-nav' do %>
-    <span class='glyphicon glyphicon-chevron-left'
-        style='color:#337ab7; margin-top:20px; margin-right:5px'>
-    </span><span>Curate Stories</span>
-  <% end %>
-  <hr>
+  <div class="row">
+    <div class='col-md-2'>
 
-  <%= render 'shared/social_sharing' %>
+      <%= link_to company_path(current_user.company), class: 'story-nav' do %>
+        <span class='glyphicon glyphicon-chevron-left'
+            style='color:#337ab7; margin-top:17px; margin-right:5px'>
+        </span><span>Curate Stories</span>
+      <% end %><br>
+      <%= link_to edit_story_path(@story), class: 'story-nav' do %>
+        <span class='glyphicon glyphicon-chevron-left'
+            style='color:#337ab7; margin-top:5px; margin-right:5px'>
+        </span><span>Edit this Story</span>
+      <% end %>
 
-  <div class= 'col-md-3' style='margin-top:15px'>
-    <div class='row'>
-      <div class='col-md-11 text-center'>
-        <img src="https://logo.clearbit.com/<%= @story.success.customer.name %>.com"
-            style="height:180px; width:180px">
-      </div>
+    </div>
+    <div class='col-md-10 text-right' style='margin-top:18px; padding-right:40px'>
+
+      <%= render 'shared/social_sharing' %>
+
     </div>
   </div>
+  <hr style='margin-top:15px'>
 
-  <div class= 'col-md-5' style='margin-top:15px'>
-    <div class='row'>
-      <div class='col-md-11'>
-        <div class='content'>
-          <!-- <div class='heading-block heading-minimal heading-center'> -->
-            <p class='lead'><em>
-              "<%= @story.quote %>"
-            </em></p><br>
-            <div class='row'>
-              <div class='col-md-11 text-right'>
-                <p>- <%= @story.quote_attr %></p>
-              </div>
-            </div>
-          <!-- </div> -->
-        </div>
-      </div>
-    </div>
+<div class="row">
+  <div class= 'col-md-3 text-center' style='margin-top:5px'>
+    <!-- <div class='row'>
+      <div class='col-md-11 text-center'> -->
+        <img src="https://logo.clearbit.com/<%= @story.success.customer.name.downcase %>.com"
+            style="height:120px; width:120px">
+    <!--   </div>
+    </div> -->
   </div>
 
-  <div class= 'col-md-4' style='margin-top:15px'>
+  <div class= 'col-md-5' style='margin-top:5px'>  <!-- quote -->
+
+    <p class='lead'><em>
+      "<%= @story.quote %>"
+    </em></p><br>
+
     <div class='row'>
+      <div class='col-md-11 text-right'>
+
+        <p>- <%= @story.quote_attr %></p>
+
+      </div>
+    </div>
+  </div>  <!-- quote -->
+
+  <div class= 'col-md-4' style='margin-top:5px'>
+    <!-- <div class='row'> -->
       <iframe width="320" height="180" src="<%= @story.embed_url %>" frameborder="0" allowfullscreen></iframe>
-    </div>
+    <!-- </div> -->
   </div>
+
+</div>
 
   <div class='col-md-8'>
     <div class='well'>
