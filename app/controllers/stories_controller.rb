@@ -1,7 +1,9 @@
 class StoriesController < ApplicationController
 
   def index
+    @company = Company.find params[:id]
     @stories = Company.find(params[:id]).stories
+    industries_select_options @company.industry_categories
   end
 
   def show

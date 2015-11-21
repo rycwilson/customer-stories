@@ -48,17 +48,16 @@
           </a>
         </li>
 
-        <li class='navTab' id='measureTab'role='presentation'
+        <li class='navTab' id='measureTab' role='presentation'
             style='margin-bottom: 0px'>
           <a href='#measure' role='tab' data-toggle='tab' aria-controls='measure'>
             Measure
           </a>
         </li>
 
-        <li class="<%= @company.new_record? ? 'navTab active pull-right' : 'navTab  pull-right' %>"
-            id='curateTab' role='presentation' style='margin-bottom: 0px'>
-          <a href='#company-settings' role='tab' data-toggle='tab'
-              aria-controls='company-settings '>
+        <li class="<%= @company.new_record? ? 'navTab active pull-right' : 'navTab pull-right' %>"
+            role='presentation' style='margin-bottom: 0px'>
+          <a href='#company-settings' role='tab' data-toggle='tab' aria-controls='company-settings'>
             Company Settings
           </a>
         </li>

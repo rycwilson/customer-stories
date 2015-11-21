@@ -2,6 +2,7 @@
 <div role='tabpanel' class='tab-pane content' id='measure'>
   <div class='container'>
     <div class='row'>
+
       <div class='portlet portlet-default'>
 
         <div class="portlet-header">
@@ -10,72 +11,55 @@
           </h4>
         </div>
 
- <div class='portlet-body'>
+        <div class='portlet-body'>
+
+          <table class="table table-striped table-bordered">
+            <thead>
+
+              <tr>
+                <th>Customer</th>
+                <th>City</th>
+                <th>State</th>
+                <th>Visit Date & Time</th>
+              </tr>
+
+            </thead>
+                      <% @company.visitors.each do |visitor| %>
+            <tbody>
+
+              <tr>
+                <td><%= visitor.organization %></td>
+                <td><%= visitor.city %></td>
+                <td><%= visitor.state %></td>
+                <td><%= visitor.created_at %></td>
+              </tr>
+
+            </tbody>
+               <% end %>
+          </table>
+        </div>
+
+      </div> <!-- portlet -->
+
+      <div class="portlet portlet-boxed">
+
+        <div class="portlet-header">
+          <h4 class="portlet-title">
+            <u>Donut  Chart</u>
+          </h4>
+        </div> <!-- /.portlet-header -->
+
+        <div class="portlet-body">
+          <div id="donut-chart" class="chart-holder"></div>
+
+        </div> <!-- /.portlet-body -->
 
 
+        <div id="flot-placeholder" style="width:300px; height: 200px"></div>
 
-            <table class="table table-striped table-bordered">
-              <thead>
+      </div> <!-- /.portlet -->
 
-                <tr>
-                  <th>Customer</th>
-                  <th>City</th>
-                  <th>State</th>
-                  <th>Visit Date & Time</th>
-                </tr>
-
-              </thead>
-                        <% @company.visitors.each do |visitor| %>
-              <tbody>
-
-                <tr>
-                  <td><%= visitor.organization %></td>
-                  <td><%= visitor.city %></td>
-                  <td><%= visitor.state %></td>
-                  <td><%= visitor.created_at %></td>
-                </tr>
-
-              </tbody>
-                 <% end %>
-            </table>
-
-   </div> <!-- portlet -->
-
-          <div class="portlet portlet-boxed">
-
-            <div class="portlet-header">
-              <h4 class="portlet-title">
-                <u>Donut  Chart</u>
-              </h4>
-            </div> <!-- /.portlet-header -->
-
-            <div class="portlet-body">
-              <div id="donut-chart" class="chart-holder"></div>
-              
-              
-            </div> <!-- /.portlet-body -->
-
-
-<div id="flot-placeholder" style="width:300px; height: 200px"></div>
-
-
-<script type="text/javascript">
-$(function() {
-    var d1 = [];
-    for (var i = 0; i < 14; i += 0.5) {
-        d1.push([i, Math.sin(i)]);
-    }
-    var d2 = [[0, 3], [4, 8], [8, 5], [9, 13]];
-    // A null signifies separate line segments
-    var d3 = [[0, 12], [7, 12], null, [7, 2.5], [12, 2.5]];
-    $.plot("#flot-placeholder", [ d1, d2, d3 ]);
-});
-</script>
-
-          </div> <!-- /.portlet -->	
-
-       
-
+      <div class='portlet portlet-default'>
         <div class="portlet-body">
 
           <table
@@ -113,9 +97,22 @@ $(function() {
             </tfoot>
 
           </table>
-
-     
+        </div>
       </div> <!-- portlet -->
+
     </div>  <!-- row -->
   </div>  <!-- container -->
 </div>  <!-- measure -->
+
+<script type="text/javascript">
+$(function() {
+    var d1 = [];
+    for (var i = 0; i < 14; i += 0.5) {
+        d1.push([i, Math.sin(i)]);
+    }
+    var d2 = [[0, 3], [4, 8], [8, 5], [9, 13]];
+    // A null signifies separate line segments
+    var d3 = [[0, 12], [7, 12], null, [7, 2.5], [12, 2.5]];
+    $.plot("#flot-placeholder", [ d1, d2, d3 ]);
+});
+</script>

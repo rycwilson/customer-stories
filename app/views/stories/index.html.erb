@@ -12,6 +12,12 @@
       <!-- .mainnav class puts the fading graphic underneath the headline -->
       <div class="mainnav" style="color:#999999; margin-top:20px">
         <h2 style="margin-left:20px">Customers</h2>
+
+         <%= select_tag "",
+                  options_for_select(@industries_select),
+                  { class: 'new-story-tags form-control',
+                    style: 'width:100%'} %>
+
       </div>
 
       <div class="portlet portlet-default">

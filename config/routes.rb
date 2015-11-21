@@ -36,5 +36,5 @@ Rails.application.routes.draw do
   get     '/profile/edit', to: 'profile#edit'
 
 ## TODO!!!  Add route for devise Admin scope to the RailsAdmin page(s) /admin
-  
+
 end
