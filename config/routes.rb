@@ -4,10 +4,11 @@ Rails.application.routes.draw do
   root 'site#index'
   get '/product' => 'site#product'
   get '/plans' => 'site#plans'
-  get '/csp' => 'site#csp'
+  get '/our-company' => 'site#our-company'
   get '/team' => 'site#team'
   get '/tos' => 'site#tos'
   get '/privacy' => 'site#privacy'
+  get '/our-story' => 'site#our-story'
 
   post  '/companies', to: 'companies#create'
   get   '/companies/new', to: 'companies#new', as: 'new_company'
