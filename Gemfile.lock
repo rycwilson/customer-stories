@@ -226,7 +226,6 @@ DEPENDENCIES
   devise
   ffaker
   figaro
-  font-awesome-rails
   omniauth
   omniauth-linkedin
   paperclip (~> 4.3)
