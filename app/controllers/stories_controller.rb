@@ -3,7 +3,14 @@ class StoriesController < ApplicationController
   def index
     @company = Company.find params[:id]
     @stories = Company.find(params[:id]).stories
-    industries_select_options @company.industry_categories
+    if params[:filter]
+      filter @stories, params[:filter][:type], params[:filter][:data]
+      respond_to do |format|
+        format.json { render json: @stories }
+      end
+    else
+      industries_filter_options @company.industry_categories
+    end
   end
 
   def show
@@ -101,6 +108,29 @@ class StoriesController < ApplicationController
   def story_params
     params.require(:story).permit(:title, :quote, :quote_attr, :embed_url, :situation,
         :challenge, :solution, :results)
+  end
+
+  def filter stories, type, data
+    if data == 'all'
+      return @stories = stories.map do |story|
+        { story: story, customer: story.success.customer }
+      end
+    end
+    case type
+      when 'industries'
+        @stories = Success.joins(:industry_categories)
+                          .where(industry_categories: { id: params[:filter][:data] })
+                          .map { |success| { story: success.story,
+                                          customer: success.customer } }
+      else
+    end
+    @stories
+  end
+
+  def industries_filter_options company_industries
+    @industries_select = industries_select_options company_industries
+    @industries_select.keep_if { |industry| industry[1].is_a? Numeric }
+    @industries_select.unshift(['All', 'all'])
   end
 
   def assign_tags story, new_story

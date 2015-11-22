@@ -3,6 +3,7 @@
 
 asset 'jquery'
 asset 'jquery-ujs'
+asset 'underscore'
 asset 'rails-turbolinks'
 asset 'select2', '~4.0.0'
 asset 'bootstrap-sass', '~> 3.3.5'

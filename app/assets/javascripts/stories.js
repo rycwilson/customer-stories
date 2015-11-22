@@ -5,12 +5,38 @@
 //= require best_in_place
 //= require dirtyFields/jquery.dirtyFields.js
 
-$(function () {
+var ready = function () {
 
   configPlugins();
   initListeners();
+  initUnderscore();
 
-});
+};
+
+/*
+  with turbolinks in place, js only runs on initial page load
+  for example, js does not run when going from stories#show to stories#edit,
+    and this results in plug-ins not being initialized
+  below ensures that js runs each time a stories/ page loads
+*/
+$(document).ready(ready);
+$(document).on('page:load', ready);
+
+function initUnderscore() {
+  // this changes underscore to use {{ }} delimiters
+  // (so doesn't clash with ejs)
+  _.templateSettings = {
+    evaluate:    /\{\{(.+?)\}\}/g,
+    interpolate: /\{\{=(.+?)\}\}/g,
+    escape:      /\{\{-(.+?)\}\}/g
+  };
+  // provide a .each_slice method for the template
+  Array.prototype.each_slice = function (size, callback) {
+    for (var i = 0, l = this.length; i < l; i += size) {
+      callback.call(this, this.slice(i, i + size));
+    }
+  };
+}
 
 function initListeners () {
 
@@ -46,6 +72,25 @@ function initListeners () {
     // console.log('industry tags on change: ', $('#story_industry_tags_').val());
   });
 
+  $('.stories-filter').on('change', function (e) {
+    var filterType = $(this).attr('id');
+    var filterData = $(this).val();
+    console.log(filterType, filterData);
+
+    var companyId = $('#stories-gallery').data('company-id');
+    $.ajax({
+      url: '/companies/' + companyId.toString() + '/stories',
+      method: 'get',
+      data: { filter: { type: filterType, data: filterData } },
+      // dataType: 'json',
+      success: function (data, status) {
+        console.log(data);
+        var template = _.template($('#stories-template').html());
+        $('#stories-gallery').empty().append(template({ stories: data }));
+      }
+    });
+  });
+
   // TODO: figure out how to reset select2 inputs
   // commented code results in error when attempting
   // to make changes after reset
@@ -78,6 +123,10 @@ function configPlugins () {
   $('.story-tags').select2({
     theme: 'bootstrap',
     placeholder: 'select tags'
+  });
+
+  $('.stories-filter').select2({
+    theme: 'bootstrap'
   });
 
 

@@ -3,6 +3,7 @@
   "dependencies": {
     "jquery": "latest",
     "jquery-ujs": "latest",
+    "underscore": "latest",
     "rails-turbolinks": "latest",
     "select2": "~4.0.0",
     "bootstrap-sass": "~> 3.3.5",

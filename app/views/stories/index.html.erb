@@ -19,9 +19,9 @@
           </div>
           <div class="col-md-2">
 
-             <%= select_tag "Industries",
+             <%= select_tag "industries",
                     options_for_select(@industries_select),
-                    { class: 'new-story-tags form-control',
+                    { class: 'stories-filter form-control',
                       style: 'width:100%'} %>
 
           </div>
@@ -29,7 +29,8 @@
       </div>  <!-- mainnav -->
 
       <div class="portlet portlet-default">
-        <div class="portlet-body">
+        <div id='stories-gallery' class="portlet-body"
+            data-company-id="<%= current_user.company_id %>">
 
           <!-- TODO: Make this responsive -->
           <% @stories.each_slice(5) do |stories_row| %>
@@ -37,7 +38,7 @@
               <% stories_row.each do |story| %>
 
                 <div class="col-md-2 text-center" style='margin-left:26px'>
-                  <a href='/stories/<%= story.id %>'>
+                  <a href='/stories/<%= story.id %>' class='story-link'>
                     <div class="thumbnail" style='position:relative'>
                       <!-- <div class="thumbnail-view"> -->
 
@@ -57,7 +58,25 @@
 
         </div>  <!-- portlet-body -->
       </div>  <!-- portlet -->
-
     </div>  <!-- container -->
   </div>  <!-- content -->
 </div>  <!-- wrapper -->
+
+<!-- underscore template -->
+<script type="text/template" id="stories-template">
+  {{ stories.each_slice(5, function (stories_row) { }}
+    <div class='container row' style='margin: 0 auto'>
+      {{ stories_row.forEach (function (story) { }}
+        <div class="col-md-2 text-center" style='margin-left:26px'>
+          <a href='/stories/{{= story.story.id }}' class='story-link'>
+            <div class="thumbnail" style='position:relative'>
+              <img src="/assets/video.png" alt="video tag"
+                  style='position:absolute; height:25px; left:130px'>
+              <img src="https://logo.clearbit.com/{{= story.customer.name.toLowerCase() }}.com" style='height:95px' >
+            </div>
+          </a>
+        </div>
+      {{ }); }}
+    </div>
+  {{ }); }}
+</script>

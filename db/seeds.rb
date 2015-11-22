@@ -33,25 +33,28 @@ end
 ['Ebay', 'Google', 'Microsoft', 'Twitter', 'IBM', 'Amazon', 'Facebook', 'Verizon', 'ATT', 'Sprint'].each do |customer_name|
   customer = Customer.create(name: customer_name)
   cisco.customers << customer
-  success = Success.create()
-  customer.successes << success
-  # each success has some visitors
   10.times do
-    success.visitors << Visitor.create(
-          organization: FFaker::Company.name,
-          city: FFaker::AddressUS.city,
-          state: FFaker::AddressUS.state_abbr )
+    success = Success.create()
+    success.industry_categories << cisco.industry_categories[rand(0...12)]
+    customer.successes << success
+    # each success has some visitors
+    10.times do
+      success.visitors << Visitor.create(
+            organization: FFaker::Company.name,
+            city: FFaker::AddressUS.city,
+            state: FFaker::AddressUS.state_abbr )
+    end
+    # each success has a story
+    success.story = Story.create(
+                 title:FFaker::Lorem.sentence,
+                 quote:FFaker::Lorem.sentences.join(" "),
+            quote_attr:FFaker::Name.name << ", " << FFaker::Company.position,
+             situation:FFaker::Lorem.paragraphs.join(" "),
+             challenge:FFaker::Lorem.paragraphs.join(" "),
+              solution:FFaker::Lorem.paragraphs.join(" "),
+               results:FFaker::Lorem.paragraphs.join(" "),
+             embed_url:"https://www.youtube.com/embed/hecXupPpE9o")
   end
-  # each success has a story
-  success.story = Story.create(
-               title:FFaker::Lorem.sentence,
-               quote:FFaker::Lorem.sentences.join(" "),
-          quote_attr:FFaker::Name.name << ", " << FFaker::Company.position,
-           situation:FFaker::Lorem.paragraphs.join(" "),
-           challenge:FFaker::Lorem.paragraphs.join(" "),
-            solution:FFaker::Lorem.paragraphs.join(" "),
-             results:FFaker::Lorem.paragraphs.join(" "),
-           embed_url:"https://www.youtube.com/embed/hecXupPpE9o")
 end
 
 
