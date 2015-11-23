@@ -52,12 +52,12 @@ end
       if seed
         success.update(approved?: true)
         success.update(published?: true)
+        success.update(publish_date: Time.now)
       else
         # defaults to false
       end
       success.story = story
       success.industry_categories << cisco.industry_categories[rand(0...12)]
-      success.update(publish_date: Time.now)
       # each story has some visitors
       10.times do
         success.visitors << Visitor.create(
