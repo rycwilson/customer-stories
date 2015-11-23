@@ -23,8 +23,8 @@
                 <tr>
                   <th>Customer</th>
                   <th>Title</th>
-                  <th>Publish Date</th>
                   <th>Status</th>
+                  <th>Publish Date</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -39,12 +39,21 @@
                     <td class='valign-middle'>
                       <%= story.title %>
                     </td>
-                    <td class='valign-middle'>
-                      <%= story.success.publish_date.strftime('%m/%d/%Y') %>
-                    </td>
-                    <td class='valign-middle'>
-                      <%= link_to 'Pending curation', story_path(story) %>
-                    </td>
+                    <% if story.success.published? %>
+                      <td class='valign-middle'>
+                        <%= link_to 'Published', story_path(story) %>
+                      </td>
+                      <td class='valign-middle'>
+                        <%= story.success.publish_date.strftime('%m/%d/%Y') %>
+                      </td>
+                    <% else %>
+                      <td class='valign-middle'>
+                        <%= link_to 'Pending curation', story_path(story) %>
+                      </td>
+                      <td class='valign-middle'>
+                        N/A
+                      </td>
+                    <% end %>
                     <td class="text-center class='valign-middle'">
                       <%= link_to edit_story_path(story),
                           class: "btn btn-xs btn-primary" do %>
