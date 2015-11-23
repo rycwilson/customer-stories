@@ -31,8 +31,8 @@ config/application.yml
 public/system
 
 # pre-compiled assets (uncomment for github push, comment for heroku)
-#public/assets
-#tmp/cache
+public/assets
+tmp/cache
 
 # user-specific (uncomment for github push, comment for heroku)
 config/database.yml
