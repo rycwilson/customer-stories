@@ -12,43 +12,40 @@
 
         <div class='portlet-body'>
 
-        
-
             <table class="table table-striped table-bordered">
               <thead>
-
                 <tr>
                   <th>Customer</th>
                   <th>Deal Close Date</th>
                   <th>Days Aged</th>
                   <th class="text-center"> Action</th>
                 </tr>
-
               </thead>
-              
-              <% @company.successes.each do |success| %>
+
               <tbody>
 
-                <tr>
-                  <td><%= success.customer.name %></td>
-                  <td><%= success.created_at.to_date %></td>
-                  <td><%= ((Time.now-success.created_at)/86400).round(0) %></td>
-                  
-                  
-              <td class="text-center valign-left">
-                    
-                      <button class="btn btn-xs btn-secondary"
-                      data-toggle="modal"  data-target="#new-story-modal">
-                      Spawn Story
-                      </button>
-                    </td>
-                </tr>
+                <% @company.successes.each do |success| %>
+                  <% if success.story.nil? %>
+
+                    <tr>
+                      <td><%= success.customer.name %></td>
+                      <td><%= success.created_at.to_date %></td>
+                      <td><%= ((Time.now-success.created_at)/86400).round(0) %></td>
+
+
+                      <td class="text-center valign-left">
+                        <button class="btn btn-xs btn-secondary"
+                            data-toggle="modal"  data-target="#new-story-modal">
+                          Spawn Story
+                        </button>
+                      </td>
+                    </tr>
+
+                  <% end %>
+                <% end %>
 
               </tbody>
-                  <% end %>
             </table>
-
-      
 
         </div>
       </div>  <!-- portlet -->

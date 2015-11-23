@@ -35,17 +35,11 @@ end
   cisco.customers << customer
   10.times do
     success = Success.create()
-    success.industry_categories << cisco.industry_categories[rand(0...12)]
     customer.successes << success
-    # each success has some visitors
-    10.times do
-      success.visitors << Visitor.create(
-            organization: FFaker::Company.name,
-            city: FFaker::AddressUS.city,
-            state: FFaker::AddressUS.state_abbr )
-    end
-    # each success has a story
-    success.story = Story.create(
+    # random seed value
+    seed = (rand(0..1) == 1) ? 1 : nil
+    if seed
+      story = Story.create(
                  title:FFaker::Lorem.sentence,
                  quote:FFaker::Lorem.sentences.join(" "),
             quote_attr:FFaker::Name.name << ", " << FFaker::Company.position,
@@ -54,6 +48,24 @@ end
               solution:FFaker::Lorem.paragraphs.join(" "),
                results:FFaker::Lorem.paragraphs.join(" "),
              embed_url:"https://www.youtube.com/embed/hecXupPpE9o")
+      seed = (rand(0..1) == 1) ? 1 : nil
+      if seed
+        success.update(approved?: true)
+        success.update(published?: true)
+      else
+        # defaults to false
+      end
+      success.story = story
+      success.industry_categories << cisco.industry_categories[rand(0...12)]
+      success.update(publish_date: Time.now)
+      # each story has some visitors
+      10.times do
+        success.visitors << Visitor.create(
+              organization: FFaker::Company.name,
+              city: FFaker::AddressUS.city,
+              state: FFaker::AddressUS.state_abbr )
+      end
+    end
   end
 end
 
