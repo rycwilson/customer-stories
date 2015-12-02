@@ -6,14 +6,14 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-# Company.destroy_all
+#Company.destroy_all
 Customer.destroy_all # also destroys successes, stories, and successes* join tables
 Product.destroy_all
 ProductCategory.destroy_all
 IndustryCategory.destroy_all
 
 # cisco = Company.create(name:'Cisco')
-# cisco.users << User.find_by(email:'***REMOVED***')
+# cisco.users << User.find_by(email:'joe@mail.com')
 cisco = Company.find_by(name:'Cisco')
 
 # Cisco's target industries...
@@ -30,14 +30,16 @@ end
 end
 
 # Customers...
-['Ebay', 'Google', 'Microsoft', 'Twitter', 'IBM', 'Amazon', 'Facebook', 'Verizon', 'ATT', 'Sprint'].each do |customer_name|
+['Ebay', 'Google', 'Microsoft', 'Twitter', 'IBM', 'Amazon', 'Facebook', 'Verizon', 'ATT', 'Sprint', 'GE', 'McKesson', 'GM', 'Ford', 'Costco', 'Kroger', 'Walmart', 'Apple', 'Prudential', 'Boeing', 'Citigroup', 'Target', 'Anthem', 'Metlife', 'Comcast', 'PepsiCo', 'AIG', 'UPS', 'Aetna', 'Caterpillar', 'FedEx', 'Pfizer', 'Disney', 'Sysco'].each do |customer_name|
   customer = Customer.create(name: customer_name)
   cisco.customers << customer
-  10.times do
+#  10.times do
     success = Success.create()
     customer.successes << success
+    success.created_at = (rand*60).days.ago
+    success.save
     # random seed value
-    seed = (rand(0..1) == 1) ? 1 : nil
+    seed = (rand(0..2) >= 1) ? 1 : nil
     if seed
       story = Story.create(
                  title:FFaker::Lorem.sentence,
@@ -63,10 +65,11 @@ end
         success.visitors << Visitor.create(
               organization: FFaker::Company.name,
               city: FFaker::AddressUS.city,
-              state: FFaker::AddressUS.state_abbr )
+              state: FFaker::AddressUS.state_abbr,
+              created_at: (rand*60).days.ago)
       end
     end
-  end
+#  end
 end
 
 
