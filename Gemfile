@@ -24,6 +24,7 @@ gem 'figaro'
 gem 'devise'
 gem 'omniauth'
 gem 'omniauth-linkedin'
+gem 'multi_json'
 gem "paperclip", "~> 4.3"
 gem 'ffaker'
 gem 'rails_admin'

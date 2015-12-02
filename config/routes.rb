@@ -31,6 +31,8 @@ Rails.application.routes.draw do
       confirmations: 'users/confirmations'
     }
 
+  get '/auth/linkedin/callback', to: 'profile#linkedin'
+
   get     '/profile', to: 'profile#show'
   put     '/profile', to: 'profile#update'
   delete  '/profile', to: 'profile#destroy'

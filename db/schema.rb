@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151123161927) do
+ActiveRecord::Schema.define(version: 20151202202028) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -24,6 +24,7 @@ ActiveRecord::Schema.define(version: 20151123161927) do
     t.string   "logo_content_type"
     t.integer  "logo_file_size"
     t.datetime "logo_updated_at"
+    t.string   "logo"
   end
 
   create_table "customers", force: :cascade do |t|
@@ -145,6 +146,9 @@ ActiveRecord::Schema.define(version: 20151123161927) do
     t.datetime "updated_at",                             null: false
     t.integer  "company_id"
     t.boolean  "admin",                  default: false
+    t.string   "provider"
+    t.string   "uid"
+    t.string   "linkedin_url"
   end
 
   add_index "users", ["company_id"], name: "index_users_on_company_id", using: :btree

@@ -109,6 +109,7 @@ GEM
     mimemagic (0.3.0)
     mini_portile (0.6.2)
     minitest (5.8.0)
+    multi_json (1.11.2)
     nested_form (0.3.2)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
@@ -235,6 +236,7 @@ DEPENDENCIES
   ffaker
   figaro
   font-awesome-rails
+  multi_json
   omniauth
   omniauth-linkedin
   paperclip (~> 4.3)
