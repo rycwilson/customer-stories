@@ -27,18 +27,16 @@ Rails.application.configure do
 
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
-  host = 'csp-dlindblodev.c9.io'
-  config.action_mailer.default_url_options = { host: host }
+  config.action_mailer.default_url_options = { host: ENV['HOST'] }
   ActionMailer::Base.smtp_settings = {
     :address        => 'smtp.sendgrid.net',
-    :port           => '2525',
+    :port           => '587',
     :authentication => :plain,
     :user_name      => ENV['SENDGRID_USERNAME'],
     :password       => ENV['SENDGRID_PASSWORD'],
-    :domain         => 'heroku.com',
+    # :domain         => 'heroku.com',
     :enable_starttls_auto => true
   }
-
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log
@@ -65,8 +63,8 @@ Rails.application.configure do
 
   # paperclip search path
   Paperclip.options[:command_path] = "/usr/local/bin/"
-  
+
   # allow render on local network
   config.web_console.whitelisted_ips = '73.231.35.0/16'
-  
+
 end
