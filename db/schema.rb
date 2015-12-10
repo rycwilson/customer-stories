@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151202202028) do
+ActiveRecord::Schema.define(version: 20151210211903) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,6 +26,22 @@ ActiveRecord::Schema.define(version: 20151202202028) do
     t.datetime "logo_updated_at"
     t.string   "logo"
   end
+
+  create_table "contributions", force: :cascade do |t|
+    t.integer  "user_id"
+    t.integer  "success_id"
+    t.string   "role"
+    t.text     "contribution"
+    t.text     "feedback"
+    t.string   "state"
+    t.boolean  "linkedin_auth?"
+    t.boolean  "opt_out?"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
+  add_index "contributions", ["success_id"], name: "index_contributions_on_success_id", using: :btree
+  add_index "contributions", ["user_id"], name: "index_contributions_on_user_id", using: :btree
 
   create_table "customers", force: :cascade do |t|
     t.string   "name"
@@ -168,6 +184,8 @@ ActiveRecord::Schema.define(version: 20151202202028) do
 
   add_index "visitors", ["success_id"], name: "index_visitors_on_success_id", using: :btree
 
+  add_foreign_key "contributions", "successes"
+  add_foreign_key "contributions", "users"
   add_foreign_key "customers", "companies"
   add_foreign_key "industries_successes", "industry_categories"
   add_foreign_key "industries_successes", "successes"

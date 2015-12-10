@@ -3,6 +3,7 @@
 class User < ActiveRecord::Base
 
   belongs_to :company
+  has_many :contributions
 
   # Adding signup code for beta control
   attr_accessor :sign_up_code
