@@ -1,3 +1,5 @@
+<%= render 'stories/shared/new_contributor_modal' %>
+
 <div class='container'>
 
   <%= link_to company_path(current_user.company), class: 'story-nav' do %>
@@ -7,6 +9,7 @@
   <% end %>
   <hr>
 
+  <!-- settings, title, quote, video -->
   <div class='row' style='margin-top:15px'>
 
     <div class='col-md-4'>  <!-- story settings -->
@@ -154,6 +157,7 @@
     </div>  <!-- video -->  <!-- settings, title, quote, video -->
   </div>  <!-- settings, title, quote, video -->
 
+  <!-- tags -->
   <p class='lead' style='display:inline-block'>Tags</p>
   <button type='submit' class='edit-tags hidden btn btn-sm btn-primary'
       style='display:inline-block; margin-left:15px; margin-bottom:8px' form='tags-form'>
@@ -204,30 +208,24 @@
       </div>
     </div>
   </div>  <!-- tags form -->
+  <!-- tags -->
 
-</br>
-</br>
+  </br></br>
+
   <div class="row">  <!-- content -->
-     
-  
-      <div class="container">
-
-
+    <div class="container">
       <div class="layout layout-main-right layout-stack-sm">
-
-
-
         <div class="col-md-2 col-sm-4 layout-sidebar">
-          
-      <button type="button" class="btn btn-secondary"
-        style='margin-top: -25px; margin-bottom: 14px'
-        data-toggle="modal" data-target="#new-story-modal">
-      Add Contributor
-    </button>
 
-          <div class="nav-layout-sidebar-skip">
+          <button type="button" class="btn btn-secondary"
+            style='margin-top: -25px; margin-bottom: 14px'
+            data-toggle="modal" data-target="#new-contributor-modal">
+              Add Contributor
+          </button>
+
+       <!--    <div class="nav-layout-sidebar-skip">
             <strong>Tab Navigation</strong> / <a href="#settings-content">Skip to Content</a>
-          </div>
+          </div> -->
 
           <ul id="myTab" class="nav nav-layout-sidebar nav-stacked">
               <li class="active">
@@ -310,19 +308,19 @@
 <p >Bill Smith </p>
 <p >bill@gmail.com </p>
 <p >Partner</p>
-<p >Status: Request in process, 3 days remaining</p> 
+<p >Status: Request in process, 3 days remaining</p>
  </div>
     <div class="well" style='position:relative'>
 <p >Sally Johnson </p>
 <p >bill@gmail.com </p>
 <p >Customer</p>
-<p >Status: Request in process, 1 day remaining</p> 
+<p >Status: Request in process, 1 day remaining</p>
  </div>
 
 <div class="well" style='position:relative'>
  <p >Tom Collins, Partner  </p>
 <p >tom@gmail.com </p>
-<p >Status: Did not respond</p> 
+<p >Status: Did not respond</p>
  </div>
 
 
@@ -388,7 +386,7 @@
   </div>
 </div>
 
- 
+
                 </div>
 
 
@@ -410,9 +408,9 @@
   </div>
 </div>
                 </div>
-     
-              
-             <div class="well" style='position:relative'>  
+
+
+             <div class="well" style='position:relative'>
         <script src="//platform.linkedin.com/in.js" type="text/javascript"></script>
         <script type="IN/MemberProfile" data-id="https://www.linkedin.com/pub/allan-lo/2/80/214" data-format="inline" data-related="false" data-width='200'></script>
 <div class="accordion" id="accordion2">
@@ -430,8 +428,8 @@
   </div>
 </div>
               </div>
-              
-             <div class="well" style='position:relative'>  
+
+             <div class="well" style='position:relative'>
         <script src="//platform.linkedin.com/in.js" type="text/javascript"></script>
         <script type="IN/MemberProfile" data-id="https://www.linkedin.com/pub/joakim-lindblom/0/4aa/999" data-format="inline" data-related="false" data-width='200'></script>
 <div class="accordion" id="accordion3">
@@ -449,8 +447,8 @@
   </div>
 </div>
               </div>
-              
-             <div class="well" style='position:relative'>  
+
+             <div class="well" style='position:relative'>
         <script src="//platform.linkedin.com/in.js" type="text/javascript"></script>
         <script type="IN/MemberProfile" data-id="https://www.linkedin.com/in/jeffweiner08" data-format="inline" data-related="false" data-width='200'></script>
 <div class="accordion" id="accordion4">
@@ -467,8 +465,8 @@
     </div>
   </div>
 </div>
-                
-                
+
+
               </div>
        </div> <!-- /.tab-pane -->
 
@@ -559,12 +557,12 @@
 
         </div> <!-- /.col -->
 
-      </div> 
-   
-  
-  
-  
-  
+      </div>
+
+
+
+
+
     <div class='col-md-6'>
       <p class='lead'>Story Narration</p>
       <div class="well" style='position:relative'>
@@ -641,7 +639,7 @@
         </div>
       </div>  <!-- well -->
     </div>  <!-- col-md-8 -->
-    
+
 
 
 </div>  <!-- container -->
