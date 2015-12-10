@@ -24,16 +24,16 @@ vendor/assets/bower_components
 # git rm -r --cached tmp/cache
 
 # figaro-managed credentials (uncomment for github push, comment for heroku)
-#config/application.yml
+config/application.yml
 
 # paperclip images
 public/system
 
 # pre-compiled assets (uncomment for github push, comment for heroku)
-#public/assets
-#tmp/cache
+public/assets
+tmp/cache
 
 # user-specific (uncomment for github push, comment for heroku)
-#config/database.yml
+config/database.yml
 
 
