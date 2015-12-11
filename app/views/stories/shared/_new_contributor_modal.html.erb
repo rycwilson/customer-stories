@@ -4,11 +4,45 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">New Contribution</h4>
+        <h4 class="modal-title">New Contributor</h4>
       </div>
       <div class="modal-body">
 
-        <p>Hello</p>
+        <!-- Note: all form inputs name-spaced under 'story' -->
+        <%= form_tag story_contributions_path, class: 'form-horizontal', remote: true do %>
+
+          <div class='form-group required-input'>
+            <%= label_tag 'First name', nil, class: 'col-md-3 control-label' %>
+            <div class='col-md-9'>
+              <%= text_field_tag 'contributor[first_name]', nil, class: 'form-control',
+                  placeholder: 'first name' %>
+            </div>
+          </div>
+
+          <div class='form-group required-input'>
+            <%= label_tag 'Last name', nil, class: 'col-md-3 control-label' %>
+            <div class='col-md-9'>
+              <%= text_field_tag 'contributor[last_name]', nil, class: 'form-control',
+                  placeholder: 'last name' %>
+            </div>
+          </div>
+
+          <div class='form-group required-input'>
+            <%= label_tag 'Email', nil, class: 'col-md-3 control-label' %>
+            <div class='col-md-9'>
+              <%= email_field_tag 'contributor[email]', nil, class: 'form-control',
+                  placeholder: 'email' %>
+            </div>
+          </div>
+
+          <div class="form-group required-input">
+            <%= label_tag 'Role', nil, class: 'col-md-3 control-label' %>
+            <div class='col-md-9'>
+              <%= select_tag "contributor[role]",
+                  options_for_select(['Customer', 'Partner', 'Sales Team']),
+                  { class: 'contributor-role form-control', style: 'width:100%'} %>
+            </div>
+          </div>
 
       </div>
       <div class="modal-footer">
@@ -16,6 +50,10 @@
         <button class="btn btn-default" data-dismiss="modal">
           Cancel
         </button>
+
+          <%= submit_tag 'Add Contributor', class: 'btn btn-primary' %>
+
+        <% end %>  <!-- form_for -->
 
       </div>
     </div><!-- /.modal-content -->

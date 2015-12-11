@@ -8,9 +8,29 @@
 
 #Company.destroy_all
 Customer.destroy_all # also destroys successes, stories, and successes* join tables
-Product.destroy_all
-ProductCategory.destroy_all
-IndustryCategory.destroy_all
+# Product.destroy_all
+# ProductCategory.destroy_all
+# IndustryCategory.destroy_all
+Contribution.destroy_all
+
+def create_contributor
+  email = FFaker::Internet.email # need to use the same value twice, so store in variable
+  User.create(
+      first_name: FFaker::Name.first_name,
+       last_name: FFaker::Name.last_name,
+           email: email,
+    # password is necessary, so just set it to the email
+        password: email,
+    sign_up_code: 'csp_beta')
+end
+
+def create_contribution success_id, contributor_id, role, status
+  Contribution.create(
+     success_id: success_id,
+        user_id: contributor_id,
+           role: role,
+         status: status)
+end
 
 # cisco = Company.create(name:'Cisco')
 # cisco.users << User.find_by(email:'joe@mail.com')
@@ -33,44 +53,66 @@ end
 ['Ebay', 'Google', 'Microsoft', 'Twitter', 'IBM', 'Amazon', 'Facebook', 'Verizon', 'ATT', 'Sprint', 'GE', 'McKesson', 'GM', 'Ford', 'Costco', 'Kroger', 'Walmart', 'Apple', 'Prudential', 'Boeing', 'Citigroup', 'Target', 'Anthem', 'Metlife', 'Comcast', 'PepsiCo', 'AIG', 'UPS', 'Aetna', 'Caterpillar', 'FedEx', 'Pfizer', 'Disney', 'Sysco'].each do |customer_name|
   customer = Customer.create(name: customer_name)
   cisco.customers << customer
-#  10.times do
-    success = Success.create()
-    customer.successes << success
-    success.created_at = (rand*60).days.ago
-    success.save
-    # random seed value
-    seed = (rand(0..2) >= 1) ? 1 : nil
-    if seed
-      story = Story.create(
-                 title:FFaker::Lorem.sentence,
-                 quote:FFaker::Lorem.sentences.join(" "),
-            quote_attr:FFaker::Name.name << ", " << FFaker::Company.position,
-             situation:FFaker::Lorem.paragraphs.join(" "),
-             challenge:FFaker::Lorem.paragraphs.join(" "),
-              solution:FFaker::Lorem.paragraphs.join(" "),
-               results:FFaker::Lorem.paragraphs.join(" "),
-             embed_url:"https://www.youtube.com/embed/hecXupPpE9o")
-      seed = (rand(0..1) == 1) ? 1 : nil
-      if seed
-        success.update(approved?: true)
-        success.update(published?: true)
-        success.update(publish_date: Time.now)
-      else
-        # defaults to false
-      end
-      success.story = story
-      success.industry_categories << cisco.industry_categories[rand(0...12)]
-      # each story has some visitors
-      10.times do
-        success.visitors << Visitor.create(
-              organization: FFaker::Company.name,
-              city: FFaker::AddressUS.city,
-              state: FFaker::AddressUS.state_abbr,
-              created_at: (rand*60).days.ago)
-      end
+  success = Success.create()
+  customer.successes << success
+  success.created_at = (rand*60).days.ago
+  success.save
+  # 2/3 successes will have a story
+  if rand(3) >= 1
+    story = Story.create(
+               title:FFaker::Lorem.sentence,
+               quote:FFaker::Lorem.sentences.join(" "),
+          quote_attr:FFaker::Name.name << ", " << FFaker::Company.position,
+           situation:FFaker::Lorem.paragraphs.join(" "),
+           challenge:FFaker::Lorem.paragraphs.join(" "),
+            solution:FFaker::Lorem.paragraphs.join(" "),
+             results:FFaker::Lorem.paragraphs.join(" "),
+           embed_url:"https://www.youtube.com/embed/hecXupPpE9o")
+    # 1/2 stories will be approved/published
+    if rand(2) == 1
+      success.update(approved?: true)
+      success.update(published?: true)
+      success.update(publish_date: Time.now)
+    else
+      # attributes default to false
     end
-#  end
+    success.story = story
+    success.industry_categories << cisco.industry_categories[rand(0...12)]
+    # each story has some visitors
+    10.times do
+      success.visitors << Visitor.create(
+                            organization: FFaker::Company.name,
+                                    city: FFaker::AddressUS.city,
+                                   state: FFaker::AddressUS.state_abbr,
+                              created_at: (rand*60).days.ago)
+    end
+
+
+    # Contributions
+    roles = ['Customer', 'Partner', 'Sales Team']
+    status_options = ['request1', 'request2', 'request3', 'did_not_respond', 'feedback', 'contribution', 'opt_out']
+
+    # pre-request contributions
+    5.times do
+      role = roles[rand(roles.length)]
+      contributor = create_contributor
+      success.contributions <<
+        create_contribution(success.id, contributor.id, role, 'pre-request')
+    end
+
+    # contributions in progress
+    5.times do
+      role = roles[rand(roles.length)]
+      # status is either request* or did_not_respond
+      status = status_options[rand(4)]
+      contributor = create_contributor
+      success.contributions <<
+        create_contribution(success.id, contributor.id, role, status)
+    end
+
+  end  # story create
 end
+
 
 
 

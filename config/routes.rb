@@ -24,7 +24,7 @@ Rails.application.routes.draw do
   put   '/stories/:id', to: 'stories#update'
   delete '/stories/:id', to: 'stories#destroy'
 
-  post  '/stories/:id/contributions', to: 'contributions#create'
+  post  '/stories/:id/contributions', to: 'contributions#create', as: 'story_contributions'
 
   devise_for :users, controllers: {
       sessions: 'users/sessions',

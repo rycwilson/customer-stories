@@ -18,8 +18,9 @@ class StoriesController < ApplicationController
   end
 
   def edit
-    @story = Story.find params[:id]
     @company = current_user.company
+    @story = Story.find params[:id]
+    @contributions = @story.success.contributions
     # populate options for industries select (multiple select)
     industries_select_options @company.industry_categories
     industries_preselected_options @story.success.industry_categories

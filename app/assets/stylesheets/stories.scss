@@ -10,6 +10,11 @@
 *= require social-sharing
 */
 
+.required-input label:after {
+  color: #D9534F;
+  content: " *";
+}
+
 well {
   margin-bottom: 15px
 }

@@ -24,13 +24,14 @@ $(document).on('page:load', ready);
 
 function initUnderscore() {
   // this changes underscore to use {{ }} delimiters
-  // (so doesn't clash with ejs)
+  // (so doesn't clash with erb <% %>)
   _.templateSettings = {
     evaluate:    /\{\{(.+?)\}\}/g,
     interpolate: /\{\{=(.+?)\}\}/g,
     escape:      /\{\{-(.+?)\}\}/g
   };
   // provide a .each_slice method for the template
+  // this is for rendering the stories index
   Array.prototype.each_slice = function (size, callback) {
     for (var i = 0, l = this.length; i < l; i += size) {
       callback.call(this, this.slice(i, i + size));
@@ -39,7 +40,6 @@ function initUnderscore() {
 }
 
 function initListeners () {
-
   /*
     update story attribute: embed_url
     The url is modified on server side to ensure that the
@@ -72,11 +72,9 @@ function initListeners () {
     // console.log('industry tags on change: ', $('#story_industry_tags_').val());
   });
 
-  $('.stories-filter').on('change', function (e) {
+  $('.stories-filter').on('change', function () {
     var filterType = $(this).attr('id');
     var filterData = $(this).val();
-    console.log(filterType, filterData);
-
     var companyId = $('#stories-gallery').data('company-id');
     $.ajax({
       url: '/companies/' + companyId.toString() + '/stories',
@@ -107,6 +105,14 @@ function initListeners () {
     // tagsFormDirty = false;
   });
 
+  // reset new contributor modal form
+  $('.modal').on('hidden.bs.modal', function () {
+    // form inputs to default values...
+    $(this).find('form')[0].reset();
+    // select2 inputs to default values...
+    $('.contributor-role').select2('val', 'Customer');  // single select
+  });
+
 }
 
 function configPlugins () {
@@ -129,6 +135,9 @@ function configPlugins () {
     theme: 'bootstrap'
   });
 
+  $('.contributor-role').select2({
+    theme: 'bootstrap'
+  });
 
   /*
     dirtyFields() plugin will apply .dirtyField class to label on input change
