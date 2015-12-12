@@ -12,23 +12,33 @@ Product.destroy_all
 ProductCategory.destroy_all
 IndustryCategory.destroy_all
 
-def create_contributor
+def create_contributor first_name=nil, last_name=nil, cont_email=nil, linkedin_url=nil
   email = FFaker::Internet.email # need to use the same value twice, so store in variable
-  User.create(
-      first_name: FFaker::Name.first_name,
-       last_name: FFaker::Name.last_name,
-           email: email,
+  contributor = User.new(
+      first_name: first_name || FFaker::Name.first_name,
+       last_name: last_name || FFaker::Name.last_name,
+           email: cont_email || email,
     # password is necessary, so just set it to the email
         password: email,
+    linkedin_url: linkedin_url,
     sign_up_code: 'csp_beta')
+  puts contributor.errors.full_messages unless contributor.save
+  return contributor
 end
 
 def create_contribution success_id, contributor_id, role, status
-  Contribution.create(
+  text = FFaker::Lorem.paragraph
+  (status == 'feedback') ? feedback = text : feedback = nil
+  (status == 'contribution') ? contribution = text : contribution = nil
+  contribution = Contribution.new(
      success_id: success_id,
         user_id: contributor_id,
            role: role,
-         status: status)
+         status: status,
+       feedback: feedback,
+   contribution: contribution)
+  puts contribution.errors.full_messages unless contribution.save
+  return contribution
 end
 
 # cisco = Company.create(name:'Cisco')
@@ -92,7 +102,7 @@ end
     status_options = ['request1', 'request2', 'request3', 'did_not_respond', 'feedback', 'contribution', 'opt_out']
 
     # pre-request contributions
-    5.times do
+    3.times do
       role = roles[rand(roles.length)]
       contributor = create_contributor
       success.contributions <<
@@ -100,13 +110,29 @@ end
     end
 
     # contributions in progress
-    5.times do
+    3.times do
       role = roles[rand(roles.length)]
       # status is either request* or did_not_respond
       status = status_options[rand(4)]
       contributor = create_contributor
       success.contributions <<
         create_contribution(success.id, contributor.id, role, status)
+    end
+
+    # feedback
+    3.times do
+      role = roles[rand(roles.length)]
+      contributor = create_contributor
+      success.contributions <<
+        create_contribution(success.id, contributor.id, role, 'feedback')
+    end
+
+    # contribution
+    2.times do
+      role = roles[rand(roles.length)]
+      contributor = create_contributor
+      success.contributions <<
+        create_contribution(success.id, contributor.id, role, 'contribution')
     end
 
   end  # story create
