@@ -26,7 +26,6 @@ class ContributionsController < ApplicationController
                          status: 'pre-request')
     # respond with all pre-request contributions, most recent additions first
     @contributors = pre_request_contributors @story.success.contributions
-    binding.pry
     respond_to do |format|
       format.js
     end
