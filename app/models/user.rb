@@ -17,7 +17,7 @@ class User < ActiveRecord::Base
   #  removed  :confirmable, so it works on heroku until we have email service set up
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
-         :lockable, :confirmable
+         :lockable #, confirmable
 
   # This is for users signing up
   # Not presently using this, but may in the future

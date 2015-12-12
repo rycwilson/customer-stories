@@ -15,15 +15,11 @@
 # front-end dependencies
 vendor/assets/bower_components
 
-# Before a github push (assuming last push was to heroku),
-# run these commands in terminal and then commit/push:
-#
-# git rm --cached config/application.yml
-# git rm --cached config/database.yml
-# git rm -r --cached public/assets
-# git rm -r --cached tmp/cache
-
-# figaro-managed credentials (uncomment for github push, comment for heroku)
+# figaro-managed credentials
+# no push to either github or heroku
+# to set env variables in heroku (when new vars are added),
+# run this in local environment:
+#   figaro heroku:set -e production
 config/application.yml
 
 # paperclip images

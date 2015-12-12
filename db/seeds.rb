@@ -7,11 +7,10 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 #Company.destroy_all
-Customer.destroy_all # also destroys successes, stories, and successes* join tables
-# Product.destroy_all
-# ProductCategory.destroy_all
-# IndustryCategory.destroy_all
-Contribution.destroy_all
+Customer.destroy_all # also destroys successes, stories, visitors, contributions and successes* join tables
+Product.destroy_all
+ProductCategory.destroy_all
+IndustryCategory.destroy_all
 
 def create_contributor
   email = FFaker::Internet.email # need to use the same value twice, so store in variable
