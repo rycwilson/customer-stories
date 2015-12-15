@@ -45,7 +45,7 @@ class ContributionsController < ApplicationController
     end
   end
 
-  # TODO: What if user submits
+  # TODO: What if user separately submits contribution and feedback?
   def update
     if @contribution.update contribution_params
       if contribution_params[:opt_out?]

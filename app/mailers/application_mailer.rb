@@ -1,6 +1,7 @@
 class ApplicationMailer < ActionMailer::Base
 
-  add_template_helper ApplicationHelper
+  # include ApplicationHelper
+  helper :application
 
   default from: "from@example.com"
   layout 'mailer'
