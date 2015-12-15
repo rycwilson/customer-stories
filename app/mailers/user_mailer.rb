@@ -18,9 +18,10 @@ class UserMailer < ApplicationMailer
     #   => @customer = Customer.find @contributor.customer_id
     # for now:
     @customer = Customer.find contribution.success.customer_id
-    @contribution_url = "http://localhost:3000/contributions/#{contribution.id}/contribution"
-    @feedback_url = "http://localhost:3000/contributions/#{contribution.id}/feedback"
-    @opt_out_url = "http://localhost:3000/contributions/#{contribution.id}/opt_out"
+    @contribution_url = "http://#{ENV['HOST']}/contributions/#{contribution.id}/contribution"
+    @feedback_url = "http://#{ENV['HOST']}/contributions/#{contribution.id}/feedback"
+    @opt_out_url = "http://#{ENV['HOST']}/contributions/#{contribution.id}/opt_out"
+    binding.pry
 
     mail to: @contributor.email, subject: "Participate in a #{@customer.name} / #{@company.name} success story"
 
