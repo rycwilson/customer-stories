@@ -23,7 +23,6 @@
   <%= favicon_link_tag 'favicon.ico' %>
 </head>
 <body>
-
   <% if current_user && controller_name != 'contributions'  %>  <!-- admin -->
 
     <!-- current_user could be contributor with token access -->
@@ -33,11 +32,11 @@
 
   <% elsif controller_name == 'contributions' %>  <!-- mvp landing -->
 
-    <%= render partial: 'shared/mvp_landing_navbar', locals: { contribution: true } %>
+    <%= render 'shared/mvp_landing_navbar' %>
 
   <% else %>
 
-    <%= render partial: 'shared/mvp_landing_navbar', locals: { contribution: false } %>
+    <%= render 'shared/mvp_landing_navbar' %>
 
   <% end %>
 

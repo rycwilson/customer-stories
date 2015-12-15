@@ -21,9 +21,13 @@
 
     <nav class="collapse navbar-collapse" role="navigation">
 
-      <% if current_user && !contribution %>  <!-- note: this could be contributor -->
+      <% if current_user && controller_name != "contributions" %>
 
         <%= render '/shared/mvp_admin_navbar_nav' %>
+
+      <% elsif controller_name != "contributions" %>
+
+        <%= render '/shared/mvp_landing_navbar_nav' %>
 
       <% end %>
 
