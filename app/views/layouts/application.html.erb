@@ -24,17 +24,24 @@
 </head>
 <body>
 
-  <%= render 'layouts/footer_analytics' %>
+  <% if current_user && controller_name != 'contributions'  %>  <!-- admin -->
 
-  <% if current_user %>  <!-- mvp admin -->
+    <!-- current_user could be contributor with token access -->
+    <!-- check current_user.role (once that attribute is added) -->
 
     <%= render 'shared/mvp_admin_navbar' %>
 
-  <% else %>  <!-- mvp landing -->
+  <% elsif controller_name == 'contributions' %>  <!-- mvp landing -->
 
-    <%= render 'shared/mvp_landing_navbar' %>
+    <%= render partial: 'shared/mvp_landing_navbar', locals: { contribution: true } %>
+
+  <% else %>
+
+    <%= render partial: 'shared/mvp_landing_navbar', locals: { contribution: false } %>
 
   <% end %>
+
+  <%= render 'layouts/footer_analytics' %>
 
   <%= yield %>
 

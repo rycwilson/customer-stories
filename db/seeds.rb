@@ -7,6 +7,7 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 #Company.destroy_all
+User.where.not(email:"***REMOVED***").destroy_all
 Customer.destroy_all # also destroys successes, stories, visitors, contributions and successes* join tables
 Product.destroy_all
 ProductCategory.destroy_all

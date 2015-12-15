@@ -1,15 +1,29 @@
 class ContributionsController < ApplicationController
 
-  def index
-  end
+  before_action :find_contribution, only: [:contribution_request_email, :edit, :update]
 
-  def new
-  end
-
-  def show
+  def contribution_request_email
+    # TODO: Determine the status of @contribution, send appropriate email template
+    # email_template = EmailTemplate.find ...
+    # if first request, kick off cron job for subsequent request emails
+    UserMailer.request_contribution(@contribution, current_user).deliver
+    # @contribution.update status:
+    respond_to do |format|
+      format.js {}
+    end
   end
 
   def edit
+    @curator = current_user  # this is a hack
+                             # curator must be logged in
+                             # this isn't going to work with cron
+    if params[:type] == "feedback"
+      @type = "feedback"
+    elsif params[:type] == "contribution"
+      @type = "contribution"
+    else
+      render :opt_out_confirm
+    end
   end
 
   def create
@@ -27,7 +41,28 @@ class ContributionsController < ApplicationController
     # respond with all pre-request contributions, most recent additions first
     @contributors = pre_request_contributors @story.success.contributions
     respond_to do |format|
-      format.js
+      format.js {}
+    end
+  end
+
+  # TODO: What if user submits
+  def update
+    if @contribution.update contribution_params
+      if contribution_params[:opt_out?]
+        @type = "opt_out"
+        #  notify curator
+        render :opt_out_confirm
+      elsif contribution_params[:feedback]
+        @type = "feedback"
+        render :feedback_confirm
+      elsif contribution_params[:contribution] #contribution
+        @type = "contribution"
+        render :contribution_confirm
+      else
+        puts "Something went wrong"
+      end
+    else
+      render :edit
     end
   end
 
@@ -35,6 +70,16 @@ class ContributionsController < ApplicationController
   end
 
   private
+
+  # may add more attributes to this list at some point
+  # for not, these are the primary changes coming from contributor
+  def contribution_params
+    params.require(:contribution).permit(:contribution, :feedback, :opt_out?)
+  end
+
+  def find_contribution
+    @contribution = Contribution.find params[:id]
+  end
 
   # this method extracts the necessary combination of contribution
   # and contributor data for new contributor AJAX response

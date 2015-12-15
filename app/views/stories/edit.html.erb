@@ -287,9 +287,10 @@
                       <%= contribution.role %>
                     </div>
                     <div class="col-sm-6 text-right">
-                      <button class='btn btn-sm btn-secondary'>
-                        Send Request
-                      </button>
+                      <%= button_to 'Send Request',
+                          request_contribution_path(contribution),
+                          class: 'btn btn-sm btn-secondary',
+                          method: 'put', remote: true %>
                     </div>
                   </div>
                 </div>
@@ -521,21 +522,19 @@
                     html_attrs: { style: 'width:100%' } %>
 
               </div>
-            </div> <br>
 
+            </div>  <!-- row -->
           </div>
         </div>  <!-- well -->
       </div>  <!-- col-md-6 Story content -->
-
     </div>  <!-- layout -->
   </div>  <!-- row -->
-
 </div>  <!-- container -->
 
 <!-- pre-request template -->
 <script type="text/template" id="pre-request-template">
   {{ contributors.forEach(function (contributor) { }}
-    <div class="well" data-id="{{= contributor.contribution_id }}">
+    <div class="well">
       <div class="row">
         <div class='col-sm-12'>
           {{= contributor.user_name }} <br>
@@ -546,11 +545,9 @@
         <div class="col-sm-6">
           {{= contributor.role }}
         </div>
-        <div class="col-sm-6 text-right">
-          <button class='btn btn-sm btn-secondary'>
-            Send Request
-          </button>
-        </div>
+        <%= link_to "Send Request",
+            "/contributions/{{= contributor.contribution_id }}/request_contribution",
+            class: 'btn btn-sm btn-secondary' %>
       </div>
     </div>
   {{ }); }}

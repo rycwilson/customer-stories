@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <title>Story Contribution Request</title>
+  </head>
+  <body>
+
+    <p>Dear <%= @contributor.first_name %>,</p>
+
+    <p>My name is <%= user_full_name(@curator) %> and I’ll be curating a story about the success of your project.  The value of participating is it will be closely connected with LinkedIn so it’s an opportunity to include in your CV as validation of your great work.  The story will also be used as a case study to help others learn about solving similar challenges.</p>
+
+    <p>Best of all, I’ll be doing the work of narrating the story and all I need from you are some notes from your perspective.  It will take maximum 5 minutes:</p>
+    <a href="<%= @contribution_url %>">Share your Story</a>
+
+
+    <p>If you cannot contribute to a success story, please give us feedback why:</p>
+    <a href="<%= @feedback_url %>">Provide feedback</a>
+
+    <p>If you have any questions, please email or call me.</p>
+
+    <p>Thank you,</p>
+    <%= user_full_name(@curator) %>
+    <%= @curator.email %>
+    <%= user_company(@curator) %>
+    <!-- [curator_title] --> <!-- need a model attribute for this -->
+    <!--[curator_phone] --> <!-- need a model attribute -->
+
+    <p>To opt out of a story altogether, please click here:</p>
+    <a href="<%= @opt_out_url %>">Opt out</a>
+
+  </body>
+</html>
+

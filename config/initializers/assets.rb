@@ -19,4 +19,5 @@ Rails.application.config.assets.precompile += %w(
   companies.js companies.css
   stories.js stories.css
   profile.js profile.css
+  contributions.js contributions.css
 )

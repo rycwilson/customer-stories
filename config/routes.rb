@@ -16,6 +16,9 @@ Rails.application.routes.draw do
   patch '/companies/:id', to: 'companies#update'
   get   '/companies/:id/edit', to: 'companies#edit', as: 'edit_company'
 
+  #
+  # Stories
+  #
   get   '/companies/:id/stories', to: 'stories#index', as: 'company_stories'
   post  '/companies/:id/stories', to: 'stories#create'
   get   '/companies/:id/stories/new', to: 'stories#new', as: 'new_company_story'
@@ -24,7 +27,15 @@ Rails.application.routes.draw do
   put   '/stories/:id', to: 'stories#update'
   delete '/stories/:id', to: 'stories#destroy'
 
+  #
+  # Contributions
+  #
   post  '/stories/:id/contributions', to: 'contributions#create', as: 'story_contributions'
+  put   '/contributions/:id', to: 'contributions#update', as: 'contribution'
+  get   '/contributions/:id/:type', to: 'contributions#edit', as: 'edit_contribution'
+  put   '/contributions/:id/request_contribution',
+        to: 'contributions#contribution_request_email', as: 'request_contribution'
+
 
   devise_for :users, controllers: {
       sessions: 'users/sessions',
@@ -33,6 +44,9 @@ Rails.application.routes.draw do
       confirmations: 'users/confirmations'
     }
 
+  #
+  # LinkedIn Oauth2 (omniauth gem)
+  #
   get '/auth/linkedin/callback', to: 'profile#linkedin'
 
   get     '/profile', to: 'profile#show'
