@@ -33,6 +33,7 @@ Rails.application.routes.draw do
   post  '/stories/:id/contributions', to: 'contributions#create', as: 'story_contributions'
   put   '/contributions/:id/request_contribution',
         to: 'contributions#contribution_request_email', as: 'request_contribution'
+  # type is: contribution, feedback, opt_out
   get   '/contributions/:id/:type', to: 'contributions#edit', as: 'edit_contribution'
   put   '/contributions/:id', to: 'contributions#update', as: 'contribution'
 

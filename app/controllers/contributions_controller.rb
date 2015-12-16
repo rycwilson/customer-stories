@@ -17,7 +17,6 @@ class ContributionsController < ApplicationController
     @curator = current_user  # this is a hack
                              # curator must be logged in
                              # this isn't going to work with cron
-    binding.pry
     if params[:type] == "feedback"
       @type = "feedback"
     elsif params[:type] == "contribution"
