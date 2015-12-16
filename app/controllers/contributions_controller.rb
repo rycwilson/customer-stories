@@ -17,12 +17,15 @@ class ContributionsController < ApplicationController
     @curator = current_user  # this is a hack
                              # curator must be logged in
                              # this isn't going to work with cron
+    binding.pry
     if params[:type] == "feedback"
       @type = "feedback"
     elsif params[:type] == "contribution"
       @type = "contribution"
-    else
+    elsif params[:type] == "opt_out"
       render :opt_out_confirm
+    else
+      # raise an error
     end
   end
 
