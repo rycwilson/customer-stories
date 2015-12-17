@@ -28,7 +28,6 @@ gem 'multi_json'
 gem "paperclip", "~> 4.3"
 gem 'ffaker'
 gem 'rails_admin'
-gem 'web-console', '~> 2.0'
 
 gem 'best_in_place', '~> 3.0.1'
 
@@ -47,5 +46,6 @@ group :development, :test do
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
+  gem 'web-console', '~> 2.0'
 
 end

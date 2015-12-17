@@ -1,8 +1,8 @@
 class StoriesController < ApplicationController
 
   def index
-    @company = Company.find params[:id]
-    @stories = Company.find(params[:id]).stories
+    @company = Company.find params[:company_id]
+    @stories = @company.stories
     if params[:filter]
       filter @stories, params[:filter][:type], params[:filter][:data]
       respond_to do |format|
@@ -18,7 +18,7 @@ class StoriesController < ApplicationController
   end
 
   def edit
-    @company = current_user.company
+    @company = current_user.company # company_id not in the stories#edit route
     @story = Story.find params[:id]
     @contributions = @story.success.contributions
     # populate options for industries select (multiple select)
@@ -36,7 +36,7 @@ class StoriesController < ApplicationController
   # Notice how nested hash keys are treated as strings in the params hash
   # -> due to the way form parameters are name-spaced
   def create
-    @company = Company.find params[:id]
+    @company = Company.find params[:company_id]
     new_story = params[:story]
     # was a new customer entered? ...
     new_customer = new_story[:customer] if new_story[:customer].to_i == 0

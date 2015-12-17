@@ -80,6 +80,9 @@ Rails.application.configure do
   # config sendgrid emails
   config.action_mailer.raise_delivery_errors = true
   config.action_mailer.delivery_method = :smtp
+  # What exactly does this host setting do?
+  #  because it works fine when the actual host name is
+  #  something different, e.g. 'floating-spire-2927.herokuapp.com'
   host = 'www.customerstories.net'
   config.action_mailer.default_url_options = { host: host }
   ActionMailer::Base.smtp_settings = {

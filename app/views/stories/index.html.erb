@@ -2,10 +2,14 @@
   <div class="content">
     <div class="container">
 
-      <%= link_to company_path(current_user.company), class: 'story-nav' do %>
-        <span class='glyphicon glyphicon-chevron-left'
-            style='color:#337ab7; margin-top:20px; margin-right:5px'>
-        </span><span>Curate Stories</span>
+      <% if user_signed_in? %>
+        <!-- provide a link to Curation only if logged in -->
+        <%= link_to company_path(current_user.company), class: 'story-nav' do %>
+          <span class='glyphicon glyphicon-chevron-left'
+              style='color:#337ab7; margin-top:20px; margin-right:5px'>
+          </span><span>Curate Stories</span>
+        <% end %>
+
       <% end %>
       <hr>
 
@@ -30,7 +34,7 @@
 
       <div class="portlet portlet-default">
         <div id='stories-gallery' class="portlet-body"
-            data-company-id="<%= current_user.company_id %>">
+            data-company-id="<%= @company.id %>">
 
           <!-- TODO: Make this responsive -->
           <% @stories.each_slice(5) do |stories_row| %>
