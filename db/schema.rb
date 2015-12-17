@@ -24,7 +24,6 @@ ActiveRecord::Schema.define(version: 20151216214235) do
     t.string   "logo_content_type"
     t.integer  "logo_file_size"
     t.datetime "logo_updated_at"
-    t.string   "logo"
   end
 
   create_table "contributions", force: :cascade do |t|
