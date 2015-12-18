@@ -29,19 +29,15 @@ class ContributionsController < ApplicationController
   end
 
   def create
-    @story = Story.find params[:id]
-    @user = User.create(first_name: params[:contributor][:first_name],
-                         last_name: params[:contributor][:last_name],
-                             email: params[:contributor][:email],
-                          # password is necessary, so just set it to the email
-                          password: params[:contributor][:email],
-                      sign_up_code: 'csp_beta')
-    Contribution.create(user_id: @user.id,
-                     success_id: @story.success.id,
+    story = Story.find params[:id]
+    existing_user = User.find_by email: params[:contributor][:email]
+    contributor = existing_user || create_new_user(params[:contributor])
+    Contribution.create(user_id: contributor.id,
+                     success_id: story.success.id,
                            role: params[:contributor][:role],
                          status: 'pre-request')
     # respond with all pre-request contributions, most recent additions first
-    @contributors = pre_request_contributors @story.success.contributions
+    @contributors = pre_request_contributors story.success.contributions
     respond_to do |format|
       format.js {}
     end
@@ -81,6 +77,20 @@ class ContributionsController < ApplicationController
 
   def find_contribution
     @contribution = Contribution.find params[:id]
+  end
+
+  def create_new_user contributor
+    user = User.new(first_name: contributor[:first_name],
+                     last_name: contributor[:last_name],
+                         email: contributor[:email],
+               # password is necessary, so just set it to the email
+                      password: contributor[:email],
+                  sign_up_code: 'csp_beta')
+    if user.save
+      return user
+    else
+      # TODO raise an exception
+    end
   end
 
   # this method extracts the necessary combination of contribution
