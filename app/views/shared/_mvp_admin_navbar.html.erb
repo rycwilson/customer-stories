@@ -2,14 +2,18 @@
   <div class="container">
     <div class="navbar-header">
 
-      <% if current_user.company_id %>  <!-- company is registered -->
+      <!-- TODO need a company_registered? helper method -->
+      <!-- for demo version, just load Cisco logo -->
+      <% if user_signed_in? %>
 
-        <%= image_tag current_user.company.logo.url(:thumb),
+        <img src="<%= asset_path('cisco-logo.jpg') %>" alt="Company Logo"
+            style="width:90px">
+        <%#= image_tag current_user.company.logo.url(:thumb),
               { class: 'navbar-brand navbar-brand-img', alt: 'Company Logo' } %>
 
       <% else %>
 
-        <%= image_tag "mvp-admin/csp_logo.png",
+        <%= image_tag "mvp-landing/logo_full.png",
             { class: 'navbar-brand navbar-brand-img', alt: 'CSP Logo' } %>
 
       <% end %>
@@ -24,10 +28,13 @@
 
     <%= render 'shared/flash' %>
 
-    <nav class="collapse navbar-collapse" role="navigation">
+    <% if user_signed_in? %>
 
-      <%= render '/shared/mvp_admin_navbar_nav' %>
+      <nav class="collapse navbar-collapse" role="navigation">
+        <%= render '/shared/mvp_admin_navbar_nav' %>
+      </nav>
 
-    </nav>
+    <% end %>
+
   </div> <!-- /.container -->
 </header>

@@ -9,25 +9,30 @@
               style='color:#337ab7; margin-top:20px; margin-right:5px'>
           </span><span>Curate Stories</span>
         <% end %>
-
-      <% end %>
       <hr>
+      <% end %>
 
       <!-- .mainnav class puts the fading graphic underneath the headline -->
-      <div class="mainnav" style="color:#999999; margin-top:20px">
+      <div class="mainnav"
+           style="color:#999999; margin-top:5px; margin-bottom:40px">
         <div class="row">
-          <div class="col-md-3">
+          <div class='col-md-2 text-center vcenter'>
 
-            <h2 style="margin-left:20px">Customers</h2>
+            <img src="<%= asset_path('cisco-logo.jpg') %>"
+                alt="Company Logo" style="width:125px">
 
           </div>
-          <div class="col-md-2">
+          <!-- <div class="col-md-2 vcenter">
+
+            <h2 style="margin:0">Customers</h2>
+
+          </div> -->
+          <div class="col-md-2 vcenter">
 
              <%= select_tag "industries",
                     options_for_select(@industries_select),
                     { class: 'stories-filter form-control',
                       style: 'width:100%'} %>
-
           </div>
         </div>
       </div>  <!-- mainnav -->
