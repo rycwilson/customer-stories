@@ -6,8 +6,9 @@
       <!-- for demo version, just load Cisco logo -->
       <% if user_signed_in? %>
 
-        <img src="<%= asset_path('cisco-logo.jpg') %>" alt="Company Logo"
-            style="width:90px">
+        <%= image_tag "cisco-logo.jpg",
+            { class: 'navbar-brand navbar-brand-img',
+              style: 'width:90px', alt: 'Company Logo' } %>
         <%#= image_tag current_user.company.logo.url(:thumb),
               { class: 'navbar-brand navbar-brand-img', alt: 'Company Logo' } %>
 
