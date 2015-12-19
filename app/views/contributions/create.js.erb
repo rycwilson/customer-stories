@@ -1,11 +1,17 @@
 
 var contributors = <%= raw @contributors.to_json %>
-console.log(contributors);
+
+console.log('Contributors: ', contributors);
 
 $('#new-contributor-modal').modal('hide');
 
 var template = _.template($('#pre-request-template').html());
-$('#pre-request-contributors').empty().append(template({ contributors: contributors }));
+
+$('#pre-request-contributors').empty()
+                              .append(
+                                template({ contributors: contributors })
+                              );
+
 
 
 

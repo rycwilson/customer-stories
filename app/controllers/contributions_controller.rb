@@ -1,13 +1,17 @@
 class ContributionsController < ApplicationController
 
-  before_action :find_contribution, only: [:contribution_request_email, :edit, :update]
+  before_action :find_contribution, only:
+                          [:contribution_request_email, :edit, :update]
 
   def contribution_request_email
-    # TODO: Determine the status of @contribution, send appropriate email template
-    # email_template = EmailTemplate.find ...
+    contributor = User.find_by(id: @contribution.user_id)
+    # TODO: Determine status of @contribution and @role (customer, partner, sales) \
+    #   -> send appropriate template
     # if first request, kick off cron job for subsequent request emails
-    UserMailer.request_contribution(@contribution, current_user).deliver
+    UserMailer.request_contribution(@contribution, current_user).deliver_now
     # @contribution.update status:
+    flash.now[:info] =
+      "An email request for contribution has been sent to #{user_full_name(contributor)}"
     respond_to do |format|
       format.js {}
     end

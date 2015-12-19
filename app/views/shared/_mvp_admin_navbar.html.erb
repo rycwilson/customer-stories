@@ -1,5 +1,7 @@
 <header class="navbar" role="banner">
   <div class="container">
+
+    <!-- navbar-header -->
     <div class="navbar-header">
 
       <!-- TODO need a company_registered? helper method -->
@@ -24,10 +26,27 @@
         <span class="sr-only">Toggle navigation</span>
         <i class="fa fa-cog"></i>
       </button>
-
     </div> <!-- /.navbar-header -->
 
-    <%= render 'shared/flash' %>
+    <!-- flash -->
+    <% if flash.any? %>
+
+      <%= render 'shared/flash' %>
+    <!-- This partial will only render if there is something in the flash hash
+         In case of AJAX request / JS response, need to render below
+         Note: below is hidden by on page load -->
+
+    <% else %>
+
+      <div id='flash'
+         class="hidden col-md-6 col-md-offset-2 text-center alert alert-info"
+         role="alert"
+         style='z-index:1; position:fixed'>
+        <button type="button" class="close" data-dismiss="alert"
+                aria-hidden="true">&times;</button>
+      </div>
+
+    <% end %>
 
     <% if user_signed_in? %>
 

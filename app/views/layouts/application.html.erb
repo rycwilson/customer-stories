@@ -7,8 +7,8 @@
 <head>
   <title>Customer Stories</title>
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
-  <!-- NOTE: the controller_name helper method will NOT work  -->
-  <!-- as argument to link / include methods below -->
+  <!-- NOTE: the controller_name helper method will NOT work
+       as argument to link / include methods below -->
   <!-- controller-specific stylesheets -->
   <%= stylesheet_link_tag params[:controller], 'data-turbolinks-track' => true %>
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
@@ -29,7 +29,7 @@
   <% if user_signed_in? && controller_name != 'contributions'  %>  <!-- admin -->
 
     <!-- current_user could be contributor with token access -->
-    <!-- check current_user.role (once that attribute is added) -->
+    <!-- TODO check current_user.role (once that attribute is added) -->
 
     <%= render 'shared/mvp_admin_navbar' %>
 
