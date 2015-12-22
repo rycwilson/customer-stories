@@ -25,7 +25,9 @@
           .find("div[data-contribution-id='" + contribution.id.toString() + "']");
     setTimeout(function () {
       $preRequest.hide('fast', function() { $preRequest.remove(); });
+      // $('#flash').fadeOut(300, function () { $(this).remove() });
     }, 3500);
+
 
     // combine the neccessary information from @contribution
     // and @contributor to provide the necessary response data
@@ -49,6 +51,7 @@
     $('#flash').toggleClass('hidden').append(mesg);
     // another way:
     $('#flash').hide().append(flash).fadeIn('fast');
+
 
     setTimeout(function () {
       $('#flash').slideUp();

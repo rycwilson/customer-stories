@@ -573,18 +573,24 @@
   {{ contributors.forEach(function (contributor) { }}
     <div class="well" data-contribution-id="{{= contributor.contribution_id }}">
       <div class="row">
-        <div class='col-sm-12'>
+        <div class='col-md-12'>
           {{= contributor.full_name }} <br>
           {{= contributor.email }}
         </div>
       </div> <br>
       <div class="row">
-        <div class="col-sm-6">
+        <div class="col-md-6">
           {{= contributor.role }}
         </div>
-        <%= link_to "Send Request",
-            "/contributions/{{= contributor.contribution_id }}/request_contribution",
-            class: 'btn btn-sm btn-secondary' %>
+        <div class='col-md-6 text-right'>
+          <form class="button_to" method="post"
+              action="/contributions/{{= contributor.contribution_id }}/request_contribution"
+              data-remote="true">
+            <input type="hidden" name="_method" value="put">
+            <input class="btn btn-sm btn-secondary" type="submit"
+                    value="Send Request">
+          </form>
+        </div>
       </div>
     </div>
   {{ }); }}
@@ -603,10 +609,6 @@
     </div>
   </div>
 </script>
-
-
-
-
 
 
 
