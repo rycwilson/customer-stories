@@ -1,3 +1,6 @@
+
+<%= render 'shared/flash' %>
+
 <header class="navbar" role="banner">
   <div class="container">
 
@@ -17,11 +20,9 @@
 
     </div> <!-- /.navbar-header -->
 
-    <%= render 'shared/flash' %>
-
     <nav class="collapse navbar-collapse" role="navigation">
 
-      <% if current_user && controller_name != "contributions" %>
+      <% if user_signed_in? && controller_name != "contributions" %>
 
         <%= render '/shared/mvp_admin_navbar_nav' %>
 

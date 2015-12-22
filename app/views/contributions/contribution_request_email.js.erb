@@ -1,23 +1,78 @@
 
-var contribution = <%= raw @contribution.to_json %>
-var flash = <%= raw flash[:info].to_json %>
+// TODO: make sure all of this only runs once
 
-console.log('Contribution request sent for: ', contribution)
+(function () {
 
-$('#flash').toggleClass('hidden').append(flash);
-// another way:
-// $('#flash').hide().append(flash).fadeIn('fast');
+  var contribution = <%= raw @contribution.to_json %>;
+  var contributor = <%= raw @contributor.to_json %>;
+  var status = <%= raw @status.to_json %>;
+  var flashMesg = <%= raw flash[:info].to_json %>;
 
-setTimeout(function () {
-  $('#flash').slideUp();
-}, 3000);
+  flashDisplay(flashMesg);
+  // move contributor from 'pre-request' to 'in-progress'
+  moveContributor(contribution, contributor, status);
 
-setTimeout(function () {
-  $('#flash').toggleClass('hidden')
-  // dispay:none setting appears after first click-cycle,
-  // leads to subsequent failures
-  // solution...
-  $('#flash').css('display', '');
-  // remove all text, leave child elements
-  $('#flash').html($('#flash').children());
-}, 4000);
+  /*
+    moveContributor will:
+    - remove the pre-request contributor listing
+    - parse server response and pass necessary data to the in-progress template
+    - render the in-progress contributor listing
+  */
+  function moveContributor (contribution, contributor, status) {
+
+    // remove the pre-request listing (with animation)
+    var $preRequest = $('#pre-request')
+          .find("div[data-contribution-id='" + contribution.id.toString() + "']");
+    setTimeout(function () {
+      $preRequest.hide('fast', function() { $preRequest.remove(); });
+    }, 3500);
+
+    // combine the neccessary information from @contribution
+    // and @contributor to provide the necessary response data
+    var inProgressContributor = {
+      contributionId: contribution.id,
+      fullName: contributor.first_name + contributor.last_name,
+      email: contributor.email,
+      role: contribution.role,
+      contributionStatus: status
+    }
+
+    // template for an in-progress contribution
+    var template = _.template($('#in-progress-template').html());
+    $('#in-progress-contributors')
+        .append(template({ contributor: inProgressContributor }));
+  }
+
+
+  function flashDisplay (mesg) {
+
+    $('#flash').toggleClass('hidden').append(mesg);
+    // another way:
+    $('#flash').hide().append(flash).fadeIn('fast');
+
+    setTimeout(function () {
+      $('#flash').slideUp();
+      // $('#send_contribution_request').parent()[0].reset()
+    }, 3000);
+
+    setTimeout(function () {
+      $('#flash').toggleClass('hidden')
+      // dispay:none setting appears after first click-cycle,
+      // leads to subsequent failures
+      // solution...
+      $('#flash').css('display', '');
+      // remove all text, leave child elements
+      $('#flash').html($('#flash').children());
+    }, 4000);
+  }
+
+}());
+
+
+
+
+
+
+
+
+

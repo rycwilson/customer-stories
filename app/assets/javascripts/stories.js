@@ -113,6 +113,11 @@ function initListeners () {
     $('.contributor-role').select2('val', 'Customer');  // single select
   });
 
+  // blur buttons after they're clicked
+  $('.contribution-request').on('focus','input.contribution-request', function () {
+    console.log('focus: ', $(this));
+  });
+
 }
 
 function configPlugins () {

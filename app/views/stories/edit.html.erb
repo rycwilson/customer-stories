@@ -275,18 +275,17 @@
 
             <div class="heading-block">
               <h4>Contributors Waiting for Request</h4>
-            </div> <!-- /.heading-block -->
+            </div>
 
             <div id='pre-request-contributors'>
 
               <% @contributions.select { |cont| cont.status == 'pre-request'} %>
               <%   .each do |contribution| %>
 
-                <div class="well">
+                <div class="well" data-contribution-id="<%= contribution.id %>">
                   <div class="row">
                     <div class='col-sm-12'>
-                      <%= contribution.user.first_name %>
-                      <%= contribution.user.last_name %> <br>
+                      <%= user_full_name(contribution.user) %> <br>
                       <%= contribution.user.email %>
                     </div>
                   </div> <br>
@@ -298,7 +297,6 @@
                       <%= button_to 'Send Request',
                           request_contribution_path(contribution),
                           class: 'btn btn-sm btn-secondary',
-                          id: 'send_contribution_request',
                           method: 'put', remote: true %>
                     </div>
                   </div>
@@ -323,11 +321,10 @@
                                                 cont.status == 'request3' ||
                                                 cont.status == 'did_not_respond' } %>
               <%   .each do |contribution| %>
-                <div class="well">
+                <div class="well" data-contribution-id="<%= contribution.id %>">
                   <div class="row">
-                    <div class='col-sm-12'>
-                      <%= contribution.user.first_name %>
-                      <%= contribution.user.last_name %> <br>
+                    <div class='col-md-12'>
+                      <%= user_full_name(contribution.user) %> <br>
                       <%= contribution.user.email %> <br>
                       <%= contribution.role %> <br><br>
                       <%= contribution_status(contribution.status) %>
@@ -574,11 +571,11 @@
 <!-- pre-request template -->
 <script type="text/template" id="pre-request-template">
   {{ contributors.forEach(function (contributor) { }}
-    <div class="well">
+    <div class="well" data-contribution-id="{{= contributor.contribution_id }}">
       <div class="row">
         <div class='col-sm-12'>
-          {{= contributor.user_name }} <br>
-          {{= contributor.user_email }}
+          {{= contributor.full_name }} <br>
+          {{= contributor.email }}
         </div>
       </div> <br>
       <div class="row">
@@ -593,6 +590,19 @@
   {{ }); }}
 </script>
 
+<!-- in-progress template -->
+<script type="text/template" id="in-progress-template">
+  <div class="well" data-contribution-id="{{= contributor.contributionId }}">
+    <div class="row">
+      <div class='col-md-12'>
+        {{= contributor.fullName }} <br>
+        {{= contributor.email }} <br>
+        {{= contributor.role }} <br><br>
+        {{= contributor.contributionStatus }}
+      </div>
+    </div>
+  </div>
+</script>
 
 
 

@@ -1,3 +1,23 @@
+
+<% if flash.any? %>
+
+  <%= render 'shared/flash' %>
+<!-- This partial will only render if there is something in the flash hash
+     In case of AJAX request / JS response, need to render below -->
+
+<% else %>
+
+  <div class='container' style='z-index:999; position:fixed; width:100%' >
+    <div id='flash'
+       class="hidden col-md-6 col-md-offset-3 text-center alert alert-info"
+       role="alert">
+      <button type="button" class="close" data-dismiss="alert"
+              aria-hidden="true">&times;</button>
+    </div>
+  </div>
+
+<% end %>
+
 <header class="navbar" role="banner">
   <div class="container">
 
@@ -28,25 +48,7 @@
       </button>
     </div> <!-- /.navbar-header -->
 
-    <!-- flash -->
-    <% if flash.any? %>
 
-      <%= render 'shared/flash' %>
-    <!-- This partial will only render if there is something in the flash hash
-         In case of AJAX request / JS response, need to render below
-         Note: below is hidden by on page load -->
-
-    <% else %>
-
-      <div id='flash'
-         class="hidden col-md-6 col-md-offset-2 text-center alert alert-info"
-         role="alert"
-         style='z-index:1; position:fixed'>
-        <button type="button" class="close" data-dismiss="alert"
-                aria-hidden="true">&times;</button>
-      </div>
-
-    <% end %>
 
     <% if user_signed_in? %>
 

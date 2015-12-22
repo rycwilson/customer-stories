@@ -1,19 +1,27 @@
 class ContributionsController < ApplicationController
 
+  include ContributionsHelper
+
   before_action :find_contribution, only:
                           [:contribution_request_email, :edit, :update]
 
   def contribution_request_email
-    contributor = User.find_by(id: @contribution.user_id)
-    # TODO: Determine status of @contribution and @role (customer, partner, sales) \
-    #   -> send appropriate template
-    # if first request, kick off cron job for subsequent request emails
-    UserMailer.request_contribution(@contribution, current_user).deliver_now
-    # @contribution.update status:
-    flash.now[:info] =
-      "An email request for contribution has been sent to #{user_full_name(contributor)}"
-    respond_to do |format|
-      format.js {}
+    if @contribution.update status: 'request1'
+      @contributor = User.find @contribution.user_id
+      # need to use ContributionsHelper#contribution_status
+      # to present a status message based on contribution.status
+      @status = contribution_status @contribution.status
+      # TODO: Determine status of @contribution and @role (customer, partner, sales) \
+      #   -> send appropriate template
+      # if first request, kick off cron job for subsequent request emails
+      UserMailer.request_contribution(@contribution, @contributor, current_user).deliver_now
+      flash.now[:info] =
+        "An email request for contribution has been sent to #{user_full_name(@contributor)}"
+      respond_to do |format|
+        format.js {}
+      end
+    else
+      puts 'error updating contribution'
     end
   end
 
@@ -98,15 +106,15 @@ class ContributionsController < ApplicationController
   end
 
   # this method extracts the necessary combination of contribution
-  # and contributor data for new contributor AJAX response
+  # and contributor data for new contribution AJAX response
   def pre_request_contributors success_contributions
     success_contributions.order(created_at: :desc)
       .select { |contribution| contribution.status == 'pre-request' }
       .map do |contribution|
         {
           contribution_id: contribution.id,
-          user_name: contribution.user.first_name + " " + contribution.user.last_name,
-          user_email: contribution.user.email,
+          full_name: contribution.user.first_name + " " + contribution.user.last_name,
+          email: contribution.user.email,
           role: contribution.role,
         }
       end
