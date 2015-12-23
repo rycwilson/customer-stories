@@ -12,15 +12,16 @@ class UserMailer < ApplicationMailer
     #  is curator data captured in the cron job?
     @curator = contribution.success.curator
     @contributor = contributor
-    @company = Company.find_by(id: @curator.company_id)
+    @company = @curator.company
     # eventually Users will be role-based STI,
     #   contributor will have a customer_id
     #   => @customer = Customer.find @contributor.customer_id
     # for now:
-    @customer = Customer.find_by(id: contribution.success.customer_id)
+    @customer = contribution.success.customer
     @contribution_url = "http://#{ENV['HOST_NAME']}/contributions/#{contribution.id}/contribution"
     @feedback_url = "http://#{ENV['HOST_NAME']}/contributions/#{contribution.id}/feedback"
     @opt_out_url = "http://#{ENV['HOST_NAME']}/contributions/#{contribution.id}/opt_out"
+    binding.pry
 
     mail to: @contributor.email, subject: "Participate in a #{@customer.name} / #{@company.name} success story"
 

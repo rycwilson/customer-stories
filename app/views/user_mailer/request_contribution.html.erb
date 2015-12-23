@@ -8,7 +8,7 @@
 
     <p>Dear <%= @contributor.first_name %>,</p>
 
-    <p>My name is <%= user_full_name(@curator) %> and I’ll be curating a story about the success of your project.  The value of participating is it will be closely connected with LinkedIn so it’s an opportunity to include in your CV as validation of your great work.  The story will also be used as a case study to help others learn about solving similar challenges.</p>
+    <p>My name is <%= @curator.first_name %> <%= @curator.last_name %> and I’ll be curating a story about the success of your project.  The value of participating is it will be closely connected with LinkedIn so it’s an opportunity to include in your CV as validation of your great work.  The story will also be used as a case study to help others learn about solving similar challenges.</p>
 
     <p>Best of all, I’ll be doing the work of narrating the story and all I need from you are some notes from your perspective.  It will take maximum 5 minutes:</p>
     <a href="<%= @contribution_url %>">Share your Story</a>
