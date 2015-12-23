@@ -20,9 +20,9 @@
     <p>If you have any questions, please email or call me.</p>
 
     <p>Thank you,</p>
-    <%= user_full_name(@curator) %>
-    <%= @curator.email %>
-    <%= user_company(@curator) %>
+    <%= @curator.first_name %> <%= @curator.last_name %> <br>
+    <%= @curator.email %> <br>
+    <%= @curator.company.name %> <br>
     <!-- [curator_title] --> <!-- need a model attribute for this -->
     <!--[curator_phone] --> <!-- need a model attribute -->
 
