@@ -2,19 +2,23 @@
   <div class="row">
     <div class='col-md-8'>
 
-      <% if @type == 'feedback' %>
+      <% if @type == 'contribution' %>
 
-        <%= render partial: 'contributions/shared/feedback_heading',
-                    locals: { curator: @curator } %> <br>
+        <%= render partial: 'contributions/shared/contribution_form',
+                    locals: {      curator: @curator,
+                              contribution: @contribution,
+                                      type: @type          } %> <br>
 
-        <%= render 'contributions/shared/feedback_form' %>
+      <% elsif @type == 'feedback' %>
 
-      <% elsif @type == 'contribution' %>
+        <%= render partial: 'contributions/shared/feedback_form',
+                    locals: {      curator: @curator,
+                              contribution: @contribution,
+                                      type: @type          } %> <br>
 
-        <%= render partial: 'contributions/shared/contribution_heading',
-                    locals: { curator: @curator } %> <br>
+      <% elsif @type == 'opt_out' %>
 
-        <%= render 'contributions/shared/contribution_form' %>
+        <h3>You have been unsubscribed</h3>
 
       <% end %>
 

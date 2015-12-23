@@ -5,6 +5,8 @@ console.log('Contributors: ', contributors);
 
 $('#new-contributor-modal').modal('hide');
 
+$("a[href='#pre-request']").tab('show');
+
 var template = _.template($('#pre-request-template').html());
 
 $('#pre-request-contributors').empty()

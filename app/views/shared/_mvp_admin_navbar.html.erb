@@ -3,7 +3,7 @@
 
   <%= render 'shared/flash' %>
 <!-- This partial will only render if there is something in the flash hash
-     In case of AJAX request / JS response, need to render below -->
+     In case of AJAX request / JS response, render below -->
 
 <% else %>
 
@@ -47,8 +47,6 @@
         <i class="fa fa-cog"></i>
       </button>
     </div> <!-- /.navbar-header -->
-
-
 
     <% if user_signed_in? %>
 

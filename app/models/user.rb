@@ -14,7 +14,6 @@ class User < ActiveRecord::Base
 
   # Include default devise modules. Others available are:
   # :lockable, :timeoutable and :omniauthable
-  #  removed  :confirmable, so it works on heroku until we have email service set up
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
          :lockable#, :confirmable

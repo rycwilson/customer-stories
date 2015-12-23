@@ -25,18 +25,19 @@ class ContributionsController < ApplicationController
     end
   end
 
+  #
+  # GET '/contributions/:id/:type'
+  #   type is 'contribution', 'feedback', 'opt_out'
+  #
   def edit
     @curator = current_user  # this is a hack
                              # curator must be logged in
                              # this isn't going to work with cron
-    if params[:type] == "feedback"
-      @type = "feedback"
-    elsif params[:type] == "contribution"
-      @type = "contribution"
-    elsif params[:type] == "opt_out"
-      render :opt_out_confirm
+    if ['contribution', 'feedback', 'opt_out'].include? params[:type]
+      @type = params[:type]
+      process_opt_out(@contribution) if (@type == 'opt_out')
     else
-      # raise an error
+      # page doesn't exist
     end
   end
 
@@ -44,34 +45,31 @@ class ContributionsController < ApplicationController
     story = Story.find params[:id]
     existing_user = User.find_by email: params[:contributor][:email]
     contributor = existing_user || create_new_user(params[:contributor])
-    Contribution.create(user_id: contributor.id,
-                     success_id: story.success.id,
-                           role: params[:contributor][:role],
-                         status: 'pre-request')
-    # respond with all pre-request contributions, most recent additions first
-    @contributors = pre_request_contributors story.success.contributions
-    respond_to do |format|
-      format.js {}
+    contribution = Contribution.new(user_id: contributor.id,
+                                 success_id: story.success.id,
+                                       role: params[:contributor][:role],
+                                     status: 'pre-request')
+    if contribution.save
+      # respond with all pre-request contributions, most recent additions first
+      @contributors = pre_request_contributors story.success.contributions
+      respond_to do |format|
+        format.js {}
+      end
+    else
+      puts 'Error saving contribution: ' + contribution.errors.full_messages
     end
   end
 
-  # TODO: What if user separately submits contribution and feedback?
+  #
+  # params = { contribution: { status: <type> }, { <type>: <content> } }
+  #
+  # TODO: after submission, update (change? delete?) the contributor's token
+  #
   def update
     if @contribution.update contribution_params
-      if contribution_params[:opt_out?]
-        @type = "opt_out"
-        #  notify curator
-        render :opt_out_confirm
-      elsif contribution_params[:feedback]
-        @type = "feedback"
-        render :feedback_confirm
-      elsif contribution_params[:contribution] #contribution
-        @type = "contribution"
-        render :contribution_confirm
-      else
-        puts "Something went wrong"
-      end
+      render :confirm_submission
     else
+      flash.now[:danger] = "Something went wrong"
       render :edit
     end
   end
@@ -81,14 +79,16 @@ class ContributionsController < ApplicationController
 
   private
 
-  # may add more attributes to this list at some point
-  # for not, these are the primary changes coming from contributor
   def contribution_params
-    params.require(:contribution).permit(:contribution, :feedback, :opt_out?)
+    params.require(:contribution).permit(:status, :contribution, :feedback)
   end
 
   def find_contribution
     @contribution = Contribution.find params[:id]
+  end
+
+  def process_opt_out contribution
+    # TODO: process opt_out request
   end
 
   def create_new_user contributor
@@ -98,10 +98,13 @@ class ContributionsController < ApplicationController
                # password is necessary, so just set it to the email
                       password: contributor[:email],
                   sign_up_code: 'csp_beta')
+    # Note - skipping confirmation means the user can log in
+    #   with these credentials
+    user.skip_confirmation!
     if user.save
-      return user
+      user
     else
-      # TODO raise an exception
+      puts 'error creating contributor'
     end
   end
 

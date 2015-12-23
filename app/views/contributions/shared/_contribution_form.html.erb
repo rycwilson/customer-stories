@@ -1,8 +1,28 @@
 
+<h3>Thanks for contributing!</h3>
+
+<p>If you have any questions, please contact your Story Curator.</p>
+
+<div class="row">
+
+  <div class='col-md-2'>
+    <label for="curator">Story Curator</label>
+  </div>
+
+  <div class='col-md-10'>
+    <span id='curator'><%= user_full_name(curator) %></span> <br>
+    <span><%= curator.company.name %></span> <br>
+    <span><%= curator.email %></span> <br>
+  </div>
+
+</div>
+
 <div class='row'>
 
-  <%= form_for @contribution,
-    html: { class: "form-horizontal", method: "put" } do |f| %>
+  <%= form_for contribution,
+        html: { class: "form-horizontal", method: "put" } do |f| %>
+
+    <%= hidden_field_tag "contribution[status]", type %>
 
     <div class="form-group">
       <%= f.label :contribution, "Your Success Story",

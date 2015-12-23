@@ -21,6 +21,7 @@ vendor/assets/bower_components
 # run this in local environment:
 #   figaro heroku:set -e production
 config/application.yml
+config/secrets.yml
 
 # paperclip images
 public/system

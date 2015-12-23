@@ -1,0 +1,18 @@
+
+HOST_NAME: < your_development_host >
+
+SENDGRID_USERNAME: ***
+SENDGRID_PASSWORD: ***
+
+DEVISE_SECRET_KEY: ***
+
+LINKEDIN_KEY: ***
+LINKEDIN_SECRET: ***
+
+AWS_ACCESS_KEY_ID: ***
+AWS_SECRET_ACCESS_KEY: ***
+S3_BUCKET: ***
+
+production:
+  HOST_NAME: 'www.customerstories.net'
+  S3_BUCKET: ***
