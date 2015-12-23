@@ -3,7 +3,7 @@
 class User < ActiveRecord::Base
 
   belongs_to :company
-  has_many :contributions, dependent: :destroy
+  has_many :contributions # no (dependent: :destroy)
 
   # Adding signup code for beta control
   attr_accessor :sign_up_code
@@ -16,7 +16,7 @@ class User < ActiveRecord::Base
   # :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
-         :lockable, :confirmable
+         :lockable#, :confirmable
 
   # This is for users signing up
   # Not presently using this, but may in the future

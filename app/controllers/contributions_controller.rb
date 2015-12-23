@@ -104,7 +104,7 @@ class ContributionsController < ApplicationController
                   sign_up_code: 'csp_beta')
     # Note - skipping confirmation means the user can log in
     #   with these credentials
-    user.skip_confirmation!
+    # user.skip_confirmation!  this is undefined when :confirmable is disabled
     if user.save
       user
     else
