@@ -16,7 +16,7 @@ class User < ActiveRecord::Base
   # :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
-         :lockable#, :confirmable
+         :lockable, :confirmable
 
   # This is for users signing up
   # Not presently using this, but may in the future
