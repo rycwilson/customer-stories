@@ -21,7 +21,8 @@ class ContributionsController < ApplicationController
         format.js {}
       end
     else
-      puts 'error updating contribution'
+      redirect_to story_path(@contribution.success.story),
+        flash[:alert] = "Something went wrong"
     end
   end
 
@@ -30,9 +31,12 @@ class ContributionsController < ApplicationController
   #   type is 'contribution', 'feedback', 'opt_out'
   #
   def edit
-    @curator = current_user  # this is a hack
-                             # curator must be logged in
-                             # this isn't going to work with cron
+    # When a user clicks a link in email, they are not logged in and thus
+    # current_user returns nil
+    # TODO: Once token-based login is established, need to distinguish here
+    # between the current_user (contributor who clicked an email login link)
+    # and the curator (identified by?)
+    @curator = current_user || { first_name: "Test", last_name: "Curator"}
     if ['contribution', 'feedback', 'opt_out'].include? params[:type]
       @type = params[:type]
       process_opt_out(@contribution) if (@type == 'opt_out')
