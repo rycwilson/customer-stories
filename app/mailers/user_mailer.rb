@@ -6,11 +6,11 @@ class UserMailer < ApplicationMailer
     mail(to: '***REMOVED***', subject: 'testing cron emailer')
   end
 
-  def request_contribution contribution, contributor, curator
+  def request_contribution contribution, contributor
     # TODO: how to set curator if email sent via cron job?
     #  i.e. curator not necessarily logged in
     #  is curator data captured in the cron job?
-    @curator = curator
+    @curator = contribution.success.curator
     @contributor = contributor
     @company = Company.find_by(id: @curator.company_id)
     # eventually Users will be role-based STI,

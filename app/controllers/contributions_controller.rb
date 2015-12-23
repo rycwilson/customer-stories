@@ -7,14 +7,14 @@ class ContributionsController < ApplicationController
 
   def contribution_request_email
     if @contribution.update status: 'request1'
-      @contributor = User.find @contribution.user_id
+      @contributor = @contribution.user
       # need to use ContributionsHelper#contribution_status
       # to present a status message based on contribution.status
       @status = contribution_status @contribution.status
       # TODO: Determine status of @contribution and @role (customer, partner, sales) \
       #   -> send appropriate template
       # if first request, kick off cron job for subsequent request emails
-      UserMailer.request_contribution(@contribution, @contributor, current_user).deliver_now
+      UserMailer.request_contribution(@contribution, @contributor).deliver_now
       flash.now[:info] =
         "An email request for contribution has been sent to #{user_full_name(@contributor)}"
       respond_to do |format|
