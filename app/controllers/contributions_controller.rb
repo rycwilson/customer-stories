@@ -31,12 +31,8 @@ class ContributionsController < ApplicationController
   #   type is 'contribution', 'feedback', 'opt_out'
   #
   def edit
-    # When a user clicks a link in email, they are not logged in and thus
-    # current_user returns nil
-    # TODO: Once token-based login is established, need to distinguish here
-    # between the current_user (contributor who clicked an email login link)
-    # and the curator (identified by?)
-    @curator = current_user || { first_name: "Test", last_name: "Curator"}
+    @curator = @contribution.success.curator
+    # validate :type
     if ['contribution', 'feedback', 'opt_out'].include? params[:type]
       @type = params[:type]
       process_opt_out(@contribution) if (@type == 'opt_out')

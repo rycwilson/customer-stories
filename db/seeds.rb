@@ -7,11 +7,19 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 #Company.destroy_all
+
+# destroy contributions first so deleted users don't orphan contributions (violates foreign key costraint)
+# -> not using dependent: :destroy for users -> contributions
+Contribution.destroy_all
 User.where.not("email = ? OR email = ?", "***REMOVED***", "***REMOVED***").destroy_all
-Customer.destroy_all # also destroys successes, stories, visitors, contributions and successes* join tables
+Customer.destroy_all # also destroys successes, stories, visitors, and successes* join tables
 Product.destroy_all
 ProductCategory.destroy_all
 IndustryCategory.destroy_all
+
+dan = User.find_by(email:'***REMOVED***')
+ryan = User.find_by(email:'***REMOVED***')
+curators = [dan, ryan]
 
 def create_contributor first_name=nil, last_name=nil, cont_email=nil, linkedin_url=nil
   email = FFaker::Internet.email # need to use the same value twice, so store in variable
@@ -24,7 +32,7 @@ def create_contributor first_name=nil, last_name=nil, cont_email=nil, linkedin_u
     linkedin_url: linkedin_url,
     sign_up_code: 'csp_beta')
   puts contributor.errors.full_messages unless contributor.save
-  return contributor
+  contributor
 end
 
 def create_contribution success_id, contributor_id, role, status
@@ -39,7 +47,7 @@ def create_contribution success_id, contributor_id, role, status
        feedback: feedback,
    contribution: contribution)
   puts contribution.errors.full_messages unless contribution.save
-  return contribution
+  contribution
 end
 
 # cisco = Company.create(name:'Cisco')
@@ -66,6 +74,7 @@ end
   success = Success.create()
   customer.successes << success
   success.created_at = (rand*60).days.ago
+  success.curator = curators[rand(2)]  # randomly select dan or ryan as curator
   success.save
   # 2/3 successes will have a story
   if rand(3) >= 1
@@ -96,7 +105,6 @@ end
                                    state: FFaker::AddressUS.state_abbr,
                               created_at: (rand*60).days.ago)
     end
-
 
     # Contributions
     roles = ['Customer', 'Partner', 'Sales Team']

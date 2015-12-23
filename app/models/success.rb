@@ -1,6 +1,10 @@
 class Success < ActiveRecord::Base
 
   belongs_to :customer
+  belongs_to :user
+  # alias the user attribute -> Success.find(id).curator
+  alias_attribute :curator, :user
+
   has_one :story, dependent: :destroy
   has_many :visitors, dependent: :destroy
   has_many :products_successes, dependent: :destroy
@@ -10,9 +14,8 @@ class Success < ActiveRecord::Base
   has_many :industries_successes, dependent: :destroy
   has_many :industry_categories, through: :industries_successes
   has_many :contributions, dependent: :destroy
-  has_many :users, through: :contributions
-  # below we are creating an alias so we can call 'success.contributors' instead of 'success.users'
-  # has_many :contributors, through: :contributions, foreign_key: "success_id", class_name: "User"
+  # alias the association to user -> Success.find(id).contributors
+  has_many :contributors, through: :contributions, source: :user
 
 end
 

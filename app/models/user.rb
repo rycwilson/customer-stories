@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
 
   belongs_to :company
   has_many :contributions # no (dependent: :destroy)
+  has_many :successes # no (dependent: :destroy)
 
   # Adding signup code for beta control
   attr_accessor :sign_up_code
