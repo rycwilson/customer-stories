@@ -21,7 +21,6 @@ class UserMailer < ApplicationMailer
     @contribution_url = "http://#{ENV['HOST_NAME']}/contributions/#{contribution.id}/contribution"
     @feedback_url = "http://#{ENV['HOST_NAME']}/contributions/#{contribution.id}/feedback"
     @opt_out_url = "http://#{ENV['HOST_NAME']}/contributions/#{contribution.id}/opt_out"
-    binding.pry
 
     mail to: @contributor.email, subject: "Participate in a #{@customer.name} / #{@company.name} success story"
 
