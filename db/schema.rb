@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151223195252) do
+ActiveRecord::Schema.define(version: 20151224191001) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,6 +25,17 @@ ActiveRecord::Schema.define(version: 20151223195252) do
     t.integer  "logo_file_size"
     t.datetime "logo_updated_at"
   end
+
+  create_table "contribution_emails", force: :cascade do |t|
+    t.string   "name"
+    t.string   "subject"
+    t.text     "body"
+    t.integer  "company_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "contribution_emails", ["company_id"], name: "index_contribution_emails_on_company_id", using: :btree
 
   create_table "contributions", force: :cascade do |t|
     t.integer  "user_id"
@@ -186,6 +197,7 @@ ActiveRecord::Schema.define(version: 20151223195252) do
 
   add_index "visitors", ["success_id"], name: "index_visitors_on_success_id", using: :btree
 
+  add_foreign_key "contribution_emails", "companies"
   add_foreign_key "contributions", "successes"
   add_foreign_key "contributions", "users"
   add_foreign_key "customers", "companies"

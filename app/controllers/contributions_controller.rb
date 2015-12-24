@@ -6,7 +6,7 @@ class ContributionsController < ApplicationController
                           [:contribution_request_email, :edit, :update]
 
   def contribution_request_email
-    if @contribution.update status: 'request1'
+    if @contribution.update status:'request'
       @contributor = @contribution.user
       # need to use ContributionsHelper#contribution_status
       # to present a status message based on contribution.status
@@ -48,7 +48,7 @@ class ContributionsController < ApplicationController
     contribution = Contribution.new(user_id: contributor.id,
                                  success_id: story.success.id,
                                        role: params[:contributor][:role],
-                                     status: 'pre-request')
+                                     status: 'pre_request')
     if contribution.save
       # respond with all pre-request contributions, most recent additions first
       @contributors = pre_request_contributors story.success.contributions
@@ -112,7 +112,7 @@ class ContributionsController < ApplicationController
   # and contributor data for new contribution AJAX response
   def pre_request_contributors success_contributions
     success_contributions.order(created_at: :desc)
-      .select { |contribution| contribution.status == 'pre-request' }
+      .select { |contribution| contribution.status == 'pre_request' }
       .map do |contribution|
         {
           contribution_id: contribution.id,

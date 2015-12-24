@@ -1,15 +1,34 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
 
-#Company.destroy_all
+# This file assumes the existence of:
+#
+#   users: 'dlindblom@gmail.com', '***REMOVED***'
+#   companies: 'Cisco'
+#
+#  ** All other data will be destroyed and re-created upon running this file **
+
+require File.expand_path('../seeds/contributions', __FILE__)
+require File.expand_path('../seeds/stories', __FILE__)
+require File.expand_path('../seeds/visitors', __FILE__)
+# ref: http://stackoverflow.com/questions/619840/
+# require "#{Rails.root}/db/seeds/contributions.rb"
+
+# see config/initializers/constants.rb for generic list of industries
+#   that the app uses to populate select boxes
+INDUSTRIES_CISCO = ['Automotive', 'Education', 'Energy', 'Financial Services', 'Government', 'Healthcare', 'Hospitality', 'Life Sciences', 'Manufacturing', 'Retail', 'Sports and Entertainment', 'Transportation']
+CUSTOMERS = ['Ebay', 'Google', 'Microsoft', 'Twitter', 'IBM', 'Amazon', 'Facebook', 'Verizon', 'ATT', 'Sprint', 'GE', 'McKesson', 'GM', 'Ford', 'Costco', 'Kroger', 'Walmart', 'Apple', 'Prudential', 'Boeing', 'Citigroup', 'Target', 'Anthem', 'Metlife', 'Comcast', 'PepsiCo', 'AIG', 'UPS', 'Aetna', 'Caterpillar', 'FedEx', 'Pfizer', 'Disney', 'Sysco']
+PROD_CATS = ['Servers', 'Switches', 'Routers', 'Networking Software', 'Security', 'Storage', 'Video']
+PRODUCTS = ['UCS C3160', 'Nexus 7004', 'Catalyst 6807', 'ISR 4400', 'ASR 1001', 'IOS XR 5.1', 'AnyConnect 4.1', 'MDS 9500']
+
+ROLES = ['Customer', 'Partner', 'Sales Team']
+STATUS_OPTIONS = ['pre_request', 'request', 'remind1', 'remind2', 'feedback', 'contribution', 'opt_out', 'did_not_respond']
+
+dan = User.find_by(email:'***REMOVED***')
+ryan = User.find_by(email:'***REMOVED***')
+curators = [dan, ryan]
+cisco = Company.find_by(name:'Cisco')
 
 # destroy contributions first so deleted users don't orphan contributions (violates foreign key costraint)
-# -> not using dependent: :destroy for users -> contributions
+# Note: not using (dependent: :destroy) for users -> contributions (or users -> successes)
 Contribution.destroy_all
 User.where.not("email = ? OR email = ?", "***REMOVED***", "***REMOVED***").destroy_all
 Customer.destroy_all # also destroys successes, stories, visitors, and successes* join tables
@@ -17,131 +36,43 @@ Product.destroy_all
 ProductCategory.destroy_all
 IndustryCategory.destroy_all
 
-dan = User.find_by(email:'***REMOVED***')
-ryan = User.find_by(email:'***REMOVED***')
-curators = [dan, ryan]
-
-def create_contributor first_name=nil, last_name=nil, cont_email=nil, linkedin_url=nil
-  email = FFaker::Internet.email # need to use the same value twice, so store in variable
-  contributor = User.new(
-      first_name: first_name || FFaker::Name.first_name,
-       last_name: last_name || FFaker::Name.last_name,
-           email: cont_email || email,
-    # password is necessary, so just set it to the email
-        password: email,
-    linkedin_url: linkedin_url,
-    sign_up_code: 'csp_beta')
-  puts contributor.errors.full_messages unless contributor.save
-  contributor
-end
-
-def create_contribution success_id, contributor_id, role, status
-  text = FFaker::Lorem.paragraph
-  (status == 'feedback') ? feedback = text : feedback = nil
-  (status == 'contribution') ? contribution = text : contribution = nil
-  contribution = Contribution.new(
-     success_id: success_id,
-        user_id: contributor_id,
-           role: role,
-         status: status,
-       feedback: feedback,
-   contribution: contribution)
-  puts contribution.errors.full_messages unless contribution.save
-  contribution
-end
-
-# cisco = Company.create(name:'Cisco')
-# cisco.users << User.find_by(email:'joe@mail.com')
-cisco = Company.find_by(name:'Cisco')
-
 # Cisco's target industries...
-['Automotive', 'Education', 'Energy', 'Financial Services', 'Government', 'Healthcare', 'Hospitality', 'Life Sciences', 'Manufacturing', 'Retail', 'Sports and Entertainment', 'Transportation'].each do |industry_category|
-  cisco.industry_categories << IndustryCategory.create(name: industry_category)
+INDUSTRIES_CISCO.each do |industry_name|
+  cisco.industry_categories << IndustryCategory.create(name: industry_name)
 end
 
 # Cisco's product categories and products...
-['Servers', 'Switches', 'Routers', 'Networking Software', 'Security', 'Storage', 'Video'].each do |category_name|
+PROD_CATS.each do |category_name|
   cisco.product_categories << ProductCategory.create(name: category_name)
 end
-['UCS C3160', 'Nexus 7004', 'Catalyst 6807', 'ISR 4400', 'ASR 1001', 'IOS XR 5.1', 'AnyConnect 4.1', 'MDS 9500'].each do |product_name|
+PRODUCTS.each do |product_name|
   cisco.products << Product.create(name: product_name)
 end
 
 # Customers...
-['Ebay', 'Google', 'Microsoft', 'Twitter', 'IBM', 'Amazon', 'Facebook', 'Verizon', 'ATT', 'Sprint', 'GE', 'McKesson', 'GM', 'Ford', 'Costco', 'Kroger', 'Walmart', 'Apple', 'Prudential', 'Boeing', 'Citigroup', 'Target', 'Anthem', 'Metlife', 'Comcast', 'PepsiCo', 'AIG', 'UPS', 'Aetna', 'Caterpillar', 'FedEx', 'Pfizer', 'Disney', 'Sysco'].each do |customer_name|
+CUSTOMERS.each do |customer_name|
   customer = Customer.create(name: customer_name)
   cisco.customers << customer
-  success = Success.create()
+  success = Success.create
   customer.successes << success
   success.created_at = (rand*60).days.ago
   success.curator = curators[rand(2)]  # randomly select dan or ryan as curator
   success.save
   # 2/3 successes will have a story
   if rand(3) >= 1
-    story = Story.create(
-               title:FFaker::Lorem.sentence,
-               quote:FFaker::Lorem.sentences.join(" "),
-          quote_attr:FFaker::Name.name << ", " << FFaker::Company.position,
-           situation:FFaker::Lorem.paragraphs.join(" "),
-           challenge:FFaker::Lorem.paragraphs.join(" "),
-            solution:FFaker::Lorem.paragraphs.join(" "),
-             results:FFaker::Lorem.paragraphs.join(" "),
-           embed_url:"https://www.youtube.com/embed/hecXupPpE9o")
-    # 1/2 stories will be approved/published
+    success.story = StoriesSeed::create
+    # 1/2 stories will be approved/published (attributes default to false)
     if rand(2) == 1
-      success.update(approved?: true)
-      success.update(published?: true)
-      success.update(publish_date: Time.now)
-    else
-      # attributes default to false
+      success.update(approved?: true, published?: true, publish_date: Time.now)
     end
-    success.story = story
+    # pick a random industry category
     success.industry_categories << cisco.industry_categories[rand(0...12)]
     # each story has some visitors
-    10.times do
-      success.visitors << Visitor.create(
-                            organization: FFaker::Company.name,
-                                    city: FFaker::AddressUS.city,
-                                   state: FFaker::AddressUS.state_abbr,
-                              created_at: (rand*60).days.ago)
-    end
+    10.times { success.visitors << VisitorsSeed::create }
 
     # Contributions
-    roles = ['Customer', 'Partner', 'Sales Team']
-    status_options = ['request1', 'request2', 'request3', 'did_not_respond', 'feedback', 'contribution', 'opt_out']
-
-    # pre-request contributions
-    3.times do
-      role = roles[rand(roles.length)]
-      contributor = create_contributor
-      success.contributions <<
-        create_contribution(success.id, contributor.id, role, 'pre-request')
-    end
-
-    # contributions in progress
-    3.times do
-      role = roles[rand(roles.length)]
-      # status is either request* or did_not_respond
-      status = status_options[rand(4)]
-      contributor = create_contributor
-      success.contributions <<
-        create_contribution(success.id, contributor.id, role, status)
-    end
-
-    # feedback
-    3.times do
-      role = roles[rand(roles.length)]
-      contributor = create_contributor
-      success.contributions <<
-        create_contribution(success.id, contributor.id, role, 'feedback')
-    end
-
-    # contribution
-    2.times do
-      role = roles[rand(roles.length)]
-      contributor = create_contributor
-      success.contributions <<
-        create_contribution(success.id, contributor.id, role, 'contribution')
+    10.times do
+      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], STATUS_OPTIONS[rand(STATUS_OPTIONS.length)] )
     end
 
   end  # story create

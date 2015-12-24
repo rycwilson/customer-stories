@@ -279,7 +279,7 @@
 
             <div id='pre-request-contributors'>
 
-              <% @contributions.select { |cont| cont.status == 'pre-request'} %>
+              <% @contributions.select { |cont| cont.status == 'pre_request'} %>
               <%   .each do |contribution| %>
 
                 <div class="well" data-contribution-id="<%= contribution.id %>">
@@ -316,9 +316,9 @@
 
             <div id='in-progress-contributors'>
 
-              <% @contributions.select { |cont| cont.status == 'request1' ||
-                                                cont.status == 'request2' ||
-                                                cont.status == 'request3' ||
+              <% @contributions.select { |cont| cont.status == 'request' ||
+                                                cont.status == 'remind1' ||
+                                                cont.status == 'remind2' ||
                                                 cont.status == 'did_not_respond' } %>
               <%   .each do |contribution| %>
                 <div class="well" data-contribution-id="<%= contribution.id %>">
@@ -352,8 +352,7 @@
 
                   <div class="row">
                     <div class='col-sm-12'>
-                      <%= contribution.user.first_name %>
-                      <%= contribution.user.last_name %> <br>
+                      <%= user_full_name contribution.user %> <br>
                       <%= contribution.user.email %> <br>
                       <%= contribution.role %> <br>
                     </div>
