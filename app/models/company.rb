@@ -13,6 +13,8 @@ class Company < ActiveRecord::Base
   has_many :products, dependent: :destroy
   has_many :product_categories, dependent: :destroy
 
+  has_many :contribution_emails, dependent: :destroy
+
   # paperclip
   has_attached_file :logo, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: "companies/:style/missing_logo.png"
   validates_attachment_content_type :logo, content_type: /\Aimage\/.*\Z/

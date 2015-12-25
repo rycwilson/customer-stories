@@ -2,18 +2,19 @@
 # This file assumes the existence of:
 #
 #   users: 'dlindblom@gmail.com', '***REMOVED***'
-#   companies: 'Cisco'
+#   companies: 'Cisco', 'CSP'
 #
 #  ** All other data will be destroyed and re-created upon running this file **
 
 require File.expand_path('../seeds/contributions', __FILE__)
 require File.expand_path('../seeds/stories', __FILE__)
 require File.expand_path('../seeds/visitors', __FILE__)
+require File.expand_path('../seeds/email_templates', __FILE__)
+
 # ref: http://stackoverflow.com/questions/619840/
 # require "#{Rails.root}/db/seeds/contributions.rb"
 
 # see config/initializers/constants.rb for generic list of industries
-#   that the app uses to populate select boxes
 INDUSTRIES_CISCO = ['Automotive', 'Education', 'Energy', 'Financial Services', 'Government', 'Healthcare', 'Hospitality', 'Life Sciences', 'Manufacturing', 'Retail', 'Sports and Entertainment', 'Transportation']
 CUSTOMERS = ['Ebay', 'Google', 'Microsoft', 'Twitter', 'IBM', 'Amazon', 'Facebook', 'Verizon', 'ATT', 'Sprint', 'GE', 'McKesson', 'GM', 'Ford', 'Costco', 'Kroger', 'Walmart', 'Apple', 'Prudential', 'Boeing', 'Citigroup', 'Target', 'Anthem', 'Metlife', 'Comcast', 'PepsiCo', 'AIG', 'UPS', 'Aetna', 'Caterpillar', 'FedEx', 'Pfizer', 'Disney', 'Sysco']
 PROD_CATS = ['Servers', 'Switches', 'Routers', 'Networking Software', 'Security', 'Storage', 'Video']
@@ -35,6 +36,7 @@ Customer.destroy_all # also destroys successes, stories, visitors, and successes
 Product.destroy_all
 ProductCategory.destroy_all
 IndustryCategory.destroy_all
+ContributionEmail.destroy_all
 
 # Cisco's target industries...
 INDUSTRIES_CISCO.each do |industry_name|
@@ -49,7 +51,18 @@ PRODUCTS.each do |product_name|
   cisco.products << Product.create(name: product_name)
 end
 
-# Customers...
+# Default email templates
+cisco.contribution_emails << ContributionEmail.create(name: "customer_request", subject: EmailTemplatesSeed::REQUEST_SUBJECT, body: EmailTemplatesSeed::REQUEST_BODY)
+cisco.contribution_emails << ContributionEmail.create(name: "customer_remind_1")
+cisco.contribution_emails << ContributionEmail.create(name: "customer_remind_2")
+cisco.contribution_emails << ContributionEmail.create(name: "sales_request")
+cisco.contribution_emails << ContributionEmail.create(name: "sales_remind_1")
+cisco.contribution_emails << ContributionEmail.create(name: "sales_remind_2")
+cisco.contribution_emails << ContributionEmail.create(name: "partner_request")
+cisco.contribution_emails << ContributionEmail.create(name: "partner_remind_1")
+cisco.contribution_emails << ContributionEmail.create(name: "partner_remind_2")
+
+# Customers and Stories...
 CUSTOMERS.each do |customer_name|
   customer = Customer.create(name: customer_name)
   cisco.customers << customer
