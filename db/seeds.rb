@@ -27,6 +27,7 @@ dan = User.find_by(email:'***REMOVED***')
 ryan = User.find_by(email:'***REMOVED***')
 curators = [dan, ryan]
 cisco = Company.find_by(name:'Cisco')
+csp = Company.find_by(name:'CSP')
 
 # destroy contributions first so deleted users don't orphan contributions (violates foreign key costraint)
 # Note: not using (dependent: :destroy) for users -> contributions (or users -> successes)
@@ -52,15 +53,15 @@ PRODUCTS.each do |product_name|
 end
 
 # Default email templates
-cisco.contribution_emails << ContributionEmail.create(name: "customer_request", subject: EmailTemplatesSeed::REQUEST_SUBJECT, body: EmailTemplatesSeed::REQUEST_BODY)
-cisco.contribution_emails << ContributionEmail.create(name: "customer_remind_1")
-cisco.contribution_emails << ContributionEmail.create(name: "customer_remind_2")
-cisco.contribution_emails << ContributionEmail.create(name: "sales_request")
-cisco.contribution_emails << ContributionEmail.create(name: "sales_remind_1")
-cisco.contribution_emails << ContributionEmail.create(name: "sales_remind_2")
-cisco.contribution_emails << ContributionEmail.create(name: "partner_request")
-cisco.contribution_emails << ContributionEmail.create(name: "partner_remind_1")
-cisco.contribution_emails << ContributionEmail.create(name: "partner_remind_2")
+csp.contribution_emails << ContributionEmail.create(name: "customer_request", subject: EmailTemplatesSeed::REQUEST_SUBJECT, body: EmailTemplatesSeed::REQUEST_BODY)
+csp.contribution_emails << ContributionEmail.create(name: "customer_remind_1")
+csp.contribution_emails << ContributionEmail.create(name: "customer_remind_2")
+csp.contribution_emails << ContributionEmail.create(name: "sales_request")
+csp.contribution_emails << ContributionEmail.create(name: "sales_remind_1")
+csp.contribution_emails << ContributionEmail.create(name: "sales_remind_2")
+csp.contribution_emails << ContributionEmail.create(name: "partner_request")
+csp.contribution_emails << ContributionEmail.create(name: "partner_remind_1")
+csp.contribution_emails << ContributionEmail.create(name: "partner_remind_2")
 
 # Customers and Stories...
 CUSTOMERS.each do |customer_name|
