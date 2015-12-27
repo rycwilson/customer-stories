@@ -25,7 +25,7 @@
                 <%= label_tag 'Industries served', nil,
                     class: 'col-md-3 control-label' %>
                 <div class='col-md-9'>
-                  <%= select_tag 'industry_tags[]',
+                  <%= select_tag 'tags[industry][]',
                       options_for_select(@industries),
                       { multiple: 'true', class: 'industry-tags form-control',
                         # placeholder: doesn't work from here, set in js
@@ -37,7 +37,7 @@
                 <%= label_tag 'Product categories', nil,
                     class: 'col-md-3 control-label' %>
                 <div class='col-md-9'>
-                  <%= select_tag 'product_cat_tags[]',
+                  <%= select_tag 'tags[product_category][]',
                       # none presently exist, so pass empty array...
                       options_for_select([]),
                       { multiple: 'true', class: 'prod-cat-tags-reg form-control',
@@ -49,7 +49,7 @@
                 <%= label_tag 'Products', nil,
                     class: 'col-md-3 control-label' %>
                 <div class='col-md-9'>
-                  <%= select_tag 'products[]',
+                  <%= select_tag 'tags[product][]',
                       # none presently exist, so pass empty array...
                       options_for_select([]),
                       { multiple: 'true', class: 'products-reg form-control',

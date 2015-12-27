@@ -27,19 +27,11 @@ class CompaniesController < ApplicationController
     @company = Company.new company_params
     if @company.save
       @company.users << current_user
-      # create tags if any were entered
-      if params[:industry_tags]
-        create_industry_categories params[:industry_tags]
-      end
-      if params[:product_cat_tags]
-        create_product_categories params[:product_cat_tags]
-      end
-      if params[:products]
-        create_products params[:products]
-      end
+      @company.create_tags(params[:tags]) if params[:tags]
+      @company.create_email_templates
       redirect_to company_path(@company), flash: { success: "Registered company ok" }
     else
-      # back to form, try again (only validation is presence of name)
+      # validation(s): presence / uniqueness of name
       flash.now[:danger] = "#{@company.errors.full_messages}"
       # default industry categories
       @industries = INDUSTRIES
@@ -55,24 +47,6 @@ class CompaniesController < ApplicationController
 
   def company_params
     params.require(:company).permit(:name, :logo)
-  end
-
-  def create_industry_categories tags
-    tags.each do |tag|
-      @company.industry_categories << IndustryCategory.create(name: tag)
-    end
-  end
-
-  def create_product_categories tags
-    tags.each do |tag|
-      @company.product_categories << ProductCategory.create(name: tag)
-    end
-  end
-
-  def create_products products
-    products.each do |product|
-      @company.products << Product.create(name: product)
-    end
   end
 
 end
