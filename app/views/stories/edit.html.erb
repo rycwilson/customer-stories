@@ -182,7 +182,7 @@
               <!-- Note the necessary '[]' notation below  -->
               <!-- if not present, will only return a single value  -->
               <%= select_tag "story[industry_tags][]",
-                  options_for_select(@industries_select, @industries_preselect),
+                  options_for_select(@industries, @industries_pre_select),
                   { multiple: 'true', class: 'story-tags form-control',
                     style: 'width:100%'} %>
             </div>
@@ -190,7 +190,7 @@
             <div class="form-group col-md-4" style='margin-bottom:10px'>
               <%= label_tag 'Product Category', nil, class: 'control-label' %>
               <%= select_tag "story[product_cat_tags][]",
-                  options_for_select(@product_cats_select, @product_cats_preselect),
+                  options_for_select(@product_categories, @product_cats_pre_select),
                   { multiple: 'true', class: 'story-tags form-control',
                     style: 'width:100%'} %>
             </div>
@@ -198,7 +198,7 @@
             <div class="form-group col-md-4" style='margin-bottom:10px'>
               <%= label_tag 'Product', nil, class: 'control-label' %>
               <%= select_tag "story[product_tags][]",
-                  options_for_select(@products_select, @products_preselect),
+                  options_for_select(@products, @products_pre_select),
                   { multiple: 'true', class: 'story-tags form-control',
                     style: 'width:100%'} %>
             </div>

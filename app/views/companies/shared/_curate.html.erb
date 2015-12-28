@@ -96,7 +96,7 @@
             <%= label_tag 'Customer', nil, class: 'col-md-4 control-label' %>
             <div class='col-md-8'>
 
-              <% if @customers_select.length == 1 %>
+              <% if @customers.length == 1 %>
 
                 <%= text_field_tag 'story[customer]', nil,
                   class: 'form-control',
@@ -106,7 +106,7 @@
               <% else %>
 
                 <%= select_tag 'story[customer]',
-                    options_for_select(@customers_select),
+                    options_for_select(@customers),
                     class: 'new-story-customer form-control',
                     style: 'width: 100%' %>
 
@@ -130,7 +130,7 @@
               <!-- Note the necessary '[]' notation below  -->
               <!-- if not present, will only return a single value  -->
               <%= select_tag "story[industry_tags][]",
-                  options_for_select(@industries_select),
+                  options_for_select(@industries),
                   { multiple: 'true', class: 'new-story-tags form-control',
                     style: 'width:100%'} %>
             </div>
@@ -141,7 +141,7 @@
                 class: 'col-md-4 control-label' %>
             <div class='col-md-8'>
               <%= select_tag "story[product_cat_tags][]",
-                  options_for_select(@product_cats_select),
+                  options_for_select(@product_categories),
                   { multiple: 'true', class: 'new-story-tags form-control',
                     style: 'width:100%'} %>
             </div>
@@ -151,7 +151,7 @@
             <%= label_tag 'Product tags', nil, class: 'col-md-4 control-label' %>
             <div class='col-md-8'>
               <%= select_tag "story[product_tags][]",
-                  options_for_select(@products_select),
+                  options_for_select(@products),
                   { multiple: 'true', class: 'new-story-tags form-control',
                     style: 'width:100%'} %>
             </div>

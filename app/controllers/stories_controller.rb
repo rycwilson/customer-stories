@@ -1,15 +1,16 @@
 class StoriesController < ApplicationController
 
+  before_action :find_company, only: [:index, :create]
+
   def index
-    @company = Company.find params[:company_id]
-    @stories = @company.stories
-    if params[:filter]
-      filter @stories, params[:filter][:type], params[:filter][:data]
+    if params[:filter]  # ajax GET request
+      @stories = @company.filter_stories params[:filter][:type], params[:filter][:id]
       respond_to do |format|
         format.json { render json: @stories }
       end
     else
-      industries_filter_options @company.industry_categories
+      @stories = @company.stories
+      @industries = @company.industries_filter_select
     end
   end
 
@@ -21,22 +22,18 @@ class StoriesController < ApplicationController
     @company = current_user.company # company_id not in the stories#edit route
     @story = Story.find params[:id]
     @contributions = @story.success.contributions
-    # populate options for industries select (multiple select)
-    industries_select_options @company.industry_categories
-    industries_preselected_options @story.success.industry_categories
-    # populate options for product categories select (multiple select)
-    product_cats_select_options @company.product_categories
-    product_cats_preselected_options @story.success.product_categories
-    # populate options for products select (single select for now)
-    products_select_options @company.products
-    products_preselected_options @story.success.products
+    @industries = @company.industries_select
+    @industries_pre_select = @story.success.industry_categories.map { |category| category.id }
+    @product_categories = @company.product_categories_select
+    @product_cats_pre_select = @story.success.product_categories.map { |category| category.id }
+    @products = @company.product_categories_select
+    @products_pre_select = @story.success.products.map { |category| category.id }
   end
 
   # TODO: allow for new Customer creation
   # Notice how nested hash keys are treated as strings in the params hash
   # -> due to the way form parameters are name-spaced
   def create
-    @company = Company.find params[:company_id]
     new_story = params[:story]
     # was a new customer entered? ...
     new_customer = new_story[:customer] if new_story[:customer].to_i == 0
@@ -111,27 +108,8 @@ class StoriesController < ApplicationController
         :challenge, :solution, :results)
   end
 
-  def filter stories, type, data
-    if data == 'all'
-      return @stories = stories.map do |story|
-        { story: story, customer: story.success.customer }
-      end
-    end
-    case type
-      when 'industries'
-        @stories = Success.joins(:industry_categories)
-                          .where(industry_categories: { id: params[:filter][:data] })
-                          .map { |success| { story: success.story,
-                                          customer: success.customer } }
-      else
-    end
-    @stories
-  end
-
-  def industries_filter_options company_industries
-    @industries_select = industries_select_options company_industries
-    @industries_select.keep_if { |industry| industry[1].is_a? Numeric }
-    @industries_select.unshift(['All', 'all'])
+  def find_company
+    @company = Company.find params[:company_id]
   end
 
   def assign_tags story, new_story
@@ -212,18 +190,6 @@ class StoriesController < ApplicationController
                                   story.success.id, product.id)[0].destroy
       end
     end
-  end
-
-  def industries_preselected_options story_industry_categories
-    @industries_preselect = story_industry_categories.map { |category| category.id }
-  end
-
-  def product_cats_preselected_options story_product_categories
-    @product_cats_preselect = story_product_categories.map { |category| category.id }
-  end
-
-  def products_preselected_options story_products
-    @products_preselect = story_products.map { |category| category.id }
   end
 
 end

@@ -18,6 +18,7 @@ var ready = function () {
   for example, js does not run when going from stories#show to stories#edit,
     and this results in plug-ins not being initialized
   below ensures that js runs each time a stories/ page loads
+  both are needed
 */
 $(document).ready(ready);
 $(document).on('page:load', ready);
@@ -73,16 +74,17 @@ function initListeners () {
   });
 
   $('.stories-filter').on('change', function () {
-    var filterType = $(this).attr('id');
-    var filterData = $(this).val();
+
+    var filterType = $(this).attr('id'); // 'industries'
+    var filterId = $(this).val(); // the database id of the chosen industry
     var companyId = $('#stories-gallery').data('company-id');
     $.ajax({
       url: '/companies/' + companyId.toString() + '/stories',
       method: 'get',
-      data: { filter: { type: filterType, data: filterData } },
+      data: { filter: { type: filterType, id: filterId } },
       // dataType: 'json',
       success: function (data, status) {
-        console.log(data);
+        console.log('filtered stories: ', data);
         var template = _.template($('#stories-template').html());
         $('#stories-gallery').empty().append(template({ stories: data }));
       }

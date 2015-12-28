@@ -13,14 +13,10 @@ class CompaniesController < ApplicationController
     # TODO: what's the best balance of eager vs. lazy loading?
     # e.g. we're not eager loading products here...
     @company = Company.includes(:customers, :successes, :stories, :visitors).find params[:id]
-    # options for new story customer select
-    customers_select_options @company.customers
-    # options for product categories select (multiple select)
-    product_cats_select_options @company.product_categories
-    # options for products select (single select for now)
-    products_select_options @company.products
-    # options for industries select (multiple select)
-    industries_select_options @company.industry_categories
+    @customers = @company.customers_select
+    @product_categories = @company.product_categories_select # multiple select
+    @products = @company.products_select # single select (for now)
+    @industries = @company.industries_select # multiple select
   end
 
   def create
