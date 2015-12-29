@@ -6,22 +6,18 @@ class ContributionsController < ApplicationController
                           [:contribution_request_email, :edit, :update]
 
   def contribution_request_email
+    @contributor = @contribution.user
+    UserMailer.request_contribution(@contribution, @contributor).deliver_now
     if @contribution.update status:'request'
-      @contributor = @contribution.user
-      # need to use ContributionsHelper#contribution_status
-      # to present a status message based on contribution.status
-      @status = contribution_status @contribution.status
-      # TODO: Determine status of @contribution and @role (customer, partner, sales) \
-      #   -> send appropriate template
-      # if first request, kick off cron job for subsequent request emails
-      UserMailer.request_contribution(@contribution, @contributor).deliver_now
+      @status = contribution_status @contribution.status # view helper
+      # TODO: start cron job for reminder emails and token expiration
       flash.now[:info] =
         "An email request for contribution has been sent to #{user_full_name(@contributor)}"
       respond_to do |format|
         format.js {}
       end
     else
-      redirect_to story_path(@contribution.success.story),
+      redirect_to edit_story_path(@contribution.success.story),
         flash[:alert] = "Something went wrong"
     end
   end

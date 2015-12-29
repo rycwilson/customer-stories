@@ -1,7 +1,8 @@
 class Success < ActiveRecord::Base
 
+  belongs_to :company
   belongs_to :customer
-  belongs_to :user
+  belongs_to :user  # the curator
   # alias the user attribute -> Success.find(id).curator
   alias_attribute :curator, :user
 
