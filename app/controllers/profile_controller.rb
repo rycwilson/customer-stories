@@ -3,8 +3,8 @@ class ProfileController < ApplicationController
   def linkedin
     if user_signed_in?
       if current_user.update linkedin_url: auth_hash[:info][:urls][:public_profile]
-        redirect_to profile_path, flash: { success: 'Connected to LinkedIn!' }
         @linkedin_data = auth_hash
+        flash.now[:info] = 'Connected to LinkedIn!'
         render :show
       else
         # flash.now[:danger] = "Problem updating linkedin_url field for #{}"
