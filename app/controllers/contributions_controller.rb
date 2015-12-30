@@ -62,11 +62,20 @@ class ContributionsController < ApplicationController
   # TODO: after submission, update (change? delete?) the contributor's token
   #
   def update
-    if @contribution.update contribution_params
+    if params[:linkedin] # contributor successfully connected to linkedin
+      @linkedin_connect = true
       render :confirm_submission
     else
-      flash.now[:danger] = "Something went wrong"
-      render :edit
+      if @contribution.update contribution_params
+        if @contribution.linkedin? && @contribution.user.linkedin_url.nil?
+          redirect_to "/auth/linkedin?contribution=#{@contribution.id}"
+        else
+          render :confirm_submission
+        end
+      else
+        flash.now[:danger] = "Something went wrong"
+        render :edit
+      end
     end
   end
 
@@ -76,7 +85,7 @@ class ContributionsController < ApplicationController
   private
 
   def contribution_params
-    params.require(:contribution).permit(:status, :contribution, :feedback)
+    params.require(:contribution).permit(:status, :contribution, :feedback, :linkedin)
   end
 
   def find_contribution

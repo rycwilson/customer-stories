@@ -12,7 +12,7 @@
   <div class='col-md-10'>
     <span id='curator'><%= user_full_name(curator) %></span> <br>
     <span><%= curator.company.name %></span> <br>
-    <span><%= curator.email %></span> <br>
+    <span><%= curator.email %></span> <br> <br>
   </div>
 
 </div>
@@ -34,8 +34,18 @@
     </div>
 
     <div class="form-group">
-      <div class='col-md-2 pull-right text-right'>
-        <input type='submit' class='btn btn-secondary'>
+      <div class='col-md-1 col-md-offset-2'>
+        <h1>
+          <i class="fa fa-linkedin-square" style="color:#006fb3"></i>
+        <h1>
+      </div>
+      <div class='checkbox-inline col-md-6'>
+        <%= f.check_box :linkedin %>
+        <%= f.label :linkedin, "Check here if you would like your LinkedIn profile to appear as part of the Contribution Team for this Success Story.",
+          style: "padding:0" %>
+      </div>
+      <div class='col-md-2 pull-right text-right' style='margin-top:5px'>
+        <input type='submit' class='btn btn-lg btn-secondary'>
       </div>
     </div>
 

@@ -1,7 +1,23 @@
 <div class='container'>
   <div class='row'>
 
-    <h3>Your <%= @contribution.status %> has been submitted. Thanks again!</h3>
+    <% if @linkedin_connect %>
+
+      <h3>Your contribution has been submitted. Thanks again!</h3>
+
+      <p>When this Success Story is published, your LinkedIn profile will appear as part of the Contribution Team.  It will look like this:</p>
+
+      <script src="//platform.linkedin.com/in.js" type="text/javascript"></script>
+
+      <script type="IN/MemberProfile"
+              data-id="<%= @contribution.user.linkedin_url %>"
+              data-format="inline" data-related="false" data-width='300'></script>
+
+    <% else %>
+
+      <h3>Your <%= @contribution.status %> has been submitted. Thanks again!</h3>
+
+    <% end %>
 
   </div>
 </div>

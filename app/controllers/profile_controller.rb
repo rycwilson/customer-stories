@@ -1,12 +1,21 @@
 class ProfileController < ApplicationController
 
   def linkedin
-    if current_user.update linkedin_url: auth_hash[:info][:urls][:public_profile]
-      # redirect_to profile_path, flash: { success: 'Connected to LinkedIn!' }
-      @linkedin_data = auth_hash
-      render :show
-    else
-      #
+    if user_signed_in?
+      if current_user.update linkedin_url: auth_hash[:info][:urls][:public_profile]
+        redirect_to profile_path, flash: { success: 'Connected to LinkedIn!' }
+        @linkedin_data = auth_hash
+        render :show
+      else
+        # flash.now[:danger] = "Problem updating linkedin_url field for #{}"
+      end
+    else # request came from contributor submission (not loggged in)
+      contribution = Contribution.find(request.env["omniauth.params"]["contribution"])
+      if contribution.user.update linkedin_url: auth_hash[:info][:urls][:public_profile]
+        redirect_to confirm_contribution_path(request.env["omniauth.params"]["contribution"], linkedin: true)
+      else
+        # flash.now[:danger] = "Problem updating linkedin_url field for #{}"
+      end
     end
   end
 
