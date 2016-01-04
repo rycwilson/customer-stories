@@ -2,8 +2,9 @@ class UserMailer < ApplicationMailer
 
   default from: 'noreply@customerstories.net'
 
-  def cron_email
-    mail(to: '***REMOVED***', subject: 'testing cron emailer')
+  def cron_email body
+    @body = body
+    mail to: '***REMOVED***', subject: 'testing cron emailer'
   end
 
   # TODO: How to handle errors/exceptions for sending email?
@@ -27,7 +28,7 @@ class UserMailer < ApplicationMailer
                   .sub("[feedback_url]", feedback_url)
                   .sub("[curator_full_name]", curator.full_name)
                   .sub("[curator_company]", company.name)
-                  .sub("[curator_email]", curator.email)
+     e             .sub("[curator_email]", curator.email)
                   .sub("[curator_phone]", "123-456-7890")
                   .sub("[opt_out_url]", opt_out_url)
                   .html_safe

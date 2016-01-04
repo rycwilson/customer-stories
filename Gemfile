@@ -31,7 +31,7 @@ gem 'rails_admin'
 
 gem 'best_in_place', '~> 3.0.1'
 
-gem 'whenever', :require => false
+gem 'whenever', require: false
 
 
 group :production do

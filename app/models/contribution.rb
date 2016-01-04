@@ -6,6 +6,7 @@ class Contribution < ActiveRecord::Base
   before_save :default_values
 
   def default_values
+    self.opt_out ||= false
     self.linkedin ||= false
     # if the callback method returns false (right-hand value above),
     # it will cancel the action, so...
