@@ -81,6 +81,13 @@ class StoriesController < ApplicationController
           #
         end
       end
+    elsif params[:story][:published]
+      if story.update story_params
+        respond_to do |format|
+          format.json { render json: nil } # empty response
+        end
+      else
+      end
     else  # all other updates
       respond_to do |format|
         if story.update story_params
@@ -105,7 +112,7 @@ class StoriesController < ApplicationController
 
   def story_params
     params.require(:story).permit(:title, :quote, :quote_attr, :embed_url, :situation,
-        :challenge, :solution, :results)
+        :challenge, :solution, :results, :published, :logo_published)
   end
 
   def find_company

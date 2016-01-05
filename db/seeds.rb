@@ -31,13 +31,13 @@ csp = Company.find_by(name:'CSP')
 
 # destroy contributions first so deleted users don't orphan contributions (violates foreign key costraint)
 # Note: not using (dependent: :destroy) for users -> contributions (or users -> successes)
-# Contribution.destroy_all
-# User.where.not("email = ? OR email = ?", "***REMOVED***", "***REMOVED***").destroy_all
-# Customer.destroy_all # also destroys successes, stories, visitors, and successes* join tables
+Contribution.destroy_all
+User.where.not("email = ? OR email = ?", "***REMOVED***", "***REMOVED***").destroy_all
+Customer.destroy_all # also destroys successes, stories, visitors, and successes* join tables
 # Product.destroy_all
 # ProductCategory.destroy_all
 # IndustryCategory.destroy_all
-ContributionEmail.destroy_all
+# ContributionEmail.destroy_all
 
 # Cisco's target industries...
 # INDUSTRIES_CISCO.each do |industry_name|
@@ -53,46 +53,46 @@ ContributionEmail.destroy_all
 # end
 
 # Default email templates
-csp.contribution_emails << ContributionEmail.create(name: "customer_request", subject: EmailTemplatesSeed::REQUEST_SUBJECT, body: EmailTemplatesSeed::CUSTOMER_REQUEST_BODY)
-csp.contribution_emails << ContributionEmail.create(name: "customer_remind_1", subject: EmailTemplatesSeed::CUSTOMER_REMIND1_SUBJECT, body: EmailTemplatesSeed::CUSTOMER_REMIND1_BODY)
-csp.contribution_emails << ContributionEmail.create(name: "customer_remind_2", subject: EmailTemplatesSeed::CUSTOMER_REMIND2_SUBJECT, body: EmailTemplatesSeed::CUSTOMER_REMIND2_BODY)
-csp.contribution_emails << ContributionEmail.create(name: "partner_request", subject: EmailTemplatesSeed::REQUEST_SUBJECT, body: EmailTemplatesSeed::PARTNER_REQUEST_BODY)
-csp.contribution_emails << ContributionEmail.create(name: "partner_remind_1", subject: EmailTemplatesSeed::PARTNER_REMIND1_SUBJECT, body: EmailTemplatesSeed::PARTNER_REMIND1_BODY)
-csp.contribution_emails << ContributionEmail.create(name: "partner_remind_2", subject: EmailTemplatesSeed::PARTNER_REMIND2_SUBJECT, body: EmailTemplatesSeed::PARTNER_REMIND2_BODY)
-csp.contribution_emails << ContributionEmail.create(name: "sales_request", subject: EmailTemplatesSeed::REQUEST_SUBJECT, body: EmailTemplatesSeed::SALES_REQUEST_BODY)
-csp.contribution_emails << ContributionEmail.create(name: "sales_remind_1", subject: EmailTemplatesSeed::SALES_REMIND1_SUBJECT, body: EmailTemplatesSeed::SALES_REMIND1_BODY)
-csp.contribution_emails << ContributionEmail.create(name: "sales_remind_2", subject: EmailTemplatesSeed::SALES_REMIND2_SUBJECT, body: EmailTemplatesSeed::SALES_REMIND2_BODY)
+# csp.contribution_emails << ContributionEmail.create(name: "customer_request", subject: EmailTemplatesSeed::REQUEST_SUBJECT, body: EmailTemplatesSeed::CUSTOMER_REQUEST_BODY)
+# csp.contribution_emails << ContributionEmail.create(name: "customer_remind_1", subject: EmailTemplatesSeed::CUSTOMER_REMIND1_SUBJECT, body: EmailTemplatesSeed::CUSTOMER_REMIND1_BODY)
+# csp.contribution_emails << ContributionEmail.create(name: "customer_remind_2", subject: EmailTemplatesSeed::CUSTOMER_REMIND2_SUBJECT, body: EmailTemplatesSeed::CUSTOMER_REMIND2_BODY)
+# csp.contribution_emails << ContributionEmail.create(name: "partner_request", subject: EmailTemplatesSeed::REQUEST_SUBJECT, body: EmailTemplatesSeed::PARTNER_REQUEST_BODY)
+# csp.contribution_emails << ContributionEmail.create(name: "partner_remind_1", subject: EmailTemplatesSeed::PARTNER_REMIND1_SUBJECT, body: EmailTemplatesSeed::PARTNER_REMIND1_BODY)
+# csp.contribution_emails << ContributionEmail.create(name: "partner_remind_2", subject: EmailTemplatesSeed::PARTNER_REMIND2_SUBJECT, body: EmailTemplatesSeed::PARTNER_REMIND2_BODY)
+# csp.contribution_emails << ContributionEmail.create(name: "sales_request", subject: EmailTemplatesSeed::REQUEST_SUBJECT, body: EmailTemplatesSeed::SALES_REQUEST_BODY)
+# csp.contribution_emails << ContributionEmail.create(name: "sales_remind_1", subject: EmailTemplatesSeed::SALES_REMIND1_SUBJECT, body: EmailTemplatesSeed::SALES_REMIND1_BODY)
+# csp.contribution_emails << ContributionEmail.create(name: "sales_remind_2", subject: EmailTemplatesSeed::SALES_REMIND2_SUBJECT, body: EmailTemplatesSeed::SALES_REMIND2_BODY)
 
-cisco.create_email_templates
+# cisco.create_email_templates
 
 # Customers and Stories...
-# CUSTOMERS.each do |customer_name|
-#   customer = Customer.create(name: customer_name)
-#   cisco.customers << customer
-#   success = Success.create
-#   customer.successes << success
-#   success.created_at = (rand*60).days.ago
-#   success.curator = curators[rand(2)]  # randomly select dan or ryan as curator
-#   success.save
-#   # 2/3 successes will have a story
-#   if rand(3) >= 1
-#     success.story = StoriesSeed::create
-#     # 1/2 stories will be approved/published (attributes default to false)
-#     if rand(2) == 1
-#       success.update(approved?: true, published?: true, publish_date: Time.now)
-#     end
-#     # pick a random industry category
-#     success.industry_categories << cisco.industry_categories[rand(0...12)]
-#     # each story has some visitors
-#     10.times { success.visitors << VisitorsSeed::create }
+CUSTOMERS.each do |customer_name|
+  customer = Customer.create(name: customer_name)
+  cisco.customers << customer
+  success = Success.create
+  customer.successes << success
+  success.created_at = (rand*60).days.ago
+  success.curator = curators[rand(2)]  # randomly select dan or ryan as curator
+  success.save
+  # 2/3 successes will have a story
+  if rand(3) >= 1
+    success.story = StoriesSeed::create
+    # 1/2 stories will be approved/published (attributes default to false)
+    if rand(2) == 1
+      success.story.update(approved: true, published: true, logo_published: true, publish_date: Time.now)
+    end
+    # pick a random industry category
+    success.industry_categories << cisco.industry_categories[rand(0...12)]
+    # each story has some visitors
+    10.times { success.visitors << VisitorsSeed::create }
 
-#     # Contributions
-#     10.times do
-#       ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], STATUS_OPTIONS[rand(STATUS_OPTIONS.length)] )
-#     end
+    # Contributions
+    10.times do
+      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], STATUS_OPTIONS[rand(STATUS_OPTIONS.length)] )
+    end
 
-#   end  # story create
-# end
+  end  # story create
+end
 
 
 

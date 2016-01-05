@@ -28,7 +28,7 @@ class UserMailer < ApplicationMailer
                   .sub("[feedback_url]", feedback_url)
                   .sub("[curator_full_name]", curator.full_name)
                   .sub("[curator_company]", company.name)
-     e             .sub("[curator_email]", curator.email)
+                  .sub("[curator_email]", curator.email)
                   .sub("[curator_phone]", "123-456-7890")
                   .sub("[opt_out_url]", opt_out_url)
                   .html_safe

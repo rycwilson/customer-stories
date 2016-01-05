@@ -39,7 +39,7 @@
                     <td class='valign-middle'>
                       <%= story.title %>
                     </td>
-                    <% if story.success.published? %>
+                    <% if story.published? %>
                       <td class='valign-middle'>
                         <%= link_to 'Published', story_path(story) %>
                       </td>

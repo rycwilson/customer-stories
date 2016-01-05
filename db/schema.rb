@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151230042451) do
+ActiveRecord::Schema.define(version: 20160105013524) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,10 +44,10 @@ ActiveRecord::Schema.define(version: 20151230042451) do
     t.text     "contribution"
     t.text     "feedback"
     t.string   "status"
-    t.boolean  "linkedin"
-    t.boolean  "opt_out"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.boolean  "linkedin",     default: false
+    t.boolean  "opt_out",      default: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
   end
 
   add_index "contributions", ["success_id"], name: "index_contributions_on_success_id", using: :btree
@@ -131,19 +131,20 @@ ActiveRecord::Schema.define(version: 20151230042451) do
     t.text     "solution"
     t.text     "results"
     t.integer  "success_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.boolean  "approved",       default: false
+    t.boolean  "published",      default: false
+    t.boolean  "logo_published", default: false
+    t.datetime "publish_date"
   end
 
   add_index "stories", ["success_id"], name: "index_stories_on_success_id", using: :btree
 
   create_table "successes", force: :cascade do |t|
-    t.boolean  "approved?",    default: false
-    t.boolean  "published?",   default: false
     t.integer  "customer_id"
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
-    t.datetime "publish_date"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
     t.integer  "user_id"
   end
 

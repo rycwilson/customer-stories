@@ -46,11 +46,11 @@ function initListeners () {
     The url is modified on server side to ensure that the
     youtube embed link is used
   */
-  $(".best_in_place[data-bip-attribute='embed_url'").bind("ajax:success",
+  $(".best_in_place[data-bip-attribute='embed_url']").bind("ajax:success",
     function (event, data) {
       newUrl = JSON.parse(data).embed_url;
       $('#embed-iframe').attr('src', newUrl);
-      $(".best_in_place[data-bip-attribute='embed_url'")
+      $(".best_in_place[data-bip-attribute='embed_url']")
         .text(newUrl);
   });
 
@@ -120,16 +120,19 @@ function initListeners () {
     console.log('focus: ', $(this));
   });
 
+  $('.bs-switch').on('switchChange.bootstrapSwitch', function (event, state) {
+    $(this).parent().submit();
+    // don't need this yet...
+    console.log(state);
+  });
+
 }
 
 function configPlugins () {
 
   $('.best_in_place').best_in_place();
 
-  $('#publish-story').bootstrapSwitch({
-    size: 'small'
-  });
-  $('#publish-logo').bootstrapSwitch({
+  $('.bs-switch').bootstrapSwitch({
     size: 'small'
   });
 
