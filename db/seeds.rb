@@ -66,7 +66,7 @@ Customer.destroy_all # also destroys successes, stories, visitors, and successes
 # cisco.create_email_templates
 
 # Customers and Stories...
-['Ebay', 'Google', 'Microsoft', 'Twitter', 'IBM'].each do |customer_name|
+['Ebay', 'Google', 'Microsoft', 'Twitter', 'IBM', 'Amazon'].each do |customer_name|
   customer = Customer.create(name: customer_name)
   cisco.customers << customer
   success = Success.create
