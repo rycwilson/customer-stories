@@ -81,8 +81,12 @@ Customer.destroy_all # also destroys successes, stories, visitors, and successes
     if rand(2) == 1
       success.story.update(approved: true, published: true, logo_published: true, publish_date: Time.now)
     end
-    # pick a random industry category
-    success.industry_categories << cisco.industry_categories[rand(0...12)]
+    # random industry category (tag)
+    success.industry_categories << cisco.industry_categories[rand(0...cisco.industry_categories.count)]
+    # random product category (tag)
+    success.product_categories << cisco.product_categories[rand(0...cisco.product_categories.count)]
+    # random product (tag)
+    success.products << cisco.products[rand(0...cisco.products.count)]
     # each story has some visitors
     10.times { success.visitors << VisitorsSeed::create }
 

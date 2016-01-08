@@ -187,7 +187,7 @@
               <%= label_tag 'Industry', nil, class: 'control-label' %>
               <!-- Note the necessary '[]' notation below  -->
               <!-- if not present, will only return a single value  -->
-              <%= select_tag "story[industry_tags][]",
+              <%= select_tag "story_tags[industry][]",
                   options_for_select(@industries, @industries_pre_select),
                   { multiple: 'true', class: 'story-tags form-control',
                     style: 'width:100%'} %>
@@ -195,7 +195,7 @@
 
             <div class="form-group col-md-4" style='margin-bottom:10px'>
               <%= label_tag 'Product Category', nil, class: 'control-label' %>
-              <%= select_tag "story[product_cat_tags][]",
+              <%= select_tag "story_tags[product_category][]",
                   options_for_select(@product_categories, @product_cats_pre_select),
                   { multiple: 'true', class: 'story-tags form-control',
                     style: 'width:100%'} %>
@@ -203,7 +203,7 @@
 
             <div class="form-group col-md-4" style='margin-bottom:10px'>
               <%= label_tag 'Product', nil, class: 'control-label' %>
-              <%= select_tag "story[product_tags][]",
+              <%= select_tag "story_tags[product][]",
                   options_for_select(@products, @products_pre_select),
                   { multiple: 'true', class: 'story-tags form-control',
                     style: 'width:100%'} %>
