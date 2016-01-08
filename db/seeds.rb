@@ -75,7 +75,7 @@ Customer.destroy_all # also destroys successes, stories, visitors, and successes
   success.curator = curators[rand(2)]  # randomly select dan or ryan as curator
   success.save
   # 2/3 successes will have a story
-  if rand(3) >= 1
+  if rand(3) >= 0
     success.story = StoriesSeed::create
     # 1/2 stories will be approved/published (attributes default to false)
     if rand(2) == 1
