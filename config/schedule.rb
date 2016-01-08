@@ -15,7 +15,7 @@ env :PATH, ENV['PATH']
 
 set :output, "#{Rails.root}/log/cron.log"
 set :environment, "#{Rails.env}"
-set :job_template, "zsh -l -c ':job'"
+# set :job_template, "zsh -l -c ':job'"
 
 every :day, at: ['10:55 am', '11:00 am', '11:05 am', '11:10 am', '11:15 am'] do
 
