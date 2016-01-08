@@ -26,7 +26,7 @@ class StoriesController < ApplicationController
     @industries_pre_select = @story.success.industry_categories.map { |category| category.id }
     @product_categories = @company.product_categories_select
     @product_cats_pre_select = @story.success.product_categories.map { |category| category.id }
-    @products = @company.product_categories_select
+    @products = @company.products_select
     @products_pre_select = @story.success.products.map { |category| category.id }
   end
 
