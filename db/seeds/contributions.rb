@@ -12,7 +12,8 @@ module ContributionsSeed
              role: role,
            status: status,
          feedback: feedback,
-     contribution: contribution)
+     contribution: contribution,
+        remind_at: Time.now + rand(20).minutes )
     puts contribution.errors.full_messages unless contribution.save
     contribution
   end

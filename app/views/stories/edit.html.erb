@@ -28,24 +28,11 @@
           <%= link_to 'Preview Story Page', story_path(@story),
                 class: 'btn btn-secondary' %> <br><br>
 
-
-         <!--  <div id='publish-switches'>
-
-            <%#= best_in_place @story, :published,
-                as: :checkbox,
-                url: story_path(@story) %>
-
-            <%#= best_in_place @story, :logo_published,
-                as: :checkbox,
-                url: story_path(@story) %>
-
-          </div> -->
           <!-- publish logo/story -->
           <%= form_for @story, url: story_path(@story),
-                            remote: true,
                             method: 'put',
+                            remote: true,
                               html: { class: "form-horizontal" } do |f| %>
-          <!-- <div class="form-horizontal"> -->
 
             <div class="form-group">
               <%= f.label 'Publish Story', class: 'col-md-6 control-label' %>
@@ -64,7 +51,6 @@
             </div>
 
           <% end %>
-          <!-- </div>  form -->
 
         </div>
 

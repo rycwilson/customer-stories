@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160105013524) do
+ActiveRecord::Schema.define(version: 20160108013024) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,10 +44,12 @@ ActiveRecord::Schema.define(version: 20160105013524) do
     t.text     "contribution"
     t.text     "feedback"
     t.string   "status"
-    t.boolean  "linkedin",     default: false
-    t.boolean  "opt_out",      default: false
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+    t.boolean  "linkedin",           default: false
+    t.boolean  "opt_out",            default: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.datetime "remind_at"
+    t.integer  "reminder_frequency", default: 1
   end
 
   add_index "contributions", ["success_id"], name: "index_contributions_on_success_id", using: :btree
