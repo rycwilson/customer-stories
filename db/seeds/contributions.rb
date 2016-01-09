@@ -6,17 +6,19 @@ module ContributionsSeed
     (status == 'feedback') ? feedback = text : feedback = nil
     (status == 'contribution') ? contribution = text : contribution = nil
     contributor = ContributionsSeed::create_contributor
-    contribution = Contribution.new(
+    c = Contribution.new(
        success_id: success_id,
           user_id: contributor.id,
              role: role,
            status: status,
          feedback: feedback,
-     contribution: contribution,
-        remind_at: Time.now + rand(30).minutes )
-    puts contribution.errors.full_messages unless contribution.save
-    contribution
+     contribution: contribution)
+    c.remind_at = Time.now + c.remind_1_wait.days if (status == 'request')
+    c.remind_at = Time.now + c.remind_2_wait.days if (status == 'remind1')
+    puts c.errors.full_messages unless c.save
+    c
   end
+
 
   def self.create_contributor first_name=nil, last_name=nil, cont_email=nil, linkedin_url=nil
     email = FFaker::Internet.email # need to use the same value twice, so store in variable

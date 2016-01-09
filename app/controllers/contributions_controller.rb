@@ -9,7 +9,7 @@ class ContributionsController < ApplicationController
     @contributor = @contribution.user
     UserMailer.request_contribution(@contribution, @contributor).deliver_now
     if @contribution.update(   status:'request',
-                            remind_at: Time.now + @contribution.reminder_frequency.days )
+                            remind_at: Time.now + @contribution.remind_1_wait.days )
       @status = contribution_status @contribution.status # view helper
       # TODO: start cron job for reminder emails and token expiration
       flash.now[:info] =
