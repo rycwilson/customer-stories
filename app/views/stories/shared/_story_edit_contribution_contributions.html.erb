@@ -1,0 +1,55 @@
+<!-- contribution -->
+<div class="tab-pane fade" id="contribution">
+
+  <div class="heading-block">
+    <h4>Successful Contribution</h4>
+  </div> <!-- /.heading-block -->
+
+  <div id='contribution-contributors'>
+
+    <% @contributions.select { |c| c.status == 'contribution' }
+        .each_with_index do |contribution, index| %>
+
+      <div class="well">
+
+        <div class="row">
+          <div class='col-md-12'>
+            <%= contribution.user.full_name %> &nbsp&nbsp
+            <a target="_blank"
+               href="http://google.com/search?q=
+                 <%= user_search(contribution.user,
+                                @story.success.customer) %>">
+              Research <%= contribution.user.first_name %>
+            </a> <br>
+            <%= contribution.user.email %> <br>
+            <%= contribution.role %> <br>
+          </div>
+        </div> <br>
+
+        <div class="accordion"
+            id="accordion-contribution-<%= index %>">
+          <div class="accordion-group">
+
+            <div class="accordion-heading">
+              <a class="accordion-toggle" data-toggle="collapse"
+                 data-parent="#accordion-contribution-<%= index %>"
+                 href="#collapse-contribution-<%= index %>">
+                Read Contribution
+              </a>
+            </div>
+
+            <div id="collapse-contribution-<%= index %>"
+                class="accordion-body collapse">
+              <div class="accordion-inner">
+                <%= contribution.contribution %>
+              </div>
+            </div>
+
+          </div>  <!-- accordian-group -->
+        </div>  <!-- accordian -->
+      </div>  <!-- well -->
+
+    <% end %>
+
+  </div>  <!-- contribution contributors -->
+</div>  <!-- contribution -->

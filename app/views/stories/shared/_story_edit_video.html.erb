@@ -1,0 +1,24 @@
+
+<div class='well' id='story-embed-well' style='position:relative'>
+
+  <!-- http://stackoverflow.com/questions/13725683 -->
+
+  <iframe id='embed-iframe' width="320" height="180"
+      src="<%= @story.embed_url %>" frameborder="0"></iframe> <br><br>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div id='edit-story-embed'
+          style='position:absolute; right:20px; margin-top:-3px'>
+        <span class='glyphicon glyphicon-pencil bip-clickable'></span>
+      </div>
+
+      <div id='story-embed' class='col-md-10' style='overflow:auto'>
+        <%= best_in_place @story, :embed_url, url: story_path(@story),
+            activator: '#edit-story-embed',
+            place_holder: 'Add a video (Youtube URL) ...',
+            html_attrs: { style: 'width:100%' } %>
+      </div>
+    </div>
+  </div>
+</div>  <!-- well -->

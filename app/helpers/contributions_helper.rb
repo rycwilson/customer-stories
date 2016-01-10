@@ -1,15 +1,16 @@
 module ContributionsHelper
 
   def contribution_status status
+    label = "<strong>Status:&nbsp&nbsp</strong>"
     case status
       when 'request'
-        return "Request sent, 3 days remaining"
+        return label + "Request sent"
       when 'remind1'
-        return "Request sent, 2 days remaining"
+        return label + "First reminder sent"
       when 'remind2'
-        return "Request sent, 1 day remaining"
+        return label + "Second reminder sent"
       when 'did_not_respond'
-        return "Did not respond"
+        return label + "Did not respond"
     end
   end
 

@@ -48,7 +48,7 @@ class ContributionsController < ApplicationController
                                      status: 'pre_request')
     if contribution.save
       # respond with all pre-request contributions, most recent additions first
-      @contributors = pre_request_contributors story.success.contributions
+      @contributors = Contribution.pre_request story.success_id
       respond_to do |format|
         format.js {}
       end
@@ -112,21 +112,6 @@ class ContributionsController < ApplicationController
     else
       puts 'error creating contributor'
     end
-  end
-
-  # this method extracts the necessary combination of contribution
-  # and contributor data for new contribution AJAX response
-  def pre_request_contributors success_contributions
-    success_contributions.order(created_at: :desc)
-      .select { |contribution| contribution.status == 'pre_request' }
-      .map do |contribution|
-        {
-          contribution_id: contribution.id,
-          full_name: contribution.user.first_name + " " + contribution.user.last_name,
-          email: contribution.user.email,
-          role: contribution.role,
-        }
-      end
   end
 
 end

@@ -22,6 +22,7 @@ class StoriesController < ApplicationController
     @company = current_user.company # company_id not in the stories#edit route
     @story = Story.find params[:id]
     @contributions = @story.success.contributions
+    @contributions_in_progress = Contribution.in_progress @story.success_id
     @industries = @company.industries_select
     @industries_pre_select = @story.success.industry_categories.map { |category| category.id }
     @product_categories = @company.product_categories_select

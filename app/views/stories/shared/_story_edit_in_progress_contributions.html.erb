@@ -1,0 +1,26 @@
+<!-- in-progress -->
+<div class="tab-pane fade" id="in-progress">
+
+  <div class="heading-block">
+    <h4>Contributions in Progress</h4>
+  </div> <!-- /.heading-block -->
+
+  <div id='in-progress-contributors'>
+
+    <% @contributions_in_progress.each do |contribution| %>
+
+      <div class="well" data-contribution-id="<%= contribution.id %>">
+        <div class="row">
+          <div class='col-md-12'>
+            <%= contribution.user.full_name %> <br>
+            <%= contribution.user.email %> <br>
+            <%= contribution.role %> <br><br>
+            <%= contribution_status(contribution.status).html_safe %>
+          </div>
+        </div>
+      </div>
+
+    <% end %>
+
+  </div>
+</div> <!-- in-progress -->

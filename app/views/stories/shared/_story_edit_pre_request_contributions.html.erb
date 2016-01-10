@@ -1,0 +1,41 @@
+<!-- pre-request contributors -->
+<div class="tab-pane fade in active" id="pre-request">
+
+  <div class="heading-block">
+    <h4>Contributors Awaiting Request</h4> <br>
+    <button type="button" class="btn btn-secondary btn-sm"
+        data-toggle="modal" data-target="#new-contributor-modal">
+      Add Contributor
+    </button>
+  </div>
+
+  <div id='pre-request-contributors'>
+
+    <% @contributions.order(created_at: :desc)
+                     .select { |c| c.status == 'pre_request' }
+                     .each do |contribution| %>
+
+      <div class="well" data-contribution-id="<%= contribution.id %>">
+        <div class="row">
+          <div class='col-sm-12'>
+            <%= contribution.user.full_name %> <br>
+            <%= contribution.user.email %>
+          </div>
+        </div> <br>
+        <div class="row">
+          <div class="col-sm-6">
+            <%= contribution.role %>
+          </div>
+          <div class="col-sm-6 text-right">
+            <%= button_to 'Send Request',
+                request_contribution_path(contribution),
+                class: 'btn btn-sm btn-secondary',
+                method: 'put', remote: true %>
+          </div>
+        </div>
+      </div>
+
+    <% end %>
+
+  </div>
+</div>
