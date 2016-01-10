@@ -5,24 +5,6 @@ class ContributionsController < ApplicationController
   before_action :find_contribution, only:
                           [:contribution_request_email, :edit, :update]
 
-  def contribution_request_email
-    @contributor = @contribution.user
-    UserMailer.request_contribution(@contribution, @contributor).deliver_now
-    if @contribution.update(   status:'request',
-                            remind_at: Time.now + @contribution.remind_1_wait.days )
-      @status = contribution_status @contribution.status # view helper
-      # TODO: start cron job for reminder emails and token expiration
-      flash.now[:info] =
-        "An email request for contribution has been sent to #{@contributor.full_name}"
-      respond_to do |format|
-        format.js {}
-      end
-    else
-      redirect_to edit_story_path(@contribution.success.story),
-        flash[:alert] = "Something went wrong"
-    end
-  end
-
   #
   # GET '/contributions/:id/:type'
   #   type is 'contribution', 'feedback', 'opt_out'
@@ -80,7 +62,22 @@ class ContributionsController < ApplicationController
     end
   end
 
-  def destroy
+  def contribution_request_email
+    @contributor = @contribution.user
+    UserMailer.request_contribution(@contribution, @contributor).deliver_now
+    if @contribution.update(   status:'request',
+                            remind_at: Time.now + @contribution.remind_1_wait.days )
+      @status = contribution_status @contribution.status # view helper
+      # TODO: start cron job for reminder emails and token expiration
+      flash.now[:info] =
+        "An email request for contribution has been sent to #{@contributor.full_name}"
+      respond_to do |format|
+        format.js {}
+      end
+    else
+      redirect_to edit_story_path(@contribution.success.story),
+        flash[:alert] = "Something went wrong"
+    end
   end
 
   private

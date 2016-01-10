@@ -7,17 +7,20 @@ class Contribution < ActiveRecord::Base
   validates :remind_1_wait, numericality: { only_integer: true }
   validates :remind_2_wait, numericality: { only_integer: true }
 
-  def send_reminder
-    if self.remind_at.past?
-      UserMailer.contribution_reminder(self).deliver_now
-      if self.status == 'request'
-        new_status = 'remind1'
-        new_remind_at = Time.now + self.remind_2_wait.days
-      else
-        new_status = 'remind2'
-        new_remind_at = nil  # no more reminders
+  def self.send_reminders
+    Contribution.where("status IN ('request', 'remind1')")
+                .each do |contribution|
+      if contribution.remind_at.past?
+        UserMailer.contribution_reminder(contribution).deliver_now
+        if contribution.status == 'request'
+          new_status = 'remind1'
+          new_remind_at = Time.now + contribution.remind_2_wait.days
+        else
+          new_status = 'remind2'
+          new_remind_at = nil  # no more reminders
+        end
+        contribution.update(status: new_status, remind_at: new_remind_at)
       end
-      self.update(status: new_status, remind_at: new_remind_at)
     end
   end
 
@@ -40,7 +43,7 @@ class Contribution < ActiveRecord::Base
 
   #
   # return in-progress Contributions for a given Success
-  # sort oldest to newest
+  # sort oldest to newest (according to status)
   #
   def self.in_progress success_id
     order = ['did_not_respond', 'remind2', 'remind1', 'request']
