@@ -9,9 +9,9 @@ class UserMailer < ApplicationMailer
     template_name = contribution.role + "_request"
     template = company.contribution_emails.where(name:template_name).take
     binding.pry
-    contribution_url = "http://#{ENV['HOST_NAME']}/contributions/#{contribution.id}/#{contribution.access_token}/contribution"
-    feedback_url = "http://#{ENV['HOST_NAME']}/contributions/#{contribution.id}/#{contribution.access_token}/feedback"
-    opt_out_url = "http://#{ENV['HOST_NAME']}/contributions/#{contribution.id}/#{contribution.access_token}/opt_out"
+    contribution_url = "http://#{ENV['HOST_NAME']}/contributions/#{contribution.id}/contribution"
+    feedback_url = "http://#{ENV['HOST_NAME']}/contributions/#{contribution.id}/feedback"
+    opt_out_url = "http://#{ENV['HOST_NAME']}/contributions/#{contribution.id}/opt_out"
     subject = template.subject
                       .sub("[customer_name]", contribution.success.customer.name)
                       .sub("[company_name]", company.name)
