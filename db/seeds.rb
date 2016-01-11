@@ -91,11 +91,11 @@ CUSTOMERS.each do |customer_name|
     10.times { success.visitors << VisitorsSeed::create }
 
     # Contributions
-    8.times do
+    9.times do
       ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], STATUS_OPTIONS[rand(4..7)] )
     end
 
-    2.times do
+    1.times do
       ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], STATUS_OPTIONS[rand(0..3)] )
     end
 

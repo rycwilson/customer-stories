@@ -24,7 +24,10 @@ class Contribution < ActiveRecord::Base
           new_remind_at = nil  # no more reminders
         end
         contribution.update(status: new_status, remind_at: new_remind_at)
-        puts "email reminder sent, new remind_at: #{contribution.remind_at.strftime('%-m/%-d/%y at %I:%M %P')}"
+        if new_status == 'remind1'
+          puts "email reminder sent, new remind_at: #{contribution.remind_at.strftime('%-m/%-d/%y at %I:%M %P')} UTC"
+        else puts "email reminder sent, new remind_at: nil"
+        end
       end
       puts "status for #{contribution.id} is now #{contribution.status}"
     end

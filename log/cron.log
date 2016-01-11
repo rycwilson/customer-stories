@@ -1,17 +1,66 @@
-
-rake aborted!
-NoMethodError: undefined method `strftime' for nil:NilClass
-/Users/wilson/dev/csp/app/models/contribution.rb:27:in `block in send_reminders'
-/Users/wilson/dev/csp/app/models/contribution.rb:15:in `send_reminders'
-/Users/wilson/dev/csp/lib/tasks/email_tasks.rake:5:in `block (2 levels) in <top (required)>'
-Tasks: TOP => email:send_contribution_reminders
-(See full trace by running task with --trace)
-sending reminders - 1/11/16 at 01:08 pm
-processing contribution 3738 with status request
+sending reminders - 1/11/16 at 01:55 pm
+processing contribution 5359 with status remind1
 in UserMailer
-email reminder sent, new remind_at: 1/13/16 at 09:08 pm
-status for 3738 is now remind1
-processing contribution 3739 with status remind1
-status for 3739 is now remind1
-processing contribution 3758 with status remind1
+email reminder sent, new remind_at: 
+status for 5359 is now remind2
+processing contribution 5369 with status remind1
 in UserMailer
+email reminder sent, new remind_at: 
+status for 5369 is now remind2
+processing contribution 5389 with status request
+in UserMailer
+email reminder sent, new remind_at: 2016-01-13 21:55:05 UTC
+status for 5389 is now remind1
+processing contribution 5399 with status request
+status for 5399 is now request
+processing contribution 5409 with status remind1
+in UserMailer
+email reminder sent, new remind_at: 
+status for 5409 is now remind2
+processing contribution 5429 with status request
+status for 5429 is now request
+processing contribution 5469 with status request
+in UserMailer
+email reminder sent, new remind_at: 2016-01-13 21:55:06 UTC
+status for 5469 is now remind1
+processing contribution 5479 with status request
+in UserMailer
+email reminder sent, new remind_at: 2016-01-13 21:55:07 UTC
+status for 5479 is now remind1
+processing contribution 5489 with status remind1
+status for 5489 is now remind1
+processing contribution 5529 with status request
+in UserMailer
+email reminder sent, new remind_at: 2016-01-13 21:55:08 UTC
+status for 5529 is now remind1
+sending reminders - 1/11/16 at 02:00 pm
+processing contribution 5589 with status remind1
+in UserMailer
+email reminder sent, new remind_at: nil
+status for 5589 is now remind2
+processing contribution 5609 with status request
+in UserMailer
+email reminder sent, new remind_at: 1/13/16 at 10:00 pm
+status for 5609 is now remind1
+processing contribution 5639 with status remind1
+in UserMailer
+email reminder sent, new remind_at: nil
+status for 5639 is now remind2
+processing contribution 5669 with status request
+status for 5669 is now request
+processing contribution 5679 with status request
+status for 5679 is now request
+processing contribution 5709 with status remind1
+status for 5709 is now remind1
+processing contribution 5719 with status request
+in UserMailer
+email reminder sent, new remind_at: 1/13/16 at 10:00 pm
+status for 5719 is now remind1
+processing contribution 5729 with status request
+in UserMailer
+email reminder sent, new remind_at: 1/13/16 at 10:00 pm
+status for 5729 is now remind1
+processing contribution 5779 with status request
+in UserMailer
+email reminder sent, new remind_at: 1/13/16 at 10:00 pm
+status for 5779 is now remind1

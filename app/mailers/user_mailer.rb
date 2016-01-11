@@ -60,7 +60,7 @@ class UserMailer < ApplicationMailer
     if ['***REMOVED***', '***REMOVED***'].include? contributor.email
       mail to: contributor.email, from: curator.email, subject: subject
     else
-      mail to: '***REMOVED***', from: curator.email, subject: subject
+      mail to: '***REMOVED***', from: "#{curator.full_name} <#{curator.email}>", subject: subject
     end
   end
 
