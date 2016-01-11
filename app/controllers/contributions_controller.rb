@@ -66,7 +66,6 @@ class ContributionsController < ApplicationController
   end
 
   def contribution_request_email
-    binding.pry
     @contributor = @contribution.user
     UserMailer.request_contribution(@contribution, @contributor).deliver_now
     if @contribution.update(   status:'request',

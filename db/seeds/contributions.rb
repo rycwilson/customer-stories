@@ -13,10 +13,10 @@ module ContributionsSeed
            status: status,
          feedback: feedback,
      contribution: contribution)
-    c.remind_at = Time.now + rand(5).minutes if (status == 'request')
-    c.remind_at = Time.now + rand(5).minutes if (status == 'remind1')
-    # c.remind_at = Time.now + c.remind_1_wait.days if (status == 'request')
-    # c.remind_at = Time.now + c.remind_2_wait.days if (status == 'remind1')
+    # c.remind_at = Time.now + rand(5).minutes if (status == 'request')
+    # c.remind_at = Time.now + rand(5).minutes if (status == 'remind1')
+    c.remind_at = Time.now + c.remind_1_wait.days if (status == 'request')
+    c.remind_at = Time.now + c.remind_2_wait.days if (status == 'remind1')
     puts c.errors.full_messages unless c.save
     c
   end

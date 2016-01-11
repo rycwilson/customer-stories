@@ -1,32 +1,32 @@
 
 module EmailTemplatesSeed
 
-  REQUEST_SUBJECT = "Participate in a [customer_name]/[company_name] success story"
+  REQUEST_SUBJECT = "[customer_name]/[company_name] Success Story"
 
-  CUSTOMER_REQUEST_BODY = "<p>Dear [contributor_first_name],</p>
+  CUSTOMER_REQUEST_BODY = "<p>Hi [contributor_first_name],</p>
 
-    <p>My name is [curator_first_name] and I’ll be curating a story about the success of your project.  The value of participating is it will be closely connected with LinkedIn so it’s an opportunity to include in your CV as validation of your great work.  The story will also be used as a case study to help others learn about solving similar challenges.</p>
+    <p>Bill Smith referred me to you.  I will be writing a success story about your project utilizing [company_name].</p>
 
-    <p>Best of all, I’ll be doing the work narrating the story and all I need from you are some notes from your perspective.  It will take maximum 5 minutes:</p>
+    <p>This success story will highlight your accomplishments.  It’s a great way to build your personal brand and show impact you’ve delivered. It may also be used as a customer reference for others to learn about solving similar needs.</p>
 
-    <a href='[contribution_url]'>Contribute</a>
+    <p>Your input will take just 3 minutes.  I will do the majority of the writing, based on input from the entire team.  All I need from you are brief notes on the primary success factors of the project.</p>
 
-    <p>If you cannot contribute to a success story, please give us feedback why:</p>
+    <a href='[contribution_url]'>Provide your input here</a>
 
-    <a href='[feedback_url]'>Feedback</a>
-
-    <p>If you have any questions, please email or call me.</p>
+    <p>Please call or email if you have any questions.  I personally appreciate your contribution. It helps me write a great story that I think you will be proud of and want to share with your colleagues.</p>
 
     <p>Thank you,</p>
 
     <span>[curator_full_name]</span> <br>
+    <p>Customer Reference Program Manager</p>
     <span>[curator_company]</span> <br>
-    <span>[curator_email]</span> <br>
-    <span>[curator_phone]</span> <br>
+    <span>[curator_email] [curator_phone]</span> <br>
 
-    <p>To opt out of a story all together, please click here:</p>
+    <p>Note: Once I have the story fully written it will go to [customer_name] for approval before publishing.  See a published example story <a href='[story_example_url]'>here</a>.
 
-    <a href='[opt_out_url]'>Opt-out</a>"
+    <p>If you cannot contribute to a success story, please give us <a href='[feedback_url]'>feedback</a> why.</p>
+
+    <p>Click to <a href='[opt_out_url]'>opt-out</a> altogether.</p>"
 
   CUSTOMER_REMIND1_SUBJECT = "Customer - first reminder"
 

@@ -2,6 +2,10 @@ class Story < ActiveRecord::Base
 
   belongs_to :success
 
+  def self.find_example
+    Story.where(published: true).first.id
+  end
+
   def assign_tags new_story
     if new_story[:industry_tags]
       new_story[:industry_tags].each do |selection|
