@@ -2,11 +2,13 @@ class ContributionsController < ApplicationController
 
   include ContributionsHelper
 
-  before_action :find_contribution, only:
-                          [:contribution_request_email, :edit, :update]
+  before_action :find_contribution, only: [:contribution_request_email, :edit, :update]
+  # before_action :update do
+  #   auth_token? # how to pass the params hash?
+  # end
 
   #
-  # GET '/contributions/:id/:type'
+  # GET '/contributions/:id/:token/:type'
   #   type is 'contribution', 'feedback', 'opt_out'
   #
   def edit
@@ -27,7 +29,8 @@ class ContributionsController < ApplicationController
     contribution = Contribution.new(user_id: contributor.id,
                                  success_id: story.success.id,
                                        role: params[:contributor][:role],
-                                     status: 'pre_request')
+                                     status: 'pre_request',
+                               access_token: SecureRandom.hex)
     if contribution.save
       # respond with all pre-request contributions, most recent additions first
       @contributors = Contribution.pre_request story.success_id
@@ -63,6 +66,7 @@ class ContributionsController < ApplicationController
   end
 
   def contribution_request_email
+    binding.pry
     @contributor = @contribution.user
     UserMailer.request_contribution(@contribution, @contributor).deliver_now
     if @contribution.update(   status:'request',
@@ -83,7 +87,7 @@ class ContributionsController < ApplicationController
   private
 
   def contribution_params
-    params.require(:contribution).permit(:status, :contribution, :feedback, :linkedin)
+    params.require(:contribution).permit(:status, :contribution, :feedback, :access_token, :linkedin)
   end
 
   def find_contribution
@@ -109,6 +113,17 @@ class ContributionsController < ApplicationController
     else
       puts 'error creating contributor'
     end
+  end
+
+  def auth_token?
+    # layout: false prevents the application layout page from loading
+    # returning false/true stops/allows the action
+    # unless current_user.id == params[:id].to_i
+    #   render file: 'public/401.html', status: 401, layout: false
+    #   false
+    # else
+    #   true
+    # end
   end
 
 end

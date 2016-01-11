@@ -66,7 +66,7 @@ Customer.destroy_all # also destroys successes, stories, visitors, and successes
 # cisco.create_email_templates
 
 # Customers and Stories...
-['Ebay', 'Google', 'Microsoft', 'Twitter', 'IBM', 'Amazon', 'Facebook'].each do |customer_name|
+CUSTOMERS.each do |customer_name|
   customer = Customer.create(name: customer_name)
   cisco.customers << customer
   success = Success.create
@@ -75,7 +75,7 @@ Customer.destroy_all # also destroys successes, stories, visitors, and successes
   success.curator = curators[rand(2)]  # randomly select dan or ryan as curator
   success.save
   # 2/3 successes will have a story
-  if rand(3) >= 0
+  if rand(3) >= 1
     success.story = StoriesSeed::create
     # 1/2 stories will be approved/published (attributes default to false)
     if rand(2) == 1
@@ -91,8 +91,12 @@ Customer.destroy_all # also destroys successes, stories, visitors, and successes
     10.times { success.visitors << VisitorsSeed::create }
 
     # Contributions
-    10.times do
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], STATUS_OPTIONS[rand(STATUS_OPTIONS.length)] )
+    8.times do
+      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], STATUS_OPTIONS[rand(4..7)] )
+    end
+
+    2.times do
+      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], STATUS_OPTIONS[rand(0..3)] )
     end
 
   end  # story create

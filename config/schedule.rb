@@ -17,7 +17,7 @@ set :output, "#{Rails.root}/log/cron.log"
 set :environment, "#{Rails.env}"
 set :job_template, "zsh -l -c ':job'"
 
-every :day, at: '7:00 am' do
+every :day, at: ['10:05 am', '10:10 am', '10:15 am', '10:20 am', '10:25 am'] do
 
   # runner 'Contribution.send_reminders'
   rake 'email:send_contribution_reminders'

@@ -8,8 +8,12 @@ class Contribution < ActiveRecord::Base
   validates :remind_2_wait, numericality: { only_integer: true }
 
   def self.send_reminders
+    # logs to log/cron.log in development environment (output set in schedule.rb)
+    # TODO: log in production environment
+    puts "sending reminders - #{Time.now.strftime('%-m/%-d/%y at %I:%M %P')}"
     Contribution.where("status IN ('request', 'remind1')")
                 .each do |contribution|
+      puts "processing contribution #{contribution.id} with status #{contribution.status}"
       if contribution.remind_at.past?
         UserMailer.contribution_reminder(contribution).deliver_now
         if contribution.status == 'request'
@@ -20,7 +24,9 @@ class Contribution < ActiveRecord::Base
           new_remind_at = nil  # no more reminders
         end
         contribution.update(status: new_status, remind_at: new_remind_at)
+        puts "email reminder sent, new remind_at: #{contribution.remind_at.strftime('%-m/%-d/%y at %I:%M %P')}"
       end
+      puts "status for #{contribution.id} is now #{contribution.status}"
     end
   end
 

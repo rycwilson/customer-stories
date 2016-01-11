@@ -1,48 +1,81 @@
-processing contribution 3087 with status remind1
-status is now remind1
-processing contribution 3091 with status request
+rake aborted!
+NameError: undefined local variable or method `contribution' for main:Object
+/Users/wilson/dev/csp/lib/tasks/email_tasks.rake:5:in `block (2 levels) in <top (required)>'
+Tasks: TOP => email:send_contribution_reminders
+(See full trace by running task with --trace)
+2016-01-11 09:47:03 -0800 -- processing contribution 3087 with status remind1
 in UserMailer
-status is now remind1
-processing contribution 3092 with status remind1
-status is now remind1
-processing contribution 3101 with status remind1
-status is now remind1
-processing contribution 3102 with status request
+email reminder sent, new remind_at: 
+status for 3087 is now remind2
+2016-01-11 09:47:05 -0800 -- processing contribution 3092 with status remind1
 in UserMailer
-status is now remind1
-processing contribution 3106 with status request
+email reminder sent, new remind_at: 
+status for 3092 is now remind2
+2016-01-11 09:47:06 -0800 -- processing contribution 3101 with status remind1
 in UserMailer
-status is now remind1
-processing contribution 3107 with status request
+email reminder sent, new remind_at: 
+status for 3101 is now remind2
+2016-01-11 09:47:08 -0800 -- processing contribution 3108 with status remind1
 in UserMailer
-status is now remind1
-processing contribution 3108 with status remind1
-status is now remind1
-processing contribution 3112 with status request
+email reminder sent, new remind_at: 
+status for 3108 is now remind2
+2016-01-11 09:47:09 -0800 -- processing contribution 3091 with status remind1
+status for 3091 is now remind1
+2016-01-11 09:47:09 -0800 -- processing contribution 3102 with status remind1
+status for 3102 is now remind1
+2016-01-11 09:47:09 -0800 -- processing contribution 3106 with status remind1
+status for 3106 is now remind1
+2016-01-11 09:47:09 -0800 -- processing contribution 3107 with status remind1
+status for 3107 is now remind1
+2016-01-11 09:47:09 -0800 -- processing contribution 3125 with status remind1
 in UserMailer
-status is now remind1
-processing contribution 3117 with status request
+email reminder sent, new remind_at: 
+status for 3125 is now remind2
+2016-01-11 09:47:10 -0800 -- processing contribution 3141 with status remind1
 in UserMailer
-status is now remind1
-processing contribution 3121 with status request
+email reminder sent, new remind_at: 
+status for 3141 is now remind2
+2016-01-11 09:47:12 -0800 -- processing contribution 3144 with status remind1
 in UserMailer
-status is now remind1
-processing contribution 3122 with status request
+email reminder sent, new remind_at: 
+status for 3144 is now remind2
+2016-01-11 09:47:13 -0800 -- processing contribution 3149 with status remind1
 in UserMailer
-status is now remind1
-processing contribution 3125 with status remind1
-status is now remind1
-processing contribution 3128 with status request
+email reminder sent, new remind_at: 
+status for 3149 is now remind2
+2016-01-11 09:47:15 -0800 -- processing contribution 3150 with status remind1
 in UserMailer
-status is now remind1
-processing contribution 3135 with status request
+email reminder sent, new remind_at: 
+status for 3150 is now remind2
+2016-01-11 09:47:16 -0800 -- processing contribution 3117 with status remind1
+status for 3117 is now remind1
+2016-01-11 09:47:16 -0800 -- processing contribution 3121 with status remind1
+status for 3121 is now remind1
+2016-01-11 09:47:16 -0800 -- processing contribution 3112 with status remind1
+status for 3112 is now remind1
+2016-01-11 09:47:16 -0800 -- processing contribution 3122 with status remind1
+status for 3122 is now remind1
+2016-01-11 09:47:16 -0800 -- processing contribution 3128 with status remind1
+status for 3128 is now remind1
+2016-01-11 09:47:16 -0800 -- processing contribution 3135 with status remind1
+status for 3135 is now remind1
+rake aborted!
+NoMethodError: undefined method `strftime' for nil:NilClass
+/Users/wilson/dev/csp/app/models/contribution.rb:27:in `block in send_reminders'
+/Users/wilson/dev/csp/app/models/contribution.rb:15:in `send_reminders'
+/Users/wilson/dev/csp/lib/tasks/email_tasks.rake:5:in `block (2 levels) in <top (required)>'
+Tasks: TOP => email:send_contribution_reminders
+(See full trace by running task with --trace)
+sending reminders - 1/11/16 at 10:05 am
+processing contribution 3163 with status remind1
 in UserMailer
-status is now remind1
-processing contribution 3141 with status remind1
-status is now remind1
-processing contribution 3144 with status remind1
-status is now remind1
-processing contribution 3149 with status remind1
-status is now remind1
-processing contribution 3150 with status remind1
-status is now remind1
+rake aborted!
+NoMethodError: undefined method `strftime' for nil:NilClass
+/Users/wilson/dev/csp/app/models/contribution.rb:27:in `block in send_reminders'
+/Users/wilson/dev/csp/app/models/contribution.rb:15:in `send_reminders'
+/Users/wilson/dev/csp/lib/tasks/email_tasks.rake:5:in `block (2 levels) in <top (required)>'
+Tasks: TOP => email:send_contribution_reminders
+(See full trace by running task with --trace)
+sending reminders - 1/11/16 at 10:10 am
+processing contribution 3165 with status remind1
+in UserMailer
