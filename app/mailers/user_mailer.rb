@@ -27,7 +27,7 @@ class UserMailer < ApplicationMailer
                     .sub("[opt_out_url]", opt_out_url)
                     .html_safe
 
-    mail to: contributor.email, from: curator.email, subject: subject
+    mail to: contributor.email, from: "#{curator.full_name} <#{curator.email}>", subject: subject
 
   end
 
@@ -58,7 +58,7 @@ class UserMailer < ApplicationMailer
                     .html_safe
 
     if ['***REMOVED***', '***REMOVED***'].include? contributor.email
-      mail to: contributor.email, from: curator.email, subject: subject
+      mail to: contributor.email, from: "#{curator.full_name} <#{curator.email}>", subject: subject
     else
       mail to: '***REMOVED***', from: "#{curator.full_name} <#{curator.email}>", subject: subject
     end

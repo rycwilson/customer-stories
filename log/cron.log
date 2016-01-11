@@ -1,38 +1,4 @@
-sending reminders - 1/11/16 at 01:55 pm
-processing contribution 5359 with status remind1
-in UserMailer
-email reminder sent, new remind_at: 
-status for 5359 is now remind2
-processing contribution 5369 with status remind1
-in UserMailer
-email reminder sent, new remind_at: 
-status for 5369 is now remind2
-processing contribution 5389 with status request
-in UserMailer
-email reminder sent, new remind_at: 2016-01-13 21:55:05 UTC
-status for 5389 is now remind1
-processing contribution 5399 with status request
-status for 5399 is now request
-processing contribution 5409 with status remind1
-in UserMailer
-email reminder sent, new remind_at: 
-status for 5409 is now remind2
-processing contribution 5429 with status request
-status for 5429 is now request
-processing contribution 5469 with status request
-in UserMailer
-email reminder sent, new remind_at: 2016-01-13 21:55:06 UTC
-status for 5469 is now remind1
-processing contribution 5479 with status request
-in UserMailer
-email reminder sent, new remind_at: 2016-01-13 21:55:07 UTC
-status for 5479 is now remind1
-processing contribution 5489 with status remind1
-status for 5489 is now remind1
-processing contribution 5529 with status request
-in UserMailer
-email reminder sent, new remind_at: 2016-01-13 21:55:08 UTC
-status for 5529 is now remind1
+
 sending reminders - 1/11/16 at 02:00 pm
 processing contribution 5589 with status remind1
 in UserMailer
