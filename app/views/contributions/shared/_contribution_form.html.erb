@@ -3,7 +3,7 @@
 
   <div class='col-md-4'>
 
-    <%= image_tag "dan.jpg", alt: 'curator_img' %> <br>
+    <img src="<%= asset_path('dan.jpg') %>" alt="curator_img"> <br>
 
     <span><%= curator.full_name %></span> <br>
     <span><%= curator.company.name %></span> <br>
@@ -87,6 +87,6 @@
 
 <div class="row">
   <div class='col-md-12 text-right'>
-    <%= image_tag "CS-powered-by", alt: 'curator_img' %>
+    <img src="<%= asset_path('CS-powered-by.png') %>" alt="powered_by_csp">
   </div>
 </div>
