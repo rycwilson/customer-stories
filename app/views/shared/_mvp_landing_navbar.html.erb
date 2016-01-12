@@ -22,11 +22,11 @@
 
     <nav class="collapse navbar-collapse" role="navigation">
 
-      <% if user_signed_in? && controller_name != "contributions" %>
+      <% if user_signed_in? %>
 
         <%= render '/shared/mvp_admin_navbar_nav' %>
 
-      <% elsif controller_name != "contributions" %>
+      <% else %>
 
         <%= render '/shared/mvp_landing_navbar_nav' %>
 

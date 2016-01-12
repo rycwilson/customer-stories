@@ -2,13 +2,13 @@ Rails.application.routes.draw do
 
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   root 'site#index'
-  get '/product' => 'site#product'
-  get '/plans' => 'site#plans'
-  get '/our-company' => 'site#our-company'
-  get '/team' => 'site#team'
-  get '/tos' => 'site#tos'
-  get '/privacy' => 'site#privacy'
-  get '/our-story' => 'site#our-story'
+  get '/product', to: 'site#product'
+  get '/plans', to: 'site#plans'
+  get '/our-company', to: 'site#our-company'
+  get '/team', to: 'site#team'
+  get '/tos', to: 'site#tos', as: 'tos'
+  get '/privacy', to: 'site#privacy'
+  get '/our-story', to: 'site#our-story'
 
   devise_for :users, controllers: {
       sessions: 'users/sessions',

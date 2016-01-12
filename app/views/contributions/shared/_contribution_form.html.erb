@@ -1,54 +1,92 @@
 
-<h3>Thanks for contributing!</h3>
-
-<p>If you have any questions, please contact your Story Curator.</p>
-
 <div class="row">
 
-  <div class='col-md-2'>
-    <label for="curator">Story Curator</label>
-  </div>
+  <div class='col-md-4'>
 
-  <div class='col-md-10'>
-    <span id='curator'><%= curator.full_name %></span> <br>
+    <%= image_tag "dan.jpg", alt: 'curator_img' %> <br>
+
+    <span><%= curator.full_name %></span> <br>
     <span><%= curator.company.name %></span> <br>
     <span><%= curator.email %></span> <br> <br>
+
+  </div>
+
+  <div class='col-md-8 bubble' >
+    <p> John, <br>
+        Your input will greatly help me write a compelling success story about your project utilizing Cisco. I personally appreciate your help.  </br>
+        Thank You!</p>
   </div>
 
 </div>
 
 <div class='row'>
+  <div class="col-md-12">
+    <div class="accordion" id="accordion-guidance">
+      <div class="accordion-group">
 
-  <%= form_for contribution,
-        html: { class: "form-horizontal", method: "put" } do |f| %>
+        <div class="accordion-heading">
+            Want some guidance on what to write?
+          <a class="accordion-toggle" data-toggle="collapse"
+             data-parent="#accordion-guidance" href="#collapse-guidance">
+             Expand
+          </a>
+        </div>
 
-    <%= hidden_field_tag "contribution[status]", type %>
+        <div id="collapse-guidance" class="accordion-body collapse">
+          <div class="accordion-inner">
+           <p>
+            <i class="icon-li fa fa-hand-o-right"></i>  What was the challenge this project needed to solve? </br>
+            <i class="icon-li fa fa-hand-o-right"></i>  What was the solution?</br>
+            <i class="icon-li fa fa-hand-o-right"></i>  What was the measured results of the solution?</p>
+          </div>
+        </div>
 
-    <div class="form-group">
-      <%= f.label :contribution, "Your Success Story",
-          class: 'col-md-2 control-label' %>
-      <div class='col-md-10'>
-        <%= f.text_area :contribution, rows: "12",
-            class: 'form-control', autofocus: true %>
-      </div>
+      </div>  <!-- accordian-group -->
+    </div>  <!-- accordian -->
+  </div>
+</div>
+
+
+<%= form_for contribution, html: { method: "put" } do |f| %>
+
+  <%= hidden_field_tag "contribution[status]", response_type %>
+
+  <div class='row'>
+    <div class="form-group col-md-12" style='margin-bottom:15px'>
+      <%= f.text_area :contribution, rows: "10",
+          class: 'form-control',
+          placeholder: 'Please type your notes and thoughts here.', tabindex: '2',
+          autofocus: true %>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class='col-md-1 text-center' style='margin-top:-4px'>
+      <h1>
+        <i class="fa fa-linkedin-square" style="color:#006fb3; margin-bottom:15px"></i>
+      <h1>
     </div>
 
-    <div class="form-group">
-      <div class='col-md-1 col-md-offset-2'>
-        <h1>
-          <i class="fa fa-linkedin-square" style="color:#006fb3"></i>
-        <h1>
-      </div>
-      <div class='checkbox-inline col-md-6'>
-        <%= f.check_box :linkedin %>
-        <%= f.label :linkedin, "Check here if you would like your LinkedIn profile to appear as part of the Contribution Team for this Success Story.",
-          style: "padding:0" %>
-      </div>
-      <div class='col-md-2 pull-right text-right' style='margin-top:5px'>
-        <input type='submit' class='btn btn-lg btn-secondary'>
-      </div>
+    <div class='col-md-7 checkbox-inline'>
+      <%= f.check_box :linkedin %>
+      <%= f.label :linkedin, "Optional: check here if you want your LinkedIn profile to be included in the success story.",
+        style: "padding:0" %>
+      <p style='font-size:12px'> You can always remove or add your LinkedIn profile later. <br> See an example of a finished story <a href="<%= @story_example_url %>" target="_blank">here</a>.</p>
     </div>
 
-  <% end %>
+    <div class='col-md-3 pull-right text-right'>
+      <%= f.submit 'Submit', class: 'btn btn-lg btn-secondary' %> <br>
+      <p style='font-size:12px; margin-top:10px'>
+        By submitting you are agreeing to the
+        <%= link_to 'ToS', tos_path, target: '_blank' %> </p>
+    </div>
+  </div>  <!-- row -->
 
+<% end %>
+
+<div class="row">
+  <div class='col-md-12 text-right'>
+    <%= image_tag "CS-powered-by", alt: 'curator_img' %>
+  </div>
 </div>

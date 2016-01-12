@@ -26,20 +26,17 @@
 </head>
 <body>
 
-  <% if user_signed_in? && controller_name != 'contributions'  %>  <!-- admin -->
-
-    <!-- current_user could be contributor with token access -->
-    <!-- TODO check current_user.role (once that attribute is added) -->
+  <% if user_signed_in? and controller_name != 'contributions'  %>
 
     <%= render 'shared/mvp_admin_navbar' %>
-
-  <% elsif controller_name == 'contributions' %>  <!-- landing -->
-
-    <%= render 'shared/mvp_landing_navbar' %>
 
   <% elsif controller_name == 'stories' %>
 
     <%= render 'shared/mvp_admin_navbar' %>
+
+  <% elsif controller_name == 'contributions' %>
+
+    <!-- render nothing -->
 
   <% else %>
 
