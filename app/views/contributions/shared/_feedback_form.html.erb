@@ -10,7 +10,7 @@
   </div>
 
   <div class='col-md-10'>
-    <span id='curator'><%= user_full_name(curator) %></span> <br>
+    <span><%= curator.full_name %></span> <br>
     <span><%= curator.company.name %></span> <br>
     <span><%= curator.email %></span> <br> <br>
   </div>
@@ -22,7 +22,7 @@
   <%= form_for contribution,
         html: { class: "form-horizontal", method: "put" } do |f| %>
 
-    <%= hidden_field_tag "contribution[status]", type %>
+    <%= hidden_field_tag "contribution[status]", response_type %>
 
     <div class="form-group">
       <%= f.label :feedback, "Feedback",

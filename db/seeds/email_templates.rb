@@ -17,7 +17,7 @@ module EmailTemplatesSeed
 
     <p>Thank you,</p>
 
-    <img src='[curator_img_path]' alt='curator_img'>
+    <img src='[curator_img_url]' alt='curator_img'>
 
     <span>[curator_full_name]</span> <br>
     <span>[curator_company]</span> <br>
@@ -27,7 +27,9 @@ module EmailTemplatesSeed
 
     <p>If you cannot contribute to a success story, please give us <a href='[feedback_url]'>feedback</a> why.</p>
 
-    <p>Click to <a href='[opt_out_url]'>opt-out</a> altogether.</p>"
+    <p>Click to <a href='[opt_out_url]'>opt-out</a> altogether.</p>
+
+    <img src='[csp_img_url]' alt='csp_logo'>"
 
 
   CUSTOMER_REMIND1_SUBJECT = "Customer - first reminder"

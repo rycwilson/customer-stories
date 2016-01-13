@@ -15,6 +15,8 @@ class UserMailer < ApplicationMailer
     feedback_url = "#{host}/contributions/#{contribution.id}/feedback"
     opt_out_url = "#{host}/contributions/#{contribution.id}/opt_out"
     story_example_url = "#{host}/stories/#{story_example_id}"
+    # csp_img_url = "https://s3-us-west-1.amazonaws.com/csp-development-assets/CS-powered-by.png"
+    # dan_img_url = "https://s3-us-west-1.amazonaws.com/csp-development-assets/dan.jpg"
     subject = template.subject
                       .sub("[customer_name]", contribution.success.customer.name)
                       .sub("[company_name]", company.name)
@@ -32,7 +34,9 @@ class UserMailer < ApplicationMailer
                     .sub("[story_example_url]", story_example_url)
                     .sub("[opt_out_url]", opt_out_url)
                     .html_safe
-                    # .sub("[curator_img_path]", curator_img_path)
+                    # .sub("[curator_img_url]", dan_img_url)
+                    # .sub("[csp_img_url]", csp_img_url)
+
 
 
     # sends file ok, but no thumbnail preview.  email settings?

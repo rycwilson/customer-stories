@@ -31,26 +31,26 @@ csp = Company.find_by(name:'CSP')
 
 # destroy contributions first so deleted users don't orphan contributions (violates foreign key costraint)
 # Note: not using (dependent: :destroy) for users -> contributions (or users -> successes)
-Contribution.destroy_all
-User.where.not("email = ? OR email = ?", "***REMOVED***", "***REMOVED***").destroy_all
-Customer.destroy_all # also destroys successes, stories, visitors, and successes* join tables
-Product.destroy_all
-ProductCategory.destroy_all
-IndustryCategory.destroy_all
+# Contribution.destroy_all
+# User.where.not("email = ? OR email = ?", "***REMOVED***", "***REMOVED***").destroy_all
+# Customer.destroy_all # also destroys successes, stories, visitors, and successes* join tables
+# Product.destroy_all
+# ProductCategory.destroy_all
+# IndustryCategory.destroy_all
 ContributionEmail.destroy_all
 
 # Cisco's target industries...
-INDUSTRIES_CISCO.each do |industry_name|
-  cisco.industry_categories << IndustryCategory.create(name: industry_name)
-end
+# INDUSTRIES_CISCO.each do |industry_name|
+#   cisco.industry_categories << IndustryCategory.create(name: industry_name)
+# end
 
-# Cisco's product categories and products...
-PROD_CATS.each do |category_name|
-  cisco.product_categories << ProductCategory.create(name: category_name)
-end
-PRODUCTS.each do |product_name|
-  cisco.products << Product.create(name: product_name)
-end
+# # Cisco's product categories and products...
+# PROD_CATS.each do |category_name|
+#   cisco.product_categories << ProductCategory.create(name: category_name)
+# end
+# PRODUCTS.each do |product_name|
+#   cisco.products << Product.create(name: product_name)
+# end
 
 # Default email templates
 csp.contribution_emails << ContributionEmail.create(name: "customer_request", subject: EmailTemplatesSeed::REQUEST_SUBJECT, body: EmailTemplatesSeed::CUSTOMER_REQUEST_BODY)
@@ -66,41 +66,41 @@ csp.contribution_emails << ContributionEmail.create(name: "sales_remind_2", subj
 cisco.create_email_templates
 
 # Customers and Stories...
-CUSTOMERS.each do |customer_name|
-  customer = Customer.create(name: customer_name)
-  cisco.customers << customer
-  success = Success.create
-  customer.successes << success
-  success.created_at = (rand*60).days.ago
-  success.curator = dan # curators[rand(2)]  # randomly select dan or ryan as curator
-  success.save
-  # 2/3 successes will have a story
-  if rand(3) >= 1
-    success.story = StoriesSeed::create
-    # 1/2 stories will be approved/published (attributes default to false)
-    if rand(2) == 1
-      success.story.update(approved: true, published: true, logo_published: true, publish_date: Time.now)
-    end
-    # random industry category (tag)
-    success.industry_categories << cisco.industry_categories[rand(0...cisco.industry_categories.count)]
-    # random product category (tag)
-    success.product_categories << cisco.product_categories[rand(0...cisco.product_categories.count)]
-    # random product (tag)
-    success.products << cisco.products[rand(0...cisco.products.count)]
-    # each story has some visitors
-    10.times { success.visitors << VisitorsSeed::create }
+# CUSTOMERS.each do |customer_name|
+#   customer = Customer.create(name: customer_name)
+#   cisco.customers << customer
+#   success = Success.create
+#   customer.successes << success
+#   success.created_at = (rand*60).days.ago
+#   success.curator = dan # curators[rand(2)]  # randomly select dan or ryan as curator
+#   success.save
+#   # 2/3 successes will have a story
+#   if rand(3) >= 1
+#     success.story = StoriesSeed::create
+#     # 1/2 stories will be approved/published (attributes default to false)
+#     if rand(2) == 1
+#       success.story.update(approved: true, published: true, logo_published: true, publish_date: Time.now)
+#     end
+#     # random industry category (tag)
+#     success.industry_categories << cisco.industry_categories[rand(0...cisco.industry_categories.count)]
+#     # random product category (tag)
+#     success.product_categories << cisco.product_categories[rand(0...cisco.product_categories.count)]
+#     # random product (tag)
+#     success.products << cisco.products[rand(0...cisco.products.count)]
+#     # each story has some visitors
+#     10.times { success.visitors << VisitorsSeed::create }
 
-    # Contributions
-    9.times do
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], STATUS_OPTIONS[rand(4..7)] )
-    end
+#     # Contributions
+#     9.times do
+#       ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], STATUS_OPTIONS[rand(4..7)] )
+#     end
 
-    1.times do
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], STATUS_OPTIONS[rand(0..3)] )
-    end
+#     1.times do
+#       ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], STATUS_OPTIONS[rand(0..3)] )
+#     end
 
-  end  # story create
-end
+#   end  # story create
+# end
 
 
 
