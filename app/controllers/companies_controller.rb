@@ -1,5 +1,8 @@
 class CompaniesController < ApplicationController
 
+  # aws docs suggest first four actions, currently only need last one
+  before_action :set_s3_direct_post, only: [:new, :edit, :create, :update, :show]
+
   # GET /companies/new
   def new
     @company = Company.new
@@ -17,6 +20,9 @@ class CompaniesController < ApplicationController
     @product_categories = @company.product_categories_select # multiple select
     @products = @company.products_select # single select (for now)
     @industries = @company.industries_select # multiple select
+  end
+
+  def edit
   end
 
   def create
@@ -42,7 +48,11 @@ class CompaniesController < ApplicationController
   private
 
   def company_params
-    params.require(:company).permit(:name, :logo)
+    params.require(:company).permit(:name, :logo_url)
+  end
+
+  def set_s3_direct_post
+    @s3_direct_post = S3_BUCKET.presigned_post(key: "uploads/#{SecureRandom.uuid}/${filename}", success_action_status: '201', acl: 'public-read')
   end
 
 end

@@ -11,8 +11,13 @@
             <h3>Please register your company</h3><br>
 
             <%= form_for @company, url: companies_path,
-                html: { class: 'form-horizontal col-md-7',
-                    multipart: 'true' } do |f| %>
+                  html: { class: 'form-horizontal col-md-7 directUpload',
+                           data: {
+                             'form-data': (@s3_direct_post.fields),
+                                   'url': @s3_direct_post.url,
+                                  'host': URI.parse(@s3_direct_post.url).host
+                                  } } do |f| %>
+                                     <!-- multipart: 'true' } do |f| -->
 
               <div class="form-group required-input">
                 <%= f.label :name, class: 'col-md-3 control-label' %>
@@ -58,9 +63,9 @@
               </div>
 
               <div class="form-group">
-                <%= f.label :logo, nil, class: 'col-md-3 control-label' %>
+                <%= f.label "Logo", nil, class: 'col-md-3 control-label' %>
                 <div class='col-md-9'>
-                  <%= f.file_field :logo, class: 'form-control' %>
+                  <%= f.file_field :logo_url, class: 'form-control' %>
                 </div>
               </div>
 
@@ -74,9 +79,9 @@
             <% end %>  <!-- form_for -->
 
           <% else %>
-          
+
           <!-- Company Update -->
-          
+
 <div role='tabpanel' class='tab-pane content' id='settings'>
   <div class='container'>
     <div class='row'>
@@ -97,7 +102,7 @@
           </div>
 
           <ul id="myTab" class="nav nav-layout-sidebar nav-stacked">
-      
+
             <li class="active">
               <a href="#company_profile" data-toggle="tab">
               <i class="fa fa-edit"></i>
@@ -146,7 +151,7 @@
                 </h3>
               </div> <!-- /.heading-block -->
 
-      <div class='lead'>Company Name 
+      <div class='lead'>Company Name
 
   </div>
       <div class='row'>
@@ -160,7 +165,7 @@
                 <span class='glyphicon glyphicon-pencil bip-clickable'></span>
               </div>
         <div class='col-md-11' >
-          
+
           Cisco Systems
          </div>
 
@@ -170,7 +175,7 @@
 
       </div>  <!-- title row -->
 
-      <div class='lead'>Company Logo 
+      <div class='lead'>Company Logo
 
   </div>
       <div class='row'>
@@ -183,13 +188,13 @@
                   style='position:absolute; right:20px; margin-top:-3px'>
                 <span class='glyphicon glyphicon-pencil bip-clickable'></span>
               </div>
- 
-          
+
+
        <div class='col-md-4 text-center'>
           <img src="https://logo.clearbit.com/<%= @company.name.downcase %>.com"
               style="height:100px">
         </div>
-       
+
 
             </div>
           </div>
@@ -198,7 +203,7 @@
       </div>  <!-- title row -->
 
 
- 
+
 
             </div> <!-- /.tab-pane -->
 
@@ -210,8 +215,8 @@
                   Email Templates
                 </h3>
               </div> <!-- /.heading-block -->
-              
-      <div class='lead'>Request to Customer 
+
+      <div class='lead'>Request to Customer
         <div class='pull-right'>
      <%= link_to 'Restore Default Template', company_path(@company),
                 class: 'btn btn-secondary' %>
@@ -259,7 +264,7 @@
         </div>  <!-- well -->
 
       </div>  <!-- title row -->
-      <div class='lead'>Reminder to Customer 
+      <div class='lead'>Reminder to Customer
         <div class='pull-right'>
      <%= link_to 'Restore Default Template', company_path(@company),
                 class: 'btn btn-secondary' %>
@@ -276,15 +281,15 @@
                 <span class='glyphicon glyphicon-pencil bip-clickable'></span>
               </div>
 
-         
+
 
             </div>
           </div>
         </div>  <!-- well -->
 
       </div>  <!-- title row -->
-       
-            <div class='lead'>Final Reminder to Customer 
+
+            <div class='lead'>Final Reminder to Customer
         <div class='pull-right'>
      <%= link_to 'Restore Default Template', company_path(@company),
                 class: 'btn btn-secondary' %>
@@ -301,14 +306,14 @@
                 <span class='glyphicon glyphicon-pencil bip-clickable'></span>
               </div>
 
-         
+
 
             </div>
           </div>
         </div>  <!-- well -->
 
       </div>  <!-- title row -->
-                          
+
                </div> <!-- /.tab-pane -->
 
 
@@ -321,7 +326,7 @@
                 </h3>
               </div> <!-- /.heading-block -->
             <p>To be added: curator control    </p>
-  
+
               </div> <!-- /.tab-pane -->
 
 
@@ -354,12 +359,12 @@
   </div> <!-- .content -->
 
 
-      
+
     </div>  <!-- row -->
   </div>  <!-- container -->
 </div>  <!-- company settings  -->
 
-    <% end  %>  
+    <% end  %>
 
         </div>  <!-- portlet-body -->
       </div>  <!-- portlet -->

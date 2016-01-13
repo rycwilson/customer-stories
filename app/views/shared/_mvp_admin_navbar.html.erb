@@ -24,15 +24,13 @@
     <!-- navbar-header -->
     <div class="navbar-header">
 
-      <!-- TODO need a company_registered? helper method -->
-      <!-- for demo version, just load Cisco logo -->
-      <% if user_signed_in? %>
+      <% if user_signed_in? and current_user.company and current_user.company.logo_url %>
 
-        <%= image_tag "cisco-logo.jpg",
+        <img src="<%= current_user.company.logo_url %>"
+              class="navbar-brand navbar-brand-img" alt="">
+        <%#= image_tag "cisco-logo.jpg",
             { class: 'navbar-brand navbar-brand-img',
               style: 'width:90px', alt: 'Company Logo' } %>
-        <%#= image_tag current_user.company.logo.url(:thumb),
-              { class: 'navbar-brand navbar-brand-img', alt: 'Company Logo' } %>
 
       <% else %>
 

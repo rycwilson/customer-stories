@@ -1,6 +1,6 @@
 class StoriesController < ApplicationController
 
-  before_action :find_company, only: [:index, :create]
+  before_action :set_company, only: [:index, :create]
 
   def index
     if params[:filter]  # ajax GET request
@@ -116,7 +116,7 @@ class StoriesController < ApplicationController
         :challenge, :solution, :results, :published, :logo_published)
   end
 
-  def find_company
+  def set_company
     @company = Company.find params[:company_id]
   end
 

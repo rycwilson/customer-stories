@@ -40,6 +40,7 @@ class Company < ActiveRecord::Base
   end
 
   def create_email_templates
+    self.contribution_emails.destroy_all
     CSP.contribution_emails.each do |template|
       self.contribution_emails << template.dup
     end

@@ -7,6 +7,7 @@ class UserMailer < ApplicationMailer
     curator = contribution.success.curator
     company = curator.company
     story_example_id = Story.find_example
+    # curator_img_path = Rails.application.assets["#{curator.first_name.downcase}.jpg"].pathname.to_s
     template_name = contribution.role + "_request"
     template = company.contribution_emails.where(name:template_name).take
     host = "http://#{ENV['HOST_NAME']}"
@@ -31,6 +32,14 @@ class UserMailer < ApplicationMailer
                     .sub("[story_example_url]", story_example_url)
                     .sub("[opt_out_url]", opt_out_url)
                     .html_safe
+                    # .sub("[curator_img_path]", curator_img_path)
+
+
+    # sends file ok, but no thumbnail preview.  email settings?
+    # ryan = File.expand_path(Rails.root + 'app/assets/images/ryan.jpg')
+    # attachments['ryan.jpg'] = File.read(ryan)
+
+    # attachments.inline['ryan.jpg'] = File.read(ryan)
 
     mail to: contributor.email, from: "#{curator.full_name} <#{curator.email}>",
           subject: subject

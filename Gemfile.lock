@@ -227,7 +227,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  aws-sdk
+  aws-sdk (~> 2)
   best_in_place (~> 3.0.1)
   better_errors
   bower-rails
