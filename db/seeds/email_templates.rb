@@ -17,19 +17,17 @@ module EmailTemplatesSeed
 
     <p>Thank you,</p>
 
-    <img src='[curator_img_url]' alt='curator_img'>
+    <img src='[curator_img_url]' alt='curator_img'> <br>
 
     <span>[curator_full_name]</span> <br>
     <span>[curator_company]</span> <br>
-    <span>[curator_email] [curator_phone]</span> <br>
+    <span>[curator_email] | [curator_phone]</span> <br>
 
     <p>Note: Once I have the story fully written it will go to [customer_name] for approval before publishing.  See an example of a published story <a href='[story_example_url]'>here</a>.
 
     <p>If you cannot contribute to a success story, please give us <a href='[feedback_url]'>feedback</a> why.</p>
 
-    <p>Click to <a href='[opt_out_url]'>opt-out</a> altogether.</p>
-
-    <img src='[csp_img_url]' alt='csp_logo'>"
+    <p>Click to <a href='[opt_out_url]'>opt-out</a> altogether.</p>"
 
 
   CUSTOMER_REMIND1_SUBJECT = "Customer - first reminder"

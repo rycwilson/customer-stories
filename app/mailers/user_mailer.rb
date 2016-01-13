@@ -15,8 +15,7 @@ class UserMailer < ApplicationMailer
     feedback_url = "#{host}/contributions/#{contribution.id}/feedback"
     opt_out_url = "#{host}/contributions/#{contribution.id}/opt_out"
     story_example_url = "#{host}/stories/#{story_example_id}"
-    # csp_img_url = "https://s3-us-west-1.amazonaws.com/csp-development-assets/CS-powered-by.png"
-    # dan_img_url = "https://s3-us-west-1.amazonaws.com/csp-development-assets/dan.jpg"
+    dan_img_url = "https://s3-us-west-1.amazonaws.com/csp-development-assets/dan.jpg"
     subject = template.subject
                       .sub("[customer_name]", contribution.success.customer.name)
                       .sub("[company_name]", company.name)
@@ -30,14 +29,11 @@ class UserMailer < ApplicationMailer
                     .sub("[curator_full_name]", curator.full_name)
                     .sub("[curator_company]", company.name)
                     .sub("[curator_email]", curator.email)
-                    .sub("[curator_phone]", "123-456-7890")
+                    .sub("[curator_phone]", "415-555-7256")
                     .sub("[story_example_url]", story_example_url)
                     .sub("[opt_out_url]", opt_out_url)
+                    .sub("[curator_img_url]", dan_img_url)
                     .html_safe
-                    # .sub("[curator_img_url]", dan_img_url)
-                    # .sub("[csp_img_url]", csp_img_url)
-
-
 
     # sends file ok, but no thumbnail preview.  email settings?
     # ryan = File.expand_path(Rails.root + 'app/assets/images/ryan.jpg')
@@ -45,8 +41,9 @@ class UserMailer < ApplicationMailer
 
     # attachments.inline['ryan.jpg'] = File.read(ryan)
 
-    mail to: contributor.email, from: "#{curator.full_name} <#{curator.email}>",
-          subject: subject
+    mail     to: "#{contributor.full_name} <#{contributor.email}>",
+           from: "#{curator.full_name} <#{curator.email}>",
+        subject: subject
 
   end
 
