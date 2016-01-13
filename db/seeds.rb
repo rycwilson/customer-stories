@@ -26,7 +26,7 @@ STATUS_OPTIONS = ['pre_request', 'request', 'remind1', 'remind2', 'feedback', 'c
 dan = User.find_by(email:'***REMOVED***')
 ryan = User.find_by(email:'***REMOVED***')
 curators = [dan, ryan]
-cisco = Company.find_by(name:'Cisco')
+cisco = Company.find_by(name:'Cisco Systems')
 csp = Company.find_by(name:'CSP')
 
 # destroy contributions first so deleted users don't orphan contributions (violates foreign key costraint)
