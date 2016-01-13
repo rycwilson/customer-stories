@@ -13,9 +13,9 @@
             <%= form_for @company, url: companies_path,
                   html: { class: 'form-horizontal col-md-7 directUpload',
                            data: {
-                             'form-data': (@s3_direct_post.fields),
-                                   'url': @s3_direct_post.url,
-                                  'host': URI.parse(@s3_direct_post.url).host
+                             'form-data' => (@s3_direct_post.fields),
+                                   'url' => @s3_direct_post.url,
+                                  'host' => URI.parse(@s3_direct_post.url).host
                                   } } do |f| %>
                                      <!-- multipart: 'true' } do |f| -->
 
