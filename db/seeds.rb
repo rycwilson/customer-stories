@@ -24,8 +24,8 @@ ROLES = ['customer', 'partner', 'sales']
 STATUS_OPTIONS = ['pre_request', 'request', 'remind1', 'remind2', 'feedback', 'contribution', 'opt_out', 'did_not_respond']
 
 dan = User.find_by(email:'***REMOVED***')
-ryan = User.find_by(email:'***REMOVED***')
-curators = [dan, ryan]
+# ryan = User.find_by(email:'***REMOVED***')
+# curators = [dan, ryan]
 cisco = Company.find_by(name:'Cisco Systems')
 csp = Company.find_by(name:'CSP')
 
@@ -72,7 +72,7 @@ CUSTOMERS.each do |customer_name|
   success = Success.create
   customer.successes << success
   success.created_at = (rand*60).days.ago
-  success.curator = curators[rand(2)]  # randomly select dan or ryan as curator
+  success.curator = dan # curators[rand(2)]  # randomly select dan or ryan as curator
   success.save
   # 2/3 successes will have a story
   if rand(3) >= 1
