@@ -3,6 +3,7 @@ class Company < ActiveRecord::Base
   validates :name, presence: true, uniqueness: true
 
   has_many :users  # no dependent: :destroy users, handle more gracefully
+  has_many :invited_curators, dependent: :destroy
 
   has_many :customers, dependent: :destroy
   has_many :successes, through: :customers

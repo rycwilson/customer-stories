@@ -74,13 +74,16 @@ class UserMailer < ApplicationMailer
                     .html_safe
 
     if ['***REMOVED***', '***REMOVED***'].include? contributor.email
-      mail to: contributor.email, from: "#{curator.full_name} <#{curator.email}>",
-            subject: subject
+      mail     to: "#{contributor.full_name} <#{contributor.email}>",
+             from: "#{curator.full_name} <#{curator.email}>",
+          subject: subject
     else
-      mail to: '***REMOVED***', from: "#{curator.full_name} <#{curator.email}>",
-            subject: subject
+      mail     to: "Ryan Wilson <***REMOVED***>",
+             from: "#{curator.full_name} <#{curator.email}>",
+          subject: subject
     end
-  end
+
+  end # contribution_reminder
 
 end
 

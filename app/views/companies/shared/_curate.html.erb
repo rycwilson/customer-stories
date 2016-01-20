@@ -1,5 +1,6 @@
+<!-- <div id='curate' class="<%#= current_user.linkedin_url && @company.persisted? ? 'tab-pane content active' : 'tab-pane content' %>" role='tabpanel'> -->
 <!-- curate -->
-<div id='curate' class='tab-pane content active' role='tabpanel'>
+<div id='curate' class="<%= @company.persisted? && current_user.linkedin_url && @linkedin_data.nil? ? 'active tab-pane content' : 'tab-pane content' %>" role='tabpanel'>
   <div class='container'>
 
     <!-- new story modal -->

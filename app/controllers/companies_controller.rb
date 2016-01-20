@@ -6,8 +6,6 @@ class CompaniesController < ApplicationController
   # GET /companies/new
   def new
     @company = Company.new
-    # default industry tags
-    @industries = INDUSTRIES
     render :show
   end
 

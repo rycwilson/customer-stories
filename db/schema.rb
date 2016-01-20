@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160112230238) do
+ActiveRecord::Schema.define(version: 20160114174507) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -87,6 +87,15 @@ ActiveRecord::Schema.define(version: 20160112230238) do
 
   add_index "industry_categories", ["company_id"], name: "index_industry_categories_on_company_id", using: :btree
 
+  create_table "invited_curators", force: :cascade do |t|
+    t.string   "email"
+    t.integer  "company_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "invited_curators", ["company_id"], name: "index_invited_curators_on_company_id", using: :btree
+
   create_table "product_categories", force: :cascade do |t|
     t.string   "name"
     t.integer  "company_id"
@@ -157,14 +166,14 @@ ActiveRecord::Schema.define(version: 20160112230238) do
   add_index "successes", ["user_id"], name: "index_successes_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                  default: "",    null: false
-    t.string   "encrypted_password",     default: "",    null: false
+    t.string   "email",                  default: "", null: false
+    t.string   "encrypted_password",     default: "", null: false
     t.string   "first_name"
     t.string   "last_name"
     t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          default: 0,     null: false
+    t.integer  "sign_in_count",          default: 0,  null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
     t.inet     "current_sign_in_ip"
@@ -173,17 +182,17 @@ ActiveRecord::Schema.define(version: 20160112230238) do
     t.datetime "confirmed_at"
     t.datetime "confirmation_sent_at"
     t.string   "unconfirmed_email"
-    t.integer  "failed_attempts",        default: 0,     null: false
+    t.integer  "failed_attempts",        default: 0,  null: false
     t.string   "unlock_token"
     t.datetime "locked_at"
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
     t.integer  "company_id"
-    t.boolean  "admin",                  default: false
     t.string   "provider"
     t.string   "uid"
     t.string   "linkedin_url"
     t.string   "token"
+    t.integer  "role"
   end
 
   add_index "users", ["company_id"], name: "index_users_on_company_id", using: :btree
@@ -210,6 +219,7 @@ ActiveRecord::Schema.define(version: 20160112230238) do
   add_foreign_key "industries_successes", "industry_categories"
   add_foreign_key "industries_successes", "successes"
   add_foreign_key "industry_categories", "companies"
+  add_foreign_key "invited_curators", "companies"
   add_foreign_key "product_categories", "companies"
   add_foreign_key "product_cats_successes", "product_categories"
   add_foreign_key "product_cats_successes", "successes"

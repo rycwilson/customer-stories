@@ -1,0 +1,281 @@
+<div role='tabpanel' class='tab-pane content' id='company-settings'>
+  <div class='container'>
+    <div class='row'>
+      <div class='portlet portlet-default'>
+
+           <br class="xs-30 sm-0">
+
+  <div class="content">
+
+    <div class="container">
+
+      <div class="layout layout-main-right layout-stack-sm">
+
+        <div class="col-md-3 col-sm-4 layout-sidebar">
+
+          <div class="nav-layout-sidebar-skip">
+            <strong>Tab Navigation</strong> / <a href="#settings-content">Skip to Content</a>
+          </div>
+
+          <ul id="myTab" class="nav nav-layout-sidebar nav-stacked">
+
+            <li class="active">
+              <a href="#company_profile" data-toggle="tab">
+              <i class="fa fa-edit"></i>
+              &nbsp;&nbsp;Company Profile
+              </a>
+            </li>
+
+            <li>
+              <a href="#email_templates" data-toggle="tab">
+              <i class="fa fa-envelope-o"></i>
+              &nbsp;&nbsp;Email Templates
+              </a>
+            </li>
+
+            <li>
+              <a href="#curators" data-toggle="tab">
+              <i class="fa fa-users"></i>
+              &nbsp;&nbsp;Curators
+              </a>
+            </li>
+
+            <li>
+              <a href="#billing" data-toggle="tab">
+              <i class="fa fa-credit-card"></i>
+              &nbsp;&nbsp;Billing
+              </a>
+            </li>
+
+          </ul>
+
+        </div> <!-- /.col -->
+
+
+
+        <div class="col-md-9 col-sm-8 layout-main">
+
+          <div id="settings-content" class="tab-content stacked-content">
+
+
+
+            <div class="tab-pane fade in active" id="company_profile">
+
+              <div class="heading-block">
+                <h3>
+                  Update Company Profile
+                </h3>
+              </div> <!-- /.heading-block -->
+
+      <div class='lead'>Company Name
+
+  </div>
+      <div class='row'>
+
+        <div class='well'>
+          <div class="container-fluid">
+            <div class="row">
+
+              <div id='edit-company-name'
+                  style='position:absolute; right:20px; margin-top:-3px'>
+                <span class='glyphicon glyphicon-pencil bip-clickable'></span>
+              </div>
+        <div class='col-md-11' >
+
+          Cisco Systems
+         </div>
+
+            </div>
+          </div>
+        </div>  <!-- well -->
+
+      </div>  <!-- title row -->
+
+      <div class='lead'>Company Logo
+
+  </div>
+      <div class='row'>
+
+        <div class='well'>
+          <div class="container-fluid">
+            <div class="row">
+
+              <div id='edit-company-logo'
+                  style='position:absolute; right:20px; margin-top:-3px'>
+                <span class='glyphicon glyphicon-pencil bip-clickable'></span>
+              </div>
+
+
+       <div class='col-md-4 text-center'>
+          <img src="<%= @company.logo_url %>"
+              style="height:100px">
+        </div>
+
+
+            </div>
+          </div>
+        </div>  <!-- well -->
+
+      </div>  <!-- title row -->
+
+
+
+
+            </div> <!-- /.tab-pane -->
+
+
+            <div class="tab-pane fade" id="email_templates">
+
+              <div class="heading-block">
+                <h3>
+                  Email Templates
+                </h3>
+              </div> <!-- /.heading-block -->
+
+      <div class='lead'>Request to Customer
+        <div class='pull-right'>
+     <%= link_to 'Restore Default Template', company_path(@company),
+                class: 'btn btn-secondary' %>
+        </div>
+  </div>
+      <div class='row'>
+
+        <div class='well'>
+          <div class="container-fluid">
+            <div class="row">
+
+              <div id='edit-customer-email1'
+                  style='position:absolute; right:20px; margin-top:-3px'>
+                <span class='glyphicon glyphicon-pencil bip-clickable'></span>
+              </div>
+        <div class='col-md-11' >
+              <p>Dear [contributor_first_name],</p>
+
+    <p>My name is [curator_first_name] and I’ll be curating a story about the success of your project.  The value of participating is it will be closely connected with LinkedIn so it’s an opportunity to include in your CV as validation of your great work.  The story will also be used as a case study to help others learn about solving similar challenges.</p>
+
+    <p>Best of all, I’ll be doing the work narrating the story and all I need from you are some notes from your perspective.  It will take maximum 5 minutes:</p>
+
+    <a href='[contribution_url]'>Contribute</a>
+
+    <p>If you cannot contribute to a success story, please give us feedback why:</p>
+
+    <a href='[feedback_url]'>Feedback</a>
+
+    <p>If you have any questions, please email or call me.</p>
+
+    <p>Thank you,</p>
+
+    <span>[curator_full_name]</span> <br>
+    <span>[curator_company]</span> <br>
+    <span>[curator_email]</span> <br>
+    <span>[curator_phone]</span> <br>
+
+    <p>To opt out of a story all together, please click here:</p>
+
+    <a href='[opt_out_url]'>Opt-out</a>
+         </div>
+
+            </div>
+          </div>
+        </div>  <!-- well -->
+
+      </div>  <!-- title row -->
+      <div class='lead'>Reminder to Customer
+        <div class='pull-right'>
+     <%= link_to 'Restore Default Template', company_path(@company),
+                class: 'btn btn-secondary' %>
+        </div>
+  </div>
+      <div class='row'>
+
+        <div class='well'>
+          <div class="container-fluid">
+            <div class="row">
+
+              <div id='edit-customer-email2'
+                  style='position:absolute; right:20px; margin-top:-3px'>
+                <span class='glyphicon glyphicon-pencil bip-clickable'></span>
+              </div>
+
+
+
+            </div>
+          </div>
+        </div>  <!-- well -->
+
+      </div>  <!-- title row -->
+
+            <div class='lead'>Final Reminder to Customer
+        <div class='pull-right'>
+     <%= link_to 'Restore Default Template', company_path(@company),
+                class: 'btn btn-secondary' %>
+        </div>
+  </div>
+      <div class='row'>
+
+        <div class='well'>
+          <div class="container-fluid">
+            <div class="row">
+
+              <div id='edit-customer-email3'
+                  style='position:absolute; right:20px; margin-top:-3px'>
+                <span class='glyphicon glyphicon-pencil bip-clickable'></span>
+              </div>
+
+
+
+            </div>
+          </div>
+        </div>  <!-- well -->
+
+      </div>  <!-- title row -->
+
+               </div> <!-- /.tab-pane -->
+
+
+
+            <div class="tab-pane fade" id="curators">
+
+              <div class="heading-block">
+                <h3>
+                  Add and Remove Curators
+                </h3>
+              </div> <!-- /.heading-block -->
+            <p>To be added: curator control    </p>
+
+              </div> <!-- /.tab-pane -->
+
+
+
+            <div class="tab-pane fade" id="billing">
+
+              <div class="heading-block">
+                <h3>
+                  Manage Payment and Billing
+                </h3>
+              </div> <!-- /.heading-block -->
+          <p>To be added: billing    </p>
+
+       </div> <!-- /.tab-pane -->
+
+
+
+
+              </div> <!-- /.tab-pane -->
+
+          </div> <!-- /.tab-content -->
+
+        </div> <!-- /.col -->
+
+      </div> <!-- /.row -->
+
+
+    </div> <!-- /.container -->
+
+  </div> <!-- .content -->
+
+
+
+    </div>  <!-- row -->
+  </div>  <!-- container -->
+</div>  <!-- company settings  -->

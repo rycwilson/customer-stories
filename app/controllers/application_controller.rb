@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  include ApplicationHelper
+  include ApplicationHelper #  really need this? probably shouldn't be calling helper methods in controllers
 
   # Devise - whitelist User params
   before_action :configure_permitted_parameters, if: :devise_controller?
@@ -19,9 +19,17 @@ class ApplicationController < ActionController::Base
   end
 
   # change devise redirect on sign in
-  def after_sign_in_path_for(user)
-    return company_path(user.company_id) if user.company_id
-    new_company_path
+  def after_sign_in_path_for user
+    if user.company_id  # returning user
+      company_path user.company_id
+    # elsif invited_curator = InvitedCurator.find_by(email: user.email)
+    #   user.update role: 2, company_id: invited_curator.company_id  # curator
+    #   company_path user.company_id
+      # TODO: need a callback here to destroy invited_curator
+    else
+      # user.update role: 1  # company admin
+      new_company_path
+    end
   end
 
 end

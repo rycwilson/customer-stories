@@ -3,8 +3,8 @@
 class User < ActiveRecord::Base
 
   belongs_to :company
-  has_many :contributions # no (dependent: :destroy)
-  has_many :successes # no (dependent: :destroy)
+  has_many :contributions # contributor, no (dependent: :destroy)
+  has_many :successes # curator, no (dependent: :destroy)
 
   # Adding signup code for beta control
   attr_accessor :sign_up_code
@@ -19,7 +19,15 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable,
          :lockable#, :confirmable
 
-  # This is for users signing up
+  def full_name
+    self.first_name + " " + self.last_name
+  end
+
+  def is_admin?
+    self.role == 1
+  end
+
+  # This is for users signing up via Oauth
   # Not presently using this, but may in the future
   # def self.create_from_omniauth auth
   #   create! do |user|
@@ -28,16 +36,5 @@ class User < ActiveRecord::Base
   #     # user.name = auth["info"]["nickname"]
   #   end
   # end
-
-  # def new_token
-  #   SecureRandom.hex(16).tap do |random_token|
-  #     update_attributes token: random_token
-  #     Rails.logger.info("Set new token for user #{ id }")
-  #   end
-  # end
-
-  def full_name
-    self.first_name + " " + self.last_name
-  end
 
 end

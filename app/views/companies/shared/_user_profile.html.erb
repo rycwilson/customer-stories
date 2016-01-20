@@ -1,0 +1,40 @@
+<!-- profile -->
+<div id='user-profile' role='tabpanel'
+    class="<%= @company.persisted? && (current_user.linkedin_url.nil? || @linkedin_data) ? 'active tab-pane content' : 'tab-pane content' %>">
+  <div class='container'>
+    <div class='row'>
+
+    <!--         <div class="profile-avatar">
+              <img src="../../global/img/avatars/avatar-2-lg.jpg" class="profile-avatar-img img-responsive thumbnail" alt="Profile Image">
+            </div>  -->
+
+      <div class="col-md-5">
+
+        <% if current_user.linkedin_url %>
+
+          <script src="//platform.linkedin.com/in.js" type="text/javascript"></script>
+          <script type="IN/MemberProfile" data-id="<%= current_user.linkedin_url %>" data-format="inline" data-related="true"></script>
+
+        <% else %>
+
+          <%= link_to "Connect to LinkedIn", "/auth/linkedin", class: 'btn btn-default',
+            style: 'background-color: #2672ae; color: white' %>
+
+        <% end %>
+
+      </div>
+
+      <% if @linkedin_data %>
+
+        <div class="col-md-5">
+          <h3>Data from LinkedIn:</h3>
+          <% @linkedin_data.each do |key, value| %>
+            <p><%= key %>: <%= value %></p>
+          <% end %>
+        </div>
+
+      <% end %>
+
+    </div>  <!-- row -->
+  </div>  <!-- container -->
+</div>  <!-- user-profile -->
