@@ -90,7 +90,7 @@
             </div>
 
             <%= form_for current_user,
-                  url: update_user_path(current_user),
+                  url: registration_path(current_user),
                method: 'PUT',
                  html: { class: 'form-horizontal directUpload',
                           data: { 'form-data' => (@s3_direct_post.fields),
