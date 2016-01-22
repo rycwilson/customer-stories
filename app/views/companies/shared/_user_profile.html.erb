@@ -67,10 +67,12 @@
                   <div class='col-md-7'>
 
                     <div class="fileinput <%= current_user.photo_url ? 'fileinput-exists' : 'fileinput-new' %>" data-provides="fileinput" style='margin:0'>
+
                       <div class="fileinput-new thumbnail"
                           style="width: 100px; height: 100px;">
                         <img src="https://s3-us-west-1.amazonaws.com/csp-development-assets/user-photo-missing.png" alt="user-photo-missing.png">
                       </div>
+
                       <div class="fileinput-preview fileinput-exists thumbnail"
                           data-trigger="fileinput"
                           style="width: 100px; height: 100px;">
@@ -93,6 +95,7 @@
                           Remove
                         </a>
                       </div>
+
                     </div> <!-- /.fileupload -->
                   </div>
                 </div>

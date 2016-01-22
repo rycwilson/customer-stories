@@ -22,9 +22,21 @@
 // require_tree ./sitewide (under construction)
 
 // flash messaging
-setTimeout(function () {
-  $('#flash').slideUp();
-}, 3000);
+
+
+$(function() {
+
+  setTimeout(function () {
+    $('#flash').slideUp();
+  }, 3000);
+
+  // clcear localStorage
+  $('#logout').on('click', function () {
+    localStorage.clear();
+  });
+
+});
+
 
 
 
