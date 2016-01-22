@@ -4,58 +4,77 @@
     <div class='row'>
       <div class='portlet portlet-default'>
 
-        <div class="portlet-header">
-          <h4 class="portlet-title">
-            <u>Promote</u>
-          </h4>
-        </div>
+                <div class="portlet-header">
 
+             <h5 class="portlet-title">
+            <b>Ad Networks: </b> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+              <u>
+        <span style='display:inline-block'>&nbsp;&nbsp; &nbsp;
+        <input type="checkbox" id='publish-story'>
+        <label for="publish-story">Enable Retargeting</label> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
+
+        <input type="checkbox" id='publish-story'>
+        <label for="publish-story">Enable CRM Targeting</label> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
+
+
+        <input type="checkbox" id='publish-story'>
+        <label for="publish-story">Enable Audience Targeting</label>
+
+</span>
+    </u>
+          </h5>
+
+
+
+
+        </div>
         <div class='portlet-body'>
 
-          <div class="feature-lg">
+                 <div class="feature-lg">
 
-            <div class="row">
-
-              <div class="col-sm-4">
-                <figure class="thumbnail">
-                  <%= image_tag 'mvp-landing/2014-10-26_1640.png',
-                    { class: 'img-responsive layout-main-left center-block',
-                      style: 'width: 100%;', alt: '' } %>
-                </figure>
-              </div><!-- /.col -->
-
-              <div class="col-sm-6">
-
-                <br class="xs-30 sm-0">
-
-                <div class="feature-content">
-
-                  <h3>Promote Stories in Ad Networks</h3>
-
-                  <div>
-                    <input type="checkbox" id='publish-story'>
-                    <label for="publish-story">Enable Retargeting</label>
-                  </div>  <br>
-
-                  <div>
-                    <input type="checkbox" id='publish-story'>
-                    <label for="publish-story">Enable CRM Targeting</label>
-                  </div>  <br>
-
-                  <div>
-                    <input type="checkbox" id='publish-story'>
-                    <label for="publish-story">Enable Audience Targeting</label>
-                  </div>
-                </div> <!-- /.feature-content -->
-
-              </div><!-- /.col -->
-            </div> <!-- /.row -->
-
-          </div> <!-- /.feature-lg -->
+          <div class="row">
 
 
-        </div>  <!-- portlet body -->
 
+               <% @company.stories.each do |story| %>
+                        <div class="col-sm-4">
+              <div id="ad-wrap1">
+             <img id="ad-logo" src="<%= @company.logo_url %>"  />
+              <div id="ad1-text"><%= story.success.customer.name =%> achieves <%= rand(50)+50 =%>% higher Data Center speeds with Cisco UCS </div>
+              <button id="ad-btn">Read Story</button>
+             <img id="ad-powered" src="http://content.screencast.com/users/danlindblom/folders/Jing/media/2572803a-857a-40a8-b31a-e507bad0aa1b/00001977.png"  />
+                </div>
+              <br>
+             <br>
+      <br>
+            </div><!-- /.col -->
+ <% end %>
+            <div class="col-sm-6">
+
+              <br class="xs-30 sm-0">
+
+              <div class="feature-content">
+
+           <% @company.stories.each do |story| %>
+             <div id="ad-wrap2">
+             <img id="ad-logo" src="<%= @company.logo_url %>"  />
+             <div id="ad2-text"><%= story.success.customer.name =%> achieves <%= rand(50)+50 =%>% better Data Center efficiency with Cisco UCS </div>
+              <button id="ad-btn">Read Story</button>
+             <img id="ad-powered" src="http://content.screencast.com/users/danlindblom/folders/Jing/media/2572803a-857a-40a8-b31a-e507bad0aa1b/00001977.png"  />
+            </div>
+            <br>
+            <br>
+            <br>
+            <% end %>
+            </div> <!-- /.feature-content -->
+            </div><!-- /.col -->
+
+          </div> <!-- /.row -->
+
+        </div> <!-- /.feature-lg -->
+
+
+        </div>
       </div>  <!-- portlet -->
     </div>  <!-- row -->
   </div>  <!-- container -->

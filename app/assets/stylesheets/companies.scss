@@ -3,8 +3,9 @@
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
 /*
-*= require magnific-popup/dist/magnific-popup
 *= require mvpready-admin
+*= require bootstrap-jasny/dist/css/jasny-bootstrap.css
+*= require magnific-popup/dist/magnific-popup
 *= require datatables-plugins/integration/bootstrap/3/dataTables.bootstrap
 *= require select2/dist/css/select2
 *= require select2-bootstrap-theme/dist/select2-bootstrap
@@ -27,4 +28,85 @@
   padding-left: 0.2em;
   color:   white;
   display: none;
+}
+
+
+// Promote settings
+#ad-wrap1 {
+    position:relative; /* make this relative to have the inner div absolute without breaking out */
+    width: 300px;  /* fix the width or else it'll be the entire page's width */
+    height: 250px;
+    background-color: white;
+    border: 1px solid grey
+}
+
+#ad-wrap2 {
+    position:relative; /* make this relative to have the inner div absolute without breaking out */
+    width: 728px;  /* fix the width or else it'll be the entire page's width */
+    height: 90px;
+    background-color: white;
+    border: 1px solid grey
+}
+
+#ad1-text {
+    text-align: center;
+    position: absolute;
+    font-family: Arial;
+    font-size: 24px;
+    padding: 5px 10px 5px 10px;
+    top: 10px;
+    bottom: 20px;
+    color:gray
+}
+
+#ad2-text {
+    text-align: center;
+    position: absolute;
+    font-family: Arial;
+    font-size: 24px;
+    padding: 5px 160px 5px 140px;
+    top: 5px;
+    bottom: 20px;
+    color:gray
+}
+
+#ad-logo {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
+    height: 50px
+}
+
+#ad-powered {
+    position: absolute;
+    right: 20px;
+    bottom: 5px;
+    height: 15px
+}
+
+
+#ad-btn {
+  position: absolute;
+  right: 20px;
+  bottom: 35px;
+  background: #3498db;
+  background-image: -webkit-linear-gradient(top, #3498db, #85CEE6);
+  background-image: -moz-linear-gradient(top, #3498db, #85CEE6);
+  background-image: -ms-linear-gradient(top, #3498db, #85CEE6);
+  background-image: -o-linear-gradient(top, #3498db, #85CEE6);
+  background-image: linear-gradient(to bottom, #3498db, #85CEE6);
+  -webkit-border-radius: 6;
+  -moz-border-radius: 6;
+  border-radius: 6px;
+  text-shadow: 0px 1px 3px #666666;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 18px;
+  padding: 5px 10px 5px 10px;
+  text-decoration: none;
+}
+
+#ad-btn:hover {
+  background: #85CEE6;
+  text-decoration: none;
 }

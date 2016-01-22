@@ -38,3 +38,347 @@
     </div>  <!-- row -->
   </div>  <!-- container -->
 </div>  <!-- user-profile -->
+
+<div class="content">
+  <div class="container">
+    <div class="layout layout-main-right layout-stack-sm">
+      <div class="col-md-3 col-sm-4 layout-sidebar">
+
+        <div class="nav-layout-sidebar-skip">
+          <strong>Tab Navigation</strong> / <a href="#settings-content">Skip to Content</a>
+        </div>
+
+        <ul class="nav nav-layout-sidebar nav-stacked">
+
+          <li class="active">
+            <a href="#profile-tab" data-toggle="tab">
+            <i class="fa fa-user"></i>
+            &nbsp;&nbsp;Profile Settings
+            </a>
+          </li>
+
+          <li>
+            <a href="#password-tab" data-toggle="tab">
+            <i class="fa fa-lock"></i>
+            &nbsp;&nbsp;Change Password
+            </a>
+          </li>
+
+          <li>
+            <a href="#my-contributions-tab" data-toggle="tab">
+            <i class="fa fa-users"></i>
+            &nbsp;&nbsp;Contributions
+            </a>
+          </li>
+
+          <li>
+            <a href="#notifications-tab" data-toggle="tab">
+            <i class="fa fa-bullhorn"></i>
+            &nbsp;&nbsp;Notifications
+            </a>
+          </li>
+
+        </ul>
+      </div> <!-- /.col -->
+
+      <div class="col-md-9 col-sm-8 layout-main">
+        <div id="settings-content" class="tab-content stacked-content">
+          <div class="tab-pane fade in active" id="profile-tab">
+
+            <div class="heading-block">
+              <h3> Edit Profile </h3>
+            </div>
+
+            <%= form_for current_user,
+                  url: update_user_path(current_user),
+               method: 'PUT',
+                 html: { class: 'form-horizontal directUpload',
+                          data: { 'form-data' => (@s3_direct_post.fields),
+                                        'url' => @s3_direct_post.url,
+                                       'host' => URI.parse(@s3_direct_post.url).host
+                                } } do |f| %>
+
+              <div class="form-group">
+                <%= f.label "Photo", nil, class: 'col-md-2 control-label' %>
+                <div class='col-md-7'>
+
+                  <%= f.file_field :photo_url, class: 'form-control' %>
+
+                  <!-- <div class="fileinput fileinput-new" data-provides="fileinput">
+                    <div class="fileinput-preview thumbnail" data-trigger="fileinput" style="min-width: 125px; min-height: 125px;">
+                      <img src="../../global/img/avatars/avatar-3-md.jpg" alt="Avatar">
+                    </div>
+                    <div>
+                      <span class="btn btn-default btn-file"><span class="fileinput-new">Select image</span><span class="fileinput-exists">Change</span><input type="file" name="..."></span>
+                      <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">Remove</a>
+                    </div>
+                  </div> --> <!-- /.fileupload -->
+                </div>
+              </div>
+
+              <div class="form-group">
+                <%= f.label "First Name", nil, class: 'col-md-2 control-label' %>
+                <div class="col-md-7">
+                  <%= f.text_field :first_name, class: 'form-control' %>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <%= f.label "Last Name", nil, class: 'col-md-2 control-label' %>
+                <div class="col-md-7">
+                  <%= f.text_field :last_name, class: 'form-control' %>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <%= f.label "Email Address", nil, class: 'col-md-2 control-label' %>
+                <div class="col-md-7">
+                  <%= f.text_field :email, class: 'form-control' %>
+                </div>
+              </div>
+
+              <!-- <div class="form-group">
+                <div class="col-md-7 col-md-offset-2">
+                  <button type="submit" class="btn btn-primary">Save Changes</button>
+                  &nbsp;
+                  <button type="reset" class="btn btn-default">Cancel</button>
+                </div>
+              </div> -->
+
+            <% end %>
+
+          </div> <!-- /.tab-pane -->
+
+          <div class="tab-pane fade" id="password-tab">
+
+            <div class="heading-block">
+              <h3>
+                Change Password
+              </h3>
+            </div> <!-- /.heading-block -->
+
+            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes.</p>
+
+            <br><br>
+
+            <form action="./page-settings.html" class="form-horizontal">
+
+              <div class="form-group">
+
+                <label class="col-md-3 control-label">Old Password</label>
+
+                <div class="col-md-7">
+                  <input type="password" name="old-password" class="form-control" />
+                </div> <!-- /.col -->
+
+              </div> <!-- /.form-group -->
+
+
+              <hr>
+
+
+              <div class="form-group">
+
+                <label class="col-md-3 control-label">New Password</label>
+
+                <div class="col-md-7">
+                  <input type="password" name="new-password-1" class="form-control" />
+                </div> <!-- /.col -->
+
+              </div> <!-- /.form-group -->
+
+
+              <div class="form-group">
+
+                <label class="col-md-3 control-label">New Password Confirm</label>
+
+                <div class="col-md-7">
+                  <input type="password" name="new-password-2" class="form-control" />
+                </div> <!-- /.col -->
+
+              </div> <!-- /.form-group -->
+
+
+              <div class="form-group">
+
+                <div class="col-md-7 col-md-push-3">
+                  <button type="submit" class="btn btn-primary">Save Changes</button>
+                  &nbsp;
+                  <button type="reset" class="btn btn-default">Cancel</button>
+                </div> <!-- /.col -->
+
+              </div> <!-- /.form-group -->
+
+            </form>
+
+          </div> <!-- /.tab-pane -->
+
+          <div class="tab-pane fade" id="my-contributions-tab">
+
+            <div class="heading-block">
+              <h3>
+                Notification Settings
+              </h3>
+            </div> <!-- /.heading-block -->
+
+            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes.</p>
+
+            <br><br>
+
+            <form action="./page-settings.html" class="form form-horizontal">
+
+              <div class="form-group">
+
+                <label class="col-md-3 control-label">Toggle Notifications</label>
+
+                <div class="col-md-7">
+
+                  <div class="checkbox">
+                    <label>
+                    <input value="" type="checkbox" checked>
+                    Send me security emails
+                    </label>
+                  </div> <!-- /.checkbox -->
+
+                  <div class="checkbox">
+                    <label>
+                    <input value="" type="checkbox" checked>
+                    Send system emails
+                    </label>
+                  </div> <!-- /.checkbox -->
+
+                  <div class="checkbox">
+                    <label>
+                    <input value="" type="checkbox">
+                    Lorem ipsum dolor sit amet
+                    </label>
+                  </div> <!-- /.checkbox -->
+
+                  <div class="checkbox">
+                    <label>
+                    <input value="" type="checkbox">
+                    Laborum, quam iure quibusdam
+                    </label>
+                  </div> <!-- /.checkbox -->
+
+                </div> <!-- /.col -->
+
+              </div> <!-- /.form-group -->
+
+
+              <div class="form-group">
+
+                <label class="col-md-3 control-label">Email for Notifications</label>
+
+                <div class="col-md-7">
+                  <select name="email_notifications" class="form-control">
+                    <option value="1">john@mvpready.com</option>
+                    <option value="2">mary@mvpready.com</option>
+                    <option value="3">chris@mvpready.com</option>
+                  </select>
+                </div> <!-- /.col -->
+
+              </div> <!-- /.form-group -->
+
+
+              <div class="form-group">
+
+                <div class="col-md-7 col-md-push-3">
+                  <button type="submit" class="btn btn-primary">Save Changes</button>
+                  &nbsp;
+                  <button type="reset" class="btn btn-default">Cancel</button>
+                </div> <!-- /.col -->
+
+              </div> <!-- /.form-group -->
+
+            </form>
+
+          </div> <!-- /.tab-pane -->
+
+          <div class="tab-pane fade" id="notifications-tab">
+
+            <div class="heading-block">
+              <h3>
+                Notification Settings
+              </h3>
+            </div> <!-- /.heading-block -->
+
+            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes.</p>
+
+            <br><br>
+
+            <form action="./page-settings.html" class="form form-horizontal">
+
+              <div class="form-group">
+
+                <label class="col-md-3 control-label">Toggle Notifications</label>
+
+                <div class="col-md-7">
+
+                  <div class="checkbox">
+                    <label>
+                    <input value="" type="checkbox" checked>
+                    Send me security emails
+                    </label>
+                  </div> <!-- /.checkbox -->
+
+                  <div class="checkbox">
+                    <label>
+                    <input value="" type="checkbox" checked>
+                    Send system emails
+                    </label>
+                  </div> <!-- /.checkbox -->
+
+                  <div class="checkbox">
+                    <label>
+                    <input value="" type="checkbox">
+                    Lorem ipsum dolor sit amet
+                    </label>
+                  </div> <!-- /.checkbox -->
+
+                  <div class="checkbox">
+                    <label>
+                    <input value="" type="checkbox">
+                    Laborum, quam iure quibusdam
+                    </label>
+                  </div> <!-- /.checkbox -->
+
+                </div> <!-- /.col -->
+
+              </div> <!-- /.form-group -->
+
+
+              <div class="form-group">
+
+                <label class="col-md-3 control-label">Email for Notifications</label>
+
+                <div class="col-md-7">
+                  <select name="email_notifications" class="form-control">
+                    <option value="1">john@mvpready.com</option>
+                    <option value="2">mary@mvpready.com</option>
+                    <option value="3">chris@mvpready.com</option>
+                  </select>
+                </div> <!-- /.col -->
+
+              </div> <!-- /.form-group -->
+
+
+              <div class="form-group">
+
+                <div class="col-md-7 col-md-push-3">
+                  <button type="submit" class="btn btn-primary">Save Changes</button>
+                  &nbsp;
+                  <button type="reset" class="btn btn-default">Cancel</button>
+                </div> <!-- /.col -->
+
+              </div> <!-- /.form-group -->
+
+            </form>
+
+          </div> <!-- /.tab-pane -->
+
+        </div> <!-- /.tab-content -->
+      </div> <!-- /.col -->
+    </div> <!-- /.row -->
+  </div> <!-- /.container -->
+</div> <!-- .content -->

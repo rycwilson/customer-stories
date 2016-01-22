@@ -14,8 +14,15 @@ Rails.application.routes.draw do
       sessions: 'users/sessions',
       registrations: 'users/registrations',
       passwords: 'users/passwords',
-      confirmations: 'users/confirmations'
+      confirmations: 'users/confirmations',
+      unlocks_controller: 'users/unlocks',
+      omniauth_callbacks_controller: 'users/omniauth_callbacks'
     }
+
+  # customize Devise routes
+  # devise_scope :user do
+  #   put 'users/:id', to: 'users/registrations#update', as: 'update_user'
+  # end
 
   #
   # Companies and Stories
