@@ -39,7 +39,15 @@ before_action :set_s3_direct_post, only: [:edit, :update]
     super
   end
 
-  # protected
+  protected
+
+  def update_resource user, params
+    resource.update_without_password params
+  end
+
+  def after_update_path_for user
+    company_path user.company_id
+  end
 
   # If you have extra params to permit, append them to the sanitizer.
   # def configure_sign_up_params

@@ -15,8 +15,24 @@
 
 $(function () {
 
+  // not the best solution for remembering active tab, but it works
+  var lastTab = localStorage.getItem('lastTab');
+  if (lastTab) {
+    $('[href="' + lastTab + '"]').tab('show');
+  }
+
   configSelect2();
   configS3Upload();
+  initListeners();
+
+});
+
+function initListeners() {
+
+  // remember the last active tab for server submit / page refresh
+  $('a[data-toggle="tab"]').on('shown.bs.tab', function () {
+    localStorage.setItem('lastTab', $(this).attr('href'));
+  });
 
   // reset new story modal form
   $('.modal').on('hidden.bs.modal', function () {
@@ -27,7 +43,7 @@ $(function () {
     $('.new-story-tags').val('').trigger('change');  // multiple select
   });
 
-});
+}
 
 // It would be nice to have a .tags class to which the common
 // settings (theme, tags) can be applied, but that doesn't work.
@@ -90,7 +106,7 @@ function configS3Upload () {
     var submitButton = form.find('input[type="submit"]');
     var progressBar  = $("<div class='bar'></div>");
     var barContainer = $("<div class='progress'></div>").append(progressBar);
-    fileInput.after(barContainer);
+    // fileInput.after(barContainer);
     fileInput.fileupload({
       fileInput:       fileInput,
       url:             form.data('url'),
