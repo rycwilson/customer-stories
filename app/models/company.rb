@@ -16,9 +16,10 @@ class Company < ActiveRecord::Base
 
   has_many :contribution_emails, dependent: :destroy
 
+  # presently uploading direct to S3, paperclip not used
   # paperclip
-  has_attached_file :logo, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: "companies/:style/missing_logo.png"
-  validates_attachment_content_type :logo, content_type: /\Aimage\/.*\Z/
+  # has_attached_file :logo, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: "companies/:style/missing_logo.png"
+  # validates_attachment_content_type :logo, content_type: /\Aimage\/.*\Z/
 
   CSP = self.find_by(name:'CSP')
 
@@ -112,5 +113,62 @@ class Company < ActiveRecord::Base
     stories
   end
 
+  # slightly different than updating tags for a story
+  def update_tags new_tags
+    old_industry_tags = self.industry_categories
+    old_product_cat_tags = self.product_categories
+    old_product_tags = self.products
+    # remove deleted industry tags ...
+    old_industry_tags.each do |industry_category|
+      if new_tags[:industry].nil? || !(new_tags[:industry].include? industry_category.id.to_s)
+        # remove the tag from any successes
+        IndustriesSuccess.where(industry_category_id: industry_category.id).destroy_all
+        industry_category.destroy
+      end
+    end
+    # add new industry tags ...
+    new_tags[:industry].each do |industry_id|
+      if industry_id.to_i == 0 # new (custom or default) tag
+        self.industry_categories << IndustryCategory.create(name: industry_id)
+      else
+        # do nothing
+      end
+    end unless new_tags[:industry].nil?
+    # remove deleted product category tags ...
+    old_product_cat_tags.each do |product_category|
+      if new_tags[:product_category].nil? || !(new_tags[:product_category].include? product_category.id.to_s)
+        # remove the tag from any successes it appears in
+        ProductCatsSuccess.where(product_category_id: product_category.id).destroy_all
+        # destroy the tag
+        product_category.destroy
+      end
+    end
+    # add new product category tags ...
+    new_tags[:product_category].each do |product_category_id|
+      if product_category_id.to_i == 0 # new tag
+        self.product_categories << ProductCategory.create(name: product_category_id)
+      else
+        # do nothing
+      end
+    end unless new_tags[:product_category].nil?
+    # remove deleted product tags ...
+    old_product_tags.each do |product|
+      if new_tags[:product].nil? || !(new_tags[:product].include? product.id.to_s)
+        # remove the tag from any successes it appears in
+        ProductsSuccess.where(product_id: product.id).destroy_all
+        # destroy the tag
+        product.destroy
+      end
+    end
+    # add new product tags ...
+    new_tags[:product].each do |product_id|
+      if product_id.to_i == 0 # new tag
+        self.products << Product.create(name: product_id)
+      else
+        # do nothing
+      end
+    end unless new_tags[:product].nil?
+
+  end
 
 end

@@ -51,6 +51,12 @@ function initListeners() {
 // any others will be ignored
 function configSelect2 () {
 
+  $('.company-tags').select2({
+    theme: 'bootstrap',
+    tags: true,
+    placeholder: 'add tags'
+  });
+
   // has the curate tab content been rendered?
   if ($('#curate').length) {
     // is there a list of existing customers to choose from?
@@ -73,29 +79,6 @@ function configSelect2 () {
     });
 
   }
-
-  $(".industry-tags").select2({
-    theme: 'bootstrap',
-    tags: true,
-    placeholder: 'select or add new industries'
-  });
-
-  // company registration
-  // TODO: disable autocomplete
-  $(".prod-cat-tags-reg").select2({
-    theme: 'bootstrap',
-    tags: true,
-    placeholder: 'add product categories'
-  });
-
-  // company registration
-  // TODO: disable autocomplete
-  $(".products-reg").select2({
-    theme: 'bootstrap',
-    tags: true,
-    placeholder: 'add products'
-  });
-
 }
 
 function configS3Upload () {
