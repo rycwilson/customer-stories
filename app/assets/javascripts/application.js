@@ -30,7 +30,7 @@ $(function() {
     $('#flash').slideUp();
   }, 3000);
 
-  // clcear localStorage
+  // clear localStorage
   $('#logout').on('click', function () {
     localStorage.clear();
   });
