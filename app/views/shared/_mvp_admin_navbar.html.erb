@@ -24,13 +24,10 @@
     <!-- navbar-header -->
     <div class="navbar-header">
 
-      <% if user_signed_in? and current_user.company and current_user.company.logo_url %>
+      <% if user_signed_in? and current_user.company and !current_user.company.logo_url.blank? %>
 
         <img src="<%= current_user.company.logo_url %>"
-              class="navbar-brand navbar-brand-img" alt="">
-        <%#= image_tag "cisco-logo.jpg",
-            { class: 'navbar-brand navbar-brand-img',
-              style: 'width:90px', alt: 'Company Logo' } %>
+              class="navbar-brand navbar-brand-img" alt="company logo">
 
       <% else %>
 

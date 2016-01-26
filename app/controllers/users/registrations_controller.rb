@@ -2,7 +2,7 @@
 
 class Users::RegistrationsController < Devise::RegistrationsController
 # before_filter :configure_sign_up_params, only: [:create]
-# before_filter :configure_account_update_params, only: [:update]
+# before_action :configure_account_update_params, only: [:update]
 before_action :set_s3_direct_post, only: [:edit, :update]
 
   # GET /resource/sign_up
@@ -41,10 +41,12 @@ before_action :set_s3_direct_post, only: [:edit, :update]
 
   protected
 
+  # allow updates without a password
   def update_resource user, params
     resource.update_without_password params
   end
 
+  # change redirect on update
   def after_update_path_for user
     company_path user.company_id
   end

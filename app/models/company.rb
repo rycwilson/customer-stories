@@ -168,7 +168,6 @@ class Company < ActiveRecord::Base
         # do nothing
       end
     end unless new_tags[:product].nil?
-
   end
 
 end
