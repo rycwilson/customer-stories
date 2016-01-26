@@ -27,8 +27,7 @@ config/secrets.yml
 public/system
 
 # pre-compiled assets (uncomment for github push, comment for heroku)
-#public/assets
-#tmp/cache
+public/assets
 
 # user-specific (uncomment for github push, comment for heroku)
 config/database.yml
