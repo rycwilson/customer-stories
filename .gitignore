@@ -30,6 +30,6 @@ public/system
 public/assets
 
 # user-specific (uncomment for github push, comment for heroku)
-config/database.yml
+# config/database.yml
 
 
