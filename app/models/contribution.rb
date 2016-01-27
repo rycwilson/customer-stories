@@ -11,23 +11,25 @@ class Contribution < ActiveRecord::Base
     # logs to log/cron.log in development environment (output set in schedule.rb)
     # TODO: log in production environment
     puts "sending reminders - #{Time.now.strftime('%-m/%-d/%y at %I:%M %P')}"
-    Contribution.where("status IN ('request', 'remind1')")
+    Contribution.where("status IN ('request', 'remind1', 'remind2')")
                 .each do |contribution|
       puts "processing contribution #{contribution.id} with status #{contribution.status}"
       if contribution.remind_at.past?
-        UserMailer.contribution_reminder(contribution).deliver_now
+        UserMailer.contribution_reminder(contribution).deliver_now unless contribution.status == 'remind2'
         if contribution.status == 'request'
           new_status = 'remind1'
           new_remind_at = Time.now + contribution.remind_2_wait.days
-        else
+          puts "first reminder sent, new remind_at: #{new_remind_at.strftime('%-m/%-d/%y at %I:%M %P')} UTC"
+        elsif contribution.status == 'remind1'
           new_status = 'remind2'
-          new_remind_at = nil  # no more reminders
+          new_remind_at = Time.now + contribution.remind_2_wait.days  # no more reminders
+          puts "second reminder sent, new remind_at (status to did_not_respond): #{new_remind_at.strftime('%-m/%-d/%y at %I:%M %P')} UTC"
+        else
+          new_status = 'did_not_respond'
+          new_remind_at = nil
+          puts "no more reminders, did not respond"
         end
         contribution.update(status: new_status, remind_at: new_remind_at)
-        if new_status == 'remind1'
-          puts "email reminder sent, new remind_at: #{contribution.remind_at.strftime('%-m/%-d/%y at %I:%M %P')} UTC"
-        else puts "email reminder sent, new remind_at: nil"
-        end
       end
       puts "status for #{contribution.id} is now #{contribution.status}"
     end
