@@ -26,7 +26,7 @@ class UserMailer < ApplicationMailer
               .sub("[curator_phone]", "415-555-7256")
               .sub("[story_example_url]", "#{host}/stories/#{story_example_id}")
               .sub("[opt_out_url]", "#{host}/contributions/#{contribution.access_token}/opt_out")
-              .sub("[curator_img_url]", curator.photo_url)
+              .sub("[curator_img_url]", curator.photo_url || "")
               .html_safe
 
     # sends file ok, but no thumbnail preview.  email settings?
