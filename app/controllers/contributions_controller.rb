@@ -2,9 +2,11 @@ class ContributionsController < ApplicationController
 
   include ContributionsHelper
 
-  before_action :find_contribution, only: [:contribution_request_email, :edit, :update]
+  before_action :set_contribution, only: :contribution_request_email
+  before_action :auth_token, only: [:edit, :update]
+
   # before_action :update do
-  #   auth_token? # how to pass the params hash?
+  #   auth_token # how to pass the params hash?
   # end
 
   #
@@ -18,7 +20,7 @@ class ContributionsController < ApplicationController
     # validate :type
     if ['contribution', 'feedback', 'opt_out'].include? params[:type]
       @response_type = params[:type]
-      process_opt_out(@contribution) if (@type == 'opt_out')
+      process_opt_out(@contribution) if (@response_type == 'opt_out')
     else
       # page doesn't exist
     end
@@ -91,8 +93,12 @@ class ContributionsController < ApplicationController
     params.require(:contribution).permit(:status, :contribution, :feedback, :access_token, :linkedin)
   end
 
-  def find_contribution
+  def set_contribution
     @contribution = Contribution.find params[:id]
+  end
+
+  def generate_token
+
   end
 
   def process_opt_out contribution
@@ -116,15 +122,13 @@ class ContributionsController < ApplicationController
     end
   end
 
-  def auth_token?
-    # layout: false prevents the application layout page from loading
-    # returning false/true stops/allows the action
-    # unless current_user.id == params[:id].to_i
-    #   render file: 'public/401.html', status: 401, layout: false
-    #   false
-    # else
-    #   true
-    # end
+  def auth_token
+    if @contribution = Contribution.find_by(access_token: params[:token])
+      @contribution
+    else
+      render file: 'public/404.html', status: 404, layout: false
+      false
+    end
   end
 
 end

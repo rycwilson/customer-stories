@@ -18,14 +18,14 @@ class UserMailer < ApplicationMailer
               .sub("[company_name]", curator.company.name)
               .sub("[contributor_first_name]", contributor.first_name)
               .sub("[curator_first_name]", curator.first_name)
-              .sub("[contribution_url]", "#{host}/contributions/#{contribution.id}/contribution")
-              .sub("[feedback_url]", "#{host}/contributions/#{contribution.id}/feedback")
+              .sub("[contribution_url]", "#{host}/contributions/#{contribution.access_token}/contribution")
+              .sub("[feedback_url]", "#{host}/contributions/#{contribution.access_token}/feedback")
               .sub("[curator_full_name]", curator.full_name)
               .sub("[curator_company]", curator.company.name)
               .sub("[curator_email]", curator.email)
               .sub("[curator_phone]", "415-555-7256")
               .sub("[story_example_url]", "#{host}/stories/#{story_example_id}")
-              .sub("[opt_out_url]", "#{host}/contributions/#{contribution.id}/opt_out")
+              .sub("[opt_out_url]", "#{host}/contributions/#{contribution.access_token}/opt_out")
               .sub("[curator_img_url]", curator.photo_url)
               .html_safe
 
@@ -59,9 +59,9 @@ class UserMailer < ApplicationMailer
                 .sub("[company_name]", curator.company.name)
     @body = template.body
               .sub("[contributor_first_name]", contribution.user.first_name)
-              .sub("[contribution_url]", "#{host}/contributions/#{contribution.id}/contribution")
-              .sub("[feedback_url]", "#{host}/contributions/#{contribution.id}/feedback")
-              .sub("[opt_out_url]", "#{host}/contributions/#{contribution.id}/opt_out")
+              .sub("[contribution_url]", "#{host}/contributions/#{contribution.access_token}/contribution")
+              .sub("[feedback_url]", "#{host}/contributions/#{contribution.access_token}/feedback")
+              .sub("[opt_out_url]", "#{host}/contributions/#{contribution.access_token}/opt_out")
               .html_safe
 
     if ['***REMOVED***', '***REMOVED***'].include? contributor.email

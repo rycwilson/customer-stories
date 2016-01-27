@@ -3,7 +3,7 @@
 
   <div class='col-md-4'>
 
-    <img src="<%= asset_path('dan.jpg') %>" alt="curator_img"> <br>
+    <img src="<%= contribution.success.curator.photo_url %>" alt="curator_img"> <br>
 
     <span><%= curator.full_name %></span> <br>
     <span><%= curator.company.name %></span> <br>
@@ -47,7 +47,8 @@
 </div>
 
 
-<%= form_for contribution, html: { method: "put" } do |f| %>
+<%= form_for contribution, url: "/contributions/#{contribution.access_token}",
+        html: { method: "put" } do |f| %>
 
   <%= hidden_field_tag "contribution[status]", response_type %>
 
@@ -72,7 +73,7 @@
       <%= f.check_box :linkedin %>
       <%= f.label :linkedin, "Optional: check here if you want your LinkedIn profile to be included in the success story.",
         style: "padding:0" %>
-      <p style='font-size:12px'> You can always remove or add your LinkedIn profile later. <br> See an example of a finished story <a href="<%= @story_example_url %>" target="_blank">here</a>.</p>
+      <p style='font-size:12px'> You can always remove or add your LinkedIn profile later. <br> See an example of a finished story <a href="<%= story_example_url %>" target="_blank">here</a>.</p>
     </div>
 
     <div class='col-md-3 pull-right text-right'>

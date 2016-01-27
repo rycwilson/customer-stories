@@ -19,7 +19,7 @@
 
 <div class='row'>
 
-  <%= form_for contribution,
+  <%= form_for contribution, url: "/contributions/#{contribution.access_token}",
         html: { class: "form-horizontal", method: "put" } do |f| %>
 
     <%= hidden_field_tag "contribution[status]", response_type %>

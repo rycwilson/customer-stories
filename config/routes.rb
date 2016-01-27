@@ -65,10 +65,8 @@ Rails.application.routes.draw do
         to: 'contributions#contribution_request_email', as: 'request_contribution'
   get   '/contributions/:id/confirm', to: 'contributions#update', as: 'confirm_contribution'
   # type is: contribution, feedback, opt_out
-  get   '/contributions/:id/:type', to: 'contributions#edit', as: 'edit_contribution'
-  put   '/contributions/:id', to: 'contributions#update', as: 'contribution'
-
-
+  get   '/contributions/:token/:type', to: 'contributions#edit', as: 'edit_contribution'
+  put   '/contributions/:token', to: 'contributions#update', as: 'contribution'
 
   #
   # LinkedIn Oauth2 (omniauth gem)
