@@ -33,7 +33,7 @@ Rails.application.routes.draw do
   resources :stories, only: [:show]
   # all others need authentication...
   authenticate :user do
-    resources :companies, except: [:index, :destroy] do
+    resources :companies, except: [:index, :destroy, :edit] do
       resources :stories, only: [:new, :create]
     end
     resources :stories, only: [:edit, :update, :destroy]

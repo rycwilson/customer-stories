@@ -1,6 +1,8 @@
 class StoriesController < ApplicationController
 
   before_action :set_company, only: [:index, :create]
+  before_action :set_story, only: [:show, :edit]
+  before_action :auth_user?, only: [:edit]
 
   def index
     if params[:filter]  # ajax GET request
@@ -15,12 +17,10 @@ class StoriesController < ApplicationController
   end
 
   def show
-    @story = Story.find params[:id]
   end
 
   def edit
     @company = current_user.company # company_id not in the stories#edit route
-    @story = Story.find params[:id]
     @contributions = @story.success.contributions
     @contributions_in_progress = Contribution.in_progress @story.success_id
     @industries = @company.industries_select
@@ -118,6 +118,19 @@ class StoriesController < ApplicationController
 
   def set_company
     @company = Company.find params[:company_id]
+  end
+
+  def set_story
+    @story = Story.find params[:id]
+  end
+
+  def auth_user?
+    if current_user.company_id == Story.find(params[:id]).success.customer.company.id
+      true
+    else
+      render file: 'public/403', status: 403, layout: false
+      false
+    end
   end
 
 end

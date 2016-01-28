@@ -3,6 +3,7 @@ class CompaniesController < ApplicationController
   # aws docs suggest first four actions, currently only need last one
   before_action :set_s3_direct_post, only: [:new, :edit, :create, :update, :show]
   before_action :set_company, only: :update
+  before_action :auth_user?, only: [:show]
 
   # GET /companies/new
   def new
@@ -31,6 +32,7 @@ class CompaniesController < ApplicationController
   end
 
   def edit
+    # no edit route is defined
   end
 
   def create
@@ -80,6 +82,15 @@ class CompaniesController < ApplicationController
 
   def set_company
     @company = Company.find params[:id]
+  end
+
+  def auth_user?
+    if (current_user.company_id == params[:id])
+      true
+    else
+      render file: 'public/403', status: 403, layout: false
+      false
+    end
   end
 
   def set_s3_direct_post
