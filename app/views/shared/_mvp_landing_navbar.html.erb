@@ -22,15 +22,7 @@
 
     <nav class="collapse navbar-collapse" role="navigation">
 
-      <% if user_signed_in? %>
-
-        <%= render '/shared/mvp_admin_navbar_nav' %>
-
-      <% else %>
-
-        <%= render '/shared/mvp_landing_navbar_nav' %>
-
-      <% end %>
+      <%= render '/shared/mvp_landing_navbar_nav' %>
 
     </nav>
 

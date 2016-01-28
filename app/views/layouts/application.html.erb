@@ -26,21 +26,18 @@
 </head>
 <body>
 
-  <% if user_signed_in? and controller_name != 'contributions'  %>
+  <% case controller_name
 
-    <%= render 'shared/mvp_admin_navbar' %>
+     when 'site' %>
 
-  <% elsif controller_name == 'stories' %>
+    <!-- some more logic within the navbar to handle signed in users -->
+    <%= render 'shared/mvp_landing_navbar' %>
 
-    <%= render 'shared/mvp_admin_navbar' %>
-
-  <% elsif controller_name == 'contributions' %>
-
+  <% when 'contributions' %>
     <!-- render nothing -->
-
   <% else %>
 
-    <%= render 'shared/mvp_landing_navbar' %>
+    <%= render 'shared/mvp_admin_navbar' %>
 
   <% end %>
 
