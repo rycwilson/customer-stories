@@ -85,7 +85,7 @@ class CompaniesController < ApplicationController
   end
 
   def auth_user?
-    if (current_user.company_id == params[:id])
+    if (current_user.company_id == params[:id].to_i)
       true
     else
       render file: 'public/403', status: 403, layout: false
