@@ -30,12 +30,12 @@
               </a>
             </li>
 
-            <li>
+            <!-- <li>
               <a href="#billing" data-toggle="tab">
               <i class="fa fa-credit-card"></i>
               &nbsp;&nbsp;Billing
               </a>
-            </li>
+            </li> -->
 
           </ul>
         </div> <!-- /.col -->
@@ -108,6 +108,7 @@
                 <div class="col-md-7">
 
                   <div class="form-group">
+
                     <%= label_tag 'Industries served', nil, class: 'control-label' %>
                     <%= select_tag 'company_tags[industry][]',
                         options_for_select(@industries, @industries_pre_select),
@@ -170,15 +171,15 @@
 
             </div> <!-- /.tab-pane -->
 
-            <div class="tab-pane fade" id="billing">
+            <!-- <div class="tab-pane fade" id="billing">
 
               <div class="heading-block">
                 <h3>
                   Manage Payment and Billing
                 </h3>
-              </div> <!-- /.heading-block -->
+              </div>
 
-            </div> <!-- /.tab-pane -->
+            </div> --> <!-- /.tab-pane -->
 
           </div> <!-- /.tab-content -->
         </div> <!-- /.col -->

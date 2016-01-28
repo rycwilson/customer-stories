@@ -57,6 +57,17 @@ function configSelect2 () {
     placeholder: 'add tags'
   });
 
+  // With these two listeners we are dynamically setthing the max-height of the
+  // company tags form inputs to 0.  The function of these fields is to create
+  // the list of available options for tagging a Story.  So the entries (in this case)
+  // are either being created or deleted, i.e. no existing options to choose from
+  $('#company-profile').on('select2:open', function () {
+    $(".select2-container--bootstrap .select2-results > .select2-results__options").css('max-height', 0);
+  });
+  $('#company-profile').on('select2:close', function () {
+    $(".select2-container--bootstrap .select2-results > .select2-results__options").css('max-height', '200px');
+  });
+
   // has the curate tab content been rendered?
   if ($('#curate').length) {
     // is there a list of existing customers to choose from?
