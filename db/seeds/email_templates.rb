@@ -20,6 +20,7 @@ module EmailTemplatesSeed
     <img src='[curator_img_url]' alt='curator_img'> <br>
 
     <span>[curator_full_name]</span> <br>
+    <span>[curator_title]</span> <br>
     <span>[curator_company]</span> <br>
     <span>[curator_email] | [curator_phone]</span> <br>
 

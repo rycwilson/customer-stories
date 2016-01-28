@@ -101,21 +101,42 @@
                       </div>
                     </div>  <!-- /.fileupload -->
                   </div>
-                </div>  <!-- col -->
 
-                <div class="col-md-4">
                   <div class="form-group">
                     <%= f.label "First Name", class: 'control-label' %>
                     <%= f.text_field :first_name, class: 'form-control' %>
                   </div>
+
                   <div class="form-group">
                     <%= f.label "Last Name", nil, class: 'control-label' %>
                     <%= f.text_field :last_name, class: 'form-control' %>
                   </div>
+
+                </div>  <!-- col -->
+
+                <div class="col-md-4">
+
                   <div class="form-group">
-                    <%= f.label "Email Address", class: 'control-label' %>
+                    <% company = @company.name %>
+                    <%= f.label "Company", nil, class: 'control-label' %>
+                    <%= f.text_field :company_id, class: 'form-control', value: company, disabled: 'true' %>
+                  </div>
+
+                  <div class="form-group">
+                    <%= f.label "Email", nil, class: 'control-label' %>
                     <%= f.text_field :email, class: 'form-control' %>
                   </div>
+
+                  <div class="form-group">
+                    <%= f.label "Title", nil, class: 'control-label' %>
+                    <%= f.text_field :title, class: 'form-control' %>
+                  </div>
+
+                  <div class="form-group">
+                    <%= f.label "Phone", nil, class: 'control-label' %>
+                    <%= f.text_field :phone, class: 'form-control' %>
+                  </div>
+
                 </div>
 
                 <div class="col-md-5">

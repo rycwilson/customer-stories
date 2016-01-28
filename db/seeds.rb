@@ -23,7 +23,7 @@ PRODUCTS = ['UCS C3160', 'Nexus 7004', 'Catalyst 6807', 'ISR 4400', 'ASR 1001', 
 ROLES = ['customer', 'partner', 'sales']
 STATUS_OPTIONS = ['pre_request', 'request', 'remind1', 'remind2', 'feedback', 'contribution', 'opt_out', 'did_not_respond']
 
-dan = User.find_by(email:'***REMOVED***')
+# dan = User.find_by(email:'***REMOVED***')
 # ryan = User.find_by(email:'***REMOVED***')
 # curators = [dan, ryan]
 cisco = Company.find_by(name:'Cisco Systems')

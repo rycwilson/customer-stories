@@ -6,8 +6,9 @@
     <img src="<%= contribution.success.curator.photo_url %>" alt="curator_img"> <br>
 
     <span><%= curator.full_name %></span> <br>
+    <span><%= curator.title %></span> <br>
     <span><%= curator.company.name %></span> <br>
-    <span><%= curator.email %></span> <br> <br>
+    <span><a href="mailto:<%= curator.email %>"><%= curator.email %></a> <br> <br>
 
   </div>
 

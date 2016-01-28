@@ -18,6 +18,8 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.for(:sign_up) << :sign_up_code
     devise_parameter_sanitizer.for(:account_update) << :photo_url
     devise_parameter_sanitizer.for(:account_update) << :linkedin_url
+    devise_parameter_sanitizer.for(:account_update) << :title
+    devise_parameter_sanitizer.for(:account_update) << :phone
   end
 
   # change devise redirect on sign in
