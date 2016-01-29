@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160128212304) do
+ActiveRecord::Schema.define(version: 20160129004534) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(version: 20160128212304) do
     t.integer  "logo_file_size"
     t.datetime "logo_updated_at"
     t.string   "logo_url"
+    t.string   "subdomain"
   end
 
   create_table "contribution_emails", force: :cascade do |t|

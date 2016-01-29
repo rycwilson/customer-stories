@@ -40,7 +40,6 @@ class CompaniesController < ApplicationController
     if @company.save
       @company.update_tags(params[:company_tags]) if params[:company_tags]
       @company.users << current_user
-      @company.create_tags(params[:tags]) if params[:tags]
       @company.create_email_templates
       redirect_to company_path(@company), flash: { success: "Registered company successfully" }
     else
@@ -77,7 +76,7 @@ class CompaniesController < ApplicationController
   private
 
   def company_params
-    params.require(:company).permit(:name, :logo_url)
+    params.require(:company).permit(:name, :subdomain, :logo_url)
   end
 
   def set_company
@@ -85,7 +84,7 @@ class CompaniesController < ApplicationController
   end
 
   def auth_user?
-    if (current_user.company_id == params[:id].to_i)
+    if current_user.company_id == params[:id].to_i
       true
     else
       render file: 'public/403', status: 403, layout: false

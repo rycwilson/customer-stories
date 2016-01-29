@@ -1,6 +1,8 @@
 class Company < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: true
+  validates :subdomain, presence: true, uniqueness: true
+  validates_format_of :subdomain, with: /\A[a-zA-Z0-9_-]*\z/, on: [:create, :update]
 
   has_many :users  # no dependent: :destroy users, handle more gracefully
   has_many :invited_curators, dependent: :destroy
