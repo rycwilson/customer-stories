@@ -20,6 +20,7 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.for(:account_update) << :linkedin_url
     devise_parameter_sanitizer.for(:account_update) << :title
     devise_parameter_sanitizer.for(:account_update) << :phone
+    devise_parameter_sanitizer.for(:account_update) << :subdomain
   end
 
   # change devise redirect on sign in
