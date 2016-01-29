@@ -20,8 +20,8 @@ class Company < ActiveRecord::Base
 
   # presently uploading direct to S3, paperclip not used
   # paperclip
-  # has_attached_file :logo, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: "companies/:style/missing_logo.png"
-  # validates_attachment_content_type :logo, content_type: /\Aimage\/.*\Z/
+  has_attached_file :logo, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: "companies/:style/missing_logo.png"
+  validates_attachment_content_type :logo, content_type: /\Aimage\/.*\Z/
 
   CSP = self.find_by(name:'CSP')
 
