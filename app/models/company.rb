@@ -2,7 +2,9 @@ class Company < ActiveRecord::Base
 
   validates :name, presence: true, uniqueness: true
   validates :subdomain, presence: true, uniqueness: true
-  validates_format_of :subdomain, with: /\A[a-zA-Z0-9_-]*\z/, on: [:create, :update]
+  validates_length_of :subdomain, maximum: 32, message: "must be 32 characters or less"
+  validates_format_of :subdomain, with: /\A[a-z0-9-]*\z/, on: [:create, :update], message: "may only contain lowercase alphanumerics or hyphens"
+  validates_exclusion_of :subdomain, in: ['www', 'mail', 'ftp'], message: "is not available"
 
   has_many :users  # no dependent: :destroy users, handle more gracefully
   has_many :invited_curators, dependent: :destroy
@@ -25,22 +27,9 @@ class Company < ActiveRecord::Base
 
   CSP = self.find_by(name:'CSP')
 
-  def create_tags tags
-    if tags[:industry]
-      tags[:industry].each do |tag|
-        self.industry_categories << IndustryCategory.create(name: tag)
-      end
-    end
-    if tags[:product_category]
-      tags[:product_category].each do |tag|
-        self.product_categories << ProductCategory.create(name: tag)
-      end
-    end
-    if tags[:product]
-      tags[:product].each do |tag|
-        self.products << Product.create(name: tag)
-      end
-    end
+  # returns a unique list of registered subdomains
+  def self.subdomains
+    Company.select("DISTINCT ")
   end
 
   def create_email_templates

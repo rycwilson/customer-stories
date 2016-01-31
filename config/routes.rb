@@ -1,11 +1,20 @@
 Rails.application.routes.draw do
 
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
+
+  devise_scope :user do
+    get '/', to: 'users/sessions#new', constraints: { subdomain: /[a-z0-9-]+/ }
+  end
+  # authenticate :user do
+  #   get '/', to: 'site#show', constraints: { subdomain: /[a-z0-9-]+/ }
+  # end
+
   root 'site#index'
+
   get '/product', to: 'site#product'
   get '/plans', to: 'site#plans'
   get '/our-company', to: 'site#our-company'
-  get '/team', to: 'site#team'
+  get '/tea m', to: 'site#team'
   get '/tos', to: 'site#tos', as: 'tos'
   get '/privacy', to: 'site#privacy'
   get '/our-story', to: 'site#our-story'
@@ -43,7 +52,6 @@ Rails.application.routes.draw do
   # above code condenses commented code below, and enables devise user authentication
   # but: only checks if someone is logged in, not who that someone is
 
-  # except: index, destroy
   # post  '/companies', to: 'companies#create'
   # get   '/companies/new', to: 'companies#new', as: 'new_company'
   # get   '/companies/:id/edit', to: 'companies#edit', as: 'edit_company'
