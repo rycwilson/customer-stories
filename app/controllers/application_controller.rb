@@ -53,7 +53,7 @@ class ApplicationController < ActionController::Base
 
   # removes the subdomain from the url upon signing out
   def after_sign_out_path_for user
-    root_url(host: request.domain)
+    root_url(host: 'www.' + request.domain)
   end
 
 end
