@@ -14,7 +14,7 @@ Rails.application.routes.draw do
   get '/product', to: 'site#product'
   get '/plans', to: 'site#plans'
   get '/our-company', to: 'site#our-company'
-  get '/team', to: 'site#team'
+  get '/tea m', to: 'site#team'
   get '/tos', to: 'site#tos', as: 'tos'
   get '/privacy', to: 'site#privacy'
   get '/our-story', to: 'site#our-story'
