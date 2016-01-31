@@ -3,12 +3,26 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  include ApplicationHelper #  really need this? probably shouldn't be calling helper methods in controllers
-
   # Devise - whitelist User params
   before_action :configure_permitted_parameters, if: :devise_controller?
+  before_action :validate_subdomain
 
   protected
+
+  # validate_subdomain ensures that a subdomain attached to any requests is valid,
+  #   i.e. is associated with a company
+  #
+  # TODO: run this once at the beginning of a session, then disallow any
+  #  changes to subdomain
+  #
+  def validate_subdomain
+    if Company.any? { |c| c.subdomain == request.subdomain }
+      true
+    else
+      render file: 'public/404', status: 404, layout: false
+      false
+    end unless (request.subdomain.blank? || request.subdomain == 'www')
+  end
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) << :first_name
@@ -35,6 +49,11 @@ class ApplicationController < ActionController::Base
       # user.update role: 1  # company admin
       new_company_path
     end
+  end
+
+  # removes the subdomain from the url upon signing out
+  def after_sign_out_path_for user
+    root_url(host: request.domain)
   end
 
 end

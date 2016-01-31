@@ -26,18 +26,15 @@
 </head>
 <body>
 
-  <% case controller_name
-
-     when 'site' %>
-
-    <!-- some more logic within the navbar to handle signed in users -->
-    <%= render 'shared/mvp_landing_navbar' %>
-
-  <% when 'contributions' %>
-    <!-- render nothing -->
-  <% else %>
+  <% if controller_name == 'companies' || controller_name == 'stories' %>
 
     <%= render 'shared/mvp_admin_navbar' %>
+
+  <% elsif controller_name == 'contributions' %>
+    <!-- render nothing -->
+  <% else %>
+    <!-- more logic within the navbar to handle signed in users... -->
+    <%= render 'shared/mvp_landing_navbar' %>
 
   <% end %>
 
