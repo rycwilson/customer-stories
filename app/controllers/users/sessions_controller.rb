@@ -9,7 +9,7 @@ class Users::SessionsController < Devise::SessionsController
   before_action only: :create do
     if request.subdomain.present?
       validate_user_subdomain(request.subdomain, params[:user][:email])
-    end
+    end unless request.subdomain == 'www'
   end
 
   # before_action :check_root, only: :new

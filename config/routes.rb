@@ -2,6 +2,8 @@ Rails.application.routes.draw do
 
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
 
+  get '/', to: 'site#index', constraints: { subdomain: 'www' }
+
   devise_scope :user do
     get '/', to: 'users/sessions#new', constraints: { subdomain: /(?!www)[a-z0-9-]+/ }
   end
