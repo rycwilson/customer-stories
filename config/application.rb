@@ -36,5 +36,8 @@ module Csp
     config.assets.paths <<
         Rails.root.join("vendor","assets","bower_components")
 
+    # this will load any custom classes in lib/
+    config.autoload_paths += Dir["#{config.root}/lib/**/"]
+
   end
 end

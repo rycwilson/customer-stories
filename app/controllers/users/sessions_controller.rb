@@ -7,16 +7,14 @@ class Users::SessionsController < Devise::SessionsController
   # validate that request.subdomain matches the user.company.subdomain
   # this callback assumes the user exists.
   before_action only: :create do
-    if request.subdomain.present?
+    if request.subdomain.present? && request.subdomain != 'www'
       validate_user_subdomain(request.subdomain, params[:user][:email])
-    end unless request.subdomain == 'www'
+    end
   end
-
-  # before_action :check_root, only: :new
-
 
   # GET /resource/sign_in
   def new
+    # binding.pry
     super
   end
 
@@ -39,18 +37,15 @@ class Users::SessionsController < Devise::SessionsController
 
   private
 
-  def check_root
-    # binding.pry
-  end
-
   def validate_user_subdomain subdomain, email
-    user = User.find_by(email: email)
-    if user.company.subdomain == subdomain
+    binding.pry
+    if User.find_by(email: email).try(:company).try(:subdomain) == subdomain
       true
     else
-      render file: 'public/403', status: 403, layout: false
+      redirect_to root_url(host: 'www.' + request.domain), flash: { danger: "Not authorized"}
+      # render file: 'public/403', status: 403, layout: false
       false
-    end unless user.nil?  # devise will handle if user does not exist
+    end
     true
   end
 

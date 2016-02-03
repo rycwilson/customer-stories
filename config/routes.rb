@@ -2,15 +2,21 @@ Rails.application.routes.draw do
 
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
 
-  get '/', to: 'site#index', constraints: { subdomain: 'www' }
-
-  devise_scope :user do
-    get '/', to: 'users/sessions#new', constraints: { subdomain: /(?!www)[a-z0-9-]+/ }
+  # for valid subdomains (excluding www)
+  constraints(Subdomain) do
+    devise_scope :user do
+      get '/', to: 'users/sessions#new'
+    end
   end
-  # authenticate :user do
-  #   get '/', to: 'site#show', constraints: { subdomain: /[a-z0-9-]+/ }
-  # end
 
+  # www subdomain
+  # signed in users will be redirected to Company home at site#index
+  # get '/', to: 'site#index', constraints: { subdomain: 'www' }
+
+  # subdomain with signed in user will go to Company home page instead of store front
+  # get '/', to: 'companies#show', constraints: { subdomain: /[a-z0-9-]+/}
+
+  # signed in users will be redirected to Company home at site#index
   root 'site#index'
 
   get '/product', to: 'site#product'
@@ -44,7 +50,7 @@ Rails.application.routes.draw do
   resources :stories, only: [:show]
   # all others need authentication...
   authenticate :user do
-    resources :companies, except: [:index, :destroy] do
+    resources :companies, except: [:index, :destroy, :edit] do
       resources :stories, only: [:new, :create]
     end
     resources :stories, only: [:edit, :update, :destroy]
@@ -82,11 +88,6 @@ Rails.application.routes.draw do
   # LinkedIn Oauth2 (omniauth gem)
   #
   get '/auth/linkedin/callback', to: 'profile#linkedin'
-
-  get     '/profile', to: 'profile#show'
-  put     '/profile', to: 'profile#update'
-  delete  '/profile', to: 'profile#destroy'
-  get     '/profile/edit', to: 'profile#edit'
 
 ## TODO!!!  Add route for devise Admin scope to the RailsAdmin page(s) /admin
 
