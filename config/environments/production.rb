@@ -2,6 +2,9 @@ Rails.application.configure do
 
   # Settings specified here will take precedence over those in config/application.rb.
 
+  # moved from session_store.rb
+  Rails.application.config.session_store :cookie_store, key: '_csp_session', domain: 'customerstories.net', tld_length: 2
+
   # Code is not reloaded between requests.
   config.cache_classes = true
 

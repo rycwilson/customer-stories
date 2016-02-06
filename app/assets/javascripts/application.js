@@ -28,7 +28,7 @@ $(function() {
 
   setTimeout(function () {
     $('#flash').slideUp();
-  }, 3000);
+  }, 4000);
 
   // clear localStorage
   $('#logout').on('click', function () {

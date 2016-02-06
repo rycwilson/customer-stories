@@ -7,14 +7,13 @@ class Users::SessionsController < Devise::SessionsController
   # validate that request.subdomain matches the user.company.subdomain
   # this callback assumes the user exists.
   before_action only: :create do
-    if request.subdomain.present? && request.subdomain != 'www'
+    if request.subdomain.present?
       validate_user_subdomain(request.subdomain, params[:user][:email])
     end
   end
 
   # GET /resource/sign_in
   def new
-    # binding.pry
     super
   end
 
@@ -38,15 +37,13 @@ class Users::SessionsController < Devise::SessionsController
   private
 
   def validate_user_subdomain subdomain, email
-    binding.pry
     if User.find_by(email: email).try(:company).try(:subdomain) == subdomain
       true
     else
-      redirect_to root_url(host: 'www.' + request.domain), flash: { danger: "Not authorized"}
-      # render file: 'public/403', status: 403, layout: false
-      false
+      # kill session since user is already logged in at this point (not sure why!)
+      request.reset_session
+      redirect_to(root_url(host: request.domain), flash: { danger: "Not authorized"}) and return false
     end
-    true
   end
 
 end

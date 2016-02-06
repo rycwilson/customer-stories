@@ -6,7 +6,7 @@ class UserMailer < ApplicationMailer
   def request_contribution contribution, contributor
     curator = contribution.success.curator
     story_example_id = Story.find_example
-    host = "http://#{ENV['HOST_NAME']}"
+    host = "http://#{curator.company.subdomain}.#{ENV['HOST_NAME']}"
     template_name = contribution.role + "_request"
     template = curator.company.contribution_emails.where(name:template_name).take
     @footer_img_url = "https://s3-us-west-1.amazonaws.com/csp-#{Rails.env}-assets/CS-powered-by.png"
@@ -45,7 +45,7 @@ class UserMailer < ApplicationMailer
   def contribution_reminder contribution
     contributor = contribution.user
     curator = contribution.success.curator
-    host = "http://#{ENV['HOST_NAME']}"
+    host = "http://#{curator.company.subdomain}.#{ENV['HOST_NAME']}"
     if contribution.status == 'request'
       template_name = contribution.role + "_remind_1"
     elsif contribution.status == 'remind1'

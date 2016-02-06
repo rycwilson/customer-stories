@@ -2,7 +2,7 @@ class ContributionsController < ApplicationController
 
   include ContributionsHelper
 
-  before_action :set_contribution, only: :contribution_request_email
+  before_action :set_contribution, only: :request_contribution_email
   before_action :auth_token, only: [:edit, :update]
 
   # before_action :update do
@@ -69,7 +69,7 @@ class ContributionsController < ApplicationController
     end
   end
 
-  def contribution_request_email
+  def request_contribution_email
     @contributor = @contribution.user
     UserMailer.request_contribution(@contribution, @contributor).deliver_now
     if @contribution.update(   status:'request',

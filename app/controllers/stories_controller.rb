@@ -117,7 +117,11 @@ class StoriesController < ApplicationController
   end
 
   def set_company
-    @company = Company.find params[:company_id]
+    if params[:company_id].present?  # create
+      @company = Company.find params[:company_id]
+    else  # index
+      @company = Company.find_by subdomain: request.subdomain
+    end
   end
 
   def set_story
