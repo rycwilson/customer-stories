@@ -1,3 +1,6 @@
+# uncomment for heroku ...
+# ruby '2.2.4'
+
 source 'https://rubygems.org'
 
 # NOTE: Front-end assets are all managed through the bower-rails gem

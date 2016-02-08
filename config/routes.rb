@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
 
+  ## TODO!!!  Add route for devise Admin scope to the RailsAdmin page(s) /admin
+  mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
+
   # valid subdomains (company/subdomain exists, excludes www)
   constraints(Subdomain) do
 
@@ -69,8 +72,5 @@ Rails.application.routes.draw do
   get '/tos', to: 'site#tos', as: 'tos'
   get '/privacy', to: 'site#privacy'
   get '/our-story', to: 'site#our-story'
-
-  ## TODO!!!  Add route for devise Admin scope to the RailsAdmin page(s) /admin
-  mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
 
 end
