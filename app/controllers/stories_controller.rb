@@ -17,6 +17,9 @@ class StoriesController < ApplicationController
   end
 
   def show
+    @contributors = @story.success.contributions
+                          .where(linkedin: :true).map { |c| c.user }
+    @contributors << @story.success.curator
   end
 
   def edit
@@ -49,6 +52,7 @@ class StoriesController < ApplicationController
       success = Success.new customer_id: new_story[:customer]
     end
     if success.save
+      success.curator = current_user
       story = Story.new title: new_story[:title], success_id: success.id
       if story.save
         story.assign_tags new_story
