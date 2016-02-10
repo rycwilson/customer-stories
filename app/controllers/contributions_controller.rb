@@ -29,6 +29,7 @@ class ContributionsController < ApplicationController
   def create
     story = Story.find params[:id]
     existing_user = User.find_by email: params[:contributor][:email]
+
     contributor = existing_user || create_new_user(params[:contributor])
     contribution = Contribution.new(user_id: contributor.id,
                                 referrer_id: params[:contributor][:referrer],
@@ -39,11 +40,11 @@ class ContributionsController < ApplicationController
     if contribution.save
       # respond with all pre-request contributions, most recent additions first
       @contributors = Contribution.pre_request story.success_id
-      respond_to do |format|
-        format.js {}
-      end
+      respond_to { |format| format.js {} }
     else
-      puts 'Error saving contribution: ' + contribution.errors.full_messages
+      # presently only one validation - contributor may have one contribution per success
+      flash.now[:danger] = "That user already has a contribution for this story"
+      respond_to { |format| format.js { render action: 'create_error' } }
     end
   end
 
@@ -76,15 +77,12 @@ class ContributionsController < ApplicationController
     if @contribution.update(   status:'request',
                             remind_at: Time.now + @contribution.remind_1_wait.days )
       @status = contribution_status @contribution.status # view helper
-      # TODO: start cron job for reminder emails and token expiration
       flash.now[:info] =
         "An email request for contribution has been sent to #{@contribution.contributor.full_name}"
-      respond_to do |format|
-        format.js {}
-      end
+      respond_to { |format| format.js { render 'request_contribution_email_success' } }
     else
-      redirect_to edit_story_path(@contribution.success.story),
-        flash[:alert] = "Something went wrong"
+      flash.now[:danger] = "Error updating Contribution: #{@contribution.errors.full_messages.join(', ')}"
+      respond_to { |format| format.js { render 'request_contribution_email_error' } }
     end
   end
 
@@ -96,10 +94,6 @@ class ContributionsController < ApplicationController
 
   def set_contribution
     @contribution = Contribution.find params[:id]
-  end
-
-  def generate_token
-
   end
 
   def process_opt_out contribution

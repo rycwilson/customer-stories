@@ -1,8 +1,6 @@
 
 var contributors = <%= raw @contributors.to_json %>
 
-console.log('Contributors: ', contributors);
-
 $('#new-contributor-modal').modal('hide');
 
 $("a[href='#pre-request']").tab('show');

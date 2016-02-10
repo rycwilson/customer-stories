@@ -5,6 +5,9 @@ class Contribution < ActiveRecord::Base
 
   belongs_to :success
 
+  # contributor may have only one contribution per story
+  validates_uniqueness_of :user_id, scope: :success_id
+
   # represents number of days between reminder emails
   validates :remind_1_wait, numericality: { only_integer: true }
   validates :remind_2_wait, numericality: { only_integer: true }
