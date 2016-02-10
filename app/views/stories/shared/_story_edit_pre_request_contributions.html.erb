@@ -3,7 +3,7 @@
 
   <div class="heading-block">
     <h4>Contributors Awaiting Request</h4> <br>
-    <button type="button" class="btn btn-secondary btn-sm"
+    <button id="new-contributor-button" type="button" class="btn btn-secondary btn-sm"
         data-toggle="modal" data-target="#new-contributor-modal">
       Add Contributor
     </button>
@@ -16,23 +16,29 @@
                      .each do |contribution| %>
 
       <div class="well" data-contribution-id="<%= contribution.id %>">
+
         <div class="row">
-          <div class='col-sm-12'>
-            <%= contribution.user.full_name %> <br>
-            <%= contribution.user.email %>
-          </div>
-        </div> <br>
-        <div class="row">
-          <div class="col-sm-6">
+          <div class='col-sm-7'>
+            <%= contribution.contributor.full_name %> <br>
+            <%= contribution.contributor.email %> <br>
             <%= contribution.role %>
           </div>
-          <div class="col-sm-6 text-right">
+          <div class="col-sm-5 text-right">
             <%= button_to 'Send Request',
                 request_contribution_path(contribution),
                 class: 'btn btn-sm btn-secondary',
                 method: 'put', remote: true %>
           </div>
         </div>
+
+        <% if contribution.referrer_id.present? %>
+          <br>
+          <div class="row">
+            <div class="col-sm-12">
+              Referred by <%= contribution.referrer.full_name %>
+            </div>
+          </div>
+        <% end %>
       </div>
 
     <% end %>

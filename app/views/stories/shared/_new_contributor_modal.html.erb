@@ -14,24 +14,21 @@
           <div class='form-group required-input'>
             <%= label_tag 'First name', nil, class: 'col-md-3 control-label' %>
             <div class='col-md-9'>
-              <%= text_field_tag 'contributor[first_name]', nil, class: 'form-control',
-                  placeholder: 'first name' %>
+              <%= text_field_tag 'contributor[first_name]', nil, class: 'form-control' %>
             </div>
           </div>
 
           <div class='form-group required-input'>
             <%= label_tag 'Last name', nil, class: 'col-md-3 control-label' %>
             <div class='col-md-9'>
-              <%= text_field_tag 'contributor[last_name]', nil, class: 'form-control',
-                  placeholder: 'last name' %>
+              <%= text_field_tag 'contributor[last_name]', nil, class: 'form-control' %>
             </div>
           </div>
 
           <div class='form-group required-input'>
             <%= label_tag 'Email', nil, class: 'col-md-3 control-label' %>
             <div class='col-md-9'>
-              <%= email_field_tag 'contributor[email]', nil, class: 'form-control',
-                  placeholder: 'email' %>
+              <%= email_field_tag 'contributor[email]', nil, class: 'form-control' %>
             </div>
           </div>
 
@@ -41,8 +38,18 @@
               <%= select_tag "contributor[role]",
                   options_for_select([ ['Customer', 'customer'],
                                        ['Partner', 'partner'],
-                                       ['Sales Team', 'sales'] ]),
-                  { class: 'contributor-role form-control',
+                                       ['Sales', 'sales'] ]),
+                  { class: 'new-contributor-role form-control',
+                    style: 'width:100%' } %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= label_tag 'Referred by', nil, class: 'col-md-3 control-label' %>
+            <div class='col-md-9'>
+              <%= select_tag "contributor[referrer]",
+                  options_for_select(@referrer_select),
+                  { class: 'new-contributor-referrer form-control',
                     style: 'width:100%' } %>
             </div>
           </div>

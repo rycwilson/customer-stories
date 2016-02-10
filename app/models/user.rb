@@ -3,7 +3,12 @@
 class User < ActiveRecord::Base
 
   belongs_to :company
-  has_many :contributions # contributor, no (dependent: :destroy)
+
+  # a User can have his own contribution(s) (i.e. he is contributor),
+  # or he can be the Referrer for contribution(s)
+  has_many :own_contributions, class_name: 'Contribution', foreign_key: 'user_id'
+  has_many :referred_contributions, class_name: 'Contribution', foreign_key: 'referrer_id'
+
   has_many :successes # curator, no (dependent: :destroy)
 
   # Adding signup code for beta control

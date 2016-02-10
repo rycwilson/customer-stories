@@ -230,16 +230,12 @@
   {{ contributors.forEach(function (contributor) { }}
     <div class="well" data-contribution-id="{{= contributor.contribution_id }}">
       <div class="row">
-        <div class='col-md-12'>
+        <div class='col-sm-7'>
           {{= contributor.full_name }} <br>
-          {{= contributor.email }}
-        </div>
-      </div> <br>
-      <div class="row">
-        <div class="col-md-6">
+          {{= contributor.email }} <br>
           {{= contributor.role }}
         </div>
-        <div class='col-md-6 text-right'>
+        <div class='col-sm-5 text-right'>
           <form class="button_to" method="post"
               action="/contributions/{{= contributor.contribution_id }}/request_contribution"
               data-remote="true">
@@ -249,6 +245,14 @@
           </form>
         </div>
       </div>
+      {{ if (contributor.referrer) { }}
+        <br>
+        <div class="row">
+          <div class="col-sm-12">
+            Referred by {{= contributor.referrer }}
+          </div>
+        </div>
+      {{ } }}
     </div>
   {{ }); }}
 </script>

@@ -1,7 +1,7 @@
 module ContributionsHelper
 
   def contribution_status status
-    label = "<strong>Status:&nbsp&nbsp</strong>"
+    label = "Status:&nbsp&nbsp"
     case status
       when 'request'
         return label + "Request sent"

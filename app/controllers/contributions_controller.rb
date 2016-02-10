@@ -31,6 +31,7 @@ class ContributionsController < ApplicationController
     existing_user = User.find_by email: params[:contributor][:email]
     contributor = existing_user || create_new_user(params[:contributor])
     contribution = Contribution.new(user_id: contributor.id,
+                                referrer_id: params[:contributor][:referrer],
                                  success_id: story.success.id,
                                        role: params[:contributor][:role],
                                      status: 'pre_request',
@@ -70,14 +71,14 @@ class ContributionsController < ApplicationController
   end
 
   def request_contribution_email
-    @contributor = @contribution.user
-    UserMailer.request_contribution(@contribution, @contributor).deliver_now
+    # TODO: email error handling
+    UserMailer.request_contribution(@contribution).deliver_now
     if @contribution.update(   status:'request',
                             remind_at: Time.now + @contribution.remind_1_wait.days )
       @status = contribution_status @contribution.status # view helper
       # TODO: start cron job for reminder emails and token expiration
       flash.now[:info] =
-        "An email request for contribution has been sent to #{@contributor.full_name}"
+        "An email request for contribution has been sent to #{@contribution.contributor.full_name}"
       respond_to do |format|
         format.js {}
       end

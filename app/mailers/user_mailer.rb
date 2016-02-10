@@ -3,8 +3,9 @@ class UserMailer < ApplicationMailer
   default from: 'no-reply@customerstories.net'
 
   # TODO: How to handle errors/exceptions for sending email?
-  def request_contribution contribution, contributor
+  def request_contribution contribution
     curator = contribution.success.curator
+    referral_intro = contribution.referrer_id.present? ? contribution.referrer.full_name + " referred me to you. " : ""
     story_example_id = Story.find_example
     host = "http://#{curator.company.subdomain}.#{ENV['HOST_NAME']}"
     template_name = contribution.role + "_request"
@@ -16,8 +17,9 @@ class UserMailer < ApplicationMailer
     @body = template.body
               .sub("[customer_name]", contribution.success.customer.name)
               .sub("[company_name]", curator.company.name)
-              .sub("[contributor_first_name]", contributor.first_name)
+              .sub("[contributor_first_name]", contribution.contributor.first_name)
               .sub("[curator_first_name]", curator.first_name)
+              .sub("[referral_intro]", referral_intro)
               .sub("[contribution_url]", "#{host}/contributions/#{contribution.access_token}/contribution")
               .sub("[feedback_url]", "#{host}/contributions/#{contribution.access_token}/feedback")
               .sub("[curator_full_name]", curator.full_name)
@@ -36,7 +38,7 @@ class UserMailer < ApplicationMailer
 
     # attachments.inline['ryan.jpg'] = File.read(ryan)
 
-    mail     to: "#{contributor.full_name} <#{contributor.email}>",
+    mail     to: "#{contribution.contributor.full_name} <#{contribution.contributor.email}>",
            from: "#{curator.full_name} <#{curator.email}>",
         subject: subject
 

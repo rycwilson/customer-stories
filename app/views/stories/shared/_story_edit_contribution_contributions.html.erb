@@ -14,15 +14,15 @@
 
         <div class="row">
           <div class='col-md-12'>
-            <%= contribution.user.full_name %> &nbsp&nbsp
+            <%= contribution.contributor.full_name %> &nbsp&nbsp
             <% research_url = %>
             <a target="_blank"
                href="http://google.com/search?q=
-                 <%= research_user_query_string(contribution.user,
+                 <%= research_user_query_string(contribution.contributor,
                                 @story.success.customer) %>">
-              Research <%= contribution.user.first_name %>
+              Research <%= contribution.contributor.first_name %>
             </a> <br>
-            <%= contribution.user.email %> <br>
+            <%= contribution.contributor.email %> <br>
             <%= contribution.role %> <br>
           </div>
         </div> <br>

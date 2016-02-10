@@ -5,7 +5,7 @@ module EmailTemplatesSeed
 
   CUSTOMER_REQUEST_BODY = "<p>Hi [contributor_first_name],</p>
 
-    <p>Bill Smith referred me to you.  I will be writing a success story about your project utilizing [company_name].</p>
+    <p>[referral_intro]I will be writing a success story about your project utilizing [company_name].</p>
 
     <p>This success story will highlight your accomplishments.  It’s a great way to build your personal brand and show impact you’ve delivered. It may also be used as a customer reference for others to learn about solving similar needs.</p>
 

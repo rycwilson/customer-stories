@@ -1,6 +1,8 @@
 class Contribution < ActiveRecord::Base
 
-  belongs_to :user  # contributor
+  belongs_to :contributor, class_name: 'User', foreign_key: 'user_id'
+  belongs_to :referrer, class_name: 'User', foreign_key: 'referrer_id'
+
   belongs_to :success
 
   # represents number of days between reminder emails
@@ -41,15 +43,19 @@ class Contribution < ActiveRecord::Base
   #
   def self.pre_request success_id
     Contribution.where(success_id: success_id, status: 'pre_request')
-                .order(created_at: :desc)
-                .map do |contribution|
-                  {
-                    contribution_id: contribution.id,
-                    full_name: contribution.user.full_name,
-                    email: contribution.user.email,
-                    role: contribution.role,
-                  }
-                end
+          .order(created_at: :desc)
+          .map do |contribution|
+            {
+              contribution_id: contribution.id,
+              full_name: contribution.contributor.full_name,
+              email: contribution.contributor.email,
+              role: contribution.role,
+              # this doesn't work, "No Method" error
+              # -> but works in console, wtf?
+              # referrer: contribution.referrer.try[:full_name]
+              referrer: contribution.referrer ? contribution.referrer.full_name : ""
+            }
+          end
   end
 
   #

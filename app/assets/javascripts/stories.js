@@ -107,12 +107,19 @@ function initListeners () {
     // tagsFormDirty = false;
   });
 
-  // reset new contributor modal form
+  // reset new contributor modal form when the modal closes
   $('.modal').on('hidden.bs.modal', function () {
-    // form inputs to default values...
+    // input elements to default values (first, last, email)
     $(this).find('form')[0].reset();
-    // select2 inputs to default values...
-    $('.contributor-role').select2('val', 'Customer');  // single select
+    // select2 inputs to default values (role, referred-by)
+    $('.new-contributor-role').select2('val', 'customer');  // single select
+    $('.new-contributor-referrer').select2('val', '');
+  });
+
+  // separate 'shown' handler necessary for setting input focus
+  $('.modal').on('shown.bs.modal', function () {
+    // the selector $('input:first') doesn't work for some reason
+    $(this).find('#contributor_first_name').focus();
   });
 
   // blur buttons after they're clicked
@@ -124,6 +131,11 @@ function initListeners () {
     $(this).parent().submit();
     // don't need this yet...
     console.log(state);
+  });
+
+  // don't leave focus on the button
+  $('#new-contributor-button').focus(function (e) {
+    e.target.blur();
   });
 
 }
@@ -145,8 +157,13 @@ function configPlugins () {
     theme: 'bootstrap'
   });
 
-  $('.contributor-role').select2({
+  $('.new-contributor-role').select2({
     theme: 'bootstrap'
+  });
+
+  $('.new-contributor-referrer').select2({
+    theme: 'bootstrap',
+    placeholder: 'Who referred you to this contributor?'
   });
 
   /*
