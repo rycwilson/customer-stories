@@ -13,7 +13,7 @@ Rails.application.routes.draw do
 
     # Company home / Story Curation - authentication required
     authenticate :user do
-      resources :companies, except: [:index, :destroy, :edit] do
+      resources :companies, only: [:show, :update] do
         resources :stories, only: [:new, :create]
       end
       resources :stories, only: [:edit, :update, :destroy]
@@ -32,6 +32,9 @@ Rails.application.routes.draw do
                                          as: 'edit_contribution'
     put   '/contributions/:token', to: 'contributions#update',
                                    as: 'contribution'
+
+    # LinkedIn Oauth2 (omniauth gem)
+    get '/auth/linkedin/callback', to: 'profile#linkedin_callback'
 
     # need to pick up on devise sign-in route here, without doing so explicitly
     # as that will conflict with devise routes declared below
@@ -52,6 +55,9 @@ Rails.application.routes.draw do
 
   root 'site#index'
 
+  # these will be without subdomain
+  resources :companies, only: [:new, :create]
+
   devise_for :users, controllers: {
       sessions: 'users/sessions',
       registrations: 'users/registrations',
@@ -60,9 +66,6 @@ Rails.application.routes.draw do
       unlocks_controller: 'users/unlocks',
       omniauth_callbacks_controller: 'users/omniauth_callbacks'
     }
-
-  # LinkedIn Oauth2 (omniauth gem)
-  get '/auth/linkedin/callback', to: 'profile#linkedin'
 
   # Store Front
   get '/product', to: 'site#product'

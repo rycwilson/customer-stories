@@ -1,8 +1,8 @@
 class ProfileController < ApplicationController
 
-  before_action :set_s3_direct_post, only: :linkedin
+  before_action :set_s3_direct_post, only: :linkedin_callback
 
-  def linkedin
+  def linkedin_callback
     if user_signed_in?  # company admin or curator
       if current_user.update linkedin_url: auth_hash[:info][:urls][:public_profile]
         # TODO: log the auth_hash
@@ -26,9 +26,6 @@ class ProfileController < ApplicationController
   end
 
   def show
-    # LinkedIn data will display if this is the first render upon
-    # authentication, else message will appear
-    @linkedin_data ||= { message: "this data is not persisted" };
   end
 
   def edit

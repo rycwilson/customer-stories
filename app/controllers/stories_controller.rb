@@ -2,14 +2,12 @@ class StoriesController < ApplicationController
 
   before_action :set_company, only: [:index, :create]
   before_action :set_story, only: [:show, :edit]
-  before_action :auth_user?, only: [:edit]
+  before_action :user_authorized?, only: [:edit]
 
   def index
     if params[:filter]  # ajax GET request
       @stories = @company.filter_stories params[:filter][:type], params[:filter][:id]
-      respond_to do |format|
-        format.json { render json: @stories }
-      end
+      respond_to { |format| format.json { render json: @stories } }
     else
       @stories = @company.stories
       @industries = @company.industries_filter_select
@@ -138,7 +136,7 @@ class StoriesController < ApplicationController
     @story = Story.find params[:id]
   end
 
-  def auth_user?
+  def user_authorized?
     if current_user.company_id == Story.find(params[:id]).success.customer.company.id
       true
     else

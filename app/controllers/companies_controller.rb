@@ -41,7 +41,7 @@ class CompaniesController < ApplicationController
       @company.update_tags(params[:company_tags]) if params[:company_tags]
       @company.users << current_user
       @company.create_email_templates
-      redirect_to company_path(@company), flash: { success: "Registered company successfully" }
+      redirect_to File.join(request.protocol + "#{@company.subdomain}." + request.domain + request.port_string, company_path(@company)), flash: { success: "Registered company successfully" }
     else
       # validation(s): presence / uniqueness of name
       flash.now[:danger] = "Unable to register: #{@company.errors.full_messages.join(', ')}"
