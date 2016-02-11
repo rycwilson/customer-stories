@@ -18,7 +18,7 @@ class StoriesController < ApplicationController
 
   def show
     @contributors = @story.success.contributions
-                          .where(linkedin: :true).map { |c| c.user }
+                          .where(linkedin: :true).map { |c| c.contributor }
     @contributors << @story.success.curator
   end
 

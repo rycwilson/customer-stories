@@ -1,43 +1,23 @@
 <!-- connection -->
-<div class="tab-pane fade" id="connection">
+<div class="tab-pane fade" id="connections">
 
   <div class="heading-block">
     <h4>
-        Story Connections
+      Story Connections
     </h4>
   </div> <!-- /.heading-block -->
 
   <div id='contribution-connections'>
-
-    <% @contributions.select { |c| c.status == 'contribution' }
-        .each do |contribution| %>
-
-      <div class="well">
-
-        <div class="row">
-          <div class='col-md-12'>
-            <%= contribution.contributor.full_name %> <br>
-            <%= contribution.contributor.email %> <br>
-            <%= contribution.role %> <br>
-          </div>
-        </div> <br>
-
-      </div>  <!-- well -->
-
-    <% end %>
-
-    <script src="//platform.linkedin.com/in.js" type="text/javascript">
-    </script>
-
     <div class='text-center'>
-    <script type="IN/MemberProfile"
-            data-id="https://www.linkedin.com/in/jeffhaslem"
-        data-format="inline" data-related="true" data-width='200'></script>
 
-    <script type="IN/MemberProfile"
-            data-id="https://www.linkedin.com/pub/allan-lo/2/80/214"
-        data-format="inline" data-related="false" data-width='200'></script>
+      <% @contributions.select { |c| c.linkedin == true }
+                       .each do |contribution| %>
+
+          <script type="IN/MemberProfile"
+                 data-id="<%= contribution.contributor.linkedin_url %>"
+             data-format="inline" data-related="false" data-width='340'></script>
+
+      <% end %>
     </div>
-
   </div>  <!-- contribution connections -->
 </div>  <!-- connection -->

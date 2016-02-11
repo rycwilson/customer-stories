@@ -10,6 +10,8 @@ var ready = function () {
   configPlugins();
   initListeners();
   initUnderscore();
+  // linkedin widgets
+  $.getScript('http://platform.linkedin.com/in.js');
 
 };
 

@@ -1,14 +1,15 @@
 
 module ContributionsSeed
 
-  def self.create success_id, role, status
+  def self.create success_id, role, status, user=nil
     text = FFaker::Lorem.paragraph
     (status == 'feedback') ? feedback = text : feedback = nil
     (status == 'contribution') ? contribution = text : contribution = nil
-    contributor = ContributionsSeed::create_contributor
+    contributor = user || ContributionsSeed::create_contributor
     c = Contribution.new(
        success_id: success_id,
           user_id: contributor.id,
+         linkedin: user ? true : false,
              role: role,
            status: status,
          feedback: feedback,
@@ -17,7 +18,7 @@ module ContributionsSeed
     # c.remind_at = Time.now + rand(5).minutes if (status == 'remind1')
     c.remind_at = Time.now + c.remind_1_wait.days if (status == 'request')
     c.remind_at = Time.now + c.remind_2_wait.days if (status == 'remind1')
-    puts c.errors.full_messages unless c.save
+    puts("create contribution error: " + c.errors.full_messages.join(', ')) unless c.save
     c
   end
 
@@ -32,7 +33,7 @@ module ContributionsSeed
           password: email,
       linkedin_url: linkedin_url,
       sign_up_code: 'csp_beta')
-    puts contributor.errors.full_messages unless contributor.save
+    puts("create contributor error: " + contributor.errors.full_messages.join(', ')) unless contributor.save
     contributor
   end
 
