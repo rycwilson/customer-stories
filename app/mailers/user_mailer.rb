@@ -9,7 +9,7 @@ class UserMailer < ApplicationMailer
     story_example_id = Story.find_example
     host = "http://#{curator.company.subdomain}.#{ENV['HOST_NAME']}"
     template_name = contribution.role + "_request"
-    template = curator.company.contribution_emails.where(name:template_name).take
+    template = curator.company.email_templates.where(name:template_name).take
     @footer_img_url = "https://s3-us-west-1.amazonaws.com/csp-#{Rails.env}-assets/CS-powered-by.png"
     subject = template.subject
                 .sub("[customer_name]", contribution.success.customer.name)
@@ -55,7 +55,7 @@ class UserMailer < ApplicationMailer
     else
       # error
     end
-    template = curator.company.contribution_emails.where(name:template_name).take
+    template = curator.company.email_templates.where(name:template_name).take
     @footer_img_url = "https://s3-us-west-1.amazonaws.com/csp-#{Rails.env}-assets/CS-powered-by.png"
     subject = template.subject
                 .sub("[customer_name]", contribution.success.customer.name)

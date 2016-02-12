@@ -1,5 +1,9 @@
 Rails.application.routes.draw do
 
+  get 'email_templates/show'
+
+  get 'email_templates/edit'
+
   ## TODO!!!  Add route for devise Admin scope to the RailsAdmin page(s) /admin
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
 
@@ -18,6 +22,9 @@ Rails.application.routes.draw do
       end
       resources :stories, only: [:edit, :update, :destroy]
     end
+
+    # Email Templates
+    resources :email_templates, only: [:show, :update]
 
     # Contributions
     post  '/stories/:id/contributions', to: 'contributions#create',

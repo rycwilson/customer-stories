@@ -18,7 +18,7 @@ class Company < ActiveRecord::Base
   has_many :products, dependent: :destroy
   has_many :product_categories, dependent: :destroy
 
-  has_many :contribution_emails, dependent: :destroy
+  has_many :email_templates, dependent: :destroy
 
   # presently uploading direct to S3, paperclip not used
   # paperclip
@@ -33,10 +33,17 @@ class Company < ActiveRecord::Base
   end
 
   def create_email_templates
-    self.contribution_emails.destroy_all
-    CSP.contribution_emails.each do |template|
-      self.contribution_emails << template.dup
+    self.email_templates.destroy_all
+    CSP.email_templates.each do |template|
+      self.email_templates << template.dup
     end
+  end
+
+  def update_email_templates new_template
+    self.email_templates.where(name: new_template[:name]).take
+                            .update( subject: new_template[:subject],
+                                        body: new_template[:body]  )
+    binding.pry
   end
 
   def customers_select
@@ -84,6 +91,13 @@ class Company < ActiveRecord::Base
     # TODO: expand this to exclude categories for which there are no stories?
     industries.keep_if { |industry| industry[1].is_a? Numeric }
     industries.unshift(['All', 'all'])
+  end
+
+  def templates_select
+    self.email_templates.map do |template|
+      [template.name, template.id]
+    end
+    .unshift( [""] )
   end
 
   def filter_stories type, id

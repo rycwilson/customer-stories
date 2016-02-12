@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160209204745) do
+ActiveRecord::Schema.define(version: 20160212011737) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -27,17 +27,6 @@ ActiveRecord::Schema.define(version: 20160209204745) do
     t.string   "logo_url"
     t.string   "subdomain"
   end
-
-  create_table "contribution_emails", force: :cascade do |t|
-    t.string   "name"
-    t.string   "subject"
-    t.text     "body"
-    t.integer  "company_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  add_index "contribution_emails", ["company_id"], name: "index_contribution_emails_on_company_id", using: :btree
 
   create_table "contributions", force: :cascade do |t|
     t.integer  "user_id"
@@ -69,6 +58,17 @@ ActiveRecord::Schema.define(version: 20160209204745) do
   end
 
   add_index "customers", ["company_id"], name: "index_customers_on_company_id", using: :btree
+
+  create_table "email_templates", force: :cascade do |t|
+    t.string   "name"
+    t.string   "subject"
+    t.text     "body"
+    t.integer  "company_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "email_templates", ["company_id"], name: "index_email_templates_on_company_id", using: :btree
 
   create_table "industries_successes", force: :cascade do |t|
     t.integer  "industry_category_id"
@@ -217,10 +217,10 @@ ActiveRecord::Schema.define(version: 20160209204745) do
 
   add_index "visitors", ["success_id"], name: "index_visitors_on_success_id", using: :btree
 
-  add_foreign_key "contribution_emails", "companies"
   add_foreign_key "contributions", "successes"
   add_foreign_key "contributions", "users"
   add_foreign_key "customers", "companies"
+  add_foreign_key "email_templates", "companies"
   add_foreign_key "industries_successes", "industry_categories"
   add_foreign_key "industries_successes", "successes"
   add_foreign_key "industry_categories", "companies"

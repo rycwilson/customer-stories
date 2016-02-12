@@ -3447,7 +3447,9 @@ fieldset[disabled] .navbar .btn-link:focus {
     margin-right: 0;
   }
   .mainnav-menu > li > a {
-    padding: 21px 15px;
+    /* Ryan changed from padding: 21px 15px; */
+    padding: 15px 10px;
+    /* Ryan changed from font-size: 20px; */
     font-size: 16px;
     letter-spacing: -1px;
     border-bottom: 1px solid transparent;
@@ -3513,7 +3515,7 @@ fieldset[disabled] .navbar .btn-link:focus {
 }
 @media (min-width: 1200px) {
   .mainnav-menu > li > a {
-    font-size: 20px;
+    font-size: 16px;
   }
 }
 @media (max-width: 767px) {

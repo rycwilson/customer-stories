@@ -29,6 +29,10 @@ class CompaniesController < ApplicationController
     @product_cats_pre_select = @company.product_categories.map { |category| category.id }
     @products = @company.products_select # single select (for now)
     @products_pre_select = @company.products.map { |product| product.id }
+    # just the first template for now ...
+    @templates_select = @company.templates_select
+    # @email_template.populate_values
+
   end
 
   def edit
@@ -57,7 +61,7 @@ class CompaniesController < ApplicationController
   end
 
   def update
-    @company.update_tags(params[:company_tags]) if params[:company_tags]
+    @company.update_tags(params[:company_tags]) if params[:company_tags].present?
     if @company.update company_params
       redirect_to company_path(@company), flash: { success: "Changes saved" }
     else

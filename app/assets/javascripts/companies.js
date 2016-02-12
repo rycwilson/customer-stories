@@ -13,6 +13,13 @@
 //= require jquery-ui/ui/widget.js
 //= require jquery-file-upload/js/jquery.fileupload
 
+// HTML editor for email templates
+//= require bootstrap-wysihtml5
+//= require bootstrap-wysihtml5/locales/en-US
+$(document).on('page:load', function () {
+  window.rangy.initialized = false;
+});
+
 $(function () {
 
   // not the best solution for remembering active tab, but it works
@@ -23,12 +30,12 @@ $(function () {
 
   configSelect2();
   configS3Upload();
+  configWysihtml5();
   initListeners();
 
 });
 
 function initListeners() {
-
   // remember the last active tab for server submit / page refresh
   $('a[data-toggle="tab"]').on('shown.bs.tab', function () {
     localStorage.setItem('lastTab', $(this).attr('href'));
@@ -43,7 +50,33 @@ function initListeners() {
     $('.new-story-tags').val('').trigger('change');  // multiple select
   });
 
+  $('.templates-select').on('change', function () {
+    $.get('/email_templates/' + $(this).val(), function (data, status, xhr) {
+      console.log(data);
+      $('#template_subject').val(data.subject);
+      $('#template_body').data("wysihtml5").editor.setValue(data.body);
+      $('#email-template-form').attr('action', '/email_templates/' + data.id);
+    });
+  });
 }
+
+function configWysihtml5 () {
+  $('.wysihtml5').wysihtml5({'toolbar': {
+      'font-styles': false,
+      'color': false,
+      'emphasis': {
+        'small': false
+      },
+      'blockquote': true,
+      'lists': true,
+      'html': true,
+      'link': true,
+      'image': true,
+      'smallmodals': true
+    }
+  });
+}
+
 
 // It would be nice to have a .tags class to which the common
 // settings (theme, tags) can be applied, but that doesn't work.
@@ -55,6 +88,11 @@ function configSelect2 () {
     theme: 'bootstrap',
     tags: true,
     placeholder: 'add tags'
+  });
+
+  $('.templates-select').select2({
+    theme: 'bootstrap',
+    placeholder: 'select a template...'
   });
 
   // Company tags are for maintaining a list of options for Story tagging

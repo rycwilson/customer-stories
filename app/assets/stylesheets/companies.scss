@@ -9,13 +9,12 @@
 *= require datatables-plugins/integration/bootstrap/3/dataTables.bootstrap
 *= require select2/dist/css/select2
 *= require select2-bootstrap-theme/dist/select2-bootstrap
+*= require bootstrap-wysihtml5
 */
 
 .required-input label:after {
-
   color: #D9534F;
   content: " *";
-
 }
 
 .progress {
