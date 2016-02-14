@@ -8,7 +8,7 @@ class UserMailer < ApplicationMailer
     referral_intro = contribution.referrer_id.present? ? contribution.referrer.full_name + " referred me to you. " : ""
     story_example_id = Story.find_example
     host = "http://#{curator.company.subdomain}.#{ENV['HOST_NAME']}"
-    template_name = contribution.role + "_request"
+    template_name = contribution.role.capitalize + " - initial contribution request"
     template = curator.company.email_templates.where(name:template_name).take
     @footer_img_url = "https://s3-us-west-1.amazonaws.com/csp-#{Rails.env}-assets/CS-powered-by.png"
     subject = template.subject
