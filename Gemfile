@@ -32,7 +32,7 @@ gem "paperclip", "~> 4.3"
 gem 'ffaker'
 gem 'rails_admin'
 gem 'best_in_place', '~> 3.0.1'
-gem 'bootstrap-wysihtml5-rails'
+gem 'summernote-rails'
 
 gem 'whenever', require: false
 

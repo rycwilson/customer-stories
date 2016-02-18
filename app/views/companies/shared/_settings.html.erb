@@ -191,7 +191,8 @@
                   <%= label_tag "Body", nil, class: "control-label col-md-2" %>
                   <div class="col-md-10">
                     <%= text_area_tag "template[body]", nil,
-                          class: 'form-control wysihtml5', rows: 20,
+                          data: { provider: 'summernote'},
+                          class: 'form-control', rows: 20,
                           style: "width: 80%" %>
                   </div>
                 </div>
