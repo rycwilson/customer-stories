@@ -1,66 +1,38 @@
 
 module EmailTemplatesSeed
 
-  REQUEST_SUBJECT = "[customer_name]/[company_name] Success Story"
+  REQUEST_SUBJECT = "Participate in a [customer_name]/[company_name] success story"
 
-  CUSTOMER_REQUEST_BODY = "<p>Hi [contributor_first_name],</p>
+  CUSTOMER_REQUEST_BODY = "<p>[contributor_first_name],</p>
 
-<p>[referral_intro]I will be writing a success story about your project utilizing [company_name].</p>
+<p>[referral_intro]</p>
 
-<p>This success story will highlight your accomplishments.  It’s a great way to build your personal brand and show impact you’ve delivered. It may also be used as a customer reference for others to learn about solving similar needs.</p>
+<p>I’m reaching out to request a favor. I’m planning to write a success story about your project utilizing [company_name] and would like your input. I will professionally write the story and need just 3 minutes of your time jotting down some notes.</p>
 
-<p>Your input will take just 3 minutes.  I will do the majority of the writing, based on input from the entire team.  All I need from you are brief notes on the primary success factors of the project.</p>
+<p>By participating, you can also use the curated success story as proof of your great work. It’s a great way to build your professional brand and showcase impact you’ve delivered. It will also be used as a reference to help others learn about solving similar needs.</p>
 
-<a href='[contribution_url]'>Provide your input here</a>
+<p> <a href='[contribution_url]'>Provide your input here</a> </p>
 
-<p>Please call or email if you have any questions.  I personally appreciate your contribution. It helps me write a great story that I think you will be proud of and want to share with your colleagues.</p>
+<p>Please call or email if you have any questions. I’m confident you will be proud of the curated story and will want to share with your colleagues.</p>
 
 <p>Thank you,</p>
 
-<img src='[curator_img_url]' alt='curator_img'> <br>
+<img id='curator-img' src='[curator_img_url]' alt='curator-img'> <br>
 
-<span>[curator_full_name]</span> <br>
-<span>[curator_title]</span> <br>
-<span>[curator_company]</span> <br>
-<span>[curator_email] | [curator_phone]</span> <br>
+[curator_full_name] <br>
+[curator_title] <br>
+[company_name] <br>
+[curator_email] | [curator_phone] <br>
 
-<p>Note: Once I have the story fully written it will go to [customer_name] for approval before publishing.  See an example of a published story <a href='[story_example_url]'>here</a>.
+<p>Note: I will be sure to get approval from [customer_name] before publishing.</p>
 
-<p>If you cannot contribute to a success story, please give us <a href='[feedback_url]'>feedback</a> why.</p>
+<p>If you feel you can't contribute to a success story, please give us <a href='[feedback_url]'>feedback</a> why.</p>
 
-<p>Click to <a href='[opt_out_url]'>opt-out</a> altogether.</p>"
+<p>You can opt out altogether <a href='[opt_out_url]'>here</a>.</p><br>"
 
+  CUSTOMER_REMIND1_SUBJECT = "Reminder: participate in a [customer_name]/[company_name] success story"
 
-  CUSTOMER_REMIND1_SUBJECT = "Customer - first reminder"
-
-  CUSTOMER_REMIND1_BODY = "<p>Dear [contributor_first_name],</p>
-
-<p>This is your first reminder to make a contribution.</p>
-
-<p> <a href='[contribution_url]'>Contribute</a> </p>
-<p> <a href='[feedback_url]'>Feedback</a> </p>
-<p> <a href='[opt_out_url]'>Opt-out</a> </p>"
-
-  CUSTOMER_REMIND2_SUBJECT = "Customer - second reminder"
-
-  CUSTOMER_REMIND2_BODY = "<p>Dear [contributor_first_name],</p>
-
-<p>This is your second reminder to make a contribution.</p>
-
-<p> <a href='[contribution_url]'>Contribute</a> </p>
-<p> <a href='[feedback_url]'>Feedback</a> </p>
-<p> <a href='[opt_out_url]'>Opt-out</a> </p>"
-
-  PARTNER_REQUEST_BODY = "<p>Dear [contributor_first_name],</p>
-
-<p>This is an invitation to contribute to a success story for which you were a Partner.</p>
-
-<p> <a href='[contribution_url]'>Contribute</a> </p>
-<p> <a href='[feedback_url]'>Feedback</a>
-<p> <a href='[opt_out_url]'>Opt-out</a>"
-
-  PARTNER_REMIND1_SUBJECT = "Partner - first reminder"
-  PARTNER_REMIND1_BODY = "<p>Dear [contributor_first_name],</p>
+  CUSTOMER_REMIND1_BODY = "<p>[contributor_first_name],</p>
 
 <p>This is your first reminder to make a contribution.</p>
 
@@ -68,25 +40,45 @@ module EmailTemplatesSeed
 <p> <a href='[feedback_url]'>Feedback</a> </p>
 <p> <a href='[opt_out_url]'>Opt-out</a> </p>"
 
-  PARTNER_REMIND2_SUBJECT = "Partner - second reminder"
-  PARTNER_REMIND2_BODY = "<p>Dear [contributor_first_name],</p>
+  CUSTOMER_REMIND2_SUBJECT = "Final reminder: participate in a [customer_name]/[company_name] success story"
 
-<p>This is your second reminder to make a contribution.</p>
+  CUSTOMER_REMIND2_BODY = "<p>[contributor_first_name],</p>
 
-<p> <a href='[contribution_url]'>Contribute</a> </p>
-<p> <a href='[feedback_url]'>Feedback</a> </p>
-<p> <a href='[opt_out_url]'>Opt-out</a> </p>"
-
-  SALES_REQUEST_BODY = "<p>Dear [contributor_first_name],</p>
-
-<p>This is an invitation to contribute to a success story for which you were on the Sales Team.</p>
+<p>This is your final reminder to make a contribution.</p>
 
 <p> <a href='[contribution_url]'>Contribute</a> </p>
 <p> <a href='[feedback_url]'>Feedback</a> </p>
 <p> <a href='[opt_out_url]'>Opt-out</a> </p>"
 
-  SALES_REMIND1_SUBJECT = "Sales - first reminder"
-  SALES_REMIND1_BODY = "<p>Dear [contributor_first_name],</p>
+  PARTNER_REQUEST_BODY = "<p>[contributor_first_name],</p>
+
+<p>[contributor_first_name],</p>
+
+<p>[referral_intro]</p>
+
+<p>I’m reaching out to request a favor. I’m planning to write a success story about your company’s service success with [customer_name] utilizing [company_name]. I will professionally write the story and need just 3 minutes of your time jotting down some notes.</p>
+
+<p>By participating, you can use the curated success story as personal validation of how you contributed to [company_name]’s success utilizing [company_name].   It’s a great reference to use with other prospects, proving your professional credibility in achieving results for your customers.</p>
+
+<p> <a href='[contribution_url]'>Provide your input here</a> </p>
+
+<p>Please call or email if you have any questions. I’m confident you will be proud of the curated story and will want to share with your prospects and colleagues.</p>
+
+<p>Thank you,</p>
+
+<img id='curator-img' src='[curator_img_url]' alt='curator-img'> <br>
+
+[curator_full_name] <br>
+[curator_title] <br>
+[company_name] <br>
+[curator_email] | [curator_phone] <br>
+
+<p>If you feel you can't contribute to a success story, please give us <a href='[feedback_url]'>feedback</a> why.</p>
+
+<p>You can opt out altogether <a href='[opt_out_url]'>here</a>.</p><br>"
+
+  PARTNER_REMIND1_SUBJECT = "Reminder: participate in a [customer_name]/[company_name] success story"
+  PARTNER_REMIND1_BODY = "<p>[contributor_first_name],</p>
 
 <p>This is your first reminder to make a contribution.</p>
 
@@ -94,10 +86,55 @@ module EmailTemplatesSeed
 <p> <a href='[feedback_url]'>Feedback</a> </p>
 <p> <a href='[opt_out_url]'>Opt-out</a> </p>"
 
-  SALES_REMIND2_SUBJECT = "Sales - second reminder"
+  PARTNER_REMIND2_SUBJECT = "Final reminder: participate in a [customer_name]/[company_name] success story"
+  PARTNER_REMIND2_BODY = "<p>[contributor_first_name],</p>
+
+<p>This is your final reminder to make a contribution.</p>
+
+<p> <a href='[contribution_url]'>Contribute</a> </p>
+<p> <a href='[feedback_url]'>Feedback</a> </p>
+<p> <a href='[opt_out_url]'>Opt-out</a> </p>"
+
+  SALES_REQUEST_BODY = "<p>[contributor_first_name],</p>
+
+<p>[contributor_first_name],</p>
+
+<p>[referral_intro]</p>
+
+<p>I’m reaching out to request a favor. I’m planning to write a success story about [customer_name] utilizing [company_name] and would like your input. I will professionally write the story and need just 3 minutes of your time jotting down some notes.</p>
+
+<p>By participating, you can use the curated success story as personal validation of your contribution to [customer_name]’s success utilizing [company_name]. It’s a great reference to use with other prospects, proving your professional credibility in achieving results for your customers.</p>
+
+<p> <a href='[contribution_url]'>Provide your input here</a> </p>
+
+<p>Please call or email if you have any questions. I’m confident you will be proud of the curated story and will want to share with your prospects and colleagues.</p>
+
+<p>Thank you,</p>
+
+<img id='curator-img' src='[curator_img_url]' alt='curator-img'> <br>
+
+[curator_full_name] <br>
+[curator_title] <br>
+[company_name] <br>
+[curator_email] | [curator_phone] <br>
+
+<p>If you feel you can't contribute to a success story, please give us <a href='[feedback_url]'>feedback</a> why.</p>
+
+<p>You can opt out altogether <a href='[opt_out_url]'>here</a>.</p><br>"
+
+  SALES_REMIND1_SUBJECT = "Reminder: participate in a [customer_name]/[company_name] success story"
+  SALES_REMIND1_BODY = "<p>[contributor_first_name],</p>
+
+<p>This is your first reminder to make a contribution.</p>
+
+<p> <a href='[contribution_url]'>Contribute</a> </p>
+<p> <a href='[feedback_url]'>Feedback</a> </p>
+<p> <a href='[opt_out_url]'>Opt-out</a> </p>"
+
+  SALES_REMIND2_SUBJECT = "Final reminder: participate in a [customer_name]/[company_name] success story"
   SALES_REMIND2_BODY = "<p>Dear [contributor_first_name],</p>
 
-<p>This is your second reminder to make a contribution.</p>
+<p>This is your final reminder to make a contribution.</p>
 
 <p> <a href='[contribution_url]'>Contribute</a> </p>
 <p> <a href='[feedback_url]'>Feedback</a> </p>

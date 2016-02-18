@@ -14,35 +14,38 @@
 //= require jquery-file-upload/js/jquery.fileupload
 
 // HTML editor for email templates
-//= require bootstrap-wysihtml5
-//= require bootstrap-wysihtml5/locales/en-US
-$(document).on('page:load', function () {
-  window.rangy.initialized = false;
-});
+//= require summernote
 
 $(function () {
 
   // not the best solution for remembering active tab, but it works
   var lastTab = localStorage.getItem('lastTab');
+  var lastSubTab = localStorage.getItem('lastSubTab');
   if (lastTab) {
     $('[href="' + lastTab + '"]').tab('show');
+  }
+  if (lastSubTab) {
+    $('[href="' + lastSubTab + '"]').tab('show');
   }
 
   configSelect2();
   configS3Upload();
-  configWysihtml5();
+  configSummernote();
   initListeners();
 
 });
 
 function initListeners() {
   // remember the last active tab for server submit / page refresh
-  $('a[data-toggle="tab"]').on('shown.bs.tab', function () {
+  $('.mainnav-menu a[data-toggle="tab"]').on('shown.bs.tab', function () {
     localStorage.setItem('lastTab', $(this).attr('href'));
+  });
+  $('.nav-stacked a[data-toggle="tab"]').on('shown.bs.tab', function () {
+    localStorage.setItem('lastSubTab', $(this).attr('href'));
   });
 
   // reset new story modal form
-  $('.modal').on('hidden.bs.modal', function () {
+  $('#new-story-modal').on('hidden.bs.modal', function () {
     // form inputs to default values... (in this case just title)
     $(this).find('form')[0].reset();
     // select2 inputs to default values...
@@ -50,33 +53,50 @@ function initListeners() {
     $('.new-story-tags').val('').trigger('change');  // multiple select
   });
 
+  // load selected email template for editing
   $('.templates-select').on('change', function () {
     $.get('/email_templates/' + $(this).val(), function (data, status, xhr) {
       console.log(data);
       $('#template_subject').val(data.subject);
-      $('#template_body').data("wysihtml5").editor.setValue(data.body);
+      $('.note-editable').html(data.body);
       $('#email-template-form').attr('action', '/email_templates/' + data.id);
     });
   });
+
+  // when a modified template is saved, remove the
+  // $('#email-template-form').on('submit', function (e) {
+  //   e.preventDefault();
+  //   var templateBody = $(this).find('.note-editable').html();
+  //   // use a conditional expression in order to delay submission of the form
+  //   // until after necessary changes are made
+    // var newBody = templateBody.replace(
+    //                     /(id=('|")curator-img('|") src=)('|")https:\/\/\S+('|")/,
+    //                     "$1[curator_img_url]" );
+  //   if ($(this).find('.note-editable').html( newBody ) ) {
+  //     console.log('well?');
+  //     // $(this).trigger('submit');
+  //   }
+  // });
 }
 
-function configWysihtml5 () {
-  $('.wysihtml5').wysihtml5({'toolbar': {
-      'font-styles': false,
-      'color': false,
-      'emphasis': {
-        'small': false
-      },
-      'blockquote': true,
-      'lists': true,
-      'html': true,
-      'link': true,
-      'image': true,
-      'smallmodals': true
-    }
+function configSummernote () {
+  $('[data-provider="summernote"]').each(function () {
+    $(this).summernote({
+      toolbar: [
+        // ['style', ['style']],
+        ['font', ['bold', 'italic', 'underline']], //, 'clear']],
+        ['fontname', ['fontname']],
+        // ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        ['height', ['height']],
+        // ['table', ['table']],
+        ['insert', ['link', 'picture', 'hr']],
+        ['view', ['codeview']],   // fullscreen
+        // ['help', ['help']]
+      ],
+    });
   });
 }
-
 
 // It would be nice to have a .tags class to which the common
 // settings (theme, tags) can be applied, but that doesn't work.
