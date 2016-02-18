@@ -54,12 +54,13 @@ class StoriesController < ApplicationController
       end
     else  # existing customer
       success = Success.new customer_id: new_story[:customer]
+      success.curator = current_user
     end
     if success.save
-      success.curator = current_user
       story = Story.new title: new_story[:title], success_id: success.id
       if story.save
         story.assign_tags new_story
+        binding.pry
         redirect_to edit_story_path story
       else
         # problem creating story

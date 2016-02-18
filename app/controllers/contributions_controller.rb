@@ -29,14 +29,13 @@ class ContributionsController < ApplicationController
   def create
     story = Story.find params[:id]
     existing_user = User.find_by email: params[:contributor][:email]
-
     contributor = existing_user || create_new_user(params[:contributor])
-    contribution = Contribution.new(user_id: contributor.id,
-                                referrer_id: params[:contributor][:referrer],
-                                 success_id: story.success.id,
-                                       role: params[:contributor][:role],
-                                     status: 'pre_request',
-                               access_token: SecureRandom.hex)
+    contribution = Contribution.new(  user_id: contributor.id,
+                                  referrer_id: params[:contributor][:referrer],
+                                   success_id: story.success.id,
+                                         role: params[:contributor][:role],
+                                       status: 'pre_request',
+                                 access_token: SecureRandom.hex )
     if contribution.save
       # respond with all pre-request contributions, most recent additions first
       @contributors = Contribution.pre_request story.success_id

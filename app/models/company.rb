@@ -39,13 +39,6 @@ class Company < ActiveRecord::Base
     end
   end
 
-  def update_email_templates new_template
-    self.email_templates.where(name: new_template[:name]).take
-                            .update( subject: new_template[:subject],
-                                        body: new_template[:body]  )
-    binding.pry
-  end
-
   def customers_select
     self.customers.map do |customer|
       # name will appear as a selection, while its id will be the value submitted
