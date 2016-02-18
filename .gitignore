@@ -20,8 +20,8 @@ vendor/assets/bower_components
 # to set env variables in heroku (when new vars are added),
 # run this in local environment:
 #   figaro heroku:set -e production
-config/application.yml
-config/secrets.yml
+#config/application.yml
+#config/secrets.yml
 
 # paperclip images
 public/system
