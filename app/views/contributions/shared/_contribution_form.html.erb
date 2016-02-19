@@ -8,11 +8,12 @@
     <span><%= curator.full_name %></span> <br>
     <span><%= curator.title %></span> <br>
     <span><%= curator.company.name %></span> <br>
+    <span><%= curator.phone %></span>
     <span><a href="mailto:<%= curator.email %>"><%= curator.email %></a> <br> <br>
 
   </div>
 
-  <div class='col-md-8 bubble' >
+  <div class='col-md-8 bubble'>
     <p> John, <br>
         Your input will greatly help me write a compelling success story about your project utilizing Cisco. I personally appreciate your help.  </br>
         Thank You!</p>
@@ -26,7 +27,7 @@
       <div class="accordion-group">
 
         <div class="accordion-heading">
-            Want some guidance on what to write?
+            Want some writing tips?
           <a class="accordion-toggle" data-toggle="collapse"
              data-parent="#accordion-guidance" href="#collapse-guidance">
              Expand
@@ -36,9 +37,9 @@
         <div id="collapse-guidance" class="accordion-body collapse">
           <div class="accordion-inner">
            <p>
-            <i class="icon-li fa fa-hand-o-right"></i>  What was the challenge this project needed to solve? </br>
+            <i class="icon-li fa fa-hand-o-right"></i>  What was the challenge? </br>
             <i class="icon-li fa fa-hand-o-right"></i>  What was the solution?</br>
-            <i class="icon-li fa fa-hand-o-right"></i>  What was the measured results of the solution?</p>
+            <i class="icon-li fa fa-hand-o-right"></i>  What are your estimated or measured results?</p>
           </div>
         </div>
 
@@ -78,7 +79,7 @@
     </div>
 
     <div class='col-md-3 pull-right text-right'>
-      <%= f.submit 'Submit', class: 'btn btn-primary' %> <br>
+      <%= f.submit 'Submit', class: 'btn btn-success' %> <br>
       <p style='font-size:12px; margin-top:10px'>
         By submitting you are agreeing to the
         <%= link_to 'ToS', tos_path, target: '_blank' %> </p>

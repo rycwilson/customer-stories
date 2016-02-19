@@ -24,9 +24,17 @@
                             contribution: @contribution,
                            response_type: @response_type } %> <br>
 
+    <% elsif @response_type == 'unsubscribe' %>
+
+      <p>Thanks for your response. We won't send you any more emails about this success story.</p>
+
+      <p>To opt out of all future requests, <a href="https://contributions/<%= @contribution.access_token %>/opt_out">click here</a>.</p>
+
     <% elsif @response_type == 'opt_out' %>
 
-      <h3>You have been unsubscribed</h3>
+      <p>Thanks for your response.</p>
+
+      <p><%= @contribution.contributor.email %> will be permanently removed from our list.</p>
 
     <% end %>
 

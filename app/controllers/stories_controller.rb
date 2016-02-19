@@ -46,12 +46,9 @@ class StoriesController < ApplicationController
     # was a new customer entered? ...
     new_customer = new_story[:customer] if new_story[:customer].to_i == 0
     if new_customer
-      customer = Customer.new name: new_customer, company_id: @company.id
-      if customer.save
-        success = Success.new customer_id: customer.id
-      else
-        puts 'problem creating Customer'
-      end
+      Customer.create name: new_customer, company_id: @company.id
+      success = Success.new customer_id: customer.id
+      success.curator = current_user
     else  # existing customer
       success = Success.new customer_id: new_story[:customer]
       success.curator = current_user

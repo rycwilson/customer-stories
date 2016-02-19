@@ -28,7 +28,7 @@ module EmailTemplatesSeed
 
 <p>If you feel you can't contribute to a success story, please give us <a href='[feedback_url]'>feedback</a> why.</p>
 
-<p>You can opt out altogether <a href='[opt_out_url]'>here</a>.</p><br>"
+<p>You can <a href='[unsubscribe_url]'>unsubscribe</a> from this success story or <a href='[opt_out_url]'>opt out</a> of all future requests.</p>"
 
   CUSTOMER_REMIND1_SUBJECT = "Reminder: participate in a [customer_name]/[company_name] success story"
 

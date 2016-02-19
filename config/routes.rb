@@ -1,9 +1,5 @@
 Rails.application.routes.draw do
 
-  get 'email_templates/show'
-
-  get 'email_templates/edit'
-
   ## TODO!!!  Add route for devise Admin scope to the RailsAdmin page(s) /admin
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
 
@@ -15,7 +11,7 @@ Rails.application.routes.draw do
     # Stories - public access
     resources :stories, only: [:index, :show]
 
-    # Company home / Story Curation - authentication required
+    # Company home / Story curation - authentication required
     authenticate :user do
       resources :companies, only: [:show, :update] do
         resources :stories, only: [:new, :create]
@@ -34,9 +30,10 @@ Rails.application.routes.draw do
                     as: 'request_contribution'
     get   '/contributions/:id/confirm', to: 'contributions#update',
                                         as: 'confirm_contribution'
-    # type is: contribution, feedback, opt_out
+    # type is: contribution, feedback, unsubscribe, opt_out
     get   '/contributions/:token/:type', to: 'contributions#edit',
-                                         as: 'edit_contribution'
+                                         as: 'edit_contribution',
+                    constraints: { type: /(contribution|feedback|unsubscribe|opt_out)/ }
     put   '/contributions/:token', to: 'contributions#update',
                                    as: 'contribution'
 

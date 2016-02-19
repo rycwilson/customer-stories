@@ -27,15 +27,10 @@ class UserMailer < ApplicationMailer
               .gsub("[curator_phone]", curator.phone || "")
               .gsub("[curator_title]", curator.title || "")
               .gsub("[story_example_url]", "#{host}/stories/#{story_example_id}")
+              .gsub("[unsubscribe_url]", "#{host}/contributions/#{contribution.access_token}/unsubscribe")
               .gsub("[opt_out_url]", "#{host}/contributions/#{contribution.access_token}/opt_out")
               .gsub("[curator_img_url]", curator.photo_url || "")
               .html_safe
-
-    # sends file ok, but no thumbnail preview.  email settings?
-    # ryan = File.expand_path(Rails.root + 'app/assets/images/ryan.jpg')
-    # attachments['ryan.jpg'] = File.read(ryan)
-
-    # attachments.inline['ryan.jpg'] = File.read(ryan)
 
     mail     to: "#{contribution.contributor.full_name} <#{contribution.contributor.email}>",
            from: "#{curator.full_name} <#{curator.email}>",
@@ -79,5 +74,4 @@ class UserMailer < ApplicationMailer
   end # contribution_reminder
 
 end
-
 

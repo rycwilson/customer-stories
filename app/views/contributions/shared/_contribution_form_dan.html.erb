@@ -1,0 +1,94 @@
+
+<div class="row">
+
+  <!-- <div class='curator_welcome'> -->
+  <div class="col-sm-3">
+    <img src="<%= contribution.success.curator.photo_url %>" width="80"
+        alt="curator_img" style='border:1px solid #CCC; border-radius:4px'> <br>
+  </div>
+  <div class="col-sm-9">
+    <div class='bubble' >
+     <span>Thank you for contributing. Your notes will help me write a compelling success story. I personally appreciate your help.</span>
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  </div>
+    <span><%= curator.full_name %></span> <br>
+    <span><%= curator.title %></span> <br>
+    <span><%= curator.company.name %></span> <br>
+    <span><%= curator.phone %></span> <br>
+    <span><%= curator.email %></span> <br> <br>
+  </div>
+</div>
+
+
+<div class='row'>
+  <div class='col-md-12'>
+    <div class='contributor_font' >
+      <div class="accordion" id="accordion-guidance">
+        <div class="accordion-group">
+          <div class="accordion-heading">
+            &nbspWould you like some writing guidance?
+            <a class="accordion-toggle" data-toggle="collapse"
+            data-parent="#accordion-guidance" href="#collapse-guidance">
+            Expand
+            </a>
+            <div id="collapse-guidance" class="accordion-body collapse">
+              <div class="accordion-inner">
+                <p>
+                  <i class="icon-li fa fa-hand-o-right"></i>  What was the challenge? </br>
+                  <i class="icon-li fa fa-hand-o-right"></i>  What was the solution?</br>
+                  <i class="icon-li fa fa-hand-o-right"></i>  What are your estimated or measured results?
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>  <!-- accordian-group -->
+      </div>  <!-- accordian -->
+    </div> <br>
+  </div>
+</div>
+
+<div class='row'>
+  <div class='col-md-12 contributor_font'>
+        <%= form_for contribution,
+            html: { class: "form-horizontal", method: "put" } do |f| %>
+          <%= hidden_field_tag "contribution[status]", response_type %>
+          <%#= f.label :contribution, "Your Success Story",
+            class: 'col-md-2 control-label' %>
+          <%= f.text_area :contribution, rows: "12",
+            class: 'form-control',
+            placeholder: 'Please type your notes and thoughts here', tabindex: '2',
+            autofocus: true %>
+  </div>
+</div>
+
+<div class='row'>
+    <div class="form-group">
+        <div class='col-md-1'>
+        <h1>
+        <i class="fa fa-linkedin-square" style="color:#006fb3"></i>
+        <h1>
+        </div>
+            <div class='checkbox-inline contributor_font col-md-7'>
+            <%= f.check_box :linkedin %>
+            <%= f.label :linkedin, "Optional: check here if you want your LinkedIn profile to be included in the success story.",
+              style: "padding:0 left:10" %>
+            <p> You can always remove or add your LinkedIn profile later.   </p>
+            </div>
+        <div class='col-md-3 pull-right text-right' style='margin-top:5px'>
+        <input type='submit' class='btn btn-lg btn-secondary'>
+            <div  style='margin-top:20px'>
+            <p class='contributor_font'> By submitting you are agreeing to the <a href="http://www.customerstories.net/tos" target="_blank">ToS</a></p>
+            </div>
+        <% end %>
+        </div>
+    </div>
+
+    <div class='col-md-2 pull-left'>
+    <img src="/assets/CS-powered-by.png" >
+    </div>
+
+</div>

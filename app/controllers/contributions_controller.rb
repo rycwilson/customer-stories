@@ -10,19 +10,18 @@ class ContributionsController < ApplicationController
   # end
 
   #
-  # GET '/contributions/:id/:token/:type'
-  #   type is 'contribution', 'feedback', 'opt_out'
+  # GET '/contributions/:token/:type'
+  #   type is 'contribution', 'feedback', 'unsubscribe', opt_out'
   #
   def edit
     @curator = @contribution.success.curator
     story_example_id = Story.find_example
     @story_example_url = "http://#{ENV['HOST_NAME']}/stories/#{story_example_id}"
-    # validate :type
-    if ['contribution', 'feedback', 'opt_out'].include? params[:type]
-      @response_type = params[:type]
-      process_opt_out(@contribution) if (@response_type == 'opt_out')
-    else
-      # page doesn't exist
+    @response_type = params[:type]
+    if @response_type == 'opt_out'
+      OptOut.create email: @contribution.contributor.email
+    elsif @response_type == 'unsubscribe'
+      @contribution.update unsubscribe: :true
     end
   end
 
