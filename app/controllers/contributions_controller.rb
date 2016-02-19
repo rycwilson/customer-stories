@@ -21,7 +21,7 @@ class ContributionsController < ApplicationController
     if @response_type == 'opt_out'
       OptOut.create email: @contribution.contributor.email
     elsif @response_type == 'unsubscribe'
-      @contribution.update unsubscribe: :true
+      @contribution.update unsubscribe: true
     end
   end
 
