@@ -1,29 +1,34 @@
 <br><br>
+<style>
+  body {
+    background-color: #85CEE6
+  }
+</style>
+
 <div class="container">
-  <div class="row">
-    <div class='col-md-8'>
+  <div class='col-md-8' style='background-color:white; padding-left:35px;
+    padding-right:35px; padding-top:35px; margin-top:-45px; border: 1px solid #CCC'>
 
-      <% if @response_type == 'contribution' %>
+    <% if @response_type == 'contribution' %>
 
-        <%= render partial: 'contributions/shared/contribution_form',
-                    locals: {      curator: @curator,
-                              contribution: @contribution,
-                             response_type: @response_type,
-                         story_example_url: @story_example_url } %> <br>
+      <%= render partial: 'contributions/shared/contribution_form',
+                  locals: {      curator: @curator,
+                            contribution: @contribution,
+                           response_type: @response_type,
+                       story_example_url: @story_example_url } %> <br>
 
-      <% elsif @response_type == 'feedback' %>
+    <% elsif @response_type == 'feedback' %>
 
-        <%= render partial: 'contributions/shared/feedback_form',
-                    locals: {      curator: @curator,
-                              contribution: @contribution,
-                             response_type: @response_type } %> <br>
+      <%= render partial: 'contributions/shared/feedback_form',
+                  locals: {      curator: @curator,
+                            contribution: @contribution,
+                           response_type: @response_type } %> <br>
 
-      <% elsif @response_type == 'opt_out' %>
+    <% elsif @response_type == 'opt_out' %>
 
-        <h3>You have been unsubscribed</h3>
+      <h3>You have been unsubscribed</h3>
 
-      <% end %>
+    <% end %>
 
-    </div>
   </div>
 </div>

@@ -3,7 +3,7 @@
 
   <div class='col-md-4'>
 
-    <img src="<%= contribution.success.curator.photo_url %>" alt="curator_img"> <br>
+    <img src="<%= contribution.success.curator.photo_url %>" alt="curator_img" style='border:1px solid #CCC; border-radius:4px'> <br>
 
     <span><%= curator.full_name %></span> <br>
     <span><%= curator.title %></span> <br>
@@ -55,7 +55,7 @@
 
   <div class='row'>
     <div class="form-group col-md-12" style='margin-bottom:15px'>
-      <%= f.text_area :contribution, rows: "10",
+      <%= f.text_area :contribution, rows: "8",
           class: 'form-control',
           placeholder: 'Please type your notes and thoughts here.', tabindex: '2',
           autofocus: true %>
@@ -78,7 +78,7 @@
     </div>
 
     <div class='col-md-3 pull-right text-right'>
-      <%= f.submit 'Submit', class: 'btn btn-lg btn-secondary' %> <br>
+      <%= f.submit 'Submit', class: 'btn btn-primary' %> <br>
       <p style='font-size:12px; margin-top:10px'>
         By submitting you are agreeing to the
         <%= link_to 'ToS', tos_path, target: '_blank' %> </p>
@@ -87,8 +87,9 @@
 
 <% end %>
 
+<br>
 <div class="row">
-  <div class='col-md-12 text-right'>
+  <div class='col-md-12 text-center'>
     <img src="<%= asset_path('CS-powered-by.png') %>" alt="powered_by_csp">
   </div>
 </div>
