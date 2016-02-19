@@ -28,7 +28,7 @@
 
       <p>Thanks for your response. We won't send you any more emails about this success story.</p>
 
-      <p>To opt out of all future requests, <a href="https://contributions/<%= @contribution.access_token %>/opt_out">click here</a>.</p>
+      <p>To opt out of all future requests, <a href="https://<%= @curator.company.subdomain %>/contributions/<%= @contribution.access_token %>/opt_out">click here</a>.</p>
 
     <% elsif @response_type == 'opt_out' %>
 
