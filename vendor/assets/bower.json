@@ -8,6 +8,7 @@
     "select2": "~4.0.0",
     "bootstrap-sass": "~> 3.3.5",
     "bootstrap-switch": "latest",
+    "responsive-toolkit": "latest",
     "fontawesome": "~4.4.0",
     "flot": "~0.8.3",
     "flot.tooltip": "~0.8.5",

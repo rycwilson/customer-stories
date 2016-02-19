@@ -1,12 +1,7 @@
 <br><br>
-<style>
-  body {
-    background-color: #85CEE6
-  }
-</style>
 
 <div class="container">
-  <div class='col-md-8' style='background-color:white; padding-left:35px;
+  <div class='col-xs-12 col-sm-10 <%= (@response_type == 'contribution' || @response_type == 'feedback') ? 'show' : 'hidden' %>' style='background-color:white; padding-left:35px;
     padding-right:35px; padding-top:35px; margin-top:-45px; border: 1px solid #CCC'>
 
     <% if @response_type == 'contribution' %>
@@ -24,7 +19,13 @@
                             contribution: @contribution,
                            response_type: @response_type } %> <br>
 
-    <% elsif @response_type == 'unsubscribe' %>
+    <% end %>
+
+  </div>
+
+  <div class="col-sm-8 <%= (@response_type == 'unsubscribe' || @response_type == 'opt_out') ? 'show' : 'hidden' %>">
+
+    <% if @response_type == 'unsubscribe' %>
 
       <p>Thanks for your response. We won't send you any more emails about this success story.</p>
 
