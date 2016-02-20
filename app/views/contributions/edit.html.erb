@@ -1,7 +1,7 @@
 <br><br>
 
 <div class="container">
-  <div class='col-xs-12 col-sm-10 <%= (@response_type == 'contribution' || @response_type == 'feedback') ? 'show' : 'hidden' %>' style='background-color:white; padding-left:35px;
+  <div class='col-xs-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 <%= (@response_type == 'contribution' || @response_type == 'feedback') ? 'show' : 'hidden' %>' style='background-color:white; padding-left:35px;
     padding-right:35px; padding-top:35px; margin-top:-45px; border: 1px solid #CCC'>
 
     <% if @response_type == 'contribution' %>
@@ -23,7 +23,7 @@
 
   </div>
 
-  <div class="col-sm-8 <%= (@response_type == 'unsubscribe' || @response_type == 'opt_out') ? 'show' : 'hidden' %>">
+  <div class="col-xs-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 <%= (@response_type == 'unsubscribe' || @response_type == 'opt_out') ? 'show' : 'hidden' %>">
 
     <% if @response_type == 'unsubscribe' %>
 
