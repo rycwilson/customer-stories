@@ -135,6 +135,7 @@ function configSelect2 () {
 
 
   // has the curate tab content been rendered?
+  //   (it may not have been if company not yet registered)
   if ($('#curate').length) {
     // is there a list of existing customers to choose from?
     if ($('.new-story-customer').length) {

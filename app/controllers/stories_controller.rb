@@ -17,7 +17,7 @@ class StoriesController < ApplicationController
   def show
     @contributors = @story.success.contributions
                           .where(linkedin: :true).map { |c| c.contributor }
-    @contributors << @story.success.curator
+    @contributors << @story.success.curator unless @contributors.any? { |c| c.email == @story.success.curator.email }
   end
 
   def edit
@@ -38,34 +38,30 @@ class StoriesController < ApplicationController
                              .unshift( [""] )
   end
 
-  # TODO: allow for new Customer creation
   # Notice how nested hash keys are treated as strings in the params hash
   # -> due to the way form parameters are name-spaced
   def create
     new_story = params[:story]
-    # was a new customer entered? ...
-    new_customer = new_story[:customer] if new_story[:customer].to_i == 0
-    if new_customer
-      Customer.create name: new_customer, company_id: @company.id
-      success = Success.new customer_id: customer.id
-      success.curator = current_user
-    else  # existing customer
-      success = Success.new customer_id: new_story[:customer]
-      success.curator = current_user
-    end
-    if success.save
-      story = Story.new title: new_story[:title], success_id: success.id
-      if story.save
-        story.assign_tags new_story
-        binding.pry
-        redirect_to edit_story_path story
-      else
-        # problem creating story
-        # TODO: wire up some flash messaging, possible to re-render the modal??
-        puts 'problem creating Story'
+    if new_story[:customer].to_i == 0  # new customer?
+      customer = Customer.new name: new_story[:customer], company_id: @company.id
+      unless customer.save
+        @flash_mesg = "Customer field can't be blank"
+        respond_to { |format| format.js { render action: 'create_error' } } and return
       end
     else
-      puts 'problem creating Success'
+      customer = Customer.find new_story[:customer]
+    end
+    success = Success.create customer_id: customer.id, curator_id: current_user.id
+    story = Story.new title: new_story[:title], success_id: success.id
+    if story.save
+      story.assign_tags new_story
+      flash[:success] = "Story created successfully"
+      flash.keep(:success)
+      @redirect = File.join request.base_url, edit_story_path(story)
+      respond_to { |format| format.js { render action: 'create_success' } }
+    else
+      @flash_mesg = story.errors.full_messages.join(', ')
+      respond_to { |format| format.js { render action: 'create_error' } }
     end
   end
 

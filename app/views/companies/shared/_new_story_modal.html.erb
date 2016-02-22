@@ -1,0 +1,94 @@
+<!-- new story modal -->
+<!-- NOTE tabIndex = -1 must be removed for select2 to work in the modal -->
+<div class="modal fade" id="new-story-modal" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">New Customer Story</h4>
+      </div>
+      <div class="modal-body">
+
+        <!-- Note: all form inputs name-spaced under 'story' -->
+        <%= form_tag company_stories_path(@company), remote: true,
+              class: 'form-horizontal' do %>
+
+          <div class='form-group required-input'>
+            <%= label_tag 'Customer', nil, class: 'col-md-4 control-label' %>
+            <div class='col-md-8'>
+
+              <!-- if no customers (just empty placeholder) -->
+              <% if @customers.length == 1 %>
+
+                <%= text_field_tag 'story[customer]', nil,
+                  class: 'form-control',
+                  style: 'width: 100%', autofocus: 'true' %>
+
+              <% else %>
+
+                <%= select_tag 'story[customer]',
+                    options_for_select(@customers),
+                    class: 'new-story-customer form-control',
+                    style: 'width: 100%' %>
+
+              <% end %>
+
+            </div>
+          </div>
+
+          <div class='form-group required-input'>
+            <%= label_tag 'Story title', nil, class: 'col-md-4 control-label' %>
+            <div class='col-md-8'>
+              <%= text_field_tag 'story[title]', nil, class: 'form-control',
+                  placeholder: 'title' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= label_tag 'Industry tags', nil,
+                class: 'col-md-4 control-label' %>
+            <div class='col-md-8'>
+              <!-- Note the necessary '[]' notation below  -->
+              <!-- if not present, will only return a single value  -->
+              <%= select_tag "story[industry_tags][]",
+                  options_for_select(@industries),
+                  { multiple: 'true', class: 'new-story-tags form-control',
+                    style: 'width:100%'} %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= label_tag 'Product Category tags', nil,
+                class: 'col-md-4 control-label' %>
+            <div class='col-md-8'>
+              <%= select_tag "story[product_cat_tags][]",
+                  options_for_select(@product_categories),
+                  { multiple: 'true', class: 'new-story-tags form-control',
+                    style: 'width:100%'} %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= label_tag 'Product tags', nil, class: 'col-md-4 control-label' %>
+            <div class='col-md-8'>
+              <%= select_tag "story[product_tags][]",
+                  options_for_select(@products),
+                  { multiple: 'true', class: 'new-story-tags form-control',
+                    style: 'width:100%'} %>
+            </div>
+          </div>
+
+      </div>
+      <div class="modal-footer">
+
+        <button class="btn btn-default" data-dismiss="modal">
+          Cancel
+        </button>
+
+          <%= submit_tag 'Create Story', class: 'btn btn-primary' %>
+
+        <% end %>  <!-- form_for -->
+
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal

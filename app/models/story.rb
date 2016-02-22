@@ -2,6 +2,8 @@ class Story < ActiveRecord::Base
 
   belongs_to :success
 
+  validates :title, presence: true
+
   def self.find_example
     Story.where(published: true).first.id
   end

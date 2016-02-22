@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160219171329) do
+ActiveRecord::Schema.define(version: 20160222175534) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -167,11 +167,11 @@ ActiveRecord::Schema.define(version: 20160219171329) do
     t.integer  "customer_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
-    t.integer  "user_id"
+    t.integer  "curator_id"
   end
 
+  add_index "successes", ["curator_id"], name: "index_successes_on_curator_id", using: :btree
   add_index "successes", ["customer_id"], name: "index_successes_on_customer_id", using: :btree
-  add_index "successes", ["user_id"], name: "index_successes_on_user_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
@@ -239,7 +239,7 @@ ActiveRecord::Schema.define(version: 20160219171329) do
   add_foreign_key "products_successes", "successes"
   add_foreign_key "stories", "successes"
   add_foreign_key "successes", "customers"
-  add_foreign_key "successes", "users"
+  add_foreign_key "successes", "users", column: "curator_id"
   add_foreign_key "users", "companies"
   add_foreign_key "visitors", "successes"
 end

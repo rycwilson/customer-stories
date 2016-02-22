@@ -2,10 +2,7 @@ class Success < ActiveRecord::Base
 
   belongs_to :company
   belongs_to :customer
-  belongs_to :curator, class_name: 'User', foreign_key: 'user_id'
-  # belongs_to :user  # the curator
-  # alias the user attribute -> Success.find(id).curator
-  # alias_attribute :curator, :user
+  belongs_to :curator, class_name: 'User', foreign_key: 'curator_id'
 
   has_one :story, dependent: :destroy
   has_many :visitors, dependent: :destroy

@@ -21,13 +21,13 @@ vendor/assets/bower_components
 # run this in local environment:
 #   figaro heroku:set -e production
 config/application.yml
-config/secrets.yml
+#config/secrets.yml
 
 # paperclip images
 public/system
 
 # pre-compiled assets (uncomment for github push, comment for heroku)
-public/assets
+#public/assets
 
 # user-specific (uncomment for github push, comment for heroku)
 # config/database.yml
