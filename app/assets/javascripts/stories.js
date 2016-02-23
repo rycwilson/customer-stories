@@ -140,6 +140,26 @@ function initListeners () {
     e.target.blur();
   });
 
+  // new result form - submit is disabled until value entered
+  $('#new-result').on('input', function () {
+    if ($(this).val().length > 0)
+      $(this).closest('form').find('button').prop('disabled', false);
+    else
+      $(this).closest('form').find('button').prop('disabled', true);
+  });
+
+  // delete a result
+  $('#results-list').on('click', '.delete-result', function () {
+    var $deleteButton = $(this);
+    $.ajax({
+      url: $deleteButton.data('action'),
+      method: 'delete',
+      success: function (data, status, xhr) {
+        $deleteButton.closest('.row').next('br').remove();
+        $deleteButton.closest('.row').remove();
+      }
+    });
+  });
 }
 
 function configPlugins () {

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160222175534) do
+ActiveRecord::Schema.define(version: 20160223024230) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -143,6 +143,15 @@ ActiveRecord::Schema.define(version: 20160222175534) do
   add_index "products_successes", ["product_id"], name: "index_products_successes_on_product_id", using: :btree
   add_index "products_successes", ["success_id"], name: "index_products_successes_on_success_id", using: :btree
 
+  create_table "results", force: :cascade do |t|
+    t.string   "description"
+    t.integer  "success_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
+  add_index "results", ["success_id"], name: "index_results_on_success_id", using: :btree
+
   create_table "stories", force: :cascade do |t|
     t.string   "title"
     t.text     "quote"
@@ -151,7 +160,7 @@ ActiveRecord::Schema.define(version: 20160222175534) do
     t.text     "situation"
     t.text     "challenge"
     t.text     "solution"
-    t.text     "results"
+    t.text     "benefits"
     t.integer  "success_id"
     t.datetime "created_at",                     null: false
     t.datetime "updated_at",                     null: false
@@ -237,6 +246,7 @@ ActiveRecord::Schema.define(version: 20160222175534) do
   add_foreign_key "products", "companies"
   add_foreign_key "products_successes", "products"
   add_foreign_key "products_successes", "successes"
+  add_foreign_key "results", "successes"
   add_foreign_key "stories", "successes"
   add_foreign_key "successes", "customers"
   add_foreign_key "successes", "users", column: "curator_id"

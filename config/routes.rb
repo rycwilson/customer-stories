@@ -37,6 +37,9 @@ Rails.application.routes.draw do
     put   '/contributions/:token', to: 'contributions#update',
                                    as: 'contribution'
 
+    # delete a Result
+    delete  '/results/:id', to: 'results#destroy'
+
     # LinkedIn Oauth2 (omniauth gem)
     get '/auth/linkedin/callback', to: 'profile#linkedin_callback'
 

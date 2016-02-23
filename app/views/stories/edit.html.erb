@@ -41,29 +41,77 @@
 
   </div>  <!-- settings, title, quote, video -->
 
-  <!-- tags -->
-  <p class='lead' style='display:inline-block'>Tags</p>
-  <button type='submit' class='edit-tags hidden btn btn-sm btn-primary'
-      style='display:inline-block; margin-left:15px; margin-bottom:8px' form='tags-form'>
-    Save changes
-  </button>
-  <button id='edit-tags-cancel' class='edit-tags hidden btn btn-sm btn-default'
-      style='display:inline-block; margin-bottom:8px'>
-    Cancel
-  </button>  <!-- tags -->
-
-  <!-- tags form -->
   <div class="row" style='margin-bottom: 15px'>
-    <div class="col-md-12">
+    <!-- tags form -->
+    <div class="col-sm-7">
+    <!-- tags -->
+    <p class='lead' style='display:inline-block'>Tags</p>
+    <button type='submit' class='edit-tags hidden btn btn-sm btn-primary'
+        style='display:inline-block; margin-left:15px; margin-bottom:8px' form='tags-form'>
+      Save changes
+    </button>
+    <button id='edit-tags-cancel' class='edit-tags hidden btn btn-sm btn-default'
+        style='display:inline-block; margin-bottom:8px'>
+      Cancel
+    </button>  <!-- tags -->
       <div class="well">
-        <div class="container-fluid">
+        <!-- <div class="container-fluid"> -->
 
           <%= render 'stories/shared/story_edit_tags_form' %>
+
+        <!-- </div> -->
+      </div>
+    </div>  <!-- tags form -->
+
+
+    <div class="col-sm-5">
+      <p class='lead' style='display:inline-block'>Results</p>
+      <div class="well" style="position:relative">
+
+        <%= form_tag story_path(@story), remote: true, method: :put,
+              class: 'form-inline' do %>
+          <%= text_field_tag "story[new_result]", nil, class: 'form-control',
+                  id: 'new-result', style: 'width:89%', placeholder: 'Add a result' %>
+          <%= button_tag type: "submit", class: "btn btn-secondary", disabled: true do %>
+            <i class='glyphicon glyphicon-plus'></i>
+          <% end %>
+
+        <% end %> <br>
+
+        <div class='container-fluid' id='results-list'>
+
+          <% @results.each_with_index do |result, index| %>
+            <div class="row">
+
+              <div class="modify-result">
+                <div id="edit-story-result-<%= index %>"
+                    style='position:absolute; right:55px; margin-top:-3px'>
+                  <i class='glyphicon glyphicon-pencil bip-clickable'></i>
+                </div>
+
+                <div class='delete-result' id="delete-story-result-<%= index %>"
+                    data-id="<%= result.id %>"
+                    data-action="<%= File.join( @base_url, "results/#{result.id}" ) %>"
+                    style='position:absolute; right:20px; margin-top:-3px'>
+                  <i class='glyphicon glyphicon-remove bip-clickable'></i>
+                </div>
+              </div>
+
+              <div id='story-result-<%= index %>' class="story-result col-md-9">
+                <!-- http://stackoverflow.com/questions/13561533 -->
+                <%= best_in_place result, :description,
+                          url: story_path(@story) + "?result_id=#{result.id}",
+                   html_attrs: { style: 'width:100%' },
+                    activator: "#edit-story-result-#{index}" %>
+              </div>
+
+            </div>  <!-- row --> <br>
+          <% end %>
 
         </div>
       </div>
     </div>
-  </div>  <!-- tags form -->
+  </div>
 
 
   <div class="row">
@@ -201,16 +249,16 @@
 
             <div class="row">
 
-              <div id='edit-story-results'
+              <div id='edit-story-benefits'
                     style='position:absolute; right:20px; margin-top:-3px'>
                   <span class='glyphicon glyphicon-pencil bip-clickable'></span>
               </div>
 
-              <div class='col-md-11' id='story-results'>
-                <strong>Results:&nbsp&nbsp</strong>
-                <%= best_in_place @story, :results, as: :textarea, url: story_path(@story),
-                    activator: '#edit-story-results',
-                    place_holder: 'Add story results ...',
+              <div class='col-md-11' id='story-benefits'>
+                <strong>Benefits:&nbsp&nbsp</strong>
+                <%= best_in_place @story, :benefits, as: :textarea, url: story_path(@story),
+                    activator: '#edit-story-benefits',
+                    place_holder: 'Add story benefits ...',
                     html_attrs: { style: 'width:100%' } %>
 
               </div>
@@ -270,6 +318,43 @@
     </div>
   </div>
 </script>
+
+<!-- Results -->
+<script type="text/template" id="results-template">
+  <div class="row">
+
+    <div class='modify-result'>
+      <div id="edit-story-result-{{= index }}"
+          style='position:absolute; right:55px; margin-top:-3px'>
+        <i class='glyphicon glyphicon-pencil bip-clickable'></i>
+      </div>
+
+      <div id="delete-story-result-{{= index }}" class="delete-result"
+          data-id="{{= result.id }}"
+          data-action="{{= baseUrl }}/results/{{= result.id }}"
+          style='position:absolute; right:20px; margin-top:-3px'>
+        <i class='glyphicon glyphicon-remove bip-clickable'></i>
+      </div>
+    </div>
+
+    <div id='story-result-{{= index }}' class="story-result col-md-9">
+      <span data-bip-type="input" data-bip-attribute="description"
+            data-bip-activator="#edit-story-result-{{= index }}"
+            data-bip-html-attrs="{&quot;style&quot;:&quot;width:100%&quot;}"
+            data-bip-object="result"
+            data-bip-original-content="{{= result.description }}"
+            data-bip-url="/stories/{{= storyId }}?result_id={{= result.id }}"
+            data-bip-value="{{= result.description }}"
+            class="best_in_place"
+            id="best_in_place_result_{{= result.id }}_description">
+        {{= result.description }}
+      </span>
+    </div>
+
+  </div> <br>
+</script>
+
+
 
 
 

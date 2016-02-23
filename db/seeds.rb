@@ -31,20 +31,20 @@ csp = Company.find_by(name:'CSP')
 
 # destroy contributions first so deleted users don't orphan contributions (violates foreign key costraint)
 # Note: not using (dependent: :destroy) for users -> contributions (or users -> successes)
-# Contribution.destroy_all
-# User.where.not("email = ? OR email = ?", "***REMOVED***", "***REMOVED***").destroy_all
-# Customer.destroy_all # also destroys successes, stories, visitors, and successes* join tables
+Contribution.destroy_all
+User.where.not("email = ? OR email = ?", "***REMOVED***", "***REMOVED***").destroy_all
+Customer.destroy_all # also destroys successes, stories, visitors, and successes* join tables
 # Product.destroy_all
 # ProductCategory.destroy_all
 # IndustryCategory.destroy_all
-EmailTemplate.destroy_all
+# EmailTemplate.destroy_all
 
 # some users with linkedin profiles
-# user1 = User.create(first_name:'Carlos', last_name:'Ramon', email:'carlos@mail.com', linkedin_url:'https://www.linkedin.com/in/carlosramon', sign_up_code:'csp_beta', password:'password')
-# user2 = User.create(first_name:'Reza', last_name:'Raji', email:'reza@mail.com', linkedin_url:'https://www.linkedin.com/in/rezaraji', sign_up_code:'csp_beta', password:'password')
-# user3 = User.create(first_name:'Jeff', last_name:'Haslem', email:'jeffh@mail.com', linkedin_url:'https://www.linkedin.com/in/jeffhaslem', sign_up_code:'csp_beta', password:'password')
-# user4 = User.create(first_name:'Allan', last_name:'Lo', email:'allan@mail.com', linkedin_url:'https://www.linkedin.com/pub/allan-lo/2/80/214', sign_up_code:'csp_beta', password:'password')
-# user5 = User.create(first_name:'Jeff', last_name:'Weiner', email:'jeffw@mail.com', linkedin_url:'https://www.linkedin.com/in/jeffweiner08', sign_up_code:'csp_beta', password:'password')
+user1 = User.create(first_name:'Carlos', last_name:'Ramon', email:'carlos@mail.com', linkedin_url:'https://www.linkedin.com/in/carlosramon', sign_up_code:'csp_beta', password:'password')
+user2 = User.create(first_name:'Reza', last_name:'Raji', email:'reza@mail.com', linkedin_url:'https://www.linkedin.com/in/rezaraji', sign_up_code:'csp_beta', password:'password')
+user3 = User.create(first_name:'Jeff', last_name:'Haslem', email:'jeffh@mail.com', linkedin_url:'https://www.linkedin.com/in/jeffhaslem', sign_up_code:'csp_beta', password:'password')
+user4 = User.create(first_name:'Allan', last_name:'Lo', email:'allan@mail.com', linkedin_url:'https://www.linkedin.com/pub/allan-lo/2/80/214', sign_up_code:'csp_beta', password:'password')
+user5 = User.create(first_name:'Jeff', last_name:'Weiner', email:'jeffw@mail.com', linkedin_url:'https://www.linkedin.com/in/jeffweiner08', sign_up_code:'csp_beta', password:'password')
 
 # Cisco's target industries...
 # INDUSTRIES_CISCO.each do |industry_name|
@@ -60,57 +60,63 @@ EmailTemplate.destroy_all
 # end
 
 # Default email templates
-csp.email_templates << EmailTemplate.create(name: "Customer - initial contribution request", subject: EmailTemplatesSeed::REQUEST_SUBJECT, body: EmailTemplatesSeed::CUSTOMER_REQUEST_BODY)
-csp.email_templates << EmailTemplate.create(name: "Customer - first contribution reminder", subject: EmailTemplatesSeed::CUSTOMER_REMIND1_SUBJECT, body: EmailTemplatesSeed::CUSTOMER_REMIND1_BODY)
-csp.email_templates << EmailTemplate.create(name: "Customer - second contribution reminder", subject: EmailTemplatesSeed::CUSTOMER_REMIND2_SUBJECT, body: EmailTemplatesSeed::CUSTOMER_REMIND2_BODY)
-csp.email_templates << EmailTemplate.create(name: "Partner - initial contribution request", subject: EmailTemplatesSeed::REQUEST_SUBJECT, body: EmailTemplatesSeed::PARTNER_REQUEST_BODY)
-csp.email_templates << EmailTemplate.create(name: "Partner - first contribution reminder", subject: EmailTemplatesSeed::PARTNER_REMIND1_SUBJECT, body: EmailTemplatesSeed::PARTNER_REMIND1_BODY)
-csp.email_templates << EmailTemplate.create(name: "Partner - second contribution reminder", subject: EmailTemplatesSeed::PARTNER_REMIND2_SUBJECT, body: EmailTemplatesSeed::PARTNER_REMIND2_BODY)
-csp.email_templates << EmailTemplate.create(name: "Sales - initial contribution request", subject: EmailTemplatesSeed::REQUEST_SUBJECT, body: EmailTemplatesSeed::SALES_REQUEST_BODY)
-csp.email_templates << EmailTemplate.create(name: "Sales - first contribution reminder", subject: EmailTemplatesSeed::SALES_REMIND1_SUBJECT, body: EmailTemplatesSeed::SALES_REMIND1_BODY)
-csp.email_templates << EmailTemplate.create(name: "Sales - second contribution reminder", subject: EmailTemplatesSeed::SALES_REMIND2_SUBJECT, body: EmailTemplatesSeed::SALES_REMIND2_BODY)
+# csp.email_templates << EmailTemplate.create(name: "Customer - initial contribution request", subject: EmailTemplatesSeed::REQUEST_SUBJECT, body: EmailTemplatesSeed::CUSTOMER_REQUEST_BODY)
+# csp.email_templates << EmailTemplate.create(name: "Customer - first contribution reminder", subject: EmailTemplatesSeed::CUSTOMER_REMIND1_SUBJECT, body: EmailTemplatesSeed::CUSTOMER_REMIND1_BODY)
+# csp.email_templates << EmailTemplate.create(name: "Customer - second contribution reminder", subject: EmailTemplatesSeed::CUSTOMER_REMIND2_SUBJECT, body: EmailTemplatesSeed::CUSTOMER_REMIND2_BODY)
+# csp.email_templates << EmailTemplate.create(name: "Partner - initial contribution request", subject: EmailTemplatesSeed::REQUEST_SUBJECT, body: EmailTemplatesSeed::PARTNER_REQUEST_BODY)
+# csp.email_templates << EmailTemplate.create(name: "Partner - first contribution reminder", subject: EmailTemplatesSeed::PARTNER_REMIND1_SUBJECT, body: EmailTemplatesSeed::PARTNER_REMIND1_BODY)
+# csp.email_templates << EmailTemplate.create(name: "Partner - second contribution reminder", subject: EmailTemplatesSeed::PARTNER_REMIND2_SUBJECT, body: EmailTemplatesSeed::PARTNER_REMIND2_BODY)
+# csp.email_templates << EmailTemplate.create(name: "Sales - initial contribution request", subject: EmailTemplatesSeed::REQUEST_SUBJECT, body: EmailTemplatesSeed::SALES_REQUEST_BODY)
+# csp.email_templates << EmailTemplate.create(name: "Sales - first contribution reminder", subject: EmailTemplatesSeed::SALES_REMIND1_SUBJECT, body: EmailTemplatesSeed::SALES_REMIND1_BODY)
+# csp.email_templates << EmailTemplate.create(name: "Sales - second contribution reminder", subject: EmailTemplatesSeed::SALES_REMIND2_SUBJECT, body: EmailTemplatesSeed::SALES_REMIND2_BODY)
 
-cisco.create_email_templates
+# cisco.create_email_templates
 
 # Customers and Stories...
-# CUSTOMERS.each do |customer_name|
-#   customer = Customer.create(name: customer_name)
-#   cisco.customers << customer
-#   success = Success.create
-#   customer.successes << success
-#   success.created_at = (rand*60).days.ago
-#   success.curator = dan # curators[rand(2)]  # randomly select dan or ryan as curator
-#   success.save
-#   # 2/3 successes will have a story
-#   if rand(3) >= 1
-#     success.story = StoriesSeed::create
-#     # 1/2 stories will be approved/published (attributes default to false)
-#     if rand(2) == 1
-#       success.story.update(approved: true, published: true, logo_published: true, publish_date: Time.now)
-#     end
-#     # random industry category (tag)
-#     success.industry_categories << cisco.industry_categories[rand(0...cisco.industry_categories.count)]
-#     # random product category (tag)
-#     success.product_categories << cisco.product_categories[rand(0...cisco.product_categories.count)]
-#     # random product (tag)
-#     success.products << cisco.products[rand(0...cisco.products.count)]
-#     # each story has some visitors
-#     10.times { success.visitors << VisitorsSeed::create }
+CUSTOMERS.each do |customer_name|
+  customer = Customer.create(name: customer_name)
+  cisco.customers << customer
+  success = Success.create
+  customer.successes << success
+  success.created_at = (rand*60).days.ago
+  success.curator = dan # curators[rand(2)]  # randomly select dan or ryan as curator
+  success.save
+  # 2/3 successes will have a story
+  if rand(3) >= 1
+    success.story = StoriesSeed::create
+    # 1/2 stories will be approved/published (attributes default to false)
+    if rand(2) == 1
+      success.story.update(approved: true, published: true, logo_published: true, publish_date: Time.now)
+    end
+    # random industry category (tag)
+    success.industry_categories << cisco.industry_categories[rand(0...cisco.industry_categories.count)]
+    # random product category (tag)
+    success.product_categories << cisco.product_categories[rand(0...cisco.product_categories.count)]
+    # random product (tag)
+    success.products << cisco.products[rand(0...cisco.products.count)]
+    # each story has some visitors
+    10.times { success.visitors << VisitorsSeed::create }
 
-#     # Contributions
-#     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user1 )
-#     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user2 )
-#     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user3 )
-#     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user4 )
-#     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user5 )
+    # Contributions
+    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user1 )
+    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user2 )
+    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user3 )
+    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user4 )
+    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user5 )
 
-#     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'pre_request' )
-#     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], STATUS_OPTIONS[rand(1..3)] )
-#     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'feedback' )
-#     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution' )
+    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'pre_request' )
+    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], STATUS_OPTIONS[rand(1..3)] )
+    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'feedback' )
+    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution' )
 
-#   end  # story create
-# end
+    # Results
+    3.times do
+      success.results << Result.create(description: FFaker::Lorem.sentence,
+                                        success_id: success.id)
+    end
+
+  end  # story create
+end
 
 
 

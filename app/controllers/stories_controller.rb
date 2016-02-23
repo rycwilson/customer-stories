@@ -36,6 +36,9 @@ class StoriesController < ApplicationController
     @referrer_select = @story.success.contributions
                              .map { |c| [ c.contributor.full_name, c.contributor.id ] }
                              .unshift( [""] )
+    @results = @story.success.results
+    # this is needed for the Result delete button...
+    @base_url = request.base_url
   end
 
   # Notice how nested hash keys are treated as strings in the params hash
@@ -67,11 +70,22 @@ class StoriesController < ApplicationController
 
   def update
     story = Story.find params[:id]
-    if params[:story_tags] # if updating tags
+    if params[:story_tags]  # updated tags
       story.update_tags params[:story_tags]
       respond_to do |format|
         format.js
       end
+    elsif params[:result]  # a result was edited
+      Result.find(params[:result_id].to_i).update description: params[:result][:description]
+      respond_to { |format| format.json { render json: nil } }
+    # params[:story]* items must appear below, else error
+    # (there is no params[:story] when params[:story_tags] or params[:result] are present)
+    elsif params[:story][:new_result]
+      story.success.results << Result.create(description: params[:story][:new_result])
+      @results = story.success.results
+      @story_id = story.id
+      @base_url = request.base_url  # needed for deleting a result
+      respond_to { |format| format.js { render action: 'create_result_success' } }
     elsif params[:story][:embed_url]  # if updating video url
       youtube_id = params[:story][:embed_url].match(/v=(?<id>.*)/)[:id]
       params[:story][:embed_url] = "https://www.youtube.com/embed/" + youtube_id
@@ -86,9 +100,7 @@ class StoriesController < ApplicationController
       end
     elsif params[:story][:published]
       if story.update story_params
-        respond_to do |format|
-          format.json { render json: nil } # empty response
-        end
+        respond_to { |format| format.json { render json: nil } } # empty response
       else
       end
     else  # all other updates
