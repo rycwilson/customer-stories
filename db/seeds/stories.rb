@@ -9,7 +9,7 @@ module StoriesSeed
            situation:FFaker::Lorem.paragraphs.join(" "),
            challenge:FFaker::Lorem.paragraphs.join(" "),
             solution:FFaker::Lorem.paragraphs.join(" "),
-             results:FFaker::Lorem.paragraphs.join(" "),
+            benefits:FFaker::Lorem.paragraphs.join(" "),
            embed_url:"https://www.youtube.com/embed/hecXupPpE9o")
   end
 
