@@ -140,7 +140,11 @@ function initListeners () {
     e.target.blur();
   });
 
-  // new result form - submit is disabled until value entered
+  /*
+    new result form - submit is disabled until value entered.
+    listens for input event instead of change event, as latter only fires after
+    focus moves away from input field, while former fires after all edits
+  */
   $('#new-result').on('input', function () {
     if ($(this).val().length > 0)
       $(this).closest('form').find('button').prop('disabled', false);
