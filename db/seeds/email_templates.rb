@@ -17,7 +17,7 @@ module EmailTemplatesSeed
 
 <p>Thank you,</p>
 
-<img id='curator-img' src='[curator_img_url]' alt='curator-img'> <br>
+<img id='curator-img' src='[curator_img_url]' style='width:100px' alt='curator-img'> <br>
 
 [curator_full_name] <br>
 [curator_title] <br>
@@ -66,7 +66,7 @@ module EmailTemplatesSeed
 
 <p>Thank you,</p>
 
-<img id='curator-img' src='[curator_img_url]' alt='curator-img'> <br>
+<img id='curator-img' src='[curator_img_url]' style='width:100px' alt='curator-img'> <br>
 
 [curator_full_name] <br>
 [curator_title] <br>

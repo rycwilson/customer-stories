@@ -2970,8 +2970,9 @@ table.dataTable-helper td.highlight {
 .navbar-profile-label-visible {
   display: inline !important;
 }
+/*csp change from 50px*/
 .navbar-nav > .navbar-profile .dropdown-toggle {
-  padding-left: 50px;
+  padding-left: 20px;
 }
  -nav > .navbar-profile .dropdown-toggle:hover .navbar-profile-avatar,
 .navbar-nav > .navbar-profile.open .navbar-profile-avatar {

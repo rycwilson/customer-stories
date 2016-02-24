@@ -6,7 +6,7 @@
 
     <!-- need to prevent these partials from being rendered if new company,
     else references to company parameters in the partials will crash the app -->
-    <% unless @company.new_record? %>
+    <!-- <%# unless @company.new_record? %> -->
 
       <%= render 'companies/shared/pipeline' %>
 
@@ -16,11 +16,8 @@
 
       <%= render 'companies/shared/measure' %>
 
-      <%= render 'companies/shared/user_profile' %>
+    <%# end %>
 
-    <% end %>
-
-    <%= render 'companies/shared/settings' %>
 
   </div>  <!-- tab content -->
 

@@ -26,8 +26,10 @@
 
       <% if user_signed_in? && current_user.company.try(:logo_url) %>
 
-        <img src="<%= current_user.company.logo_url %>"
-              class="navbar-brand navbar-brand-img" alt="company logo">
+        <%= link_to root_path do %>
+          <%= image_tag "#{current_user.company.logo_url}",
+                class: "navbar-brand navbar-brand-img", alt: "company logo" %>
+        <% end %>
 
       <% else %>
 
@@ -39,20 +41,26 @@
       <button class="navbar-toggle" type="button"
               data-toggle="collapse" data-target=".navbar-collapse">
         <span class="sr-only">Toggle navigation</span>
-        <i class="fa fa-cog"></i>
+        <i class="glyphicon glyphicon-align-justfy"></i>
       </button>
     </div> <!-- /.navbar-header -->
 
     <% if user_signed_in? %>
 
       <nav class="collapse navbar-collapse" role="navigation">
+
+        <% if current_user.company_id.blank? %>
+          <%= link_to 'Register your Company', new_company_path,
+                class: 'btn btn-info', style: 'margin-top:10px; margin-left:20px' %>
+        <% end %>
+
         <%= render '/shared/mvp_admin_navbar_nav' %>
       </nav>
 
     <% else %>
 
       <nav class="collapse navbar-collapse" role="navigation">
-        <%= link_to 'Sign in', new_user_session_path, class: 'btn btn-primary navbar-right', style: 'margin-top: 10px' %>
+        <%= link_to 'Sign in', new_user_session_path, class: 'btn btn-success navbar-right', style: 'margin-top: 10px' %>
       </nav>
 
     <% end %>

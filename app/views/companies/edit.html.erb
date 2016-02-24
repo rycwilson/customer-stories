@@ -1,41 +1,59 @@
-<!-- company settings -->
-<div id='company-settings' role='tabpanel'
-    class="<%= @company.new_record? ? 'active tab-pane content' : 'tab-pane content' %>">
+<div class="wrapper">
+
+  <!-- this needs to be present despite being empty, or stuff below will go haywire -->
+  <div class="mainnav">
+    <div class="container">
+
+    </div>
+  </div>
+
   <div class="content">
     <div class="container">
       <div class="layout layout-main-right layout-stack-sm">
-
         <div class="col-md-3 col-sm-4 layout-sidebar">
 
           <ul class="nav nav-layout-sidebar nav-stacked">
 
             <li class="active">
               <a href="#company-profile" data-toggle="tab">
-              <i class="fa fa-edit"></i>
-              &nbsp;&nbsp;Company Profile
+                <i class="fa fa-edit"></i>
+                &nbsp;&nbsp;Company
               </a>
             </li>
 
-            <li>
-              <a href="#email-templates" data-toggle="tab">
-              <i class="fa fa-envelope-o"></i>
-              &nbsp;&nbsp;Email Templates
-              </a>
-            </li>
+            <% if @company.persisted? %>
 
-            <li>
-              <a href="#curators" data-toggle="tab">
-              <i class="fa fa-users"></i>
-              &nbsp;&nbsp;Curators
-              </a>
-            </li>
+              <li>
+                <a href="#email-templates" data-toggle="tab">
+                  <i class="fa fa-envelope-o"></i>
+                  &nbsp;&nbsp;Email Templates
+                </a>
+              </li>
 
-            <!-- <li>
-              <a href="#billing" data-toggle="tab">
-              <i class="fa fa-credit-card"></i>
-              &nbsp;&nbsp;Billing
-              </a>
-            </li> -->
+              <li>
+                <a href="#curators" data-toggle="tab">
+                  <i class="fa fa-users"></i>
+                  &nbsp;&nbsp;Curators
+                </a>
+              </li>
+
+            <% else %>
+
+              <li>
+                <a href="javascript:;" data-toggle="tab">
+                  <i class="fa fa-envelope-o"></i>
+                  &nbsp;&nbsp;Email Templates
+                </a>
+              </li>
+
+              <li>
+                <a href="javasript:;" data-toggle="tab">
+                  <i class="fa fa-users"></i>
+                  &nbsp;&nbsp;Curators
+                </a>
+              </li>
+
+            <% end %>
 
           </ul>
         </div> <!-- /.col -->
@@ -50,13 +68,14 @@
                   <h3> Company Registration </h3>
 
                 <% else %>
-                  <h3> Update Company Profile </h3>
+                  <h3> Company Profile </h3>
 
                 <% end %>
               </div> <!-- /.heading-block -->
 
               <%= form_for @company,
                     html: { class: 'directUpload',
+                           remote: true,
                              data: {
                                'form-data' => (@s3_direct_post.fields),
                                      'url' => @s3_direct_post.url,
@@ -216,20 +235,10 @@
 
             </div> <!-- /.tab-pane -->
 
-            <!-- <div class="tab-pane fade" id="billing">
-
-              <div class="heading-block">
-                <h3>
-                  Manage Payment and Billing
-                </h3>
-              </div>
-
-            </div> --> <!-- /.tab-pane -->
-
           </div> <!-- /.tab-content -->
         </div> <!-- /.col -->
 
       </div> <!-- /.row -->
     </div>  <!-- container -->
   </div>  <!-- content -->
-</div>  <!-- company settings
+</div>  <!-- wrapper

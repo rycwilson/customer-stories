@@ -16,16 +16,16 @@
 // HTML editor for email templates
 //= require summernote
 
-$(function () {
+var ready = function () {
 
   // not the best solution for remembering active tab, but it works
-  var lastTab = localStorage.getItem('lastTab');
-  var lastSubTab = localStorage.getItem('lastSubTab');
-  if (lastTab) {
-    $('[href="' + lastTab + '"]').tab('show');
+  var lastCurateTab = localStorage.getItem('lastCurateTab');
+  var lastSettingsTab = localStorage.getItem('lastSettingsTab');
+  if (lastCurateTab) {
+    $('[href="' + lastCurateTab + '"]').tab('show');
   }
-  if (lastSubTab) {
-    $('[href="' + lastSubTab + '"]').tab('show');
+  if (lastSettingsTab) {
+    $('[href="' + lastSettingsTab + '"]').tab('show');
   }
 
   configSelect2();
@@ -33,15 +33,26 @@ $(function () {
   configSummernote();
   initListeners();
 
-});
+};
+
+/*
+  with turbolinks in place, js only runs on initial page load
+  for example, js does not run when going from stories#show to stories#edit,
+    and this results in plug-ins not being initialized
+  below ensures that js runs each time a stories/ page loads
+  both are needed
+*/
+$(document).ready(ready);
+$(document).on('page:load', ready);
+
 
 function initListeners() {
   // remember the last active tab for server submit / page refresh
   $('.mainnav-menu a[data-toggle="tab"]').on('shown.bs.tab', function () {
-    localStorage.setItem('lastTab', $(this).attr('href'));
+    localStorage.setItem('lastCurateTab', $(this).attr('href'));
   });
   $('.nav-stacked a[data-toggle="tab"]').on('shown.bs.tab', function () {
-    localStorage.setItem('lastSubTab', $(this).attr('href'));
+    localStorage.setItem('lastSettingsTab', $(this).attr('href'));
   });
 
   // reset new story modal form

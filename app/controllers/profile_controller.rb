@@ -1,16 +1,18 @@
 class ProfileController < ApplicationController
 
-  before_action :set_s3_direct_post, only: :linkedin_callback
+  before_action :set_company, only: :edit
+  before_action :set_s3_direct_post, only: [:linkedin_callback, :edit]
 
   def linkedin_callback
     if user_signed_in?  # company admin or curator
       if current_user.update linkedin_url: auth_hash[:info][:urls][:public_profile]
         # TODO: log the auth_hash
-        flash[:info] = 'Connected to LinkedIn!'
-        if current_user.company_id.nil?
-          redirect_to new_company_path
-        else
+        if current_user.company_id.present?
+          flash[:success] = 'Account setup complete'
           redirect_to company_path(current_user.company_id)
+        else
+          flash[:info] = 'Connected to LinkedIn'
+          redirect_to edit_profile_no_company_path
         end
       else
         # flash.now[:danger] = "Problem updating linkedin_url field for #{}"
@@ -44,6 +46,14 @@ class ProfileController < ApplicationController
   end
 
   private
+
+  def set_company
+    if current_user.company_id.present?
+      @company = Company.find current_user.company_id
+    else
+      true  # return value is insignificant
+    end
+  end
 
   def set_s3_direct_post
     @s3_direct_post = S3_BUCKET.presigned_post(key: "uploads/#{SecureRandom.uuid}/${filename}", success_action_status: '201', acl: 'public-read')

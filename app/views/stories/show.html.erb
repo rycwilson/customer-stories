@@ -6,13 +6,13 @@
 
       <% if user_signed_in? %>
 
-        <%= link_to company_path(current_user.company), class: 'story-nav' do %>
+        <%= link_to company_path(current_user.company), class: 'csp-nav' do %>
           <span class='glyphicon glyphicon-chevron-left'
               style='color:#337ab7; margin-top:17px; margin-right:5px'>
           </span><span>Curate Stories</span>
         <% end %><br>
 
-        <%= link_to edit_story_path(@story), class: 'story-nav' do %>
+        <%= link_to edit_story_path(@story), class: 'csp-nav' do %>
           <span class='glyphicon glyphicon-chevron-left'
               style='color:#337ab7; margin-top:5px; margin-right:5px'>
           </span><span>Edit this Story</span>

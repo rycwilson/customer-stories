@@ -5,6 +5,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
 # before_action :configure_account_update_params, only: [:update]
 before_action :set_s3_direct_post, only: [:edit, :update]
 
+  # respond_to :html, :js
+
   # GET /resource/sign_up
   def new
     super
@@ -23,6 +25,13 @@ before_action :set_s3_direct_post, only: [:edit, :update]
   # PUT /resource
   def update
     super
+    # if @user.errors.present?
+    #   @flash_mesg = @user.errors.full_messages.join(', ')
+    #   @flash_status = 'danger'
+    # else
+    #   @flash_mesg = "Account updated successfully"
+    #   @flash_status = "success"
+    # end
   end
 
   # DELETE /resource
@@ -48,7 +57,7 @@ before_action :set_s3_direct_post, only: [:edit, :update]
 
   # change redirect on update
   def after_update_path_for user
-    company_path user.company_id
+    edit_profile_path
   end
 
   # If you have extra params to permit, append them to the sanitizer.

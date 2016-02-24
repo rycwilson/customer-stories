@@ -41,16 +41,11 @@ class ApplicationController < ActionController::Base
 
   # change devise redirect on sign in
   def after_sign_in_path_for user
-    if user.company_id  # returning users
+    if user.company_id.present?  # returning users
       root = root_url(host: user.company.subdomain + '.' + request.domain)
       File.join(root, company_path(user.company_id))
-    # elsif invited_curator = InvitedCurator.find_by(email: user.email)
-      #   user.update role: 2, company_id: invited_curator.company_id  # curator
-      #   company_path user.company_id
-      # TODO: callback to destroy invited_curator
     else
-      # user.update role: 1  # company admin
-      new_company_path
+      edit_profile_no_company_path('edit')
     end
   end
 

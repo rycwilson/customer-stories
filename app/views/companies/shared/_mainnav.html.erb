@@ -1,32 +1,24 @@
 
+<!-- old way: -->
 <!-- 1 - go to Company Settings tab if new company -->
 <!-- 2 - go to My Profile tab if not yet connected to LinkedIn -->
 <!-- 3 - go to Curate tab -->
 
-<% if @company.new_record? || current_user.linkedin_url.nil? %>
+<%# if @company.new_record? || current_user.linkedin_url.nil? %>
   <!-- not sure why, but <%#= javascript_tag defer: 'defer' do %> apparently
   failed to hold off execution until DOM loaded ($ methods below weren't working)
   using $(function () { ... }) instead seems to work -->
-  <%= javascript_tag do %>
-    $(function () {
+  <%#= javascript_tag do %>
+<!--     $(function () {
       $('#pipeline-tab').css('pointer-events', 'none');
       $('#curate-tab').css('pointer-events', 'none');
       $('#promote-tab').css('pointer-events', 'none');
       $('#measure-tab').css('pointer-events', 'none');
-    });
-  <% end %>
+    }); -->
+  <%# end %>
 
-<% end %>
+<%# end %>
 
-<% if @company.new_record? %>
-
-  <%= javascript_tag do %>
-    $(function () {
-      $('#user-profile-tab').css('pointer-events', 'none');
-    });
-  <% end %>
-
-<% end %>
 
 <div class='mainnav'>
   <div class='container'>
@@ -47,8 +39,8 @@
           </a>
         </li>
 
-        <li class="<%= @company.persisted? && current_user.linkedin_url && @linkedin_data.nil? ? 'active' : '' %>"
-            id='curate-tab' role='presentation' style='margin-bottom: 0px'>
+    <!--     <li class="<%#= @company.persisted? && current_user.linkedin_url && @linkedin_data.nil? ? 'active' : '' %>" -->
+        <li id='curate-tab' class='active' role='presentation' style='margin-bottom: 0px'>
           <a href='#curate' role='tab' data-toggle='tab' aria-controls='curate'>
             Curate
           </a>
@@ -65,21 +57,6 @@
             style='margin-bottom: 0px'>
           <a href='#measure' role='tab' data-toggle='tab' aria-controls='measure'>
             Measure
-          </a>
-        </li>
-
-        <li id='user-profile-tab'
-            class="<%= @company.persisted? && (current_user.linkedin_url.nil? || @linkedin_data) ? 'active pull-right' : 'pull-right' %>"
-            role='presentation' style='margin-bottom: 0px'>
-          <a href='#user-profile' role='tab' data-toggle='tab' aria-controls='user-profile'>
-            My Profile
-          </a>
-        </li>
-
-        <li class="<%= @company.new_record? ? 'active pull-right' : 'pull-right' %>"
-            role='presentation' style='margin-bottom: 0px'>
-          <a href='#company-settings' role='tab' data-toggle='tab' aria-controls='company-settings'>
-            Company Settings
           </a>
         </li>
 

@@ -13,10 +13,17 @@ Rails.application.routes.draw do
 
     # Company home / Story curation - authentication required
     authenticate :user do
-      resources :companies, only: [:show, :update] do
+      resources :companies, only: [:show, :edit, :update] do
         resources :stories, only: [:new, :create]
       end
       resources :stories, only: [:edit, :update, :destroy]
+
+      # delete a Result
+      delete '/results/:id', to: 'results#destroy'
+
+      # user profile
+      get   '/profile/edit', to: 'profile#edit', as: 'edit_profile'
+
     end
 
     # Email Templates
@@ -36,9 +43,6 @@ Rails.application.routes.draw do
                     constraints: { type: /(contribution|feedback|unsubscribe|opt_out)/ }
     put   '/contributions/:token', to: 'contributions#update',
                                    as: 'contribution'
-
-    # delete a Result
-    delete  '/results/:id', to: 'results#destroy'
 
     # LinkedIn Oauth2 (omniauth gem)
     get '/auth/linkedin/callback', to: 'profile#linkedin_callback'
@@ -64,6 +68,14 @@ Rails.application.routes.draw do
 
   # these will be without subdomain
   resources :companies, only: [:new, :create]
+
+  # user profile - company not registered (Curator or Contributor)
+  # (need to give the route a different alias to distinguish from the one
+  #  under subdomains)
+  get   '/profile/edit', to: 'profile#edit', as: 'edit_profile_no_company'
+
+  # LinkedIn Oauth2 (omniauth gem)
+  get '/auth/linkedin/callback', to: 'profile#linkedin_callback'
 
   devise_for :users, controllers: {
       sessions: 'users/sessions',
