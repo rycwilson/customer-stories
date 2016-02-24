@@ -45,7 +45,7 @@ class ApplicationController < ActionController::Base
       root = root_url(host: user.company.subdomain + '.' + request.domain)
       File.join(root, company_path(user.company_id))
     else
-      edit_profile_no_company_path('edit')
+      edit_profile_no_company_path
     end
   end
 
