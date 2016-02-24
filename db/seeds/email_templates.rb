@@ -75,7 +75,7 @@ module EmailTemplatesSeed
 
 <p>If you feel you can't contribute to a success story, please give us <a href='[feedback_url]'>feedback</a> why.</p>
 
-<p>You can opt out altogether <a href='[opt_out_url]'>here</a>.</p><br>"
+<p>You can <a href='[unsubscribe_url]'>unsubscribe</a> from this success story or <a href='[opt_out_url]'>opt out</a> of all future requests.</p>"
 
   PARTNER_REMIND1_SUBJECT = "Reminder: participate in a [customer_name]/[company_name] success story"
   PARTNER_REMIND1_BODY = "<p>[contributor_first_name],</p>
@@ -111,7 +111,7 @@ module EmailTemplatesSeed
 
 <p>Thank you,</p>
 
-<img id='curator-img' src='[curator_img_url]' alt='curator-img'> <br>
+<img id='curator-img' src='[curator_img_url]' style='width:100px' alt='curator-img'> <br>
 
 [curator_full_name] <br>
 [curator_title] <br>
@@ -120,7 +120,7 @@ module EmailTemplatesSeed
 
 <p>If you feel you can't contribute to a success story, please give us <a href='[feedback_url]'>feedback</a> why.</p>
 
-<p>You can opt out altogether <a href='[opt_out_url]'>here</a>.</p><br>"
+<p>You can <a href='[unsubscribe_url]'>unsubscribe</a> from this success story or <a href='[opt_out_url]'>opt out</a> of all future requests.</p>"
 
   SALES_REMIND1_SUBJECT = "Reminder: participate in a [customer_name]/[company_name] success story"
   SALES_REMIND1_BODY = "<p>[contributor_first_name],</p>

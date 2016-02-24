@@ -6,18 +6,15 @@ class EmailTemplatesController < ApplicationController
   #       after updating they become escaped double quote
   # note: saving template without any changes leads to an empty template body (??)
   def show
-    binding.pry
-    @template.subject.gsub!(/(\[.+?\])/, '<span style="color:red">\1</span>')
-    # insert curator's photo
+    # insert curator's photo (or a placeholder)
     if current_user.photo_url.present?
       @template.body.sub! "[curator_img_url]", current_user.photo_url
     else
       @template.body.sub! "[curator_img_url]", ActionController::Base.helpers.asset_path("user-photo-missing.png")
     end
-
     # give anchor links a format that allows for editing text of the link
     # don't want to include actual links, as they'll be broken (placeholders instead of actual urls)
-    @template.body.gsub!(/<a\shref=('|\")\[(\w+)\]('|\")>(.+)<\/a>/, '[\2 link_text="\4"]')
+    @template.body.gsub!(/<a\shref=('|\")\[(\w+)\]('|\")>(.+?)<\/a>/, '[\2 link_text="\4"]')
     # highlight all placeholders, links, and urls
     @template.body.gsub!(/(\[.+?\])/, '<span style="color:red">\1</span>')
     respond_to { |format| format.json { render json: @template } }

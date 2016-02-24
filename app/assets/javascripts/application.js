@@ -22,8 +22,6 @@
 // require_tree ./sitewide (under construction)
 
 // flash messaging
-
-
 $(function() {
 
   setTimeout(function () {
@@ -36,6 +34,9 @@ $(function() {
   });
 
 });
+
+
+
 
 
 

@@ -4,7 +4,7 @@ class EmailTemplate < ActiveRecord::Base
 
   before_update do |template|
     # re-construct curator photo placeholder
-    template.body.sub!( /(id=('|")curator-img('|") src=)('|")https:\/\/\S+('|")/,
+    template.body.sub!( /(id=('|")curator-img('|") src=)('|")(https:\S+|\/assets\S+)('|")/,
                         '\1"[curator_img_url]"' ) # outside single quote necessary for capture reference to work correctly
     # re-construct anchor links
     template.body.gsub!( /\[(\w+)\slink_text=('|")(.+?)('|")\]/,
