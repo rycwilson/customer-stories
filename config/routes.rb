@@ -87,12 +87,12 @@ Rails.application.routes.draw do
     }
 
   # Store Front
-  get '/product', to: 'site#product'
-  get '/plans', to: 'site#plans'
-  get '/our-company', to: 'site#our-company'
-  get '/tea m', to: 'site#team'
-  get '/tos', to: 'site#tos', as: 'tos'
-  get '/privacy', to: 'site#privacy'
-  get '/our-story', to: 'site#our-story'
+  get '/product', to: 'site#store_front'
+  get '/plans', to: 'site#store_front'
+  get '/our-company', to: 'site#store_front'
+  get '/team', to: 'site#store_front'
+  get '/tos', to: 'site#store_front', as: 'tos'
+  get '/privacy', to: 'site#store_front'
+  get '/our-story', to: 'site#store_front'
 
 end

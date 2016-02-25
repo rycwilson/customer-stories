@@ -45,7 +45,9 @@
 
   <% if user_signed_in? %>
 
-    <%= link_to company_path(current_user.company_id) do %>
+    <%= link_to File.join( request.protocol + current_user.company.subdomain +
+                           "." + request.domain + request.port_string,
+                           company_path(current_user.company_id) ) do %>
       <%= image_tag(current_user.company.logo_url, class: 'navbar-brand navbar-brand-img') %>
     <% end %>
 

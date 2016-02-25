@@ -82,7 +82,8 @@
       <%= f.submit 'Submit', class: 'btn btn-success btn-block' %> <br>
     </div>
     <div class='col-xs-12 text-center'>
-      <p>By submitting you are agreeing to the <%= link_to 'Terms of Service', tos_path, target: '_blank' %></p>
+      <p>By submitting you are agreeing to the <%= link_to 'Terms of Service',
+            "#{ request.protocol + request.domain + request.port_string + '/tos' }", target: '_blank' %></p>
     </div>
   </div>
 

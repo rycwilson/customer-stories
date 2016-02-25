@@ -21,6 +21,11 @@ class ApplicationController < ActionController::Base
       request.subdomain.blank? ? true : redirect_to(File.join(root_url(host: request.domain), request.path))
     elsif user_subdomain == request.subdomain  # all good
       true
+    elsif request.subdomain.blank? &&
+          params[:controller] == 'site' &&
+          (['index', 'store_front'].include? params[:action])
+      # logged in, navigating to store front
+      true
     else  # wrong subdomain, re-direct
       redirect_to File.join(root_url(host: user_subdomain + '.' + request.domain), request.path)
     end
