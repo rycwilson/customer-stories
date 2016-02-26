@@ -1,9 +1,6 @@
 class SiteController < ApplicationController
 
   def index
-    # if current_user.try :company
-    #   redirect_to company_path(current_user.company_id)
-    # end
   end
 
   def valid_subdomain_bad_path
