@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160223024230) do
+ActiveRecord::Schema.define(version: 20160226034652) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -143,6 +143,15 @@ ActiveRecord::Schema.define(version: 20160223024230) do
   add_index "products_successes", ["product_id"], name: "index_products_successes_on_product_id", using: :btree
   add_index "products_successes", ["success_id"], name: "index_products_successes_on_success_id", using: :btree
 
+  create_table "prompts", force: :cascade do |t|
+    t.string   "body"
+    t.integer  "success_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "prompts", ["success_id"], name: "index_prompts_on_success_id", using: :btree
+
   create_table "results", force: :cascade do |t|
     t.string   "description"
     t.integer  "success_id"
@@ -246,6 +255,7 @@ ActiveRecord::Schema.define(version: 20160223024230) do
   add_foreign_key "products", "companies"
   add_foreign_key "products_successes", "products"
   add_foreign_key "products_successes", "successes"
+  add_foreign_key "prompts", "successes"
   add_foreign_key "results", "successes"
   add_foreign_key "stories", "successes"
   add_foreign_key "successes", "customers"
