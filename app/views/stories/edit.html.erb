@@ -74,7 +74,7 @@
         <%= form_tag story_path(@story), remote: true, method: :put,
               class: 'form-inline' do %>
           <%= text_field_tag "story[new_prompt]", nil, class: 'form-control',
-                  id: 'new-prompt', style: 'width:89%', placeholder: 'Add a prompt...' %>
+                  id: 'new-prompt', style: 'width:89%', placeholder: 'Add a prompt that will help contributors share their experience ...' %>
           <%= button_tag type: "submit", class: "btn btn-secondary", disabled: true do %>
             <i class='glyphicon glyphicon-plus'></i>
           <% end %>
@@ -122,7 +122,7 @@
         <%= form_tag story_path(@story), remote: true, method: :put,
               class: 'form-inline' do %>
           <%= text_field_tag "story[new_result]", nil, class: 'form-control',
-                  id: 'new-result', style: 'width:89%', placeholder: 'Add a result' %>
+                  id: 'new-result', style: 'width:89%', placeholder: 'What were the measurable results for this success?' %>
           <%= button_tag type: "submit", class: "btn btn-secondary", disabled: true do %>
             <i class='glyphicon glyphicon-plus'></i>
           <% end %>
