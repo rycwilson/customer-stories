@@ -54,7 +54,8 @@ p.lead {
 #edit-story-challenge:hover + #story-challenge,
 #edit-story-solution:hover + #story-solution,
 #edit-story-benefits:hover + #story-benefits,
-.modify-result:hover + .story-result {
+.modify-result:hover + .story-result,
+.modify-prompt:hover + .story-prompt {
   border-left: 3px solid #87a3bc;
 }
 
