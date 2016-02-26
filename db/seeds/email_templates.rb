@@ -52,8 +52,6 @@ module EmailTemplatesSeed
 
   PARTNER_REQUEST_BODY = "<p>[contributor_first_name],</p>
 
-<p>[contributor_first_name],</p>
-
 <p>[referral_intro]</p>
 
 <p>I’m reaching out to request a favor. I’m planning to write a success story about your company’s service success with [customer_name] utilizing [company_name]. I will professionally write the story and need just 3 minutes of your time jotting down some notes.</p>
@@ -96,8 +94,6 @@ module EmailTemplatesSeed
 <p> <a href='[opt_out_url]'>Opt-out</a> </p>"
 
   SALES_REQUEST_BODY = "<p>[contributor_first_name],</p>
-
-<p>[contributor_first_name],</p>
 
 <p>[referral_intro]</p>
 

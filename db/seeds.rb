@@ -23,7 +23,7 @@ PRODUCTS = ['UCS C3160', 'Nexus 7004', 'Catalyst 6807', 'ISR 4400', 'ASR 1001', 
 ROLES = ['customer', 'partner', 'sales']
 STATUS_OPTIONS = ['pre_request', 'request', 'remind1', 'remind2', 'feedback', 'contribution', 'opt_out', 'did_not_respond']
 
-dan = User.find_by(email:'***REMOVED***')
+# dan = User.find_by(email:'***REMOVED***')
 # ryan = User.find_by(email:'***REMOVED***')
 # curators = [dan, ryan]
 cisco = Company.find_by(name:'Cisco Systems')
@@ -31,20 +31,20 @@ csp = Company.find_by(name:'CSP')
 
 # destroy contributions first so deleted users don't orphan contributions (violates foreign key costraint)
 # Note: not using (dependent: :destroy) for users -> contributions (or users -> successes)
-Contribution.destroy_all
-Customer.destroy_all # also destroys successes, stories, visitors, and successes* join tables
-User.where.not("email = ? OR email = ?", "***REMOVED***", "***REMOVED***").destroy_all
+# Contribution.destroy_all
+# Customer.destroy_all # also destroys successes, stories, visitors, and successes* join tables
+# User.where.not("email = ? OR email = ?", "***REMOVED***", "***REMOVED***").destroy_all
 # Product.destroy_all
 # ProductCategory.destroy_all
 # IndustryCategory.destroy_all
 EmailTemplate.destroy_all
 
 # some users with linkedin profiles
-user1 = User.create(first_name:'Carlos', last_name:'Ramon', email:'carlos@mail.com', linkedin_url:'https://www.linkedin.com/in/carlosramon', sign_up_code:'csp_beta', password:'password')
-user2 = User.create(first_name:'Reza', last_name:'Raji', email:'reza@mail.com', linkedin_url:'https://www.linkedin.com/in/rezaraji', sign_up_code:'csp_beta', password:'password')
-user3 = User.create(first_name:'Jeff', last_name:'Haslem', email:'jeffh@mail.com', linkedin_url:'https://www.linkedin.com/in/jeffhaslem', sign_up_code:'csp_beta', password:'password')
-user4 = User.create(first_name:'Allan', last_name:'Lo', email:'allan@mail.com', linkedin_url:'https://www.linkedin.com/pub/allan-lo/2/80/214', sign_up_code:'csp_beta', password:'password')
-user5 = User.create(first_name:'Jeff', last_name:'Weiner', email:'jeffw@mail.com', linkedin_url:'https://www.linkedin.com/in/jeffweiner08', sign_up_code:'csp_beta', password:'password')
+# user1 = User.create(first_name:'Carlos', last_name:'Ramon', email:'carlos@mail.com', linkedin_url:'https://www.linkedin.com/in/carlosramon', sign_up_code:'csp_beta', password:'password')
+# user2 = User.create(first_name:'Reza', last_name:'Raji', email:'reza@mail.com', linkedin_url:'https://www.linkedin.com/in/rezaraji', sign_up_code:'csp_beta', password:'password')
+# user3 = User.create(first_name:'Jeff', last_name:'Haslem', email:'jeffh@mail.com', linkedin_url:'https://www.linkedin.com/in/jeffhaslem', sign_up_code:'csp_beta', password:'password')
+# user4 = User.create(first_name:'Allan', last_name:'Lo', email:'allan@mail.com', linkedin_url:'https://www.linkedin.com/pub/allan-lo/2/80/214', sign_up_code:'csp_beta', password:'password')
+# user5 = User.create(first_name:'Jeff', last_name:'Weiner', email:'jeffw@mail.com', linkedin_url:'https://www.linkedin.com/in/jeffweiner08', sign_up_code:'csp_beta', password:'password')
 
 # Cisco's target industries...
 # INDUSTRIES_CISCO.each do |industry_name|
@@ -73,58 +73,58 @@ csp.email_templates << EmailTemplate.create(name: "Sales - second contribution r
 cisco.create_email_templates
 
 # Customers and Stories...
-CUSTOMERS.each do |customer_name|
-  customer = Customer.create(name: customer_name)
-  cisco.customers << customer
-  success = Success.create
-  customer.successes << success
-  success.created_at = (rand*60).days.ago
-  success.curator = dan # curators[rand(2)]  # randomly select dan or ryan as curator
-  success.save
-  # 2/3 successes will have a story
-  if rand(3) >= 1
-    success.story = StoriesSeed::create
-    # 1/2 stories will be approved/published (attributes default to false)
-    if rand(2) == 1
-      success.story.update(approved: true, published: true, logo_published: true, publish_date: Time.now)
-    end
-    # random industry category (tag)
-    success.industry_categories << cisco.industry_categories[rand(0...cisco.industry_categories.count)]
-    # random product category (tag)
-    success.product_categories << cisco.product_categories[rand(0...cisco.product_categories.count)]
-    # random product (tag)
-    success.products << cisco.products[rand(0...cisco.products.count)]
-    # each story has some visitors
-    10.times { success.visitors << VisitorsSeed::create }
+# CUSTOMERS.each do |customer_name|
+#   customer = Customer.create(name: customer_name)
+#   cisco.customers << customer
+#   success = Success.create
+#   customer.successes << success
+#   success.created_at = (rand*60).days.ago
+#   success.curator = dan # curators[rand(2)]  # randomly select dan or ryan as curator
+#   success.save
+#   # 2/3 successes will have a story
+#   if rand(3) >= 1
+#     success.story = StoriesSeed::create
+#     # 1/2 stories will be approved/published (attributes default to false)
+#     if rand(2) == 1
+#       success.story.update(approved: true, published: true, logo_published: true, publish_date: Time.now)
+#     end
+#     # random industry category (tag)
+#     success.industry_categories << cisco.industry_categories[rand(0...cisco.industry_categories.count)]
+#     # random product category (tag)
+#     success.product_categories << cisco.product_categories[rand(0...cisco.product_categories.count)]
+#     # random product (tag)
+#     success.products << cisco.products[rand(0...cisco.products.count)]
+#     # each story has some visitors
+#     10.times { success.visitors << VisitorsSeed::create }
 
-    # Contributions
-    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user1 )
-    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user2 )
-    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user3 )
-    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user4 )
-    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user5 )
+#     # Contributions
+#     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user1 )
+#     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user2 )
+#     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user3 )
+#     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user4 )
+#     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user5 )
 
-    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'pre_request' )
-    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], STATUS_OPTIONS[rand(1..3)] )
-    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'feedback' )
-    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution' )
+#     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'pre_request' )
+#     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], STATUS_OPTIONS[rand(1..3)] )
+#     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'feedback' )
+#     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution' )
 
-    # Results
-    3.times do
-      success.results << Result.create(description: FFaker::Lorem.sentence,
-                                        success_id: success.id)
-    end
+#     # Results
+#     3.times do
+#       success.results << Result.create(description: FFaker::Lorem.sentence,
+#                                         success_id: success.id)
+#     end
 
-    # Prompts
-    success.prompts << Prompt.create(description: "What was the challenge?",
-                                        success_id: success.id)
-    success.prompts << Prompt.create(description: "What was the solution?",
-                                        success_id: success.id)
-    success.prompts << Prompt.create(description: "What are your estimated or measured results?",
-                                        success_id: success.id)
+#     # Prompts
+#     success.prompts << Prompt.create(description: "What was the challenge?",
+#                                         success_id: success.id)
+#     success.prompts << Prompt.create(description: "What was the solution?",
+#                                         success_id: success.id)
+#     success.prompts << Prompt.create(description: "What are your estimated or measured results?",
+#                                         success_id: success.id)
 
-  end  # story create
-end
+#   end  # story create
+# end
 
 
 
