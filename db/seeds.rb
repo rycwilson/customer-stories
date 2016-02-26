@@ -23,7 +23,7 @@ PRODUCTS = ['UCS C3160', 'Nexus 7004', 'Catalyst 6807', 'ISR 4400', 'ASR 1001', 
 ROLES = ['customer', 'partner', 'sales']
 STATUS_OPTIONS = ['pre_request', 'request', 'remind1', 'remind2', 'feedback', 'contribution', 'opt_out', 'did_not_respond']
 
-# dan = User.find_by(email:'***REMOVED***')
+dan = User.find_by(email:'***REMOVED***')
 # ryan = User.find_by(email:'***REMOVED***')
 # curators = [dan, ryan]
 cisco = Company.find_by(name:'Cisco Systems')
@@ -114,6 +114,14 @@ CUSTOMERS.each do |customer_name|
       success.results << Result.create(description: FFaker::Lorem.sentence,
                                         success_id: success.id)
     end
+
+    # Prompts
+    success.prompts << Prompt.create(description: "What was the challenge?",
+                                        success_id: success.id)
+    success.prompts << Prompt.create(description: "What was the solution?",
+                                        success_id: success.id)
+    success.prompts << Prompt.create(description: "What are your estimated or measured results?",
+                                        success_id: success.id)
 
   end  # story create
 end

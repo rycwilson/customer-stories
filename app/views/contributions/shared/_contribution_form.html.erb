@@ -10,19 +10,19 @@
       <div class="accordion-group">
 
         <div class="accordion-heading">
-            Thank you for your contribution to this success story. Here are pointers to help:&nbsp;
+            <p>Thank you for your contribution to this success story. Here are pointers to help:&nbsp;
           <a class="accordion-toggle" data-toggle="collapse"
              data-parent="#accordion-guidance" href="#collapse-guidance">
              Expand
-          </a>
-        </div> <br>
+          </a></p>
+        </div>
 
         <div id="collapse-guidance" class="accordion-body collapse">
           <div class="accordion-inner">
-           <p>
-            <i class="icon-li fa fa-hand-o-right"></i>  What was the challenge? </br>
-            <i class="icon-li fa fa-hand-o-right"></i>  What was the solution?</br>
-            <i class="icon-li fa fa-hand-o-right"></i>  What are your estimated or measured results?</p>
+            <% @prompts.each do |prompt|  %>
+              <i class="icon-li fa fa-hand-o-right"></i>
+              <%= prompt.description %> <br>
+            <% end %>
           </div>
         </div>
 
@@ -37,14 +37,14 @@
 
     <%= hidden_field_tag "contribution[status]", response_type %>
 
-    <div class='row'>
-      <div class="form-group col-md-12" style='margin-bottom:15px'>
+    <!-- <div class='row'> -->
+      <div class="form-group col-xs-12" style='margin-bottom:15px'>
         <%= f.text_area :contribution, rows: "10",
             class: 'form-control',
             placeholder: 'Add your notes here...', tabindex: '2',
             autofocus: true %>
       </div>
-    </div>
+    <!-- </div> -->
 
     <div class="form-group">
       <div class='col-xs-2 col-sm-2 text-right' style='margin-top:-3px'>

@@ -41,28 +41,79 @@
 
   </div>  <!-- settings, title, quote, video -->
 
-  <div class="row" style='margin-bottom: 15px'>
-    <!-- tags form -->
-    <div class="col-sm-7">
     <!-- tags -->
-    <p class='lead' style='display:inline-block'>Tags</p>
-    <button type='submit' class='edit-tags hidden btn btn-sm btn-primary'
-        style='display:inline-block; margin-left:15px; margin-bottom:8px' form='tags-form'>
-      Save changes
-    </button>
-    <button id='edit-tags-cancel' class='edit-tags hidden btn btn-sm btn-default'
-        style='display:inline-block; margin-bottom:8px'>
-      Cancel
-    </button>  <!-- tags -->
+  <p class='lead' style='display:inline-block'>Tags</p>
+  <button type='submit' class='edit-tags hidden btn btn-sm btn-primary'
+      style='display:inline-block; margin-left:15px; margin-bottom:8px' form='tags-form'>
+    Save changes
+  </button>
+  <button id='edit-tags-cancel' class='edit-tags hidden btn btn-sm btn-default'
+      style='display:inline-block; margin-bottom:8px'>
+    Cancel
+  </button>  <!-- tags -->
+
+  <!-- tags form -->
+  <div class="row" style='margin-bottom: 15px'>
+    <div class="col-md-12">
       <div class="well">
-        <!-- <div class="container-fluid"> -->
+        <div class="container-fluid">
 
           <%= render 'stories/shared/story_edit_tags_form' %>
 
-        <!-- </div> -->
+        </div>
       </div>
-    </div>  <!-- tags form -->
+    </div>
+  </div>  <!-- tags form -->
 
+  <div class="row">
+
+    <div class="col-sm-5 col-sm-offset-1">
+      <p class='lead' style='display:inline-block'>Prompts</p>
+      <div class="well" style="position:relative">
+
+        <%= form_tag story_path(@story), remote: true, method: :put,
+              class: 'form-inline' do %>
+          <%= text_field_tag "story[new_prompt]", nil, class: 'form-control',
+                  id: 'new-prompt', style: 'width:89%', placeholder: 'Add a prompt...' %>
+          <%= button_tag type: "submit", class: "btn btn-secondary", disabled: true do %>
+            <i class='glyphicon glyphicon-plus'></i>
+          <% end %>
+
+        <% end %> <br>
+
+        <div class='container-fluid' id='prompts-list'>
+
+          <% @prompts.each_with_index do |prompt, index| %>
+            <div class="row">
+
+              <div class="modify-prompt">
+                <div id="edit-story-prompt-<%= index %>"
+                    style='position:absolute; right:55px; margin-top:-3px'>
+                  <i class='glyphicon glyphicon-pencil bip-clickable'></i>
+                </div>
+
+                <div class='delete-prompt' id="delete-story-prompt-<%= index %>"
+                    data-id="<%= prompt.id %>"
+                    data-action="<%= File.join( @base_url, "prompts/#{prompt.id}" ) %>"
+                    style='position:absolute; right:20px; margin-top:-3px'>
+                  <i class='glyphicon glyphicon-remove bip-clickable'></i>
+                </div>
+              </div>
+
+              <div id='story-prompt-<%= index %>' class="story-prompt col-md-9">
+                <!-- http://stackoverflow.com/questions/13561533 -->
+                <%= best_in_place prompt, :description,
+                          url: story_path(@story) + "?prompt_id=#{prompt.id}",
+                   html_attrs: { style: 'width:100%' },
+                    activator: "#edit-story-prompt-#{index}" %>
+              </div>
+
+            </div>  <!-- row --> <br>
+          <% end %>
+
+        </div>
+      </div>
+    </div>
 
     <div class="col-sm-5">
       <p class='lead' style='display:inline-block'>Results</p>
@@ -348,6 +399,41 @@
             class="best_in_place"
             id="best_in_place_result_{{= result.id }}_description">
         {{= result.description }}
+      </span>
+    </div>
+
+  </div> <br>
+</script>
+
+<!-- Prompts -->
+<script type="text/template" id="prompts-template">
+  <div class="row">
+
+    <div class='modify-prompt'>
+      <div id="edit-story-prompt-{{= index }}"
+          style='position:absolute; right:55px; margin-top:-3px'>
+        <i class='glyphicon glyphicon-pencil bip-clickable'></i>
+      </div>
+
+      <div id="delete-story-prompt-{{= index }}" class="delete-prompt"
+          data-id="{{= prompt.id }}"
+          data-action="{{= baseUrl }}/prompts/{{= prompt.id }}"
+          style='position:absolute; right:20px; margin-top:-3px'>
+        <i class='glyphicon glyphicon-remove bip-clickable'></i>
+      </div>
+    </div>
+
+    <div id='story-prompt-{{= index }}' class="story-prompt col-sm-9">
+      <span data-bip-type="input" data-bip-attribute="description"
+            data-bip-activator="#edit-story-prompt-{{= index }}"
+            data-bip-html-attrs="{&quot;style&quot;:&quot;width:100%&quot;}"
+            data-bip-object="prompt"
+            data-bip-original-content="{{= prompt.description }}"
+            data-bip-url="/stories/{{= storyId }}?prompt_id={{= prompt.id }}"
+            data-bip-value="{{= prompt.description }}"
+            class="best_in_place"
+            id="best_in_place_prompt_{{= prompt.id }}_description">
+        {{= prompt.description }}
       </span>
     </div>
 

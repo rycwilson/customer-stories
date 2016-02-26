@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160226034652) do
+ActiveRecord::Schema.define(version: 20160226044449) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -144,10 +144,10 @@ ActiveRecord::Schema.define(version: 20160226034652) do
   add_index "products_successes", ["success_id"], name: "index_products_successes_on_success_id", using: :btree
 
   create_table "prompts", force: :cascade do |t|
-    t.string   "body"
+    t.string   "description"
     t.integer  "success_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
   add_index "prompts", ["success_id"], name: "index_prompts_on_success_id", using: :btree

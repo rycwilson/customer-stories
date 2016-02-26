@@ -21,6 +21,9 @@ Rails.application.routes.draw do
       # delete a Result
       delete '/results/:id', to: 'results#destroy'
 
+      # delete a Prompt
+      delete '/prompts/:id', to: 'prompts#destroy'
+
       # user profile
       get   '/profile/edit', to: 'profile#edit', as: 'edit_profile'
 

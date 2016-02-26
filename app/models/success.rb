@@ -14,6 +14,7 @@ class Success < ActiveRecord::Base
   has_many :industry_categories, through: :industries_successes
   has_many :contributions, dependent: :destroy
   has_many :results, dependent: :destroy
+  has_many :prompts, dependent: :destroy
   # alias the association to user -> Success.find(id).contributors
   # note: contributor is an alias - see contribution.rb
   has_many :contributors, through: :contributions, source: :contributor

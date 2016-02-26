@@ -37,6 +37,7 @@ class StoriesController < ApplicationController
                              .map { |c| [ c.contributor.full_name, c.contributor.id ] }
                              .unshift( [""] )
     @results = @story.success.results
+    @prompts = @story.success.prompts
     # this is needed for the Result delete button...
     @base_url = request.base_url
   end
@@ -78,6 +79,9 @@ class StoriesController < ApplicationController
     elsif params[:result]  # a result was edited
       Result.find(params[:result_id].to_i).update description: params[:result][:description]
       respond_to { |format| format.json { render json: nil } }
+    elsif params[:prompt]  # a prompt was edited
+      Prompt.find(params[:prompt_id].to_i).update description: params[:prompt][:description]
+      respond_to { |format| format.json { render json: nil } }
     # params[:story]* items must appear below, else error
     # (there is no params[:story] when params[:story_tags] or params[:result] are present)
     elsif params[:story][:new_result]
@@ -86,6 +90,12 @@ class StoriesController < ApplicationController
       @story_id = story.id
       @base_url = request.base_url  # needed for deleting a result
       respond_to { |format| format.js { render action: 'create_result_success' } }
+    elsif params[:story][:new_prompt]
+      story.success.prompts << Prompt.create(description: params[:story][:new_prompt])
+      @prompts = story.success.prompts
+      @story_id = story.id
+      @base_url = request.base_url  # needed for deleting a result
+      respond_to { |format| format.js { render action: 'create_prompt_success' } }
     elsif params[:story][:embed_url]  # if updating video url
       youtube_id = params[:story][:embed_url].match(/v=(?<id>.*)/)[:id]
       params[:story][:embed_url] = "https://www.youtube.com/embed/" + youtube_id
