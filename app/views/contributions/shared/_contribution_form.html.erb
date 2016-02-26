@@ -9,18 +9,17 @@
     <div class="accordion" id="accordion-guidance">
       <div class="accordion-group">
 
-        <div class="accordion-heading">
-            <p>Thank you for your contribution to this success story. Here are pointers to help:&nbsp;
+        <div id='pointer-toggle' class="accordion-heading">
+          <p>Thank you for your contribution to this success story. Here are pointers to help:&nbsp;
           <a class="accordion-toggle" data-toggle="collapse"
-             data-parent="#accordion-guidance" href="#collapse-guidance">
-             Expand
-          </a></p>
+             data-parent="#accordion-guidance"
+             href="#collapse-guidance">show pointers</a></p>
         </div>
 
         <div id="collapse-guidance" class="accordion-body collapse">
           <div class="accordion-inner">
             <% @prompts.each do |prompt|  %>
-              <i class="icon-li fa fa-hand-o-right"></i>
+              <i class="icon-li fa fa-hand-o-right"></i>&nbsp;
               <%= prompt.description %> <br>
             <% end %>
           </div>
