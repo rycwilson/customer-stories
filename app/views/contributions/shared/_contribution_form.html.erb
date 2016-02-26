@@ -4,22 +4,6 @@
   }
 </style>
 
-<div class="row">
-  <div class='col-xs-4'>
-    <img src="<%= contribution.success.curator.photo_url %>" alt="curator_img"
-        style='border:1px solid #CCC; border-radius:4px'> <br>
-  </div>
-</div>
-
-<div class="row">
-  <div class="col-xs-12">
-    <%= curator.full_name %> <br>
-    <%= curator.title %> <br>
-    <%= curator.company.name %> <br>
-    <a href="mailto:<%= curator.email %>"><%= curator.email %></a>&nbsp;|&nbsp;<%= curator.phone %> <br> <br>
-  </div>
-</div>
-
  <!--  <div class='hidden-xs col-md-8 bubble'>
     <p> John, <br>
         Your input will greatly help me write a compelling success story about your project utilizing Cisco. I personally appreciate your help.  </br>
@@ -32,12 +16,12 @@
       <div class="accordion-group">
 
         <div class="accordion-heading">
-            Want some writing tips?
+            Thank you for your contribution to this success story. Here are pointers to help:&nbsp;
           <a class="accordion-toggle" data-toggle="collapse"
              data-parent="#accordion-guidance" href="#collapse-guidance">
              Expand
           </a>
-        </div>
+        </div> <br>
 
         <div id="collapse-guidance" class="accordion-body collapse">
           <div class="accordion-inner">
@@ -53,6 +37,7 @@
   </div>
 </div>
 
+<div class="row">
 <%= form_for contribution, url: "/contributions/#{contribution.access_token}",
         method: "put", html: { id: 'contribution-submission-form'} do |f| %>
 
@@ -60,18 +45,19 @@
 
   <div class='row'>
     <div class="form-group col-md-12" style='margin-bottom:15px'>
-      <%= f.text_area :contribution, rows: "8",
+      <%= f.text_area :contribution, rows: "10",
           class: 'form-control',
-          placeholder: 'Please type your notes and thoughts here.', tabindex: '2',
+          placeholder: 'Add your notes here...', tabindex: '2',
           autofocus: true %>
     </div>
   </div>
 
   <div class="form-group">
-    <div class='col-xs-2 text-right' style='margin-top:-3px'>
+
+    <div class='col-xs-2 col-sm-2 text-right' style='margin-top:-3px'>
       <i class="fa fa-3x fa-linkedin-square" style="color:#006fb3; margin-bottom:15px"></i>
     </div>
-    <div class='col-xs-10 col-md-9 checkbox-inline' style='margin-right:-2px'>
+    <div class='col-xs-10 col-sm-10 col-md-9 checkbox-inline' style='margin-right:-2px'>
       <%= f.check_box :linkedin %>
       Check here if you want your LinkedIn profile to be included in the success story. You can add or remove your profile at any time.
     </div>
@@ -81,17 +67,43 @@
     <div class='col-xs-8 col-xs-offset-2'>
       <%= f.submit 'Submit', class: 'btn btn-success btn-block' %> <br>
     </div>
-    <div class='col-xs-12 text-center'>
-      <p>By submitting you are agreeing to the <%= link_to 'Terms of Service',
-            "#{ request.protocol + request.domain + request.port_string + '/tos' }", target: '_blank' %></p>
-    </div>
+  </div>
+
+  <div class='col-xs-12 text-center'>
+    <p>By submitting you are agreeing to the <%= link_to 'Terms of Service',
+          "#{ request.protocol + request.domain + request.port_string + '/tos' }", target: '_blank' %></p>
+  </div>
+  <div class="col-xs-12 text-center">
+
+    <%= image_tag 'CS-powered-by.png', alt:'powered-by-csp' %>
   </div>
 
 <% end %>
+</div>
 
 <br>
-<div class="row">
-  <div class='col-xs-12 text-center'>
-    <img src="<%= asset_path('CS-powered-by.png') %>" alt="powered_by_csp">
-  </div>
+
+<h4 style="font-family:'Open Sans';font:sans-serif">Your dedicated story curator</h4>
+
+
+<div class='col-xs-12' style="padding:0 0 0 110px; position:relative; margin-bottom:20px">
+
+  <img src="<%= contribution.success.curator.photo_url %>" alt="curator_img"
+      style='position:absolute; left:0; width:100px; border:1px solid #CCC; border-radius:4px'>
+
+  <%= curator.full_name %> <br>
+  <%= curator.title %> <br>
+  <%= curator.company.name %> <br>
+  <a href="mailto:<%= curator.email %>"><%= curator.email %></a> <br>
+  <%= curator.phone %>
 </div>
+
+
+
+<!-- <div class="row text-center">
+  <img src="<%#= asset_path('CS-powered-by.png') %>" alt="powered_by_csp">
+</div> -->
+
+
+
+
