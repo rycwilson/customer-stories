@@ -32,8 +32,8 @@ csp = Company.find_by(name:'CSP')
 # destroy contributions first so deleted users don't orphan contributions (violates foreign key costraint)
 # Note: not using (dependent: :destroy) for users -> contributions (or users -> successes)
 Contribution.destroy_all
-User.where.not("email = ? OR email = ?", "***REMOVED***", "***REMOVED***").destroy_all
 Customer.destroy_all # also destroys successes, stories, visitors, and successes* join tables
+User.where.not("email = ? OR email = ?", "***REMOVED***", "***REMOVED***").destroy_all
 # Product.destroy_all
 # ProductCategory.destroy_all
 # IndustryCategory.destroy_all
