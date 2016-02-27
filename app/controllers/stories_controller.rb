@@ -109,10 +109,8 @@ class StoriesController < ApplicationController
         end
       end
     elsif params[:story][:published]
-      if story.update story_params
-        respond_to { |format| format.json { render json: nil } } # empty response
-      else
-      end
+      story.update published: true, publish_date: Time.now
+      respond_to { |format| format.json { head :ok } } # empty response
     else  # all other updates
       respond_to do |format|
         if story.update story_params

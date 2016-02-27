@@ -25,13 +25,6 @@ before_action :set_s3_direct_post, only: [:edit, :update]
   # PUT /resource
   def update
     super
-    # if @user.errors.present?
-    #   @flash_mesg = @user.errors.full_messages.join(', ')
-    #   @flash_status = 'danger'
-    # else
-    #   @flash_mesg = "Account updated successfully"
-    #   @flash_status = "success"
-    # end
   end
 
   # DELETE /resource
