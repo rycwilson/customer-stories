@@ -13,7 +13,8 @@ module ContributionsSeed
              role: role,
            status: status,
          feedback: feedback,
-     contribution: contribution)
+     contribution: contribution,
+     access_token: SecureRandom.hex )
     # c.remind_at = Time.now + rand(5).minutes if (status == 'request')
     # c.remind_at = Time.now + rand(5).minutes if (status == 'remind1')
     c.remind_at = Time.now + c.remind_1_wait.days if (status == 'request')

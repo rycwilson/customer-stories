@@ -7,7 +7,7 @@ module EmailTemplatesSeed
 
 <p>[referral_intro]</p>
 
-<p>I’m reaching out to request a favor. I’m planning to write a success story about your project utilizing [company_name] and would like your input. I will professionally write the story and need just 3 minutes of your time jotting down some notes.</p>
+<p>I’m reaching out to request a favor. I’m planning to write a success story about your project utilizing [company_name] and would like your input. I will professionally write the story and need just three minutes of your time jotting down some notes.</p>
 
 <p>By participating, you can also use the curated success story as proof of your great work. It’s a great way to build your professional brand and showcase impact you’ve delivered. It will also be used as a reference to help others learn about solving similar needs.</p>
 
@@ -54,7 +54,7 @@ module EmailTemplatesSeed
 
 <p>[referral_intro]</p>
 
-<p>I’m reaching out to request a favor. I’m planning to write a success story about your company’s service success with [customer_name] utilizing [company_name]. I will professionally write the story and need just 3 minutes of your time jotting down some notes.</p>
+<p>I’m reaching out to request a favor. I’m planning to write a success story about your company’s service success with [customer_name] utilizing [company_name]. I will professionally write the story and need just three minutes of your time jotting down some notes.</p>
 
 <p>By participating, you can use the curated success story as personal validation of how you contributed to [company_name]’s success utilizing [company_name].   It’s a great reference to use with other prospects, proving your professional credibility in achieving results for your customers.</p>
 
@@ -97,7 +97,7 @@ module EmailTemplatesSeed
 
 <p>[referral_intro]</p>
 
-<p>I’m reaching out to request a favor. I’m planning to write a success story about [customer_name] utilizing [company_name] and would like your input. I will professionally write the story and need just 3 minutes of your time jotting down some notes.</p>
+<p>I’m reaching out to request a favor. I’m planning to write a success story about [customer_name] utilizing [company_name] and would like your input. I will professionally write the story and need just three minutes of your time jotting down some notes.</p>
 
 <p>By participating, you can use the curated success story as personal validation of your contribution to [customer_name]’s success utilizing [company_name]. It’s a great reference to use with other prospects, proving your professional credibility in achieving results for your customers.</p>
 

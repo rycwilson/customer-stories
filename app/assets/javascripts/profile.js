@@ -30,12 +30,37 @@ $(function () {
 });
 
 function initListeners () {
+
   $('.nav-stacked a[data-toggle="tab"]').on('shown.bs.tab', function () {
     // password reload should go back to profile
     if ($(this).attr('href') == '#password-tab')
       sessionStorage.setItem('lastProfileTab', '#profile-tab');
     else
       sessionStorage.setItem('lastProfileTab', $(this).attr('href'));
+  });
+
+  $('.linkedin-checkbox').on('change', function () {
+
+    if ($(this).val() === 'true') {
+      $(this).val(false);
+    }
+    else {
+      $(this).val(true);
+    }
+
+    $.ajax({
+      url: '/contributions/' + $(this).data('token'),
+      method: 'put',
+      data: { "linkedin_include": $(this).val() },
+      success: function (data, status, xhr) {
+        console.log(data, status);
+      }
+    });
+
+  });
+
+  $('.linkedin-checkbox').on('focus', function () {
+    $(this).blur();
   });
 }
 

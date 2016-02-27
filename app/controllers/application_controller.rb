@@ -18,7 +18,17 @@ class ApplicationController < ActionController::Base
     if user_subdomain.nil?
       # user without a company may proceed so long as he doesn't insert
       # a legit subdomain that isn't his ...
-      request.subdomain.blank? ? true : redirect_to(File.join(root_url(host: request.domain), request.path))
+      if request.subdomain.blank?
+        true
+      else
+        # ok to access public pages (story, stories index, or contributions)
+        if (params[:controller] == 'stories' && (['index', 'show'].include? params[:action])) ||
+            params[:controller] == 'contributions'
+          true
+        else
+          redirect_to(File.join(root_url(host: request.domain), request.path))
+        end
+      end
     elsif user_subdomain == request.subdomain  # all good
       true
     elsif request.subdomain.blank? &&

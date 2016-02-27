@@ -4,7 +4,7 @@
   <div class="row">
     <div class='col-md-2'>
 
-      <% if user_signed_in? %>
+      <% if user_signed_in? && (current_user.company.try(:subdomain) == request.subdomain) %>
 
         <%= link_to company_path(current_user.company), class: 'csp-nav' do %>
           <span class='glyphicon glyphicon-chevron-left'
@@ -18,7 +18,16 @@
           </span><span>Edit this Story</span>
         <% end %>
 
+      <% else %>
+
+        <%= link_to edit_profile_no_company_path, class: 'csp-nav' do %>
+          <span class='glyphicon glyphicon-chevron-left'
+              style='color:#337ab7; margin-top:24px; margin-right:5px'>
+          </span><span>My Profile</span>
+        <% end %><br>
+
       <% end %>
+
 
     </div>  <!-- nav links -->
 

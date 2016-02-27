@@ -56,9 +56,12 @@ class ContributionsController < ApplicationController
     if params[:linkedin] # contributor successfully connected to linkedin
       @linkedin_connect = true
       render :confirm_submission
+    elsif params[:linkedin_include].present?
+      @contribution.update linkedin: params[:linkedin_include]
+      respond_to { |format| format.json { head :ok } }
     else
       if @contribution.update contribution_params
-        if @contribution.linkedin? && @contribution.user.linkedin_url.nil?
+        if @contribution.linkedin? && @contribution.contributor.linkedin_url.nil?
           redirect_to "/auth/linkedin?contribution=#{@contribution.id}"
         else
           render :confirm_submission
