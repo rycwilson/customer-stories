@@ -33,15 +33,15 @@ class ApplicationController < ActionController::Base
 
   def configure_permitted_parameters
     devise_parameter_sanitizer.for(:sign_up) << :first_name
-    devise_parameter_sanitizer.for(:account_update) << :first_name
+    # devise_parameter_sanitizer.for(:account_update) << :first_name
     devise_parameter_sanitizer.for(:sign_up) << :last_name
-    devise_parameter_sanitizer.for(:account_update) << :last_name
+    # devise_parameter_sanitizer.for(:account_update) << :last_name
     devise_parameter_sanitizer.for(:sign_up) << :sign_up_code
-    devise_parameter_sanitizer.for(:account_update) << :photo_url
-    devise_parameter_sanitizer.for(:account_update) << :linkedin_url
-    devise_parameter_sanitizer.for(:account_update) << :title
-    devise_parameter_sanitizer.for(:account_update) << :phone
-    devise_parameter_sanitizer.for(:account_update) << :subdomain
+
+    devise_parameter_sanitizer.for(:account_update) { |u|
+      u.permit(:email, :first_name, :last_name, :photo_url, :linked_url, :title, :phone, :password, :password_confirmation, :current_password)
+    }
+
   end
 
   # change devise redirect on sign in

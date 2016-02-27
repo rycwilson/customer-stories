@@ -5,7 +5,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 # before_action :configure_account_update_params, only: [:update]
 before_action :set_s3_direct_post, only: [:edit, :update]
 
-  # respond_to :html, :js
+  respond_to :html, :js
 
   # GET /resource/sign_up
   def new
@@ -50,15 +50,28 @@ before_action :set_s3_direct_post, only: [:edit, :update]
 
   protected
 
-  # allow updates without a password
+  # override the update action
   def update_resource user, params
-    resource.update_without_password params
+    if params[:password].blank?
+      resource.update_without_password params
+      @password_update = false
+    else
+      resource.update params
+      @password_update = true
+    end
+    if @user.errors.present?
+      @flash_mesg = @user.errors.full_messages.join(', ')
+      @status = 'danger'
+    else
+      @status = 'success'
+    end
   end
 
   # change redirect on update
   def after_update_path_for user
     edit_profile_path
   end
+
 
   # If you have extra params to permit, append them to the sanitizer.
   # def configure_sign_up_params

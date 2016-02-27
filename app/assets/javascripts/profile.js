@@ -15,9 +15,29 @@
 
 $(function () {
 
+  var lastProfileTab = sessionStorage.getItem('lastProfileTab');
+
+  if (lastProfileTab) {
+    $('[href="' + lastProfileTab + '"]').tab('show');
+  }
+  if (lastProfileTab) {
+    $('[href="' + lastProfileTab + '"]').tab('show');
+  }
+
+  initListeners();
   configS3Upload();
 
 });
+
+function initListeners () {
+  $('.nav-stacked a[data-toggle="tab"]').on('shown.bs.tab', function () {
+    // password reload should go back to profile
+    if ($(this).attr('href') == '#password-tab')
+      sessionStorage.setItem('lastProfileTab', '#profile-tab');
+    else
+      sessionStorage.setItem('lastProfileTab', $(this).attr('href'));
+  });
+}
 
 function configS3Upload () {
 

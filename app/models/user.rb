@@ -3,6 +3,8 @@
 class User < ActiveRecord::Base
 
   belongs_to :company
+  validates :first_name, presence: true
+  validates :last_name, presence: true
 
   # a User can have his own contribution(s) (i.e. he is contributor),
   # or he can be the Referrer for contribution(s)
@@ -10,6 +12,9 @@ class User < ActiveRecord::Base
   has_many :referred_contributions, class_name: 'Contribution', foreign_key: 'referrer_id'
 
   has_many :successes # curator, no (dependent: :destroy)
+
+  # for changing password
+  attr_accessor :current_password
 
   # Adding signup code for beta control
   attr_accessor :sign_up_code

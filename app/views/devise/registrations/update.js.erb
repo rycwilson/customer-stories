@@ -1,9 +1,26 @@
 (function () {
 
-  var flashMesg = <%= raw @flash_mesg.to_json %>,
-      flashStatus = <%= raw @flash_status.to_json %>
+  var status = "<%= @status %>",
+      flashMesg = "<%= @flash_mesg %>"
+      pwUpdate = <%= @password_update %>   // boolean
 
-  flashDisplay(flashMesg, flashStatus);
+  if (pwUpdate) {
+    $('#password-update-form')[0].reset();
+    if (status === 'success') {
+      flashDisplay("Password updated successfully", status);
+      $("[href='#profile-tab']").click()
+    }
+    else {
+      flashDisplay(flashMesg, status);
+      $('#user_current_password').focus();
+    }
+  }
+  else {
+    if (status === 'success')
+      flashDisplay("Account updated successfully", status);
+    else
+      flashDisplay(flashMesg, status);
+  }
 
   function flashDisplay (mesg, status) {
 
