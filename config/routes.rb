@@ -77,8 +77,11 @@ Rails.application.routes.draw do
   #  under subdomains)
   get   '/profile/edit', to: 'profile#edit', as: 'edit_profile_no_company'
 
-  put   '/contributions/:token', to: 'contributions#update',
-                               as: 'contribution_no_company'
+  # above comments about distinguishing the route apply to below as well
+  #
+  # this route is for the case of a Contributor being logged in (no subdomain)
+  # and updating a Contribution by checking or unchecking a LinkedIn Profile box
+  put   '/contributions/:token', to: 'contributions#update', as: 'contribution_no_company'
 
   # LinkedIn Oauth2 (omniauth gem)
   get '/auth/linkedin/callback', to: 'profile#linkedin_callback'

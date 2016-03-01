@@ -59,7 +59,9 @@ class StoriesController < ApplicationController
     story = Story.new title: new_story[:title], success_id: success.id
     if story.save
       story.assign_tags new_story
+      story.create_default_results
       flash[:success] = "Story created successfully"
+      # prevent js response from killing flash message
       flash.keep(:success)
       @redirect = File.join request.base_url, edit_story_path(story)
       respond_to { |format| format.js { render action: 'create_success' } }

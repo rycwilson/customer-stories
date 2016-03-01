@@ -278,6 +278,7 @@
                               </td>
                               <td class='valign-middle text-center'>
 
+                <!-- check_box method requires instance variable, not local variable -->
                 <%= check_box get_contribution(contribution.id),
                       :linkedin?, { checked: contribution.linkedin?,
                                       class: 'linkedin-checkbox',

@@ -17,7 +17,7 @@ class ContributionsController < ApplicationController
     @curator = @contribution.success.curator
     @prompts = @contribution.success.prompts
     # story_example_id = Story.find_example
-    # @story_example_url = "http://#{ENV['HOST_NAME']}/stories/#{story_example_id}"
+    #@story_example_url = "http://#{ENV['HOST_NAME']}/stories/#{story_example_id}"
     @response_type = params[:type]
     if @response_type == 'opt_out'
       OptOut.create email: @contribution.contributor.email
