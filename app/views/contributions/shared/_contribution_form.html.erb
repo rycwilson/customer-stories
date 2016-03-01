@@ -4,6 +4,8 @@
   }
 </style>
 
+
+
 <div class='row'>
   <div class="col-xs-12">
     <div class="accordion" id="accordion-guidance">
@@ -65,6 +67,7 @@
     </div>
 
     <div class='col-xs-12 text-center'>
+      <span class="visible-xs">xs</span><span class="visible-sm">sm</span><span class='visible-md'>md</span><span class="visible-lg">lg</span>
       <p>By submitting you are agreeing to the <%= link_to 'Terms of Service',
             "#{ request.protocol + request.domain + request.port_string + '/tos' }", target: '_blank' %></p>
     </div>
@@ -74,10 +77,10 @@
 
 <br>
 
-<h4 style="font-family:'Open Sans';font:sans-serif">Your story curator</h4>
-
+<!-- <h4 style="font-family:'Open Sans';font:sans-serif">Your story curator</h4> -->
+<p>Your story curator</p>
 <!-- http://www.no-margin-for-errors.com/blog/2009/12/10/css-tip-float-an-image-without-text-wrapping-under-it/ -->
-<div class='col-xs-12' style="padding:0 0 0 110px; position:relative; margin-bottom:20px">
+<div class='col-xs-12' style="padding:0 0 0 110px; position:relative">
 
   <img src="<%= contribution.success.curator.photo_url %>" alt="curator_img"
       style='position:absolute; left:0; width:100px; border:1px solid #CCC; border-radius:4px'>
