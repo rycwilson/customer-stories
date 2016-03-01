@@ -7,11 +7,7 @@
   ref: http://stackoverflow.com/questions/18575582
        https://github.com/maciej-gurban/responsive-bootstrap-toolkit
 */
-// (function($, viewport){
 
-//     // not presently using
-
-// })(jQuery, ResponsiveBootstrapToolkit);
 
 $(function () {
 
@@ -22,5 +18,14 @@ $(function () {
     else
       $link.text('show pointers');
   });
+
+  // this will only run on document load; no dynamic checking
+  (function($, viewport){
+
+    if( viewport.is('xs') ) {
+      $('.container').css('padding', '0');
+    }
+
+  })(jQuery, ResponsiveBootstrapToolkit);
 
 });

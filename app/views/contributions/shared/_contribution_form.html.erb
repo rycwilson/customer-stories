@@ -1,10 +1,4 @@
-<style>
-  body {
-    background-color: #85CEE6
-  }
-</style>
-
-
+<!--  <span class="visible-xs">xs</span><span class="visible-sm">sm</span><span class='visible-md'>md</span><span class="visible-lg">lg</span> -->
 
 <div class='row'>
   <div class="col-xs-12">
@@ -12,7 +6,7 @@
       <div class="accordion-group">
 
         <div id='pointer-toggle' class="accordion-heading">
-          <p>Thank you for your contribution to this success story. Here are pointers to help:&nbsp;
+          <p>Thank you for contributing to this success story. Here are some helpful pointers:&nbsp;
           <a class="accordion-toggle" data-toggle="collapse"
              data-parent="#accordion-guidance"
              href="#collapse-guidance">show pointers</a></p>
@@ -38,16 +32,16 @@
 
     <%= hidden_field_tag "contribution[status]", response_type %>
 
-    <div class="form-group col-xs-12" style='margin-bottom:15px'>
-      <%= f.text_area :contribution, rows: "9",
-          class: 'form-control',
+    <div class="form-group col-xs-12">
+      <%= f.text_area :contribution, rows:"12",
+          class: 'form-control', width: "70%",
           placeholder: 'Add your notes here ...', tabindex: '2',
           autofocus: true %>
     </div>
 
     <div class="form-group">
       <div class='col-xs-2 col-sm-2 text-right' style='margin-top:-3px'>
-        <i class="fa fa-3x fa-linkedin-square" style="color:#006fb3; margin-bottom:15px"></i>
+        <i class="fa fa-3x fa-linkedin-square"></i>
       </div>
       <div class='col-xs-10 col-sm-10 col-md-9 checkbox-inline' style='margin-right:-2px'>
         <%= f.check_box :linkedin %>
@@ -57,19 +51,12 @@
 
     <div class="form-group">
       <div class='col-xs-8 col-xs-offset-2'>
-        <%= f.submit 'Submit', class: 'btn btn-success btn-block' %> <br>
+        <%= f.submit 'Submit', class: 'btn btn-primary btn-block' %> <br>
       </div>
     </div>
 
-    <div class="col-xs-12 text-center">
-
-      <%= image_tag 'CS-powered-by.png', alt:'powered-by-csp' %>
-    </div>
-
     <div class='col-xs-12 text-center'>
-      <span class="visible-xs">xs</span><span class="visible-sm">sm</span><span class='visible-md'>md</span><span class="visible-lg">lg</span>
-      <p>By submitting you are agreeing to the <%= link_to 'Terms of Service',
-            "#{ request.protocol + request.domain + request.port_string + '/tos' }", target: '_blank' %></p>
+      <p class='tos'>By submitting you are agreeing to the <%= link_to 'Terms of Service', "#{ request.protocol + request.domain + request.port_string + '/tos' }", target: '_blank' %></p>
     </div>
 
   <% end %>
@@ -80,18 +67,24 @@
 <!-- <h4 style="font-family:'Open Sans';font:sans-serif">Your story curator</h4> -->
 <p>Your story curator</p>
 <!-- http://www.no-margin-for-errors.com/blog/2009/12/10/css-tip-float-an-image-without-text-wrapping-under-it/ -->
-<div class='col-xs-12' style="padding:0 0 0 110px; position:relative">
+<div id='curator-info' class='col-xs-12 col-sm-7'>
 
-  <img src="<%= contribution.success.curator.photo_url %>" alt="curator_img"
-      style='position:absolute; left:0; width:100px; border:1px solid #CCC; border-radius:4px'>
+  <img id='curator-photo' src="<%= contribution.success.curator.photo_url %>"
+        alt="curator photo">
   <%= curator.full_name %> <br>
   <%= curator.title %> <br>
   <%= curator.company.name %> <br>
   <a href="mailto:<%= curator.email %>"><%= curator.email %></a> <br>
   <%= curator.phone %>
 </div>
-
-
+<div class="col-sm-5 hidden-xs text-right" style="position:relative; min-height:105px">
+  <%= image_tag 'CS-powered-by.png', alt:'powered-by-csp', style:"position:absolute; right:0; bottom:0" %>
+</div>
+<div class="col-xs-12 visible-xs text-center">
+  <br>
+  <%= image_tag 'CS-powered-by.png', alt:'powered-by-csp' %>
+</div>
+<br><br>
 
 
 
