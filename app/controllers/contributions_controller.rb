@@ -53,6 +53,7 @@ class ContributionsController < ApplicationController
   # TODO: after submission, update (change? delete?) the contributor's token
   #
   def update
+    binding.pry
     if params[:linkedin] # contributor successfully connected to linkedin
       @linkedin_connect = true
       render :confirm_submission
