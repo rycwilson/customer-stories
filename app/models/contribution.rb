@@ -2,11 +2,12 @@ class Contribution < ActiveRecord::Base
 
   belongs_to :contributor, class_name: 'User', foreign_key: 'user_id'
   belongs_to :referrer, class_name: 'User', foreign_key: 'referrer_id'
-
   belongs_to :success
 
   validates :contribution, presence: true,
                 if: Proc.new { |contribution| contribution.status == 'contribution'}
+  validates :feedback, presence: true,
+                if: Proc.new { |contribution| contribution.status == 'feedback'}
 
   # contributor may have only one contribution per story
   validates_uniqueness_of :user_id, scope: :success_id
