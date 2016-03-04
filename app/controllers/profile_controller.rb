@@ -22,11 +22,8 @@ class ProfileController < ApplicationController
       end
     else # contributor
       contribution = Contribution.find(request.env["omniauth.params"]["contribution"])
-      if contribution.user.update linkedin_url: auth_hash[:info][:urls][:public_profile]
-        redirect_to confirm_contribution_path(request.env["omniauth.params"]["contribution"], linkedin: true)
-      else
-        # flash.now[:danger] = "Problem updating linkedin_url field for #{}"
-      end
+      contribution.contributor.update linkedin_url: auth_hash[:info][:urls][:public_profile]
+      redirect_to confirm_contribution_path(request.env["omniauth.params"]["contribution"], linkedin_oauth_connect: true)
     end
   end
 

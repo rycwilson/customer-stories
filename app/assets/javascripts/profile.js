@@ -43,15 +43,14 @@ function initListeners () {
 
     if ($(this).val() === 'true') {
       $(this).val(false);
-    }
-    else {
+    } else {
       $(this).val(true);
     }
 
     $.ajax({
       url: '/contributions/' + $(this).data('token'),
       method: 'put',
-      data: { "linkedin_include": $(this).val() },
+      data: { "linkedin_include_profile": $(this).val() },
       success: function (data, status, xhr) {
         console.log(data, status);
       }

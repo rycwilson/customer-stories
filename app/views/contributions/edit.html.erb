@@ -1,15 +1,14 @@
 <br><br>
 
 <div class="container">
-  <div class='col-xs-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 <%= (@response_type == 'contribution' || @response_type == 'feedback') ? 'show' : 'hidden' %>'>
+  <div class='contribution-submission col-xs-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 <%= (@response_type == 'contribution' || @response_type == 'feedback') ? 'show' : 'hidden' %>'>
 
     <% if @response_type == 'contribution' %>
 
       <%= render partial: 'contributions/shared/contribution_form',
                   locals: {      curator: @curator,
                             contribution: @contribution,
-                           response_type: @response_type,
-                       story_example_url: @story_example_url } %> <br>
+                           response_type: @response_type, } %> <br>
 
     <% elsif @response_type == 'feedback' %>
 
@@ -22,7 +21,7 @@
 
   </div>
 
-  <div class="col-xs-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 <%= (@response_type == 'unsubscribe' || @response_type == 'opt_out') ? 'show' : 'hidden' %>">
+  <div class="contribution-submission col-xs-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 <%= (@response_type == 'unsubscribe' || @response_type == 'opt_out') ? 'show' : 'hidden' %>">
 
     <% if @response_type == 'unsubscribe' %>
 

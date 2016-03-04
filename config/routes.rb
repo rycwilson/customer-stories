@@ -38,7 +38,7 @@ Rails.application.routes.draw do
     put   '/contributions/:id/request_contribution',
                     to: 'contributions#request_contribution_email',
                     as: 'request_contribution'
-    get   '/contributions/:id/confirm', to: 'contributions#update',
+    get   '/contributions/:id/confirm', to: 'contributions#confirm',
                                         as: 'confirm_contribution'
     # type is: contribution, feedback, unsubscribe, opt_out
     get   '/contributions/:token/:type', to: 'contributions#edit',

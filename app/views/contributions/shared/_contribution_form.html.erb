@@ -27,8 +27,9 @@
 </div>
 
 <div class="row" style='margin-top: -20px'>
-  <%= form_for contribution, url: "/contributions/#{contribution.access_token}",
-          method: "put", html: { id: 'contribution-submission-form'} do |f| %>
+  <%= form_for contribution,
+        url: "/contributions/#{contribution.access_token}",
+        method: "put", html: { id: 'contribution-submission-form'} do |f| %>
 
     <%= hidden_field_tag "contribution[status]", response_type %>
 

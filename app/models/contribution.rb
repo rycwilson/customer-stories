@@ -5,6 +5,9 @@ class Contribution < ActiveRecord::Base
 
   belongs_to :success
 
+  validates :contribution, presence: true,
+                if: Proc.new { |contribution| contribution.status == 'contribution'}
+
   # contributor may have only one contribution per story
   validates_uniqueness_of :user_id, scope: :success_id
 

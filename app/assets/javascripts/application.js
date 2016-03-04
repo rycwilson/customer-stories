@@ -31,6 +31,7 @@ $(function() {
   // clear localStorage
   $('#logout').on('click', function () {
     localStorage.clear();
+    sessionStorage.clear();
   });
 
 });

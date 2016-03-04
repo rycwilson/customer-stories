@@ -2,7 +2,7 @@ class ContributionsController < ApplicationController
 
   include ContributionsHelper
 
-  before_action :set_contribution, only: :request_contribution_email
+  before_action :set_contribution, only: [:confirm, :request_contribution_email]
   before_action :auth_token, only: [:edit, :update]
 
   # before_action :update do
@@ -50,28 +50,30 @@ class ContributionsController < ApplicationController
   #
   # params = { contribution: { status: <type> }, { <type>: <content> } }
   #
-  # TODO: after submission, update (change? delete?) the contributor's token
-  #
+  # PUT /contributions/:token/:type
   def update
-    binding.pry
-    if params[:linkedin] # contributor successfully connected to linkedin
-      @linkedin_connect = true
-      render :confirm_submission
-    elsif params[:linkedin_include].present?
-      @contribution.update linkedin: params[:linkedin_include]
+    if params[:linkedin_include_profile].present? # from User Profile checkbox
+      @contribution.update linkedin: params[:linkedin_include_profile]
       respond_to { |format| format.json { head :ok } }
     else
       if @contribution.update contribution_params
-        if @contribution.linkedin? && @contribution.contributor.linkedin_url.nil?
+        if @contribution.linkedin? && @contribution.contributor.linkedin_url.blank?
           redirect_to "/auth/linkedin?contribution=#{@contribution.id}"
         else
-          render :confirm_submission
+          redirect_to confirm_contribution_path(@contribution)
         end
       else
-        flash.now[:danger] = "Something went wrong"
+        @response_type = params[:contribution][:status]
+        @curator = @contribution.success.curator
+        @prompts = @contribution.success.prompts
+        flash.now[:danger] = @contribution.errors.full_messages.join(', ')
         render :edit
       end
     end
+  end
+
+  def confirm
+    # binding.pry
   end
 
   def request_contribution_email

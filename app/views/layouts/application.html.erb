@@ -31,7 +31,9 @@
     <%= render 'shared/mvp_admin_navbar' %>
 
   <% elsif controller_name == 'contributions' %>
-    <!-- render nothing -->
+    <!-- render nothing (just flash) -->
+    <%= render 'shared/flash' if flash.any? %>
+
   <% else %>
     <!-- more logic within the navbar to handle signed in users... -->
     <%= render 'shared/mvp_landing_navbar' %>
