@@ -1,0 +1,42 @@
+
+<%= form_tag story_path(@story), remote: true, method: :put,
+      class: 'form-inline' do %>
+  <%= text_field_tag "story[new_prompt]", nil, class: 'form-control',
+          id: 'new-prompt', style: 'width:89%', placeholder: 'Add a prompt that will help contributors share their experience ...' %>
+  <%= button_tag type: "submit", class: "btn btn-secondary", disabled: true do %>
+    <i class='glyphicon glyphicon-plus'></i>
+  <% end %>
+
+<% end %> <br>
+
+<div class='container-fluid' id='prompts-list'>
+
+  <% @prompts.each_with_index do |prompt, index| %>
+    <div class="row">
+
+      <div class="modify-prompt">
+        <div id="edit-story-prompt-<%= index %>"
+            style='position:absolute; right:55px; margin-top:-3px'>
+          <i class='glyphicon glyphicon-pencil bip-clickable'></i>
+        </div>
+
+        <div class='delete-prompt' id="delete-story-prompt-<%= index %>"
+            data-id="<%= prompt.id %>"
+            data-action="<%= File.join( @base_url, "prompts/#{prompt.id}" ) %>"
+            style='position:absolute; right:20px; margin-top:-3px'>
+          <i class='glyphicon glyphicon-remove bip-clickable'></i>
+        </div>
+      </div>
+
+      <div id='story-prompt-<%= index %>' class="story-prompt col-md-9">
+        <!-- http://stackoverflow.com/questions/13561533 -->
+        <%= best_in_place prompt, :description,
+                  url: story_path(@story) + "?prompt_id=#{prompt.id}",
+           html_attrs: { style: 'width:100%' },
+            activator: "#edit-story-prompt-#{index}" %>
+      </div>
+
+    </div>  <!-- row --> <br>
+  <% end %>
+
+</div>

@@ -1,0 +1,40 @@
+
+<%= form_tag story_results_path(@story), remote: true, class: 'form-inline' do %>
+  <%= text_field_tag :description, nil, class: 'form-control',
+          id: 'new-result', style: 'width:89%', placeholder: 'What were the measurable results for this success?' %>
+  <%= button_tag type: "submit", class: "btn btn-secondary", disabled: true do %>
+    <i class='glyphicon glyphicon-plus'></i>
+  <% end %>
+
+<% end %> <br>
+
+<div class='container-fluid' id='results-list'>
+
+  <% @results.each_with_index do |result, index| %>
+    <div class="row">
+
+      <div class="modify-result">
+        <div id="edit-story-result-<%= index %>"
+            style='position:absolute; right:55px; margin-top:-3px'>
+          <i class='glyphicon glyphicon-pencil bip-clickable'></i>
+        </div>
+
+        <div class='delete-result' id="delete-story-result-<%= index %>"
+            data-id="<%= result.id %>"
+            data-action="<%= File.join( @base_url, "stories/#{@story.id}/results/#{result.id}" ) %>"
+            style='position:absolute; right:20px; margin-top:-3px'>
+          <i class='glyphicon glyphicon-remove bip-clickable'></i>
+        </div>
+      </div>
+
+      <div id='story-result-<%= index %>' class="story-result col-md-9">
+        <!-- http://stackoverflow.com/questions/13561533 -->
+        <%= best_in_place result, :description,
+                  url: story_result_path(@story, result),
+           html_attrs: { style: 'width:100%' },
+            activator: "#edit-story-result-#{index}" %>
+      </div>
+
+    </div>  <!-- row --> <br>
+  <% end %>
+</div>

@@ -65,53 +65,15 @@
     </div>
   </div>  <!-- tags form -->
 
+  <!-- prompts and results-->
   <div class="row">
 
     <div class="col-sm-6">
       <p class='lead' style='display:inline-block'>Prompts</p>
       <div class="well" style="position:relative">
 
-        <%= form_tag story_path(@story), remote: true, method: :put,
-              class: 'form-inline' do %>
-          <%= text_field_tag "story[new_prompt]", nil, class: 'form-control',
-                  id: 'new-prompt', style: 'width:89%', placeholder: 'Add a prompt that will help contributors share their experience ...' %>
-          <%= button_tag type: "submit", class: "btn btn-secondary", disabled: true do %>
-            <i class='glyphicon glyphicon-plus'></i>
-          <% end %>
+        <%= render '/stories/shared/story_edit_prompts' %>
 
-        <% end %> <br>
-
-        <div class='container-fluid' id='prompts-list'>
-
-          <% @prompts.each_with_index do |prompt, index| %>
-            <div class="row">
-
-              <div class="modify-prompt">
-                <div id="edit-story-prompt-<%= index %>"
-                    style='position:absolute; right:55px; margin-top:-3px'>
-                  <i class='glyphicon glyphicon-pencil bip-clickable'></i>
-                </div>
-
-                <div class='delete-prompt' id="delete-story-prompt-<%= index %>"
-                    data-id="<%= prompt.id %>"
-                    data-action="<%= File.join( @base_url, "prompts/#{prompt.id}" ) %>"
-                    style='position:absolute; right:20px; margin-top:-3px'>
-                  <i class='glyphicon glyphicon-remove bip-clickable'></i>
-                </div>
-              </div>
-
-              <div id='story-prompt-<%= index %>' class="story-prompt col-md-9">
-                <!-- http://stackoverflow.com/questions/13561533 -->
-                <%= best_in_place prompt, :description,
-                          url: story_path(@story) + "?prompt_id=#{prompt.id}",
-                   html_attrs: { style: 'width:100%' },
-                    activator: "#edit-story-prompt-#{index}" %>
-              </div>
-
-            </div>  <!-- row --> <br>
-          <% end %>
-
-        </div>
       </div>
     </div>
 
@@ -119,51 +81,12 @@
       <p class='lead' style='display:inline-block'>Results</p>
       <div class="well" style="position:relative">
 
-        <%= form_tag story_path(@story), remote: true, method: :put,
-              class: 'form-inline' do %>
-          <%= text_field_tag "story[new_result]", nil, class: 'form-control',
-                  id: 'new-result', style: 'width:89%', placeholder: 'What were the measurable results for this success?' %>
-          <%= button_tag type: "submit", class: "btn btn-secondary", disabled: true do %>
-            <i class='glyphicon glyphicon-plus'></i>
-          <% end %>
+        <%= render '/stories/shared/story_edit_results' %>
 
-        <% end %> <br>
-
-        <div class='container-fluid' id='results-list'>
-
-          <% @results.each_with_index do |result, index| %>
-            <div class="row">
-
-              <div class="modify-result">
-                <div id="edit-story-result-<%= index %>"
-                    style='position:absolute; right:55px; margin-top:-3px'>
-                  <i class='glyphicon glyphicon-pencil bip-clickable'></i>
-                </div>
-
-                <div class='delete-result' id="delete-story-result-<%= index %>"
-                    data-id="<%= result.id %>"
-                    data-action="<%= File.join( @base_url, "results/#{result.id}" ) %>"
-                    style='position:absolute; right:20px; margin-top:-3px'>
-                  <i class='glyphicon glyphicon-remove bip-clickable'></i>
-                </div>
-              </div>
-
-              <div id='story-result-<%= index %>' class="story-result col-md-9">
-                <!-- http://stackoverflow.com/questions/13561533 -->
-                <%= best_in_place result, :description,
-                          url: story_path(@story) + "?result_id=#{result.id}",
-                   html_attrs: { style: 'width:100%' },
-                    activator: "#edit-story-result-#{index}" %>
-              </div>
-
-            </div>  <!-- row --> <br>
-          <% end %>
-
-        </div>
       </div>
     </div>
-  </div>
 
+  </div>  <!-- prompts and results -->
 
   <div class="row">
     <div class="col-md-6">
@@ -382,7 +305,7 @@
 
       <div id="delete-story-result-{{= index }}" class="delete-result"
           data-id="{{= result.id }}"
-          data-action="{{= baseUrl }}/results/{{= result.id }}"
+          data-action="{{= baseUrl }}/stories/{{= storyId }}/results/{{= result.id }}"
           style='position:absolute; right:20px; margin-top:-3px'>
         <i class='glyphicon glyphicon-remove bip-clickable'></i>
       </div>
@@ -394,7 +317,7 @@
             data-bip-html-attrs="{&quot;style&quot;:&quot;width:100%&quot;}"
             data-bip-object="result"
             data-bip-original-content="{{= result.description }}"
-            data-bip-url="/stories/{{= storyId }}?result_id={{= result.id }}"
+            data-bip-url="/stories/{{= storyId }}/results/{{= result.id }}"
             data-bip-value="{{= result.description }}"
             class="best_in_place"
             id="best_in_place_result_{{= result.id }}_description">

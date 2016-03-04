@@ -16,10 +16,9 @@ Rails.application.routes.draw do
       resources :companies, only: [:show, :edit, :update] do
         resources :stories, only: [:new, :create]
       end
-      resources :stories, only: [:edit, :update, :destroy]
-
-      # delete a Result
-      delete '/results/:id', to: 'results#destroy'
+      resources :stories, only: [:edit, :update, :destroy] do
+        resources :results, only: [:create, :update, :destroy]
+      end
 
       # delete a Prompt
       delete '/prompts/:id', to: 'prompts#destroy'

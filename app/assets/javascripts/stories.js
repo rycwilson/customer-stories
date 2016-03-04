@@ -5,6 +5,10 @@
 //= require best_in_place
 //= require dirtyFields/jquery.dirtyFields.js
 
+// for best-in-place validation errors...
+//= require best_in_place.purr
+//= require jquery.purr
+
 var ready = function () {
 
   configPlugins();
@@ -54,6 +58,13 @@ function initListeners () {
       $('#embed-iframe').attr('src', newUrl);
       $(".best_in_place[data-bip-attribute='embed_url']")
         .text(newUrl);
+  });
+
+  // best-in-place errors
+  $(document).on('best_in_place:error', function (event, data, status, xhr) {
+    var error = JSON.parse(data.responseText)[0];
+    if ( error.match(/maximum\sis\s50\scharacters/) )
+      flashDisplay("Result can't exceed 50 characters", "danger");
   });
 
   /*
