@@ -1,36 +1,47 @@
-<br><br>
-<div class='container'>
-  <div class='col-xs-12'>
+<!-- @contribution, @linkedin_connect -->
+<div class="container">
+  <div class="contribution-submission col-xs-12 col-md-10 col-md-offset-1 col-md-offset-1 col-lg-8 col-lg-offset-2" style='margin-top:40px'>
+
+
+    <div class='row'>
+      <div class="col-xs-12">
+        <% if @contribution.status == 'contribution' %>
+          <h3>Your contribution has been submitted. Thanks again!</h3>
+        <% else %>
+          <h3>Your feedback has been submitted.</h3>
+        <% end %>
+      </div>
+    </div> <br>
 
     <% if @contribution.status == 'contribution' %>
-
-      <h4>Your contribution has been submitted. Thanks again!</h4>
-
-      <p>When the success story is published, we will contact you so that you may review and confirm .  It will look like this:</p>
-
+      <p>We will contact you when the success story is published. At that time you may review the story and confirm whether you would like to include your LinkedIn profile.</p>
     <% else %>
-
+      <p>We're sorry to hear you can't contribute to the success story. Thanks for taking the time to let us know why.</p>
     <% end %>
 
+    <br><br>
+    <p>Your story curator</p>
+    <!-- http://www.no-margin-for-errors.com/blog/2009/12/10/css-tip-float-an-image-without-text-wrapping-under-it/ -->
+    <div id='curator-info' class='col-xs-12 col-sm-7'>
+
+      <img id='curator-photo' src="<%= @contribution.success.curator.photo_url %>"
+            alt="curator photo">
+      <%= @curator.full_name %> <br>
+      <%= @curator.title %> <br>
+      <%= @curator.company.name %> <br>
+      <a href="mailto:<%= @curator.email %>"><%= @curator.email %></a> <br>
+      <%= @curator.phone %>
+    </div>
+    <div class="col-sm-5 hidden-xs text-right" style="position:relative; min-height:105px">
+      <%= image_tag 'CS-powered-by.png', alt:'powered-by-csp', style:"position:absolute; right:0; bottom:0" %>
+    </div>
+    <div class="col-xs-12 visible-xs text-center">
+      <br>
+      <%= image_tag 'CS-powered-by.png', alt:'powered-by-csp' %>
+    </div>
+    <br>
 
 
-    <% if @linkedin_connect %>
-
-      <h4>Your contribution has been submitted. Thanks again!</h4>
-
-      <p>When the Success Story is published, your LinkedIn profile will appear as part of the Contribution Team.  It will look like this:</p>
-
-      <script src="//platform.linkedin.com/in.js" type="text/javascript"></script>
-
-      <script type="IN/MemberProfile"
-              data-id="<%= @contribution.user.linkedin_url %>"
-              data-format="inline" data-related="false" data-width='300'></script>
-
-    <% else %>
-
-      <h3>Your <%= @contribution.status %> has been submitted. Thanks again!</h3>
-
-    <% end %>
 
   </div>
 </div>

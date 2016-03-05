@@ -73,7 +73,7 @@ class ContributionsController < ApplicationController
   end
 
   def confirm
-    # binding.pry
+    @curator = @contribution.success.curator
   end
 
   def request_contribution_email
