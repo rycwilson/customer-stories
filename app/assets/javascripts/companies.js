@@ -70,6 +70,7 @@ function initListeners() {
       console.log(data);
       $('#template_subject').val(data.subject);
       $('.note-editable').html(data.body);
+      $('.note-editable').trigger('input');
       $('#email-template-form').attr('action', '/email_templates/' + data.id);
     });
   });
@@ -88,6 +89,13 @@ function initListeners() {
   //     // $(this).trigger('submit');
   //   }
   // });
+
+  $('.note-editable').on('input', function () {
+    if ($(this).text().length > 0)
+      $(this).closest('form').find('[type=submit]').prop('disabled', false);
+    else
+      $(this).closest('form').find('[type=submit]').prop('disabled', true);
+  });
 }
 
 function configSummernote () {

@@ -43,6 +43,7 @@ class CompaniesController < ApplicationController
   end
 
   def create
+    binding.pry
     @company = Company.new company_params
     if @company.save
       @company.update_tags(params[:company_tags]) if params[:company_tags].present?
@@ -72,9 +73,11 @@ class CompaniesController < ApplicationController
       @company.update_tags(params[:company_tags]) if params[:company_tags].present?
       @flash_mesg = "Account updated successfully"
       @flash_status = "success"
+      binding.pry
     else
       @flash_mesg = @company.errors.full_messages.join(', ')
       @flash_status = "danger"
+      binding.pry
     end
     respond_to do |format|
       format.html do
