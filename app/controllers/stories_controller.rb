@@ -3,6 +3,7 @@ class StoriesController < ApplicationController
   before_action :set_company, only: [:index, :create]
   before_action :set_story, only: [:show, :edit]
   before_action :user_authorized?, only: [:edit]
+  before_action :set_s3_direct_post, only: [:edit]
 
   def index
     if params[:filter]  # ajax GET request
@@ -16,12 +17,13 @@ class StoriesController < ApplicationController
 
   def show
     @contributors = @story.success.contributions
-                          .where(linkedin: :true).map { |c| c.contributor }
+                          .where(linkedin: true).map { |c| c.contributor }
     @contributors << @story.success.curator unless @contributors.any? { |c| c.email == @story.success.curator.email }
   end
 
   def edit
     @company = current_user.company # company_id not in the stories#edit route
+    @customer = @story.success.customer
     @contributions = @story.success.contributions
     @contributions_in_progress = Contribution.in_progress @story.success_id
     @industries = @company.industries_select
@@ -78,6 +80,9 @@ class StoriesController < ApplicationController
       respond_to do |format|
         format.js
       end
+    elsif params[:customer_logo_url]
+      story.success.customer.update logo_url: params[:customer_logo_url]
+      respond_to { |format| format.json { render json: nil } }
     elsif params[:prompt]  # a prompt was edited
       Prompt.find(params[:prompt_id].to_i).update description: params[:prompt][:description]
       respond_to { |format| format.json { render json: nil } }

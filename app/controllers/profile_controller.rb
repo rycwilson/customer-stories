@@ -1,6 +1,5 @@
 class ProfileController < ApplicationController
 
-  before_action :set_user, only: :edit
   before_action :set_company, only: :edit
   before_action :set_s3_direct_post, only: [:linkedin_callback, :edit]
 
@@ -31,6 +30,7 @@ class ProfileController < ApplicationController
   end
 
   def edit
+    @user = current_user
   end
 
   def update
@@ -47,20 +47,8 @@ class ProfileController < ApplicationController
 
   private
 
-  def set_user
-    @user = current_user
-  end
-
   def set_company
-    if current_user.company_id.present?
-      @company = Company.find current_user.company_id
-    else
-      true  # return value is insignificant
-    end
-  end
-
-  def set_s3_direct_post
-    @s3_direct_post = S3_BUCKET.presigned_post(key: "uploads/#{SecureRandom.uuid}/${filename}", success_action_status: '201', acl: 'public-read')
+    current_user.company_id.present? ? @company = current_user.company : @company = nil
   end
 
 end

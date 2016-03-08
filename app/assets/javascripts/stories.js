@@ -3,17 +3,25 @@
 //= require bootstrap-switch/dist/js/bootstrap-switch
 //= require select2/dist/js/select2
 //= require best_in_place
+//= require bootstrap-jasny/js/fileinput.js
 //= require dirtyFields/jquery.dirtyFields.js
 
 // for best-in-place validation errors...
 //= require best_in_place.purr
 //= require jquery.purr
 
+// AWS S3 upload
+//= require jquery-ui/ui/widget.js
+//= require jquery-file-upload/js/jquery.fileupload
+
 var ready = function () {
 
-  configPlugins();
+  initBIPListeners();
+  initTagsListeners();
   initListeners();
-  initUnderscore();
+  configPlugins();
+  configUnderscore();
+  configS3Upload();
   // linkedin widgets
   $.getScript('http://platform.linkedin.com/in.js');
 
@@ -29,7 +37,7 @@ var ready = function () {
 $(document).ready(ready);
 $(document).on('page:load', ready);
 
-function initUnderscore() {
+function configUnderscore() {
   // this changes underscore to use {{ }} delimiters
   // (so doesn't clash with erb <% %>)
   _.templateSettings = {
@@ -46,7 +54,7 @@ function initUnderscore() {
   };
 }
 
-function initListeners () {
+function initBIPListeners () {
   /*
     update story attribute: embed_url
     The url is modified on server side to ensure that the
@@ -66,7 +74,9 @@ function initListeners () {
     if ( error.match(/maximum\sis\s50\scharacters/) )
       flashDisplay("Result can't exceed 50 characters", "danger");
   });
+}
 
+function initTagsListeners () {
   /*
     Remember the initial <option>s of the tag select inputs
     If user cancels changes, revert to these
@@ -86,6 +96,48 @@ function initListeners () {
     // console.log('industry tags on change: ', $('#story_industry_tags_').val());
   });
 
+  // TODO: figure out how to reset select2 inputs
+  // commented code results in error when attempting
+  // to make changes after reset
+  $('#edit-tags-cancel').on('click', function (e) {
+    e.preventDefault();
+    // reset the select input values
+    // $('.select2-selection__rendered').eq(0).html(industryTagsOptions);
+    // $('#story_industry_tags_').val(industryTagsVal);
+    // $('.select2-selection__rendered').eq(1).html(productCatTags);
+    // $('.select2-selection__rendered').eq(2).html(productTags);
+    // console.log('industry tags after cancel: ', $('#story_industry_tags_').val());
+    // hide the save/cancel buttons
+    // $('.edit-tags').toggleClass('hidden');
+    // tagsFormDirty = false;
+  });
+
+}
+
+function initListeners () {
+
+  /*
+    Customer logo
+  */
+  $('#customer-logo-form').on('change.bs.fileinput', function () {
+    var $form = $(this);
+    // need to introduce a slight delay while fileinput.js updates the form
+    // (adds hidden input with value = S3 link)
+    window.setTimeout(function () {
+      $.ajax({
+        url: $form.attr('action'),
+        method: 'put',
+        data: $form.serialize(),
+        success: function (data, status) {
+          console.log(data, status);
+        }
+      });
+    }, 500);
+  });
+
+  /*
+    Stories filter
+  */
   $('.stories-filter').on('change', function () {
 
     var filterType = $(this).attr('id'); // 'industries'
@@ -102,22 +154,6 @@ function initListeners () {
         $('#stories-gallery').empty().append(template({ stories: data }));
       }
     });
-  });
-
-  // TODO: figure out how to reset select2 inputs
-  // commented code results in error when attempting
-  // to make changes after reset
-  $('#edit-tags-cancel').on('click', function (e) {
-    e.preventDefault();
-    // reset the select input values
-    // $('.select2-selection__rendered').eq(0).html(industryTagsOptions);
-    // $('#story_industry_tags_').val(industryTagsVal);
-    // $('.select2-selection__rendered').eq(1).html(productCatTags);
-    // $('.select2-selection__rendered').eq(2).html(productTags);
-    // console.log('industry tags after cancel: ', $('#story_industry_tags_').val());
-    // hide the save/cancel buttons
-    // $('.edit-tags').toggleClass('hidden');
-    // tagsFormDirty = false;
   });
 
   // reset new contributor modal form when the modal closes

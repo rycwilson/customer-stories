@@ -1,38 +1,82 @@
-<div class='row'>
 
-  <div class='col-md-4 text-center'>
-    <img src="https://logo.clearbit.com/<%= @story.success.customer.name.downcase %>.com"
-        style="height:100px">
-  </div>
+<div class='col-sm-4 text-center' style='padding:0'>
+<!--
+  Note the absence of method:put and remote:true
+  We are only using this form for the S3 upload (necessary data attributes)
+  Submission must be triggered by file select, however calling $.submit()
+    messes with the response type called for by remote:true (instead of
+    javascript it gets changed to HTML, resulting in server error: unknown format)
+  So, submission is done via AJAX. See stories.js
+  -->
+  <%= form_tag story_path(@story), class: 'directUpload', id: 'customer-logo-form',
+        data: { 'form-data' => (@s3_direct_post.fields),
+                      'url' => @s3_direct_post.url,
+                     'host' => URI.parse(@s3_direct_post.url).host
+               } do %>
+    <div class="fileinput <%= @customer.logo_url.present? ? 'fileinput-exists' : 'fileinput-new' %>" data-provides="fileinput">
 
-  <div class='col-md-8 text-center'>
+      <div class="fileinput-new thumbnail"
+          style="width: 100px">
+        <%= image_tag "company-logo-missing.png", alt: 'photo missing' %>
+      </div>
 
+      <div class="fileinput-preview fileinput-exists thumbnail"
+          data-trigger="fileinput"
+          style="width: 100px">
+        <img id='customer-logo' src="<%= @customer.logo_url %>" alt="Avatar">
+      </div>
+
+      <div>
+        <div class="row">
+          <span class="btn btn-default btn-file" style='width:100px'>
+            <span class="fileinput-new">
+              Select
+            </span>
+            <span class="fileinput-exists">
+              Change
+            </span>
+            <%= file_field_tag :customer_logo_url %>
+          </span>
+        </div>
+        <div class="row" style='margin-top:5px'>
+          <a href="#" class="btn btn-default fileinput-exists"
+              style='width:100px' data-dismiss="fileinput">Remove
+          </a>
+        </div>
+      </div>
+    </div>  <!-- /.fileupload -->
+  <% end %>
+</div>
+
+<div class='col-sm-8 text-center' style='padding-top:5px'>
+
+  <!-- publish logo/story -->
+  <%= form_for @story, url: story_path(@story),
+                    method: 'put',
+                    remote: true,
+                      html: { class: "form-horizontal" } do |f| %>
+
+    <div class="form-group">
+      <%= f.label 'Publish Story', class: 'col-sm-6 control-label' %>
+      <div class="col-sm-6 text-left" style='padding-left:0'>
+        <%= f.check_box :published,
+              class: 'bs-switch form-control' %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label 'Publish Logo', class: 'col-sm-6 control-label' %>
+      <div class="col-sm-6 text-left" style='padding-left:0'>
+        <%= f.check_box :logo_published,
+              class: 'bs-switch form-control'  %>
+      </div>
+    </div>
+
+  <% end %>
+
+  <div class="col-sm-12">
     <%= link_to 'Preview Story Page', story_path(@story),
-          class: 'btn btn-secondary' %> <br><br>
-
-    <!-- publish logo/story -->
-    <%= form_for @story, url: story_path(@story),
-                      method: 'put',
-                      remote: true,
-                        html: { class: "form-horizontal" } do |f| %>
-
-      <div class="form-group">
-        <%= f.label 'Publish Story', class: 'col-md-6 control-label' %>
-        <div class="col-md-6 text-left" style='padding-left:0'>
-          <%= f.check_box :published,
-                class: 'bs-switch form-control' %>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <%= f.label 'Publish Logo', class: 'col-md-6 control-label' %>
-        <div class="col-md-6 text-left" style='padding-left:0'>
-          <%= f.check_box :logo_published,
-                class: 'bs-switch form-control'  %>
-        </div>
-      </div>
-
-    <% end %>
-
+        class: 'btn btn-primary' %>
   </div>
+
 </div>

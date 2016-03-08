@@ -73,9 +73,9 @@
                 <% end %>
               </div> <!-- /.heading-block -->
 
-              <%= form_for @company,
+              <%= form_for @company, method: 'put', remote: true,
+                    authenticity_token: true,
                     html: { class: 'directUpload',
-                           remote: true,
                              data: {
                                'form-data' => (@s3_direct_post.fields),
                                      'url' => @s3_direct_post.url,

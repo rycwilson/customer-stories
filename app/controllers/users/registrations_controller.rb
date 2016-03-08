@@ -3,7 +3,7 @@
 class Users::RegistrationsController < Devise::RegistrationsController
 # before_filter :configure_sign_up_params, only: [:create]
 # before_action :configure_account_update_params, only: [:update]
-before_action :set_s3_direct_post, only: [:edit, :update]
+# before_action :set_s3_direct_post, only: [:edit, :update]
 
   respond_to :html, :js
 
@@ -65,7 +65,6 @@ before_action :set_s3_direct_post, only: [:edit, :update]
     edit_profile_path
   end
 
-
   # If you have extra params to permit, append them to the sanitizer.
   # def configure_sign_up_params
   #   devise_parameter_sanitizer.for(:sign_up) << :attribute
@@ -88,9 +87,5 @@ before_action :set_s3_direct_post, only: [:edit, :update]
   # end
 
   private
-
-  def set_s3_direct_post
-    @s3_direct_post = S3_BUCKET.presigned_post(key: "uploads/#{SecureRandom.uuid}/${filename}", success_action_status: '201', acl: 'public-read')
-  end
 
 end

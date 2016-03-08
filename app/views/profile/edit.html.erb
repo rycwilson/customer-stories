@@ -11,37 +11,8 @@
       <div class="layout layout-main-right layout-stack-sm">
         <div class="col-md-3 col-sm-4 layout-sidebar">
 
-          <ul class="nav nav-layout-sidebar nav-stacked">
+        <%= render 'profile/shared/side_tabs' %>
 
-            <li class="active">
-              <a href="#profile-tab" data-toggle="tab">
-              <i class="fa fa-user"></i>
-              &nbsp;&nbsp;Profile
-              </a>
-            </li>
-
-            <li>
-              <a href="#password-tab" data-toggle="tab">
-              <i class="fa fa-lock"></i>
-              &nbsp;&nbsp;Change Password
-              </a>
-            </li>
-
-            <li>
-              <a href="#my-contributions-tab" data-toggle="tab">
-              <i class="fa fa-users"></i>
-              &nbsp;&nbsp;Contributions
-              </a>
-            </li>
-
-            <!-- <li>
-              <a href="javascript:;" data-toggle="tab">
-              <i class="fa fa-bullhorn"></i>
-              &nbsp;&nbsp;Notifications
-              </a>
-            </li> -->
-
-          </ul>
         </div> <!-- /.col -->
 
         <div class="col-md-9 col-sm-8 layout-main">
@@ -60,8 +31,9 @@
                 <% end %>
               </div>
 
-              <%= form_for @user,
-                    url: registration_path(@user), method: 'put', remote: 'true',
+              <%= form_for @user, url: registration_path(@user),
+                    method: 'put', remote: 'true',
+                    authenticity_token: true,
                    html: { class: 'directUpload',
                             data: { 'form-data' => (@s3_direct_post.fields),
                                           'url' => @s3_direct_post.url,

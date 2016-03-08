@@ -1,7 +1,7 @@
 class CompaniesController < ApplicationController
 
   # aws docs suggest first four actions, currently only need last one
-  before_action :set_s3_direct_post, only: [:new, :edit, :create, :update, :show]
+  before_action :set_s3_direct_post, only: [:new, :edit]
   before_action :set_company, only: [:edit, :update]
   before_action :user_authorized?, only: :show
 
@@ -70,13 +70,19 @@ class CompaniesController < ApplicationController
   def update
     if @company.update company_params
       @company.update_tags(params[:company_tags]) if params[:company_tags].present?
-      @flash_mesg = "Changes saved"
+      @flash_mesg = "Account updated successfully"
       @flash_status = "success"
     else
       @flash_mesg = @company.errors.full_messages.join(', ')
       @flash_status = "danger"
     end
-    respond_to { |format| format.js }
+    respond_to do |format|
+      format.html do
+        redirect_to edit_company_path(@company),
+          flash: { success: "Account updated successfully" }
+      end
+      format.js
+    end
   end
 
   private
@@ -96,10 +102,6 @@ class CompaniesController < ApplicationController
       render file: 'public/403', status: 403, layout: false
       false
     end
-  end
-
-  def set_s3_direct_post
-    @s3_direct_post = S3_BUCKET.presigned_post(key: "uploads/#{SecureRandom.uuid}/${filename}", success_action_status: '201', acl: 'public-read')
   end
 
 end
