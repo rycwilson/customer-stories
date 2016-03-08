@@ -1,0 +1,55 @@
+
+<!-- the template id will be appended to url when selection is made -->
+<%= form_tag "/", method: :put, remote: true,
+    class: 'form-horizontal', id: 'email-templates-form' do %>
+
+  <div class="form-group">
+    <%= label_tag "Template", nil, class: "control-label col-sm-2" %>
+    <div class="col-sm-8">
+      <%= select_tag "template[name]",
+            options_for_select(@templates_select),
+           { class: 'templates-select form-control', style: 'width:100%' } %>
+    </div>
+    <!-- Single button -->
+    <div class="col-sm-2 btn-group" id="restore-dropdown">
+      <button type="button" class="btn btn-default dropdown-toggle"
+          data-toggle="dropdown" aria-haspopup="true"
+          aria-expanded="false" disabled="true">
+        Restore <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li>
+          <a id='restore-current-template' href="javascript:;">This template</a>
+        </li>
+        <li>
+          <a id='restore-all-templates' href="javascript:;">All templates</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= label_tag "Subject", nil, class: "control-label col-sm-2" %>
+    <div class="col-sm-8">
+      <%= text_field_tag "template[subject]", nil, class: 'form-control' %>
+    </div>
+    <div class="col-sm-2">
+      <button id='test-template' type='button' class='btn btn-default' disabled='true'>
+        Test
+      </button>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= label_tag "Body", nil, class: "control-label col-sm-2" %>
+    <div class="col-sm-8">
+      <%= text_area_tag "template[body]", nil,
+            data: { provider: 'summernote'},
+            class: 'form-control', rows: 20 %>
+    </div>
+    <div class="col-sm-2">
+      <%= submit_tag "Save changes", class: "btn btn-primary", disabled: true %>
+    </div>
+  </div>
+
+<% end %>

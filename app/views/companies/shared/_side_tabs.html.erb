@@ -1,0 +1,45 @@
+
+<ul class="nav nav-layout-sidebar nav-stacked">
+
+  <li class="active">
+    <a href="#company-profile" data-toggle="tab">
+      <i class="fa fa-edit"></i>
+      &nbsp;&nbsp;Company
+    </a>
+  </li>
+
+  <% if @company.persisted? %>
+
+    <li>
+      <a href="#email-templates" data-toggle="tab">
+        <i class="fa fa-envelope-o"></i>
+        &nbsp;&nbsp;Email Templates
+      </a>
+    </li>
+
+   <!--  <li>
+      <a href="#curators" data-toggle="tab">
+        <i class="fa fa-users"></i>
+        &nbsp;&nbsp;Curators
+      </a>
+    </li> -->
+
+  <% else %>
+
+    <li>
+      <a href="javascript:;" data-toggle="tab">
+        <i class="fa fa-envelope-o"></i>
+        &nbsp;&nbsp;Email Templates
+      </a>
+    </li>
+
+    <!-- <li>
+      <a href="javasript:;" data-toggle="tab">
+        <i class="fa fa-users"></i>
+        &nbsp;&nbsp;Curators
+      </a>
+    </li> -->
+
+  <% end %>
+
+</ul>

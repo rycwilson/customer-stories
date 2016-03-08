@@ -66,12 +66,13 @@ function initListeners() {
 
   // load selected email template for editing
   $('.templates-select').on('change', function () {
+    console.log('hello?');
     $.get('/email_templates/' + $(this).val(), function (data, status, xhr) {
       console.log(data);
       $('#template_subject').val(data.subject);
       $('.note-editable').html(data.body);
       $('.note-editable').trigger('input');
-      $('#email-template-form').attr('action', '/email_templates/' + data.id);
+      $('#email-templates-form').attr('action', '/email_templates/' + data.id);
     });
   });
 
@@ -91,10 +92,73 @@ function initListeners() {
   // });
 
   $('.note-editable').on('input', function () {
-    if ($(this).text().length > 0)
+    // restore button
+    $(this).closest('form').find('.dropdown-toggle').prop('disabled', false);
+    // submit / test buttons
+    if ($(this).text().length > 0) {
       $(this).closest('form').find('[type=submit]').prop('disabled', false);
-    else
+      $('#test-template').prop('disabled', false);
+    } else {
       $(this).closest('form').find('[type=submit]').prop('disabled', true);
+      $('#test-template').prop('disabled', true);
+    }
+  });
+
+  // $('#restore-dropdown a').on('click', function () {
+  //   var restoreOption;
+  //   if ($(this).attr('id') === "restore-current-template")
+  //     restoreOption = { restore: true };
+  //   else if ($(this).attr('id') === "restore-all-templates")
+  //     restoreOption = { restore_all: true };
+  //   $.ajax({
+  //     url: '/email_templates/' +
+  //             $('#email-templates-form').find('select:first').val(),
+  //     method: 'put',
+  //     data: restoreOption,
+  //     success: function (data, status, xhr) {
+  //       $('#template-subject').text(data.template.subject);
+  //       $('.note-editable').html(data.template.body);
+  //       flashDisplay(data.flash, 'success');
+  //     }
+  //   });
+
+  // });
+
+  $('#restore-current-template').on('click', function () {
+    $.ajax({
+      url: '/email_templates/' +
+              $('#email-templates-form').find('select:first').val(),
+      method: 'put',
+      data: { 'restore': true },
+      success: function (data, status, xhr) {
+        $('#template-subject').text(data.template.subject);
+        $('.note-editable').html(data.template.body);
+        flashDisplay(data.flash, 'success');
+      }
+    });
+  });
+
+  $('#restore-all-templates').on('click', function () {
+    $.ajax({
+      url: '/email_templates/' +
+              $('#email-templates-form').find('select:first').val(),
+      method: 'put',
+      data: { 'restore_all': true },
+      success: function (data, status, xhr) {
+        data.templates_select.shift();  // remove placeholder
+        var newOptions = "";
+        data.templates_select.forEach(function (option) {
+          if (option[1] === data.current_template.id)
+            newOptions += "<option selected='selected' value='" + option[1] + "'>" + option[0] + "</option>";
+          else
+            newOptions += "<option value='" + option[1] + "'>" + option[0] + "</option>";
+        });
+        // select2 doesn't currently support wholesale replacement of options;
+        // here's a workaround:
+        $('.templates-select').html(newOptions).change();
+        flashDisplay(data.flash, 'success');
+      }
+    });
   });
 }
 
@@ -131,7 +195,7 @@ function configSelect2 () {
 
   $('.templates-select').select2({
     theme: 'bootstrap',
-    placeholder: 'select a template...'
+    placeholder: 'select a template ...'
   });
 
   // Company tags are for maintaining a list of options for Story tagging

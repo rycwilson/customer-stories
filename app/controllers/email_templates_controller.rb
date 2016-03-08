@@ -6,30 +6,47 @@ class EmailTemplatesController < ApplicationController
   #       after updating they become escaped double quote
   # note: saving template without any changes leads to an empty template body (??)
   def show
-    # insert curator's photo (or a placeholder)
-    if current_user.photo_url.present?
-      @template.body.sub! "[curator_img_url]", current_user.photo_url
-    else
-      @template.body.sub! "[curator_img_url]", ActionController::Base.helpers.asset_path("user-photo-missing.png")
-    end
-    # give anchor links a format that allows for editing text of the link
-    # don't want to include actual links, as they'll be broken (placeholders instead of actual urls)
-    @template.body.gsub!(/<a\shref=('|\")\[(\w+)\]('|\")>(.+?)<\/a>/, '[\2 link_text="\4"]')
-    # highlight all placeholders, links, and urls
-    @template.body.gsub!(/(\[.+?\])/, '<span style="color:red">\1</span>')
+    @template.format_for_editor current_user
     respond_to { |format| format.json { render json: @template } }
   end
 
   def update
-    # modified_body = params[:template][:body]
-    #                       .gsub!(/<span>(.+)<\/span>/, '\1')
-    if @template.update( subject: params[:template][:subject],
-                            body: params[:template][:body] )
-      flash.now[:success] = "Changes saved"
-      respond_to { |format| format.js { render action: 'update_success' } }
+    if params[:restore]
+      default_template =
+        EmailTemplate.where("company_id = ? AND name = ?",
+                              Company::CSP.id, @template.name).take
+      @template.update(subject: default_template.subject,
+                          body: default_template.body)
+      @template.format_for_editor current_user
+      respond_to do |format|
+        format.json { render json: { template: @template,
+                            flash: "Template '#{@template.name}' restored to default" } }
+      end
+    elsif params[:restore_all]
+      current_template_name = @template.name
+      company = current_user.company
+      company.create_email_templates
+      current_template =
+        EmailTemplate.where("company_id = ? AND name = ?",
+                              company.id, current_template_name).take
+      templates_select = company.templates_select
+      respond_to do |format|
+        format.json do
+          render json: { current_template: current_template,
+                         templates_select: templates_select,
+                                    flash: "All templates restored to default" }
+        end
+      end
     else
-      flash.now[:danger] = "Can't save changes: #{@template.errors.full_messages.join(', ')}"
-      respond_to { |format| format.js { render action: 'update_error' } }
+      if @template.update( subject: params[:template][:subject],
+                              body: params[:template][:body] )
+        @flash_mesg = "Changes saved"
+        @status = "success"
+      else
+        @flash_mesg = @template.errors.full_messages.join(', ')
+        @status = "danger"
+      end
+      respond_to { |format| format.js }
     end
   end
 
