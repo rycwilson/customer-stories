@@ -79,16 +79,16 @@ function initTemplateEditorListeners () {
   });
 
   /*
-    Detect changes in template editor
+    Detect changes in template editor (subject or body)
   */
-  $('.note-editable').on('input', function () {
-    // save / test buttons
-    if ($(this).text().length > 0) {
-      $(this).closest('form').find('[type=submit]').prop('disabled', false);
+  $('#template_subject, .note-editable').on('input', function () {
+    // textarea responds to .text(); text field responds to .val()
+    if ($(this).text().length > 0 || $(this).val().length > 0) {
+      $('#save-template').prop('disabled', false);
       $('#test-template').prop('disabled', false);
       $('#cancel-template').prop('disabled', false);
     } else {
-      $(this).closest('form').find('[type=submit]').prop('disabled', true);
+      $('#save-template').prop('disabled', true);
       $('#test-template').prop('disabled', true);
       // cancel stays active once a change is made
     }
@@ -166,6 +166,13 @@ function initTemplateEditorListeners () {
 
   $('#cancel-template').on('click', function () {
     $('.templates-select').trigger('change');
+  });
+
+  $('button').on('focus', function () {
+    var _this = $(this);
+    window.setTimeout(function () {
+      _this.blur();
+    }, 200);
   });
 
 }
