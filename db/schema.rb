@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160309010516) do
+ActiveRecord::Schema.define(version: 20160305204327) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -44,7 +44,6 @@ ActiveRecord::Schema.define(version: 20160309010516) do
     t.integer  "remind_2_wait", default: 2
     t.string   "access_token"
     t.integer  "referrer_id"
-    t.boolean  "is_dummy"
   end
 
   add_index "contributions", ["success_id"], name: "index_contributions_on_success_id", using: :btree
