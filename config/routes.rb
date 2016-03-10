@@ -30,6 +30,8 @@ Rails.application.routes.draw do
 
     # Email Templates
     resources :email_templates, only: [:show, :update]
+    post   '/email_templates/:id/test', to: 'email_templates#test'
+
 
     # Contributions
     post  '/stories/:id/contributions', to: 'contributions#create',

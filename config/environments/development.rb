@@ -1,5 +1,7 @@
 Rails.application.configure do
 
+  # config.log_level = :debug
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   # moved from session_store.rb

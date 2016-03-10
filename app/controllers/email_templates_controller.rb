@@ -23,7 +23,7 @@ class EmailTemplatesController < ApplicationController
                             flash: "Template '#{@template.name}' restored to default" } }
       end
     elsif params[:restore_all]
-      current_template_name = @template.name
+      current_template_name = @template.try(:name)
       company = current_user.company
       company.create_email_templates
       current_template =
@@ -32,6 +32,7 @@ class EmailTemplatesController < ApplicationController
       templates_select = company.templates_select
       respond_to do |format|
         format.json do
+          # current template will be nil if no templates were loaded
           render json: { current_template: current_template,
                          templates_select: templates_select,
                                     flash: "All templates restored to default" }
@@ -50,10 +51,23 @@ class EmailTemplatesController < ApplicationController
     end
   end
 
+  def test
+    template = EmailTemplate.new subject: params[:subject], body: params[:body]
+    template.format_for_storage
+    UserMailer.test_template(template, current_user).deliver_now
+    respond_to do |format|
+      format.json { render json: { flash: "Test email sent to #{current_user.email}" } }
+    end
+  end
+
   private
 
   def set_template
-    @template = EmailTemplate.find params[:id]
+    if params[:id] == "0"
+      @template = nil
+    else
+      @template = EmailTemplate.find params[:id]
+    end
   end
 
 end

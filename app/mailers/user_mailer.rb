@@ -2,7 +2,6 @@ class UserMailer < ApplicationMailer
 
   default from: 'no-reply@customerstories.net'
 
-  # TODO: How to handle errors/exceptions for sending email?
   def request_contribution contribution
     curator = contribution.success.curator
     referral_intro = contribution.referrer_id.present? ? contribution.referrer.full_name + " referred me to you. " : ""
@@ -32,9 +31,15 @@ class UserMailer < ApplicationMailer
               .gsub("[curator_img_url]", curator.photo_url || "")
               .html_safe
 
-    mail     to: "#{contribution.contributor.full_name} <#{contribution.contributor.email}>",
-           from: "#{curator.full_name} <#{curator.email}>",
-        subject: subject
+    unless contribution.contributor.email == curator.email
+      mail     to: "#{contribution.contributor.full_name} <#{contribution.contributor.email}>",
+             from: "#{curator.full_name} <#{curator.email}>",
+          subject: subject
+    else
+      mail     to: "#{contribution.contributor.full_name} <#{contribution.contributor.email}>",
+               # use default from to avoid same address causing email to bounce
+          subject: subject
+    end
 
   end
 
@@ -72,6 +77,36 @@ class UserMailer < ApplicationMailer
     end
 
   end # contribution_reminder
+
+  def test_template template, curator
+    @footer_img_url = "https://s3-us-west-1.amazonaws.com/csp-#{Rails.env}-assets/CS-powered-by.png"
+    subject = template.subject
+                .sub("[customer_name]", "CustomerCompany")
+                .sub("[company_name]", curator.company.name)
+    @body = template.body
+              .gsub("[customer_name]", "CustomerCompany")
+              .gsub("[company_name]", curator.company.name)
+              .gsub("[contributor_first_name]", "Contributor")
+              .gsub("[curator_first_name]", curator.first_name)
+              .gsub("[referral_intro]", "John Doe referred me to you. ")
+              .gsub("[contribution_url]", "#")
+              .gsub("[feedback_url]", "#")
+              .gsub("[curator_full_name]", curator.full_name)
+              .gsub("[curator_email]", curator.email)
+              .gsub("[curator_phone]", curator.phone || "")
+              .gsub("[curator_title]", curator.title || "")
+              .gsub("[unsubscribe_url]", "#")
+              .gsub("[opt_out_url]", "#")
+              .gsub("[curator_img_url]", curator.photo_url || "")
+              .html_safe
+
+    mail       to: "#{curator.full_name} <#{curator.email}>",
+              # use default from to avoid same address causing email to bounce
+          subject: subject,
+    template_path: 'user_mailer',
+    template_name: 'request_contribution'
+
+  end
 
 end
 

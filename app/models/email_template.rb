@@ -5,14 +5,7 @@ class EmailTemplate < ActiveRecord::Base
   validates :body, presence: true
 
   before_update do |template|
-    # re-construct curator photo placeholder
-    template.body.sub!( /(id=('|")curator-img('|") src=)('|")(https:\S+|\/assets\S+)('|")/,
-                        '\1"[curator_img_url]"' ) # outside single quote necessary for capture reference to work correctly
-    # re-construct anchor links
-    template.body.gsub!( /\[(\w+)\slink_text=('|")(.+?)('|")\]/,
-                         '<a href="[\1]">\3</a>' )
-    # remove highlights
-    template.body.gsub!( /<span\sstyle=\"color:.+?\">(.+?)<\/span>/, '\1' )
+    template.format_for_storage
   end
 
   def format_for_editor curator
@@ -26,6 +19,17 @@ class EmailTemplate < ActiveRecord::Base
     self.body.gsub!(/<a\shref=('|\")\[(\w+)\]('|\")>(.+?)<\/a>/, '[\2 link_text="\4"]')
     # highlight all placeholders, links, and urls
     self.body.gsub!(/(\[.+?\])/, '<span style="color:red">\1</span>')
+  end
+
+  def format_for_storage
+    # re-construct curator photo placeholder
+    self.body.sub!( /(id=('|")curator-img('|") src=)('|")(https:\S+|\/assets\S+)('|")/,
+                        '\1"[curator_img_url]"' ) # outside single quote necessary for capture reference to work correctly
+    # re-construct anchor links
+    self.body.gsub!( /\[(\w+)\slink_text=('|")(.+?)('|")\]/,
+                         '<a href="[\1]">\3</a>' )
+    # remove highlights
+    self.body.gsub!( /<span\sstyle=\"color:.+?\">(.+?)<\/span>/, '\1' )
   end
 
 end

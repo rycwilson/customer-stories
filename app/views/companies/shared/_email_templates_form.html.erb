@@ -14,15 +14,15 @@
     <div class="col-sm-2 btn-group" id="restore-dropdown">
       <button type="button" class="btn btn-default dropdown-toggle"
           data-toggle="dropdown" aria-haspopup="true"
-          aria-expanded="false" disabled="true">
-        Restore <span class="caret"></span>
+          aria-expanded="false">
+        Defaults <span class="caret"></span>
       </button>
       <ul class="dropdown-menu">
         <li>
-          <a id='restore-current-template' href="javascript:;">This template</a>
+          <a id='restore-all-templates' href="javascript:;">Restore all templates</a>
         </li>
-        <li>
-          <a id='restore-all-templates' href="javascript:;">All templates</a>
+        <li class='disabled'>
+          <a id='restore-current-template' href="javascript:;">Restore this template</a>
         </li>
       </ul>
     </div>
@@ -48,7 +48,11 @@
             class: 'form-control', rows: 20 %>
     </div>
     <div class="col-sm-2">
-      <%= submit_tag "Save changes", class: "btn btn-primary", disabled: true %>
+      <%= submit_tag "Save changes", class: "btn btn-primary", disabled: true %> <br><br>
+      <button id='cancel-template' type='button' class='btn btn-default' disabled='true'>
+        Cancel
+      </button>
+
     </div>
   </div>
 

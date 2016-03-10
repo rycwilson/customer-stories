@@ -32,6 +32,7 @@ var ready = function () {
   configS3Upload();
   configSummernote();
   initListeners();
+  initTemplateEditorListeners();
 
 };
 
@@ -45,6 +46,129 @@ var ready = function () {
 $(document).ready(ready);
 $(document).on('page:load', ready);
 
+function initTemplateEditorListeners () {
+
+  // load selected email template for editing
+  $('.templates-select').on('change', function () {
+    /*
+      This event will get triggered by a re-populating of the select options,
+      such as happens when all templates are restored to default.
+      When this happens, if no template has been loaded, do not send a GET
+    */
+    if ($(this).val() === null)
+      return false;
+
+    $.get('/email_templates/' + $(this).val(), function (data, status, xhr) {
+      $('#template_subject').val(data.subject);
+      $('.note-editable').html(data.body);
+      $('#email-templates-form').attr('action', '/email_templates/' + data.id);
+      $('.note-editable').trigger('loadTemplate');
+    });
+
+  });
+
+  $('.note-editable').on('loadTemplate', function () {
+    // restore this template
+    $('#restore-current-template').parent().toggleClass('disabled');
+    // test template
+    $('#test-template').prop('disabled', false);
+    // save
+    $(this).closest('form').find('[type=submit]').prop('disabled', true);
+    // cancel
+    $('#cancel-template').prop('disabled', true);
+  });
+
+  /*
+    Detect changes in template editor
+  */
+  $('.note-editable').on('input', function () {
+    // save / test buttons
+    if ($(this).text().length > 0) {
+      $(this).closest('form').find('[type=submit]').prop('disabled', false);
+      $('#test-template').prop('disabled', false);
+      $('#cancel-template').prop('disabled', false);
+    } else {
+      $(this).closest('form').find('[type=submit]').prop('disabled', true);
+      $('#test-template').prop('disabled', true);
+      // cancel stays active once a change is made
+    }
+  });
+
+  $('#restore-current-template').on('click', function () {
+    if ($(this).parent().hasClass('disabled'))
+      return false;
+
+    var $a = $(this);
+    $.ajax({
+      url: '/email_templates/' +
+              $('#email-templates-form').find('select:first').val(),
+      method: 'put',
+      data: { 'restore': true },
+      success: function (data, status, xhr) {
+        $('#template-subject').text(data.template.subject);
+        $('.note-editable').html(data.template.body);
+        $a.closest('form').find('[type=submit]').prop('disabled', true);
+        $('#cancel-template').prop('disabled', true);
+        flashDisplay(data.flash, 'success');
+      }
+    });
+  });
+
+  $('#restore-all-templates').on('click', function () {
+    var templateId = $('#email-templates-form').find('select:first').val(),
+        newOptions = "",
+        responseTemplateId;
+    if (templateId === "")
+      templateId = 0;
+    $.ajax({
+      url: '/email_templates/' + templateId,
+      method: 'put',
+      data: { 'restore_all': true },
+      success: function (data, status, xhr) {
+        // if no loaded template when request was made,
+        // a null current_template is returned
+        responseTemplateId = (data.current_template || { id: 0 }).id;
+        data.templates_select.forEach(function (option, index) {
+          // if this is the first option AND no template was loaded,
+          // first option to allow for placeholder
+          if (index === 0 && responseTemplateId === 0) {
+            newOptions += "<option value></option>";
+          } else if (option[1] === responseTemplateId) {
+            newOptions += "<option selected='selected' value='" + option[1] + "'>" + option[0] + "</option>";
+          } else {
+            newOptions += "<option value='" + option[1] + "'>" + option[0] + "</option>";
+          }
+        });
+        // select2 doesn't currently support wholesale replacement of options;
+        // here's a workaround:
+        // (https://github.com/select2/select2/issues/2830#issuecomment-74971872)
+        $('.templates-select').html(newOptions).change();
+        flashDisplay(data.flash, 'success');
+      }
+    });
+  });
+
+  $('#test-template').on('click', function () {
+    // don't use .serialize() or it will send a PUT request
+    // (not that it really matters what kind of request it is - POST or PUT is fine)
+    var data = {
+      subject: $('#template_subject').val(),
+         body: $('.note-editable').html()
+    };
+    $.post(
+        '/email_templates/' + $('.templates-select').val() + '/test',
+        data,
+        function (data, status) {
+          flashDisplay(data.flash, 'info');
+        }
+    );
+  });
+
+  $('#cancel-template').on('click', function () {
+    $('.templates-select').trigger('change');
+  });
+
+}
 
 function initListeners() {
   // remember the last active tab for server submit / page refresh
@@ -62,103 +186,6 @@ function initListeners() {
     // select2 inputs to default values...
     $('.new-story-customer').select2('val', '');  // single select
     $('.new-story-tags').val('').trigger('change');  // multiple select
-  });
-
-  // load selected email template for editing
-  $('.templates-select').on('change', function () {
-    console.log('hello?');
-    $.get('/email_templates/' + $(this).val(), function (data, status, xhr) {
-      console.log(data);
-      $('#template_subject').val(data.subject);
-      $('.note-editable').html(data.body);
-      $('.note-editable').trigger('input');
-      $('#email-templates-form').attr('action', '/email_templates/' + data.id);
-    });
-  });
-
-  // when a modified template is saved, remove the
-  // $('#email-template-form').on('submit', function (e) {
-  //   e.preventDefault();
-  //   var templateBody = $(this).find('.note-editable').html();
-  //   // use a conditional expression in order to delay submission of the form
-  //   // until after necessary changes are made
-    // var newBody = templateBody.replace(
-    //                     /(id=('|")curator-img('|") src=)('|")https:\/\/\S+('|")/,
-    //                     "$1[curator_img_url]" );
-  //   if ($(this).find('.note-editable').html( newBody ) ) {
-  //     console.log('well?');
-  //     // $(this).trigger('submit');
-  //   }
-  // });
-
-  $('.note-editable').on('input', function () {
-    // restore button
-    $(this).closest('form').find('.dropdown-toggle').prop('disabled', false);
-    // submit / test buttons
-    if ($(this).text().length > 0) {
-      $(this).closest('form').find('[type=submit]').prop('disabled', false);
-      $('#test-template').prop('disabled', false);
-    } else {
-      $(this).closest('form').find('[type=submit]').prop('disabled', true);
-      $('#test-template').prop('disabled', true);
-    }
-  });
-
-  // $('#restore-dropdown a').on('click', function () {
-  //   var restoreOption;
-  //   if ($(this).attr('id') === "restore-current-template")
-  //     restoreOption = { restore: true };
-  //   else if ($(this).attr('id') === "restore-all-templates")
-  //     restoreOption = { restore_all: true };
-  //   $.ajax({
-  //     url: '/email_templates/' +
-  //             $('#email-templates-form').find('select:first').val(),
-  //     method: 'put',
-  //     data: restoreOption,
-  //     success: function (data, status, xhr) {
-  //       $('#template-subject').text(data.template.subject);
-  //       $('.note-editable').html(data.template.body);
-  //       flashDisplay(data.flash, 'success');
-  //     }
-  //   });
-
-  // });
-
-  $('#restore-current-template').on('click', function () {
-    $.ajax({
-      url: '/email_templates/' +
-              $('#email-templates-form').find('select:first').val(),
-      method: 'put',
-      data: { 'restore': true },
-      success: function (data, status, xhr) {
-        $('#template-subject').text(data.template.subject);
-        $('.note-editable').html(data.template.body);
-        flashDisplay(data.flash, 'success');
-      }
-    });
-  });
-
-  $('#restore-all-templates').on('click', function () {
-    $.ajax({
-      url: '/email_templates/' +
-              $('#email-templates-form').find('select:first').val(),
-      method: 'put',
-      data: { 'restore_all': true },
-      success: function (data, status, xhr) {
-        data.templates_select.shift();  // remove placeholder
-        var newOptions = "";
-        data.templates_select.forEach(function (option) {
-          if (option[1] === data.current_template.id)
-            newOptions += "<option selected='selected' value='" + option[1] + "'>" + option[0] + "</option>";
-          else
-            newOptions += "<option value='" + option[1] + "'>" + option[0] + "</option>";
-        });
-        // select2 doesn't currently support wholesale replacement of options;
-        // here's a workaround:
-        $('.templates-select').html(newOptions).change();
-        flashDisplay(data.flash, 'success');
-      }
-    });
   });
 }
 
@@ -181,10 +208,12 @@ function configSummernote () {
   });
 }
 
-// It would be nice to have a .tags class to which the common
-// settings (theme, tags) can be applied, but that doesn't work.
-// That is, only one .select2() call per element will work,
-// any others will be ignored
+/*
+  It would be nice to have a .tags class to which the common
+  settings (theme, tags) can be applied, but that doesn't work.
+  That is, only one .select2() call per element will work,
+  any others will be ignored
+*/
 function configSelect2 () {
 
   $('.company-tags').select2({
