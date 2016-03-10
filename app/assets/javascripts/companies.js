@@ -69,7 +69,7 @@ function initTemplateEditorListeners () {
 
   $('.note-editable').on('loadTemplate', function () {
     // restore this template
-    $('#restore-current-template').parent().toggleClass('disabled');
+    $('#restore-current-template').parent().removeClass('disabled');
     // test template
     $('#test-template').prop('disabled', false);
     // save
