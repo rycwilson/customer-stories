@@ -44,8 +44,7 @@
   <div class="row">
     <div class= 'col-md-3 text-center' style='margin-top:5px'>
 
-      <img src="https://logo.clearbit.com/<%= @story.success.customer.name.downcase %>.com"
-          style="height:120px; width:120px">  <!-- logo -->
+      <img src="<%= @story.success.customer.logo_url || asset_path('company-logo-missing.png') %>" style="width:120px">
 
     </div>  <!-- logo -->
 
