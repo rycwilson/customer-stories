@@ -11,7 +11,7 @@ class User < ActiveRecord::Base
   has_many :own_contributions, class_name: 'Contribution', foreign_key: 'user_id'
   has_many :referred_contributions, class_name: 'Contribution', foreign_key: 'referrer_id'
 
-  has_many :successes # curator, no (dependent: :destroy)
+  has_many :successes, class_name: 'Success', foreign_key: 'curator_id' # curator, no (dependent: :destroy)
 
   # for changing password
   attr_accessor :current_password
