@@ -36,6 +36,8 @@ $(function() {
 
 });
 
+
+
 // status should be one of: success, info, warning, danger
 function flashDisplay (mesg, status) {
   $('#flash').toggleClass('hidden alert-' + status).append(mesg);

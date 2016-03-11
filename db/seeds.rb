@@ -21,7 +21,7 @@ PROD_CATS = ['Servers', 'Switches', 'Routers', 'Networking Software', 'Security'
 PRODUCTS = ['UCS C3160', 'Nexus 7004', 'Catalyst 6807', 'ISR 4400', 'ASR 1001', 'IOS XR 5.1', 'AnyConnect 4.1', 'MDS 9500']
 
 ROLES = ['customer', 'partner', 'sales']
-STATUS_OPTIONS = ['pre_request', 'request', 'remind1', 'remind2', 'feedback', 'contribution', 'opt_out', 'did_not_respond']
+STATUS_OPTIONS = ['pre_request', 'request', 'remind1', 'remind2', 'feedback', 'contribution', 'opt_out', 'unsubscribe', 'did_not_respond']
 
 dan = User.find_by(email:'***REMOVED***')
 # ryan = User.find_by(email:'***REMOVED***')

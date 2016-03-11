@@ -37,7 +37,7 @@ Rails.application.routes.draw do
     post  '/stories/:id/contributions', to: 'contributions#create',
                                         as: 'story_contributions'
     put   '/contributions/:id/request_contribution',
-                    to: 'contributions#request_contribution_email',
+                    to: 'contributions#request_contribution',
                     as: 'request_contribution'
     get   '/contributions/:id/confirm', to: 'contributions#confirm',
                                         as: 'confirm_contribution'

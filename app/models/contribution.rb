@@ -24,7 +24,9 @@ class Contribution < ActiveRecord::Base
                 .each do |contribution|
       puts "processing contribution #{contribution.id} with status #{contribution.status}"
       if contribution.remind_at.past?
-        UserMailer.contribution_reminder(contribution).deliver_now unless contribution.status == 'remind2'
+        unless ['remind2', 'unsubscribe', 'opt_out'].include? contribution.status
+          UserMailer.contribution_reminder(contribution).deliver_now
+        end
         if contribution.status == 'request'
           new_status = 'remind1'
           new_remind_at = Time.now + contribution.remind_2_wait.days
@@ -70,12 +72,14 @@ class Contribution < ActiveRecord::Base
   # sort oldest to newest (according to status)
   #
   def self.in_progress success_id
-    order = ['did_not_respond', 'remind2', 'remind1', 'request']
+    order = ['opt_out', 'unsubscribe', 'did_not_respond', 'remind2', 'remind1', 'request']
     Contribution.where(success_id: success_id)
-                .select { |c| c.status == 'request' or
-                              c.status == 'remind1' or
-                              c.status == 'remind2' or
-                              c.status == 'did_not_respond' }
+                .select { |c| c.status == 'request' ||
+                              c.status == 'remind1' ||
+                              c.status == 'remind2' ||
+                              c.status == 'did_not_respond' ||
+                              c.status == 'unsubscribe' ||
+                              c.status == 'opt_out' }
                 .sort do |a,b|
                   if order.index(a.status) < order.index(b.status)
                     -1
@@ -84,6 +88,16 @@ class Contribution < ActiveRecord::Base
                   else 0
                   end
                 end
+  end
+
+  #
+  # "Fetch all Contributions where the Contributor has this email and update them"
+  # note: need to use the actual table name (users) instead of the alias (contributors)
+  #
+  def self.update_opt_out_status opt_out_email
+    Contribution.joins(:contributor)
+                .where(users: { email: opt_out_email })
+                .each { |c| c.update status: 'opt_out' }
   end
 
 end

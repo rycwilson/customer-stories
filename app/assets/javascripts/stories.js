@@ -183,8 +183,11 @@ function initListeners () {
   });
 
   // don't leave focus on the button
-  $('#new-contributor-button').focus(function (e) {
-    e.target.blur();
+  $('#new-contributor-button').on('focus', function () {
+    var _this = $(this);
+    window.setTimeout(function () {
+      _this.blur();
+    }, 200);
   });
 
   /*

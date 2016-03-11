@@ -27,11 +27,6 @@ class Company < ActiveRecord::Base
 
   CSP = self.find_by(name:'CSP')
 
-  # returns a unique list of registered subdomains
-  def self.subdomains
-    Company.select("DISTINCT ")
-  end
-
   def create_email_templates
     self.email_templates.destroy_all
     CSP.email_templates.each do |template|

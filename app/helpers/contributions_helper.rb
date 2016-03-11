@@ -11,6 +11,10 @@ module ContributionsHelper
         return label + "Second reminder sent"
       when 'did_not_respond'
         return label + "Did not respond"
+      when 'unsubscribe'
+        return label + "Unsubscribed from this story"
+      when 'opt_out'
+        return label + "Opted out of CSP emails"
     end
   end
 
