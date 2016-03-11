@@ -171,23 +171,18 @@ function initListeners () {
     $(this).find('#contributor_first_name').focus();
   });
 
-  // blur buttons after they're clicked
-  $('.contribution-request').on('focus','input.contribution-request', function () {
-    console.log('focus: ', $(this));
-  });
-
   $('.bs-switch').on('switchChange.bootstrapSwitch', function (event, state) {
     $(this).parent().submit();
     // don't need this yet...
     console.log(state);
   });
 
-  // don't leave focus on the button
-  $('#new-contributor-button').on('focus', function () {
+  // blur buttons after they're clicked
+  $('.btn').on('focus', function () {
     var _this = $(this);
     window.setTimeout(function () {
       _this.blur();
-    }, 200);
+    }, 300);
   });
 
   /*

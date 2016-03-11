@@ -81,19 +81,24 @@ class ContributionsController < ApplicationController
   end
 
   def request_contribution
-    UserMailer.request_contribution(@contribution).deliver_now
-    if @contribution.update(   status:'request',
-                            remind_at: Time.now + @contribution.remind_1_wait.days )
-      @contribution_status = contribution_status @contribution.status # view helper
-      @flash_status = "info"
-      @flash_mesg =
-        "An email request for contribution has been sent to #{@contribution.contributor.full_name}"
+    if @contribution.success.curator.photo_url.present?
+      UserMailer.request_contribution(@contribution).deliver_now
+      if @contribution.update(   status:'request',
+                              remind_at: Time.now + @contribution.remind_1_wait.days )
+        @contribution_status = contribution_status @contribution.status # view helper
+        @flash_status = "info"
+        @flash_mesg =
+          "An email request for contribution has been sent to #{@contribution.contributor.full_name}"
+      else
+        @flash_status = "danger"
+        @flash_mesg =
+          "Error updating Contribution: #{@contribution.errors.full_messages.join(', ')}"
+      end
+      respond_to { |format| format.js }
     else
       @flash_status = "danger"
-      @flash_mesg =
-        "Error updating Contribution: #{@contribution.errors.full_messages.join(', ')}"
+      @flash_mesg = "Curator photo is missing"
     end
-    respond_to { |format| format.js }
   end
 
   def confirm
