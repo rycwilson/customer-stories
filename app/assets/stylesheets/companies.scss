@@ -12,9 +12,11 @@
 *= require summernote
 */
 
-// .note-editor {
-//   width: 80%;
-// }
+// this gets rid of the dropdown caret
+.mainnav .nav > li > .dropdown-menu::after,
+.mainnav .nav > li > .dropdown-menu::before {
+  display:none;
+}
 
 #email-templates-form .control-label {
   margin-left: -30px;

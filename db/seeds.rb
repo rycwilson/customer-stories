@@ -23,21 +23,26 @@ PRODUCTS = ['UCS C3160', 'Nexus 7004', 'Catalyst 6807', 'ISR 4400', 'ASR 1001', 
 ROLES = ['customer', 'partner', 'sales']
 STATUS_OPTIONS = ['pre_request', 'request', 'remind1', 'remind2', 'feedback', 'contribution', 'opt_out', 'unsubscribe', 'did_not_respond']
 
-dan = User.find_by(email:'***REMOVED***')
+dan = User.create(first_name:'Dan', last_name:'Lindblom', email:'***REMOVED***', sign_up_code:'csp_beta', password:'password')
+# dan = User.find_by(email:'***REMOVED***')
 # ryan = User.find_by(email:'***REMOVED***')
 # curators = [dan, ryan]
-cisco = Company.find_by(name:'Cisco Systems')
-csp = Company.find_by(name:'CSP')
+# cisco = Company.find_by(name:'Cisco Systems')
+cisco = Company.create(name:'Cisco Systems', subdomain:'cisco')
+
+# csp = Company.find_by(name:'CSP')
+csp = Company.create(name:'CSP', subdomain:'csp')
+puts csp.errors.full_messages
 
 # destroy contributions first so deleted users don't orphan contributions (violates foreign key costraint)
 # Note: not using (dependent: :destroy) for users -> contributions (or users -> successes)
-Contribution.destroy_all
-Customer.destroy_all # also destroys successes, stories, visitors, and successes* join tables
-User.where.not("email = ? OR email = ?", "***REMOVED***", "***REMOVED***").destroy_all
+# Contribution.destroy_all
+# Customer.destroy_all # also destroys successes, stories, visitors, and successes* join tables
+# User.where.not("email = ? OR email = ?", "***REMOVED***", "***REMOVED***").destroy_all
 # Product.destroy_all
 # ProductCategory.destroy_all
 # IndustryCategory.destroy_all
-EmailTemplate.destroy_all
+# EmailTemplate.destroy_all
 
 # some users with linkedin profiles
 user1 = User.create(first_name:'Carlos', last_name:'Ramon', email:'carlos@mail.com', linkedin_url:'https://www.linkedin.com/in/carlosramon', sign_up_code:'csp_beta', password:'password')
@@ -47,17 +52,17 @@ user4 = User.create(first_name:'Allan', last_name:'Lo', email:'allan@mail.com', 
 user5 = User.create(first_name:'Jeff', last_name:'Weiner', email:'jeffw@mail.com', linkedin_url:'https://www.linkedin.com/in/jeffweiner08', sign_up_code:'csp_beta', password:'password')
 
 # Cisco's target industries...
-# INDUSTRIES_CISCO.each do |industry_name|
-#   cisco.industry_categories << IndustryCategory.create(name: industry_name)
-# end
+INDUSTRIES_CISCO.each do |industry_name|
+  cisco.industry_categories << IndustryCategory.create(name: industry_name)
+end
 
 # # Cisco's product categories and products...
-# PROD_CATS.each do |category_name|
-#   cisco.product_categories << ProductCategory.create(name: category_name)
-# end
-# PRODUCTS.each do |product_name|
-#   cisco.products << Product.create(name: product_name)
-# end
+PROD_CATS.each do |category_name|
+  cisco.product_categories << ProductCategory.create(name: category_name)
+end
+PRODUCTS.each do |product_name|
+  cisco.products << Product.create(name: product_name)
+end
 
 # Default email templates
 csp.email_templates << EmailTemplate.create(name: "Customer - initial contribution request", subject: EmailTemplatesSeed::REQUEST_SUBJECT, body: EmailTemplatesSeed::CUSTOMER_REQUEST_BODY)

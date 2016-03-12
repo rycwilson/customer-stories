@@ -41,7 +41,7 @@
       <button class="navbar-toggle" type="button"
               data-toggle="collapse" data-target=".navbar-collapse">
         <span class="sr-only">Toggle navigation</span>
-        <i class="glyphicon glyphicon-align-justfy"></i>
+        <i class="glyphicon glyphicon-align-justfy" ></i>
       </button>
     </div> <!-- /.navbar-header -->
 
@@ -54,7 +54,9 @@
                 class: 'btn btn-info', style: 'margin-top:10px; margin-left:20px' %>
         <% end %>
 
-        <%= render '/shared/mvp_admin_navbar_nav' %>
+        <%= link_to 'Sign out', destroy_user_session_path, class: 'navbar-right',
+              style: 'color: white; margin-top:20px' %>
+
       </nav>
 
     <% else %>

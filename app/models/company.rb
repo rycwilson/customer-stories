@@ -25,11 +25,13 @@ class Company < ActiveRecord::Base
   has_attached_file :logo, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: "companies/:style/missing_logo.png"
   validates_attachment_content_type :logo, content_type: /\Aimage\/.*\Z/
 
-  CSP = self.find_by(name:'CSP')
+  # why did this crap out when seeding?
+  # CSP = self.find_by(name:'CSP')
 
   def create_email_templates
     self.email_templates.destroy_all
-    CSP.email_templates.each do |template|
+    # CSP.email_templates.each do |template|
+    Company.find_by(name:'CSP').email_templates.each do |template|
       self.email_templates << template.dup
     end
   end
