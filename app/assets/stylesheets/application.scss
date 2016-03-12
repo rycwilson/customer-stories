@@ -17,7 +17,7 @@
  *= require bootstrap-sass/assets/stylesheets/_bootstrap
  */
 
-// this gets rid of the dropdown caret
+// this gets rid of the dropdown caret in mainnav
 .mainnav .nav > li > .dropdown-menu::after,
 .mainnav .nav > li > .dropdown-menu::before {
   display:none;

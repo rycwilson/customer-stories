@@ -1,4 +1,17 @@
+<%= javascript_tag do %>
 
+  $(function () {
+    var company = <%= raw @company.to_json %>;
+
+    $('.nav-tabs .active').removeClass('active');
+
+    $('a[role=tab]').on('click', function() {
+      window.location =
+        '/companies/' + company.id + '?mainnav_tab=' + $(this).attr('aria-controls')
+    });
+  });
+
+<% end %>
 
 <div id='wrapper'>
 
