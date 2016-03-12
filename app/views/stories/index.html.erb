@@ -2,37 +2,32 @@
   <div class="content">
     <div class="container">
 
-      <% if user_signed_in? %>
-        <!-- provide a link to Curation only if logged in -->
-        <%= link_to company_path(current_user.company), class: 'csp-nav' do %>
-          <span class='glyphicon glyphicon-chevron-left'
-              style='color:#337ab7; margin-top:20px; margin-right:5px'>
-          </span><span>Curate Stories</span>
-        <% end %>
-      <hr>
-      <% end %>
-
       <!-- .mainnav class puts the fading graphic underneath the headline -->
       <div class="mainnav"
-           style="color:#999999; margin-top:5px; margin-bottom:40px">
-        <div class="row">
-          <div class='col-md-2 text-center vcenter'>
+           style="color:#999999; margin-bottom:35px; min-height:55px">
+        <div class="row" style='padding-top:10px;'>
 
-            <img src="<%= @company.logo_url %>"
-                alt="Company Logo" style="width:125px">
+          <div class="col-sm-2 vcenter">
+            <% if user_signed_in? %>
+              <%= link_to company_path(current_user.company), class: 'csp-nav' do %>
+                <span class='glyphicon glyphicon-chevron-left'
+                    style='color:#337ab7; margin-right:5px'>
+                </span><span>Curate Stories</span>
+              <% end %>
+            <% end %>
+          </div><!--
 
-          </div>
-          <!-- <div class="col-md-2 vcenter">
-
-            <h2 style="margin:0">Customers</h2>
-
-          </div> -->
-          <div class="col-md-2 vcenter">
-
+       --><div class="col-sm-10 vcenter">
+             <div class="form-horizontal">
+             <%= label_tag :industries, "Filter", class: 'control-label col-sm-1' %>
+             <div class="col-sm-11">
              <%= select_tag "industries", options_for_select(@industries),
                     { class: 'stories-filter form-control',
-                      style: 'width:100%' } %>
+                      style: 'width:25%' } %>
+             </div>
+             </div>
           </div>
+
         </div>
       </div>  <!-- mainnav -->
 
@@ -79,8 +74,14 @@
           <a href='/stories/{{= story.story.id }}' class='story-link'>
             <div class="thumbnail" style='position:relative'>
               <img src="<%= asset_path('video.png') %>" alt="video tag"
-                  style='position:absolute; height:25px; left:130px'>
-              <img src="https://logo.clearbit.com/{{= story.customer.name.toLowerCase() }}.com" style='height:95px' >
+                   style='position:absolute; height:25px; left:130px'>
+              {{ if (story.customer.logo_url) { }}
+                <img src="{{= story.customer.logo_url }}.com"
+                     style='height:95px' >
+              {{ } else { }}
+                <img src="<%= asset_path('company-logo-missing.png') %>"
+                     style='height:95px' >
+              {{ } }}
             </div>
           </a>
         </div>

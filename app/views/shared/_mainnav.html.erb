@@ -10,26 +10,29 @@
     <nav class="collapse mainnav-collapse" role="navigation">
       <ul class='nav nav-tabs mainnav-menu' role='tablist'>
 
-        <li id='pipeline-tab' role='presentation' style='margin-bottom: 0px'>
+        <li id='pipeline-tab' class="<%= @mainnav_tab == 'pipeline' ? 'active' : '' %>"
+            role='presentation' style='margin-bottom: 0px'>
           <a href='#pipeline' role='tab' data-toggle='tab' aria-controls='pipeline'>
             Pipeline
           </a>
         </li>
 
-    <!--     <li class="<%#= @company.persisted? && current_user.linkedin_url && @linkedin_data.nil? ? 'active' : '' %>" -->
-        <li id='curate-tab' class='active' role='presentation' style='margin-bottom: 0px'>
+        <li id='curate-tab' class="<%= @mainnav_tab == 'curate' ? 'active' : '' %>"
+            role='presentation' style='margin-bottom: 0px'>
           <a href='#curate' role='tab' data-toggle='tab' aria-controls='curate'>
             Curate
           </a>
         </li>
 
-        <li id='promote-tab' role='presentation' style='margin-bottom: 0px'>
+        <li id='promote-tab' class="<%= @mainnav_tab == 'promote' ? 'active' : '' %>"
+            role='presentation' style='margin-bottom: 0px'>
           <a href='#promote' role='tab' data-toggle='tab' aria-controls='promote'>
             Promote
           </a>
         </li>
 
-        <li id='measure-tab' role='presentation' style='margin-bottom: 0px'>
+        <li id='measure-tab' class="<%= @mainnav_tab == 'measure' ? 'active' : '' %>"
+            role='presentation' style='margin-bottom: 0px'>
           <a href='#measure' role='tab' data-toggle='tab' aria-controls='measure'>
             Measure
           </a>

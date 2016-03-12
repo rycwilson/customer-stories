@@ -19,14 +19,14 @@
 var ready = function () {
 
   // not the best solution for remembering active tab, but it works
-  var lastCurateTab = localStorage.getItem('lastCurateTab');
-  var lastSettingsTab = localStorage.getItem('lastSettingsTab');
-  if (lastCurateTab) {
-    $('[href="' + lastCurateTab + '"]').tab('show');
-  }
-  if (lastSettingsTab) {
-    $('[href="' + lastSettingsTab + '"]').tab('show');
-  }
+  // var lastCurateTab = localStorage.getItem('lastCurateTab');
+  // var lastSettingsTab = localStorage.getItem('lastSettingsTab');
+  // if (lastCurateTab) {
+  //   $('[href="' + lastCurateTab + '"]').tab('show');
+  // }
+  // if (lastSettingsTab) {
+  //   $('[href="' + lastSettingsTab + '"]').tab('show');
+  // }
 
   configSelect2();
   configS3Upload();

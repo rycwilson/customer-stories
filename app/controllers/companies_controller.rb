@@ -18,16 +18,22 @@ class CompaniesController < ApplicationController
 
   # GET /companies/:id
   def show
-    # TODO: what's the best balance of eager vs. lazy loading?
-    # e.g. we're not eager loading products here...
-    @company = Company.includes(:customers, :successes, :stories, :visitors).find params[:id]
-    @customers = @company.customers_select
-    @industries = @company.industries_select # multiple select
-    # @industries_pre_select = @company.industry_categories.map { |category| category.id }
-    @product_categories = @company.product_categories_select # multiple select
-    # @product_cats_pre_select = @company.product_categories.map { |category| category.id }
-    @products = @company.products_select # single select (for now)
-    # @products_pre_select = @company.products.map { |product| product.id }
+    if params[:mainnav_tab]
+      session[:mainnav_tab] = params[:mainnav_tab]
+      redirect_to request.path
+    else
+      @mainnav_tab = session[:mainnav_tab] || 'curate'
+      # TODO: what's the best balance of eager vs. lazy loading?
+      # e.g. we're not eager loading products here...
+      @company = Company.includes(:customers, :successes, :stories, :visitors).find params[:id]
+      @customers = @company.customers_select
+      @industries = @company.industries_select # multiple select
+      # @industries_pre_select = @company.industry_categories.map { |category| category.id }
+      @product_categories = @company.product_categories_select # multiple select
+      # @product_cats_pre_select = @company.product_categories.map { |category| category.id }
+      @products = @company.products_select # single select (for now)
+      # @products_pre_select = @company.products.map { |product| product.id }
+    end
   end
 
   def edit

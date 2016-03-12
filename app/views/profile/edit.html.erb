@@ -1,17 +1,29 @@
+<!-- need access to @company in js -->
+<%= javascript_tag do %>
+
+  $(function () {
+    var company = <%= raw @company.to_json %>;
+
+    $('.nav-tabs .active').removeClass('active');
+
+    $('a[role=tab]').on('click', function() {
+      window.location =
+        '/companies/' + company.id + '?mainnav_tab=' + $(this).attr('aria-controls')
+    });
+  });
+
+<% end %>
+
 <div class="wrapper">
 
-  <!-- this needs to be present despite being empty, or stuff below will go haywire -->
-  <div class="mainnav">
-    <div class="container">
-    </div>
-  </div>
+  <%= render 'shared/mainnav' %>
 
   <div class="content">
     <div class="container">
       <div class="layout layout-main-right layout-stack-sm">
         <div class="col-md-3 col-sm-4 layout-sidebar">
 
-        <%= render 'profile/shared/side_tabs' %>
+          <%= render 'profile/shared/side_tabs' %>
 
         </div> <!-- /.col -->
 

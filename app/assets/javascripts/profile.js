@@ -15,19 +15,27 @@
 
 $(function () {
 
-  var lastProfileTab = sessionStorage.getItem('lastProfileTab');
+  // var lastProfileTab = sessionStorage.getItem('lastProfileTab');
 
-  if (lastProfileTab) {
-    $('[href="' + lastProfileTab + '"]').tab('show');
-  }
-  if (lastProfileTab) {
-    $('[href="' + lastProfileTab + '"]').tab('show');
-  }
+  // if (lastProfileTab) {
+  //   $('[href="' + lastProfileTab + '"]').tab('show');
+  // }
+  // if (lastProfileTab) {
+  //   $('[href="' + lastProfileTab + '"]').tab('show');
+  // }
 
   initListeners();
   configS3Upload();
 
 });
+
+// function navTabs () {
+//   $('.mainnav .active').removeClass('active');
+
+//   $('.nav-tabs a').on('click', function (e) {
+//     $.get('/companies/')
+//   });
+// }
 
 function initListeners () {
 

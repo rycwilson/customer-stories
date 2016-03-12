@@ -22,7 +22,7 @@
   <div class="container">
 
     <!-- navbar-header -->
-    <div class="navbar-header">
+    <div class="navbar-header col-sm-2">
 
       <% if user_signed_in? && current_user.company.try(:logo_url) %>
 
@@ -45,6 +45,11 @@
       </button>
     </div> <!-- /.navbar-header -->
 
+    <div class="col-sm-8 text-center"
+         style="color:rgb(212, 212, 212); font-size:20px; margin-top:13px">
+      <%= current_user.company.name || @company.name  %> Customer Stories
+    </div>
+
     <% if user_signed_in? %>
 
       <nav class="collapse navbar-collapse" role="navigation">
@@ -54,16 +59,17 @@
                 class: 'btn btn-info', style: 'margin-top:10px; margin-left:20px' %>
         <% end %>
 
-        <%= link_to 'Sign out', destroy_user_session_path,
+        <%= link_to 'Sign out', destroy_user_session_path, method: :delete,
               class: 'btn btn-sm btn-default navbar-right',
               style: 'margin-top: 12px' %>
-
       </nav>
 
     <% else %>
 
       <nav class="collapse navbar-collapse" role="navigation">
-        <%= link_to 'Sign in', new_user_session_path, class: 'btn btn-success navbar-right', style: 'margin-top: 10px' %>
+        <%= link_to 'Sign in', new_user_session_path,
+              class: 'btn btn-sm btn-default navbar-right',
+              style: 'margin-top: 12px' %>
       </nav>
 
     <% end %>

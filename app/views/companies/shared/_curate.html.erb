@@ -1,7 +1,8 @@
 <%= render 'companies/shared/new_story_modal' %>
 
 <!-- curate -->
-<div id='curate' class="<%= @company.persisted? && current_user.linkedin_url && @linkedin_data.nil? ? 'active tab-pane content' : 'tab-pane content' %>" role='tabpanel'>
+
+<div id='curate' class="<%= @mainnav_tab == 'curate' ? 'active tab-pane content' : 'tab-pane content' %>" role='tabpanel'>
   <div class='container'>
 
     <!-- new story modal -->

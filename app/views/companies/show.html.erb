@@ -1,24 +1,16 @@
 <div id='wrapper'>
 <%#= console %>
-  <%= render 'companies/shared/mainnav' %>
+  <%= render 'shared/mainnav' %>
 
   <div class='tab-content'>
 
-    <!-- need to prevent these partials from being rendered if new company,
-    else references to company parameters in the partials will crash the app -->
-    <!-- <%# unless @company.new_record? %> -->
+    <%= render 'companies/shared/pipeline' %>
 
-      <%= render 'companies/shared/pipeline' %>
+    <%= render 'companies/shared/curate' %>
 
-      <%= render 'companies/shared/curate' %>
+    <%= render 'companies/shared/promote' %>
 
-      <%= render 'companies/shared/promote' %>
-
-      <%= render 'companies/shared/measure' %>
-
-    <%# end %>
-
+    <%= render 'companies/shared/measure' %>
 
   </div>  <!-- tab content -->
-
 </div>  <!-- wrapper -->
