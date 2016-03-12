@@ -17,6 +17,12 @@
  *= require bootstrap-sass/assets/stylesheets/_bootstrap
  */
 
+// this gets rid of the dropdown caret
+.mainnav .nav > li > .dropdown-menu::after,
+.mainnav .nav > li > .dropdown-menu::before {
+  display:none;
+}
+
 .csp-nav {
  color: #337ab7;
 }
