@@ -1,4 +1,13 @@
-<div class='mainnav'>
+<% if user_signed_in? && controller_name == 'stories' && action_name == 'show' %>
+
+  <style>
+    .mainnav-main:after { content: none; }
+  </style>
+
+<% end %>
+
+<div class='mainnav mainnav-main'
+    style="<%= user_signed_in? ? 'margin-bottom:0' : '' %>">
   <div class='container'>
 
     <div class="navbar-header">
@@ -8,7 +17,6 @@
       <i class="fa fa-bars"></i>
     </a>
     </div>
-
 
     <div class="collapse mainnav-collapse" role="navigation">
       <ul class='nav nav-tabs mainnav-menu col-sm-4' role='tablist' style='border-bottom:0'>
@@ -48,18 +56,18 @@
            <%= label_tag :industries, "Industries", class: 'control-label' %>
            <%= select_tag :industries, options_for_select(@industries),
                   { class: 'stories-filter form-control' } %>
-          </div>
+          </div>&nbsp;&nbsp;
           <div class="form-group text-left">
            <%= label_tag :products, "Products", class: 'control-label' %>
            <%= select_tag :products, options_for_select(@industries),
                   { disabled: true,
                     class: 'stories-filter form-control' } %>
-
           </div>
         </form>
       <% end %>
 
-      <ul class='nav nav-tabs mainnav-menu col-sm-2 pull-right' role='tablist' style='border-bottom:0'>
+      <ul class='nav nav-tabs mainnav-menu col-sm-2 pull-right'
+          role='tablist' style='border-bottom:0'>
 
         <% if user_signed_in? && current_user.company_id.present? %>
 

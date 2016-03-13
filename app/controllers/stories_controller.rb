@@ -1,6 +1,6 @@
 class StoriesController < ApplicationController
 
-  before_action :set_company, only: [:index, :create]
+  before_action :set_company, only: [:index, :show, :create]
   before_action :set_story, only: [:show, :edit]
   before_action :user_authorized?, only: [:edit]
   before_action :set_s3_direct_post, only: [:edit]

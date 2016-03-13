@@ -1,215 +1,227 @@
+<%= javascript_tag do %>
+
+  $(function () {
+    var company = <%= raw @company.to_json %>;
+
+    $('.nav-tabs .active').removeClass('active');
+
+    $('a[role=tab]').on('click', function() {
+      window.location =
+        '/companies/' + company.id + '?mainnav_tab=' + $(this).attr('aria-controls')
+    });
+  });
+
+<% end %>
+
 <%= render 'stories/shared/new_contributor_modal' %>
 
-<div class='container'>
+<div class="wrapper">
 
-  <!-- nav back to Curate -->
-  <%= link_to company_path(current_user.company), class: 'csp-nav' do %>
-    <span class='glyphicon glyphicon-chevron-left'
-        style='color:#337ab7; margin-top:20px; margin-right:5px'>
-    </span><span>Curate Stories</span>
-  <% end %>
-  <hr>
+  <%= render 'shared/mainnav' %>
 
-  <!-- settings, title, quote, video -->
-  <div class='row' style='margin-top:15px'>
+  <div class="content">
+    <div class='container' style='margin-top:30px'>
+      <!-- settings, title, quote, video -->
+      <div class='row'>
 
-    <div class='col-md-4'>  <!-- story settings -->
+        <div class='col-sm-4' style='margin-top:-17px'>  <!-- story settings -->
 
-      <p class='lead'>Story Settings</p>
-      <%= render 'stories/shared/story_edit_settings.html.erb' %>
+          <p class='lead' style='font-size:30px;color:black'><%= @customer.name %></p>
+          <%= render 'stories/shared/story_edit_settings.html.erb' %>
 
-    </div>  <!-- story settings -->
+        </div><!--
 
-    <!-- title and quote -->
-    <div class="col-md-4">
+     --><div class="col-sm-4">
 
-      <p class='lead'>Title</p>
-      <%= render 'stories/shared/story_edit_title' %>
+          <p class='lead'>Title</p>
+          <%= render 'stories/shared/story_edit_title' %>
 
-      <p class='lead'>Customer Quote</p>
-      <%= render 'stories/shared/story_edit_customer_quote' %>
+          <p class='lead'>Customer Quote</p>
+          <%= render 'stories/shared/story_edit_customer_quote' %>
 
-    </div>  <!-- title and quote -->
+        </div>  <!-- title and quote -->
 
-    <!-- video -->
-    <div class='col-md-4'>
+        <!-- video -->
+        <div class='col-sm-4'>
 
-      <p class='lead'>Video</p>
-      <%= render 'stories/shared/story_edit_video' %>
+          <p class='lead'>Video</p>
+          <%= render 'stories/shared/story_edit_video' %>
 
-    </div>  <!-- video -->
+        </div>  <!-- video -->
 
-  </div>  <!-- settings, title, quote, video -->
+      </div>  <!-- settings, title, quote, video -->
 
-    <!-- tags -->
-  <p class='lead' style='display:inline-block'>Tags</p>
-  <button type='submit' class='edit-tags hidden btn btn-sm btn-primary'
-      style='display:inline-block; margin-left:15px; margin-bottom:8px' form='tags-form'>
-    Save changes
-  </button>
-  <button id='edit-tags-cancel' class='edit-tags hidden btn btn-sm btn-default'
-      style='display:inline-block; margin-bottom:8px'>
-    Cancel
-  </button>  <!-- tags -->
+      <!-- tags -->
+      <p class='lead' style='display:inline-block'>Tags</p>
+      <button type='submit' class='edit-tags hidden btn btn-sm btn-primary'
+        style='display:inline-block; margin-left:15px; margin-bottom:8px' form='tags-form'>
+        Save changes
+      </button>
+      <button id='edit-tags-cancel' class='edit-tags hidden btn btn-sm btn-default'
+          style='display:inline-block; margin-bottom:8px'>
+        Cancel
+      </button>  <!-- tags -->
 
-  <!-- tags form -->
-  <div class="row" style='margin-bottom: 15px'>
-    <div class="col-md-12">
-      <div class="well" style='margin-bottom:10px'>
-        <div class="container-fluid">
+      <!-- tags form -->
+      <div class="row" style='margin-bottom: 15px'>
+        <div class="col-sm-12">
+          <div class="well" style='margin-bottom:10px'>
+            <div class="container-fluid">
 
-          <%= render 'stories/shared/story_edit_tags_form' %>
+              <%= render 'stories/shared/story_edit_tags_form' %>
 
+            </div>
+          </div>
+        </div>
+      </div>  <!-- tags form -->
+
+      <!-- prompts and results-->
+      <div class="row">
+
+        <div class="col-sm-6">
+          <p class='lead' style='display:inline-block'>Prompts</p>
+          <div class="well" style="position:relative">
+
+            <%= render '/stories/shared/story_edit_prompts' %>
+
+          </div>
+        </div>
+
+        <div class="col-sm-6">
+          <p class='lead' style='display:inline-block'>Results</p>
+          <div class="well" style="position:relative">
+
+            <%= render '/stories/shared/story_edit_results' %>
+
+          </div>
+        </div>
+
+      </div>  <!-- prompts and results -->
+
+      <div class="row">
+        <div class="col-sm-6">
+          <p class='lead'>Contributions</p>
+        </div>
+        <div class="col-sm-6">
+          <p class='lead'>Story Narration</p>
         </div>
       </div>
-    </div>
-  </div>  <!-- tags form -->
 
-  <!-- prompts and results-->
-  <div class="row">
+      <div class="row">  <!-- content -->
 
-    <div class="col-sm-6">
-      <p class='lead' style='display:inline-block'>Prompts</p>
-      <div class="well" style="position:relative">
+        <!-- <div class="layout layout-main-right layout-stack-sm"> -->
 
-        <%= render '/stories/shared/story_edit_prompts' %>
+          <!-- Contributors nav -->
+          <div class="col-sm-2 col-sm-4 layout-sidebar" style='padding-top:0'>
 
-      </div>
-    </div>
+            <%= render 'stories/shared/contributions_side_tabs' %>
 
-    <div class="col-sm-6">
-      <p class='lead' style='display:inline-block'>Results</p>
-      <div class="well" style="position:relative">
+          </div> <!-- .col-sm-2 contributions navigation -->
 
-        <%= render '/stories/shared/story_edit_results' %>
+          <!-- Contributors list -->
+          <div class="col-sm-4 col-sm-8 layout-main" style='padding-top:0'>
+          <hr style='margin-top:0'>
 
-      </div>
-    </div>
+            <div class="tab-content stacked-content">
 
-  </div>  <!-- prompts and results -->
+              <%= render 'stories/shared/story_edit_pre_request_contributions' %>
 
-  <div class="row">
-    <div class="col-md-6">
-      <p class='lead'>Contributions</p>
-    </div>
-    <div class="col-md-6">
-      <p class='lead'>Story Narration</p>
-    </div>
+              <%= render 'stories/shared/story_edit_in_progress_contributions' %>
+
+              <%= render 'stories/shared/story_edit_feedback_contributions' %>
+
+              <%= render 'stories/shared/story_edit_contribution_contributions' %>
+
+              <%= render 'stories/shared/story_edit_connection_contributions' %>
+
+            </div> <!-- tab-content -->
+
+          </div>  <!-- Contributors list -->
+
+          <!-- Story content -->
+          <div class='col-sm-6'>
+            <!-- <p class='lead'>Story Narration</p> -->
+            <div class="well" style='position:relative'>
+              <div class="container-fluid">
+
+                <div class="row" style='margin-top:10px'>
+
+                  <div id='edit-story-situation'
+                        style='position:absolute; right:20px; margin-top:-3px'>
+                      <span class='glyphicon glyphicon-pencil bip-clickable'></span>
+                  </div>
+
+                  <div class='col-sm-11' id='story-situation'>
+                    <strong>Situation:&nbsp&nbsp</strong>
+                    <%= best_in_place @story, :situation, as: :textarea, url: story_path(@story),
+                        activator: '#edit-story-situation',
+                        place_holder: 'Add story situation ...',
+                        html_attrs: { style: 'width:100%' } %>
+                  </div>
+
+                </div> <br>
+
+                <div class="row">
+
+                  <div id='edit-story-challenge'
+                        style='position:absolute; right:20px; margin-top:-3px'>
+                      <span class='glyphicon glyphicon-pencil bip-clickable'></span>
+                  </div>
+
+                  <div class='col-sm-11' id='story-challenge'>
+                    <strong>Challenge:&nbsp&nbsp</strong>
+                    <%= best_in_place @story, :challenge, as: :textarea, url: story_path(@story),
+                        activator: '#edit-story-challenge',
+                        place_holder: 'Add story challenge ...',
+                        html_attrs: { style: 'width:100%' } %>
+
+                  </div>
+                </div> <br>
+
+                <div class="row">
+
+                  <div id='edit-story-solution'
+                        style='position:absolute; right:20px; margin-top:-3px'>
+                      <span class='glyphicon glyphicon-pencil bip-clickable'></span>
+                  </div>
+
+                  <div class='col-sm-11' id='story-solution'>
+                    <strong>Solution:&nbsp&nbsp</strong>
+                    <%= best_in_place @story, :solution, as: :textarea, url: story_path(@story),
+                        activator: '#edit-story-solution',
+                        place_holder: 'Add story solution ...',
+                        html_attrs: { style: 'width:100%' } %>
+
+                  </div>
+                </div> <br>
+
+                <div class="row">
+
+                  <div id='edit-story-benefits'
+                        style='position:absolute; right:20px; margin-top:-3px'>
+                      <span class='glyphicon glyphicon-pencil bip-clickable'></span>
+                  </div>
+
+                  <div class='col-sm-11' id='story-benefits'>
+                    <strong>Benefits:&nbsp&nbsp</strong>
+                    <%= best_in_place @story, :benefits, as: :textarea, url: story_path(@story),
+                        activator: '#edit-story-benefits',
+                        place_holder: 'Add story benefits ...',
+                        html_attrs: { style: 'width:100%' } %>
+
+                  </div>
+
+                </div>  <!-- row -->
+              </div>
+            </div>  <!-- well -->
+          </div>  <!-- col-sm-6 Story content -->
+
+        <!-- </div>  --> <!-- layout -->
+
+      </div>  <!-- row -->
+    </div>  <!-- container -->
   </div>
-
-  <div class="row">  <!-- content -->
-
-    <!-- <div class="layout layout-main-right layout-stack-sm"> -->
-
-      <!-- Contributors nav -->
-      <div class="col-md-2 col-sm-4 layout-sidebar" style='padding-top:0'>
-
-        <%= render 'stories/shared/contributions_side_tabs' %>
-
-      </div> <!-- .col-md-2 contributions navigation -->
-
-      <!-- Contributors list -->
-      <div class="col-md-4 col-sm-8 layout-main" style='padding-top:0'>
-      <hr style='margin-top:0'>
-
-        <div class="tab-content stacked-content">
-
-          <%= render 'stories/shared/story_edit_pre_request_contributions' %>
-
-          <%= render 'stories/shared/story_edit_in_progress_contributions' %>
-
-          <%= render 'stories/shared/story_edit_feedback_contributions' %>
-
-          <%= render 'stories/shared/story_edit_contribution_contributions' %>
-
-          <%= render 'stories/shared/story_edit_connection_contributions' %>
-
-        </div> <!-- tab-content -->
-
-      </div>  <!-- Contributors list -->
-
-      <!-- Story content -->
-      <div class='col-md-6'>
-        <!-- <p class='lead'>Story Narration</p> -->
-        <div class="well" style='position:relative'>
-          <div class="container-fluid">
-
-            <div class="row" style='margin-top:10px'>
-
-              <div id='edit-story-situation'
-                    style='position:absolute; right:20px; margin-top:-3px'>
-                  <span class='glyphicon glyphicon-pencil bip-clickable'></span>
-              </div>
-
-              <div class='col-md-11' id='story-situation'>
-                <strong>Situation:&nbsp&nbsp</strong>
-                <%= best_in_place @story, :situation, as: :textarea, url: story_path(@story),
-                    activator: '#edit-story-situation',
-                    place_holder: 'Add story situation ...',
-                    html_attrs: { style: 'width:100%' } %>
-              </div>
-
-            </div> <br>
-
-            <div class="row">
-
-              <div id='edit-story-challenge'
-                    style='position:absolute; right:20px; margin-top:-3px'>
-                  <span class='glyphicon glyphicon-pencil bip-clickable'></span>
-              </div>
-
-              <div class='col-md-11' id='story-challenge'>
-                <strong>Challenge:&nbsp&nbsp</strong>
-                <%= best_in_place @story, :challenge, as: :textarea, url: story_path(@story),
-                    activator: '#edit-story-challenge',
-                    place_holder: 'Add story challenge ...',
-                    html_attrs: { style: 'width:100%' } %>
-
-              </div>
-            </div> <br>
-
-            <div class="row">
-
-              <div id='edit-story-solution'
-                    style='position:absolute; right:20px; margin-top:-3px'>
-                  <span class='glyphicon glyphicon-pencil bip-clickable'></span>
-              </div>
-
-              <div class='col-md-11' id='story-solution'>
-                <strong>Solution:&nbsp&nbsp</strong>
-                <%= best_in_place @story, :solution, as: :textarea, url: story_path(@story),
-                    activator: '#edit-story-solution',
-                    place_holder: 'Add story solution ...',
-                    html_attrs: { style: 'width:100%' } %>
-
-              </div>
-            </div> <br>
-
-            <div class="row">
-
-              <div id='edit-story-benefits'
-                    style='position:absolute; right:20px; margin-top:-3px'>
-                  <span class='glyphicon glyphicon-pencil bip-clickable'></span>
-              </div>
-
-              <div class='col-md-11' id='story-benefits'>
-                <strong>Benefits:&nbsp&nbsp</strong>
-                <%= best_in_place @story, :benefits, as: :textarea, url: story_path(@story),
-                    activator: '#edit-story-benefits',
-                    place_holder: 'Add story benefits ...',
-                    html_attrs: { style: 'width:100%' } %>
-
-              </div>
-
-            </div>  <!-- row -->
-          </div>
-        </div>  <!-- well -->
-      </div>  <!-- col-md-6 Story content -->
-
-    <!-- </div>  --> <!-- layout -->
-
-  </div>  <!-- row -->
-</div>  <!-- container -->
+</div>  <!-- wrapper -->
 
 <!-- pre-request template -->
 <script type="text/template" id="pre-request-template">
@@ -247,7 +259,7 @@
 <script type="text/template" id="in-progress-template">
   <div class="well" data-contribution-id="{{= contributor.contributionId }}">
     <div class="row">
-      <div class='col-md-12'>
+      <div class='col-sm-12'>
         {{= contributor.fullName }} <br>
         {{= contributor.email }} <br>
         {{= contributor.role }} <br><br>

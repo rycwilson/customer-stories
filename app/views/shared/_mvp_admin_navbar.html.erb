@@ -31,10 +31,19 @@
                 class: "navbar-brand navbar-brand-img", alt: "company logo" %>
         <% end %>
 
-      <% else %>
+      <% elsif user_signed_in? && current_user.company.try(:logo_url).blank? %>
+
+        <% image_tag "company-logo-missing", alt: "company logo placeholder" %>
+
+      <% elsif user_signed_in? && current_user.company_id.blank? %>
 
         <%= image_tag "mvp-landing/logo_full.png",
             { class: 'navbar-brand navbar-brand-img', alt: 'CSP Logo' } %>
+
+      <% else %>
+
+        <%= image_tag @company.logo_url,
+            { class: 'navbar-brand navbar-brand-img', alt: 'company logo' } %>
 
       <% end %>
 
@@ -47,7 +56,13 @@
 
     <div class="col-sm-8 text-center"
          style="color:rgb(212, 212, 212); font-size:20px; margin-top:13px">
-      <%= current_user.company.name || @company.name  %> Customer Stories
+
+      <% if (controller_name == 'companies' && action_name != 'new') || (controller_name == 'stories' && action_name == 'index') || (controller_name == 'profile') %>
+        <%= @company.name %> Customer Stories
+      <% elsif (controller_name == 'stories') && (['show', 'edit'].include? action_name) %>
+        <%= @company.name %> Customer Story
+      <% end %>
+
     </div>
 
     <% if user_signed_in? %>

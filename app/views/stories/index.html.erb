@@ -1,3 +1,4 @@
+
 <%= javascript_tag do %>
 
   $(function () {
@@ -15,9 +16,32 @@
 
 <div id='wrapper'>
 
-  <%= render 'shared/mainnav' %>
+  <% if user_signed_in? %>
+    <%= render 'shared/mainnav' %>
+  <% else %>
 
-  <div class="content">
+    <div class="mainnav" style='min-height:55px'>
+      <div class="container">
+        <form class="form-inline col-sm-7 col-sm-offset-1" style='padding-top: 10px'>
+          <div class="form-group text-left">
+           <%= label_tag :industries, "Industries", class: 'control-label' %>
+           <%= select_tag :industries, options_for_select(@industries),
+                  class: 'stories-filter form-control' %>
+          </div>&nbsp;&nbsp;
+          <div class="form-group text-left">
+           <%= label_tag :products, "Products", class: 'control-label' %>
+           <%= select_tag :products, options_for_select(@industries),
+                  { disabled: true,
+                    class: 'stories-filter form-control' } %>
+
+          </div>
+        </form>
+      </div>
+    </div>
+
+  <% end %>
+
+  <div class="content" style='margin-top:25px'>
     <div class="container">
       <div class="portlet portlet-default">
         <div id='stories-gallery' class="portlet-body"
