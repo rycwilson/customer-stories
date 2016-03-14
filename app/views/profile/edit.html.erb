@@ -2,21 +2,38 @@
 <%= javascript_tag do %>
 
   $(function () {
+
     var company = <%= raw @company.to_json %>;
 
-    $('.nav-tabs .active').removeClass('active');
+    if (company) {
+      $('.nav-tabs .active').removeClass('active');
 
-    $('a[role=tab]').on('click', function() {
-      window.location =
-        '/companies/' + company.id + '?mainnav_tab=' + $(this).attr('aria-controls')
-    });
+      $('a[role=tab]').on('click', function() {
+        window.location =
+          '/companies/' + company.id + '?mainnav_tab=' + $(this).attr('aria-controls')
+      });
+    }
+    else {
+      $('header').css('background-color', 'white');
+      $('header').css('border-color', '#dddddd')
+    }
+
+
   });
 
 <% end %>
 
 <div class="wrapper">
 
-  <%= render 'shared/mainnav' %>
+  <% if current_user.company_id.present? %>
+
+    <%= render 'shared/mainnav' %>
+
+  <% else %>
+
+    <%= render 'shared/mainnav_no_company' %>
+
+  <% end %>
 
   <div class="content" style='margin-top:30px; overflow:hidden'>
     <div class="container">
@@ -34,12 +51,16 @@
               <div class="heading-block">
                 <% if current_user.linkedin_url.present? %>
                   <h3> Account Profile </h3>
-                <% else %>
-
+                <% elsif current_user.company_id.blank? %>
+                  <span style='font-size:14px'>Want your LinkedIn profile to appear in a Customer Story?</span>&nbsp;&nbsp;&nbsp;
                   <%= link_to "Connect to LinkedIn", "/auth/linkedin",
                       class: 'btn btn-default',
                       style: 'background-color: #2672ae; color: white' %>
 
+                <% else %>
+                  <%= link_to "Connect to LinkedIn", "/auth/linkedin",
+                      class: 'btn btn-default',
+                      style: 'background-color: #2672ae; color: white' %>
                 <% end %>
               </div>
 

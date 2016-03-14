@@ -1,13 +1,19 @@
+<%= javascript_tag do %>
+
+  $(function () {
+
+    $('header').css('background-color', 'white');
+    $('header').css('border-color', '#dddddd');
+
+  });
+
+<% end %>
+
 <div class="wrapper">
 
-  <!-- this needs to be present despite being empty, or stuff below will go haywire -->
-  <div class="mainnav">
-    <div class="container">
+  <%= render 'shared/mainnav_no_company' %>
 
-    </div>
-  </div>
-
-  <div class="content">
+  <div class="content" style='margin-top:30px; overflow:hidden'>
     <div class="container">
       <div class="layout layout-main-right layout-stack-sm">
         <div class="col-md-3 col-sm-4 layout-sidebar">

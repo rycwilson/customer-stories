@@ -15,12 +15,22 @@
     </a>
   </li>
 
-  <li>
-    <a href="#my-contributions-tab" data-toggle="tab">
-    <i class="fa fa-users"></i>
-    &nbsp;&nbsp;Contributions
-    </a>
-  </li>
+  <!-- don't allow access to Contributions tab until connect to LinkedIn -->
+  <% if current_user.linkedin_url.present? %>
+    <li>
+      <a href="#my-contributions-tab" data-toggle="tab">
+        <i class="fa fa-users"></i>&nbsp;&nbsp;
+        Contributions
+      </a>
+    </li>
+  <% else %>
+    <li>
+      <a href="javascript:;" data-toggle="tab">
+        <i class="fa fa-users"></i>&nbsp;&nbsp;
+        Contributions
+      </a>
+    </li>
+  <% end %>
 
   <!-- <li>
     <a href="javascript:;" data-toggle="tab">

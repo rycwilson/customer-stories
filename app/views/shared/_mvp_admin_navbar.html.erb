@@ -20,25 +20,36 @@
 
 <header class="navbar" role="banner">
   <div class="container">
-
     <!-- navbar-header -->
     <div class="navbar-header col-sm-2">
 
-      <% if user_signed_in? && current_user.company.try(:logo_url) %>
+      <% if user_signed_in? && current_user.company.try(:logo_url).present? %>
 
         <%= link_to root_path do %>
-          <%= image_tag "#{current_user.company.logo_url}",
+          <%= image_tag current_user.company.logo_url,
                 class: "navbar-brand navbar-brand-img", alt: "company logo" %>
         <% end %>
 
-      <% elsif user_signed_in? && current_user.company.try(:logo_url).blank? %>
+      <% elsif user_signed_in? && current_user.company_id.present? && current_user.company_id.try(:logo_url).blank? %>
 
-        <% image_tag "company-logo-missing", alt: "company logo placeholder" %>
+        <%= image_tag "company-logo-missing",
+            { class: 'navbar-brand navbar-brand-img',
+                alt: "company logo placeholder" } %>
 
       <% elsif user_signed_in? && current_user.company_id.blank? %>
 
-        <%= image_tag "mvp-landing/logo_full.png",
+        <% if controller_name == 'stories' %>
+
+          <%= image_tag(@company.logo_url,
+                class: "navbar-brand navbar-brand-img",
+                  alt: "company logo") unless @company.logo_url.blank? %>
+
+        <% else %>
+
+          <%= image_tag "mvp-landing/logo_full.png",
             { class: 'navbar-brand navbar-brand-img', alt: 'CSP Logo' } %>
+
+        <% end %>
 
       <% else %>
 
@@ -57,7 +68,7 @@
     <div class="col-sm-8 text-center"
          style="color:rgb(212, 212, 212); font-size:20px; margin-top:13px">
 
-      <% if (controller_name == 'companies' && action_name != 'new') || (controller_name == 'stories' && action_name == 'index') || (controller_name == 'profile') %>
+      <% if (controller_name == 'companies' && action_name != 'new') || (controller_name == 'stories' && action_name == 'index') || (controller_name == 'profile' && current_user.company_id.present?) %>
         <%= @company.name %> Customer Stories
       <% elsif (controller_name == 'stories') && (['show', 'edit'].include? action_name) %>
         <%= @company.name %> Customer Story
@@ -68,11 +79,6 @@
     <% if user_signed_in? %>
 
       <nav class="collapse navbar-collapse" role="navigation">
-
-        <% if current_user.company_id.blank? %>
-          <%= link_to 'Register your Company', new_company_path,
-                class: 'btn btn-info', style: 'margin-top:10px; margin-left:20px' %>
-        <% end %>
 
         <%= link_to 'Sign out', destroy_user_session_path, method: :delete,
               class: 'btn btn-sm btn-default navbar-right',

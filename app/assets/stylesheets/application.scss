@@ -17,6 +17,12 @@
  *= require bootstrap-sass/assets/stylesheets/_bootstrap
  */
 
+.vcenter {
+  display: inline-block;
+  vertical-align: middle;
+  float: none;
+}
+
 // this gets rid of the dropdown caret in mainnav
 .mainnav .nav > li > .dropdown-menu::after,
 .mainnav .nav > li > .dropdown-menu::before {
