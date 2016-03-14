@@ -92,20 +92,19 @@ class Company < ActiveRecord::Base
 
   def filter_stories type, id
     if id == 'all' # all stories for current company
-      return stories = self.stories.map do |story|
+      return self.stories.map do |story|
         # provide the customer along with the story
-        { story: story, customer: story.success.customer }
+        { story_id: story.id, customer_logo: story.success.customer.logo_url }
       end
     end
     case type
       when 'industries'
-        stories = Success.joins(:industry_categories)
-                          .where(industry_categories: { id: id })
-                          .map { |success| { story: success.story,
-                                          customer: success.customer } }
+        Success.joins(:industry_categories)
+               .where(industry_categories: { id: id })
+               .map { |success| { story_id: success.story.id,
+                             customer_logo: success.customer.logo_url } }
       else
     end
-    stories
   end
 
   # slightly different than updating tags for a story
