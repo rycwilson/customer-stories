@@ -3,3 +3,4 @@ INDUSTRIES = ['Education', 'Government', 'Financial Services', 'Healthcare', 'Ho
 RESULT1 = "What was the challenge?"
 RESULT2 = "What was the solution?"
 RESULT3 = "What are your estimated or measured results?"
+

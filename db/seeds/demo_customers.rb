@@ -1,0 +1,40 @@
+module DemoCustomersSeed
+
+  DEMO_CUSTOMERS = [
+    {name:'Ebay', logo:'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/f85c0aa2-726f-4152-973a-2470ee9afaa4/ebaycom.png'},
+    {name:'Google', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/f85c0aa2-726f-4152-973a-2470ee9afaa4/googlecom.png"},
+    {name:'Microsoft', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/8577ac9d-6e68-4e54-8722-e1ed51bf2294/ms-logo.png"},
+    {name:'Twitter', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/ec60df62-89ce-422f-b781-c2bcb8ebbb60/twittercom.png"},
+    {name:'IBM', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/f85c0aa2-726f-4152-973a-2470ee9afaa4/ibmcom.png"},
+    {name:'Amazon', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/f85c0aa2-726f-4152-973a-2470ee9afaa4/amazoncom.png"},
+    {name:'Facebook', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/361d0766-21cc-46d7-9164-53ee0f1504d9/facebook-icon-logo-vector.png"},
+    {name:'Verizon', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/c0599721-7a5e-4fa3-a85b-b2952c6bb9ec/verizoncom.png"},
+    {name:'ATT', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/f85c0aa2-726f-4152-973a-2470ee9afaa4/attcom.png"},
+    {name:'Sprint', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/f85c0aa2-726f-4152-973a-2470ee9afaa4/sprintcom.png"},
+    {name:'GE', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/c53254e3-20c1-4da5-ad46-2ea2ad6eea79/gecom.png"},
+    {name:'McKesson', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/f85c0aa2-726f-4152-973a-2470ee9afaa4/mckessoncom.png"},
+    {name:'GM', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/c4dae8e3-546e-4751-8c88-d24ee857e625/gmcom.png"},
+    {name:'Ford', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/b317524d-09a7-45c0-b1e6-8259135a9d53/fordcom.png"},
+    {name:'Costco', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/f85c0aa2-726f-4152-973a-2470ee9afaa4/costcocom.png"},
+    {name:'Kroger', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/819e8329-edcd-41c8-809b-f8002a2082b1/krogercom.png"},
+    {name:'Walmart', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/2e1c4ee0-270b-4018-87a6-d529e6ad6afd/wallmartcom.png"},
+    {name:'Apple', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/f85c0aa2-726f-4152-973a-2470ee9afaa4/applecom.png"},
+    {name:'Prudential', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/805174e6-0f5d-4333-99ab-42b9a1263ca7/prudentialcom.png"},
+    {name:'Boeing', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/f85c0aa2-726f-4152-973a-2470ee9afaa4/boeingcom.png"},
+    {name:'Citigroup', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/8737baa4-ac6a-4ebe-97bb-0e424bba0355/citigroupcom.png"},
+    {name:'Target', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/57eb8823-bd83-499c-9439-f9f02bdbcdee/targetcom.png"},
+    {name:'Anthem', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/6d309428-3e0e-47b6-ab68-e34d434a6181/anthemcom.png"},
+    {name:'Metlife', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/f85c0aa2-726f-4152-973a-2470ee9afaa4/metlifecom.png"},
+    {name:'Comcast', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/f85c0aa2-726f-4152-973a-2470ee9afaa4/comcastcom.png"},
+    {name:'PepsiCo', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/f85c0aa2-726f-4152-973a-2470ee9afaa4/pepsicocom.png"},
+    {name:'AIG', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/808d9052-79f2-41ab-9b57-f17699fafdeb/aigcom.png"},
+    {name:'UPS', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/5df3acd2-fe1a-4b37-8ec7-2039ae4f88a8/upscom.png"},
+    {name:'Aetna', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/84f59551-2c28-4d9d-8035-87a074ddb0a0/aetnacom.png"},
+    {name:'Caterpillar', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/808d9052-79f2-41ab-9b57-f17699fafdeb/caterpillarcom.png"},
+    {name:'FedEx', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/77a0b358-3da9-457a-9d1a-94e4e6e660a9/fedexcom.png"},
+    {name:'Pfizer', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/08d74207-aa99-48de-92a4-d90d6dc9eb6c/pfizercom.png"},
+    {name:'Disney', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/6c0b9aa5-8855-4ec6-9e77-01f1a2591c53/disneycom.png"},
+    {name:'Sysco', logo:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/4b4eeb0f-cff9-4460-906e-6fd2b253b0d7/syscocom.png"}
+  ]
+
+end

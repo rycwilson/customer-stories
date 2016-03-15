@@ -6,6 +6,7 @@
 #
 #  ** All other data will be destroyed and re-created upon running this file **
 
+require File.expand_path('../seeds/demo_customers', __FILE__)
 require File.expand_path('../seeds/contributions', __FILE__)
 require File.expand_path('../seeds/stories', __FILE__)
 require File.expand_path('../seeds/visitors', __FILE__)
@@ -16,23 +17,21 @@ require File.expand_path('../seeds/email_templates', __FILE__)
 
 # see config/initializers/constants.rb for generic list of industries
 INDUSTRIES_CISCO = ['Automotive', 'Education', 'Energy', 'Financial Services', 'Government', 'Healthcare', 'Hospitality', 'Life Sciences', 'Manufacturing', 'Retail', 'Sports and Entertainment', 'Transportation']
-CUSTOMERS = ['Ebay', 'Google', 'Microsoft', 'Twitter', 'IBM', 'Amazon', 'Facebook', 'Verizon', 'ATT', 'Sprint', 'GE', 'McKesson', 'GM', 'Ford', 'Costco', 'Kroger', 'Walmart', 'Apple', 'Prudential', 'Boeing', 'Citigroup', 'Target', 'Anthem', 'Metlife', 'Comcast', 'PepsiCo', 'AIG', 'UPS', 'Aetna', 'Caterpillar', 'FedEx', 'Pfizer', 'Disney', 'Sysco']
 PROD_CATS = ['Servers', 'Switches', 'Routers', 'Networking Software', 'Security', 'Storage', 'Video']
 PRODUCTS = ['UCS C3160', 'Nexus 7004', 'Catalyst 6807', 'ISR 4400', 'ASR 1001', 'IOS XR 5.1', 'AnyConnect 4.1', 'MDS 9500']
 
 ROLES = ['customer', 'partner', 'sales']
 STATUS_OPTIONS = ['pre_request', 'request', 'remind1', 'remind2', 'feedback', 'contribution', 'opt_out', 'unsubscribe', 'did_not_respond']
 
-dan = User.create(first_name:'Dan', last_name:'Lindblom', email:'***REMOVED***', sign_up_code:'csp_beta', password:'password')
-# dan = User.find_by(email:'***REMOVED***')
-# ryan = User.find_by(email:'***REMOVED***')
-# curators = [dan, ryan]
+dan = User.create(first_name:'Dan', last_name:'Lindblom', email:'***REMOVED***', linkedin_url:'https://www.linkedin.com/in/danlindblom', sign_up_code:'csp_beta', password:'password')
+ryan = User.create(first_name:'Ryan', last_name:'Wilson', email:'***REMOVED***', linkedin_url:'https://www.linkedin.com/in/wilsonryanc', sign_up_code:'csp_beta', password:'password')
+curators = [dan, ryan]
 # cisco = Company.find_by(name:'Cisco Systems')
 cisco = Company.create(name:'Cisco Systems', subdomain:'cisco')
+cisco.users << dan << ryan
 
 # csp = Company.find_by(name:'CSP')
 csp = Company.create(name:'CSP', subdomain:'csp')
-puts csp.errors.full_messages
 
 # destroy contributions first so deleted users don't orphan contributions (violates foreign key costraint)
 # Note: not using (dependent: :destroy) for users -> contributions (or users -> successes)
@@ -78,13 +77,14 @@ csp.email_templates << EmailTemplate.create(name: "Sales - second contribution r
 cisco.create_email_templates
 
 # Customers and Stories...
-CUSTOMERS.each do |customer_name|
-  customer = Customer.create(name: customer_name)
+DemoCustomersSeed::DEMO_CUSTOMERS.each do |customer_info|
+  puts customer_info
+  customer = Customer.create(name: customer_info[:name], logo_url: customer_info[:logo])
   cisco.customers << customer
   success = Success.create
   customer.successes << success
   success.created_at = (rand*60).days.ago
-  success.curator = dan # curators[rand(2)]  # randomly select dan or ryan as curator
+  success.curator = curators[rand(2)]  # randomly select dan or ryan as curator
   success.save
   # 2/3 successes will have a story
   if rand(3) >= 1
