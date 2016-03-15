@@ -66,7 +66,7 @@ class UserMailer < ApplicationMailer
               .sub("[opt_out_url]", "#{host}/contributions/#{contribution.access_token}/opt_out")
               .html_safe
 
-    if ['***REMOVED***', '***REMOVED***'].include? contributor.email
+    if ['***REMOVED***', '***REMOVED***', '***REMOVED***'].include? contributor.email
       mail     to: "#{contributor.full_name} <#{contributor.email}>",
              from: "#{curator.full_name} <#{curator.email}>",
           subject: subject
