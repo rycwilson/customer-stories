@@ -110,7 +110,6 @@ DemoCustomersSeed::DEMO_CUSTOMERS.each do |customer_info|
     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user5 )
 
     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'pre_request' )
-    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], STATUS_OPTIONS[rand(1..3)] )
     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'feedback' )
     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution' )
 
