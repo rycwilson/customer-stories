@@ -48,9 +48,9 @@ class UserMailer < ApplicationMailer
     curator = contribution.success.curator
     host = "http://#{curator.company.subdomain}.#{ENV['HOST_NAME']}"
     if contribution.status == 'request'
-      template_name = contribution.role + "_remind_1"
+      template_name = contribution.role.capitalize + " - first contribution reminder"
     elsif contribution.status == 'remind1'
-      template_name = contribution.role + "_remind_2"
+      template_name = contribution.role.capitalize + " - second contribution reminder"
     else
       # error
     end
