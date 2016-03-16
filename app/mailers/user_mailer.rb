@@ -44,7 +44,7 @@ class UserMailer < ApplicationMailer
   end
 
   def contribution_reminder contribution
-    contributor = contribution.user
+    contributor = contribution.contributor
     curator = contribution.success.curator
     host = "http://#{curator.company.subdomain}.#{ENV['HOST_NAME']}"
     if contribution.status == 'request'
@@ -60,7 +60,7 @@ class UserMailer < ApplicationMailer
                 .sub("[customer_name]", contribution.success.customer.name)
                 .sub("[company_name]", curator.company.name)
     @body = template.body
-              .sub("[contributor_first_name]", contribution.user.first_name)
+              .sub("[contributor_first_name]", contribution.contributor.first_name)
               .sub("[contribution_url]", "#{host}/contributions/#{contribution.access_token}/contribution")
               .sub("[feedback_url]", "#{host}/contributions/#{contribution.access_token}/feedback")
               .sub("[opt_out_url]", "#{host}/contributions/#{contribution.access_token}/opt_out")
