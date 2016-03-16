@@ -1,30 +1,32 @@
-<!-- TODO: confirm validations -->
-<!-- TODO: provide an option to create Username? -->
-<!-- TODO: Wire up TOS and Privacy Policy modals -->
-
-<!-- New user signup -->
+<!-- New user/admin signup -->
 
 <div id="wrapper">
-  <div class="masthead">
+
+  <div class="masthead" style='border-bottom:0'>
     <div class="container">
       <!-- <hr class="spacer-sm"> -->
       <div class="row text-center masthead-text animated fadeInDownBig"
           style='margin-top:15px'>
-        <h6 class="masthead-title">
-          Customer Stories is in beta.  For more information please <a href="mailto:info@customerstories.net" class="btn btn-primary">Contact Us</a>
-        </h6>
+        <% if request.path == '/users/sign_up' %>
+          <h6 class="masthead-title">
+            Customer Stories is in beta.  For more information please <a href="mailto:info@customerstories.net" class="btn btn-primary">Contact Us</a>
+          </h6>
+        <% end %>
       </div>
     </div> <!-- /.container -->
+  </div>
 
-
-  <div class="content" style ='padding-top:5px'>
+  <div class="content" style='padding-top:5px; background-color:#85CEE6'>
     <div class="container">
       <!-- <hr class="spacer-sm"> -->
       <div class="account-wrapper">
         <div class="account-body">
 
-          <h3 style='margin-bottom:5px'>Get Started with a Free Account.</h3>
-
+          <% if request.path == '/users/sign_up' %>
+            <h3 style='margin-bottom:5px'>Get Started with a Free Account.</h3>
+          <% else %>
+            <h3 style='margin-bottom:5px'>Admin Registration</h3>
+          <% end %>
 
           <%= form_for(resource, as: resource_name,
                       url: registration_path(resource_name),
@@ -82,25 +84,23 @@
                   </div>
                 </div> -->
 
+              <% if request.path == '/users/sign_up' %>
                 <div class="form-group" style='margin-bottom:5px'>
-                  <%= f.label :beta_signup_code, class: 'control-label col-md-3' %>
+                  <%= f.label :sign_up_code, class: 'control-label col-md-3' %>
                   <div class='col-md-9'>
                     <%= f.text_field :sign_up_code, { class: 'form-control',
                         id: 'sign_up_code', tabindex: '5' } %>
                   </div>
                 </div>
-
-        <!--     <div class="form-group">
-              <label class="checkbox-inline">
-              <input type="checkbox" name="agree" tabindex="6"> I agree to the
-              <a href="javascript:;" target="_blank">Terms of Service</a>
-              &amp;
-              <a href="javascript:;" target="_blank">Privacy Policy</a>
-              </label>
-            </div> --> <!-- /.form-group -->
-
-            <!--   </div>
-            </div> -->
+              <% else %>
+                <div class="form-group" style='margin-bottom:5px'>
+                  <%= f.label :admin_access_code, "Admin code", class: 'control-label col-md-3' %>
+                  <div class='col-md-9'>
+                    <%= f.text_field :admin_access_code, { class: 'form-control',
+                        id: 'sign_up_code', tabindex: '5' } %>
+                  </div>
+                </div>
+              <% end %>
 
             <div class="form-group">
               <%= button_tag(type: 'submit', tabindex: '6',
@@ -109,9 +109,11 @@
               <% end %>
             </div>
 
-            <div class="form-group">
-              Please review the <a href="/tos">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>. By creating an account you are agreeing to these terms and conditions.
-            </div>
+            <% if request.path == '/users/sign_up' %>
+              <div class="form-group">
+                Please review the <a href="/tos">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>. By creating an account you are agreeing to these terms and conditions.
+              </div>
+            <% end %>
 
           <% end %>
 
@@ -119,11 +121,18 @@
 
         <div class="account-footer">
           <p>Already have an account? &nbsp;
-            <%= link_to 'Sign in', new_user_session_path %>
+            <% if request.path == '/users/sign_up' %>
+              <%= link_to 'Sign in', new_user_session_path %>
+            <% elsif request.path == '/admins/sign_up' %>
+              <%= link_to 'Sign in', new_admin_session_path %>
+            <% end %>
           </p>
-          <p>
-          Forgot password? &nbsp;
-          <%= link_to 'Reset', new_user_password_path %>
+          <p>Forgot password? &nbsp;
+            <% if request.path == '/users/sign_up' %>
+              <%= link_to 'Reset', new_user_password_path %>
+            <% elsif request.path == '/admins/sign_up' %>
+              <%= link_to 'Reset', new_admin_password_path %>
+            <% end %>
           </p>
        <%#    <p>
           Didn't get confirmation? &nbsp;
@@ -134,8 +143,9 @@
       </div> <!-- /.account-wrapper -->
     </div> <!-- /.container -->
   </div> <!-- /.content -->
+
+  <% if request.path == '/users/sign_up' %>
+    <%= render 'shared/csp_landing_footer' %>
+  <% end %>
+
 </div> <!-- /#wrapper -->
-
-
-</div>
-<%= render 'shared/csp_landing_footer' %>

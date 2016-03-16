@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  devise_for :admins
   ## TODO!!!  Add route for devise Admin scope to the RailsAdmin page(s) /admin
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
 
@@ -86,6 +87,8 @@ Rails.application.routes.draw do
 
   # LinkedIn Oauth2 (omniauth gem)
   get '/auth/linkedin/callback', to: 'profile#linkedin_callback'
+
+  # devise_for :admin
 
   devise_for :users, controllers: {
       sessions: 'users/sessions',

@@ -2,18 +2,18 @@ RailsAdmin.config do |config|
 
   ### Popular gems integration
 
-## TODO!  Replace the authentication from User to Admin 
+## TODO!  Replace the authentication from User to Admin
   ## == Devise Admin ==
-  # config.authenticate_with do
-  #   warden.authenticate! scope: :admin
-  # end
-  # config.current_user_method(&:current_admin)
+  config.authenticate_with do
+    warden.authenticate! scope: :admin
+  end
+  config.current_user_method(&:current_admin)
 
   ## == Devise User ==
-  config.authenticate_with do
-    warden.authenticate! scope: :user
-  end
-  config.current_user_method(&:current_user)
+  # config.authenticate_with do
+  #   warden.authenticate! scope: :user
+  # end
+  # config.current_user_method(&:current_user)
 
   ## == Cancan ==
   # config.authorize_with :cancan

@@ -20,4 +20,8 @@ Rails.application.config.assets.precompile += %w(
   stories.js stories.css
   profile.js profile.css
   contributions.js contributions.css
+  devise/sessions.css
+  devise/registrations.css
+  devise/confirmations.css
+  devise/passwords.css
 )
