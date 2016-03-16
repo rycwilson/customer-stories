@@ -78,7 +78,6 @@ cisco.create_email_templates
 
 # Customers and Stories...
 DemoCustomersSeed::DEMO_CUSTOMERS.each do |customer_info|
-  puts customer_info
   customer = Customer.create(name: customer_info[:name], logo_url: customer_info[:logo])
   cisco.customers << customer
   success = Success.create
@@ -108,7 +107,6 @@ DemoCustomersSeed::DEMO_CUSTOMERS.each do |customer_info|
     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user3 )
     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user4 )
     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user5 )
-
     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'pre_request' )
     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'feedback' )
     ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution' )
