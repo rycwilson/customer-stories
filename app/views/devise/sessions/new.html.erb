@@ -3,20 +3,26 @@
   <div class="masthead">
     <div class="content">
       <div class="container">
-
         <hr class="spacer-sm">
-
         <div class="account-wrapper">  <!-- style='width:450px' -->
           <div class="row">
             <div class="account-body col-xs-8 col-xs-offset-2">
 
-              <h3>Welcome back to Customer Stories</h3>
+              <% if request.path == '/users/sign_in' %>
+
+                <h3>Welcome back to Customer Stories</h3>
+
+              <% elsif request.path == '/admins/sign_in' %>
+
+                <h3>CSP Admin</h3>
+
+              <% end %>
 
               <h5>Please sign in</h5>
 
               <%= form_for(resource, as: resource_name,
                   url: session_path(resource_name),
-                  html: { id: 'fform', class: 'form account-form' }) do |f| %>
+                  html: { class: 'form account-form' }) do |f| %>
 
                 <div class='form-group'>
                   <%= f.label :email %><br />
@@ -52,24 +58,35 @@
 
             </div> <!-- /.account-body -->
           </div>
+
           <div class="account-footer">
+
             <p>
-            Forgot password? &nbsp;
-            <%= link_to 'Reset', new_user_password_path %>
+              Forgot password? &nbsp;
+              <% if request.path == '/users/sign_in' %>
+                <%= link_to 'Reset', new_user_password_path %>
+              <% elsif request.path == '/admins/sign_in' %>
+                <%= link_to 'Reset', new_admin_password_path %>
+              <% end %>
             </p>
+
             <p>
-            Don't have an account? &nbsp;
-            <%= link_to 'Sign up', new_user_registration_path %>
+              Don't have an account? &nbsp;
+              <% if request.path == '/users/sign_in' %>
+                <%= link_to 'Sign up', new_user_registration_path %>
+              <% elsif request.path == '/admins/sign_in' %>
+                <%= link_to 'Sign up', new_admin_registration_path %>
+              <% end %>
             </p>
+
             <p>
             <!-- Didn't get confirmation? &nbsp; -->
             <%#= link_to 'Resend email', new_user_confirmation_path %>
             </p>
+
           </div> <!-- /.account-footer -->
 
         </div> <!-- /.account-wrapper -->
-
-
       </div> <!-- /.container -->
     </div> <!-- /.content -->
   </div> <!-- /.masthead -->

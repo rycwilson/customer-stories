@@ -56,12 +56,16 @@ class ApplicationController < ActionController::Base
   end
 
   # change devise redirect on sign in
-  def after_sign_in_path_for user
-    if user.company_id.present?  # returning users
-      root = root_url(host: user.company.subdomain + '.' + request.domain)
-      File.join(root, company_path(user.company_id))
-    else
-      edit_profile_no_company_path
+  def after_sign_in_path_for resource
+    if resource.class.name == 'User'
+      if resource.company_id.present?  # returning users
+        root = root_url(host: resource.company.subdomain + '.' + request.domain)
+        File.join(root, company_path(resource.company_id))
+      else
+        edit_profile_no_company_path
+      end
+    elsif resource.class.name == 'Admin'
+      rails_admin_path
     end
   end
 

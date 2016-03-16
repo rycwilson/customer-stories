@@ -1,8 +1,4 @@
-<!-- TODO: confirm validations -->
-<!-- TODO: provide an option to create Username? -->
-<!-- TODO: Wire up TOS and Privacy Policy modals -->
-
-<!-- New user signup -->
+<!-- New user/admin signup -->
 
 <div id="wrapper">
 
@@ -125,11 +121,18 @@
 
         <div class="account-footer">
           <p>Already have an account? &nbsp;
-            <%= link_to 'Sign in', new_user_session_path %>
+            <% if request.path == '/users/sign_up' %>
+              <%= link_to 'Sign in', new_user_session_path %>
+            <% elsif request.path == '/admins/sign_up' %>
+              <%= link_to 'Sign in', new_admin_session_path %>
+            <% end %>
           </p>
-          <p>
-          Forgot password? &nbsp;
-          <%= link_to 'Reset', new_user_password_path %>
+          <p>Forgot password? &nbsp;
+            <% if request.path == '/users/sign_up' %>
+              <%= link_to 'Reset', new_user_password_path %>
+            <% elsif request.path == '/admins/sign_up' %>
+              <%= link_to 'Reset', new_admin_password_path %>
+            <% end %>
           </p>
        <%#    <p>
           Didn't get confirmation? &nbsp;
