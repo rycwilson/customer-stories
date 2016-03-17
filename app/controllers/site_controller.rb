@@ -8,6 +8,7 @@ class SiteController < ApplicationController
   end
 
   def invalid_subdomain
+    logger.debug "PASSWORD REQUEST INFO: #{request.original_url}"
     redirect_to root_url(host: request.domain)
   end
 
