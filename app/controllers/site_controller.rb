@@ -5,7 +5,7 @@ class SiteController < ApplicationController
 
   def strip_www_subdomain
     logger.debug "PASSWORD REQUEST INFO: #{request.original_url}"
-    redir = request.protocol + request.host + request.path
+    redir = request.protocol + request.domain + request.path
     logger.debug "REDIRECTING TO: #{redir}"
     redirect_to redir
   end
