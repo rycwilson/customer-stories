@@ -16,14 +16,15 @@
 
 var ready = function () {
 
+  // linkedin widgets
+  $.getScript('http://platform.linkedin.com/in.js');
+
   initBIPListeners();
   initTagsListeners();
   initListeners();
   configPlugins();
   configUnderscore();
   configS3Upload();
-  // linkedin widgets
-  $.getScript('http://platform.linkedin.com/in.js');
 
 };
 

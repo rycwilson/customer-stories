@@ -10,6 +10,7 @@
       window.location =
         '/companies/' + company.id + '?mainnav_tab=' + $(this).attr('aria-controls')
     });
+
   });
 
 <% end %>
@@ -27,11 +28,15 @@
 
         <% if user_signed_in? && (current_user.company.try(:subdomain) == request.subdomain) %>
 
-          <%= link_to edit_story_path(@story), class: 'csp-nav' do %>
-            <span class='glyphicon glyphicon-chevron-left'
-                style='color:#337ab7; margin-top:20px; margin-right:5px'>
-            </span><span>Edit this Story</span>
-          <% end %>
+          <!-- the data-no-turbolink attribute is necessary for linkedin widgets to properly load -->
+          <!-- http://stackoverflow.com/questions/17600093/rails-javascript-not-loading-after-clicking-through-link-to-helper -->
+          <div data-no-turbolink>
+            <%= link_to edit_story_path(@story), class: 'csp-nav' do %>
+              <span class='glyphicon glyphicon-chevron-left'
+                  style='color:#337ab7; margin-top:20px; margin-right:5px'>
+              </span><span>Edit this Story</span>
+            <% end %>
+          </div>
 
         <% elsif !user_signed_in? %>
 
@@ -131,6 +136,7 @@
               <script type="IN/MemberProfile" data-id="<%= contributor.linkedin_url %>" data-format="inline" data-related="true" data-width='340'></script>
 
             <% end %>
+
           </div>
         </div>  <!-- results and contributing team -->
       </div>  <!-- story content, results, contributing team -->
