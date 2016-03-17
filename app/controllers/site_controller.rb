@@ -4,10 +4,11 @@ class SiteController < ApplicationController
   end
 
   def strip_www_subdomain
-    logger.debug "PASSWORD REQUEST INFO: #{request.original_url}"
-    redir = request.protocol + request.domain + request.path + '?' + request.query_string
-    logger.debug "REDIRECTING TO: #{redir}"
-    redirect_to redir
+    if request.query_string.present?
+      redirect_to request.protocol + request.domain + request.path + '?' + request.query_string
+    else
+      redirect_to request.protocol + request.domain + request.path
+    end
   end
 
   def valid_subdomain_bad_path
@@ -15,7 +16,6 @@ class SiteController < ApplicationController
   end
 
   def invalid_subdomain
-    # logger.debug "PASSWORD REQUEST INFO: #{request.original_url}"
     redirect_to root_url(host: request.domain)
   end
 
