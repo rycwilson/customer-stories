@@ -5,5 +5,5 @@ require File.expand_path('../application', __FILE__)
 Rails.application.initialize!
 
 # Logger
-# Rails.logger = Logger.new(STDOUT)
+Rails.logger = Logger.new(STDOUT)
 

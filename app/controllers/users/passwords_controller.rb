@@ -11,6 +11,7 @@ class Users::PasswordsController < Devise::PasswordsController
 
   # GET /resource/password/edit?reset_password_token=abcdef
    def edit
+     logger.debug "PASSWORD REQUEST INFO: #{request.original_url}"
      super
    end
 

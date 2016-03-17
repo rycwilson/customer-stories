@@ -40,7 +40,7 @@ class ContributionsController < ApplicationController
         #   contributor may have only one contribution per success
         @flash_status = "danger"
         @flash_mesg = "That user already has a contribution for this story"
-        respond_to { |format| format.js  }
+        respond_to { |format| format.js }
       end
     else
       @flash_status = "danger"

@@ -24,7 +24,7 @@ class Contribution < ActiveRecord::Base
                 .each do |contribution|
       puts "processing contribution #{contribution.id} with status #{contribution.status}"
       if contribution.remind_at.past?
-        unless ['remind2', 'unsubscribe', 'opt_out'].include? contribution.status
+        unless contribution.status == 'remind2'
           UserMailer.contribution_reminder(contribution).deliver_now
         end
         if contribution.status == 'request'
@@ -33,6 +33,7 @@ class Contribution < ActiveRecord::Base
           puts "first reminder sent, new remind_at: #{new_remind_at.strftime('%-m/%-d/%y at %I:%M %P')} UTC"
         elsif contribution.status == 'remind1'
           new_status = 'remind2'
+          # no more reminders, but need to trigger when to change status to 'did_not_respond'
           new_remind_at = Time.now + contribution.remind_2_wait.days  # no more reminders
           puts "second reminder sent, new remind_at (status to did_not_respond): #{new_remind_at.strftime('%-m/%-d/%y at %I:%M %P')} UTC"
         else
