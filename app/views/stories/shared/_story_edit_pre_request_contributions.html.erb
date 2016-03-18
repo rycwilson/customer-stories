@@ -31,7 +31,7 @@
           <div class="col-sm-5 text-right">
             <%= button_to 'Send Request',
                 request_contribution_path(contribution),
-                class: 'btn btn-sm btn-secondary',
+                class: 'btn btn-sm btn-secondary', id: 'send-request-button',
                 method: 'put', remote: true %>
           </div>
         </div>

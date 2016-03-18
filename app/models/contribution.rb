@@ -48,8 +48,8 @@ class Contribution < ActiveRecord::Base
   end
 
   #
-  # this method extracts the necessary combination of contribution
-  # and contributor data for new contribution AJAX response
+  # this method extracts the necessary combination of contribution,
+  # contributor, and referrer data for new contribution AJAX response
   #
   def self.pre_request success_id
     Contribution.where(success_id: success_id, status: 'pre_request')
@@ -57,13 +57,11 @@ class Contribution < ActiveRecord::Base
           .map do |contribution|
             {
               contribution_id: contribution.id,
+              contributor_id: contribution.contributor.id,
               full_name: contribution.contributor.full_name,
               email: contribution.contributor.email,
               role: contribution.role,
-              # this doesn't work, "No Method" error
-              # -> but works in console, wtf?
-              # referrer: contribution.referrer.try[:full_name]
-              referrer: contribution.referrer ? contribution.referrer.full_name : ""
+              referrer: contribution.referrer.try(:full_name)
             }
           end
   end

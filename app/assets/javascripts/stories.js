@@ -179,11 +179,11 @@ function initListeners () {
   });
 
   // blur buttons after they're clicked
-  $('.btn').on('focus', function () {
+  $('#send-request-button, #new-contributor-button').on('focus', function () {
     var _this = $(this);
     window.setTimeout(function () {
       _this.blur();
-    }, 300);
+    }, 220);
   });
 
   /*

@@ -1,6 +1,7 @@
 (function () {
 
-  var contributors = <%= raw @contributors.to_json %>,
+  var preRequestContributors = <%= raw @pre_request_contributors.to_json %>,
+      allContributors = <%= raw @contributors.to_json %>,
          flashMesg = "<%= @flash_mesg %>",
        flashStatus = "<%= @flash_status %>",
           template = _.template($('#pre-request-template').html());
@@ -13,9 +14,24 @@
     $('#pre-request-contributors')
         .empty()
         .append(
-          template({ contributors: contributors })
+          template({ contributors: preRequestContributors })
         );
     $("a[href='#pre-request']").tab('show');
+  }
+
+  updateReferrerSelectOptions(allContributors)
+
+  /*
+    update the referrer select options with any newly added contributors
+  */
+  function updateReferrerSelectOptions (contributors) {
+    var newOptions = "<option value></option>";
+    contributors.forEach(function (contributor, index) {
+      newOptions += "<option value='" + contributor.id + "'>" +
+                    contributor.first_name + " " +
+                    contributor.last_name + "</option>";
+    });
+    $('#contributor_referrer').html(newOptions).change();
   }
 
 })();

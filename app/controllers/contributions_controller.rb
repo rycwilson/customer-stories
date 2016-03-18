@@ -34,7 +34,9 @@ class ContributionsController < ApplicationController
       contribution = new_contribution(story.success.id, contributor.id, params)
       if contribution.save
         # respond with all pre-request contributions, most recent additions first
-        @contributors = Contribution.pre_request story.success_id
+        # all contributors needed to populate referrer select box
+        @pre_request_contributors = Contribution.pre_request story.success_id
+        @contributors = story.success.contributors
       else
         # presently only one validation:
         #   contributor may have only one contribution per success
