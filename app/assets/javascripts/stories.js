@@ -81,6 +81,17 @@ function initBIPListeners () {
     if ( error.match(/maximum\sis\s50\scharacters/) )
       flashDisplay("Result can't exceed 50 characters", "danger");
   });
+
+  /*
+    tabindex=-1 on these elements prevents them from gaining focus
+    after a bip field is submitted (with tab)
+    also has the side-effect of keeping focus on the element,
+    which we'll prevent with ...
+  */
+  $('a.accordion-toggle').on('focus', function () {
+    $(this).blur();
+  });
+
 }
 
 function initTagsListeners () {

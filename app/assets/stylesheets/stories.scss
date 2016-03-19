@@ -11,6 +11,11 @@
 *= require social-sharing
 */
 
+.pre-request-contribution {
+  padding-top:12px;
+  padding-bottom:5px;
+}
+
 .vcenter {
     display: inline-block;
     vertical-align: middle;
@@ -59,7 +64,8 @@ p.lead {
 #edit-story-solution:hover + #story-solution,
 #edit-story-benefits:hover + #story-benefits,
 .modify-result:hover + .story-result,
-.modify-prompt:hover + .story-prompt {
+.modify-prompt:hover + .story-prompt,
+div[id^='edit-pr-contribution-notes']:hover + div[id^='pr-contribution-notes'] {
   border-left: 3px solid #87a3bc;
 }
 

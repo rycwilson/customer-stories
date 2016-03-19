@@ -20,8 +20,7 @@
                      .select { |c| c.status == 'pre_request' }
                      .each_with_index do |contribution, index| %>
 
-      <div class="well" data-contribution-id="<%= contribution.id %>"
-          style='padding-top:12px; padding-bottom:5px'>
+      <div class="well pre-request-contribution" data-contribution-id="<%= contribution.id %>">
 
         <div class="row">
           <div class='col-sm-12'>
@@ -39,7 +38,7 @@
 
                   <a class="accordion-toggle" data-toggle="collapse"
                      data-parent="#pre-request-info-<%= index %>"
-                     href="#collapse-pre-request-info-<%= index %>">
+                     href="#collapse-pre-request-info-<%= index %>" tabindex='-1'>
                     <span class='glyphicon glyphicon-info-sign bip-clickable'></span>
                   </a>
 
@@ -50,7 +49,7 @@
                 <%= button_to 'Send Request',
                 request_contribution_path(contribution),
                 class: 'btn btn-sm btn-default', id: 'send-request-button',
-                method: 'put', remote: true %>
+                method: 'put', remote: true, tabindex:'-1' %>
               </div> <br><br>
 
               <div class="col-sm-12">
@@ -58,24 +57,30 @@
                     class="accordion-body collapse">
                   <div class="accordion-inner">
 
+                    <hr style='margin-top:7px; margin-bottom:7px'>
+
                     Role:&nbsp;&nbsp;<%= contribution.role %> <br style='line-height:20px'>
                     Referred by:&nbsp;&nbsp;<%= contribution.referrer_id.present? ? contribution.referrer.full_name : "N/A" %> <br style='line-height:20px'>
+                    Added:&nbsp;&nbsp;<%= contribution.created_at.strftime('%-m/%-d/%Y') %> <br style='line-height:20px'>
                     Notes: <br style='line-height:20px'>
 
                     <div class="row" style='padding-bottom:8px'>
+
+                      <div id='edit-pr-contribution-notes-<%= index %>'
+                          class='col-sm-2 text-center pull-right'
+                          style='padding:0; margin-top:-6px'>
+                        <span class='glyphicon glyphicon-pencil bip-clickable'></span>
+                      </div>
+
                       <div id='pr-contribution-notes-<%= index %>' class='col-sm-10'
                           style='padding-right:0'>
                         <%= best_in_place contribution, :notes, as: :textarea,
                                   url: "/contributions/#{contribution.access_token}",
-                           html_attrs: { style:'width:100%  ' },
+                           html_attrs: { style:'width:100%' },
                             activator: "#edit-pr-contribution-notes-#{index}",
-                         place_holder: "<i>Add notes ...</i>" %>
-                      </div><!--
-
-                   --><div id='edit-pr-contribution-notes-<%= index %>'
-                          class='col-sm-2 text-center' style='padding:0; margin-top:-20px'>
-                        <span class='glyphicon glyphicon-pencil bip-clickable'></span>
+                         place_holder: "<i>add notes ...</i>" %>
                       </div>
+
                     </div>
                   </div>
                 </div>

@@ -1,6 +1,6 @@
 (function () {
 
-  var preRequestContributors = <%= raw @pre_request_contributors.to_json %>,
+  var preRequestContributions = <%= raw @pre_request_contributions.to_json %>,
       allContributors = <%= raw @contributors.to_json %>,
          flashMesg = "<%= @flash_mesg %>",
        flashStatus = "<%= @flash_status %>",
@@ -14,12 +14,18 @@
     $('#pre-request-contributors')
         .empty()
         .append(
-          template({ contributors: preRequestContributors })
+          template({ contributions: preRequestContributions })
         );
     $("a[href='#pre-request']").tab('show');
   }
 
   updateReferrerSelectOptions(allContributors)
+  // dynamically added elements must be re-configured as best-in-place
+  $('.best_in_place').best_in_place();
+  // attach listeners to dynamically added elements
+  $('a.accordion-toggle').on('focus', function () {
+    $(this).blur();
+  });
 
   /*
     update the referrer select options with any newly added contributors

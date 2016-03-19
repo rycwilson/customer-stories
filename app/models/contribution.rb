@@ -56,12 +56,15 @@ class Contribution < ActiveRecord::Base
           .order(created_at: :desc)
           .map do |contribution|
             {
-              contribution_id: contribution.id,
+              id: contribution.id,
               contributor_id: contribution.contributor.id,
-              full_name: contribution.contributor.full_name,
-              email: contribution.contributor.email,
+              contributor_full_name: contribution.contributor.full_name,
+              contributor_email: contribution.contributor.email,
               role: contribution.role,
-              referrer: contribution.referrer.try(:full_name)
+              referrer: contribution.referrer.try(:full_name),
+              notes: contribution.notes,
+              token: contribution.access_token,
+              created_at: contribution.created_at.strftime('%-m/%-d/%Y')
             }
           end
   end
