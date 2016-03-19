@@ -60,9 +60,12 @@ class ContributionsController < ApplicationController
   #
   # params = { contribution: { status: <type> }, { <type>: <content> } }
   #
-  # PUT /contributions/:token/:type
+  # PUT /contributions/:token
   def update
-    if params[:linkedin_include_profile].present? # from User Profile checkbox
+    if params[:contribution][:notes]
+      @contribution.update notes: params[:contribution][:notes]
+      respond_to { |format| format.json { respond_with_bip(@contribution) } }
+    elsif params[:linkedin_include_profile].present? # from User Profile checkbox
       @contribution.update linkedin: params[:linkedin_include_profile]
       respond_to { |format| format.json { head :ok } }
     else
@@ -110,7 +113,7 @@ class ContributionsController < ApplicationController
   private
 
   def contribution_params
-    params.require(:contribution).permit(:status, :contribution, :feedback, :access_token, :linkedin)
+    params.require(:contribution).permit(:status, :contribution, :feedback, :access_token, :linkedin, :notes)
   end
 
   def set_contribution

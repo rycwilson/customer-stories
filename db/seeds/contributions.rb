@@ -14,6 +14,7 @@ module ContributionsSeed
            status: status,
          feedback: feedback,
      contribution: contribution,
+            notes: FFaker::Lorem.paragraph,
      access_token: SecureRandom.hex )
     # c.remind_at = Time.now + rand(5).minutes if (status == 'request')
     # c.remind_at = Time.now + rand(5).minutes if (status == 'remind1')

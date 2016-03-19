@@ -69,6 +69,12 @@ function initBIPListeners () {
         .text(newUrl);
   });
 
+  $(".best_in_place[data-bip-attribute='notes']").bind("ajax:success",
+    function (event, data) {
+      console.log('bip success');
+
+  });
+
   // best-in-place errors
   $(document).on('best_in_place:error', function (event, data, status, xhr) {
     var error = JSON.parse(data.responseText)[0];
