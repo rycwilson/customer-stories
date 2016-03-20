@@ -11,11 +11,6 @@
 *= require social-sharing
 */
 
-.contribution-card {
-  padding-top:12px;
-  padding-bottom:5px;
-}
-
 .vcenter {
     display: inline-block;
     vertical-align: middle;
@@ -51,7 +46,7 @@ p.lead {
 
 .bip-clickable:hover {
   color: white;
-  background-color: #87a3bc;
+  background-color: #666;
 }
 
 /* make edit field stand out when hover over edit button */
@@ -67,7 +62,10 @@ p.lead {
 .modify-prompt:hover + .story-prompt,
 div[id^='edit-pr-contribution-notes']:hover + div[id^='pr-contribution-notes'],
 div[id^='edit-contribution-notes']:hover + div[id^='contribution-notes'] {
-  border-left: 3px solid #87a3bc;
+  // border-left: 3px solid #87a3bc;
+  background-color: #e3e3e3;
+  background-clip: content-box;
+  border-radius:3px
 }
 
 .dirtyField {

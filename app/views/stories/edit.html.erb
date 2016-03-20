@@ -228,78 +228,65 @@
 <!-- pre-request template -->
 <script type="text/template" id="pre-request-template">
   {{ contributions.forEach(function (contribution, index) { }}
-    <div class="well pre-request-contribution" data-contribution-id="{{= contribution.id }}">
+    <div class="well contribution-card accordion"
+        id="pre-request-accordion-{{= index }}"
+        data-contribution-id="{{= contribution.id }}">
 
       <div class="row">
-        <div class='col-sm-12'>
+        <div class='col-sm-7'>
           {{= contribution.contributor_full_name }} <br>
           {{= contribution.contributor_email }}
         </div>
-      </div> <br>
+        <div class="col-sm-5 text-right">
+
+          <a data-remote="true" rel="nofollow" data-method="put"
+              href="/contributions/{{= contribution.id }}/request_contribution" tabindex="-1">
+            <i class="glyphicon glyphicon-envelope bip-clickable"></i></a>
+
+          <a class="accordion-toggle" data-toggle="collapse"
+             data-parent="#pre-request-accordion-{{= index }}"
+             href="#collapse-pre-request-info-{{= index }}" tabindex='-1'>
+            <i class='glyphicon glyphicon-info-sign bip-clickable'></i></a>
+
+        </div>
+      </div>
 
       <div class="row">
-        <div class="accordion" id="pre-request-info-{{= index }}" >
-          <div class="accordion-group">
+        <div class="col-sm-12">
+          <div id="collapse-pre-request-info-{{= index }}"
+              class="accordion-body collapse">
+            <div class="accordion-inner">
+              <hr>
 
-            <div class="col-sm-6">
-              <div class="accordion-heading">
+              Role:&nbsp;&nbsp;{{= contribution.role }} <br style='line-height:20px'>
+              Referred by:&nbsp;&nbsp;{{= contribution.referrer ? contribution.referrer.full_name : "n/a" }} <br style='line-height:20px'>
+              Added:&nbsp;&nbsp;{{= contribution.created_at }} <br style='line-height:20px'>
+              Notes: <br style='line-height:20px'>
 
-                <a class="accordion-toggle" data-toggle="collapse"
-                   data-parent="#pre-request-info-{{= index }}"
-                   href="#collapse-pre-request-info-{{= index }}" tabindex='-1'>
-                  <span class='glyphicon glyphicon-info-sign bip-clickable'></span>
-                </a>
+              <div class="row">
 
-              </div>
-            </div>
-
-            <div class="col-sm-6 text-right">
-              <form class="button_to" method="post" data-remote="true"
-                  action="/contributions/{{= contribution.id }}/request_contribution">
-                <input type="hidden" name="_method" value="put">
-                <input class="btn btn-sm btn-default" id="send-request-button"
-                    type="submit" tabindex='-1' value="Send Request">
-              </form>
-            </div> <br><br>
-
-            <div class="col-sm-12">
-              <div id="collapse-pre-request-info-{{= index }}"
-                  class="accordion-body collapse">
-                <div class="accordion-inner">
-
-                  <hr style='margin-top:7px; margin-bottom:7px'>
-
-                  Role:&nbsp;&nbsp;{{= contribution.role }} <br style='line-height:20px'>
-                  Referred by:&nbsp;&nbsp;{{= contribution.referrer || "n/a" }} <br style='line-height:20px'>
-                  Added:&nbsp;&nbsp;{{= contribution.created_at }} <br style='line-height:20px'>
-                  Notes: <br style='line-height:20px'>
-
-                  <div class="row" style='padding-bottom:8px'>
-
-                    <div id='edit-pr-contribution-notes-{{= index }}'
-                        class='col-sm-2 text-center pull-right'
-                        style='padding:0; margin-top:-6px'>
-                      <span class='glyphicon glyphicon-pencil bip-clickable'></span>
-                    </div>
-
-                    <div id='pr-contribution-notes-{{= index }}' class='col-sm-10'
-                        style='padding-right:0'>
-                      <span data-bip-type="textarea" data-bip-attribute="notes"
-                          data-bip-activator="#edit-pr-contribution-notes-{{= index }}"
-                          data-bip-html-attrs="{&quot;style&quot;:&quot;width:100%&quot;}"
-                          data-bip-object="contribution"
-                          data-bip-original-content="{{= contribution.notes }}"
-                          data-bip-value="{{= contribution.notes }}"
-                          data-bip-url="/contributions/{{= contribution.token }}"
-                          data-bip-placeholder="<i>Add notes ...</i>"
-                          class="best_in_place"
-                          id="best_in_place_contribution_{{= contribution.id }}_notes">
-                        {{= contribution.notes || "<i style=>add notes ...</i>" }}
-                      </span>
-                    </div>
-
-                  </div>
+                <div id='edit-pr-contribution-notes-{{= index }}'
+                    class='col-sm-2 text-center pull-right'
+                    style='padding:0; margin-top:-2px'>
+                  <i class='glyphicon glyphicon-pencil bip-clickable'></i>
                 </div>
+
+                <div id='pr-contribution-notes-{{= index }}'
+                    class='col-sm-10' style='padding-right:0'>
+                  <span data-bip-type="textarea" data-bip-attribute="notes"
+                      data-bip-activator="#edit-pr-contribution-notes-{{= index }}"
+                      data-bip-html-attrs="{&quot;style&quot;:&quot;width:100%&quot;}"
+                      data-bip-object="contribution"
+                      data-bip-original-content="{{= contribution.notes }}"
+                      data-bip-value="{{= contribution.notes }}"
+                      data-bip-url="/contributions/{{= contribution.token }}"
+                      data-bip-placeholder="<i>Add notes ...</i>"
+                      class="best_in_place"
+                      id="best_in_place_contribution_{{= contribution.id }}_notes">
+                    {{= contribution.notes || "<i>add notes ...</i>" }}
+                  </span>
+                </div>
+
               </div>
             </div>
           </div>

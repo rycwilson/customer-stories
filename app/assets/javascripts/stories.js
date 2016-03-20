@@ -130,6 +130,23 @@ function initTagsListeners () {
     // tagsFormDirty = false;
   });
 
+  /*
+    only one accordion panel open at a time
+  */
+  $('.accordion-toggle').on('click', function () {
+    if ($(this).attr('href').match(/info/)) {
+      var $readPanel = $(this).closest('.accordion')
+                              .find("div.accordion-body[id*='read']");
+      if ($readPanel.hasClass('in'))
+        $readPanel.removeClass('in');
+    } else if ($(this).attr('href').match(/read/)) {
+      var $infoPanel = $(this).closest('.accordion')
+                              .find("div.accordion-body[id*='info']");
+      if ($infoPanel.hasClass('in'))
+        $infoPanel.removeClass('in');
+    }
+  });
+
 }
 
 function initListeners () {
