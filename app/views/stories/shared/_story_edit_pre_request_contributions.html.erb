@@ -20,7 +20,7 @@
                      .select { |c| c.status == 'pre_request' }
                      .each_with_index do |contribution, index| %>
 
-      <div class="well pre-request-contribution" data-contribution-id="<%= contribution.id %>">
+      <div class="well contribution-card" data-contribution-id="<%= contribution.id %>">
 
         <div class="row">
           <div class='col-sm-12'>
@@ -60,7 +60,7 @@
                     <hr style='margin-top:7px; margin-bottom:7px'>
 
                     Role:&nbsp;&nbsp;<%= contribution.role %> <br style='line-height:20px'>
-                    Referred by:&nbsp;&nbsp;<%= contribution.referrer_id.present? ? contribution.referrer.full_name : "N/A" %> <br style='line-height:20px'>
+                    Referred by:&nbsp;&nbsp;<%= contribution.referrer_id.present? ? contribution.referrer.full_name : "n/a" %> <br style='line-height:20px'>
                     Added:&nbsp;&nbsp;<%= contribution.created_at.strftime('%-m/%-d/%Y') %> <br style='line-height:20px'>
                     Notes: <br style='line-height:20px'>
 
