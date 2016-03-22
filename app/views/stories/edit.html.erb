@@ -4,6 +4,13 @@
   $(function () {
     var company = <%= raw @company.to_json %>;
 
+    if (company.feature_flag !== 'demo') {
+      <!-- // disabling the publish checkboxes must be done directly on the element;
+      // bootstrap-switch won't accept a dynamic change to these attributes:
+      // http://www.bootstrap-switch.org/documentation-2.html -->
+      $(".tooltip-wrapper-publish").tooltip({ placement: 'top' });
+    }
+
     $('.nav-tabs .active').removeClass('active');
 
     $('a[role=tab]').on('click', function() {

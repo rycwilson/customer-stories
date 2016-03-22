@@ -6,6 +6,19 @@
 
 <% end %>
 
+<%= javascript_tag do %>
+
+  $(function () {
+    var company = <%= raw @company.to_json %>;
+
+    if (company.feature_flag !== 'demo') {
+      $(".tooltip-wrapper-tabs").tooltip({ placement: 'right', container: 'body' });
+    }
+
+  });
+
+<% end %>
+
 <div class='mainnav mainnav-main'
     style="<%= user_signed_in? ? 'margin-bottom:0' : '' %>">
   <div class='container'>
@@ -25,6 +38,15 @@
           <li id='pipeline-tab' class="<%= @mainnav_tab == 'pipeline' ? 'active' : '' %>"
               role='presentation' style='margin-bottom: 0px'>
             <a href='#pipeline' role='tab' data-toggle='tab' aria-controls='pipeline'>
+              Pipeline
+            </a>
+          </li>
+        <% else %>
+          <li id='pipeline-tab' class='tooltip-wrapper-tabs'
+              style='margin-bottom: 0px; display:inline-block'
+              data-title="This section is currently disabled">
+            <a href='#pipeline' role='tab' aria-controls='pipeline'
+                style='pointer-events:none' disabled>
               Pipeline
             </a>
           </li>
@@ -48,6 +70,15 @@
           <li id='measure-tab' class="<%= @mainnav_tab == 'measure' ? 'active' : '' %>"
               role='presentation' style='margin-bottom: 0px'>
             <a href='#measure' role='tab' data-toggle='tab' aria-controls='measure'>
+              Measure
+            </a>
+          </li>
+        <% else %>
+          <li id='measure-tab' class='tooltip-wrapper-tabs'
+              style='margin-bottom: 0px; display:inline-block'
+              data-title="This section is currently disabled">
+            <a href='#measure' role='tab' aria-controls='measure'
+                style='pointer-events:none' disabled>
               Measure
             </a>
           </li>

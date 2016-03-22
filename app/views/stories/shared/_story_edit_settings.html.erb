@@ -50,7 +50,8 @@
 
 <div class='col-sm-8 text-center' style='padding-top:5px'>
 
-  <!-- publish logo/story -->
+  <!-- resources: http://stackoverflow.com/questions/13311574
+                  http://jsfiddle.net/cSSUA/209/ -->
   <%= form_for @story, url: story_path(@story),
                     method: 'put',
                     remote: true,
@@ -58,20 +59,36 @@
 
     <div class="form-group">
       <%= f.label 'Publish Story', class: 'col-sm-6 control-label' %>
-      <div class="col-sm-6 text-left" style='padding-left:0'>
-        <%= f.check_box :published,
-              class: 'bs-switch form-control',
-              disabled: (true unless @company.feature_flag == 'demo') %>
-      </div>
+      <% if @company.feature_flag == 'demo' %>
+        <div class="col-sm-6 text-left" style='padding-left:0'>
+          <%= f.check_box :published, class: "bs-switch form-control" %>
+        </div>
+      <% else %>
+        <div class="col-sm-6 text-left tooltip-wrapper-publish"
+            data-title="This feature is currently disabled"
+            style='padding-left:0; display:inline-block' disabled>
+          <%= f.check_box :published,
+                class: "bs-switch form-control", id: 'publish-story-checkbox',
+                  disabled: true, style: 'pointer-events: none' %>
+        </div>
+      <% end %>
     </div>
 
     <div class="form-group">
       <%= f.label 'Publish Logo', class: 'col-sm-6 control-label' %>
-      <div class="col-sm-6 text-left" style='padding-left:0'>
-        <%= f.check_box :logo_published,
-              class: 'bs-switch form-control',
-              disabled: (true unless @company.feature_flag == 'demo') %>
-      </div>
+      <% if @company.feature_flag == 'demo' %>
+        <div class="col-sm-6 text-left" style='padding-left:0'>
+          <%= f.check_box :logo_published, class: "bs-switch form-control" %>
+        </div>
+      <% else %>
+        <div class="col-sm-6 text-left tooltip-wrapper-publish"
+            data-title="This feature is currently disabled"
+            style='padding-left:0; display:inline-block' disabled>
+          <%= f.check_box :logo_published,
+                class: "bs-switch form-control", id: 'publish-logo-checkbox',
+                  disabled: true, style: 'pointer-events: none' %>
+        </div>
+      <% end %>
     </div>
 
   <% end %>
@@ -80,7 +97,7 @@
   http://stackoverflow.com/questions/17600093/rails-javascript-not-loading-after-clicking-through-link-to-helper -->
   <div class="col-sm-12" data-no-turbolink>
     <%= link_to 'Preview Story Page', story_path(@story),
-        class: 'btn btn-primary' %>
+          class: 'btn btn-primary' %>
   </div>
 
 </div>
