@@ -3,7 +3,7 @@ class SiteController < ApplicationController
   def index
   end
 
-  def strip_www_subdomain
+  def strip_subdomain
     if request.query_string.present?
       redirect_to request.protocol + request.domain + request.path + '?' + request.query_string
     else

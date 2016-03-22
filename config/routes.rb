@@ -66,7 +66,7 @@ Rails.application.routes.draw do
   end
 
   # all other subdomains
-  get '/*all', to: 'site#strip_www_subdomain', constraints: { subdomain: 'www' }
+  get '/*all', to: 'site#strip_subdomain', constraints: { subdomain: /(www|csp-staging|floating-spire-2927)/ }
   get '/', to: 'site#invalid_subdomain', constraints: { subdomain: /.+/ }
   get '/*all', to: 'site#invalid_subdomain', constraints: { subdomain: /.+/ }
 
