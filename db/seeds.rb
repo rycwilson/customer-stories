@@ -27,7 +27,7 @@ dan = User.create(first_name:'Dan', last_name:'Lindblom', email:'***REMOVED***',
 ryan = User.create(first_name:'Ryan', last_name:'Wilson', email:'***REMOVED***', linkedin_url:'https://www.linkedin.com/in/wilsonryanc', sign_up_code:'csp_beta', password:'password', photo_url: 'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/099b59d3-1f35-4d8b-9183-a162a80bfbac/ryan.png')
 curators = [dan, ryan]
 # cisco = Company.find_by(name:'Cisco Systems')
-cisco = Company.create(name:'Cisco Systems', subdomain:'cisco', logo_url: 'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/6326ee57-e0e0-4a0b-aacb-9b59849f2c40/cisco-grey@2x.png')
+cisco = Company.create(name:'Cisco Systems', subdomain:'cisco', feature_flag:'demo', logo_url: 'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/6326ee57-e0e0-4a0b-aacb-9b59849f2c40/cisco-grey@2x.png')
 cisco.users << dan << ryan
 
 # csp = Company.find_by(name:'CSP')

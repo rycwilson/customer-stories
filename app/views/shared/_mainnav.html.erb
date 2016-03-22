@@ -13,6 +13,7 @@
 
     if (company.feature_flag !== 'demo') {
       $(".tooltip-wrapper-tabs").tooltip({ placement: 'right', container: 'body' });
+      $(".tooltip-wrapper-promote").tooltip({ placement: 'top' });
     }
 
   });
@@ -42,14 +43,14 @@
             </a>
           </li>
         <% else %>
-          <li id='pipeline-tab' class='tooltip-wrapper-tabs'
+        <!--   <li id='pipeline-tab' class='tooltip-wrapper-tabs'
               style='margin-bottom: 0px; display:inline-block'
               data-title="This section is currently disabled">
             <a href='#pipeline' role='tab' aria-controls='pipeline'
                 style='pointer-events:none' disabled>
               Pipeline
             </a>
-          </li>
+          </li> -->
         <% end %>
 
         <li id='curate-tab' class="<%= @mainnav_tab == 'curate' ? 'active' : '' %>"
