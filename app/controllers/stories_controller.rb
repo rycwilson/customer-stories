@@ -61,7 +61,7 @@ class StoriesController < ApplicationController
     story = Story.new title: new_story[:title], success_id: success.id
     if story.save
       story.assign_tags new_story
-      story.create_default_results
+      story.success.create_default_prompts
       flash[:success] = "Story created successfully"
       # prevent js response from killing flash message
       flash.keep(:success)
@@ -107,7 +107,23 @@ class StoriesController < ApplicationController
         end
       end
     elsif params[:story][:published]
-      story.update published: true, publish_date: Time.now
+      publish_story = params[:story][:published] == '1' ? true : false
+      publish_logo = params[:story][:logo_published] == '1' ? true : false
+      # only update if the value has changed ...
+      unless (publish_story && story.published?) || (!publish_story && !story.published?)
+        if publish_story
+          story.update(published: publish_story, publish_date: Time.now)
+        else
+          story.update(published: publish_story, publish_date: nil)
+        end
+      end
+      unless (publish_logo && story.logo_published?) || (!publish_story && !story.published?)
+        if publish_logo
+          story.update(logo_published: publish_logo)
+        else
+          story.update(logo_published: publish_logo)
+        end
+      end
       respond_to { |format| format.json { head :ok } } # empty response
     else  # all other updates
       respond_to do |format|

@@ -19,5 +19,11 @@ class Success < ActiveRecord::Base
   # note: contributor is an alias - see contribution.rb
   has_many :contributors, through: :contributions, source: :contributor
 
+  def create_default_prompts
+    self.prompts << Prompt.create(description: "What was the challenge?")
+    self.prompts << Prompt.create(description: "What was the solution?")
+    self.prompts << Prompt.create(description: "What are your estimated or measured results?")
+  end
+
 end
 

@@ -33,10 +33,6 @@ class User < ActiveRecord::Base
     self.first_name + " " + self.last_name
   end
 
-  def is_admin?
-    self.role == 1
-  end
-
   # This is for users signing up via Oauth
   # Not presently using this, but may in the future
   # def self.create_from_omniauth auth

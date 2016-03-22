@@ -21,12 +21,14 @@
     <div class="collapse mainnav-collapse" role="navigation">
       <ul class='nav nav-tabs mainnav-menu col-sm-4' role='tablist' style='border-bottom:0'>
 
-        <li id='pipeline-tab' class="<%= @mainnav_tab == 'pipeline' ? 'active' : '' %>"
-            role='presentation' style='margin-bottom: 0px'>
-          <a href='#pipeline' role='tab' data-toggle='tab' aria-controls='pipeline'>
-            Pipeline
-          </a>
-        </li>
+        <% if @company.feature_flag == 'demo' %>
+          <li id='pipeline-tab' class="<%= @mainnav_tab == 'pipeline' ? 'active' : '' %>"
+              role='presentation' style='margin-bottom: 0px'>
+            <a href='#pipeline' role='tab' data-toggle='tab' aria-controls='pipeline'>
+              Pipeline
+            </a>
+          </li>
+        <% end %>
 
         <li id='curate-tab' class="<%= @mainnav_tab == 'curate' ? 'active' : '' %>"
             role='presentation' style='margin-bottom: 0px'>
@@ -42,12 +44,14 @@
           </a>
         </li>
 
-        <li id='measure-tab' class="<%= @mainnav_tab == 'measure' ? 'active' : '' %>"
-            role='presentation' style='margin-bottom: 0px'>
-          <a href='#measure' role='tab' data-toggle='tab' aria-controls='measure'>
-            Measure
-          </a>
-        </li>
+        <% if @company.feature_flag == 'demo' %>
+          <li id='measure-tab' class="<%= @mainnav_tab == 'measure' ? 'active' : '' %>"
+              role='presentation' style='margin-bottom: 0px'>
+            <a href='#measure' role='tab' data-toggle='tab' aria-controls='measure'>
+              Measure
+            </a>
+          </li>
+        <% end %>
       </ul>
 
       <% if controller_name == 'stories' && action_name == 'index' %>

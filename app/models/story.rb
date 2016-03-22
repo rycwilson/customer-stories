@@ -32,12 +32,6 @@ class Story < ActiveRecord::Base
     end
   end
 
-  def create_default_results
-    self.results << Result.create(description: RESULT1)
-    self.results << Result.create(description: RESULT2)
-    self.results << Result.create(description: RESULT3)
-  end
-
   def update_tags new_tags
     old_industry_tags = self.success.industry_categories
     old_product_cat_tags = self.success.product_categories

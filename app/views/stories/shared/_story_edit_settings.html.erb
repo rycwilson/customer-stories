@@ -60,7 +60,8 @@
       <%= f.label 'Publish Story', class: 'col-sm-6 control-label' %>
       <div class="col-sm-6 text-left" style='padding-left:0'>
         <%= f.check_box :published,
-              class: 'bs-switch form-control' %>
+              class: 'bs-switch form-control',
+              disabled: (true unless @company.feature_flag == 'demo') %>
       </div>
     </div>
 
@@ -68,7 +69,8 @@
       <%= f.label 'Publish Logo', class: 'col-sm-6 control-label' %>
       <div class="col-sm-6 text-left" style='padding-left:0'>
         <%= f.check_box :logo_published,
-              class: 'bs-switch form-control'  %>
+              class: 'bs-switch form-control',
+              disabled: (true unless @company.feature_flag == 'demo') %>
       </div>
     </div>
 
