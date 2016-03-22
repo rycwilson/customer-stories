@@ -6,7 +6,9 @@ class StoriesController < ApplicationController
   before_action :set_s3_direct_post, only: [:edit]
 
   def index
-    if params[:filter]  # ajax GET request
+    if @company.feature_flag == 'alpha'
+      @stories = @industries = []
+    elsif params[:filter]  # ajax GET request
       @stories = @company.filter_stories(params[:filter][:type], params[:filter][:id])
       respond_to { |format| format.json { render json: @stories } }
     else

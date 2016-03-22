@@ -11,7 +11,7 @@
   $(function () {
     var company = <%= raw @company.to_json %>;
 
-    if (company.feature_flag !== 'demo') {
+    if (company.feature_flag == 'alpha') {
       $(".tooltip-wrapper-tabs").tooltip({ placement: 'right', container: 'body' });
       $(".tooltip-wrapper-promote").tooltip({ placement: 'top' });
     }
@@ -35,14 +35,7 @@
     <div class="collapse mainnav-collapse" role="navigation">
       <ul class='nav nav-tabs mainnav-menu col-sm-4' role='tablist' style='border-bottom:0'>
 
-        <% if @company.feature_flag == 'demo' %>
-          <li id='pipeline-tab' class="<%= @mainnav_tab == 'pipeline' ? 'active' : '' %>"
-              role='presentation' style='margin-bottom: 0px'>
-            <a href='#pipeline' role='tab' data-toggle='tab' aria-controls='pipeline'>
-              Pipeline
-            </a>
-          </li>
-        <% else %>
+        <% if @company.feature_flag == 'alpha' %>
         <!--   <li id='pipeline-tab' class='tooltip-wrapper-tabs'
               style='margin-bottom: 0px; display:inline-block'
               data-title="This section is currently disabled">
@@ -51,6 +44,13 @@
               Pipeline
             </a>
           </li> -->
+        <% else %>
+          <li id='pipeline-tab' class="<%= @mainnav_tab == 'pipeline' ? 'active' : '' %>"
+              role='presentation' style='margin-bottom: 0px'>
+            <a href='#pipeline' role='tab' data-toggle='tab' aria-controls='pipeline'>
+              Pipeline
+            </a>
+          </li>
         <% end %>
 
         <li id='curate-tab' class="<%= @mainnav_tab == 'curate' ? 'active' : '' %>"
@@ -67,19 +67,19 @@
           </a>
         </li>
 
-        <% if @company.feature_flag == 'demo' %>
-          <li id='measure-tab' class="<%= @mainnav_tab == 'measure' ? 'active' : '' %>"
-              role='presentation' style='margin-bottom: 0px'>
-            <a href='#measure' role='tab' data-toggle='tab' aria-controls='measure'>
-              Measure
-            </a>
-          </li>
-        <% else %>
+        <% if @company.feature_flag == 'alpha' %>
           <li id='measure-tab' class='tooltip-wrapper-tabs'
               style='margin-bottom: 0px; display:inline-block'
               data-title="This section is currently disabled">
             <a href='#measure' role='tab' aria-controls='measure'
                 style='pointer-events:none' disabled>
+              Measure
+            </a>
+          </li>
+        <% else %>
+          <li id='measure-tab' class="<%= @mainnav_tab == 'measure' ? 'active' : '' %>"
+              role='presentation' style='margin-bottom: 0px'>
+            <a href='#measure' role='tab' data-toggle='tab' aria-controls='measure'>
               Measure
             </a>
           </li>
@@ -91,13 +91,17 @@
           <div class="form-group text-left">
            <%= label_tag :industries, "Industries", class: 'control-label' %>
            <%= select_tag :industries, options_for_select(@industries),
-                  { class: 'stories-filter form-control' } %>
+                  { class: 'stories-filter form-control',
+                    style: 'min-width: 140px',
+                    disabled: (true if @company.feature_flag == 'alpha') }
+                    %>
           </div>&nbsp;&nbsp;
           <div class="form-group text-left">
            <%= label_tag :products, "Products", class: 'control-label' %>
            <%= select_tag :products, options_for_select(@industries),
                   { disabled: true,
-                    class: 'stories-filter form-control' } %>
+                    class: 'stories-filter form-control',
+                    style: 'min-width: 140px' } %>
           </div>
         </form>
       <% end %>

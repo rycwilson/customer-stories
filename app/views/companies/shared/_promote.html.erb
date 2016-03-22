@@ -11,7 +11,7 @@
               <u>
         <span style='display:inline-block'>&nbsp;&nbsp; &nbsp;
 
-          <% if @company.feature_flag != 'demo' %>
+          <% if @company.feature_flag == 'alpha' %>
 
             <span class='tooltip-wrapper-promote' style='display:inline-block'
                 data-title='This feature is currently disabled'>

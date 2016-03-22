@@ -59,11 +59,7 @@
 
     <div class="form-group">
       <%= f.label 'Publish Story', class: 'col-sm-6 control-label' %>
-      <% if @company.feature_flag == 'demo' %>
-        <div class="col-sm-6 text-left" style='padding-left:0'>
-          <%= f.check_box :published, class: "bs-switch form-control" %>
-        </div>
-      <% else %>
+      <% if @company.feature_flag == 'alpha' %>
         <div class="col-sm-6 text-left tooltip-wrapper-publish"
             data-title="This feature is currently disabled"
             style='padding-left:0; display:inline-block' disabled>
@@ -71,22 +67,26 @@
                 class: "bs-switch form-control", id: 'publish-story-checkbox',
                   disabled: true, style: 'pointer-events: none' %>
         </div>
+      <% else %>
+        <div class="col-sm-6 text-left" style='padding-left:0'>
+          <%= f.check_box :published, class: "bs-switch form-control" %>
+        </div>
       <% end %>
     </div>
 
     <div class="form-group">
       <%= f.label 'Publish Logo', class: 'col-sm-6 control-label' %>
-      <% if @company.feature_flag == 'demo' %>
-        <div class="col-sm-6 text-left" style='padding-left:0'>
-          <%= f.check_box :logo_published, class: "bs-switch form-control" %>
-        </div>
-      <% else %>
+      <% if @company.feature_flag == 'alpha' %>
         <div class="col-sm-6 text-left tooltip-wrapper-publish"
             data-title="This feature is currently disabled"
             style='padding-left:0; display:inline-block' disabled>
           <%= f.check_box :logo_published,
                 class: "bs-switch form-control", id: 'publish-logo-checkbox',
                   disabled: true, style: 'pointer-events: none' %>
+        </div>
+      <% else %>
+        <div class="col-sm-6 text-left" style='padding-left:0'>
+          <%= f.check_box :logo_published, class: "bs-switch form-control" %>
         </div>
       <% end %>
     </div>
