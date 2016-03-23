@@ -16,6 +16,7 @@ class UserMailer < ApplicationMailer
     @body = template.body
               .gsub("[customer_name]", contribution.success.customer.name)
               .gsub("[company_name]", curator.company.name)
+              .gsub("[product_name]", contribution.success.products.take)
               .gsub("[contributor_first_name]", contribution.contributor.first_name)
               .gsub("[curator_first_name]", curator.first_name)
               .gsub("[referral_intro]", referral_intro)
@@ -86,6 +87,7 @@ class UserMailer < ApplicationMailer
     @body = template.body
               .gsub("[customer_name]", "CustomerCompany")
               .gsub("[company_name]", curator.company.name)
+              .gsub("[product_name]", contribution.success.products.take)
               .gsub("[contributor_first_name]", "Contributor")
               .gsub("[curator_first_name]", curator.first_name)
               .gsub("[referral_intro]", "John Doe referred me to you. ")
