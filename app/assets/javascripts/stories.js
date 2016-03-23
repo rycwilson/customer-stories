@@ -182,11 +182,17 @@ function initListeners () {
       url: '/stories',
       method: 'get',
       data: { filter: { type: filterType, id: filterId } },
-      // dataType: 'json',
       success: function (data, status) {
         console.log('filtered stories: ', data);
-        var template = _.template($('#stories-template').html());
-        $('#stories-gallery').empty().append(template({ stories: data }));
+        if (data.length === 0) {
+          $('#stories-gallery').empty();
+          $('p.lead').removeClass('hidden');
+        }
+        else {
+          $('p.lead').addClass('hidden');
+          var template = _.template($('#stories-template').html());
+          $('#stories-gallery').empty().append(template({ stories: data }));
+        }
       }
     });
   });

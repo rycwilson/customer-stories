@@ -47,33 +47,35 @@
   <div class="content" style='margin-top:30px'>
     <div class="container">
       <div class="portlet portlet-default">
-        <div id='stories-gallery' class="portlet-body"
+        <div class="portlet-body"
             data-company-id="<%= @company.id %>">
 
-          <!-- TODO: Make this responsive -->
-          <% @story_tiles.each_slice(5) do |stories_row| %>
-            <div class='container row' style='margin: 0 auto'>
-              <% stories_row.each do |story| %>
+          <p class='lead hidden'>Sorry, no stories!</p>
 
-                <div class="col-md-2 text-center" style='margin-left:26px'>
-                  <a href="<%= story.published? ? "/stories/#{ story.id }" : 'javascript:;' %>" class='story-link'>
-                    <div class="thumbnail" style='position:relative'>
-                      <!-- <div class="thumbnail-view"> -->
+          <div id="stories-gallery">
+            <% @story_tiles.each_slice(5) do |stories_row| %>
+              <div class='container row' style='margin: 0 auto'>
+                <% stories_row.each do |story| %>
 
-                      <img src="<%= asset_path('video.png') %>" alt="video tag"
-                          style='position:absolute; height:25px; left:130px'>
+                  <div class="col-md-2 text-center" style='margin-left:26px'>
+                    <a href="<%= story.published? ? "/stories/#{ story.id }" : 'javascript:;' %>" class='story-link'>
+                      <div class="thumbnail" style='position:relative'>
+                        <!-- <div class="thumbnail-view"> -->
 
-                      <img src="<%= story.success.customer.logo_url || asset_path('company-logo-missing') %>" style='width:95px' >
+                        <img src="<%= asset_path('video.png') %>" alt="video tag"
+                            style='position:absolute; height:25px; left:130px'>
 
-                      <!-- </div> -->
-                    </div> <!-- /.thumbnail -->
-                  </a>
-                </div> <!-- /.col -->
+                        <img src="<%= story.success.customer.logo_url || asset_path('company-logo-missing') %>" style='width:95px' >
 
-              <% end %>
-            </div><br><br>
-          <% end %>
+                        <!-- </div> -->
+                      </div> <!-- /.thumbnail -->
+                    </a>
+                  </div> <!-- /.col -->
 
+                <% end %>
+              </div><br><br>
+            <% end %>
+          </div>
         </div>  <!-- portlet-body -->
       </div>  <!-- portlet -->
     </div>  <!-- container -->
