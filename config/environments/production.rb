@@ -105,6 +105,4 @@ Rails.application.configure do
     :enable_starttls_auto => true
   }
 
-  config.middleware.insert 0, "Rack::WWWhisper"
-
 end
