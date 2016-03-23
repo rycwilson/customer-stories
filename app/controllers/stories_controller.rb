@@ -12,7 +12,7 @@ class StoriesController < ApplicationController
       @stories = @company.filter_stories(params[:filter][:type], params[:filter][:id])
       respond_to { |format| format.json { render json: @stories } }
     else
-      @stories = @company.stories
+      @story_tiles = @company.stories.where(logo_published: true)
       @industries = @company.industries_filter_select
     end
   end

@@ -88,9 +88,13 @@ DemoCustomersSeed::DEMO_CUSTOMERS.each do |customer_info|
   # 2/3 successes will have a story
   if rand(3) >= 1
     success.story = StoriesSeed::create
-    # 1/2 stories will be approved/published (attributes default to false)
-    if rand(2) == 1
-      success.story.update(approved: true, published: true, logo_published: true, publish_date: Time.now)
+    # 2/3 stories have logo published
+    if rand(3) >= 1
+      success.story.update(logo_published: true, logo_publish_date: Time.now)
+      # 1/2 of published logos are published stories (1/3 of stories are published)
+      if rand(2) == 0
+        success.story.update(approved: true, published: true, publish_date: Time.now)
+      end
     end
     # random industry category (tag)
     success.industry_categories << cisco.industry_categories[rand(0...cisco.industry_categories.count)]
