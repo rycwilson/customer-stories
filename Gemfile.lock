@@ -36,6 +36,7 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
+    addressable (2.4.0)
     arel (6.0.3)
     aws-sdk (2.2.1)
       aws-sdk-resources (= 2.2.1)
@@ -111,6 +112,7 @@ GEM
     minitest (5.8.0)
     multi_json (1.11.2)
     nested_form (0.3.2)
+    net-http-persistent (2.9.4)
     nokogiri (1.6.6.2)
       mini_portile (~> 0.6.0)
     oauth (0.4.7)
@@ -142,6 +144,10 @@ GEM
       rack (~> 1.1)
     rack-test (0.6.3)
       rack (>= 1.0)
+    rack-wwwhisper (1.1.9)
+      addressable (~> 2.0)
+      net-http-persistent
+      rack (~> 1.0)
     rails (4.2.1)
       actionmailer (= 4.2.1)
       actionpack (= 4.2.1)
@@ -244,6 +250,7 @@ DEPENDENCIES
   paperclip (~> 4.3)
   pg
   pry-rails
+  rack-wwwhisper (~> 1.0)
   rails (= 4.2.1)
   rails_12factor
   rails_admin
@@ -255,4 +262,4 @@ DEPENDENCIES
   whenever
 
 BUNDLED WITH
-   1.10.6
+   1.11.2
