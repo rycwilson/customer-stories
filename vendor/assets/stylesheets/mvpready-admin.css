@@ -14,11 +14,14 @@
 body {
   padding: 0;
   margin: 0;
-  font-family: 'Open Sans', 'Trebuchet MS', arial, sans-serif;
+  font-family: 'Merriweather', 'Open Sans', 'Trebuchet MS', arial, sans-serif;
   font-size: 13px;
 }
 p {
   line-height: 1.7em;
+}
+p.lead {
+  font-family: 'Lato';
 }
 h1,
 h2,
@@ -34,7 +37,7 @@ h6,
 .h6 {
   margin-top: 0;
   margin-bottom: .75em;
-  font-family: 'Oswald', 'Trebuchet MS', 'Open Sans', arial, sans-serif;
+  font-family: 'Lato', 'Oswald', 'Trebuchet MS', 'Open Sans', arial, sans-serif;
 }
 label {
   font-weight: 600;
@@ -3351,7 +3354,7 @@ fieldset[disabled] .navbar .btn-link:focus {
   display: block;
   padding: 10px 15px;
   color: #999999;
-  font-weight: 600;
+  font-weight: 300;  /* Lato 300 */
   background: #ffffff;
 }
 .mainnav-menu > li > a:hover {

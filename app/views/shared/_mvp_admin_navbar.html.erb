@@ -21,7 +21,7 @@
 <header class="navbar" role="banner">
   <div class="container">
     <!-- navbar-header -->
-    <div class="navbar-header col-sm-2">
+    <div class="navbar-header col-sm-2 valign">
 
       <% if user_signed_in? && current_user.company.try(:logo_url).present? %>
 
@@ -63,35 +63,32 @@
         <span class="sr-only">Toggle navigation</span>
         <i class="glyphicon glyphicon-align-justfy" ></i>
       </button>
-    </div> <!-- /.navbar-header -->
 
-    <div class="col-sm-8 text-center"
-         style="color:rgb(212, 212, 212); font-size:20px; margin-top:13px">
+    </div><!--
 
+ --><div class="col-sm-8 text-center valign"
+         style="color:rgb(212, 212, 212)">
       <% if (controller_name == 'companies' && action_name != 'new') || (controller_name == 'stories' && action_name == 'index') || (controller_name == 'profile' && current_user.company_id.present?) %>
-        <%= @company.name %> Customer Stories
+        <h3><%= @company.name %> Customer Stories</h3>
       <% elsif (controller_name == 'stories') && (['show', 'edit'].include? action_name) %>
-        <%= @company.name %> Customer Story
+        <h3><%= @company.name %> Customer Story</h3>
       <% end %>
-
     </div>
 
-    <% if user_signed_in? %>
+    <% if user_signed_in? %><!--
 
-      <nav class="collapse navbar-collapse" role="navigation">
+   --><div class="collapse navbar-collapse col-sm-2 valign pull-right" role="navigation">
 
         <%= link_to 'Sign out', destroy_user_session_path, method: :delete,
-              class: 'btn btn-sm btn-default navbar-right',
-              style: 'margin-top: 12px' %>
-      </nav>
+              class: 'btn btn-sm btn-default' %>
+      </div><!--
 
-    <% else %>
+ --><% else %><!--
 
-      <nav class="collapse navbar-collapse" role="navigation">
+   --><div class="collapse navbar-collapse col-sm-2 valign pull-right" role="navigation">
         <%= link_to 'Sign in', new_user_session_path,
-              class: 'btn btn-sm btn-default navbar-right',
-              style: 'margin-top: 12px' %>
-      </nav>
+              class: 'btn btn-sm btn-default' %>
+      </div>
 
     <% end %>
 

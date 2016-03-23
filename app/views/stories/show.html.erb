@@ -24,7 +24,7 @@
   <!-- nav links, social sharing  -->
   <div class="mainnav" style="min-height:55px">
     <div class="container">
-      <div class='col-sm-3'>
+      <div class='col-sm-3' style='margin-top:1.7%; margin-bottom:1.7%'>
 
         <% if user_signed_in? && (current_user.company.try(:subdomain) == request.subdomain) %>
 
@@ -33,7 +33,7 @@
           <div data-no-turbolink>
             <%= link_to edit_story_path(@story), class: 'csp-nav' do %>
               <span class='glyphicon glyphicon-chevron-left'
-                  style='color:#337ab7; margin-top:20px; margin-right:5px'>
+                  style='color:#337ab7; margin-right:5px'>
               </span><span>Edit this Story</span>
             <% end %>
           </div>
@@ -42,7 +42,7 @@
 
           <%= link_to root_path, class: 'csp-nav' do %>
             <span class='glyphicon glyphicon-chevron-left'
-                style='color:#337ab7; margin-top:20px; margin-right:5px'>
+                style='color:#337ab7; margin-right:5px'>
             </span><span>Back to Stories</span>
           <% end %><br>
 
@@ -50,15 +50,15 @@
 
       </div>  <!-- nav links -->
 
-      <div class="col-sm-5 text-center" style='font-size:38px'>
-        <%= @story.success.customer.name %>
+      <div class="col-sm-5 text-center" style='margin-top:1%; margin-bottom:1%'>
+        <h2 style='margin-bottom:0'> <%= @story.success.customer.name %></h2>
       </div>
 
-      <div class='col-sm-4 text-right' style='margin-top:10px; padding-right:32px'>
-
+      <div class='col-sm-4 text-right'
+          style='margin-top:1%; margin-bottom:1%; padding-right:32px'>
         <%= render 'shared/social_sharing' %>
-
       </div>
+
     </div>   <!-- container -->
   </div>  <!-- mainnav -->
 

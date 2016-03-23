@@ -33,9 +33,12 @@
       <!-- settings, title, quote, video -->
       <div class='row'>
 
-        <div class='col-sm-4' style='margin-top:-17px'>  <!-- story settings -->
+        <div class='col-sm-4' style='margin-top:-8px'>  <!-- story settings -->
 
-          <p class='lead' style='font-size:30px;color:black'><%= @customer.name %></p>
+          <h2 style='color:#333333; margin-bottom:12px'>
+            <%= @customer.name %>
+          </h2>
+
           <%= render 'stories/shared/story_edit_settings.html.erb' %>
 
         </div><!--
