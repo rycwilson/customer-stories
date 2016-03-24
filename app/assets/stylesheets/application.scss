@@ -17,7 +17,6 @@
  *= require bootstrap-sass/assets/stylesheets/_bootstrap
  */
 
-
 .content h3 {
   font-weight: 700;
 }
@@ -35,16 +34,29 @@ p.lead {
   font-family: 'Istok Web';
 }
 
- img.navbar-brand {
+img.navbar-brand {
   max-height: 30px;
- }
-
-.valign {
-  margin-top: 1.2%;
-  margin-bottom: 1.2%;
 }
 
-// this gets rid of the dropdown caret in mainnav
+header.navbar {
+  /* color1, color2, and text color are defined in company model */
+  /* background-color set to transparent in mvpready-admin.css */
+  background-clip: border-box;
+  border:0;
+}
+
+/*
+  apply to all columns within a row to center vertically
+*/
+.vcenter {
+  display: inline-block;
+  vertical-align: middle;
+  float: none;
+}
+
+/*
+  removes the dropdown caret in mainnav
+*/
 .mainnav .nav > li > .dropdown-menu::after,
 .mainnav .nav > li > .dropdown-menu::before {
   display:none;

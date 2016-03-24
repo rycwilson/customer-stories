@@ -16,6 +16,9 @@
 // HTML editor for email templates
 //= require summernote
 
+// Color picker
+//= require jquery.minicolors
+
 var ready = function () {
 
   // not the best solution for remembering active tab, but it works
@@ -31,6 +34,7 @@ var ready = function () {
   configSelect2();
   configS3Upload();
   configSummernote();
+  configMiniColors();
   initListeners();
   initTemplateEditorListeners();
 
@@ -194,6 +198,20 @@ function initListeners() {
     $('.new-story-customer').select2('val', '');  // single select
     $('.new-story-tags').val('').trigger('change');  // multiple select
   });
+
+  $('#test-colors-button').on('click', function () {
+    var color1 = $('input#company_nav_color_1').val(),
+        color2 = $('input#company_nav_color_2').val(),
+      navTextColor = $('input#company_nav_text_color').val();
+    $('header.navbar').css(
+        'background', 'linear-gradient(45deg, ' + color1 + ' 0%, ' + color2 + ' 100%)');
+    $('header.navbar').css('color', navTextColor);
+    /*
+      the restore button is defined in companies#edit javascript_tag,
+      so it has access to admin_navbar_style helper and company color attributes
+    */
+  });
+
 }
 
 function configSummernote () {
@@ -213,6 +231,10 @@ function configSummernote () {
       ],
     });
   });
+}
+
+function configMiniColors () {
+  $('.mini-colors').minicolors({ theme: 'bootstrap' });
 }
 
 /*

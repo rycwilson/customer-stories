@@ -94,7 +94,8 @@ class CompaniesController < ApplicationController
   private
 
   def company_params
-    params.require(:company).permit(:name, :subdomain, :logo_url)
+    params.require(:company).permit(:name, :subdomain, :logo_url, :nav_color_1,
+                                    :nav_color_2, :nav_text_color )
   end
 
   def set_company
