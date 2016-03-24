@@ -18,82 +18,27 @@
 
 <% end %>
 
-<header class="navbar" role="banner">
+<header class="navbar" role="banner" style="<%= admin_navbar_style %>">
   <div class="container">
-    <!-- navbar-header -->
+
     <div class="navbar-header col-sm-2">
 
-      <% if user_signed_in? && current_user.company.try(:logo_url).present? %>
-
-        <%= link_to root_path do %>
-          <%= image_tag current_user.company.logo_url,
-                class: "navbar-brand navbar-brand-img", alt: "company logo" %>
-        <% end %>
-
-      <% elsif user_signed_in? && current_user.company_id.present? && current_user.company_id.try(:logo_url).blank? %>
-
-        <%= image_tag "company-logo-missing",
-            { class: 'navbar-brand navbar-brand-img',
-                alt: "company logo placeholder" } %>
-
-      <% elsif user_signed_in? && current_user.company_id.blank? %>
-
-        <% if controller_name == 'stories' %>
-
-          <%= image_tag(@company.logo_url,
-                class: "navbar-brand navbar-brand-img",
-                  alt: "company logo") unless @company.logo_url.blank? %>
-
-        <% else %>
-
-          <%= image_tag "mvp-landing/logo_full.png",
-            { class: 'navbar-brand navbar-brand-img', alt: 'CSP Logo' } %>
-
-        <% end %>
-
-      <% else %>
-
-        <%= image_tag @company.logo_url,
-            { class: 'navbar-brand navbar-brand-img', alt: 'company logo' } %>
-
-      <% end %>
+      <%= render 'shared/admin_navbar_logo' %>
 
       <button class="navbar-toggle" type="button"
               data-toggle="collapse" data-target=".navbar-collapse">
         <span class="sr-only">Toggle navigation</span>
         <i class="glyphicon glyphicon-align-justfy" ></i>
       </button>
-    </div> <!-- /.navbar-header -->
+    </div>
 
-    <div class="col-sm-8 text-center"
-         style="color:rgb(212, 212, 212); font-size:20px; margin-top:13px">
+    <div class="col-sm-8 text-center" style="font-size:20px; margin-top:13px">
 
-      <% if (controller_name == 'companies' && action_name != 'new') || (controller_name == 'stories' && action_name == 'index') || (controller_name == 'profile' && current_user.company_id.present?) %>
-        <%= @company.name %> Customer Stories
-      <% elsif (controller_name == 'stories') && (['show', 'edit'].include? action_name) %>
-        <%= @company.name %> Customer Story
-      <% end %>
+      <%= render 'shared/admin_navbar_title' %>
 
     </div>
 
-    <% if user_signed_in? %>
+    <%= render 'shared/admin_navbar_session' %>
 
-      <nav class="collapse navbar-collapse" role="navigation">
-
-        <%= link_to 'Sign out', destroy_user_session_path, method: :delete,
-              class: 'btn btn-sm btn-default navbar-right',
-              style: 'margin-top: 12px' %>
-      </nav>
-
-    <% else %>
-
-      <nav class="collapse navbar-collapse" role="navigation">
-        <%= link_to 'Sign in', new_user_session_path,
-              class: 'btn btn-sm btn-default navbar-right',
-              style: 'margin-top: 12px' %>
-      </nav>
-
-    <% end %>
-
-  </div> <!-- /.container -->
+  </div>
 </header>

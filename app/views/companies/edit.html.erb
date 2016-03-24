@@ -1,6 +1,5 @@
 
 <%= javascript_tag do %>
-
   $(function () {
     var company = <%= raw @company.to_json %>;
 
@@ -10,8 +9,15 @@
       window.location =
         '/companies/' + company.id + '?mainnav_tab=' + $(this).attr('aria-controls')
     });
-  });
 
+    $('#restore-colors-button').on('click', function () {
+      $('header.navbar').attr('style', '<%= admin_navbar_style %>');
+      $('#company_nav_color_1').minicolors('value', '<%= @company.nav_color_1 %>');
+      $('#company_nav_color_2').minicolors('value', '<%= @company.nav_color_2 %>');
+      $('<div id="company_nav_text_color"></div>').minicolors('value', '<%= @company.nav_text_color %>');
+    });
+
+  });
 <% end %>
 
 <div class="wrapper">

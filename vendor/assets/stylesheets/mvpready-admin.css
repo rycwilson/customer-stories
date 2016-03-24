@@ -2995,7 +2995,7 @@ table.dataTable-helper td.highlight {
   background-color: #FFFFFF;
   border-color: #FFFFFF;*/
   background-color: #2b3d4c;
-  border-color: #2b3d4c;
+  border-color: transparent;
 }
 .navbar .navbar-brand {
   color: #87a3bc;

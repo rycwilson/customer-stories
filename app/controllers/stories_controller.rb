@@ -7,7 +7,7 @@ class StoriesController < ApplicationController
 
   def index
     if @company.feature_flag == 'alpha'
-      @stories = @industries = []
+      @story_tiles = @industries = []
     elsif params[:filter]  # ajax GET request
       @stories = @company.filter_stories(params[:filter][:type], params[:filter][:id])
       respond_to { |format| format.json { render json: @stories } }

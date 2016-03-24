@@ -1,0 +1,35 @@
+
+<% if user_signed_in? && current_user.company.try(:logo_url).present? %>
+
+  <%= link_to root_path do %>
+    <%= image_tag current_user.company.logo_url,
+          class: "navbar-brand navbar-brand-img", alt: "company logo" %>
+  <% end %>
+
+<% elsif user_signed_in? && current_user.company_id.present? && current_user.company_id.try(:logo_url).blank? %>
+
+  <%= image_tag "company-logo-missing",
+      { class: 'navbar-brand navbar-brand-img',
+          alt: "company logo placeholder" } %>
+
+<% elsif user_signed_in? && current_user.company_id.blank? %>
+
+  <% if controller_name == 'stories' %>
+
+    <%= image_tag(@company.logo_url,
+          class: "navbar-brand navbar-brand-img",
+            alt: "company logo") unless @company.logo_url.blank? %>
+
+  <% else %>
+
+    <%= image_tag "mvp-landing/logo_full.png",
+      { class: 'navbar-brand navbar-brand-img', alt: 'CSP Logo' } %>
+
+  <% end %>
+
+<% else %>
+
+  <%= image_tag @company.logo_url,
+      { class: 'navbar-brand navbar-brand-img', alt: 'company logo' } %>
+
+<% end %>

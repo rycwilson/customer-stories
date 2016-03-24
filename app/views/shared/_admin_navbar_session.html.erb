@@ -1,0 +1,19 @@
+
+<% if user_signed_in? %>
+
+  <nav class="collapse navbar-collapse" role="navigation">
+
+    <%= link_to 'Sign out', destroy_user_session_path, method: :delete,
+          class: 'btn btn-sm btn-default navbar-right',
+          style: 'margin-top: 12px' %>
+  </nav>
+
+<% else %>
+
+  <nav class="collapse navbar-collapse" role="navigation">
+    <%= link_to 'Sign in', new_user_session_path,
+          class: 'btn btn-sm btn-default navbar-right',
+          style: 'margin-top: 12px' %>
+  </nav>
+
+<% end %>
