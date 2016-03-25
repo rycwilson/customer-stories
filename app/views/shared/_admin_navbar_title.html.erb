@@ -1,6 +1,6 @@
 
 <% if (controller_name == 'companies' && action_name != 'new') || (controller_name == 'stories' && action_name == 'index') || (controller_name == 'profile' && current_user.company_id.present?) %>
-  <span><%= @company.name %> Customer Stories</span>
+  <h3>Customer Stories</h3>
 <% elsif (controller_name == 'stories') && (['show', 'edit'].include? action_name) %>
-  <span><%= @company.name %> Customer Story</span>
+  <h3>Customer Story</h3>
 <% end %>

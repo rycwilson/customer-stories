@@ -1,19 +1,19 @@
 
 <% if user_signed_in? %>
 
-  <nav class="collapse navbar-collapse" role="navigation">
+  <nav class="collapse navbar-collapse col-sm-2 pull-right" role="navigation"
+      style='margin-top:2%; margin-bottom:1%'>
 
     <%= link_to 'Sign out', destroy_user_session_path, method: :delete,
-          class: 'btn btn-sm btn-default navbar-right',
-          style: 'margin-top: 12px' %>
+          class: 'btn btn-xs btn-default navbar-right' %>
   </nav>
 
 <% else %>
 
-  <nav class="collapse navbar-collapse" role="navigation">
+  <nav class="collapse navbar-collapse col-sm-2 pull-right" role="navigation"
+      style='margin-top:2%; margin-bottom:1%'>
     <%= link_to 'Sign in', new_user_session_path,
-          class: 'btn btn-sm btn-default navbar-right',
-          style: 'margin-top: 12px' %>
+          class: 'btn btn-xs btn-default navbar-right' %>
   </nav>
 
 <% end %>
