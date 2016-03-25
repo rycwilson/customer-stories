@@ -3290,7 +3290,7 @@ fieldset[disabled] .navbar .btn-link:focus {
 }
 .mainnav {
   position: relative;
-  height: 55px;
+  height: 45px;
   margin-bottom: 40px;
   background-color: #ffffff;
   border-bottom: 1px solid #dddddd;
@@ -3354,7 +3354,7 @@ fieldset[disabled] .navbar .btn-link:focus {
 .mainnav-menu > li > a {
   position: relative;
   display: block;
-  padding: 10px 15px;
+  padding: 10px 10px;
   color: #555555;
   font-weight: 300;  /* Lato 300 */
   background: #ffffff;
@@ -3454,7 +3454,7 @@ fieldset[disabled] .navbar .btn-link:focus {
   }
   .mainnav-menu > li > a {
     /* Ryan changed from padding: 21px 15px; */
-    padding: 15px 10px;
+    padding: 10px 10px;
     /* Ryan changed from font-size: 20px; */
     font-size: 16px;
     letter-spacing: -1px;

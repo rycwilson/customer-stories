@@ -74,7 +74,8 @@
 
         </div>  <!-- logo -->
 
-        <div class= 'col-sm-5' style='margin-top:5px'>  <!-- quote -->
+        <!-- quote -->
+        <div class= 'col-sm-5 text-justify' style='margin-top:5px'>
 
           <p class='lead'><em>"<%= @story.quote %>"</em></p> <br>
 
@@ -95,18 +96,20 @@
       <!-- story content, results, contributing team -->
       <div class="row" style='margin-top:20px'>
         <div class='col-sm-8'>  <!-- content -->
-          <div class='well'>
-
+          <div class='well' style='padding:40px'>
             <h3 class='text-center'><%= @story.title %></h3><br>
 
-            <p><strong>Situation: </strong><%= @story.situation %></p><br>
+            <p class='text-justify'>
+              <strong>Situation: </strong><%= @story.situation %>
+            </p> <br>
 
-            <p><strong>Challenge: </strong><%= @story.challenge %></p><br>
+            <p class='text-justify'>
+              <strong>Challenge: </strong><%= @story.challenge %>
+            </p> <br>
 
-            <p><strong>Solution: </strong><%= @story.solution %></p><br>
+            <p class='text-justify'><strong>Solution: </strong><%= @story.solution %></p> <br>
 
-            <p><strong>Benefits: </strong><%= @story.benefits %></p><br>
-
+            <p class='text-justify'><strong>Benefits: </strong><%= @story.benefits %></p> <br>
           </div>
         </div>  <!-- content -->
 
