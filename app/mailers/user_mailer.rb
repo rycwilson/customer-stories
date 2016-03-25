@@ -1,7 +1,6 @@
 class UserMailer < ApplicationMailer
 
   default from: 'no-reply@customerstories.net'
-  test_emails = ['***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', 'ryan.wilson@generalassemb.ly']
 
   def request_contribution contribution
     curator = contribution.success.curator
@@ -33,16 +32,17 @@ class UserMailer < ApplicationMailer
               .gsub("[curator_img_url]", curator.photo_url || "")
               .html_safe
 
-    if ENV['HOST_NAME'] == 'customerstories.org'
+    if ENV['HOST_NAME'] == 'customerstories.org'  # staging
       recipient = "***REMOVED***"
       sender = "#{curator.full_name} <#{curator.email}>"
     elsif contribution.contributor.email == curator.email
       recipient = "#{contribution.contributor.full_name} <#{contribution.contributor.email}>"
       sender = 'no-reply@customerstories.net'
     else
-      recipient = "#{contribution.contributor.full_name} <#{contribution.contributor.email}>"
+      recipient = "#{contributor.full_name} <#{contributor.email}>"
       sender = "#{curator.full_name} <#{curator.email}>"
     end
+
     mail to: recipient, from: sender, subject: subject
 
   end
@@ -70,17 +70,14 @@ class UserMailer < ApplicationMailer
               .sub("[opt_out_url]", "#{host}/contributions/#{contribution.access_token}/opt_out")
               .html_safe
 
-    if ENV['HOST_NAME'] == 'customerstories.org'
+    if ENV['HOST_NAME'] == 'customerstories.org'  # staging
       recipient = "***REMOVED***"
       sender = "#{curator.full_name} <#{curator.email}>"
     elsif contributor.email == curator.email
       recipient = "#{contributor.full_name} <#{contributor.email}>"
-      sender = nil
-    elsif test_emails.include? contributor.email
-      recipient = "#{contributor.full_name} <#{contributor.email}>"
-      sender = "#{curator.full_name} <#{curator.email}>"
+      sender = 'no-reply@customerstories.net'
     else
-      recipient = "***REMOVED***"
+      recipient = "#{contributor.full_name} <#{contributor.email}>"
       sender = "#{curator.full_name} <#{curator.email}>"
     end
     mail to: recipient, from: sender, subject: subject
@@ -95,7 +92,7 @@ class UserMailer < ApplicationMailer
     @body = template.body
               .gsub("[customer_name]", "CustomerCompany")
               .gsub("[company_name]", curator.company.name)
-              .gsub("[product_name]", contribution.success.products.take)
+              .gsub("[product_name]", "CompanyProduct")
               .gsub("[contributor_first_name]", "Contributor")
               .gsub("[curator_first_name]", curator.first_name)
               .gsub("[referral_intro]", "John Doe referred me to you. ")
