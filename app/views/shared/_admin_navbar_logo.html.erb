@@ -6,7 +6,7 @@
           class: "navbar-brand navbar-brand-img", alt: "company logo" %>
   <% end %>
 
-<% elsif user_signed_in? && current_user.company_id.present? && current_user.company_id.try(:logo_url).blank? %>
+<% elsif user_signed_in? && current_user.company_id.present? && current_user.company.logo_url.blank? %>
 
   <%= image_tag "company-logo-missing",
       { class: 'navbar-brand navbar-brand-img',
