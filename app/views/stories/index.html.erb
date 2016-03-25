@@ -20,9 +20,9 @@
     <%= render 'shared/mainnav' %>,
   <% else %>
 
-    <div class="mainnav" style='min-height:55px'>
+    <div class="mainnav" style='padding-top:5px'>
       <div class="container">
-        <form class="form-inline col-sm-7 col-sm-offset-1" style='padding-top: 10px'>
+        <form class="form-inline col-sm-7 col-sm-offset-1">
           <div class="form-group text-left">
            <%= label_tag :industries, "Industries", class: 'control-label' %>
            <%= select_tag :industries, options_for_select(@industries),
