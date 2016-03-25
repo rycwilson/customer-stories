@@ -93,7 +93,11 @@ Rails.application.configure do
   # What exactly does this host setting do?
   #  because it works fine when the actual host name is
   #  something different, e.g. 'floating-spire-2927.herokuapp.com'
-  host = 'www.customerstories.net'
+  if ENV['HOST_NAME'] == 'customerstories.org'
+    host = 'customerstories.org'
+  else
+    host = 'customerstories.net'
+  end
   config.action_mailer.default_url_options = { host: host }
   ActionMailer::Base.smtp_settings = {
     :address        => 'smtp.sendgrid.net',
