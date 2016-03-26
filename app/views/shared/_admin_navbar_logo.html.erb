@@ -1,4 +1,5 @@
 
+<!-- "https://csp-development-assets.s3-us-west-1.amazonaws.com/uploads/8b7767ec-fc46-4d37-91b6-90dfbb18024b/acme.png" -->
 <% if user_signed_in? && current_user.company.try(:logo_url).present? %>
 
   <%= link_to root_path do %>
@@ -8,9 +9,8 @@
 
 <% elsif user_signed_in? && current_user.company_id.present? && current_user.company.logo_url.blank? %>
 
-  <%= image_tag "company-logo-missing",
-      { class: 'navbar-brand navbar-brand-img',
-          alt: "company logo placeholder" } %>
+  <%= image_tag "company-logo-missing.png", class: 'navbar-brand navbar-brand-img',
+          alt: "company logo placeholder" %>
 
 <% elsif user_signed_in? && current_user.company_id.blank? %>
 
