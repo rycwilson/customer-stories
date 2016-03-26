@@ -65,8 +65,7 @@ p.lead {
 #edit-story-benefits:hover + #story-benefits,
 .modify-result:hover + .story-result,
 .modify-prompt:hover + .story-prompt,
-div[id^='edit-pr-contribution-notes']:hover + div[id^='pr-contribution-notes'],
-div[id^='edit-contribution-notes']:hover + div[id^='contribution-notes'] {
+div[id*='contribution-notes']:hover + div[id*='contribution-notes'] {
   // border-left: 3px solid #87a3bc;
   background-color: #e3e3e3;
   background-clip: content-box;

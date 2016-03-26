@@ -4,6 +4,7 @@ class UserMailer < ApplicationMailer
 
   def request_contribution contribution
     curator = contribution.success.curator
+    contributor = contribution.contributor
     referral_intro = contribution.referrer_id.present? ? contribution.referrer.full_name + " referred me to you. " : ""
     story_example_id = Story.find_example
     host = "http://#{curator.company.subdomain}.#{ENV['HOST_NAME']}"
@@ -17,7 +18,7 @@ class UserMailer < ApplicationMailer
               .gsub("[customer_name]", contribution.success.customer.name)
               .gsub("[company_name]", curator.company.name)
               .gsub("[product_name]", contribution.success.products.take.name)
-              .gsub("[contributor_first_name]", contribution.contributor.first_name)
+              .gsub("[contributor_first_name]", contributor.first_name)
               .gsub("[curator_first_name]", curator.first_name)
               .gsub("[referral_intro]", referral_intro)
               .gsub("[contribution_url]", "#{host}/contributions/#{contribution.access_token}/contribution")
@@ -35,8 +36,8 @@ class UserMailer < ApplicationMailer
     if ENV['HOST_NAME'] == 'customerstories.org'  # staging
       recipient = "***REMOVED***"
       sender = "#{curator.full_name} <#{curator.email}>"
-    elsif contribution.contributor.email == curator.email
-      recipient = "#{contribution.contributor.full_name} <#{contribution.contributor.email}>"
+    elsif contributor.email == curator.email
+      recipient = "#{contributor.full_name} <#{contributor.email}>"
       sender = 'no-reply@customerstories.net'
     else
       recipient = "#{contributor.full_name} <#{contributor.email}>"
