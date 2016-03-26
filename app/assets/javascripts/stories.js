@@ -78,8 +78,8 @@ function initBIPListeners () {
   // best-in-place errors
   $(document).on('best_in_place:error', function (event, data, status, xhr) {
     var error = JSON.parse(data.responseText)[0];
-    if ( error.match(/maximum\sis\s50\scharacters/) )
-      flashDisplay("Result can't exceed 50 characters", "danger");
+    if ( error.match(/maximum\sis\s70\scharacters/) )
+      flashDisplay("Result can't exceed 70 characters", "danger");
   });
 
   /*

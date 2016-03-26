@@ -10,7 +10,7 @@ class ResultsController < ApplicationController
       @results = story.success.results
       respond_to { |format| format.js }
     else
-      @flash_error = "Result can't exceed 50 characters"
+      @flash_error = "Result can't exceed 70 characters"
       respond_to { |format| format.js }
     end
   end
