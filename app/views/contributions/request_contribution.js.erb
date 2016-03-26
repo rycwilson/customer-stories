@@ -1,49 +1,32 @@
 
-// TODO: make sure all of this only runs once
+// TODO: make sure all of this only runs once (i.e. page refresh)
 
 (function () {
 
-  var     contribution = <%= raw @contribution.to_json %>,
-           contributor = <%= raw @contribution.contributor.to_json %>,
-    contributionStatus = <%= raw @contribution_status.to_json %>,
-             flashMesg = "<%= @flash_mesg %>",
-           flashStatus = "<%= @flash_status %>"
+  var contributionsInProgress = <%= raw @contributions_in_progress.to_json %>,
+      contribution = <%= raw @contribution.to_json %>,
+         flashMesg = "<%= @flash_mesg %>",
+       flashStatus = "<%= @flash_status %>",
+          template = _.template($('#in-progress-template').html());
 
   flashDisplay(flashMesg, flashStatus);
 
-  if (flashStatus === "info") {
-    moveContributor(contribution, contributor, contributionStatus);
+  if (flashStatus === "info") {  // success
+    removeContributionCard(contribution.id);
+    $('#in-progress-contributors')
+        .empty()
+        .append(template({ contributions: contributionsInProgress }));
+    $('.best_in_place').best_in_place();
   }
 
-  /*
-    - remove the pre-request contributor listing
-    - parse server response and pass necessary data to the in-progress template
-    - render the in-progress contributor listing
-  */
-  function moveContributor (contribution, contributor, status) {
-
-    // remove the pre-request listing (with animation)
-    var $preRequest = $('#pre-request')
-          .find("div[data-contribution-id='" + contribution.id.toString() + "']");
+  // remove the pre-request contribution card
+  function removeContributionCard (contribution_id) {
+    var $preRequestCard = $('#pre-request')
+          .find("div[data-contribution-id='" + contribution_id.toString() + "']");
     setTimeout(function () {
-      $preRequest.hide('fast', function() { $preRequest.remove(); });
+      $preRequestCard.hide('fast', function() { $preRequestCard.remove(); });
       // $('#flash').fadeOut(300, function () { $(this).remove() });
     }, 3500);
-
-    // combine the neccessary information from @contribution
-    // and @contributor to provide the necessary response data
-    var inProgressContributor = {
-      contributionId: contribution.id,
-      fullName: contributor.first_name + " " + contributor.last_name,
-      email: contributor.email,
-      role: contribution.role,
-      contributionStatus: status
-    }
-
-    // template for an in-progress contribution
-    var template = _.template($('#in-progress-template').html());
-    $('#in-progress-contributors')
-        .append(template({ contributor: inProgressContributor }));
   }
 
 }());

@@ -21,6 +21,7 @@ class StoriesController < ApplicationController
     @contributors = @story.success.contributions
                           .where(linkedin: true).map { |c| c.contributor }
     @contributors << @story.success.curator unless @contributors.any? { |c| c.email == @story.success.curator.email }
+    @contributions_in_progress = Contribution.in_progress @story.success_id
   end
 
   def edit

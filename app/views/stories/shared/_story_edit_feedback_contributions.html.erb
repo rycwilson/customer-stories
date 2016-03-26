@@ -32,8 +32,8 @@
 
             <a target="_blank" tabindex='-1' href="http://google.com/search?q=
               <%= contribution.role == 'customer' ?
-                  research_user_query_string(contribution.contributor,
-                    @story.success.customer) :
+                  research_user_query_string(contribution.contributor.id,
+                    @story.success.customer.name) :
                   research_user_query_string(contribution.contributor) %>">
               <span class='glyphicon glyphicon-user bip-clickable'></span></a>
           </div>

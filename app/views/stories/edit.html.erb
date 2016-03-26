@@ -258,6 +258,13 @@
              href="#collapse-pre-request-info-{{= index }}" tabindex='-1'>
             <i class='glyphicon glyphicon-info-sign bip-clickable'></i></a>
 
+          <a target="_blank" tabindex='-1' href="http://google.com/search?q=
+              {{= contribution.role == 'customer' ?
+                  research_user_query_string(contribution.contributor_id,
+                    contribution.customer_name) :
+                  research_user_query_string(contribution.contributor_id) %>">
+              <span class='glyphicon glyphicon-user bip-clickable'></span></a>
+
         </div>
       </div>
 
@@ -309,16 +316,81 @@
 
 <!-- in-progress template -->
 <script type="text/template" id="in-progress-template">
-  <div class="well" data-contribution-id="{{= contributor.contributionId }}">
-    <div class="row">
-      <div class='col-sm-12'>
-        {{= contributor.fullName }} <br>
-        {{= contributor.email }} <br>
-        {{= contributor.role }} <br><br>
-        {{= contributor.contributionStatus }}
+  {{ contributions.forEach(function (contribution, index) { }}
+    <div class="well contribution-card accordion"
+        id="in-progress-accordion-{{= index }}"
+        data-contribution-id="{{= contribution.id }}">
+
+      <div class="row">
+        <div class='col-sm-7'>
+          {{= contribution.contributor_full_name }} <br>
+          {{= contribution.contributor_email }}
+        </div>
+        <div class="col-sm-5 text-right">
+
+          <a data-remote="true" rel="nofollow" data-method="put"
+              href="/contributions/{{= contribution.id }}/request_contribution" tabindex="-1">
+            <i class="glyphicon glyphicon-envelope bip-clickable"></i></a>
+
+          <a class="accordion-toggle" data-toggle="collapse"
+             data-parent="#in-progress-accordion-{{= index }}"
+             href="#collapse-in-progress-info-{{= index }}" tabindex='-1'>
+            <i class='glyphicon glyphicon-info-sign bip-clickable'></i></a>
+
+          <a target="_blank" tabindex='-1' href="http://google.com/search?q=
+              {{= contribution.role == 'customer' ?
+                  research_user_query_string(contribution.contributor_id,
+                    contribution.customer_name) :
+                  research_user_query_string(contribution.contributor_id) %>">
+              <span class='glyphicon glyphicon-user bip-clickable'></span></a>
+
+        </div>
       </div>
+
+      <div class="row">
+        <div class="col-sm-12">
+          <div id="collapse-in-progress-info-{{= index }}"
+              class="accordion-body collapse">
+            <div class="accordion-inner">
+              <hr>
+
+              Role:&nbsp;&nbsp;{{= contribution.role }} <br style='line-height:20px'>
+              Referred by:&nbsp;&nbsp;{{= contribution.referrer ? contribution.referrer.full_name : "n/a" }} <br style='line-height:20px'>
+              Status:&nbsp;&nbsp;{{= contribution.status }} <br style='line-height:20px'>
+              Notes: <br style='line-height:20px'>
+
+              <div class="row">
+
+                <div id='ip-edit-contribution-notes-{{= index }}'
+                    class='col-sm-2 text-center pull-right'
+                    style='padding:0; margin-top:-2px'>
+                  <i class='glyphicon glyphicon-pencil bip-clickable'></i>
+                </div>
+
+                <div id='ip-contribution-notes-{{= index }}'
+                    class='col-sm-10' style='padding-right:0'>
+                  <span data-bip-type="textarea" data-bip-attribute="notes"
+                      data-bip-activator="#ip-edit-contribution-notes-{{= index }}"
+                      data-bip-html-attrs="{&quot;style&quot;:&quot;width:100%&quot;}"
+                      data-bip-object="contribution"
+                      data-bip-original-content="{{= contribution.notes }}"
+                      data-bip-value="{{= contribution.notes }}"
+                      data-bip-url="/contributions/{{= contribution.token }}"
+                      data-bip-placeholder="<i>Add notes ...</i>"
+                      class="best_in_place"
+                      id="best_in_place_contribution_{{= contribution.id }}_notes">
+                    {{= contribution.notes || "<i>add notes ...</i>" }}
+                  </span>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
-  </div>
+  {{ }); }}
 </script>
 
 <!-- Results -->

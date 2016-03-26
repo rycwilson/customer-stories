@@ -38,7 +38,7 @@ class UserMailer < ApplicationMailer
       sender = "#{curator.full_name} <#{curator.email}>"
     elsif contributor.email == curator.email
       recipient = "#{contributor.full_name} <#{contributor.email}>"
-      sender = 'no-reply@customerstories.net'
+      sender = 'Customer Stories <no-reply@customerstories.net>'
     else
       recipient = "#{contributor.full_name} <#{contributor.email}>"
       sender = "#{curator.full_name} <#{curator.email}>"
@@ -76,7 +76,7 @@ class UserMailer < ApplicationMailer
       sender = "#{curator.full_name} <#{curator.email}>"
     elsif contributor.email == curator.email
       recipient = "#{contributor.full_name} <#{contributor.email}>"
-      sender = 'no-reply@customerstories.net'
+      sender = 'Customer Stories <no-reply@customerstories.net>'
     else
       recipient = "#{contributor.full_name} <#{contributor.email}>"
       sender = "#{curator.full_name} <#{curator.email}>"

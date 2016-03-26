@@ -10,10 +10,10 @@ module StoriesHelper
   end
 
   # extra parameter is necessary because user not connected to customer
-  def research_user_query_string user, customer=nil
-    user = User.find_by(id: user.id)
-    if customer.present?
-      user.first_name + "+" + user.last_name + "+" + customer.name
+  def research_user_query_string user_id, customer_name=nil
+    user = User.find_by(id: user_id)
+    if customer_name.present?
+      user.first_name + "+" + user.last_name + "+" + customer_name
     else
       user.first_name + "+" + user.last_name
     end

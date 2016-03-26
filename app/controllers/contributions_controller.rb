@@ -62,7 +62,7 @@ class ContributionsController < ApplicationController
   #
   # PUT /contributions/:token
   def update
-    if params[:contribution][:notes]
+    if params[:contribution][:notes]  # notes coming from contribution cards
       @contribution.update notes: params[:contribution][:notes]
       respond_to { |format| format.json { respond_with_bip(@contribution) } }
     elsif params[:linkedin_include_profile].present? # from User Profile checkbox
@@ -90,7 +90,8 @@ class ContributionsController < ApplicationController
       UserMailer.request_contribution(@contribution).deliver_now
       if @contribution.update(   status:'request',
                               remind_at: Time.now + @contribution.remind_1_wait.days )
-        @contribution_status = contribution_status @contribution.status # view helper
+        # @contribution_status = contribution_status @contribution.status # view helper
+        @contributions_in_progress = Contribution.in_progress @contribution.success_id
         @flash_status = "info"
         @flash_mesg =
           "An email request for contribution has been sent to #{@contribution.contributor.full_name}"

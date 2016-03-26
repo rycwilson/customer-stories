@@ -60,6 +60,7 @@ class Contribution < ActiveRecord::Base
               contributor_id: contribution.contributor.id,
               contributor_full_name: contribution.contributor.full_name,
               contributor_email: contribution.contributor.email,
+              customer_name: contribution.success.customer.name,
               role: contribution.role,
               referrer: contribution.referrer.try(:full_name),
               notes: contribution.notes,
@@ -74,21 +75,30 @@ class Contribution < ActiveRecord::Base
   # sort oldest to newest (according to status)
   #
   def self.in_progress success_id
-    order = ['opt_out', 'unsubscribe', 'did_not_respond', 'remind2', 'remind1', 'request']
+    status_options = ['opt_out', 'unsubscribe', 'did_not_respond', 'remind2', 'remind1', 'request']
     Contribution.where(success_id: success_id)
-                .select { |c| c.status == 'request' ||
-                              c.status == 'remind1' ||
-                              c.status == 'remind2' ||
-                              c.status == 'did_not_respond' ||
-                              c.status == 'unsubscribe' ||
-                              c.status == 'opt_out' }
-                .sort do |a,b|
-                  if order.index(a.status) < order.index(b.status)
+                .select { |contribution| status_options.include? contribution.status }
+                .sort do |a,b|  # according to
+                  if status_options.index(a.status) < status_options.index(b.status)
                     -1
-                  elsif order.index(a.status) > order.index(b.status)
+                  elsif status_options.index(a.status) > status_options.index(b.status)
                     1
                   else 0
                   end
+                end
+                .map do |contribution|
+                  {
+                    id: contribution.id,
+                    contributor_id: contribution.contributor.id,
+                    contributor_full_name: contribution.contributor.full_name,
+                    contributor_email: contribution.contributor.email,
+                    customer_name: contribution.success.customer.name,
+                    role: contribution.role,
+                    referrer: contribution.referrer.try(:full_name),
+                    notes: contribution.notes,
+                    token: contribution.access_token,
+                    status: contribution.status
+                  }
                 end
   end
 
