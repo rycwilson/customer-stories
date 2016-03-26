@@ -4,98 +4,79 @@
     <div class='row'>
       <div class='portlet portlet-default'>
 
-                <div class="portlet-header">
+        <div class="portlet-header">
+          <h5 class="portlet-title">
 
-             <h5 class="portlet-title">
             <b>Ad Networks: </b> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-              <u>
-        <span style='display:inline-block'>&nbsp;&nbsp; &nbsp;
+            <span style='display:inline-block'>&nbsp;&nbsp; &nbsp;
 
-          <% if @company.feature_flag == 'alpha' %>
+                <% if @company.feature_flag == 'alpha' %>
 
-            <span class='tooltip-wrapper-promote' style='display:inline-block'
-                data-title='This feature is currently disabled'>
-              <input type="checkbox" style='pointer-events:none' disabled>
-              <label>Enable Retargeting</label> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
+                  <span class='tooltip-wrapper-promote' style='display:inline-block'
+                      data-title='This feature is currently disabled'>
+                    <input type="checkbox" style='pointer-events:none' disabled>
+                    <label>Enable Retargeting</label> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
 
-              <input type="checkbox" style='pointer-events:none' disabled>
-              <label>Enable CRM Targeting</label> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
+                    <input type="checkbox" style='pointer-events:none' disabled>
+                    <label>Enable CRM Targeting</label> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
 
-              <input type="checkbox" style='pointer-events:none' disabled>
-              <label>Enable Audience Targeting</label>
+                    <input type="checkbox" style='pointer-events:none' disabled>
+                    <label>Enable Audience Targeting</label>
+                  </span>
+
+                <% else %>
+
+                  <span>
+                    <input type="checkbox">
+                    <label>Enable Retargeting</label> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
+
+                    <input type="checkbox">
+                    <label>Enable CRM Targeting</label> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
+
+                    <input type="checkbox">
+                    <label>Enable Audience Targeting</label>
+                  </span>
+
+                <% end %>
+
             </span>
+          </h5>
+        </div>
 
-          <% else %>
+        <div class='portlet-body'>
 
-            <span>
-              <input type="checkbox">
-              <label>Enable Retargeting</label> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
+          <% @company.stories.each do |story| %>
 
-              <input type="checkbox">
-              <label>Enable CRM Targeting</label> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
+            <div class="row">
 
-              <input type="checkbox">
-              <label>Enable Audience Targeting</label>
-            </span>
+              <div class="col-sm-4">
+                <div id="ad-wrap1">
+                  <img id="ad-logo" src="<%= @company.logo_url %>">
+                  <div id="ad1-text">
+                    <%= story.success.results.take.description %>
+                  </div>
+                  <button type='button' id="ad-btn">Read Story</button>
+                  <img id="ad-powered" src="http://content.screencast.com/users/danlindblom/folders/Jing/media/2572803a-857a-40a8-b31a-e507bad0aa1b/00001977.png">
+                </div> <br><br><br>
+              </div><!-- /.col -->
+
+              <div class="col-sm-8">
+                <div id="ad-wrap2">
+                  <img id="ad-logo" src="<%= @company.logo_url %>"  />
+                  <div id="ad2-text">
+                    <%= story.success.results.take.description %>
+                  </div>
+                  <button type='button' id="ad-btn">Read Story</button>
+                  <img id="ad-powered" src="http://content.screencast.com/users/danlindblom/folders/Jing/media/2572803a-857a-40a8-b31a-e507bad0aa1b/00001977.png"  />
+                </div> <br><br><br>
+              </div>
+
+            </div>
 
           <% end %>
 
-
-        </span>
-    </u>
-          </h5>
-
-
-
-
         </div>
-        <div class='portlet-body'>
 
-                 <div class="feature-lg">
-
-          <div class="row">
-
-
-
-               <% @company.stories.each do |story| %>
-                        <div class="col-sm-4">
-              <div id="ad-wrap1">
-             <img id="ad-logo" src="<%= @company.logo_url %>"  />
-              <div id="ad1-text"><%= story.success.customer.name =%> achieves <%= rand(50)+50 =%>% higher Data Center speeds with Cisco UCS </div>
-              <button id="ad-btn">Read Story</button>
-             <img id="ad-powered" src="http://content.screencast.com/users/danlindblom/folders/Jing/media/2572803a-857a-40a8-b31a-e507bad0aa1b/00001977.png"  />
-                </div>
-              <br>
-             <br>
-      <br>
-            </div><!-- /.col -->
- <% end %>
-            <div class="col-sm-6">
-
-              <br class="xs-30 sm-0">
-
-              <div class="feature-content">
-
-           <% @company.stories.each do |story| %>
-             <div id="ad-wrap2">
-             <img id="ad-logo" src="<%= @company.logo_url %>"  />
-             <div id="ad2-text"><%= story.success.customer.name =%> achieves <%= rand(50)+50 =%>% better Data Center efficiency with Cisco UCS </div>
-              <button id="ad-btn">Read Story</button>
-             <img id="ad-powered" src="http://content.screencast.com/users/danlindblom/folders/Jing/media/2572803a-857a-40a8-b31a-e507bad0aa1b/00001977.png"  />
-            </div>
-            <br>
-            <br>
-            <br>
-            <% end %>
-            </div> <!-- /.feature-content -->
-            </div><!-- /.col -->
-
-          </div> <!-- /.row -->
-
-        </div> <!-- /.feature-lg -->
-
-
-        </div>
       </div>  <!-- portlet -->
     </div>  <!-- row -->
   </div>  <!-- container -->
