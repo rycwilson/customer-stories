@@ -39,6 +39,14 @@
                data-parent="#pre-request-accordion-<%= index %>"
                href="#collapse-pre-request-info-<%= index %>" tabindex='-1'>
               <i class='glyphicon glyphicon-info-sign bip-clickable'></i></a>
+
+            <a target="_blank" tabindex='-1' href="http://google.com/search?q=
+              <%= contribution.role == 'customer' ?
+                  research_user_query_string(contribution.contributor,
+                    @story.success.customer) :
+                  research_user_query_string(contribution.contributor) %>">
+              <span class='glyphicon glyphicon-user bip-clickable'></span></a>
+
           </div>
         </div>
 
@@ -56,7 +64,7 @@
 
                 <div class="row">
 
-                  <div id='edit-pr-contribution-notes-<%= index %>'
+                  <div id='pr-edit-contribution-notes-<%= index %>'
                       class='col-sm-2 text-center pull-right'
                       style='padding:0; margin-top:-2px'>
                     <i class='glyphicon glyphicon-pencil bip-clickable'></i>
@@ -67,7 +75,7 @@
                     <%= best_in_place contribution, :notes, as: :textarea,
                               url: "/contributions/#{contribution.access_token}",
                        html_attrs: { style:'width:100%' },
-                        activator: "#edit-pr-contribution-notes-#{index}",
+                        activator: "#pr-edit-contribution-notes-#{index}",
                      place_holder: "<i>add notes ...</i>" %>
                   </div>
 

@@ -52,7 +52,7 @@
       <% if current_user.company.logo_url.present? %>
         <%= image_tag current_user.company.logo_url, class: 'navbar-brand navbar-brand-img' %>
       <% else %>
-        <%= image_tag 'company-logo-missing', class: 'navbar-brand navbar-brand-img' %>
+        <%= image_tag 'company-logo-missing.png', class: 'navbar-brand navbar-brand-img' %>
       <% end %>
     <% end %>
 

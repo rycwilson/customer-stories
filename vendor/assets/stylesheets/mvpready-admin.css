@@ -3007,7 +3007,7 @@ table.dataTable-helper td.highlight {
 .navbar .navbar-brand:hover,
 .navbar .navbar-brand:focus {
   color: #ffffff;
-  background-color: #283846;
+  background-color: transparent;
 }
 .navbar .navbar-text {
   color: #ffffff;
