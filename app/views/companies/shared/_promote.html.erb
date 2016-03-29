@@ -47,31 +47,32 @@
 
           <% @company.stories.each do |story| %>
 
-            <div class="row">
+            <% if story.success.results.present? %>
 
-              <div class="col-sm-4">
-                <div id="ad-wrap1">
-                  <img id="ad-logo" src="<%= @company.logo_url %>">
-                  <div id="ad1-text">
-                    <%= story.success.results.take.description %>
-                  </div>
-                  <button type='button' id="ad-btn">Read Story</button>
-                  <img id="ad-powered" src="http://content.screencast.com/users/danlindblom/folders/Jing/media/2572803a-857a-40a8-b31a-e507bad0aa1b/00001977.png">
-                </div> <br><br><br>
-              </div><!-- /.col -->
-
-              <div class="col-sm-8">
-                <div id="ad-wrap2">
-                  <img id="ad-logo" src="<%= @company.logo_url %>"  />
-                  <div id="ad2-text">
-                    <%= story.success.results.take.description %>
-                  </div>
-                  <button type='button' id="ad-btn">Read Story</button>
-                  <img id="ad-powered" src="http://content.screencast.com/users/danlindblom/folders/Jing/media/2572803a-857a-40a8-b31a-e507bad0aa1b/00001977.png"  />
-                </div> <br><br><br>
+              <div class="row">
+                <div class="col-sm-4">
+                  <div id="ad-wrap1">
+                    <img id="ad-logo" src="<%= @company.logo_url %>">
+                    <div id="ad1-text">
+                      <%= story.success.results.take.description %>
+                    </div>
+                    <button type='button' id="ad-btn">Read Story</button>
+                    <img id="ad-powered" src="http://content.screencast.com/users/danlindblom/folders/Jing/media/2572803a-857a-40a8-b31a-e507bad0aa1b/00001977.png">
+                  </div> <br><br><br>
+                </div><!-- /.col -->
+                <div class="col-sm-8">
+                  <div id="ad-wrap2">
+                    <img id="ad-logo" src="<%= @company.logo_url %>"  />
+                    <div id="ad2-text">
+                      <%= story.success.results.take.description %>
+                    </div>
+                    <button type='button' id="ad-btn">Read Story</button>
+                    <img id="ad-powered" src="http://content.screencast.com/users/danlindblom/folders/Jing/media/2572803a-857a-40a8-b31a-e507bad0aa1b/00001977.png"  />
+                  </div> <br><br><br>
+                </div>
               </div>
 
-            </div>
+            <% end %>
 
           <% end %>
 
