@@ -23,6 +23,7 @@
               <thead>
                 <tr>
                   <th>Customer</th>
+                  <th>Curator</th>
                   <th>Title</th>
                   <th>Status</th>
                   <th>Publish Date</th>
@@ -36,6 +37,9 @@
                   <tr>
                     <td class='valign-middle'>
                       <%= story.success.customer.name %>
+                    </td>
+                    <td>
+                      <%= story.success.curator.full_name %>
                     </td>
                     <td class='valign-middle'>
                       <%= story.title %>

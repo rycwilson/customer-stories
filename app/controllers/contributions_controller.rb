@@ -86,7 +86,8 @@ class ContributionsController < ApplicationController
   end
 
   def request_contribution
-    if @contribution.success.curator.photo_url.present?
+    curator_missing_info = @contribution.success.curator.missing_info
+    if curator_missing_info.empty?
       UserMailer.request_contribution(@contribution).deliver_now
       if @contribution.update(   status:'request',
                               remind_at: Time.now + @contribution.remind_1_wait.days )
@@ -103,7 +104,8 @@ class ContributionsController < ApplicationController
       respond_to { |format| format.js }
     else
       @flash_status = "danger"
-      @flash_mesg = "Curator photo is missing"
+      @flash_mesg =
+        "Can't send email because the following Curator fields are missing: #{curator_missing_info.join(', ')}"
     end
   end
 

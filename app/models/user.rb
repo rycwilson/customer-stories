@@ -33,6 +33,16 @@ class User < ActiveRecord::Base
     self.first_name + " " + self.last_name
   end
 
+  def missing_info
+    missing = []
+    missing << "first name" unless self.first_name.present?
+    missing << "last name" unless self.last_name.present?
+    missing << "photo" unless self.photo_url.present?
+    missing << "phone" unless self.phone.present?
+    missing << "title" unless self.title.present?
+    missing
+  end
+
   # This is for users signing up via Oauth
   # Not presently using this, but may in the future
   # def self.create_from_omniauth auth
