@@ -50,12 +50,6 @@
         <div class="portlet-body"
             data-company-id="<%= @company.id %>">
 
-          <% if @story_tiles.blank? %>
-            <p class='lead'>Sorry, no stories!</p>
-          <% else %>
-            <p class='lead hidden'>Sorry, no stories!</p>
-          <% end %>
-
           <div id="stories-gallery">
             <% @story_tiles.each_slice(5) do |stories_row| %>
               <div class='container row' style='margin: 0 auto'>

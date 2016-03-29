@@ -186,10 +186,8 @@ function initListeners () {
         console.log('filtered stories: ', data);
         if (data.length === 0) {
           $('#stories-gallery').empty();
-          $('p.lead').removeClass('hidden');
         }
         else {
-          $('p.lead').addClass('hidden');
           var template = _.template($('#stories-template').html());
           $('#stories-gallery').empty().append(template({ stories: data }));
         }
