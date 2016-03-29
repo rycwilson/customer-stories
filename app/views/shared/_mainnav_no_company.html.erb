@@ -1,13 +1,11 @@
 <div class='mainnav' style='margin-bottom:0;'>
   <div class='container'>
 
-    <div class="navbar-header" style='padding-top:10px'>
+    <div class="navbar-header" style='font-size:14px; margin-top:1.1%; margin-bottom:1.1%'>
 
       <% if controller_name == 'profile' %>
-        <span style='font-size:14px'>
-          Are you a Customer Reference Program Manager?
-        </span>&nbsp;&nbsp;&nbsp;
-        <%= link_to 'Register your Company', new_company_path, class: 'btn btn-info vcenter' %>
+        <span>Are you a Customer Reference Program Manager?</span>&nbsp;&nbsp;
+        <%= link_to 'Register your Company', new_company_path, style:'font-family:Open Sans' %>
       <% end %>
 
       <a class="mainnav-toggle"
@@ -19,9 +17,7 @@
 
     <div class="collapse mainnav-collapse" role="navigation">
 
-
-
-      <ul class='nav nav-tabs mainnav-menu col-sm-6 pull-right'
+      <ul class='nav nav-tabs mainnav-menu col-sm-1 pull-right'
           role='tablist' style='border-bottom:0'>
 
         <li class="dropdown pull-right" style='margin-bottom:0'>

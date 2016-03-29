@@ -36,7 +36,7 @@ class Company < ActiveRecord::Base
     end
   end
 
-  def customers_select
+  def customers_select_options
     self.customers.map do |customer|
       # name will appear as a selection, while its id will be the value submitted
       [ customer.name, customer.id ]
@@ -44,32 +44,22 @@ class Company < ActiveRecord::Base
     .unshift( [""] )  # empty option makes placeholder possible (only needed for single select)
   end
 
-  def product_categories_select
+  def industries_select_options
+    self.industry_categories.map do |industry|
+      [ industry.name, industry.id ]
+    end
+  end
+
+  def product_categories_select_options
     self.product_categories.map do |category|
       [ category.name, category.id ]
     end
   end
 
-  def products_select
+  def products_select_options
     self.products.map do |product|
       [ product.name, product.id ]
     end
-  end
-
-  # company-specific categories (if any) listed first,
-  # followed by generic categories
-  def industries_select
-    self.industry_categories.map do |industry|
-      [ industry.name, industry.id ]
-    end
-      .concat(
-        INDUSTRIES.map do |category|
-          # value = the category itself (pass this through so a company
-          # category can be created based on the generic category)
-          [ category, category ]
-        end
-      )
-      .uniq { |industry| industry[0] }  # get rid of duplicates
   end
 
   # TODO: this method can likely be combined with the one above

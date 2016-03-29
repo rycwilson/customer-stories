@@ -244,36 +244,30 @@ function configMiniColors () {
   any others will be ignored
 */
 function configSelect2 () {
-
+  /*
+    Company tags are for maintaining a list of options for Story tagging
+    Thus, company tag select boxes should not show a list of options, because the
+    options are being created at this stage.  There is nothing to select
+    These listeners will dynamically change the max-height of the select box
+    (a static setting doesn't work for some reason)
+  */
   $('.company-tags').select2({
     theme: 'bootstrap',
     tags: true,
     placeholder: 'add tags'
   });
 
+  $('#company-profile').on('select2:open', function () {
+    $(".select2-container--bootstrap .select2-results > .select2-results__options").css('max-height', 0);
+  });
+
+  /*
+    Email templates
+  */
   $('.templates-select').select2({
     theme: 'bootstrap',
     placeholder: 'select a template ...'
   });
-
-  // Company tags are for maintaining a list of options for Story tagging
-  // Thus, company tag select boxes should not show a list of options, because the
-  //   options are being created at this stage.  There is nothing to select
-  // These listeners will dynamically change the max-height of the select box
-  // Industries select box not included since there will be some defaults to select from
-  $('#company-profile').on('select2:open', '#company_tags_product_category_', function () {
-    $(".select2-container--bootstrap .select2-results > .select2-results__options").css('max-height', 0);
-  });
-  $('#company-profile').on('select2:close', '#company_tags_product_category_', function () {
-    $(".select2-container--bootstrap .select2-results > .select2-results__options").css('max-height', '200px');
-  });
-  $('#company-profile').on('select2:open', '#company_tags_product_', function () {
-    $(".select2-container--bootstrap .select2-results > .select2-results__options").css('max-height', 0);
-  });
-  $('#company-profile').on('select2:close', '#company_tags_product_', function () {
-    $(".select2-container--bootstrap .select2-results > .select2-results__options").css('max-height', '200px');
-  });
-
 
   // has the curate tab content been rendered?
   //   (it may not have been if company not yet registered)

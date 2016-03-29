@@ -33,13 +33,13 @@ class StoriesController < ApplicationController
     @customer = @story.success.customer
     @contributions = @story.success.contributions
     @contributions_in_progress = Contribution.in_progress @story.success_id
-    @industries = @company.industries_select
+    @industries = @company.industries_select_options
     @industries_pre_select = @story.success.industry_categories
                                    .map { |category| category.id }
-    @product_categories = @company.product_categories_select
+    @product_categories = @company.product_categories_select_options
     @product_cats_pre_select = @story.success.product_categories
                                      .map { |category| category.id }
-    @products = @company.products_select
+    @products = @company.products_select_options
     @products_pre_select = @story.success.products
                                  .map { |category| category.id }
     @referrer_select = @story.success.contributions

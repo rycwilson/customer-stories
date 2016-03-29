@@ -51,11 +51,10 @@
                 <% if current_user.linkedin_url.present? %>
                   <h3> Account Profile </h3>
                 <% elsif current_user.company_id.blank? %>
-                  <span style='font-size:14px'>Want your LinkedIn profile to appear in a Customer Story?</span>&nbsp;&nbsp;&nbsp;
-                  <%= link_to "Connect to LinkedIn", "/auth/linkedin",
-                      class: 'btn btn-default',
-                      style: 'background-color: #2672ae; color: white' %>
-
+                  <span style='font-size:14px'>
+                    Want your LinkedIn profile to appear in a Customer Story?&nbsp;&nbsp;
+                    <%= link_to "Connect to LinkedIn", "/auth/linkedin" %>
+                  </span>
                 <% else %>
                   <%= link_to "Connect to LinkedIn", "/auth/linkedin",
                       class: 'btn btn-default',

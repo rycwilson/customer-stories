@@ -8,12 +8,6 @@ class CompaniesController < ApplicationController
   # GET /companies/new
   def new
     @company = Company.new
-    @industries = INDUSTRIES
-    @industries_pre_select = []
-    @product_categories = []
-    @product_cats_pre_select = []
-    @products = []
-    @products_pre_select = []
   end
 
   # GET /companies/:id
@@ -26,12 +20,12 @@ class CompaniesController < ApplicationController
       # TODO: what's the best balance of eager vs. lazy loading?
       # e.g. we're not eager loading products here...
       @company = Company.includes(:customers, :successes, :stories, :visitors).find params[:id]
-      @customers = @company.customers_select
-      @industries = @company.industries_select # multiple select
+      @customers = @company.customers_select_options
+      @industries = @company.industries_select_options
       # @industries_pre_select = @company.industry_categories.map { |category| category.id }
-      @product_categories = @company.product_categories_select # multiple select
+      @product_categories = @company.product_categories_select_options
       # @product_cats_pre_select = @company.product_categories.map { |category| category.id }
-      @products = @company.products_select # single select (for now)
+      @products = @company.products_select_options # single select (for now)
       # @products_pre_select = @company.products.map { |product| product.id }
     end
   end
@@ -39,11 +33,11 @@ class CompaniesController < ApplicationController
   def edit
     @company = Company.includes(:industry_categories, :product_categories,
                                 :products, :email_templates).find params[:id]
-    @industries = @company.industries_select # multiple select
-    @industries_pre_select = @company.industry_categories.map { |category| category.id }
-    @product_categories = @company.product_categories_select # multiple select
+    @industries = @company.industries_select_options
+    @industries_pre_select = @company.industry_categories.map { |industry| industry.id }
+    @product_categories = @company.product_categories_select_options
     @product_cats_pre_select = @company.product_categories.map { |category| category.id }
-    @products = @company.products_select # single select (for now)
+    @products = @company.products_select_options
     @products_pre_select = @company.products.map { |product| product.id }
     @templates_select = @company.templates_select
   end
@@ -62,12 +56,6 @@ class CompaniesController < ApplicationController
     else
       # validation(s): presence / uniqueness of name, presence of subdomain
       flash.now[:danger] = "Unable to register: #{@company.errors.full_messages.join(', ')}"
-      @industries = INDUSTRIES
-      @industries_pre_select = []
-      @product_categories = []
-      @product_cats_pre_select = []
-      @products = []
-      @products_pre_select = []
       render :new
     end
 
