@@ -62,15 +62,17 @@ class Company < ActiveRecord::Base
     end
   end
 
-  # TODO: this method can likely be combined with the one above
-  #   only difference is this one excludes generic industries
-  def industries_filter_select
-    industries = self.industries_select
-    # we don't want the generic industries, just the company's industries
-    # (a generic industry won't have a numeric id)
-    # TODO: expand this to exclude categories for which there are no stories?
-    industries.keep_if { |industry| industry[1].is_a? Numeric }
-    industries.unshift(['All', 'all'])
+  def industries_filter_select_options
+    # an array of success ids with logo_published == true
+    success_ids = self.successes
+                      .select { |s| s.story.present? && s.story.logo_published? }
+                      .map { |success| success.id }
+    filter_select_options =
+      IndustryCategory.joins(:industries_successes)
+                      .where(industries_successes: { success_id: success_ids })
+                      .uniq
+                      .map { |ic| [ ic.name, ic.id ] }
+    filter_select_options.unshift(['All', 'all'])
   end
 
   def templates_select

@@ -17,7 +17,7 @@ class StoriesController < ApplicationController
       else
         @story_tiles = @company.stories.where(logo_published: true)
       end
-      @industries = @company.industries_filter_select
+      @industries = @company.industries_filter_select_options
     end
   end
 
