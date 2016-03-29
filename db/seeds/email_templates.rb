@@ -56,7 +56,7 @@ module EmailTemplatesSeed
 <p> <a href='[contribution_url]'>Provide your input here</a> </p>
 <p>Please call or email if you have any questions. I’m confident you will be proud of the curated story and will want to share with your prospects and colleagues.</p>
 <p>Thank you,</p>
-<img id='curator-img' src='[curator_img_url]' style='width:100px' alt='curator-img'> <br>
+<img id='curator-img' src='[curator_img_url]' style='width:80px' alt='curator-img'> <br>
 [curator_full_name] <br>
 [curator_title] <br>
 [company_name] <br>
@@ -72,7 +72,7 @@ module EmailTemplatesSeed
 <p> <a href='[contribution_url]'>Provide your input here</a> </p>
 <p>Please call or email if you have any questions. I’m confident you will be proud of the curated story and will want to share with your prospects and colleagues.</p>
 <p>Thank you,</p>
-<img id='curator-img' src='[curator_img_url]' style='width:100px' alt='curator-img'> <br>
+<img id='curator-img' src='[curator_img_url]' style='width:80px' alt='curator-img'> <br>
 [curator_full_name] <br>
 [curator_title] <br>
 [company_name] <br>
@@ -88,7 +88,7 @@ module EmailTemplatesSeed
 <p> <a href='[contribution_url]'>Provide your input here</a> </p>
 <p>Please call or email if you have any questions. I’m confident you will be proud of the curated story and will want to share with your prospects and colleagues.</p>
 <p>Thank you,</p>
-<img id='curator-img' src='[curator_img_url]' style='width:100px' alt='curator-img'> <br>
+<img id='curator-img' src='[curator_img_url]' style='width:80px' alt='curator-img'> <br>
 [curator_full_name] <br>
 [curator_title] <br>
 [company_name] <br>
@@ -103,7 +103,7 @@ module EmailTemplatesSeed
 <p> <a href='[contribution_url]'>Provide your input here</a> </p>
 <p>Please call or email if you have any questions. I’m confident you will be proud of the curated story and will want to share with your prospects and colleagues.</p>
 <p>Thank you,</p>
-<img id='curator-img' src='[curator_img_url]' style='width:100px' alt='curator-img'> <br>
+<img id='curator-img' src='[curator_img_url]' style='width:80px' alt='curator-img'> <br>
 [curator_full_name] <br>
 [curator_title] <br>
 [company_name] <br>
@@ -119,7 +119,7 @@ module EmailTemplatesSeed
 <p> <a href='[contribution_url]'>Provide your input here</a> </p>
 <p>Please call or email if you have any questions. I’m confident you will be proud of the curated story and will want to share with your prospects and colleagues.</p>
 <p>Thank you,</p>
-<img id='curator-img' src='[curator_img_url]' style='width:100px' alt='curator-img'> <br>
+<img id='curator-img' src='[curator_img_url]' style='width:80px' alt='curator-img'> <br>
 [curator_full_name] <br>
 [curator_title] <br>
 [company_name] <br>
@@ -135,7 +135,7 @@ module EmailTemplatesSeed
 <p> <a href='[contribution_url]'>Provide your input here</a> </p>
 <p>Please call or email if you have any questions. I’m confident you will be proud of the curated story and will want to share with your prospects and colleagues.</p>
 <p>Thank you,</p>
-<img id='curator-img' src='[curator_img_url]' style='width:100px' alt='curator-img'> <br>
+<img id='curator-img' src='[curator_img_url]' style='width:80px' alt='curator-img'> <br>
 [curator_full_name] <br>
 [curator_title] <br>
 [company_name] <br>
