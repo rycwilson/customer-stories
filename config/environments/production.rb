@@ -2,12 +2,12 @@ Rails.application.configure do
 
   config.log_level = :debug
 
+  # restrict access to staging site
   if ENV['HOST_NAME'] == 'customerstories.org'
     Rails.application.configure do
       config.middleware.insert_after(::Rack::Runtime, "::Rack::Auth::Basic", "Staging") do |u, p|
-        [u, p] == ['username', 'password']
+        [u, p] == ['csp', 'csp-stag!ng']
       end
-    #... other config
     end
   end
 
