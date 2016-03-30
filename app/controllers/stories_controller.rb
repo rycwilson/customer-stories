@@ -6,17 +6,18 @@ class StoriesController < ApplicationController
   before_action :set_s3_direct_post, only: [:edit]
 
   def index
-    if @company.feature_flag == 'alpha'
-      @story_tiles = @industries = []
-    elsif params[:filter]  # ajax GET request
-      @stories = @company.filter_stories(params[:filter][:type], params[:filter][:id])
+    if params[:filter]
+      @stories = @company.filter_stories params[:filter][:type], params[:filter][:id]
       respond_to { |format| format.json { render json: @stories } }
+    elsif curator?
+      @story_tiles = @company.stories  # all
+      @industries = @company.industries_select_options  # all
+    elsif @company.feature_flag == 'alpha'
+      redirect_to request.protocol + request.domain + request.port_string
     else
-      if user_signed_in? && current_user.company_id == @company.id
-        @story_tiles = @company.stories
-      else
-        @story_tiles = @company.stories.where(logo_published: true)
-      end
+      @story_tiles = @company.stories.where(logo_published: true)
+      # select options populated only with industries that are connected
+      # to a story with logo published ...
       @industries = @company.industries_filter_select_options
     end
   end
