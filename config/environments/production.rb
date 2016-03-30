@@ -2,6 +2,15 @@ Rails.application.configure do
 
   config.log_level = :debug
 
+  if ENV['HOST_NAME'] == 'customerstories.org'
+    MyApp::Application.configure do
+      config.middleware.insert_after(::Rack::Runtime, "::Rack::Auth::Basic", "Staging") do |u, p|
+        [u, p] == ['username', 'password']
+      end
+    #... other config
+    end
+  end
+
   # Settings specified here will take precedence over those in config/application.rb.
 
   # moved from session_store.rb
