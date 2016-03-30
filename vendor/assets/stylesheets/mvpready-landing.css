@@ -838,7 +838,7 @@ fieldset[disabled] .btn-transparent.active {
   background-color: #fff;
   border-bottom-width: 1px;
   vertical-align: middle;
-  font-family: 'Oswald', 'Trebuchet MS', 'Open Sans', arial, sans-serif;
+  font-family: 'Lato', 'Trebuchet MS', 'Open Sans', arial, sans-serif;
   font-weight: 600;
   font-size: 14px;
 }
@@ -2321,9 +2321,9 @@ ul.blog-stats > li > a:hover .blog-stats-mark {
 }
 .feature-sm {
   position: relative;
-  padding: 0 10px;
+  padding: 0 10px 0 10px;
   margin-bottom: 30px;
-  padding-left: 60px;
+  /*padding-left: 60px; csp remove */
   /*csp add*/
   font-size: 20px;
 }
@@ -2897,7 +2897,7 @@ br.xs-100 {
   font-size: 17px;
   font-weight: 500;
   text-transform: uppercase;
-  font-family: 'Oswald', 'Trebuchet MS', 'Open Sans', arial, sans-serif;
+  font-family: 'Lato', 'Trebuchet MS', 'Open Sans', arial, sans-serif;
   background: transparent;
   border: none;
 }
@@ -3127,7 +3127,7 @@ h6.masthead-title {
 }
 .home-section:first-child,
 .content-feature:first-child {
-  padding-top: 35px;
+  padding-top: 75px;
   margin-top: -40px;
   border-top: none;
 }
@@ -3149,7 +3149,7 @@ h6.masthead-title {
   }
   .home-section:first-child,
   .content-feature:first-child {
-    padding-top: 40px;
+    padding-top: 75px;
   }
 }
 .footer {
@@ -3159,10 +3159,10 @@ h6.masthead-title {
   background: #85CEE6;
 }
 .footer a {
-  color: #93acc2;
+  color: #4D5861;
 }
 .footer a:hover {
-  color: #b3c5d4;
+  color: #23527c;  /* matches bootstrap */
 }
 .footer .heading-block h1,
 .footer .heading-block h2,
