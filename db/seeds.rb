@@ -19,7 +19,7 @@ STATUS_OPTIONS = ['pre_request', 'request', 'remind1', 'remind2', 'feedback', 'c
 # dan = User.create(first_name:'Dan', last_name:'Lindblom', email:'***REMOVED***', linkedin_url:'https://www.linkedin.com/in/danlindblom', sign_up_code:'csp_beta', password:'password', photo_url: 'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/0e2caaaf-d808-4279-b7ca-9929cfc6400c/dan.png')
 # ryan = User.create(first_name:'Ryan', last_name:'Wilson', email:'***REMOVED***', linkedin_url:'https://www.linkedin.com/in/wilsonryanc', sign_up_code:'csp_beta', password:'password', photo_url: 'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/099b59d3-1f35-4d8b-9183-a162a80bfbac/ryan.png')
 # curators = [dan, ryan]
-cisco = Company.find_by(name:'Cisco Systems')
+# cisco = Company.find_by(name:'Cisco Systems')
 # cisco = Company.create(name:'Cisco Systems', subdomain:'cisco', feature_flag:'demo',
 #                    logo_url: 'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/6326ee57-e0e0-4a0b-aacb-9b59849f2c40/cisco-grey@2x.png',
 #                    nav_color_1: '#007fc5', nav_color_2: '#2B5693' , nav_text_color: '#FCFCFD')
@@ -74,7 +74,7 @@ csp.email_templates << EmailTemplate.create(name: "Sales - initial contribution 
 csp.email_templates << EmailTemplate.create(name: "Sales - first contribution reminder", subject: EmailTemplatesSeed::SALES_REMIND1_SUBJECT, body: EmailTemplatesSeed::SALES_REMIND1_BODY)
 csp.email_templates << EmailTemplate.create(name: "Sales - second contribution reminder", subject: EmailTemplatesSeed::SALES_REMIND2_SUBJECT, body: EmailTemplatesSeed::SALES_REMIND2_BODY)
 
-cisco.create_email_templates
+# cisco.create_email_templates
 
 # # Customers and Stories...
 # DemoCustomersSeed::DEMO_CUSTOMERS.each do |customer_info|
