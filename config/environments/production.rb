@@ -4,10 +4,8 @@ Rails.application.configure do
 
   # restrict access to staging site
   if ENV['HOST_NAME'] == 'customerstories.org'
-    Rails.application.configure do
-      config.middleware.insert_after(::Rack::Runtime, "::Rack::Auth::Basic", "Staging") do |u, p|
-        [u, p] == ['csp', 'csp-stag!ng']
-      end
+    config.middleware.insert_after(::Rack::Runtime, "::Rack::Auth::Basic", "Staging") do |u, p|
+      [u, p] == ['csp', 'csp-stag!ng']
     end
   end
 
