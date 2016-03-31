@@ -34,7 +34,7 @@ ActiveRecord::Schema.define(version: 20160324162720) do
   end
 
   add_index "admins", ["email"], name: "index_admins_on_email", unique: true, using: :btree
-  add_index "admins", ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true, using: :btree
+  # add_index "admins", ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true, using: :btree
 
   create_table "companies", force: :cascade do |t|
     t.string   "name"
@@ -251,7 +251,7 @@ ActiveRecord::Schema.define(version: 20160324162720) do
 
   add_index "users", ["company_id"], name: "index_users_on_company_id", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+  # add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   # add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
 
   create_table "visitors", force: :cascade do |t|
