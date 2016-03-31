@@ -17,6 +17,28 @@
  *= require bootstrap-sass/assets/stylesheets/_bootstrap
  */
 
+
+
+/********** curate table **************/
+.td-story-date {
+  width: 12%;
+}
+.td-story-status {
+  width: 15%;
+}
+.td-story-actions {
+  width: 10%;
+}
+// this will stretch the table cell to fit content
+// (don't want to wrap a customer or curator name)
+.td-story-curator,
+.td-story-customer {
+  width:1%;
+  white-space:nowrap;
+}
+/***************************************/
+
+
 /********** admin navbar **************/
 
 .navbar-brand-img {
