@@ -37,7 +37,7 @@ cg = Company.create(name:'Compas Global', subdomain:'compas',
 # csp = Company.find_by(name:'CSP')
 csp = Company.create(name:'CSP', subdomain:'csp',
                 logo_url:"https://s3-us-west-1.amazonaws.com/csp-production-assets/cs_logo.png",
-                nav_color_1:"#FBFBFB", nav_color_2:"#85CEE6", nav_color_3:"#333333")
+                nav_color_1:"#FBFBFB", nav_color_2:"#85CEE6", nav_text_color:"#333333")
 csp.users << dan << ryan
 
 # destroy contributions first so deleted users don't orphan contributions (violates foreign key costraint)
