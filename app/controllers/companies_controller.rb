@@ -22,11 +22,8 @@ class CompaniesController < ApplicationController
       @company = Company.includes(:customers, :successes, :stories, :visitors).find params[:id]
       @customers = @company.customers_select_options
       @industries = @company.industries_select_options
-      # @industries_pre_select = @company.industry_categories.map { |category| category.id }
       @product_categories = @company.product_categories_select_options
-      # @product_cats_pre_select = @company.product_categories.map { |category| category.id }
-      @products = @company.products_select_options # single select (for now)
-      # @products_pre_select = @company.products.map { |product| product.id }
+      @products = @company.products_select_options
     end
   end
 
