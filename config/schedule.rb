@@ -17,11 +17,8 @@ set :output, "#{Rails.root}/log/cron.log"
 set :environment, "#{Rails.env}"
 set :job_template, "zsh -l -c ':job'"
 
-every :day, at: '7:00 am' do
-
-  # runner 'Contribution.send_reminders'
+every :day, at: '7:00am' do
   rake 'email:send_contribution_reminders'
-
 end
 
 # The env method is appending this PATH varaible to the crontab:

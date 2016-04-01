@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160324162720) do
+ActiveRecord::Schema.define(version: 20160331221350) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,7 +34,7 @@ ActiveRecord::Schema.define(version: 20160324162720) do
   end
 
   add_index "admins", ["email"], name: "index_admins_on_email", unique: true, using: :btree
-  # add_index "admins", ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true, using: :btree
+  add_index "admins", ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true, using: :btree
 
   create_table "companies", force: :cascade do |t|
     t.string   "name"
@@ -82,6 +82,17 @@ ActiveRecord::Schema.define(version: 20160324162720) do
   end
 
   add_index "customers", ["company_id"], name: "index_customers_on_company_id", using: :btree
+
+  create_table "email_contribution_requests", force: :cascade do |t|
+    t.integer  "contribution_id"
+    t.string   "name"
+    t.string   "subject"
+    t.string   "body"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "email_contribution_requests", ["contribution_id"], name: "index_email_contribution_requests_on_contribution_id", using: :btree
 
   create_table "email_templates", force: :cascade do |t|
     t.string   "name"
@@ -251,8 +262,8 @@ ActiveRecord::Schema.define(version: 20160324162720) do
 
   add_index "users", ["company_id"], name: "index_users_on_company_id", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-  # add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
-  # add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
+  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
+  add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
 
   create_table "visitors", force: :cascade do |t|
     t.string   "organization"
@@ -268,6 +279,7 @@ ActiveRecord::Schema.define(version: 20160324162720) do
   add_foreign_key "contributions", "successes"
   add_foreign_key "contributions", "users"
   add_foreign_key "customers", "companies"
+  add_foreign_key "email_contribution_requests", "contributions"
   add_foreign_key "email_templates", "companies"
   add_foreign_key "industries_successes", "industry_categories"
   add_foreign_key "industries_successes", "successes"

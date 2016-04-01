@@ -3,6 +3,7 @@ class Contribution < ActiveRecord::Base
   belongs_to :contributor, class_name: 'User', foreign_key: 'user_id'
   belongs_to :referrer, class_name: 'User', foreign_key: 'referrer_id'
   belongs_to :success
+  has_one :email_contribution_request, dependent: :destroy
 
   validates :contribution, presence: true,
                 if: Proc.new { |contribution| contribution.status == 'contribution'}
@@ -19,10 +20,10 @@ class Contribution < ActiveRecord::Base
   def self.send_reminders
     # logs to log/cron.log in development environment (output set in schedule.rb)
     # TODO: log in production environment
-    puts "sending reminders - #{Time.now.strftime('%-m/%-d/%y at %I:%M %P')}"
+    # logger.info "sending reminders - #{Time.now.strftime('%-m/%-d/%y at %I:%M %P')}"
     Contribution.where("status IN ('request', 'remind1', 'remind2')")
                 .each do |contribution|
-      puts "processing contribution #{contribution.id} with status #{contribution.status}"
+      # puts "processing contribution #{contribution.id} with status #{contribution.status}"
       if contribution.remind_at.past?
         unless contribution.status == 'remind2'
           UserMailer.contribution_reminder(contribution).deliver_now
@@ -30,20 +31,20 @@ class Contribution < ActiveRecord::Base
         if contribution.status == 'request'
           new_status = 'remind1'
           new_remind_at = Time.now + contribution.remind_2_wait.days
-          puts "first reminder sent, new remind_at: #{new_remind_at.strftime('%-m/%-d/%y at %I:%M %P')} UTC"
+          # puts "first reminder sent, new remind_at: #{new_remind_at.strftime('%-m/%-d/%y at %I:%M %P')} UTC"
         elsif contribution.status == 'remind1'
           new_status = 'remind2'
           # no more reminders, but need to trigger when to change status to 'did_not_respond'
-          new_remind_at = Time.now + contribution.remind_2_wait.days  # no more reminders
-          puts "second reminder sent, new remind_at (status to did_not_respond): #{new_remind_at.strftime('%-m/%-d/%y at %I:%M %P')} UTC"
+          new_remind_at = Time.now + contribution.remind_2_wait.days
+          # puts "second reminder sent, new remind_at (status to did_not_respond): #{new_remind_at.strftime('%-m/%-d/%y at %I:%M %P')} UTC"
         else
           new_status = 'did_not_respond'
           new_remind_at = nil
-          puts "no more reminders, did not respond"
+          # puts "no more reminders, did not respond"
         end
         contribution.update(status: new_status, remind_at: new_remind_at)
       end
-      puts "status for #{contribution.id} is now #{contribution.status}"
+      # puts "status for #{contribution.id} is now #{contribution.status}"
     end
   end
 
