@@ -7,9 +7,9 @@
       <!-- <hr class="spacer-sm"> -->
       <div class="row text-center masthead-text animated fadeInDownBig"
           style='margin-top:15px'>
-        <% if request.path == '/users/sign_up' %>
+        <% if request.path == '/users/sign_up' || request.path == '/users' %>
           <h6 class="masthead-title">
-            Customer Stories is in beta.  For more information please <a href="mailto:info@customerstories.net" class="btn btn-primary">Contact Us</a>
+            Customer Stories is in beta.  For more information please <a href="mailto:info@customerstories.net">contact us.</a>
           </h6>
         <% end %>
       </div>
@@ -22,9 +22,9 @@
       <div class="account-wrapper">
         <div class="account-body">
 
-          <% if request.path == '/users/sign_up' %>
+          <% if request.path == '/users/sign_up' || request.path == '/users' %>
             <h3 style='margin-bottom:5px'>Get Started with a Free Account.</h3>
-          <% else %>
+          <% elsif request.path == '/admins/sign_up' || request.path == '/admins' %>
             <h3 style='margin-bottom:5px'>Admin Registration</h3>
           <% end %>
 
@@ -84,7 +84,7 @@
                   </div>
                 </div> -->
 
-              <% if request.path == '/users/sign_up' %>
+              <% if request.path == '/users/sign_up' || request.path == '/users' %>
                 <div class="form-group" style='margin-bottom:5px'>
                   <%= f.label :sign_up_code, class: 'control-label col-md-3' %>
                   <div class='col-md-9'>
@@ -92,7 +92,7 @@
                         id: 'sign_up_code', tabindex: '5' } %>
                   </div>
                 </div>
-              <% else %>
+              <% elsif request.path == '/admins/sign_up' || request.path == '/admins' %>
                 <div class="form-group" style='margin-bottom:5px'>
                   <%= f.label :admin_access_code, "Admin code", class: 'control-label col-md-3' %>
                   <div class='col-md-9'>
@@ -144,7 +144,7 @@
     </div> <!-- /.container -->
   </div> <!-- /.content -->
 
-  <% if request.path == '/users/sign_up' %>
+  <% if request.path == '/users/sign_up' || request.path == '/users' %>
     <%= render 'shared/csp_landing_footer' %>
   <% end %>
 
