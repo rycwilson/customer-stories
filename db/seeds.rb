@@ -50,7 +50,7 @@ cisco.users << dan << ryan
 #                 nav_color_1:'#f7f7f7' ,nav_color_2:'#ebebeb', nav_text_color:"#e55f53")
 # cg.users << User.create(email:'compas@customerstories.net', first_name:'Dan', last_name:'Lindblom', sign_up_code:'csp_beta', password:'password')
 
-# csp = Company.find_by(name:'CSP')
+csp = Company.find_by(name:'CSP')
 # csp = Company.create(name:'CSP', subdomain:'csp',
 #                 logo_url:"https://s3-us-west-1.amazonaws.com/csp-production-assets/cs_logo.png",
 #                 nav_color_1:"#FBFBFB", nav_color_2:"#85CEE6", nav_text_color:"#333333")
