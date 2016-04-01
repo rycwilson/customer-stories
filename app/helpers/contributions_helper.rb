@@ -1,20 +1,19 @@
 module ContributionsHelper
 
-  def contribution_status status
-    label = "Status:&nbsp&nbsp"
-    case status
+  def contribution_status contribution
+    case contribution[:status]
       when 'request'
-        return label + "Request sent"
+        return "request sent #{(contribution[:remind_at] - contribution[:remind_1_wait].days).strftime('%-m/%-d/%y')}"
       when 'remind1'
-        return label + "First reminder sent"
+        return "first reminder sent #{(contribution[:remind_at] - contribution[:remind_2_wait].days).strftime('%-m/%-d/%y')}"
       when 'remind2'
-        return label + "Second reminder sent"
+        return "second reminder sent #{(contribution[:remind_at] - contribution[:remind_2_wait].days).strftime('%-m/%-d/%y')}"
       when 'did_not_respond'
-        return label + "Did not respond"
+        return "did not respond"
       when 'unsubscribe'
-        return label + "Unsubscribed from this story"
+        return "unsubscribed from story"
       when 'opt_out'
-        return label + "Opted out of CSP emails"
+        return "opted out of all emails"
     end
   end
 

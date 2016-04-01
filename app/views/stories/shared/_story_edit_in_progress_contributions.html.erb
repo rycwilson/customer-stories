@@ -50,10 +50,11 @@
               <div class="accordion-inner">
                 <hr>
 
-                Role:&nbsp;&nbsp;<%= contribution_hash[:role] %> <br style='line-height:20px'>
-                Referred by:&nbsp;&nbsp;<%= contribution_hash[:referrer] || "n/a" %> <br style='line-height:20px'>
-                Status:&nbsp;&nbsp;<%= contribution_hash[:status] %> <br style='line-height:20px'>
-                Notes: <br style='line-height:20px'>
+                Role:&nbsp;&nbsp;<%= contribution_hash[:role] %> <br>
+                Referred by:&nbsp;&nbsp;<%= contribution_hash[:referrer] || "n/a" %> <br>
+                Status:&nbsp;&nbsp;
+                  <%= contribution_status(contribution_hash) %> <br>
+                Notes: <br>
 
                 <div class="row">
 

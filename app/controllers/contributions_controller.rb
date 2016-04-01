@@ -91,7 +91,6 @@ class ContributionsController < ApplicationController
       UserMailer.request_contribution(@contribution).deliver_now
       if @contribution.update(   status:'request',
                               remind_at: Time.now + @contribution.remind_1_wait.days )
-        # @contribution_status = contribution_status @contribution.status # view helper
         @contributions_in_progress = Contribution.in_progress @contribution.success_id
         @flash_status = "info"
         @flash_mesg =

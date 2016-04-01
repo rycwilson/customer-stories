@@ -76,7 +76,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # end
 
   # The path used after sign up.
-  # TODO: If user must confirm via email, what's the point of this?
   # def after_sign_up_path_for(resource)
   #   # a page to direct them to check their email
   # end

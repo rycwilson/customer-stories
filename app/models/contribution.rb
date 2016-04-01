@@ -98,7 +98,10 @@ class Contribution < ActiveRecord::Base
                     referrer: contribution.referrer.try(:full_name),
                     notes: contribution.notes,
                     token: contribution.access_token,
-                    status: contribution.status
+                    status: contribution.status,
+                    remind_at: contribution.remind_at,
+                    remind_1_wait: contribution.remind_1_wait,
+                    remind_2_wait: contribution.remind_2_wait
                   }
                 end
   end
