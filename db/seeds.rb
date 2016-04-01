@@ -98,7 +98,7 @@ csp.email_templates << EmailTemplate.create(name: "Sales", subject: EmailTemplat
 Company.where.not(name:'CSP').each { |c| c.create_email_templates }
 
 
-Customers and Stories...
+# Customers and Stories...
 DemoCustomersSeed::DEMO_CUSTOMERS.each do |customer_info|
   customer = Customer.create(name: customer_info[:name], logo_url: customer_info[:logo])
   cisco.customers << customer
