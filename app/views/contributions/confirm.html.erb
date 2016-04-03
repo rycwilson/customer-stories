@@ -6,17 +6,17 @@
     <div class='row'>
       <div class="col-xs-12">
         <% if @contribution.status == 'contribution' %>
-          <h3>Your contribution has been submitted. Thanks again!</h3>
+          <h3>Thank you for submitting your contribution.</h3>
         <% else %>
-          <h3>Your feedback has been submitted.</h3>
+          <h3>Thank you for submitting your feedback.</h3>
         <% end %>
       </div>
     </div> <br>
 
     <% if @contribution.status == 'contribution' %>
-      <p>We will contact you when the success story is published. At that time you may review the story and confirm whether you would like to include your LinkedIn profile.</p>
+      <p>Once finished, we will notify you via email how to add the success story to you Linkedin profile.</p>
     <% else %>
-      <p>We're sorry to hear you can't contribute to the success story. Thanks for taking the time to let us know why.</p>
+      <p>Once we review your feedback, we may reach out to try and address any issues.</p>
     <% end %>
 
     <br><br>
