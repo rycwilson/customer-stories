@@ -61,7 +61,7 @@
       <%= f.label 'Publish Story', class: 'col-sm-6 control-label' %>
       <% if @company.feature_flag == 'alpha' %>
         <div class="col-sm-6 text-left tooltip-wrapper-publish"
-            data-title="This feature is currently disabled"
+            data-title="Coming soon"
             style='padding-left:0; display:inline-block' disabled>
           <%= f.check_box :published,
                 class: "bs-switch form-control", id: 'publish-story-checkbox',
@@ -78,7 +78,7 @@
       <%= f.label 'Publish Logo', class: 'col-sm-6 control-label' %>
       <% if @company.feature_flag == 'alpha' %>
         <div class="col-sm-6 text-left tooltip-wrapper-publish"
-            data-title="This feature is currently disabled"
+            data-title="Coming soon"
             style='padding-left:0; display:inline-block' disabled>
           <%= f.check_box :logo_published,
                 class: "bs-switch form-control", id: 'publish-logo-checkbox',
