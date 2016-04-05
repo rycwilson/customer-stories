@@ -9,6 +9,7 @@
     "bootstrap-sass": "~> 3.3.5",
     "bootstrap-switch": "latest",
     "responsive-toolkit": "latest",
+    "jquery.inputmask": "~3.2.7",
     "fontawesome": "~4.4.0",
     "flot": "~0.8.3",
     "flot.tooltip": "~0.8.5",

@@ -9,6 +9,7 @@ asset 'select2', '~4.0.0'
 asset 'bootstrap-sass', '~> 3.3.5'
 asset 'bootstrap-switch'
 asset 'responsive-toolkit'
+asset 'jquery.inputmask', '~3.2.7'
 
 # dependencies for MVP theme
 asset 'fontawesome', '~4.4.0'

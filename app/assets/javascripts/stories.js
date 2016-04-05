@@ -3,16 +3,21 @@
 //= require bootstrap-switch/dist/js/bootstrap-switch
 //= require select2/dist/js/select2
 //= require best_in_place
-//= require bootstrap-jasny/js/fileinput.js
-//= require dirtyFields/jquery.dirtyFields.js
+//= require bootstrap-jasny/js/fileinput
+//= require dirtyFields/jquery.dirtyFields
 
 // for best-in-place validation errors...
 //= require best_in_place.purr
 //= require jquery.purr
 
 // AWS S3 upload
-//= require jquery-ui/ui/widget.js
+//= require jquery-ui/ui/widget
 //= require jquery-file-upload/js/jquery.fileupload
+
+//= require jquery.inputmask/dist/inputmask/inputmask
+//= require jquery.inputmask/dist/inputmask/inputmask.phone.extensions
+//= require jquery.inputmask/dist/inputmask/jquery.inputmask
+
 
 var ready = function () {
 
@@ -295,6 +300,8 @@ function configPlugins () {
     theme: 'bootstrap',
     placeholder: 'Who referred you to this contributor?'
   });
+
+  $("input[type='tel']").inputmask("999-999-9999");
 
   /*
     dirtyFields() plugin will apply .dirtyField class to label on input change

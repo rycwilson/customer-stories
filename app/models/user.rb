@@ -7,6 +7,7 @@ class User < ActiveRecord::Base
   belongs_to :company
   validates :first_name, presence: true
   validates :last_name, presence: true
+  validates :phone, format: { without: /_/ }
 
   # a User can have his own contribution(s) (i.e. he is contributor),
   # or he can be the Referrer for contribution(s)

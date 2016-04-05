@@ -25,13 +25,6 @@
             </div>
           </div>
 
-          <div class='form-group required-input'>
-            <%= label_tag 'Email', nil, class: 'col-md-3 control-label' %>
-            <div class='col-md-9'>
-              <%= email_field_tag 'contributor[email]', nil, class: 'form-control' %>
-            </div>
-          </div>
-
           <div class="form-group required-input">
             <%= label_tag 'Role', nil, class: 'col-md-3 control-label' %>
             <div class='col-md-9'>
@@ -41,6 +34,20 @@
                                        ['Sales', 'sales'] ]),
                   { class: 'new-contributor-role form-control',
                     style: 'width:100%' } %>
+            </div>
+          </div>
+
+          <div class='form-group required-input'>
+            <%= label_tag 'Email', nil, class: 'col-md-3 control-label' %>
+            <div class='col-md-9'>
+              <%= email_field_tag 'contributor[email]', nil, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class='form-group'>
+            <%= label_tag 'Phone', nil, class: 'col-md-3 control-label' %>
+            <div class='col-md-9'>
+              <%= telephone_field_tag 'contributor[phone]', nil, class: 'form-control' %>
             </div>
           </div>
 

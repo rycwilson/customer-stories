@@ -29,9 +29,11 @@ class ContributionsController < ApplicationController
   def create
     story = Story.find params[:id]
     existing_user = User.find_by email: params[:contributor][:email]
-    contributor = existing_user || create_contributor(params[:contributor])
-    if contributor.save
-      contribution = new_contribution(story.success.id, contributor.id, params)
+    contributor = existing_user || new_user(params[:contributor])
+    # existing user gets a phone number if he doesn't have one already ...
+    contributor.phone = params[:contributor][:phone] if params[:contributor][:phone].present?
+    if !contributor.changed? || contributor.save  # don't save if not necessary
+      contribution = new_contribution story.success.id, contributor.id, params
       if contribution.save
         # respond with all pre-request contributions, most recent additions first
         # all contributors needed to populate referrer select box
@@ -46,11 +48,10 @@ class ContributionsController < ApplicationController
       end
     else
       @flash_status = "danger"
-      # leave out the last message, as it will refer to password being blank
       @flash_mesg = contributor.errors
                                .full_messages
                                .delete_if do |message|
-                                  message == contributor.errors.full_messages.last
+                                  message == "Password can't be blank"
                                 end
                                .join(', ')
       respond_to { |format| format.js }
@@ -146,12 +147,13 @@ class ContributionsController < ApplicationController
     end
   end
 
-  def create_contributor contributor
-    User.new(first_name: contributor[:first_name],
-              last_name: contributor[:last_name],
-                  email: contributor[:email],
+  def new_user contributor_params
+    User.new(first_name: contributor_params[:first_name],
+              last_name: contributor_params[:last_name],
+                  email: contributor_params[:email],
+                  phone: contributor_params[:phone],
              # password is necessary, so just set it to the email
-               password: contributor[:email],
+               password: contributor_params[:email],
            sign_up_code: 'csp_beta')
     # Note - skipping confirmation means the user can log in
     #   with these credentials
