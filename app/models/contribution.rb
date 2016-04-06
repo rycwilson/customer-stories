@@ -48,27 +48,10 @@ class Contribution < ActiveRecord::Base
     end
   end
 
-  #
-  # this method extracts the necessary combination of contribution,
-  # contributor, and referrer data for new contribution AJAX response
-  #
   def self.pre_request success_id
-    Contribution.where(success_id: success_id, status: 'pre_request')
-          .order(created_at: :desc)
-          .map do |contribution|
-            {
-              id: contribution.id,
-              contributor_id: contribution.contributor.id,
-              contributor_full_name: contribution.contributor.full_name,
-              contributor_email: contribution.contributor.email,
-              customer_name: contribution.success.customer.name,
-              role: contribution.role,
-              referrer: contribution.referrer.try(:full_name),
-              notes: contribution.notes,
-              token: contribution.access_token,
-              created_at: contribution.created_at.strftime('%-m/%-d/%Y')
-            }
-          end
+    Contribution.includes(:contributor, :referrer)
+                .where("success_id = ? AND status = ?", success_id, "pre_request")
+                .order(created_at: :desc)  # most recent first
   end
 
   #
@@ -76,10 +59,10 @@ class Contribution < ActiveRecord::Base
   # sort oldest to newest (according to status)
   #
   def self.in_progress success_id
-    status_options = ['opt_out', 'unsubscribe', 'did_not_respond', 'remind2', 'remind1', 'request']
-    Contribution.where(success_id: success_id)
-                .select { |contribution| status_options.include? contribution.status }
-                .sort do |a,b|  # according to
+    status_options = ['opt_out', 'unsubscribe', 'remind2', 'remind1', 'request']
+    Contribution.includes(:contributor, :referrer)
+                .where("success_id = ? AND status IN (?)", success_id, status_options)
+                .sort do |a,b|  # sorts as per order of status_options
                   if status_options.index(a.status) < status_options.index(b.status)
                     -1
                   elsif status_options.index(a.status) > status_options.index(b.status)
@@ -87,23 +70,23 @@ class Contribution < ActiveRecord::Base
                   else 0
                   end
                 end
-                .map do |contribution|
-                  {
-                    id: contribution.id,
-                    contributor_id: contribution.contributor.id,
-                    contributor_full_name: contribution.contributor.full_name,
-                    contributor_email: contribution.contributor.email,
-                    customer_name: contribution.success.customer.name,
-                    role: contribution.role,
-                    referrer: contribution.referrer.try(:full_name),
-                    notes: contribution.notes,
-                    token: contribution.access_token,
-                    status: contribution.status,
-                    remind_at: contribution.remind_at,
-                    remind_1_wait: contribution.remind_1_wait,
-                    remind_2_wait: contribution.remind_2_wait
-                  }
-                end
+  end
+
+  def self.next_steps success_id
+    status_options = ['feedback', 'did_not_respond']
+    Contribution.includes(:contributor, :referrer)
+                .where("success_id = ? AND status IN (?)", success_id, status_options)
+  end
+
+  def self.contributors success_id
+    Contribution.includes(:contributor, :referrer)
+                .where(status:'contribution')
+  end
+
+  def self.connections success_id
+    Contribution.includes(:contributor, :referrer)
+                .where("success_id = ? AND (status = ? OR notes IS NOT NULL)",
+                          success_id, "contribution")
   end
 
   #

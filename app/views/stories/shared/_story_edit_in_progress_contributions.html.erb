@@ -1,84 +1,16 @@
 
 <div class="tab-pane fade" id="in-progress">
 
-  <div class="heading-block">
-    <h4>Contributions in Progress</h4>
-  </div> <!-- /.heading-block -->
-
   <div id='in-progress-contributors'>
 
-    <% @contributions_in_progress.each_with_index do |contribution_hash, index| %>
+    <% if @contributions_in_progress.empty? %>
+      <p class="lead text-center" style='margin-top:2.8%'>None currently</p>
+    <% end %>
 
-    <!-- NOTE: @contributions_in_progress is an array of hashes, NOT active record objects
-    it's been filtered from an array of AR objects in order to combine it with contributor data
-    below, we create a temporary model because this is what the best-in-place input
-    for contribution notes is expecting -->
-    <% contribution = Contribution.new(notes: contribution_hash[:notes]) %>
+    <% @contributions_in_progress.each_with_index do |contribution, index| %>
 
-      <!-- note the hash notation -->
-      <div class="well contribution-card accordion"
-          id="in-progress-accordian-<%= index %>"
-
-          data-contribution-id="<%= contribution_hash[:id] %>">
-
-        <div class="row">
-          <div class='col-sm-7'>
-            <%= contribution_hash[:contributor_full_name] %> <br>
-            <%= contribution_hash[:contributor_email] %>
-          </div>
-          <div class="col-sm-5 text-right">
-
-            <a class="accordion-toggle" data-toggle="collapse"
-               data-parent="#in-progress-accordion-<%= index %>"
-               href="#collapse-in-progress-info-<%= index %>" tabindex='-1'>
-              <span class='glyphicon glyphicon-info-sign bip-clickable'></span></a>
-
-            <a target="_blank" tabindex='-1' href="http://google.com/search?q=
-              <%= contribution_hash[:role] == 'customer' ?
-                  research_user_query_string(contribution_hash[:contributor_id],
-                    @story.success.customer.name) :
-                  research_user_query_string(contribution_hash[:contributor_id]) %>">
-              <span class='glyphicon glyphicon-user bip-clickable'></span></a>
-
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col-sm-12">
-
-            <div id="collapse-in-progress-info-<%= index %>" class="accordion-body collapse">
-              <div class="accordion-inner">
-                <hr>
-
-                Role:&nbsp;&nbsp;<%= contribution_hash[:role] %> <br>
-                Referred by:&nbsp;&nbsp;<%= contribution_hash[:referrer] || "n/a" %> <br>
-                Status:&nbsp;&nbsp;
-                  <%= contribution_status(contribution_hash) %> <br>
-                Notes: <br>
-
-                <div class="row">
-
-                  <div id='ip-edit-contribution-notes-<%= index %>'
-                      class='col-sm-2 text-center pull-right'
-                      style='padding:0; margin-top:-2px'>
-                    <span class='glyphicon glyphicon-pencil bip-clickable'></span>
-                  </div>
-
-                  <div id='ip-contribution-notes-<%= index %>' class='col-sm-10'
-                      style='padding-right:0'>
-                    <%= best_in_place contribution, :notes, as: :textarea,
-                              url: "/contributions/#{contribution_hash[:token]}",
-                       html_attrs: { style:'width:100%' },
-                        activator: "#ip-edit-contribution-notes-#{index}",
-                     place_holder: "<i>add notes ...</i>" %>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <%= render 'stories/shared/contribution_card',
+            { contribution: contribution, type: "in-progress", index: index } %>
 
     <% end %>
 

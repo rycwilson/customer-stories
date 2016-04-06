@@ -11,7 +11,7 @@
 *= require social-sharing
 */
 
-.accordion-inner br {
+.contribution-card .accordion-inner br {
   line-height: 20px;
 }
 
@@ -69,7 +69,7 @@ p.lead {
 #edit-story-benefits:hover + #story-benefits,
 .modify-result:hover + .story-result,
 .modify-prompt:hover + .story-prompt,
-div[id*='contribution-notes']:hover + div[id*='contribution-notes'] {
+.cc-notes:hover + .cc-notes {
   // border-left: 3px solid #87a3bc;
   background-color: #e3e3e3;
   background-clip: content-box;

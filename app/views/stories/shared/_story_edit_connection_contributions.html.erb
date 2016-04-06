@@ -1,24 +1,25 @@
-<!-- connection -->
+
 <div class="tab-pane fade" id="connections">
-
-  <div class="heading-block">
-    <h4>
-      Story Connections
-    </h4>
-  </div> <!-- /.heading-block -->
-
   <div id='contribution-connections'>
-    <div class='text-center'>
 
-      <% @contributions.select { |c| c.linkedin == true }
-                       .each do |contribution| %>
+    <% @contributions_connections.each_with_index do |contribution, index| %>
 
+      <% if contribution.linkedin? %>
+
+        <div class='text-center'>
           <script type="IN/MemberProfile"
                  data-id="<%= contribution.contributor.linkedin_url %>"
              data-format="inline" data-related="false" data-width='340'></script>
+        </div>
+
+      <% else %>
+
+        <%= render 'stories/shared/contribution_card',
+              { contribution: contribution, type: "connection", index: index } %>
 
       <% end %>
 
-    </div>
-  </div>  <!-- contribution connections -->
-</div>  <!-- connection -->
+    <% end %>
+
+  </div>
+</div>

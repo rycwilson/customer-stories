@@ -1,0 +1,73 @@
+
+<div class="well contribution-card accordion"
+    id="<%= type %>-accordion-<%= index %>"
+    data-contribution-id="<%= contribution.id %>">
+
+  <div class="row">
+    <div class='col-sm-7'>
+      <%= contribution.contributor.full_name %>
+    </div>
+    <div class="col-sm-5 text-right">
+
+      <%= render 'stories/shared/contribution_card_actions',
+            { contribution: contribution, type: type, index: index } %>
+
+    </div>
+  </div>
+
+  <% if type == 'in-progress' || type == 'next-steps' %>
+    <div class="row">
+      <div class="col-sm-12">
+        Status:&nbsp;&nbsp;<%= contribution_status(contribution) %>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="row">
+    <div class="col-sm-12">
+
+      <div id="collapse-<%= type %>-submission-<%= index %>"
+          class="accordion-body collapse">
+        <div class="accordion-inner">
+          <hr>
+          <% if contribution.status == 'contribution' %>
+            <div>"<%= contribution.contribution %>"</div>
+          <% elsif contribution.status == 'feedback' %>
+            <div>"<%= contribution.feedback %>"</div>
+          <% end %>
+        </div>
+      </div>
+
+      <div id="collapse-<%= type %>-info-<%= index %>" class="accordion-body collapse">
+        <div class="accordion-inner">
+          <hr>
+
+          Role:&nbsp;&nbsp;<%= contribution.role %> <br>
+          Email:&nbsp;&nbsp;<%= contribution.contributor.email %> <br>
+          Phone:&nbsp;&nbsp;<%= contribution.contributor.phone %> <br>
+          Referred by:&nbsp;&nbsp;<%= contribution.referrer_id.present? ? contribution.referrer.full_name : "n/a" %> <br>
+          Notes: <br>
+
+          <div class="row">
+
+            <div id='edit-<%= type %>-notes-<%= index %>'
+                class='col-sm-2 text-center pull-right cc-notes'
+                style='padding:0; margin-top:-2px'>
+              <span class='glyphicon glyphicon-pencil bip-clickable'></span>
+            </div>
+
+            <div id='<%= type %>-notes-<%= index %>' class='col-sm-10 cc-notes'
+                style='padding-right:0'>
+              <%= best_in_place contribution, :notes, as: :textarea,
+                        url: "/contributions/#{contribution.access_token}",
+                 html_attrs: { style:'width:100%' },
+                  activator: "#edit-#{type}-notes-#{index}",
+               place_holder: "<i>add notes ...</i>" %>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

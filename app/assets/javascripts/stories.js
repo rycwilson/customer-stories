@@ -141,10 +141,10 @@ function initTagsListeners () {
   $('.accordion-toggle').on('click', function () {
     if ($(this).attr('href').match(/info/)) {
       var $readPanel = $(this).closest('.accordion')
-                              .find("div.accordion-body[id*='read']");
+                              .find("div.accordion-body[id*='submission']");
       if ($readPanel.hasClass('in'))
         $readPanel.removeClass('in');
-    } else if ($(this).attr('href').match(/read/)) {
+    } else if ($(this).attr('href').match(/submission/)) {
       var $infoPanel = $(this).closest('.accordion')
                               .find("div.accordion-body[id*='info']");
       if ($infoPanel.hasClass('in'))

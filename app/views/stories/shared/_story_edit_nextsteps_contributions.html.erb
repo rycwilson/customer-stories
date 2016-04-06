@@ -1,0 +1,14 @@
+<!-- feedback -->
+<div class="tab-pane fade" id="feedback">
+
+  <div id='feedback-contributors'>
+
+    <% @contributions_next_steps.each_with_index do |contribution, index| %>
+
+      <%= render 'stories/shared/contribution_card',
+              { contribution: contribution, type: "next-steps", index: index } %>
+
+    <% end %>
+
+  </div>  <!-- feedback contributors -->
+</div> <!-- feedback -->

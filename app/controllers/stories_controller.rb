@@ -32,8 +32,11 @@ class StoriesController < ApplicationController
   def edit
     @company = current_user.company # company_id not in the stories#edit route
     @customer = @story.success.customer
-    @contributions = @story.success.contributions
+    @contributions_pre_request = Contribution.pre_request @story.success_id
     @contributions_in_progress = Contribution.in_progress @story.success_id
+    @contributions_next_steps = Contribution.next_steps @story.success_id
+    @contributions_contributors = Contribution.contributors @story.success_id
+    @contributions_connections = Contribution.connections @story.success_id
     @industries = @company.industries_select_options
     @industries_pre_select = @story.success.industry_categories
                                    .map { |category| category.id }
