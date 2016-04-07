@@ -1,27 +1,32 @@
 (function () {
 
-  var preRequestContributions = <%= raw @pre_request_contributions.to_json %>,
+  var contributionsPreRequest = <%= raw @contributions_pre_request.to_json({ include: { contributor: {}, referrer: {}, success: { include: :customer } } }) %>,
       allContributors = <%= raw @contributors.to_json %>,
          flashMesg = "<%= @flash_mesg %>",
        flashStatus = "<%= @flash_status %>",
-          template = _.template($('#pre-request-template').html());
+          template = _.template($('#cc-template').html());
 
+  console.log(contributionsPreRequest);
   $('#new-contributor-modal').modal('hide');
 
   if (flashStatus === "danger") {
     flashDisplay(flashMesg, flashStatus);
   } else {
-    $('#pre-request-contributors')
+    $('#contributions-pre-request')
         .empty()
         .append(
-          template({ contributions: preRequestContributions })
+          template({ contributions: contributionsPreRequest,
+                              type: 'pre-request',
+                contributionStatus: null })  // only need this for an in-progress template
         );
     $("a[href='#pre-request']").tab('show');
   }
 
-  updateReferrerSelectOptions(allContributors)
+  updateReferrerSelectOptions(allContributors);
+
   // dynamically added elements must be re-configured as best-in-place
   $('.best_in_place').best_in_place();
+
   // attach listeners to dynamically added elements
   $('a.accordion-toggle').on('focus', function () {
     $(this).blur();

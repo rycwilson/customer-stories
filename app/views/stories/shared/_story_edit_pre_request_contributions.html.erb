@@ -13,12 +13,12 @@
        data-target="#new-contributor-modal"></span> -->
   </div>
 
-  <div id='pre-request-contributors'>
+  <div id='contributions-pre-request'>
 
     <% @contributions_pre_request.each_with_index do |contribution, index| %>
 
        <%= render 'stories/shared/contribution_card',
-              { contribution: contribution, type: "pre-request", index: index } %>
+            { contribution: contribution, type: "pre-request", index: index } %>
 
     <% end %>
 

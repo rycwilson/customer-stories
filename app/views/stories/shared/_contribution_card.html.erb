@@ -4,10 +4,10 @@
     data-contribution-id="<%= contribution.id %>">
 
   <div class="row">
-    <div class='col-sm-7'>
+    <div class='col-sm-7 vcenter' style='font-size:14px'>
       <%= contribution.contributor.full_name %>
-    </div>
-    <div class="col-sm-5 text-right">
+    </div><!--
+ --><div class="col-sm-5 text-right vcenter">
 
       <%= render 'stories/shared/contribution_card_actions',
             { contribution: contribution, type: type, index: index } %>

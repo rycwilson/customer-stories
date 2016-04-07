@@ -3,25 +3,28 @@
 
 (function () {
 
-  var contributionsInProgress = <%= raw @contributions_in_progress.to_json %>,
-      contribution = <%= raw @contribution.to_json %>,
-         flashMesg = "<%= @flash_mesg %>",
-       flashStatus = "<%= @flash_status %>",
-          template = _.template($('#in-progress-template').html());
+  var contributionsInProgress = <%= raw @contributions_in_progress.to_json({ include: { contributor: {}, referrer: {}, success: { include: :customer } } }) %>,
+          contribution = <%= raw @contribution.to_json %>,
+    contributionStatus = "<%= contribution_status(@contribution) %>"
+             flashMesg = "<%= @flash_mesg %>",
+           flashStatus = "<%= @flash_status %>",
+              template = _.template($('#cc-template').html());
 
   flashDisplay(flashMesg, flashStatus);
 
   if (flashStatus === "info") {  // success
     removeContributionCard(contribution.id);
-    $('#in-progress-contributors')
+    $('#contributions-in-progress')
         .empty()
-        .append(template({ contributions: contributionsInProgress }));
+        .append(template({ contributions: contributionsInProgress,
+                                    type: 'in-progress',
+                      contributionStatus: contributionStatus }));
     $('.best_in_place').best_in_place();
   }
 
   // remove the pre-request contribution card
   function removeContributionCard (contribution_id) {
-    var $preRequestCard = $('#pre-request')
+    var $preRequestCard = $('#contributions-pre-request')
           .find("div[data-contribution-id='" + contribution_id.toString() + "']");
     setTimeout(function () {
       $preRequestCard.hide('fast', function() { $preRequestCard.remove(); });
