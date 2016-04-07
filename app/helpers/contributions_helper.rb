@@ -11,11 +11,11 @@ module ContributionsHelper
     when 'remind2'
       return "second reminder sent #{(contribution.remind_at - contribution.remind_2_wait.days).strftime('%-m/%-d/%y')}"
     when 'did_not_respond'
-      return "follow up with phone call"
+      return "follow up phone call"
     when 'contribution'
       return 'contribution submitted'
     when 'feedback'
-      return 'feedback submitted'
+      return 'review feedback'
     when 'unsubscribe'
       return "unsubscribed from story"
     when 'opt_out'

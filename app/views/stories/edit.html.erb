@@ -277,7 +277,8 @@
       {{ if (type === 'in-progress' || type === 'next-steps' ) { }}
         <div class="row">
           <div class="col-sm-12">
-            Status:&nbsp;&nbsp;{{= contributionStatus }}
+            {{= type == 'in-progress' ? 'Status:' : 'Next step:' }}&nbsp;
+            {{= contributionStatus }}
           </div>
         </div>
       {{ } }}

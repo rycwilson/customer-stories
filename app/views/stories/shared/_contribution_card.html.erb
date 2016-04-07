@@ -18,7 +18,8 @@
   <% if type == 'in-progress' || type == 'next-steps' %>
     <div class="row">
       <div class="col-sm-12">
-        Status:&nbsp;&nbsp;<%= contribution_status(contribution) %>
+        <%= type =='in-progress' ? 'Status:' : 'Next step:' %>&nbsp;
+        <%= contribution_status(contribution) %>
       </div>
     </div>
   <% end %>
