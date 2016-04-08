@@ -80,7 +80,7 @@ class Contribution < ActiveRecord::Base
 
   def self.contributors success_id
     Contribution.includes(:contributor, :referrer)
-                .where(status:'contribution')
+                .where("success_id = ? AND status = ?", success_id, 'contribution')
   end
 
   def self.connections success_id
