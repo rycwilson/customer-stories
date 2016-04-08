@@ -6,10 +6,10 @@
 
       <% if contribution.linkedin? %>
 
-        <div class='text-center'>
+        <div class='text-center' tabindex='-1'>
           <script type="IN/MemberProfile"
                  data-id="<%= contribution.contributor.linkedin_url %>"
-             data-format="inline" data-related="false" data-width='340'></script>
+             data-format="inline" data-related="false" data-width='340' tabindex='-1'></script>
         </div>
 
       <% else %>

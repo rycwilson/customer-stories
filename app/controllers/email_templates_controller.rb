@@ -14,7 +14,7 @@ class EmailTemplatesController < ApplicationController
     if params[:restore]
       default_template =
         EmailTemplate.where("company_id = ? AND name = ?",
-                              Company::CSP.id, @template.name).take
+                              Company.find_by(name:'CSP').id, @template.name).take
       @template.update(subject: default_template.subject,
                           body: default_template.body)
       @template.format_for_editor current_user
