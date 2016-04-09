@@ -18,7 +18,6 @@
 //= require jquery.inputmask/dist/inputmask/inputmask.phone.extensions
 //= require jquery.inputmask/dist/inputmask/jquery.inputmask
 
-
 var ready = function () {
 
   // linkedin widgets
@@ -30,6 +29,16 @@ var ready = function () {
   configPlugins();
   configUnderscore();
   configS3Upload();
+
+  /*
+    give the linkedin widgets a second to load,
+    then disable their tabbing behavior
+  */
+  window.setTimeout(function () {
+    $("#contribution-connections iframe").each(function () {
+      $(this).prop('tabIndex', '-1');
+    });
+  }, 1000);
 
 };
 
@@ -74,10 +83,36 @@ function initBIPListeners () {
         .text(newUrl);
   });
 
-  $(".best_in_place[data-bip-attribute='notes']").bind("ajax:success",
+  $(".best_in_place[data-bip-attribute='linkedin_url']").bind("ajax:success",
     function (event, data) {
-      console.log('bip success');
-
+      var url = $(this).text(),
+          $accordion = $(this).closest('.accordion-inner');
+      if ($accordion.find('iframe').length === 0 && url !== "add url ..." ) {
+        $accordion.append(
+          "<br style='line-height:10px'>" +
+          "<div class='row text-center'>" +
+            "<script type='IN/MemberProfile' " +
+              "data-id='" + url + "' " +
+              "data-format='inline' data-related='false' " +
+              "data-width='340'></script>" +
+          "</div>");
+        IN.parse();
+      } else if ($accordion.find('iframe').length !== 0 && url === "add url ...") {
+        $accordion.find('br:last').remove();
+        $accordion.find('div:last').remove();
+      } else {
+        $accordion.find('br:last').remove();
+        $accordion.find('div:last').remove();
+        $accordion.append(
+          "<br style='line-height:10px'>" +
+          "<div class='row text-center'>" +
+            "<script type='IN/MemberProfile' " +
+              "data-id='" + url + "' " +
+              "data-format='inline' data-related='false' " +
+              "data-width='340'></script>" +
+          "</div>");
+        IN.parse();
+      }
   });
 
   // best-in-place errors
@@ -315,6 +350,7 @@ function configPlugins () {
   $('#tags-form').dirtyFields();
 
 }
+
 
 
 

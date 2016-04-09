@@ -4,20 +4,8 @@
 
     <% @contributions_connections.each_with_index do |contribution, index| %>
 
-      <% if contribution.linkedin? %>
-
-        <div class='text-center' tabindex='-1'>
-          <script type="IN/MemberProfile"
-                 data-id="<%= contribution.contributor.linkedin_url %>"
-             data-format="inline" data-related="false" data-width='340' tabindex='-1'></script>
-        </div>
-
-      <% else %>
-
-        <%= render 'stories/shared/contribution_card',
-              { contribution: contribution, type: "connection", index: index } %>
-
-      <% end %>
+      <%= render 'stories/shared/contribution_card',
+            { contribution: contribution, type: "connection", index: index } %>
 
     <% end %>
 

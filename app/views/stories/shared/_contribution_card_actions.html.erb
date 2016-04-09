@@ -9,17 +9,23 @@
   <a class="accordion-toggle" data-toggle="collapse"
      data-parent="#<%= type %>-accordion-<%= index %>"
      href="#collapse-<%= type %>-submission-<%= index %>" tabindex='-1'>
-    <span class='glyphicon glyphicon-comment bip-clickable'></span></a>
+    <i class='glyphicon glyphicon-comment bip-clickable'></i></a>
 <% end %>
 
 <a class="accordion-toggle" data-toggle="collapse"
    data-parent="#<%= type %>-accordion-<%= index %>"
    href="#collapse-<%= type %>-info-<%= index %>" tabindex='-1'>
-  <span class='glyphicon glyphicon-info-sign bip-clickable'></span></a>
+  <i class='glyphicon glyphicon-info-sign bip-clickable'></i></a>
 
-<a target="_blank" tabindex='-1' href="http://google.com/search?q=
-  <%= contribution.role == 'customer' ?
-      research_user_query_string(contribution.contributor,
-        @story.success.customer.name) :
-      research_user_query_string(contribution.contributor) %>">
-  <span class='glyphicon glyphicon-user bip-clickable'></span></a>
+<% if type == 'connection' && contribution.linkedin? %>
+  <a target="_blank" tabindex='-1'
+      href="<%= contribution.contributor.linkedin_url %>">
+    <i class='fa fa-linkedin-square bip-clickable-fa'></i></a>
+<% else %>
+  <a target="_blank" tabindex='-1'
+      href="http://google.com/search?q=<%= contribution.role == 'customer' ?
+        research_user_query_string(contribution.contributor,
+          @story.success.customer.name) :
+        research_user_query_string(contribution.contributor) %>">
+    <i class='glyphicon glyphicon-user bip-clickable'></i></a>
+<% end %>
