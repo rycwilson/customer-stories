@@ -89,6 +89,7 @@ function initBIPListeners () {
       var linkedinUrl = $(this).text(),
           $card = $(this).closest('.contribution-card'),
           $research = $card.find('.research');
+
       // add ...
       if ($card.find('iframe').length === 0 && linkedinUrl !== "add url ..." ) {
         $card.append(
@@ -105,12 +106,12 @@ function initBIPListeners () {
         $research.html("<i class='fa fa-linkedin-square bip-clickable-fa'>");
       // remove ...
       } else if ($card.find('iframe').length !== 0 && linkedinUrl === "add url ...") {
+        console.log('removing..');
         $card.find('br:last').remove();
         $card.find('div:last').remove();
         // get contribution data so we can set research button
         // (needs contributor and customer data)
         $.get('/contributions/' + $card.data('contribution-id'), function (contribution, status) {
-          console.log(data, status);
           if (contribution.role == 'customer') {
             $research.attr('href',
               "http://google.com/search?q=" +
