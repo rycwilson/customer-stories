@@ -3,8 +3,10 @@ class ContributionsController < ApplicationController
   include ContributionsHelper
 
   before_action :valid_token?, only: [:edit, :update]
-  before_action :set_contribution, only: [:confirm, :request_contribution]
+  before_action :set_contribution, only: [:show, :confirm, :request_contribution]
   before_action :check_opt_out_list, only: [:create, :request_contribution]
+
+  respond_to :html, :json
 
   #
   # GET '/contributions/:token/:type'
@@ -24,6 +26,11 @@ class ContributionsController < ApplicationController
     elsif @response_type == 'unsubscribe'
       @contribution.update status: 'unsubscribe'
     end
+  end
+
+  def show
+    respond_with @contribution, include: {
+          contributor: {}, referrer: {}, success: { include: :customer } }
   end
 
   def create

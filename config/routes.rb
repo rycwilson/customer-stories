@@ -46,6 +46,9 @@ Rails.application.routes.draw do
     get   '/contributions/:token/:type', to: 'contributions#edit',
                                          as: 'edit_contribution',
                     constraints: { type: /(contribution|feedback|unsubscribe|opt_out)/ }
+    # this route returns json data for the contribution
+    # presently only need this when removing a linkedin_url from a contribution
+    get   '/contributions/:id', to: 'contributions#show'
     put   '/contributions/:token', to: 'contributions#update',
                                    as: 'contribution'
 

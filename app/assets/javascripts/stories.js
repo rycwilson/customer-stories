@@ -18,6 +18,7 @@
 //= require jquery.inputmask/dist/inputmask/inputmask.phone.extensions
 //= require jquery.inputmask/dist/inputmask/jquery.inputmask
 
+
 var ready = function () {
 
   // linkedin widgets
@@ -85,29 +86,55 @@ function initBIPListeners () {
 
   $(".best_in_place[data-bip-attribute='linkedin_url']").bind("ajax:success",
     function (event, data) {
-      var url = $(this).text(),
-          $accordion = $(this).closest('.accordion-inner');
-      if ($accordion.find('iframe').length === 0 && url !== "add url ..." ) {
-        $accordion.append(
+      var linkedinUrl = $(this).text(),
+          $card = $(this).closest('.contribution-card'),
+          $research = $card.find('.research');
+      // add ...
+      if ($card.find('iframe').length === 0 && linkedinUrl !== "add url ..." ) {
+        $card.append(
           "<br style='line-height:10px'>" +
           "<div class='row text-center'>" +
             "<script type='IN/MemberProfile' " +
-              "data-id='" + url + "' " +
+              "data-id='" + linkedinUrl + "' " +
               "data-format='inline' data-related='false' " +
               "data-width='340'></script>" +
           "</div>");
         IN.parse();
-      } else if ($accordion.find('iframe').length !== 0 && url === "add url ...") {
-        $accordion.find('br:last').remove();
-        $accordion.find('div:last').remove();
+        // find the research icon, remove and replace with linkedin icon
+        $research.attr('href', linkedinUrl);
+        $research.html("<i class='fa fa-linkedin-square bip-clickable-fa'>");
+      // remove ...
+      } else if ($card.find('iframe').length !== 0 && linkedinUrl === "add url ...") {
+        $card.find('br:last').remove();
+        $card.find('div:last').remove();
+        // get contribution data so we can set research button
+        // (needs contributor and customer data)
+        $.get('/contributions/' + $card.data('contribution-id'), function (contribution, status) {
+          console.log(data, status);
+          if (contribution.role == 'customer') {
+            $research.attr('href',
+              "http://google.com/search?q=" +
+              contribution.contributor.first_name + "+" +
+              contribution.contributor.last_name + "+" +
+              contribution.success.customer.name);
+
+          } else {
+            $research.attr('href',
+              "http://google.com/search?q=" +
+              contribution.contributor.first_name + "+" +
+              contribution.contributor.last_name + "+");
+          }
+        }, 'json');
+        $research.html("<i class='glyphicon glyphicon-user bip-clickable'></i>");
+      // replace ...
       } else {
-        $accordion.find('br:last').remove();
-        $accordion.find('div:last').remove();
-        $accordion.append(
+        $card.find('br:last').remove();
+        $card.find('div:last').remove();
+        $card.append(
           "<br style='line-height:10px'>" +
           "<div class='row text-center'>" +
             "<script type='IN/MemberProfile' " +
-              "data-id='" + url + "' " +
+              "data-id='" + linkedinUrl + "' " +
               "data-format='inline' data-related='false' " +
               "data-width='340'></script>" +
           "</div>");
