@@ -33,6 +33,9 @@ class ContributionsController < ApplicationController
           contributor: {}, referrer: {}, success: { include: :customer } }
   end
 
+  #
+  # respond_to { |format| format.js }   => this is implied by the request
+  #
   def create
     story = Story.find params[:id]
     existing_user = User.find_by email: params[:contributor][:email]
@@ -51,17 +54,13 @@ class ContributionsController < ApplicationController
         #   contributor may have only one contribution per success
         @flash_status = "danger"
         @flash_mesg = "That user already has a contribution for this story"
-        respond_to { |format| format.js }
       end
     else
       @flash_status = "danger"
       @flash_mesg = contributor.errors
                                .full_messages
-                               .delete_if do |message|
-                                  message == "Password can't be blank"
-                                end
+                               .delete_if { |message| message == "Password can't be blank" }
                                .join(', ')
-      respond_to { |format| format.js }
     end
   end
 
@@ -100,6 +99,7 @@ class ContributionsController < ApplicationController
     end
   end
 
+  # respond_to { |format| format.js }
   def request_contribution
     curator_missing_info = @contribution.success.curator.missing_info
     if curator_missing_info.empty?
@@ -115,7 +115,6 @@ class ContributionsController < ApplicationController
         @flash_mesg =
           "Error updating Contribution: #{@contribution.errors.full_messages.join(', ')}"
       end
-      respond_to { |format| format.js }
     else
       @flash_status = "danger"
       @flash_mesg =
