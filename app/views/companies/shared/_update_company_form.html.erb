@@ -57,32 +57,39 @@
       </div> <!-- /.fileupload -->
     </div>  <!-- form-group -->
 
-    <hr>
-
     <div class="form-group">
 
       <div class="row" style='margin-bottom:15px'>
-        <div class="col-sm-7 vcenter">
+        <div class="col-sm-5 vcenter">
           <%= f.label "Banner colors", nil %>
         </div><!--
-     --><div class="col-sm-5 vcenter text-right">
-          <button type='button' id='test-colors-button' class='btn btn-sm btn-default'>
+     --><div class="col-sm-7 vcenter text-right">
+          <button type='button' id='test-colors-button' class='btn btn btn-default'>
             Test
           </button>
-          <button type='button' id='restore-colors-button' class='btn btn-sm btn-default'>
+          <button type='button' id='restore-colors-button' class='btn btn btn-default'>
             Restore
           </button>
         </div>
       </div>
 
-      <%= f.label :nav_color_1, 'Color 1', class: 'control-label' %>
-      <%= f.text_field :nav_color_1, class: 'form-control mini-colors' %> <br>
+      <div class="row color-picker" style='margin-bottom:15px'>
+        <div class="col-sm-6">
+          <%= f.label :nav_color_1, 'Color 1', class: 'control-label' %>
+          <%= f.text_field :nav_color_1, class: 'form-control mini-colors' %>
+        </div>
+        <div class="col-sm-6">
+          <%= f.label :nav_color_2, 'Color 2', class: 'control-label' %>
+          <%= f.text_field :nav_color_2, class: 'form-control mini-colors' %>
+        </div>
+      </div>
 
-      <%= f.label :nav_color_2, 'Color 2', class: 'control-label' %>
-      <%= f.text_field :nav_color_2, class: 'form-control mini-colors' %> <br>
-
-      <%= f.label :nav_text_color, 'Text', class: 'control-label' %>
-      <%= f.text_field :nav_text_color, class: 'form-control mini-colors' %>
+      <div class="row">
+        <div class="col-sm-6">
+          <%= f.label :nav_text_color, 'Text', class: 'control-label' %>
+          <%= f.text_field :nav_text_color, class: 'form-control mini-colors' %>
+        </div>
+      </div>
 
     </div>
 
