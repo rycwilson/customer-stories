@@ -37,6 +37,7 @@ var ready = function () {
   configMiniColors();
   initListeners();
   initTemplateEditorListeners();
+  initFormLogoBackground();
 
 };
 
@@ -293,3 +294,36 @@ function configSelect2 () {
 
   }
 }
+
+function initFormLogoBackground () {
+  var $thumbnails = $("form[id*='company'] .thumbnail");
+  var companyColor1 = $('header').css('background')
+                                 .match(/\(((\d|\s|,)+)\)/g)[1]
+                                 .slice(1, -1)
+                                 .split(', ')
+                                 .map(function (color) {
+                                    var hexVal = parseInt(color, 10).toString(16);
+                                    if (hexVal.length === 1) {
+                                      hexVal += hexVal;
+                                    }
+                                    return hexVal;
+                                  })
+                                 .join('');
+  console.log(companyColor1);
+  $thumbnails.each(function () {
+    $(this).css('background-color', '#' + companyColor1);
+  });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

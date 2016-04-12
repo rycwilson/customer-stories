@@ -29,19 +29,17 @@
 
       <div class="fileinput <%= @company.logo_url.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput" style='margin:0'>
 
-        <div class="fileinput-new thumbnail"
-            style="width: 100px; height: 100px;">
+        <div class="fileinput-new thumbnail col-sm-7">
           <%= image_tag "company-logo-missing.png", alt: 'logo missing' %>
         </div>
 
-        <div class="fileinput-preview fileinput-exists thumbnail"
-            data-trigger="fileinput"
-            style="width: 100px; height: 100px;">
+        <div class="fileinput-preview fileinput-exists thumbnail col-sm-7"
+            data-trigger="fileinput">
           <img src="<%= @company.logo_url %>" alt="company logo">
         </div>
 
-        <div>
-          <span class="btn btn-default btn-file">
+        <div class='col-sm-5'>
+          <span class="btn btn-default btn-file" style='margin-bottom:7px'>
             <span class="fileinput-new">
               Select image
             </span>
@@ -49,7 +47,7 @@
               Change
             </span>
             <%= f.file_field :logo_url %>
-          </span>
+          </span> <br>
 
           <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">
             Remove
