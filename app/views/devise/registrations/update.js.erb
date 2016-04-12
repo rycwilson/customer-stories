@@ -1,10 +1,12 @@
 (function () {
 
-  var status = "<%= @status %>",
+  var user = <%= raw @user.to_json %>,
+      status = "<%= @status %>",
       flashMesg = "<%= @flash_mesg %>",
-      pwUpdate = <%= @password_update %>;   // boolean
+      linkedinUpdate = <%= @linkedin_update %>
+      passwordUpdate = <%= @password_update %>;   // boolean
 
-  if (pwUpdate) {
+  if (passwordUpdate) {
     $('#password-update-form')[0].reset();
     if (status === 'success') {
       flashDisplay("Password updated successfully", status);
@@ -16,10 +18,23 @@
     }
   }
   else {
-    if (status === 'success')
+    if (status === 'success') {
+      $.getScript('http://platform.linkedin.com/in.js', function () {
+        $("input[name='user[linkedin_url]']").parent().siblings().remove();
+        $("input[name='user[linkedin_url]']").parent().after(
+              "<script type='IN/MemberProfile' " +
+                "data-id='" + user.linkedin_url + "' " +
+                "data-format='inline' data-related='false' " +
+                "data-width='300'>" +
+              "</script>"
+            );
+        IN.parse();
+      });
       flashDisplay("Account updated successfully", status);
-    else
+    }
+    else {
       flashDisplay(flashMesg, status);
+    }
   }
 
 })();

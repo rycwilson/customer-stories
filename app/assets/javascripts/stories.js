@@ -89,7 +89,6 @@ function initBIPListeners () {
       var linkedinUrl = $(this).text(),
           $card = $(this).closest('.contribution-card'),
           $research = $card.find('.research');
-
       // add ...
       if ($card.find('iframe').length === 0 && linkedinUrl !== "add url ..." ) {
         $card.append(
@@ -101,12 +100,10 @@ function initBIPListeners () {
               "data-width='340'></script>" +
           "</div>");
         IN.parse();
-        // find the research icon, remove and replace with linkedin icon
         $research.attr('href', linkedinUrl);
         $research.html("<i class='fa fa-linkedin-square bip-clickable-fa'>");
       // remove ...
       } else if ($card.find('iframe').length !== 0 && linkedinUrl === "add url ...") {
-        console.log('removing..');
         $card.find('br:last').remove();
         $card.find('div:last').remove();
         // get contribution data so we can set research button
@@ -118,7 +115,6 @@ function initBIPListeners () {
               contribution.contributor.first_name + "+" +
               contribution.contributor.last_name + "+" +
               contribution.success.customer.name);
-
           } else {
             $research.attr('href',
               "http://google.com/search?q=" +
