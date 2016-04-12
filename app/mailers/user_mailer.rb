@@ -74,7 +74,7 @@ class UserMailer < ApplicationMailer
     template.body
             .gsub("[customer_name]", contribution.success.customer.name)
             .gsub("[company_name]", curator.company.name)
-            .gsub("[product_name]", contribution.success.products.take.name)
+            .gsub("[product_name]", contribution.success.products.take.try(:name) || "")
             .gsub("[contributor_first_name]", contributor.first_name)
             .gsub("[curator_first_name]", curator.first_name)
             .gsub("[referral_intro]", referral_intro)
