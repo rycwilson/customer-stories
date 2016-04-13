@@ -2,30 +2,40 @@
 <% if type == 'pre-request' %>
   <%= link_to request_contribution_path(contribution),
         method: 'put', remote: true, tabindex:'-1' do %>
-      <i class='glyphicon glyphicon-envelope bip-clickable'></i><% end %>
+      <i class='glyphicon glyphicon-envelope bip-clickable'
+          data-toggle='tooltip' data-placement='top'
+          title='Send contribution request'></i><% end %>
 <% end %>
 
 <% if ['contribution', 'feedback'].include? contribution.status %>
   <a class="accordion-toggle" data-toggle="collapse"
      data-parent="#<%= type %>-accordion-<%= index %>"
      href="#collapse-<%= type %>-submission-<%= index %>" tabindex='-1'>
-    <i class='glyphicon glyphicon-comment bip-clickable'></i></a>
+    <i class='glyphicon glyphicon-comment bip-clickable'
+       data-toggle='tooltip' data-placement='top'
+       title="<%= contribution.status == 'contribution' ? 'Contribution' : 'Feedback' %>"></i></a>
 <% end %>
 
 <a class="accordion-toggle" data-toggle="collapse"
    data-parent="#<%= type %>-accordion-<%= index %>"
    href="#collapse-<%= type %>-info-<%= index %>" tabindex='-1'>
-  <i class='glyphicon glyphicon-info-sign bip-clickable'></i></a>
+  <i class='glyphicon glyphicon-info-sign bip-clickable'
+      data-toggle='tooltip' data-placement='top'
+      title='More information'></i></a>
 
 <% if type == 'connection' && contribution.linkedin? %>
   <a class='research' target="_blank" tabindex='-1'
       href="<%= contribution.contributor.linkedin_url %>">
-    <i class='fa fa-linkedin-square bip-clickable-fa'></i></a>
+    <i class='fa fa-linkedin-square bip-clickable-fa'
+        data-toggle='tooltip' data-placement='top'
+        title='Open LinkedIn profile'></i></a>
 <% else %>
   <a class='research' target="_blank" tabindex='-1'
       href="http://google.com/search?q=<%= contribution.role == 'customer' ?
         research_user_query_string(contribution.contributor,
           @story.success.customer.name) :
         research_user_query_string(contribution.contributor) %>">
-    <i class='glyphicon glyphicon-user bip-clickable'></i></a>
+    <i class='glyphicon glyphicon-user bip-clickable'
+        data-toggle='tooltip' data-placment='top'
+        title='Research'></i></a>
 <% end %>

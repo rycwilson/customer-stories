@@ -309,7 +309,6 @@ function initFormLogoBackground () {
                                     return hexVal;
                                   })
                                  .join('');
-  console.log(companyColor1);
   $thumbnails.each(function () {
     $(this).css('background-color', '#' + companyColor1);
   });

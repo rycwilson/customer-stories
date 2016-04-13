@@ -21,8 +21,9 @@
 
 // require_tree ./sitewide (under construction)
 
-// flash messaging
 $(function() {
+
+  initTooltips();
 
   setTimeout(function () {
     $('#flash').slideUp();
@@ -110,6 +111,9 @@ function configS3Upload () {
   });
 }
 
+function initTooltips () {
+  $('[data-toggle="tooltip"]').tooltip();
+}
 
 
 
