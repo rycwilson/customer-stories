@@ -21,6 +21,10 @@
 
 var ready = function () {
 
+  $('#contributions-pre-request').on('click', '.send-request', function () {
+    $('#progress-modal').modal('show');
+  });
+
   // linkedin widgets
   $.getScript('http://platform.linkedin.com/in.js');
 
@@ -281,7 +285,7 @@ function initListeners () {
   });
 
   // blur buttons after they're clicked
-  $('#send-request-button, #new-contributor-button').on('focus', function () {
+  $('#new-contributor-button').on('focus', function () {
     var _this = $(this);
     window.setTimeout(function () {
       _this.blur();

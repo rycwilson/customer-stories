@@ -1,7 +1,7 @@
 
 <% if type == 'pre-request' %>
   <%= link_to request_contribution_path(contribution),
-        method: 'put', remote: true, tabindex:'-1' do %>
+        class: 'send-request', method: 'put', remote: true, tabindex:'-1' do %>
       <i class='glyphicon glyphicon-envelope bip-clickable'
           data-toggle='tooltip' data-placement='top'
           title='Send contribution request'></i><% end %>
