@@ -14,7 +14,7 @@
       $('header.navbar').attr('style', '<%= admin_navbar_style %>');
       $('#company_nav_color_1').minicolors('value', '<%= @company.nav_color_1 %>');
       $('#company_nav_color_2').minicolors('value', '<%= @company.nav_color_2 %>');
-      $('<div id="company_nav_text_color"></div>').minicolors('value', '<%= @company.nav_text_color %>');
+      $('#company_nav_text_color').minicolors('value', '<%= @company.nav_text_color %>');
     });
 
   });

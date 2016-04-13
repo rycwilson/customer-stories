@@ -153,7 +153,7 @@ class StoriesController < ApplicationController
     story = Story.find params[:id]
     story.destroy
     redirect_to company_path(current_user.company_id),
-        info: "Story '#{story.title}' was deleted"
+        flash: { info: "Story '#{story.title}' was deleted" }
   end
 
   private
