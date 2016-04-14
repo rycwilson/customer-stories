@@ -251,26 +251,52 @@
      --><div class="col-sm-5 text-right vcenter">
 
           {{ if (type === 'pre-request') { }}
-            <a data-remote="true" rel="nofollow" data-method="put" tabindex="-1"
+            <a class='send-request' data-remote="true" rel="nofollow"
+                data-method="put" tabindex="-1"
                 href="/contributions/{{= contribution.id }}/request_contribution">
-              <i class="glyphicon glyphicon-envelope bip-clickable"></i></a>
+              <i class="glyphicon glyphicon-envelope bip-clickable"
+                  data-toggle='tooltip' data-placement='top'
+                  title='Send contribution request'></i></a>
           {{ } }}
 
           {{ if (contribution.status === 'contribution' || contribution.status === 'feedback') { }}
             <a class="accordion-toggle" data-toggle="collapse" tabindex="-1"
                 data-parent="#{{= type }}-accordion-{{= index }}"
                 href="#collapse-{{= type }}-submission-{{= index }}">
-              <i class="glyphicon glyphicon-comment bip-clickable"></i></a>
+              <i class="glyphicon glyphicon-comment bip-clickable"
+                  data-toggle='tooltip' data-placement='top'
+                  title="{{= contribution.status == 'contribution' ? 'Contribution' : 'Feedback' }}"></i></a>
           {{ } }}
 
           <a class="accordion-toggle" data-toggle="collapse" tabindex="-1"
               data-parent="#{{= type }}-accordion-{{= index }}"
               href="#collapse-{{= type }}-info-{{= index }}">
-            <i class="glyphicon glyphicon-info-sign bip-clickable"></i></a>
+            <i class="glyphicon glyphicon-info-sign bip-clickable"
+                data-toggle='tooltip' data-placement='top'
+                title='More information'></i></a>
 
-          <a target="_blank" tabindex="-1"
+          <!--/*
+            dynamic research button is presently only featured under Connections.
+            so it's unnecessary here, but may be useful at some point
+            (curator enters a linkedin_url upon on creating contributor)
+          */-->
+          {{ if (type === 'connection' && contribution.linkedin) { }}
+
+            <a class='research' target="_blank" tabindex='-1'
+                href="{{= contribution.contributor.linkedin_url }}">
+              <i class='fa fa-linkedin-square bip-clickable-fa'
+                  data-toggle='tooltip' data-placement='top'
+                  title='LinkedIn profile'></i></a>
+
+          {{ } else { }}
+
+            <a target="_blank" tabindex="-1"
               href="http://google.com/search?q={{= contribution.contributor.first_name + '+' + contribution.contributor.last_name + '+' + contribution.success.customer.name }}">
-            <span class="glyphicon glyphicon-user bip-clickable"></span></a>
+              <i class="glyphicon glyphicon-user bip-clickable"
+                  data-toggle='tooltip' data-placement='top'
+                  title='Research'></i></a>
+
+          {{ } }}
 
         </div>
       </div>
@@ -334,7 +360,11 @@
                 </div>
 
               </div>
-            </div>
+
+              <!--/*
+                LinkedIn features only occur under Connections - never templated
+              */-->
+            </div>  <!-- //.accordion-inner -->
           </div>
         </div>
       </div>
