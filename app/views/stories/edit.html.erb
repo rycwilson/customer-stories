@@ -331,7 +331,32 @@
               <hr>
               Role:&nbsp;&nbsp;{{= contribution.role }} <br>
               Email:&nbsp;&nbsp;{{= contribution.contributor.email }} <br>
-              Phone:&nbsp;&nbsp;{{= contribution.contributor.phone }} <br>
+              <div class="row">
+
+                <div id='edit-{{= type }}-phone-{{= index }}'
+                    class='col-sm-2 text-center pull-right cc-notes'
+                    style='padding:0; margin-top:-2px'>
+                  <i class='glyphicon glyphicon-pencil bip-clickable'></i>
+                </div>
+
+                <div id='{{= type }}-phone-{{= index }}' class='col-sm-10 cc-notes'
+                    style='padding-right:0; margin-bottom:4px'>
+                    Phone:&nbsp;&nbsp;
+                  <span data-bip-type="input" data-bip-attribute="phone"
+                      data-bip-activator="#edit-{{= type }}-phone-{{= index }}"
+                      data-bip-html-attrs="{&quot;style&quot;:&quot;width:100%&quot;}"
+                      data-bip-object="user"
+                      data-bip-original-content="{{= contribution.contributor.phone }}"
+                      data-bip-value="{{= contribution.contributor.phone }}"
+                      data-bip-url="/contributions/{{= contribution.access_token }}"
+                      data-bip-placeholder="<i>add phone ...</i>"
+                      class="best_in_place"
+                      id="best_in_place_user_{{= contribution.contributor.id }}_phone">
+                    {{= contribution.contributor.phone || "<i>add phone ...</i>" }}
+                  </span>
+                </div> <br style='line-height:10px'>
+
+              </div>
               Referred by:&nbsp;&nbsp;{{= contribution.referrer_id !== null ? contribution.referrer.first_name + ' ' + contribution.referrer.last_name : "n/a" }} <br>
               Notes: <br>
 
@@ -344,7 +369,7 @@
                 </div>
 
                 <div id="{{= type }}-notes-{{= index }}"
-                    class="col-sm-10 cc-notes" style="padding-right:0">
+                    class="col-sm-10 cc-notes" style="padding-right:0; margin-bottom:4px">
                   <span data-bip-type="textarea" data-bip-attribute="notes"
                       data-bip-activator="#edit-{{= type }}-notes-{{= index }}"
                       data-bip-html-attrs="{&quot;style&quot;:&quot;width:100%&quot;}"
@@ -352,7 +377,7 @@
                       data-bip-original-content="{{= contribution.notes }}"
                       data-bip-value="{{= contribution.notes }}"
                       data-bip-url="/contributions/{{= contribution.access_token }}"
-                      data-bip-placeholder="<i>Add notes ...</i>"
+                      data-bip-placeholder="<i>add notes ...</i>"
                       class="best_in_place"
                       id="best_in_place_contribution_{{= contribution.id }}_notes">
                     {{= contribution.notes || "<i>add notes ...</i>" }}

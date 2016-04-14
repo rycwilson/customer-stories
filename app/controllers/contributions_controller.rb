@@ -69,12 +69,16 @@ class ContributionsController < ApplicationController
   #
   # PUT /contributions/:token
   def update
-    if params[:user].try(:[], :linkedin_url)  # coming from contribution card
-      @contribution.contributor.update linkedin_url: params[:user][:linkedin_url]
-      # update unless already true
-      @contribution.update(linkedin: true) unless @contribution.linkedin?
-      # set false if blank linkedin url submitted
-      @contribution.update(linkedin: false) if params[:user][:linkedin_url].blank?
+    if params[:user] # contributor update coming from contribution card
+      if params[:user][:linkedin_url]
+        @contribution.contributor.update linkedin_url: params[:user][:linkedin_url]
+        # update unless already true
+        @contribution.update(linkedin: true) unless @contribution.linkedin?
+        # set false if blank linkedin url submitted
+        @contribution.update(linkedin: false) if params[:user][:linkedin_url].blank?
+      elsif params[:user][:phone]
+        @contribution.contributor.update phone: params[:user][:phone]
+      end
       respond_to { |format| format.json { head :ok } }
     elsif params[:contribution].try(:[], :notes)  # notes coming from contribution cards
       @contribution.update notes: params[:contribution][:notes]

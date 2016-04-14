@@ -44,7 +44,25 @@
 
           Role:&nbsp;&nbsp;<%= contribution.role %> <br>
           Email:&nbsp;&nbsp;<%= contribution.contributor.email %> <br>
-          Phone:&nbsp;&nbsp;<%= contribution.contributor.phone %> <br>
+          <div class="row">
+
+            <div id='edit-<%= type %>-phone-<%= index %>'
+                class='col-sm-2 text-center pull-right cc-notes'
+                style='padding:0; margin-top:-2px'>
+              <i class='glyphicon glyphicon-pencil bip-clickable'></i>
+            </div>
+
+            <div id='<%= type %>-phone-<%= index %>' class='col-sm-10 cc-notes'
+                style='padding-right:0; margin-bottom:4px'>
+                Phone:&nbsp;&nbsp;
+              <%= best_in_place contribution.contributor, :phone,
+                        url: "/contributions/#{contribution.access_token}",
+                 html_attrs: { style:'width:100%' },
+                  activator: "#edit-#{type}-phone-#{index}",
+               place_holder: "<i>add phone ...</i>" %>
+            </div> <br style='line-height:10px'>
+
+          </div>
           Referred by:&nbsp;&nbsp;<%= contribution.referrer_id.present? ? contribution.referrer.full_name : "n/a" %> <br>
           Notes: <br>
           <div class="row">
