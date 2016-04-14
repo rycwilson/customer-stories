@@ -4,6 +4,6 @@ class Customer < ActiveRecord::Base
   has_many :successes, dependent: :destroy
   has_many :stories, through: :successes
 
-  validates :name, presence: true
+  validates :name, presence: true, uniqueness: true
 
 end

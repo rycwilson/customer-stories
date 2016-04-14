@@ -18,7 +18,7 @@ gem 'uglifier', '>= 1.3.0'
 # Use CoffeeScript for .coffee assets and views
 gem 'coffee-rails', '~> 4.1.0'
 
-gem 'jquery-minicolors-rails'
+
 gem 'aws-sdk', '~> 2'
 gem 'pry-rails'
 gem 'better_errors'
@@ -34,6 +34,8 @@ gem 'ffaker'
 gem 'rails_admin'
 gem 'best_in_place', '~> 3.0.1'
 gem 'summernote-rails'
+gem 'jquery-minicolors-rails'
+gem 'friendly_id', '~> 5.1.0'
 
 gem 'whenever', require: false
 
