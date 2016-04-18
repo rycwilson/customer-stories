@@ -10,7 +10,8 @@ Rails.application.routes.draw do
     get '/', to: 'stories#index'
 
     # Stories - public access
-    resources :stories, only: [:index, :show]
+    resources :stories, only: :index
+    get   '/stories/:id/:customer/:product/:title', to: 'stories#show', as: 'story_path'
 
     # Company home / Story curation - authentication required
     authenticate :user do

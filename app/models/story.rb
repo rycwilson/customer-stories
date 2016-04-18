@@ -1,8 +1,13 @@
 class Story < ActiveRecord::Base
 
+  include FriendlyId
+
   belongs_to :success
 
   validates :title, presence: true
+
+  friendly_id :title, use: [:slugged, :finders]
+
 
   def self.find_example
     Story.where(published: true).first.id

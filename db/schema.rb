@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160401070139) do
+ActiveRecord::Schema.define(version: 20160418174213) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -73,14 +73,16 @@ ActiveRecord::Schema.define(version: 20160401070139) do
   add_index "contributions", ["user_id"], name: "index_contributions_on_user_id", using: :btree
 
   create_table "customers", force: :cascade do |t|
-    t.string   "name"
+    t.string   "name",       null: false
     t.string   "logo_url"
     t.integer  "company_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "slug"
   end
 
   add_index "customers", ["company_id"], name: "index_customers_on_company_id", using: :btree
+  add_index "customers", ["name", "company_id"], name: "index_customers_on_name_and_company_id", unique: true, using: :btree
 
   create_table "email_contribution_requests", force: :cascade do |t|
     t.integer  "contribution_id"
@@ -158,14 +160,16 @@ ActiveRecord::Schema.define(version: 20160401070139) do
   add_index "product_cats_successes", ["success_id"], name: "index_product_cats_successes_on_success_id", using: :btree
 
   create_table "products", force: :cascade do |t|
-    t.string   "name"
+    t.string   "name",        null: false
     t.text     "description"
     t.integer  "company_id"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+    t.string   "slug"
   end
 
   add_index "products", ["company_id"], name: "index_products_on_company_id", using: :btree
+  add_index "products", ["name", "company_id"], name: "index_products_on_name_and_company_id", unique: true, using: :btree
 
   create_table "products_successes", force: :cascade do |t|
     t.integer  "success_id"
@@ -196,7 +200,7 @@ ActiveRecord::Schema.define(version: 20160401070139) do
   add_index "results", ["success_id"], name: "index_results_on_success_id", using: :btree
 
   create_table "stories", force: :cascade do |t|
-    t.string   "title"
+    t.string   "title",                             null: false
     t.text     "quote"
     t.text     "quote_attr"
     t.string   "embed_url"
@@ -212,9 +216,11 @@ ActiveRecord::Schema.define(version: 20160401070139) do
     t.boolean  "logo_published",    default: false
     t.datetime "publish_date"
     t.datetime "logo_publish_date"
+    t.string   "slug"
   end
 
   add_index "stories", ["success_id"], name: "index_stories_on_success_id", using: :btree
+  add_index "stories", ["title"], name: "index_stories_on_title", unique: true, using: :btree
 
   create_table "successes", force: :cascade do |t|
     t.integer  "customer_id"
