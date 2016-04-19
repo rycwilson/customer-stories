@@ -267,7 +267,7 @@
                                 <%= contribution.success.curator.full_name %>
                               </td>
                               <td class='valign-middle'>
-                                <%= contribution.success.products.take.name %>
+                                <%= contribution.success.products.take.try(:name) || "none" %>
                               </td>
                               <td class='valign-middle text-center'>
 
