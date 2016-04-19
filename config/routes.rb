@@ -11,12 +11,15 @@ Rails.application.routes.draw do
 
     # Stories - public access
     resources :stories, only: :index
-    get   '/stories/:id/:customer/:product/:title', to: 'stories#show', as: 'story_path'
+    # don't call this one 'story' or it will leave the PUT and DELETE routes (below)
+    # without an alias
+    # make sure there are no routes below with four levels, or this route will trigger!
+    get 'stories/:id/:customer/:product/:title', to: 'stories#show', as: 'public_story'
 
     # Company home / Story curation - authentication required
     authenticate :user do
       resources :companies, only: [:show, :edit, :update] do
-        resources :stories, only: [:new, :create]
+        resources :stories, only: [:create]
       end
       resources :stories, only: [:edit, :update, :destroy] do
         resources :results, only: [:create, :update, :destroy]

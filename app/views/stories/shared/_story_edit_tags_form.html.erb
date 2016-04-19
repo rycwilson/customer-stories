@@ -1,5 +1,5 @@
 
-<%= form_tag story_path(@story), remote: true, method: "put",
+<%= form_tag story_path(@story.id), remote: true, method: "put",
                 id: 'tags-form', class: 'form-inline' do %>
 
   <div class="form-group col-md-4" style='margin-bottom:10px'>

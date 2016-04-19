@@ -1,5 +1,5 @@
 
-<%= form_tag story_path(@story), remote: true, method: :put,
+<%= form_tag story_path(@story.id), remote: true, method: :put,
       class: 'form-inline' do %>
   <%= text_field_tag "story[new_prompt]", nil, class: 'form-control',
           id: 'new-prompt', style: 'width:89%', placeholder: 'Add a prompt that will help contributors share their experience ...' %>
@@ -31,7 +31,7 @@
       <div id='story-prompt-<%= index %>' class="story-prompt col-md-9">
         <!-- http://stackoverflow.com/questions/13561533 -->
         <%= best_in_place prompt, :description,
-                  url: story_path(@story) + "?prompt_id=#{prompt.id}",
+                  url: story_path(@story.id) + "?prompt_id=#{prompt.id}",
            html_attrs: { style: 'width:100%' },
             activator: "#edit-story-prompt-#{index}" %>
       </div>

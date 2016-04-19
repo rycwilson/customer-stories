@@ -43,21 +43,18 @@
             </div>
           </div>
 
-          <div class="form-group">
-            <%= label_tag 'Industry tags', nil,
-                class: 'col-md-4 control-label' %>
+          <div class="form-group required-input">
+            <%= label_tag 'Product tag(s)', nil, class: 'col-md-4 control-label' %>
             <div class='col-md-8'>
-              <!-- Note the necessary '[]' notation below  -->
-              <!-- if not present, will only return a single value  -->
-              <%= select_tag "story[industry_tags][]",
-                  options_for_select(@industries),
+              <%= select_tag "story[product_tags][]",
+                  options_for_select(@products),
                   { multiple: 'true', class: 'new-story-tags form-control',
                     style: 'width:100%'} %>
             </div>
           </div>
 
           <div class="form-group">
-            <%= label_tag 'Product Category tags', nil,
+            <%= label_tag 'Product Category tag(s)', nil,
                 class: 'col-md-4 control-label' %>
             <div class='col-md-8'>
               <%= select_tag "story[product_cat_tags][]",
@@ -68,10 +65,13 @@
           </div>
 
           <div class="form-group">
-            <%= label_tag 'Product tags', nil, class: 'col-md-4 control-label' %>
+            <%= label_tag 'Industry tag(s)', nil,
+                class: 'col-md-4 control-label' %>
             <div class='col-md-8'>
-              <%= select_tag "story[product_tags][]",
-                  options_for_select(@products),
+              <!-- Note the necessary '[]' notation below  -->
+              <!-- if not present, will only return a single value  -->
+              <%= select_tag "story[industry_tags][]",
+                  options_for_select(@industries),
                   { multiple: 'true', class: 'new-story-tags form-control',
                     style: 'width:100%'} %>
             </div>
@@ -84,7 +84,7 @@
           Cancel
         </button>
 
-          <%= submit_tag 'Create Story', class: 'btn btn-primary' %>
+          <%= submit_tag 'Create Story', class: 'btn btn-primary', disabled: true %>
 
         <% end %>  <!-- form_for -->
 

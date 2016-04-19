@@ -14,7 +14,7 @@
       </div>
 
       <div id='story-embed' class='col-md-10' style='overflow:auto'>
-        <%= best_in_place @story, :embed_url, url: story_path(@story),
+        <%= best_in_place @story, :embed_url, url: story_path(@story.id),
             activator: '#edit-story-embed',
             place_holder: 'Add a video (Youtube URL) ...',
             html_attrs: { style: 'width:100%' } %>

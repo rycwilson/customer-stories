@@ -297,7 +297,10 @@
                                         File.join( request.protocol +
                                           contribution.success.customer.company.subdomain +
                                           '.' + request.domain + request.port_string,
-                                          story_path(contribution.success.story) ) %>
+                                          public_story_path(contribution.success.story.id,
+                                                     contribution.success.customer.slug,
+                                                     contribution.success.products[0].slug,
+                                                     contribution.success.story.slug) ) %>
                                 <% else %>
                                   <span>Pending Curation</span>
                                 <% end %>

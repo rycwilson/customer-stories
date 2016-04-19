@@ -38,6 +38,7 @@ var ready = function () {
   initListeners();
   initTemplateEditorListeners();
   initFormLogoBackground();
+  initNewStoryValidator();
 
 };
 
@@ -289,7 +290,7 @@ function configSelect2 () {
     // TODO: enable new tags from here?
     $(".new-story-tags").select2({
       theme: 'bootstrap',
-      placeholder: 'select tags'
+      placeholder: 'select tag(s)'
     });
 
   }
@@ -311,6 +312,24 @@ function initFormLogoBackground () {
                                  .join('');
   $thumbnails.each(function () {
     $(this).css('background-color', '#' + companyColor1);
+  });
+}
+
+/*
+  Detect changes in new story modal required inputs, and enable
+  submit button accordingly.
+  'change' event is for the select boxes; 'input' for text box
+*/
+function initNewStoryValidator () {
+  $('#new-story-modal').on('change input', function () {
+    if ($('#story_customer').val() &&
+        $('#story_title').val() &&
+        $('#story_product_tags_').val()) {
+      $(this).find("[type='submit']").prop('disabled', false);
+    }
+    else {
+      $(this).find("[type='submit']").prop('disabled', true);
+    }
   });
 }
 

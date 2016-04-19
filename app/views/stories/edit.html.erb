@@ -165,7 +165,7 @@
 
                   <div class='col-sm-11' id='story-situation'>
                     <strong>Situation:&nbsp&nbsp</strong>
-                    <%= best_in_place @story, :situation, as: :textarea, url: story_path(@story),
+                    <%= best_in_place @story, :situation, as: :textarea, url: story_path(@story.id),
                         activator: '#edit-story-situation',
                         place_holder: 'Add story situation ...',
                         html_attrs: { style: 'width:100%' } %>
@@ -182,7 +182,7 @@
 
                   <div class='col-sm-11' id='story-challenge'>
                     <strong>Challenge:&nbsp&nbsp</strong>
-                    <%= best_in_place @story, :challenge, as: :textarea, url: story_path(@story),
+                    <%= best_in_place @story, :challenge, as: :textarea, url: story_path(@story.id),
                         activator: '#edit-story-challenge',
                         place_holder: 'Add story challenge ...',
                         html_attrs: { style: 'width:100%' } %>
@@ -199,7 +199,7 @@
 
                   <div class='col-sm-11' id='story-solution'>
                     <strong>Solution:&nbsp&nbsp</strong>
-                    <%= best_in_place @story, :solution, as: :textarea, url: story_path(@story),
+                    <%= best_in_place @story, :solution, as: :textarea, url: story_path(@story.id),
                         activator: '#edit-story-solution',
                         place_holder: 'Add story solution ...',
                         html_attrs: { style: 'width:100%' } %>
@@ -216,7 +216,7 @@
 
                   <div class='col-sm-11' id='story-benefits'>
                     <strong>Benefits:&nbsp&nbsp</strong>
-                    <%= best_in_place @story, :benefits, as: :textarea, url: story_path(@story),
+                    <%= best_in_place @story, :benefits, as: :textarea, url: story_path(@story.id),
                         activator: '#edit-story-benefits',
                         place_holder: 'Add story benefits ...',
                         html_attrs: { style: 'width:100%' } %>

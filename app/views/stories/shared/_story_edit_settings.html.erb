@@ -8,7 +8,7 @@
     javascript it gets changed to HTML, resulting in server error: unknown format)
   So, submission is done via AJAX. See stories.js
   -->
-  <%= form_tag story_path(@story), class: 'directUpload', id: 'customer-logo-form',
+  <%= form_tag story_path(@story.id), class: 'directUpload', id: 'customer-logo-form',
         data: { 'form-data' => (@s3_direct_post.fields),
                       'url' => @s3_direct_post.url,
                      'host' => URI.parse(@s3_direct_post.url).host
@@ -52,7 +52,7 @@
 
   <!-- resources: http://stackoverflow.com/questions/13311574
                   http://jsfiddle.net/cSSUA/209/ -->
-  <%= form_for @story, url: story_path(@story),
+  <%= form_for @story, url: story_path(@story.id),
                     method: 'put',
                     remote: true,
                       html: { class: "form-horizontal" } do |f| %>
@@ -96,7 +96,9 @@
   <!-- the data-no-turbolink attribute is necessary for linkedin widgets to properly load
   http://stackoverflow.com/questions/17600093/rails-javascript-not-loading-after-clicking-through-link-to-helper -->
   <div class="col-sm-12" data-no-turbolink>
-    <%= link_to 'Preview Story Page', story_path(@story),
+    <%= link_to 'Preview Story Page', public_story_path(@story.id,
+                                                  @story.success.customer.slug,
+                                          @story.success.products[0].slug, @story.slug),
           class: 'btn btn-primary' %>
   </div>
 
