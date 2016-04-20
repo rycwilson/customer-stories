@@ -11,10 +11,7 @@ Rails.application.routes.draw do
 
     # Stories - public access
     resources :stories, only: :index
-    # don't call this one 'story' or it will leave the PUT and DELETE routes (below)
-    # without an alias
-    # make sure there are no routes below with four levels, or this route will trigger!
-    get 'stories/:customer/:product/:title', to: 'stories#show', as: 'public_story'
+    # see below for route to public story page
 
     # Company home / Story curation - authentication required
     authenticate :user do
@@ -66,6 +63,12 @@ Rails.application.routes.draw do
       get '/:devise/:method', to: 'users/sessions#new',
                      constraints: { devise: 'users', method: 'sign_in' }
     end
+
+
+    # public story route moved down here so it doesn't hijack any other routes
+    # don't call this route 'story' or it will leave the PUT and DELETE routes (above)
+    # without an alias
+    get '/:customer/:product/:title', to: 'stories#show', as: 'public_story'
 
     # broken links
     get '/*all', to: 'site#valid_subdomain_bad_path'

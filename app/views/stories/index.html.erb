@@ -89,7 +89,7 @@
     <div class='container row' style='margin: 0 auto'>
       {{ successes_row.forEach (function (success) { }}
         <div class="col-md-2 text-center" style='margin-left:26px'>
-          <a href='/stories/{{= success.customer.slug }}/{{= success.products[0].slug }}/{{= success.story.slug }}'
+          <a href='/{{= success.customer.slug }}/{{= success.products[0].slug }}/{{= success.story.slug }}'
               class='story-link'>
             <div class="thumbnail" style='position:relative'>
               <img src="<%= asset_path('video.png') %>" alt="video tag"
