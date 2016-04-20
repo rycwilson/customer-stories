@@ -11,7 +11,7 @@ class Story < ActiveRecord::Base
   friendly_id :title, use: [:slugged, :finders, :history]
 
   def should_generate_new_friendly_id?
-    title_changed?
+    new_record? || title_changed? || slug.blank?
   end
 
   def assign_tags new_story

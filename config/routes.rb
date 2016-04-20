@@ -64,7 +64,6 @@ Rails.application.routes.draw do
                      constraints: { devise: 'users', method: 'sign_in' }
     end
 
-
     # public story route moved down here so it doesn't hijack any other routes
     # don't call this route 'story' or it will leave the PUT and DELETE routes (above)
     # without an alias
