@@ -113,17 +113,18 @@ class StoriesController < ApplicationController
       @story_id = story.id
       @base_url = request.base_url  # needed for deleting a result
       respond_to { |format| format.js { render action: 'create_prompt_success' } }
-    elsif params[:story][:embed_url]  # if updating video url
-      youtube_id = params[:story][:embed_url].match(/v=(?<id>.*)/)[:id]
-      params[:story][:embed_url] = "https://www.youtube.com/embed/" + youtube_id
+    elsif params[:story][:embed_url]  # embedded video
+      if params[:story][:embed_url].match(/youtube/)
+        youtube_id = params[:story][:embed_url].match(/v=(?<id>.+)/)[:id]
+        story.update embed_url: "https://www.youtube.com/embed/#{youtube_id}"
+      elsif params[:story][:embed_url].match(/vimeo/)
+        vimeo_id = params[:story][:embed_url].match(/\/(?<id>\d+)$/)[:id]
+        story.update embed_url: "https://player.vimeo.com/video/#{vimeo_id}"
+      end
+      # respond with json because we need to update the video iframe
+      # with the modified url ...
       respond_to do |format|
-        if story.update story_params
-          # respond with json because we need to update the input field
-          # on client side with the modified url ...
-          format.json { render json: story.as_json(only: :embed_url) }
-        else
-          #
-        end
+        format.json { render json: story.as_json(only: :embed_url) }
       end
     elsif params[:story][:published]
       publish_story = params[:story][:published] == '1' ? true : false
