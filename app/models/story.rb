@@ -4,13 +4,14 @@ class Story < ActiveRecord::Base
 
   belongs_to :success
 
-  validates :title, presence: true
+  # Story title should be unique, even across companies
+  # This because friendly_id allows us to search based on the title slug
+  validates :title, presence: true, uniqueness: true
 
-  friendly_id :title, use: [:slugged, :finders]
+  friendly_id :title, use: [:slugged, :finders, :history]
 
-
-  def self.find_example
-    Story.where(published: true).first.id
+  def should_generate_new_friendly_id?
+    title_changed?
   end
 
   def assign_tags new_story

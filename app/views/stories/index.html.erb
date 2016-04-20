@@ -57,7 +57,7 @@
 
                   <div class="col-md-2 text-center" style='margin-left:26px'>
                     <a href="<%= story.published? ?
-                        public_story_path(story.id, story.success.customer.slug,
+                        public_story_path(story.success.customer.slug,
                                           story.success.products[0].slug, story.slug) :
                                           'javascript:;' %>" class='story-link'>
                       <div class="thumbnail" style='position:relative'>
@@ -85,18 +85,17 @@
 
 <!-- underscore template -->
 <script type="text/template" id="stories-template">
-  {{ stories.each_slice(5, function (stories_row) { }}
+  {{ successes.each_slice(5, function (successes_row) { }}
     <div class='container row' style='margin: 0 auto'>
-      {{ stories_row.forEach (function (story) { }}
-        {{ console.log('story: ', story); }}
+      {{ successes_row.forEach (function (success) { }}
         <div class="col-md-2 text-center" style='margin-left:26px'>
-          <a href='/stories/{{= story.story_id }}' class='story-link'>
-          <a href='/stories/{{= story.story_id }}' class='story-link'>
+          <a href='/stories/{{= success.customer.slug }}/{{= success.products[0].slug }}/{{= success.story.slug }}'
+              class='story-link'>
             <div class="thumbnail" style='position:relative'>
               <img src="<%= asset_path('video.png') %>" alt="video tag"
                    style='position:absolute; height:25px; left:130px'>
-              {{ if (story.customer_logo) { }}
-                <img src="{{= story.customer_logo }}"
+              {{ if (success.customer.logo_url) { }}
+                <img src="{{= success.customer.logo_url }}"
                      style='height:95px' >
               {{ } else { }}
                 <img src="<%= asset_path('company-logo-missing.png') %>"

@@ -1,14 +1,22 @@
 class StoriesController < ApplicationController
 
   before_action :set_company, only: [:index, :show, :create]
-  before_action :set_story, only: [:show, :edit]
+  before_action :set_public_story_or_redirect, only: :show
+  before_action :set_story, only: :edit
   before_action :user_authorized?, only: [:edit]
   before_action :set_s3_direct_post, only: [:edit]
 
   def index
     if params[:filter]
-      @stories = @company.filter_stories params[:filter][:type], params[:filter][:id]
-      respond_to { |format| format.json { render json: @stories } }
+      @successes = @company.filter_successes params[:filter][:type], params[:filter][:id]
+      respond_to do |format|
+        format.json do
+          render json: @successes,
+              include: { story: { only: :slug },
+                      products: { only: :slug },
+                      customer: { only: [:slug, :logo_url] } }
+        end
+      end
     elsif curator?
       @story_tiles = @company.stories  # all
       @industries = @company.industries_select_options  # all
@@ -168,6 +176,17 @@ class StoriesController < ApplicationController
       @company = Company.find params[:company_id]
     else  # index
       @company = Company.find_by subdomain: request.subdomain
+    end
+  end
+
+  def set_public_story_or_redirect
+    @story = Story.friendly.find params[:title]
+    if request.path != public_story_path(@story.success.customer.slug,
+                                          @story.success.products[0].slug,
+                                          @story.slug)
+      return redirect_to public_story_path(@story.success.customer.slug,
+                                            @story.success.products[0].slug,
+                                            @story.slug), status: :moved_permanently
     end
   end
 

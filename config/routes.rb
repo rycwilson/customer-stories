@@ -14,7 +14,7 @@ Rails.application.routes.draw do
     # don't call this one 'story' or it will leave the PUT and DELETE routes (below)
     # without an alias
     # make sure there are no routes below with four levels, or this route will trigger!
-    get 'stories/:id/:customer/:product/:title', to: 'stories#show', as: 'public_story'
+    get 'stories/:customer/:product/:title', to: 'stories#show', as: 'public_story'
 
     # Company home / Story curation - authentication required
     authenticate :user do

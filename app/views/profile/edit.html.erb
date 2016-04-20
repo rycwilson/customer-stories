@@ -297,8 +297,7 @@
                                         File.join( request.protocol +
                                           contribution.success.customer.company.subdomain +
                                           '.' + request.domain + request.port_string,
-                                          public_story_path(contribution.success.story.id,
-                                                     contribution.success.customer.slug,
+                                          public_story_path(contribution.success.customer.slug,
                                                      contribution.success.products[0].slug,
                                                      contribution.success.story.slug) ) %>
                                 <% else %>

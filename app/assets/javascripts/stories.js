@@ -251,13 +251,14 @@ function initListeners () {
       method: 'get',
       data: { filter: { type: filterType, id: filterId } },
       success: function (data, status) {
-        console.log('filtered stories: ', data);
+        console.log('filtered successes: ', data);
         if (data.length === 0) {
           $('#stories-gallery').empty();
         }
         else {
           var template = _.template($('#stories-template').html());
-          $('#stories-gallery').empty().append(template({ stories: data }));
+          $('#stories-gallery').empty()
+                               .append(template({ successes: data }));
         }
       }
     });
