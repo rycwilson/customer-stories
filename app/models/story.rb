@@ -3,6 +3,8 @@ class Story < ActiveRecord::Base
   include FriendlyId
 
   belongs_to :success
+  # Note: no explicit association to friendly_id_slugs, but it's there
+  # Story has many friendly_id_slugs -> captures history of slug changes
 
   # Story title should be unique, even across companies
   # This because friendly_id allows us to search based on the title slug

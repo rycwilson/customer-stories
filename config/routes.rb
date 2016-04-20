@@ -64,7 +64,7 @@ Rails.application.routes.draw do
                      constraints: { devise: 'users', method: 'sign_in' }
     end
 
-    # public story route moved down here so it doesn't hijack any other routes
+    # public story route moved down here so it doesn't hijack any other routes.
     # don't call this route 'story' or it will leave the PUT and DELETE routes (above)
     # without an alias
     get '/:customer/:product/:title', to: 'stories#show', as: 'public_story'
@@ -97,8 +97,6 @@ Rails.application.routes.draw do
 
   # LinkedIn Oauth2 (omniauth gem)
   get '/auth/linkedin/callback', to: 'profile#linkedin_callback'
-
-  # devise_for :admin
 
   devise_for :users, controllers: {
       sessions: 'users/sessions',
