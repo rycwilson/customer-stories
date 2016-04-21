@@ -10,8 +10,11 @@ require File.expand_path('../seeds/email_templates', __FILE__)
 
 # see config/initializers/constants.rb for generic list of industries
 INDUSTRIES_CISCO = ['Automotive', 'Education', 'Energy', 'Financial Services', 'Government', 'Healthcare', 'Hospitality', 'Life Sciences', 'Manufacturing', 'Retail', 'Sports and Entertainment', 'Transportation']
-PROD_CATS = ['Servers', 'Switches', 'Routers', 'Networking Software', 'Security', 'Storage', 'Video']
-PRODUCTS = ['UCS C3160', 'Nexus 7004', 'Catalyst 6807', 'ISR 4400', 'ASR 1001', 'IOS XR 5.1', 'AnyConnect 4.1', 'MDS 9500']
+INDUSTRIES_ACME = ['Manufacturing', 'Pharmaceutical', 'Sports & Outdoors', 'Finance', 'Clothing', 'Farm Supplies', 'Toys']
+PROD_CATS_CISCO = ['Servers', 'Switches', 'Routers', 'Networking Software', 'Security', 'Storage', 'Video']
+PROD_CATS_ACME = ['Heavy Equipment', 'Explosives', 'Outdoor Gear', 'Firearms', 'Animal Feed', 'Winged Suits']
+PRODUCTS_CISCO = ['UCS C3160', 'Nexus 7004', 'Catalyst 6807', 'ISR 4400', 'ASR 1001', 'IOS XR 5.1', 'AnyConnect 4.1', 'MDS 9500']
+PRODUCTS_ACME = ['Anvil', 'Catapult', 'Bat Suit', 'Earthquake Pills', 'Plunger Detonator', 'Explosive Tennis Balls', 'Magnet']
 
 ROLES = ['customer', 'partner', 'sales']
 STATUS_OPTIONS = ['pre_request', 'request', 'remind1', 'remind2', 'feedback', 'contribution', 'opt_out', 'unsubscribe', 'did_not_respond']
@@ -19,9 +22,12 @@ STATUS_OPTIONS = ['pre_request', 'request', 'remind1', 'remind2', 'feedback', 'c
 dan = User.find_by(email:'***REMOVED***')
 # dan = User.create(first_name:'Dan', last_name:'Lindblom', email:'***REMOVED***', linkedin_url:'https://www.linkedin.com/in/danlindblom', sign_up_code:'csp_beta', password:'password', photo_url: 'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/0e2caaaf-d808-4279-b7ca-9929cfc6400c/dan.png')
 ryan = User.find_by(email:'***REMOVED***')
+joe = User.find_by(email:'***REMOVED***')
+frank = User.find_by(email:'***REMOVED***')
 # ryan = User.create(first_name:'Ryan', last_name:'Wilson', email:'***REMOVED***', linkedin_url:'https://www.linkedin.com/in/wilsonryanc', sign_up_code:'csp_beta', password:'password', photo_url: 'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/099b59d3-1f35-4d8b-9183-a162a80bfbac/ryan.png')
-curators = [dan, ryan]
 
+acme = Company.find_by(name:'Acme')
+acme.users.push(joe, frank)
 # acme = Company.create(name:'Acme Test', subdomain:'acme-test',
 #                   logo_url:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/4975cb76-14d7-4f09-a1ba-7726ae7fe6c3/acmecom.png",
 #                   nav_color_1:"#0056d6", nav_color_2:"#5f69a3", nav_text_color:"#f0f0f0")
@@ -31,6 +37,7 @@ curators = [dan, ryan]
 #                       phone:"650-327-6040", title:"Sales, Marketing, Entrepreneur, Investor, Advisor")
 
 cisco = Company.find_by(name:'Cisco Systems')
+cisco.users.push(dan, ryan)
 # cisco = Company.create(name:'Cisco Systems', subdomain:'cisco', feature_flag:'demo',
 #                    logo_url:'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/6326ee57-e0e0-4a0b-aacb-9b59849f2c40/cisco-grey@2x.png',
 #                    nav_color_1:'#007fc5', nav_color_2:'#2B5693' , nav_text_color:'#FCFCFD')
@@ -61,13 +68,13 @@ cisco = Company.find_by(name:'Cisco Systems')
 # Note: not using (dependent: :destroy) for users -> contributions (or users -> successes)
 EmailContributionRequest.destroy_all
 Contribution.destroy_all
-Customer.destroy_all # also destroys successes, stories, visitors, and successes* join tables
+Customer.destroy_all  # destroys successes, stories, visitors, and successes* join tables
 Prompt.destroy_all
 Result.destroy_all
-User.where.not("email = ? OR email = ?", "***REMOVED***", "***REMOVED***").destroy_all
-# Product.destroy_all
-# ProductCategory.destroy_all
-# IndustryCategory.destroy_all
+User.where.not("email IN ('***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***')").destroy_all
+Product.destroy_all
+ProductCategory.destroy_all
+IndustryCategory.destroy_all
 # EmailTemplate.destroy_all
 
 # some users with linkedin profiles (demo only)
@@ -78,83 +85,104 @@ user4 = User.create(first_name:'Allan', last_name:'Lo', email:'allan@mail.com', 
 user5 = User.create(first_name:'Jeff', last_name:'Weiner', email:'jeffw@mail.com', linkedin_url:'https://www.linkedin.com/in/jeffweiner08', sign_up_code:'csp_beta', password:'password')
 
 # Cisco's target industries...
-# INDUSTRIES_CISCO.each do |industry_name|
-#   cisco.industry_categories << IndustryCategory.create(name: industry_name)
-# end
+INDUSTRIES_CISCO.each do |industry_name|
+  cisco.industry_categories << IndustryCategory.create(name: industry_name)
+end
 
-# # Cisco's product categories and products...
-# PROD_CATS.each do |category_name|
-#   cisco.product_categories << ProductCategory.create(name: category_name)
-# end
-# PRODUCTS.each do |product_name|
-#   cisco.products << Product.create(name: product_name)
-# end
+# Acme's target industries...
+INDUSTRIES_ACME.each do |industry_name|
+  acme.industry_categories << IndustryCategory.create(name: industry_name)
+end
 
+
+# Cisco's product categories and products...
+PROD_CATS_CISCO.each do |category_name|
+  cisco.product_categories << ProductCategory.create(name: category_name)
+end
+PRODUCTS_CISCO.each do |product_name|
+  cisco.products << Product.create(name: product_name)
+end
+
+# Acme's product categories and products...
+PROD_CATS_ACME.each do |category_name|
+  acme.product_categories << ProductCategory.create(name: category_name)
+end
+PRODUCTS_ACME.each do |product_name|
+  acme.products << Product.create(name: product_name)
+end
 # Default email templates
 # csp.email_templates << EmailTemplate.create(name: "Customer", subject: EmailTemplatesSeed::REQUEST_SUBJECT, body: EmailTemplatesSeed::CUSTOMER_BODY)
 # csp.email_templates << EmailTemplate.create(name: "Partner", subject: EmailTemplatesSeed::REQUEST_SUBJECT, body: EmailTemplatesSeed::PARTNER_BODY)
 # csp.email_templates << EmailTemplate.create(name: "Sales", subject: EmailTemplatesSeed::REQUEST_SUBJECT, body: EmailTemplatesSeed::SALES_BODY)
 
 # Company.where.not(name:'CSP').each { |c| c.create_email_templates }
-
+acme.create_email_templates
 
 # Customers and Stories...
-DemoCustomersSeed::DEMO_CUSTOMERS.each do |customer_info|
-  customer = Customer.create(name: customer_info[:name], logo_url: customer_info[:logo])
-  cisco.customers << customer
-  success = Success.create
-  customer.successes << success
-  success.created_at = (rand*60).days.ago
-  success.curator = curators[rand(2)]  # randomly select dan or ryan as curator
-  success.save
-  # 2/3 successes will have a story
-  if rand(3) >= 1
-    success.story = StoriesSeed::create
-    # 2/3 stories have logo published
+
+def seed_company company, *users
+  DemoCustomersSeed::DEMO_CUSTOMERS.each do |customer_info|
+    customer = Customer.create(name: customer_info[:name], logo_url: customer_info[:logo])
+    company.customers << customer
+    success = Success.create
+    customer.successes << success
+    success.created_at = (rand*60).days.ago
+    success.curator = company.users[rand(2)]  # randomly select curator
+    success.save
+    # 2/3 successes will have a story
     if rand(3) >= 1
-      success.story.update(logo_published: true, logo_publish_date: Time.now)
-      # 1/2 of published logos are published stories (1/3 of stories are published)
-      if rand(2) == 0
-        success.story.update(approved: true, published: true, publish_date: Time.now)
+      success.story = StoriesSeed::create
+      # 2/3 stories have logo published
+      if rand(3) >= 1
+        success.story.update(logo_published: true, logo_publish_date: Time.now)
+        # 1/2 of published logos are published stories (1/3 of stories are published)
+        if rand(2) == 0
+          success.story.update(approved: true, published: true, publish_date: Time.now)
+        end
       end
-    end
-    # random industry category (tag)
-    success.industry_categories << cisco.industry_categories[rand(0...cisco.industry_categories.count)]
-    # random product category (tag)
-    success.product_categories << cisco.product_categories[rand(0...cisco.product_categories.count)]
-    # random product (tag)
-    success.products << cisco.products[rand(0...cisco.products.count)]
-    # each story has some visitors
-    10.times { success.visitors << VisitorsSeed::create }
+      # random industry category (tag)
+      success.industry_categories << company.industry_categories[rand(0...company.industry_categories.count)]
+      # random product category (tag)
+      success.product_categories << company.product_categories[rand(0...company.product_categories.count)]
+      # random product (tag)
+      success.products << company.products[rand(0...company.products.count)]
+      # each story has some visitors
+      10.times { success.visitors << VisitorsSeed::create }
 
-    # Contributions
-    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user1 )
-    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user2 )
-    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user3 )
-    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user4 )
-    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', user5 )
-    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'pre_request' )
-    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'feedback' )
-    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'did_not_respond',  nil, 10.days.ago )
-    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'opt_out' )
-    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'unsubscribe' )
-    ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution' )
+      # Contributions
+      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', users[0] )
+      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', users[1] )
+      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', users[2] )
+      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', users[3] )
+      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', users[4] )
+      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'pre_request' )
+      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'feedback' )
+      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'did_not_respond', nil, 10.days.ago )
+      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'opt_out' )
+      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'unsubscribe' )
+      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution' )
 
 
-    # Result
-    success.results << Result.create(description: "#{success.customer.name} achieves #{rand(50)+50}% higher Data Center speeds with Cisco UCS",
-                                        success_id: success.id)
+      # Result
+      success.results << Result.create(description: "#{success.customer.name} achieves #{rand(50)+50}% higher Data Center speeds with #{company.name} UCS",
+                                          success_id: success.id)
 
-    # Prompts
-    success.prompts << Prompt.create(description: "What was the challenge?",
-                                        success_id: success.id)
-    success.prompts << Prompt.create(description: "What was the solution?",
-                                        success_id: success.id)
-    success.prompts << Prompt.create(description: "What are your estimated or measured results?",
-                                        success_id: success.id)
+      # Prompts
+      success.prompts << Prompt.create(description: "What was the challenge?",
+                                          success_id: success.id)
+      success.prompts << Prompt.create(description: "What was the solution?",
+                                          success_id: success.id)
+      success.prompts << Prompt.create(description: "What are your estimated or measured results?",
+                                          success_id: success.id)
 
-  end  # story create
+    end  # story create
+  end
 end
+
+seed_company(cisco, user1, user2, user3, user4, user5)
+seed_company(acme, user1, user2, user3, user4, user5)
+
+
 
 
 

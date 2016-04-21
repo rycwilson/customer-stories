@@ -72,7 +72,7 @@ class Company < ActiveRecord::Base
                       .where(industries_successes: { success_id: success_ids })
                       .uniq
                       .map { |ic| [ ic.name, ic.id ] }
-    filter_select_options.unshift(['All', 'all'])
+    filter_select_options.unshift(['All', 0])
   end
 
   def templates_select
@@ -82,21 +82,40 @@ class Company < ActiveRecord::Base
     .unshift( [""] )
   end
 
+  def products_filter_select_options
+    Product.joins(:products_successes)
+  end
+
   # method returns successes instead of stories because success
   # associations also needed
-  def filter_successes type, id
+  def filter_successes_by_tag tag, id
     if id == '0'  # all successes
       return Success.includes(:story, :customer, :products)
-                    .joins(:story)  # only successes with a story
+                    .joins(:story, :customer)  # only successes with a story
+                    .where(customers: { company_id: self.id })
     else
-      case type
+      case tag
         when 'industries'
           Success.includes(:story, :customer, :products)
-                 .joins(:industry_categories)
-                 .where(industry_categories: { id: id })
+                 .joins(:industry_categories, :customer)
+                 .where(customers: { company_id: self.id },
+                        industry_categories: { id: id })
         else
       end
     end
+  end
+
+  def successes_with_logo_published
+    Success.includes(:story, :customer, :products)
+           .joins(:story, :customer)  # these are associations
+           .where(customers: { company_id: self.id },  # these are tables
+                    stories: { logo_published: true })
+  end
+
+  def successes_with_story
+    Success.includes(:story, :customer, :products)
+           .joins(:story, :customer)
+           .where(customers: { company_id: self.id })
   end
 
   # slightly different than updating tags for a story

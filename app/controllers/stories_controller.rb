@@ -8,23 +8,24 @@ class StoriesController < ApplicationController
 
   def index
     if params[:filter]
-      @successes = @company.filter_successes params[:filter][:type], params[:filter][:id]
+      @success_tiles =
+          @company.filter_successes_by_tag params[:filter][:tag], params[:filter][:id]
       respond_to do |format|
         format.json do
-          render json: @successes,
+          render json: @success_tiles,
               include: { story: { only: :slug },
                       products: { only: :slug },
                       customer: { only: [:slug, :logo_url] } }
         end
       end
     elsif curator?
-      @story_tiles = @company.stories  # all
-      @industries = @company.industries_select_options  # all
-                            .unshift( ["all", 0] )
+      @success_tiles = @company.successes_with_story    # all stories
+      @industries = @company.industries_select_options  # all industries
+                            .unshift( ["All", 0] )
     elsif @company.feature_flag == 'alpha'
       redirect_to request.protocol + request.domain + request.port_string
-    else
-      @story_tiles = @company.stories.where(logo_published: true)
+    else  # public reader
+      @success_tiles = @company.successes_with_logo_published
       # select options populated only with industries that are connected
       # to a story with logo published ...
       @industries = @company.industries_filter_select_options

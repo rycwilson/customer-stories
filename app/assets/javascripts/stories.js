@@ -242,22 +242,19 @@ function initListeners () {
     Stories filter
   */
   $('.stories-filter').on('change', function () {
-    var filterType = $(this).attr('id'),  // 'industries'
+    var filterTag = $(this).attr('id'),  // 'industries'
         filterId = $(this).val(),  // the database id of the chosen industry
-        companyId = $('#stories-gallery').data('company-id');
+        companyId = $('#stories-gallery').data('company-id'),
+        template = _.template($('#stories-template').html());
     $.ajax({
       url: '/stories',
       method: 'get',
-      data: { filter: { type: filterType, id: filterId } },
+      data: { filter: { tag: filterTag, id: filterId } },
       success: function (data, status) {
         console.log('filtered successes: ', data);
-        if (data.length === 0) {
-          $('#stories-gallery').empty();
-        }
-        else {
-          var template = _.template($('#stories-template').html());
-          $('#stories-gallery').empty()
-                               .append(template({ successes: data }));
+        $('#stories-gallery').empty();
+        if (data.length !== 0) {
+          $('#stories-gallery').append(template({ success_tiles: data }));
         }
       }
     });
