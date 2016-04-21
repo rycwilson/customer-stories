@@ -20,8 +20,12 @@ class StoriesController < ApplicationController
       end
     elsif curator?
       @success_tiles = @company.successes_with_story    # all stories
+      # need to unshift here instead of model methods since other calls to
+      # these methods don't require the unshift
       @industries = @company.industries_select_options  # all industries
                             .unshift( ["All", 0] )
+      @products = @company.products_select_options
+                          .unshift( ["All", 0] )
     elsif @company.feature_flag == 'alpha'
       redirect_to request.protocol + request.domain + request.port_string
     else  # public reader
@@ -29,6 +33,7 @@ class StoriesController < ApplicationController
       # select options populated only with industries that are connected
       # to a story with logo published ...
       @industries = @company.industries_filter_select_options
+      @products = @company.products_filter_select_options
     end
   end
 
@@ -184,12 +189,14 @@ class StoriesController < ApplicationController
 
   def set_public_story_or_redirect
     @story = Story.friendly.find params[:title]
-    if request.path != public_story_path(@story.success.customer.slug,
-                                          @story.success.products[0].slug,
-                                          @story.slug)
-      return redirect_to public_story_path(@story.success.customer.slug,
-                                            @story.success.products[0].slug,
-                                            @story.slug), status: :moved_permanently
+    if request.path !=
+       public_story_path(@story.success.customer.slug,
+                         @story.success.products.try(:[], 0).slug || "product missing",
+                         @story.slug)
+      return redirect_to public_story_path(
+                           @story.success.customer.slug,
+                           @story.success.products.try(:[], 0).slug || "product missing",
+                           @story.slug), status: :moved_permanently
     end
   end
 

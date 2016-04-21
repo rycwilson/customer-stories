@@ -62,17 +62,24 @@ class Company < ActiveRecord::Base
     end
   end
 
+  # method returns an array of industry tags for which
+  # a logo-published story exists for the given company
   def industries_filter_select_options
-    # an array of success ids with logo_published == true
-    success_ids = self.successes
-                      .select { |s| s.story.present? && s.story.logo_published? }
-                      .map { |success| success.id }
-    filter_select_options =
-      IndustryCategory.joins(:industries_successes)
-                      .where(industries_successes: { success_id: success_ids })
-                      .uniq
-                      .map { |ic| [ ic.name, ic.id ] }
-    filter_select_options.unshift(['All', 0])
+    IndustryCategory.joins(successes: { story: {}, customer: {} })
+                    .where(customers: { company_id: self.id })
+                    .uniq
+                    .map { |ic| [ ic.name, ic.id ] }
+                    .unshift ['All', 0]
+  end
+
+  # method returns an array of product tags for which
+  # a logo-published story exists for the given company
+  def products_filter_select_options
+    Product.joins(successes: { story: {}, customer: {} })
+           .where(customers: { company_id: self.id })
+           .uniq
+           .map { |product| [ product.name, product.id ]}
+           .unshift ['All', 0]
   end
 
   def templates_select
@@ -82,24 +89,29 @@ class Company < ActiveRecord::Base
     .unshift( [""] )
   end
 
-  def products_filter_select_options
-    Product.joins(:products_successes)
-  end
-
-  # method returns successes instead of stories because success
-  # associations also needed
+  # method returns successes instead of stories because data from
+  # success associations is needed
   def filter_successes_by_tag tag, id
     if id == '0'  # all successes
       return Success.includes(:story, :customer, :products)
                     .joins(:story, :customer)  # only successes with a story
-                    .where(customers: { company_id: self.id })
+                    .where(stories: { logo_published: true },
+                         customers: { company_id: self.id })
     else
       case tag
         when 'industries'
           Success.includes(:story, :customer, :products)
-                 .joins(:industry_categories, :customer)
-                 .where(customers: { company_id: self.id },
-                        industry_categories: { id: id })
+                 .joins(:industry_categories, :story, :customer)
+                 .where(industry_categories: { id: id },
+                          stories: { logo_published: true },
+                        customers: { company_id: self.id })
+
+        when 'products'
+          Success.includes(:story, :customer, :products)
+                 .joins(:products, :story, :customer)
+                 .where(products: { id: id },
+                         stories: { logo_published: true },
+                       customers: { company_id: self.id })
         else
       end
     end

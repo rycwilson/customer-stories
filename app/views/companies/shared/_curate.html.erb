@@ -31,62 +31,69 @@
                 </tr>
               </thead>
               <tbody>
+    <!-- <tbody> -->
+      <% @company.stories.each do |story| %>
 
-                <% @company.stories.each do |story| %>
+        <tr>
+          <td class='td-story-customer valign-middle'>
+            <%= story.success.customer.name %>
+          </td>
+          <td class='td-story-curator valign-middle'>
+            <%= story.success.curator.full_name %>
+          </td>
+          <td class='td-story-title valign-middle'>
+            <%= story.title %>
+          </td>
+          <% if story.published? %>
+            <td class='td-story-status valign-middle'>
+              <%= link_to 'Published',
+                    public_story_path(
+                      story.success.customer.slug,
+                      story.success.products.try(:[], 0).slug || "product missing",
+                      story.slug) %>
+            </td>
+            <td class='td-story-date valign-middle'>
+              <%= story.publish_date.strftime('%-m/%-d/%y') %>
+            </td>
+          <% elsif story.logo_published? %>
+            <td class='td-story-status valign-middle'>
+              <%= link_to 'Logo published',
+                    public_story_path(
+                      story.success.customer.slug,
+                      story.success.products.try(:[], 0).slug || "product missing",
+                      story.slug) %>
+            </td>
+            <td class='td-story-date valign-middle'>
+              <%= story.logo_publish_date.strftime('%-m/%-d/%y') %>
+            </td>
+          <% else %>
+            <td class='td-story-status valign-middle'>
+              <%= link_to 'Pending curation',
+                    public_story_path(
+                      story.success.customer.slug,
+                      story.success.products.try(:[], 0).slug || "product missing",
+                      story.slug) %>
+            </td>
+            <td class='valign-middle'>
+              N/A
+            </td>
+          <% end %>
+          <td class="td-story-actions text-center valign-middle">
+            <%= link_to edit_story_path(story.id),
+                class: "btn btn-xs btn-primary" do %>
+              <i class="fa fa-pencil"></i>
+            <% end %>
+            <%= link_to story_path(story.id),
+                method: 'delete',
+                data: { confirm: 'Are you sure?' },
+                class: 'btn btn-xs btn-secondary' do %>
+              <i class="fa fa-times"></i>
+            <% end %>
+          </td>
+        </tr>
 
-                  <tr>
-                    <td class='td-story-customer valign-middle'>
-                      <%= story.success.customer.name %>
-                    </td>
-                    <td class='td-story-curator valign-middle'>
-                      <%= story.success.curator.full_name %>
-                    </td>
-                    <td class='td-story-title valign-middle'>
-                      <%= story.title %>
-                    </td>
-                    <% if story.published? %>
-                      <td class='td-story-status valign-middle'>
-                        <%= link_to 'Published',
-                              public_story_path(story.success.customer.slug,
-                                       story.success.products[0].slug, story.slug) %>
-                      </td>
-                      <td class='td-story-date valign-middle'>
-                        <%= story.publish_date.strftime('%-m/%-d/%y') %>
-                      </td>
-                    <% elsif story.logo_published? %>
-                      <td class='td-story-status valign-middle'>
-                        <%= link_to 'Logo published',
-                              public_story_path(story.success.customer.slug,
-                                       story.success.products[0].slug, story.slug) %>
-                      </td>
-                      <td class='td-story-date valign-middle'>
-                        <%= story.logo_publish_date.strftime('%-m/%-d/%y') %>
-                      </td>
-                    <% else %>
-                      <td class='td-story-status valign-middle'>
-                        <%= link_to 'Pending curation',
-                              public_story_path(story.success.customer.slug,
-                                       story.success.products[0].slug, story.slug) %>
-                      </td>
-                      <td class='valign-middle'>
-                        N/A
-                      </td>
-                    <% end %>
-                    <td class="td-story-actions text-center valign-middle">
-                      <%= link_to edit_story_path(story.id),
-                          class: "btn btn-xs btn-primary" do %>
-                        <i class="fa fa-pencil"></i>
-                      <% end %>
-                      <%= link_to story_path(story.id),
-                          method: 'delete',
-                          data: { confirm: 'Are you sure?' },
-                          class: 'btn btn-xs btn-secondary' do %>
-                        <i class="fa fa-times"></i>
-                      <% end %>
-                    </td>
-                  </tr>
-
-                <% end %>
+      <% end %>
+    <!-- </tbody> -->
 
               </tbody>
             </table>

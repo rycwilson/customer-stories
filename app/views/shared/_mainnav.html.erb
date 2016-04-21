@@ -89,18 +89,16 @@
       <% if controller_name == 'stories' && action_name == 'index' %>
         <form class="form-inline col-sm-6 text-center" style='padding-top: 5px'>
           <div class="form-group text-left">
-           <%= label_tag :industries, "Industries", class: 'control-label' %>
+           <%= label_tag :industries, "Industry", class: 'control-label' %>
            <%= select_tag :industries, options_for_select(@industries),
                   { class: 'stories-filter form-control',
-                    style: 'min-width: 140px',
-                    disabled: (true if @company.feature_flag == 'alpha') }
+                    style: 'min-width: 140px' }
                     %>
           </div>&nbsp;&nbsp;
           <div class="form-group text-left">
-           <%= label_tag :products, "Products", class: 'control-label' %>
-           <%= select_tag :products, options_for_select(@industries),
-                  { disabled: true,
-                    class: 'stories-filter form-control',
+           <%= label_tag :products, "Product", class: 'control-label' %>
+           <%= select_tag :products, options_for_select(@products),
+                  { class: 'stories-filter form-control',
                     style: 'min-width: 140px' } %>
           </div>
         </form>

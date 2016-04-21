@@ -24,18 +24,16 @@
       <div class="container">
         <form class="form-inline col-sm-7 col-sm-offset-1">
           <div class="form-group text-left">
-           <%= label_tag :industries, "Industries", class: 'control-label' %>
+           <%= label_tag :industries, "Industry", class: 'control-label' %>
            <%= select_tag :industries, options_for_select(@industries),
                   class: 'stories-filter form-control',
-                  style: 'min-width: 140px',
-                  disabled: (true if @company.feature_flag == 'alpha') %>
+                  style: 'min-width: 140px' %>
           </div>&nbsp;&nbsp;
           <div class="form-group text-left">
-           <%= label_tag :products, "Products", class: 'control-label' %>
-           <%= select_tag :products, options_for_select(@industries),
+           <%= label_tag :products, "Product", class: 'control-label' %>
+           <%= select_tag :products, options_for_select(@products),
                   { class: 'stories-filter form-control',
-                    style: 'min-width: 140px',
-                 disabled: true } %>
+                    style: 'min-width: 140px' } %>
 
           </div>
         </form>
@@ -57,9 +55,10 @@
 
                   <div class="col-md-2 text-center" style='margin-left:26px'>
                     <a href="<%= success.story.published? ?
-                        public_story_path(success.customer.slug,
-                                          success.products[0].slug, success.story.slug) :
-                                          'javascript:;' %>" class='story-link'>
+                        public_story_path(
+                          success.customer.slug,
+                          success.products.try(:[], 0).slug || 'product missing',
+                          success.story.slug) : 'javascript:;' %>" class='story-link'>
                       <div class="thumbnail" style='position:relative'>
                         <!-- <div class="thumbnail-view"> -->
 
@@ -89,6 +88,7 @@
     <div class='container row' style='margin: 0 auto'>
       {{ success_tiles_row.forEach (function (success) { }}
         <div class="col-md-2 text-center" style='margin-left:26px'>
+          {{ if (!success.products) { success.products.push({ slug: "product missing" }); } }}
           <a href='/{{= success.customer.slug }}/{{= success.products[0].slug }}/{{= success.story.slug }}'
               class='story-link'>
             <div class="thumbnail" style='position:relative'>

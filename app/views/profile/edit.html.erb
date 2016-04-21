@@ -256,59 +256,59 @@
                           </tr>
                         </thead>
                         <tbody>
+    <!-- <tbody> -->
+      <% @user.own_contributions.each do |contribution| %>
 
-                          <% @user.own_contributions.each do |contribution| %>
+        <tr>
+          <td class='valign-middle'>
+            <%= contribution.success.customer.company.name %>
+          </td>
+          <td class='valign-middle'>
+            <%= contribution.success.curator.full_name %>
+          </td>
+          <td class='valign-middle'>
+            <%= contribution.success.products.take.try(:name) || "none" %>
+          </td>
+          <td class='valign-middle text-center'>
 
-                            <tr>
-                              <td class='valign-middle'>
-                                <%= contribution.success.customer.company.name %>
-                              </td>
-                              <td class='valign-middle'>
-                                <%= contribution.success.curator.full_name %>
-                              </td>
-                              <td class='valign-middle'>
-                                <%= contribution.success.products.take.try(:name) || "none" %>
-                              </td>
-                              <td class='valign-middle text-center'>
+            <% unless contribution.success.story.published? %>
+              <a href="javascript:;">
+                <i class='glyphicon glyphicon-pencil'></i>
+              </a>
+            <% end %>
 
-                                <% unless contribution.success.story.published? %>
-                                  <a href="javascript:;">
-                                    <i class='glyphicon glyphicon-pencil'></i>
-                                  </a>
-                                <% end %>
+          </td>
+          <td class='valign-middle text-center'>
 
-                              </td>
-                              <td class='valign-middle text-center'>
+          <!-- check_box method requires instance variable, not local variable -->
+          <%= check_box get_contribution(contribution.id),
+            :linkedin?, { checked: contribution.linkedin?,
+                            class: 'linkedin-checkbox',
+                             data: {
+                                token: contribution.access_token,
+                            subdomain: contribution.success.customer.company.subdomain
+                             } }, "true", "false" %>
 
-                <!-- check_box method requires instance variable, not local variable -->
-                <%= check_box get_contribution(contribution.id),
-                      :linkedin?, { checked: contribution.linkedin?,
-                                      class: 'linkedin-checkbox',
-                                       data: {
-                                          token: contribution.access_token,
-                                      subdomain: contribution.success.customer.company.subdomain
-                                       } }, "true", "false" %>
+          </td>
+          <td class='valign-middle'>
 
-                              </td>
-                              <td class='valign-middle'>
+            <% if contribution.success.story.published? %>
+              <%= link_to 'Published',
+                    File.join( request.protocol +
+                      contribution.success.customer.company.subdomain +
+                      '.' + request.domain + request.port_string,
+                      public_story_path(contribution.success.customer.slug,
+                                 contribution.success.products.try(:[], 0).slug || 'product missing',
+                                 contribution.success.story.slug) ) %>
+            <% else %>
+              <span>Pending Curation</span>
+            <% end %>
 
-                                <% if contribution.success.story.published? %>
-                                  <%= link_to 'Published',
-                                        File.join( request.protocol +
-                                          contribution.success.customer.company.subdomain +
-                                          '.' + request.domain + request.port_string,
-                                          public_story_path(contribution.success.customer.slug,
-                                                     contribution.success.products[0].slug,
-                                                     contribution.success.story.slug) ) %>
-                                <% else %>
-                                  <span>Pending Curation</span>
-                                <% end %>
+          </td>
+        </tr>
 
-                              </td>
-                            </tr>
-
-                          <% end %>
-
+      <% end %>
+    <!-- </tbody> -->
                         </tbody>
                       </table>
                     </div>  <!-- table-responsive -->

@@ -242,10 +242,24 @@ function initListeners () {
     Stories filter
   */
   $('.stories-filter').on('change', function () {
-    var filterTag = $(this).attr('id'),  // 'industries'
+
+    /*
+      if change was triggered automatically,
+      (i.e. to reset one select box in favor of select box most recently changed),
+      exit from function
+    */
+    if (sessionStorage.getItem('autoTrigger') === 'true') {
+      sessionStorage.setItem('autoTrigger', 'false');
+      return false;
+    }
+
+    var filterTag = $(this).attr('name'),  // 'industries' or 'products' (comes from instance var name)
         filterId = $(this).val(),  // the database id of the chosen industry
         companyId = $('#stories-gallery').data('company-id'),
-        template = _.template($('#stories-template').html());
+        template = _.template($('#stories-template').html()),
+        $industrySelect = $(this).closest('.container').find("[name='industries']"),
+        $productSelect = $(this).closest('.container').find("[name='products']");
+
     $.ajax({
       url: '/stories',
       method: 'get',
@@ -253,11 +267,20 @@ function initListeners () {
       success: function (data, status) {
         console.log('filtered successes: ', data);
         $('#stories-gallery').empty();
-        if (data.length !== 0) {
+        if (data) {
           $('#stories-gallery').append(template({ success_tiles: data }));
         }
       }
     });
+
+    if (filterTag === 'industries' && $productSelect.val() !== '0') {
+      sessionStorage.setItem('autoTrigger', 'true');
+      $productSelect.val('0').trigger('change');
+    } else if (filterTag === 'products' && $industrySelect.val() !== '0') {
+      sessionStorage.setItem('autoTrigger', 'true');
+      $industrySelect.val('0').trigger('change');
+    }
+
   });
 
   // reset new contributor modal form when the modal closes

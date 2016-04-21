@@ -10,11 +10,11 @@ require File.expand_path('../seeds/email_templates', __FILE__)
 
 # see config/initializers/constants.rb for generic list of industries
 INDUSTRIES_CISCO = ['Automotive', 'Education', 'Energy', 'Financial Services', 'Government', 'Healthcare', 'Hospitality', 'Life Sciences', 'Manufacturing', 'Retail', 'Sports and Entertainment', 'Transportation']
-INDUSTRIES_ACME = ['Manufacturing', 'Pharmaceutical', 'Sports & Outdoors', 'Finance', 'Clothing', 'Farm Supplies', 'Toys']
+INDUSTRIES_ACME = ['Automotive', 'Manufacturing', 'Home & Garden', 'Steel', 'Pharmaceutical', 'Construction', 'Sports & Outdoors', 'Food', 'Party Supply', 'Clothing', 'Farm Equipment', 'Toys']
 PROD_CATS_CISCO = ['Servers', 'Switches', 'Routers', 'Networking Software', 'Security', 'Storage', 'Video']
-PROD_CATS_ACME = ['Heavy Equipment', 'Explosives', 'Outdoor Gear', 'Firearms', 'Animal Feed', 'Winged Suits']
+PROD_CATS_ACME = ['Heavy Equipment', 'Explosives', 'Roadrunner Traps', 'Outdoor Gear', 'Firearms', 'Ammunition', 'Appliances', 'Animal Feed', 'Winged Suits', 'Kitchen Essentials', 'Dietary Supplements', 'Costumes']
 PRODUCTS_CISCO = ['UCS C3160', 'Nexus 7004', 'Catalyst 6807', 'ISR 4400', 'ASR 1001', 'IOS XR 5.1', 'AnyConnect 4.1', 'MDS 9500']
-PRODUCTS_ACME = ['Anvil', 'Catapult', 'Bat Suit', 'Earthquake Pills', 'Plunger Detonator', 'Explosive Tennis Balls', 'Magnet']
+PRODUCTS_ACME = ['Anvil', 'Catapult', 'Bat Suit', 'Iron Carrot', 'Buck Shot', 'Axle Grease', 'Earthquake Pills', 'Rocket Sled', 'Detonator', 'Explosive Tennis Balls', 'Magnet', 'Super Speed Vitamins', 'Cement', 'Time-Space Gun', 'Giant Rubber Band' ]
 
 ROLES = ['customer', 'partner', 'sales']
 STATUS_OPTIONS = ['pre_request', 'request', 'remind1', 'remind2', 'feedback', 'contribution', 'opt_out', 'unsubscribe', 'did_not_respond']

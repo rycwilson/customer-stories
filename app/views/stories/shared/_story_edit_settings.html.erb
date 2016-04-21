@@ -96,8 +96,10 @@
   <!-- the data-no-turbolink attribute is necessary for linkedin widgets to properly load
   http://stackoverflow.com/questions/17600093/rails-javascript-not-loading-after-clicking-through-link-to-helper -->
   <div class="col-sm-12" data-no-turbolink>
-    <%= link_to 'Preview Story Page', public_story_path(@story.success.customer.slug,
-                                          @story.success.products[0].slug, @story.slug),
+    <%= link_to 'Preview Story Page',
+            public_story_path(@story.success.customer.slug,
+                              @story.success.products.try(:[], 0).slug || 'product missing',
+                              @story.slug),
           class: 'btn btn-primary' %>
   </div>
 
