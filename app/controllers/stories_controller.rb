@@ -20,6 +20,7 @@ class StoriesController < ApplicationController
     elsif curator?
       @story_tiles = @company.stories  # all
       @industries = @company.industries_select_options  # all
+                            .unshift( ["all", 0] )
     elsif @company.feature_flag == 'alpha'
       redirect_to request.protocol + request.domain + request.port_string
     else

@@ -242,10 +242,9 @@ function initListeners () {
     Stories filter
   */
   $('.stories-filter').on('change', function () {
-
-    var filterType = $(this).attr('id'); // 'industries'
-    var filterId = $(this).val(); // the database id of the chosen industry
-    var companyId = $('#stories-gallery').data('company-id');
+    var filterType = $(this).attr('id'),  // 'industries'
+        filterId = $(this).val(),  // the database id of the chosen industry
+        companyId = $('#stories-gallery').data('company-id');
     $.ajax({
       url: '/stories',
       method: 'get',

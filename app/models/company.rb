@@ -82,21 +82,20 @@ class Company < ActiveRecord::Base
     .unshift( [""] )
   end
 
+  # method returns successes instead of stories because success
+  # associations also needed
   def filter_successes type, id
-    if id == 'all' # all stories for current company
-      return self.stories.map do |story|
-        # provide the customer along with the story
-        { story_id: story.id, customer_logo: story.success.customer.logo_url }
+    if id == '0'  # all successes
+      return Success.includes(:story, :customer, :products)
+                    .joins(:story)  # only successes with a story
+    else
+      case type
+        when 'industries'
+          Success.includes(:story, :customer, :products)
+                 .joins(:industry_categories)
+                 .where(industry_categories: { id: id })
+        else
       end
-    end
-    case type
-      when 'industries'
-        Success.includes(:story, :customer, :products)
-               .joins(:industry_categories)
-               .where(industry_categories: { id: id })
-               # .map { |success| { story_id: success.story.id,
-               #               customer_logo: success.customer.logo_url } }
-      else
     end
   end
 
