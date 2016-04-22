@@ -11,6 +11,32 @@
 *= require social-sharing
 */
 
+.grid {
+  margin: 0 auto;
+}
+
+.grid-item {
+  // float: left;
+  width: 170px;
+  // height: 170px;
+  margin-left: 15px;
+  margin-right: 15px;
+  margin-bottom: 30px
+  // border: 2px solid hsla(0, 0%, 0%, 0.5);
+}
+
+a img {
+  padding-bottom: 4px;
+}
+
+.thumbnail {
+  padding: 4px 0 0 0;
+}
+
+.thumbnail .caption {
+  padding: 2px 0 2px 6px;
+}
+
 .contribution-card .accordion-inner br {
   line-height: 22px;
 }

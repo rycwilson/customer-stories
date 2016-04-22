@@ -47,34 +47,29 @@
       <div class="portlet portlet-default">
         <div class="portlet-body"
             data-company-id="<%= @company.id %>">
+          <div class='grid' id="stories-gallery">
 
-          <div id="stories-gallery">
-            <% @success_tiles.each_slice(5) do |success_tiles_row| %>
-              <div class='container row' style='margin: 0 auto'>
-                <% success_tiles_row.each do |success| %>
-
-                  <div class="col-md-2 text-center" style='margin-left:26px'>
-                    <a href="<%= success.story.published? ?
-                        public_story_path(
+            <% @success_tiles.each do |success| %>
+              <div class="grid-item thumbnail">
+                <a
+                    href="<%= success.story.published? ?
+                      public_story_path(
                           success.customer.slug,
                           success.products.try(:[], 0).slug || 'product missing',
-                          success.story.slug) : 'javascript:;' %>" class='story-link'>
-                      <div class="thumbnail" style='position:relative'>
-                        <!-- <div class="thumbnail-view"> -->
+                          success.story.slug) : 'javascript:;' %>">
+                  <img src="<%= success.customer.logo_url || asset_path('company-logo-missing.png') %>" style='height:95px; width:95px' >
 
-                        <img src="<%= asset_path('video.png') %>" alt="video tag"
-                            style='position:absolute; height:25px; left:130px'>
-
-                        <img src="<%= success.customer.logo_url || asset_path('company-logo-missing.png') %>" style='width:95px' >
-
-                        <!-- </div> -->
-                      </div> <!-- /.thumbnail -->
-                    </a>
-                  </div> <!-- /.col -->
-
-                <% end %>
-              </div><br><br>
+                </a>
+                <div class="caption"
+                    style="background-color:<%= @company.nav_color_1 %>;
+                           color:<%= @company.nav_text_color %>;
+                           visibility:<%= success.story.published? ?
+                                            'visible' : 'hidden' %>">
+                  <span>Read their story</span>
+                </div>
+              </div>
             <% end %>
+
           </div>
         </div>  <!-- portlet-body -->
       </div>  <!-- portlet -->

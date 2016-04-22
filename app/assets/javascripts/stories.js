@@ -18,6 +18,7 @@
 //= require jquery.inputmask/dist/inputmask/inputmask.phone.extensions
 //= require jquery.inputmask/dist/inputmask/jquery.inputmask
 
+//= require masonry/dist/masonry.pkgd
 
 var ready = function () {
 
@@ -396,6 +397,13 @@ function configPlugins () {
   $("label[for='Product_Category']").attr('for', 'story_product_cat_tags_');
   $("label[for='Product']").attr('for', 'story_product_tags_');
   $('#tags-form').dirtyFields();
+
+  $('.grid').masonry({
+    // options...
+    itemSelector: '.grid-item',
+    columnWidth: 220,
+    isFitWidth: true
+  });
 
 }
 
