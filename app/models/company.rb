@@ -66,7 +66,8 @@ class Company < ActiveRecord::Base
   # a logo-published story exists for the given company
   def industries_filter_select_options
     IndustryCategory.joins(successes: { story: {}, customer: {} })
-                    .where(customers: { company_id: self.id })
+                    .where(customers: { company_id: self.id },
+                             stories: { logo_published: true })
                     .uniq
                     .map { |ic| [ ic.name, ic.id ] }
                     .unshift ['All', 0]
@@ -76,7 +77,8 @@ class Company < ActiveRecord::Base
   # a logo-published story exists for the given company
   def products_filter_select_options
     Product.joins(successes: { story: {}, customer: {} })
-           .where(customers: { company_id: self.id })
+           .where(customers: { company_id: self.id },
+                    stories: { logo_published: true })
            .uniq
            .map { |product| [ product.name, product.id ]}
            .unshift ['All', 0]
