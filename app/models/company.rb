@@ -99,6 +99,7 @@ class Company < ActiveRecord::Base
                     .joins(:story, :customer)  # only successes with a story
                     .where(stories: { logo_published: true },
                          customers: { company_id: self.id })
+                    .order("stories.published DESC, stories.publish_date ASC")
     else
       case tag
         when 'industries'
@@ -107,13 +108,14 @@ class Company < ActiveRecord::Base
                  .where(industry_categories: { id: id },
                           stories: { logo_published: true },
                         customers: { company_id: self.id })
-
+                 .order("stories.published DESC, stories.publish_date ASC")
         when 'products'
           Success.includes(:story, :customer, :products)
                  .joins(:products, :story, :customer)
                  .where(products: { id: id },
                          stories: { logo_published: true },
                        customers: { company_id: self.id })
+                 .order("stories.published DESC, stories.publish_date ASC")
         else
       end
     end
