@@ -13,7 +13,7 @@ class StoriesController < ApplicationController
       respond_to do |format|
         format.json do
           render json: @success_tiles,
-              include: { story: { only: :slug },
+              include: { story: { only: [:slug, :published] },
                       products: { only: :slug },
                       customer: { only: [:slug, :logo_url] } }
         end

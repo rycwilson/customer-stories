@@ -269,7 +269,10 @@ function initListeners () {
         console.log('filtered successes: ', data);
         $('#stories-gallery').empty();
         if (data) {
-          $('#stories-gallery').append(template({ success_tiles: data }));
+          var $tiles = $(template({ successTiles: data }));
+          $('#stories-gallery').masonry()
+                               .append($tiles)
+                               .masonry('appended', $tiles);
         }
       }
     });
