@@ -50,6 +50,7 @@
           <div class='grid' id="stories-gallery">
 
             <% @success_tiles.each do |success| %>
+
               <div class="grid-item thumbnail">
                 <a data-no-turbolink href="<%= success.story.published? ?
                       public_story_path(
@@ -66,6 +67,7 @@
                   <span>Read story</span>
                 </div>
               </div>
+
             <% end %>
 
           </div>
