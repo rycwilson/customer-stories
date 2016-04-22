@@ -124,12 +124,14 @@ class Company < ActiveRecord::Base
            .joins(:story, :customer)  # these are associations
            .where(customers: { company_id: self.id },  # these are tables
                     stories: { logo_published: true })
+           .order("stories.published DESC, stories.publish_date ASC")
   end
 
   def successes_with_story
     Success.includes(:story, :customer, :products)
            .joins(:story, :customer)
            .where(customers: { company_id: self.id })
+           .order("stories.published DESC, stories.publish_date ASC")
   end
 
   # slightly different than updating tags for a story
