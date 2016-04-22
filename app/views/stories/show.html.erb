@@ -56,7 +56,7 @@
 
       <div class='col-sm-4 text-right'
           style='margin-top:1%; margin-bottom:1%; padding-right:32px'>
-        <%= render 'shared/social_sharing' %>
+        <%#= render 'shared/social_sharing' %>
       </div>
 
     </div>   <!-- container -->
@@ -136,7 +136,9 @@
 
             <% @contributors.each do |contributor| %>
 
-              <script type="IN/MemberProfile" data-id="<%= contributor.linkedin_url %>" data-format="inline" data-related="true" data-width='340'></script>
+  <%#= debug contributor %>
+              <script type="IN/MemberProfile" data-id="<%= contributor.linkedin_url %>"
+              data-format="inline" data-related="true" data-width='340'></script>
 
             <% end %>
 

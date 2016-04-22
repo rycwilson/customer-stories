@@ -49,14 +49,25 @@ var ready = function () {
 };
 
 /*
-  with turbolinks in place, js only runs on initial page load
-  for example, js does not run when going from stories#show to stories#edit,
+  with turbolinks in place, js only runs on initial controller/page load
+  e.g. js does not run when going from stories#show to stories#edit,
     and this results in plug-ins not being initialized
   below ensures that js runs each time a stories/ page loads
   both are needed
 */
-$(document).ready(ready);
-$(document).on('page:load', ready);
+$(document).ready(function () {
+  // console.log('doc.ready');
+  ready();
+});
+
+$(document).on('page:load', function () {
+  // console.log('page:load');
+  ready();
+});
+
+$(document).on('page:change', function () {
+  // console.log('page:change');
+});
 
 function configUnderscore() {
   // this changes underscore to use {{ }} delimiters

@@ -51,7 +51,7 @@
 
             <% @success_tiles.each do |success| %>
               <div class="grid-item thumbnail">
-                <a href="<%= success.story.published? ?
+                <a data-no-turbolink href="<%= success.story.published? ?
                       public_story_path(
                           success.customer.slug,
                           success.products.try(:[], 0).slug || 'product missing',
