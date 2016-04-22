@@ -84,7 +84,7 @@
       {{ if (!success.products) { }}
         success.products = [{ slug:'product-missing' }];
       {{ } }}
-      <a href="{{= success.story.published ? '/' + success.customer.slug + '/' + success.products[0].slug + '/' + success.story.slug : 'javascript:;' }}">
+      <a data-no-turbolink href="{{= success.story.published ? '/' + success.customer.slug + '/' + success.products[0].slug + '/' + success.story.slug : 'javascript:;' }}">
         {{ if (success.customer.logo_url) { }}
           <img src="{{= success.customer.logo_url }}"
               style='height:95px; width:95px' >
