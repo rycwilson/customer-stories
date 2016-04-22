@@ -38,10 +38,17 @@ class StoriesController < ApplicationController
   end
 
   def show
-    @contributors = @story.success.contributions
-                          .where(linkedin: true).map { |c| c.contributor }
+    @contributors =
+        User.joins(own_contributions: { success: {} })
+            .where(contributions: { linkedin: true },
+                       successes: { id: @story.success_id })
+            .order("CASE contributions.role
+                      WHEN 'customer' THEN '1'
+                      WHEN 'partner' THEN '2'
+                      WHEN 'sales' THEN '3'
+                    END")
+    # add the curator if he hasn't already been added ...
     @contributors << @story.success.curator unless @contributors.any? { |c| c.email == @story.success.curator.email }
-    @contributions_in_progress = Contribution.in_progress @story.success_id
   end
 
   def edit
