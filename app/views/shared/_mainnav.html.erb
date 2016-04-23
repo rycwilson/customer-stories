@@ -88,19 +88,23 @@
 
       <% if controller_name == 'stories' && action_name == 'index' %>
         <form class="form-inline col-sm-6 text-center" style='padding-top: 5px'>
-          <div class="form-group text-left">
-           <%= label_tag :industries, "Industry", class: 'control-label' %>
-           <%= select_tag :industries, options_for_select(@industries),
-                  { class: 'stories-filter form-control',
-                    style: 'min-width: 140px' }
-                    %>
-          </div>&nbsp;&nbsp;
-          <div class="form-group text-left">
-           <%= label_tag :products, "Product", class: 'control-label' %>
-           <%= select_tag :products, options_for_select(@products),
-                  { class: 'stories-filter form-control',
-                    style: 'min-width: 140px' } %>
-          </div>
+          <% if @industries.length > 2 %>  <!-- includes 'All' (hence 2) -->
+            <div class="form-group text-left">
+             <%= label_tag :industries, "Industry", class: 'control-label' %>
+             <%= select_tag :industries, options_for_select(@industries),
+                    { class: 'stories-filter form-control',
+                      style: 'min-width: 140px' }
+                      %>
+            </div>&nbsp;&nbsp;
+          <% end %>
+          <% if @products.length > 2 %>
+            <div class="form-group text-left">
+               <%= label_tag :products, "Product", class: 'control-label' %>
+               <%= select_tag :products, options_for_select(@products),
+                      { class: 'stories-filter form-control',
+                        style: 'min-width: 140px' } %>
+            </div>
+          <% end %>
         </form>
       <% end %>
 
