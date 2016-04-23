@@ -18,4 +18,14 @@ module StoriesHelper
     end
   end
 
+  def csp_story_path story
+    if story.success.products.present?
+      public_story_path(story.success.customer.slug,
+                        story.success.products.take.slug,
+                        story.slug)
+    else
+      public_story_no_product_path(story.success.customer.slug, story.slug)
+    end
+  end
+
 end

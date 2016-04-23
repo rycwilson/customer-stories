@@ -297,9 +297,7 @@
                     File.join( request.protocol +
                       contribution.success.customer.company.subdomain +
                       '.' + request.domain + request.port_string,
-                      public_story_path(contribution.success.customer.slug,
-                                 contribution.success.products.try(:[], 0).slug || 'product missing',
-                                 contribution.success.story.slug) ) %>
+                      csp_story_path(contribution.success.story) ) %>
             <% else %>
               <span>Pending Curation</span>
             <% end %>

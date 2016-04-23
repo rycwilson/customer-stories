@@ -67,7 +67,10 @@ Rails.application.routes.draw do
     # public story route moved down here so it doesn't hijack any other routes.
     # don't call this route 'story' or it will leave the PUT and DELETE routes (above)
     # without an alias
-    get '/:customer/:product/:title', to: 'stories#show', as: 'public_story'
+    constraints(StoryPathConstraint) do
+      get '/:customer/:product/:title', to: 'stories#show', as: 'public_story'
+      get '/:customer/:title', to: 'stories#show', as: 'public_story_no_product'
+    end
 
     # broken links
     get '/*all', to: 'site#valid_subdomain_bad_path'

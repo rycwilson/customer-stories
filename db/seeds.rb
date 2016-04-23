@@ -122,8 +122,9 @@ acme.create_email_templates
 
 def seed_company company, *users
   DemoCustomersSeed::DEMO_CUSTOMERS.each do |customer_info|
-    customer = Customer.create(name: customer_info[:name], logo_url: customer_info[:logo])
-    company.customers << customer
+    customer = Customer.create(name: customer_info[:name],
+                           logo_url: customer_info[:logo],
+                         company_id: company.id)
     success = Success.create
     customer.successes << success
     success.created_at = (rand*60).days.ago

@@ -1,5 +1,7 @@
 class StoriesController < ApplicationController
 
+  include StoriesHelper
+
   before_action :set_company, only: [:index, :show, :create]
   before_action :set_public_story_or_redirect, only: :show
   before_action :set_story, only: :edit
@@ -196,14 +198,8 @@ class StoriesController < ApplicationController
 
   def set_public_story_or_redirect
     @story = Story.friendly.find params[:title]
-    if request.path !=
-       public_story_path(@story.success.customer.slug,
-                         @story.success.products.try(:[], 0).slug || "product missing",
-                         @story.slug)
-      return redirect_to public_story_path(
-                           @story.success.customer.slug,
-                           @story.success.products.try(:[], 0).slug || "product missing",
-                           @story.slug), status: :moved_permanently
+    if request.path != csp_story_path(@story)
+      return redirect_to csp_story_path(@story), status: :moved_permanently
     end
   end
 

@@ -46,33 +46,21 @@
           </td>
           <% if story.published? %>
             <td class='td-story-status valign-middle'>
-              <%= link_to 'Published',
-                    public_story_path(
-                      story.success.customer.slug,
-                      story.success.products.try(:[], 0).slug || "product missing",
-                      story.slug) %>
+              <%= link_to 'Published', csp_story_path(story) %>
             </td>
             <td class='td-story-date valign-middle'>
               <%= story.publish_date.strftime('%-m/%-d/%y') %>
             </td>
           <% elsif story.logo_published? %>
             <td class='td-story-status valign-middle'>
-              <%= link_to 'Logo published',
-                    public_story_path(
-                      story.success.customer.slug,
-                      story.success.products.try(:[], 0).slug || "product missing",
-                      story.slug) %>
+              <%= link_to 'Logo published', csp_story_path(story) %>
             </td>
             <td class='td-story-date valign-middle'>
               <%= story.logo_publish_date.strftime('%-m/%-d/%y') %>
             </td>
           <% else %>
             <td class='td-story-status valign-middle'>
-              <%= link_to 'Pending curation',
-                    public_story_path(
-                      story.success.customer.slug,
-                      story.success.products.try(:[], 0).slug || "product missing",
-                      story.slug) %>
+              <%= link_to 'Pending curation', csp_story_path(story) %>
             </td>
             <td class='valign-middle'>
               N/A

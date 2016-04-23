@@ -53,11 +53,8 @@
 
               <div class="grid-item thumbnail">
                 <a data-no-turbolink href="<%= success.story.published? ?
-                      public_story_path(
-                          success.customer.slug,
-                          success.products.try(:[], 0).slug || 'product missing',
-                          success.story.slug) : 'javascript:;' %>">
-                  <img src="<%= success.customer.logo_url || asset_path('company-logo-missing.png') %>" style='height:95px; width:95px'>
+                      csp_story_path(success.story) : 'javascript:;' %>">
+                  <img src="<%= success.customer.logo_url || asset_path('company-logo-missing.png') %>">
                 </a>
                 <div class="caption"
                     style="background-color:<%= @company.nav_color_1 %>;
