@@ -77,18 +77,8 @@
 <!-- underscore template -->
 <script type="text/template" id="stories-template">
   {{ successTiles.forEach(function (success) { }}
-    {{ if (success.products) { }}
-      {{ var storyLink = success.story.published ? '/' +
-                         success.customer.slug + '/' +
-                         success.products[0].slug + '/' +
-                         success.story.slug : 'javascript:;'; }}
-    {{ } else { }}
-      {{ var storyLink = success.story.published ? '/' +
-                         success.customer.slug + '/' +
-                         success.story.slug : 'javascript:;'; }}
-    {{ } }}
     <div class="grid-item thumbnail">
-      <a data-no-turbolink href="{{= storyLink }}">
+      <a data-no-turbolink href="{{= success.path || 'javascript:;' }}">
         {{ if (success.customer.logo_url) { }}
           <img src="{{= success.customer.logo_url }}">
         {{ } else { }}

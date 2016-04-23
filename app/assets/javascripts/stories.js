@@ -270,16 +270,28 @@ function initListeners () {
         companyId = $('#stories-gallery').data('company-id'),
         template = _.template($('#stories-template').html()),
         $industrySelect = $(this).closest('.container').find("[name='industries']"),
-        $productSelect = $(this).closest('.container').find("[name='products']");
+        $productSelect = $(this).closest('.container').find("[name='products']"),
+        storyPath = null;
 
     $.ajax({
       url: '/stories',
       method: 'get',
       data: { filter: { tag: filterTag, id: filterId } },
       success: function (data, status) {
-        console.log('filtered successes: ', data);
         $('#stories-gallery').empty();
         if (data) {
+          data.forEach(function (success) {
+            if (success.products && success.published) {
+              storyPath = '/' + success.customer.slug +
+                          '/' + success.products[0].slug +
+                          '/' + success.story.slug;
+            } else {
+              storyPath = '/' + success.customer.slug +
+                          '/' + success.story.slug;
+            }
+            $.extend(success, { path: storyPath } );
+          });
+          console.log('filtered successes: ', data);
           var $tiles = $(template({ successTiles: data }));
           $('#stories-gallery').masonry()
                                .append($tiles)

@@ -11,13 +11,13 @@ class StoriesController < ApplicationController
   def index
     if params[:filter]
       @success_tiles =
-          @company.filter_successes_by_tag params[:filter][:tag], params[:filter][:id]
+          @company.filter_successes_by_tag(params[:filter][:tag], params[:filter][:id])
       respond_to do |format|
         format.json do
           render json: @success_tiles,
               include: { story: { only: [:slug, :published] },
                       products: { only: :slug },
-                      customer: { only: [:slug, :logo_url] } }
+                      customer: { only: [:slug, :logo_url] }}
         end
       end
     elsif curator?
