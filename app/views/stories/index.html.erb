@@ -77,17 +77,22 @@
 <!-- underscore template -->
 <script type="text/template" id="stories-template">
   {{ successTiles.forEach(function (success) { }}
+    {{ if (success.products) { }}
+      {{ var storyLink = success.story.published ? '/' +
+                         success.customer.slug + '/' +
+                         success.products[0].slug + '/' +
+                         success.story.slug : 'javascript:;'; }}
+    {{ } else { }}
+      {{ var storyLink = success.story.published ? '/' +
+                         success.customer.slug + '/' +
+                         success.story.slug : 'javascript:;'; }}
+    {{ } }}
     <div class="grid-item thumbnail">
-      {{ if (!success.products) { }}
-        success.products = [{ slug:'product-missing' }];
-      {{ } }}
-      <a data-no-turbolink href="{{= success.story.published ? '/' + success.customer.slug + '/' + success.products[0].slug + '/' + success.story.slug : 'javascript:;' }}">
+      <a data-no-turbolink href="{{= storyLink }}">
         {{ if (success.customer.logo_url) { }}
-          <img src="{{= success.customer.logo_url }}"
-              style='height:95px; width:95px' >
+          <img src="{{= success.customer.logo_url }}">
         {{ } else { }}
-          <img src="<%= asset_path('company-logo-missing.png') %>"
-              style='height:95px; width:95px' >
+          <img src="<%= asset_path('company-logo-missing.png') %>">
         {{ } }}
       </a>
       <div class="caption"

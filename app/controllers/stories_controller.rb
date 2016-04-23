@@ -143,23 +143,7 @@ class StoriesController < ApplicationController
         format.json { render json: story.as_json(only: :embed_url) }
       end
     elsif params[:story][:published]
-      publish_story = params[:story][:published] == '1' ? true : false
-      publish_logo = params[:story][:logo_published] == '1' ? true : false
-      # only update if the value has changed ...
-      unless (publish_story && story.published?) || (!publish_story && !story.published?)
-        if publish_story
-          story.update(published: publish_story, publish_date: Time.now)
-        else
-          story.update(published: publish_story, publish_date: nil)
-        end
-      end
-      unless (publish_logo && story.logo_published?) || (!publish_story && !story.published?)
-        if publish_logo
-          story.update(logo_published: publish_logo)
-        else
-          story.update(logo_published: publish_logo)
-        end
-      end
+      update_publish_state story, params[:story]
       respond_to { |format| format.json { head :ok } } # empty response
     else  # all other updates
       respond_to do |format|
@@ -215,5 +199,22 @@ class StoriesController < ApplicationController
       false
     end
   end
+
+  def update_publish_state story, story_params
+    # binding.pry
+    publish_story = story_params[:published] == '1' ? true : false
+    publish_logo = story_params[:logo_published] == '1' ? true : false
+    # only update if the value has changed ...
+    if publish_story && !story.published?
+      story.update(published: true, publish_date: Time.now)
+    elsif !publish_story && story.published?
+      story.update(published: false, publish_date: nil)
+    elsif publish_logo && !story.logo_published?
+      story.update(logo_published: true, logo_publish_date: Time.now)
+    elsif !publish_logo && story.logo_published?
+      story.update(logo_published: false, logo_publish_date: nil)
+    end
+  end
+
 
 end

@@ -323,8 +323,7 @@ function initFormLogoBackground () {
 function initNewStoryValidator () {
   $('#new-story-modal').on('change input', function () {
     if ($('#story_customer').val() &&
-        $('#story_title').val() &&
-        $('#story_product_tags_').val()) {
+        $('#story_title').val()) {
       $(this).find("[type='submit']").prop('disabled', false);
     }
     else {
