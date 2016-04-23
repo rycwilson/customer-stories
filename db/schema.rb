@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160419213745) do
+ActiveRecord::Schema.define(version: 20160423205748) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,7 +45,7 @@ ActiveRecord::Schema.define(version: 20160419213745) do
     t.datetime "logo_updated_at"
     t.string   "logo_url"
     t.string   "subdomain"
-    t.string   "feature_flag",      default: "alpha"
+    t.string   "feature_flag",      default: "beta"
     t.string   "nav_color_1",       default: "#FBFBFB"
     t.string   "nav_color_2",       default: "#85CEE6"
     t.string   "nav_text_color",    default: "#333333"
