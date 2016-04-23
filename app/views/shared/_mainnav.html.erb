@@ -11,7 +11,7 @@
   $(function () {
     var company = <%= raw @company.to_json %>;
 
-    if (company.feature_flag == 'alpha') {
+    if (company.feature_flag == 'alpha' || company.feature_flag == 'beta') {
       $(".tooltip-wrapper-tabs").tooltip({ placement: 'right', container: 'body' });
       $(".tooltip-wrapper-promote").tooltip({ placement: 'top' });
     }
@@ -35,7 +35,7 @@
     <div class="collapse mainnav-collapse" role="navigation">
       <ul class='nav nav-tabs mainnav-menu col-sm-4' role='tablist' style='border-bottom:0'>
 
-        <% if @company.feature_flag == 'alpha' %>
+        <% if ['alpha', 'beta'].include? @company.feature_flag %>
         <!--   <li id='pipeline-tab' class='tooltip-wrapper-tabs'
               style='margin-bottom: 0px; display:inline-block'
               data-title="This section is currently disabled">
@@ -67,7 +67,7 @@
           </a>
         </li>
 
-        <% if @company.feature_flag == 'alpha' %>
+        <% if ['alpha', 'beta'].include? @company.feature_flag %>
           <li id='measure-tab' class='tooltip-wrapper-tabs'
               style='margin-bottom: 0px; display:inline-block'
               data-title="Coming soon">
