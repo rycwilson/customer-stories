@@ -18,16 +18,10 @@
 
 <% end %>
 
-<header class="navbar" role="banner" style="<%= admin_navbar_style %>">
+<nav class="navbar" role="banner" style="<%= admin_navbar_style %>">
   <div class="container">
 
-    <div class="navbar-header col-sm-6 valign" style='margin-right:10px'>
-
-      <button class="navbar-toggle" type="button"
-              data-toggle="collapse" data-target=".navbar-collapse">
-        <span class="sr-only">Toggle navigation</span>
-        <i class="glyphicon glyphicon-align-justfy" ></i>
-      </button>
+    <div class="navbar-header col-xs-6 valign" style='margin-right:10px'>
 
       <%= render 'shared/admin_navbar_logo' %>
 
@@ -38,4 +32,4 @@
     <%= render 'shared/admin_navbar_session' %>
 
   </div>
-</header>
+</nav>

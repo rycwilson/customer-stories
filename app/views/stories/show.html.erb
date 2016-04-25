@@ -21,22 +21,23 @@
     <%= render 'shared/mainnav' %>
   <% end %>
 
-  <!-- nav links, social sharing  -->
+  <!-- nav links, story title, social sharing  -->
   <div class="mainnav" style="min-height:55px">
     <div class="container">
-      <div class='col-sm-3' style='margin-top:1.7%; margin-bottom:1.7%'>
+    <div class="row">
+      <div data-no-turbolink class='col-sm-2' style='margin-top:1.7%; margin-bottom:1.7%'>
 
         <% if user_signed_in? && (current_user.company.try(:subdomain) == request.subdomain) %>
 
           <!-- the data-no-turbolink attribute is necessary for linkedin widgets to properly load -->
           <!-- http://stackoverflow.com/questions/17600093/rails-javascript-not-loading-after-clicking-through-link-to-helper -->
-          <div data-no-turbolink>
+          <!-- <div data-no-turbolink> -->
             <%= link_to edit_story_path(@story.id), class: 'csp-nav' do %>
               <span class='glyphicon glyphicon-chevron-left'
                   style='color:#337ab7; margin-right:5px'>
               </span><span>Edit this Story</span>
             <% end %>
-          </div>
+          <!-- </div> -->
 
         <% elsif !user_signed_in? %>
 
@@ -50,15 +51,15 @@
 
       </div>  <!-- nav links -->
 
-      <div class="col-sm-5 text-center" style='margin-top:1%; margin-bottom:1%'>
+      <div class="col-sm-8 text-center" style='margin-top:1%; margin-bottom:1%'>
         <h2 style='margin-bottom:0'> <%= @story.success.customer.name %></h2>
       </div>
 
-      <div class='col-sm-4 text-right'
-          style='margin-top:1%; margin-bottom:1%; padding-right:32px'>
+      <div class='col-sm-2'
+          style='margin-top:1%; margin-bottom:1%;'>
         <%#= render 'shared/social_sharing' %>
       </div>
-
+</div>
     </div>   <!-- container -->
   </div>  <!-- mainnav -->
 

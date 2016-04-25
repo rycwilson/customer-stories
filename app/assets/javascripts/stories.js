@@ -289,9 +289,9 @@ function initListeners () {
               storyPath = '/' + success.customer.slug +
                           '/' + success.story.slug;
             }
-            $.extend(success, { path: storyPath } );
+            $.extend(success, { path: storyPath });
           });
-          console.log('filtered successes: ', data);
+          // console.log('filtered successes: ', data);
           var $tiles = $(template({ successTiles: data }));
           $('#stories-gallery').masonry()
                                .append($tiles)
