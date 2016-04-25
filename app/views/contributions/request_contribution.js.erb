@@ -12,10 +12,11 @@
 
   window.setTimeout(function () {
     $('#progress-modal').modal('hide');
-  }, 2000)
+  }, 2000);
 
-
-  // flashDisplay(flashMesg, flashStatus);
+  window.setTimeout(function () {
+    flashDisplay(flashMesg, flashStatus);
+  }, 2200);
 
   if (flashStatus === "info") {  // success
     removeContributionCard(contribution.id);
