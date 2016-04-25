@@ -27,7 +27,7 @@ $(function() {
 
   setTimeout(function () {
     $('#flash').slideUp();
-  }, 4000);
+  }, 3000);
 
   // clear localStorage
   // $('#logout').on('click', function () {
@@ -44,7 +44,7 @@ function flashDisplay (mesg, status) {
 
   setTimeout(function () {
     $('#flash').slideUp();
-  }, 4000);
+  }, 3000);
 
   setTimeout(function () {
     $('#flash').toggleClass('hidden alert-' + status);
@@ -54,7 +54,7 @@ function flashDisplay (mesg, status) {
     $('#flash').css('display', '');
     // remove all text, leave child elements
     $('#flash').html($('#flash').children());
-  }, 5000);
+  }, 4000);
 }
 
 function configS3Upload () {
