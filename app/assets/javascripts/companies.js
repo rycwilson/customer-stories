@@ -338,20 +338,12 @@ function adjustPromoCSS () {
   $('.ad2-text').each(function () {
     $(this).css('padding-left', logoWidth + 20 + 'px');
     if (logoWidth > 100)  {
-      $(this).css('font-size', '22px');
+      $(this).css('font-size', '24px');
       $(this).css('top', '8px');
     }
     if (logoWidth > 150) {
-      $(this).css('font-size', '20px');
+      $(this).css('font-size', '22px');
       $(this).css('top', '10px');
-    }
-    if (logoWidth > 200) {
-      $(this).css('font-size', '18px');
-      $(this).css('top', '14px');
-    }
-    if (logoWidth > 250) {
-      $(this).css('font-size', '16px');
-      $(this).css('top', '18px');
     }
   });
 
