@@ -55,7 +55,7 @@ form[id*='company'] .thumbnail {
   width: 728px;  /* fix the width or else it'll be the entire page's width */
   height: 90px;
   background-color: white;
-  border: 1px solid grey
+  border: 1px solid grey;
 }
 
 .ad1-text {
@@ -76,8 +76,9 @@ form[id*='company'] .thumbnail {
   font-size: 24px;
   padding: 5px 130px 5px 140px;
   top: 5px;
-  bottom: 20px;
-  color:gray
+  bottom: 0;
+  margin: auto;
+  color:gray;
 }
 
 .ad1-logo {
@@ -91,7 +92,10 @@ form[id*='company'] .thumbnail {
 .ad2-logo {
   position: absolute;
   left: 10px;
-  top: 25px;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  vertical-align: middle;
   max-height: 70px;
   max-width: 20%;
 }
@@ -127,4 +131,10 @@ form[id*='company'] .thumbnail {
 .ad-btn:hover {
   background: #85CEE6;
   text-decoration: none;
+}
+
+.helper {
+  display: inline-block;
+  height: 100%;
+  vertical-align: middle;
 }

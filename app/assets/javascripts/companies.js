@@ -337,14 +337,14 @@ function adjustPromoCSS () {
   var logoWidth = $('.ad2-logo').prop('width');
   $('.ad2-text').each(function () {
     $(this).css('padding-left', logoWidth + 20 + 'px');
-    if (logoWidth > 100)  {
-      $(this).css('font-size', '24px');
-      $(this).css('top', '8px');
-    }
-    if (logoWidth > 150) {
-      $(this).css('font-size', '22px');
-      $(this).css('top', '10px');
-    }
+    // if (logoWidth > 100)  {
+    //   $(this).css('font-size', '24px');
+    //   $(this).css('top', '8px');
+    // }
+    // if (logoWidth > 150) {
+    //   $(this).css('font-size', '22px');
+    //   $(this).css('top', '10px');
+    // }
   });
 
 }
