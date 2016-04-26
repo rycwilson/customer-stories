@@ -10,7 +10,7 @@ class Story < ActiveRecord::Base
   # This because friendly_id allows us to search based on the title slug
   validates :title, presence: true, uniqueness: true
 
-  friendly_id :title, use: [:slugged, :finders]
+  friendly_id :title, use: [:slugged, :finders, :history]
 
   def should_generate_new_friendly_id?
     new_record? || title_changed? || slug.blank?
