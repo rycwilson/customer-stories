@@ -5,8 +5,8 @@ class StoriesController < ApplicationController
   before_action :set_company, only: [:index, :show, :create]
   before_action :set_public_story_or_redirect, only: :show
   before_action :set_story, only: :edit
-  before_action :user_authorized?, only: [:edit]
-  before_action :set_s3_direct_post, only: [:edit]
+  before_action :user_authorized?, only: :edit
+  before_action :set_s3_direct_post, only: :edit
 
   def index
     if params[:filter]
@@ -144,7 +144,10 @@ class StoriesController < ApplicationController
       end
     elsif params[:story][:published]
       update_publish_state story, params[:story]
-      respond_to { |format| format.json { head :ok } } # empty response
+      respond_to do |format|
+        format.json { render json: story,
+                             only: [:published, :logo_published] }
+      end
     else  # all other updates
       respond_to do |format|
         if story.update story_params
@@ -172,6 +175,10 @@ class StoriesController < ApplicationController
         :challenge, :solution, :benefits, :published, :logo_published)
   end
 
+  def set_story
+    @story = Story.find params[:id]
+  end
+
   def set_company
     if params[:company_id].present?  # create
       @company = Company.find params[:company_id]
@@ -180,15 +187,23 @@ class StoriesController < ApplicationController
     end
   end
 
+  # if we're here, it means the router allowed through a valid path:
+  # /:customer/:product/:title OR /:customer/:title
+  # (valid => these resources exist AND exist together)
+  # => @story can't be nil
+  #
+  # method will set the public story if published or if curator,
+  # else it will redirect to ...
+  #   - the correct link if outdated slug is used
+  #   - company's story index if not published or not curator
   def set_public_story_or_redirect
     @story = Story.friendly.find params[:title]
     if request.path != csp_story_path(@story)
+      # old story title slug, redirect to current
       return redirect_to csp_story_path(@story), status: :moved_permanently
+    elsif !@story.published? && !curator?
+      return redirect_to root_url(subdomain:request.subdomain, host:request.domain)
     end
-  end
-
-  def set_story
-    @story = Story.find params[:id]
   end
 
   def user_authorized?
@@ -201,20 +216,37 @@ class StoriesController < ApplicationController
   end
 
   def update_publish_state story, story_params
-    # binding.pry
     publish_story = story_params[:published] == '1' ? true : false
     publish_logo = story_params[:logo_published] == '1' ? true : false
     # only update if the value has changed ...
     if publish_story && !story.published?
-      story.update(published: true, publish_date: Time.now)
+      # binding.pry
+      story.published = true
+      story.publish_date = Time.now
     elsif !publish_story && story.published?
-      story.update(published: false, publish_date: nil)
+      # binding.pry
+      story.published = false
+      story.publish_date = nil
     elsif publish_logo && !story.logo_published?
-      story.update(logo_published: true, logo_publish_date: Time.now)
+      # binding.pry
+      story.logo_published = true
+      story.logo_publish_date = Time.now
     elsif !publish_logo && story.logo_published?
-      story.update(logo_published: false, logo_publish_date: nil)
+      # binding.pry
+      story.logo_published = false
+      story.logo_publish_date = nil
     end
+    # prevent false state ...
+    # binding.pry
+    if (publish_story && !publish_logo) && story.published_changed?
+      story.logo_published = true
+      story.logo_publish_date = Time.now
+    elsif (publish_story && !publish_logo) && story.logo_published_changed?
+      story.published = false
+      story.publish_date = nil
+    end
+    # binding.pry
+    story.save
   end
-
 
 end

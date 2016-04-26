@@ -2,11 +2,14 @@ class StoryPathConstraint
 
   def self.matches? request
     company = Company.find_by subdomain: request.subdomain
-    customer = Customer.friendly.find request.params[:customer]
-    story = Story.friendly.find request.params[:title]
+    customer = Customer.friendly.exists?(request.params[:customer]) ?
+      Customer.friendly.find(request.params[:customer]) : nil
+    story = Story.friendly.exists?(request.params[:title]) ?
+      Story.friendly.find(request.params[:title]) : nil
 
     if customer && story && request.params[:product]
-      product = Product.friendly.find request.params[:product]
+      product = Product.friendly.exists?(request.params[:product]) ?
+        Product.friendly.find(request.params[:product]) : nil
       product && Story.joins(success: { customer: {}, products: {} })
                       .where(customers: { name: customer.name, company_id: company.id },
                               products: { name: product.name, company_id: company.id },

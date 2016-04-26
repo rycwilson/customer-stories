@@ -35,6 +35,7 @@ var ready = function () {
   configPlugins();
   configUnderscore();
   configS3Upload();
+  initBootstrapSwitch();
 
   /*
     give the linkedin widgets a second to load,
@@ -325,12 +326,6 @@ function initListeners () {
     $(this).find('#contributor_first_name').focus();
   });
 
-  $('.bs-switch').on('switchChange.bootstrapSwitch', function (event, state) {
-    $(this).parent().submit();
-    // don't need this yet...
-    console.log(state);
-  });
-
   // blur buttons after they're clicked
   $('#new-contributor-button').on('focus', function () {
     var _this = $(this);
@@ -389,10 +384,6 @@ function configPlugins () {
 
   $('.best_in_place').best_in_place();
 
-  $('.bs-switch').bootstrapSwitch({
-    size: 'small'
-  });
-
   $('.story-tags').select2({
     theme: 'bootstrap',
     placeholder: 'select tags'
@@ -431,6 +422,33 @@ function configPlugins () {
     isFitWidth: true
   });
 
+}
+
+function initBootstrapSwitch() {
+
+  $('.bs-switch').bootstrapSwitch({
+    size: 'small'
+  });
+
+  $('.bs-switch').on('switchChange.bootstrapSwitch', function (event, state) {
+    $(this).parent().submit();
+  });
+
+  $('#story-publish-form').on('ajax:success', function (event, data) {
+    var $publish = $("#story_published"),
+        $logoPublish = $("#story_logo_published");
+    /*
+      server may have changed values to prevent invalid state!
+      it either ...
+        - turned logo_publish on to track story_publish=on
+        - turned story_publish off to track logo_publish=off
+    */
+    if (!data.published && $publish.bootstrapSwitch('state') === true) {
+      $publish.bootstrapSwitch('state', false);
+    } else if (data.logo_published && $logoPublish.bootstrapSwitch('state') === false) {
+      $logoPublish.bootstrapSwitch('state', true);
+    }
+  });
 }
 
 
