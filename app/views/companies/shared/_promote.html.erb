@@ -50,27 +50,29 @@
               <% story.success.results.each do |result| %>
 
                 <% result.description[0] = result.description[0].downcase %>
+                <% ad_text = story.success.customer.name + " " +
+                            result.description + " with " + @company.name %>
 
                 <div class="row">
 
                   <div class="col-sm-4">
                     <div class="ad1-wrap">
                       <img class='ad1-logo' src="<%= @company.logo_url %>">
-                      <div class="ad1-text">
-                        <%= story.success.customer.name + " " +
-                            result.description + " with " + @company.name %>
+                      <div class="ad1-text" data-text-length="<%= ad_text.length %>">
+                        <%= ad_text %>
                       </div>
                       <button id='ad-btn' type='button'>Read Story</button>
                       <img class="ad-powered" src="http://content.screencast.com/users/danlindblom/folders/Jing/media/2572803a-857a-40a8-b31a-e507bad0aa1b/00001977.png">
                     </div> <br><br><br>
                   </div><!-- /.col -->
 
+                  <!-- adding a data-text-length attribute because using jquery to
+                  capture the length isn't reliable -->
                   <div class="col-sm-8">
                     <div class="ad2-wrap">
                       <img class="ad2-logo" src="<%= @company.logo_url %>"/>
-                      <div class="ad2-text">
-                        <%= story.success.customer.name + " " +
-                            result.description + " with " + @company.name %>
+                      <div class="ad2-text" data-text-length="<%= ad_text.length %>">
+                        <%= ad_text %>
                       </div>
                       <button id='ad-btn' type='button'>Read Story</button>
                       <img class='ad-powered' src="http://content.screencast.com/users/danlindblom/folders/Jing/media/2572803a-857a-40a8-b31a-e507bad0aa1b/00001977.png"  />

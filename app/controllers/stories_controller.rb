@@ -145,6 +145,8 @@ class StoriesController < ApplicationController
     elsif params[:story][:published]
       update_publish_state story, params[:story]
       respond_to do |format|
+        # respond with the (possibly modified over user selection) publish state,
+        # so client js can make necessary adjustments
         format.json { render json: story,
                              only: [:published, :logo_published] }
       end
@@ -220,24 +222,19 @@ class StoriesController < ApplicationController
     publish_logo = story_params[:logo_published] == '1' ? true : false
     # only update if the value has changed ...
     if publish_story && !story.published?
-      # binding.pry
       story.published = true
       story.publish_date = Time.now
     elsif !publish_story && story.published?
-      # binding.pry
       story.published = false
       story.publish_date = nil
     elsif publish_logo && !story.logo_published?
-      # binding.pry
       story.logo_published = true
       story.logo_publish_date = Time.now
     elsif !publish_logo && story.logo_published?
-      # binding.pry
       story.logo_published = false
       story.logo_publish_date = nil
     end
     # prevent false state ...
-    # binding.pry
     if (publish_story && !publish_logo) && story.published_changed?
       story.logo_published = true
       story.logo_publish_date = Time.now
@@ -245,7 +242,6 @@ class StoriesController < ApplicationController
       story.published = false
       story.publish_date = nil
     end
-    # binding.pry
     story.save
   end
 

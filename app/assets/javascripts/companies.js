@@ -334,19 +334,27 @@ function initNewStoryValidator () {
 }
 
 function adjustPromoCSS () {
-  var logoWidth = $('.ad2-logo').prop('width');
-  $('.ad2-text').each(function () {
-    $(this).css('padding-left', logoWidth + 20 + 'px');
-    // if (logoWidth > 100)  {
-    //   $(this).css('font-size', '24px');
-    //   $(this).css('top', '8px');
-    // }
-    // if (logoWidth > 150) {
-    //   $(this).css('font-size', '22px');
-    //   $(this).css('top', '10px');
-    // }
-  });
+  $(document).on('shown.bs.tab', "a[href='#promote']", function () {
 
+    var ad2LogoWidth = parseInt($('.ad2-logo').css('width'), 10);
+
+    $('.ad1-text').each(function () {
+      if ($(this).data('text-length') >= 85) {
+        $(this).css('font-size', '22px');
+      }
+    });
+
+    $('.ad2-text').each(function () {
+      $(this).css('padding-left', ad2LogoWidth + 20);
+      if ($(this).data('text-length') >= 85) {
+        $(this).css('font-size', '20px');
+        $(this).css('top', '10px');
+      } else if ($(this).data('text-length') >= 75) {
+        $(this).css('font-size', '22px');
+        $(this).css('top', '8px');
+      }
+    });
+  });
 }
 
 

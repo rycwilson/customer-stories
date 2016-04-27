@@ -231,7 +231,6 @@ function initTagsListeners () {
 }
 
 function initListeners () {
-
   /*
     Customer logo
   */
