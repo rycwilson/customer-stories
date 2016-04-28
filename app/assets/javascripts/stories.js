@@ -29,6 +29,7 @@ var ready = function () {
   // linkedin widgets
   $.getScript('http://platform.linkedin.com/in.js');
 
+  initSelect2();
   initBIPListeners();
   initTagsListeners();
   initListeners();
@@ -383,24 +384,6 @@ function configPlugins () {
 
   $('.best_in_place').best_in_place();
 
-  $('.story-tags').select2({
-    theme: 'bootstrap',
-    placeholder: 'select tags'
-  });
-
-  $('.stories-filter').select2({
-    theme: 'bootstrap'
-  });
-
-  $('.new-contributor-role').select2({
-    theme: 'bootstrap'
-  });
-
-  $('.new-contributor-referrer').select2({
-    theme: 'bootstrap',
-    placeholder: 'Who referred you to this contributor?'
-  });
-
   $("input[type='tel']").inputmask("999-999-9999");
 
   /*
@@ -448,6 +431,41 @@ function initBootstrapSwitch() {
       $logoPublish.bootstrapSwitch('state', true);
     }
   });
+}
+
+function initSelect2 () {
+
+  $('.story-tags').select2({
+    theme: 'bootstrap',
+    placeholder: 'select tags'
+  });
+
+  $('.stories-filter').select2({
+    theme: 'bootstrap'
+  });
+
+  $('.new-contributor-role').select2({
+    theme: 'bootstrap'
+  });
+
+  $('.new-contributor-referrer').select2({
+    theme: 'bootstrap',
+    placeholder: 'Who referred you to this contributor?'
+  });
+
+  $('.select2').on('select2:unselecting', function(e) {
+    console.log($(this));
+    $(this).data('unselecting', true);
+  // });
+  }).on('select2:open', function(e) { // note the open event is important
+    console.log($(this));
+    if ($(this).data('unselecting')) {
+      console.log('is anything fucking happening?');
+        $(this).removeData('unselecting'); // you need to unset this before close
+        $(this).select2('close');
+    }
+  });
+
 }
 
 

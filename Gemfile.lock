@@ -237,7 +237,7 @@ DEPENDENCIES
   best_in_place (~> 3.0.1)
   better_errors
   binding_of_caller
-  bower-rails
+  bower-rails (~> 0.10.0)
   coffee-rails (~> 4.1.0)
   devise
   ffaker

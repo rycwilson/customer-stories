@@ -22,7 +22,7 @@ gem 'coffee-rails', '~> 4.1.0'
 gem 'aws-sdk', '~> 2'
 gem 'pry-rails'
 gem 'better_errors'
-gem 'bower-rails'
+gem 'bower-rails', "~> 0.10.0"
 gem 'font-awesome-rails'
 gem 'figaro'
 gem 'devise'
