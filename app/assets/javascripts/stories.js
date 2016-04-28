@@ -453,14 +453,12 @@ function initSelect2 () {
     placeholder: 'Who referred you to this contributor?'
   });
 
-  $('.select2').on('select2:unselecting', function(e) {
-    console.log($(this));
+  // this code prevents the options list from showing
+  // when a tag is removed
+  $('.select2').prev().on('select2:unselecting', function(e) {
     $(this).data('unselecting', true);
-  // });
   }).on('select2:open', function(e) { // note the open event is important
-    console.log($(this));
     if ($(this).data('unselecting')) {
-      console.log('is anything fucking happening?');
         $(this).removeData('unselecting'); // you need to unset this before close
         $(this).select2('close');
     }
