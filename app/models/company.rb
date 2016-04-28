@@ -45,9 +45,8 @@ class Company < ActiveRecord::Base
   end
 
   def industries_select_options
-    self.industry_categories.map do |industry|
-      [ industry.name, industry.id ]
-    end
+    self.industry_categories.map { |industry| [ industry.name, industry.id ] }
+                            .unshift [ "", 0 ]
   end
 
   def product_categories_select_options

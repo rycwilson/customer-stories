@@ -110,11 +110,9 @@ class StoriesController < ApplicationController
 
   def update
     story = Story.find params[:id]
-    if params[:story_tags]  # updated tags
-      story.update_tags params[:story_tags]
-      respond_to do |format|
-        format.js
-      end
+    if params[:story_tags]  # updated tags (this comes from a hidden field with value="")
+      story.update_tags params[:story]
+      respond_to { |format| format.js }
     elsif params[:customer_logo_url]
       story.success.customer.update logo_url: params[:customer_logo_url]
       respond_to { |format| format.json { render json: nil } }

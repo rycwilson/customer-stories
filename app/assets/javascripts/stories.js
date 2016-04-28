@@ -186,7 +186,7 @@ function initTagsListeners () {
     var productTags = $('.select2-selection__rendered').eq(2).html();
   */
 
-  $('#tags-form select').on('change', function (e) {
+  $('#story-tags-form select').on('change', function (e) {
 
     if ($('.edit-tags').hasClass('hidden')) {
       // un-hide the save/cancel buttons
@@ -412,7 +412,7 @@ function configPlugins () {
   $("label[for='Industry']").attr('for', 'story_industry_tags_');
   $("label[for='Product_Category']").attr('for', 'story_product_cat_tags_');
   $("label[for='Product']").attr('for', 'story_product_tags_');
-  $('#tags-form').dirtyFields();
+  $('#story-tags-form').dirtyFields();
 
   $('.grid').masonry({
     // options...
