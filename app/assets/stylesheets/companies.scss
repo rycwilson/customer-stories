@@ -41,7 +41,20 @@ form[id*='company'] .thumbnail {
   width: 100%;
 }
 
-// Promote settings
+
+/********************************/
+/*          summernote          */
+/********************************/
+
+.note-group-select-from-files {
+  display: none;
+}
+
+
+/********************************/
+/*       promote boxes          */
+/********************************/
+
 .ad1-wrap {
   position:relative; /* make this relative to have the inner div absolute without breaking out */
   width: 300px;  /* fix the width or else it'll be the entire page's width */

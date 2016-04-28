@@ -234,6 +234,8 @@ function configSummernote () {
       ],
     });
   });
+
+  $('.note-image-url').parent().css('padding', '0 5%');
 }
 
 function configMiniColors () {

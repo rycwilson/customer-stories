@@ -2,7 +2,7 @@
 # use Bootstrap Validator on client side if necessary
 class User < ActiveRecord::Base
 
-  RYAN = self.find_by(email:'***REMOVED***')
+  # RYAN = self.find_by(email:'***REMOVED***')
 
   belongs_to :company
   validates :first_name, presence: true
