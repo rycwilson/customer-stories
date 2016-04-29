@@ -88,7 +88,7 @@ function initTemplateEditorListeners () {
   /*
     Detect changes in template editor (subject or body)
   */
-  $('#template_subject, .note-editable').on('input', function () {
+  $('#template_subject, #summernote-editor').on('input summernote.change', function () {
     // textarea responds to .text(); text field responds to .val()
     if ($(this).text().length > 0 || $(this).val().length > 0) {
       $('#save-template').prop('disabled', false);
