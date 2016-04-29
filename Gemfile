@@ -37,8 +37,6 @@ gem 'summernote-rails'
 gem 'jquery-minicolors-rails'
 gem 'friendly_id', '~> 5.1.0'
 
-gem 'whenever', require: false
-
 
 group :production do
 
@@ -48,6 +46,7 @@ end
 
 group :development, :test do
 
+  gem 'whenever', require: false
   # Access an IRB console on exception pages or by using <%= console %> in views
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
