@@ -75,7 +75,7 @@
         </div>  <!-- logo -->
 
         <!-- quote -->
-        <div class= 'col-sm-5 text-justify story-text' style='margin-top:5px'>
+        <div class= 'col-sm-5 text-left story-text' style='margin-top:5px'>
 
           <p class='lead'><em>"<%= @story.quote %>"</em></p> <br>
 
@@ -98,30 +98,30 @@
       </div>  <!-- logo, quote, video -->
 
       <!-- story content, results, contributing team -->
-      <div class="row story-text" style='margin-top:20px'>
+      <div class="row" style='margin-top:20px'>
         <div class='col-sm-8'>  <!-- content -->
-          <div class='well'>
+          <div class='well story-narration'>
 
             <h3 class='text-center'><%= @story.title %></h3><br>
 
-            <p class='text-justify'>
-              <strong><u>Situation</u></strong> <br>
-              <%= @story.situation %>
+            <p><strong>Situation</strong></p>
+            <p>
+              <%= simple_format @story.situation, class: "story-text"%>
             </p> <br>
 
-            <p class='text-justify'>
-              <strong><u>Challenge</u></strong> <br>
-              <%= @story.challenge %>
+            <p><strong>Challenge</strong></p>
+            <p>
+              <%= simple_format @story.challenge, class: 'story-text' %>
             </p> <br>
 
-            <p class='text-justify'>
-              <strong><u>Solution</u></strong> <br>
-              <%= @story.solution %>
+            <p><strong>Solution</strong></p>
+            <p>
+              <%= simple_format @story.solution, class: 'story-text' %>
             </p> <br>
 
-            <p class='text-justify'>
-              <strong><u>Benefits</u></strong> <br>
-              <%= @story.benefits %>
+            <p><strong>Benefits</strong></p>
+            <p>
+              <%= simple_format @story.benefits, class: 'story-text' %>
             </p> <br>
 
           </div>
@@ -150,8 +150,8 @@
 
             <% @contributors.each do |contributor| %>
 
-                <script type="IN/MemberProfile" data-id="<%= contributor.linkedin_url %>"
-                data-format="inline" data-related="true"></script>
+                <script type="IN/MemberProfile" data-id="<%= contributor.linkedin_url %>" data-format="inline" data-related="true"
+                  data-width='340'></script>
 
             <% end %>
 

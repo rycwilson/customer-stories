@@ -11,6 +11,11 @@
 *= require social-sharing
 */
 
+
+/************************************
+*          stories gallery          *
+*************************************/
+
 .grid {
   margin: 0 auto;
 }
@@ -36,14 +41,25 @@
   padding: 2px 0 2px 6px;
 }
 
+
+/************************************
+*         contribution card         *
+*************************************/
+
 .contribution-card .accordion-inner br {
   line-height: 22px;
 }
 
-.story-text p {
+
+/************************************
+*           story text              *
+*************************************/
+
+.story-text {
   font-family: 'Merriweather';
   font-weight: 400;
 }
+
 
 .vcenter {
     display: inline-block;

@@ -155,8 +155,7 @@
             <!-- <p class='lead'>Story Narration</p> -->
             <div class="well" style='position:relative'>
               <div class="container-fluid">
-
-                <div class="row text-justify" style='margin-top:10px'>
+                <div class="row" style='margin-top:10px'>
 
                   <div id='edit-story-situation'
                         style='position:absolute; right:20px; margin-top:-3px'>
@@ -164,16 +163,19 @@
                   </div>
 
                   <div class='col-sm-11' id='story-situation'>
-                    <strong>Situation:&nbsp&nbsp</strong>
-                    <%= best_in_place @story, :situation, as: :textarea, url: story_path(@story.id),
-                        activator: '#edit-story-situation',
-                        place_holder: 'Add story situation ...',
-                        html_attrs: { style: 'width:100%' } %>
+                    <p><strong>Situation</strong></p>
+                    <%= best_in_place @story, :situation,
+                          as: :textarea,
+                          display_with: lambda { |text| simple_format(text) },
+                          sanitize: false,
+                          url: story_path(@story.id),
+                          activator: '#edit-story-situation',
+                          place_holder: 'Add story situation ...',
+                          html_attrs: { style: 'width:100%' } %>
                   </div>
 
                 </div> <br>
-
-                <div class="row text-justify">
+                <div class="row">
 
                   <div id='edit-story-challenge'
                         style='position:absolute; right:20px; margin-top:-3px'>
@@ -181,16 +183,20 @@
                   </div>
 
                   <div class='col-sm-11' id='story-challenge'>
-                    <strong>Challenge:&nbsp&nbsp</strong>
-                    <%= best_in_place @story, :challenge, as: :textarea, url: story_path(@story.id),
-                        activator: '#edit-story-challenge',
-                        place_holder: 'Add story challenge ...',
-                        html_attrs: { style: 'width:100%' } %>
+                    <p><strong>Challenge</strong></p>
+                    <%= best_in_place @story, :challenge,
+                          as: :textarea,
+                          display_with: lambda { |text| simple_format(text) },
+                          sanitize: false,
+                          url: story_path(@story.id),
+                          activator: '#edit-story-challenge',
+                          place_holder: 'Add story challenge ...',
+                          html_attrs: { style: 'width:100%' } %>
 
                   </div>
-                </div> <br>
 
-                <div class="row text-justify">
+                </div> <br>
+                <div class="row">
 
                   <div id='edit-story-solution'
                         style='position:absolute; right:20px; margin-top:-3px'>
@@ -198,16 +204,19 @@
                   </div>
 
                   <div class='col-sm-11' id='story-solution'>
-                    <strong>Solution:&nbsp&nbsp</strong>
-                    <%= best_in_place @story, :solution, as: :textarea, url: story_path(@story.id),
-                        activator: '#edit-story-solution',
-                        place_holder: 'Add story solution ...',
-                        html_attrs: { style: 'width:100%' } %>
+                    <p><strong>Solution</strong></p>
+                    <%= best_in_place @story, :solution,
+                          as: :textarea,
+                          display_with: lambda { |text| simple_format(text) },
+                          url: story_path(@story.id),
+                          sanitize: false,
+                          activator: '#edit-story-solution',
+                          place_holder: 'Add story solution ...',
+                          html_attrs: { style: 'width:100%' } %>
 
                   </div>
                 </div> <br>
-
-                <div class="row text-justify">
+                <div class="row">
 
                   <div id='edit-story-benefits'
                         style='position:absolute; right:20px; margin-top:-3px'>
@@ -215,11 +224,15 @@
                   </div>
 
                   <div class='col-sm-11' id='story-benefits'>
-                    <strong>Benefits:&nbsp&nbsp</strong>
-                    <%= best_in_place @story, :benefits, as: :textarea, url: story_path(@story.id),
-                        activator: '#edit-story-benefits',
-                        place_holder: 'Add story benefits ...',
-                        html_attrs: { style: 'width:100%' } %>
+                    <p><strong>Benefits:&nbsp&nbsp</strong></p>
+                    <%= best_in_place @story, :benefits,
+                          as: :textarea,
+                          url: story_path(@story.id),
+                          display_with: lambda { |text| simple_format(text) },
+                          sanitize: false,
+                          activator: '#edit-story-benefits',
+                          place_holder: 'Add story benefits ...',
+                          html_attrs: { style: 'width:100%' } %>
 
                   </div>
 
