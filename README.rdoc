@@ -26,3 +26,24 @@ Things you may want to cover:
 
 Please feel free to use a different markup language if you do not plan to run
 <tt>rake doc:app</tt>.
+
+### SSL Setup
+
+#####App
+- add `config.force_ssl = true` to `production.rb`
+
+####Certificate
+
+####GoDaddy DNS
+
+- Changed TTL on production to a higher value.  DNS file will be re-cached at TTL frequency.  For a stable app, give it a relatively high value.
+
+
+####Heroku 
+- Heroku doesn't like A-records, may lead to instability in DNS resolution
+	- [The Limitations of DNS A-Records](https://devcenter.heroku.com/articles/apex-domains) 
+	- [Stack Overflow](http://stackoverflow.com/questions/13478008/heroku-godaddy-naked-domain), [Stack Overflow](http://stackoverflow.com/questions/11492563/heroku-godaddy-send-naked-domain-to-www), [Stack Overflow](http://stackoverflow.com/questions/16022324/how-to-setup-dns-for-an-apex-domain-no-www-pointing-to-a-heroku-app)
+	- [Set up a forward on GoDaddy](https://www.godaddy.com/help/manually-forwarding-or-masking-your-domain-name-422)
+	
+- Use GoDaddy forwarding feature
+- only need www/* custom domain (delete the other)
