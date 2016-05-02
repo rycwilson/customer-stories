@@ -22,14 +22,8 @@
 
 var ready = function () {
 
-  $('#contributions-pre-request').on('click', '.send-request', function () {
-    $('#progress-modal').modal('show');
-  });
-
-  // linkedin widgets
-  $.getScript('http://platform.linkedin.com/in.js');
-
   initSelect2();
+  initLinkedIn();
   initBIPListeners();
   initTagsListeners();
   initListeners();
@@ -37,16 +31,7 @@ var ready = function () {
   configUnderscore();
   configS3Upload();
   initBootstrapSwitch();
-
-  /*
-    give the linkedin widgets a second to load,
-    then disable their tabbing behavior
-  */
-  window.setTimeout(function () {
-    $("#contribution-connections iframe").each(function () {
-      $(this).prop('tabIndex', '-1');
-    });
-  }, 1000);
+  initContributions();
 
 };
 
@@ -102,61 +87,6 @@ function initBIPListeners () {
         .text(newUrl);
   });
 
-  $(".best_in_place[data-bip-attribute='linkedin_url']").bind("ajax:success",
-    function (event, data) {
-      var linkedinUrl = $(this).text(),
-          $card = $(this).closest('.contribution-card'),
-          $research = $card.find('.research');
-      // add ...
-      if ($card.find('iframe').length === 0 && linkedinUrl !== "add url ..." ) {
-        $card.append(
-          "<br style='line-height:10px'>" +
-          "<div class='row text-center'>" +
-            "<script type='IN/MemberProfile' " +
-              "data-id='" + linkedinUrl + "' " +
-              "data-format='inline' data-related='false' " +
-              "data-width='340'></script>" +
-          "</div>");
-        IN.parse();
-        $research.attr('href', linkedinUrl);
-        $research.html("<i class='fa fa-linkedin-square bip-clickable-fa'>");
-      // remove ...
-      } else if ($card.find('iframe').length !== 0 && linkedinUrl === "add url ...") {
-        $card.find('br:last').remove();
-        $card.find('div:last').remove();
-        // get contribution data so we can set research button
-        // (needs contributor and customer data)
-        $.get('/contributions/' + $card.data('contribution-id'), function (contribution, status) {
-          if (contribution.role == 'customer') {
-            $research.attr('href',
-              "http://google.com/search?q=" +
-              contribution.contributor.first_name + "+" +
-              contribution.contributor.last_name + "+" +
-              contribution.success.customer.name);
-          } else {
-            $research.attr('href',
-              "http://google.com/search?q=" +
-              contribution.contributor.first_name + "+" +
-              contribution.contributor.last_name + "+");
-          }
-        }, 'json');
-        $research.html("<i class='glyphicon glyphicon-user bip-clickable'></i>");
-      // replace ...
-      } else {
-        $card.find('br:last').remove();
-        $card.find('div:last').remove();
-        $card.append(
-          "<br style='line-height:10px'>" +
-          "<div class='row text-center'>" +
-            "<script type='IN/MemberProfile' " +
-              "data-id='" + linkedinUrl + "' " +
-              "data-format='inline' data-related='false' " +
-              "data-width='340'></script>" +
-          "</div>");
-        IN.parse();
-      }
-  });
-
   // best-in-place errors
   $(document).on('best_in_place:error', function (event, data, status, xhr) {
     var error = JSON.parse(data.responseText)[0];
@@ -171,7 +101,8 @@ function initBIPListeners () {
     which we'll prevent with ...
   */
   $('a.accordion-toggle').on('focus', function () {
-    $(this).blur();
+    var $_this = $(this);
+    window.setTimeout(function () { $_this.blur(); }, 200);
   });
 
 }
@@ -210,23 +141,6 @@ function initTagsListeners () {
     // hide the save/cancel buttons
     // $('.edit-tags').toggleClass('hidden');
     // tagsFormDirty = false;
-  });
-
-  /*
-    only one accordion panel open at a time
-  */
-  $('.accordion-toggle').on('click', function () {
-    if ($(this).attr('href').match(/info/)) {
-      var $readPanel = $(this).closest('.accordion')
-                              .find("div.accordion-body[id*='submission']");
-      if ($readPanel.hasClass('in'))
-        $readPanel.removeClass('in');
-    } else if ($(this).attr('href').match(/submission/)) {
-      var $infoPanel = $(this).closest('.accordion')
-                              .find("div.accordion-body[id*='info']");
-      if ($infoPanel.hasClass('in'))
-        $infoPanel.removeClass('in');
-    }
   });
 
 }
@@ -466,7 +380,131 @@ function initSelect2 () {
 
 }
 
+function initContributions () {
 
+  // show an in-progress modal when request email is sent
+  $('#contributions-pre-request').on('click', '.send-request', function () {
+    $('#progress-modal').modal('show');
+  });
+
+  /*
+    on successful addition of linkedin profile to contributor card
+  */
+  $(".best_in_place[data-bip-attribute='linkedin_url']").bind("ajax:success",
+    function (event, data) {
+      var linkedinUrl = $(this).text(),
+          $card = $(this).closest('.contribution-card'),
+          $research = $card.find('.research');
+      // add ...
+      if ($card.find('iframe').length === 0 && linkedinUrl !== "add url ..." ) {
+        $card.append(
+          "<br style='line-height:10px'>" +
+          "<div class='row text-center'>" +
+            "<script type='IN/MemberProfile' " +
+              "data-id='" + linkedinUrl + "' " +
+              "data-format='inline' data-related='false' " +
+              "data-width='340'></script>" +
+          "</div>");
+        IN.parse();
+        $research.attr('href', linkedinUrl);
+        $research.html("<i class='fa fa-linkedin-square bip-clickable-fa'>");
+      // remove ...
+      } else if ($card.find('iframe').length !== 0 && linkedinUrl === "add url ...") {
+        $card.find('br:last').remove();
+        $card.find('div:last').remove();
+        // get contribution data so we can set research button
+        // (needs contributor and customer data)
+        $.get('/contributions/' + $card.data('contribution-id'), function (contribution, status) {
+          if (contribution.role == 'customer') {
+            $research.attr('href',
+              "http://google.com/search?q=" +
+              contribution.contributor.first_name + "+" +
+              contribution.contributor.last_name + "+" +
+              contribution.success.customer.name);
+          } else {
+            $research.attr('href',
+              "http://google.com/search?q=" +
+              contribution.contributor.first_name + "+" +
+              contribution.contributor.last_name + "+");
+          }
+        }, 'json');
+        $research.html("<i class='glyphicon glyphicon-user bip-clickable'></i>");
+      // replace ...
+      } else {
+        $card.find('br:last').remove();
+        $card.find('div:last').remove();
+        $card.append(
+          "<br style='line-height:10px'>" +
+          "<div class='row text-center'>" +
+            "<script type='IN/MemberProfile' " +
+              "data-id='" + linkedinUrl + "' " +
+              "data-format='inline' data-related='false' " +
+              "data-width='340'></script>" +
+          "</div>");
+        IN.parse();
+      }
+  });
+
+  /*
+    only one accordion panel open at a time
+  */
+  $('.accordion-toggle').on('click', function () {
+    if ($(this).attr('href').match(/info/)) {
+      var $readPanel = $(this).closest('.accordion')
+                              .find("div.accordion-body[id*='submission']");
+      if ($readPanel.hasClass('in'))
+        $readPanel.removeClass('in');
+    } else if ($(this).attr('href').match(/submission/)) {
+      var $infoPanel = $(this).closest('.accordion')
+                              .find("div.accordion-body[id*='info']");
+      if ($infoPanel.hasClass('in'))
+        $infoPanel.removeClass('in');
+    }
+  });
+
+  /*
+    Propagate any changes to contribution notes dynamically.
+    There are issues with updating an existing best_in_place input with jquery,
+    so instead this function finds the notes field that needs updating,
+    removes and replaces it with a clone of itself, with attributes updated
+    as necessary
+  */
+  $(".contribution-card").on("ajax:success", ".best_in_place[data-bip-attribute='notes']",
+    function (event, data) {
+      var $_this = $(this), // the notes field that was modified
+          contributionId = $(this).attr('id').match(/_(\d+)_notes$/)[1];
+      $(".best_in_place[id*='" + contributionId + "_notes']")
+        .each(function (index) {
+          // update any instance of this contribution notes field
+          // besides the one that was just modified ...
+          if ( !$(this).is($_this) ) {
+            var $newNotesField = $(this).clone();
+            $newNotesField.text($_this.text());
+            $newNotesField.attr('data-bip-value', $_this.text());
+            $newNotesField.attr('data-bip-original-content', $_this.text());
+            $(this).parent().empty().append($newNotesField);
+            $newNotesField.best_in_place();
+          }
+      });
+  });
+
+}
+
+function initLinkedIn () {
+
+  // linkedin widgets
+  $.getScript('http://platform.linkedin.com/in.js');
+
+  /*
+    give the linkedin widgets a second to load,
+    then disable their tabbing behavior
+  */
+  window.setTimeout(function () {
+    $("#contribution-connections iframe").each(function () {
+      $(this).prop('tabIndex', '-1');
+    });
+  }, 1000);
+}
 
 
 
