@@ -18,7 +18,9 @@
     <div class="row">
       <div class="col-sm-12">
         <%= follow_up_required?(contribution.status) ? 'Next step:' : 'Status:' %>&nbsp;
+        <span class="contribution-status">
         <%= contribution_status(contribution) %>
+        </span>
       </div>
     </div>
   <% end %>

@@ -50,7 +50,9 @@ class ContributionsController < ApplicationController
         # all contributors needed to populate referrer select box ...
         @contributors = story.success.contributors
         # all contributions to build connections list
+        # leave out contributors who unsubscribed or opted out
         @contributions = story.success.contributions
+                                      .where("status NOT IN ('unsubscribe', 'opt_out')")
       else
         # presently only one validation:
         #   contributor may have only one contribution per success

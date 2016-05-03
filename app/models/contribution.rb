@@ -108,9 +108,7 @@ class Contribution < ActiveRecord::Base
 
   def self.connections success_id
     Contribution.includes(:contributor, :referrer)
-                .where(success_id: success_id)
-                # .where("success_id = ? AND (status = ? OR (notes IS NOT NULL AND notes != ?))",
-                #           success_id, "contribution", "")
+                .where("success_id = ? AND status NOT IN ('unsubscribe', 'opt_out')", success_id)
   end
 
   #

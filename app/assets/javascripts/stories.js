@@ -226,7 +226,7 @@ function initListeners () {
   });
 
   // reset new contributor modal form when the modal closes
-  $('.modal').on('hidden.bs.modal', function () {
+  $('#new-contributor-modal').on('hidden.bs.modal', function () {
     // input elements to default values (first, last, email)
     $(this).find('form')[0].reset();
     // select2 inputs to default values (role, referred-by)
@@ -384,7 +384,13 @@ function initContributions () {
 
   // show an in-progress modal when request email is sent
   $('#contributions-pre-request').on('click', '.send-request', function () {
+    $('[data-toggle="tooltip"]').tooltip('destroy');
     $('#progress-modal').modal('show');
+  });
+
+  // re-establish the tooltips
+  $('#progress-modal').on('hidden.bs.modal', function () {
+    $('[data-toggle="tooltip"]').tooltip();
   });
 
   /*
