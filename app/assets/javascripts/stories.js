@@ -469,7 +469,7 @@ function initContributions () {
     removes and replaces it with a clone of itself, with attributes updated
     as necessary
   */
-  $(".contribution-card").on("ajax:success", ".best_in_place[data-bip-attribute='notes']",
+  $(".contribution-cards").on("ajax:success", ".best_in_place[data-bip-attribute='notes']",
     function (event, data) {
 
       var $_this = $(this), // the notes field that was modified
@@ -493,9 +493,9 @@ function initContributions () {
   });
 
   // mirrors above function for phone field
-  $(".contribution-card").on("ajax:success", ".best_in_place[data-bip-attribute='phone']",
+  $(".contribution-cards").on("ajax:success", ".best_in_place[data-bip-attribute='phone']",
     function (event, data) {
-
+      console.log('fart');
       var $_this = $(this), // the notes field that was modified
           contributionId = $(this).attr('id').match(/_(\d+)_phone$/)[1];
 

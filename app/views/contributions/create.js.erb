@@ -2,11 +2,13 @@
 
   var contributionsPreRequest = <%= raw @contributions_pre_request.to_json({ include: { contributor: {}, referrer: {}, success: { include: :customer } } }) %>,
       allContributors = <%= raw @contributors.to_json %>,
+       connections = <%= raw @contributions.to_json({ methods: :status_helper, include: { contributor: {}, referrer: {}, success: { include: :customer } } }) %>,
          flashMesg = "<%= @flash_mesg %>",
        flashStatus = "<%= @flash_status %>",
           template = _.template($('#cc-template').html());
 
-  console.log(contributionsPreRequest);
+  console.log('connections: ', connections)
+
   $('#new-contributor-modal').modal('hide');
 
   if (flashStatus === "danger") {
@@ -16,8 +18,13 @@
         .empty()
         .append(
           template({ contributions: contributionsPreRequest,
-                              type: 'pre-request',
-                contributionStatus: null })  // only need this for an in-progress template
+                              type: 'pre-request' })
+        );
+    $('#contribution-connections')
+        .empty()
+        .append(
+          template({ contributions: connections,
+                              type: 'connection' })
         );
     $("a[href='#pre-request']").tab('show');
   }
@@ -44,6 +51,16 @@
     });
     $('#contributor_referrer').html(newOptions).change();
   }
+
+  /*
+    apply status helper to status fields
+  */
+  // function applyStatusHelper (contributions) {
+  //   return contributions.map(function (contribution) {
+  //     return $.extend(contribution,
+  //                 { statusHelper: "<%#= contribution_status(contribution.status) %>" });
+  //   });
+  // }
 
 })();
 

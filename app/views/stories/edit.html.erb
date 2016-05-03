@@ -134,7 +134,7 @@
           <!-- Contributors list -->
           <div class="col-sm-8 col-md-4 layout-main" style='padding-top:0'>
 
-            <div class="tab-content stacked-content">
+            <div class="tab-content stacked-content contribution-cards">
 
               <%= render 'stories/shared/story_edit_pre_request_contributions' %>
 
@@ -272,7 +272,7 @@
                   title='Send contribution request'></i></a>
           {{ } }}
 
-          {{ if (contribution.status === 'contribution' || contribution.status === 'feedback') { }}
+          {{ if (contribution.status === 'contribution' || contribution.status === 'feedback' ) { }}
             <a class="accordion-toggle" data-toggle="collapse" tabindex="-1"
                 data-parent="#{{= type }}-accordion-{{= index }}"
                 href="#collapse-{{= type }}-submission-{{= index }}">
@@ -314,11 +314,11 @@
         </div>
       </div>
 
-      {{ if (type === 'in-progress' || type === 'next-steps' ) { }}
+      {{ if (type === 'in-progress' || type === 'next-steps' || type === 'connection') { }}
         <div class="row">
           <div class="col-sm-12">
-            {{= type == 'in-progress' ? 'Status:' : 'Next step:' }}&nbsp;
-            {{= contributionStatus }}
+            {{= (contribution.status === 'feedback' || contribution.status === 'did_not_respond')? 'Next step:' : 'Status:' }}&nbsp;
+            {{= contribution.status_helper }}
           </div>
         </div>
       {{ } }}
@@ -364,7 +364,7 @@
                       data-bip-url="/contributions/{{= contribution.access_token }}"
                       data-bip-placeholder="<i>add phone ...</i>"
                       class="best_in_place"
-                      id="best_in_place_user_{{= contribution.contributor.id }}_phone">
+                      id="{{= type }}_best_in_place_user_{{= contribution.contributor.id }}_phone">
                     {{= contribution.contributor.phone || "<i>add phone ...</i>" }}
                   </span>
                 </div> <br style='line-height:10px'>
@@ -392,7 +392,7 @@
                       data-bip-url="/contributions/{{= contribution.access_token }}"
                       data-bip-placeholder="<i>add notes ...</i>"
                       class="best_in_place"
-                      id="best_in_place_contribution_{{= contribution.id }}_notes">
+                      id="{{= type }}_best_in_place_contribution_{{= contribution.id }}_notes">
                     {{= contribution.notes || "<i>add notes ...</i>" }}
                   </span>
                 </div>
