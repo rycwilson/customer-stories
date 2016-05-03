@@ -14,10 +14,10 @@
     </div>
   </div>
 
-  <% if type == 'in-progress' || type == 'next-steps' %>
+  <% if type == 'in-progress' || type == 'next-steps' || type == 'connection' %>
     <div class="row">
       <div class="col-sm-12">
-        <%= type =='in-progress' ? 'Status:' : 'Next step:' %>&nbsp;
+        <%= type == 'next-steps' ? 'Next step:' : 'Status:' %>&nbsp;
         <%= contribution_status(contribution) %>
       </div>
     </div>

@@ -471,21 +471,49 @@ function initContributions () {
   */
   $(".contribution-card").on("ajax:success", ".best_in_place[data-bip-attribute='notes']",
     function (event, data) {
+
       var $_this = $(this), // the notes field that was modified
           contributionId = $(this).attr('id').match(/_(\d+)_notes$/)[1];
+
       $(".best_in_place[id*='" + contributionId + "_notes']")
         .each(function (index) {
           // update any instance of this contribution notes field
           // besides the one that was just modified ...
           if ( !$(this).is($_this) ) {
             var $newNotesField = $(this).clone();
-            $newNotesField.text($_this.text());
-            $newNotesField.attr('data-bip-value', $_this.text());
-            $newNotesField.attr('data-bip-original-content', $_this.text());
-            $(this).parent().empty().append($newNotesField);
+            $newNotesField.html($_this.html());
+            $newNotesField.attr('data-bip-value', $_this.html());
+            $newNotesField.attr('data-bip-original-content', $_this.html());
+            $(this).parent().empty()
+                            .append($newNotesField);
             $newNotesField.best_in_place();
           }
       });
+
+  });
+
+  // mirrors above function for phone field
+  $(".contribution-card").on("ajax:success", ".best_in_place[data-bip-attribute='phone']",
+    function (event, data) {
+
+      var $_this = $(this), // the notes field that was modified
+          contributionId = $(this).attr('id').match(/_(\d+)_phone$/)[1];
+
+      $(".best_in_place[id*='" + contributionId + "_phone']")
+        .each(function (index) {
+          // update any instance of this contribution notes field
+          // besides the one that was just modified ...
+          if ( !$(this).is($_this) ) {
+            var $newPhoneField = $(this).clone();
+            $newPhoneField.html($_this.html());
+            $newPhoneField.attr('data-bip-value', $_this.html());
+            $newPhoneField.attr('data-bip-original-content', $_this.html());
+            $(this).parent().empty()
+                            .append("<span>Phone:&nbsp;&nbsp;</span>", $newPhoneField);
+            $newPhoneField.best_in_place();
+          }
+      });
+
   });
 
 }
