@@ -45,6 +45,7 @@ class ContributionsController < ApplicationController
     if !contributor.changed? || contributor.save  # don't save if not necessary
       contribution = new_contribution story.success.id, contributor.id, params
       if contribution.save
+        contribution.update(linkedin: true) if contribution.contributor.linkedin_url.present?
         # respond with all pre-request contributions, most recent additions first
         @contributions_pre_request = Contribution.pre_request story.success_id
         # all contributors needed to populate referrer select box ...

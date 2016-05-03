@@ -7,37 +7,67 @@
        flashStatus = "<%= @flash_status %>",
           template = _.template($('#cc-template').html());
 
-  console.log('connections: ', connections)
+  /*
+    wait for the modal to close before callback executes
+    .one() => callback executes only once
+  */
+  $('#new-contributor-modal').one('hidden.bs.modal', function () {
+    if (flashStatus === "danger") {
+      flashDisplay(flashMesg, flashStatus);
+    } else {
+      renderPreRequestContributions();
+      renderConnections();
+      updateReferrerSelectOptions(allContributors);
+      // dynamically added elements must be re-configured as best-in-place
+      $('#contributions-pre-request .best_in_place').best_in_place();
+      $('#contribution-connections .best_in_place').best_in_place();
+      // render linkedin profile widgets
+      IN.parse();
+      initLinkedIn();  // remove tab index'ing
+      // attach listeners to dynamically added elements
+      $('a.accordion-toggle').on('focus', function () {
+        var $_this = $(this);
+        window.setTimeout(function () { $_this.blur(); }, 200);
+      });
+    }
+  });
 
-  $('#new-contributor-modal').modal('hide');
+  $('#new-contributor-modal').modal('hide')
 
-  if (flashStatus === "danger") {
-    flashDisplay(flashMesg, flashStatus);
-  } else {
+  function renderPreRequestContributions () {
     $('#contributions-pre-request')
-        .empty()
-        .append(
-          template({ contributions: contributionsPreRequest,
-                              type: 'pre-request' })
-        );
-    $('#contribution-connections')
-        .empty()
-        .append(
-          template({ contributions: connections,
-                              type: 'connection' })
-        );
-    $("a[href='#pre-request']").tab('show');
+      .empty()
+      .append(
+        template({ contributions: contributionsPreRequest,
+                            type: 'pre-request' })
+      );
   }
 
-  updateReferrerSelectOptions(allContributors);
-
-  // dynamically added elements must be re-configured as best-in-place
-  $('.best_in_place').best_in_place();
-
-  // attach listeners to dynamically added elements
-  $('a.accordion-toggle').on('focus', function () {
-    $(this).blur();
-  });
+  function renderConnections () {
+    $('#contribution-connections')
+      .empty()
+      .append(
+        template({ contributions: connections,
+                            type: 'connection' })
+      );
+    /*
+      since we don't want a <script> inside of a <script>, the contribution
+      card template will leave a space for the linkedin widget, and we'll
+      fill it in here ...
+    */
+    $('#contribution-connections .linkedin-profile').each(function () {
+      var linkedinUrl = $.trim($(this).parent().find("[data-bip-attribute='linkedin_url']").text());
+      $(this).append(
+        "<script type='IN/MemberProfile' " +
+          "data-id='" + linkedinUrl + "' " +
+          "data-format='inline' data-related='false' " +
+          "data-width='340'></script>");
+    });
+    // render the widgets ...
+    IN.parse();
+    // give them a second to load, then disable tab index'ing ...
+    initLinkedIn();
+  }
 
   /*
     update the referrer select options with any newly added contributors
@@ -51,16 +81,6 @@
     });
     $('#contributor_referrer').html(newOptions).change();
   }
-
-  /*
-    apply status helper to status fields
-  */
-  // function applyStatusHelper (contributions) {
-  //   return contributions.map(function (contribution) {
-  //     return $.extend(contribution,
-  //                 { statusHelper: "<%#= contribution_status(contribution.status) %>" });
-  //   });
-  // }
 
 })();
 

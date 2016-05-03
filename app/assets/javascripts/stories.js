@@ -396,7 +396,7 @@ function initContributions () {
   /*
     on successful addition of linkedin profile to contributor card
   */
-  $(".best_in_place[data-bip-attribute='linkedin_url']").bind("ajax:success",
+  $(".contribution-cards").on("ajax:success", ".best_in_place[data-bip-attribute='linkedin_url']",
     function (event, data) {
       var linkedinUrl = $(this).text(),
           $card = $(this).closest('.contribution-card'),
@@ -412,6 +412,7 @@ function initContributions () {
               "data-width='340'></script>" +
           "</div>");
         IN.parse();
+        initLinkedIn();
         $research.attr('href', linkedinUrl);
         $research.html("<i class='fa fa-linkedin-square bip-clickable-fa'>");
       // remove ...
@@ -448,6 +449,7 @@ function initContributions () {
               "data-width='340'></script>" +
           "</div>");
         IN.parse();
+        initLinkedIn();
       }
   });
 
@@ -501,7 +503,6 @@ function initContributions () {
   // mirrors above function for phone field
   $(".contribution-cards").on("ajax:success", ".best_in_place[data-bip-attribute='phone']",
     function (event, data) {
-      console.log('fart');
       var $_this = $(this), // the notes field that was modified
           contributionId = $(this).attr('id').match(/_(\d+)_phone$/)[1];
 
@@ -526,19 +527,25 @@ function initContributions () {
 
 function initLinkedIn () {
 
-  // linkedin widgets
-  $.getScript('http://platform.linkedin.com/in.js');
+  // linkedin widgets (load IN.js library conditionally)
+  if (typeof(IN) !== "object") {
+    console.log("loading in.js ...");
+    $.getScript('http://platform.linkedin.com/in.js');
+  } else {
+    console.log("in.js already loaded");
+  }
 
   /*
-    give the linkedin widgets a second to load,
-    then disable their tabbing behavior
+    give the  widgets a second to load, then disable their tabbing behavior
   */
   window.setTimeout(function () {
     $("#contribution-connections iframe").each(function () {
       $(this).prop('tabIndex', '-1');
     });
   }, 1000);
+
 }
+
 
 
 
