@@ -3,39 +3,54 @@
 
 (function () {
 
-  var contributionsInProgress = <%= raw @contributions_in_progress.to_json({ include: { contributor: {}, referrer: {}, success: { include: :customer } } }) %>,
-          contribution = <%= raw @contribution.to_json %>,
+  var contributionsInProgress = <%= raw @contributions_in_progress.to_json({ methods: :status_helper, include: { contributor: {}, referrer: {}, success: { include: :customer } } }) %>,
+          contribution = <%= raw @contribution.to_json({ methods: :status_helper }) %>,
     contributionStatus = "<%= contribution_status(@contribution) %>"
              flashMesg = "<%= @flash_mesg %>",
            flashStatus = "<%= @flash_status %>",
               template = _.template($('#cc-template').html());
 
-  window.setTimeout(function () {
-    $('#progress-modal').modal('hide');
-  }, 1500);
-
-  window.setTimeout(function () {
-    flashDisplay(flashMesg, flashStatus);
-  }, 1800);
-
+  setTimeouts();
   if (flashStatus === "info") {  // success
-    removeContributionCard(contribution.id);
-    $('#contributions-in-progress')
-        .empty()
-        .append(template({ contributions: contributionsInProgress,
-                                    type: 'in-progress',
-                      contributionStatus: contributionStatus }));
-    $('.best_in_place').best_in_place();
+    removePreRequestCard(contribution.id);
+    renderInProgressCards();
+    updateConnectionCard();
+  } else {
+    // error (reflected in flash display)
+  }
+
+  function setTimeouts () {
+    window.setTimeout(function () {
+      $('#progress-modal').modal('hide');
+    }, 1500);
+
+    window.setTimeout(function () {
+      flashDisplay(flashMesg, flashStatus);
+    }, 1800);
   }
 
   // remove the pre-request contribution card
-  function removeContributionCard (contribution_id) {
+  function removePreRequestCard (contribution_id) {
     var $preRequestCard = $('#contributions-pre-request')
           .find("div[data-contribution-id='" + contribution_id.toString() + "']");
     setTimeout(function () {
       $preRequestCard.hide('fast', function() { $preRequestCard.remove(); });
       // $('#flash').fadeOut(300, function () { $(this).remove() });
     }, 1000);
+  }
+
+  function renderInProgressCards () {
+    $('#contributions-in-progress')
+      .empty()
+      .append(template({ contributions: contributionsInProgress,
+                                  type: 'in-progress' }));
+    $('.best_in_place').best_in_place();
+  }
+
+  function updateConnectionCard () {
+    $('#contribution-connections')
+      .find(".contribution-card[data-contribution-id='" + contribution.id + "']")
+      .find(".contribution-status").text(contribution.status_helper)
   }
 
 }());
