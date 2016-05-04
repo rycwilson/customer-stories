@@ -28,4 +28,12 @@ module StoriesHelper
     end
   end
 
+  def curator_story_view?
+    company_curator? && controller_name == 'stories' && action_name == 'show'
+  end
+
+  def gallery_view?
+    controller_name == 'stories' && action_name == 'index'
+  end
+
 end

@@ -58,7 +58,7 @@
 
   <div class="form-group">
 
-    <%= label_tag 'Industries served', nil, class: 'control-label' %>
+    <%= label_tag 'company_tags[industry][]', 'Category', class: 'control-label' %>
     <%= select_tag 'company_tags[industry][]',
           # none presently exist, so pass empty array...
           options_for_select([]),

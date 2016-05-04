@@ -10,6 +10,8 @@ class ApplicationController < ActionController::Base
                   if: Proc.new { user_signed_in? },
               unless: Proc.new { devise_controller? || invalid_subdomain? }
 
+  helper_method :company_curator?
+
   protected
 
   #  this method ensures signed in users can't jump to a subdomain they don't belong to
@@ -83,7 +85,7 @@ class ApplicationController < ActionController::Base
   end
 
   # this method assumes @company is defined in the calling action
-  def curator?
+  def company_curator?
     user_signed_in? && current_user.company_id == @company.id
   end
 

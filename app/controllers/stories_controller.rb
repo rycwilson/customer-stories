@@ -20,7 +20,7 @@ class StoriesController < ApplicationController
                       customer: { only: [:slug, :logo_url] }}
         end
       end
-    elsif curator?
+    elsif company_curator?
       @success_tiles = @company.successes_with_story    # all stories
       # need to unshift here instead of model methods since other calls to
       # these methods don't require the unshift
@@ -201,7 +201,7 @@ class StoriesController < ApplicationController
     if request.path != csp_story_path(@story)
       # old story title slug, redirect to current
       return redirect_to csp_story_path(@story), status: :moved_permanently
-    elsif !@story.published? && !curator?
+    elsif !@story.published? && !company_curator?
       return redirect_to root_url(subdomain:request.subdomain, host:request.domain)
     end
   end

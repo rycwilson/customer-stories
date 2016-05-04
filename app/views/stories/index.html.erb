@@ -16,31 +16,17 @@
 
 <div id='wrapper'>
 
-  <% if user_signed_in? %>
+  <% if company_curator? %>
+
     <%= render 'shared/mainnav' %>,
+
   <% else %>
 
     <div class="mainnav" style='padding-top:5px'>
       <div class="container">
-        <form class="form-inline col-sm-7 col-sm-offset-1">
-          <% if @industries.length > 2 %>  <!-- includes 'All' (hence 2) -->
-            <div class="form-group text-left">
-              <%= label_tag :industries, "Industry", class: 'control-label' %>
-              <%= select_tag :industries, options_for_select(@industries),
-                    class: 'stories-filter form-control',
-                    style: 'min-width: 140px' %>
-            </div>&nbsp;&nbsp;
-          <% end %>
-          <% if @products.length > 2 %>
-            <div class="form-group text-left">
-              <%= label_tag :products, "Product", class: 'control-label' %>
-              <%= select_tag :products, options_for_select(@products),
-                    class: 'stories-filter form-control',
-                    style: 'min-width: 140px' %>
 
-            </div>
-          <% end %>
-        </form>
+        <%= render 'stories/shared/filters' %>
+
       </div>
     </div>
 
