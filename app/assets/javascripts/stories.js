@@ -20,27 +20,12 @@
 
 //= require masonry/dist/masonry.pkgd
 
-var ready = function () {
-
-  initSelect2();
-  initLinkedIn();
-  initBIPListeners();
-  initTagsListeners();
-  initListeners();
-  configPlugins();
-  configUnderscore();
-  configS3Upload();
-  initBootstrapSwitch();
-  initContributions();
-
-};
-
 /*
-  with turbolinks in place, js only runs on initial controller/page load
-  e.g. js does not run when going from stories#show to stories#edit,
-    and this results in plug-ins not being initialized
-  below ensures that js runs each time a stories/ page loads
-  both are needed
+  With turbolinks in place, js only runs on initial controller/page load,
+  e.g. js does not run when going from stories#show to stories#edit
+  This results in plug-ins not being initialized
+  Below ensures that js runs each time a stories# page loads
+  Both are needed
 */
 $(document).ready(function () {
   // console.log('doc.ready');
@@ -55,6 +40,21 @@ $(document).on('page:load', function () {
 $(document).on('page:change', function () {
   // console.log('page:change');
 });
+
+function ready () {
+
+  initSelect2();
+  initLinkedIn();
+  initBIPListeners();
+  initTagsListeners();
+  initListeners();
+  configPlugins();
+  configUnderscore();
+  configS3Upload();
+  initBootstrapSwitch();
+  initContributions();
+
+}
 
 function configUnderscore() {
   // this changes underscore to use {{ }} delimiters
@@ -334,7 +334,7 @@ function initBootstrapSwitch() {
     var $publish = $("#story_published"),
         $logoPublish = $("#story_logo_published");
     /*
-      server may have changed values to prevent invalid state!
+      server may have changed values to prevent invalid state ...
       it either ...
         - turned logo_publish on to track story_publish=on
         - turned story_publish off to track logo_publish=off
