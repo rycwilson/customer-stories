@@ -58,7 +58,7 @@
                 style='padding-right:0; margin-bottom:4px'>
                 Phone:&nbsp;&nbsp;
               <%= best_in_place contribution.contributor, :phone,
-                  id: "#{type}_best_in_place_contribution_#{contribution.id}_phone",
+                  id: "#{type}_best_in_place_user_#{contribution.contributor.id}_phone",
                  url: "/contributions/#{contribution.access_token}",
           html_attrs: { style:'width:100%' },
            activator: "#edit-#{type}-phone-#{index}",

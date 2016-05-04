@@ -503,12 +503,14 @@ function initContributions () {
   // mirrors above function for phone field
   $(".contribution-cards").on("ajax:success", ".best_in_place[data-bip-attribute='phone']",
     function (event, data) {
-      var $_this = $(this), // the notes field that was modified
-          contributionId = $(this).attr('id').match(/_(\d+)_phone$/)[1];
 
-      $(".best_in_place[id*='" + contributionId + "_phone']")
+      var $_this = $(this), // the phone field that was modified
+          userId = $(this).attr('id').match(/_(\d+)_phone$/)[1];
+
+      $(".best_in_place[id*='" + userId + "_phone']")
         .each(function (index) {
-          // update any instance of this contribution notes field
+          console.log('phone fields: ', $(this));
+          // update any instance of this phone field
           // besides the one that was just modified ...
           if ( !$(this).is($_this) ) {
             var $newPhoneField = $(this).clone();
