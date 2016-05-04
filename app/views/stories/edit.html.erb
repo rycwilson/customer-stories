@@ -67,7 +67,7 @@
       <!-- tags -->
       <p class='lead' style='display:inline-block'>Tags</p>
       <button type='submit' class='edit-tags hidden btn btn-sm btn-primary'
-        style='display:inline-block; margin-left:15px; margin-bottom:8px' form='tags-form'>
+        style='display:inline-block; margin-left:15px; margin-bottom:8px' form='story-tags-form'>
         Save changes
       </button>
       <button id='edit-tags-cancel' class='edit-tags hidden btn btn-sm btn-default'
@@ -134,7 +134,7 @@
           <!-- Contributors list -->
           <div class="col-sm-8 col-md-4 layout-main" style='padding-top:0'>
 
-            <div class="tab-content stacked-content">
+            <div class="tab-content stacked-content contribution-cards">
 
               <%= render 'stories/shared/story_edit_pre_request_contributions' %>
 
@@ -155,8 +155,7 @@
             <!-- <p class='lead'>Story Narration</p> -->
             <div class="well" style='position:relative'>
               <div class="container-fluid">
-
-                <div class="row text-justify" style='margin-top:10px'>
+                <div class="row" style='margin-top:10px'>
 
                   <div id='edit-story-situation'
                         style='position:absolute; right:20px; margin-top:-3px'>
@@ -164,16 +163,19 @@
                   </div>
 
                   <div class='col-sm-11' id='story-situation'>
-                    <strong>Situation:&nbsp&nbsp</strong>
-                    <%= best_in_place @story, :situation, as: :textarea, url: story_path(@story.id),
-                        activator: '#edit-story-situation',
-                        place_holder: 'Add story situation ...',
-                        html_attrs: { style: 'width:100%' } %>
+                    <p><strong>Situation</strong></p>
+                    <%= best_in_place @story, :situation,
+                          as: :textarea,
+                          display_with: lambda { |text| simple_format(text) },
+                          sanitize: false,
+                          url: story_path(@story.id),
+                          activator: '#edit-story-situation',
+                          place_holder: 'Add story situation ...',
+                          html_attrs: { style: 'width:100%' } %>
                   </div>
 
                 </div> <br>
-
-                <div class="row text-justify">
+                <div class="row">
 
                   <div id='edit-story-challenge'
                         style='position:absolute; right:20px; margin-top:-3px'>
@@ -181,16 +183,20 @@
                   </div>
 
                   <div class='col-sm-11' id='story-challenge'>
-                    <strong>Challenge:&nbsp&nbsp</strong>
-                    <%= best_in_place @story, :challenge, as: :textarea, url: story_path(@story.id),
-                        activator: '#edit-story-challenge',
-                        place_holder: 'Add story challenge ...',
-                        html_attrs: { style: 'width:100%' } %>
+                    <p><strong>Challenge</strong></p>
+                    <%= best_in_place @story, :challenge,
+                          as: :textarea,
+                          display_with: lambda { |text| simple_format(text) },
+                          sanitize: false,
+                          url: story_path(@story.id),
+                          activator: '#edit-story-challenge',
+                          place_holder: 'Add story challenge ...',
+                          html_attrs: { style: 'width:100%' } %>
 
                   </div>
-                </div> <br>
 
-                <div class="row text-justify">
+                </div> <br>
+                <div class="row">
 
                   <div id='edit-story-solution'
                         style='position:absolute; right:20px; margin-top:-3px'>
@@ -198,16 +204,19 @@
                   </div>
 
                   <div class='col-sm-11' id='story-solution'>
-                    <strong>Solution:&nbsp&nbsp</strong>
-                    <%= best_in_place @story, :solution, as: :textarea, url: story_path(@story.id),
-                        activator: '#edit-story-solution',
-                        place_holder: 'Add story solution ...',
-                        html_attrs: { style: 'width:100%' } %>
+                    <p><strong>Solution</strong></p>
+                    <%= best_in_place @story, :solution,
+                          as: :textarea,
+                          display_with: lambda { |text| simple_format(text) },
+                          url: story_path(@story.id),
+                          sanitize: false,
+                          activator: '#edit-story-solution',
+                          place_holder: 'Add story solution ...',
+                          html_attrs: { style: 'width:100%' } %>
 
                   </div>
                 </div> <br>
-
-                <div class="row text-justify">
+                <div class="row">
 
                   <div id='edit-story-benefits'
                         style='position:absolute; right:20px; margin-top:-3px'>
@@ -215,11 +224,15 @@
                   </div>
 
                   <div class='col-sm-11' id='story-benefits'>
-                    <strong>Benefits:&nbsp&nbsp</strong>
-                    <%= best_in_place @story, :benefits, as: :textarea, url: story_path(@story.id),
-                        activator: '#edit-story-benefits',
-                        place_holder: 'Add story benefits ...',
-                        html_attrs: { style: 'width:100%' } %>
+                    <p><strong>Benefits:&nbsp&nbsp</strong></p>
+                    <%= best_in_place @story, :benefits,
+                          as: :textarea,
+                          url: story_path(@story.id),
+                          display_with: lambda { |text| simple_format(text) },
+                          sanitize: false,
+                          activator: '#edit-story-benefits',
+                          place_holder: 'Add story benefits ...',
+                          html_attrs: { style: 'width:100%' } %>
 
                   </div>
 
@@ -259,7 +272,7 @@
                   title='Send contribution request'></i></a>
           {{ } }}
 
-          {{ if (contribution.status === 'contribution' || contribution.status === 'feedback') { }}
+          {{ if (contribution.status === 'contribution' || contribution.status === 'feedback' ) { }}
             <a class="accordion-toggle" data-toggle="collapse" tabindex="-1"
                 data-parent="#{{= type }}-accordion-{{= index }}"
                 href="#collapse-{{= type }}-submission-{{= index }}">
@@ -280,7 +293,7 @@
             so it's unnecessary here, but may be useful at some point
             (curator enters a linkedin_url upon on creating contributor)
           */-->
-          {{ if (type === 'connection' && contribution.linkedin) { }}
+          {{ if (contribution.linkedin) { }}
 
             <a class='research' target="_blank" tabindex='-1'
                 href="{{= contribution.contributor.linkedin_url }}">
@@ -301,11 +314,11 @@
         </div>
       </div>
 
-      {{ if (type === 'in-progress' || type === 'next-steps' ) { }}
+      {{ if (type === 'in-progress' || type === 'next-steps' || type === 'connection') { }}
         <div class="row">
           <div class="col-sm-12">
-            {{= type == 'in-progress' ? 'Status:' : 'Next step:' }}&nbsp;
-            {{= contributionStatus }}
+            {{= (contribution.status === 'feedback' || contribution.status === 'did_not_respond')? 'Next step:' : 'Status:' }}&nbsp;
+            {{= contribution.status_helper }}
           </div>
         </div>
       {{ } }}
@@ -334,12 +347,12 @@
               <div class="row">
 
                 <div id='edit-{{= type }}-phone-{{= index }}'
-                    class='col-sm-2 text-center pull-right cc-notes'
+                    class='col-sm-2 text-center pull-right cc-editable'
                     style='padding:0; margin-top:-2px'>
                   <i class='glyphicon glyphicon-pencil bip-clickable'></i>
                 </div>
 
-                <div id='{{= type }}-phone-{{= index }}' class='col-sm-10 cc-notes'
+                <div id='{{= type }}-phone-{{= index }}' class='col-sm-10 cc-editable'
                     style='padding-right:0; margin-bottom:4px'>
                     Phone:&nbsp;&nbsp;
                   <span data-bip-type="input" data-bip-attribute="phone"
@@ -351,7 +364,7 @@
                       data-bip-url="/contributions/{{= contribution.access_token }}"
                       data-bip-placeholder="<i>add phone ...</i>"
                       class="best_in_place"
-                      id="best_in_place_user_{{= contribution.contributor.id }}_phone">
+                      id="{{= type }}_best_in_place_user_{{= contribution.contributor.id }}_phone">
                     {{= contribution.contributor.phone || "<i>add phone ...</i>" }}
                   </span>
                 </div> <br style='line-height:10px'>
@@ -363,13 +376,13 @@
               <div class="row">
 
                 <div id="edit-{{= type }}-notes-{{= index }}"
-                    class="col-sm-2 text-center pull-right cc-notes"
+                    class="col-sm-2 text-center pull-right cc-editable"
                     style="padding:0; margin-top:-2px">
                   <i class="glyphicon glyphicon-pencil bip-clickable"></i>
                 </div>
 
                 <div id="{{= type }}-notes-{{= index }}"
-                    class="col-sm-10 cc-notes" style="padding-right:0; margin-bottom:4px">
+                    class="col-sm-10 cc-editable" style="padding-right:0; margin-bottom:4px">
                   <span data-bip-type="textarea" data-bip-attribute="notes"
                       data-bip-activator="#edit-{{= type }}-notes-{{= index }}"
                       data-bip-html-attrs="{&quot;style&quot;:&quot;width:100%&quot;}"
@@ -379,16 +392,50 @@
                       data-bip-url="/contributions/{{= contribution.access_token }}"
                       data-bip-placeholder="<i>add notes ...</i>"
                       class="best_in_place"
-                      id="best_in_place_contribution_{{= contribution.id }}_notes">
+                      id="{{= type }}_best_in_place_contribution_{{= contribution.id }}_notes">
                     {{= contribution.notes || "<i>add notes ...</i>" }}
                   </span>
                 </div>
 
               </div>
 
-              <!--/*
-                LinkedIn features only occur under Connections - never templated
-              */-->
+              {{ if (type == 'connection') { }}
+
+                LinkedIn profile: <br>
+                <div class="row">
+
+                  <div id='edit-linkedin-{{= index }}'
+                      class='col-sm-2 text-center pull-right cc-editable'
+                      style='padding:0; margin-top:-2px'>
+                    <span class='glyphicon glyphicon-pencil bip-clickable'></span>
+                  </div>
+
+                  <div id='linkedin-{{= index }}' class='col-sm-10 cc-editable'
+                      style='padding-right:0'>
+                    <span data-bip-type="input" data-bip-attribute="linkedin_url"
+                        data-bip-activator="#edit-linkedin-{{= index }}"
+                        data-bip-html-attrs="{&quot;style&quot;:&quot;width:100%&quot;}"
+                        data-bip-object="user"
+                        data-bip-original-content="{{= contribution.contributor.linkedin_url }}"
+                        data-bip-value="{{= contribution.contributor.linkedin_url }}"
+                        data-bip-url="/contributions/{{= contribution.access_token }}"
+                        data-bip-placeholder="<i>add url ...</i>"
+                        class="best_in_place"
+                        id="best_in_place_user_{{= contribution.contributor.id }}_linkedin_url">
+                      {{= contribution.contributor.linkedin_url || "<i>add url ...</i>" }}
+                    </span>
+                  </div>
+
+                </div>
+
+                {{ if (contribution.linkedin) { }}
+                  <br style='line-height:10px'>
+                  <div class='row text-center linkedin-profile'>
+                    <!-- // linkedin widget will be inserted here -->
+                  </div>
+                {{ } }}
+
+              {{ } }}
             </div>  <!-- //.accordion-inner -->
           </div>
         </div>

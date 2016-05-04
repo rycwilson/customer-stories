@@ -11,6 +11,11 @@
 *= require social-sharing
 */
 
+
+/************************************
+*          stories gallery          *
+*************************************/
+
 .grid {
   margin: 0 auto;
 }
@@ -36,14 +41,25 @@
   padding: 2px 0 2px 6px;
 }
 
+
+/************************************
+*         contribution card         *
+*************************************/
+
 .contribution-card .accordion-inner br {
   line-height: 22px;
 }
 
-.story-text p {
+
+/************************************
+*           story text              *
+*************************************/
+
+.story-text {
   font-family: 'Merriweather';
   font-weight: 400;
 }
+
 
 .vcenter {
     display: inline-block;
@@ -56,8 +72,8 @@
   content: " *";
 }
 
-well {
-  margin-bottom: 15px
+.well {
+  padding: 25px 5% 25px 5%;
 }
 
 p.lead {
@@ -106,7 +122,7 @@ p.lead {
 #edit-story-benefits:hover + #story-benefits,
 .modify-result:hover + .story-result,
 .modify-prompt:hover + .story-prompt,
-.cc-notes:hover + .cc-notes {
+.cc-editable:hover + .cc-editable {
   // border-left: 3px solid #87a3bc;
   background-color: #e3e3e3;
   background-clip: content-box;

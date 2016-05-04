@@ -165,7 +165,7 @@ def seed_company company, *users
 
 
       # Result
-      success.results << Result.create(description: "#{success.customer.name} achieves #{rand(50)+50}% higher Data Center speeds with #{company.name} UCS",
+      success.results << Result.create(description: "Achieves #{rand(50)+50}% higher Data Center speeds",
                                           success_id: success.id)
 
       # Prompts

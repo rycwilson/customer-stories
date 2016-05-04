@@ -39,6 +39,7 @@ var ready = function () {
   initTemplateEditorListeners();
   initFormLogoBackground();
   initNewStoryValidator();
+  adjustPromoCSS();
 
 };
 
@@ -87,7 +88,7 @@ function initTemplateEditorListeners () {
   /*
     Detect changes in template editor (subject or body)
   */
-  $('#template_subject, .note-editable').on('input', function () {
+  $('#template_subject, #summernote-editor').on('input summernote.change', function () {
     // textarea responds to .text(); text field responds to .val()
     if ($(this).text().length > 0 || $(this).val().length > 0) {
       $('#save-template').prop('disabled', false);
@@ -233,6 +234,8 @@ function configSummernote () {
       ],
     });
   });
+
+  $('.note-image-url').parent().css('padding', '0 2.7%');
 }
 
 function configMiniColors () {
@@ -329,6 +332,30 @@ function initNewStoryValidator () {
     else {
       $(this).find("[type='submit']").prop('disabled', true);
     }
+  });
+}
+
+function adjustPromoCSS () {
+  $(document).on('shown.bs.tab', "a[href='#promote']", function () {
+
+    var ad2LogoWidth = parseInt($('.ad2-logo').css('width'), 10);
+
+    $('.ad1-text').each(function () {
+      if ($(this).data('text-length') >= 85) {
+        $(this).css('font-size', '22px');
+      }
+    });
+
+    $('.ad2-text').each(function () {
+      $(this).css('padding-left', ad2LogoWidth + 20);
+      if ($(this).data('text-length') >= 85) {
+        $(this).css('font-size', '20px');
+        $(this).css('top', '10px');
+      } else if ($(this).data('text-length') >= 75) {
+        $(this).css('font-size', '22px');
+        $(this).css('top', '8px');
+      }
+    });
   });
 }
 

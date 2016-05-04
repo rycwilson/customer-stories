@@ -1,7 +1,6 @@
 class CompaniesController < ApplicationController
 
-  # aws docs suggest first four actions, currently only need last one
-  before_action :set_s3_direct_post, only: [:new, :edit]
+  before_action :set_s3_direct_post, only: [:new, :edit, :create]
   before_action :set_company, only: [:edit, :update]
   before_action :user_authorized?, only: :show
 

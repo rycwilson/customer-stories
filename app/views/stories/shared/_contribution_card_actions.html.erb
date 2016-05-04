@@ -23,7 +23,7 @@
       data-toggle='tooltip' data-placement='top'
       title='More information'></i></a>
 
-<% if type == 'connection' && contribution.linkedin? %>
+<% if contribution.linkedin? %>
   <a class='research' target="_blank" tabindex='-1'
       href="<%= contribution.contributor.linkedin_url %>">
     <i class='fa fa-linkedin-square bip-clickable-fa'
