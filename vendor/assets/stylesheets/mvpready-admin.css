@@ -728,8 +728,9 @@ fieldset[disabled] .btn-transparent.active {
   margin-left: 0;
 }
 .form-horizontal .control-label {
-  position: relative;
-  top: 3px;
+  /*position: relative;*/
+  /*top: 3px;*/
+  padding-top: 7px;
   text-align: right;
 }
 .btn-primary .caret,
