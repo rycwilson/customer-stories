@@ -5,8 +5,8 @@
   <% if @industries.length > 2 %>  <!-- includes 'All' (hence 2) -->
 
     <div class='form-group'>
-      <%= label_tag :industries, "Category", class: 'col-xs-2 control-label' %>
-      <div class='col-xs-6'>
+      <%= label_tag :industries, "Category", class: 'col-xs-3 control-label' %>
+      <div class='col-xs-7'>
        <%= select_tag :industries, options_for_select(@industries),
               { class: 'stories-filter form-control',
                 style: 'min-width: 140px' } %>
@@ -18,8 +18,8 @@
   <% if @products.length > 2 %>
 
     <div class="form-group">
-      <%= label_tag :products, "Product", class: 'col-xs-2 control-label' %>
-      <div class="col-xs-6">
+      <%= label_tag :products, "Product", class: 'col-xs-3 control-label' %>
+      <div class="col-xs-7">
         <%= select_tag :products, options_for_select(@products),
              { class: 'stories-filter form-control',
                style: 'min-width: 140px' } %>
