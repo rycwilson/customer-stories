@@ -1,8 +1,6 @@
-<% if user_signed_in? && controller_name == 'stories' && action_name == 'show' %>
+<% if curator_story_view? %>
 
-  <style>
-    .mainnav-main:after { content: none; }
-  </style>
+  <style>.mainnav-main:after { content: none; }</style>
 
 <% end %>
 
@@ -24,6 +22,7 @@
     style="<%= user_signed_in? ? 'margin-bottom:0' : '' %>">
   <div class='container'>
 
+    <!-- only need this if curator signed in ... -->
     <div class="navbar-header">
       <a class="mainnav-toggle"
         data-toggle="collapse" data-target=".mainnav-collapse">
@@ -33,85 +32,19 @@
     </div>
 
     <div class="collapse mainnav-collapse" role="navigation">
-      <ul class='nav nav-tabs mainnav-menu col-sm-4' role='tablist' style='border-bottom:0'>
 
-        <% if ['alpha', 'beta'].include? @company.feature_flag %>
-        <!--   <li id='pipeline-tab' class='tooltip-wrapper-tabs'
-              style='margin-bottom: 0px; display:inline-block'
-              data-title="This section is currently disabled">
-            <a href='#pipeline' role='tab' aria-controls='pipeline'
-                style='pointer-events:none' disabled>
-              Pipeline
-            </a>
-          </li> -->
-        <% else %>
-          <li id='pipeline-tab' class="<%= @mainnav_tab == 'pipeline' ? 'active' : '' %>"
-              role='presentation' style='margin-bottom: 0px'>
-            <a href='#pipeline' role='tab' data-toggle='tab' aria-controls='pipeline'>
-              Pipeline
-            </a>
-          </li>
-        <% end %>
+      <%= render 'shared/mainnav_tabs' %>
 
-        <li id='curate-tab' class="<%= @mainnav_tab == 'curate' ? 'active' : '' %>"
-            role='presentation' style='margin-bottom: 0px'>
-          <a href='#curate' role='tab' data-toggle='tab' aria-controls='curate'>
-            Curate
-          </a>
-        </li>
+      <% if gallery_view? %>
 
-        <li id='promote-tab' class="<%= @mainnav_tab == 'promote' ? 'active' : '' %>"
-            role='presentation' style='margin-bottom: 0px'>
-          <a href='#promote' role='tab' data-toggle='tab' aria-controls='promote'>
-            Promote
-          </a>
-        </li>
+        <%= render 'stories/shared/filters' %>
 
-        <% if ['alpha', 'beta'].include? @company.feature_flag %>
-          <li id='measure-tab' class='tooltip-wrapper-tabs'
-              style='margin-bottom: 0px; display:inline-block'
-              data-title="Coming soon">
-            <a href='#measure' role='tab' aria-controls='measure'
-                style='pointer-events:none' disabled>
-              Measure
-            </a>
-          </li>
-        <% else %>
-          <li id='measure-tab' class="<%= @mainnav_tab == 'measure' ? 'active' : '' %>"
-              role='presentation' style='margin-bottom: 0px'>
-            <a href='#measure' role='tab' data-toggle='tab' aria-controls='measure'>
-              Measure
-            </a>
-          </li>
-        <% end %>
-      </ul>
-
-      <% if controller_name == 'stories' && action_name == 'index' %>
-        <form class="form-inline col-sm-6 text-center" style='padding-top: 5px'>
-          <% if @industries.length > 2 %>  <!-- includes 'All' (hence 2) -->
-            <div class="form-group text-left">
-             <%= label_tag :industries, "Industry", class: 'control-label' %>
-             <%= select_tag :industries, options_for_select(@industries),
-                    { class: 'stories-filter form-control',
-                      style: 'min-width: 140px' }
-                      %>
-            </div>&nbsp;&nbsp;
-          <% end %>
-          <% if @products.length > 2 %>
-            <div class="form-group text-left">
-               <%= label_tag :products, "Product", class: 'control-label' %>
-               <%= select_tag :products, options_for_select(@products),
-                      { class: 'stories-filter form-control',
-                        style: 'min-width: 140px' } %>
-            </div>
-          <% end %>
-        </form>
       <% end %>
 
       <ul class='nav nav-tabs mainnav-menu col-sm-2 pull-right'
           role='tablist' style='border-bottom:0'>
 
-        <% if user_signed_in? && current_user.company_id.present? %>
+        <% if company_curator? %>
 
           <li class="dropdown pull-right">
 
@@ -145,7 +78,7 @@
 
           <ul class="dropdown-menu" role="menu">
 
-            <% if current_user.company_id.present? %>
+            <% if company_curator? %>
               <li>
                 <%= link_to edit_profile_path do %>
                   <%= current_user.full_name %>

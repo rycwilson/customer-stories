@@ -1,28 +1,33 @@
 
-<form class="form-inline col-sm-6 text-center" style='padding-top: 5px'>
+<div class="form-horizontal visible-xs-block col-xs-12 col-md-6"
+    style='padding-top: 5px'>
 
   <% if @industries.length > 2 %>  <!-- includes 'All' (hence 2) -->
 
-    <div class="form-group text-left">
-     <%= label_tag :industries, "Category", class: 'control-label' %>
-     <%= select_tag :industries, options_for_select(@industries),
-            { class: 'stories-filter form-control',
-              style: 'min-width: 140px' }
-              %>
-    </div>&nbsp;&nbsp;
+    <div class='form-group'>
+      <%= label_tag :industries, "Category", class: 'col-xs-2 control-label' %>
+      <div class='col-xs-6'>
+       <%= select_tag :industries, options_for_select(@industries),
+              { class: 'stories-filter form-control',
+                style: 'min-width: 140px' } %>
+      </div>
+    </div>
 
   <% end %>
 
   <% if @products.length > 2 %>
 
-    <div class="form-group text-left">
-       <%= label_tag :products, "Product", class: 'control-label' %>
-       <%= select_tag :products, options_for_select(@products),
-              { class: 'stories-filter form-control',
-                style: 'min-width: 140px' } %>
+    <div class="form-group">
+      <%= label_tag :products, "Product", class: 'col-xs-2 control-label' %>
+      <div class="col-xs-6">
+        <%= select_tag :products, options_for_select(@products),
+             { class: 'stories-filter form-control',
+               style: 'min-width: 140px' } %>
+      </div>
+
     </div>
 
   <% end %>
 
-</form>
+</div>
 
