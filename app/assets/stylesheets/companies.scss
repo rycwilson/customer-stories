@@ -13,9 +13,58 @@
 *= require jquery.minicolors
 */
 
-/********************************/
-/*      company form logo       */
-/********************************/
+/***********************************************/
+/*      curate panel
+/***********************************************/
+
+/* New Story / Gallery View buttons
+  (rule applies to bootstrap row) */
+@media (min-width: 768px) {
+  .curate-nav {
+    margin-top: -1.8%;
+    margin-bottom: 2.5%;
+  }
+}
+
+@media (min-width: 992px) {
+  .curate-nav {
+    margin-top: -1.4%;
+    margin-bottom: 2%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .curate-nav {
+    margin-top: -1%;
+    margin-bottom: 1.8%;
+  }
+}
+
+/***********************************************/
+/*      email template editor
+/***********************************************/
+
+#email-templates-form .control-label {
+  margin-left: -30px;
+}
+
+#email-templates-form > div > div > button {
+  width: 100%;
+}
+
+
+/***********************************************/
+/*      summernote
+/***********************************************/
+
+.note-group-select-from-files {
+  display: none;
+}
+
+
+/***********************************************/
+/*      company form logo
+/***********************************************/
 
 form[id*='company'] .thumbnail {
   height: 73px;
@@ -31,31 +80,9 @@ form[id*='company'] .thumbnail {
 }
 
 
-/********************************/
-/*    email template editor     */
-/********************************/
-
-#email-templates-form .control-label {
-  margin-left: -30px;
-}
-
-#email-templates-form > div > div > button {
-  width: 100%;
-}
-
-
-/********************************/
-/*          summernote          */
-/********************************/
-
-.note-group-select-from-files {
-  display: none;
-}
-
-
-/********************************/
-/*       promote boxes          */
-/********************************/
+/***********************************************/
+/*      promote boxes
+/***********************************************/
 
 .ad1-wrap {
   position:relative; /* make this relative to have the inner div absolute without breaking out */
