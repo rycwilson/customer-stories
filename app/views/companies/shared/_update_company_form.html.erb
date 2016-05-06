@@ -103,7 +103,7 @@
 
     <div class="form-group">
 
-      <%= label_tag 'Industries served', nil, class: 'control-label' %>
+      <%= label_tag 'company_tags[industry][]', 'Categories', class: 'control-label' %>
       <%= select_tag 'company_tags[industry][]',
             options_for_select(@industries, @industries_pre_select),
             { multiple: 'true', class: 'company-tags form-control',
@@ -111,13 +111,13 @@
               style: 'width:100%' } %>
     </div>
 
-    <div class="form-group">
-      <%= label_tag 'Product categories', nil, class: 'control-label' %>
-      <%= select_tag 'company_tags[product_category][]',
+<!--     <div class="form-group">
+      <%#= label_tag 'Product categories', nil, class: 'control-label' %>
+      <%#= select_tag 'company_tags[product_category][]',
             options_for_select(@product_categories, @product_cats_pre_select),
             { multiple: 'true', class: 'company-tags form-control',
               style: 'width:100%' } %>
-    </div>
+    </div> -->
 
     <div class="form-group">
       <%= label_tag 'Products', nil, class: 'control-label' %>
