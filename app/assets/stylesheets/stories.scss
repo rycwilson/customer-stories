@@ -11,10 +11,17 @@
 *= require social-sharing
 */
 
-
 /************************************
 *          stories gallery          *
 *************************************/
+
+#stories-filters-xs .form-group {
+  margin: 2% auto;
+}
+
+#stories-filters .form-group {
+  margin: 1% auto;
+}
 
 .grid {
   margin: 0 auto;
@@ -41,9 +48,6 @@
   padding: 2px 0 2px 6px;
 }
 
-#stories-filters .form-group {
-  margin: 2% auto;
-}
 
 
 /************************************

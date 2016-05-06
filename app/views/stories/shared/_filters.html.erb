@@ -1,6 +1,6 @@
 
 <div class="row">
-  <div id='stories-filters' class="form-horizontal visible-xs-block">
+  <div id='stories-filters-xs' class="form-horizontal visible-xs-block">
 
     <% if @industries.length > 2 %>  <!-- includes 'All' (hence 2) -->
 
@@ -27,5 +27,31 @@
     <% end %>
 
   </div>
+
+  <div id="stories-filters" class="form-inline hidden-xs" style='margin-left:30px'>
+
+    <% if @industries.length > 2 %>  <!-- includes 'All' (hence 2) -->
+
+      <div class='form-group'>
+        <%= label_tag :industries, "Category" %>&nbsp;
+        <%= select_tag :industries, options_for_select(@industries),
+              { class: 'stories-filter form-control',
+                style: 'width:200px' } %>
+      </div>&nbsp;&nbsp;&nbsp;
+
+    <% end %>
+
+    <% if @products.length > 2 %>
+
+      <div class="form-group">
+        <%= label_tag :products, "Product" %>&nbsp;
+        <%= select_tag :products, options_for_select(@products),
+              { class: 'stories-filter form-control',
+                style: 'width:200px' } %>
+      </div>
+
+    <% end %>
+  </div>
+
 </div>
 

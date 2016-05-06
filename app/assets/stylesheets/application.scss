@@ -52,6 +52,11 @@
   height: 65px;
 }
 
+.navbar .container-fluid {
+  padding-left: 4%;
+  padding-right: 4%;
+}
+
 .navbar .navbar-brand {
   // height set to 65px in mvpready-admin - to match navbar height
   line-height: 58px  // use this to center the logo
