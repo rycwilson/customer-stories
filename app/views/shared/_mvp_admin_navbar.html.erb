@@ -11,25 +11,27 @@
     <div id='flash'
        class="hidden col-md-6 col-md-offset-3 text-center alert"
        role="alert">
-      <!-- <button type="button" class="close" data-dismiss="alert"
-              aria-hidden="true">&times;</button> -->
+      <button type="button" class="close" data-dismiss="alert"
+              aria-hidden="true">&times;</button>
     </div>
   </div>
 
 <% end %>
 
-<nav class="navbar" role="banner" style="<%= admin_navbar_style %>">
+<nav class="navbar navbar-default" role="banner" style="<%= admin_navbar_style %>">
   <div class="container">
+<!-- <div class="row"> -->
+    <div class="navbar-header col-xs-10">
 
-    <div class="navbar-header col-xs-6 valign" style='margin-right:10px'>
+      <%= render 'shared/admin_navbar_header' %>
 
-      <%= render 'shared/admin_navbar_logo' %>
+    </div>
+    <div class="col-xs-2 text-right">
 
-      <%= render 'shared/admin_navbar_title' %>
+      <%= render 'shared/admin_navbar_session' %>
 
     </div>
 
-    <%= render 'shared/admin_navbar_session' %>
-
+  <!-- </div> -->
   </div>
 </nav>

@@ -8,8 +8,7 @@
         <%= label_tag :industries, "Category", class: 'col-xs-3 control-label' %>
         <div class='col-xs-6'>
          <%= select_tag :industries, options_for_select(@industries),
-                { class: 'stories-filter form-control',
-                  style: 'min-width: 140px' } %>
+                { class: 'stories-filter form-control' } %>
         </div>
       </div>
 
@@ -21,10 +20,8 @@
         <%= label_tag :products, "Product", class: 'col-xs-3 control-label' %>
         <div class="col-xs-6">
           <%= select_tag :products, options_for_select(@products),
-               { class: 'stories-filter form-control',
-                 style: 'min-width: 140px' } %>
+               { class: 'stories-filter form-control' } %>
         </div>
-
       </div>
 
     <% end %>

@@ -37,28 +37,43 @@
 /***************************************/
 
 
-/********** admin navbar **************/
+/********************************/
+/*         admin navbar         */
+/********************************/
 
-.navbar-brand-img {
-  padding-right:25px;
+.navbar {
+  /* color1, color2, and text color are defined in company model */
+  /* background-color set to transparent in mvpready-admin.css */
+  background-clip: border-box;
+  border:0;
 }
 
 .navbar {
-  min-height: 60px;
+  height: 65px;
 }
 
-img.navbar-brand {
-  max-height: 40px;
+.navbar .navbar-brand {
+  // height set to 65px in mvpready-admin - to match navbar height
+  line-height: 58px  // use this to center the logo
 }
 
-header h3 {
+.navbar-brand img {
+  margin: auto;
+  vertical-align: middle;
+  display: inline-block;
+  max-height: 45px;  // restrict the height of the logo
+  padding-right: 15px;
+}
+
+.navbar h3 {
+  margin-top: 23px;
   margin-bottom: 0;
 }
 
-.valign {
-  margin-top: 1%;
-  margin-bottom: 1%;
+.navbar .btn {
+  margin-top: 25px;
 }
+
 
 /***************************************/
 
@@ -69,13 +84,6 @@ header h3 {
 .mainnav a {
   font-family: 'Lato';
   font-weight: 300;
-}
-
-header.navbar {
-  /* color1, color2, and text color are defined in company model */
-  /* background-color set to transparent in mvpready-admin.css */
-  background-clip: border-box;
-  border:0;
 }
 
 /*
