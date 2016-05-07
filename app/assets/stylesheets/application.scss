@@ -37,9 +37,9 @@
 /***************************************/
 
 
-/********************************/
-/*         admin navbar         */
-/********************************/
+/***********************************************/
+/*          admin navbar
+/***********************************************/
 
 .fa-bars {
   color: #555555;
@@ -77,6 +77,37 @@
 .navbar h3 {
   margin-top: 23px;
   margin-bottom: 0;
+  // display: inline-block;
+}
+
+@media (max-width: 450px) {
+  .navbar-header h3 {
+    font-size: 16px;
+    margin-top: 30px;
+  }
+  .navbar-brand img {
+    padding-right: 0;
+  }
+}
+
+@media (min-width: 450px) and (max-width: 475px) {
+  .navbar-header h3 {
+    font-size: 20px;
+    margin-top: 26px;
+  }
+  .navbar-brand img {
+    padding-right: 5px;
+  }
+}
+
+@media (min-width: 476px) and (max-width: 500px) {
+  .navbar-header h3 {
+    font-size: 22px;
+    margin-top: 25px;
+  }
+  .navbar-brand img {
+    padding-right: 10px;
+  }
 }
 
 .navbar .btn {

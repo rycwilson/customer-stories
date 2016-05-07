@@ -16,33 +16,48 @@
 /***********************************************/
 
 #stories-filters-xs .form-group {
-  margin: 2% auto;
+  margin: 1.5% auto;
 }
 
-// put the smaller media query first ...
+#stories-filters-xs .stories-filter + span {
+  width: 200px;
+}
+
 @media (min-width: 768px) {
-  .stories-filter + span {
+  #stories-filters.reader {
+    margin-left: 30px;
+  }
+  #stories-filters.reader .stories-filter + span {
+    width: 180px;
+  }
+  #stories-filters.curator .stories-filter + span {
     width: 150px;
   }
-  #stories-filters .form-group {
+  #stories-filters.reader .form-group {
+    margin: 1% auto;
+  }
+  #stories-filters.curator .form-group {
     margin: 1.5% auto;
   }
 }
 
 @media (min-width: 992px) {
-  .stories-filter + span {
-    width: 150px;
+  #stories-filters.reader .form-group {
+    margin: 0.8% auto;
   }
-  #stories-filters .form-group {
-    margin: 1.5% auto;
+  #stories-filters.reader .stories-filter + span {
+    width: 200px;
   }
 }
 
 @media (min-width: 1200px) {
-  .stories-filter + span {
+  #stories-filters.curator .stories-filter + span {
     width: 200px;
   }
-  #stories-filters .form-group {
+  #stories-filters.reader .form-group {
+    margin: 0.6% auto;
+  }
+  #stories-filters.curator .form-group {
     margin: 1.3% auto;
   }
 }

@@ -27,10 +27,8 @@
 
 </div>
 
-<!-- If no one is signed in, there will be no nav tabs,
-so give the filters some left margin -->
-<div id="stories-filters" class="form-inline hidden-xs"
-    style="<%= company_curator? ? '' : 'margin-left:30px' %>">
+<div id="stories-filters"
+    class="form-inline hidden-xs <%= company_curator? ? 'curator' : 'reader' %>">
 
   <% if @industries.length > 2 %>  <!-- includes 'All' (hence 2) -->
 

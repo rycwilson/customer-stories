@@ -27,7 +27,7 @@ module ApplicationHelper
     user_signed_in? && current_user.company_id.present? && current_user.company.logo_url.blank?
   end
 
-  def user_without_company?
+  def registered_user_without_company?
     user_signed_in? && current_user.company_id.blank?
   end
 
