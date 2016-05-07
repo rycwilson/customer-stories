@@ -355,7 +355,8 @@ function initSelect2 () {
   });
 
   $('.stories-filter').select2({
-    theme: 'bootstrap'
+    theme: 'bootstrap',
+    width: 'style'   // get the width from stories.scss
   });
 
   $('.new-contributor-role').select2({
