@@ -28,6 +28,7 @@ class StoriesController < ApplicationController
                             .unshift( ["All", 0] )
       @products = @company.products_select_options
                           .unshift( ["All", 0] )
+    # TODO: remove alpha restrictions (no more alpha companies?)
     elsif @company.feature_flag == 'alpha'
       redirect_to request.protocol + request.domain + request.port_string
     else  # public reader
