@@ -6,9 +6,15 @@
 
     $('.nav-tabs .active').removeClass('active');
 
-    $('a[role=tab]').on('click', function() {
-      window.location =
-        '/companies/' + company.id + '?mainnav_tab=' + $(this).attr('aria-controls')
+    $('.mainnav a[role=tab]').on('click', function() {
+      if ((company.feature_flag == 'alpha' ||
+           company.feature_flag == 'beta') &&
+           $(this).attr('aria-controls') === 'measure') {
+        return false;
+      } else {
+        window.location =
+          '/companies/' + company.id + '?mainnav_tab=' + $(this).attr('aria-controls')
+      }
     });
   });
 
@@ -18,7 +24,7 @@
 
   <% if company_curator? %>
 
-    <%= render 'shared/mainnav' %>,
+    <%= render 'shared/mainnav' %>
 
   <% else %>
 
@@ -26,7 +32,7 @@
       <div class="container">
         <div class="row">
 
-        <%= render 'stories/shared/filters' %>
+          <%= render 'stories/shared/filters' %>
 
         </div>
       </div>
