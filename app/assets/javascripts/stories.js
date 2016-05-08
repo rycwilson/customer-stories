@@ -169,7 +169,6 @@ function initListeners () {
     Stories filter
   */
   $('.stories-filter').on('change', function () {
-
     /*
       if change was triggered automatically,
       (i.e. to reset one select box in favor of select box most recently changed),
@@ -184,8 +183,8 @@ function initListeners () {
         filterId = $(this).val(),  // the database id of the chosen industry
         companyId = $('#stories-gallery').data('company-id'),
         template = _.template($('#stories-template').html()),
-        $industrySelect = $(this).closest('.container').find("[name='industries']"),
-        $productSelect = $(this).closest('.container').find("[name='products']"),
+        $industrySelect = $(this).closest("[id*='stories-filters']").find("[name='industries']"),
+        $productSelect = $(this).closest("[id*='stories-filters']").find("[name='products']"),
         storyPath = null;
 
     $.ajax({
@@ -216,11 +215,13 @@ function initListeners () {
     });
 
     if (filterTag === 'industries' && $productSelect.val() !== '0') {
+      console.log('hey hey');
       sessionStorage.setItem('autoTrigger', 'true');
       $productSelect.val('0').trigger('change');
     } else if (filterTag === 'products' && $industrySelect.val() !== '0') {
       sessionStorage.setItem('autoTrigger', 'true');
       $industrySelect.val('0').trigger('change');
+      console.log('what what');
     }
 
   });
