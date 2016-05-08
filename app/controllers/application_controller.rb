@@ -86,7 +86,8 @@ class ApplicationController < ActionController::Base
 
   # this method assumes @company is defined in the calling action
   def company_curator?
-    user_signed_in? && current_user.company_id == @company.id
+    user_signed_in? &&
+    current_user.company_id == @company.id
   end
 
 end

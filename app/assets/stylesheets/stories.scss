@@ -92,6 +92,56 @@
 }
 
 
+/***********************************************/
+/*      stories#show
+/***********************************************/
+
+@media (min-width: 768px) {
+  #story-banner > div:nth-of-type(1) {
+    margin: 1.9% auto;
+  }
+  #story-banner > div:nth-of-type(2) {
+    margin: 1% auto;
+  }
+}
+
+@media (min-width: 992px) {
+  #story-banner > div:nth-of-type(1) {
+    margin: 1.5% auto;
+  }
+  #story-banner > div:nth-of-type(2) {
+    margin: 0.7% auto;
+  }
+}
+
+@media (min-width: 1200px) {
+  #story-banner > div:nth-of-type(1) {
+    margin: 1.2% auto;
+  }
+  #story-banner > div:nth-of-type(2) {
+    margin: 0.6% auto;
+  }
+}
+
+p.lead {
+  font-family: 'Open Sans';
+}
+
+#story-quote-attr {
+  margin: 5px auto;
+}
+
+#story-show-row-1 {
+  margin: 5px 0 30px 0;
+}
+
+#story-results {
+  margin: 0 0 30px 0;
+}
+
+#story-results + .story-video {
+  margin: 0 0 30px 0;
+}
 
 /***********************************************/
 /*      contribution card
@@ -105,8 +155,8 @@
 /*           story text
 /***********************************************/
 .story-text {
-  font-family: 'Merriweather';
-  font-weight: 400;
+  font-family: 'Open Sans';
+  // font-weight: 400;
 }
 
 
