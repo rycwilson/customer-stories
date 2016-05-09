@@ -193,26 +193,26 @@ function initListeners () {
       data: { filter: { tag: filterTag, id: filterId } },
       success: function (data, status) {
         console.log('response data: ', data);
-        $('#stories-gallery').empty();
-        if (data) {
-          data.forEach(function (success) {
-            if (success.products && success.published) {
-              storyPath = '/' + success.customer.slug +
-                          '/' + success.products[0].slug +
-                          '/' + success.story.slug;
-            } else {
-              storyPath = '/' + success.customer.slug +
-                          '/' + success.story.slug;
-            }
-            $.extend(success, { path: storyPath });
-          });
-          console.log('with path: ', data);
-          // console.log('filtered successes: ', data);
-          var $tiles = $(template({ successTiles: data }));
-          $('#stories-gallery').masonry()
-                               .append($tiles)
-                               .masonry('appended', $tiles);
-        }
+        // $('#stories-gallery').empty();
+        // if (data) {
+        //   data.forEach(function (success) {
+        //     if (success.products && success.published) {
+        //       storyPath = '/' + success.customer.slug +
+        //                   '/' + success.products[0].slug +
+        //                   '/' + success.story.slug;
+        //     } else {
+        //       storyPath = '/' + success.customer.slug +
+        //                   '/' + success.story.slug;
+        //     }
+        //     $.extend(success, { path: storyPath });
+        //   });
+        //   console.log('with path: ', data);
+        //   // console.log('filtered successes: ', data);
+        //   var $tiles = $(template({ successTiles: data }));
+        //   $('#stories-gallery').masonry()
+        //                        .append($tiles)
+        //                        .masonry('appended', $tiles);
+        // }
       }
     });
 
