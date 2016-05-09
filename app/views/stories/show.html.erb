@@ -78,10 +78,14 @@
 
         <!-- quote -->
         <div class='col-sm-8 col-md-7 col-lg-5 story-text'>
-          <p id='story-quote' class='lead'><em>"<%= @story.quote %>"</em></p>
+          <p id='story-quote' class='lead story-text'>
+            <em>"<%= @story.quote %>"</em>
+          </p>
           <div class='row'>
             <div class='col-sm-11 text-right'>
-              <p id='story-quote-attr'>- <%= @story.quote_attr %></p>
+              <p id='story-quote-attr'>
+                <em>- <%= @story.quote_attr %></em>
+              </p>
             </div>
           </div>
         </div>  <!-- quote -->
@@ -104,16 +108,44 @@
             <h3 class='text-center'><%= @story.title %></h3>
 
             <p><strong>Situation</strong></p>
-            <p><%= simple_format @story.situation, class: "story-text"%></p>
+            <div>
+              <%= simple_format @story.situation,
+                class: "story-text text-justify visible-md-block visible-lg-block" %>
+            </div>
+            <div>
+              <%= simple_format @story.situation,
+                class: "story-text hidden-md hidden-lg"%>
+            </div>
 
             <p><strong>Challenge</strong></p>
-            <p><%= simple_format @story.challenge, class: 'story-text' %></p>
+            <div>
+              <%= simple_format @story.challenge,
+                class: "story-text text-justify visible-md-block visible-lg-block" %>
+            </div>
+            <div>
+              <%= simple_format @story.challenge,
+                class: "story-text hidden-md hidden-lg"%>
+            </div>
 
             <p><strong>Solution</strong></p>
-            <p><%= simple_format @story.solution, class: 'story-text' %></p>
+            <div>
+              <%= simple_format @story.solution,
+                class: "story-text text-justify visible-md-block visible-lg-block" %>
+            </div>
+            <div>
+              <%= simple_format @story.solution,
+                class: "story-text hidden-md hidden-lg"%>
+            </div>
 
             <p><strong>Benefits</strong></p>
-            <p><%= simple_format @story.benefits, class: 'story-text' %></p>
+            <div>
+              <%= simple_format @story.benefits,
+                class: "story-text text-justify visible-md-block visible-lg-block" %>
+            </div>
+            <div>
+              <%= simple_format @story.benefits,
+                class: "story-text hidden-md hidden-lg"%>
+            </div>
 
           </div>
         </div>  <!-- content -->
