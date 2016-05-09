@@ -216,10 +216,14 @@ function initListeners () {
       }
     });
 
-    if (filterTag === 'industries' && $productSelect.val() !== '0') {
+    if (filterTag === 'industries' &&
+                      $productSelect.length &&  // was filter removed?
+                      $productSelect.val() !== '0') {
       sessionStorage.setItem('autoTrigger', 'true');
       $productSelect.val('0').trigger('change');
-    } else if (filterTag === 'products' && $industrySelect.val() !== '0') {
+    } else if (filterTag === 'products' &&
+                             $industrySelect.length &&  // was filter removed?
+                             $industrySelect.val() !== '0') {
       sessionStorage.setItem('autoTrigger', 'true');
       $industrySelect.val('0').trigger('change');
     }
