@@ -28,9 +28,6 @@ class StoriesController < ApplicationController
                             .unshift( ["All", 0] )
       @products = @company.products_select_options
                           .unshift( ["All", 0] )
-    # TODO: remove alpha restrictions (no more alpha companies?)
-    elsif @company.feature_flag == 'alpha'
-      redirect_to request.protocol + request.domain + request.port_string
     else  # public reader
       @success_tiles = @company.successes_with_logo_published
       # select options populated only with industries that are connected

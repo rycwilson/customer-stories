@@ -192,6 +192,7 @@ function initListeners () {
       method: 'get',
       data: { filter: { tag: filterTag, id: filterId } },
       success: function (data, status) {
+        console.log('response data: ', data);
         $('#stories-gallery').empty();
         if (data) {
           data.forEach(function (success) {
@@ -205,6 +206,7 @@ function initListeners () {
             }
             $.extend(success, { path: storyPath });
           });
+          console.log('with path: ', data);
           // console.log('filtered successes: ', data);
           var $tiles = $(template({ successTiles: data }));
           $('#stories-gallery').masonry()
@@ -215,13 +217,11 @@ function initListeners () {
     });
 
     if (filterTag === 'industries' && $productSelect.val() !== '0') {
-      console.log('hey hey');
       sessionStorage.setItem('autoTrigger', 'true');
       $productSelect.val('0').trigger('change');
     } else if (filterTag === 'products' && $industrySelect.val() !== '0') {
       sessionStorage.setItem('autoTrigger', 'true');
       $industrySelect.val('0').trigger('change');
-      console.log('what what');
     }
 
   });
