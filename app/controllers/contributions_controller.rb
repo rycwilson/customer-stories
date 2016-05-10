@@ -3,8 +3,8 @@ class ContributionsController < ApplicationController
   include ContributionsHelper
 
   before_action :valid_token?, only: [:edit, :update]
-  before_action :set_contribution, only: [:show, :confirm, :request_contribution]
-  before_action :check_opt_out_list, only: [:create, :request_contribution]
+  before_action :set_contribution, only: [:show, :confirm_request, :send_request]
+  before_action :check_opt_out_list, only: [:create, :confirm_request]
 
   respond_to :html, :json
 
@@ -108,22 +108,11 @@ class ContributionsController < ApplicationController
     end
   end
 
-  # respond_to { |format| format.js }
-  def request_contribution
+  # responds with confirm_request.js
+  def confirm_request
     curator_missing_info = @contribution.success.curator.missing_info
     if curator_missing_info.empty?
-      UserMailer.request_contribution(@contribution).deliver_now
-      if @contribution.update(   status:'request',
-                              remind_at: Time.now + @contribution.remind_1_wait.days )
-        @contributions_in_progress = Contribution.in_progress @contribution.success_id
-        @flash_status = "info"
-        @flash_mesg =
-          "An email request for contribution has been sent to #{@contribution.contributor.full_name}"
-      else
-        @flash_status = "danger"
-        @flash_mesg =
-          "Error updating Contribution: #{@contribution.errors.full_messages.join(', ')}"
-      end
+      @request_email = @contribution.generate_request_email
     else
       @flash_status = "danger"
       @flash_mesg =
@@ -131,8 +120,19 @@ class ContributionsController < ApplicationController
     end
   end
 
-  def confirm
-    @curator = @contribution.success.curator
+  def send_request
+    UserMailer.request_contribution(@contribution).deliver_now
+    if @contribution.update(   status:'request',
+                            remind_at: Time.now + @contribution.remind_1_wait.days )
+      @contributions_in_progress = Contribution.in_progress @contribution.success_id
+      @flash_status = "info"
+      @flash_mesg =
+        "An email request for contribution has been sent to #{@contribution.contributor.full_name}"
+    else
+      @flash_status = "danger"
+      @flash_mesg =
+        "Error updating Contribution: #{@contribution.errors.full_messages.join(', ')}"
+    end
   end
 
   private
@@ -161,8 +161,8 @@ class ContributionsController < ApplicationController
     contributor_email =
         params[:contributor].try(:[], :email) || Contribution.find(params[:id]).contributor.email
     if OptOut.find_by(email: contributor_email)
-      @flash_mesg = "Email address has opted out of Customer Stories emails"
       @flash_status = "danger"
+      @flash_mesg = "Email address has opted out of Customer Stories emails"
       respond_to { |format| format.js }
     else
       true

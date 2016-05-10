@@ -29,9 +29,6 @@ class ProfileController < ApplicationController
     end
   end
 
-  def show
-  end
-
   def edit
     @user = current_user
   end

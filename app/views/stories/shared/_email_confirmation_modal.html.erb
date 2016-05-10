@@ -1,21 +1,29 @@
 
-
-<!-- Modal -->
-<div class="modal fade" id="email-confirmation-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+<div class="modal fade" id="email-confirmation-modal" tabindex="-1" role="dialog"
+    aria-labelledby="myModalLabel">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <i class='glyphicon glyphicon-pencil bip-clickable pull-right'></i>
         <h4 class="modal-title">Ready to send?</h4>
+        <span>Recipient:&nbsp;&nbsp;</span>
       </div>
       <div class="modal-body">
-        <div class="textarea">
 
-        </div>
+        <%= form_tag '/contribution_requests' do  %>
+
+          <input class='form-control' id='confirm-email-subject' readonly> <br>
+
+          <div class='form-control' id='confirm-email-body' style='height:100%'
+              contenteditable='true' readonly>
+          </div>
+
+        <% end %>
+
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary">Send</button>
       </div>
     </div>
   </div>

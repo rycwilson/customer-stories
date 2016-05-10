@@ -1,0 +1,23 @@
+(function () {
+
+  var requestEmail = <%= raw @request_email.to_json %>,
+      contribution = <%= raw @contribution.to_json(include: { contributor: {}, referrer: {}, success: { include: :customer } }) %>,
+      flashStatus = "<%= @flash_status %>",
+      flashMesg = "<%= @flash_mesg %>";
+
+  console.log(requestEmail);
+
+  if (flashStatus == 'danger') {
+    flashDisplay(flashMesg, flashStatus)
+  } else {
+    $('[data-toggle="tooltip"]').tooltip('destroy');
+    $('#confirm-email-subject').val(requestEmail.subject);
+    $('#confirm-email-body').html(requestEmail.body);
+    $('#email-confirmation-modal .modal-title + span')
+        .empty()
+        .append('Recipient:&nbsp;&nbsp;' + contribution.contributor.first_name + ' '
+                                         + contribution.contributor.last_name);
+    $('#email-confirmation-modal').modal('show');
+  }
+
+}());

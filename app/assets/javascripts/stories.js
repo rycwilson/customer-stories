@@ -389,10 +389,15 @@ function initSelect2 () {
 function initContributions () {
 
   // show an in-progress modal when request email is sent
-  $('#contributions-pre-request').on('click', '.send-request', function () {
-    $('[data-toggle="tooltip"]').tooltip('destroy');
-    $('#progress-modal').modal('show');
+  $('#email-confirmation-modal i').on('click', function () {
+
+    $('#confirm-email-subject').prop('readonly', false);
+    // check curator info
+    // get template and necessary data
+    // display
   });
+
+
 
   // re-establish the tooltips
   $('#progress-modal').on('hidden.bs.modal', function () {
