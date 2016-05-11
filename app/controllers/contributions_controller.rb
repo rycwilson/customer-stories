@@ -120,21 +120,6 @@ class ContributionsController < ApplicationController
     end
   end
 
-  def send_request
-    UserMailer.request_contribution(@contribution).deliver_now
-    if @contribution.update(   status:'request',
-                            remind_at: Time.now + @contribution.remind_1_wait.days )
-      @contributions_in_progress = Contribution.in_progress @contribution.success_id
-      @flash_status = "info"
-      @flash_mesg =
-        "An email request for contribution has been sent to #{@contribution.contributor.full_name}"
-    else
-      @flash_status = "danger"
-      @flash_mesg =
-        "Error updating Contribution: #{@contribution.errors.full_messages.join(', ')}"
-    end
-  end
-
   private
 
   def contribution_params

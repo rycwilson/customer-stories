@@ -49,7 +49,7 @@ class Contribution < ActiveRecord::Base
       # puts "processing contribution #{contribution.id} with status #{contribution.status}"
       if contribution.remind_at.past?
         unless contribution.status == 'remind2'
-          UserMailer.contribution_reminder(contribution).deliver_now
+          UserMailer.send_contribution_reminder(contribution).deliver_now
         end
         if contribution.status == 'request'
           new_status = 'remind1'

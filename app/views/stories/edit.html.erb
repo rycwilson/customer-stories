@@ -265,9 +265,8 @@
      --><div class="col-sm-5 text-right vcenter">
 
           {{ if (type === 'pre-request') { }}
-            <a class='send-request' data-remote="true" rel="nofollow"
-                data-method="put" tabindex="-1"
-                href="/contributions/{{= contribution.id }}/request_contribution">
+            <a class='send-request' data-remote="true" rel="nofollow" tabindex="-1"
+                href="/contributions/{{= contribution.id }}/confirm_request">
               <i class="glyphicon glyphicon-envelope bip-clickable"
                   data-toggle='tooltip' data-placement='top'
                   title='Send contribution request'></i></a>

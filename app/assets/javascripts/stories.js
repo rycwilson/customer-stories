@@ -14,6 +14,9 @@
 //= require jquery-ui/ui/widget
 //= require jquery-file-upload/js/jquery.fileupload
 
+// HTML editor for contribution requests
+//= require summernote
+
 //= require jquery.inputmask/dist/inputmask/inputmask
 //= require jquery.inputmask/dist/inputmask/inputmask.phone.extensions
 //= require jquery.inputmask/dist/inputmask/jquery.inputmask
@@ -391,17 +394,37 @@ function initContributions () {
   // show an in-progress modal when request email is sent
   $('#email-confirmation-modal i').on('click', function () {
 
-    $('#confirm-email-subject').prop('readonly', false);
-    // check curator info
-    // get template and necessary data
-    // display
   });
 
+  $('#confirm-email-form').on('submit', function () {
+    $(this).closest('.modal-content').find('.modal-title')
+                                     .addClass('hidden');
+    $(this).closest('.modal-content').find('.progress')
+                                     .removeClass('hidden');
+  });
 
-
-  // re-establish the tooltips
-  $('#progress-modal').on('hidden.bs.modal', function () {
-    $('[data-toggle="tooltip"]').tooltip();
+  /*
+    init summernote
+    this could potentially be run in application.js and apply to both
+    stories and companies controllers, but for the time being the editor
+    in stories needs to have some stuff disabled
+  */
+  $('[data-provider="summernote"]').each(function () {
+    $(this).summernote({
+      focus: false,  // this does not appear to work
+      toolbar: [
+        // ['style', ['style']],
+        ['font', ['bold', 'italic', 'underline']], //, 'clear']],
+        // ['fontname', ['fontname']],
+        // ['color', ['color']],
+        ['para', ['ul', 'ol', 'paragraph']],
+        // ['height', ['height']],
+        // ['table', ['table']],
+        // ['insert', ['link', 'picture', 'hr']],
+        // ['view', ['codeview']],
+        // ['help', ['help']]
+      ],
+    });
   });
 
   /*
