@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160428224419) do
+ActiveRecord::Schema.define(version: 20160511175458) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -86,7 +86,6 @@ ActiveRecord::Schema.define(version: 20160428224419) do
 
   create_table "email_contribution_requests", force: :cascade do |t|
     t.integer  "contribution_id"
-    t.string   "name"
     t.string   "subject"
     t.string   "body"
     t.datetime "created_at",      null: false

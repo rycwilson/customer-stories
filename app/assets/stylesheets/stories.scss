@@ -152,13 +152,31 @@ p.lead.story-text {
 
 
 /***********************************************/
+/*      email request confirmation modal
+/***********************************************/
+
+#email-confirmation-modal .modal-title,
+#email-confirmation-modal .progress {
+  margin-bottom: 5px;
+}
+
+#email-confirmation-modal .progress {
+  margin-top: 5px;
+}
+
+#email-confirmation-modal .modal-body {
+  max-height: 440px;
+  overflow-y: auto;
+}
+
+
+/***********************************************/
 /*           story text
 /***********************************************/
 .story-text {
   font-family: 'Open Sans';
   // font-weight: 400;
 }
-
 
 .vcenter {
     display: inline-block;

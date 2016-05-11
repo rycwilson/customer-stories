@@ -29,7 +29,7 @@
   </div>
 
   <div class="form-group">
-    <%= label_tag "Subject", nil, class: "control-label col-sm-2" %>
+    <%= label_tag "template[subject]", "Subject", class: "control-label col-sm-2" %>
     <div class="col-sm-8">
       <%= text_field_tag "template[subject]", nil, class: 'form-control' %>
     </div>
@@ -46,7 +46,7 @@
       <%= text_area_tag "template[body]", nil,
             data: { provider: 'summernote'},
               id: 'summernote-editor',
-            class: 'form-control', rows: 20 %>
+            class: 'form-control' %>
     </div>
     <div class="col-sm-2">
       <%= submit_tag "Save changes", class: "btn btn-primary",

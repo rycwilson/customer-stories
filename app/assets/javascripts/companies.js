@@ -229,7 +229,7 @@ function configSummernote () {
         ['height', ['height']],
         // ['table', ['table']],
         ['insert', ['link', 'picture', 'hr']],
-        ['view', ['codeview']],   // fullscreen
+        ['view', ['codeview']],
         // ['help', ['help']]
       ],
     });

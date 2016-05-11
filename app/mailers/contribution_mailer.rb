@@ -1,0 +1,2 @@
+class ContributionMailer < ApplicationMailer
+end
