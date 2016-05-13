@@ -36,6 +36,17 @@ module StoriesHelper
     controller_name == 'stories' && action_name == 'index'
   end
 
+  def grid_item_link success
+    story = success.story
+    if story.published?
+      csp_story_path story
+    elsif company_curator?
+      edit_story_path story.id
+    else
+      "javascript:;"
+    end
+  end
+
   def grid_item_caption_style success
     company = success.customer.company
     story = success.story
