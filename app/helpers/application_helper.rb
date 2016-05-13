@@ -31,4 +31,9 @@ module ApplicationHelper
     user_signed_in? && current_user.company_id.blank?
   end
 
+  # method takes a url and strips out the subdomain (as defined by the current request)
+  def strip_subdomain url
+    url.sub request.subdomain + '.', ''
+  end
+
 end

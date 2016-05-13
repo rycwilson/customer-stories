@@ -64,7 +64,7 @@
             <p>
               Forgot password? &nbsp;
               <% if request.path == '/users/sign_in' %>
-                <%= link_to 'Reset', new_user_password_path %>
+                <%= link_to 'Reset', strip_subdomain(new_user_password_url) %>
               <% elsif request.path == '/admins/sign_in' %>
                 <%= link_to 'Reset', new_admin_password_path %>
               <% end %>
@@ -73,7 +73,7 @@
             <p>
               Don't have an account? &nbsp;
               <% if request.path == '/users/sign_in' %>
-                <%= link_to 'Sign up', new_user_registration_path %>
+                <%= link_to 'Sign up', strip_subdomain(new_user_registration_url) %>
               <% elsif request.path == '/admins/sign_in' %>
                 <%= link_to 'Sign up', new_admin_registration_path %>
               <% end %>
