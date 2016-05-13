@@ -50,7 +50,7 @@
             <% @success_tiles.each do |success| %>
 
               <div class="grid-item thumbnail">
-<div>
+<div class='thumbnail_wrapper'>
                 <a data-no-turbolink href="<%= success.story.published? ?
                       csp_story_path(success.story) : 'javascript:;' %>">
                   <img src="<%= success.customer.logo_url || asset_path('company-logo-missing.png') %>">

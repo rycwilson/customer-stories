@@ -584,11 +584,28 @@ function initLinkedIn () {
 }
 
 function initMasonry () {
+
   $('.grid').masonry({
     // options...
     itemSelector: '.grid-item',
     columnWidth: 220,
     isFitWidth: true
+  });
+
+  /*
+    Since gettinng the image centered vertically with css is a pain,
+    do it with jquery instead
+  */
+  $('#stories-gallery img').each(function (image) {
+
+    var height = $(this).outerHeight(),
+        maxHeight = parseInt($(this).css('max-height')),
+        diff = maxHeight - height;
+
+    if (diff) {
+      $(this).css('margin-top', diff / 2);
+    }
+
   });
 }
 

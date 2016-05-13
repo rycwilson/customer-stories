@@ -81,7 +81,7 @@
 }
 
 .grid-item.thumbnail {
-  padding: 4px 0 0 0;
+  padding: 0   // define all in order to override bootstrap default
 }
 
 .grid-item.thumbnail > a {
@@ -89,7 +89,8 @@
 }
 
 .grid-item.thumbnail > div > a > img {
-  max-height: 95px;
+  max-height: 99px;
+  padding: 5px 10px 5px 10px;
 }
 
 .grid-item.thumbnail .caption {
@@ -97,8 +98,13 @@
   position: absolute;
   bottom: 0;
   width: 100%;
+  border-radius: 0 0 3px 3px;
 }
 
+/*
+  this will be helpful for centering images without the caption:
+  http://stackoverflow.com/questions/23477909/
+*/
 
 
 /***********************************************/
