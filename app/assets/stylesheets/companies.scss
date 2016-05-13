@@ -66,18 +66,17 @@
 /*      company form logo
 /***********************************************/
 
-form[id*='company'] .thumbnail {
-  height: 73px;
-  width: 120px;
-  padding: 10px;
+/* max height should mirror nav bar
+  (actually the bootstrap column will prevent it from ever getting this high) */
+.thumbnail {
+  max-height: 65px;
+  padding: 2.5%;
 }
 
-// center the image vertically...
-.fileinput .thumbnail > img {
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
+.thumbnail > img {
+  max-height: 45px !important;
 }
+
 
 
 /***********************************************/

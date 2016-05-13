@@ -35,9 +35,19 @@ $(document).ready(function () {
   ready();
 });
 
+/*
+  is this even doing anything?  not so sure
+*/
 $(document).on('page:load', function () {
   // console.log('page:load');
-  ready();
+  ready();  // TODO: probably don't have to run everything here
+});
+
+/*
+  wait for images to load before initializing the masonry grid
+*/
+$(window).on('load', function () {
+  initMasonry();
 });
 
 $(document).on('page:change', function () {
@@ -45,7 +55,6 @@ $(document).on('page:change', function () {
 });
 
 function ready () {
-
   initSelect2();
   initLinkedIn();
   initBIPListeners();
@@ -56,7 +65,6 @@ function ready () {
   configS3Upload();
   initBootstrapSwitch();
   initContributions();
-
 }
 
 function configUnderscore() {
@@ -319,13 +327,6 @@ function configPlugins () {
   $("label[for='Product']").attr('for', 'story_product_tags_');
   $('#story-tags-form').dirtyFields();
 
-  $('.grid').masonry({
-    // options...
-    itemSelector: '.grid-item',
-    columnWidth: 220,
-    isFitWidth: true
-  });
-
 }
 
 function initBootstrapSwitch() {
@@ -580,6 +581,15 @@ function initLinkedIn () {
     });
   }, 1000);
 
+}
+
+function initMasonry () {
+  $('.grid').masonry({
+    // options...
+    itemSelector: '.grid-item',
+    columnWidth: 220,
+    isFitWidth: true
+  });
 }
 
 

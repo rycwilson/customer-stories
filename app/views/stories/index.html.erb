@@ -41,26 +41,26 @@
   <% end %>
 
   <div class="content" style='margin-top:30px'>
-    <div class="container">
+    <!-- <div class="container"> -->
       <div class="portlet portlet-default">
-        <div class="portlet-body"
+        <div
             data-company-id="<%= @company.id %>">
           <div class='grid' id="stories-gallery">
 
             <% @success_tiles.each do |success| %>
 
               <div class="grid-item thumbnail">
+<div>
                 <a data-no-turbolink href="<%= success.story.published? ?
                       csp_story_path(success.story) : 'javascript:;' %>">
                   <img src="<%= success.customer.logo_url || asset_path('company-logo-missing.png') %>">
                 </a>
-                <div class="caption"
-                    style="background-color:<%= @company.nav_color_1 %>;
-                           color:<%= @company.nav_text_color %>;
-                           visibility:<%= success.story.published? ?
-                                            'visible' : 'hidden' %>">
-                  <span>Read story</span>
+              </div>
+
+                <div class="caption" style="<%= grid_item_caption_style(success) %>">
+                  <div><%= grid_item_caption_text(success) %></div>
                 </div>
+
               </div>
 
             <% end %>
@@ -68,7 +68,7 @@
           </div>
         </div>  <!-- portlet-body -->
       </div>  <!-- portlet -->
-    </div>  <!-- container -->
+    <!-- </div>  --> <!-- container -->
   </div>  <!-- content -->
 </div>  <!-- wrapper -->
 

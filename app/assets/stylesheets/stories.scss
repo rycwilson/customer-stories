@@ -72,24 +72,33 @@
 
 .grid-item {
   width: 170px;
+  height:123px;
   margin-left: 24px;
   margin-right: 24px;
-  margin-bottom: 28px
+  margin-bottom: 42px;
+  position: relative;  // this is for positioning the caption at the bottom
   // border: 2px solid hsla(0, 0%, 0%, 0.5);
 }
 
-.thumbnail > a > img {
-  height: 95px;
-  padding-bottom: 4px;
-}
-
-.thumbnail {
+.grid-item.thumbnail {
   padding: 4px 0 0 0;
 }
 
-.thumbnail .caption {
-  padding: 2px 0 2px 6px;
+.grid-item.thumbnail > a {
+  padding-bottom: 4px;
 }
+
+.grid-item.thumbnail > div > a > img {
+  max-height: 95px;
+}
+
+.grid-item.thumbnail .caption {
+  padding: 2px 0 2px 6px;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
 
 
 /***********************************************/
@@ -170,6 +179,39 @@ p.lead.story-text {
 }
 
 
+
+/***********************************************/
+/*           customer logo
+/***********************************************/
+
+.fileinput .thumbnail {
+  background-color: #f5f5f5;
+  padding: 10px;
+}
+
+#story-show-logo-img {
+  max-height: 150px;
+  max-width: 70%;
+}
+
+#story-edit-logo-img {
+  max-height: 150px !important;
+}
+
+
+/***********************************************/
+/*           story settings
+/***********************************************/
+
+#story-publish-settings .form-group {
+  margin-bottom: 15px;
+}
+
+#story-edit-logo-buttons {
+  margin-bottom: 10px;
+}
+
+
 /***********************************************/
 /*           story text
 /***********************************************/
@@ -179,9 +221,9 @@ p.lead.story-text {
 }
 
 .vcenter {
-    display: inline-block;
-    vertical-align: middle;
-    float: none;
+  display: inline-block;
+  vertical-align: middle;
+  float: none;
 }
 
 .required-input label:after {

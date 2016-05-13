@@ -36,4 +36,25 @@ module StoriesHelper
     controller_name == 'stories' && action_name == 'index'
   end
 
+  def grid_item_caption_style success
+    company = success.customer.company
+    story = success.story
+    if story.published?
+      "background-color:#{company.nav_color_1}; color:#{company.nav_text_color}"
+    elsif company_curator?
+      "background-color:#f5f5f5"
+    else
+      "visibility:hidden"
+    end
+  end
+
+  def grid_item_caption_text success
+    story = success.story
+    if story.published?
+      "Read story"
+    elsif company_curator?
+      story.logo_published? ? "Logo published" : "Pending curation"
+    end
+  end
+
 end

@@ -27,18 +27,18 @@
     <label>Logo</label>  <!-- have to pull this out for proper styling -->
     <div class="form-group" style='margin-bottom:20px'>
 
-      <div class="fileinput <%= @company.logo_url.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput" style='margin:0'>
+      <div class="fileinput <%= @company.logo_url.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">
 
-        <div class="fileinput-new thumbnail col-sm-7">
+        <div class="fileinput-new thumbnail col-sm-8">
           <%= image_tag "company-logo-missing.png", alt: 'logo missing' %>
         </div>
 
-        <div class="fileinput-preview fileinput-exists thumbnail col-sm-7"
+        <div class="fileinput-preview fileinput-exists thumbnail col-sm-8"
             data-trigger="fileinput">
           <img src="<%= @company.logo_url %>" alt="company logo">
         </div>
 
-        <div class='col-sm-5'>
+        <div class='col-sm-4'>
           <span class="btn btn-default btn-file" style='margin-bottom:7px'>
             <span class="fileinput-new">
               Select image

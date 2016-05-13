@@ -71,9 +71,9 @@
       <!-- logo, quote, video -->
       <div id='story-show-row-1' class="row">
 
-        <div class= 'col-sm-4 col-lg-3 text-center'>
-          <img src="<%= @story.success.customer.logo_url || asset_path('company-logo-missing.png') %>" style="width:120px">
-
+        <div class='col-sm-4 col-lg-3 text-center'>
+          <img id='story-show-logo-img'
+            src="<%= @story.success.customer.logo_url || asset_path('company-logo-missing.png') %>">
         </div>  <!-- logo -->
 
         <!-- quote -->
