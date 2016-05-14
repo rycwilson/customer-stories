@@ -228,6 +228,7 @@ function initListeners () {
           $('#stories-gallery').masonry()
                                .append($tiles)
                                .masonry('appended', $tiles);
+          centerLogos();
         }
       }
     });
