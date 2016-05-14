@@ -1,6 +1,7 @@
 # http://stackoverflow.com/questions/6234045/how-do-you-access-devise-controllers
 
 class Users::SessionsController < Devise::SessionsController
+
   # before_filter :configure_sign_in_params, only: [:create]
 
   # if attempting to log in through a subdomain (in the url, not in the form),

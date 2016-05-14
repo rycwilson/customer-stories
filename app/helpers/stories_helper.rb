@@ -18,16 +18,6 @@ module StoriesHelper
     end
   end
 
-  def csp_story_path story
-    if story.success.products.present?
-      public_story_path(story.success.customer.slug,
-                        story.success.products.take.slug,
-                        story.slug)
-    else
-      public_story_no_product_path(story.success.customer.slug, story.slug)
-    end
-  end
-
   def curator_story_view?
     company_curator? && controller_name == 'stories' && action_name == 'show'
   end
@@ -39,7 +29,7 @@ module StoriesHelper
   def grid_item_link success
     story = success.story
     if story.published?
-      csp_story_path story
+      story.csp_story_path
     elsif company_curator?
       edit_story_path story.id
     else

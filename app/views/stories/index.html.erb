@@ -40,8 +40,8 @@
 
   <% end %>
 
-  <div class="content" style='margin-top:30px'>
-    <!-- <div class="container"> -->
+  <div id='stories-gallery-content' class="content">
+    <div class="container">
       <div class="portlet portlet-default">
         <div
             data-company-id="<%= @company.id %>">
@@ -56,7 +56,7 @@
                 </a>
 
                 <div class="caption" style="<%= grid_item_caption_style(success) %>">
-                  <div><%= grid_item_caption_text(success) %></div>
+                  <%= grid_item_caption_text(success) %>
                 </div>
 
               </div>
@@ -66,14 +66,16 @@
           </div>
         </div>  <!-- portlet-body -->
       </div>  <!-- portlet -->
-    <!-- </div>  --> <!-- container -->
+    </div>  <!-- container -->
   </div>  <!-- content -->
 </div>  <!-- wrapper -->
 
 <!-- underscore template -->
 <script type="text/template" id="stories-template">
   {{ successTiles.forEach(function (success) { }}
+
     <div class="grid-item thumbnail">
+
       <a data-no-turbolink href="{{= success.path || 'javascript:;' }}">
         {{ if (success.customer.logo_url) { }}
           <img src="{{= success.customer.logo_url }}">
@@ -81,12 +83,25 @@
           <img src="<%= asset_path('company-logo-missing.png') %>">
         {{ } }}
       </a>
-      <div class="caption"
+
+      {{ if (success.story.published) { }}
+
+        <div class="caption"
           style="background-color:<%= @company.nav_color_1 %>;
-                 color:<%= @company.nav_text_color %>;
-                 visibility:{{= success.story.published ? 'visible' : 'hidden' }}">
-        <span>Read story</span>
-      </div>
+                 color:<%= @company.nav_text_color %>;}}">
+          Read story
+        </div>
+
+      {{ } else if (curator) { }}
+
+        <div class="caption"
+          style="background-color:{{= '#f5f5f5' }}">
+          {{= success.story.logo_published ? 'Logo published' : 'Pending curation' }}
+        </div>
+
+      {{ } }}
+
     </div>
+
   {{ }); }}
 </script>

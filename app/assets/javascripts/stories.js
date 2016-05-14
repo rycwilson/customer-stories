@@ -204,22 +204,27 @@ function initListeners () {
       data: { filter: { tag: filterTag, id: filterId } },
       success: function (data, status) {
         console.log('response data: ', data);
+        var successData = JSON.parse(data.success_tiles);
+        console.log('success data: ', successData);
         $('#stories-gallery').empty();
-        if (data) {
-          data.forEach(function (success) {
-            if (success.products && success.published) {
+        if (successData.length) {
+          successData.forEach(function (success) {
+            if (success.products && success.story.published) {
               storyPath = '/' + success.customer.slug +
                           '/' + success.products[0].slug +
                           '/' + success.story.slug;
-            } else {
+            } else if (success.story.published) {
               storyPath = '/' + success.customer.slug +
                           '/' + success.story.slug;
+            } else if (data.curator) {
+              storyPath = '/stories/' + success.story.id + '/edit';
             }
             $.extend(success, { path: storyPath });
           });
-          console.log('with path: ', data);
+          // console.log('with path: ', data);
           // console.log('filtered successes: ', data);
-          var $tiles = $(template({ successTiles: data }));
+          var $tiles = $(template({ curator: data.curator,
+                                 successTiles: successData }));
           $('#stories-gallery').masonry()
                                .append($tiles)
                                .masonry('appended', $tiles);

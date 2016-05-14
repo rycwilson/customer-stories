@@ -62,6 +62,10 @@
   }
 }
 
+#stories-gallery-content {
+  margin-top: 40px;
+}
+
 #collapsed-workflow-tabs .glyphicon-align-justify {
   padding-left: 5px;
 }
@@ -75,7 +79,7 @@
   height:123px;
   margin-left: 24px;
   margin-right: 24px;
-  margin-bottom: 42px;
+  margin-bottom: 40px;  // mirrors #stories-gallery-content
   position: relative;  // this is for positioning the caption at the bottom
   // border: 2px solid hsla(0, 0%, 0%, 0.5);
 }

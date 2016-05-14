@@ -297,7 +297,7 @@
                     File.join( request.protocol +
                       contribution.success.customer.company.subdomain +
                       '.' + request.domain + request.port_string,
-                      csp_story_path(contribution.success.story) ) %>
+                      contribution.success.story.csp_story_path ) %>
             <% else %>
               <span>Pending Curation</span>
             <% end %>

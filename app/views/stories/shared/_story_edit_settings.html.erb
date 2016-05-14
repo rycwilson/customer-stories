@@ -16,7 +16,7 @@
       <!-- the data-no-turbolink attribute is necessary for linkedin widgets to properly load
   http://stackoverflow.com/questions/17600093/rails-javascript-not-loading-after-clicking-through-link-to-helper -->
       <div class="col-sm-4 text-center" data-no-turbolink>
-          <%= link_to 'Preview', csp_story_path(@story),
+          <%= link_to 'Preview', @story.csp_story_path,
                           class: 'btn btn-primary' %>
       </div>
     </div>
