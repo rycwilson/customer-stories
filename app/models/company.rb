@@ -89,8 +89,12 @@ class Company < ActiveRecord::Base
     .unshift( [""] )
   end
 
+  #
   # method returns successes instead of stories because data from
   # success associations is needed
+  #
+  # TODO: faster? http://stackoverflow.com/questions/20014292
+  #
   def filter_successes_by_tag tag, id
     if id == '0'  # all successes
       return Success.includes(:story, :customer, :products)
