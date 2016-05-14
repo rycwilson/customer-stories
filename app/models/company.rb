@@ -98,6 +98,7 @@ class Company < ActiveRecord::Base
                     .where(stories: { logo_published: true },
                          customers: { company_id: self.id })
                     .order("stories.published DESC, stories.publish_date ASC")
+                    .order("stories.updated_at DESC")
     else
       case tag
         when 'industries'
@@ -107,6 +108,7 @@ class Company < ActiveRecord::Base
                           stories: { logo_published: true },
                         customers: { company_id: self.id })
                  .order("stories.published DESC, stories.publish_date ASC")
+                 .order("stories.updated_at DESC")
         when 'products'
           Success.includes(:story, :customer, :products)
                  .joins(:products, :story, :customer)
@@ -114,6 +116,7 @@ class Company < ActiveRecord::Base
                          stories: { logo_published: true },
                        customers: { company_id: self.id })
                  .order("stories.published DESC, stories.publish_date ASC")
+                 .order("stories.updated_at DESC")
         else
       end
     end
@@ -125,6 +128,7 @@ class Company < ActiveRecord::Base
            .where(customers: { company_id: self.id },  # these are tables
                     stories: { logo_published: true })
            .order("stories.published DESC, stories.publish_date ASC")
+           .order("stories.updated_at DESC")
   end
 
   def successes_with_story
@@ -132,6 +136,7 @@ class Company < ActiveRecord::Base
            .joins(:story, :customer)
            .where(customers: { company_id: self.id })
            .order("stories.published DESC, stories.publish_date ASC")
+           .order("stories.updated_at DESC")
   end
 
   # slightly different than updating tags for a story
