@@ -35,7 +35,7 @@
               </thead>
               <tbody>
     <!-- <tbody> -->
-      <% @company.stories.each do |story| %>
+      <% @company.stories.order(updated_at: :desc).each do |story| %>
 
         <tr>
           <td class='td-story-customer valign-middle'>
