@@ -228,6 +228,7 @@ function initListeners () {
           $('#stories-gallery').masonry()
                                .append($tiles)
                                .masonry('appended', $tiles);
+          centerLogos();
         }
       }
     });
@@ -597,10 +598,14 @@ function initMasonry () {
     isFitWidth: true
   });
 
-  /*
-    Since gettinng the image centered vertically with css is a pain,
-    do it with jquery instead
-  */
+  centerLogos();
+}
+
+/*
+  Since gettinng the image centered vertically with css is a pain,
+  do it with jquery instead
+*/
+function centerLogos () {
   $('#stories-gallery img').each(function (image) {
 
     var height = $(this).outerHeight(),
