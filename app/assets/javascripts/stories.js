@@ -23,6 +23,8 @@
 
 //= require masonry/dist/masonry.pkgd
 
+//= require js/jquery.slidedrawer
+
 /*
   With turbolinks in place, js only runs on initial controller/page load,
   e.g. js does not run when going from stories#show to stories#edit
@@ -65,6 +67,15 @@ function ready () {
   configS3Upload();
   initBootstrapSwitch();
   initContributions();
+
+  $('.drawer').slideDrawer({
+    showDrawer: true, // The drawer is hidden by default.
+    slideTimeout: true, // Sets the drawer to slide down after set count if set to true.
+    slideSpeed: 600, // Slide drawer speed.
+    slideTimeoutCount: 3000, // How long to wait before sliding drawer slides down.
+  });
+
+
 }
 
 function configUnderscore() {
