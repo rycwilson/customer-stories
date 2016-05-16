@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160511175458) do
+ActiveRecord::Schema.define(version: 20160516192004) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,15 +37,15 @@ ActiveRecord::Schema.define(version: 20160511175458) do
 
   create_table "companies", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at",                                                   null: false
-    t.datetime "updated_at",                                                   null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
     t.string   "logo_file_name"
     t.string   "logo_content_type"
     t.integer  "logo_file_size"
     t.datetime "logo_updated_at"
     t.string   "logo_url"
     t.string   "subdomain"
-    t.string   "feature_flag",      default: "---\n:from: alpha\n:to: beta\n"
+    t.string   "feature_flag",      default: "beta"
     t.string   "nav_color_1",       default: "#FBFBFB"
     t.string   "nav_color_2",       default: "#85CEE6"
     t.string   "nav_text_color",    default: "#333333"
