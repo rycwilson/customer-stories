@@ -58,7 +58,7 @@ function main() {
     console.log('widget_css: ', widget_css);
     widget_css.appendTo('head');
 
-    var url = "<%= URI.join(root_url, widget_path, '?callback=?') %>";
+    var url = "<%= URI.join(root_url, Rails.application.routes.url_helpers.widget_path, '?callback=?') %>";
     console.log('url: ', url);
     $.getJSON(url, function (data) {
       $('#cs-container').html(data.html);
