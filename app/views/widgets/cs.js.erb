@@ -39,25 +39,32 @@ function main() {
   jQuery(document).ready(function ($) {
 
     // check for bootstrap 3 ...
-    if (typeof $().emulateTransitionEnd !== 'function') {
-      var bootstrap_css = $("<link>", {
-        rel: "stylesheet",
-        type: "text/css",
-        href: "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
-        integrity: "sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7",
-        crossorigin: "anonymous"
-      });
-      bootstrap_css.appendTo('head');
-    }
+    // if (typeof $().emulateTransitionEnd !== 'function') {
+    //   var bootstrap_css = $("<link>", {
+    //     rel: "stylesheet",
+    //     type: "text/css",
+    //     href: "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+    //     integrity: "sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7",
+    //     crossorigin: "anonymous"
+    //   });
+    //   bootstrap_css.appendTo('head');
+    // }
 
     var widget_css = $("<link>", {
       rel: "stylesheet",
       type: "text/css",
-      href: "http://customerstories.org/bootstrap.min.css",
+      href: "<%= URI.join(root_url, asset_path('widget.css')).to_s %>",
+    });
+    console.log('widget_css: ', widget_css);
+    widget_css.appendTo('head');
 
+    var url = "<%= URI.join(root_url, widget_path, '?callback=?') %>";
+    console.log('url: ', url);
+    $.getJSON(url, function (data) {
+      $('#cs-container').html(data.html);
     });
 
-
+  });
 }
 
-})(); // We call our anonymous function immediately
+})();
