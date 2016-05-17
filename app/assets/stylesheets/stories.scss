@@ -29,14 +29,14 @@ margin: auto;
 overflow: hidden;
 padding: 5px;
 text-align: center;
-width: 150px;
--moz-border-radius-topleft: 25px 40px;
--moz-border-radius-topright: 25px 40px;
-border-top-left-radius: 25px 40px;
-border-top-right-radius: 25px 40px;
+width: 180px;
+-moz-border-radius-topleft: 10px 10px;
+-moz-border-radius-topright: 10px 10px;
+border-top-left-radius: 10px 10px;
+border-top-right-radius: 10px 10px;
 }
 .drawer-content {
-background: url(../images/bg.png);
+background-image: image-url('drawer-plugin/bg.png');
 border-collapse: collapse;
 border-top: 5px solid #000000;
 height: 110px;
@@ -73,6 +73,21 @@ background: #bd4929;
 color: #c4c4c4;
 font-size: 20px;
 line-height: 1.1;
+}
+.drawer-items .row {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+.drawer-items .thumbnail {
+  background-color: white;
+}
+.drawer-items .thumbnail img {
+  max-height: 80px;
+  // margin: 5px auto 5px auto;
+}
+
+.drawer-items a {
+  margin:0;
 }
 
 
