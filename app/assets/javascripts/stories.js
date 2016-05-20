@@ -234,7 +234,7 @@ function initListeners () {
           });
           // console.log('with path: ', data);
           // console.log('filtered successes: ', data);
-          var $tiles = $(template({ curator: data.curator,
+          var $tiles = $(template({ isCurator: data.is_curator,
                                  successTiles: successData }));
           $('#stories-gallery').masonry()
                                .append($tiles)

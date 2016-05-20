@@ -17,7 +17,7 @@
 
 <div class='wrapper'>
 
-  <% if company_curator? %>
+  <% if company_curator? @company.id %>
 
     <%= render 'shared/mainnav' %>
 
@@ -34,7 +34,7 @@
         -->
         <div data-no-turbolink class='col-sm-2'>
 
-          <% if company_curator? %>
+          <% if company_curator? @company.id %>
 
             <%= link_to edit_story_path(@story.id), class: 'csp-nav' do %>
               <span class='glyphicon glyphicon-chevron-left'

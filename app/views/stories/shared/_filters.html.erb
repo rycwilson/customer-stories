@@ -28,7 +28,7 @@
 </div>
 
 <div id="stories-filters"
-    class="form-inline hidden-xs <%= company_curator? ? 'curator' : 'reader' %>">
+    class="form-inline hidden-xs <%= company_curator?(@company.id) ? 'curator' : 'reader' %>">
 
   <% if @industries.length > 2 %>  <!-- includes 'All' (hence 2) -->
 

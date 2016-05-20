@@ -18,42 +18,38 @@ module StoriesHelper
     end
   end
 
-  def curator_story_view?
-    company_curator? && controller_name == 'stories' && action_name == 'show'
+  def curator_story_view? company_id
+    company_curator?(company_id) && controller_name == 'stories' && action_name == 'show'
   end
 
   def gallery_view?
     controller_name == 'stories' && action_name == 'index'
   end
 
-  def grid_item_link success
-    story = success.story
+  def grid_item_link company_id, story
     if story.published?
       story.csp_story_path
-    elsif company_curator?
+    elsif company_curator? company_id
       edit_story_path story.id
     else
       "javascript:;"
     end
   end
 
-  def grid_item_caption_style success
-    company = success.customer.company
-    story = success.story
+  def grid_item_caption_style company, story
     if story.published?
       "background-color:#{company.nav_color_1}; color:#{company.nav_text_color}"
-    elsif company_curator?
+    elsif company_curator? company.id
       "background-color:#f5f5f5"
     else
       "visibility:hidden"
     end
   end
 
-  def grid_item_caption_text success
-    story = success.story
+  def grid_item_caption_text company_id, story
     if story.published?
       "Read story"
-    elsif company_curator?
+    elsif company_curator? company_id
       story.logo_published? ? "Logo published" : "Pending curation"
     end
   end
