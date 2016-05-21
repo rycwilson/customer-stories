@@ -22,7 +22,7 @@
 
 <!-- <div id='wrapper'> -->
 
-  <% if company_curator? %>
+  <% if company_curator? @company.id %>
 
     <%= render 'shared/mainnav' %>
 
@@ -51,12 +51,13 @@
 
               <div class="grid-item thumbnail">
 
-                <a data-no-turbolink href="<%= grid_item_link(success) %>">
+                <a data-no-turbolink href="<%= grid_item_link(@company.id, success.story) %>">
                   <img src="<%= success.customer.logo_url || asset_path('company-logo-missing.png') %>">
                 </a>
 
-                <div class="caption" style="<%= grid_item_caption_style(success) %>">
-                  <%= grid_item_caption_text(success) %>
+                <div class="caption"
+                    style="<%= grid_item_caption_style(@company, success.story) %>">
+                  <%= grid_item_caption_text(@company.id, success.story) %>
                 </div>
 
               </div>
@@ -67,54 +68,8 @@
         </div>  <!-- portlet-body -->
       </div>  <!-- portlet -->
     </div>  <!-- container -->
-
-    <script type="text/javascript" src="http://customerstories.org/fart/widget.js"></script>
-
-    <section class="drawer">
-      <header class="clickme">Customer Success Stories</header>
-      <div class="drawer-content">
-      <div class="drawer-items">
-      <div class="row" style='height:100px'>
-        <div class="col-md-2">
-          <a href="#" class="thumbnail">
-            <img src="<%= @success_tiles[0].customer.logo_url %>" alt="">
-          </a>
-        </div>
-        <div class="col-md-2">
-          <a href="#" class="thumbnail">
-            <img src="<%= @success_tiles[1].customer.logo_url %>" alt="">
-          </a>
-        </div>
-        <div class="col-md-2">
-          <a href="#" class="thumbnail">
-            <img src="<%= @success_tiles[2].customer.logo_url %>" alt="">
-          </a>
-        </div>
-        <div class="col-md-2">
-          <a href="#" class="thumbnail">
-            <img src="<%= @success_tiles[3].customer.logo_url %>" alt="">
-          </a>
-        </div>
-        <div class="col-md-2">
-          <a href="#" class="thumbnail">
-            <img src="<%= @success_tiles[4].customer.logo_url %>" alt="">
-          </a>
-        </div>
-        <div class="col-md-2">
-          <a href="#" class="thumbnail">
-            <img src="<%= @success_tiles[5].customer.logo_url %>" alt="">
-          </a>
-        </div>
-      </div>
-
-      </div>
-      </div>
-    </section>
-
   </div>  <!-- content -->
-<!-- </div>  --> <!-- wrapper -->
-
-
+</div>  <!-- wrapper -->
 
 <!-- underscore template -->
 <script type="text/template" id="stories-template">
@@ -138,7 +93,7 @@
           Read story
         </div>
 
-      {{ } else if (curator) { }}
+      {{ } else if (isCurator) { }}
 
         <div class="caption"
           style="background-color:{{= '#f5f5f5' }}">

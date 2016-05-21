@@ -9,13 +9,14 @@ class StoriesController < ApplicationController
   before_action :set_s3_direct_post, only: :edit
 
   def index
+    binding.pry
     if params[:filter]
       @success_tiles =
           @company.filter_successes_by_tag(params[:filter][:tag], params[:filter][:id])
       respond_to do |format|
         format.json do
           render json: {
-            curator: company_curator?,
+            is_curator: company_curator?(@company.id),
             success_tiles: @success_tiles.to_json(
                              include: { story: { only: [:id, :slug, :published] },
                             products: { only: :slug },
@@ -23,7 +24,7 @@ class StoriesController < ApplicationController
           }
         end
       end
-    elsif company_curator?
+    elsif company_curator?(@company.id)
       @success_tiles = @company.successes_with_story    # all stories
       # need to unshift here instead of model methods since other calls to
       # these methods don't require the unshift
@@ -180,8 +181,10 @@ class StoriesController < ApplicationController
     @story = Story.find params[:id]
   end
 
+  # Why not just always look to the subdomain?
+  # => lookup by id faster
   def set_company
-    if params[:company_id].present?  # create
+    if params[:company_id]  # create story
       @company = Company.find params[:company_id]
     else  # index
       @company = Company.find_by subdomain: request.subdomain
@@ -202,7 +205,7 @@ class StoriesController < ApplicationController
     if request.path != @story.csp_story_path
       # old story title slug, redirect to current
       return redirect_to @story.csp_story_path, status: :moved_permanently
-    elsif !@story.published? && !company_curator?
+    elsif !@story.published? && !company_curator?(@company.id)
       return redirect_to root_url(subdomain:request.subdomain, host:request.domain)
     end
   end

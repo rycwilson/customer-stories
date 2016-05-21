@@ -84,10 +84,9 @@ class ApplicationController < ActionController::Base
     @s3_direct_post = S3_BUCKET.presigned_post(key: "uploads/#{SecureRandom.uuid}/${filename}", success_action_status: '201', acl: 'public-read')
   end
 
-  # this method assumes @company is defined in the calling action
-  def company_curator?
+  def company_curator? company_id
     user_signed_in? &&
-    current_user.company_id == @company.id
+    current_user.company_id == company_id
   end
 
 end

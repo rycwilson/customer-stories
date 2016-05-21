@@ -81,8 +81,6 @@ Rails.application.routes.draw do
 
   end
 
-  get '/widget', to: 'site#widget', as: 'widget'
-
   # all other subdomains
   get '/*all', to: 'site#strip_subdomain', constraints: { subdomain: 'www' }
   get '/', to: 'site#invalid_subdomain', constraints: { subdomain: /.+/ }
@@ -124,5 +122,9 @@ Rails.application.routes.draw do
   get '/tos', to: 'site#store_front', as: 'tos'
   get '/privacy', to: 'site#store_front'
   get '/our-story', to: 'site#store_front'
+
+  # Widget
+  get '/widget/cs', to: 'widgets#script', as: 'widget'
+  get '/widget/cs-data', to: 'widgets#data', as: 'widget_data'
 
 end

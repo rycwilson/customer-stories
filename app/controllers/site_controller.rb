@@ -1,9 +1,7 @@
 class SiteController < ApplicationController
 
   def index
-  end
-
-  def widget
+    binding.pry
   end
 
   def strip_subdomain

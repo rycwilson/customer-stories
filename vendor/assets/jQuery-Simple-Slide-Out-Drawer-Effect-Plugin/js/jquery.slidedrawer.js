@@ -8,18 +8,18 @@
 */
 
 ;(function ($) {
-	
+
 	var drawer = {
-		
+
 		init: function ( options, div ) {
-			
-			// Set 			
+
+			// Set
 			if(options.showDrawer == true && options.slideTimeout == true)
 			{
 				setTimeout(function() {
 					drawer.slide(div, options.drawerHiddenHeight, options.slideSpeed);
 				}, options.slideTimeoutCount);
-			} 
+			}
 			else if(options.showDrawer == 'slide')
 			{
 				// Set drawer hidden with slide effect
@@ -35,14 +35,14 @@
 			$('.clickme').on('click', function(){
 				drawer.toggle(options, div);
 			});
-			
+
 		},
-		
+
 		//Toggle function
 		toggle: function(options, div) {
 			($(div).height()+options.borderHeight === options.drawerHeight) ? drawer.slide( div, options.drawerHiddenHeight, options.slideSpeed ) : drawer.slide( div, options.drawerHeight-options.borderHeight, options.slideSpeed );
 		},
-		
+
 		// Slide animation function
 		slide: function( div, height, speed ) {
 			$(div).animate({
@@ -57,14 +57,14 @@
 
 	// Function wrapper
   $.fn.slideDrawer = function ( options ) {
-	
+
 		var drawerContent = this.children('.drawer-content'), /* Content height of drawer */
 			borderHeight = parseInt(drawerContent.css('border-top-width')); /* Border height of content */
-	
+
 		var drawerHeight = this.height() + borderHeight; /* Total drawer height + border height */
 		var drawerContentHeight = drawerContent.height() - borderHeight; /* Total drawer content height minus border top */
 		var drawerHiddenHeight = drawerHeight - drawerContentHeight; /* How much to hide the drawer, total height minus content height */
-  
+
 	  var defaults = {
 			showDrawer: 'slide', /* Drawer hidden on load by default, options (true, false, slide) */
 			slideSpeed: 700, /* Slide drawer speed 3 secs by default */
@@ -75,15 +75,15 @@
 			drawerHiddenHeight: drawerHiddenHeight, /* Height of div when hidden full height minus content height */
 			borderHeight: borderHeight /* border height if set in css you cann overwrite but best just leave alone */
 	  };
-				
+
 		/* Overwrite defaults */
 		var options = $.extend(defaults, options);
-		
+
 		return this.each(function() {
-			
+
 			drawer.init(options, this);
-    	
-		});		
+
+		});
 	};
-	
+
 })(jQuery);

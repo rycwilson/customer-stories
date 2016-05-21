@@ -1,0 +1,207 @@
+(function (window, document) {
+
+  "use strict";
+
+  var jQuery, $; // Localize jQuery variables
+
+  // slideout drawer plugin
+  var drawer = {
+
+    init: function ( options, div ) {
+
+      // Set
+      if(options.showDrawer === true && options.slideTimeout === true)
+      {
+        setTimeout(function() {
+          drawer.slide(div, options.drawerHiddenHeight, options.slideSpeed);
+        }, options.slideTimeoutCount);
+      }
+      else if(options.showDrawer === 'slide')
+      {
+        // Set drawer hidden with slide effect
+        drawer.slide(div, options.drawerHiddenHeight, options.slideSpeed);
+      }
+      else if(options.showDrawer === false)
+      {
+        // Set drawer to hide
+        drawer.hide(options, div);
+      }
+
+      // Toggle drawer when clicked
+      $('.clickme').on('click', function(){
+        drawer.toggle(options, div);
+      });
+
+    },
+
+    //Toggle function
+    toggle: function(options, div) {
+      ($(div).height()+options.borderHeight === options.drawerHeight) ? drawer.slide( div, options.drawerHiddenHeight, options.slideSpeed ) : drawer.slide( div, options.drawerHeight-options.borderHeight, options.slideSpeed );
+    },
+
+    // Slide animation function
+    slide: function( div, height, speed ) {
+      $(div).animate({
+        'height': height
+      }, speed );
+    },
+
+    hide: function(options, div) {
+      $(div).css('height', options.drawerHiddenHeight);
+    }
+  };
+
+  if (window.jQuery === undefined || isOldVersion(window.jQuery.fn.jquery)) {
+
+    loadScript("https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js",
+      function () {
+        /* Restore $ and window.jQuery to their previous values and store the
+           new jQuery in our local jQuery variables. */
+        $ = jQuery = window.jQuery.noConflict(true);
+        initPlugin($);
+        main();
+      });
+
+  }
+
+  function loadScript (url, callback) {
+    var scriptTag = document.createElement('script');
+    scriptTag.setAttribute("type", "text/javascript");
+    scriptTag.setAttribute("src", url);
+    if (typeof callback !== "undefined") {
+      if (scriptTag.readyState) {
+        /* For old versions of IE */
+        scriptTag.onreadystatechange = function () {
+          if (this.readyState === 'complete' || this.readyState === 'loaded') {
+            callback();
+          }
+        };
+      } else {
+        scriptTag.onload = callback;
+      }
+    }
+    (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(scriptTag);
+  }
+
+  // bootstrap requires >= v1.9 of jquery
+  function isOldVersion (jqVer) {
+    var majorRel = jqVer.split('.')[0],
+        minorRel = jqVer.split('.')[1];
+
+    if (majorRel === '1' && parseInt(minorRel, 10) < 9) {
+      return true;
+    }
+    else return false;
+  }
+
+  function initPlugin ($) {
+
+    // Function wrapper
+    $.fn.slideDrawer = function (options) {
+
+      // not totally sure why this is necessary.
+      // without it, drawer doesn't slide all the way down
+      var fudgeFactor = 10;
+
+      var drawerContent = this.children('.drawer-content'), /* Content height of drawer */
+        borderHeight = parseInt(drawerContent.css('border-top-width')); /* Border height of content */
+
+      var drawerHeight = this.height() + borderHeight; /* Total drawer height + border height */
+      var drawerContentHeight = drawerContent.height() - borderHeight; /* Total drawer content height minus border top */
+      var drawerHiddenHeight = (drawerHeight - drawerContentHeight) - fudgeFactor; /* How much to hide the drawer, total height minus content height */
+
+      var defaults = {
+        showDrawer: 'slide', /* Drawer hidden on load by default, options (true, false, slide) */
+        slideSpeed: 700, /* Slide drawer speed 3 secs by default */
+        slideTimeout: true, /* Sets time out if set to true showDrawer false will be ignored */
+        slideTimeoutCount: 5000, /* How long to wait before sliding drawer */
+        drawerContentHeight: drawerContentHeight, /* Div content height no including tab or border */
+        drawerHeight: drawerHeight, /* Full div height */
+        drawerHiddenHeight: drawerHiddenHeight, /* Height of div when hidden full height minus content height */
+        borderHeight: borderHeight /* border height if set in css you cann overwrite but best just leave alone */
+      };
+
+      /* Overwrite defaults */
+      var pluginOptions = $.extend(defaults, options);
+
+      return this.each(function () {
+
+        drawer.init(pluginOptions, this);
+
+      });
+    };
+
+  }
+
+  function centerLogos () {
+    $('.drawer-items img').each(function (image) {
+      var height = $(this).outerHeight(),
+          maxHeight = parseInt($(this).css('max-height')),
+          diff = maxHeight - height;
+      if (diff) {
+        $(this).css('margin-top', diff / 2);
+        $(this).css('margin-bottom', diff / 2);
+      }
+    });
+  }
+
+  function main () {
+    $(function () {
+
+      var company = $('#cs-widget').data('cs-domain'),
+          url = "<%= URI.join(root_url, widget_data_path) %>",
+          bootstrapCss = null,
+          widgetCss = $("<link>", {
+            rel: "stylesheet",
+            type: "text/css",
+            href: "<%= URI.join(root_url, asset_path('widget.css')).to_s %>"
+          });
+
+      widgetCss.appendTo('head');
+
+      // check for bootstrap 3 ...
+      if (typeof $().emulateTransitionEnd !== 'function') {
+        bootstrapCss = $("<link>", {
+          rel: "stylesheet",
+          type: "text/css",
+          href: "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+          integrity: "sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7",
+          crossorigin: "anonymous"
+        });
+        bootstrapCss.appendTo('head');
+        console.log('bootstrap css: ', bootstrapCss);
+      }
+
+      // if using this approach, append '?callback=?' to the url
+      // $.getJSON(url, function (data) {
+      //   console.log('response: ', data);
+      //   $('#cs-container').html(data.html);
+      //   $('#cs-container .drawer').slideDrawer({
+      //     showDrawer: true, // The drawer is hidden by default.
+      //     slideTimeout: true, // Sets the drawer to slide down after set count if set to true.
+      //     slideSpeed: 600, // Slide drawer speed.
+      //     slideTimeoutCount: 3000, // How long to wait before sliding drawer slides down.
+      //     });
+      // });
+
+      $.ajax({
+        url: url,
+        dataType: 'jsonp',
+        data: { company: company },
+        success: function (data) {
+          console.log('response: ', data);
+          $('#cs-container').html(data.html);
+          $('#cs-container .drawer').slideDrawer({
+            showDrawer: false, // drawer is hidden on page load
+            slideTimeout: true, // Sets the drawer to slide down after set count if set to true.
+            slideSpeed: 600, // Slide drawer speed.
+            slideTimeoutCount: 3000 // How long to wait before sliding drawer slides down.
+          });
+          centerLogos();
+        }
+      });
+
+    });
+  }
+
+}(window, document));
