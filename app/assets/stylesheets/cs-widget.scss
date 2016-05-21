@@ -1,0 +1,8 @@
+// Place all the styles related to the widgets controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.cs-widget {
+  @import 'bootstrap-sass/assets/stylesheets/_bootstrap-widget.scss';
+  @import 'widget.scss';
+}
