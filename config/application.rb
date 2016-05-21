@@ -32,9 +32,16 @@ module Csp
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
 
-    # Bower
-    config.assets.paths <<
-        Rails.root.join("vendor","assets","bower_components")
+    # Bower asset paths
+    # (lines 37-47 per bootstrap-sass docs re: using bower package)
+    Rails.root.join('vendor', 'assets', 'bower_components').to_s.tap do |bower_path|
+      config.sass.load_paths << bower_path
+      config.assets.paths << bower_path
+    end
+    # Precompile Bootstrap fonts
+    config.assets.precompile << %r(bootstrap-sass/assets/fonts/bootstrap/[\w-]+\.(?:eot|svg|ttf|woff2?)$)
+    # Minimum Sass number precision required by bootstrap-sass
+    ::Sass::Script::Value::Number.precision = [8, ::Sass::Script::Value::Number.precision].max
 
     # this will load any custom classes in lib/
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
