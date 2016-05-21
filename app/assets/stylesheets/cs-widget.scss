@@ -2,7 +2,9 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+// namespace the widget css so as not to interfere with anything on host page
 .cs-widget {
   @import 'bootstrap-sass/assets/stylesheets/_bootstrap-widget.scss';
+  @import 'bootstrap-horizon/bootstrap-horizon.scss';
   @import 'widget.scss';
 }

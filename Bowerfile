@@ -12,6 +12,7 @@ asset 'responsive-toolkit'
 asset 'jquery.inputmask', '~3.2.7'
 asset 'masonry'
 asset 'imagesloaded', '~4.1'
+asset 'bootstrap-horizon'
 
 # dependencies for MVP theme
 asset 'fontawesome', '~4.4.0'

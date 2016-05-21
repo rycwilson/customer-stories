@@ -32,36 +32,64 @@ class WidgetsController < ApplicationController
   def widget_html company_subdomain
     storiesLink = stories_url(host: company_subdomain + '.' + request.domain)
     company = Company.find_by(subdomain: company_subdomain)
-    logoLinks = company.successes_with_logo_published.first(5)
+    logoLinks = company.successes_with_logo_published.first(10)
                        .map { |success| success.customer.logo_url }
+
     "<section class='drawer'>
       <header class='clickme'>Customer Success Stories</header>
       <div class='drawer-content'>
         <div class='drawer-items container-fluid'>
-          <div class='row'>
-            <div class='col-md-2'>
+          <div class='row row-horizon'>
+
+            <div class='col-sm-2'>
               <a href='#{storiesLink}' class='thumbnail' target='_blank'>
                 <img src='#{logoLinks[0]}' alt=''>
               </a>
             </div>
-            <div class='col-md-2'>
+            <div class='col-sm-2'>
               <a href='#{storiesLink}' class='thumbnail' target='_blank'>
                 <img src='#{logoLinks[1]}' alt=''>
               </a>
             </div>
-            <div class='col-md-2'>
+            <div class='col-sm-2'>
               <a href='#{storiesLink}' class='thumbnail' target='_blank'>
                 <img src='#{logoLinks[2]}' alt=''>
               </a>
             </div>
-            <div class='col-md-2'>
+            <div class='col-sm-2'>
               <a href='#{storiesLink}' class='thumbnail' target='_blank'>
                 <img src='#{logoLinks[3]}' alt=''>
               </a>
             </div>
-            <div class='col-md-2'>
+            <div class='col-sm-2'>
               <a href='#{storiesLink}' class='thumbnail' target='_blank'>
                 <img src='#{logoLinks[4]}' alt=''>
+              </a>
+            </div>
+
+            <div class='col-sm-2'>
+              <a href='#{storiesLink}' class='thumbnail' target='_blank'>
+                <img src='#{logoLinks[5]}' alt=''>
+              </a>
+            </div>
+            <div class='col-sm-2'>
+              <a href='#{storiesLink}' class='thumbnail' target='_blank'>
+                <img src='#{logoLinks[6]}' alt=''>
+              </a>
+            </div>
+            <div class='col-sm-2'>
+              <a href='#{storiesLink}' class='thumbnail' target='_blank'>
+                <img src='#{logoLinks[7]}' alt=''>
+              </a>
+            </div>
+            <div class='col-sm-2'>
+              <a href='#{storiesLink}' class='thumbnail' target='_blank'>
+                <img src='#{logoLinks[8]}' alt=''>
+              </a>
+            </div>
+            <div class='col-sm-2'>
+              <a href='#{storiesLink}' class='thumbnail' target='_blank'>
+                <img src='#{logoLinks[9]}' alt=''>
               </a>
             </div>
 
