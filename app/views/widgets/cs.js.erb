@@ -160,17 +160,17 @@
       widgetCss.appendTo('head');
 
       // check for bootstrap 3 ...
-      if (typeof $().emulateTransitionEnd !== 'function') {
-        bootstrapCss = $("<link>", {
-          rel: "stylesheet",
-          type: "text/css",
-          href: "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
-          integrity: "sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7",
-          crossorigin: "anonymous"
-        });
-        bootstrapCss.appendTo('head');
-        console.log('bootstrap css: ', bootstrapCss);
-      }
+      // if (typeof $().emulateTransitionEnd !== 'function') {
+      //   bootstrapCss = $("<link>", {
+      //     rel: "stylesheet",
+      //     type: "text/css",
+      //     href: "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
+      //     integrity: "sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7",
+      //     crossorigin: "anonymous"
+      //   });
+      //   bootstrapCss.appendTo('head');
+      //   console.log('bootstrap css: ', bootstrapCss);
+      // }
 
       // if using this approach, append '?callback=?' to the url
       // $.getJSON(url, function (data) {
