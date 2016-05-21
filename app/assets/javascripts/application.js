@@ -14,7 +14,8 @@
 //= require jquery-ujs/src/rails
 //= require rails-turbolinks/lib/assets/javascripts/turbolinks
 //= require underscore/underscore
-//= require bootstrap-sass/assets/javascripts/bootstrap
+//  require bootstrap-sass/assets/javascripts/bootstrap
+//= require bootstrap-sass/assets/javascripts/bootstrap-sprockets
 //= require mvpready-core
 //= require mvpready-helpers
 //= require flot/jquery.flot

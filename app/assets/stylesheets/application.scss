@@ -14,8 +14,13 @@
  *
  *= require animate.css/animate
  *= require font-awesome
- *= require bootstrap-sass/assets/stylesheets/_bootstrap
  */
+
+/* bootstrap-sass */
+$icon-font-path: "bootstrap-sass/assets/fonts/bootstrap/";
+@import "bootstrap-sass/assets/stylesheets/bootstrap-sprockets";
+@import "bootstrap-sass/assets/stylesheets/bootstrap";
+
 
 /********** curate table **************/
 .td-story-date {
