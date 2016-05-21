@@ -32,12 +32,12 @@ class WidgetsController < ApplicationController
   def widget_html company_subdomain
     storiesLink = stories_url(host: company_subdomain + '.' + request.domain)
     company = Company.find_by(subdomain: company_subdomain)
-    logoLinks = company.successes_with_logo_published.first(6)
+    logoLinks = company.successes_with_logo_published.first(5)
                        .map { |success| success.customer.logo_url }
     "<section class='drawer'>
       <header class='clickme'>Customer Success Stories</header>
       <div class='drawer-content'>
-        <div class='drawer-items'>
+        <div class='drawer-items container-fluid'>
           <div class='row'>
             <div class='col-md-2'>
               <a href='#{storiesLink}' class='thumbnail' target='_blank'>
@@ -64,11 +64,7 @@ class WidgetsController < ApplicationController
                 <img src='#{logoLinks[4]}' alt=''>
               </a>
             </div>
-            <div class='col-md-2'>
-              <a href='#{storiesLink}' class='thumbnail' target='_blank'>
-                <img src='#{logoLinks[5]}' alt=''>
-              </a>
-            </div>
+
           </div>
         </div>
       </div>

@@ -52,7 +52,6 @@
   };
 
   if (window.jQuery === undefined || isOldVersion(window.jQuery.fn.jquery)) {
-
     loadScript("https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js",
       function () {
         /* Restore $ and window.jQuery to their previous values and store the
@@ -61,7 +60,6 @@
         initPlugin($);
         main();
       });
-
   }
 
   function loadScript (url, callback) {
@@ -99,15 +97,17 @@
     // Function wrapper
     $.fn.slideDrawer = function (options) {
 
-      // not totally sure why this is necessary.
-      // without it, drawer doesn't slide all the way down
-      var fudgeFactor = 10;
+      // not totally sure why this is necessary, something to do with border height
+      // without fudgeFactor, drawer doesn't slide all the way down
+      var fudgeFactor = 12;
 
-      var drawerContent = this.children('.drawer-content'), /* Content height of drawer */
-        borderHeight = parseInt(drawerContent.css('border-top-width')); /* Border height of content */
+      var $drawerContent = $('.drawer-content'),  /* Content height of drawer */
+          borderHeight = parseInt($drawerContent.css('border-top-width')); /* Border height of content */
 
       var drawerHeight = this.height() + borderHeight; /* Total drawer height + border height */
-      var drawerContentHeight = drawerContent.height() - borderHeight; /* Total drawer content height minus border top */
+      // console.log('drawerHeight: ', drawerHeight);
+      var drawerContentHeight = $drawerContent.height() - borderHeight; /* Total drawer content height minus border top */
+      // console.log('drawerContentHeight: ', drawerContentHeight);
       var drawerHiddenHeight = (drawerHeight - drawerContentHeight) - fudgeFactor; /* How much to hide the drawer, total height minus content height */
 
       var defaults = {
@@ -148,40 +148,19 @@
   function main () {
     $(function () {
 
-      var company = $('#cs-widget').data('cs-domain'),
+      var company = $('#cs-script').data('company'),
           url = "<%= URI.join(root_url, widget_data_path) %>",
-          bootstrapCss = null,
           widgetCss = $("<link>", {
             rel: "stylesheet",
             type: "text/css",
-            href: "<%= URI.join(root_url, asset_path('widget.css')).to_s %>"
+            href: "<%= URI.join(root_url, asset_path('cs-widget.css')).to_s %>"
           });
 
       widgetCss.appendTo('head');
 
-      // check for bootstrap 3 ...
-      // if (typeof $().emulateTransitionEnd !== 'function') {
-      //   bootstrapCss = $("<link>", {
-      //     rel: "stylesheet",
-      //     type: "text/css",
-      //     href: "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css",
-      //     integrity: "sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7",
-      //     crossorigin: "anonymous"
-      //   });
-      //   bootstrapCss.appendTo('head');
-      //   console.log('bootstrap css: ', bootstrapCss);
-      // }
-
       // if using this approach, append '?callback=?' to the url
       // $.getJSON(url, function (data) {
       //   console.log('response: ', data);
-      //   $('#cs-container').html(data.html);
-      //   $('#cs-container .drawer').slideDrawer({
-      //     showDrawer: true, // The drawer is hidden by default.
-      //     slideTimeout: true, // Sets the drawer to slide down after set count if set to true.
-      //     slideSpeed: 600, // Slide drawer speed.
-      //     slideTimeoutCount: 3000, // How long to wait before sliding drawer slides down.
-      //     });
       // });
 
       $.ajax({
@@ -189,7 +168,6 @@
         dataType: 'jsonp',
         data: { company: company },
         success: function (data) {
-          console.log('response: ', data);
           $('#cs-container').html(data.html);
           $('#cs-container .drawer').slideDrawer({
             showDrawer: false, // drawer is hidden on page load

@@ -1,7 +1,7 @@
 
 .drawer {
 bottom: 0px;
-height: 140px;
+height: 158px;
 overflow: hidden;
 position: fixed;
 width: 100%;
@@ -12,24 +12,25 @@ z-index: 5;
 background: #000000;
 color: #ffffff;
 display: block;
-height: 30px;
-line-height: 25px;
+height: 24px;
+line-height: 24px;
 margin-left: 75%;
 overflow: hidden;
-padding: 5px;
+padding-top: 7px;
+padding-bottom: 7px;
 text-align: center;
 width: 200px;
 -moz-border-radius-topleft: 10px 10px;
 -moz-border-radius-topright: 10px 10px;
-border-top-left-radius: 10px 10px;
-border-top-right-radius: 10px 10px;
+border-top-left-radius: 6px 6px;
+border-top-right-radius: 6px 6px;
 }
 
 .drawer-content {
 background-image: image-url('drawer-plugin/bg.png');
 border-collapse: collapse;
-border-top: 5px solid #000000;
-height: 110px;
+border-top: 4px solid #000000;
+// height: 110px;
 width: 100%;
 }
 
@@ -66,16 +67,16 @@ width: 176px;
 background: #bd4929;
 }
 
-.drawer-items .title {
-color: #c4c4c4;
-font-size: 20px;
-line-height: 1.1;
-}
+// .drawer-items .title {
+// color: #c4c4c4;
+// font-size: 20px;
+// line-height: 1.1;
+// }
 
 .drawer-items .row {
   // height: 100px;
   padding-top: 6px;
-  padding-bottom: 6px;
+  padding-bottom: 10px;
 }
 
 .drawer-items .thumbnail {
@@ -83,7 +84,7 @@ line-height: 1.1;
 }
 
 .drawer-items .thumbnail img {
-  max-height: 80px;
+  max-height: 90px;
   // margin: 5px auto 5px auto;
 }
 
