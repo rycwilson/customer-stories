@@ -13,7 +13,6 @@ class WidgetsController < ApplicationController
     html = widget_html params[:company]
     respond_to do |format|
       format.js do
-        # old way:
         # Build a JSON object containing our HTML
         json = { html: html }.to_json
         # Get the name of the JSONP callback created by jQuery
@@ -22,7 +21,6 @@ class WidgetsController < ApplicationController
         jsonp = callback + "(" + json + ")"
         # Send result to the browser
         render text: jsonp, content_type: "text/javascript"
-        # render json: html, callback: params[:callback]
       end
     end
   end
@@ -32,71 +30,27 @@ class WidgetsController < ApplicationController
   def widget_html company_subdomain
     storiesLink = stories_url(host: company_subdomain + '.' + request.domain)
     company = Company.find_by(subdomain: company_subdomain)
-    logoLinks = company.successes_with_logo_published.first(10)
+    logoLinks = company.successes_with_logo_published
                        .map { |success| success.customer.logo_url }
 
-    "<section class='drawer'>
-      <header class='clickme'>Customer Success Stories</header>
-      <div class='drawer-content'>
-        <div class='drawer-items container-fluid'>
-          <div class='row row-horizon'>
+    html = "<section class='drawer'>
+              <header class='clickme'>Customer Success Stories</header>
+              <div class='drawer-content'>
+                <div class='drawer-items'>
+                  <div class='row row-horizon'>"
 
-            <div class='col-sm-2'>
-              <a href='#{storiesLink}' class='thumbnail' target='_blank'>
-                <img src='#{logoLinks[0]}' alt=''>
-              </a>
-            </div>
-            <div class='col-sm-2'>
-              <a href='#{storiesLink}' class='thumbnail' target='_blank'>
-                <img src='#{logoLinks[1]}' alt=''>
-              </a>
-            </div>
-            <div class='col-sm-2'>
-              <a href='#{storiesLink}' class='thumbnail' target='_blank'>
-                <img src='#{logoLinks[2]}' alt=''>
-              </a>
-            </div>
-            <div class='col-sm-2'>
-              <a href='#{storiesLink}' class='thumbnail' target='_blank'>
-                <img src='#{logoLinks[3]}' alt=''>
-              </a>
-            </div>
-            <div class='col-sm-2'>
-              <a href='#{storiesLink}' class='thumbnail' target='_blank'>
-                <img src='#{logoLinks[4]}' alt=''>
-              </a>
-            </div>
+    logoLinks.each do |logoLink|
+      html <<       "<div class='col-xs-4 col-sm-3 col-md-2'>
+                       <a href='#{storiesLink}' class='thumbnail' target='_blank'>
+                         <img src='#{logoLink}' alt=''>
+                       </a>
+                     </div>"
+    end
 
-            <div class='col-sm-2'>
-              <a href='#{storiesLink}' class='thumbnail' target='_blank'>
-                <img src='#{logoLinks[5]}' alt=''>
-              </a>
-            </div>
-            <div class='col-sm-2'>
-              <a href='#{storiesLink}' class='thumbnail' target='_blank'>
-                <img src='#{logoLinks[6]}' alt=''>
-              </a>
-            </div>
-            <div class='col-sm-2'>
-              <a href='#{storiesLink}' class='thumbnail' target='_blank'>
-                <img src='#{logoLinks[7]}' alt=''>
-              </a>
-            </div>
-            <div class='col-sm-2'>
-              <a href='#{storiesLink}' class='thumbnail' target='_blank'>
-                <img src='#{logoLinks[8]}' alt=''>
-              </a>
-            </div>
-            <div class='col-sm-2'>
-              <a href='#{storiesLink}' class='thumbnail' target='_blank'>
-                <img src='#{logoLinks[9]}' alt=''>
-              </a>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </section>"
+    html <<      "</div>
+                </div>
+              </div>
+            </section>"
   end
 
 end
