@@ -32,8 +32,7 @@ class WidgetsController < ApplicationController
     company = Company.find_by(subdomain: company_subdomain)
     logoLinks = company.successes_with_logo_published
                        .map { |success| success.customer.logo_url }
-
-    html = "<section class='drawer'>
+    html = "<section class='drawer' style='visibility:hidden'>
               <header class='clickme'>Customer Success Stories</header>
               <div class='drawer-content'>
                 <div class='drawer-items'>

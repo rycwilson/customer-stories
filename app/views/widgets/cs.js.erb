@@ -4,31 +4,40 @@
 
   var jQuery, $; // Localize jQuery variables
 
+  if (window.jQuery === undefined || isOldVersion(window.jQuery.fn.jquery)) {
+    loadScript("https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js",
+      function () {
+        /* Restore $ and window.jQuery to their previous values and store the
+           new jQuery in our local jQuery variables. */
+        $ = jQuery = window.jQuery.noConflict(true);
+        main();
+      });
+  }
+
   // slideout drawer plugin
   var drawer = {
 
-    init: function ( options, div ) {
-
+    init: function (options, div) {
       // Set
-      if(options.showDrawer === true && options.slideTimeout === true)
+      if (options.showDrawer === true && options.slideTimeout === true)
       {
         setTimeout(function() {
           drawer.slide(div, options.drawerHiddenHeight, options.slideSpeed);
         }, options.slideTimeoutCount);
       }
-      else if(options.showDrawer === 'slide')
+      else if (options.showDrawer === 'slide')
       {
         // Set drawer hidden with slide effect
         drawer.slide(div, options.drawerHiddenHeight, options.slideSpeed);
       }
-      else if(options.showDrawer === false)
+      else if (options.showDrawer === false)
       {
         // Set drawer to hide
         drawer.hide(options, div);
       }
 
       // Toggle drawer when clicked
-      $('.clickme').on('click', function(){
+      $('#cs-container .clickme').on('click', function(){
         drawer.toggle(options, div);
       });
 
@@ -48,19 +57,9 @@
 
     hide: function(options, div) {
       $(div).css('height', options.drawerHiddenHeight);
-    }
-  };
+    },
 
-  if (window.jQuery === undefined || isOldVersion(window.jQuery.fn.jquery)) {
-    loadScript("https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js",
-      function () {
-        /* Restore $ and window.jQuery to their previous values and store the
-           new jQuery in our local jQuery variables. */
-        $ = jQuery = window.jQuery.noConflict(true);
-        initPlugin($);
-        main();
-      });
-  }
+  };
 
   function loadScript (url, callback) {
     var scriptTag = document.createElement('script');
@@ -85,14 +84,13 @@
   function isOldVersion (jqVer) {
     var majorRel = jqVer.split('.')[0],
         minorRel = jqVer.split('.')[1];
-
     if (majorRel === '1' && parseInt(minorRel, 10) < 9) {
       return true;
     }
     else return false;
   }
 
-  function initPlugin ($) {
+  function loadPlugin ($) {
 
     // Function wrapper
     $.fn.slideDrawer = function (options) {
@@ -101,15 +99,12 @@
       // without fudgeFactor, drawer doesn't slide all the way down
       var fudgeFactor = 12;
 
-      var $drawerContent = $('.drawer-content'),  /* Content height of drawer */
+      var $drawerContent = $('#cs-container .drawer-content'),  /* Content height of drawer */
           borderHeight = parseInt($drawerContent.css('border-top-width')); /* Border height of content */
 
       var drawerHeight = this.height() + borderHeight; /* Total drawer height + border height */
-      // console.log('drawerHeight: ', drawerHeight);
       var drawerContentHeight = $drawerContent.height() - borderHeight; /* Total drawer content height minus border top */
-      // console.log('drawerContentHeight: ', drawerContentHeight);
       var drawerHiddenHeight = (drawerHeight - drawerContentHeight) - fudgeFactor; /* How much to hide the drawer, total height minus content height */
-
       var defaults = {
         showDrawer: 'slide', /* Drawer hidden on load by default, options (true, false, slide) */
         slideSpeed: 700, /* Slide drawer speed 3 secs by default */
@@ -129,12 +124,13 @@
         drawer.init(pluginOptions, this);
 
       });
+
     };
 
   }
 
   function centerLogos () {
-    $('.drawer-items img').each(function (image) {
+    $('#cs-container img').each(function (image) {
       var height = $(this).outerHeight(),
           maxHeight = parseInt($(this).css('max-height')),
           diff = maxHeight - height;
@@ -146,37 +142,44 @@
   }
 
   function main () {
+
     $(function () {
 
       var company = $('#cs-script').data('company'),
           url = "<%= URI.join(root_url, widget_data_path) %>",
-          widgetCss = $("<link>", {
+          $widgetStylesheet = $("<link>", {
             rel: "stylesheet",
             type: "text/css",
             href: "<%= URI.join(root_url, asset_path('cs-widget.css')).to_s %>"
           });
 
-      widgetCss.appendTo('head');
+      // wait for stylesheet to load ...
+      $widgetStylesheet.appendTo('head').on('load', function () {
 
-      // if using this approach, append '?callback=?' to the url
-      // $.getJSON(url, function (data) {
-      //   console.log('response: ', data);
-      // });
+        $.ajax({
+          url: url,
+          dataType: 'jsonp',
+          data: { company: company },
+          success: function (data) {
+            $('#cs-container').html(data.html);
+            var $images = $('#cs-container img'), loadedImages = 0;
+            // wait for all images to load so dimension calculations are correct ...
+            $images.on('load', function () {
+              if (++loadedImages === $images.length) {
+                loadPlugin($);
+                centerLogos();
+                $('#cs-container .drawer').slideDrawer({
+                  showDrawer: false, // drawer is hidden on page load
+                  slideTimeout: true, // Sets the drawer to slide down after set count if set to true.
+                  slideSpeed: 600, // Slide drawer speed.
+                  slideTimeoutCount: 3000 // How long to wait before sliding drawer slides down.
+                });
+                $('#cs-container .drawer').css('visibility', 'visible');
+              }
+            });
+          }
+        }); // ajax
 
-      $.ajax({
-        url: url,
-        dataType: 'jsonp',
-        data: { company: company },
-        success: function (data) {
-          $('#cs-container').html(data.html);
-          $('#cs-container .drawer').slideDrawer({
-            showDrawer: false, // drawer is hidden on page load
-            slideTimeout: true, // Sets the drawer to slide down after set count if set to true.
-            slideSpeed: 600, // Slide drawer speed.
-            slideTimeoutCount: 3000 // How long to wait before sliding drawer slides down.
-          });
-          centerLogos();
-        }
       });
 
     });
