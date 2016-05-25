@@ -145,9 +145,7 @@
 
     $(function () {
 
-      var company = $('#cs-script').data('company'),
-          url = "<%= URI.join(root_url, widget_data_path) %>",
-          $widgetStylesheet = $("<link>", {
+      var $widgetStylesheet = $("<link>", {
             rel: "stylesheet",
             type: "text/css",
             href: "<%= URI.join(root_url, asset_path('cs-widget.css')).to_s %>"
@@ -157,9 +155,9 @@
       $widgetStylesheet.appendTo('head').on('load', function () {
 
         $.ajax({
-          url: url,
+          url: "<%= URI.join(root_url, widget_data_path) %>",
           dataType: 'jsonp',
-          data: { company: company },
+          data: { company: $('#cs-script').data('company') },
           success: function (data) {
             $('#cs-container').html(data.html);
             var $images = $('#cs-container img'), loadedImages = 0;

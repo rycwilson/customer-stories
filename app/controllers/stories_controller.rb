@@ -9,7 +9,6 @@ class StoriesController < ApplicationController
   before_action :set_s3_direct_post, only: :edit
 
   def index
-    binding.pry
     if params[:filter]
       @success_tiles =
           @company.filter_successes_by_tag(params[:filter][:tag], params[:filter][:id])
