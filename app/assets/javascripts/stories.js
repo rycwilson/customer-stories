@@ -220,7 +220,7 @@ function initListeners () {
         $('#stories-gallery').empty();
         if (successData.length) {
           successData.forEach(function (success) {
-            if (success.products && success.story.published) {
+            if (success.products.length && success.story.published) {
               storyPath = '/' + success.customer.slug +
                           '/' + success.products[0].slug +
                           '/' + success.story.slug;
