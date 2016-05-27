@@ -28,20 +28,28 @@ class WidgetsController < ApplicationController
   protected
 
   def widget_html company_subdomain
-    storiesLink = stories_url(host: company_subdomain + '.' + request.domain)
-    company = Company.find_by(subdomain: company_subdomain)
-    logoLinks = company.successes_with_logo_published
-                       .map { |success| success.customer.logo_url }
+    stories_index_url = stories_url(host: company_subdomain + '.' + request.domain)
+    stories_links =
+         Company.find_by(subdomain: company_subdomain)
+                .successes_with_logo_published
+                .map do |success|
+                  story = success.story
+                  { logo: success.customer.logo_url,
+                    link: story.published ?
+                            URI.join(root_url(host: company_subdomain + '.' + request.domain),
+                                     story.csp_story_path)
+                            : stories_index_url }
+                end
     html = "<section class='drawer' style='visibility:hidden'>
               <header class='clickme'>Customer Success Stories</header>
               <div class='drawer-content'>
                 <div class='drawer-items'>
                   <div class='row row-horizon'>"
 
-    logoLinks.each do |logoLink|
+    stories_links.each do |story|
       html <<       "<div class='col-xs-4 col-sm-3 col-md-2'>
-                       <a href='#{storiesLink}' class='thumbnail' target='_blank'>
-                         <img src='#{logoLink}' alt=''>
+                       <a href='#{story[:link]}' class='thumbnail' target='_blank'>
+                         <img src='#{story[:logo]}' alt=''>
                        </a>
                      </div>"
     end

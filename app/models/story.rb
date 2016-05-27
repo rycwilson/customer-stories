@@ -93,7 +93,7 @@ class Story < ActiveRecord::Base
     end
   end
 
-  # method returns a friendly id url that either contains or omits a product
+  # method returns a friendly id path that either contains or omits a product
   def csp_story_path
     url_helpers = Rails.application.routes.url_helpers
     if self.success.products.present?
