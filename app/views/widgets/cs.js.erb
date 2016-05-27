@@ -148,7 +148,7 @@
     so need to achieve event delegation with vanilla js
   */
   function preventScrollNav ($) {
-    document.querySelector('body').addEventListener('wheel', function (event) {
+    document.querySelector('#cs-container').addEventListener('wheel', function (event) {
       var $widget = $('.row-horizon');
       if (event.target.closest('.row-horizon')) {  // event within widget?
         var maxX = $widget.prop('scrollWidth') - $widget.prop('offsetWidth'); // don't scroll below zero or above max
