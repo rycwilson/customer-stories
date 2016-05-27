@@ -183,7 +183,9 @@
         $.ajax({
           url: "<%= URI.join(root_url, widget_data_path) %>",
           dataType: 'jsonp',
-          data: { company: $('#cs-script').data('company') },
+          data: { company: $('#cs-script').data('company'),
+                  tabColor: $('#cs-script').data('tab-color'),
+                  fontColor: $('#cs-script').data('font-color') },
           success: function (data) {
             $('#cs-container').html(data.html);
             var $images = $('#cs-container img'), loadedImages = 0;

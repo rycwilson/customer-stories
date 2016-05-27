@@ -10,7 +10,7 @@ class WidgetsController < ApplicationController
   end
 
   def data
-    html = widget_html params[:company]
+    html = widget_html params
     respond_to do |format|
       format.js do
         # Build a JSON object containing our HTML
@@ -27,7 +27,10 @@ class WidgetsController < ApplicationController
 
   protected
 
-  def widget_html company_subdomain
+  def widget_html params
+    company_subdomain = params[:company]
+    tab_color = params[:tabColor]
+    font_color = params[:fontColor]
     stories_index_url = stories_url(host: company_subdomain + '.' + request.domain)
     stories_links =
          Company.find_by(subdomain: company_subdomain)
@@ -41,8 +44,11 @@ class WidgetsController < ApplicationController
                             : stories_index_url }
                 end
     html = "<section class='drawer' style='visibility:hidden'>
-              <header class='clickme'>Customer Success Stories</header>
-              <div class='drawer-content'>
+              <header class='clickme'
+                style='background-color:#{tab_color};color:#{font_color}'>
+                Customer Success Stories
+              </header>
+              <div class='drawer-content' style='border-top-color:#{tab_color}'>
                 <div class='drawer-items'>
                   <div class='row row-horizon'>"
 
