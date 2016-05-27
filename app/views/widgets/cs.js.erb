@@ -141,6 +141,30 @@
     });
   }
 
+  /*
+    when scrolling past boundaries, prevent default browser behavior
+    (back/forward navigation)
+    note: jquery event listener doesn't work, as deltaX is undefined on the event,
+    so need to achieve event delegation with vanilla js
+  */
+  function preventScrollNav ($) {
+    document.querySelector('body').addEventListener('wheel', function (event) {
+      var $widget = $('.row-horizon');
+      if (event.target.closest('.row-horizon')) {  // event within widget?
+        var maxX = $widget.prop('scrollWidth') - $widget.prop('offsetWidth'); // don't scroll below zero or above max
+        /*
+          If this event looks like it will scroll beyond the bounds of the element,
+          prevent it and set the scroll to the boundary manually
+        */
+        if ($widget.prop('scrollLeft') + event.deltaX < 0 ||
+            $widget.prop('scrollLeft') + event.deltaX > maxX) {
+          event.preventDefault();
+          $widget.prop('scrollLeft', Math.max(0, Math.min(maxX, $widget.prop('scrollLeft') + event.deltaX)));
+        }
+      }
+    });
+  }
+
   function main () {
 
     $(function () {
@@ -150,6 +174,8 @@
             type: "text/css",
             href: "<%= URI.join(root_url, asset_path('cs-widget.css')).to_s %>"
           });
+
+      preventScrollNav($);
 
       // wait for stylesheet to load ...
       $widgetStylesheet.appendTo('head').on('load', function () {
@@ -177,9 +203,7 @@
             });
           }
         }); // ajax
-
       });
-
     });
   }
 
