@@ -18,6 +18,8 @@
   padding-bottom: 7px;
   text-align: center;
   width: 145px;
+  margin-left: auto;
+  margin-right: 10%;
   -moz-border-radius-topleft: 6px 6px;
   -moz-border-radius-topright: 6px 6px;
   border-top-left-radius: 6px 6px;
@@ -38,7 +40,6 @@
 
 .drawer-items {
   margin: auto;
-  width: 80%;
 }
 
 .drawer-items .row {
@@ -60,17 +61,12 @@
   margin: 0;
 }
 
-.drawer header {
-  margin-left: auto;
-  margin-right: 10%;
-}
-
 .scroll-left {
   position: absolute;
   cursor: pointer;
   top: 28px;
   left: 0;
-  margin-left: 4%;
+  margin-left: 2%;
   z-index: 10;
   height: 60px;
   width: 32px;
@@ -88,7 +84,7 @@
   cursor: pointer;
   top: 28px;
   right: 0;
-  margin-right: 4%;
+  margin-right: 2%;
   z-index: 10;
   height: 60px;
   width: 32px;
@@ -101,6 +97,23 @@
   background-color: black;
 }
 
+@media (min-width: 768px) {
+  .drawer-items {
+    width: 79%;
+  }
+}
+
+@media (min-width: 992px) {
+  .drawer-items {
+    width: 82%;
+  }
+}
+
+@media (min-width: 1200px) {
+  .drawer-items {
+    width: 84%;
+  }
+}
 
 // .drawer-items ul {
 // margin: 0px;

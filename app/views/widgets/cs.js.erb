@@ -168,6 +168,31 @@
     });
   }
 
+  function initScrollListeners ($) {
+    var rowWidth = $('.row-horizon').width(),
+        scrollWidth = $('.row-horizon').prop('scrollWidth'),
+        maxScrollPosition = scrollWidth - rowWidth,
+        scrollPosition = null;
+    $('.scroll-left').on('click', function () {
+      scrollPosition = $('.row-horizon').scrollLeft();
+      if (scrollPosition <= (maxScrollPosition - 100)) {
+        $('.row-horizon').scrollLeft(scrollPosition + 100);
+      }
+      else {
+        $('.row-horizon').scrollLeft(maxScrollPosition);
+      }
+    });
+    $('.scroll-right').on('click', function () {
+      scrollPosition = $('.row-horizon').scrollLeft();
+      if (scrollPosition >= 100) {
+        $('.row-horizon').scrollLeft(scrollPosition - 100);
+      }
+      else {
+        $('.row-horizon').scrollLeft(0);
+      }
+    });
+  }
+
   function main () {
 
     $(function () {
@@ -196,6 +221,7 @@
             $images.on('load', function () {
               if (++loadedImages === $images.length) {
                 loadPlugin($);
+                initScrollListeners($);
                 centerLogos();
                 // if user is using a mouse, this will hose dimensions
                 // (in a somewhat random way)
