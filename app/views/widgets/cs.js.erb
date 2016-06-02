@@ -12,6 +12,9 @@
         $ = jQuery = window.jQuery.noConflict(true);
         main();
       });
+  } else {
+    $ = jQuery = window.jQuery
+    main();
   }
 
   // slideout drawer plugin
@@ -194,6 +197,13 @@
               if (++loadedImages === $images.length) {
                 loadPlugin($);
                 centerLogos();
+                // if user is using a mouse, this will hose dimensions
+                // (in a somewhat random way)
+                // compensate for this ...
+                if ($('.drawer-content').css('height') !== '122px') {
+                  $('.drawer-content').css('height', '122px');
+                  $('.drawer-items').css('height', '122px');
+                }
                 $('#cs-container .drawer').slideDrawer({
                   showDrawer: false, // drawer is hidden on page load
                   slideTimeout: true, // Sets the drawer to slide down after set count if set to true.

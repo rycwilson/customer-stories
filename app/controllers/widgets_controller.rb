@@ -46,21 +46,23 @@ class WidgetsController < ApplicationController
     html = "<section class='drawer' style='visibility:hidden'>
               <header class='clickme'
                 style='background-color:#{tab_color};color:#{font_color}'>
-                Customer Success Stories
+                Customer Stories
               </header>
               <div class='drawer-content' style='border-top-color:#{tab_color}'>
                 <div class='drawer-items'>
-                  <div class='row row-horizon'>"
+                  <div class='scroll-left'></div>
+                    <div class='row row-horizon'>"
 
     stories_links.each do |story|
-      html <<       "<div class='col-xs-4 col-sm-3 col-md-2'>
-                       <a href='#{story[:link]}' class='thumbnail' target='_blank'>
-                         <img src='#{story[:logo]}' alt=''>
-                       </a>
-                     </div>"
+      html <<         "<div class='col-xs-4 col-sm-3 col-md-2'>
+                         <a href='#{story[:link]}' class='thumbnail' target='_blank'>
+                           <img src='#{story[:logo]}' alt=''>
+                         </a>
+                       </div>"
     end
 
-    html <<      "</div>
+    html <<        "</div>
+                  <div class='scroll-right'></div>
                 </div>
               </div>
             </section>"
