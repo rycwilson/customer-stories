@@ -9,6 +9,10 @@ Rails.application.routes.draw do
 
     get '/', to: 'stories#index'
 
+    # Widget
+    get '/widget/cs', to: 'widgets#script', as: 'widget'
+    get '/widget/cs-data', to: 'widgets#data', as: 'widget_data'
+
     # Stories - public access
     resources :stories, only: :index
     # see below for route to public story page
@@ -79,6 +83,8 @@ Rails.application.routes.draw do
     # broken links
     get '/*all', to: 'site#valid_subdomain_bad_path'
 
+
+
   end
 
   # all other subdomains
@@ -122,9 +128,5 @@ Rails.application.routes.draw do
   get '/tos', to: 'site#store_front', as: 'tos'
   get '/privacy', to: 'site#store_front'
   get '/our-story', to: 'site#store_front'
-
-  # Widget
-  get '/widget/cs', to: 'widgets#script', as: 'widget'
-  get '/widget/cs-data', to: 'widgets#data', as: 'widget_data'
 
 end

@@ -20,7 +20,7 @@ class WidgetsController < ApplicationController
         # Wrap the JSON object with a call to the JSONP callback
         jsonp = callback + "(" + json + ")"
         # Send result to the browser
-        render text: jsonp, content_type: "text/javascript"
+        render text: jsonp
       end
     end
   end
@@ -28,7 +28,7 @@ class WidgetsController < ApplicationController
   protected
 
   def widget_html params
-    company_subdomain = params[:company]
+    company_subdomain = request.subdomain
     tab_color = params[:tabColor]
     font_color = params[:fontColor]
     stories_index_url = stories_url(host: company_subdomain + '.' + request.domain)
