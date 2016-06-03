@@ -51,6 +51,11 @@ class WidgetsController < ApplicationController
               <div class='drawer-content' style='border-top-color:#{tab_color}'>
                 <div class='drawer-items'>
                   <div class='scroll-left'></div>
+                    <div class='row pagination-row text-center'>
+                      <div class='pagination'></div>
+                      <div class='pagination'></div>
+                      <div class='pagination'></div>
+                    </div>
                     <div class='row row-horizon'>"
 
     stories_links.each do |story|

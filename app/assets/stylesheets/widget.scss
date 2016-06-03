@@ -1,7 +1,7 @@
 
 .drawer {
   bottom: 0px;
-  height: 164px;
+  // height: 183px;
   overflow: hidden;
   position: fixed;
   z-index: 5;
@@ -42,8 +42,8 @@
   margin: auto;
 }
 
-.drawer-items .row {
-  padding-top: 8px;
+.row-horizon {
+  // padding-top: 8px;
   padding-bottom: 16px;
 }
 
@@ -54,7 +54,7 @@
 
 .drawer-items .thumbnail img {
   max-height: 90px;
-  max-width: 100%;  // 150 - paddingx2
+  max-width: 100%;
 }
 
 .drawer-items a {
@@ -64,7 +64,7 @@
 .scroll-left {
   position: absolute;
   cursor: pointer;
-  top: 28px;
+  top: 44px;
   left: 0;
   margin-left: 2%;
   z-index: 10;
@@ -82,7 +82,7 @@
 .scroll-right {
   position: absolute;
   cursor: pointer;
-  top: 28px;
+  top: 44px;
   right: 0;
   margin-right: 2%;
   z-index: 10;
@@ -113,6 +113,20 @@
   .drawer-items {
     width: 84%;
   }
+}
+
+.pagination {
+  display: inline-block;
+  height: 8px;
+  width: 8px;
+  margin: 4px;
+  border: 1px solid white;
+  background: transparent;
+  border-radius: 8px;
+}
+
+.pagination-row {
+  margin-top: 3px;
 }
 
 // .drawer-items ul {

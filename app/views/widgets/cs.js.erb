@@ -98,16 +98,12 @@
     // Function wrapper
     $.fn.slideDrawer = function (options) {
 
-      // not totally sure why this is necessary, something to do with border height
-      // without fudgeFactor, drawer doesn't slide all the way down
-      var fudgeFactor = 12;
-
       var $drawerContent = $('#cs-container .drawer-content'),  /* Content height of drawer */
           borderHeight = parseInt($drawerContent.css('border-top-width')); /* Border height of content */
 
       var drawerHeight = this.height() + borderHeight; /* Total drawer height + border height */
-      var drawerContentHeight = $drawerContent.height() - borderHeight; /* Total drawer content height minus border top */
-      var drawerHiddenHeight = (drawerHeight - drawerContentHeight) - fudgeFactor; /* How much to hide the drawer, total height minus content height */
+      var drawerContentHeight = $drawerContent.outerHeight() //- borderHeight; /* Total drawer content height minus border top */
+      var drawerHiddenHeight = (drawerHeight - drawerContentHeight) - borderHeight; /* How much to hide the drawer, total height minus content height */
       var defaults = {
         showDrawer: 'slide', /* Drawer hidden on load by default, options (true, false, slide) */
         slideSpeed: 700, /* Slide drawer speed 3 secs by default */
@@ -237,10 +233,10 @@
                 // if user is using a mouse, this will hose dimensions
                 // (in a somewhat random way)
                 // compensate for this ...
-                if ($('.drawer-content').css('height') !== '122px') {
-                  $('.drawer-content').css('height', '122px');
-                  $('.drawer-items').css('height', '122px');
-                }
+                // if ($('.drawer-content').css('height') !== '122px') {
+                //   $('.drawer-content').css('height', '122px');
+                //   $('.drawer-items').css('height', '122px');
+                // }
                 $('#cs-container .drawer').slideDrawer({
                   showDrawer: false, // drawer is hidden on page load
                   slideTimeout: true, // Sets the drawer to slide down after set count if set to true.
