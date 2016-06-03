@@ -169,28 +169,39 @@
   }
 
   function initScrollListeners ($) {
+
     var rowWidth = $('.row-horizon').width(),
         scrollWidth = $('.row-horizon').prop('scrollWidth'),
         maxScrollPosition = scrollWidth - rowWidth,
-        scrollPosition = null;
+        scrollPosition = null,
+        scrollRemaining = null;
+
     $('.scroll-left').on('click', function () {
       scrollPosition = $('.row-horizon').scrollLeft();
-      if (scrollPosition <= (maxScrollPosition - 100)) {
-        $('.row-horizon').scrollLeft(scrollPosition + 100);
+      if (scrollPosition >= 980) {
+        $('.row-horizon').animate({ scrollLeft: '-=980' }, 1000)
       }
       else {
-        $('.row-horizon').scrollLeft(maxScrollPosition);
+        $('.row-horizon').animate({ scrollLeft: '-=' +
+                                      scrollPosition.toString() }, 1000);
       }
     });
+
     $('.scroll-right').on('click', function () {
       scrollPosition = $('.row-horizon').scrollLeft();
-      if (scrollPosition >= 100) {
-        $('.row-horizon').scrollLeft(scrollPosition - 100);
-      }
-      else {
-        $('.row-horizon').scrollLeft(0);
+      scrollRemaining = scrollWidth - (scrollPosition + rowWidth);
+      if (scrollRemaining >= 980) {
+        $('.row-horizon').animate({ scrollLeft: '+=980' }, 1000);
+      } else {
+        $('.row-horizon').animate({ scrollLeft: '+=' +
+                                      scrollRemaining.toString() }, 1000);
       }
     });
+
+    // $('.row-horizon').on('scroll', function () {
+    //   console.log('scroll');
+    // });
+
   }
 
   function main () {
