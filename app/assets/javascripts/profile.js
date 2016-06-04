@@ -26,7 +26,7 @@ $(function () {
 
   initListeners();
   configS3Upload();
-  $.getScript('http://platform.linkedin.com/in.js');
+  $.getScript('//platform.linkedin.com/in.js');
 
 });
 

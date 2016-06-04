@@ -19,7 +19,7 @@
   }
   else {
     if (status === 'success') {
-      $.getScript('http://platform.linkedin.com/in.js', function () {
+      $.getScript('//platform.linkedin.com/in.js', function () {
         $("input[name='user[linkedin_url]']").parent().siblings().remove();
         $("input[name='user[linkedin_url]']").parent().after(
               "<script type='IN/MemberProfile' " +
