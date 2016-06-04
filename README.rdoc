@@ -30,11 +30,17 @@ Please feel free to use a different markup language if you do not plan to run
 ### SSL Setup
 
 ####Certificate
+Heroku recommends [DNSimple](https://support.dnsimple.com/articles/ssl-certificate-with-heroku/)
 
 ####GoDaddy DNS
+GoDaddy is only our registrar. Nameservers point to DNSimple, which manages the DNS records
 
-####Heroku 
+
+####Heroku
 - Heroku doesn't like A-records, may lead to instability in DNS resolution
 	- [The Limitations of DNS A-Records](https://devcenter.heroku.com/articles/apex-domains)
-- Use GoDaddy forwarding feature
+	- [Stack Overflow](http://stackoverflow.com/questions/13478008/heroku-godaddy-naked-domain), [Stack Overflow](http://stackoverflow.com/questions/11492563/heroku-godaddy-send-naked-domain-to-www), [Stack Overflow](http://stackoverflow.com/questions/16022324/how-to-setup-dns-for-an-apex-domain-no-www-pointing-to-a-heroku-app)
+
+
+
 - only need www/* custom domain (delete the other)
