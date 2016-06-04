@@ -271,7 +271,7 @@
           </td>
           <td class='valign-middle text-center'>
 
-            <% unless contribution.success.story.published? %>
+            <% unless contribution.success.story.try(:published?) %>
               <a href="javascript:;">
                 <i class='glyphicon glyphicon-pencil'></i>
               </a>
@@ -292,12 +292,12 @@
           </td>
           <td class='valign-middle'>
 
-            <% if contribution.success.story.published? %>
+            <% if contribution.success.story.try(:published?) %>
               <%= link_to 'Published',
                     File.join( request.protocol +
                       contribution.success.customer.company.subdomain +
                       '.' + request.domain + request.port_string,
-                      csp_story_path(contribution.success.story) ) %>
+                      contribution.success.story.csp_story_path ) %>
             <% else %>
               <span>Pending Curation</span>
             <% end %>

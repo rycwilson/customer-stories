@@ -10,6 +10,8 @@ class ApplicationController < ActionController::Base
                   if: Proc.new { user_signed_in? },
               unless: Proc.new { devise_controller? || invalid_subdomain? }
 
+  helper_method :company_curator?
+
   protected
 
   #  this method ensures signed in users can't jump to a subdomain they don't belong to
@@ -82,9 +84,9 @@ class ApplicationController < ActionController::Base
     @s3_direct_post = S3_BUCKET.presigned_post(key: "uploads/#{SecureRandom.uuid}/${filename}", success_action_status: '201', acl: 'public-read')
   end
 
-  # this method assumes @company is defined in the calling action
-  def curator?
-    user_signed_in? && current_user.company_id == @company.id
+  def company_curator? company_id
+    user_signed_in? &&
+    current_user.company_id == company_id
   end
 
 end

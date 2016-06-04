@@ -1,8 +1,6 @@
-<% if user_signed_in? && controller_name == 'stories' && action_name == 'show' %>
+<% if curator_story_view?(@company.id) %>
 
-  <style>
-    .mainnav-main:after { content: none; }
-  </style>
+  <style>.mainnav-main:after { content: none; }</style>
 
 <% end %>
 
@@ -20,149 +18,38 @@
 
 <% end %>
 
-<div class='mainnav mainnav-main'
-    style="<%= user_signed_in? ? 'margin-bottom:0' : '' %>">
+<nav class='mainnav mainnav-main' style="margin-bottom:0">
   <div class='container'>
 
-    <div class="navbar-header">
-      <a class="mainnav-toggle"
-        data-toggle="collapse" data-target=".mainnav-collapse">
-      <span class="sr-only">Toggle navigation</span>
-      <i class="fa fa-bars"></i>
-    </a>
-    </div>
+    <div id='mainnav-workflow'
+        class="col-xs-8 col-sm-6 col-md-4 <%= gallery_view? ? 'hidden-xs hidden-sm' : '' %>">
 
-    <div class="collapse mainnav-collapse" role="navigation">
-      <ul class='nav nav-tabs mainnav-menu col-sm-4' role='tablist' style='border-bottom:0'>
-
-        <% if ['alpha', 'beta'].include? @company.feature_flag %>
-        <!--   <li id='pipeline-tab' class='tooltip-wrapper-tabs'
-              style='margin-bottom: 0px; display:inline-block'
-              data-title="This section is currently disabled">
-            <a href='#pipeline' role='tab' aria-controls='pipeline'
-                style='pointer-events:none' disabled>
-              Pipeline
-            </a>
-          </li> -->
-        <% else %>
-          <li id='pipeline-tab' class="<%= @mainnav_tab == 'pipeline' ? 'active' : '' %>"
-              role='presentation' style='margin-bottom: 0px'>
-            <a href='#pipeline' role='tab' data-toggle='tab' aria-controls='pipeline'>
-              Pipeline
-            </a>
-          </li>
-        <% end %>
-
-        <li id='curate-tab' class="<%= @mainnav_tab == 'curate' ? 'active' : '' %>"
-            role='presentation' style='margin-bottom: 0px'>
-          <a href='#curate' role='tab' data-toggle='tab' aria-controls='curate'>
-            Curate
-          </a>
-        </li>
-
-        <li id='promote-tab' class="<%= @mainnav_tab == 'promote' ? 'active' : '' %>"
-            role='presentation' style='margin-bottom: 0px'>
-          <a href='#promote' role='tab' data-toggle='tab' aria-controls='promote'>
-            Promote
-          </a>
-        </li>
-
-        <% if ['alpha', 'beta'].include? @company.feature_flag %>
-          <li id='measure-tab' class='tooltip-wrapper-tabs'
-              style='margin-bottom: 0px; display:inline-block'
-              data-title="Coming soon">
-            <a href='#measure' role='tab' aria-controls='measure'
-                style='pointer-events:none' disabled>
-              Measure
-            </a>
-          </li>
-        <% else %>
-          <li id='measure-tab' class="<%= @mainnav_tab == 'measure' ? 'active' : '' %>"
-              role='presentation' style='margin-bottom: 0px'>
-            <a href='#measure' role='tab' data-toggle='tab' aria-controls='measure'>
-              Measure
-            </a>
-          </li>
-        <% end %>
-      </ul>
-
-      <% if controller_name == 'stories' && action_name == 'index' %>
-        <form class="form-inline col-sm-6 text-center" style='padding-top: 5px'>
-          <% if @industries.length > 2 %>  <!-- includes 'All' (hence 2) -->
-            <div class="form-group text-left">
-             <%= label_tag :industries, "Industry", class: 'control-label' %>
-             <%= select_tag :industries, options_for_select(@industries),
-                    { class: 'stories-filter form-control',
-                      style: 'min-width: 140px' }
-                      %>
-            </div>&nbsp;&nbsp;
-          <% end %>
-          <% if @products.length > 2 %>
-            <div class="form-group text-left">
-               <%= label_tag :products, "Product", class: 'control-label' %>
-               <%= select_tag :products, options_for_select(@products),
-                      { class: 'stories-filter form-control',
-                        style: 'min-width: 140px' } %>
-            </div>
-          <% end %>
-        </form>
-      <% end %>
-
-      <ul class='nav nav-tabs mainnav-menu col-sm-2 pull-right'
-          role='tablist' style='border-bottom:0'>
-
-        <% if user_signed_in? && current_user.company_id.present? %>
-
-          <li class="dropdown pull-right">
-
-            <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
-              <span class="visible-xs-inline" style="display: inline !important">
-                <i class='glyphicon glyphicon-cog'></i> &nbsp;
-              </span>
-              <i class="fa fa-caret-down"></i>
-            </a>
-
-            <ul class="dropdown-menu" role="menu">
-              <li>
-                <%= link_to edit_company_path(current_user.company_id) do %>
-                  Company Settings
-                <% end %>
-              </li>
-            </ul>
-
-          </li>
-
-        <% end %>
-
-        <li class="dropdown pull-right">
-
-          <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
-            <span class="visible-xs-inline" style="display: inline !important">
-              <i class='glyphicon glyphicon-user'></i> &nbsp;
-            </span>
-            <i class="fa fa-caret-down"></i>
-          </a>
-
-          <ul class="dropdown-menu" role="menu">
-
-            <% if current_user.company_id.present? %>
-              <li>
-                <%= link_to edit_profile_path do %>
-                  <%= current_user.full_name %>
-                <% end %>
-              </li>
-            <% else %>
-              <li>
-                <%= link_to edit_profile_no_company_path do %>
-                  <%= current_user.full_name %>
-                <% end %>
-              </li>
-            <% end %>
-
-          </ul>
-        </li>
-      </ul>
+      <%= render 'shared/mainnav_workflow_tabs' %>
 
     </div>
+
+    <div id='collapsed-workflow-tabs'
+        class="col-xs-1 <%= gallery_view? ? '' : 'hidden-xs hidden-sm' %> hidden-md hidden-lg ">
+
+      <%= render 'shared/collapsed_workflow_tabs' %>
+
+    </div>
+
+    <% if gallery_view? %>
+
+      <div class="col-xs-8 col-md-6">
+
+        <%= render 'stories/shared/filters' %>
+
+      </div>
+
+    <% end %>
+
+    <div class="col-xs-3 col-md-2 pull-right">
+
+      <%= render 'shared/mainnav_account_dropdowns', { company: @company } %>
+
+    </div>
+
   </div>  <!-- container -->
-</div>  <!-- mainnav -->
+</nav>  <!-- mainnav -->

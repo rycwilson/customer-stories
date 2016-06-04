@@ -3,8 +3,8 @@ class ContributionsController < ApplicationController
   include ContributionsHelper
 
   before_action :valid_token?, only: [:edit, :update]
-  before_action :set_contribution, only: [:show, :confirm, :request_contribution]
-  before_action :check_opt_out_list, only: [:create, :request_contribution]
+  before_action :set_contribution, only: [:show, :confirm_request, :send_request]
+  before_action :check_opt_out_list, only: [:create, :confirm_request]
 
   respond_to :html, :json
 
@@ -45,10 +45,15 @@ class ContributionsController < ApplicationController
     if !contributor.changed? || contributor.save  # don't save if not necessary
       contribution = new_contribution story.success.id, contributor.id, params
       if contribution.save
+        contribution.update(linkedin: true) if contribution.contributor.linkedin_url.present?
         # respond with all pre-request contributions, most recent additions first
-        # all contributors needed to populate referrer select box
         @contributions_pre_request = Contribution.pre_request story.success_id
+        # all contributors needed to populate referrer select box ...
         @contributors = story.success.contributors
+        # all contributions to build connections list
+        # leave out contributors who unsubscribed or opted out
+        @contributions = story.success.contributions
+                                      .where("status NOT IN ('unsubscribe', 'opt_out')")
       else
         # presently only one validation:
         #   contributor may have only one contribution per success
@@ -103,31 +108,16 @@ class ContributionsController < ApplicationController
     end
   end
 
-  # respond_to { |format| format.js }
-  def request_contribution
+  # responds with confirm_request.js
+  def confirm_request
     curator_missing_info = @contribution.success.curator.missing_info
     if curator_missing_info.empty?
-      UserMailer.request_contribution(@contribution).deliver_now
-      if @contribution.update(   status:'request',
-                              remind_at: Time.now + @contribution.remind_1_wait.days )
-        @contributions_in_progress = Contribution.in_progress @contribution.success_id
-        @flash_status = "info"
-        @flash_mesg =
-          "An email request for contribution has been sent to #{@contribution.contributor.full_name}"
-      else
-        @flash_status = "danger"
-        @flash_mesg =
-          "Error updating Contribution: #{@contribution.errors.full_messages.join(', ')}"
-      end
+      @request_email = @contribution.generate_request_email
     else
       @flash_status = "danger"
       @flash_mesg =
         "Can't send email because the following Curator fields are missing: #{curator_missing_info.join(', ')}"
     end
-  end
-
-  def confirm
-    @curator = @contribution.success.curator
   end
 
   private
@@ -156,8 +146,8 @@ class ContributionsController < ApplicationController
     contributor_email =
         params[:contributor].try(:[], :email) || Contribution.find(params[:id]).contributor.email
     if OptOut.find_by(email: contributor_email)
-      @flash_mesg = "Email address has opted out of Customer Stories emails"
       @flash_status = "danger"
+      @flash_mesg = "Email address has opted out of Customer Stories emails"
       respond_to { |format| format.js }
     else
       true

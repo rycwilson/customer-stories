@@ -1,5 +1,38 @@
+<div id='story-publish-settings' class='row' style='padding-top:5px'>
 
-<div class='col-sm-4 text-center' style='padding:0'>
+  <!-- resources: http://stackoverflow.com/questions/13311574
+                  http://jsfiddle.net/cSSUA/209/ -->
+  <%= form_for @story, url: story_path(@story.id),
+                    method: 'put',
+                    remote: true,
+                      html: { class: "form-horizontal",
+                                 id: 'story-publish-form' } do |f| %>
+
+    <div class="form-group">
+      <%= f.label 'Publish Story', class: 'col-sm-4 control-label' %>
+      <div class="col-sm-3">
+        <%= f.check_box :published, class: "bs-switch form-control" %>
+      </div>
+      <!-- the data-no-turbolink attribute is necessary for linkedin widgets to properly load
+  http://stackoverflow.com/questions/17600093/rails-javascript-not-loading-after-clicking-through-link-to-helper -->
+      <div class="col-sm-4 text-center" data-no-turbolink>
+          <%= link_to 'Preview', @story.csp_story_path,
+                          class: 'btn btn-primary' %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label 'Publish Logo', class: 'col-sm-4 control-label' %>
+      <div class="col-sm-3">
+        <%= f.check_box :logo_published, class: "bs-switch form-control" %>
+      </div>
+    </div>
+
+  <% end %>
+
+</div>
+
+<div id='#story-edit-logo' class='row'>
 <!--
   Note the absence of method:put and remote:true
   We are only using this form for the S3 upload (necessary data attributes)
@@ -13,92 +46,34 @@
                       'url' => @s3_direct_post.url,
                      'host' => URI.parse(@s3_direct_post.url).host
                } do %>
-    <div class="fileinput <%= @customer.logo_url.present? ? 'fileinput-exists' : 'fileinput-new' %>" data-provides="fileinput">
+    <div class="col-sm-12 fileinput <%= @customer.logo_url.present? ? 'fileinput-exists' : 'fileinput-new' %>" data-provides="fileinput">
 
-      <div class="fileinput-new thumbnail"
-          style="width: 100px">
+      <div class="fileinput-new thumbnail col-sm-7">
         <%= image_tag "company-logo-missing.png", alt: 'photo missing' %>
       </div>
 
-      <div class="fileinput-preview fileinput-exists thumbnail"
-          data-trigger="fileinput"
-          style="width: 100px">
-        <img id='customer-logo' src="<%= @customer.logo_url %>" alt="Avatar">
+      <div class="fileinput-preview fileinput-exists thumbnail col-sm-7"
+          data-trigger="fileinput">
+        <img id='story-edit-logo-img' src="<%= @customer.logo_url %>" alt="Avatar">
       </div>
 
-      <div>
-        <div class="row">
-          <span class="btn btn-default btn-file" style='width:100px'>
-            <span class="fileinput-new">
-              Select
-            </span>
-            <span class="fileinput-exists">
-              Change
-            </span>
-            <%= file_field_tag :customer_logo_url %>
+      <div class="col-sm-5 text-center">
+        <span id='story-edit-logo-buttons' class="btn btn-default btn-file">
+          <span class="fileinput-new">
+            Select
           </span>
-        </div>
-        <div class="row" style='margin-top:5px'>
-          <a href="#" class="btn btn-default fileinput-exists"
-              style='width:100px' data-dismiss="fileinput">Remove
-          </a>
-        </div>
+          <span class="fileinput-exists">
+            Change
+          </span>
+          <%= file_field_tag :customer_logo_url %>
+        </span>
+        <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">
+          Remove
+        </a>
       </div>
+
     </div>  <!-- /.fileupload -->
   <% end %>
 </div>
 
-<div class='col-sm-8 text-center' style='padding-top:5px'>
 
-  <!-- resources: http://stackoverflow.com/questions/13311574
-                  http://jsfiddle.net/cSSUA/209/ -->
-  <%= form_for @story, url: story_path(@story.id),
-                    method: 'put',
-                    remote: true,
-                      html: { class: "form-horizontal",
-                                 id: 'story-publish-form' } do |f| %>
-
-    <div class="form-group">
-      <%= f.label 'Publish Story', class: 'col-sm-6 control-label' %>
-      <% if @company.feature_flag == 'alpha' %>
-        <div class="col-sm-6 text-left tooltip-wrapper-publish"
-            data-title="Coming soon"
-            style='padding-left:0; display:inline-block' disabled>
-          <%= f.check_box :published,
-                class: "bs-switch form-control", id: 'publish-story-checkbox',
-                  disabled: true, style: 'pointer-events: none' %>
-        </div>
-      <% else %>
-        <div class="col-sm-6 text-left" style='padding-left:0'>
-          <%= f.check_box :published, class: "bs-switch form-control" %>
-        </div>
-      <% end %>
-    </div>
-
-    <div class="form-group">
-      <%= f.label 'Publish Logo', class: 'col-sm-6 control-label' %>
-      <% if @company.feature_flag == 'alpha' %>
-        <div class="col-sm-6 text-left tooltip-wrapper-publish"
-            data-title="Coming soon"
-            style='padding-left:0; display:inline-block' disabled>
-          <%= f.check_box :logo_published,
-                class: "bs-switch form-control", id: 'publish-logo-checkbox',
-                  disabled: true, style: 'pointer-events: none' %>
-        </div>
-      <% else %>
-        <div class="col-sm-6 text-left" style='padding-left:0'>
-          <%= f.check_box :logo_published, class: "bs-switch form-control" %>
-        </div>
-      <% end %>
-    </div>
-
-  <% end %>
-
-  <!-- the data-no-turbolink attribute is necessary for linkedin widgets to properly load
-  http://stackoverflow.com/questions/17600093/rails-javascript-not-loading-after-clicking-through-link-to-helper -->
-  <div class="col-sm-12" data-no-turbolink>
-    <%= link_to 'Preview Story Page', csp_story_path(@story),
-                                      class: 'btn btn-primary' %>
-  </div>
-
-</div>

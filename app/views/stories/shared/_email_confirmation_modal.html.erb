@@ -1,0 +1,38 @@
+
+<div class="modal fade" id="email-confirmation-modal" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content" >
+      <div class="modal-header">
+        <!-- <i class='glyphicon glyphicon-pencil bip-clickable pull-right'></i> -->
+        <h4 class="modal-title">Send Contribution Request</h4>
+        <div class="progress hidden">
+          <div class="progress-bar progress-bar-info progress-bar-striped active"
+                role='progressbar' style='width:100%'
+                aria-valuenow='80' aria-valuemin="0" aria-valuemax='100'>
+          </div>
+        </div>
+        <span id='request-recipient'></span>
+      </div>
+      <div class="modal-body">
+
+        <%= form_tag '/contribution_requests', remote: true,
+              id: 'confirm-email-form' do  %>
+
+          <%= hidden_field_tag 'contribution_id', nil %>
+
+          <%= text_field_tag 'contribution_request[subject]', nil,
+                class: 'form-control' %> <br>
+
+          <%= text_area_tag 'contribution_request[body]', nil,
+              data: { provider: 'summernote' }, class: 'form-control' %>
+
+        <% end %>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="submit" form='confirm-email-form' class="btn btn-primary">Send</button>
+      </div>
+    </div>
+  </div>
+</div>

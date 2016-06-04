@@ -14,13 +14,16 @@ class StoriesController < ApplicationController
           @company.filter_successes_by_tag(params[:filter][:tag], params[:filter][:id])
       respond_to do |format|
         format.json do
-          render json: @success_tiles,
-              include: { story: { only: [:slug, :published] },
-                      products: { only: :slug },
-                      customer: { only: [:slug, :logo_url] }}
+          render json: {
+            is_curator: company_curator?(@company.id),
+            success_tiles: @success_tiles.to_json(
+                             include: { story: { only: [:id, :slug, :published] },
+                            products: { only: :slug },
+                            customer: { only: [:slug, :logo_url] } } )
+          }
         end
       end
-    elsif curator?
+    elsif company_curator?(@company.id)
       @success_tiles = @company.successes_with_story    # all stories
       # need to unshift here instead of model methods since other calls to
       # these methods don't require the unshift
@@ -28,8 +31,6 @@ class StoriesController < ApplicationController
                             .unshift( ["All", 0] )
       @products = @company.products_select_options
                           .unshift( ["All", 0] )
-    elsif @company.feature_flag == 'alpha'
-      redirect_to request.protocol + request.domain + request.port_string
     else  # public reader
       @success_tiles = @company.successes_with_logo_published
       # select options populated only with industries that are connected
@@ -179,8 +180,10 @@ class StoriesController < ApplicationController
     @story = Story.find params[:id]
   end
 
+  # Why not just always look to the subdomain?
+  # => lookup by id faster
   def set_company
-    if params[:company_id].present?  # create
+    if params[:company_id]  # create story
       @company = Company.find params[:company_id]
     else  # index
       @company = Company.find_by subdomain: request.subdomain
@@ -198,10 +201,10 @@ class StoriesController < ApplicationController
   #   - company's story index if not published or not curator
   def set_public_story_or_redirect
     @story = Story.friendly.find params[:title]
-    if request.path != csp_story_path(@story)
+    if request.path != @story.csp_story_path
       # old story title slug, redirect to current
-      return redirect_to csp_story_path(@story), status: :moved_permanently
-    elsif !@story.published? && !curator?
+      return redirect_to @story.csp_story_path, status: :moved_permanently
+    elsif !@story.published? && !company_curator?(@company.id)
       return redirect_to root_url(subdomain:request.subdomain, host:request.domain)
     end
   end

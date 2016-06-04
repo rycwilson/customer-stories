@@ -13,27 +13,36 @@
 *= require jquery.minicolors
 */
 
-/********************************/
-/*      company form logo       */
-/********************************/
+/***********************************************/
+/*      curate panel
+/***********************************************/
 
-form[id*='company'] .thumbnail {
-  height: 73px;
-  width: 120px;
-  padding: 10px;
+/* New Story / Gallery View buttons
+  (rule applies to bootstrap row) */
+@media (min-width: 768px) {
+  .curate-nav {
+    margin-top: -1.8%;
+    margin-bottom: 2.5%;
+  }
 }
 
-// center the image vertically...
-.fileinput .thumbnail > img {
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
+@media (min-width: 992px) {
+  .curate-nav {
+    margin-top: -1.4%;
+    margin-bottom: 2%;
+  }
 }
 
+@media (min-width: 1200px) {
+  .curate-nav {
+    margin-top: -1%;
+    margin-bottom: 1.8%;
+  }
+}
 
-/********************************/
-/*    email template editor     */
-/********************************/
+/***********************************************/
+/*      email template editor
+/***********************************************/
 
 #email-templates-form .control-label {
   margin-left: -30px;
@@ -44,18 +53,35 @@ form[id*='company'] .thumbnail {
 }
 
 
-/********************************/
-/*          summernote          */
-/********************************/
+/***********************************************/
+/*      summernote
+/***********************************************/
 
 .note-group-select-from-files {
   display: none;
 }
 
 
-/********************************/
-/*       promote boxes          */
-/********************************/
+/***********************************************/
+/*      company form logo
+/***********************************************/
+
+/* max height should mirror nav bar
+  (actually the bootstrap column will prevent it from ever getting this high) */
+.thumbnail {
+  max-height: 65px;
+  padding: 2.5%;
+}
+
+.thumbnail > img {
+  max-height: 45px !important;
+}
+
+
+
+/***********************************************/
+/*      promote boxes
+/***********************************************/
 
 .ad1-wrap {
   position:relative; /* make this relative to have the inner div absolute without breaking out */

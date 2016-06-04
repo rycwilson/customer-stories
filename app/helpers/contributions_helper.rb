@@ -23,4 +23,12 @@ module ContributionsHelper
     end
   end
 
+  def display_status? type
+    type == 'in-progress' || type == 'next-steps' || type == 'connection'
+  end
+
+  def follow_up_required? status
+    ['feedback', 'did_not_respond'].include? status
+  end
+
 end

@@ -6,24 +6,13 @@ class UserMailer < ApplicationMailer
   FOOTER_IMG_URL = "https://s3-us-west-1.amazonaws.com/csp-#{Rails.env}-assets/CS-powered-by.png"
 
   def request_contribution contribution
-    curator = contribution.success.curator
-    contributor = contribution.contributor
-    template_name = contribution.role.capitalize
-    template = curator.company.email_templates.where(name:template_name).take
-    subject = template.subject
-                      .sub("[customer_name]", contribution.success.customer.name)
-                      .sub("[company_name]", curator.company.name)
-    @body = populate_body template, curator, contribution, contributor
+    @body = contribution.email_contribution_request.body.html_safe
     @footer_img_url = FOOTER_IMG_URL
-    # capture the template for this contribution's reminders ...
-    contribution.email_contribution_request =
-        EmailContributionRequest.create(   name: template_name,
-                                        subject: subject,
-                                           body: @body )
-    send_mail curator, contributor, subject
+    send_mail contribution.success.curator, contribution.contributor,
+              contribution.email_contribution_request.subject
   end
 
-  def contribution_reminder contribution
+  def send_contribution_reminder contribution
     curator = contribution.success.curator
     contributor = contribution.contributor
     @footer_img_url = FOOTER_IMG_URL
@@ -65,29 +54,6 @@ class UserMailer < ApplicationMailer
     template_path: 'user_mailer',
     template_name: 'request_contribution'
 
-  end
-
-  def populate_body template, curator, contribution, contributor
-    host = "http://#{curator.company.subdomain}.#{ENV['HOST_NAME']}"
-    referral_intro = contribution.referrer_id.present? ?
-                     contribution.referrer.full_name + " referred me to you. " : ""
-    template.body
-            .gsub("[customer_name]", contribution.success.customer.name)
-            .gsub("[company_name]", curator.company.name)
-            .gsub("[product_name]", contribution.success.products.take.try(:name) || "")
-            .gsub("[contributor_first_name]", contributor.first_name)
-            .gsub("[curator_first_name]", curator.first_name)
-            .gsub("[referral_intro]", referral_intro)
-            .gsub("[curator_full_name]", curator.full_name)
-            .gsub("[curator_email]", curator.email)
-            .gsub("[curator_phone]", curator.phone || "")
-            .gsub("[curator_title]", curator.title || "")
-            .gsub("[curator_img_url]", curator.photo_url || "")
-            .gsub("[contribution_url]", "#{host}/contributions/#{contribution.access_token}/contribution")
-            .gsub("[feedback_url]", "#{host}/contributions/#{contribution.access_token}/feedback")
-            .gsub("[unsubscribe_url]", "#{host}/contributions/#{contribution.access_token}/unsubscribe")
-            .gsub("[opt_out_url]", "#{host}/contributions/#{contribution.access_token}/opt_out")
-            .html_safe
   end
 
   def send_mail curator, contributor, subject

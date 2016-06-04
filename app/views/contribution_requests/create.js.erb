@@ -1,0 +1,59 @@
+
+(function () {
+
+  var contributionsInProgress = <%= raw @contributions_in_progress.to_json({ methods: :status_helper, include: { contributor: {}, referrer: {}, success: { include: :customer } } }) %>,
+          contribution = <%= raw @contribution.to_json({ methods: :status_helper }) %>,
+    contributionStatus = "<%= contribution_status(@contribution) %>"
+             flashMesg = "<%= @flash_mesg %>",
+           flashStatus = "<%= @flash_status %>",
+              template = _.template($('#cc-template').html()),
+                $modal = $('#email-confirmation-modal')
+
+  setTimeouts();
+  if (flashStatus === "info") {  // success
+    removePreRequestCard(contribution.id);
+    renderInProgressCards();
+    updateConnectionCard();
+  } else {
+    // error (reflected in flash display)
+  }
+
+  function setTimeouts () {
+    window.setTimeout(function () {
+      $modal.modal('hide');
+      $modal.find('.modal-title').removeClass('hidden');
+      $modal.find('.progress').addClass('hidden');
+      // re-establish tooltips ..
+      $('[data-toggle="tooltip"]').tooltip();
+    }, 1800);
+    window.setTimeout(function () {
+      flashDisplay(flashMesg, flashStatus);
+    }, 2100);
+  }
+
+  // remove the pre-request contribution card
+  function removePreRequestCard (contribution_id) {
+    var $preRequestCard = $('#contributions-pre-request')
+          .find("div[data-contribution-id='" + contribution_id.toString() + "']");
+    setTimeout(function () {
+      $preRequestCard.hide('fast', function() { $preRequestCard.remove(); });
+      // $('#flash').fadeOut(300, function () { $(this).remove() });
+    }, 1000);
+  }
+
+  function renderInProgressCards () {
+    $('#contributions-in-progress')
+      .empty()
+      .append(template({ contributions: contributionsInProgress,
+                                  type: 'in-progress' }));
+    $('.best_in_place').best_in_place();
+  }
+
+  function updateConnectionCard () {
+    $('#contribution-connections')
+      .find(".contribution-card[data-contribution-id='" + contribution.id + "']")
+      .find(".contribution-status").text(contribution.status_helper)
+  }
+
+
+}());

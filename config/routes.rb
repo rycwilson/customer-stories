@@ -1,13 +1,16 @@
 Rails.application.routes.draw do
 
   devise_for :admins
-  ## TODO!!!  Add route for devise Admin scope to the RailsAdmin page(s) /admin
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
 
   # valid subdomains (company/subdomain exists, excludes www)
   constraints(Subdomain) do
 
     get '/', to: 'stories#index'
+
+    # Widget
+    get '/widget/cs', to: 'widgets#script', as: 'widget'
+    get '/widget/cs-data', to: 'widgets#data', as: 'widget_data'
 
     # Stories - public access
     resources :stories, only: :index
@@ -36,13 +39,17 @@ Rails.application.routes.draw do
 
 
     # Contributions
+    post  '/contribution_requests', to: 'contribution_requests#create'
     post  '/stories/:id/contributions', to: 'contributions#create',
                                         as: 'story_contributions'
     put   '/contributions/:id/request_contribution',
                     to: 'contributions#request_contribution',
                     as: 'request_contribution'
+
     get   '/contributions/:id/confirm', to: 'contributions#confirm',
                                         as: 'confirm_contribution'
+    get   '/contributions/:id/confirm_request', to: 'contributions#confirm_request',
+                                        as: 'confirm_contribution_request'
     # type is: contribution, feedback, unsubscribe, opt_out
     get   '/contributions/:token/:type', to: 'contributions#edit',
                                          as: 'edit_contribution',
@@ -74,6 +81,8 @@ Rails.application.routes.draw do
 
     # broken links
     get '/*all', to: 'site#valid_subdomain_bad_path'
+
+
 
   end
 

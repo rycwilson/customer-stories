@@ -96,17 +96,17 @@ end
 
 
 # Cisco's product categories and products...
-PROD_CATS_CISCO.each do |category_name|
-  cisco.product_categories << ProductCategory.create(name: category_name)
-end
+# PROD_CATS_CISCO.each do |category_name|
+#   cisco.product_categories << ProductCategory.create(name: category_name)
+# end
 PRODUCTS_CISCO.each do |product_name|
   cisco.products << Product.create(name: product_name)
 end
 
 # Acme's product categories and products...
-PROD_CATS_ACME.each do |category_name|
-  acme.product_categories << ProductCategory.create(name: category_name)
-end
+# PROD_CATS_ACME.each do |category_name|
+#   acme.product_categories << ProductCategory.create(name: category_name)
+# end
 PRODUCTS_ACME.each do |product_name|
   acme.products << Product.create(name: product_name)
 end
@@ -144,7 +144,7 @@ def seed_company company, *users
       # random industry category (tag)
       success.industry_categories << company.industry_categories[rand(0...company.industry_categories.count)]
       # random product category (tag)
-      success.product_categories << company.product_categories[rand(0...company.product_categories.count)]
+      # success.product_categories << company.product_categories[rand(0...company.product_categories.count)]
       # random product (tag)
       success.products << company.products[rand(0...company.products.count)]
       # each story has some visitors

@@ -17,6 +17,29 @@ class Contribution < ActiveRecord::Base
   validates :remind_1_wait, numericality: { only_integer: true }
   validates :remind_2_wait, numericality: { only_integer: true }
 
+  def status_helper
+    case self[:status]
+    when 'pre_request'
+      return "added #{self.created_at.strftime('%-m/%-d/%y')}"
+    when 'request'
+      return "request sent #{(self.remind_at - self.remind_1_wait.days).strftime('%-m/%-d/%y')}"
+    when 'remind1'
+      return "first reminder sent #{(self.remind_at - self.remind_2_wait.days).strftime('%-m/%-d/%y')}"
+    when 'remind2'
+      return "second reminder sent #{(self.remind_at - self.remind_2_wait.days).strftime('%-m/%-d/%y')}"
+    when 'did_not_respond'
+      return "follow up phone call"
+    when 'contribution'
+      return 'contribution submitted'
+    when 'feedback'
+      return 'review feedback'
+    when 'unsubscribe'
+      return "unsubscribed from story"
+    when 'opt_out'
+      return "opted out of all emails"
+    end
+  end
+
   def self.send_reminders
     # logs to log/cron.log in development environment (output set in schedule.rb)
     # TODO: log in production environment
@@ -26,7 +49,7 @@ class Contribution < ActiveRecord::Base
       # puts "processing contribution #{contribution.id} with status #{contribution.status}"
       if contribution.remind_at.past?
         unless contribution.status == 'remind2'
-          UserMailer.contribution_reminder(contribution).deliver_now
+          UserMailer.send_contribution_reminder(contribution).deliver_now
         end
         if contribution.status == 'request'
           new_status = 'remind1'
@@ -85,8 +108,7 @@ class Contribution < ActiveRecord::Base
 
   def self.connections success_id
     Contribution.includes(:contributor, :referrer)
-                .where("success_id = ? AND (status = ? OR (notes IS NOT NULL AND notes != ?))",
-                          success_id, "contribution", "")
+                .where("success_id = ? AND status NOT IN ('unsubscribe', 'opt_out')", success_id)
   end
 
   #
@@ -97,6 +119,38 @@ class Contribution < ActiveRecord::Base
     Contribution.joins(:contributor)
                 .where(users: { email: opt_out_email })
                 .each { |c| c.update status: 'opt_out' }
+  end
+
+  # returns a hash with subject and body, all placeholders populated with data
+  def generate_request_email
+    success = self.success
+    curator = success.curator
+    template = curator.company.email_templates
+                              .where(name: self.role.capitalize).take
+    subject = template.subject
+                      .sub("[customer_name]", success.customer.name)
+                      .sub("[company_name]", curator.company.name)
+    host = "http://#{curator.company.subdomain}.#{ENV['HOST_NAME']}"
+    referral_intro = self.referrer_id.present? ?
+                     self.referrer.full_name + " referred me to you. " : ""
+    body = template.body
+                    .gsub("[customer_name]", success.customer.name)
+                    .gsub("[company_name]", curator.company.name)
+                    .gsub("[product_name]", success.products.take.try(:name) || "")
+                    .gsub("[contributor_first_name]", self.contributor.first_name)
+                    .gsub("[curator_first_name]", curator.first_name)
+                    .gsub("[referral_intro]", referral_intro)
+                    .gsub("[curator_full_name]", curator.full_name)
+                    .gsub("[curator_email]", curator.email)
+                    .gsub("[curator_phone]", curator.phone || "")
+                    .gsub("[curator_title]", curator.title || "")
+                    .gsub("[curator_img_url]", curator.photo_url || "")
+                    .gsub("[contribution_url]", "#{host}/contributions/#{self.access_token}/contribution")
+                    .gsub("[feedback_url]", "#{host}/contributions/#{self.access_token}/feedback")
+                    .gsub("[unsubscribe_url]", "#{host}/contributions/#{self.access_token}/unsubscribe")
+                    .gsub("[opt_out_url]", "#{host}/contributions/#{self.access_token}/opt_out")
+                    .html_safe
+    { subject: subject, body: body }
   end
 
 end

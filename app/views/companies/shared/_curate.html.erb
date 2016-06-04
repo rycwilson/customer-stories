@@ -3,18 +3,21 @@
 <div id='curate' class="<%= @mainnav_tab == 'curate' ? 'active tab-pane content' : 'tab-pane content' %>" role='tabpanel' style='margin-top:-10px'>
   <div class='container'>
 
-    <div class="col-sm-2">
-      <!-- new story modal -->
-      <button type="button" class="btn btn-primary" style='width:100%'
-          data-toggle="modal" data-target="#new-story-modal">
-        New story
-      </button> <br><br>
-
-      <%= link_to 'Gallery View', stories_path,
-            { class: 'btn btn-default', style: 'width:100%' } %>
+    <div class="row curate-nav">
+      <div class="col-xs-4 col-sm-3 col-md-2">
+        <!-- new story modal -->
+        <button type="button" class="btn btn-default" style='width:100%'
+            data-toggle="modal" data-target="#new-story-modal">
+          New story
+        </button>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-2">
+        <%= link_to 'Gallery View', stories_path,
+              { class: 'btn btn-default', style: 'width:100%' } %>
+      </div>
     </div>
 
-    <div class='col-sm-10'>
+    <div class='col-sm-12'>
       <div class='portlet portlet-default'>
         <div class='portlet-body'>
           <div class='table-responsive'>
@@ -32,7 +35,7 @@
               </thead>
               <tbody>
     <!-- <tbody> -->
-      <% @company.stories.each do |story| %>
+      <% @company.stories.order(updated_at: :desc).each do |story| %>
 
         <tr>
           <td class='td-story-customer valign-middle'>
@@ -46,21 +49,21 @@
           </td>
           <% if story.published? %>
             <td class='td-story-status valign-middle'>
-              <%= link_to 'Published', csp_story_path(story) %>
+              <%= link_to 'Published', story.csp_story_path %>
             </td>
             <td class='td-story-date valign-middle'>
               <%= story.publish_date.strftime('%-m/%-d/%y') %>
             </td>
           <% elsif story.logo_published? %>
             <td class='td-story-status valign-middle'>
-              <%= link_to 'Logo published', csp_story_path(story) %>
+              <%= link_to 'Logo published', story.csp_story_path %>
             </td>
             <td class='td-story-date valign-middle'>
               <%= story.logo_publish_date.strftime('%-m/%-d/%y') %>
             </td>
           <% else %>
             <td class='td-story-status valign-middle'>
-              <%= link_to 'Pending curation', csp_story_path(story) %>
+              <%= link_to 'Pending curation', story.csp_story_path %>
             </td>
             <td class='valign-middle'>
               N/A

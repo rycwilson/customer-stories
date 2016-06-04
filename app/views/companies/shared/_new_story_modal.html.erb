@@ -13,8 +13,9 @@
               class: 'form-horizontal' do %>
 
           <div class='form-group required-input'>
-            <%= label_tag 'Customer', nil, class: 'col-md-4 control-label' %>
-            <div class='col-md-8'>
+            <%= label_tag 'story[customer]', 'Customer',
+                  class: 'col-md-3 control-label' %>
+            <div class='col-md-9'>
 
               <!-- if no customers (just empty placeholder) -->
               <% if @customers.length == 1 %>
@@ -36,38 +37,17 @@
           </div>
 
           <div class='form-group required-input'>
-            <%= label_tag 'Story title', nil, class: 'col-md-4 control-label' %>
-            <div class='col-md-8'>
+            <%= label_tag 'Story title', nil, class: 'col-md-3 control-label' %>
+            <div class='col-md-9'>
               <%= text_field_tag 'story[title]', nil, class: 'form-control',
                   placeholder: 'title' %>
             </div>
           </div>
 
           <div class="form-group">
-            <%= label_tag 'Product tag(s)', nil, class: 'col-md-4 control-label' %>
-            <div class='col-md-8'>
-              <%= select_tag "story[product_tags][]",
-                  options_for_select(@products),
-                  { multiple: 'true', class: 'new-story-tags form-control',
-                    style: 'width:100%'} %>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <%= label_tag 'Product Category tag(s)', nil,
-                class: 'col-md-4 control-label' %>
-            <div class='col-md-8'>
-              <%= select_tag "story[product_cat_tags][]",
-                  options_for_select(@product_categories),
-                  { multiple: 'true', class: 'new-story-tags form-control',
-                    style: 'width:100%'} %>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <%= label_tag 'Industry tag(s)', nil,
-                class: 'col-md-4 control-label' %>
-            <div class='col-md-8'>
+            <%= label_tag "story[industry_tags][]", 'Category tag(s)',
+                class: 'col-md-3 control-label' %>
+            <div class='col-md-9'>
               <!-- Note the necessary '[]' notation below  -->
               <!-- if not present, will only return a single value  -->
               <%= select_tag "story[industry_tags][]",
@@ -76,6 +56,28 @@
                     style: 'width:100%'} %>
             </div>
           </div>
+
+          <div class="form-group">
+            <%= label_tag "story[product_tags][]", 'Product tag(s)',
+                  class: 'col-md-3 control-label' %>
+            <div class='col-md-9'>
+              <%= select_tag "story[product_tags][]",
+                  options_for_select(@products),
+                  { multiple: 'true', class: 'new-story-tags form-control',
+                    style: 'width:100%'} %>
+            </div>
+          </div>
+
+          <!-- <div class="form-group">
+            <%#= label_tag "story[product_cat_tags][]", 'Product Category tag(s)',
+                class: 'col-md-4 control-label' %>
+            <div class='col-md-8'>
+              <%#= select_tag "story[product_cat_tags][]",
+                  options_for_select(@product_categories),
+                  { multiple: 'true', class: 'new-story-tags form-control',
+                    style: 'width:100%'} %>
+            </div>
+          </div> -->
 
       </div>
       <div class="modal-footer">

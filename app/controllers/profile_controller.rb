@@ -5,9 +5,12 @@ class ProfileController < ApplicationController
 
   def linkedin_callback
     if user_signed_in?  # company admin or curator
-      if current_user.update(linkedin_url: auth_hash[:info][:urls][:public_profile],
-                                    phone: auth_hash[:info][:phone],
-                                    title: auth_hash[:info][:description])
+      # always want to update the linkedin_url field,
+      # but the others only update conditionally (i.e. only if nil)
+      current_user.linkedin_url = auth_hash[:info][:urls][:public_profile]
+      current_user.phone ||= auth_hash[:info][:phone]
+      current_user.title ||= auth_hash[:info][:description]
+      if current_user.save
         # TODO: log the auth_hash
         if current_user.company_id.present?
           flash[:success] = 'Account setup complete'
@@ -24,9 +27,6 @@ class ProfileController < ApplicationController
       contribution.contributor.update linkedin_url: auth_hash[:info][:urls][:public_profile]
       redirect_to confirm_contribution_path(request.env["omniauth.params"]["contribution"], linkedin_oauth_connect: true)
     end
-  end
-
-  def show
   end
 
   def edit

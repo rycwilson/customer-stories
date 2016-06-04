@@ -728,8 +728,9 @@ fieldset[disabled] .btn-transparent.active {
   margin-left: 0;
 }
 .form-horizontal .control-label {
-  position: relative;
-  top: 3px;
+  /*position: relative;*/
+  /*top: 3px;*/
+  padding-top: 7px;
   text-align: right;
 }
 .btn-primary .caret,
@@ -933,6 +934,11 @@ fieldset[disabled] .btn-transparent.active {
 .nav-tabs > li > a {
   color: #444444;
   background-color: transparent;
+  /* Ryan add: */
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  border-radius: 0;
+  margin-right: 0;  /* overrides bootstrap */
 }
 .nav-tabs > li > a:hover,
 .nav-tabs > li > a:focus {
@@ -2956,7 +2962,7 @@ table.dataTable-helper td.highlight {
   border-radius: 0;
 }
 .navbar .navbar-brand {
-  height: 54px;
+  height: 65px;
   padding-top: 0;
   padding-bottom: 0;
 }
@@ -3290,7 +3296,7 @@ fieldset[disabled] .navbar .btn-link:focus {
 }
 .mainnav {
   position: relative;
-  height: 45px;
+  min-height: 48px;
   margin-bottom: 40px;
   background-color: #ffffff;
   border-bottom: 1px solid #dddddd;
@@ -3354,7 +3360,7 @@ fieldset[disabled] .navbar .btn-link:focus {
 .mainnav-menu > li > a {
   position: relative;
   display: block;
-  padding: 10px 10px;
+  padding: 12px 10px;
   color: #555555;
   font-weight: 300;  /* Lato 300 */
   background: #ffffff;
@@ -3454,10 +3460,10 @@ fieldset[disabled] .navbar .btn-link:focus {
   }
   .mainnav-menu > li > a {
     /* Ryan changed from padding: 21px 15px; */
-    padding: 10px 10px;
+    padding: 12px 10px;
     /* Ryan changed from font-size: 20px; */
     font-size: 16px;
-    letter-spacing: -1px;
+    letter-spacing: normal;
     border-bottom: 1px solid transparent;
     border-bottom-color: transparent;
   }
@@ -3504,10 +3510,10 @@ fieldset[disabled] .navbar .btn-link:focus {
     width: 225px;
   }
   .mainnav-menu > li {
-    margin-right: 10px;
+    margin-right: 0;  /* Ryan changed from 10 */
   }
   .mainnav-menu > li > a {
-    font-size: 18px;
+    font-size: 16px;
   }
   .mainnav-menu .mainnav-caret {
     top: -2px;

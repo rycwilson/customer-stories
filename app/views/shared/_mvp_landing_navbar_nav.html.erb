@@ -34,19 +34,19 @@
 
   <% else %>
 
-  <li role="menu">
-    <%= link_to new_user_registration_path do %>
-      Signup
-      <!--  <i class="fa fa-pencil-square-o dropdown-icon"></i> -->
-    <% end %>
-  </li>
-  
     <li role="menu">
-    <%= link_to new_user_session_path do %>
-      Login
-      <!--  <i class="fa fa-pencil-square-o dropdown-icon"></i> -->
-    <% end %>
-  </li>
+      <%= link_to new_user_registration_path do %>
+        Sign up
+        <!--  <i class="fa fa-pencil-square-o dropdown-icon"></i> -->
+      <% end %>
+    </li>
+
+    <li role="menu">
+      <%= link_to new_user_session_path do %>
+        Sign in
+        <!--  <i class="fa fa-pencil-square-o dropdown-icon"></i> -->
+      <% end %>
+    </li>
 
   <% end %>
 </ul>

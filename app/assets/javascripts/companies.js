@@ -229,7 +229,7 @@ function configSummernote () {
         ['height', ['height']],
         // ['table', ['table']],
         ['insert', ['link', 'picture', 'hr']],
-        ['view', ['codeview']],   // fullscreen
+        ['view', ['codeview']],
         // ['help', ['help']]
       ],
     });
@@ -301,7 +301,7 @@ function configSelect2 () {
 
 function initFormLogoBackground () {
   var $thumbnails = $("form[id*='company'] .thumbnail");
-  var companyColor1 = $('header').css('background')
+  var companyColor1 = $('nav').css('background')
                                  .match(/\(((\d|\s|,)+)\)/g)[1]
                                  .slice(1, -1)
                                  .split(', ')

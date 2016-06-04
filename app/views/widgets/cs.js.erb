@@ -1,0 +1,280 @@
+(function (window, document) {
+
+  "use strict";
+
+  var jQuery, $; // localize jquery variables
+
+  if (window.jQuery === undefined || isOldVersion(window.jQuery.fn.jquery)) {
+    loadScript("https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js",
+      function () {
+        /* Restore $ and window.jQuery to their previous values and store the
+           new jQuery in our local jQuery variables. */
+        $ = jQuery = window.jQuery.noConflict(true);
+        main();
+      });
+  } else {
+    $ = jQuery = window.jQuery;
+    main();
+  }
+
+  function main () {
+
+    $(function () {
+
+      var $widgetStylesheet = $("<link>", {
+            rel: "stylesheet",
+            type: "text/css",
+            href: "<%= URI.join(root_url, asset_path('cs-widget.css')).to_s %>"
+          });
+
+      preventScrollNav($);
+
+      // wait for stylesheet to load ...
+      $widgetStylesheet.appendTo('head').on('load', function () {
+
+        $.ajax({
+          url: "<%= URI.join(root_url, widget_data_path) %>",
+          dataType: 'jsonp',
+          data: { tabColor: $('#cs-script').data('tab-color'),
+                  fontColor: $('#cs-script').data('font-color') },
+          success: function (data) {
+            $('#cs-container').html(data.html);
+            var $images = $('#cs-container img'), loadedImages = 0;
+            // wait for all images to load so dimension calculations are correct ...
+            $images.on('load', function () {
+              if (++loadedImages === $images.length) {
+                initScrollListeners($);
+                initPagination($);
+                slideDrawerPlugin($);
+                centerLogos();
+                // if user is using a mouse, this will hose dimensions
+                // (in a somewhat random way)
+                // compensate for this ...
+                if ($('.drawer-content').css('height') !== '141px') {
+                  $('.drawer-content').css('height', '141px');
+                  $('.drawer-items').css('height', '141px');
+                }
+                $('#cs-container .drawer').slideDrawer({
+                  showDrawer: false, // drawer is hidden on page load
+                  slideTimeout: true, // Sets the drawer to slide down after set count if set to true.
+                  slideSpeed: 600, // Slide drawer speed.
+                  slideTimeoutCount: 3000 // How long to wait before sliding drawer slides down.
+                });
+                $('#cs-container .drawer').css('visibility', 'visible');
+              }
+            });
+          }
+        }); // ajax
+      });
+    });
+  }
+
+  // slideout drawer plugin
+  var drawer = {
+
+    init: function (options, div) {
+
+      if (options.showDrawer === true && options.slideTimeout === true) {
+        setTimeout(function() {
+          drawer.slide(div, options.drawerHiddenHeight, options.slideSpeed);
+        }, options.slideTimeoutCount);
+      } else if (options.showDrawer === 'slide') {
+        // Set drawer hidden with slide effect
+        drawer.slide(div, options.drawerHiddenHeight, options.slideSpeed);
+      } else if (options.showDrawer === false) {
+        // Set drawer to hide
+        drawer.hide(options, div);
+      }
+
+      $('#cs-container .clickme').on('click', function () {
+        drawer.toggle(options, div);
+      });
+    },
+
+    //Toggle function
+    toggle: function (options, div) {
+      ($(div).height() + options.borderHeight === options.drawerHeight) ?
+        drawer.slide( div, options.drawerHiddenHeight, options.slideSpeed ) :
+        drawer.slide( div, options.drawerHeight-options.borderHeight, options.slideSpeed );
+    },
+
+    // Slide animation function
+    slide: function (div, height, speed) {
+      $(div).animate({
+        'height': height
+      }, speed );
+    },
+
+    hide: function (options, div) {
+      $(div).css('height', options.drawerHiddenHeight);
+    },
+
+  };
+
+  function loadScript (url, callback) {
+    var scriptTag = document.createElement('script');
+    scriptTag.setAttribute("type", "text/javascript");
+    scriptTag.setAttribute("src", url);
+    if (typeof callback !== "undefined") {
+      if (scriptTag.readyState) {
+        /* For old versions of IE */
+        scriptTag.onreadystatechange = function () {
+          if (this.readyState === 'complete' || this.readyState === 'loaded') {
+            callback();
+          }
+        };
+      } else {
+        scriptTag.onload = callback;
+      }
+    }
+    (document.getElementsByTagName("head")[0] || document.documentElement).appendChild(scriptTag);
+  }
+
+  // bootstrap requires >= v1.9 of jquery
+  function isOldVersion (jqVer) {
+    var majorRel = jqVer.split('.')[0],
+        minorRel = jqVer.split('.')[1];
+    if (majorRel === '1' && parseInt(minorRel, 10) < 9) {
+      return true;
+    }
+    else return false;
+  }
+
+  function slideDrawerPlugin ($) {
+
+    // Function wrapper
+    $.fn.slideDrawer = function (options) {
+
+      var $drawerContent = $('#cs-container .drawer-content'),  /* Content height of drawer */
+          borderHeight = parseInt($drawerContent.css('border-top-width')); /* Border height of content */
+
+      var drawerHeight = this.height() + borderHeight; /* Total drawer height + border height */
+      var drawerContentHeight = $drawerContent.outerHeight() //- borderHeight; /* Total drawer content height minus border top */
+      var drawerHiddenHeight = (drawerHeight - drawerContentHeight) - borderHeight; /* How much to hide the drawer, total height minus content height */
+      var defaults = {
+        showDrawer: 'slide', /* Drawer hidden on load by default, options (true, false, slide) */
+        slideSpeed: 700, /* Slide drawer speed 3 secs by default */
+        slideTimeout: true, /* Sets time out if set to true showDrawer false will be ignored */
+        slideTimeoutCount: 5000, /* How long to wait before sliding drawer */
+        drawerContentHeight: drawerContentHeight, /* Div content height no including tab or border */
+        drawerHeight: drawerHeight, /* Full div height */
+        drawerHiddenHeight: drawerHiddenHeight, /* Height of div when hidden full height minus content height */
+        borderHeight: borderHeight /* border height if set in css you cann overwrite but best just leave alone */
+      };
+
+      /* Overwrite defaults */
+      var pluginOptions = $.extend(defaults, options);
+
+      return this.each(function () {
+        drawer.init(pluginOptions, this);
+      });
+    };
+  }
+
+  function centerLogos () {
+    $('#cs-container img').each(function (image) {
+      var height = $(this).outerHeight(),
+          maxHeight = parseInt($(this).css('max-height')),
+          diff = maxHeight - height;
+      if (diff) {
+        $(this).css('margin-top', diff / 2);
+        $(this).css('margin-bottom', diff / 2);
+      }
+    });
+  }
+
+  /*
+    when scrolling past boundaries with trackpad, prevent default browser behavior
+    (back/forward navigation)
+    note: jquery event listener doesn't work, as deltaX is undefined on the event,
+    so need to achieve event delegation with vanilla js
+  */
+  function preventScrollNav ($) {
+
+    var $carousel = $('.row-horizon'),
+        maxX = null;
+
+    // note: 'mousewheel' event is non-standard and deperecated; use 'wheel'
+    document.querySelector('#cs-container').addEventListener('wheel', function (event) {
+      if (event.target.closest('.row-horizon')) {  // event within widget?
+        // don't scroll below zero or above max ...
+        maxX = $carousel.prop('scrollWidth') - $carousel.prop('offsetWidth');
+        /*
+          If this event looks like it will scroll beyond the bounds of the element,
+          prevent it and set the scroll to the boundary manually
+        */
+        if ($carousel.prop('scrollLeft') + event.deltaX < 0 ||
+            $carousel.prop('scrollLeft') + event.deltaX > maxX) {
+          event.preventDefault();
+          $carousel.prop('scrollLeft', Math.max(0, Math.min(maxX, $carousel.prop('scrollLeft') + event.deltaX)));
+        }
+      }
+    });
+  }
+
+  function initScrollListeners ($) {
+
+    var $carousel = $('.row-horizon'),
+        scrollWidth = $carousel.prop('scrollWidth'),
+        maxScrollPosition = scrollWidth - $carousel.width(),
+        numPages = Math.ceil(scrollWidth / $carousel.width()),
+        pageWidth = Math.ceil(scrollWidth / numPages),
+        scrollPosition = null, scrollRemaining = null;
+
+    $('.scroll-left').on('click', function () {
+      scrollPosition = $carousel.scrollLeft();
+      if (scrollPosition >= pageWidth) {
+        $carousel.animate({ scrollLeft: '-=' + pageWidth.toString() }, 1000)
+      }
+      else {
+        $carousel.animate({ scrollLeft: '-=' +
+                                      scrollPosition.toString() }, 1000);
+      }
+    });
+
+    $('.scroll-right').on('click', function () {
+      scrollPosition = $carousel.scrollLeft();
+      scrollRemaining = scrollWidth - (scrollPosition + $carousel.width());
+      if (scrollRemaining >= pageWidth) {
+        $carousel.animate({ scrollLeft: '+=' + pageWidth.toString() }, 1000);
+      } else {
+        $carousel.animate({ scrollLeft: '+=' +
+                                      scrollRemaining.toString() }, 1000);
+      }
+    });
+  }
+
+  function initPagination ($) {
+
+    var $carousel = $('.row-horizon'),
+        $pageDots = $('.row-pagination'),
+        scrollWidth = $carousel.prop('scrollWidth'),
+        numPages = Math.ceil(scrollWidth / $carousel.width()),
+        pageWidth = Math.ceil(scrollWidth / numPages),
+        currentPage = 1,
+        dynamicPage = null, lastPage = null;
+
+    for (var i = 0; i < numPages; i++) {
+      $pageDots.append("<div class='pagination'></div>")
+    }
+
+    $pageDots.find('div:first').css('background', 'white');
+
+    $carousel.on('scroll', function () {
+      dynamicPage = calculatePage($(this).scrollLeft(), numPages, pageWidth, $carousel.width());
+      if (dynamicPage !== currentPage) {
+        lastPage = currentPage;
+        currentPage = dynamicPage;
+        $pageDots.find('div:nth-of-type(' + lastPage.toString() + ')').css('background', 'transparent');
+        $pageDots.find('div:nth-of-type(' + currentPage.toString() + ')').css('background', 'white');
+      }
+    });
+  }
+
+  function calculatePage (position, numPages, pageWidth, carouselWidth) {
+    for (var i = 1; i <= numPages; i++) {
+      if (position + (carouselWidth / 2) < pageWidth * i) { return i }
+    }
+  }
+
+}(window, document));

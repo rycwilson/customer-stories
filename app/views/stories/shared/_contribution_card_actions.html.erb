@@ -1,7 +1,7 @@
 
 <% if type == 'pre-request' %>
-  <%= link_to request_contribution_path(contribution),
-        class: 'send-request', method: 'put', remote: true, tabindex:'-1' do %>
+  <%= link_to confirm_contribution_request_path(contribution), class: 'send-request',
+        remote: true, tabindex:'-1' do %>
       <i class='glyphicon glyphicon-envelope bip-clickable'
           data-toggle='tooltip' data-placement='top'
           title='Send contribution request'></i><% end %>
@@ -23,7 +23,7 @@
       data-toggle='tooltip' data-placement='top'
       title='More information'></i></a>
 
-<% if type == 'connection' && contribution.linkedin? %>
+<% if contribution.linkedin? %>
   <a class='research' target="_blank" tabindex='-1'
       href="<%= contribution.contributor.linkedin_url %>">
     <i class='fa fa-linkedin-square bip-clickable-fa'
