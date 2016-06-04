@@ -2,7 +2,7 @@
 
   "use strict";
 
-  var jQuery, $; // Localize jQuery variables
+  var jQuery, $; // localize jquery variables
 
   if (window.jQuery === undefined || isOldVersion(window.jQuery.fn.jquery)) {
     loadScript("https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js",
@@ -13,52 +13,99 @@
         main();
       });
   } else {
-    $ = jQuery = window.jQuery
+    $ = jQuery = window.jQuery;
     main();
+  }
+
+  function main () {
+
+    $(function () {
+
+      var $widgetStylesheet = $("<link>", {
+            rel: "stylesheet",
+            type: "text/css",
+            href: "<%= URI.join(root_url, asset_path('cs-widget.css')).to_s %>"
+          });
+
+      preventScrollNav($);
+
+      // wait for stylesheet to load ...
+      $widgetStylesheet.appendTo('head').on('load', function () {
+
+        $.ajax({
+          url: "<%= URI.join(root_url, widget_data_path) %>",
+          dataType: 'jsonp',
+          data: { tabColor: $('#cs-script').data('tab-color'),
+                  fontColor: $('#cs-script').data('font-color') },
+          success: function (data) {
+            $('#cs-container').html(data.html);
+            var $images = $('#cs-container img'), loadedImages = 0;
+            // wait for all images to load so dimension calculations are correct ...
+            $images.on('load', function () {
+              if (++loadedImages === $images.length) {
+                initScrollListeners($);
+                initPagination($);
+                slideDrawerPlugin($);
+                centerLogos();
+                // if user is using a mouse, this will hose dimensions
+                // (in a somewhat random way)
+                // compensate for this ...
+                if ($('.drawer-content').css('height') !== '141px') {
+                  $('.drawer-content').css('height', '141px');
+                  $('.drawer-items').css('height', '141px');
+                }
+                $('#cs-container .drawer').slideDrawer({
+                  showDrawer: false, // drawer is hidden on page load
+                  slideTimeout: true, // Sets the drawer to slide down after set count if set to true.
+                  slideSpeed: 600, // Slide drawer speed.
+                  slideTimeoutCount: 3000 // How long to wait before sliding drawer slides down.
+                });
+                $('#cs-container .drawer').css('visibility', 'visible');
+              }
+            });
+          }
+        }); // ajax
+      });
+    });
   }
 
   // slideout drawer plugin
   var drawer = {
 
     init: function (options, div) {
-      // Set
-      if (options.showDrawer === true && options.slideTimeout === true)
-      {
+
+      if (options.showDrawer === true && options.slideTimeout === true) {
         setTimeout(function() {
           drawer.slide(div, options.drawerHiddenHeight, options.slideSpeed);
         }, options.slideTimeoutCount);
-      }
-      else if (options.showDrawer === 'slide')
-      {
+      } else if (options.showDrawer === 'slide') {
         // Set drawer hidden with slide effect
         drawer.slide(div, options.drawerHiddenHeight, options.slideSpeed);
-      }
-      else if (options.showDrawer === false)
-      {
+      } else if (options.showDrawer === false) {
         // Set drawer to hide
         drawer.hide(options, div);
       }
 
-      // Toggle drawer when clicked
-      $('#cs-container .clickme').on('click', function(){
+      $('#cs-container .clickme').on('click', function () {
         drawer.toggle(options, div);
       });
-
     },
 
     //Toggle function
-    toggle: function(options, div) {
-      ($(div).height()+options.borderHeight === options.drawerHeight) ? drawer.slide( div, options.drawerHiddenHeight, options.slideSpeed ) : drawer.slide( div, options.drawerHeight-options.borderHeight, options.slideSpeed );
+    toggle: function (options, div) {
+      ($(div).height() + options.borderHeight === options.drawerHeight) ?
+        drawer.slide( div, options.drawerHiddenHeight, options.slideSpeed ) :
+        drawer.slide( div, options.drawerHeight-options.borderHeight, options.slideSpeed );
     },
 
     // Slide animation function
-    slide: function( div, height, speed ) {
+    slide: function (div, height, speed) {
       $(div).animate({
         'height': height
       }, speed );
     },
 
-    hide: function(options, div) {
+    hide: function (options, div) {
       $(div).css('height', options.drawerHiddenHeight);
     },
 
@@ -119,13 +166,9 @@
       var pluginOptions = $.extend(defaults, options);
 
       return this.each(function () {
-
         drawer.init(pluginOptions, this);
-
       });
-
     };
-
   }
 
   function centerLogos () {
@@ -141,24 +184,29 @@
   }
 
   /*
-    when scrolling past boundaries, prevent default browser behavior
+    when scrolling past boundaries with trackpad, prevent default browser behavior
     (back/forward navigation)
     note: jquery event listener doesn't work, as deltaX is undefined on the event,
     so need to achieve event delegation with vanilla js
   */
   function preventScrollNav ($) {
+
+    var $carousel = $('.row-horizon'),
+        maxX = null;
+
+    // note: 'mousewheel' event is non-standard and deperecated; use 'wheel'
     document.querySelector('#cs-container').addEventListener('wheel', function (event) {
-      var $widget = $('.row-horizon');
       if (event.target.closest('.row-horizon')) {  // event within widget?
-        var maxX = $widget.prop('scrollWidth') - $widget.prop('offsetWidth'); // don't scroll below zero or above max
+        // don't scroll below zero or above max ...
+        maxX = $carousel.prop('scrollWidth') - $carousel.prop('offsetWidth');
         /*
           If this event looks like it will scroll beyond the bounds of the element,
           prevent it and set the scroll to the boundary manually
         */
-        if ($widget.prop('scrollLeft') + event.deltaX < 0 ||
-            $widget.prop('scrollLeft') + event.deltaX > maxX) {
+        if ($carousel.prop('scrollLeft') + event.deltaX < 0 ||
+            $carousel.prop('scrollLeft') + event.deltaX > maxX) {
           event.preventDefault();
-          $widget.prop('scrollLeft', Math.max(0, Math.min(maxX, $widget.prop('scrollLeft') + event.deltaX)));
+          $carousel.prop('scrollLeft', Math.max(0, Math.min(maxX, $carousel.prop('scrollLeft') + event.deltaX)));
         }
       }
     });
@@ -227,58 +275,6 @@
     for (var i = 1; i <= numPages; i++) {
       if (position + (carouselWidth / 2) < pageWidth * i) { return i }
     }
-  }
-
-  function main () {
-
-    $(function () {
-
-      var $widgetStylesheet = $("<link>", {
-            rel: "stylesheet",
-            type: "text/css",
-            href: "<%= URI.join(root_url, asset_path('cs-widget.css')).to_s %>"
-          });
-
-      preventScrollNav($);
-
-      // wait for stylesheet to load ...
-      $widgetStylesheet.appendTo('head').on('load', function () {
-
-        $.ajax({
-          url: "<%= URI.join(root_url, widget_data_path) %>",
-          dataType: 'jsonp',
-          data: { tabColor: $('#cs-script').data('tab-color'),
-                  fontColor: $('#cs-script').data('font-color') },
-          success: function (data) {
-            $('#cs-container').html(data.html);
-            var $images = $('#cs-container img'), loadedImages = 0;
-            // wait for all images to load so dimension calculations are correct ...
-            $images.on('load', function () {
-              if (++loadedImages === $images.length) {
-                initScrollListeners($);
-                initPagination($);
-                slideDrawerPlugin($);
-                centerLogos();
-                // if user is using a mouse, this will hose dimensions
-                // (in a somewhat random way)
-                // compensate for this ...
-                if ($('.drawer-content').css('height') !== '141px') {
-                  $('.drawer-content').css('height', '141px');
-                  $('.drawer-items').css('height', '141px');
-                }
-                $('#cs-container .drawer').slideDrawer({
-                  showDrawer: false, // drawer is hidden on page load
-                  slideTimeout: true, // Sets the drawer to slide down after set count if set to true.
-                  slideSpeed: 600, // Slide drawer speed.
-                  slideTimeoutCount: 3000 // How long to wait before sliding drawer slides down.
-                });
-                $('#cs-container .drawer').css('visibility', 'visible');
-              }
-            });
-          }
-        }); // ajax
-      });
-    });
   }
 
 }(window, document));
