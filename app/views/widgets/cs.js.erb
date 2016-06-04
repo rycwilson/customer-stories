@@ -93,7 +93,7 @@
     else return false;
   }
 
-  function loadPlugin ($) {
+  function slideDrawerPlugin ($) {
 
     // Function wrapper
     $.fn.slideDrawer = function (options) {
@@ -166,38 +166,67 @@
 
   function initScrollListeners ($) {
 
-    var rowWidth = $('.row-horizon').width(),
-        scrollWidth = $('.row-horizon').prop('scrollWidth'),
-        maxScrollPosition = scrollWidth - rowWidth,
-        scrollPosition = null,
-        scrollRemaining = null;
+    var $carousel = $('.row-horizon'),
+        scrollWidth = $carousel.prop('scrollWidth'),
+        maxScrollPosition = scrollWidth - $carousel.width(),
+        numPages = Math.ceil(scrollWidth / $carousel.width()),
+        pageWidth = Math.ceil(scrollWidth / numPages),
+        scrollPosition = null, scrollRemaining = null;
 
     $('.scroll-left').on('click', function () {
-      scrollPosition = $('.row-horizon').scrollLeft();
-      if (scrollPosition >= 980) {
-        $('.row-horizon').animate({ scrollLeft: '-=980' }, 1000)
+      scrollPosition = $carousel.scrollLeft();
+      if (scrollPosition >= pageWidth) {
+        $carousel.animate({ scrollLeft: '-=' + pageWidth.toString() }, 1000)
       }
       else {
-        $('.row-horizon').animate({ scrollLeft: '-=' +
+        $carousel.animate({ scrollLeft: '-=' +
                                       scrollPosition.toString() }, 1000);
       }
     });
 
     $('.scroll-right').on('click', function () {
-      scrollPosition = $('.row-horizon').scrollLeft();
-      scrollRemaining = scrollWidth - (scrollPosition + rowWidth);
-      if (scrollRemaining >= 980) {
-        $('.row-horizon').animate({ scrollLeft: '+=980' }, 1000);
+      scrollPosition = $carousel.scrollLeft();
+      scrollRemaining = scrollWidth - (scrollPosition + $carousel.width());
+      if (scrollRemaining >= pageWidth) {
+        $carousel.animate({ scrollLeft: '+=' + pageWidth.toString() }, 1000);
       } else {
-        $('.row-horizon').animate({ scrollLeft: '+=' +
+        $carousel.animate({ scrollLeft: '+=' +
                                       scrollRemaining.toString() }, 1000);
       }
     });
+  }
 
-    // $('.row-horizon').on('scroll', function () {
-    //   console.log('scroll');
-    // });
+  function initPagination ($) {
 
+    var $carousel = $('.row-horizon'),
+        $pageDots = $('.row-pagination'),
+        scrollWidth = $carousel.prop('scrollWidth'),
+        numPages = Math.ceil(scrollWidth / $carousel.width()),
+        pageWidth = Math.ceil(scrollWidth / numPages),
+        currentPage = 1,
+        dynamicPage = null, lastPage = null;
+
+    for (var i = 0; i < numPages; i++) {
+      $pageDots.append("<div class='pagination'></div>")
+    }
+
+    $pageDots.find('div:first').css('background', 'white');
+
+    $carousel.on('scroll', function () {
+      dynamicPage = calculatePage($(this).scrollLeft(), numPages, pageWidth, $carousel.width());
+      if (dynamicPage !== currentPage) {
+        lastPage = currentPage;
+        currentPage = dynamicPage;
+        $pageDots.find('div:nth-of-type(' + lastPage.toString() + ')').css('background', 'transparent');
+        $pageDots.find('div:nth-of-type(' + currentPage.toString() + ')').css('background', 'white');
+      }
+    });
+  }
+
+  function calculatePage (position, numPages, pageWidth, carouselWidth) {
+    for (var i = 1; i <= numPages; i++) {
+      if (position + (carouselWidth / 2) < pageWidth * i) { return i }
+    }
   }
 
   function main () {
@@ -218,8 +247,7 @@
         $.ajax({
           url: "<%= URI.join(root_url, widget_data_path) %>",
           dataType: 'jsonp',
-          data: { company: $('#cs-script').data('company'),
-                  tabColor: $('#cs-script').data('tab-color'),
+          data: { tabColor: $('#cs-script').data('tab-color'),
                   fontColor: $('#cs-script').data('font-color') },
           success: function (data) {
             $('#cs-container').html(data.html);
@@ -227,16 +255,17 @@
             // wait for all images to load so dimension calculations are correct ...
             $images.on('load', function () {
               if (++loadedImages === $images.length) {
-                loadPlugin($);
                 initScrollListeners($);
+                initPagination($);
+                slideDrawerPlugin($);
                 centerLogos();
                 // if user is using a mouse, this will hose dimensions
                 // (in a somewhat random way)
                 // compensate for this ...
-                // if ($('.drawer-content').css('height') !== '122px') {
-                //   $('.drawer-content').css('height', '122px');
-                //   $('.drawer-items').css('height', '122px');
-                // }
+                if ($('.drawer-content').css('height') !== '141px') {
+                  $('.drawer-content').css('height', '141px');
+                  $('.drawer-items').css('height', '141px');
+                }
                 $('#cs-container .drawer').slideDrawer({
                   showDrawer: false, // drawer is hidden on page load
                   slideTimeout: true, // Sets the drawer to slide down after set count if set to true.
