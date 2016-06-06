@@ -45,4 +45,3 @@ Heroku recommends [DNSimple](https://support.dnsimple.com/articles/ssl-certifica
 - add `config.force_ssl = true` to `production.rb`
 
 
-
