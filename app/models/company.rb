@@ -46,6 +46,7 @@ class Company < ActiveRecord::Base
 
   def industries_select_options
     self.industry_categories.map { |industry| [ industry.name, industry.id ] }
+                            .sort
   end
 
   def product_categories_select_options
@@ -55,9 +56,8 @@ class Company < ActiveRecord::Base
   end
 
   def products_select_options
-    self.products.map do |product|
-      [ product.name, product.id ]
-    end
+    self.products.map { |product| [ product.name, product.id ] }
+                 .sort
   end
 
   # method returns an array of industry tags for which
@@ -68,6 +68,7 @@ class Company < ActiveRecord::Base
                              stories: { logo_published: true })
                     .uniq
                     .map { |ic| [ ic.name, ic.id ] }
+                    .sort
                     .unshift ['All', 0]
   end
 
@@ -79,6 +80,7 @@ class Company < ActiveRecord::Base
                     stories: { logo_published: true })
            .uniq
            .map { |product| [ product.name, product.id ]}
+           .sort
            .unshift ['All', 0]
   end
 
