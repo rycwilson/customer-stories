@@ -33,7 +33,11 @@ module ApplicationHelper
 
   # method takes a url and strips out the subdomain (as defined by the current request)
   def strip_subdomain url
-    url.sub(request.subdomain + '.', '') if request.subdomain.present?
+    if request.subdomain.present?
+      url.sub(request.subdomain + '.', '')
+    else
+      url
+    end
   end
 
 end
