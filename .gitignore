@@ -12,6 +12,9 @@
 !/log/.keep
 /tmp
 
+# ssl certificates
+/ssl
+
 # front-end dependencies
 vendor/assets/bower_components
 
