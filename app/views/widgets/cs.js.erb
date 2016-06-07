@@ -27,8 +27,6 @@
             href: "<%= URI.join(root_url, asset_path('cs-widget.css')).to_s %>"
           });
 
-      preventScrollNav($);
-
       // wait for stylesheet to load ...
       $widgetStylesheet.appendTo('head').on('load', function () {
 
@@ -43,9 +41,10 @@
             // wait for all images to load so dimension calculations are correct ...
             $images.on('load', function () {
               if (++loadedImages === $images.length) {
-                initScrollListeners($);
-                initPagination($);
-                slideDrawerPlugin($);
+                preventScrollNav();
+                initScrollListeners();
+                initPagination();
+                slideDrawerPlugin();
                 centerLogos();
                 // if user is using a mouse, this will hose dimensions
                 // (in a somewhat random way)
@@ -140,7 +139,7 @@
     else return false;
   }
 
-  function slideDrawerPlugin ($) {
+  function slideDrawerPlugin () {
 
     // Function wrapper
     $.fn.slideDrawer = function (options) {
@@ -189,7 +188,7 @@
     note: jquery event listener doesn't work, as deltaX is undefined on the event,
     so need to achieve event delegation with vanilla js
   */
-  function preventScrollNav ($) {
+  function preventScrollNav () {
 
     var $carousel = $('.row-horizon'),
         maxX = null;
@@ -197,7 +196,6 @@
     // note: 'mousewheel' event is non-standard and deperecated; use 'wheel'
     document.querySelector('#cs-container').addEventListener('wheel', function (event) {
       if (event.target.closest('.row-horizon')) {  // event within widget?
-        console.log('widget wheel event');
         // don't scroll below zero or above max ...
         maxX = $carousel.prop('scrollWidth') - $carousel.prop('offsetWidth');
         /*
@@ -209,11 +207,11 @@
           event.preventDefault();
           $carousel.prop('scrollLeft', Math.max(0, Math.min(maxX, $carousel.prop('scrollLeft') + event.deltaX)));
         }
-      } else { console.log('non-widget wheel event'); }
+      }
     });
   }
 
-  function initScrollListeners ($) {
+  function initScrollListeners () {
 
     var $carousel = $('.row-horizon'),
         scrollWidth = $carousel.prop('scrollWidth'),
@@ -245,7 +243,7 @@
     });
   }
 
-  function initPagination ($) {
+  function initPagination () {
 
     var $carousel = $('.row-horizon'),
         $pageDots = $('.row-pagination'),
