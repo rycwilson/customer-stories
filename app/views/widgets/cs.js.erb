@@ -40,9 +40,11 @@
           success: function (data) {
             $('#cs-container').html(data.html);
             var $images = $('#cs-container img'), loadedImages = 0;
+            console.log('total image tags: ', $images.length);
             // wait for all images to load so dimension calculations are correct ...
             $images.on('load', function () {
               if (++loadedImages === $images.length) {
+                console.log('all images loaded');
                 initScrollListeners($);
                 initPagination($);
                 slideDrawerPlugin($);

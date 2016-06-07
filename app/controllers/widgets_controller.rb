@@ -40,9 +40,10 @@ class WidgetsController < ApplicationController
                   { logo: success.customer.logo_url,
                     link: story.published ?
                             URI.join(root_url(host: company_subdomain + '.' + request.domain),
-                                     story.csp_story_path)
+                                     story.csp_story_path).to_s
                             : stories_index_url }
                 end
+
     html = "<section class='drawer' style='visibility:hidden'>
               <header class='clickme'
                 style='background-color:#{tab_color};color:#{font_color}'>
@@ -55,7 +56,8 @@ class WidgetsController < ApplicationController
                     </div>
                     <div class='row row-horizon'>"
 
-    stories_links.each do |story|
+    # the bootstrap styling starts to break down after 30 stories
+    stories_links.first(30).each do |story|
       html <<         "<div class='col-xs-4 col-sm-3 col-md-2'>
                          <a href='#{story[:link]}' class='thumbnail' target='_blank'>
                            <img src='#{story[:logo]}' alt=''>
