@@ -584,9 +584,7 @@ function initLinkedIn () {
   // linkedin widgets (load IN.js library conditionally)
   if (typeof(IN) !== "object") {
     console.log("loading in.js ...");
-    $.getScript('//platform.linkedin.com/in.js', function () {
-      console.log('Here we are.');
-    });
+    $.getScript('//platform.linkedin.com/in.js');
   } else {
     console.log("in.js already loaded");
   }
