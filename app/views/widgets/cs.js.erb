@@ -199,6 +199,7 @@
     // note: 'mousewheel' event is non-standard and deperecated; use 'wheel'
     document.querySelector('#cs-container').addEventListener('wheel', function (event) {
       if (event.target.closest('.row-horizon')) {  // event within widget?
+        console.log('widget wheel event');
         // don't scroll below zero or above max ...
         maxX = $carousel.prop('scrollWidth') - $carousel.prop('offsetWidth');
         /*
@@ -210,7 +211,7 @@
           event.preventDefault();
           $carousel.prop('scrollLeft', Math.max(0, Math.min(maxX, $carousel.prop('scrollLeft') + event.deltaX)));
         }
-      }
+      } else { console.log('non-widget wheel event'); }
     });
   }
 
