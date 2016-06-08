@@ -12,6 +12,7 @@
 //
 //= require jquery/dist/jquery
 //= require jquery-ujs/src/rails
+//= require turbolinks
 //= require underscore/underscore
 //= require bootstrap-sass/assets/javascripts/bootstrap-sprockets
 //= require mvpready-core
