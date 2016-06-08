@@ -12,7 +12,7 @@
 //
 //= require jquery/dist/jquery
 //= require jquery-ujs/src/rails
-//= require turbolinks
+// require turbolinks
 //= require underscore/underscore
 //= require bootstrap-sass/assets/javascripts/bootstrap-sprockets
 //= require mvpready-core
@@ -20,6 +20,8 @@
 //= require flot/jquery.flot
 
 // require_tree ./sitewide (under construction)
+
+// eventLogs();
 
 $(function() {
 
@@ -36,6 +38,28 @@ $(function() {
   // });
 
 });
+
+function eventLogs () {
+  $(document).ready(function () {
+    console.log('doc.ready');
+  });
+
+  $(document).on('turbolinks:load', function () {
+    console.log('turbolinks:load');
+  });
+
+  $(document).on('page:change', function () {
+    console.log('page:change');
+  });
+
+  $(document).on('page:load', function () {
+    console.log('page:load');
+  });
+
+  $(window).on('load', function () {
+    console.log('window load');
+  });
+}
 
 // status should be one of: success, info, warning, danger
 function flashDisplay (mesg, status) {

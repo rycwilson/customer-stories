@@ -23,8 +23,6 @@
 
 //= require masonry/dist/masonry.pkgd
 
-//= require js/jquery.slidedrawer
-
 /*
   With turbolinks in place, js only runs on initial controller/page load,
   e.g. js does not run when going from stories#show to stories#edit
@@ -33,17 +31,15 @@
   Both are needed
 */
 $(document).ready(function () {
-  // console.log('doc.ready');
+  // console.log('calling ready from stories.js - doc.ready');
   ready();
 });
 
-/*
-  is this even doing anything?  not so sure
-*/
-$(document).on('page:load', function () {
-  // console.log('page:load');
-  ready();  // TODO: probably don't have to run everything here
-});
+// $(document).on('turbolinks:load', function () {
+//   console.log('calling ready from stories.js - turbolinks:load');
+//   ready();  // TODO: probably don't have to run everything here
+// });
+
 
 /*
   wait for images to load before initializing the masonry grid
@@ -52,11 +48,14 @@ $(window).on('load', function () {
   initMasonry();
 });
 
-$(document).on('page:change', function () {
-  // console.log('page:change');
-});
+// $(document).on('page:change', function () {
+//   // console.log('page:change');
+// });
 
 function ready () {
+
+  // console.log('ready()');
+
   initSelect2();
   initLinkedIn();
   initBIPListeners();
@@ -67,14 +66,6 @@ function ready () {
   configS3Upload();
   initBootstrapSwitch();
   initContributions();
-
-  $('.drawer').slideDrawer({
-    showDrawer: true, // The drawer is hidden by default.
-    slideTimeout: true, // Sets the drawer to slide down after set count if set to true.
-    slideSpeed: 600, // Slide drawer speed.
-    slideTimeoutCount: 3000, // How long to wait before sliding drawer slides down.
-  });
-
 
 }
 
@@ -476,13 +467,13 @@ function initContributions () {
         $.get('/contributions/' + $card.data('contribution-id'), function (contribution, status) {
           if (contribution.role == 'customer') {
             $research.attr('href',
-              "http://google.com/search?q=" +
+              "//google.com/search?q=" +
               contribution.contributor.first_name + "+" +
               contribution.contributor.last_name + "+" +
               contribution.success.customer.name);
           } else {
             $research.attr('href',
-              "http://google.com/search?q=" +
+              "//google.com/search?q=" +
               contribution.contributor.first_name + "+" +
               contribution.contributor.last_name + "+");
           }
