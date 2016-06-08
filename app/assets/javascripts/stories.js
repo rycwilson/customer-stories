@@ -209,6 +209,8 @@ function initListeners () {
         $productSelect = $(this).closest("[id*='stories-filters']").find("[name='products']"),
         storyPath = null;
 
+        var $_this = $(this);
+
     $.ajax({
       url: '/stories',
       method: 'get',
@@ -240,6 +242,20 @@ function initListeners () {
                                .append($tiles)
                                .masonry('appended', $tiles);
           centerLogos();
+
+
+
+
+          var filterName = $_this.find("[value='" + $_this.val() + "']")
+                                 .text().toLowerCase().replace(' ', '-');
+          if (filterTag === 'industries') {
+            console.log('category: ', filterName);
+            history.pushState({ category: filterName, product: 'all' }, null, '/stories/?category=' + filterName);
+          } else {  // products
+            console.log('product: ', filterName);
+            history.pushState({ category: 'all', product: filterName }, null, '/stories/?product=' + filterName);
+          }
+          console.log('pushed state: ', history.state);
         }
       }
     });
@@ -257,6 +273,15 @@ function initListeners () {
     }
 
   });
+
+  window.onpopstate = function (event) {
+    console.log('state: ', event.state);
+
+  };
+
+
+
+
 
   // reset new contributor modal form when the modal closes
   $('#new-contributor-modal').on('hidden.bs.modal', function () {
