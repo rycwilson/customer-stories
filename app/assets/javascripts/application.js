@@ -1,60 +1,55 @@
-// This is a manifest file that'll be compiled into application.js, which will include all the files
-// listed below.
-//
-// Any JavaScript/Coffee file within this directory, lib/assets/javascripts, vendor/assets/javascripts,
-// or any plugin's vendor/assets/javascripts directory can be referenced here using a relative path.
-//
-// It's not advisable to add code directly here, but if you do, it'll appear at the bottom of the
-// compiled file.
-//
-// Read Sprockets README (https://github.com/rails/sprockets#sprockets-directives) for details
-// about supported directives.
 //
 //= require jquery/dist/jquery
 //= require jquery-ujs/src/rails
+
+//= require init
 //= require underscore/underscore
 //= require bootstrap-sass/assets/javascripts/bootstrap-sprockets
 //= require mvpready-core
 //= require mvpready-helpers
 //= require flot/jquery.flot
+//= require flash
 
 // require_tree ./sitewide (under construction)
 
-$(function() {
-
-  initTooltips();
-
-  setTimeout(function () {
-    $('#flash').slideUp();
-  }, 3000);
-
-  // clear localStorage
-  // $('#logout').on('click', function () {
-  //   localStorage.clear();
-  //   sessionStorage.clear();
-  // });
-
+$(document).on('page:change', function () {
+  console.log('page:change');
+  window.App.init();
 });
 
+// $(function () {
+
+//   setTimeout(function () {
+//     $('#flash').slideUp();
+//   }, 3000);
+
+//   // clear localStorage
+//   // $('#logout').on('click', function () {
+//   //   localStorage.clear();
+//   //   sessionStorage.clear();
+//   // });
+
+// });
+
 // status should be one of: success, info, warning, danger
-function flashDisplay (mesg, status) {
-  $('#flash').toggleClass('hidden alert-' + status).append(mesg);
-  $('#flash').hide().append(flash).fadeIn('fast');
+// function flashDisplay (mesg, status) {
+//   $('#flash').toggleClass('hidden alert-' + status).append(mesg);
+//   $('#flash').hide().append(flash).fadeIn('fast');
 
-  setTimeout(function () {
-    $('#flash').slideUp();
-  }, 3000);
+//   setTimeout(function () {
+//     $('#flash').slideUp();
+//   }, 3000);
 
-  setTimeout(function () {
-    $('#flash').toggleClass('hidden alert-' + status);
-    // dispay:none setting appears after first click-cycle,
-    // leads to subsequent failures
-    // solution...
-    $('#flash').css('display', '');
-    // remove all text, leave child elements
-    $('#flash').html($('#flash').children());
-  }, 4000);
-}
+//   setTimeout(function () {
+//     $('#flash').toggleClass('hidden alert-' + status);
+//     // dispay:none setting appears after first click-cycle,
+//     // leads to subsequent failures
+//     // solution...
+//     $('#flash').css('display', '');
+//     // remove all text, leave child elements
+//     $('#flash').html($('#flash').children());
+//   }, 4000);
+// }
 
 function configS3Upload () {
 
@@ -110,9 +105,9 @@ function configS3Upload () {
   });
 }
 
-function initTooltips () {
-  $('[data-toggle="tooltip"]').tooltip();
-}
+// function initTooltips () {
+//   $('[data-toggle="tooltip"]').tooltip();
+// }
 
 
 

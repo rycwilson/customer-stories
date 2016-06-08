@@ -23,7 +23,8 @@
 
 //= require masonry/dist/masonry.pkgd
 
-//= require js/jquery.slidedrawer
+//= require stories/gallery
+
 
 /*
   With turbolinks in place, js only runs on initial controller/page load,
@@ -41,7 +42,7 @@ $(document).ready(function () {
   is this even doing anything?  not so sure
 */
 $(document).on('page:load', function () {
-  // console.log('page:load');
+  console.log('page:load');
   ready();  // TODO: probably don't have to run everything here
 });
 
@@ -52,11 +53,14 @@ $(window).on('load', function () {
   initMasonry();
 });
 
-$(document).on('page:change', function () {
-  // console.log('page:change');
-});
+// $(document).on('page:change', function () {
+//   console.log('page:change');
+// });
 
 function ready () {
+
+  gallery.foo();
+
   initSelect2();
   initLinkedIn();
   initBIPListeners();
@@ -67,14 +71,6 @@ function ready () {
   configS3Upload();
   initBootstrapSwitch();
   initContributions();
-
-  $('.drawer').slideDrawer({
-    showDrawer: true, // The drawer is hidden by default.
-    slideTimeout: true, // Sets the drawer to slide down after set count if set to true.
-    slideSpeed: 600, // Slide drawer speed.
-    slideTimeoutCount: 3000, // How long to wait before sliding drawer slides down.
-  });
-
 
 }
 
