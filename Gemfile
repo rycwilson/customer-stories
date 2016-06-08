@@ -45,6 +45,9 @@ end
 
 group :development, :test do
 
+  # RailsPanel Chrome extension
+  gem 'meta_request'
+
   gem 'whenever', require: false
   # Access an IRB console on exception pages or by using <%= console %> in views
 
