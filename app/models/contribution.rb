@@ -139,7 +139,7 @@ class Contribution < ActiveRecord::Base
                     .gsub("[company_name]", curator.company.name)
                     .gsub("[product_name]", success.products.take.try(:name) || "")
                     .gsub("[contributor_first_name]", self.contributor.first_name)
-                    .gsub("[contributor_last_name", self.contributor.last_name)
+                    .gsub("[contributor_last_name]", self.contributor.last_name)
                     .gsub("[curator_first_name]", curator.first_name)
                     .gsub("[referral_intro]", referral_intro)
                     .gsub("[curator_full_name]", curator.full_name)
