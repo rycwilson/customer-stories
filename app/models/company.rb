@@ -88,6 +88,7 @@ class Company < ActiveRecord::Base
     self.email_templates.map do |template|
       [template.name, template.id]
     end
+    .sort
     .unshift( [""] )
   end
 

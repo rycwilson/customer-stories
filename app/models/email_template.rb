@@ -18,7 +18,7 @@ class EmailTemplate < ActiveRecord::Base
     # don't want to include actual links, as they'll be broken (placeholders instead of actual urls)
     self.body.gsub!(/<a\shref=('|\")\[(\w+)\]('|\")>(.+?)<\/a>/, '[\2 link_text="\4"]')
     # highlight all placeholders, links, and urls
-    self.body.gsub!(/(\[.+?\])/, '<span style="color:red">\1</span>')
+    self.body.gsub!(/(\[.+?\])/, '<span>\1</span>')
   end
 
   def format_for_storage
@@ -29,7 +29,7 @@ class EmailTemplate < ActiveRecord::Base
     self.body.gsub!( /\[(\w+)\slink_text=('|")(.+?)('|")\]/,
                          '<a href="[\1]">\3</a>' )
     # remove highlights
-    self.body.gsub!( /<span\sstyle=\"color:.+?\">(.+?)<\/span>/, '\1' )
+    # self.body.gsub!( /<span\sstyle=\"color:.+?\">(.+?)<\/span>/, '\1' )
   end
 
 end
