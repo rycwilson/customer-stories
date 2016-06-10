@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160516192004) do
+ActiveRecord::Schema.define(version: 20160610185538) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,6 +49,7 @@ ActiveRecord::Schema.define(version: 20160516192004) do
     t.string   "nav_color_1",       default: "#FBFBFB"
     t.string   "nav_color_2",       default: "#85CEE6"
     t.string   "nav_text_color",    default: "#333333"
+    t.string   "website"
   end
 
   create_table "contributions", force: :cascade do |t|

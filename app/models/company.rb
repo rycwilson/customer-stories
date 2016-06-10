@@ -1,7 +1,10 @@
 class Company < ActiveRecord::Base
 
+  before_validation :smart_add_url_protocol
+
   validates :name, presence: true, uniqueness: true
   validates :subdomain, presence: true, uniqueness: true
+  validates :website, presence: true, uniqueness: true, website: true
   validates_length_of :subdomain, maximum: 32, message: "must be 32 characters or less"
   validates_format_of :subdomain, with: /\A[a-z0-9-]*\z/, on: [:create, :update], message: "may only contain lowercase alphanumerics or hyphens"
   validates_exclusion_of :subdomain, in: ['www', 'mail', 'ftp'], message: "is not available"
@@ -201,6 +204,12 @@ class Company < ActiveRecord::Base
         # do nothing
       end
     end unless new_tags[:product].nil?
+  end
+
+  def smart_add_url_protocol
+    unless self.website[/\Ahttp:\/\//] || self.website[/\Ahttps:\/\//]
+      self.website = "http://#{self.website}"
+    end
   end
 
 end
