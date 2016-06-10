@@ -3,8 +3,6 @@
   var flashMesg = <%= raw @flash_mesg.to_json %>,
       flashStatus = <%= raw @flash_status.to_json %>
 
-  console.log('wtf');
-
   $('header.navbar').attr('style', '<%= admin_navbar_style %>');
 
   $('.fileinput-preview').css('background-color', $('#company_nav_color_1').val())

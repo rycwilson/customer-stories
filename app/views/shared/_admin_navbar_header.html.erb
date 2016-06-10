@@ -30,7 +30,7 @@
 
 <% else %>
 
-  <%= link_to root_path, class: 'navbar-brand' do %>
+  <%= link_to @company.website, class: 'navbar-brand', target: '_blank' do %>
     <%= image_tag(@company.logo_url, alt: "#{@company.name} logo") unless @company.logo_url.blank? %>
   <% end %>
 
