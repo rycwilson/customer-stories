@@ -41,17 +41,20 @@ var ready = function () {
   initNewStoryValidator();
   adjustPromoCSS();
 
+  // console.log('ready()');
+
 };
 
-/*
-  with turbolinks in place, js only runs on initial page load
-  for example, js does not run when going from stories#show to stories#edit,
-    and this results in plug-ins not being initialized
-  below ensures that js runs each time a stories/ page loads
-  both are needed
-*/
-$(document).ready(ready);
-$(document).on('page:load', ready);
+$(document).ready(function () {
+  // console.log('calling ready from companies.js - doc.ready');
+  ready();
+});
+
+// $(document).on('turbolinks:load', function () {
+//   console.log('calling ready from companies.js - turbolinks:load');
+//   ready();
+// });
+
 
 function initTemplateEditorListeners () {
 

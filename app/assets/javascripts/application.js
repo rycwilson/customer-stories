@@ -1,55 +1,78 @@
 //
 //= require jquery/dist/jquery
 //= require jquery-ujs/src/rails
-
-//= require init
+// require turbolinks
 //= require underscore/underscore
 //= require bootstrap-sass/assets/javascripts/bootstrap-sprockets
 //= require mvpready-core
 //= require mvpready-helpers
 //= require flot/jquery.flot
-//= require flash
 
 // require_tree ./sitewide (under construction)
 
-$(document).on('page:change', function () {
-  console.log('page:change');
-  window.App.init();
+// eventLogs();
+
+$(function() {
+
+  initTooltips();
+
+  setTimeout(function () {
+    $('#flash').slideUp();
+  }, 3000);
+
+  // clear localStorage
+  // $('#logout').on('click', function () {
+  //   localStorage.clear();
+  //   sessionStorage.clear();
+  // });
+
 });
 
-// $(function () {
+function eventLogs () {
+  $(document).ready(function () {
+    console.log('doc.ready');
+  });
 
-//   setTimeout(function () {
-//     $('#flash').slideUp();
-//   }, 3000);
+  $(document).on('turbolinks:load', function () {
+    console.log('turbolinks:load');
+  });
 
-//   // clear localStorage
-//   // $('#logout').on('click', function () {
-//   //   localStorage.clear();
-//   //   sessionStorage.clear();
-//   // });
+  $(document).on('page:change', function () {
+    console.log('page:change');
+  });
 
-// });
+  $(document).on('page:load', function () {
+    console.log('page:load');
+  });
+
+  $(window).on('load', function () {
+    console.log('window load');
+  });
+}
 
 // status should be one of: success, info, warning, danger
-// function flashDisplay (mesg, status) {
-//   $('#flash').toggleClass('hidden alert-' + status).append(mesg);
-//   $('#flash').hide().append(flash).fadeIn('fast');
+function flashDisplay (mesg, status) {
+  $('#flash').toggleClass('hidden alert-' + status).append(mesg);
+  $('#flash').hide().append(flash).fadeIn('fast');
 
-//   setTimeout(function () {
-//     $('#flash').slideUp();
-//   }, 3000);
+  setTimeout(function () {
+    $('#flash').slideUp();
+  }, 3000);
 
-//   setTimeout(function () {
-//     $('#flash').toggleClass('hidden alert-' + status);
-//     // dispay:none setting appears after first click-cycle,
-//     // leads to subsequent failures
-//     // solution...
-//     $('#flash').css('display', '');
-//     // remove all text, leave child elements
-//     $('#flash').html($('#flash').children());
-//   }, 4000);
-// }
+  setTimeout(function () {
+    $('#flash').toggleClass('hidden alert-' + status);
+    // dispay:none setting appears after first click-cycle,
+    // leads to subsequent failures
+    // solution...
+    $('#flash').css('display', '');
+    // remove all text, leave child elements
+    $('#flash').html($('#flash').children());
+  }, 4000);
+}
+
+function initTooltips () {
+  $('[data-toggle="tooltip"]').tooltip();
+}
 
 function configS3Upload () {
 
@@ -105,9 +128,6 @@ function configS3Upload () {
   });
 }
 
-// function initTooltips () {
-//   $('[data-toggle="tooltip"]').tooltip();
-// }
 
 
 

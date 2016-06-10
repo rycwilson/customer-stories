@@ -3,7 +3,7 @@ class ContributionsController < ApplicationController
   include ContributionsHelper
 
   before_action :valid_token?, only: [:edit, :update]
-  before_action :set_contribution, only: [:show, :confirm_request, :send_request]
+  before_action :set_contribution, only: [:show, :confirm, :confirm_request, :send_request]
   before_action :check_opt_out_list, only: [:create, :confirm_request]
 
   respond_to :html, :json
@@ -118,6 +118,10 @@ class ContributionsController < ApplicationController
       @flash_mesg =
         "Can't send email because the following Curator fields are missing: #{curator_missing_info.join(', ')}"
     end
+  end
+
+  def confirm
+    @curator = @contribution.success.curator
   end
 
   private
