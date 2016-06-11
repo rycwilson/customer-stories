@@ -9,7 +9,10 @@ class WebsiteValidator < ActiveModel::EachValidator
     if res.kind_of? Net::HTTPRedirection
       url_exist? res['location'] # Go after any redirect and make sure you can access the redirected URL
     else
-      ! %W(4 5).include?(res.code[0]) # Not from 4xx or 5xx families
+      # http://neonova.net failed validation with a 4xx message
+      # so, let 4xx and 5xx pass through (at least means the site is there) ...
+      true
+      # ! %W(4 5).include?(res.code[0]) # Not from 4xx or 5xx families
     end
   rescue Errno::ENOENT, SocketError, Errno::ECONNREFUSED, Net::OpenTimeout, OpenSSL::SSL::SSLError
     false
