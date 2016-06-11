@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160610185538) do
+ActiveRecord::Schema.define(version: 20160611015224) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -235,6 +235,27 @@ ActiveRecord::Schema.define(version: 20160610185538) do
   add_index "stories", ["success_id"], name: "index_stories_on_success_id", using: :btree
   add_index "stories", ["title"], name: "index_stories_on_title", unique: true, using: :btree
 
+  create_table "story_categories", force: :cascade do |t|
+    t.string   "name"
+    t.string   "slug"
+    t.integer  "company_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "story_categories", ["company_id"], name: "index_story_categories_on_company_id", using: :btree
+  add_index "story_categories", ["name", "company_id"], name: "index_story_categories_on_name_and_company_id", unique: true, using: :btree
+
+  create_table "story_categories_successes", force: :cascade do |t|
+    t.integer  "story_category_id"
+    t.integer  "success_id"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  add_index "story_categories_successes", ["story_category_id"], name: "index_story_categories_successes_on_story_category_id", using: :btree
+  add_index "story_categories_successes", ["success_id"], name: "index_story_categories_successes_on_success_id", using: :btree
+
   create_table "successes", force: :cascade do |t|
     t.integer  "customer_id"
     t.datetime "created_at",  null: false
@@ -309,6 +330,9 @@ ActiveRecord::Schema.define(version: 20160610185538) do
   add_foreign_key "prompts", "successes"
   add_foreign_key "results", "successes"
   add_foreign_key "stories", "successes"
+  add_foreign_key "story_categories", "companies"
+  add_foreign_key "story_categories_successes", "story_categories"
+  add_foreign_key "story_categories_successes", "successes"
   add_foreign_key "successes", "customers"
   add_foreign_key "successes", "users", column: "curator_id"
   add_foreign_key "users", "companies"
