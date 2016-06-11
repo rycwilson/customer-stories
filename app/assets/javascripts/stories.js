@@ -230,7 +230,7 @@ function initListeners () {
 
 
 
-
+          // this is going into the query string, so make it url-safe
           var filterName = $_this.find("[value='" + $_this.val() + "']")
                                  .text().toLowerCase().replace(' ', '-');
           if (filterTag === 'industries') {
@@ -260,7 +260,7 @@ function initListeners () {
   });
 
   window.onpopstate = function (event) {
-    console.log('state: ', event.state);
+    console.log('pop state: ', event.state);
 
   };
 

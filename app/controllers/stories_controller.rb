@@ -9,6 +9,7 @@ class StoriesController < ApplicationController
   before_action :set_s3_direct_post, only: :edit
 
   def index
+    # this will always be an async request
     if params[:filter]
       @success_tiles =
           @company.filter_successes_by_tag(params[:filter][:tag], params[:filter][:id])
@@ -23,7 +24,11 @@ class StoriesController < ApplicationController
           }
         end
       end
+    # sync requests ...
     elsif company_curator?(@company.id)
+      if params[:category] || params[:product]
+        binding.pry
+      end
       @success_tiles = @company.successes_with_story    # all stories
       # need to unshift here instead of model methods since other calls to
       # these methods don't require the unshift
@@ -32,6 +37,9 @@ class StoriesController < ApplicationController
       @products = @company.products_select_options
                           .unshift( ["All", 0] )
     else  # public reader
+      if params[:category] || params[:product]
+        binding.pry
+      end
       @success_tiles = @company.successes_with_logo_published
       # select options populated only with industries that are connected
       # to a story with logo published ...
