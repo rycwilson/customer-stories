@@ -1,6 +1,10 @@
-<%= render 'companies/shared/new_story_modal' %>
+<%= render partial: 'companies/shared/new_story_modal',
+            locals: { company: company,
+                    customers: customers,
+                   categories: categories,
+                     products: products } %>
 <!-- curate -->
-<div id='curate' class="<%= @mainnav_tab == 'curate' ? 'active tab-pane content' : 'tab-pane content' %>" role='tabpanel' style='margin-top:-10px'>
+<div id='curate' class="<%= mainnav_tab == 'curate' ? 'active tab-pane content' : 'tab-pane content' %>" role='tabpanel' style='margin-top:-10px'>
   <div class='container'>
 
     <div class="row curate-nav">
@@ -35,7 +39,7 @@
               </thead>
               <tbody>
     <!-- <tbody> -->
-      <% @company.stories.order(updated_at: :desc).each do |story| %>
+      <% company.stories.order(updated_at: :desc).each do |story| %>
 
         <tr>
           <td class='td-story-customer valign-middle'>

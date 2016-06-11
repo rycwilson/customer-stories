@@ -63,8 +63,8 @@
 
   <div class="form-group">
 
-    <%= label_tag 'company_tags[industry][]', 'Categories', class: 'control-label' %>
-    <%= select_tag 'company_tags[industry][]',
+    <%= label_tag 'company_tags[category][]', 'Categories', class: 'control-label' %>
+    <%= select_tag 'company_tags[category][]',
           # none presently exist, so pass empty array...
           options_for_select([]),
           { multiple: 'true', class: 'company-tags form-control',

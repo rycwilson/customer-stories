@@ -117,21 +117,22 @@ function initBIPListeners () {
 function initTagsListeners () {
   /*
     Remember the initial <option>s of the tag select inputs
-    If user cancels changes, revert to these
+    If user cancels changes, revert to these (skipping for now)
 
-    var industryTagsOptions = $('.select2-selection__rendered').eq(0).html();
-    var industryTagsVal = $('#story_industry_tags_').val();
+    var categoryTagsOptions = $('.select2-selection__rendered').eq(0).html();
+    var categoryTagsVal = $('#story_category_tags_').val();
     var productCatTags = $('.select2-selection__rendered').eq(1).html();
     var productTags = $('.select2-selection__rendered').eq(2).html();
   */
 
   $('#story-tags-form select').on('change', function (e) {
 
+    console.log('tags change');
     if ($('.edit-tags').hasClass('hidden')) {
       // un-hide the save/cancel buttons
       $('.edit-tags').toggleClass('hidden');
     }
-    // console.log('industry tags on change: ', $('#story_industry_tags_').val());
+    // console.log('category tags on change: ', $('#story_category_tags_').val());
   });
 
   // TODO: figure out how to reset select2 inputs
@@ -140,11 +141,11 @@ function initTagsListeners () {
   $('#edit-tags-cancel').on('click', function (e) {
     e.preventDefault();
     // reset the select input values
-    // $('.select2-selection__rendered').eq(0).html(industryTagsOptions);
-    // $('#story_industry_tags_').val(industryTagsVal);
+    // $('.select2-selection__rendered').eq(0).html(categoryTagsOptions);
+    // $('#story_category_tags_').val(categoryTagsVal);
     // $('.select2-selection__rendered').eq(1).html(productCatTags);
     // $('.select2-selection__rendered').eq(2).html(productTags);
-    // console.log('industry tags after cancel: ', $('#story_industry_tags_').val());
+    // console.log('category tags after cancel: ', $('#story_category_tags_').val());
     // hide the save/cancel buttons
     // $('.edit-tags').toggleClass('hidden');
     // tagsFormDirty = false;
@@ -186,11 +187,11 @@ function initListeners () {
       return false;
     }
 
-    var filterTag = $(this).attr('name'),  // 'industries' or 'products' (comes from instance var name)
-        filterId = $(this).val(),  // the database id of the chosen industry
+    var filterTag = $(this).attr('name'),  // 'categories' or 'products' (comes from instance var name)
+        filterId = $(this).val(),  // the database id of the chosen tag
         companyId = $('#stories-gallery').data('company-id'),
         template = _.template($('#stories-template').html()),
-        $industrySelect = $(this).closest("[id*='stories-filters']").find("[name='industries']"),
+        $categorySelect = $(this).closest("[id*='stories-filters']").find("[name='categories']"),
         $productSelect = $(this).closest("[id*='stories-filters']").find("[name='products']"),
         storyPath = null;
 
@@ -233,7 +234,7 @@ function initListeners () {
           // this is going into the query string, so make it url-safe
           var filterName = $_this.find("[value='" + $_this.val() + "']")
                                  .text().toLowerCase().replace(' ', '-');
-          if (filterTag === 'industries') {
+          if (filterTag === 'categories') {
             console.log('category: ', filterName);
             history.pushState({ category: filterName, product: 'all' }, null, '/stories/?category=' + filterName);
           } else {  // products
@@ -245,16 +246,16 @@ function initListeners () {
       }
     });
 
-    if (filterTag === 'industries' &&
+    if (filterTag === 'categories' &&
                       $productSelect.length &&  // was filter removed?
                       $productSelect.val() !== '0') {
       sessionStorage.setItem('autoTrigger', 'true');
       $productSelect.val('0').trigger('change');
     } else if (filterTag === 'products' &&
-                             $industrySelect.length &&  // was filter removed?
-                             $industrySelect.val() !== '0') {
+                             $categorySelect.length &&  // was filter removed?
+                             $categorySelect.val() !== '0') {
       sessionStorage.setItem('autoTrigger', 'true');
-      $industrySelect.val('0').trigger('change');
+      $categorySelect.val('0').trigger('change');
     }
 
   });
@@ -349,8 +350,7 @@ function configPlugins () {
     Need to modify the "for" label attributes to match the id attribute
     of the corresponding input field.
   */
-  $("label[for='Industry']").attr('for', 'story_industry_tags_');
-  $("label[for='Product_Category']").attr('for', 'story_product_cat_tags_');
+  $("label[for='Category']").attr('for', 'story_category_tags_');
   $("label[for='Product']").attr('for', 'story_product_tags_');
   $('#story-tags-form').dirtyFields();
 

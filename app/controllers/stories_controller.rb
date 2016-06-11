@@ -26,24 +26,22 @@ class StoriesController < ApplicationController
       end
     # sync requests ...
     elsif company_curator?(@company.id)
-      if params[:category] || params[:product]
-        binding.pry
-      end
+      # if params[:category] || params[:product]
+      #   binding.pry
+      # end
       @success_tiles = @company.successes_with_story    # all stories
       # need to unshift here instead of model methods since other calls to
       # these methods don't require the unshift
-      @industries = @company.industries_select_options  # all industries
+      @categories = @company.categories_select_options  # all categories
                             .unshift( ["All", 0] )
       @products = @company.products_select_options
                           .unshift( ["All", 0] )
     else  # public reader
-      if params[:category] || params[:product]
-        binding.pry
-      end
+      # if params[:category] || params[:product]
+      #   binding.pry
+      # end
       @success_tiles = @company.successes_with_logo_published
-      # select options populated only with industries that are connected
-      # to a story with logo published ...
-      @industries = @company.industries_filter_select_options
+      @categories = @company.categories_filter_select_options
       @products = @company.products_filter_select_options
     end
   end
@@ -70,12 +68,9 @@ class StoriesController < ApplicationController
     @contributions_next_steps = Contribution.next_steps @story.success_id
     @contributions_contributors = Contribution.contributors @story.success_id
     @contributions_connections = Contribution.connections @story.success_id
-    @industries = @company.industries_select_options
-    @industries_pre_select = @story.success.industry_categories
+    @categories = @company.categories_select_options
+    @categories_pre_select = @story.success.story_categories
                                    .map { |category| category.id }
-    @product_categories = @company.product_categories_select_options
-    @product_cats_pre_select = @story.success.product_categories
-                                     .map { |category| category.id }
     @products = @company.products_select_options
     @products_pre_select = @story.success.products
                                  .map { |category| category.id }

@@ -17,20 +17,15 @@ class Story < ActiveRecord::Base
   end
 
   def assign_tags new_story
-    if new_story[:industry_tags]
-      new_story[:industry_tags].each do |selection|
+    if new_story[:category_tags]
+      new_story[:category_tags].each do |selection|
         if selection.to_i == 0   # if it's a generic tag
-          # create a new company industry category based on the generic tag
-          self.success.industry_categories << IndustryCategory.create(
+          # create a new company category category based on the generic tag
+          self.success.story_categories << StoryCategory.create(
               name: selection, company_id: current_user.company.id)
-        else  # selection is the id of an existing company industry category
-          self.success.industry_categories << IndustryCategory.find(selection)
+        else  # selection is the id of an existing company story category
+          self.success.story_categories << StoryCategory.find(selection)
         end
-      end
-    end
-    if new_story[:product_cat_tags]
-      new_story[:product_cat_tags].each do |selection|
-        self.success.product_categories << ProductCategory.find(selection)
       end
     end
     if new_story[:product_tags]
@@ -41,54 +36,40 @@ class Story < ActiveRecord::Base
   end
 
   def update_tags new_tags
-    old_industry_tags = self.success.industry_categories
-    old_product_cat_tags = self.success.product_categories
+    old_category_tags = self.success.story_categories
     old_product_tags = self.success.products
-    # add new industry tags ...
-    unless new_tags.try(:[], :industry_tags).nil?
-      new_tags[:industry_tags].each do |industry_id|
-        unless old_industry_tags.any? { |industry| industry.id == industry_id.to_i }
-          self.success.industry_categories << IndustryCategory.find(industry_id.to_i)
+    # remove deleted category tags ...
+    old_category_tags.each do |category|
+      unless (new_tags.try(:[], :category_tags)) &&
+          (new_tags.try(:[], :category_tags).include? category.id.to_s)
+        StoryCategoriesSuccess.where("success_id = ? AND story_category_id = ?",
+                                self.success.id, category.id)[0].destroy
+      end
+    end
+    # add new category tags ...
+    unless new_tags.try(:[], :category_tags).nil?
+      new_tags[:category_tags].each do |category_id|
+        unless old_category_tags.any? { |category| category.id == category_id.to_i }
+          self.success.story_categories << StoryCategory.find(category_id.to_i)
         end
       end
     end
-    # remove deleted industry tags ...
-    old_industry_tags.each do |industry|
-      unless (new_tags.try(:[], :industry_tags)) && (new_tags.try(:[], :industry_tags).include? industry.id.to_s)
-        IndustriesSuccess.where("success_id = ? AND industry_category_id = ?",
-                                  self.success.id, industry.id)[0].destroy
-      end
-    end
-    # add new product category tags ...
-    unless new_tags.try(:[], :product_category_tags).nil?
-      new_tags[:product_category_tags].each do |product_cat_id|
-        unless old_product_cat_tags.any? { |product_cat| product_cat.id == product_cat_id.to_i }
-          self.success.product_categories << ProductCategory.find(product_cat_id.to_i)
-        end
-      end
-    end
-    # remove deleted product category tags ...
-    old_product_cat_tags.each do |product_cat|
-      unless (new_tags.try(:[], :product_category_tags)) &&
-          (new_tags.try(:[], :product_category_tags).include? product_cat.id.to_s)
-        ProductCatsSuccess.where("success_id = ? AND product_category_id = ?",
-                                  self.success.id, product_cat.id)[0].destroy
-      end
-    end
-    # add new product tags ...
-    unless new_tags.try(:[], :product_tags).nil?
-      new_tags[:product_tags].each do |product_id|
-        unless old_product_tags.any? { |product| product.id == product_id.to_i }
-          self.success.products << Product.find(product_id.to_i)
-        end
-      end
-    end
+
     # remove deleted product tags ...
     old_product_tags.each do |product|
       unless (new_tags.try(:[], :product_tags)) &&
           (new_tags.try(:[], :product_tags).include? product.id.to_s)
         ProductsSuccess.where("success_id = ? AND product_id = ?",
                                   self.success.id, product.id)[0].destroy
+      end
+    end
+
+    # add new product tags ...
+    unless new_tags.try(:[], :product_tags).nil?
+      new_tags[:product_tags].each do |product_id|
+        unless old_product_tags.any? { |product| product.id == product_id.to_i }
+          self.success.products << Product.find(product_id.to_i)
+        end
       end
     end
   end

@@ -20,19 +20,17 @@ class CompaniesController < ApplicationController
       # e.g. we're not eager loading products here...
       @company = Company.includes(:customers, :successes, :stories, :visitors).find params[:id]
       @customers = @company.customers_select_options
-      @industries = @company.industries_select_options
-      @product_categories = @company.product_categories_select_options
+      @categories = @company.categories_select_options
       @products = @company.products_select_options
     end
   end
 
   def edit
-    @company = Company.includes(:industry_categories, :product_categories,
-                                :products, :email_templates).find params[:id]
-    @industries = @company.industries_select_options
-    @industries_pre_select = @company.industry_categories.map { |industry| industry.id }
-    @product_categories = @company.product_categories_select_options
-    @product_cats_pre_select = @company.product_categories.map { |category| category.id }
+    @company = Company.includes(:story_categories,
+                                :products,
+                                :email_templates).find params[:id]
+    @categories = @company.categories_select_options
+    @categories_pre_select = @company.story_categories.map { |category| category.id }
     @products = @company.products_select_options
     @products_pre_select = @company.products.map { |product| product.id }
     @templates_select = @company.templates_select

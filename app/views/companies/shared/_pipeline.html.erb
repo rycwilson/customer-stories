@@ -1,5 +1,5 @@
 <!-- pipeline -->
-<div id='pipeline' class="<%= @mainnav_tab == 'pipeline' ? 'active tab-pane content' : 'tab-pane content' %>" role='tabpanel'>
+<div id='pipeline' class="<%= mainnav_tab == 'pipeline' ? 'active tab-pane content' : 'tab-pane content' %>" role='tabpanel'>
   <div class='container'>
     <div class='row'>
       <div class='portlet portlet-default'>
@@ -24,7 +24,7 @@
 
               <tbody>
 
-                <% @company.successes.each do |success| %>
+                <% company.successes.each do |success| %>
                   <% if success.story.nil? %>
 
                     <tr>

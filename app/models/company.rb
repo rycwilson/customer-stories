@@ -17,7 +17,7 @@ class Company < ActiveRecord::Base
   has_many :visitors, through: :successes
   has_many :stories, through: :successes
 
-  has_many :industry_categories, dependent: :destroy
+  has_many :story_categories, dependent: :destroy
   has_many :products, dependent: :destroy
   has_many :product_categories, dependent: :destroy
 
@@ -47,9 +47,9 @@ class Company < ActiveRecord::Base
     .unshift( [""] )  # empty option makes placeholder possible (only needed for single select)
   end
 
-  def industries_select_options
-    self.industry_categories.map { |industry| [ industry.name, industry.id ] }
-                            .sort
+  def categories_select_options
+    self.story_categories.map { |category| [ category.name, category.id ] }
+                         .sort
   end
 
   def product_categories_select_options
@@ -63,16 +63,16 @@ class Company < ActiveRecord::Base
                  .sort
   end
 
-  # method returns an array of industry tags for which
-  # a logo-published story exists for the given company
-  def industries_filter_select_options
-    IndustryCategory.joins(successes: { story: {}, customer: {} })
-                    .where(customers: { company_id: self.id },
-                             stories: { logo_published: true })
-                    .uniq
-                    .map { |ic| [ ic.name, ic.id ] }
-                    .sort
-                    .unshift ['All', 0]
+  # method returns an array of category tags for which
+  # a logo-published story exists for the given company (self)
+  def categories_filter_select_options
+    StoryCategory.joins(successes: { story: {}, customer: {} })
+                 .where(customers: { company_id: self.id },
+                          stories: { logo_published: true })
+                 .uniq
+                 .map { |category| [ category.name, category.id ] }
+                 .sort
+                 .unshift ['All', 0]
   end
 
   # method returns an array of product tags for which
@@ -111,10 +111,10 @@ class Company < ActiveRecord::Base
                     .order("stories.updated_at DESC")
     else
       case tag
-        when 'industries'
+        when 'categories'
           Success.includes(:story, :customer, :products)
-                 .joins(:industry_categories, :story, :customer)
-                 .where(industry_categories: { id: id },
+                 .joins(:story_categories, :story, :customer)
+                 .where(story_categories: { id: id },
                           stories: { logo_published: true },
                         customers: { company_id: self.id })
                  .order("stories.published DESC, stories.publish_date ASC")
@@ -151,42 +151,25 @@ class Company < ActiveRecord::Base
 
   # slightly different than updating tags for a story
   def update_tags new_tags
-    old_industry_tags = self.industry_categories
-    old_product_cat_tags = self.product_categories
+    old_category_tags = self.story_categories
     old_product_tags = self.products
-    # remove deleted industry tags ...
-    old_industry_tags.each do |industry_category|
-      if new_tags[:industry].nil? || !(new_tags[:industry].include? industry_category.id.to_s)
+    # remove deleted category tags ...
+    old_category_tags.each do |category_tag|
+      if new_tags[:category].nil? || !(new_tags[:category].include? category_tag.id.to_s)
         # remove the tag from any successes
-        IndustriesSuccess.where(industry_category_id: industry_category.id).destroy_all
-        industry_category.destroy
-      end
-    end
-    # add new industry tags ...
-    new_tags[:industry].each do |industry_id|
-      if industry_id.to_i == 0 # new (custom or default) tag
-        self.industry_categories << IndustryCategory.create(name: industry_id)
-      else
-        # do nothing
-      end
-    end unless new_tags[:industry].nil?
-    # remove deleted product category tags ...
-    old_product_cat_tags.each do |product_category|
-      if new_tags[:product_category].nil? || !(new_tags[:product_category].include? product_category.id.to_s)
-        # remove the tag from any successes it appears in
-        ProductCatsSuccess.where(product_category_id: product_category.id).destroy_all
+        StoryCategoriesSuccess.where(story_category_id: category_tag.id).destroy_all
         # destroy the tag
-        product_category.destroy
+        category_tag.destroy
       end
     end
-    # add new product category tags ...
-    new_tags[:product_category].each do |product_category_id|
-      if product_category_id.to_i == 0 # new tag
-        self.product_categories << ProductCategory.create(name: product_category_id)
+    # add new category tags ...
+    new_tags[:category].each do |category_tag_id|
+      if category_tag_id.to_i == 0 # new (custom or default) tag
+        self.story_categories << StoryCategory.create(name: category_tag_id)
       else
         # do nothing
       end
-    end unless new_tags[:product_category].nil?
+    end unless new_tags[:category].nil?
     # remove deleted product tags ...
     old_product_tags.each do |product|
       if new_tags[:product].nil? || !(new_tags[:product].include? product.id.to_s)
@@ -206,6 +189,8 @@ class Company < ActiveRecord::Base
     end unless new_tags[:product].nil?
   end
 
+  # this is used for validating the company's website address
+  # see lib/website_validator.rb
   def smart_add_url_protocol
     unless self.website[/\Ahttp:\/\//] || self.website[/\Ahttps:\/\//]
       self.website = "http://#{self.website}"

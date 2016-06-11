@@ -4,6 +4,9 @@ class StoryCategory < ActiveRecord::Base
 
   belongs_to :company
 
+  has_many :story_categories_successes, dependent: :destroy
+  has_many :successes, through: :story_categories_successes
+
   validates :name, presence: true
   validates_uniqueness_of :name, scope: :company_id
 

@@ -8,10 +8,8 @@ class Success < ActiveRecord::Base
   has_many :visitors, dependent: :destroy
   has_many :products_successes, dependent: :destroy
   has_many :products, through: :products_successes
-  has_many :product_cats_successes, dependent: :destroy
-  has_many :product_categories, through: :product_cats_successes
-  has_many :industries_successes, dependent: :destroy
-  has_many :industry_categories, through: :industries_successes
+  has_many :story_categories_successes, dependent: :destroy
+  has_many :story_categories, through: :story_categories_successes
   has_many :contributions, dependent: :destroy
   has_many :results, dependent: :destroy
   has_many :prompts, dependent: :destroy

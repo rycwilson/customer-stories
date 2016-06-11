@@ -1,24 +1,24 @@
 
 <div id='stories-filters-xs' class="form-horizontal visible-xs-block">
 
-  <% if @industries.length > 2 %>  <!-- includes 'All' (hence 2) -->
+  <% if categories.length > 2 %>  <!-- includes 'All' (hence 2) -->
 
     <div class='form-group'>
-      <%= label_tag :industries, "Category", class: 'col-xs-3 control-label' %>
+      <%= label_tag :categories, "Category", class: 'col-xs-3 control-label' %>
       <div class='col-xs-6'>
-       <%= select_tag :industries, options_for_select(@industries),
+       <%= select_tag :categories, options_for_select(categories),
               { class: 'stories-filter form-control' } %>
       </div>
     </div>
 
   <% end %>
 
-  <% if @products.length > 2 %>
+  <% if products.length > 2 %>
 
     <div class="form-group">
       <%= label_tag :products, "Product", class: 'col-xs-3 control-label' %>
       <div class="col-xs-6">
-        <%= select_tag :products, options_for_select(@products),
+        <%= select_tag :products, options_for_select(products),
              { class: 'stories-filter form-control' } %>
       </div>
     </div>
@@ -28,23 +28,23 @@
 </div>
 
 <div id="stories-filters"
-    class="form-inline hidden-xs <%= company_curator?(@company.id) ? 'curator' : 'reader' %>">
+    class="form-inline hidden-xs <%= company_curator?(company.id) ? 'curator' : 'reader' %>">
 
-  <% if @industries.length > 2 %>  <!-- includes 'All' (hence 2) -->
+  <% if categories.length > 2 %>  <!-- includes 'All' (hence 2) -->
 
     <div class='form-group'>
-      <%= label_tag :industries, "Category" %>&nbsp;
-      <%= select_tag :industries, options_for_select(@industries),
+      <%= label_tag :categories, "Category" %>&nbsp;
+      <%= select_tag :categories, options_for_select(categories),
             { class: 'stories-filter form-control' } %>
     </div>&nbsp;&nbsp;&nbsp;&nbsp;
 
   <% end %>
 
-  <% if @products.length > 2 %>
+  <% if products.length > 2 %>
 
     <div class="form-group">
       <%= label_tag :products, "Product" %>&nbsp;
-      <%= select_tag :products, options_for_select(@products),
+      <%= select_tag :products, options_for_select(products),
             { class: 'stories-filter form-control' } %>
     </div>
 

@@ -5,13 +5,21 @@
 
   <div class='tab-content' style='margin-top:40px'>
 
-    <%= render 'companies/shared/pipeline' %>
+    <%= render partial: 'companies/shared/pipeline',
+                locals: { mainnav_tab: @mainnav_tab, company: @company } %>
 
-    <%= render 'companies/shared/curate' %>
+    <%= render partial: 'companies/shared/curate',
+                locals: { mainnav_tab: @mainnav_tab,
+                              company: @company,
+                            customers: @customers,
+                           categories: @categories,
+                             products: @products } %>
 
-    <%= render 'companies/shared/promote' %>
+    <%= render partial: 'companies/shared/promote',
+                locals: { mainnav_tab: @mainnav_tab, company: @company} %>
 
-    <%= render 'companies/shared/measure' %>
+    <%= render partial: 'companies/shared/measure',
+                locals: { mainnav_tab: @mainnav_tab, company: @company} %>
 
   </div>  <!-- tab content -->
 

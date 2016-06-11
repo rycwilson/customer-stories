@@ -108,9 +108,9 @@
 
     <div class="form-group">
 
-      <%= label_tag 'company_tags[industry][]', 'Categories', class: 'control-label' %>
-      <%= select_tag 'company_tags[industry][]',
-            options_for_select(@industries, @industries_pre_select),
+      <%= label_tag 'company_tags[category][]', 'Categories', class: 'control-label' %>
+      <%= select_tag 'company_tags[category][]',
+            options_for_select(@categories, @categories_pre_select),
             { multiple: 'true', class: 'company-tags form-control',
               # placeholder: doesn't work from here, set in js
               style: 'width:100%' } %>
