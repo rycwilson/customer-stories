@@ -32,9 +32,13 @@
       <div class="container">
         <div class="row">
 
-          <%= render 'stories/shared/filters', { company: @company,
-                                                 categories: @categories,
-                                                 products: @products } %>
+          <%= render 'stories/shared/filters',
+                      { company: @company,
+                        categories: @categories,
+                        categories_pre_select: @categories_pre_select,
+                        products: @products,
+                        products_pre_select: @products_pre_select } %>
+
         </div>
       </div>
     </div>
@@ -48,7 +52,7 @@
             data-company-id="<%= @company.id %>">
           <div class='grid' id="stories-gallery">
 
-            <% @success_tiles.each do |success| %>
+            <% @story_tiles.each do |success| %>
 
               <div class="grid-item thumbnail">
 
@@ -74,7 +78,7 @@
 
 <!-- underscore template -->
 <script type="text/template" id="stories-template">
-  {{ successTiles.forEach(function (success) { }}
+  {{ storyTiles.forEach(function (success) { }}
 
     <div class="grid-item thumbnail">
 

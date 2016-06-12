@@ -95,20 +95,26 @@ class Company < ActiveRecord::Base
     .unshift( [""] )
   end
 
+  def stories_with_logo_published
+    Success.includes(:story, :customer, :products)
+           .joins(:story, :customer)  # these are associations
+           .where(customers: { company_id: self.id },  # these are tables
+                    stories: { logo_published: true })
+           .order("stories.published DESC, stories.publish_date ASC")
+           .order("stories.updated_at DESC")
+  end
+
   #
   # method returns successes instead of stories because data from
   # success associations is needed
   #
   # TODO: faster? http://stackoverflow.com/questions/20014292
   #
-  def filter_successes_by_tag tag, id
-    if id == '0'  # all successes
-      return Success.includes(:story, :customer, :products)
-                    .joins(:story, :customer)  # only successes with a story
-                    .where(stories: { logo_published: true },
-                         customers: { company_id: self.id })
-                    .order("stories.published DESC, stories.publish_date ASC")
-                    .order("stories.updated_at DESC")
+  def filter_stories_by_tag filter_params
+    tag = filter_params[:tag]
+    id = filter_params[:id]
+    if id == '0'  # all
+      return stories_with_logo_published
     else
       case tag
         when 'categories'
@@ -132,16 +138,7 @@ class Company < ActiveRecord::Base
     end
   end
 
-  def successes_with_logo_published
-    Success.includes(:story, :customer, :products)
-           .joins(:story, :customer)  # these are associations
-           .where(customers: { company_id: self.id },  # these are tables
-                    stories: { logo_published: true })
-           .order("stories.published DESC, stories.publish_date ASC")
-           .order("stories.updated_at DESC")
-  end
-
-  def successes_with_story
+  def all_stories
     Success.includes(:story, :customer, :products)
            .joins(:story, :customer)
            .where(customers: { company_id: self.id })

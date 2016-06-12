@@ -55,6 +55,7 @@ function ready () {
   initBIPListeners();
   initTagsListeners();
   initListeners();
+  storiesFiltersListener();
   configPlugins();
   configUnderscore();
   configS3Upload();
@@ -153,29 +154,8 @@ function initTagsListeners () {
 
 }
 
-function initListeners () {
-  /*
-    Customer logo
-  */
-  $('#customer-logo-form').on('change.bs.fileinput', function () {
-    var $form = $(this);
-    // need to introduce a slight delay while fileinput.js updates the form
-    // (adds hidden input with value = S3 link)
-    window.setTimeout(function () {
-      $.ajax({
-        url: $form.attr('action'),
-        method: 'put',
-        data: $form.serialize(),
-        success: function (data, status) {
-          console.log(data, status);
-        }
-      });
-    }, 500);
-  });
+function storiesFiltersListener () {
 
-  /*
-    Stories filter
-  */
   $('.stories-filter').on('change', function () {
     /*
       if change was triggered automatically,
@@ -202,12 +182,14 @@ function initListeners () {
       method: 'get',
       data: { filter: { tag: filterTag, id: filterId } },
       success: function (data, status) {
-        console.log('response data: ', data);
-        var successData = JSON.parse(data.success_tiles);
-        console.log('success data: ', successData);
+        // console.log('response data: ', data);
+        var storiesData = JSON.parse(data.story_tiles),
+            filterSlug = data.filter_slug,
+            isCurator = data.is_curator;
+        // console.log('success data: ', storiesData);
         $('#stories-gallery').empty();
-        if (successData.length) {
-          successData.forEach(function (success) {
+        if (storiesData.length) {
+          storiesData.forEach(function (success) {
             if (success.products.length && success.story.published) {
               storyPath = '/' + success.customer.slug +
                           '/' + success.products[0].slug +
@@ -222,26 +204,27 @@ function initListeners () {
           });
           // console.log('with path: ', data);
           // console.log('filtered successes: ', data);
-          var $tiles = $(template({ isCurator: data.is_curator,
-                                 successTiles: successData }));
+          var $tiles = $(template({ isCurator: isCurator,
+                                    storyTiles: storiesData }));
           $('#stories-gallery').masonry()
                                .append($tiles)
                                .masonry('appended', $tiles);
           centerLogos();
 
-
-
-          // this is going into the query string, so make it url-safe
-          var filterName = $_this.find("[value='" + $_this.val() + "']")
-                                 .text().toLowerCase().replace(' ', '-');
-          if (filterTag === 'categories') {
-            console.log('category: ', filterName);
-            history.pushState({ category: filterName, product: 'all' }, null, '/stories/?category=' + filterName);
-          } else {  // products
-            console.log('product: ', filterName);
-            history.pushState({ category: 'all', product: filterName }, null, '/stories/?product=' + filterName);
+          // push state
+          if (filterId === '0' && !filterSlug) {  // all
+            history.pushState({ category: 'all', product: 'all' },
+                                null, '/');
+          } else if (filterTag === 'categories') {
+            history.pushState({ category: filterSlug, product: 'all' },
+                                null, '/stories/?category=' + filterSlug);
+          } else if (filterTag === 'products') {  // products
+            history.pushState({ category: 'all', product: filterSlug },
+                                null, '/stories/?product=' + filterSlug);
+          } else {
+            // error
           }
-          console.log('pushed state: ', history.state);
+
         }
       }
     });
@@ -261,13 +244,35 @@ function initListeners () {
   });
 
   window.onpopstate = function (event) {
+    // need an ajax call here
     console.log('pop state: ', event.state);
-
   };
 
+}
 
+// function storiesIndexSuccess (data, status) {
 
+// }
 
+function initListeners () {
+  /*
+    Customer logo
+  */
+  $('#customer-logo-form').on('change.bs.fileinput', function () {
+    var $form = $(this);
+    // need to introduce a slight delay while fileinput.js updates the form
+    // (adds hidden input with value = S3 link)
+    window.setTimeout(function () {
+      $.ajax({
+        url: $form.attr('action'),
+        method: 'put',
+        data: $form.serialize(),
+        success: function (data, status) {
+          console.log(data, status);
+        }
+      });
+    }, 500);
+  });
 
   // reset new contributor modal form when the modal closes
   $('#new-contributor-modal').on('hidden.bs.modal', function () {

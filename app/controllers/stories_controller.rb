@@ -9,15 +9,26 @@ class StoriesController < ApplicationController
   before_action :set_s3_direct_post, only: :edit
 
   def index
-    # this will always be an async request
+    is_curator = company_curator? @company.id
+    # select box options ...
+    @categories = is_curator ?
+                    @company.categories_select_options.unshift(["All", 0]) :
+                    @company.categories_filter_select_options  # public reader
+    # if there's a query string, the option will be pre-selected ...
+    @categories_pre_select = []
+    @products = is_curator ?
+                  @company.products_select_options.unshift( ["All", 0] ) :
+                  @company.products_filter_select_options  # public reader
+    @products_pre_select = []
+    # async request ...
     if params[:filter]
-      @success_tiles =
-          @company.filter_successes_by_tag(params[:filter][:tag], params[:filter][:id])
+      @story_tiles = @company.filter_stories_by_tag params[:filter]
       respond_to do |format|
         format.json do
           render json: {
-            is_curator: company_curator?(@company.id),
-            success_tiles: @success_tiles.to_json(
+            filter_slug: get_filter_slug(params[:filter]),
+            is_curator: is_curator,
+            story_tiles: @story_tiles.to_json(
                              include: { story: { only: [:id, :slug, :published] },
                             products: { only: :slug },
                             customer: { only: [:slug, :logo_url] } } )
@@ -25,24 +36,14 @@ class StoriesController < ApplicationController
         end
       end
     # sync requests ...
-    elsif company_curator?(@company.id)
-      # if params[:category] || params[:product]
-      #   binding.pry
-      # end
-      @success_tiles = @company.successes_with_story    # all stories
-      # need to unshift here instead of model methods since other calls to
-      # these methods don't require the unshift
-      @categories = @company.categories_select_options  # all categories
-                            .unshift( ["All", 0] )
-      @products = @company.products_select_options
-                          .unshift( ["All", 0] )
+    elsif query_string? params
+      @story_tiles = @company.filter_stories_by_tag get_filter_params(params)
+      @categories_pre_select = [StoryCategory.friendly.find(params[:category]).id] if params[:category]
+      @products_pre_select = [Product.friendly.find(params[:product]).id] if params[:product]
+    elsif is_curator
+      @story_tiles = @company.all_stories
     else  # public reader
-      # if params[:category] || params[:product]
-      #   binding.pry
-      # end
-      @success_tiles = @company.successes_with_logo_published
-      @categories = @company.categories_filter_select_options
-      @products = @company.products_filter_select_options
+      @story_tiles = @company.stories_with_logo_published
     end
   end
 
@@ -247,6 +248,32 @@ class StoriesController < ApplicationController
       story.publish_date = nil
     end
     story.save
+  end
+
+  def get_filter_slug filter_params
+    if filter_params[:id] == '0'  # all -> query string to be removed, no slug needed
+      return nil
+    elsif filter_params[:tag] == 'categories'
+      StoryCategory.find(filter_params[:id]).slug
+    elsif filter_params[:tag] == 'products'
+      Product.find(filter_params[:id]).slug
+    end
+  end
+
+  def query_string? params
+    params[:category] || params[:product]
+  end
+
+  def get_filter_params params
+    filter = {}
+    if params[:category]
+      filter[:tag] = 'categories'
+      filter[:id] = StoryCategory.friendly.find params[:category]
+    else
+      filter[:tag] = 'products'
+      filter[:id] = Product.friendly.find params[:product]
+    end
+    filter
   end
 
 end
