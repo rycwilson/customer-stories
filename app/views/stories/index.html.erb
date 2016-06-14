@@ -24,7 +24,12 @@
 
   <% if company_curator? @company.id %>
 
-    <%= render 'shared/mainnav' %>
+    <%= render 'shared/mainnav',
+                  { company: @company,
+                    category_select_options: @category_select_options,
+                    category_pre_selected_options: @category_pre_selected_options,
+                    product_select_options: @product_select_options,
+                    product_pre_selected_options: @product_pre_selected_options } %>
 
   <% else %>
 

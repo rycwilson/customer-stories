@@ -38,8 +38,8 @@ class StoriesController < ApplicationController
     # sync requests ...
     elsif query_string? params
       @story_tiles = @company.filter_stories_by_tag get_filter_params_from_query(params)
-      @categories_pre_select = [StoryCategory.friendly.find(params[:category]).id] if params[:category]
-      @products_pre_select = [Product.friendly.find(params[:product]).id] if params[:product]
+      @category_pre_selected_options = [StoryCategory.friendly.find(params[:category]).id] if params[:category]
+      @product_pre_selected_options = [Product.friendly.find(params[:product]).id] if params[:product]
     elsif is_curator
       @story_tiles = @company.all_stories
     else  # public reader
