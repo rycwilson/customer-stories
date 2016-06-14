@@ -34,10 +34,10 @@
 
           <%= render 'stories/shared/filters',
                       { company: @company,
-                        categories: @categories,
-                        categories_pre_select: @categories_pre_select,
-                        products: @products,
-                        products_pre_select: @products_pre_select } %>
+                        category_select_options: @category_select_options,
+                        category_pre_selected_options: @category_pre_selected_options,
+                        product_select_options: @product_select_options,
+                        product_pre_selected_options: @product_pre_selected_options } %>
 
         </div>
       </div>
@@ -45,11 +45,12 @@
 
   <% end %>
 
-  <div id='stories-gallery-content' class="content">
+  <div id='stories-gallery-content' class="content"
+      data-company-id="<%= @company.id %>">
     <div class="container">
       <div class="portlet portlet-default">
-        <div
-            data-company-id="<%= @company.id %>">
+       <!--  <div
+            > -->
           <div class='grid' id="stories-gallery">
 
             <% @story_tiles.each do |success| %>
@@ -70,7 +71,7 @@
             <% end %>
 
           </div>
-        </div>  <!-- portlet-body -->
+       <!--  </div> -->  <!-- portlet-body -->
       </div>  <!-- portlet -->
     </div>  <!-- container -->
   </div>  <!-- content -->

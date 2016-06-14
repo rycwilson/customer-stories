@@ -1,24 +1,25 @@
 
 <div id='stories-filters-xs' class="form-horizontal visible-xs-block">
 
-  <% if categories.length > 2 %>  <!-- includes 'All' (hence 2) -->
+  <% if category_select_options.length > 2 %>  <!-- includes 'All' (hence 2) -->
 
     <div class='form-group'>
-      <%= label_tag :categories, "Category", class: 'col-xs-3 control-label' %>
+      <%= label_tag :category_select, "Category", class: 'col-xs-3 control-label' %>
       <div class='col-xs-6'>
-       <%= select_tag :categories, options_for_select(categories, categories_pre_select),
+       <%= select_tag :category_select,
+              options_for_select(category_select_options, category_pre_selected_options),
               { class: 'stories-filter form-control' } %>
       </div>
     </div>
 
   <% end %>
 
-  <% if products.length > 2 %>
+  <% if product_select_options.length > 2 %>
 
     <div class="form-group">
-      <%= label_tag :products, "Product", class: 'col-xs-3 control-label' %>
+      <%= label_tag :product_select, "Product", class: 'col-xs-3 control-label' %>
       <div class="col-xs-6">
-        <%= select_tag :products, options_for_select(products, products_pre_select),
+        <%= select_tag :product_select, options_for_select(product_select_options, product_pre_selected_options),
              { class: 'stories-filter form-control' } %>
       </div>
     </div>
@@ -30,21 +31,21 @@
 <div id="stories-filters"
     class="form-inline hidden-xs <%= company_curator?(company.id) ? 'curator' : 'reader' %>">
 
-  <% if categories.length > 2 %>  <!-- includes 'All' (hence 2) -->
+  <% if category_select_options.length > 2 %>  <!-- includes 'All' (hence 2) -->
 
     <div class='form-group'>
-      <%= label_tag :categories, "Category" %>&nbsp;
-      <%= select_tag :categories, options_for_select(categories, categories_pre_select),
+      <%= label_tag :category_select, "Category" %>&nbsp;
+      <%= select_tag :category_select, options_for_select(category_select_options, category_pre_selected_options),
             { class: 'stories-filter form-control' } %>
     </div>&nbsp;&nbsp;&nbsp;&nbsp;
 
   <% end %>
 
-  <% if products.length > 2 %>
+  <% if product_select_options.length > 2 %>
 
     <div class="form-group">
-      <%= label_tag :products, "Product" %>&nbsp;
-      <%= select_tag :products, options_for_select(products, products_pre_select),
+      <%= label_tag :product_select, "Product" %>&nbsp;
+      <%= select_tag :product_select, options_for_select(product_select_options, product_pre_selected_options),
             { class: 'stories-filter form-control' } %>
     </div>
 

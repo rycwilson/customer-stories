@@ -55,12 +55,13 @@ function ready () {
   initBIPListeners();
   initTagsListeners();
   initListeners();
-  storiesFiltersListener();
+  storiesFiltersListeners();
   configPlugins();
   configUnderscore();
   configS3Upload();
   initBootstrapSwitch();
   initContributions();
+  checkQueryString();
 
 }
 
@@ -154,28 +155,53 @@ function initTagsListeners () {
 
 }
 
-function storiesFiltersListener () {
+/**
+ * Get the value of a querystring
+ * @param  {String} field The field to get the value of
+ * @param  {String} url   The URL to get the value from (optional)
+ * @return {String}       The field value
+ */
+function getQueryString ( field, url ) {
+    var href = url ? url : window.location.href;
+    var reg = new RegExp( '[?&]' + field + '=([^&#]*)', 'i' );
+    var string = reg.exec(href);
+    return string ? string[1] : null;
+}
+
+/**
+  This should only run on stories#index
+ */
+function checkQueryString () {
+  var category = getQueryString('category'),  // slug || null
+      product = getQueryString('product'),
+      companyId = $('[data-company-id]').data('company-id');
+
+  if (category) {
+    $.get('/companies/' + companyId + '/story_categories/' + category,
+        function (data, status) {
+          $("select[name='category_select']").val(data.id).trigger('change.select2');
+        });
+  } else if (product) {
+    $.get('/companies/' + companyId + '/products/' + product,
+        function (data, status) {
+          $("select[name='product_select']").val(data.id).trigger('change.select2');
+        });
+  }
+}
+
+function storiesFiltersListeners () {
 
   $('.stories-filter').on('change', function () {
-    /*
-      if change was triggered automatically,
-      (i.e. to reset one select box in favor of select box most recently changed),
-      exit from function
-    */
-    if (sessionStorage.getItem('autoTrigger') === 'true') {
-      sessionStorage.setItem('autoTrigger', 'false');
-      return false;
-    }
 
-    var filterTag = $(this).attr('name'),  // 'categories' or 'products' (comes from instance var name)
-        filterId = $(this).val(),  // the database id of the chosen tag
-        companyId = $('#stories-gallery').data('company-id'),
+    // name will be 'category_select' or 'product_select'
+    var filterTag = $(this).attr('name').replace('_select', ''),
+        filterId = $(this).val(),  // the database id of the selected tag
         template = _.template($('#stories-template').html()),
-        $categorySelect = $(this).closest("[id*='stories-filters']").find("[name='categories']"),
-        $productSelect = $(this).closest("[id*='stories-filters']").find("[name='products']"),
+        $categorySelect = $(this).closest("[id*='stories-filters']")
+                                 .find("[name='category_select']"),
+        $productSelect = $(this).closest("[id*='stories-filters']")
+                                .find("[name='product_select']"),
         storyPath = null;
-
-        var $_this = $(this);
 
     $.ajax({
       url: '/stories',
@@ -213,39 +239,108 @@ function storiesFiltersListener () {
 
           // push state
           if (filterId === '0' && !filterSlug) {  // all
-            history.pushState({ category: 'all', product: 'all' },
-                                null, '/');
-          } else if (filterTag === 'categories') {
-            history.pushState({ category: filterSlug, product: 'all' },
-                                null, '/stories/?category=' + filterSlug);
-          } else if (filterTag === 'products') {  // products
-            history.pushState({ category: 'all', product: filterSlug },
-                                null, '/stories/?product=' + filterSlug);
+            history.pushState({ filter: null }, null, '/');
+          } else if (filterTag === 'category') {
+            history.pushState({ filter: {
+                                    tag: 'category',
+                                     id: filterId
+                                } }, null, '/?category=' + filterSlug);
+          } else if (filterTag === 'product') {
+            history.pushState({ filter: {
+                                    tag: 'product',
+                                     id: filterId
+                                } }, null, '/?product=' + filterSlug);
           } else {
             // error
+          }
+
+          // Filter select boxes are mutually exclusive
+          // If a category was selected, the product is 'all'
+          // (and vice versa)
+          if (filterTag === 'category' && $productSelect.length) {
+            $productSelect.val('0').trigger('change.select2');
+          } else if (filterTag === 'product' && $categorySelect.length) {
+            $categorySelect.val('0').trigger('change.select2');
           }
 
         }
       }
     });
 
-    if (filterTag === 'categories' &&
-                      $productSelect.length &&  // was filter removed?
-                      $productSelect.val() !== '0') {
-      sessionStorage.setItem('autoTrigger', 'true');
-      $productSelect.val('0').trigger('change');
-    } else if (filterTag === 'products' &&
-                             $categorySelect.length &&  // was filter removed?
-                             $categorySelect.val() !== '0') {
-      sessionStorage.setItem('autoTrigger', 'true');
-      $categorySelect.val('0').trigger('change');
-    }
+
 
   });
 
   window.onpopstate = function (event) {
-    // need an ajax call here
-    console.log('pop state: ', event.state);
+    // console.log('pop state: ', event.state);
+    /*
+      event.state may be null (i.e. there was no pushed state, e.g. initial page load)
+      or
+      event.state will contain a filter property ...
+        null -> all stories
+        tag, id -> filter stories
+    */
+    var filterTag = event.state ? (event.state.filter ?
+                            event.state.filter.tag : 'all') : 'all',
+        filterId = event.state ? (event.state.filter ?
+                            event.state.filter.id : '0') : '0',
+        template = _.template($('#stories-template').html()),
+        $categorySelect = $(document).find("[name='category_select']"),
+        $productSelect = $(document).find("[name='product_select']"),
+        storyPath = null;
+
+    $.ajax({
+      url: '/stories',
+      method: 'get',
+      data: { filter: { tag: filterTag, id: filterId } },
+      success: function (data, status) {
+        // console.log('response data: ', data);
+        var storiesData = JSON.parse(data.story_tiles),
+            filterSlug = data.filter_slug,
+            isCurator = data.is_curator;
+        // console.log('success data: ', storiesData);
+        $('#stories-gallery').empty();
+        if (storiesData.length) {
+          storiesData.forEach(function (success) {
+            if (success.products.length && success.story.published) {
+              storyPath = '/' + success.customer.slug +
+                          '/' + success.products[0].slug +
+                          '/' + success.story.slug;
+            } else if (success.story.published) {
+              storyPath = '/' + success.customer.slug +
+                          '/' + success.story.slug;
+            } else if (data.curator) {
+              storyPath = '/stories/' + success.story.id + '/edit';
+            }
+            $.extend(success, { path: storyPath });
+          });
+          // console.log('with path: ', data);
+          // console.log('filtered successes: ', data);
+          var $tiles = $(template({ isCurator: isCurator,
+                                    storyTiles: storiesData }));
+          $('#stories-gallery').masonry()
+                               .append($tiles)
+                               .masonry('appended', $tiles);
+          centerLogos();
+
+          // Filter select boxes are mutually exclusive
+          // If a category was selected, the product is 'all'
+          // (and vice versa)
+
+          if (filterTag === 'category' && $productSelect.length) {
+            $categorySelect.val(filterId.toString()).trigger('change.select2');
+            $productSelect.val('0').trigger('change.select2');
+          } else if (filterTag === 'product' && $categorySelect.length) {
+            $productSelect.val(filterId.toString()).trigger('change.select2');
+            $categorySelect.val('0').trigger('change.select2');
+          } else if (filterTag === 'all') {
+            $productSelect.val('0').trigger('change.select2');
+            $categorySelect.val('0').trigger('change.select2');
+          }
+        }
+      }
+    });
+
   };
 
 }

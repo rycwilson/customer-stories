@@ -11,16 +11,16 @@ class StoriesController < ApplicationController
   def index
     is_curator = company_curator? @company.id
     # select box options ...
-    @categories = is_curator ?
+    @category_select_options = is_curator ?
                     @company.categories_select_options.unshift(["All", 0]) :
                     @company.categories_filter_select_options  # public reader
     # if there's a query string, the option will be pre-selected ...
-    @categories_pre_select = []
-    @products = is_curator ?
-                  @company.products_select_options.unshift( ["All", 0] ) :
+    @category_pre_selected_options = []
+    @product_select_options = is_curator ?
+                  @company.products_select_options.unshift(["All", 0]) :
                   @company.products_filter_select_options  # public reader
-    @products_pre_select = []
-    # async request ...
+    @product_pre_selected_options = []
+    # async requests ...
     if params[:filter]
       @story_tiles = @company.filter_stories_by_tag params[:filter]
       respond_to do |format|
@@ -37,7 +37,7 @@ class StoriesController < ApplicationController
       end
     # sync requests ...
     elsif query_string? params
-      @story_tiles = @company.filter_stories_by_tag get_filter_params(params)
+      @story_tiles = @company.filter_stories_by_tag get_filter_params_from_query(params)
       @categories_pre_select = [StoryCategory.friendly.find(params[:category]).id] if params[:category]
       @products_pre_select = [Product.friendly.find(params[:product]).id] if params[:product]
     elsif is_curator
@@ -250,13 +250,19 @@ class StoriesController < ApplicationController
     story.save
   end
 
+  # async filter requests may contain either the tag's numeric id or its slug
+  # if id, look up the slug and return.  if slug, just return
   def get_filter_slug filter_params
     if filter_params[:id] == '0'  # all -> query string to be removed, no slug needed
       return nil
-    elsif filter_params[:tag] == 'categories'
+    elsif filter_params[:id].to_i == 0  # params already contain slug (instead of numeric id)
+      filter_params[:id]
+    elsif filter_params[:tag] == 'category'
       StoryCategory.find(filter_params[:id]).slug
-    elsif filter_params[:tag] == 'products'
+    elsif filter_params[:tag] == 'product'
       Product.find(filter_params[:id]).slug
+    else
+      # error
     end
   end
 
@@ -264,14 +270,17 @@ class StoriesController < ApplicationController
     params[:category] || params[:product]
   end
 
-  def get_filter_params params
+  def get_filter_params_from_query params
     filter = {}
     if params[:category]
-      filter[:tag] = 'categories'
-      filter[:id] = StoryCategory.friendly.find params[:category]
+      filter[:tag] = 'category'
+      filter[:id] = StoryCategory.friendly.find(params[:category]).id
+    elsif params[:product]
+      filter[:tag] = 'product'
+      filter[:id] = Product.friendly.find(params[:product]).id
     else
-      filter[:tag] = 'products'
-      filter[:id] = Product.friendly.find params[:product]
+      # error - should only be in this method if there was
+      # a query string with category= or product=
     end
     filter
   end

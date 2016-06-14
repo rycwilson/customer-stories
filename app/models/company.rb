@@ -66,6 +66,7 @@ class Company < ActiveRecord::Base
   # method returns an array of category tags for which
   # a logo-published story exists for the given company (self)
   def categories_filter_select_options
+    # binding.pry
     StoryCategory.joins(successes: { story: {}, customer: {} })
                  .where(customers: { company_id: self.id },
                           stories: { logo_published: true })
@@ -95,6 +96,14 @@ class Company < ActiveRecord::Base
     .unshift( [""] )
   end
 
+  def all_stories
+    Success.includes(:story, :customer, :products)
+           .joins(:story, :customer)
+           .where(customers: { company_id: self.id })
+           .order("stories.published DESC, stories.publish_date ASC")
+           .order("stories.updated_at DESC")
+  end
+
   def stories_with_logo_published
     Success.includes(:story, :customer, :products)
            .joins(:story, :customer)  # these are associations
@@ -111,39 +120,34 @@ class Company < ActiveRecord::Base
   # TODO: faster? http://stackoverflow.com/questions/20014292
   #
   def filter_stories_by_tag filter_params
-    tag = filter_params[:tag]
-    id = filter_params[:id]
-    if id == '0'  # all
-      return stories_with_logo_published
-    else
-      case tag
-        when 'categories'
-          Success.includes(:story, :customer, :products)
-                 .joins(:story_categories, :story, :customer)
-                 .where(story_categories: { id: id },
-                          stories: { logo_published: true },
-                        customers: { company_id: self.id })
-                 .order("stories.published DESC, stories.publish_date ASC")
-                 .order("stories.updated_at DESC")
-        when 'products'
-          Success.includes(:story, :customer, :products)
-                 .joins(:products, :story, :customer)
-                 .where(products: { id: id },
-                         stories: { logo_published: true },
-                       customers: { company_id: self.id })
-                 .order("stories.published DESC, stories.publish_date ASC")
-                 .order("stories.updated_at DESC")
-        else
-      end
+    return self.all_stories if filter_params[:id] == '0'  # all stories
+    case filter_params[:tag]  # all || category || product
+      when 'all'
+        self.all_stories
+      when 'category'
+        id = (StoryCategory.friendly
+                           .find(filter_params[:id]) # will find whether id or slug
+                           .id unless filter_params[:id].to_i != 0).try(:to_i) || filter_params[:id].to_i
+        Success.includes(:story, :customer, :products)
+               .joins(:story_categories, :story, :customer)
+               .where(story_categories: { id: id },
+                        stories: { logo_published: true },
+                      customers: { company_id: self.id })
+               .order("stories.published DESC, stories.publish_date ASC")
+               .order("stories.updated_at DESC")
+      when 'product'
+        id = (Product.friendly
+                     .find(filter_params[:id])
+                     .id unless filter_params[:id].to_i != 0).try(:to_i) || filter_params[:id].to_i
+        Success.includes(:story, :customer, :products)
+               .joins(:products, :story, :customer)
+               .where(products: { id: id },
+                       stories: { logo_published: true },
+                     customers: { company_id: self.id })
+               .order("stories.published DESC, stories.publish_date ASC")
+               .order("stories.updated_at DESC")
+      else
     end
-  end
-
-  def all_stories
-    Success.includes(:story, :customer, :products)
-           .joins(:story, :customer)
-           .where(customers: { company_id: self.id })
-           .order("stories.published DESC, stories.publish_date ASC")
-           .order("stories.updated_at DESC")
   end
 
   # slightly different than updating tags for a story

@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  get 'products/show'
+
   devise_for :admins
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
 
@@ -79,9 +81,13 @@ Rails.application.routes.draw do
       get '/:customer/:title', to: 'stories#show', as: 'public_story_no_product'
     end
 
+    # find a tag by its slug, necessary to set filter select boxes
+    # on sync load of stories#index
+    get   '/companies/:company_id/story_categories/:slug', to: 'story_categories#show'
+    get   '/companies/:company_id/products/:slug', to: 'products#show'
+
     # broken links
     get '/*all', to: 'site#valid_subdomain_bad_path'
-
 
 
   end
