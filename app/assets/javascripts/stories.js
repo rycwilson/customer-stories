@@ -718,6 +718,7 @@ function initMasonry () {
     isFitWidth: true
   });
   centerLogos();
+  $('#stories-gallery-content').css('visibility', 'visible');
 }
 
 /*
