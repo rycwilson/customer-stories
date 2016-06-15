@@ -22,7 +22,7 @@ class StoriesController < ApplicationController
     @product_pre_selected_options = []
     # async requests ...
     if params[:filter]
-      @story_tiles = @company.filter_stories_by_tag params[:filter]
+      @story_tiles = @company.filter_stories_by_tag params[:filter], is_curator
       respond_to do |format|
         format.json do
           render json: {
@@ -37,8 +37,7 @@ class StoriesController < ApplicationController
       end
     # sync requests ...
     elsif valid_query_string? params
-      binding.pry
-      @story_tiles = @company.filter_stories_by_tag get_filter_params_from_query(params)
+      @story_tiles = @company.filter_stories_by_tag get_filter_params_from_query(params), is_curator
       @category_pre_selected_options = [StoryCategory.friendly.find(params[:category]).id] if params[:category]
       @product_pre_selected_options = [Product.friendly.find(params[:product]).id] if params[:product]
     elsif is_curator

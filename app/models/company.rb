@@ -119,11 +119,15 @@ class Company < ActiveRecord::Base
   #
   # TODO: faster? http://stackoverflow.com/questions/20014292
   #
-  def filter_stories_by_tag filter_params
-    return self.all_stories if filter_params[:id] == '0'  # all stories
+  def filter_stories_by_tag filter_params, is_curator
+    if filter_params[:id] == '0'  # all stories
+      return self.all_stories if is_curator
+      return self.stories_with_logo_published
+    end
     case filter_params[:tag]  # all || category || product
       when 'all'
-        self.all_stories
+        return self.all_stories if is_curator
+        self.stories_with_logo_published
       when 'category'
         id = (StoryCategory.friendly
                            .find(filter_params[:id]) # will find whether id or slug
