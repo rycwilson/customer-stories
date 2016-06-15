@@ -36,7 +36,8 @@ class StoriesController < ApplicationController
         end
       end
     # sync requests ...
-    elsif query_string? params
+    elsif valid_query_string? params
+      binding.pry
       @story_tiles = @company.filter_stories_by_tag get_filter_params_from_query(params)
       @category_pre_selected_options = [StoryCategory.friendly.find(params[:category]).id] if params[:category]
       @product_pre_selected_options = [Product.friendly.find(params[:product]).id] if params[:product]
@@ -266,8 +267,20 @@ class StoriesController < ApplicationController
     end
   end
 
-  def query_string? params
-    params[:category] || params[:product]
+  # check validity of query string parameters
+  # at this point, only category or product are acceptable
+  def valid_query_string? params
+    return false if request.query_string.blank?
+    query_hash = Rack::Utils.parse_nested_query request.query_string
+    category_slug = params.try(:[], :category)
+    product_slug = params.try(:[], :product)
+    if query_hash.length === 1 && (category_slug || product_slug) &&
+        (category_slug ? StoryCategory.friendly.exists?(category_slug) :
+                        Product.friendly.exists?(product_slug))
+      true
+    else
+      redirect_to(root_path, flash: { warning: "That page doesn't exist" }) and return false
+    end
   end
 
   def get_filter_params_from_query params
@@ -278,6 +291,7 @@ class StoriesController < ApplicationController
     elsif params[:product]
       filter[:tag] = 'product'
       filter[:id] = Product.friendly.find(params[:product]).id
+    # elsif # some foreign parameter, or multiple foreign
     else
       # error - should only be in this method if there was
       # a query string with category= or product=
