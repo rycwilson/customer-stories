@@ -20,8 +20,8 @@ class CompaniesController < ApplicationController
       # e.g. we're not eager loading products here...
       @company = Company.includes(:customers, :successes, :stories, :visitors).find params[:id]
       @customers = @company.customers_select_options
-      @categories = @company.categories_select_options
-      @products = @company.products_select_options
+      @categories = @company.category_select_options_all
+      @products = @company.product_select_options_all
     end
   end
 
@@ -29,9 +29,9 @@ class CompaniesController < ApplicationController
     @company = Company.includes(:story_categories,
                                 :products,
                                 :email_templates).find params[:id]
-    @categories = @company.categories_select_options
+    @categories = @company.category_select_options_all
     @categories_pre_select = @company.story_categories.map { |category| category.id }
-    @products = @company.products_select_options
+    @products = @company.product_select_options_all
     @products_pre_select = @company.products.map { |product| product.id }
     @templates_select = @company.templates_select
   end

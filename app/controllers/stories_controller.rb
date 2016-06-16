@@ -10,15 +10,15 @@ class StoriesController < ApplicationController
 
   def index
     is_curator = company_curator? @company.id
-    # select box options ...
+    # select box options (filtered by role) ...
     @category_select_options = is_curator ?
-                    @company.categories_select_options.unshift(["All", 0]) :
-                    @company.categories_filter_select_options  # public reader
-    # if there's a query string, the option will be pre-selected ...
-    @category_pre_selected_options = []
+                    @company.category_select_options_all.unshift(["All", 0]) :
+                    @company.category_select_options_filtered  # public reader
     @product_select_options = is_curator ?
-                  @company.products_select_options.unshift(["All", 0]) :
-                  @company.products_filter_select_options  # public reader
+                  @company.product_select_options_all.unshift(["All", 0]) :
+                  @company.product_select_options_filtered  # public reader
+    # if there's a query string, the option will be pre-selected, otherwise no pre-selects
+    @category_pre_selected_options = []
     @product_pre_selected_options = []
     # async requests ...
     if params[:filter]
@@ -69,10 +69,10 @@ class StoriesController < ApplicationController
     @contributions_next_steps = Contribution.next_steps @story.success_id
     @contributions_contributors = Contribution.contributors @story.success_id
     @contributions_connections = Contribution.connections @story.success_id
-    @categories = @company.categories_select_options
+    @categories = @company.category_select_options_all
     @categories_pre_select = @story.success.story_categories
                                    .map { |category| category.id }
-    @products = @company.products_select_options
+    @products = @company.product_select_options_all
     @products_pre_select = @story.success.products
                                  .map { |category| category.id }
     @referrer_select = @story.success.contributions

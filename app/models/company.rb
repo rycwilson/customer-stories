@@ -47,25 +47,19 @@ class Company < ActiveRecord::Base
     .unshift( [""] )  # empty option makes placeholder possible (only needed for single select)
   end
 
-  def categories_select_options
+  def category_select_options_all
     self.story_categories.map { |category| [ category.name, category.id ] }
                          .sort
   end
 
-  def product_categories_select_options
-    self.product_categories.map do |category|
-      [ category.name, category.id ]
-    end
-  end
-
-  def products_select_options
+  def product_select_options_all
     self.products.map { |product| [ product.name, product.id ] }
                  .sort
   end
 
   # method returns an array of category tags for which
   # a logo-published story exists for the given company (self)
-  def categories_filter_select_options
+  def category_select_options_filtered
     # binding.pry
     StoryCategory.joins(successes: { story: {}, customer: {} })
                  .where(customers: { company_id: self.id },
@@ -78,7 +72,7 @@ class Company < ActiveRecord::Base
 
   # method returns an array of product tags for which
   # a logo-published story exists for the given company
-  def products_filter_select_options
+  def product_select_options_filtered
     Product.joins(successes: { story: {}, customer: {} })
            .where(customers: { company_id: self.id },
                     stories: { logo_published: true })

@@ -61,7 +61,7 @@ function ready () {
   configS3Upload();
   initBootstrapSwitch();
   initContributions();
-  checkQueryString();
+  updateSelectIfQueryString();
 
 }
 
@@ -171,7 +171,7 @@ function getQueryString ( field, url ) {
 /**
   This should only run on stories#index
  */
-function checkQueryString () {
+function updateSelectIfQueryString () {
   var category = getQueryString('category'),  // slug || null
       product = getQueryString('product'),
       companyId = $('[data-company-id]').data('company-id');
@@ -230,16 +230,21 @@ function storiesFiltersListeners () {
           });
           // console.log('with path: ', data);
           // console.log('filtered successes: ', data);
+
           var $tiles = $(template({ isCurator: isCurator,
                                     storyTiles: storiesData }));
+
+setTimeout(function () {
           $('#stories-gallery').masonry()
                                .append($tiles)
                                .masonry('appended', $tiles);
-          centerLogos();
 
+
+          centerLogos();
+}, 500);
           // push state
           if (filterId === '0' && !filterSlug) {  // all
-            history.pushState({ filter: null }, null, '/');
+            history.pushState({ filter: { tag: 'all', id: '0' } }, null, '/');
           } else if (filterTag === 'category') {
             history.pushState({ filter: {
                                     tag: 'category',
@@ -272,7 +277,8 @@ function storiesFiltersListeners () {
   });
 
   window.onpopstate = function (event) {
-    // console.log('pop state: ', event.state);
+    console.log('pop state: ', event.state);
+    console.log('history length: ', window.history.length);
     /*
       event.state may be null (i.e. there was no pushed state, e.g. initial page load)
       or
@@ -280,66 +286,68 @@ function storiesFiltersListeners () {
         null -> all stories
         tag, id -> filter stories
     */
-    var filterTag = event.state ? (event.state.filter ?
-                            event.state.filter.tag : 'all') : 'all',
-        filterId = event.state ? (event.state.filter ?
-                            event.state.filter.id : '0') : '0',
-        template = _.template($('#stories-template').html()),
-        $categorySelect = $(document).find("[name='category_select']"),
-        $productSelect = $(document).find("[name='product_select']"),
-        storyPath = null;
 
-    $.ajax({
-      url: '/stories',
-      method: 'get',
-      data: { filter: { tag: filterTag, id: filterId } },
-      success: function (data, status) {
-        // console.log('response data: ', data);
-        var storiesData = JSON.parse(data.story_tiles),
-            filterSlug = data.filter_slug,
-            isCurator = data.is_curator;
-        // console.log('success data: ', storiesData);
-        $('#stories-gallery').empty();
-        if (storiesData.length) {
-          storiesData.forEach(function (success) {
-            if (success.products.length && success.story.published) {
-              storyPath = '/' + success.customer.slug +
-                          '/' + success.products[0].slug +
-                          '/' + success.story.slug;
-            } else if (success.story.published) {
-              storyPath = '/' + success.customer.slug +
-                          '/' + success.story.slug;
-            } else if (data.curator) {
-              storyPath = '/stories/' + success.story.id + '/edit';
+    if (event.state) {
+      var filterTag = event.state.filter.tag,
+          filterId = event.state.filter.id,
+          template = _.template($('#stories-template').html()),
+          $categorySelect = $(document).find("[name='category_select']"),
+          $productSelect = $(document).find("[name='product_select']"),
+          storyPath = null;
+
+      $.ajax({
+        url: '/stories',
+        method: 'get',
+        data: { filter: { tag: filterTag, id: filterId } },
+        success: function (data, status) {
+          // console.log('response data: ', data);
+          var storiesData = JSON.parse(data.story_tiles),
+              filterSlug = data.filter_slug,
+              isCurator = data.is_curator;
+          // console.log('success data: ', storiesData);
+          $('#stories-gallery').empty();
+          if (storiesData.length) {
+            storiesData.forEach(function (success) {
+              if (success.products.length && success.story.published) {
+                storyPath = '/' + success.customer.slug +
+                            '/' + success.products[0].slug +
+                            '/' + success.story.slug;
+              } else if (success.story.published) {
+                storyPath = '/' + success.customer.slug +
+                            '/' + success.story.slug;
+              } else if (data.curator) {
+                storyPath = '/stories/' + success.story.id + '/edit';
+              }
+              $.extend(success, { path: storyPath });
+            });
+            // console.log('with path: ', data);
+            // console.log('filtered successes: ', data);
+            var $tiles = $(template({ isCurator: isCurator,
+                                      storyTiles: storiesData }));
+            $('#stories-gallery').masonry()
+                                 .append($tiles)
+                                 .masonry('appended', $tiles);
+            centerLogos();
+
+            // Filter select boxes are mutually exclusive
+            // If a category was selected, the product is 'all'
+            // (and vice versa)
+
+            if (filterTag === 'category' && $productSelect.length) {
+              $categorySelect.val(filterId.toString()).trigger('change.select2');
+              $productSelect.val('0').trigger('change.select2');
+            } else if (filterTag === 'product' && $categorySelect.length) {
+              $productSelect.val(filterId.toString()).trigger('change.select2');
+              $categorySelect.val('0').trigger('change.select2');
+            } else if (filterTag === 'all') {
+              $productSelect.val('0').trigger('change.select2');
+              $categorySelect.val('0').trigger('change.select2');
             }
-            $.extend(success, { path: storyPath });
-          });
-          // console.log('with path: ', data);
-          // console.log('filtered successes: ', data);
-          var $tiles = $(template({ isCurator: isCurator,
-                                    storyTiles: storiesData }));
-          $('#stories-gallery').masonry()
-                               .append($tiles)
-                               .masonry('appended', $tiles);
-          centerLogos();
-
-          // Filter select boxes are mutually exclusive
-          // If a category was selected, the product is 'all'
-          // (and vice versa)
-
-          if (filterTag === 'category' && $productSelect.length) {
-            $categorySelect.val(filterId.toString()).trigger('change.select2');
-            $productSelect.val('0').trigger('change.select2');
-          } else if (filterTag === 'product' && $categorySelect.length) {
-            $productSelect.val(filterId.toString()).trigger('change.select2');
-            $categorySelect.val('0').trigger('change.select2');
-          } else if (filterTag === 'all') {
-            $productSelect.val('0').trigger('change.select2');
-            $categorySelect.val('0').trigger('change.select2');
           }
         }
-      }
-    });
+      });
+
+    } // if
 
   };
 
