@@ -270,12 +270,19 @@ class StoriesController < ApplicationController
   # at this point, only category or product are acceptable
   def valid_query_string? params
     return false if request.query_string.blank?
+    company = Company.find_by subdomain: request.subdomain
     query_hash = Rack::Utils.parse_nested_query request.query_string
-    category_slug = params.try(:[], :category)
-    product_slug = params.try(:[], :product)
-    if query_hash.length === 1 && (category_slug || product_slug) &&
-        (category_slug ? StoryCategory.friendly.exists?(category_slug) :
-                        Product.friendly.exists?(product_slug))
+    valid_category = params.try(:[], :category) &&
+                StoryCategory.joins(successes: { customer: {} })
+                             .where(slug: params[:category],
+                                    customers: { company_id: company.id } )
+                             .present?
+    valid_product = params.try(:[], :product) &&
+                      Product.joins(successes: { customer: {} })
+                             .where(slug: params[:product],
+                                    customers: { company_id: company.id } )
+                             .present?
+    if query_hash.length === 1 && (valid_category || valid_product)
       true
     else
       redirect_to(root_path, flash: { warning: "That page doesn't exist" }) and return false

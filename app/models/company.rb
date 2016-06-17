@@ -42,19 +42,25 @@ class Company < ActiveRecord::Base
   def customers_select_options
     self.customers.map do |customer|
       # name will appear as a selection, while its id will be the value submitted
-      [ customer.name, customer.id ]
+      [ customer.name, customer.id, ]
     end
     .unshift( [""] )  # empty option makes placeholder possible (only needed for single select)
   end
 
   def category_select_options_all
-    self.story_categories.map { |category| [ category.name, category.id ] }
-                         .sort
+    self.story_categories
+        .map do |category|
+          [ category.name, category.id, { data: { slug: category.slug } } ]
+        end
+        .sort
   end
 
   def product_select_options_all
-    self.products.map { |product| [ product.name, product.id ] }
-                 .sort
+    self.products
+        .map do |product|
+          [ product.name, product.id, { data: { slug: product.slug } } ]
+        end
+        .sort
   end
 
   # method returns an array of category tags for which
@@ -65,7 +71,9 @@ class Company < ActiveRecord::Base
                  .where(customers: { company_id: self.id },
                           stories: { logo_published: true })
                  .uniq
-                 .map { |category| [ category.name, category.id ] }
+                 .map do |category|
+                   [ category.name, category.id, { data: { slug: category.slug } } ]
+                 end
                  .sort
                  .unshift ['All', 0]
   end
@@ -77,7 +85,9 @@ class Company < ActiveRecord::Base
            .where(customers: { company_id: self.id },
                     stories: { logo_published: true })
            .uniq
-           .map { |product| [ product.name, product.id ]}
+           .map do |product|
+             [ product.name, product.id, { data: { slug: product.slug } } ]
+           end
            .sort
            .unshift ['All', 0]
   end
@@ -126,8 +136,8 @@ class Company < ActiveRecord::Base
         id = (StoryCategory.friendly
                            .find(filter_params[:id]) # will find whether id or slug
                            .id unless filter_params[:id].to_i != 0).try(:to_i) || filter_params[:id].to_i
-        Success.includes(:story, :customer, :products)
-               .joins(:story_categories, :story, :customer)
+        Success.includes(:story, :customer, :story_categories)
+               .joins(:story, :customer, :story_categories)
                .where(story_categories: { id: id },
                         stories: { logo_published: true },
                       customers: { company_id: self.id })
@@ -138,7 +148,7 @@ class Company < ActiveRecord::Base
                      .find(filter_params[:id])
                      .id unless filter_params[:id].to_i != 0).try(:to_i) || filter_params[:id].to_i
         Success.includes(:story, :customer, :products)
-               .joins(:products, :story, :customer)
+               .joins(:story, :customer, :products)
                .where(products: { id: id },
                        stories: { logo_published: true },
                      customers: { company_id: self.id })

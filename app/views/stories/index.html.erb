@@ -50,13 +50,13 @@
 
   <% end %>
 
-  <div id='stories-gallery-content' class="content" style='visibility:hidden'
-      data-company-id="<%= @company.id %>">
+  <div id='stories-gallery-content' class="content">
     <div class="container">
       <div class="portlet portlet-default">
        <!--  <div
             > -->
-          <div class='grid' id="stories-gallery">
+          <div class='grid' id="stories-gallery" data-company-id="<%= @company.id %>"
+              style='visibility:hidden'>
 
             <% @story_tiles.each do |success| %>
 

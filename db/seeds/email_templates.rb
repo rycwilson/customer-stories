@@ -4,7 +4,6 @@ module EmailTemplatesSeed
   REQUEST_SUBJECT = "[customer_name] and [company_name] success story"
 
   CUSTOMER_BODY = "<p>[contributor_first_name],</p>
-<p>[contributor_first_name],</p>
 <p>[referral_intro]</p>
 <p>We're writing a success story about your project using [company_name] and would appreciate three minutes of your time to jot down your input.</p>
 <p>The benefit to you is this story will showcase your accomplishments. </p>
