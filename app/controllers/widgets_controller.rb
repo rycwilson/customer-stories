@@ -65,11 +65,23 @@ class WidgetsController < ApplicationController
                   <div class='scroll-left'></div>
                     <div class='row row-pagination text-center'>
                     </div>
-                    <div class='row row-horizon'>"
+                    <div class='row row-horizon text-center'>"
+
+    # determine best column width given number of stories
+    case stories_links.length
+      when 1..10
+        xs_col_width = 4
+        sm_col_width = 3
+        md_col_width = 2
+      when 11..30
+        xs_col_width = 4
+        sm_col_width = 3
+        md_col_width = 2
+    end
 
     # the bootstrap styling starts to break down after 30 stories
     stories_links.first(30).each do |story|
-      html <<         "<div class='col-xs-4 col-sm-3 col-md-2'>
+      html <<         "<div class='col-xs-#{xs_col_width} col-sm-#{sm_col_width} col-md-#{md_col_width}'>
                          <a href='#{story[:link]}' class='thumbnail' target='_blank'>
                            <img src='#{story[:logo]}' alt=''>
                          </a>
