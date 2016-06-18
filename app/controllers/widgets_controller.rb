@@ -34,7 +34,7 @@ class WidgetsController < ApplicationController
     stories_index_url = stories_url(host: company_subdomain + '.' + request.domain)
     stories_links =
          Company.find_by(subdomain: company_subdomain)
-                .successes_with_logo_published
+                .stories_with_logo_published
                 .map do |success|
                   story = success.story
                   { logo: success.customer.logo_url,
