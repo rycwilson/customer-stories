@@ -8,7 +8,9 @@ Rails.application.routes.draw do
   # valid subdomains (company/subdomain exists, excludes www)
   constraints(Subdomain) do
 
-    get '/', to: 'stories#index'
+    # giving this route an alias so we can use csp_stories_url
+    # instead of stories_url in the widgets controller
+    get '/', to: 'stories#index', as: 'csp_stories'
 
     # Widget
     get '/widget/cs', to: 'widgets#script', as: 'widget'

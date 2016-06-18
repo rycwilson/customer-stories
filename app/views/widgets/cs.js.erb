@@ -34,7 +34,9 @@
           url: "<%= URI.join(root_url, widget_data_path) %>",
           dataType: 'jsonp',
           data: { tabColor: $('#cs-script').data('tab-color'),
-                  fontColor: $('#cs-script').data('font-color') },
+                  fontColor: $('#cs-script').data('font-color'),
+                  category: $('#cs-script').data('category'),
+                  product: $('#cs-script').data('product') },
           success: function (data) {
             $('#cs-container').html(data.html);
             var $images = $('#cs-container img'), loadedImages = 0;

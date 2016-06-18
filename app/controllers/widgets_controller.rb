@@ -27,14 +27,25 @@ class WidgetsController < ApplicationController
 
   protected
 
+  # if invalid category or product filters, return all stories
   def widget_html params
     company_subdomain = request.subdomain
     tab_color = params[:tabColor]
     font_color = params[:fontColor]
-    stories_index_url = stories_url(host: company_subdomain + '.' + request.domain)
+    filter_all = { tag: 'all', id: '0' }
+    filter_attributes = params[:category].present? ?
+                            { tag: 'category', slug: params[:category] } :
+                        (params[:product].present? ?
+                            { tag: 'product', slug: params[:product] } : nil)
+    filter_params = filter_attributes ?
+        validate_and_convert_filter_attributes(filter_attributes) : nil
+    stories_index_url = filter_params ?
+        csp_stories_url(host: company_subdomain + '.' + request.domain) +
+              '?' + filter_params[:tag] + '=' + filter_attributes[:slug] :
+        csp_stories_url(host: company_subdomain + '.' + request.domain)
     stories_links =
          Company.find_by(subdomain: company_subdomain)
-                .stories_with_logo_published
+                .filter_stories_by_tag(filter_params || filter_all, false)
                 .map do |success|
                   story = success.story
                   { logo: success.customer.logo_url,
@@ -72,4 +83,29 @@ class WidgetsController < ApplicationController
             </section>"
   end
 
+  # filter attributes = { tag: ... , slug: ... }
+  def validate_and_convert_filter_attributes filter_attributes
+    company = Company.find_by subdomain: request.subdomain
+    case filter_attributes[:tag]
+      when 'category'
+        category_id = StoryCategory.joins(successes: { customer: {} })
+                                   .where(slug: filter_attributes[:slug],
+                                          customers: { company_id: company.id } )
+                                   .take.try(:id)
+        return category_id ? { tag: 'category', id:  category_id } : nil
+      when 'product'
+        product_id = Product.joins(successes: { customer: {} })
+                            .where(slug: filter_attributes[:slug],
+                                   customers: { company_id: company.id } )
+                            .take.try(:id)
+        return product_id ? { tag: 'product', id: product_id } : nil
+    end
+  end
+
 end
+
+
+
+
+
+
