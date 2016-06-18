@@ -56,7 +56,7 @@ class WidgetsController < ApplicationController
                 end
 
     html = "<section class='drawer' style='visibility:hidden'>
-              <header class='clickme'
+              <header class='clickme text-center'
                 style='background-color:#{tab_color};color:#{font_color}'>
                 Customer Stories
               </header>
