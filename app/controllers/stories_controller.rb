@@ -9,12 +9,12 @@ class StoriesController < ApplicationController
   before_action :set_s3_direct_post, only: :edit
 
   def index
-    is_curator = company_curator? @company.id
+    @is_curator = company_curator? @company.id
     # select box options (filtered by role) ...
-    @category_select_options = is_curator ?
+    @category_select_options = @is_curator ?
                     @company.category_select_options_all.unshift(["All", 0]) :
                     @company.category_select_options_filtered  # public reader
-    @product_select_options = is_curator ?
+    @product_select_options = @is_curator ?
                   @company.product_select_options_all.unshift(["All", 0]) :
                   @company.product_select_options_filtered  # public reader
     # if there's a query string, the option will be pre-selected, otherwise no pre-selects
@@ -22,12 +22,12 @@ class StoriesController < ApplicationController
     @product_pre_selected_options = []
     # async requests ...
     if params[:filter]
-      @story_tiles = @company.filter_stories_by_tag params[:filter], is_curator
+      @story_tiles = @company.filter_stories_by_tag params[:filter], @is_curator
       respond_to do |format|
         format.json do
           render json: {
             filter_slug: get_filter_slug(params[:filter]),
-            is_curator: is_curator,
+            is_curator: @is_curator,
             story_tiles: @story_tiles.to_json(
                              include: { story: { only: [:id, :slug, :published] },
                             products: { only: :slug },
@@ -37,10 +37,10 @@ class StoriesController < ApplicationController
       end
     # sync requests ...
     elsif valid_query_string? params
-      @story_tiles = @company.filter_stories_by_tag get_filter_params_from_query(params), is_curator
+      @story_tiles = @company.filter_stories_by_tag get_filter_params_from_query(params), @is_curator
       @category_pre_selected_options = [StoryCategory.friendly.find(params[:category]).id] if params[:category]
       @product_pre_selected_options = [Product.friendly.find(params[:product]).id] if params[:product]
-    elsif is_curator
+    elsif @is_curator
       @story_tiles = @company.all_stories
     else  # public reader
       @story_tiles = @company.stories_with_logo_published

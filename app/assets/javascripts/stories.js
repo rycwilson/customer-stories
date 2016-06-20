@@ -218,7 +218,7 @@ function storiesFilterListeners () {
       method: 'get',
       data: { filter: { tag: filterTag, id: filterId } },
       success: function (data, status, xhr) {
-        getFilteredStoriesSuccess(data, true, filterTag, filterId);
+        getFilteredStoriesSuccess(data, true, filterTag, filterId, false);
       }
     });
   });
@@ -246,7 +246,7 @@ function storiesFilterListeners () {
         method: 'get',
         data: { filter: { tag: filterTag, id: filterId } },
         success: function (data, status, xhr) {
-          getFilteredStoriesSuccess(data, false, filterTag, filterId);
+          getFilteredStoriesSuccess(data, false, filterTag, filterId, true);
         }
       });
 
@@ -280,7 +280,7 @@ function pushStateStoriesGallery (filterTag, filterId, filterSlug) {
   }
 }
 
-function getFilteredStoriesSuccess (data, pushStateIsRequired, filterTag, filterId) {
+function getFilteredStoriesSuccess (data, pushStateIsRequired, filterTag, filterId, isPopstate) {
 
   var storyTiles = JSON.parse(data.story_tiles),
       filterSlug = data.filter_slug,
@@ -293,6 +293,13 @@ function getFilteredStoriesSuccess (data, pushStateIsRequired, filterTag, filter
   // console.log('story data: ', storyTiles);
 
   $('#stories-gallery').empty();
+
+  if (isPopstate) {
+    $("[name='category_select'] + span").find('.select2-selection')
+                                        .each(function () { $(this).blur(); });
+    $("[name='product_select'] + span").find('.select2-selection')
+                                       .each(function () { $(this).blur(); });
+  }
 
   if (storyTiles.length) {
     storyTiles.forEach(function (success) {
@@ -312,8 +319,9 @@ function getFilteredStoriesSuccess (data, pushStateIsRequired, filterTag, filter
     updateGallery( $(template({ isCurator: isCurator,
                                 storyTiles: storyTiles })) );
 
-    if (pushStateIsRequired)
+    if (pushStateIsRequired) {
       pushStateStoriesGallery(filterTag, filterId, filterSlug);
+    }
 
     /**
       Filter select boxes are mutually exclusive
@@ -737,7 +745,11 @@ function centerLogos () {
         maxHeight = parseInt($(this).css('max-height')),
         diff = maxHeight - height;
     if (diff) {
-      $(this).css('margin-top', diff / 2);
+      // if there is no caption for the thumbnail, there is already a
+      // margin-top to compensate for this ...
+      // factor this in ...
+      var newMarginTop = (diff / 2) + parseInt($(this).css('margin-top'), 10);
+      $(this).css('margin-top', newMarginTop);
       $(this).css('margin-bottom', diff / 2);
     }
   });

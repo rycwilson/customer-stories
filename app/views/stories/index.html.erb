@@ -60,16 +60,19 @@
 
             <% @story_tiles.each do |success| %>
 
-              <div class="grid-item thumbnail">
+              <div class="grid-item thumbnail
+                   <%= !@is_curator && !success.story.published ? 'no-caption' : '' %>">
 
                 <a data-no-turbolink href="<%= grid_item_link(@company.id, success.story) %>">
                   <img src="<%= success.customer.logo_url || asset_path('company-logo-missing.png') %>">
                 </a>
 
+                <% if @is_curator || success.story.logo_published? %>
                 <div class="caption"
                     style="<%= grid_item_caption_style(@company, success.story) %>">
                   <%= grid_item_caption_text(@company.id, success.story) %>
                 </div>
+                <% end %>
 
               </div>
 
@@ -86,7 +89,8 @@
 <script type="text/template" id="stories-template">
   {{ storyTiles.forEach(function (success) { }}
 
-    <div class="grid-item thumbnail">
+    <div class="grid-item thumbnail
+          {{= !isCurator && !success.story.published ? 'no-caption' : '' }}">
 
       <a data-no-turbolink href="{{= success.path || 'javascript:;' }}">
         {{ if (success.customer.logo_url) { }}
