@@ -289,6 +289,8 @@ class StoriesController < ApplicationController
     end
   end
 
+  # since we've already passed valid_query_string? method,
+  # we know params and data are legit
   def get_filter_params_from_query params
     filter = {}
     if params[:category]
@@ -297,7 +299,6 @@ class StoriesController < ApplicationController
     elsif params[:product]
       filter[:tag] = 'product'
       filter[:id] = Product.friendly.find(params[:product]).id
-    # elsif # some foreign parameter, or multiple foreign
     else
       # error - should only be in this method if there was
       # a query string with category= or product=

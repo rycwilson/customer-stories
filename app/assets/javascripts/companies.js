@@ -36,7 +36,8 @@ var ready = function () {
   configSummernote();
   configMiniColors();
   initListeners();
-  initTemplateEditorListeners();
+  initTemplateEditor();
+  templateEditorListeners();
   initFormLogoBackground();
   initNewStoryValidator();
   adjustPromoCSS();
@@ -55,8 +56,11 @@ $(document).ready(function () {
 //   ready();
 // });
 
+function initTemplateEditor () {
+  $('.note-editable').attr('contenteditable', 'false');
+}
 
-function initTemplateEditorListeners () {
+function templateEditorListeners () {
 
   // load selected email template for editing
   $('.templates-select').on('change', function () {
@@ -69,6 +73,8 @@ function initTemplateEditorListeners () {
       return false;
 
     $.get('/email_templates/' + $(this).val(), function (data, status, xhr) {
+      // enable the editor
+      $('.note-editable').attr('contenteditable', 'true');
       $('#template_subject').val(data.subject);
       $('.note-editable').html(data.body);
       $('#email-templates-form').attr('action', '/email_templates/' + data.id);
@@ -78,6 +84,8 @@ function initTemplateEditorListeners () {
   });
 
   $('.note-editable').on('loadTemplate', function () {
+    // show the editor
+    // $(this).closest('form-group')
     // restore this template
     $('#restore-current-template').parent().removeClass('disabled');
     // test template
