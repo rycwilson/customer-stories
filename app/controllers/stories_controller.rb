@@ -88,7 +88,7 @@ class StoriesController < ApplicationController
   # -> due to the way form parameters are name-spaced
   def create
     new_story = params[:story]
-    if new_story[:customer].to_i == 0  # new customer?
+    if new_customer new_story[:customer]
       customer = Customer.new name: new_story[:customer], company_id: @company.id
       unless customer.save
         @flash_mesg = "Customer field can't be blank"
@@ -192,6 +192,17 @@ class StoriesController < ApplicationController
     else  # index
       @company = Company.find_by subdomain: request.subdomain
     end
+  end
+
+  # new customers can be created on new story creation
+  # the customer field's value will be either a number (db id of existing customer),
+  # or a string (new customer)
+  # this method ensures that a number is treated as a number and a string is
+  # treated as a string, e.g. "3M" is treated as a string
+  def new_customer customer
+    !Float(customer)  # if a number then customer already exists
+    rescue ArgumentError  # if error then customer is a string -> new customer
+      true
   end
 
   # if we're here, it means the router allowed through a valid path:
