@@ -121,8 +121,19 @@
         <div class="col-sm-6">
           <p class='lead'>Contributions</p>
         </div>
-        <div class="col-sm-6">
-          <p class='lead'>Story Narration</p>
+        <div class="col-sm-6" style='position:relative'>
+          <p class='lead' style='display:inline-block;margin-right:10px'>
+            Story Narration
+          </p>
+          <span id='edit-story-content' style='position:absolute'
+                class='glyphicon glyphicon-pencil bip-clickable'></span>
+          <button type='submit' class='hidden btn btn-sm btn-primary'
+                  form='story-content-form' style='position:absolute;left:205px'>
+            Save changes
+          </button>
+          <input type='reset' class='hidden btn btn-sm btn-default'
+                  form='story-content-form' style='position:absolute;left:310px'
+                  value='Cancel'>
         </div>
       </div>
 
@@ -158,94 +169,16 @@
 
           <!-- Story content -->
           <div class='col-sm-6'>
-            <!-- <p class='lead'>Story Narration</p> -->
-            <div class="well" style='position:relative'>
-              <div class="container-fluid">
-                <div class="row" style='margin-top:10px'>
+            <%= form_for @story,
+                  url: story_path(@story.id), html: { id: 'story-content-form' },
+                  method: :put, remote: true do |f| %>
 
-                  <div id='edit-story-situation'
-                        style='position:absolute; right:20px; margin-top:-3px'>
-                      <span class='glyphicon glyphicon-pencil bip-clickable'></span>
-                  </div>
+              <%= f.text_area :content, id: 'story-content',
+                    data: { provider: 'summernote' } %>
 
-                  <div class='col-sm-11' id='story-situation'>
-                    <p><strong>Situation</strong></p>
-                    <%= best_in_place @story, :situation,
-                          as: :textarea,
-                          display_with: lambda { |text| simple_format(text) },
-                          sanitize: false,
-                          url: story_path(@story.id),
-                          activator: '#edit-story-situation',
-                          place_holder: 'Add story situation ...',
-                          html_attrs: { style: 'width:100%' } %>
-                  </div>
+            <% end %>
+          </div>
 
-                </div> <br>
-                <div class="row">
-
-                  <div id='edit-story-challenge'
-                        style='position:absolute; right:20px; margin-top:-3px'>
-                      <span class='glyphicon glyphicon-pencil bip-clickable'></span>
-                  </div>
-
-                  <div class='col-sm-11' id='story-challenge'>
-                    <p><strong>Challenge</strong></p>
-                    <%= best_in_place @story, :challenge,
-                          as: :textarea,
-                          display_with: lambda { |text| simple_format(text) },
-                          sanitize: false,
-                          url: story_path(@story.id),
-                          activator: '#edit-story-challenge',
-                          place_holder: 'Add story challenge ...',
-                          html_attrs: { style: 'width:100%' } %>
-
-                  </div>
-
-                </div> <br>
-                <div class="row">
-
-                  <div id='edit-story-solution'
-                        style='position:absolute; right:20px; margin-top:-3px'>
-                      <span class='glyphicon glyphicon-pencil bip-clickable'></span>
-                  </div>
-
-                  <div class='col-sm-11' id='story-solution'>
-                    <p><strong>Solution</strong></p>
-                    <%= best_in_place @story, :solution,
-                          as: :textarea,
-                          display_with: lambda { |text| simple_format(text) },
-                          url: story_path(@story.id),
-                          sanitize: false,
-                          activator: '#edit-story-solution',
-                          place_holder: 'Add story solution ...',
-                          html_attrs: { style: 'width:100%' } %>
-
-                  </div>
-                </div> <br>
-                <div class="row">
-
-                  <div id='edit-story-benefits'
-                        style='position:absolute; right:20px; margin-top:-3px'>
-                      <span class='glyphicon glyphicon-pencil bip-clickable'></span>
-                  </div>
-
-                  <div class='col-sm-11' id='story-benefits'>
-                    <p><strong>Benefits:&nbsp&nbsp</strong></p>
-                    <%= best_in_place @story, :benefits,
-                          as: :textarea,
-                          url: story_path(@story.id),
-                          display_with: lambda { |text| simple_format(text) },
-                          sanitize: false,
-                          activator: '#edit-story-benefits',
-                          place_holder: 'Add story benefits ...',
-                          html_attrs: { style: 'width:100%' } %>
-
-                  </div>
-
-                </div>  <!-- row -->
-              </div>
-            </div>  <!-- well -->
-          </div>  <!-- col-sm-6 Story content -->
 
         <!-- </div>  --> <!-- layout -->
 

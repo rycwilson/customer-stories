@@ -23,7 +23,7 @@
           <%= text_field_tag 'contribution_request[subject]', nil,
                 class: 'form-control' %> <br>
 
-          <%= text_area_tag 'contribution_request[body]', nil,
+          <%= text_area_tag 'contribution_request[body]', nil, id: 'email-confirmation-editor',
               data: { provider: 'summernote' }, class: 'form-control' %>
 
         <% end %>

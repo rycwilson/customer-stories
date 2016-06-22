@@ -9,6 +9,7 @@
 *= require select2-bootstrap-theme/dist/select2-bootstrap
 *= require bootstrap-jasny/dist/css/jasny-bootstrap.css
 *= require social-sharing
+*= require summernote
 */
 
 .drawer {
@@ -307,10 +308,11 @@ p.lead.story-text {
   margin-bottom: 10px;
 }
 
+// summernote - disable file upload
+.note-group-select-from-files {
+  display: none;
+}
 
-/***********************************************/
-/*           story text
-/***********************************************/
 .story-text {
   font-family: 'Open Sans';
   // font-weight: 400;
@@ -347,6 +349,7 @@ p.lead {
   border-radius: 3px;
   padding: 5px;
   font-size: 1.2em;
+  cursor: pointer;
 }
 
 /* The font-size needs to be slightly different for the font awesome icons,
@@ -359,10 +362,11 @@ p.lead {
   border-radius: 3px;
   padding: 5px 6px 5px 5px;
   font-size: 1.3em;
+  cursor: pointer;
 }
 
 .bip-clickable:hover, .bip-clickable-fa:hover  {
-  color: white;
+  color: white !important;
   background-color: #666;
 }
 

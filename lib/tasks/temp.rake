@@ -1,6 +1,6 @@
 namespace :temp do
   desc "TODO"
-  task clone: :environment do
+  task clone_categories: :environment do
 
     id_mapping = {}
 
@@ -19,4 +19,20 @@ namespace :temp do
     end
 
   end
+
+  task condense_story_fields: :environment do
+    Story.all.each do |story|
+      story.content = ""
+      story.content << "<p><strong>Situation</strong></p>"
+      story.content << story.situation.to_s
+      story.content << "<p><strong>Challenge</strong></p>"
+      story.content << story.challenge.to_s
+      story.content << "<p><strong>Solution</strong></p>"
+      story.content << story.solution.to_s
+      story.content << "<p><strong>Benefits</strong></p>"
+      story.content << story.benefits.to_s
+      story.save
+    end
+  end
+
 end

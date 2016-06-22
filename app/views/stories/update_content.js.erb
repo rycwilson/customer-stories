@@ -1,0 +1,34 @@
+(function () {
+
+  var newContent = "<%= @new_content.gsub('\"', '\'') %>",
+      $storyContent = $('#story-content'),
+      $summernote = $storyContent.next(),
+      $formButtons = $("[form='story-content-form']"),
+      $editor = $summernote.find('.note-editable'),
+      $toolbarButtons = $summernote.find('.note-toolbar > .note-btn-group > button, .note-toolbar > .note-btn-group > .note-btn-group > button');
+
+  /*
+   *  we need to do this so that clicking 'Cancel' will go back to
+   *  the very last saved value, NOT the value on initial page load
+   *  (note: first one doesn't work!)
+   */
+  // $storyContent.summernote('code', newContent);
+  $storyContent.html(newContent);
+
+  $editor.attr('contenteditable', 'false')
+         .css({
+          'background-color': '#f5f5f5',
+          'pointer-events': 'none'
+         });
+
+  $toolbarButtons.css({
+                  'background-color': '#f5f5f5',
+                  'pointer-events': 'none'
+                 });
+
+  $formButtons.addClass('hidden');
+
+  $('#edit-story-content').css('color', '#666')
+                          .css('pointer-events', 'auto');
+
+}());

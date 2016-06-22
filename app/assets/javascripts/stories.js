@@ -61,6 +61,7 @@ function ready () {
   configS3Upload();
   initBootstrapSwitch();
   initContributions();
+  initStoryContentEditor();
 
   updateSelectBoxesIfQueryString();
 
@@ -532,45 +533,35 @@ function initSelect2 () {
 }
 
 function initContributions () {
-
-  // show an in-progress modal when request email is sent
-  $('#email-confirmation-modal i').on('click', function () {
-
-  });
-
+  /*
+   *  hide the email confirmation modal after sending
+   */
   $('#confirm-email-form').on('submit', function () {
     $(this).closest('.modal-content').find('.modal-title')
                                      .addClass('hidden');
     $(this).closest('.modal-content').find('.progress')
                                      .removeClass('hidden');
   });
-
   /*
-    init summernote
-    this could potentially be run in application.js and apply to both
-    stories and companies controllers, but for the time being the editor
-    in stories needs to have some stuff disabled
-  */
-  $('[data-provider="summernote"]').each(function () {
-    $(this).summernote({
-      focus: false,  // this does not appear to work
-      toolbar: [
-        // ['style', ['style']],
-        ['font', ['bold', 'italic', 'underline']], //, 'clear']],
-        // ['fontname', ['fontname']],
-        // ['color', ['color']],
-        ['para', ['ul', 'ol', 'paragraph']],
-        // ['height', ['height']],
-        // ['table', ['table']],
-        // ['insert', ['link', 'picture', 'hr']],
-        // ['view', ['codeview']],
-        // ['help', ['help']]
-      ],
-    });
+   *  init summernote
+   */
+  $('#email-confirmation-editor').summernote({
+    focus: false,  // this does not appear to work
+    toolbar: [
+      // ['style', ['style']],
+      ['font', ['bold', 'italic', 'underline']], //, 'clear']],
+      // ['fontname', ['fontname']],
+      // ['color', ['color']],
+      ['para', ['ul', 'ol', 'paragraph']],
+      // ['height', ['height']],
+      // ['table', ['table']],
+      // ['insert', ['link', 'picture', 'hr']],
+      // ['view', ['codeview']],
+      // ['help', ['help']]
+    ],
   });
-
   /*
-    on successful addition of linkedin profile to contributor card
+   *  on successful addition of linkedin profile to contributor card
   */
   $(".contribution-cards").on("ajax:success", ".best_in_place[data-bip-attribute='linkedin_url']",
     function (event, data) {
@@ -630,7 +621,7 @@ function initContributions () {
   });
 
   /*
-    only one accordion panel open at a time
+   *  only one accordion panel open at a time
   */
   $('.accordion-toggle').on('click', function () {
     if ($(this).attr('href').match(/info/)) {
@@ -701,6 +692,79 @@ function initContributions () {
 
   });
 
+}
+
+function initStoryContentEditor () {
+
+  var $storyContent = $('#story-content'),
+      $saveButton = $("[type='submit'][form='story-content-form']"),
+      $cancelButton = $("[type='reset'][form='story-content-form']"),
+      $formButtons = $("[form='story-content-form']");
+
+  $storyContent.summernote({
+    toolbar: [
+      ['style', ['style']],
+      ['font', ['bold', 'italic', 'underline']], //, 'clear']],
+      ['fontname', ['fontname']],
+      // ['color', ['color']],
+      ['para', ['ul', 'ol', 'paragraph']],
+      ['height', ['height']],
+      ['table', ['table']],
+      ['insert', ['link', 'picture', 'hr']],
+      ['view', ['codeview']],
+      ['help', ['help']]
+    ],
+  });
+
+  var $summernote = $storyContent.next(),
+      $editor = $summernote.find('.note-editable'),
+      $toolbarButtons = $summernote.find('.note-toolbar > .note-btn-group > button, .note-toolbar > .note-btn-group > .note-btn-group > button');
+
+  // disable the editor until edit button is clicked
+  $editor.attr('contenteditable', 'false')
+         .css({
+          'background-color': '#f5f5f5',
+          'pointer-events': 'none'
+         });
+
+  $toolbarButtons.css({
+                  'background-color': '#f5f5f5',
+                  'pointer-events': 'none'
+                 });
+
+  $('#edit-story-content').on('click', function () {
+    $(this).css({
+      'pointer-events': 'none',
+      color: '#e3e3e3'
+    });
+    $editor.attr('contenteditable', 'true')
+           .css({
+            'background-color': 'white',
+            'pointer-events': 'auto'
+           });
+    $toolbarButtons.css({
+                      'background-color': 'white',
+                      'pointer-events': 'auto'
+                    });
+    $formButtons.removeClass('hidden');
+    // $cancelButton.removeClass('hidden');
+  });
+
+  $summernote.on('click', '.note-view', function () {
+    if ($formButtons.prop('disabled')) {
+      $formButtons.prop('disabled', false);
+    } else {
+      $formButtons.prop('disabled', true);
+    }
+  });
+
+  // this function can be generalized and used elsewhere ...
+  // $('form').has('[data-provider="summernote"]').on('reset', function () {
+  $('#story-content-form').on('reset', function () {
+    // revert to last saved content ...
+    $storyContent.summernote('code', $storyContent.text());
+    $saveButton.click();
+  });
 }
 
 function initLinkedIn () {

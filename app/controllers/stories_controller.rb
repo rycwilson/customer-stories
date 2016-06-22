@@ -117,7 +117,7 @@ class StoriesController < ApplicationController
     story = Story.find params[:id]
     if params[:story_tags]  # updated tags (this comes from a hidden field with value="")
       story.update_tags params[:story]
-      respond_to { |format| format.js }
+      respond_to { |format| format.js { render action: 'update_tags' } }
     elsif params[:customer_logo_url]
       story.success.customer.update logo_url: params[:customer_logo_url]
       respond_to { |format| format.json { render json: nil } }
@@ -126,6 +126,10 @@ class StoriesController < ApplicationController
       respond_to { |format| format.json { render json: nil } }
     # params[:story]* items must appear below, else error
     # (there is no params[:story] when params[:story_tags] or params[:result] are present)
+    elsif params[:story][:content]
+      story.update content: params[:story][:content]
+      @new_content = story.content.html_safe
+      respond_to { |format| format.js { render action: 'update_content' } }
     elsif params[:story][:new_prompt]
       story.success.prompts << Prompt.create(description: params[:story][:new_prompt])
       @prompts = story.success.prompts
@@ -200,8 +204,8 @@ class StoriesController < ApplicationController
   # this method ensures that a number is treated as a number and a string is
   # treated as a string, e.g. "3M" is treated as a string
   def new_customer customer
-    !Float(customer)  # if a number then customer already exists
-    rescue ArgumentError  # if error then customer is a string -> new customer
+    !Float(customer)  # if a number then customer already exists -> return false
+    rescue ArgumentError  # if error then customer is a string -> return true
       true
   end
 

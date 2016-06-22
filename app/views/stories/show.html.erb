@@ -92,36 +92,11 @@
 
             <h3 class='text-center'><%= @story.title %></h3>
 
-            <p><strong>Situation</strong></p>
             <div class="story-text visible-md-block visible-lg-block">
-              <%= simple_format @story.situation %>
+              <%= simple_format @story.content %>
             </div>
             <div class="story-text hidden-md hidden-lg">
-              <%= simple_format @story.situation %>
-            </div>
-
-            <p><strong>Challenge</strong></p>
-            <div class="story-text visible-md-block visible-lg-block">
-              <%= simple_format @story.challenge %>
-            </div>
-            <div class="story-text hidden-md hidden-lg">
-              <%= simple_format @story.challenge %>
-            </div>
-
-            <p><strong>Solution</strong></p>
-            <div class="story-text visible-md-block visible-lg-block">
-              <%= simple_format @story.solution %>
-            </div>
-            <div class="story-text hidden-md hidden-lg">
-              <%= simple_format @story.solution %>
-            </div>
-
-            <p><strong>Benefits</strong></p>
-            <div class="story-text visible-md-block visible-lg-block">
-              <%= simple_format @story.benefits %>
-            </div>
-            <div class="story-text hidden-md hidden-lg">
-              <%= simple_format @story.benefits %>
+              <%= simple_format @story.content %>
             </div>
 
           </div>
