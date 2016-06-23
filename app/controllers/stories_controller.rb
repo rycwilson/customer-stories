@@ -128,7 +128,9 @@ class StoriesController < ApplicationController
     # (there is no params[:story] when params[:story_tags] or params[:result] are present)
     elsif params[:story][:content]
       story.update content: params[:story][:content]
-      @new_content = story.content.html_safe
+      @new_content = story.content
+      # logger.debug "@new_content: #{@new_content}"
+      # binding.pry
       respond_to { |format| format.js { render action: 'update_content' } }
     elsif params[:story][:new_prompt]
       story.success.prompts << Prompt.create(description: params[:story][:new_prompt])

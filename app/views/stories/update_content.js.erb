@@ -1,6 +1,6 @@
 (function () {
 
-  var newContent = "<%= @new_content.gsub('\"', '\'') %>",
+  var newContent = "<%= j @new_content.html_safe %>",
       $storyContent = $('#story-content'),
       $summernote = $storyContent.next(),
       $formButtons = $("[form='story-content-form']"),
