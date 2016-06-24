@@ -27,10 +27,27 @@ Things you may want to cover:
 Please feel free to use a different markup language if you do not plan to run
 <tt>rake doc:app</tt>.
 
+## Heroku
+#### Database
+To copy from production to staging: 
+(this assumes `staging` is a git remote repo)
+
+1. turn off the web dynos in staging: ```heroku maintenance:on -r staging```
+2. if there are non-web-dynos, turn them off too: ```heroku ps:scale worker=0 -r staging```
+3. copy: ```heroku pg:copy floating-spire-2927::HEROKU_POSTGRESQL_GOLD_URL HEROKU_POSTGRESQL_MAUVE_URL -r staging```
+4. (to confirm database names: ```heroku pg:info```)
+
+Turn stuff back on:
+
+1. ```heroku maintenance:off -r staging```
+2. ```heroku ps:scale worker=1 -r staging``` (or however many workers, if any)
+
+
+
 ## Amazon Web Services (AWS)
 ####Account
 - Ryan owns account, Dan has root permissions
-- TODO: at what point is it not free anymore?
+- TODO: at what point is it no longer free?
 
 #### Buckets - development and production
 - user-uploaded images are in uploads/
