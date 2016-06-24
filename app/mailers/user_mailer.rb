@@ -22,7 +22,7 @@ class UserMailer < ApplicationMailer
       subject = contribution.email_contribution_request.subject.prepend("Final reminder: ")
     end
     @body = contribution.email_contribution_request.body.html_safe
-    send_mail curator, contributor, subject
+    send_mail curator, contributor, subject, true
   end
 
   def test_template template, curator
@@ -56,7 +56,7 @@ class UserMailer < ApplicationMailer
 
   end
 
-  def send_mail curator, contributor, subject
+  def send_mail curator, contributor, subject, is_reminder=false
     if Rails.env == 'development'
       if TEST_EMAILS.include? contributor.email
         sender_email = (contributor.email == curator.email ? "dev-test@customerstories.net" : curator.email)
@@ -76,7 +76,12 @@ class UserMailer < ApplicationMailer
       recipient = "#{contributor.full_name} <#{contributor.email}>"
       sender = "#{curator.full_name} <#{curator.email}>"
     end
-    mail to: recipient, from: sender, subject: subject
+    if is_reminder
+      mail to: recipient, from: sender, subject: subject,
+      template_path: 'user_mailer', template_name: 'request_contribution'
+    else
+      mail to: recipient, from: sender, subject: subject
+    end
   end
 
 end
