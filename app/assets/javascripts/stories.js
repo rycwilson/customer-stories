@@ -747,7 +747,6 @@ function initStoryContentEditor () {
                       'pointer-events': 'auto'
                     });
     $formButtons.removeClass('hidden');
-    // $cancelButton.removeClass('hidden');
   });
 
   $summernote.on('click', '.note-view', function () {

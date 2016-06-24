@@ -12,8 +12,17 @@ class Story < ActiveRecord::Base
 
   friendly_id :title, use: [:slugged, :finders, :history]
 
+  # scrub user-supplied html input using whitelist
+  before_save :scrub_html_input, on: [:create, :update],
+              if: Proc.new { self.content.present? && self.content_changed? }
+
   def should_generate_new_friendly_id?
     new_record? || title_changed? || slug.blank?
+  end
+
+  def scrub_html_input
+    white_list_sanitizer = Rails::Html::WhiteListSanitizer.new
+    self.content = white_list_sanitizer.sanitize(content, tags: %w(a p strong i u blockquote pre font h1 h2 h3 h4 h5 h6 table tr td ol ul li hr img), attributes: %w(id class style face href src))
   end
 
   def assign_tags new_story

@@ -1,5 +1,9 @@
 (function () {
 
+  /*
+   *  TODO: user-supplied html is scrubbed on input;
+   *  should .sanitize also be called here?
+   */
   var newContent = "<%= j @new_content.html_safe %>",
       $storyContent = $('#story-content'),
       $summernote = $storyContent.next(),
@@ -12,7 +16,7 @@
    *  the very last saved value, NOT the value on initial page load
    *  (note: first one doesn't work!)
    */
-  // $storyContent.summernote('code', newContent);
+  // $summernote('code', newContent);
   $storyContent.html(newContent);
 
   $editor.attr('contenteditable', 'false')

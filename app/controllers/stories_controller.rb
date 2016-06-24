@@ -7,6 +7,7 @@ class StoriesController < ApplicationController
   before_action :set_story, only: :edit
   before_action :user_authorized?, only: :edit
   before_action :set_s3_direct_post, only: :edit
+  before_action
 
   def index
     @is_curator = company_curator? @company.id
@@ -129,8 +130,6 @@ class StoriesController < ApplicationController
     elsif params[:story][:content]
       story.update content: params[:story][:content]
       @new_content = story.content
-      # logger.debug "@new_content: #{@new_content}"
-      # binding.pry
       respond_to { |format| format.js { render action: 'update_content' } }
     elsif params[:story][:new_prompt]
       story.success.prompts << Prompt.create(description: params[:story][:new_prompt])

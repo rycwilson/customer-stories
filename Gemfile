@@ -16,11 +16,14 @@ gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 
+# this was supposedly going to help with history api cross-browser
+# compatibility, but didn't change onpopstate behavior
 # gem 'wiselinks'
+
+gem 'rails-html-sanitizer'
 gem 'turbolinks', '~> 5.0.0.beta'
 gem 'aws-sdk', '~> 2'
 gem 'pry-rails'
-gem 'better_errors'
 gem 'bower-rails', "~> 0.10.0"
 gem 'font-awesome-rails'
 gem 'figaro'
@@ -46,6 +49,7 @@ end
 group :development, :test do
 
   gem 'whenever', require: false
+  gem 'better_errors'
   # Access an IRB console on exception pages or by using <%= console %> in views
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring

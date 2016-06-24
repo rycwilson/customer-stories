@@ -254,6 +254,7 @@ DEPENDENCIES
   pg
   pry-rails
   rails (= 4.2.1)
+  rails-html-sanitizer
   rails_12factor
   rails_admin
   sass-rails (~> 5.0)

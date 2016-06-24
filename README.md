@@ -30,7 +30,9 @@ Please feel free to use a different markup language if you do not plan to run
 ## Heroku
 #### Database
 To copy from production to staging: 
-(this assumes `staging` is a git remote repo)
+(assumes `staging` is a git remote repo)
+
+[reference](https://http://stackoverflow.com/questions/10673630)
 
 1. turn off the web dynos in staging: ```heroku maintenance:on -r staging```
 2. if there are non-web-dynos, turn them off too: ```heroku ps:scale worker=0 -r staging```
