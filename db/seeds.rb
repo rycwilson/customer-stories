@@ -16,14 +16,28 @@ PRODUCTS_ACME = ['Anvil', 'Catapult', 'Bat Suit', 'Iron Carrot', 'Buck Shot', 'A
 ROLES = ['customer', 'partner', 'sales']
 STATUS_OPTIONS = ['pre_request', 'request', 'remind1', 'remind2', 'feedback', 'contribution', 'opt_out', 'unsubscribe', 'did_not_respond']
 
+# destroy all data unrelated to these three companies ...
+# Company.where.not("name IN ('CSP', 'Cisco Systems', 'Acme')").destroy_all
+
+# destroy CSP / Cisco / Acme data ...
+StoryCategory.destroy_all
+Product.destroy_all
+EmailTemplate.destroy_all
+Customer.destroy_all  # destroys successes
+                      # -> destroys stories, prompts, results, visitors,
+                      #    successes* join tables, contributions, email_contribution_requests
+User.destroy_all
+Company.destroy_all
+# User.where.not("email IN ('***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***')").destroy_all
+
 # dan = User.find_by(email:'***REMOVED***')
-# dan = User.create(first_name:'Dan', last_name:'Lindblom', email:'***REMOVED***', linkedin_url:'https://www.linkedin.com/in/danlindblom', sign_up_code:'csp_beta', password:'password', photo_url: 'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/0e2caaaf-d808-4279-b7ca-9929cfc6400c/dan.png')
+dan = User.create(first_name:'Dan', last_name:'Lindblom', email:'***REMOVED***', linkedin_url:'https://www.linkedin.com/in/danlindblom', sign_up_code:'csp_beta', password:'password', photo_url: 'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/0e2caaaf-d808-4279-b7ca-9929cfc6400c/dan.png')
 # ryan = User.find_by(email:'***REMOVED***')
 # joe = User.find_by(email:'***REMOVED***')
 # frank = User.find_by(email:'***REMOVED***')
-# ryan = User.create(first_name:'Ryan', last_name:'Wilson', email:'***REMOVED***', linkedin_url:'https://www.linkedin.com/in/wilsonryanc', sign_up_code:'csp_beta', password:'password', photo_url: 'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/099b59d3-1f35-4d8b-9183-a162a80bfbac/ryan.png')
+ryan = User.create(first_name:'Ryan', last_name:'Wilson', email:'***REMOVED***', linkedin_url:'https://www.linkedin.com/in/wilsonryanc', sign_up_code:'csp_beta', password:'password', photo_url: 'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/099b59d3-1f35-4d8b-9183-a162a80bfbac/ryan.png')
 
-acme = Company.find_by(name:'Acme')
+# acme = Company.find_by(name:'Acme')
 # acme.users.push(joe, frank)
 # acme = Company.create(name:'Acme Test', subdomain:'acme-test',
 #                   logo_url:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/4975cb76-14d7-4f09-a1ba-7726ae7fe6c3/acmecom.png",
@@ -33,12 +47,11 @@ acme = Company.find_by(name:'Acme')
 #                       photo_url:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/1c396f91-6232-4bdb-916e-907fcf6f6905/dlindblo[2].jpg",
 #                       phone:"650-327-6040", title:"Sales, Marketing, Entrepreneur, Investor, Advisor")
 
-cisco = Company.find_by(name:'Cisco Systems')
-# cisco.users.push(dan, ryan)
-# cisco = Company.create(name:'Cisco Systems', subdomain:'cisco', feature_flag:'demo',
-#                    logo_url:'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/6326ee57-e0e0-4a0b-aacb-9b59849f2c40/cisco-grey@2x.png',
-#                    nav_color_1:'#007fc5', nav_color_2:'#2B5693' , nav_text_color:'#FCFCFD')
-# cisco.users << dan << ryan
+# cisco = Company.find_by(name:'Cisco Systems')
+cisco = Company.create(name:'Cisco Systems', subdomain:'cisco', feature_flag:'demo', website: 'https://cisco.com',
+                   logo_url:'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/6326ee57-e0e0-4a0b-aacb-9b59849f2c40/cisco-grey@2x.png',
+                   nav_color_1:'#007fc5', nav_color_2:'#2B5693' , nav_text_color:'#FCFCFD')
+cisco.users << dan << ryan
 
 # trunity = Company.create(name:'Trunity', subdomain:'trunity',
 #                     logo_url:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/7272f9a8-5a97-460f-b6c6-5b176e8880d3/trunity_logo.png",
@@ -54,24 +67,12 @@ cisco = Company.find_by(name:'Cisco Systems')
 #                 nav_color_1:'#f7f7f7' ,nav_color_2:'#ebebeb', nav_text_color:"#e55f53")
 # cg.users << User.create(email:'compas@customerstories.net', first_name:'Dan', last_name:'Lindblom', sign_up_code:'csp_beta', password:'password')
 
-csp = Company.find_by(name:'CSP')
-# csp = Company.create(name:'CSP', subdomain:'csp', feature_flag:'beta'
-#                 logo_url:"https://s3-us-west-1.amazonaws.com/csp-production-assets/cs_logo.png",
-#                 nav_color_1:"#FBFBFB", nav_color_2:"#85CEE6", nav_text_color:"#333333")
+# csp = Company.find_by(name:'CSP')
+csp = Company.create(name:'CSP', subdomain:'csp', feature_flag:'beta', website:'http://www.fark.com',
+                logo_url:"https://s3-us-west-1.amazonaws.com/csp-production-assets/cs_logo.png",
+                nav_color_1:"#FBFBFB", nav_color_2:"#85CEE6", nav_text_color:"#333333")
 # csp.users << dan << ryan
 
-
-# destroy all data unrelated to these three companies ...
-Company.where.not("name IN ('CSP', 'Cisco Systems', 'Acme')").destroy_all
-
-# destroy CSP / Cisco / Acme data ...
-StoryCategory.destroy_all
-Product.destroy_all
-EmailTemplate.destroy_all
-Customer.destroy_all  # destroys successes
-                      # -> destroys stories, prompts, results, visitors,
-                      #    successes* join tables, contributions, email_contribution_requests
-User.where.not("email IN ('***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***')").destroy_all
 
 # some users with linkedin profiles (demo only)
 user1 = User.create(first_name:'Carlos', last_name:'Ramon', email:'carlos@mail.com', linkedin_url:'https://www.linkedin.com/in/carlosramon', sign_up_code:'csp_beta', password:'password')
@@ -84,15 +85,15 @@ user5 = User.create(first_name:'Jeff', last_name:'Weiner', email:'jeffw@mail.com
 STORY_CATEGORIES_CISCO.each do |category_name|
   cisco.story_categories << StoryCategory.create(name: category_name)
 end
-STORY_CATEGORIES_ACME.each do |category_name|
-  acme.story_categories << StoryCategory.create(name: category_name)
-end
+# STORY_CATEGORIES_ACME.each do |category_name|
+#   acme.story_categories << StoryCategory.create(name: category_name)
+# end
 PRODUCTS_CISCO.each do |product_name|
   cisco.products << Product.create(name: product_name)
 end
-PRODUCTS_ACME.each do |product_name|
-  acme.products << Product.create(name: product_name)
-end
+# PRODUCTS_ACME.each do |product_name|
+#   acme.products << Product.create(name: product_name)
+# end
 
 # Default email templates
 csp.email_templates << EmailTemplate.create(name: "Customer", subject: EmailTemplatesSeed::REQUEST_SUBJECT, body: EmailTemplatesSeed::CUSTOMER_BODY)
@@ -164,7 +165,7 @@ def seed_company company, *users
 end
 
 seed_company(cisco, user1, user2, user3, user4, user5)
-seed_company(acme, user1, user2, user3, user4, user5)
+# seed_company(acme, user1, user2, user3, user4, user5)
 
 
 

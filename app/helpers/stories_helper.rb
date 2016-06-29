@@ -54,4 +54,12 @@ module StoriesHelper
     end
   end
 
+  # this is for PDF generation
+  # ref: https://github.com/mileszs/wicked_pdf/issues/36
+  def embed_remote_image(url, content_type)
+    asset = open(url, "r:UTF-8") { |f| f.read }
+    base64 = Base64.encode64(asset.to_s).gsub(/\s+/, "")
+    "data:#{content_type};base64,#{Rack::Utils.escape(base64)}"
+  end
+
 end

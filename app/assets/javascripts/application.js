@@ -116,6 +116,16 @@ function configS3Upload () {
         // create hidden field
         var input = $("<input />", { type:'hidden', name: fileInput.attr('name'), value: url });
         form.append(input);
+        if (form.prop('id') === 'customer-logo-form') {
+          $.ajax({
+            url: form.attr('action'),
+            method: 'put',
+            data: form.serialize(),
+            success: function (data, status) {
+              // console.log(data, status);
+            }
+          });
+        }
       },
       fail: function(e, data) {
         submitButton.prop('disabled', false);

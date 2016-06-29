@@ -365,24 +365,6 @@ function replaceStateOnGalleryLoad (filterTag, filterId) {
 }
 
 function initListeners () {
-  /*
-    Customer logo
-  */
-  $('#customer-logo-form').on('change.bs.fileinput', function () {
-    var $form = $(this);
-    // need to introduce a slight delay while fileinput.js updates the form
-    // (adds hidden input with value = S3 link)
-    window.setTimeout(function () {
-      $.ajax({
-        url: $form.attr('action'),
-        method: 'put',
-        data: $form.serialize(),
-        success: function (data, status) {
-          // console.log(data, status);
-        }
-      });
-    }, 500);
-  });
 
   // reset new contributor modal form when the modal closes
   $('#new-contributor-modal').on('hidden.bs.modal', function () {

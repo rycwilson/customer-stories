@@ -1,0 +1,74 @@
+
+<div class='row header'>
+  <%= image_tag embed_remote_image(story.success.customer.company.logo_url, 'image/png'), height: 50 %>
+  <span style='font-size:20px; margin-left:20px'>Customer Story</span>
+  <%= wicked_pdf_image_tag 'mvp-landing/logo_full.png',
+        height: 50, class: 'pull-right' %>
+</div>
+
+<hr>
+
+<!-- <div class="row text-center">
+  <h3><%#= story.success.customer.name %></h3>
+</div> -->
+
+<div class="row logo-quote">
+  <div class='col-xs-3 text-center'>
+    <%= image_tag embed_remote_image(story.success.customer.logo_url, 'image/png'),
+          class: 'customer-logo' %>
+  </div>  <!-- logo -->
+
+  <!-- quote -->
+  <div class='col-xs-7'>
+    <p class='lead'>
+      <em>"<%= story.quote %>"</em>
+    </p>
+    <div class='row'>
+      <div class='col-sm-10 text-right'>
+        <p>
+          <em>- <%= story.quote_attr %></em>
+        </p>
+      </div>
+  </div>
+
+  </div>  <!-- quote -->
+</div>
+
+<hr>
+
+<div class="row story-content">
+
+  <div class="col-xs-7">
+    <div>
+      <h4 class='text-center story-title'><strong><%= story.title %></strong></h4>
+      <div>
+        <%= simple_format story.content %>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="col-xs-3 content-right">
+
+    <div class='results'>
+      <h4 class='text-center'><strong>Results</strong></h4>
+      <% story.success.results.each do |result| %>
+
+        <p><%= result.description %></p>
+
+      <% end %>
+    </div>
+
+    <div>
+      <h4 class='text-center'><strong>Contributors</strong></h4>
+      <% story.success.contributions.each do |contribution| %>
+
+        <p><%= contribution.contributor.full_name %></p>
+
+      <% end %>
+    </div>
+
+  </div>
+</div>
+
+

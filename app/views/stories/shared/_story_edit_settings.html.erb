@@ -40,6 +40,7 @@
     messes with the response type called for by remote:true (instead of
     javascript it gets changed to HTML, resulting in server error: unknown format)
   So, submission is done via AJAX. See stories.js
+  UPDATE: ajax upload happend in the S3 config function (application.js)
   -->
   <%= form_tag story_path(@story.id), class: 'directUpload', id: 'customer-logo-form',
         data: { 'form-data' => (@s3_direct_post.fields),

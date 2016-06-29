@@ -5,9 +5,9 @@ class StoriesController < ApplicationController
   before_action :set_company, only: [:index, :show, :create]
   before_action :set_public_story_or_redirect, only: :show
   before_action :set_story, only: :edit
+  before_action :set_contributors, only: :show
   before_action :user_authorized?, only: :edit
   before_action :set_s3_direct_post, only: :edit
-  before_action
 
   def index
     @is_curator = company_curator? @company.id
@@ -49,17 +49,16 @@ class StoriesController < ApplicationController
   end
 
   def show
-    @contributors =
-        User.joins(own_contributions: { success: {} })
-            .where(contributions: { linkedin: true },
-                       successes: { id: @story.success_id })
-            .order("CASE contributions.role
-                      WHEN 'customer' THEN '1'
-                      WHEN 'partner' THEN '2'
-                      WHEN 'sales' THEN '3'
-                    END")
-    # add the curator if he hasn't already been added ...
-    @contributors << @story.success.curator unless @contributors.any? { |c| c.email == @story.success.curator.email }
+    company_name = @story.success.customer.company.subdomain
+    customer_name = @story.success.customer.slug
+    respond_to do |format|
+      format.html
+      format.pdf do
+        render pdf: "#{company_name}-customer-story-#{customer_name}",
+               template: "stories/show.pdf.erb",
+               locals: { story: @story }
+      end
+    end
   end
 
   def edit
@@ -199,6 +198,20 @@ class StoriesController < ApplicationController
     end
   end
 
+  def set_contributors
+    @contributors =
+        User.joins(own_contributions: { success: {} })
+            .where(contributions: { linkedin: true },
+                       successes: { id: @story.success_id })
+            .order("CASE contributions.role
+                      WHEN 'customer' THEN '1'
+                      WHEN 'partner' THEN '2'
+                      WHEN 'sales' THEN '3'
+                    END")
+    # add the curator if he hasn't already been added ...
+    @contributors << @story.success.curator unless @contributors.any? { |c| c.email == @story.success.curator.email }
+  end
+
   # new customers can be created on new story creation
   # the customer field's value will be either a number (db id of existing customer),
   # or a string (new customer)
@@ -221,7 +234,9 @@ class StoriesController < ApplicationController
   #   - company's story index if not published or not curator
   def set_public_story_or_redirect
     @story = Story.friendly.find params[:title]
-    if request.path != @story.csp_story_path
+    if request.format == 'application/pdf'
+      @story
+    elsif request.path != @story.csp_story_path
       # old story title slug, redirect to current
       return redirect_to @story.csp_story_path, status: :moved_permanently
     elsif !@story.published? && !company_curator?(@company.id)

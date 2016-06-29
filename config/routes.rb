@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
 
-  get 'products/show'
-
   devise_for :admins
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
 
