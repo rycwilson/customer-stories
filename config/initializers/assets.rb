@@ -25,4 +25,5 @@ Rails.application.config.assets.precompile += %w(
   devise/confirmations.css
   devise/passwords.css
   widget.css cs-widget.css
+  pdf.css
 )
