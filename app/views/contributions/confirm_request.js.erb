@@ -29,8 +29,6 @@
     $("[data-toggle='tooltip']").tooltip('destroy');
     loadModalValues();
     $modal.modal('show');
-    // console.log($modal.find('.modal-body'));
-    // $modal.find('.modal-body').css('visibility', 'visible');
   }
 
   function loadModalValues () {
@@ -46,17 +44,10 @@
     this code must be run AFTER the modal opens
   */
   function loadSummernote () {
-    $modal.find('.note-codable').hide() // see comment below
+    // $modal.find('.note-codable').hide() // see comment below
     $summernote.summernote('code', requestEmail.body);
   }
 
 }());
 
-/*
-  There is an issue with summernote displaying both .note-codable
-  and .note-editable (html and text edit fields, respectively) simultaneously,
-  so the editor for email confirmation does not include html editing, and the jquery
-  statement above strips out .note-codable (which still shows up despite
-  display:none and despite being removed from the toolbox).
-*/
 

@@ -4,7 +4,7 @@
 
     <div>
       <%= image_tag embed_remote_image(story.success.customer.company.logo_url, 'image/png'), height: 45 %>
-      <h4 id='company-name'><%= company.name %></h4>
+      <!-- <h4 id='company-name'><%#= company.name %></h4> -->
     </div>
 
     <h3 id='customer-name'>
@@ -14,7 +14,7 @@
   </div>
 
   <%= image_tag embed_remote_image(story.success.curator.photo_url, 'image/png'),
-        height: 80, class: 'pull-right' %>
+        height: 82, class: 'pull-right' %>
 
   <div id='curator-contact' class='pull-right text-right' >
     <div>
