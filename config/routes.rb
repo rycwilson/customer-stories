@@ -27,6 +27,9 @@ Rails.application.routes.draw do
         resources :results, only: [:create, :update, :destroy]
       end
 
+      # approval PDF
+      get '/stories/:id/approval', to: 'stories#approval', as: 'story_approval'
+
       # delete a Prompt
       delete '/prompts/:id', to: 'prompts#destroy'
 

@@ -13,6 +13,7 @@
       <div class="col-sm-3">
         <%= f.check_box :published, class: "bs-switch form-control" %>
       </div>
+
       <!-- the data-no-turbolink attribute is necessary for linkedin widgets to properly load
   http://stackoverflow.com/questions/17600093/rails-javascript-not-loading-after-clicking-through-link-to-helper -->
       <div class="col-sm-4 text-center" data-no-turbolink>
@@ -25,6 +26,11 @@
       <%= f.label 'Publish Logo', class: 'col-sm-4 control-label' %>
       <div class="col-sm-3">
         <%= f.check_box :logo_published, class: "bs-switch form-control" %>
+      </div>
+
+      <div class="col-sm-4 text-center" data-no-turbolink>
+        <%= link_to 'Approval PDF', story_approval_path(@story.id, format: :pdf),
+              class: 'btn btn-primary', target: '_blank' %>
       </div>
     </div>
 

@@ -1,0 +1,101 @@
+
+<div class='header'>
+  <div>
+
+    <div>
+      <%= image_tag embed_remote_image(story.success.customer.company.logo_url, 'image/png'), height: 45 %>
+      <h4 id='company-name'><%= company.name %></h4>
+    </div>
+
+    <h3 id='customer-name'>
+      Customer Story - <%= customer_name %>
+    </h3>
+
+  </div>
+
+  <%= image_tag embed_remote_image(story.success.curator.photo_url, 'image/png'),
+        height: 80, class: 'pull-right' %>
+
+  <div id='curator-contact' class='pull-right text-right' >
+    <div>
+      <strong>Story Curator</strong>
+    </div>
+    <div>
+      <%= story.success.curator.full_name %>
+    </div>
+    <div>
+      <%= story.success.curator.title %>
+    </div>
+    <div>
+      <%= story.success.curator.email %>
+    </div>
+    <div>
+      <%= story.success.curator.phone %>
+    </div>
+  </div>
+
+</div>
+
+<hr>
+
+<div class="row logo-quote">
+  <div class='col-xs-3 text-center'>
+    <%= image_tag embed_remote_image(story.success.customer.logo_url, 'image/png'),
+          id: 'customer-logo' %>
+  </div>  <!-- logo -->
+
+  <!-- quote -->
+  <div class='col-xs-7'>
+    <p class='lead'>
+      <em>"<%= story.quote %>"</em>
+    </p>
+    <div class='row'>
+      <div class='col-sm-10 text-right'>
+        <p id='quote-attr'>
+          <em>- <%= story.quote_attr %></em>
+        </p>
+      </div>
+  </div>
+
+  </div>  <!-- quote -->
+</div>
+
+<hr>
+
+<div id="story-container">
+
+  <h4 id='story-title' class='text-center'>
+    <strong><%= story.title %></strong>
+  </h4>
+
+  <div id='results-container'>
+
+    <h4 class='text-center'><strong>Results</strong></h4>
+    <div id='results-list'>
+      <% story.success.results.each do |result| %>
+
+        <p><%= result.description %></p>
+
+      <% end %>
+    </div>
+
+    <h4 class='text-center'><strong>Contributors</strong></h4>
+    <div class='contributors'>
+      <ul class='list-unstyled text-center'>
+        <% story.success.contributions.each do |contribution| %>
+
+          <li style='line-height: 16px'><%= contribution.contributor.full_name %></li>
+
+        <% end %>
+      </ul>
+    </div>
+
+  </div>
+
+  <div>
+    <%= simple_format story.content %>
+  </div>
+
+</div>
+
+

@@ -2,10 +2,10 @@ class StoriesController < ApplicationController
 
   include StoriesHelper
 
-  before_action :set_company, only: [:index, :show, :create]
+  before_action :set_company, only: [:index, :show, :create, :approval]
   before_action :set_public_story_or_redirect, only: :show
-  before_action :set_story, only: :edit
-  before_action :set_contributors, only: :show
+  before_action :set_story, only: [:edit, :approval]
+  before_action :set_contributors, only: [:show, :approval]
   before_action :user_authorized?, only: :edit
   before_action :set_s3_direct_post, only: :edit
 
@@ -49,16 +49,6 @@ class StoriesController < ApplicationController
   end
 
   def show
-    company_name = @story.success.customer.company.subdomain
-    customer_name = @story.success.customer.slug
-    respond_to do |format|
-      format.html
-      format.pdf do
-        render pdf: "#{company_name}-customer-story-#{customer_name}",
-               template: "stories/show.pdf.erb",
-               locals: { story: @story }
-      end
-    end
   end
 
   def edit
@@ -175,6 +165,20 @@ class StoriesController < ApplicationController
     story.destroy
     redirect_to company_path(current_user.company_id),
         flash: { info: "Story '#{story.title}' was deleted" }
+  end
+
+  def approval
+    respond_to do |format|
+      format.pdf do
+        render pdf: "#{@company.subdomain}-customer-story-#{@story.success.customer.slug}",
+               template: "stories/approval.pdf.erb",
+               locals: { story: @story,
+                         company: @company,
+                         customer_name: @story.success.customer.name,
+                         contributors: @contributors },
+               footer: { right: '[page] of [topage]' }
+        end
+    end
   end
 
   private
