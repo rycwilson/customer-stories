@@ -10,10 +10,6 @@
 //= require best_in_place.purr
 //= require jquery.purr
 
-// AWS S3 upload
-//= require jquery-ui/ui/widget
-//= require jquery-file-upload/js/jquery.fileupload
-
 // HTML editor for contribution requests
 //= require summernote
 

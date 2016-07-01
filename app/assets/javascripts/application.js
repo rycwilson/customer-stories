@@ -8,6 +8,10 @@
 //= require mvpready-helpers
 //= require flot/jquery.flot
 
+// AWS S3 upload
+//= require jquery-ui/ui/widget
+//= require jquery-file-upload/js/jquery.fileupload
+
 // require_tree ./sitewide (under construction)
 
 // eventLogs();
@@ -74,9 +78,12 @@ function initTooltips () {
   $('[data-toggle="tooltip"]').tooltip();
 }
 
+
+// need to vlidate input file name
+// http://stackoverflow.com/questions/22387874/jquery-validate-plugin-bootstrap-jasny-bootstrap-file-input-regex-validation
 function configS3Upload () {
 
-  $('.directUpload').find("input:file").each(function(i, elem) {
+  $('.directUpload').find("input:file").each(function (i, elem) {
     var fileInput    = $(elem);
     var form         = $(fileInput.parents('form:first'));
     var submitButton = form.find('input[type="submit"]');
@@ -96,9 +103,22 @@ function configS3Upload () {
         var progress = parseInt(data.loaded / data.total * 100, 10);
         progressBar.css('width', progress + '%');
       },
+      submit: function (e, data) {
+        /*
+         *  don't allow spaces in file names
+         *  note: this is dependent upon bootstrap jasny hack,
+         *  ref: https://github.com/jasny/bootstrap/issues/179
+         */
+        var filePath = $(e.target).val(),
+            fileName = filePath.slice(filePath.lastIndexOf('/') + 1, filePath.length);
+        if (fileName.indexOf(' ') !== -1) {
+          flashDisplay('File name can not contain spaces', 'danger');
+          $('.fileinput').fileinput('reset');
+          return false;
+        }
+      },
       start: function (e) {
         submitButton.prop('disabled', true);
-
         progressBar.
           css('background', 'green').
           css('display', 'block').
@@ -108,7 +128,6 @@ function configS3Upload () {
       done: function(e, data) {
         submitButton.prop('disabled', false);
         progressBar.text("Uploading done");
-
         // extract key and generate URL from response
         var key   = $(data.jqXHR.responseXML).find("Key").text();
         var url   = 'https://' + form.data('host') + '/' + key;

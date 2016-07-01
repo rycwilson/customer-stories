@@ -9,10 +9,6 @@
 // Select2
 //= require select2/dist/js/select2
 
-// AWS S3 upload
-//= require jquery-ui/ui/widget.js
-//= require jquery-file-upload/js/jquery.fileupload
-
 // HTML editor for email templates
 //= require summernote
 

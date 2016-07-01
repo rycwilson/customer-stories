@@ -9,6 +9,11 @@ class User < ActiveRecord::Base
   validates :last_name, presence: true
   validates :phone, format: { without: /_/ }
 
+  # photo_url validation is handled on the front-end for now.
+  # due to S3 presence (?), server-side validation failures of photo_url
+  # open a devise view (not what we want)
+  # validates :photo_url, format: { without: /\s/ }
+
   # a User can have his own contribution(s) (i.e. he is contributor),
   # or he can be the Referrer for contribution(s)
   has_many :own_contributions, class_name: 'Contribution', foreign_key: 'user_id'
