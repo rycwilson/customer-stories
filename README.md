@@ -29,7 +29,7 @@ Please feel free to use a different markup language if you do not plan to run
 
 ## Heroku
 #### Database
-To copy from production to staging: 
+To copy from production to staging:
 (assumes `staging` is a git remote repo)
 
 [reference](https://http://stackoverflow.com/questions/10673630)
@@ -56,6 +56,7 @@ Turn stuff back on:
 - CORS config - new company deployments must be added to the list (dev and prod)
 - TODO: script to clean up orphaned files
 - TODO: limit image size
+- TODO: How to automate addition of new company to CORS list?
 
 #### CLI
 - [About](http://docs.aws.amazon.com/cli/latest/userguide/cli-chap-welcome.html)
@@ -73,7 +74,7 @@ Turn stuff back on:
 - Heroku doesn't like A-records, may lead to instability in DNS resolution
 	- [The Limitations of DNS A-Records](https://devcenter.heroku.com/articles/apex-domains)
 	- [Stack Overflow](http://stackoverflow.com/questions/13478008/heroku-godaddy-naked-domain), [Stack Overflow](http://stackoverflow.com/questions/11492563/heroku-godaddy-send-naked-domain-to-www), [Stack Overflow](http://stackoverflow.com/questions/16022324/how-to-setup-dns-for-an-apex-domain-no-www-pointing-to-a-heroku-app)
-	
+
 ####SSL Certificate
 - Wildcard certificate for *.customerstories.net purchased from DNSimple
 - Files are in ssl/ (.gitignore)
