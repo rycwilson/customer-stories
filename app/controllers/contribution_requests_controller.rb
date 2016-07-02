@@ -12,7 +12,7 @@ class ContributionRequestsController < ApplicationController
       @contributions_in_progress = Contribution.in_progress @contribution.success_id
       @flash_status = "info"
       @flash_mesg =
-        "An email request for contribution has been sent to #{@contribution.contributor.full_name}"
+        "Request sent to #{@contribution.contributor.full_name}"
     else
       @flash_status = "danger"
       @flash_mesg =

@@ -1,5 +1,5 @@
 <!-- flash messaging -->
-<div class="container" style='z-index:999; position:fixed; width:100%'>
+<div class="container" style='z-index:999;position:fixed;width:100%;padding:0'>
   <% flash.each do |type, msg| %>
     <!-- bootstrap type: success, info, warning, danger -->
     <!-- devise uses built-in types notice and alert,
@@ -8,12 +8,12 @@
       <% type = 'success' if type == 'notice' %>
       <% type = 'danger' if type == 'alert' %>
 
-      <div id='flash'
-           class="col-md-6 col-md-offset-3 text-center alert alert-<%= type %>"
+      <div id='flash' style='font-size:16px;height:65px;border-radius:0;padding-top:19px'
+           class="col-xs-12 text-center alert alert-<%= type %>"
            role="alert">
-       <!--  <button type="button" class="close" data-dismiss="alert"
+           <!--  <button type="button" class="close" data-dismiss="alert"
                 aria-hidden="true">&times;</button> -->
-        <%= content_tag :div, msg, id: "flash_#{type}" %>
+           <%= msg %>
       </div>
 
     <% end %>

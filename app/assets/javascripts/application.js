@@ -20,9 +20,18 @@ $(function() {
 
   initTooltips();
 
-  setTimeout(function () {
-    $('#flash').slideUp();
-  }, 3000);
+  (function syncHideFlash () {
+    setTimeout(function () {
+      $('#flash').slideUp();
+    }, 3000);
+    setTimeout(function () {
+      $('#flash').addClass('hidden')
+                 .removeClass('alert-success alert-info alert-warning alert-danger')
+                 .empty();
+    }, 3500);
+  }());
+
+
 
   // clear localStorage
   // $('#logout').on('click', function () {
@@ -56,22 +65,27 @@ function eventLogs () {
 
 // status should be one of: success, info, warning, danger
 function flashDisplay (mesg, status) {
-  $('#flash').toggleClass('hidden alert-' + status).append(mesg);
-  $('#flash').hide().append(flash).fadeIn('fast');
+  $('#flash').removeClass('hidden')
+             .addClass('alert-' + status)
+             .append(mesg)
+             .hide().append(flash).fadeIn('fast');
 
   setTimeout(function () {
     $('#flash').slideUp();
   }, 3000);
 
   setTimeout(function () {
-    $('#flash').toggleClass('hidden alert-' + status);
+    $('#flash').addClass('hidden')
+               .removeClass('alert-' + status);
+    $('#flash div').empty();
+
     // dispay:none setting appears after first click-cycle,
     // leads to subsequent failures
     // solution...
     $('#flash').css('display', '');
     // remove all text, leave child elements
     $('#flash').html($('#flash').children());
-  }, 4000);
+  }, 3500);
 }
 
 function initTooltips () {

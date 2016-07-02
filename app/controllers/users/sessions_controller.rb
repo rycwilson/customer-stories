@@ -19,13 +19,19 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   # POST /resource/sign_in
+  # overriding native devise in order to customize flash message
   def create
-    super
+    self.resource = warden.authenticate!(auth_options)
+    flash[:notice] = "Signed in" if is_flashing_format?
+    sign_in(resource_name, resource)
+    yield resource if block_given?
+    respond_with resource, location: after_sign_in_path_for(resource)
   end
 
   # DELETE /resource/sign_out
   def destroy
     super
+    flash.delete(:notice)  # skip the flash for sign out
   end
 
   # protected
@@ -43,7 +49,7 @@ class Users::SessionsController < Devise::SessionsController
     else
       # kill session since user is already logged in at this point (not sure why!)
       request.reset_session
-      redirect_to(root_url(host: request.domain), flash: { danger: "Not authorized"}) and return false
+      redirect_to(root_url(host: request.domain), flash: { danger: "Not authorized" }) and return false
     end
   end
 

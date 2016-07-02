@@ -58,7 +58,7 @@ class CompaniesController < ApplicationController
   def update
     if @company.update company_params
       @company.update_tags(params[:company_tags]) if params[:company_tags].present?
-      @flash_mesg = "Account updated successfully"
+      @flash_mesg = "Company profile updated"
       @flash_status = "success"
     else
       @flash_mesg = @company.errors.full_messages.join(', ')
@@ -67,7 +67,7 @@ class CompaniesController < ApplicationController
     respond_to do |format|
       format.html do
         redirect_to edit_company_path(@company),
-          flash: { success: "Account updated successfully" }
+          flash: { success: "Company profile updated" }
       end
       format.js
     end

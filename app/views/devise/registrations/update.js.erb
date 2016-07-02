@@ -9,7 +9,7 @@
   if (passwordUpdate) {
     $('#password-update-form')[0].reset();
     if (status === 'success') {
-      flashDisplay("Password updated successfully", status);
+      flashDisplay("Password changed", status);
       $("[href='#profile-tab']").click()
     }
     else {
@@ -30,7 +30,7 @@
             );
         IN.parse();
       });
-      flashDisplay("Account updated successfully", status);
+      flashDisplay("Account updated", status);
     }
     else {
       flashDisplay(flashMesg, status);

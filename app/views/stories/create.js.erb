@@ -1,0 +1,11 @@
+(function () {
+
+  $('#new-story-modal').modal('hide');
+
+  if ('<%= @redirect_url %>') {
+    window.location = '<%= @redirect_url %>'
+  } else {
+    flashDisplay('<%= @errors %>', 'danger')
+  }
+
+}());

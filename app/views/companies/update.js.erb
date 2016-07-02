@@ -1,7 +1,11 @@
 (function () {
 
-  var flashMesg = <%= raw @flash_mesg.to_json %>,
-      flashStatus = <%= raw @flash_status.to_json %>
+  var flashMesg = '<%= @flash_mesg %>',
+      flashStatus = '<%= @flash_status %>';
+
+      console.log('company update');
+      console.log('flash_mesg: ', flashMesg);
+      console.log('flash_status: ', flashStatus);
 
   $('header.navbar').attr('style', '<%= admin_navbar_style %>');
 

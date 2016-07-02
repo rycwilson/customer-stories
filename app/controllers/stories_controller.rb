@@ -78,11 +78,11 @@ class StoriesController < ApplicationController
   # -> due to the way form parameters are name-spaced
   def create
     new_story = params[:story]
-    if new_customer new_story[:customer]
+    if new_customer? new_story[:customer]
       customer = Customer.new name: new_story[:customer], company_id: @company.id
       unless customer.save
-        @flash_mesg = "Customer field can't be blank"
-        respond_to { |format| format.js { render action: 'create_error' } } and return
+        @errors = "Customer is required"
+        respond_to { |format| format.js } and return
       end
     else
       customer = Customer.find new_story[:customer]
@@ -92,15 +92,14 @@ class StoriesController < ApplicationController
     if story.save
       story.assign_tags new_story
       story.success.create_default_prompts
-      flash[:success] = "Story created successfully"
-      # prevent js response from killing flash message
-      flash.keep(:success)
-      @redirect = File.join request.base_url, edit_story_path(story.id)
-      respond_to { |format| format.js { render action: 'create_success' } }
+      # flash[:success] = "Story created successfully"
+      # # prevent js response from killing flash message
+      # flash.keep(:success)
+      @redirect_url = File.join request.base_url, edit_story_path(story.id)
     else
-      @flash_mesg = story.errors.full_messages.join(', ')
-      respond_to { |format| format.js { render action: 'create_error' } }
+      @errors = story.errors.full_messages.join(', ')
     end
+    respond_to { |format| format.js }
   end
 
   def update
@@ -221,7 +220,7 @@ class StoriesController < ApplicationController
   # or a string (new customer)
   # this method ensures that a number is treated as a number and a string is
   # treated as a string, e.g. "3M" is treated as a string
-  def new_customer customer
+  def new_customer? customer
     !Float(customer)  # if a number then customer already exists -> return false
     rescue ArgumentError  # if error then customer is a string -> return true
       true
@@ -320,7 +319,7 @@ class StoriesController < ApplicationController
     if query_hash.length === 1 && (valid_category || valid_product)
       true
     else
-      redirect_to(root_path, flash: { warning: "That page doesn't exist" }) and return false
+      redirect_to(root_path, flash: { warning: "Page doesn't exist" }) and return false
     end
   end
 

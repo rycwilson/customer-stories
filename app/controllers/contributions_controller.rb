@@ -55,10 +55,10 @@ class ContributionsController < ApplicationController
         @contributions = story.success.contributions
                                       .where("status NOT IN ('unsubscribe', 'opt_out')")
       else
-        # presently only one validation:
-        #   contributor may have only one contribution per success
         @flash_status = "danger"
-        @flash_mesg = "That user already has a contribution for this story"
+        @flash_mesg = contribution.errors.present? ?
+                        contribution.errors.full_messages.join(', ') :
+                        "User already has a contribution for this story"
       end
     else
       @flash_status = "danger"

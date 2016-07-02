@@ -5,6 +5,7 @@ class Contribution < ActiveRecord::Base
   belongs_to :success
   has_one :email_contribution_request, dependent: :destroy
 
+  validates :role, presence: true
   validates :contribution, presence: true,
                 if: Proc.new { |contribution| contribution.status == 'contribution'}
   validates :feedback, presence: true,
@@ -123,6 +124,7 @@ class Contribution < ActiveRecord::Base
 
   # returns a hash with subject and body, all placeholders populated with data
   def generate_request_email
+    logger.debug "CURATOR: #{self.success.curator.full_name}"
     success = self.success
     curator = success.curator
     template = curator.company.email_templates

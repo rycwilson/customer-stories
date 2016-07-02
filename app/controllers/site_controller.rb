@@ -12,7 +12,7 @@ class SiteController < ApplicationController
   end
 
   def valid_subdomain_bad_path
-    redirect_to root_url(host: request.host), flash: { warning: "That page doesn't exist" }
+    redirect_to root_url(host: request.host), flash: { warning: "Page doesn't exist" }
   end
 
   def invalid_subdomain
