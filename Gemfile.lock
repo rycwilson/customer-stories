@@ -202,6 +202,9 @@ GEM
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
       tilt (~> 1.1)
+    shareable (1.1.4)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
     slop (3.6.0)
     spring (1.4.0)
     sprockets (3.3.3)
@@ -260,6 +263,7 @@ DEPENDENCIES
   rails_12factor
   rails_admin
   sass-rails (~> 5.0)
+  shareable
   spring
   summernote-rails
   turbolinks (~> 5.0.0.beta)

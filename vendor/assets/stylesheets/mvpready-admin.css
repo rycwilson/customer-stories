@@ -3297,7 +3297,7 @@ fieldset[disabled] .navbar .btn-link:focus {
 .mainnav {
   position: relative;
   min-height: 48px;
-  margin-bottom: 40px;
+  margin-bottom: 25px;
   background-color: #ffffff;
   border-bottom: 1px solid #dddddd;
 }

@@ -1,32 +1,71 @@
 <!--
-  locals: @story
+  locals: @company
+          @story
 -->
 
-<!-- logo -->
-<div class='col-sm-4 col-lg-3 text-center'>
-  <img id='story-show-logo-img'
-    src="<%= @story.success.customer.logo_url || asset_path('company-logo-missing.png') %>">
+<!--
+  data-no-turbolink attribute is necessary for linkedin widgets
+  to properly load
+  http://stackoverflow.com/questions/17600093/rails-javascript-not-loading-after-clicking-through-link-to-helper
+-->
+<div id='story-sub-section-nav' class="col-xs-12">
+
+  <div data-no-turbolink class='story-nav'>
+    <%= render 'stories/shared/story_nav' %>
+  </div>
+
 </div>
 
-<!-- quote -->
-<div class='col-sm-8 col-md-7 col-lg-5 story-text'>
-  <p id='story-quote' class='lead story-text'>
-    <em>"<%= @story.quote %>"</em>
-  </p>
-  <div class='row'>
-    <div class='col-sm-11 text-right'>
-      <p id='story-quote-attr'>
-        <em>- <%= @story.quote_attr %></em>
-      </p>
+<div id='story-sub-section-quote-video'
+    class="col-xs-12
+        <%= @story.embed_url.present? ? 'col-md-5 col-lg-6' : '' %>">
+
+  <!-- logo -->
+  <div class='col-xs-12 col-sm-3
+      <%= @story.embed_url.present? ? 'col-md-12' : '' %> text-center'>
+    <img id='story-customer-logo'
+      src="<%= @story.success.customer.logo_url || asset_path('company-logo-missing.png') %>">
+  </div>
+
+  <!-- quote -->
+  <div class='col-sm-9 <%= @story.embed_url.present? ?
+              'col-md-12' : 'col-md-8' %> story-text'>
+    <p id='story-quote' class='lead story-text'>
+      <em>"<%= @story.quote %>"</em>
+    </p>
+    <div class='row'>
+      <div class='col-sm-11 text-right'>
+        <p id='story-quote-attr'>
+          - <%= @story.quote_attr %>
+        </p>
+      </div>
     </div>
   </div>
+
+  <div id='story-video-xs'
+      class="col-sm-10 col-sm-offset-1
+        <%= @story.embed_url.blank? ? 'hidden' : 'visible-xs-block visible-sm-block' %>">
+
+    <div class='embed-responsive embed-responsive-16by9'>
+      <iframe class='embed-responsive-item'
+          src="<%= @story.embed_url %>" allowfullscreen>
+      </iframe>
+    </div>
+
+  </div>
+
 </div>
 
-<!-- video -->
-<div class= 'col-lg-4 hidden-xs hidden-sm hidden-md text-center'>
+<div class="story-video <%= @story.embed_url.blank? ? 'hidden' : '' %>
+              hidden-xs hidden-sm col-md-7 col-lg-6">
+
   <div class='embed-responsive embed-responsive-16by9'>
     <iframe class='embed-responsive-item'
         src="<%= @story.embed_url %>" allowfullscreen>
     </iframe>
   </div>
+
 </div>
+
+
+

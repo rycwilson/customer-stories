@@ -20,6 +20,7 @@ gem 'uglifier', '>= 1.3.0'
 # compatibility, but didn't change onpopstate behavior
 # gem 'wiselinks'
 
+gem 'shareable'
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
 gem 'rails-html-sanitizer'
