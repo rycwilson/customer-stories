@@ -123,48 +123,28 @@
 /***********************************************/
 
 /*
- *  below two rules combined will bottom-align the columns in #story-banner
+ *  below two rules combined will bottom-align the columns in #story-header
  */
-#story-banner {
+#story-header {
   font-size: 0;
   margin-top: 8px;
   padding-left: 15px;
+  color: #444;
 }
 
-#story-banner > * {
+#story-header > * {
   float: none;
   display: inline-block;
   // font-size: whatever; override 0 as necessary
   vertical-align: bottom;
 }
 
-#social {
+#social-buttons {
   padding-bottom: 4px;
 }
 
-.story-nav {
- color: #337ab7;
- padding: 0;
-}
-
-#story-customer-name h2 {
-  margin-bottom: 0;
-}
-
-#story-customer-name-xs h3 {
-  margin-bottom: 0;
-}
-
-#story-sub-section-nav {
-  margin-bottom: 15px;
-}
-
-#story-section-content {
-  margin-top: 52px;
-}
-
 /*
- *  Social share buttons
+ *  Shareable gem style settings
  */
 nav.share {display:inline-block;} /* shareable's nav tag */
 nav.share div {float:left;}
@@ -182,68 +162,22 @@ nav.share iframe {border:0; margin-top:0; padding-top:0;} /* if using medium siz
   margin-right: 9px;
 }
 
-
-@media (max-width: 767px) {
-  #story-banner {
-    margin-top: 14px;  // this compensates for the smaller h3 headline
-  }
-  #story-video-xs {
-    margin-top: 15px;
-    margin-bottom: -10px;
-  }
-  #story-customer-logo {
-    max-height: 70px;
-    max-width: 70%;
-    margin-bottom: 10px;
-  }
-  #story-sub-section-nav {
-    margin-bottom: 5px;
-  }
+#story-customer-name h2 {
+  margin-bottom: 0;
 }
 
-@media (min-width: 768px) {
-  #story-customer-logo {
-    max-height: 80px;
-    max-width: 100%;
-  }
-  #story-quote {
-    font-size: 18px;
-  }
-  #story-video-xs {
-    margin-top: 22px;
-  }
+#story-customer-name-xs h3 {
+  margin-bottom: 0;
 }
 
-@media (min-width: 992px) {
-  #story-customer-logo {
-    max-height: 80px;
-    max-width: 70%;
-    margin-bottom: 10px;
-  }
-  #story-quote {
-    font-size: 18px;
-  }
-  #story-sub-section-nav {
-    margin-bottom: 5px;
-  }
+// nav links
+.story-nav {
+ color: #337ab7;
+ padding: 0;
 }
 
-@media (min-width: 1200px) {
-  #story-nav {
-    margin-top: -15px;
-    margin-bottom: 0;
-  }
-  #story-customer-logo {
-    max-height: 90px;
-    max-width: 70%;
-    margin-bottom: 10px;
-  }
-  #story-quote {
-    font-size: 21px;  /* bootstrap .lead default */
-  }
-  #story-sub-section-nav {
-    margin-bottom: 5px;
-  }
+#story-nav-col {
+  margin-bottom: 15px;
 }
 
 p.lead.story-text {
@@ -252,15 +186,22 @@ p.lead.story-text {
 
 #story-quote-attr {
   margin: 5px auto;
+  color: #666;
 }
 
-#story-section-quote-video {
+#story-section-content {
+  background-color: #f2f2f2;
+  margin-top: 52px;
+}
+
+#story-section-testimonial {
   /* this is necessary for the trailing color gradient (see below) */
   position: relative;
   margin: 0 0 40px 0;
 }
 
-#story-section-quote-video:after {
+
+#story-section-testimonial:after {
   content: '';
   position: absolute;
   top: 100%;
@@ -273,16 +214,9 @@ p.lead.story-text {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2f2f2', endColorstr='#ffffffff', GradientType=0);
 }
 
-.well.story-text {
-  background-color: white;
-}
-
-#story-section-content {
-  background-color: #f2f2f2;
-}
-
 #story-section-content .well {
   background-color: #ffffff;
+  margin-top: -5px;
 }
 
 #story-results {
@@ -292,6 +226,155 @@ p.lead.story-text {
 #story-results + .story-video {
   margin: 0 0 30px 0;
 }
+
+@media (max-width: 549px) {
+  #story-header {
+    margin-top: 14px;  // this compensates for the smaller h3 headline
+  }
+  #story-nav-col {
+    margin-bottom: 20px;
+  }
+  #story-customer-logo {
+    max-height: 70px;
+    max-width: 100%;
+    margin-bottom: 10px;
+  }
+  #story-quote {
+    font-size: 14px;
+  }
+  #story-video-col-xs-sm {
+    margin-top: 15px;
+    margin-bottom: -10px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
+
+@media (min-width: 550px) and (max-width: 599px) {
+  #story-header {
+    margin-top: 14px;  // this compensates for the smaller h3 headline
+  }
+  #story-nav-col {
+    margin-bottom: 20px;
+  }
+  #story-customer-logo {
+    max-height: 70px;
+    max-width: 70%;
+    margin-bottom: 10px;
+  }
+  #story-video-col-xs-sm {
+    margin-top: 15px;
+    margin-bottom: -10px;
+    padding-left: 8%;
+    padding-right: 8%;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 699px) {
+  #story-header {
+    margin-top: 14px;  // this compensates for the smaller h3 headline
+  }
+  #story-nav-col {
+    margin-bottom: 20px;
+  }
+  #story-customer-logo {
+    max-height: 70px;
+    max-width: 80%;
+    margin-bottom: 10px;
+  }
+  #story-video-col-xs-sm {
+    margin-top: 15px;
+    margin-bottom: -10px;
+    padding-left: 12%;
+    padding-right: 12%;
+  }
+}
+
+@media (min-width: 700px) and (max-width: 767px) {
+  #story-header {
+    margin-top: 14px;  // this compensates for the smaller h3 headline
+  }
+  #story-nav-col {
+    margin-bottom: 20px;
+  }
+  #story-video-col-xs-sm {
+    margin-top: 15px;
+    margin-bottom: -10px;
+    padding-left: 15%;
+    padding-right: 15%;
+  }
+  #story-customer-logo {
+    max-height: 70px;
+    max-width: 70%;
+    margin-bottom: 10px;
+  }
+}
+
+@media (min-width: 768px) {
+  #story-nav-col {
+    margin-bottom: 20px;
+  }
+  #story-customer-logo {
+    max-height: 80px;
+    max-width: 100%;
+  }
+  #story-quote {
+    font-size: 16px;
+  }
+  #story-video-col-xs-sm {
+    margin-top: 25px;
+    padding-left: 45px;
+    padding-right: 45px;
+  }
+}
+
+@media (min-width: 992px) {
+  #story-nav-col {
+    margin-bottom: 5px;
+  }
+  #story-testimonial-col {  // md and lg only
+    padding-left: 30px;
+  }
+  #story-customer-logo-col {
+    margin-bottom: 15px;
+  }
+  #story-customer-logo {
+    max-height: 80px;
+    max-width: 70%;
+  }
+  #story-quote {
+    font-size: 16px;
+  }
+  #story-video-col-md-lg {
+    padding-left: 30px;
+    padding-right: 45px;
+  }
+}
+
+@media (min-width: 1200px) {
+  #story-nav-col {
+    margin-bottom: 5px;
+  }
+  #story-testimonial-col {
+    padding-left: 30px;
+  }
+  #story-customer-logo-col {
+    margin-bottom: 15px;
+  }
+  #story-customer-logo {
+    max-height: 90px;
+    max-width: 70%;
+  }
+  #story-quote {
+    font-size: 20px;  /* bootstrap .lead default is 21px */
+  }
+  #story-video-col-md-lg {
+    padding-left: 30px;
+    padding-right: 45px;
+  }
+}
+
+
 
 /***********************************************/
 /*      contribution card
@@ -412,7 +495,7 @@ p.lead {
 
 /* make edit field stand out when hover over edit button */
 #edit-story-title:hover + #story-title,
-#edit-story-quote:hover + #story-quote,
+#edit-story-quote:hover + #story-edit-quote,
 #edit-story-quote-attr:hover + #story-quote-attr,
 #edit-story-embed:hover + #story-embed,
 #edit-story-situation:hover + #story-situation,

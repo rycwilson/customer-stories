@@ -54,6 +54,7 @@ function ready () {
   storiesFilterListeners();
   configPlugins();
   configUnderscore();
+  configS3Upload();
   initBootstrapSwitch();
   initContributions();
   initStoryContentEditor();

@@ -8,7 +8,7 @@
   to properly load
   http://stackoverflow.com/questions/17600093/rails-javascript-not-loading-after-clicking-through-link-to-helper
 -->
-<div id='story-sub-section-nav' class="col-xs-12">
+<div id='story-nav-col' class="col-xs-12">
 
   <div data-no-turbolink class='story-nav'>
     <%= render 'stories/shared/story_nav' %>
@@ -16,25 +16,24 @@
 
 </div>
 
-<div id='story-sub-section-quote-video'
-    class="col-xs-12
-        <%= @story.embed_url.present? ? 'col-md-5 col-lg-6' : '' %>">
+<div id='story-testimonial-col'
+    class="col-xs-12 <%= @story.embed_url.present? ? 'col-md-5 col-lg-6' : '' %>">
 
   <!-- logo -->
-  <div class='col-xs-12 col-sm-3
+  <div id='story-customer-logo-col' class='col-xs-3
       <%= @story.embed_url.present? ? 'col-md-12' : '' %> text-center'>
     <img id='story-customer-logo'
       src="<%= @story.success.customer.logo_url || asset_path('company-logo-missing.png') %>">
   </div>
 
   <!-- quote -->
-  <div class='col-sm-9 <%= @story.embed_url.present? ?
+  <div id='story-quote-col' class='col-xs-9 <%= @story.embed_url.present? ?
               'col-md-12' : 'col-md-8' %> story-text'>
     <p id='story-quote' class='lead story-text'>
       <em>"<%= @story.quote %>"</em>
     </p>
     <div class='row'>
-      <div class='col-sm-11 text-right'>
+      <div class='col-xs-12 col-lg-11 text-right'>
         <p id='story-quote-attr'>
           - <%= @story.quote_attr %>
         </p>
@@ -42,8 +41,9 @@
     </div>
   </div>
 
-  <div id='story-video-xs'
-      class="col-sm-10 col-sm-offset-1
+  <!-- video (xs and sm only) -->
+  <div id='story-video-col-xs-sm'
+      class="col-xs-12 col-sm-10 col-sm-offset-1
         <%= @story.embed_url.blank? ? 'hidden' : 'visible-xs-block visible-sm-block' %>">
 
     <div class='embed-responsive embed-responsive-16by9'>
@@ -56,8 +56,9 @@
 
 </div>
 
-<div class="story-video <%= @story.embed_url.blank? ? 'hidden' : '' %>
-              hidden-xs hidden-sm col-md-7 col-lg-6">
+<div id='story-video-col-md-lg'
+    class="<%= @story.embed_url.blank? ? 'hidden' : '' %>
+        hidden-xs hidden-sm col-md-7 col-lg-6">
 
   <div class='embed-responsive embed-responsive-16by9'>
     <iframe class='embed-responsive-item'

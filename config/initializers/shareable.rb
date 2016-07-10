@@ -14,14 +14,14 @@ Shareable.configure do |config|
   ###############
   config.app_id = '<facebook_app_id>' if ENV['HOST_NAME'] == 'customerstories.org'
   config.app_id = '291034101286863' if ENV['HOST_NAME'] == 'customerstories.net'
-  # config.send= 'true'
+  config.send = 'true'
   #config.layout='box_count' # 'standard', 'button_count', 'button' or 'box_count'. '' defaults to 'standard'.
   #config.show_faces='' # 'true' or 'false'. '' defaults to 'false'. Don't set to 'true', if kid_directed_site is also 'true'.
-  config.action='like' # 'like' or 'recommend'. '' defaults to 'like'.
+  #config.action='like' # 'like' or 'recommend'. '' defaults to 'like'.
   #config.font=''
   #config.colorscheme='' # 'light' or 'dark'. '' defaults to 'light'.
   #config.ref=''
-  #config.share='true' # 'true' or 'false'. '' defaults to 'false'.
+  config.share = 'true' # 'true' or 'false'. '' defaults to 'false'.
   #config.kid_directed_site='' # 'true' or 'false'. '' defaults to 'false'. Facebook assumes your site is not kid friendly.
 
   ###############
@@ -38,7 +38,7 @@ Shareable.configure do |config|
   ###############
   ##linkedin
   ###############
-  #config.counter = 'right' # 'right', 'top' or ''. '' hides counter.
+  config.counter = '' # 'right', 'top' or ''. '' hides counter.
   #config.onsuccess = '' # name of a javascript function to fire if url is successfully shared.
   #config.onerror = ''
   #config.showzero = 'true' # 'true' or 'false'.
