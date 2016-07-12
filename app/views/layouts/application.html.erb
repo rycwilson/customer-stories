@@ -5,7 +5,10 @@
 <!--[if gt IE 8]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
 <html prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#">
 <head>
-  <title>Customer Stories</title>
+  <title><%= title_helper(controller_name, action_name, @company, @story) %></title>
+  <!--  <meta name="description" content="">
+  <meta name="author" content=""> -->
+  <%= yield(:head) if content_for?(:head) %>
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
   <!-- NOTE: the controller_name helper method will NOT work
        as argument to link / include methods below -->
@@ -17,10 +20,6 @@
   <%= csrf_meta_tags %>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
- <!--  <meta name="description" content="">
-  <meta name="author" content=""> -->
-  <%= yield(:head) if content_for?(:head) %>
-
   <!-- Google Fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,400italic,600,600italic,800,800italic">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald:300,400,700">

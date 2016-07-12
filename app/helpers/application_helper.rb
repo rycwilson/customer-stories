@@ -40,4 +40,14 @@ module ApplicationHelper
     end
   end
 
+  def title_helper controller, action, company=nil, story=nil
+    if controller == 'stories' && action == 'show'
+      story.title
+    elsif controller == 'stories' && action == 'index' || controller == 'companies'
+      company.name + ' Customer Stories'
+    else
+      'Customer Stories'
+    end
+  end
+
 end

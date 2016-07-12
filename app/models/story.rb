@@ -96,4 +96,17 @@ class Story < ActiveRecord::Base
     end
   end
 
+  # method returns a friendly id url that either contains or omits a product
+  def csp_story_url
+    url_helpers = Rails.application.routes.url_helpers
+    if self.success.products.present?
+      url_helpers.public_story_url(self.success.customer.slug,
+                                   self.success.products.take.slug,
+                                   self.slug)
+    else
+      url_helpers.public_story_no_product_url(self.success.customer.slug,
+                                              self.slug)
+    end
+  end
+
 end

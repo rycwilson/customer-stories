@@ -1,3 +1,6 @@
+
+Rails.application.routes.default_url_options[:host] = ENV['HOST_NAME']
+
 Rails.application.routes.draw do
 
   devise_for :admins
