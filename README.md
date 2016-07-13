@@ -67,7 +67,8 @@ Turn stuff back on:
 <hr>
 
 #### DNS
-- GoDaddy acts as registrar only. Nameservers (set in GoDaddy) point to DNSimple, which manages the DNS records
+- staging is registered and hosted on DNSimple (user=***REMOVED***, pass=Epld1212)
+- production is registered on GoDaddy and hosted on DNSimple
 - DNSimple: For a stable app, give TTL a relatively high value.
 
 ####Heroku
