@@ -100,14 +100,13 @@ function initBIPListeners () {
 
   // best-in-place errors
   $(document).on('best_in_place:error', function (event, data, status, xhr) {
-    var error = JSON.parse(data.responseText)[0];
-    if ( error.match(/maximum\sis\s70\scharacters/) )
-      flashDisplay("Result can't exceed 70 characters", "danger");
+    var errors = JSON.parse(data.responseText);
+    flashDisplay(errors.join(', '), "danger");
   });
 
   /*
     tabindex=-1 on these elements prevents them from gaining focus
-    after a bip field is submitted (with tab)
+    after a bip field is submitted (with tab)()
     also has the side-effect of keeping focus on the element,
     which we'll prevent with ...
   */

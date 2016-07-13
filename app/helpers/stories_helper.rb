@@ -1,9 +1,9 @@
 module StoriesHelper
 
-  # renders the story's :quote attribute as a <blockquote>
+  # method allows for insertion of html into best_in_place textarea
   def story_quote text
     if text
-      raw "<em id='story-edit-quote'>" + "\"#{text}\"" + "</em>"
+      "<em id='story-edit-quote'>" + "\"#{text}\"" + "</em>".html_safe
     else
       "Add a customer quote ..."
     end

@@ -1,8 +1,5 @@
 Rails.application.configure do
 
-  config.log_level = :debug
-  # config.force_ssl = true
-
   # restrict access to staging site
   # if ENV['HOST_NAME'] == 'customerstories.org'
   #   config.middleware.insert_after(::Rack::Runtime, "::Rack::Auth::Basic", "Staging") do |u, p|

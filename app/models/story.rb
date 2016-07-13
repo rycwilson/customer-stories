@@ -86,12 +86,13 @@ class Story < ActiveRecord::Base
   # method returns a friendly id path that either contains or omits a product
   def csp_story_path
     url_helpers = Rails.application.routes.url_helpers
-    if self.success.products.present?
-      url_helpers.public_story_path(self.success.customer.slug,
-                                    self.success.products.take.slug,
+    success = self.success
+    if success.products.present?
+      url_helpers.public_story_path(success.customer.slug,
+                                    success.products.take.slug,
                                     self.slug)
     else
-      url_helpers.public_story_no_product_path(self.success.customer.slug,
+      url_helpers.public_story_no_product_path(success.customer.slug,
                                                self.slug)
     end
   end
@@ -99,13 +100,19 @@ class Story < ActiveRecord::Base
   # method returns a friendly id url that either contains or omits a product
   def csp_story_url
     url_helpers = Rails.application.routes.url_helpers
-    if self.success.products.present?
-      url_helpers.public_story_url(self.success.customer.slug,
-                                   self.success.products.take.slug,
-                                   self.slug)
+    success = self.success
+    company = success.customer.company
+    if success.products.present?
+      url_helpers.public_story_url(
+                    success.customer.slug,
+                    success.products.take.slug,
+                    self.slug,
+                    subdomain: company.subdomain )
     else
-      url_helpers.public_story_no_product_url(self.success.customer.slug,
-                                              self.slug)
+      url_helpers.public_story_no_product_url(
+                    success.customer.slug,
+                    self.slug,
+                    subdomain: company.subdomain )
     end
   end
 

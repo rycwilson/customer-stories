@@ -147,14 +147,9 @@ class StoriesController < ApplicationController
                              only: [:published, :logo_published] }
       end
     else  # all other updates
+      story.update story_params
       respond_to do |format|
-        if story.update story_params
-          # format.html { redirect_to(@story, :notice => 'Story was successfully updated.') }
-          format.json { respond_with_bip(story) }
-        else
-          # format.html { render :action => "edit" }
-          # format.json { respond_with_bip(story) }
-        end
+        format.json { respond_with_bip(story) }
       end
     end
   end

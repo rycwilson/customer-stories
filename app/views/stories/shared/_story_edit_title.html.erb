@@ -10,8 +10,7 @@
 
         <div id='story-title' class='col-md-11'>
           <%= best_in_place @story, :title, as: :textarea, url: story_path(@story.id),
-              html_attrs: { style: 'width:100%' },
-              activator: '#edit-story-title', place_holder: "Add a title ..." %>
+              html_attrs: { style: 'width:100%' }, activator: '#edit-story-title' %>
         </div>
 
       </div>

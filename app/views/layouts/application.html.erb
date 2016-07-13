@@ -6,9 +6,9 @@
 <html prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb#">
 <head>
   <title><%= title_helper(controller_name, action_name, @company, @story) %></title>
+  <%= yield(:head) if content_for?(:head) %>
   <!--  <meta name="description" content="">
   <meta name="author" content=""> -->
-  <%= yield(:head) if content_for?(:head) %>
   <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
   <!-- NOTE: the controller_name helper method will NOT work
        as argument to link / include methods below -->
