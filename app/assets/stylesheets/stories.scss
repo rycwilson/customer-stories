@@ -14,6 +14,51 @@
 
 
 /***********************************************/
+/*      story video
+/***********************************************/
+// .video-container {
+//   display: block;
+//   // margin: 20px auto;
+//   width: 100%;
+//   max-width: 600px;
+// }
+
+.video-thumb-container {
+  // width: 100%; /* assuming that the video has a 16:9 ratio */
+  padding-bottom: 56.25%;  // ??  but apparently necessary
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+}
+
+.video-thumb {
+  position: absolute;
+  top:0; right:0; bottom:0; left:0;
+  margin: auto;
+  width: 100%;
+}
+
+.fa-play-circle-o:hover, .video-thumb:hover + .fa-play-circle-o {
+  opacity: 0.8;
+}
+
+.fa-play-circle-o {
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  opacity: 0.5;
+}
+
+
+
+
+/***********************************************/
 /*      stories gallery
 /***********************************************/
 
@@ -333,7 +378,7 @@ p.lead.story-text {
     margin-bottom: 5px;
   }
   #story-testimonial-col {  // md and lg only
-    padding-left: 30px;
+    // padding-left: 30px;
   }
   #story-customer-logo-col {
     margin-bottom: 15px;
@@ -346,8 +391,8 @@ p.lead.story-text {
     font-size: 16px;
   }
   #story-video-col-md-lg {
-    padding-left: 30px;
-    padding-right: 45px;
+    // padding-left: 30px;
+    // padding-right: 45px;
   }
 }
 
@@ -356,7 +401,7 @@ p.lead.story-text {
     margin-bottom: 5px;
   }
   #story-testimonial-col {
-    padding-left: 30px;
+    // padding-left: 30px;
   }
   #story-customer-logo-col {
     margin-bottom: 15px;
@@ -369,7 +414,7 @@ p.lead.story-text {
     font-size: 20px;  /* bootstrap .lead default is 21px */
   }
   #story-video-col-md-lg {
-    padding-left: 30px;
+    padding-left: 45px;
     padding-right: 45px;
   }
 }
@@ -514,6 +559,8 @@ p.lead {
 .dirtyField {
   color: #D9534F;
 }
+
+
 
 /*
 a transparent input - might come in handy at some point

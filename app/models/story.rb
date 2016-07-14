@@ -116,4 +116,17 @@ class Story < ActiveRecord::Base
     end
   end
 
+  def video_info
+    return nil if self.embed_url.blank?
+    if self.embed_url.include? "youtube"
+      { provider: 'youtube',
+        id: embed_url.slice(embed_url.rindex('/') + 1, embed_url.length) }
+    elsif self.embed_url.include? "vimeo"
+      { provider: 'vimeo',
+        id: embed_url.slice(embed_url.rindex('/') + 1, embed_url.length) }
+    else
+      # error
+    end
+  end
+
 end

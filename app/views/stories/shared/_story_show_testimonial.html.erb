@@ -17,7 +17,7 @@
 </div>
 
 <div id='story-testimonial-col'
-    class="col-xs-12 <%= @story.embed_url.present? ? 'col-md-5 col-lg-6' : '' %>">
+    class="col-xs-12 <%= @story.embed_url.present? ? 'col-md-7' : '' %>">
 
   <!-- logo -->
   <div id='story-customer-logo-col' class='col-xs-3
@@ -57,14 +57,23 @@
 </div>
 
 <div id='story-video-col-md-lg'
-    class="<%= @story.embed_url.blank? ? 'hidden' : '' %>
-        hidden-xs hidden-sm col-md-7 col-lg-6">
+     class="<%= @story.embed_url.blank? ? 'hidden' : '' %>
+             hidden-xs hidden-sm col-md-5">
 
-  <div class='embed-responsive embed-responsive-16by9'>
+  <!-- <div class="video-container embed-responsive embed-responsive-16by9"> -->
+    <div class="video-thumb-container"
+         data-provider="<%= @story.video_info[:provider] %>"
+         data-id="<%= @story.video_info[:id] %>"
+         data-toggle='modal' data-target='#story-video-modal'
+         data-video-url="<%= @story.embed_url %>">
+    </div>
+  <!-- </div> -->
+
+  <!-- <div class='embed-responsive embed-responsive-16by9'>
     <iframe class='embed-responsive-item'
-        src="<%= @story.embed_url %>" allowfullscreen>
+        src="<%#= @story.embed_url %>" allowfullscreen>
     </iframe>
-  </div>
+  </div> -->
 
 </div>
 

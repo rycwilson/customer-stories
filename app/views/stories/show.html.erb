@@ -35,6 +35,8 @@
   <!-- <meta name="twitter:site" content="<%#= @company.website %>"> -->
 <% end %>
 
+<%= render 'stories/shared/video_modal' %>
+
 <div class='wrapper'>
 
   <% if company_curator? @company.id %>
@@ -57,7 +59,7 @@
         </div>
 
         <div id='social-buttons' class="col-sm-5 col-md-4 hidden-xs hidden-sm text-center">
-          <%= render_shareable buttons: ['twitter', 'linkedin', 'facebook'] %>
+          <%#= render_shareable buttons: ['twitter', 'linkedin', 'facebook'] %>
         </div>
 
       </div>

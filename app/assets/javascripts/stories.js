@@ -19,6 +19,8 @@
 
 //= require masonry/dist/masonry.pkgd
 
+//= require stories/video
+
 /*
   With turbolinks in place, js only runs on initial controller/page load,
   e.g. js does not run when going from stories#show to stories#edit
@@ -48,6 +50,8 @@ function ready () {
 
   initPlugins() ;
   configUnderscore();
+
+  VIDEO_LIB.loadThumbnail();
 
 
   select2Listeners();
