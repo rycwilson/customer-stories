@@ -3,7 +3,7 @@ module StoriesHelper
   # method allows for insertion of html into best_in_place textarea
   def story_quote text
     if text
-      "<em id='story-edit-quote'>" + "\"#{text}\"" + "</em>".html_safe
+      raw "<em id='story-edit-quote'>" + "\"#{text}\"" + "</em>"
     else
       "Add a customer quote ..."
     end
