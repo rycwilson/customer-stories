@@ -46,24 +46,110 @@ $(window).on('load', function () {
 
 function ready () {
 
-  initSelect2();
-  initLinkedIn();
-  initBIPListeners();
-  initTagsListeners();
-  initListeners();
-  storiesFilterListeners();
-  configPlugins();
+  initPlugins() ;
   configUnderscore();
-  configS3Upload();
-  initBootstrapSwitch();
-  initContributions();
-  initStoryContentEditor();
 
+
+  select2Listeners();
+  initLinkedIn();
+  bipListeners();
+  editTagsListeners();
+  miscListeners();
+  storiesFilterListeners();
+  configS3Upload();
+  bootstrapSwitchListeners();
+  contributionsListeners();
+  storyContentEditor();
   updateSelectBoxesIfQueryString();
 
   var isChrome = navigator.userAgent.toLowerCase().indexOf('chrome') > -1;
   if (isChrome)
     replaceStateOnGalleryLoad();
+
+}
+
+function initPlugins () {
+  $('.best_in_place').best_in_place();
+  $('.bs-switch').bootstrapSwitch({ size: 'small' });
+  $("input[type='tel']").inputmask("999-999-9999");
+  /*
+    dirtyFields() plugin will apply .dirtyField class to label on input change
+    (allows for color change)
+    Ensure "for" attribute is present on label tag
+    and matches the id attribute of the corresponding input field.
+  */
+  $('#story-tags-form').dirtyFields();
+
+  $('.story-tags').select2({
+    theme: 'bootstrap',
+    placeholder: 'select tags'
+  });
+
+  $('.stories-filter').select2({
+    theme: 'bootstrap',
+    width: 'style'   // get the width from stories.scss
+  });
+
+  $('.new-contributor-role').select2({
+    theme: 'bootstrap'
+  });
+
+  $('.new-contributor-referrer').select2({
+    theme: 'bootstrap',
+    placeholder: 'Who referred you to this contributor?'
+  });
+
+  $('#email-confirmation-editor').summernote({
+    focus: false,  // this does not appear to work
+    toolbar: [
+      // ['style', ['style']],
+      ['font', ['bold', 'italic', 'underline']], //, 'clear']],
+      // ['fontname', ['fontname']],
+      // ['color', ['color']],
+      ['para', ['ul', 'ol', 'paragraph']],
+      // ['height', ['height']],
+      // ['table', ['table']],
+      // ['insert', ['link', 'picture', 'hr']],
+      // ['view', ['codeview']],
+      // ['help', ['help']]
+    ],
+  });
+
+  $('#story-content').summernote({
+    toolbar: [
+      ['style', ['style']],
+      ['font', ['bold', 'italic', 'underline']], //, 'clear']],
+      ['fontname', ['fontname']],
+      // ['color', ['color']],
+      ['para', ['ul', 'ol', 'paragraph']],
+      ['height', ['height']],
+      ['table', ['table']],
+      ['insert', ['link', 'picture', 'hr']],
+      ['view', ['codeview']],
+      ['help', ['help']]
+    ],
+  });
+
+}
+
+function initLinkedIn () {
+
+  // linkedin widgets (load IN.js library conditionally)
+  if (typeof(IN) !== "object") {
+    console.log("loading in.js ...");
+    $.getScript('//platform.linkedin.com/in.js');
+  } else {
+    console.log("in.js already loaded");
+  }
+
+  /*
+    give the  widgets a second to load, then disable their tabbing behavior
+  */
+  window.setTimeout(function () {
+    $("#contribution-connections iframe").each(function () {
+      $(this).prop('tabIndex', '-1');
+    });
+  }, 1000);
 
 }
 
@@ -84,7 +170,7 @@ function configUnderscore() {
   };
 }
 
-function initBIPListeners () {
+function bipListeners () {
   /*
     update story attribute: embed_url
     The url is modified on server side to ensure that the
@@ -117,7 +203,7 @@ function initBIPListeners () {
 
 }
 
-function initTagsListeners () {
+function editTagsListeners () {
   /*
     Remember the initial <option>s of the tag select inputs
     If user cancels changes, revert to these (skipping for now)
@@ -359,7 +445,7 @@ function replaceStateOnGalleryLoad (filterTag, filterId) {
   }
 }
 
-function initListeners () {
+function miscListeners () {
 
   // reset new contributor modal form when the modal closes
   $('#new-contributor-modal').on('hidden.bs.modal', function () {
@@ -430,29 +516,7 @@ function initListeners () {
   });
 }
 
-function configPlugins () {
-
-  $('.best_in_place').best_in_place();
-
-  $("input[type='tel']").inputmask("999-999-9999");
-
-  /*
-    dirtyFields() plugin will apply .dirtyField class to label on input change
-    (allows for color change)
-    Need to modify the "for" label attributes to match the id attribute
-    of the corresponding input field.
-  */
-  $("label[for='Category']").attr('for', 'story_category_tags_');
-  $("label[for='Product']").attr('for', 'story_product_tags_');
-  $('#story-tags-form').dirtyFields();
-
-}
-
-function initBootstrapSwitch() {
-
-  $('.bs-switch').bootstrapSwitch({
-    size: 'small'
-  });
+function bootstrapSwitchListeners() {
 
   $('.bs-switch').on('switchChange.bootstrapSwitch', function (event, state) {
     $(this).parent().submit();
@@ -475,41 +539,21 @@ function initBootstrapSwitch() {
   });
 }
 
-function initSelect2 () {
-
-  $('.story-tags').select2({
-    theme: 'bootstrap',
-    placeholder: 'select tags'
-  });
-
-  $('.stories-filter').select2({
-    theme: 'bootstrap',
-    width: 'style'   // get the width from stories.scss
-  });
-
-  $('.new-contributor-role').select2({
-    theme: 'bootstrap'
-  });
-
-  $('.new-contributor-referrer').select2({
-    theme: 'bootstrap',
-    placeholder: 'Who referred you to this contributor?'
-  });
-
-  // this code prevents the options list from showing
-  // when a tag is removed
-  $('.select2').prev().on('select2:unselecting', function(e) {
-    $(this).data('unselecting', true);
-  }).on('select2:open', function(e) { // note the open event is important
-    if ($(this).data('unselecting')) {
-        $(this).removeData('unselecting'); // you need to unset this before close
-        $(this).select2('close');
-    }
-  });
-
+function select2Listeners () {
+  // prevents the options list from showing when a tag is removed
+  $('.select2').prev()
+               .on('select2:unselecting', function (e) {
+                 $(this).data('unselecting', true);
+               })
+               .on('select2:open', function (e) { // note the open event is important
+                 if ($(this).data('unselecting')) {
+                   $(this).removeData('unselecting'); // you need to unset this before close
+                   $(this).select2('close');
+                 }
+               });
 }
 
-function initContributions () {
+function contributionsListeners () {
   /*
    *  hide the email confirmation modal after sending
    */
@@ -519,24 +563,7 @@ function initContributions () {
     $(this).closest('.modal-content').find('.progress')
                                      .removeClass('hidden');
   });
-  /*
-   *  init summernote
-   */
-  $('#email-confirmation-editor').summernote({
-    focus: false,  // this does not appear to work
-    toolbar: [
-      // ['style', ['style']],
-      ['font', ['bold', 'italic', 'underline']], //, 'clear']],
-      // ['fontname', ['fontname']],
-      // ['color', ['color']],
-      ['para', ['ul', 'ol', 'paragraph']],
-      // ['height', ['height']],
-      // ['table', ['table']],
-      // ['insert', ['link', 'picture', 'hr']],
-      // ['view', ['codeview']],
-      // ['help', ['help']]
-    ],
-  });
+
   /*
    *  on successful addition of linkedin profile to contributor card
   */
@@ -671,29 +698,13 @@ function initContributions () {
 
 }
 
-function initStoryContentEditor () {
+function storyContentEditor () {
 
   var $storyContent = $('#story-content'),
+      $summernote = $storyContent.next(),
       $saveButton = $("[type='submit'][form='story-content-form']"),
       $cancelButton = $("[type='reset'][form='story-content-form']"),
-      $formButtons = $("[form='story-content-form']");
-
-  $storyContent.summernote({
-    toolbar: [
-      ['style', ['style']],
-      ['font', ['bold', 'italic', 'underline']], //, 'clear']],
-      ['fontname', ['fontname']],
-      // ['color', ['color']],
-      ['para', ['ul', 'ol', 'paragraph']],
-      ['height', ['height']],
-      ['table', ['table']],
-      ['insert', ['link', 'picture', 'hr']],
-      ['view', ['codeview']],
-      ['help', ['help']]
-    ],
-  });
-
-  var $summernote = $storyContent.next(),
+      $formButtons = $("[form='story-content-form']"),
       $editor = $summernote.find('.note-editable'),
       $toolbarButtons = $summernote.find('.note-toolbar > .note-btn-group > button, .note-toolbar > .note-btn-group > .note-btn-group > button');
 
@@ -741,27 +752,6 @@ function initStoryContentEditor () {
     $storyContent.summernote('code', $storyContent.text());
     $saveButton.click();
   });
-}
-
-function initLinkedIn () {
-
-  // linkedin widgets (load IN.js library conditionally)
-  if (typeof(IN) !== "object") {
-    console.log("loading in.js ...");
-    $.getScript('//platform.linkedin.com/in.js');
-  } else {
-    console.log("in.js already loaded");
-  }
-
-  /*
-    give the  widgets a second to load, then disable their tabbing behavior
-  */
-  window.setTimeout(function () {
-    $("#contribution-connections iframe").each(function () {
-      $(this).prop('tabIndex', '-1');
-    });
-  }, 1000);
-
 }
 
 function initMasonry () {
