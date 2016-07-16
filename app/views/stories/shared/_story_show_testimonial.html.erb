@@ -17,63 +17,60 @@
 </div>
 
 <div id='story-testimonial-col'
-    class="col-xs-12 <%= @story.embed_url.present? ? 'col-md-7' : '' %>">
+    class="col-xs-12 <%= @story.embed_url.present? ? 'col-sm-6 col-md-7' : '' %>">
 
   <!-- logo -->
-  <div id='story-customer-logo-col' class='col-xs-3
-      <%= @story.embed_url.present? ? 'col-md-12' : '' %> text-center'>
+  <div id='story-customer-logo-col'
+       class='text-center col-xs-3
+             <%= @story.embed_url.present? ? 'col-sm-12' : '' %>'>
     <img id='story-customer-logo'
       src="<%= @story.success.customer.logo_url || asset_path('company-logo-missing.png') %>">
   </div>
 
   <!-- quote -->
-  <div id='story-quote-col' class='col-xs-9 <%= @story.embed_url.present? ?
-              'col-md-12' : 'col-md-8' %> story-text'>
+  <div id='story-quote-col'
+       class='story-text col-xs-8
+              <%= @story.embed_url.present? ? 'col-sm-12' : '' %> '>
+
     <p id='story-quote' class='lead story-text'>
       <em>"<%= @story.quote %>"</em>
     </p>
-    <div class='row'>
-      <div class='col-xs-12 col-lg-11 text-right'>
-        <p id='story-quote-attr'>
-          - <%= @story.quote_attr %>
-        </p>
-      </div>
+
+    <div id='story-quote-attr-col'
+         class='col-xs-12 col-lg-11 text-right'>
+      <p id='story-quote-attr'>
+        &#8212;&nbsp;<%= @story.quote_attr %>
+      </p>
     </div>
+
   </div>
 
-  <!-- video (xs and sm only) -->
-  <div id='story-video-col-xs-sm'
-      class="col-xs-12 col-sm-10 col-sm-offset-1
-        <%= @story.embed_url.blank? ? 'hidden' : 'visible-xs-block visible-sm-block' %>">
+  <!-- video (xs only) -->
+  <div id='story-video-col-xs'
+       class="col-xs-10 col-xs-offset-1
+          <%= @story.embed_url.present? ? 'visible-xs-block' : 'hidden' %>">
 
-    <div class='embed-responsive embed-responsive-16by9'>
-      <iframe class='embed-responsive-item'
-          src="<%= @story.embed_url %>" allowfullscreen>
-      </iframe>
+    <div class="video-thumb-container"
+       data-toggle='modal' data-target='#story-video-modal'
+       data-provider="<%= @story.video_info[:provider] %>"
+       data-video-id="<%= @story.video_info[:id] %>"
+       data-video-url="<%= @story.embed_url %>">
     </div>
 
   </div>
 
 </div>
 
-<div id='story-video-col-md-lg'
-     class="<%= @story.embed_url.blank? ? 'hidden' : '' %>
-             hidden-xs hidden-sm col-md-5">
+<div id='story-video-col'
+     class="<%= @story.embed_url.present? ?
+            'hidden-xs col-sm-6 col-md-5' : 'hidden' %>">
 
-  <!-- <div class="video-container embed-responsive embed-responsive-16by9"> -->
-    <div class="video-thumb-container"
-         data-provider="<%= @story.video_info[:provider] %>"
-         data-id="<%= @story.video_info[:id] %>"
-         data-toggle='modal' data-target='#story-video-modal'
-         data-video-url="<%= @story.embed_url %>">
-    </div>
-  <!-- </div> -->
-
-  <!-- <div class='embed-responsive embed-responsive-16by9'>
-    <iframe class='embed-responsive-item'
-        src="<%#= @story.embed_url %>" allowfullscreen>
-    </iframe>
-  </div> -->
+  <div class="video-thumb-container"
+       data-toggle='modal' data-target='#story-video-modal'
+       data-provider="<%= @story.video_info[:provider] %>"
+       data-video-id="<%= @story.video_info[:id] %>"
+       data-video-url="<%= @story.embed_url %>">
+  </div>
 
 </div>
 

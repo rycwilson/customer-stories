@@ -82,6 +82,9 @@ Turn stuff back on:
 - Staging has a self-signed certificate
 - Heroku installation (staging and production) per [Heroku SSL](https://devcenter.heroku.com/articles/ssl-beta)
 
+## Wistia
+- user = ***REMOVED***, pass = ***REMOVED***
+
 
 
 

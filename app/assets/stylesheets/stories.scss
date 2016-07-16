@@ -16,12 +16,6 @@
 /***********************************************/
 /*      story video
 /***********************************************/
-// .video-container {
-//   display: block;
-//   // margin: 20px auto;
-//   width: 100%;
-//   max-width: 600px;
-// }
 
 .video-thumb-container {
   // width: 100%; /* assuming that the video has a 16:9 ratio */
@@ -39,7 +33,8 @@
 }
 
 .fa-play-circle-o:hover, .video-thumb:hover + .fa-play-circle-o {
-  opacity: 0.8;
+  opacity: 1;
+  color: #4285f4;
 }
 
 .fa-play-circle-o {
@@ -287,11 +282,14 @@ p.lead.story-text {
   #story-quote {
     font-size: 14px;
   }
-  #story-video-col-xs-sm {
+  #story-video-col-xs {
     margin-top: 15px;
     margin-bottom: -10px;
     padding-left: 0;
     padding-right: 0;
+  }
+  #story-video-modal iframe {
+    height: 260px;
   }
 }
 
@@ -307,11 +305,14 @@ p.lead.story-text {
     max-width: 70%;
     margin-bottom: 10px;
   }
-  #story-video-col-xs-sm {
+  #story-video-col-xs {
     margin-top: 15px;
     margin-bottom: -10px;
     padding-left: 8%;
     padding-right: 8%;
+  }
+  #story-video-modal iframe {
+    height: 300px;
   }
 }
 
@@ -327,11 +328,14 @@ p.lead.story-text {
     max-width: 80%;
     margin-bottom: 10px;
   }
-  #story-video-col-xs-sm {
+  #story-video-col-xs {
     margin-top: 15px;
     margin-bottom: -10px;
     padding-left: 12%;
     padding-right: 12%;
+  }
+  #story-video-modal iframe {
+    height: 320px;
   }
 }
 
@@ -342,8 +346,8 @@ p.lead.story-text {
   #story-nav-col {
     margin-bottom: 20px;
   }
-  #story-video-col-xs-sm {
-    margin-top: 15px;
+  #story-video-col-xs {
+    margin-top: 20px;
     margin-bottom: -10px;
     padding-left: 15%;
     padding-right: 15%;
@@ -353,23 +357,38 @@ p.lead.story-text {
     max-width: 70%;
     margin-bottom: 10px;
   }
+  #story-video-modal iframe {
+    height: 400px;
+  }
 }
 
 @media (min-width: 768px) {
   #story-nav-col {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
   }
   #story-customer-logo {
-    max-height: 80px;
-    max-width: 100%;
+    max-height: 65px;
+    max-width: 80%;
+  }
+  #story-customer-logo-col {
+    margin-bottom: 10px;
+  }
+  #story-quote-attr-col {
+    padding: 0;
   }
   #story-quote {
     font-size: 16px;
   }
-  #story-video-col-xs-sm {
+  #story-video-col-xs {
     margin-top: 25px;
     padding-left: 45px;
     padding-right: 45px;
+  }
+  #story-section-content .well {
+    margin-top: -10px;
+  }
+  #story-video-modal iframe {
+    height: 330px;
   }
 }
 
@@ -377,22 +396,18 @@ p.lead.story-text {
   #story-nav-col {
     margin-bottom: 5px;
   }
-  #story-testimonial-col {  // md and lg only
-    // padding-left: 30px;
-  }
   #story-customer-logo-col {
     margin-bottom: 15px;
   }
   #story-customer-logo {
-    max-height: 80px;
+    max-height: 75px;
     max-width: 70%;
   }
   #story-quote {
-    font-size: 16px;
+    font-size: 18px;
   }
-  #story-video-col-md-lg {
-    // padding-left: 30px;
-    // padding-right: 45px;
+  #story-video-modal iframe {
+    height: 500px;
   }
 }
 
@@ -407,18 +422,16 @@ p.lead.story-text {
     margin-bottom: 15px;
   }
   #story-customer-logo {
-    max-height: 90px;
+    max-height: 85px;
     max-width: 70%;
   }
   #story-quote {
     font-size: 20px;  /* bootstrap .lead default is 21px */
   }
-  #story-video-col-md-lg {
-    padding-left: 45px;
-    padding-right: 45px;
+  #story-video-modal iframe {
+    height: 500px;
   }
 }
-
 
 
 /***********************************************/
