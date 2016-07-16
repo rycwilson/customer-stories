@@ -50,12 +50,14 @@
        class="col-xs-10 col-xs-offset-1
           <%= @story.embed_url.present? ? 'visible-xs-block' : 'hidden' %>">
 
-    <div class="video-thumb-container"
-       data-toggle='modal' data-target='#story-video-modal'
-       data-provider="<%= @story.video_info[:provider] %>"
-       data-video-id="<%= @story.video_info[:id] %>"
-       data-video-url="<%= @story.embed_url %>">
-    </div>
+    <!-- <div class="video-container"> -->
+      <div class="video-thumb-container embed-responsive embed-responsive-16by9"
+         data-toggle='modal' data-target='#story-video-modal'
+         data-provider="<%= @story.video_info[:provider] %>"
+         data-video-id="<%= @story.video_info[:id] %>"
+         data-video-url="<%= @story.embed_url %>">
+      </div>
+    <!-- </div> -->
 
   </div>
 

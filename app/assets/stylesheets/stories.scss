@@ -17,12 +17,17 @@
 /*      story video
 /***********************************************/
 
+// ref: http://www.labnol.org/internet/light-youtube-embeds/27941/
 .video-thumb-container {
   // width: 100%; /* assuming that the video has a 16:9 ratio */
   padding-bottom: 56.25%;  // ??  but apparently necessary
   overflow: hidden;
   position: relative;
+  cursor: hand;
   cursor: pointer;
+  // width: 100%;
+  // max-height: 100%;
+  // display: block;
 }
 
 .video-thumb {
@@ -30,6 +35,9 @@
   top:0; right:0; bottom:0; left:0;
   margin: auto;
   width: 100%;
+
+  // display: block;
+  // width: 100%
 }
 
 .fa-play-circle-o:hover, .video-thumb:hover + .fa-play-circle-o {
