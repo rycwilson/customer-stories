@@ -126,12 +126,18 @@ class StoriesController < ApplicationController
       @base_url = request.base_url  # needed for deleting a result
       respond_to { |format| format.js { render action: 'create_prompt_success' } }
     elsif params[:story][:embed_url]  # embedded video
-      if params[:story][:embed_url].match(/youtube/)
-        youtube_id = params[:story][:embed_url].match(/v=(?<id>.+)/)[:id]
+      if params[:story][:embed_url].include? "youtube"
+        # https://www.youtube.com/watch?v=BAjqPZY8sFg
+        # or
+        # https://www.youtube.com/embed/BAjqPZY8sFg
+        youtube_id = params[:story][:embed_url].match(/(v=|\/)(?<id>\w+)$/)[:id]
         story.update embed_url: "https://www.youtube.com/embed/#{youtube_id}"
-      elsif params[:story][:embed_url].match(/vimeo/)
+      elsif params[:story][:embed_url].include? "vimeo"
         vimeo_id = params[:story][:embed_url].match(/\/(?<id>\d+)$/)[:id]
         story.update embed_url: "https://player.vimeo.com/video/#{vimeo_id}"
+      elsif params[:story][:embed_url].include? "wistia"
+        wistia_id = params[:story][:embed_url].match(/\/(?<id>\w+)($|\.\w+$)/)[:id]
+        story.update embed_url: "https://fast.wistia.com/embed/medias/#{wistia_id}.jsonp"
       end
       # respond with json because we need to update the video iframe
       # with the modified url ...

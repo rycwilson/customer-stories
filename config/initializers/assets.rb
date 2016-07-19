@@ -26,5 +26,5 @@ Rails.application.config.assets.precompile += %w(
   devise/passwords.css
   widget.css cs-widget.css
   pdf.css
-  stories/video.js
+  stories/video.js stories/bip.js
 )

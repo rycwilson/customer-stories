@@ -116,6 +116,13 @@ class Story < ActiveRecord::Base
     end
   end
 
+  ##
+  #  embed_url looks like one of these ...
+  #
+  #  "https://www.youtube.com/embed/#{youtube_id}"
+  #  "https://player.vimeo.com/video/#{vimeo_id}"
+  #  "https://fast.wistia.com/embed/medias/#{wistia_id}.jsonp"
+  #
   def video_info
     return { provider: nil, id: nil } if self.embed_url.blank?
     if self.embed_url.include? "youtube"
@@ -124,6 +131,9 @@ class Story < ActiveRecord::Base
     elsif self.embed_url.include? "vimeo"
       { provider: 'vimeo',
         id: embed_url.slice(embed_url.rindex('/') + 1, embed_url.length) }
+    elsif self.embed_url.include? "wistia"
+      { provider: 'wistia',
+        id: self.embed_url.match(/\/(?<id>\w+)(\.\w+$)/)[:id] }
     else
       # error
     end

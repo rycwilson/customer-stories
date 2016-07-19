@@ -20,6 +20,7 @@
 //= require masonry/dist/masonry.pkgd
 
 //= require stories/video
+//= require stories/bip
 
 /*
   With turbolinks in place, js only runs on initial controller/page load,
@@ -52,11 +53,10 @@ function ready () {
   configUnderscore();
 
   VIDEO_LIB.loadThumbnail();
-
+  BIP.listeners();
 
   select2Listeners();
   initLinkedIn();
-  bipListeners();
   editTagsListeners();
   miscListeners();
   storiesFilterListeners();
@@ -174,38 +174,7 @@ function configUnderscore() {
   };
 }
 
-function bipListeners () {
-  /*
-    update story attribute: embed_url
-    The url is modified on server side to ensure that the
-    youtube embed link is used
-  */
-  $(".best_in_place[data-bip-attribute='embed_url']").bind("ajax:success",
-    function (event, data) {
-      newUrl = JSON.parse(data).embed_url;
-      $('#embed-iframe').attr('src', newUrl);
-      $(".best_in_place[data-bip-attribute='embed_url']")
-        .text(newUrl);
-  });
 
-  // best-in-place errors
-  $(document).on('best_in_place:error', function (event, data, status, xhr) {
-    var errors = JSON.parse(data.responseText);
-    flashDisplay(errors.join(', '), "danger");
-  });
-
-  /*
-    tabindex=-1 on these elements prevents them from gaining focus
-    after a bip field is submitted (with tab)()
-    also has the side-effect of keeping focus on the element,
-    which we'll prevent with ...
-  */
-  $('a.accordion-toggle').on('focus', function () {
-    var $_this = $(this);
-    window.setTimeout(function () { $_this.blur(); }, 200);
-  });
-
-}
 
 function editTagsListeners () {
   /*

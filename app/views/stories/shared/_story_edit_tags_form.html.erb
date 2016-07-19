@@ -12,8 +12,8 @@
     <!-- if not present, will only return a single value  -->
     <%= select_tag "story[category_tags][]",
         options_for_select(categories, categories_pre_select),
-        { multiple: 'true', class: 'story-tags form-control',
-          style: 'width:100%'} %>
+        { multiple: 'true', class: 'story-tags form-control', tabIndex: '-1',
+          style: 'width:100%' } %>
   </div>
 
   <div class="form-group col-md-6" style='margin-bottom:10px'>
@@ -21,8 +21,8 @@
           for: 'story_product_tags_' %>
     <%= select_tag "story[product_tags][]",
         options_for_select(products, products_pre_select),
-        { multiple: 'true', class: 'story-tags form-control',
-          style: 'width:100%'} %>
+        { multiple: 'true', class: 'story-tags form-control', tabIndex: '-1',
+          style: 'width:100%' } %>
   </div>
 
 <% end %>

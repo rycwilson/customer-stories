@@ -36,6 +36,7 @@ var VIDEO_LIB = {
           "</div>");
       });
     }
+
     $thumbContainer.on('click', 'img, i', function (e) {
 
       if ($(document).width() < 600) {
