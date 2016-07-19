@@ -136,6 +136,9 @@ class StoriesController < ApplicationController
         vimeo_id = params[:story][:embed_url].match(/\/(?<id>\d+)$/)[:id]
         story.update embed_url: "https://player.vimeo.com/video/#{vimeo_id}"
       elsif params[:story][:embed_url].include? "wistia"
+        # https://fast.wistia.com/embed/medias/avk9twrrbn.jsonp (standard)
+        # or
+        # https://fast.wistia.net/embed/iframe/avk9twrrbn (fallback)
         wistia_id = params[:story][:embed_url].match(/\/(?<id>\w+)($|\.\w+$)/)[:id]
         story.update embed_url: "https://fast.wistia.com/embed/medias/#{wistia_id}.jsonp"
       end
