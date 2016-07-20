@@ -15,7 +15,7 @@
     <% elsif @story.video_info[:provider] == 'youtube' %>  <!-- youtube or vimeo -->
 
       <iframe id='youtube-iframe' width="320" height="180"
-              src="<%= @story.embed_url + '/?autohide=2&&enablejsapi=1&controls=0&showinfo=0&rel=0' %>"
+              src="<%= @story.embed_url + '/?enablejsapi=1&controls=0&iv_load_policy=3&showinfo=0&rel=0' %>"
               frameborder="0"></iframe>
 
     <% elsif @story.video_info[:provider] == 'vimeo' %>

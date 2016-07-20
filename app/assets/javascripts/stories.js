@@ -279,6 +279,7 @@ function storiesFilterListeners () {
   });
 
   window.onpopstate = function (event) {
+
     // console.log('pop state: ', event.state);
     var $categorySelect = $("[name='category_select']"),
         categorySelectIsPresent = $categorySelect.length,

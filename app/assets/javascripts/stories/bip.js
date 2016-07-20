@@ -11,7 +11,7 @@ var BIP = BIP || {
         if (newUrl.includes("youtube")) {
           $newVideo =
             "<iframe id='youtube-iframe' width='320' height='180' " +
-              "src='" + newUrl + "?autohide=2&&enablejsapi=1&controls=0&showinfo=0&rel=0'" +
+              "src='" + newUrl + "?autohide=2&&enablejsapi=1&controls=0&showinfo=0&iv_load_policy=3&rel=0'" +
               "frameborder='0'></iframe>";
 
         } else if (newUrl.includes("vimeo")) {
