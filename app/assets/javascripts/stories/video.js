@@ -13,12 +13,20 @@ var VIDEO_LIB = {
     if (provider === 'youtube') {
       videoQuery = "/?autoplay=1&enablejsapi=1&controls=0&iv_load_policy=3&showinfo=0&rel=0";
       // ref: http://stackoverflow.com/questions/2068344
-      thumbSrc = '//i1.ytimg.com/vi/' + videoId + '/0.jpg';
+      thumbSrc = '//i1.ytimg.com/vi/' + videoId + '/hqdefault.jpg';
       $thumbContainer.append(
-          "<div>" +
-            "<img class='video-thumb' src='" + thumbSrc + "'>" +
-            "<i class='fa fa-5x fa-inverse fa-play-circle-o'></i>" +
-          "</div>" );
+        "<div>" +
+          "<img class='video-thumb' src='" + thumbSrc + "'>" +
+        "</div>"
+      );
+      // wait for image to load before overlaying play button ...
+      $thumbContainer.find('img').one('load', function () {
+        $(this).after(
+          "<div class='play-button'>" +
+            "<i class='fa fa-2x fa-inverse fa-play'></i>" +
+          "</div>"
+        );
+      });
 
     } else if (provider === 'vimeo') {
       videoQuery = "/?autoplay=1";
@@ -33,7 +41,7 @@ var VIDEO_LIB = {
           });
     }
 
-    $thumbContainer.on('click', 'img, i', function (e) {
+    $thumbContainer.on('click', 'img, .play-button', function (e) {
 
       // presently only the show page loads a thumbnail for youtube and vimeo,
       // so if this event was triggered we know we're on stories#show

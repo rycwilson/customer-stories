@@ -25,7 +25,6 @@
   position: relative;
   cursor: hand;
   cursor: pointer;
-  // width: 100%;
   // display: block;
 }
 
@@ -35,15 +34,13 @@
   margin: auto;
   width: 100%;
   // display: block;
-  // width: 100%
 }
 
-.fa-play-circle-o:hover, .video-thumb:hover + .fa-play-circle-o {
-  opacity: 1;
-  color: #4285f4;
-}
-
-.fa-play-circle-o {
+.play-button {
+  width: 70px;
+  height: 45px;
+  background-color: rgba(0,0,0,0.6);
+  border-radius: 4px;
   text-align: center;
   position: absolute;
   top: 50%;
@@ -53,8 +50,20 @@
   -ms-transform: translate(-50%, -50%);
   -o-transform: translate(-50%, -50%);
   transform: translate(-50%, -50%);
-  opacity: 0.5;
 }
+
+.fa-play {
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
 
 
 
