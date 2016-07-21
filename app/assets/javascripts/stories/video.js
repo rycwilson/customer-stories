@@ -12,9 +12,8 @@ var VIDEO_LIB = {
 
     if (provider === 'youtube') {
       videoQuery = "/?autoplay=1&enablejsapi=1&controls=0&iv_load_policy=3&showinfo=0&rel=0";
-      // 1, 2, 3, hqdefault, mqdefault, default
       // ref: http://stackoverflow.com/questions/2068344
-      thumbSrc = '//img.youtube.com/vi/' + videoId + '/hqdefault.jpg';
+      thumbSrc = '//i1.ytimg.com/vi/' + videoId + '/0.jpg';
       $thumbContainer.append(
           "<div>" +
             "<img class='video-thumb' src='" + thumbSrc + "'>" +
@@ -23,17 +22,15 @@ var VIDEO_LIB = {
 
     } else if (provider === 'vimeo') {
       videoQuery = "/?autoplay=1";
-      // 640 (large), 200x150 (medium), or 100x75 (small)
-      // ref: http://stackoverflow.com/questions/1361149/
-      // (can't use a direct url because there's a different id to get to the thumbnails)
-      $.getJSON('//vimeo.com/api/v2/video/' + videoId + '.json', function (data, status) {
-        thumbSrc = data[0].thumbnail_medium;
-        $thumbContainer.append(
-          "<div>" +
-            "<img class='video-thumb' src='" + thumbSrc + "'>" +
-            "<i class='fa fa-5x fa-inverse fa-play-circle-o'></i>" +
-          "</div>");
-      });
+      $.getJSON('//vimeo.com/api/oembed.json?url=https%3A//vimeo.com/' + videoId + '.json',
+          function (data, status) {
+            thumbSrc = data.thumbnail_url_with_play_button;
+            $thumbContainer.append(
+              "<div>" +
+                "<img class='video-thumb' src='" + thumbSrc + "'>" +
+              "</div>"
+            );
+          });
     }
 
     $thumbContainer.on('click', 'img, i', function (e) {
