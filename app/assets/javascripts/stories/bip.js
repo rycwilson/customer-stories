@@ -2,13 +2,17 @@ var BIP = BIP || {
 
   listeners: function () {
 
+    var videoPlaceholderText = "Video URL (YouTube, Vimeo, or Wistia)";
+
     // update video
     $(".best_in_place[data-bip-attribute='embed_url']").on("ajax:success",
       function (event, data) {
         var newUrl = JSON.parse(data).embed_url,
             $newVideo = null;
 
-        if (newUrl.includes("youtube")) {
+        if (!newUrl) {
+          $newVideo = $("<img src='" + $('.video-container').data('placeholder') + "'>");
+        } else if (newUrl.includes("youtube")) {
           $newVideo =
             "<iframe id='youtube-iframe' width='320' height='180' " +
               "src='" + newUrl + "?autohide=2&&enablejsapi=1&controls=0&showinfo=0&iv_load_policy=3&rel=0'" +
@@ -35,7 +39,7 @@ var BIP = BIP || {
 
         $('.video-container').empty().append($newVideo);
 
-        $(".best_in_place[data-bip-attribute='embed_url']").text(newUrl);
+        $(".best_in_place[data-bip-attribute='embed_url']").text(newUrl || videoPlaceholderText);
 
     });
 

@@ -3,7 +3,7 @@
 
   <!-- http://stackoverflow.com/questions/13725683 -->
 
-  <div class="video-container">
+  <div class="video-container" data-placeholder="<%= asset_path('video_placeholder.jpg') %>">
 
     <% if @story.video_info[:provider] == 'wistia' %>
 

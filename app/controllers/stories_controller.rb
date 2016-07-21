@@ -141,6 +141,8 @@ class StoriesController < ApplicationController
         # https://fast.wistia.net/embed/iframe/avk9twrrbn (fallback)
         wistia_id = params[:story][:embed_url].match(/\/(?<id>\w+)($|\.\w+$)/)[:id]
         story.update embed_url: "https://fast.wistia.com/embed/medias/#{wistia_id}.jsonp"
+      elsif params[:story][:embed_url].blank?
+        story.update embed_url: nil
       end
       # respond with json because we need to update the video iframe
       # with the modified url ...
