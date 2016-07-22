@@ -17,7 +17,7 @@ Shareable.configure do |config|
   config.send = 'true'
   #config.layout='box_count' # 'standard', 'button_count', 'button' or 'box_count'. '' defaults to 'standard'.
   #config.show_faces='' # 'true' or 'false'. '' defaults to 'false'. Don't set to 'true', if kid_directed_site is also 'true'.
-  #config.action='like' # 'like' or 'recommend'. '' defaults to 'like'.
+  config.action='recommend' # 'like' or 'recommend'. '' defaults to 'like'.
   #config.font=''
   #config.colorscheme='' # 'light' or 'dark'. '' defaults to 'light'.
   #config.ref=''
