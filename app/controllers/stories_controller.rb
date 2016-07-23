@@ -49,6 +49,8 @@ class StoriesController < ApplicationController
   end
 
   def show
+    # declare this here since numerous references in meta tags
+    @success = @story.success
   end
 
   def edit

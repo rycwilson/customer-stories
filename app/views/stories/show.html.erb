@@ -40,92 +40,110 @@
 
   <% end %>
 
-  <!-- customer name, social sharing  -->
-  <div class="mainnav">
-    <div class="container">
-      <div id='story-header' class="row">
+  <div itemscope itemtype="//schema.org/CreativeWork">
+    <meta itemprop='author' content='<%= @success.curator.full_name %>'>
+    <meta itemprop='publisher' content='<%= @company.name %>'>
+    <meta itemprop='description'
+          content='<%= @company.name + '/' + @story.success.customer.name + ' Customer Story' %>'>
+    <meta itemprop='keywords' content='<%= meta_keywords(@success) %>'>
+    <meta itemprop='dateCreated' content='<%= @story.created_at %>'>
+    <meta itemprop='dateModified' content='<%= @story.updated_at %>'>
+    <meta itemprop='datePublished' content='<%= @story.publish_date %>'>
+    <meta itemprop='genre' content='<%= @success.story_categories.take.name || '' %>'>
+    <meta itemprop='isFamilyFriendly' content='true'>
+    <meta itemprop='url' content='<%= @story.csp_story_url %>'>
 
-        <div id='story-customer-name' class="hidden-xs col-sm-7 col-md-8">
-          <h2><%= @story.success.customer.name %></h2>
-        </div>
+    <!-- customer name, social sharing  -->
+    <div class="mainnav">
+      <div class="container">
+        <div id='story-header' class="row">
 
-        <div id='story-customer-name-xs' class="col-xs-12 visible-xs-block">
-          <h3><%= @story.success.customer.name %></h3>
-        </div>
-
-        <div id='social-buttons' class="col-sm-5 col-md-4 hidden-xs hidden-sm text-center">
-          <%= render_shareable buttons: ['twitter', 'linkedin', 'facebook'] %>
-        </div>
-
-      </div>
-    </div>   <!-- container -->
-  </div>  <!-- mainnav -->
-
-  <div id='story-section-testimonial'>
-    <div class="container">
-
-        <%= render 'stories/shared/story_show_testimonial',
-              { story: @story } %>
-
-    </div>  <!-- logo, quote, video -->
-  </div>
-
-  <!-- story content, results, contributing team -->
-  <div id='story-section-content'>
-    <div class="container">
-
-      <div class='col-sm-6 col-md-7'>
-        <div class='well story-narration'>
-
-          <h3><%= @story.title %></h3>
-
-          <div class="story-text visible-md-block visible-lg-block">
-            <%= simple_format @story.content %>
+          <div id='story-customer-name' class="hidden-xs col-sm-7 col-md-8">
+            <h2><%= @story.success.customer.name %></h2>
           </div>
-          <div class="story-text hidden-md hidden-lg">
-            <%= simple_format @story.content %>
+
+          <div id='story-customer-name-xs' class="col-xs-12 visible-xs-block">
+            <h3><%= @story.success.customer.name %></h3>
+          </div>
+
+          <div id='social-buttons' class="col-sm-5 col-md-4 hidden-xs hidden-sm text-center">
+            <%= render_shareable buttons: ['twitter', 'linkedin', 'facebook'] %>
           </div>
 
         </div>
-      </div>
+      </div>   <!-- container -->
+    </div>  <!-- mainnav -->
 
-      <div class='col-sm-6 col-md-5'>
+    <div id='story-section-testimonial'>
+      <div class="container">
 
-        <div id='story-results' class="well story-text">
-          <h3 class='text-center'>Results</h3>
-          <% @story.success.results.each do |result| %>
-            <i class='fa fa-check'></i>&nbsp;&nbsp;&nbsp;&nbsp;<%= result.description %></p>
-          <% end %>
+          <%= render 'stories/shared/story_show_testimonial',
+                { story: @story } %>
+
+      </div>  <!-- logo, quote, video -->
+    </div>
+
+    <!-- story content, results, contributing team -->
+    <div id='story-section-content'>
+      <div class="container">
+
+        <div class='col-sm-6 col-md-7'>
+          <div class='well story-narration'>
+
+            <h3 itemprop='headline'><%= @story.title %></h3>
+
+            <div itemprop='text' class="story-text visible-md-block visible-lg-block">
+              <%= simple_format @story.content %>
+            </div>
+            <div itemprop='text'class="story-text hidden-md hidden-lg">
+              <%= simple_format @story.content %>
+            </div>
+
+          </div>
         </div>
 
-        <div class="text-center">
-          <h3>Contributing Team</h3>
+        <div class='col-sm-6 col-md-5'>
 
-          <% @contributors.each do |contributor| %>
+          <div id='story-results' class="well story-text">
+            <h3 class='text-center'>Results</h3>
+            <% @story.success.results.each do |result| %>
+              <i class='fa fa-check'></i>&nbsp;&nbsp;&nbsp;&nbsp;<%= result.description %></p>
+            <% end %>
+          </div>
 
-              <!-- TODO: loading double the widgets due to this approach,
-              try jquery instead -->
-              <div class="visible-lg">
-                <script type="IN/MemberProfile"
-                        data-id="<%= contributor.linkedin_url %>"
-                        data-format="inline"
-                        data-related="true"
-                        data-width='420'></script>
+          <div class="text-center">
+            <h3>Contributing Team</h3>
+
+            <% @contributors.each do |contributor| %>
+
+              <div itemscope itemtype='//schema.org/Person'
+                   itemprop>
+                <!-- TODO: loading double the widgets due to this approach,
+                try jquery instead -->
+                <div class="visible-lg">
+                  <script type="IN/MemberProfile"
+                          data-id="<%= contributor.linkedin_url %>"
+                          data-format="inline"
+                          data-related="true"
+                          data-width='420'></script>
+                </div>
+
+                <div class="hidden-lg">
+                  <script type="IN/MemberProfile"
+                          data-id="<%= contributor.linkedin_url %>"
+                          data-format="inline"
+                          data-related="true"
+                          data-width='340'></script>
+                </div>
+
               </div>
 
-              <div class="hidden-lg">
-                <script type="IN/MemberProfile"
-                        data-id="<%= contributor.linkedin_url %>"
-                        data-format="inline"
-                        data-related="true"
-                        data-width='340'></script>
-              </div>
+            <% end %>
 
-          <% end %>
-
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  </div>  <!-- CreativeWork -->
 </div>  <!-- wrapper -->
 
