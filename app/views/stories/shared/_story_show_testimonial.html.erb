@@ -17,12 +17,12 @@
 </div>
 
 <div id='story-testimonial-col'
-    class="col-xs-12 <%= @story.embed_url.present? ? 'col-sm-6 col-md-7' : '' %>">
+    class="col-xs-12 <%= @story_has_video ? 'col-sm-6 col-md-7' : 'no-video' %>">
 
   <!-- logo -->
   <div id='story-customer-logo-col'
        class='text-center col-xs-3
-             <%= @story.embed_url.present? ? 'col-sm-12' : '' %>'>
+             <%= @story_has_video ? 'col-sm-12' : '' %>'>
     <img id='story-customer-logo'
       src="<%= @story.success.customer.logo_url || asset_path('company-logo-missing.png') %>">
   </div>
@@ -30,7 +30,7 @@
   <!-- quote -->
   <div id='story-quote-col'
        class='story-text col-xs-8
-              <%= @story.embed_url.present? ? 'col-sm-12' : '' %> '>
+              <%= @story_has_video ? 'col-sm-12' : '' %> '>
 
     <p id='story-quote' class='lead story-text'>
       <em>"<%= @story.quote %>"</em>
@@ -48,7 +48,7 @@
   <!-- video (xs only) -->
   <div id='story-video-col-xs'
        class="col-xs-10 col-xs-offset-1
-          <%= @story.embed_url.present? ? 'visible-xs-block' : 'hidden' %>">
+          <%= @story_has_video ? 'visible-xs-block' : 'hidden' %>">
 
     <!-- <div itemprop='video' itemscope itemtype='//schema.org/VideoObject'> -->
       <!-- <meta itemprop='' itemcontent=''> -->
@@ -83,8 +83,7 @@
 </div>
 
 <div id='story-video-col'
-     class="<%= @story.embed_url.present? ?
-            'hidden-xs col-sm-6 col-md-5' : 'hidden' %>">
+     class="<%= @story_has_video ? 'hidden-xs col-sm-6 col-md-5' : 'hidden' %>">
 
   <!-- <div itemprop='video' itemscope itemtype='//schema.org/VideoObject'> -->
     <!-- <meta itemprop='' content='' -->

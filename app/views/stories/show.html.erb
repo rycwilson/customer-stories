@@ -58,15 +58,15 @@
       <div class="container">
         <div id='story-header' class="row">
 
-          <div id='story-customer-name' class="hidden-xs col-sm-7 col-md-8">
-            <h2><%= @story.success.customer.name %></h2>
+          <div id='story-customer-name' class="hidden-xs col-sm-12 col-md-6">
+            <h3><%= @story.success.customer.name %></h3>
           </div>
 
           <div id='story-customer-name-xs' class="col-xs-12 visible-xs-block">
             <h3><%= @story.success.customer.name %></h3>
           </div>
 
-          <div id='social-buttons' class="col-sm-5 col-md-4 hidden-xs hidden-sm text-center">
+          <div id='social-buttons' class="col-sm-6 hidden-xs hidden-sm text-center">
             <%= render_shareable buttons: ['twitter', 'linkedin', 'facebook'] %>
           </div>
 
@@ -92,11 +92,13 @@
 
             <h3 itemprop='headline'><%= @story.title %></h3>
 
-            <div itemprop='text' class="story-text visible-md-block visible-lg-block">
-              <%= simple_format @story.content %>
-            </div>
-            <div itemprop='text'class="story-text hidden-md hidden-lg">
-              <%= simple_format @story.content %>
+            <div itemprop='text'>
+              <div class="story-text visible-md-block visible-lg-block">
+                <%= simple_format @story.content %>
+              </div>
+              <div class="story-text hidden-md hidden-lg">
+                <%= simple_format @story.content %>
+              </div>
             </div>
 
           </div>
@@ -107,7 +109,16 @@
           <div id='story-results' class="well story-text">
             <h3 class='text-center'>Results</h3>
             <% @story.success.results.each do |result| %>
-              <i class='fa fa-check'></i>&nbsp;&nbsp;&nbsp;&nbsp;<%= result.description %></p>
+
+              <div class="row">
+                <div class="col-xs-1">
+                  <i class='fa fa-check'></i>
+                </div>
+                <div class="col-xs-11">
+                  <span><%= result.description %></span>
+                </div>
+              </div>
+
             <% end %>
           </div>
 

@@ -51,6 +51,7 @@ class StoriesController < ApplicationController
   def show
     # declare this here since numerous references in meta tags
     @success = @story.success
+    @story_has_video = @story.embed_url.present?
   end
 
   def edit
