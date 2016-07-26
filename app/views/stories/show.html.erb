@@ -70,7 +70,7 @@
       "about": <%= raw @about_jsonld.to_json %>,
       "headline": "<%= @story.title %>",
       "alternativeHeadline": <%= raw @success.results.pluck('description').to_json %>,
-      "articleBody": "<%= @story.content.html_safe %>",
+      "articleBody": "<%= @story.content %>",
       // "url": "<%= @story.csp_story_url %>",
       "genre": "<%= @success.story_categories.take.try(:name) %>",
       "keywords": "<%= meta_keywords(@success) %>",
