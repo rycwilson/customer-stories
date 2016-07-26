@@ -30,15 +30,9 @@
 
 <% else %>
 
-<div itemscope itemtype='//schema.org/Organization'>
-  <meta itemprop='name' content='<%= @company.name %>'>
-  <meta itemprop='url' content='<%= @company.website %>'>
-  <meta itemref='' itemprop='author'>
   <%= link_to @company.website, class: 'navbar-brand', target: '_blank' do %>
-    <%= image_tag(@company.logo_url, alt: "#{@company.name} logo", itemprop: 'logo') %>
+    <%= image_tag @company.logo_url, alt: "#{@company.name} logo" %>
   <% end unless @company.logo_url.blank? %>
-
-</div>
 
 <% end %>
 
