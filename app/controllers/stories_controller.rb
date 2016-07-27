@@ -49,6 +49,7 @@ class StoriesController < ApplicationController
   end
 
   def show
+    @story_has_video = @story.embed_url.present?
     # declare this here since numerous references in meta tags
     @success = @story.success
     # convert the story content to plain text (for SEO tags)
