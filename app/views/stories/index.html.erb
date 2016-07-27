@@ -20,6 +20,42 @@
 
 <% end %>
 
+<% content_for :head do %>
+  <script type='application/ld+json'>
+    {
+      "@context": "https://schema.org/",
+      "@type": "CollectionPage",
+      "publisher": {
+        "@type": "Corporation",
+        "name": "<%= @company.name %>",
+        "url": "<%= @company.website %>",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "<%= @company.logo_url %>"
+        },
+        "owns": <%= raw @company.products.map { |product| { "@type" => "Product", "name" => product.name } }.to_json %>
+      },
+      "specialty": "Marketing",
+      "description": "<%= @company.name + ' Customer Success Stories' %>",
+      "about": {
+        "@type": "Corporation",
+        "name": "<%= @company.name %>",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "<%= @company.logo_url %>"
+        }
+      },
+      // "about": ,
+      // "url": "<%#= @story.csp_story_url %>",
+      "keywords": "Customer, Success, Stories",
+      "dateCreated": "<%= @company.created_at %>",
+      "dateModified": "<%= @company.stories.where(logo_published: true).order(logo_publish_date: :desc).take.try(:logo_publish_date) %>",
+      "datePublished": "<%= @company.stories.where(published: true).order(:publish_date).take.try(:publish_date) %>",
+      "isFamilyFriendly": "true"
+    }
+  </script>
+<% end %>
+
 <!-- <div id='wrapper'> -->
 
   <% if company_curator? @company.id %>
