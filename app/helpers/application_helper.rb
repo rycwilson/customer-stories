@@ -43,7 +43,7 @@ module ApplicationHelper
   def title_helper controller, action, company=nil, story=nil
     if controller == 'stories' && action == 'show'
       story.title
-    elsif controller == 'stories' && action == 'index' || controller == 'companies'
+    elsif controller == 'stories' && action == 'index'
       company.name + ' Customer Stories'
     else
       'Customer Stories'
