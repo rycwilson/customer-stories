@@ -1,0 +1,76 @@
+<!--
+  locals: company: @company
+          success: @success
+          story: @story
+          owns: @owns_jsonld
+          contributors: @contributors_jsonld
+          about: @about_jsonld
+-->
+
+<% content_for :head do %>
+
+  <meta property='og:title' content="<%= story.title %>">
+  <meta property="og:url" content="<%= story.csp_story_url %>">
+  <meta property='og:image' content="<%= company.logo_url %>">
+  <meta property='og:description'
+    content="<%= company.name + '/' + story.success.customer.name + ' Customer Story' %>">
+  <meta property='og:type' content='article'>
+  <meta property='og:site_name' content="<%= company.name %> Customer Stories">
+  <meta property='fb:app_id'
+        content="<%= ENV['HOST_NAME'] == 'customerstories.net' ?
+                  '291034101286863' : '<facebook_app_id>' %>">
+  <meta name="twitter:card" content="summary">
+
+  <script type='application/ld+json'>
+    {
+      "@context": "https://schema.org/",
+      "@type": "Article",
+      "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "<%= story.csp_story_url %>"
+      },
+      "publisher": {
+        "@type": "Corporation",
+        "name": "<%= company.name %>",
+        "url": "<%= company.website %>",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "<%= company.logo_url %>"
+        },
+        "owns": <%= raw owns.to_json %>
+      },
+      "author": {
+        "@type": "Person",
+        "name": "<%= success.curator.full_name %>"
+      },
+      "description": "<%= company.name + '/' + success.customer.name + ' Customer Story' %>",
+      "image": {
+        "@type": "ImageObject",
+        "url": "https://s3-us-west-1.amazonaws.com/csp-production-assets/cs_logo_full.png",
+        "height": 640,
+        "width": 220
+      },
+      "contributor": <%= raw contributors.to_json %>,
+      "about": {
+        "@type": "Corporation",
+        "name": "<%= success.customer.name %>",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "<%= success.customer.logo_url %>"
+        }
+      },
+      "about": <%= raw about.to_json %>,
+      "headline": "<%= story.title %>",
+      "alternativeHeadline": <%= raw success.results.pluck('description').to_json %>,
+      "articleBody": "<%= story.content %>",
+      // "url": "<%= story.csp_story_url %>",
+      "genre": "<%= success.story_categories.take.try(:name) %>",
+      "keywords": "<%= meta_keywords(success) %>",
+      "dateCreated": "<%= story.created_at %>",
+      "dateModified": "<%= story.updated_at %>",
+      "datePublished": "<%= story.publish_date %>",
+      "isFamilyFriendly": "true"
+    }
+  </script>
+
+<% end %>
