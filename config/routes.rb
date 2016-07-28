@@ -9,6 +9,8 @@ Rails.application.routes.draw do
   devise_for :admins
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
 
+  get '/:google', to: 'site#google_verify', constraints: { google: /google\w+/ }
+
   # valid subdomains (company/subdomain exists, excludes www)
   constraints(Subdomain) do
 

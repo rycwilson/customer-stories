@@ -40,4 +40,8 @@ class SiteController < ApplicationController
     end
   end
 
+  def google_verify
+    render params[:google], layout: false
+  end
+
 end

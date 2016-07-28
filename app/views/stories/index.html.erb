@@ -20,6 +20,8 @@
 
 <% end %>
 
+<%= render 'stories/shared/story_index_meta_tags', { company: @company } %>
+
 <!-- <div id='wrapper'> -->
 
   <% if company_curator? @company.id %>

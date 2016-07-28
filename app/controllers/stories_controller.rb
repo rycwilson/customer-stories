@@ -49,6 +49,28 @@ class StoriesController < ApplicationController
   end
 
   def show
+    @story_has_video = @story.embed_url.present?
+    # declare this here since numerous references in meta tags
+    @success = @story.success
+    # convert the story content to plain text (for SEO tags)
+    @story_content_text = HtmlToPlainText.plain_text(@story.content)
+    @contributors_jsonld = @success.contributors
+                                   .map do |contributor|
+                                     { "@type" => "Person",
+                                       "name" => contributor.full_name }
+                                   end
+    @owns_jsonld = @company.products.map do |product|
+                                      { "@type" => "Product",
+                                        "name" => product.name }
+                                    end
+    @about_jsonld = [{ "@type" => "Corporation",
+                       "name" => @success.customer.name,
+                       "logo" => { "@type" => "ImageObject",
+                                   "url" => @success.customer.logo_url }}] +
+                    @success.products.map do |product|
+                                        { "@type" => "Product",
+                                          "name" => product.name }
+                                     end
   end
 
   def edit

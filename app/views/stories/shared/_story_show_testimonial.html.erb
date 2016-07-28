@@ -1,6 +1,6 @@
 <!--
-  locals: @company
-          @story
+  locals: @story
+          @story_has_video (boolean)
 -->
 
 <!--
@@ -17,29 +17,29 @@
 </div>
 
 <div id='story-testimonial-col'
-    class="col-xs-12 <%= @story.embed_url.present? ? 'col-sm-6 col-md-7' : '' %>">
+    class="col-xs-12 <%= story_has_video ? 'col-sm-6 col-md-7' : 'no-video' %>">
 
   <!-- logo -->
   <div id='story-customer-logo-col'
        class='text-center col-xs-3
-             <%= @story.embed_url.present? ? 'col-sm-12' : '' %>'>
+             <%= story_has_video ? 'col-sm-12' : '' %>'>
     <img id='story-customer-logo'
-      src="<%= @story.success.customer.logo_url || asset_path('company-logo-missing.png') %>">
+      src="<%= story.success.customer.logo_url || asset_path('company-logo-missing.png') %>">
   </div>
 
   <!-- quote -->
   <div id='story-quote-col'
        class='story-text col-xs-8
-              <%= @story.embed_url.present? ? 'col-sm-12' : '' %> '>
+              <%= story_has_video ? 'col-sm-12' : '' %> '>
 
     <p id='story-quote' class='lead story-text'>
-      <em>"<%= @story.quote %>"</em>
+      <em>"<%= story.quote %>"</em>
     </p>
 
     <div id='story-quote-attr-col'
          class='col-xs-12 col-lg-11 text-right'>
       <p id='story-quote-attr'>
-        &#8211;&nbsp;<%= @story.quote_attr %>
+        &#8211;&nbsp;<%= story.quote_attr %>
       </p>
     </div>
 
@@ -48,69 +48,73 @@
   <!-- video (xs only) -->
   <div id='story-video-col-xs'
        class="col-xs-10 col-xs-offset-1
-          <%= @story.embed_url.present? ? 'visible-xs-block' : 'hidden' %>">
+          <%= story_has_video ? 'visible-xs-block' : 'hidden' %>">
 
-    <% if @story.video_info[:provider] == 'wistia' %>
+    <!-- <div itemprop='video' itemscope itemtype='//schema.org/VideoObject'> -->
+      <!-- <meta itemprop='' itemcontent=''> -->
 
-      <script src="//fast.wistia.com/embed/medias/<%= @story.video_info[:provider] %>.jsonp" async></script>
+      <% if story.video_info[:provider] == 'wistia' %>
+
+        <script src="//fast.wistia.com/embed/medias/<%= story.video_info[:provider] %>.jsonp" async></script>
+        <script src="//fast.wistia.com/assets/external/E-v1.js" async></script>
+        <div class="wistia_responsive_padding"
+             style="padding:56.25% 0 0 0;position:relative;">
+          <div class="wistia_responsive_wrapper"
+               style="height:100%;left:0;position:absolute;top:0;width:100%;">
+            <div class="wistia_embed wistia_async_<%= story.video_info[:id] %> videoFoam=true"
+                 style="height:100%;width:100%">&nbsp;
+            </div>
+          </div>
+        </div>
+
+      <% else %>
+
+        <div class="video-thumb-container embed-responsive embed-responsive-16by9"
+           data-toggle='modal' data-target='#story-video-modal'
+           data-provider="<%= story.video_info[:provider] %>"
+           data-video-id="<%= story.video_info[:id] %>"
+           data-video-url="<%= story.embed_url %>">
+        </div>
+
+      <% end %>
+
+    <!-- </div> -->  <!-- meta VideoObject -->
+  </div>
+</div>
+
+<div id='story-video-col'
+     class="<%= story_has_video ? 'hidden-xs col-sm-6 col-md-5' : 'hidden' %>">
+
+  <!-- <div itemprop='video' itemscope itemtype='//schema.org/VideoObject'> -->
+    <!-- <meta itemprop='' content='' -->
+
+    <% if story.video_info[:provider] == 'wistia' %>
+
+      <script src="//fast.wistia.com/embed/medias/<%= story.video_info[:id] %>.jsonp" async></script>
       <script src="//fast.wistia.com/assets/external/E-v1.js" async></script>
       <div class="wistia_responsive_padding"
-           style="padding:56.25% 0 0 0;position:relative;">
+           style="padding:56.25% 0 0 0; position:relative;">
         <div class="wistia_responsive_wrapper"
              style="height:100%;left:0;position:absolute;top:0;width:100%;">
-          <div class="wistia_embed wistia_async_<%= @story.video_info[:id] %> videoFoam=true"
-               style="height:100%;width:100%">&nbsp;
+          <div class="wistia_embed wistia_async_<%= story.video_info[:id] %>
+                popover=true popoverAnimateThumbnail=true videoFoam=true"
+               style="display:inline-block; width:100%; height:100%">&nbsp;
           </div>
         </div>
       </div>
 
     <% else %>
 
-      <div class="video-thumb-container embed-responsive embed-responsive-16by9"
-         data-toggle='modal' data-target='#story-video-modal'
-         data-provider="<%= @story.video_info[:provider] %>"
-         data-video-id="<%= @story.video_info[:id] %>"
-         data-video-url="<%= @story.embed_url %>">
-      </div>
+        <div class="video-thumb-container"
+             data-toggle='modal' data-target='#story-video-modal'
+             data-provider="<%= story.video_info[:provider] %>"
+             data-video-id="<%= story.video_info[:id] %>"
+             data-video-url="<%= story.embed_url %>">
+        </div>
 
     <% end %>
 
-  </div>
-
-</div>
-
-<div id='story-video-col'
-     class="<%= @story.embed_url.present? ?
-            'hidden-xs col-sm-6 col-md-5' : 'hidden' %>">
-
-  <% if @story.video_info[:provider] == 'wistia' %>
-
-    <!-- script was already declared above.  note that an element with .hidden
-         still appears in the dom -->
-    <script src="//fast.wistia.com/embed/medias/<%= @story.video_info[:id] %>.jsonp" async></script>
-    <script src="//fast.wistia.com/assets/external/E-v1.js" async></script>
-    <div class="wistia_responsive_padding"
-         style="padding:56.25% 0 0 0; position:relative;">
-      <div class="wistia_responsive_wrapper"
-           style="height:100%;left:0;position:absolute;top:0;width:100%;">
-        <div class="wistia_embed wistia_async_<%= @story.video_info[:id] %>
-              popover=true popoverAnimateThumbnail=true videoFoam=true"
-             style="display:inline-block; width:100%; height:100%">&nbsp;
-        </div>
-      </div>
-    </div>
-
-  <% else %>
-
-    <div class="video-thumb-container"
-         data-toggle='modal' data-target='#story-video-modal'
-         data-provider="<%= @story.video_info[:provider] %>"
-         data-video-id="<%= @story.video_info[:id] %>"
-         data-video-url="<%= @story.embed_url %>">
-    </div>
-
-  <% end %>
-
+  <!-- </div> -->  <!-- meta VideoObject -->
 </div>
 
 
