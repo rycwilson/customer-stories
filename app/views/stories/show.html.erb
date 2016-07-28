@@ -45,13 +45,16 @@
 
 
         <div id='social-buttons' class="col-sm-5 col-md-4 hidden-xs hidden-sm text-center">
-          <a href="#" class="icon-button linkedin">
+          <a href="//www.linkedin.com/shareArticle?mini=true&url=<%= @story.csp_story_url %>"
+             class="icon-button linkedin" target="_blank">
             <i class="fa fa-linkedin"></i><span></span>
           </a>
-          <a href="#" class="icon-button twitter">
+          <a href="//twitter.com/share?url=<%= @story.csp_story_url %>"
+             class="icon-button twitter" target="_blank">
             <i class="fa fa-twitter"></i><span></span>
           </a>
-          <a href="#" class="icon-button facebook">
+          <a href="//www.facebook.com/sharer.php?u=<%= @story.csp_story_url %>"
+             class="icon-button facebook" target="_blank">
             <i class="fa fa-facebook"></i><span></span>
           </a>
           <%#= render_shareable buttons: ['twitter', 'linkedin', 'facebook'] %>
