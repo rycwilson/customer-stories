@@ -35,7 +35,7 @@
     <div class="container">
       <div id='story-header' class="row">
 
-        <div id='story-customer-name' class="hidden-xs col-sm-9 col-md-10">
+        <div id='story-customer-name' class="hidden-xs col-sm-9">
           <h3><%= @story.success.customer.name %></h3>
         </div>
 
@@ -43,7 +43,7 @@
           <h3><%= @story.success.customer.name %></h3>
         </div>
 
-        <div id='social-buttons' class="col-sm-3 col-md-2 hidden-xs text-center">
+        <div id='social-buttons' class="col-sm-3 hidden-xs text-center">
           <a href="//www.linkedin.com/shareArticle?mini=true&url=<%= @story.csp_story_url %>"
              class="icon-button linkedin" target="_blank">
             <i class="fa fa-linkedin"></i><span></span>

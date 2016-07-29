@@ -944,13 +944,14 @@ fieldset[disabled] .btn-transparent.active {
 .nav-tabs > li > a:focus {
   color: #444444;
   background-color: #eeeeee;
+  border-bottom: 1px solid #ddd;
 }
 .nav-tabs > li.active > a,
 .nav-tabs > li.active > a:hover,
 .nav-tabs > li.active > a:focus {
   color: #d74b4b;
   background-color: #ffffff;
-  font-weight: 600;
+  /*font-weight: 600;*/
 }
 .nav .open > a,
 .nav .open > a:hover,
@@ -3299,7 +3300,7 @@ fieldset[disabled] .navbar .btn-link:focus {
   min-height: 48px;
   margin-bottom: 25px;
   background-color: #ffffff;
-  border-bottom: 1px solid #dddddd;
+  /*border-bottom: 1px solid #dddddd;*/
 }
 .mainnav:after {
   content: '';
@@ -3308,7 +3309,7 @@ fieldset[disabled] .navbar .btn-link:focus {
   z-index: -1;
   width: 100%;
   height: 50px;
-  margin-top: 2px;
+  /*margin-top: 2px;*/
   background-image: linear-gradient(to bottom, #f2f2f2 0%, #ffffff 100%);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2f2f2', endColorstr='#ffffffff', GradientType=0);
@@ -3468,12 +3469,13 @@ fieldset[disabled] .navbar .btn-link:focus {
     border-bottom-color: transparent;
   }
   .mainnav-menu > li > a:hover {
-    background-color: #f4f4f4;
+    background-color: #f2f2f2;
     border-bottom-color: transparent;
   }
   .mainnav-menu > li.active > a {
     /*border-bottom-color: #d74b4b;*/
-    border-bottom-color: #555555;
+    /* !important keeps the bottom border even when hover */
+    border-bottom-color: #4885ed !important;
   }
   .mainnav-menu .mainnav-caret {
     font-size: 13px;

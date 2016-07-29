@@ -149,6 +149,15 @@ $icon-font-path: "bootstrap-sass/assets/fonts/bootstrap/";
   display:none;
 }
 
+/*
+  no borders on nav tabs (override bootstra)
+*/
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+  border: 1px solid transparent;
+}
+
 .required-input label:after {
   color: #D9534F;
   content: " *";
