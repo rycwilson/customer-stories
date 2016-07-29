@@ -27,4 +27,5 @@ Rails.application.config.assets.precompile += %w(
   widget.css cs-widget.css
   pdf.css
   stories/video.js stories/bip.js
+  social-share.css
 )
