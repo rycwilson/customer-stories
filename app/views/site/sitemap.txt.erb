@@ -1,0 +1,12 @@
+
+<% @published_companies.each do |published_co| %>
+
+  <%= "https://#{published_co[:subdomain]}.customerstories.net" %>
+
+  <% published_co[:story_urls].each do |url| %>
+
+    <%= url %>
+
+  <% end %>
+
+<% end %>

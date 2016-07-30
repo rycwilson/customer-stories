@@ -40,6 +40,30 @@ class SiteController < ApplicationController
     end
   end
 
+  def sitemap
+    @published_companies = Company.joins(successes: { story: {} })
+                                  .where(stories: { published: true })
+                                  .where.not("subdomain IN ('csp', 'acme-test')")
+                                  .uniq
+                                  .map do |company|
+                                    { id: company.id,
+                                      subdomain: company.subdomain }
+                                  end
+    @published_companies.each do |published_company|
+      published_company[:stories] =
+                        Story.joins(success: { customer: { company: {} }})
+                             .where(published: true,
+                                    companies: { id: published_company[:id] })
+                             .map do |story|
+                               { url: story.csp_story_url,
+                                 last_modified: story.updated_at }
+                             end
+    end
+    respond_to do |format|
+        format.xml { render layout: false }
+    end
+  end
+
   def google_verify
     render params[:google], layout: false
   end
