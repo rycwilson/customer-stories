@@ -95,7 +95,16 @@
         <div id='story-results' class="well story-text">
           <h3 class='text-center'>Results</h3>
           <% @story.success.results.each do |result| %>
-            <i class='fa fa-check'></i>&nbsp;&nbsp;&nbsp;&nbsp;<%= result.description %></p>
+          <div class="row">
+            <div class="col-xs-1">
+            <i class='fa fa-check'></i>&nbsp;&nbsp;&nbsp;&nbsp;
+
+            </div>
+            <div class="col-xs-11">
+
+            <span><%= result.description %></span>
+            </div>
+          </div>
           <% end %>
         </div>
 
