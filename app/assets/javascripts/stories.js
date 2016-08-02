@@ -141,13 +141,13 @@ function initPlugins () {
 function initSocialShare() {
 
   $('#social-buttons .linkedin').on('click', function (e) {
-    $(this).socialSharePopup(e, 550, 442);
+    $(this).socialSharePopup(e, 550, 561);
   });
   $('#social-buttons .twitter').on('click', function (e) {
     $(this).socialSharePopup(e, 550, 253);
   });
   $('#social-buttons .facebook').on('click', function (e) {
-    $(this).socialSharePopup(e, 560, 442);
+    $(this).socialSharePopup(e, 560, 656);
   });
 
   $.fn.socialSharePopup = function (e, width, height) {
