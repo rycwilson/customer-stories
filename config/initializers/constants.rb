@@ -2,5 +2,5 @@ INDUSTRIES = ['Education', 'Government', 'Financial Services', 'Healthcare', 'Ho
 
 CS_LOGO_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/cs_logo.png"
 
-CS_FULL_LOGO_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/cs_logo_full_4.png"
+CS_FULL_LOGO_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/cs_logo_full_1200x630.png"
 
