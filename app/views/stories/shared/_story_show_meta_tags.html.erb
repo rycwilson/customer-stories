@@ -11,15 +11,19 @@
 
   <meta property='og:title' content="<%= story.title %>">
   <meta property="og:url" content="<%= story.csp_story_url %>">
-  <meta property='og:image' content="<%= company.logo_url %>">
+  <meta property='og:image' content="https://s3-us-west-1.amazonaws.com/csp-production-assets/cs_logo_full_1200x630.png">
+  <meta property='og:image:width' content="1200">
+  <meta property='og:image:height' content="630">
   <meta property='og:description'
-    content="<%= company.name + '/' + story.success.customer.name + ' Customer Story' %>">
+    content="<%= story.quote.present? ? "\"" + story.quote + "\"" :
+                  company.name + "/" + success.customer.name + " Customer Story" %>">
   <meta property='og:type' content='article'>
   <meta property='og:site_name' content="<%= company.name %> Customer Stories">
   <meta property='fb:app_id'
         content="<%= ENV['HOST_NAME'] == 'customerstories.net' ?
                   '291034101286863' : '<facebook_app_id>' %>">
   <meta name="twitter:card" content="summary">
+  <meta name="twitter:image" content="<%= CS_LOGO_URL %>">
 
   <script type='application/ld+json'>
     {
@@ -46,9 +50,9 @@
       "description": "<%= company.name + '/' + success.customer.name + ' Customer Story' %>",
       "image": {
         "@type": "ImageObject",
-        "url": "https://s3-us-west-1.amazonaws.com/csp-production-assets/cs_logo_full.png",
-        "height": 640,
-        "width": 220
+        "url": "<%= CS_FULL_LOGO_URL %>",
+        "height": 590,
+        "width": 310
       },
       "contributor": <%= raw contributors.to_json %>,
       "about": {
