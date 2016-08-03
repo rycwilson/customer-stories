@@ -256,7 +256,7 @@
         <div class="row">
           <div class="col-sm-12">
             {{= (contribution.status === 'feedback' || contribution.status === 'did_not_respond')? 'Next step:' : 'Status:' }}&nbsp;
-            {{= contribution.status_helper }}
+            {{= contribution.display_status }}
           </div>
         </div>
       {{ } }}

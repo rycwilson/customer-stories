@@ -1,7 +1,5 @@
 class ContributionsController < ApplicationController
 
-  include ContributionsHelper
-
   before_action :valid_token?, only: [:edit, :update]
   before_action :set_contribution, only: [:show, :confirm, :confirm_request, :send_request]
   before_action :check_opt_out_list, only: [:create, :confirm_request]

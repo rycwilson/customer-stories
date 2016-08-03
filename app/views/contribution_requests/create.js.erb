@@ -1,9 +1,9 @@
 
 (function () {
 
-  var contributionsInProgress = <%= raw @contributions_in_progress.to_json({ methods: :status_helper, include: { contributor: {}, referrer: {}, success: { include: :customer } } }) %>,
-          contribution = <%= raw @contribution.to_json({ methods: :status_helper }) %>,
-    contributionStatus = "<%= contribution_status(@contribution) %>"
+  var contributionsInProgress = <%= raw @contributions_in_progress.to_json({ methods: :display_status, include: { contributor: {}, referrer: {}, success: { include: :customer } } }) %>,
+          contribution = <%= raw @contribution.to_json %>,
+    contributionStatus = "<%= @contribution.display_status %>",
              flashMesg = "<%= @flash_mesg %>",
            flashStatus = "<%= @flash_status %>",
               template = _.template($('#cc-template').html()),
@@ -11,7 +11,11 @@
 
   setTimeouts();
   if (flashStatus === "info") {  // success
-    removePreRequestCard(contribution.id);
+    if (contribution.status == 'request')
+      removePreRequestCard(contribution.id);
+    else {  // re-send
+      removeNextStepCard(contribution.id)
+    }
     renderInProgressCards();
     updateConnectionCard();
   } else {
@@ -37,7 +41,14 @@
           .find("div[data-contribution-id='" + contribution_id.toString() + "']");
     setTimeout(function () {
       $preRequestCard.hide('fast', function() { $preRequestCard.remove(); });
-      // $('#flash').fadeOut(300, function () { $(this).remove() });
+    }, 1000);
+  }
+
+  function removeNextStepCard (contribution_id) {
+    var $nextStepCard = $('#contributions-next-steps')
+          .find("div[data-contribution-id='" + contribution_id.toString() + "']");
+    setTimeout(function () {
+      $nextStepCard.hide('fast', function() { $nextStepCard.remove(); });
     }, 1000);
   }
 
@@ -52,7 +63,7 @@
   function updateConnectionCard () {
     $('#contribution-connections')
       .find(".contribution-card[data-contribution-id='" + contribution.id + "']")
-      .find(".contribution-status").text(contribution.status_helper)
+      .find(".contribution-status").text(contributionStatus);
   }
 
 

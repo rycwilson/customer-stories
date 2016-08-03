@@ -18,26 +18,29 @@ class Contribution < ActiveRecord::Base
   validates :remind_1_wait, numericality: { only_integer: true }
   validates :remind_2_wait, numericality: { only_integer: true }
 
-  def status_helper
-    case self[:status]
-    when 'pre_request'
-      return "added #{self.created_at.strftime('%-m/%-d/%y')}"
-    when 'request'
-      return "request sent #{(self.remind_at - self.remind_1_wait.days).strftime('%-m/%-d/%y')}"
-    when 'remind1'
-      return "first reminder sent #{(self.remind_at - self.remind_2_wait.days).strftime('%-m/%-d/%y')}"
-    when 'remind2'
-      return "second reminder sent #{(self.remind_at - self.remind_2_wait.days).strftime('%-m/%-d/%y')}"
-    when 'did_not_respond'
-      return "follow up phone call"
-    when 'contribution'
-      return 'contribution submitted'
-    when 'feedback'
-      return 'review feedback'
-    when 'unsubscribe'
-      return "unsubscribed from story"
-    when 'opt_out'
-      return "opted out of all emails"
+  def display_status
+    case self.status
+      when 'pre_request'
+        return "added #{self.created_at.strftime('%-m/%-d/%y')}"
+      when 'request'
+        return "request sent #{(self.remind_at - self.remind_1_wait.days).strftime('%-m/%-d/%y')}"
+      when 'remind1'
+        return "first reminder sent #{(self.remind_at - self.remind_2_wait.days).strftime('%-m/%-d/%y')}"
+      when 'remind2'
+        return "second reminder sent #{(self.remind_at - self.remind_2_wait.days).strftime('%-m/%-d/%y')}"
+      when 'did_not_respond'
+        return "follow up"
+      when 'contribution'
+        return 'contribution submitted'
+      when 'feedback'
+        return 'review feedback'
+      when 'unsubscribe'
+        return "unsubscribed from story"
+      when 'opt_out'
+        return "opted out of all emails"
+      when 're_send'
+        # hack: remind_at holds the re-send date
+        return "request re-sent #{self.remind_at.strftime('%-m/%-d/%y')}"
     end
   end
 
@@ -45,30 +48,32 @@ class Contribution < ActiveRecord::Base
     # logs to log/cron.log in development environment (output set in schedule.rb)
     # TODO: log in production environment
     # logger.info "sending reminders - #{Time.now.strftime('%-m/%-d/%y at %I:%M %P')}"
-    Contribution.where("status IN ('request', 'remind1', 'remind2')")
+    Contribution.where("status IN ('request', 'remind1', 'remind2', 're_send')")
                 .each do |contribution|
       # puts "processing contribution #{contribution.id} with status #{contribution.status}"
       if contribution.remind_at.past?
-        unless contribution.status == 'remind2'
+        unless ['remind2', 're_send'].include? contribution.status
           UserMailer.send_contribution_reminder(contribution).deliver_now
         end
         if contribution.status == 'request'
           new_status = 'remind1'
           new_remind_at = Time.now + contribution.remind_2_wait.days
-          # puts "first reminder sent, new remind_at: #{new_remind_at.strftime('%-m/%-d/%y at %I:%M %P')} UTC"
         elsif contribution.status == 'remind1'
           new_status = 'remind2'
           # no more reminders, but need to trigger when to change status to 'did_not_respond'
           new_remind_at = Time.now + contribution.remind_2_wait.days
-          # puts "second reminder sent, new remind_at (status to did_not_respond): #{new_remind_at.strftime('%-m/%-d/%y at %I:%M %P')} UTC"
+        elsif contribution.status == 're_send'
+          # for re_send, remind_at captures when it was re-sent
+          if contribution.remind_at < remind_2_wait.days.ago
+            new_status = 'did_not_respond'
+            new_remind_at = nil
+          end
         else
           new_status = 'did_not_respond'
           new_remind_at = nil
-          # puts "no more reminders, did not respond"
         end
         contribution.update(status: new_status, remind_at: new_remind_at)
       end
-      # puts "status for #{contribution.id} is now #{contribution.status}"
     end
   end
 
@@ -83,7 +88,7 @@ class Contribution < ActiveRecord::Base
   # sort oldest to newest (according to status)
   #
   def self.in_progress success_id
-    status_options = ['opt_out', 'unsubscribe', 'remind2', 'remind1', 'request']
+    status_options = ['opt_out', 'unsubscribe', 'remind2', 'remind1', 'request', 're_send']
     Contribution.includes(:contributor, :referrer)
                 .where("success_id = ? AND status IN (?)", success_id, status_options)
                 .sort do |a,b|  # sorts as per order of status_options
@@ -124,7 +129,6 @@ class Contribution < ActiveRecord::Base
 
   # returns a hash with subject and body, all placeholders populated with data
   def generate_request_email
-    logger.debug "CURATOR: #{self.success.curator.full_name}"
     success = self.success
     curator = success.curator
     template = curator.company.email_templates
