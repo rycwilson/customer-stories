@@ -3,11 +3,10 @@ class UserMailer < ApplicationMailer
   default from: 'no-reply@customerstories.net'
 
   TEST_EMAILS = ['***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***']
-  FOOTER_IMG_URL = "https://s3-us-west-1.amazonaws.com/csp-#{Rails.env}-assets/CS-powered-by.png"
 
   def request_contribution contribution
     @body = contribution.email_contribution_request.body.html_safe
-    @footer_img_url = FOOTER_IMG_URL
+    @footer_img_url = CS_POWERED_LOGO_URL
     send_mail contribution.success.curator, contribution.contributor,
               contribution.email_contribution_request.subject
   end
@@ -15,7 +14,7 @@ class UserMailer < ApplicationMailer
   def send_contribution_reminder contribution
     curator = contribution.success.curator
     contributor = contribution.contributor
-    @footer_img_url = FOOTER_IMG_URL
+    @footer_img_url = CS_POWERED_LOGO_URL
     if contribution.status == 'request'
       subject = contribution.email_contribution_request.subject.prepend("Reminder: ")
     else
@@ -26,7 +25,7 @@ class UserMailer < ApplicationMailer
   end
 
   def test_template template, curator
-    @footer_img_url = "https://s3-us-west-1.amazonaws.com/csp-#{Rails.env}-assets/CS-powered-by.png"
+    @footer_img_url = CS_POWERED_LOGO_URL
     subject = template.subject
                 .sub("[customer_name]", "CustomerCompany")
                 .sub("[company_name]", curator.company.name)
