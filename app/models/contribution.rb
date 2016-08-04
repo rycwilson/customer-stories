@@ -64,7 +64,7 @@ class Contribution < ActiveRecord::Base
           new_remind_at = Time.now + contribution.remind_2_wait.days
         elsif contribution.status == 're_send'
           # for re_send, remind_at captures when it was re-sent
-          if contribution.remind_at < remind_2_wait.days.ago
+          if contribution.remind_at < contribution.remind_2_wait.days.ago
             new_status = 'did_not_respond'
             new_remind_at = nil
           end
