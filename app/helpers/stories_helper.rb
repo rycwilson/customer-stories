@@ -67,4 +67,9 @@ module StoriesHelper
     keywords.present? ? keywords.join(', ') : ''
   end
 
+  def quote_attribution story
+    return "" if story.quote_attr.blank?
+    story.quote_attr.gsub(',', ",<br>&nbsp;&nbsp;").html_safe
+  end
+
 end
