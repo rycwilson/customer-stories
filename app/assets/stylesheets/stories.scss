@@ -198,14 +198,15 @@
   margin-right: 10px;
 }
 
+#social-buttons-xs {
+  background-color: #f2f2f2;
+  padding: 15px 25px 15px 15px;
+}
+
 // nav links
 .story-nav {
  color: #337ab7;
  padding: 0;
-}
-
-#story-nav-col {
-  margin-bottom: 15px;
 }
 
 p.lead.story-text {
@@ -217,17 +218,21 @@ p.lead.story-text {
   color: #666;
 }
 
+#story-section-video-xs {
+  background-color: #f2f2f2;
+  padding-bottom: 15px;
+}
+
 #story-section-content {
   background-color: #f2f2f2;
-  margin-top: 52px;
+  padding-top: 15px;
 }
 
 #story-section-testimonial {
-  /* this is necessary for the trailing color gradient (see below) */
   position: relative;
-  margin: 0 0 40px 0;
+  /* make some room for the trailing color gradient (see below) */
+  margin: 0 0 50px 0;
 }
-
 
 #story-section-testimonial:after {
   content: '';
@@ -236,11 +241,12 @@ p.lead.story-text {
   z-index: -1;
   width: 100%;
   height: 50px;
-  margin-top: 2px;
+  // margin-top: 2px;
   background-image: linear-gradient(to top, #f2f2f2 0%, #ffffff 100%);
   background-repeat: repeat-x;
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2f2f2', endColorstr='#ffffffff', GradientType=0);
 }
+
 
 #story-section-content .well {
   background-color: #ffffff;
@@ -259,22 +265,23 @@ p.lead.story-text {
   #story-header {
     margin-top: 14px;  // this compensates for the smaller h3 headline
   }
-  #story-nav-col {
-    margin-bottom: 20px;
+  #story-testimonial-col {
+    margin-top: 22px;
+    padding: 0;
   }
   #story-customer-logo {
     max-height: 70px;
     max-width: 100%;
     margin-bottom: 10px;
   }
+  #story-section-video-xs [class^='col-'] {
+    padding: 0;
+  }
+  #story-quote-col {
+    padding: 0;
+  }
   #story-quote {
     font-size: 14px;
-  }
-  #story-video-col-xs {
-    margin-top: 15px;
-    margin-bottom: -10px;
-    padding-left: 0;
-    padding-right: 0;
   }
   #story-video-modal iframe {
     height: 260px;
@@ -285,17 +292,15 @@ p.lead.story-text {
   #story-header {
     margin-top: 14px;  // this compensates for the smaller h3 headline
   }
-  #story-nav-col {
-    margin-bottom: 20px;
+  #story-testimonial-col {
+    margin-top: 22px;
   }
   #story-customer-logo {
     max-height: 70px;
     max-width: 70%;
     margin-bottom: 10px;
   }
-  #story-video-col-xs {
-    margin-top: 15px;
-    margin-bottom: -10px;
+  #story-section-video-xs {
     padding-left: 8%;
     padding-right: 8%;
   }
@@ -308,17 +313,15 @@ p.lead.story-text {
   #story-header {
     margin-top: 14px;  // this compensates for the smaller h3 headline
   }
-  #story-nav-col {
-    margin-bottom: 20px;
+  #story-testimonial-col {
+    margin-top: 22px;
   }
   #story-customer-logo {
     max-height: 70px;
     max-width: 80%;
     margin-bottom: 10px;
   }
-  #story-video-col-xs {
-    margin-top: 15px;
-    margin-bottom: -10px;
+  #story-section-video-xs {
     padding-left: 12%;
     padding-right: 12%;
   }
@@ -331,12 +334,10 @@ p.lead.story-text {
   #story-header {
     margin-top: 14px;  // this compensates for the smaller h3 headline
   }
-  #story-nav-col {
-    margin-bottom: 20px;
+  #story-testimonial-col {
+    margin-top: 22px;
   }
-  #story-video-col-xs {
-    margin-top: 20px;
-    margin-bottom: -10px;
+  #story-section-video-xs {
     padding-left: 15%;
     padding-right: 15%;
   }
@@ -347,6 +348,15 @@ p.lead.story-text {
   }
   #story-video-modal iframe {
     height: 400px;
+  }
+}
+
+@media (max-width: 767px) {
+  #story-section-video-xs .col-xs-10 {
+    margin-top: -10px;
+  }
+  #story-section-content > .container > [class^="col-"] {
+    padding: 0;
   }
 }
 
@@ -366,11 +376,6 @@ p.lead.story-text {
   }
   #story-quote {
     font-size: 16px;
-  }
-  #story-video-col-xs {
-    margin-top: 25px;
-    padding-left: 45px;
-    padding-right: 45px;
   }
   #story-section-content .well {
     margin-top: -10px;
