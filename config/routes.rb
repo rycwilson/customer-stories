@@ -137,6 +137,15 @@ Rails.application.routes.draw do
       omniauth_callbacks_controller: 'users/omniauth_callbacks'
     }
 
+  devise_for :admins, controllers: {
+      sessions: 'admins/sessions',
+      registrations: 'admins/registrations',
+      passwords: 'admins/passwords',
+      confirmations: 'admins/confirmations',
+      unlocks_controller: 'admins/unlocks',
+      omniauth_callbacks_controller: 'admins/omniauth_callbacks'
+    }
+
   # Store Front
   get '/product', to: 'site#store_front'
   get '/plans', to: 'site#store_front'
