@@ -120,6 +120,8 @@ function initPlugins () {
     ],
   });
 
+  $('[data-toggle="popover"]').popover();
+
   $('#story-content').summernote({
     toolbar: [
       ['style', ['style']],
@@ -525,6 +527,15 @@ function miscListeners () {
         $deleteButton.closest('.row').remove();
       }
     });
+  });
+
+  $('#approval-pdf-btn').on('click', function (e) {
+    var missingInfo = $(this).data('missing-curator-info');
+    if (missingInfo.length) {
+      e.preventDefault();
+      var flashMesg = "Can't generate document because the following Curator fields are missing: " + missingInfo.join(', ');
+      flashDisplay(flashMesg, 'danger');
+    }
   });
 }
 

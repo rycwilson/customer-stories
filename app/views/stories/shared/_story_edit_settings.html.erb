@@ -30,8 +30,11 @@
 
       <div class="col-sm-4 text-center" data-no-turbolink>
         <%= link_to 'Approval PDF', story_approval_path(@story.id, format: :pdf),
-              class: 'btn btn-primary', target: '_blank' %>
+              class: 'btn btn-primary', id: 'approval-pdf-btn',
+              data: { missing_curator_info: @story.success.curator.missing_info.to_json },
+              target: '_blank' %>
       </div>
+
     </div>
 
   <% end %>
