@@ -6,3 +6,4 @@ CS_FULL_LOGO_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/cs_
 
 CS_POWERED_LOGO_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/CS-powered-by.png"
 
+ADMIN_USERS = ["***REMOVED***", "***REMOVED***", "***REMOVED***", "***REMOVED***", "***REMOVED***"]

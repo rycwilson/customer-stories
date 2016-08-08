@@ -1,8 +1,13 @@
 
 <% if user_signed_in? %>
 
-  <%= link_to 'Sign out', destroy_user_session_path, method: :delete,
-        class: 'btn btn-xs btn-default' %>
+  <!-- if necessary, override the styling to make room for switch_user_select -->
+  <%= link_to 'Sign out', destroy_user_session_path,
+        method: :delete,
+         class: 'btn btn-xs btn-default',
+         style: "#{ADMIN_USERS.include?(current_user.email) ? 'margin-top:20px' : ''}" %>
+
+  <%= switch_user_select style: 'width:140px' %>
 
 <% else %>
 

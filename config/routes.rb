@@ -1,16 +1,22 @@
 
 Rails.application.routes.default_url_options = {
-    host: ENV['HOST_NAME'],
-    protocol: 'https'
+    protocol: 'https',
+    host: ENV['HOST_NAME']
 }
 
 Rails.application.routes.draw do
 
   devise_for :admins
+
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
 
   get '/sitemap', to: 'site#sitemap'
   get '/:google', to: 'site#google_verify', constraints: { google: /google\w+/ }
+
+  # admins only
+  # layout is protected, but these routes could be more secure
+  get 'switch_user', to: 'switch_user#set_current_user'
+  get 'switch_user/remember_user', to: 'switch_user#remember_user'
 
   # valid subdomains (company/subdomain exists, excludes www)
   constraints(Subdomain) do
@@ -137,14 +143,7 @@ Rails.application.routes.draw do
       omniauth_callbacks_controller: 'users/omniauth_callbacks'
     }
 
-  devise_for :admins, controllers: {
-      sessions: 'admins/sessions',
-      registrations: 'admins/registrations',
-      passwords: 'admins/passwords',
-      confirmations: 'admins/confirmations',
-      unlocks_controller: 'admins/unlocks',
-      omniauth_callbacks_controller: 'admins/omniauth_callbacks'
-    }
+
 
   # Store Front
   get '/product', to: 'site#store_front'
