@@ -16,7 +16,6 @@
 //= require jquery.minicolors
 
 var ready = function () {
-
   // not the best solution for remembering active tab, but it works
   // var lastCurateTab = localStorage.getItem('lastCurateTab');
   // var lastSettingsTab = localStorage.getItem('lastSettingsTab');
@@ -36,9 +35,7 @@ var ready = function () {
   templateEditorListeners();
   initFormLogoBackground();
   initNewStoryValidator();
-  adjustPromoCSS();
-
-  // console.log('ready()');
+  adjustPromoCSSChecker();
 
 };
 
@@ -342,27 +339,35 @@ function initNewStoryValidator () {
   });
 }
 
+function adjustPromoCSSChecker () {
+  if ($('#promote').hasClass('active')) {
+    adjustPromoCSS();
+  } else {
+    $(document).on('shown.bs.tab', "a[href='#promote']", function () {
+      adjustPromoCSS();
+    });
+  }
+}
+
 function adjustPromoCSS () {
-  $(document).on('shown.bs.tab', "a[href='#promote']", function () {
 
-    var ad2LogoWidth = parseInt($('.ad2-logo').css('width'), 10);
+  var ad2LogoWidth = parseInt($('.ad2-logo').css('width'), 10);
 
-    $('.ad1-text').each(function () {
-      if ($(this).data('text-length') >= 85) {
-        $(this).css('font-size', '22px');
-      }
-    });
+  $('.ad1-text').each(function () {
+    if ($(this).data('text-length') >= 85) {
+      $(this).css('font-size', '22px');
+    }
+  });
 
-    $('.ad2-text').each(function () {
-      $(this).css('padding-left', ad2LogoWidth + 20);
-      if ($(this).data('text-length') >= 85) {
-        $(this).css('font-size', '20px');
-        $(this).css('top', '10px');
-      } else if ($(this).data('text-length') >= 75) {
-        $(this).css('font-size', '22px');
-        $(this).css('top', '8px');
-      }
-    });
+  $('.ad2-text').each(function () {
+    $(this).css('padding-left', ad2LogoWidth + 20);
+    if ($(this).data('text-length') >= 85) {
+      $(this).css('font-size', '20px');
+      $(this).css('top', '10px');
+    } else if ($(this).data('text-length') >= 75) {
+      $(this).css('font-size', '22px');
+      $(this).css('top', '8px');
+    }
   });
 }
 

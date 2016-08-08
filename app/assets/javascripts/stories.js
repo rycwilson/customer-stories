@@ -120,6 +120,8 @@ function initPlugins () {
     ],
   });
 
+  $('[data-toggle="popover"]').popover();
+
   $('#story-content').summernote({
     toolbar: [
       ['style', ['style']],
@@ -213,7 +215,6 @@ function configUnderscore() {
 }
 
 
-
 function editTagsListeners () {
   /*
     Remember the initial <option>s of the tag select inputs
@@ -250,19 +251,6 @@ function editTagsListeners () {
     // tagsFormDirty = false;
   });
 
-}
-
-/**
- * Get the value of a querystring
- * @param  {String} field The field to get the value of
- * @param  {String} url   The URL to get the value from (optional)
- * @return {String}       The field value
- */
-function getQueryString (field, url) {
-    var href = url ? url : window.location.href;
-    var reg = new RegExp( '[?&]' + field + '=([^&#]*)', 'i' );
-    var string = reg.exec(href);
-    return string ? string[1] : null;
 }
 
 /**
@@ -525,6 +513,15 @@ function miscListeners () {
         $deleteButton.closest('.row').remove();
       }
     });
+  });
+
+  $('#approval-pdf-btn').on('click', function (e) {
+    var missingInfo = $(this).data('missing-curator-info');
+    if (missingInfo.length) {
+      e.preventDefault();
+      var flashMesg = "Can't generate document because the following Curator fields are missing: " + missingInfo.join(', ');
+      flashDisplay(flashMesg, 'danger');
+    }
   });
 }
 
@@ -796,6 +793,8 @@ function centerLogos () {
     }
   });
 }
+
+
 
 
 

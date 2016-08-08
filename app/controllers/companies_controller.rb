@@ -16,6 +16,7 @@ class CompaniesController < ApplicationController
       redirect_to request.path
     else
       @mainnav_tab = session[:mainnav_tab] || 'curate'
+      session[:mainnav_tab] = nil # reset - so refresh always goes back to curate
       # TODO: what's the best balance of eager vs. lazy loading?
       # e.g. we're not eager loading products here...
       @company = Company.includes(:customers, :successes, :stories, :visitors).find params[:id]
