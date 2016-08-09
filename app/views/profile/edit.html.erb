@@ -60,6 +60,9 @@
                       class: 'btn btn-default',
                       style: 'background-color: #2672ae; color: white' %>
                 <% end %>
+
+                <br> <%= switch_user_select %>
+
               </div>
 
               <%= form_for @user, url: registration_path(@user),

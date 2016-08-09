@@ -14,7 +14,6 @@ Rails.application.routes.draw do
   get '/:google', to: 'site#google_verify', constraints: { google: /google\w+/ }
 
   # admins only
-  # layout is protected, but these routes could be more secure
   get 'switch_user', to: 'switch_user#set_current_user'
   get 'switch_user/remember_user', to: 'switch_user#remember_user'
 
@@ -142,8 +141,6 @@ Rails.application.routes.draw do
       unlocks_controller: 'users/unlocks',
       omniauth_callbacks_controller: 'users/omniauth_callbacks'
     }
-
-
 
   # Store Front
   get '/product', to: 'site#store_front'

@@ -5,7 +5,7 @@ SwitchUser.setup do |config|
   # available_users is a hash,
   # key is the model name of user (:user, :admin, or any name you use),
   # value is a block that return the users that can be switched.
-  config.available_users = { :user => lambda { User.where("company_id IS NOT NULL") } }
+  config.available_users = { :user => lambda { User.where.not("company_id IS NULL OR (first_name = ? AND last_name = ? AND admin = ?)", "Dan", "Lindblom", "FALSE") } }
 
   # available_users_identifiers is a hash,
   # keys in this hash should match a key in the available_users hash
@@ -24,17 +24,20 @@ SwitchUser.setup do |config|
   # if it returns true, the request will continue,
   # else the request will be refused and returns "Permission Denied"
   # if you switch from "admin" to user, the current_user param is "admin"
-  config.controller_guard = lambda { |current_user, request| true }
+  config.controller_guard = lambda { |current_user, request, original_user|
+    current_user.admin? || original_user.try(:admin?)
+  }
 
   # view_guard is a block,
   # if it returns true, the switch user select box will be shown,
   # else the select box will not be shown
   # if you switch from admin to "user", the current_user param is "user"
-  config.view_guard = lambda { |current_user, request| ADMIN_USERS.include? current_user.email }
+  config.view_guard = lambda { |current_user, request, original_user|
+    current_user.admin? || original_user.try(:admin?) }
 
   # redirect_path is a block, it returns which page will be redirected
   # after switching a user.
-  config.redirect_path = lambda { |request, params| '/' }
+  config.redirect_path = lambda { |request, params| '/profile/edit' }
 
   # helper_with_guest is a boolean value, if it set to false
   # the guest item in the helper won't be shown
@@ -42,7 +45,7 @@ SwitchUser.setup do |config|
 
   # false = login from one scope to another and you are logged in only in both scopes
   # true = you are logged only into one scope at a time
-  config.login_exclusive = true
+  config.login_exclusive = false
 
   # switch_back allows you to switch back to a previously selected user. See
   # README for more details.
