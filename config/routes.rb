@@ -1,16 +1,21 @@
 
 Rails.application.routes.default_url_options = {
-    host: ENV['HOST_NAME'],
-    protocol: 'https'
+    protocol: 'https',
+    host: ENV['HOST_NAME']
 }
 
 Rails.application.routes.draw do
 
   devise_for :admins
+
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
 
   get '/sitemap', to: 'site#sitemap'
   get '/:google', to: 'site#google_verify', constraints: { google: /google\w+/ }
+
+  # admins only
+  get 'switch_user', to: 'switch_user#set_current_user'
+  get 'switch_user/remember_user', to: 'switch_user#remember_user'
 
   # valid subdomains (company/subdomain exists, excludes www)
   constraints(Subdomain) do
