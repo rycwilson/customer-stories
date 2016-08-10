@@ -54,6 +54,12 @@
                   <% end %>
                 </div>
 
+            <% if request.path == '/users/sign_in' %>
+              <div class="form-group">
+                By signing in you are agreeing to the <a href="/tos">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.
+              </div>
+            <% end %>
+
               <% end %>
 
             </div> <!-- /.account-body -->
