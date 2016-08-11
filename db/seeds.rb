@@ -53,6 +53,7 @@ cisco = Company.create(name:'Cisco Systems', subdomain:'cisco', feature_flag:'de
                    logo_url:'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/6326ee57-e0e0-4a0b-aacb-9b59849f2c40/cisco-grey@2x.png',
                    nav_color_1:'#007fc5', nav_color_2:'#2B5693' , nav_text_color:'#FCFCFD')
 cisco.users << ryan << dan
+cisco.create_email_templates
 
 # trunity = Company.create(name:'Trunity', subdomain:'trunity',
 #                     logo_url:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/7272f9a8-5a97-460f-b6c6-5b176e8880d3/trunity_logo.png",
