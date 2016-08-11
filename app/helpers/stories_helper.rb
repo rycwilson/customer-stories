@@ -72,4 +72,63 @@ module StoriesHelper
     story.quote_attr.gsub(',', ",<br>&nbsp;&nbsp;").html_safe
   end
 
+  def og_image company, provider
+    if provider == 'all'
+      width = '400'
+      height = '400'
+    elsif provider == 'linkedin'
+      width = '300'
+      height = '160'
+    end
+    case company.subdomain
+    when 'trunity'
+      if provider == 'all'
+        image = TRUNITY_400X400_URL
+      elsif provider == 'linkedin'
+        image = TRUNITY_300X160_URL
+      end
+    when 'compas'
+      if provider == 'all'
+        image = COMPAS_400X400_URL
+      elsif provider == 'linkedin'
+        image = COMPAS_300X160_URL
+      end
+    when 'corefact'
+      if provider == 'all'
+        image = COREFACT_400X400_URL
+      elsif provider == 'linkedin'
+        image = COREFACT_300X160_URL
+      end
+    when 'varmour'
+      if provider == 'all'
+        image = VARMOUR_400X400_URL
+      elsif provider == 'linkedin'
+        image = VARMOUR_300X160_URL
+      end
+    when 'zoommarketing'
+      if provider == 'all'
+        image = ZOOM_400X400_URL
+      elsif provider == 'linkedin'
+        image = ZOOM_300X160_URL
+      end
+    when 'saucelabs'
+      if provider == 'all'
+        image = SAUCELABS_400X400_URL
+      elsif provider == 'linkedin'
+        image = SAUCELABS_300X160_URL
+      end
+    when 'centerforcustomerengagement'
+      if provider == 'all'
+        image = CCE_400X400_URL
+      elsif provider == 'linkedin'
+        image = CCE_300X160_URL
+      end
+    else
+      width = '1200'
+      height = '630'
+      image = CS_FULL_LOGO_URL
+    end
+    { image: image, width: width, height: height }
+  end
+
 end

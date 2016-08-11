@@ -11,9 +11,13 @@
 
   <meta property='og:title' content="<%= story.title %>">
   <meta property="og:url" content="<%= story.csp_story_url %>">
-  <meta property='og:image' content="https://s3-us-west-1.amazonaws.com/csp-production-assets/cs_logo_full_1200x630.png">
-  <meta property='og:image:width' content="1200">
-  <meta property='og:image:height' content="630">
+  <meta property='og:image' content="<%= og_image(company,'linkedin')[:image] %>">
+  <meta property='og:image:width' content="<%= og_image(company,'linkedin')[:width] %>">
+  <meta property='og:image:height' content="<%= og_image(company,'linkedin')[:height] %>">
+  <meta property='og:image' content="<%= og_image(company,'all')[:image] %>">
+  <meta property='og:image:width' content="<%= og_image(company,'all')[:width] %>">
+  <meta property='og:image:height' content="<%= og_image(company,'all')[:height] %>">
+
   <meta property='og:description'
     content="<%= story.quote.present? ? "\"" + story.quote + "\"" :
                   company.name + "/" + success.customer.name + " Customer Story" %>">
@@ -23,7 +27,7 @@
         content="<%= ENV['HOST_NAME'] == 'customerstories.net' ?
                   '291034101286863' : '<facebook_app_id>' %>">
   <meta name="twitter:card" content="summary">
-  <meta name="twitter:image" content="<%= CS_LOGO_URL %>">
+  <meta name="twitter:image" content="<%= og_image(company,'all')[:image] %>">
 
   <script type='application/ld+json'>
     {

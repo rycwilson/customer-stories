@@ -48,6 +48,7 @@ class User < ActiveRecord::Base
     missing << "photo" unless self.photo_url.present?
     missing << "phone" unless self.phone.present?
     missing << "title" unless self.title.present?
+    missing
   end
 
   # This is for users signing up via Oauth
