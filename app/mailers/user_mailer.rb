@@ -6,7 +6,6 @@ class UserMailer < ApplicationMailer
 
   def request_contribution contribution
     @body = contribution.email_contribution_request.body.html_safe
-    @footer_img_url = CS_POWERED_LOGO_URL
     send_mail contribution.success.curator, contribution.contributor,
               contribution.email_contribution_request.subject
   end
@@ -14,7 +13,6 @@ class UserMailer < ApplicationMailer
   def send_contribution_reminder contribution
     curator = contribution.success.curator
     contributor = contribution.contributor
-    @footer_img_url = CS_POWERED_LOGO_URL
     if contribution.status == 'request'
       subject = contribution.email_contribution_request.subject.prepend("Reminder: ")
     else
@@ -22,6 +20,37 @@ class UserMailer < ApplicationMailer
     end
     @body = contribution.email_contribution_request.body.html_safe
     send_mail curator, contributor, subject, true
+  end
+
+  def alert_contribution_update contribution
+    success = contribution.success
+    story = success.story
+    company = success.customer.company
+    customer_name = success.customer.name
+    # http - so it works in development
+    story_link = "http://#{company.subdomain}.#{ENV['HOST_NAME']}/stories/#{story.id}/edit"
+    curator = success.curator
+    contributor = contribution.contributor
+    if contribution.status == 'contribution'
+      subject = "#{contributor.full_name} of the
+        #{customer_name} success story submitted a contribution"
+      @body = "<p>#{curator.first_name},</p>
+        <p>#{contributor.full_name} of the story \"#{story.title}\"
+           submitted a contribution:</p>
+        <p><i>\"#{contribution.contribution}\"</i></p>
+        <p><a href='#{story_link}'>Go to story</a></p>".html_safe
+    elsif contribution.status == 'feedback'
+      subject = "#{contributor.full_name} of the
+        #{customer_name} success story submitted feedback"
+      @body = "<p>#{curator.first_name},</p>
+        <p>#{contributor.full_name} of the story \"#{story.title}\"
+           submitted feedback:</p>
+        <p><i>\"#{contribution.feedback}\"</i></p>
+        <p><a href='#{story_link}'>Go to story</a></p>".html_safe
+    end
+    mail to: "#{curator.full_name} <#{curator.email}>",
+         from: "Customer Stories Alerts <no-reply@customerstories.net>",
+         subject: subject
   end
 
   def test_template template, curator

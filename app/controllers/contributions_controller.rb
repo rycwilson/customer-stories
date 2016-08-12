@@ -35,11 +35,14 @@ class ContributionsController < ApplicationController
   # respond_to { |format| format.js }   => this is implied by the request
   #
   def create
+
     story = Story.find params[:id]
     existing_user = User.find_by email: params[:contributor][:email]
     contributor = existing_user || new_user(params[:contributor])
+
     # existing user gets a phone number if he doesn't have one already ...
     contributor.phone = params[:contributor][:phone] if params[:contributor][:phone].present?
+
     if !contributor.changed? || contributor.save  # don't save if not necessary
       contribution = new_contribution story.success.id, contributor.id, params
       if contribution.save
@@ -91,6 +94,7 @@ class ContributionsController < ApplicationController
       respond_to { |format| format.json { head :ok } }
     else
       if @contribution.update contribution_params
+        UserMailer.alert_contribution_update(@contribution).deliver_now
         if @contribution.linkedin? && @contribution.contributor.linkedin_url.blank?
           redirect_to "/auth/linkedin?contribution=#{@contribution.id}"
         else

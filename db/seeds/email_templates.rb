@@ -37,7 +37,6 @@ module EmailTemplatesSeed
 <p>You can <a href='[unsubscribe_url]'>unsubscribe</a> from this success story or <a href='[opt_out_url]'>opt out</a> of all future requests.</p>"
 
   SALES_BODY = "<p>[contributor_first_name],</p>
-<p>[contributor_first_name],</p>
 <p>[referral_intro]</p>
 <p>We're writing a success story about [customer_name]'s use of [company_name] and would appreciate three minutes of your time to jot down your input.</p>
 <p>The benefit to you is this story will highlight your contribution to [customer_name]’s success, and will give you a powerful reference story to help you build trust with prospects.</p>

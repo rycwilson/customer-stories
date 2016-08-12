@@ -35,9 +35,9 @@
         <div class="accordion-inner">
           <hr>
           <% if contribution.status == 'contribution' %>
-            <div>"<%= contribution.contribution %>"</div>
+            <div><i>"<%= contribution.contribution %>"</i></div>
           <% elsif contribution.status == 'feedback' %>
-            <div>"<%= contribution.feedback %>"</div>
+            <div><i>"<%= contribution.feedback %>"</i></div>
           <% end %>
         </div>
       </div>
