@@ -228,6 +228,7 @@ function configSummernote () {
         // ['style', ['style']],
         ['font', ['bold', 'italic', 'underline']], //, 'clear']],
         ['fontname', ['fontname']],
+        ['fontsize', ['fontsize']],
         // ['color', ['color']],
         ['para', ['ul', 'ol', 'paragraph']],
         ['height', ['height']],

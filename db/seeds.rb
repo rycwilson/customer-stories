@@ -50,7 +50,7 @@ acme.users << joe
 
 # cisco = Company.find_by(name:'Cisco Systems')
 cisco = Company.create(name:'Cisco Systems', subdomain:'cisco', feature_flag:'demo', website: 'https://cisco.com',
-                   logo_url:'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/6326ee57-e0e0-4a0b-aacb-9b59849f2c40/cisco-grey@2x.png',
+                   logo_url:'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/59dad7c8-6e86-42df-845b-02bfc2dc9026/cisco-logo.jpg',
                    nav_color_1:'#007fc5', nav_color_2:'#2B5693' , nav_text_color:'#FCFCFD')
 cisco.users << ryan << dan
 cisco.create_email_templates

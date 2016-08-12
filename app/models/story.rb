@@ -22,7 +22,7 @@ class Story < ActiveRecord::Base
 
   def scrub_html_input
     white_list_sanitizer = Rails::Html::WhiteListSanitizer.new
-    self.content = white_list_sanitizer.sanitize(content, tags: %w(a p strong i u blockquote pre font h1 h2 h3 h4 h5 h6 table tr td ol ul li hr img), attributes: %w(id class style face href src))
+    self.content = white_list_sanitizer.sanitize(content, tags: %w(a p span strong i u blockquote pre font h1 h2 h3 h4 h5 h6 table tr td ol ul li hr img), attributes: %w(id class style face href src))
   end
 
   def assign_tags new_story
