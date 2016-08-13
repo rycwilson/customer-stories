@@ -48,11 +48,11 @@
              href="<%= LINKEDIN_SHARE_URL + @story.csp_story_url %>">
             <i class="fa fa-linkedin"></i><span></span>
           </a>
-          <a href="//twitter.com/share?url=<%= @story.csp_story_url %>"
+          <a href="<%= TWITTER_SHARE_URL + @story.csp_story_url %>"
              class="icon-button twitter" target="_blank">
             <i class="fa fa-twitter"></i><span></span>
           </a>
-          <a href="//www.facebook.com/sharer.php?u=<%= @story.csp_story_url %>"
+          <a href="<%= FACEBOOK_SHARE_URL + @story.csp_story_url %>"
              class="icon-button facebook" target="_blank">
             <i class="fa fa-facebook"></i><span></span>
           </a>
@@ -161,7 +161,7 @@
             </div>
             <div class="col-xs-11">
 
-            <span><%= result.description %></span>
+            <p><%= result.description %></p>
             </div>
           </div>
           <% end %>

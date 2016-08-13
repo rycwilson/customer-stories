@@ -73,56 +73,30 @@ module StoriesHelper
   end
 
   def og_image company, provider
-    if provider == 'all'
-      width = '400'
-      height = '400'
-    elsif provider == 'linkedin'
-      width = '300'
-      height = '160'
-    end
+    provider == 'all' ? (width = '400'; height = '400') :
+                        (width = '300'; height = '160') # linkedin
     case company.subdomain
     when 'trunity'
-      if provider == 'all'
-        image = TRUNITY_400X400_URL
-      elsif provider == 'linkedin'
-        image = TRUNITY_300X160_URL
-      end
+      provider == 'all' ? (image = TRUNITY_400X400_URL) :
+                          (image = TRUNITY_300X160_URL) # linkedin
     when 'compas'
-      if provider == 'all'
-        image = COMPAS_400X400_URL
-      elsif provider == 'linkedin'
-        image = COMPAS_300X160_URL
-      end
+      provider == 'all' ? (image = COMPAS_400X400_URL) :
+                          (image = COMPAS_300X160_URL) # linkedin
     when 'corefact'
-      if provider == 'all'
-        image = COREFACT_400X400_URL
-      elsif provider == 'linkedin'
-        image = COREFACT_300X160_URL
-      end
+      provider == 'all' ? (image = COREFACT_400X400_URL) :
+                          (image = COREFACT_300X160_URL) # linkedin
     when 'varmour'
-      if provider == 'all'
-        image = VARMOUR_400X400_URL
-      elsif provider == 'linkedin'
-        image = VARMOUR_300X160_URL
-      end
+      provider == 'all' ? (image = VARMOUR_400X400_URL) :
+                          (image = VARMOUR_300X160_URL) # linkedin
     when 'zoommarketing'
-      if provider == 'all'
-        image = ZOOM_400X400_URL
-      elsif provider == 'linkedin'
-        image = ZOOM_300X160_URL
-      end
+      provider == 'all' ? (image = ZOOM_400X400_URL) :
+                          (image = ZOOM_300X160_URL) # linkedin
     when 'saucelabs'
-      if provider == 'all'
-        image = SAUCELABS_400X400_URL
-      elsif provider == 'linkedin'
-        image = SAUCELABS_300X160_URL
-      end
+      provider == 'all' ? (image = SAUCELABS_400X400_URL) :
+                          (image = SAUCELABS_300X160_URL) # linkedin
     when 'centerforcustomerengagement'
-      if provider == 'all'
-        image = CCE_400X400_URL
-      elsif provider == 'linkedin'
-        image = CCE_300X160_URL
-      end
+      provider == 'all' ? (image = CCE_400X400_URL) :
+                          (image = CCE_300X160_URL) # linkedin
     else
       width = '1200'
       height = '630'

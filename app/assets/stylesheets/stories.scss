@@ -177,25 +177,28 @@
  *  below two rules combined will bottom-align the columns in #story-header
  */
 #story-header {
-  font-size: 0;
-  margin-top: 14px;
+  // font-size: 0;
+  margin-top: 12px;
   padding-left: 12px;
   color: #444;
 }
 
-#story-header > * {
-  float: none;
-  display: inline-block;
-  // font-size: whatever; override 0 as necessary
-  vertical-align: bottom;
-}
+// #story-header > * {
+//   float: none;
+//   display: inline-block;
+//   // font-size: whatever; override 0 as necessary
+//   vertical-align: bottom;
+// }
 
 #story-header h3 {
   margin-bottom: 0;
 }
 
+#story-customer-name {
+  margin-top: 5px;
+}
 #social-buttons a {
-  margin-right: 10px;
+  margin-right: 4px;
 }
 
 #social-buttons-xs {
@@ -209,13 +212,14 @@
  padding: 0;
 }
 
-p.lead.story-text {
+#story-quote {
+  color: #757575;
   font-family: 'Open Sans';
 }
 
 #story-quote-attr {
   margin: 5px auto;
-  color: #666;
+  color: #757575;
 }
 
 #story-section-video-xs {
@@ -364,6 +368,12 @@ p.lead.story-text {
   #story-nav-col {
     margin-bottom: 20px;
   }
+  #story-testimonial-col {
+    margin: 0 0 10px 0;
+  }
+  #story-video-col {
+    margin: 0 0 10px 0;
+  }
   #story-customer-logo {
     max-height: 65px;
     max-width: 80%;
@@ -378,7 +388,7 @@ p.lead.story-text {
     font-size: 16px;
   }
   #story-section-content .well {
-    margin-top: -10px;
+    margin-top: -30px;
   }
   #story-video-modal iframe {
     height: 330px;
@@ -388,6 +398,12 @@ p.lead.story-text {
 @media (min-width: 992px) {
   #story-nav-col {
     margin-bottom: 5px;
+  }
+  #story-testimonial-col {
+    margin: 10px 0 10px 0;
+  }
+  #story-video-col {
+    margin: 10px 0 10px 0;
   }
   #story-customer-logo-col {
     margin-bottom: 15px;
@@ -403,7 +419,7 @@ p.lead.story-text {
     height: 490px;
   }
   #story-testimonial-col.no-video {
-    margin-top: 20px;
+    margin: 20px 0 20px 0;
   }
 }
 
@@ -412,10 +428,13 @@ p.lead.story-text {
     margin-bottom: 5px;
   }
   #story-testimonial-col {
-    // padding-left: 30px;
+    margin: 10px 0 10px 0;
+  }
+  #story-video-col {
+    margin: 10px 0 10px 0;
   }
   #story-customer-logo-col {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
   }
   #story-customer-logo {
     max-height: 85px;
@@ -442,9 +461,9 @@ p.lead.story-text {
   padding-left: 10px;
 }
 
-#story-results .row + .row {
-  margin-top: 5px;
-}
+// #story-results .row + .row {
+//   margin-top: 5px;
+// }
 
 
 
