@@ -63,10 +63,13 @@ class ContributionsController < ApplicationController
       end
     else
       @flash_status = "danger"
-      @flash_mesg = contributor.errors
-                               .full_messages
-                               .delete_if { |message| message == "Password can't be blank" }
-                               .join(', ')
+      @flash_mesg = contribution.errors
+                      .full_messages
+                      .map! do |msg|
+                        msg == "User has already been taken" ?
+                               "User already has a contribution for this story" : msg
+                      end
+                      .join(', ')
     end
   end
 
