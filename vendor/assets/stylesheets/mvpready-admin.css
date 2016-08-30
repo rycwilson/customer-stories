@@ -649,10 +649,10 @@ fieldset[disabled] .btn-transparent.active {
 .popover-title {
   font-size: 15px;
 }
-.popover-content {
+/*.popover-content {
   font-family: 'Open Sans', 'Trebuchet MS', arial, sans-serif;
   font-size: 13px;
-}
+}*/
 .alert {
   text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
 }
@@ -1978,7 +1978,7 @@ fieldset[disabled] .btn-transparent.active {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
 }
-.feed-item {
+/*.feed-item {
   position: relative;
   padding: 0;
   margin: 0;
@@ -1987,7 +1987,7 @@ fieldset[disabled] .btn-transparent.active {
   padding-left: 40px;
   margin-left: 20px;
   border-left: 2px solid #DDD;
-}
+}*/
 .feed-item:last-child {
   padding-bottom: 15px;
 }

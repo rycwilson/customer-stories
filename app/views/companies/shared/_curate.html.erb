@@ -1,8 +1,10 @@
-<%= render partial: 'companies/shared/new_story_modal',
-            locals: { company: company,
-                    customers: customers,
-                   categories: categories,
-                     products: products } %>
+<%= render 'companies/shared/new_story_modal',
+            { company: company,
+              customers: customers,
+              categories: categories,
+              products: products } %>
+<%= render 'companies/shared/activity_feed_modal', { company: @company } %>
+
 <!-- curate -->
 <div id='curate' class="<%= mainnav_tab == 'curate' ? 'active tab-pane content' : 'tab-pane content' %>" role='tabpanel' style='margin-top:-10px'>
   <div class='container'>
@@ -18,6 +20,10 @@
       <div class="col-xs-4 col-sm-3 col-md-2">
         <%= link_to 'Gallery View', root_path,
               { class: 'btn btn-default', style: 'width:100%' } %>
+      </div>
+      <div class="col-xs-4 col-sm-3 col-md-2">
+        <%= link_to 'Recent Activity', company_activity_path, remote: true,
+              id:'activity-feed-btn', class: 'btn btn-default', style: 'width:100%' %>
       </div>
     </div>
 

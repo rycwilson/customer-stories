@@ -1,7 +1,7 @@
 
 module ContributionsSeed
 
-  def self.create success_id, role, status, user=nil, created=nil
+  def self.create success_id, role, submitted_at, status, user=nil, created=nil
     text = FFaker::Lorem.paragraph
     (status == 'feedback') ? feedback = text : feedback = nil
     (status == 'contribution') ? contribution = text : contribution = nil
@@ -15,6 +15,7 @@ module ContributionsSeed
          feedback: feedback,
      contribution: contribution,
             notes: FFaker::Lorem.paragraph,
+     submitted_at: submitted_at,
      access_token: SecureRandom.hex,
        created_at: created || Time.now )
     # c.remind_at = Time.now + rand(5).minutes if (status == 'request')

@@ -1,5 +1,9 @@
 module ApplicationHelper
 
+  def production?
+    ENV['HOST_NAME'] == 'customerstories.net'
+  end
+
   def admin_navbar_style
     company = @company || Company.find_by(name:'CSP')
     color1 = company.nav_color_1

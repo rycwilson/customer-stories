@@ -138,17 +138,17 @@ def seed_company company, *users
       10.times { success.visitors << VisitorsSeed::create }
 
       # Contributions
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', users[0] )
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', users[1] )
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', users[2] )
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', users[3] )
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution', users[4] )
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'pre_request' )
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'feedback' )
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'did_not_respond', nil, 10.days.ago )
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'opt_out' )
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'unsubscribe' )
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 'contribution' )
+      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 1.day.ago, 'contribution', users[0] )
+      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 2.days.ago, 'contribution', users[1] )
+      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 3.days.ago, 'contribution', users[2] )
+      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 4.days.ago, 'contribution', users[3] )
+      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 5.days.ago, 'contribution', users[4] )
+      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], nil, 'pre_request' )
+      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 6.days.ago, 'feedback' )
+      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], nil, 'did_not_respond', nil, 10.days.ago )
+      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], nil, 'opt_out' )
+      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], nil, 'unsubscribe' )
+      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], nil, 'contribution' )
 
 
       # Result

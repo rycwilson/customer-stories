@@ -71,6 +71,13 @@ function ready () {
   if (isChrome)
     replaceStateOnGalleryLoad();
 
+
+  $('#social-buttons').on('click', function (e) {
+    var provider = e.target.classList[1].split('-')[1];  // twitter, facebook, linkedin
+    $.post('/analytics', { type: 'share', provider: provider });
+  });
+
+
 }
 
 function initPlugins () {

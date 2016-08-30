@@ -98,19 +98,14 @@ Rails.application.configure do
   # What exactly does this host setting do?
   #  because it works fine when the actual host name is
   #  something different, e.g. 'floating-spire-2927.herokuapp.com'
-  if ENV['HOST_NAME'] == 'customerstories.org'
-    host = 'customerstories.org'
-  else
-    host = 'customerstories.net'
-  end
-  config.action_mailer.default_url_options = { host: host }
+  config.action_mailer.default_url_options = { host: ENV['HOST_NAME'] }
   ActionMailer::Base.smtp_settings = {
     :address        => 'smtp.sendgrid.net',
     :port           => '587',
     :authentication => :plain,
     :user_name      => ENV['SENDGRID_USERNAME'],
     :password       => ENV['SENDGRID_PASSWORD'],
-    # :domain         => 'heroku.com',
+    :domain         => ENV['HOST_NAME'],
     :enable_starttls_auto => true
   }
 

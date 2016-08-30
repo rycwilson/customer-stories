@@ -96,6 +96,8 @@ class ContributionsController < ApplicationController
       @contribution.update linkedin: params[:linkedin_include_profile]
       respond_to { |format| format.json { head :ok } }
     else
+      # response to contribution request email
+      @contribution.submitted_at = Time.now
       if @contribution.update contribution_params
         UserMailer.alert_contribution_update(@contribution).deliver_now
         if @contribution.linkedin? && @contribution.contributor.linkedin_url.blank?
@@ -132,7 +134,7 @@ class ContributionsController < ApplicationController
   private
 
   def contribution_params
-    params.require(:contribution).permit(:status, :contribution, :feedback, :access_token, :linkedin, :notes)
+    params.require(:contribution).permit(:status, :contribution, :feedback, :access_token, :linkedin, :notes, :submitted_at)
   end
 
   def set_contribution

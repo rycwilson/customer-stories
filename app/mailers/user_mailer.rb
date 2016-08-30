@@ -1,16 +1,25 @@
 class UserMailer < ApplicationMailer
 
+  include ApplicationHelper
+
   default from: 'no-reply@customerstories.net'
 
   TEST_EMAILS = ['***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***']
 
   def request_contribution contribution
+    # don't track emails sent from dev or staging ...
+    headers['X-SMTPAPI'] = { unique_args: {
+                                contribution_id: contribution.id
+                             }}.to_json if production?
     @body = contribution.email_contribution_request.body.html_safe
     send_mail contribution.success.curator, contribution.contributor,
               contribution.email_contribution_request.subject
   end
 
   def send_contribution_reminder contribution
+    headers['X-SMTPAPI'] = { unique_args: {
+                                contribution_id: contribution.id
+                             }}.to_json if production?
     curator = contribution.success.curator
     contributor = contribution.contributor
     if contribution.status == 'request'

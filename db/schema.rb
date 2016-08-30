@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160809214530) do
+ActiveRecord::Schema.define(version: 20160825014401) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -60,15 +60,17 @@ ActiveRecord::Schema.define(version: 20160809214530) do
     t.text     "contribution"
     t.text     "feedback"
     t.string   "status"
-    t.boolean  "linkedin",      default: false
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.boolean  "linkedin",            default: false
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
     t.datetime "remind_at"
-    t.integer  "remind_1_wait", default: 1
-    t.integer  "remind_2_wait", default: 2
+    t.integer  "remind_1_wait",       default: 1
+    t.integer  "remind_2_wait",       default: 2
     t.string   "access_token"
     t.integer  "referrer_id"
     t.text     "notes"
+    t.datetime "submitted_at"
+    t.datetime "request_received_at"
   end
 
   add_index "contributions", ["success_id"], name: "index_contributions_on_success_id", using: :btree

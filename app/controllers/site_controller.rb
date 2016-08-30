@@ -1,5 +1,7 @@
 class SiteController < ApplicationController
 
+  skip_before_action :verify_authenticity_token, only: :esp_notifications
+
   def index
   end
 
@@ -60,12 +62,31 @@ class SiteController < ApplicationController
                              end
     end
     respond_to do |format|
-        format.xml { render layout: false }
+      format.xml { render layout: false }
     end
   end
 
   def google_verify
     render params[:google], layout: false
+  end
+
+  def esp_notifications
+    # contribution_id was tagged onto the email via X-SMTPAPI header
+    #   (requests and reminders only, hence check for contribution below)
+    # TODO: why do incoming params include both params[:_json] and params[:site][:_json]?
+    contribution = Contribution.find_by id: params[:_json][0][:contribution_id]
+    if contribution
+      case params[:_json][0][:event]
+      when 'open'
+        contribution.update(request_received_at: Time.now)
+      when 'click'
+        # how to keep track of a clicked on but unsubmitted contribution form?
+        # eg params[:_json][:url] = http://cisco.lvh.me:3000/contributions/1262f1939a25c209949bd183e630ca79/contribution
+      else
+      end
+    end
+    # response required or sendgrid will continue sending
+    head :ok
   end
 
 end

@@ -15,6 +15,7 @@ class ContributionRequestsController < ApplicationController
     if request.save
       @contribution.email_contribution_request = request
       UserMailer.request_contribution(@contribution).deliver_now
+      # see below for what email via sendgrid mail api might look like
       @contribution.update( status: new_status,
                             remind_at: new_remind_at )
       @contributions_in_progress = Contribution.in_progress @contribution.success_id
@@ -29,3 +30,43 @@ class ContributionRequestsController < ApplicationController
   end
 
 end
+
+# send_mail_request = Typhoeus::Request.new(
+#   SG_SEND_URL,
+#   method: :post,
+#   body: {
+#     personalizations: [
+#       {
+#         to: [
+#           {
+#             email: "***REMOVED***"
+#           }
+#         ],
+#         subject: "sendgrid api test"
+#       }
+#     ],
+#     from: {
+#       email: "***REMOVED***"
+#     },
+#     content: [
+#       {
+#         type: "text/html",
+#         value: "Hello, World!"
+#       }
+#     ],
+#     tracking_settings: {
+#       open_tracking: { enable: true }
+#     },
+#     custom_args: { foo: 'bar' }
+#   }.to_json,
+#   headers: { Authorization: "Bearer #{ENV['SENDGRID_APIKEY']}",
+#              "Content-Type" => "application/json" }
+# )
+# # logger.debug "SENDGRID REQUEST"
+# # logger.debug "#{send_mail_request}"
+# send_mail_request.run
+# logger.debug "SENDGRID RESPONSE"
+# logger.debug "#{send_mail_request.response.code}"
+# logger.debug "#{send_mail_request.response.total_time}"
+# logger.debug "#{send_mail_request.response.headers}"
+# logger.debug "#{send_mail_request.response.body}"

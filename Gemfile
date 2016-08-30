@@ -20,12 +20,13 @@ gem 'uglifier', '>= 1.3.0'
 # compatibility, but didn't change onpopstate behavior
 # gem 'wiselinks'
 
+gem 'typhoeus'
 gem 'switch_user'
 gem 'html_to_plain_text'
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
 gem 'rails-html-sanitizer'
-gem 'turbolinks', '~> 5.0.0.beta'
+gem 'turbolinks', '~> 5.0.0'
 gem 'aws-sdk', '~> 2'
 gem 'pry-rails'
 gem 'bower-rails', "~> 0.10.0"

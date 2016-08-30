@@ -37,6 +37,168 @@ var ready = function () {
   initNewStoryValidator();
   adjustPromoCSSChecker();
 
+  popoverConfineScroll();
+  function popoverConfineScroll () {
+    var $popover = null;
+    // note: jquery event listener doesn't work, as deltaX is undefined on the event,
+    // so need to achieve event delegation with vanilla js
+    // ref: http://stackoverflow.com/questions/8737709
+    document.querySelector('body').addEventListener('wheel', function (event) {
+      if (event.target.closest('.popover-content')) {  // event within popover?
+        $popover = $('.popover-content');
+        maxY = $popover.prop('scrollHeight') - $popover.prop('offsetHeight');
+        /*
+          If this event looks like it will scroll beyond the bounds of the element,
+          prevent it and set the scroll to the boundary manually
+        */
+        if ($popover.prop('scrollTop') + event.deltaY < 0 ||
+            $popover.prop('scrollTop') + event.deltaY > maxY) {
+          event.preventDefault();
+          $popover.prop('scrollTop', Math.max(0, Math.min(maxY, $popover.prop('scrollTop') + event.deltaY)));
+        }
+      }
+    });
+  }
+
+  $("body").on('click', '.popover-title + button.close', function () {
+    $(this).closest('.popover').popover('hide');
+  });
+
+  $('#activity-feed-btn')
+    .popover({
+      title: 'Last 7 days',
+      placement: 'right',
+      html: 'true',
+      trigger: 'manual',
+      template: '<div class="popover activity-feed-popover" role="tooltip">' +
+                  '<div class="arrow"></div>' +
+                  '<div style="position:relative">' +
+                    '<h3 class="popover-title"></h3>' +
+                    '<button style="z-index:1;position:absolute;top:3px;right:8px" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+                  '</div>' +
+                  '<div class="popover-content"></div>' +
+                '</div>'
+    })
+    .on('click', function (e) {
+      $(this).html('<i class="fa fa-spinner fa-pulse fa-fw"></i>' +
+                   '<span class="sr-only">Loading...</span>');
+    })
+    .on('ajax:success', function (e, data, status, xhr) {
+      var target, date, dateFormatted, storyTitle, storyPath, customer, visitor,
+          monthNames = [
+            "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
+            "Aug", "Sep", "Oct", "Nov", "Dec"
+          ];
+      // console.log(data);
+      $feedWrapper = $("<div><div class='activity-feed'></div></div>");
+      $feed = $feedWrapper.children();
+      data.events.forEach(function (event) {
+        target = event.target;  // a contribution or story object
+        date = new Date(event.timestamp);
+        dateFormatted = monthNames[date.getMonth()] + ' ' + date.getDate();
+        customer = target.success ? target.success.customer.name : event.customer;
+        contributor = target.contributor ? target.contributor.full_name : null;
+        curator = target.success ?
+                    (target.success.curator ? target.success.curator.full_name : null) : null;
+        visitor = event.organization;
+        provider = event.provider === 'linkedin' ? 'LinkedIn' :
+                    (event.provider === 'twitter' ? 'Twitter' :
+                      (event.provider === 'facebook' ? 'Facebook' : null));
+        (({
+            "contribution_submission": function () {
+              storyTitle = target.success.story.title;
+              storyPath = target.success.story.csp_edit_story_path;
+              $feed.append("" +
+                "<div class='feed-item'>" +
+                  "<div class='date'>" + dateFormatted + "</div>" +
+                  "<div class='text'>" +
+                    '<strong>' + contributor + '</strong> submitted ' +
+                    (target.contribution ? 'a contribution ' : 'feedback ') +
+                    'for the <strong>' + customer + '</strong> story, ' +
+                    '<a href="' + storyPath + '">' + storyTitle + '</a>' +
+                  "</div>" +
+                "</div>");
+            },
+            "contribution_request_received": function () {
+              storyTitle = target.success.story.title;
+              storyPath = target.success.story.csp_edit_story_path;
+              $feed.append("" +
+                "<div class='feed-item'>" +
+                  "<div class='date'>" + dateFormatted + "</div>" +
+                  "<div class='text'>" +
+                    '<strong>' + contributor + '</strong> received and opened a contribution request ' +
+                    'for the <strong>' + customer + '</strong> story, ' +
+                    '<a href="' + storyPath + '">' + storyTitle + '</a>' +
+                  "</div>" +
+                "</div>");
+            },
+            "story_created": function () {
+              storyTitle = target.title;
+              $feed.append("" +
+                "<div class='feed-item'>" +
+                  "<div class='date'>" + dateFormatted + "</div>" +
+                  "<div class='text'>" +
+                    '<strong>' + curator + '</strong> created a story for <strong>' + customer + '</strong>: ' +
+                    '\"' + storyTitle + '\"' +
+                  "</div>" +
+                "</div>");
+            },
+            "story_published": function () {
+              storyTitle = target.title;
+              storyPath = target.csp_story_path;
+              $feed.append("" +
+                "<div class='feed-item'>" +
+                  "<div class='date'>" + dateFormatted + "</div>" +
+                  "<div class='text'>" +
+                    '<strong>' + curator + '</strong> published the <strong>' + customer + '</strong> story, ' +
+                    '<a href="' + storyPath + '">' + storyTitle + '</a>' +
+                  "</div>" +
+                "</div>");
+            },
+            "story_logo_published": function () {
+              storyTitle = target.title;
+              $feed.append("" +
+                "<div class='feed-item'>" +
+                  "<div class='date'>" + dateFormatted + "</div>" +
+                  "<div class='text'>" +
+                    '<strong>' + curator + ' </strong> published a logo for the <strong>' +
+                    customer + '</strong> story, ' + '\"' + storyTitle + '\"' +
+                  "</div>" +
+                "</div>");
+            },
+            "story_view": function () {
+              storyTitle = target.title;
+              storyPath = target.path;
+              $feed.append("" +
+                "<div class='feed-item'>" +
+                  "<div class='date'>" + dateFormatted + "</div>" +
+                  "<div class='text'>" +
+                    '<strong>' + visitor + '</strong> viewed the <strong>' + customer + '</strong> story, ' +
+                    '<a href="' + storyPath + '">' + storyTitle + '</a>' +
+                  "</div>" +
+                "</div>");
+            },
+            "story_share": function () {
+              storyTitle = target.title;
+              storyPath = target.path;
+              $feed.append("" +
+                "<div class='feed-item'>" +
+                  "<div class='date'>" + dateFormatted + "</div>" +
+                  "<div class='text'>" +
+                    '<strong>' + visitor + '</strong> shared via ' + provider +
+                    ' the <strong>' + customer + '</strong> story, ' +
+                    '<a href="' + storyPath + '">' + storyTitle + '</a>' +
+                  "</div>" +
+                "</div>");
+            }
+        })[event.event])();
+
+      });
+      $(this).html('').text('Recent Activity');
+      $('#activity-feed-btn')
+        .attr('data-content', $feedWrapper.html())
+        .popover('show');
+  });
 };
 
 $(document).ready(function () {

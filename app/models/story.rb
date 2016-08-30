@@ -116,6 +116,13 @@ class Story < ActiveRecord::Base
     end
   end
 
+  # defining this method makes it easy to include the edit_story_path helper
+  # with activity feed response (contributions_submitted and contribution_requests_received)
+  def csp_edit_story_path
+    url_helpers = Rails.application.routes.url_helpers
+    url_helpers.edit_story_path(self.id)
+  end
+
   ##
   #  embed_url looks like one of these ...
   #

@@ -14,8 +14,14 @@ Rails.application.routes.draw do
   get '/:google', to: 'site#google_verify', constraints: { google: /google\w+/ }
 
   # admins only
-  get 'switch_user', to: 'switch_user#set_current_user'
-  get 'switch_user/remember_user', to: 'switch_user#remember_user'
+  get '/switch_user', to: 'switch_user#set_current_user'
+  get '/switch_user/remember_user', to: 'switch_user#remember_user'
+
+  # sendgrid events (currently tracking open and click)
+  post '/esp/notifications', to: 'site#esp_notifications'
+
+  # clicky custom logging (currently tracking social shares)
+  post '/analytics', to: 'analytics#create'
 
   # valid subdomains (company/subdomain exists, excludes www)
   constraints(Subdomain) do
@@ -40,6 +46,8 @@ Rails.application.routes.draw do
       resources :stories, only: [:edit, :update, :destroy] do
         resources :results, only: [:create, :update, :destroy]
       end
+
+      get '/companies/:id/activity', to: 'companies#activity', as: 'company_activity'
 
       # approval PDF
       get '/stories/:id/approval', to: 'stories#approval', as: 'story_approval'
