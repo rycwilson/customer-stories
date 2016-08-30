@@ -11,16 +11,16 @@ class Success < ActiveRecord::Base
   has_many :story_categories_successes, dependent: :destroy
   has_many :story_categories, through: :story_categories_successes
   has_many :contributions, dependent: :destroy
-  has_many :results, dependent: :destroy
-  has_many :prompts, dependent: :destroy
+  has_many :results, -> { order(created_at: :asc) }, dependent: :destroy
+  has_many :prompts, -> { order(created_at: :asc) }, dependent: :destroy
   # alias the association to user -> Success.find(id).contributors
   # note: contributor is an alias - see contribution.rb
   has_many :contributors, through: :contributions, source: :contributor
 
   def create_default_prompts
-    self.prompts << Prompt.create(description: "What was the challenge?")
-    self.prompts << Prompt.create(description: "What was the solution?")
-    self.prompts << Prompt.create(description: "What are your estimated or measured results?")
+    self.prompts << Prompt.create(description: "What was the challenge?") <<
+                    Prompt.create(description: "What was the solution?") <<
+                    Prompt.create(description: "What was the measure of success achieved?")
   end
 
 end
