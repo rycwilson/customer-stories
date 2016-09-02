@@ -28,7 +28,6 @@ gem 'wkhtmltopdf-binary'
 gem 'rails-html-sanitizer'
 gem 'turbolinks', '~> 5.0.0'
 gem 'aws-sdk', '~> 2'
-gem 'pry-rails'
 gem 'bower-rails', "~> 0.10.0"
 gem 'font-awesome-rails'
 gem 'figaro'
@@ -54,6 +53,7 @@ end
 
 group :development, :test do
 
+  gem 'pry-rails'
   gem 'whenever', require: false
   gem 'better_errors'
   # Access an IRB console on exception pages or by using <%= console %> in views
