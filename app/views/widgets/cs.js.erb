@@ -187,28 +187,17 @@
   /*
     when scrolling past boundaries with trackpad, prevent default browser behavior
     (back/forward navigation)
-    note: jquery event listener doesn't work, as deltaX is undefined on the event,
-    so need to achieve event delegation with vanilla js
   */
   function preventScrollNav () {
-
-    var $carousel = $('.row-horizon'),
-        maxX = null;
-
-    // note: 'mousewheel' event is non-standard and deperecated; use 'wheel'
-    document.querySelector('#cs-container').addEventListener('wheel', function (event) {
-      if (event.target.closest('.row-horizon')) {  // event within widget?
-        // don't scroll below zero or above max ...
-        maxX = $carousel.prop('scrollWidth') - $carousel.prop('offsetWidth');
-        /*
-          If this event looks like it will scroll beyond the bounds of the element,
-          prevent it and set the scroll to the boundary manually
-        */
-        if ($carousel.prop('scrollLeft') + event.deltaX < 0 ||
-            $carousel.prop('scrollLeft') + event.deltaX > maxX) {
-          event.preventDefault();
-          $carousel.prop('scrollLeft', Math.max(0, Math.min(maxX, $carousel.prop('scrollLeft') + event.deltaX)));
-        }
+    var maxX = null;
+    $(document).on('wheel', '.row-horizon', function (event) {
+      maxX = $(this).prop('scrollWidth') - $(this).prop('offsetWidth');
+      // If this event looks like it will scroll beyond the bounds of the element,
+      //  prevent it and set the scroll to the boundary manually
+      if ($(this).prop('scrollLeft') + event.originalEvent.deltaX < 0 ||
+          $(this).prop('scrollLeft') + event.originalEvent.deltaX > maxX) {
+        event.preventDefault();
+        $(this).prop('scrollLeft', Math.max(0, Math.min(maxX, $(this).prop('scrollLeft') + event.originalEvent.deltaX)));
       }
     });
   }
