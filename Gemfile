@@ -42,7 +42,8 @@ gem 'best_in_place', '~> 3.0.1'
 gem 'summernote-rails'
 gem 'jquery-minicolors-rails'
 gem 'friendly_id', '~> 5.1.0'
-
+gem 'jazz_hands', github: 'nixme/jazz_hands', branch: 'bring-your-own-debugger'
+gem 'pry-byebug'
 
 group :production do
 
@@ -53,7 +54,6 @@ end
 
 group :development, :test do
 
-  gem 'pry-rails'
   gem 'whenever', require: false
   gem 'better_errors'
   # Access an IRB console on exception pages or by using <%= console %> in views
