@@ -23,13 +23,13 @@ class Contribution < ActiveRecord::Base
       when 'pre_request'
         return "added #{self.created_at.strftime('%-m/%-d/%y')}"
       when 'request'
-        return "request sent #{(self.remind_at - self.remind_1_wait.days).strftime('%-m/%-d/%y')}"
+        return "request sent #{(self.remind_at - self.remind_1_wait.days).strftime('%-m/%-d/%y')} (email #{self.request_received_at.present? ? '' : 'not' } opened)"
       when 'remind1'
-        return "first reminder sent #{(self.remind_at - self.remind_2_wait.days).strftime('%-m/%-d/%y')}"
+        return "first reminder sent #{(self.remind_at - self.remind_2_wait.days).strftime('%-m/%-d/%y')} (email #{self.request_received_at.present? ? '' : 'not' } opened)"
       when 'remind2'
-        return "second reminder sent #{(self.remind_at - self.remind_2_wait.days).strftime('%-m/%-d/%y')}"
+        return "second reminder sent #{(self.remind_at - self.remind_2_wait.days).strftime('%-m/%-d/%y')} (email #{self.request_received_at.present? ? '' : 'not' } opened)"
       when 'did_not_respond'
-        return "follow up"
+        return "follow up (email #{self.request_received_at.present? ? '' : 'not' } opened)"
       when 'contribution'
         return 'contribution submitted'
       when 'feedback'
