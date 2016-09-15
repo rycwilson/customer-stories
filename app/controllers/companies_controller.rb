@@ -209,7 +209,8 @@ class CompaniesController < ApplicationController
         story_views << { event: 'story_view',
                          target: { title: story.title, path: story.csp_story_path },
                          customer: story.success.customer.name,
-                         organization: '',  # to be filled in after we get visitor info
+                         geolocation: '',  # to be filled in after we get visitor info
+                         organization: '',
                          session_id: action['session_id'],
                          timestamp: DateTime.strptime(action['time'], '%s') }
       elsif action['action_type'] == 'click'
@@ -266,8 +267,10 @@ class CompaniesController < ApplicationController
 
     hydra.run
 
-    # fill in the missing organization ...
+    # fill in missing info ...
     story_views_visitors_list_requests.each_with_index do |request, index|
+      story_views[index][:geolocation] =
+        JSON.parse(request.response.body)[0]['dates'][0]['items'][0]['geolocation']
       story_views[index][:organization] =
         JSON.parse(request.response.body)[0]['dates'][0]['items'][0]['organization']
     end

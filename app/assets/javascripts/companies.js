@@ -173,7 +173,7 @@ var ready = function () {
                 "<div class='feed-item'>" +
                   "<div class='date'>" + dateFormatted + "</div>" +
                   "<div class='text'>" +
-                    '<strong>' + visitor + '</strong> viewed the <strong>' + customer + '</strong> story, ' +
+                    '<strong>' + visitor + '</strong> (' + event.geolocation + ') viewed the <strong>' + customer + '</strong> story, ' +
                     '<a href="' + storyPath + '">' + storyTitle + '</a>' +
                   "</div>" +
                 "</div>");
