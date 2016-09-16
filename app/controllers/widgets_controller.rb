@@ -63,9 +63,9 @@ class WidgetsController < ApplicationController
               <div class='drawer-content' style='border-top-color:#{tab_color}'>
                 <div class='drawer-items'>
                   <div class='scroll-left'></div>
-                    <div class='row row-pagination text-center'>
+                    <div class='cs-row row-pagination text-center'>
                     </div>
-                    <div class='row row-horizon text-center'>"
+                    <div class='cs-row row-horizon text-center'>"
 
     # determine best column width given number of stories
     case stories_links.length

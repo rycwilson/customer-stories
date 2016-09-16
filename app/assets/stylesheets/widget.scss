@@ -4,7 +4,7 @@
   // height: 183px;
   overflow: hidden;
   position: fixed;
-  z-index: 5;
+  z-index: 10000;
   width: 100%;
 }
 
@@ -12,6 +12,7 @@
   background: #000000;
   color: #ffffff;
   display: block;
+  font-size: 16px;
   height: 24px;
   line-height: 24px;
   overflow: hidden;
@@ -44,6 +45,7 @@
 }
 
 .drawer-items {
+  line-height: normal;  // added to compenstate for a line-height of 1.9 that was inherited from body and was making .row-pagination too tall
   margin: auto;
 }
 
