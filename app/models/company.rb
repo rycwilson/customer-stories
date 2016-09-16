@@ -14,8 +14,8 @@ class Company < ActiveRecord::Base
 
   has_many :customers, dependent: :destroy
   has_many :successes, through: :customers
-  has_many :visitors, through: :successes
   has_many :stories, through: :successes
+  has_many :visitors, dependent: :destroy
 
   has_many :story_categories, dependent: :destroy
   has_many :products, dependent: :destroy
