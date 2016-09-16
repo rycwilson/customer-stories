@@ -2,7 +2,12 @@ class CreateVisitors < ActiveRecord::Migration
 
   def change
 
-    drop_table :visitors  # old visitors table
+    drop_table :visitors do |t| # old visitors table
+      t.string :organization
+      t.string :city
+      t.string :state
+      t.integer :success_id
+    end
 
     create_table :visitors do |t|
       t.string :name
@@ -11,6 +16,7 @@ class CreateVisitors < ActiveRecord::Migration
 
       t.timestamps null: false
     end
+
   end
 
 end

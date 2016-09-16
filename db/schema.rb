@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160915221517) do
+ActiveRecord::Schema.define(version: 20160831011737) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -302,36 +302,12 @@ ActiveRecord::Schema.define(version: 20160915221517) do
   add_index "users", ["company_id"], name: "index_users_on_company_id", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
 
-  create_table "visitor_actions", force: :cascade do |t|
-    t.string   "type"
-    t.integer  "success_id"
-    t.integer  "visitor_session_id"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
-  end
-
-  add_index "visitor_actions", ["success_id"], name: "index_visitor_actions_on_success_id", using: :btree
-  add_index "visitor_actions", ["visitor_session_id"], name: "index_visitor_actions_on_visitor_session_id", using: :btree
-
-  create_table "visitor_sessions", force: :cascade do |t|
-    t.datetime "timestamp"
-    t.string   "referrer_type"
-    t.integer  "visitor_id"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
-  end
-
-  add_index "visitor_sessions", ["visitor_id"], name: "index_visitor_sessions_on_visitor_id", using: :btree
-
   create_table "visitors", force: :cascade do |t|
-    t.string   "name"
-    t.string   "location"
-    t.integer  "company_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string  "organization"
+    t.string  "city"
+    t.string  "state"
+    t.integer "success_id"
   end
-
-  add_index "visitors", ["company_id"], name: "index_visitors_on_company_id", using: :btree
 
   add_foreign_key "contributions", "successes"
   add_foreign_key "contributions", "users"
@@ -357,8 +333,4 @@ ActiveRecord::Schema.define(version: 20160915221517) do
   add_foreign_key "successes", "customers"
   add_foreign_key "successes", "users", column: "curator_id"
   add_foreign_key "users", "companies"
-  add_foreign_key "visitor_actions", "successes"
-  add_foreign_key "visitor_actions", "visitor_sessions"
-  add_foreign_key "visitor_sessions", "visitors"
-  add_foreign_key "visitors", "companies"
 end
