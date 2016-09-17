@@ -44,9 +44,16 @@
             $images.on('load', function () {
               if (++loadedImages === $images.length) {
                 preventScrollNav();
+<<<<<<< HEAD
+                initScrollHandlers();
+                slideDrawerPlugin();
+                initPagination();
+                initPagination();
+=======
                 initScrollListeners();
                 slideDrawerPlugin();
                 initPagination();
+>>>>>>> master
                 centerLogos();
                 // if user is using a mouse, this will hose dimensions
                 // (in a somewhat random way)
@@ -202,7 +209,7 @@
     });
   }
 
-  function initScrollListeners () {
+  function initScrollHandlers () {
 
     var $carousel = $('.row-horizon'),
         scrollWidth = $carousel.prop('scrollWidth'),
@@ -242,7 +249,16 @@
         numPages = Math.ceil(scrollWidth / $carousel.width()),
         pageWidth = Math.ceil(scrollWidth / numPages),
         currentPage = 1,
-        dynamicPage = null, lastPage = null;
+        dynamicPage = null, lastPage = null, dotScroll = null,
+        scrollHandler = function () {
+          dynamicPage = calculatePage($(this).scrollLeft(), numPages, pageWidth, $carousel.width());
+          if (dynamicPage !== currentPage) {
+            lastPage = currentPage;
+            currentPage = dynamicPage;
+            $pageDotsContainer.find('div:nth-of-type(' + lastPage.toString() + ')').css('background', 'transparent');
+            $pageDotsContainer.find('div:nth-of-type(' + currentPage.toString() + ')').css('background', 'white');
+          }
+        }
 
     for (var i = 0; i < numPages; i++) {
       $pageDotsContainer.append("<div class='page-dot'></div>")
@@ -267,17 +283,10 @@
           return false;
         }
       });
-      $carousel.animate({ scrollLeft: scrollTo }, 1000);
-    });
-
-    $carousel.on('scroll', function () {
-      dynamicPage = calculatePage($(this).scrollLeft(), numPages, pageWidth, $carousel.width());
-      if (dynamicPage !== currentPage) {
-        lastPage = currentPage;
-        currentPage = dynamicPage;
-        $pageDotsContainer.find('div:nth-of-type(' + lastPage.toString() + ')').css('background', 'transparent');
-        $pageDotsContainer.find('div:nth-of-type(' + currentPage.toString() + ')').css('background', 'white');
-      }
+      $carousel.off('scroll', scrollHandler);
+      $carousel.animate({ scrollLeft: scrollTo }, 1000, function () {
+        $carousel.on('scroll', scrollHandler);
+      });
     });
   }
 

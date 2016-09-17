@@ -1,5 +1,15 @@
 module ApplicationHelper
 
+  def mvp_stylesheet
+    if ['companies', 'stories', 'profile'].include? controller_name
+      stylesheet_link_tag 'mvpready-admin', media: 'all',
+                          'data-turbolinks-track' => 'reload'
+    else
+      stylesheet_link_tag 'mvpready-landing', media: 'all',
+                          'data-turbolinks-track' => 'reload'
+    end
+  end
+
   def production?
     ENV['HOST_NAME'] == 'customerstories.net'
   end

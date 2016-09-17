@@ -4,6 +4,8 @@ LINKEDIN_SHARE_URL = "//www.linkedin.com/shareArticle?mini=true&url="
 TWITTER_SHARE_URL = "//twitter.com/share?url="
 FACEBOOK_SHARE_URL = "//www.facebook.com/sharer.php?u="
 
+EMBEDLY_API_BASE_URL = "https://api.embedly.com/1/oembed/key=#{}"
+
 GETCLICKY_API_BASE_URL = "http://api.clicky.com/api/stats/4"
 GETCLICKY_TRACKING_URL = "http://in.getclicky.com/in.php"
 

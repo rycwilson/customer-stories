@@ -12,7 +12,7 @@
     "masonry": "latest",
     "imagesloaded": "~4.1",
     "bootstrap-horizon": "latest",
-    "cleanslate": "latest",
+    "js-cookie": "latest",
     "fontawesome": "~4.4.0",
     "flot": "~0.8.3",
     "flot.tooltip": "~0.8.5",

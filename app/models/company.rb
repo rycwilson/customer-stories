@@ -31,6 +31,11 @@ class Company < ActiveRecord::Base
   # why did this crap out when seeding?
   # CSP = self.find_by(name:'CSP')
 
+  def curator? current_user=nil
+    return false if current_user.nil?
+    current_user.company_id == self.id
+  end
+
   def create_email_templates
     self.email_templates.destroy_all
     # CSP.email_templates.each do |template|
@@ -39,7 +44,7 @@ class Company < ActiveRecord::Base
     end
   end
 
-  def customers_select_options
+  def customer_select_options
     self.customers.map do |customer|
       # name will appear as a selection, while its id will be the value submitted
       [ customer.name, customer.id, ]
@@ -66,7 +71,6 @@ class Company < ActiveRecord::Base
   # method returns an array of category tags for which
   # a logo-published story exists for the given company (self)
   def category_select_options_filtered
-    # binding.pry
     StoryCategory.joins(successes: { story: {}, customer: {} })
                  .where(customers: { company_id: self.id },
                           stories: { logo_published: true })
@@ -101,59 +105,93 @@ class Company < ActiveRecord::Base
   end
 
   def all_stories
-    Success.includes(:story, :customer, :products)
-           .joins(:story, :customer)
-           .where(customers: { company_id: self.id })
-           .order("stories.published DESC, stories.publish_date ASC")
-           .order("stories.updated_at DESC")
+    Story.company_all(self.id)
   end
 
-  def stories_with_logo_published
-    Success.includes(:story, :customer, :products)
-           .joins(:story, :customer)  # these are associations
-           .where(customers: { company_id: self.id },  # these are tables
-                    stories: { logo_published: true })
-           .order("stories.published DESC, stories.publish_date ASC")
-           .order("stories.updated_at DESC")
+  def public_stories
+    Story.company_all_logo_published(self.id)
   end
 
-  #
-  # method returns successes instead of stories because data from
-  # success associations is needed
-  #
+  # serialized story data for the public reader
+  # omits data for stories that aren't published
+  def public_stories_json
+    JSON.parse(
+      Story.company_all_logo_published(self.id)
+           .to_json({
+              only: [:published, :logo_published, :publish_date, :updated_at],
+              # only include content/contributors/tags if the story is published ...
+              methods: [:csp_story_path],
+              include: {
+                success: {
+                  only: [],
+                  include: { customer: { only: [:name, :logo_url] },
+                             story_categories: { only: [:id, :name, :slug] },
+                             products: { only: [:id, :name, :slug] }, }}}
+            })
+    # remove any nil entries, e.g. published* methods if not published
+    ).each do |story|
+        story.delete_if do |key, value|
+          (key == 'csp_story_path' && !story['published']) || value.nil?
+        end
+      end
+  end
+
+  def all_stories_json
+    JSON.parse(
+      Story
+        .company_all(self.id)
+        .to_json({
+          only: [:id, :published, :logo_published, :publish_date, :updated_at],
+          methods: [:csp_story_path],
+          include: {
+            success: {
+              only: [],
+              include: {
+                customer: { only: [:name, :logo_url] },
+                story_categories: { only: [:id, :name, :slug] },
+                products: { only: [:id, :name, :slug] } }}}
+        })
+    )
+  end
+
   # TODO: faster? http://stackoverflow.com/questions/20014292
-  #
   def filter_stories_by_tag filter_params, is_curator
     if filter_params[:id] == '0'  # all stories
       return self.all_stories if is_curator
-      return self.stories_with_logo_published
+      return self.public_stories
     end
     case filter_params[:tag]  # all || category || product
       when 'all'
         return self.all_stories if is_curator
-        self.stories_with_logo_published
+        self.public_stories
       when 'category'
-        id = (StoryCategory.friendly
-                           .find(filter_params[:id]) # will find whether id or slug
-                           .id unless filter_params[:id].to_i != 0).try(:to_i) || filter_params[:id].to_i
-        Success.includes(:story, :customer, :story_categories)
-               .joins(:story, :customer, :story_categories)
-               .where(story_categories: { id: id },
-                        stories: { logo_published: true },
-                      customers: { company_id: self.id })
-               .order("stories.published DESC, stories.publish_date ASC")
-               .order("stories.updated_at DESC")
+        # use the slug to look up the category id,
+        # unless filter_params[:id] already represents the id
+        category_id = (StoryCategory
+                         .friendly
+                         .find(filter_params[:id]) # will find whether id or slug
+                         .id unless filter_params[:id].to_i != 0).try(:to_i) ||
+                      filter_params[:id].to_i
+        if is_curator
+          self.all_stories.select do |story|
+            story.success.story_categories.any? { |category| category.id == category_id }
+          end
+        else
+          self.public_stories.select do |story|
+            story.success.story_categories.any? { |category| category.id == category_id }
+          end
+        end
       when 'product'
-        id = (Product.friendly
-                     .find(filter_params[:id])
-                     .id unless filter_params[:id].to_i != 0).try(:to_i) || filter_params[:id].to_i
-        Success.includes(:story, :customer, :products)
-               .joins(:story, :customer, :products)
-               .where(products: { id: id },
-                       stories: { logo_published: true },
-                     customers: { company_id: self.id })
-               .order("stories.published DESC, stories.publish_date ASC")
-               .order("stories.updated_at DESC")
+        # use the slug to look up the product id,
+        # unless filter_params[:id] already represents the id
+        product_id = (Product
+                        .friendly
+                        .find(filter_params[:id])
+                        .id unless filter_params[:id].to_i != 0).try(:to_i) ||
+                     filter_params[:id].to_i
+        self.all_stories.select do |story|
+          story.success.products.any? { |product| product.id == product_id }
+        end
       else
     end
   end
@@ -204,6 +242,10 @@ class Company < ActiveRecord::Base
     unless self.website[/\Ahttp:\/\//] || self.website[/\Ahttps:\/\//]
       self.website = "http://#{self.website}"
     end
+  end
+
+  def header_style
+    "background:linear-gradient(45deg, #{self.nav_color_1} 0%, #{self.nav_color_2} 100%);color:#{self.nav_text_color};"
   end
 
 end

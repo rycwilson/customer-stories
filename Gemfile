@@ -1,6 +1,5 @@
 
 ruby '2.3.0'
-
 source 'https://rubygems.org'
 
 # NOTE: Front-end assets are all managed through the bower-rails gem
@@ -20,29 +19,31 @@ gem 'uglifier', '>= 1.3.0'
 # compatibility, but didn't change onpopstate behavior
 # gem 'wiselinks'
 
+gem 'rails_admin'
+gem 'devise'
+gem 'turbolinks', '~> 5.0.0'
+gem 'gon'
+gem 'friendly_id', '~> 5.1.0'
 gem 'typhoeus'
+gem 'omniauth'
+gem 'omniauth-linkedin'
+gem 'summernote-rails'
 gem 'switch_user'
 gem 'html_to_plain_text'
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
+gem 'ffaker'
 gem 'rails-html-sanitizer'
-gem 'turbolinks', '~> 5.0.0'
 gem 'aws-sdk', '~> 2'
 gem 'bower-rails', "~> 0.10.0"
 gem 'font-awesome-rails'
 gem 'figaro'
-gem 'devise'
-gem 'omniauth'
-gem 'omniauth-linkedin'
 gem 'multi_json'
 gem "paperclip", "~> 4.3"
-gem 'ffaker'
-gem 'rails_admin'
 gem 'best_in_place', '~> 3.0.1'
-gem 'summernote-rails'
 gem 'jquery-minicolors-rails'
-gem 'friendly_id', '~> 5.1.0'
 gem 'jazz_hands', github: 'nixme/jazz_hands', branch: 'bring-your-own-debugger'
+gem 'pry-theme'
 gem 'pry-byebug'
 
 group :production do

@@ -11,21 +11,9 @@ Rails.application.config.assets.version = '1.0'
 # Rails.application.config.assets.precompile += %w( search.js )
 
 Rails.application.config.assets.precompile += %w(
-  site.js site.css
-  users/sessions.js users/sessions.css
-  users/registrations.js users/registrations.css
-  users/passwords.js  users/passwords.css
-  users/confirmations.js users/confirmations.css
-  companies.js companies.css
-  stories.js stories.css
-  profile.js profile.css
-  contributions.js contributions.css
-  devise/sessions.css
-  devise/registrations.css
-  devise/confirmations.css
-  devise/passwords.css
   widget.css cs-widget.css
   pdf.css
-  stories/video.js stories/bip.js
   social-share.css
+  mvpready-landing.css
+  mvpready-admin.css
 )

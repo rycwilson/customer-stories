@@ -1,6 +1,7 @@
 class ProfileController < ApplicationController
 
   before_action :set_company, only: :edit
+  before_action only: [:edit] { set_gon(@company) }  # @company may be nil -> ok
   before_action :set_s3_direct_post, only: [:linkedin_callback, :edit]
 
   def linkedin_callback
@@ -48,7 +49,7 @@ class ProfileController < ApplicationController
   private
 
   def set_company
-    current_user.company_id.present? ? @company = current_user.company : @company = nil
+    @company = current_user.company
   end
 
 end

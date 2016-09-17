@@ -7,16 +7,13 @@
 <head>
   <title><%= title_helper(controller_name, action_name, @company, @story) %></title>
   <%= yield(:head) if content_for?(:head) %>
-  <!--  <meta name="description" content="">
-  <meta name="author" content=""> -->
-  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
-  <!-- NOTE: the controller_name helper method will NOT work
-       as argument to link / include methods below -->
-  <!-- controller-specific stylesheets -->
-  <%= stylesheet_link_tag params[:controller], 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-  <!-- controller-specific js -->
-  <%= javascript_include_tag params[:controller], 'data-turbolinks-track' => true %>
+
+  <%= stylesheet_link_tag 'application', media: 'all',
+                          'data-turbolinks-track' => 'reload' %>
+  <%= mvp_stylesheet %>
+
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => 'reload' %>
+
   <%= csrf_meta_tags %>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
@@ -29,7 +26,9 @@
   <!-- <link href='https://fonts.googleapis.com/css?family=Merriweather:400,400italic,700' rel='stylesheet' type='text/css'> -->
   <%= favicon_link_tag 'favicon.ico' %>
 </head>
-<body>
+<body class="<%= controller_name %> <%= action_name %>">
+
+  <%= include_gon %>
 
   <% if ['companies', 'stories', 'profile'].include? controller_name %>
 

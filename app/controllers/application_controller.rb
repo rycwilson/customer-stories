@@ -14,6 +14,29 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def set_gon company=nil
+    is_curator = (current_user.try(:company_id) == company.try(:id))
+    if !(cookies[:csp_init])
+      gon.push({
+        company: company.present? ?
+                    JSON.parse(company.to_json({ methods: :header_style })) : nil,
+        current_user: user_signed_in? ? {
+                        name: current_user.full_name,
+                        email: current_user.email,
+                        is_curator: is_curator } : nil,
+        stories: company.present? ? company.all_stories_json : nil
+      })
+      cookies[:csp_init] = { value: true, expires: 1.hour.from_now }
+    else
+      # This shouldn't be necessary.  If nothing is pushed, gon should be empty!
+      # Somehow setting a binding.pry at the location (without the code below)
+      # results in gon = {} on client.  But as soon as it's removed, gon is
+      # populated with data on client, despite nothing being pushed.
+      # Just be explicit:
+      gon.push({})
+    end
+  end
+
   #  this method ensures signed in users can't jump to a subdomain they don't belong to
   def check_subdomain
     user_subdomain = current_user.company.try(:subdomain)
@@ -44,17 +67,11 @@ class ApplicationController < ActionController::Base
   end
 
   def configure_permitted_parameters
-    devise_parameter_sanitizer.for(:sign_up) << :first_name
-    # devise_parameter_sanitizer.for(:account_update) << :first_name
-    devise_parameter_sanitizer.for(:sign_up) << :last_name
-    # devise_parameter_sanitizer.for(:account_update) << :last_name
-    devise_parameter_sanitizer.for(:sign_up) << :sign_up_code
-    devise_parameter_sanitizer.for(:sign_up) << :admin_access_code
-
-    devise_parameter_sanitizer.for(:account_update) { |u|
-      u.permit(:email, :first_name, :last_name, :photo_url, :linkedin_url, :title, :phone, :password, :password_confirmation, :current_password)
+    devise_parameter_sanitizer.permit(:sign_up,
+      keys: [:first_name, :last_name, :sign_up_code, :admin_access_code])
+    devise_parameter_sanitizer.permit(:account_update) { |user|
+      user.permit(:email, :first_name, :last_name, :photo_url, :linkedin_url, :title, :phone, :password, :password_confirmation, :current_password)
     }
-
   end
 
   # change devise redirect on sign in

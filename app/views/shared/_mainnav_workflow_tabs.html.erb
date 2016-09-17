@@ -1,7 +1,8 @@
-<ul class='nav nav-tabs mainnav-menu' role='tablist' style='border-bottom:0'>
+
+<ul class='nav nav-tabs workflow-tabs mainnav-menu' role='tablist' style='border-bottom:0'>
 
   <% if ['alpha', 'beta'].include? @company.feature_flag %>
-  <!--   <li id='pipeline-tab' class='tooltip-wrapper-tabs'
+  <!--   <li id='pipeline-tab'
         style='margin-bottom: 0px; display:inline-block'
         data-title="This section is currently disabled">
       <a href='#pipeline' role='tab' aria-controls='pipeline'
@@ -10,41 +11,45 @@
       </a>
     </li> -->
   <% else %>
-    <li id='pipeline-tab' class="<%= @mainnav_tab == 'pipeline' ? 'active' : '' %>"
+    <li id='pipeline-tab' class="<%= @workflow_tab == 'pipeline' ? 'active' : '' %>"
         role='presentation' style='margin-bottom: 0px'>
-      <a href='#pipeline' role='tab' data-toggle='tab' aria-controls='pipeline'>
+      <a href='#pipeline-panel' role='tab' data-toggle='tab' aria-controls='pipeline'
+          data-turbolinks='false'>
         Pipeline
       </a>
     </li>
   <% end %>
 
-  <li id='curate-tab' class="<%= @mainnav_tab == 'curate' ? 'active' : '' %>"
+  <li id='curate-tab' class="<%= @workflow_tab == 'curate' ? 'active' : '' %>"
       role='presentation' style='margin-bottom: 0px'>
-    <a href='#curate' role='tab' data-toggle='tab' aria-controls='curate'>
+    <a href='#curate-panel' role='tab' data-toggle='tab' aria-controls='curate'
+       data-turbolinks='false'>
       Curate
     </a>
   </li>
 
-  <li id='promote-tab' class="<%= @mainnav_tab == 'promote' ? 'active' : '' %>"
+  <li id='promote-tab' class="<%= @workflow_tab == 'promote' ? 'active' : '' %>"
       role='presentation' style='margin-bottom: 0px'>
-    <a href='#promote' role='tab' data-toggle='tab' aria-controls='promote'>
+    <a href='#promote-panel' role='tab' data-toggle='tab' aria-controls='promote'
+        data-turbolinks='false'>
       Promote
     </a>
   </li>
 
   <% if ['alpha', 'beta'].include? @company.feature_flag %>
-    <li id='measure-tab' class='tooltip-wrapper-tabs'
+    <li id='measure-tab' class='tooltip-beta-measure'
         style='margin-bottom: 0px; display:inline-block'
         data-title="Coming soon">
-      <a href='#measure' role='tab' aria-controls='measure'
+      <a href='#measure-panel' role='tab' aria-controls='measure'
           style='pointer-events:none' disabled>
         Measure
       </a>
     </li>
   <% else %>
-    <li id='measure-tab' class="<%= @mainnav_tab == 'measure' ? 'active' : '' %>"
+    <li id='measure-tab' class="<%= @workflow_tab == 'measure' ? 'active' : '' %>"
         role='presentation' style='margin-bottom: 0px'>
-      <a href='#measure' role='tab' data-toggle='tab' aria-controls='measure'>
+      <a href='#measure-panel' role='tab' data-toggle='tab' aria-controls='measure'
+          data-turbolinks='false'>
         Measure
       </a>
     </li>

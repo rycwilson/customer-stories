@@ -3,6 +3,20 @@ class Story < ActiveRecord::Base
   include FriendlyId
 
   belongs_to :success
+
+  scope :company_all, ->(company_id) {
+    joins(success: { customer: {} })
+    .where(customers: { company_id: company_id })
+    .order("stories.published DESC, stories.publish_date ASC")
+    .order("stories.updated_at DESC")
+  }
+  scope :company_all_logo_published, ->(company_id) {
+    company_all(company_id)
+    .where(logo_published: true)
+  }
+
+
+
   # Note: no explicit association to friendly_id_slugs, but it's there
   # Story has many friendly_id_slugs -> captures history of slug changes
 
@@ -144,6 +158,30 @@ class Story < ActiveRecord::Base
     else
       # error
     end
+  end
+
+  # not currently used, maybe include with json api
+  def published_contributors
+    return nil unless self.published?
+    self.success.contributions
+        .select { |contribution| contribution.status == 'contribution' && contribution.linkedin? }
+        .map { |contribution| { linkedin_url: contribution.contributor.linkedin_url } }
+  end
+
+  # not currently used, maybe include with json api
+  def published_tags
+    return nil unless self.published?
+    { categories: self.success.story_categories.map { |c| { name: c.name, slug: c.slug } },
+      products: self.success.products.map { |p| { name: p.name, slug: p.slug } }}
+  end
+
+  # not currently used, maybe include with json api
+  def published_content
+    return nil unless self.published?
+    { title: title,
+      quote: quote,
+      quote_attr: quote_attr,
+      content: content }
   end
 
 end

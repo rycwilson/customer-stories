@@ -1,12 +1,14 @@
 <%= render 'companies/shared/new_story_modal',
             { company: company,
-              customers: customers,
-              categories: categories,
-              products: products } %>
+              customer_select_options: customer_select_options,
+              category_select_options: category_select_options,
+              product_select_options: product_select_options } %>
 <%= render 'companies/shared/activity_feed_modal', { company: @company } %>
 
 <!-- curate -->
-<div id='curate' class="<%= mainnav_tab == 'curate' ? 'active tab-pane content' : 'tab-pane content' %>" role='tabpanel' style='margin-top:-10px'>
+<div id='curate-panel'
+     class="<%= workflow_tab == 'curate' ? 'active tab-pane content' : 'tab-pane content' %>" role='tabpanel' style='margin-top:-10px'>
+
   <div class='container'>
 
     <div class="row curate-nav">

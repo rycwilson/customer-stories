@@ -1,20 +1,4 @@
 
-<%= javascript_tag do %>
-
-  $(function () {
-    var company = <%= raw @company.to_json %>;
-
-    $('.nav-tabs .active').removeClass('active');
-
-    $('a[role=tab]').on('click', function() {
-      window.location =
-        '/companies/' + company.id + '?mainnav_tab=' + $(this).attr('aria-controls')
-    });
-
-  });
-
-<% end %>
-
 <%= render 'stories/shared/story_show_meta_tags',
             { company: @company, success: @success, story: @story,
               owns: @owns_jsonld, contributors: @contributors_jsonld,
@@ -24,7 +8,7 @@
 
 <div class='wrapper'>
 
-  <% if company_curator? @company.id %>
+  <% if @company.curator?(current_user) %>
 
     <%= render 'shared/mainnav' %>
 
@@ -171,11 +155,16 @@
 
           <h3>Contributing Team</h3>
 
+
           <% @contributors.each do |contributor| %>
+
+            <a class='embedly-card' href="<%= contributor.linkedin_url %>"
+               data-card-controls='0' data-card-align='center '
+               data-card-width='100%'></a>
 
             <!-- TODO: loading double the widgets due to this approach,
             try jquery instead -->
-            <div class="visible-lg">
+          <!--   <div class="linkedin visible-lg">
               <script type="IN/MemberProfile"
                       data-id="<%= contributor.linkedin_url %>"
                       data-format="inline"
@@ -183,15 +172,16 @@
                       data-width='420'></script>
             </div>
 
-            <div class="hidden-lg">
+            <div class="linkedin hidden-lg">
               <script type="IN/MemberProfile"
                       data-id="<%= contributor.linkedin_url %>"
                       data-format="inline"
                       data-related="true"
                       data-width='340'></script>
-            </div>
+            </div> -->
 
           <% end %>
+
 
         </div>
       </div>

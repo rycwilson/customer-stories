@@ -1,22 +1,44 @@
 
-<%= javascript_tag do %>
+<% content_for :head do %>
 
-  $(function () {
-    var company = <%= raw @company.to_json %>;
+  <meta name="turbolinks-cache-control" content="no-cache">
 
-    $('.nav-tabs .active').removeClass('active');
+  <!-- underscore template -->
+  <script type="text/template" id="stories-template">
 
-    $('.mainnav a[role=tab]').on('click', function() {
-      if ((company.feature_flag == 'alpha' ||
-           company.feature_flag == 'beta') &&
-           $(this).attr('aria-controls') === 'measure') {
-        return false;
-      } else {
-        window.location =
-          '/companies/' + company.id + '?mainnav_tab=' + $(this).attr('aria-controls')
-      }
-    });
-  });
+    {{ stories.forEach(function (story) { }}
+
+      <div class="grid-item thumbnail
+            {{= !isCurator && !story.published ? 'no-caption' : '' }}">
+
+        <a href="{{= (story.published && story.csp_story_path) || (isCurator && '/stories/' + story.id + '/edit') || 'javascript:;' }}">
+          {{ if (story.success.customer.logo_url) { }}
+            <img src="{{= story.success.customer.logo_url }}">
+          {{ } else { }}
+            <img src="<%= asset_path('company-logo-missing.png') %>">
+          {{ } }}
+        </a>
+
+        {{ if (story.published) { }}
+
+          <div class="caption"
+            style="background-color:<%= @company.nav_color_1 %>;
+                   color:<%= @company.nav_text_color %>;}}">
+            Read story
+          </div>
+
+        {{ } else if (isCurator) { }}
+
+          <div class="caption" style="background-color:#f5f5f5">
+            {{= story.logo_published ? 'Logo published' : 'Pending curation' }}
+          </div>
+
+        {{ } }}
+
+      </div>
+
+    {{ }); }}
+  </script>
 
 <% end %>
 
@@ -57,23 +79,22 @@
       <div class="portlet portlet-default">
        <!--  <div
             > -->
-          <div class='grid' id="stories-gallery" data-company-id="<%= @company.id %>"
-              style='visibility:hidden'>
+          <div class='grid' id="stories-gallery" data-company-id="<%= @company.id %>">
 
-            <% @story_tiles.each do |success| %>
+            <% @stories.each do |story| %>
 
               <div class="grid-item thumbnail
-                   <%= !@is_curator && !success.story.published ? 'no-caption' : '' %>">
+                   <%= !@is_curator && !story.published ? 'no-caption' : '' %>">
 
-                <a data-no-turbolink href="<%= grid_item_link(@company.id, success.story) %>">
-                  <img src="<%= success.customer.logo_url || asset_path('company-logo-missing.png') %>">
+                <a href="<%= grid_item_link(@company.id, story) %>">
+                  <img src="<%= story.success.customer.logo_url || asset_path('company-logo-missing.png') %>">
                 </a>
 
-                <% if @is_curator || success.story.logo_published? %>
-                <div class="caption"
-                    style="<%= grid_item_caption_style(@company, success.story) %>">
-                  <%= grid_item_caption_text(@company.id, success.story) %>
-                </div>
+                <% if @is_curator || story.logo_published? %>
+                  <div class="caption"
+                      style="<%= grid_item_caption_style(@company, story) %>">
+                    <%= grid_item_caption_text(@company.id, story) %>
+                  </div>
                 <% end %>
 
               </div>
@@ -87,39 +108,55 @@
   </div>  <!-- content -->
 </div>  <!-- wrapper -->
 
-<!-- underscore template -->
-<script type="text/template" id="stories-template">
-  {{ storyTiles.forEach(function (success) { }}
+<!-- currently unused template
+<script type='text/template' id='stories-filters-template'>
+  <div id='stories-filters'
+       class="form-inline hidden-xs {{= isCurator ? 'curator' : '' }} ">
 
-    <div class="grid-item thumbnail
-          {{= !isCurator && !success.story.published ? 'no-caption' : '' }}">
+    {{ if (categorySelectOptions.length > 2) { }}
 
-      <a data-no-turbolink href="{{= success.path || 'javascript:;' }}">
-        {{ if (success.customer.logo_url) { }}
-          <img src="{{= success.customer.logo_url }}">
-        {{ } else { }}
-          <img src="<%= asset_path('company-logo-missing.png') %>">
-        {{ } }}
-      </a>
+      <div class='form-group'>
+        <label for='category_select'>Category</label>
+        <select name='category_select' id='category_select'
+                class='stories-filter form-control'
+                tabindex='-1'>
+          {{ categorySelectOptions.forEach(function (option, index) { }}
+               {{ if (index === 0) { }}
+                    <option value="0">All</option>
+               {{ } else { }}
+                    <option data-slug="{{= option[2].data.slug }}"
+                            value="{{= option[1] }}">
+                      {{= option[0] }}
+                    </option>
+               {{ } }}
+          {{ }); }}
+        </select>
+      </div>&nbsp;&nbsp;&nbsp;&nbsp;
 
-      {{ if (success.story.published) { }}
+    {{ } }}
 
-        <div class="caption"
-          style="background-color:<%= @company.nav_color_1 %>;
-                 color:<%= @company.nav_text_color %>;}}">
-          Read story
-        </div>
+    {{ if (productSelectOptions.length > 2) { }}
 
-      {{ } else if (isCurator) { }}
+      <div class='form-group'>
+        <label for='product_select'>Product</label>
+        <select name='product_select' id='product_select'
+                class='stories-filter form-control'
+                tabindex='-1'>
+          {{ productSelectOptions.forEach(function (option, index) { }}
+               {{ if (index === 0) { }}
+                    <option value="0">All</option>
+               {{ } else { }}
+                    <option data-slug="{{= option[2].data.slug }}"
+                            value="{{= option[1] }}">
+                      {{= option[0] }}
+                    </option>
+               {{ } }}
+          {{ }); }}
+        </select>
+      </div>
 
-        <div class="caption"
-          style="background-color:{{= '#f5f5f5' }}">
-          {{= success.story.logo_published ? 'Logo published' : 'Pending curation' }}
-        </div>
+    {{ } }}
 
-      {{ } }}
-
-    </div>
-
-  {{ }); }}
+  </div>
 </script>
+-->

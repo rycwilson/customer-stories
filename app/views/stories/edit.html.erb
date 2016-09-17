@@ -1,27 +1,4 @@
 
-<%= javascript_tag do %>
-
-  $(function () {
-    var company = <%= raw @company.to_json %>;
-
-    if (company.feature_flag !== 'demo') {
-      <!-- // disabling the publish checkboxes must be done directly on the element;
-      // bootstrap-switch won't accept a dynamic change to these attributes:
-      // http://www.bootstrap-switch.org/documentation-2.html -->
-      $(".tooltip-wrapper-publish").tooltip({ placement: 'top' });
-    }
-
-    $('.nav-tabs .active').removeClass('active');
-
-    $('a[role=tab]').on('click', function() {
-      window.location =
-        '/companies/' + company.id + '?mainnav_tab=' + $(this).attr('aria-controls')
-    });
-
-  });
-
-<% end %>
-
 <%= render 'stories/shared/new_contributor_modal' %>
 <%#= render 'stories/shared/contribution_request_progress_modal' %>
 <%= render 'stories/shared/email_confirmation_modal' %>
@@ -173,7 +150,7 @@
                   url: story_path(@story.id), html: { id: 'story-content-form' },
                   method: :put, remote: true do |f| %>
 
-              <%= f.text_area :content, id: 'story-content',
+              <%= f.text_area :content, id: 'story-content-editor',
                     data: { provider: 'summernote' } %>
 
             <% end %>
