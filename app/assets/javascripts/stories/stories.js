@@ -16,16 +16,13 @@ function storiesIndex () {
       // filtersTemplate = _.template($('#stories-filters-template').html()),
       $gallery = $('#stories-gallery');
 
-
-  if ($gallery.children().length === 0 && app.stories.length) {
-    $gallery
-      .append(
-        $(storiesTemplate({ stories: app.stories,
-                            isCurator: app.current_user &&
-                                       app.current_user.is_curator })));
+  if ($gallery.children().length === 0 && app.stories) {
+    updateGallery($(storiesTemplate({
+                      stories: app.stories,
+                      isCurator: app.current_user &&
+                                 app.current_user.is_curator })));
     // also make sure filters set to 'All'
   }
-  initMasonry();
 
   // selectBoxesTrackQueryString($categorySelect, categorySlug, $productSelect, productSlug);
 

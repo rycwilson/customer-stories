@@ -1,38 +1,39 @@
 namespace :temp do
-  desc "TODO"
-  task clone_categories: :environment do
+  desc "What's up with Embed.ly"
+  task emb: :environment do
+logger = Logger.new(STDOUT)
 
-    id_mapping = {}
+    embedly_api =
+    Embedly::API.new :user_agent => 'Mozilla/5.0 (compatible; mytestapp/1.0; my@email.com)'
+logger.info "embedly_api: #{embedly_api}"
+    # single url
+    obj = embedly_api.extract :url => 'https://www.linkedin.com/in/wilsonryanc',
+                             :key => '9f595b21f8f54828bd803c88800e862e'
+logger.info "embedly_api.extract: #{obj}"
+#     puts obj[0].marshal_dump
+logger.info "marshal_dump: #{obj[0].marshal_dump}"
+    json_obj = JSON.pretty_generate(obj[0].marshal_dump)
+#     puts json_obj
+logger.info "json_obj: #{json_obj}"
 
-    IndustryCategory.all.each do |industry|
-      sc = StoryCategory.new
-      sc.update(industry.attributes.except("id"))
-      id_mapping[industry.id] = sc.id
-    end
+    # multiple urls with opts
+    # objs = embedly_api.oembed(
+    #   :urls => ['http://www.youtube.com/watch?v=sPbJ4Z5D-n4&feature=topvideos',
+    #             'http://twitpic.com/3yr7hk'],
+    #   :maxwidth => 450,
+    #   :wmode => 'transparent',
+    #   :method => 'after'
+    # )
+    # json_obj = JSON.pretty_generate(objs.collect{|o| o.marshal_dump})
+    # puts json_obj
 
-    IndustriesSuccess.all.each do |old_join_record|
-      StoryCategoriesSuccess.create(
-        story_category_id: id_mapping[old_join_record.industry_category_id],
-        success_id: old_join_record.success_id
-      )
+    # # call api with key (you'll need a real key)
+    # embedly_api = Embedly::API.new :key => '9f595b21f8f54828bd803c88800e862e',
+    #         :user_agent => 'Mozilla/5.0 (compatible; mytestapp/1.0; my@email.com)'
+    # url = 'http://www.guardian.co.uk/media/2011/jan/21/andy-coulson-phone-hacking-statement'
+    # obj = embedly_api.extract :url => url
+    # puts JSON.pretty_generate(obj[0].marshal_dump)
 
-    end
-
-  end
-
-  task condense_story_fields: :environment do
-    Story.all.each do |story|
-      story.content = ""
-      story.content << "<p><strong>Situation</strong></p>"
-      story.content << story.situation.to_s
-      story.content << "<p><strong>Challenge</strong></p>"
-      story.content << story.challenge.to_s
-      story.content << "<p><strong>Solution</strong></p>"
-      story.content << story.solution.to_s
-      story.content << "<p><strong>Benefits</strong></p>"
-      story.content << story.benefits.to_s
-      story.save
-    end
   end
 
 end

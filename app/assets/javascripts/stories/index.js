@@ -27,10 +27,9 @@ function popstateHandler ($categorySelect, $productSelect, storiesTemplate) {
       // replacePageState($categorySelect, categorySlug, $productSelect, productSlug);
     }
 
-    // what was the point of these?
     // categoryId = $categorySelect ? $categorySelect.find(':selected').val() : null,
     // productId = $productSelect ? $productSelect.find(':selected').val() : null,
-  };  // popstate
+  };
 }
 
 function storiesIndexHandlers () {
@@ -132,11 +131,27 @@ function selectBoxesTrackQueryString ($categorySelect, categorySlug, $productSel
 }
 
 function updateGallery ($stories) {
-  $('#stories-gallery').empty()
-                       .masonry()
-                       .append($stories)
-                       .masonry('appended', $stories);
-  centerLogos();
+
+  var $gallery = $('#stories-gallery');
+
+  if ($gallery.children().length) {  // trying to empty an already empty .grid element can lead to problems
+    $gallery.empty().masonry();
+  }
+
+  $stories.imagesLoaded(function () {
+    $gallery.append($stories)
+            .masonry('appended', $stories);
+  });
+
+
+  // $gallery.empty()
+  //         .masonry();
+
+  // setTimeout(function () {
+  //   $gallery.append($stories);
+  //   $gallery.masonry('appended', $stories);
+  // }, 200);
+
 }
 
 function replaceStateStoriesIndex (filterTag, filterId, filterSlug) {

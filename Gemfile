@@ -19,6 +19,8 @@ gem 'uglifier', '>= 1.3.0'
 # compatibility, but didn't change onpopstate behavior
 # gem 'wiselinks'
 
+# gem 'querystring'
+# gem 'embedly'
 gem 'rails_admin'
 gem 'devise'
 gem 'turbolinks', '~> 5.0.0'

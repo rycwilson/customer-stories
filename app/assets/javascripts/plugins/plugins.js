@@ -1,7 +1,7 @@
 
 //= require plugins/manifest
 //= require plugins/socialshare
-//= require plugins/embed
+//= require plugins/linkedin
 //= require plugins/summernote
 //= require plugins/masonry
 //= require plugins/select2
@@ -10,10 +10,9 @@ function constructPlugins () {
 
   initSelect2();
   initLinkedIn();
-  initEmbedly();
   initSocialShare();
   initSummernote();
-  // initMasonry();  do this in storiesIndex (must wait for images to load)
+  initMasonry();
 
   $("[data-toggle='tooltip']").tooltip();
   $('.best_in_place').best_in_place();
@@ -54,10 +53,9 @@ function deconstructPlugins () {
     $(this)[0].setAttribute('data-pre-select', $(this).find(':selected').val());
     $(this).select2('destroy');
   });
-
   $('.grid').masonry('destroy');
-
   $("[data-provider='summernote']").summernote('destroy');
+  // $('.linkedin-widget span').remove();
 
 }
 

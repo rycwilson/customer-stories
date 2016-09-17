@@ -3,20 +3,16 @@ function initMasonry () {
 
   var $gallery = $('.grid');
 
-  $gallery.imagesLoaded(function () {  // .always, .done, .fail, .progress
+  $gallery.masonry({
+             itemSelector: '.grid-item',
+             columnWidth: 220,
+             isFitWidth: true,
+             // disable initial layout ...
+             // isInitLayout: false
+           });
 
-    $gallery.masonry({
-               itemSelector: '.grid-item',
-               columnWidth: 220,
-               isFitWidth: true,
-               // disable initial layout ...
-               // isInitLayout: false
-             });
-
-    $gallery.masonry('on', 'layoutComplete', function () {
-      centerLogos();
-    });
-
+  $gallery.masonry('on', 'layoutComplete', function () {
+    centerLogos();
   });
 
   // manually trigger initial layout ...

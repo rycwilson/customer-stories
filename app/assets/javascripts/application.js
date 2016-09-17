@@ -98,13 +98,12 @@ function attachAppHandlers () {
     .on('turbolinks:render', function () {
       console.log('turbolinks:render');
       if (document.documentElement.hasAttribute('data-turbolinks-preview')) {
-        // debugger;
-        constructPlugins();
-        initMasonry();
+        console.log('preview rendered');
 
         if ($('body').hasClass('not:companies not:show')) {
           $('.workflow-tabs').find('.active').removeClass('active');
         }
+        constructPlugins();
       }
     });
 }

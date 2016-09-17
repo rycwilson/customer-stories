@@ -3,7 +3,7 @@ function initLinkedIn () {
 
   // linkedin library
   if (typeof(IN) !== 'object') {
-    $.getScript('//platform.linkedin.com/in.js');
+    $.getScript('//platform.linkedin.com/in.js');  // it will parse independently when loaded
   } else {
     IN.parse();
   }
@@ -17,10 +17,10 @@ function initLinkedIn () {
 
 }
 
-function initEmbedly () {
-  if (typeof(embedly) !== 'function') {
-    $.getScript('//cdn.embedly.com/widgets/platform.js');
-  } else {
+// function initEmbedly () {
+//   if (typeof(embedly) !== 'function') {
+//     $.getScript('//cdn.embedly.com/widgets/platform.js');
+//   } else {
 
-  }
-}
+//   }
+// }

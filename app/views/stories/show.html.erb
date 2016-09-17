@@ -1,4 +1,9 @@
 
+<!-- turbolinks caching problematic with linkedin widgets  -->
+<% content_for :head do %>
+  <meta name="turbolinks-cache-control" content="no-cache">
+<% end %>
+
 <%= render 'stories/shared/story_show_meta_tags',
             { company: @company, success: @success, story: @story,
               owns: @owns_jsonld, contributors: @contributors_jsonld,
@@ -151,20 +156,20 @@
           <% end %>
         </div>
 
-        <div class="text-center">
+        <div class="linkedin-widgets text-center">
 
           <h3>Contributing Team</h3>
 
 
           <% @contributors.each do |contributor| %>
 
-            <a class='embedly-card' href="<%= contributor.linkedin_url %>"
-               data-card-controls='0' data-card-align='center '
-               data-card-width='100%'></a>
+            <!-- <a class='embedly-card' href="<%= contributor.linkedin_url %>"
+               data-card-controls='0' data-card-align='center'
+               data-card-width='100%' data-thumbnail-width='100px'></a> -->
 
             <!-- TODO: loading double the widgets due to this approach,
             try jquery instead -->
-          <!--   <div class="linkedin visible-lg">
+            <div class="linkedin-widget visible-lg">
               <script type="IN/MemberProfile"
                       data-id="<%= contributor.linkedin_url %>"
                       data-format="inline"
@@ -178,7 +183,7 @@
                       data-format="inline"
                       data-related="true"
                       data-width='340'></script>
-            </div> -->
+            </div>
 
           <% end %>
 

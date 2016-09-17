@@ -12,7 +12,7 @@ class StoriesController < ApplicationController
 
   def index
     # select box options (filtered by role) ...
-    @is_curator = @company.curator?(current_user)
+    @is_curator = @company.curator? current_user
     @category_select_options = @is_curator ?
                     @company.category_select_options_all.unshift(["All", 0]) :
                     @company.category_select_options_filtered  # public reader
@@ -26,7 +26,7 @@ class StoriesController < ApplicationController
       @stories = @company.filter_stories_by_tag(get_filter_params_from_query(params), @is_curator)
       @category_pre_selected_options = [StoryCategory.friendly.find(params[:category]).id] if params[:category]
       @product_pre_selected_options = [Product.friendly.find(params[:product]).id] if params[:product]
-    elsif cookies['csp_curator_init'] || cookies['csp_reader_init']
+    elsif cookies['csp_init']
       @stories = []
     elsif @is_curator
       @stories = @company.all_stories
