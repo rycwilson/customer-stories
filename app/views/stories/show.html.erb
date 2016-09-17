@@ -44,16 +44,16 @@
         </div>
 
         <div id='social-buttons' class="col-sm-3 hidden-xs text-center">
-          <a class="icon-button linkedin clicky_log" target="_blank"
+          <a class="icon-button linkedin <%= production? ? 'clicky_log' : '' %>" target="_blank"
              href="<%= LINKEDIN_SHARE_URL + @story.csp_story_url %>">
             <i class="fa fa-linkedin"></i><span></span>
           </a>
           <a href="<%= TWITTER_SHARE_URL + @story.csp_story_url %>"
-             class="icon-button twitter clicky_log" target="_blank">
+             class="icon-button twitter <%= production? ? 'clicky_log' : '' %>" target="_blank">
             <i class="fa fa-twitter"></i><span></span>
           </a>
           <a href="<%= FACEBOOK_SHARE_URL + @story.csp_story_url %>"
-             class="icon-button facebook clicky_log" target="_blank">
+             class="icon-button facebook <%= production? ? 'clicky_log' : '' %>" target="_blank">
             <i class="fa fa-facebook"></i><span></span>
           </a>
         </div>
@@ -117,15 +117,15 @@
 
   <div id='social-buttons-xs' class="visible-xs text-right">
     <a href="//www.linkedin.com/shareArticle?mini=true&url=<%= @story.csp_story_url %>"
-       class="icon-button-xs linkedin" target="_blank">
+       class="icon-button-xs linkedin <%= production? ? 'clicky_log' : '' %>" target="_blank">
       <i class="fa fa-linkedin"></i><span></span>
     </a>
     <a href="//twitter.com/share?url=<%= @story.csp_story_url %>"
-       class="icon-button-xs twitter" target="_blank">
+       class="icon-button-xs twitter <%= production? ? 'clicky_log' : '' %>" target="_blank">
       <i class="fa fa-twitter"></i><span></span>
     </a>
     <a href="//www.facebook.com/sharer.php?u=<%= @story.csp_story_url %>"
-       class="icon-button-xs facebook" target="_blank">
+       class="icon-button-xs facebook <%= production? ? 'clicky_log' : '' %>" target="_blank">
       <i class="fa fa-facebook"></i><span></span>
     </a>
   </div>
