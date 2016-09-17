@@ -62,9 +62,7 @@ class CompaniesController < ApplicationController
     end
   end
 
-  # TODO: shares and page views
-  # TODO: Why the json back-and-forth?  Experiment and document
-  # -> .to_json necessary to actually include data?
+  # TODO: Why the json back-and-forth?
   def activity
     events = []
     story_views = []

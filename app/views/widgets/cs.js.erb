@@ -43,17 +43,10 @@
             // wait for all images to load so dimension calculations are correct ...
             $images.on('load', function () {
               if (++loadedImages === $images.length) {
+                slideDrawerPlugin();
                 preventScrollNav();
-<<<<<<< HEAD
                 initScrollHandlers();
-                slideDrawerPlugin();
                 initPagination();
-                initPagination();
-=======
-                initScrollListeners();
-                slideDrawerPlugin();
-                initPagination();
->>>>>>> master
                 centerLogos();
                 // if user is using a mouse, this will hose dimensions
                 // (in a somewhat random way)
