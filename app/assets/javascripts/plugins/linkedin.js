@@ -1,7 +1,12 @@
 
 function initLinkedIn () {
 
-  // linkedin library
+  if (app.screenSize === 'lg') {
+    $('.linkedin-widget').not('.linkedin-widget-wide').remove();
+  } else {
+    $('.linkedin-widget-wide').remove();
+  }
+
   if (typeof(IN) !== 'object') {
     $.getScript('//platform.linkedin.com/in.js');  // it will parse independently when loaded
   } else {

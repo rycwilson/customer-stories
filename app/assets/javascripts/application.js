@@ -14,11 +14,9 @@
 
 $(document).on('turbolinks:load', function (e) {
   console.log('turbolinks:load');
-
   setAppData();
   constructPlugins();
   app.init();
-
   // ref: https://clicky.com/help/apps-plugins#rails4turbo
   // clicky.log( document.location.pathname + document.location.search, document.title, 'pageview' )
 });
@@ -31,6 +29,10 @@ $(document).one('turbolinks:load', function () {
   attachContributionsHandlers();
 });
 
+window.onbeforeunload = function() {
+  Cookies.remove('csp_init');
+};
+
 function setAppData () {
   if (window.gon) {  // use window.gon in case undefined
     console.log('gon: ', gon);
@@ -41,6 +43,7 @@ function setAppData () {
   app.stories = (window.gon && gon.stories) || app.stories || null;
   app.current_user = (window.gon && gon.current_user) || app.current_user || null;
   console.log('app: ', app);
+  getScreenSize();
 }
 
 function attachAppHandlers () {
@@ -108,10 +111,19 @@ function attachAppHandlers () {
     });
 }
 
-window.onbeforeunload = function() {
-  Cookies.remove('csp_init');
-};
-
+function getScreenSize () {
+  (function($, viewport){
+    if (viewport.is('xs')) {
+      app.screenSize = 'xs';
+    } else if (viewport.is('sm')) {
+      app.screenSize = 'sm';
+    } else if (viewport.is('md')) {
+      app.screenSize = 'md';
+    } else if (viewport.is('lg')) {
+      app.screenSize = 'lg';
+    }
+  })(jQuery, ResponsiveBootstrapToolkit);
+}
 
 
 

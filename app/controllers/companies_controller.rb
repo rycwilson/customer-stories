@@ -188,7 +188,7 @@ class CompaniesController < ApplicationController
     actions_list.each_with_index do |action, index|
       story_slug = action['action_url'].slice(action['action_url'].rindex('/') + 1, action['action_url'].length)
       if action['action_type'] == 'pageview' &&
-         action['action_url'].include?("//#{@company.subdomain}") &&
+         action['action_url'].include?("#{@company.subdomain}.#{ENV['HOST_NAME']}") &&
          # filter out landing page or stories#index views
          # (clicky isn't correctly logging 'action_title' for all stories,
          # so reference 'action_url' instead)
@@ -214,7 +214,7 @@ class CompaniesController < ApplicationController
           actions_list[index+1..actions_list.length].each do |prev_action|
             if prev_action['action_type'] == 'pageview' &&
                prev_action['session_id'] == action['session_id']
-              if prev_action['action_url'].include?("//#{@company.subdomain}")
+              if prev_action['action_url'].include?("#{@company.subdomain}.#{ENV['HOST_NAME']}")
                 shared_story_slug = prev_action['action_url'].slice(prev_action['action_url'].rindex('/') + 1, prev_action['action_url'].length)
               end
               break # whether the share belongs to @company or not
