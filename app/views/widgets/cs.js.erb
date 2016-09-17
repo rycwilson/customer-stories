@@ -45,8 +45,8 @@
               if (++loadedImages === $images.length) {
                 preventScrollNav();
                 initScrollListeners();
-                initPagination();
                 slideDrawerPlugin();
+                initPagination();
                 centerLogos();
                 // if user is using a mouse, this will hose dimensions
                 // (in a somewhat random way)
@@ -237,27 +237,49 @@
   function initPagination () {
 
     var $carousel = $('.row-horizon'),
-        $pageDots = $('.row-pagination'),
+        $pageDotsContainer = $('.row-pagination'),
         scrollWidth = $carousel.prop('scrollWidth'),
         numPages = Math.ceil(scrollWidth / $carousel.width()),
         pageWidth = Math.ceil(scrollWidth / numPages),
         currentPage = 1,
-        dynamicPage = null, lastPage = null;
+        dynamicPage = null, lastPage = null, dotScroll = null,
+        scrollHandler = function () {
+          dynamicPage = calculatePage($(this).scrollLeft(), numPages, pageWidth, $carousel.width());
+          if (dynamicPage !== currentPage) {
+            lastPage = currentPage;
+            currentPage = dynamicPage;
+            $pageDotsContainer.find('div:nth-of-type(' + lastPage.toString() + ')').css('background', 'transparent');
+            $pageDotsContainer.find('div:nth-of-type(' + currentPage.toString() + ')').css('background', 'white');
+          }
+        }
 
     for (var i = 0; i < numPages; i++) {
-      $pageDots.append("<div class='pagination'></div>")
+      $pageDotsContainer.append("<div class='page-dot'></div>")
     }
 
-    $pageDots.find('div:first').css('background', 'white');
+    $pageDotsContainer.find('div:first')
+                      .css('background', 'white')
+                      .addClass('current-page-dot');
 
-    $carousel.on('scroll', function () {
-      dynamicPage = calculatePage($(this).scrollLeft(), numPages, pageWidth, $carousel.width());
-      if (dynamicPage !== currentPage) {
-        lastPage = currentPage;
-        currentPage = dynamicPage;
-        $pageDots.find('div:nth-of-type(' + lastPage.toString() + ')').css('background', 'transparent');
-        $pageDots.find('div:nth-of-type(' + currentPage.toString() + ')').css('background', 'white');
-      }
+    $('.page-dot').on('click', function (e) {
+      var goToPage = null, scrollTo = null;
+      if ($(this).hasClass('current-page-dot')) { e.preventDefault(); }
+      $(this).css('background', 'white')
+             .addClass('goto-page-dot');
+      $('.current-page-dot').css('background', 'transparent')
+                            .removeClass('current-page-dot')
+      $('.page-dot').each(function (index, pageDot) {
+        if ($(this).hasClass('goto-page-dot')) {
+          scrollTo = index * pageWidth;
+          $(this).removeClass('goto-page-dot')
+                 .addClass('current-page-dot')
+          return false;
+        }
+      });
+      $carousel.off('scroll', scrollHandler);
+      $carousel.animate({ scrollLeft: scrollTo }, 1000, function () {
+        $carousel.on('scroll', scrollHandler);
+      });
     });
   }
 
