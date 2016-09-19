@@ -55,15 +55,15 @@ class WidgetsController < ApplicationController
                             : stories_index_url }
                 end
 
-    html = "<section class='drawer' style='visibility:hidden'>
-              <header class='clickme text-center'
+    html = "<section class='cs-drawer' style='visibility:hidden'>
+              <header class='text-center'
                 style='background-color:#{tab_color};color:#{font_color}'>
                 Customer Stories
               </header>
-              <div class='drawer-content' style='border-top-color:#{tab_color}'>
-                <div class='drawer-items'>
-                  <div class='scroll-left'></div>
-                    <div class='cs-row row-pagination text-center'>
+              <div class='cs-drawer-content' style='border-top-color:#{tab_color}'>
+                <div class='cs-drawer-items'>
+                  <div class='cs-scroll-left'></div>
+                    <div class='cs-row cs-pagination-row text-center'>
                     </div>
                     <div class='cs-row row-horizon text-center'>"
 
@@ -82,14 +82,14 @@ class WidgetsController < ApplicationController
     # the bootstrap styling starts to break down after 30 stories
     stories_links.first(30).each do |story|
       html <<         "<div class='col-xs-#{xs_col_width} col-sm-#{sm_col_width} col-md-#{md_col_width}'>
-                         <a href='#{story[:link]}' class='thumbnail' target='_blank'>
+                         <a href='#{story[:link]}' class='cs-thumbnail' target='_blank'>
                            <img src='#{story[:logo]}' alt=''>
                          </a>
                        </div>"
     end
 
     html <<        "</div>
-                  <div class='scroll-right'></div>
+                  <div class='cs-scroll-right'></div>
                 </div>
               </div>
             </section>"

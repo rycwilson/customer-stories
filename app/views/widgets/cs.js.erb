@@ -43,25 +43,25 @@
             // wait for all images to load so dimension calculations are correct ...
             $images.on('load', function () {
               if (++loadedImages === $images.length) {
-                preventScrollNav();
-                initScrollListeners();
                 slideDrawerPlugin();
-                initPagination();
+                preventScrollNav();
+                scrollHandlers();
+                // initPagination();
                 centerLogos();
                 // if user is using a mouse, this will hose dimensions
                 // (in a somewhat random way)
                 // compensate for this ...
-                if ($('.drawer-content').css('height') !== '141px') {
-                  $('.drawer-content').css('height', '141px');
-                  $('.drawer-items').css('height', '141px');
+                if ($('.cs-drawer-content').css('height') !== '141px') {
+                  $('.cs-drawer-content').css('height', '141px');
+                  $('.cs-drawer-items').css('height', '141px');
                 }
-                $('#cs-container .drawer').slideDrawer({
+                $('#cs-container .cs-drawer').slideDrawer({
                   showDrawer: false, // drawer is hidden on page load
                   slideTimeout: true, // Sets the drawer to slide down after set count if set to true.
                   slideSpeed: 600, // Slide drawer speed.
                   slideTimeoutCount: 3000 // How long to wait before sliding drawer slides down.
                 });
-                $('#cs-container .drawer').css('visibility', 'visible');
+                $('#cs-container .cs-drawer').css('visibility', 'visible');
               }
             });
           }
@@ -87,7 +87,7 @@
         drawer.hide(options, div);
       }
 
-      $('#cs-container .clickme').on('click', function () {
+      $('#cs-container header').on('click', function () {
         drawer.toggle(options, div);
       });
     },
@@ -146,7 +146,7 @@
     // Function wrapper
     $.fn.slideDrawer = function (options) {
 
-      var $drawerContent = $('#cs-container .drawer-content'),  /* Content height of drawer */
+      var $drawerContent = $('#cs-container .cs-drawer-content'),  /* Content height of drawer */
           borderHeight = parseInt($drawerContent.css('border-top-width')); /* Border height of content */
 
       var drawerHeight = this.height() + borderHeight; /* Total drawer height + border height */
@@ -202,88 +202,112 @@
     });
   }
 
-  function initScrollListeners () {
+  function scrollHandlers () {
 
     var $carousel = $('.row-horizon'),
+        $paginationContainer = $('.cs-pagination-row'),
         scrollWidth = $carousel.prop('scrollWidth'),
         maxScrollPosition = scrollWidth - $carousel.width(),
         numPages = Math.ceil(scrollWidth / $carousel.width()),
         pageWidth = Math.ceil(scrollWidth / numPages),
-        scrollPosition = null, scrollRemaining = null;
-
-    $('.scroll-left').on('click', function () {
-      scrollPosition = $carousel.scrollLeft();
-      if (scrollPosition >= pageWidth) {
-        $carousel.animate({ scrollLeft: '-=' + pageWidth.toString() }, 1000)
-      }
-      else {
-        $carousel.animate({ scrollLeft: '-=' +
-                                      scrollPosition.toString() }, 1000);
-      }
-    });
-
-    $('.scroll-right').on('click', function () {
-      scrollPosition = $carousel.scrollLeft();
-      scrollRemaining = scrollWidth - (scrollPosition + $carousel.width());
-      if (scrollRemaining >= pageWidth) {
-        $carousel.animate({ scrollLeft: '+=' + pageWidth.toString() }, 1000);
-      } else {
-        $carousel.animate({ scrollLeft: '+=' +
-                                      scrollRemaining.toString() }, 1000);
-      }
-    });
-  }
-
-  function initPagination () {
-
-    var $carousel = $('.row-horizon'),
-        $pageDotsContainer = $('.row-pagination'),
-        scrollWidth = $carousel.prop('scrollWidth'),
-        numPages = Math.ceil(scrollWidth / $carousel.width()),
-        pageWidth = Math.ceil(scrollWidth / numPages),
         currentPage = 1,
-        dynamicPage = null, lastPage = null, dotScroll = null,
-        scrollHandler = function () {
-          dynamicPage = calculatePage($(this).scrollLeft(), numPages, pageWidth, $carousel.width());
+        scrollPosition = null, scrollRemaining = null,
+        dynamicPage = null, lastPage = null,
+        paginationTrackScroll = function () {
+          dynamicPage =
+            calculateDynamicPage($(this).scrollLeft(), numPages, pageWidth, $(this).width());
           if (dynamicPage !== currentPage) {
             lastPage = currentPage;
             currentPage = dynamicPage;
-            $pageDotsContainer.find('div:nth-of-type(' + lastPage.toString() + ')').css('background', 'transparent');
-            $pageDotsContainer.find('div:nth-of-type(' + currentPage.toString() + ')').css('background', 'white');
+            $paginationContainer.find('div:nth-of-type(' + lastPage.toString() + ')')
+                                .removeClass('cs-current-page-dot');
+            $paginationContainer.find('div:nth-of-type(' + currentPage.toString() + ')')
+                                .addClass('cs-current-page-dot');
           }
-        }
+        };
 
+    // set up pagination
     for (var i = 0; i < numPages; i++) {
-      $pageDotsContainer.append("<div class='page-dot'></div>")
+      if (i === 0) {
+        $paginationContainer
+          .append("<div class='cs-page-dot cs-current-page-dot'></div>")
+      } else {
+        $paginationContainer
+          .append("<div class='cs-page-dot'></div>")
+      }
     }
 
-    $pageDotsContainer.find('div:first')
-                      .css('background', 'white')
-                      .addClass('current-page-dot');
+    $carousel.on('scroll', paginationTrackScroll);
 
-    $('.page-dot').on('click', function (e) {
+    $('.cs-scroll-left')
+      .on('click', arrowScrollLeft($carousel, pageWidth));
+
+    $('.cs-scroll-right')
+      .on('click', arrowScrollRight($carousel, pageWidth, scrollWidth));
+
+    $('.cs-page-dot')
+      .on('click', paginationScroll($carousel, pageWidth, paginationTrackScroll));
+  }
+
+  function arrowScrollRight ($carousel, pageWidth, scrollWidth) {
+    return function (e) {
+      var scrollPosition = $carousel.scrollLeft(),
+          scrollRemaining = scrollWidth - (scrollPosition + $carousel.width());
+      $('.cs-page-dot').off('click', paginationScroll);
+      if (scrollRemaining >= pageWidth) {
+        $carousel.animate({ scrollLeft: '+=' + pageWidth.toString() }, 1000,
+          function () { $('.cs-page-dot').on('click', paginationScroll); })
+      } else {
+        $carousel.animate({ scrollLeft: '+=' + scrollRemaining.toString() }, 1000,
+          function () { $('.cs-page-dot').on('click', paginationScroll); })
+      }
+    }
+  }
+
+  function arrowScrollLeft ($carousel, pageWidth) {
+    return function (e) {
+      var scrollPosition = $carousel.scrollLeft();
+      $('.cs-page-dot').off('click', paginationScroll);
+      if (scrollPosition >= pageWidth) {
+        $carousel.animate({ scrollLeft: '-=' + pageWidth.toString() }, 1000,
+          function () { $('.cs-page-dot').on('click', paginationScroll); })
+      }
+      else {
+        $carousel.animate({ scrollLeft: '-=' + scrollPosition.toString() }, 1000,
+          function () { $('.cs-page-dot').on('click', paginationScroll); })
+      }
+    }
+  }
+
+  function paginationScroll ($carousel, pageWidth, paginationTrackScroll) {
+    // $(this) refers to the div.page-dot clicked
+    return function (e) {
       var goToPage = null, scrollTo = null;
-      if ($(this).hasClass('current-page-dot')) { e.preventDefault(); }
-      $(this).css('background', 'white')
-             .addClass('goto-page-dot');
-      $('.current-page-dot').css('background', 'transparent')
-                            .removeClass('current-page-dot')
-      $('.page-dot').each(function (index, pageDot) {
+
+      if ($(this).hasClass('cs-current-page-dot')) { e.preventDefault(); }
+
+      // turn off other handlers until animation is complete
+      $carousel.off('scroll', paginationTrackScroll);
+      // $('.cs-page-dot').off('click', paginationScroll)
+
+      $(this).addClass('goto-page-dot');
+      $('.cs-current-page-dot').removeClass('cs-current-page-dot')
+      $('.cs-page-dot').each(function (index, pageDot) {
         if ($(this).hasClass('goto-page-dot')) {
           scrollTo = index * pageWidth;
-          $(this).removeClass('goto-page-dot')
-                 .addClass('current-page-dot')
+          $(this).addClass('cs-current-page-dot')
+                 .removeClass('goto-page-dot')
           return false;
         }
       });
-      $carousel.off('scroll', scrollHandler);
       $carousel.animate({ scrollLeft: scrollTo }, 1000, function () {
-        $carousel.on('scroll', scrollHandler);
+        $carousel.on('scroll', paginationTrackScroll);
+        // $('.cs-page-dot').on('click', paginationScroll($carousel, pageWidth, paginationTrackScroll))
       });
-    });
+    }
   }
 
-  function calculatePage (position, numPages, pageWidth, carouselWidth) {
+  function calculateDynamicPage (position, numPages, pageWidth, carouselWidth) {
     for (var i = 1; i <= numPages; i++) {
       if (position + (carouselWidth / 2) < pageWidth * i) { return i }
     }
