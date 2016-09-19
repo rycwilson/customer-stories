@@ -1,37 +1,4 @@
 
-function popstateHandler ($categorySelect, $productSelect, storiesTemplate) {
-
-  window.onpopstate = function (event) {
-
-    // if (event.state.turbolinks) { return false; }
-
-    var categorySlug = getQueryString('category'),
-        productSlug = getQueryString('product');
-
-    if (event.state.filter) {
-
-      var filterTag = event.state.filter.tag;
-      var filterId = event.state.filter.id; // this may be a slug
-
-      filteredStories = filterStories(filterTag, filterId);
-      updateGallery($(storiesTemplate({
-                         stories: filteredStories,
-                         isCurator: app.current_user.is_curator })));
-      selectBoxesTrackQueryString($categorySelect, categorySlug, $productSelect, productSlug);
-
-
-    /*
-     *  Safari only (calls window.onpopstate on initial load)
-     */
-    // } else {
-      // replacePageState($categorySelect, categorySlug, $productSelect, productSlug);
-    }
-
-    // categoryId = $categorySelect ? $categorySelect.find(':selected').val() : null,
-    // productId = $productSelect ? $productSelect.find(':selected').val() : null,
-  };
-}
-
 function storiesIndexHandlers () {
 
   $(document).on('change', '.stories-filter', function () {
@@ -43,19 +10,13 @@ function storiesIndexHandlers () {
         filterSlug = $(this).find("option[value='" + filterId + "']").data('slug'),
         storiesTemplate = _.template($('#stories-template').html()),
         filteredStories = [];
-
-    console.log('filtering with: ', filterTag, filterId);
     filteredStories = filterStories(filterTag, filterId);
-    console.log('filteredStories: ', filteredStories);
     updateGallery($(storiesTemplate({
                       stories: filteredStories,
                       isCurator: app.current_user && app.current_user.is_curator
                     })));
-
     replaceStateStoriesIndex(filterTag, filterId, filterSlug);
-
     mutuallyExcludeFilters(filterTag, filterId, $categorySelect, $productSelect);
-
   });
 }
 
@@ -78,15 +39,10 @@ function filterStories (filterTag, filterId) {
 }
 
 function mutuallyExcludeFilters (filterTag, filterId, $categorySelect, $productSelect) {
-  /**
-    Filter select boxes are mutually exclusive
-    If a category was selected, the product is 'all' (and vice versa)
-  */
   if (filterTag === 'category' && $productSelect.length) {
-    // $categorySelect.val(filterId.toString()).trigger('change.select2');
+    // change the selected option without triggering the 'change' event
     $productSelect.val('0').trigger('change.select2');
   } else if (filterTag === 'product' && $categorySelect.length) {
-    // $productSelect.val(filterId.toString()).trigger('change.select2');
     $categorySelect.val('0').trigger('change.select2');
   }
 }
@@ -151,4 +107,37 @@ function replaceStateStoriesIndex (filterTag, filterId, filterSlug) {
 //   // don't overwrite history.state.turbolinks
 //   $.extend(history.state, { filter: { tag: filterTag, id: filterId }});
 
+// }
+
+//
+// With { turbolinks: true } in all calls to history.pushState(),
+// turbolinks is handling the browser history.
+//
+// function popstateHandler ($categorySelect, $productSelect, storiesTemplate) {
+
+//   window.onpopstate = function (event) {
+
+//     // if (event.state.turbolinks) { return false; }
+
+//     var categorySlug = getQueryString('category'),
+//         productSlug = getQueryString('product');
+//         // categoryId = $categorySelect ? $categorySelect.find(':selected').val() : null,
+//         // productId = $productSelect ? $productSelect.find(':selected').val() : null,
+
+//     if (event.state.filter) {
+
+//       var filterTag = event.state.filter.tag;
+//       var filterId = event.state.filter.id; // this may be a slug
+
+//       filteredStories = filterStories(filterTag, filterId);
+//       updateGallery($(storiesTemplate({
+//                          stories: filteredStories,
+//                          isCurator: app.current_user.is_curator })));
+//       selectBoxesTrackQueryString($categorySelect, categorySlug, $productSelect, productSlug);
+
+//     // Safari only (calls window.onpopstate on initial load)
+//     // } else {
+//       // replacePageState($categorySelect, categorySlug, $productSelect, productSlug);
+//     }
+//   };
 // }

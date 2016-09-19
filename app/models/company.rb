@@ -248,4 +248,13 @@ class Company < ActiveRecord::Base
     "background:linear-gradient(45deg, #{self.nav_color_1} 0%, #{self.nav_color_2} 100%);color:#{self.nav_text_color};"
   end
 
+  def missing_info
+    missing = []
+    missing << "logo" unless self.logo_url.present?
+    missing << "story_categories" unless self.story_categories.present?
+    missing << "products" unless self.products.present?
+    binding.pry
+    missing
+  end
+
 end

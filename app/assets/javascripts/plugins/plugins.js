@@ -45,7 +45,6 @@ function constructPlugins () {
 }
 
 function deconstructPlugins () {
-
   // Set the data attribute with vanilla js.  Data attributes set via jquery
   // do not persist across turbolinks visits (or don't persist for some unknown reason)
   // TODO: does this apply to *all* select2 boxes?
@@ -56,7 +55,6 @@ function deconstructPlugins () {
   $('.grid').masonry('destroy');
   $("[data-provider='summernote']").summernote('destroy');
   // $('.linkedin-widget span').remove();
-
 }
 
 

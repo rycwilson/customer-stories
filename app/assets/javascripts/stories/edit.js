@@ -1,5 +1,6 @@
 
 function storiesEditHandlers () {
+  storiesEditBIPHandlers();
   storiesEditSettingsHandlers();
   storiesEditVideoHandlers();
   storiesEditTagsHandlers();
@@ -7,9 +8,10 @@ function storiesEditHandlers () {
   storiesEditResultsHandlers();
   storiesEditPromptsHandlers();
   storiesEditContributionsHandlers();
+  storiesEditContentEditorHandlers();
 }
 
-function storiesEditInitBIP () {
+function storiesEditBIPHandlers () {
   // best-in-place errors
   $(document).on('best_in_place:error', function (event, data, status, xhr) {
     var errors = JSON.parse(data.responseText);
@@ -22,7 +24,7 @@ function storiesEditInitBIP () {
     also has the side-effect of keeping focus on the element,
     which we'll prevent with ...
   */
-  $('a.accordion-toggle').on('focus', function () {
+  $(document).on('focus', 'a.accordion-toggle', function () {
     var $_this = $(this);
     window.setTimeout(function () { $_this.blur(); }, 200);
   });
@@ -30,11 +32,11 @@ function storiesEditInitBIP () {
 
 function storiesEditSettingsHandlers () {
 
-  $('.bs-switch').on('switchChange.bootstrapSwitch', function (event, state) {
+  $(document).on('switchChange.bootstrapSwitch', '.bs-switch', function (event, state) {
     $(this).parent().submit();
   });
 
-  $('#story-publish-form').on('ajax:success', function (event, data) {
+  $(document).on('ajax:success', '#story-publish-form', function (event, data) {
     var $publish = $("#story_published"),
         $logoPublish = $("#story_logo_published");
     /*
@@ -50,7 +52,7 @@ function storiesEditSettingsHandlers () {
     }
   });
 
-  $('#approval-pdf-btn').on('click', function (e) {
+  $(document).on('click', '#approval-pdf-btn', function (e) {
     var missingInfo = $(this).data('missing-curator-info');
     if (missingInfo.length) {
       e.preventDefault();
@@ -65,7 +67,7 @@ function storiesEditVideoHandlers () {
 
   var videoPlaceholderText = "Video URL (YouTube, Vimeo, or Wistia)";
 
-  $(".best_in_place[data-bip-attribute='embed_url']").on("ajax:success",
+  $(document).on("ajax:success", ".best_in_place[data-bip-attribute='embed_url']",
     function (event, data) {
       var newUrl = JSON.parse(data).embed_url,
           $newVideo = null;
@@ -115,11 +117,11 @@ function storiesEditTagsHandlers () {
     var productTags = $('.select2-selection__rendered').eq(2).html();
   */
 
-  $('#story-tags-form select').on('change', function (e) {
+  $(document).on('change', '#story-tags-form select', function (e) {
 
     if ($('.edit-tags').hasClass('hidden')) {
       // un-hide the save/cancel buttons
-      $('.edit-tags').toggleClass('hidden');
+      $('.edit-tags').removeClass('hidden');
     }
     // console.log('category tags on change: ', $('#story_category_tags_').val());
   });
@@ -127,7 +129,7 @@ function storiesEditTagsHandlers () {
   // TODO: figure out how to reset select2 inputs
   // commented code results in error when attempting
   // to make changes after reset
-  $('#edit-tags-cancel').on('click', function (e) {
+  $(document).on('click', '#edit-tags-cancel', function (e) {
     e.preventDefault();
     // reset the select input values
     // $('.select2-selection__rendered').eq(0).html(categoryTagsOptions);
@@ -145,13 +147,13 @@ function storiesEditTagsHandlers () {
 function storiesEditNewContributorHandlers () {
 
   // separate 'shown' handler necessary for setting input focus
-  $('.modal').on('shown.bs.modal', function () {
+  $(document).on('shown.bs.modal', '.modal', function () {
     // the selector $('input:first') doesn't work for some reason
     $(this).find('#contributor_first_name').focus();
   });
 
   // reset new contributor modal form when the modal closes
-  $('#new-contributor-modal').on('hidden.bs.modal', function () {
+  $(document).on('hidden.bs.modal', '#new-contributor-modal', function () {
     // input elements to default values (first, last, email)
     $(this).find('form')[0].reset();
     // select2 inputs to default values (role, referred-by)
@@ -160,7 +162,7 @@ function storiesEditNewContributorHandlers () {
   });
 
   // blur buttons after they're clicked
-  $('#new-contributor-button').on('focus', function () {
+  $(document).on('focus', '#new-contributor-button', function () {
     var _this = $(this);
     window.setTimeout(function () {
       _this.blur();
@@ -175,7 +177,7 @@ function storiesEditResultsHandlers () {
     listens for input event instead of change event, as latter only fires after
     focus moves away from input field, while former fires after all edits
   */
-  $('#new-result').on('input', function () {
+  $(document).on('input', '#new-result', function () {
     if ($(this).val().length > 0)
       $(this).closest('form').find('button').prop('disabled', false);
     else
@@ -183,7 +185,7 @@ function storiesEditResultsHandlers () {
   });
 
    // delete a result
-  $('#results-list').on('click', '.delete-result', function () {
+  $(document).on('click', '.delete-result', function () {
     var $deleteButton = $(this);
     $.ajax({
       url: $deleteButton.data('action'),
@@ -199,7 +201,7 @@ function storiesEditResultsHandlers () {
 
 function storiesEditPromptsHandlers () {
 
-  $('#new-prompt').on('input', function () {
+  $(document).on('input', '#new-prompt', function () {
     if ($(this).val().length > 0)
       $(this).closest('form').find('button').prop('disabled', false);
     else
@@ -207,7 +209,7 @@ function storiesEditPromptsHandlers () {
   });
 
   // delete a prompt
-  $('#prompts-list').on('click', '.delete-prompt', function () {
+  $(document).on('click', '.delete-prompt', function () {
     var $deleteButton = $(this);
     $.ajax({
       url: $deleteButton.data('action'),
@@ -225,7 +227,7 @@ function storiesEditContributionsHandlers () {
   /*
    *  hide the email confirmation modal after sending
    */
-  $('#confirm-email-form').on('submit', function () {
+  $(document).on('submit', '#confirm-email-form', function () {
     $(this).closest('.modal-content').find('.modal-title')
                                      .addClass('hidden');
     $(this).closest('.modal-content').find('.progress')
@@ -235,7 +237,7 @@ function storiesEditContributionsHandlers () {
   /*
    *  on successful addition of linkedin profile to contributor card
   */
-  $(".contribution-cards").on("ajax:success", ".best_in_place[data-bip-attribute='linkedin_url']",
+  $(document).on("ajax:success", ".best_in_place[data-bip-attribute='linkedin_url']",
     function (event, data) {
       var linkedinUrl = $(this).text(),
           $card = $(this).closest('.contribution-card'),
@@ -250,7 +252,6 @@ function storiesEditContributionsHandlers () {
               "data-format='inline' data-related='false' " +
               "data-width='340'></script>" +
           "</div>");
-        IN.parse();
         initLinkedIn();
         $research.attr('href', linkedinUrl);
         $research.html("<i class='fa fa-linkedin-square bip-clickable-fa'>");
@@ -287,7 +288,6 @@ function storiesEditContributionsHandlers () {
               "data-format='inline' data-related='false' " +
               "data-width='340'></script>" +
           "</div>");
-        IN.parse();
         initLinkedIn();
       }
   });
@@ -295,7 +295,7 @@ function storiesEditContributionsHandlers () {
   /*
    *  only one accordion panel open at a time
   */
-  $('.accordion-toggle').on('click', function () {
+  $(document).on('click', '.accordion-toggle', function () {
     if ($(this).attr('href').match(/info/)) {
       var $readPanel = $(this).closest('.accordion')
                               .find("div.accordion-body[id*='submission']");
@@ -316,7 +316,7 @@ function storiesEditContributionsHandlers () {
     removes and replaces it with a clone of itself, with attributes updated
     as necessary
   */
-  $(".contribution-cards").on("ajax:success", ".best_in_place[data-bip-attribute='notes']",
+  $(document).on("ajax:success", ".best_in_place[data-bip-attribute='notes']",
     function (event, data) {
 
       var $_this = $(this), // the notes field that was modified
@@ -340,7 +340,7 @@ function storiesEditContributionsHandlers () {
   });
 
   // mirrors above function for phone field
-  $(".contribution-cards").on("ajax:success", ".best_in_place[data-bip-attribute='phone']",
+  $(document).on("ajax:success", ".best_in_place[data-bip-attribute='phone']",
     function (event, data) {
 
       var $_this = $(this), // the phone field that was modified
@@ -361,18 +361,56 @@ function storiesEditContributionsHandlers () {
             $newPhoneField.best_in_place();
           }
       });
+  });
+}
 
+function storiesEditContentEditorHandlers () {
+
+  var $storyContentEditor = $('#story-content-editor'),
+      $summernote = $storyContentEditor.next(),
+      $editor = $summernote.find('.note-editable'),
+      $saveButton = $("[type='submit'][form='story-content-form']"),
+      $formButtons = $("[form='story-content-form']"),
+      $toolbarButtons = $summernote.find('.note-toolbar > .note-btn-group > button, .note-toolbar > .note-btn-group > .note-btn-group > button');
+
+  $(document).on('click', '#edit-story-content', function () {
+    $(this).css({
+      'pointer-events': 'none',
+      color: '#e3e3e3'
+    });
+    $editor.attr('contenteditable', 'true')
+           .css({
+             'background-color': 'white',
+             'pointer-events': 'auto'
+           });
+    $toolbarButtons.css({
+                      'background-color': 'white',
+                      'pointer-events': 'auto'
+                    });
+    $formButtons.removeClass('hidden');
   });
 
+  // this function can be generalized and used elsewhere ...
+  // $('form').has('[data-provider="summernote"]').on('reset', function () {
+  $(document).one('reset', '#story-content-form', function () {
+    // revert to last saved content ...
+    $storyContentEditor.summernote('code', $storyContentEditor.text());
+    $saveButton.click();
+  });
+
+  $(document).on('click', '.note-view', function () {
+    if ($formButtons.prop('disabled')) {
+      $formButtons.prop('disabled', false);
+    } else {
+      $formButtons.prop('disabled', true);
+    }
+  });
 }
 
 function storiesEditInitContentEditor () {
 
   var $storyContentEditor = $('#story-content-editor'),
       $summernote = $storyContentEditor.next(),
-      $saveButton = $("[type='submit'][form='story-content-form']"),
-      $cancelButton = $("[type='reset'][form='story-content-form']"),
-      $formButtons = $("[form='story-content-form']"),
       $editor = $summernote.find('.note-editable'),
       $toolbarButtons = $summernote.find('.note-toolbar > .note-btn-group > button, .note-toolbar > .note-btn-group > .note-btn-group > button');
 
@@ -387,38 +425,5 @@ function storiesEditInitContentEditor () {
                   'background-color': '#f5f5f5',
                   'pointer-events': 'none'
                  });
-
-  $('#edit-story-content').on('click', function () {
-    $(this).css({
-      'pointer-events': 'none',
-      color: '#e3e3e3'
-    });
-    $editor.attr('contenteditable', 'true')
-           .css({
-            'background-color': 'white',
-            'pointer-events': 'auto'
-           });
-    $toolbarButtons.css({
-                      'background-color': 'white',
-                      'pointer-events': 'auto'
-                    });
-    $formButtons.removeClass('hidden');
-  });
-
-  $summernote.on('click', '.note-view', function () {
-    if ($formButtons.prop('disabled')) {
-      $formButtons.prop('disabled', false);
-    } else {
-      $formButtons.prop('disabled', true);
-    }
-  });
-
-  // this function can be generalized and used elsewhere ...
-  // $('form').has('[data-provider="summernote"]').on('reset', function () {
-  $('#story-content-form').on('reset', function () {
-    // revert to last saved content ...
-    $storyContentEditor.summernote('code', $storyContentEditor.text());
-    $saveButton.click();
-  });
 }
 

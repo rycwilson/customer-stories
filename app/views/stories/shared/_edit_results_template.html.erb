@@ -1,0 +1,35 @@
+
+<!-- Results -->
+<script type="text/template" id="results-template">
+  <div class="row">
+
+    <div class='modify-result'>
+      <div id="edit-story-result-{{= index }}"
+          style='position:absolute; right:55px; margin-top:-3px'>
+        <i class='glyphicon glyphicon-pencil bip-clickable'></i>
+      </div>
+
+      <div id="delete-story-result-{{= index }}" class="delete-result"
+          data-id="{{= result.id }}"
+          data-action="{{= baseUrl }}/stories/{{= storyId }}/results/{{= result.id }}"
+          style='position:absolute; right:20px; margin-top:-3px'>
+        <i class='glyphicon glyphicon-remove bip-clickable'></i>
+      </div>
+    </div>
+
+    <div id='story-result-{{= index }}' class="story-result col-sm-9">
+      <span data-bip-type="input" data-bip-attribute="description"
+            data-bip-activator="#edit-story-result-{{= index }}"
+            data-bip-html-attrs="{&quot;style&quot;:&quot;width:100%&quot;}"
+            data-bip-object="result"
+            data-bip-original-content="{{= result.description }}"
+            data-bip-url="/stories/{{= storyId }}/results/{{= result.id }}"
+            data-bip-value="{{= result.description }}"
+            class="best_in_place"
+            id="best_in_place_result_{{= result.id }}_description">
+        {{= result.description }}
+      </span>
+    </div>
+
+  </div> <br>
+</script>

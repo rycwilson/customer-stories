@@ -8,6 +8,7 @@ function attachStoriesHandlers () {
 }
 
 function storiesIndex () {
+
   var $categorySelect = $("[name='category_select']"),
       categorySlug = getQueryString('category'),
       $productSelect = $("[name='product_select']"),
@@ -22,22 +23,10 @@ function storiesIndex () {
                       isCurator: app.current_user &&
                                  app.current_user.is_curator })));
     // also make sure filters set to 'All'
+  } else {
+    // neither?
   }
-
   // selectBoxesTrackQueryString($categorySelect, categorySlug, $productSelect, productSlug);
-
-  // popstateHandler($categorySelect, $productSelect, storiesTemplate);
-
-  /*
-   *  Need to capture default filters (category=all, product=all)
-   *  in the history object in order to enable history navigation
-   *
-   *  Safari calls window.onpopstate on initial page load,
-   *  see function popstateHandler ()
-   */
-  // if (app.browser.isChrome || app.browser.isFirefox) {
-    // replacePageState($categorySelect, categorySlug, $productSelect, productSlug);
-  // }
 }
 
 function storiesShow () {
@@ -45,7 +34,6 @@ function storiesShow () {
 }
 
 function storiesEdit () {
-  storiesEditInitBIP();
   storiesEditInitContentEditor();
 }
 

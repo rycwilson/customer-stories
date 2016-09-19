@@ -41,12 +41,7 @@ window.app = window.app || {
           'edit': storiesEdit,
         })[action])();
       },
-      'contributions': function () {
-        (({
-          'show': storiesShow,
-          'edit': contributionsEdit,
-        })[action])();
-      },
+      'contributions': function () {},
       'profile': function () {
         (({
           'edit': profileEdit,

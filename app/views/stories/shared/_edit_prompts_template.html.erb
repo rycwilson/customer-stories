@@ -1,0 +1,35 @@
+
+<!-- Prompts -->
+<script type="text/template" id="prompts-template">
+  <div class="row">
+
+    <div class='modify-prompt'>
+      <div id="edit-story-prompt-{{= index }}"
+          style='position:absolute; right:55px; margin-top:-3px'>
+        <i class='glyphicon glyphicon-pencil bip-clickable'></i>
+      </div>
+
+      <div id="delete-story-prompt-{{= index }}" class="delete-prompt"
+          data-id="{{= prompt.id }}"
+          data-action="{{= baseUrl }}/prompts/{{= prompt.id }}"
+          style='position:absolute; right:20px; margin-top:-3px'>
+        <i class='glyphicon glyphicon-remove bip-clickable'></i>
+      </div>
+    </div>
+
+    <div id='story-prompt-{{= index }}' class="story-prompt col-sm-9">
+      <span data-bip-type="input" data-bip-attribute="description"
+            data-bip-activator="#edit-story-prompt-{{= index }}"
+            data-bip-html-attrs="{&quot;style&quot;:&quot;width:100%&quot;}"
+            data-bip-object="prompt"
+            data-bip-original-content="{{= prompt.description }}"
+            data-bip-url="/stories/{{= storyId }}?prompt_id={{= prompt.id }}"
+            data-bip-value="{{= prompt.description }}"
+            class="best_in_place"
+            id="best_in_place_prompt_{{= prompt.id }}_description">
+        {{= prompt.description }}
+      </span>
+    </div>
+
+  </div> <br>
+</script>

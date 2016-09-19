@@ -2,7 +2,7 @@
 
   var contributionsPreRequest = <%= raw @contributions_pre_request.to_json({ include: { contributor: {}, referrer: {}, success: { include: :customer } } }) %>,
       allContributors = <%= raw @contributors.to_json %>,
-       connections = <%= raw @contributions.to_json({ methods: :status_helper, include: { contributor: {}, referrer: {}, success: { include: :customer } } }) %>,
+       connections = <%= raw @contributions.to_json({ methods: :display_status, include: { contributor: {}, referrer: {}, success: { include: :customer } } }) %>,
          flashMesg = "<%= @flash_mesg %>",
        flashStatus = "<%= @flash_status %>",
           template = _.template($('#cc-template').html());
