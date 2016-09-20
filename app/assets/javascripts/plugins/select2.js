@@ -5,7 +5,7 @@
   Only one .select2() call per element will work, others ignored
 */
 function initSelect2 () {
-  console.log('init select2');
+
   $('.story-tags').select2({
     theme: 'bootstrap',
     placeholder: 'select tags'
@@ -83,7 +83,8 @@ function initSelect2 () {
   // restore last selected value
   // change the selected item, but avoid 'change' event
   $('select').each(function () {
-    if (preSelect = $(this).data('pre-select')) {
+    if ($(this).hasClass('stories-filter') &&
+        (preSelect = $(this).data('pre-select'))) {
       $(this).val(preSelect.toString()).trigger('change.select2');
     }
   });

@@ -48,12 +48,20 @@ function deconstructPlugins () {
   // Set the data attribute with vanilla js.  Data attributes set via jquery
   // do not persist across turbolinks visits (or don't persist for some unknown reason)
   // TODO: does this apply to *all* select2 boxes?
-  $('select').not('.switch-user-select').each(function () {
-    $(this)[0].setAttribute('data-pre-select', $(this).find(':selected').val());
+  $('select').each(function () {
+
+    if ($(this).hasClass('stories-filter')) {
+      $(this)[0].setAttribute('data-pre-select', $(this).find(':selected').val());
+    }
+
     $(this).select2('destroy');
+
   });
+
   $('.grid').masonry('destroy');
+
   $("[data-provider='summernote']").summernote('destroy');
+
   // $('.linkedin-widget span').remove();
 }
 

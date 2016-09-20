@@ -253,7 +253,6 @@ class Company < ActiveRecord::Base
     missing << "logo" unless self.logo_url.present?
     missing << "story_categories" unless self.story_categories.present?
     missing << "products" unless self.products.present?
-    binding.pry
     missing
   end
 
