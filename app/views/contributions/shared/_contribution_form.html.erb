@@ -6,20 +6,24 @@
       <div class="accordion-group">
 
         <div class="accordion-heading">
-          <p>Thank you for contributing to the success story. Here are some
-          <a class="accordion-toggle" data-toggle="collapse"
+          <p>Thank you for contributing to the success story. Here are some prompts to get you started:</p>
+<!--           <a class="accordion-toggle" data-toggle="collapse"
              data-parent="#accordion-guidance"
-             href="#collapse-guidance">helpful pointers</a></p>
+             href="#collapse-guidance">helpful pointers</a></p> -->
         </div>
 
-        <div id="collapse-guidance" class="accordion-body collapse">
-          <div class="accordion-inner">
+<!--         <div id="collapse-guidance" class="accordion-body collapse">
+          <div class="accordion-inner"> -->
+          <ul class=''>
             <% @prompts.each do |prompt|  %>
-              <i class="icon-li fa fa-hand-o-right"></i>&nbsp;
-              <%= prompt.description %> <br>
+            <li>
+              <i class="icon-li"></i>&nbsp;
+              <%= prompt.description %>
+            </li>
             <% end %>
-          </div> <br>
-        </div>
+          </ul>
+    <!--       </div> <br>
+        </div> -->
 
       </div>  <!-- accordian-group -->
     </div>  <!-- accordian -->
