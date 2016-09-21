@@ -139,10 +139,10 @@
 
           <h3><%= @story.title %></h3>
 
-          <div class="story-text visible-md-block visible-lg-block">
+          <div class="visible-md-block visible-lg-block">
             <%= simple_format @story.content %>
           </div>
-          <div class="story-text hidden-md hidden-lg">
+          <div class="hidden-md hidden-lg">
             <%= simple_format @story.content %>
           </div>
 
@@ -151,7 +151,7 @@
 
       <div class='col-sm-6 col-md-5'>
 
-        <div id='story-results' class="well story-text">
+        <div id='story-results' class="well">
           <h3 class='text-center'>Results</h3>
           <% @story.success.results.each do |result| %>
           <div class="row">
