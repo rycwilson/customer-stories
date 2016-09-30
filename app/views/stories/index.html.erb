@@ -2,47 +2,10 @@
 <% content_for :head do %>
 
   <meta name="turbolinks-cache-control" content="no-cache">
-
-  <!-- underscore template -->
-  <script type="text/template" id="stories-template">
-
-    {{ stories.forEach(function (story) { }}
-
-      <div class="grid-item thumbnail
-            {{= !isCurator && !story.published ? 'no-caption' : '' }}">
-
-        <a href="{{= (story.published && story.csp_story_path) || (isCurator && '/stories/' + story.id + '/edit') || 'javascript:;' }}">
-          {{ if (story.success.customer.logo_url) { }}
-            <img src="{{= story.success.customer.logo_url }}">
-          {{ } else { }}
-            <img src="<%= asset_path('company-logo-missing.png') %>">
-          {{ } }}
-        </a>
-
-        {{ if (story.published) { }}
-
-          <div class="caption"
-            style="background-color:<%= @company.nav_color_1 %>;
-                   color:<%= @company.nav_text_color %>;}}">
-            Read story
-          </div>
-
-        {{ } else if (isCurator) { }}
-
-          <div class="caption" style="background-color:#f5f5f5">
-            {{= story.logo_published ? 'Logo published' : 'Pending curation' }}
-          </div>
-
-        {{ } }}
-
-      </div>
-
-    {{ }); }}
-  </script>
+  <%= render 'stories/shared/stories_index_template' %>
+  <%= render 'stories/shared/stories_index_meta_tags', { company: @company } %>
 
 <% end %>
-
-<%= render 'stories/shared/story_index_meta_tags', { company: @company } %>
 
 <!-- <div id='wrapper'> -->
 
@@ -82,21 +45,22 @@
 
             <% @stories.each do |story| %>
 
-              <div class="grid-item thumbnail
-                   <%= !@is_curator && !story.published ? 'no-caption' : '' %>">
+              <a href="<%= grid_item_link(@company.id, story) %>"
+                 style="<%= !@is_curator && !story.published ? 'pointer-events:none' : ''%>">
+                <div class="grid-item thumbnail
+                     <%= !@is_curator && !story.published ? 'no-caption' : '' %>">
 
-                <a href="<%= grid_item_link(@company.id, story) %>">
-                  <img src="<%= story.success.customer.logo_url || asset_path('company-logo-missing.png') %>">
-                </a>
+                    <img src="<%= story.success.customer.logo_url || asset_path('company-logo-missing.png') %>">
 
-                <% if @is_curator || story.logo_published? %>
-                  <div class="caption"
-                      style="<%= grid_item_caption_style(@company, story) %>">
-                    <%= grid_item_caption_text(@company.id, story) %>
-                  </div>
-                <% end %>
+                  <% if @is_curator || story.logo_published? %>
+                    <div class="caption"
+                        style="<%= grid_item_caption_style(@company, story) %>">
+                      <%= grid_item_caption_text(@company.id, story) %>
+                    </div>
+                  <% end %>
 
-              </div>
+                </div>
+              </a>
 
             <% end %>
 

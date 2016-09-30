@@ -30,11 +30,13 @@
                 <% elsif current_user.company_id.blank? %>
                   <span style='font-size:14px'>
                     Want your LinkedIn profile to appear in a Customer Story?&nbsp;&nbsp;
-                    <%= link_to "Connect to LinkedIn", "/auth/linkedin" %>
+                    <%= link_to "Connect to LinkedIn", linkedin_connect_no_company_path,
+                        data: { turbolinks: false } %>
                   </span>
                 <% else %>
-                  <%= link_to "Connect to LinkedIn", "/auth/linkedin",
-                      class: 'btn btn-default',
+                  <%= link_to "Connect to LinkedIn", linkedin_connect_path,
+                      class: 'linkedin-connect btn btn-default',
+                      data: { turbolinks: false },
                       style: 'background-color: #2672ae; color: white' %>
                 <% end %>
 

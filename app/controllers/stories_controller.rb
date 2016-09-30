@@ -26,12 +26,15 @@ class StoriesController < ApplicationController
       @stories = @company.filter_stories_by_tag(get_filter_params_from_query(params), @is_curator)
       @category_pre_selected_options = [StoryCategory.friendly.find(params[:category]).id] if params[:category]
       @product_pre_selected_options = [Product.friendly.find(params[:product]).id] if params[:product]
-    elsif cookies['csp_init']
+    elsif cookies[:csp_init]
       @stories = []
     elsif @is_curator
       @stories = @company.all_stories
+      # TODO: set this cookie more broadly throughout app
+      cookies[:csp_init] = { value: true, expires: 1.hour.from_now }
     else  # public reader
       @stories = @company.public_stories
+      cookies[:csp_init] = { value: true, expires: 1.hour.from_now }
     end
   end
 
@@ -215,18 +218,24 @@ class StoriesController < ApplicationController
     end
   end
 
+    # .where(contributions: { linkedin: true,
+    #                       status: 'contribution' },
   def set_contributors
+    curator = @story.success.curator
     @contributors =
         User.joins(own_contributions: { success: {} })
-            .where(contributions: { linkedin: true },
-                       successes: { id: @story.success_id })
+            .where.not(linkedin_url:'')
+            .where(successes: { id: @story.success_id })
             .order("CASE contributions.role
                       WHEN 'customer' THEN '1'
                       WHEN 'partner' THEN '2'
                       WHEN 'sales' THEN '3'
                     END")
-    # add the curator if he hasn't already been added ...
-    @contributors << @story.success.curator unless @contributors.any? { |c| c.email == @story.success.curator.email }
+            .to_a
+            .delete_if { |c| c.id == curator.id } # remove the contributor;
+                                                  # he goes at the end
+    @contributors << curator unless curator.linkedin_url.blank?
+    @contributors
   end
 
   # new customers can be created on new story creation

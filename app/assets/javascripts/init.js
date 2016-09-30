@@ -32,7 +32,6 @@ window.app = window.app || {
         })[action])();
       },
       'stories': function () {
-
         app.betaFeatures();
 
         (({
@@ -45,6 +44,7 @@ window.app = window.app || {
       'profile': function () {
         (({
           'edit': profileEdit,
+          'linkedin_callback': profileEdit
         })[action])();
       },
       // no js for these controllers, but must be listed here ...

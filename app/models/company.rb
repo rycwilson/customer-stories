@@ -142,7 +142,7 @@ class Company < ActiveRecord::Base
         .company_all(self.id)
         .to_json({
           only: [:id, :published, :logo_published, :publish_date, :updated_at],
-          methods: [:csp_story_path],
+          methods: [:csp_story_path, :published_contributors],
           include: {
             success: {
               only: [],

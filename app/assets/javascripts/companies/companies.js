@@ -22,7 +22,6 @@ function companiesNew () {
 }
 
 function companiesShow () {
-  initTemplateEditor();
   adjustPromoCSSChecker();
 }
 

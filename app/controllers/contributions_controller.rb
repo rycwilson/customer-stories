@@ -96,12 +96,17 @@ class ContributionsController < ApplicationController
       @contribution.update linkedin: params[:linkedin_include_profile]
       respond_to { |format| format.json { head :ok } }
     else
-      # response to contribution request email
+      # contribution submission
       @contribution.submitted_at = Time.now
       if @contribution.update contribution_params
         UserMailer.alert_contribution_update(@contribution).deliver_now
         if @contribution.linkedin? && @contribution.contributor.linkedin_url.blank?
-          redirect_to "/auth/linkedin?contribution=#{@contribution.id}"
+          redirect_to url_for({  # remove the subdomain to avoid csp authentication
+                        subdomain: nil,
+                        controller: 'profile',
+                        action: 'linkedin_connect',
+                        params: { contribution_id: @contribution.id }
+                      })
         else
           redirect_to confirm_contribution_path(@contribution)
         end
@@ -149,7 +154,6 @@ class ContributionsController < ApplicationController
                        status: 'pre_request',
                  access_token: SecureRandom.hex )
   end
-
 
   def check_opt_out_list
     # contributor email depends on the action (create or update)

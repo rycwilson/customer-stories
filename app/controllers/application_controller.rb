@@ -24,12 +24,11 @@ class ApplicationController < ActionController::Base
                         name: current_user.full_name,
                         email: current_user.email,
                         is_curator: is_curator } : nil,
-        stories: company.present? ? company.all_stories_json : nil
+        stories: company.present? ? company.all_stories_json : nil,
       })
-      cookies[:csp_init] = { value: true, expires: 1.hour.from_now }
     else
       # This shouldn't be necessary.  If nothing is pushed, gon should be empty!
-      # Somehow setting a binding.pry at the location (without the code below)
+      # Somehow setting a binding.pry at this location (without the code below)
       # results in gon = {} on client.  But as soon as it's removed, gon is
       # populated with data on client, despite nothing being pushed.
       # Just be explicit:
@@ -50,8 +49,10 @@ class ApplicationController < ActionController::Base
         if (params[:controller] == 'stories' && (['index', 'show'].include? params[:action])) ||
             params[:controller] == 'contributions'
           true
-        else
-          redirect_to(File.join(root_url(host: request.domain), request.path))
+        else # strip the subdomain
+          redirect_to url_for({ subdomain: nil,
+                                controller: params[:controller],
+                                action: params[:action] })
         end
       end
     elsif user_subdomain == request.subdomain  # all good
@@ -61,8 +62,18 @@ class ApplicationController < ActionController::Base
           (['index', 'store_front'].include? params[:action])
       # logged in, navigating to store front
       true
-    else  # wrong subdomain, re-direct
-      redirect_to File.join(root_url(host: user_subdomain + '.' + request.domain), request.path)
+    else  # re-direction required
+      if params[:action] == 'linkedin_callback'
+         # linkedin_callback won't have subdomain, insert it and include params
+        redirect_to url_for({ subdomain: user_subdomain,
+                              controller: params[:controller],
+                              action: params[:action],
+                              params: request.params })
+      else
+        redirect_to url_for({ subdomain: user_subdomain,
+                              controller: params[:controller],
+                              action: params[:action] })
+      end
     end
   end
 
@@ -78,8 +89,12 @@ class ApplicationController < ActionController::Base
   def after_sign_in_path_for resource
     if resource.class.name == 'User'
       if resource.company_id.present?  # returning users
-        root = root_url(host: resource.company.subdomain + '.' + request.domain)
-        File.join(root, company_path(resource.company_id))
+        url_for({
+            subdomain: resource.company.subdomain,
+            controller: '/companies',
+            action: 'show',
+            id: resource.company.id
+          })
       else
         edit_profile_no_company_path
       end
@@ -90,7 +105,7 @@ class ApplicationController < ActionController::Base
 
   # removes the subdomain from the url upon signing out
   def after_sign_out_path_for resource
-    root_url(host: request.domain)
+    url_for({ subdomain: nil, controller: '/site', action: 'index' })
   end
 
   def invalid_subdomain?

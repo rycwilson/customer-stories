@@ -1,5 +1,6 @@
 
 //= require ./index
+//= require ./show
 //= require ./edit
 
 function attachStoriesHandlers () {
@@ -18,24 +19,33 @@ function storiesIndex () {
       $gallery = $('#stories-gallery');
 
   if ($gallery.children().length === 0 && app.stories) {
-    updateGallery($(storiesTemplate({
-                      stories: app.stories,
-                      isCurator: app.current_user &&
-                                 app.current_user.is_curator })));
+
+    if (app.current_user.is_curator) {
+      updateGallery(
+        $(storiesTemplate({ stories: app.stories, isCurator: true }) ));
+    } else {
+      updateGallery(
+        $(storiesTemplate({
+            stories: app.stories.filter(function (story) {
+                       return story.logo_published; }),
+            isCurator: false }) ));
+    }
     // also make sure filters set to 'All'
   } else {
     // neither?
   }
+
   // selectBoxesTrackQueryString($categorySelect, categorySlug, $productSelect, productSlug);
 }
 
 function storiesShow () {
   loadVideoThumbnail();
+  widgetsMonitor();
 }
 
 function storiesEdit () {
-  storiesEditInitContentEditor();
 }
+
 
 
 

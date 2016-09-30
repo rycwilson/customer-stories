@@ -128,7 +128,6 @@ GEM
       posix-spawn (~> 0.3.6)
     haml (4.0.7)
       tilt
-    hashie (3.4.4)
     hirb (0.7.3)
     html_to_plain_text (1.0.5)
       nokogiri (>= 1.4.0)
@@ -161,15 +160,6 @@ GEM
     nokogiri (1.6.8)
       mini_portile2 (~> 2.1.0)
       pkg-config (~> 1.1.7)
-    oauth (0.5.1)
-    omniauth (1.3.1)
-      hashie (>= 1.2, < 4)
-      rack (>= 1.0, < 3)
-    omniauth-linkedin (0.2.0)
-      omniauth-oauth (~> 1.0)
-    omniauth-oauth (1.1.0)
-      oauth
-      omniauth (~> 1.0)
     orm_adapter (0.5.0)
     paperclip (4.3.7)
       activemodel (>= 3.2.0)
@@ -324,8 +314,6 @@ DEPENDENCIES
   jazz_hands!
   jquery-minicolors-rails
   multi_json
-  omniauth
-  omniauth-linkedin
   paperclip (~> 4.3)
   pg
   pry-byebug

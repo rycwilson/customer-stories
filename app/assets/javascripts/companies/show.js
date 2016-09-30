@@ -4,10 +4,6 @@ function companiesShowHandlers () {
   newStoryModalHandlers();
 }
 
-function initTemplateEditor () {
-  $('.note-editable').attr('contenteditable', 'false');
-}
-
 function activityFeedHandlers () {
   $(document)
     .on('click', '#activity-feed-btn', function (e) {
@@ -129,6 +125,15 @@ function activityFeedHandlers () {
 }
 
 function newStoryModalHandlers() {
+
+  // jquery-ujs functionality gets lost after turbolinks navigation,
+  // so handle it manually ... (limited to modals?)
+  $(document).on('click', '#new-story-modal input[type="submit"]',
+    function (event) {
+      event.preventDefault();
+      $.rails.handleRemote($('#new-story-modal form'));
+    });
+
   /*
     Detect changes in new story modal required inputs, and enable
     submit button accordingly.

@@ -1,6 +1,10 @@
 
 function storiesIndexHandlers () {
 
+  $(document).on('layoutComplete', '.grid', function () {
+    centerLogos();
+  });
+
   $(document).on('change', '.stories-filter', function () {
 
     var $categorySelect = $("[name='category_select']"),
@@ -21,17 +25,35 @@ function storiesIndexHandlers () {
 }
 
 function filterStories (filterTag, filterId) {
-  if (filterId === '0') { return app.stories; }  // all stories
+  if (filterId === '0') {  // all stories
+    return app.current_user.is_curator ? app.stories :
+           app.stories.filter(function (story) { return story.logo_published; });
+  }
   return app.stories.filter(function (story, index) {
     if (filterTag === 'category') {
-      return story.success.story_categories.some(function (category) {
-        // loosely typed because former is string, latter is number ...
-        return category.id == filterId;
-      });
+      if (app.current_user.is_curator) {
+        return story.success.story_categories.some(function (category) {
+          // loosely typed because former is string, latter is number ...
+          return category.id == filterId;
+        });
+      } else {
+        return story.logo_published &&
+          story.success.story_categories.some(function (category) {
+            // loosely typed because former is string, latter is number ...
+            return category.id == filterId;
+          });
+      }
     } else if (filterTag === 'product') {
-      return story.success.products.some(function (product) {
-        return product.id == filterId;
-      });
+      if (app.current_user.is_curator) {
+        return story.success.products.some(function (product) {
+          return product.id == filterId;
+        });
+      } else {
+        return story.logo_published &&
+          story.success.products.some(function (product) {
+            return product.id == filterId;
+          });
+      }
     } else {
       // TODO: error
     }
@@ -82,14 +104,11 @@ function updateGallery ($stories) {
 
 function replaceStateStoriesIndex (filterTag, filterId, filterSlug) {
   if (filterId === '0') {  // all
-    console.log('replacing state - all');
     history.replaceState({ turbolinks: true, filter: { tag: 'all', id: '0' } }, null, '/');
   } else if (filterTag === 'category') {
-    console.log('replacing state - category');
     history.replaceState({ turbolinks: true, filter: { tag: 'category', id: filterId } },
                         null, '/?category=' + filterSlug);
   } else if (filterTag === 'product') {
-    console.log('replacing state - product');
     history.replaceState({ turbolinks: true, filter: { tag: 'product', id: filterId } },
                         null, '/?product=' + filterSlug);
   } else {
@@ -97,17 +116,6 @@ function replaceStateStoriesIndex (filterTag, filterId, filterSlug) {
   }
 }
 
-// function replacePageState ($categorySelect, categorySlug, $productSelect, productSlug) {
-//   var filterTag = categorySlug ? 'category' : (productSlug ? 'product' : 'all'),
-//       filterId = categorySlug ?
-//           $categorySelect.find("option[data-slug='" + categorySlug + "']")
-//                          .val() :
-//           (productSlug ? $productSelect.find("option[data-slug='" + productSlug + "']")
-//                                        .val() : '0');
-//   // don't overwrite history.state.turbolinks
-//   $.extend(history.state, { filter: { tag: filterTag, id: filterId }});
-
-// }
 
 //
 // With { turbolinks: true } in all calls to history.pushState(),

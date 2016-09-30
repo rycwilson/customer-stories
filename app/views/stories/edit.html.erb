@@ -1,12 +1,13 @@
 
 <% content_for :head do %>
+  <!-- turbolinks caching problematic with linkedin widgets  -->
+  <meta name="turbolinks-cache-control" content="no-cache">
   <%= render 'stories/shared/contribution_cards_template' %>
   <%= render 'stories/shared/edit_prompts_template' %>
   <%= render 'stories/shared/edit_results_template' %>
 <% end %>
 
 <%= render 'stories/shared/new_contributor_modal' %>
-
 <%= render 'stories/shared/email_confirmation_modal' %>
 
 <div class="wrapper">

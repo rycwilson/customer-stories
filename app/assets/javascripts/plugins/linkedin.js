@@ -8,7 +8,9 @@ function initLinkedIn () {
   }
 
   if (typeof(IN) !== 'object') {
-    $.getScript('//platform.linkedin.com/in.js');  // it will parse independently when loaded
+    $.getScript('//platform.linkedin.com/in.js', function () {
+      // do linkedin stuff
+    });
   } else {
     IN.parse();
   }
@@ -21,11 +23,3 @@ function initLinkedIn () {
   }, 1000);
 
 }
-
-// function initEmbedly () {
-//   if (typeof(embedly) !== 'function') {
-//     $.getScript('//cdn.embedly.com/widgets/platform.js');
-//   } else {
-
-//   }
-// }

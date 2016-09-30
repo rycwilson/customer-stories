@@ -15,8 +15,6 @@ class Story < ActiveRecord::Base
     .where(logo_published: true)
   }
 
-
-
   # Note: no explicit association to friendly_id_slugs, but it's there
   # Story has many friendly_id_slugs -> captures history of slug changes
 
@@ -160,12 +158,45 @@ class Story < ActiveRecord::Base
     end
   end
 
-  # not currently used, maybe include with json api
+  # this method closely resembles the 'set_contributors' method in stories controller;
+  # adds contributor linkedin data, which may be necessary client-side for widgets
+  # that fail to load
+
+        # .where(contributions: { linkedin: true,
+        #                         status: 'contribution' },
+        #        successes: { id: self.success_id })
   def published_contributors
-    return nil unless self.published?
-    self.success.contributions
-        .select { |contribution| contribution.status == 'contribution' && contribution.linkedin? }
-        .map { |contribution| { linkedin_url: contribution.contributor.linkedin_url } }
+    curator = self.success.curator
+    contributors =
+      User.joins(own_contributions: { success: {} })
+          .where.not(linkedin_url:'')
+          .where(successes: { id: self.success_id })
+          .order("CASE contributions.role
+                    WHEN 'customer' THEN '1'
+                    WHEN 'partner' THEN '2'
+                    WHEN 'sales' THEN '3'
+                  END")
+          .map do |contributor|
+             { widget_loaded: false,
+               id: contributor.id,
+               first_name: contributor.first_name,
+               last_name: contributor.last_name,
+               linkedin_url: contributor.linkedin_url,
+               linkedin_photo_url: contributor.linkedin_photo_url,
+               linkedin_title: contributor.linkedin_title,
+               linkedin_company: contributor.linkedin_company,
+               linkedin_location: contributor.linkedin_location }
+           end
+    contributors.delete_if { |c| c[:id] == curator.id }
+    # don't need the id anymore, don't want to send it to client ...
+    contributors.map! { |c| c.except(:id) }
+    if curator.linkedin_url.present?
+      contributors.push({ widget_loaded: false }
+                  .merge(self.success.curator.slice(
+                    :first_name, :last_name, :linkedin_url, :linkedin_photo_url,
+                    :linkedin_title, :linkedin_company, :linkedin_location )))
+    end
+    contributors
   end
 
   # not currently used, maybe include with json api

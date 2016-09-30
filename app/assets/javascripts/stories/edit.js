@@ -65,11 +65,11 @@ function storiesEditSettingsHandlers () {
 
 function storiesEditVideoHandlers () {
 
-  var videoPlaceholderText = "Video URL (YouTube, Vimeo, or Wistia)";
 
   $(document).on("ajax:success", ".best_in_place[data-bip-attribute='embed_url']",
     function (event, data) {
-      var newUrl = JSON.parse(data).embed_url,
+      var videoPlaceholderText = "Video URL (YouTube, Vimeo, or Wistia)",
+          newUrl = JSON.parse(data).embed_url,
           $newVideo = null;
 
       if (!newUrl) {
@@ -224,6 +224,16 @@ function storiesEditPromptsHandlers () {
 }
 
 function storiesEditContributionsHandlers () {
+
+  // remote form doesn't submit after a turbolinks visit, so do it manually;
+  // problem  appears limited to modal (other remote forms submit ok after Turbolinks visit)
+  // note: but email confirmation works ok??
+  $(document).on('click', '#new-contributor-modal input[type="submit"]',
+    function (event) {
+      event.preventDefault();
+      $.rails.handleRemote($('#new-contributor-modal form'));
+    });
+
   /*
    *  hide the email confirmation modal after sending
    */
@@ -366,14 +376,13 @@ function storiesEditContributionsHandlers () {
 
 function storiesEditContentEditorHandlers () {
 
-  var $storyContentEditor = $('#story-content-editor'),
-      $summernote = $storyContentEditor.next(),
-      $editor = $summernote.find('.note-editable'),
-      $saveButton = $("[type='submit'][form='story-content-form']"),
-      $formButtons = $("[form='story-content-form']"),
-      $toolbarButtons = $summernote.find('.note-toolbar > .note-btn-group > button, .note-toolbar > .note-btn-group > .note-btn-group > button');
-
   $(document).on('click', '#edit-story-content', function () {
+    var $storyContentEditor = $('#story-content-editor'),
+        $summernote = $storyContentEditor.next(),
+        $editor = $summernote.find('.note-editable'),
+        $saveButton = $("[type='submit'][form='story-content-form']"),
+        $formButtons = $("[form='story-content-form']"),
+        $toolbarButtons = $summernote.find('.note-toolbar > .note-btn-group > button, .note-toolbar > .note-btn-group > .note-btn-group > button');
     $(this).css({
       'pointer-events': 'none',
       color: '#e3e3e3'
@@ -392,13 +401,16 @@ function storiesEditContentEditorHandlers () {
 
   // this function can be generalized and used elsewhere ...
   // $('form').has('[data-provider="summernote"]').on('reset', function () {
-  $(document).one('reset', '#story-content-form', function () {
+  $(document).on('reset', '#story-content-form', function () {
     // revert to last saved content ...
+    var $storyContentEditor = $('#story-content-editor'),
+        $saveButton = $("[type='submit'][form='story-content-form']");
     $storyContentEditor.summernote('code', $storyContentEditor.text());
     $saveButton.click();
   });
 
   $(document).on('click', '.note-view', function () {
+    var $formButtons = $("[form='story-content-form']");
     if ($formButtons.prop('disabled')) {
       $formButtons.prop('disabled', false);
     } else {
@@ -407,23 +419,4 @@ function storiesEditContentEditorHandlers () {
   });
 }
 
-function storiesEditInitContentEditor () {
-
-  var $storyContentEditor = $('#story-content-editor'),
-      $summernote = $storyContentEditor.next(),
-      $editor = $summernote.find('.note-editable'),
-      $toolbarButtons = $summernote.find('.note-toolbar > .note-btn-group > button, .note-toolbar > .note-btn-group > .note-btn-group > button');
-
-  // disable the editor until edit button is clicked
-  $editor.attr('contenteditable', 'false')
-         .css({
-          'background-color': '#f5f5f5',
-          'pointer-events': 'none'
-         });
-
-  $toolbarButtons.css({
-                  'background-color': '#f5f5f5',
-                  'pointer-events': 'none'
-                 });
-}
 

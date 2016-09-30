@@ -1,10 +1,22 @@
 INDUSTRIES = ['Education', 'Government', 'Financial Services', 'Healthcare', 'Hospitality', 'Manufacturing', 'Media and Entertainment', 'Service Provider', 'Technology', 'IT', 'Telecommunications'];
 
+# the parameters can be hard-coded here because this will be used in a simple re-direct
+LINKEDIN_AUTHORIZE_BASE_URL = "https://www.linkedin.com/oauth/v2/authorization?\
+                               client_id=#{ENV['LINKEDIN_KEY']}&\
+                               response_type=code&\
+                               scope=r_basicprofile&\
+                               state=#{ENV['LINKEDIN_STATE']}&".gsub(/\s+/, '')
+                               # redirect_uri=  included by profile/contributions controller
+
+# the parameters must be defined in the typhoeus request (see profile controller)
+LINKEDIN_GETTOKEN_BASE_URL = "https://www.linkedin.com/oauth/v2/accessToken"
+LINKEDIN_PEOPLE_BASE_URL = "https://api.linkedin.com/v1/people/~"
+
 LINKEDIN_SHARE_URL = "//www.linkedin.com/shareArticle?mini=true&url="
 TWITTER_SHARE_URL = "//twitter.com/share?url="
 FACEBOOK_SHARE_URL = "//www.facebook.com/sharer.php?u="
 
-EMBEDLY_API_BASE_URL = "https://api.embedly.com/1/oembed/key=#{}"
+# EMBEDLY_API_BASE_URL = "https://api.embedly.com/1/oembed/key=#{}"
 
 GETCLICKY_API_BASE_URL = "http://api.clicky.com/api/stats/4"
 GETCLICKY_TRACKING_URL = "http://in.getclicky.com/in.php"

@@ -21,13 +21,16 @@ function centerLogos () {
     var height = $(this).outerHeight(),
         maxHeight = parseInt($(this).css('max-height')),
         diff = maxHeight - height;
-    if (diff) {
+
+    // prevent repeat executions of this code by checking 'data-modified' attribute
+    if (diff && !$(this).data('modified')) {
       // if there is no caption for the thumbnail, there is already a
       // margin-top to compensate for this ...
       // factor this in ...
       var newMarginTop = (diff / 2) + parseInt($(this).css('margin-top'), 10);
       $(this).css('margin-top', newMarginTop);
       $(this).css('margin-bottom', diff / 2);
+      $(this).data('modified', true);
     }
   });
 }
