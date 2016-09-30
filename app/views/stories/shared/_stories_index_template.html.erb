@@ -3,7 +3,8 @@
 
     {{ stories.forEach(function (story) { }}
 
-      <a href="{{= (story.published && story.csp_story_path) || (isCurator && '/stories/' + story.id + '/edit') || 'javascript:;' }}">
+      <a href="{{= (story.published && story.csp_story_path) || (isCurator && '/stories/' + story.id + '/edit') || 'javascript:;' }}"
+         style="{{= !isCurator && !story.published ? 'pointer-events:none' : '' }}">
         <div class="grid-item thumbnail
               {{= !isCurator && !story.published ? 'no-caption' : '' }}">
 
