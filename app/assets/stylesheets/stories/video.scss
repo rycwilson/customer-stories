@@ -1,0 +1,51 @@
+
+.stories.show, .stories.edit {
+
+  // ref: http://www.labnol.org/internet/light-youtube-embeds/27941/
+  .video-thumb-container {
+    // width: 100%; /* assuming that the video has a 16:9 ratio */
+    padding-bottom: 56.25%;  // ??  but apparently necessary
+    overflow: hidden;
+    position: relative;
+    cursor: hand;
+    cursor: pointer;
+    // display: block;
+  }
+
+  .video-thumb {
+    position: absolute;
+    top:0; right:0; bottom:0; left:0;
+    margin: auto;
+    width: 100%;
+    // display: block;
+  }
+
+  .play-button {
+    width: 70px;
+    height: 45px;
+    background-color: rgba(0,0,0,0.6);
+    border-radius: 4px;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
+
+  .fa-play {
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    -moz-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    -o-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+  }
+
+}

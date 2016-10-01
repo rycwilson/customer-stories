@@ -1,0 +1,174 @@
+
+.sub-widget-wrapper {
+  position: relative;
+  background: #fff;
+  zoom: 1;
+  line-height: 1.2;
+  color: #000;
+  text-align: left;
+  display: inline-block;
+
+  html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-weight: inherit;
+    font-style: inherit;
+    font-size: 100%;
+    font-family: sans-serif;
+    vertical-align: baseline;
+  }
+
+  a {
+    text-decoration: none;
+    color: #069;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+
+  img.photo {
+    display: block;
+    padding: 2px;
+    border: 1px solid #e6e6e6;
+  }
+
+  .container-outer {
+    border: 1px solid #ededed;
+    padding: 1px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+
+    .li-profile-container {
+      background: #ededed;
+      display: block;
+      font-size: 13px;
+      padding: 5px;
+      zoom: 1;
+      -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+      border-radius: 5px;
+
+      .li-profile-card {
+        background: #fff;
+        border: 1px solid #ccc;
+        font-style: normal;
+        padding: 10px;
+        zoom: 1;
+        -webkit-box-shadow: 1px 1px 5px #cccccc;
+        -moz-box-shadow: 1px 1px 5px #cccccc;
+        box-shadow: 1px 1px 5px #cccccc;
+        .member-info {
+          margin: 4px 0 0 0;
+          width: 70%;
+          float: left;
+          h1.url {
+            vertical-align: middle;
+          }
+        }
+        .member-photo {
+          position: relative;
+          border: 2px solid #e5e5e5;
+          padding: 0;
+          float: right;
+          .photo {
+            border: 0;
+            padding: 0;
+          }
+        }
+        .mark {
+          position: absolute;
+          right: 0;
+          bottom: 0;
+        }
+        .ie-filter-fix {
+          position: relative;
+        }
+        h1 {
+          font-size: 20px;
+          font-weight: bold;
+          margin: 2px 0;
+          color: #0079AB;
+        }
+        .locality, .title {
+          display: block;
+          margin-top: 2px;
+          color: #666;
+        }
+        .widget-actions {
+          clear: both;
+          margin-top: 10px;
+        }
+      }
+
+      .li-profile-card:after {
+        content: ".";
+        display: block;
+        height: 0;
+        clear: both;
+        visibility: hidden;
+      }
+
+      .mark {
+        background: url('https://static.licdn.com/scds/common/u/img/sprite/sprite_connect_v13.png') -92px -42px no-repeat;
+        display: inline-block;
+        _display: inline;
+        height: 14px;
+        width: 14px;
+        vertical-align: middle;
+        padding-top: 2px;
+        zoom: 1;
+      }
+
+      p {
+        margin: 5px 0;
+        font-size: 12px;
+      }
+    }
+  }
+
+  a.btn-ternary {
+    display: inline-block !important;
+  }
+
+  a.btn-ternary:hover {
+    text-decoration: none !important;
+  }
+
+  .btn-ternary {
+    background: #CDE5F0;
+    background: -moz-linear-gradient(top, #eef7fa 0, #eef7fa 1px, #dcedf5 1px, #cde5f0 100%);
+    background: -o-linear-gradient(top, #eef7fa 0, #eef7fa 1px, #dcedf5 1px, #cde5f0 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #eef7fa), color-stop(5%, #eef7fa), color-stop(5%, #dcedf5), color-stop(100%, #cde5f0));
+    background: linear-gradient(top, #eef7fa 0%,#eef7fa 1px,#dcedf5 1px,#cde5f0 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#DCEDF5', endColorstr='#CDE5F0',GradientType=0 );
+    border-color: #a3cfe4;
+    color: #069 !important;
+    border-width: 1px;
+    border-style: solid;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 1.35;
+    margin: 0;
+    overflow: visible;
+    padding: 3px 10px 2px;
+    text-decoration: none !important;
+    vertical-align: top;
+    width: auto;
+  }
+
+  .btn-ternary:hover {
+    background: #AED6E9;
+    background: -moz-linear-gradient(top, #e2f2f9 0, #e2f2f9 1px, #c3e5f2 1px, #aed6e9 100%);
+    background: -o-linear-gradient(top, #e2f2f9 0, #e2f2f9 1px, #c3e5f2 1px, #aed6e9 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #e2f2f9), color-stop(5%, #e2f2f9), color-stop(5%, #c3e5f2), color-stop(100%, #aed6e9));
+    background: linear-gradient(top, #e2f2f9 0%,#e2f2f9 1px,#c3e5f2 1px,#aed6e9 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#C3E5F2', endColorstr='#AED6E9',GradientType=0 );
+    border-color: #64b0d4;
+  }
+
+}
