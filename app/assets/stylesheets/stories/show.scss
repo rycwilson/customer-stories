@@ -197,6 +197,9 @@
   #story-testimonial-col {
     margin: 0 0 10px 0;
   }
+  #story-testimonial-col.no-video {
+    margin-top: 8px;
+  }
   #story-video-col {
     margin: 0 0 10px 0;
   }
@@ -228,6 +231,9 @@
   #story-testimonial-col {
     margin: 10px 0 10px 0;
   }
+  #story-testimonial-col.no-video {
+    margin: 25px 0 18px 0;
+  }
   #story-video-col {
     margin: 10px 0 10px 0;
   }
@@ -243,9 +249,6 @@
   }
   #story-video-modal iframe {
     height: 490px;
-  }
-  #story-testimonial-col.no-video {
-    margin: 20px 0 20px 0;
   }
 }
 
