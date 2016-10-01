@@ -136,13 +136,13 @@ function templateEditorHandlers () {
 
 function companyProfileHandlers() {
 
-  $(document).on('click', '#test-colors-button', function () {
+  $(document).on('click', '#test-colors-btn', function () {
     var color1 = $('input#company_nav_color_1').val(),
         color2 = $('input#company_nav_color_2').val(),
-      navTextColor = $('input#company_nav_text_color').val();
-    $('header.navbar').css(
+        navTextColor = $('input#company_nav_text_color').val();
+    $('.navbar').css(
         'background', 'linear-gradient(45deg, ' + color1 + ' 0%, ' + color2 + ' 100%)');
-    $('header.navbar').css('color', navTextColor);
+    $('.navbar').css('color', navTextColor);
   });
 
   // Dynamically change the max-height of the select box
@@ -151,8 +151,8 @@ function companyProfileHandlers() {
     $(".select2-container--bootstrap .select2-results > .select2-results__options").css('max-height', 0);
   });
 
-  $(document).on('click', '#restore-colors-button', function () {
-    $('header.navbar').attr('style', app.company.header_style);
+  $(document).on('click', '#restore-colors-btn', function () {
+    $('.navbar').attr('style', app.company.header_style);
     $('#company_nav_color_1').minicolors('value', app.company.nav_color_1);
     $('#company_nav_color_2').minicolors('value', app.company.nav_color_2);
     $('#company_nav_text_color').minicolors('value', app.company.nav_text_color);
