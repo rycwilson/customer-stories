@@ -2,28 +2,18 @@
 
 <div class='row'>
   <div class="col-xs-12">
-    <div class="accordion" id="accordion-guidance">
-      <div class="accordion-group">
 
-        <div class="accordion-heading">
-          <p>Thank you for contributing to the success story. Here are some
-          <a id='contribution-submission-prompts'
-             class="accordion-toggle" data-toggle="collapse"
-             data-parent="#accordion-guidance"
-             href="#collapse-guidance">helpful pointers</a></p>
-        </div>
+    <p>Thank you for contributing to the success story. Here are some prompts to get you started:</p>
 
-        <div id="collapse-guidance" class="accordion-body collapse">
-          <div class="accordion-inner">
-            <% @prompts.each do |prompt|  %>
-              <i class="icon-li fa fa-hand-o-right"></i>&nbsp;
-              <%= prompt.description %> <br>
-            <% end %>
-          </div> <br>
-        </div>
+    <ul>
+      <% @prompts.each do |prompt|  %>
+      <li>
+        <i class="icon-li"></i>&nbsp;
+        <%= prompt.description %>
+      </li>
+      <% end %>
+    </ul>
 
-      </div>  <!-- accordian-group -->
-    </div>  <!-- accordian -->
   </div>
 </div>
 
