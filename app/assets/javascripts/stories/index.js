@@ -6,7 +6,6 @@ function storiesIndexHandlers () {
   });
 
   $(document).on('change', '.stories-filter', function () {
-    console.log('filter change');
     var $categorySelect = $("[name='category_select']"),
         $productSelect = $("[name='product_select']"),
         filterTag = $(this).attr('name').replace('_select', ''),

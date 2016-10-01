@@ -29,7 +29,7 @@ function attachProfileHandlers () {
       method: 'put',
       data: { "linkedin_include_profile": $(this).val() },
       success: function (data, status, xhr) {
-        console.log(data, status);
+        // console.log(data, status);
       }
     });
 

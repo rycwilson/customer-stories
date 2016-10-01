@@ -26,22 +26,15 @@ function widgetsMonitor () {
         if ($('body').hasClass('stories show')) {
           // For Chrome, the origin property is in the event.originalEvent object.
           var origin = event.origin || event.originalEvent.origin;
-          // console.log(event);
           if (event.origin === "https://platform.linkedin.com" &&
               event.data.includes('-ready') && firstWidgetIndex === null) {
-            console.log(event.data);
             firstWidgetIndex = parseInt(event.data.match(/\w+_(\d+)-ready/)[1], 10);
-            console.log('firstWidgetIndex: ', firstWidgetIndex);
 
           } else if (event.origin === "https://platform.linkedin.com" &&
               event.data.includes('widgetReady')) {
-            console.log(event.data);
             currentWidgetIndex = parseInt(event.data.match(/\w+_(\d+)\s/)[1], 10);
-            console.log('currentWidgetIndex: ', currentWidgetIndex);
             relativeWidgetIndex = currentWidgetIndex - firstWidgetIndex;
-            console.log('relativeWidgetIndex: ', relativeWidgetIndex);
             contributors[relativeWidgetIndex].widget_loaded = true;
-            // console.log('widgetReady for: ', contributors[relativeWidgetIndex]);
             if (!firstWidgetLoaded) {
               firstWidgetLoaded = true;
               setWidgetTimeout(firstWidgetReadyTimeoutDelay, postMessageHandler);
@@ -58,7 +51,6 @@ function widgetsMonitor () {
 
   // remove the listener when navigating away from this page
   $(document).one('turbolinks:before-visit', function () {
-    console.log('removing message listener (from widgetsMonitor)');
     window.removeEventListener('message', postMessageHandler, false);
     contributors.forEach(function (contributor) {
       contributor.widget_loaded = false;

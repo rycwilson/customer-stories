@@ -13,7 +13,7 @@
 //= require init
 
 $(document).on('turbolinks:load', function (e) {
-  console.log('turbolinks:load');
+  // console.log('turbolinks:load');
   setAppData();
   constructPlugins();
   app.init();
@@ -30,20 +30,20 @@ $(document).one('turbolinks:load', function () {
 });
 
 window.onbeforeunload = function() {
-  console.log('onbeforeunload');
+  // console.log('onbeforeunload');
   Cookies.remove('csp_init');
 };
 
 function setAppData () {
   if (window.gon) {  // use window.gon in case undefined
-    console.log('gon: ', gon);
+    // console.log('gon: ', gon);
   } else {
-    console.log('gon undefined');
+    // console.log('gon undefined');
   }
   app.company = (window.gon && gon.company) || app.company || null;
   app.stories = (window.gon && gon.stories) || app.stories || null;
   app.current_user = (window.gon && gon.current_user) || app.current_user || null;
-  console.log('app: ', app);
+  // console.log('app: ', app);
   getScreenSize();
 }
 
@@ -68,41 +68,41 @@ function attachAppHandlers () {
 
   $(document)
     .on('turbolinks:click', function () {
-      console.log('turbolinks:click');
+      // console.log('turbolinks:click');
     })
 
     .on('turbolinks:before-visit', function () {
-      console.log('turbolinks:before-visit');
+      // console.log('turbolinks:before-visit');
       // debugger;
     })
 
     .on('turbolinks:request-start', function () {
-      console.log('turbolinks:request-start');
+      // console.log('turbolinks:request-start');
       // debugger;
     })
     .on('turbolinks:visit', function () {
-      console.log('turbolinks:visit');
+      // console.log('turbolinks:visit');
       // debugger;
     })
 
     .on('turbolinks:request-end', function () {
-      console.log('turbolinks:request-end');
+      // console.log('turbolinks:request-end');
       // debugger;
     })
 
     .on('turbolinks:before-cache', function () {
-      console.log('turbolinks:before-cache');
+      // console.log('turbolinks:before-cache');
       deconstructPlugins();
     })
 
     .on('turbolinks:before-render', function (event) {
-      console.log('turbolinks:before-render');
+      // console.log('turbolinks:before-render');
     })
 
     .on('turbolinks:render', function () {
-      console.log('turbolinks:render');
+      // console.log('turbolinks:render');
       if (document.documentElement.hasAttribute('data-turbolinks-preview')) {
-        console.log('preview rendered');
+        // console.log('preview rendered');
 
         if ($('body').hasClass('not:companies not:show')) {
           $('.workflow-tabs').find('.active').removeClass('active');
