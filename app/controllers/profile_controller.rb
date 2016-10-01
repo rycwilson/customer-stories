@@ -22,7 +22,6 @@ class ProfileController < ApplicationController
           token = token_response['access_token']
           # save token to User model
           linkedin_data = get_linkedin_data(token)
-          logger.info linkedin_data
           if false # errors
             # what if linkedin api is down?  timeout?
             # since this is all happening in the same flow, a 401 response won't happen;
@@ -82,25 +81,6 @@ class ProfileController < ApplicationController
       end
     end
   end
-
-      # always want to update the linkedin_url field,
-      # but the others only update conditionally (i.e. only if nil)
-      # current_user.linkedin_url = auth_hash[:info][:urls][:public_profile]
-      # current_user.phone ||= auth_hash[:info][:phone]
-      # current_user.title ||= auth_hash[:info][:description]
-      # logger.debug "#{JSON.pretty_generate(auth_hash)}"
-      # if current_user.save
-      #   # TODO: log the auth_hash
-      #   if current_user.company_id.present?
-      #     flash[:success] = 'Account setup complete'
-      #     redirect_to company_path(current_user.company_id)
-      #   else
-      #     flash[:info] = 'Connected to LinkedIn'
-      #     redirect_to edit_profile_no_company_path
-      #   end
-      # else
-      #   # flash.now[:danger] = "Problem updating linkedin_url field for #{}"
-      # end
 
   def linkedin_connect
     if params[:contribution_id]  # request coming from contribution submission
@@ -171,12 +151,12 @@ class ProfileController < ApplicationController
 
   def update_user_linkedin_data user, linkedin_data
     user.update({
-          linkedin_url: linkedin_data['publicProfileUrl'],
-          linkedin_photo_url: linkedin_data['pictureUrls']['values'][0],
-          linkedin_company: linkedin_data['positions']['values'][0]['company']['name'],
-          linkedin_title: linkedin_data['positions']['values'][0]['title'],
-          linkedin_location: linkedin_data['location']['name']
-        })
+      linkedin_url: linkedin_data['publicProfileUrl'],
+      linkedin_photo_url: linkedin_data['pictureUrls']['values'].try(:[], 0),
+      linkedin_company: linkedin_data['positions']['values'].try(:[], 0)['company']['name'],
+      linkedin_title: linkedin_data['positions']['values'].try(:[], 0)['title'],
+      linkedin_location: linkedin_data['location']['name']
+    })
   end
 
   def linkedin_authenticated?

@@ -6,7 +6,7 @@ function storiesIndexHandlers () {
   });
 
   $(document).on('change', '.stories-filter', function () {
-
+    console.log('filter change');
     var $categorySelect = $("[name='category_select']"),
         $productSelect = $("[name='product_select']"),
         filterTag = $(this).attr('name').replace('_select', ''),
@@ -14,6 +14,7 @@ function storiesIndexHandlers () {
         filterSlug = $(this).find("option[value='" + filterId + "']").data('slug'),
         storiesTemplate = _.template($('#stories-template').html()),
         filteredStories = [];
+
     filteredStories = filterStories(filterTag, filterId);
     updateGallery($(storiesTemplate({
                       stories: filteredStories,
@@ -24,7 +25,17 @@ function storiesIndexHandlers () {
   });
 }
 
-function filterStories (filterTag, filterId) {
+function filterStories (filterTag, filterId, filterSlug) {
+  // console.log('filterStories');
+  // if (app.stories.length === 0) {
+  //   if (filterId === '0') {
+  //     Turbolinks.visit('/');
+  //     console.log('visit /');
+  //   } else {
+  //     console.log('visit /?' + filterTag + '=' + filterSlug);
+  //     Turbolinks.visit('/?' + filterTag + '=' + filterSlug);
+  //   }
+  // }
   if (filterId === '0') {  // all stories
     return app.current_user.is_curator ? app.stories :
            app.stories.filter(function (story) { return story.logo_published; });
@@ -102,15 +113,14 @@ function updateGallery ($stories) {
   });
 }
 
+// turbolinks will not save filter info to the state, so it's not included
 function replaceStateStoriesIndex (filterTag, filterId, filterSlug) {
   if (filterId === '0') {  // all
-    history.replaceState({ turbolinks: true, filter: { tag: 'all', id: '0' } }, null, '/');
+    history.replaceState({ turbolinks: true }, null, '/');
   } else if (filterTag === 'category') {
-    history.replaceState({ turbolinks: true, filter: { tag: 'category', id: filterId } },
-                        null, '/?category=' + filterSlug);
+    history.replaceState({ turbolinks: true }, null, '/?category=' + filterSlug);
   } else if (filterTag === 'product') {
-    history.replaceState({ turbolinks: true, filter: { tag: 'product', id: filterId } },
-                        null, '/?product=' + filterSlug);
+    history.replaceState({ turbolinks: true }, null, '/?product=' + filterSlug);
   } else {
     // error
   }

@@ -30,6 +30,7 @@ $(document).one('turbolinks:load', function () {
 });
 
 window.onbeforeunload = function() {
+  console.log('onbeforeunload');
   Cookies.remove('csp_init');
 };
 

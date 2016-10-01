@@ -2,7 +2,7 @@
 <% content_for :head do %>
 
   <meta name="turbolinks-cache-control" content="no-cache">
-  <%= render 'stories/shared/stories_index_template' %>
+  <%= render 'stories/shared/stories_index_template', { company: @company } %>
   <%= render 'stories/shared/stories_index_meta_tags', { company: @company } %>
 
 <% end %>

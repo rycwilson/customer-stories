@@ -76,19 +76,24 @@ function setWidgetTimeout (delay, postMessageHandler) {
                     return story.csp_story_path === window.location.pathname;
                   });
       if (story && story.published_contributors) {
+         var subs = false;
          story.published_contributors
               .forEach(function (contributor, index) {
                  if (!contributor.widget_loaded) {
+                   subs = true;
                    // console.log('widget did not load: ', delay, contributor.linkedin_url);
                    contributor.widget_loaded = subWidget(contributor, index);
                  }
                });
+         if (subs) {
+           $('.linkedin-widgets').imagesLoaded(function () {
+             $('.sub-widget-wrapper').removeClass('hidden');
+           });
+         }
       }
-      // keep this listener isolated to stories#show for now
-      console.log('removing message listener (from setWidgetTimeout)');
+      // keep this listener isolated to stories#show
       window.removeEventListener('message', postMessageHandler, false);
     } else {
-      console.log('removing message listener (from setWidgetTimeout)');
       window.removeEventListener('message', postMessageHandler, false);
     }
   }, delay);

@@ -71,18 +71,6 @@ window.app = window.app || {
   }
 };
 
-// TODO: use this across app
-// $(function () {
-
-//   // this will only run on document load; no dynamic checking
-//   (function($, viewport){
-//     if( viewport.is('xs') ) {
-//       $('.container').css('padding', '0');
-//       $('.container > .col-xs-12').css('padding', '30px');
-//     }
-//   })(jQuery, ResponsiveBootstrapToolkit);
-
-// });
 
 
 
