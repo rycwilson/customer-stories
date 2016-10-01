@@ -38,8 +38,8 @@ class CompaniesController < ApplicationController
       end
     else
       # validation(s): presence / uniqueness of name, presence of subdomain
-      flash.now[:danger] = "Unable to register: #{@company.errors.full_messages.join(', ')}"
-      render :new
+      flash[:danger] = @company.errors.full_messages.join(', ')
+      redirect_to new_company_path
     end
 
   end
