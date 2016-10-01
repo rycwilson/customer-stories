@@ -46,9 +46,8 @@ class WidgetsController < ApplicationController
     stories_links =
          Company.find_by(subdomain: company_subdomain)
                 .filter_stories_by_tag(filter_params || filter_all, false)
-                .map do |success|
-                  story = success.story
-                  { logo: success.customer.logo_url,
+                .map do |story|
+                  { logo: story.success.customer.logo_url,
                     link: story.published ?
                             URI.join(root_url(host: company_subdomain + '.' + request.domain),
                                      story.csp_story_path).to_s
