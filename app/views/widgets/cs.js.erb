@@ -40,8 +40,10 @@
           success: function (data) {
             $('#cs-container').html(data.html);
             var $images = $('#cs-container img'), loadedImages = 0;
+            $images.each(function () {
+            });
             // wait for all images to load so dimension calculations are correct ...
-            $images.on('load', function () {
+            $images.on('load', function (e) {
               if (++loadedImages === $images.length) {
                 slideDrawerPlugin();
                 preventScrollNav();

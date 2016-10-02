@@ -189,8 +189,14 @@ class Company < ActiveRecord::Base
                         .find(filter_params[:id])
                         .id unless filter_params[:id].to_i != 0).try(:to_i) ||
                      filter_params[:id].to_i
-        self.all_stories.select do |story|
-          story.success.products.any? { |product| product.id == product_id }
+        if is_curator
+          self.all_stories.select do |story|
+            story.success.products.any? { |product| product.id == product_id }
+          end
+        else
+          self.public_stories.select do |story|
+            story.success.products.any? { |product| product.id == product_id }
+          end
         end
       else
     end
