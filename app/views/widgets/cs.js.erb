@@ -40,8 +40,12 @@
           success: function (data) {
             $('#cs-container').html(data.html);
             var $images = $('#cs-container img'), loadedImages = 0;
+            $images.each(function () {
+              console.log('csp-img: ', $(this).attr('src'));
+            });
             // wait for all images to load so dimension calculations are correct ...
-            $images.on('load', function () {
+            $images.on('load', function (e) {
+              console.log('csp-img-load: ', e.target.src);
               if (++loadedImages === $images.length) {
                 slideDrawerPlugin();
                 preventScrollNav();
