@@ -18,8 +18,7 @@ function storiesIndex () {
       // filtersTemplate = _.template($('#stories-filters-template').html()),
       $gallery = $('#stories-gallery');
 
-  if ($gallery.children().length === 0 && app.stories) {
-
+  if ($gallery.children().length === 0 && app.stories.length !== 0 ) {
     if (app.current_user.is_curator) {
       updateGallery(
         $(storiesTemplate({ stories: app.stories, isCurator: true }) ));
@@ -30,9 +29,9 @@ function storiesIndex () {
                        return story.logo_published; }),
             isCurator: false }) ));
     }
-    // also make sure filters set to 'All'
-  } else {
-    // neither?
+  } else if (app.stories.length === 0) {
+    Cookies.remove('csp_init'); // let server know we don't have stories data
+    Turbolinks.visit('/');
   }
 
   // selectBoxesTrackQueryString($categorySelect, categorySlug, $productSelect, productSlug);
