@@ -5,6 +5,7 @@
 //= require plugins/summernote
 //= require plugins/masonry
 //= require plugins/select2
+//= require plugins/clicky
 
 function constructPlugins () {
 
@@ -13,6 +14,7 @@ function constructPlugins () {
   initSocialShare();
   initSummernote();
   initMasonry();
+  initClicky();
 
   $("[data-toggle='tooltip']").tooltip();
   $('.best_in_place').best_in_place();
