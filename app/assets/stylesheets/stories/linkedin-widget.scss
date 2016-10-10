@@ -72,9 +72,13 @@
           border: 2px solid #e5e5e5;
           padding: 0;
           float: right;
+          width: 80px;
+          background-color: #e5e5e5;
           .photo {
             border: 0;
             padding: 0;
+            margin-right: auto;
+            margin-left: auto;
           }
         }
         .mark {
