@@ -431,11 +431,9 @@ function storiesEditContributionsHandlers () {
           window.removeEventListener('message', newWidgetPostMesgHandler, false);
           // did the linkedin widget arrive?
           if ($widgetContainer.data('linkedin-widget-loaded')) {
-            console.log('success');
             // success -> remove the placeholder
             $placeholderWidgetContainer.empty();
           } else {
-            console.log('failure');
             // failure
             $placeholderWidgetContainer
               .find('.member-info > p')

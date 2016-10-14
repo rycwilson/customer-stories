@@ -9,7 +9,6 @@ module ContributionsSeed
     c = Contribution.new(
           success_id: success_id,
           user_id: contributor.id,
-          publish_contributor: user ? true : false,
           role: role,
           status: status,
           feedback: feedback,
@@ -17,7 +16,8 @@ module ContributionsSeed
           notes: FFaker::Lorem.paragraph,
           submitted_at: submitted_at,
           access_token: SecureRandom.hex,
-          created_at: created || Time.now )
+          created_at: created || Time.now,
+          publish_contributor: status == 'contribution' )  # 2/5 published
     # c.remind_at = Time.now + rand(5).minutes if (status == 'request')
     # c.remind_at = Time.now + rand(5).minutes if (status == 'remind1')
     c.remind_at = Time.now + c.remind_1_wait.days if (status == 'request')
@@ -34,7 +34,7 @@ module ContributionsSeed
          last_name: last_name || FFaker::Name.last_name,
              email: cont_email || email,
       # password is necessary, so just set it to the email
-          password: email,
+          password: 'password',
       linkedin_url: linkedin_url,
       sign_up_code: 'csp_beta')
     puts("create contributor error: " + contributor.errors.full_messages.join(', ')) unless contributor.save
