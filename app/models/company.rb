@@ -112,30 +112,7 @@ class Company < ActiveRecord::Base
     Story.company_all_logo_published(self.id)
   end
 
-  # serialized story data for the public reader
-  # omits data for stories that aren't published
-  def public_stories_json
-    JSON.parse(
-      Story.company_all_logo_published(self.id)
-           .to_json({
-              only: [:published, :logo_published, :publish_date, :updated_at],
-              # only include content/contributors/tags if the story is published ...
-              methods: [:csp_story_path],
-              include: {
-                success: {
-                  only: [],
-                  include: { customer: { only: [:name, :logo_url] },
-                             story_categories: { only: [:id, :name, :slug] },
-                             products: { only: [:id, :name, :slug] }, }}}
-            })
-    # remove any nil entries, e.g. published* methods if not published
-    ).each do |story|
-        story.delete_if do |key, value|
-          (key == 'csp_story_path' && !story['published']) || value.nil?
-        end
-      end
-  end
-
+  # all_stories_json returns data included in the client via the gon object
   def all_stories_json
     JSON.parse(
       Story

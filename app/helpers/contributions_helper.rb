@@ -12,4 +12,8 @@ module ContributionsHelper
     type == 'pre-request' || (contribution.status == 'did_not_respond' && type == 'next-steps')
   end
 
+  def get_contribution_inst_var contribution_id
+    @contribution = Contribution.find contribution_id
+  end
+
 end

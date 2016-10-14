@@ -1,152 +1,227 @@
 
-/***********************************************/
-/*      story results
-/***********************************************/
+.stories.edit {
 
-#story-results .col-xs-1 {
-  padding-right: 0
-}
+  /***********************************************/
+  /*      video
+  /***********************************************/
+  .video-container {
+    margin-bottom: 10px;
+  }
+  #edit-video-well label {
+    margin-bottom: 0;
+  }
 
-#story-results .col-xs-11 {
-  padding-left: 10px;
-}
+  /***********************************************/
+  /*      results
+  /***********************************************/
 
-// #story-results .row + .row {
-//   margin-top: 5px;
-// }
+  #story-results .col-xs-1 {
+    padding-right: 0
+  }
 
+  #story-results .col-xs-11 {
+    padding-left: 10px;
+  }
 
-
-/***********************************************/
-/*      contribution card
-/***********************************************/
-.contribution-card .accordion-inner br {
-  line-height: 22px;
-}
-
-
-/***********************************************/
-/*      email request confirmation modal
-/***********************************************/
-
-#email-confirmation-modal .modal-title,
-#email-confirmation-modal .progress {
-  margin-bottom: 5px;
-}
-
-#email-confirmation-modal .progress {
-  margin-top: 5px;
-}
-
-#email-confirmation-modal .modal-body {
-  max-height: 440px;
-  overflow-y: auto;
-}
+  // #story-results .row + .row {
+  //   margin-top: 5px;
+  // }
 
 
+  /***********************************************/
+  /*      contribution card
+  /***********************************************/
 
-/***********************************************/
-/*          stories#edit customer logo
-/***********************************************/
+  .contribution-card {
+    label {
+      margin-bottom: 0;
+    }
+    .contributor-name-and-actions {
+      line-height: 25px;
+      font-size: 14px;
+    }
+    .contribution-status {
+      line-height: 25px;
+    }
+    .role-field, .email-field, .phone-field, .referrer-field {
+      line-height: 24px;
+    }
+    .phone-field {
+      position: relative;
+      i {
+        position: absolute;
+        top: -3px;
+        right: 0;
+      }
+      div {
+        width: 87%;
+      }
+    }
+    .notes-field {
+      position: relative;
+      line-height: auto;
+      i {
+        position: absolute;
+        top: 4px;
+        right: 0;
+      }
+      label {
+        line-height: 24px;
+      }
+      div {
+        width: 87%;
+      }
+    }
+    .linkedin-url-field {
+      position: relative;
+      line-height: auto;
+      i {
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+      label {
+        line-height: 28px;
+      }
+      div {
+        width: 87%
+      }
+    }
+    .linkedin-checkbox-container.contributor-unpublished {
+      pointer-events: none;
+      opacity: 0.4;
+    }
+    .linkedin-checkbox-container {
+      line-height: 34px;
+    }
+  }  // .contribution-card
 
-.fileinput .thumbnail {
-  background-color: #f5f5f5;
-  padding: 10px;
-}
+
+  /***********************************************/
+  /*      email request confirmation modal
+  /***********************************************/
+
+  #email-confirmation-modal .modal-title,
+  #email-confirmation-modal .progress {
+    margin-bottom: 5px;
+  }
+
+  #email-confirmation-modal .progress {
+    margin-top: 5px;
+  }
+
+  #email-confirmation-modal .modal-body {
+    max-height: 440px;
+    overflow-y: auto;
+  }
 
 
-#customer-logo-form img {
-  max-height: 90px !important;
-}
+
+  /***********************************************/
+  /*          stories#edit customer logo
+  /***********************************************/
+
+  .fileinput .thumbnail {
+    background-color: #f5f5f5;
+    padding: 10px;
+  }
 
 
-/***********************************************/
-/*           story settings
-/***********************************************/
+  #customer-logo-form img {
+    max-height: 90px !important;
+  }
 
-#story-publish-settings .form-group {
-  margin-bottom: 15px;
-}
 
-#story-edit-logo-buttons {
-  margin-bottom: 10px;
-}
+  /***********************************************/
+  /*           story settings
+  /***********************************************/
 
-// summernote - disable file upload
-.note-group-select-from-files {
-  display: none;
-}
+  #story-publish-settings .form-group {
+    margin-bottom: 15px;
+  }
 
-.vcenter {
-  display: inline-block;
-  vertical-align: middle;
-  float: none;
-}
+  #story-edit-logo-buttons {
+    margin-bottom: 10px;
+  }
 
-.required-input label:after {
-  color: #D9534F;
-  content: " *";
-}
+  // summernote - disable file upload
+  .note-group-select-from-files {
+    display: none;
+  }
 
-.well {
-  padding: 25px 5% 25px 5%;
-}
+  .vcenter {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+  }
 
-p.lead {
-  margin-bottom: 8px;
-}
+  .required-input label:after {
+    color: #D9534F;
+    content: " *";
+  }
 
-#story-edit-nav:hover {
-  text-decoration: underline;
-}
+  .well {
+    padding: 25px 5% 25px 5%;
+  }
 
-.bip-clickable {
-  height: 28px;
-  width: 28px;
-  color: #666;
-  border: 1px solid #e3e3e3;
-  border-radius: 3px;
-  padding: 5px;
-  font-size: 1.2em;
-  cursor: pointer;
-}
+  p.lead {
+    margin-bottom: 8px;
+  }
 
-/* The font-size needs to be slightly different for the font awesome icons,
-   to achieve consistent layout */
-.bip-clickable-fa {
-  height: 28px;
-  width: 28px;
-  color: #666;
-  border: 1px solid #e3e3e3;
-  border-radius: 3px;
-  padding: 5px 6px 5px 5px;
-  font-size: 1.3em;
-  cursor: pointer;
-}
+  #story-edit-nav:hover {
+    text-decoration: underline;
+  }
 
-.bip-clickable:hover, .bip-clickable-fa:hover  {
-  color: white !important;
-  background-color: #666;
-}
+  .bip-clickable {
+    height: 28px;
+    width: 28px;
+    color: #666;
+    border: 1px solid #e3e3e3;
+    border-radius: 3px;
+    padding: 5px;
+    font-size: 1.2em;
+    cursor: pointer;
+  }
 
-/* make edit field stand out when hover over edit button */
-#edit-story-title:hover + #story-title,
-#edit-story-quote:hover + #story-edit-quote,
-#edit-story-quote-attr:hover + #story-quote-attr,
-#edit-story-embed:hover + #story-embed,
-#edit-story-situation:hover + #story-situation,
-#edit-story-challenge:hover + #story-challenge,
-#edit-story-solution:hover + #story-solution,
-#edit-story-benefits:hover + #story-benefits,
-.modify-result:hover + .story-result,
-.modify-prompt:hover + .story-prompt,
-.cc-editable:hover + .cc-editable {
-  // border-left: 3px solid #87a3bc;
-  background-color: #e3e3e3;
-  background-clip: content-box;
-  border-radius: 3px
-}
+  /* The font-size needs to be slightly different for the font awesome icons,
+     to achieve consistent layout */
+  .bip-clickable-fa {
+    height: 28px;
+    width: 28px;
+    color: #666;
+    border: 1px solid #e3e3e3;
+    border-radius: 3px;
+    padding: 5px 6px 5px 5px;
+    font-size: 1.3em;
+    cursor: pointer;
+  }
 
-.dirtyField {
-  color: #D9534F;
+  .bip-clickable:hover, .bip-clickable-fa:hover  {
+    color: white !important;
+    background-color: rgb(14, 122, 254); // #4885ed; //#666;
+  }
+
+  /* make edit field stand out when hover over edit button */
+  #edit-story-title:hover + #story-title,
+  #edit-story-quote:hover + #story-edit-quote,
+  #edit-story-quote-attr:hover + #story-quote-attr,
+  #edit-story-embed-url:hover + #story-embed-url,
+  #edit-story-situation:hover + #story-situation,
+  #edit-story-challenge:hover + #story-challenge,
+  #edit-story-solution:hover + #story-solution,
+  #edit-story-benefits:hover + #story-benefits,
+  .modify-result:hover + .story-result,
+  .modify-prompt:hover + .story-prompt,
+  i.cc-editable:hover + .cc-editable,
+  i.cc-editable:hover + .cc-editable + .cc-editable {
+    // border-left: 3px solid #87a3bc;
+    background-color: #e3e3e3;
+    background-clip: content-box;
+    border-radius: 3px
+  }
+
+  .dirtyField {
+    color: #D9534F;
+  }
+
 }

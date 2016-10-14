@@ -1,0 +1,15 @@
+
+<div class="tab-pane fade" id="contributions">
+
+  <div id='contribution-contributors'>
+
+    <% @story.contributions_submitted.each_with_index do |contribution, index| %>
+
+      <%= render 'stories/shared/edit/contribution_card',
+              { contribution: contribution, contributor: contribution.contributor,
+                type: "contribution", index: index } %>
+
+    <% end %>
+
+  </div>
+</div>

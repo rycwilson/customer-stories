@@ -7,17 +7,17 @@ module ContributionsSeed
     (status == 'contribution') ? contribution = text : contribution = nil
     contributor = user || ContributionsSeed::create_contributor
     c = Contribution.new(
-       success_id: success_id,
+          success_id: success_id,
           user_id: contributor.id,
-         linkedin: user ? true : false,
-             role: role,
-           status: status,
-         feedback: feedback,
-     contribution: contribution,
-            notes: FFaker::Lorem.paragraph,
-     submitted_at: submitted_at,
-     access_token: SecureRandom.hex,
-       created_at: created || Time.now )
+          publish_contributor: user ? true : false,
+          role: role,
+          status: status,
+          feedback: feedback,
+          contribution: contribution,
+          notes: FFaker::Lorem.paragraph,
+          submitted_at: submitted_at,
+          access_token: SecureRandom.hex,
+          created_at: created || Time.now )
     # c.remind_at = Time.now + rand(5).minutes if (status == 'request')
     # c.remind_at = Time.now + rand(5).minutes if (status == 'remind1')
     c.remind_at = Time.now + c.remind_1_wait.days if (status == 'request')

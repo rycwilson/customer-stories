@@ -1,4 +1,4 @@
-class StoriesController < ApplicationController
+  class StoriesController < ApplicationController
 
   include StoriesHelper
 
@@ -39,7 +39,6 @@ class StoriesController < ApplicationController
   end
 
   def show
-    @story_has_video = @story.embed_url.present?
     # declare this here since numerous references in meta tags
     @success = @story.success
     # convert the story content to plain text (for SEO tags)
@@ -65,11 +64,6 @@ class StoriesController < ApplicationController
 
   def edit
     @customer = @story.success.customer
-    @contributions_pre_request = Contribution.pre_request @story.success_id
-    @contributions_in_progress = Contribution.in_progress @story.success_id
-    @contributions_next_steps = Contribution.next_steps @story.success_id
-    @contributions_contributors = Contribution.contributors @story.success_id
-    @contributions_connections = Contribution.connections @story.success_id
     @categories = @company.category_select_options_all
     @categories_pre_select = @story.success.story_categories
                                    .map { |category| category.id }
@@ -158,7 +152,7 @@ class StoriesController < ApplicationController
       # respond with json because we need to update the video iframe
       # with the modified url ...
       respond_to do |format|
-        format.json { render json: story.as_json(only: :embed_url) }
+        format.json { render json: story.as_json(only: :embed_url, methods: :video_info) }
       end
     elsif params[:story][:published]
       update_publish_state story, params[:story]
@@ -218,14 +212,13 @@ class StoriesController < ApplicationController
     end
   end
 
-    # .where(contributions: { linkedin: true,
-    #                       status: 'contribution' },
   def set_contributors
     curator = @story.success.curator
     @contributors =
         User.joins(own_contributions: { success: {} })
             .where.not(linkedin_url:'')
-            .where(successes: { id: @story.success_id })
+            .where(successes: { id: @story.success_id },
+                   contributions: { publish_contributor: true })
             .order("CASE contributions.role
                       WHEN 'customer' THEN '1'
                       WHEN 'partner' THEN '2'

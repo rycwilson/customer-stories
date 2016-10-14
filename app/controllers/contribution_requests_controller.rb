@@ -2,6 +2,7 @@ class ContributionRequestsController < ApplicationController
 
   def create
     @contribution = Contribution.find params[:contribution_id]
+    story = @contribution.success.story
     if @contribution.status == 'pre_request'
       new_status = 'request'
       new_remind_at = Time.now + @contribution.remind_1_wait.days
@@ -18,7 +19,7 @@ class ContributionRequestsController < ApplicationController
       # see below for what email via sendgrid mail api might look like
       @contribution.update( status: new_status,
                             remind_at: new_remind_at )
-      @contributions_in_progress = Contribution.in_progress @contribution.success_id
+      @contributions_in_progress = story.contributions_in_progress
       @flash_status = "info"
       @flash_mesg =
         "Request sent to #{@contribution.contributor.full_name}"

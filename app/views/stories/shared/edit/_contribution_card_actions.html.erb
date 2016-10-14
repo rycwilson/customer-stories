@@ -23,18 +23,18 @@
       data-toggle='tooltip' data-placement='top'
       title='More information'></i></a>
 
-<% if contribution.linkedin? %>
+<% if contributor.linkedin_url? %>
   <a class='research' target="_blank" tabindex='-1'
-      href="<%= contribution.contributor.linkedin_url %>">
+      href="<%= contributor.linkedin_url %>">
     <i class='fa fa-linkedin-square bip-clickable-fa'
         data-toggle='tooltip' data-placement='top'
         title='LinkedIn profile'></i></a>
 <% else %>
   <a class='research' target="_blank" tabindex='-1'
       href="http://google.com/search?q=<%= contribution.role == 'customer' ?
-        research_user_query_string(contribution.contributor,
+        research_user_query_string(contributor,
           @story.success.customer.name) :
-        research_user_query_string(contribution.contributor) %>">
+        research_user_query_string(contributor) %>">
     <i class='glyphicon glyphicon-user bip-clickable'
         data-toggle='tooltip' data-placment='top'
         title='Research'></i></a>

@@ -77,11 +77,21 @@ cisco.create_email_templates
 
 
 # some users with linkedin profiles (demo only)
-user1 = User.create(first_name:'Carlos', last_name:'Ramon', email:'carlos@mail.com', linkedin_url:'https://www.linkedin.com/in/carlosramon', sign_up_code:'csp_beta', password:'password')
-user2 = User.create(first_name:'Reza', last_name:'Raji', email:'reza@mail.com', linkedin_url:'https://www.linkedin.com/in/rezaraji', sign_up_code:'csp_beta', password:'password')
-user3 = User.create(first_name:'Jeff', last_name:'Haslem', email:'jeffh@mail.com', linkedin_url:'https://www.linkedin.com/in/jeffhaslem', sign_up_code:'csp_beta', password:'password')
-user4 = User.create(first_name:'Allan', last_name:'Lo', email:'allan@mail.com', linkedin_url:'https://www.linkedin.com/pub/allan-lo/2/80/214', sign_up_code:'csp_beta', password:'password')
-user5 = User.create(first_name:'Jeff', last_name:'Weiner', email:'jeffw@mail.com', linkedin_url:'https://www.linkedin.com/in/jeffweiner08', sign_up_code:'csp_beta', password:'password')
+user1 = User.create(first_name:'Carlos', last_name:'Ramon', email:'carlos@mail.com',
+  linkedin_url:'https://www.linkedin.com/in/carlosramon',
+  sign_up_code:'csp_beta', password:'password')
+user2 = User.create(first_name:'Reza', last_name:'Raji', email:'reza@mail.com',
+  linkedin_url:'https://www.linkedin.com/in/rezaraji',
+  sign_up_code:'csp_beta', password:'password')
+user3 = User.create(first_name:'Jeff', last_name:'Haslem', email:'jeffh@mail.com',
+  linkedin_url:'https://www.linkedin.com/in/jeffhaslem',
+  sign_up_code:'csp_beta', password:'password')
+user4 = User.create(first_name:'Allan', last_name:'Lo', email:'allan@mail.com',
+  linkedin_url:'https://www.linkedin.com/pub/allan-lo/2/80/214',
+  sign_up_code:'csp_beta', password:'password')
+user5 = User.create(first_name:'Jeff', last_name:'Weiner', email:'jeffw@mail.com',
+  linkedin_url:'https://www.linkedin.com/in/jeffweiner08',
+  sign_up_code:'csp_beta', password:'password')
 
 # Company tags ...
 STORY_CATEGORIES_CISCO.each do |category_name|
@@ -138,7 +148,11 @@ def seed_company company, *users
       10.times { success.visitors << VisitorsSeed::create }
 
       # Contributions
-      ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 1.day.ago, 'contribution', users[0] )
+      ContributionsSeed::create( success.id,
+                                 ROLES[rand(ROLES.length)],
+                                 1.day.ago,
+                                 'contribution',
+                                 users[0] )
       ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 2.days.ago, 'contribution', users[1] )
       ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 3.days.ago, 'contribution', users[2] )
       ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 4.days.ago, 'contribution', users[3] )

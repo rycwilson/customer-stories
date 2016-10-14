@@ -2,14 +2,14 @@
 <!-- turbolinks caching problematic with linkedin widgets  -->
 <% content_for :head do %>
   <meta name="turbolinks-cache-control" content="no-cache">
-  <%= render 'stories/shared/sub_linkedin_widget_template' %>
+  <%= render 'stories/shared/csp_linkedin_widget_template' %>
   <%= render 'stories/shared/story_show_meta_tags',
               { company: @company, success: @success, story: @story,
                 owns: @owns_jsonld, contributors: @contributors_jsonld,
                 about: @about_jsonld } %>
 <% end %>
 
-<%= render 'stories/shared/story_show_video_modal' %>
+<%= render 'stories/shared/video_modal' %>
 
 <div class='wrapper'>
 
@@ -54,8 +54,7 @@
   <div id='story-section-testimonial'>
     <div class="container">
 
-        <%= render 'stories/shared/story_show_testimonial',
-              { story: @story, story_has_video: @story_has_video } %>
+        <%= render 'stories/shared/story_show_testimonial', { story: @story } %>
 
     </div>  <!-- logo, quote, video -->
   </div>
@@ -65,7 +64,7 @@
     <div class="container">
       <div class='row'>
         <div class="col-xs-10 col-xs-offset-1
-                <%= @story_has_video ? 'visible-xs-block' : 'hidden' %>">
+                <%= @story.embed_url.present? ? 'visible-xs-block' : 'hidden' %>">
 
           <!-- <div itemprop='video' itemscope itemtype='//schema.org/VideoObject'> -->
             <!-- <meta itemprop='' itemcontent=''> -->
@@ -161,6 +160,10 @@
           <h3>Contributing Team</h3>
 
           <% @contributors.each do |contributor| %>
+
+            <% if Rails.env.development? %>
+              <%= contributor.attributes.slice('id','email','linkedin_url') %>
+            <% end %>
 
             <div class="linkedin-widget linkedin-widget-wide">
               <script type="IN/MemberProfile"

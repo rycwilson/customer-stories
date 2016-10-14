@@ -1,22 +1,23 @@
 
 //= require plugins/manifest
-//= require plugins/socialshare
-//= require plugins/linkedin
-//= require plugins/summernote
 //= require plugins/masonry
 //= require plugins/select2
+//= require plugins/linkedin
+//= require plugins/summernote
+//= require plugins/socialshare
+//= require plugins/tooltips
 //= require plugins/clicky
 
 function constructPlugins () {
 
+  initMasonry();
   initSelect2();
   initLinkedIn();
-  initSocialShare();
   initSummernote();
-  initMasonry();
+  initSocialShare();
+  initTooltips();
   initClicky();
 
-  $("[data-toggle='tooltip']").tooltip();
   $('.best_in_place').best_in_place();
   $('.bs-switch').bootstrapSwitch({ size: 'small' });
   $("input[type='tel']").inputmask("999-999-9999");

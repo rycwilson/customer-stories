@@ -88,8 +88,7 @@ Rails.application.routes.draw do
     # this route returns json data for the contribution
     # presently only need this when removing a linkedin_url from a contribution
     get   '/contributions/:id', to: 'contributions#show'
-    put   '/contributions/:token', to: 'contributions#update',
-                                   as: 'contribution'
+    put   '/contributions/:token', to: 'contributions#update'
 
     # need to pick up on devise sign-in route here, without doing so explicitly
     # as that will conflict with devise routes declared below
@@ -139,7 +138,7 @@ Rails.application.routes.draw do
   #
   # this route is for the case of a Contributor being logged in (no subdomain)
   # and updating a Contribution by checking or unchecking a LinkedIn Profile box
-  put   '/contributions/:token', to: 'contributions#update', as: 'contribution_no_company'
+  put   '/contributions/:token', to: 'contributions#update'
 
 
   devise_for :users, controllers: {

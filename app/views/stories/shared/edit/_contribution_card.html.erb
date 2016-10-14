@@ -1,0 +1,198 @@
+
+<!--
+  locals: contribution
+          contributor
+          type ('pre-request', 'in-progress', 'contribution', 'next-steps', 'connection')
+          index
+-->
+
+<div class="contribution-card well accordion"
+     id="<%= type %>-accordion-<%= index %>"
+     data-contribution-id="<%= contribution.id %>">
+
+  <!-- only using bootstrap row/column to vertically center columns -->
+  <div class="row contributor-name-and-actions">
+    <div class='contributor-name col-sm-7 vcenter'>
+      <!-- <%#= Rails.env.development? ? 'cid=' + contribution.id.to_s : '' %> -->
+      <%= contributor.full_name %>
+    </div><!--
+ --><div class="col-sm-5 text-right vcenter">
+      <%= render 'stories/shared/edit/contribution_card_actions',
+            { contribution: contribution, contributor: contribution.contributor,
+              type: type, index: index } %>
+    </div>
+  </div>
+
+  <% if display_status? type %>
+
+    <div class="contribution-status">
+        <%= follow_up_required?(contribution.status) ?
+              '<label>Next step:</label>'.html_safe :
+              '<label>Status:</label>'.html_safe %>&nbsp;
+        <span><%= contribution.display_status %></span>
+    </div>
+
+  <% end %>
+
+  <div id="collapse-<%= type %>-submission-<%= index %>"
+      class="accordion-body collapse">
+    <div class="accordion-inner">
+      <hr>
+      <% if contribution.status == 'contribution' %>
+        <div><em>"<%= contribution.contribution %>"</em></div>
+      <% elsif contribution.status == 'feedback' %>
+        <div><em>"<%= contribution.feedback %>"</em></div>
+      <% end %>
+    </div>
+  </div>
+
+  <div id="collapse-<%= type %>-info-<%= index %>" class="accordion-body collapse">
+    <div class="accordion-inner">
+      <hr>
+
+      <div class='role-field'>
+        <label>Role:</label>&nbsp;&nbsp;<%= contribution.role %>
+      </div>
+      <div class='email-field'>
+        <label>Email:</label>&nbsp;&nbsp;<%= contributor.email %>
+      </div>
+
+      <div class='phone-field'>
+
+        <i id='edit-<%= type %>-phone-<%= index %>'
+           class='glyphicon glyphicon-pencil bip-clickable cc-editable'></i>
+
+        <div id='<%= type %>-phone-<%= index %>' class='cc-editable'>
+          <label>Phone:</label>&nbsp;&nbsp;
+          <%= best_in_place contributor, :phone,
+               id: "#{type}_best_in_place_user_#{contributor.id}_phone",
+               url: "/contributions/#{contribution.access_token}",
+               html_attrs: { style: 'width:80%;line-height:16px' },
+               activator: "#edit-#{type}-phone-#{index}",
+               place_holder: "<em>add phone ...</em>" %>
+        </div>
+
+      </div>
+
+      <% if contribution.referrer_id.present? %>
+        <div class="referrer-field">
+          <label>Referred by:</label>&nbsp;&nbsp;<%= contribution.referrer.full_name  %>
+        </div>
+      <% end %>
+
+      <div class='notes-field'>
+        <i id='edit-<%= type %>-notes-<%= index %>'
+           class='glyphicon glyphicon-pencil bip-clickable cc-editable'></i>
+        <div class='cc-editable'>
+          <label>Notes:</label>
+        </div>
+        <div id='<%= type %>-notes-<%= index %>' class='notes-textarea cc-editable'>
+          <%= best_in_place contribution, :notes, as: :textarea,
+               id: "#{type}_best_in_place_contribution_#{contribution.id}_notes",
+               url: "/contributions/#{contribution.access_token}",
+               html_attrs: { style:'width:100%' },
+               activator: "#edit-#{type}-notes-#{index}",
+               place_holder: "<em>add notes ...</em>" %>
+        </div>
+      </div>
+
+      <% if type == 'connection' %>
+
+        <div class="linkedin-container">
+
+          <!-- linkedin_url input field -->
+          <div class='linkedin-url-field'>
+            <i id='edit-linkedin-url-<%= index %>'
+               class='glyphicon glyphicon-pencil bip-clickable cc-editable'></i>
+            <div class='cc-editable'>
+              <label>LinkedIn profile:</label>
+            </div>
+            <div id='linkedin-url-<%= index %>' class='cc-editable'>
+              <%= best_in_place contributor, :linkedin_url,
+                   url: "/contributions/#{contribution.access_token}",
+                   html_attrs: { style:'width:100%' },
+                   activator: "#edit-linkedin-url-#{index}",
+                   place_holder: "<em>add url ...</em>" %>
+            </div>
+          </div>
+
+          <!-- show linkedin checkbox and widget (or placeholder) -->
+          <div class="linkedin-checkbox-and-widget
+                <%= contributor.linkedin_url.present? ? '' : 'hidden'  %>" >
+            <!-- tooltip wrapper -->
+            <div
+              data-toggle="<%= contribution.contributor_unpublished? ? 'tooltip' : '' %>"
+              data-placement="<%= contribution.contributor_unpublished? ? 'top' : '' %>"
+              title="<%= contribution.contributor_unpublished? ?
+                'Contributor has removed their profile from this story' : '' %>">
+
+              <div class="linkedin-checkbox-container
+                   <%= contribution.contributor_unpublished? ?
+                        'contributor-unpublished' : '' %>">
+
+                <%= form_for contribution,
+                      url: "/contributions/#{contribution.access_token}",
+                      method: :put, remote: true,
+                      html: { class: 'curator-linkedin-checkbox',
+                              style: 'display:inline-block' } do |f| %>
+
+                  <label for="contribution[publish_contributor]">
+                    <%= f.check_box :publish_contributor, {}, 'true', 'false' %>
+                    &nbsp;&nbsp;Publish profile with story
+                  </label>
+
+                <% end %>
+
+                <span class='ajax-confirm hidden' style='color:green'>
+                  &nbsp;&nbsp;<i class='fa fa-check'></i>
+                  saved
+                </span>
+
+              </div>
+            </div>
+
+            <!-- widget -->
+            <div class="widget-container">
+
+              <!-- render csp widget in client so width can be determined
+                   dynamically -->
+              <% if contributor.linkedin_data? %>
+
+                <div class="csp-widget-container text-center"
+                     data-first-name="<%= contributor.first_name %>"
+                     data-last-name="<%= contributor.last_name %>"
+                     data-linkedin-url="<%= contributor.linkedin_url %>"
+                     data-linkedin-title="<%= contributor.linkedin_title %>"
+                     data-linkedin-company="<%= contributor.linkedin_company %>"
+                     data-linkedin-location="<%= contributor.linkedin_location %>"
+                     data-linkedin-photo-url="<%= contributor.linkedin_photo_url %>">
+                </div>
+
+              <% else %>
+                <!-- placeholder rendered, removed if/when linkedin widget arrives -->
+                <div class='placeholder-widget-container text-center'
+                     style='min-height:128px'
+                     data-first-name="<%= contributor.first_name %>"
+                     data-last-name="<%= contributor.last_name %>"
+                     data-linkedin-url="<%= contributor.linkedin_url %>">
+                </div>
+
+                <div class='linkedin-widget-container hidden text-center'
+                     style='min-height:128px;position:relative'>
+                  <script type="IN/MemberProfile"
+                          data-id="<%= contributor.linkedin_url %>"
+                          data-format="inline"
+                          data-related="false" data-width='322'></script>
+                </div>
+
+              <% end %>
+            </div>
+
+          </div>
+
+        </div>  <!-- linkedin-container -->
+      <% end %>
+
+    </div>
+  </div>
+</div>

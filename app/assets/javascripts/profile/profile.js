@@ -16,27 +16,17 @@ function attachProfileHandlers () {
       sessionStorage.setItem('lastProfileTab', $(this).attr('href'));
   });
 
-  $(document).on('change', '.linkedin-checkbox', function () {
-
-    if ($(this).val() === 'true') {
-      $(this).val(false);
-    } else {
-      $(this).val(true);
-    }
-
-    $.ajax({
-      url: '/contributions/' + $(this).data('token'),
-      method: 'put',
-      data: { "linkedin_include_profile": $(this).val() },
-      success: function (data, status, xhr) {
-        // console.log(data, status);
-      }
-    });
-
+  $(document).on('focus', '.contributor-linkedin-checkbox', function () {
+    $(this).blur();
   });
 
-  $(document).on('focus', '.linkedin-checkbox', function () {
-    $(this).blur();
+  $(document).on('change', '.contributor-linkedin-checkbox', function () {
+    if ($(this).find('#contribution_publish_contributor').prop('checked')) {  // unchecked
+      $(this).find('#contribution_contributor_unpublished').val(false);
+    } else {
+      $(this).find('#contribution_contributor_unpublished').val(true);
+    }
+    $(this).submit();
   });
 
 }
