@@ -23,15 +23,20 @@ vendor/assets/bower_components
 # to set env variables in heroku (when new vars are added),
 # run this in local environment (app_name is csp-staging or floating-spire-2927):
 #   figaro heroku:set -e production -a <app_name>
-config/application.yml
+/config/application.yml
+
+# heroku local config
+/.env
 
 # paperclip images
-public/system
+/public/system
 
 # pre-compiled assets (uncomment for github push, comment for heroku)
-# public/assets
+# /public/assets
 
 # user-specific (uncomment for github push, comment for heroku)
-# config/database.yml
+# /config/database.yml
+
+
 
 
