@@ -40,6 +40,8 @@ gem 'jazz_hands', github: 'nixme/jazz_hands', branch: 'bring-your-own-debugger'
 gem 'pry-theme'
 gem 'pry-byebug'
 
+gem 'meta_request'
+
 group :production do
 
   gem 'puma'
