@@ -3,11 +3,22 @@ function storiesEdit () {
   // $('#contributions-nav').find('a:last').tab('show');
   // $("a[href='#collapse-connection-info-9']").click();
   loadVideoThumbnail();
-  loadLinkedInWidgets();
   loadCspOrPlaceholderWidgets();
 }
 
 function storiesEditHandlers () {
+
+  $(document)
+    .on('click', "a[href*='#collapse-connection-info']",
+    function () {
+      var $card = $(this).closest('.contribution-card');
+      if ($card.find('.linkedin-checkbox-and-widget').hasClass('hidden')) {
+        return false;
+      } else {
+        loadLIWidget($card);
+      }
+    });
+
   storiesEditBIPHandlers();
   storiesEditSettingsHandlers();
   storiesEditVideoInputHandler();
@@ -57,48 +68,63 @@ function loadCspOrPlaceholderWidgets() {
         // or (in this case) the placeholder widget
          $container.find('.csp-linkedin-widget').removeClass('hidden');
        });
-    // if the linkedin widget doesn't load after 10 seconds ...
-    setTimeout(function () {
-      if ($container.closest('.widget-container').data('linkedin-widget-loaded')) {
-        // success -> empty the placeholder
-        $container.empty();
-      } else {
-        // failure
-        $container.find('.member-info > p')
-                  .css('color', 'red')
-                  .text('Profile data not available');
-      }
-    }, 10000);
   });
 }
 
-function loadLinkedInWidgets () {
-  var firstWidgetIndex = null, currentWidgetIndex = null, relativeWidgetIndex = null,
-      postMessageHandler = function (event) {
-        if ($('body').hasClass('stories edit')) {
-          // For Chrome, the origin property is in the event.originalEvent object.
-          var origin = event.origin || event.originalEvent.origin;
-          if (event.origin === "https://platform.linkedin.com" &&
-              event.data.includes('-ready') && firstWidgetIndex === null) {
-            firstWidgetIndex = parseInt(event.data.match(/\w+_(\d+)-ready/)[1], 10);
-          } else if (event.origin === "https://platform.linkedin.com" &&
-              event.data.includes('widgetReady')) {
-            currentWidgetIndex = parseInt(event.data.match(/\w+_(\d+)\s/)[1], 10);
-            relativeWidgetIndex = currentWidgetIndex - firstWidgetIndex;
-            $('.linkedin-widget-container')
-              .eq(relativeWidgetIndex)
-              .css('margin-top', '-128px')  // overlay the placeholder container
-              .removeClass('hidden')
-              .closest('.widget-container')
-              .data('linkedin-widget-loaded', 'true');
+function loadLIWidget ($card) {
+  if ($card.find('.widget-container').data('linkedin-widget-loaded')) {
+    return false;
+  } else {
+    var $linkedinWidgetContainer = $card.find('.linkedin-widget-container'),
+        $placeholderWidgetContainer = $card.find('.placeholder-widget-container'),
+        url = $linkedinWidgetContainer.data('url'),
+        widgetWidth = 322,
+        widgetMarginTop = '-' + $card.find('.placeholder-widget-container')
+                                     .outerHeight()
+                                     .toString() + 'px',
+        $widget = $("<script type='IN/MemberProfile' " +
+                            "data-id='" + url + "' " +
+                            "data-format='inline' data-related='false' " +
+                            "data-width='" + widgetWidth.toString() + "'></script>"),
+        newWidgetPostMesgHandler = function () {
+          if ($('body').hasClass('stories edit')) {
+            // For Chrome, the origin property is in the event.originalEvent object.
+            var  origin = event.origin || event.originalEvent.origin,
+                 newWidgetId = $linkedinWidgetContainer
+                                 .find('iframe').attr('id')
+                                 .match(/^\w+(li_gen\w+)_provider/)[1];
+            if (origin === "https://platform.linkedin.com" &&
+                event.data.includes('widgetReady')) {
+              var widgetReadyId = event.data.match(/^(\w+)\s/)[1];
+              if (widgetReadyId === newWidgetId) {
+                $linkedinWidgetContainer
+                  .css('margin-top', widgetMarginTop)  // height of the placeholder container (for overlay)
+                  .removeClass('hidden')
+                  .closest('.widget-container')
+                  .data('linkedin-widget-loaded', true);
+              }
+            }  // widgetReady event
           }
-        }
-      };
-  window.addEventListener('message', postMessageHandler, false);
-  // remove the listener when navigating away from this page
-  $(document).one('turbolinks:before-visit', function () {
-    window.removeEventListener('message', postMessageHandler, false);
-  });
+        };  // var declarations
+    $linkedinWidgetContainer.append($widget);
+    window.addEventListener('message', newWidgetPostMesgHandler, false);
+    IN.parse();
+    setTimeout(function () {
+      if ($card.find('.widget-container').data('linkedin-widget-loaded')) {
+        // success (just leave the placeholder; removing or emptying will affect layout)
+      } else {
+        // failure
+        $placeholderWidgetContainer
+          .find('.member-info > p')
+          .css('color', 'red')
+          .text('Profile data not available');
+      }
+    }, 7000);
+    // remove the listener when navigating away from this page
+    $(document).one('turbolinks:before-visit', function () {
+      window.removeEventListener('message', newWidgetPostMesgHandler, false);
+    });
+  }
 }
 
 function storiesEditBIPHandlers () {
@@ -431,8 +457,7 @@ function storiesEditContributionsHandlers () {
           window.removeEventListener('message', newWidgetPostMesgHandler, false);
           // did the linkedin widget arrive?
           if ($widgetContainer.data('linkedin-widget-loaded')) {
-            // success -> remove the placeholder
-            $placeholderWidgetContainer.empty();
+            // success
           } else {
             // failure
             $placeholderWidgetContainer
