@@ -9,13 +9,12 @@ function storiesEdit () {
 function storiesEditHandlers () {
 
   $(document)
-    .on('click', "a[href*='#collapse-connection-info']",
+    .on('shown.bs.collapse', '.contribution-card',
     function () {
-      var $card = $(this).closest('.contribution-card');
-      if ($card.find('.linkedin-checkbox-and-widget').hasClass('hidden')) {
+      if ($(this).find('.linkedin-checkbox-and-widget').hasClass('hidden')) {
         return false;
       } else {
-        loadLIWidget($card);
+        loadLIWidget($(this));
       }
     });
 
