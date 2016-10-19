@@ -32,7 +32,9 @@ Rails.application.routes.draw do
 
     # Widget
     get '/widget/cs', to: 'widgets#script', as: 'widget'
-    get '/widget/cs-data', to: 'widgets#data', as: 'widget_data'
+    # specifying a default format here because (for unknown reason) ajax jsonp
+    # request sent from IE11 was resulting in request interpreted as html
+    get '/widget/cs-data', to: 'widgets#data', as: 'widget_data', format: 'js'
 
     # Stories - public access
     resources :stories, only: :index
