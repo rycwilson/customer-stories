@@ -7,6 +7,7 @@
 //= require plugins/socialshare
 //= require plugins/tooltips
 //= require plugins/clicky
+//= require plugins/promote
 
 function constructPlugins () {
 
@@ -17,6 +18,7 @@ function constructPlugins () {
   initSocialShare();
   initTooltips();
   initClicky();
+  initAdRoll();
 
   $('.best_in_place').best_in_place();
   $('.bs-switch').bootstrapSwitch({ size: 'small' });
