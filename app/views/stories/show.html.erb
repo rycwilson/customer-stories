@@ -157,7 +157,9 @@
 
         <div class="linkedin-widgets text-center">
 
-          <h3>Contributing Team</h3>
+          <% if @contributors.present? %>
+            <h3>Contributing Team</h3>
+          <% end %>
 
           <% @contributors.each do |contributor| %>
 
