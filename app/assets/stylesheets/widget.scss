@@ -8,6 +8,7 @@
 }
 
 .cs-drawer header {
+  box-sizing: content-box !important;
   cursor: pointer;
   background: #000000;
   color: #ffffff;
