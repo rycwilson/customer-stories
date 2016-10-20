@@ -40,8 +40,6 @@
           success: function (data) {
             $('#cs-container').html(data.html);
             var $images = $('#cs-container img'), loadedImages = 0;
-            $images.each(function () {
-            });
             // wait for all images to load so dimension calculations are correct ...
             $images.on('load', function (e) {
               if (++loadedImages === $images.length) {
@@ -49,6 +47,7 @@
                 preventScrollNav();
                 scrollHandlers();
                 centerLogos();
+                trackVisitor(data.segmentId);
                 // if user is using a mouse, this will hose dimensions
                 // (in a somewhat random way)
                 // compensate for this ...
@@ -311,6 +310,22 @@
   function calculateDynamicPage (position, numPages, pageWidth, carouselWidth) {
     for (var i = 1; i <= numPages; i++) {
       if (position + (carouselWidth / 2) < pageWidth * i) { return i }
+    }
+  }
+
+  function trackVisitor (segmentId) {
+    if (!segmentId) { return false; }
+    if (typeof __adroll === undefined) {
+      var trackingHost = (("https:" == document.location.protocol) ? "https://s.adroll.com" : "http://a.adroll.com");
+      $.getScript(trackingHost + '/j/roundtrip.js', function () {
+        try {
+          __adroll.record_user({"adroll_segments": segmentId})
+        } catch(err) {}
+      });
+    } else {
+      try {
+        __adroll.record_user({"adroll_segments": segmentId})
+      } catch(err) {}
     }
   }
 
