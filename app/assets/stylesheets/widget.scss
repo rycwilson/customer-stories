@@ -1,31 +1,31 @@
-
 .cs-drawer {
-  bottom: 0px !important;
-  // height: 183px !important;
-  overflow: hidden !important;
-  position: fixed !important;
-  z-index: 10000 !important;
-  width: 100% !important;
+  bottom: 0px;
+  // height: 183px;
+  overflow: hidden;
+  position: fixed;
+  z-index: 10000;
+  width: 100%;
 }
 
 .cs-drawer header {
-  cursor: pointer !important;
+  cursor: pointer;
   background: #000000;
   color: #ffffff;
-  display: block !important;
-  font-size: 16px !important;
-  height: 24px !important;
-  line-height: 24px !important;
-  overflow: hidden !important;
-  padding-top: 7px !important;
-  padding-bottom: 7px !important;
-  width: 145px !important;
-  margin-left: auto !important;
-  margin-right: 10% !important;
-  -moz-border-radius-topleft: 6px 6px !important;
-  -moz-border-radius-topright: 6px 6px !important;
-  border-top-left-radius: 6px 6px !important;
-  border-top-right-radius: 6px 6px !important;
+  display: block;
+  font-size: 16px;
+  height: 24px;
+  line-height: 24px;
+  overflow: hidden;
+  padding-top: 7px;
+  padding-bottom: 7px;
+  // text-align: center;
+  width: 145px;
+  margin-left: auto;
+  margin-right: 10%;
+  -moz-border-radius-topleft: 6px 6px;
+  -moz-border-radius-topright: 6px 6px;
+  border-top-left-radius: 6px 6px;
+  border-top-right-radius: 6px 6px;
 }
 
 .cs-drawer header:hover {
@@ -33,99 +33,99 @@
 }
 
 .cs-drawer-content {
-  position: relative !important;
+  position: relative;
   background-image: image-url('drawer-plugin/bg.png');
-  border-collapse: collapse !important;
+  border-collapse: collapse;
   border-top: 4px solid #000000;
-  width: 100% !important;
+  width: 100%;
 }
 
 .cs-drawer-items {
-  line-height: normal !important;  // added to compenstate for a line-height of 1.9 that was inherited from body and was making .row-pagination too tall
-  margin: auto !important;
+  line-height: normal;  // added to compenstate for a line-height of 1.9 that was inherited from body and was making .row-pagination too tall
+  margin: auto;
 }
 
 .row-horizon {
-  // padding-top: 8px !important;
-  padding-bottom: 16px !important;
+  // padding-top: 8px;
+  padding-bottom: 16px;
 }
 
 .cs-drawer-items .cs-thumbnail {
-  background-color: white !important;
-  max-width: 150px !important;
+  background-color: white;
+  max-width: 150px;
 }
 
 .cs-drawer-items .cs-thumbnail img {
-  max-height: 90px !important;
-  max-width: 100% !important;
+  max-height: 90px;
+  max-width: 100%;
 }
 
 .cs-drawer-items a {
-  margin: 0 !important;
+  margin: 0;
 }
 
 .cs-scroll-left {
-  position: absolute !important;
-  cursor: pointer !important;
-  top: 40px !important;
-  left: 0 !important;
-  margin-left: 2% !important;
-  z-index: 10 !important;
-  height: 60px !important;
-  width: 32px !important;
-  border-radius: 5px !important;
+  position: absolute;
+  cursor: pointer;
+  top: 40px;
+  left: 0;
+  margin-left: 2%;
+  z-index: 10;
+  height: 60px;
+  width: 32px;
+  border-radius: 5px;
   background: image-url('icon-chevron-left.png') no-repeat 0 0;
   background-clip: content-box;
 }
 
 .cs-scroll-left:hover {
-  background-color: black !important;
+  background-color: black;
 }
 
 .cs-scroll-right {
-  position: absolute !important;
-  cursor: pointer !important;
-  top: 40px !important;
-  right: 0 !important;
-  margin-right: 2% !important;
-  z-index: 10 !important;
-  height: 60px !important;
-  width: 32px !important;
-  border-radius: 5px !important;
+  position: absolute;
+  cursor: pointer;
+  top: 40px;
+  right: 0;
+  margin-right: 2%;
+  z-index: 10;
+  height: 60px;
+  width: 32px;
+  border-radius: 5px;
   background: image-url('icon-chevron-right.png') no-repeat 0 0;
   background-clip: content-box;
 }
 
 .cs-scroll-right:hover {
-  background-color: black !important;
+  background-color: black;
 }
 
 @media (min-width: 768px) {
   .cs-drawer-items {
-    width: 79% !important;
+    width: 79%;
   }
 }
 
 @media (min-width: 992px) {
   .cs-drawer-items {
-    width: 82% !important;
+    width: 82%;
   }
 }
 
 @media (min-width: 1200px) {
   .cs-drawer-items {
-    width: 84% !important;
+    width: 84%;
   }
 }
 
 .cs-page-dot {
-  display: inline-block !important;
-  height: 8px !important;
-  width: 8px !important;
-  margin: 4px !important;
-  border: 1px solid white !important;
-  background: transparent !important;
-  border-radius: 8px !important;
+  display: inline-block;
+  height: 8px;
+  width: 8px;
+  margin: 4px;
+  border: 1px solid white;
+  background: transparent;
+  border-radius: 8px;
 }
 
 .cs-current-page-dot {
@@ -133,5 +133,5 @@
 }
 
 .cs-pagination-row {
-  margin-top: 3px !important;
+  margin-top: 3px;
 }
