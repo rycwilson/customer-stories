@@ -47,7 +47,6 @@
                 preventScrollNav();
                 scrollHandlers();
                 centerLogos();
-                trackVisitor(data.segmentId);
                 // if user is using a mouse, this will hose dimensions
                 // (in a somewhat random way)
                 // compensate for this ...
@@ -62,6 +61,9 @@
                   slideTimeoutCount: 3000 // How long to wait before sliding drawer slides down.
                 });
                 $('#cs-container .cs-drawer').css('visibility', 'visible');
+                if (data.advId && data.pixId && data.segmentId) {
+                  trackVisitor(data.advId, data.pixId, data.segmentId);
+                }
               }
             });
           }
@@ -313,20 +315,17 @@
     }
   }
 
-  function trackVisitor (segmentId) {
-    if (!segmentId) { return false; }
-    if (typeof __adroll === undefined) {
-      var trackingHost = (("https:" == document.location.protocol) ? "https://s.adroll.com" : "http://a.adroll.com");
-      $.getScript(trackingHost + '/j/roundtrip.js', function () {
-        try {
-          __adroll.record_user({"adroll_segments": segmentId})
-        } catch(err) {}
-      });
-    } else {
-      try {
-        __adroll.record_user({"adroll_segments": segmentId})
-      } catch(err) {}
-    }
+  function trackVisitor (advId, pixId, segmentId) {
+
+    $('#cs-container').append('<iframe class="cs-iframe" src="about:blank"></iframe>');
+
+    var trackingDoc = $('#cs-container').find('iframe')[0].contentWindow.document,
+        trackingHost = (("https:" == document.location.protocol) ? "https://s.adroll.com" : "http://a.adroll.com"),
+        trackingUrl = trackingHost + '/j/roundtrip.js';
+
+    trackingDoc.open();
+    trackingDoc.write("<html><head><script>adroll_adv_id='" + advId + "';adroll_pix_id='" + pixId + "';</script><script src='" + trackingUrl + "'></script><script>try{__adroll.record_user({'adroll_segments':" + segmentId + "})}catch(err){};</script></head></html>");
+    trackingDoc.close();
   }
 
 }(window, document));

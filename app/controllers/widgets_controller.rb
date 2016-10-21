@@ -11,16 +11,20 @@ class WidgetsController < ApplicationController
   end
 
   def data
-    if ENV['HOST_NAME'] == 'customerstories.net' && request.subdomain == 'varmour'
+    if request.subdomain == 'varmour'
       segmentId = VARMOUR_ADROLL_WIDGET_SEGMENT_ID
+      advId = VARMOUR_ADROLL_ADV_ID
+      pixId = VARMOUR_ADROLL_PIX_ID
     else
       segmentId = nil
+      advId = nil
+      pixId = nil
     end
     html = widget_html params
     respond_to do |format|
       format.js do
         # Build a JSON object containing our HTML
-        json = { html: html, segmentId: segmentId }.to_json
+        json = { html: html, segmentId: segmentId, advId: advId, pixId: pixId }.to_json
         # Get the name of the JSONP callback created by jQuery
         callback = params[:callback]
         # Wrap the JSON object with a call to the JSONP callback
