@@ -1,4 +1,10 @@
 
+<% content_for :head do %>
+  <!-- challenge: get the cache preview to be responsive to tab selection
+       workaround: no preview-cache  -->
+  <meta name="turbolinks-cache-control" content="no-preview">
+<% end %>
+
 <div id='wrapper'>
 
   <%= render 'shared/mainnav' %>
@@ -6,20 +12,20 @@
   <div class='tab-content' style='margin-top:40px'>
 
     <%= render partial: 'companies/shared/pipeline',
-                locals: { mainnav_tab: @mainnav_tab, company: @company } %>
+                locals: { workflow_tab: @workflow_tab, company: @company } %>
 
     <%= render partial: 'companies/shared/curate',
-                locals: { mainnav_tab: @mainnav_tab,
-                              company: @company,
-                            customers: @customers,
-                           categories: @categories,
-                             products: @products } %>
+                locals: { workflow_tab: @workflow_tab,
+                               company: @company,
+               customer_select_options: @customer_select_options,
+               category_select_options: @category_select_options,
+                product_select_options: @product_select_options } %>
 
     <%= render partial: 'companies/shared/promote',
-                locals: { mainnav_tab: @mainnav_tab, company: @company} %>
+                locals: { workflow_tab: @workflow_tab, company: @company} %>
 
     <%= render partial: 'companies/shared/measure',
-                locals: { mainnav_tab: @mainnav_tab, company: @company} %>
+                locals: { workflow_tab: @workflow_tab, company: @company} %>
 
   </div>  <!-- tab content -->
 

@@ -4,16 +4,17 @@ class UserMailer < ApplicationMailer
 
   default from: 'no-reply@customerstories.net'
 
-  TEST_EMAILS = ['***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***']
+  CSP_EMAILS = ['***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***']
 
   def request_contribution contribution
     # don't track emails sent from dev or staging ...
     headers['X-SMTPAPI'] = { unique_args: {
                                 contribution_id: contribution.id
                              }}.to_json if production?
+    curator = contribution.success.curator
+    contributor = contribution.contributor
     @body = contribution.email_contribution_request.body.html_safe
-    send_mail contribution.success.curator, contribution.contributor,
-              contribution.email_contribution_request.subject
+    send_mail 'request', curator, contributor, contribution.email_contribution_request.subject
   end
 
   def send_contribution_reminder contribution
@@ -28,7 +29,7 @@ class UserMailer < ApplicationMailer
       subject = contribution.email_contribution_request.subject.prepend("Final reminder: ")
     end
     @body = contribution.email_contribution_request.body.html_safe
-    send_mail curator, contributor, subject, true
+    send_mail 'remind', curator, contributor, subject
   end
 
   def alert_contribution_update contribution
@@ -57,13 +58,10 @@ class UserMailer < ApplicationMailer
         <p><i>\"#{contribution.feedback}\"</i></p>
         <p><a href='#{story_link}'>Go to story</a></p>".html_safe
     end
-    mail to: "#{curator.full_name} <#{curator.email}>",
-         from: "Customer Stories Alerts <no-reply@customerstories.net>",
-         subject: subject
+    send_mail 'alert', curator, curator, subject
   end
 
   def test_template template, curator
-    @footer_img_url = CS_POWERED_LOGO_URL
     subject = template.subject
                 .sub("[customer_name]", "CustomerCompany")
                 .sub("[company_name]", curator.company.name)
@@ -84,41 +82,39 @@ class UserMailer < ApplicationMailer
               .gsub("[opt_out_url]", "#")
               .gsub("[curator_img_url]", curator.photo_url || "")
               .html_safe
-
-    mail       to: "#{curator.full_name} <#{curator.email}>",
-              # use default from to avoid same address causing email to bounce
-          subject: subject,
-    template_path: 'user_mailer',
-    template_name: 'request_contribution'
-
+    send_mail 'test', curator, curator, subject
   end
 
-  def send_mail curator, contributor, subject, is_reminder=false
+  # type is one of: request, remind, alert, test
+  def send_mail type, sender, recipient, subject
     if Rails.env == 'development'
-      if TEST_EMAILS.include? contributor.email
-        sender_email = (contributor.email == curator.email ? "dev-test@customerstories.net" : curator.email)
-        recipient = "#{contributor.full_name} <#{contributor.email}>"
-        sender = "#{curator.full_name} <#{sender_email}>"
+      if CSP_EMAILS.include? recipient.email
+        # if sender and recipient are same, provide a fake sender address
+        sender_email = (recipient.email == sender.email ? "dev-test@customerstories.net" : sender.email)
+        recipient_address = "#{recipient.full_name} <#{recipient.email}>"
+        sender_address = "#{sender.full_name} <#{sender_email}>"
       else
-        recipient = "#{contributor.full_name} <***REMOVED***>"
-        sender = "#{curator.full_name} <#{curator.email}>"
+        recipient_address = "#{recipient.full_name} <***REMOVED***>"
+        sender_address = "#{sender.full_name} <#{sender.email}>"
       end
     elsif ENV['HOST_NAME'] == 'customerstories.org'  # staging
-      recipient = "***REMOVED***"
-      sender = "#{curator.full_name} <#{curator.email}>"
-    elsif contributor.email == curator.email
-      recipient = "#{contributor.full_name} <#{contributor.email}>"
-      sender = 'Customer Stories <no-reply@customerstories.net>'
+      recipient_address = "#{recipient.full_name} <***REMOVED***>"
+      sender_address = "#{sender.full_name} <#{sender.email}>"
+    elsif recipient.email == sender.email
+      recipient_address = "#{recipient.full_name} <#{recipient.email}>"
+      sender_address = 'Customer Stories <no-reply@customerstories.net>'
     else
-      recipient = "#{contributor.full_name} <#{contributor.email}>"
-      sender = "#{curator.full_name} <#{curator.email}>"
+      recipient_address = "#{recipient.full_name} <#{recipient.email}>"
+      sender_address = "#{sender.full_name} <#{sender.email}>"
     end
-    if is_reminder
-      mail to: recipient, from: sender, subject: subject,
-      template_path: 'user_mailer', template_name: 'request_contribution'
-    else
-      mail to: recipient, from: sender, subject: subject
+
+    if type == 'alert'
+      sender_address = "Customer Stories Alerts <no-reply@customerstories.net>"
     end
+
+    mail to: recipient_address, from: sender_address, subject: subject,
+         template_path: 'user_mailer', template_name: 'standard_template'
+
   end
 
 end

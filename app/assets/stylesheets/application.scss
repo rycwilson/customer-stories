@@ -15,125 +15,39 @@
  *
  *= require animate.css/animate
  *= require font-awesome
+ *= require bootstrap
+ *= require bootstrap-jasny/dist/css/jasny-bootstrap.css
+ *= require magnific-popup/dist/magnific-popup
+ *= require datatables-plugins/integration/bootstrap/3/dataTables.bootstrap
+ *= require select2/dist/css/select2
+ *= require select2-bootstrap-theme/dist/select2-bootstrap
+ *= require jquery.minicolors
+ *= require bootstrap-switch/dist/css/bootstrap3/bootstrap-switch
+ *= require social-share
+ *= require companies/companies
+ *= require stories/stories
+ *= require contributions/contributions
  */
 
-/* bootstrap-sass */
-$icon-font-path: "bootstrap-sass/assets/fonts/bootstrap/";
-@import "bootstrap-sass/assets/stylesheets/bootstrap-sprockets";
-@import "bootstrap-sass/assets/stylesheets/bootstrap";
+// had to change from require to this due to the error described here:
+ // https://github.com/summernote/summernote-rails/issues/46
+ // comports with summernote docs
+ @import "summernote";
 
 
-/********** curate table **************/
-.td-story-date {
-  width: 12%;
-}
-.td-story-status {
-  width: 15%;
-}
-.td-story-actions {
-  width: 10%;
-}
-// this will stretch the table cell to fit content
-// (don't want to wrap a customer or curator name)
-.td-story-curator,
-.td-story-customer {
-  width:1%;
-  white-space:nowrap;
-}
-/***************************************/
-
-
-/***********************************************/
-/*          admin navbar
-/***********************************************/
-
-.fa-bars {
-  color: #555555;
+.turbolinks-progress-bar {
+  height: 1px;
+  background-color: #00fbff;
 }
 
-.navbar.admin {
-  /* color1, color2, and text color are defined in company model */
-  /* background-color set to transparent in mvpready-admin.css */
-  background-clip: border-box;
-  border:0;
-}
-
-.navbar.admin {
-  height: 65px;
-}
-
-.navbar.admin .container-fluid {
-  padding-left: 4%;
-  padding-right: 4%;
-}
-
-.navbar.admin .navbar-brand {
-  // height set to 65px in mvpready-admin - to match navbar height
-  line-height: 58px  // use this to center the logo
-}
-
-.navbar-brand img {
-  margin: auto;
-  vertical-align: middle;
-  display: inline-block;
-  max-height: 45px;  // restrict the height of the logo
-  padding-right: 15px;
-}
-
-.navbar.admin h3 {
-  margin-top: 23px;
-  margin-bottom: 0;
-  // display: inline-block;
-}
-
-@media (max-width: 450px) {
-  .navbar.admin .navbar-header h3 {
-    font-size: 16px;
-    margin-top: 30px;
-  }
-  .navbar.admin .navbar-brand img {
-    padding-right: 0;
-  }
-}
-
-@media (min-width: 450px) and (max-width: 475px) {
-  .navbar.admin .navbar-header h3 {
-    font-size: 20px;
-    margin-top: 26px;
-  }
-  .navbar.admin .navbar-brand img {
-    padding-right: 5px;
-  }
-}
-
-@media (min-width: 476px) and (max-width: 500px) {
-  .navbar.admin .navbar-header h3 {
-    font-size: 22px;
-    margin-top: 25px;
-  }
-  .navbar.admin .navbar-brand img {
-    padding-right: 10px;
-  }
-}
-
-.navbar.admin .btn {
-  margin-top: 25px;
-}
-
-
-/***************************************/
 
 .content h3 {
   font-weight: 700;
 }
 
-.mainnav a {
-  font-family: 'Lato';
-  font-weight: 300;
-}
 
 /*
-  apply to all columns within a row to center vertically
+ *  apply to all columns within a row to center vertically
 */
 .vcenter {
   display: inline-block;
@@ -141,28 +55,15 @@ $icon-font-path: "bootstrap-sass/assets/fonts/bootstrap/";
   float: none;
 }
 
-/*
-  removes the dropdown caret in mainnav
-*/
-.mainnav .nav > li > .dropdown-menu::after,
-.mainnav .nav > li > .dropdown-menu::before {
-  display:none;
-}
-
-/*
-  no borders on nav tabs (override bootstra)
-*/
-.nav-tabs > li.active > a,
-.nav-tabs > li.active > a:hover,
-.nav-tabs > li.active > a:focus {
-  border: 1px solid transparent;
-}
-
 .required-input label:after {
   color: #D9534F;
   content: " *";
 }
 
+
+/*
+ *  below related to S3 upload
+ */
 .progress {
   max-width: 600px;
   margin:    0.2em 0 0.2em 0;

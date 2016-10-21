@@ -2081,7 +2081,7 @@ ul.blog-popular-posts > li {
   padding: 0;
   margin: 0 0 1em;
   list-style-type: none;
-  *zoom: 1;
+  zoom: 1;
   display: table;
 }
 ul.blog-popular-posts > li:last-child {

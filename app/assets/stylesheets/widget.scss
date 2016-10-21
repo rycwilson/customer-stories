@@ -1,17 +1,19 @@
-
-.drawer {
+.cs-drawer {
   bottom: 0px;
   // height: 183px;
   overflow: hidden;
   position: fixed;
-  z-index: 5;
+  z-index: 10000;
   width: 100%;
 }
 
-.drawer header {
+.cs-drawer header {
+  box-sizing: content-box !important;
+  cursor: pointer;
   background: #000000;
   color: #ffffff;
   display: block;
+  font-size: 16px;
   height: 24px;
   line-height: 24px;
   font-size: 16px;
@@ -28,11 +30,11 @@
   border-top-right-radius: 6px 6px;
 }
 
-.drawer header:hover {
+.cs-drawer header:hover {
   color: #e2e2e2 !important;
 }
 
-.drawer-content {
+.cs-drawer-content {
   position: relative;
   background-image: image-url('drawer-plugin/bg.png');
   border-collapse: collapse;
@@ -40,11 +42,8 @@
   width: 100%;
 }
 
-.clickme {
-  cursor: pointer;
-}
-
-.drawer-items {
+.cs-drawer-items {
+  line-height: normal;  // added to compenstate for a line-height of 1.9 that was inherited from body and was making .row-pagination too tall
   margin: auto;
 }
 
@@ -53,21 +52,21 @@
   padding-bottom: 16px;
 }
 
-.drawer-items .thumbnail {
+.cs-drawer-items .cs-thumbnail {
   background-color: white;
   max-width: 150px;
 }
 
-.drawer-items .thumbnail img {
+.cs-drawer-items .cs-thumbnail img {
   max-height: 90px;
   max-width: 100%;
 }
 
-.drawer-items a {
+.cs-drawer-items a {
   margin: 0;
 }
 
-.scroll-left {
+.cs-scroll-left {
   position: absolute;
   cursor: pointer;
   top: 40px;
@@ -81,11 +80,11 @@
   background-clip: content-box;
 }
 
-.scroll-left:hover {
+.cs-scroll-left:hover {
   background-color: black;
 }
 
-.scroll-right {
+.cs-scroll-right {
   position: absolute;
   cursor: pointer;
   top: 40px;
@@ -99,29 +98,29 @@
   background-clip: content-box;
 }
 
-.scroll-right:hover {
+.cs-scroll-right:hover {
   background-color: black;
 }
 
 @media (min-width: 768px) {
-  .drawer-items {
+  .cs-drawer-items {
     width: 79%;
   }
 }
 
 @media (min-width: 992px) {
-  .drawer-items {
+  .cs-drawer-items {
     width: 82%;
   }
 }
 
 @media (min-width: 1200px) {
-  .drawer-items {
+  .cs-drawer-items {
     width: 84%;
   }
 }
 
-.pagination {
+.cs-page-dot {
   display: inline-block;
   height: 8px;
   width: 8px;
@@ -131,36 +130,10 @@
   border-radius: 8px;
 }
 
-.row-pagination {
-  margin-top: 3px;
+.cs-current-page-dot {
+  background: white !important;
 }
 
-// .drawer-items ul {
-// margin: 0px;
-// }
-
-// .drawer-items li {
-//   float: left;
-//   list-style: none;
-//   margin-left: 0px;
-//   width: 200px;
-// }
-
-// .drawer-items li a {
-//   color: #fff;
-//   display: block;
-//   height: 86px;
-//   padding: 12px;
-//   text-decoration: none;
-//   width: 176px;
-// }
-
-// .drawer-items li a:hover {
-//   background: #bd4929;
-// }
-
-// .drawer-items .title {
-// color: #c4c4c4;
-// font-size: 20px;
-// line-height: 1.1;
-// }
+.cs-pagination-row {
+  margin-top: 3px;
+}

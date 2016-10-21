@@ -1,5 +1,7 @@
 <!-- promote -->
-<div id='promote' class="<%= mainnav_tab == 'promote' ? 'active tab-pane content' : 'tab-pane content' %>" role='tabpanel'>
+<div id='promote-panel'
+     class="<%= workflow_tab == 'promote' ? 'active tab-pane content' : 'tab-pane content' %>" role='tabpanel'>
+
   <div class='container'>
     <div class='row'>
       <div class='portlet portlet-default'>
@@ -12,8 +14,8 @@
 
                 <% if ['alpha', 'beta'].include? company.feature_flag %>
 
-                  <span class='tooltip-wrapper-promote' style='display:inline-block'
-                      data-title='Coming soon'>
+                  <span class='tooltip-beta-promote' data-title='Coming soon'
+                        style='display:inline-block'>
                     <input type="checkbox" style='pointer-events:none' disabled>
                     <label>Enable Retargeting</label> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
 

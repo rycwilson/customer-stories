@@ -1,0 +1,37 @@
+
+  <script type="text/template" id="stories-template">
+
+    {{ stories.forEach(function (story) { }}
+
+      <a href="{{= (story.published && story.csp_story_path) || (isCurator && '/stories/' + story.id + '/edit') || 'javascript:;' }}"
+         style="{{= !isCurator && !story.published ? 'pointer-events:none' : '' }}">
+        <div class="grid-item thumbnail
+              {{= !isCurator && !story.published ? 'no-caption' : '' }}">
+
+            {{ if (story.success.customer.logo_url) { }}
+              <img src="{{= story.success.customer.logo_url }}">
+            {{ } else { }}
+              <img src="<%= asset_path('company-logo-missing.png') %>">
+            {{ } }}
+
+          {{ if (story.published) { }}
+
+            <div class="caption"
+              style="background-color:<%= company.nav_color_1 %>;
+                     color:<%= company.nav_text_color %>;}}">
+              Read story
+            </div>
+
+          {{ } else if (isCurator) { }}
+
+            <div class="caption" style="background-color:#f5f5f5">
+              {{= story.logo_published ? 'Logo published' : 'Pending curation' }}
+            </div>
+
+          {{ } }}
+
+        </div>
+      </a>
+
+    {{ }); }}
+  </script>

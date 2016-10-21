@@ -1,25 +1,4 @@
 
-<%= javascript_tag do %>
-  $(function () {
-    var company = <%= raw @company.to_json %>;
-
-    $('.nav-tabs .active').removeClass('active');
-
-    $('a[role=tab]').on('click', function() {
-      window.location =
-        '/companies/' + company.id + '?mainnav_tab=' + $(this).attr('aria-controls')
-    });
-
-    $('#restore-colors-button').on('click', function () {
-      $('header.navbar').attr('style', '<%= admin_navbar_style %>');
-      $('#company_nav_color_1').minicolors('value', '<%= @company.nav_color_1 %>');
-      $('#company_nav_color_2').minicolors('value', '<%= @company.nav_color_2 %>');
-      $('#company_nav_text_color').minicolors('value', '<%= @company.nav_text_color %>');
-    });
-
-  });
-<% end %>
-
 <div class="wrapper">
 
   <%= render 'shared/mainnav' %>

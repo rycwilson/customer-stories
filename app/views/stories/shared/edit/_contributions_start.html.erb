@@ -1,0 +1,28 @@
+<!-- pre-request contributors -->
+<div class="tab-pane fade in active" id="pre-request">
+
+  <div style='padding-top:2.8%; padding-bottom:2.8%; margin-bottom:2.5%'>
+    <button type="button" id="new-contributor-button"
+        class="btn btn-primary btn-sm"
+        data-toggle="modal" data-target="#new-contributor-modal">
+      Add Contributor
+    </button>
+    <!-- <span class='glyphicon glyphicon-plus bip-clickable'
+       style="position:absolute; top:-5px; left:230px"
+       id="new-contributor-button" data-toggle="modal"
+       data-target="#new-contributor-modal"></span> -->
+  </div>
+
+  <div id='contributions-pre-request'>
+
+    <% @story.contributions_pre_request.each_with_index do |contribution, index| %>
+
+       <%= render 'stories/shared/edit/contribution_card',
+            { contribution: contribution, contributor: contribution.contributor,
+              type: "pre-request", index: index } %>
+
+    <% end %>
+
+  </div>
+
+</div>

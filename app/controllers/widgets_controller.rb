@@ -1,3 +1,4 @@
+
 class WidgetsController < ApplicationController
 
   skip_before_action :verify_authenticity_token, only: [:script, :data]
@@ -10,11 +11,20 @@ class WidgetsController < ApplicationController
   end
 
   def data
+    if request.subdomain == 'varmour'
+      segmentId = VARMOUR_ADROLL_WIDGET_SEGMENT_ID
+      advId = VARMOUR_ADROLL_ADV_ID
+      pixId = VARMOUR_ADROLL_PIX_ID
+    else
+      segmentId = nil
+      advId = nil
+      pixId = nil
+    end
     html = widget_html params
     respond_to do |format|
       format.js do
         # Build a JSON object containing our HTML
-        json = { html: html }.to_json
+        json = { html: html, segmentId: segmentId, advId: advId, pixId: pixId }.to_json
         # Get the name of the JSONP callback created by jQuery
         callback = params[:callback]
         # Wrap the JSON object with a call to the JSONP callback
@@ -46,50 +56,38 @@ class WidgetsController < ApplicationController
     stories_links =
          Company.find_by(subdomain: company_subdomain)
                 .filter_stories_by_tag(filter_params || filter_all, false)
-                .map do |success|
-                  story = success.story
-                  { logo: success.customer.logo_url,
-                    link: story.published ?
-                            URI.join(root_url(host: company_subdomain + '.' + request.domain),
-                                     story.csp_story_path).to_s
-                            : stories_index_url }
+                .map do |story|
+                  { logo: story.success.customer.logo_url,
+                    link: story.published ? story.csp_story_url : stories_index_url }
                 end
 
-    html = "<section class='drawer' style='visibility:hidden'>
-              <header class='clickme text-center'
+    html = "<section class='cs-drawer' style='visibility:hidden'>
+              <header class='text-center'
                 style='background-color:#{tab_color};color:#{font_color}'>
                 Customer Stories
               </header>
-              <div class='drawer-content' style='border-top-color:#{tab_color}'>
-                <div class='drawer-items'>
-                  <div class='scroll-left'></div>
-                    <div class='row row-pagination text-center'>
+              <div class='cs-drawer-content' style='border-top-color:#{tab_color}'>
+                <div class='cs-drawer-items'>
+                  <div class='cs-scroll-left'></div>
+                    <div class='cs-row cs-pagination-row text-center'>
                     </div>
-                    <div class='row row-horizon text-center'>"
+                    <div class='cs-row row-horizon text-center'>"
 
-    # determine best column width given number of stories
-    case stories_links.length
-      when 1..10
-        xs_col_width = 4
-        sm_col_width = 3
-        md_col_width = 2
-      when 11..30
-        xs_col_width = 4
-        sm_col_width = 3
-        md_col_width = 2
-    end
+    xs_col_width = 4
+    sm_col_width = 3
+    md_col_width = 2
 
     # the bootstrap styling starts to break down after 30 stories
     stories_links.first(30).each do |story|
       html <<         "<div class='col-xs-#{xs_col_width} col-sm-#{sm_col_width} col-md-#{md_col_width}'>
-                         <a href='#{story[:link]}' class='thumbnail' target='_blank'>
+                         <a href='#{story[:link]}' class='cs-thumbnail' target='_blank'>
                            <img src='#{story[:logo]}' alt=''>
                          </a>
                        </div>"
     end
 
     html <<        "</div>
-                  <div class='scroll-right'></div>
+                  <div class='cs-scroll-right'></div>
                 </div>
               </div>
             </section>"

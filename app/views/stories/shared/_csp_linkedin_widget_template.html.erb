@@ -1,0 +1,67 @@
+
+<script id='csp-linkedin-widget-template' type='text/template'>
+
+  {{ var noPhotoUrl = 'https://static.licdn.com/scds/common/u/img/icon/icon_no_photo_80x80.png'; }}
+  {{ var loading = loading || false; }}
+
+  <div class="csp-linkedin-widget hidden" style="{{= 'width:' + widgetWidth.toString() + 'px' }}">
+    <div class="container-outer">
+      <div class="li-profile-container member-profile"
+           style="{{= 'width:' + (widgetWidth - 4).toString() + 'px' }}">
+        <div class="li-profile-card vcard">
+          <div class="ie-filter-fix">
+            <div class="member-info">
+              <h1>
+                <a href="{{= contributor.linkedin_url }}"
+                   target='_blank' class='url'>
+                  <span id="name" class="n fn">
+                    <span class="given-name">{{= contributor.first_name }}</span>
+                    <span class="family-name">{{= contributor.last_name }}</span>
+                  </span> </a>
+              </h1>
+              <p>
+                {{ if (contributor.linkedin_title && contributor.linkedin_company) { }}
+
+                  <span class="title">
+                    <b>{{= contributor.linkedin_title }}</b>
+                    at
+                    <b class="org">{{= contributor.linkedin_company }}</b>
+                  </span>
+                  <span class="locality">
+                    {{= contributor.linkedin_location }}
+                  </span>
+
+                {{ } else { }}
+
+                  {{ if (loading) { }}
+                    <i class="fa fa-spinner fa-pulse fa-fw"></i>
+                    <span class="sr-only">Loading...</span>
+                  {{ } else { }}
+                    <span class="title" style='color:red'>
+                      <b>Profile data not available</b>
+                    </span>
+                  {{ } }}
+
+                {{ } }}
+              </p>
+              <div class="widget-actions">
+                <p>
+                  <a href="{{= contributor.linkedin_url }}"
+                     target='_blank' class='btn-ternary'>
+                    View Profile
+                  </a>
+                </p>
+              </div>
+            </div>
+            <div class="member-photo">
+              <img class='photo'
+                  src="{{= contributor.linkedin_photo_url || noPhotoUrl }}" alt="">
+              <span class="mark {{= contributor.linkedin_photo_url && contributor.linkedin_photo_url.includes('licdn') ? '' : 'hidden' }}"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</script>

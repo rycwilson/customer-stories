@@ -89,10 +89,10 @@
 
         <div class="col-sm-6">
           <label>Try it!</label> <br>
-          <button type='button' id='test-colors-button' class='btn btn btn-default'>
+          <button type='button' id='test-colors-btn' class='btn btn btn-default'>
             Apply
           </button>
-          <button type='button' id='restore-colors-button' class='btn btn btn-default'>
+          <button type='button' id='restore-colors-btn' class='btn btn btn-default'>
             Restore
           </button>
         </div>
@@ -110,7 +110,7 @@
 
       <%= label_tag 'company_tags[category][]', 'Categories', class: 'control-label' %>
       <%= select_tag 'company_tags[category][]',
-            options_for_select(@categories, @categories_pre_select),
+            options_for_select(@category_select_options, @category_pre_selected_options),
             { multiple: 'true', class: 'company-tags form-control',
               # placeholder: doesn't work from here, set in js
               style: 'width:100%' } %>
@@ -127,7 +127,7 @@
     <div class="form-group">
       <%= label_tag 'Products', nil, class: 'control-label' %>
       <%= select_tag 'company_tags[product][]',
-            options_for_select(@products, @products_pre_select),
+            options_for_select(@product_select_options, @product_pre_selected_options),
             { multiple: 'true', class: 'company-tags form-control',
               style: 'width:100%' } %>
     </div>

@@ -7,78 +7,75 @@
           about: @about_jsonld
 -->
 
-<% content_for :head do %>
+<meta property='og:title' content="<%= story.title %>">
+<meta property="og:url" content="<%= story.csp_story_url %>">
+<meta property='og:image' content="<%= og_image(company,'linkedin')[:image] %>">
+<meta property='og:image:width' content="<%= og_image(company,'linkedin')[:width] %>">
+<meta property='og:image:height' content="<%= og_image(company,'linkedin')[:height] %>">
+<meta property='og:image' content="<%= og_image(company,'all')[:image] %>">
+<meta property='og:image:width' content="<%= og_image(company,'all')[:width] %>">
+<meta property='og:image:height' content="<%= og_image(company,'all')[:height] %>">
 
-  <meta property='og:title' content="<%= story.title %>">
-  <meta property="og:url" content="<%= story.csp_story_url %>">
-  <meta property='og:image' content="<%= og_image(company,'linkedin')[:image] %>">
-  <meta property='og:image:width' content="<%= og_image(company,'linkedin')[:width] %>">
-  <meta property='og:image:height' content="<%= og_image(company,'linkedin')[:height] %>">
-  <meta property='og:image' content="<%= og_image(company,'all')[:image] %>">
-  <meta property='og:image:width' content="<%= og_image(company,'all')[:width] %>">
-  <meta property='og:image:height' content="<%= og_image(company,'all')[:height] %>">
+<meta property='og:description'
+  content="<%= story.quote.present? ? "\"" + story.quote + "\"" :
+                company.name + "/" + success.customer.name + " Customer Story" %>">
+<meta property='og:type' content='article'>
+<meta property='og:site_name' content="<%= company.name %> Customer Stories">
+<meta property='fb:app_id'
+      content="<%= ENV['HOST_NAME'] == 'customerstories.net' ?
+                '291034101286863' : '<facebook_app_id>' %>">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="<%= og_image(company,'all')[:image] %>">
 
-  <meta property='og:description'
-    content="<%= story.quote.present? ? "\"" + story.quote + "\"" :
-                  company.name + "/" + success.customer.name + " Customer Story" %>">
-  <meta property='og:type' content='article'>
-  <meta property='og:site_name' content="<%= company.name %> Customer Stories">
-  <meta property='fb:app_id'
-        content="<%= ENV['HOST_NAME'] == 'customerstories.net' ?
-                  '291034101286863' : '<facebook_app_id>' %>">
-  <meta name="twitter:card" content="summary">
-  <meta name="twitter:image" content="<%= og_image(company,'all')[:image] %>">
-
-  <script type='application/ld+json'>
-    {
-      "@context": "https://schema.org/",
-      "@type": "Article",
-      "mainEntityOfPage": {
-        "@type": "WebPage",
-        "@id": "<%= story.csp_story_url %>"
-      },
-      "publisher": {
-        "@type": "Corporation",
-        "name": "<%= company.name %>",
-        "url": "<%= company.website %>",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "<%= company.logo_url %>"
-        },
-        "owns": <%= raw owns.to_json %>
-      },
-      "author": {
-        "@type": "Person",
-        "name": "<%= success.curator.full_name %>"
-      },
-      "description": "<%= company.name + '/' + success.customer.name + ' Customer Story' %>",
-      "image": {
+<script type='application/ld+json'>
+  {
+    "@context": "https://schema.org/",
+    "@type": "Article",
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": "<%= story.csp_story_url %>"
+    },
+    "publisher": {
+      "@type": "Corporation",
+      "name": "<%= company.name %>",
+      "url": "<%= company.website %>",
+      "logo": {
         "@type": "ImageObject",
-        "url": "<%= CS_FULL_LOGO_URL %>",
-        "height": 1200,
-        "width": 630
+        "url": "<%= company.logo_url %>"
       },
-      "contributor": <%= raw contributors.to_json %>,
-      "about": {
-        "@type": "Corporation",
-        "name": "<%= success.customer.name %>",
-        "logo": {
-          "@type": "ImageObject",
-          "url": "<%= success.customer.logo_url %>"
-        }
-      },
-      "about": <%= raw about.to_json %>,
-      "headline": "<%= story.title %>",
-      "alternativeHeadline": <%= raw success.results.pluck('description').to_json %>,
-      "articleBody": "<%= story.content %>",
-      // "url": "<%= story.csp_story_url %>",
-      "genre": "<%= success.story_categories.take.try(:name) %>",
-      "keywords": "<%= meta_keywords(success) %>",
-      "dateCreated": "<%= story.created_at %>",
-      "dateModified": "<%= story.updated_at %>",
-      "datePublished": "<%= story.publish_date %>",
-      "isFamilyFriendly": "true"
-    }
-  </script>
+      "owns": <%= raw owns.to_json %>
+    },
+    "author": {
+      "@type": "Person",
+      "name": "<%= success.curator.full_name %>"
+    },
+    "description": "<%= company.name + '/' + success.customer.name + ' Customer Story' %>",
+    "image": {
+      "@type": "ImageObject",
+      "url": "<%= CS_FULL_LOGO_URL %>",
+      "height": 1200,
+      "width": 630
+    },
+    "contributor": <%= raw contributors.to_json %>,
+    "about": {
+      "@type": "Corporation",
+      "name": "<%= success.customer.name %>",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "<%= success.customer.logo_url %>"
+      }
+    },
+    "about": <%= raw about.to_json %>,
+    "headline": "<%= story.title %>",
+    "alternativeHeadline": <%= raw success.results.pluck('description').to_json %>,
+    "articleBody": "<%= story.content %>",
+    // "url": "<%= story.csp_story_url %>",
+    "genre": "<%= success.story_categories.take.try(:name) %>",
+    "keywords": "<%= meta_keywords(success) %>",
+    "dateCreated": "<%= story.created_at %>",
+    "dateModified": "<%= story.updated_at %>",
+    "datePublished": "<%= story.publish_date %>",
+    "isFamilyFriendly": "true"
+  }
+</script>
 
-<% end %>

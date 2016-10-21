@@ -1,16 +1,12 @@
 (function () {
 
-  var contributionsPreRequest = <%= raw @contributions_pre_request.to_json({ include: { contributor: {}, referrer: {}, success: { include: :customer } } }) %>,
+  var contributionsPreRequest = <%= raw @contributions_pre_request.to_json({ include: { contributor: { methods: :full_name }, referrer: { methods: :full_name }, success: { include: :customer } } }) %>,
       allContributors = <%= raw @contributors.to_json %>,
-       connections = <%= raw @contributions.to_json({ methods: :status_helper, include: { contributor: {}, referrer: {}, success: { include: :customer } } }) %>,
+       connections = <%= raw @contributions.to_json({ methods: :display_status, include: { contributor: { methods: :full_name }, referrer: { methods: :full_name }, success: { include: :customer } } }) %>,
          flashMesg = "<%= @flash_mesg %>",
        flashStatus = "<%= @flash_status %>",
           template = _.template($('#cc-template').html());
 
-  /*
-    wait for the modal to close before callback executes
-    .one() => callback executes only once
-  */
   $('#new-contributor-modal').one('hidden.bs.modal', function () {
     if (flashStatus === "danger") {
       flashDisplay(flashMesg, flashStatus);
@@ -21,9 +17,7 @@
       // dynamically added elements must be re-configured as best-in-place
       $('#contributions-pre-request .best_in_place').best_in_place();
       $('#contribution-connections .best_in_place').best_in_place();
-      // render linkedin profile widgets
-      IN.parse();
-      initLinkedIn();  // remove tab index'ing
+
       /*
         attach listeners to dynamically added elements ...
         TODO: define these in stories.js
@@ -72,18 +66,16 @@
       card template will leave a space for the linkedin widget, and we'll
       fill it in here ...
     */
-    $('#contribution-connections .linkedin-profile').each(function () {
-      var linkedinUrl = $.trim($(this).parent().find("[data-bip-attribute='linkedin_url']").text());
+    $('.linkedin-widget-container').each(function () {
       $(this).append(
         "<script type='IN/MemberProfile' " +
-          "data-id='" + linkedinUrl + "' " +
+          "data-id='" + $(this).data('linkedin-url') + "' " +
           "data-format='inline' data-related='false' " +
-          "data-width='340'></script>");
+          "data-width='322'></script>" );
     });
-    // render the widgets ...
-    IN.parse();
-    // give them a second to load, then disable tab index'ing ...
+    // parse and disable tab index'ing
     initLinkedIn();
+    loadLinkedInWidgets();  // attach post message handler
   }
 
   /*

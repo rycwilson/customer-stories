@@ -4,20 +4,6 @@
 
 <% end %>
 
-<%= javascript_tag do %>
-
-  $(function () {
-    var company = <%= raw @company.to_json %>;
-
-    if (company.feature_flag == 'alpha' || company.feature_flag == 'beta') {
-      $(".tooltip-wrapper-tabs").tooltip({ placement: 'right', container: 'body' });
-      $(".tooltip-wrapper-promote").tooltip({ placement: 'top' });
-    }
-
-  });
-
-<% end %>
-
 <nav class='mainnav mainnav-main' style="margin-bottom:0">
   <div class='container'>
 
@@ -37,7 +23,7 @@
 
     <% if gallery_view? %>
 
-      <div class="col-xs-8 col-md-6">
+      <div class="stories-filters-container col-xs-8 col-md-6">
         <%= render 'stories/shared/filters',
                       { company: @company,
                         category_select_options: @category_select_options,

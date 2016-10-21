@@ -3,6 +3,18 @@ class Story < ActiveRecord::Base
   include FriendlyId
 
   belongs_to :success
+
+  scope :company_all, ->(company_id) {
+    joins(success: { customer: {} })
+    .where(customers: { company_id: company_id })
+    .order("stories.published DESC, stories.publish_date ASC")
+    .order("stories.updated_at DESC")
+  }
+  scope :company_all_logo_published, ->(company_id) {
+    company_all(company_id)
+    .where(logo_published: true)
+  }
+
   # Note: no explicit association to friendly_id_slugs, but it's there
   # Story has many friendly_id_slugs -> captures history of slug changes
 
@@ -144,6 +156,116 @@ class Story < ActiveRecord::Base
     else
       # error
     end
+  end
+
+  def contributions_pre_request
+    Contribution
+      .story_all(self.id)
+      .includes(:contributor, :referrer)
+      .where(status: 'pre_request')
+      .order(created_at: :desc)  # most recent first
+  end
+
+  # sort oldest to newest (according to status)
+  def contributions_in_progress
+    status_options = ['opt_out', 'unsubscribe', 'remind2', 'remind1', 'request', 're_send']
+    Contribution
+      .story_all(self.id)
+      .includes(:contributor, :referrer)
+      .where('status IN (?)', status_options)
+      .sort do |a,b|  # sorts as per order of status_options
+        if status_options.index(a.status) < status_options.index(b.status)
+          -1
+        elsif status_options.index(a.status) > status_options.index(b.status)
+          1
+        else 0
+        end
+      end
+  end
+
+  def contributions_next_steps
+    Contribution
+      .story_all(self.id)
+      .includes(:contributor, :referrer)
+      .where('status IN (?)', ['feedback', 'did_not_respond'])
+      .order("CASE status
+                WHEN 'feedback' THEN '1'
+                WHEN 'did_not_respond' THEN '2'
+              END")
+  end
+
+  def contributions_submitted
+    Contribution
+      .story_all(self.id)
+      .includes(:contributor, :referrer)
+      .where(status: 'contribution')
+      .order(submitted_at: :desc)
+  end
+
+  def contributions_as_connections
+    Contribution
+      .story_all_except_curator(self.id, self.success.curator.id)
+      .includes(:contributor, :referrer)
+      .where.not("status IN ('unsubscribe', 'opt_out')")
+      .order("CASE role
+                WHEN 'customer' THEN '1'
+                WHEN 'partner' THEN '2'
+                WHEN 'sales' THEN '3'
+              END")
+  end
+
+  # this method closely resembles the 'set_contributors' method in stories controller;
+  # adds contributor linkedin data, which is necessary client-side for widgets
+  # that fail to load
+  def published_contributors
+    curator = self.success.curator
+    contributors =
+      User.joins(own_contributions: { success: {} })
+          .where.not(linkedin_url:'')
+          .where(successes: { id: self.success_id },
+                 contributions: { publish_contributor: true })
+          .order("CASE contributions.role
+                    WHEN 'customer' THEN '1'
+                    WHEN 'partner' THEN '2'
+                    WHEN 'sales' THEN '3'
+                  END")
+          .map do |contributor|
+             { widget_loaded: false,
+               id: contributor.id,
+               first_name: contributor.first_name,
+               last_name: contributor.last_name,
+               linkedin_url: contributor.linkedin_url,
+               linkedin_photo_url: contributor.linkedin_photo_url,
+               linkedin_title: contributor.linkedin_title,
+               linkedin_company: contributor.linkedin_company,
+               linkedin_location: contributor.linkedin_location }
+           end
+    contributors.delete_if { |c| c[:id] == curator.id }
+    # don't need the id anymore, don't want to send it to client ...
+    contributors.map! { |c| c.except(:id) }
+    if curator.linkedin_url.present?
+      contributors.push({ widget_loaded: false }
+                  .merge(self.success.curator.slice(
+                    :first_name, :last_name, :linkedin_url, :linkedin_photo_url,
+                    :linkedin_title, :linkedin_company, :linkedin_location )))
+    end
+    contributors
+  end
+
+  # not currently used, maybe include with json api
+  def published_tags
+    return nil unless self.published?
+    { categories: self.success.story_categories.map { |c| { name: c.name, slug: c.slug } },
+      products: self.success.products.map { |p| { name: p.name, slug: p.slug } }}
+  end
+
+  # not currently used, maybe include with json api
+  def published_content
+    return nil unless self.published?
+    { title: title,
+      quote: quote,
+      quote_attr: quote_attr,
+      content: content }
   end
 
 end

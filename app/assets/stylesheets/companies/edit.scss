@@ -1,0 +1,40 @@
+
+.companies.edit {
+
+  /***********************************************/
+  /*      company form logo
+  /***********************************************/
+
+  /* max height should mirror nav bar
+    (actually the bootstrap column will prevent it from ever getting this high) */
+
+  .fileinput .thumbnail {
+    max-height: 65px;
+    padding: 2.5%;
+  }
+
+  .thumbnail > img {
+    max-height: 45px !important;
+  }
+
+  /***********************************************/
+  /*      email template editor
+  /***********************************************/
+
+  #email-templates-form .control-label {
+    margin-left: -30px;
+  }
+
+  #email-templates-form > div > div > button {
+    width: 100%;
+  }
+
+  /***********************************************/
+  /*      summernote
+  /***********************************************/
+
+  .note-group-select-from-files {
+    display: none;
+  }
+
+}

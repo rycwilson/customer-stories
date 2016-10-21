@@ -8,7 +8,7 @@
       <div class='col-xs-6'>
        <%= select_tag :category_select,
               options_for_select(category_select_options, category_pre_selected_options),
-              { class: 'stories-filter form-control' } %>
+              { class: 'stories-filter category-select form-control' } %>
       </div>
     </div>
 
@@ -20,7 +20,7 @@
       <%= label_tag :product_select, "Product", class: 'col-xs-3 control-label' %>
       <div class="col-xs-6">
         <%= select_tag :product_select, options_for_select(product_select_options, product_pre_selected_options),
-             { class: 'stories-filter form-control' } %>
+             { class: 'stories-filter product-select form-control' } %>
       </div>
     </div>
 
@@ -36,7 +36,7 @@
     <div class='form-group'>
       <%= label_tag :category_select, "Category" %>&nbsp;
       <%= select_tag :category_select, options_for_select(category_select_options, category_pre_selected_options),
-            { class: 'stories-filter form-control' } %>
+            { class: 'stories-filter category-select form-control' } %>
     </div>&nbsp;&nbsp;&nbsp;&nbsp;
 
   <% end %>
@@ -46,7 +46,7 @@
     <div class="form-group">
       <%= label_tag :product_select, "Product" %>&nbsp;
       <%= select_tag :product_select, options_for_select(product_select_options, product_pre_selected_options),
-            { class: 'stories-filter form-control' } %>
+            { class: 'stories-filter product-select form-control' } %>
     </div>
 
   <% end %>

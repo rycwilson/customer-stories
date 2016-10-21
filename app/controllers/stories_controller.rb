@@ -1,17 +1,18 @@
-class StoriesController < ApplicationController
+  class StoriesController < ApplicationController
 
   include StoriesHelper
 
-  before_action :set_company, only: [:index, :show, :create, :approval]
+  before_action :user_authorized?, only: :edit
+  before_action :set_company, except: [:update]
+  before_action only: [:index, :show, :edit] { set_gon(@company) }
   before_action :set_public_story_or_redirect, only: :show
   before_action :set_story, only: [:edit, :approval]
   before_action :set_contributors, only: [:show, :approval]
-  before_action :user_authorized?, only: :edit
   before_action :set_s3_direct_post, only: :edit
 
   def index
-    @is_curator = company_curator? @company.id
     # select box options (filtered by role) ...
+    @is_curator = @company.curator? current_user
     @category_select_options = @is_curator ?
                     @company.category_select_options_all.unshift(["All", 0]) :
                     @company.category_select_options_filtered  # public reader
@@ -21,35 +22,23 @@ class StoriesController < ApplicationController
     # if there's a query string, the option will be pre-selected, otherwise no pre-selects
     @category_pre_selected_options = []
     @product_pre_selected_options = []
-    # async requests ...
-    if params[:filter]
-      @story_tiles = @company.filter_stories_by_tag params[:filter], @is_curator
-      respond_to do |format|
-        format.json do
-          render json: {
-            filter_slug: get_filter_slug(params[:filter]),
-            is_curator: @is_curator,
-            story_tiles: @story_tiles.to_json(
-                             include: { story: { only: [:id, :slug, :published] },
-                            products: { only: :slug },
-                            customer: { only: [:slug, :logo_url] } } )
-          }
-        end
-      end
-    # sync requests ...
-    elsif valid_query_string? params
-      @story_tiles = @company.filter_stories_by_tag get_filter_params_from_query(params), @is_curator
+    if valid_query_string? params
+      @stories = @company.filter_stories_by_tag(get_filter_params_from_query(params), @is_curator)
       @category_pre_selected_options = [StoryCategory.friendly.find(params[:category]).id] if params[:category]
       @product_pre_selected_options = [Product.friendly.find(params[:product]).id] if params[:product]
+    elsif cookies[:csp_init]
+      @stories = []
     elsif @is_curator
-      @story_tiles = @company.all_stories
+      @stories = @company.all_stories
+      # TODO: set this cookie more broadly throughout app
+      cookies[:csp_init] = { value: true, expires: 1.hour.from_now }
     else  # public reader
-      @story_tiles = @company.stories_with_logo_published
+      @stories = @company.public_stories
+      cookies[:csp_init] = { value: true, expires: 1.hour.from_now }
     end
   end
 
   def show
-    @story_has_video = @story.embed_url.present?
     # declare this here since numerous references in meta tags
     @success = @story.success
     # convert the story content to plain text (for SEO tags)
@@ -74,13 +63,7 @@ class StoriesController < ApplicationController
   end
 
   def edit
-    @company = current_user.company # company_id not in the stories#edit route
     @customer = @story.success.customer
-    @contributions_pre_request = Contribution.pre_request @story.success_id
-    @contributions_in_progress = Contribution.in_progress @story.success_id
-    @contributions_next_steps = Contribution.next_steps @story.success_id
-    @contributions_contributors = Contribution.contributors @story.success_id
-    @contributions_connections = Contribution.connections @story.success_id
     @categories = @company.category_select_options_all
     @categories_pre_select = @story.success.story_categories
                                    .map { |category| category.id }
@@ -169,7 +152,7 @@ class StoriesController < ApplicationController
       # respond with json because we need to update the video iframe
       # with the modified url ...
       respond_to do |format|
-        format.json { render json: story.as_json(only: :embed_url) }
+        format.json { render json: story.as_json(only: :embed_url, methods: :video_info) }
       end
     elsif params[:story][:published]
       update_publish_state story, params[:story]
@@ -190,7 +173,7 @@ class StoriesController < ApplicationController
   def destroy
     story = Story.find params[:id]
     story.destroy
-    redirect_to company_path(current_user.company_id),
+    redirect_to company_path(@company_id),
         flash: { info: "Story '#{story.title}' was deleted" }
   end
 
@@ -224,23 +207,28 @@ class StoriesController < ApplicationController
   def set_company
     if params[:company_id]  # create story
       @company = Company.find params[:company_id]
-    else  # index
+    else
       @company = Company.find_by subdomain: request.subdomain
     end
   end
 
   def set_contributors
+    curator = @story.success.curator
     @contributors =
         User.joins(own_contributions: { success: {} })
-            .where(contributions: { linkedin: true },
-                       successes: { id: @story.success_id })
+            .where.not(linkedin_url:'')
+            .where(successes: { id: @story.success_id },
+                   contributions: { publish_contributor: true })
             .order("CASE contributions.role
                       WHEN 'customer' THEN '1'
                       WHEN 'partner' THEN '2'
                       WHEN 'sales' THEN '3'
                     END")
-    # add the curator if he hasn't already been added ...
-    @contributors << @story.success.curator unless @contributors.any? { |c| c.email == @story.success.curator.email }
+            .to_a
+            .delete_if { |c| c.id == curator.id } # remove the contributor;
+                                                  # he goes at the end
+    @contributors << curator unless curator.linkedin_url.blank?
+    @contributors
   end
 
   # new customers can be created on new story creation

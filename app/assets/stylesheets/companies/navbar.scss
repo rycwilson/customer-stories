@@ -1,0 +1,78 @@
+
+
+/***********************************************/
+/*          admin navbar
+/***********************************************/
+
+.fa-bars {
+  color: #555555;
+}
+
+.navbar.admin {
+  /* color1, color2, and text color are defined in company model */
+  /* background-color set to transparent in mvpready-admin.css */
+  background-clip: border-box;
+  border:0;
+}
+
+.navbar.admin {
+  height: 65px;
+}
+
+.navbar.admin .container-fluid {
+  padding-left: 4%;
+  padding-right: 4%;
+}
+
+.navbar.admin .navbar-brand {
+  // height set to 65px in mvpready-admin - to match navbar height
+  line-height: 58px  // use this to center the logo
+}
+
+.navbar-brand img {
+  margin: auto;
+  vertical-align: middle;
+  display: inline-block;
+  max-height: 45px;  // restrict the height of the logo
+  padding-right: 15px;
+}
+
+.navbar.admin h3 {
+  margin-top: 23px;
+  margin-bottom: 0;
+  // display: inline-block;
+}
+
+@media (max-width: 450px) {
+  .navbar.admin .navbar-header h3 {
+    font-size: 16px;
+    margin-top: 30px;
+  }
+  .navbar.admin .navbar-brand img {
+    padding-right: 0;
+  }
+}
+
+@media (min-width: 450px) and (max-width: 475px) {
+  .navbar.admin .navbar-header h3 {
+    font-size: 20px;
+    margin-top: 26px;
+  }
+  .navbar.admin .navbar-brand img {
+    padding-right: 5px;
+  }
+}
+
+@media (min-width: 476px) and (max-width: 500px) {
+  .navbar.admin .navbar-header h3 {
+    font-size: 22px;
+    margin-top: 25px;
+  }
+  .navbar.admin .navbar-brand img {
+    padding-right: 10px;
+  }
+}
+
+.navbar.admin .btn {
+  margin-top: 25px;
+}

@@ -1,6 +1,6 @@
 
 Rails.application.routes.default_url_options = {
-    protocol: 'https',
+    protocol: Rails.env.production? ? 'https' : 'http',
     host: ENV['HOST_NAME']
 }
 
@@ -32,7 +32,9 @@ Rails.application.routes.draw do
 
     # Widget
     get '/widget/cs', to: 'widgets#script', as: 'widget'
-    get '/widget/cs-data', to: 'widgets#data', as: 'widget_data'
+    # specifying a default format here because (for unknown reason) ajax jsonp
+    # request sent from IE11 was resulting in request interpreted as html
+    get '/widget/cs-data', to: 'widgets#data', as: 'widget_data', format: 'js'
 
     # Stories - public access
     resources :stories, only: :index
@@ -57,8 +59,12 @@ Rails.application.routes.draw do
 
       # user profile
       get   '/profile/edit', to: 'profile#edit', as: 'edit_profile'
-
+      get   '/profile/linkedin_connect', to: 'profile#linkedin_connect',
+                                         as: 'linkedin_connect'
     end
+
+    # no authentication required (may come from a submission)
+    get   '/profile/linkedin_callback', to: 'profile#linkedin_callback'
 
     # Email Templates
     resources :email_templates, only: [:show, :update]
@@ -84,11 +90,7 @@ Rails.application.routes.draw do
     # this route returns json data for the contribution
     # presently only need this when removing a linkedin_url from a contribution
     get   '/contributions/:id', to: 'contributions#show'
-    put   '/contributions/:token', to: 'contributions#update',
-                                   as: 'contribution'
-
-    # LinkedIn Oauth2 (omniauth gem)
-    get '/auth/linkedin/callback', to: 'profile#linkedin_callback'
+    put   '/contributions/:token', to: 'contributions#update'
 
     # need to pick up on devise sign-in route here, without doing so explicitly
     # as that will conflict with devise routes declared below
@@ -131,15 +133,15 @@ Rails.application.routes.draw do
   # (need to give the route a different alias to distinguish from the one
   #  under subdomains)
   get   '/profile/edit', to: 'profile#edit', as: 'edit_profile_no_company'
+  get   '/profile/linkedin_connect', to: 'profile#linkedin_connect', as: 'linkedin_connect_no_company'
+  get   '/profile/linkedin_callback', to: 'profile#linkedin_callback', as: 'linkedin_callback'
 
   # above comments about distinguishing the route apply to below as well
   #
   # this route is for the case of a Contributor being logged in (no subdomain)
   # and updating a Contribution by checking or unchecking a LinkedIn Profile box
-  put   '/contributions/:token', to: 'contributions#update', as: 'contribution_no_company'
+  put   '/contributions/:token', to: 'contributions#update'
 
-  # LinkedIn Oauth2 (omniauth gem)
-  get '/auth/linkedin/callback', to: 'profile#linkedin_callback'
 
   devise_for :users, controllers: {
       sessions: 'users/sessions',

@@ -1,27 +1,4 @@
 
-<%= javascript_tag do %>
-
-  $(function () {
-
-    var company = <%= raw @company.to_json %>;
-
-    if (company) {
-      $('.nav-tabs .active').removeClass('active');
-
-      $('a[role=tab]').on('click', function() {
-        window.location =
-          '/companies/' + company.id + '?mainnav_tab=' + $(this).attr('aria-controls')
-      });
-    }
-    else {
-      $('header').css('background-color', 'white');
-      $('header').css('border-color', '#dddddd')
-    }
-
-  });
-
-<% end %>
-
 <div class="wrapper">
 
   <% if current_user.company_id.present? %>
@@ -53,15 +30,17 @@
                 <% elsif current_user.company_id.blank? %>
                   <span style='font-size:14px'>
                     Want your LinkedIn profile to appear in a Customer Story?&nbsp;&nbsp;
-                    <%= link_to "Connect to LinkedIn", "/auth/linkedin" %>
+                    <%= link_to "Connect to LinkedIn", linkedin_connect_no_company_path,
+                        data: { turbolinks: false } %>
                   </span>
                 <% else %>
-                  <%= link_to "Connect to LinkedIn", "/auth/linkedin",
-                      class: 'btn btn-default',
+                  <%= link_to "Connect to LinkedIn", linkedin_connect_path,
+                      class: 'linkedin-connect btn btn-default',
+                      data: { turbolinks: false },
                       style: 'background-color: #2672ae; color: white' %>
                 <% end %>
 
-                <br> <%= switch_user_select %>
+                <br> <%= switch_user_select class: 'switch-user-select' %>
 
               </div>
 
@@ -283,14 +262,17 @@
           </td>
           <td class='valign-middle text-center'>
 
-          <!-- check_box method requires instance variable, not local variable -->
-          <%= check_box get_contribution(contribution.id),
-            :linkedin?, { checked: contribution.linkedin?,
-                            class: 'linkedin-checkbox',
-                             data: {
-                                token: contribution.access_token,
-                            subdomain: contribution.success.customer.company.subdomain
-                             } }, "true", "false" %>
+            <%= form_for contribution,
+                  url: "/contributions/#{contribution.access_token}",
+                  method: :put, remote: true,
+                  html: { class: 'contributor-linkedin-checkbox' } do |f| %>
+
+              <!-- value will be filled in by js based on checkbox -->
+              <%= hidden_field_tag 'contribution[contributor_unpublished]' %>
+
+              <%= f.check_box :publish_contributor, {}, 'true', 'false' %>
+
+            <% end %>
 
           </td>
           <td class='valign-middle'>
@@ -317,88 +299,6 @@
                  <!--  </div>  --> <!-- portlet-body -->
                 <!-- </div> -->  <!-- portlet -->
               <!-- </div> -->  <!-- row -->
-
-            </div> <!-- /.tab-pane -->
-
-            <div class="tab-pane fade" id="notifications-tab">
-
-              <div class="heading-block">
-                <h3>
-                  Notification Settings
-                </h3>
-              </div> <!-- /.heading-block -->
-
-              <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes.</p>
-
-              <br><br>
-
-              <form action="./page-settings.html" class="form form-horizontal">
-
-                <div class="form-group">
-
-                  <label class="col-md-3 control-label">Toggle Notifications</label>
-
-                  <div class="col-md-7">
-
-                    <div class="checkbox">
-                      <label>
-                      <input value="" type="checkbox" checked>
-                      Send me security emails
-                      </label>
-                    </div> <!-- /.checkbox -->
-
-                    <div class="checkbox">
-                      <label>
-                      <input value="" type="checkbox" checked>
-                      Send system emails
-                      </label>
-                    </div> <!-- /.checkbox -->
-
-                    <div class="checkbox">
-                      <label>
-                      <input value="" type="checkbox">
-                      Lorem ipsum dolor sit amet
-                      </label>
-                    </div> <!-- /.checkbox -->
-
-                    <div class="checkbox">
-                      <label>
-                      <input value="" type="checkbox">
-                      Laborum, quam iure quibusdam
-                      </label>
-                    </div> <!-- /.checkbox -->
-
-                  </div> <!-- /.col -->
-
-                </div> <!-- /.form-group -->
-
-
-                <div class="form-group">
-
-                  <label class="col-md-3 control-label">Email for Notifications</label>
-
-                  <div class="col-md-7">
-                    <select name="email_notifications" class="form-control">
-                      <option value="1">john@mvpready.com</option>
-                      <option value="2">mary@mvpready.com</option>
-                      <option value="3">chris@mvpready.com</option>
-                    </select>
-                  </div> <!-- /.col -->
-
-                </div> <!-- /.form-group -->
-
-
-                <div class="form-group">
-
-                  <!-- <div class="col-md-7 col-md-push-3">
-                    <button type="submit" class="btn btn-primary">Save Changes</button>
-                    &nbsp;
-                    <button type="reset" class="btn btn-default">Cancel</button>
-                  </div> --> <!-- /.col -->
-
-                </div> <!-- /.form-group -->
-
-              </form>
 
             </div> <!-- /.tab-pane -->
 

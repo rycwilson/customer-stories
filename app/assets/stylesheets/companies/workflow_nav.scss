@@ -1,0 +1,22 @@
+
+/*
+  removes the dropdown caret in mainnav
+*/
+.mainnav .nav > li > .dropdown-menu::after,
+.mainnav .nav > li > .dropdown-menu::before {
+  display:none;
+}
+
+/*
+  no borders on nav tabs (override bootstra)
+*/
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
+  border: 1px solid transparent;
+}
+
+.mainnav a {
+  font-family: 'Lato';
+  font-weight: 300;
+}

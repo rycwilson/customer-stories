@@ -1,39 +1,27 @@
 class CompaniesController < ApplicationController
 
+  before_action :user_authorized?, only: [:show, :edit]
+  before_action :set_company, except: [:new, :create]
+  before_action only: [:show, :edit] { set_gon(@company) }
   before_action :set_s3_direct_post, only: [:new, :edit, :create]
-  before_action :set_company, only: [:edit, :update, :activity]
-  before_action :user_authorized?, only: :show
 
-  # GET /companies/new
   def new
     @company = Company.new
   end
 
-  # GET /companies/:id
   def show
-    if params[:mainnav_tab]
-      session[:mainnav_tab] = params[:mainnav_tab]
-      redirect_to request.path
-    else
-      @mainnav_tab = session[:mainnav_tab] || 'curate'
-      session[:mainnav_tab] = nil # reset - so refresh always goes back to curate
-      # TODO: what's the best balance of eager vs. lazy loading?
-      # e.g. we're not eager loading products here...
-      @company = Company.includes(:customers, :successes, :stories, :visitors).find params[:id]
-      @customers = @company.customers_select_options
-      @categories = @company.category_select_options_all
-      @products = @company.product_select_options_all
-    end
+    @workflow_tab = cookies[:csp_workflow_tab] || 'curate'
+    cookies.delete(:csp_workflow_tab) if cookies[:csp_workflow_tab]
+    @customer_select_options = @company.customer_select_options
+    @category_select_options = @company.category_select_options_all
+    @product_select_options = @company.product_select_options_all
   end
 
   def edit
-    @company = Company.includes(:story_categories,
-                                :products,
-                                :email_templates).find params[:id]
-    @categories = @company.category_select_options_all
-    @categories_pre_select = @company.story_categories.map { |category| category.id }
-    @products = @company.product_select_options_all
-    @products_pre_select = @company.products.map { |product| product.id }
+    @category_select_options = @company.category_select_options_all
+    @category_pre_selected_options = @company.story_categories.map { |category| category.id }
+    @product_select_options = @company.product_select_options_all
+    @product_pre_selected_options = @company.products.map { |product| product.id }
     @templates_select = @company.templates_select
   end
 
@@ -50,8 +38,8 @@ class CompaniesController < ApplicationController
       end
     else
       # validation(s): presence / uniqueness of name, presence of subdomain
-      flash.now[:danger] = "Unable to register: #{@company.errors.full_messages.join(', ')}"
-      render :new
+      flash[:danger] = @company.errors.full_messages.join(', ')
+      redirect_to new_company_path
     end
 
   end
@@ -59,7 +47,7 @@ class CompaniesController < ApplicationController
   def update
     if @company.update company_params
       @company.update_tags(params[:company_tags]) if params[:company_tags].present?
-      @flash_mesg = "Company profile updated"
+      @flash_mesg = "Company updated"
       @flash_status = "success"
     else
       @flash_mesg = @company.errors.full_messages.join(', ')
@@ -68,15 +56,13 @@ class CompaniesController < ApplicationController
     respond_to do |format|
       format.html do
         redirect_to edit_company_path(@company),
-          flash: { success: "Company profile updated" }
+          flash: { success: "Company updated" }
       end
       format.js
     end
   end
 
-  # TODO: shares and page views
-  # TODO: Why the json back-and-forth?  Experiment and document
-  # -> .to_json necessary to actually include data?
+  # TODO: Why the json back-and-forth?
   def activity
     events = []
     story_views = []
@@ -200,7 +186,7 @@ class CompaniesController < ApplicationController
     actions_list.each_with_index do |action, index|
       story_slug = action['action_url'].slice(action['action_url'].rindex('/') + 1, action['action_url'].length)
       if action['action_type'] == 'pageview' &&
-         action['action_url'].include?("//#{@company.subdomain}") &&
+         action['action_url'].include?("#{@company.subdomain}.#{ENV['HOST_NAME']}") &&
          # filter out landing page or stories#index views
          # (clicky isn't correctly logging 'action_title' for all stories,
          # so reference 'action_url' instead)
@@ -226,7 +212,7 @@ class CompaniesController < ApplicationController
           actions_list[index+1..actions_list.length].each do |prev_action|
             if prev_action['action_type'] == 'pageview' &&
                prev_action['session_id'] == action['session_id']
-              if prev_action['action_url'].include?("//#{@company.subdomain}")
+              if prev_action['action_url'].include?("#{@company.subdomain}.#{ENV['HOST_NAME']}")
                 shared_story_slug = prev_action['action_url'].slice(prev_action['action_url'].rindex('/') + 1, prev_action['action_url'].length)
               end
               break # whether the share belongs to @company or not

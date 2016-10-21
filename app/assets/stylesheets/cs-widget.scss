@@ -2,6 +2,9 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 
+// pre-compiler doesn't like it if this is included inside .cs-widget
+// @import 'cleanslate/cleanslate.css';
+
 // namespace the widget css so as not to interfere with anything on host page
 .cs-widget {
 
@@ -10,3 +13,4 @@
   @import 'widget.scss';
 
 }
+

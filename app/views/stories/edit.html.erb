@@ -1,30 +1,17 @@
 
-<%= javascript_tag do %>
-
-  $(function () {
-    var company = <%= raw @company.to_json %>;
-
-    if (company.feature_flag !== 'demo') {
-      <!-- // disabling the publish checkboxes must be done directly on the element;
-      // bootstrap-switch won't accept a dynamic change to these attributes:
-      // http://www.bootstrap-switch.org/documentation-2.html -->
-      $(".tooltip-wrapper-publish").tooltip({ placement: 'top' });
-    }
-
-    $('.nav-tabs .active').removeClass('active');
-
-    $('a[role=tab]').on('click', function() {
-      window.location =
-        '/companies/' + company.id + '?mainnav_tab=' + $(this).attr('aria-controls')
-    });
-
-  });
-
+<% content_for :head do %>
+  <!-- turbolinks caching problematic with linkedin widgets  -->
+  <meta name="turbolinks-cache-control" content="no-cache">
+  <%= render 'stories/shared/edit/contribution_cards_template' %>
+  <%= render 'stories/shared/csp_linkedin_widget_template' %>
+  <%= render 'stories/shared/edit/video_template' %>
+  <%= render 'stories/shared/edit/prompt_template' %>
+  <%= render 'stories/shared/edit/result_template' %>
 <% end %>
 
-<%= render 'stories/shared/new_contributor_modal' %>
-<%#= render 'stories/shared/contribution_request_progress_modal' %>
-<%= render 'stories/shared/email_confirmation_modal' %>
+<%= render 'stories/shared/edit/new_contributor_modal' %>
+<%= render 'stories/shared/edit/email_confirmation_modal' %>
+<%= render 'stories/shared/video_modal' %>
 
 <div class="wrapper">
 
@@ -41,17 +28,17 @@
             <%= @customer.name %>
           </h2>
 
-          <%= render 'stories/shared/story_edit_settings.html.erb' %>
+          <%= render 'stories/shared/edit/edit_settings.html.erb' %>
 
         </div><!--
 
      --><div class="col-sm-4">
 
           <p class='lead'>Title</p>
-          <%= render 'stories/shared/story_edit_title' %>
+          <%= render 'stories/shared/edit/edit_title' %>
 
           <p class='lead'>Customer Quote</p>
-          <%= render 'stories/shared/story_edit_quote' %>
+          <%= render 'stories/shared/edit/edit_quote' %>
 
         </div>  <!-- title and quote -->
 
@@ -59,7 +46,7 @@
         <div class='col-sm-4'>
 
           <p class='lead'>Video</p>
-          <%= render 'stories/shared/story_edit_video' %>
+          <%= render 'stories/shared/edit/edit_video' %>
 
         </div>  <!-- video -->
 
@@ -82,7 +69,7 @@
           <div class="well" style='margin-bottom:10px'>
             <div class="container-fluid">
 
-              <%= render 'stories/shared/story_edit_tags_form',
+              <%= render 'stories/shared/edit/edit_tags',
                           { story: @story,
                             categories: @categories,
                             categories_pre_select: @categories_pre_select,
@@ -101,7 +88,7 @@
           <p class='lead' style='display:inline-block'>Prompts</p>
           <div class="well" style="position:relative">
 
-            <%= render '/stories/shared/story_edit_prompts' %>
+            <%= render '/stories/shared/edit/edit_prompts' %>
 
           </div>
         </div>
@@ -110,7 +97,7 @@
           <p class='lead' style='display:inline-block'>Results</p>
           <div class="well" style="position:relative">
 
-            <%= render '/stories/shared/story_edit_results' %>
+            <%= render '/stories/shared/edit/edit_results' %>
 
           </div>
         </div>
@@ -144,7 +131,7 @@
           <!-- Contributors nav -->
           <div class="col-sm-4 col-md-2 layout-sidebar" style='padding-top:0'>
 
-            <%= render 'stories/shared/contributions_side_tabs' %>
+            <%= render 'stories/shared/edit/contributions_side_tabs' %>
 
           </div> <!-- .col-sm-2 contributions navigation -->
 
@@ -153,15 +140,20 @@
 
             <div class="tab-content stacked-content contribution-cards">
 
-              <%= render 'stories/shared/story_edit_pre_request_contributions' %>
+              <%= render 'stories/shared/edit/contributions_start',
+                         { story: @story } %>
 
-              <%= render 'stories/shared/story_edit_in_progress_contributions' %>
+              <%= render 'stories/shared/edit/contributions_in_progress',
+                         { story: @story } %>
 
-              <%= render 'stories/shared/story_edit_nextsteps_contributions' %>
+              <%= render 'stories/shared/edit/contributions_next_steps',
+                         { story: @story } %>
 
-              <%= render 'stories/shared/story_edit_contribution_contributions' %>
+              <%= render 'stories/shared/edit/contributions_submitted',
+                         { story: @story } %>
 
-              <%= render 'stories/shared/story_edit_connection_contributions' %>
+              <%= render 'stories/shared/edit/contributions_as_connections',
+                         { story: @story } %>
 
             </div> <!-- tab-content -->
 
@@ -173,12 +165,11 @@
                   url: story_path(@story.id), html: { id: 'story-content-form' },
                   method: :put, remote: true do |f| %>
 
-              <%= f.text_area :content, id: 'story-content',
+              <%= f.text_area :content, id: 'story-content-editor',
                     data: { provider: 'summernote' } %>
 
             <% end %>
           </div>
-
 
         <!-- </div>  --> <!-- layout -->
 
@@ -187,270 +178,10 @@
   </div>
 </div>  <!-- wrapper -->
 
-<!-- contribution card template -->
-<script type="text/template" id="cc-template">
 
-  {{ contributions.forEach(function (contribution, index) { }}
 
-    <div class="well contribution-card accordion"
-        id="{{= type }}-accordion-{{= index }}"
-        data-contribution-id="{{= contribution.id }}">
 
-      <div class="row">
-        <div class="col-sm-7 vcenter" style='font-size:14px'>
-          {{= contribution.contributor.first_name + ' ' + contribution.contributor.last_name }}
-        </div><!--
-     --><div class="col-sm-5 text-right vcenter">
 
-          {{ if (type === 'pre-request') { }}
-            <a class='send-request' data-remote="true" rel="nofollow" tabindex="-1"
-                href="/contributions/{{= contribution.id }}/confirm_request">
-              <i class="glyphicon glyphicon-envelope bip-clickable"
-                  data-toggle='tooltip' data-placement='top'
-                  title='Send contribution request'></i></a>
-          {{ } }}
-
-          {{ if (contribution.status === 'contribution' || contribution.status === 'feedback' ) { }}
-            <a class="accordion-toggle" data-toggle="collapse" tabindex="-1"
-                data-parent="#{{= type }}-accordion-{{= index }}"
-                href="#collapse-{{= type }}-submission-{{= index }}">
-              <i class="glyphicon glyphicon-comment bip-clickable"
-                  data-toggle='tooltip' data-placement='top'
-                  title="{{= contribution.status == 'contribution' ? 'Contribution' : 'Feedback' }}"></i></a>
-          {{ } }}
-
-          <a class="accordion-toggle" data-toggle="collapse" tabindex="-1"
-              data-parent="#{{= type }}-accordion-{{= index }}"
-              href="#collapse-{{= type }}-info-{{= index }}">
-            <i class="glyphicon glyphicon-info-sign bip-clickable"
-                data-toggle='tooltip' data-placement='top'
-                title='More information'></i></a>
-
-          <!--/*
-            dynamic research button is presently only featured under Connections.
-            so it's unnecessary here, but may be useful at some point
-            (curator enters a linkedin_url upon on creating contributor)
-          */-->
-          {{ if (contribution.linkedin) { }}
-
-            <a class='research' target="_blank" tabindex='-1'
-                href="{{= contribution.contributor.linkedin_url }}">
-              <i class='fa fa-linkedin-square bip-clickable-fa'
-                  data-toggle='tooltip' data-placement='top'
-                  title='LinkedIn profile'></i></a>
-
-          {{ } else { }}
-
-            <a target="_blank" tabindex="-1"
-              href="http://google.com/search?q={{= contribution.contributor.first_name + '+' + contribution.contributor.last_name + '+' + contribution.success.customer.name }}">
-              <i class="glyphicon glyphicon-user bip-clickable"
-                  data-toggle='tooltip' data-placement='top'
-                  title='Research'></i></a>
-
-          {{ } }}
-
-        </div>
-      </div>
-
-      {{ if (type === 'in-progress' || type === 'next-steps' || type === 'connection') { }}
-        <div class="row">
-          <div class="col-sm-12">
-            {{= (contribution.status === 'feedback' || contribution.status === 'did_not_respond')? 'Next step:' : 'Status:' }}&nbsp;
-            {{= contribution.display_status }}
-          </div>
-        </div>
-      {{ } }}
-
-      <div class="row">
-        <div class="col-sm-12">
-
-          <div id="collapse-{{= type }}-submission-{{= index }}"
-              class="accordion-body collapse">
-            <div class="accordion-inner">
-              <hr>
-              {{ if (contribution.status === 'contribution') { }}
-                {{= contribution.contribution }}
-              {{ } else if (contribution.status === 'feedback') { }}
-                {{= contribution.feedback }}
-              {{ } }}
-            </div>
-          </div>
-
-          <div id="collapse-{{= type }}-info-{{= index }}"
-              class="accordion-body collapse">
-            <div class="accordion-inner">
-              <hr>
-              Role:&nbsp;&nbsp;{{= contribution.role }} <br>
-              Email:&nbsp;&nbsp;{{= contribution.contributor.email }} <br>
-              <div class="row">
-
-                <div id='edit-{{= type }}-phone-{{= index }}'
-                    class='col-sm-2 text-center pull-right cc-editable'
-                    style='padding:0; margin-top:-2px'>
-                  <i class='glyphicon glyphicon-pencil bip-clickable'></i>
-                </div>
-
-                <div id='{{= type }}-phone-{{= index }}' class='col-sm-10 cc-editable'
-                    style='padding-right:0; margin-bottom:4px'>
-                    Phone:&nbsp;&nbsp;
-                  <span data-bip-type="input" data-bip-attribute="phone"
-                      data-bip-activator="#edit-{{= type }}-phone-{{= index }}"
-                      data-bip-html-attrs="{&quot;style&quot;:&quot;width:100%&quot;}"
-                      data-bip-object="user"
-                      data-bip-original-content="{{= contribution.contributor.phone }}"
-                      data-bip-value="{{= contribution.contributor.phone }}"
-                      data-bip-url="/contributions/{{= contribution.access_token }}"
-                      data-bip-placeholder="<i>add phone ...</i>"
-                      class="best_in_place"
-                      id="{{= type }}_best_in_place_user_{{= contribution.contributor.id }}_phone">
-                    {{= contribution.contributor.phone || "<i>add phone ...</i>" }}
-                  </span>
-                </div> <br style='line-height:10px'>
-
-              </div>
-              Referred by:&nbsp;&nbsp;{{= contribution.referrer_id !== null ? contribution.referrer.first_name + ' ' + contribution.referrer.last_name : "n/a" }} <br>
-              Notes: <br>
-
-              <div class="row">
-
-                <div id="edit-{{= type }}-notes-{{= index }}"
-                    class="col-sm-2 text-center pull-right cc-editable"
-                    style="padding:0; margin-top:-2px">
-                  <i class="glyphicon glyphicon-pencil bip-clickable"></i>
-                </div>
-
-                <div id="{{= type }}-notes-{{= index }}"
-                    class="col-sm-10 cc-editable" style="padding-right:0; margin-bottom:4px">
-                  <span data-bip-type="textarea" data-bip-attribute="notes"
-                      data-bip-activator="#edit-{{= type }}-notes-{{= index }}"
-                      data-bip-html-attrs="{&quot;style&quot;:&quot;width:100%&quot;}"
-                      data-bip-object="contribution"
-                      data-bip-original-content="{{= contribution.notes }}"
-                      data-bip-value="{{= contribution.notes }}"
-                      data-bip-url="/contributions/{{= contribution.access_token }}"
-                      data-bip-placeholder="<i>add notes ...</i>"
-                      class="best_in_place"
-                      id="{{= type }}_best_in_place_contribution_{{= contribution.id }}_notes">
-                    {{= contribution.notes || "<i>add notes ...</i>" }}
-                  </span>
-                </div>
-
-              </div>
-
-              {{ if (type == 'connection') { }}
-
-                LinkedIn profile: <br>
-                <div class="row">
-
-                  <div id='edit-linkedin-{{= index }}'
-                      class='col-sm-2 text-center pull-right cc-editable'
-                      style='padding:0; margin-top:-2px'>
-                    <span class='glyphicon glyphicon-pencil bip-clickable'></span>
-                  </div>
-
-                  <div id='linkedin-{{= index }}' class='col-sm-10 cc-editable'
-                      style='padding-right:0'>
-                    <span data-bip-type="input" data-bip-attribute="linkedin_url"
-                        data-bip-activator="#edit-linkedin-{{= index }}"
-                        data-bip-html-attrs="{&quot;style&quot;:&quot;width:100%&quot;}"
-                        data-bip-object="user"
-                        data-bip-original-content="{{= contribution.contributor.linkedin_url }}"
-                        data-bip-value="{{= contribution.contributor.linkedin_url }}"
-                        data-bip-url="/contributions/{{= contribution.access_token }}"
-                        data-bip-placeholder="<i>add url ...</i>"
-                        class="best_in_place"
-                        id="best_in_place_user_{{= contribution.contributor.id }}_linkedin_url">
-                      {{= contribution.contributor.linkedin_url || "<i>add url ...</i>" }}
-                    </span>
-                  </div>
-
-                </div>
-
-                {{ if (contribution.linkedin) { }}
-                  <br style='line-height:10px'>
-                  <div class='row text-center linkedin-profile'>
-                    <!-- // linkedin widget will be inserted here -->
-                  </div>
-                {{ } }}
-
-              {{ } }}
-            </div>  <!-- //.accordion-inner -->
-          </div>
-        </div>
-      </div>
-    </div>
-  {{ }); }}
-</script>
-
-<!-- Results -->
-<script type="text/template" id="results-template">
-  <div class="row">
-
-    <div class='modify-result'>
-      <div id="edit-story-result-{{= index }}"
-          style='position:absolute; right:55px; margin-top:-3px'>
-        <i class='glyphicon glyphicon-pencil bip-clickable'></i>
-      </div>
-
-      <div id="delete-story-result-{{= index }}" class="delete-result"
-          data-id="{{= result.id }}"
-          data-action="{{= baseUrl }}/stories/{{= storyId }}/results/{{= result.id }}"
-          style='position:absolute; right:20px; margin-top:-3px'>
-        <i class='glyphicon glyphicon-remove bip-clickable'></i>
-      </div>
-    </div>
-
-    <div id='story-result-{{= index }}' class="story-result col-sm-9">
-      <span data-bip-type="input" data-bip-attribute="description"
-            data-bip-activator="#edit-story-result-{{= index }}"
-            data-bip-html-attrs="{&quot;style&quot;:&quot;width:100%&quot;}"
-            data-bip-object="result"
-            data-bip-original-content="{{= result.description }}"
-            data-bip-url="/stories/{{= storyId }}/results/{{= result.id }}"
-            data-bip-value="{{= result.description }}"
-            class="best_in_place"
-            id="best_in_place_result_{{= result.id }}_description">
-        {{= result.description }}
-      </span>
-    </div>
-
-  </div> <br>
-</script>
-
-<!-- Prompts -->
-<script type="text/template" id="prompts-template">
-  <div class="row">
-
-    <div class='modify-prompt'>
-      <div id="edit-story-prompt-{{= index }}"
-          style='position:absolute; right:55px; margin-top:-3px'>
-        <i class='glyphicon glyphicon-pencil bip-clickable'></i>
-      </div>
-
-      <div id="delete-story-prompt-{{= index }}" class="delete-prompt"
-          data-id="{{= prompt.id }}"
-          data-action="{{= baseUrl }}/prompts/{{= prompt.id }}"
-          style='position:absolute; right:20px; margin-top:-3px'>
-        <i class='glyphicon glyphicon-remove bip-clickable'></i>
-      </div>
-    </div>
-
-    <div id='story-prompt-{{= index }}' class="story-prompt col-sm-9">
-      <span data-bip-type="input" data-bip-attribute="description"
-            data-bip-activator="#edit-story-prompt-{{= index }}"
-            data-bip-html-attrs="{&quot;style&quot;:&quot;width:100%&quot;}"
-            data-bip-object="prompt"
-            data-bip-original-content="{{= prompt.description }}"
-            data-bip-url="/stories/{{= storyId }}?prompt_id={{= prompt.id }}"
-            data-bip-value="{{= prompt.description }}"
-            class="best_in_place"
-            id="best_in_place_prompt_{{= prompt.id }}_description">
-        {{= prompt.description }}
-      </span>
-    </div>
-
-  </div> <br>
-</script>
 
 
 

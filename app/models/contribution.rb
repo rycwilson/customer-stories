@@ -5,6 +5,15 @@ class Contribution < ActiveRecord::Base
   belongs_to :success
   has_one :email_contribution_request, dependent: :destroy
 
+  scope :story_all, ->(story_id) {
+    joins(success: { story: {} })
+    .where(stories: { id: story_id })
+  }
+  scope :story_all_except_curator, ->(story_id, curator_id) {
+    story_all(story_id)
+    .where.not(user_id: curator_id)
+  }
+
   validates :role, presence: true
   validates :contribution, presence: true,
                 if: Proc.new { |contribution| contribution.status == 'contribution'}
@@ -75,46 +84,6 @@ class Contribution < ActiveRecord::Base
         contribution.update(status: new_status, remind_at: new_remind_at)
       end
     end
-  end
-
-  def self.pre_request success_id
-    Contribution.includes(:contributor, :referrer)
-                .where("success_id = ? AND status = ?", success_id, "pre_request")
-                .order(created_at: :desc)  # most recent first
-  end
-
-  #
-  # return in-progress Contributions for a given Success
-  # sort oldest to newest (according to status)
-  #
-  def self.in_progress success_id
-    status_options = ['opt_out', 'unsubscribe', 'remind2', 'remind1', 'request', 're_send']
-    Contribution.includes(:contributor, :referrer)
-                .where("success_id = ? AND status IN (?)", success_id, status_options)
-                .sort do |a,b|  # sorts as per order of status_options
-                  if status_options.index(a.status) < status_options.index(b.status)
-                    -1
-                  elsif status_options.index(a.status) > status_options.index(b.status)
-                    1
-                  else 0
-                  end
-                end
-  end
-
-  def self.next_steps success_id
-    status_options = ['feedback', 'did_not_respond']
-    Contribution.includes(:contributor, :referrer)
-                .where("success_id = ? AND status IN (?)", success_id, status_options)
-  end
-
-  def self.contributors success_id
-    Contribution.includes(:contributor, :referrer)
-                .where("success_id = ? AND status = ?", success_id, 'contribution')
-  end
-
-  def self.connections success_id
-    Contribution.includes(:contributor, :referrer)
-                .where("success_id = ? AND status NOT IN ('unsubscribe', 'opt_out')", success_id)
   end
 
   #

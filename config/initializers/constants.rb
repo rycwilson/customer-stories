@@ -1,11 +1,29 @@
 INDUSTRIES = ['Education', 'Government', 'Financial Services', 'Healthcare', 'Hospitality', 'Manufacturing', 'Media and Entertainment', 'Service Provider', 'Technology', 'IT', 'Telecommunications'];
 
+# the parameters can be hard-coded here because this will be used in a simple re-direct
+LINKEDIN_AUTHORIZE_BASE_URL = "https://www.linkedin.com/oauth/v2/authorization?\
+                               client_id=#{ENV['LINKEDIN_KEY']}&\
+                               response_type=code&\
+                               scope=r_basicprofile&\
+                               state=#{ENV['LINKEDIN_STATE']}&".gsub(/\s+/, '')
+                               # redirect_uri=  included by profile/contributions controller
+
+# the parameters must be defined in the typhoeus request (see profile controller)
+LINKEDIN_GETTOKEN_BASE_URL = "https://www.linkedin.com/oauth/v2/accessToken"
+LINKEDIN_PEOPLE_BASE_URL = "https://api.linkedin.com/v1/people/~"
+
 LINKEDIN_SHARE_URL = "//www.linkedin.com/shareArticle?mini=true&url="
 TWITTER_SHARE_URL = "//twitter.com/share?url="
 FACEBOOK_SHARE_URL = "//www.facebook.com/sharer.php?u="
 
 GETCLICKY_API_BASE_URL = "http://api.clicky.com/api/stats/4"
 GETCLICKY_TRACKING_URL = "http://in.getclicky.com/in.php"
+
+VARMOUR_ADROLL_ADV_ID = "WZHVL3T2BFD67DGPDZXPOR"
+VARMOUR_ADROLL_PIX_ID = "S3NNBWGIABFTFAG3BRHH7P"
+VARMOUR_ADROLL_INDEX_SEGMENT_ID = "ee28bb3a"
+VARMOUR_ADROLL_STORY_SEGMENT_ID = "ecfb56e6"
+VARMOUR_ADROLL_WIDGET_SEGMENT_ID = "e1834138"
 
 CS_LOGO_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/cs_logo.png"
 CS_FULL_LOGO_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/cs_logo_full_1200x630.png"
