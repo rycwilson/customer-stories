@@ -317,7 +317,7 @@
 
   function trackVisitor (advId, pixId, segmentId) {
 
-    $('#cs-container').append('<iframe class="cs-iframe" src="about:blank"></iframe>');
+    $('#cs-container').append('<iframe class="cs-iframe" style="display:none" src="about:blank"></iframe>');
 
     var trackingDoc = $('#cs-container').find('iframe')[0].contentWindow.document,
         trackingHost = (("https:" == document.location.protocol) ? "https://s.adroll.com" : "http://a.adroll.com"),
