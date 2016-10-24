@@ -25,6 +25,7 @@ class ApplicationController < ActionController::Base
                         email: current_user.email,
                         is_curator: is_curator } : nil,
         stories: company.present? ? company.all_stories_json : nil,
+        env: csp_environment
       })
     else
       # This shouldn't be necessary.  If nothing is pushed, gon should be empty!
@@ -119,6 +120,16 @@ class ApplicationController < ActionController::Base
   def company_curator? company_id
     user_signed_in? &&
     current_user.company_id == company_id
+  end
+
+  def csp_environment
+    if ENV['HOST_NAME'] == 'customerstories.net'
+      return 'production'
+    elsif ENV['HOST_NAME'] == 'customerstories.org'
+      return 'staging'
+    else
+      return 'development'
+    end
   end
 
 end

@@ -1,13 +1,13 @@
 
 function initAdRoll () {
 
-  if (app.company.name === 'vARMOUR' &&
+  if (app.env !== 'development' && app.company.name === 'vARMOUR' &&
       ($('body').hasClass('stories index') || $('body').hasClass('stories show'))) {
 
     window.adroll_adv_id = window.adroll_adv_id || "WZHVL3T2BFD67DGPDZXPOR";
     window.adroll_pix_id = window.adroll_pix_id || "S3NNBWGIABFTFAG3BRHH7P";
 
-    if (typeof __adroll !== 'object') {
+    if (typeof __adroll === 'undefined') {
       $.getScript('//s.adroll.com/j/roundtrip.js');
     }
 

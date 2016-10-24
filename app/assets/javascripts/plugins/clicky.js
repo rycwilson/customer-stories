@@ -1,6 +1,8 @@
 
 function initClicky () {
-  if (typeof(clicky) !== 'object') {
+
+  if (app.env !== 'development' && typeof(clicky) === 'undefined') {
+
     $.getScript('//static.getclicky.com/js', function () {
       try {
         clicky.init(100886848);
@@ -8,5 +10,6 @@ function initClicky () {
         // handle exception
       }
     });
+
   }
 }
