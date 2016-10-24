@@ -1,5 +1,9 @@
 module ApplicationHelper
 
+  def include_gtm? company, controller, action
+    controller == 'stories' && (['index', 'show'].include? action) && company.try(:gtm_id).present?
+  end
+
   def mvp_stylesheet
     if ['companies', 'stories', 'profile'].include? controller_name
       stylesheet_link_tag 'mvpready-admin', media: 'all',
