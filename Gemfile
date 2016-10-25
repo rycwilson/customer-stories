@@ -40,7 +40,7 @@ gem 'jazz_hands', github: 'nixme/jazz_hands', branch: 'bring-your-own-debugger'
 gem 'pry-theme'
 gem 'pry-byebug'
 
-gem 'meta_request'
+gem 'meta_request'  # rails panel chrome extension
 
 group :production do
 

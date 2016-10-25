@@ -1,3 +1,4 @@
+# Settings specified here will take precedence over those in config/application.rb.
 Rails.application.configure do
 
   # restrict access to staging site
@@ -7,7 +8,6 @@ Rails.application.configure do
     end
   end
 
-  # Settings specified here will take precedence over those in config/application.rb.
 
   # moved from session_store.rb
   if ENV['HOST_NAME'] == 'customerstories.net'
@@ -61,7 +61,11 @@ Rails.application.configure do
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
-  config.log_level = :warn
+  if ENV['HOST_NAME'] == 'customerstories.net'
+    config.log_level = :warn
+  else
+    config.log_level = :debug
+  end
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :subdomain, :uuid ]
