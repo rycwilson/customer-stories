@@ -324,7 +324,7 @@
         trackingUrl = trackingHost + '/j/roundtrip.js';
 
     trackingDoc.open();
-    trackingDoc.write("<html><head><script>adroll_adv_id='" + advId + "';adroll_pix_id='" + pixId + "';</script><script src='" + trackingUrl + "'></script><script>try{__adroll.record_user({'adroll_segments':" + segmentId + "})}catch(err){};</script></head></html>");
+    trackingDoc.write("<html><head><script>adroll_adv_id='" + advId + "';adroll_pix_id='" + pixId + "';</script><script src='" + trackingUrl + "'></script><script>try{__adroll.record_user({'adroll_segments':'" + segmentId + "'})}catch(err){};</script></head></html>");
     trackingDoc.close();
   }
 
