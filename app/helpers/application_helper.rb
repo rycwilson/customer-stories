@@ -4,8 +4,7 @@ module ApplicationHelper
     ENV['HOST_NAME'] == 'customerstories.net' &&
     controller == 'stories' &&
     (['index', 'show'].include? action) &&
-    company.try(:gtm_id).present? &&
-    current_user.company_id != company.id
+    company.try(:gtm_id).present? && !user_signed_in?
   end
 
   def mvp_stylesheet
