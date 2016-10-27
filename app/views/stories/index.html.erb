@@ -2,8 +2,10 @@
 <% content_for :head do %>
 
   <meta name="turbolinks-cache-control" content="no-cache">
-  <%= render 'stories/shared/stories_index_template', { company: @company } %>
-  <%= render 'stories/shared/stories_index_meta_tags', { company: @company } %>
+  <%= render 'stories/shared/stories_index_template',
+      { company: @company, cached: true } %>
+  <%= render 'stories/shared/stories_index_meta_tags',
+      { company: @company, cached: true } %>
 
 <% end %>
 
@@ -12,11 +14,12 @@
   <% if company_curator? @company.id %>
 
     <%= render 'shared/mainnav',
-                  { company: @company,
-                    category_select_options: @category_select_options,
-                    category_pre_selected_options: @category_pre_selected_options,
-                    product_select_options: @product_select_options,
-                    product_pre_selected_options: @product_pre_selected_options } %>
+               { company: @company,
+                 category_select_options: @category_select_options,
+                 category_pre_selected_options: @category_pre_selected_options,
+                 product_select_options: @product_select_options,
+                 product_pre_selected_options: @product_pre_selected_options,
+                 cached: true } %>
 
   <% else %>
 
@@ -29,7 +32,8 @@
                         category_select_options: @category_select_options,
                         category_pre_selected_options: @category_pre_selected_options,
                         product_select_options: @product_select_options,
-                        product_pre_selected_options: @product_pre_selected_options } %>
+                        product_pre_selected_options: @product_pre_selected_options,
+                        cached: true } %>
 
         </div>
       </div>
@@ -43,28 +47,9 @@
         <!--  <div> -->
           <div class='grid' id="stories-gallery">
 
-            <% @stories.each do |story| %>
-
-              <% cache story do %>
-              <a href="<%= grid_item_link(@company.id, story) %>"
-                 style="<%= !@is_curator && !story.published ? 'pointer-events:none' : ''%>">
-                <div class="grid-item thumbnail
-                     <%= !@is_curator && !story.published ? 'no-caption' : '' %>">
-
-                    <img src="<%= story.success.customer.logo_url || asset_path('company-logo-missing.png') %>">
-
-                  <% if @is_curator || story.logo_published? %>
-                    <div class="caption"
-                        style="<%= grid_item_caption_style(@company, story) %>">
-                      <%= grid_item_caption_text(@company.id, story) %>
-                    </div>
-                  <% end %>
-
-                </div>
-              </a>
-              <% end %>
-
-            <% end %>
+            <%= render 'stories/shared/story_gallery',
+                { company: @company, stories: @stories, is_curator: @is_curator,
+                cached: true } %>
 
           </div>
        <!--  </div> -->  <!-- portlet-body -->

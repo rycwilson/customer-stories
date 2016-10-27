@@ -1,0 +1,21 @@
+
+<% stories.each do |story| %>
+
+  <a href="<%= grid_item_link(company.id, story) %>"
+     style="<%= !is_curator && !story.published ? 'pointer-events:none' : ''%>">
+    <div class="grid-item thumbnail
+         <%= !is_curator && !story.published ? 'no-caption' : '' %>">
+
+        <img src="<%= story.success.customer.logo_url || asset_path('company-logo-missing.png') %>">
+
+      <% if is_curator || story.logo_published? %>
+        <div class="caption"
+            style="<%= grid_item_caption_style(company, story) %>">
+          <%= grid_item_caption_text(company.id, story) %>
+        </div>
+      <% end %>
+
+    </div>
+  </a>
+
+<% end %>
