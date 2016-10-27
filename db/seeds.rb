@@ -165,7 +165,7 @@ def seed_company company, *users
       # random product (tag)
       success.products << company.products[rand(0...company.products.count)]
       # each story has some visitors
-      10.times { success.visitors << VisitorsSeed::create }
+      # 10.times { success.visitors << VisitorsSeed::create }
 
       # Contributions
       ContributionsSeed::create( success.id, ROLES[rand(ROLES.length)], 1.day.ago, 'contribution', users[0] )
