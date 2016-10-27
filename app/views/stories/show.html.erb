@@ -142,16 +142,14 @@
         <div id='story-results' class="well">
           <h3 class='text-center'>Results</h3>
           <% @story.success.results.each do |result| %>
-          <div class="row">
-            <div class="col-xs-1">
-            <i class='fa fa-check'></i>&nbsp;&nbsp;&nbsp;&nbsp;
-
+            <div class="row">
+              <div class='col-xs-1'>
+                <i class='fa fa-check'></i>
+              </div>
+              <div class='col-xs-11'>
+                <p><%= result.description %></p>
+              </div>
             </div>
-            <div class="col-xs-11">
-
-            <p><%= result.description %></p>
-            </div>
-          </div>
           <% end %>
         </div>
 

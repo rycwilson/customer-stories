@@ -85,6 +85,10 @@
 
 #story-results {
   margin: 0 0 30px 0;
+  .row div:first-child {
+    text-align: center;
+    padding-right: 0;
+  }
 }
 
 #story-results + .story-video {
