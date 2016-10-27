@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161024205315) do
+ActiveRecord::Schema.define(version: 20161027225225) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,6 +53,8 @@ ActiveRecord::Schema.define(version: 20161024205315) do
     t.string   "website"
     t.string   "gtm_id"
   end
+
+  add_index "companies", ["subdomain"], name: "index_companies_on_subdomain", unique: true, using: :btree
 
   create_table "contributions", force: :cascade do |t|
     t.integer  "user_id"

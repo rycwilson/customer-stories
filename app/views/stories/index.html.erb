@@ -45,6 +45,7 @@
 
             <% @stories.each do |story| %>
 
+              <% cache story do %>
               <a href="<%= grid_item_link(@company.id, story) %>"
                  style="<%= !@is_curator && !story.published ? 'pointer-events:none' : ''%>">
                 <div class="grid-item thumbnail
@@ -61,6 +62,7 @@
 
                 </div>
               </a>
+              <% end %>
 
             <% end %>
 

@@ -51,6 +51,9 @@ end
 
 group :development, :test do
 
+  gem 'rack-mini-profiler'
+  gem 'flamegraph'
+  gem 'stackprof'
   gem 'meta_request'  # rails panel chrome extension
   gem 'whenever', require: false
   gem 'better_errors'

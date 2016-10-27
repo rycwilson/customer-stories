@@ -15,8 +15,8 @@ class ApplicationController < ActionController::Base
   protected
 
   def set_gon company=nil
-    is_curator = (current_user.try(:company_id) == company.try(:id))
     if !cookies[:csp_init]
+      is_curator = (user_signed_in? && (current_user.company_id == company.try(:id)))
       gon.push({
         company: company.present? ?
                     JSON.parse(company.to_json({ methods: :header_style })) : nil,
