@@ -15,7 +15,6 @@ gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 
-gem 'rails_admin'
 gem 'devise'
 gem 'turbolinks', '~> 5.0.0'
 gem 'gon'
@@ -39,13 +38,15 @@ gem 'jquery-minicolors-rails'
 gem 'jazz_hands', github: 'nixme/jazz_hands', branch: 'bring-your-own-debugger'
 gem 'pry-theme'
 gem 'pry-byebug'
-
 gem 'meta_request'  # rails panel chrome extension
 
 group :production do
 
-  gem 'puma'
   gem 'rails_12factor'
+  gem 'puma'
+  gem 'dalli'
+  gem 'connection_pool'
+  gem 'rails_admin'
 
 end
 
