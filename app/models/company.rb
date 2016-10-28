@@ -52,7 +52,7 @@ class Company < ActiveRecord::Base
     .unshift( [""] )  # empty option makes placeholder possible (only needed for single select)
   end
 
-  def category_select_options_all
+  def category_select_options
     self.story_categories
         .map do |category|
           [ category.name, category.id, { data: { slug: category.slug } } ]
@@ -60,7 +60,24 @@ class Company < ActiveRecord::Base
         .sort
   end
 
-  def product_select_options_all
+  # method returns an array of category tags for which
+  # a logo-published story exists for the given company (self)
+  def public_category_select_options
+    Rails.cache.fetch("#{self.subdomain}/public_category_select_options",
+                      expires_in: 24.hours) do
+      StoryCategory.joins(successes: { story: {}, customer: {} })
+                   .where(customers: { company_id: self.id },
+                            stories: { logo_published: true })
+                   .uniq
+                   .map do |category|
+                     [ category.name, category.id, { data: { slug: category.slug } } ]
+                   end
+                   .sort
+                   .unshift ['All', 0]
+    end
+  end
+
+  def product_select_options
     self.products
         .map do |product|
           [ product.name, product.id, { data: { slug: product.slug } } ]
@@ -68,32 +85,21 @@ class Company < ActiveRecord::Base
         .sort
   end
 
-  # method returns an array of category tags for which
-  # a logo-published story exists for the given company (self)
-  def category_select_options_filtered
-    StoryCategory.joins(successes: { story: {}, customer: {} })
-                 .where(customers: { company_id: self.id },
-                          stories: { logo_published: true })
-                 .uniq
-                 .map do |category|
-                   [ category.name, category.id, { data: { slug: category.slug } } ]
-                 end
-                 .sort
-                 .unshift ['All', 0]
-  end
-
   # method returns an array of product tags for which
   # a logo-published story exists for the given company
-  def product_select_options_filtered
-    Product.joins(successes: { story: {}, customer: {} })
-           .where(customers: { company_id: self.id },
-                    stories: { logo_published: true })
-           .uniq
-           .map do |product|
-             [ product.name, product.id, { data: { slug: product.slug } } ]
-           end
-           .sort
-           .unshift ['All', 0]
+  def public_product_select_options
+    Rails.cache.fetch("#{self.subdomain}/public_product_select_options",
+                      expires_in: 24.hours) do
+      Product.joins(successes: { story: {}, customer: {} })
+             .where(customers: { company_id: self.id },
+                      stories: { logo_published: true })
+             .uniq
+             .map do |product|
+               [ product.name, product.id, { data: { slug: product.slug } } ]
+             end
+             .sort
+             .unshift ['All', 0]
+    end
   end
 
   def templates_select
@@ -109,7 +115,9 @@ class Company < ActiveRecord::Base
   end
 
   def public_stories
-    Story.company_all_logo_published(self.id)
+    Rails.cache.fetch("#{self.subdomain}/public_stories", expires_in: 24.hours) do
+      Story.company_all_logo_published(self.id).pluck(:id)
+    end
   end
 
   # all_stories_json returns data included in the client via the gon object
