@@ -32,10 +32,11 @@ function storiesIndex () {
       productSlug = getQueryString('product'),
       storiesTemplate = _.template($('#stories-template').html()),
       // filtersTemplate = _.template($('#stories-filters-template').html()),
-      $gallery = $('#stories-gallery');
+      $gallery = $('#stories-gallery'),
+      isCurator = app.current_user && app.current_user.is_curator;
 
   if ($gallery.children().length === 0 && app.stories.length !== 0 ) {
-    if (app.current_user.is_curator) {
+    if (isCurator) {
       updateGallery(
         $(storiesTemplate({ stories: app.stories, isCurator: true }) ));
     } else {
@@ -54,23 +55,16 @@ function storiesIndex () {
 }
 
 function filterStories (filterTag, filterId, filterSlug) {
-  // console.log('filterStories');
-  // if (app.stories.length === 0) {
-  //   if (filterId === '0') {
-  //     Turbolinks.visit('/');
-  //     console.log('visit /');
-  //   } else {
-  //     console.log('visit /?' + filterTag + '=' + filterSlug);
-  //     Turbolinks.visit('/?' + filterTag + '=' + filterSlug);
-  //   }
-  // }
+
+  var isCurator = app.current_user && app.current_user.is_curator;
+
   if (filterId === '0') {  // all stories
-    return app.current_user.is_curator ? app.stories :
+    return isCurator ? app.stories :
            app.stories.filter(function (story) { return story.logo_published; });
   }
   return app.stories.filter(function (story, index) {
     if (filterTag === 'category') {
-      if (app.current_user.is_curator) {
+      if (isCurator) {
         return story.success.story_categories.some(function (category) {
           // loosely typed because former is string, latter is number ...
           return category.id == filterId;
@@ -83,7 +77,7 @@ function filterStories (filterTag, filterId, filterSlug) {
           });
       }
     } else if (filterTag === 'product') {
-      if (app.current_user.is_curator) {
+      if (isCurator) {
         return story.success.products.some(function (product) {
           return product.id == filterId;
         });
