@@ -14,11 +14,11 @@
     # select box options (filtered by role) ...
     @is_curator = @company.curator? current_user
     @category_select_options = @is_curator ?
-                    @company.category_select_options_all.unshift(["All", 0]) :
-                    @company.category_select_options_filtered  # public reader
+                    @company.category_select_options.unshift(["All", 0]) :
+                    @company.public_category_select_options  # public reader
     @product_select_options = @is_curator ?
-                  @company.product_select_options_all.unshift(["All", 0]) :
-                  @company.product_select_options_filtered  # public reader
+                  @company.product_select_options.unshift(["All", 0]) :
+                  @company.public_product_select_options  # public reader
     # if there's a query string, the option will be pre-selected, otherwise no pre-selects
     @category_pre_selected_options = []
     @product_pre_selected_options = []
@@ -27,13 +27,19 @@
       @category_pre_selected_options = [StoryCategory.friendly.find(params[:category]).id] if params[:category]
       @product_pre_selected_options = [Product.friendly.find(params[:product]).id] if params[:product]
     elsif cookies[:csp_init]
+      # binding.remote_pry
       @stories = []
     elsif @is_curator
+      # binding.remote_pry
       @stories = @company.all_stories
       # TODO: set this cookie more broadly throughout app
       cookies[:csp_init] = { value: true, expires: 1.hour.from_now }
     else  # public reader
-      @stories = @company.public_stories
+      public_story_ids = @company.public_stories
+      # sort order is lost when .find takes an array of ids, so need to re-sort;
+      # ref: http://stackoverflow.com/questions/1680627
+      @stories = Story.find(public_story_ids)
+                      .sort_by { |story| public_story_ids.index(story.id) }
       cookies[:csp_init] = { value: true, expires: 1.hour.from_now }
     end
   end
