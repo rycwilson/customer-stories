@@ -1,10 +1,6 @@
 
 window.app = window.app || {
 
-  company: {},
-  stories: [],
-  current_user: {},
-
   browser: {  // ref: http://stackoverflow.com/questions/9847580
     isChrome: !!window.chrome && !!window.chrome.webstore,
     isSafari: Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0,
