@@ -31,6 +31,100 @@ class Company < ActiveRecord::Base
   # why did this crap out when seeding?
   # CSP = self.find_by(name:'CSP')
 
+  def all_stories
+    Rails.cache.fetch("#{self.subdomain}/all_stories", expires_in: 24.hours) do
+      Story.order(Story.company_all(self.id)).pluck(:id)
+    end
+  end
+
+  def all_stories_filter_category category_id
+    Rails.cache.fetch("#{self.subdomain}/all_stories_category_#{category_id}",
+                      expires_in: 24.hours) do
+      Story.order(Story.company_all_filter_category(self.id, category_id)).pluck(:id)
+    end
+  end
+
+  def all_stories_filter_product product_id
+    Rails.cache.fetch("#{self.subdomain}/all_stories_product_#{product_id}",
+                      expires_in: 24.hours) do
+      Story.order(Story.company_all_filter_product(self.id, product_id)).pluck(:id)
+    end
+  end
+
+  def public_stories
+    Rails.cache.fetch("#{self.subdomain}/public_stories",
+                      expires_in: 24.hours) do
+      Story.order(Story.company_public(self.id)).pluck(:id)
+    end
+  end
+
+  def public_stories_filter_category category_id
+    Rails.cache.fetch("#{self.subdomain}/public_stories_category_#{category_id}",
+                      expires_in: 24.hours) do
+      Story.order(Story.company_public_filter_category(self.id, category_id)).pluck(:id)
+    end
+  end
+
+  def public_stories_filter_product product_id
+    Rails.cache.fetch("#{self.subdomain}/public_stories_product_#{product_id}",
+                      expires_in: 24.hours) do
+      Story.order(Story.company_public_filter_product(self.id, product_id)).pluck(:id)
+    end
+  end
+
+  # TODO: faster? http://stackoverflow.com/questions/20014292
+  def filter_stories_by_tag filter_params, is_curator
+    if filter_params[:id] == '0'  # all stories
+      story_ids = is_curator ? story_ids = self.all_stories : self.public_stories
+    else
+      case filter_params[:tag]  # all || category || product
+        when 'all'
+          story_ids = is_curator ? self.all_stories : self.public_stories
+        when 'category'
+          # use the slug to look up the category id,
+          # unless filter_params[:id] already represents the id
+          category_id = (StoryCategory
+                           .friendly
+                           .find(filter_params[:id]) # will find whether id or slug
+                           .id unless filter_params[:id].to_i != 0).try(:to_i) ||
+                        filter_params[:id].to_i
+          story_ids = is_curator ? self.all_stories_filter_category(category_id) :
+                                   self.public_stories_filter_category(category_id)
+        when 'product'
+          # use the slug to look up the product id,
+          # unless filter_params[:id] already represents the id
+          product_id = (Product
+                          .friendly
+                          .find(filter_params[:id])
+                          .id unless filter_params[:id].to_i != 0).try(:to_i) ||
+                       filter_params[:id].to_i
+          story_ids = is_curator ? self.all_stories_filter_product(product_id) :
+                                   self.public_stories_filter_product(product_id)
+        else
+      end
+    end
+    Story.find(story_ids)
+         .sort_by { |story| story_ids.index(story.id) }
+  end
+
+  # all_stories_json returns data included in the client via the gon object
+  def all_stories_json
+    JSON.parse(
+      Story.order(Story.company_all(self.id))
+      .to_json({
+        only: [:id, :published, :logo_published, :publish_date, :updated_at],
+        methods: [:csp_story_path, :published_contributors],
+        include: {
+          success: {
+            only: [],
+            include: {
+              customer: { only: [:name, :logo_url] },
+              story_categories: { only: [:id, :name, :slug] },
+              products: { only: [:id, :name, :slug] } }}}
+      })
+    )
+  end
+
   def curator? current_user=nil
     return false if current_user.nil?
     current_user.company_id == self.id
@@ -42,14 +136,6 @@ class Company < ActiveRecord::Base
     Company.find_by(name:'CSP').email_templates.each do |template|
       self.email_templates << template.dup
     end
-  end
-
-  def customer_select_options
-    self.customers.map do |customer|
-      # name will appear as a selection, while its id will be the value submitted
-      [ customer.name, customer.id, ]
-    end
-    .unshift( [""] )  # empty option makes placeholder possible (only needed for single select)
   end
 
   def category_select_options
@@ -102,89 +188,20 @@ class Company < ActiveRecord::Base
     end
   end
 
+  def customer_select_options
+    self.customers.map do |customer|
+      # name will appear as a selection, while its id will be the value submitted
+      [ customer.name, customer.id, ]
+    end
+    .unshift( [""] )  # empty option makes placeholder possible (only needed for single select)
+  end
+
   def templates_select
     self.email_templates.map do |template|
       [template.name, template.id]
     end
     .sort
     .unshift( [""] )
-  end
-
-  def all_stories
-    Story.company_all(self.id)
-  end
-
-  def public_stories
-    Rails.cache.fetch("#{self.subdomain}/public_stories", expires_in: 24.hours) do
-      Story.company_all_logo_published(self.id).pluck(:id)
-    end
-  end
-
-  # all_stories_json returns data included in the client via the gon object
-  def all_stories_json
-    JSON.parse(
-      Story
-        .company_all(self.id)
-        .to_json({
-          only: [:id, :published, :logo_published, :publish_date, :updated_at],
-          methods: [:csp_story_path, :published_contributors],
-          include: {
-            success: {
-              only: [],
-              include: {
-                customer: { only: [:name, :logo_url] },
-                story_categories: { only: [:id, :name, :slug] },
-                products: { only: [:id, :name, :slug] } }}}
-        })
-    )
-  end
-
-  # TODO: faster? http://stackoverflow.com/questions/20014292
-  def filter_stories_by_tag filter_params, is_curator
-    if filter_params[:id] == '0'  # all stories
-      return self.all_stories if is_curator
-      return self.public_stories
-    end
-    case filter_params[:tag]  # all || category || product
-      when 'all'
-        return self.all_stories if is_curator
-        self.public_stories
-      when 'category'
-        # use the slug to look up the category id,
-        # unless filter_params[:id] already represents the id
-        category_id = (StoryCategory
-                         .friendly
-                         .find(filter_params[:id]) # will find whether id or slug
-                         .id unless filter_params[:id].to_i != 0).try(:to_i) ||
-                      filter_params[:id].to_i
-        if is_curator
-          self.all_stories.select do |story|
-            story.success.story_categories.any? { |category| category.id == category_id }
-          end
-        else
-          self.public_stories.select do |story|
-            story.success.story_categories.any? { |category| category.id == category_id }
-          end
-        end
-      when 'product'
-        # use the slug to look up the product id,
-        # unless filter_params[:id] already represents the id
-        product_id = (Product
-                        .friendly
-                        .find(filter_params[:id])
-                        .id unless filter_params[:id].to_i != 0).try(:to_i) ||
-                     filter_params[:id].to_i
-        if is_curator
-          self.all_stories.select do |story|
-            story.success.products.any? { |product| product.id == product_id }
-          end
-        else
-          self.public_stories.select do |story|
-            story.success.products.any? { |product| product.id == product_id }
-          end
-        end
-      else
-    end
   end
 
   # slightly different than updating tags for a story
