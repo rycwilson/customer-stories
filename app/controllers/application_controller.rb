@@ -14,6 +14,16 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def csp_environment
+    if ENV['HOST_NAME'] == 'customerstories.net'
+      return 'production'
+    elsif ENV['HOST_NAME'] == 'customerstories.org'
+      return 'staging'
+    else
+      return 'development'
+    end
+  end
+
   def set_gon company=nil
     if !cookies[:csp_init]
       is_curator = (user_signed_in? && (current_user.company_id == company.try(:id)))
@@ -120,16 +130,6 @@ class ApplicationController < ActionController::Base
   def company_curator? company_id
     user_signed_in? &&
     current_user.company_id == company_id
-  end
-
-  def csp_environment
-    if ENV['HOST_NAME'] == 'customerstories.net'
-      return 'production'
-    elsif ENV['HOST_NAME'] == 'customerstories.org'
-      return 'staging'
-    else
-      return 'development'
-    end
   end
 
 end
