@@ -13,14 +13,14 @@ class CompaniesController < ApplicationController
     @workflow_tab = cookies[:csp_workflow_tab] || 'curate'
     cookies.delete(:csp_workflow_tab) if cookies[:csp_workflow_tab]
     @customer_select_options = @company.customer_select_options
-    @category_select_options = @company.category_select_options_all
-    @product_select_options = @company.product_select_options_all
+    @category_select_options = @company.category_select_options
+    @product_select_options = @company.product_select_options
   end
 
   def edit
-    @category_select_options = @company.category_select_options_all
+    @category_select_options = @company.category_select_options
     @category_pre_selected_options = @company.story_categories.map { |category| category.id }
-    @product_select_options = @company.product_select_options_all
+    @product_select_options = @company.product_select_options
     @product_pre_selected_options = @company.products.map { |product| product.id }
     @templates_select = @company.templates_select
   end

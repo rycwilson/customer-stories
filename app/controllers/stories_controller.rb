@@ -70,10 +70,10 @@
 
   def edit
     @customer = @story.success.customer
-    @categories = @company.category_select_options_all
+    @categories = @company.category_select_options
     @categories_pre_select = @story.success.story_categories
                                    .map { |category| category.id }
-    @products = @company.product_select_options_all
+    @products = @company.product_select_options
     @products_pre_select = @story.success.products
                                  .map { |category| category.id }
     @referrer_select = @story.success.contributions

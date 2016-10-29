@@ -4,17 +4,6 @@ class Story < ActiveRecord::Base
 
   belongs_to :success
 
-  scope :company_all, ->(company_id) {
-    joins(success: { customer: {} })
-    .where(customers: { company_id: company_id })
-    .order("stories.published DESC, stories.publish_date ASC")
-    .order("stories.updated_at DESC")
-  }
-  scope :company_all_logo_published, ->(company_id) {
-    company_all(company_id)
-    .where(logo_published: true)
-  }
-
   # Note: no explicit association to friendly_id_slugs, but it's there
   # Story has many friendly_id_slugs -> captures history of slug changes
 
@@ -27,6 +16,45 @@ class Story < ActiveRecord::Base
   # scrub user-supplied html input using whitelist
   before_save :scrub_html_input, on: [:create, :update],
               if: Proc.new { self.content.present? && self.content_changed? }
+
+  scope :company_all, ->(company_id) {
+    joins(success: { customer: {} })
+    .where(customers: { company_id: company_id })
+  }
+  scope :company_all_filter_category, ->(company_id, category_id) {
+    joins(success: { customer: {}, story_categories: {} })
+    .where(customers: { company_id: company_id },
+           story_categories: { id: category_id } )
+  }
+  scope :company_all_filter_product, ->(company_id, product_id) {
+    joins(success: { customer: {}, products: {} })
+    .where(customers: { company_id: company_id },
+           products: { id: product_id } )
+  }
+  scope :company_public, ->(company_id) {
+    joins(success: { customer: {} })
+    .where(logo_published: true,
+           customers: { company_id: company_id })
+  }
+  scope :company_public_filter_category, ->(company_id, category_id) {
+    joins(success: { customer: {}, story_categories: {} })
+    .where(logo_published: true,
+           customers: { company_id: company_id },
+           story_categories: { id: category_id })
+  }
+  scope :company_public_filter_product, ->(company_id, product_id) {
+    joins(success: { customer: {}, products: {} })
+    .where(logo_published: true,
+           customers: { company_id: company_id },
+           products: { id: product_id })
+  }
+
+  # method takes an active record relation
+  def self.order stories_relation
+    stories_relation
+      .order("stories.published DESC, stories.publish_date ASC")
+      .order("stories.updated_at DESC")
+  end
 
   def should_generate_new_friendly_id?
     new_record? || title_changed? || slug.blank?
