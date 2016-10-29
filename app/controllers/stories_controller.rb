@@ -2,12 +2,17 @@
 
   include StoriesHelper
 
-  before_action :user_authorized?, only: :edit
   before_action :set_company, except: [:update]
-  before_action only: [:index, :show, :edit] { set_gon(@company) }
-  before_action :set_public_story_or_redirect, only: :show
   before_action :set_story, only: [:edit, :approval]
-  before_action :set_contributors, only: [:show, :approval]
+  before_action only: [:edit] { user_authorized?(@story, current_user) }
+  before_action only: [:index, :show, :edit] { set_gon(@company) }
+  before_action only: [:show] {
+    set_public_story_or_redirect(@company)
+    set_contributors_jsonld(@story)
+    set_products_jsonld(@company)
+    set_about_jsonld(@story)
+  }
+  before_action only: [:show, :approval] { set_contributors(@story) }
   before_action :set_s3_direct_post, only: :edit
 
   def index
@@ -49,23 +54,9 @@
     @success = @story.success
     # convert the story content to plain text (for SEO tags)
     @story_content_text = HtmlToPlainText.plain_text(@story.content)
-    @contributors_jsonld = @success.contributors
-                                   .map do |contributor|
-                                     { "@type" => "Person",
-                                       "name" => contributor.full_name }
-                                   end
-    @owns_jsonld = @company.products.map do |product|
-                                      { "@type" => "Product",
-                                        "name" => product.name }
-                                    end
-    @about_jsonld = [{ "@type" => "Corporation",
-                       "name" => @success.customer.name,
-                       "logo" => { "@type" => "ImageObject",
-                                   "url" => @success.customer.logo_url }}] +
-                    @success.products.map do |product|
-                                        { "@type" => "Product",
-                                          "name" => product.name }
-                                     end
+
+
+
   end
 
   def edit
@@ -218,12 +209,12 @@
     end
   end
 
-  def set_contributors
-    curator = @story.success.curator
+  def set_contributors story
+    curator = story.success.curator
     @contributors =
         User.joins(own_contributions: { success: {} })
             .where.not(linkedin_url:'')
-            .where(successes: { id: @story.success_id },
+            .where(successes: { id: story.success_id },
                    contributions: { publish_contributor: true })
             .order("CASE contributions.role
                       WHEN 'customer' THEN '1'
@@ -235,6 +226,35 @@
                                                   # he goes at the end
     @contributors << curator unless curator.linkedin_url.blank?
     @contributors
+  end
+
+  def set_contributors_jsonld story
+    @contributors_jsonld = story.success
+                                .contributors
+                                .map do |contributor|
+                                  { "@type" => "Person",
+                                    "name" => contributor.full_name }
+                                end
+  end
+
+  def set_products_jsonld company
+    @owns_jsonld = company.products
+                          .map do |product|
+                            { "@type" => "Product",
+                              "name" => product.name }
+                          end
+  end
+
+  def set_about_jsonld story
+    success = story.success
+    @about_jsonld = [{ "@type" => "Corporation",
+                   "name" => success.customer.name,
+                   "logo" => { "@type" => "ImageObject",
+                               "url" => success.customer.logo_url }}] +
+                success.products.map do |product|
+                                    { "@type" => "Product",
+                                      "name" => product.name }
+                                 end
   end
 
   # new customers can be created on new story creation
@@ -257,20 +277,20 @@
   # else it will redirect to ...
   #   - the correct link if outdated slug is used
   #   - company's story index if not published or not curator
-  def set_public_story_or_redirect
+  def set_public_story_or_redirect company
     @story = Story.friendly.find params[:title]
     if request.format == 'application/pdf'
       @story
     elsif request.path != @story.csp_story_path
       # old story title slug, redirect to current
       return redirect_to @story.csp_story_path, status: :moved_permanently
-    elsif !@story.published? && !company_curator?(@company.id)
+    elsif !@story.published? && !company_curator?(company.id)
       return redirect_to root_url(subdomain:request.subdomain, host:request.domain)
     end
   end
 
-  def user_authorized?
-    if current_user.company_id == Story.find(params[:id]).success.customer.company.id
+  def user_authorized? story, current_user
+    if current_user.try(:company_id) == story.success.customer.company.id
       true
     else
       render file: 'public/403', status: 403, layout: false
