@@ -1,4 +1,4 @@
-  class StoriesController < ApplicationController
+class StoriesController < ApplicationController
 
   include StoriesHelper
 
@@ -32,11 +32,11 @@
       @category_pre_selected_options = [StoryCategory.friendly.find(params[:category]).id] if params[:category]
       @product_pre_selected_options = [Product.friendly.find(params[:product]).id] if params[:product]
     elsif cookies[:csp_init]
-      # binding.remote_pry
       @stories = []
     elsif @is_curator
-      # binding.remote_pry
-      @stories = @company.all_stories
+      story_ids = @company.all_stories
+      @stories = Story.find(story_ids)
+                      .sort_by { |story| story_ids.index(story.id) }
       # TODO: set this cookie more broadly throughout app
       cookies[:csp_init] = { value: true, expires: 1.hour.from_now }
     else  # public reader
@@ -54,9 +54,6 @@
     @success = @story.success
     # convert the story content to plain text (for SEO tags)
     @story_content_text = HtmlToPlainText.plain_text(@story.content)
-
-
-
   end
 
   def edit
@@ -248,9 +245,9 @@
   def set_about_jsonld story
     success = story.success
     @about_jsonld = [{ "@type" => "Corporation",
-                   "name" => success.customer.name,
-                   "logo" => { "@type" => "ImageObject",
-                               "url" => success.customer.logo_url }}] +
+                       "name" => success.customer.name,
+                       "logo" => { "@type" => "ImageObject",
+                       "url" => success.customer.logo_url }}] +
                 success.products.map do |product|
                                     { "@type" => "Product",
                                       "name" => product.name }

@@ -2,10 +2,10 @@
 <% content_for :head do %>
 
   <meta name="turbolinks-cache-control" content="no-cache">
-  <%= render 'stories/shared/stories_index_template',
-      { company: @company, cached: true } %>
-  <%= render 'stories/shared/stories_index_meta_tags',
-      { company: @company, cached: true } %>
+
+  <%= render 'stories/shared/stories_index_template', { company: @company, cached: true } %>
+
+  <%= render 'stories/shared/stories_index_meta_tags', { company: @company, cached: true } %>
 
 <% end %>
 
@@ -47,9 +47,21 @@
         <!--  <div> -->
           <div class='grid' id="stories-gallery">
 
-            <%= render 'stories/shared/story_gallery',
-                { company: @company, stories: @stories, is_curator: @is_curator,
-                cached: true } %>
+            <% @stories.each do |story| %>
+
+              <% if @is_curator %>
+
+                <%= render 'stories/shared/curator_story_tile',
+                  { company: @company, story: story, customer: story.success.customer } %>
+
+              <% else %>
+
+                <%= render 'stories/shared/public_story_tile',
+                  { company: @company, story: story, customer: story.success.customer } %>
+
+              <% end %>  <!-- if @is_curator -->
+
+            <% end %>  <!-- @stories.each -->
 
           </div>
        <!--  </div> -->  <!-- portlet-body -->
@@ -58,55 +70,3 @@
   </div>  <!-- content -->
 </div>  <!-- wrapper -->
 
-<!-- currently unused template
-<script type='text/template' id='stories-filters-template'>
-  <div id='stories-filters'
-       class="form-inline hidden-xs {{= isCurator ? 'curator' : '' }} ">
-
-    {{ if (categorySelectOptions.length > 2) { }}
-
-      <div class='form-group'>
-        <label for='category_select'>Category</label>
-        <select name='category_select' id='category_select'
-                class='stories-filter form-control'
-                tabindex='-1'>
-          {{ categorySelectOptions.forEach(function (option, index) { }}
-               {{ if (index === 0) { }}
-                    <option value="0">All</option>
-               {{ } else { }}
-                    <option data-slug="{{= option[2].data.slug }}"
-                            value="{{= option[1] }}">
-                      {{= option[0] }}
-                    </option>
-               {{ } }}
-          {{ }); }}
-        </select>
-      </div>&nbsp;&nbsp;&nbsp;&nbsp;
-
-    {{ } }}
-
-    {{ if (productSelectOptions.length > 2) { }}
-
-      <div class='form-group'>
-        <label for='product_select'>Product</label>
-        <select name='product_select' id='product_select'
-                class='stories-filter form-control'
-                tabindex='-1'>
-          {{ productSelectOptions.forEach(function (option, index) { }}
-               {{ if (index === 0) { }}
-                    <option value="0">All</option>
-               {{ } else { }}
-                    <option data-slug="{{= option[2].data.slug }}"
-                            value="{{= option[1] }}">
-                      {{= option[0] }}
-                    </option>
-               {{ } }}
-          {{ }); }}
-        </select>
-      </div>
-
-    {{ } }}
-
-  </div>
-</script>
--->
