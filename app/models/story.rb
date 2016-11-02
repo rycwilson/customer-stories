@@ -49,6 +49,13 @@ class Story < ActiveRecord::Base
            products: { id: product_id })
   }
 
+  # note: the _changed? methods for attributes don't work in the after_commit callback
+  # note: the & operator interestects the arrays, returning any values that exist in both
+  after_commit :invalidate_story_tile_cache_keys, :invalidate_stories_index_cache_key,
+    on: :update, if: Proc.new { |story|
+                       (story.previous_changes.keys & ['published', 'logo_published']).any?
+                     }
+
   # method takes an active record relation
   def self.order stories_relation
     stories_relation
@@ -97,6 +104,7 @@ class Story < ActiveRecord::Base
     end
     # add new category tags ...
     unless new_tags.try(:[], :category_tags).nil?
+      binding.pry
       new_tags[:category_tags].each do |category_id|
         unless old_category_tags.any? { |category| category.id == category_id.to_i }
           self.success.story_categories << StoryCategory.find(category_id.to_i)
@@ -294,6 +302,37 @@ class Story < ActiveRecord::Base
       quote: quote,
       quote_attr: quote_attr,
       content: content }
+  end
+
+  def curator_story_tile_memcache_iterator
+    company = self.success.customer.company
+    Rails.cache.fetch(
+      "#{company.subdomain}/curator-story-#{self.id}-tile-memcache-iterator") { rand(10) }
+  end
+
+  def public_story_tile_memcache_iterator
+    company = self.success.customer.company
+    Rails.cache.fetch(
+      "#{company.subdomain}/public-story-#{self.id}-tile-memcache-iterator") { rand(10) }
+  end
+
+  # this method can be called from one of four places
+  # 1 - story after_commit callback (if publish state changed)
+  # 2 - company after_commit callback (if nav colors changed)
+  # 3 - customer after_commit callback (if name or logo_url changed)
+  # 4 - stories_controller#set_public_story_or_redirect (if story url changed)
+  def invalidate_story_tile_cache_keys
+    company = self.success.customer.company
+    Rails.cache.write(
+      "#{company.subdomain}/curator-story-#{self.id}-tile-memcache-iterator",
+      self.curator_story_tile_memcache_iterator + 1)
+    Rails.cache.write(
+      "#{company.subdomain}/public-story-#{self.id}-tile-memcache-iterator",
+      self.public_story_tile_memcache_iterator + 1)
+  end
+
+  def invalidate_stories_index_cache_key
+    self.success.customer.company.increment_stories_index_memcache_iterator
   end
 
 end

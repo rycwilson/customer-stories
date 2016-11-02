@@ -3,7 +3,7 @@
 
   <% if current_user.company_id.present? %>
 
-    <%= render 'shared/mainnav' %>
+    <%= render 'shared/company_navbar', { company: @company, workflow_tab: nil } %>
 
   <% else %>
 

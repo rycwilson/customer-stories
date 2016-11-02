@@ -2,7 +2,7 @@
   locals: company: @company
           success: @success
           story: @story
-          owns: @owns_jsonld
+          owns: @products_jsonld
           contributors: @contributors_jsonld
           about: @about_jsonld
 -->
@@ -22,8 +22,7 @@
 <meta property='og:type' content='article'>
 <meta property='og:site_name' content="<%= company.name %> Customer Stories">
 <meta property='fb:app_id'
-      content="<%= ENV['HOST_NAME'] == 'customerstories.net' ?
-                '291034101286863' : '<facebook_app_id>' %>">
+      content="<%= '291034101286863' %>">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="<%= og_image(company,'all')[:image] %>">
 
@@ -43,7 +42,7 @@
         "@type": "ImageObject",
         "url": "<%= company.logo_url %>"
       },
-      "owns": <%= raw owns.to_json %>
+      "owns": <%= raw products.to_json %>
     },
     "author": {
       "@type": "Person",

@@ -28,48 +28,53 @@ class Company < ActiveRecord::Base
   has_attached_file :logo, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: "companies/:style/missing_logo.png"
   validates_attachment_content_type :logo, content_type: /\Aimage\/.*\Z/
 
+  after_commit :invalidate_cache_keys, on: :update,
+    if: Proc.new { |company|
+      (company.previous_changes.keys & ['nav_color_1', 'nav_text_color']).any?
+    }
+
   # why did this crap out when seeding?
   # CSP = self.find_by(name:'CSP')
 
   def all_stories
-    Rails.cache.fetch("#{self.subdomain}/all_stories", expires_in: 24.hours) do
+    # Rails.cache.fetch("#{self.subdomain}/all_stories", expires_in: 24.hours) do
       Story.order(Story.company_all(self.id)).pluck(:id)
-    end
+    # end
   end
 
   def all_stories_filter_category category_id
-    Rails.cache.fetch("#{self.subdomain}/all_stories_category_#{category_id}",
-                      expires_in: 24.hours) do
+    # Rails.cache.fetch("#{self.subdomain}/all_stories_category_#{category_id}",
+                      # expires_in: 24.hours) do
       Story.order(Story.company_all_filter_category(self.id, category_id)).pluck(:id)
-    end
+    # end
   end
 
   def all_stories_filter_product product_id
-    Rails.cache.fetch("#{self.subdomain}/all_stories_product_#{product_id}",
-                      expires_in: 24.hours) do
+    # Rails.cache.fetch("#{self.subdomain}/all_stories_product_#{product_id}",
+                      # expires_in: 24.hours) do
       Story.order(Story.company_all_filter_product(self.id, product_id)).pluck(:id)
-    end
+    # end
   end
 
   def public_stories
-    Rails.cache.fetch("#{self.subdomain}/public_stories",
-                      expires_in: 24.hours) do
+    # Rails.cache.fetch("#{self.subdomain}/public_stories",
+    #                   expires_in: 24.hours) do
       Story.order(Story.company_public(self.id)).pluck(:id)
-    end
+    # end
   end
 
   def public_stories_filter_category category_id
-    Rails.cache.fetch("#{self.subdomain}/public_stories_category_#{category_id}",
-                      expires_in: 24.hours) do
+    # Rails.cache.fetch("#{self.subdomain}/public_stories_category_#{category_id}",
+    #                   expires_in: 24.hours) do
       Story.order(Story.company_public_filter_category(self.id, category_id)).pluck(:id)
-    end
+    # end
   end
 
   def public_stories_filter_product product_id
-    Rails.cache.fetch("#{self.subdomain}/public_stories_product_#{product_id}",
-                      expires_in: 24.hours) do
+    # Rails.cache.fetch("#{self.subdomain}/public_stories_product_#{product_id}",
+    #                   expires_in: 24.hours) do
       Story.order(Story.company_public_filter_product(self.id, product_id)).pluck(:id)
-    end
+    # end
   end
 
   # TODO: faster? http://stackoverflow.com/questions/20014292
@@ -142,50 +147,40 @@ class Company < ActiveRecord::Base
     self.story_categories
         .map do |category|
           [ category.name, category.id, { data: { slug: category.slug } } ]
-        end
-        .sort
+        end.sort
   end
 
   # method returns an array of category tags for which
   # a logo-published story exists for the given company (self)
   def public_category_select_options
-    Rails.cache.fetch("#{self.subdomain}/public_category_select_options",
-                      expires_in: 24.hours) do
-      StoryCategory.joins(successes: { story: {}, customer: {} })
-                   .where(customers: { company_id: self.id },
-                            stories: { logo_published: true })
-                   .uniq
-                   .map do |category|
-                     [ category.name, category.id, { data: { slug: category.slug } } ]
-                   end
-                   .sort
-                   .unshift ['All', 0]
-    end
+    StoryCategory.joins(successes: { story: {}, customer: {} })
+                 .where(customers: { company_id: self.id },
+                          stories: { logo_published: true })
+                 .uniq
+                 .map do |category|
+                   [ category.name, category.id, { data: { slug: category.slug } } ]
+                 end.sort.unshift ['All', 0]
   end
 
   def product_select_options
     self.products
         .map do |product|
           [ product.name, product.id, { data: { slug: product.slug } } ]
-        end
-        .sort
+        end.sort
   end
 
   # method returns an array of product tags for which
   # a logo-published story exists for the given company
   def public_product_select_options
-    Rails.cache.fetch("#{self.subdomain}/public_product_select_options",
-                      expires_in: 24.hours) do
-      Product.joins(successes: { story: {}, customer: {} })
-             .where(customers: { company_id: self.id },
-                      stories: { logo_published: true })
-             .uniq
-             .map do |product|
-               [ product.name, product.id, { data: { slug: product.slug } } ]
-             end
-             .sort
-             .unshift ['All', 0]
-    end
+    Product.joins(successes: { story: {}, customer: {} })
+           .where(customers: { company_id: self.id },
+                    stories: { logo_published: true })
+           .uniq
+           .map do |product|
+             [ product.name, product.id, { data: { slug: product.slug } } ]
+           end
+           .sort
+           .unshift ['All', 0]
   end
 
   def customer_select_options
@@ -262,6 +257,68 @@ class Company < ActiveRecord::Base
     missing << "story_categories" unless self.story_categories.present?
     missing << "products" unless self.products.present?
     missing
+  end
+
+  def products_jsonld
+    self.products.map do |product|
+                    { "@type" => "Product",
+                      "name" => product.name }
+                  end
+  end
+
+  def latest_story_publish_date
+    self.stories.where(published: true).order(:publish_date).take.try(:publish_date)
+  end
+
+  def latest_story_modified_date
+    self.stories.where(logo_published: true).order(logo_publish_date: :desc).take.try(:logo_publish_date)
+  end
+
+  def invalidate_cache_keys
+    self.successes.each do |success|
+      success.story.invalidate_story_tile_cache_keys
+    end
+    self.increment_stories_index_memcache_iterator
+  end
+
+  def stories_index_memcache_iterator
+    Rails.cache.fetch("#{self.subdomain}/stories-index-memcache-iterator") { rand(10) }
+  end
+
+  def increment_stories_index_memcache_iterator
+    Rails.cache.write("#{self.subdomain}/stories-index-memcache-iterator", self.stories_index_memcache_iterator + 1)
+  end
+
+  def curator_category_select_memcache_iterator
+    Rails.cache.fetch("#{self.subdomain}/curator-category-select-memcache-iterator") { rand(10) }
+  end
+
+  def increment_curator_category_select_memcache_iterator
+    Rails.cache.write("#{self.subdomain}/curator-category-select-memcache-iterator", self.curator_category_select_memcache_iterator + 1)
+  end
+
+  def curator_product_select_memcache_iterator
+    Rails.cache.fetch("#{self.subdomain}/curator-product-select-memcache-iterator") { rand(10) }
+  end
+
+  def increment_curator_product_select_memcache_iterator
+    Rails.cache.write("#{self.subdomain}/curator-product-select-memcache-iterator", self.curator_product_select_memcache_iterator + 1)
+  end
+
+  def public_category_select_memcache_iterator
+    Rails.cache.fetch("#{self.subdomain}/public-category-select-memcache-iterator") { rand(10) }
+  end
+
+  def increment_public_category_select_memcache_iterator
+    Rails.cache.write("#{self.subdomain}/public-category-select-memcache-iterator", self.public_category_select_memcache_iterator + 1)
+  end
+
+  def public_product_select_memcache_iterator
+    Rails.cache.fetch("#{self.subdomain}/public-product-select-memcache-iterator") { rand(10) }
+  end
+
+  def increment_public_product_select_memcache_iterator
+    Rails.cache.write("#{self.subdomain}/public-product-select-memcache-iterator", self.public_product_select_memcache_iterator + 1)
   end
 
 end

@@ -1,0 +1,66 @@
+
+<div class="container">
+
+  <div class='col-sm-6 col-md-7'>
+
+    <div class='well story-narration'>
+
+      <h3><%= story.title %></h3>
+
+      <div class="visible-md-block visible-lg-block">
+        <%= simple_format story.content %>
+      </div>
+      <div class="hidden-md hidden-lg">
+        <%= simple_format story.content %>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class='col-sm-6 col-md-5'>
+
+    <div id='story-results' class="well">
+      <h3 class='text-center'>Results</h3>
+      <% story.success.results.each do |result| %>
+        <div class="row">
+          <div class='col-xs-1'>
+            <i class='fa fa-check'></i>
+          </div>
+          <div class='col-xs-11'>
+            <p><%= result.description %></p>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="linkedin-widgets text-center">
+
+      <% if contributors.present? %>
+        <h3>Contributing Team</h3>
+      <% end %>
+
+      <% contributors.each do |contributor| %>
+
+        <div class="linkedin-widget linkedin-widget-wide">
+          <script type="IN/MemberProfile"
+                  data-id="<%= contributor.linkedin_url %>"
+                  data-format="inline"
+                  data-related="true"
+                  data-width='420'></script>
+        </div>
+
+        <div class="linkedin-widget">
+          <script type="IN/MemberProfile"
+                  data-id="<%= contributor.linkedin_url %>"
+                  data-format="inline"
+                  data-related="true"
+                  data-width='340'></script>
+        </div>
+
+      <% end %>
+
+
+    </div>
+  </div>
+</div>

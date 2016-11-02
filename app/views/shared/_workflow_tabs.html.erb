@@ -1,7 +1,7 @@
 
 <ul class='nav nav-tabs workflow-tabs mainnav-menu' role='tablist' style='border-bottom:0'>
 
-  <% if ['alpha', 'beta'].include? @company.feature_flag %>
+  <% if ['alpha', 'beta'].include? company.feature_flag %>
   <!--   <li id='pipeline-tab'
         style='margin-bottom: 0px; display:inline-block'
         data-title="This section is currently disabled">
@@ -11,7 +11,7 @@
       </a>
     </li> -->
   <% else %>
-    <li id='pipeline-tab' class="<%= @workflow_tab == 'pipeline' ? 'active' : '' %>"
+    <li id='pipeline-tab' class="<%= workflow_tab == 'pipeline' ? 'active' : '' %>"
         role='presentation' style='margin-bottom: 0px'>
       <a href='#pipeline-panel' role='tab' data-toggle='tab' aria-controls='pipeline'
           data-turbolinks='false'>
@@ -20,7 +20,7 @@
     </li>
   <% end %>
 
-  <li id='curate-tab' class="<%= @workflow_tab == 'curate' ? 'active' : '' %>"
+  <li id='curate-tab' class="<%= workflow_tab == 'curate' ? 'active' : '' %>"
       role='presentation' style='margin-bottom: 0px'>
     <a href='#curate-panel' role='tab' data-toggle='tab' aria-controls='curate'
        data-turbolinks='false'>
@@ -28,7 +28,7 @@
     </a>
   </li>
 
-  <li id='promote-tab' class="<%= @workflow_tab == 'promote' ? 'active' : '' %>"
+  <li id='promote-tab' class="<%= workflow_tab == 'promote' ? 'active' : '' %>"
       role='presentation' style='margin-bottom: 0px'>
     <a href='#promote-panel' role='tab' data-toggle='tab' aria-controls='promote'
         data-turbolinks='false'>
@@ -36,7 +36,7 @@
     </a>
   </li>
 
-  <% if ['alpha', 'beta'].include? @company.feature_flag %>
+  <% if ['alpha', 'beta'].include? company.feature_flag %>
     <li id='measure-tab' class='tooltip-beta-measure'
         style='margin-bottom: 0px; display:inline-block'
         data-title="Coming soon">
@@ -46,7 +46,7 @@
       </a>
     </li>
   <% else %>
-    <li id='measure-tab' class="<%= @workflow_tab == 'measure' ? 'active' : '' %>"
+    <li id='measure-tab' class="<%= workflow_tab == 'measure' ? 'active' : '' %>"
         role='presentation' style='margin-bottom: 0px'>
       <a href='#measure-panel' role='tab' data-toggle='tab' aria-controls='measure'
           data-turbolinks='false'>

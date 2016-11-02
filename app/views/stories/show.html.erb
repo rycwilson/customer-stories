@@ -1,12 +1,22 @@
 
 <!-- turbolinks caching problematic with linkedin widgets  -->
 <% content_for :head do %>
+
   <meta name="turbolinks-cache-control" content="no-cache">
+
   <%= render 'stories/shared/csp_linkedin_widget_template' %>
-  <%= render 'stories/shared/story_show_meta_tags',
-              { company: @company, success: @success, story: @story,
-                owns: @owns_jsonld, contributors: @contributors_jsonld,
-                about: @about_jsonld } %>
+
+  <% if production? %>
+    <% Rails.cache.fetch("views/#{@company.subdomain}/story-meta-tags/#{@story.id}",
+                         expires_in: 1.week) do %>
+
+      <%= render 'stories/shared/story_meta_tags',
+                  { company: @company, success: @story.success, story: @story,
+                    products: @products_jsonld, contributors: @contributors_jsonld,
+                    about: @about_jsonld } %>
+    <% end %>
+  <% end %>
+
 <% end %>
 
 <%= render 'stories/shared/video_modal' %>
@@ -15,178 +25,54 @@
 
   <% if @company.curator?(current_user) %>
 
-    <%= render 'shared/mainnav' %>
+    <%= render 'shared/company_navbar', { company: @company, workflow_tab: nil } %>
 
   <% end %>
 
   <!-- customer name, social sharing  -->
   <div class="mainnav">
-    <div class="container">
-      <div id='story-header' class="row">
 
-        <div id='story-customer-name' class="hidden-xs col-sm-9">
-          <h3><%= @story.success.customer.name %></h3>
-        </div>
+    <% cache "#{@company.subdomain}/story-header/#{@story.cache_key}" do %>
+      <%= render 'stories/shared/story_header',
+          { story: @story, customer: @story.success.customer } %>
+    <% end %>
 
-        <div id='story-customer-name-xs' class="col-xs-12 visible-xs-block">
-          <h3><%= @story.success.customer.name %></h3>
-        </div>
-
-        <div id='social-buttons' class="col-sm-3 hidden-xs text-center">
-          <a class="icon-button linkedin <%= production? ? 'clicky_log' : '' %>" target="_blank"
-             href="<%= LINKEDIN_SHARE_URL + @story.csp_story_url %>">
-            <i class="fa fa-linkedin"></i><span></span>
-          </a>
-          <a href="<%= TWITTER_SHARE_URL + @story.csp_story_url %>"
-             class="icon-button twitter <%= production? ? 'clicky_log' : '' %>" target="_blank">
-            <i class="fa fa-twitter"></i><span></span>
-          </a>
-          <a href="<%= FACEBOOK_SHARE_URL + @story.csp_story_url %>"
-             class="icon-button facebook <%= production? ? 'clicky_log' : '' %>" target="_blank">
-            <i class="fa fa-facebook"></i><span></span>
-          </a>
-        </div>
-
-      </div>
-    </div>   <!-- container -->
-  </div>  <!-- mainnav -->
+  </div>
 
   <div id='story-section-testimonial'>
-    <div class="container">
 
-        <%= render 'stories/shared/story_show_testimonial', { story: @story } %>
+    <% cache "#{@company.subdomain}/story-testimonial/#{@story.cache_key}" do %>
+      <%= render 'stories/shared/story_testimonial', { story: @story } %>
+    <% end %>
 
-    </div>  <!-- logo, quote, video -->
   </div>
 
   <!-- video (xs only) -->
   <div id='story-section-video-xs'>
-    <div class="container">
-      <div class='row'>
-        <div class="col-xs-10 col-xs-offset-1
-                <%= @story.embed_url.present? ? 'visible-xs-block' : 'hidden' %>">
 
-          <!-- <div itemprop='video' itemscope itemtype='//schema.org/VideoObject'> -->
-            <!-- <meta itemprop='' itemcontent=''> -->
+    <% cache "#{@company.subdomain}/story-video-xs/#{@story.cache_key}" do %>
+      <%= render 'stories/shared/story_video_xs', { story: @story } %>
+    <% end %>
 
-            <% if @story.video_info[:provider] == 'wistia' %>
-
-              <script src="//fast.wistia.com/embed/medias/<%= @story.video_info[:provider] %>.jsonp" async></script>
-              <script src="//fast.wistia.com/assets/external/E-v1.js" async></script>
-              <div class="wistia_responsive_padding"
-                   style="padding:56.25% 0 0 0;position:relative;">
-                <div class="wistia_responsive_wrapper"
-                     style="height:100%;left:0;position:absolute;top:0;width:100%;">
-                  <div class="wistia_embed wistia_async_<%= @story.video_info[:id] %> videoFoam=true"
-                       style="height:100%;width:100%">&nbsp;
-                  </div>
-                </div>
-              </div>
-
-            <% else %>
-
-              <div class="video-thumb-container embed-responsive embed-responsive-16by9"
-                 data-toggle='modal' data-target='#story-video-modal'
-                 data-provider="<%= @story.video_info[:provider] %>"
-                 data-video-id="<%= @story.video_info[:id] %>"
-                 data-video-url="<%= @story.embed_url %>">
-              </div>
-
-            <% end %>
-
-          <!-- </div> -->  <!-- meta VideoObject -->
-        </div>
-        <div class="col-xs-1">
-          <!-- space filler -->
-        </div>
-      </div>
-    </div>
   </div>
 
   <div id='social-buttons-xs' class="visible-xs text-right">
-    <a href="//www.linkedin.com/shareArticle?mini=true&url=<%= @story.csp_story_url %>"
-       class="icon-button-xs linkedin <%= production? ? 'clicky_log' : '' %>" target="_blank">
-      <i class="fa fa-linkedin"></i><span></span>
-    </a>
-    <a href="//twitter.com/share?url=<%= @story.csp_story_url %>"
-       class="icon-button-xs twitter <%= production? ? 'clicky_log' : '' %>" target="_blank">
-      <i class="fa fa-twitter"></i><span></span>
-    </a>
-    <a href="//www.facebook.com/sharer.php?u=<%= @story.csp_story_url %>"
-       class="icon-button-xs facebook <%= production? ? 'clicky_log' : '' %>" target="_blank">
-      <i class="fa fa-facebook"></i><span></span>
-    </a>
+
+    <% cache "#{@company.subdomain}/social-buttons-xs/#{@story.cache_key}" do %>
+      <%= render 'stories/shared/social_buttons_xs', { story: @story } %>
+    <% end %>
+
   </div>
 
   <!-- story content, results, contributing team -->
   <div id='story-section-content'>
-    <div class="container">
 
-      <div class='col-sm-6 col-md-7'>
-        <div class='well story-narration'>
+    <% cache "#{@company.subdomain}/story-content/#{@story.cache_key}" do %>
+      <%= render 'stories/shared/story_content',
+          { story: @story, contributors: @contributors } %>
+    <% end %>
 
-          <h3><%= @story.title %></h3>
-
-          <div class="visible-md-block visible-lg-block">
-            <%= simple_format @story.content %>
-          </div>
-          <div class="hidden-md hidden-lg">
-            <%= simple_format @story.content %>
-          </div>
-
-        </div>
-      </div>
-
-      <div class='col-sm-6 col-md-5'>
-
-        <div id='story-results' class="well">
-          <h3 class='text-center'>Results</h3>
-          <% @story.success.results.each do |result| %>
-            <div class="row">
-              <div class='col-xs-1'>
-                <i class='fa fa-check'></i>
-              </div>
-              <div class='col-xs-11'>
-                <p><%= result.description %></p>
-              </div>
-            </div>
-          <% end %>
-        </div>
-
-        <div class="linkedin-widgets text-center">
-
-          <% if @contributors.present? %>
-            <h3>Contributing Team</h3>
-          <% end %>
-
-          <% @contributors.each do |contributor| %>
-
-            <% if Rails.env.development? %>
-              <%= contributor.attributes.slice('id','email','linkedin_url') %>
-            <% end %>
-
-            <div class="linkedin-widget linkedin-widget-wide">
-              <script type="IN/MemberProfile"
-                      data-id="<%= contributor.linkedin_url %>"
-                      data-format="inline"
-                      data-related="true"
-                      data-width='420'></script>
-            </div>
-
-            <div class="linkedin-widget">
-              <script type="IN/MemberProfile"
-                      data-id="<%= contributor.linkedin_url %>"
-                      data-format="inline"
-                      data-related="true"
-                      data-width='340'></script>
-            </div>
-
-          <% end %>
-
-
-        </div>
-      </div>
-    </div>
   </div>
+
 </div>  <!-- wrapper -->
 

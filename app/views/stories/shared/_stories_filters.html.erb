@@ -1,0 +1,54 @@
+<div id="stories-filters"
+    class="form-inline hidden-xs <%= is_curator ? 'curator' : 'reader' %>">
+<% cache(category_select_cache_key) do %>
+
+  <!-- only renders if there are at least two distinct tags to choose between -->
+  <!-- includes 'All' placeholder (hence 2) -->
+  <% if is_curator && company.category_select_options.length > 2 %>
+
+    <div class='form-group'>
+      <%= label_tag :category_select, "Category" %>&nbsp;
+      <%= select_tag :category_select,
+        options_for_select(company.category_select_options.unshift(["All", 0]), pre_selected_filter),
+        { class: 'stories-filter category-select form-control' } %>
+    </div>&nbsp;&nbsp;&nbsp;&nbsp;
+
+  <% elsif company.public_category_select_options.length > 2 %>
+
+    <div class='form-group'>
+      <%= label_tag :category_select, "Category" %>&nbsp;
+      <%= select_tag :category_select,
+        options_for_select(company.public_category_select_options, pre_selected_filter),
+        { class: 'stories-filter category-select form-control' } %>
+    </div>&nbsp;&nbsp;&nbsp;&nbsp;
+
+  <% end %>
+
+<% end %>
+
+<% cache(product_select_cache_key) do %>
+
+  <% if is_curator && company.product_select_options.length > 2 %>
+
+    <div class="form-group">
+      <%= label_tag :product_select, "Product" %>&nbsp;
+      <%= select_tag :product_select,
+        options_for_select(company.product_select_options.unshift(["All", 0]), pre_selected_filter),
+        { class: 'stories-filter product-select form-control' } %>
+    </div>
+
+  <% elsif company.public_product_select_options.length > 2 %>
+
+    <div class="form-group">
+      <%= label_tag :product_select, "Product" %>&nbsp;
+      <%= select_tag :product_select,
+        options_for_select(company.public_product_select_options, pre_selected_filter),
+        { class: 'stories-filter product-select form-control' } %>
+    </div>
+
+  <% end %>
+
+<% end %>
+</div>
+
+

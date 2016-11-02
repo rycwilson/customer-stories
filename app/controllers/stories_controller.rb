@@ -1,4 +1,4 @@
-  class StoriesController < ApplicationController
+class StoriesController < ApplicationController
 
   include StoriesHelper
 
@@ -8,35 +8,35 @@
   before_action only: [:index, :show, :edit] { set_gon(@company) }
   before_action only: [:show] {
     set_public_story_or_redirect(@company)
-    set_contributors_jsonld(@story)
+    set_contributors_jsonld(@company, @story)
     set_products_jsonld(@company)
-    set_about_jsonld(@story)
+    set_about_jsonld(@company, @story)
   }
   before_action only: [:show, :approval] { set_contributors(@story) }
   before_action :set_s3_direct_post, only: :edit
 
   def index
-    # select box options (filtered by role) ...
-    @is_curator = @company.curator? current_user
-    @category_select_options = @is_curator ?
-                    @company.category_select_options.unshift(["All", 0]) :
-                    @company.public_category_select_options  # public reader
-    @product_select_options = @is_curator ?
-                  @company.product_select_options.unshift(["All", 0]) :
-                  @company.public_product_select_options  # public reader
-    # if there's a query string, the option will be pre-selected, otherwise no pre-selects
-    @category_pre_selected_options = []
-    @product_pre_selected_options = []
+    @is_curator = @company.curator?(current_user)
+    # these will get overwritten below if there's a query filter
+    @filtered_tag_id = 0  # all
+    @category_select_cache_key =
+      filter_select_cache_key(@company, @is_curator, { tag: 'category', id: 0 })
+    @product_select_cache_key =
+      filter_select_cache_key(@company, @is_curator, { tag: 'product', id: 0 })
+
     if valid_query_string? params
-      @stories = @company.filter_stories_by_tag(get_filter_params_from_query(params), @is_curator)
-      @category_pre_selected_options = [StoryCategory.friendly.find(params[:category]).id] if params[:category]
-      @product_pre_selected_options = [Product.friendly.find(params[:product]).id] if params[:product]
+      filter_params = get_filter_params_from_query(params)  # e.g. { category: 42 }
+      @stories = @company.filter_stories_by_tag(filter_params, @is_curator)
+      @filtered_tag_id = filter_params[:id]
+      @category_select_cache_key = get_cache_key(@company, @is_curator, filter_params)
+      @product_select_cache_key = get_cache_key(@company, @is_curator, filter_params)
+
     elsif cookies[:csp_init]
-      # binding.remote_pry
       @stories = []
     elsif @is_curator
-      # binding.remote_pry
-      @stories = @company.all_stories
+      story_ids = @company.all_stories
+      @stories = Story.find(story_ids)
+                      .sort_by { |story| story_ids.index(story.id) }
       # TODO: set this cookie more broadly throughout app
       cookies[:csp_init] = { value: true, expires: 1.hour.from_now }
     else  # public reader
@@ -50,13 +50,8 @@
   end
 
   def show
-    # declare this here since numerous references in meta tags
-    @success = @story.success
     # convert the story content to plain text (for SEO tags)
     @story_content_text = HtmlToPlainText.plain_text(@story.content)
-
-
-
   end
 
   def edit
@@ -228,33 +223,44 @@
     @contributors
   end
 
-  def set_contributors_jsonld story
-    @contributors_jsonld = story.success
-                                .contributors
-                                .map do |contributor|
-                                  { "@type" => "Person",
-                                    "name" => contributor.full_name }
-                                end
+  def set_contributors_jsonld company, story
+    @contributors_jsonld =
+      Rails.cache.fetch("#{company.subdomain}/contributors-jsonld-story#{story.id}",
+                      expires_in: 1.week) do
+        story.success.contributors
+          .map do |contributor|
+            { "@type" => "Person",
+              "name" => contributor.full_name }
+          end
+      end
   end
 
   def set_products_jsonld company
-    @owns_jsonld = company.products
-                          .map do |product|
-                            { "@type" => "Product",
-                              "name" => product.name }
-                          end
+    @products_jsonld =
+      Rails.cache.fetch("#{company.subdomain}/products-jsonld",
+                        expires_in: 1.week) do
+        company.products
+          .map do |product|
+            { "@type" => "Product",
+              "name" => product.name }
+          end
+      end
   end
 
-  def set_about_jsonld story
+  def set_about_jsonld company, story
     success = story.success
-    @about_jsonld = [{ "@type" => "Corporation",
-                   "name" => success.customer.name,
-                   "logo" => { "@type" => "ImageObject",
-                               "url" => success.customer.logo_url }}] +
+    @about_jsonld =
+      Rails.cache.fetch("#{company.subdomain}/about-jsonld",
+                        expires_in: 1.week) do
+        [{ "@type" => "Corporation",
+                      "name" => success.customer.name,
+                      "logo" => { "@type" => "ImageObject",
+                      "url" => success.customer.logo_url }}] +
                 success.products.map do |product|
                                     { "@type" => "Product",
                                       "name" => product.name }
                                  end
+      end
   end
 
   # new customers can be created on new story creation
@@ -282,6 +288,10 @@
     if request.format == 'application/pdf'
       @story
     elsif request.path != @story.csp_story_path
+      # a change to the story url invalidates the cached story tile fragment ...
+      @story.invalidate_story_tile_cache_keys
+      # ... and the index as a whole ...
+      company.increment_stories_index_memcache_iterator
       # old story title slug, redirect to current
       return redirect_to @story.csp_story_path, status: :moved_permanently
     elsif !@story.published? && !company_curator?(company.id)
@@ -380,6 +390,34 @@
       # a query string with category= or product=
     end
     filter
+  end
+
+  # method returns a fragment cache key that looks like this:
+  #
+  #   trunity/curator-category-select-xx-memcache-iterator-yy
+  #
+  # xx is the selected category id (0 if none selected)
+  # yy is the memcache iterator
+  #
+  def filter_select_cache_key company, is_curator, filter_params
+    tag = filter_params[:tag]  # 'category' or 'product'
+    if is_curator
+      if tag == 'category'
+        memcache_iterator = company.curator_category_select_memcache_iterator
+      else
+        memcache_iterator = company.curator_product_select_memcache_iterator
+      end
+    else
+      if tag == 'category'
+        memcache_iterator = company.public_category_select_memcache_iterator
+      else
+        memcache_iterator = company.public_product_select_memcache_iterator
+      end
+    end
+    "#{company.subdomain}/" +
+    "#{is_curator ? 'curator' : 'public'}-" +
+    "#{tag}-select-#{filter_params[:id]}-" +   # id = 0 -> all
+    "memcache-iterator-#{memcache_iterator}"
   end
 
 end

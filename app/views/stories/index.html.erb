@@ -2,24 +2,24 @@
 <% content_for :head do %>
 
   <meta name="turbolinks-cache-control" content="no-cache">
-  <%= render 'stories/shared/stories_index_template',
-      { company: @company, cached: true } %>
-  <%= render 'stories/shared/stories_index_meta_tags',
-      { company: @company, cached: true } %>
+
+  <%= render 'stories/shared/stories_index_template', { company: @company } %>
+
+  <% cache("#{@company.subdomain}/stories-index-meta-tags", expires_in: 1.week) do %>
+    <%= render 'stories/shared/stories_index_meta_tags', { company: @company } %>
+  <% end %>
 
 <% end %>
 
 <!-- <div id='wrapper'> -->
 
-  <% if company_curator? @company.id %>
+  <% if @is_curator %>
 
-    <%= render 'shared/mainnav',
-               { company: @company,
-                 category_select_options: @category_select_options,
-                 category_pre_selected_options: @category_pre_selected_options,
-                 product_select_options: @product_select_options,
-                 product_pre_selected_options: @product_pre_selected_options,
-                 cached: true } %>
+    <%= render 'shared/company_navbar',
+         { company: @company, is_curator: true, workflow_tab: nil,
+           category_select_cache_key: @category_select_cache_key,
+           product_select_cache_key: @product_select_cache_key,
+           pre_selected_filter: [@filtered_tag_id] } %>
 
   <% else %>
 
@@ -27,13 +27,17 @@
       <div class="container">
         <div class="row">
 
-          <%= render 'stories/shared/filters',
-                      { company: @company,
-                        category_select_options: @category_select_options,
-                        category_pre_selected_options: @category_pre_selected_options,
-                        product_select_options: @product_select_options,
-                        product_pre_selected_options: @product_pre_selected_options,
-                        cached: true } %>
+           <%= render 'stories/shared/stories_filters_xs',
+             { company: @company, is_curator: false,
+               category_select_cache_key: @category_select_cache_key,
+               product_select_cache_key: @product_select_cache_key,
+               pre_selected_filter: [@filtered_tag_id] } %>
+
+           <%= render 'stories/shared/stories_filters',
+             { company: @company, is_curator: false,
+               category_select_cache_key: @category_select_cache_key,
+               product_select_cache_key: @product_select_cache_key,
+               pre_selected_filter: [@filtered_tag_id] } %>
 
         </div>
       </div>
@@ -47,9 +51,25 @@
         <!--  <div> -->
           <div class='grid' id="stories-gallery">
 
-            <%= render 'stories/shared/story_gallery',
-                { company: @company, stories: @stories, is_curator: @is_curator,
-                cached: true } %>
+            <% cache "#{@company.subdomain}/stories-index-memcache-iterator-#{@company.stories_index_memcache_iterator}" do %>
+
+              <% @stories.each do |story| %>
+
+                <% if @is_curator %>
+
+                  <%= render 'stories/shared/curator_story_tile',
+                    { company: @company, story: story, customer: story.success.customer } %>
+
+                <% else %>
+
+                  <%= render 'stories/shared/public_story_tile',
+                    { company: @company, story: story, customer: story.success.customer } %>
+
+                <% end %>  <!-- if @is_curator -->
+
+              <% end %>  <!-- @stories.each -->
+
+            <% end %>
 
           </div>
        <!--  </div> -->  <!-- portlet-body -->
@@ -58,55 +78,3 @@
   </div>  <!-- content -->
 </div>  <!-- wrapper -->
 
-<!-- currently unused template
-<script type='text/template' id='stories-filters-template'>
-  <div id='stories-filters'
-       class="form-inline hidden-xs {{= isCurator ? 'curator' : '' }} ">
-
-    {{ if (categorySelectOptions.length > 2) { }}
-
-      <div class='form-group'>
-        <label for='category_select'>Category</label>
-        <select name='category_select' id='category_select'
-                class='stories-filter form-control'
-                tabindex='-1'>
-          {{ categorySelectOptions.forEach(function (option, index) { }}
-               {{ if (index === 0) { }}
-                    <option value="0">All</option>
-               {{ } else { }}
-                    <option data-slug="{{= option[2].data.slug }}"
-                            value="{{= option[1] }}">
-                      {{= option[0] }}
-                    </option>
-               {{ } }}
-          {{ }); }}
-        </select>
-      </div>&nbsp;&nbsp;&nbsp;&nbsp;
-
-    {{ } }}
-
-    {{ if (productSelectOptions.length > 2) { }}
-
-      <div class='form-group'>
-        <label for='product_select'>Product</label>
-        <select name='product_select' id='product_select'
-                class='stories-filter form-control'
-                tabindex='-1'>
-          {{ productSelectOptions.forEach(function (option, index) { }}
-               {{ if (index === 0) { }}
-                    <option value="0">All</option>
-               {{ } else { }}
-                    <option data-slug="{{= option[2].data.slug }}"
-                            value="{{= option[1] }}">
-                      {{= option[0] }}
-                    </option>
-               {{ } }}
-          {{ }); }}
-        </select>
-      </div>
-
-    {{ } }}
-
-  </div>
-</script>
--->

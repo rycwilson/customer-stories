@@ -1,0 +1,22 @@
+
+<% cache "#{company.subdomain}/public-story-#{story.id}-tile-memcache-iterator-#{story.public_story_tile_memcache_iterator}" do %>
+
+  <a href="<%= story.published ? story.csp_story_path : 'javascript:;' %>"
+     style="<%= story.published ? '' : 'pointer-events:none' %>">
+
+    <div class="grid-item thumbnail <%= story.published ? '' : 'no-caption' %>">
+
+      <img src="<%= customer.logo_url || image_path('company-logo-missing.png') %>">
+
+      <% if story.logo_published? %>
+        <div class="caption"
+            style="<%= story.published ? 'background-color:' + company.nav_color_1 + ';color:' + company.nav_text_color : 'visibility:hidden' %>">
+          <%= story.published ? 'Read story' : '' %>
+        </div>
+      <% end %>
+
+    </div>
+
+  </a>
+
+<% end %>

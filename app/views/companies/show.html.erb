@@ -7,25 +7,25 @@
 
 <div id='wrapper'>
 
-  <%= render 'shared/mainnav' %>
+  <%= render 'shared/company_navbar', { company: @company, workflow_tab: @workflow_tab } %>
 
   <div class='tab-content' style='margin-top:40px'>
 
-    <%= render partial: 'companies/shared/pipeline',
-                locals: { workflow_tab: @workflow_tab, company: @company } %>
+    <%= render 'companies/shared/pipeline',
+               { workflow_tab: @workflow_tab, company: @company } %>
 
-    <%= render partial: 'companies/shared/curate',
-                locals: { workflow_tab: @workflow_tab,
-                               company: @company,
-               customer_select_options: @customer_select_options,
-               category_select_options: @category_select_options,
-                product_select_options: @product_select_options } %>
+    <%= render 'companies/shared/curate',
+               { workflow_tab: @workflow_tab,
+                 company: @company,
+                 customer_select_options: @customer_select_options,
+                 category_select_options: @category_select_options,
+                 product_select_options: @product_select_options } %>
 
-    <%= render partial: 'companies/shared/promote',
-                locals: { workflow_tab: @workflow_tab, company: @company} %>
+    <%= render 'companies/shared/promote',
+               { workflow_tab: @workflow_tab, company: @company} %>
 
-    <%= render partial: 'companies/shared/measure',
-                locals: { workflow_tab: @workflow_tab, company: @company} %>
+    <%= render 'companies/shared/measure',
+                { workflow_tab: @workflow_tab, company: @company} %>
 
   </div>  <!-- tab content -->
 
