@@ -51,23 +51,29 @@
         <!--  <div> -->
           <div class='grid' id="stories-gallery">
 
-            <% cache "#{@company.subdomain}/stories-index-memcache-iterator-#{@company.stories_index_memcache_iterator}" do %>
+            <% cache @stories_index_cache_key do %>
 
-              <% @stories.each do |story| %>
+              <% if @is_curator %>
 
-                <% if @is_curator %>
+                <% @stories.each do |story| %>
 
                   <%= render 'stories/shared/curator_story_tile',
-                    { company: @company, story: story, customer: story.success.customer } %>
+                      { company: @company, story: story,
+                        customer: story.success.customer } %>
 
-                <% else %>
+                <% end %>
+
+              <% else %>
+
+                <% @stories.each do |story| %>
 
                   <%= render 'stories/shared/public_story_tile',
-                    { company: @company, story: story, customer: story.success.customer } %>
+                      { company: @company, story: story,
+                        customer: story.success.customer } %>
 
-                <% end %>  <!-- if @is_curator -->
+                <% end %>
 
-              <% end %>  <!-- @stories.each -->
+              <% end %>
 
             <% end %>
 

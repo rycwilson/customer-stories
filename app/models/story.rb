@@ -51,10 +51,14 @@ class Story < ActiveRecord::Base
 
   # note: the _changed? methods for attributes don't work in the after_commit callback
   # note: the & operator interestects the arrays, returning any values that exist in both
-  after_commit :invalidate_story_tile_cache_keys, :invalidate_stories_index_cache_key,
-    on: :update, if: Proc.new { |story|
-                       (story.previous_changes.keys & ['published', 'logo_published']).any?
-                     }
+  after_commit :expire_story_tile_fragment_cache,
+               :expire_stories_index_fragment_cache,
+               :expire_filter_select_fragment_cache,
+               :expire_all_stories_json,
+               on: :update, if:
+        Proc.new { |story|
+          (story.previous_changes.keys & ['published', 'logo_published']).any?
+        }
 
   # method takes an active record relation
   def self.order stories_relation
@@ -91,23 +95,27 @@ class Story < ActiveRecord::Base
     end
   end
 
-  def update_tags new_tags
+  def update_tags company, new_tags
     old_category_tags = self.success.story_categories
     old_product_tags = self.success.products
+    category_tags_changed = false
+    product_tags_changed = false
+
     # remove deleted category tags ...
     old_category_tags.each do |category|
       unless (new_tags.try(:[], :category_tags)) &&
           (new_tags.try(:[], :category_tags).include? category.id.to_s)
         StoryCategoriesSuccess.where("success_id = ? AND story_category_id = ?",
                                 self.success.id, category.id)[0].destroy
+        category_tags_changed = true
       end
     end
     # add new category tags ...
     unless new_tags.try(:[], :category_tags).nil?
-      binding.pry
       new_tags[:category_tags].each do |category_id|
         unless old_category_tags.any? { |category| category.id == category_id.to_i }
           self.success.story_categories << StoryCategory.find(category_id.to_i)
+          category_tags_changed = true
         end
       end
     end
@@ -118,6 +126,7 @@ class Story < ActiveRecord::Base
           (new_tags.try(:[], :product_tags).include? product.id.to_s)
         ProductsSuccess.where("success_id = ? AND product_id = ?",
                                   self.success.id, product.id)[0].destroy
+        product_tags_changed = true
       end
     end
 
@@ -126,9 +135,21 @@ class Story < ActiveRecord::Base
       new_tags[:product_tags].each do |product_id|
         unless old_product_tags.any? { |product| product.id == product_id.to_i }
           self.success.products << Product.find(product_id.to_i)
+          product_tags_changed = true
         end
       end
     end
+
+    # invalidate cached fragments ...
+    if self.logo_published?
+      if category_tags_changed
+        company.increment_public_category_select_fragments_memcache_iterator
+      end
+      if product_tags_changed
+        company.increment_public_product_select_fragments_memcache_iterator
+      end
+    end
+
   end
 
   # method returns a friendly id path that either contains or omits a product
@@ -304,35 +325,96 @@ class Story < ActiveRecord::Base
       content: content }
   end
 
-  def curator_story_tile_memcache_iterator
+  # expire fragment cache for a single story tile (curator and public)
+  def expire_story_tile_fragment_cache
     company = self.success.customer.company
-    Rails.cache.fetch(
-      "#{company.subdomain}/curator-story-#{self.id}-tile-memcache-iterator") { rand(10) }
+    memcache_iterator =
+      "memcache-iterator-#{company.story_tile_fragments_memcache_iterator}"
+    curator_tile_fragment = "#{company.subdomain}/curator-story-tile-\
+                             #{self.id}-#{memcache_iterator}"
+    public_tile_fragment = "#{company.subdomain}/public-story-tile-\
+                            #{self.id}-#{memcache_iterator}"
+    expire_fragment(curator_tile_fragment)
+    # public tile fragment will not exist if this is first time logo published
+    expire_fragment(public_tile_fragment) if fragment_exist?(public_tile_fragment)
   end
 
-  def public_story_tile_memcache_iterator
+  # expire fragment cache for the stories index (gallery of tiles)
+  def expire_stories_index_fragment_cache
     company = self.success.customer.company
-    Rails.cache.fetch(
-      "#{company.subdomain}/public-story-#{self.id}-tile-memcache-iterator") { rand(10) }
+    categories = self.success.story_categories
+    products = self.success.products
+    csimi = "memcache-iterator-\
+             #{company.curator_stories_index_fragments_memcache_iterator}"
+    psimi = "memcache-iterator-\
+             #{company.public_stories_index_fragments_memcache_iterator}"
+
+    # expire curator-stories-index-all-0 (all story tiles)
+    expire_fragment("#{company.subdomain}/curator-stories-index-all-0-#{csimi}")
+    # expire public-stories-index-all-0
+    expire_fragment("#{company.subdomain}/public-stories-index-all-0-#{psimi}")
+
+    categories.each do |category|
+      # expire curator-stories-index-category-xx,
+      expire_fragment(
+        "#{company.subdomain}/curator-stories-index-category-#{category.id}-#{csimi}")
+      # expire public-stories-index-product-xx,
+      expire_fragment(
+        "#{company.subdomain}/public-stories-index-category-#{category.id}-#{psimi}")
+    end
+
+    products.each do |product|
+      # expire curator-stories-index-product-xx,
+      expire_fragment(
+        "#{company.subdomain}/curator-stories-index-product-#{product.id}-#{csimi}")
+      # expire public-stories-index-category-xx,
+      expire_fragment(
+        "#{company.subdomain}/public-stories-index-product-#{product.id}-#{psimi}")
+    end
   end
 
-  # this method can be called from one of four places
-  # 1 - story after_commit callback (if publish state changed)
-  # 2 - company after_commit callback (if nav colors changed)
-  # 3 - customer after_commit callback (if name or logo_url changed)
-  # 4 - stories_controller#set_public_story_or_redirect (if story url changed)
-  def invalidate_story_tile_cache_keys
+  def expire_filter_select_fragment_cache
     company = self.success.customer.company
-    Rails.cache.write(
-      "#{company.subdomain}/curator-story-#{self.id}-tile-memcache-iterator",
-      self.curator_story_tile_memcache_iterator + 1)
-    Rails.cache.write(
-      "#{company.subdomain}/public-story-#{self.id}-tile-memcache-iterator",
-      self.public_story_tile_memcache_iterator + 1)
+    success = self.success
+    if success.categories.present?
+      company.increment_public_category_select_fragments_memcache_iterator
+    end
+    if success.products.present?
+      company.increment_public_product_select_fragments_memcache_iterator
+    end
   end
 
-  def invalidate_stories_index_cache_key
-    self.success.customer.company.increment_stories_index_memcache_iterator
+  def expire_fragment_cache_on_path_change
+    company = self.success.company
+    if self.logo_published
+      self.expire_story_tile_fragment_cache
+      expire_fragment(
+        "#{company.subdomain}/curator-stories-index-all-0-memcache-iterator-\
+         #{company.curator_stories_index_fragments_memcache_iterator}")
+      expire_fragment(
+        "#{company.subdomain}/public-stories-index-all-0-memcache-iterator-\
+         #{company.public_stories_index_fragments_memcache_iterator}")
+      self.success.story_categories.each do |category|
+        expire_fragment(
+          "#{company.subdomain}/curator-stories-index-category-#{category.id}-\
+           memcache-iterator-#{company.curator_stories_index_fragments_memcache_iterator}")
+        expire_fragment(
+          "#{company.subdomain}/public-stories-index-category-#{category.id}-\
+           memcache-iterator-#{company.public_stories_index_fragments_memcache_iterator}")
+      end
+      self.success.products.each do |product|
+        expire_fragment(
+          "#{company.subdomain}/curator-stories-index-product-#{product.id}-\
+           memcache-iterator-#{company.curator_stories_index_fragments_memcache_iterator}")
+        expire_fragment(
+          "#{company.subdomain}/public-stories-index-product-#{product.id}-\
+           memcache-iterator-#{company.public_stories_index_fragments_memcache_iterator}")
+      end
+    end
+  end
+
+  def expire_all_stories_json
+    self.success.customer.company.expire_all_stories_json
   end
 
 end

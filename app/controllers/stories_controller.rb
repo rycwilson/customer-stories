@@ -2,7 +2,7 @@ class StoriesController < ApplicationController
 
   include StoriesHelper
 
-  before_action :set_company, except: [:update]
+  before_action :set_company
   before_action :set_story, only: [:edit, :approval]
   before_action only: [:edit] { user_authorized?(@story, current_user) }
   before_action only: [:index, :show, :edit] { set_gon(@company) }
@@ -17,8 +17,10 @@ class StoriesController < ApplicationController
 
   def index
     @is_curator = @company.curator?(current_user)
-    # these will get overwritten below if there's a query filter
+    # these will get overwritten below if there's a query filter ...
     @filtered_tag_id = 0  # all
+    @stories_index_cache_key =
+      stories_index_cache_key(@company, @is_curator, { tag: 'all', id: 0 })
     @category_select_cache_key =
       filter_select_cache_key(@company, @is_curator, { tag: 'category', id: 0 })
     @product_select_cache_key =
@@ -27,9 +29,13 @@ class StoriesController < ApplicationController
     if valid_query_string? params
       filter_params = get_filter_params_from_query(params)  # e.g. { category: 42 }
       @stories = @company.filter_stories_by_tag(filter_params, @is_curator)
-      @filtered_tag_id = filter_params[:id]
-      @category_select_cache_key = get_cache_key(@company, @is_curator, filter_params)
-      @product_select_cache_key = get_cache_key(@company, @is_curator, filter_params)
+      @filtered_tag_id = filter_params[:id] # needed for options_for_select()
+      @stories_index_cache_key =
+        stories_index_cache_key(@company, @is_curator, filter_params)
+      @category_select_cache_key =
+        filter_select_cache_key(@company, @is_curator, filter_params)
+      @product_select_cache_key =
+        filter_select_cache_key(@company, @is_curator, filter_params)
 
     elsif cookies[:csp_init]
       @stories = []
@@ -102,7 +108,7 @@ class StoriesController < ApplicationController
   def update
     story = Story.find params[:id]
     if params[:story_tags]  # updated tags (this comes from a hidden field with value="")
-      story.update_tags params[:story]
+      story.update_tags(@company, params[:story])
       respond_to { |format| format.js { render action: 'update_tags' } }
     elsif params[:customer_logo_url]
       story.success.customer.update logo_url: params[:customer_logo_url]
@@ -190,18 +196,16 @@ class StoriesController < ApplicationController
         :challenge, :solution, :benefits, :published, :logo_published)
   end
 
-  def set_story
-    @story = Story.find params[:id]
-  end
-
-  # Why not just always look to the subdomain?
-  # => lookup by id faster
   def set_company
     if params[:company_id]  # create story
       @company = Company.find params[:company_id]
     else
       @company = Company.find_by subdomain: request.subdomain
     end
+  end
+
+  def set_story
+    @story = Story.find params[:id]
   end
 
   def set_contributors story
@@ -287,12 +291,9 @@ class StoriesController < ApplicationController
     @story = Story.friendly.find params[:title]
     if request.format == 'application/pdf'
       @story
-    elsif request.path != @story.csp_story_path
-      # a change to the story url invalidates the cached story tile fragment ...
-      @story.invalidate_story_tile_cache_keys
-      # ... and the index as a whole ...
-      company.increment_stories_index_memcache_iterator
-      # old story title slug, redirect to current
+    elsif request.path != @story.csp_story_path  # friendly path changed
+      @story.expire_fragment_cache_on_path_change
+      # old story title slug requested, redirect to current
       return redirect_to @story.csp_story_path, status: :moved_permanently
     elsif !@story.published? && !company_curator?(company.id)
       return redirect_to root_url(subdomain:request.subdomain, host:request.domain)
@@ -392,6 +393,30 @@ class StoriesController < ApplicationController
     filter
   end
 
+  #
+  # method returns a fragment cache key that looks like this:
+  #
+  #   trunity/curator-stories-index-{tag}-xx-memcache-iterator-yy
+  #
+  # tag is 'all', 'category', or 'product'
+  # xx is the selected filter id (0 if none selected)
+  # yy is the memcache iterator
+  #
+  def stories_index_cache_key company, is_curator, filter_params
+    tag = filter_params[:tag]
+    id = filter_params[:id]
+    if is_curator
+      memcache_iterator = company.curator_stories_index_fragments_memcache_iterator
+    else
+      memcache_iterator = company.public_stories_index_fragments_memcache_iterator
+    end
+    "#{company.subdomain}/" +
+    "#{is_curator ? 'curator' : 'public'}-" +
+    "stories-index-#{tag}-#{id}-" +  # id = 0 -> all
+    "memcache-iterator-#{memcache_iterator}"
+  end
+
+  #
   # method returns a fragment cache key that looks like this:
   #
   #   trunity/curator-category-select-xx-memcache-iterator-yy
@@ -403,15 +428,15 @@ class StoriesController < ApplicationController
     tag = filter_params[:tag]  # 'category' or 'product'
     if is_curator
       if tag == 'category'
-        memcache_iterator = company.curator_category_select_memcache_iterator
+        memcache_iterator = company.curator_category_select_fragments_memcache_iterator
       else
-        memcache_iterator = company.curator_product_select_memcache_iterator
+        memcache_iterator = company.curator_product_select_fragments_memcache_iterator
       end
     else
       if tag == 'category'
-        memcache_iterator = company.public_category_select_memcache_iterator
+        memcache_iterator = company.public_category_select_fragments_memcache_iterator
       else
-        memcache_iterator = company.public_product_select_memcache_iterator
+        memcache_iterator = company.public_product_select_fragments_memcache_iterator
       end
     end
     "#{company.subdomain}/" +

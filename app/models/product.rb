@@ -12,14 +12,17 @@ class Product < ActiveRecord::Base
 
   friendly_id :name, use: [:slugged, :scoped], scope: :company_id
 
-  after_commit :delete_cache
+  after_commit :expire_fragment_cache, on: [:create, :destroy]
 
-  def delete_cache
+  # curator product select fragments (all and pre-selected) invalidated by:
+  # -> create/delete company tags
+  # public product select fragments (all and pre-selected) invalidated by:
+  # -> attach/detach tags IF the story has logo published (see story.update_tags)
+  # -> story publish state IF story is tagged
+  #    (see story.expire_filter_select_fragment_cache)
+  def expire_fragment_cache
     company = self.success.customer.company
-    Rails.cache.delete("#{company.subdomain}/product_select_options")
-    Rails.cache.delete("#{company.subdomain}/public_product_select_options")
-    Rails.cache.delete("views/#{company.subdomain}/curator_story_filters")
-    Rails.cache.delete("views/#{company.subdomain}/public_story_filters")
+    company.increment_curator_product_select_fragments_memcache_iterator
   end
 
   def should_generate_new_friendly_id?

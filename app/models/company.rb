@@ -28,7 +28,7 @@ class Company < ActiveRecord::Base
   has_attached_file :logo, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: "companies/:style/missing_logo.png"
   validates_attachment_content_type :logo, content_type: /\Aimage\/.*\Z/
 
-  after_commit :invalidate_cache_keys, on: :update,
+  after_commit :expire_fragment_cache, on: :update,
     if: Proc.new { |company|
       (company.previous_changes.keys & ['nav_color_1', 'nav_text_color']).any?
     }
@@ -114,20 +114,26 @@ class Company < ActiveRecord::Base
 
   # all_stories_json returns data included in the client via the gon object
   def all_stories_json
-    JSON.parse(
-      Story.order(Story.company_all(self.id))
-      .to_json({
-        only: [:id, :published, :logo_published, :publish_date, :updated_at],
-        methods: [:csp_story_path, :published_contributors],
-        include: {
-          success: {
-            only: [],
-            include: {
-              customer: { only: [:name, :logo_url] },
-              story_categories: { only: [:id, :name, :slug] },
-              products: { only: [:id, :name, :slug] } }}}
-      })
-    )
+    Rails.cache.fetch("#{self.subdomain}/all_stories_json") do
+      JSON.parse(
+        Story.order(Story.company_all(self.id))
+        .to_json({
+          only: [:id, :published, :logo_published, :publish_date, :updated_at],
+          methods: [:csp_story_path, :published_contributors],
+          include: {
+            success: {
+              only: [],
+              include: {
+                customer: { only: [:name, :logo_url] },
+                story_categories: { only: [:id, :name, :slug] },
+                products: { only: [:id, :name, :slug] } }}}
+        })
+      )
+    end
+  end
+
+  def expire_all_stories_json
+    Rails.cache.delete("#{self.subdomain}/all_stories_json")
   end
 
   def curator? current_user=nil
@@ -274,51 +280,99 @@ class Company < ActiveRecord::Base
     self.stories.where(logo_published: true).order(logo_publish_date: :desc).take.try(:logo_publish_date)
   end
 
-  def invalidate_cache_keys
-    self.successes.each do |success|
-      success.story.invalidate_story_tile_cache_keys
-    end
-    self.increment_stories_index_memcache_iterator
+  def expire_fragment_cache
+    self.increment_curator_stories_index_fragments_memcache_iterator
+    self.increment_public_stories_index_fragments_memcache_iterator
+    self.increment_story_tile_fragments_memcache_iterator
   end
 
-  def stories_index_memcache_iterator
-    Rails.cache.fetch("#{self.subdomain}/stories-index-memcache-iterator") { rand(10) }
+  # invalidation of any story tile fragment will invalidate
+  # - curator stories index (all stories)
+  # - curator stories index (filters in which the tile appears)
+  def curator_stories_index_fragments_memcache_iterator
+    Rails.cache.fetch("#{self.subdomain}/curator-stories-index-fragments-memcache-iterator") { rand(10) }
   end
 
-  def increment_stories_index_memcache_iterator
-    Rails.cache.write("#{self.subdomain}/stories-index-memcache-iterator", self.stories_index_memcache_iterator + 1)
+  def increment_curator_stories_index_fragments_memcache_iterator
+    Rails.cache.write(
+      "#{self.subdomain}/curator-stories-index-fragments-memcache-iterator",
+      self.curator_stories_index_fragments_memcache_iterator + 1)
   end
 
-  def curator_category_select_memcache_iterator
-    Rails.cache.fetch("#{self.subdomain}/curator-category-select-memcache-iterator") { rand(10) }
+  # expiration of a story tile fragment with logo published
+  # expires all public stories index fragments
+  def public_stories_index_fragments_memcache_iterator
+    Rails.cache.fetch("#{self.subdomain}/public-stories-index-fragments-memcache-iterator") { rand(10) }
   end
 
-  def increment_curator_category_select_memcache_iterator
-    Rails.cache.write("#{self.subdomain}/curator-category-select-memcache-iterator", self.curator_category_select_memcache_iterator + 1)
+  def increment_public_stories_index_fragments_memcache_iterator
+    Rails.cache.write(
+      "#{self.subdomain}/public-stories-index-fragments-memcache-iterator",
+      self.public_stories_index_fragments_memcache_iterator + 1)
   end
 
-  def curator_product_select_memcache_iterator
-    Rails.cache.fetch("#{self.subdomain}/curator-product-select-memcache-iterator") { rand(10) }
+  # all story fragments must be expired if these attributes change: nav_color_1, nav_text_color
+  def story_tile_fragments_memcache_iterator
+    Rails.cache.fetch("#{self.subdomain}/stories-tile-fragments-memcache-iterator") { rand(10) }
   end
 
-  def increment_curator_product_select_memcache_iterator
-    Rails.cache.write("#{self.subdomain}/curator-product-select-memcache-iterator", self.curator_product_select_memcache_iterator + 1)
+  def increment_story_tile_fragments_memcache_iterator
+    Rails.cache.write(
+      "#{self.subdomain}/stories-tile-fragments-memcache-iterator",
+      self.story_tile_fragments_memcache_iterator + 1)
   end
 
-  def public_category_select_memcache_iterator
-    Rails.cache.fetch("#{self.subdomain}/public-category-select-memcache-iterator") { rand(10) }
+  #
+  # curator category select fragments (all and pre-selected) invalidated by:
+  # -> create/delete company tags (see story_category.rb)
+  #
+  def curator_category_select_fragments_memcache_iterator
+    Rails.cache.fetch(
+      "#{self.subdomain}/curator-category-select-fragments-memcache-iterator") { rand(10) }
   end
 
-  def increment_public_category_select_memcache_iterator
-    Rails.cache.write("#{self.subdomain}/public-category-select-memcache-iterator", self.public_category_select_memcache_iterator + 1)
+  def increment_curator_category_select_fragments_memcache_iterator
+    Rails.cache.write(
+      "#{self.subdomain}/curator-category-select-fragments-memcache-iterator",
+      self.curator_category_select_fragments_memcache_iterator + 1)
   end
 
-  def public_product_select_memcache_iterator
-    Rails.cache.fetch("#{self.subdomain}/public-product-select-memcache-iterator") { rand(10) }
+  def curator_product_select_fragments_memcache_iterator
+    Rails.cache.fetch(
+      "#{self.subdomain}/curator-product-select-fragments-memcache-iterator") { rand(10) }
   end
 
-  def increment_public_product_select_memcache_iterator
-    Rails.cache.write("#{self.subdomain}/public-product-select-memcache-iterator", self.public_product_select_memcache_iterator + 1)
+  def increment_curator_product_select_fragments_memcache_iterator
+    Rails.cache.write(
+      "#{self.subdomain}/curator-product-select-fragments-memcache-iterator",
+      self.curator_product_select_fragments_memcache_iterator + 1)
+  end
+
+  #
+  # public category/product select fragments (all and pre-selected) invalidated by:
+  # -> attach/detach tags IF the story has logo published
+  # -> story publish state IF story is tagged
+  #
+  def public_category_select_fragments_memcache_iterator
+    Rails.cache.fetch(
+      "#{self.subdomain}/public-category-select-fragments-memcache-iterator") { rand(10) }
+  end
+
+  def increment_public_category_select_fragments_memcache_iterator
+    Rails.cache.write(
+      "#{self.subdomain}/public-category-select-fragments-memcache-iterator",
+      self.category_select_fragments_memcache_iterator + 1)
+  end
+
+  def public_product_select_fragments_memcache_iterator
+    Rails.cache.fetch(
+      "#{self.subdomain}/public-product-select-fragments-memcache-iterator") { rand(10) }
+  end
+
+  def increment_public_product_select_fragments_memcache_iterator
+    Rails.cache.write(
+      "#{self.subdomain}/public-product-select-fragments-memcache-iterator",
+      self.product_select_fragments_memcache_iterator + 1)
   end
 
 end

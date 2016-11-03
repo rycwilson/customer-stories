@@ -1,5 +1,6 @@
 
-<% cache "#{company.subdomain}/curator-story-#{story.id}-tile-memcache-iterator-#{story.curator_story_tile_memcache_iterator}" do %>
+<% cache "#{company.subdomain}/curator-story-tile-#{story.id}-\
+          memcache-iterator-#{company.story_tile_fragments_memcache_iterator}" do %>
 
   <a href="<%= story.published ? story.csp_story_path : edit_story_path(story.id) %>">
 
