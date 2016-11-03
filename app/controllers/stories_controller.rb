@@ -292,7 +292,6 @@ class StoriesController < ApplicationController
     if request.format == 'application/pdf'
       @story
     elsif request.path != @story.csp_story_path  # friendly path changed
-      @story.expire_fragment_cache_on_path_change
       # old story title slug requested, redirect to current
       return redirect_to @story.csp_story_path, status: :moved_permanently
     elsif !@story.published? && !company_curator?(company.id)

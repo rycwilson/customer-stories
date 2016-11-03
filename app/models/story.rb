@@ -49,16 +49,21 @@ class Story < ActiveRecord::Base
            products: { id: product_id })
   }
 
+  after_commit :expire_all_stories_json_cache, on: [:create, :destroy]
+
   # note: the _changed? methods for attributes don't work in the after_commit callback
   # note: the & operator interestects the arrays, returning any values that exist in both
   after_commit :expire_story_tile_fragment_cache,
                :expire_stories_index_fragment_cache,
                :expire_filter_select_fragment_cache,
-               :expire_all_stories_json,
+               :expire_all_stories_json_cache,
                on: :update, if:
         Proc.new { |story|
           (story.previous_changes.keys & ['published', 'logo_published']).any?
         }
+
+  after_commit :expire_csp_story_path_cache, on: :update, if:
+               Proc.new { |story| story.previous_changes.key?('title') }
 
   # method takes an active record relation
   def self.order stories_relation
@@ -140,12 +145,17 @@ class Story < ActiveRecord::Base
       end
     end
 
-    # invalidate cached fragments ...
-    if self.logo_published?
-      if category_tags_changed
+    # expire cache
+    if category_tags_changed
+      company.expire_all_stories_json_cache
+      if self.logo_published?
         company.increment_public_category_select_fragments_memcache_iterator
       end
-      if product_tags_changed
+    end
+    if product_tags_changed
+      company.expire_all_stories_json_cache
+      self.expire_csp_story_path_cache
+      if self.logo_published?
         company.increment_public_product_select_fragments_memcache_iterator
       end
     end
@@ -154,16 +164,25 @@ class Story < ActiveRecord::Base
 
   # method returns a friendly id path that either contains or omits a product
   def csp_story_path
-    url_helpers = Rails.application.routes.url_helpers
-    success = self.success
-    if success.products.present?
-      url_helpers.public_story_path(success.customer.slug,
-                                    success.products.take.slug,
-                                    self.slug)
-    else
-      url_helpers.public_story_no_product_path(success.customer.slug,
-                                               self.slug)
+    company = self.success.customer.company
+    Rails.cache.fetch("#{company.subdomain}/csp-story-#{self.id}-path") do
+      url_helpers = Rails.application.routes.url_helpers
+      success = self.success
+      if success.products.present?
+        url_helpers.public_story_path(success.customer.slug,
+                                      success.products.take.slug,
+                                      self.slug)
+      else
+        url_helpers.public_story_no_product_path(success.customer.slug,
+                                                 self.slug)
+      end
     end
+  end
+
+  def expire_csp_story_path_cache
+    Rails.cache.delete("#{company.subdomain}/csp-story-#{self.id}-path")
+    self.success.customer.company.expire_all_stories_json_cache
+    self.expire_fragment_cache_on_path_change
   end
 
   # method returns a friendly id url that either contains or omits a product
@@ -275,38 +294,46 @@ class Story < ActiveRecord::Base
   # adds contributor linkedin data, which is necessary client-side for widgets
   # that fail to load
   def published_contributors
-    curator = self.success.curator
-    contributors =
-      User.joins(own_contributions: { success: {} })
-          .where.not(linkedin_url:'')
-          .where(successes: { id: self.success_id },
-                 contributions: { publish_contributor: true })
-          .order("CASE contributions.role
-                    WHEN 'customer' THEN '1'
-                    WHEN 'partner' THEN '2'
-                    WHEN 'sales' THEN '3'
-                  END")
-          .map do |contributor|
-             { widget_loaded: false,
-               id: contributor.id,
-               first_name: contributor.first_name,
-               last_name: contributor.last_name,
-               linkedin_url: contributor.linkedin_url,
-               linkedin_photo_url: contributor.linkedin_photo_url,
-               linkedin_title: contributor.linkedin_title,
-               linkedin_company: contributor.linkedin_company,
-               linkedin_location: contributor.linkedin_location }
-           end
-    contributors.delete_if { |c| c[:id] == curator.id }
-    # don't need the id anymore, don't want to send it to client ...
-    contributors.map! { |c| c.except(:id) }
-    if curator.linkedin_url.present?
-      contributors.push({ widget_loaded: false }
-                  .merge(self.success.curator.slice(
-                    :first_name, :last_name, :linkedin_url, :linkedin_photo_url,
-                    :linkedin_title, :linkedin_company, :linkedin_location )))
+    company = self.success.customer.company
+    Rails.cache.fetch("#{company.subdomain}/story-#{self.id}-published-contributors") do
+      curator = self.success.curator
+      contributors =
+        User.joins(own_contributions: { success: {} })
+            .where.not(linkedin_url:'')
+            .where(successes: { id: self.success_id },
+                   contributions: { publish_contributor: true })
+            .order("CASE contributions.role
+                      WHEN 'customer' THEN '1'
+                      WHEN 'partner' THEN '2'
+                      WHEN 'sales' THEN '3'
+                    END")
+            .map do |contributor|
+               { widget_loaded: false,
+                 id: contributor.id,
+                 first_name: contributor.first_name,
+                 last_name: contributor.last_name,
+                 linkedin_url: contributor.linkedin_url,
+                 linkedin_photo_url: contributor.linkedin_photo_url,
+                 linkedin_title: contributor.linkedin_title,
+                 linkedin_company: contributor.linkedin_company,
+                 linkedin_location: contributor.linkedin_location }
+             end
+      contributors.delete_if { |c| c[:id] == curator.id }
+      # don't need the id anymore, don't want to send it to client ...
+      contributors.map! { |c| c.except(:id) }
+      if curator.linkedin_url.present?
+        contributors.push({ widget_loaded: false }
+                    .merge(self.success.curator.slice(
+                      :first_name, :last_name, :linkedin_url, :linkedin_photo_url,
+                      :linkedin_title, :linkedin_company, :linkedin_location )))
+      end
+      contributors
     end
-    contributors
+  end
+
+  def expire_published_contributors_cache
+    Rails.cache.delete("#{company.subdomain}/story-#{self.id}-published-contributors")
+    self.success.customer.company.expire_all_stories_json_cache
   end
 
   # not currently used, maybe include with json api
@@ -413,8 +440,8 @@ class Story < ActiveRecord::Base
     end
   end
 
-  def expire_all_stories_json
-    self.success.customer.company.expire_all_stories_json
+  def expire_all_stories_json_cache
+    self.success.customer.company.expire_all_stories_json_cache
   end
 
 end

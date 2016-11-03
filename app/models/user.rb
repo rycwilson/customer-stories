@@ -27,11 +27,14 @@ class User < ActiveRecord::Base
   has_many :successes, class_name: 'Success', foreign_key: 'curator_id' # curator, no (dependent: :destroy)
 
   # if user doesn't have a linkedin_url, unpublish any contributions
-  after_save(on: :update) do
-    if self.linkedin_url.blank?
-      self.own_contributions.each { |c| c.update publish_contributor: false }
-    end
-  end
+  after_commit :update_contributions, on: :update
+
+  after_commit :expire_published_contributors_cache, on: :update, if:
+      Proc.new { |user|
+        trigger_keys = ['first_name', 'last_name', 'linkedin_url', 'linkedin_title',
+            'linkedin_photo_url', 'linkedin_company', 'linkedin_location']
+        (user.previous_changes.keys & trigger_keys).any?
+      }
 
   # for changing password
   attr_accessor :current_password
@@ -67,6 +70,20 @@ class User < ActiveRecord::Base
     self.linkedin_title.present? &&
     self.linkedin_company.present? &&
     self.linkedin_photo_url.present?
+  end
+
+  def update_contributions
+    if self.linkedin_url.blank?
+      self.own_contributions.each { |c| c.update publish_contributor: false }
+    end
+  end
+
+  def expire_published_contributors_cache
+    self.own_contributions.each do |contribution|
+      if contribution.publish_contributor?
+        contribution.success.story.expire_published_contributors_cache
+      end
+    end
   end
 
   # This is for users signing up via Oauth

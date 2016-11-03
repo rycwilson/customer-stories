@@ -37,44 +37,27 @@ class Company < ActiveRecord::Base
   # CSP = self.find_by(name:'CSP')
 
   def all_stories
-    # Rails.cache.fetch("#{self.subdomain}/all_stories", expires_in: 24.hours) do
-      Story.order(Story.company_all(self.id)).pluck(:id)
-    # end
+    Story.order(Story.company_all(self.id)).pluck(:id)
   end
 
   def all_stories_filter_category category_id
-    # Rails.cache.fetch("#{self.subdomain}/all_stories_category_#{category_id}",
-                      # expires_in: 24.hours) do
-      Story.order(Story.company_all_filter_category(self.id, category_id)).pluck(:id)
-    # end
+    Story.order(Story.company_all_filter_category(self.id, category_id)).pluck(:id)
   end
 
   def all_stories_filter_product product_id
-    # Rails.cache.fetch("#{self.subdomain}/all_stories_product_#{product_id}",
-                      # expires_in: 24.hours) do
-      Story.order(Story.company_all_filter_product(self.id, product_id)).pluck(:id)
-    # end
+    Story.order(Story.company_all_filter_product(self.id, product_id)).pluck(:id)
   end
 
   def public_stories
-    # Rails.cache.fetch("#{self.subdomain}/public_stories",
-    #                   expires_in: 24.hours) do
-      Story.order(Story.company_public(self.id)).pluck(:id)
-    # end
+    Story.order(Story.company_public(self.id)).pluck(:id)
   end
 
   def public_stories_filter_category category_id
-    # Rails.cache.fetch("#{self.subdomain}/public_stories_category_#{category_id}",
-    #                   expires_in: 24.hours) do
-      Story.order(Story.company_public_filter_category(self.id, category_id)).pluck(:id)
-    # end
+    Story.order(Story.company_public_filter_category(self.id, category_id)).pluck(:id)
   end
 
   def public_stories_filter_product product_id
-    # Rails.cache.fetch("#{self.subdomain}/public_stories_product_#{product_id}",
-    #                   expires_in: 24.hours) do
-      Story.order(Story.company_public_filter_product(self.id, product_id)).pluck(:id)
-    # end
+    Story.order(Story.company_public_filter_product(self.id, product_id)).pluck(:id)
   end
 
   # TODO: faster? http://stackoverflow.com/questions/20014292
@@ -132,7 +115,7 @@ class Company < ActiveRecord::Base
     end
   end
 
-  def expire_all_stories_json
+  def expire_all_stories_json_cache
     Rails.cache.delete("#{self.subdomain}/all_stories_json")
   end
 

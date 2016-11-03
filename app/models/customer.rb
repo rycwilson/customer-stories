@@ -11,8 +11,13 @@ class Customer < ActiveRecord::Base
 
   friendly_id :name, use: [:slugged, :scoped], scope: :company_id
 
-  after_commit :expire_fragment_cache, on: :update,
+  after_commit :expire_fragment_cache,
+               :expire_all_stories_json_cache, on: :update,
     if: Proc.new { |customer| customer.previous_changes.key?('logo_url') }
+
+  after_commit :expire_csp_story_path_cache,
+               :expire_all_stories_json_cache, on: :update,
+    if: Proc.new { |customer| customer.previous_changes.key('name') }
 
   def should_generate_new_friendly_id?
     new_record? || name_changed? || slug.blank?
@@ -57,6 +62,16 @@ class Customer < ActiveRecord::Base
         end
       end
     end
+  end
+
+  def expire_csp_story_path_cache
+    self.successes.each do |success|
+      success.story.expire_csp_story_path_cache
+    end
+  end
+
+  def expire_all_stories_json_cache
+    self.company.expire_all_stories_json_cache
   end
 
 end

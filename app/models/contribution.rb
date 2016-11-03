@@ -27,6 +27,11 @@ class Contribution < ActiveRecord::Base
   validates :remind_1_wait, numericality: { only_integer: true }
   validates :remind_2_wait, numericality: { only_integer: true }
 
+  after_commit :expire_published_contributors_cache, on: :update, if:
+        Proc.new { |contribution|
+          contribution.previous_changes.key?('publish_contributor')
+        }
+
   def display_status
     case self.status
       when 'pre_request'
@@ -128,6 +133,11 @@ class Contribution < ActiveRecord::Base
                     .gsub("[opt_out_url]", "#{host}/contributions/#{self.access_token}/opt_out")
                     .html_safe
     { subject: subject, body: body }
+  end
+
+  def expire_published_contributors_cache
+    story = self.success.story
+    story.expire_published_contributors_cache
   end
 
 end
