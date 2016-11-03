@@ -6,12 +6,7 @@ class StoriesController < ApplicationController
   before_action :set_story, only: [:edit, :approval]
   before_action only: [:edit] { user_authorized?(@story, current_user) }
   before_action only: [:index, :show, :edit] { set_gon(@company) }
-  before_action only: [:show] {
-    set_public_story_or_redirect(@company)
-    set_contributors_jsonld(@company, @story)
-    set_products_jsonld(@company)
-    set_about_jsonld(@company, @story)
-  }
+  before_action only: [:show] { set_public_story_or_redirect(@company) }
   before_action only: [:show, :approval] { set_contributors(@story) }
   before_action :set_s3_direct_post, only: :edit
 
@@ -225,46 +220,6 @@ class StoriesController < ApplicationController
                                                   # he goes at the end
     @contributors << curator unless curator.linkedin_url.blank?
     @contributors
-  end
-
-  def set_contributors_jsonld company, story
-    @contributors_jsonld =
-      Rails.cache.fetch("#{company.subdomain}/contributors-jsonld-story#{story.id}",
-                      expires_in: 1.week) do
-        story.success.contributors
-          .map do |contributor|
-            { "@type" => "Person",
-              "name" => contributor.full_name }
-          end
-      end
-  end
-
-  def set_products_jsonld company
-    @products_jsonld =
-      Rails.cache.fetch("#{company.subdomain}/products-jsonld",
-                        expires_in: 1.week) do
-        company.products
-          .map do |product|
-            { "@type" => "Product",
-              "name" => product.name }
-          end
-      end
-  end
-
-  def set_about_jsonld company, story
-    success = story.success
-    @about_jsonld =
-      Rails.cache.fetch("#{company.subdomain}/about-jsonld",
-                        expires_in: 1.week) do
-        [{ "@type" => "Corporation",
-                      "name" => success.customer.name,
-                      "logo" => { "@type" => "ImageObject",
-                      "url" => success.customer.logo_url }}] +
-                success.products.map do |product|
-                                    { "@type" => "Product",
-                                      "name" => product.name }
-                                 end
-      end
   end
 
   # new customers can be created on new story creation

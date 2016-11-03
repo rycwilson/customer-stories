@@ -21,8 +21,7 @@
                 company.name + "/" + success.customer.name + " Customer Story" %>">
 <meta property='og:type' content='article'>
 <meta property='og:site_name' content="<%= company.name %> Customer Stories">
-<meta property='fb:app_id'
-      content="<%= '291034101286863' %>">
+<meta property='fb:app_id' content="<%= '291034101286863' %>">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="<%= og_image(company,'all')[:image] %>">
 
@@ -42,7 +41,7 @@
         "@type": "ImageObject",
         "url": "<%= company.logo_url %>"
       },
-      "owns": <%= raw products.to_json %>
+      "owns": <%= raw company.products_jsonld.to_json %>
     },
     "author": {
       "@type": "Person",
@@ -55,7 +54,7 @@
       "height": 1200,
       "width": 630
     },
-    "contributor": <%= raw contributors.to_json %>,
+    "contributor": <%= raw story.contributors_jsonld.to_json %>,
     "about": {
       "@type": "Corporation",
       "name": "<%= success.customer.name %>",
@@ -64,7 +63,7 @@
         "url": "<%= success.customer.logo_url %>"
       }
     },
-    "about": <%= raw about.to_json %>,
+    "about": <%= raw story.about_jsonld.to_json %>,
     "headline": "<%= story.title %>",
     "alternativeHeadline": <%= raw success.results.pluck('description').to_json %>,
     "articleBody": "<%= story.content %>",

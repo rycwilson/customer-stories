@@ -5,14 +5,16 @@
 
     <div class='well story-narration'>
 
-      <h3><%= story.title %></h3>
+      <% cache "#{company.subdomain}/story-#{story.id}-narration" do %>
+        <h3><%= story.title %></h3>
 
-      <div class="visible-md-block visible-lg-block">
-        <%= simple_format story.content %>
-      </div>
-      <div class="hidden-md hidden-lg">
-        <%= simple_format story.content %>
-      </div>
+        <div class="visible-md-block visible-lg-block">
+          <%= simple_format story.content %>
+        </div>
+        <div class="hidden-md hidden-lg">
+          <%= simple_format story.content %>
+        </div>
+      <% end %>
 
     </div>
 
@@ -20,47 +22,63 @@
 
   <div class='col-sm-6 col-md-5'>
 
-    <div id='story-results' class="well">
-      <h3 class='text-center'>Results</h3>
-      <% story.success.results.each do |result| %>
-        <div class="row">
-          <div class='col-xs-1'>
-            <i class='fa fa-check'></i>
+    <% cache "#{company.subdomain}/story-#{story.id}-results" do %>
+
+      <div id='story-results' class="well">
+        <h3 class='text-center'>Results</h3>
+
+        <% story.success.results.each do |result| %>
+
+          <div class="row">
+            <div class='col-xs-1'>
+              <i class='fa fa-check'></i>
+            </div>
+            <div class='col-xs-11'>
+              <p><%= result.description %></p>
+            </div>
           </div>
-          <div class='col-xs-11'>
-            <p><%= result.description %></p>
-          </div>
-        </div>
-      <% end %>
-    </div>
 
-    <div class="linkedin-widgets text-center">
+        <% end %>
 
-      <% if contributors.present? %>
-        <h3>Contributing Team</h3>
-      <% end %>
+      </div>
 
-      <% contributors.each do |contributor| %>
+    <% end %>
 
-        <div class="linkedin-widget linkedin-widget-wide">
-          <script type="IN/MemberProfile"
-                  data-id="<%= contributor.linkedin_url %>"
-                  data-format="inline"
-                  data-related="true"
-                  data-width='420'></script>
-        </div>
+    <% cache "#{company.subdomain}/story-#{story.id}-contributors" do %>
 
-        <div class="linkedin-widget">
-          <script type="IN/MemberProfile"
-                  data-id="<%= contributor.linkedin_url %>"
-                  data-format="inline"
-                  data-related="true"
-                  data-width='340'></script>
-        </div>
+      <div class="linkedin-widgets text-center">
 
-      <% end %>
+        <% if contributors.present? %>
 
+          <h3>Contributing Team</h3>
 
-    </div>
+          <% contributors.each do |contributor| %>
+
+            <% cache "#{company.subdomain}/story-#{story.id}-\
+                      contributor-#{contributor.id}" do %>
+
+              <div class="linkedin-widget linkedin-widget-wide">
+                <script type="IN/MemberProfile"
+                        data-id="<%= contributor.linkedin_url %>"
+                        data-format="inline"
+                        data-related="true"
+                        data-width='420'></script>
+              </div>
+
+              <div class="linkedin-widget">
+                <script type="IN/MemberProfile"
+                        data-id="<%= contributor.linkedin_url %>"
+                        data-format="inline"
+                        data-related="true"
+                        data-width='340'></script>
+              </div>
+
+            <% end %>
+
+          <% end %>
+
+        <% end %>
+      </div>
+    <% end %>
   </div>
 </div>

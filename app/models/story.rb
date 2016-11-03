@@ -56,14 +56,30 @@ class Story < ActiveRecord::Base
   after_commit :expire_story_tile_fragment_cache,
                :expire_stories_index_fragment_cache,
                :expire_filter_select_fragment_cache,
-               :expire_all_stories_json_cache,
-               on: :update, if:
+               :expire_all_stories_json_cache, on: :update, if:
         Proc.new { |story|
           (story.previous_changes.keys & ['published', 'logo_published']).any?
         }
 
-  after_commit :expire_csp_story_path_cache, on: :update, if:
-               Proc.new { |story| story.previous_changes.key?('title') }
+  after_commit :expire_story_video_info_cache,
+               :expire_story_video_xs_fragment_cache, on: :update, if:
+        Proc.new { |story|
+          story.previous_changes.key('embed_url')
+        }
+
+  after_commit :expire_story_testimonial_fragment_cache, on: :update, if:
+        Proc.new { |story|
+          (story.previous_changes.keys & ['embed_url', 'quote', 'quote_attr']).any?
+        }
+
+  after_commit :expire_csp_story_path_cache,
+               :expire_story_narration_fragment_cache, on: :update, if:
+        Proc.new { |story| story.previous_changes.key?('title') }
+
+  after_commit :expire_story_narration_fragment_cache, on: :update, if:
+        Proc.new { |story|
+          (story.previous_changes.keys & ['title', 'content']).any?
+        }
 
   # method takes an active record relation
   def self.order stories_relation
@@ -219,18 +235,21 @@ class Story < ActiveRecord::Base
   #  "https://fast.wistia.com/embed/medias/#{wistia_id}.jsonp"
   #
   def video_info
-    return { provider: nil, id: nil } if self.embed_url.blank?
-    if self.embed_url.include? "youtube"
-      { provider: 'youtube',
-        id: embed_url.slice(embed_url.rindex('/') + 1, embed_url.length) }
-    elsif self.embed_url.include? "vimeo"
-      { provider: 'vimeo',
-        id: embed_url.slice(embed_url.rindex('/') + 1, embed_url.length) }
-    elsif self.embed_url.include? "wistia"
-      { provider: 'wistia',
-        id: self.embed_url.match(/\/(?<id>\w+)(\.\w+$)/)[:id] }
-    else
-      # error
+    company = self.success.customer.company
+    Rails.cache.fetch("#{company.subdomain}/story-#{self.id}-video-info") do
+      return { provider: nil, id: nil } if self.embed_url.blank?
+      if self.embed_url.include? "youtube"
+        { provider: 'youtube',
+          id: embed_url.slice(embed_url.rindex('/') + 1, embed_url.length) }
+      elsif self.embed_url.include? "vimeo"
+        { provider: 'vimeo',
+          id: embed_url.slice(embed_url.rindex('/') + 1, embed_url.length) }
+      elsif self.embed_url.include? "wistia"
+        { provider: 'wistia',
+          id: self.embed_url.match(/\/(?<id>\w+)(\.\w+$)/)[:id] }
+      else
+        # error
+      end
     end
   end
 
@@ -442,6 +461,46 @@ class Story < ActiveRecord::Base
 
   def expire_all_stories_json_cache
     self.success.customer.company.expire_all_stories_json_cache
+  end
+
+  def expire_story_testimonial_fragment_cache
+    expire_fragment("#{@company.subdomain}/story-#{self.id}-testimonial")
+  end
+
+  def expire_story_video_info_cache
+    company = self.success.customer.company
+    Rails.cache.delete("#{company.subdomain}/story-#{self.id}-video-info")
+  end
+
+  def expire_story_video_xs_fragment_cache
+    expire_fragment("#{@company.subdomain}/story-#{self.id}-video-xs")
+  end
+
+  def expire_story_narration_fragment_cache
+    expire_fragment("#{@company.subdomain}/story-#{self.id}-narration")
+  end
+
+  def expire_results_fragment_cache
+    expire_fragment("#{@company.subdomain}/story-#{self.id}-results")
+  end
+
+  def contributors_jsonld
+    self.success.contributors.map do |contributor|
+                                { "@type" => "Person",
+                                  "name" => contributor.full_name }
+                              end
+  end
+
+  def about_jsonld
+    customer = self.success.customer
+    [{ "@type" => "Corporation",
+       "name" => customer.name,
+       "logo" => { "@type" => "ImageObject",
+       "url" => customer.logo_url }}] +
+      self.success.products.map do |product|
+                              { "@type" => "Product",
+                                "name" => product.name }
+                            end
   end
 
 end

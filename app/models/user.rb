@@ -36,6 +36,9 @@ class User < ActiveRecord::Base
         (user.previous_changes.keys & trigger_keys).any?
       }
 
+  after_commit :expire_contributor_fragment_cache, on: :update, if:
+              Proc.new { |user| previous_changes.key?('linkedin_url') }
+
   # for changing password
   attr_accessor :current_password
 
@@ -83,6 +86,15 @@ class User < ActiveRecord::Base
       if contribution.publish_contributor?
         contribution.success.story.expire_published_contributors_cache
       end
+    end
+  end
+
+  def expire_contributor_fragment_cache
+    self.own_contributions.each do |contribution|
+      story = contribution.success.story
+      expire_fragment("#{company.subdomain}/story-#{story.id}-\
+                       contributor-#{self.id}")
+      expire_fragment("#{company.subdomain}/story-#{story.id}-contributors")
     end
   end
 

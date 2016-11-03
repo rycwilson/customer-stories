@@ -7,13 +7,10 @@
   <%= render 'stories/shared/csp_linkedin_widget_template' %>
 
   <% if production? %>
-    <% Rails.cache.fetch("views/#{@company.subdomain}/story-meta-tags/#{@story.id}",
+    <% cache("#{@company.subdomain}/story-#{@story.id}-meta-tags",
                          expires_in: 1.week) do %>
-
       <%= render 'stories/shared/story_meta_tags',
-                  { company: @company, success: @story.success, story: @story,
-                    products: @products_jsonld, contributors: @contributors_jsonld,
-                    about: @about_jsonld } %>
+            { company: @company, success: @story.success, story: @story } %>
     <% end %>
   <% end %>
 
@@ -32,16 +29,28 @@
   <!-- customer name, social sharing  -->
   <div class="mainnav">
 
-    <% cache "#{@company.subdomain}/story-header/#{@story.cache_key}" do %>
-      <%= render 'stories/shared/story_header',
-          { story: @story, customer: @story.success.customer } %>
+    <!-- clicky_log class present only for production, so separate the fragments -->
+    <% if production? %>
+
+      <% cache "#{@company.subdomain}/story-#{@story.id}-header" do %>
+        <%= render 'stories/shared/story_header',
+            { story: @story, customer: @story.success.customer } %>
+      <% end %>
+
+    <% else %>
+
+      <% cache "#{@company.subdomain}/story-#{@story.id}-header-not-production" do %>
+        <%= render 'stories/shared/story_header',
+            { story: @story, customer: @story.success.customer } %>
+      <% end %>
+
     <% end %>
 
   </div>
 
-  <div id='story-section-testimonial'>
+  <div id='story-section-testimonial'>  <!-- includes video -->
 
-    <% cache "#{@company.subdomain}/story-testimonial/#{@story.cache_key}" do %>
+    <% cache "#{@company.subdomain}/story-#{@story.id}-testimonial" do %>
       <%= render 'stories/shared/story_testimonial', { story: @story } %>
     <% end %>
 
@@ -50,7 +59,7 @@
   <!-- video (xs only) -->
   <div id='story-section-video-xs'>
 
-    <% cache "#{@company.subdomain}/story-video-xs/#{@story.cache_key}" do %>
+    <% cache "#{@company.subdomain}/story-#{@story.id}-video-xs" do %>
       <%= render 'stories/shared/story_video_xs', { story: @story } %>
     <% end %>
 
@@ -58,7 +67,7 @@
 
   <div id='social-buttons-xs' class="visible-xs text-right">
 
-    <% cache "#{@company.subdomain}/social-buttons-xs/#{@story.cache_key}" do %>
+    <% cache "story-social-buttons-xs" do %>
       <%= render 'stories/shared/social_buttons_xs', { story: @story } %>
     <% end %>
 
@@ -67,10 +76,8 @@
   <!-- story content, results, contributing team -->
   <div id='story-section-content'>
 
-    <% cache "#{@company.subdomain}/story-content/#{@story.cache_key}" do %>
-      <%= render 'stories/shared/story_content',
-          { story: @story, contributors: @contributors } %>
-    <% end %>
+    <%= render 'stories/shared/story_content',
+        { company: @company, story: @story, contributors: @contributors } %>
 
   </div>
 

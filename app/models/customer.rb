@@ -12,10 +12,12 @@ class Customer < ActiveRecord::Base
   friendly_id :name, use: [:slugged, :scoped], scope: :company_id
 
   after_commit :expire_fragment_cache,
-               :expire_all_stories_json_cache, on: :update,
+               :expire_all_stories_json_cache,
+               :expire_story_testimonial_fragment_cache, on: :update,
     if: Proc.new { |customer| customer.previous_changes.key?('logo_url') }
 
   after_commit :expire_csp_story_path_cache,
+               :expire_story_header_fragment_cache,
                :expire_all_stories_json_cache, on: :update,
     if: Proc.new { |customer| customer.previous_changes.key('name') }
 
@@ -72,6 +74,19 @@ class Customer < ActiveRecord::Base
 
   def expire_all_stories_json_cache
     self.company.expire_all_stories_json_cache
+  end
+
+  def expire_story_header_fragment_cache
+    company = self.company
+    expire_fragment("#{company.subdomain}/story-#{@story.id}-header")
+    expire_fragment("#{company.subdomain}/story-#{@story.id}-header-not-production")
+  end
+
+  def expire_story_testimonial_fragment_cache
+    company = self.company
+    self.successes.each do |success|
+      expire_fragment("#{company.subdomain}/story-#{success.story.id}-testimonial")
+    end
   end
 
 end

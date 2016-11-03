@@ -190,31 +190,39 @@ class Company < ActiveRecord::Base
 
   # slightly different than updating tags for a story
   def update_tags new_tags
-    old_category_tags = self.story_categories
-    old_product_tags = self.products
+    existing_category_tags = self.story_categories
+    existing_product_tags = self.products
     # remove deleted category tags ...
-    old_category_tags.each do |category_tag|
-      if new_tags[:category].nil? || !(new_tags[:category].include? category_tag.id.to_s)
-        # remove the tag from any successes
-        StoryCategoriesSuccess.where(story_category_id: category_tag.id).destroy_all
-        # destroy the tag
-        category_tag.destroy
+    existing_category_tags.each do |category|
+      if new_tags[:category].nil? || !(new_tags[:category].include? category.id.to_s)
+        tag_instances =
+          StoryCategoriesSuccess.where(story_category_id: category.id)
+        # expire filter select fragment cache
+        expire_filter_select_fragments_on_tag_destroy('category', tag_instances)
+        # untag stories
+        tag_instances.destroy_all
+        category.destroy
       end
     end
     # add new category tags ...
-    new_tags[:category].each do |category_tag_id|
-      if category_tag_id.to_i == 0 # new (custom or default) tag
-        self.story_categories << StoryCategory.create(name: category_tag_id)
+    new_tags[:category].each do |category_id|
+      if category_id.to_i == 0 # new (custom or default) tag
+        self.story_categories << StoryCategory.create(name: category_id)
+        # expire filter select fragment cache
+        company.increment_curator_category_select_fragments_memcache_iterator
       else
         # do nothing
       end
     end unless new_tags[:category].nil?
+
     # remove deleted product tags ...
-    old_product_tags.each do |product|
+    existing_product_tags.each do |product|
       if new_tags[:product].nil? || !(new_tags[:product].include? product.id.to_s)
-        # remove the tag from any successes it appears in
-        ProductsSuccess.where(product_id: product.id).destroy_all
-        # destroy the tag
+        tag_instances = ProductsSuccess.where(product_id: product.id)
+        # expire filter select fragment cache
+        expire_filter_select_fragments_on_tag_destroy('product', tag_instances)
+        # untag stories
+        tag_instances.destroy_all
         product.destroy
       end
     end
@@ -222,10 +230,35 @@ class Company < ActiveRecord::Base
     new_tags[:product].each do |product_id|
       if product_id.to_i == 0 # new tag
         self.products << Product.create(name: product_id)
+        # expire cache
+        company.increment_curator_product_select_fragments_memcache_iterator
       else
         # do nothing
       end
     end unless new_tags[:product].nil?
+  end
+
+  #
+  # when destroying a tag,
+  # 1 - expire all curator filter select fragments
+  # 2 - expire public filter select fragments that are affected
+  #
+  def expire_filter_select_fragments_on_tag_destroy tag, tag_instances
+    if tag == 'category'
+      company.increment_curator_category_select_fragments_memcache_iterator
+    elsif tag == 'product'
+      company.increment_curator_product_select_fragments_memcache_iterator
+    end
+    # check for tagged stories -> expire public filter select fragments
+    tag_instances.each do |tag_instance|
+      if tag_instance.success.story.logo_published?
+        if tag == 'category'
+          company.increment_public_category_select_fragments_memcache_iterator
+        elsif tag == 'product'
+          company.increment_public_product_select_fragments_memcache_iterator
+        end
+      end
+    end
   end
 
   # this is used for validating the company's website address
@@ -263,6 +296,7 @@ class Company < ActiveRecord::Base
     self.stories.where(logo_published: true).order(logo_publish_date: :desc).take.try(:logo_publish_date)
   end
 
+  # changes to company colors expires all gallery fragments
   def expire_fragment_cache
     self.increment_curator_stories_index_fragments_memcache_iterator
     self.increment_public_stories_index_fragments_memcache_iterator

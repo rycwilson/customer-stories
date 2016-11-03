@@ -5,8 +5,10 @@
 
   <%= render 'stories/shared/stories_index_template', { company: @company } %>
 
-  <% cache("#{@company.subdomain}/stories-index-meta-tags", expires_in: 1.week) do %>
-    <%= render 'stories/shared/stories_index_meta_tags', { company: @company } %>
+  <% if production? %>
+    <% cache("#{@company.subdomain}/stories-index-meta-tags", expires_in: 1.week) do %>
+      <%= render 'stories/shared/stories_index_meta_tags', { company: @company } %>
+    <% end %>
   <% end %>
 
 <% end %>
