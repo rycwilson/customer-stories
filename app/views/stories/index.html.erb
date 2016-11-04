@@ -53,7 +53,7 @@
         <!--  <div> -->
           <div class='grid' id="stories-gallery">
 
-            <% cache @stories_index_cache_key do %>
+            <% cache(@stories_index_cache_key, skip_digest: true) do %>
 
               <% if @is_curator %>
 

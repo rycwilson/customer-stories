@@ -1,6 +1,6 @@
 <div id='stories-filters-xs' class="form-horizontal visible-xs-block">
 
-<% cache(category_select_cache_key) do %>
+<% cache(category_select_cache_key + '-xs', skip_digest: true) do %>
 
   <!-- only render if there are at least two distinct tags to choose between -->
   <!-- includes 'All' placeholder (hence 2) -->
@@ -30,7 +30,7 @@
 
 <% end %>
 
-<% cache(product_select_cache_key) do %>
+<% cache(product_select_cache_key + '-xs', skip_digest: true) do %>
 
   <% if is_curator && company.product_select_options.length > 2 %>
 

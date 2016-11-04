@@ -5,7 +5,8 @@
 
     <div class='well story-narration'>
 
-      <% cache "#{company.subdomain}/story-#{story.id}-narration" do %>
+      <% cache("#{company.subdomain}/story-#{story.id}-narration",
+               skip_digest: true) do %>
         <h3><%= story.title %></h3>
 
         <div class="visible-md-block visible-lg-block">
@@ -22,7 +23,8 @@
 
   <div class='col-sm-6 col-md-5'>
 
-    <% cache "#{company.subdomain}/story-#{story.id}-results" do %>
+    <% cache("#{company.subdomain}/story-#{story.id}-results",
+             skip_digest: true) do %>
 
       <div id='story-results' class="well">
         <h3 class='text-center'>Results</h3>
@@ -44,7 +46,8 @@
 
     <% end %>
 
-    <% cache "#{company.subdomain}/story-#{story.id}-contributors" do %>
+    <% cache("#{company.subdomain}/story-#{story.id}-contributors",
+             skip_digest: true) do %>
 
       <div class="linkedin-widgets text-center">
 
@@ -54,8 +57,7 @@
 
           <% contributors.each do |contributor| %>
 
-            <% cache "#{company.subdomain}/story-#{story.id}-\
-                      contributor-#{contributor.id}" do %>
+            <% cache("#{company.subdomain}/story-#{story.id}-contributor-#{contributor.id}", skip_digest: true) do %>
 
               <div class="linkedin-widget linkedin-widget-wide">
                 <script type="IN/MemberProfile"

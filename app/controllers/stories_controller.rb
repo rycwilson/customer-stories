@@ -17,9 +17,11 @@ class StoriesController < ApplicationController
     @stories_index_cache_key =
       stories_index_cache_key(@company, @is_curator, { tag: 'all', id: 0 })
     @category_select_cache_key =
-      filter_select_cache_key(@company, @is_curator, { tag: 'category', id: 0 })
+      filter_select_cache_key(
+        @company, @is_curator, 'category', { tag: 'category', id: 0 })
     @product_select_cache_key =
-      filter_select_cache_key(@company, @is_curator, { tag: 'product', id: 0 })
+      filter_select_cache_key(
+        @company, @is_curator, 'product', { tag: 'product', id: 0 })
 
     if valid_query_string? params
       #  ?category=automotive  =>  { tag: 'category', id: '42' }
@@ -32,9 +34,9 @@ class StoriesController < ApplicationController
       end
       @filtered_tag_id = filter_params[:id] # needed for options_for_select()
       @category_select_cache_key =
-        filter_select_cache_key(@company, @is_curator, filter_params)
+        filter_select_cache_key(@company, @is_curator, 'category', filter_params)
       @product_select_cache_key =
-        filter_select_cache_key(@company, @is_curator, filter_params)
+        filter_select_cache_key(@company, @is_curator, 'product', filter_params)
 
     elsif cookies[:csp_init]
       @stories = []
@@ -361,8 +363,6 @@ class StoriesController < ApplicationController
   # yy is the memcache iterator
   #
   def stories_index_cache_key company, is_curator, filter_params
-    tag = filter_params[:tag]
-    id = filter_params[:id]
     if is_curator
       memcache_iterator = company.curator_stories_index_fragments_memcache_iterator
     else
@@ -370,7 +370,7 @@ class StoriesController < ApplicationController
     end
     "#{company.subdomain}/" +
     "#{is_curator ? 'curator' : 'public'}-" +
-    "stories-index-#{tag}-#{id}-" +  # id = 0 -> all
+    "stories-index-#{filter_params[:tag]}-#{filter_params[:id]}-" +  # id = 0 -> all
     "memcache-iterator-#{memcache_iterator}"
   end
 
@@ -382,22 +382,27 @@ class StoriesController < ApplicationController
   #   xx is the selected category id (0 if none selected)
   #   yy is the memcache iterator
   #
-  def filter_select_cache_key company, is_curator, filter_params
-    "#{company.subdomain}/\
-     #{is_curator ? 'curator' : 'public'}-\
-     #{filter_params[:tag]}-select-#{filter_params[:id]}-memcache-iterator-\
-     #{filter_select_memcache_iterator(company, is_curator, filter_params[:tag])}"
+  def filter_select_cache_key company, is_curator, filter_tag, filter_params
+    if filter_tag == filter_params[:tag]  # is this the filter that was selected?
+      filter_id = filter_params[:id]
+    else
+      filter_id = 0
+    end
+    "#{company.subdomain}/" +
+    "#{is_curator ? 'curator' : 'public'}-" +
+    "#{filter_tag}-select-#{filter_id}-memcache-iterator-" +
+    "#{filter_select_memcache_iterator(company, is_curator, filter_tag)}"
   end
 
-  def filter_select_memcache_iterator company, is_curator, tag
+  def filter_select_memcache_iterator company, is_curator, filter_tag
     if is_curator
-      if tag == 'category'
+      if filter_tag == 'category'
         company.curator_category_select_fragments_memcache_iterator
       else
         company.curator_product_select_fragments_memcache_iterator
       end
     else
-      if tag == 'category'
+      if filter_tag == 'category'
         company.public_category_select_fragments_memcache_iterator
       else
         company.public_product_select_fragments_memcache_iterator
