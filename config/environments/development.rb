@@ -1,8 +1,23 @@
+
+# Settings specified here will take precedence over those in config/application.rb.
+
 Rails.application.configure do
 
   config.log_level = :debug
 
-  # Settings specified here will take precedence over those in config/application.rb.
+  # config.cache_store = :null_store
+  # global memcached enable/disable
+  config.perform_caching = true
+  # fragment and page caching
+  config.action_controller.perform_caching = true
+  config.cache_store = :dalli_store,
+                       'localhost:11211',
+                       {:failover => true,
+                        :socket_timeout => 1.5,
+                        :socket_failure_delay => 0.2,
+                        :down_retry_delay => 60,
+                        :pool_size => 5  # server threads/concurrency
+                       }
 
   # moved from session_store.rb
   # this ensures subdomans work properly in dev environment
@@ -17,9 +32,8 @@ Rails.application.configure do
   # Do not eager load code on boot.
   config.eager_load = false
 
-  # Show full error reports and disable caching.
-  config.consider_all_requests_local       = true
-  config.action_controller.perform_caching = false
+  # Show full error reports
+  config.consider_all_requests_local = true
 
   # by default, emails won't send in development environment
   # change this:

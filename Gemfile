@@ -15,6 +15,9 @@ gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 
+gem 'dalli'
+gem 'connection_pool'
+
 gem 'rails_admin'
 gem 'devise'
 gem 'turbolinks', '~> 5.0.0'
@@ -44,8 +47,6 @@ group :production do
 
   gem 'rails_12factor'
   gem 'puma'
-  gem 'dalli'
-  gem 'connection_pool'
 
 end
 
