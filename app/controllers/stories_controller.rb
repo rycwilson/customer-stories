@@ -22,11 +22,15 @@ class StoriesController < ApplicationController
       filter_select_cache_key(@company, @is_curator, { tag: 'product', id: 0 })
 
     if valid_query_string? params
-      filter_params = get_filter_params_from_query(params)  # e.g. { category: 42 }
-      @stories = @company.filter_stories_by_tag(filter_params, @is_curator)
-      @filtered_tag_id = filter_params[:id] # needed for options_for_select()
+      #  ?category=automotive  =>  { tag: 'category', id: '42' }
+      filter_params = get_filter_params_from_query(params)
       @stories_index_cache_key =
         stories_index_cache_key(@company, @is_curator, filter_params)
+      unless fragment_exist?(@stories_index_cache_key)
+        binding.remote_pry
+        @stories = @company.filter_stories_by_tag(filter_params, @is_curator)
+      end
+      @filtered_tag_id = filter_params[:id] # needed for options_for_select()
       @category_select_cache_key =
         filter_select_cache_key(@company, @is_curator, filter_params)
       @product_select_cache_key =
@@ -375,28 +379,30 @@ class StoriesController < ApplicationController
   #
   #   trunity/curator-category-select-xx-memcache-iterator-yy
   #
-  # xx is the selected category id (0 if none selected)
-  # yy is the memcache iterator
+  #   xx is the selected category id (0 if none selected)
+  #   yy is the memcache iterator
   #
   def filter_select_cache_key company, is_curator, filter_params
-    tag = filter_params[:tag]  # 'category' or 'product'
+    "#{company.subdomain}/\
+     #{is_curator ? 'curator' : 'public'}-\
+     #{filter_params[:tag]}-select-#{filter_params[:id]}-memcache-iterator-\
+     #{filter_select_memcache_iterator(company, is_curator, filter_params[:tag])}"
+  end
+
+  def filter_select_memcache_iterator company, is_curator, tag
     if is_curator
       if tag == 'category'
-        memcache_iterator = company.curator_category_select_fragments_memcache_iterator
+        company.curator_category_select_fragments_memcache_iterator
       else
-        memcache_iterator = company.curator_product_select_fragments_memcache_iterator
+        company.curator_product_select_fragments_memcache_iterator
       end
     else
       if tag == 'category'
-        memcache_iterator = company.public_category_select_fragments_memcache_iterator
+        company.public_category_select_fragments_memcache_iterator
       else
-        memcache_iterator = company.public_product_select_fragments_memcache_iterator
+        company.public_product_select_fragments_memcache_iterator
       end
     end
-    "#{company.subdomain}/" +
-    "#{is_curator ? 'curator' : 'public'}-" +
-    "#{tag}-select-#{filter_params[:id]}-" +   # id = 0 -> all
-    "memcache-iterator-#{memcache_iterator}"
   end
 
 end
