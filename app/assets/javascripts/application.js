@@ -29,11 +29,6 @@ $(document).one('turbolinks:load', function () {
   attachContributionsHandlers();
 });
 
-window.onbeforeunload = function() {
-  // console.log('onbeforeunload');
-  Cookies.remove('csp_init');
-};
-
 function setAppData () {
   if (window.gon) {  // use window.gon in case undefined
     // console.log('gon: ', gon);

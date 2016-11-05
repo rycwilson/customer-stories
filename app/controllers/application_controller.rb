@@ -25,26 +25,17 @@ class ApplicationController < ActionController::Base
   end
 
   def set_gon company=nil
-    if !cookies[:csp_init]
-      is_curator = (user_signed_in? && (current_user.company_id == company.try(:id)))
-      gon.push({
-        company: company.present? ?
-                    JSON.parse(company.to_json({ methods: :header_style })) : nil,
-        current_user: user_signed_in? ? {
-                        name: current_user.full_name,
-                        email: current_user.email,
-                        is_curator: is_curator } : nil,
-        stories: company.present? ? company.all_stories_json : nil,
-        env: csp_environment
-      })
-    else
-      # This shouldn't be necessary.  If nothing is pushed, gon should be empty!
-      # Somehow setting a binding.pry at this location (without the code below)
-      # results in gon = {} on client.  But as soon as it's removed, gon is
-      # populated with data on client, despite nothing being pushed.
-      # Just be explicit:
-      gon.push({})
-    end
+    is_curator = (user_signed_in? && (current_user.company_id == company.try(:id)))
+    gon.push({
+      company: company.present? ?
+                  JSON.parse(company.to_json({ methods: :header_style })) : nil,
+      current_user: user_signed_in? ? {
+                      name: current_user.full_name,
+                      email: current_user.email,
+                      is_curator: is_curator } : nil,
+      stories: company.present? ? company.all_stories_json : nil,
+      env: csp_environment
+    })
   end
 
   #  this method ensures signed in users can't jump to a subdomain they don't belong to

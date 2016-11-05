@@ -12,10 +12,11 @@ class StoriesController < ApplicationController
 
   def index
     @is_curator = @company.curator?(current_user)
+
     # these will get overwritten below if there's a query filter ...
-    @filtered_tag_id = 0  # all
+    @pre_selected_filter = { tag: 'all', id: 0 }
     @stories_index_cache_key =
-      stories_index_cache_key(@company, @is_curator, { tag: 'all', id: 0 })
+      stories_index_cache_key(@company, @is_curator, @pre_selected_filter)
     @category_select_cache_key =
       filter_select_cache_key(
         @company, @is_curator, 'category', { tag: 'category', id: 0 })
@@ -29,30 +30,29 @@ class StoriesController < ApplicationController
       @stories_index_cache_key =
         stories_index_cache_key(@company, @is_curator, filter_params)
       unless fragment_exist?(@stories_index_cache_key)
-        binding.remote_pry
         @stories = @company.filter_stories_by_tag(filter_params, @is_curator)
       end
-      @filtered_tag_id = filter_params[:id] # needed for options_for_select()
+      @pre_selected_filter = filter_params # needed for options_for_select()
       @category_select_cache_key =
         filter_select_cache_key(@company, @is_curator, 'category', filter_params)
       @product_select_cache_key =
         filter_select_cache_key(@company, @is_curator, 'product', filter_params)
 
-    elsif cookies[:csp_init]
-      @stories = []
     elsif @is_curator
-      story_ids = @company.all_stories
-      @stories = Story.find(story_ids)
-                      .sort_by { |story| story_ids.index(story.id) }
-      # TODO: set this cookie more broadly throughout app
-      cookies[:csp_init] = { value: true, expires: 1.hour.from_now }
+      unless fragment_exist?(@stories_index_cache_key)
+        story_ids = @company.all_stories
+        @stories = Story.find(story_ids)
+                        .sort_by { |story| story_ids.index(story.id) }
+      end
+
     else  # public reader
-      public_story_ids = @company.public_stories
-      # sort order is lost when .find takes an array of ids, so need to re-sort;
-      # ref: http://stackoverflow.com/questions/1680627
-      @stories = Story.find(public_story_ids)
-                      .sort_by { |story| public_story_ids.index(story.id) }
-      cookies[:csp_init] = { value: true, expires: 1.hour.from_now }
+      unless fragment_exist?(@stories_index_cache_key)
+        public_story_ids = @company.public_stories
+        # sort order is lost when .find takes an array of ids, so need to re-sort;
+        # ref: http://stackoverflow.com/questions/1680627
+        @stories = Story.find(public_story_ids)
+                        .sort_by { |story| public_story_ids.index(story.id) }
+      end
     end
   end
 

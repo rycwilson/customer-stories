@@ -11,12 +11,10 @@ function storiesIndexHandlers () {
         filterTag = $(this).attr('name').replace('_select', ''),
         filterId = $(this).val(),
         filterSlug = $(this).find("option[value='" + filterId + "']").data('slug'),
-        storiesTemplate = _.template($('#stories-template').html()),
-        filteredStories = [];
+        storiesTemplate = _.template($('#stories-template').html());
 
-    filteredStories = filterStories(filterTag, filterId);
     updateGallery($(storiesTemplate({
-                      stories: filteredStories,
+                      stories: filterStories(filterTag, filterId, filterSlug),
                       isCurator: app.current_user && app.current_user.is_curator
                     })));
     replaceStateStoriesIndex(filterTag, filterId, filterSlug);
@@ -26,30 +24,19 @@ function storiesIndexHandlers () {
 
 function storiesIndex () {
 
-  var $categorySelect = $("[name='category_select']"),
+  var $gallery = $('#stories-gallery'),
+      $categorySelect = $("[name='category_select']"),
       categorySlug = getQueryString('category'),
       $productSelect = $("[name='product_select']"),
       productSlug = getQueryString('product'),
       storiesTemplate = _.template($('#stories-template').html()),
-      // filtersTemplate = _.template($('#stories-filters-template').html()),
-      $gallery = $('#stories-gallery'),
-      isCurator = app.current_user && app.current_user.is_curator;
+      filterTag = categorySlug ? 'category' : (productSlug ? 'product' : null);
+      filterSlug = categorySlug ? categorySlug : (productSlug ? productSlug : null);
 
-  if ($gallery.children().length === 0 && app.stories.length !== 0 ) {
-    if (isCurator) {
-      updateGallery(
-        $(storiesTemplate({ stories: app.stories, isCurator: true }) ));
-    } else {
-      updateGallery(
-        $(storiesTemplate({
-            stories: app.stories.filter(function (story) {
-                       return story.logo_published; }),
-            isCurator: false }) ));
-    }
-  } else if (app.stories.length === 0) {
-    Cookies.remove('csp_init'); // let server know we don't have stories data
-    Turbolinks.visit('/');
-  }
+  updateGallery($(storiesTemplate({
+                    stories: filterStories(filterTag, null, filterSlug),
+                    isCurator: app.current_user && app.current_user.is_curator
+                  }) ));
 
   // selectBoxesTrackQueryString($categorySelect, categorySlug, $productSelect, productSlug);
 }
@@ -58,7 +45,7 @@ function filterStories (filterTag, filterId, filterSlug) {
 
   var isCurator = app.current_user && app.current_user.is_curator;
 
-  if (filterId === '0') {  // all stories
+  if (filterId === '0' || filterSlug === null) {  // all stories
     return isCurator ? app.stories :
            app.stories.filter(function (story) { return story.logo_published; });
   }
@@ -67,24 +54,24 @@ function filterStories (filterTag, filterId, filterSlug) {
       if (isCurator) {
         return story.success.story_categories.some(function (category) {
           // loosely typed because former is string, latter is number ...
-          return category.id == filterId;
+          return category.id == filterId || category.slug == filterSlug;
         });
       } else {
         return story.logo_published &&
           story.success.story_categories.some(function (category) {
             // loosely typed because former is string, latter is number ...
-            return category.id == filterId;
+            return category.id == filterId || category.slug == filterSlug;
           });
       }
     } else if (filterTag === 'product') {
       if (isCurator) {
         return story.success.products.some(function (product) {
-          return product.id == filterId;
+          return product.id == filterId || product.slug == filterSlug;
         });
       } else {
         return story.logo_published &&
           story.success.products.some(function (product) {
-            return product.id == filterId;
+            return product.id == filterId || product.slug == filterSlug;
           });
       }
     } else {

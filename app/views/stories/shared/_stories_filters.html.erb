@@ -9,7 +9,10 @@
     <div class='form-group'>
       <%= label_tag :category_select, "Category" %>&nbsp;
       <%= select_tag :category_select,
-        options_for_select(company.category_select_options.unshift(["All", 0]), pre_selected_filter),
+        options_for_select(
+          company.category_select_options.unshift(["All", 0]),
+          pre_selected_filter[:tag] == 'category' ? [pre_selected_filter[:id]] : []
+        ),
         { class: 'stories-filter category-select form-control' } %>
     </div>&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -18,7 +21,10 @@
     <div class='form-group'>
       <%= label_tag :category_select, "Category" %>&nbsp;
       <%= select_tag :category_select,
-        options_for_select(company.public_category_select_options, pre_selected_filter),
+        options_for_select(
+          company.public_category_select_options,
+          pre_selected_filter[:tag] == 'category' ? [pre_selected_filter[:id]] : []
+        ),
         { class: 'stories-filter category-select form-control' } %>
     </div>&nbsp;&nbsp;&nbsp;&nbsp;
 
@@ -33,7 +39,10 @@
     <div class="form-group">
       <%= label_tag :product_select, "Product" %>&nbsp;
       <%= select_tag :product_select,
-        options_for_select(company.product_select_options.unshift(["All", 0]), pre_selected_filter),
+        options_for_select(
+          company.product_select_options.unshift(["All", 0]),
+          pre_selected_filter[:tag] == 'product' ? [pre_selected_filter[:id]] : []
+        ),
         { class: 'stories-filter product-select form-control' } %>
     </div>
 
@@ -42,7 +51,10 @@
     <div class="form-group">
       <%= label_tag :product_select, "Product" %>&nbsp;
       <%= select_tag :product_select,
-        options_for_select(company.public_product_select_options, pre_selected_filter),
+        options_for_select(
+          company.public_product_select_options,
+          pre_selected_filter[:tag] == 'product' ? [pre_selected_filter[:id]] : []
+        ),
         { class: 'stories-filter product-select form-control' } %>
     </div>
 
