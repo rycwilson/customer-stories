@@ -92,9 +92,9 @@ class User < ActiveRecord::Base
   def expire_contributor_fragment_cache
     self.own_contributions.each do |contribution|
       story = contribution.success.story
-      expire_fragment("#{company.subdomain}/story-#{story.id}-\
+      self.expire_fragment("#{company.subdomain}/story-#{story.id}-\
                        contributor-#{self.id}")
-      expire_fragment("#{company.subdomain}/story-#{story.id}-contributors")
+      self.expire_fragment("#{company.subdomain}/story-#{story.id}-contributors")
     end
   end
 

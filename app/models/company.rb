@@ -209,7 +209,7 @@ class Company < ActiveRecord::Base
       if category_id.to_i == 0 # new (custom or default) tag
         self.story_categories << StoryCategory.create(name: category_id)
         # expire filter select fragment cache
-        company.increment_curator_category_select_fragments_memcache_iterator
+        self.increment_curator_category_select_fragments_memcache_iterator
       else
         # do nothing
       end
@@ -231,7 +231,7 @@ class Company < ActiveRecord::Base
       if product_id.to_i == 0 # new tag
         self.products << Product.create(name: product_id)
         # expire cache
-        company.increment_curator_product_select_fragments_memcache_iterator
+        self.increment_curator_product_select_fragments_memcache_iterator
       else
         # do nothing
       end
@@ -245,17 +245,17 @@ class Company < ActiveRecord::Base
   #
   def expire_filter_select_fragments_on_tag_destroy tag, tag_instances
     if tag == 'category'
-      company.increment_curator_category_select_fragments_memcache_iterator
+      self.increment_curator_category_select_fragments_memcache_iterator
     elsif tag == 'product'
-      company.increment_curator_product_select_fragments_memcache_iterator
+      self.increment_curator_product_select_fragments_memcache_iterator
     end
     # check for tagged stories -> expire public filter select fragments
     tag_instances.each do |tag_instance|
       if tag_instance.success.story.logo_published?
         if tag == 'category'
-          company.increment_public_category_select_fragments_memcache_iterator
+          self.increment_public_category_select_fragments_memcache_iterator
         elsif tag == 'product'
-          company.increment_public_product_select_fragments_memcache_iterator
+          self.increment_public_product_select_fragments_memcache_iterator
         end
       end
     end

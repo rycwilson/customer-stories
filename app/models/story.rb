@@ -72,8 +72,8 @@ class Story < ActiveRecord::Base
           (story.previous_changes.keys & ['embed_url', 'quote', 'quote_attr']).any?
         }
 
-  after_commit :expire_csp_story_path_cache,
-               :expire_story_narration_fragment_cache, on: :update, if:
+  after_commit :expire_story_narration_fragment_cache,
+               :expire_fragment_cache_on_path_change, on: :update, if:
         Proc.new { |story| story.previous_changes.key?('title') }
 
   after_commit :expire_story_narration_fragment_cache, on: :update, if:
@@ -351,8 +351,9 @@ class Story < ActiveRecord::Base
   end
 
   def expire_published_contributors_cache
+    company = self.success.company
     Rails.cache.delete("#{company.subdomain}/story-#{self.id}-published-contributors")
-    self.success.customer.company.expire_all_stories_json_cache
+    company.expire_all_stories_json_cache
   end
 
   # not currently used, maybe include with json api
@@ -380,9 +381,9 @@ class Story < ActiveRecord::Base
                              #{self.id}-#{memcache_iterator}"
     public_tile_fragment = "#{company.subdomain}/public-story-tile-\
                             #{self.id}-#{memcache_iterator}"
-    expire_fragment(curator_tile_fragment)
+    self.expire_fragment(curator_tile_fragment)
     # public tile fragment will not exist if this is first time logo published
-    expire_fragment(public_tile_fragment) if fragment_exist?(public_tile_fragment)
+    self.expire_fragment(public_tile_fragment) if fragment_exist?(public_tile_fragment)
   end
 
   # expire fragment cache for the stories index (gallery of tiles)
@@ -396,25 +397,25 @@ class Story < ActiveRecord::Base
              #{company.public_stories_index_fragments_memcache_iterator}"
 
     # expire curator-stories-index-all-0 (all story tiles)
-    expire_fragment("#{company.subdomain}/curator-stories-index-all-0-#{csimi}")
+    self.expire_fragment("#{company.subdomain}/curator-stories-index-all-0-#{csimi}")
     # expire public-stories-index-all-0
-    expire_fragment("#{company.subdomain}/public-stories-index-all-0-#{psimi}")
+    self.expire_fragment("#{company.subdomain}/public-stories-index-all-0-#{psimi}")
 
     categories.each do |category|
       # expire curator-stories-index-category-xx,
-      expire_fragment(
+      self.expire_fragment(
         "#{company.subdomain}/curator-stories-index-category-#{category.id}-#{csimi}")
       # expire public-stories-index-product-xx,
-      expire_fragment(
+      self.expire_fragment(
         "#{company.subdomain}/public-stories-index-category-#{category.id}-#{psimi}")
     end
 
     products.each do |product|
       # expire curator-stories-index-product-xx,
-      expire_fragment(
+      self.expire_fragment(
         "#{company.subdomain}/curator-stories-index-product-#{product.id}-#{csimi}")
       # expire public-stories-index-category-xx,
-      expire_fragment(
+      self.expire_fragment(
         "#{company.subdomain}/public-stories-index-product-#{product.id}-#{psimi}")
     end
   end
@@ -434,25 +435,25 @@ class Story < ActiveRecord::Base
     company = self.success.company
     if self.logo_published
       self.expire_story_tile_fragment_cache
-      expire_fragment(
+      self.expire_fragment(
         "#{company.subdomain}/curator-stories-index-all-0-memcache-iterator-\
          #{company.curator_stories_index_fragments_memcache_iterator}")
-      expire_fragment(
+      self.expire_fragment(
         "#{company.subdomain}/public-stories-index-all-0-memcache-iterator-\
          #{company.public_stories_index_fragments_memcache_iterator}")
       self.success.story_categories.each do |category|
-        expire_fragment(
+        self.expire_fragment(
           "#{company.subdomain}/curator-stories-index-category-#{category.id}-\
            memcache-iterator-#{company.curator_stories_index_fragments_memcache_iterator}")
-        expire_fragment(
+        self.expire_fragment(
           "#{company.subdomain}/public-stories-index-category-#{category.id}-\
            memcache-iterator-#{company.public_stories_index_fragments_memcache_iterator}")
       end
       self.success.products.each do |product|
-        expire_fragment(
+        self.expire_fragment(
           "#{company.subdomain}/curator-stories-index-product-#{product.id}-\
            memcache-iterator-#{company.curator_stories_index_fragments_memcache_iterator}")
-        expire_fragment(
+        self.expire_fragment(
           "#{company.subdomain}/public-stories-index-product-#{product.id}-\
            memcache-iterator-#{company.public_stories_index_fragments_memcache_iterator}")
       end
@@ -464,7 +465,8 @@ class Story < ActiveRecord::Base
   end
 
   def expire_story_testimonial_fragment_cache
-    expire_fragment("#{@company.subdomain}/story-#{self.id}-testimonial")
+    company = self.success.customer.company
+    self.expire_fragment("#{company.subdomain}/story-#{self.id}-testimonial")
   end
 
   def expire_story_video_info_cache
@@ -473,15 +475,18 @@ class Story < ActiveRecord::Base
   end
 
   def expire_story_video_xs_fragment_cache
-    expire_fragment("#{@company.subdomain}/story-#{self.id}-video-xs")
+    company = self.success.customer.company
+    self.expire_fragment("#{company.subdomain}/story-#{self.id}-video-xs")
   end
 
   def expire_story_narration_fragment_cache
-    expire_fragment("#{@company.subdomain}/story-#{self.id}-narration")
+    company = self.success.customer.company
+    self.expire_fragment("#{company.subdomain}/story-#{self.id}-narration")
   end
 
   def expire_results_fragment_cache
-    expire_fragment("#{@company.subdomain}/story-#{self.id}-results")
+    company = self.success.customer.company
+    self.expire_fragment("#{company.subdomain}/story-#{self.id}-results")
   end
 
   def contributors_jsonld

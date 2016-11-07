@@ -34,32 +34,32 @@ class Customer < ActiveRecord::Base
              #{company.public_stories_index_fragments_memcache_iterator}"
 
     # expire curator-stories-index-all-0, public-stories-index-all-0
-    expire_fragment(
+    self.expire_fragment(
       "#{company.subdomain}/curator-stories-index-all-0-#{csimi}")
-    expire_fragment(
+    self.expire_fragment(
       "#{company.subdomain}/public-stories-index-all-0-#{psimi}")
 
     successes.each do |success|
       story = success.story
       if story.logo_published?
         # expire story tile fragments ...
-        expire_fragment(
+        self.expire_fragment(
           "#{company.subdomain}/curator-story-tile-#{story.id}-\
            memcache-iterator-#{company.story_tile_fragments_memcache_iterator}")
-        expire_fragment(
+        self.expire_fragment(
           "#{company.subdomain}/public-story-tile-#{story.id}-\
            memcache-iterator-#{company.story_tile_fragments_memcache_iterator}")
         # expire stories index fragments for affected filters ...
         success.story_categories.each do |category|
-          expire_fragment(
+          self.expire_fragment(
             "#{company.subdomain}/curator-stories-index-category-#{category.id}-#{csimi}")
-          expire_fragment(
+          self.expire_fragment(
             "#{company.subdomain}/public-stories-index-category-#{category.id}-#{psimi}")
         end
         success.products.each do |product|
-          expire_fragment(
+          self.expire_fragment(
             "#{company.subdomain}/curator-stories-index-product-#{product.id}-#{csimi}")
-          expire_fragment(
+          self.expire_fragment(
             "#{company.subdomain}/public-stories-index-product-#{product.id}-#{psimi}")
         end
       end
@@ -78,14 +78,14 @@ class Customer < ActiveRecord::Base
 
   def expire_story_header_fragment_cache
     company = self.company
-    expire_fragment("#{company.subdomain}/story-#{@story.id}-header")
-    expire_fragment("#{company.subdomain}/story-#{@story.id}-header-not-production")
+    self.expire_fragment("#{company.subdomain}/story-#{@story.id}-header")
+    self.expire_fragment("#{company.subdomain}/story-#{@story.id}-header-not-production")
   end
 
   def expire_story_testimonial_fragment_cache
     company = self.company
     self.successes.each do |success|
-      expire_fragment("#{company.subdomain}/story-#{success.story.id}-testimonial")
+      self.expire_fragment("#{company.subdomain}/story-#{success.story.id}-testimonial")
     end
   end
 
