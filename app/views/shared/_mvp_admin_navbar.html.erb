@@ -26,11 +26,23 @@
       <%= render 'shared/admin_navbar_header' %>
 
     </div>
-    <div class="hidden-xs col-sm-2 text-right pull-right">
 
-      <%= render 'shared/admin_navbar_session' %>
+    <% if controller_name == 'stories' && action_name == 'show' %>
 
-    </div>
+      <button class='btn btn-success'>Call to Action</button>
+
+    <% elsif user_signed_in? %>
+
+      <div class="hidden-xs col-sm-2 text-right pull-right">
+        <%= link_to 'Sign out', destroy_user_session_path,
+            method: :delete, class: 'btn btn-xs btn-default' %>
+      </div>
+
+    <% elsif  %>
+
+
+
+    <% end %>
 
   <!-- </div> -->
   </div>
