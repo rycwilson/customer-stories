@@ -378,7 +378,7 @@ class Company < ActiveRecord::Base
   def increment_public_category_select_fragments_memcache_iterator
     Rails.cache.write(
       "#{self.subdomain}/public-category-select-fragments-memcache-iterator",
-      self.category_select_fragments_memcache_iterator + 1)
+      self.public_category_select_fragments_memcache_iterator + 1)
   end
 
   def public_product_select_fragments_memcache_iterator
@@ -389,7 +389,7 @@ class Company < ActiveRecord::Base
   def increment_public_product_select_fragments_memcache_iterator
     Rails.cache.write(
       "#{self.subdomain}/public-product-select-fragments-memcache-iterator",
-      self.product_select_fragments_memcache_iterator + 1)
+      self.public_product_select_fragments_memcache_iterator + 1)
   end
 
 end

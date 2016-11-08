@@ -130,24 +130,7 @@ class StoriesController < ApplicationController
       @base_url = request.base_url  # needed for deleting a result
       respond_to { |format| format.js { render action: 'create_prompt_success' } }
     elsif params[:story][:embed_url]  # embedded video
-      if params[:story][:embed_url].include? "youtube"
-        # https://www.youtube.com/watch?v=BAjqPZY8sFg
-        # or
-        # https://www.youtube.com/embed/BAjqPZY8sFg
-        youtube_id = params[:story][:embed_url].match(/(v=|\/)(?<id>\w+)$/)[:id]
-        story.update embed_url: "https://www.youtube.com/embed/#{youtube_id}"
-      elsif params[:story][:embed_url].include? "vimeo"
-        vimeo_id = params[:story][:embed_url].match(/\/(?<id>\d+)$/)[:id]
-        story.update embed_url: "https://player.vimeo.com/video/#{vimeo_id}"
-      elsif params[:story][:embed_url].include? "wistia"
-        # https://fast.wistia.com/embed/medias/avk9twrrbn.jsonp (standard)
-        # or
-        # https://fast.wistia.net/embed/iframe/avk9twrrbn (fallback)
-        wistia_id = params[:story][:embed_url].match(/\/(?<id>\w+)($|\.\w+$)/)[:id]
-        story.update embed_url: "https://fast.wistia.com/embed/medias/#{wistia_id}.jsonp"
-      elsif params[:story][:embed_url].blank?
-        story.update embed_url: nil
-      end
+      story.update embed_url: new_embed_url_formatted(params[:story][:embed_url])
       # respond with json because we need to update the video iframe
       # with the modified url ...
       respond_to do |format|
@@ -257,6 +240,27 @@ class StoriesController < ApplicationController
       return redirect_to @story.csp_story_path, status: :moved_permanently
     elsif !@story.published? && !company_curator?(company.id)
       return redirect_to root_url(subdomain:request.subdomain, host:request.domain)
+    end
+  end
+
+  def new_embed_url_formatted new_embed_url
+    if new_embed_url.include? "youtube"
+      # https://www.youtube.com/watch?v=BAjqPZY8sFg
+      # or
+      # https://www.youtube.com/embed/BAjqPZY8sFg
+      youtube_id = new_embed_url.match(/(v=|\/)(?<id>\w+)$/)[:id]
+      YOUTUBE_BASE_URL + "#{youtube_id}"
+    elsif new_embed_url.include? "vimeo"
+      vimeo_id = new_embed_url.match(/\/(?<id>\d+)$/)[:id]
+      VIMEO_BASE_URL + "#{vimeo_id}"
+    elsif new_embed_url.include? "wistia"
+      # https://fast.wistia.com/embed/medias/avk9twrrbn.jsonp (standard)
+      # or
+      # https://fast.wistia.net/embed/iframe/avk9twrrbn (fallback)
+      wistia_id = new_embed_url.match(/\/(?<id>\w+)($|\.\w+$)/)[:id]
+      WISTIA_BASE_URL + "#{wistia_id}.jsonp"
+    elsif new_embed_url.blank?
+      nil
     end
   end
 

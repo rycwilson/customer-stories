@@ -64,7 +64,7 @@ class Story < ActiveRecord::Base
   after_commit :expire_story_video_info_cache,
                :expire_story_video_xs_fragment_cache, on: :update, if:
         Proc.new { |story|
-          story.previous_changes.key('embed_url')
+          story.previous_changes.key?('embed_url')
         }
 
   after_commit :expire_story_testimonial_fragment_cache, on: :update, if:
@@ -72,8 +72,8 @@ class Story < ActiveRecord::Base
           (story.previous_changes.keys & ['embed_url', 'quote', 'quote_attr']).any?
         }
 
-  after_commit :expire_story_narration_fragment_cache,
-               :expire_fragment_cache_on_path_change, on: :update, if:
+  after_commit :expire_csp_story_path_cache,
+               :expire_story_narration_fragment_cache, on: :update, if:
         Proc.new { |story| story.previous_changes.key?('title') }
 
   after_commit :expire_story_narration_fragment_cache, on: :update, if:
@@ -117,13 +117,13 @@ class Story < ActiveRecord::Base
   end
 
   def update_tags company, new_tags
-    old_category_tags = self.success.story_categories
-    old_product_tags = self.success.products
+    existing_category_tags = self.success.story_categories
+    existing_product_tags = self.success.products
     category_tags_changed = false
     product_tags_changed = false
 
     # remove deleted category tags ...
-    old_category_tags.each do |category|
+    existing_category_tags.each do |category|
       unless (new_tags.try(:[], :category_tags)) &&
           (new_tags.try(:[], :category_tags).include? category.id.to_s)
         StoryCategoriesSuccess.where("success_id = ? AND story_category_id = ?",
@@ -134,7 +134,7 @@ class Story < ActiveRecord::Base
     # add new category tags ...
     unless new_tags.try(:[], :category_tags).nil?
       new_tags[:category_tags].each do |category_id|
-        unless old_category_tags.any? { |category| category.id == category_id.to_i }
+        unless existing_category_tags.any? { |category| category.id == category_id.to_i }
           self.success.story_categories << StoryCategory.find(category_id.to_i)
           category_tags_changed = true
         end
@@ -142,7 +142,7 @@ class Story < ActiveRecord::Base
     end
 
     # remove deleted product tags ...
-    old_product_tags.each do |product|
+    existing_product_tags.each do |product|
       unless (new_tags.try(:[], :product_tags)) &&
           (new_tags.try(:[], :product_tags).include? product.id.to_s)
         ProductsSuccess.where("success_id = ? AND product_id = ?",
@@ -154,7 +154,7 @@ class Story < ActiveRecord::Base
     # add new product tags ...
     unless new_tags.try(:[], :product_tags).nil?
       new_tags[:product_tags].each do |product_id|
-        unless old_product_tags.any? { |product| product.id == product_id.to_i }
+        unless existing_product_tags.any? { |product| product.id == product_id.to_i }
           self.success.products << Product.find(product_id.to_i)
           product_tags_changed = true
         end
@@ -196,8 +196,9 @@ class Story < ActiveRecord::Base
   end
 
   def expire_csp_story_path_cache
+    company = self.success.customer.company
+    company.expire_all_stories_json_cache
     Rails.cache.delete("#{company.subdomain}/csp-story-#{self.id}-path")
-    self.success.customer.company.expire_all_stories_json_cache
     self.expire_fragment_cache_on_path_change
   end
 
@@ -350,26 +351,13 @@ class Story < ActiveRecord::Base
     end
   end
 
-  def expire_published_contributors_cache
-    company = self.success.company
+  def expire_published_contributor_cache contributor_id
+    company = self.success.customer.company
     Rails.cache.delete("#{company.subdomain}/story-#{self.id}-published-contributors")
     company.expire_all_stories_json_cache
-  end
-
-  # not currently used, maybe include with json api
-  def published_tags
-    return nil unless self.published?
-    { categories: self.success.story_categories.map { |c| { name: c.name, slug: c.slug } },
-      products: self.success.products.map { |p| { name: p.name, slug: p.slug } }}
-  end
-
-  # not currently used, maybe include with json api
-  def published_content
-    return nil unless self.published?
-    { title: title,
-      quote: quote,
-      quote_attr: quote_attr,
-      content: content }
+    self.expire_fragment("#{company.subdomain}/story-#{self.id}-contributors")
+    self.expire_fragment(
+      "#{company.subdomain}/story-#{self.id}-contributor-#{contributor_id}")
   end
 
   # expire fragment cache for a single story tile (curator and public)
@@ -421,9 +409,9 @@ class Story < ActiveRecord::Base
   end
 
   def expire_filter_select_fragment_cache
-    company = self.success.customer.company
     success = self.success
-    if success.categories.present?
+    company = success.customer.company
+    if success.story_categories.present?
       company.increment_public_category_select_fragments_memcache_iterator
     end
     if success.products.present?
@@ -432,9 +420,10 @@ class Story < ActiveRecord::Base
   end
 
   def expire_fragment_cache_on_path_change
-    company = self.success.company
+    company = self.success.customer.company
     if self.logo_published
       self.expire_story_tile_fragment_cache
+
       self.expire_fragment(
         "#{company.subdomain}/curator-stories-index-all-0-memcache-iterator-\
          #{company.curator_stories_index_fragments_memcache_iterator}")
@@ -507,5 +496,21 @@ class Story < ActiveRecord::Base
                                 "name" => product.name }
                             end
   end
+
+  # not currently used, maybe include with json api
+  # def published_tags
+  #   return nil unless self.published?
+  #   { categories: self.success.story_categories.map { |c| { name: c.name, slug: c.slug } },
+  #     products: self.success.products.map { |p| { name: p.name, slug: p.slug } }}
+  # end
+
+  # # not currently used, maybe include with json api
+  # def published_content
+  #   return nil unless self.published?
+  #   { title: title,
+  #     quote: quote,
+  #     quote_attr: quote_attr,
+  #     content: content }
+  # end
 
 end

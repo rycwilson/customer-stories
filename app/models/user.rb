@@ -29,15 +29,12 @@ class User < ActiveRecord::Base
   # if user doesn't have a linkedin_url, unpublish any contributions
   after_commit :update_contributions, on: :update
 
-  after_commit :expire_published_contributors_cache, on: :update, if:
+  after_commit :expire_published_contributor_cache, on: :update, if:
       Proc.new { |user|
         trigger_keys = ['first_name', 'last_name', 'linkedin_url', 'linkedin_title',
             'linkedin_photo_url', 'linkedin_company', 'linkedin_location']
         (user.previous_changes.keys & trigger_keys).any?
       }
-
-  after_commit :expire_contributor_fragment_cache, on: :update, if:
-              Proc.new { |user| previous_changes.key?('linkedin_url') }
 
   # for changing password
   attr_accessor :current_password
@@ -81,20 +78,12 @@ class User < ActiveRecord::Base
     end
   end
 
-  def expire_published_contributors_cache
-    self.own_contributions.each do |contribution|
-      if contribution.publish_contributor?
-        contribution.success.story.expire_published_contributors_cache
-      end
-    end
-  end
-
-  def expire_contributor_fragment_cache
+  def expire_published_contributor_cache
     self.own_contributions.each do |contribution|
       story = contribution.success.story
-      self.expire_fragment("#{company.subdomain}/story-#{story.id}-\
-                       contributor-#{self.id}")
-      self.expire_fragment("#{company.subdomain}/story-#{story.id}-contributors")
+      if contribution.publish_contributor?
+        story.expire_published_contributor_cache(self.id)
+      end
     end
   end
 

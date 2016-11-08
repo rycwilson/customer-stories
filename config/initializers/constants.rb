@@ -27,6 +27,10 @@ TRUNITY_ADROLL_ADV_ID = "OYBCTHF2DBDYRHEAC5ILVM"
 TRUNITY_ADROLL_PIX_ID = "P77666QEWVCZJJXSGS32MX"
 TRUNITY_ADROLL_WIDGET_SEGMENT_ID = "6635e16c"
 
+YOUTUBE_BASE_URL = "https://www.youtube.com/embed/"
+VIMEO_BASE_URL = "https://player.vimeo.com/video/"
+WISTIA_BASE_URL = "https://fast.wistia.com/embed/medias/"
+
 CS_LOGO_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/cs_logo.png"
 CS_FULL_LOGO_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/cs_logo_full_1200x630.png"
 CS_POWERED_LOGO_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/CS-powered-by.png"

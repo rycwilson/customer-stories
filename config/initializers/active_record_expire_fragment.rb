@@ -5,7 +5,13 @@
 # and may not be the most sustainable solution
 # ref: http://stackoverflow.com/questions/393395
 class ActiveRecord::Base
+
   def expire_fragment(*args)
     ActionController::Base.new.expire_fragment(*args)
   end
+
+  def fragment_exist?(*args)
+    ActionController::Base.new.expire_fragment(*args)
+  end
+
 end

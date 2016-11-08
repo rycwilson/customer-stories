@@ -27,7 +27,7 @@ class Contribution < ActiveRecord::Base
   validates :remind_1_wait, numericality: { only_integer: true }
   validates :remind_2_wait, numericality: { only_integer: true }
 
-  after_commit :expire_published_contributors_cache, on: :update, if:
+  after_commit :expire_published_contributor_cache, on: :update, if:
         Proc.new { |contribution|
           contribution.previous_changes.key?('publish_contributor')
         }
@@ -135,9 +135,9 @@ class Contribution < ActiveRecord::Base
     { subject: subject, body: body }
   end
 
-  def expire_published_contributors_cache
+  def expire_published_contributor_cache
     story = self.success.story
-    story.expire_published_contributors_cache
+    story.expire_published_contributor_cache(self.contributor.id)
   end
 
 end
