@@ -20,34 +20,77 @@
 
 <div class='wrapper'>
 
-  <% if @company.curator?(current_user) %>
+  <% if @is_curator %>
 
     <%= render 'shared/company_navbar', { company: @company, workflow_tab: nil } %>
 
   <% end %>
 
   <!-- customer name, social sharing  -->
-  <div class="mainnav">
+  <!--  -->
+  <div class="mainnav" style='min-height:42px!important'>
 
     <!-- clicky_log class present only for production, so separate the fragments -->
-    <% if production? %>
+    <% if @is_curator && production? %>
 
-      <% cache("#{@company.subdomain}/story-#{@story.id}-header",
+      <% cache("#{@company.subdomain}/curator-story-header-production",
                skip_digest: true) do %>
         <%= render 'stories/shared/story_header',
-            { story: @story, customer: @story.success.customer } %>
+            { story: @story, is_curator: true, production: true,
+              customer: @story.success.customer } %>
+      <% end %>
+
+    <% elsif @is_curator %>
+
+      <% cache("#{@company.subdomain}/curator-story-header-not-production",
+               skip_digest: true) do %>
+        <%= render 'stories/shared/story_header',
+            { story: @story, is_curator: true, production: false,
+              customer: @story.success.customer  } %>
+      <% end %>
+
+    <% elsif production? %>
+
+      <% cache("#{@company.subdomain}/public-story-header-production",
+               skip_digest: true) do %>
+        <%= render 'stories/shared/story_header',
+            { story: @story, is_curator: false, production: true,
+              customer: @story.success.customer } %>
       <% end %>
 
     <% else %>
 
-      <% cache("#{@company.subdomain}/story-#{@story.id}-header-not-production",
+      <% cache("#{@company.subdomain}/public-story-header-not-production",
                skip_digest: true) do %>
-        <%= render 'stories/shared/story_header_not_production',
-            { story: @story, customer: @story.success.customer } %>
+        <%= render 'stories/shared/story_header',
+            { story: @story, is_curator: false, production: false,
+              customer: @story.success.customer } %>
       <% end %>
 
     <% end %>
 
+  </div>
+
+  <div class="container">
+    <div id='story-customer-name' class="row" style='margin-bottom:10px'>
+
+      <div class='story-nav hidden-xs col-sm-2' style='padding-left:27px'>
+        <%= link_to root_path do %>
+          <span class='glyphicon glyphicon-chevron-left'
+              style='color:#337ab7; margin-right:5px'>
+          </span>More stories</span>
+        <% end %>
+      </div>
+
+      <div class='col-xs-12 col-sm-8 text-center'>
+        <h3 style='margin-bottom:0'><%= @story.success.customer.name %></h3>
+      </div>
+
+      <div class="col-sm-2">
+        <!-- filler -->
+      </div>
+
+    </div>
   </div>
 
   <div id='story-section-testimonial'>  <!-- includes video -->

@@ -4,6 +4,7 @@ class StoriesController < ApplicationController
 
   before_action :set_company
   before_action :set_story, only: [:edit, :approval]
+  before_action only: [:index, :show] { @is_curator = @company.curator?(current_user) }
   before_action only: [:edit] { user_authorized?(@story, current_user) }
   before_action only: [:index, :show, :edit] { set_gon(@company) }
   before_action only: [:show] { set_public_story_or_redirect(@company) }
@@ -11,8 +12,6 @@ class StoriesController < ApplicationController
   before_action :set_s3_direct_post, only: :edit
 
   def index
-    @is_curator = @company.curator?(current_user)
-
     # these will get overwritten below if there's a query filter ...
     @pre_selected_filter = { tag: 'all', id: 0 }
     @stories_index_cache_key =

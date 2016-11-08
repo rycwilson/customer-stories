@@ -7,9 +7,9 @@ Rails.application.configure do
 
   # config.cache_store = :null_store
   # global memcached enable/disable
-  config.perform_caching = true
+  config.perform_caching = false
   # fragment and page caching
-  config.action_controller.perform_caching = true
+  config.action_controller.perform_caching = false
   config.cache_store = :dalli_store,
                        'localhost:11211',
                        {:failover => true,
