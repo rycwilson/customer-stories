@@ -14,7 +14,7 @@
 
     <!-- logo -->
     <div id='story-customer-logo-col'
-         class='col-xs-3
+         class='text-center col-xs-3
                <%= story.embed_url.present? ? 'col-sm-12' : '' %>'>
       <img id='story-customer-logo'
         src="<%= story.success.customer.logo_url || asset_path('company-logo-missing.png') %>">
