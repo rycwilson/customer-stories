@@ -365,10 +365,10 @@ class Story < ActiveRecord::Base
     company = self.success.customer.company
     memcache_iterator =
       "memcache-iterator-#{company.story_tile_fragments_memcache_iterator}"
-    curator_tile_fragment = "#{company.subdomain}/curator-story-tile-\
-                             #{self.id}-#{memcache_iterator}"
-    public_tile_fragment = "#{company.subdomain}/public-story-tile-\
-                            #{self.id}-#{memcache_iterator}"
+    curator_tile_fragment = "#{company.subdomain}/curator-story-tile-" +
+                            "#{self.id}-#{memcache_iterator}"
+    public_tile_fragment = "#{company.subdomain}/public-story-tile-" +
+                           "#{self.id}-#{memcache_iterator}"
     self.expire_fragment(curator_tile_fragment)
     # public tile fragment will not exist if this is first time logo published
     self.expire_fragment(public_tile_fragment) if fragment_exist?(public_tile_fragment)
@@ -379,10 +379,10 @@ class Story < ActiveRecord::Base
     company = self.success.customer.company
     categories = self.success.story_categories
     products = self.success.products
-    csimi = "memcache-iterator-\
-             #{company.curator_stories_index_fragments_memcache_iterator}"
-    psimi = "memcache-iterator-\
-             #{company.public_stories_index_fragments_memcache_iterator}"
+    csimi = "memcache-iterator-" +
+            "#{company.curator_stories_index_fragments_memcache_iterator}"
+    psimi = "memcache-iterator-" +
+            "#{company.public_stories_index_fragments_memcache_iterator}"
 
     # expire curator-stories-index-all-0 (all story tiles)
     self.expire_fragment("#{company.subdomain}/curator-stories-index-all-0-#{csimi}")
@@ -425,26 +425,26 @@ class Story < ActiveRecord::Base
       self.expire_story_tile_fragment_cache
 
       self.expire_fragment(
-        "#{company.subdomain}/curator-stories-index-all-0-memcache-iterator-\
-         #{company.curator_stories_index_fragments_memcache_iterator}")
+        "#{company.subdomain}/curator-stories-index-all-0-memcache-iterator-" +
+        "#{company.curator_stories_index_fragments_memcache_iterator}")
       self.expire_fragment(
-        "#{company.subdomain}/public-stories-index-all-0-memcache-iterator-\
-         #{company.public_stories_index_fragments_memcache_iterator}")
+        "#{company.subdomain}/public-stories-index-all-0-memcache-iterator-" +
+        "#{company.public_stories_index_fragments_memcache_iterator}")
       self.success.story_categories.each do |category|
         self.expire_fragment(
-          "#{company.subdomain}/curator-stories-index-category-#{category.id}-\
-           memcache-iterator-#{company.curator_stories_index_fragments_memcache_iterator}")
+          "#{company.subdomain}/curator-stories-index-category-#{category.id}-" +
+          "memcache-iterator-#{company.curator_stories_index_fragments_memcache_iterator}")
         self.expire_fragment(
-          "#{company.subdomain}/public-stories-index-category-#{category.id}-\
-           memcache-iterator-#{company.public_stories_index_fragments_memcache_iterator}")
+          "#{company.subdomain}/public-stories-index-category-#{category.id}-" +
+          "memcache-iterator-#{company.public_stories_index_fragments_memcache_iterator}")
       end
       self.success.products.each do |product|
         self.expire_fragment(
-          "#{company.subdomain}/curator-stories-index-product-#{product.id}-\
-           memcache-iterator-#{company.curator_stories_index_fragments_memcache_iterator}")
+          "#{company.subdomain}/curator-stories-index-product-#{product.id}-" +
+          "memcache-iterator-#{company.curator_stories_index_fragments_memcache_iterator}")
         self.expire_fragment(
-          "#{company.subdomain}/public-stories-index-product-#{product.id}-\
-           memcache-iterator-#{company.public_stories_index_fragments_memcache_iterator}")
+          "#{company.subdomain}/public-stories-index-product-#{product.id}-" +
+          "memcache-iterator-#{company.public_stories_index_fragments_memcache_iterator}")
       end
     end
   end

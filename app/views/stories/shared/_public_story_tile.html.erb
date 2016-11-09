@@ -1,6 +1,6 @@
 
-<% cache("#{company.subdomain}/public-story-tile-#{story.id}-\
-          memcache-iterator-#{company.story_tile_fragments_memcache_iterator}",
+<% cache("#{company.subdomain}/public-story-tile-#{story.id}-" +
+         "memcache-iterator-#{company.story_tile_fragments_memcache_iterator}",
          skip_digest: true) do %>
 
   <a href="<%= story.published ? story.csp_story_path : 'javascript:;' %>"
