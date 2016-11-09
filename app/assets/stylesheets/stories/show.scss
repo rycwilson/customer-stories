@@ -2,6 +2,12 @@
 #story-header {
   padding-left: 12px;
   font-size: 0;  // ref: http://stackoverflow.com/questions/13841387
+  .nav {
+    float: none;
+    display: inline-block;
+    font-size: 12px;
+    margin-bottom: 1px;
+  }
   h3 {
     float: none;
     display: inline-block;

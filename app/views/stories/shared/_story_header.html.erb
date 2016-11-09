@@ -5,6 +5,11 @@
 
     <div class="hidden-xs col-sm-9">
       <div>
+        <%= link_to root_path, class: 'nav' do %>
+          <span class='glyphicon glyphicon-chevron-left'
+                style='color:#337ab7; margin-right:5px'>
+          </span>
+        <% end %>
         <h3>Customer Story</h3>
         <% if is_curator %>
           <%= link_to 'Edit story', edit_story_path(story.id),

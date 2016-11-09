@@ -7,14 +7,14 @@
   to properly load
   http://stackoverflow.com/questions/17600093/rails-javascript-not-loading-after-clicking-through-link-to-helper
 -->
-<div class="container">
+<div class="container" style='padding-top:12px'>
 
   <div id='story-testimonial-col'
       class="col-xs-12 <%= story.embed_url.present? ? 'col-sm-6 col-md-7' : 'no-video' %>">
 
     <!-- logo -->
     <div id='story-customer-logo-col'
-         class='text-center col-xs-3
+         class='col-xs-3
                <%= story.embed_url.present? ? 'col-sm-12' : '' %>'>
       <img id='story-customer-logo'
         src="<%= story.success.customer.logo_url || asset_path('company-logo-missing.png') %>">
