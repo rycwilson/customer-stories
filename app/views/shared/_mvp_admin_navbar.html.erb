@@ -21,15 +21,28 @@
 <nav class="navbar navbar-default admin" role="banner" style="<%= admin_navbar_style %>">
   <div class="container-fluid">
 <!-- <div class="row"> -->
-    <div class="navbar-header col-xs-12 col-sm-10">
+    <div class="navbar-header col-xs-12 col-sm-6">
 
       <%= render 'shared/admin_navbar_header' %>
 
     </div>
 
+ <!-- style='display:inline-block;float:none' -->
     <% if controller_name == 'stories' && action_name == 'show' %>
 
-      <button class='btn btn-success'>Call to Action</button>
+      <div class='col-sm-3 col-sm-offset-2 col-md-2 col-md-offset-3'>
+        <!-- Single button -->
+        <button id='cta-btn' type="button" class="btn btn-warning" style='width:100%'>
+          Request Trial
+        </button>
+
+      </div>
+
+      <div class='col-sm-1'>
+        <!-- filler -->
+      </div>
+
+
 
     <% elsif user_signed_in? %>
 

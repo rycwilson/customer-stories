@@ -46,6 +46,52 @@
 
     <% end %>
 
+    <div id='learn-more' class='well' style='margin-top:15px!important'>
+      <h3 class='text-center'>Learn More</h3>
+
+      <div class="row">
+        <div class='col-xs-1'>
+          <i class='fa fa-hand-o-right'></i>
+        </div>
+        <div class='col-xs-11'>
+          <p><a href="javascript:;">Contact us</a></p>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class='col-xs-1'>
+          <i class='fa fa-hand-o-right'></i>
+        </div>
+        <div class='col-xs-11'>
+          <p><a href="javascript:;">Product Docs</a></p>
+        </div>
+      </div>
+
+      <!-- <div class='row'>
+
+        <div class="col-sm-8 col-sm-offset-2">
+          <button id='cta-btn' type="button" class="btn btn-info" style='width:100%'>
+            Contact Us
+          </button>
+
+          <button type="button" class="btn btn-info" style='width:80%'>Product Pages</button>
+          <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style='width:20%'>
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+          </button>
+          <ul class="dropdown-menu" style='width:100%'>
+            <li><a href="#">Action</a></li>
+            <li><a href="#">Another action</a></li>
+            <li><a href="#">Something else here</a></li>
+            <li role="separator" class="divider"></li>
+            <li><a href="#">Separated link</a></li>
+          </ul>
+
+        </div>
+      </div> -->
+
+    </div>
+
     <% cache("#{company.subdomain}/story-#{story.id}-contributors",
              skip_digest: true) do %>
 
