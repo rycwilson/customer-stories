@@ -153,6 +153,7 @@ class StoriesController < ApplicationController
 
   def destroy
     story = Story.find params[:id]
+    expire_cache_on_story_destroy story
     story.destroy
     redirect_to company_path(@company_id),
         flash: { info: "Story '#{story.title}' was deleted" }
@@ -411,6 +412,12 @@ class StoriesController < ApplicationController
         company.public_product_select_fragments_memcache_iterator
       end
     end
+  end
+
+  def expire_cache_on_story_destroy story
+    story.expire_stories_index_fragment_cache
+    story.expire_filter_select_fragment_cache
+    story.success.customer.company.expire_all_stories_json_cache
   end
 
 end
