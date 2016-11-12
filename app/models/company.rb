@@ -48,6 +48,10 @@ class Company < ActiveRecord::Base
     Story.order(Story.company_all_filter_product(self.id, product_id)).pluck(:id)
   end
 
+  def published_stories
+    Story.order(Story.company_published(self.id)).pluck(:id)
+  end
+
   def public_stories
     Story.order(Story.company_public(self.id)).pluck(:id)
   end

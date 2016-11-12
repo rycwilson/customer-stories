@@ -172,16 +172,6 @@
     text-decoration: underline;
   }
 
-  .bip-clickable {
-    height: 28px;
-    width: 28px;
-    color: #666;
-    border: 1px solid #e3e3e3;
-    border-radius: 3px;
-    padding: 5px;
-    font-size: 1.2em;
-    cursor: pointer;
-  }
 
   /* The font-size needs to be slightly different for the font awesome icons,
      to achieve consistent layout */
@@ -196,10 +186,6 @@
     cursor: pointer;
   }
 
-  .bip-clickable:hover, .bip-clickable-fa:hover  {
-    color: white !important;
-    background-color: rgb(14, 122, 254); // #4885ed; //#666;
-  }
 
   /* make edit field stand out when hover over edit button */
   #edit-story-title:hover + #story-title,

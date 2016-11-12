@@ -1,284 +1,466 @@
 
-#story-header {
-  padding-left: 12px;
-  font-size: 0;  // ref: http://stackoverflow.com/questions/13841387
-  .nav {
-    float: none;
-    display: inline-block;
-    font-size: 12px;
-    margin-bottom: 1px;
+.stories.show {
+
+  #story-header {
+    padding-left: 12px;
+    font-size: 0;  // ref: http://stackoverflow.com/questions/13841387
+    .nav {
+      float: none;
+      display: inline-block;
+      font-size: 12px;
+      margin-bottom: 1px;
+    }
+    h3 {
+      float: none;
+      display: inline-block;
+      margin-top: 14px;
+      margin-bottom: 0;
+      vertical-align: bottom;
+      font-size: 20px;
+      color: #b3b3b3;
+    }
+    .btn {
+      float: none;
+      display: inline-block;
+      margin-left: 16px;
+    }
+    #social-buttons {
+      margin-top: 8px;
+      float: none;
+      display: inline-block;
+      a {
+        margin-right: 4px;
+      }
+    }
+
   }
-  h3 {
-    float: none;
-    display: inline-block;
-    margin-top: 14px;
-    margin-bottom: 0;
-    vertical-align: bottom;
-    font-size: 20px;
-    color: #b3b3b3;
-  }
-  .btn {
-    float: none;
-    display: inline-block;
-    margin-left: 16px;
-  }
-  #social-buttons {
-    margin-top: 8px;
-    float: none;
-    display: inline-block;
+
+  .prev-next {
+    position: static;
+    height: 0;
+    width: 0;
+    .prev, .next {
+      position: fixed;
+      height: 5.4rem;
+      left: 50%;
+      top: 28.7rem;
+      width: 4.4rem;
+      z-index: 100;
+    }
+    .prev {
+      // margin-left: -58.4rem;   see media queries below
+      a {
+        left: 0;
+        right: auto;
+      }
+      a:hover {
+        margin: -5.4rem 0 0 0;
+      }
+      a:hover:before {
+        background: transparent;
+        content: 'NEXT STORY';
+        background-image: initial;
+        background-position-x: initial;
+        background-position-y: initial;
+        background-size: initial;
+        background-repeat-x: initial;
+        background-repeat-y: initial;
+        background-attachment: initial;
+        background-origin: initial;
+        background-clip: initial;
+        background-color: transparent;
+        color: #767676;
+        font-size: 0.8rem;
+        left: 1rem;
+        position: absolute;
+        top: 0.6rem;
+        -webkit-transform: none;
+        transform: none;
+        white-space: nowrap;
+        width: 100%;
+      }
+      a:hover:before {
+        content: 'PREVIOUS STORY'
+      }
+    }
+    a:hover:before {
+      background: transparent;
+      content: 'NEXT STORY';
+      background-image: initial;
+      background-position-x: initial;
+      background-position-y: initial;
+      background-size: initial;
+      background-repeat-x: initial;
+      background-repeat-y: initial;
+      background-attachment: initial;
+      background-origin: initial;
+      background-clip: initial;
+      background-color: transparent;
+      color: #767676;
+      font-size: 0.8rem;
+      left: 1rem;
+      position: absolute;
+      top: 0.6rem;
+      -webkit-transform: none;
+      transform: none;
+      white-space: nowrap;
+      width: 100%;
+    }
+    .next {
+      // margin-left: 54rem;   see media queries below
+    }
     a {
-      margin-right: 4px;
+      background-color: #f9f9f9;
+      background-position: center 2.1rem;
+      background-repeat: no-repeat;
+      background-size: 0 0;
+      border: 1px solid #dbdbdb;
+      border-radius: 0.5rem;
+      display: block;
+      font-family: Arial, sans-serif;
+      font-size: 1.1rem;
+      height: 100%;
+      line-height: 1.2;
+      overflow: hidden;
+      padding: 0.6rem;
+      position: absolute;
+      text-align: left;
+      text-decoration: none;
+      top: 0;
+      // transition-property: border;
+      // transition-druation: 250ms, 250ms, 0.3s;
+      // transition-timing-function: ease-out, ease-out, initial;
+      // transition-delay: initial, initial, initial;
+      // transition: border 250ms cubic-bezier(0.39, 0.58, 0.57, 1), background-color 250ms ease-out, opacity .3s;
+      width: 100%;
+      .link-text {
+        display: inline-block;
+        opacity: 0;
+        padding-top: 1rem;
+      }
+      img {
+        opacity: 0;
+      }
+    }
+    a:hover {
+      background-color: #fff;
+      background-size: 50%; // 10rem 6.6rem;
+      background-position: center 24%;
+      border: 1px solid #e8e8e8;
+      border-radius: 0.3rem;
+      color: #08c;
+      font-family: Arial, sans-serif;
+      height: auto;
+      margin: -5.4rem 0 0 -7.8rem;
+      min-height: 15.5rem;
+      opacity: 1;
+      padding: 2.3rem 1rem 0.75rem;
+      transition-property: opacity;
+      transition-duration: 0.3s;
+      transition-timing-function: initial;
+      transition-delay: initial;
+      width: 14.2rem;
+      .link-text {
+        opacity: 1;
+      }
+      img {
+        opacity: 1;
+      }
+      .prev-arrow, .next-arrow {
+        display: none;
+      }
+    }
+    .prev-arrow, .next-arrow {
+      height: 60%;
+      left: 20%;
+      position: absolute;
+      top: 20%;
+      width: 60%
+    }
+    .prev-arrow svg, .next-arrow svg {
+      fill: #7d7d7d !important;
+      height: 100%;
+      left: 50%;
+      margin-left: -9px;
+      position: absolute;
+      top: 0;
+      width: 16px;
+    }
+    .next-arrow {
+      transform: rotate(180deg);
+    }
+
+  }
+
+  #social-buttons-xs {
+    background-color: #f2f2f2;
+    padding: 15px 25px 15px 15px;
+  }
+
+  // nav links
+  .story-nav {
+   color: #337ab7;
+   padding: 0;
+  }
+
+  #story-quote {
+    color: #757575;
+    font-family: 'Open Sans';
+  }
+
+  #story-quote-attr {
+    margin: 5px auto;
+    color: #757575;
+  }
+
+  #story-section-video-xs {
+    background-color: #f2f2f2;
+    padding-bottom: 15px;
+  }
+
+  #story-section-content {
+    background-color: #f2f2f2;
+    padding-top: 15px;
+  }
+
+  #story-section-testimonial {
+    position: relative;
+    /* make some room for the trailing color gradient (see below) */
+    margin: 0 0 50px 0;
+  }
+
+  #story-section-testimonial:after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    z-index: -1;
+    width: 100%;
+    height: 50px;
+    // margin-top: 2px;
+    background-image: linear-gradient(to top, #f2f2f2 0%, #ffffff 100%);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2f2f2', endColorstr='#ffffffff', GradientType=0);
+  }
+
+
+  #story-section-content .well {
+    background-color: #ffffff;
+    margin-top: -5px;
+  }
+
+  #story-results {
+    margin: 0 0 30px 0;
+    .row div:first-child {
+      text-align: center;
+      padding-right: 0;
     }
   }
 
-}
+  #learn-more {
+    margin: 0 0 30px 0;
+    .row div:first-child {
+      text-align: center;
+      padding-right: 0;
+    }
+  }
 
-#social-buttons-xs {
-  background-color: #f2f2f2;
-  padding: 15px 25px 15px 15px;
-}
+  #story-results + .story-video {
+    margin: 0 0 30px 0;
+  }
 
-// nav links
-.story-nav {
- color: #337ab7;
- padding: 0;
-}
+  @media (max-width: 549px) {
+    #story-testimonial-col {
+      margin-top: 22px;
+      padding: 0;
+    }
+    #story-customer-logo {
+      max-height: 70px;
+      max-width: 100%;
+      margin-bottom: 10px;
+    }
+    #story-section-video-xs [class^='col-'] {
+      padding: 0;
+    }
+    #story-quote-col {
+      padding: 0;
+    }
+    #story-quote {
+      font-size: 14px;
+    }
+    #story-video-modal iframe {
+      height: 260px;
+    }
+  }
 
-#story-quote {
-  color: #757575;
-  font-family: 'Open Sans';
-}
+  @media (min-width: 550px) and (max-width: 599px) {
+    #story-testimonial-col {
+      margin-top: 22px;
+    }
+    #story-customer-logo {
+      max-height: 70px;
+      max-width: 70%;
+      margin-bottom: 10px;
+    }
+    #story-section-video-xs {
+      padding-left: 8%;
+      padding-right: 8%;
+    }
+    #story-video-modal iframe {
+      height: 300px;
+    }
+  }
 
-#story-quote-attr {
-  margin: 5px auto;
-  color: #757575;
-}
+  @media (min-width: 600px) and (max-width: 699px) {
+    #story-testimonial-col {
+      margin-top: 22px;
+    }
+    #story-customer-logo {
+      max-height: 70px;
+      max-width: 80%;
+      margin-bottom: 10px;
+    }
+    #story-section-video-xs {
+      padding-left: 12%;
+      padding-right: 12%;
+    }
+    #story-video-modal iframe {
+      height: 320px;
+    }
+  }
 
-#story-section-video-xs {
-  background-color: #f2f2f2;
-  padding-bottom: 15px;
-}
+  @media (min-width: 700px) and (max-width: 767px) {
+    #story-testimonial-col {
+      margin-top: 22px;
+    }
+    #story-section-video-xs {
+      padding-left: 15%;
+      padding-right: 15%;
+    }
+    #story-customer-logo {
+      max-height: 70px;
+      max-width: 70%;
+      margin-bottom: 10px;
+    }
+    #story-video-modal iframe {
+      height: 400px;
+    }
+  }
 
-#story-section-content {
-  background-color: #f2f2f2;
-  padding-top: 15px;
-}
+  @media (max-width: 767px) {
+    #story-section-video-xs .col-xs-10 {
+      margin-top: -10px;
+    }
+    #story-section-content > .container > [class^="col-"] {
+      padding: 0;
+    }
+  }
 
-#story-section-testimonial {
-  position: relative;
-  /* make some room for the trailing color gradient (see below) */
-  margin: 0 0 50px 0;
-}
+  @media (min-width: 768px) {
+    #story-nav-col {
+      margin-bottom: 20px;
+    }
+    #story-testimonial-col {
+      margin: 0 0 10px 0;
+    }
+    #story-testimonial-col.no-video {
+      margin-top: 8px;
+    }
+    #story-video-col {
+      margin: 0 0 10px 0;
+    }
+    #story-customer-logo {
+      max-height: 65px;
+      max-width: 80%;
+    }
+    #story-customer-logo-col {
+      margin-bottom: 10px;
+    }
+    #story-quote-attr-col {
+      padding: 0;
+    }
+    #story-quote {
+      font-size: 16px;
+    }
+    #story-section-content .well {
+      margin-top: -30px;
+    }
+    #story-video-modal iframe {
+      height: 330px;
+    }
+  }
 
-#story-section-testimonial:after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  z-index: -1;
-  width: 100%;
-  height: 50px;
-  // margin-top: 2px;
-  background-image: linear-gradient(to top, #f2f2f2 0%, #ffffff 100%);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2f2f2', endColorstr='#ffffffff', GradientType=0);
-}
+  @media (min-width: 992px) {
+    .prev-next .prev {
+      margin-left: -53.4rem;
+    }
+    .prev-next .next {
+      margin-left: 49rem;
+    }
+    #social-buttons {
+      padding-right: 25px;
+    }
+    #story-nav-col {
+      margin-bottom: 5px;
+    }
+    #story-testimonial-col {
+      margin: 10px 0 10px 0;
+    }
+    #story-testimonial-col.no-video {
+      margin: 25px 0 18px 0;
+    }
+    #story-video-col {
+      margin: 10px 0 10px 0;
+    }
+    #story-customer-logo-col {
+      margin-bottom: 15px;
+    }
+    #story-customer-logo {
+      max-height: 75px;
+      max-width: 70%;
+    }
+    #story-quote {
+      font-size: 18px;
+    }
+    #story-video-modal iframe {
+      height: 490px;
+    }
+  }
 
+  @media (min-width: 1200px) {
+    .container {
+      width: 1080px;
+    }
+    .prev-next .prev {
+      margin-left: -58.4rem;
+    }
+    .prev-next .next {
+      margin-left: 54rem;
+    }
+    #social-buttons {
+      padding-right: 34px;
+    }
+    #story-nav-col {
+      margin-bottom: 5px;
+    }
+    #story-testimonial-col {
+      margin: 10px 0 10px 0;
+    }
+    #story-video-col {
+      margin: 10px 0 10px 0;
+    }
+    #story-customer-logo-col {
+      margin-bottom: 20px;
+    }
+    #story-customer-logo {
+      max-height: 85px;
+      max-width: 70%;
+    }
+    #story-quote {
+      font-size: 20px;  /* bootstrap .lead default is 21px */
+    }
+    #story-video-modal iframe {
+      height: 490px;
+    }
+  }
 
-#story-section-content .well {
-  background-color: #ffffff;
-  margin-top: -5px;
-}
-
-#story-results {
-  margin: 0 0 30px 0;
-  .row div:first-child {
-    text-align: center;
-    padding-right: 0;
-  }
-}
-
-#learn-more {
-  margin: 0 0 30px 0;
-  .row div:first-child {
-    text-align: center;
-    padding-right: 0;
-  }
-}
-
-#story-results + .story-video {
-  margin: 0 0 30px 0;
-}
-
-@media (max-width: 549px) {
-  #story-testimonial-col {
-    margin-top: 22px;
-    padding: 0;
-  }
-  #story-customer-logo {
-    max-height: 70px;
-    max-width: 100%;
-    margin-bottom: 10px;
-  }
-  #story-section-video-xs [class^='col-'] {
-    padding: 0;
-  }
-  #story-quote-col {
-    padding: 0;
-  }
-  #story-quote {
-    font-size: 14px;
-  }
-  #story-video-modal iframe {
-    height: 260px;
-  }
-}
-
-@media (min-width: 550px) and (max-width: 599px) {
-  #story-testimonial-col {
-    margin-top: 22px;
-  }
-  #story-customer-logo {
-    max-height: 70px;
-    max-width: 70%;
-    margin-bottom: 10px;
-  }
-  #story-section-video-xs {
-    padding-left: 8%;
-    padding-right: 8%;
-  }
-  #story-video-modal iframe {
-    height: 300px;
-  }
-}
-
-@media (min-width: 600px) and (max-width: 699px) {
-  #story-testimonial-col {
-    margin-top: 22px;
-  }
-  #story-customer-logo {
-    max-height: 70px;
-    max-width: 80%;
-    margin-bottom: 10px;
-  }
-  #story-section-video-xs {
-    padding-left: 12%;
-    padding-right: 12%;
-  }
-  #story-video-modal iframe {
-    height: 320px;
-  }
-}
-
-@media (min-width: 700px) and (max-width: 767px) {
-  #story-testimonial-col {
-    margin-top: 22px;
-  }
-  #story-section-video-xs {
-    padding-left: 15%;
-    padding-right: 15%;
-  }
-  #story-customer-logo {
-    max-height: 70px;
-    max-width: 70%;
-    margin-bottom: 10px;
-  }
-  #story-video-modal iframe {
-    height: 400px;
-  }
-}
-
-@media (max-width: 767px) {
-  #story-section-video-xs .col-xs-10 {
-    margin-top: -10px;
-  }
-  #story-section-content > .container > [class^="col-"] {
-    padding: 0;
-  }
-}
-
-@media (min-width: 768px) {
-  #story-nav-col {
-    margin-bottom: 20px;
-  }
-  #story-testimonial-col {
-    margin: 0 0 10px 0;
-  }
-  #story-testimonial-col.no-video {
-    margin-top: 8px;
-  }
-  #story-video-col {
-    margin: 0 0 10px 0;
-  }
-  #story-customer-logo {
-    max-height: 65px;
-    max-width: 80%;
-  }
-  #story-customer-logo-col {
-    margin-bottom: 10px;
-  }
-  #story-quote-attr-col {
-    padding: 0;
-  }
-  #story-quote {
-    font-size: 16px;
-  }
-  #story-section-content .well {
-    margin-top: -30px;
-  }
-  #story-video-modal iframe {
-    height: 330px;
-  }
-}
-
-@media (min-width: 992px) {
-  #story-nav-col {
-    margin-bottom: 5px;
-  }
-  #story-testimonial-col {
-    margin: 10px 0 10px 0;
-  }
-  #story-testimonial-col.no-video {
-    margin: 25px 0 18px 0;
-  }
-  #story-video-col {
-    margin: 10px 0 10px 0;
-  }
-  #story-customer-logo-col {
-    margin-bottom: 15px;
-  }
-  #story-customer-logo {
-    max-height: 75px;
-    max-width: 70%;
-  }
-  #story-quote {
-    font-size: 18px;
-  }
-  #story-video-modal iframe {
-    height: 490px;
-  }
-}
-
-@media (min-width: 1200px) {
-  #story-nav-col {
-    margin-bottom: 5px;
-  }
-  #story-testimonial-col {
-    margin: 10px 0 10px 0;
-  }
-  #story-video-col {
-    margin: 10px 0 10px 0;
-  }
-  #story-customer-logo-col {
-    margin-bottom: 20px;
-  }
-  #story-customer-logo {
-    max-height: 85px;
-    max-width: 70%;
-  }
-  #story-quote {
-    font-size: 20px;  /* bootstrap .lead default is 21px */
-  }
-  #story-video-modal iframe {
-    height: 490px;
-  }
 }

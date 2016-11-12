@@ -36,6 +36,9 @@ class Story < ActiveRecord::Base
     .where(logo_published: true,
            customers: { company_id: company_id })
   }
+  scope :company_published, ->(company_id) {
+    company_public(company_id).where(published: true)
+  }
   scope :company_public_filter_category, ->(company_id, category_id) {
     joins(success: { customer: {}, story_categories: {} })
     .where(logo_published: true,
@@ -495,6 +498,36 @@ class Story < ActiveRecord::Base
                               { "@type" => "Product",
                                 "name" => product.name }
                             end
+  end
+
+  def previous is_curator
+    company = self.success.customer.company
+    all_stories = company.all_stories
+    published_stories = company.published_stories
+    if is_curator
+      prev_story_index = all_stories.index(self.id) - 1
+      prev_story_index = (all_stories.length - 1) if prev_story_index == 0
+      Story.find(all_stories[prev_story_index])
+    else
+      prev_story_index = published_stories.index(self.id) - 1
+      prev_story_index = published_stories.length - 1 if prev_story_index == 0
+      Story.find(published_stories[prev_story_index])
+    end
+  end
+
+  def next is_curator
+    company = self.success.customer.company
+    all_stories = company.all_stories
+    published_stories = company.published_stories
+    if is_curator
+      next_story_index = all_stories.index(self.id) + 1
+      next_story_index = 0 if next_story_index == all_stories.length
+      Story.find(all_stories[next_story_index])
+    else
+      next_story_index = published_stories.index(self.id) + 1
+      next_story_index = 0 if next_story_index == published_stories.length
+      Story.find(published_stories[next_story_index])
+    end
   end
 
   # not currently used, maybe include with json api
