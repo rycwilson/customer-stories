@@ -58,6 +58,14 @@ class StoriesController < ApplicationController
   def show
     # convert the story content to plain text (for SEO tags)
     @story_content_text = HtmlToPlainText.plain_text(@story.content)
+    prev_next_fragment_key =
+      "#{@company.subdomain}/#{@is_curator ? 'curator' : 'public' }/" +
+      "story-#{@story.id}-prev-next"
+    unless fragment_exist?(prev_next_fragment_key)
+      @prev_story = @story.previous(@is_curator)
+      @next_story = @story.next(@is_curator)
+    end
+
   end
 
   def edit
@@ -417,7 +425,7 @@ class StoriesController < ApplicationController
   def expire_cache_on_story_destroy story
     story.expire_stories_index_fragment_cache
     story.expire_filter_select_fragment_cache
-    story.success.customer.company.expire_all_stories_json_cache
+    story.success.customer.company.expire_all_stories_cache(false)
   end
 
 end

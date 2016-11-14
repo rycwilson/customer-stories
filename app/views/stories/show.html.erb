@@ -18,35 +18,21 @@
 
 <%= render 'stories/shared/video_modal' %>
 
-<section class='prev-next' style='font-size:10px;box-sizing:border-box;text-size-adjust:100%'>
-  <div class='prev'>
-    <a href="<%= @story.previous(@is_curator).csp_story_path %>">
-      <div class='prev-arrow'>
-        <svg xmlns="http://www.w3.org/2000/svg" role="presentation"
-             width="15.8" height="30.3" viewBox="0 0 15.8 30.3"
-             preserveAspectRatio="xMinYMin meet">
-          <path d="M15.4 27l-11.9-11.9 11.9-11.8c.3-.3.4-.6.4-1s-.1-.7-.4-1c-.5-.5-1.4-.5-1.9 0l-13.2 13.2c-.2.1-.3.4-.3.6 0 .2.1.5.3.7l13.1 13.1c.3.3.6.4 1 .4s.7-.1 1-.4c.3-.3.4-.6.4-1s-.2-.7-.4-.9z"></path>
-        </svg>
-      </div>
-      <img style='max-height:80px;max-width:80%;display:block;margin:auto'src="<%= @story.previous(@is_curator).success.customer.logo_url %>" alt="">
-      <span class='link-text'><%= @story.previous(@is_curator).title %></span>
-    </a>
-    <!-- <a href="/" class='all-stories'>ALL STORIES</a> -->
-  </div>
-  <div class="next">
-    <a href="<%= @story.next(@is_curator).csp_story_path %>">
-      <div class='next-arrow'>
-        <svg xmlns="http://www.w3.org/2000/svg" role="presentation"
-             width="15.8" height="30.3" viewBox="0 0 15.8 30.3"
-             preserveAspectRatio="xMinYMin meet">
-          <path d="M15.4 27l-11.9-11.9 11.9-11.8c.3-.3.4-.6.4-1s-.1-.7-.4-1c-.5-.5-1.4-.5-1.9 0l-13.2 13.2c-.2.1-.3.4-.3.6 0 .2.1.5.3.7l13.1 13.1c.3.3.6.4 1 .4s.7-.1 1-.4c.3-.3.4-.6.4-1s-.2-.7-.4-.9z"></path>
-        </svg>
-      </div>
-      <img style='max-height:80px;max-width:80%;display:block;margin:auto'src="<%= @story.next(@is_curator).success.customer.logo_url %>" alt="">
-      <span class='link-text'><%= @story.next(@is_curator).title %></span>
-    </a>
-  </div>
-</section>
+<!--
+  why use memcache iterators here?
+  because when a given story updates (title, csp_story_path, customer logo_url),
+  this expires its prev/next navigation fragment, as well as the parent story.
+  but how to know what the parent story is from the context of the story that's
+  expiring its prev/next navigation cache?  That would require a costly lookup operation.
+  instead, use memcache iterators
+-->
+<% cache("#{@company.subdomain}/#{@is_curator ? 'curator' : 'public'}/story-#{@story.id}-prev-next-mi-#{@prev_story.prev_next_memcache_iterator}-mi-#{@next_story.prev_next_memcache_iterator}", skip_digest: true) do %>
+
+  <%= render 'stories/shared/prev_next_stories',
+        { company: @company, story: @story,
+          prev_story: @prev_story, next_story: @next_story } %>
+
+<% end %>
 
 <% if @is_curator %>
 

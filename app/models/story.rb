@@ -64,17 +64,22 @@ class Story < ActiveRecord::Base
            products: { id: product_id })
   }
 
-  after_commit :expire_all_stories_json_cache, on: [:create, :destroy]
+  after_commit on: [:create, :destroy] do
+    expire_all_stories_cache(false)
+  end
 
-  # note: the _changed? methods for attributes don't work in the after_commit callback
-  # note: the & operator interestects the arrays, returning any values that exist in both
-  after_commit :expire_story_tile_fragment_cache,
-               :expire_stories_index_fragment_cache,
-               :expire_filter_select_fragment_cache,
-               :expire_all_stories_json_cache, on: :update, if:
-        Proc.new { |story|
-          (story.previous_changes.keys & ['published', 'logo_published']).any?
-        }
+  # note: the _changed? methods for attributes don't work in the
+  # after_commit callback;
+  # note: the & operator interestects the arrays, returning any values
+  # that exist in both
+  after_commit on: :update do
+    expire_story_tile_fragment_cache
+    expire_stories_index_fragment_cache
+    expire_filter_select_fragment_cache
+    expire_all_stories_cache(true)
+  end if Proc.new { |story|
+            (story.previous_changes.keys & ['published', 'logo_published']).any?
+          }
 
   after_commit :expire_story_video_info_cache,
                :expire_story_video_xs_fragment_cache, on: :update, if:
@@ -88,7 +93,8 @@ class Story < ActiveRecord::Base
         }
 
   after_commit :expire_csp_story_path_cache,
-               :expire_story_narration_fragment_cache, on: :update, if:
+               :expire_story_narration_fragment_cache,
+               :expire_prev_next_fragment_cache, on: :update, if:
         Proc.new { |story| story.previous_changes.key?('title') }
 
   after_commit :expire_story_narration_fragment_cache, on: :update, if:
@@ -178,13 +184,13 @@ class Story < ActiveRecord::Base
 
     # expire cache
     if category_tags_changed
-      company.expire_all_stories_json_cache
+      company.expire_all_stories_cache(true)  # json only
       if self.logo_published?
         company.increment_public_category_select_fragments_memcache_iterator
       end
     end
     if product_tags_changed
-      company.expire_all_stories_json_cache
+      company.expire_all_stories_cache(true)  # json only
       self.expire_csp_story_path_cache
       if self.logo_published?
         company.increment_public_product_select_fragments_memcache_iterator
@@ -212,7 +218,7 @@ class Story < ActiveRecord::Base
 
   def expire_csp_story_path_cache
     company = self.success.customer.company
-    company.expire_all_stories_json_cache
+    company.expire_all_stories_cache(true)  # => json only
     Rails.cache.delete("#{company.subdomain}/csp-story-#{self.id}-path")
     self.expire_fragment_cache_on_path_change
   end
@@ -369,7 +375,7 @@ class Story < ActiveRecord::Base
   def expire_published_contributor_cache contributor_id
     company = self.success.customer.company
     Rails.cache.delete("#{company.subdomain}/story-#{self.id}-published-contributors")
-    company.expire_all_stories_json_cache
+    company.expire_all_stories_cache(true)  # json only
     self.expire_fragment("#{company.subdomain}/story-#{self.id}-contributors")
     self.expire_fragment(
       "#{company.subdomain}/story-#{self.id}-contributor-#{contributor_id}")
@@ -436,9 +442,9 @@ class Story < ActiveRecord::Base
 
   def expire_fragment_cache_on_path_change
     company = self.success.customer.company
+    self.expire_prev_next_fragment_cache
     if self.logo_published
       self.expire_story_tile_fragment_cache
-
       self.expire_fragment(
         "#{company.subdomain}/curator-stories-index-all-0-memcache-iterator-" +
         "#{company.curator_stories_index_fragments_memcache_iterator}")
@@ -464,8 +470,9 @@ class Story < ActiveRecord::Base
     end
   end
 
-  def expire_all_stories_json_cache
-    self.success.customer.company.expire_all_stories_json_cache
+  def expire_all_stories_cache json_only
+    company = self.success.customer.company
+    company.expire_all_stories_cache(json_only)
   end
 
   def expire_story_testimonial_fragment_cache
@@ -491,6 +498,28 @@ class Story < ActiveRecord::Base
   def expire_results_fragment_cache
     company = self.success.customer.company
     self.expire_fragment("#{company.subdomain}/story-#{self.id}-results")
+  end
+
+  def prev_next_memcache_iterator
+    company = self.success.customer.company
+    Rails.cache.fetch(
+      "#{company.subdomain}/story-#{self.id}-prev-next-memcache-iterator") { rand(10) }
+  end
+
+  def increment_prev_next_memcache_iterator
+    company = self.success.customer.company
+    Rails.cache.write(
+      "#{company.subdomain}/story-#{self.id}-prev-next-memcache-iterator",
+      self.prev_next_memcache_iterator + 1)
+  end
+
+  # previous/next story navigation
+  def expire_prev_next_fragment_cache
+    company = self.success.customer.company
+    self.expire_fragment("#{company.subdomain}/prev_story_#{self.id}")
+    self.expire_fragment("#{company.subdomain}/next_story_#{self.id}")
+    # expire the above's parent fragment(s)
+    self.increment_prev_next_memcache_iterator
   end
 
   def contributors_jsonld

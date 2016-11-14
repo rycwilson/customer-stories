@@ -426,6 +426,12 @@
     }
   }
 
+  @media (max-width: 1070px) {
+    .prev-next {
+      opacity: 0;
+    }
+  }
+
   @media (min-width: 1200px) {
     .container {
       width: 1080px;

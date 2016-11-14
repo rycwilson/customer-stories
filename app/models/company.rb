@@ -34,7 +34,9 @@ class Company < ActiveRecord::Base
     }
 
   def all_stories
-    Story.order(Story.company_all(self.id)).pluck(:id)
+    Rails.cache.fetch("#{self.subdomain}/all_stories") do
+      Story.order(Story.company_all(self.id)).pluck(:id)
+    end
   end
 
   def all_stories_filter_category category_id
@@ -124,8 +126,15 @@ class Company < ActiveRecord::Base
     end
   end
 
-  def expire_all_stories_json_cache
-    Rails.cache.delete("#{self.subdomain}/all_stories_json")
+  # all_stories_json contains a bunch of association data;
+  # all_stories is just an array of ids
+  def expire_all_stories_cache json_only
+    if json_only
+      Rails.cache.delete("#{self.subdomain}/all_stories_json")
+    else
+      Rails.cache.delete("#{self.subdomain}/all_stories_json")
+      Rails.cache.delete("#{self.subdomain}/all_stories")
+    end
   end
 
   def curator? current_user=nil
