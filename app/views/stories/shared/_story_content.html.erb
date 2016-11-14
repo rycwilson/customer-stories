@@ -3,7 +3,7 @@
 
   <div class='col-sm-6 col-md-7'>
 
-    <div class='well story-narration'>
+    <div id='story-narration' class='well'>
 
       <% cache("#{company.subdomain}/story-#{story.id}-narration",
                skip_digest: true) do %>
@@ -19,15 +19,23 @@
 
     </div>
 
-    <div id='story-footer'>
-      <div class="col-sm-6 col-md-7">
+<!--
+    <div id='story-footer' class='well' style='min-height:200px;padding:0'>
+      <h3>Related Stories</h3>
+      <div class="col-xs-12">
+        <div class="grid-related">
 
-        <div class="well" style='height:150px'>
+          <%# @story.related_stories.each do |story| %>
+
+            <%#= render 'stories/shared/public_story_tile',
+                        { company: @company, story: story,
+                          customer: story.success.customer } %>
+
+          <%# end %>
 
         </div>
-
       </div>
-    </div>
+    </div> -->
 
   </div>
 

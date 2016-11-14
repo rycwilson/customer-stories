@@ -33,9 +33,6 @@ class Company < ActiveRecord::Base
       (company.previous_changes.keys & ['nav_color_1', 'nav_text_color']).any?
     }
 
-  # why did this crap out when seeding?
-  # CSP = self.find_by(name:'CSP')
-
   def all_stories
     Story.order(Story.company_all(self.id)).pluck(:id)
   end
@@ -50,6 +47,14 @@ class Company < ActiveRecord::Base
 
   def published_stories
     Story.order(Story.company_published(self.id)).pluck(:id)
+  end
+
+  def published_stories_filter_category category_id
+    Story.order(Story.company_published_filter_category(self.id, category_id)).pluck(:id)
+  end
+
+  def published_stories_filter_product product_id
+    Story.order(Story.company_published_filter_product(self.id, product_id)).pluck(:id)
   end
 
   def public_stories

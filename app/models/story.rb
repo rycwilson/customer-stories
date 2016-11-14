@@ -31,13 +31,25 @@ class Story < ActiveRecord::Base
     .where(customers: { company_id: company_id },
            products: { id: product_id } )
   }
+  scope :company_published, ->(company_id) {
+    company_public(company_id).where(published: true)
+  }
+  scope :company_published_filter_category, ->(company_id, category_id) {
+    joins(success: { customer: {}, story_categories: {} })
+    .where(published: true,
+           customers: { company_id: company_id },
+           story_categories: { id: category_id })
+  }
+  scope :company_published_filter_product, ->(company_id, product_id) {
+    joins(success: { customer: {}, products: {} })
+    .where(published: true,
+           customers: { company_id: company_id },
+           products: { id: product_id })
+  }
   scope :company_public, ->(company_id) {
     joins(success: { customer: {} })
     .where(logo_published: true,
            customers: { company_id: company_id })
-  }
-  scope :company_published, ->(company_id) {
-    company_public(company_id).where(published: true)
   }
   scope :company_public_filter_category, ->(company_id, category_id) {
     joins(success: { customer: {}, story_categories: {} })
@@ -545,5 +557,32 @@ class Story < ActiveRecord::Base
   #     quote_attr: quote_attr,
   #     content: content }
   # end
+
+  def related_stories
+    related_stories = []
+    same_product_stories = []
+    same_category_stories = []
+    success = self.success
+    company = success.customer.company
+    published_stories = company.published_stories
+    success.products.each do |product|
+      same_product_stories += company.published_stories_filter_product(product.id)
+    end
+    success.story_categories.each do |category|
+      same_category_stories += company.published_stories_filter_category(category.id)
+    end
+    same_tag_stories = (same_product_stories + same_category_stories).uniq
+    if same_product_stories.length >= 3
+      related_stories = same_product_stories.sample(3)
+    elsif same_tag_stories.length >= 3
+      related_stories = same_tag_stories.sample(3)
+    elsif same_tag_stories.length == 0
+      related_stories = published_stories.sample(3)
+    else
+      related_stories = same_tag_stories +
+                        published_stories.sample(3 - same_tag_stories.length)
+    end
+    Story.find(related_stories)
+  end
 
 end
