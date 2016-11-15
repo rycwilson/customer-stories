@@ -27,22 +27,7 @@
 
     </div>
 
- <!-- style='display:inline-block;float:none' -->
-    <% if controller_name == 'stories' && action_name == 'show' && !user_signed_in? %>
-
-      <div class='col-sm-3 col-sm-offset-3 col-md-2 col-md-offset-4'>
-        <!-- Single button -->
-        <button id='cta-btn' type="button" class="btn btn-warning" style='width:100%'>
-          Request Trial
-        </button>
-
-      </div>
-
-      <div class='col-sm-1'>
-        <!-- filler -->
-      </div>
-
-    <% elsif user_signed_in? %>
+    <% if user_signed_in? %>
 
       <div class="hidden-xs col-sm-2 text-right pull-right">
         <%= link_to 'Sign out', destroy_user_session_path,
