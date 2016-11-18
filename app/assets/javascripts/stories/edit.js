@@ -21,6 +21,7 @@ function storiesEditHandlers () {
   storiesEditBIPHandlers();
   storiesEditSettingsHandlers();
   storiesEditVideoInputHandler();
+  storiesEditOutboundLinksHandlers();
   storiesEditTagsHandlers();
   storiesEditNewContributorHandlers();
   storiesEditResultsHandlers();
@@ -215,6 +216,15 @@ function storiesEditVideoInputHandler () {
 
     $(".best_in_place[data-bip-attribute='embed_url']").text(videoUrl || inputPlaceholder);
 
+  });
+}
+
+function storiesEditOutboundLinksHandlers () {
+  $(document).on('input', '#outbound-links-form', function () {
+    if ($('#outbound-links-submit').hasClass('hidden')) {
+      // un-hide the save/cancel buttons
+      $('#outbound-links-submit').removeClass('hidden');
+    }
   });
 }
 

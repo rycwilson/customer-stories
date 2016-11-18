@@ -21,17 +21,31 @@
 <nav class="navbar navbar-default admin" role="banner" style="<%= admin_navbar_style %>">
   <div class="container" style='padding:0'>
 <!-- <div class="row"> -->
-    <div class="navbar-header col-xs-12 col-sm-6">
+    <div class="navbar-header col-xs-12 col-sm-9">
 
       <%= render 'shared/admin_navbar_header' %>
 
     </div>
 
-    <% if user_signed_in? %>
+    <% if user_signed_in? && !(controller_name == 'stories' && action_name == 'show') %>
 
-      <div class="hidden-xs col-sm-2 text-right pull-right">
+      <div class="hidden-xs col-sm-3 text-right">
         <%= link_to 'Sign out', destroy_user_session_path,
-            method: :delete, class: 'btn btn-xs btn-default' %>
+            method: :delete, class: 'btn btn-xs btn-default sign-out' %>
+      </div>
+
+    <% elsif controller_name == 'stories' && action_name == 'show' %>
+
+      <div class='hidden-xs col-sm-3 text-right'>
+
+        <% if @company.cta_button.try(:btn_text).present? %>
+
+          <%= link_to @company.cta_button.btn_text,
+                @company.cta_button.url, class: 'btn cta_btn', target: '_blank',
+                style: "background-color:#{@company.cta_button.background_color};color:#{@company.cta_button.color};border-color:#{@company.cta_button.background_color}" %>
+
+        <% end %>
+<!--         <a href="https://info.varmour.com/download-dss.html?PartnerName=&amp;leadReferer=website&amp;leadRefererDetail=default%20micro-segmentation%20dss%20page&amp;OfferCode=WW2016MARALLDSS&amp;headline=Default%20Micro-segmentation" class="cta_btn">Request Trial</a> -->
       </div>
 
     <% end %>

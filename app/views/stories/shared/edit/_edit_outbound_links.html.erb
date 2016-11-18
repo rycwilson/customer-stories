@@ -1,0 +1,59 @@
+
+<div class="col-sm-6">
+
+  <p class='lead' style='display:inline-block'>Outbound Links</p>
+  <button id='outbound-links-submit' type='submit'
+    class='hidden btn btn-sm btn-primary'
+    style='display:inline-block;margin-left:15px;margin-top:-10px' form='outbound-links-form'>
+    Save changes
+  </button>
+
+  <div class="well" style='padding:18px 0 18px 0;margin-bottom:10px'>
+    <div class="container-fluid">
+
+      <%= form_tag outbound_links_path(story.id), remote: true, method: "put",
+            id: 'outbound-links-form' do %>
+
+        <div class="col-sm-12">
+  <!--         <div style='margin-bottom:5px'>
+            <i class='fa fa-link'></i>&nbsp;
+            <a href="javascript:;">link</a>&nbsp;&nbsp;&#124;&nbsp;&nbsp;
+            <i class='fa fa-wpforms'></i>&nbsp;
+            <a href="javascript:;">script</a>
+          </div> -->
+        <!--   <div class="radio-inline">
+            <%# radio_button('story', ) %>
+          </div>
+   -->
+          <%= label_tag 'Learn More 1', nil, for: 'outbound_links_link1_text'  %>
+          <div class="form-group outbound-links" style='margin-bottom:20px'>
+            <%= text_field_tag 'outbound_links[link1_text]', story.outbound_links[0].try(:link_text), placeholder: 'display text', class: 'form-control',
+              style: 'margin-bottom:5px' %>
+            <%= text_field_tag 'outbound_links[link1_url]', story.outbound_links[0].try(:url),
+              placeholder: 'website address', class: 'form-control',
+              style: 'margin-bottom:5px' %>
+
+          </div>
+        </div>
+        <div class="col-sm-12">
+          <div class="form-group" style='margin-bottom:10px'>
+            <!-- <div style='margin-bottom:5px'>
+              <i class='fa fa-link'></i>&nbsp;
+              <a href="javascript:;">link</a>&nbsp;&nbsp;&#124;&nbsp;&nbsp;
+              <i class='fa fa-wpforms'></i>&nbsp;
+              <a href="javascript:;">script</a>
+            </div> -->
+            <%= label_tag 'Learn More 2', nil, for: 'outbound_links_link2_text' %>
+            <%= text_field_tag 'outbound_links[link2_text]', story.outbound_links[1].try(:link_text),
+              placeholder: 'display text', class: 'form-control',
+              style: 'margin-bottom:5px' %>
+            <%= text_field_tag 'outbound_links[link2_url]', story.outbound_links[1].try(:url),
+              placeholder: 'website address', class: 'form-control' %>
+          </div>
+        </div>
+
+      <% end %>
+
+    </div>
+  </div>
+</div>

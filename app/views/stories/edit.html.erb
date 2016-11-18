@@ -52,21 +52,24 @@
 
       </div>  <!-- settings, title, quote, video -->
 
-      <!-- tags -->
-      <p class='lead' style='display:inline-block'>Tags</p>
-      <button type='submit' class='edit-tags hidden btn btn-sm btn-primary'
-        style='display:inline-block; margin-left:15px; margin-bottom:8px' form='story-tags-form'>
-        Save changes
-      </button>
-      <!-- <button id='edit-tags-cancel' class='edit-tags hidden btn btn-sm btn-default'
-          style='display:inline-block; margin-bottom:8px'>
-        Cancel
-      </button>  --> <!-- tags -->
-
-      <!-- tags form -->
       <div class="row" style='margin-bottom: 15px'>
-        <div class="col-sm-12">
-          <div class="well" style='margin-bottom:10px'>
+
+
+        <%= render 'stories/shared/edit/edit_outbound_links', { story: @story } %>
+
+
+        <div class="col-sm-6">
+          <!-- tags -->
+          <p class='lead' style='display:inline-block'>Tags</p>
+          <button type='submit' class='edit-tags hidden btn btn-sm btn-primary'
+            style='display:inline-block; margin-left:15px; margin-bottom:8px' form='story-tags-form'>
+            Save changes
+          </button>
+          <!-- <button id='edit-tags-cancel' class='edit-tags hidden btn btn-sm btn-default'
+              style='display:inline-block; margin-bottom:8px'>
+            Cancel
+          </button>  --> <!-- tags -->
+          <div class="well" style='padding:18px 0 18px 0;margin-bottom:10px'>
             <div class="container-fluid">
 
               <%= render 'stories/shared/edit/edit_tags',
@@ -79,7 +82,8 @@
             </div>
           </div>
         </div>
-      </div>  <!-- tags form -->
+
+      </div>
 
       <!-- prompts and results-->
       <div class="row">

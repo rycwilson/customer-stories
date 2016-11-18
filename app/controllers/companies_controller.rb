@@ -53,6 +53,20 @@ class CompaniesController < ApplicationController
       @flash_mesg = @company.errors.full_messages.join(', ')
       @flash_status = "danger"
     end
+    if @company.cta_button.blank?
+      @company.cta_button = CtaButton.create(
+                             url: params[:cta][:url],
+                             btn_text: params[:cta][:btn_text],
+                             color: params[:cta][:color],
+                             background_color: params[:cta][:background_color])
+    else
+      @company.cta_button.update(
+                url: params[:cta][:url],
+                btn_text: params[:cta][:btn_text],
+                color: params[:cta][:color],
+                background_color: params[:cta][:background_color])
+    end
+
     respond_to do |format|
       format.html do
         redirect_to edit_company_path(@company),

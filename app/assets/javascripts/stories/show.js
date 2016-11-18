@@ -2,6 +2,22 @@
 function storiesShow () {
   loadVideoThumbnail();
   widgetsMonitor();
+
+  // $('#iframe-test').on('click', function () {
+
+  //   $('#iframe-modal').find('iframe')[0].contentDocument.write('' +
+  //     '<!DOCTYPE html>' +
+  //     '<html>' +
+  //     '<head></head' +
+  //     '<body>' +
+  //       '<script src="//app-ab04.marketo.com/js/forms2/js/forms2.min.js"></script>' +
+  //       '<form id="mktoForm_1157" novalidate="novalidate" style="margin:0 auto;font-size:13px;color:rgb(51, 51, 51);width:505px;"></form>' +
+  //       '<script>MktoForms2.loadForm("//app-ab04.marketo.com", "650-OZW-112", 1157)</script>' +
+  //     '</body>' +
+  //     '</html>');
+
+  // });
+
 }
 
 /*

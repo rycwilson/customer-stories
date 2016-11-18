@@ -135,6 +135,32 @@
       <%= f.text_field :gtm_id, class: 'form-control' %>
     </div>
 
+    <div class="form-group">
+      <%= label_tag 'Call to Action', nil, class: 'control-label' %>
+      <div class="form-group outbound-links" style='margin-bottom:20px'>
+        <%= text_field_tag 'cta[btn_text]',
+              @company.cta_button.try(:btn_text),
+              placeholder: 'display text', class: 'form-control',
+              style: 'margin-bottom:5px' %>
+        <%= text_field_tag 'cta[url]',
+              @company.cta_button.try(:url),
+              placeholder: 'website address', class: 'form-control',
+              style: 'margin-bottom:5px' %>
+        <div class="col-sm-6">
+          <%= label_tag 'Button color' %>
+          <%= text_field_tag 'cta[background_color]',
+                @company.cta_button.try(:background_color),
+                class: 'form-control mini-colors', style: 'margin-bottom:5px' %>
+        </div>
+        <div class="col-sm-6">
+          <%= label_tag 'Text color' %>
+          <%= text_field_tag 'cta[color]',
+                @company.cta_button.try(:color),
+                class: 'form-control mini-colors', style: 'margin-bottom:5px' %>
+        </div>
+      </div>
+    </div>
+
   </div>  <!-- col -->
 
   <div class="col-md-12">

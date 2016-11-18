@@ -64,27 +64,46 @@
 
     <% end %>
 
-    <div id='learn-more' class='well hidden' style='margin-top:15px!important'>
+    <div id='learn-more' class='well' style='margin-top:15px!important'>
       <h3 class='text-center'>Learn More</h3>
 
-      <div class="row">
-        <div class='col-xs-1'>
-          <i class='fa fa-hand-o-right'></i>
-        </div>
-        <div class='col-xs-11'>
-          <p><a href="javascript:;">Contact us</a></p>
-        </div>
-      </div>
+      <% if @company.subdomain == 'varmour' %>
 
-      <div class="row">
-        <div class='col-xs-1'>
-          <i class='fa fa-hand-o-right'></i>
+        <div class="row">
+          <div class='col-xs-1'>
+            <i class='fa fa-hand-o-right'></i>
+          </div>
+          <div class='col-xs-11'>
+            <p>
+              <a href='' data-toggle='modal' data-target='#varmour-modal'>
+                Contact us
+              </a>
+            </p>
+          </div>
         </div>
-        <div class='col-xs-11'>
-          <p><a href="javascript:;">Product Docs</a></p>
-        </div>
-      </div>
 
+      <% end %>
+
+      <% @story.outbound_links.each do |link| %>
+
+        <% if link.url.present? %>
+
+          <div class="row">
+            <div class='col-xs-1'>
+              <i class='fa fa-hand-o-right'></i>
+            </div>
+            <div class='col-xs-11'>
+              <p>
+                <a href="<%= link.url %>" target='_blank'>
+                  <%= link.link_text %>
+                </a>
+              </p>
+            </div>
+          </div>
+
+        <% end %>
+
+      <% end %>
       <!-- <div class='row'>
 
         <div class="col-sm-8 col-sm-offset-2">
