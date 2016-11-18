@@ -43,12 +43,12 @@
 
 <% end %>
 
-<div class="mainnav" style='min-height:42px!important'>
+<div class="mainnav" style='min-height:42px!important;position:relative'>
 
   <!-- clicky_log class present only for production, so separate the fragments -->
   <% if @is_curator && production? %>
 
-    <% cache("#{@company.subdomain}/curator-story-header-production",
+    <% cache("#{@company.subdomain}/curator-story-#{@story.id}-header-production",
              skip_digest: true) do %>
       <%= render 'stories/shared/story_header',
           { story: @story, is_curator: true, production: true,
@@ -57,7 +57,7 @@
 
   <% elsif @is_curator %>
 
-    <% cache("#{@company.subdomain}/curator-story-header-not-production",
+    <% cache("#{@company.subdomain}/curator-story-#{@story.id}-header-not-production",
              skip_digest: true) do %>
       <%= render 'stories/shared/story_header',
           { story: @story, is_curator: true, production: false,
@@ -66,7 +66,7 @@
 
   <% elsif production? %>
 
-    <% cache("#{@company.subdomain}/public-story-header-production",
+    <% cache("#{@company.subdomain}/public-story-#{@story.id}-header-production",
              skip_digest: true) do %>
       <%= render 'stories/shared/story_header',
           { story: @story, is_curator: false, production: true,
@@ -75,7 +75,7 @@
 
   <% else %>
 
-    <% cache("#{@company.subdomain}/public-story-header-not-production",
+    <% cache("#{@company.subdomain}/public-story-#{@story.id}-header-not-production",
              skip_digest: true) do %>
       <%= render 'stories/shared/story_header',
           { story: @story, is_curator: false, production: false,
