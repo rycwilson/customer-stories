@@ -64,29 +64,14 @@
 
     <% end %>
 
-    <div id='learn-more' class='well' style='margin-top:15px!important'>
-      <h3 class='text-center'>Learn More</h3>
+    <% unless @company.subdomain != 'varmour' &&
+              (@story.outbound_links[0].try(:url).blank? &&
+               @story.outbound_links[1].try(:url).blank?) %>
 
-      <% if @company.subdomain == 'varmour' %>
+      <div id='learn-more' class='well' style='margin-top:15px!important'>
+        <h3 class='text-center'>Learn More</h3>
 
-        <div class="row">
-          <div class='col-xs-1'>
-            <i class='fa fa-hand-o-right'></i>
-          </div>
-          <div class='col-xs-11'>
-            <p>
-              <a href='' data-toggle='modal' data-target='#varmour-modal'>
-                Contact us
-              </a>
-            </p>
-          </div>
-        </div>
-
-      <% end %>
-
-      <% @story.outbound_links.each do |link| %>
-
-        <% if link.url.present? %>
+        <% if @company.subdomain == 'varmour' %>
 
           <div class="row">
             <div class='col-xs-1'>
@@ -94,8 +79,8 @@
             </div>
             <div class='col-xs-11'>
               <p>
-                <a href="<%= link.url %>" target='_blank'>
-                  <%= link.link_text %>
+                <a href='' data-toggle='modal' data-target='#varmour-modal'>
+                  Contact us
                 </a>
               </p>
             </div>
@@ -103,31 +88,52 @@
 
         <% end %>
 
-      <% end %>
-      <!-- <div class='row'>
+        <% @story.outbound_links.each do |link| %>
 
-        <div class="col-sm-8 col-sm-offset-2">
-          <button id='cta-btn' type="button" class="btn btn-info" style='width:100%'>
-            Contact Us
-          </button>
+          <% if link.url.present? %>
 
-          <button type="button" class="btn btn-info" style='width:80%'>Product Pages</button>
-          <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style='width:20%'>
-            <span class="caret"></span>
-            <span class="sr-only">Toggle Dropdown</span>
-          </button>
-          <ul class="dropdown-menu" style='width:100%'>
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">Separated link</a></li>
-          </ul>
+            <div class="row">
+              <div class='col-xs-1'>
+                <i class='fa fa-hand-o-right'></i>
+              </div>
+              <div class='col-xs-11'>
+                <p>
+                  <a href="<%= link.url %>" target='_blank'>
+                    <%= link.link_text %>
+                  </a>
+                </p>
+              </div>
+            </div>
 
-        </div>
-      </div> -->
+          <% end %>
 
-    </div>
+        <% end %>
+        <!-- <div class='row'>
+
+          <div class="col-sm-8 col-sm-offset-2">
+            <button id='cta-btn' type="button" class="btn btn-info" style='width:100%'>
+              Contact Us
+            </button>
+
+            <button type="button" class="btn btn-info" style='width:80%'>Product Pages</button>
+            <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style='width:20%'>
+              <span class="caret"></span>
+              <span class="sr-only">Toggle Dropdown</span>
+            </button>
+            <ul class="dropdown-menu" style='width:100%'>
+              <li><a href="#">Action</a></li>
+              <li><a href="#">Another action</a></li>
+              <li><a href="#">Something else here</a></li>
+              <li role="separator" class="divider"></li>
+              <li><a href="#">Separated link</a></li>
+            </ul>
+
+          </div>
+        </div> -->
+
+      </div>
+
+    <% end %>
 
     <% cache("#{company.subdomain}/story-#{story.id}-contributors",
              skip_digest: true) do %>
