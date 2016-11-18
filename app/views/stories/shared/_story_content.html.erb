@@ -19,9 +19,9 @@
 
     </div>
 
-<!--
-    <div id='story-footer' class='well' style='min-height:200px;padding:0'>
-      <h3>Related Stories</h3>
+
+    <div id='story-footer' class='well' style='min-height:50px;padding:0 15px 0 0'>
+      <!-- <h3>Related Stories</h3> -->
       <div class="col-xs-12">
         <div class="grid-related">
 
@@ -34,8 +34,12 @@
           <%# end %>
 
         </div>
+        <h5 class='text-right' style='margin-top:17px'>
+          <%= company.name %> team members <%= link_to 'sign in',
+                new_user_session_path %>
+        </h5>
       </div>
-    </div> -->
+    </div>
 
   </div>
 
