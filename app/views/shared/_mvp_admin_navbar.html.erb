@@ -27,14 +27,7 @@
 
     </div>
 
-    <% if user_signed_in? && !(controller_name == 'stories' && action_name == 'show') %>
-
-      <div class="hidden-xs col-sm-3 text-right">
-        <%= link_to 'Sign out', destroy_user_session_path,
-            method: :delete, class: 'btn btn-xs btn-default sign-out' %>
-      </div>
-
-    <% elsif controller_name == 'stories' && action_name == 'show' %>
+    <% if controller_name == 'stories' && action_name == 'show' %>
 
       <div class='hidden-xs col-sm-3 text-right'>
 
@@ -45,7 +38,20 @@
                 style: "background-color:#{@company.cta_button.background_color};color:#{@company.cta_button.color};border-color:#{@company.cta_button.background_color}" %>
 
         <% end %>
-<!--         <a href="https://info.varmour.com/download-dss.html?PartnerName=&amp;leadReferer=website&amp;leadRefererDetail=default%20micro-segmentation%20dss%20page&amp;OfferCode=WW2016MARALLDSS&amp;headline=Default%20Micro-segmentation" class="cta_btn">Request Trial</a> -->
+
+      </div>
+
+    <% elsif user_signed_in? %>
+
+      <div class="hidden-xs col-sm-3 text-right">
+        <%= link_to 'Sign out', destroy_user_session_path,
+            method: :delete, class: 'btn btn-xs btn-default sign-out' %>
+      </div>
+
+    <% else %>
+
+      <div class="hidden-xs col-sm-3">
+        <!-- filler -->
       </div>
 
     <% end %>
