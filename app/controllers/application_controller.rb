@@ -8,7 +8,8 @@ class ApplicationController < ActionController::Base
 
   before_action :check_subdomain,
                   if: Proc.new { user_signed_in? },
-              unless: Proc.new { devise_controller? || invalid_subdomain? }
+              unless: Proc.new { devise_controller? || invalid_subdomain? ||
+                                 params[:controller] == 'widgets' }
 
   helper_method :company_curator?
 

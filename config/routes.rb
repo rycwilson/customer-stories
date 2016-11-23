@@ -36,6 +36,8 @@ Rails.application.routes.draw do
     # request sent from IE11 was resulting in request interpreted as html
     get '/widget/cs-data', to: 'widgets#data', as: 'widget_data', format: 'js'
 
+    get '/track_widget', to: 'widgets#track'
+
     # Stories - public access
     resources :stories, only: :index
     # see below for route to public story page

@@ -11,24 +11,24 @@ class WidgetsController < ApplicationController
   end
 
   def data
-    if request.subdomain == 'varmour'
-      segmentId = VARMOUR_ADROLL_WIDGET_SEGMENT_ID
-      advId = VARMOUR_ADROLL_ADV_ID
-      pixId = VARMOUR_ADROLL_PIX_ID
-    elsif request.subdomain == 'trunity'
-      segmentId = TRUNITY_ADROLL_WIDGET_SEGMENT_ID
-      advId = TRUNITY_ADROLL_ADV_ID
-      pixId = TRUNITY_ADROLL_PIX_ID
-    else
-      segmentId = nil
-      advId = nil
-      pixId = nil
-    end
+    # if request.subdomain == 'varmour'
+    #   segmentId = VARMOUR_ADROLL_WIDGET_SEGMENT_ID
+    #   advId = VARMOUR_ADROLL_ADV_ID
+    #   pixId = VARMOUR_ADROLL_PIX_ID
+    # elsif request.subdomain == 'trunity'
+    #   segmentId = TRUNITY_ADROLL_WIDGET_SEGMENT_ID
+    #   advId = TRUNITY_ADROLL_ADV_ID
+    #   pixId = TRUNITY_ADROLL_PIX_ID
+    # else
+    #   segmentId = nil
+    #   advId = nil
+    #   pixId = nil
+    # end
     html = widget_html params
     respond_to do |format|
       format.js do
         # Build a JSON object containing our HTML
-        json = { html: html, segmentId: segmentId, advId: advId, pixId: pixId }.to_json
+        json = { html: html, company: request.subdomain }.to_json
         # Get the name of the JSONP callback created by jQuery
         callback = params[:callback]
         # Wrap the JSON object with a call to the JSONP callback
@@ -37,6 +37,11 @@ class WidgetsController < ApplicationController
         render text: jsonp
       end
     end
+  end
+
+  def track
+    response.headers.delete('X-Frame-Options')
+    render layout: false
   end
 
   protected
