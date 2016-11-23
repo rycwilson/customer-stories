@@ -1,0 +1,2 @@
+class OutboundScript < OutboundAction
+end

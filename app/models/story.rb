@@ -3,8 +3,8 @@ class Story < ActiveRecord::Base
   include FriendlyId
 
   belongs_to :success
-  has_many :outbound_links_stories, dependent: :destroy
-  has_many :outbound_links, through: :outbound_links_stories
+  has_many :outbound_actions_stories, dependent: :destroy
+  has_many :outbound_actions, through: :outbound_actions_stories
 
   # Note: no explicit association to friendly_id_slugs, but it's there
   # Story has many friendly_id_slugs -> captures history of slug changes

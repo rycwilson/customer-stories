@@ -220,12 +220,12 @@ function storiesEditVideoInputHandler () {
 }
 
 function storiesEditOutboundLinksHandlers () {
-  $(document).on('input', '#outbound-links-form', function () {
-    if ($('#outbound-links-submit').hasClass('hidden')) {
-      // un-hide the save/cancel buttons
-      $('#outbound-links-submit').removeClass('hidden');
-    }
+
+  $(document).on('click', '#outbound-actions-form .btn-group input', function () {
+    $('.link-input,.html-input').toggle();
+    $('.link-input,.html-input').val('');
   });
+
 }
 
 function storiesEditTagsHandlers () {

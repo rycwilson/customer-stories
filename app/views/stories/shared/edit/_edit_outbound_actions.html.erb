@@ -1,0 +1,59 @@
+
+<div id='edit-outbound-actions' class="col-sm-6">
+
+  <p class='lead'>Outbound Actions</p>
+
+  <div class="well">
+    <div class="container-fluid">
+
+      <%= form_tag new_outbound_action_path(story.id), remote: true,
+            id: 'outbound-actions-form' do %>
+
+        <div class='row btn-group' data-toggle="buttons">
+          <div class="col-sm-12">
+            <label class="radio-inline active">
+              <input id='link-radio' name='outbound-options' type="radio"
+                     autocomplete="off" checked>Link
+            </label>
+            <label class="radio-inline">
+              <input id='source-radio' name='outbound-options' type="radio"
+                     autocomplete="off">Source Code
+            </label>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-12">
+            <%= text_field_tag 'outbound_action[link_display_text]', nil,
+                  class: 'form-control link-input',
+                  placeholder: 'display text' %>
+            <%= text_field_tag 'outbound_action[link_url]', nil,
+                  class: 'form-control link-input',
+                  placeholder: 'website address' %>
+            <%= text_field_tag 'outbound_action[html_display_text]', nil,
+                  class: 'form-control html-input',
+                  placeholder: 'display text' %>
+            <%= text_area_tag 'outbound_action[html]', nil,
+                  class: 'form-control html-input', rows: 3,
+                  placeholder: 'html, e.g. <script> and <form> tags' %>
+          </div>
+          <div>
+            <%= button_tag type: 'submit', class: 'btn btn-secondary btn-sm',
+                  id: 'outbound-links-submit' do %>
+              <i class='glyphicon glyphicon-plus'></i>
+            <% end %>
+          </div>
+        </div>
+
+      <% end %>
+
+      <hr>
+
+        <div class="col-sm-12">
+
+        </div>
+
+
+    </div>
+  </div>
+</div>

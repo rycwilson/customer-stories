@@ -54,7 +54,8 @@ Rails.application.routes.draw do
       # approval PDF
       get '/stories/:id/approval', to: 'stories#approval', as: 'story_approval'
 
-      put '/stories/:id/outbound_links', to: 'outbound_links#update', as: 'outbound_links'
+      post '/stories/:id/outbound_actions', to: 'outbound_actions#create',
+              as: 'new_outbound_action'
 
       # delete a Prompt
       delete '/prompts/:id', to: 'prompts#destroy'

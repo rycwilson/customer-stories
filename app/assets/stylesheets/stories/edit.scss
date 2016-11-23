@@ -1,6 +1,41 @@
 
 .stories.edit {
 
+  #edit-outbound-actions {
+    .well {
+      padding: 18px 0 18px 0;
+      margin-bottom: 10px;
+    }
+    #outbound-actions-form {
+      .radio-inline {
+        margin-bottom: 12px;
+      }
+      .row:nth-of-type(2) {
+        position: relative;
+        .col-sm-12 {
+          width: 83%;
+        }
+        input[type='text'] {
+          margin-bottom: 5px;
+        }
+        input[type='submit'] {
+          font-size: 20px;
+        }
+        div:last-child {
+          position: absolute;
+          bottom: 6px;
+          right: 30px;
+        }
+      }
+      .col-sm-10, .col-sm-12 {
+        padding: 0 0 0 30px;
+      }
+      .html-input {
+        display: none;   // to be toggled
+      }
+    }  // #outbound-links-form
+
+  }
   /***********************************************/
   /*      video
   /***********************************************/
