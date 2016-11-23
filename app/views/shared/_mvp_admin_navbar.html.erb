@@ -41,13 +41,6 @@
 
       </div>
 
-    <% elsif user_signed_in? %>
-
-      <div class="hidden-xs col-sm-3 text-right">
-        <%= link_to 'Sign out', destroy_user_session_path,
-            method: :delete, class: 'btn btn-xs btn-default sign-out' %>
-      </div>
-
     <% else %>
 
       <div class="hidden-xs col-sm-3">
