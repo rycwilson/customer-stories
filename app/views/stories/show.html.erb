@@ -111,14 +111,14 @@
 </div>
 
 <!-- story content, results, contributing team -->
-<div id='story-section-content'>
+<div id='story-section-content' style='padding-bottom:15px'>
 
   <%= render 'stories/shared/story_content',
       { company: @company, story: @story, contributors: @contributors } %>
 
 </div>
 
-<div class='hidden-xs' style='border-top:1px solid #85cee6'>
+<div class='hidden-xs'>
   <div class='container' style='padding:15px 0 15px 0' id='story-footer'>
 
     <div class="row" style='font-size:0'>
@@ -126,10 +126,10 @@
         <img src="<%= CS_POWERED_LOGO_URL %>" alt="Powered by Customer Stories">
       </div>
       <div class="col-sm-6 text-right" style='display:inline-block;float:none;vertical-align:middle'>
-        <h4 style='margin:0'>
+        <h5 style='margin:0'>
         <%= @company.name %> Curators <%= link_to 'Login', new_user_session_path %>
 
-        </h4>
+        </h5>
       </div>
     </div>
 
