@@ -68,8 +68,8 @@
 
     <% end %>
 
-    <%# if @story.outbound_links.select { |link| link.url.present? }.present? %>
-    <% if true %>
+    <% if @story.outbound_links.select { |link| link.url.present? }.present? %>
+
       <div id='learn-more' class='well' style='margin-top:15px!important'>
         <h3 class='text-center'>Learn More</h3>
 
@@ -88,19 +88,6 @@
           </div> -->
 
         <%# end %>
-
-        <div class="row">
-          <div class='col-xs-1'>
-            <i class='fa fa-hand-o-right'></i>
-          </div>
-          <div class='col-xs-11'>
-            <p>
-              <a href='' data-toggle='modal' data-target='#varmour-modal'>
-                test
-              </a>
-            </p>
-          </div>
-        </div>
 
         <% @story.outbound_links.each do |link| %>
 

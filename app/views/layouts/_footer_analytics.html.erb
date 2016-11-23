@@ -1,3 +1,44 @@
 
- <!-- Get Clicky Analytics -->
-<noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/100886848ns.gif" /></p></noscript>
+<% if include_gtm?(company, current_user, controller_name, action_name) %>
+
+  <!-- Google Tag Manager (for browser with js disabled) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-<%= company.try(:gtm_id) %>"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager -->
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer', 'GTM-' + "<%= company.try(:gtm_id) %>");</script>
+  <!-- End Google Tag Manager -->
+
+<% end %>
+
+<!-- browsers with js disabled -->
+<% if ENV['HOST_NAME'] == 'customerstories.net' %>
+
+  <!-- google ad words -->
+  <script type="text/javascript">
+    /* <![CDATA[ */
+    var google_conversion_id = 919156278;
+    var google_custom_params = window.google_tag_params;
+    var google_remarketing_only = true;
+    /* ]]> */
+  </script>
+  <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+  </script>
+
+  <noscript>
+    <!-- google ads -->
+    <div style="display:inline;">
+      <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/919156278/?guid=ON&amp;script=0"/>
+    </div>
+    <!-- clicky -->
+    <p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/100886848ns.gif" />
+    </p>
+  </noscript>
+
+<% end %>
+

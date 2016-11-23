@@ -8,7 +8,6 @@ Rails.application.configure do
     end
   end
 
-
   # moved from session_store.rb
   if ENV['HOST_NAME'] == 'customerstories.net'
     Rails.application.config.session_store :cookie_store, key: '_csp_session', domain: 'customerstories.net', tld_length: 2

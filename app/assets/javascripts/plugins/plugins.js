@@ -7,8 +7,6 @@
 //= require plugins/socialshare
 //= require plugins/tooltips
 //= require plugins/clicky
-//= require plugins/promote
-//= require plugins/marketo
 
 function constructPlugins () {
 
@@ -19,8 +17,6 @@ function constructPlugins () {
   initSocialShare();
   initTooltips();
   initClicky();
-  initAdRoll();
-  initMarketo();
 
   $('.best_in_place').best_in_place();
   $('.bs-switch').bootstrapSwitch({ size: 'small' });
