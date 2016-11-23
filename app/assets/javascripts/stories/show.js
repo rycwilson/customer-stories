@@ -3,7 +3,7 @@ function storiesShow () {
   loadVideoThumbnail();
   widgetsMonitor();
 
-  // $('#iframe-test').on('click', function () {
+  // $(document).on('click', '.outbound-script', function () {
 
   //   $('#iframe-modal').find('iframe')[0].contentDocument.write('' +
   //     '<!DOCTYPE html>' +
