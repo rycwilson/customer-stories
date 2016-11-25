@@ -1,0 +1,2 @@
+class OutboundForm < OutboundAction
+end

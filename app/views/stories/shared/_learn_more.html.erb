@@ -1,0 +1,34 @@
+
+<div id='learn-more' class='well' style='margin-top:15px!important'>
+  <h3 class='text-center'>Learn More</h3>
+
+  <% story.outbound_actions.each do |action| %>
+
+    <div class="row">
+      <div class='col-xs-1'>
+        <i class='fa fa-hand-o-right'></i>
+      </div>
+      <div class='col-xs-11'>
+
+        <% if action.type == 'OutboundLink' %>
+
+          <p><a href="<%= action.link_url %>" target='_blank'>
+            <%= action.link_display_text %>
+          </a></p>
+
+        <% else %>  <!-- OutboundForm -->
+
+          <p><a href="#outbound-form-<%= action.id %>-modal"
+                class='outbound-form' data-toggle='modal'
+                data-target="#outbound-form-<%= action.id %>-modal">
+            <%= action.form_display_text %>
+          </a></p>
+
+        <% end %>
+
+      </div>
+    </div>
+
+  <% end %>
+
+</div>

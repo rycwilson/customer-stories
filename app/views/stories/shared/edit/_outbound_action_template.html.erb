@@ -1,13 +1,13 @@
 
-<script type='text/template' id='outbound_action_template'>
+<script type='text/template' id='outbound-action-template'>
 
-  {{ if (action.type === 'link') { }}
+  <div class="row">
+    <div class="col-sm-1" style='text-align:center;padding-right:0'>
+      <i class="fa fa-{{= action.type === 'OutboundLink' ? 'link' : 'wpforms' }}"></i>
+    </div>
+    <div class="col-sm-11">
+      <p>{{= action.description }}</p>
+    </div>
+  </div>
 
-
-
-  {{ } else { }}
-
-
-
-  {{ } }}
 </script>

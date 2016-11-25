@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161117225339) do
+ActiveRecord::Schema.define(version: 20161124061741) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -173,25 +173,28 @@ ActiveRecord::Schema.define(version: 20161117225339) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "outbound_links", force: :cascade do |t|
-    t.string   "url"
-    t.string   "link_text"
+  create_table "outbound_actions", force: :cascade do |t|
+    t.string   "link_url"
     t.integer  "company_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.string   "type"
+    t.text     "form_html"
+    t.string   "display_text"
+    t.string   "description"
   end
 
-  add_index "outbound_links", ["company_id"], name: "index_outbound_links_on_company_id", using: :btree
+  add_index "outbound_actions", ["company_id"], name: "index_outbound_actions_on_company_id", using: :btree
 
-  create_table "outbound_links_stories", force: :cascade do |t|
-    t.integer  "outbound_link_id"
+  create_table "outbound_actions_stories", force: :cascade do |t|
+    t.integer  "outbound_action_id"
     t.integer  "story_id"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
   end
 
-  add_index "outbound_links_stories", ["outbound_link_id"], name: "index_outbound_links_stories_on_outbound_link_id", using: :btree
-  add_index "outbound_links_stories", ["story_id"], name: "index_outbound_links_stories_on_story_id", using: :btree
+  add_index "outbound_actions_stories", ["outbound_action_id"], name: "index_outbound_actions_stories_on_outbound_action_id", using: :btree
+  add_index "outbound_actions_stories", ["story_id"], name: "index_outbound_actions_stories_on_story_id", using: :btree
 
   create_table "product_categories", force: :cascade do |t|
     t.string   "name"
@@ -381,9 +384,9 @@ ActiveRecord::Schema.define(version: 20161117225339) do
   add_foreign_key "industries_successes", "successes"
   add_foreign_key "industry_categories", "companies"
   add_foreign_key "invited_curators", "companies"
-  add_foreign_key "outbound_links", "companies"
-  add_foreign_key "outbound_links_stories", "outbound_links"
-  add_foreign_key "outbound_links_stories", "stories"
+  add_foreign_key "outbound_actions", "companies"
+  add_foreign_key "outbound_actions_stories", "outbound_actions"
+  add_foreign_key "outbound_actions_stories", "stories"
   add_foreign_key "product_categories", "companies"
   add_foreign_key "product_cats_successes", "product_categories"
   add_foreign_key "product_cats_successes", "successes"

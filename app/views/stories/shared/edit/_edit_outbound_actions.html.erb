@@ -17,7 +17,7 @@
             </label>
             <label class="radio-inline">
               <input id='source-radio' name='outbound-options' type="radio"
-                     autocomplete="off">Source Code
+                     autocomplete="off">Web form
             </label>
           </div>
         </div>
@@ -30,16 +30,23 @@
             <%= text_field_tag 'outbound_action[link_url]', nil,
                   class: 'form-control link-input',
                   placeholder: 'website address' %>
-            <%= text_field_tag 'outbound_action[html_display_text]', nil,
+                  <!-- what happens when two description fields? -->
+            <%= text_field_tag 'outbound_action[link_description]', nil,
+                  class: 'form-control link-input',
+                  placeholder: 'description' %>
+            <%= text_field_tag 'outbound_action[form_display_text]', nil,
                   class: 'form-control html-input',
                   placeholder: 'display text' %>
-            <%= text_area_tag 'outbound_action[html]', nil,
+            <%= text_area_tag 'outbound_action[form_html]', nil,
                   class: 'form-control html-input', rows: 3,
                   placeholder: 'html, e.g. <script> and <form> tags' %>
+            <%= text_field_tag 'outbound_action[form_description]', nil,
+                  class: 'form-control html-input',
+                  placeholder: 'description' %>
           </div>
           <div>
             <%= button_tag type: 'submit', class: 'btn btn-secondary btn-sm',
-                  id: 'outbound-links-submit' do %>
+                  id: 'outbound-links-submit', disabled: true do %>
               <i class='glyphicon glyphicon-plus'></i>
             <% end %>
           </div>
@@ -49,12 +56,21 @@
 
       <hr>
 
-      <div class="row">
-        <div class="col-sm-12">
+      <div id='actions-list'>
+        <% story.outbound_actions.each do |action| %>
 
-          <%  %>
-
+        <div class="row">
+          <div class="col-sm-1" style='text-align:center;padding-right:0'>
+            <i class="fa fa-<%= action.type == 'OutboundLink' ? 'link' : 'wpforms' %>"></i>
+          </div>
+          <div class="col-sm-11">
+            <p>
+              <%= action.display_text %>
+            </p>
+          </div>
         </div>
+
+        <% end %>
       </div>
 
 

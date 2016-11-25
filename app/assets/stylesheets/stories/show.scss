@@ -1,6 +1,29 @@
 
 .stories.show {
 
+  .modal[id^='outbound-form'] {
+    .modal-header {
+      height: 50px;
+      padding: 10px;
+      img {
+        max-height: 100%;
+      }
+    }
+    // size the modal to fit content
+    // ref: http://stackoverflow.com/questions/16152275
+    .modal-dialog {
+      position: relative;
+      display: table; //This is important
+      overflow-y: auto;
+      overflow-x: auto;
+      width: auto;
+    }
+    .modal-body {
+      height: calc(100vh - 200px);
+      // overflow-y: scroll;
+    }
+  }
+
   .cta_btn {
     font-weight: 400;
     border-radius: 2px;

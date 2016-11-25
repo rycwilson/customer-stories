@@ -1,2 +1,0 @@
-class OutboundScript < OutboundAction
-end

@@ -67,29 +67,7 @@
 
     <% if @story.outbound_actions.present? %>
 
-      <div id='learn-more' class='well' style='margin-top:15px!important'>
-        <h3 class='text-center'>Learn More</h3>
-
-        <% @story.outbound_actions.each do |action| %>
-
-          <div class="row">
-            <div class='col-xs-1'>
-              <i class='fa fa-hand-o-right'></i>
-            </div>
-            <div class='col-xs-11'>
-
-              <p><a href="<%= action.type == 'OutboundLink' ? action.link_url : '' %>"
-                    target='_blank'>
-                <%= action.type == 'OutboundLink' ? action.link_display_text :
-                      action.html_display_text %>
-              </a></p>
-
-            </div>
-          </div>
-
-        <% end %>
-
-      </div>
+      <%= render 'stories/shared/learn_more', { story: @story } %>
 
     <% end %>
 

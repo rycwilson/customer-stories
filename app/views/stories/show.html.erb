@@ -18,6 +18,14 @@
 
 <%= render 'stories/shared/video_modal' %>
 
+<% @story.outbound_actions
+         .select { |action| action.type == 'OutboundForm' }
+         .each do |form| %>
+
+  <%= render 'stories/shared/outbound_form_modal', { form: form } %>
+
+<% end %>
+
 <!--
   why use memcache iterators here?
   because when a given story updates (title, csp_story_path, customer logo_url),
@@ -140,6 +148,4 @@
   </div>
 <% end %>
 
-
-</div>
 
