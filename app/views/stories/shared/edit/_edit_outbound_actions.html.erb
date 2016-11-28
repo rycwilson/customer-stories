@@ -24,15 +24,17 @@
 
         <div class="row">
           <div class="col-sm-12">
+            <%= text_field_tag 'outbound_action[link_description]', nil,
+                  class: 'form-control link-input',
+                  placeholder: 'description' %>
             <%= text_field_tag 'outbound_action[link_display_text]', nil,
                   class: 'form-control link-input',
                   placeholder: 'display text' %>
             <%= text_field_tag 'outbound_action[link_url]', nil,
                   class: 'form-control link-input',
                   placeholder: 'website address' %>
-                  <!-- what happens when two description fields? -->
-            <%= text_field_tag 'outbound_action[link_description]', nil,
-                  class: 'form-control link-input',
+            <%= text_field_tag 'outbound_action[form_description]', nil,
+                  class: 'form-control html-input',
                   placeholder: 'description' %>
             <%= text_field_tag 'outbound_action[form_display_text]', nil,
                   class: 'form-control html-input',
@@ -40,9 +42,6 @@
             <%= text_area_tag 'outbound_action[form_html]', nil,
                   class: 'form-control html-input', rows: 3,
                   placeholder: 'html, e.g. <script> and <form> tags' %>
-            <%= text_field_tag 'outbound_action[form_description]', nil,
-                  class: 'form-control html-input',
-                  placeholder: 'description' %>
           </div>
           <div>
             <%= button_tag type: 'submit', class: 'btn btn-secondary btn-sm',
@@ -56,17 +55,25 @@
 
       <hr>
 
-      <div id='actions-list'>
-        <% story.outbound_actions.each do |action| %>
+      <div id='outbound-actions-list'>
 
-        <div class="row">
-          <div class="col-sm-1" style='text-align:center;padding-right:0'>
-            <i class="fa fa-<%= action.type == 'OutboundLink' ? 'link' : 'wpforms' %>"></i>
+        <% story.outbound_actions.each_with_index do |action, index| %>
+
+        <div class='outbound-actions-list-item'>
+          <div class="modify-outbound-action">
+            <div class='delete-outbound-action' id="delete-outbound-action-<%= index %>"
+                 data-action="<%= outbound_action_path(action) %>">
+              <i class='glyphicon glyphicon-remove bip-clickable'></i>
+            </div>
           </div>
-          <div class="col-sm-11">
-            <p>
-              <%= action.display_text %>
-            </p>
+
+          <div class="row outbound-action">
+            <div class="col-sm-1">
+              <i class="fa fa-<%= action.type == 'OutboundLink' ? 'link' : 'wpforms' %>"></i>
+            </div>
+            <div class="col-sm-11">
+              <span><%= action.description %></span>
+            </div>
           </div>
         </div>
 

@@ -34,6 +34,25 @@
         display: none;   // to be toggled
       }
     }  // #outbound-links-form
+    hr {
+      margin: 15px 15px;
+    }
+    #outbound-actions-list {
+      line-height: 32px;
+      .outbound-action {
+        padding-left: 30px;
+        width:88%;
+        div:first-child {
+          text-align: center;
+          padding: 0;
+        }
+      }
+      .delete-outbound-action {
+        position: absolute;
+        right:40px;
+      }
+    }
+
 
   }
   /***********************************************/
@@ -233,6 +252,7 @@
   #edit-story-benefits:hover + #story-benefits,
   .modify-result:hover + .story-result,
   .modify-prompt:hover + .story-prompt,
+  .modify-outbound-action:hover + .outbound-action,
   i.cc-editable:hover + .cc-editable,
   i.cc-editable:hover + .cc-editable + .cc-editable {
     // border-left: 3px solid #87a3bc;

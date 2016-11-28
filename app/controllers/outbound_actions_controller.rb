@@ -28,7 +28,13 @@ class OutboundActionsController < ApplicationController
   def update
   end
 
+  # method responds with the deleted action object's id
+  # the id isn't needed by client, however if empty response (e.g. format.json { head :ok }),
+  # then response isn't caught by the AJAX success handler
   def destroy
+    action = OutboundAction.find params[:id]
+    action.destroy
+    respond_to { |format| format.json { render json: { action: action.id } } }
   end
 
 end

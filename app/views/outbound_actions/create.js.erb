@@ -4,6 +4,6 @@
   var newAction = <%= raw @new_action.to_json({ methods: [:type] }) %>,
       template = _.template($('#outbound-action-template').html());
 
-  $('#actions-list').append(template({ action: newAction }))
+  $('#outbound-actions-list').append(template({ action: newAction }))
 
 }());

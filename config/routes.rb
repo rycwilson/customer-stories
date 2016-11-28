@@ -57,9 +57,11 @@ Rails.application.routes.draw do
       get '/stories/:id/approval', to: 'stories#approval', as: 'story_approval'
 
       # outbound actions
-      get 'outbound_forms/:id', to: 'outbound_actions#show', as: 'outbound_form'
-      post '/stories/:id/outbound_actions', to: 'outbound_actions#create',
+      get   '/outbound_forms/:id', to: 'outbound_actions#show', as: 'outbound_form'
+      post  '/stories/:id/outbound_actions', to: 'outbound_actions#create',
               as: 'new_outbound_action'
+      delete '/outbound_actions/:id', to: 'outbound_actions#destroy',
+              as: 'outbound_action'
 
       # delete a Prompt
       delete '/prompts/:id', to: 'prompts#destroy'

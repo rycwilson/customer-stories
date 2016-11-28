@@ -1,13 +1,24 @@
 
 <script type='text/template' id='outbound-action-template'>
 
-  <div class="row">
-    <div class="col-sm-1" style='text-align:center;padding-right:0'>
-      <i class="fa fa-{{= action.type === 'OutboundLink' ? 'link' : 'wpforms' }}"></i>
+  <div class='outbound-actions-list-item'>
+
+    <div class="modify-outbound-action">
+      <div class='delete-outbound-action'
+           data-action="'/outbound_actions/{{= action.id }}">
+        <i class='glyphicon glyphicon-remove bip-clickable'></i>
+      </div>
     </div>
-    <div class="col-sm-11">
-      <p>{{= action.description }}</p>
+
+    <div class="row outbound-action">
+      <div class="col-sm-1">
+        <i class="fa fa-{{= action.type == 'OutboundLink' ? 'link' : 'wpforms' }}"></i>
+      </div>
+      <div class="col-sm-11">
+        <span>{{= action.description }}</span>
+      </div>
     </div>
+
   </div>
 
 </script>

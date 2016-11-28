@@ -10,13 +10,13 @@ function storiesEditHandlers () {
 
   $(document)
     .on('shown.bs.collapse', '.contribution-card',
-    function () {
-      if ($(this).find('.linkedin-checkbox-and-widget').hasClass('hidden')) {
-        return false;
-      } else {
-        loadLIWidget($(this));
-      }
-    });
+      function () {
+        if ($(this).find('.linkedin-checkbox-and-widget').hasClass('hidden')) {
+          return false;
+        } else {
+          loadLIWidget($(this));
+        }
+      });
 
   storiesEditBIPHandlers();
   storiesEditSettingsHandlers();
@@ -239,7 +239,26 @@ function storiesEditOutboundActionsHandlers () {
             return el.value !== '';
           })) {
         $(this).find('button[type="submit"]').prop('disabled', false);
+      } else if ($formRadio.prop('checked') &&
+                 $.makeArray($('.html-input')).every(function (el) {
+                   return el.value !== '';
+                 })) {
+        $(this).find('button[type="submit"]').prop('disabled', false);
       }
+    });
+
+  // delete a prompt
+  $(document).on('click', '.delete-outbound-action',
+    function () {
+      var $_this = $(this);
+      $.ajax({
+        url: $(this).data('action'),
+        method: 'delete',
+        success: function (data, status, xhr) {
+          console.log(data);
+          $_this.closest('.outbound-actions-list-item').remove();
+        }
+      });
     });
 
 }

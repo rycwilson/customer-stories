@@ -13,7 +13,7 @@
         <% if action.type == 'OutboundLink' %>
 
           <p><a href="<%= action.link_url %>" target='_blank'>
-            <%= action.link_display_text %>
+            <%= action.display_text %>
           </a></p>
 
         <% else %>  <!-- OutboundForm -->
@@ -21,7 +21,7 @@
           <p><a href="#outbound-form-<%= action.id %>-modal"
                 class='outbound-form' data-toggle='modal'
                 data-target="#outbound-form-<%= action.id %>-modal">
-            <%= action.form_display_text %>
+            <%= action.display_text %>
           </a></p>
 
         <% end %>
