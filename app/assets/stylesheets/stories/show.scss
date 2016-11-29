@@ -1,6 +1,61 @@
 
 .stories.show {
 
+  #related-stories {
+    padding-bottom: 15px;
+    .row {
+      font-size: 0;
+      margin-bottom: 20px;
+      div[class^='col-'] {
+        float: none;
+        display: inline-block;
+        vertical-align: bottom;
+      }
+      h3 {
+        display: inline-block;
+        margin-bottom: 0;
+        margin-right: 10px;
+      }
+      a {
+        font-size: 13px;
+      }
+    }
+    .grid {
+      margin: 0 auto;
+    }
+    .grid-item {
+      width: 140px;
+      height: 100px;
+      // margin-left: 24px;
+      // margin-right: 24px;
+      margin-bottom: 20px;  // mirrors #stories-gallery-content
+      position: relative;  // this is for positioning the caption at the bottom
+      // border: 2px solid hsla(0, 0%, 0%, 0.5);
+    }
+
+    .grid-item.thumbnail {
+      padding: 0   // define all in order to override bootstrap default
+    }
+
+    .grid-item.thumbnail > img {
+      max-height: 78px;
+      padding: 5px 10px 5px 10px;
+    }
+
+    .grid-item.thumbnail.no-caption > img {
+      margin-top: 11px;
+      padding: 5px 10px 5px 10px;
+    }
+
+    .grid-item.thumbnail .caption {
+      padding: 2px 0 2px 6px;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      border-radius: 0 0 3px 3px;
+    }
+  }
+
   .modal[id^='outbound-form'] {
     .modal-header {
       height: 50px;
@@ -305,6 +360,10 @@
     }
   }
 
+  .linkedin-widgets {
+    margin-bottom: 20px;
+  }
+
   #story-results + .story-video {
     margin: 0 0 30px 0;
   }
@@ -397,9 +456,6 @@
   }
 
   @media (min-width: 768px) {
-    #story-nav-col {
-      margin-bottom: 20px;
-    }
     #story-testimonial-col {
       margin: 0 0 10px 0;
     }
@@ -439,9 +495,6 @@
     }
     #social-buttons {
       padding-right: 25px;
-    }
-    #story-nav-col {
-      margin-bottom: 5px;
     }
     #story-testimonial-col {
       margin: 10px 0 10px 0;
@@ -485,9 +538,6 @@
     }
     #social-buttons {
       padding-right: 34px;
-    }
-    #story-nav-col {
-      margin-bottom: 5px;
     }
     #story-testimonial-col {
       margin: 10px 0 10px 0;

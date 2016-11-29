@@ -247,7 +247,6 @@ function storiesEditOutboundActionsHandlers () {
       }
     });
 
-  // delete a prompt
   $(document).on('click', '.delete-outbound-action',
     function () {
       var $_this = $(this);
@@ -255,7 +254,6 @@ function storiesEditOutboundActionsHandlers () {
         url: $(this).data('action'),
         method: 'delete',
         success: function (data, status, xhr) {
-          console.log(data);
           $_this.closest('.outbound-actions-list-item').remove();
         }
       });

@@ -595,12 +595,15 @@ class Story < ActiveRecord::Base
     same_category_stories = []
     success = self.success
     company = success.customer.company
-    published_stories = company.published_stories
+    published_stories =
+      company.published_stories.delete_if { |story_id| story_id == self.id }
     success.products.each do |product|
       same_product_stories += company.published_stories_filter_product(product.id)
+                                     .delete_if { |story_id| story_id == self.id }
     end
     success.story_categories.each do |category|
       same_category_stories += company.published_stories_filter_category(category.id)
+                                      .delete_if { |story_id| story_id == self.id }
     end
     same_tag_stories = (same_product_stories + same_category_stories).uniq
     if same_product_stories.length >= 3
@@ -611,7 +614,9 @@ class Story < ActiveRecord::Base
       related_stories = published_stories.sample(3)
     else
       related_stories = same_tag_stories +
-                        published_stories.sample(3 - same_tag_stories.length)
+                        published_stories.delete_if do |story_id|
+                          same_tag_stories.include?(story_id)
+                        end.sample(3 - same_tag_stories.length)
     end
     Story.find(related_stories)
   end
