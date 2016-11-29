@@ -22,6 +22,7 @@ class Company < ActiveRecord::Base
   has_many :product_categories, dependent: :destroy
   has_many :email_templates, dependent: :destroy
   has_one :cta_button, dependent: :destroy
+  has_many :outbound_actions, dependent: :destroy
 
   # presently uploading direct to S3, paperclip not used
   # paperclip
