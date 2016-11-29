@@ -6,11 +6,16 @@
   <div class="well">
     <div class="container-fluid">
 
+
       <%= form_tag new_outbound_action_path(story.id), remote: true,
             id: 'outbound-actions-form' do %>
 
         <div class='row btn-group' data-toggle="buttons">
           <div class="col-sm-12">
+            <div>
+
+            </div>
+            <label>Create a new action</label>
             <label class="radio-inline active">
               <input id='link-radio' name='outbound-options' type="radio"
                      autocomplete="off" checked>Link

@@ -7,8 +7,14 @@
       margin-bottom: 10px;
     }
     #outbound-actions-form {
-      .radio-inline {
-        margin-bottom: 12px;
+      .btn-group {
+        margin-bottom: 6px;
+        label {
+          margin-right: 14px;
+        }
+        .radio-inline {
+          margin-bottom: 4px;
+        }
       }
       .row:nth-of-type(2) {
         position: relative;
