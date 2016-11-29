@@ -65,7 +65,7 @@ class StoriesController < ApplicationController
       @prev_story = @story.previous(@is_curator)
       @next_story = @story.next(@is_curator)
     end
-
+    @related_stories = @story.related_stories
   end
 
   def edit

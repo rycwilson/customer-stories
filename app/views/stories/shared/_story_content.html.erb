@@ -20,27 +20,30 @@
     </div>
 
 
-    <div id='related-stories' class='well hidden-xs'>
+    <% if @related_stories.length >= 2 %>
 
-      <div class="row">
-        <div class="col-xs-12">
-          <h3>Related stories</h3>
-          <a href='/'>All stories</a>
+      <div id='related-stories' class='well hidden-xs'>
+
+        <div class="row">
+          <div class="col-xs-12">
+            <h3>Related stories</h3>
+            <a href='/'>All stories</a>
+          </div>
         </div>
+
+        <div class="grid">
+          <% @related_stories.each do |story| %>
+
+            <%= render 'stories/shared/public_story_tile',
+                        { company: @company, story: story,
+                          customer: story.success.customer } %>
+
+          <% end %>
+        </div>
+
       </div>
 
-      <div class="grid">
-
-        <% @story.related_stories.each do |story| %>
-
-          <%= render 'stories/shared/public_story_tile',
-                      { company: @company, story: story,
-                        customer: story.success.customer } %>
-
-        <% end %>
-
-      </div>
-    </div>
+    <% end %>
 
   </div>
 
@@ -112,27 +115,31 @@
       </div>
     <% end %>
 
-    <div id='related-stories' class='well visible-xs'>
+    <% if @related_stories.length >= 2 %>
 
-      <div class="row">
-        <div class="col-xs-12">
-          <h3>Related stories</h3>
-          <a href='/'>All stories</a>
+      <div id='related-stories' class='well visible-xs'>
+
+        <div class="row">
+          <div class="col-xs-12">
+            <h3>Related stories</h3>
+            <a href='/'>All stories</a>
+          </div>
         </div>
+
+        <div class="grid">
+          <% @related_stories.each do |story| %>
+
+            <%= render 'stories/shared/public_story_tile',
+                        { company: @company, story: story,
+                          customer: story.success.customer } %>
+
+          <% end %>
+        </div>
+
       </div>
 
-      <div class="grid">
+    <% end %>
 
-        <% @story.related_stories.each do |story| %>
-
-          <%= render 'stories/shared/public_story_tile',
-                      { company: @company, story: story,
-                        customer: story.success.customer } %>
-
-        <% end %>
-
-      </div>
-    </div>
   </div>
 
 </div>
