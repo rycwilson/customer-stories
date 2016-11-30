@@ -191,7 +191,7 @@ class CompaniesController < ApplicationController
                 sitekey: ENV['GETCLICKY_SITE_KEY'],
                 type: 'actions-list',
                 date: 'last-7-days',
-                limit: 'all',
+                limit: '100',
                 output: 'json' },
       headers: { Accept: "application/json" }
     )
@@ -253,14 +253,14 @@ class CompaniesController < ApplicationController
 
     story_views_visitors_list_requests =
       story_views.map do |view|
-        request = clicky_session_request(view[:session_id])
+        request = clicky_session_request(view[:session_id], @company)
         hydra.queue(request)
         request
       end
 
     story_shares_visitors_list_requests =
       story_shares.map do |share|
-        request = clicky_session_request(share[:session_id])
+        request = clicky_session_request(share[:session_id], @company)
         hydra.queue(request)
         request
       end
@@ -318,7 +318,7 @@ class CompaniesController < ApplicationController
     end
   end
 
-  def clicky_session_request session_id
+  def clicky_session_request session_id, company
     Typhoeus::Request.new(
       GETCLICKY_API_BASE_URL,
       method: :get,
@@ -326,7 +326,7 @@ class CompaniesController < ApplicationController
       params: { site_id: ENV['GETCLICKY_SITE_ID'],
                 sitekey: ENV['GETCLICKY_SITE_KEY'],
                 type: 'visitors-list',
-                date: 'last-7-days',
+                date: company.subdomain == 'varmour' ? 'last-1-days' : 'last-7-days',
                 session_id: session_id,
                 limit: 'all',
                 output: 'json' },

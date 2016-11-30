@@ -194,9 +194,13 @@ class Company < ActiveRecord::Base
   def customer_select_options
     self.customers.map do |customer|
       # name will appear as a selection, while its id will be the value submitted
-      [ customer.name, customer.id, ]
+      [ customer.name, customer.id ]
     end
     .unshift( [""] )  # empty option makes placeholder possible (only needed for single select)
+  end
+
+  def outbound_actions_select_options
+    self.outbound_actions.map { |action| [ action.description, action.id ] }
   end
 
   def templates_select
