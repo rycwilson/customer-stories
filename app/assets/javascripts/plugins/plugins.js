@@ -32,7 +32,7 @@ function constructPlugins () {
   $('#outbound-links-form').dirtyFields();
 
   $('#activity-feed-btn').popover({
-    title: 'Last 7 days',
+    title: "Last day's activity",
     placement: 'right',
     html: 'true',
     trigger: 'manual',
