@@ -29,7 +29,11 @@ function initMasonry () {
   // set isInitLayout to false (default is true);
   $('.grid').imagesLoaded(function () {
     $('.grid').masonry();
-    setTimeout(function () { centerLogos(); }, 500);
+    // setTimeout(function () { centerLogos(); }, 500);
+  });
+
+  $('.grid').masonry('on', 'layoutComplete', function () {
+    centerLogos();
   });
 
 }

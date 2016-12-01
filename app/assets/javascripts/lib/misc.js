@@ -17,8 +17,9 @@ function getQueryString (field, url) {
   do it with jquery instead
 */
 function centerLogos () {
+
   $('#stories-gallery img, .drawer-items img, #related-stories img')
-    .each(function (image) {
+    .each(function () {
       var height = $(this).outerHeight(),
           maxHeight = parseInt($(this).css('max-height')),
           diff = maxHeight - height;
@@ -34,4 +35,5 @@ function centerLogos () {
         $(this).data('modified', true);
       }
     });
+
 }
