@@ -81,6 +81,7 @@ class CompaniesController < ApplicationController
     events = []
     story_views = []
     story_shares = []
+    sessions_organizations = []
 
     contributions =
       Contribution
@@ -213,6 +214,7 @@ class CompaniesController < ApplicationController
                          organization: '',
                          session_id: action['session_id'],
                          timestamp: DateTime.strptime(action['time'], '%s') }
+        sessions_organizations << { session_id: action['session_id'], organization: '' }
       elsif action['action_type'] == 'click'
         shared_story_slug = ''
         if action['action_url'].include?('linkedin') ||
@@ -241,10 +243,13 @@ class CompaniesController < ApplicationController
                               organization: '',
                               session_id: action['session_id'],
                               timestamp: DateTime.strptime(action['time'], '%s') }
+            sessions_organizations << { session_id: action['session_id'], organization: '' }
           end
         end
       end
     end
+
+    sessions_organizations.uniq! { |session| session[:session_id] }
 
     story_views.uniq! { |view| view.values_at(:target, :session_id) }
 
