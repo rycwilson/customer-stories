@@ -1,0 +1,2 @@
+class PageShare < VisitorAction
+end

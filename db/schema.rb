@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161124061741) do
+ActiveRecord::Schema.define(version: 20161201211907) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -347,8 +347,10 @@ ActiveRecord::Schema.define(version: 20161124061741) do
     t.string   "type"
     t.integer  "success_id"
     t.integer  "visitor_session_id"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.boolean  "landing",            default: false
+    t.string   "social_provider"
   end
 
   add_index "visitor_actions", ["success_id"], name: "index_visitor_actions_on_success_id", using: :btree
@@ -370,8 +372,10 @@ ActiveRecord::Schema.define(version: 20161124061741) do
     t.integer  "company_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "clicky_uid"
   end
 
+  add_index "visitors", ["clicky_uid"], name: "index_visitors_on_clicky_uid", unique: true, using: :btree
   add_index "visitors", ["company_id"], name: "index_visitors_on_company_id", using: :btree
 
   add_foreign_key "contributions", "successes"

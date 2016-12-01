@@ -1,0 +1,2 @@
+class PageView < VisitorAction
+end
