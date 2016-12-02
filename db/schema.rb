@@ -350,7 +350,7 @@ ActiveRecord::Schema.define(version: 20161201211907) do
     t.datetime "created_at",                         null: false
     t.datetime "updated_at",                         null: false
     t.boolean  "landing",            default: false
-    t.string   "social_provider"
+    t.string   "share_network"
   end
 
   add_index "visitor_actions", ["success_id"], name: "index_visitor_actions_on_success_id", using: :btree

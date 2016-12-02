@@ -5,6 +5,6 @@ class Visitor < ActiveRecord::Base
   has_many :visitor_actions, through: :visitor_sessions
   has_many :successes, through: :visitor_actions
 
-  validates :name, presence: true, uniqueness: true
+  # validates :name, presence: true
 
 end
