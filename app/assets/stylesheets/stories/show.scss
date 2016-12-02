@@ -104,11 +104,11 @@
     h3 {
       float: none;
       display: inline-block;
-      margin-top: 14px;
+      margin-top: 11px;
       margin-bottom: 0;
       vertical-align: bottom;
-      font-size: 20px;
-      color: #b3b3b3;
+      font-size: 24px;
+      color: #cfcfcf; //#b3b3b3;
     }
     .btn {
       float: none;
@@ -215,11 +215,11 @@
       // margin-left: 54rem;   see media queries below
     }
     a {
-      background-color: #f9f9f9;
+      background-color: #f4f4f4;
       background-position: center 2.1rem;
       background-repeat: no-repeat;
       background-size: 0 0;
-      border: 1px solid #dbdbdb;
+      border: 1px solid #e3e3e3;
       border-radius: 0.5rem;
       display: block;
       font-family: Arial, sans-serif;
@@ -251,7 +251,7 @@
       background-color: #fff;
       background-size: 50%; // 10rem 6.6rem;
       background-position: center 24%;
-      border: 1px solid #e8e8e8;
+      border: 1px solid #e3e3e3;
       border-radius: 0.3rem;
       color: #337ab7;
       font-family: Arial, sans-serif;
@@ -324,15 +324,17 @@
   }
 
   #story-section-content {
-    background-color: #f2f2f2;
+    background-color: #f2f2f2; //#f2f2f2;
     padding-top: 15px;
-    margin-top: -15px;
+    // margin-top: -20px;
+    padding-bottom: 26px;
   }
 
   #story-section-testimonial {
     position: relative;
     /* make some room for the trailing color gradient (see below) */
-    margin: 0 0 50px 0;
+    margin: 0 0 90px 0;
+    // padding-bottom: 15px;
   }
 
   #story-section-testimonial:after {
@@ -341,9 +343,10 @@
     top: 100%;
     z-index: -1;
     width: 100%;
-    height: 50px;
+    // margin-top: -20px;
+    height: 90px;
     // margin-top: 2px;
-    background-image: linear-gradient(to top, #f2f2f2 0%, #ffffff 100%);
+    background-image: linear-gradient(to top, #f2f2f2 0%, #ffffff 100%);  //f2f2f2
     background-repeat: repeat-x;
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2f2f2', endColorstr='#ffffffff', GradientType=0);
   }
@@ -498,6 +501,9 @@
     #story-video-modal iframe {
       height: 330px;
     }
+    #story-section-content > .container > div[class^='col'] {
+      margin-top: -42px;
+    }
   }
 
   @media (min-width: 992px) {
@@ -531,6 +537,9 @@
     }
     #story-video-modal iframe {
       height: 490px;
+    }
+    #story-section-content > .container > div[class^='col'] {
+      margin-top: -42px;
     }
   }
 
@@ -571,6 +580,9 @@
     }
     #story-video-modal iframe {
       height: 490px;
+    }
+    #story-section-content > .container > div[class^='col'] {
+      margin-top: -42px;
     }
   }
 

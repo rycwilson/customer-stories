@@ -101,7 +101,7 @@
 </div>
 
 <!-- video (xs only) -->
-<div id='story-section-video-xs'>
+<div id='story-section-video-xs' class='visible-xs'>
 
   <% cache("#{@company.subdomain}/story-#{@story.id}-video-xs",
            skip_digest: true) do %>
@@ -119,7 +119,7 @@
 </div>
 
 <!-- story content, results, contributing team -->
-<div id='story-section-content' style='padding-bottom:26px'>
+<div id='story-section-content'>
 
   <%= render 'stories/shared/story_content',
       { company: @company, story: @story, contributors: @contributors } %>
