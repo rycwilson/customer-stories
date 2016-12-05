@@ -5,27 +5,32 @@ namespace :clicky do
   task download: :environment do
 
     new_visitor_sessions = []  # unique session ids
-    visitors_list = get_clicky_visitors(3600)  # range in seconds relative to now
-    visitors_list.slice!(0, visitors_list.index do |session|
-                              session['session_id'] == VisitorSession.last_recorded
-                            end || visitors_list.length)
+    visitors_list = get_clicky_visitors(36000)  # range in seconds relative to now
+    # remove any sessions that have already been saved
+    visitors_list.slice!(
+      visitors_list.index do |session|
+        session['session_id'] == VisitorSession.last_recorded.try(:clicky_session_id)
+      end || visitors_list.length, visitors_list.length)
+    puts "\nVISITORS LIST\n"
     puts JSON.pretty_generate(visitors_list)
 
     visitors_list.each do |session|
       company = Company.find_by(subdomain: session['landing_page'].match(/\/\/((\w|-)+)/)[1])
+      puts "\nCOMPANY FOUND #{ company.subdomain}\n"
       next if company.nil?
       visitor = Visitor.find_by(clicky_uid: session['uid']) ||
                 Visitor.create(clicky_uid: session['uid'],
                                name: session['organization'],
                                location: session['geolocation'],
                                company_id: company.id)
-      # create a new VisitorSession
+      puts "\nERRORS CREATING VISITOR\n"
+      puts visitor.errors.full_messages
       visitor_session =
         VisitorSession.create(
           timestamp: Time.at(session['time'].to_i),
           visitor_id: visitor.id,
+          clicky_session_id: session['session_id'],
           referrer_type: session['referrer_type'].present? ? session['referrer_type'] : nil)
-        VisitorSession.last_recorded = session['session_id']
       # create a new VisitorAction, use landing_page to look up story
       story_slug = session['landing_page'].slice(session['landing_page'].rindex('/') + 1, session['landing_page'].length)
       success = Story.friendly.exists?(story_slug) ? Story.friendly.find(story_slug).success : nil
@@ -51,7 +56,7 @@ namespace :clicky do
       params: { site_id: ENV['GETCLICKY_SITE_ID'],
                 sitekey: ENV['GETCLICKY_SITE_KEY'],
                 type: 'visitors-list',
-                time_offset: range,
+                time_offset: "#{range}",
                 limit: 'all',
                 output: 'json' },
       headers: { Accept: "application/json" }
