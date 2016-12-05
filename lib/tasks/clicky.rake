@@ -5,15 +5,14 @@ namespace :clicky do
   task download: :environment do
 
     new_visitor_sessions = []  # unique session ids
-    visitors_list = get_clicky_visitors(36000)  # range in seconds relative to now
+    visitors_list = get_clicky_visitors(3600)  # range in seconds relative to now (last hour)
     # remove any sessions that have already been saved
     visitors_list.slice!(
       visitors_list.index do |session|
         session['session_id'] == VisitorSession.last_recorded.try(:clicky_session_id)
       end || visitors_list.length, visitors_list.length)
-    puts "\nVISITORS LIST\n"
-    puts JSON.pretty_generate(visitors_list)
-
+    # puts "\nVISITORS LIST\n"
+    # puts JSON.pretty_generate(visitors_list)
     visitors_list.each do |session|
       company = Company.find_by(subdomain: session['landing_page'].match(/\/\/((\w|-)+)/)[1])
       puts "\nCOMPANY FOUND #{ company.subdomain}\n"
@@ -23,8 +22,6 @@ namespace :clicky do
                                name: session['organization'],
                                location: session['geolocation'],
                                company_id: company.id)
-      puts "\nERRORS CREATING VISITOR\n"
-      puts visitor.errors.full_messages
       visitor_session =
         VisitorSession.create(
           timestamp: Time.at(session['time'].to_i),
