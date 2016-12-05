@@ -1,2 +1,0 @@
-class PageView < VisitorAction
-end

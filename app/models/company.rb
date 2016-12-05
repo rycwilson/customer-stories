@@ -16,6 +16,8 @@ class Company < ActiveRecord::Base
   has_many :successes, through: :customers
   has_many :stories, through: :successes
   has_many :visitors, dependent: :destroy
+  has_many :visitor_sessions, through: :visitors
+  has_many :visitor
 
   has_many :story_categories, dependent: :destroy
   has_many :products, dependent: :destroy
@@ -413,6 +415,129 @@ class Company < ActiveRecord::Base
     Rails.cache.write(
       "#{self.subdomain}/public-product-select-fragments-memcache-iterator",
       self.public_product_select_fragments_memcache_iterator + 1)
+  end
+
+  def contribution_submissions_activity days_ago
+    Contribution
+      .company_submissions_since(self.id, days_ago)
+      .map do |contribution|
+        { event: 'contribution_submission',
+          target: JSON.parse(
+                    contribution.to_json({
+                      only: [:status, :contribution, :feedback, :submitted_at],
+                      include: {
+                      contributor: { only: [], # only need full name
+                                     methods: :full_name },
+                      success: { only: [], # only need story and customer
+                                include: { story: { only: :title,
+                                                    methods: :csp_edit_story_path },
+                                           customer: { only: [:name] } }}}
+                    })),
+          timestamp: contribution['submitted_at'] }
+      end
+  end
+
+  def contribution_requests_received_activity days_ago
+    Contribution
+      .company_requests_received_since(self.id, days_ago)
+      .map do |contribution|
+        { event: 'contribution_request_received',
+          target: JSON.parse(
+                    contribution.to_json({
+                       only: [:status, :request_received_at],
+                       include: {
+                         contributor: { only: [], # only need full name
+                                        methods: :full_name },
+                         success: {
+                           only: [], # only need story and customer
+                           include: {
+                             story: { only: :title, methods: :csp_edit_story_path },
+                             customer: { only: [:name] } }}}
+                    })),
+          timestamp: contribution['request_received_at'] }
+      end
+  end
+
+  def stories_created_activity days_ago
+    Story
+      .company_all_created_since(self.id, days_ago)
+        .map do |story|
+          { event: 'story_created',
+            target: JSON.parse(
+                      story.to_json({
+                        only: [:title],
+                        include: {
+                          success: {
+                            only: [],
+                            include: { customer: { only: [:name] },
+                                     curator: { methods: :full_name } }}}
+                      })),
+            timestamp: story['created_at'] }
+        end
+  end
+
+  def stories_published_activity days_ago
+    Story
+      .company_published_since(self.id, days_ago)
+      .map do |story|
+        { event: 'story_published',
+          target: JSON.parse(
+                    story.to_json({
+                      only: [:title, :publish_date],
+                      methods: :csp_story_path,
+                      include: {
+                        success: {
+                          only: [],
+                          include: { customer: { only: [:name] },
+                                     curator: { methods: :full_name } }}}
+                    })),
+          timestamp: story['publish_date'] }
+      end
+  end
+
+  def stories_logo_published_activity days_ago
+    Story
+      .company_public_since(self.id, days_ago)
+      .map do |story|
+        { event: 'story_logo_published',
+          target: JSON.parse(
+                    story.to_json({
+                      only: [:title, :logo_publish_date],
+                      include: {
+                        success: {
+                          only: [],
+                          include: { customer: { only: [:name, :logo_url] },
+                                     curator: { methods: :full_name } }}}
+                    })),
+          timestamp: story['logo_publish_date'] }
+      end
+  end
+
+  def story_views_activity days_ago
+    StoryView
+      .company_views_since(self.id, days_ago)
+      .map do |story_view|
+        { event: 'story_view',
+          target: JSON.parse(
+                    story_view.to_json({
+                      only: [],
+                      include: {
+                        success: {
+                          only: [],
+                          include: {
+                            story: {
+                              only: [:title],
+                              methods: [:csp_story_path] }}},
+                        visitor_session: {
+                          only: [],
+                          include: {
+                            visitor: { only: [:name, :location] } }}}
+                    })),
+          timestamp: story_view.visitor_session.timestamp }
+      end
+  end
+
+  def story_shares_activity days_ago
   end
 
 end

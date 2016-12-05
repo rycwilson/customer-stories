@@ -15,6 +15,10 @@ class Success < ActiveRecord::Base
   # alias the association to user -> Success.find(id).contributors
   # note: contributor is an alias - see contribution.rb
   has_many :contributors, through: :contributions, source: :contributor
+  has_many :story_views, class_name: 'StoryView'
+  has_many :story_shares, class_name: 'StoryShare'
+  has_many :visitor_actions
+  has_many :visitors, through: :visitor_actions
 
   def create_default_prompts
     self.prompts << Prompt.create(description: "What was the challenge?") <<

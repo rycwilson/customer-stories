@@ -33,8 +33,16 @@ class Story < ActiveRecord::Base
     .where(customers: { company_id: company_id },
            products: { id: product_id } )
   }
+  scope :company_all_created_since, ->(company_id, days_ago) {
+    company_all(company_id)
+    .where('stories.created_at >= ?', days_ago.days.ago)
+  }
   scope :company_published, ->(company_id) {
     company_public(company_id).where(published: true)
+  }
+  scope :company_published_since, ->(company_id, days_ago) {
+    company_published(company_id)
+    .where('stories.publish_date >= ?', days_ago.days.ago)
   }
   scope :company_published_filter_category, ->(company_id, category_id) {
     joins(success: { customer: {}, story_categories: {} })
@@ -52,6 +60,10 @@ class Story < ActiveRecord::Base
     joins(success: { customer: {} })
     .where(logo_published: true,
            customers: { company_id: company_id })
+  }
+  scope :company_public_since, ->(company_id, days_ago) {
+    company_public(company_id)
+    .where('stories.logo_publish_date >= ?', days_ago.days.ago)
   }
   scope :company_public_filter_category, ->(company_id, category_id) {
     joins(success: { customer: {}, story_categories: {} })

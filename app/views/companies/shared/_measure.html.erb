@@ -1,4 +1,4 @@
-<!-- measure -->
+measure -->
 <div id='measure-panel'
      class="<%= workflow_tab == 'measure' ? 'active tab-pane content' : 'tab-pane content' %>"
      role='tabpanel'>
@@ -105,7 +105,7 @@
                 </h3>
               </div> <!-- /.heading-block -->
 
-            <table class="table table-striped table-bordered">
+<!--             <table class="table table-striped table-bordered">
               <thead>
 
                 <tr>
@@ -117,20 +117,20 @@
                 </tr>
 
               </thead>
-                        <% company.visitors.each do |visitor| %>
+                        <%# company.visitors.each do |visitor| %>
               <tbody>
 
                 <tr>
-                  <td><%= visitor.organization %></td>
-                  <td><%= visitor.city %></td>
-                  <td><%= visitor.state %></td>
-                  <td><%= visitor.created_at.to_date %></td>
-                  <td><%= visitor.created_at.strftime("%I:%M%p") %></td>
+                  <td><%#= visitor.name %></td>
+                  <td><%#= visitor.location %></td>
+                  <td><%#= visitor.state %></td>
+                  <td><%#= visitor.created_at.to_date %></td>
+                  <td><%#= visitor.created_at.strftime("%I:%M%p") %></td>
                   </tr>
 
               </tbody>
-                 <% end %>
-            </table>
+                 <%# end %>
+            </table> -->
 
 
               </div> <!-- /.tab-pane -->
@@ -331,4 +331,4 @@ $(function() {
       </div> <!-- portlet -->
     </div>  <!-- row -->
   </div>  <!-- container -->
-</div>  <!-- measure -->
+</div>  <!-- measure
