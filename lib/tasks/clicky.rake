@@ -5,7 +5,10 @@ namespace :clicky do
   task download: :environment do
 
     new_visitor_sessions = []  # unique session ids
-    visitors_list = get_clicky_visitors(1)  # range last-X-days
+    visitors_list = get_clicky_visitors(3600)  # range in seconds relative to now
+    visitors_list.slice!(0, visitors_list.index do |session|
+                              session['session_id'] == VisitorSession.last_recorded
+                            end || visitors_list.length)
     puts JSON.pretty_generate(visitors_list)
 
     visitors_list.each do |session|
@@ -16,13 +19,13 @@ namespace :clicky do
                                name: session['organization'],
                                location: session['geolocation'],
                                company_id: company.id)
-      puts visitor.errors.full_messages
       # create a new VisitorSession
       visitor_session =
-        VisitorSession
-          .create(timestamp: Time.at(session['time'].to_i),
-                  visitor_id: visitor.id,
-                  referrer_type: session['referrer_type'].present? ? session['referrer_type'] : nil)
+        VisitorSession.create(
+          timestamp: Time.at(session['time'].to_i),
+          visitor_id: visitor.id,
+          referrer_type: session['referrer_type'].present? ? session['referrer_type'] : nil)
+        VisitorSession.last_recorded = session['session_id']
       # create a new VisitorAction, use landing_page to look up story
       story_slug = session['landing_page'].slice(session['landing_page'].rindex('/') + 1, session['landing_page'].length)
       success = Story.friendly.exists?(story_slug) ? Story.friendly.find(story_slug).success : nil
@@ -40,7 +43,7 @@ namespace :clicky do
     get_clicky_actions(new_visitor_sessions)
   end
 
-  def get_clicky_visitors range
+  def get_clicky_visitors range  # seconds relative to now
     visitors_list_request = Typhoeus::Request.new(
       GETCLICKY_API_BASE_URL,
       method: :get,
@@ -48,7 +51,7 @@ namespace :clicky do
       params: { site_id: ENV['GETCLICKY_SITE_ID'],
                 sitekey: ENV['GETCLICKY_SITE_KEY'],
                 type: 'visitors-list',
-                date: "last-#{range}-days",
+                time_offset: range,
                 limit: 'all',
                 output: 'json' },
       headers: { Accept: "application/json" }
@@ -70,9 +73,7 @@ namespace :clicky do
             params: { site_id: ENV['GETCLICKY_SITE_ID'],
                       sitekey: ENV['GETCLICKY_SITE_KEY'],
                       type: 'actions-list',
-                      date: 'last-1-days',
                       session_id: session[:clicky_session_id],
-                      limit: '100',
                       output: 'json' },
             headers: { Accept: "application/json" }
           )
