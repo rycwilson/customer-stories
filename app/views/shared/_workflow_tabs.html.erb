@@ -36,11 +36,11 @@
     </a>
   </li>
 
-  <% if ['alpha', 'beta'].include? company.feature_flag %>
+  <% if production? && ['alpha', 'beta'].include?(company.feature_flag) %>
     <li id='measure-tab' class='tooltip-beta-measure'
         style='margin-bottom: 0px; display:inline-block'
         data-title="Coming soon">
-      <a href='#measure-panel' role='tab' aria-controls='measure'
+      <a href='#measure-panel-disabled' role='tab' aria-controls='measure'
           style='pointer-events:none' disabled>
         Measure
       </a>

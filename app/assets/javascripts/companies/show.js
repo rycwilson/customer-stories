@@ -2,6 +2,10 @@
 function companiesShowHandlers () {
   activityFeedHandlers();
   newStoryModalHandlers();
+
+  // need to construct / desconstruct these
+  $('#curate-table').DataTable();
+  $('#visitors-table').DataTable();
 }
 
 function activityFeedHandlers () {

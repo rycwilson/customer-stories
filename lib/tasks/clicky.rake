@@ -19,10 +19,13 @@ namespace :clicky do
     visitors_list.each do |session|
       company = Company.find_by(subdomain: session['landing_page'].match(/\/\/((\w|-)+)/)[1])
       next if company.nil?
-      visitor = Visitor.find_by(clicky_uid: session['uid']) ||
+      existing_visitor = Visitor.find_by(clicky_uid: session['uid'])
+      existing_visitor.try(:update, total_visits: session['total_visits'])
+      visitor = existing_visitor ||
                 Visitor.create(clicky_uid: session['uid'],
                                name: session['organization'],
                                location: session['geolocation'],
+                               total_visits: session['total_visits'],
                                company_id: company.id)
       visitor_session =
         VisitorSession.create(
