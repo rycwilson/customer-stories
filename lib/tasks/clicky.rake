@@ -5,17 +5,19 @@ namespace :clicky do
   task download: :environment do
 
     new_visitor_sessions = []  # unique session ids
+    # NOTE: for added redundancy and because heroku scheduler is "best effort",
+    # we're downloading an hour's worth of data every ten minutes
     visitors_list = get_clicky_visitors(3600)  # range in seconds relative to now (last hour)
-    # remove any sessions that have already been saved
+
+    # remove redundant data
     visitors_list.slice!(
       visitors_list.index do |session|
-        session['session_id'] == VisitorSession.last_recorded.try(:clicky_session_id)
+        session['session_id'] == VisitorSession.last_session.try(:clicky_session_id)
       end || visitors_list.length, visitors_list.length)
-    # puts "\nVISITORS LIST\n"
-    # puts JSON.pretty_generate(visitors_list)
+
+    # create visitors and sessions, update associations
     visitors_list.each do |session|
       company = Company.find_by(subdomain: session['landing_page'].match(/\/\/((\w|-)+)/)[1])
-      puts "\nCOMPANY FOUND #{ company.subdomain}\n"
       next if company.nil?
       visitor = Visitor.find_by(clicky_uid: session['uid']) ||
                 Visitor.create(clicky_uid: session['uid'],
@@ -32,8 +34,8 @@ namespace :clicky do
       story_slug = session['landing_page'].slice(session['landing_page'].rindex('/') + 1, session['landing_page'].length)
       success = Story.friendly.exists?(story_slug) ? Story.friendly.find(story_slug).success : nil
       visitor_action = StoryView.create(landing: true,
-                                       visitor_session_id: visitor_session.id,
-                                       success_id: success.try(:id))
+                                        visitor_session_id: visitor_session.id,
+                                        success_id: success.try(:id))
       # update the associations
       visitor.visitor_sessions << visitor_session
       visitor_session.visitor_actions << visitor_action
