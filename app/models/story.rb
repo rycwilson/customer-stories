@@ -633,4 +633,16 @@ class Story < ActiveRecord::Base
     Story.find(related_stories)
   end
 
+  #
+  # returns number of unique visitors
+  #
+  def unique_visitors_count
+    unique_visitors = Set.new
+    story_views = StoryView.includes(:visitor).where(success_id: self.success_id)
+    story_views.each do |story_view|
+      unique_visitors << story_view.visitor.clicky_uid
+    end
+    unique_visitors.length
+  end
+
 end

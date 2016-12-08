@@ -5,7 +5,8 @@ function companiesShowHandlers () {
 
   // need to construct / desconstruct these
   $('#curate-table').DataTable();
-  $('#visitors-table').DataTable();
+  $('#measure-visitors-table').DataTable();
+  $('#measure-stories-table').DataTable();
 }
 
 function activityFeedHandlers () {

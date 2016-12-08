@@ -17,7 +17,7 @@ class Company < ActiveRecord::Base
   has_many :stories, through: :successes
   has_many :visitors, dependent: :destroy
   has_many :visitor_sessions, through: :visitors
-  has_many :visitor
+  has_many :story_views, through: :visitor_sessions
 
   has_many :story_categories, dependent: :destroy
   has_many :products, dependent: :destroy

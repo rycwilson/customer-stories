@@ -2,26 +2,83 @@ namespace :clicky do
 
   desc "Clicky Analytics API"
 
+  task catchup: :environment do
+    visitors_list = []
+    visitors_list += get_clicky_visitors_range('2016-05-01,2016-05-31')
+    visitors_list += get_clicky_visitors_range('2016-06-01,2016-06-30')
+    visitors_list += get_clicky_visitors_range('2016-07-01,2016-07-31')
+    visitors_list += get_clicky_visitors_range('2016-08-01,2016-08-31')
+    visitors_list += get_clicky_visitors_range('2016-09-01,2016-09-30')
+    visitors_list += get_clicky_visitors_range('2016-10-01,2016-10-31')
+    visitors_list += get_clicky_visitors_range('2016-11-01,2016-11-30')
+    visitors_list += get_clicky_visitors_since('588324')  # seconds since 12/1
+    # create visitors and sessions, establish associations
+    new_visitor_sessions = parse_clicky_sessions(visitors_list)
+    # get actions associated with sessions
+    get_clicky_actions(new_visitor_sessions)
+  end
+
+  #
+  # time conversion
+  #
   task download: :environment do
-
-    new_visitor_sessions = []  # unique session ids
-    # NOTE: for added redundancy and because heroku scheduler is "best effort",
+    # for added redundancy and because heroku scheduler is "best effort",
     # we're downloading an hour's worth of data every ten minutes
-    visitors_list = get_clicky_visitors(3600)  # range in seconds relative to now (last hour)
-
+    visitors_list = get_clicky_visitors_since('3600')  # range in seconds relative to now (last hour)
     # remove redundant data
     visitors_list.slice!(
       visitors_list.index do |session|
         session['session_id'] == VisitorSession.last_session.try(:clicky_session_id)
       end || visitors_list.length, visitors_list.length)
+    # create visitors and sessions, establish associations
+    new_visitor_sessions = parse_clicky_sessions(visitors_list)
+    # get actions associated with sessions
+    get_clicky_actions(new_visitor_sessions)
+  end
 
-    # create visitors and sessions, update associations
+  def get_clicky_visitors_range range
+    visitors_list_request = Typhoeus::Request.new(
+      GETCLICKY_API_BASE_URL,
+      method: :get,
+      body: nil,
+      params: { site_id: ENV['GETCLICKY_SITE_ID'],
+                sitekey: ENV['GETCLICKY_SITE_KEY'],
+                type: 'visitors-list',
+                date: range,
+                limit: 'all',
+                output: 'json' },
+      headers: { Accept: "application/json" }
+    )
+    visitors_list_request.run
+    JSON.parse(visitors_list_request.response.response_body)[0]['dates'][0]['items']
+  end
+
+  def get_clicky_visitors_since time_offset  # seconds relative to now
+    visitors_list_request = Typhoeus::Request.new(
+      GETCLICKY_API_BASE_URL,
+      method: :get,
+      body: nil,
+      params: { site_id: ENV['GETCLICKY_SITE_ID'],
+                sitekey: ENV['GETCLICKY_SITE_KEY'],
+                type: 'visitors-list',
+                time_offset: time_offset,
+                limit: 'all',
+                output: 'json' },
+      headers: { Accept: "application/json" }
+    )
+    visitors_list_request.run
+    JSON.parse(visitors_list_request.response.response_body)[0]['dates'][0]['items']
+  end
+
+  def parse_clicky_sessions visitors_list
+    new_visitor_sessions = []
     visitors_list.each do |session|
       company = Company.find_by(subdomain: session['landing_page'].match(/\/\/((\w|-)+)/)[1])
-      next if company.nil?
-      existing_visitor = Visitor.find_by(clicky_uid: session['uid'])
-      existing_visitor.try(:update, total_visits: session['total_visits'])
-      visitor = existing_visitor ||
+      next if (company.nil? || company.subdomain == 'cisco' || company.subdomain == 'acme' ||
+               company.subdomain == 'acme-test')
+      return_visitor = Visitor.find_by(clicky_uid: session['uid'])
+      return_visitor.try(:increment, :total_visits).try(:save)
+      visitor = return_visitor ||
                 Visitor.create(clicky_uid: session['uid'],
                                name: session['organization'],
                                location: session['geolocation'],
@@ -47,31 +104,15 @@ namespace :clicky do
                                 clicky_session_id: session['session_id'],
                                 actions: session['actions'] }  # number of actions
     end
-    get_clicky_actions(new_visitor_sessions)
-  end
-
-  def get_clicky_visitors range  # seconds relative to now
-    visitors_list_request = Typhoeus::Request.new(
-      GETCLICKY_API_BASE_URL,
-      method: :get,
-      body: nil,
-      params: { site_id: ENV['GETCLICKY_SITE_ID'],
-                sitekey: ENV['GETCLICKY_SITE_KEY'],
-                type: 'visitors-list',
-                time_offset: "#{range}",
-                limit: 'all',
-                output: 'json' },
-      headers: { Accept: "application/json" }
-    )
-    visitors_list_request.run
-    JSON.parse(visitors_list_request.response.response_body)[0]['dates'][0]['items']
+    new_visitor_sessions
   end
 
   def get_clicky_actions sessions
     # clicky limits api requests to one per ip address per site id at a time
     hydra = Typhoeus::Hydra.new(max_concurrency: 1)
     sessions.each do |session|
-      if session[:actions].to_i > 1  # don't send request if only the landing action
+      # don't send request if only the landing action (which was already saved)
+      if session[:actions].to_i > 1
         session[:actions_list_request] =
           Typhoeus::Request.new(
             GETCLICKY_API_BASE_URL,
@@ -93,16 +134,18 @@ namespace :clicky do
         actions_list =
           JSON.parse(session[:actions_list_request].response.response_body)[0]['dates'][0]['items']
         actions_list.each_with_index do |action, index|
-          next if index == 0  # first action is already recorded landing pageview
+          next if index == 0  # first action is already saved landing pageview
           if action['action_type'] == 'pageview'
-            story_title_slug = action['action_url'].match(/\/((\w|-)+)$/).try(:[], 1)
-            success_id = story_title_slug.present? ?
+            story_title_slug =
+              action['action_url'].match(/\/(\w|-)+\/(?=.*-)((\w|-)+)$/).try(:[], 2)
+            puts "\nstory_title_slug: #{story_title_slug}"
+            success_id = story_title_slug.present? && Story.exists?(story_title_slug) ?
                            Story.friendly.find(story_title_slug).success_id : nil
             StoryView.create({ success_id: success_id,
-                              visitor_session_id: session[:visitor_session_id] })
+                               visitor_session_id: session[:visitor_session_id] })
           elsif action['action_type'] == 'click'
             StoryShare.create({ success_id: success_id,
-                               visitor_session_id: session[:visitor_session_id] })
+                                visitor_session_id: session[:visitor_session_id] })
           end
         end
       end
