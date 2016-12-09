@@ -17,7 +17,7 @@ class Company < ActiveRecord::Base
   has_many :stories, through: :successes
   has_many :visitors, dependent: :destroy
   has_many :visitor_sessions, through: :visitors
-  has_many :story_views, through: :visitor_sessions
+  has_many :page_views, through: :visitor_sessions
 
   has_many :story_categories, dependent: :destroy
   has_many :products, dependent: :destroy
@@ -514,7 +514,7 @@ class Company < ActiveRecord::Base
   end
 
   def story_views_activity days_ago
-    StoryView
+    PageView
       .company_views_since(self.id, days_ago)
       .map do |story_view|
         { event: 'story_view',

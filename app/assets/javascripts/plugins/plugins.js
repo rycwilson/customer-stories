@@ -7,6 +7,7 @@
 //= require plugins/socialshare
 //= require plugins/tooltips
 //= require plugins/clicky
+//= require plugins/datatables
 
 function constructPlugins () {
 
@@ -17,6 +18,7 @@ function constructPlugins () {
   initSocialShare();
   initTooltips();
   initClicky();
+  initDataTables();
 
   $('.best_in_place').best_in_place();
   $('.bs-switch').bootstrapSwitch({ size: 'small' });
@@ -64,6 +66,8 @@ function deconstructPlugins () {
   });
 
   $('.grid').masonry('destroy');
+
+  $('.dataTables_wrapper').destroy();
 
   $("[data-provider='summernote']").summernote('destroy');
 

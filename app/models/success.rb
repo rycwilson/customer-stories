@@ -15,7 +15,7 @@ class Success < ActiveRecord::Base
   # alias the association to user -> Success.find(id).contributors
   # note: contributor is an alias - see contribution.rb
   has_many :contributors, through: :contributions, source: :contributor
-  has_many :story_views, class_name: 'StoryView'
+  has_many :page_views, class_name: 'PageView'
   has_many :story_shares, class_name: 'StoryShare'
   has_many :visitor_actions
   has_many :visitors, through: :visitor_actions

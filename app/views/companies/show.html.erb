@@ -25,7 +25,9 @@
                { workflow_tab: @workflow_tab, company: @company} %>
 
     <%= render 'companies/shared/measure',
-                { workflow_tab: @workflow_tab, company: @company} %>
+                { workflow_tab: @workflow_tab, company: @company,
+                  company_index_views_count: @company_index_views_count,
+                  company_page_views_count: @company_page_views_count } %>
 
   </div>  <!-- tab content -->
 

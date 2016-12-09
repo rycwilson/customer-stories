@@ -5,6 +5,9 @@ class Story < ActiveRecord::Base
   belongs_to :success
   has_many :outbound_actions_stories, dependent: :destroy
   has_many :outbound_actions, through: :outbound_actions_stories
+  has_many :visitors, through: :success
+  has_many :page_views, through: :success, class_name: "PageView"
+  has_many :visitor_actions, through: :success
 
   # Note: no explicit association to friendly_id_slugs, but it's there
   # Story has many friendly_id_slugs -> captures history of slug changes
@@ -638,7 +641,7 @@ class Story < ActiveRecord::Base
   #
   def unique_visitors_count
     unique_visitors = Set.new
-    story_views = StoryView.includes(:visitor).where(success_id: self.success_id)
+    story_views = PageView.includes(:visitor).where(success_id: self.success_id)
     story_views.each do |story_view|
       unique_visitors << story_view.visitor.clicky_uid
     end

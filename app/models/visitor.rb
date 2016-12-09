@@ -7,4 +7,8 @@ class Visitor < ActiveRecord::Base
 
   # validates :name, presence: true
 
+  scope :company_all, ->(company_id) {
+    where(company_id: company_id)
+  }
+
 end

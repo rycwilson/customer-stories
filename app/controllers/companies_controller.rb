@@ -15,6 +15,13 @@ class CompaniesController < ApplicationController
     @customer_select_options = @company.customer_select_options
     @category_select_options = @company.category_select_options
     @product_select_options = @company.product_select_options
+    # Measure
+    @company_page_views_count = @company.page_views.length.to_f
+    @company_index_views_count = PageView.company_index_views(@company.id).length.to_f
+    @company_index_unique_visitors = Set.new
+    PageView.company_index_views(@company.id).each do |page_view|
+      @company_index_unique_visitors << page_view.visitor
+    end
   end
 
   def edit

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161206034714) do
+ActiveRecord::Schema.define(version: 20161208213614) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -363,19 +363,19 @@ ActiveRecord::Schema.define(version: 20161206034714) do
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
     t.string   "clicky_session_id"
+    t.string   "ip_address"
+    t.string   "organization"
+    t.string   "location"
   end
 
   add_index "visitor_sessions", ["clicky_session_id"], name: "index_visitor_sessions_on_clicky_session_id", unique: true, using: :btree
   add_index "visitor_sessions", ["visitor_id"], name: "index_visitor_sessions_on_visitor_id", using: :btree
 
   create_table "visitors", force: :cascade do |t|
-    t.string   "name"
-    t.string   "location"
     t.integer  "company_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string   "clicky_uid"
-    t.integer  "total_visits"
   end
 
   add_index "visitors", ["clicky_uid"], name: "index_visitors_on_clicky_uid", unique: true, using: :btree

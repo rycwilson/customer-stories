@@ -11,11 +11,13 @@ namespace :clicky do
     visitors_list += get_clicky_visitors_range('2016-09-01,2016-09-30')
     visitors_list += get_clicky_visitors_range('2016-10-01,2016-10-31')
     visitors_list += get_clicky_visitors_range('2016-11-01,2016-11-30')
-    visitors_list += get_clicky_visitors_since('588324')  # seconds since 12/1
+    visitors_list += get_clicky_visitors_since('733282')  # seconds since 12/1
     # create visitors and sessions, establish associations
     new_visitor_sessions = parse_clicky_sessions(visitors_list)
     # get actions associated with sessions
     get_clicky_actions(new_visitor_sessions)
+    # PageView.joins(success: { story: {} }, visitor_sessionsssion: {})
+    #         .where('stories.publish_date < visitor_sessions.timestamp')
   end
 
   #
@@ -77,25 +79,25 @@ namespace :clicky do
       next if (company.nil? || company.subdomain == 'cisco' || company.subdomain == 'acme' ||
                company.subdomain == 'acme-test')
       return_visitor = Visitor.find_by(clicky_uid: session['uid'])
-      return_visitor.try(:increment, :total_visits).try(:save)
+      # return_visitor.try(:increment, :total_visits).try(:save)
       visitor = return_visitor ||
                 Visitor.create(clicky_uid: session['uid'],
-                               name: session['organization'],
-                               location: session['geolocation'],
-                               total_visits: session['total_visits'],
                                company_id: company.id)
       visitor_session =
         VisitorSession.create(
           timestamp: Time.at(session['time'].to_i),
           visitor_id: visitor.id,
+          organization: session['organization'],
+          location: session['geolocation'],
+          ip_address: session['ip_address'],
           clicky_session_id: session['session_id'],
-          referrer_type: session['referrer_type'].present? ? session['referrer_type'] : nil)
+          referrer_type: session['referrer_type'] || 'direct')
       # create a new VisitorAction, use landing_page to look up story
       story_slug = session['landing_page'].slice(session['landing_page'].rindex('/') + 1, session['landing_page'].length)
       success = Story.friendly.exists?(story_slug) ? Story.friendly.find(story_slug).success : nil
-      visitor_action = StoryView.create(landing: true,
-                                        visitor_session_id: visitor_session.id,
-                                        success_id: success.try(:id))
+      visitor_action = PageView.create(landing: true,
+                                       visitor_session_id: visitor_session.id,
+                                       success_id: success.try(:id))  # nil if stories index
       # update the associations
       visitor.visitor_sessions << visitor_session
       visitor_session.visitor_actions << visitor_action
@@ -138,11 +140,10 @@ namespace :clicky do
           if action['action_type'] == 'pageview'
             story_title_slug =
               action['action_url'].match(/\/(\w|-)+\/(?=.*-)((\w|-)+)$/).try(:[], 2)
-            puts "\nstory_title_slug: #{story_title_slug}"
             success_id = story_title_slug.present? && Story.exists?(story_title_slug) ?
                            Story.friendly.find(story_title_slug).success_id : nil
-            StoryView.create({ success_id: success_id,
-                               visitor_session_id: session[:visitor_session_id] })
+            PageView.create({ success_id: success_id,
+                              visitor_session_id: session[:visitor_session_id] })
           elsif action['action_type'] == 'click'
             StoryShare.create({ success_id: success_id,
                                 visitor_session_id: session[:visitor_session_id] })
