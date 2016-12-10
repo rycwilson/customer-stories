@@ -2,26 +2,32 @@ namespace :clicky do
 
   desc "Clicky Analytics API"
 
-  task catchup: :environment do
-    visitors_list = []
-    visitors_list += get_clicky_visitors_range('2016-05-01,2016-05-31')
+  #
+  # download history
+  # time_offset is seconds since 12/1
+  #
+  task :init, [:time_offset] => :environment do |task, args|
+    Visitor.destroy_all
+    visitors_list = get_clicky_visitors_range('2016-05-01,2016-05-31')
     visitors_list += get_clicky_visitors_range('2016-06-01,2016-06-30')
     visitors_list += get_clicky_visitors_range('2016-07-01,2016-07-31')
     visitors_list += get_clicky_visitors_range('2016-08-01,2016-08-31')
     visitors_list += get_clicky_visitors_range('2016-09-01,2016-09-30')
     visitors_list += get_clicky_visitors_range('2016-10-01,2016-10-31')
     visitors_list += get_clicky_visitors_range('2016-11-01,2016-11-30')
-    visitors_list += get_clicky_visitors_since('739400')  # seconds since 12/1
+    visitors_list += get_clicky_visitors_since(args[:time_offset])  # seconds since 12/1
     # create visitors and sessions, establish associations
     new_visitor_sessions = parse_clicky_sessions(visitors_list)
     # get actions associated with sessions
     get_clicky_actions(new_visitor_sessions)
-    # PageView.joins(success: { story: {} }, visitor_sessionsssion: {})
-    #         .where('stories.publish_date < visitor_sessions.timestamp')
+    # remove any PageView that were captured prior to story publish date
+    PageView.joins(success: { story: {} }, visitor_session: {})
+            .where('stories.publish_date > visitor_sessions.timestamp')
+            .destroy_all
   end
 
   #
-  # time conversion
+  # download last hour's data
   #
   task download: :environment do
     # for added redundancy and because heroku scheduler is "best effort",
@@ -36,6 +42,10 @@ namespace :clicky do
     new_visitor_sessions = parse_clicky_sessions(visitors_list)
     # get actions associated with sessions
     get_clicky_actions(new_visitor_sessions)
+    # remove any PageView that were captured prior to story publish date
+    PageView.joins(success: { story: {} }, visitor_session: {})
+            .where('stories.publish_date > visitor_sessions.timestamp')
+            .destroy_all
   end
 
   def get_clicky_visitors_range range
@@ -92,6 +102,7 @@ namespace :clicky do
           ip_address: session['ip_address'],
           clicky_session_id: session['session_id'],
           referrer_type: session['referrer_type'] || 'direct')
+      VisitorSession.last_session = visitor_session
       # create a new VisitorAction, use landing_page to look up story
       story_slug = session['landing_page'].slice(session['landing_page'].rindex('/') + 1, session['landing_page'].length)
       success = Story.friendly.exists?(story_slug) ? Story.friendly.find(story_slug).success : nil

@@ -8,7 +8,7 @@ class VisitorSession < ActiveRecord::Base
 
   @last_session = self.all.sort_by { |session| session.clicky_session_id }.last
 
-  # capture the last session to have been downloaded, for use in
+  # capture the last session that was downloaded, for use in
   # parsing response to rake clicky:download
   class << self
     attr_accessor :last_session
