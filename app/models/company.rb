@@ -569,15 +569,16 @@ class Company < ActiveRecord::Base
     Story
       .company_all_created_since(self.id, days_offset)
         .map do |story|
-          { event: 'New stories',
-            target: JSON.parse(
+          { type: 'Stories created',
+            story: JSON.parse(
                       story.to_json({
                         only: [:title],
+                        methods: [:csp_edit_story_path],
                         include: {
                           success: {
                             only: [],
                             include: { customer: { only: [:name] },
-                                     curator: { methods: :full_name } }}}
+                                       curator: { methods: :full_name } }}}
                       })),
             timestamp: story['created_at'] }
         end
@@ -587,26 +588,28 @@ class Company < ActiveRecord::Base
     Story
       .company_public_since(self.id, days_offset)
       .map do |story|
-        { event: 'Logos published',
-          target: JSON.parse(
+        { type: 'Logos published',
+          story: JSON.parse(
                     story.to_json({
-                      only: [:title, :logo_publish_date],
+                      only: [:title, :published],
+                      methods: [:csp_edit_story_path],
                       include: {
                         success: {
                           only: [],
-                          include: { customer: { only: [:name, :logo_url] },
+                          include: { customer: { only: [:name] },
                                      curator: { methods: :full_name } }}}
                     })),
           timestamp: story['logo_publish_date'] }
       end
+      .delete_if { |event| event[:story][:published] }
   end
 
   def contribution_requests_received_activity days_offset
     Contribution
       .company_requests_received_since(self.id, days_offset)
       .map do |contribution|
-        { event: 'Contribution requests received',
-          target: JSON.parse(
+        { type: 'Contribution requests received',
+          contribution: JSON.parse(
                     contribution.to_json({
                        only: [:status, :request_received_at],
                        include: {
@@ -620,14 +623,15 @@ class Company < ActiveRecord::Base
                     })),
           timestamp: contribution['request_received_at'] }
       end
+      .delete_if { |contribution| contribution.status == 'contribution' }
   end
 
   def contribution_submissions_activity days_offset
     Contribution
       .company_submissions_since(self.id, days_offset)
       .map do |contribution|
-        { event: 'Contribution submissions',
-          target: JSON.parse(
+        { type: 'Contributions submitted',
+          contribution: JSON.parse(
                     contribution.to_json({
                       only: [:status, :contribution, :feedback, :submitted_at],
                       include: {
@@ -646,18 +650,18 @@ class Company < ActiveRecord::Base
     Story
       .company_published_since(self.id, days_offset)
       .map do |story|
-        { event: 'Stories published',
-          target: JSON.parse(
-                    story.to_json({
-                      only: [:title, :publish_date],
-                      methods: :csp_story_path,
-                      include: {
-                        success: {
-                          only: [],
-                          include: { customer: { only: [:name] },
-                                     curator: { methods: :full_name } }}}
-                    })),
-          timestamp: story['publish_date'] }
+        { type: 'Stories published',
+          story: JSON.parse(
+                   story.to_json({
+                     only: [:title],
+                     methods: [:csp_story_path],
+                     include: {
+                       success: {
+                         only: [],
+                         include: { customer: { only: [:name] },
+                                    curator: { methods: :full_name } }}}
+                   })),
+          timestamp: story[:publish_date] }
       end
   end
 
@@ -667,21 +671,21 @@ class Company < ActiveRecord::Base
       .company_story_views_since(self.id, days_offset)
       .map do |story_view|
         { type: 'Story views',
-          target: JSON.parse(
-                    story_view.to_json({
-                      only: [],
-                      include: {
-                        success: {
+          story_view: JSON.parse(
+                        story_view.to_json({
                           only: [],
                           include: {
-                            story: {
-                              only: [:title],
-                              methods: [:csp_story_path] },
-                            customer: {
-                              only: [:name] }}},
-                        visitor_session: {
-                          only: [:timestamp, :organization, :location] }}
-                    })),
+                            success: {
+                              only: [],
+                              include: {
+                                story: {
+                                  only: [:title],
+                                  methods: [:csp_story_path] },
+                                customer: {
+                                  only: [:name] }}},
+                            visitor_session: {
+                              only: [:organization, :location] }}
+                        })),
           timestamp: story_view.visitor_session.timestamp }
       end
   end

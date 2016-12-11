@@ -67,11 +67,11 @@ function deconstructPlugins () {
 
   $('.grid').masonry('destroy');
 
-  $('.dataTables_wrapper').destroy();
+  // does not seem to be neceessary (and doesn't work anyway):
+  // $('.datatable').each(function (table) { table.DataTable.destroy(); });
 
   $("[data-provider='summernote']").summernote('destroy');
 
-  // $('.linkedin-widget span').remove();
 }
 
 
