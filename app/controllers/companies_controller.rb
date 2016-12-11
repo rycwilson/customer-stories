@@ -22,6 +22,7 @@ class CompaniesController < ApplicationController
     PageView.company_index_views(@company.id).each do |page_view|
       @company_index_unique_visitors << page_view.visitor
     end
+    @activity = @company.activity(7)[:events]
   end
 
   def edit

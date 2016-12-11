@@ -104,7 +104,7 @@
                  class="datatable table table-striped table-bordered">
             <thead>
               <tr>
-                <th>Date</th>
+                <th>Date / time</th>
                 <th>Customer</th>
                 <th>Story title</th>
                 <th>Event type</th>
@@ -112,15 +112,15 @@
             </thead>
             <tbody>
 
-              <% company.activity(7)[:events].each do |event| %>
+              <% @activity.each do |event| %>
 
                 <tr>
-                  <td><%= event[:timestamp].strftime('%m/%d/%y') %></td>
+                  <td><%= event[:timestamp].localtime.strftime('%b %-d %-l:%M%p') %></td>
                   <td><%= company_activity(company, event)[:customer] %></td>
                   <td><a href="<%= company_activity(company, event)[:story_path] %>">
                     <%= company_activity(company, event)[:story_title] %>
                   </a></td>
-                  <td><%= event[:type] %></td>
+                  <td><%= event[:type] %>&nbsp;&#8211;&nbsp;<%= @activity.select { |e| e[:type] == event[:type] }.count %></td>
                 </tr>
 
               <% end %>

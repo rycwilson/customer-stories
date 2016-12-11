@@ -4,10 +4,12 @@ function initDataTables () {
   $('#curate-table').DataTable();
 
   $('#measure-activity-table').DataTable({
+    lengthMenu: [[-1, 10, 25, 50], ['All', 10, 25, 50]],
+    order: [[3, ['Story views','Stories created','Logos published','Stories published','Contributions submitted','Contribution requests received']],[0,'desc']],
     'columnDefs': [
-      { 'visible': false, 'targets': 3 }
+      { targets: [3], visible: false },
     ],
-    'drawCallback': function (settings) {
+    drawCallback: function (settings) {
         var api = this.api();
         var rows = api.rows({ page:'current' }).nodes();
         var last = null;
