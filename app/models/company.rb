@@ -427,16 +427,12 @@ class Company < ActiveRecord::Base
     story_views = self.story_views_activity(days_offset)
     # story_shares = self.story_shares(days_offset)
 
-    events = stories_created +
-             stories_logo_published +
-             contribution_requests_received +
-             contribution_submissions +
-             stories_published +
-             story_views
-
-    remove_redundant_events(events) unless events.empty?
-
-    { events: events }
+    { events: stories_created +
+              stories_logo_published +
+              contribution_requests_received +
+              contribution_submissions +
+              stories_published +
+              story_views }
 
     # .sort_by { |event| event[:timestamp] }.reverse
 

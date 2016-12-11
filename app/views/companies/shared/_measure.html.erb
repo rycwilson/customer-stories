@@ -115,7 +115,7 @@
               <% @activity.each do |event| %>
 
                 <tr>
-                  <td><%= event[:timestamp].localtime.strftime('%b %-d %-l:%M%p') %></td>
+                  <td><%= event[:timestamp].strftime('%b %-d %-l:%M%p') %>&nbsp;UTC</td>
                   <td><%= company_activity(company, event)[:customer] %></td>
                   <td><a href="<%= company_activity(company, event)[:story_path] %>">
                     <%= company_activity(company, event)[:story_title] %>

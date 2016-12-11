@@ -43,10 +43,11 @@ namespace :clicky do
     new_visitor_sessions = parse_clicky_sessions(visitors_list)
     # get actions associated with sessions
     get_clicky_actions(new_visitor_sessions)
-    # remove any PageView that were captured prior to story publish date
-    PageView.joins(success: { story: {} }, visitor_session: {})
-            .where('stories.publish_date > visitor_sessions.timestamp')
-            .destroy_all
+    # anyone viewing a story prior to publish date is a curator or CSP staff - remove!
+    Visitor.joins(visitor_actions: { story: {} })
+           .where.not(visitor_actions: { success_id: nil })  # i.e. page views (must use :visitor_actions; :page_views => error)
+           .where('stories.published = ? OR stories.publish_date > visitor_sessions.timestamp', false)
+           .destroy_all
   end
 
   def get_clicky_visitors_range range
