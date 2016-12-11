@@ -6,6 +6,11 @@ class VisitorSession < ActiveRecord::Base
   has_many :story_shares
   has_many :successes, through: :visitor_actions
 
+  scope :company_all, ->(company_id) {
+    joins(:visitor)
+    .where(visitors: { company_id: company_id })
+  }
+
   @last_session = self.all.sort_by { |session| session.clicky_session_id }.last
 
   # capture the last session that was downloaded, for use in
