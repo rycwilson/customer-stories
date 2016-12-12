@@ -115,7 +115,8 @@
               <% @activity.each do |event| %>
 
                 <tr>
-                  <td><%= event[:timestamp].strftime('%b %-d %-l:%M%p') %>&nbsp;UTC</td>
+                  <!-- parse the timestamp b/c it was stored in cache as a string -->
+                  <td><%= DateTime.parse(event[:timestamp]).strftime('%b %-d %-l:%M%p') %>&nbsp;UTC</td>
                   <td><%= company_activity(company, event)[:customer] %></td>
                   <td><a href="<%= company_activity(company, event)[:story_path] %>">
                     <%= company_activity(company, event)[:story_title] %>

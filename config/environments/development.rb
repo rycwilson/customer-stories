@@ -5,19 +5,19 @@ Rails.application.configure do
 
   config.log_level = :debug
 
-  config.cache_store = :null_store
+  # config.cache_store = :null_store
   # global memcached enable/disable
-  config.perform_caching = false
+  config.perform_caching = true
   # fragment and page caching
-  config.action_controller.perform_caching = false
-  # config.cache_store = :dalli_store,
-  #                      'localhost:11211',
-  #                      {:failover => true,
-  #                       :socket_timeout => 1.5,
-  #                       :socket_failure_delay => 0.2,
-  #                       :down_retry_delay => 60,
-  #                       :pool_size => 5  # server threads/concurrency
-  #                      }
+  config.action_controller.perform_caching = true
+  config.cache_store = :dalli_store,
+                       'localhost:11211',
+                       {:failover => true,
+                        :socket_timeout => 1.5,
+                        :socket_failure_delay => 0.2,
+                        :down_retry_delay => 60,
+                        :pool_size => 5  # server threads/concurrency
+                       }
 
   # moved from session_store.rb
   # this ensures subdomans work properly in dev environment

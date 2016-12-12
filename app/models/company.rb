@@ -426,139 +426,12 @@ class Company < ActiveRecord::Base
     stories_published = self.stories_published_activity(days_offset)
     story_views = self.story_views_activity(days_offset)
     # story_shares = self.story_shares(days_offset)
-
     { events: stories_created +
               stories_logo_published +
               contribution_requests_received +
               contribution_submissions +
               stories_published +
               story_views }
-
-    # .sort_by { |event| event[:timestamp] }.reverse
-
-    # sessions_organizations = []
-    # actions_list_request = Typhoeus::Request.new(
-    #   GETCLICKY_API_BASE_URL,
-    #   method: :get,
-    #   body: nil,
-    #   params: { site_id: ENV['GETCLICKY_SITE_ID'],
-    #             sitekey: ENV['GETCLICKY_SITE_KEY'],
-    #             type: 'actions-list',
-    #             date: 'last-7-days',
-    #             limit: '100',
-    #             output: 'json' },
-    #   headers: { Accept: "application/json" }
-    # )
-    # actions_list_request.run
-    # actions_list = JSON.parse(actions_list_request.response.response_body)[0]['dates'][0]['items']
-    # actions_list.each_with_index do |action, index|
-    #   story_slug = action['action_url'].slice(action['action_url'].rindex('/') + 1, action['action_url'].length)
-    #   if action['action_type'] == 'pageview' &&
-    #      action['action_url'].include?("#{@company.subdomain}.#{ENV['HOST_NAME']}") &&
-    #      # filter out landing page or stories#index views
-    #      # (clicky isn't correctly logging 'action_title' for all stories,
-    #      # so reference 'action_url' instead)
-    #      (story = Story.joins(success: { customer: {} } )
-    #                    .where(slug: story_slug, customers: { company_id: @company.id })[0])
-    #     story_views << { event: 'story_view',
-    #                      target: { title: story.title, path: story.csp_story_path },
-    #                      customer: story.success.customer.name,
-    #                      geolocation: '',  # to be filled in after we get visitor info
-    #                      organization: '',
-    #                      session_id: action['session_id'],
-    #                      timestamp: DateTime.strptime(action['time'], '%s') }
-    #     sessions_organizations << { session_id: action['session_id'], organization: '' }
-    #   elsif action['action_type'] == 'click'
-    #     shared_story_slug = ''
-    #     if action['action_url'].include?('linkedin') ||
-    #        action['action_url'].include?('twitter') ||
-    #        action['action_url'].include?('facebook')
-    #       provider = action['action_url'].include?('linkedin') ? 'linkedin' :
-    #                  (action['action_url'].include?('twitter') ? 'twitter' : 'facebook')
-    #       # since the shared story click doesn't contain company info,
-    #       # find the most recent 'pageview' action that corresponds to the session_id,
-    #       # then check if it belongs to @company
-    #       actions_list[index+1..actions_list.length].each do |prev_action|
-    #         if prev_action['action_type'] == 'pageview' &&
-    #            prev_action['session_id'] == action['session_id']
-    #           if prev_action['action_url'].include?("#{@company.subdomain}.#{ENV['HOST_NAME']}")
-    #             shared_story_slug = prev_action['action_url'].slice(prev_action['action_url'].rindex('/') + 1, prev_action['action_url'].length)
-    #           end
-    #           break # whether the share belongs to @company or not
-    #         end
-    #       end
-    #       if shared_story_slug.present?  # it will be blank if story belongs to another company
-    #         story = Story.friendly.find(shared_story_slug)
-    #         story_shares << { event: 'story_share',
-    #                           target: { title: story.title, path: story.csp_story_path },
-    #                           customer: story.success.customer.name,
-    #                           provider: provider,
-    #                           organization: '',
-    #                           session_id: action['session_id'],
-    #                           timestamp: DateTime.strptime(action['time'], '%s') }
-    #         sessions_organizations << { session_id: action['session_id'], organization: '' }
-    #       end
-    #     end
-    #   end
-    # end
-
-    # sessions_organizations.uniq! { |session| session[:session_id] }
-
-    # story_views.uniq! { |view| view.values_at(:target, :session_id) }
-
-    # # clicky limits api requests to one per ip address per site id at a time
-    # hydra = Typhoeus::Hydra.new(max_concurrency: 1)
-
-    # story_views_visitors_list_requests =
-    #   story_views.map do |view|
-    #     request = clicky_session_request(view[:session_id], @company)
-    #     hydra.queue(request)
-    #     request
-    #   end
-
-    # story_shares_visitors_list_requests =
-    #   story_shares.map do |share|
-    #     request = clicky_session_request(share[:session_id], @company)
-    #     hydra.queue(request)
-    #     request
-    #   end
-
-    # hydra.run
-
-    # # fill in missing info ...
-    # story_views_visitors_list_requests.each_with_index do |request, index|
-    #   story_views[index][:geolocation] =
-    #     JSON.parse(request.response.body)[0]['dates'][0]['items'][0]['geolocation']
-    #   story_views[index][:organization] =
-    #     JSON.parse(request.response.body)[0]['dates'][0]['items'][0]['organization']
-    # end
-
-    # story_shares_visitors_list_requests.each_with_index do |request, index|
-    #   story_shares[index][:organization] =
-    #     JSON.parse(request.response.body)[0]['dates'][0]['items'][0]['organization']
-    # end
-
-
-  end
-
-  def remove_redundant_events events
-    # if there was a submission event or contribution_request_received event,
-    # remove any prior contribution_request_received events
-    events.each_with_index do |event, index|
-      if event[:event] == 'contribution_submission' ||
-         event[:event] == 'contribution_request_received'
-        events[index+1..events.length-1].each_with_index do |prior_event, prior_event_index|
-          if prior_event[:event] == 'contribution_request_received' &&
-             (prior_event[:target]['contributor']['full_name'] ==
-                event[:target]['contributor']['full_name']) &&
-             (prior_event[:target]['success']['story']['title'] ==
-                event[:target]['success']['story']['title'])
-            events.delete_at(index + (prior_event_index+1))
-          end
-        end
-      end
-    end
-    events
   end
 
   def stories_created_activity days_offset
@@ -576,7 +449,7 @@ class Company < ActiveRecord::Base
                             include: { customer: { only: [:name] },
                                        curator: { methods: :full_name } }}}
                       })),
-            timestamp: story['created_at'] }
+            timestamp: story.created_at.to_s }
         end
   end
 
@@ -595,9 +468,9 @@ class Company < ActiveRecord::Base
                           include: { customer: { only: [:name] },
                                      curator: { methods: :full_name } }}}
                     })),
-          timestamp: story['logo_publish_date'] }
+          timestamp: story.logo_publish_date }
       end
-      .delete_if { |event| event[:story][:published] }
+      .delete_if { |story| story[:story]['published'] }
   end
 
   def contribution_requests_received_activity days_offset
@@ -617,9 +490,9 @@ class Company < ActiveRecord::Base
                              story: { only: :title, methods: :csp_edit_story_path },
                              customer: { only: [:name] } }}}
                     })),
-          timestamp: contribution['request_received_at'] }
+          timestamp: contribution.request_received_at.to_s }
       end
-      .delete_if { |contribution| contribution.status == 'contribution' }
+      .delete_if { |event| event[:contribution]['status'] == 'contribution' }
   end
 
   def contribution_submissions_activity days_offset
@@ -638,7 +511,7 @@ class Company < ActiveRecord::Base
                                                     methods: :csp_edit_story_path },
                                            customer: { only: [:name] } }}}
                     })),
-          timestamp: contribution['submitted_at'] }
+          timestamp: contribution.submitted_at.to_s }
       end
   end
 
@@ -657,33 +530,35 @@ class Company < ActiveRecord::Base
                          include: { customer: { only: [:name] },
                                     curator: { methods: :full_name } }}}
                    })),
-          timestamp: story[:publish_date] }
+          timestamp: story.publish_date.to_s }
       end
   end
 
 
   def story_views_activity days_offset
-    PageView
-      .company_story_views_since(self.id, days_offset)
-      .map do |story_view|
-        { type: 'Story views',
-          story_view: JSON.parse(
-                        story_view.to_json({
-                          only: [],
-                          include: {
-                            success: {
-                              only: [],
-                              include: {
-                                story: {
-                                  only: [:title],
-                                  methods: [:csp_story_path] },
-                                customer: {
-                                  only: [:name] }}},
-                            visitor_session: {
-                              only: [:organization, :location] }}
-                        })),
-          timestamp: story_view.visitor_session.timestamp }
-      end
+    Rails.cache.fetch("#{self.subdomain}/story-views-activity") do
+      PageView
+        .company_story_views_since(self.id, days_offset)
+        .map do |story_view|
+          { type: 'Story views',
+            story_view: JSON.parse(
+                          story_view.to_json({
+                            only: [],
+                            include: {
+                              success: {
+                                only: [],
+                                include: {
+                                  story: {
+                                    only: [:title],
+                                    methods: [:csp_story_path] },
+                                  customer: {
+                                    only: [:name] }}},
+                              visitor_session: {
+                                only: [:organization, :location] }}
+                          })),
+            timestamp: story_view.visitor_session.timestamp.to_s }
+        end
+    end
   end
 
   def story_shares_activity days_offset

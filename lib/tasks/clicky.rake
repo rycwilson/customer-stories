@@ -49,6 +49,16 @@ namespace :clicky do
            .where.not(visitor_actions: { success_id: nil })  # i.e. page views (must use :visitor_actions; :page_views => error)
            .where('stories.published = ? OR stories.publish_date > visitor_sessions.timestamp', false)
            .destroy_all
+
+    # update cache
+    Company.all.each do |company|
+      Rails.cache.write(
+        "#{company.subdomain}/story-views-activity",
+        company.story_views_activity(7)
+      )
+      company.stories.each do |story|
+        Rails.cache.write
+    end
   end
 
   def get_clicky_visitors_range range
