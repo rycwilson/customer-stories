@@ -117,19 +117,19 @@
                 </tr>
 
               </thead>
-                        <% company.visitors.each do |visitor| %>
+                        <%# company.visitors.each do |visitor| %>
               <tbody>
 
                 <tr>
-                  <td><%= visitor.organization %></td>
-                  <td><%= visitor.city %></td>
-                  <td><%= visitor.state %></td>
-                  <td><%= visitor.created_at.to_date %></td>
-                  <td><%= visitor.created_at.strftime("%I:%M%p") %></td>
+                  <td><%#= visitor.organization %></td>
+                  <td><%#= visitor.city %></td>
+                  <td><%#= visitor.state %></td>
+                  <td><%#= visitor.created_at.to_date %></td>
+                  <td><%#= visitor.created_at.strftime("%I:%M%p") %></td>
                   </tr>
 
               </tbody>
-                 <% end %>
+                 <%# end %>
             </table>
 
 
