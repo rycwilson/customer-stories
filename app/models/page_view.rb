@@ -13,6 +13,7 @@ class PageView < VisitorAction
   scope :company_story_views_since, ->(company_id, days_offset) {
     company_story_views(company_id)
     .where('visitor_sessions.timestamp > ?', days_offset.days.ago)
+    .order('visitor_sessions.timestamp desc')
   }
 
   scope :company_index_views, ->(company_id) {

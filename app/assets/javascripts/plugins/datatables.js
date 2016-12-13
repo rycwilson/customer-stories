@@ -7,8 +7,7 @@ function initDataTables () {
     lengthMenu: [[-1, 10, 25, 50], ['All', 10, 25, 50]],
     order: [[3, ['Story views','Stories created','Logos published','Stories published','Contributions submitted','Contribution requests received']],[0,'desc']],
     'columnDefs': [
-      { targets: [3], visible: false },
-      { targets: [0], type: 'date' }
+      { targets: [3], visible: false }
     ],
     drawCallback: function (settings) {
         var api = this.api();
