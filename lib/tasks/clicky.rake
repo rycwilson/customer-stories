@@ -56,8 +56,6 @@ namespace :clicky do
         "#{company.subdomain}/story-views-activity",
         company.story_views_activity(7)
       )
-      company.stories.each do |story|
-        Rails.cache.write
     end
   end
 
