@@ -14,9 +14,9 @@
       }
     }
     .event-type-group {
-      display: none;
+      // display: none;
     }
-    [data-toggle="toggle"] {  // hide the checkbox
+    [data-toggle="toggle"] {  // hide the checkbox (jquery)
       display: none;
     }
   }

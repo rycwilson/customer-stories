@@ -23,13 +23,6 @@
             </li>
 
             <li>
-              <a href="#measure-visitors-container" data-toggle="tab">
-              <i class="fa fa-users"></i>
-              &nbsp;&nbsp;Visitors
-              </a>
-            </li>
-
-            <li>
               <a href="#measure-stories-container" data-toggle="tab">
               <i class="fa fa-newspaper-o"></i>
               &nbsp;&nbsp;Stories
@@ -37,285 +30,52 @@
             </li>
 
             <li>
-              <a href="#measure-charts" data-toggle="tab">
-              <i class="fa fa-pie-chart"></i>
-              &nbsp;&nbsp;Charts
+              <a href="#measure-visitors-container" data-toggle="tab">
+              <i class="fa fa-users"></i>
+              &nbsp;&nbsp;Visitors
               </a>
             </li>
 
-            <!-- <li class="active">
-              <a href="#crowdsource" data-toggle="tab">
-                <i class="fa fa-bar-chart-o"></i>
-                &nbsp;&nbsp;Channel Contribution
-              </a>
-            </li> -->
-
-
-        <!--     <li>
-              <a href="#rev_product" data-toggle="tab">
+         <!--    <li>
+              <a href="#measure-charts" data-toggle="tab">
               <i class="fa fa-pie-chart"></i>
-              &nbsp;&nbsp;Contribution to Product
+              &nbsp;&nbsp;Charts
               </a>
             </li> -->
 
           </ul>
 
-        </div> <!-- /.col -->
+        </div>
 
 
         <div class="col-md-9 col-sm-8 layout-main">
 
           <div id="settings-content" class="tab-content stacked-content">
 
-            <!-- <div class="tab-pane fade in active" id="crowdsource">
-
-              <div class="heading-block">
-                <h3>
-                  Revenue Contribution by channel
-                </h3>
-              </div>
-
-                          <figure class="feature-figure">
-                <%#= image_tag 'mvp-landing/homepage-features/rev_channel.png',
-                  { class: 'img-responsive figure-shadow center-block',
-                    style: 'width: 90%;', alt: '' } %>
-              </figure>
-            </div>  -->
-
-   <!--          <div class="tab-pane fade" id="rev_product">
-
-              <div class="heading-block">
-                <h3>
-                  Story Contribution to Product Lines
-                </h3>
-              </div>
-
-                          <figure class="feature-figure">
-                <%#= image_tag 'mvp-landing/homepage-features/rev_product.png',
-                  { class: 'img-responsive figure-shadow center-block',
-                    style: 'width: 70%;', alt: '' } %>
-              </figure>
-
-                  </div>  -->
-
             <div class="tab-pane fade in active" id="measure-activity-container">
 
-          <table id='measure-activity-table' width='100%'
-                 class="datatable table table-striped table-bordered">
-            <thead>
-              <tr>
-                <th>Date / time</th>
-                <th>Customer</th>
-                <th>Story title</th>
-                <!-- <th>Event type</th> -->
-              </tr>
-            </thead>
-            <tbody>
-              <!-- this is just filler so the "No data available" message doesn't appear -->
-              <tr class='hidden'><td></td><td></td><td></td></tr>
+              <%#= render 'shared/measure/activity_table_jquery', { activity: activity } %>
 
-              <tbody class="event-type">
-                <tr>
-                  <td colspan="3">
-                    <label for='stories-created-row-grouping'>Stories created</label>
-                    <input type="checkbox" id='stories-created-row-grouping' data-toggle="toggle">
-                  </td>
-                </tr>
-              </tbody>
-              <tbody class='event-type-group'>
-                <% @activity[:stories_created].try(:each) do |story| %>
+              <%= render 'shared/measure/activity_table_bootstrap',
+                          { activity: activity } %>
 
-                  <tr>
-                    <!-- parse the timestamp b/c it was stored in cache as a string -->
-                    <td><%= DateTime.parse(story[:timestamp]).strftime('%b %-d %-l:%M%p') %>&nbsp;UTC</td>
-                    <td><%= story[:story]['success']['customer']['name'] %></td>
-                    <td><a href="<%= story[:story]['csp_story_path'] %>">
-                      <%= story[:story]['title'] %>
-                    </a></td>
-                    <!-- <td><%#= event[:type] %>&nbsp;&#8211;&nbsp;<%#= @activity.select { |e| e[:type] == event[:type] }.count %></td> -->
-                  </tr>
-
-                <% end %>
-              </tbody>
-
-              <tbody class="event-type">
-                <tr>
-                  <td colspan="3">
-                    <label for='logos-published-row-group'>Logos published</label>
-                    <input type="checkbox" id='logos-published-row-group' data-toggle="toggle">
-                  </td>
-                </tr>
-              </tbody>
-              <tbody class='event-type-group'>
-                <% @activity[:stories_logo_published].try(:each) do |event| %>
-
-                <% end %>
-              </tbody>
-
-              <tbody class="event-type">
-                <tr>
-                  <td colspan="3">
-                    <label for='requests-received-row-group'>Contribution requests received</label>
-                    <input type="checkbox" id='requests-received-row-group' data-toggle="toggle">
-                  </td>
-                </tr>
-              </tbody>
-              <tbody class='event-type-group'>
-                <% @activity[:contribution_requests_received].try(:each) do |event| %>
-
-                <% end %>
-              </tbody>
-
-              <tbody class="event-type">
-                <tr>
-                  <td colspan="3">
-                    <label for='contributions-submitted-row-group'>Contributions submitted</label>
-                    <input type="checkbox" id='contributions-submitted-row-group' data-toggle="toggle">
-                  </td>
-                </tr>
-              </tbody>
-              <tbody class='event-type-group'>
-                <% @activity[:contributions_submitted].try(:each) do |event| %>
-
-                <% end %>
-              </tbody>
-
-              <tbody class="event-type">
-                <tr>
-                  <td colspan="3">
-                    <label for='stories-published-row-group'>Stories published</label>
-                    <input type="checkbox" id='stories-published-row-group' data-toggle="toggle">
-                  </td>
-                </tr>
-              </tbody>
-              <tbody class='event-type-group'>
-                <% @activity[:stories_published].try(:each) do |event| %>
-
-                <% end %>
-              </tbody>
-
-              <tbody class="event-type">
-                <tr>
-                  <td colspan="3">
-                    <label for='story-views-row-group'>Story views</label>
-                    <input type="checkbox" id='story-views-row-group' data-toggle="toggle">
-                  </td>
-                </tr>
-              </tbody>
-              <tbody class='event-type-group'>
-
-                <% @activity[:story_views].each do |story_view| %>
-<!-- <h2></h2> -->
-                  <tr>
-                    <!-- parse the timestamp b/c it was stored in cache as a string -->
-                    <td><%= DateTime.parse(story_view[:timestamp]).strftime('%b %-d %-l:%M%p') %>&nbsp;UTC</td>
-                    <td><%= story_view[:story_view]['success']['customer']['name'] %></td>
-                    <td><a href="<%= story_view[:story_view]['success']['story']['csp_story_path'] %>">
-                      <%= story_view[:story_view]['success']['story']['title'] %>
-                    </a></td>
-                    <!-- <td><%#= event[:type] %>&nbsp;&#8211;&nbsp;<%#= @activity.select { |e| e[:type] == event[:type] }.count %></td> -->
-                  </tr>
-
-                <% end %>
-
-              </tbody>
-
-            </tbody>
-          </table>
+              <%#= render 'shared/measure/activity_table_datatable', { activity: activity } %>
 
             </div>
 
-
-
             <div class="tab-pane fade" id="measure-visitors-container">
 
+              <%= render 'shared/measure/visitors_table', { company: company } %>
 
-
-          <table id='measure-visitors-table' width='100%'
-                 class="datatable table table-striped table-bordered">
-            <thead>
-              <tr>
-                <th>Visitor</th>
-                <th>Organization</th>
-                <th>Location</th>
-                <th>Visits</th>
-                <th>Last visited</th>
-              </tr>
-            </thead>
-            <tfoot>
-              <tr>
-                <td colspan='3'><em>
-                  Total: <%= Visitor.company_all(company.id).count %>
-                </em></td>
-                <td colspan='2'><em>
-                  Total: <%= VisitorSession.company_all(company.id).count %>
-                </em></td>
-              </tr>
-            </tfoot>
-            <tbody>
-
-              <% Visitor.includes(:visitor_sessions)
-                        .company_all(company.id).each do |visitor| %>
-
-                <tr>
-                  <td><%= visitor.clicky_uid %></td>
-                  <td><%= visitor.visitor_sessions.take.organization %></td>
-                  <td><%= visitor.visitor_sessions.take.location %></td>
-                  <td><%= visitor.visitor_sessions.length %></td>
-                  <td><%= visitor.visitor_sessions.order(timestamp: :desc).take.timestamp.strftime("%m/%d/%y") %></td>
-                </tr>
-
-              <% end %>
-
-            </tbody>
-          </table>
-
-            </div> <!-- /.tab-pane -->
+            </div>
 
             <div class="tab-pane fade" id="measure-stories-container">
 
-          <table id='measure-stories-table' width='100%'
-                 class="datatable table table-striped table-bordered">
-
-            <thead>
-              <tr>
-                <th>Customer</th>
-                <th>Story title</th>
-                <th>Publish date</th>
-                <th>Unique visitors</th>
-                <th>Total views</th>
-                <th>Landing</th>
-              </tr>
-            </thead>
-            <tbody>
-
-              <tr>
-                <td></td>
-                <td><em>index</em></td>
-                <td></td>
-                <td><%= @company_index_unique_visitors.length %></td>
-                <td><%= company_index_views_count.to_i %></td>
-                <td><%= "#{((company_index_views_count / company_page_views_count) * 100).round(1)}%" %></td>
-              </tr>
-
-
-              <% Story.includes(:visitor_actions, :visitors)
-                      .company_published(company.id).each do |story| %>
-                      <!-- include :page_views results in error -->
-                <tr>
-                  <td><%= story.customer.name %></td>
-                  <td><%= story.title %></td>
-                  <td><%= story.publish_date.strftime("%m/%d/%y") %></td>
-                  <td><%= Set.new(story.visitors).length %></td>
-                  <td><%= story.page_views.length %></td>
-                  <td><%= "#{((story.page_views.length.to_f / company_page_views_count) * 100).round(1)}%" %></td>
-                </tr>
-
-              <% end %>
-
-            </tbody>
-
-          </table>
+              <%= render 'shared/measure/stories_table',
+                    { company: company,
+                      company_index_unique_visitors: company_index_unique_visitors,
+                      company_index_views_count: company_index_views_count,
+                      company_page_views_count: company_page_views_count } %>
 
             </div>  <!-- stories data -->
 
@@ -328,12 +88,7 @@
             </div>
 
         </div> <!-- /.col -->
-
       </div> <!-- layout -->
-
-
     </div> <!-- container -->
-
   </div> <!-- content -->
-
 </div>  <!-- measure -->

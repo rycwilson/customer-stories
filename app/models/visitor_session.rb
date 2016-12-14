@@ -1,6 +1,6 @@
 class VisitorSession < ActiveRecord::Base
 
-  belongs_to :visitor
+  belongs_to :visitor, counter_cache: true
   has_many :visitor_actions, dependent: :destroy
   has_many :page_views
   has_many :story_shares

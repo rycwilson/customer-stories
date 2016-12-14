@@ -1,0 +1,71 @@
+
+
+<table id='measure-activity-table' width='100%'
+       class="datatable table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th>Date / time</th>
+      <th>Customer</th>
+      <th>Story title</th>
+      <!-- <th>Event type</th> -->
+    </tr>
+  </thead>
+  <tbody>
+    <!-- this is just filler so the "No data available" message doesn't appear -->
+    <!-- <tr class='hidden'><td></td><td></td><td></td></tr> -->
+
+    <tbody class="event-type">
+      <tr>
+        <td colspan="3">
+          <a data-toggle='collapse' href='#stories-created-collapse-group'
+             >
+            Stories created
+          </a>
+        </td>
+      </tr>
+    </tbody>
+    <tbody class='collapse event-type-group' id='stories-created-collapse-group'>
+      <% activity[:stories_created].try(:each) do |story| %>
+
+        <tr>
+          <!-- parse the timestamp b/c it was stored in cache as a string -->
+          <td><%= DateTime.parse(story[:timestamp]).strftime('%b %-d %-l:%M%p') %>&nbsp;UTC</td>
+          <td><%= story[:story]['success']['customer']['name'] %></td>
+          <td><a href="<%= story[:story]['csp_story_path'] %>">
+            <%= story[:story]['title'] %>
+          </a></td>
+          <!-- <td><%#= event[:type] %>&nbsp;&#8211;&nbsp;<%#= @activity.select { |e| e[:type] == event[:type] }.count %></td> -->
+        </tr>
+
+      <% end %>
+    </tbody>
+
+
+
+    <tbody class="event-type">
+      <tr>
+        <td colspan="3">
+          <label for='story-views-row-group'>Story views</label>
+          <input type="checkbox" id='story-views-row-group' data-toggle="toggle">
+        </td>
+      </tr>
+    </tbody>
+    <tbody class='event-type-group'>
+
+      <% activity[:story_views].each do |story_view| %>
+        <tr>
+          <!-- parse the timestamp b/c it was stored in cache as a string -->
+          <td><%= DateTime.parse(story_view[:timestamp]).strftime('%b %-d %-l:%M%p') %>&nbsp;UTC</td>
+          <td><%= story_view[:story_view]['success']['customer']['name'] %></td>
+          <td><a href="<%= story_view[:story_view]['success']['story']['csp_story_path'] %>">
+            <%= story_view[:story_view]['success']['story']['title'] %>
+          </a></td>
+          <!-- <td><%#= event[:type] %>&nbsp;&#8211;&nbsp;<%#= @activity.select { |e| e[:type] == event[:type] }.count %></td> -->
+        </tr>
+
+      <% end %>
+
+    </tbody>
+
+  </tbody>
+</table>

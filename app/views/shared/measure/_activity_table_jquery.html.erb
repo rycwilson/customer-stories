@@ -1,0 +1,122 @@
+
+<table id='measure-activity-table' width='100%'
+       class="datatable table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th>Date / time</th>
+      <th>Customer</th>
+      <th>Story title</th>
+      <!-- <th>Event type</th> -->
+    </tr>
+  </thead>
+  <tbody>
+    <!-- this is just filler so the "No data available" message doesn't appear -->
+    <tr class='hidden'><td></td><td></td><td></td></tr>
+
+    <tbody class="event-type">
+      <tr>
+        <td colspan="3">
+          <label for='stories-created-row-grouping'>Stories created</label>
+          <input type="checkbox" id='stories-created-row-grouping' data-toggle="toggle">
+        </td>
+      </tr>
+    </tbody>
+    <tbody class='event-type-group'>
+      <% activity[:stories_created].try(:each) do |story| %>
+
+        <tr>
+          <!-- parse the timestamp b/c it was stored in cache as a string -->
+          <td><%= DateTime.parse(story[:timestamp]).strftime('%b %-d %-l:%M%p') %>&nbsp;UTC</td>
+          <td><%= story[:story]['success']['customer']['name'] %></td>
+          <td><a href="<%= story[:story]['csp_story_path'] %>">
+            <%= story[:story]['title'] %>
+          </a></td>
+          <!-- <td><%#= event[:type] %>&nbsp;&#8211;&nbsp;<%#= @activity.select { |e| e[:type] == event[:type] }.count %></td> -->
+        </tr>
+
+      <% end %>
+    </tbody>
+
+    <tbody class="event-type">
+      <tr>
+        <td colspan="3">
+          <label for='logos-published-row-group'>Logos published</label>
+          <input type="checkbox" id='logos-published-row-group' data-toggle="toggle">
+        </td>
+      </tr>
+    </tbody>
+    <tbody class='event-type-group'>
+      <% activity[:stories_logo_published].try(:each) do |event| %>
+
+      <% end %>
+    </tbody>
+
+    <tbody class="event-type">
+      <tr>
+        <td colspan="3">
+          <label for='requests-received-row-group'>Contribution requests received</label>
+          <input type="checkbox" id='requests-received-row-group' data-toggle="toggle">
+        </td>
+      </tr>
+    </tbody>
+    <tbody class='event-type-group'>
+      <% activity[:contribution_requests_received].try(:each) do |event| %>
+
+      <% end %>
+    </tbody>
+
+    <tbody class="event-type">
+      <tr>
+        <td colspan="3">
+          <label for='contributions-submitted-row-group'>Contributions submitted</label>
+          <input type="checkbox" id='contributions-submitted-row-group' data-toggle="toggle">
+        </td>
+      </tr>
+    </tbody>
+    <tbody class='event-type-group'>
+      <% activity[:contributions_submitted].try(:each) do |event| %>
+
+      <% end %>
+    </tbody>
+
+    <tbody class="event-type">
+      <tr>
+        <td colspan="3">
+          <label for='stories-published-row-group'>Stories published</label>
+          <input type="checkbox" id='stories-published-row-group' data-toggle="toggle">
+        </td>
+      </tr>
+    </tbody>
+    <tbody class='event-type-group'>
+      <% activity[:stories_published].try(:each) do |event| %>
+
+      <% end %>
+    </tbody>
+
+    <tbody class="event-type">
+      <tr>
+        <td colspan="3">
+          <label for='story-views-row-group'>Story views</label>
+          <input type="checkbox" id='story-views-row-group' data-toggle="toggle">
+        </td>
+      </tr>
+    </tbody>
+    <tbody class='event-type-group'>
+
+      <% activity[:story_views].each do |story_view| %>
+        <tr>
+          <!-- parse the timestamp b/c it was stored in cache as a string -->
+          <td><%= DateTime.parse(story_view[:timestamp]).strftime('%b %-d %-l:%M%p') %>&nbsp;UTC</td>
+          <td><%= story_view[:story_view]['success']['customer']['name'] %></td>
+          <td><a href="<%= story_view[:story_view]['success']['story']['csp_story_path'] %>">
+            <%= story_view[:story_view]['success']['story']['title'] %>
+          </a></td>
+          <!-- <td><%#= event[:type] %>&nbsp;&#8211;&nbsp;<%#= @activity.select { |e| e[:type] == event[:type] }.count %></td> -->
+        </tr>
+
+      <% end %>
+
+    </tbody>
+
+  </tbody>
+</table>

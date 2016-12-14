@@ -1,0 +1,43 @@
+
+<table id='measure-stories-table' width='100%'
+       class="table table-striped table-bordered">
+
+  <thead>
+    <tr>
+      <th>Customer</th>
+      <th>Story title</th>
+      <th>Publish date</th>
+      <th>Unique visitors</th>
+      <th>Total views</th>
+      <th>Landing</th>
+    </tr>
+  </thead>
+
+  <tbody>
+
+    <tr>
+      <td></td>
+      <td><em>index</em></td>
+      <td></td>
+      <td><%= company_index_unique_visitors.length %></td>
+      <td><%= company_index_views_count.to_i %></td>
+      <td><%= "#{((company_index_views_count / company_page_views_count) * 100).round(1)}%" %></td>
+    </tr>
+
+    <% Story.includes(:visitor_actions, :visitors)
+            .company_published(company.id).each do |story| %>
+            <!-- include :page_views results in error -->
+      <tr>
+        <td><%= story.customer.name %></td>
+        <td><%= story.title %></td>
+        <td><%= story.publish_date.strftime("%m/%d/%y") %></td>
+        <td><%= Set.new(story.visitors).length %></td>
+        <td><%= story.page_views.length %></td>
+        <td><%= "#{((story.page_views.length.to_f / company_page_views_count) * 100).round(1)}%" %></td>
+      </tr>
+
+    <% end %>
+
+  </tbody>
+
+</table>

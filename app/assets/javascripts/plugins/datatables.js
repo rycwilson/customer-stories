@@ -1,11 +1,11 @@
 
 function initDataTables () {
 
+  // _activity_table_jquery.html.erb
   $('#measure-activity-table [data-toggle="toggle"]').change(function () {
-    if ($(this).closest('tbody').next().children().length !== 0) {
-
-      $(this).closest('tbody').next().toggle();
-    }
+    // if ($(this).closest('tbody').next().children().length !== 0) {
+    //   $(this).closest('tbody').next().toggle();
+    // }
   });
 
   $('#curate-table').DataTable();
