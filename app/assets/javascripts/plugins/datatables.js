@@ -1,29 +1,34 @@
 
 function initDataTables () {
 
+  $('#measure-activity-table [data-toggle="toggle"]').change(function () {
+    $(this).closest('tbody').next().toggle();
+  });
+
   $('#curate-table').DataTable();
 
   $('#measure-activity-table').DataTable({
     lengthMenu: [[-1, 10, 25, 50], ['All', 10, 25, 50]],
-    order: [[3, ['Story views','Stories created','Logos published','Stories published','Contributions submitted','Contribution requests received']],[0,'desc']],
-    'columnDefs': [
-      { targets: [3], visible: false }
-    ],
-    drawCallback: function (settings) {
-        var api = this.api();
-        var rows = api.rows({ page:'current' }).nodes();
-        var last = null;
+  //   // order: [[3, ['Story views','Stories created','Logos published','Stories published','Contributions submitted','Contribution requests received']],[0,'desc']],
+  //   // 'columnDefs': [
+  //   //   { targets: [3], visible: false }
+  //   // ],
+  //   // drawCallback: function (settings) {
+  //   //     var api = this.api();
+  //   //     var rows = api.rows({ page:'current' }).nodes();
+  //   //     var last = null;
 
-        api.column(3, { page: 'current' }).data().each(function (group, i) {
-          if (last !== group) {
-            $(rows).eq(i).before(
-              '<tr class="group"><td colspan="3">' + group + '</td></tr>'
-            );
-            last = group;
-          }
-        });
-    }
+  //   //     api.column(3, { page: 'current' }).data().each(function (group, i) {
+  //   //       if (last !== group) {
+  //   //         $(rows).eq(i).before(
+  //   //           '<tr class="group"><td colspan="3">' + group + '</td></tr>'
+  //   //         );
+  //   //         last = group;
+  //   //       }
+  //   //     });
+  //   // }
   });
+
 
   $('#measure-visitors-table').DataTable({
     'order': [[3, 'desc']]  // order by total views

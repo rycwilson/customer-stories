@@ -419,43 +419,41 @@ class Company < ActiveRecord::Base
 
 
   def activity days_offset  # today = 0
-    stories_created = self.stories_created_activity(days_offset)
-    stories_logo_published = self.stories_logo_published_activity(days_offset)
-    contribution_requests_received = self.contribution_requests_received_activity(days_offset)
-    contribution_submissions = self.contribution_submissions_activity(days_offset)
-    stories_published = self.stories_published_activity(days_offset)
-    story_views = self.story_views_activity(days_offset)
     # story_shares = self.story_shares(days_offset)
-    { events: stories_created +
-              stories_logo_published +
-              contribution_requests_received +
-              contribution_submissions +
-              stories_published +
-              story_views }
+    {
+      stories_created: self.stories_created_activity(days_offset),
+      stories_logo_published: self.stories_logo_published_activity(days_offset),
+      contribution_requests_received: self.contribution_requests_received_activity(days_offset),
+      contribution_submissions: self.contribution_submissions_activity(days_offset),
+      stories_published: self.stories_published_activity(days_offset),
+      story_views: self.story_views_activity(days_offset)
+    }
   end
 
   def stories_created_activity days_offset
     Story
       .company_all_created_since(self.id, days_offset)
-        .map do |story|
-          { type: 'Stories created',
-            story: JSON.parse(
-                      story.to_json({
-                        only: [:title],
-                        methods: [:csp_edit_story_path],
-                        include: {
-                          success: {
-                            only: [],
-                            include: { customer: { only: [:name] },
-                                       curator: { methods: :full_name } }}}
-                      })),
-            timestamp: story.created_at.to_s }
-        end
+      .order(created_at: :desc)
+      .map do |story|
+        { type: 'Stories created',
+          story: JSON.parse(
+                    story.to_json({
+                      only: [:title],
+                      methods: [:csp_edit_story_path],
+                      include: {
+                        success: {
+                          only: [],
+                          include: { customer: { only: [:name] },
+                                     curator: { only: [], methods: :full_name } }}}
+                    })),
+          timestamp: story.created_at.to_s }
+      end
   end
 
   def stories_logo_published_activity days_offset
     Story
       .company_public_since(self.id, days_offset)
+      .order(logo_publish_date: :desc)
       .map do |story|
         { type: 'Logos published',
           story: JSON.parse(
@@ -476,6 +474,7 @@ class Company < ActiveRecord::Base
   def contribution_requests_received_activity days_offset
     Contribution
       .company_requests_received_since(self.id, days_offset)
+      .order(request_received_at: :desc)
       .map do |contribution|
         { type: 'Contribution requests received',
           contribution: JSON.parse(
@@ -498,6 +497,7 @@ class Company < ActiveRecord::Base
   def contribution_submissions_activity days_offset
     Contribution
       .company_submissions_since(self.id, days_offset)
+      .order(submitted_at: :desc)
       .map do |contribution|
         { type: 'Contributions submitted',
           contribution: JSON.parse(
@@ -518,6 +518,7 @@ class Company < ActiveRecord::Base
   def stories_published_activity days_offset
     Story
       .company_published_since(self.id, days_offset)
+      .order(publish_date: :desc)
       .map do |story|
         { type: 'Stories published',
           story: JSON.parse(
@@ -539,6 +540,7 @@ class Company < ActiveRecord::Base
     Rails.cache.fetch("#{self.subdomain}/story-views-activity") do
       PageView
         .company_story_views_since(self.id, days_offset)
+        .order('visitor_sessions.timestamp desc')
         .map do |story_view|
           { type: 'Story views',
             story_view: JSON.parse(

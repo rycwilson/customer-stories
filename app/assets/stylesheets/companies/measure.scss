@@ -1,0 +1,24 @@
+
+#measure-panel {
+
+  #measure-activity-table {
+    tbody {
+      border-top: 0;  // override bootstrap
+    }
+    .event-types {
+      label {
+        cursor: pointer;
+      }
+      tr {
+        background: #f4f4f4;
+      }
+    }
+    .hide-row-grouping {
+      display: none;
+    }
+    [data-toggle="toggle"] {  // hide the checkbox
+      display: none;
+    }
+  }
+
+}
