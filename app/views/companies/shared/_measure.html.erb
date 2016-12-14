@@ -114,7 +114,7 @@
               <!-- this is just filler so the "No data available" message doesn't appear -->
               <tr class='hidden'><td></td><td></td><td></td></tr>
 
-              <tbody class="event-types">
+              <tbody class="event-type">
                 <tr>
                   <td colspan="3">
                     <label for='stories-created-row-grouping'>Stories created</label>
@@ -122,7 +122,7 @@
                   </td>
                 </tr>
               </tbody>
-              <tbody class='hide-row-grouping'>
+              <tbody class='event-type-group'>
                 <% @activity[:stories_created].try(:each) do |story| %>
 
                   <tr>
@@ -138,63 +138,71 @@
                 <% end %>
               </tbody>
 
-              <tbody class="event-types">
+              <tbody class="event-type">
                 <tr>
                   <td colspan="3">
-                    <label for='logos-published-row-grouping'>Logos published</label>
-                    <input type="checkbox" id='logos-published-row-grouping' data-toggle="toggle">
+                    <label for='logos-published-row-group'>Logos published</label>
+                    <input type="checkbox" id='logos-published-row-group' data-toggle="toggle">
                   </td>
                 </tr>
               </tbody>
-              <% @activity[:stories_logo_published].try(:each) do |event| %>
+              <tbody class='event-type-group'>
+                <% @activity[:stories_logo_published].try(:each) do |event| %>
 
-              <% end %>
+                <% end %>
+              </tbody>
 
-              <tbody class="event-types">
+              <tbody class="event-type">
                 <tr>
                   <td colspan="3">
-                    <label for='requests-received-row-grouping'>Contribution requests received</label>
-                    <input type="checkbox" id='requests-received-row-grouping' data-toggle="toggle">
+                    <label for='requests-received-row-group'>Contribution requests received</label>
+                    <input type="checkbox" id='requests-received-row-group' data-toggle="toggle">
                   </td>
                 </tr>
               </tbody>
-              <% @activity[:contribution_requests_received].try(:each) do |event| %>
+              <tbody class='event-type-group'>
+                <% @activity[:contribution_requests_received].try(:each) do |event| %>
 
-              <% end %>
+                <% end %>
+              </tbody>
 
-              <tbody class="event-types">
+              <tbody class="event-type">
                 <tr>
                   <td colspan="3">
-                    <label for='contributions-submitted-row-grouping'>Contributions submitted</label>
-                    <input type="checkbox" id='contributions-submitted-row-grouping' data-toggle="toggle">
+                    <label for='contributions-submitted-row-group'>Contributions submitted</label>
+                    <input type="checkbox" id='contributions-submitted-row-group' data-toggle="toggle">
                   </td>
                 </tr>
               </tbody>
-              <% @activity[:contributions_submitted].try(:each) do |event| %>
+              <tbody class='event-type-group'>
+                <% @activity[:contributions_submitted].try(:each) do |event| %>
 
-              <% end %>
+                <% end %>
+              </tbody>
 
-              <tbody class="event-types">
+              <tbody class="event-type">
                 <tr>
                   <td colspan="3">
-                    <label for='stories-published-row-grouping'>Stories published</label>
-                    <input type="checkbox" id='stories-published-row-grouping' data-toggle="toggle">
+                    <label for='stories-published-row-group'>Stories published</label>
+                    <input type="checkbox" id='stories-published-row-group' data-toggle="toggle">
                   </td>
                 </tr>
               </tbody>
-              <% @activity[:stories_published].try(:each) do |event| %>
+              <tbody class='event-type-group'>
+                <% @activity[:stories_published].try(:each) do |event| %>
 
-              <% end %>
+                <% end %>
+              </tbody>
 
-              <tbody class="event-types">
+              <tbody class="event-type">
                 <tr>
                   <td colspan="3">
-                    <label for='story-views-row-grouping'>Story views</label>
-                    <input type="checkbox" id='story-views-row-grouping' data-toggle="toggle">
+                    <label for='story-views-row-group'>Story views</label>
+                    <input type="checkbox" id='story-views-row-group' data-toggle="toggle">
                   </td>
                 </tr>
               </tbody>
-              <tbody class='hide-row-grouping'>
+              <tbody class='event-type-group'>
 
                 <% @activity[:story_views].each do |story_view| %>
 <!-- <h2></h2> -->

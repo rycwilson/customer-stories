@@ -5,7 +5,7 @@
     tbody {
       border-top: 0;  // override bootstrap
     }
-    .event-types {
+    .event-type {
       label {
         cursor: pointer;
       }
@@ -13,7 +13,7 @@
         background: #f4f4f4;
       }
     }
-    .hide-row-grouping {
+    .event-type-group {
       display: none;
     }
     [data-toggle="toggle"] {  // hide the checkbox
