@@ -30,6 +30,14 @@
 
   <%= include_gon %>
 
+  <!-- lead forensics -->
+  <% if !user_signed_in? %>
+
+    <script type="text/javascript" src="https://secure.leadforensics.com/js/90336.js" ></script>
+    <noscript><img alt="" src="https://secure.leadforensics.com/90336.png" style="display:none;" /></noscript>
+
+  <% end %>
+
   <% if ['companies', 'stories', 'profile'].include? controller_name %>
 
     <%= render 'shared/mvp_admin_navbar' %>
