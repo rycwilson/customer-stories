@@ -424,7 +424,7 @@ class Company < ActiveRecord::Base
       stories_created: self.stories_created_activity(days_offset),
       stories_logo_published: self.stories_logo_published_activity(days_offset),
       contribution_requests_received: self.contribution_requests_received_activity(days_offset),
-      contribution_submissions: self.contribution_submissions_activity(days_offset),
+      contributions_submitted: self.contribution_submissions_activity(days_offset),
       stories_published: self.stories_published_activity(days_offset),
       story_views: self.story_views_activity(days_offset)
     }
@@ -466,7 +466,7 @@ class Company < ActiveRecord::Base
                           include: { customer: { only: [:name] },
                                      curator: { methods: :full_name } }}}
                     })),
-          timestamp: story.logo_publish_date }
+          timestamp: story.logo_publish_date.to_s }
       end
       .delete_if { |story| story[:story]['published'] }
   end

@@ -1,23 +1,27 @@
 
 #measure-panel {
 
-  #measure-activity-table {
+  #activity-groups {
+    table {
+      border-collapse: collapse;
+    }
     tbody {
       border-top: 0;  // override bootstrap
     }
-    .event-type {
-      label {
-        cursor: pointer;
-      }
-      tr {
-        background: #f4f4f4;
-      }
+    .accordion-toggle {
+      cursor: pointer;
     }
-    .event-type-group {
-      // display: none;
+    .hiddenRow {
+      padding: 0;
+      .accordion-body {
+        padding-top: 15px;
+      }
     }
     [data-toggle="toggle"] {  // hide the checkbox (jquery)
       display: none;
+    }
+    i {
+      color: #555555;
     }
   }
 

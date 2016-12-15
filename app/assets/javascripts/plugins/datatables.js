@@ -32,6 +32,42 @@ function initDataTables () {
   //   // }
   });
 
+  $('#story-views-table:not(.short)').DataTable({
+    order: [0, 'desc'],
+    columns: [
+      { type: 'date' }, null, null, null
+    ]
+  });
+  $('#stories-published-table:not(.short)').DataTable({
+    order: [0, 'desc'],
+    columns: [
+      { type: 'date' }, null, null, null
+    ]
+  });
+  $('#contributions-submitted-table:not(.short)').DataTable({
+    order: [0, 'desc'],
+    columns: [
+      { type: 'date' }, null, null, null
+    ]
+  });
+  $('#requests-received-table:not(.short)').DataTable({
+    order: [0, 'desc'],
+    columns: [
+      { type: 'date' }, null, null, null
+    ]
+  });
+  $('#logos-published-table:not(.short)').DataTable({
+    order: [0, 'desc'],
+    columns: [
+      { type: 'date' }, null, null, null
+    ]
+  });
+  $('#stories-created-table:not(.short)').DataTable({
+    order: [0, 'desc'],
+    columns: [
+      { type: 'date' }, null, null, null
+    ]
+  });
 
   $('#measure-visitors-table').DataTable({
     'order': [[3, 'desc']]  // order by total views
