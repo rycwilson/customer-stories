@@ -36,23 +36,13 @@
     </a>
   </li>
 
-  <% if production? && ['alpha', 'beta'].include?(company.feature_flag) %>
-    <li id='measure-tab' class='tooltip-beta-measure'
-        style='margin-bottom: 0px; display:inline-block'
-        data-title="Coming soon">
-      <a href='#measure-panel-disabled' role='tab' aria-controls='measure'
-          style='pointer-events:none' disabled>
-        Measure
-      </a>
-    </li>
-  <% else %>
-    <li id='measure-tab' class="<%= workflow_tab == 'measure' ? 'active' : '' %>"
-        role='presentation' style='margin-bottom: 0px'>
-      <a href='#measure-panel' role='tab' data-toggle='tab' aria-controls='measure'
-          data-turbolinks='false'>
-        Measure
-      </a>
-    </li>
-  <% end %>
+  <li id='measure-tab' class="<%= workflow_tab == 'measure' ? 'active' : '' %>"
+      role='presentation' style='margin-bottom: 0px'>
+    <a href='#measure-panel' role='tab' data-toggle='tab' aria-controls='measure'
+        data-turbolinks='false'>
+      Measure
+    </a>
+  </li>
+
 
 </ul>
