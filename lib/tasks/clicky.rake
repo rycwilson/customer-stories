@@ -15,13 +15,14 @@ namespace :clicky do
     visitors_list += get_clicky_visitors_range('2016-09-01,2016-09-30')
     visitors_list += get_clicky_visitors_range('2016-10-01,2016-10-31')
     visitors_list += get_clicky_visitors_range('2016-11-01,2016-11-30')
-    visitors_list += get_clicky_visitors_range('2016-12-01,2016-12-13')
+    visitors_list += get_clicky_visitors_range('2016-12-01,2016-12-14')
     visitors_list += get_clicky_visitors_since(args[:time_offset])  # seconds since 12/1
     # create visitors and sessions, establish associations
     new_visitor_sessions = parse_clicky_sessions(visitors_list)
     # get actions associated with sessions
     get_clicky_actions(new_visitor_sessions)
     # anyone viewing a story prior to publish date is a curator or CSP staff - remove!
+    # TODO: limit this scope to recenty added items
     Visitor.joins(visitor_actions: { story: {} })
            .where.not(visitor_actions: { success_id: nil })  # i.e. page views (must use :visitor_actions; :page_views => error)
            .where('stories.published = ? OR stories.publish_date > visitor_sessions.timestamp', false)
@@ -96,7 +97,11 @@ namespace :clicky do
   def parse_clicky_sessions visitors_list
     new_visitor_sessions = []
     visitors_list.each do |session|
+
       company = Company.find_by(subdomain: session['landing_page'].match(/\/\/((\w|-)+)/)[1])
+      story_slug = session['landing_page'].slice(session['landing_page'].rindex('/') + 1, session['landing_page'].length)
+      # puts "\ncompany - #{company.name}\n"
+      # puts "#{story_slug}"
       next if (company.nil? || company.subdomain == 'cisco' || company.subdomain == 'acme' ||
                company.subdomain == 'acme-test')
       return_visitor = Visitor.find_by(clicky_uid: session['uid'])
@@ -115,7 +120,6 @@ namespace :clicky do
           referrer_type: session['referrer_type'] || 'direct')
       VisitorSession.last_session = visitor_session
       # create a new VisitorAction, use landing_page to look up story
-      story_slug = session['landing_page'].slice(session['landing_page'].rindex('/') + 1, session['landing_page'].length)
       success = Story.friendly.exists?(story_slug) ? Story.friendly.find(story_slug).success : nil
       visitor_action = PageView.create(landing: true,
                                        visitor_session_id: visitor_session.id,

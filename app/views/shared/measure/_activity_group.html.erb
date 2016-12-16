@@ -1,0 +1,26 @@
+
+<tr class="accordion-toggle <%= group_items.empty? ? 'no-data' : '' %>"
+    data-toggle='collapse' data-parent='#activity-groups'
+    data-target=".<%= group_type %>">
+
+  <td><i class='fa fa-chevron-right'></i><i class='fa fa-chevron-down'></i></td>
+  <td><%= group_label %></td>
+  <td><%= group_items.count if group_items.count > 0 %>
+      <span class="<%= group_items.count > 0 ? 'hidden' : '' %>">&#8211;</span></td>
+
+</tr>
+
+<tr>
+
+  <td colspan='3' class='hiddenRow'>
+    <div class="accordion-body collapse <%= group_type %>">
+      <table class='table table-bordered <%= group_items.count < 10 ? 'short' : '' %>'       width='100%' id="<%= group_type %>-table">
+
+        <%= render 'shared/measure/activity_group_table_data',
+                   { group_items: group_items, group_type: group_type } %>
+
+      </table>
+    </div>
+  </td>
+
+</tr>
