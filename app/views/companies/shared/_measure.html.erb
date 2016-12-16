@@ -22,7 +22,7 @@
               </a>
             </li> -->
 
-            <li>
+            <li class='active'>
               <a href="#measure-stories-container" data-toggle="tab">
               <i class="fa fa-newspaper-o"></i>
               &nbsp;&nbsp;Stories
@@ -63,13 +63,7 @@
 
             </div> -->
 
-            <div class="tab-pane fade" id="measure-visitors-container">
-
-              <%= render 'shared/measure/visitors_table', { company: company } %>
-
-            </div>
-
-            <div class="tab-pane fade" id="measure-stories-container">
+            <div class="tab-pane fade in active" id="measure-stories-container">
 
               <%= render 'shared/measure/stories_table',
                     { company: company,
@@ -78,6 +72,13 @@
                       company_page_views_count: company_page_views_count } %>
 
             </div>  <!-- stories data -->
+
+            <div class="tab-pane fade" id="measure-visitors-container">
+
+              <%= render 'shared/measure/visitors_table', { company: company } %>
+
+            </div>
+
 
             <div class="tab-pane fade" id="measure-charts">
 
