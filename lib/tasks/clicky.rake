@@ -23,9 +23,9 @@ namespace :clicky do
     get_clicky_actions(new_visitor_sessions)
     # anyone viewing a story prior to publish date is a curator or CSP staff - remove!
     # TODO: limit this scope to recenty added items
-    Visitor.joins(:visitor_sessions, :stories)
-           .where('stories.published = ? OR stories.publish_date > visitor_sessions.timestamp', false)
-           .destroy_all
+    # Visitor.joins(:visitor_sessions, :stories)
+    #        .where('stories.published = ? OR stories.publish_date > visitor_sessions.timestamp', false)
+    #        .destroy_all
   end
 
   #
@@ -45,9 +45,9 @@ namespace :clicky do
     # get actions associated with sessions
     get_clicky_actions(new_visitor_sessions)
     # anyone viewing a story prior to publish date is a curator or CSP staff - remove!
-    Visitor.joins(:stories, :visitor_sessions)
-           .where('stories.published = ? OR stories.publish_date > visitor_sessions.timestamp', false)
-           .destroy_all
+    # Visitor.joins(:stories, :visitor_sessions)
+    #        .where('stories.published = ? OR stories.publish_date > visitor_sessions.timestamp', false)
+    #        .destroy_all
 
     # update cache
     Company.all.each do |company|
