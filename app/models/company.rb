@@ -15,9 +15,10 @@ class Company < ActiveRecord::Base
   has_many :customers, dependent: :destroy
   has_many :successes, through: :customers
   has_many :stories, through: :successes
-  has_many :visitors, dependent: :destroy
-  has_many :visitor_sessions, through: :visitors
-  has_many :page_views, through: :visitor_sessions
+  has_many :visitor_actions
+  has_many :page_views, class_name: "PageView"
+  has_many :visitor_sessions, -> { distinct }, through: :visitor_actions
+  has_many :visitors, -> { distinct }, through: :visitor_sessions
 
   has_many :story_categories, dependent: :destroy
   has_many :products, dependent: :destroy
@@ -552,6 +553,7 @@ class Company < ActiveRecord::Base
   def story_views_activity days_offset
     Rails.cache.fetch("#{self.subdomain}/story-views-activity") do
       PageView
+        .joins(:visitor_session)
         .company_story_views_since(self.id, days_offset)
         .order('visitor_sessions.timestamp desc')
         .map do |story_view|

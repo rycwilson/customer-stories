@@ -15,7 +15,7 @@ namespace :clicky do
     visitors_list += get_clicky_visitors_range('2016-09-01,2016-09-30')
     visitors_list += get_clicky_visitors_range('2016-10-01,2016-10-31')
     visitors_list += get_clicky_visitors_range('2016-11-01,2016-11-30')
-    visitors_list += get_clicky_visitors_range('2016-12-01,2016-12-14')
+    visitors_list += get_clicky_visitors_range('2016-12-01,2016-12-15')
     visitors_list += get_clicky_visitors_since(args[:time_offset])  # seconds since 12/1
     # create visitors and sessions, establish associations
     new_visitor_sessions = parse_clicky_sessions(visitors_list)
@@ -23,8 +23,7 @@ namespace :clicky do
     get_clicky_actions(new_visitor_sessions)
     # anyone viewing a story prior to publish date is a curator or CSP staff - remove!
     # TODO: limit this scope to recenty added items
-    Visitor.joins(visitor_actions: { story: {} })
-           .where.not(visitor_actions: { success_id: nil })  # i.e. page views (must use :visitor_actions; :page_views => error)
+    Visitor.joins(page_views: { story: {} }, visitor_sessions: {})
            .where('stories.published = ? OR stories.publish_date > visitor_sessions.timestamp', false)
            .destroy_all
   end
@@ -46,8 +45,7 @@ namespace :clicky do
     # get actions associated with sessions
     get_clicky_actions(new_visitor_sessions)
     # anyone viewing a story prior to publish date is a curator or CSP staff - remove!
-    Visitor.joins(visitor_actions: { story: {} })
-           .where.not(visitor_actions: { success_id: nil })  # i.e. page views (must use :visitor_actions; :page_views => error)
+    Visitor.joins(visitor_actions: { story: {} }, visitor_sessions: {})
            .where('stories.published = ? OR stories.publish_date > visitor_sessions.timestamp', false)
            .destroy_all
 
@@ -97,7 +95,6 @@ namespace :clicky do
   def parse_clicky_sessions visitors_list
     new_visitor_sessions = []
     visitors_list.each do |session|
-
       company = Company.find_by(subdomain: session['landing_page'].match(/\/\/((\w|-)+)/)[1])
       story_slug = session['landing_page'].slice(session['landing_page'].rindex('/') + 1, session['landing_page'].length)
       # puts "\ncompany - #{company.name}\n"
@@ -106,9 +103,7 @@ namespace :clicky do
                company.subdomain == 'acme-test')
       return_visitor = Visitor.find_by(clicky_uid: session['uid'])
       # return_visitor.try(:increment, :total_visits).try(:save)
-      visitor = return_visitor ||
-                Visitor.create(clicky_uid: session['uid'],
-                               company_id: company.id)
+      visitor = return_visitor || Visitor.create(clicky_uid: session['uid'])
       visitor_session =
         VisitorSession.create(
           timestamp: Time.at(session['time'].to_i),
@@ -123,7 +118,8 @@ namespace :clicky do
       success = Story.friendly.exists?(story_slug) ? Story.friendly.find(story_slug).success : nil
       visitor_action = PageView.create(landing: true,
                                        visitor_session_id: visitor_session.id,
-                                       success_id: success.try(:id))  # nil if stories index
+                                       success_id: success.try(:id),
+                                       company_id: company.id)  # nil if stories index
       # update the associations
       visitor.visitor_sessions << visitor_session
       visitor_session.visitor_actions << visitor_action
@@ -163,15 +159,19 @@ namespace :clicky do
           JSON.parse(session[:actions_list_request].response.response_body)[0]['dates'][0]['items']
         actions_list.each_with_index do |action, index|
           next if index == 0  # first action is already saved landing pageview
-          if action['action_type'] == 'pageview'
+          company = Company.find_by(subdomain: action['action_url'].match(/\/\/((\w|-)+)/)[1])
+          # don't register any page view that's not tied to a company
+          if company.present? && action['action_type'] == 'pageview'
             story_title_slug =
               action['action_url'].match(/\/(\w|-)+\/(?=.*-)((\w|-)+)$/).try(:[], 2)
             success_id = story_title_slug.present? && Story.exists?(story_title_slug) ?
                            Story.friendly.find(story_title_slug).success_id : nil
             PageView.create({ success_id: success_id,
+                              company_id: company.id,
                               visitor_session_id: session[:visitor_session_id] })
-          elsif action['action_type'] == 'click'
+          elsif company.present? && action['action_type'] == 'click'
             StoryShare.create({ success_id: success_id,
+                                company_id: company.id,
                                 visitor_session_id: session[:visitor_session_id] })
           end
         end
