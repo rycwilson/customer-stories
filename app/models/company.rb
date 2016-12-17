@@ -581,4 +581,13 @@ class Company < ActiveRecord::Base
   def story_shares_activity days_offset
   end
 
+  def stories_index_unique_visitors
+    Rails.cache.fetch("#{self.subdomain}/stories_index_unique_visitors") do
+      unique_visitors = Set.new
+      PageView.company_index_views(self.id).each do |page_view|
+        @company_index_unique_visitors << page_view.visitor
+      end
+    end
+  end
+
 end

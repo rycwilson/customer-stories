@@ -22,7 +22,7 @@ window.app = window.app || {
     (({
       'companies': function () {
 
-        app.betaFeatures();
+        // app.betaFeatures();
 
         (({
           'new': companiesNew,

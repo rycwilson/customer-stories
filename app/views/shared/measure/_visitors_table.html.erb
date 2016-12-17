@@ -27,7 +27,7 @@
 
   <tbody>
 
-    <% Visitor.company_top(company.id, 100).each do |visitor| %>
+    <% Visitor.includes(:visitor_sessions).company_top(company.id, 100).each do |visitor| %>
 
       <tr>
         <td><%= visitor.clicky_uid %></td>

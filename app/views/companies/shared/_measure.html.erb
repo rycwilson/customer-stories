@@ -70,11 +70,7 @@
 
             <div class="tab-pane fade" id="measure-stories-container">
 
-              <%= render 'shared/measure/stories_table',
-                    { company: company,
-                      company_index_unique_visitors: company_index_unique_visitors,
-                      company_index_views_count: company_index_views_count,
-                      company_page_views_count: company_page_views_count } %>
+              <%= render 'shared/measure/stories_table', { company: company } %>
 
             </div>  <!-- stories data -->
 
