@@ -33,7 +33,7 @@
         <div class='portlet-body'>
           <div class='table-responsive'>
 
-            <table id='curate-table' class="table table-striped table-bordered thumbnail-table">
+            <table id='curate-table' class="table table-striped table-bordered">
               <thead>
                 <tr>
                   <th>Customer</th>
@@ -46,7 +46,10 @@
               </thead>
               <tbody>
     <!-- <tbody> -->
-      <% company.stories.order(updated_at: :desc).each do |story| %>
+      <% Story.includes(:customer, :curator)
+              .company_all(company.id)
+              .order(updated_at: :desc)
+              .each do |story| %>
 
         <tr>
           <td class='td-story-customer valign-middle'>

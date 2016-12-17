@@ -1,7 +1,7 @@
 class Success < ActiveRecord::Base
 
-  belongs_to :company
   belongs_to :customer
+  has_one :company, through: :customer
   belongs_to :curator, class_name: 'User', foreign_key: 'curator_id'
 
   has_one :story, dependent: :destroy

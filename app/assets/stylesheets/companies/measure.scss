@@ -4,12 +4,20 @@
   #activity-groups {
     table {
       border-collapse: collapse;
+      tr.accordion-toggle td:first-child {
+        width: 40px;
+        text-align: center;
+      }
     }
     tbody {
       border-top: 0;  // override bootstrap
     }
     .accordion-toggle {
       cursor: pointer;
+    }
+    tr.accordion-toggle.no-data {
+      pointer-events: none;
+      opacity: 0.3;
     }
     .hiddenRow {
       padding: 0;
@@ -22,6 +30,9 @@
     }
     i {
       color: #555555;
+    }
+    i + i {
+      display: none;
     }
   }
 

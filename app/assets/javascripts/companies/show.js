@@ -3,7 +3,12 @@ function companiesShowHandlers () {
   activityFeedHandlers();
   newStoryModalHandlers();
 
-  // need to construct / desconstruct these
+  // toggle display Recent activity groups
+  $(document).on('show.bs.collapse hidden.bs.collapse',
+                 '#activity-groups .hiddenRow',
+    function () {
+      $(this).parent().prev().find('i').toggle();
+  });
 
 }
 

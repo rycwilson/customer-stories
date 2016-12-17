@@ -1,20 +1,27 @@
 class Visitor < ActiveRecord::Base
 
-  belongs_to :company
   has_many :visitor_sessions, dependent: :destroy
   has_many :visitor_actions, through: :visitor_sessions
   has_many :page_views, through: :visitor_sessions, class_name: 'PageView'
   has_many :successes, through: :visitor_actions
+  has_many :stories, through: :successes
 
-  # validates :name, presence: true
   scope :company_all, ->(company_id) {
-    where(company_id: company_id)
+    joins(:page_views)
+    .where(visitor_actions: { company_id: company_id })
   }
 
   scope :company_top, ->(company_id, top) {
     company_all(company_id)
-    .order(visitor_sessions_count: :desc)  # see VisitorSession => cache_count: true
+    .order(visitor_sessions_count: :desc)
+    .distinct
     .limit(top)
+  }
+
+  scope :company_index_visitors, ->(company_id) {
+    company_all(company_id)
+    .where(visitor_actions: { success_id: nil })
+    .distinct
   }
 
   # ref: http://stackoverflow.com/questions/8696005/rails-3-activerecord-order-by-count-on-association

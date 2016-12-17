@@ -14,18 +14,20 @@
 
   <tfoot>
     <tr>
-      <td colspan='3'><em>
-        Total: <%= Visitor.company_all(company.id).count %>
+      <td colspan='1'><em>
+        Total: <%= company.visitors.count %>
       </em></td>
-      <td colspan='2'><em>
-        Total: <%= VisitorSession.company_all(company.id).count %>
+      <td colspan='2'></td>
+      <td colspan='1'><em>
+        Total: <%= company.visitor_sessions.count %>
       </em></td>
+      <td colspan='1'></td>
     </tr>
   </tfoot>
 
   <tbody>
 
-    <% Visitor.company_top(company.id, 100).each do |visitor| %>
+    <% Visitor.includes(:visitor_sessions).company_top(company.id, 100).each do |visitor| %>
 
       <tr>
         <td><%= visitor.clicky_uid %></td>

@@ -1,68 +1,43 @@
 
 function initDataTables () {
 
-  // _activity_table_jquery.html.erb
-  $('#measure-activity-table [data-toggle="toggle"]').change(function () {
-    // if ($(this).closest('tbody').next().children().length !== 0) {
-    //   $(this).closest('tbody').next().toggle();
-    // }
-  });
-
   $('#curate-table').DataTable();
 
-  $('#measure-activity-table').DataTable({
-    lengthMenu: [[-1, 10, 25, 50], ['All', 10, 25, 50]],
-  //   // order: [[3, ['Story views','Stories created','Logos published','Stories published','Contributions submitted','Contribution requests received']],[0,'desc']],
-  //   // 'columnDefs': [
-  //   //   { targets: [3], visible: false }
-  //   // ],
-  //   // drawCallback: function (settings) {
-  //   //     var api = this.api();
-  //   //     var rows = api.rows({ page:'current' }).nodes();
-  //   //     var last = null;
+  // $('#measure-activity-table').DataTable({
+  //   lengthMenu: [[-1, 10, 25, 50], ['All', 10, 25, 50]],
+  // });
 
-  //   //     api.column(3, { page: 'current' }).data().each(function (group, i) {
-  //   //       if (last !== group) {
-  //   //         $(rows).eq(i).before(
-  //   //           '<tr class="group"><td colspan="3">' + group + '</td></tr>'
-  //   //         );
-  //   //         last = group;
-  //   //       }
-  //   //     });
-  //   // }
-  });
-
-  $('#story-views-table:not(.short)').DataTable({
+  $('#story_views-table:not(.short)').DataTable({
     order: [0, 'desc'],
     columns: [
       { type: 'date' }, null, null, null
     ]
   });
-  $('#stories-published-table:not(.short)').DataTable({
+  $('#stories_published-table:not(.short)').DataTable({
     order: [0, 'desc'],
     columns: [
       { type: 'date' }, null, null, null
     ]
   });
-  $('#contributions-submitted-table:not(.short)').DataTable({
+  $('#contributions_submitted-table:not(.short)').DataTable({
     order: [0, 'desc'],
     columns: [
       { type: 'date' }, null, null, null
     ]
   });
-  $('#requests-received-table:not(.short)').DataTable({
+  $('#contribution_requests_received-table:not(.short)').DataTable({
     order: [0, 'desc'],
     columns: [
       { type: 'date' }, null, null, null
     ]
   });
-  $('#logos-published-table:not(.short)').DataTable({
+  $('#stories_logo_published-table:not(.short)').DataTable({
     order: [0, 'desc'],
     columns: [
       { type: 'date' }, null, null, null
     ]
   });
-  $('#stories-created-table:not(.short)').DataTable({
+  $('#stories_created-table:not(.short)').DataTable({
     order: [0, 'desc'],
     columns: [
       { type: 'date' }, null, null, null

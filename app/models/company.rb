@@ -15,9 +15,10 @@ class Company < ActiveRecord::Base
   has_many :customers, dependent: :destroy
   has_many :successes, through: :customers
   has_many :stories, through: :successes
-  has_many :visitors, dependent: :destroy
-  has_many :visitor_sessions, through: :visitors
-  has_many :page_views, through: :visitor_sessions
+  has_many :visitor_actions
+  has_many :page_views, class_name: "PageView"
+  has_many :visitor_sessions, -> { distinct }, through: :visitor_actions
+  has_many :visitors, -> { distinct }, through: :visitor_sessions
 
   has_many :story_categories, dependent: :destroy
   has_many :products, dependent: :destroy
@@ -420,14 +421,27 @@ class Company < ActiveRecord::Base
 
   def activity days_offset  # today = 0
     # story_shares = self.story_shares(days_offset)
-    {
-      stories_created: self.stories_created_activity(days_offset),
-      stories_logo_published: self.stories_logo_published_activity(days_offset),
-      contribution_requests_received: self.contribution_requests_received_activity(days_offset),
-      contributions_submitted: self.contribution_submissions_activity(days_offset),
-      stories_published: self.stories_published_activity(days_offset),
-      story_views: self.story_views_activity(days_offset)
-    }
+    groups = [
+      { label: 'Story views',
+        story_views: self.story_views_activity(days_offset) },
+      { label: 'Stories published',
+        stories_published: self.stories_published_activity(days_offset) },
+      { label: 'Contributions submitted',
+        contributions_submitted: self.contribution_submissions_activity(days_offset) },
+      { label: 'Contribution requests received',
+        contribution_requests_received: self.contribution_requests_received_activity(days_offset) },
+      { label: 'Logos published',
+        stories_logo_published: self.stories_logo_published_activity(days_offset) },
+      { label: 'Stories created',
+        stories_created: self.stories_created_activity(days_offset) }
+    ]
+    # move any groups with no entries to the end of the array
+    groups.length.times do
+      if groups.any? { |group| group.values[1].length == 0 }
+        groups.insert(groups.length - 1, groups.delete_at(groups.find_index { |group| group.values[1].length == 0 }))
+      end
+    end
+    groups
   end
 
   def stories_created_activity days_offset
@@ -539,6 +553,7 @@ class Company < ActiveRecord::Base
   def story_views_activity days_offset
     Rails.cache.fetch("#{self.subdomain}/story-views-activity") do
       PageView
+        .joins(:visitor_session)
         .company_story_views_since(self.id, days_offset)
         .order('visitor_sessions.timestamp desc')
         .map do |story_view|
@@ -564,6 +579,15 @@ class Company < ActiveRecord::Base
   end
 
   def story_shares_activity days_offset
+  end
+
+  def stories_index_unique_visitors
+    Rails.cache.fetch("#{self.subdomain}/stories_index_unique_visitors") do
+      unique_visitors = Set.new
+      PageView.company_index_views(self.id).each do |page_view|
+        @company_index_unique_visitors << page_view.visitor
+      end
+    end
   end
 
 end
