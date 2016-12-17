@@ -15,7 +15,7 @@ namespace :clicky do
     visitors_list += get_clicky_visitors_range('2016-09-01,2016-09-30')
     visitors_list += get_clicky_visitors_range('2016-10-01,2016-10-31')
     visitors_list += get_clicky_visitors_range('2016-11-01,2016-11-30')
-    visitors_list += get_clicky_visitors_range('2016-12-01,2016-12-15')
+    visitors_list += get_clicky_visitors_range('2016-12-01,2016-12-16')
     visitors_list += get_clicky_visitors_since(args[:time_offset])  # seconds since 12/1
     # create visitors and sessions, establish associations
     new_visitor_sessions = parse_clicky_sessions(visitors_list)
@@ -23,7 +23,7 @@ namespace :clicky do
     get_clicky_actions(new_visitor_sessions)
     # anyone viewing a story prior to publish date is a curator or CSP staff - remove!
     # TODO: limit this scope to recenty added items
-    Visitor.joins(page_views: { story: {} }, visitor_sessions: {})
+    Visitor.joins(:visitor_sessions, :stories)
            .where('stories.published = ? OR stories.publish_date > visitor_sessions.timestamp', false)
            .destroy_all
   end
@@ -45,7 +45,7 @@ namespace :clicky do
     # get actions associated with sessions
     get_clicky_actions(new_visitor_sessions)
     # anyone viewing a story prior to publish date is a curator or CSP staff - remove!
-    Visitor.joins(visitor_actions: { story: {} }, visitor_sessions: {})
+    Visitor.joins(:stories, :visitor_sessions)
            .where('stories.published = ? OR stories.publish_date > visitor_sessions.timestamp', false)
            .destroy_all
 

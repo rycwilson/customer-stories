@@ -9,7 +9,7 @@ class Story < ActiveRecord::Base
   has_many :outbound_actions, through: :outbound_actions_stories
   has_many :visitor_actions, through: :success
   has_many :page_views, through: :success, class_name: 'PageView'
-  has_many :visitors, through: :page_views
+  has_many :visitors, -> { distinct }, through: :page_views
 
   # Note: no explicit association to friendly_id_slugs, but it's there
   # Story has many friendly_id_slugs -> captures history of slug changes

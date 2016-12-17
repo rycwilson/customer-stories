@@ -15,12 +15,6 @@
 
           <ul class="nav nav-layout-sidebar nav-stacked">
 
-            <li class='active'>
-              <a href="#measure-activity-container" data-toggle="tab">
-              <i class="fa fa-line-chart"></i>
-              &nbsp;&nbsp;Recent activity
-              </a>
-            </li>
 
             <li class='active'>
               <a href="#measure-stories-container" data-toggle="tab">
@@ -33,6 +27,13 @@
               <a href="#measure-visitors-container" data-toggle="tab">
               <i class="fa fa-users"></i>
               &nbsp;&nbsp;Visitors
+              </a>
+            </li>
+
+            <li>
+              <a href="#measure-activity-container" data-toggle="tab">
+              <i class="fa fa-line-chart"></i>
+              &nbsp;&nbsp;Recent activity
               </a>
             </li>
 
@@ -52,21 +53,11 @@
 
           <div id="settings-content" class="tab-content stacked-content">
 
-          <div class="tab-pane fade in active" id="measure-activity-container">
-
-              <%#= render 'shared/measure/activity_table_jquery', { activity: activity } %>
-
-              <%= render 'shared/measure/activity_table', { activity: activity } %>
-
-              <%#= render 'shared/measure/activity_table_datatable', { activity: activity } %>
-
-            </div>
-
             <div class="tab-pane fade in active" id="measure-stories-container">
 
               <%= render 'shared/measure/stories_table', { company: company } %>
 
-            </div>  <!-- stories data -->
+            </div>
 
             <div class="tab-pane fade" id="measure-visitors-container">
 
@@ -74,6 +65,11 @@
 
             </div>
 
+            <div class="tab-pane fade" id="measure-activity-container">
+
+              <%= render 'shared/measure/activity_table', { activity: activity } %>
+
+            </div>
 
             <div class="tab-pane fade" id="measure-charts">
 
@@ -82,6 +78,7 @@
               </div> <!-- /.heading-block -->
 
             </div>
+          </div>
 
         </div> <!-- /.col -->
       </div> <!-- layout -->
