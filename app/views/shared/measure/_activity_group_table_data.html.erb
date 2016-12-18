@@ -48,7 +48,7 @@
                group_type == :stories_created ||
                group_type == :stories_logo_published %>
 
-<td ><%= DateTime.parse(item[:timestamp]).strftime('%-d/%-m/%y') %></td>
+<td ><%= DateTime.parse(item[:timestamp]).strftime('%-m/%-d/%y') %></td>
 <td><%= item[:story]['success']['curator']['full_name'] %></td>
 <td><%= item[:story]['success']['customer']['name'] %></td>
 <td><a href="<%= item[:story]['csp_story_path'] %>">

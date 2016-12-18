@@ -26,6 +26,8 @@ namespace :clicky do
     Visitor.joins(:visitor_sessions, :stories)
            .where('stories.published = ? OR stories.publish_date > visitor_sessions.timestamp', false)
            .destroy_all
+
+
   end
 
   #
@@ -51,7 +53,7 @@ namespace :clicky do
 
     # update cache
     Company.all.each do |company|
-      Rails.cache.write(
+      Rails.cache.fetch(
         "#{company.subdomain}/story-views-activity",
         company.story_views_activity(7)
       )

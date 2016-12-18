@@ -34,7 +34,7 @@
         <td><%= visitor.visitor_sessions.take.organization %></td>
         <td><%= visitor.visitor_sessions.take.location %></td>
         <td><%= visitor.visitor_sessions_count %></td>
-        <td><%= visitor.visitor_sessions.order(timestamp: :desc).take.timestamp.strftime("%m/%d/%y") %></td>
+        <td><%= visitor.visitor_sessions.order(timestamp: :desc).take.timestamp.strftime("%-m/%-d/%y") %></td>
       </tr>
 
     <% end %>

@@ -30,7 +30,7 @@
       <tr>
         <td><%= story.customer.name %></td>
         <td><%= story.title %></td>
-        <td><%= story.publish_date.strftime("%m/%d/%y") %></td>
+        <td><%= story.publish_date.strftime("%-m/%-d/%y") %></td>
         <td><%= story.visitors.uniq.count %></td>
         <td><%= story.page_views.count %></td>
         <td><%= "#{((story.page_views.count.to_f / company.page_views.count.to_f) * 100).round(1)}%" %></td>
