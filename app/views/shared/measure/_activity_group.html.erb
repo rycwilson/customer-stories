@@ -3,8 +3,12 @@
     data-toggle='collapse' data-parent='#activity-groups'
     data-target=".<%= group_type %>">
 
+  <% last_7_days = group_items.select { |item| Date.parse(item[:timestamp]) >= 7.days.ago } %>
+
   <td><i class='fa fa-chevron-right'></i><i class='fa fa-chevron-down'></i></td>
   <td><%= group_label %></td>
+  <td><%= last_7_days.count if last_7_days.count > 0 %>
+      <span class="<%= last_7_days.count > 0 ? 'hidden' : '' %>">&#8211;</span></td>
   <td><%= group_items.count if group_items.count > 0 %>
       <span class="<%= group_items.count > 0 ? 'hidden' : '' %>">&#8211;</span></td>
 
@@ -12,7 +16,7 @@
 
 <tr>
 
-  <td colspan='3' class='hiddenRow'>
+  <td colspan='4' class='hiddenRow'>
     <div class="accordion-body collapse <%= group_type %>">
       <table class='table table-bordered <%= group_items.count < 10 ? 'short' : '' %>'       width='100%' id="<%= group_type %>-table">
 

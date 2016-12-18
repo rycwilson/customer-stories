@@ -55,7 +55,7 @@ namespace :clicky do
     Company.all.each do |company|
       Rails.cache.write(
         "#{company.subdomain}/story-views-activity",
-        company.story_views_activity(7)
+        company.story_views_activity(30)
       )
     end
   end
@@ -106,6 +106,7 @@ namespace :clicky do
       return_visitor = Visitor.find_by(clicky_uid: session['uid'])
       # return_visitor.try(:increment, :total_visits).try(:save)
       visitor = return_visitor || Visitor.create(clicky_uid: session['uid'])
+      visitor.update(last_visited: Time.at(session['time'].to_i))
       visitor_session =
         VisitorSession.create(
           timestamp: Time.at(session['time'].to_i),
