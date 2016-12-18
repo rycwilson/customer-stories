@@ -15,7 +15,7 @@ class CompaniesController < ApplicationController
     @customer_select_options = @company.customer_select_options
     @category_select_options = @company.category_select_options
     @product_select_options = @company.product_select_options
-    @activity = @company.activity(7)
+    @activity = @company.activity(30)
   end
 
   def edit
