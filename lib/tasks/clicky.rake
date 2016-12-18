@@ -15,7 +15,7 @@ namespace :clicky do
     visitors_list += get_clicky_visitors_range('2016-09-01,2016-09-30')
     visitors_list += get_clicky_visitors_range('2016-10-01,2016-10-31')
     visitors_list += get_clicky_visitors_range('2016-11-01,2016-11-30')
-    visitors_list += get_clicky_visitors_range('2016-12-01,2016-12-16')
+    visitors_list += get_clicky_visitors_range('2016-12-01,2016-12-17')
     visitors_list += get_clicky_visitors_since(args[:time_offset])  # seconds since 12/1
     # create visitors and sessions, establish associations
     new_visitor_sessions = parse_clicky_sessions(visitors_list)
@@ -53,9 +53,9 @@ namespace :clicky do
 
     # update cache
     Company.all.each do |company|
-      Rails.cache.fetch(
+      Rails.cache.write(
         "#{company.subdomain}/story-views-activity",
-        company.story_views_activity(7)
+        company.story_views_activity(30)
       )
     end
   end
@@ -106,6 +106,7 @@ namespace :clicky do
       return_visitor = Visitor.find_by(clicky_uid: session['uid'])
       # return_visitor.try(:increment, :total_visits).try(:save)
       visitor = return_visitor || Visitor.create(clicky_uid: session['uid'])
+      visitor.update(last_visited: Time.at(session['time'].to_i))
       visitor_session =
         VisitorSession.create(
           timestamp: Time.at(session['time'].to_i),
