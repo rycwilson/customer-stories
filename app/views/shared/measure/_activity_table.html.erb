@@ -19,7 +19,8 @@
         <%= render 'shared/measure/activity_group',
                     { group_type: activity_group.keys[1],
                       group_label: activity_group[:label],
-                      group_items: activity_group.values[1] } %>
+                      group_items: activity_group.values[1],
+                      story_views_30_day_count: story_views_30_day_count } %>
 
       <% end %>
 

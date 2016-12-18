@@ -6,11 +6,12 @@
   <% last_7_days = group_items.select { |item| Date.parse(item[:timestamp]) >= 7.days.ago } %>
 
   <td><i class='fa fa-chevron-right'></i><i class='fa fa-chevron-down'></i></td>
-  <td><%= group_label %></td>
+  <td><%= group_type == :story_views ? group_label + ' (limit 7 days)' : group_label %></td>
   <td><%= last_7_days.count if last_7_days.count > 0 %>
       <span class="<%= last_7_days.count > 0 ? 'hidden' : '' %>">&#8211;</span></td>
-  <td><%= group_items.count if group_items.count > 0 %>
-      <span class="<%= group_items.count > 0 ? 'hidden' : '' %>">&#8211;</span></td>
+  <td><%= group_type == :story_views ? (story_views_30_day_count if story_views_30_day_count > 0) :
+          group_items.count if group_items.count > 0 %>
+      <span class="<%= group_type == :story_views ? (story_views_30_day_count > 0 ? 'hidden' : '') :               group_items.count > 0 ? 'hidden' : '' %>">&#8211;</span></td>
 
 </tr>
 

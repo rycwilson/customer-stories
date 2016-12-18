@@ -16,6 +16,8 @@ class CompaniesController < ApplicationController
     @category_select_options = @company.category_select_options
     @product_select_options = @company.product_select_options
     @activity = @company.activity(30)
+    @story_views_30_day_count = PageView.joins(:visitor_session)
+                                  .company_story_views_since(@company.id, 30).count
   end
 
   def edit

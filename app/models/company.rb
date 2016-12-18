@@ -423,7 +423,7 @@ class Company < ActiveRecord::Base
     # story_shares = self.story_shares(days_offset)
     groups = [
       { label: 'Story views',
-        story_views: self.story_views_activity(days_offset) },
+        story_views: self.story_views_activity(7) },
       { label: 'Stories published',
         stories_published: self.stories_published_activity(days_offset) },
       { label: 'Contributions submitted',
