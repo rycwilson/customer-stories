@@ -102,13 +102,14 @@
       margin-bottom: 1px;
     }
     h3 {
+      font-weight: 400; // overrides bootstrap
       float: none;
       display: inline-block;
       margin-top: 11px;
       margin-bottom: 0;
       vertical-align: bottom;
       font-size: 24px;
-      color: #cfcfcf; //#b3b3b3;
+      color: #cacaca; //#b3b3b3;
     }
     .btn {
       float: none;

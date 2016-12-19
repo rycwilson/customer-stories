@@ -29,7 +29,7 @@ window.app = window.app || {
         })[action])();
       },
       'stories': function () {
-        app.betaFeatures();
+        // app.betaFeatures();
 
         (({
           'index': storiesIndex,
