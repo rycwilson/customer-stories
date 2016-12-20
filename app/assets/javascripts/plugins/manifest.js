@@ -40,3 +40,5 @@
 
 //= require js-cookie/src/js.cookie
 
+//= require local_time
+
