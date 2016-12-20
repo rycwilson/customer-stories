@@ -2,7 +2,7 @@ class CompaniesController < ApplicationController
 
   before_action :user_authorized?, only: [:show, :edit]
   before_action :set_company, except: [:new, :create]
-  # before_action only: [:show, :edit] { set_gon(@company) }
+  before_action only: [:show, :edit] { set_gon(@company) }
   before_action :set_s3_direct_post, only: [:new, :edit, :create]
 
   def new
