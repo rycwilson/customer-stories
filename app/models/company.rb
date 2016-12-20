@@ -419,7 +419,7 @@ class Company < ActiveRecord::Base
   end
 
 
-  def activity days_offset  # today = 0
+  def recent_activity days_offset  # today = 0
     # story_shares = self.story_shares(days_offset)
     groups = [
       { label: 'Story views',

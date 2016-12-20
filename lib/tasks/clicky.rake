@@ -55,7 +55,7 @@ namespace :clicky do
     Company.all.each do |company|
       Rails.cache.write(
         "#{company.subdomain}/story-views-activity",
-        company.story_views_activity(30)
+        company.story_views_activity(7)
       )
     end
   end

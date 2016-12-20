@@ -68,7 +68,8 @@
             <div class="tab-pane fade" id="measure-activity-container">
 
               <%= render 'shared/measure/activity_table',
-                    { activity: activity, story_views_30_day_count: @story_views_30_day_count } %>
+                    { recent_activity: recent_activity,
+                      story_views_30_day_count: @story_views_30_day_count } %>
 
             </div>
 

@@ -14,7 +14,7 @@
       <!-- this is just filler so the "No data available" message doesn't appear -->
       <!-- <tr class='hidden'><td></td><td></td><td></td></tr> -->
 
-      <% activity.each do |activity_group| %>
+      <% recent_activity.each do |activity_group| %>
 
         <%= render 'shared/measure/activity_group',
                     { group_type: activity_group.keys[1],

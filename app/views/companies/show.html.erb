@@ -22,11 +22,12 @@
                  product_select_options: @product_select_options } %>
 
     <%= render 'companies/shared/promote',
-               { workflow_tab: @workflow_tab, company: @company} %>
+               { workflow_tab: @workflow_tab, company: @company } %>
 
     <%= render 'companies/shared/measure',
                 { workflow_tab: @workflow_tab, company: @company,
-                  activity: @activity } %>
+                  recent_activity: @recent_activity,
+                  story_views_30_day_count: @story_views_30_day_count } %>
 
   </div>  <!-- tab content -->
 
