@@ -37,7 +37,7 @@
 
       <% if group_type == :story_views %>
 
-<td><%= DateTime.parse(item[:timestamp]).strftime('%-m/%-d/%y %-l:%M %p') %></td>
+<td><%= local_time(DateTime.parse(item[:timestamp]), "%m/%d/%y %l:%M %p") %></td>
 <td><a href="<%= item[:story_view]['success']['story']['csp_story_path'] %>">
   <%= item[:story_view]['success']['story']['title'] %>
 </a></td>
@@ -48,7 +48,7 @@
                group_type == :stories_created ||
                group_type == :stories_logo_published %>
 
-<td ><%= DateTime.parse(item[:timestamp]).strftime('%-m/%-d/%y') %></td>
+<td ><%= local_time(DateTime.parse(item[:timestamp]), '%m/%d/%y') %></td>
 <td><%= item[:story]['success']['curator']['full_name'] %></td>
 <td><%= item[:story]['success']['customer']['name'] %></td>
 <td><a href="<%= item[:story]['csp_story_path'] %>">
@@ -58,7 +58,7 @@
       <% elsif group_type == :contributions_submitted ||
                group_type == :contribution_requests_received %>
 
-<td ><%= DateTime.parse(item[:timestamp]).strftime('%-m/%-d/%y %-l:%M %p') %></td>
+<td ><%= local_time(DateTime.parse(item[:timestamp]), '%m/%d/%y %l:%M %p') %></td>
 <td><%= item[:contribution]['success']['customer']['name'] %></td>
 <td><%= item[:contribution]['contributor']['full_name'] %></td>
 <td><a href="<%= item[:contribution]['success']['story']['csp_edit_story_path'] %>">

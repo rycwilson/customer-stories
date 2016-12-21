@@ -66,14 +66,14 @@
               <%= link_to 'Published', story.csp_story_path %>
             </td>
             <td class='td-story-date valign-middle'>
-              <%= story.publish_date.strftime('%-m/%-d/%y') %>
+              <%= local_time(story.publish_date, '%m/%d/%y') %>
             </td>
           <% elsif story.logo_published? %>
             <td class='td-story-status valign-middle'>
               <%= link_to 'Logo published', story.csp_story_path %>
             </td>
             <td class='td-story-date valign-middle'>
-              <%= story.logo_publish_date.strftime('%-m/%-d/%y') %>
+              <%= local_time(story.logo_publish_date, '%m/%d/%y') %>
             </td>
           <% else %>
             <td class='td-story-status valign-middle'>
