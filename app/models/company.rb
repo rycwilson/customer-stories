@@ -423,7 +423,7 @@ class Company < ActiveRecord::Base
     # story_shares = self.story_shares(days_offset)
     groups = [
       { label: 'Story views',
-        story_views: self.story_views_activity(7) },
+        story_views: Rails.cache.fetch("#{self.subdomain}/story-views-activity") },
       { label: 'Stories published',
         stories_published: self.stories_published_activity(days_offset) },
       { label: 'Contributions submitted',
@@ -551,31 +551,29 @@ class Company < ActiveRecord::Base
 
 
   def story_views_activity days_offset
-    Rails.cache.fetch("#{self.subdomain}/story-views-activity") do
-      PageView
-        .joins(:visitor_session)
-        .company_story_views_since(self.id, days_offset)
-        .order('visitor_sessions.timestamp desc')
-        .map do |story_view|
-          { type: 'Story views',
-            story_view: JSON.parse(
-                          story_view.to_json({
-                            only: [],
-                            include: {
-                              success: {
-                                only: [],
-                                include: {
-                                  story: {
-                                    only: [:title],
-                                    methods: [:csp_story_path] },
-                                  customer: {
-                                    only: [:name] }}},
-                              visitor_session: {
-                                only: [:organization, :location] }}
-                          })),
-            timestamp: story_view.visitor_session.timestamp.to_s }
-        end
-    end
+    PageView
+      .joins(:visitor_session)
+      .company_story_views_since(self.id, days_offset)
+      .order('visitor_sessions.timestamp desc')
+      .map do |story_view|
+        { type: 'Story views',
+          story_view: JSON.parse(
+                        story_view.to_json({
+                          only: [],
+                          include: {
+                            success: {
+                              only: [],
+                              include: {
+                                story: {
+                                  only: [:title],
+                                  methods: [:csp_story_path] },
+                                customer: {
+                                  only: [:name] }}},
+                            visitor_session: {
+                              only: [:organization, :location] }}
+                        })),
+          timestamp: story_view.visitor_session.timestamp.to_s }
+      end
   end
 
   def story_shares_activity days_offset
