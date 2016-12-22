@@ -570,7 +570,7 @@ class Company < ActiveRecord::Base
                                 customer: {
                                   only: [:name] }}},
                             visitor_session: {
-                              only: [:organization, :location] }}
+                              only: [:organization, :location, :referrer_type] }}
                         })),
           timestamp: story_view.visitor_session.timestamp.to_s }
       end

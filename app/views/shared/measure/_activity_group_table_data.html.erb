@@ -8,6 +8,7 @@
       <th>Story title</th>
       <th>Organization</th>
       <th>Location</th>
+      <th>Source</th>
 
     <% elsif group_type == :stories_published ||
              group_type == :stories_logo_published ||
@@ -43,6 +44,7 @@
 </a></td>
 <td><%= item[:story_view]['visitor_session']['organization'] %></td>
 <td><%= item[:story_view]['visitor_session']['location'] %></td>
+<td><%= item[:story_view]['visitor_session']['referrer_type'] %></td>
 
       <% elsif group_type == :stories_published ||
                group_type == :stories_created ||

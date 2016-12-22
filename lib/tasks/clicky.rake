@@ -15,7 +15,7 @@ namespace :clicky do
     visitors_list += get_clicky_visitors_range('2016-09-01,2016-09-30')
     visitors_list += get_clicky_visitors_range('2016-10-01,2016-10-31')
     visitors_list += get_clicky_visitors_range('2016-11-01,2016-11-30')
-    visitors_list += get_clicky_visitors_range('2016-12-01,2016-12-18')
+    visitors_list += get_clicky_visitors_range('2016-12-01,2016-12-20')
     visitors_list += get_clicky_visitors_since(args[:time_offset])  # seconds since 12/1
     # create visitors and sessions, establish associations
     new_visitor_sessions = parse_clicky_sessions(visitors_list)
@@ -27,7 +27,13 @@ namespace :clicky do
            .where('stories.published = ? OR stories.publish_date > visitor_sessions.timestamp', false)
            .destroy_all
 
-
+    # update cache
+    Company.all.each do |company|
+      Rails.cache.write(
+        "#{company.subdomain}/story-views-activity",
+        company.story_views_activity(7)
+      )
+    end
   end
 
   #
@@ -107,6 +113,9 @@ namespace :clicky do
       # return_visitor.try(:increment, :total_visits).try(:save)
       visitor = return_visitor || Visitor.create(clicky_uid: session['uid'])
       visitor.update(last_visited: Time.at(session['time'].to_i))
+      referrer_type = session['referrer_type'] || 'direct'
+      referrer_type = 'promote' if referrer_type == 'advertising'
+      referrer_type = 'link' if referrer_type == 'email'
       visitor_session =
         VisitorSession.create(
           timestamp: Time.at(session['time'].to_i),
@@ -115,7 +124,7 @@ namespace :clicky do
           location: session['geolocation'],
           ip_address: session['ip_address'],
           clicky_session_id: session['session_id'],
-          referrer_type: session['referrer_type'] || 'direct')
+          referrer_type: referrer_type)
       VisitorSession.last_session = visitor_session
       # create a new VisitorAction, use landing_page to look up story
       success = Story.friendly.exists?(story_slug) ? Story.friendly.find(story_slug).success : nil
