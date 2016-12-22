@@ -10,7 +10,7 @@ function initDataTables () {
   $('#story_views-table:not(.short)').DataTable({
     order: [0, 'desc'],
     columns: [
-      { type: 'date' }, null, null, null
+      { type: 'date' }, null, null, null, null
     ]
   });
   $('#stories_published-table:not(.short)').DataTable({
