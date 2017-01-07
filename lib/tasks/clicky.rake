@@ -4,10 +4,14 @@ namespace :clicky do
 
   #
   # download history
-  # time_offset is seconds since 12/1
+  # time_offset is seconds since start of today
   #
   task :init, [:time_offset] => :environment do |task, args|
+  # task init: :environment do
     Visitor.destroy_all
+    ActiveRecord::Base.connection.execute('ALTER SEQUENCE visitors_id_seq RESTART WITH 1')
+    ActiveRecord::Base.connection.execute('ALTER SEQUENCE visitor_sessions_id_seq RESTART WITH 1')
+    ActiveRecord::Base.connection.execute('ALTER SEQUENCE visitor_actions_id_seq RESTART WITH 1')
     visitors_list = get_clicky_visitors_range('2016-05-01,2016-05-31')
     visitors_list += get_clicky_visitors_range('2016-06-01,2016-06-30')
     visitors_list += get_clicky_visitors_range('2016-07-01,2016-07-31')
@@ -15,8 +19,10 @@ namespace :clicky do
     visitors_list += get_clicky_visitors_range('2016-09-01,2016-09-30')
     visitors_list += get_clicky_visitors_range('2016-10-01,2016-10-31')
     visitors_list += get_clicky_visitors_range('2016-11-01,2016-11-30')
-    visitors_list += get_clicky_visitors_range('2016-12-01,2016-12-20')
-    visitors_list += get_clicky_visitors_since(args[:time_offset])  # seconds since 12/1
+    visitors_list += get_clicky_visitors_range('2016-12-01,2016-12-15')
+    visitors_list += get_clicky_visitors_range('2016-12-16,2016-12-31')
+    visitors_list += get_clicky_visitors_range('2017-01-01,2017-01-06')
+    visitors_list += get_clicky_visitors_since(args[:time_offset])
     # create visitors and sessions, establish associations
     new_visitor_sessions = parse_clicky_sessions(visitors_list)
     # get actions associated with sessions
@@ -25,6 +31,11 @@ namespace :clicky do
     # TODO: limit this scope to recenty added items
     Visitor.joins(:visitor_sessions, :stories)
            .where('stories.published = ? OR stories.publish_date > visitor_sessions.timestamp', false)
+           .destroy_all
+
+    # Ryan
+    Visitor.joins(:visitor_actions)
+           .where(visitor_actions: { company_id: 1 } )  # acme-test
            .destroy_all
 
     # update cache
@@ -56,6 +67,13 @@ namespace :clicky do
     Visitor.joins(:stories, :visitor_sessions)
            .where('stories.published = ? OR stories.publish_date > visitor_sessions.timestamp', false)
            .destroy_all
+
+    # Ryan
+    Visitor.joins(:visitor_actions)
+           .where(visitor_actions: { company_id: 1 } )  # acme-test
+           .destroy_all
+    Visitor.find_by(clicky_uid: 6314802).destroy
+    Visitor.find_by(clicky_uid: 1888001310).destroy
 
     # update cache
     Company.all.each do |company|
