@@ -1,10 +1,6 @@
 
 function storiesIndexHandlers () {
 
-  $(document).on('layoutComplete', '.grid', function () {
-    centerLogos();
-  });
-
   $(document).on('change', '.stories-filter', function () {
     var $categorySelect = $("[name='category_select']"),
         $productSelect = $("[name='product_select']"),

@@ -7,6 +7,7 @@
 //= require plugins/socialshare
 //= require plugins/tooltips
 //= require plugins/clicky
+//= require plugins/datatables
 
 function constructPlugins () {
 
@@ -17,6 +18,7 @@ function constructPlugins () {
   initSocialShare();
   initTooltips();
   initClicky();
+  initDataTables();
 
   $('.best_in_place').best_in_place();
   $('.bs-switch').bootstrapSwitch({ size: 'small' });
@@ -32,7 +34,7 @@ function constructPlugins () {
   $('#outbound-links-form').dirtyFields();
 
   $('#activity-feed-btn').popover({
-    title: 'Last 7 days',
+    title: "Last day's activity",
     placement: 'right',
     html: 'true',
     trigger: 'manual',
@@ -65,9 +67,11 @@ function deconstructPlugins () {
 
   $('.grid').masonry('destroy');
 
+  // does not seem to be neceessary (and doesn't work anyway):
+  // $('.datatable').each(function (table) { table.DataTable.destroy(); });
+
   $("[data-provider='summernote']").summernote('destroy');
 
-  // $('.linkedin-widget span').remove();
 }
 
 

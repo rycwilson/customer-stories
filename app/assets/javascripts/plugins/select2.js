@@ -88,6 +88,13 @@ function initSelect2 () {
       $(this).val(preSelect.toString()).trigger('change.select2');
     }
   });
+
+  $('#outbound-actions-select').select2({
+    theme: 'bootstrap',
+    placeholder: 'select an action',
+    tags: true
+  });
+
 }
 
 function select2Handlers () {

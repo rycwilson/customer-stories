@@ -22,8 +22,6 @@ window.app = window.app || {
     (({
       'companies': function () {
 
-        app.betaFeatures();
-
         (({
           'new': companiesNew,
           'show': companiesShow,
@@ -31,7 +29,7 @@ window.app = window.app || {
         })[action])();
       },
       'stories': function () {
-        app.betaFeatures();
+        // app.betaFeatures();
 
         (({
           'index': storiesIndex,
@@ -61,13 +59,13 @@ window.app = window.app || {
 
   },
 
-  betaFeatures: function () {
-    if (this.company.feature_flag !== 'demo') {
-      // workflow features block
-      $('.tooltip-beta-measure').tooltip({ placement: 'right', container: 'body' });
-      $('.tooltip-beta-promote').tooltip({ placement: 'top' });
-    }
-  }
+  // betaFeatures: function () {
+  //   if (this.company.feature_flag !== 'demo') {
+  //     // workflow features block
+  //     $('.tooltip-beta-measure').tooltip({ placement: 'right', container: 'body' });
+  //     $('.tooltip-beta-promote').tooltip({ placement: 'top' });
+  //   }
+  // }
 };
 
 

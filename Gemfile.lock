@@ -151,6 +151,8 @@ GEM
     kaminari (0.17.0)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
+    local_time (1.0.3)
+      coffee-rails
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.4)
@@ -331,6 +333,7 @@ DEPENDENCIES
   html_to_plain_text
   jazz_hands!
   jquery-minicolors-rails
+  local_time
   meta_request
   multi_json
   paperclip (~> 4.3)

@@ -18,6 +18,7 @@ gem 'uglifier', '>= 1.3.0'
 gem 'dalli'
 gem 'connection_pool'
 
+gem 'local_time'
 gem 'rails_admin'
 gem 'devise'
 gem 'turbolinks', '~> 5.0.0'

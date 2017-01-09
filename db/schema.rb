@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161124061741) do
+ActiveRecord::Schema.define(version: 20161218195350) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -347,10 +347,14 @@ ActiveRecord::Schema.define(version: 20161124061741) do
     t.string   "type"
     t.integer  "success_id"
     t.integer  "visitor_session_id"
-    t.datetime "created_at",         null: false
-    t.datetime "updated_at",         null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.boolean  "landing",            default: false
+    t.string   "share_network"
+    t.integer  "company_id"
   end
 
+  add_index "visitor_actions", ["company_id"], name: "index_visitor_actions_on_company_id", using: :btree
   add_index "visitor_actions", ["success_id"], name: "index_visitor_actions_on_success_id", using: :btree
   add_index "visitor_actions", ["visitor_session_id"], name: "index_visitor_actions_on_visitor_session_id", using: :btree
 
@@ -358,21 +362,26 @@ ActiveRecord::Schema.define(version: 20161124061741) do
     t.datetime "timestamp"
     t.string   "referrer_type"
     t.integer  "visitor_id"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.string   "clicky_session_id"
+    t.string   "ip_address"
+    t.string   "organization"
+    t.string   "location"
   end
 
+  add_index "visitor_sessions", ["clicky_session_id"], name: "index_visitor_sessions_on_clicky_session_id", unique: true, using: :btree
   add_index "visitor_sessions", ["visitor_id"], name: "index_visitor_sessions_on_visitor_id", using: :btree
 
   create_table "visitors", force: :cascade do |t|
-    t.string   "name"
-    t.string   "location"
-    t.integer  "company_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.string   "clicky_uid"
+    t.integer  "visitor_sessions_count", default: 0
+    t.datetime "last_visited"
   end
 
-  add_index "visitors", ["company_id"], name: "index_visitors_on_company_id", using: :btree
+  add_index "visitors", ["clicky_uid"], name: "index_visitors_on_clicky_uid", unique: true, using: :btree
 
   add_foreign_key "contributions", "successes"
   add_foreign_key "contributions", "users"
@@ -402,8 +411,8 @@ ActiveRecord::Schema.define(version: 20161124061741) do
   add_foreign_key "successes", "customers"
   add_foreign_key "successes", "users", column: "curator_id"
   add_foreign_key "users", "companies"
+  add_foreign_key "visitor_actions", "companies"
   add_foreign_key "visitor_actions", "successes"
   add_foreign_key "visitor_actions", "visitor_sessions"
   add_foreign_key "visitor_sessions", "visitors"
-  add_foreign_key "visitors", "companies"
 end

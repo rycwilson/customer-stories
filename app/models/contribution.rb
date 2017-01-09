@@ -14,6 +14,18 @@ class Contribution < ActiveRecord::Base
     .where.not(user_id: curator_id)
   }
 
+  scope :company, ->(company_id) {
+    includes(:contributor, success: { story: {}, customer: {} })
+    .joins(success: { customer: {} })
+    .where(customers: { company_id: company_id })
+  }
+  scope :company_submissions_since, ->(company_id, days_ago) {
+    company(company_id).where('submitted_at >= ?', days_ago.days.ago)
+  }
+  scope :company_requests_received_since, ->(company_id, days_ago) {
+    company(company_id).where('request_received_at >= ?', days_ago.days.ago)
+  }
+
   validates :role, presence: true
   validates :contribution, presence: true,
                 if: Proc.new { |contribution| contribution.status == 'contribution'}

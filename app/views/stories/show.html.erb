@@ -34,13 +34,13 @@
   expiring its prev/next navigation cache?  That would require a costly lookup operation.
   instead, use memcache iterators
 -->
-<% cache("#{@company.subdomain}/#{@is_curator ? 'curator' : 'public'}/story-#{@story.id}-prev-next-mi-#{@prev_story.prev_next_memcache_iterator}-mi-#{@next_story.prev_next_memcache_iterator}", skip_digest: true) do %>
+<%# cache("#{@company.subdomain}/#{@is_curator ? 'curator' : 'public'}/story-#{@story.id}-prev-next-mi-#{@prev_story.prev_next_memcache_iterator}-mi-#{@next_story.prev_next_memcache_iterator}", skip_digest: true) do %>
 
-  <%= render 'stories/shared/prev_next_stories',
+  <%#= render 'stories/shared/prev_next_stories',
         { company: @company, story: @story,
           prev_story: @prev_story, next_story: @next_story } %>
 
-<% end %>
+<%# end %>
 
 <% if @is_curator %>
 
@@ -101,7 +101,7 @@
 </div>
 
 <!-- video (xs only) -->
-<div id='story-section-video-xs'>
+<div id='story-section-video-xs' class='visible-xs'>
 
   <% cache("#{@company.subdomain}/story-#{@story.id}-video-xs",
            skip_digest: true) do %>
@@ -119,7 +119,7 @@
 </div>
 
 <!-- story content, results, contributing team -->
-<div id='story-section-content' style='padding-bottom:15px'>
+<div id='story-section-content'>
 
   <%= render 'stories/shared/story_content',
       { company: @company, story: @story, contributors: @contributors } %>
@@ -127,7 +127,7 @@
 </div>
 
 <% unless user_signed_in? %>
-  <div class='hidden-xs'>
+  <div class='hidden-xs' style='border:1px solid #e3e3e3;z-index:1000'>
     <div class='container' style='padding:15px 0 15px 0' id='story-footer'>
 
       <div class="row" style='font-size:0'>

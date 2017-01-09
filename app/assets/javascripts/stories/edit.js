@@ -528,7 +528,7 @@ function storiesEditContributionsHandlers () {
   /*
    *  only one accordion panel open at a time
   */
-  $(document).on('click', '.accordion-toggle', function () {
+  $(document).on('click', '.contribution-card.accordion-toggle', function () {
     if ($(this).attr('href').match(/info/)) {
       var $readPanel = $(this).closest('.accordion')
                               .find("div.accordion-body[id*='submission']");

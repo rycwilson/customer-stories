@@ -51,8 +51,6 @@ Rails.application.routes.draw do
         resources :results, only: [:create, :update, :destroy]
       end
 
-      get '/companies/:id/activity', to: 'companies#activity', as: 'company_activity'
-
       # approval PDF
       get '/stories/:id/approval', to: 'stories#approval', as: 'story_approval'
 

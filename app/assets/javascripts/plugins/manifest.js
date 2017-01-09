@@ -4,6 +4,7 @@
 //= require magnific-popup/dist/jquery.magnific-popup
 //= require datatables/media/js/jquery.dataTables
 //= require datatables-plugins/integration/bootstrap/3/dataTables.bootstrap
+
 //= require bootstrap-jasny/js/fileinput.js
 //= require mvpready-core
 //= require mvpready-helpers
@@ -38,4 +39,6 @@
 // https://github.com/maciej-gurban/responsive-bootstrap-toolkit
 
 //= require js-cookie/src/js.cookie
+
+//= require local_time
 

@@ -1,7 +1,7 @@
 class Success < ActiveRecord::Base
 
-  belongs_to :company
   belongs_to :customer
+  has_one :company, through: :customer
   belongs_to :curator, class_name: 'User', foreign_key: 'curator_id'
 
   has_one :story, dependent: :destroy
@@ -15,6 +15,10 @@ class Success < ActiveRecord::Base
   # alias the association to user -> Success.find(id).contributors
   # note: contributor is an alias - see contribution.rb
   has_many :contributors, through: :contributions, source: :contributor
+  has_many :page_views, class_name: 'PageView'
+  has_many :story_shares, class_name: 'StoryShare'
+  has_many :visitor_actions
+  has_many :visitors, through: :visitor_actions
 
   def create_default_prompts
     self.prompts << Prompt.create(description: "What was the challenge?") <<

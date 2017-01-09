@@ -1,7 +1,7 @@
 
 <ul class='nav nav-tabs workflow-tabs mainnav-menu' role='tablist' style='border-bottom:0'>
 
-  <% if ['alpha', 'beta'].include? company.feature_flag %>
+  <% if ['alpha', 'beta', 'demo'].include? company.feature_flag %>
   <!--   <li id='pipeline-tab'
         style='margin-bottom: 0px; display:inline-block'
         data-title="This section is currently disabled">
@@ -36,23 +36,13 @@
     </a>
   </li>
 
-  <% if ['alpha', 'beta'].include? company.feature_flag %>
-    <li id='measure-tab' class='tooltip-beta-measure'
-        style='margin-bottom: 0px; display:inline-block'
-        data-title="Coming soon">
-      <a href='#measure-panel' role='tab' aria-controls='measure'
-          style='pointer-events:none' disabled>
-        Measure
-      </a>
-    </li>
-  <% else %>
-    <li id='measure-tab' class="<%= workflow_tab == 'measure' ? 'active' : '' %>"
-        role='presentation' style='margin-bottom: 0px'>
-      <a href='#measure-panel' role='tab' data-toggle='tab' aria-controls='measure'
-          data-turbolinks='false'>
-        Measure
-      </a>
-    </li>
-  <% end %>
+  <li id='measure-tab' class="<%= workflow_tab == 'measure' ? 'active' : '' %>"
+      role='presentation' style='margin-bottom: 0px'>
+    <a href='#measure-panel' role='tab' data-toggle='tab' aria-controls='measure'
+        data-turbolinks='false'>
+      Measure
+    </a>
+  </li>
+
 
 </ul>
