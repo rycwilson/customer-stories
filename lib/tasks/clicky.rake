@@ -74,6 +74,7 @@ namespace :clicky do
            .destroy_all
     Visitor.find_by(clicky_uid: 6314802).destroy
     Visitor.find_by(clicky_uid: 1888001310).destroy
+    Visitor.find_by(clicky_uid: 2953643240).destroy   # safari
 
     # update cache
     Company.all.each do |company|
