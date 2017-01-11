@@ -21,7 +21,7 @@
     <div class="accordion-body collapse <%= group_type %>">
       <table class='table table-bordered <%= group_items.count < 10 ? 'short' : '' %>'       width='100%' id="<%= group_type %>-table">
 
-        <%= render 'shared/measure/activity_group_table_data',
+        <%= render 'companies/shared/measure/activity_group_table_data',
                    { group_items: group_items, group_type: group_type } %>
 
       </table>

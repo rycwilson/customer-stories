@@ -15,8 +15,15 @@
 
           <ul class="nav nav-layout-sidebar nav-stacked">
 
-
             <li class='active'>
+              <a href="#measure-summary" data-toggle="tab">
+              <i class="fa fa-pie-chart"></i>
+              &nbsp;&nbsp;Summary
+              </a>
+
+            </li>
+
+            <li>
               <a href="#measure-stories-container" data-toggle="tab">
               <i class="fa fa-newspaper-o"></i>
               &nbsp;&nbsp;Stories
@@ -37,48 +44,34 @@
               </a>
             </li>
 
-         <!--    <li>
-              <a href="#measure-charts" data-toggle="tab">
-              <i class="fa fa-pie-chart"></i>
-              &nbsp;&nbsp;Charts
-              </a>
-            </li> -->
 
           </ul>
 
         </div>
 
-
         <div class="col-md-9 col-sm-8 layout-main">
 
           <div id="settings-content" class="tab-content stacked-content">
 
-            <div class="tab-pane fade in active" id="measure-stories-container">
+            <div class="tab-pane fade in active" id="measure-summary-container">
+              <%= render 'companies/shared/measure/summary_charts',
+                         { company: company } %>
+            </div>
 
-              <%= render 'shared/measure/stories_table', { company: company } %>
-
+            <div class="tab-pane fade" id="measure-stories-container">
+              <%= render 'companies/shared/measure/stories_table',
+                         { company: company } %>
             </div>
 
             <div class="tab-pane fade" id="measure-visitors-container">
-
-              <%= render 'shared/measure/visitors_table', { company: company } %>
-
+              <%= render 'companies/shared/measure/visitors_table',
+                         { company: company } %>
             </div>
 
             <div class="tab-pane fade" id="measure-activity-container">
-
-              <%= render 'shared/measure/activity_table',
+              <%= render 'companies/shared/measure/activity_table',
                     { recent_activity: recent_activity,
                       story_views_30_day_count: @story_views_30_day_count } %>
-
-            </div>
-
-            <div class="tab-pane fade" id="measure-charts">
-
-              <div class="heading-block">
-                <h3>Charts</h3>
-              </div> <!-- /.heading-block -->
-
             </div>
 
           <!-- </div> -->

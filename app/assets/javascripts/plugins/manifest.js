@@ -42,3 +42,6 @@
 
 //= require local_time
 
+//= require moment/moment
+//= require bootstrap-daterangepicker/daterangepicker
+

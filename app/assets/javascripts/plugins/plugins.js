@@ -8,6 +8,7 @@
 //= require plugins/tooltips
 //= require plugins/clicky
 //= require plugins/datatables
+//= require plugins/daterangepicker
 
 function constructPlugins () {
 
@@ -19,6 +20,7 @@ function constructPlugins () {
   initTooltips();
   initClicky();
   initDataTables();
+  initDateRangePicker();
 
   $('.best_in_place').best_in_place();
   $('.bs-switch').bootstrapSwitch({ size: 'small' });
