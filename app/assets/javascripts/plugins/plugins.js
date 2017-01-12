@@ -9,6 +9,7 @@
 //= require plugins/clicky
 //= require plugins/datatables
 //= require plugins/daterangepicker
+//= require plugins/google_charts
 
 function constructPlugins () {
 
@@ -21,6 +22,7 @@ function constructPlugins () {
   initClicky();
   initDataTables();
   initDateRangePicker();
+  initGoogleCharts();
 
   $('.best_in_place').best_in_place();
   $('.bs-switch').bootstrapSwitch({ size: 'small' });

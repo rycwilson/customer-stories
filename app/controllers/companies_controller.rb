@@ -18,6 +18,14 @@ class CompaniesController < ApplicationController
     @recent_activity = @company.recent_activity(30)
     @story_views_30_day_count = PageView.joins(:visitor_session)
                                   .company_story_views_since(@company.id, 30).count
+
+    gon.push({
+      referrer_types: VisitorSession.select(:referrer_type)
+                                    .where('timestamp >= ?', 30.days.ago)
+                                    .group_by { |session| session.referrer_type }
+                                    .map { |type, records| [type,records.count] }
+    })
+
   end
 
   def edit
