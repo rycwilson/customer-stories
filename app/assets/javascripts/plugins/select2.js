@@ -95,6 +95,11 @@ function initSelect2 () {
     tags: true
   });
 
+  $('#charts-story').select2({
+    theme: 'bootstrap',
+    width: 'style'
+  });
+
 }
 
 function select2Handlers () {

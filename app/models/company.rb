@@ -206,6 +206,12 @@ class Company < ActiveRecord::Base
     self.outbound_actions.map { |action| [ action.description, action.id ] }
   end
 
+  def story_select_options
+    self.stories.select { |story| story.published }
+                .map { |story| [ story.title, story.id ] }
+                .unshift( ['All', 0] )
+  end
+
   def templates_select
     self.email_templates.map do |template|
       [template.name, template.id]

@@ -20,12 +20,16 @@ class CompaniesController < ApplicationController
                                   .company_story_views_since(@company.id, 30).count
 
     gon.push({
-      referrer_types: VisitorSession.select(:referrer_type)
-                                    .where('timestamp >= ?', 30.days.ago)
-                                    .group_by { |session| session.referrer_type }
-                                    .map { |type, records| [type,records.count] }
+      charts: {
+        referrerTypes: VisitorSession.select(:referrer_type)
+                         .joins(:visitor_actions)
+                         .where(visitor_actions: { company_id: @company.id })
+                         .where('timestamp >= ?', 30.days.ago)
+                         .group_by { |session| session.referrer_type }
+                         .map { |type, records| [type,records.count] }
+      }
     })
-
+    @story_select_options = @company.story_select_options
   end
 
   def edit

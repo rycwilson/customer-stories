@@ -1,0 +1,8 @@
+
+(function () {
+
+  var referrerTypes = <%= raw @referrer_types.to_json %>;
+
+  initGoogleCharts(false, { referrerTypes: referrerTypes });
+
+}());

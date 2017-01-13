@@ -22,7 +22,7 @@ function constructPlugins () {
   initClicky();
   initDataTables();
   initDateRangePicker();
-  initGoogleCharts();
+  initGoogleCharts(true, app.charts);  // true => synchronous load
 
   $('.best_in_place').best_in_place();
   $('.bs-switch').bootstrapSwitch({ size: 'small' });

@@ -54,6 +54,9 @@ Rails.application.routes.draw do
       # approval PDF
       get '/stories/:id/approval', to: 'stories#approval', as: 'story_approval'
 
+      # analytics
+      get '/analytics/charts', to: 'analytics#charts', as: 'charts'
+
       # outbound actions
       get   '/outbound_forms/:id', to: 'outbound_actions#show', as: 'outbound_form'
       post  '/stories/:id/outbound_actions', to: 'outbound_actions#create',

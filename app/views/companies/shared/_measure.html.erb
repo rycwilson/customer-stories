@@ -54,7 +54,8 @@
 
             <div class="tab-pane fade in active" id="measure-summary-container">
               <%= render 'companies/shared/measure/summary_charts',
-                         { company: company } %>
+                   { company: company,
+                     story_select_options: @story_select_options } %>
             </div>
 
             <div class="tab-pane fade" id="measure-stories-container">
