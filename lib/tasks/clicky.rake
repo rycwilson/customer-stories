@@ -73,9 +73,9 @@ namespace :clicky do
     Visitor.joins(:visitor_actions)
            .where(visitor_actions: { company_id: 1 } )  # acme-test
            .destroy_all
-    Visitor.find_by(clicky_uid: 6314802).destroy
-    Visitor.find_by(clicky_uid: 1888001310).destroy
-    Visitor.find_by(clicky_uid: 2953643240).destroy   # safari
+    Visitor.find_by(clicky_uid: 6314802).try(:destroy)
+    Visitor.find_by(clicky_uid: 1888001310).try(:destroy)
+    Visitor.find_by(clicky_uid: 2953643240).try(:destroy)   # safari
 
     # update cache
     Company.all.each do |company|
