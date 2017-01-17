@@ -16,25 +16,67 @@ function initGoogleCharts (syncLoad, charts) {
     };
   };
 
-  if (syncLoad) {
+  var drawVisitorsBarGraph = function (uniqueVisitors) {
 
+    var totalVisitors = 0, axes = [];
+
+    uniqueVisitors.forEach(function (group) { totalVisitors += group[1]; });
+
+    // columns as days or weeks?
+    if (uniqueVisitors.length === 1) {   // 1 day
+      xDelta = 0;
+    } else {
+      xDelta = moment.duration(new Date(uniqueVisitors[1][0]) - new Date(uniqueVisitors[0][0])).asDays();
+      if (xDelta < 0) { xDelta += 365; }  // account for ranges that span new year
+    }
+    if (xDelta <= 1)  {
+      axes = ['Day', 'Visitors'];
+    } else if (xDelta === 7) {
+      axes = ['Week starting', 'Visitors'];
+    } else {
+
+    }
+
+    uniqueVisitors.unshift(axes);
+
+    return function () {
+      var data = google.visualization.arrayToDataTable(uniqueVisitors),
+          view = new google.visualization.DataView(data),
+          options = {
+            title: "Unique Visitors - " + totalVisitors.toString(),
+            // width: 1000,
+            // height: 400,
+            // bar: { groupWidth: "95%" },
+            legend: { position: "none" },
+            hAxis: {
+              title: axes[0]
+            }
+          },
+          chart = new google.visualization.ColumnChart($('#visitors-bar-graph')[0]);
+      chart.draw(view, options);
+    };
+  };
+
+  var drawCharts = function (google) {
+    google.charts.setOnLoadCallback(drawReferrerTypesPieChart(charts.referrerTypes));
+    google.charts.setOnLoadCallback(drawVisitorsBarGraph(charts.uniqueVisitors));
+  };
+
+  if (syncLoad) {
     if ($('body').hasClass('companies show') &&
         (typeof google === 'undefined' || typeof google.charts === 'undefined' )) {
 
       $.getScript('//www.gstatic.com/charts/loader.js', function () {
         google.charts.load('current', { packages: ['corechart'] });
-        google.charts.setOnLoadCallback(drawReferrerTypesPieChart(charts.referrerTypes));
+        drawCharts(google);
       });
 
     } else if ($('body').hasClass('companies show')) {
       google.charts.load('current', { packages: ['corechart'] });
-      google.charts.setOnLoadCallback(drawReferrerTypesPieChart(charts.referrerTypes));
+      drawCharts(google);
     }
-
   } else {
-
-    google.charts.setOnLoadCallback(drawReferrerTypesPieChart(charts.referrerTypes));
-
+    drawCharts(google);
   }
 
 }

@@ -22,6 +22,7 @@ namespace :clicky do
     visitors_list += get_clicky_visitors_range('2016-12-01,2016-12-15')
     visitors_list += get_clicky_visitors_range('2016-12-16,2016-12-31')
     visitors_list += get_clicky_visitors_range('2017-01-01,2017-01-12')
+    visitors_list += get_clicky_visitors_range('2017-01-13,2017-01-16')
     visitors_list += get_clicky_visitors_since(args[:time_offset])
     # create visitors and sessions, establish associations
     new_visitor_sessions = parse_clicky_sessions(visitors_list)

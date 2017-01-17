@@ -24,9 +24,22 @@ class CompaniesController < ApplicationController
         referrerTypes: VisitorSession.select(:referrer_type)
                          .joins(:visitor_actions)
                          .where(visitor_actions: { company_id: @company.id })
-                         .where('timestamp >= ?', 30.days.ago)
+                         .where('timestamp >= ?', 30.days.ago.beginning_of_day)
                          .group_by { |session| session.referrer_type }
-                         .map { |type, records| [type,records.count] }
+                         .map { |type, records| [type,records.count] },
+        uniqueVisitors: VisitorSession.distinct
+            .includes(:visitor)
+            .joins(:visitor_actions)
+            .where(visitor_actions: { company_id: @company.id })
+            .where('timestamp >= ?', 30.days.ago)
+            .group_by { |session| session.timestamp.to_date.beginning_of_week }
+            .sort_by { |date, sessions| date }.to_h
+            .map do |date, sessions|
+              [ date.strftime('%-m/%-d'),
+                sessions.map { |session| session.visitor }.uniq.count ]
+        end
+
+
       }
     })
     @story_select_options = @company.story_select_options

@@ -1,8 +1,10 @@
 
 (function () {
 
-  var referrerTypes = <%= raw @referrer_types.to_json %>;
+  var referrerTypes = <%= raw @referrer_types.to_json %>,
+      uniqueVisitors = <%= raw @unique_visitors.to_json %>
 
-  initGoogleCharts(false, { referrerTypes: referrerTypes });
+  initGoogleCharts(false, { referrerTypes: referrerTypes,
+                            uniqueVisitors: uniqueVisitors });
 
 }());
