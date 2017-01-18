@@ -17,40 +17,41 @@ function initGoogleCharts (syncLoad, charts) {
   };
 
   var drawVisitorsBarGraph = function (uniqueVisitors) {
-
-    var totalVisitors = 0, axes = [];
+    var totalVisitors = 0, axesLabels = [];
 
     uniqueVisitors.forEach(function (group) { totalVisitors += group[1]; });
 
     // columns as days or weeks?
     if (uniqueVisitors.length === 1) {   // 1 day
       xDelta = 0;
-    } else {
+    } else if (uniqueVisitors.length > 1) {
       xDelta = moment.duration(new Date(uniqueVisitors[1][0]) - new Date(uniqueVisitors[0][0])).asDays();
       if (xDelta < 0) { xDelta += 365; }  // account for ranges that span new year
     }
     if (xDelta <= 1)  {
-      axes = ['Day', 'Visitors'];
+      axesLabels = ['Day', 'Visitors'];
     } else if (xDelta === 7) {
-      axes = ['Week starting', 'Visitors'];
+      axesLabels = ['Week starting', 'Visitors'];
     } else {
 
     }
-
-    uniqueVisitors.unshift(axes);
-
+    // don't bother if there is no data
+    if (uniqueVisitors.length > 0) {
+      uniqueVisitors.unshift(axesLabels);
+    }
     return function () {
       var data = google.visualization.arrayToDataTable(uniqueVisitors),
           view = new google.visualization.DataView(data),
           options = {
-            title: "Unique Visitors - " + totalVisitors.toString(),
-            // width: 1000,
-            // height: 400,
-            // bar: { groupWidth: "95%" },
-            legend: { position: "none" },
+            title: "Total Unique Visitors - " + totalVisitors.toString(),
+          //   // width: 1000,
+          //   // height: 400,
+          //   // bar: { groupWidth: "95%" },
+          //   legend: { position: "none" },
             hAxis: {
-              title: axes[0]
-            }
+              title: axesLabels[0]
+            },
+            vAxis: { title: axesLabels[1] }
           },
           chart = new google.visualization.ColumnChart($('#visitors-bar-graph')[0]);
       chart.draw(view, options);
@@ -58,6 +59,10 @@ function initGoogleCharts (syncLoad, charts) {
   };
 
   var drawCharts = function (google) {
+    // even if uniqueVisitors is empty, the old visitors chart will stick around,
+    // so just get rid of all charts
+    $('#referrer-type-pie-chart').empty();
+    $('#visitors-bar-graph').empty();
     google.charts.setOnLoadCallback(drawReferrerTypesPieChart(charts.referrerTypes));
     google.charts.setOnLoadCallback(drawVisitorsBarGraph(charts.uniqueVisitors));
   };

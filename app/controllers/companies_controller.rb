@@ -19,15 +19,7 @@ class CompaniesController < ApplicationController
     @story_views_30_day_count = PageView.joins(:visitor_session)
                                   .company_story_views_since(@company.id, 30).count
 
-    gon.push({
-      charts: {
-        referrerTypes: VisitorSession.select(:referrer_type)
-                         .joins(:visitor_actions)
-                         .where(visitor_actions: { company_id: @company.id })
-                         .where('timestamp >= ?', 30.days.ago.beginning_of_day)
-                         .group_by { |session| session.referrer_type }
-                         .map { |type, records| [type,records.count] },
-        uniqueVisitors: VisitorSession.distinct
+    visitors = VisitorSession.distinct
             .includes(:visitor)
             .joins(:visitor_actions)
             .where(visitor_actions: { company_id: @company.id })
@@ -37,9 +29,18 @@ class CompaniesController < ApplicationController
             .map do |date, sessions|
               [ date.strftime('%-m/%-d'),
                 sessions.map { |session| session.visitor }.uniq.count ]
-        end
+            end
+    # visitors = fill_weekly_gaps(visitors, 30.days.ago, Time.now)
 
-
+    gon.push({
+      charts: {
+        referrerTypes: VisitorSession.select(:referrer_type)
+                         .joins(:visitor_actions)
+                         .where(visitor_actions: { company_id: @company.id })
+                         .where('timestamp >= ?', 30.days.ago.beginning_of_day)
+                         .group_by { |session| session.referrer_type }
+                         .map { |type, records| [type,records.count] },
+        uniqueVisitors: visitors
       }
     })
     @story_select_options = @company.story_select_options
@@ -124,21 +125,5 @@ class CompaniesController < ApplicationController
       false
     end
   end
-
-  # def clicky_session_request session_id, company
-  #   Typhoeus::Request.new(
-  #     GETCLICKY_API_BASE_URL,
-  #     method: :get,
-  #     body: nil,
-  #     params: { site_id: ENV['GETCLICKY_SITE_ID'],
-  #               sitekey: ENV['GETCLICKY_SITE_KEY'],
-  #               type: 'visitors-list',
-  #               date: company.subdomain == 'varmour' ? 'last-1-days' : 'last-7-days',
-  #               session_id: session_id,
-  #               limit: 'all',
-  #               output: 'json' },
-  #     headers: { Accept: "application/json" }
-  #   )
-  # end
 
 end
