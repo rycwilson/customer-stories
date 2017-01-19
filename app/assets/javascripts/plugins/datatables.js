@@ -45,7 +45,7 @@ function initDataTables () {
   });
 
   $('#measure-visitors-table').DataTable({
-    'order': [[3, 'desc']]  // order by total views
+    'order': [[1, 'asc']]  // order by total views
   //   // 'footerCallback': function (row, data, start, end, display) {
   //   //     var api = this.api();
   //   //     // Remove the formatting to get integer data for summation
