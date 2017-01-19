@@ -21,7 +21,9 @@ class AnalyticsController < ApplicationController
 
   def unique_visitors_data company, target, start_date, end_date
 
-    if (start_date..end_date).count < 21
+    num_days = (start_date..end_date).count
+
+    if num_days < 21
 
       visitors = VisitorSession.distinct
         .includes(:visitor)
@@ -39,7 +41,7 @@ class AnalyticsController < ApplicationController
           visitors = fill_daily_gaps(visitors, start_date, end_date)
         end
 
-    elsif (start_date..end_date).count < 120
+    elsif num_days < 120
 
       # TODO: Perform the count without actually loading any objects
       visitors = VisitorSession.distinct
@@ -61,6 +63,26 @@ class AnalyticsController < ApplicationController
       end
 
     else
+
+      visitors = VisitorSession.distinct
+        .includes(:visitor)
+        .joins(:visitor_actions)
+        .where(visitor_actions: visitor_actions_conditions(company, target))
+        .where('timestamp > ? AND timestamp < ?',
+               start_date.beginning_of_month.beginning_of_day, end_date.end_of_month.end_of_day)
+        .group_by { |session| session.timestamp.to_date.beginning_of_month }
+        .sort_by { |date, sessions| date }.to_h
+        .map do |date, sessions|
+          [ date.strftime('%-m/%y'),
+            sessions.map { |session| session.visitor }.uniq.count ]
+        end
+      visitors
+      # if visitors.empty?
+      #   visitors
+      # else
+      #   visitors = fill_monthly_gaps(visitors, start_date, end_date)
+      # end
+
     end
   end
 

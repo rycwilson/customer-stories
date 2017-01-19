@@ -33,7 +33,7 @@ function initGoogleCharts (syncLoad, charts) {
     } else if (xDelta === 7) {
       axesLabels = ['Week starting', 'Visitors'];
     } else {
-
+      axesLabels = ['Month', 'Visitors'];
     }
     // don't bother if there is no data
     if (uniqueVisitors.length > 0) {
@@ -51,7 +51,8 @@ function initGoogleCharts (syncLoad, charts) {
             hAxis: {
               title: axesLabels[0]
             },
-            vAxis: { title: axesLabels[1] }
+            vAxis: { title: axesLabels[1] },
+            legend: { position: 'none' }
           },
           chart = new google.visualization.ColumnChart($('#visitors-bar-graph')[0]);
       chart.draw(view, options);
