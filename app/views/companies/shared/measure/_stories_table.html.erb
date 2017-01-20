@@ -15,25 +15,20 @@
 
   <tbody>
 
-    <tr>
-      <td></td>
-      <td><em>Logo Page</em></td>
-      <td></td>
-      <td><%= Visitor.company_index_visitors(company.id).count %></td>
-      <td><%= PageView.company_index_views(company.id).count %></td>
-      <td><%= "#{((PageView.company_index_views(company.id).count.to_f / company.page_views.count.to_f) * 100).round(1)}%" %></td>
-    </tr>
+    <% @stories_analytics.each do |story| %>
 
-    <% Story.includes(:customer, :page_views, :visitors)
-            .company_published(company.id).each do |story| %>
-            <!-- include :page_views results in error -->
       <tr>
-        <td><%= story.customer.name %></td>
-        <td><%= story.title %></td>
-        <td><%= local_time(story.publish_date, "%m/%d/%y") %></td>
-        <td><%= story.visitors.uniq.count %></td>
-        <td><%= story.page_views.count %></td>
-        <td><%= "#{((story.page_views.count.to_f / company.page_views.count.to_f) * 100).round(1)}%" %></td>
+        <td><%= story[:customer] %></td>
+        <td><%= story[:title] %></td>
+        <td><%= story[:publish_date].present? ? local_time(story[:publish_date], "%m/%d/%y") : '' %></td>
+        <td><%= story[:visitors] %></td>
+        <td><%= story[:views] %></td>
+
+        <% if story[:title] == 'Logo Page' %>
+          <td><%= "#{((PageView.company_index_views(company.id).count.to_f / company.page_views.count.to_f) * 100).round(1)}%" %></td>
+        <% else %>
+          <td><%= "#{((Story.find_by(title: story[:title]).page_views.count.to_f / company.page_views.count.to_f) * 100).round(1)}%" %></td>
+        <% end %>
       </tr>
 
     <% end %>

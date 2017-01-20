@@ -585,4 +585,39 @@ class Company < ActiveRecord::Base
   def story_shares_activity days_offset
   end
 
+  def stories_analytics
+    logo_page_visitors = PageView.joins(:visitor)
+                           .where(company_id: self.id, success_id: nil)
+                           .group('visitors.id').count
+    logo_page = {
+      title: 'Logo Page',
+      customer: '',
+      publish_date: '',
+      views: logo_page_visitors.values.reduce(:+),
+      visitors: logo_page_visitors.length
+    }
+    PageView.distinct
+      .joins(:story, :visitor, success: { customer: {} })
+      .where(company_id: self.id, stories: { published: true })
+      .group('stories.title', 'stories.publish_date', 'visitors.id', 'customers.name')
+      .count
+      .group_by {|story_visitor, visits| story_visitor[0]}
+      .to_a.map do |story|
+        visitors = []
+        views = 0
+        publish_date = nil
+        customer = nil
+        story[1].each do |visitor|
+          visitors << visitor[0][2]
+          publish_date ||= visitor[0][1]
+          customer ||= visitor[0][3]
+          views += visitor[1]
+        end
+        { title: story[0], customer: customer, publish_date: publish_date,
+          visitors: visitors.length, views: views }
+      end
+      .push(logo_page)
+      .sort_by { |story| story[:views] }.reverse
+  end
+
 end

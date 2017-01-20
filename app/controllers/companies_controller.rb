@@ -18,9 +18,12 @@ class CompaniesController < ApplicationController
     @recent_activity = @company.recent_activity(30)
     @story_views_30_day_count = PageView.joins(:visitor_session)
                                   .company_story_views_since(@company.id, 30).count
+
+    @stories_analytics = @company.stories_analytics
+
     @orgs_visitors =
       VisitorSession.distinct.joins(:visitor, :visitor_actions)
-        .where('timestamp >= ? AND visitor_actions.company_id = ?', 90.days.ago, 10)
+        .where('timestamp >= ? AND visitor_actions.company_id = ?', 30.days.ago, 10)
         .group(:organization, 'visitors.id')
         .count
         .group_by { |session_data, session_count| session_data[0] }
