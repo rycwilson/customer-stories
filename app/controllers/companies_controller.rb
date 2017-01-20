@@ -18,6 +18,21 @@ class CompaniesController < ApplicationController
     @recent_activity = @company.recent_activity(30)
     @story_views_30_day_count = PageView.joins(:visitor_session)
                                   .company_story_views_since(@company.id, 30).count
+    @orgs_visitors =
+      VisitorSession.distinct.joins(:visitor, :visitor_actions)
+        .where('timestamp >= ? AND visitor_actions.company_id = ?', 90.days.ago, @company.id)
+        .group(:organization, 'visitors.id')
+        .count
+        .group_by { |session_data, session_count| session_data[0] }
+        .to_a.map do |org_data|
+          visitors = []
+          visits = 0
+          org_data[1].each do |visitor|
+            visitors << visitor[0][1]
+            visits += visitor[1]
+          end
+          { :name => org_data[0], :visitors => visitors, :visits => visits }
+        end.sort_by { |org| org[:name] || '' }
 
     visitors = VisitorSession.distinct
             .includes(:visitor)
@@ -30,7 +45,6 @@ class CompaniesController < ApplicationController
               [ date.strftime('%-m/%-d'),
                 sessions.map { |session| session.visitor }.uniq.count ]
             end
-    # visitors = fill_weekly_gaps(visitors, 30.days.ago, Time.now)
 
     gon.push({
       charts: {
