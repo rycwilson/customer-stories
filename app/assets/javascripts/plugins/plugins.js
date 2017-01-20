@@ -71,6 +71,8 @@ function deconstructPlugins () {
 
   $('.grid').masonry('destroy');
 
+  $('.datatables').DataTable().destroy();
+
   // does not seem to be neceessary (and doesn't work anyway):
   // $('.datatable').each(function (table) { table.DataTable.destroy(); });
 

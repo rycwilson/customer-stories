@@ -20,7 +20,7 @@ class CompaniesController < ApplicationController
                                   .company_story_views_since(@company.id, 30).count
     @orgs_visitors =
       VisitorSession.distinct.joins(:visitor, :visitor_actions)
-        .where('timestamp >= ? AND visitor_actions.company_id = ?', 90.days.ago, @company.id)
+        .where('timestamp >= ? AND visitor_actions.company_id = ?', 90.days.ago, 10)
         .group(:organization, 'visitors.id')
         .count
         .group_by { |session_data, session_count| session_data[0] }
@@ -32,7 +32,7 @@ class CompaniesController < ApplicationController
             visits += visitor[1]
           end
           { :name => org_data[0], :visitors => visitors, :visits => visits }
-        end.sort_by { |org| org[:name] || '' }
+        end
 
     visitors = VisitorSession.distinct
             .includes(:visitor)

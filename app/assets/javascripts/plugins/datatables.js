@@ -3,9 +3,9 @@ function initDataTables () {
 
   $('#curate-table').DataTable();
 
-  // $('#measure-activity-table').DataTable({
-  //   lengthMenu: [[-1, 10, 25, 50], ['All', 10, 25, 50]],
-  // });
+  $('#measure-activity-table').DataTable({
+    lengthMenu: [[-1, 10, 25, 50], ['All', 10, 25, 50]],
+  });
 
   $('#story_views-table:not(.short)').DataTable({
     order: [0, 'desc'],
