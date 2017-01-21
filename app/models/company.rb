@@ -617,7 +617,7 @@ class Company < ActiveRecord::Base
           visitors: visitors.length, views: views }
       end
       .push(logo_page)
-      .sort_by { |story| story[:views] }.reverse
+      .sort_by { |story| story[:views] || 0 }.reverse
   end
 
 end
