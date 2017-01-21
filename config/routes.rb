@@ -56,6 +56,7 @@ Rails.application.routes.draw do
 
       # analytics
       get '/analytics/charts', to: 'analytics#charts', as: 'charts'
+      get '/analytics/visitors', to: 'analytics#visitors', as: 'measure_visitors'
 
       # outbound actions
       get   '/outbound_forms/:id', to: 'outbound_actions#show', as: 'outbound_form'

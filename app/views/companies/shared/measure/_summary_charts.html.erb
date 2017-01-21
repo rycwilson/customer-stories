@@ -3,18 +3,18 @@
       { method: :get, remote: true, class: 'form-horizontal' } do %>
 
   <div class="form-group">
-    <%= label_tag 'charts[story_id]', 'Story', class: 'col-sm-2 control-label' %>
+    <%= label_tag :story_id, 'Story', class: 'col-sm-2 control-label' %>
     <div class='col-sm-10'>
-      <%= select_tag 'charts[story_id]', options_for_select(story_select_options),
-          { id: 'charts-story', class: 'form-control',
+      <%= select_tag :story_id, options_for_select(story_select_options),
+          { id: 'charts-story-select', class: 'form-control',
             style: 'width:60%' } %>
     </div>
   </div>
 
   <div class="form-group">
-    <%= label_tag 'charts[date_range]', 'Date(s)', class: 'col-sm-2 control-label' %>
+    <%= label_tag :date_range, 'Date(s)', class: 'col-sm-2 control-label' %>
     <div class='col-sm-10'>
-      <%= text_field_tag 'charts[date_range]', nil, class: 'daterange form-control',
+      <%= text_field_tag :date_range, nil, class: 'daterange form-control',
             style: 'width: 60%' %>
     </div>
   </div>

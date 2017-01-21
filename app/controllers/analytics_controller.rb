@@ -1,12 +1,37 @@
 class AnalyticsController < ApplicationController
 
+  before_action do
+    @company = Company.find_by(subdomain: request.subdomain)
+    @story = Story.find_by(id: params[:story_id])
+    @start_date = Date.strptime(params[:date_range].split(' - ')[0], '%m/%d/%Y' )
+    @end_date = Date.strptime(params[:date_range].split(' - ')[1] || @start_date, '%m/%d/%Y' )
+  end
+
   def charts
-    company = Company.find_by(subdomain: request.subdomain)
-    story = Story.find_by(id: params[:charts][:story_id])
-    start_date = Date.strptime(params[:charts][:date_range].split(' - ')[0], '%m/%d/%Y' )
-    end_date = Date.strptime(params[:charts][:date_range].split(' - ')[1] || start_date, '%m/%d/%Y' )
-    @referrer_types = referrer_types_data(company, story || 'all', start_date, end_date)
-    @unique_visitors = unique_visitors_data(company, story || 'all', start_date, end_date)
+    @referrer_types = referrer_types_data(@company, @story || 'all', @start_date, @end_date)
+    @unique_visitors = unique_visitors_data(@company, @story || 'all', @start_date, @end_date)
+    respond_to { |format| format.js }
+  end
+
+  def visitors
+    @orgs_visitors =
+      VisitorSession.distinct.joins(:visitor, :visitor_actions)
+        .where('timestamp >= ? AND timestamp <= ?',
+                @start_date.beginning_of_day, @end_date.end_of_day)
+        .where(visitor_actions: visitor_actions_conditions(@company, @story || 'all'))
+        .group(:organization, 'visitors.id')
+        .count
+        .group_by { |session_data, session_count| session_data[0] }
+        .to_a.map do |org_data|
+          visitors = []
+          visits = 0
+          org_data[1].each do |visitor|
+            visitors << visitor[0][1]
+            visits += visitor[1]
+          end
+          [ org_data[0], visitors.count, visits ]
+        end
+        .sort_by { |org| org[0] || '' }
     respond_to { |format| format.js }
   end
 
@@ -68,7 +93,7 @@ class AnalyticsController < ApplicationController
         .includes(:visitor)
         .joins(:visitor_actions)
         .where(visitor_actions: visitor_actions_conditions(company, target))
-        .where('timestamp > ? AND timestamp < ?',
+        .where('timestamp >= ? AND timestamp <= ?',
                start_date.beginning_of_month.beginning_of_day, end_date.end_of_month.end_of_day)
         .group_by { |session| session.timestamp.to_date.beginning_of_month }
         .sort_by { |date, sessions| date }.to_h

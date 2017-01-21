@@ -43,6 +43,7 @@ function initDateRangePicker () {
     ranges: {
       'Last 7 Days': [moment().subtract(6, 'days'), moment()],
       'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+      'Last 90 Days': [moment().subtract(89, 'days'), moment()],
       'This Quarter': quarterRange('this'),
       'Last Quarter': quarterRange('last'),
       'Last Year': [moment().subtract(1, 'year').startOf('year'), moment().subtract(1, 'year').endOf('year')]

@@ -1,0 +1,10 @@
+(function () {
+
+  var visitors = <%= raw @orgs_visitors.to_json %>,
+      visitorsTable = $('#measure-visitors-table').DataTable();
+
+  visitorsTable.clear();
+  visitorsTable.rows.add(visitors);
+  visitorsTable.draw();
+
+}());

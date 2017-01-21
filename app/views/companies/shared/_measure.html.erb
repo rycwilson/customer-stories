@@ -65,7 +65,8 @@
 
             <div class="tab-pane fade" id="measure-visitors-container">
               <%= render 'companies/shared/measure/visitors_table',
-                         { company: company } %>
+                         { company: company,
+                           story_select_options: @story_select_options } %>
             </div>
 
             <div class="tab-pane fade" id="measure-activity-container">

@@ -1,6 +1,26 @@
 
+<%= form_tag measure_visitors_path,
+      { method: :get, remote: true, class: 'form-inline' } do %>
+
+  <div class="form-group">
+    <%= label_tag :story_id, 'Story' %>
+    <%= select_tag :story_id, options_for_select(story_select_options),
+        { id: 'visitors-story-select', class: 'form-control',
+          style: 'width:300px' } %>
+  </div>&nbsp;&nbsp;
+
+  <div class="form-group">
+    <%= label_tag :date_range, 'Date(s)' %>
+    <%= text_field_tag :date_range, nil, class: 'daterange form-control',
+        style: 'width: 200px' %>
+  </div>
+
+  <%= submit_tag 'Submit', class: 'btn btn-primary' %>
+
+<% end %>
+
 <table id='measure-visitors-table' width='100%'
-       class="table table-striped table-bordered">
+       class="datatables table table-striped table-bordered">
 
   <thead>
     <tr>
@@ -16,7 +36,7 @@
 
       <tr>
         <td><%= org[:name] %></td>
-        <td><%= org[:visitors].count %></td>
+        <td><%= org[:visitors] %></td>
         <td><%= org[:visits] %></td>
       </tr>
 

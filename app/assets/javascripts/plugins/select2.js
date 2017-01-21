@@ -95,7 +95,7 @@ function initSelect2 () {
     tags: true
   });
 
-  $('#charts-story').select2({
+  $('#charts-story-select, #visitors-story-select').select2({
     theme: 'bootstrap',
     width: 'style'
   });
