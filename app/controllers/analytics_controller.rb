@@ -14,7 +14,7 @@ class AnalyticsController < ApplicationController
   end
 
   def visitors
-    @orgs_visitors =
+    @visitors =
       VisitorSession.distinct.joins(:visitor, :visitor_actions)
         .where('timestamp >= ? AND timestamp <= ?',
                 @start_date.beginning_of_day, @end_date.end_of_day)
@@ -29,10 +29,16 @@ class AnalyticsController < ApplicationController
             visitors << visitor[0][1]
             visits += visitor[1]
           end
-          [ org_data[0], visitors.count, visits ]
+          # the whitespace is for the 'show details' column
+          [ '', org_data[0], visitors.count, visits ]
         end
         .sort_by { |org| org[0] || '' }
-    respond_to { |format| format.js }
+
+    # binding.remote_pry
+
+    respond_to do |format|
+      format.json { render({ json: { data: @visitors } }) }
+    end
   end
 
   def referrer_types_data company, target, start_date, end_date

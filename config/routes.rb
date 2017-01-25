@@ -20,9 +20,6 @@ Rails.application.routes.draw do
   # sendgrid events (currently tracking open and click)
   post '/esp/notifications', to: 'site#esp_notifications'
 
-  # clicky custom logging (currently tracking social shares)
-  post '/analytics', to: 'analytics#create'
-
   # valid subdomains (company/subdomain exists, excludes www)
   constraints(Subdomain) do
 

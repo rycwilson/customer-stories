@@ -33,13 +33,10 @@ function initDateRangePicker () {
         }
       };
 
-  // function cb (start, end) {
-  //   $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-  // }
-
   $('input.daterange').daterangepicker({
     startDate: start,
     endDate: end,
+    // format:
     ranges: {
       'Last 7 Days': [moment().subtract(6, 'days'), moment()],
       'Last 30 Days': [moment().subtract(29, 'days'), moment()],
@@ -48,7 +45,6 @@ function initDateRangePicker () {
       'Last Quarter': quarterRange('last'),
       'Last Year': [moment().subtract(1, 'year').startOf('year'), moment().subtract(1, 'year').endOf('year')]
     }
-
   });
 
 }

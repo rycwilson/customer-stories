@@ -36,9 +36,33 @@
     }
   }
 
-  #measure-visitors-container {
+  #measure-summary-container {
+
     form {
-      margin-bottom: 20px;
+      margin: 10px 0 40px 0
+    }
+
+  }
+
+  #measure-visitors-container {
+
+    form {
+      margin: 10px 0 26px 0
+    }
+
+    #measure-visitors {
+
+      table {
+        border-collapse: collapse;
+        tr.accordion-toggle td:first-child {
+          width: 40px;
+          text-align: center;
+        }
+      }
+      tbody {
+        border-top: 0;  // override bootstrap
+      }
+
     }
   }
 

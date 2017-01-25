@@ -1,10 +1,12 @@
 (function () {
 
-  var visitors = <%= raw @orgs_visitors.to_json %>,
-      visitorsTable = $('#measure-visitors-table').DataTable();
+  var visitors = <%= raw @visitors.to_json %>,
+      table = $('#measure-visitors-table').DataTable();
 
-  visitorsTable.clear();
-  visitorsTable.rows.add(visitors);
-  visitorsTable.draw();
+  console.log(visitors)
+
+  table.clear();
+  table.rows.add(visitors);
+  table.draw();
 
 }());

@@ -43,7 +43,7 @@ function initGoogleCharts (syncLoad, charts) {
       var data = google.visualization.arrayToDataTable(uniqueVisitors),
           view = new google.visualization.DataView(data),
           options = {
-            title: "Total Unique Visitors - " + totalVisitors.toString(),
+            title: "Unique Visitors - " + totalVisitors.toString(),
           //   // width: 1000,
           //   // height: 400,
           //   // bar: { groupWidth: "95%" },

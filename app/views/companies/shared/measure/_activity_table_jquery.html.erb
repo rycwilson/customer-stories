@@ -22,7 +22,7 @@
       </tr>
     </tbody>
     <tbody class='event-type-group'>
-      <% activity[:stories_created].try(:each) do |story| %>
+      <% recent_activity[:stories_created].try(:each) do |story| %>
 
         <tr>
           <!-- parse the timestamp b/c it was stored in cache as a string -->
@@ -46,7 +46,7 @@
       </tr>
     </tbody>
     <tbody class='event-type-group'>
-      <% activity[:stories_logo_published].try(:each) do |event| %>
+      <% recent_activity[:stories_logo_published].try(:each) do |event| %>
 
       <% end %>
     </tbody>
@@ -60,7 +60,7 @@
       </tr>
     </tbody>
     <tbody class='event-type-group'>
-      <% activity[:contribution_requests_received].try(:each) do |event| %>
+      <% recent_activity[:contribution_requests_received].try(:each) do |event| %>
 
       <% end %>
     </tbody>
@@ -74,7 +74,7 @@
       </tr>
     </tbody>
     <tbody class='event-type-group'>
-      <% activity[:contributions_submitted].try(:each) do |event| %>
+      <% recent_activity[:contributions_submitted].try(:each) do |event| %>
 
       <% end %>
     </tbody>
@@ -88,7 +88,7 @@
       </tr>
     </tbody>
     <tbody class='event-type-group'>
-      <% activity[:stories_published].try(:each) do |event| %>
+      <% recent_activity[:stories_published].try(:each) do |event| %>
 
       <% end %>
     </tbody>
@@ -103,7 +103,7 @@
     </tbody>
     <tbody class='event-type-group'>
 
-      <% activity[:story_views].each do |story_view| %>
+      <% recent_activity[:story_views].each do |story_view| %>
         <tr>
           <!-- parse the timestamp b/c it was stored in cache as a string -->
           <td><%= DateTime.parse(story_view[:timestamp]).strftime('%b %-d %-l:%M%p') %>&nbsp;UTC</td>
