@@ -1,7 +1,7 @@
 class AnalyticsController < ApplicationController
 
-  before_action do
-    @company = Company.find_by(subdomain: request.subdomain)
+  before_action { @company = Company.find_by(subdomain: request.subdomain) }
+  before_action except: [:stories] do
     @story = Story.find_by(id: params[:story_id])
     @start_date = Date.strptime(params[:date_range].split(' - ')[0], '%m/%d/%Y' )
     @end_date = Date.strptime(params[:date_range].split(' - ')[1] || @start_date, '%m/%d/%Y' )
@@ -25,6 +25,16 @@ class AnalyticsController < ApplicationController
       format.json do
         render({
           json: { data: @company.visitors_table_json(@story, @start_date, @end_date) }
+        })
+      end
+    end
+  end
+
+  def stories
+    respond_to do |format|
+      format.json do
+        render({
+          json: { data: @company.stories_table_json }
         })
       end
     end

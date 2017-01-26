@@ -1,6 +1,7 @@
 
 <table id='measure-stories-table' width='100%'
-       class="datatable table table-striped table-bordered">
+       class="datatable table table-striped table-bordered"
+       style='visibility:hidden'>
 
   <thead>
     <tr>
@@ -12,27 +13,5 @@
       <th>Landing</th>
     </tr>
   </thead>
-
-  <tbody>
-
-    <% stories.each do |story| %>
-
-      <tr>
-        <td><%= story[:customer] %></td>
-        <td><%= story[:title] %></td>
-        <td><%= story[:publish_date].present? ? local_time(story[:publish_date], "%m/%d/%y") : '' %></td>
-        <td><%= story[:visitors] %></td>
-        <td><%= story[:views] %></td>
-
-        <% if story[:title] == 'Logo Page' %>
-          <td><%= "#{((PageView.company_index_views(company.id).count.to_f / company.page_views.count.to_f) * 100).round(1)}%" %></td>
-        <% else %>
-          <td><%= "#{((Story.find_by(title: story[:title]).page_views.count.to_f / company.page_views.count.to_f) * 100).round(1)}%" %></td>
-        <% end %>
-      </tr>
-
-    <% end %>
-
-  </tbody>
 
 </table>

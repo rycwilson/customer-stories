@@ -6,6 +6,9 @@ function initDataTables () {
   if ($('#measure-visitors-container').hasClass('active')) {
     $('a[href="#measure-visitors-container"]')[0].click();
   }
+  if ($('#measure-stories-container').hasClass('active')) {
+    $('a[href="#measure-stories-container"]')[0].click();
+  }
 
   $('#curate-table').DataTable();
 
@@ -48,12 +51,6 @@ function initDataTables () {
     columns: [
       { type: 'date' }, null, null, null
     ]
-  });
-
-  $('#measure-stories-table').DataTable({
-    paging: false,
-    info: false,
-    order: [[3, 'desc']]
   });
 
 }

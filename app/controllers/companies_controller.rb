@@ -20,7 +20,6 @@ class CompaniesController < ApplicationController
                                  .company_story_views_since(@company.id, 30).count
 
     @story_select_options = @company.story_select_options
-    @stories_table_json = @company.stories_table_json
 
     gon.push({
       charts: {

@@ -424,7 +424,6 @@ class Company < ActiveRecord::Base
       self.public_product_select_fragments_memcache_iterator + 1)
   end
 
-
   def recent_activity days_offset  # today = 0
     # story_shares = self.story_shares(days_offset)
     groups = [
@@ -586,16 +585,13 @@ class Company < ActiveRecord::Base
   end
 
   def stories_table_json
+    company_page_views = self.page_views.count
     logo_page_visitors = PageView.joins(:visitor)
                            .where(company_id: self.id, success_id: nil)
                            .group('visitors.id').count
-    logo_page = {
-      title: 'Logo Page',
-      customer: '',
-      publish_date: '',
-      views: logo_page_visitors.values.reduce(:+),
-      visitors: logo_page_visitors.length
-    }
+    logo_page =
+      [ '', 'Logo Page', '', logo_page_visitors.values.reduce(:+), logo_page_visitors.length,
+        ((PageView.company_index_views(self.id).count.to_f / company_page_views.to_f) * 100).round(1).to_s + '%' ]
     PageView.distinct
       .joins(:story, :visitor, success: { customer: {} })
       .where(company_id: self.id, stories: { published: true })
@@ -604,20 +600,20 @@ class Company < ActiveRecord::Base
       .group_by {|story_visitor, visits| story_visitor[0]}
       .to_a.map do |story|
         visitors = []
-        views = 0
+        visits = 0
         publish_date = nil
         customer = nil
         story[1].each do |visitor|
           visitors << visitor[0][2]
           publish_date ||= visitor[0][1]
           customer ||= visitor[0][3]
-          views += visitor[1]
+          visits += visitor[1]
         end
-        { title: story[0], customer: customer, publish_date: publish_date,
-          visitors: visitors.length, views: views }
+        [ customer, story[0], publish_date.strftime('%-m/%-d/%y'), visitors.count, visits,
+          ((Story.find_by(title: story[0]).page_views.count.to_f / company_page_views.to_f) * 100).round(1).to_s + '%' ]
       end
       .push(logo_page)
-      .sort_by { |story| story[:views] || 0 }.reverse
+      .sort_by { |story| story[3] || 0 }.reverse
   end
 
   def visitors_chart_json story, start_date, end_date

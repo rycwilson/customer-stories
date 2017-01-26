@@ -14,13 +14,40 @@ function companiesShowListeners () {
 }
 
 function measureStories () {
+  var initTable = function ($table, data) {
+        $table.DataTable({
+          data: data,
+          columns: [
+            { title: 'Customer' },
+            { title: 'Title' },
+            { title: 'Publish Date' },
+            { title: 'Unique Visitors' },
+            { title: 'Visits' },
+            { title: 'Landing' }
+          ],
+          paging: false,
+          info: false,
+          order: [[3, 'desc']]
+        });
+        $table.css('visibility', 'visible');
+      },
+      getStories = function () {
+        var $table = $('#measure-stories-table');
+        $.get({
+          url: '/analytics/stories',
+          success: function (data, status, jqxhr) {
+            initTable($table, data.data);
+          },
+          dataType: 'json'
+        });
+      };
 
-  // $(document).on('click', 'a[href="#measure-stories-container"]',
-  //   function () {
-  //     if (!$.fn.DataTable.isDataTable($('#measure-visitors-table'))) {
-  //       loadVisitors();
-  //     }
-  //   });
+  $(document).on('click', 'a[href="#measure-stories-container"]',
+    function () {
+      if (!$.fn.DataTable.isDataTable($('#measure-stories-table'))) {
+        getStories();
+      }
+    });
 }
 
 function measureVisitors () {
