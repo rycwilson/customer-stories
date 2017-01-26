@@ -16,7 +16,7 @@ function initGoogleCharts (syncLoad, charts) {
   };
 
   var drawVisitorsBarGraph = function (uniqueVisitors) {
-    var totalVisitors = 0, axesLabels = [];
+    var totalVisitors = 0, axesLabels = [], xDelta = null;
 
     uniqueVisitors.forEach(function (group) { totalVisitors += group[1]; });
 
