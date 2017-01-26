@@ -1,6 +1,6 @@
 
-function companiesShowHandlers () {
-  newStoryModalHandlers();
+function companiesShowListeners () {
+  newStoryModalListeners();
   measureStories();
   measureVisitors();
 
@@ -92,7 +92,7 @@ function measureVisitors () {
       });
 }
 
-function newStoryModalHandlers() {
+function newStoryModalListeners() {
 
   // jquery-ujs functionality gets lost after turbolinks navigation,
   // so handle it manually ... (limited to modals?)

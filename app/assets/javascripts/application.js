@@ -22,11 +22,11 @@ $(document).on('turbolinks:load', function (e) {
 });
 
 $(document).one('turbolinks:load', function () {
-  attachAppHandlers();
-  attachCompaniesHandlers();
-  attachStoriesHandlers();
-  attachProfileHandlers();
-  attachContributionsHandlers();
+  attachAppListeners();
+  attachCompaniesListeners();
+  attachStoriesListeners();
+  attachProfileListeners();
+  attachContributionsListeners();
 });
 
 function setAppData () {
@@ -44,9 +44,9 @@ function setAppData () {
   getScreenSize();
 }
 
-function attachAppHandlers () {
+function attachAppListeners () {
 
-  popoverHandlers();
+  popoverListeners();
 
   $(document).on('click', '.workflow-tabs a', function (e) {
     if ($('body').hasClass('companies show')) {

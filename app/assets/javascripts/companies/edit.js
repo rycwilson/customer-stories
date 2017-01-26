@@ -1,10 +1,10 @@
 
-function companiesEditHandlers () {
-  companyProfileHandlers();
-  templateEditorHandlers();
+function companiesEditListeners () {
+  companyProfileListeners();
+  templateEditorListeners();
 }
 
-function templateEditorHandlers () {
+function templateEditorListeners () {
 
   // load selected email template for editing
   $(document).on('change', '.templates-select', function () {
@@ -134,7 +134,7 @@ function templateEditorHandlers () {
 
 }
 
-function companyProfileHandlers() {
+function companyProfileListeners() {
 
   $(document).on('click', '#test-colors-btn', function () {
     var color1 = $('input#company_nav_color_1').val(),

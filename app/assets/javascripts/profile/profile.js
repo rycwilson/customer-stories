@@ -6,7 +6,7 @@ function profileEdit () {
   }
 }
 
-function attachProfileHandlers () {
+function attachProfileListeners () {
 
   $(document).on('shown.bs.tab', '.nav-stacked a[data-toggle="tab"]', function () {
     // password reload should go back to profile

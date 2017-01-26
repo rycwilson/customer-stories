@@ -21,7 +21,6 @@ window.app = window.app || {
     // (this is a shorthand switch statement)
     (({
       'companies': function () {
-
         (({
           'new': companiesNew,
           'show': companiesShow,
@@ -29,8 +28,6 @@ window.app = window.app || {
         })[action])();
       },
       'stories': function () {
-        // app.betaFeatures();
-
         (({
           'index': storiesIndex,
           'show': storiesShow,

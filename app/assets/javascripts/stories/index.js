@@ -1,5 +1,5 @@
 
-function storiesIndexHandlers () {
+function storiesIndexListeners () {
 
   $(document).on('change', '.stories-filter', function () {
     var $categorySelect = $("[name='category_select']"),

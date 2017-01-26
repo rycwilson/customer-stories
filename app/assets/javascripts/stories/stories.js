@@ -3,10 +3,10 @@
 //= require ./show
 //= require ./edit
 
-function attachStoriesHandlers () {
-  storiesIndexHandlers();
-  storiesEditHandlers();
-  storiesPlayVideoHandler();
+function attachStoriesListeners () {
+  storiesIndexListeners();
+  storiesEditListeners();
+  storiesPlayVideoListener();
 }
 
 function loadVideoThumbnail () {
@@ -50,7 +50,7 @@ function loadVideoThumbnail () {
   }
 } // loadThumbnail
 
-function storiesPlayVideoHandler () {
+function storiesPlayVideoListener () {
 
   $(document).on('click',
     '.video-thumb-container img, .video-thumb-container .play-button',
