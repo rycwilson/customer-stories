@@ -585,7 +585,7 @@ class Company < ActiveRecord::Base
   def story_shares_activity days_offset
   end
 
-  def stories_analytics
+  def stories_table_json
     logo_page_visitors = PageView.joins(:visitor)
                            .where(company_id: self.id, success_id: nil)
                            .group('visitors.id').count
@@ -618,6 +618,191 @@ class Company < ActiveRecord::Base
       end
       .push(logo_page)
       .sort_by { |story| story[:views] || 0 }.reverse
+  end
+
+  def visitors_chart_json story, start_date, end_date
+    if story.nil?
+      visitor_actions_conditions = { company_id: self.id }
+    else
+      visitor_actions_conditions = { company_id: self.id, success_id: story.success.id }
+    end
+    num_days = (start_date..end_date).count
+    if num_days < 21
+      visitors = VisitorSession.distinct
+        .includes(:visitor)
+        .joins(:visitor_actions)
+        .where(visitor_actions: visitor_actions_conditions)
+          .where('timestamp > ? AND timestamp < ?',
+                 start_date.beginning_of_day, end_date.end_of_day)
+          .group_by { |session| session.timestamp.to_date }
+          .sort_by { |date, sessions| date }.to_h
+          .map do |date, sessions|
+            [ date.strftime('%-m/%-d/%y'), sessions.map { |session| session.visitor }.uniq.count ]
+          end
+        if start_date == end_date || visitors.empty?
+          visitors
+        else
+          visitors = fill_daily_gaps(visitors, start_date, end_date)
+        end
+    elsif num_days < 120
+      # TODO: Perform the count without actually loading any objects
+      visitors = VisitorSession.distinct
+        .includes(:visitor)
+        .joins(:visitor_actions)
+        .where(visitor_actions: visitor_actions_conditions)
+        .where('timestamp > ? AND timestamp < ?',
+               start_date.beginning_of_week.beginning_of_day, end_date.end_of_week.end_of_day)
+        .group_by { |session| session.timestamp.to_date.beginning_of_week }
+        .sort_by { |date, sessions| date }.to_h
+        .map do |date, sessions|
+          [ date.strftime('%-m/%-d/%y'),
+            sessions.map { |session| session.visitor }.uniq.count ]
+        end
+      if visitors.empty?
+        visitors
+      else
+        visitors = fill_weekly_gaps(visitors, start_date, end_date)
+      end
+    else
+      visitors = VisitorSession.distinct
+        .includes(:visitor)
+        .joins(:visitor_actions)
+        .where(visitor_actions: visitor_actions_conditions)
+        .where('timestamp >= ? AND timestamp <= ?',
+               start_date.beginning_of_month.beginning_of_day, end_date.end_of_month.end_of_day)
+        .group_by { |session| session.timestamp.to_date.beginning_of_month }
+        .sort_by { |date, sessions| date }.to_h
+        .map do |date, sessions|
+          [ date.strftime('%-m/%y'),
+            sessions.map { |session| session.visitor }.uniq.count ]
+        end
+      visitors
+      # if visitors.empty?
+      #   visitors
+      # else
+      #   visitors = fill_monthly_gaps(visitors, start_date, end_date)
+      # end
+    end
+  end
+
+  def visitors_table_json story, start_date, end_date
+    if story.nil?
+      visitor_actions_conditions = { company_id: self.id }
+    else
+      visitor_actions_conditions = { company_id: self.id, success_id: story.success.id }
+    end
+    VisitorSession.distinct.joins(:visitor, :visitor_actions)
+      .where('timestamp >= ? AND timestamp <= ?',
+              start_date.beginning_of_day, end_date.end_of_day)
+      .where(visitor_actions: visitor_actions_conditions)
+      .group(:organization, 'visitors.id')
+      .count
+      .group_by { |session_data, session_count| session_data[0] }
+      .to_a.map do |org_data|
+        visitors = []
+        visits = 0
+        org_data[1].each do |visitor|
+          visitors << visitor[0][1]
+          visits += visitor[1]
+        end
+        # the whitespace is for the 'show details' column
+        [ '', org_data[0], visitors.count, visits ]
+      end
+      .sort_by { |org| org[1] || '' }
+  end
+
+  def referrer_types_chart_json story, start_date, end_date
+    if story.nil?
+      visitor_actions_conditions = { company_id: self.id }
+    else
+      visitor_actions_conditions = { company_id: self.id, success_id: story.success.id }
+    end
+    VisitorSession
+      .select(:referrer_type)
+      .joins(:visitor_actions)
+      .where(visitor_actions: visitor_actions_conditions)
+      .where('timestamp > ? AND timestamp < ?',
+             start_date.beginning_of_day, end_date.end_of_day)
+      .group_by { |session| session.referrer_type }
+      .map { |type, records| [type, records.count] }
+  end
+
+  private
+
+  def fill_daily_gaps visitors, start_date, end_date
+    all_dates = []
+    if visitors.empty?
+      (end_date - start_date).to_i.times do |i|
+        all_dates << [(start_date + i).strftime("%-m/%-d"), 0]
+      end
+      return all_dates
+    end
+    first_dates = []
+    (Date.strptime(visitors[0][0], "%m/%d/%y") - start_date).to_i.times do |index|
+      first_dates << [(start_date + index).strftime("%-m/%-d/%y"), 0]
+    end
+    # check for gaps in the middle of the list, but only if at least two are present
+    if visitors.length >= 2
+      all_dates = first_dates +
+        visitors.each_cons(2).each_with_index.flat_map do |(prev_date, next_date), index|
+          prev_datep = Date.strptime(prev_date[0], '%m/%d/%y')
+          next_datep = Date.strptime(next_date[0], '%m/%d/%y')
+          return_arr = [prev_date]
+          delta = (next_datep - prev_datep).to_i
+          if delta > 1
+            (delta - 1).times do |i|
+              return_arr.insert(1, [(next_datep - (i + 1)).strftime("%-m/%-d"), 0])
+            end
+          end
+          if (index == visitors.length - 2)
+            return_arr << next_date
+          else
+            return_arr
+          end
+        end
+    else
+      all_dates = first_dates + visitors
+    end
+    end_delta = (end_date - Date.strptime(all_dates.last[0], "%m/%d/%y")).to_i
+    end_delta.times do
+      all_dates << [(Date.strptime(all_dates.last[0], "%m/%d/%y") + 1).strftime("%-m/%-d/%y"), 0]
+    end
+    # get rid of the year
+    all_dates.map { |date| [date[0].sub!(/\/\d+$/, ''), date[1]] }
+  end
+
+  def fill_weekly_gaps visitors, start_date, end_date
+    first_weeks = []
+    ((Date.strptime(visitors[0][0], "%m/%d/%y") -
+        start_date.beginning_of_week).to_i / 7).times do |index|
+      first_weeks << [(start_date.beginning_of_week + index*7).strftime("%-m/%-d/%y"), 0]
+    end
+    all_weeks = first_weeks +
+      visitors.each_cons(2).each_with_index.flat_map do |(prev_week, next_week), index|
+        prev_weekp = Date.strptime(prev_week[0], '%m/%d/%y')
+        next_weekp = Date.strptime(next_week[0], '%m/%d/%y')
+        return_arr = [prev_week]
+        delta = (next_weekp - prev_weekp).to_i
+        delta /= 7
+        if delta > 1
+          (delta - 1).times do |i|
+            return_arr.insert(1, [(next_weekp - ((i + 1)*7)).strftime("%-m/%-d/%y"), 0])
+          end
+        end
+        if (index == visitors.length - 2)
+          return_arr << next_week
+        else
+          return_arr
+        end
+      end
+    end_delta = (end_date.beginning_of_week -
+                 Date.strptime(all_weeks.last[0], "%m/%d/%y")).to_i
+    end_delta /=7
+    end_delta.times do
+      all_weeks << [(Date.strptime(all_weeks.last[0], "%m/%d/%y") + 1.week).strftime("%-m/%-d/%y"), 0]
+    end
+    # get rid of the year
+    all_weeks.map { |week| [week[0].sub!(/\/\d+$/, ''), week[1]] }
   end
 
 end

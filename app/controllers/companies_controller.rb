@@ -19,49 +19,16 @@ class CompaniesController < ApplicationController
     @story_views_30_day_count = PageView.joins(:visitor_session)
                                  .company_story_views_since(@company.id, 30).count
 
-    @stories_analytics = @company.stories_analytics
-
-    @orgs_visitors =
-      VisitorSession.distinct.joins(:visitor, :visitor_actions)
-        .where('timestamp >= ? AND visitor_actions.company_id = ?', 30.days.ago, @company.id)
-        .group(:organization, 'visitors.id')
-        .count
-        .group_by { |session_data, session_count| session_data[0] }
-        .to_a.map do |org_data|
-          visitors = []
-          visits = 0
-          org_data[1].each do |visitor|
-            visitors << visitor[0][1]
-            visits += visitor[1]
-          end
-          { :name => org_data[0], :visitors => visitors.length, :visits => visits }
-        end
-        .sort_by { |org| org[:name] || '' }
-
-    visitors = VisitorSession.distinct
-            .includes(:visitor)
-            .joins(:visitor_actions)
-            .where(visitor_actions: { company_id: @company.id })
-            .where('timestamp >= ?', 30.days.ago)
-            .group_by { |session| session.timestamp.to_date.beginning_of_week }
-            .sort_by { |date, sessions| date }.to_h
-            .map do |date, sessions|
-              [ date.strftime('%-m/%-d'),
-                sessions.map { |session| session.visitor }.uniq.count ]
-            end
+    @story_select_options = @company.story_select_options
+    @stories_table_json = @company.stories_table_json
 
     gon.push({
       charts: {
-        referrerTypes: VisitorSession.select(:referrer_type)
-                         .joins(:visitor_actions)
-                         .where(visitor_actions: { company_id: @company.id })
-                         .where('timestamp >= ?', 30.days.ago.beginning_of_day)
-                         .group_by { |session| session.referrer_type }
-                         .map { |type, records| [type,records.count] },
-        uniqueVisitors: visitors
+        referrerTypes: @company.referrer_types_chart_json(nil, 30.days.ago.to_date, Date.today),
+        uniqueVisitors: @company.visitors_chart_json(nil, 30.days.ago.to_date, Date.today)
       }
     })
-    @story_select_options = @company.story_select_options
+
   end
 
   def edit
