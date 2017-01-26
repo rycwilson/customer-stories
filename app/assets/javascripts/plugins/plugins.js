@@ -16,13 +16,13 @@ function constructPlugins () {
   initMasonry();
   initSelect2();
   initLinkedIn();
-  initSummernote();
-  initSocialShare();
-  initTooltips();
-  initClicky();
-  initDataTables();
-  initDateRangePicker();
   initGoogleCharts(true, app.charts);  // true => synchronous load
+  initDateRangePicker();
+  initDataTables();
+  initSummernote();
+  initTooltips();
+  initSocialShare();
+  initClicky();
 
   $('.best_in_place').best_in_place();
   $('.bs-switch').bootstrapSwitch({ size: 'small' });
@@ -71,7 +71,7 @@ function deconstructPlugins () {
 
   $('.grid').masonry('destroy');
 
-  $('.datatables').DataTable().destroy();
+  $('.datatable').DataTable().destroy();
 
   // does not seem to be neceessary (and doesn't work anyway):
   // $('.datatable').each(function (table) { table.DataTable.destroy(); });

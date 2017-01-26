@@ -24,48 +24,65 @@ function measureStories () {
 }
 
 function measureVisitors () {
-
-  var $table = $('#measure-visitors-table');
   var initTable = function ($table, data) {
-    $table.DataTable({
-      data: data,
-      columns: [
-        { title: '' },
-        { title: 'Organization' },
-        { title: 'Unique Visitors' },
-        { title: 'Visits' }
-      ],
-      order: [[1, 'asc']]
-    });
-  };
-  var updateTable = function ($table, data) {
-    $table.DataTable().clear();
-    $table.DataTable().rows.add(data);
-    $table.DataTable().draw();
-  };
-  var getVisitors = function () {
-    $.get({
-      url: '/analytics/visitors',
-      data: {
-        story_id: $('#visitors-story-select').val(),
-        date_range: $('#visitors-date-range-input').val()
+        $table.DataTable({
+          data: data,
+          columns: [
+            { title: '' },
+            { title: 'Organization' },
+            { title: 'Unique Visitors' },
+            { title: 'Visits' }
+          ],
+          order: [[1, 'asc']]
+        });
       },
-      success: function (data, status, jqxhr) {
-        if ($.fn.DataTable.isDataTable($table)) {
-          updateTable($table, data.data);
-        } else {
-          initTable($table, data.data);
-        }
+      updateTable = function ($table, data) {
+        $table.DataTable().clear();
+        $table.DataTable().rows.add(data);
+        $table.DataTable().draw();
       },
-      dataType: 'json'
-    });
-  };
+      getVisitors = function () {
+        var $table = $('#measure-visitors-table');
+        $.get({
+          url: '/analytics/visitors',
+          data: {
+            story_id: $('#visitors-story-select').val(),
+            date_range: $('#visitors-date-range-input').val()
+          },
+          success: function (data, status, jqxhr) {
+            if ($.fn.DataTable.isDataTable($table)) {
+              updateTable($table, data.data);
+            } else {
+              initTable($table, data.data);
+            }
+          },
+          dataType: 'json'
+        });
+      },
+      getCharts = function () {
+        $.get({
+          url: '/analytics/charts',
+          data: {
+            story_id: $('#charts-story-select').val(),
+            date_range: $('#charts-date-range-input').val()
+          },
+          success: function (data, status, jqxhr) {
+            initGoogleCharts(false, { referrerTypes: data.referrer_types,
+                                      uniqueVisitors: data.unique_visitors });
+          },
+          dataType: 'json'
+        });
+      };
 
   $(document)
-    .on('submit', '#measure-visitors-form',
+    .on('submit', '#charts-filter-form, #visitors-filter-form',
       function (e) {
         e.preventDefault();
-        getVisitors();
+        if ($(this).attr('id') === 'charts-filter-form') {
+          getCharts();
+        } else {
+          getVisitors();
+        }
       })
     .on('click', 'a[href="#measure-visitors-container"]',
       function () {

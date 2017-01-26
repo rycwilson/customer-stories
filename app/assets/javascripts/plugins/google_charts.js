@@ -5,7 +5,6 @@ function initGoogleCharts (syncLoad, charts) {
     return function () {
       // Define the chart to be drawn.
       var data = new google.visualization.DataTable();
-
       data.addColumn('string', 'Referrer type');
       data.addColumn('number', 'Views');
       data.addRows(referrerTypes);

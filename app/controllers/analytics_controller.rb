@@ -10,7 +10,12 @@ class AnalyticsController < ApplicationController
   def charts
     @referrer_types = referrer_types_data(@company, @story || 'all', @start_date, @end_date)
     @unique_visitors = unique_visitors_data(@company, @story || 'all', @start_date, @end_date)
-    respond_to { |format| format.js }
+    respond_to do |format|
+      format.json { render({ json: {
+                               referrer_types: @referrer_types,
+                               unique_visitors: @unique_visitors
+                             } }) }
+    end
   end
 
   def visitors
@@ -32,9 +37,7 @@ class AnalyticsController < ApplicationController
           # the whitespace is for the 'show details' column
           [ '', org_data[0], visitors.count, visits ]
         end
-        .sort_by { |org| org[0] || '' }
-
-    # binding.remote_pry
+        .sort_by { |org| org[1] || '' }
 
     respond_to do |format|
       format.json { render({ json: { data: @visitors } }) }

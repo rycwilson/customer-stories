@@ -1,16 +1,17 @@
 
 <!-- this will be submitted via javascript (see companies/show.js)  -->
+<!-- (remote: true option removed to stop rails form submission) -->
 <%= form_tag form_path,
-      { method: :GET, remote: true, id: form_id, class: 'form-inline' } do %>
+      { method: :GET, id: form_id, class: 'form-inline' } do %>
 
   <div class="form-group">
-    <%= label_tag :story_id, 'Story' %>
+    <label for="<%= story_select_id %>"></label>
     <%= select_tag :story_id, options_for_select(story_select_options),
-        { id: story_input_id, class: 'form-control', style: 'width:360px' } %>
+        { id: story_select_id, class: 'form-control', style: 'width:360px' } %>
   </div>&nbsp;&nbsp;
 
   <div class="form-group">
-    <%= label_tag :date_range, 'Date(s)' %>
+    <label for="<%= date_range_input_id %>"></label>
     <%= text_field_tag :date_range, nil, id: date_range_input_id,
         class: 'daterange form-control', style: 'width: 200px' %>
   </div>

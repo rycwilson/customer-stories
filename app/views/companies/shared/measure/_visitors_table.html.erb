@@ -1,15 +1,15 @@
 
 <div id='measure-visitors'>
 
-  <%= render 'companies/shared/measure/story_daterange_form',
-              { form_id: 'measure-visitors-form',
+  <%= render 'companies/shared/measure/filter_form',
+              { form_id: 'visitors-filter-form',
                 form_path: measure_visitors_path,
-                story_input_id: 'visitors-story-select',
+                story_select_id: 'visitors-story-select',
                 story_select_options: story_select_options,
                 date_range_input_id: 'visitors-date-range-input' } %>
 
   <table id='measure-visitors-table' width='100%'
-         class="datatables table table-striped table-bordered">
+         class="datatable table table-striped table-bordered">
 
     <!-- <thead>
       <tr>
@@ -18,9 +18,9 @@
         <th>Unique visitors</th>
         <th>Visits</th>
       </tr>
-    </thead>
+    </thead> -->
 
-    <tbody> -->
+    <!-- <tbody> -->
 
 
       <%# @orgs_visitors.each_with_index do |org, index| %>

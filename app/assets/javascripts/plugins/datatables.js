@@ -1,6 +1,12 @@
 
 function initDataTables () {
 
+  // make sure daterangepicker is initialized prior to datatables,
+  // else the prior selected date range will be used instead of default
+  if ($('#measure-visitors-container').hasClass('active')) {
+    $('a[href="#measure-visitors-container"]')[0].click();
+  }
+
   $('#curate-table').DataTable();
 
   $('#measure-activity-table').DataTable({
