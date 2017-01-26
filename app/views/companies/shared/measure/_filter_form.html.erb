@@ -5,13 +5,13 @@
       { method: :GET, id: form_id, class: 'form-inline' } do %>
 
   <div class="form-group">
-    <label for="<%= story_select_id %>"></label>
+    <label for="<%= story_select_id %>">Story</label>&nbsp;&nbsp;
     <%= select_tag :story_id, options_for_select(story_select_options),
-        { id: story_select_id, class: 'form-control', style: 'width:360px' } %>
-  </div>&nbsp;&nbsp;
+        { id: story_select_id, class: 'form-control', style: 'width:340px' } %>
+  </div>&nbsp;&nbsp;&nbsp;&nbsp;
 
   <div class="form-group">
-    <label for="<%= date_range_input_id %>"></label>
+    <label for="<%= date_range_input_id %>">Dates</label>&nbsp;&nbsp;
     <%= text_field_tag :date_range, nil, id: date_range_input_id,
         class: 'daterange form-control', style: 'width: 200px' %>
   </div>
