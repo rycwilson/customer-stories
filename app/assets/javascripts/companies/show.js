@@ -94,6 +94,7 @@ function measureVisitors () {
           ],
           order: [[1, 'asc']]
         });
+        $table.css('visibility', 'visible');
       },
       updateTable = function ($table, data) {
         $table.DataTable().clear();
