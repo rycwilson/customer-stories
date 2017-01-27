@@ -12,8 +12,10 @@ class AnalyticsController < ApplicationController
       format.json do
         render({
           json: {
-            referrer_types: @company.referrer_types_chart_json(@story, @start_date, @end_date),
-            unique_visitors: @company.visitors_chart_json(@story, @start_date, @end_date)
+            charts: {
+              referrerTypes: @company.referrer_types_chart_json(@story, @start_date, @end_date),
+              visitors: @company.visitors_chart_json(@story, @start_date, @end_date)
+            }
           }
         })
       end

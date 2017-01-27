@@ -18,16 +18,7 @@ class CompaniesController < ApplicationController
     @recent_activity = @company.recent_activity(30)
     @story_views_30_day_count = PageView.joins(:visitor_session)
                                  .company_story_views_since(@company.id, 30).count
-
     @story_select_options = @company.story_select_options
-
-    gon.push({
-      charts: {
-        referrerTypes: @company.referrer_types_chart_json(nil, 30.days.ago.to_date, Date.today),
-        uniqueVisitors: @company.visitors_chart_json(nil, 30.days.ago.to_date, Date.today)
-      }
-    })
-
   end
 
   def edit

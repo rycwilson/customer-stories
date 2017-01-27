@@ -1,5 +1,5 @@
 
-function initGoogleCharts (syncLoad, charts) {
+function initGoogleCharts (asyncLoad, charts) {
 
   var drawReferrerTypesPieChart = function (referrerTypes) {
     return function () {
@@ -15,16 +15,16 @@ function initGoogleCharts (syncLoad, charts) {
     };
   };
 
-  var drawVisitorsBarGraph = function (uniqueVisitors) {
+  var drawVisitorsBarGraph = function (visitors) {
     var totalVisitors = 0, axesLabels = [], xDelta = null;
 
-    uniqueVisitors.forEach(function (group) { totalVisitors += group[1]; });
+    visitors.forEach(function (group) { totalVisitors += group[1]; });
 
     // columns as days or weeks?
-    if (uniqueVisitors.length === 1) {   // 1 day
+    if (visitors.length === 1) {   // 1 day
       xDelta = 0;
-    } else if (uniqueVisitors.length > 1) {
-      xDelta = moment.duration(new Date(uniqueVisitors[1][0]) - new Date(uniqueVisitors[0][0])).asDays();
+    } else if (visitors.length > 1) {
+      xDelta = moment.duration(new Date(visitors[1][0]) - new Date(visitors[0][0])).asDays();
       if (xDelta < 0) { xDelta += 365; }  // account for ranges that span new year
     }
     if (xDelta <= 1)  {
@@ -35,11 +35,11 @@ function initGoogleCharts (syncLoad, charts) {
       axesLabels = ['Month', 'Visitors'];
     }
     // don't bother if there is no data
-    if (uniqueVisitors.length > 0) {
-      uniqueVisitors.unshift(axesLabels);
+    if (visitors.length > 0) {
+      visitors.unshift(axesLabels);
     }
     return function () {
-      var data = google.visualization.arrayToDataTable(uniqueVisitors),
+      var data = google.visualization.arrayToDataTable(visitors),
           view = new google.visualization.DataView(data),
           options = {
             title: "Unique Visitors - " + totalVisitors.toString(),
@@ -59,29 +59,30 @@ function initGoogleCharts (syncLoad, charts) {
   };
 
   var drawCharts = function (google) {
-    // even if uniqueVisitors is empty, the old visitors chart will stick around,
+    // even if visitors is empty, the old visitors chart will stick around,
     // so just get rid of all charts
     $('#referrer-type-pie-chart').empty();
     $('#visitors-bar-graph').empty();
     google.charts.setOnLoadCallback(drawReferrerTypesPieChart(charts.referrerTypes));
-    google.charts.setOnLoadCallback(drawVisitorsBarGraph(charts.uniqueVisitors));
+    google.charts.setOnLoadCallback(drawVisitorsBarGraph(charts.visitors));
   };
 
-  if (syncLoad) {
-    if ($('body').hasClass('companies show') &&
-        (typeof google === 'undefined' || typeof google.charts === 'undefined' )) {
-
-      $.getScript('//www.gstatic.com/charts/loader.js', function () {
-        google.charts.load('current', { packages: ['corechart'] });
-        drawCharts(google);
-      });
-
-    } else if ($('body').hasClass('companies show')) {
-      google.charts.load('current', { packages: ['corechart'] });
+  var loadCharts = function (google) {
+    google.charts.load('current', { packages: ['corechart'] });
+    if (asyncLoad === true) {
       drawCharts(google);
+    } else if ($('#measure-panel').hasClass('active')) {
+      $('#charts-filter-form').trigger('submit');
     }
-  } else {
-    drawCharts(google);
+  } ;
+
+  if ($('body').hasClass('companies show') &&
+      (typeof google === 'undefined' || typeof google.charts === 'undefined' )) {
+    $.getScript('//www.gstatic.com/charts/loader.js', function () {
+      loadCharts(google);
+    });
+  } else if ($('body').hasClass('companies show')) {
+    loadCharts(google);
   }
 
 }

@@ -16,8 +16,8 @@ function constructPlugins () {
   initMasonry();
   initSelect2();
   initLinkedIn();
-  initGoogleCharts(true, app.charts);  // true => synchronous load
   initDateRangePicker();
+  initGoogleCharts(false, null);  // false => just load library; don't draw any charts
   initDataTables();
   initSummernote();
   initTooltips();

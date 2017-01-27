@@ -1,6 +1,7 @@
 
 function companiesShowListeners () {
   newStoryModalListeners();
+  measureCharts();
   measureStories();
   measureVisitors();
 
@@ -11,6 +12,37 @@ function companiesShowListeners () {
       $(this).parent().prev().find('i').toggle();
   });
 
+}
+
+function measureCharts () {
+  var getCharts = function () {
+    $.get({
+      url: '/analytics/charts',
+      data: {
+        story_id: $('#charts-story-select').val(),
+        date_range: $('#charts-date-range-input').val()
+      },
+      success: function (data, status, jqxhr) {
+        initGoogleCharts(true, data.charts);
+      },
+      dataType: 'json'
+    });
+  };
+
+  $(document)
+    .on('click', 'a[href="#measure-panel"]',
+      function () {
+        // if a synchronous load, let initGoogleCharts handle it
+        if ($('#measure-summary-container').length === 0) { return false; }
+        if ($('#visitors-bar-graph').children().length === 0) {
+          getCharts();
+        }
+      })
+    .on('submit', '#charts-filter-form',
+      function (e) {
+        e.preventDefault();
+        getCharts();
+      });
 }
 
 function measureStories () {
@@ -102,14 +134,10 @@ function measureVisitors () {
       };
 
   $(document)
-    .on('submit', '#charts-filter-form, #visitors-filter-form',
+    .on('submit', '#visitors-filter-form',
       function (e) {
         e.preventDefault();
-        if ($(this).attr('id') === 'charts-filter-form') {
-          getCharts();
-        } else {
-          getVisitors();
-        }
+        getVisitors();
       })
     .on('click', 'a[href="#measure-visitors-container"]',
       function () {
