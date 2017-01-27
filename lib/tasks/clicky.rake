@@ -37,14 +37,21 @@ namespace :clicky do
     # Ryan
     Visitor.joins(:visitor_actions)
            .where(visitor_actions: { company_id: 1 } )  # acme-test
-           .destroy_all
+           .try(:destroy_all)
+    Visitor.find_by(clicky_uid: 6314802).try(:destroy)
+    Visitor.find_by(clicky_uid: 1888001310).try(:destroy)
+    Visitor.find_by(clicky_uid: 2953643240).try(:destroy)   # safari
 
     # update cache
     Company.all.each do |company|
-      Rails.cache.write(
-        "#{company.subdomain}/story-views-activity",
-        company.story_views_activity(7)
-      )
+      Rails.cache.write("#{company.subdomain}/recent-activity",
+                        company.recent_activity(30))
+      Rails.cache.write("#{company.subdomain}/visitors-chart-default",
+                        company.visitors_chart_json(nil, 30.days.ago.to_date, Date.today))
+      Rails.cache.write("#{company.subdomain}/stories-table",
+                        company.stories_table_json)
+      Rails.cache.write("#{company.subdomain}/visitors-table-default",
+                        company.visitors_table_json(nil, 30.days.ago.to_date, Date.today))
     end
   end
 
@@ -72,17 +79,21 @@ namespace :clicky do
     # Ryan
     Visitor.joins(:visitor_actions)
            .where(visitor_actions: { company_id: 1 } )  # acme-test
-           .destroy_all
+           .try(:destroy_all)
     Visitor.find_by(clicky_uid: 6314802).try(:destroy)
     Visitor.find_by(clicky_uid: 1888001310).try(:destroy)
     Visitor.find_by(clicky_uid: 2953643240).try(:destroy)   # safari
 
     # update cache
     Company.all.each do |company|
-      Rails.cache.write(
-        "#{company.subdomain}/story-views-activity",
-        company.story_views_activity(7)
-      )
+      Rails.cache.write("#{company.subdomain}/recent-activity",
+                        company.recent_activity(30))
+      Rails.cache.write("#{company.subdomain}/visitors-chart-default",
+                        company.visitors_chart_json(nil, 30.days.ago.to_date, Date.today))
+      Rails.cache.write("#{company.subdomain}/stories-table",
+                        company.stories_table_json)
+      Rails.cache.write("#{company.subdomain}/visitors-table-default",
+                        company.visitors_table_json(nil, 30.days.ago.to_date, Date.today))
     end
   end
 

@@ -15,10 +15,10 @@ class CompaniesController < ApplicationController
     @customer_select_options = @company.customer_select_options
     @category_select_options = @company.category_select_options
     @product_select_options = @company.product_select_options
-    @recent_activity = @company.recent_activity(30)
+    @story_select_options = @company.story_select_options
+    @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity")
     @story_views_30_day_count = PageView.joins(:visitor_session)
                                  .company_story_views_since(@company.id, 30).count
-    @story_select_options = @company.story_select_options
   end
 
   def edit
