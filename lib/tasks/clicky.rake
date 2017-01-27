@@ -44,6 +44,7 @@ namespace :clicky do
 
     # update cache
     Company.all.each do |company|
+      expire_fragment("#{company.subdomain}/recent-activity")
       Rails.cache.write("#{company.subdomain}/recent-activity",
                         company.recent_activity(30))
       Rails.cache.write("#{company.subdomain}/visitors-chart-default",
@@ -86,6 +87,7 @@ namespace :clicky do
 
     # update cache
     Company.all.each do |company|
+      expire_fragment("#{company.subdomain}/recent-activity")
       Rails.cache.write("#{company.subdomain}/recent-activity",
                         company.recent_activity(30))
       Rails.cache.write("#{company.subdomain}/visitors-chart-default",
