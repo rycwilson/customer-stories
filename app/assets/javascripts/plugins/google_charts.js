@@ -50,7 +50,7 @@ function initGoogleCharts (asyncLoad, charts) {
             hAxis: {
               title: axesLabels[0]
             },
-            vAxis: { title: axesLabels[1] },
+            vAxis: { title: axesLabels[1], minValue: 0 },
             legend: { position: 'none' }
           },
           chart = new google.visualization.ColumnChart($('#visitors-bar-graph')[0]);
