@@ -681,30 +681,48 @@ class Company < ActiveRecord::Base
     end
   end
 
-  def visitors_table_json story, start_date, end_date
+  def visitors_table_json story=nil, start_date=30.days.ago.to_date, end_date=Date.today
     if story.nil?
       visitor_actions_conditions = { company_id: self.id }
     else
       visitor_actions_conditions = { company_id: self.id, success_id: story.success.id }
     end
-    VisitorSession.distinct.joins(:visitor, :visitor_actions)
+    success_list = Set.new
+    visitors = VisitorSession.distinct.joins(:visitor, :visitor_actions)
       .where('timestamp >= ? AND timestamp <= ?',
               start_date.beginning_of_day, end_date.end_of_day)
-      .where(visitor_actions: visitor_actions_conditions)
-      .group(:organization, 'visitors.id')
+      .where(visitor_actions: { company_id: self.id } )
+      .group(:organization, 'visitors.id', 'visitor_actions.success_id')
       .count
-      .group_by { |session_data, session_count| session_data[0] }
-      .to_a.map do |org_data|
-        visitors = []
-        visits = 0
-        org_data[1].each do |visitor|
-          visitors << visitor[0][1]
-          visits += visitor[1]
+      .group_by { |org_visitor_success, count| org_visitor_success[0] }
+      .to_a.map do |org|
+        org_visitors = Set.new
+        org_visits = 0
+        successes = []  # => [ [ success_id, unique visitors = [], visits ] ]
+        org[1].each do |org_visitor_success|
+          visitor_id = org_visitor_success[0][1]
+          success_id = org_visitor_success[0][2]
+          org_visitors << visitor_id
+          org_visits += org_visitor_success[1]
+          if (index = successes.find_index { |success| success[0] == success_id })
+            successes[index][1] << visitor_id
+            successes[index][2] += org_visitor_success[1]
+          else
+            success_list << success_id
+            successes << [ success_id, [visitor_id], org_visitor_success[1] ]
+          end
         end
-        # the whitespace is for the 'show details' column
-        [ '', org_data[0], visitors.count, visits ]
+        successes.map! { |success| [ success[0], success[1].count, success[2] ] }
+        [ '', org[0] || '', org_visitors.count, org_visits, successes ]
       end
       .sort_by { |org| org[1] || '' }
+      success_list.delete_if { |success_id| success_id.nil? }
+      success_story_titles =
+        Success.find(success_list.to_a).map { |success| [ success.id, success.story.title ] }.to_h
+      visitors.each do |org|
+        org[4].map! { |success| [ success_story_titles[success[0]] || 'Logo Page', success[1], success[2] ] }
+              .sort_by! { |story| story[1] }.reverse!
+      end
   end
 
   def referrer_types_chart_json story, start_date, end_date

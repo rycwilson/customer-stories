@@ -83,11 +83,41 @@ function measureStories () {
 }
 
 function measureVisitors () {
-  var initTable = function ($table, data) {
+
+  var formatChildRow = function (org, $parentRow) {
+        var tbody = '<tbody>',
+            cellStyle = function ($parentRow, column) {
+              var width = $parentRow.find('td:nth-of-type(' + column.toString() + ')').css('width'),
+                  padding = $parentRow.find('td:nth-of-type(' + column.toString() + ')').css('padding'),
+                  lineHeight = $parentRow.find('td:nth-of-type(' + column.toString() + ')').css('line-height');
+              if (column === 1 || column === 4) {
+                width = (parseInt(width, 10) - parseInt(padding, 10)).toString() + "px";
+              }
+              return 'width:' + width + ';padding:' + padding + ';line-height:' + lineHeight;
+            };
+        org[4].forEach(function (story, storyIndex) {
+          tbody += '<tr ' + 'style="' + ((storyIndex < org[4].length - 1) ? 'border-bottom:1px solid #ddd' : '') + '"><td style="' + cellStyle($parentRow, 1) + '"></td>';
+          story.forEach(function (cellData, index) {
+            tbody += '<td style="' + cellStyle($parentRow, index + 2) + '">' + cellData + '</td>';
+          });
+          tbody += '</tr>';
+        });
+        tbody += '</tbody>';
+        return '<table cellpadding="5" cellspacing="0" border="0">' +
+                  tbody +
+               '</table>';
+      },
+
+      initTable = function ($table, data) {
         $table.DataTable({
           data: data,
           columns: [
-            { title: '' },
+            {
+              className:      'details-control',
+              orderable:      false,
+              data:           null,
+              defaultContent: '<i class="fa fa-chevron-right"></i><i class="fa fa-chevron-down"></i>'
+            },
             { title: 'Organization' },
             { title: 'Unique Visitors' },
             { title: 'Visits' }
@@ -145,6 +175,23 @@ function measureVisitors () {
         if (!$.fn.DataTable.isDataTable($('#measure-visitors-table'))) {
           getVisitors();
         }
+      })
+    .on('click', 'td.details-control',
+      function () {
+        var table = $('#measure-visitors-table').DataTable(),
+            $parentRow = $(this).closest('tr'),
+            row = table.row($parentRow);
+        if ( row.child.isShown() ) {
+            // This row is already open - close it
+            row.child.hide();
+            $parentRow.removeClass('shown');
+        }
+        else {
+            // Open this row
+            row.child( formatChildRow(row.data(), $parentRow) ).show();
+            $parentRow.addClass('shown');
+        }
+        $parentRow.find('i').toggle();
       });
 }
 
