@@ -20,9 +20,6 @@ Rails.application.routes.draw do
   # sendgrid events (currently tracking open and click)
   post '/esp/notifications', to: 'site#esp_notifications'
 
-  # clicky custom logging (currently tracking social shares)
-  post '/analytics', to: 'analytics#create'
-
   # valid subdomains (company/subdomain exists, excludes www)
   constraints(Subdomain) do
 
@@ -32,7 +29,11 @@ Rails.application.routes.draw do
 
     # Widget
     get '/widget/cs', to: 'widgets#script', as: 'widget'
-    get '/widget/cs-data', to: 'widgets#data', as: 'widget_data'
+    # specifying a default format here because (for unknown reason) ajax jsonp
+    # request sent from IE11 was resulting in request interpreted as html
+    get '/widget/cs-data', to: 'widgets#data', as: 'widget_data', format: 'js'
+
+    get '/track_widget', to: 'widgets#track'
 
     # Stories - public access
     resources :stories, only: :index
@@ -47,10 +48,20 @@ Rails.application.routes.draw do
         resources :results, only: [:create, :update, :destroy]
       end
 
-      get '/companies/:id/activity', to: 'companies#activity', as: 'company_activity'
-
       # approval PDF
       get '/stories/:id/approval', to: 'stories#approval', as: 'story_approval'
+
+      # analytics
+      get '/analytics/charts', to: 'analytics#charts', as: 'charts'
+      get '/analytics/visitors', to: 'analytics#visitors', as: 'measure_visitors'
+      get '/analytics/stories', to: 'analytics#stories', as: 'measure_stories'
+
+      # outbound actions
+      get   '/outbound_forms/:id', to: 'outbound_actions#show', as: 'outbound_form'
+      post  '/stories/:id/outbound_actions', to: 'outbound_actions#create',
+              as: 'new_outbound_action'
+      delete '/outbound_actions/:id', to: 'outbound_actions#destroy',
+              as: 'outbound_action'
 
       # delete a Prompt
       delete '/prompts/:id', to: 'prompts#destroy'
@@ -88,8 +99,7 @@ Rails.application.routes.draw do
     # this route returns json data for the contribution
     # presently only need this when removing a linkedin_url from a contribution
     get   '/contributions/:id', to: 'contributions#show'
-    put   '/contributions/:token', to: 'contributions#update',
-                                   as: 'contribution'
+    put   '/contributions/:token', to: 'contributions#update'
 
     # need to pick up on devise sign-in route here, without doing so explicitly
     # as that will conflict with devise routes declared below
@@ -139,7 +149,7 @@ Rails.application.routes.draw do
   #
   # this route is for the case of a Contributor being logged in (no subdomain)
   # and updating a Contribution by checking or unchecking a LinkedIn Profile box
-  put   '/contributions/:token', to: 'contributions#update', as: 'contribution_no_company'
+  put   '/contributions/:token', to: 'contributions#update'
 
 
   devise_for :users, controllers: {

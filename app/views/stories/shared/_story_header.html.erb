@@ -1,0 +1,38 @@
+
+<div class="container">
+
+  <div id='story-header' class="row">
+
+    <div class="hidden-xs col-sm-9">
+      <div>
+        <h3 style='margin-right:10px'>Customer Story</h3>
+        <% if is_curator %>
+          <%= link_to edit_story_path(story.id) do %>
+            <i class='glyphicon glyphicon-pencil bip-clickable'></i>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="col-xs-12 visible-xs-block">
+      <h3>Customer Story</h3>
+    </div>
+
+    <div id='social-buttons' class="col-sm-3 hidden-xs text-right">
+      <a href="<%= LINKEDIN_SHARE_URL + story.csp_story_url %>" target="_blank"
+         class="icon-button linkedin <%= production? ? 'clicky_log' : '' %>">
+        <i class="fa fa-linkedin"></i><span></span>
+      </a>
+      <a href="<%= TWITTER_SHARE_URL + story.csp_story_url %>" target="_blank"
+         class="icon-button twitter <%= production? ? 'clicky_log' : '' %>">
+        <i class="fa fa-twitter"></i><span></span>
+      </a>
+      <a href="<%= FACEBOOK_SHARE_URL + story.csp_story_url %>" target="_blank"
+         class="icon-button facebook <%= production? ? 'clicky_log' : '' %>">
+        <i class="fa fa-facebook"></i><span></span>
+      </a>
+    </div>
+
+  </div>
+
+</div>

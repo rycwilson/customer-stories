@@ -3,7 +3,7 @@
 
   <% if current_user.company_id.present? %>
 
-    <%= render 'shared/mainnav' %>
+    <%= render 'shared/company_navbar', { company: @company, workflow_tab: nil } %>
 
   <% else %>
 
@@ -262,14 +262,17 @@
           </td>
           <td class='valign-middle text-center'>
 
-          <!-- check_box method requires instance variable, not local variable -->
-          <%= check_box get_contribution(contribution.id),
-            :linkedin?, { checked: contribution.linkedin?,
-                            class: 'linkedin-checkbox',
-                             data: {
-                                token: contribution.access_token,
-                            subdomain: contribution.success.customer.company.subdomain
-                             } }, "true", "false" %>
+            <%= form_for contribution,
+                  url: "/contributions/#{contribution.access_token}",
+                  method: :put, remote: true,
+                  html: { class: 'contributor-linkedin-checkbox' } do |f| %>
+
+              <!-- value will be filled in by js based on checkbox -->
+              <%= hidden_field_tag 'contribution[contributor_unpublished]' %>
+
+              <%= f.check_box :publish_contributor, {}, 'true', 'false' %>
+
+            <% end %>
 
           </td>
           <td class='valign-middle'>

@@ -2,78 +2,78 @@ class StoriesController < ApplicationController
 
   include StoriesHelper
 
-  before_action :user_authorized?, only: :edit
-  before_action :set_company, except: [:update]
-  before_action only: [:index, :show, :edit] { set_gon(@company) }
-  before_action :set_public_story_or_redirect, only: :show
+  before_action :set_company
   before_action :set_story, only: [:edit, :approval]
-  before_action :set_contributors, only: [:show, :approval]
+  before_action only: [:index, :show] { @is_curator = @company.curator?(current_user) }
+  before_action only: [:edit] { user_authorized?(@story, current_user) }
+  before_action only: [:index, :show, :edit] { set_gon(@company) }
+  before_action only: [:show] { set_public_story_or_redirect(@company) }
+  before_action only: [:show, :approval] { set_contributors(@story) }
   before_action :set_s3_direct_post, only: :edit
 
   def index
-    # select box options (filtered by role) ...
-    @is_curator = @company.curator? current_user
-    @category_select_options = @is_curator ?
-                    @company.category_select_options_all.unshift(["All", 0]) :
-                    @company.category_select_options_filtered  # public reader
-    @product_select_options = @is_curator ?
-                  @company.product_select_options_all.unshift(["All", 0]) :
-                  @company.product_select_options_filtered  # public reader
-    # if there's a query string, the option will be pre-selected, otherwise no pre-selects
-    @category_pre_selected_options = []
-    @product_pre_selected_options = []
+    # these will get overwritten below if there's a query filter ...
+    @pre_selected_filter = { tag: 'all', id: 0 }
+    @stories_index_cache_key =
+      stories_index_cache_key(@company, @is_curator, @pre_selected_filter)
+    @category_select_cache_key =
+      filter_select_cache_key(
+        @company, @is_curator, 'category', { tag: 'category', id: 0 })
+    @product_select_cache_key =
+      filter_select_cache_key(
+        @company, @is_curator, 'product', { tag: 'product', id: 0 })
+
     if valid_query_string? params
-      @stories = @company.filter_stories_by_tag(get_filter_params_from_query(params), @is_curator)
-      @category_pre_selected_options = [StoryCategory.friendly.find(params[:category]).id] if params[:category]
-      @product_pre_selected_options = [Product.friendly.find(params[:product]).id] if params[:product]
-    elsif cookies[:csp_init]
-      @stories = []
+      #  ?category=automotive  =>  { tag: 'category', id: '42' }
+      filter_params = get_filter_params_from_query(params)
+      @stories_index_cache_key =
+        stories_index_cache_key(@company, @is_curator, filter_params)
+      unless fragment_exist?(@stories_index_cache_key)
+        @stories = @company.filter_stories_by_tag(filter_params, @is_curator)
+      end
+      @pre_selected_filter = filter_params # needed for options_for_select()
+      @category_select_cache_key =
+        filter_select_cache_key(@company, @is_curator, 'category', filter_params)
+      @product_select_cache_key =
+        filter_select_cache_key(@company, @is_curator, 'product', filter_params)
+
     elsif @is_curator
-      @stories = @company.all_stories
-      # TODO: set this cookie more broadly throughout app
-      cookies[:csp_init] = { value: true, expires: 1.hour.from_now }
+      unless fragment_exist?(@stories_index_cache_key)
+        story_ids = @company.all_stories
+        @stories = Story.find(story_ids)
+                        .sort_by { |story| story_ids.index(story.id) }
+      end
+
     else  # public reader
-      @stories = @company.public_stories
-      cookies[:csp_init] = { value: true, expires: 1.hour.from_now }
+      unless fragment_exist?(@stories_index_cache_key)
+        public_story_ids = @company.public_stories
+        # sort order is lost when .find takes an array of ids, so need to re-sort;
+        # ref: http://stackoverflow.com/questions/1680627
+        @stories = Story.find(public_story_ids)
+                        .sort_by { |story| public_story_ids.index(story.id) }
+      end
     end
   end
 
   def show
-    @story_has_video = @story.embed_url.present?
-    # declare this here since numerous references in meta tags
-    @success = @story.success
     # convert the story content to plain text (for SEO tags)
     @story_content_text = HtmlToPlainText.plain_text(@story.content)
-    @contributors_jsonld = @success.contributors
-                                   .map do |contributor|
-                                     { "@type" => "Person",
-                                       "name" => contributor.full_name }
-                                   end
-    @owns_jsonld = @company.products.map do |product|
-                                      { "@type" => "Product",
-                                        "name" => product.name }
-                                    end
-    @about_jsonld = [{ "@type" => "Corporation",
-                       "name" => @success.customer.name,
-                       "logo" => { "@type" => "ImageObject",
-                                   "url" => @success.customer.logo_url }}] +
-                    @success.products.map do |product|
-                                        { "@type" => "Product",
-                                          "name" => product.name }
-                                     end
+    prev_next_fragment_key =
+      "#{@company.subdomain}/#{@is_curator ? 'curator' : 'public' }/" +
+      "story-#{@story.id}-prev-next"
+    unless fragment_exist?(prev_next_fragment_key)
+      @prev_story = @story.previous(@is_curator)
+      @next_story = @story.next(@is_curator)
+    end
+    @related_stories = @story.related_stories
   end
 
   def edit
     @customer = @story.success.customer
-    @contributions_pre_request = Contribution.pre_request @story.success_id
-    @contributions_in_progress = Contribution.in_progress @story.success_id
-    @contributions_next_steps = Contribution.next_steps @story.success_id
-    @contributions_contributors = Contribution.contributors @story.success_id
-    @contributions_connections = Contribution.connections @story.success_id
-    @categories = @company.category_select_options_all
+    @categories = @company.category_select_options
     @categories_pre_select = @story.success.story_categories
                                    .map { |category| category.id }
-    @products = @company.product_select_options_all
+    @products = @company.product_select_options
     @products_pre_select = @story.success.products
                                  .map { |category| category.id }
     @referrer_select = @story.success.contributions
@@ -116,7 +116,7 @@ class StoriesController < ApplicationController
   def update
     story = Story.find params[:id]
     if params[:story_tags]  # updated tags (this comes from a hidden field with value="")
-      story.update_tags params[:story]
+      story.update_tags(@company, params[:story])
       respond_to { |format| format.js { render action: 'update_tags' } }
     elsif params[:customer_logo_url]
       story.success.customer.update logo_url: params[:customer_logo_url]
@@ -137,28 +137,11 @@ class StoriesController < ApplicationController
       @base_url = request.base_url  # needed for deleting a result
       respond_to { |format| format.js { render action: 'create_prompt_success' } }
     elsif params[:story][:embed_url]  # embedded video
-      if params[:story][:embed_url].include? "youtube"
-        # https://www.youtube.com/watch?v=BAjqPZY8sFg
-        # or
-        # https://www.youtube.com/embed/BAjqPZY8sFg
-        youtube_id = params[:story][:embed_url].match(/(v=|\/)(?<id>\w+)$/)[:id]
-        story.update embed_url: "https://www.youtube.com/embed/#{youtube_id}"
-      elsif params[:story][:embed_url].include? "vimeo"
-        vimeo_id = params[:story][:embed_url].match(/\/(?<id>\d+)$/)[:id]
-        story.update embed_url: "https://player.vimeo.com/video/#{vimeo_id}"
-      elsif params[:story][:embed_url].include? "wistia"
-        # https://fast.wistia.com/embed/medias/avk9twrrbn.jsonp (standard)
-        # or
-        # https://fast.wistia.net/embed/iframe/avk9twrrbn (fallback)
-        wistia_id = params[:story][:embed_url].match(/\/(?<id>\w+)($|\.\w+$)/)[:id]
-        story.update embed_url: "https://fast.wistia.com/embed/medias/#{wistia_id}.jsonp"
-      elsif params[:story][:embed_url].blank?
-        story.update embed_url: nil
-      end
+      story.update embed_url: new_embed_url_formatted(params[:story][:embed_url])
       # respond with json because we need to update the video iframe
       # with the modified url ...
       respond_to do |format|
-        format.json { render json: story.as_json(only: :embed_url) }
+        format.json { render json: story.as_json(only: :embed_url, methods: :video_info) }
       end
     elsif params[:story][:published]
       update_publish_state story, params[:story]
@@ -178,6 +161,7 @@ class StoriesController < ApplicationController
 
   def destroy
     story = Story.find params[:id]
+    expire_cache_on_story_destroy story
     story.destroy
     redirect_to company_path(@company_id),
         flash: { info: "Story '#{story.title}' was deleted" }
@@ -204,12 +188,6 @@ class StoriesController < ApplicationController
         :challenge, :solution, :benefits, :published, :logo_published)
   end
 
-  def set_story
-    @story = Story.find params[:id]
-  end
-
-  # Why not just always look to the subdomain?
-  # => lookup by id faster
   def set_company
     if params[:company_id]  # create story
       @company = Company.find params[:company_id]
@@ -218,14 +196,17 @@ class StoriesController < ApplicationController
     end
   end
 
-    # .where(contributions: { linkedin: true,
-    #                       status: 'contribution' },
-  def set_contributors
-    curator = @story.success.curator
+  def set_story
+    @story = Story.find params[:id]
+  end
+
+  def set_contributors story
+    curator = story.success.curator
     @contributors =
         User.joins(own_contributions: { success: {} })
             .where.not(linkedin_url:'')
-            .where(successes: { id: @story.success_id })
+            .where(successes: { id: story.success_id },
+                   contributions: { publish_contributor: true })
             .order("CASE contributions.role
                       WHEN 'customer' THEN '1'
                       WHEN 'partner' THEN '2'
@@ -258,20 +239,41 @@ class StoriesController < ApplicationController
   # else it will redirect to ...
   #   - the correct link if outdated slug is used
   #   - company's story index if not published or not curator
-  def set_public_story_or_redirect
+  def set_public_story_or_redirect company
     @story = Story.friendly.find params[:title]
     if request.format == 'application/pdf'
       @story
-    elsif request.path != @story.csp_story_path
-      # old story title slug, redirect to current
+    elsif request.path != @story.csp_story_path  # friendly path changed
+      # old story title slug requested, redirect to current
       return redirect_to @story.csp_story_path, status: :moved_permanently
-    elsif !@story.published? && !company_curator?(@company.id)
+    elsif !@story.published? && !company_curator?(company.id)
       return redirect_to root_url(subdomain:request.subdomain, host:request.domain)
     end
   end
 
-  def user_authorized?
-    if current_user.company_id == Story.find(params[:id]).success.customer.company.id
+  def new_embed_url_formatted new_embed_url
+    if new_embed_url.include? "youtube"
+      # https://www.youtube.com/watch?v=BAjqPZY8sFg
+      # or
+      # https://www.youtube.com/embed/BAjqPZY8sFg
+      youtube_id = new_embed_url.match(/(v=|\/)(?<id>\w+)$/)[:id]
+      YOUTUBE_BASE_URL + "#{youtube_id}"
+    elsif new_embed_url.include? "vimeo"
+      vimeo_id = new_embed_url.match(/\/(?<id>\d+)$/)[:id]
+      VIMEO_BASE_URL + "#{vimeo_id}"
+    elsif new_embed_url.include? "wistia"
+      # https://fast.wistia.com/embed/medias/avk9twrrbn.jsonp (standard)
+      # or
+      # https://fast.wistia.net/embed/iframe/avk9twrrbn (fallback)
+      wistia_id = new_embed_url.match(/\/(?<id>\w+)($|\.\w+$)/)[:id]
+      WISTIA_BASE_URL + "#{wistia_id}.jsonp"
+    elsif new_embed_url.blank?
+      nil
+    end
+  end
+
+  def user_authorized? story, current_user
+    if current_user.try(:company_id) == story.success.customer.company.id
       true
     else
       render file: 'public/403', status: 403, layout: false
@@ -361,6 +363,69 @@ class StoriesController < ApplicationController
       # a query string with category= or product=
     end
     filter
+  end
+
+  #
+  # method returns a fragment cache key that looks like this:
+  #
+  #   trunity/curator-stories-index-{tag}-xx-memcache-iterator-yy
+  #
+  # tag is 'all', 'category', or 'product'
+  # xx is the selected filter id (0 if none selected)
+  # yy is the memcache iterator
+  #
+  def stories_index_cache_key company, is_curator, filter_params
+    if is_curator
+      memcache_iterator = company.curator_stories_index_fragments_memcache_iterator
+    else
+      memcache_iterator = company.public_stories_index_fragments_memcache_iterator
+    end
+    "#{company.subdomain}/" +
+    "#{is_curator ? 'curator' : 'public'}-" +
+    "stories-index-#{filter_params[:tag]}-#{filter_params[:id]}-" +  # id = 0 -> all
+    "memcache-iterator-#{memcache_iterator}"
+  end
+
+  #
+  # method returns a fragment cache key that looks like this:
+  #
+  #   trunity/curator-category-select-xx-memcache-iterator-yy
+  #
+  #   xx is the selected category id (0 if none selected)
+  #   yy is the memcache iterator
+  #
+  def filter_select_cache_key company, is_curator, filter_tag, filter_params
+    if filter_tag == filter_params[:tag]  # is this the filter that was selected?
+      filter_id = filter_params[:id]
+    else
+      filter_id = 0
+    end
+    "#{company.subdomain}/" +
+    "#{is_curator ? 'curator' : 'public'}-" +
+    "#{filter_tag}-select-#{filter_id}-memcache-iterator-" +
+    "#{filter_select_memcache_iterator(company, is_curator, filter_tag)}"
+  end
+
+  def filter_select_memcache_iterator company, is_curator, filter_tag
+    if is_curator
+      if filter_tag == 'category'
+        company.curator_category_select_fragments_memcache_iterator
+      else
+        company.curator_product_select_fragments_memcache_iterator
+      end
+    else
+      if filter_tag == 'category'
+        company.public_category_select_fragments_memcache_iterator
+      else
+        company.public_product_select_fragments_memcache_iterator
+      end
+    end
+  end
+
+  def expire_cache_on_story_destroy story
+    story.expire_stories_index_fragment_cache
+    story.expire_filter_select_fragment_cache
+    story.success.customer.company.expire_all_stories_cache(false)
   end
 
 end

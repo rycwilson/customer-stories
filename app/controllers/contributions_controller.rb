@@ -1,6 +1,6 @@
 class ContributionsController < ApplicationController
 
-  before_action :valid_token?, only: [:edit, :update]
+  before_action :set_contribution_if_valid_token?, only: [:edit, :update]
   before_action :set_contribution, only: [:show, :confirm, :confirm_request, :send_request]
   before_action :check_opt_out_list, only: [:create, :confirm_request]
 
@@ -35,7 +35,6 @@ class ContributionsController < ApplicationController
   # respond_to { |format| format.js }   => this is implied by the request
   #
   def create
-
     story = Story.find params[:id]
     existing_user = User.find_by email: params[:contributor][:email]
     contributor = existing_user || new_user(params[:contributor])
@@ -46,9 +45,11 @@ class ContributionsController < ApplicationController
     if !contributor.changed? || contributor.save  # don't save if not necessary
       contribution = new_contribution story.success.id, contributor.id, params
       if contribution.save
-        contribution.update(linkedin: true) if contribution.contributor.linkedin_url.present?
+        if contribution.contributor.linkedin_url.present?
+          contribution.update(publish_contributor: true)
+        end
         # respond with all pre-request contributions, most recent additions first
-        @contributions_pre_request = Contribution.pre_request story.success_id
+        @contributions_pre_request = story.contributions_pre_request
         # all contributors needed to populate referrer select box ...
         @contributors = story.success.contributors
         # all contributions to build connections list
@@ -56,10 +57,8 @@ class ContributionsController < ApplicationController
         @contributions = story.success.contributions
                                       .where("status NOT IN ('unsubscribe', 'opt_out')")
       else
-        @flash_status = "danger"
-        @flash_mesg = contribution.errors.present? ?
-                        contribution.errors.full_messages.join(', ') :
-                        "User already has a contribution for this story"
+        @flash_status = 'danger'
+        @flash_mesg = 'User already has a contribution for this story'
       end
     else
       @flash_status = "danger"
@@ -78,29 +77,33 @@ class ContributionsController < ApplicationController
   #
   # PUT /contributions/:token
   def update
-    if params[:user] # contributor update coming from contribution card
-      if params[:user][:linkedin_url]
-        @contribution.contributor.update linkedin_url: params[:user][:linkedin_url]
-        # update unless already true
-        @contribution.update(linkedin: true) unless @contribution.linkedin?
-        # set false if blank linkedin url submitted
-        @contribution.update(linkedin: false) if params[:user][:linkedin_url].blank?
-      elsif params[:user][:phone]
-        @contribution.contributor.update phone: params[:user][:phone]
+    # user updates from contribution card (linkedin_url, phone) are sent here
+    # instead of registrations_controller so that the update can be made without user password
+    # TODO: should be able to make the update without password in registrations_controller,
+    # but no big deal for now
+    if params[:user]
+      contributor = @contribution.contributor
+      contributor.update user_params
+      respond_to { |format| format.json { respond_with_bip(contributor) } }
+
+    # contribution update from either profile (:publish_contributor, :contributor_unpublished)
+    # or contribution card (:publish_contributor OR :notes)
+    elsif params[:contribution].length <= 2
+      if @contribution.update contribution_params
+        @contribution.success.story
+          .expire_published_contributor_cache(@contribution.contributor.id)
+        respond_to { |format| format.json { render json: true } }  # http://stackoverflow.com/questions/12407328
+      else
+        # TODO: error
       end
-      respond_to { |format| format.json { head :ok } }
-    elsif params[:contribution].try(:[], :notes)  # notes coming from contribution cards
-      @contribution.update notes: params[:contribution][:notes]
-      respond_to { |format| format.json { head :ok } }
-    elsif params[:linkedin_include_profile].present? # from User Profile checkbox
-      @contribution.update linkedin: params[:linkedin_include_profile]
-      respond_to { |format| format.json { head :ok } }
+
+    # contribution submission (via email link) ...
     else
-      # contribution submission
       @contribution.submitted_at = Time.now
       if @contribution.update contribution_params
         UserMailer.alert_contribution_update(@contribution).deliver_now
-        if @contribution.linkedin? && @contribution.contributor.linkedin_url.blank?
+        if @contribution.publish_contributor? &&
+           @contribution.contributor.linkedin_url.blank?
           redirect_to url_for({  # remove the subdomain to avoid csp authentication
                         subdomain: nil,
                         controller: 'profile',
@@ -139,7 +142,14 @@ class ContributionsController < ApplicationController
   private
 
   def contribution_params
-    params.require(:contribution).permit(:status, :contribution, :feedback, :access_token, :linkedin, :notes, :submitted_at)
+    params.require(:contribution)
+          .permit(:status, :contribution, :feedback, :access_token,
+                  :publish_contributor, :contributor_unpublished,
+                  :notes, :submitted_at)
+  end
+
+  def user_params
+    params.require(:user).permit(:linkedin_url, :phone)
   end
 
   def set_contribution
@@ -182,7 +192,7 @@ class ContributionsController < ApplicationController
     # contributor.skip_confirmation!  this is undefined when :confirmable is disabled
   end
 
-  def valid_token?
+  def set_contribution_if_valid_token?
     if @contribution = Contribution.find_by(access_token: params[:token])
       @contribution
     else

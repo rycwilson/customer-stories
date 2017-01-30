@@ -1,17 +1,133 @@
 
-function storiesEditHandlers () {
-  storiesEditBIPHandlers();
-  storiesEditSettingsHandlers();
-  storiesEditVideoHandlers();
-  storiesEditTagsHandlers();
-  storiesEditNewContributorHandlers();
-  storiesEditResultsHandlers();
-  storiesEditPromptsHandlers();
-  storiesEditContributionsHandlers();
-  storiesEditContentEditorHandlers();
+function storiesEdit () {
+  // $('#contributions-nav').find('a:last').tab('show');
+  // $("a[href='#collapse-connection-info-9']").click();
+  loadVideoThumbnail();
+  loadCspOrPlaceholderWidgets();
 }
 
-function storiesEditBIPHandlers () {
+function storiesEditListeners () {
+
+  $(document)
+    .on('shown.bs.collapse', '.contribution-card',
+      function () {
+        if ($(this).find('.linkedin-checkbox-and-widget').hasClass('hidden')) {
+          return false;
+        } else {
+          loadLIWidget($(this));
+        }
+      });
+
+  storiesEditBIPListeners();
+  storiesEditSettingsListeners();
+  storiesEditVideoInputHandler();
+  storiesEditOutboundActionsListeners();
+  storiesEditTagsListeners();
+  storiesEditNewContributorListeners();
+  storiesEditResultsListeners();
+  storiesEditPromptsListeners();
+  storiesEditContributionsListeners();
+  storiesEditContentEditorListeners();
+}
+
+function loadCspOrPlaceholderWidgets() {
+
+  var widgetWidth = 322,
+      template = _.template($('#csp-linkedin-widget-template').html());
+
+  // populate csp widgets and placeholder widgets;
+  // the placeholders will be swapped out for linkedin widgets as they arrive
+  $('.csp-widget-container').each(function () {
+    var $container = $(this), contributor = {};
+    contributor.first_name = $container.data('first-name');
+    contributor.last_name = $container.data('last-name');
+    contributor.linkedin_url = $container.data('linkedin-url');
+    contributor.linkedin_title = $container.data('linkedin-title');
+    contributor.linkedin_company = $container.data('linkedin-company');
+    contributor.linkedin_photo_url = $container.data('linkedin-photo-url');
+    contributor.linkedin_location = $container.data('linkedin-location');
+    $container
+      .append(template({ contributor: contributor,
+                         widgetWidth: widgetWidth }))
+      .imagesLoaded(function () {
+         $container.find('.csp-linkedin-widget').removeClass('hidden');
+       });
+  });
+
+  $('.placeholder-widget-container').each(function () {
+    var $container = $(this), contributor = {};
+    contributor.first_name = $container.data('first-name');
+    contributor.last_name = $container.data('last-name');
+    contributor.linkedin_url = $container.data('linkedin-url');
+    $container
+      .append(template({ loading: true,
+                         contributor: contributor,
+                         widgetWidth: widgetWidth }))
+      .imagesLoaded(function () {
+        // .csp-linkedin-widget may be a csp widget populated with data,
+        // or (in this case) the placeholder widget
+         $container.find('.csp-linkedin-widget').removeClass('hidden');
+       });
+  });
+}
+
+function loadLIWidget ($card) {
+  if ($card.find('.widget-container').data('linkedin-widget-loaded')) {
+    return false;
+  } else {
+    var $linkedinWidgetContainer = $card.find('.linkedin-widget-container'),
+        $placeholderWidgetContainer = $card.find('.placeholder-widget-container'),
+        url = $linkedinWidgetContainer.data('url'),
+        widgetWidth = 322,
+        widgetMarginTop = '-' + $card.find('.placeholder-widget-container')
+                                     .outerHeight()
+                                     .toString() + 'px',
+        $widget = $("<script type='IN/MemberProfile' " +
+                            "data-id='" + url + "' " +
+                            "data-format='inline' data-related='false' " +
+                            "data-width='" + widgetWidth.toString() + "'></script>"),
+        newWidgetPostMesgHandler = function () {
+          if ($('body').hasClass('stories edit')) {
+            // For Chrome, the origin property is in the event.originalEvent object.
+            var  origin = event.origin || event.originalEvent.origin,
+                 newWidgetId = $linkedinWidgetContainer
+                                 .find('iframe').attr('id')
+                                 .match(/^\w+(li_gen\w+)_provider/)[1];
+            if (origin === "https://platform.linkedin.com" &&
+                event.data.includes('widgetReady')) {
+              var widgetReadyId = event.data.match(/^(\w+)\s/)[1];
+              if (widgetReadyId === newWidgetId) {
+                $linkedinWidgetContainer
+                  .css('margin-top', widgetMarginTop)  // height of the placeholder container (for overlay)
+                  .removeClass('hidden')
+                  .closest('.widget-container')
+                  .data('linkedin-widget-loaded', true);
+              }
+            }  // widgetReady event
+          }
+        };  // var declarations
+    $linkedinWidgetContainer.append($widget);
+    window.addEventListener('message', newWidgetPostMesgHandler, false);
+    IN.parse();
+    setTimeout(function () {
+      if ($card.find('.widget-container').data('linkedin-widget-loaded')) {
+        // success (just leave the placeholder; removing or emptying will affect layout)
+      } else {
+        // failure
+        $placeholderWidgetContainer
+          .find('.member-info > p')
+          .css('color', 'red')
+          .text('Profile data not available');
+      }
+    }, 7000);
+    // remove the listener when navigating away from this page
+    $(document).one('turbolinks:before-visit', function () {
+      window.removeEventListener('message', newWidgetPostMesgHandler, false);
+    });
+  }
+}
+
+function storiesEditBIPListeners () {
   // best-in-place errors
   $(document).on('best_in_place:error', function (event, data, status, xhr) {
     var errors = JSON.parse(data.responseText);
@@ -30,7 +146,7 @@ function storiesEditBIPHandlers () {
   });
 }
 
-function storiesEditSettingsHandlers () {
+function storiesEditSettingsListeners () {
 
   $(document).on('switchChange.bootstrapSwitch', '.bs-switch', function (event, state) {
     $(this).parent().submit();
@@ -63,50 +179,89 @@ function storiesEditSettingsHandlers () {
 
 }
 
-function storiesEditVideoHandlers () {
+function storiesEditVideoInputHandler () {
 
+  $(document).on('ajax:success',
+                 ".best_in_place[data-bip-attribute='embed_url']",
+                  function (event, data) {
 
-  $(document).on("ajax:success", ".best_in_place[data-bip-attribute='embed_url']",
-    function (event, data) {
-      var videoPlaceholderText = "Video URL (YouTube, Vimeo, or Wistia)",
-          newUrl = JSON.parse(data).embed_url,
-          $newVideo = null;
+    var res = JSON.parse(data),
+        provider = res.video_info.provider,
+        videoUrl = res.embed_url,
+        videoId = res.video_info.id,
+        $placeholder = $("<img src='" + $('.video-container').data('placeholder') + "'>"),
+        inputPlaceholder = "Video URL (YouTube, Vimeo, or Wistia)",
+        template = _.template($('#video-template').html());
 
-      if (!newUrl) {
-        $newVideo = $("<img src='" + $('.video-container').data('placeholder') + "'>");
-      } else if (newUrl.includes("youtube")) {
-        $newVideo =
-          "<iframe id='youtube-iframe' width='320' height='180' " +
-            "src='" + newUrl + "?autohide=2&&enablejsapi=1&controls=0&showinfo=0&iv_load_policy=3&rel=0'" +
-            "frameborder='0'></iframe>";
+    if (!videoUrl) {
+      $('.video-container').empty().append($placeholder);
 
-      } else if (newUrl.includes("vimeo")) {
-        $newVideo =
-          "<iframe id='vimeo-iframe' width='320' height='180' " +
-            "src='" + newUrl + "' " +
-            "frameborder='0'></iframe>";
-
-      } else if (newUrl.includes("wistia")) {  // wistia
-        // are wistia assets already defined?
-        if (typeof Wistia === 'undefined') {
-          $.getScript(newUrl);
-          $.getScript('//fast.wistia.com/assets/external/E-v1.js');
-        }
-        // this must come after the $.getScript statements above!
-        $newVideo =
-          "<div class='wistia_embed wistia_async_" +
-            newUrl.match(/\/(\w+)($|\.\w+$)/)[1] +
-            "' style='width:320px;height:180px'>&nbsp;</div>";
+    } else if (provider === 'wistia') {  // wistia
+      if (typeof Wistia === 'undefined') {
+        // $.getScript(videoUrl); # apparently not required, but came from docs
+        $.getScript('//fast.wistia.com/assets/external/E-v1.js');
       }
+      $('.video-container')
+        .empty()
+        .append(template({ provider: provider,
+                            videoId: videoId }));
+    } else {  // youtube or vimeo
+      $('.video-container')
+        .empty()
+        .append(template({ provider: provider,
+                            videoId: videoId,
+                            videoUrl: videoUrl }));
+      loadVideoThumbnail();
+    }
 
-      $('.video-container').empty().append($newVideo);
-
-      $(".best_in_place[data-bip-attribute='embed_url']").text(newUrl || videoPlaceholderText);
+    $(".best_in_place[data-bip-attribute='embed_url']").text(videoUrl || inputPlaceholder);
 
   });
 }
 
-function storiesEditTagsHandlers () {
+function storiesEditOutboundActionsListeners () {
+
+  $(document).on('click', '#outbound-actions-form .btn-group input',
+    function () {
+      $('.link-input,.html-input').toggle();
+      $('.link-input,.html-input').val('');
+    });
+
+  $(document).on('input', '#outbound-actions-form',
+    function () {
+      if ($(this).find('button[type="submit"]').prop('disabled') === false) {
+        return false;
+      }
+      $linkRadio = $(this).find('.btn-group input:first');
+      $formRadio = $(this).find('.btn-group input:last');
+      if ($linkRadio.prop('checked') &&
+          $.makeArray($('.link-input')).every(function (el) {
+            return el.value !== '';
+          })) {
+        $(this).find('button[type="submit"]').prop('disabled', false);
+      } else if ($formRadio.prop('checked') &&
+                 $.makeArray($('.html-input')).every(function (el) {
+                   return el.value !== '';
+                 })) {
+        $(this).find('button[type="submit"]').prop('disabled', false);
+      }
+    });
+
+  $(document).on('click', '.delete-outbound-action',
+    function () {
+      var $_this = $(this);
+      $.ajax({
+        url: $(this).data('action'),
+        method: 'delete',
+        success: function (data, status, xhr) {
+          $_this.closest('.outbound-actions-list-item').remove();
+        }
+      });
+    });
+
+}
+
+function storiesEditTagsListeners () {
   /*
     Remember the initial <option>s of the tag select inputs
     If user cancels changes, revert to these (skipping for now)
@@ -144,7 +299,7 @@ function storiesEditTagsHandlers () {
 
 }
 
-function storiesEditNewContributorHandlers () {
+function storiesEditNewContributorListeners () {
 
   // separate 'shown' handler necessary for setting input focus
   $(document).on('shown.bs.modal', '.modal', function () {
@@ -157,8 +312,9 @@ function storiesEditNewContributorHandlers () {
     // input elements to default values (first, last, email)
     $(this).find('form')[0].reset();
     // select2 inputs to default values (role, referred-by)
-    $('.new-contributor-role').select2('val', 'customer');  // single select
-    $('.new-contributor-referrer').select2('val', '');
+    $('.new-contributor-role').val('customer');
+    // trigger necessary; not sure why ... http://stackoverflow.com/questions/19639951
+    $('.new-contributor-referrer').val('').trigger('change');
   });
 
   // blur buttons after they're clicked
@@ -171,7 +327,7 @@ function storiesEditNewContributorHandlers () {
 
 }
 
-function storiesEditResultsHandlers () {
+function storiesEditResultsListeners () {
   /*
     new result form - submit is disabled until value entered.
     listens for input event instead of change event, as latter only fires after
@@ -199,7 +355,7 @@ function storiesEditResultsHandlers () {
 
 }
 
-function storiesEditPromptsHandlers () {
+function storiesEditPromptsListeners () {
 
   $(document).on('input', '#new-prompt', function () {
     if ($(this).val().length > 0)
@@ -223,7 +379,7 @@ function storiesEditPromptsHandlers () {
 
 }
 
-function storiesEditContributionsHandlers () {
+function storiesEditContributionsListeners () {
 
   // remote form doesn't submit after a turbolinks visit, so do it manually;
   // problem  appears limited to modal (other remote forms submit ok after Turbolinks visit)
@@ -234,9 +390,7 @@ function storiesEditContributionsHandlers () {
       $.rails.handleRemote($('#new-contributor-modal form'));
     });
 
-  /*
-   *  hide the email confirmation modal after sending
-   */
+  // hide the email confirmation modal after sending
   $(document).on('submit', '#confirm-email-form', function () {
     $(this).closest('.modal-content').find('.modal-title')
                                      .addClass('hidden');
@@ -244,33 +398,68 @@ function storiesEditContributionsHandlers () {
                                      .removeClass('hidden');
   });
 
-  /*
-   *  on successful addition of linkedin profile to contributor card
-  */
+  // adding linkedin widget to contribution card
   $(document).on("ajax:success", ".best_in_place[data-bip-attribute='linkedin_url']",
-    function (event, data) {
-      var linkedinUrl = $(this).text(),
+    function (event) {
+      var urlInput = $(this), url = $(this).text(), widgetWidth = 322,
+          validUrl = function ($url) {
+            // detect valid url by comparing to the input placeholder
+            return $url.html() !== urlInput.attr('data-bip-placeholder');
+          },
+          template = _.template($('#csp-linkedin-widget-template').html()),
           $card = $(this).closest('.contribution-card'),
-          $research = $card.find('.research');
-      // add ...
-      if ($card.find('iframe').length === 0 && linkedinUrl !== "add url ..." ) {
-        $card.append(
-          "<br style='line-height:10px'>" +
-          "<div class='row text-center'>" +
-            "<script type='IN/MemberProfile' " +
-              "data-id='" + linkedinUrl + "' " +
-              "data-format='inline' data-related='false' " +
-              "data-width='340'></script>" +
-          "</div>");
-        initLinkedIn();
-        $research.attr('href', linkedinUrl);
-        $research.html("<i class='fa fa-linkedin-square bip-clickable-fa'>");
-      // remove ...
-      } else if ($card.find('iframe').length !== 0 && linkedinUrl === "add url ...") {
-        $card.find('br:last').remove();
-        $card.find('div:last').remove();
-        // get contribution data so we can set research button
-        // (needs contributor and customer data)
+          $checkboxAndWidget = $card.find('.linkedin-checkbox-and-widget'),
+          $widgetContainer = $card.find('.widget-container'),
+          $research = $card.find('.research'),
+          $placeholderWidgetContainer =
+            $("<div class='placeholder-widget-container text-center'" +
+                   "style='min-height:128px'>" +
+              "</div>"),
+          $linkedinWidgetContainer =
+            $("<div class='linkedin-widget-container hidden text-center' " +
+                   "style='min-height:128px;position:relative'>" +
+                "<script type='IN/MemberProfile' " +
+                        "data-id='" + url + "' " +
+                        "data-format='inline' data-related='false' " +
+                        "data-width='" + widgetWidth.toString() + "'></script>" +
+              "</div>"),
+          contributor = {
+            first_name: $card.find('.contributor-name').text().trim().split(' ')[0],
+            last_name: $card.find('.contributor-name').text().trim().split(' ')[1],
+            linkedin_url: url
+          },
+          newWidgetPostMesgHandler = function ($linkedinWidgetContainer) {
+            return function (event) {
+              if ($('body').hasClass('stories edit')) {
+                // For Chrome, the origin property is in the event.originalEvent object.
+                var  origin = event.origin || event.originalEvent.origin,
+                     newWidgetId = $linkedinWidgetContainer
+                                     .find('iframe').attr('id')
+                                     .match(/^\w+(li_gen\w+)_provider/)[1];
+                if (origin === "https://platform.linkedin.com" &&
+                    event.data.includes('widgetReady')) {
+                  var widgetReadyId = event.data.match(/^(\w+)\s/)[1];
+                  if (widgetReadyId === newWidgetId) {
+                    $linkedinWidgetContainer
+                      .css('margin-top', '-128px')  // height of the placeholder container (for overlay)
+                      .removeClass('hidden')
+                      .closest('.widget-container')
+                      .data('linkedin-widget-loaded', true);
+                  }
+                }  // widgetReady event
+              }
+            };
+          };
+
+      // remove whatever is there
+      $widgetContainer.empty();
+      $widgetContainer.data('linkedin-widget-loaded', false);
+
+      if (!validUrl(urlInput)) {  // blank or invalid (not currently validating)
+        $checkboxAndWidget.addClass('hidden');
+
+        // update the research button
+        // TODO: better way to have all this data available
         $.get('/contributions/' + $card.data('contribution-id'), function (contribution, status) {
           if (contribution.role == 'customer') {
             $research.attr('href',
@@ -286,26 +475,60 @@ function storiesEditContributionsHandlers () {
           }
         }, 'json');
         $research.html("<i class='glyphicon glyphicon-user bip-clickable'></i>");
-      // replace ...
+
       } else {
-        $card.find('br:last').remove();
-        $card.find('div:last').remove();
-        $card.append(
-          "<br style='line-height:10px'>" +
-          "<div class='row text-center'>" +
-            "<script type='IN/MemberProfile' " +
-              "data-id='" + linkedinUrl + "' " +
-              "data-format='inline' data-related='false' " +
-              "data-width='340'></script>" +
-          "</div>");
-        initLinkedIn();
+        $checkboxAndWidget.removeClass('hidden');
+        $widgetContainer
+          .append($placeholderWidgetContainer)
+          .append($linkedinWidgetContainer)
+          .find('.placeholder-widget-container')
+          .append(template({
+                    loading: true,
+                    contributor: contributor,
+                    widgetWidth: widgetWidth
+                  }))
+          .imagesLoaded(function () {
+            // unhide placeholder
+            $('.csp-linkedin-widget.hidden').removeClass('hidden');
+          });
+        window.addEventListener('message', newWidgetPostMesgHandler($linkedinWidgetContainer), false);
+        IN.parse();
+        setTimeout(function () {
+          // $widgetContainer = $card.find('.widget-container');
+          // time's up -> remove the post message listener
+          window.removeEventListener('message', newWidgetPostMesgHandler, false);
+          // did the linkedin widget arrive?
+          if ($widgetContainer.data('linkedin-widget-loaded')) {
+            // success
+          } else {
+            // failure
+            $placeholderWidgetContainer
+              .find('.member-info > p')
+              .css('color', 'red')
+              .text('Profile data not available');
+          }
+        }, 8000);
+        $research.attr('href', url);
+        $research.html("<i class='fa fa-linkedin-square bip-clickable-fa'>");
       }
+  });
+
+  $(document).on('change', '.curator-linkedin-checkbox', function () {
+    $(this).submit();
+  });
+
+  $(document).on('ajax:success', '.curator-linkedin-checkbox', function (e) {
+    var $checkboxForm = $(this);
+    $checkboxForm.next().removeClass('hidden');
+    setTimeout(function () {
+      $checkboxForm.next().addClass('hidden');
+    }, 2000);
   });
 
   /*
    *  only one accordion panel open at a time
   */
-  $(document).on('click', '.accordion-toggle', function () {
+  $(document).on('click', '.contribution-card.accordion-toggle', function () {
     if ($(this).attr('href').match(/info/)) {
       var $readPanel = $(this).closest('.accordion')
                               .find("div.accordion-body[id*='submission']");
@@ -374,7 +597,7 @@ function storiesEditContributionsHandlers () {
   });
 }
 
-function storiesEditContentEditorHandlers () {
+function storiesEditContentEditorListeners () {
 
   $(document).on('click', '#edit-story-content', function () {
     var $storyContentEditor = $('#story-content-editor'),

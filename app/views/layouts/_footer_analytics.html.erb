@@ -1,4 +1,57 @@
- <!-- Get Clicky Analytics -->
-<script src="//static.getclicky.com/js" type="text/javascript"></script>
-<script type="text/javascript">try{ clicky.init(100886848); }catch(e){}</script>
-<noscript><p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/100886848ns.gif" /></p></noscript>
+
+<% if include_gtm?(company, current_user, controller_name, action_name) %>
+
+  <!-- Google Tag Manager (for browser with js disabled) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-<%= company.try(:gtm_id) %>"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager -->
+
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer', 'GTM-' + "<%= company.try(:gtm_id) %>");</script>
+  <!-- End Google Tag Manager -->
+
+<% end %>
+
+<!-- google adwords and agile crm only for public readers -->
+<% if ENV['HOST_NAME'] == 'customerstories.net' && !user_signed_in? %>
+
+  <% if controller_name == 'stories' %>
+
+    <!-- google ad words (re-targeting) -->
+    <script type="text/javascript">
+      /* <![CDATA[ */
+      var google_conversion_id = 919156278;
+      var google_custom_params = window.google_tag_params;
+      var google_remarketing_only = true;
+      /* ]]> */
+    </script>
+    <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+    </script>
+    <!-- browsers with js disabled -->
+    <noscript>
+      <div style="display:inline;">
+        <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/919156278/?guid=ON&amp;script=0"/>
+      </div>
+    </noscript>
+
+    <!-- agile crm -->
+    <script id="_agile_min_js" async type="text/javascript" src="https://customerstories.agilecrm.com/stats/min/agile-min.js"> </script> <script type="text/javascript" > var Agile_API = Agile_API || {};Agile_API.on_after_load = function(){_agile.set_account('1g26nfs2fgphtg7vp574pelpdi', 'customerstories'); _agile.track_page_view();}; </script>
+
+  <% elsif controller_name == 'site' %>
+
+    <script id="_agile_min_js" async type="text/javascript" src="https://customerstories.agilecrm.com/stats/min/agile-min.js"> </script> <script type="text/javascript" > var Agile_API = Agile_API || {};Agile_API.on_after_load = function(){ _agile.set_account('1g26nfs2fgphtg7vp574pelpdi', 'customerstories'); _agile.track_page_view(); _agile_execute_web_rules();}; </script>
+
+  <% end %>
+
+  <!-- clicky w/ js disabled (see clicky.js for $.getScript) -->
+  <noscript>
+    <p><img alt="Clicky" width="1" height="1" src="//in.getclicky.com/100886848ns.gif" />
+    </p>
+  </noscript>
+
+<% end %>
+

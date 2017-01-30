@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160922235310) do
+ActiveRecord::Schema.define(version: 20161218195350) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,7 +51,10 @@ ActiveRecord::Schema.define(version: 20160922235310) do
     t.string   "nav_color_2",       default: "#85CEE6"
     t.string   "nav_text_color",    default: "#333333"
     t.string   "website"
+    t.string   "gtm_id"
   end
+
+  add_index "companies", ["subdomain"], name: "index_companies_on_subdomain", unique: true, using: :btree
 
   create_table "contributions", force: :cascade do |t|
     t.integer  "user_id"
@@ -60,21 +63,35 @@ ActiveRecord::Schema.define(version: 20160922235310) do
     t.text     "contribution"
     t.text     "feedback"
     t.string   "status"
-    t.boolean  "linkedin",            default: false
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.boolean  "linkedin",                default: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
     t.datetime "remind_at"
-    t.integer  "remind_1_wait",       default: 1
-    t.integer  "remind_2_wait",       default: 2
+    t.integer  "remind_1_wait",           default: 1
+    t.integer  "remind_2_wait",           default: 2
     t.string   "access_token"
     t.integer  "referrer_id"
     t.text     "notes"
     t.datetime "submitted_at"
     t.datetime "request_received_at"
+    t.boolean  "publish_contributor",     default: false
+    t.boolean  "contributor_unpublished", default: false
   end
 
   add_index "contributions", ["success_id"], name: "index_contributions_on_success_id", using: :btree
   add_index "contributions", ["user_id"], name: "index_contributions_on_user_id", using: :btree
+
+  create_table "cta_buttons", force: :cascade do |t|
+    t.string   "btn_text"
+    t.string   "color",            default: "#fff"
+    t.string   "url"
+    t.integer  "company_id"
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+    t.string   "background_color", default: "#ff6600"
+  end
+
+  add_index "cta_buttons", ["company_id"], name: "index_cta_buttons_on_company_id", using: :btree
 
   create_table "customers", force: :cascade do |t|
     t.string   "name",       null: false
@@ -155,6 +172,29 @@ ActiveRecord::Schema.define(version: 20160922235310) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  create_table "outbound_actions", force: :cascade do |t|
+    t.string   "link_url"
+    t.integer  "company_id"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+    t.string   "type"
+    t.text     "form_html"
+    t.string   "display_text"
+    t.string   "description"
+  end
+
+  add_index "outbound_actions", ["company_id"], name: "index_outbound_actions_on_company_id", using: :btree
+
+  create_table "outbound_actions_stories", force: :cascade do |t|
+    t.integer  "outbound_action_id"
+    t.integer  "story_id"
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
+  end
+
+  add_index "outbound_actions_stories", ["outbound_action_id"], name: "index_outbound_actions_stories_on_outbound_action_id", using: :btree
+  add_index "outbound_actions_stories", ["story_id"], name: "index_outbound_actions_stories_on_story_id", using: :btree
 
   create_table "product_categories", force: :cascade do |t|
     t.string   "name"
@@ -303,19 +343,49 @@ ActiveRecord::Schema.define(version: 20160922235310) do
   add_index "users", ["company_id"], name: "index_users_on_company_id", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
 
-  create_table "visitors", force: :cascade do |t|
-    t.string   "organization"
-    t.string   "city"
-    t.string   "state"
+  create_table "visitor_actions", force: :cascade do |t|
+    t.string   "type"
     t.integer  "success_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.integer  "visitor_session_id"
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.boolean  "landing",            default: false
+    t.string   "share_network"
+    t.integer  "company_id"
   end
 
-  add_index "visitors", ["success_id"], name: "index_visitors_on_success_id", using: :btree
+  add_index "visitor_actions", ["company_id"], name: "index_visitor_actions_on_company_id", using: :btree
+  add_index "visitor_actions", ["success_id"], name: "index_visitor_actions_on_success_id", using: :btree
+  add_index "visitor_actions", ["visitor_session_id"], name: "index_visitor_actions_on_visitor_session_id", using: :btree
+
+  create_table "visitor_sessions", force: :cascade do |t|
+    t.datetime "timestamp"
+    t.string   "referrer_type"
+    t.integer  "visitor_id"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.string   "clicky_session_id"
+    t.string   "ip_address"
+    t.string   "organization"
+    t.string   "location"
+  end
+
+  add_index "visitor_sessions", ["clicky_session_id"], name: "index_visitor_sessions_on_clicky_session_id", unique: true, using: :btree
+  add_index "visitor_sessions", ["visitor_id"], name: "index_visitor_sessions_on_visitor_id", using: :btree
+
+  create_table "visitors", force: :cascade do |t|
+    t.datetime "created_at",                         null: false
+    t.datetime "updated_at",                         null: false
+    t.string   "clicky_uid"
+    t.integer  "visitor_sessions_count", default: 0
+    t.datetime "last_visited"
+  end
+
+  add_index "visitors", ["clicky_uid"], name: "index_visitors_on_clicky_uid", unique: true, using: :btree
 
   add_foreign_key "contributions", "successes"
   add_foreign_key "contributions", "users"
+  add_foreign_key "cta_buttons", "companies"
   add_foreign_key "customers", "companies"
   add_foreign_key "email_contribution_requests", "contributions"
   add_foreign_key "email_templates", "companies"
@@ -323,6 +393,9 @@ ActiveRecord::Schema.define(version: 20160922235310) do
   add_foreign_key "industries_successes", "successes"
   add_foreign_key "industry_categories", "companies"
   add_foreign_key "invited_curators", "companies"
+  add_foreign_key "outbound_actions", "companies"
+  add_foreign_key "outbound_actions_stories", "outbound_actions"
+  add_foreign_key "outbound_actions_stories", "stories"
   add_foreign_key "product_categories", "companies"
   add_foreign_key "product_cats_successes", "product_categories"
   add_foreign_key "product_cats_successes", "successes"
@@ -338,5 +411,8 @@ ActiveRecord::Schema.define(version: 20160922235310) do
   add_foreign_key "successes", "customers"
   add_foreign_key "successes", "users", column: "curator_id"
   add_foreign_key "users", "companies"
-  add_foreign_key "visitors", "successes"
+  add_foreign_key "visitor_actions", "companies"
+  add_foreign_key "visitor_actions", "successes"
+  add_foreign_key "visitor_actions", "visitor_sessions"
+  add_foreign_key "visitor_sessions", "visitors"
 end

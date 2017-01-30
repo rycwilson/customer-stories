@@ -1,5 +1,12 @@
 module ApplicationHelper
 
+  def include_gtm? company=nil, current_user=nil, controller, action
+    ENV['HOST_NAME'] == 'customerstories.net' &&
+    controller == 'stories' &&
+    (['index', 'show'].include? action) &&
+    company.try(:gtm_id).present? && !user_signed_in?
+  end
+
   def mvp_stylesheet
     if ['companies', 'stories', 'profile'].include? controller_name
       stylesheet_link_tag 'mvpready-admin', media: 'all',

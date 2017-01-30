@@ -1,9 +1,5 @@
 
-function storiesIndexHandlers () {
-
-  $(document).on('layoutComplete', '.grid', function () {
-    centerLogos();
-  });
+function storiesIndexListeners () {
 
   $(document).on('change', '.stories-filter', function () {
     var $categorySelect = $("[name='category_select']"),
@@ -11,12 +7,10 @@ function storiesIndexHandlers () {
         filterTag = $(this).attr('name').replace('_select', ''),
         filterId = $(this).val(),
         filterSlug = $(this).find("option[value='" + filterId + "']").data('slug'),
-        storiesTemplate = _.template($('#stories-template').html()),
-        filteredStories = [];
+        storiesTemplate = _.template($('#stories-template').html());
 
-    filteredStories = filterStories(filterTag, filterId);
     updateGallery($(storiesTemplate({
-                      stories: filteredStories,
+                      stories: filterStories(filterTag, filterId, filterSlug),
                       isCurator: app.current_user && app.current_user.is_curator
                     })));
     replaceStateStoriesIndex(filterTag, filterId, filterSlug);
@@ -24,44 +18,58 @@ function storiesIndexHandlers () {
   });
 }
 
+function storiesIndex () {
+
+  var $gallery = $('#stories-gallery'),
+      $categorySelect = $("[name='category_select']"),
+      categorySlug = getQueryString('category'),
+      $productSelect = $("[name='product_select']"),
+      productSlug = getQueryString('product'),
+      storiesTemplate = _.template($('#stories-template').html()),
+      filterTag = categorySlug ? 'category' : (productSlug ? 'product' : null);
+      filterSlug = categorySlug ? categorySlug : (productSlug ? productSlug : null);
+
+  updateGallery(
+    $(storiesTemplate({
+      stories: filterStories(filterTag, null, filterSlug),
+      isCurator: app.current_user && app.current_user.is_curator
+    }))
+  );
+
+  // selectBoxesTrackQueryString($categorySelect, categorySlug, $productSelect, productSlug);
+}
+
 function filterStories (filterTag, filterId, filterSlug) {
-  // console.log('filterStories');
-  // if (app.stories.length === 0) {
-  //   if (filterId === '0') {
-  //     Turbolinks.visit('/');
-  //     console.log('visit /');
-  //   } else {
-  //     console.log('visit /?' + filterTag + '=' + filterSlug);
-  //     Turbolinks.visit('/?' + filterTag + '=' + filterSlug);
-  //   }
-  // }
-  if (filterId === '0') {  // all stories
-    return app.current_user.is_curator ? app.stories :
+
+  var isCurator = app.current_user && app.current_user.is_curator;
+
+  if (filterId === '0' || filterSlug === null) {  // all stories
+    return isCurator ? app.stories :
            app.stories.filter(function (story) { return story.logo_published; });
   }
   return app.stories.filter(function (story, index) {
     if (filterTag === 'category') {
-      if (app.current_user.is_curator) {
+      if (isCurator) {
         return story.success.story_categories.some(function (category) {
           // loosely typed because former is string, latter is number ...
-          return category.id == filterId;
+          return category.id == filterId || category.slug == filterSlug;
         });
       } else {
         return story.logo_published &&
           story.success.story_categories.some(function (category) {
             // loosely typed because former is string, latter is number ...
-            return category.id == filterId;
+            return category.id == filterId || category.slug == filterSlug;
           });
       }
     } else if (filterTag === 'product') {
-      if (app.current_user.is_curator) {
+      if (isCurator) {
         return story.success.products.some(function (product) {
-          return product.id == filterId;
+          return product.id == filterId || product.slug == filterSlug;
         });
       } else {
         return story.logo_published &&
           story.success.products.some(function (product) {
-            return product.id == filterId;
+            return product.id == filterId || product.slug == filterSlug;
           });
       }
     } else {

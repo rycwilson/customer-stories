@@ -1,6 +1,6 @@
 
 // ref: http://stackoverflow.com/questions/8737709
-function popoverHandlers () {
+function popoverListeners () {
   var maxY = null;
   $(document).on('wheel', '.popover-content', function (event) {
     maxY = $(this).prop('scrollHeight') - $(this).prop('offsetHeight');
@@ -18,7 +18,7 @@ function popoverHandlers () {
   });
 }
 
-// function buttonHandlers () {
+// function buttonListeners () {
 //   $(document).on('focus', 'button', function () {
 //     var _this = $(this);
 //     window.setTimeout(function () {

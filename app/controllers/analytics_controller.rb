@@ -1,18 +1,51 @@
 class AnalyticsController < ApplicationController
 
-  def create
-    # request = Typhoeus::Request.new(
-    #   GETCLICKY_TRACKING_URL,
-    #   method: :get,
-    #   body: nil,
-    #   params: { site_id: ENV['GETCLICKY_SITE_ID'],
-    #             sitekey: ENV['GETCLICKY_SITE_KEY'],
-    #             type: 'visitors-list',
-    #             data: 'last-7-days',
-    #             output: 'json' },
-    #   headers: { Accept: "application/json" }
-    # )
-    # request.run
+  before_action { @company = Company.find_by(subdomain: request.subdomain) }
+  before_action except: [:stories] do
+    @story = Story.find_by(id: params[:story_id])
+    @start_date = Date.strptime(params[:date_range].split(' - ')[0], '%m/%d/%Y' )
+    @end_date = Date.strptime(params[:date_range].split(' - ')[1] || @start_date, '%m/%d/%Y' )
+  end
+
+  def charts
+    respond_to do |format|
+      format.json do
+        render({
+          json: {
+            charts: {
+              referrerTypes: @company.referrer_types_chart_json(@story, @start_date, @end_date),
+              visitors: @company.visitors_chart_json(@story, @start_date, @end_date)
+            }
+          }
+        })
+      end
+    end
+  end
+
+  def visitors
+    respond_to do |format|
+      format.json do
+        render({
+          json: { data: @company.visitors_table_json(@story, @start_date, @end_date) }
+        })
+      end
+    end
+  end
+
+  def stories
+    respond_to do |format|
+      format.json do
+        render({
+          json: { data: @company.stories_table_json }
+        })
+      end
+    end
   end
 
 end
+
+
+
+
+
+

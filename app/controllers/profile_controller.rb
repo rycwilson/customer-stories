@@ -20,6 +20,7 @@ class ProfileController < ApplicationController
               flash: { danger: 'LinkedIn error: ' + token_response['error_description'] }
         else
           token = token_response['access_token']
+          logger.debug "TOKEN #{token}"
           # save token to User model
           linkedin_data = get_linkedin_data(token)
           if false # errors
@@ -29,6 +30,7 @@ class ProfileController < ApplicationController
             # need to account for possibility of 401, re-direct to beginning of auth process
           else
             if update_user_linkedin_data(@user, linkedin_data)
+              @user.expire_published_contributor_cache
               redirect_to edit_profile_path, flash: { info: 'Connected to LinkedIn'}
             else
               redirect_to edit_profile_path,

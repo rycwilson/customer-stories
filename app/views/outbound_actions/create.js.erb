@@ -1,0 +1,10 @@
+
+(function () {
+
+  var newAction = <%= raw @new_action.to_json({ methods: [:type] }) %>,
+      template = _.template($('#outbound-action-template').html());
+
+  $('#outbound-actions-list').append(template({ action: newAction }))
+  $('#outbound-actions-form')[0].reset();
+
+}());

@@ -1,152 +1,268 @@
 
-/***********************************************/
-/*      story results
-/***********************************************/
+.stories.edit {
 
-#story-results .col-xs-1 {
-  padding-right: 0
-}
-
-#story-results .col-xs-11 {
-  padding-left: 10px;
-}
-
-// #story-results .row + .row {
-//   margin-top: 5px;
-// }
-
-
-
-/***********************************************/
-/*      contribution card
-/***********************************************/
-.contribution-card .accordion-inner br {
-  line-height: 22px;
-}
-
-
-/***********************************************/
-/*      email request confirmation modal
-/***********************************************/
-
-#email-confirmation-modal .modal-title,
-#email-confirmation-modal .progress {
-  margin-bottom: 5px;
-}
-
-#email-confirmation-modal .progress {
-  margin-top: 5px;
-}
-
-#email-confirmation-modal .modal-body {
-  max-height: 440px;
-  overflow-y: auto;
-}
-
-
-
-/***********************************************/
-/*          stories#edit customer logo
-/***********************************************/
-
-.fileinput .thumbnail {
-  background-color: #f5f5f5;
-  padding: 10px;
-}
-
-
-#customer-logo-form img {
-  max-height: 90px !important;
-}
+  #edit-outbound-actions {
+    .well {
+      padding: 18px 0 18px 0;
+      margin-bottom: 10px;
+    }
+    #outbound-actions-form {
+      .radio-inline {
+        margin-bottom: 12px;
+      }
+      .row:nth-of-type(2) {
+        position: relative;
+        .col-sm-12 {
+          width: 83%;
+        }
+        input[type='text'] {
+          margin-bottom: 5px;
+        }
+        input[type='submit'] {
+          font-size: 20px;
+        }
+        div:last-child {
+          position: absolute;
+          bottom: 6px;
+          right: 30px;
+        }
+      }
+      .col-sm-10, .col-sm-12 {
+        padding: 0 0 0 30px;
+      }
+      .html-input {
+        display: none;   // to be toggled
+      }
+    }  // #outbound-links-form
+    hr {
+      margin: 15px 15px;
+    }
+    #outbound-actions-list {
+      line-height: 32px;
+      .outbound-action {
+        padding-left: 30px;
+        width:88%;
+        div:first-child {
+          text-align: center;
+          padding: 0;
+        }
+      }
+      .delete-outbound-action {
+        position: absolute;
+        right:40px;
+      }
+    }
 
 
-/***********************************************/
-/*           story settings
-/***********************************************/
+  }
+  /***********************************************/
+  /*      video
+  /***********************************************/
+  .video-container {
+    margin-bottom: 10px;
+  }
+  #edit-video-well label {
+    margin-bottom: 0;
+  }
 
-#story-publish-settings .form-group {
-  margin-bottom: 15px;
-}
+  /***********************************************/
+  /*      results
+  /***********************************************/
 
-#story-edit-logo-buttons {
-  margin-bottom: 10px;
-}
+  #story-results .col-xs-1 {
+    padding-right: 0
+  }
 
-// summernote - disable file upload
-.note-group-select-from-files {
-  display: none;
-}
+  #story-results .col-xs-11 {
+    padding-left: 10px;
+  }
 
-.vcenter {
-  display: inline-block;
-  vertical-align: middle;
-  float: none;
-}
+  // #story-results .row + .row {
+  //   margin-top: 5px;
+  // }
 
-.required-input label:after {
-  color: #D9534F;
-  content: " *";
-}
 
-.well {
-  padding: 25px 5% 25px 5%;
-}
+  /***********************************************/
+  /*      contribution card
+  /***********************************************/
 
-p.lead {
-  margin-bottom: 8px;
-}
+  .contribution-card {
+    label {
+      margin-bottom: 0;
+    }
+    .contributor-name-and-actions {
+      line-height: 25px;
+      font-size: 14px;
+    }
+    .contribution-status {
+      line-height: 25px;
+    }
+    .role-field, .email-field, .phone-field, .referrer-field {
+      line-height: 24px;
+    }
+    .phone-field {
+      position: relative;
+      i {
+        position: absolute;
+        top: -3px;
+        right: 0;
+      }
+      div {
+        width: 87%;
+      }
+    }
+    .notes-field {
+      position: relative;
+      line-height: auto;
+      i {
+        position: absolute;
+        top: 4px;
+        right: 0;
+      }
+      label {
+        line-height: 24px;
+      }
+      div {
+        width: 87%;
+      }
+    }
+    .linkedin-url-field {
+      position: relative;
+      line-height: auto;
+      i {
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
+      label {
+        line-height: 28px;
+      }
+      div {
+        width: 87%
+      }
+    }
+    .linkedin-checkbox-container.contributor-unpublished {
+      pointer-events: none;
+      opacity: 0.4;
+    }
+    .linkedin-checkbox-container {
+      line-height: 34px;
+    }
+  }  // .contribution-card
 
-#story-edit-nav:hover {
-  text-decoration: underline;
-}
 
-.bip-clickable {
-  height: 28px;
-  width: 28px;
-  color: #666;
-  border: 1px solid #e3e3e3;
-  border-radius: 3px;
-  padding: 5px;
-  font-size: 1.2em;
-  cursor: pointer;
-}
+  /***********************************************/
+  /*      email request confirmation modal
+  /***********************************************/
 
-/* The font-size needs to be slightly different for the font awesome icons,
-   to achieve consistent layout */
-.bip-clickable-fa {
-  height: 28px;
-  width: 28px;
-  color: #666;
-  border: 1px solid #e3e3e3;
-  border-radius: 3px;
-  padding: 5px 6px 5px 5px;
-  font-size: 1.3em;
-  cursor: pointer;
-}
+  #email-confirmation-modal .modal-title,
+  #email-confirmation-modal .progress {
+    margin-bottom: 5px;
+  }
 
-.bip-clickable:hover, .bip-clickable-fa:hover  {
-  color: white !important;
-  background-color: #666;
-}
+  #email-confirmation-modal .progress {
+    margin-top: 5px;
+  }
 
-/* make edit field stand out when hover over edit button */
-#edit-story-title:hover + #story-title,
-#edit-story-quote:hover + #story-edit-quote,
-#edit-story-quote-attr:hover + #story-quote-attr,
-#edit-story-embed:hover + #story-embed,
-#edit-story-situation:hover + #story-situation,
-#edit-story-challenge:hover + #story-challenge,
-#edit-story-solution:hover + #story-solution,
-#edit-story-benefits:hover + #story-benefits,
-.modify-result:hover + .story-result,
-.modify-prompt:hover + .story-prompt,
-.cc-editable:hover + .cc-editable {
-  // border-left: 3px solid #87a3bc;
-  background-color: #e3e3e3;
-  background-clip: content-box;
-  border-radius: 3px
-}
+  #email-confirmation-modal .modal-body {
+    max-height: 440px;
+    overflow-y: auto;
+  }
 
-.dirtyField {
-  color: #D9534F;
+
+
+  /***********************************************/
+  /*          stories#edit customer logo
+  /***********************************************/
+
+  .fileinput .thumbnail {
+    background-color: #f5f5f5;
+    padding: 10px;
+  }
+
+
+  #customer-logo-form img {
+    max-height: 90px !important;
+  }
+
+
+  /***********************************************/
+  /*           story settings
+  /***********************************************/
+
+  #story-publish-settings .form-group {
+    margin-bottom: 15px;
+  }
+
+  #story-edit-logo-buttons {
+    margin-bottom: 10px;
+  }
+
+  // summernote - disable file upload
+  .note-group-select-from-files {
+    display: none;
+  }
+
+  .vcenter {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+  }
+
+  .required-input label:after {
+    color: #D9534F;
+    content: " *";
+  }
+
+  .well {
+    padding: 25px 5% 25px 5%;
+  }
+
+  p.lead {
+    margin-bottom: 8px;
+  }
+
+  #story-edit-nav:hover {
+    text-decoration: underline;
+  }
+
+
+  /* The font-size needs to be slightly different for the font awesome icons,
+     to achieve consistent layout */
+  .bip-clickable-fa {
+    height: 28px;
+    width: 28px;
+    color: #666;
+    border: 1px solid #e3e3e3;
+    border-radius: 3px;
+    padding: 5px 6px 5px 5px;
+    font-size: 1.3em;
+    cursor: pointer;
+  }
+
+
+  /* make edit field stand out when hover over edit button */
+  #edit-story-title:hover + #story-title,
+  #edit-story-quote:hover + #story-edit-quote,
+  #edit-story-quote-attr:hover + #story-quote-attr,
+  #edit-story-embed-url:hover + #story-embed-url,
+  #edit-story-situation:hover + #story-situation,
+  #edit-story-challenge:hover + #story-challenge,
+  #edit-story-solution:hover + #story-solution,
+  #edit-story-benefits:hover + #story-benefits,
+  .modify-result:hover + .story-result,
+  .modify-prompt:hover + .story-prompt,
+  .modify-outbound-action:hover + .outbound-action,
+  i.cc-editable:hover + .cc-editable,
+  i.cc-editable:hover + .cc-editable + .cc-editable {
+    // border-left: 3px solid #87a3bc;
+    background-color: #e3e3e3;
+    background-clip: content-box;
+    border-radius: 3px
+  }
+
+  .dirtyField {
+    color: #D9534F;
+  }
+
 }

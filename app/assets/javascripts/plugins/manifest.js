@@ -4,6 +4,7 @@
 //= require magnific-popup/dist/jquery.magnific-popup
 //= require datatables/media/js/jquery.dataTables
 //= require datatables-plugins/integration/bootstrap/3/dataTables.bootstrap
+
 //= require bootstrap-jasny/js/fileinput.js
 //= require mvpready-core
 //= require mvpready-helpers
@@ -39,3 +40,10 @@
 
 //= require js-cookie/src/js.cookie
 
+//= require local_time
+
+//= require moment/moment
+//= require bootstrap-daterangepicker/daterangepicker
+
+//= require jstz
+//= require browser_timezone_rails/set_time_zone

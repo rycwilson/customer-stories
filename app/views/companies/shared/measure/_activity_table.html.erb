@@ -1,0 +1,30 @@
+
+<div id='activity-groups'>
+  <table width='100%' class="datatable table table-hover table-striped">
+
+    <thead>
+      <tr>
+        <th></th>
+        <th>Activity type</th>
+        <th>7 days</th>
+        <th>30 days</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- this is just filler so the "No data available" message doesn't appear -->
+      <!-- <tr class='hidden'><td></td><td></td><td></td></tr> -->
+
+      <% recent_activity.each do |activity_group| %>
+
+        <%= render 'companies/shared/measure/activity_group',
+                    { group_type: activity_group.keys[1],
+                      group_label: activity_group[:label],
+                      group_items: activity_group.values[1],
+                      story_views_30_day_count: story_views_30_day_count } %>
+
+      <% end %>
+
+    </tbody>
+  </table>
+
+</div>

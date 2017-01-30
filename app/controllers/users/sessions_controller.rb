@@ -30,7 +30,6 @@ class Users::SessionsController < Devise::SessionsController
 
   # DELETE /resource/sign_out
   def destroy
-    cookies.delete(:csp_init)
     gon.push({ company: nil, stories: nil, current_user: nil })
     super
     flash.delete(:notice)  # skip the flash for sign out

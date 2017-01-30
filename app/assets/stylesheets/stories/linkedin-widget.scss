@@ -1,5 +1,5 @@
 
-.sub-widget-wrapper {
+.csp-linkedin-widget {
   position: relative;
   background: #fff;
   zoom: 1;
@@ -72,9 +72,14 @@
           border: 2px solid #e5e5e5;
           padding: 0;
           float: right;
+          width: 84px; // expected img width of 80 + border*2
+          background-color: #e5e5e5;
           .photo {
+            height: 80px;
             border: 0;
             padding: 0;
+            margin-right: auto;
+            margin-left: auto;
           }
         }
         .mark {
@@ -90,6 +95,7 @@
           font-weight: bold;
           margin: 2px 0;
           color: #0079AB;
+          line-height: 25px;
         }
         .locality, .title {
           display: block;
@@ -124,6 +130,7 @@
       p {
         margin: 5px 0;
         font-size: 12px;
+        line-height: 14px; // prevent in-progress icon from changing line-height to 20
       }
     }
   }

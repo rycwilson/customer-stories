@@ -1,0 +1,74 @@
+
+#measure-panel {
+
+  #activity-groups {
+    table {
+      border-collapse: collapse;
+      tr.accordion-toggle td:first-child {
+        width: 40px;
+        text-align: center;
+      }
+    }
+    tbody {
+      border-top: 0;  // override bootstrap
+    }
+    .accordion-toggle {
+      cursor: pointer;
+    }
+    tr.accordion-toggle.no-data {
+      pointer-events: none;
+      opacity: 0.3;
+    }
+    .hiddenRow {
+      padding: 0;
+      .accordion-body {
+        padding-top: 15px;
+      }
+    }
+    [data-toggle="toggle"] {  // hide the checkbox (jquery)
+      display: none;
+    }
+    i {
+      color: #555555;
+    }
+    i + i {
+      display: none;
+    }
+  }
+
+  #measure-summary-container {
+
+    form {
+      margin: 10px 0 40px 0
+    }
+
+  }
+
+  #measure-visitors-container {
+
+    form {
+      margin: 10px 0 26px 0
+    }
+
+    #measure-visitors-table {
+      border-collapse: collapse;
+      td.details-control {
+        width: 40px;
+        cursor: pointer;
+        text-align: center;
+        i + i {
+          display: none;
+        }
+      }
+      // try this but it's a pain in the ass to get it to work
+      // http://stackoverflow.com/questions/7569436
+      // table td {
+      //   white-space: nowrap;
+      //   position: absolute;
+      //   text-overflow: ellipsis;
+      // }
+
+    }
+  }
+
+}

@@ -6,3 +6,5 @@ Rails.application.initialize!
 
 # Logger
 Rails.logger = Logger.new(STDOUT)
+
+# Rails.cache.silence!

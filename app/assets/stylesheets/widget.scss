@@ -1,4 +1,3 @@
-
 .cs-drawer {
   bottom: 0px;
   // height: 183px;
@@ -9,6 +8,7 @@
 }
 
 .cs-drawer header {
+  box-sizing: content-box !important;
   cursor: pointer;
   background: #000000;
   color: #ffffff;
@@ -16,6 +16,7 @@
   font-size: 16px;
   height: 24px;
   line-height: 24px;
+  font-size: 16px;
   overflow: hidden;
   padding-top: 7px;
   padding-bottom: 7px;

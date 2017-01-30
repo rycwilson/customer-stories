@@ -1,86 +1,90 @@
 
-#stories-filters-xs .form-group {
-  margin: 1.5% auto;
-}
+.stories.index {
 
-#stories-filters-xs .stories-filter + span {
-  width: 200px;
-}
-
-#stories-filters.reader .form-group,
-#stories-filters.curator .form-group {
-  margin-top: 7px;
-}
-
-@media (min-width: 768px) {
-  #stories-filters.reader {
-    margin-left: 30px;
+  #stories-filters-xs .form-group {
+    margin: 1.5% auto;
   }
-  #stories-filters.reader .stories-filter + span {
-    width: 180px;
-  }
-  #stories-filters.curator .stories-filter + span {
-    width: 150px;
-  }
-}
 
-@media (min-width: 992px) {
-  #stories-filters.reader .stories-filter + span {
+  #stories-filters-xs .stories-filter + span {
     width: 200px;
   }
-}
 
-@media (min-width: 1200px) {
-  #stories-filters.curator .stories-filter + span {
-    width: 200px;
+  #stories-filters.reader .form-group,
+  #stories-filters.curator .form-group {
+    margin-top: 7px;
   }
-}
 
-#stories-gallery-content {
-  margin-top: 40px;
-}
+  @media (min-width: 768px) {
+    #stories-filters.reader {
+      margin-left: 30px;
+    }
+    #stories-filters.reader .stories-filter + span {
+      width: 180px;
+    }
+    #stories-filters.curator .stories-filter + span {
+      width: 150px;
+    }
+  }
 
-#collapsed-workflow-tabs .glyphicon-align-justify {
-  padding-left: 5px;
-}
+  @media (min-width: 992px) {
+    #stories-filters.reader .stories-filter + span {
+      width: 200px;
+    }
+  }
 
-.grid {
-  margin: 0 auto;
-}
+  @media (min-width: 1200px) {
+    #stories-filters.curator .stories-filter + span {
+      width: 200px;
+    }
+  }
 
-.grid-item {
-  width: 170px;
-  height:123px;
-  margin-left: 24px;
-  margin-right: 24px;
-  margin-bottom: 40px;  // mirrors #stories-gallery-content
-  position: relative;  // this is for positioning the caption at the bottom
-  // border: 2px solid hsla(0, 0%, 0%, 0.5);
-}
+  #stories-gallery-content {
+    margin-top: 40px;
+  }
 
-.grid-item.thumbnail {
-  padding: 0   // define all in order to override bootstrap default
-}
+  #collapsed-workflow-tabs .glyphicon-align-justify {
+    padding-left: 5px;
+  }
 
-.grid-item.thumbnail > img {
-  max-height: 99px;
-  padding: 5px 10px 5px 10px;
-}
+  .grid {
+    margin: 0 auto;
+  }
 
-.grid-item.thumbnail.no-caption > img {
-  margin-top: 11px;
-  padding: 5px 10px 5px 10px;
-}
+  .grid-item {
+    width: 170px;
+    height:123px;
+    margin-left: 24px;
+    margin-right: 24px;
+    margin-bottom: 40px;  // mirrors #stories-gallery-content
+    position: relative;  // this is for positioning the caption at the bottom
+    // border: 2px solid hsla(0, 0%, 0%, 0.5);
+  }
 
-.grid-item.thumbnail .caption {
-  padding: 2px 0 2px 6px;
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  border-radius: 0 0 3px 3px;
-}
+  .grid-item.thumbnail {
+    padding: 0   // define all in order to override bootstrap default
+  }
 
-/*
-  this will be helpful for centering images without the caption:
-  http://stackoverflow.com/questions/23477909/
-*/
+  .grid-item.thumbnail > img {
+    max-height: 99px;
+    padding: 5px 10px 5px 10px;
+  }
+
+  .grid-item.thumbnail.no-caption > img {
+    margin-top: 11px;
+    padding: 5px 10px 5px 10px;
+  }
+
+  .grid-item.thumbnail .caption {
+    padding: 2px 0 2px 6px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    border-radius: 0 0 3px 3px;
+  }
+
+  /*
+    this will be helpful for centering images without the caption:
+    http://stackoverflow.com/questions/23477909/
+  */
+
+}

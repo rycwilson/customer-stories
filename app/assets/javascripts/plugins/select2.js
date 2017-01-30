@@ -88,9 +88,21 @@ function initSelect2 () {
       $(this).val(preSelect.toString()).trigger('change.select2');
     }
   });
+
+  $('#outbound-actions-select').select2({
+    theme: 'bootstrap',
+    placeholder: 'select an action',
+    tags: true
+  });
+
+  $('#charts-story-select, #visitors-story-select').select2({
+    theme: 'bootstrap',
+    width: 'style'
+  });
+
 }
 
-function select2Handlers () {
+function select2Listeners () {
   // prevents the options list from showing when a tag is removed
   $('.select2').prev()
                .on('select2:unselecting', function (e) {

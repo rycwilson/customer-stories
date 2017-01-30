@@ -1,4 +1,14 @@
 
+function storiesShow () {
+  loadVideoThumbnail();
+  widgetsMonitor();
+
+  $(document).on('click', '.outbound-form', function () {
+    $('#outbound-form-modal').modal('show');
+  });
+
+}
+
 /*
  *  There are two timers, after each of which the widgets are all checked for
  *  successful load, and replaced with a substitute widget if not
@@ -68,18 +78,18 @@ function setWidgetTimeout (delay, postMessageHandler) {
                     return story.csp_story_path === window.location.pathname;
                   });
       if (story && story.published_contributors) {
-         var subs = false;
+         var failures = false;
          story.published_contributors
               .forEach(function (contributor, index) {
                  if (!contributor.widget_loaded) {
-                   subs = true;
+                   failures = true;
                    // console.log('widget did not load: ', delay, contributor.linkedin_url);
-                   contributor.widget_loaded = subWidget(contributor, index);
+                   contributor.widget_loaded = addCspWidget(contributor, index);
                  }
                });
-         if (subs) {
+         if (failures) {
            $('.linkedin-widgets').imagesLoaded(function () {
-             $('.sub-widget-wrapper').removeClass('hidden');
+             $('.csp-linkedin-widget').removeClass('hidden');
            });
          }
       }
@@ -91,8 +101,9 @@ function setWidgetTimeout (delay, postMessageHandler) {
   }, delay);
 }
 
-function subWidget (contributor, index) {
-  var template = _.template($('#sub-linkedin-widget-template').html());
+function addCspWidget (contributor, index) {
+  var template = _.template($('#csp-linkedin-widget-template').html()),
+      widgetWidth = (app.screenSize === 'lg') ? 420 : 340;
 
   if (contributor.linkedin_photo_url && contributor.linkedin_title &&
       contributor.linkedin_company) {
@@ -100,7 +111,7 @@ function subWidget (contributor, index) {
       .eq(index)
       .empty()
       .append(template({ contributor: contributor,
-                         wide: (app.screenSize === 'lg') ? true : false }));
+                         widgetWidth: widgetWidth }));
     return true;
   } else {
     return false;

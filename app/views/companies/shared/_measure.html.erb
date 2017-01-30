@@ -1,15 +1,7 @@
-<!-- measure -->
-<div id='measure-panel'
-     class="<%= workflow_tab == 'measure' ? 'active tab-pane content' : 'tab-pane content' %>"
-     role='tabpanel'>
+-->
+<div id='measure-panel' class="<%= workflow_tab == 'measure' ? 'active tab-pane content' : 'tab-pane content' %>" role='tabpanel'>
 
-  <div class='container'>
-    <div class='row'>
-      <div class='portlet portlet-default'>
-
-           <br class="xs-30 sm-0">
-
-  <div class="content">
+  <div class="content" style='margin-top:30px;overflow:hidden'>
 
     <div class="container">
 
@@ -21,314 +13,75 @@
             <strong>Tab Navigation</strong> / <a href="#settings-content">Skip to Content</a>
           </div>
 
-          <ul id="myTab" class="nav nav-layout-sidebar nav-stacked">
-              <li class="active">
+          <ul class="nav nav-layout-sidebar nav-stacked">
 
-              <a href="#crowdsource" data-toggle="tab">
-
-              <i class="fa fa-bar-chart-o"></i>
-              &nbsp;&nbsp;Channel Contribution
+            <li class='active'>
+              <a href="#measure-summary-container" data-toggle="tab">
+              <i class="fa fa-bar-chart"></i>
+              &nbsp;&nbsp;Summary
               </a>
             </li>
 
             <li>
-              <a href="#rev_product" data-toggle="tab">
-              <i class="fa fa-pie-chart"></i>
-              &nbsp;&nbsp;Contribution to Product
+              <a href="#measure-stories-container" data-toggle="tab">
+              <i class="fa fa-newspaper-o"></i>
+              &nbsp;&nbsp;Stories
               </a>
             </li>
 
-              <li>
-              <a href="#contributors" data-toggle="tab">
+            <li>
+              <a href="#measure-visitors-container" data-toggle="tab">
               <i class="fa fa-users"></i>
-              &nbsp;&nbsp;Visitor List
+              &nbsp;&nbsp;Visitors
               </a>
             </li>
 
-
-
+            <li>
+              <a href="#measure-activity-container" data-toggle="tab">
+              <i class="fa fa-line-chart"></i>
+              &nbsp;&nbsp;Recent activity
+              </a>
+            </li>
 
 
           </ul>
 
-        </div> <!-- /.col -->
-
-
+        </div>
 
         <div class="col-md-9 col-sm-8 layout-main">
 
           <div id="settings-content" class="tab-content stacked-content">
 
-
-
-            <div class="tab-pane fade in active" id="crowdsource">
-
-              <div class="heading-block">
-                <h3>
-                  Revenue Contribution by channel
-                </h3>
-              </div> <!-- /.heading-block -->
-
-                          <figure class="feature-figure">
-                <%= image_tag 'mvp-landing/homepage-features/rev_channel.png',
-                  { class: 'img-responsive figure-shadow center-block',
-                    style: 'width: 90%;', alt: '' } %>
-              </figure>
-            </div> <!-- /.tab-pane -->
-
-
-
-
-            <div class="tab-pane fade" id="rev_product">
-
-              <div class="heading-block">
-                <h3>
-                  Story Contribution to Product Lines
-                </h3>
-              </div> <!-- /.heading-block -->
-
-                          <figure class="feature-figure">
-                <%= image_tag 'mvp-landing/homepage-features/rev_product.png',
-                  { class: 'img-responsive figure-shadow center-block',
-                    style: 'width: 70%;', alt: '' } %>
-              </figure>
-
-                  </div> <!-- /.tab-pane -->
-
-
-
-            <div class="tab-pane fade" id="contributors">
-
-              <div class="heading-block">
-                <h3>
-                  List of Visitors Reading Customer Stories
-                </h3>
-              </div> <!-- /.heading-block -->
-
-            <table class="table table-striped table-bordered">
-              <thead>
-
-                <tr>
-                  <th>Customer</th>
-                  <th>City</th>
-                  <th>State</th>
-                  <th>Visit Date</th>
-                  <th>Visit time</th>
-                </tr>
-
-              </thead>
-                        <% company.visitors.each do |visitor| %>
-              <tbody>
-
-                <tr>
-                  <td><%= visitor.organization %></td>
-                  <td><%= visitor.city %></td>
-                  <td><%= visitor.state %></td>
-                  <td><%= visitor.created_at.to_date %></td>
-                  <td><%= visitor.created_at.strftime("%I:%M%p") %></td>
-                  </tr>
-
-              </tbody>
-                 <% end %>
-            </table>
-
-
-              </div> <!-- /.tab-pane -->
-
-
-
-            <div class="tab-pane fade" id="seo">
-
-              <div class="heading-block">
-                <h3>
-                  Automated search engine optimization when customer's research references
-                </h3>
-              </div> <!-- /.heading-block -->
-          <p>Automatically leverage best practice SEO technology to make your stories rank high in Google searches when your potential clients are researching online for references.   The curation process automatically formats and creates keyword content for customer reference story uses cases without needing to know anything about SEO.   Customer Stories exclusively uses ‘White Hat’ SEO technologies and practices.    </p>
-
-       </div> <!-- /.tab-pane -->
-
-
-
-            <div class="tab-pane fade" id="retargeting">
-
-              <div class="heading-block">
-                <h3>
-                  Intelligent story promotion thru onlime media channels with retargeting
-                </h3>
-              </div> <!-- /.heading-block -->
-
-              <p>Automatically and Intelligently promote your success stories in online media to any prospect that has shown interest in your products or services.  No need for the prospect to register, they are simply retargeted with an ad whenever they visit your website or your customer story page.  This method serves as a reminder of your companies offering with the #1 most compelling content:  peer success stories from your advocate.  </p>
-
-
-              </div> <!-- /.tab-pane -->
-
-
-
-            <div class="tab-pane fade" id="crm-targeting">
-
-              <div class="heading-block">
-                <h3>
-                  Automatically promote stories to your CRM database in relevant online media
-                </h3>
-              </div> <!-- /.heading-block -->
-
-              <p>Connect your CRM database and Customer Stories will intelligently promote your stories to your list, not by email, but by online advertising.  This highly targeted approach gives you a subtle but powerful communication channel to your CRM database even if they are not aware of your products and offerings.  This provides incentive for sales people to add their target prospects in your CRM.  Other use cases is an effective and persuasive marketing channel to prospects that use your competition. </p>
-
-
-
-
-              </div> <!-- /.tab-pane -->
-
-
-
-            <div class="tab-pane fade" id="audience-targeting">
-
-              <div class="heading-block">
-                <h3>
-                  Look-alike model your existing customers and promote to a multiplied audience
-                </h3>
-              </div> <!-- /.heading-block -->
-
-              <p>Customer Stories can intelligently model your existing customers to identify ideal buyer persona.   Automatically promote your success stories to this multiplied audience of unknown prospects.  Scale your reach to a 10X or more prospect list by engaging this ideal audience with your compelling customer successes. </p>
-
-
-              </div> <!-- /.tab-pane -->
-
-
-
-            <div class="tab-pane fade" id="reporting">
-
-              <div class="heading-block">
-                <h3>
-                  Analytics & reporting showing attribution to closed deals proving ROI of program
-                </h3>
-              </div> <!-- /.heading-block -->
-
-              <p>With intelligent online tracking, ROI of program is easy to prove.   By engaging a prospect with customer stories at every stage of the buying journey, customer story attribution is validated.   Reports and analytics show how closed deals was influenced by customer, product, media channel, and time.  Funding during budgeting cycles will be easy to get.</p>
-
-
-
-              </div> <!-- /.tab-pane -->
-
-
-
-            <div class="tab-pane fade" id="integrations">
-
-              <div class="heading-block">
-                <h3>
-                  Easy integrations to the most popular CRM applications
-                </h3>
-              </div> <!-- /.heading-block -->
-
-              <p>Customer Stories integrates into the most popular CRM tools through Zapier.  The use case integrations include:
-<li>Upon closed deal, automatically creates a story pipeline in Customer Stories ready for curation decision </li>
-<li>For Audience targeting, connects to your list for look-alike modeling and ad channel matching</li>
-<li>Automatically push customer stories into CRM customer reference dashboard</li>
-</p>
-
-
-
-              </div> <!-- /.tab-pane -->
-
-          </div> <!-- /.tab-content -->
+            <div class="tab-pane fade in active" id="measure-summary-container">
+              <%= render 'companies/shared/measure/summary_charts',
+                   { company: company,
+                     story_select_options: @story_select_options } %>
+            </div>
+
+            <div class="tab-pane fade" id="measure-stories-container">
+              <%= render 'companies/shared/measure/stories_table' %>
+            </div>
+
+            <div class="tab-pane fade" id="measure-visitors-container">
+              <%= render 'companies/shared/measure/visitors_table',
+                         { company: company,
+                           story_select_options: @story_select_options } %>
+            </div>
+
+            <div class="tab-pane fade" id="measure-activity-container">
+
+              <% cache("#{company.subdomain}/recent-activity", skip_digest: true) do %>
+                <%= render 'companies/shared/measure/activity_table',
+                      { recent_activity: recent_activity,
+                        story_views_30_day_count: @story_views_30_day_count } %>
+              <% end %>
+
+            </div>
+
+          <!-- </div> -->
 
         </div> <!-- /.col -->
-
-      </div> <!-- /.row -->
-
-
-    </div> <!-- /.container -->
-
-  </div> <!-- .content -->
-<br>
-<br>
-<br>
-<br>
-     <div class="portlet portlet-boxed">
-
-            <div class="portlet-header">
-              <h4 class="portlet-title">
-                <u>Donut  Chart</u>
-              </h4>
-            </div> <!-- /.portlet-header -->
-
-            <div class="portlet-body">
-              <div id="donut-chart" class="chart-holder"></div>
-
-
-            </div> <!-- /.portlet-body -->
-
-
-
-          </div> <!-- /.portlet -->
-
- <div class='portlet-body'>
-
-
-<div id="flot-placeholder" style="width:300px; height: 200px"></div>
-<script type="text/javascript">
-$(function() {
-    var d1 = [];
-    for (var i = 0; i < 14; i += 0.5) {
-        d1.push([i, Math.sin(i)]);
-    }
-    var d2 = [[0, 3], [4, 8], [8, 5], [9, 13]];
-    // A null signifies separate line segments
-    var d3 = [[0, 12], [7, 12], null, [7, 2.5], [12, 2.5]];
-    $.plot("#flot-placeholder", [ d1, d2, d3 ]);
-});
-</script>
-
-
-
-   </div> <!-- portlet -->
-
-
-
-
-
-        <div class="portlet-body">
-
-          <table
-              class="table table-striped table-bordered table-hover ui-datatable"
-              data-ajax="lib/assets/table_data.json"
-              data-global-search="true"
-              data-length-change="true"
-              data-info="true"
-              data-paging="true"
-              data-page-length="10">
-
-            <thead>
-              <tr>
-                <th data-filterable="text">Name</th>
-                <th data-filterable="select" data-sortable="true" data-sort-order="2">Position</th>
-                <th data-filterable="select" data-sortable="true" data-sort-order="2">Office</th>
-                <th>Extn</th>
-                <th data-sortable="true">Start Date</th>
-                <th data-sortable="true" data-sort-order="1" data-direction="desc">Salary</th>
-              </tr>
-            </thead>
-
-            <tbody>
-            </tbody>
-
-            <tfoot>
-              <tr>
-                <th>Name</th>
-                <th>Position</th>
-                <th>Office</th>
-                <th>Extn</th>
-                <th>Start Date</th>
-                <th>Salary</th>
-              </tr>
-            </tfoot>
-
-          </table>
-
-     </div>
-
-      </div> <!-- portlet -->
-    </div>  <!-- row -->
-  </div>  <!-- container -->
+      </div> <!-- layout -->
+    </div> <!-- container -->
+  </div> <!-- content -->
 </div>  <!-- measure -->

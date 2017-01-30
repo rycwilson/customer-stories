@@ -1,20 +1,29 @@
 
 //= require plugins/manifest
-//= require plugins/socialshare
-//= require plugins/linkedin
-//= require plugins/summernote
 //= require plugins/masonry
 //= require plugins/select2
+//= require plugins/linkedin
+//= require plugins/summernote
+//= require plugins/socialshare
+//= require plugins/tooltips
+//= require plugins/clicky
+//= require plugins/datatables
+//= require plugins/daterangepicker
+//= require plugins/google_charts
 
 function constructPlugins () {
 
+  initMasonry();
   initSelect2();
   initLinkedIn();
-  initSocialShare();
+  initDateRangePicker();
+  initGoogleCharts(false, null);  // false => just load library; don't draw any charts
+  initDataTables();
   initSummernote();
-  initMasonry();
+  initTooltips();
+  initSocialShare();
+  initClicky();
 
-  $("[data-toggle='tooltip']").tooltip();
   $('.best_in_place').best_in_place();
   $('.bs-switch').bootstrapSwitch({ size: 'small' });
   $("input[type='tel']").inputmask("999-999-9999");
@@ -26,9 +35,10 @@ function constructPlugins () {
     and matches the id attribute of the corresponding input field.
   */
   $('#story-tags-form').dirtyFields();
+  $('#outbound-links-form').dirtyFields();
 
   $('#activity-feed-btn').popover({
-    title: 'Last 7 days',
+    title: "Last day's activity",
     placement: 'right',
     html: 'true',
     trigger: 'manual',
@@ -61,9 +71,13 @@ function deconstructPlugins () {
 
   $('.grid').masonry('destroy');
 
+  $('.datatable').DataTable().destroy();
+
+  // does not seem to be neceessary (and doesn't work anyway):
+  // $('.datatable').each(function (table) { table.DataTable.destroy(); });
+
   $("[data-provider='summernote']").summernote('destroy');
 
-  // $('.linkedin-widget span').remove();
 }
 
 

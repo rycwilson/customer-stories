@@ -1,0 +1,260 @@
+
+<!-- contribution cards template -->
+<script type="text/template" id="cc-template">
+
+
+  {{ contributions.forEach(function (contribution, index) { }}
+
+    {{ var contributor = contribution.contributor; }}
+    {{ var displayStatus = (type === 'in-progress' || type === 'next-steps' || type === 'connection'); }}
+    {{ var followUpRequired = (contribution.status === 'feedback' || contribution.status === 'did_not_respond')}}
+
+    <div class="well contribution-card accordion"
+        id="{{= type }}-accordion-{{= index }}"
+        data-contribution-id="{{= contribution.id }}">
+
+      <div class="row contributor-name-and-actions">
+        <div class="contributor-name col-sm-7 vcenter">
+          {{= contributor.full_name }}
+        </div><!--
+     --><div class="col-sm-5 text-right vcenter">
+
+          {{ if (type === 'pre-request') { }}
+            <a class='send-request' data-remote="true" rel="nofollow" tabindex="-1"
+                href="/contributions/{{= contribution.id }}/confirm_request">
+              <i class="glyphicon glyphicon-envelope bip-clickable"
+                  data-toggle='tooltip' data-placement='top'
+                  title='Send contribution request'></i></a>
+          {{ } }}
+
+          {{ if (contribution.status === 'contribution' || contribution.status === 'feedback' ) { }}
+            <a class="accordion-toggle" data-toggle="collapse" tabindex="-1"
+                data-parent="#{{= type }}-accordion-{{= index }}"
+                href="#collapse-{{= type }}-submission-{{= index }}">
+              <i class="glyphicon glyphicon-comment bip-clickable"
+                  data-toggle='tooltip' data-placement='top'
+                  title="{{= contribution.status == 'contribution' ? 'Contribution' : 'Feedback' }}"></i></a>
+          {{ } }}
+
+          <a class="accordion-toggle" data-toggle="collapse" tabindex="-1"
+              data-parent="#{{= type }}-accordion-{{= index }}"
+              href="#collapse-{{= type }}-info-{{= index }}">
+            <i class="glyphicon glyphicon-info-sign bip-clickable"
+                data-toggle='tooltip' data-placement='top'
+                title='More information'></i></a>
+
+          <!--/*
+            dynamic research button is presently only featured under Connections.
+            so it's unnecessary here, but may be useful at some point
+            (curator enters a linkedin_url upon on creating contributor)
+          */-->
+          {{ if (contribution.publish_contributor) { }}
+
+            <a class='research' target="_blank" tabindex='-1'
+                href="{{= contributor.linkedin_url }}">
+              <i class='fa fa-linkedin-square bip-clickable-fa'
+                  data-toggle='tooltip' data-placement='top'
+                  title='LinkedIn profile'></i></a>
+
+          {{ } else { }}
+
+            <a target="_blank" tabindex="-1"
+              href="http://google.com/search?q={{= contributor.first_name + '+' + contributor.last_name + '+' + contribution.success.customer.name }}">
+              <i class="glyphicon glyphicon-user bip-clickable"
+                  data-toggle='tooltip' data-placement='top'
+                  title='Research'></i></a>
+
+          {{ } }}
+
+        </div>
+      </div>
+
+      {{ if (displayStatus) { }}
+        <div class='contribution-status'>
+          {{= followUpRequired ? '<label>Next step:</label>' : '<label>Status:</label>' }}&nbsp;
+          <span>{{= contribution.display_status }}</span>
+        </div>
+      {{ } }}
+
+      <div id="collapse-{{= type }}-submission-{{= index }}"
+          class="accordion-body collapse">
+        <div class="accordion-inner">
+          <hr>
+          {{ if (contribution.status === 'contribution') { }}
+            <div><em>{{= contribution.contribution }}</em></div>
+          {{ } else if (contribution.status === 'feedback') { }}
+            <div><em>{{= contribution.feedback }}</em></div>
+          {{ } }}
+        </div>
+      </div>
+
+      <div id="collapse-{{= type }}-info-{{= index }}"
+          class="accordion-body collapse">
+        <div class="accordion-inner">
+          <hr>
+
+          <div class='role-field'>
+            <label>Role:</label>&nbsp;&nbsp;{{= contribution.role }}
+          </div>
+          <div class='email-field'>
+            <label>Email:</label>&nbsp;&nbsp;{{= contributor.email }}
+          </div>
+          <div class='phone-field'>
+
+            <i id='edit-{{= type }}-phone-{{= index }}'
+               class='glyphicon glyphicon-pencil bip-clickable cc-editable'></i>
+
+            <div id='{{= type }}-phone-{{= index }}' class='cc-editable'>
+              <label>Phone:</label>&nbsp;&nbsp;
+              <span data-bip-type="input" data-bip-attribute="phone"
+                  data-bip-activator="#edit-{{= type }}-phone-{{= index }}"
+                  data-bip-html-attrs="{&quot;style&quot;:&quot;width:80%;line-height:16px&quot;}"
+                  data-bip-object="user"
+                  data-bip-original-content="{{= contributor.phone }}"
+                  data-bip-value="{{= contributor.phone }}"
+                  data-bip-url="/contributions/{{= contribution.access_token }}"
+                  data-bip-placeholder="<em>add phone ...</em>"
+                  class="best_in_place"
+                  id="{{= type }}_best_in_place_user_{{= contributor.id }}_phone">
+                {{= contributor.phone || "<em>add phone ...</em>" }}
+              </span>
+            </div>
+
+          </div>
+
+          {{ if (contribution.referrer_id) { }}
+            <div class='referrer-field'>
+              <label>Referred by:&nbsp;&nbsp;</label>
+              <span>{{= contribution.referrer.full_name }}
+            </div>
+          {{ } }}
+
+          <div class='notes-field'>
+            <i id="edit-{{= type }}-notes-{{= index }}"
+               class="glyphicon glyphicon-pencil bip-clickable cc-editable"></i>
+            <div class='cc-editable'>
+              <label>Notes:</label>
+            </div>
+            <div id="{{= type }}-notes-{{= index }}" class="cc-editable">
+              <span data-bip-type="textarea" data-bip-attribute="notes"
+                  data-bip-activator="#edit-{{= type }}-notes-{{= index }}"
+                  data-bip-html-attrs="{&quot;style&quot;:&quot;width:100%&quot;}"
+                  data-bip-object="contribution"
+                  data-bip-original-content="{{= contribution.notes }}"
+                  data-bip-value="{{= contribution.notes }}"
+                  data-bip-url="/contributions/{{= contribution.access_token }}"
+                  data-bip-placeholder="<em>add notes ...</em>"
+                  class="best_in_place"
+                  id="{{= type }}_best_in_place_contribution_{{= contribution.id }}_notes">
+                {{= contribution.notes || "<em>add notes ...</em>" }}
+              </span>
+            </div>
+          </div>
+
+          {{ if (type === 'connection') { }}
+
+            <div class='linkedin-container'>
+
+              <div class='linkedin-url-field'>
+                <i id='edit-linkedin-url-{{= index }}'
+                   class='glyphicon glyphicon-pencil bip-clickable cc-editable'></i>
+                <div class='cc-editable'>
+                  <label>LinkedIn profile:</label>
+                </div>
+                <div id='linkedin-url-{{= index }}' class='cc-editable'>
+                  <span data-bip-type="input" data-bip-attribute="linkedin_url"
+                      data-bip-activator="#edit-linkedin-url-{{= index }}"
+                      data-bip-html-attrs="{&quot;style&quot;:&quot;width:100%&quot;}"
+                      data-bip-placeholder="<em>add url ...</em>"
+                      data-bip-object="user"
+                      data-bip-original-content="{{= contributor.linkedin_url }}"
+                      data-bip-value="{{= contributor.linkedin_url }}"
+                      data-bip-url="/contributions/{{= contribution.access_token }}"
+                      class="best_in_place"
+                      id="best_in_place_user_{{= contributor.id }}_linkedin_url">
+                    {{= contributor.linkedin_url || "<em>add url ...</em>" }}
+                  </span>
+                </div>
+              </div>
+
+              <div class="linkedin-checkbox-and-widget {{= contributor.linkedin_url ? '' : 'hidden' }}">
+                <div
+                  data-toggle="{{= contribution.contributor_unpublished ? 'tooltip' : '' }}"
+                  data-placement="{{= contribution.contributor_unpublished ? 'top' : '' }}"
+                  title="{{= contribution.contributor_unpublished ? 'Contributor has removed their profile from this story' : '' }}">
+
+                  <div class="linkedin-checkbox-container {{= contribution.contributor_unpublished ? 'contributor-unpublished' : '' }}">
+
+                    <form class="curator-linkedin-checkbox"
+                          style="display:inline-block"
+                          id="edit_contribution_126"
+                          action="/contributions/{{= contribution.access_token }}"
+                          accept-charset="UTF-8"
+                          data-remote="true" method="post">
+
+                      <input name="utf8" type="hidden" value="✓">
+                      <input type="hidden" name="_method" value="put">
+
+                      <label for="contribution[publish_contributor]">
+                        <input name="contribution[publish_contributor]"
+                               type="hidden" value="false">
+                        <input type="checkbox"
+                               value="{{= contribution.publish_contributor }}"
+                               checked="{{= contribution.publish_contributor ? 'checked' : '' }}"
+                               name="contribution[publish_contributor]"
+                               id="contribution_publish_contributor">
+                        &nbsp;&nbsp;Publish profile with story
+                      </label>
+
+                    </form>
+
+                    <span class='ajax-confirm hidden' style='color:green'>
+                      &nbsp;&nbsp;<i class='fa fa-check'></i>saved
+                    </span>
+
+                  </div>
+                </div>
+
+                <div class='widget-container'>
+
+                  {{ if (contributor.linkedin_data) { }}
+
+                    <div class="csp-widget-container text-center"
+                         data-first-name="{{= contributor.first_name }}"
+                         data-last-name="{{= contributor.last_name }}"
+                         data-linkedin-url="{{= contributor.linkedin_url }}"
+                         data-linkedin-title="{{= contributor.linkedin_title }}"
+                         data-linkedin-company="{{= contributor.linkedin_company }}"
+                         data-linkedin-location="{{= contributor.linkedin_location }}"
+                         data-linkedin-photo-url="{{= contributor.linkedin_photo_url }}">
+                    </div>
+
+                  {{ } else { }}
+
+                    <div class='placeholder-widget-container text-center'
+                         style='min-height:128px'
+                         data-first-name="{{= contributor.first_name }}"
+                         data-last-name="{{= contributor.last_name }}"
+                         data-linkedin-url="{{= contributor.linkedin_url }}">
+                    </div>
+
+                    <div class='linkedin-widget-container hidden text-center'
+                         style='min-height:128px;position:relative'
+                         data-linkedin-url='{{= contributor.linkedin_url }}'>
+                      <!-- // to be filled in by js response -->
+                    </div>
+
+                  {{ } }}
+
+                </div>
+              </div>
+
+            </div>  <!-- // type == connection -->
+
+          {{ } }}
+        </div>  <!-- //.accordion-inner -->
+      </div>
+    </div>
+
+  {{ }); }}
+</script>

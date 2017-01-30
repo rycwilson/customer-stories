@@ -10,6 +10,7 @@
                 $modal = $('#email-confirmation-modal')
 
   setTimeouts();
+
   if (flashStatus === "info") {  // success
     if (contribution.status == 'request')
       removePreRequestCard(contribution.id);
@@ -63,7 +64,7 @@
   function updateConnectionCard () {
     $('#contribution-connections')
       .find(".contribution-card[data-contribution-id='" + contribution.id + "']")
-      .find(".contribution-status").text(contributionStatus);
+      .find(".contribution-status span").text(contributionStatus);
   }
 
 

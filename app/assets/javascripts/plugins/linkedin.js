@@ -1,10 +1,12 @@
 
 function initLinkedIn () {
 
-  if (app.screenSize === 'lg') {
-    $('.linkedin-widget').not('.linkedin-widget-wide').remove();
-  } else {
-    $('.linkedin-widget-wide').remove();
+  if ($('body').hasClass('stories show')) {
+    if (app.screenSize === 'lg') {
+      $('.linkedin-widget').not('.linkedin-widget-wide').remove();
+    } else {
+      $('.linkedin-widget-wide').remove();
+    }
   }
 
   if (typeof(IN) !== 'object') {

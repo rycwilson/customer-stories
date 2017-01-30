@@ -16,10 +16,20 @@ LINKEDIN_SHARE_URL = "//www.linkedin.com/shareArticle?mini=true&url="
 TWITTER_SHARE_URL = "//twitter.com/share?url="
 FACEBOOK_SHARE_URL = "//www.facebook.com/sharer.php?u="
 
-# EMBEDLY_API_BASE_URL = "https://api.embedly.com/1/oembed/key=#{}"
-
 GETCLICKY_API_BASE_URL = "http://api.clicky.com/api/stats/4"
 GETCLICKY_TRACKING_URL = "http://in.getclicky.com/in.php"
+
+VARMOUR_ADROLL_ADV_ID = "WZHVL3T2BFD67DGPDZXPOR"
+VARMOUR_ADROLL_PIX_ID = "S3NNBWGIABFTFAG3BRHH7P"
+VARMOUR_ADROLL_WIDGET_SEGMENT_ID = "d85eb604"
+
+TRUNITY_ADROLL_ADV_ID = "OYBCTHF2DBDYRHEAC5ILVM"
+TRUNITY_ADROLL_PIX_ID = "P77666QEWVCZJJXSGS32MX"
+TRUNITY_ADROLL_WIDGET_SEGMENT_ID = "6635e16c"
+
+YOUTUBE_BASE_URL = "https://www.youtube.com/embed/"
+VIMEO_BASE_URL = "https://player.vimeo.com/video/"
+WISTIA_BASE_URL = "https://fast.wistia.com/embed/medias/"
 
 CS_LOGO_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/cs_logo.png"
 CS_FULL_LOGO_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/cs_logo_full_1200x630.png"

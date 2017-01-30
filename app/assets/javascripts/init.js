@@ -1,10 +1,6 @@
 
 window.app = window.app || {
 
-  company: {},
-  stories: [],
-  current_user: {},
-
   browser: {  // ref: http://stackoverflow.com/questions/9847580
     isChrome: !!window.chrome && !!window.chrome.webstore,
     isSafari: Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0,
@@ -22,9 +18,6 @@ window.app = window.app || {
     // (this is a shorthand switch statement)
     (({
       'companies': function () {
-
-        app.betaFeatures();
-
         (({
           'new': companiesNew,
           'show': companiesShow,
@@ -32,8 +25,6 @@ window.app = window.app || {
         })[action])();
       },
       'stories': function () {
-        app.betaFeatures();
-
         (({
           'index': storiesIndex,
           'show': storiesShow,
@@ -62,13 +53,13 @@ window.app = window.app || {
 
   },
 
-  betaFeatures: function () {
-    if (this.company.feature_flag !== 'demo') {
-      // workflow features block
-      $('.tooltip-beta-measure').tooltip({ placement: 'right', container: 'body' });
-      $('.tooltip-beta-promote').tooltip({ placement: 'top' });
-    }
-  }
+  // betaFeatures: function () {
+  //   if (this.company.feature_flag !== 'demo') {
+  //     // workflow features block
+  //     $('.tooltip-beta-measure').tooltip({ placement: 'right', container: 'body' });
+  //     $('.tooltip-beta-promote').tooltip({ placement: 'top' });
+  //   }
+  // }
 };
 
 

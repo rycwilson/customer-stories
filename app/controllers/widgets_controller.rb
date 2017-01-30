@@ -1,3 +1,4 @@
+
 class WidgetsController < ApplicationController
 
   skip_before_action :verify_authenticity_token, only: [:script, :data]
@@ -10,11 +11,24 @@ class WidgetsController < ApplicationController
   end
 
   def data
+    # if request.subdomain == 'varmour'
+    #   segmentId = VARMOUR_ADROLL_WIDGET_SEGMENT_ID
+    #   advId = VARMOUR_ADROLL_ADV_ID
+    #   pixId = VARMOUR_ADROLL_PIX_ID
+    # elsif request.subdomain == 'trunity'
+    #   segmentId = TRUNITY_ADROLL_WIDGET_SEGMENT_ID
+    #   advId = TRUNITY_ADROLL_ADV_ID
+    #   pixId = TRUNITY_ADROLL_PIX_ID
+    # else
+    #   segmentId = nil
+    #   advId = nil
+    #   pixId = nil
+    # end
     html = widget_html params
     respond_to do |format|
       format.js do
         # Build a JSON object containing our HTML
-        json = { html: html }.to_json
+        json = { html: html, company: request.subdomain }.to_json
         # Get the name of the JSONP callback created by jQuery
         callback = params[:callback]
         # Wrap the JSON object with a call to the JSONP callback
@@ -23,6 +37,11 @@ class WidgetsController < ApplicationController
         render text: jsonp
       end
     end
+  end
+
+  def track
+    response.headers.delete('X-Frame-Options')
+    render layout: false
   end
 
   protected
@@ -50,10 +69,7 @@ class WidgetsController < ApplicationController
                   logger.debug "story: #{JSON.pretty_generate story.attributes.slice('id','title')}"
                   logger.debug "customer: #{JSON.pretty_generate story.success.customer.attributes}"
                   { logo: story.success.customer.logo_url,
-                    link: story.published ?
-                            URI.join(root_url(host: company_subdomain + '.' + request.domain),
-                                     story.csp_story_path).to_s
-                            : stories_index_url }
+                    link: story.published ? story.csp_story_url : stories_index_url }
                 end
 
     logger.debug JSON.pretty_generate(stories_links)
@@ -70,17 +86,9 @@ class WidgetsController < ApplicationController
                     </div>
                     <div class='cs-row row-horizon text-center'>"
 
-    # determine best column width given number of stories
-    case stories_links.length
-      when 1..10
-        xs_col_width = 4
-        sm_col_width = 3
-        md_col_width = 2
-      when 11..30
-        xs_col_width = 4
-        sm_col_width = 3
-        md_col_width = 2
-    end
+    xs_col_width = 4
+    sm_col_width = 3
+    md_col_width = 2
 
     # the bootstrap styling starts to break down after 30 stories
     stories_links.first(30).each do |story|

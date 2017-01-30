@@ -1,0 +1,73 @@
+<div id='stories-filters-xs' class="form-horizontal visible-xs-block">
+
+<% cache(category_select_cache_key + '-xs', skip_digest: true) do %>
+
+  <!-- only render if there are at least two distinct tags to choose between -->
+  <!-- includes 'All' placeholder (hence 2) -->
+  <% if is_curator && company.category_select_options.length > 2 %>
+
+    <div class='form-group'>
+      <%= label_tag :category_select, "Category", class: 'col-xs-3 control-label' %>
+      <div class='col-xs-6'>
+       <%= select_tag :category_select,
+        options_for_select(
+          company.category_select_options.unshift(["All", 0]),
+          pre_selected_filter[:tag] == 'category' ? [pre_selected_filter[:id]] : []
+        ),
+        { class: 'stories-filter category-select form-control' } %>
+      </div>
+    </div>
+
+  <% elsif company.public_category_select_options.length > 2 %>
+
+    <div class='form-group'>
+      <%= label_tag :category_select, "Category", class: 'col-xs-3 control-label' %>
+      <div class='col-xs-6'>
+       <%= select_tag :category_select,
+        options_for_select(
+          company.public_category_select_options,
+          pre_selected_filter[:tag] == 'category' ? [pre_selected_filter[:id]] : []
+        ),
+        { class: 'stories-filter category-select form-control' } %>
+      </div>
+    </div>
+
+  <% end %>
+
+<% end %>
+
+<% cache(product_select_cache_key + '-xs', skip_digest: true) do %>
+
+  <% if is_curator && company.product_select_options.length > 2 %>
+
+    <div class="form-group">
+      <%= label_tag :product_select, "Product", class: 'col-xs-3 control-label' %>
+      <div class="col-xs-6">
+        <%= select_tag :product_select,
+          options_for_select(
+            company.product_select_options.unshift(["All", 0]),
+            pre_selected_filter[:tag] == 'product' ? [pre_selected_filter[:id]] : []
+          ),
+          { class: 'stories-filter product-select form-control' } %>
+      </div>
+    </div>
+
+  <% elsif company.public_product_select_options.length > 2 %>
+
+    <div class="form-group">
+      <%= label_tag :product_select, "Product", class: 'col-xs-3 control-label' %>
+      <div class="col-xs-6">
+        <%= select_tag :product_select,
+          options_for_select(
+            company.public_product_select_options,
+            pre_selected_filter[:tag] == 'product' ? [pre_selected_filter[:id]] : []
+          ),
+          { class: 'stories-filter product-select form-control' } %>
+      </div>
+    </div>
+
+  <% end %>
+
+<% end %>
+
+</div>

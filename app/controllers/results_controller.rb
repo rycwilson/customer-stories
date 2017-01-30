@@ -6,6 +6,7 @@ class ResultsController < ApplicationController
     @base_url = request.base_url
     @result = Result.new description: params[:description]
     if @result.save
+      story.expire_results_fragment_cache
       story.success.results << @result
       @results = story.success.results
       respond_to { |format| format.js }

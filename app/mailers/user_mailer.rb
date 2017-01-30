@@ -18,6 +18,9 @@ class UserMailer < ApplicationMailer
   end
 
   def send_contribution_reminder contribution
+    # TODO: modify seeds so this check isn't necessary ...
+    # (a seeded user may have status 'request' with no email_contribution_request)
+    return false if contribution.email_contribution_request.nil?
     headers['X-SMTPAPI'] = { unique_args: {
                                 contribution_id: contribution.id
                              }}.to_json if production?

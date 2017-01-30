@@ -13,6 +13,8 @@ asset 'masonry'
 asset 'imagesloaded', '~4.1'
 asset 'bootstrap-horizon'
 asset 'js-cookie'
+asset 'moment'
+asset 'bootstrap-daterangepicker'
 
 # dependencies for MVP theme
 asset 'fontawesome', '~4.4.0'

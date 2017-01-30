@@ -1,13 +1,13 @@
 
 <% if curator_with_logo? %>
 
-  <%= link_to root_path, class: 'navbar-brand' do %>
+  <%= link_to @company.website, class: 'navbar-brand', target: '_blank' do %>
     <%= image_tag current_user.company.logo_url, alt: "#{@company.name} logo" %>
   <% end %>
 
 <% elsif curator_without_logo? %>
 
-  <%= link_to root_path, class: 'navbar-brand' do %>
+  <%= link_to @company.website, class: 'navbar-brand', target: '_blank' do %>
     <%= image_tag "company-logo-missing.png",
           alt: "#{@company.name} logo placeholder" %>
   <% end %>
@@ -39,10 +39,6 @@
 <% if stories? %>
 
   <h3>Customer Stories</h3>
-
-<% elsif story? %>
-
-  <h3>Customer Story</h3>
 
 <% end %>
 

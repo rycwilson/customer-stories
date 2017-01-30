@@ -8,32 +8,35 @@ class ApplicationController < ActionController::Base
 
   before_action :check_subdomain,
                   if: Proc.new { user_signed_in? },
-              unless: Proc.new { devise_controller? || invalid_subdomain? }
+              unless: Proc.new { devise_controller? || invalid_subdomain? ||
+                                 params[:controller] == 'widgets' }
 
   helper_method :company_curator?
 
   protected
 
-  def set_gon company=nil
-    is_curator = (current_user.try(:company_id) == company.try(:id))
-    if !cookies[:csp_init]
-      gon.push({
-        company: company.present? ?
-                    JSON.parse(company.to_json({ methods: :header_style })) : nil,
-        current_user: user_signed_in? ? {
-                        name: current_user.full_name,
-                        email: current_user.email,
-                        is_curator: is_curator } : nil,
-        stories: company.present? ? company.all_stories_json : nil,
-      })
+  def csp_environment
+    if ENV['HOST_NAME'] == 'customerstories.net'
+      return 'production'
+    elsif ENV['HOST_NAME'] == 'customerstories.org'
+      return 'staging'
     else
-      # This shouldn't be necessary.  If nothing is pushed, gon should be empty!
-      # Somehow setting a binding.pry at this location (without the code below)
-      # results in gon = {} on client.  But as soon as it's removed, gon is
-      # populated with data on client, despite nothing being pushed.
-      # Just be explicit:
-      gon.push({})
+      return 'development'
     end
+  end
+
+  def set_gon company=nil
+    is_curator = (user_signed_in? && (current_user.company_id == company.try(:id)))
+    gon.push({
+      company: company.present? ?
+                  JSON.parse(company.to_json({ methods: :header_style })) : nil,
+      current_user: user_signed_in? ? {
+                      name: current_user.full_name,
+                      email: current_user.email,
+                      is_curator: is_curator } : nil,
+      stories: company.present? ? company.all_stories_json : nil,
+      env: csp_environment
+    })
   end
 
   #  this method ensures signed in users can't jump to a subdomain they don't belong to

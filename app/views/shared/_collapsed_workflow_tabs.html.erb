@@ -10,7 +10,7 @@
     </a>
 
     <ul class="dropdown-menu" role="menu">
-      <% unless ['alpha', 'beta'].include? @company.feature_flag %>
+      <% unless ['alpha', 'beta'].include? company.feature_flag %>
         <li>
           <a href="javascript:;" role='tab' aria-controls='pipeline'>
             Pipeline
@@ -29,7 +29,7 @@
       </li>
       <li>
         <a href='javascript:;' role='tab' aria-controls='measure'
-            disabled="<%= ['alpha', 'beta'].include?(@company.feature_flag) ? true : false %>">
+            disabled="<%= ['alpha', 'beta'].include?(company.feature_flag) ? true : false %>">
           Measure
         </a>
       </li>

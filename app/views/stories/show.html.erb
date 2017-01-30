@@ -1,189 +1,151 @@
 
 <!-- turbolinks caching problematic with linkedin widgets  -->
 <% content_for :head do %>
+
   <meta name="turbolinks-cache-control" content="no-cache">
-  <%= render 'stories/shared/sub_linkedin_widget_template' %>
-  <%= render 'stories/shared/story_show_meta_tags',
-              { company: @company, success: @success, story: @story,
-                owns: @owns_jsonld, contributors: @contributors_jsonld,
-                about: @about_jsonld } %>
+
+  <%= render 'stories/shared/csp_linkedin_widget_template' %>
+
+  <% if production? %>
+    <% cache("#{@company.subdomain}/story-#{@story.id}-meta-tags",
+             skip_digest: true, expires_in: 1.week) do %>
+      <%= render 'stories/shared/story_meta_tags',
+            { company: @company, success: @story.success, story: @story } %>
+    <% end %>
+  <% end %>
+
 <% end %>
 
-<%= render 'stories/shared/story_show_video_modal' %>
+<%= render 'stories/shared/video_modal' %>
 
-<div class='wrapper'>
+<% @story.outbound_actions
+         .select { |action| action.type == 'OutboundForm' }
+         .each do |form| %>
 
-  <% if @company.curator?(current_user) %>
+  <%= render 'stories/shared/outbound_form_modal', { form: form } %>
 
-    <%= render 'shared/mainnav' %>
+<% end %>
+
+<!--
+  why use memcache iterators here?
+  because when a given story updates (title, csp_story_path, customer logo_url),
+  this expires its prev/next navigation fragment, as well as the parent story.
+  but how to know what the parent story is from the context of the story that's
+  expiring its prev/next navigation cache?  That would require a costly lookup operation.
+  instead, use memcache iterators
+-->
+<%# cache("#{@company.subdomain}/#{@is_curator ? 'curator' : 'public'}/story-#{@story.id}-prev-next-mi-#{@prev_story.prev_next_memcache_iterator}-mi-#{@next_story.prev_next_memcache_iterator}", skip_digest: true) do %>
+
+  <%#= render 'stories/shared/prev_next_stories',
+        { company: @company, story: @story,
+          prev_story: @prev_story, next_story: @next_story } %>
+
+<%# end %>
+
+<% if @is_curator %>
+
+  <%= render 'shared/company_navbar', { company: @company, workflow_tab: nil } %>
+
+<% end %>
+
+<div class="mainnav" style='min-height:42px!important;position:relative'>
+
+  <!-- clicky_log class present only for production, so separate the fragments -->
+  <% if @is_curator && production? %>
+
+    <% cache("#{@company.subdomain}/curator-story-#{@story.id}-header-production",
+             skip_digest: true) do %>
+      <%= render 'stories/shared/story_header',
+          { story: @story, is_curator: true, production: true,
+            customer: @story.success.customer } %>
+    <% end %>
+
+  <% elsif @is_curator %>
+
+    <% cache("#{@company.subdomain}/curator-story-#{@story.id}-header-not-production",
+             skip_digest: true) do %>
+      <%= render 'stories/shared/story_header',
+          { story: @story, is_curator: true, production: false,
+            customer: @story.success.customer  } %>
+    <% end %>
+
+  <% elsif production? %>
+
+    <% cache("#{@company.subdomain}/public-story-#{@story.id}-header-production",
+             skip_digest: true) do %>
+      <%= render 'stories/shared/story_header',
+          { story: @story, is_curator: false, production: true,
+            customer: @story.success.customer } %>
+    <% end %>
+
+  <% else %>
+
+    <% cache("#{@company.subdomain}/public-story-#{@story.id}-header-not-production",
+             skip_digest: true) do %>
+      <%= render 'stories/shared/story_header',
+          { story: @story, is_curator: false, production: false,
+            customer: @story.success.customer } %>
+    <% end %>
 
   <% end %>
 
-  <!-- customer name, social sharing  -->
-  <div class="mainnav">
-    <div class="container">
-      <div id='story-header' class="row">
+</div>
 
-        <div id='story-customer-name' class="hidden-xs col-sm-9">
-          <h3><%= @story.success.customer.name %></h3>
-        </div>
+<div id='story-section-testimonial'>  <!-- includes video -->
 
-        <div id='story-customer-name-xs' class="col-xs-12 visible-xs-block">
-          <h3><%= @story.success.customer.name %></h3>
-        </div>
+  <% cache("#{@company.subdomain}/story-#{@story.id}-testimonial",
+           skip_digest: true) do %>
+    <%= render 'stories/shared/story_testimonial', { story: @story } %>
+  <% end %>
 
-        <div id='social-buttons' class="col-sm-3 hidden-xs text-center">
-          <a class="icon-button linkedin <%= production? ? 'clicky_log' : '' %>" target="_blank"
-             href="<%= LINKEDIN_SHARE_URL + @story.csp_story_url %>">
-            <i class="fa fa-linkedin"></i><span></span>
+</div>
+
+<!-- video (xs only) -->
+<div id='story-section-video-xs' class='visible-xs'>
+
+  <% cache("#{@company.subdomain}/story-#{@story.id}-video-xs",
+           skip_digest: true) do %>
+    <%= render 'stories/shared/story_video_xs', { story: @story } %>
+  <% end %>
+
+</div>
+
+<div id='social-buttons-xs' class="visible-xs text-right">
+
+  <% cache("story-social-buttons-xs", skip_digest: true) do %>
+    <%= render 'stories/shared/social_buttons_xs', { story: @story } %>
+  <% end %>
+
+</div>
+
+<!-- story content, results, contributing team -->
+<div id='story-section-content'>
+
+  <%= render 'stories/shared/story_content',
+      { company: @company, story: @story, contributors: @contributors } %>
+
+</div>
+
+<% unless user_signed_in? %>
+  <div class='hidden-xs' style='border:1px solid #e3e3e3;z-index:1000'>
+    <div class='container' style='padding:15px 0 15px 0' id='story-footer'>
+
+      <div class="row" style='font-size:0'>
+        <div class="col-sm-6" style='display:inline-block;float:none'>
+          <a href="<%= csp_landing %>">
+            <img src="<%= CS_POWERED_LOGO_URL %>" alt="Powered by Customer Stories">
           </a>
-          <a href="<%= TWITTER_SHARE_URL + @story.csp_story_url %>"
-             class="icon-button twitter <%= production? ? 'clicky_log' : '' %>" target="_blank">
-            <i class="fa fa-twitter"></i><span></span>
-          </a>
-          <a href="<%= FACEBOOK_SHARE_URL + @story.csp_story_url %>"
-             class="icon-button facebook <%= production? ? 'clicky_log' : '' %>" target="_blank">
-            <i class="fa fa-facebook"></i><span></span>
-          </a>
         </div>
+        <div class="col-sm-6 text-right" style='display:inline-block;float:none;vertical-align:middle'>
+          <h5 style='margin:0'>
+          <%= @company.name %> Curators <%= link_to 'Login', new_user_session_path %>
 
-      </div>
-    </div>   <!-- container -->
-  </div>  <!-- mainnav -->
-
-  <div id='story-section-testimonial'>
-    <div class="container">
-
-        <%= render 'stories/shared/story_show_testimonial',
-              { story: @story, story_has_video: @story_has_video } %>
-
-    </div>  <!-- logo, quote, video -->
-  </div>
-
-  <!-- video (xs only) -->
-  <div id='story-section-video-xs'>
-    <div class="container">
-      <div class='row'>
-        <div class="col-xs-10 col-xs-offset-1
-                <%= @story_has_video ? 'visible-xs-block' : 'hidden' %>">
-
-          <!-- <div itemprop='video' itemscope itemtype='//schema.org/VideoObject'> -->
-            <!-- <meta itemprop='' itemcontent=''> -->
-
-            <% if @story.video_info[:provider] == 'wistia' %>
-
-              <script src="//fast.wistia.com/embed/medias/<%= @story.video_info[:provider] %>.jsonp" async></script>
-              <script src="//fast.wistia.com/assets/external/E-v1.js" async></script>
-              <div class="wistia_responsive_padding"
-                   style="padding:56.25% 0 0 0;position:relative;">
-                <div class="wistia_responsive_wrapper"
-                     style="height:100%;left:0;position:absolute;top:0;width:100%;">
-                  <div class="wistia_embed wistia_async_<%= @story.video_info[:id] %> videoFoam=true"
-                       style="height:100%;width:100%">&nbsp;
-                  </div>
-                </div>
-              </div>
-
-            <% else %>
-
-              <div class="video-thumb-container embed-responsive embed-responsive-16by9"
-                 data-toggle='modal' data-target='#story-video-modal'
-                 data-provider="<%= @story.video_info[:provider] %>"
-                 data-video-id="<%= @story.video_info[:id] %>"
-                 data-video-url="<%= @story.embed_url %>">
-              </div>
-
-            <% end %>
-
-          <!-- </div> -->  <!-- meta VideoObject -->
-        </div>
-        <div class="col-xs-1">
-          <!-- space filler -->
+          </h5>
         </div>
       </div>
+
     </div>
   </div>
+<% end %>
 
-  <div id='social-buttons-xs' class="visible-xs text-right">
-    <a href="//www.linkedin.com/shareArticle?mini=true&url=<%= @story.csp_story_url %>"
-       class="icon-button-xs linkedin <%= production? ? 'clicky_log' : '' %>" target="_blank">
-      <i class="fa fa-linkedin"></i><span></span>
-    </a>
-    <a href="//twitter.com/share?url=<%= @story.csp_story_url %>"
-       class="icon-button-xs twitter <%= production? ? 'clicky_log' : '' %>" target="_blank">
-      <i class="fa fa-twitter"></i><span></span>
-    </a>
-    <a href="//www.facebook.com/sharer.php?u=<%= @story.csp_story_url %>"
-       class="icon-button-xs facebook <%= production? ? 'clicky_log' : '' %>" target="_blank">
-      <i class="fa fa-facebook"></i><span></span>
-    </a>
-  </div>
-
-  <!-- story content, results, contributing team -->
-  <div id='story-section-content'>
-    <div class="container">
-
-      <div class='col-sm-6 col-md-7'>
-        <div class='well story-narration'>
-
-          <h3><%= @story.title %></h3>
-
-          <div class="visible-md-block visible-lg-block">
-            <%= simple_format @story.content %>
-          </div>
-          <div class="hidden-md hidden-lg">
-            <%= simple_format @story.content %>
-          </div>
-
-        </div>
-      </div>
-
-      <div class='col-sm-6 col-md-5'>
-
-        <div id='story-results' class="well">
-          <h3 class='text-center'>Results</h3>
-          <% @story.success.results.each do |result| %>
-          <div class="row">
-            <div class="col-xs-1">
-            <i class='fa fa-check'></i>&nbsp;&nbsp;&nbsp;&nbsp;
-
-            </div>
-            <div class="col-xs-11">
-
-            <p><%= result.description %></p>
-            </div>
-          </div>
-          <% end %>
-        </div>
-
-        <div class="linkedin-widgets text-center">
-
-          <h3>Contributing Team</h3>
-
-          <% @contributors.each do |contributor| %>
-
-            <div class="linkedin-widget linkedin-widget-wide">
-              <script type="IN/MemberProfile"
-                      data-id="<%= contributor.linkedin_url %>"
-                      data-format="inline"
-                      data-related="true"
-                      data-width='420'></script>
-            </div>
-
-            <div class="linkedin-widget">
-              <script type="IN/MemberProfile"
-                      data-id="<%= contributor.linkedin_url %>"
-                      data-format="inline"
-                      data-related="true"
-                      data-width='340'></script>
-            </div>
-
-          <% end %>
-
-
-        </div>
-      </div>
-    </div>
-  </div>
-</div>  <!-- wrapper -->
 

@@ -1,3 +1,4 @@
+# Settings specified here will take precedence over those in config/application.rb.
 Rails.application.configure do
 
   # restrict access to staging site
@@ -6,8 +7,6 @@ Rails.application.configure do
       [u, p] == ['csp', 'csp-stag!ng']
     end
   end
-
-  # Settings specified here will take precedence over those in config/application.rb.
 
   # moved from session_store.rb
   if ENV['HOST_NAME'] == 'customerstories.net'
@@ -25,9 +24,8 @@ Rails.application.configure do
   # Rake tasks automatically ignore this option for performance.
   config.eager_load = true
 
-  # Full error reports are disabled and caching is turned on.
-  config.consider_all_requests_local       = false
-  config.action_controller.perform_caching = true
+  # Full error reports are disabled
+  config.consider_all_requests_local = false
 
   # Enable Rack::Cache to put a simple HTTP cache in front of your application
   # Add `rack-cache` to your Gemfile before enabling this.
@@ -57,11 +55,15 @@ Rails.application.configure do
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
 
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
-  config.force_ssl = true if Rails.env == 'production'
+  config.force_ssl = true
 
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
-  config.log_level = :warn
+  if ENV['HOST_NAME'] == 'customerstories.net'
+    config.log_level = :warn
+  else
+    config.log_level = :debug
+  end
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :subdomain, :uuid ]
@@ -69,8 +71,20 @@ Rails.application.configure do
   # Use a different logger for distributed setups.
   # config.logger = ActiveSupport::TaggedLogging.new(SyslogLogger.new)
 
-  # Use a different cache store in production.
-  # config.cache_store = :mem_cache_store
+  # global memcached enable/disable
+  config.perform_caching = true
+  # fragment and page caching
+  config.action_controller.perform_caching = true
+  config.cache_store = :dalli_store,
+                       (ENV["MEMCACHIER_SERVERS"] || "").split(","),
+                       {:username => ENV["MEMCACHIER_USERNAME"],
+                        :password => ENV["MEMCACHIER_PASSWORD"],
+                        :failover => true,
+                        :socket_timeout => 1.5,
+                        :socket_failure_delay => 0.2,
+                        :down_retry_delay => 60,
+                        :pool_size => 5  # server threads/concurrency
+                       }
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.action_controller.asset_host = 'http://assets.example.com'

@@ -15,6 +15,11 @@ gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 
+gem 'dalli'
+gem 'connection_pool'
+
+gem 'browser-timezone-rails'
+gem 'local_time'
 gem 'rails_admin'
 gem 'devise'
 gem 'turbolinks', '~> 5.0.0'
@@ -42,13 +47,17 @@ gem 'pry-byebug'
 
 group :production do
 
-  gem 'puma'
   gem 'rails_12factor'
+  gem 'puma'
 
 end
 
 group :development, :test do
 
+  # gem 'rack-mini-profiler'
+  # gem 'flamegraph'
+  # gem 'stackprof'
+  gem 'meta_request'  # rails panel chrome extension
   gem 'whenever', require: false
   gem 'better_errors'
   # Access an IRB console on exception pages or by using <%= console %> in views

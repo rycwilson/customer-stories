@@ -26,6 +26,16 @@ module StoriesHelper
     controller_name == 'stories' && action_name == 'index'
   end
 
+  def csp_landing
+    if ENV['HOST_NAME'] == 'customerstories.net'
+      'https://customerstories.net'
+    elsif ENV['HOST_NAME'] == 'customerstories.org'
+      'https://customerstories.org'
+    else
+      'http://lvh.me:3000'
+    end
+  end
+
   def grid_item_link company_id, story
     if story.published?
       story.csp_story_path

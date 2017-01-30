@@ -44,9 +44,9 @@
 
   <% end %>
 
-  <%= render 'layouts/footer_analytics' %>
-
   <%= yield %>
+
+  <%= render 'layouts/footer_analytics', { company: @company } %>
 
 </body>
 </html>

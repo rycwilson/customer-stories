@@ -45,7 +45,6 @@
             });
             // wait for all images to load so dimension calculations are correct ...
             $images.on('load', function (e) {
-              console.log('csp-img-load: ', e.target.src);
               if (++loadedImages === $images.length) {
                 slideDrawerPlugin();
                 preventScrollNav();
@@ -65,6 +64,7 @@
                   slideTimeoutCount: 3000 // How long to wait before sliding drawer slides down.
                 });
                 $('#cs-container .cs-drawer').css('visibility', 'visible');
+                trackVisitor(data.company);
               }
             });
           }
@@ -314,6 +314,21 @@
     for (var i = 1; i <= numPages; i++) {
       if (position + (carouselWidth / 2) < pageWidth * i) { return i }
     }
+  }
+
+  function trackVisitor (companySubdomain) {
+
+    $('#cs-container').append(
+      '<iframe class="cs-iframe" height="0" width="0" style="display:none" ' +
+      'src="https://' + companySubdomain + '.customerstories.net/track_widget"></iframe>');
+
+    // var trackingDoc = $('#cs-container').find('iframe')[0].contentWindow.document,
+    //     trackingHost = (("https:" == document.location.protocol) ? "https://s.adroll.com" : "http://a.adroll.com"),
+    //     trackingUrl = trackingHost + '/j/roundtrip.js';
+
+    // trackingDoc.open();
+    // trackingDoc.write("<html><head><script>adroll_adv_id='" + advId + "';adroll_pix_id='" + pixId + "';</script><script src='" + trackingUrl + "'></script><script>setTimeout(function(){try{__adroll.record_user({'adroll_segments':'" + segmentId + "'})}catch(err){};},1000);</script></head></html>");
+    // trackingDoc.close();
   }
 
 }(window, document));

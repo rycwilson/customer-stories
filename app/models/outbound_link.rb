@@ -1,0 +1,2 @@
+class OutboundLink < OutboundAction
+end

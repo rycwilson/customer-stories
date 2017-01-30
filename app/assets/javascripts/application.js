@@ -22,17 +22,12 @@ $(document).on('turbolinks:load', function (e) {
 });
 
 $(document).one('turbolinks:load', function () {
-  attachAppHandlers();
-  attachCompaniesHandlers();
-  attachStoriesHandlers();
-  attachProfileHandlers();
-  attachContributionsHandlers();
+  attachAppListeners();
+  attachCompaniesListeners();
+  attachStoriesListeners();
+  attachProfileListeners();
+  attachContributionsListeners();
 });
-
-window.onbeforeunload = function() {
-  // console.log('onbeforeunload');
-  Cookies.remove('csp_init');
-};
 
 function setAppData () {
   if (window.gon) {  // use window.gon in case undefined
@@ -43,27 +38,23 @@ function setAppData () {
   app.company = (window.gon && gon.company) || app.company || null;
   app.stories = (window.gon && gon.stories) || app.stories || null;
   app.current_user = (window.gon && gon.current_user) || app.current_user || null;
+  app.env = (window.gon && gon.env) || app.env || null;
+  app.charts = (window.gon && gon.charts) || gon.charts || null;
   // console.log('app: ', app);
   getScreenSize();
 }
 
-function attachAppHandlers () {
+function attachAppListeners () {
 
-  popoverHandlers();
+  popoverListeners();
 
   $(document).on('click', '.workflow-tabs a', function (e) {
     if ($('body').hasClass('companies show')) {
       return false;  // TODO: why does this work but not e.preventDefault()?
     }
-
     var workflowTab = $(this).attr('href').substr(1, $(this).attr('href').indexOf('-')-1);
-
-    if (workflowTab === 'measure' && app.company.feature_flag !== 'demo') {
-      e.preventDefault();
-    } else {
-      Cookies.set('csp_workflow_tab', workflowTab);
-      Turbolinks.visit('/companies/' + app.company.id.toString());
-    }
+    Cookies.set('csp_workflow_tab', workflowTab);
+    Turbolinks.visit('/companies/' + app.company.id.toString());
   });
 
   $(document)
