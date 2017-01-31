@@ -55,7 +55,7 @@
 
         <script src="//fast.wistia.com/embed/medias/<%= story.video_info[:id] %>.jsonp" async></script>
         <script src="//fast.wistia.com/assets/external/E-v1.js" async></script>
-        <div class="wistia_responsive_padding"
+        <div class="wistia_responsive_padding <%= production? ? 'clicky_log' : '' %>"
              style="padding:56.25% 0 0 0; position:relative;">
           <div class="wistia_responsive_wrapper"
                style="height:100%;left:0;position:absolute;top:0;width:100%;">
@@ -68,7 +68,7 @@
 
       <% else %>
 
-        <div class="video-thumb-container"
+        <div class="video-thumb-container <%= production? ? 'clicky_log' : '' %>"
              data-toggle='modal' data-target='#story-video-modal'
              data-provider="<%= story.video_info[:provider] %>"
              data-video-id="<%= story.video_info[:id] %>"

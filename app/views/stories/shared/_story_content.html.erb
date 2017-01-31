@@ -91,7 +91,7 @@
 
             <% cache("#{company.subdomain}/story-#{story.id}-contributor-#{contributor.id}", skip_digest: true) do %>
 
-              <div class="linkedin-widget linkedin-widget-wide">
+              <div class="linkedin-widget linkedin-widget-wide <%= production? ? 'clicky_log' : '' %>">
                 <script type="IN/MemberProfile"
                         data-id="<%= contributor.linkedin_url %>"
                         data-format="inline"
@@ -99,7 +99,7 @@
                         data-width='420'></script>
               </div>
 
-              <div class="linkedin-widget">
+              <div class="linkedin-widget <%= production? ? 'clicky_log' : '' %>">
                 <script type="IN/MemberProfile"
                         data-id="<%= contributor.linkedin_url %>"
                         data-format="inline"
@@ -117,7 +117,7 @@
 
     <% if @related_stories.length >= 2 %>
 
-      <div id='related-stories' class='wtf well visible-xs'>
+      <div id='related-stories' class='well visible-xs'>
 
         <div class="row">
           <div class="col-xs-12">
