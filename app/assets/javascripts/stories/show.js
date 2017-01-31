@@ -19,8 +19,9 @@ function widgetsClickyLog () {
 
   var clickyLog = function (e) {
     if (typeof clicky !== 'undefined') {
-      var storyTitleSlug = window.location.href.slice(window.location.href.lastIndexOf('/') + 1, window.location.href.length);
-      clicky.log(storyTitleSlug, 'LinkedIn profile click: ' + e.data.contributor);
+      var page = window.location.href,
+          storyTitleSlug = page.split('/').slice(3,page.length).join('/');
+      clicky.log(storyTitleSlug, 'LinkedIn profile click: ' + e.data.contributor.toString());
     }
   };
 
