@@ -34,7 +34,7 @@
         <% if @company.cta_button.try(:btn_text).present? %>
 
           <%= link_to @company.cta_button.btn_text,
-                @company.cta_button.url, class: "btn cta_btn #{production? ? 'clicky_log' : ''}", target: '_blank',
+                @company.cta_button.url, class: "btn cta_btn", target: '_blank',
                 style: "background-color:#{@company.cta_button.background_color};color:#{@company.cta_button.color};border-color:#{@company.cta_button.background_color}" %>
 
         <% end %>
