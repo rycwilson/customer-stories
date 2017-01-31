@@ -2,11 +2,37 @@
 function storiesShow () {
   loadVideoThumbnail();
   widgetsMonitor();
+  widgetsClickyLog();
 
-  $(document).on('click', '.outbound-form', function () {
-    $('#outbound-form-modal').modal('show');
-  });
+  $(document).on('click', '.outbound-form',
+    function () {
+      $('#outbound-form-modal').modal('show');
+    });
 
+}
+
+// NOTE: the contributor data must be passed to the callback as shown;
+// if passed via argument, with a 'contributor' parameter in the callback
+// and callback returning a function, then $(window).off() won't correctly
+// turn off the event listener
+function widgetsClickyLog () {
+
+  var clickyLog = function (e) {
+    if (typeof clicky !== 'undefined') {
+      var storyTitleSlug = window.location.href.slice(window.location.href.lastIndexOf('/') + 1, window.location.href.length);
+      clicky.log(storyTitleSlug, 'LinkedIn profile click: ' + e.data.contributor);
+    }
+  };
+
+  $(document).on('mouseover', '.linkedin-widget',
+    function () {
+      $(window).on('blur', { contributor: $(this).data('contributor') }, clickyLog);
+    });
+
+  $(document).on('mouseout', '.linkedin-widget',
+    function () {
+      $(window).off('blur', clickyLog);
+    });
 }
 
 /*
@@ -39,7 +65,6 @@ function widgetsMonitor () {
           if (event.origin === "https://platform.linkedin.com" &&
               event.data.includes('-ready') && firstWidgetIndex === null) {
             firstWidgetIndex = parseInt(event.data.match(/\w+_(\d+)-ready/)[1], 10);
-
           } else if (event.origin === "https://platform.linkedin.com" &&
               event.data.includes('widgetReady')) {
             currentWidgetIndex = parseInt(event.data.match(/\w+_(\d+)\s/)[1], 10);
