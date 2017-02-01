@@ -9,15 +9,15 @@
         <% if action.type == 'OutboundLink' %>
 
           <a href="<%= action.link_url %>" target='_blank'
-             class="<%= production? ? 'clicky_log' : '' %>">
+             class="<%= production? ? 'clicky_log_outbound' : '' %>">
             <%= action.display_text %>
           </a>
 
         <% else %>  <!-- OutboundForm -->
 
           <a href="#outbound-form-<%= action.id %>-modal"
-                class="outbound-form <%= production? ? 'clicky_log' : '' %>" data-toggle='modal'
-                data-target="#outbound-form-<%= action.id %>-modal">
+             class="outbound-form <%= production? ? 'clicky_log_outbound' : '' %>" data-toggle='modal'
+             data-target="#outbound-form-<%= action.id %>-modal">
             <%= action.display_text %>
           </a>
 
