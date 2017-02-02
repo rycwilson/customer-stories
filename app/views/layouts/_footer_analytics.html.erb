@@ -1,4 +1,7 @@
 
+<!-- ref: http://stackoverflow.com/questions/10808109/script-tag-async-defer -->
+<!-- ref: http://stackoverflow.com/questions/6026645/document-readyfunction-vs-script-at-the-bottom-of-page -->
+
 <% if include_gtm?(company, current_user, controller_name, action_name) %>
 
   <!-- Google Tag Manager (for browser with js disabled) -->
@@ -29,7 +32,7 @@
       var google_remarketing_only = true;
       /* ]]> */
     </script>
-    <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+    <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js" async>
     </script>
     <!-- browsers with js disabled -->
     <noscript>
