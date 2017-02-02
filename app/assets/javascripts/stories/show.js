@@ -19,15 +19,13 @@ function widgetsClickyLog () {
 
   var clickyLog = function (e) {
     if (typeof clicky !== 'undefined') {
-      var page = window.location.href,
-          storyTitleSlug = page.split('/').slice(3,page.length).join('/');
-      clicky.log(storyTitleSlug, 'LinkedIn profile click: ' + e.data.contributor.toString());
+      clicky.log(linkedinUrl, $('title').text(), 'outbound');
     }
   };
 
   $(document).on('mouseover', '.linkedin-widget',
     function () {
-      $(window).on('blur', { contributor: $(this).data('contributor') }, clickyLog);
+      $(window).on('blur', { linkedinUrl: $(this).data('linkedin-url') }, clickyLog);
     });
 
   $(document).on('mouseout', '.linkedin-widget',

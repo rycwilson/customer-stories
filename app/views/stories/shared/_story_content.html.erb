@@ -91,7 +91,8 @@
 
             <% cache("#{company.subdomain}/story-#{story.id}-contributor-#{contributor.id}", skip_digest: true) do %>
 
-              <div class="linkedin-widget linkedin-widget-wide" data-contributor="<%= contributor.id %>">
+              <div class="linkedin-widget linkedin-widget-wide"
+                   data-linkedin-url="<%= contributor.linkedin_url %>">
                 <script type="IN/MemberProfile"
                         data-id="<%= contributor.linkedin_url %>"
                         data-format="inline"
@@ -99,7 +100,8 @@
                         data-width='420'></script>
               </div>
 
-              <div class="linkedin-widget" data-contributor="<%= contributor.id %>">
+              <div class="linkedin-widget"
+                   data-linkedin-url="<%= contributor.linkedin_url %>">
                 <script type="IN/MemberProfile"
                         data-id="<%= contributor.linkedin_url %>"
                         data-format="inline"
