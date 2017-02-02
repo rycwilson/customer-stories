@@ -41,6 +41,7 @@ namespace :clicky do
     Visitor.find_by(clicky_uid: 6314802).try(:destroy)
     Visitor.find_by(clicky_uid: 1888001310).try(:destroy)
     Visitor.find_by(clicky_uid: 2953643240).try(:destroy)   # safari
+    Visitor.find_by(clicky_uid: 1446025430).try(:destroy)   # safari
 
     # update cache
     Company.all.each do |company|
@@ -84,6 +85,7 @@ namespace :clicky do
     Visitor.find_by(clicky_uid: 6314802).try(:destroy)
     Visitor.find_by(clicky_uid: 1888001310).try(:destroy)
     Visitor.find_by(clicky_uid: 2953643240).try(:destroy)   # safari
+    Visitor.find_by(clicky_uid: 1446025430).try(:destroy)   # safari
 
     # update cache
     Company.all.each do |company|
