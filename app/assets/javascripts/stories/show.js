@@ -1,5 +1,6 @@
 
 function storiesShow () {
+
   loadVideoThumbnail();
   widgetsMonitor();
   widgetsClickyLog();
@@ -20,11 +21,14 @@ function widgetsClickyLog () {
   var clickyLog = function (e) {
     if (typeof clicky !== 'undefined') {
       clicky.log(e.data.linkedinUrl, $('title').text(), 'outbound');
+      // window won't focus if this is executed synchronously ...
+      window.setTimeout(function () { this.focus(); }, 200);
     }
   };
 
   $(document).on('mouseover', '.linkedin-widget',
     function () {
+      window.focus();
       $(window).on('blur', { linkedinUrl: $(this).data('linkedin-url') }, clickyLog);
     });
 
