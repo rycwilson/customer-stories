@@ -19,7 +19,7 @@ function widgetsClickyLog () {
 
   var clickyLog = function (e) {
     if (typeof clicky !== 'undefined') {
-      clicky.log(linkedinUrl, $('title').text(), 'outbound');
+      clicky.log(e.data.linkedinUrl, $('title').text(), 'outbound');
     }
   };
 
