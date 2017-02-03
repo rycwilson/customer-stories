@@ -49,14 +49,26 @@ namespace :clicky do
     Company.all.each do |company|
       unless company.subdomain == 'zoommarketing'
         ActionController::Base.new.expire_fragment("#{company.subdomain}/recent-activity")
-        Rails.cache.write("#{company.subdomain}/recent-activity",
-                          company.recent_activity(30))
-        Rails.cache.write("#{company.subdomain}/visitors-chart-default",
-                          company.visitors_chart_json(nil, 30.days.ago.to_date, Date.today))
-        Rails.cache.write("#{company.subdomain}/stories-table",
-                          company.stories_table_json)
-        Rails.cache.write("#{company.subdomain}/visitors-table-default",
-                          company.visitors_table_json(nil, 30.days.ago.to_date, Date.today))
+        Rails.cache.write(
+          "#{company.subdomain}/recent-activity",
+          company.recent_activity(30)
+        )
+        Rails.cache.write(
+          "#{company.subdomain}/visitors-chart-default",
+          company.visitors_chart_json(nil, 30.days.ago.to_date, Date.today)
+        )
+        Rails.cache.write(
+          "#{company.subdomain}/referrer-types-default",
+          company.referrer_types_chart_json(nil, 30.days.ago.to_date, Date.today)
+        )
+        Rails.cache.write(
+          "#{company.subdomain}/stories-table",
+          company.stories_table_json
+        )
+        Rails.cache.write(
+          "#{company.subdomain}/visitors-table-default",
+          company.visitors_table_json(nil, 30.days.ago.to_date, Date.today)
+        )
       end
     end
   end
@@ -99,16 +111,29 @@ namespace :clicky do
     Company.all.each do |company|
       unless company.subdomain == 'zoommarketing'
         ActionController::Base.new.expire_fragment("#{company.subdomain}/recent-activity")
-        Rails.cache.write("#{company.subdomain}/recent-activity",
-                          company.recent_activity(30))
-        Rails.cache.write("#{company.subdomain}/visitors-chart-default",
-                          company.visitors_chart_json(nil, 30.days.ago.to_date, Date.today))
-        Rails.cache.write("#{company.subdomain}/stories-table",
-                          company.stories_table_json)
-        Rails.cache.write("#{company.subdomain}/visitors-table-default",
-                          company.visitors_table_json(nil, 30.days.ago.to_date, Date.today))
+        Rails.cache.write(
+          "#{company.subdomain}/recent-activity",
+          company.recent_activity(30)
+        )
+        Rails.cache.write(
+          "#{company.subdomain}/visitors-chart-default",
+          company.visitors_chart_json(nil, 30.days.ago.to_date, Date.today)
+        )
+        Rails.cache.write(
+          "#{company.subdomain}/referrer-types-default",
+          company.referrer_types_chart_json(nil, 30.days.ago.to_date, Date.today)
+        )
+        Rails.cache.write(
+          "#{company.subdomain}/stories-table",
+          company.stories_table_json
+        )
+        Rails.cache.write(
+          "#{company.subdomain}/visitors-table-default",
+          company.visitors_table_json(nil, 30.days.ago.to_date, Date.today)
+        )
       end
     end
+
   end
 
   def get_clicky_visitors_range range

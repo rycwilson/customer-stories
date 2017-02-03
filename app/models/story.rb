@@ -220,17 +220,14 @@ class Story < ActiveRecord::Base
 
   # method returns a friendly id path that either contains or omits a product
   def csp_story_path
-    company = self.success.customer.company
+    company = self.success.company
+    success = self.success
     Rails.cache.fetch("#{company.subdomain}/csp-story-#{self.id}-path") do
       url_helpers = Rails.application.routes.url_helpers
-      success = self.success
       if success.products.present?
-        url_helpers.public_story_path(success.customer.slug,
-                                      success.products.take.slug,
-                                      self.slug)
+        url_helpers.public_story_path(success.customer.slug, success.products.take.slug, self.slug)
       else
-        url_helpers.public_story_no_product_path(success.customer.slug,
-                                                 self.slug)
+        url_helpers.public_story_no_product_path(success.customer.slug, self.slug)
       end
     end
   end
