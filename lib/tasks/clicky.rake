@@ -30,84 +30,46 @@ namespace :clicky do
     new_visitor_sessions = parse_clicky_sessions(visitors_list)
     # get actions associated with sessions
     get_clicky_actions(new_visitor_sessions)
-    # anyone viewing a story prior to publish date is a curator or CSP staff - remove!
-    # TODO: limit this scope to recenty added items
-    Visitor.joins(:visitor_sessions, :stories)
-           .where('stories.published = ? OR stories.publish_date > visitor_sessions.timestamp', false)
-           .destroy_all
 
-    # Ryan
-    Visitor.joins(:visitor_actions)
-           .where(visitor_actions: { company_id: 1 } )  # acme-test
-           .try(:destroy_all)
-    Visitor.find_by(clicky_uid: 6314802).try(:destroy)
-    Visitor.find_by(clicky_uid: 1888001310).try(:destroy)
-    Visitor.find_by(clicky_uid: 2953643240).try(:destroy)   # safari
-    Visitor.find_by(clicky_uid: 1446025430).try(:destroy)   # safari
+    # remove curator and developer data
+    destroy_internal_traffic
 
     # update cache
-    Company.all.each do |company|
-      unless company.subdomain == 'zoommarketing'
-        ActionController::Base.new.expire_fragment("#{company.subdomain}/recent-activity")
-        Rails.cache.write(
-          "#{company.subdomain}/recent-activity",
-          company.recent_activity(30)
-        )
-        Rails.cache.write(
-          "#{company.subdomain}/visitors-chart-default",
-          company.visitors_chart_json(nil, 30.days.ago.to_date, Date.today)
-        )
-        Rails.cache.write(
-          "#{company.subdomain}/referrer-types-default",
-          company.referrer_types_chart_json(nil, 30.days.ago.to_date, Date.today)
-        )
-        Rails.cache.write(
-          "#{company.subdomain}/stories-table",
-          company.stories_table_json
-        )
-        Rails.cache.write(
-          "#{company.subdomain}/visitors-table-default",
-          company.visitors_table_json(nil, 30.days.ago.to_date, Date.today)
-        )
-      end
-    end
+    Rake::Task["clicky:cache"].invoke
+
   end
 
-  #
-  # download last hour's data
-  #
   task download: :environment do
     # for added redundancy and because heroku scheduler is "best effort",
     # we're downloading an hour's worth of data every ten minutes
     visitors_list = get_clicky_visitors_since('3600')  # range in seconds relative to now (last hour)
+
     # ignore most recent 10 minutes at the head
     visitors_list.slice!(0, visitors_list.index do |session|
                               Time.at(session['time'].to_i) > 10.minutes.ago
                             end || 0)
+
     # remove redundant data at the tail
     visitors_list.slice!(
       visitors_list.index do |session|
         session['session_id'] == VisitorSession.last_session.try(:clicky_session_id)
       end || visitors_list.length, visitors_list.length)
+
     # create visitors and sessions, establish associations
     new_visitor_sessions = parse_clicky_sessions(visitors_list)
+
     # get actions associated with sessions
     get_clicky_actions(new_visitor_sessions)
-    # anyone viewing a story prior to publish date is a curator or CSP staff - remove!
-    Visitor.joins(:stories, :visitor_sessions)
-           .where('stories.published = ? OR stories.publish_date > visitor_sessions.timestamp', false)
-           .destroy_all
 
-    # Ryan
-    Visitor.joins(:visitor_actions)
-           .where(visitor_actions: { company_id: 1 } )  # acme-test
-           .try(:destroy_all)
-    Visitor.find_by(clicky_uid: 6314802).try(:destroy)
-    Visitor.find_by(clicky_uid: 1888001310).try(:destroy)
-    Visitor.find_by(clicky_uid: 2953643240).try(:destroy)   # safari
-    Visitor.find_by(clicky_uid: 1446025430).try(:destroy)   # safari
+    # remove curator and developer data
+    destroy_internal_traffic
 
     # update cache
+    Rake::Task["clicky:cache"].invoke
+
+  end
+
+  task cache: :environment do
     Company.all.each do |company|
       unless company.subdomain == 'zoommarketing'
         ActionController::Base.new.expire_fragment("#{company.subdomain}/recent-activity")
@@ -133,7 +95,6 @@ namespace :clicky do
         )
       end
     end
-
   end
 
   def get_clicky_visitors_range range
@@ -264,6 +225,22 @@ namespace :clicky do
         end
       end
     end  # sessions
+  end
+
+  def destroy_internal_traffic
+    # anyone viewing a story prior to publish date is a curator or CSP staff - remove!
+    # TODO: limit this scope to recenty added items
+    Visitor.joins(:visitor_sessions, :stories)
+           .where('stories.published = ? OR stories.publish_date > visitor_sessions.timestamp', false)
+           .destroy_all
+    # Ryan
+    Visitor.joins(:visitor_actions)
+           .where(visitor_actions: { company_id: 1 } )  # acme-test
+           .try(:destroy_all)
+    Visitor.find_by(clicky_uid: 6314802).try(:destroy)
+    Visitor.find_by(clicky_uid: 1888001310).try(:destroy)
+    Visitor.find_by(clicky_uid: 2953643240).try(:destroy)   # safari
+    Visitor.find_by(clicky_uid: 1446025430).try(:destroy)   # safari
   end
 
 end
