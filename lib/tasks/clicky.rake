@@ -21,8 +21,10 @@ namespace :clicky do
     visitors_list += get_clicky_visitors_range('2016-11-01,2016-11-30')
     visitors_list += get_clicky_visitors_range('2016-12-01,2016-12-15')
     visitors_list += get_clicky_visitors_range('2016-12-16,2016-12-31')
-    visitors_list += get_clicky_visitors_range('2017-01-01,2017-01-12')
-    visitors_list += get_clicky_visitors_range('2017-01-13,2017-01-23')
+    visitors_list += get_clicky_visitors_range('2017-01-01,2017-01-14')
+    visitors_list += get_clicky_visitors_range('2017-01-15,2017-01-22')
+    visitors_list += get_clicky_visitors_range('2017-01-23,2017-01-31')
+    visitors_list += get_clicky_visitors_range('2017-02-01,2017-02-01')
     visitors_list += get_clicky_visitors_since(args[:time_offset])
     # create visitors and sessions, establish associations
     new_visitor_sessions = parse_clicky_sessions(visitors_list)
@@ -45,15 +47,17 @@ namespace :clicky do
 
     # update cache
     Company.all.each do |company|
-      ActionController::Base.new.expire_fragment("#{company.subdomain}/recent-activity")
-      Rails.cache.write("#{company.subdomain}/recent-activity",
-                        company.recent_activity(30))
-      Rails.cache.write("#{company.subdomain}/visitors-chart-default",
-                        company.visitors_chart_json(nil, 30.days.ago.to_date, Date.today))
-      Rails.cache.write("#{company.subdomain}/stories-table",
-                        company.stories_table_json)
-      Rails.cache.write("#{company.subdomain}/visitors-table-default",
-                        company.visitors_table_json(nil, 30.days.ago.to_date, Date.today))
+      unless company.subdomain == 'zoommarketing'
+        ActionController::Base.new.expire_fragment("#{company.subdomain}/recent-activity")
+        Rails.cache.write("#{company.subdomain}/recent-activity",
+                          company.recent_activity(30))
+        Rails.cache.write("#{company.subdomain}/visitors-chart-default",
+                          company.visitors_chart_json(nil, 30.days.ago.to_date, Date.today))
+        Rails.cache.write("#{company.subdomain}/stories-table",
+                          company.stories_table_json)
+        Rails.cache.write("#{company.subdomain}/visitors-table-default",
+                          company.visitors_table_json(nil, 30.days.ago.to_date, Date.today))
+      end
     end
   end
 
@@ -64,7 +68,11 @@ namespace :clicky do
     # for added redundancy and because heroku scheduler is "best effort",
     # we're downloading an hour's worth of data every ten minutes
     visitors_list = get_clicky_visitors_since('3600')  # range in seconds relative to now (last hour)
-    # remove redundant data
+    # ignore most recent 10 minutes at the head
+    visitors_list.slice!(0, visitors_list.index do |session|
+                              Time.at(session['time'].to_i) > 10.minutes.ago
+                            end || 0)
+    # remove redundant data at the tail
     visitors_list.slice!(
       visitors_list.index do |session|
         session['session_id'] == VisitorSession.last_session.try(:clicky_session_id)
@@ -140,42 +148,47 @@ namespace :clicky do
   def parse_clicky_sessions visitors_list
     new_visitor_sessions = []
     visitors_list.each do |session|
-      company = Company.find_by(subdomain: session['landing_page'].match(/\/\/((\w|-)+)/)[1])
-      story_slug = session['landing_page'].slice(session['landing_page'].rindex('/') + 1, session['landing_page'].length)
-      # puts "\ncompany - #{company.name}\n"
-      # puts "#{story_slug}"
-      next if (company.nil? || company.subdomain == 'cisco' || company.subdomain == 'acme' ||
-               company.subdomain == 'acme-test')
-      return_visitor = Visitor.find_by(clicky_uid: session['uid'])
-      # return_visitor.try(:increment, :total_visits).try(:save)
-      visitor = return_visitor || Visitor.create(clicky_uid: session['uid'])
-      visitor.update(last_visited: Time.at(session['time'].to_i))
-      referrer_type = session['referrer_type'] || 'direct'
-      referrer_type = 'promote' if referrer_type == 'advertising'
-      referrer_type = 'link' if referrer_type == 'email'
-      visitor_session =
-        VisitorSession.create(
-          timestamp: Time.at(session['time'].to_i),
-          visitor_id: visitor.id,
-          organization: session['organization'],
-          location: session['geolocation'],
-          ip_address: session['ip_address'],
-          clicky_session_id: session['session_id'],
-          referrer_type: referrer_type)
-      VisitorSession.last_session = visitor_session
-      # create a new VisitorAction, use landing_page to look up story
-      success = Story.friendly.exists?(story_slug) ? Story.friendly.find(story_slug).success : nil
-      visitor_action = PageView.create(landing: true,
-                                       visitor_session_id: visitor_session.id,
-                                       success_id: success.try(:id),
-                                       company_id: company.id)  # nil if stories index
-      # update the associations
-      visitor.visitor_sessions << visitor_session
-      visitor_session.visitor_actions << visitor_action
-      # keep track of these sessions for looking up visitor actions
-      new_visitor_sessions << { visitor_session_id: visitor_session.id,
-                                clicky_session_id: session['session_id'],
-                                actions: session['actions'] }  # number of actions
+
+      if Time.at(session['time'].to_i) < 10.minutes.ago
+
+        company = Company.find_by(subdomain: session['landing_page'].match(/\/\/((\w|-)+)/)[1])
+        story_slug = session['landing_page'].slice(session['landing_page'].rindex('/') + 1, session['landing_page'].length)
+        # puts "\ncompany - #{company.name}\n"
+        # puts "#{story_slug}"
+        next if (company.nil? || company.subdomain == 'cisco' || company.subdomain == 'acme' ||
+                 company.subdomain == 'acme-test')
+        return_visitor = Visitor.find_by(clicky_uid: session['uid'])
+        # return_visitor.try(:increment, :total_visits).try(:save)
+        visitor = return_visitor || Visitor.create(clicky_uid: session['uid'])
+        visitor.update(last_visited: Time.at(session['time'].to_i))
+        referrer_type = session['referrer_type'] || 'direct'
+        referrer_type = 'promote' if referrer_type == 'advertising'
+        referrer_type = 'link' if referrer_type == 'email'
+        visitor_session =
+          VisitorSession.create(
+            timestamp: Time.at(session['time'].to_i),
+            visitor_id: visitor.id,
+            organization: session['organization'],
+            location: session['geolocation'],
+            ip_address: session['ip_address'],
+            clicky_session_id: session['session_id'],
+            referrer_type: referrer_type)
+        VisitorSession.last_session = visitor_session
+        # create a new VisitorAction, use landing_page to look up story
+        success = Story.friendly.exists?(story_slug) ? Story.friendly.find(story_slug).success : nil
+        visitor_action = PageView.create(landing: true,
+                                         visitor_session_id: visitor_session.id,
+                                         success_id: success.try(:id),
+                                         company_id: company.id)  # nil if stories index
+        # update the associations
+        visitor.visitor_sessions << visitor_session
+        visitor_session.visitor_actions << visitor_action
+        # keep track of these sessions for looking up visitor actions
+        new_visitor_sessions << { visitor_session_id: visitor_session.id,
+                                  clicky_session_id: session['session_id'],
+                                  actions: session['actions'] }  # number of actions
+      end
+
     end
     new_visitor_sessions
   end
