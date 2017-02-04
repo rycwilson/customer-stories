@@ -3,9 +3,9 @@ function storiesShow () {
 
   loadVideoThumbnail();
   widgetsMonitor();
-  widgetsClickyLog();
+  clickyListeners();
 
-  $(document).on('click', '.outbound-form',
+  $(document).on('click', '.cta-form',
     function () {
       $('#outbound-form-modal').modal('show');
     });
@@ -16,27 +16,33 @@ function storiesShow () {
 // if passed via argument, with a 'contributor' parameter in the callback
 // and callback returning a function, then $(window).off() won't correctly
 // turn off the event listener
-function widgetsClickyLog () {
+function clickyListeners () {
 
   var clickyLog = function (e) {
     if (typeof clicky !== 'undefined') {
-      console.log(e.data.linkedinUrl);
-      clicky.log(e.data.linkedinUrl, $('title').text(), 'outbound');
-      // window won't focus if this is executed synchronously ...
+      // console.log(e.data.linkedinUrl);
+      clicky.log(e.data.href, $('title').text(), 'outbound');
+      // for linkedin widget listeners (window won't focus if this is executed synchronously ...)
       window.setTimeout(function () { this.focus(); }, 200);
     }
   };
 
-  $(document).on('mouseover', '.linkedin-widget',
-    function () {
-      window.focus();
-      $(window).on('blur', { linkedinUrl: $(this).data('linkedin-url') }, clickyLog);
-    });
-
-  $(document).on('mouseout', '.linkedin-widget',
-    function () {
-      $(window).off('blur', clickyLog);
-    });
+  $(document)
+    .on('click', '.company-logo', { href: $(this).attr('href') + ' logo' }, clickyLog)
+    .on('click', '.cta-link', { href: $(this).attr('href') + ' cta' }, clickyLog)
+    .on('click', '.cta-form', { href: $(this).data('target') + ' cta' }, clickyLog)
+    .on('click', '.linkedin-share, .twitter-share, .facebook-share',
+          // without the short-circuiting, there is an error on undefined.split
+          { href: $(this).attr('href') && $(this).attr('href').split('http')[0] }, clickyLog)
+    .on('mouseover', '.linkedin-widget',
+      function () {
+        window.focus();
+        $(window).on('blur', { href: $(this).data('linkedin-url') + ' linkedin' }, clickyLog);
+      })
+    .on('mouseout', '.linkedin-widget',
+      function () {
+        $(window).off('blur', clickyLog);
+      });
 }
 
 /*

@@ -1,22 +1,22 @@
 
 <div id='learn-more' class='well' style='margin-top:15px!important;padding-left:30px'>
   <h3 class='text-center'>Learn More</h3>
-
   <ul class='list-unstyled' style='line-height:26px'>
+
     <% story.outbound_actions.each do |action| %>
 
       <li>
         <% if action.type == 'OutboundLink' %>
 
           <a href="<%= action.link_url %>" target='_blank'
-             class="<%= production? ? 'clicky_log_outbound' : '' %>">
+             class="cta-link">
             <%= action.display_text %>
           </a>
 
-        <% else %>  <!-- OutboundForm -->
+        <% else %>
 
           <a href="#outbound-form-<%= action.id %>-modal"
-             class="outbound-form <%= production? ? 'clicky_log_outbound' : '' %>" data-toggle='modal'
+             class="cta-form" data-toggle='modal'
              data-target="#outbound-form-<%= action.id %>-modal">
             <%= action.display_text %>
           </a>
@@ -25,6 +25,6 @@
        </li>
 
     <% end %>
-  </ul>
 
+  </ul>
 </div>

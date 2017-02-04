@@ -17,12 +17,15 @@ class Company < ActiveRecord::Base
   has_many :stories, through: :successes
   has_many :visitor_actions
   has_many :page_views, class_name: "PageView"
+  has_many :story_shares, class_name: "StoryShare"
+  has_many :cta_clicks, class_name: "CtaClick"
+  has_many :profile_clicks, class_name: "ProfileClick"
+  has_many :logo_clicks, class_name: "Logo_click"
   has_many :visitor_sessions, -> { distinct }, through: :visitor_actions
   has_many :visitors, -> { distinct }, through: :visitor_sessions
 
   has_many :story_categories, dependent: :destroy
   has_many :products, dependent: :destroy
-  has_many :product_categories, dependent: :destroy
   has_many :email_templates, dependent: :destroy
   has_one :cta_button, dependent: :destroy
   has_many :outbound_actions, dependent: :destroy
@@ -628,13 +631,13 @@ class Company < ActiveRecord::Base
         .includes(:visitor)
         .joins(:visitor_actions)
         .where(visitor_actions: visitor_actions_conditions)
-          .where('timestamp > ? AND timestamp < ?',
-                 start_date.beginning_of_day, end_date.end_of_day)
-          .group_by { |session| session.timestamp.to_date }
-          .sort_by { |date, sessions| date }.to_h
-          .map do |date, sessions|
-            [ date.strftime('%-m/%-d/%y'), sessions.map { |session| session.visitor }.uniq.count ]
-          end
+        .where('visitor_sessions.timestamp > ? AND visitor_sessions.timestamp < ?',
+               start_date.beginning_of_day, end_date.end_of_day)
+        .group_by { |session| session.timestamp.to_date }
+        .sort_by { |date, sessions| date }.to_h
+        .map do |date, sessions|
+          [ date.strftime('%-m/%-d/%y'), sessions.map { |session| session.visitor }.uniq.count ]
+        end
         if start_date == end_date || visitors.empty?
           visitors
         else
@@ -646,7 +649,7 @@ class Company < ActiveRecord::Base
         .includes(:visitor)
         .joins(:visitor_actions)
         .where(visitor_actions: visitor_actions_conditions)
-        .where('timestamp > ? AND timestamp < ?',
+        .where('visitor_sessions.timestamp > ? AND visitor_sessions.timestamp < ?',
                start_date.beginning_of_week.beginning_of_day, end_date.end_of_week.end_of_day)
         .group_by { |session| session.timestamp.to_date.beginning_of_week }
         .sort_by { |date, sessions| date }.to_h
@@ -664,7 +667,7 @@ class Company < ActiveRecord::Base
         .includes(:visitor)
         .joins(:visitor_actions)
         .where(visitor_actions: visitor_actions_conditions)
-        .where('timestamp >= ? AND timestamp <= ?',
+        .where('visitor_sessions.timestamp >= ? AND visitor_sessions.timestamp <= ?',
                start_date.beginning_of_month.beginning_of_day, end_date.end_of_month.end_of_day)
         .group_by { |session| session.timestamp.to_date.beginning_of_month }
         .sort_by { |date, sessions| date }.to_h
@@ -689,7 +692,7 @@ class Company < ActiveRecord::Base
     end
     success_list = Set.new
     visitors = VisitorSession.distinct.joins(:visitor, :visitor_actions)
-      .where('timestamp >= ? AND timestamp <= ?',
+      .where('visitor_sessions.timestamp >= ? AND visitor_sessions.timestamp <= ?',
               start_date.beginning_of_day, end_date.end_of_day)
       .where(visitor_actions: { company_id: self.id } )
       .group(:organization, 'visitors.id', 'visitor_actions.success_id')
@@ -735,7 +738,7 @@ class Company < ActiveRecord::Base
       .select(:referrer_type)
       .joins(:visitor_actions)
       .where(visitor_actions: visitor_actions_conditions)
-      .where('timestamp > ? AND timestamp < ?',
+      .where('visitor_sessions.timestamp > ? AND visitor_sessions.timestamp < ?',
              start_date.beginning_of_day, end_date.end_of_day)
       .group_by { |session| session.referrer_type }
       .map { |type, records| [type, records.count] }

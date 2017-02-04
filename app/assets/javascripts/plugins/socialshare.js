@@ -4,13 +4,13 @@
 // ref: http://stackoverflow.com/questions/24046807
 function initSocialShare() {
 
-  $('#social-buttons .linkedin').on('click', function (e) {
+  $('#social-buttons .linkedin-share').on('click', function (e) {
     $(this).socialSharePopup(e, 550, 544);
   });
-  $('#social-buttons .twitter').on('click', function (e) {
+  $('#social-buttons .twitter-share').on('click', function (e) {
     $(this).socialSharePopup(e, 500, 260);
   });
-  $('#social-buttons .facebook').on('click', function (e) {
+  $('#social-buttons .facebook-share').on('click', function (e) {
     $(this).socialSharePopup(e, 600, 424);
   });
 
