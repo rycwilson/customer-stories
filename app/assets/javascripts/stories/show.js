@@ -20,7 +20,6 @@ function clickyListeners () {
 
   var clickyLog = function (e) {
     if (typeof clicky !== 'undefined') {
-      // console.log(e.data.linkedinUrl);
       clicky.log(e.data.href, $('title').text(), 'outbound');
       // for linkedin widget listeners (window won't focus if this is executed synchronously ...)
       window.setTimeout(function () { this.focus(); }, 200);

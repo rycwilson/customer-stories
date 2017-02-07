@@ -19,7 +19,8 @@
 
   <td colspan='4' class='hiddenRow'>
     <div class="accordion-body collapse <%= group_type %>">
-      <table class='datatable table table-bordered <%= group_items.count < 10 ? 'short' : '' %>'       width='100%' id="<%= group_type %>-table">
+      <table class='datatable table table-bordered <%= group_items.count < 10 ? 'short' : '' %>'
+             id="<%= group_type %>-table" width='100%' >
 
         <%= render 'companies/shared/measure/activity_group_table_data',
                    { group_items: group_items, group_type: group_type } %>

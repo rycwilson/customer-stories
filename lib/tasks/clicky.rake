@@ -24,7 +24,7 @@ namespace :clicky do
     visitors_list += get_visitors_range('2017-01-01,2017-01-14')
     visitors_list += get_visitors_range('2017-01-15,2017-01-22')
     visitors_list += get_visitors_range('2017-01-23,2017-01-31')
-    visitors_list += get_visitors_range('2017-02-01,2017-02-03')
+    visitors_list += get_visitors_range('2017-02-01,2017-02-05')
     visitors_list += get_data_since('visitors', args[:time_offset])
     # create sessions and visitors, set associations
     visitor_sessions = create_sessions(visitors_list)
@@ -90,14 +90,9 @@ namespace :clicky do
   def create_sessions visitors_list
     visitor_sessions = []
     visitors_list.each do |session|
-
       if Time.at(session['time'].to_i) < 10.minutes.ago
-
         company = Company.find_by(subdomain: session['landing_page'].match(/\/\/((\w|-)+)/)[1])
-        story_slug = session['landing_page'].slice(session['landing_page'].rindex('/') + 1, session['landing_page'].length)
-        # if landing page is a csp landing page, company will be nil
-        next if (company.nil? || company.subdomain == 'cisco' || company.subdomain == 'acme' ||
-                 company.subdomain == 'acme-test')
+        next if company_is_nil_or_test?(company)  # nil if csp landing page
         return_visitor = Visitor.find_by(clicky_uid: session['uid'])
         visitor = return_visitor || Visitor.create(clicky_uid: session['uid'])
         referrer_type = session['referrer_type'] || 'direct'
@@ -112,26 +107,23 @@ namespace :clicky do
             ip_address: session['ip_address'],
             clicky_session_id: session['session_id'],
             referrer_type: referrer_type)
-        VisitorSession.last_session = visitor_session
-        # create a new VisitorAction, use landing_page to look up story
-        success = Story.friendly.exists?(story_slug) ? Story.friendly.find(story_slug).success : nil
+        # create a new VisitorAction for the landing page
+        story_slug = session['landing_page'].slice(session['landing_page'].rindex('/') + 1, session['landing_page'].length)
+        success_id = Story.friendly.exists?(story_slug) ? Story.friendly.find(story_slug).success_id : nil
         visitor_action = PageView.create(
                            landing: true,
                            timestamp: Time.at(session['time'].to_i),
                            visitor_session_id: visitor_session.id,
-                           success_id: success.try(:id),  # nil if stories index
+                           success_id: success_id,  # nil if stories index
                            company_id: company.id )
-        VisitorAction.last_action = visitor_action
         # update the associations
         visitor.visitor_sessions << visitor_session
         visitor_session.visitor_actions << visitor_action
         # keep track of these sessions for looking up visitor actions (init task only)
-        visitor_sessions << { company_id: company.id,
-                              visitor_session_id: visitor_session.id,
+        visitor_sessions << { visitor_session_id: visitor_session.id,
                               clicky_session_id: session['session_id'],
                               actions: session['actions'] }  # number of actions
       end
-
     end
     visitor_sessions
   end
@@ -153,14 +145,14 @@ namespace :clicky do
           JSON.parse(session[:actions_request].response.response_body)[0]['dates'][0]['items']
         actions_list.each_with_index do |action, index|
           next if index == 0  # first action is already saved landing pageview
-          create_action(session, action)
+          create_action(session, action) unless !['pageview'].include?(action['action_type'])
         end
       end
     end
   end
 
   def update_actions sessions
-    VisitorAction.last_action ||= VisitorAction.order(:timestamp, :created_at).last
+    last_action ||= VisitorAction.order(:timestamp, :created_at).last
     actions_list = get_data_since('actions', '3600')
     # ignore most recent 10 minutes at the head
     actions_list.slice!(0, actions_list.index do |action|
@@ -180,53 +172,51 @@ namespace :clicky do
   end
 
   def create_action session, action
+    # outbound actions will be appended with ' csp-outbound-logo'
+    # (or csp-outbound-cta-link, csp-outbound-cta-form, csp-outbound-profile, etc)
+    success = Story.find_by(title: action['action_title'].split(' csp-outbound-')[0]).try(:success)
+    company = success.try(:company) ||
+              Company.find_by(name: action['action_title'].split(' ')[0])
+    return if company.nil?  # CSP landing pages
     new_action = {
-      company_id: session[:company_id],
+      success_id: success.try(:id),
+      company_id: company.id,
       visitor_session_id: session[:visitor_session_id],
       description: action['action_url'],
       timestamp: Time.at(action['time'].to_i)
     }
+    # more reliable than using action['action_title'] to id stories? ...
+    # story_slug = action['action_url'].match(/\/(\w|-)+\/(?=.*-)((\w|-)+)$/).try(:[], 2)
+    story_slug = action['action_url'].slice(action['action_url'].rindex('/') + 1,
+                                            action['action_url'].length)
+    success_id = story_slug.present? && Story.exists?(story_slug) ?
+                    Story.friendly.find(story_slug).success_id : nil
     if action['action_type'] == 'pageview'
-      story_title_slug = action['action_url'].match(/\/(\w|-)+\/(?=.*-)((\w|-)+)$/).try(:[], 2)
-      success_id = story_title_slug.present? && Story.exists?(story_title_slug) ?
-                     Story.friendly.find(story_title_slug).success_id : nil
-      VisitorAction.last_action =
-        PageView.create(new_action.merge({ success_id: success_id }))
-
-    elsif action['action_type'] == 'outbound' &&
-          # adjust cut-off date as necessary
-          Time.at(action['time'].to_i) > Date.strptime('2/5/17', '%m/%d/%y')
-      new_action.merge({
-        success_id: Story.find_by(title: action['action_title']).tr
-      })
-      # linkedin profile
-      if action['action_url'].match(/linkedin\z/)
-        VisitorAction.last_action = ProfileClick.create(new_action)
-      # story share
-      elsif [LINKEDIN_SHARE_URL, TWITTER_SHARE_URL, FACEBOOK_SHARE_URL].include?(action['action_url'])
-        VisitorAction.last_action = StoryShare.create(new_action)
-      # company logo
-      elsif action['action_url'].match(/logo\z/)
-        VisitorAction.last_action = LogoClick.create(new_action)
-      # CTA
-      elsif action['action_url'].match(/cta\z/)
-        VisitorAction.last_action = CtaClick.create(new_action)
-      end
+      PageView.create(new_action.merge({ success_id: success_id }))
+    # elsif action['action_type'] == 'outbound' &&
+    #       # adjust cut-off date as necessary
+    #       Time.at(action['time'].to_i) > Date.strptime('2/6/17', '%m/%d/%y')
+    #   # what's up with this comig up nil???
+    #   success_id = Story.find_by(title: action['action_title']).success.id
+    #   if success_id.nil?
+    #     puts action
+    #   end
+    #   # linkedin profile
+    #   if action['action_url'].match(/linkedin\z/)
+    #     ProfileClick.create(new_action.merge({ success_id: success_id }))
+    #   # story share
+    #   elsif [LINKEDIN_SHARE_URL, TWITTER_SHARE_URL, FACEBOOK_SHARE_URL].include?(action['action_url'])
+    #     StoryShare.create(new_action.merge({ success_id: success_id }))
+    #   # company logo
+    #   elsif action['action_url'].match(/logo\z/)
+    #     LogoClick.create(new_action.merge({ success_id: success_id }))
+    #   # CTA
+    #   elsif action['action_url'].match(/cta\z/)
+    #     CtaClick.create(new_action.merge({ success_id: success_id }))
+    #   else
+    #     # capture these
+      # end
     end
-  end
-
-  def request_actions_session session
-    Typhoeus::Request.new(
-      GETCLICKY_API_BASE_URL,
-      method: :get,
-      body: nil,
-      params: { site_id: ENV['GETCLICKY_SITE_ID'],
-                sitekey: ENV['GETCLICKY_SITE_KEY'],
-                type: 'actions-list',
-                session_id: session[:clicky_session_id],
-                output: 'json' },
-      headers: { Accept: "application/json" }
-    )
   end
 
   def get_visitors_range range
@@ -263,6 +253,20 @@ namespace :clicky do
     JSON.parse(request.response.response_body)[0]['dates'][0]['items']
   end
 
+  def request_actions_session session
+    Typhoeus::Request.new(
+      GETCLICKY_API_BASE_URL,
+      method: :get,
+      body: nil,
+      params: { site_id: ENV['GETCLICKY_SITE_ID'],
+                sitekey: ENV['GETCLICKY_SITE_KEY'],
+                type: 'actions-list',
+                session_id: session[:clicky_session_id],
+                output: 'json' },
+      headers: { Accept: "application/json" }
+    )
+  end
+
   def destroy_internal_traffic
     # anyone viewing a story prior to publish date is a curator or CSP staff - remove!
     # TODO: limit this scope to recenty added items
@@ -277,6 +281,11 @@ namespace :clicky do
     Visitor.find_by(clicky_uid: 1888001310).try(:destroy)
     Visitor.find_by(clicky_uid: 2953643240).try(:destroy)   # safari
     Visitor.find_by(clicky_uid: 1446025430).try(:destroy)   # safari
+  end
+
+  def company_is_nil_or_test? company
+    company.nil? || company.subdomain == 'cisco' || company.subdomain == 'acme' ||
+      company.subdomain == 'acme-test'
   end
 
 end

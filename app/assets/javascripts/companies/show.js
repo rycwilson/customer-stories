@@ -55,7 +55,7 @@ function measureStories () {
             { title: 'Title' },
             { title: 'Publish Date' },
             { title: 'Unique Visitors' },
-            { title: 'Visits' },
+            // { title: 'Visits' },
             { title: 'Landing' }
           ],
           paging: false,
@@ -91,13 +91,13 @@ function measureVisitors () {
               var width = $parentRow.find('td:nth-of-type(' + column.toString() + ')').css('width'),
                   padding = $parentRow.find('td:nth-of-type(' + column.toString() + ')').css('padding'),
                   lineHeight = $parentRow.find('td:nth-of-type(' + column.toString() + ')').css('line-height');
-              if (column === 1 || column === 4) {
+              if (column === 1 || column === 3) {
                 width = (parseInt(width, 10) - parseInt(padding, 10)).toString() + "px";
               }
               return 'width:' + width + ';padding:' + padding + ';line-height:' + lineHeight;
             };
-        org[4].forEach(function (story, storyIndex) {
-          tbody += '<tr ' + 'style="' + ((storyIndex < org[4].length - 1) ? 'border-bottom:1px solid #ddd' : '') + '"><td style="' + cellStyle($parentRow, 1) + '"></td>';
+        org[3].forEach(function (story, storyIndex) {
+          tbody += '<tr ' + 'style="' + ((storyIndex < org[3].length - 1) ? 'border-bottom:1px solid #ddd' : '') + '"><td style="' + cellStyle($parentRow, 1) + '"></td>';
           story.forEach(function (cellData, index) {
             tbody += '<td style="' + cellStyle($parentRow, index + 2) + '">' + cellData + '</td>';
           });
@@ -121,7 +121,7 @@ function measureVisitors () {
             },
             { title: 'Organization' },
             { title: 'Unique Visitors' },
-            { title: 'Visits' }
+            // { title: 'Visits' }
           ],
           order: [[1, 'asc']]
         });
