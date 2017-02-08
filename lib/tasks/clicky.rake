@@ -281,20 +281,20 @@ namespace :clicky do
     )
   end
 
+  # TODO: limit the scope to recently added items
   def destroy_internal_traffic
-    # anyone viewing a story prior to publish date is a curator or CSP staff
-    # TODO: limit this scope to recently added items
+    # anyone viewing a story prior to publish date is a curator or developer
     Visitor.joins(:visitor_sessions, :stories)
            .where('stories.published = ? OR stories.publish_date > visitor_sessions.timestamp', false)
-           .destroy_all
+           .try(:destroy_all)
     # Dev traffic
     Visitor.joins(:visitor_actions)
            .where(visitor_actions: { company_id: 1 } )  # acme-test
            .try(:destroy_all)
-    Visitor.find_by(clicky_uid: 6314802).try(:destroy)
-    Visitor.find_by(clicky_uid: 1888001310).try(:destroy)
-    Visitor.find_by(clicky_uid: 2953643240).try(:destroy)   # safari
-    Visitor.find_by(clicky_uid: 1446025430).try(:destroy)   # safari
+    # Dan and Ryan
+    Visitor.joins(:visitor_sessions)
+           .where(visitor_sessions: { ip_address: ['50.143.129.107', '24.130.151.80', '24.130.57.16'] })
+           .try(:destroy_all)
   end
 
   def test_company? subdomain
