@@ -174,9 +174,9 @@ namespace :clicky do
       .each do |session|
         visitor_session = VisitorSession.find_by(clicky_session_id: session[0])
         session[1].each do |action|
-          if ['pageview'].include?(action[:action_type])
-            visitor_session.visitor_actions <<
-              create_action(visitor_session.id, action.stringify_keys)
+          if ['pageview'].include?(action[:action_type]) && !action_exists?(action)
+              visitor_session.visitor_actions <<
+                create_action(visitor_session.id, action.stringify_keys)
           end
         end
       end
@@ -311,6 +311,13 @@ namespace :clicky do
   def story_page? url
     slug = url.slice(url.rindex('/') + 1, url.length)
     Story.friendly.exists?(slug) && Story.friendly.find(slug).success
+  end
+
+  def action_exists? action
+    VisitorAction.exists?({
+      visitor_session_id: VisitorSession.find_by(clicky_session_id: action[:session_id]).try(:id),
+      timestamp: Time.at(action[:time].to_i)
+    })
   end
 
 end
