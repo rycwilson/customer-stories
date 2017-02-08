@@ -747,6 +747,21 @@ class Company < ActiveRecord::Base
       .map { |type, records| [type, records.count] }
   end
 
+  def actions_table_json story, start_date, end_date
+    if story.nil?
+      visitor_actions_conditions = { company_id: self.id }
+    else
+      visitor_actions_conditions = { company_id: self.id, success_id: story.success.id }
+    end
+    VisitorAction.distinct
+      .joins(:visitor_session, :visitor)
+      .where(visitor_actions_conditions)
+      .where('visitor_actions.timestamp > ? AND visitor_actions.timestamp < ?',
+             start_date.beginning_of_day, end_date.end_of_day)
+      .group_by('visitor_actions.timestamp, visitor_actions.description', 'visitors.id' )
+      .count
+  end
+
   private
 
   def fill_daily_gaps visitors, start_date, end_date

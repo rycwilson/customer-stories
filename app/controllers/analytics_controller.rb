@@ -17,6 +17,10 @@ class AnalyticsController < ApplicationController
         Rails.cache.fetch("#{@company.subdomain}/visitors-chart-default") do
           @company.visitors_chart_json(@story, @start_date, @end_date)
         end
+      # default_actions =
+      #   Rails.cache.fetch("#{@company.subdomain}/actions-chart-default") do
+      #     @company.actions_chart_json(@story, @start_date, @end_date)
+      #   end
     else
       default_referrer_types = default_visitors = nil
     end
@@ -27,6 +31,7 @@ class AnalyticsController < ApplicationController
             charts: {
               referrerTypes: default_referrer_types || @company.referrer_types_chart_json(@story, @start_date, @end_date),
               visitors: default_visitors || @company.visitors_chart_json(@story, @start_date, @end_date)
+              # actions: default_actions || @company.actions_chart_json(@story, @start_date, @end_date)
             }
           }
         })

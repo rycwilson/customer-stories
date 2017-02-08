@@ -12,7 +12,6 @@ namespace :clicky do
     ActiveRecord::Base.connection.execute('ALTER SEQUENCE visitors_id_seq RESTART WITH 1')
     ActiveRecord::Base.connection.execute('ALTER SEQUENCE visitor_sessions_id_seq RESTART WITH 1')
     ActiveRecord::Base.connection.execute('ALTER SEQUENCE visitor_actions_id_seq RESTART WITH 1')
-<<<<<<< HEAD
     # clicky max date range 31 days, max items 1000
     visitors_list = get_visitors_range('2016-05-01,2016-05-31')
     visitors_list += get_visitors_range('2016-06-01,2016-06-30')
@@ -26,120 +25,31 @@ namespace :clicky do
     visitors_list += get_visitors_range('2017-01-01,2017-01-14')
     visitors_list += get_visitors_range('2017-01-15,2017-01-22')
     visitors_list += get_visitors_range('2017-01-23,2017-01-31')
-    visitors_list += get_visitors_range('2017-02-01,2017-02-06')
+    visitors_list += get_visitors_range('2017-02-01,2017-02-07')
     visitors_list += get_data_since('visitors', args[:time_offset])
     visitor_sessions = create_sessions(visitors_list)
     create_actions(visitor_sessions)
     destroy_internal_traffic
     Rake::Task["clicky:cache"].invoke
-=======
-    visitors_list = get_clicky_visitors_range('2016-05-01,2016-05-31')
-    visitors_list += get_clicky_visitors_range('2016-06-01,2016-06-30')
-    visitors_list += get_clicky_visitors_range('2016-07-01,2016-07-31')
-    visitors_list += get_clicky_visitors_range('2016-08-01,2016-08-31')
-    visitors_list += get_clicky_visitors_range('2016-09-01,2016-09-30')
-    visitors_list += get_clicky_visitors_range('2016-10-01,2016-10-31')
-    visitors_list += get_clicky_visitors_range('2016-11-01,2016-11-30')
-    visitors_list += get_clicky_visitors_range('2016-12-01,2016-12-15')
-    visitors_list += get_clicky_visitors_range('2016-12-16,2016-12-31')
-    visitors_list += get_clicky_visitors_range('2017-01-01,2017-01-14')
-    visitors_list += get_clicky_visitors_range('2017-01-15,2017-01-22')
-    visitors_list += get_clicky_visitors_range('2017-01-23,2017-01-31')
-    visitors_list += get_clicky_visitors_range('2017-02-01,2017-02-01')
-    visitors_list += get_clicky_visitors_since(args[:time_offset])
-    # create visitors and sessions, establish associations
-    new_visitor_sessions = parse_clicky_sessions(visitors_list)
-    # get actions associated with sessions
-    get_clicky_actions(new_visitor_sessions)
-    # anyone viewing a story prior to publish date is a curator or CSP staff - remove!
-    # TODO: limit this scope to recenty added items
-    Visitor.joins(:visitor_sessions, :stories)
-           .where('stories.published = ? OR stories.publish_date > visitor_sessions.timestamp', false)
-           .destroy_all
-
-    # Ryan
-    Visitor.joins(:visitor_actions)
-           .where(visitor_actions: { company_id: 1 } )  # acme-test
-           .try(:destroy_all)
-    Visitor.find_by(clicky_uid: 6314802).try(:destroy)
-    Visitor.find_by(clicky_uid: 1888001310).try(:destroy)
-    Visitor.find_by(clicky_uid: 2953643240).try(:destroy)   # safari
-    Visitor.find_by(clicky_uid: 1446025430).try(:destroy)   # safari
-
-    # update cache
-    Company.all.each do |company|
-      ActionController::Base.new.expire_fragment("#{company.subdomain}/recent-activity")
-      Rails.cache.write(
-        "#{company.subdomain}/recent-activity",
-        company.recent_activity(30)
-      )
-      Rails.cache.write(
-        "#{company.subdomain}/visitors-chart-default",
-        company.visitors_chart_json(nil, 30.days.ago.to_date, Date.today)
-      )
-      Rails.cache.write(
-        "#{company.subdomain}/referrer-types-default",
-        company.referrer_types_chart_json(nil, 30.days.ago.to_date, Date.today)
-      )
-      Rails.cache.write(
-        "#{company.subdomain}/stories-table",
-        company.stories_table_json
-      )
-      Rails.cache.write(
-        "#{company.subdomain}/visitors-table-default",
-        company.visitors_table_json(nil, 30.days.ago.to_date, Date.today)
-      )
-    end
->>>>>>> master
   end
 
   task update: :environment do
     # for added redundancy and because heroku scheduler is "best effort",
     # we're downloading an hour's worth of data every ten minutes
-    visitors_list = get_data_since('visitors', '3600')  # range in seconds relative to now (last hour)
+    visitors_list = get_data_since('visitors', '36000')  # range in seconds relative to now (last hour)
     # ignore most recent 10 minutes at the head
     visitors_list.slice!(0, visitors_list.index do |session|
                               Time.at(session['time'].to_i) > 10.minutes.ago
                             end || 0)
+
     # remove previously captured data at the tail
     visitors_list.slice!(visitors_list.index do |session|
                            session['session_id'] == VisitorSession.last.clicky_session_id
                          end, visitors_list.length)
-    # create sessions and visitors, set associations
     visitor_sessions = create_sessions(visitors_list)
-    # get latest actions
     update_actions(visitor_sessions)
-    # remove curator and developer data
     destroy_internal_traffic
-    # update cache
-<<<<<<< HEAD
     Rake::Task["clicky:cache"].invoke
-=======
-    Company.all.each do |company|
-      ActionController::Base.new.expire_fragment("#{company.subdomain}/recent-activity")
-      Rails.cache.write(
-        "#{company.subdomain}/recent-activity",
-        company.recent_activity(30)
-      )
-      Rails.cache.write(
-        "#{company.subdomain}/visitors-chart-default",
-        company.visitors_chart_json(nil, 30.days.ago.to_date, Date.today)
-      )
-      Rails.cache.write(
-        "#{company.subdomain}/referrer-types-default",
-        company.referrer_types_chart_json(nil, 30.days.ago.to_date, Date.today)
-      )
-      Rails.cache.write(
-        "#{company.subdomain}/stories-table",
-        company.stories_table_json
-      )
-      Rails.cache.write(
-        "#{company.subdomain}/visitors-table-default",
-        company.visitors_table_json(nil, 30.days.ago.to_date, Date.today)
-      )
-    end
-
->>>>>>> master
   end
 
   task cache: :environment do
@@ -243,11 +153,11 @@ namespace :clicky do
     end
   end
 
-  # delay 15 minutes to ensure sessions are in place
+  # delay 10 minutes to ensure sessions are in place
   def update_actions sessions
     actions_list = get_data_since('actions', '3600')
     actions_list.slice!(0, actions_list.index do |action|
-                             Time.at(action['time'].to_i) > 15.minutes.ago
+                             Time.at(action['time'].to_i) > 10.minutes.ago
                            end || 0)
     # in case there are visitor_actions with identical timestamp, look at all of them ...
     last_actions = VisitorAction.where(timestamp: VisitorAction.last.timestamp)
@@ -372,7 +282,7 @@ namespace :clicky do
   end
 
   def destroy_internal_traffic
-    # anyone viewing a story prior to publish date is a curator or CSP staff - remove!
+    # anyone viewing a story prior to publish date is a curator or CSP staff
     # TODO: limit this scope to recently added items
     Visitor.joins(:visitor_sessions, :stories)
            .where('stories.published = ? OR stories.publish_date > visitor_sessions.timestamp', false)

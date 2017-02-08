@@ -183,7 +183,7 @@ function measureVisitors () {
       });
 }
 
-function newStoryModalListeners() {
+function newStoryModalListeners () {
 
   // jquery-ujs functionality gets lost after turbolinks navigation,
   // so handle it manually ... (limited to modals?)
