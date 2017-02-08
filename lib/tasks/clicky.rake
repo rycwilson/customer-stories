@@ -12,6 +12,7 @@ namespace :clicky do
     ActiveRecord::Base.connection.execute('ALTER SEQUENCE visitors_id_seq RESTART WITH 1')
     ActiveRecord::Base.connection.execute('ALTER SEQUENCE visitor_sessions_id_seq RESTART WITH 1')
     ActiveRecord::Base.connection.execute('ALTER SEQUENCE visitor_actions_id_seq RESTART WITH 1')
+    # clicky max date range 31 days, max items 1000
     visitors_list = get_visitors_range('2016-05-01,2016-05-31')
     visitors_list += get_visitors_range('2016-06-01,2016-06-30')
     visitors_list += get_visitors_range('2016-07-01,2016-07-31')
@@ -24,15 +25,11 @@ namespace :clicky do
     visitors_list += get_visitors_range('2017-01-01,2017-01-14')
     visitors_list += get_visitors_range('2017-01-15,2017-01-22')
     visitors_list += get_visitors_range('2017-01-23,2017-01-31')
-    visitors_list += get_visitors_range('2017-02-01,2017-02-05')
+    visitors_list += get_visitors_range('2017-02-01,2017-02-06')
     visitors_list += get_data_since('visitors', args[:time_offset])
-    # create sessions and visitors, set associations
     visitor_sessions = create_sessions(visitors_list)
-    # create actions, set associations
     create_actions(visitor_sessions)
-    # remove curator and developer data
     destroy_internal_traffic
-    # update cache
     Rake::Task["clicky:cache"].invoke
   end
 
@@ -44,11 +41,10 @@ namespace :clicky do
     visitors_list.slice!(0, visitors_list.index do |session|
                               Time.at(session['time'].to_i) > 10.minutes.ago
                             end || 0)
-    # remove redundant data at the tail
-    visitors_list.slice!(
-      visitors_list.index do |session|
-        session['session_id'] == VisitorSession.last_session.try(:clicky_session_id)
-      end || visitors_list.length, visitors_list.length)
+    # remove previously captured data at the tail
+    visitors_list.slice!(visitors_list.index do |session|
+                           session['session_id'] == VisitorSession.last.clicky_session_id
+                         end, visitors_list.length)
     # create sessions and visitors, set associations
     visitor_sessions = create_sessions(visitors_list)
     # get latest actions
@@ -61,29 +57,27 @@ namespace :clicky do
 
   task cache: :environment do
     Company.all.each do |company|
-      unless company.subdomain == 'zoommarketing'
-        ActionController::Base.new.expire_fragment("#{company.subdomain}/recent-activity")
-        Rails.cache.write(
-          "#{company.subdomain}/recent-activity",
-          company.recent_activity(30)
-        )
-        Rails.cache.write(
-          "#{company.subdomain}/visitors-chart-default",
-          company.visitors_chart_json(nil, 30.days.ago.to_date, Date.today)
-        )
-        Rails.cache.write(
-          "#{company.subdomain}/referrer-types-default",
-          company.referrer_types_chart_json(nil, 30.days.ago.to_date, Date.today)
-        )
-        Rails.cache.write(
-          "#{company.subdomain}/stories-table",
-          company.stories_table_json
-        )
-        Rails.cache.write(
-          "#{company.subdomain}/visitors-table-default",
-          company.visitors_table_json(nil, 30.days.ago.to_date, Date.today)
-        )
-      end
+      ActionController::Base.new.expire_fragment("#{company.subdomain}/recent-activity")
+      Rails.cache.write(
+        "#{company.subdomain}/recent-activity",
+        company.recent_activity(30)
+      )
+      Rails.cache.write(
+        "#{company.subdomain}/visitors-chart-default",
+        company.visitors_chart_json(nil, 30.days.ago.to_date, Date.today)
+      )
+      Rails.cache.write(
+        "#{company.subdomain}/referrer-types-default",
+        company.referrer_types_chart_json(nil, 30.days.ago.to_date, Date.today)
+      )
+      Rails.cache.write(
+        "#{company.subdomain}/stories-table",
+        company.stories_table_json
+      )
+      Rails.cache.write(
+        "#{company.subdomain}/visitors-table-default",
+        company.visitors_table_json(nil, 30.days.ago.to_date, Date.today)
+      )
     end
   end
 
@@ -91,8 +85,9 @@ namespace :clicky do
     visitor_sessions = []
     visitors_list.each do |session|
       if Time.at(session['time'].to_i) < 10.minutes.ago
-        company = Company.find_by(subdomain: session['landing_page'].match(/\/\/((\w|-)+)/)[1])
-        next if company_is_nil_or_test?(company)  # nil if csp landing page
+        domain = session['landing_page'].match(/\/\/((\w|-)+)/)[1]
+        company = Company.find_by(subdomain: domain)
+        next if company.nil? || test_company?(domain)  # nil if csp landing page
         return_visitor = Visitor.find_by(clicky_uid: session['uid'])
         visitor = return_visitor || Visitor.create(clicky_uid: session['uid'])
         referrer_type = session['referrer_type'] || 'direct'
@@ -107,14 +102,22 @@ namespace :clicky do
             ip_address: session['ip_address'],
             clicky_session_id: session['session_id'],
             referrer_type: referrer_type)
+        # index or story page?
+        if (company = company_index_page?(session['landing_page']))
+          success = nil
+        elsif (success = story_page?(session['landing_page']))
+          company = success.company
+        else
+          # internal pages
+          next
+        end
         # create a new VisitorAction for the landing page
-        story_slug = session['landing_page'].slice(session['landing_page'].rindex('/') + 1, session['landing_page'].length)
-        success_id = Story.friendly.exists?(story_slug) ? Story.friendly.find(story_slug).success_id : nil
         visitor_action = PageView.create(
                            landing: true,
                            timestamp: Time.at(session['time'].to_i),
+                           description: session['landing_page'],
                            visitor_session_id: visitor_session.id,
-                           success_id: success_id,  # nil if stories index
+                           success_id: success.try(:id),
                            company_id: company.id )
         # update the associations
         visitor.visitor_sessions << visitor_session
@@ -145,54 +148,68 @@ namespace :clicky do
           JSON.parse(session[:actions_request].response.response_body)[0]['dates'][0]['items']
         actions_list.each_with_index do |action, index|
           next if index == 0  # first action is already saved landing pageview
-          create_action(session, action) unless !['pageview'].include?(action['action_type'])
+          if ['pageview'].include?(action['action_type'])
+            create_action(session[:visitor_session_id], action)
+          end
         end
       end
     end
   end
 
+  # delay 15 minutes to ensure sessions are in place
   def update_actions sessions
-    last_action ||= VisitorAction.order(:timestamp, :created_at).last
     actions_list = get_data_since('actions', '3600')
-    # ignore most recent 10 minutes at the head
     actions_list.slice!(0, actions_list.index do |action|
-                             Time.at(action['time'].to_i) > 10.minutes.ago
+                             Time.at(action['time'].to_i) > 15.minutes.ago
                            end || 0)
-    last_action_index = actions_list.index do |action|
-                          Time.at(action['time'].to_i) == VisitorAction.last_action.timestamp &&
-                          action['session_id'] == VisitorAction.last_action.visitor_session.clicky_session_id &&
-                          action['action_url'] == VisitorAction.last_action.description
+    # in case there are visitor_actions with identical timestamp, look at all of them ...
+    last_actions = VisitorAction.where(timestamp: VisitorAction.last.timestamp)
+    last_action_index = actions_list.index do |new_action|
+                          last_actions.any? do |action|
+                            Time.at(new_action['time'].to_i) == action.timestamp &&
+                            new_action['session_id'] == action.visitor_session.clicky_session_id &&
+                            new_action['action_url'] == action.description
+                          end
                         end
     actions_list.slice!(last_action_index || actions_list.length, actions_list.length)
-    # binding.remote_pry
-    # actions_list.each do |action|
-
-    # end
-
+    actions_list
+      .group_by { |action| action['session_id'] }
+      .each do |session|
+        visitor_session = VisitorSession.find_by(clicky_session_id: session[0])
+        session[1].each do |action|
+          if ['pageview'].include?(action[:action_type])
+            visitor_session.visitor_actions <<
+              create_action(visitor_session.id, action.stringify_keys)
+          end
+        end
+      end
   end
 
-  def create_action session, action
-    # outbound actions will be appended with ' csp-outbound-logo'
-    # (or csp-outbound-cta-link, csp-outbound-cta-form, csp-outbound-profile, etc)
-    success = Story.find_by(title: action['action_title'].split(' csp-outbound-')[0]).try(:success)
-    company = success.try(:company) ||
-              Company.find_by(name: action['action_title'].split(' ')[0])
-    return if company.nil?  # CSP landing pages
+  # outbound actions: action will be appended with ' csp-outbound-logo'
+  # (or csp-outbound-cta-link, csp-outbound-cta-form, csp-outbound-profile, etc)
+
+  # make sure outbound actions are captured
+
+  def create_action visitor_session_id, action
+    action_domain = action['action_url'].match(/\/\/((\w|-)+)/)[1]
+    if action_domain == 'customerstories' || test_company?(action_domain)
+      return nil
+    elsif (company = company_index_page?(action['action_url']))
+      success = nil
+    elsif (success = story_page?(action['action_url']))
+      company = success.company
+    else
+      return nil
+    end
     new_action = {
       success_id: success.try(:id),
       company_id: company.id,
-      visitor_session_id: session[:visitor_session_id],
+      visitor_session_id: visitor_session_id,
       description: action['action_url'],
       timestamp: Time.at(action['time'].to_i)
     }
-    # more reliable than using action['action_title'] to id stories? ...
-    # story_slug = action['action_url'].match(/\/(\w|-)+\/(?=.*-)((\w|-)+)$/).try(:[], 2)
-    story_slug = action['action_url'].slice(action['action_url'].rindex('/') + 1,
-                                            action['action_url'].length)
-    success_id = story_slug.present? && Story.exists?(story_slug) ?
-                    Story.friendly.find(story_slug).success_id : nil
     if action['action_type'] == 'pageview'
-      PageView.create(new_action.merge({ success_id: success_id }))
+      PageView.create(new_action)
     # elsif action['action_type'] == 'outbound' &&
     #       # adjust cut-off date as necessary
     #       Time.at(action['time'].to_i) > Date.strptime('2/6/17', '%m/%d/%y')
@@ -269,11 +286,11 @@ namespace :clicky do
 
   def destroy_internal_traffic
     # anyone viewing a story prior to publish date is a curator or CSP staff - remove!
-    # TODO: limit this scope to recenty added items
+    # TODO: limit this scope to recently added items
     Visitor.joins(:visitor_sessions, :stories)
            .where('stories.published = ? OR stories.publish_date > visitor_sessions.timestamp', false)
            .destroy_all
-    # Ryan
+    # Dev traffic
     Visitor.joins(:visitor_actions)
            .where(visitor_actions: { company_id: 1 } )  # acme-test
            .try(:destroy_all)
@@ -283,9 +300,20 @@ namespace :clicky do
     Visitor.find_by(clicky_uid: 1446025430).try(:destroy)   # safari
   end
 
-  def company_is_nil_or_test? company
-    company.nil? || company.subdomain == 'cisco' || company.subdomain == 'acme' ||
-      company.subdomain == 'acme-test'
+  def test_company? subdomain
+    test_companies = ['cisco', 'acme', 'acme-test']
+    test_companies.include?(subdomain)
+  end
+
+  # returns the company if action is a company index pageview
+  def company_index_page? url
+    Company.find_by(subdomain: url.match(/\/\/((\w|-)+).customerstories.(net|org)\/?\z/).try(:[], 1))
+  end
+
+  # returns the success object if action is a story pageview
+  def story_page? url
+    slug = url.slice(url.rindex('/') + 1, url.length)
+    Story.friendly.exists?(slug) && Story.friendly.find(slug).success
   end
 
 end
