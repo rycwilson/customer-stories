@@ -25,7 +25,7 @@ namespace :clicky do
     visitors_list += get_visitors_range('2017-01-01,2017-01-14')
     visitors_list += get_visitors_range('2017-01-15,2017-01-22')
     visitors_list += get_visitors_range('2017-01-23,2017-01-31')
-    visitors_list += get_visitors_range('2017-02-01,2017-02-07')
+    visitors_list += get_visitors_range('2017-02-01,2017-02-08')
     visitors_list += get_data_since('visitors', args[:time_offset])
     visitor_sessions = create_sessions(visitors_list)
     create_actions(visitor_sessions)
@@ -45,7 +45,7 @@ namespace :clicky do
     # remove previously captured data at the tail
     visitors_list.slice!(visitors_list.index do |session|
                            session['session_id'] == VisitorSession.last.clicky_session_id
-                         end, visitors_list.length)
+                         end || visitors_list.length, visitors_list.length)
     visitor_sessions = create_sessions(visitors_list)
     update_actions(visitor_sessions)
     destroy_internal_traffic
@@ -154,7 +154,7 @@ namespace :clicky do
 
   # delay 10 minutes to ensure sessions are in place
   def update_actions sessions
-    actions_list = get_data_since('actions', '3600')
+    actions_list = get_data_since('actions', '72000')
     actions_list.slice!(0, actions_list.index do |action|
                              Time.at(action['time'].to_i) > 10.minutes.ago
                            end || 0)
@@ -280,6 +280,8 @@ namespace :clicky do
 
   # TODO: limit the scope to recently added items
   def destroy_internal_traffic
+    # TODO: This should be modified. Visitors to stories that are subsequently
+    #       unpublished will be lost.
     # anyone viewing a story prior to publish date is a curator or developer
     Visitor.joins(:visitor_sessions, :stories)
            .where('stories.published = ? OR stories.publish_date > visitor_sessions.timestamp', false)
