@@ -36,7 +36,7 @@ namespace :clicky do
   task update: :environment do
     # for added redundancy and because heroku scheduler is "best effort",
     # we're downloading an hour's worth of data every ten minutes
-    visitors_list = get_data_since('visitors', '3600')  # range in seconds relative to now (last hour)
+    visitors_list = get_data_since('visitors', '7200')  # range in seconds relative to now (last hour)
     # ignore most recent 10 minutes at the head
     visitors_list.slice!(0, visitors_list.index do |session|
                               Time.at(session['time'].to_i) > 10.minutes.ago
@@ -154,7 +154,7 @@ namespace :clicky do
 
   # delay 10 minutes to ensure sessions are in place
   def update_actions sessions
-    actions_list = get_data_since('actions', '72000')
+    actions_list = get_data_since('actions', '7200')
     actions_list.slice!(0, actions_list.index do |action|
                              Time.at(action['time'].to_i) > 10.minutes.ago
                            end || 0)
