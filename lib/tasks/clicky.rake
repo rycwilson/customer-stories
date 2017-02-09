@@ -82,9 +82,8 @@ namespace :clicky do
     visitor_sessions = []
     visitors_list.each do |session|
       if Time.at(session['time'].to_i) < 10.minutes.ago
-        domain = session['landing_page'].match(/\/\/((\w|-)+)/)[1]
-        company = Company.find_by(subdomain: domain)
-        next if company.nil? || test_company?(domain)  # nil if csp landing page
+        next if skip_url?(session['landing_page'])
+        company = Company.find_by(subdomain: session['landing_page'].match(/\/\/((\w|-)+)/)[1])
         return_visitor = Visitor.find_by(clicky_uid: session['uid'])
         visitor = return_visitor || Visitor.create(clicky_uid: session['uid'])
         referrer_type = session['referrer_type'] || 'direct'
@@ -105,7 +104,7 @@ namespace :clicky do
         elsif (success = story_page?(session['landing_page']))
           company = success.company
         else
-          # internal pages
+          # binding.remote_pry
           next
         end
         # create a new VisitorAction for the landing page
@@ -175,8 +174,8 @@ namespace :clicky do
         visitor_session = VisitorSession.find_by(clicky_session_id: session[0])
         session[1].each do |action|
           if ['pageview'].include?(action[:action_type]) && !action_exists?(action)
-              visitor_session.visitor_actions <<
-                create_action(visitor_session.id, action.stringify_keys)
+            visitor_session.visitor_actions <<
+              create_action(visitor_session.id, action.stringify_keys)
           end
         end
       end
@@ -188,10 +187,8 @@ namespace :clicky do
   # make sure outbound actions are captured
 
   def create_action visitor_session_id, action
-    action_domain = action['action_url'].match(/\/\/((\w|-)+)/)[1]
-    if action_domain == 'customerstories' || test_company?(action_domain)
-      return nil
-    elsif (company = company_index_page?(action['action_url']))
+    return nil if skip_url?(action['action_url'])
+    if (company = company_index_page?(action['action_url']))
       success = nil
     elsif (success = story_page?(action['action_url']))
       company = success.company
@@ -292,8 +289,13 @@ namespace :clicky do
            .where(visitor_actions: { company_id: 1 } )  # acme-test
            .try(:destroy_all)
     # Dan and Ryan
+    # (last one on the list is a random visitor who visits A LOT)
     Visitor.joins(:visitor_sessions)
-           .where(visitor_sessions: { ip_address: ['50.143.129.107', '24.130.151.80', '24.130.57.16'] })
+           .where(visitor_sessions: { ip_address: ['50.143.129.107', '24.130.151.80', '24.130.57.16', '50.206.28.66'] })
+           .try(:destroy_all)
+    # staging
+    Visitor.joins(:visitor_actions)
+           .where('description LIKE ?', '%.org%')
            .try(:destroy_all)
   end
 
@@ -304,11 +306,12 @@ namespace :clicky do
 
   # returns the company if action is a company index pageview
   def company_index_page? url
-    Company.find_by(subdomain: url.match(/\/\/((\w|-)+).customerstories.(net|org)\/?\z/).try(:[], 1))
+    Company.find_by(subdomain: url.match(/\/\/((\w|-)+).customerstories.net\/?\z/).try(:[], 1))
   end
 
   # returns the success object if action is a story pageview
   def story_page? url
+    return false if url.match(/customerstories.org/)
     slug = url.slice(url.rindex('/') + 1, url.length)
     Story.friendly.exists?(slug) && Story.friendly.find(slug).success
   end
@@ -318,6 +321,11 @@ namespace :clicky do
       visitor_session_id: VisitorSession.find_by(clicky_session_id: action[:session_id]).try(:id),
       timestamp: Time.at(action[:time].to_i)
     })
+  end
+
+  def skip_url? url
+    domain = url.match(/\/\/((\w|-)+)/)[1]
+    test_company?(domain) || !(company_index_page?(url) || story_page?(url))
   end
 
 end
