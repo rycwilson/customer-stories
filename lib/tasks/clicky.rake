@@ -204,29 +204,26 @@ namespace :clicky do
     }
     if action['action_type'] == 'pageview'
       PageView.create(new_action)
-    # elsif action['action_type'] == 'outbound' &&
-    #       # adjust cut-off date as necessary
-    #       Time.at(action['time'].to_i) > Date.strptime('2/6/17', '%m/%d/%y')
-    #   # what's up with this comig up nil???
-    #   success_id = Story.find_by(title: action['action_title']).success.id
-    #   if success_id.nil?
-    #     puts action
-    #   end
-    #   # linkedin profile
-    #   if action['action_url'].match(/linkedin\z/)
-    #     ProfileClick.create(new_action.merge({ success_id: success_id }))
-    #   # story share
-    #   elsif [LINKEDIN_SHARE_URL, TWITTER_SHARE_URL, FACEBOOK_SHARE_URL].include?(action['action_url'])
-    #     StoryShare.create(new_action.merge({ success_id: success_id }))
-    #   # company logo
-    #   elsif action['action_url'].match(/logo\z/)
-    #     LogoClick.create(new_action.merge({ success_id: success_id }))
-    #   # CTA
-    #   elsif action['action_url'].match(/cta\z/)
-    #     CtaClick.create(new_action.merge({ success_id: success_id }))
-    #   else
-    #     # capture these
-      # end
+    elsif action['action_type'] == 'outbound' &&
+          # adjust cut-off date as necessary
+          Time.at(action['time'].to_i) > Date.strptime('2/12/17', '%m/%d/%y')
+      # linkedin profile
+      if User.exists?(linkedin_url: action['action_url'])
+        ProfileClick.create(new_action)
+      # story share
+      elsif action['action_title'] == nil &&
+            action['action_url'].match(/\/\/(linkedin|twitter|facebook).com/)
+        StoryShare.create(new_action)
+      # CTA
+      elsif OutboundLink.exists?(link_url: action['action_url'])
+        CtaClick.create(new_action)
+      # company logo
+      elsif action['action_url'] == company.website
+        LogoClick.create(new_action)
+        # capture these
+      else
+        # ?
+      end
     end
   end
 
