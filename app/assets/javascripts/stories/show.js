@@ -20,23 +20,31 @@ function clickyListeners () {
 
   var clickyLog = function (e) {
     if (typeof clicky !== 'undefined') {
-      clicky.log(e.data.href, $('title').text(), 'outbound');
+      var href = '';
+      if (e.data.type === 'cta-form') { href = $(this).data('target'); }
+      // clicky wants to see the http:
+      else if (e.data.type === 'social-share') { href = 'http:' + $(this).attr('href').split('http')[0]; }
+      else if (e.data.type === 'linkedin') { href = e.data.href; }
+      else { href = $(this).attr('href'); }
+      clicky.log(href, $('title').text(), 'outbound');
       // for linkedin widget listeners (window won't focus if this is executed synchronously ...)
-      window.setTimeout(function () { this.focus(); }, 200);
+      if (e.data.type === 'linkedin') {
+        window.setTimeout(function () { this.focus(); }, 200);
+      }
     }
   };
 
   $(document)
-    .on('click', '.company-logo', { href: $(this).attr('href') + ' logo' }, clickyLog)
-    .on('click', '.cta-link', { href: $(this).attr('href') + ' cta' }, clickyLog)
-    .on('click', '.cta-form', { href: $(this).data('target') + ' cta' }, clickyLog)
+    .on('click', '.company-logo', { type: 'logo' }, clickyLog)
+    .on('click', '.cta-link', { type: 'cta-link' }, clickyLog)
+    .on('click', '.cta-form', { type: 'cta-form' }, clickyLog)
     .on('click', '.linkedin-share, .twitter-share, .facebook-share',
-          // without the short-circuiting, there is an error on undefined.split
-          { href: $(this).attr('href') && $(this).attr('href').split('http')[0] }, clickyLog)
+        { type: 'social-share' }, clickyLog)
     .on('mouseover', '.linkedin-widget',
       function () {
         window.focus();
-        $(window).on('blur', { href: $(this).data('linkedin-url') + ' linkedin' }, clickyLog);
+        $(window).on('blur',
+          { type: 'linkedin', href: $(this).data('linkedin-url') }, clickyLog);
       })
     .on('mouseout', '.linkedin-widget',
       function () {
