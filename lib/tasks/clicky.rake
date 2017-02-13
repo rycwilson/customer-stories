@@ -144,7 +144,7 @@ namespace :clicky do
           JSON.parse(session[:actions_request].response.response_body)[0]['dates'][0]['items']
         actions_list.each_with_index do |action, index|
           next if index == 0  # first action is already saved landing pageview
-          if ['pageview'].include?(action['action_type'])
+          if ['pageview', 'outbound'].include?(action['action_type'])
             create_action(session[:visitor_session_id], action)
           end
         end
@@ -173,7 +173,7 @@ namespace :clicky do
       .each do |session|
         visitor_session = VisitorSession.find_by(clicky_session_id: session[0])
         session[1].each do |action|
-          if ['pageview'].include?(action[:action_type]) && !action_exists?(action)
+          if ['pageview', 'outbound'].include?(action[:action_type]) && !action_exists?(action)
             visitor_session.visitor_actions <<
               create_action(visitor_session.id, action.stringify_keys)
           end
@@ -206,7 +206,7 @@ namespace :clicky do
       PageView.create(new_action)
     elsif action['action_type'] == 'outbound' &&
           # adjust cut-off date as necessary
-          Time.at(action['time'].to_i) > Date.strptime('2/12/17', '%m/%d/%y')
+          Time.at(action['time'].to_i) > Date.strptime('2/13/17', '%m/%d/%y').beginning_of_day
       # linkedin profile
       if User.exists?(linkedin_url: action['action_url'])
         ProfileClick.create(new_action)
@@ -324,7 +324,12 @@ namespace :clicky do
 
   def skip_url? url
     domain = url.match(/\/\/((\w|-)+)/)[1]
-    test_company?(domain) || !(company_index_page?(url) || story_page?(url))
+    test_company?(domain) ||
+    !( company_index_page?(url) || story_page?(url) ||
+       User.exists?(linkedin_url: action['action_url']) ||
+       url.match(/\/\/(linkedin|twitter|facebook).com/) ||
+       OutboundLink.exists?(link_url: action['action_url']) ||
+       action['action_url'] == company.website )
   end
 
 end
