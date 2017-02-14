@@ -24,9 +24,9 @@ function clickyListeners () {
       if (e.data.type === 'cta-form') {
         href = $(this).data('target');
       } else if (e.data.type === 'social-share') {
-        // seems clicky is logging this outbound on its own, to wit:
-        // action in actions-list shows no title, and the url does not match this ...
         href = 'http:' + $(this).attr('href').split('http')[0];
+        clicky.log(href, e.data.title, 'outbound');
+        return;
       } else if (e.data.type === 'linkedin') {
         href = e.data.href;
         // for linkedin widget listeners

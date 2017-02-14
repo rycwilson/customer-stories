@@ -38,7 +38,7 @@
 
       <% if group_type == :story_views %>
 
-<td><%= local_time(DateTime.parse(item[:timestamp]), "%m-%d-%y %l:%M%p") %></td>
+<td><%= local_time(DateTime.parse(item[:timestamp]), "%m-%d-%y %l:%M %p") %></td>
 <td><a href="<%= item[:story_view]['success']['story']['csp_story_path'] %>">
   <%= item[:story_view]['success']['story']['title'] %>
 </a></td>
