@@ -40,7 +40,7 @@ namespace :clicky do
     visitors_list = get_data_since('visitors', '7200')  # range in seconds relative to now (last hour)
     # ignore most recent 10 minutes at the head
     visitors_list.slice!(0, visitors_list.index do |session|
-                              Time.at(session['time'].to_i) > 10.minutes.ago
+                              Time.at(session['time'].to_i) < 15.minutes.ago
                             end || 0)
 
     # remove previously captured data at the tail
@@ -82,7 +82,7 @@ namespace :clicky do
   def create_sessions visitors_list
     visitor_sessions = []
     visitors_list.each do |session|
-      if Time.at(session['time'].to_i) < 10.minutes.ago
+      if Time.at(session['time'].to_i) < 15.minutes.ago
         next if skip_url?(session['landing_page'], true)  # true => landing
         company = Company.find_by(subdomain: session['landing_page'].match(/\/\/((\w|-)+)/)[1])
         return_visitor = Visitor.find_by(clicky_uid: session['uid'])
@@ -154,7 +154,7 @@ namespace :clicky do
   def update_actions
     actions_list = get_data_since('actions', '7200')
     actions_list.slice!(0, actions_list.index do |action|
-                             Time.at(action['time'].to_i) > 15.minutes.ago
+                             Time.at(action['time'].to_i) < 20.minutes.ago
                            end || 0)
     # in case there are visitor_actions with identical timestamp, look at all of them ...
     last_actions = VisitorAction.where(timestamp: VisitorAction.last.timestamp)
@@ -171,6 +171,7 @@ namespace :clicky do
     actions_list
       .group_by { |action| action['session_id'] }
       .each do |session|
+        # binding.remote_pry
         visitor_session = VisitorSession.find_by(clicky_session_id: session[0])
         session[1].each do |action|
           create_action(visitor_session.id, action.stringify_keys)
