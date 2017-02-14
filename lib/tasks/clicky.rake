@@ -26,6 +26,7 @@ namespace :clicky do
     visitors_list += get_visitors_range('2017-01-15,2017-01-22')
     visitors_list += get_visitors_range('2017-01-23,2017-01-31')
     visitors_list += get_visitors_range('2017-02-01,2017-02-08')
+    visitors_list += get_visitors_range('2017-02-09,2017-02-12')
     visitors_list += get_data_since('visitors', args[:time_offset])
     visitor_sessions = create_sessions(visitors_list)
     create_actions(visitor_sessions)
@@ -46,8 +47,8 @@ namespace :clicky do
     visitors_list.slice!(visitors_list.index do |session|
                            session['session_id'] == VisitorSession.last.clicky_session_id
                          end || visitors_list.length, visitors_list.length)
-    visitor_sessions = create_sessions(visitors_list)
-    update_actions(visitor_sessions)
+    create_sessions(visitors_list)
+    update_actions
     destroy_internal_traffic
     Rake::Task["clicky:cache"].invoke
   end
@@ -82,7 +83,7 @@ namespace :clicky do
     visitor_sessions = []
     visitors_list.each do |session|
       if Time.at(session['time'].to_i) < 10.minutes.ago
-        next if skip_url?(session['landing_page'])
+        next if skip_url?(session['landing_page'], true)  # true => landing
         company = Company.find_by(subdomain: session['landing_page'].match(/\/\/((\w|-)+)/)[1])
         return_visitor = Visitor.find_by(clicky_uid: session['uid'])
         visitor = return_visitor || Visitor.create(clicky_uid: session['uid'])
@@ -144,19 +145,16 @@ namespace :clicky do
           JSON.parse(session[:actions_request].response.response_body)[0]['dates'][0]['items']
         actions_list.each_with_index do |action, index|
           next if index == 0  # first action is already saved landing pageview
-          if ['pageview', 'outbound'].include?(action['action_type'])
-            create_action(session[:visitor_session_id], action)
-          end
+          create_action(session[:visitor_session_id], action)
         end
       end
     end
   end
 
-  # delay 10 minutes to ensure sessions are in place
-  def update_actions sessions
+  def update_actions
     actions_list = get_data_since('actions', '7200')
     actions_list.slice!(0, actions_list.index do |action|
-                             Time.at(action['time'].to_i) > 10.minutes.ago
+                             Time.at(action['time'].to_i) > 15.minutes.ago
                            end || 0)
     # in case there are visitor_actions with identical timestamp, look at all of them ...
     last_actions = VisitorAction.where(timestamp: VisitorAction.last.timestamp)
@@ -168,15 +166,14 @@ namespace :clicky do
                           end
                         end
     actions_list.slice!(last_action_index || actions_list.length, actions_list.length)
+    # passing the session_id to the create_action method ensures that each session
+    # will only be looked up once
     actions_list
       .group_by { |action| action['session_id'] }
       .each do |session|
         visitor_session = VisitorSession.find_by(clicky_session_id: session[0])
         session[1].each do |action|
-          if ['pageview', 'outbound'].include?(action[:action_type]) && !action_exists?(action)
-            visitor_session.visitor_actions <<
-              create_action(visitor_session.id, action.stringify_keys)
-          end
+          create_action(visitor_session.id, action.stringify_keys)
         end
       end
   end
@@ -187,43 +184,73 @@ namespace :clicky do
   # make sure outbound actions are captured
 
   def create_action visitor_session_id, action
-    return nil if skip_url?(action['action_url'])
+    # binding.remote_pry if action['action_type'] == 'outbound'
+    return nil if (
+      visitor_session_id.nil? ||
+      !['pageview', 'outbound'].include?(action['action_type']) ||
+      action_exists?(action) ||
+      skip_url?(action['action_url'], false)  # false => not a landing pageview
+    )
     if (company = company_index_page?(action['action_url']))
       success = nil
     elsif (success = story_page?(action['action_url']))
       company = success.company
     else
       return nil
+      # it's an outbound action
     end
     new_action = {
-      success_id: success.try(:id),
-      company_id: company.id,
       visitor_session_id: visitor_session_id,
       description: action['action_url'],
       timestamp: Time.at(action['time'].to_i)
     }
     if action['action_type'] == 'pageview'
-      PageView.create(new_action)
-    elsif action['action_type'] == 'outbound' &&
+      PageView.create(
+        new_action.merge({ success_id: success.try(:id),
+                           company_id: company.id })
+      )
+    elsif action['action_type'] == 'outbound' #&&
           # adjust cut-off date as necessary
-          Time.at(action['time'].to_i) > Date.strptime('2/13/17', '%m/%d/%y').beginning_of_day
-      # linkedin profile
-      if User.exists?(linkedin_url: action['action_url'])
-        ProfileClick.create(new_action)
-      # story share
-      elsif action['action_title'] == nil &&
-            action['action_url'].match(/\/\/(linkedin|twitter|facebook).com/)
-        StoryShare.create(new_action)
-      # CTA
-      elsif OutboundLink.exists?(link_url: action['action_url'])
-        CtaClick.create(new_action)
-      # company logo
-      elsif action['action_url'] == company.website
-        LogoClick.create(new_action)
-        # capture these
-      else
-        # ?
-      end
+          # Time.at(action['time'].to_i) > Date.strptime('2/12/17', '%m/%d/%y').beginning_of_day
+
+      # # clicky strips the 'www' from any action url
+      # alt_url = action['action_url'].insert(action['action_url'].index(/\/\//) + 2, 'www.')
+
+      # # linkedin profile
+      # if ( contributor = User.find_by(linkedin_url: action['action_url'] ||
+      #      contributor = User.find_by(linkedin_url: alt_url) )
+      #   success = Story.find_by(title: action['action_title']).try(:success)
+      #   company = success.try(:company)
+      #   if success && success.contributors.include?(contributor)
+      #   ProfileClick.create(
+      #     new_action.merge({ success_id: success.id,
+      #                        company_id: company.id,
+      #                        description: contributor.linkedin_url })
+      #   )
+      # # story share
+      # elsif action['action_title'].nil? &&
+      #       action['action_url'].match(/\/\/(linkedin|twitter|facebook).com/)
+      #   # how to find the success??  clicky_custom.outbound_disable
+      #   StoryShare.create(new_action)
+      # # CTA
+      # elsif OutboundLink.exists?(link_url: action['action_url'])
+      #   # binding.remote_pry
+      #   CtaClick.create(new_action)
+      # elsif OutboundLink.exists?(link_url: alt_url)
+      #   # binding.remote_pry
+      #   new_action[:description] = alt_url
+      #   CtaClick.create(new_action)
+      # # company logo
+      # elsif action['action_url'] == company.website
+      #   # binding.remote_pry
+      #   LogoClick.create(new_action)
+      # elsif alt_url == company.website
+      #   # binding.remote_pry
+      #   new_action[:description] = alt_url
+      #   LogoClick.create(new_action)
+      # else
+      #   nil
+      # end
     end
   end
 
@@ -283,16 +310,16 @@ namespace :clicky do
     Visitor.joins(:visitor_sessions, :stories)
            .where('stories.published = ? OR stories.publish_date > visitor_sessions.timestamp', false)
            .try(:destroy_all)
-    # Dev traffic
+    # # Dev traffic
     Visitor.joins(:visitor_actions)
            .where(visitor_actions: { company_id: 1 } )  # acme-test
            .try(:destroy_all)
-    # Dan and Ryan
-    # (last one on the list is a random visitor who visits A LOT)
+    # # Dan and Ryan
+    # # (last one on the list is a random visitor who visits A LOT)
     Visitor.joins(:visitor_sessions)
            .where(visitor_sessions: { ip_address: ['50.143.129.107', '24.130.151.80', '24.130.57.16', '50.206.28.66'] })
            .try(:destroy_all)
-    # staging
+    # # staging
     Visitor.joins(:visitor_actions)
            .where('description LIKE ?', '%.org%')
            .try(:destroy_all)
@@ -317,19 +344,29 @@ namespace :clicky do
 
   def action_exists? action
     VisitorAction.exists?({
-      visitor_session_id: VisitorSession.find_by(clicky_session_id: action[:session_id]).try(:id),
-      timestamp: Time.at(action[:time].to_i)
+      visitor_session_id: VisitorSession.find_by(clicky_session_id: action['session_id']).try(:id),
+      timestamp: Time.at(action['time'].to_i)
     })
   end
 
-  def skip_url? url
+  def skip_url? url, is_landing
     domain = url.match(/\/\/((\w|-)+)/)[1]
-    test_company?(domain) ||
-    !( company_index_page?(url) || story_page?(url) ||
-       User.exists?(linkedin_url: action['action_url']) ||
-       url.match(/\/\/(linkedin|twitter|facebook).com/) ||
-       OutboundLink.exists?(link_url: action['action_url']) ||
-       action['action_url'] == company.website )
+    return true if test_company?(domain) || domain == 'customerstories'
+    if is_landing
+      # must be an index or story page
+      !( company_index_page?(url) || story_page?(url) )
+    else
+      # must be a valid outbound action OR an index or story page
+      alt_url = url.insert(url.index(/\/\//) + 2, 'www.')
+      !( ( company_index_page?(url) || story_page?(url) ) ||
+         ( User.exists?(linkedin_url: url) ||
+           User.exists?(linkedin_url: alt_url)                    # ProfileClick
+           url.match(/\/\/(linkedin|twitter|facebook).com/) ||    # StoryShare
+           OutboundLink.exists?(link_url: url) ||
+           OutboundLink.exists?(link_url: alt_url)               # CtaClick
+           Company.exists?(website: url) ||                       # LogoClick
+           Company.exists?(website: alt_url) ) )
+    end
   end
 
 end

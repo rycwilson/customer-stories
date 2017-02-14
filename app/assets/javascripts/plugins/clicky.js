@@ -8,6 +8,7 @@ function initClicky () {
     $.getScript('//static.getclicky.com/js', function () {
       try {
         clicky.init(100886848);
+        clicky_custom.outbound_disable = 1;
       } catch (e) {
         // handle exception
       }
