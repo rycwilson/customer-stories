@@ -195,19 +195,16 @@ namespace :clicky do
         new_action.merge({ success_id: success.try(:id),
                            company_id: company.id })
       )
-    elsif action['action_type'] == 'outbound' #&&
+    elsif action['action_type'] == 'outbound' #&&   # TOO MANY ISSUES
           # adjust cut-off date as necessary
           # Time.at(action['time'].to_i) > Date.strptime('2/12/17', '%m/%d/%y').beginning_of_day
-
-      # # clicky strips the 'www' from any action url
-      # alt_url = action['action_url'].insert(action['action_url'].index(/\/\//) + 2, 'www.')
+      # success = Story.find_by(title: action['action_title']).try(:success)
+      # company = success.try(:company)
 
       # # linkedin profile
       # if ( contributor = User.find_by(linkedin_url: action['action_url'] ||
-      #      contributor = User.find_by(linkedin_url: alt_url) )
-      #   success = Story.find_by(title: action['action_title']).try(:success)
-      #   company = success.try(:company)
-      #   if success && success.contributors.include?(contributor)
+      #      contributor = User.find_by(linkedin_url: alt_url(action['action_url'])) )
+      #   success
       #   ProfileClick.create(
       #     new_action.merge({ success_id: success.id,
       #                        company_id: company.id,
@@ -217,10 +214,12 @@ namespace :clicky do
       # elsif action['action_title'].nil? &&
       #       action['action_url'].match(/\/\/(linkedin|twitter|facebook).com/)
       #   # how to find the success??  clicky_custom.outbound_disable
-      #   StoryShare.create(new_action)
+      #   # StoryShare.create(new_action)
       # # CTA
-      # elsif OutboundLink.exists?(link_url: action['action_url'])
+      # elsif ( cta_link = OutboundLink.find_by(link_url: action['action_url']) ||
+      #         cta_link = OutboundLink.find_by(link_url: alt_url(action['action_url'])) )
       #   # binding.remote_pry
+
       #   CtaClick.create(new_action)
       # elsif OutboundLink.exists?(link_url: alt_url)
       #   # binding.remote_pry

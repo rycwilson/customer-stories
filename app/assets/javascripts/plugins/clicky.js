@@ -7,7 +7,7 @@ function initClicky () {
 
     $.getScript('//static.getclicky.com/js', function () {
       try {
-        var clicky_custom = clicky_custom || {};
+        clicky_custom = clicky_custom || {};
         clicky_custom.outbound_disable = 1;
         clicky.init(100886848);
       } catch (e) {
