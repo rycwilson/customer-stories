@@ -82,7 +82,7 @@ namespace :clicky do
     visitor_sessions = []
     visitors_list.each do |session|
       unless (
-          Time.at(session['time'].to_i) > 10.minutes.ago ||
+          # Time.at(session['time'].to_i) > 10.minutes.ago ||
           VisitorSession.exists?(clicky_session_id: session['session_id']) ||
           skip_url?(session['landing_page'], true) )  # true => landing
         company = Company.find_by(subdomain: session['landing_page'].match(/\/\/((\w|-)+)/)[1])
@@ -157,7 +157,7 @@ namespace :clicky do
     actions_list = get_data_since('actions', '7200')
     # buffer exists to allow for disparity in the appearance of action/session in the api feed
     actions_list.slice!(0, actions_list.index do |action|
-                             Time.at(action['time'].to_i) < VisitorSession.last.timestamp - 10.minutes
+                             Time.at(action['time'].to_i) < VisitorSession.last.timestamp - 20.minutes
                            end || 0)
     actions_list
       .group_by { |action| action['session_id'] }
@@ -183,7 +183,6 @@ namespace :clicky do
     elsif (success = story_page?(action['action_url']))
       company = success.company
     else
-      return nil
       # it's an outbound action
     end
     new_action = {
@@ -297,18 +296,10 @@ namespace :clicky do
     Visitor.joins(:visitor_sessions, :stories)
            .where('stories.published = ? OR stories.publish_date > visitor_sessions.timestamp', false)
            .try(:destroy_all)
-    # # Dev traffic
-    Visitor.joins(:visitor_actions)
-           .where(visitor_actions: { company_id: 1 } )  # acme-test
-           .try(:destroy_all)
     # # Dan and Ryan
     # # (last one on the list is a random visitor who visits A LOT)
     Visitor.joins(:visitor_sessions)
            .where(visitor_sessions: { ip_address: ['50.143.129.107', '24.130.151.80', '24.130.57.16', '50.206.28.66'] })
-           .try(:destroy_all)
-    # # staging
-    Visitor.joins(:visitor_actions)
-           .where('description LIKE ?', '%.org%')
            .try(:destroy_all)
   end
 
@@ -319,7 +310,9 @@ namespace :clicky do
 
   # returns the company if action is a company index pageview
   def company_index_page? url
-    Company.find_by(subdomain: url.match(/\/\/((\w|-)+).customerstories.net\/?\z/).try(:[], 1))
+    # www may or may not be present
+    Company.find_by(subdomain: url.match(/\/\/((\w|-)+)\.customerstories\.net\/?\z/).try(:[], 1)) ||
+    Company.find_by(subdomain: url.match(/\/\/www\.((\w|-)+)\.customerstories\.net\/?\z/).try(:[], 1))
   end
 
   # returns the success object if action is a story pageview
@@ -338,23 +331,34 @@ namespace :clicky do
   end
 
   def skip_url? url, is_landing
-    domain = url.match(/\/\/((\w|-)+)/)[1]
-    return true if test_company?(domain) || domain == 'customerstories' ||
-                   url.match(/customerstories.org/)
+    # www may or may not be present
+    domain = url.match(/\/\/www\.((\w|-)+)/).try(:[], 1) ||
+             url.match(/\/\/((\w|-)+)/)[1]
+    return true if test_company?(domain) ||
+                   domain == 'customerstories' ||     # store-front pages
+                   url.match(/customerstories.org/)   # staging
     if is_landing
       # must be an index or story page
       !( company_index_page?(url) || story_page?(url) )
     else
       # must be a valid outbound action OR an index or story page
-      alt_url = url.insert(url.index(/\/\//) + 2, 'www.')  # clicky strips out the www
-      !( ( company_index_page?(url) || story_page?(url) ) ||
+      !( ( company_index_page?(url) || story_page?(url) ) ||      # PageView
          ( User.exists?(linkedin_url: url) ||                     # ProfileClick
-           User.exists?(linkedin_url: alt_url) ||
+           User.exists?(linkedin_url: alt_url(url)) ||
            url.match(/\/\/(linkedin|twitter|facebook).com/) ||    # StoryShare
            OutboundLink.exists?(link_url: url) ||                 # CtaClick
-           OutboundLink.exists?(link_url: alt_url) ||
+           OutboundLink.exists?(link_url: alt_url(url)) ||
            Company.exists?(website: url) ||                       # LogoClick
-           Company.exists?(website: alt_url) ) )
+           Company.exists?(website: alt_url(url)) ) )
+    end
+  end
+
+  # inserts a www if not present, or removes www if present
+  def alt_url url
+    if url.match(/\/\/www\./)
+      url.sub!(/www\./, '')
+    else
+      url.insert(url.index(/\/\//) + 2, 'www.')
     end
   end
 
