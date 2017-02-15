@@ -8,7 +8,8 @@ class AnalyticsController < ApplicationController
   end
 
   def charts
-    if params[:default_data] == 'true'
+    # binding.remote_pry
+    if params[:initial_load] == 'true'
       default_referrer_types =
         Rails.cache.fetch("#{@company.subdomain}/referrer-types-default") do
           @company.referrer_types_chart_json(@story, @start_date, @end_date)

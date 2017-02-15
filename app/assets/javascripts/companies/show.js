@@ -15,13 +15,13 @@ function companiesShowListeners () {
 }
 
 function measureCharts () {
-  var getCharts = function (defaultData) {
+  var getCharts = function (isInitialLoad) {
     $.get({
       url: '/analytics/charts',
       data: {
         story_id: $('#charts-story-select').val(),
         date_range: $('#charts-date-range-input').val(),
-        default_data: defaultData
+        initial_load: isInitialLoad
       },
       success: function (data, status, jqxhr) {
         initGoogleCharts(true, data.charts);
@@ -132,14 +132,14 @@ function measureVisitors () {
         $table.DataTable().rows.add(data);
         $table.DataTable().draw();
       },
-      getVisitors = function (defaultData) {
+      getVisitors = function (isInitialLoad) {
         var $table = $('#measure-visitors-table');
         $.get({
           url: '/analytics/visitors',
           data: {
             story_id: $('#visitors-story-select').val(),
             date_range: $('#visitors-date-range-input').val(),
-            default_data: defaultData
+            initial_load: isInitialLoad
           },
           success: function (data, status, jqxhr) {
             if ($.fn.DataTable.isDataTable($table)) {
