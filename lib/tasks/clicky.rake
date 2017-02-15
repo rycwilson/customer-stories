@@ -26,7 +26,7 @@ namespace :clicky do
     visitors_list += get_visitors_range('2017-01-15,2017-01-22')
     visitors_list += get_visitors_range('2017-01-23,2017-01-31')
     visitors_list += get_visitors_range('2017-02-01,2017-02-08')
-    visitors_list += get_visitors_range('2017-02-09,2017-02-13')
+    visitors_list += get_visitors_range('2017-02-09,2017-02-14')
     visitors_list += get_data_since('visitors', args[:time_offset])
     visitor_sessions = create_sessions(visitors_list)
     create_actions(visitor_sessions)
@@ -39,9 +39,9 @@ namespace :clicky do
     # we're downloading an hour's worth of data every ten minutes
     visitors_list = get_data_since('visitors', '7200')  # range in seconds relative to now (last hour)
     # ignore most recent 10 minutes at the head
-    visitors_list.slice!(0, visitors_list.index do |session|
-                              Time.at(session['time'].to_i) < 10.minutes.ago
-                            end || 0)
+    # visitors_list.slice!(0, visitors_list.index do |session|
+    #                           Time.at(session['time'].to_i) < 10.minutes.ago
+    #                         end || 0)
     # remove previously captured data at the tail
     visitors_list.slice!(visitors_list.index do |session|
                            session['session_id'] == VisitorSession.last.clicky_session_id
@@ -156,9 +156,9 @@ namespace :clicky do
   def update_actions
     actions_list = get_data_since('actions', '7200')
     # buffer exists to allow for disparity in the appearance of action/session in the api feed
-    actions_list.slice!(0, actions_list.index do |action|
-                             Time.at(action['time'].to_i) < VisitorSession.last.timestamp - 20.minutes
-                           end || 0)
+    # actions_list.slice!(0, actions_list.index do |action|
+    #                          Time.at(action['time'].to_i) < VisitorSession.last.timestamp - 20.minutes
+    #                        end || 0)
     actions_list
       .group_by { |action| action['session_id'] }
       .each do |session|
