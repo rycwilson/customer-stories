@@ -33,8 +33,10 @@ function measureCharts () {
   $(document)
     .on('click', 'a[href="#measure-panel"]',
       function () {
-        // if a synchronous load, let initGoogleCharts handle it
-        if ($('#measure-summary-container').length === 0) { return false; }
+        // if current page is not companies#show, let initGoogleCharts handle it
+        if ($('#measure-summary-container').length === 0) {
+          return false;
+        }
         if ($('#visitors-bar-graph').children().length === 0) {
           getCharts(true);
         }

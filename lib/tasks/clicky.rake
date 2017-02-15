@@ -59,14 +59,19 @@ namespace :clicky do
         "#{company.subdomain}/recent-activity",
         company.recent_activity(30)
       )
-      Rails.cache.write(
-        "#{company.subdomain}/visitors-chart-default",
-        company.visitors_chart_json(nil, 30.days.ago.to_date, Date.today)
-      )
-      Rails.cache.write(
-        "#{company.subdomain}/referrer-types-default",
-        company.referrer_types_chart_json(nil, 30.days.ago.to_date, Date.today)
-      )
+      # somehow these to default values are different (different numbers for each week
+      # in a 30-day span) when the cache is proactively written to here.  so just delete
+      # the cache entry instead ...
+      Rails.cache.delete("#{company.subdomain}/visitors-chart-default")
+      # Rails.cache.write(
+      #   "#{company.subdomain}/visitors-chart-default",
+      #   company.visitors_chart_json(nil, 30.days.ago.to_date, Date.today)
+      # )
+      Rails.cache.delete("#{company.subdomain}/referrer-types-default")
+      # Rails.cache.write(
+      #   "#{company.subdomain}/referrer-types-default",
+      #   company.referrer_types_chart_json(nil, 30.days.ago.to_date, Date.today)
+      # )
       Rails.cache.write(
         "#{company.subdomain}/stories-table",
         company.stories_table_json
