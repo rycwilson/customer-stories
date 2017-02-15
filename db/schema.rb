@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161218195350) do
+ActiveRecord::Schema.define(version: 20170203231829) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -350,8 +350,9 @@ ActiveRecord::Schema.define(version: 20161218195350) do
     t.datetime "created_at",                         null: false
     t.datetime "updated_at",                         null: false
     t.boolean  "landing",            default: false
-    t.string   "share_network"
+    t.string   "description"
     t.integer  "company_id"
+    t.datetime "timestamp"
   end
 
   add_index "visitor_actions", ["company_id"], name: "index_visitor_actions_on_company_id", using: :btree
@@ -378,7 +379,6 @@ ActiveRecord::Schema.define(version: 20161218195350) do
     t.datetime "updated_at",                         null: false
     t.string   "clicky_uid"
     t.integer  "visitor_sessions_count", default: 0
-    t.datetime "last_visited"
   end
 
   add_index "visitors", ["clicky_uid"], name: "index_visitors_on_clicky_uid", unique: true, using: :btree

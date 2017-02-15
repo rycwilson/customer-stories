@@ -4,7 +4,6 @@
 //= require plugins/select2
 //= require plugins/linkedin
 //= require plugins/summernote
-//= require plugins/socialshare
 //= require plugins/tooltips
 //= require plugins/clicky
 //= require plugins/datatables
@@ -21,7 +20,6 @@ function constructPlugins () {
   initDataTables();
   initSummernote();
   initTooltips();
-  initSocialShare();
   initClicky();
 
   $('.best_in_place').best_in_place();
@@ -79,6 +77,85 @@ function deconstructPlugins () {
   $("[data-provider='summernote']").summernote('destroy');
 
 }
+
+// datetime-moment plugin
+// https://datatables.net/plug-ins/sorting/datetime-moment
+(function (factory) {
+  if (typeof define === "function" && define.amd) {
+    define(["jquery", "moment", "datatables.net"], factory);
+  } else {
+    factory(jQuery, moment);
+  }
+}(function ($, moment) {
+
+  $.fn.dataTable.moment = function ( format, locale ) {
+    var types = $.fn.dataTable.ext.type;
+
+    // Add type detection
+    types.detect.unshift( function ( d ) {
+      if ( d ) {
+            // Strip HTML tags and newline characters if possible
+            if ( d.replace ) {
+              d = d.replace(/(<.*?>)|(\r?\n|\r)/g, '');
+            }
+
+            // Strip out surrounding white space
+            d = $.trim( d );
+          }
+
+        // Null and empty values are acceptable
+        if ( d === '' || d === null ) {
+          return 'moment-'+format;
+        }
+
+        return moment( d, format, locale, true ).isValid() ?
+        'moment-'+format :
+        null;
+      } );
+
+    // Add sorting method - use an integer for the sorting
+    types.order[ 'moment-'+format+'-pre' ] = function ( d ) {
+      if ( d ) {
+            // Strip HTML tags and newline characters if possible
+            if ( d.replace ) {
+              d = d.replace(/(<.*?>)|(\r?\n|\r)/g, '');
+            }
+
+            // Strip out surrounding white space
+            d = $.trim( d );
+          }
+
+          return d === '' || d === null ?
+          -Infinity :
+          parseInt( moment( d, format, locale, true ).format( 'x' ), 10 );
+        };
+      };
+
+    }));
+
+// social sharing
+$.fn.socialSharePopup = function (e, width, height) {
+  // Prevent default anchor event
+  e.preventDefault();
+  // Fixes dual-screen position                         Most browsers      Firefox
+  var dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : screen.left;
+  var dualScreenTop = window.screenTop !== undefined ? window.screenTop : screen.top;
+
+  var windowWidth = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+  var windowHeight = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+  // Set values for window
+  width = width || '550';
+  height = height || '442';
+
+  var left = ((windowWidth / 2) - (width / 2)) + dualScreenLeft;
+  var top = ((windowHeight / 2) - (height / 2)) + dualScreenTop;
+
+  // Set title and open popup with focus on it
+  var strTitle = ((typeof this.attr('title') !== 'undefined') ? this.attr('title') : 'Social Share'),
+      strParam = 'width=' + width + ',height=' + height + ',top=' + top + ',left=' + left + ',resizable=no',
+      objWindow = window.open(this.attr('href'), 'shareWindow', strParam).focus();
+};
 
 
 

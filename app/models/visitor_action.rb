@@ -6,4 +6,6 @@ class VisitorAction < ActiveRecord::Base
   has_one :visitor, through: :visitor_session
   has_one :story, through: :success
 
+  default_scope { order(:timestamp) }
+
 end

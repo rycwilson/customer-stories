@@ -8,25 +8,33 @@ class AnalyticsController < ApplicationController
   end
 
   def charts
+    if params[:initial_load] == 'true'
+      # binding.remote_pry
+      default_referrer_types =
+        Rails.cache.fetch("#{@company.subdomain}/referrer-types-default") do
+          @company.referrer_types_chart_json(@story, @start_date, @end_date)
+        end
+      default_visitors =
+        Rails.cache.fetch("#{@company.subdomain}/visitors-chart-default") do
+          @company.visitors_chart_json(@story, @start_date, @end_date)
+        end
+      # default_actions =
+      #   Rails.cache.fetch("#{@company.subdomain}/actions-chart-default") do
+      #     @company.actions_chart_json(@story, @start_date, @end_date)
+      #   end
+    else
+      default_referrer_types = default_visitors = nil
+    end
     respond_to do |format|
       format.json do
         render({
           json: {
             charts: {
-              referrerTypes: @company.referrer_types_chart_json(@story, @start_date, @end_date),
-              visitors: @company.visitors_chart_json(@story, @start_date, @end_date)
+              referrerTypes: default_referrer_types || @company.referrer_types_chart_json(@story, @start_date, @end_date),
+              visitors: default_visitors || @company.visitors_chart_json(@story, @start_date, @end_date)
+              # actions: default_actions || @company.actions_chart_json(@story, @start_date, @end_date)
             }
           }
-        })
-      end
-    end
-  end
-
-  def visitors
-    respond_to do |format|
-      format.json do
-        render({
-          json: { data: @company.visitors_table_json(@story, @start_date, @end_date) }
         })
       end
     end
@@ -36,7 +44,27 @@ class AnalyticsController < ApplicationController
     respond_to do |format|
       format.json do
         render({
-          json: { data: @company.stories_table_json }
+          json: { data: Rails.cache.fetch("#{@company.subdomain}/stories-table") do
+                          @company.stories_table_json
+                        end }
+        })
+      end
+    end
+  end
+
+  def visitors
+    if params[:default_data] == 'true'
+      default_visitors =
+        Rails.cache.fetch("#{@company.subdomain}/visitors-table-default") do
+          @company.visitors_table_json(@story, @start_date, @end_date)
+        end
+    else
+      default_visitors = nil
+    end
+    respond_to do |format|
+      format.json do
+        render({
+          json: { data: default_visitors || @company.visitors_table_json(@story, @start_date, @end_date) }
         })
       end
     end

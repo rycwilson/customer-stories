@@ -1,12 +1,66 @@
 
 function storiesShow () {
+
   loadVideoThumbnail();
   widgetsMonitor();
+  clickyListeners();
 
-  $(document).on('click', '.outbound-form', function () {
-    $('#outbound-form-modal').modal('show');
-  });
+  $(document).on('click', '.cta-form',
+    function () {
+      $('#outbound-form-modal').modal('show');
+    });
 
+}
+
+// NOTE: the contributor data must be passed to the callback as shown;
+// if passed via argument, with a 'contributor' parameter in the callback
+// and callback returning a function, then $(window).off() won't correctly
+// turn off the event listener
+function clickyListeners () {
+
+  var clickyLog = function (e) {
+    if (typeof clicky !== 'undefined') {
+      var href = '';
+      if (e.data.type === 'cta-form') {
+        href = $(this).data('target');
+      } else if (e.data.type === 'social-share') {
+        href = 'http:' + $(this).attr('href').split('http')[0];
+        clicky.log(href, e.data.title, 'outbound');
+        return;
+      } else if (e.data.type === 'linkedin') {
+        href = e.data.href;
+        // for linkedin widget listeners
+        // (window won't focus if this is executed synchronously ...)
+        window.setTimeout(function () { this.focus(); }, 200);
+      } else {
+        href = $(this).attr('href');
+      }
+      clicky.log(href, $('title').text(), 'outbound');
+    }
+  };
+
+  $(document)
+    .on('click', '.company-logo', { type: 'logo' }, clickyLog)
+    .on('click', '.cta-link', { type: 'cta-link' }, clickyLog)
+    .on('click', '.cta-form', { type: 'cta-form' }, clickyLog)
+    .on('click', '.linkedin-share, .twitter-share, .facebook-share',
+        { type: 'social-share', title: $('title').text() }, clickyLog)
+    .on('click', '.linkedin-share',
+      function (e) { $(this).socialSharePopup(e, 550, 544); })
+    .on('click', '.twitter-share',
+      function (e) { $(this).socialSharePopup(e, 500, 260); })
+    .on('click', '.facebook-share',
+      function (e) { $(this).socialSharePopup(e, 600, 424); })
+    .on('mouseover', '.linkedin-widget',
+      function () {
+        window.focus();
+        $(window).on('blur',
+          { type: 'linkedin', href: $(this).data('linkedin-url') }, clickyLog);
+      })
+    .on('mouseout', '.linkedin-widget',
+      function () {
+        $(window).off('blur', clickyLog);
+      });
 }
 
 /*
@@ -39,7 +93,6 @@ function widgetsMonitor () {
           if (event.origin === "https://platform.linkedin.com" &&
               event.data.includes('-ready') && firstWidgetIndex === null) {
             firstWidgetIndex = parseInt(event.data.match(/\w+_(\d+)-ready/)[1], 10);
-
           } else if (event.origin === "https://platform.linkedin.com" &&
               event.data.includes('widgetReady')) {
             currentWidgetIndex = parseInt(event.data.match(/\w+_(\d+)\s/)[1], 10);

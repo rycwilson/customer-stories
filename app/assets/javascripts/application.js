@@ -46,7 +46,7 @@ function setAppData () {
 
 function attachAppListeners () {
 
-  popoverListeners();
+  // popoverListeners();
 
   $(document).on('click', '.workflow-tabs a', function (e) {
     if ($('body').hasClass('companies show')) {

@@ -17,12 +17,15 @@ class Company < ActiveRecord::Base
   has_many :stories, through: :successes
   has_many :visitor_actions
   has_many :page_views, class_name: "PageView"
+  has_many :story_shares, class_name: "StoryShare"
+  has_many :cta_clicks, class_name: "CtaClick"
+  has_many :profile_clicks, class_name: "ProfileClick"
+  has_many :logo_clicks, class_name: "Logo_click"
   has_many :visitor_sessions, -> { distinct }, through: :visitor_actions
   has_many :visitors, -> { distinct }, through: :visitor_sessions
 
   has_many :story_categories, dependent: :destroy
   has_many :products, dependent: :destroy
-  has_many :product_categories, dependent: :destroy
   has_many :email_templates, dependent: :destroy
   has_one :cta_button, dependent: :destroy
   has_many :outbound_actions, dependent: :destroy
@@ -586,30 +589,30 @@ class Company < ActiveRecord::Base
 
   def stories_table_json
     company_page_views = self.page_views.count
+    # timestamp must be included since there's a default scope that orders on timestamp
+    # note that it doesn't actually appear in the output
     logo_page_visitors = PageView.joins(:visitor)
                            .where(company_id: self.id, success_id: nil)
-                           .group('visitors.id').count
+                           .group('visitor_actions.timestamp, visitors.id').count
     logo_page =
-      [ '', 'Logo Page', '', logo_page_visitors.values.reduce(:+), logo_page_visitors.length,
+      [ '', 'Logo Page', '', logo_page_visitors.length,
         ((PageView.company_index_views(self.id).count.to_f / company_page_views.to_f) * 100).round(1).to_s + '%' ]
     PageView.distinct
       .joins(:story, :visitor, success: { customer: {} })
       .where(company_id: self.id, stories: { published: true })
-      .group('stories.title', 'stories.publish_date', 'visitors.id', 'customers.name')
+      .group('visitor_actions.timestamp, stories.title', 'stories.publish_date', 'visitors.id', 'customers.name')
       .count
-      .group_by {|story_visitor, visits| story_visitor[0]}
+      .group_by { |story_visitor_timestamp, visits| story_visitor_timestamp[0] }
       .to_a.map do |story|
-        visitors = []
-        visits = 0
+        visitors = Set.new
         publish_date = nil
         customer = nil
         story[1].each do |visitor|
           visitors << visitor[0][2]
           publish_date ||= visitor[0][1]
           customer ||= visitor[0][3]
-          visits += visitor[1]
         end
-        [ customer, story[0], publish_date.strftime('%-m/%-d/%y'), visitors.count, visits,
+        [ customer, story[0], publish_date.strftime('%-m/%-d/%y'), visitors.count,
           ((Story.find_by(title: story[0]).page_views.count.to_f / company_page_views.to_f) * 100).round(1).to_s + '%' ]
       end
       .push(logo_page)
@@ -628,13 +631,13 @@ class Company < ActiveRecord::Base
         .includes(:visitor)
         .joins(:visitor_actions)
         .where(visitor_actions: visitor_actions_conditions)
-          .where('timestamp > ? AND timestamp < ?',
-                 start_date.beginning_of_day, end_date.end_of_day)
-          .group_by { |session| session.timestamp.to_date }
-          .sort_by { |date, sessions| date }.to_h
-          .map do |date, sessions|
-            [ date.strftime('%-m/%-d/%y'), sessions.map { |session| session.visitor }.uniq.count ]
-          end
+        .where('visitor_sessions.timestamp > ? AND visitor_sessions.timestamp < ?',
+               start_date.beginning_of_day, end_date.end_of_day)
+        .group_by { |session| session.timestamp.to_date }
+        .sort_by { |date, sessions| date }.to_h
+        .map do |date, sessions|
+          [ date.strftime('%-m/%-d/%y'), sessions.map { |session| session.visitor }.uniq.count ]
+        end
         if start_date == end_date || visitors.empty?
           visitors
         else
@@ -646,7 +649,7 @@ class Company < ActiveRecord::Base
         .includes(:visitor)
         .joins(:visitor_actions)
         .where(visitor_actions: visitor_actions_conditions)
-        .where('timestamp > ? AND timestamp < ?',
+        .where('visitor_sessions.timestamp > ? AND visitor_sessions.timestamp < ?',
                start_date.beginning_of_week.beginning_of_day, end_date.end_of_week.end_of_day)
         .group_by { |session| session.timestamp.to_date.beginning_of_week }
         .sort_by { |date, sessions| date }.to_h
@@ -664,7 +667,7 @@ class Company < ActiveRecord::Base
         .includes(:visitor)
         .joins(:visitor_actions)
         .where(visitor_actions: visitor_actions_conditions)
-        .where('timestamp >= ? AND timestamp <= ?',
+        .where('visitor_sessions.timestamp >= ? AND visitor_sessions.timestamp <= ?',
                start_date.beginning_of_month.beginning_of_day, end_date.end_of_month.end_of_day)
         .group_by { |session| session.timestamp.to_date.beginning_of_month }
         .sort_by { |date, sessions| date }.to_h
@@ -687,40 +690,43 @@ class Company < ActiveRecord::Base
     else
       visitor_actions_conditions = { company_id: self.id, success_id: story.success.id }
     end
+    # keep track of stories viewed by a given org, to be used for looking up story titles
     success_list = Set.new
+    # note that visitor_sessions.timestamp and visitor_actions.timestamp must appear
+    # in the group clause because of the default scope (order) on these tables
+    # by including these in a single string argument,
+    # only the organization, visitors.id, and visitor_actions.success_id are returned
     visitors = VisitorSession.distinct.joins(:visitor, :visitor_actions)
-      .where('timestamp >= ? AND timestamp <= ?',
+      .where('visitor_sessions.timestamp >= ? AND visitor_sessions.timestamp <= ?',
               start_date.beginning_of_day, end_date.end_of_day)
-      .where(visitor_actions: { company_id: self.id } )
-      .group(:organization, 'visitors.id', 'visitor_actions.success_id')
+      .where(visitor_actions: visitor_actions_conditions)
+      .group('visitor_sessions.clicky_session_id, visitor_actions.timestamp, organization', 'visitors.id', 'visitor_actions.success_id')
       .count
       .group_by { |org_visitor_success, count| org_visitor_success[0] }
       .to_a.map do |org|
         org_visitors = Set.new
-        org_visits = 0
-        successes = []  # => [ [ success_id, unique visitors = [], visits ] ]
+        org_successes = []  # => [ [ success_id, unique visitors = [] ] ]
         org[1].each do |org_visitor_success|
           visitor_id = org_visitor_success[0][1]
           success_id = org_visitor_success[0][2]
           org_visitors << visitor_id
-          org_visits += org_visitor_success[1]
-          if (index = successes.find_index { |success| success[0] == success_id })
-            successes[index][1] << visitor_id
-            successes[index][2] += org_visitor_success[1]
+          if (index = org_successes.find_index { |success| success[0] == success_id })
+            org_successes[index][1] << visitor_id
           else
             success_list << success_id
-            successes << [ success_id, [visitor_id], org_visitor_success[1] ]
+            org_successes << [ success_id, [ visitor_id ] ]
           end
         end
-        successes.map! { |success| [ success[0], success[1].count, success[2] ] }
-        [ '', org[0] || '', org_visitors.count, org_visits, successes ]
+        org_successes.map! { |success| [ success[0], success[1].count ] }
+        [ '', org[0] || '', org_visitors.count, org_successes ]
       end
-      .sort_by { |org| org[1] || '' }
+      .sort_by { |org| org[1] }  # sort by org name
+      # create a lookup table { success_id: story title }
       success_list.delete_if { |success_id| success_id.nil? }
       success_story_titles =
         Success.find(success_list.to_a).map { |success| [ success.id, success.story.title ] }.to_h
       visitors.each do |org|
-        org[4].map! { |success| [ success_story_titles[success[0]] || 'Logo Page', success[1], success[2] ] }
+        org[3].map! { |success| [ success_story_titles[success[0]] || 'Logo Page', success[1] ] }
               .sort_by! { |story| story[1] }.reverse!
       end
   end
@@ -735,10 +741,25 @@ class Company < ActiveRecord::Base
       .select(:referrer_type)
       .joins(:visitor_actions)
       .where(visitor_actions: visitor_actions_conditions)
-      .where('timestamp > ? AND timestamp < ?',
+      .where('visitor_sessions.timestamp > ? AND visitor_sessions.timestamp < ?',
              start_date.beginning_of_day, end_date.end_of_day)
       .group_by { |session| session.referrer_type }
       .map { |type, records| [type, records.count] }
+  end
+
+  def actions_table_json story, start_date, end_date
+    if story.nil?
+      visitor_actions_conditions = { company_id: self.id }
+    else
+      visitor_actions_conditions = { company_id: self.id, success_id: story.success.id }
+    end
+    VisitorAction.distinct
+      .joins(:visitor_session, :visitor)
+      .where(visitor_actions_conditions)
+      .where('visitor_actions.timestamp > ? AND visitor_actions.timestamp < ?',
+             start_date.beginning_of_day, end_date.end_of_day)
+      .group_by('visitor_actions.timestamp, visitor_actions.description', 'visitors.id' )
+      .count
   end
 
   private
@@ -791,24 +812,29 @@ class Company < ActiveRecord::Base
         start_date.beginning_of_week).to_i / 7).times do |index|
       first_weeks << [(start_date.beginning_of_week + index*7).strftime("%-m/%-d/%y"), 0]
     end
-    all_weeks = first_weeks +
-      visitors.each_cons(2).each_with_index.flat_map do |(prev_week, next_week), index|
-        prev_weekp = Date.strptime(prev_week[0], '%m/%d/%y')
-        next_weekp = Date.strptime(next_week[0], '%m/%d/%y')
-        return_arr = [prev_week]
-        delta = (next_weekp - prev_weekp).to_i
-        delta /= 7
-        if delta > 1
-          (delta - 1).times do |i|
-            return_arr.insert(1, [(next_weekp - ((i + 1)*7)).strftime("%-m/%-d/%y"), 0])
+    # check for gaps in the middle of the list, but only if at least two are present
+    if visitors.length >= 2
+      all_weeks = first_weeks +
+        visitors.each_cons(2).each_with_index.flat_map do |(prev_week, next_week), index|
+          prev_weekp = Date.strptime(prev_week[0], '%m/%d/%y')
+          next_weekp = Date.strptime(next_week[0], '%m/%d/%y')
+          return_arr = [prev_week]
+          delta = (next_weekp - prev_weekp).to_i
+          delta /= 7
+          if delta > 1
+            (delta - 1).times do |i|
+              return_arr.insert(1, [(next_weekp - ((i + 1)*7)).strftime("%-m/%-d/%y"), 0])
+            end
+          end
+          if (index == visitors.length - 2)
+            return_arr << next_week
+          else
+            return_arr
           end
         end
-        if (index == visitors.length - 2)
-          return_arr << next_week
-        else
-          return_arr
-        end
-      end
+    else
+      all_weeks = first_weeks + visitors
+    end
     end_delta = (end_date.beginning_of_week -
                  Date.strptime(all_weeks.last[0], "%m/%d/%y")).to_i
     end_delta /=7
