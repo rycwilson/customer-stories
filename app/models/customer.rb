@@ -46,9 +46,7 @@ class Customer < ActiveRecord::Base
 
     successes.each do |success|
       story = success.story
-      # testimonial and prev-next fragments
       self.expire_fragment("#{company.subdomain}/story-#{story.id}-testimonial")
-      story.expire_prev_next_fragment_cache
 
       # curator
       # story tile fragment

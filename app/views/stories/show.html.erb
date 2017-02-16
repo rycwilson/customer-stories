@@ -26,22 +26,6 @@
 
 <% end %>
 
-<!--
-  why use memcache iterators here?
-  because when a given story updates (title, csp_story_path, customer logo_url),
-  this expires its prev/next navigation fragment, as well as the parent story.
-  but how to know what the parent story is from the context of the story that's
-  expiring its prev/next navigation cache?  That would require a costly lookup operation.
-  instead, use memcache iterators
--->
-<%# cache("#{@company.subdomain}/#{@is_curator ? 'curator' : 'public'}/story-#{@story.id}-prev-next-mi-#{@prev_story.prev_next_memcache_iterator}-mi-#{@next_story.prev_next_memcache_iterator}", skip_digest: true) do %>
-
-  <%#= render 'stories/shared/prev_next_stories',
-        { company: @company, story: @story,
-          prev_story: @prev_story, next_story: @next_story } %>
-
-<%# end %>
-
 <% if @is_curator %>
 
   <%= render 'shared/company_navbar', { company: @company, workflow_tab: nil } %>
@@ -125,6 +109,8 @@
       { company: @company, story: @story, contributors: @contributors } %>
 
 </div>
+
+
 
 <% unless user_signed_in? %>
   <div class='hidden-xs' style='border:1px solid #e3e3e3;z-index:1000'>
