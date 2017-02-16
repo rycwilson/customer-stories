@@ -1,5 +1,36 @@
 module ApplicationHelper
 
+  def company_widget_color company
+    case company.subdomain
+    when 'trunity'
+      '#FEBE57'
+    when 'compas'
+      '#e55f53'
+    when 'varmour'
+      '#60ccf3'
+    when 'centerforcustomerengagement'
+      '#007fc5'
+    when 'zeniq'
+      '#364150'
+    when 'saucelabs'
+      '#e2231a'
+    when 'juniper'
+      '#3493c1'
+    when 'neonova'
+      '#669bb2'
+    when 'kodacon'
+      '#85cee6'
+    when 'zoommarketing'
+      '#9e61a8'
+    when 'modeanalytics'
+      '#37b067'
+    when 'acme-test'
+      '#ff0000'
+    else
+      'rgb(14, 122, 254)'
+    end
+  end
+
   def include_gtm? company=nil, current_user=nil, controller, action
     ENV['HOST_NAME'] == 'customerstories.net' &&
     controller == 'stories' &&
@@ -19,14 +50,6 @@ module ApplicationHelper
 
   def production?
     ENV['HOST_NAME'] == 'customerstories.net'
-  end
-
-  def admin_navbar_style
-    company = @company || Company.find_by(name:'CSP')
-    color1 = company.nav_color_1
-    color2 = company.nav_color_2
-    text_color = company.nav_text_color
-    "background:linear-gradient(45deg, #{color1} 0%, #{color2} 100%);color:#{text_color};"
   end
 
   # method determines if title 'Customer Stories' should be displayed as plural

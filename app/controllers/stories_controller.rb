@@ -59,6 +59,13 @@ class StoriesController < ApplicationController
     # convert the story content to plain text (for SEO tags)
     @story_content_text = HtmlToPlainText.plain_text(@story.content)
     @related_stories = @story.related_stories
+    @more_stories =
+      @company.filter_stories_by_tag({ tag: 'all', id: '0' }, @is_curator)
+              .delete_if { |story| story.id == @story.id }
+              .map do |story|
+                { logo: story.customer.logo_url,
+                  path: story.published ? story.csp_story_path : root_path }
+              end
   end
 
   def edit

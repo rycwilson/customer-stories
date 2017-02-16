@@ -4,13 +4,33 @@ function storiesShow () {
   loadVideoThumbnail();
   widgetsMonitor();
   clickyListeners();
-
-  $(document).on('click', '.cta-form',
-    function () {
-      $('#outbound-form-modal').modal('show');
-    });
+  setTimeout(initMoreStories, 3000);
 
 }
+
+function initMoreStories () {
+
+  $('#more-stories').imagesLoaded(function (a, b, c) {
+      slideDrawerPlugin();
+      moreStoriesScrollHandlers();
+      centerLogos();
+      // if user is using a mouse, this will hose dimensions
+      // (in a somewhat random way)
+      // compensate for this ...
+      if ($('.cs-drawer-content').css('height') !== '141px') {
+        $('.cs-drawer-content').css('height', '141px');
+        $('.cs-drawer-items').css('height', '141px');
+      }
+      $('#more-stories').slideDrawer({
+        showDrawer: false, // drawer is hidden on page load
+        slideTimeout: true, // Sets the drawer to slide down after set count if set to true.
+        slideSpeed: 600, // Slide drawer speed.
+        slideTimeoutCount: 3000 // How long to wait before sliding drawer slides down.
+      });
+      $('#more-stories').css({opacity: 0, visibility: "visible"}).animate({opacity: 1}, 200);
+  });
+}
+
 
 // NOTE: the contributor data must be passed to the callback as shown;
 // if passed via argument, with a 'contributor' parameter in the callback
@@ -97,6 +117,9 @@ function widgetsMonitor () {
               event.data.includes('widgetReady')) {
             currentWidgetIndex = parseInt(event.data.match(/\w+_(\d+)\s/)[1], 10);
             relativeWidgetIndex = currentWidgetIndex - firstWidgetIndex;
+            if (contributors[relativeWidgetIndex] === undefined) {
+              // debugger;
+            }
             contributors[relativeWidgetIndex].widget_loaded = true;
             if (!firstWidgetLoaded) {
               firstWidgetLoaded = true;

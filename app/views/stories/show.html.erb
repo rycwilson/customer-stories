@@ -18,6 +18,11 @@
 
 <%= render 'stories/shared/video_modal' %>
 
+<% unless @is_curator %>
+  <%= render 'widgets/more_stories_widget',
+             { company: @company, stories: @more_stories } %>
+<% end %>
+
 <% @story.outbound_actions
          .select { |action| action.type == 'OutboundForm' }
          .each do |form| %>
@@ -109,8 +114,6 @@
       { company: @company, story: @story, contributors: @contributors } %>
 
 </div>
-
-
 
 <% unless user_signed_in? %>
   <div class='hidden-xs' style='border:1px solid #e3e3e3;z-index:1000'>

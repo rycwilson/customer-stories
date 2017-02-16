@@ -37,8 +37,12 @@ class Company < ActiveRecord::Base
 
   after_commit :expire_fragment_cache, on: :update,
     if: Proc.new { |company|
-      (company.previous_changes.keys & ['nav_color_1', 'nav_text_color']).any?
+      (company.previous_changes.keys & ['header_color_1', 'header_text_color']).any?
     }
+
+  def header_style
+    "background:linear-gradient(45deg, #{self.header_color_1} 0%, #{self.header_color_2} 100%);color:#{self.header_text_color};"
+  end
 
   def all_stories
     Rails.cache.fetch("#{self.subdomain}/all_stories") do
@@ -304,10 +308,6 @@ class Company < ActiveRecord::Base
     end
   end
 
-  def header_style
-    "background:linear-gradient(45deg, #{self.nav_color_1} 0%, #{self.nav_color_2} 100%);color:#{self.nav_text_color};"
-  end
-
   def missing_info
     missing = []
     missing << "logo" unless self.logo_url.present?
@@ -363,7 +363,7 @@ class Company < ActiveRecord::Base
       self.public_stories_index_fragments_memcache_iterator + 1)
   end
 
-  # all story fragments must be expired if these attributes change: nav_color_1, nav_text_color
+  # all story fragments must be expired if these attributes change: header_color_1, header_text_color
   def story_tile_fragments_memcache_iterator
     Rails.cache.fetch("#{self.subdomain}/stories-tile-fragments-memcache-iterator") { rand(10) }
   end

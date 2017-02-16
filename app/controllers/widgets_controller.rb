@@ -66,13 +66,9 @@ class WidgetsController < ApplicationController
          Company.find_by(subdomain: company_subdomain)
                 .filter_stories_by_tag(filter_params || filter_all, false)
                 .map do |story|
-                  logger.debug "story: #{JSON.pretty_generate story.attributes.slice('id','title')}"
-                  logger.debug "customer: #{JSON.pretty_generate story.success.customer.attributes}"
                   { logo: story.success.customer.logo_url,
                     link: story.published ? story.csp_story_url : stories_index_url }
                 end
-
-    logger.debug JSON.pretty_generate(stories_links)
 
     html = "<section class='cs-drawer' style='visibility:hidden'>
               <header class='text-center'

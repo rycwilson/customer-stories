@@ -10,7 +10,7 @@
       <img src="<%= customer.logo_url || image_path('company-logo-missing.png') %>">
 
       <div class="caption"
-           style="background-color:<%= story.published ? company.nav_color_1 : '#f5f5f5' %>;color:<%= story.published ? company.nav_text_color : '' %>">
+           style="background-color:<%= story.published ? company.header_color_1 : '#f5f5f5' %>;color:<%= story.published ? company.header_text_color : '' %>">
         <%= story.published ? 'Read story' : (story.logo_published ? 'Logo published' : 'Pending curation') %>
       </div>
 

@@ -46,7 +46,8 @@ function setAppData () {
 
 function attachAppListeners () {
 
-  // popoverListeners();
+  xScrollBoundaries();
+  yScrollBoundaries();
 
   $(document).on('click', '.workflow-tabs a', function (e) {
     if ($('body').hasClass('companies show')) {

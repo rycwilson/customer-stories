@@ -137,12 +137,12 @@ function templateEditorListeners () {
 function companyProfileListeners() {
 
   $(document).on('click', '#test-colors-btn', function () {
-    var color1 = $('input#company_nav_color_1').val(),
-        color2 = $('input#company_nav_color_2').val(),
-        navTextColor = $('input#company_nav_text_color').val();
+    var color1 = $('input#company_header_color_1').val(),
+        color2 = $('input#company_header_color_2').val(),
+        headerTextColor = $('input#company_header_text_color').val();
     $('.navbar').css(
         'background', 'linear-gradient(45deg, ' + color1 + ' 0%, ' + color2 + ' 100%)');
-    $('.navbar').css('color', navTextColor);
+    $('.navbar').css('color', headerTextColor);
   });
 
   // Dynamically change the max-height of the select box
@@ -153,9 +153,9 @@ function companyProfileListeners() {
 
   $(document).on('click', '#restore-colors-btn', function () {
     $('.navbar').attr('style', app.company.header_style);
-    $('#company_nav_color_1').minicolors('value', app.company.nav_color_1);
-    $('#company_nav_color_2').minicolors('value', app.company.nav_color_2);
-    $('#company_nav_text_color').minicolors('value', app.company.nav_text_color);
+    $('#company_header_color_1').minicolors('value', app.company.header_color_1);
+    $('#company_header_color_2').minicolors('value', app.company.header_color_2);
+    $('#company_header_text_color').minicolors('value', app.company.header_text_color);
   });
 }
 

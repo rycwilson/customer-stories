@@ -1,11 +1,12 @@
 (function () {
 
-  var flashMesg = '<%= @flash_mesg %>',
+  var headerStyle = '<%= @company.header_style %>'
+      flashMesg = '<%= @flash_mesg %>',
       flashStatus = '<%= @flash_status %>';
 
-  $('.navbar').attr('style', '<%= admin_navbar_style %>');
+  $('.navbar').attr('style', headerStyle);
 
-  $('.fileinput-preview').css('background-color', $('#company_nav_color_1').val())
+  $('.fileinput-preview').css('background-color', $('#company_header_color_1').val())
 
   flashDisplay(flashMesg, flashStatus);
 
