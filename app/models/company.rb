@@ -619,7 +619,7 @@ class Company < ActiveRecord::Base
       .sort_by { |story| story[3] || 0 }.reverse
   end
 
-  def visitors_chart_json story, start_date, end_date
+  def visitors_chart_json story = nil, start_date = 30.days.ago.to_date, end_date = Date.today
     if story.nil?
       visitor_actions_conditions = { company_id: self.id }
     else
@@ -684,7 +684,7 @@ class Company < ActiveRecord::Base
     end
   end
 
-  def visitors_table_json story=nil, start_date=30.days.ago.to_date, end_date=Date.today
+  def visitors_table_json story = nil, start_date = 30.days.ago.to_date, end_date = Date.today
     if story.nil?
       visitor_actions_conditions = { company_id: self.id }
     else
@@ -731,7 +731,7 @@ class Company < ActiveRecord::Base
       end
   end
 
-  def referrer_types_chart_json story, start_date, end_date
+  def referrer_types_chart_json story = nil, start_date = 30.days.ago.to_date, end_date = Date.today
     if story.nil?
       visitor_actions_conditions = { company_id: self.id }
     else
@@ -747,7 +747,7 @@ class Company < ActiveRecord::Base
       .map { |type, records| [type, records.count] }
   end
 
-  def actions_table_json story, start_date, end_date
+  def actions_table_json story = nil, start_date = 30.days.ago.to_date, end_date = Date.today
     if story.nil?
       visitor_actions_conditions = { company_id: self.id }
     else
@@ -760,6 +760,48 @@ class Company < ActiveRecord::Base
              start_date.beginning_of_day, end_date.end_of_day)
       .group_by('visitor_actions.timestamp, visitor_actions.description', 'visitors.id' )
       .count
+  end
+
+  # when scheduling, make sure this doesn't collide with clicky:update
+  # possible to check on run status of rake task?
+  def send_analytics_update
+    visitors = Rails.cache.fetch("#{self.subdomain}/visitors-chart-default") do
+                 self.visitors_chart_json
+               end
+    total_visitors = 0
+    visitors.each { |group| total_visitors += group[1] }
+    # columns as days or weeks?
+    # xDelta is the difference in days between adjacent columns
+    if visitors.length == 1  # 1 day
+      xDelta = 0;
+    elsif visitors.length > 1
+      xDelta = (visitors[1][0].to_date - visitors[0][0].to_date).to_i
+      xDelta += 365 if xDelta < 0  # account for ranges that span new year
+    end
+    if xDelta <= 1
+      axesLabels = ['Day', 'Visitors']
+    elsif xDelta === 7
+      axesLabels = ['Week starting', 'Visitors'];
+    else
+      axesLabels = ['Month', 'Visitors'];
+    end
+    # don't bother applying axes labels if there is no data ...
+    # visitors.unshift(axesLabels) if visitors.length > 0
+
+    # referrer_types = Rails.cache.fetch("#{self.subdomain}/referrer-types-default") do
+    #                    self.visitors_chart_json
+    #                  end
+    {
+      visitors: Gchart.bar({
+                  data: visitors
+                  # title: "Unique Visitors - #{total_visitors}"
+                  # hAxis: { title: axesLabels[0] }
+                  # vAxis: { title: axesLabels[1], minValue: 0 }
+                  # legend: { position: 'none' }
+                }),
+      referrer_types: nil
+    }
+
   end
 
   private
@@ -844,5 +886,6 @@ class Company < ActiveRecord::Base
     # get rid of the year
     all_weeks.map { |week| [week[0].sub!(/\/\d+$/, ''), week[1]] }
   end
+
 
 end

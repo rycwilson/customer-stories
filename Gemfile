@@ -17,7 +17,7 @@ gem 'uglifier', '>= 1.3.0'
 
 gem 'dalli'
 gem 'connection_pool'
-
+gem 'googlecharts'
 gem 'browser-timezone-rails'
 gem 'local_time'
 gem 'rails_admin'
