@@ -25,15 +25,24 @@
           fontColor = $('#cs-script').data('font-color'),
           categoryFilter = $('#cs-script').data('category'),
           productFilter = $('#cs-script').data('product'),
-          delay = parseInt($('#cs-script').data('product'), 10),
-          showDrawer = $('#cs-script').data('show') === 'true' ? true : false,
-          timeout = $('#cs-script').data('timeout') === 'true' ? true : false,
-          timeoutCount = parseInt($('#cs-script').data('timeout-count'), 10),
+          delay = $('#cs-script').data('delay'),
+          showDrawer = $('#cs-script').data('show'),
+          timeout = $('#cs-script').data('timeout'),
+          timeoutCount = $('#cs-script').data('timeout-count'),
           $widgetStylesheet = $("<link>", {
             rel: "stylesheet",
             type: "text/css",
             href: "<%= URI.join(root_url, asset_path('cs-widget.css')).to_s %>"
           });
+
+          // get font awesome if it doesn't exist on host
+          if ($('link[href*="font-awesome"]').length === 0) {
+            $("<link>", {
+              rel: "stylesheet",
+              type: "text/css",
+              href: "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+            }).appendTo('head');
+          }
 
       // wait for stylesheet to load ...
       $widgetStylesheet.appendTo('head').on('load', function () {
@@ -46,39 +55,52 @@
                   category: categoryFilter,
                   product: productFilter },
           success: function (data) {
-            $('#cs-container').html(data.html);
-            var $images = $('#cs-container img'), loadedImages = 0;
-            // wait for all images to load so dimension calculations are correct ...
-            $images.on('load', function (e) {
-              if (++loadedImages === $images.length) {
-                slideDrawerPlugin();
-                xScrollBoundaries()
-                scrollHandlers();
-                centerLogos();
-                // if user is using a mouse, this will hose dimensions
-                // (in a somewhat random way)
-                // compensate for this ...
-                if ($('.cs-drawer-content').css('height') !== '141px') {
-                  $('.cs-drawer-content').css('height', '141px');
-                  $('.cs-drawer-items').css('height', '141px');
-                }
-                $('#cs-container .cs-drawer').slideDrawer({
-                  showDrawer: showDrawer, // drawer is hidden on page load
-                  slideTimeout: timeout, // Sets the drawer to slide down after set count if set to true.
-                  slideSpeed: 600, // Slide drawer speed.
-                  slideTimeoutCount: timeoutCount // How long to wait before sliding drawer slides down.
-                });
-                // flip the caret if drawer is shown
-                if (showDrawer) {
-                  $('#cs-container i[class*="fa-chevron"]').toggle();
-                }
-                $('#cs-container .cs-drawer').css('visibility', 'visible');
-                // trackVisitor(data.company);
-              }
-            });
+            if (delay) {
+              setTimeout(function () {
+                buildWidget(data, showDrawer, timeout, timeoutCount);
+              }, delay)
+            } else {
+              buildWidget(data, showDrawer, timeout, timeoutCount);
+            }
           }
         }); // ajax
+
       });
+    });
+  }
+
+  function buildWidget (data, showDrawer, timeout, timeoutCount) {
+
+    $('#cs-container').html(data.html);
+    var $images = $('#cs-container img'), loadedImages = 0;
+    // wait for all images to load so dimension calculations are correct ...
+    $images.on('load', function (e) {
+      if (++loadedImages === $images.length) {
+        slideDrawerPlugin();
+        xScrollBoundaries()
+        scrollHandlers();
+        centerLogos();
+        // if user is using a mouse, this will hose dimensions
+        // (in a somewhat random way)
+        // compensate for this ...
+        if ($('.cs-drawer-content').css('height') !== '141px') {
+          $('.cs-drawer-content').css('height', '141px');
+          $('.cs-drawer-items').css('height', '141px');
+        }
+        $('#cs-container .cs-drawer').slideDrawer({
+          showDrawer: showDrawer, // drawer is hidden on page load
+          slideTimeout: timeout, // Sets the drawer to slide down after set count if set to true.
+          slideSpeed: 600, // Slide drawer speed.
+          slideTimeoutCount: timeoutCount // How long to wait before sliding drawer slides down.
+        });
+        // flip the caret if drawer is shown
+        if (showDrawer) {
+          $('#cs-container i[class*="fa-chevron"]').toggle();
+        }
+        $('#cs-container .cs-drawer').css({ opacity: 0, visibility: "visible" })
+                                     .animate({ opacity: 1 }, 'slow');
+        // trackVisitor(data.company);
+      }
     });
   }
 
@@ -144,9 +166,9 @@
 
       // Slide animation function
       slide: function (div, height, speed) {
-        $(div).animate({
-          'height': height
-        }, speed );
+        $(div).animate({ 'height': height }, speed, 'swing', function () {
+          $('#cs-container header i[class*="fa-chevron"]').toggle();
+        });
       },
 
       hide: function (options, div) {
@@ -181,6 +203,7 @@
         drawer.init(pluginOptions, this);
       });
     };
+
   }
 
   function centerLogos () {
