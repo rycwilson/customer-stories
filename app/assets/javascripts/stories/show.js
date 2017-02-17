@@ -27,7 +27,8 @@ function initMoreStories () {
         slideSpeed: 600, // Slide drawer speed.
         slideTimeoutCount: 3000 // How long to wait before sliding drawer slides down.
       });
-      $('#more-stories').css({opacity: 0, visibility: "visible"}).animate({opacity: 1}, 200);
+      $('#more-stories').css({ opacity: 0, visibility: "visible" })
+                        .animate({ opacity: 1 }, 200);
   });
 }
 
