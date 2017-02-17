@@ -12,6 +12,8 @@ module ApplicationHelper
       '#007fc5'
     when 'zeniq'
       '#364150'
+    when 'corefact'
+      '#1f9421'
     when 'saucelabs'
       '#e2231a'
     when 'juniper'
