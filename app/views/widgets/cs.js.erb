@@ -26,14 +26,23 @@
           categoryFilter = $('#cs-script').data('category'),
           productFilter = $('#cs-script').data('product'),
           delay = parseInt($('#cs-script').data('product'), 10),
-          showDrawer = $('#cs-script').data('show') === 'true' ? true : false,
-          timeout = $('#cs-script').data('timeout') === 'true' ? true : false,
+          showDrawer = $('#cs-script').data('show'),
+          timeout = $('#cs-script').data('timeout'),
           timeoutCount = parseInt($('#cs-script').data('timeout-count'), 10),
           $widgetStylesheet = $("<link>", {
             rel: "stylesheet",
             type: "text/css",
             href: "<%= URI.join(root_url, asset_path('cs-widget.css')).to_s %>"
           });
+
+          // get font awesome if it doesn't exist on host
+          if ($('link[href*="font-awesome"]').length === 0) {
+            $("<link>", {
+              rel: "stylesheet",
+              type: "text/css",
+              href: "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+            }).appendTo('head');
+          }
 
       // wait for stylesheet to load ...
       $widgetStylesheet.appendTo('head').on('load', function () {
@@ -144,9 +153,9 @@
 
       // Slide animation function
       slide: function (div, height, speed) {
-        $(div).animate({
-          'height': height
-        }, speed );
+        $(div).animate({ 'height': height }, speed, 'swing', function () {
+          $('#cs-container header i[class*="fa-chevron"]').toggle();
+        });
       },
 
       hide: function (options, div) {
@@ -181,6 +190,7 @@
         drawer.init(pluginOptions, this);
       });
     };
+
   }
 
   function centerLogos () {
