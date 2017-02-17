@@ -55,13 +55,20 @@
                   category: categoryFilter,
                   product: productFilter },
           success: function (data) {
-            if (delay) {
-              setTimeout(function () {
-                buildWidget(data, showDrawer, timeout, timeoutCount);
-              }, delay)
-            } else {
-              buildWidget(data, showDrawer, timeout, timeoutCount);
-            }
+            $('#cs-container').html(data.html);
+            // wait for all images to load so dimension calculations are correct ...
+            var $images = $('#cs-container img'), loadedImages = 0;
+            $images.on('load', function (e) {
+              if (++loadedImages === $images.length) {
+                if (delay) {
+                  setTimeout(function () {
+                    buildWidget(showDrawer, timeout, timeoutCount);
+                  }, delay)
+                } else {
+                  buildWidget(showDrawer, timeout, timeoutCount);
+                }
+              }
+            })
           }
         }); // ajax
 
@@ -69,39 +76,31 @@
     });
   }
 
-  function buildWidget (data, showDrawer, timeout, timeoutCount) {
-
-    $('#cs-container').html(data.html);
-    var $images = $('#cs-container img'), loadedImages = 0;
-    // wait for all images to load so dimension calculations are correct ...
-    $images.on('load', function (e) {
-      if (++loadedImages === $images.length) {
-        slideDrawerPlugin();
-        xScrollBoundaries()
-        scrollHandlers();
-        centerLogos();
-        // if user is using a mouse, this will hose dimensions
-        // (in a somewhat random way)
-        // compensate for this ...
-        if ($('.cs-drawer-content').css('height') !== '141px') {
-          $('.cs-drawer-content').css('height', '141px');
-          $('.cs-drawer-items').css('height', '141px');
-        }
-        $('#cs-container .cs-drawer').slideDrawer({
-          showDrawer: showDrawer, // drawer is hidden on page load
-          slideTimeout: timeout, // Sets the drawer to slide down after set count if set to true.
-          slideSpeed: 600, // Slide drawer speed.
-          slideTimeoutCount: timeoutCount // How long to wait before sliding drawer slides down.
-        });
-        // flip the caret if drawer is shown
-        if (showDrawer) {
-          $('#cs-container i[class*="fa-chevron"]').toggle();
-        }
-        $('#cs-container .cs-drawer').css({ opacity: 0, visibility: "visible" })
-                                     .animate({ opacity: 1 }, 'slow');
-        // trackVisitor(data.company);
-      }
+  function buildWidget (showDrawer, timeout, timeoutCount) {
+    slideDrawerPlugin();
+    xScrollBoundaries()
+    scrollHandlers();
+    centerLogos();
+    // if user is using a mouse, this will hose dimensions
+    // (in a somewhat random way)
+    // compensate for this ...
+    if ($('.cs-drawer-content').css('height') !== '141px') {
+      $('.cs-drawer-content').css('height', '141px');
+      $('.cs-drawer-items').css('height', '141px');
+    }
+    $('#cs-container .cs-drawer').slideDrawer({
+      showDrawer: showDrawer, // drawer is hidden on page load
+      slideTimeout: timeout, // Sets the drawer to slide down after set count if set to true.
+      slideSpeed: 600, // Slide drawer speed.
+      slideTimeoutCount: timeoutCount // How long to wait before sliding drawer slides down.
     });
+    // flip the caret if drawer is shown
+    if (showDrawer) {
+      $('#cs-container i[class*="fa-chevron"]').toggle();
+    }
+    $('#cs-container .cs-drawer').css({ opacity: 0, visibility: "visible" })
+                                 .animate({ opacity: 1 }, 400);
+    // trackVisitor(data.company);
   }
 
   // slideout drawer plugin
