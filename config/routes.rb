@@ -1,6 +1,6 @@
 
 Rails.application.routes.default_url_options = {
-    protocol: Rails.env.production? ? 'https' : 'http',
+    protocol: Rails.env.development? ? 'http' : 'https',
     host: ENV['HOST_NAME']
 }
 
