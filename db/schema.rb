@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170216022258) do
+ActiveRecord::Schema.define(version: 20170218175026) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -157,15 +157,6 @@ ActiveRecord::Schema.define(version: 20170216022258) do
   end
 
   add_index "industry_categories", ["company_id"], name: "index_industry_categories_on_company_id", using: :btree
-
-  create_table "invited_curators", force: :cascade do |t|
-    t.string   "email"
-    t.integer  "company_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  add_index "invited_curators", ["company_id"], name: "index_invited_curators_on_company_id", using: :btree
 
   create_table "opt_outs", force: :cascade do |t|
     t.string   "email"
@@ -392,7 +383,6 @@ ActiveRecord::Schema.define(version: 20170216022258) do
   add_foreign_key "industries_successes", "industry_categories"
   add_foreign_key "industries_successes", "successes"
   add_foreign_key "industry_categories", "companies"
-  add_foreign_key "invited_curators", "companies"
   add_foreign_key "outbound_actions", "companies"
   add_foreign_key "outbound_actions_stories", "outbound_actions"
   add_foreign_key "outbound_actions_stories", "stories"

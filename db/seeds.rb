@@ -160,8 +160,6 @@ def seed_company company, *users
       end
       # random story category (tag)
       success.story_categories << company.story_categories[rand(0...company.story_categories.count)]
-      # random product category (tag)
-      # success.product_categories << company.product_categories[rand(0...company.product_categories.count)]
       # random product (tag)
       success.products << company.products[rand(0...company.products.count)]
       # each story has some visitors
