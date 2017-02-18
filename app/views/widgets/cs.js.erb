@@ -62,10 +62,10 @@
               if (++loadedImages === $images.length) {
                 if (delay) {
                   setTimeout(function () {
-                    buildWidget(data.company, showDrawer, timeout, timeoutCount);
+                    buildWidget(showDrawer, timeout, timeoutCount);
                   }, delay)
                 } else {
-                  buildWidget(data.company, showDrawer, timeout, timeoutCount);
+                  buildWidget(showDrawer, timeout, timeoutCount);
                 }
               }
             })
@@ -76,7 +76,7 @@
     });
   }
 
-  function buildWidget (company, showDrawer, timeout, timeoutCount) {
+  function buildWidget (showDrawer, timeout, timeoutCount) {
     slideDrawerPlugin();
     xScrollBoundaries()
     scrollHandlers();
@@ -100,7 +100,7 @@
     }
     $('#cs-container .cs-drawer').css({ opacity: 0, visibility: "visible" })
                                  .animate({ opacity: 1 }, 400);
-    trackVisitor(company);
+    trackVisitor();
   }
 
   // slideout drawer plugin
@@ -343,6 +343,8 @@
   }
 
   function trackVisitor (companySubdomain) {
+
+    var companySubdomain = '<%= @company.subdomain %>'
 
     $('#cs-container').append(
       '<iframe class="cs-iframe" height="0" width="0" style="display:none" ' +
