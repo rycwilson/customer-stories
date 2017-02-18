@@ -62,10 +62,10 @@
               if (++loadedImages === $images.length) {
                 if (delay) {
                   setTimeout(function () {
-                    buildWidget(showDrawer, timeout, timeoutCount);
+                    buildWidget(data.company, showDrawer, timeout, timeoutCount);
                   }, delay)
                 } else {
-                  buildWidget(showDrawer, timeout, timeoutCount);
+                  buildWidget(data.company, showDrawer, timeout, timeoutCount);
                 }
               }
             })
@@ -76,7 +76,7 @@
     });
   }
 
-  function buildWidget (showDrawer, timeout, timeoutCount) {
+  function buildWidget (company, showDrawer, timeout, timeoutCount) {
     slideDrawerPlugin();
     xScrollBoundaries()
     scrollHandlers();
@@ -100,7 +100,7 @@
     }
     $('#cs-container .cs-drawer').css({ opacity: 0, visibility: "visible" })
                                  .animate({ opacity: 1 }, 400);
-    trackVisitor(data.company);
+    trackVisitor(company);
   }
 
   // slideout drawer plugin
