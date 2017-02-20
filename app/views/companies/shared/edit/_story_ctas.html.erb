@@ -1,0 +1,64 @@
+
+<div class="row">
+  <div class="col-sm-5">
+
+    <ul id='company-ctas-list' class='list-group'>
+
+    <% company.ctas.each_with_index do |action, index| %>
+
+      <li class='company-ctas-list-item list-group-item'>
+        <i class="fa fa-<%= action.type == 'CTALink' ? 'link' : 'wpforms' %>"></i>
+        <span>foo</span>
+        <i class='glyphicon glyphicon-remove bip-clickable pull-right'></i>
+      </li>
+
+    <% end %>
+
+    </ul>
+
+    <div class="form-group">
+
+      <%= label_tag nil, 'Primary CTA', class: 'control-label' %>
+      <div class="form-group cta-links" style='margin-bottom:20px'>
+        <%= text_field_tag 'company_ctas[primary][btn_text]',
+              company.cta_button.try(:btn_text),
+              placeholder: 'display text', class: 'form-control',
+              style: 'margin-bottom:5px' %>
+        <%= text_field_tag 'company_ctas[primary][url]',
+              company.cta_button.try(:url),
+              placeholder: 'website address', class: 'form-control',
+              style: 'margin-bottom:5px' %>
+        <div class="col-sm-6">
+          <%= label_tag 'Button color' %>
+          <%= text_field_tag 'company_ctas[primary][background_color]',
+                company.cta_button.try(:background_color),
+                class: 'form-control mini-colors', style: 'margin-bottom:5px' %>
+        </div>
+        <div class="col-sm-6">
+          <%= label_tag 'Text color' %>
+          <%= text_field_tag 'company_ctas[primary][color]',
+                company.cta_button.try(:color),
+                class: 'form-control mini-colors', style: 'margin-bottom:5px' %>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div class="col-sm-7">
+
+
+
+
+
+
+    <div class="form-group">
+
+
+
+    </div>
+
+  </div>
+
+</div>

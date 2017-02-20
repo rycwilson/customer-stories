@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161218195350) do
+ActiveRecord::Schema.define(version: 20170220230310) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,22 +36,37 @@ ActiveRecord::Schema.define(version: 20161218195350) do
 
   add_index "admins", ["email"], name: "index_admins_on_email", unique: true, using: :btree
 
+  create_table "call_to_actions", force: :cascade do |t|
+    t.string   "type"
+    t.integer  "company_id"
+    t.string   "link_url"
+    t.string   "description"
+    t.text     "form_html"
+    t.string   "display_text"
+    t.datetime "created_at",   null: false
+    t.datetime "updated_at",   null: false
+  end
+
+  add_index "call_to_actions", ["company_id"], name: "index_call_to_actions_on_company_id", using: :btree
+
   create_table "companies", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
     t.string   "logo_file_name"
     t.string   "logo_content_type"
     t.integer  "logo_file_size"
     t.datetime "logo_updated_at"
     t.string   "logo_url"
     t.string   "subdomain"
-    t.string   "feature_flag",      default: "beta"
-    t.string   "nav_color_1",       default: "#FBFBFB"
-    t.string   "nav_color_2",       default: "#85CEE6"
-    t.string   "nav_text_color",    default: "#333333"
+    t.string   "feature_flag",           default: "beta"
+    t.string   "header_color_1",         default: "#FBFBFB"
+    t.string   "header_color_2",         default: "#85CEE6"
+    t.string   "header_text_color",      default: "#333333"
     t.string   "website"
     t.string   "gtm_id"
+    t.string   "primary_cta_color"
+    t.string   "primary_cta_text_color"
   end
 
   add_index "companies", ["subdomain"], name: "index_companies_on_subdomain", unique: true, using: :btree
@@ -92,6 +107,16 @@ ActiveRecord::Schema.define(version: 20161218195350) do
   end
 
   add_index "cta_buttons", ["company_id"], name: "index_cta_buttons_on_company_id", using: :btree
+
+  create_table "ctas_successes", force: :cascade do |t|
+    t.integer  "call_to_action_id"
+    t.integer  "success_id"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  add_index "ctas_successes", ["call_to_action_id"], name: "index_ctas_successes_on_call_to_action_id", using: :btree
+  add_index "ctas_successes", ["success_id"], name: "index_ctas_successes_on_success_id", using: :btree
 
   create_table "customers", force: :cascade do |t|
     t.string   "name",       null: false
@@ -157,15 +182,6 @@ ActiveRecord::Schema.define(version: 20161218195350) do
   end
 
   add_index "industry_categories", ["company_id"], name: "index_industry_categories_on_company_id", using: :btree
-
-  create_table "invited_curators", force: :cascade do |t|
-    t.string   "email"
-    t.integer  "company_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  add_index "invited_curators", ["company_id"], name: "index_invited_curators_on_company_id", using: :btree
 
   create_table "opt_outs", force: :cascade do |t|
     t.string   "email"
@@ -350,8 +366,9 @@ ActiveRecord::Schema.define(version: 20161218195350) do
     t.datetime "created_at",                         null: false
     t.datetime "updated_at",                         null: false
     t.boolean  "landing",            default: false
-    t.string   "share_network"
+    t.string   "description"
     t.integer  "company_id"
+    t.datetime "timestamp"
   end
 
   add_index "visitor_actions", ["company_id"], name: "index_visitor_actions_on_company_id", using: :btree
@@ -378,21 +395,22 @@ ActiveRecord::Schema.define(version: 20161218195350) do
     t.datetime "updated_at",                         null: false
     t.string   "clicky_uid"
     t.integer  "visitor_sessions_count", default: 0
-    t.datetime "last_visited"
   end
 
   add_index "visitors", ["clicky_uid"], name: "index_visitors_on_clicky_uid", unique: true, using: :btree
 
+  add_foreign_key "call_to_actions", "companies"
   add_foreign_key "contributions", "successes"
   add_foreign_key "contributions", "users"
   add_foreign_key "cta_buttons", "companies"
+  add_foreign_key "ctas_successes", "call_to_actions"
+  add_foreign_key "ctas_successes", "successes"
   add_foreign_key "customers", "companies"
   add_foreign_key "email_contribution_requests", "contributions"
   add_foreign_key "email_templates", "companies"
   add_foreign_key "industries_successes", "industry_categories"
   add_foreign_key "industries_successes", "successes"
   add_foreign_key "industry_categories", "companies"
-  add_foreign_key "invited_curators", "companies"
   add_foreign_key "outbound_actions", "companies"
   add_foreign_key "outbound_actions_stories", "outbound_actions"
   add_foreign_key "outbound_actions_stories", "stories"

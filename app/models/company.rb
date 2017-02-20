@@ -27,6 +27,9 @@ class Company < ActiveRecord::Base
   has_one :cta_button, dependent: :destroy
   has_many :outbound_actions, dependent: :destroy
 
+  has_many :call_to_actions, dependent: :destroy
+  alias_attribute :call_to_actions, :ctas
+
   # presently uploading direct to S3, paperclip not used
   # paperclip
   has_attached_file :logo, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: "companies/:style/missing_logo.png"
@@ -202,8 +205,11 @@ class Company < ActiveRecord::Base
     .unshift( [""] )  # empty option makes placeholder possible (only needed for single select)
   end
 
-  def outbound_actions_select_options
-    self.outbound_actions.map { |action| [ action.description, action.id ] }
+  def ctas_select_options
+    self.ctas.map do |action|
+      [ action.description, action.id ]
+    end
+    .unshift( [""] )
   end
 
   def templates_select

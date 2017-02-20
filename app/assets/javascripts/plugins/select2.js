@@ -89,7 +89,7 @@ function initSelect2 () {
     }
   });
 
-  $('#outbound-actions-select').select2({
+  $('#ctas-select').select2({
     theme: 'bootstrap',
     placeholder: 'select an action',
     tags: true

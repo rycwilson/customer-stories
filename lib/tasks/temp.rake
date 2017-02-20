@@ -2,24 +2,36 @@ namespace :temp do
 
   desc "temp stuff"
 
-  # examine clicky data
-  # can a single visitor (uid) have sessions with different:
-  # - ip address, location, organization
-  # => Yes
-  task session_params: :environment do
+  task cta: :environment do
 
-    Visitor.all.each do |visitor|
-      total_sessions = visitor.visitor_sessions.length
-      if total_sessions > 1
-        uniq_sessions = Set.new
-        visitor.visitor_sessions.each do |session|
-          uniq_sessions << session.ip_address
-        end
-        puts "#{total_sessions}, #{uniq_sessions.length}"
-        # unique_ips = visitor.visitor_sessions.uniq { |session| session.values_at(:location) }.length
-        # delta = total_sessions - unique_ips
-        # puts delta if delta > 0
-      end
+    # OutboundAction.all.each do |action|
+    #   if action.type == 'OutboundLink'
+    #     type = 'CTALink'
+    #   elsif action.type == 'OutboundForm'
+    #     type = 'CTAForm'
+    #   else
+    #     puts "No type: #{action}"
+    #   end
+    #   new_cta = action.attributes
+    #   new_cta['type'] = type
+    #   CallToAction.create(new_cta)
+    # end
+
+    # OutboundActionsStory.all.each do |entry|
+    #   success_id = Story.find(entry.story_id).success.id
+    #   CtasSuccess.create({
+    #     call_to_action_id: entry.outbound_action_id,
+    #     success_id: success_id
+    #   })
+    # end
+
+    CtaButton.all.each do |button|
+      CallToAction.create({
+        type: 'CTALink',
+        company_id: button.company_id,
+        link_url: button.url,
+        display_text: button.btn_text
+      })
     end
 
   end

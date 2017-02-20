@@ -1,0 +1,2 @@
+class CTALink < CallToAction
+end

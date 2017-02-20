@@ -1,0 +1,101 @@
+
+<div id='edit-story-ctas' class="col-sm-6">
+
+  <p class='lead'>Conversions</p>
+
+  <div class="well">
+    <div class="container-fluid">
+
+      <div class="row">
+        <div class="col-sm-10">
+          <%= select_tag 'cta',
+              options_for_select(company.ctas_select_options),
+              id: 'ctas-select', class: 'form-control' %>
+        </div>
+        <div class="col-sm-2">
+          <%= button_tag class: 'btn btn-secondary btn-sm',
+                id: 'cta-add', disabled: true do %>
+            <i class='glyphicon glyphicon-plus'></i>
+          <% end %>
+        </div>
+      </div>
+
+      <%= form_tag new_cta_path(company.id), remote: true, id: 'ctas-form' do %>
+
+
+        <div class='row btn-group' data-toggle="buttons">
+          <div class="col-sm-12">
+            <label>or create a new CTA:</label>
+            <label id='link-radio' class="radio-inline">
+              <input name='outbound-options' type="radio"
+                     autocomplete="off">Link
+            </label>
+            <label id='html-radio' class="radio-inline">
+              <input name='outbound-options' type="radio"
+                     autocomplete="off">Web form
+            </label>
+          </div>
+        </div>
+
+        <div class="row hidden">
+          <div class="col-sm-12 action-inputs">
+            <%= text_field_tag 'cta[link_description]', nil,
+                  class: 'form-control link-input',
+                  placeholder: 'description' %>
+            <%= text_field_tag 'cta[link_display_text]', nil,
+                  class: 'form-control link-input',
+                  placeholder: 'display text' %>
+            <%= text_field_tag 'cta[link_url]', nil,
+                  class: 'form-control link-input',
+                  placeholder: 'website address' %>
+            <%= text_field_tag 'cta[form_description]', nil,
+                  class: 'form-control html-input',
+                  placeholder: 'description' %>
+            <%= text_field_tag 'cta[form_display_text]', nil,
+                  class: 'form-control html-input',
+                  placeholder: 'display text' %>
+            <%= text_area_tag 'cta[form_html]', nil,
+                  class: 'form-control html-input', rows: 3,
+                  placeholder: 'html, e.g. <script> and <form> tags' %>
+          </div>
+          <div>
+            <%= button_tag type: 'submit', class: 'btn btn-secondary btn-sm',
+                  id: 'outbound-links-submit', disabled: true do %>
+              <i class='glyphicon glyphicon-plus'></i>
+            <% end %>
+          </div>
+        </div>
+
+      <% end %>
+
+      <hr>
+
+      <div id='ctas-list'>
+
+      <% story.ctas.each_with_index do |action, index| %>
+
+        <div class='ctas-list-item'>
+          <div class="modify-cta">
+            <div class='delete-cta' id="delete-cta-<%= index %>"
+                 data-action="<%= cta_path(action) %>">
+              <i class='glyphicon glyphicon-remove bip-clickable'></i>
+            </div>
+          </div>
+
+          <div class="row cta">
+            <div class="col-sm-1">
+              <i class="fa fa-<%= action.type == 'CTALink' ? 'link' : 'wpforms' %>"></i>
+            </div>
+            <div class="col-sm-11">
+              <span><%= action.description %></span>
+            </div>
+          </div>
+        </div>
+
+      <% end %>
+
+      </div>
+
+    </div>
+  </div>
+</div>

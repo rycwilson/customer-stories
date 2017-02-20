@@ -1,12 +1,12 @@
 
 .stories.edit {
 
-  #edit-outbound-actions {
+  #edit-story-ctas {
     .well {
       padding: 18px 0 18px 0;
       margin-bottom: 10px;
     }
-    #outbound-actions-form {
+    #ctas-form {
       .btn-group {
         margin-bottom: 6px;
         label {
@@ -16,7 +16,7 @@
           margin-bottom: 4px;
         }
       }
-      .row:nth-of-type(2) {
+      .row:nth-of-type(3) {
         position: relative;
         .col-sm-12 {
           width: 83%;
@@ -33,19 +33,19 @@
           right: 30px;
         }
       }
-      .col-sm-10, .col-sm-12 {
+      .action-inputs {
         padding: 0 0 0 30px;
       }
       .html-input {
         display: none;   // to be toggled
       }
-    }  // #outbound-links-form
+    }  // #ctas-form
     hr {
       margin: 15px 15px;
     }
-    #outbound-actions-list {
+    #ctas-list {
       line-height: 32px;
-      .outbound-action {
+      .cta {
         padding-left: 30px;
         width:88%;
         div:first-child {
@@ -53,14 +53,13 @@
           padding: 0;
         }
       }
-      .delete-outbound-action {
+      .delete-cta {
         position: absolute;
         right:40px;
       }
     }
-
-
   }
+
   /***********************************************/
   /*      video
   /***********************************************/
@@ -258,7 +257,7 @@
   #edit-story-benefits:hover + #story-benefits,
   .modify-result:hover + .story-result,
   .modify-prompt:hover + .story-prompt,
-  .modify-outbound-action:hover + .outbound-action,
+  .modify-cta:hover + .cta,
   i.cc-editable:hover + .cc-editable,
   i.cc-editable:hover + .cc-editable + .cc-editable {
     // border-left: 3px solid #87a3bc;

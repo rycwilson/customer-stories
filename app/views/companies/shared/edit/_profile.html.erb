@@ -1,0 +1,128 @@
+
+<%= form_for @company, method: 'put', remote: true,
+      authenticity_token: true,
+      html: { class: 'directUpload',
+               data: {
+                 'form-data' => (@s3_direct_post.fields),
+                       'url' => @s3_direct_post.url,
+                      'host' => URI.parse(@s3_direct_post.url).host
+                      } } do |f| %>
+  <div class="col-md-5">
+
+    <div class="form-group required-input">
+      <%= f.label :name, class: 'control-label' %>
+      <%= f.text_field :name, class: 'form-control'%>
+    </div>
+
+    <div class="form-group required-input">
+      <%= f.label :subdomain, class: 'control-label' %>
+
+      <% if @company.persisted? %>
+        <%= f.text_field :subdomain, class: 'form-control', disabled: true %>
+      <% else %>
+        <%= f.text_field :subdomain, class: 'form-control' %>
+      <% end %>
+    </div>
+
+    <div class="form-group required-input">
+      <%= f.label :website, class: 'control-label' %>
+      <%= f.text_field :website, class: 'form-control'%>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :gtm_id, 'Google Tag Manager ID', class: 'control-label' %>
+      <%= f.text_field :gtm_id, class: 'form-control' %>
+    </div>
+
+  </div>  <!-- col -->
+
+  <div class="col-md-7">
+
+    <label>Logo</label>  <!-- have to pull this out for proper styling -->
+    <div class="form-group" style='margin-bottom:20px'>
+
+      <div class="fileinput <%= @company.logo_url.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">
+
+        <div class="fileinput-new thumbnail col-sm-8">
+          <%= image_tag "company-logo-missing.png", alt: 'logo missing' %>
+        </div>
+
+        <div class="fileinput-preview fileinput-exists thumbnail col-sm-8"
+            data-trigger="fileinput">
+          <img src="<%= @company.logo_url %>" alt="company logo">
+        </div>
+
+        <div class='col-sm-4'>
+          <span class="btn btn-default btn-file" style='margin-bottom:7px'>
+            <span class="fileinput-new">
+              Select image
+            </span>
+            <span class="fileinput-exists">
+              Change
+            </span>
+            <%= f.file_field :logo_url %>
+          </span> <br>
+
+          <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">
+            Remove
+          </a>
+        </div>
+
+      </div> <!-- /.fileupload -->
+    </div>  <!-- form-group -->
+
+    <div class="form-group">
+
+      <div class="row" style='margin-bottom:2px'>
+        <div class="col-sm-5 vcenter">
+          <%= f.label "Banner colors", nil %>
+        </div>
+      </div>
+
+      <div class="row color-picker" style='margin-bottom:15px'>
+        <div class="col-sm-6">
+          <%= f.label :nav_color_1, 'Color 1', class: 'control-label' %>
+          <%= f.text_field :nav_color_1, class: 'form-control mini-colors' %>
+        </div>
+        <div class="col-sm-6">
+          <%= f.label :nav_color_2, 'Color 2', class: 'control-label' %>
+          <%= f.text_field :nav_color_2, class: 'form-control mini-colors' %>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-6">
+          <%= f.label :nav_text_color, 'Text', class: 'control-label' %>
+          <%= f.text_field :nav_text_color, class: 'form-control mini-colors' %>
+        </div>
+
+        <div class="col-sm-6">
+          <label>Try it!</label> <br>
+          <button type='button' id='test-colors-btn' class='btn btn btn-default'>
+            Apply
+          </button>
+          <button type='button' id='restore-colors-btn' class='btn btn btn-default'>
+            Restore
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+  </div>  <!-- col -->
+
+  <div class="col-md-12">
+    <hr style='margin-top:0'>
+  </div>
+
+  <div class="col-md-4 col-md-offset-8 text-right">
+    <div class="form-group">
+      <input type='submit' class='btn btn-primary'
+        value="<%= @company.new_record? ? 'Register' : 'Save changes' %>">
+      &nbsp;
+      <button type="reset" class="btn btn-default">
+        Cancel
+      </button>
+    </div>
+  </div>
+<% end %>  <!-- form_for -->

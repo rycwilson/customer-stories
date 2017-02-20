@@ -8,46 +8,35 @@
       <div class="layout layout-main-right layout-stack-sm">
         <div class="col-sm-3 layout-sidebar">
 
-          <%= render 'companies/shared/side_tabs' %>
+          <%= render 'companies/shared/edit/side_tabs' %>
 
         </div> <!-- /.col -->
 
         <div class="col-sm-9 layout-main">
           <div class="tab-content stacked-content">
+
             <div class="tab-pane fade in active" id="company-profile">
-
-              <div class="heading-block">
-
-                <% if @company.new_record? %>
+              <% if @company.new_record? %>
+                <div class="heading-block">
                   <h3> Company Registration </h3>
+                </div>
+              <% end %>
 
-                <% else %>
-                  <h3> Company Profile </h3>
-
-                <% end %>
-              </div> <!-- /.heading-block -->
-
-              <%= render 'companies/shared/update_company_form' %>
-
-            </div> <!-- /.tab-pane -->
+              <%= render 'companies/shared/edit/profile', { company: @company } %>
+            </div>
 
             <div class="tab-pane fade" id="email-templates">
+              <%= render 'companies/shared/edit/email_templates',
+                         { templates_select: @templates_select } %>
+            </div>
 
-              <div class="heading-block">
-                <h3> Email Templates </h3>
-              </div> <!-- /.heading-block -->
+            <div class="tab-pane fade" id="story-tags">
+              <%= render 'companies/shared/edit/story_tags', { company: @company } %>
+            </div>
 
-              <%= render 'companies/shared/email_templates_form' %>
-
-            </div> <!-- /.tab-pane -->
-
-            <div class="tab-pane fade" id="curators">
-
-              <div class="heading-block">
-                <h3> Add and Remove Curators </h3>
-              </div> <!-- /.heading-block -->
-
-            </div> <!-- /.tab-pane -->
+            <div class="tab-pane fade" id="story-ctas">
+              <%= render 'companies/shared/edit/story_ctas', { company: @company } %>
+            </div>
 
           </div> <!-- /.tab-content -->
         </div> <!-- /.col -->

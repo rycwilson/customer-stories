@@ -21,7 +21,7 @@ function storiesEditHandlers () {
   storiesEditBIPHandlers();
   storiesEditSettingsHandlers();
   storiesEditVideoInputHandler();
-  storiesEditOutboundActionsHandlers();
+  storiesEditCTAsHandlers();
   storiesEditTagsHandlers();
   storiesEditNewContributorHandlers();
   storiesEditResultsHandlers();
@@ -219,15 +219,38 @@ function storiesEditVideoInputHandler () {
   });
 }
 
-function storiesEditOutboundActionsHandlers () {
+function storiesEditCTAssHandlers () {
 
-  $(document).on('click', '#outbound-actions-form .btn-group input',
+  $(document).on('change', '#ctas-select',
+    function () {
+      $('#cta-add').prop('disabled', false);
+      $.get('/ctas/' + $(this).val(),
+        function (data, status, xhr) {
+          if (data.link_url) {
+            if (!$('#link-radio').prop('checked')) {
+              $('#link-radio').button('toggle');
+            }
+            $('input[name="cta[link_description]"]').val(data.description);
+            $('input[name="cta[link_display_text]"]').val(data.display_text);
+            $('input[name="cta[link_url]"]').val(data.link_url);
+          } else {
+            if (!$('#html-radio').prop('checked')) {
+              $('#html-radio').button('toggle');
+            }
+            $('input[name="cta[form_description]"]').val(data.description);
+            $('input[name="cta[form_display_text]"]').val(data.display_text);
+            $('input[name="cta[form_html]"]').val(data.form_html);
+          }
+        });
+    });
+
+  $(document).on('click', '#ctas-form .btn-group input',
     function () {
       $('.link-input,.html-input').toggle();
       $('.link-input,.html-input').val('');
     });
 
-  $(document).on('input', '#outbound-actions-form',
+  $(document).on('input', '#ctas-form',
     function () {
       if ($(this).find('button[type="submit"]').prop('disabled') === false) {
         return false;
@@ -247,14 +270,14 @@ function storiesEditOutboundActionsHandlers () {
       }
     });
 
-  $(document).on('click', '.delete-outbound-action',
+  $(document).on('click', '.delete-cta',
     function () {
       var $_this = $(this);
       $.ajax({
         url: $(this).data('action'),
         method: 'delete',
         success: function (data, status, xhr) {
-          $_this.closest('.outbound-actions-list-item').remove();
+          $_this.closest('.ctas-list-item').remove();
         }
       });
     });

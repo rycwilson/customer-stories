@@ -1,0 +1,2 @@
+class CTAForm < CallToAction
+end
