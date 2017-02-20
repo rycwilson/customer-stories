@@ -95,9 +95,14 @@ function initSelect2 () {
     tags: true
   });
 
+  $('#charts-story-select, #visitors-story-select').select2({
+    theme: 'bootstrap',
+    width: 'style'
+  });
+
 }
 
-function select2Handlers () {
+function select2Listeners () {
   // prevents the options list from showing when a tag is removed
   $('.select2').prev()
                .on('select2:unselecting', function (e) {

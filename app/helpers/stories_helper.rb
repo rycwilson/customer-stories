@@ -48,7 +48,7 @@ module StoriesHelper
 
   def grid_item_caption_style company, story
     if story.published?
-      "background-color:#{company.nav_color_1}; color:#{company.nav_text_color}"
+      "background-color:#{company.header_color_1}; color:#{company.header_text_color}"
     elsif company_curator? company.id
       "background-color:#f5f5f5"
     else

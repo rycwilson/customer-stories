@@ -7,18 +7,12 @@ class VisitorSession < ActiveRecord::Base
   has_many :successes, -> { distinct }, through: :visitor_actions
   has_many :stories, through: :successes
 
+  default_scope { order(:clicky_session_id) }
+
   scope :company_all, ->(company_id) {
-    joins(:page_views)
+    joins(:visitor_actions)
     .where(visitor_actions: { company_id: company_id })
     .distinct
   }
-
-  @last_session = self.all.sort_by { |session| session.clicky_session_id }.last
-
-  # capture the last session that was downloaded, for use in
-  # parsing response to rake clicky:download
-  class << self
-    attr_accessor :last_session
-  end
 
 end

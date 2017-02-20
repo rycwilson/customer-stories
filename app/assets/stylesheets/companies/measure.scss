@@ -36,4 +36,39 @@
     }
   }
 
+  #measure-summary-container {
+
+    form {
+      margin: 10px 0 40px 0
+    }
+
+  }
+
+  #measure-visitors-container {
+
+    form {
+      margin: 10px 0 26px 0
+    }
+
+    #measure-visitors-table {
+      border-collapse: collapse;
+      td.details-control {
+        width: 40px;
+        cursor: pointer;
+        text-align: center;
+        i + i {
+          display: none;
+        }
+      }
+      // try this but it's a pain in the ass to get it to work
+      // http://stackoverflow.com/questions/7569436
+      // table td {
+      //   white-space: nowrap;
+      //   position: absolute;
+      //   text-overflow: ellipsis;
+      // }
+
+    }
+  }
+
 }

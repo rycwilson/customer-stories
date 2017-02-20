@@ -10,19 +10,21 @@ class Company < ActiveRecord::Base
   validates_exclusion_of :subdomain, in: ['www', 'mail', 'ftp'], message: "is not available"
 
   has_many :users  # no dependent: :destroy users, handle more gracefully
-  has_many :invited_curators, dependent: :destroy
 
   has_many :customers, dependent: :destroy
   has_many :successes, through: :customers
   has_many :stories, through: :successes
   has_many :visitor_actions
   has_many :page_views, class_name: "PageView"
+  has_many :story_shares, class_name: "StoryShare"
+  has_many :cta_clicks, class_name: "CtaClick"
+  has_many :profile_clicks, class_name: "ProfileClick"
+  has_many :logo_clicks, class_name: "Logo_click"
   has_many :visitor_sessions, -> { distinct }, through: :visitor_actions
   has_many :visitors, -> { distinct }, through: :visitor_sessions
 
   has_many :story_categories, dependent: :destroy
   has_many :products, dependent: :destroy
-  has_many :product_categories, dependent: :destroy
   has_many :email_templates, dependent: :destroy
   has_one :cta_button, dependent: :destroy
   has_many :outbound_actions, dependent: :destroy
@@ -37,8 +39,12 @@ class Company < ActiveRecord::Base
 
   after_commit :expire_fragment_cache, on: :update,
     if: Proc.new { |company|
-      (company.previous_changes.keys & ['nav_color_1', 'nav_text_color']).any?
+      (company.previous_changes.keys & ['header_color_1', 'header_text_color']).any?
     }
+
+  def header_style
+    "background:linear-gradient(45deg, #{self.header_color_1} 0%, #{self.header_color_2} 100%);color:#{self.header_text_color};"
+  end
 
   def all_stories
     Rails.cache.fetch("#{self.subdomain}/all_stories") do
@@ -212,6 +218,12 @@ class Company < ActiveRecord::Base
     .unshift( [""] )
   end
 
+  def story_select_options
+    self.stories.select { |story| story.published }
+                .map { |story| [ story.title, story.id ] }
+                .unshift( ['All', 0] )
+  end
+
   def templates_select
     self.email_templates.map do |template|
       [template.name, template.id]
@@ -301,10 +313,6 @@ class Company < ActiveRecord::Base
     end
   end
 
-  def header_style
-    "background:linear-gradient(45deg, #{self.nav_color_1} 0%, #{self.nav_color_2} 100%);color:#{self.nav_text_color};"
-  end
-
   def missing_info
     missing = []
     missing << "logo" unless self.logo_url.present?
@@ -360,7 +368,7 @@ class Company < ActiveRecord::Base
       self.public_stories_index_fragments_memcache_iterator + 1)
   end
 
-  # all story fragments must be expired if these attributes change: nav_color_1, nav_text_color
+  # all story fragments must be expired if these attributes change: header_color_1, header_text_color
   def story_tile_fragments_memcache_iterator
     Rails.cache.fetch("#{self.subdomain}/stories-tile-fragments-memcache-iterator") { rand(10) }
   end
@@ -424,12 +432,11 @@ class Company < ActiveRecord::Base
       self.public_product_select_fragments_memcache_iterator + 1)
   end
 
-
   def recent_activity days_offset  # today = 0
     # story_shares = self.story_shares(days_offset)
     groups = [
       { label: 'Story views',
-        story_views: Rails.cache.fetch("#{self.subdomain}/story-views-activity") },
+        story_views: self.story_views_activity(7) },
       { label: 'Stories published',
         stories_published: self.stories_published_activity(days_offset) },
       { label: 'Contributions submitted',
@@ -584,5 +591,306 @@ class Company < ActiveRecord::Base
 
   def story_shares_activity days_offset
   end
+
+  def stories_table_json
+    company_page_views = self.page_views.count
+    # timestamp must be included since there's a default scope that orders on timestamp
+    # note that it doesn't actually appear in the output
+    logo_page_visitors = PageView.joins(:visitor)
+                           .where(company_id: self.id, success_id: nil)
+                           .group('visitor_actions.timestamp, visitors.id').count
+    logo_page =
+      [ '', 'Logo Page', '', logo_page_visitors.length,
+        ((PageView.company_index_views(self.id).count.to_f / company_page_views.to_f) * 100).round(1).to_s + '%' ]
+    PageView.distinct
+      .joins(:story, :visitor, success: { customer: {} })
+      .where(company_id: self.id, stories: { published: true })
+      .group('visitor_actions.timestamp, stories.title', 'stories.publish_date', 'visitors.id', 'customers.name')
+      .count
+      .group_by { |story_visitor_timestamp, visits| story_visitor_timestamp[0] }
+      .to_a.map do |story|
+        visitors = Set.new
+        publish_date = nil
+        customer = nil
+        story[1].each do |visitor|
+          visitors << visitor[0][2]
+          publish_date ||= visitor[0][1]
+          customer ||= visitor[0][3]
+        end
+        [ customer, story[0], publish_date.strftime('%-m/%-d/%y'), visitors.count,
+          ((Story.find_by(title: story[0]).page_views.count.to_f / company_page_views.to_f) * 100).round(1).to_s + '%' ]
+      end
+      .push(logo_page)
+      .sort_by { |story| story[3] || 0 }.reverse
+  end
+
+  def visitors_chart_json story = nil, start_date = 30.days.ago.to_date, end_date = Date.today
+    if story.nil?
+      visitor_actions_conditions = { company_id: self.id }
+    else
+      visitor_actions_conditions = { company_id: self.id, success_id: story.success.id }
+    end
+    num_days = (start_date..end_date).count
+    if num_days < 21
+      visitors = VisitorSession.distinct
+        .includes(:visitor)
+        .joins(:visitor_actions)
+        .where(visitor_actions: visitor_actions_conditions)
+        .where('visitor_sessions.timestamp > ? AND visitor_sessions.timestamp < ?',
+               start_date.beginning_of_day, end_date.end_of_day)
+        .group_by { |session| session.timestamp.to_date }
+        .sort_by { |date, sessions| date }.to_h
+        .map do |date, sessions|
+          [ date.strftime('%-m/%-d/%y'), sessions.map { |session| session.visitor }.uniq.count ]
+        end
+        if start_date == end_date || visitors.empty?
+          visitors
+        else
+          visitors = fill_daily_gaps(visitors, start_date, end_date)
+        end
+    elsif num_days < 120
+      # TODO: Perform the count without actually loading any objects
+      visitors = VisitorSession.distinct
+        .includes(:visitor)
+        .joins(:visitor_actions)
+        .where(visitor_actions: visitor_actions_conditions)
+        .where('visitor_sessions.timestamp > ? AND visitor_sessions.timestamp < ?',
+               start_date.beginning_of_week.beginning_of_day, end_date.end_of_week.end_of_day)
+        .group_by { |session| session.timestamp.to_date.beginning_of_week }
+        .sort_by { |date, sessions| date }.to_h
+        .map do |date, sessions|
+          [ date.strftime('%-m/%-d/%y'),
+            sessions.map { |session| session.visitor }.uniq.count ]
+        end
+      if visitors.empty?
+        visitors
+      else
+        visitors = fill_weekly_gaps(visitors, start_date, end_date)
+      end
+    else
+      visitors = VisitorSession.distinct
+        .includes(:visitor)
+        .joins(:visitor_actions)
+        .where(visitor_actions: visitor_actions_conditions)
+        .where('visitor_sessions.timestamp >= ? AND visitor_sessions.timestamp <= ?',
+               start_date.beginning_of_month.beginning_of_day, end_date.end_of_month.end_of_day)
+        .group_by { |session| session.timestamp.to_date.beginning_of_month }
+        .sort_by { |date, sessions| date }.to_h
+        .map do |date, sessions|
+          [ date.strftime('%-m/%y'),
+            sessions.map { |session| session.visitor }.uniq.count ]
+        end
+      visitors
+      # if visitors.empty?
+      #   visitors
+      # else
+      #   visitors = fill_monthly_gaps(visitors, start_date, end_date)
+      # end
+    end
+  end
+
+  def visitors_table_json story = nil, start_date = 30.days.ago.to_date, end_date = Date.today
+    if story.nil?
+      visitor_actions_conditions = { company_id: self.id }
+    else
+      visitor_actions_conditions = { company_id: self.id, success_id: story.success.id }
+    end
+    # keep track of stories viewed by a given org, to be used for looking up story titles
+    success_list = Set.new
+    # note that visitor_sessions.timestamp and visitor_actions.timestamp must appear
+    # in the group clause because of the default scope (order) on these tables
+    # by including these in a single string argument,
+    # only the organization, visitors.id, and visitor_actions.success_id are returned
+    visitors = VisitorSession.distinct.joins(:visitor, :visitor_actions)
+      .where('visitor_sessions.timestamp >= ? AND visitor_sessions.timestamp <= ?',
+              start_date.beginning_of_day, end_date.end_of_day)
+      .where(visitor_actions: visitor_actions_conditions)
+      .group('visitor_sessions.clicky_session_id, visitor_actions.timestamp, organization', 'visitors.id', 'visitor_actions.success_id')
+      .count
+      .group_by { |org_visitor_success, count| org_visitor_success[0] }
+      .to_a.map do |org|
+        org_visitors = Set.new
+        org_successes = []  # => [ [ success_id, unique visitors = [] ] ]
+        org[1].each do |org_visitor_success|
+          visitor_id = org_visitor_success[0][1]
+          success_id = org_visitor_success[0][2]
+          org_visitors << visitor_id
+          if (index = org_successes.find_index { |success| success[0] == success_id })
+            org_successes[index][1] << visitor_id
+          else
+            success_list << success_id
+            org_successes << [ success_id, [ visitor_id ] ]
+          end
+        end
+        org_successes.map! { |success| [ success[0], success[1].count ] }
+        [ '', org[0] || '', org_visitors.count, org_successes ]
+      end
+      .sort_by { |org| org[1] }  # sort by org name
+      # create a lookup table { success_id: story title }
+      success_list.delete_if { |success_id| success_id.nil? }
+      success_story_titles =
+        Success.find(success_list.to_a).map { |success| [ success.id, success.story.title ] }.to_h
+      visitors.each do |org|
+        org[3].map! { |success| [ success_story_titles[success[0]] || 'Logo Page', success[1] ] }
+              .sort_by! { |story| story[1] }.reverse!
+      end
+  end
+
+  def referrer_types_chart_json story = nil, start_date = 30.days.ago.to_date, end_date = Date.today
+    if story.nil?
+      visitor_actions_conditions = { company_id: self.id }
+    else
+      visitor_actions_conditions = { company_id: self.id, success_id: story.success.id }
+    end
+    VisitorSession
+      .select(:referrer_type)
+      .joins(:visitor_actions)
+      .where(visitor_actions: visitor_actions_conditions)
+      .where('visitor_sessions.timestamp > ? AND visitor_sessions.timestamp < ?',
+             start_date.beginning_of_day, end_date.end_of_day)
+      .group_by { |session| session.referrer_type }
+      .map { |type, records| [type, records.count] }
+  end
+
+  def actions_table_json story = nil, start_date = 30.days.ago.to_date, end_date = Date.today
+    if story.nil?
+      visitor_actions_conditions = { company_id: self.id }
+    else
+      visitor_actions_conditions = { company_id: self.id, success_id: story.success.id }
+    end
+    VisitorAction.distinct
+      .joins(:visitor_session, :visitor)
+      .where(visitor_actions_conditions)
+      .where('visitor_actions.timestamp > ? AND visitor_actions.timestamp < ?',
+             start_date.beginning_of_day, end_date.end_of_day)
+      .group_by('visitor_actions.timestamp, visitor_actions.description', 'visitors.id' )
+      .count
+  end
+
+  # when scheduling, make sure this doesn't collide with clicky:update
+  # possible to check on run status of rake task?
+  def send_analytics_update
+    visitors = Rails.cache.fetch("#{self.subdomain}/visitors-chart-default") do
+                 self.visitors_chart_json
+               end
+    total_visitors = 0
+    visitors.each { |group| total_visitors += group[1] }
+    # columns as days or weeks?
+    # xDelta is the difference in days between adjacent columns
+    if visitors.length == 1  # 1 day
+      xDelta = 0;
+    elsif visitors.length > 1
+      xDelta = (visitors[1][0].to_date - visitors[0][0].to_date).to_i
+      xDelta += 365 if xDelta < 0  # account for ranges that span new year
+    end
+    if xDelta <= 1
+      axesLabels = ['Day', 'Visitors']
+    elsif xDelta === 7
+      axesLabels = ['Week starting', 'Visitors'];
+    else
+      axesLabels = ['Month', 'Visitors'];
+    end
+    # don't bother applying axes labels if there is no data ...
+    # visitors.unshift(axesLabels) if visitors.length > 0
+
+    # referrer_types = Rails.cache.fetch("#{self.subdomain}/referrer-types-default") do
+    #                    self.visitors_chart_json
+    #                  end
+    {
+      visitors: Gchart.bar({
+                  data: visitors
+                  # title: "Unique Visitors - #{total_visitors}"
+                  # hAxis: { title: axesLabels[0] }
+                  # vAxis: { title: axesLabels[1], minValue: 0 }
+                  # legend: { position: 'none' }
+                }),
+      referrer_types: nil
+    }
+
+  end
+
+  private
+
+  def fill_daily_gaps visitors, start_date, end_date
+    all_dates = []
+    if visitors.empty?
+      (end_date - start_date).to_i.times do |i|
+        all_dates << [(start_date + i).strftime("%-m/%-d"), 0]
+      end
+      return all_dates
+    end
+    first_dates = []
+    (Date.strptime(visitors[0][0], "%m/%d/%y") - start_date).to_i.times do |index|
+      first_dates << [(start_date + index).strftime("%-m/%-d/%y"), 0]
+    end
+    # check for gaps in the middle of the list, but only if at least two are present
+    if visitors.length >= 2
+      all_dates = first_dates +
+        visitors.each_cons(2).each_with_index.flat_map do |(prev_date, next_date), index|
+          prev_datep = Date.strptime(prev_date[0], '%m/%d/%y')
+          next_datep = Date.strptime(next_date[0], '%m/%d/%y')
+          return_arr = [prev_date]
+          delta = (next_datep - prev_datep).to_i
+          if delta > 1
+            (delta - 1).times do |i|
+              return_arr.insert(1, [(next_datep - (i + 1)).strftime("%-m/%-d"), 0])
+            end
+          end
+          if (index == visitors.length - 2)
+            return_arr << next_date
+          else
+            return_arr
+          end
+        end
+    else
+      all_dates = first_dates + visitors
+    end
+    end_delta = (end_date - Date.strptime(all_dates.last[0], "%m/%d/%y")).to_i
+    end_delta.times do
+      all_dates << [(Date.strptime(all_dates.last[0], "%m/%d/%y") + 1).strftime("%-m/%-d/%y"), 0]
+    end
+    # get rid of the year
+    all_dates.map { |date| [date[0].sub!(/\/\d+$/, ''), date[1]] }
+  end
+
+  def fill_weekly_gaps visitors, start_date, end_date
+    first_weeks = []
+    ((Date.strptime(visitors[0][0], "%m/%d/%y") -
+        start_date.beginning_of_week).to_i / 7).times do |index|
+      first_weeks << [(start_date.beginning_of_week + index*7).strftime("%-m/%-d/%y"), 0]
+    end
+    # check for gaps in the middle of the list, but only if at least two are present
+    if visitors.length >= 2
+      all_weeks = first_weeks +
+        visitors.each_cons(2).each_with_index.flat_map do |(prev_week, next_week), index|
+          prev_weekp = Date.strptime(prev_week[0], '%m/%d/%y')
+          next_weekp = Date.strptime(next_week[0], '%m/%d/%y')
+          return_arr = [prev_week]
+          delta = (next_weekp - prev_weekp).to_i
+          delta /= 7
+          if delta > 1
+            (delta - 1).times do |i|
+              return_arr.insert(1, [(next_weekp - ((i + 1)*7)).strftime("%-m/%-d/%y"), 0])
+            end
+          end
+          if (index == visitors.length - 2)
+            return_arr << next_week
+          else
+            return_arr
+          end
+        end
+    else
+      all_weeks = first_weeks + visitors
+    end
+    end_delta = (end_date.beginning_of_week -
+                 Date.strptime(all_weeks.last[0], "%m/%d/%y")).to_i
+    end_delta /=7
+    end_delta.times do
+      all_weeks << [(Date.strptime(all_weeks.last[0], "%m/%d/%y") + 1.week).strftime("%-m/%-d/%y"), 0]
+    end
+    # get rid of the year
+    all_weeks.map { |week| [week[0].sub!(/\/\d+$/, ''), week[1]] }
+  end
+
 
 end

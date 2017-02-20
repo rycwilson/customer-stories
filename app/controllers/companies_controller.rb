@@ -15,9 +15,10 @@ class CompaniesController < ApplicationController
     @customer_select_options = @company.customer_select_options
     @category_select_options = @company.category_select_options
     @product_select_options = @company.product_select_options
-    @recent_activity = @company.recent_activity(30)
+    @story_select_options = @company.story_select_options
+    @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
     @story_views_30_day_count = PageView.joins(:visitor_session)
-                                  .company_story_views_since(@company.id, 30).count
+                                 .company_story_views_since(@company.id, 30).count
   end
 
   def edit
@@ -83,8 +84,8 @@ class CompaniesController < ApplicationController
   private
 
   def company_params
-    params.require(:company).permit(:name, :subdomain, :logo_url, :nav_color_1,
-                                    :nav_color_2, :nav_text_color, :website, :gtm_id)
+    params.require(:company).permit(:name, :subdomain, :logo_url, :header_color_1,
+                                    :header_color_2, :header_text_color, :website, :gtm_id)
   end
 
   def set_company
@@ -99,21 +100,5 @@ class CompaniesController < ApplicationController
       false
     end
   end
-
-  # def clicky_session_request session_id, company
-  #   Typhoeus::Request.new(
-  #     GETCLICKY_API_BASE_URL,
-  #     method: :get,
-  #     body: nil,
-  #     params: { site_id: ENV['GETCLICKY_SITE_ID'],
-  #               sitekey: ENV['GETCLICKY_SITE_KEY'],
-  #               type: 'visitors-list',
-  #               date: company.subdomain == 'varmour' ? 'last-1-days' : 'last-7-days',
-  #               session_id: session_id,
-  #               limit: 'all',
-  #               output: 'json' },
-  #     headers: { Accept: "application/json" }
-  #   )
-  # end
 
 end

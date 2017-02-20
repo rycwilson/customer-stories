@@ -1,4 +1,5 @@
 
+
 // mvp ready
 //= require slimscroll/jquery.slimscroll
 //= require magnific-popup/dist/jquery.magnific-popup
@@ -41,4 +42,10 @@
 //= require js-cookie/src/js.cookie
 
 //= require local_time
+
+//= require moment/moment
+//= require bootstrap-daterangepicker/daterangepicker
+
+//= require jstz
+//= require browser_timezone_rails/set_time_zone
 

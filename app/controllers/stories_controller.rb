@@ -58,14 +58,14 @@ class StoriesController < ApplicationController
   def show
     # convert the story content to plain text (for SEO tags)
     @story_content_text = HtmlToPlainText.plain_text(@story.content)
-    prev_next_fragment_key =
-      "#{@company.subdomain}/#{@is_curator ? 'curator' : 'public' }/" +
-      "story-#{@story.id}-prev-next"
-    unless fragment_exist?(prev_next_fragment_key)
-      @prev_story = @story.previous(@is_curator)
-      @next_story = @story.next(@is_curator)
-    end
     @related_stories = @story.related_stories
+    @more_stories =
+      @company.filter_stories_by_tag({ tag: 'all', id: '0' }, @is_curator)
+              .delete_if { |story| story.id == @story.id }
+              .map do |story|
+                { logo: story.customer.logo_url,
+                  path: story.published ? story.csp_story_path : root_path }
+              end
   end
 
   def edit

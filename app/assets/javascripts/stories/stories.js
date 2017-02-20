@@ -3,10 +3,27 @@
 //= require ./show
 //= require ./edit
 
-function attachStoriesHandlers () {
-  storiesIndexHandlers();
-  storiesEditHandlers();
-  storiesPlayVideoHandler();
+function attachStoriesListeners () {
+  storiesIndexListeners();
+  storiesEditListeners();
+  storiesPlayVideoListener();
+
+  $(document).on('click', '.cta-form',
+    function () {
+      $('#outbound-form-modal').modal('show');
+    });
+
+  // this does not play nicely with the linkedin widgets
+  // if scroll while widgets are loading, somehow visibility gets set to
+  // hidden, but the More Stories header doesn't appear
+  // document.addEventListener('scroll', function () {
+  //   if ($('body').hasClass('stories show') &&
+  //       $('#more-stories').css('visibility') === 'hidden' &&
+  //       ($(window).scrollTop() - $('#story-section-testimonial').offset().top) > 0) {
+  //         initMoreStories();
+  //       }
+  // });
+
 }
 
 function loadVideoThumbnail () {
@@ -50,7 +67,7 @@ function loadVideoThumbnail () {
   }
 } // loadThumbnail
 
-function storiesPlayVideoHandler () {
+function storiesPlayVideoListener () {
 
   $(document).on('click',
     '.video-thumb-container img, .video-thumb-container .play-button',

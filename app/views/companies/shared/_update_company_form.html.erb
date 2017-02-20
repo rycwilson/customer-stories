@@ -72,19 +72,19 @@
 
       <div class="row color-picker" style='margin-bottom:15px'>
         <div class="col-sm-6">
-          <%= f.label :nav_color_1, 'Color 1', class: 'control-label' %>
-          <%= f.text_field :nav_color_1, class: 'form-control mini-colors' %>
+          <%= f.label :header_color_1, 'Color 1', class: 'control-label' %>
+          <%= f.text_field :header_color_1, class: 'form-control mini-colors' %>
         </div>
         <div class="col-sm-6">
-          <%= f.label :nav_color_2, 'Color 2', class: 'control-label' %>
-          <%= f.text_field :nav_color_2, class: 'form-control mini-colors' %>
+          <%= f.label :header_color_2, 'Color 2', class: 'control-label' %>
+          <%= f.text_field :header_color_2, class: 'form-control mini-colors' %>
         </div>
       </div>
 
       <div class="row">
         <div class="col-sm-6">
-          <%= f.label :nav_text_color, 'Text', class: 'control-label' %>
-          <%= f.text_field :nav_text_color, class: 'form-control mini-colors' %>
+          <%= f.label :header_text_color, 'Text', class: 'control-label' %>
+          <%= f.text_field :header_text_color, class: 'form-control mini-colors' %>
         </div>
 
         <div class="col-sm-6">
@@ -113,14 +113,6 @@
               # placeholder: doesn't work from here, set in js
               style: 'width:100%' } %>
     </div>
-
-<!--     <div class="form-group">
-      <%#= label_tag 'Product categories', nil, class: 'control-label' %>
-      <%#= select_tag 'company_tags[product_category][]',
-            options_for_select(@product_categories, @product_cats_pre_select),
-            { multiple: 'true', class: 'company-tags form-control',
-              style: 'width:100%' } %>
-    </div> -->
 
     <div class="form-group">
       <%= label_tag 'Products', nil, class: 'control-label' %>

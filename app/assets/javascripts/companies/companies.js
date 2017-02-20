@@ -3,10 +3,10 @@
 //= require ./show
 //= require ./edit
 
-function attachCompaniesHandlers () {
-  companiesNewHandlers();
-  companiesShowHandlers();
-  companiesEditHandlers();
+function attachCompaniesListeners () {
+  companiesNewListeners();
+  companiesShowListeners();
+  companiesEditListeners();
 
   // remember the last active tab for server submit / page refresh
   $(document).on('shown.bs.tab', '.mainnav-menu a[data-toggle="tab"]', function () {

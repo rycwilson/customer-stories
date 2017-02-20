@@ -18,7 +18,9 @@
 
 <% end %>
 
-<nav class="navbar navbar-default admin" role="banner" style="<%= admin_navbar_style %>">
+<nav class="navbar navbar-default admin"
+     role="banner"
+     style="<%= @company ? @company.header_style : Company.find_by(subdomain:'csp').header_style %>">
   <div class="container" style='padding:0'>
 <!-- <div class="row"> -->
     <div class="navbar-header col-xs-12 col-sm-9">
@@ -34,7 +36,8 @@
         <% if @company.cta_button.try(:btn_text).present? %>
 
           <%= link_to @company.cta_button.btn_text,
-                @company.cta_button.url, class: 'btn cta_btn', target: '_blank',
+                @company.cta_button.url, target: '_blank',
+                class: "btn cta_btn cta-link",
                 style: "background-color:#{@company.cta_button.background_color};color:#{@company.cta_button.color};border-color:#{@company.cta_button.background_color}" %>
 
         <% end %>

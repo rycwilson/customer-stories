@@ -21,11 +21,28 @@
 
     $(function () {
 
-      var $widgetStylesheet = $("<link>", {
+      var tabColor = $('#cs-script').data('tab-color'),
+          fontColor = $('#cs-script').data('font-color'),
+          categoryFilter = $('#cs-script').data('category'),
+          productFilter = $('#cs-script').data('product'),
+          delay = $('#cs-script').data('delay'),
+          showDrawer = $('#cs-script').data('show'),
+          timeout = $('#cs-script').data('timeout'),
+          timeoutCount = $('#cs-script').data('timeout-count'),
+          $widgetStylesheet = $("<link>", {
             rel: "stylesheet",
             type: "text/css",
             href: "<%= URI.join(root_url, asset_path('cs-widget.css')).to_s %>"
           });
+
+          // get font awesome if it doesn't exist on host
+          if ($('link[href*="font-awesome"]').length === 0) {
+            $("<link>", {
+              rel: "stylesheet",
+              type: "text/css",
+              href: "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+            }).appendTo('head');
+          }
 
       // wait for stylesheet to load ...
       $widgetStylesheet.appendTo('head').on('load', function () {
@@ -33,85 +50,60 @@
         $.ajax({
           url: "<%= URI.join(root_url, widget_data_path) %>",
           dataType: 'jsonp',
-          data: { tabColor: $('#cs-script').data('tab-color'),
-                  fontColor: $('#cs-script').data('font-color'),
-                  category: $('#cs-script').data('category'),
-                  product: $('#cs-script').data('product') },
+          data: { tabColor: tabColor,
+                  fontColor: fontColor,
+                  category: categoryFilter,
+                  product: productFilter },
           success: function (data) {
             $('#cs-container').html(data.html);
-            var $images = $('#cs-container img'), loadedImages = 0;
             // wait for all images to load so dimension calculations are correct ...
+            var $images = $('#cs-container img'), loadedImages = 0;
             $images.on('load', function (e) {
               if (++loadedImages === $images.length) {
-                slideDrawerPlugin();
-                preventScrollNav();
-                scrollHandlers();
-                centerLogos();
-                // if user is using a mouse, this will hose dimensions
-                // (in a somewhat random way)
-                // compensate for this ...
-                if ($('.cs-drawer-content').css('height') !== '141px') {
-                  $('.cs-drawer-content').css('height', '141px');
-                  $('.cs-drawer-items').css('height', '141px');
+                if (delay) {
+                  setTimeout(function () {
+                    buildWidget(showDrawer, timeout, timeoutCount);
+                  }, delay)
+                } else {
+                  buildWidget(showDrawer, timeout, timeoutCount);
                 }
-                $('#cs-container .cs-drawer').slideDrawer({
-                  showDrawer: false, // drawer is hidden on page load
-                  slideTimeout: true, // Sets the drawer to slide down after set count if set to true.
-                  slideSpeed: 600, // Slide drawer speed.
-                  slideTimeoutCount: 3000 // How long to wait before sliding drawer slides down.
-                });
-                $('#cs-container .cs-drawer').css('visibility', 'visible');
-                trackVisitor(data.company);
               }
-            });
+            })
           }
         }); // ajax
+
       });
     });
   }
 
+  function buildWidget (showDrawer, timeout, timeoutCount) {
+    slideDrawerPlugin();
+    xScrollBoundaries()
+    scrollHandlers();
+    centerLogos();
+    // if user is using a mouse, this will hose dimensions
+    // (in a somewhat random way)
+    // compensate for this ...
+    if ($('.cs-drawer-content').css('height') !== '141px') {
+      $('.cs-drawer-content').css('height', '141px');
+      $('.cs-drawer-items').css('height', '141px');
+    }
+    $('#cs-container .cs-drawer').slideDrawer({
+      showDrawer: showDrawer, // drawer is hidden on page load
+      slideTimeout: timeout, // Sets the drawer to slide down after set count if set to true.
+      slideSpeed: 600, // Slide drawer speed.
+      slideTimeoutCount: timeoutCount // How long to wait before sliding drawer slides down.
+    });
+    // flip the caret if drawer is shown
+    if (showDrawer) {
+      $('#cs-container i[class*="fa-chevron"]').toggle();
+    }
+    $('#cs-container .cs-drawer').css({ opacity: 0, visibility: "visible" })
+                                 .animate({ opacity: 1 }, 400);
+    trackVisitor();
+  }
+
   // slideout drawer plugin
-  var drawer = {
-
-    init: function (options, div) {
-
-      if (options.showDrawer === true && options.slideTimeout === true) {
-        setTimeout(function() {
-          drawer.slide(div, options.drawerHiddenHeight, options.slideSpeed);
-        }, options.slideTimeoutCount);
-      } else if (options.showDrawer === 'slide') {
-        // Set drawer hidden with slide effect
-        drawer.slide(div, options.drawerHiddenHeight, options.slideSpeed);
-      } else if (options.showDrawer === false) {
-        // Set drawer to hide
-        drawer.hide(options, div);
-      }
-
-      $('#cs-container header').on('click', function () {
-        drawer.toggle(options, div);
-      });
-    },
-
-    //Toggle function
-    toggle: function (options, div) {
-      ($(div).height() + options.borderHeight === options.drawerHeight) ?
-        drawer.slide( div, options.drawerHiddenHeight, options.slideSpeed ) :
-        drawer.slide( div, options.drawerHeight-options.borderHeight, options.slideSpeed );
-    },
-
-    // Slide animation function
-    slide: function (div, height, speed) {
-      $(div).animate({
-        'height': height
-      }, speed );
-    },
-
-    hide: function (options, div) {
-      $(div).css('height', options.drawerHiddenHeight);
-    },
-
-  };
-
   function loadScript (url, callback) {
     var scriptTag = document.createElement('script');
     scriptTag.setAttribute("type", "text/javascript");
@@ -143,6 +135,46 @@
 
   function slideDrawerPlugin () {
 
+    var drawer = {
+
+      init: function (options, div) {
+
+        if (options.showDrawer === true && options.slideTimeout === true) {
+          setTimeout(function() {
+            drawer.slide(div, options.drawerHiddenHeight, options.slideSpeed);
+          }, options.slideTimeoutCount);
+        } else if (options.showDrawer === 'slide') {
+          // Set drawer hidden with slide effect
+          drawer.slide(div, options.drawerHiddenHeight, options.slideSpeed);
+        } else if (options.showDrawer === false) {
+          // Set drawer to hide
+          drawer.hide(options, div);
+        }
+
+        $('#cs-container header').on('click', function () {
+          drawer.toggle(options, div);
+        });
+      },
+
+      //Toggle function
+      toggle: function (options, div) {
+        ($(div).height() + options.borderHeight === options.drawerHeight) ?
+          drawer.slide( div, options.drawerHiddenHeight, options.slideSpeed ) :
+          drawer.slide( div, options.drawerHeight-options.borderHeight, options.slideSpeed );
+      },
+
+      // Slide animation function
+      slide: function (div, height, speed) {
+        $(div).animate({ 'height': height }, speed, 'swing', function () {
+          $('#cs-container header i[class*="fa-chevron"]').toggle();
+        });
+      },
+
+      hide: function (options, div) {
+        $(div).css('height', options.drawerHiddenHeight);
+      },
+
+    };
     // Function wrapper
     $.fn.slideDrawer = function (options) {
 
@@ -170,6 +202,7 @@
         drawer.init(pluginOptions, this);
       });
     };
+
   }
 
   function centerLogos () {
@@ -188,7 +221,7 @@
     when scrolling past boundaries with trackpad, prevent default browser behavior
     (back/forward navigation)
   */
-  function preventScrollNav () {
+  function xScrollBoundaries () {
     var maxX = null;
     $(document).on('wheel', '.row-horizon', function (event) {
       maxX = $(this).prop('scrollWidth') - $(this).prop('offsetWidth');
@@ -213,6 +246,11 @@
         currentPage = 1,
         scrollPosition = null, scrollRemaining = null,
         dynamicPage = null, lastPage = null,
+        calculateDynamicPage = function (position, numPages, pageWidth, carouselWidth) {
+          for (var i = 1; i <= numPages; i++) {
+            if (position + (carouselWidth / 2) < pageWidth * i) { return i; }
+          }
+        },
         paginationTrackScroll = function () {
           dynamicPage =
             calculateDynamicPage($(this).scrollLeft(), numPages, pageWidth, $(this).width());
@@ -224,16 +262,71 @@
             $paginationContainer.find('div:nth-of-type(' + currentPage.toString() + ')')
                                 .addClass('cs-current-page-dot');
           }
+        },
+        paginationScroll = function ($carousel, pageWidth, paginationTrackScroll) {
+          // $(this) refers to the div.page-dot clicked
+          return function (e) {
+            var goToPage = null, scrollTo = null;
+
+            if ($(this).hasClass('cs-current-page-dot')) { e.preventDefault(); }
+
+            // turn off other handlers until animation is complete
+            $carousel.off('scroll', paginationTrackScroll);
+            // .. but not the currently executing handler ... things get weird
+            // $('.cs-page-dot').off('click', paginationScroll)
+
+            $(this).addClass('goto-page-dot');
+            $('.cs-current-page-dot').removeClass('cs-current-page-dot');
+            $('.cs-page-dot').each(function (index, pageDot) {
+              if ($(this).hasClass('goto-page-dot')) {
+                scrollTo = index * pageWidth;
+                $(this).addClass('cs-current-page-dot')
+                       .removeClass('goto-page-dot');
+                return false;
+              }
+            });
+            $carousel.animate({ scrollLeft: scrollTo }, 1000, function () {
+              $carousel.on('scroll', paginationTrackScroll);
+            });
+          };
+        },
+        arrowScrollLeft = function ($carousel, pageWidth) {
+          return function (e) {
+            var scrollPosition = $carousel.scrollLeft();
+            $('.cs-page-dot').off('click', paginationScroll);
+            if (scrollPosition >= pageWidth) {
+              $carousel.animate({ scrollLeft: '-=' + pageWidth.toString() }, 1000,
+                function () { $('.cs-page-dot').on('click', paginationScroll); });
+            }
+            else {
+              $carousel.animate({ scrollLeft: '-=' + scrollPosition.toString() }, 1000,
+                function () { $('.cs-page-dot').on('click', paginationScroll); });
+            }
+          };
+        },
+        arrowScrollRight = function ($carousel, pageWidth, scrollWidth) {
+          return function (e) {
+            var scrollPosition = $carousel.scrollLeft(),
+                scrollRemaining = scrollWidth - (scrollPosition + $carousel.width());
+            $('.cs-page-dot').off('click', paginationScroll);
+            if (scrollRemaining >= pageWidth) {
+              $carousel.animate({ scrollLeft: '+=' + pageWidth.toString() }, 1000,
+                function () { $('.cs-page-dot').on('click', paginationScroll); });
+            } else {
+              $carousel.animate({ scrollLeft: '+=' + scrollRemaining.toString() }, 1000,
+                function () { $('.cs-page-dot').on('click', paginationScroll); });
+            }
+          };
         };
 
     // set up pagination
     for (var i = 0; i < numPages; i++) {
       if (i === 0) {
         $paginationContainer
-          .append("<div class='cs-page-dot cs-current-page-dot'></div>")
+          .append("<div class='cs-page-dot cs-current-page-dot'></div>");
       } else {
         $paginationContainer
-          .append("<div class='cs-page-dot'></div>")
+          .append("<div class='cs-page-dot'></div>");
       }
     }
 
@@ -249,71 +342,9 @@
       .on('click', paginationScroll($carousel, pageWidth, paginationTrackScroll));
   }
 
-  function arrowScrollRight ($carousel, pageWidth, scrollWidth) {
-    return function (e) {
-      var scrollPosition = $carousel.scrollLeft(),
-          scrollRemaining = scrollWidth - (scrollPosition + $carousel.width());
-      $('.cs-page-dot').off('click', paginationScroll);
-      if (scrollRemaining >= pageWidth) {
-        $carousel.animate({ scrollLeft: '+=' + pageWidth.toString() }, 1000,
-          function () { $('.cs-page-dot').on('click', paginationScroll); })
-      } else {
-        $carousel.animate({ scrollLeft: '+=' + scrollRemaining.toString() }, 1000,
-          function () { $('.cs-page-dot').on('click', paginationScroll); })
-      }
-    }
-  }
-
-  function arrowScrollLeft ($carousel, pageWidth) {
-    return function (e) {
-      var scrollPosition = $carousel.scrollLeft();
-      $('.cs-page-dot').off('click', paginationScroll);
-      if (scrollPosition >= pageWidth) {
-        $carousel.animate({ scrollLeft: '-=' + pageWidth.toString() }, 1000,
-          function () { $('.cs-page-dot').on('click', paginationScroll); })
-      }
-      else {
-        $carousel.animate({ scrollLeft: '-=' + scrollPosition.toString() }, 1000,
-          function () { $('.cs-page-dot').on('click', paginationScroll); })
-      }
-    }
-  }
-
-  function paginationScroll ($carousel, pageWidth, paginationTrackScroll) {
-    // $(this) refers to the div.page-dot clicked
-    return function (e) {
-      var goToPage = null, scrollTo = null;
-
-      if ($(this).hasClass('cs-current-page-dot')) { e.preventDefault(); }
-
-      // turn off other handlers until animation is complete
-      $carousel.off('scroll', paginationTrackScroll);
-      // .. but not the currently executing handler ... things get weird
-      // $('.cs-page-dot').off('click', paginationScroll)
-
-      $(this).addClass('goto-page-dot');
-      $('.cs-current-page-dot').removeClass('cs-current-page-dot')
-      $('.cs-page-dot').each(function (index, pageDot) {
-        if ($(this).hasClass('goto-page-dot')) {
-          scrollTo = index * pageWidth;
-          $(this).addClass('cs-current-page-dot')
-                 .removeClass('goto-page-dot')
-          return false;
-        }
-      });
-      $carousel.animate({ scrollLeft: scrollTo }, 1000, function () {
-        $carousel.on('scroll', paginationTrackScroll);
-      });
-    }
-  }
-
-  function calculateDynamicPage (position, numPages, pageWidth, carouselWidth) {
-    for (var i = 1; i <= numPages; i++) {
-      if (position + (carouselWidth / 2) < pageWidth * i) { return i }
-    }
-  }
-
   function trackVisitor (companySubdomain) {
+
+    var companySubdomain = '<%= @company.subdomain %>'
 
     $('#cs-container').append(
       '<iframe class="cs-iframe" height="0" width="0" style="display:none" ' +

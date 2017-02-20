@@ -6,7 +6,7 @@ function storiesEdit () {
   loadCspOrPlaceholderWidgets();
 }
 
-function storiesEditHandlers () {
+function storiesEditListeners () {
 
   $(document)
     .on('shown.bs.collapse', '.contribution-card',
@@ -18,16 +18,16 @@ function storiesEditHandlers () {
         }
       });
 
-  storiesEditBIPHandlers();
-  storiesEditSettingsHandlers();
+  storiesEditBIPListeners();
+  storiesEditSettingsListeners();
   storiesEditVideoInputHandler();
-  storiesEditCTAsHandlers();
-  storiesEditTagsHandlers();
-  storiesEditNewContributorHandlers();
-  storiesEditResultsHandlers();
-  storiesEditPromptsHandlers();
-  storiesEditContributionsHandlers();
-  storiesEditContentEditorHandlers();
+  storiesEditCTAsListeners();
+  storiesEditTagsListeners();
+  storiesEditNewContributorListeners();
+  storiesEditResultsListeners();
+  storiesEditPromptsListeners();
+  storiesEditContributionsListeners();
+  storiesEditContentEditorListeners();
 }
 
 function loadCspOrPlaceholderWidgets() {
@@ -127,7 +127,7 @@ function loadLIWidget ($card) {
   }
 }
 
-function storiesEditBIPHandlers () {
+function storiesEditBIPListeners () {
   // best-in-place errors
   $(document).on('best_in_place:error', function (event, data, status, xhr) {
     var errors = JSON.parse(data.responseText);
@@ -146,7 +146,7 @@ function storiesEditBIPHandlers () {
   });
 }
 
-function storiesEditSettingsHandlers () {
+function storiesEditSettingsListeners () {
 
   $(document).on('switchChange.bootstrapSwitch', '.bs-switch', function (event, state) {
     $(this).parent().submit();
@@ -219,7 +219,7 @@ function storiesEditVideoInputHandler () {
   });
 }
 
-function storiesEditCTAssHandlers () {
+function storiesEditCTAsListeners () {
 
   $(document).on('change', '#ctas-select',
     function () {
@@ -284,7 +284,7 @@ function storiesEditCTAssHandlers () {
 
 }
 
-function storiesEditTagsHandlers () {
+function storiesEditTagsListeners () {
   /*
     Remember the initial <option>s of the tag select inputs
     If user cancels changes, revert to these (skipping for now)
@@ -322,7 +322,7 @@ function storiesEditTagsHandlers () {
 
 }
 
-function storiesEditNewContributorHandlers () {
+function storiesEditNewContributorListeners () {
 
   // separate 'shown' handler necessary for setting input focus
   $(document).on('shown.bs.modal', '.modal', function () {
@@ -350,7 +350,7 @@ function storiesEditNewContributorHandlers () {
 
 }
 
-function storiesEditResultsHandlers () {
+function storiesEditResultsListeners () {
   /*
     new result form - submit is disabled until value entered.
     listens for input event instead of change event, as latter only fires after
@@ -378,7 +378,7 @@ function storiesEditResultsHandlers () {
 
 }
 
-function storiesEditPromptsHandlers () {
+function storiesEditPromptsListeners () {
 
   $(document).on('input', '#new-prompt', function () {
     if ($(this).val().length > 0)
@@ -402,7 +402,7 @@ function storiesEditPromptsHandlers () {
 
 }
 
-function storiesEditContributionsHandlers () {
+function storiesEditContributionsListeners () {
 
   // remote form doesn't submit after a turbolinks visit, so do it manually;
   // problem  appears limited to modal (other remote forms submit ok after Turbolinks visit)
@@ -620,7 +620,7 @@ function storiesEditContributionsHandlers () {
   });
 }
 
-function storiesEditContentEditorHandlers () {
+function storiesEditContentEditorListeners () {
 
   $(document).on('click', '#edit-story-content', function () {
     var $storyContentEditor = $('#story-content-editor'),

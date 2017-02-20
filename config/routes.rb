@@ -1,6 +1,6 @@
 
 Rails.application.routes.default_url_options = {
-    protocol: Rails.env.production? ? 'https' : 'http',
+    protocol: Rails.env.development? ? 'http' : 'https',
     host: ENV['HOST_NAME']
 }
 
@@ -20,15 +20,12 @@ Rails.application.routes.draw do
   # sendgrid events (currently tracking open and click)
   post '/esp/notifications', to: 'site#esp_notifications'
 
-  # clicky custom logging (currently tracking social shares)
-  post '/analytics', to: 'analytics#create'
-
   # valid subdomains (company/subdomain exists, excludes www)
   constraints(Subdomain) do
 
     # giving this route an alias so we can use csp_stories_url
     # instead of stories_url in the widgets controller
-    get '/', to: 'stories#index', as: 'csp_stories'
+    get '/', to: 'stories#index' #, as: 'csp_stories'
 
     # Widget
     get '/widget/cs', to: 'widgets#script', as: 'widget'
@@ -59,6 +56,11 @@ Rails.application.routes.draw do
       get   '/cta_forms/:id', to: 'ctas#show', as: 'cta_form'
       post  '/companies/:id/ctas', to: 'ctas#create', as: 'new_cta'
       delete '/ctas/:id', to: 'ctas#destroy', as: 'cta'
+
+      # analytics
+      get '/analytics/charts', to: 'analytics#charts', as: 'charts'
+      get '/analytics/visitors', to: 'analytics#visitors', as: 'measure_visitors'
+      get '/analytics/stories', to: 'analytics#stories', as: 'measure_stories'
 
       # delete a Prompt
       delete '/prompts/:id', to: 'prompts#destroy'

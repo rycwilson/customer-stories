@@ -39,11 +39,11 @@ ryan = User.find_by(email:'***REMOVED***')
 
 acme = Company.find_by(name:'Acme Test')
 acme.update(logo_url:'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/eba0bc48-1b9f-489b-a8c2-1fcf82cbde73/acme.png',
-            nav_color_1:'#ffffff', nav_color_2:'#f0f0f0', nav_text_color:'#ff6969')
+            header_color_1:'#ffffff', header_color_2:'#f0f0f0', header_text_color:'#ff6969')
 acme.users << dan << ryan
 # acme = Company.create(name:'Acme Test', subdomain:'acme-test',
 #                   logo_url:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/4975cb76-14d7-4f09-a1ba-7726ae7fe6c3/acmecom.png",
-#                   nav_color_1:"#0056d6", nav_color_2:"#5f69a3", nav_text_color:"#f0f0f0")
+#                   header_color_1:"#0056d6", header_color_2:"#5f69a3", header_text_color:"#f0f0f0")
 # acme.users << User.create(email:"acme-test@customerstories.net", first_name:'Dan', last_name:'acme-test', sign_up_code:'csp_beta', password:'password',
 #                       linkedin_url:"https://www.linkedin.com/in/danlindblom",
 #                       photo_url:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/1c396f91-6232-4bdb-916e-907fcf6f6905/dlindblo[2].jpg",
@@ -52,13 +52,13 @@ acme.users << dan << ryan
 # cisco = Company.find_by(name:'Cisco Systems')
 # cisco = Company.create(name:'Cisco Systems', subdomain:'cisco', feature_flag:'demo', website: 'https://cisco.com',
 #                    logo_url:'https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/6b3ddffa-9afc-4aeb-9e94-6764b24f6370/cisco-grey@2x.png',
-#                    nav_color_1:'#007fc5', nav_color_2:'#2B5693' , nav_text_color:'#FCFCFD')
+#                    header_color_1:'#007fc5', header_color_2:'#2B5693' , header_text_color:'#FCFCFD')
 # cisco.users << ryan << dan
 # cisco.create_email_templates
 
 # trunity = Company.create(name:'Trunity', subdomain:'trunity',
 #                     logo_url:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/7272f9a8-5a97-460f-b6c6-5b176e8880d3/trunity_logo.png",
-#                     nav_color_1:'#ffffff', nav_color_2:'#ffffff', nav_text_color:"#2e7aa7")
+#                     header_color_1:'#ffffff', header_color_2:'#ffffff', header_text_color:"#2e7aa7")
 # trunity.users << User.create(email:"trunity@customerstories.net", first_name:'Dan', last_name:'Lindblom', sign_up_code:'csp_beta', password:'password')
 # trunity.users << User.create(email:"joakim@trunity.com", first_name:'Joakim', last_name:'Lindblom', sign_up_code:'csp_beta',
 #                           linkedin_url:"https://www.linkedin.com/in/joakim-lindblom-9994aa",
@@ -67,13 +67,13 @@ acme.users << dan << ryan
 
 # cg = Company.create(name:'Compas Global', subdomain:'compas',
 #                 logo_url:"https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/4630e5d4-1c42-4565-b64f-aa066fc6da7d/compas.png",
-#                 nav_color_1:'#f7f7f7' ,nav_color_2:'#ebebeb', nav_text_color:"#e55f53")
+#                 header_color_1:'#f7f7f7' ,header_color_2:'#ebebeb', header_text_color:"#e55f53")
 # cg.users << User.create(email:'compas@customerstories.net', first_name:'Dan', last_name:'Lindblom', sign_up_code:'csp_beta', password:'password')
 
 # csp = Company.find_by(name:'CSP')
 # csp = Company.create(name:'CSP', subdomain:'csp', feature_flag:'beta', website:'http://www.fark.com',
 #                 logo_url:"https://s3-us-west-1.amazonaws.com/csp-production-assets/cs_logo.png",
-#                 nav_color_1:"#FBFBFB", nav_color_2:"#85CEE6", nav_text_color:"#333333")
+#                 header_color_1:"#FBFBFB", header_color_2:"#85CEE6", header_text_color:"#333333")
 # csp.users << dan << ryan
 
 
@@ -160,8 +160,6 @@ def seed_company company, *users
       end
       # random story category (tag)
       success.story_categories << company.story_categories[rand(0...company.story_categories.count)]
-      # random product category (tag)
-      # success.product_categories << company.product_categories[rand(0...company.product_categories.count)]
       # random product (tag)
       success.products << company.products[rand(0...company.products.count)]
       # each story has some visitors

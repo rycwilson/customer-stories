@@ -1,5 +1,5 @@
 
-function attachContributionsHandlers () {
+function attachContributionsListeners () {
 
   $(document).on('click', '#contribution-submission-prompts', function () {
     var $link = $(this).find('a');

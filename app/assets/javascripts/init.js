@@ -13,15 +13,11 @@ window.app = window.app || {
 
     configUnderscore();
     initS3Upload();
-    // if (app.env === 'production') {
-      // initTracking();
-    // }
 
     // page-specific stuff
     // (this is a shorthand switch statement)
     (({
       'companies': function () {
-
         (({
           'new': companiesNew,
           'show': companiesShow,
@@ -29,8 +25,6 @@ window.app = window.app || {
         })[action])();
       },
       'stories': function () {
-        // app.betaFeatures();
-
         (({
           'index': storiesIndex,
           'show': storiesShow,

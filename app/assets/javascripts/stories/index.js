@@ -1,5 +1,5 @@
 
-function storiesIndexHandlers () {
+function storiesIndexListeners () {
 
   $(document).on('change', '.stories-filter', function () {
     var $categorySelect = $("[name='category_select']"),
@@ -29,10 +29,12 @@ function storiesIndex () {
       filterTag = categorySlug ? 'category' : (productSlug ? 'product' : null);
       filterSlug = categorySlug ? categorySlug : (productSlug ? productSlug : null);
 
-  updateGallery($(storiesTemplate({
-                    stories: filterStories(filterTag, null, filterSlug),
-                    isCurator: app.current_user && app.current_user.is_curator
-                  }) ));
+  updateGallery(
+    $(storiesTemplate({
+      stories: filterStories(filterTag, null, filterSlug),
+      isCurator: app.current_user && app.current_user.is_curator
+    }))
+  );
 
   // selectBoxesTrackQueryString($categorySelect, categorySlug, $productSelect, productSlug);
 }

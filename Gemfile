@@ -17,7 +17,8 @@ gem 'uglifier', '>= 1.3.0'
 
 gem 'dalli'
 gem 'connection_pool'
-
+gem 'googlecharts'
+gem 'browser-timezone-rails'
 gem 'local_time'
 gem 'rails_admin'
 gem 'devise'
@@ -53,9 +54,9 @@ end
 
 group :development, :test do
 
-  gem 'rack-mini-profiler'
-  gem 'flamegraph'
-  gem 'stackprof'
+  # gem 'rack-mini-profiler'
+  # gem 'flamegraph'
+  # gem 'stackprof'
   gem 'meta_request'  # rails panel chrome extension
   gem 'whenever', require: false
   gem 'better_errors'

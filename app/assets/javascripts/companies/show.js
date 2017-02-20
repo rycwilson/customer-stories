@@ -1,7 +1,9 @@
 
-function companiesShowHandlers () {
-  activityFeedHandlers();
-  newStoryModalHandlers();
+function companiesShowListeners () {
+  newStoryModalListeners();
+  measureCharts();
+  measureStories();
+  measureVisitors();
 
   // toggle display Recent activity groups
   $(document).on('show.bs.collapse hidden.bs.collapse',
@@ -12,127 +14,178 @@ function companiesShowHandlers () {
 
 }
 
-function activityFeedHandlers () {
+function measureCharts () {
+  var getCharts = function (isInitialLoad) {
+    $.get({
+      url: '/analytics/charts',
+      data: {
+        story_id: $('#charts-story-select').val(),
+        date_range: $('#charts-date-range-input').val(),
+        initial_load: isInitialLoad
+      },
+      success: function (data, status, jqxhr) {
+        initGoogleCharts(true, data.charts);
+      },
+      dataType: 'json'
+    });
+  };
+
   $(document)
-    .on('click', '#activity-feed-btn', function (e) {
-      $(this).html('<i class="fa fa-spinner fa-pulse fa-fw"></i>' +
-                   '<span class="sr-only">Loading...</span>');
-    })
-    .on('ajax:success', '#activity-feed-btn', function (e, data, status, xhr) {
-      var target, date, dateFormatted, storyTitle, storyPath, customer, visitor,
-          monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-      console.log(data);
-    //   $feedWrapper = $("<div><div class='activity-feed'></div></div>");
-    //   $feed = $feedWrapper.children();
-    //   data.events.forEach(function (event) {
-    //     target = event.target;  // a contribution or story object
-    //     date = new Date(event.timestamp);
-    //     dateFormatted = monthNames[date.getMonth()] + ' ' + date.getDate();
-    //     customer = target.success ? target.success.customer.name : event.customer;
-    //     contributor = target.contributor ? target.contributor.full_name : null;
-    //     curator = target.success ?
-    //                 (target.success.curator ? target.success.curator.full_name : null) : null;
-    //     visitor = event.organization;
-    //     provider = event.provider === 'linkedin' ? 'LinkedIn' :
-    //                 (event.provider === 'twitter' ? 'Twitter' :
-    //                   (event.provider === 'facebook' ? 'Facebook' : null));
-    //     (({
-    //         "contribution_submission": function () {
-    //           storyTitle = target.success.story.title;
-    //           storyPath = target.success.story.csp_edit_story_path;
-    //           $feed.append("" +
-    //             "<div class='feed-item'>" +
-    //               "<div class='date'>" + dateFormatted + "</div>" +
-    //               "<div class='text'>" +
-    //                 '<strong>' + contributor + '</strong> submitted ' +
-    //                 (target.contribution ? 'a contribution ' : 'feedback ') +
-    //                 'for the <strong>' + customer + '</strong> story, ' +
-    //                 '<a href="' + storyPath + '">' + storyTitle + '</a>' +
-    //               "</div>" +
-    //             "</div>");
-    //         },
-    //         "contribution_request_received": function () {
-    //           storyTitle = target.success.story.title;
-    //           storyPath = target.success.story.csp_edit_story_path;
-    //           $feed.append("" +
-    //             "<div class='feed-item'>" +
-    //               "<div class='date'>" + dateFormatted + "</div>" +
-    //               "<div class='text'>" +
-    //                 '<strong>' + contributor + '</strong> received and opened a contribution request ' +
-    //                 'for the <strong>' + customer + '</strong> story, ' +
-    //                 '<a href="' + storyPath + '">' + storyTitle + '</a>' +
-    //               "</div>" +
-    //             "</div>");
-    //         },
-    //         "story_created": function () {
-    //           storyTitle = target.title;
-    //           $feed.append("" +
-    //             "<div class='feed-item'>" +
-    //               "<div class='date'>" + dateFormatted + "</div>" +
-    //               "<div class='text'>" +
-    //                 '<strong>' + curator + '</strong> created a story for <strong>' + customer + '</strong>: ' +
-    //                 '\"' + storyTitle + '\"' +
-    //               "</div>" +
-    //             "</div>");
-    //         },
-    //         "story_published": function () {
-    //           storyTitle = target.title;
-    //           storyPath = target.csp_story_path;
-    //           $feed.append("" +
-    //             "<div class='feed-item'>" +
-    //               "<div class='date'>" + dateFormatted + "</div>" +
-    //               "<div class='text'>" +
-    //                 '<strong>' + curator + '</strong> published the <strong>' + customer + '</strong> story, ' +
-    //                 '<a href="' + storyPath + '">' + storyTitle + '</a>' +
-    //               "</div>" +
-    //             "</div>");
-    //         },
-    //         "story_logo_published": function () {
-    //           storyTitle = target.title;
-    //           $feed.append("" +
-    //             "<div class='feed-item'>" +
-    //               "<div class='date'>" + dateFormatted + "</div>" +
-    //               "<div class='text'>" +
-    //                 '<strong>' + curator + ' </strong> published a logo for the <strong>' +
-    //                 customer + '</strong> story, ' + '\"' + storyTitle + '\"' +
-    //               "</div>" +
-    //             "</div>");
-    //         },
-    //         "story_view": function () {
-    //           storyTitle = target.title;
-    //           storyPath = target.path;
-    //           $feed.append("" +
-    //             "<div class='feed-item'>" +
-    //               "<div class='date'>" + dateFormatted + "</div>" +
-    //               "<div class='text'>" +
-    //                 '<strong>' + visitor + '</strong> viewed the <strong>' + customer + '</strong> story, ' +
-    //                 '<a href="' + storyPath + '">' + storyTitle + '</a>' +
-    //               "</div>" +
-    //             "</div>");
-    //         },
-    //         "story_share": function () {
-    //           storyTitle = target.title;
-    //           storyPath = target.path;
-    //           $feed.append("" +
-    //             "<div class='feed-item'>" +
-    //               "<div class='date'>" + dateFormatted + "</div>" +
-    //               "<div class='text'>" +
-    //                 '<strong>' + visitor + '</strong> shared via ' + provider +
-    //                 ' the <strong>' + customer + '</strong> story, ' +
-    //                 '<a href="' + storyPath + '">' + storyTitle + '</a>' +
-    //               "</div>" +
-    //             "</div>");
-    //         }
-    //     })[event.event])();
-    //   });
-    //   $(this).html('').text('Recent Activity');
-    //   $('#activity-feed-btn')
-    //     .attr('data-content', $feedWrapper.html())
-    //     .popover('show');
+    .on('click', 'a[href="#measure-panel"]',
+      function () {
+        // if current page is not companies#show, let initGoogleCharts handle it
+        if ($('#measure-summary-container').length === 0) {
+          return false;
+        }
+        if ($('#visitors-bar-graph').children().length === 0) {
+          getCharts(true);
+        }
+      })
+    .on('submit', '#charts-filter-form',
+      function (e) {
+        e.preventDefault();
+        getCharts(false);
+      });
+}
+
+function measureStories () {
+  var initTable = function ($table, data) {
+        $table.DataTable({
+          data: data,
+          columns: [
+            { title: 'Customer' },
+            { title: 'Title' },
+            { title: 'Publish Date' },
+            { title: 'Unique Visitors' },
+            // { title: 'Visits' },
+            { title: 'Landing' }
+          ],
+          paging: false,
+          info: false,
+          order: [[3, 'desc']]
+        });
+        $table.css('visibility', 'visible');
+      },
+      getStories = function () {
+        var $table = $('#measure-stories-table');
+        $.get({
+          url: '/analytics/stories',
+          success: function (data, status, jqxhr) {
+            initTable($table, data.data);
+          },
+          dataType: 'json'
+        });
+      };
+
+  $(document).on('click', 'a[href="#measure-stories-container"]',
+    function () {
+      if (!$.fn.DataTable.isDataTable($('#measure-stories-table'))) {
+        getStories();
+      }
     });
 }
 
-function newStoryModalHandlers() {
+function measureVisitors () {
+
+  var formatChildRow = function (org, $parentRow) {
+        var tbody = '<tbody>',
+            cellStyle = function ($parentRow, column) {
+              var width = $parentRow.find('td:nth-of-type(' + column.toString() + ')').css('width'),
+                  padding = $parentRow.find('td:nth-of-type(' + column.toString() + ')').css('padding'),
+                  lineHeight = $parentRow.find('td:nth-of-type(' + column.toString() + ')').css('line-height');
+              if (column === 1 || column === 3) {
+                width = (parseInt(width, 10) - parseInt(padding, 10)).toString() + "px";
+              }
+              return 'width:' + width + ';padding:' + padding + ';line-height:' + lineHeight;
+            };
+        org[3].forEach(function (story, storyIndex) {
+          tbody += '<tr ' + 'style="' + ((storyIndex < org[3].length - 1) ? 'border-bottom:1px solid #ddd' : '') + '"><td style="' + cellStyle($parentRow, 1) + '"></td>';
+          story.forEach(function (cellData, index) {
+            tbody += '<td style="' + cellStyle($parentRow, index + 2) + '">' + cellData + '</td>';
+          });
+          tbody += '</tr>';
+        });
+        tbody += '</tbody>';
+        return '<table cellpadding="5" cellspacing="0" border="0">' +
+                  tbody +
+               '</table>';
+      },
+
+      initTable = function ($table, data) {
+        $table.DataTable({
+          data: data,
+          columns: [
+            {
+              className:      'details-control',
+              orderable:      false,
+              data:           null,
+              defaultContent: '<i class="fa fa-chevron-right"></i><i class="fa fa-chevron-down"></i>'
+            },
+            { title: 'Organization' },
+            { title: 'Unique Visitors' },
+            // { title: 'Visits' }
+          ],
+          order: [[1, 'asc']]
+        });
+        $table.css('visibility', 'visible');
+      },
+      updateTable = function ($table, data) {
+        $table.DataTable().clear();
+        $table.DataTable().rows.add(data);
+        $table.DataTable().draw();
+      },
+      getVisitors = function (isInitialLoad) {
+        var $table = $('#measure-visitors-table');
+        $.get({
+          url: '/analytics/visitors',
+          data: {
+            story_id: $('#visitors-story-select').val(),
+            date_range: $('#visitors-date-range-input').val(),
+            initial_load: isInitialLoad
+          },
+          success: function (data, status, jqxhr) {
+            if ($.fn.DataTable.isDataTable($table)) {
+              updateTable($table, data.data);
+            } else {
+              initTable($table, data.data);
+            }
+          },
+          dataType: 'json'
+        });
+      };
+
+  $(document)
+    .on('submit', '#visitors-filter-form',
+      function (e) {
+        e.preventDefault();
+        getVisitors(false);
+      })
+    .on('click', 'a[href="#measure-visitors-container"]',
+      function () {
+        if (!$.fn.DataTable.isDataTable($('#measure-visitors-table'))) {
+          getVisitors(true);
+        }
+      })
+    .on('click', 'td.details-control',
+      function () {
+        var table = $('#measure-visitors-table').DataTable(),
+            $parentRow = $(this).closest('tr'),
+            row = table.row($parentRow);
+        if ( row.child.isShown() ) {
+            // This row is already open - close it
+            row.child.hide();
+            $parentRow.removeClass('shown');
+        }
+        else {
+            // Open this row
+            row.child( formatChildRow(row.data(), $parentRow) ).show();
+            $parentRow.addClass('shown');
+        }
+        $parentRow.find('i').toggle();
+      });
+}
+
+function newStoryModalListeners () {
 
   // jquery-ujs functionality gets lost after turbolinks navigation,
   // so handle it manually ... (limited to modals?)

@@ -113,8 +113,7 @@ class Story < ActiveRecord::Base
         }
 
   after_commit :expire_csp_story_path_cache,
-               :expire_story_narration_fragment_cache,
-               :expire_prev_next_fragment_cache, on: :update, if:
+               :expire_story_narration_fragment_cache, on: :update, if:
         Proc.new { |story| story.previous_changes.key?('title') }
 
   after_commit :expire_story_narration_fragment_cache, on: :update, if:
@@ -221,17 +220,14 @@ class Story < ActiveRecord::Base
 
   # method returns a friendly id path that either contains or omits a product
   def csp_story_path
-    company = self.success.customer.company
+    company = self.success.company
+    success = self.success
     Rails.cache.fetch("#{company.subdomain}/csp-story-#{self.id}-path") do
       url_helpers = Rails.application.routes.url_helpers
-      success = self.success
       if success.products.present?
-        url_helpers.public_story_path(success.customer.slug,
-                                      success.products.take.slug,
-                                      self.slug)
+        url_helpers.public_story_path(success.customer.slug, success.products.take.slug, self.slug)
       else
-        url_helpers.public_story_no_product_path(success.customer.slug,
-                                                 self.slug)
+        url_helpers.public_story_no_product_path(success.customer.slug, self.slug)
       end
     end
   end
@@ -462,7 +458,6 @@ class Story < ActiveRecord::Base
 
   def expire_fragment_cache_on_path_change
     company = self.success.customer.company
-    self.expire_prev_next_fragment_cache
     if self.logo_published
       self.expire_story_tile_fragment_cache
       self.expire_fragment(
@@ -520,28 +515,6 @@ class Story < ActiveRecord::Base
     self.expire_fragment("#{company.subdomain}/story-#{self.id}-results")
   end
 
-  def prev_next_memcache_iterator
-    company = self.success.customer.company
-    Rails.cache.fetch(
-      "#{company.subdomain}/story-#{self.id}-prev-next-memcache-iterator") { rand(10) }
-  end
-
-  def increment_prev_next_memcache_iterator
-    company = self.success.customer.company
-    Rails.cache.write(
-      "#{company.subdomain}/story-#{self.id}-prev-next-memcache-iterator",
-      self.prev_next_memcache_iterator + 1)
-  end
-
-  # previous/next story navigation
-  def expire_prev_next_fragment_cache
-    company = self.success.customer.company
-    self.expire_fragment("#{company.subdomain}/prev_story_#{self.id}")
-    self.expire_fragment("#{company.subdomain}/next_story_#{self.id}")
-    # expire the above's parent fragment(s)
-    self.increment_prev_next_memcache_iterator
-  end
-
   def contributors_jsonld
     self.success.contributors.map do |contributor|
                                 { "@type" => "Person",
@@ -559,36 +532,6 @@ class Story < ActiveRecord::Base
                               { "@type" => "Product",
                                 "name" => product.name }
                             end
-  end
-
-  def previous is_curator
-    company = self.success.customer.company
-    all_stories = company.all_stories
-    published_stories = company.published_stories
-    if is_curator
-      prev_story_index = all_stories.index(self.id) - 1
-      prev_story_index = (all_stories.length - 1) if prev_story_index == 0
-      Story.find(all_stories[prev_story_index])
-    else
-      prev_story_index = published_stories.index(self.id) - 1
-      prev_story_index = published_stories.length - 1 if prev_story_index == 0
-      Story.find(published_stories[prev_story_index])
-    end
-  end
-
-  def next is_curator
-    company = self.success.customer.company
-    all_stories = company.all_stories
-    published_stories = company.published_stories
-    if is_curator
-      next_story_index = all_stories.index(self.id) + 1
-      next_story_index = 0 if next_story_index == all_stories.length
-      Story.find(all_stories[next_story_index])
-    else
-      next_story_index = published_stories.index(self.id) + 1
-      next_story_index = 0 if next_story_index == published_stories.length
-      Story.find(published_stories[next_story_index])
-    end
   end
 
   # not currently used, maybe include with json api

@@ -1,0 +1,19 @@
+
+<%= render 'companies/shared/measure/filter_form',
+            { form_id: 'charts-filter-form',
+              form_path: charts_path,
+              story_select_id: 'charts-story-select',
+              story_select_options: story_select_options,
+              date_range_input_id: 'charts-date-range-input' } %>
+
+<div class="row">
+
+  <div class="col-sm-6">
+    <div id='visitors-bar-graph' style='max-width:100%'></div>
+  </div>
+
+  <div class="col-sm-6">
+    <div id='referrer-type-pie-chart' style='max-width:100%'></div>
+  </div>
+
+</div>
