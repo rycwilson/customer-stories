@@ -6,40 +6,6 @@
       padding: 18px 0 18px 0;
       margin-bottom: 10px;
     }
-    #ctas-form {
-      .btn-group {
-        margin-bottom: 6px;
-        label {
-          margin-right: 14px;
-        }
-        .radio-inline {
-          margin-bottom: 4px;
-        }
-      }
-      .row:nth-of-type(3) {
-        position: relative;
-        .col-sm-12 {
-          width: 83%;
-        }
-        input[type='text'] {
-          margin-bottom: 5px;
-        }
-        input[type='submit'] {
-          font-size: 20px;
-        }
-        div:last-child {
-          position: absolute;
-          bottom: 6px;
-          right: 30px;
-        }
-      }
-      .action-inputs {
-        padding: 0 0 0 30px;
-      }
-      .html-input {
-        display: none;   // to be toggled
-      }
-    }  // #ctas-form
     hr {
       margin: 15px 15px;
     }

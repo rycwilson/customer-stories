@@ -1,31 +1,57 @@
 
-<%= form_for company, method: 'put', remote: true, authenticity_token: true do %>
+<%= form_tag update_tags_path(company.id), method: 'put', remote: true,
+      id: 'company-update-tags-form' do %>
 
-  <div class="col-sm-6">
+  <div class="row">
+    <div class="col-sm-6">
 
-    <div class="form-group">
+      <div class="form-group">
 
-      <%= label_tag 'company_tags[category][]', 'Category tags',
-            class: 'control-label' %>
-      <%= select_tag 'company_tags[category][]',
-            options_for_select(@category_select_options, @category_pre_selected_options),
-            { multiple: 'true', class: 'company-tags form-control',
-              # placeholder: doesn't work from here, set in js
-              style: 'width:100%' } %>
+        <%= label_tag 'company_tags[category][]', 'Category tags',
+              class: 'control-label' %>
+        <%= select_tag 'company_tags[category][]',
+              options_for_select(category_select_options, category_pre_selected_options),
+              { multiple: 'true', class: 'company-tags form-control',
+                # placeholder: doesn't work from here, set in js
+                style: 'width:100%' } %>
+
+      </div>
+
     </div>
+    <div class="col-sm-6">
 
+      <div class="form-group">
+
+        <%= label_tag 'Product tags', nil, class: 'control-label' %>
+        <%= select_tag 'company_tags[product][]',
+              options_for_select(product_select_options, product_pre_selected_options),
+              { multiple: 'true', class: 'company-tags form-control',
+                style: 'width:100%' } %>
+
+      </div>
+
+    </div>
   </div>
 
-  <div class="col-sm-6">
+  <hr>
 
-    <div class="form-group">
-      <%= label_tag 'Product tags', nil, class: 'control-label' %>
-      <%= select_tag 'company_tags[product][]',
-            options_for_select(@product_select_options, @product_pre_selected_options),
-            { multiple: 'true', class: 'company-tags form-control',
-              style: 'width:100%' } %>
+  <div class="row">
+    <div class="col-sm-12 text-right">
+
+      <div class="form-group">
+
+        <span class='ajax-confirm' style='display:none;color:green'>
+          <i class='fa fa-check'></i>
+        </span>&nbsp;
+        <input id='company-tags-submit' type='submit' class='btn btn-primary'
+               value="Save changes" disabled>&nbsp;
+        <button id='company-tags-reset' type="reset" class="btn btn-default" disabled>
+          Cancel
+        </button>
+
+      </div>
+
     </div>
-
   </div>
 
 <% end %>

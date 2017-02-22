@@ -48,14 +48,15 @@ Rails.application.routes.draw do
         resources :results, only: [:create, :update, :destroy]
       end
 
-      # approval PDF
-      get '/stories/:id/approval', to: 'stories#approval', as: 'story_approval'
+      # tags
+      put     '/companies/:id/tags', to: 'tags#update', as: 'update_tags'
 
       # CTAs
-      get   '/ctas/:id', to: 'ctas#select'
-      get   '/cta_forms/:id', to: 'ctas#show', as: 'cta_form'
-      post  '/companies/:id/ctas', to: 'ctas#create', as: 'new_cta'
-      delete '/ctas/:id', to: 'ctas#destroy', as: 'cta'
+      # get     '/ctas/:id', to: 'ctas#select'
+      # get     '/cta_forms/:id', to: 'ctas#show', as: 'cta_form'
+      post    '/companies/:id/ctas', to: 'ctas#create', as: 'create_cta'
+      put     '/ctas/:id', to: 'ctas#update', as: 'update_cta'
+      delete  '/ctas/:id', to: 'ctas#destroy', as: 'cta'
 
       # analytics
       get '/analytics/charts', to: 'analytics#charts', as: 'charts'
@@ -69,6 +70,9 @@ Rails.application.routes.draw do
       get   '/profile/edit', to: 'profile#edit', as: 'edit_profile'
       get   '/profile/linkedin_connect', to: 'profile#linkedin_connect',
                                          as: 'linkedin_connect'
+      # approval PDF
+      get '/stories/:id/approval', to: 'stories#approval', as: 'story_approval'
+
     end
 
     # no authentication required (may come from a submission)

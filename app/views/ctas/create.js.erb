@@ -1,10 +1,12 @@
 
 (function () {
 
-  var newAction = <%= raw @new_action.to_json({ methods: [:type] }) %>,
+  var cta = <%= raw @cta.to_json({ methods: [:type] }) %>,
       template = _.template($('#cta-template').html());
 
-  $('#ctas-list').append(template({ action: newAction }))
+debugger;
+
+  $('#ctas-list').append(template({ cta: cta }))
   $('#ctas-form')[0].reset();
 
 }());

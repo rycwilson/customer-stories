@@ -21,8 +21,7 @@ class Success < ActiveRecord::Base
   has_many :visitors, through: :visitor_actions
 
   has_many :ctas_successes, dependent: :destroy
-  has_many :call_to_actions, through: :ctas_successes
-  alias_attribute :call_to_actions, :ctas
+  has_many :ctas, through: :ctas_successes, source: :call_to_action
 
   def create_default_prompts
     self.prompts << Prompt.create(description: "What was the challenge?") <<

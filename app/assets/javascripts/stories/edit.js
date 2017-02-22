@@ -244,32 +244,6 @@ function storiesEditCTAsListeners () {
         });
     });
 
-  $(document).on('click', '#ctas-form .btn-group input',
-    function () {
-      $('.link-input,.html-input').toggle();
-      $('.link-input,.html-input').val('');
-    });
-
-  $(document).on('input', '#ctas-form',
-    function () {
-      if ($(this).find('button[type="submit"]').prop('disabled') === false) {
-        return false;
-      }
-      $linkRadio = $(this).find('.btn-group input:first');
-      $formRadio = $(this).find('.btn-group input:last');
-      if ($linkRadio.prop('checked') &&
-          $.makeArray($('.link-input')).every(function (el) {
-            return el.value !== '';
-          })) {
-        $(this).find('button[type="submit"]').prop('disabled', false);
-      } else if ($formRadio.prop('checked') &&
-                 $.makeArray($('.html-input')).every(function (el) {
-                   return el.value !== '';
-                 })) {
-        $(this).find('button[type="submit"]').prop('disabled', false);
-      }
-    });
-
   $(document).on('click', '.delete-cta',
     function () {
       var $_this = $(this);

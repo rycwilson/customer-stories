@@ -1,0 +1,13 @@
+(function () {
+
+  var ctaId = "<%= @cta.id %>";
+
+  // $('#company-tags-submit, #company-tags-reset').prop('disabled', true);
+  $('form[action*="' + ctaId + '"] .ajax-confirm').fadeToggle('fast', 'swing', function () {
+    var _$this = $(this)
+    setTimeout(function () {
+      _$this.fadeToggle('fast')
+    }, 3000);
+  })
+
+}());

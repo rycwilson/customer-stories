@@ -1,9 +1,15 @@
 
+<% content_for :head do %>
+
+  <%= render 'ctas/cta_template' %>
+
+<% end %>
+
 <div class="wrapper">
 
   <%= render 'shared/company_navbar', { company: @company, workflow_tab: @workflow_tab } %>
 
-  <div class="content" style='margin-top:30px; overflow:hidden'>
+  <div class="content">
     <div class="container">
       <div class="layout layout-main-right layout-stack-sm">
         <div class="col-sm-3 layout-sidebar">
@@ -31,11 +37,19 @@
             </div>
 
             <div class="tab-pane fade" id="story-tags">
-              <%= render 'companies/shared/edit/story_tags', { company: @company } %>
+              <%= render 'companies/shared/edit/story_tags',
+                  { company: @company,
+                    category_select_options: @category_select_options,
+                    category_pre_selected_options: @category_pre_selected_options,
+                    product_select_options: @product_select_options,
+                    product_pre_selected_options: @product_pre_selected_options } %>
             </div>
 
             <div class="tab-pane fade" id="story-ctas">
-              <%= render 'companies/shared/edit/story_ctas', { company: @company } %>
+              <%= render 'companies/shared/edit/story_ctas',
+                  { company: @company,
+                    primary_cta: @company.ctas.find { |cta| cta.company_primary },
+                    secondary_ctas: @company.ctas.reject { |cta| cta.company_primary } } %>
             </div>
 
           </div> <!-- /.tab-content -->

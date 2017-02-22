@@ -1,6 +1,109 @@
 
 .companies.edit {
 
+  .content {
+    margin-top: 40px;
+    overflow: hidden;
+  }
+  .layout-main {
+    padding-top: 50px;
+  }
+  #story-ctas {
+    .col-sm-6 {
+      padding-right: 40px;  // create some space
+    }
+    .form-group {
+      margin-bottom: 10px;
+    }
+    .list-group-item {
+      padding: 15px 15px;  // overrides bootstrap 10px 15px
+      margin-bottom: 10px;
+    }
+    #new-cta-form {
+      .btn-group {
+        margin-bottom: 0;
+        label {
+          margin-right: 14px;
+        }
+        .radio-inline {
+          margin-bottom: 4px;
+        }
+      }
+      #new-cta-inputs input {
+        margin-bottom: 10px;
+
+      }
+      // .row:nth-of-type(3) {
+      //   position: relative;
+      //   .col-sm-12 {
+      //     width: 83%;
+      //   }
+      //   input[type='text'] {
+      //     margin-bottom: 5px;
+      //   }
+      //   input[type='submit'] {
+      //     font-size: 20px;
+      //   }
+      //   div:last-child {
+      //     position: absolute;
+      //     bottom: 6px;
+      //     right: 30px;
+      //   }
+      // }
+      .html-input {
+        display: none;   // to be toggled
+      }
+    }
+    label {
+      margin-bottom: 10px;
+    }
+    li label {
+      margin-bottom: 7px;
+    }
+    .list-group {
+      margin-bottom: 30px;
+    }
+    #primary-cta-colors {
+      // padding: 0 10px 0 10px;
+      label {
+        margin-top: 7px;
+      }
+      // // margin-bottom: 10px;
+      div.col-sm-4:first-of-type {
+        padding-right: 0;
+      }
+      div.col-sm-4:last-of-type {
+        padding-left: 0;
+      }
+    }
+    .list-group-item {
+      background: #f5f5f5;
+      position: relative;
+      i.glyphicon-remove {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        right: 15px;
+      }
+      i.glyphicon-pencil {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        right: 50px;
+      }
+      div.collapse {
+        padding: 0;
+      }
+    }
+    #primary-cta, #ctas-list {
+      .form-group:last-of-type {
+        margin-bottom: 0
+      }
+    }
+  }
+
   /***********************************************/
   /*      company form logo
   /***********************************************/

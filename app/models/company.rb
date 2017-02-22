@@ -30,7 +30,7 @@ class Company < ActiveRecord::Base
   has_many :outbound_actions, dependent: :destroy
 
   has_many :call_to_actions, dependent: :destroy
-  alias_attribute :call_to_actions, :ctas
+  has_many :ctas, foreign_key: 'company_id', class_name: 'CallToAction'
 
   # presently uploading direct to S3, paperclip not used
   # paperclip
@@ -230,56 +230,6 @@ class Company < ActiveRecord::Base
     end
     .sort
     .unshift( [""] )
-  end
-
-  # slightly different than updating tags for a story
-  def update_tags new_tags
-    existing_category_tags = self.story_categories
-    existing_product_tags = self.products
-    # remove deleted category tags ...
-    existing_category_tags.each do |category|
-      if new_tags[:category].nil? || !(new_tags[:category].include? category.id.to_s)
-        tag_instances =
-          StoryCategoriesSuccess.where(story_category_id: category.id)
-        # expire filter select fragment cache
-        expire_filter_select_fragments_on_tag_destroy('category', tag_instances)
-        # untag stories
-        tag_instances.destroy_all
-        category.destroy
-      end
-    end
-    # add new category tags ...
-    new_tags[:category].each do |category_id|
-      if category_id.to_i == 0 # new (custom or default) tag
-        self.story_categories << StoryCategory.create(name: category_id)
-        # expire filter select fragment cache
-        self.increment_curator_category_select_fragments_memcache_iterator
-      else
-        # do nothing
-      end
-    end unless new_tags[:category].nil?
-
-    # remove deleted product tags ...
-    existing_product_tags.each do |product|
-      if new_tags[:product].nil? || !(new_tags[:product].include? product.id.to_s)
-        tag_instances = ProductsSuccess.where(product_id: product.id)
-        # expire filter select fragment cache
-        expire_filter_select_fragments_on_tag_destroy('product', tag_instances)
-        # untag stories
-        tag_instances.destroy_all
-        product.destroy
-      end
-    end
-    # add new product tags ...
-    new_tags[:product].each do |product_id|
-      if product_id.to_i == 0 # new tag
-        self.products << Product.create(name: product_id)
-        # expire cache
-        self.increment_curator_product_select_fragments_memcache_iterator
-      else
-        # do nothing
-      end
-    end unless new_tags[:product].nil?
   end
 
   #

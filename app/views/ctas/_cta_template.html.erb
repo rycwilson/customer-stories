@@ -1,0 +1,74 @@
+
+<script type='text/template' id='cta-template' defer>
+
+  <div>
+
+    <div class="row">
+      <div class="col-sm-12">
+        <i class="fa fa-{{= cta.type == 'CTALink' ? 'link' : 'wpforms' }}"></i>
+        <span>{{= cta.description }}</span>
+        <i class='glyphicon glyphicon-remove bip-clickable'></i>
+        <i class='glyphicon glyphicon-pencil bip-clickable'
+           data-toggle='collapse' data-target="#edit-cta-{{= cta.id }}">
+        </i>
+      </div>
+    </div>
+
+    <div id="edit-cta-{{= cta.id }}" class='collapse edit-cta'>
+      <hr>
+
+      <form action="/ctas/{{= cta.id }}" accept-charset="UTF-8"
+            data-remote="true" method="post">
+
+        <input name="utf8" type="hidden" value="✓">
+        <input type="hidden" name="_method" value="put">
+
+        <div class="form-group" style='margin-bottom: 10px'>
+          <label for='cta_description'>Description</label>
+          <input type='text' id='cta_description' class='form-control'
+                 name='cta[description]' placeholder='description'
+                 value='{{= cta.description }}'
+        </div>
+
+        <div class="form-group" style='margin-bottom: 10px'>
+          <label for='cta_display_text'>Display text</label>
+          <input type='text' id='cta_display_text' class='form-control'
+                 name='cta[display_text]' placeholder='display_text'
+                 value='{{= cta.display_text }}'
+        </div>
+
+        {{ if (cta.type == 'CTALink') { }}
+
+          <div class="form-group" style='margin-bottom: 10px'>
+            <label for='cta_link_url'>Website address</label>
+            <input type='text' id='cta_link_url' class='form-control'
+                   name='cta[link_url]' placeholder='website address'
+                   value='{{= cta.link_url }}'
+          </div>
+
+        {{ } else if (cta.type == 'CTAForm') { }}
+
+          <div class="form-group" style='margin-bottom: 10px'>
+            <label for='cta_form_html'>HTML</label>
+            <input type='text' id='cta_form_html' class='form-control'
+                   name='cta[form_html]' value='{{= cta.form_html }}'
+                   placeholder='html, e.g. <script> and <form> tags'
+          </div>
+
+        {{ } }}
+
+        <div class="form-group text-right">
+          <span class='ajax-confirm' style='display:none;color:green'>
+            <i class='fa fa-check'></i>
+          </span>&nbsp;
+          <input type='submit' id='cta-{{= cta.id }}-submit'
+                 class='btn btn-sm btn-primary' value="Save">&nbsp;
+          <button type="reset" id='cta-{{= cta.id }}-reset'
+                  class="btn btn-default">Cancel</button>
+        </div>
+
+    </div>
+
+  </div>
+
+</script>
