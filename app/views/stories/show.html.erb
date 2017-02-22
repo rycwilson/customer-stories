@@ -18,10 +18,10 @@
 
 <%= render 'stories/shared/video_modal' %>
 
-<% unless @is_curator %>
-  <%= render 'widgets/more_stories_widget',
+<%# unless @is_curator %>
+  <%#= render 'widgets/more_stories_widget',
              { company: @company, stories: @more_stories } %>
-<% end %>
+<%# end %>
 
 <% @story.outbound_actions
          .select { |action| action.type == 'OutboundForm' }
