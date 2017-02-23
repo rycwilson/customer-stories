@@ -5,11 +5,11 @@
 
     li {
       position: relative;
-      height: 100px;
-      width: 300px;
+      height: 70px;
+      width: 200px;
       margin-bottom: 20px;
       a {
-        line-height: 100px;
+        line-height: 70px;
         img {
           margin: auto;
           vertical-align: middle;
@@ -20,12 +20,17 @@
 
     @media (min-width: 768px) {
       li {
-        margin: 0 25px 25px 25px;
+        margin: 0 10px 25px 10px;
       }
     }
     @media (min-width: 992px) {
       li {
-        margin: 0 35px 25px 35px;
+        margin: 0 25px 25px 25px;
+      }
+    }
+    @media (min-width: 1200px) {
+      li {
+        margin: 0 12px 0 12px;
       }
     }
 
