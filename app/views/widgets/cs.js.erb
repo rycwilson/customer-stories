@@ -26,8 +26,8 @@
           categoryFilter = $('#cs-script').data('category'),
           productFilter = $('#cs-script').data('product'),
           delay = $('#cs-script').data('delay'),
-          showDrawer = $('#cs-script').data('show'),
-          timeout = $('#cs-script').data('timeout'),
+          showDrawer = $('#cs-script').data('show') || false,
+          timeout = $('#cs-script').data('timeout') || false,
           timeoutCount = $('#cs-script').data('timeout-count'),
           $widgetStylesheet = $("<link>", {
             rel: "stylesheet",
