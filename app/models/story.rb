@@ -9,18 +9,16 @@ class Story < ActiveRecord::Base
   has_many :page_views, through: :success, class_name: 'PageView'
   has_many :visitors, -> { distinct }, through: :page_views
   has_many :ctas, through: :success, source: :ctas do
-    def primary
-      where(company_primary: true)
-    end
-    def secondary
-      where(company_primary: false)
-    end
-    def links
-      where(type: 'CTALink')
-    end
+    # don't need this! a story will never be associated with a primary cta
+    # def secondary
+    #   where(company_primary: false)
+    # end
+
+    # for rendering modals
     def forms
-      where(type: 'CTAForm')
+      self.where(type: 'CTAForm')
     end
+
   end
 
   # Note: no explicit association to friendly_id_slugs, but it's there
@@ -164,6 +162,28 @@ class Story < ActiveRecord::Base
       new_story[:product_tags].each do |selection|
         self.success.products << Product.find(selection)
       end
+    end
+  end
+
+  # Note: the story.ctas association is read-only, because it goes through success
+  def update_ctas new_ctas
+    ctas_changed = false
+    # remove deleted ctas ...
+    self.ctas.each do |cta|
+      unless new_ctas.include?(cta.id.to_s)
+        self.success.ctas.delete(cta)
+        ctas_changed = true
+      end
+    end
+    # add new ctas ...
+    new_ctas.each do |new_cta|
+      unless self.ctas.any? { |cta| cta.id == new_cta.to_i }
+        self.success.ctas << CallToAction.find(new_cta.to_i)
+      end
+    end
+    # clear cache ...
+    if ctas_changed
+      # clear Learn More cache
     end
   end
 

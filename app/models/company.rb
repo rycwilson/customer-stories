@@ -38,6 +38,28 @@ class Company < ActiveRecord::Base
     def secondary
       where(company_primary: false)
     end
+    def select_options
+      grouped_options =
+        [ [ 'Links', ['none available'] ], [ 'Web Forms', ['none available'] ] ]
+      self.secondary.each do |cta|
+        case cta.type
+        when 'CTALink'
+          if grouped_options[0][1][0] == 'none available'
+            grouped_options[0][1][0] = [ cta.description, cta.id ]
+          else
+            grouped_options[0][1] << [ cta.description, cta.id ]
+          end
+        when 'CTAForm'
+          if grouped_options[1][1][0] == 'none available'
+            grouped_options[1][1][0] = [ cta.description, cta.id ]
+          else
+            grouped_options[1][1] << [ cta.description, cta.id ]
+          end
+        end
+      end
+      # grouped_options.unshift( [""] )
+      grouped_options
+    end
   end
 
   # presently uploading direct to S3, paperclip not used
@@ -219,12 +241,7 @@ class Company < ActiveRecord::Base
     .unshift( [""] )  # empty option makes placeholder possible (only needed for single select)
   end
 
-  def ctas_select_options
-    self.ctas.map do |action|
-      [ action.description, action.id ]
-    end
-    .unshift( [""] )
-  end
+
 
   def story_select_options
     self.stories.select { |story| story.published }

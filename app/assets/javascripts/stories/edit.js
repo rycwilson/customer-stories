@@ -221,39 +221,9 @@ function storiesEditVideoInputHandler () {
 
 function storiesEditCTAsListeners () {
 
-  $(document).on('change', '#ctas-select',
+  $(document).on('change', '#story-ctas-select',
     function () {
-      $('#cta-add').prop('disabled', false);
-      $.get('/ctas/' + $(this).val(),
-        function (data, status, xhr) {
-          if (data.link_url) {
-            if (!$('#link-radio').prop('checked')) {
-              $('#link-radio').button('toggle');
-            }
-            $('input[name="cta[link_description]"]').val(data.description);
-            $('input[name="cta[link_display_text]"]').val(data.display_text);
-            $('input[name="cta[link_url]"]').val(data.link_url);
-          } else {
-            if (!$('#html-radio').prop('checked')) {
-              $('#html-radio').button('toggle');
-            }
-            $('input[name="cta[form_description]"]').val(data.description);
-            $('input[name="cta[form_display_text]"]').val(data.display_text);
-            $('input[name="cta[form_html]"]').val(data.form_html);
-          }
-        });
-    });
-
-  $(document).on('click', '.delete-cta',
-    function () {
-      var $_this = $(this);
-      $.ajax({
-        url: $(this).data('action'),
-        method: 'delete',
-        success: function (data, status, xhr) {
-          $_this.closest('.ctas-list-item').remove();
-        }
-      });
+      $('#story-ctas-submit, #story-ctas-reset').prop('disabled', false);
     });
 
 }

@@ -89,9 +89,9 @@ function initSelect2 () {
     }
   });
 
-  $('#ctas-select').select2({
+  $('#story-ctas-select').select2({
     theme: 'bootstrap',
-    placeholder: 'select an action',
+    placeholder: 'select CTAs',
     tags: true
   });
 

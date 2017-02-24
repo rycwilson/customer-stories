@@ -5,7 +5,6 @@
   <%= render 'stories/shared/edit/contribution_cards_template' %>
   <%= render 'stories/shared/csp_linkedin_widget_template' %>
   <%= render 'stories/shared/edit/video_template' %>
-  <%= render 'stories/shared/edit/cta_template' %>
   <%= render 'stories/shared/edit/prompt_template' %>
   <%= render 'stories/shared/edit/result_template' %>
 <% end %>
@@ -53,11 +52,15 @@
 
       </div>  <!-- settings, title, quote, video -->
 
+
       <div class="row" style='margin-bottom:15px'>
 
+        <div class="col-sm-6">
 
-        <%= render 'stories/shared/edit/edit_ctas',
-                   { company: @company, story: @story } %>
+          <%= render 'stories/shared/edit/edit_ctas',
+                { company: @company, story: @story } %>
+
+        </div>
 
 
         <div class="col-sm-6">

@@ -3,7 +3,7 @@ class StoriesController < ApplicationController
   include StoriesHelper
 
   before_action :set_company
-  before_action :set_story, only: [:edit, :approval]
+  before_action :set_story, only: [:edit, :ctas, :approval]
   before_action only: [:index, :show] { @is_curator = @company.curator?(current_user) }
   before_action only: [:edit] { user_authorized?(@story, current_user) }
   before_action only: [:index, :show, :edit] { set_gon(@company) }
@@ -157,6 +157,11 @@ class StoriesController < ApplicationController
         format.json { respond_with_bip(story) }
       end
     end
+  end
+
+  def ctas
+    @story.update_ctas( params[:ctas] )
+    respond_to { |format| format.js }
   end
 
   def destroy

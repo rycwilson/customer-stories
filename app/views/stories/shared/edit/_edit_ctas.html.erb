@@ -1,52 +1,40 @@
 
-<div id='edit-story-ctas' class="col-sm-6">
+<div id='edit-story-ctas'>
 
   <p class='lead'>CTAs</p>
 
   <div class="well">
     <div class="container-fluid">
-
       <div class="row">
-        <div class="col-sm-10">
-          <%= select_tag 'cta', options_for_select(company.ctas_select_options),
-              id: 'ctas-select', class: 'form-control' %>
-        </div>
-        <div class="col-sm-2">
-          <%= button_tag class: 'btn btn-secondary btn-sm',
-                id: 'cta-add', disabled: true do %>
-            <i class='glyphicon glyphicon-plus'></i>
+        <div class="col-sm-12">
+
+          <%= form_tag ctas_story_path(story.id), method: :put, remote: true,
+                id: 'story-ctas-form' do %>
+
+            <div class="form-group">
+              <!-- <label for="#story-ctas-select"></label> -->
+              <%= select_tag 'ctas[]',
+                    grouped_options_for_select(company.ctas.select_options, story.ctas.pluck(:id)),
+                    { id: 'story-ctas-select', class: 'form-control',
+                      multiple: true } %>
+            </div>
+
+            <div class="form-group text-right">
+              <span class='ajax-confirm' style='display:none;color:green'>
+                <i class='fa fa-check'></i>
+              </span>&nbsp;
+              <input type='submit' id='story-ctas-submit'
+                     class='btn btn-sm btn-primary' value="Save" disabled>&nbsp;
+              <button type="reset" id='story-ctas-reset'
+                      class="btn btn-default" disabled>Cancel</button>
+            </div>
+
           <% end %>
+
+
         </div>
       </div>
-
-      <hr>
-
-      <div id='ctas-list'>
-
-      <% story.ctas.each_with_index do |action, index| %>
-
-        <div class='ctas-list-item'>
-          <div class="modify-cta">
-            <div class='delete-cta' id="delete-cta-<%= index %>"
-                 data-action="<%= cta_path(action) %>">
-              <i class='glyphicon glyphicon-remove bip-clickable'></i>
-            </div>
-          </div>
-
-          <div class="row cta">
-            <div class="col-sm-1">
-              <i class="fa fa-<%= action.type == 'CTALink' ? 'link' : 'wpforms' %>"></i>
-            </div>
-            <div class="col-sm-11">
-              <span><%= action.description %></span>
-            </div>
-          </div>
-        </div>
-
-      <% end %>
-
-      </div>
-
     </div>
   </div>
+
 </div>

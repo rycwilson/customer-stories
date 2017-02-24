@@ -1,8 +1,13 @@
 (function () {
 
-  var id = "<%= @cta.id %>";
+  var id = '<%= @cta.id %>',
+      description = '<%= @cta.description %>';
 
-  // $('#company-tags-submit, #company-tags-reset').prop('disabled', true);
+  // update description field
+  $('li[data-cta-id="' + id + '"] .cta-description span')
+    .text(description);
+
+  // ajax confirm
   $('form[action*="' + id + '"] .ajax-confirm').fadeToggle('fast', 'swing', function () {
     var _$this = $(this)
     setTimeout(function () {
