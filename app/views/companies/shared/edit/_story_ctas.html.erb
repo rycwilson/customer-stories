@@ -1,67 +1,10 @@
 
 <div class="col-sm-6">
 
-  <%= form_tag create_cta_path(company.id), remote: true, id: 'new-cta-form' do %>
-
-    <div class="form-group">
-
-      <!-- radio button group -->
-      <div class='row btn-group' data-toggle="buttons">
-        <div class="col-sm-12">
-          <label>Add a CTA</label>
-          <label id='link-radio' class="active radio-inline">
-            <input name='cta-options' type="radio"
-                   autocomplete="off" checked>Link
-          </label>
-          <label id='html-radio' class="radio-inline">
-            <input name='cta-options' type="radio"
-                   autocomplete="off">Web form
-          </label>
-        </div>
-      </div>
-
-      <!-- link / web form entry -->
-      <div class="row">
-        <div id='new-cta-inputs' class="col-sm-12">
-          <%= text_field_tag 'new_cta[link_description]', nil,
-                class: 'form-control link-input',
-                placeholder: 'description' %>
-          <%= text_field_tag 'new_cta[link_display_text]', nil,
-                class: 'form-control link-input',
-                placeholder: 'display text' %>
-          <%= text_field_tag 'new_cta[link_url]', nil,
-                class: 'form-control link-input',
-                placeholder: 'website address' %>
-          <%= text_field_tag 'new_cta[form_description]', nil,
-                class: 'form-control html-input',
-                placeholder: 'description' %>
-          <%= text_field_tag 'new_cta[form_display_text]', nil,
-                class: 'form-control html-input',
-                placeholder: 'display text' %>
-          <%= text_area_tag 'new_cta[form_html]', nil,
-                class: 'form-control html-input', rows: 3,
-                placeholder: 'html, e.g. <script> and <form> tags' %>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="form-group text-right">
-
-      <span class='ajax-confirm' style='display:none;color:green'>
-        <i class='fa fa-check'></i>
-      </span>&nbsp;
-      <input id='new-cta-submit' type='submit' class='btn btn-primary'
-             value="Add" disabled>&nbsp;
-      <button id='new-cta-reset' type="reset" class="btn btn-default" disabled>
-        Cancel
-      </button>
-
-    </div>
-
-  <% end %>
+  <%= render 'ctas/new_cta_form', { company: company } %>
 
 </div>
+
 <div class="col-sm-6">
 
   <!-- primary CTA -->
@@ -69,160 +12,36 @@
 
     <%= label_tag nil, 'Primary CTA', class: 'control-label' %>
 
+    <ul id='primary-cta' class='list-group'>
+      <li class="list-group-item" data-cta-id='<%= company.ctas.primary.try(:id) %>'>
 
-    <% if primary_cta %>
+      <% if company.ctas.primary %>
 
-      <ul class='list-group'>
-        <li id='primary-cta' class="list-group-item"
-            style='background:<%= company.primary_cta_background_color %>;color:<%= company.primary_cta_text_color %>'>
+        <%= render 'ctas/cta',
+          { company: company, cta: company.ctas.primary, is_primary: true } %>
 
-          <!-- description and edit/delete buttons -->
-          <div class="row">
-            <div class="col-sm-12">
-              <i class="fa fa-<%= primary_cta.type == 'CTALink' ? 'link' : 'wpforms' %>"></i>
-              <span><%= primary_cta.description %></span>
-              <i class='glyphicon glyphicon-remove bip-clickable'
-                 style='border-color:<%= company.primary_cta_text_color %>;color:<%= company.primary_cta_text_color %>'></i>
-              <i class='glyphicon glyphicon-pencil bip-clickable'
-                 style='border-color:<%= company.primary_cta_text_color %>;color:<%= company.primary_cta_text_color %>'
-                 data-toggle='collapse' data-target='#edit-primary-cta'>
-              </i>
-            </div>
-          </div>
+      <% else %>
 
-          <div class='collapse edit-cta' id='edit-primary-cta'>
-            <hr>
+        <span>Add a primary CTA</span>
 
-            <div id='primary-cta-colors' class="form-group row">
-              <%= label_tag 'primary_cta[background_color]', 'Button',
-                    class: 'col-sm-2 control-label' %>
-              <div class='col-sm-4'>
-                <%= text_field_tag 'primary_cta[background_color]',
-                      company.primary_cta_background_color,
-                      class: 'form-control mini-colors' %>
-              </div>
-              <%= label_tag 'primary_cta[text_color]', 'Text',
-                    class: 'col-sm-2 control-label text-right' %>
-              <div class='col-sm-4'>
-                <%= text_field_tag 'primary_cta[text_color]',
-                      company.primary_cta_text_color,
-                      class: 'form-control mini-colors' %>
-              </div>
-            </div>
+      <% end %>
 
-  <!-- note the inline styling below is necessary to prevent a jumpy transition -->
-
-            <div class="form-group" style='margin-bottom: 10px'>
-              <%= label_tag 'primary_cta[description]', 'Description' %>
-              <%= text_field_tag 'primary_cta[description]',
-                    primary_cta.description,
-                    placeholder: 'description', class: 'form-control' %>
-            </div>
-            <div class="form-group" style='margin-bottom: 10px'>
-              <%= label_tag 'primary_cta[display_text]', 'Display text' %>
-              <%= text_field_tag 'primary_cta[description]',
-                    primary_cta.display_text,
-                    placeholder: 'display text', class: 'form-control' %>
-
-            </div>
-            <div class="form-group" style='margin-bottom: 10px'>
-              <%= label_tag 'primary_cta[link_url]', 'Website address' %>
-              <%= text_field_tag 'primary_cta[link_url]',
-                    primary_cta.link_url,
-                    placeholder: 'website address', class: 'form-control' %>
-            </div>
-            <div class="form-group text-right">
-
-              <span class='ajax-confirm' style='display:none;color:green'>
-                <i class='fa fa-check'></i>
-              </span>&nbsp;
-              <input id='primary-cta-submit' type='submit' class='btn btn-primary'
-                     value="Save">&nbsp;
-              <button id='primary-cta-reset' type="reset" class="btn btn-default">
-                Cancel
-              </button>
-
-            </div>
-
-          </div>
-        </li>
-      </ul>
-
-    <% end %>
+      </li>
+    </ul>
 
   </div>
 
   <!-- additional CTAs -->
   <div>
     <label>Additional CTAs</label>
-    <ul id='ctas-list' class='list-group'>
+    <ul id='secondary-ctas' class='list-group'>
 
-    <% company.ctas.each do |cta| %>
+    <% company.ctas.secondary.order(created_at: :desc).each do |cta| %>
 
-      <li id="cta-<%= cta.id %>" class="list-group-item">
+      <li class="list-group-item" data-cta-id='<%= cta.id %>'>
 
-      <div>
-        <div class="row">
-          <div class="col-sm-12">
-            <i class="fa fa-<%= cta.type == 'CTALink' ? 'link' : 'wpforms' %>"></i>
-            <span><%= cta.description %></span>
-            <i class='glyphicon glyphicon-remove bip-clickable'></i>
-            <i class='glyphicon glyphicon-pencil bip-clickable'
-               data-toggle='collapse' data-target="#edit-cta-<%= cta.id %>">
-            </i>
-          </div>
-        </div>
-        <div id="edit-cta-<%= cta.id %>" class='collapse edit-cta'>
-          <hr>
+        <%= render 'ctas/cta', { cta: cta, is_primary: false } %>
 
-          <%= form_tag update_cta_path(cta.id), method: :put, remote: true do %>
-
-            <div class="form-group" style='margin-bottom: 10px'>
-              <%= label_tag 'cta[description]', 'Description' %>
-              <%= text_field_tag 'cta[description]', cta.description,
-                    placeholder: 'description', class: 'form-control' %>
-            </div>
-
-            <div class="form-group" style='margin-bottom: 10px'>
-              <%= label_tag 'cta[display_text]', 'Display text' %>
-              <%= text_field_tag 'cta[display_text]', cta.display_text,
-                    placeholder: 'display text', class: 'form-control' %>
-
-            </div>
-
-            <% if cta.type == 'CTALink' %>
-
-              <div class="form-group" style='margin-bottom: 10px'>
-                <%= label_tag 'cta[link_url]', 'Website address' %>
-                <%= text_field_tag 'cta[link_url]', cta.link_url,
-                      placeholder: 'website address', class: 'form-control' %>
-              </div>
-
-            <% else %>
-
-              <div class="form-group" style='margin-bottom: 10px'>
-                <%= label_tag 'cta[form_html]', 'HTML' %>
-                <%= text_field_tag 'cta[form_html]', cta.form_html,
-                      placeholder: 'html, e.g. <script> and <form> tags',
-                      class: 'form-control' %>
-              </div>
-
-            <% end %>
-
-            <div class="form-group text-right">
-              <span class='ajax-confirm' style='display:none;color:green'>
-                <i class='fa fa-check'></i>
-              </span>&nbsp;
-              <input type='submit' id='cta-<%= cta.id %>-submit'
-                     class='btn btn-sm btn-primary' value="Save">&nbsp;
-              <button type="reset" id='cta-<%= cta.id %>-reset'
-                      class="btn btn-default">Cancel</button>
-            </div>
-
-          <% end %>
-        </div>
-
-      </div>
       </li>
 
     <% end %>

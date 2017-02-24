@@ -30,7 +30,15 @@ class Company < ActiveRecord::Base
   has_many :outbound_actions, dependent: :destroy
 
   has_many :call_to_actions, dependent: :destroy
-  has_many :ctas, foreign_key: 'company_id', class_name: 'CallToAction'
+  # alias and methods
+  has_many :ctas, foreign_key: 'company_id', class_name: 'CallToAction' do
+    def primary
+      where(company_primary: true).take
+    end
+    def secondary
+      where(company_primary: false)
+    end
+  end
 
   # presently uploading direct to S3, paperclip not used
   # paperclip

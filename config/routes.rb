@@ -43,6 +43,7 @@ Rails.application.routes.draw do
     authenticate :user do
       resources :companies, only: [:show, :edit, :update] do
         resources :stories, only: [:create]
+        resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
       end
       resources :stories, only: [:edit, :update, :destroy] do
         resources :results, only: [:create, :update, :destroy]
@@ -50,13 +51,6 @@ Rails.application.routes.draw do
 
       # tags
       put     '/companies/:id/tags', to: 'tags#update', as: 'update_tags'
-
-      # CTAs
-      # get     '/ctas/:id', to: 'ctas#select'
-      # get     '/cta_forms/:id', to: 'ctas#show', as: 'cta_form'
-      post    '/companies/:id/ctas', to: 'ctas#create', as: 'create_cta'
-      put     '/ctas/:id', to: 'ctas#update', as: 'update_cta'
-      delete  '/ctas/:id', to: 'ctas#destroy', as: 'cta'
 
       # analytics
       get '/analytics/charts', to: 'analytics#charts', as: 'charts'

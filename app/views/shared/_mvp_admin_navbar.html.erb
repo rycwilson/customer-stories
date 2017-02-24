@@ -33,12 +33,12 @@
 
       <div class='hidden-xs col-sm-3 text-right'>
 
-        <% if @company.cta_button.try(:btn_text).present? %>
+        <% if @company.ctas.primary %>
 
-          <%= link_to @company.cta_button.btn_text,
-                @company.cta_button.url, target: '_blank',
-                class: "btn cta_btn cta-link",
-                style: "background-color:#{@company.cta_button.background_color};color:#{@company.cta_button.color};border-color:#{@company.cta_button.background_color}" %>
+          <%= link_to(@company.ctas.primary.display_text,
+                @company.ctas.primary.link_url, target: '_blank',
+                id: 'primary-cta-btn', class: "btn cta-link",
+                style: "background-color:#{@company.primary_cta_background_color};color:#{@company.primary_cta_text_color};border-color:#{@company.primary_cta_background_color}") %>
 
         <% end %>
 

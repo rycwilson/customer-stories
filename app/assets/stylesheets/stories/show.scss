@@ -79,19 +79,6 @@
     }
   }
 
-  .cta_btn {
-    font-weight: 400;
-    border-radius: 2px;
-    border: 1px solid;
-    min-width: 140px
-  }
-
-  .cta_btn:hover, .cta_btn:focus {
-    border: 1px solid;
-    box-shadow: 0 0 0 1px #fff inset;
-    outline: none !important;
-  }
-
   #story-header {
     padding-left: 12px;
     font-size: 0;  // ref: http://stackoverflow.com/questions/13841387

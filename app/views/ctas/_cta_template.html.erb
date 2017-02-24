@@ -1,17 +1,15 @@
 
 <script type='text/template' id='cta-template' defer>
 
-  <div>
+  <li class="list-group-item" data-cta-id="{{= cta.id }}">
 
-    <div class="row">
-      <div class="col-sm-12">
-        <i class="fa fa-{{= cta.type == 'CTALink' ? 'link' : 'wpforms' }}"></i>
-        <span>{{= cta.description }}</span>
-        <i class='glyphicon glyphicon-remove bip-clickable'></i>
-        <i class='glyphicon glyphicon-pencil bip-clickable'
-           data-toggle='collapse' data-target="#edit-cta-{{= cta.id }}">
-        </i>
-      </div>
+    <div class='cta-description'>
+      <i class="fa fa-{{= cta.type == 'CTALink' ? 'link' : 'wpforms' }}"></i>
+      <span>{{= cta.description }}</span>
+      <i class='glyphicon glyphicon-remove bip-clickable'></i>
+      <i class='glyphicon glyphicon-pencil bip-clickable'
+         data-toggle='collapse' data-target="#edit-cta-{{= cta.id }}">
+      </i>
     </div>
 
     <div id="edit-cta-{{= cta.id }}" class='collapse edit-cta'>
@@ -23,18 +21,91 @@
         <input name="utf8" type="hidden" value="✓">
         <input type="hidden" name="_method" value="put">
 
+        {{ if (isPrimary) { }}
+
+          <input type="hidden" name="is_primary" id="is_primary" value="true">
+
+          <div id="primary-cta-colors" class="form-group row">
+            <label class="col-sm-2 control-label" for="primary_cta_background_color">
+              Button
+            </label>
+            <div class="col-sm-4">
+              <div class="minicolors minicolors-theme-bootstrap minicolors-position-bottom minicolors-position-left">
+                <input type="text" name="primary_cta[background_color]"
+                       id="primary_cta_background_color" value="#ffffff"
+                       class="form-control mini-colors minicolors-input" size="7">
+                <span class="minicolors-swatch minicolors-sprite minicolors-input-swatch">
+                  <span class="minicolors-swatch-color"
+                        style="background-color: rgb(255, 255, 255);"></span>
+                </span>
+                <div class="minicolors-panel minicolors-slider-hue">
+                  <div class="minicolors-slider minicolors-sprite">
+                    <div class="minicolors-picker" style="top: 0px;">
+                    </div>
+                  </div>
+                  <div class="minicolors-opacity-slider minicolors-sprite">
+                    <div class="minicolors-picker">
+                    </div>
+                  </div>
+                  <div class="minicolors-grid minicolors-sprite"
+                       style="background-color: rgb(255, 0, 0);">
+                    <div class="minicolors-grid-inner">
+                    </div>
+                    <div class="minicolors-picker" style="top: 0px; left: 0px;">
+                      <div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <label class="col-sm-2 control-label text-right" for="primary_cta_text_color">
+              Text
+            </label>
+            <div class="col-sm-4">
+              <div class="minicolors minicolors-theme-bootstrap minicolors-position-bottom minicolors-position-left">
+                <input type="text" name="primary_cta[text_color]"
+                       id="primary_cta_text_color" value="#ffffff"
+                       class="form-control mini-colors minicolors-input" size="7">
+                <span class="minicolors-swatch minicolors-sprite minicolors-input-swatch">
+                  <span class="minicolors-swatch-color"
+                        style="background-color: rgb(255, 255, 255);"></span>
+                </span>
+                <div class="minicolors-panel minicolors-slider-hue">
+                  <div class="minicolors-slider minicolors-sprite">
+                    <div class="minicolors-picker" style="top: 0px;">
+                    </div>
+                  </div>
+                  <div class="minicolors-opacity-slider minicolors-sprite">
+                    <div class="minicolors-picker">
+                    </div>
+                  </div>
+                  <div class="minicolors-grid minicolors-sprite"
+                       style="background-color: rgb(255, 0, 0);">
+                    <div class="minicolors-grid-inner">
+                    </div>
+                    <div class="minicolors-picker" style="top: 0px; left: 0px;">
+                      <div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        {{ } }}
+
         <div class="form-group" style='margin-bottom: 10px'>
           <label for='cta_description'>Description</label>
-          <input type='text' id='cta_description' class='form-control'
-                 name='cta[description]' placeholder='description'
-                 value='{{= cta.description }}'
+          <input type='text' id='cta_description' class='form-control' name='cta[description]' placeholder='description' value='{{= cta.description }}'>
         </div>
 
         <div class="form-group" style='margin-bottom: 10px'>
           <label for='cta_display_text'>Display text</label>
           <input type='text' id='cta_display_text' class='form-control'
                  name='cta[display_text]' placeholder='display_text'
-                 value='{{= cta.display_text }}'
+                 value='{{= cta.display_text }}'>
         </div>
 
         {{ if (cta.type == 'CTALink') { }}
@@ -43,7 +114,7 @@
             <label for='cta_link_url'>Website address</label>
             <input type='text' id='cta_link_url' class='form-control'
                    name='cta[link_url]' placeholder='website address'
-                   value='{{= cta.link_url }}'
+                   value='{{= cta.link_url }}'>
           </div>
 
         {{ } else if (cta.type == 'CTAForm') { }}
@@ -67,8 +138,10 @@
                   class="btn btn-default">Cancel</button>
         </div>
 
+      </form>
+
     </div>
 
-  </div>
+  </li>
 
 </script>

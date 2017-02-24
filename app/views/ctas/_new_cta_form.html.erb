@@ -1,0 +1,73 @@
+
+<%= form_tag company_ctas_path(company), remote: true, id: 'new-cta-form' do %>
+
+  <!-- the value of this field will toggle with the radio buttons -->
+  <%= hidden_field_tag :cta_type, 'CTALink' %>
+
+  <div class="form-group">
+
+    <!-- radio button group -->
+    <div class='row btn-group' data-toggle="buttons">
+      <div class="col-sm-12">
+        <label>Add a CTA</label>
+        <label id='link-radio' class="active radio-inline">
+          <input name='cta-options' type="radio"
+                 autocomplete="off" checked>Link
+        </label>
+        <label id='html-radio' class="radio-inline">
+          <input name='cta-options' type="radio"
+                 autocomplete="off">Web form
+        </label>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-sm-8 col-sm-offset-2">
+        <label class="checkbox-inline">
+          <%= hidden_field_tag :is_primary, false %>
+          <%= check_box_tag :is_primary, true, false, disabled: !!company.ctas.primary %>
+          Make primary
+        </label>
+      </div>
+    </div>
+
+    <!-- link / web form entry -->
+    <div class="row">
+      <div id='new-cta-inputs' class="col-sm-12">
+        <%= text_field_tag 'new_cta[link_description]', nil,
+              class: 'form-control link-input',
+              placeholder: 'description' %>
+        <%= text_field_tag 'new_cta[link_display_text]', nil,
+              class: 'form-control link-input',
+              placeholder: 'display text' %>
+        <%= text_field_tag 'new_cta[link_url]', nil,
+              class: 'form-control link-input',
+              placeholder: 'website address' %>
+        <%= text_field_tag 'new_cta[form_description]', nil,
+              class: 'form-control html-input',
+              placeholder: 'description' %>
+        <%= text_field_tag 'new_cta[form_display_text]', nil,
+              class: 'form-control html-input',
+              placeholder: 'display text' %>
+        <%= text_area_tag 'new_cta[form_html]', nil,
+              class: 'form-control html-input', rows: 3,
+              placeholder: 'html, e.g. <script> and <form> tags' %>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="form-group text-right">
+
+    <span class='ajax-confirm' style='display:none;color:green'>
+      <i class='fa fa-check'></i>
+    </span>&nbsp;
+    <input id='new-cta-submit' type='submit' class='btn btn-primary'
+           value="Add" disabled>&nbsp;
+    <button id='new-cta-reset' type="reset" class="btn btn-default" disabled>
+      Cancel
+    </button>
+
+  </div>
+
+<% end %>

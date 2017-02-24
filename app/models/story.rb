@@ -8,7 +8,20 @@ class Story < ActiveRecord::Base
   has_many :visitor_actions, through: :success
   has_many :page_views, through: :success, class_name: 'PageView'
   has_many :visitors, -> { distinct }, through: :page_views
-  has_many :ctas, through: :success, source: :ctas
+  has_many :ctas, through: :success, source: :ctas do
+    def primary
+      where(company_primary: true)
+    end
+    def secondary
+      where(company_primary: false)
+    end
+    def links
+      where(type: 'CTALink')
+    end
+    def forms
+      where(type: 'CTAForm')
+    end
+  end
 
   # Note: no explicit association to friendly_id_slugs, but it's there
   # Story has many friendly_id_slugs -> captures history of slug changes

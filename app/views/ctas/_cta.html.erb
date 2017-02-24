@@ -1,0 +1,84 @@
+
+<div class='cta-description'>
+  <i class="fa fa-<%= cta.type == 'CTALink' ? 'link' : 'wpforms' %>"></i>
+  <span><%= cta.description %></span>
+  <i class='glyphicon glyphicon-remove bip-clickable'></i>
+  <i class='glyphicon glyphicon-pencil bip-clickable'
+     data-toggle='collapse' data-target="#edit-cta-<%= cta.id %>">
+  </i>
+</div>
+
+<div id="edit-cta-<%= cta.id %>" class='collapse edit-cta'>
+  <hr>
+
+  <%= form_tag cta_path(cta), method: :put, remote: true do %>
+
+    <% if is_primary %>
+
+      <%= hidden_field_tag :is_primary, true %>
+
+      <div id='primary-cta-colors' class="form-group row">
+        <%= label_tag 'primary_cta[background_color]', 'Button',
+              class: 'col-sm-2 control-label' %>
+        <div class='col-sm-4'>
+          <%= text_field_tag 'primary_cta[background_color]',
+                company.primary_cta_background_color,
+                class: 'form-control mini-colors' %>
+        </div>
+        <%= label_tag 'primary_cta[text_color]', 'Text',
+              class: 'col-sm-2 control-label text-right' %>
+        <div class='col-sm-4'>
+          <%= text_field_tag 'primary_cta[text_color]',
+                company.primary_cta_text_color,
+                class: 'form-control mini-colors' %>
+        </div>
+      </div>
+
+    <% end %>
+
+  <!-- note: the inline styling is necessary to prevent jerky collapse behavior -->
+
+    <div class="form-group" style='margin-bottom: 10px'>
+      <%= label_tag 'cta[description]', 'Description' %>
+      <%= text_field_tag 'cta[description]', cta.description,
+            placeholder: 'description', class: 'form-control' %>
+    </div>
+
+    <div class="form-group" style='margin-bottom: 10px'>
+      <%= label_tag 'cta[display_text]', 'Display text' %>
+      <%= text_field_tag 'cta[display_text]', cta.display_text,
+            placeholder: 'display text', class: 'form-control' %>
+    </div>
+
+    <% if cta.type == 'CTALink' %>
+
+      <div class="form-group" style='margin-bottom: 10px'>
+        <%= label_tag 'cta[link_url]', 'Website address' %>
+        <%= text_field_tag 'cta[link_url]', cta.link_url,
+              placeholder: 'website address', class: 'form-control' %>
+      </div>
+
+    <% elsif cta.type == 'CTAForm' %>
+
+      <div class="form-group" style='margin-bottom: 10px'>
+        <%= label_tag 'cta[form_html]', 'HTML' %>
+        <%= text_field_tag 'cta[form_html]', cta.form_html,
+              placeholder: 'html, e.g. <script> and <form> tags',
+              class: 'form-control' %>
+      </div>
+
+    <% end %>
+
+    <div class="form-group text-right">
+      <span class='ajax-confirm' style='display:none;color:green'>
+        <i class='fa fa-check'></i>
+      </span>&nbsp;
+      <input type='submit' id='cta-<%= cta.id %>-submit'
+             class='btn btn-sm btn-primary' value="Save">&nbsp;
+      <button type="reset" id='cta-<%= cta.id %>-reset'
+              class="btn btn-default">Cancel</button>
+    </div>
+
+  <% end %>
+</div>
+

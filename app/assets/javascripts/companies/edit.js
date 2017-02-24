@@ -38,6 +38,11 @@ function storyCTAsListeners () {
       function () {
         $('.link-input,.html-input').toggle();
         $('.link-input,.html-input').val('');
+        if ($('#cta_type').val() === 'CTALink') {
+          $('#cta_type').val('CTAForm');
+        } else if ($('#cta_type').val() === 'CTAForm') {
+          $('#cta_type').val('CTALink');
+        }
       })
     .on('input', '#new-cta-form',
       function () {
@@ -57,6 +62,24 @@ function storyCTAsListeners () {
                    })) {
           $(this).find('button[type="submit"]').prop('disabled', false);
         }
+      })
+    .on('click', '#story-ctas .glyphicon-remove',
+      function () {
+        var id = $(this).closest('li').data('cta-id');
+        $.ajax({
+          url: '/ctas/' + id,
+          method: 'delete',
+          success: function (data, status, xhr) {
+            if (data.isPrimary) {
+              $('#primary-cta li')
+                .empty().append('<span>Add a primary CTA</span>');
+              $('input[type="checkbox"][id="is_primary"]')
+                .prop('disabled', false);
+            } else {
+              $('li[data-cta-id="' + data.id + '"]').remove();
+            }
+          }
+        });
       });
 }
 

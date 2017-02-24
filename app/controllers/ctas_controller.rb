@@ -1,34 +1,33 @@
 class CtasController < ApplicationController
 
-  before_action only: [:create] { @company = Company.find(params[:id]) }
+  before_action only: [:create, :update] do
+    @is_primary = params[:is_primary]
+  end
 
+  # return html for cta forms
   def show
-    @form = CTAForm.find params[:id]
+    @form = CTAForm.find( params[:id] )
     render layout: false
   end
 
-  def select
-    cta = CallToAction.find params[:id]
-    respond_to do |format|
-      format.json { render json: cta }
-    end
-  end
-
   def create
-    binding.remote_pry
-    if params['new_cta']['link_url'].present?
+    @company = Company.find( params[:company_id] )
+    case params[:cta_type]
+    when 'CTALink'
       @cta = CTALink.create(
                        description: params['new_cta']['link_description'],
                        display_text: params['new_cta']['link_display_text'],
                        link_url: params['new_cta']['link_url'],
-                       company_id: @company.id
+                       company_id: @company.id,
+                       company_primary: @is_primary
                      )
-    elsif params['new_cta']['form_html'].present?
+    when 'CTAForm'
       @cta = CTAForm.create(
                        description: params['new_cta']['form_description'],
                        display_text: params['new_cta']['form_display_text'],
                        form_html: params['new_cta']['form_html'],
-                       company_id: @company.id
+                       company_id: @company.id,
+                       company_primary: @is_primary
                      )
     else
       # error
@@ -37,7 +36,7 @@ class CtasController < ApplicationController
   end
 
   def update
-    @cta = CallToAction.find(params[:id])
+    @cta = CallToAction.find( params[:id] )
     if params[:link_url]
       @cta.update(
         description: params['cta']['description'],
@@ -51,16 +50,23 @@ class CtasController < ApplicationController
         form_html: params['cta']['form_html']
       )
     end
+    if @is_primary
+      @cta.company.update(
+        primary_cta_background_color: params['primary_cta']['background_color'],
+        primary_cta_text_color: params['primary_cta']['text_color']
+      )
+    end
     respond_to { |format| format.js }
   end
 
-  # method responds with the deleted action object's id
-  # the id isn't needed by client, however if empty response (e.g. format.json { head :ok }),
-  # then response isn't caught by the AJAX success handler
   def destroy
-    action = CallToAction.find params[:id]
-    action.destroy
-    respond_to { |format| format.json { render json: { action: action.id } } }
+    cta = CallToAction.find( params[:id] )
+    cta.destroy
+    respond_to do |format|
+      format.json do
+        render json: { id: cta.id, isPrimary: cta.company_primary? }
+      end
+    end
   end
 
 end

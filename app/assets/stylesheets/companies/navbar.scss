@@ -73,10 +73,16 @@
   }
 }
 
-.sign-out {
-  margin-top: 25px;
+#primary-cta-btn {
+  margin-top: 15px;
+  font-weight: 400;
+  border-radius: 2px;
+  border: 1px solid;
+  min-width: 140px
 }
 
-.cta_btn {
-  margin-top: 15px;
+#primary-cta-btn:hover, #primary-cta-btn:focus {
+  border: 1px solid;
+  box-shadow: 0 0 0 1px #fff inset;
+  outline: none !important;
 }

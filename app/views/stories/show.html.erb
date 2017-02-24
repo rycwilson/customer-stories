@@ -23,11 +23,9 @@
              { company: @company, stories: @more_stories } %>
 <%# end %>
 
-<% @story.outbound_actions
-         .select { |action| action.type == 'OutboundForm' }
-         .each do |form| %>
+<% @story.ctas.forms.each do |form| %>
 
-  <%= render 'stories/shared/outbound_form_modal', { form: form } %>
+  <%= render 'ctas/cta_form_modal', { form: form } %>
 
 <% end %>
 

@@ -3,22 +3,21 @@
   <h3 class='text-center'>Learn More</h3>
   <ul class='list-unstyled' style='line-height:26px'>
 
-    <% story.outbound_actions.each do |action| %>
+    <% story.ctas.secondary.each do |cta| %>
 
       <li>
-        <% if action.type == 'OutboundLink' %>
+        <% if cta.type == 'CTALink' %>
 
-          <a href="<%= action.link_url %>" target='_blank'
-             class="cta-link">
-            <%= action.display_text %>
+          <a class="cta-link" href="<%= cta.link_url %>" target='_blank'>
+            <%= cta.display_text %>
           </a>
 
         <% else %>
 
-          <a href="#outbound-form-<%= action.id %>-modal"
+          <a href="#cta-form-<%= cta.id %>-modal"
              class="cta-form" data-toggle='modal'
-             data-target="#outbound-form-<%= action.id %>-modal">
-            <%= action.display_text %>
+             data-target="#cta-form-<%= cta.id %>-modal">
+            <%= cta.display_text %>
           </a>
 
         <% end %>

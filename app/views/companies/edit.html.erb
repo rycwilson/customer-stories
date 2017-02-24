@@ -46,10 +46,7 @@
             </div>
 
             <div class="tab-pane fade" id="story-ctas">
-              <%= render 'companies/shared/edit/story_ctas',
-                  { company: @company,
-                    primary_cta: @company.ctas.find { |cta| cta.company_primary },
-                    secondary_ctas: @company.ctas.reject { |cta| cta.company_primary } } %>
+              <%= render 'companies/shared/edit/story_ctas', { company: @company } %>
             </div>
 
           </div> <!-- /.tab-content -->

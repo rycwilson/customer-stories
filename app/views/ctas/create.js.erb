@@ -2,11 +2,17 @@
 (function () {
 
   var cta = <%= raw @cta.to_json({ methods: [:type] }) %>,
-      template = _.template($('#cta-template').html());
+      isPrimary = <%= @is_primary %>,
+      template = _.template( $('#cta-template').html() );
 
-debugger;
+  if (isPrimary) {
+    $('#primary-cta')
+      .empty().append( template({ cta: cta, isPrimary: true }) );
+    $('input[type="checkbox"][id="is_primary"]').prop('disabled', true);
 
-  $('#ctas-list').append(template({ cta: cta }))
-  $('#ctas-form')[0].reset();
+  } else {
+    $('#secondary-ctas').prepend( template({ cta: cta, isPrimary: false }) );
+  }
+  $('#new-cta-form')[0].reset();
 
 }());

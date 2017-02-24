@@ -72,7 +72,7 @@
 
     <% end %>
 
-    <% if @story.outbound_actions.present? %>
+    <% if @story.ctas.secondary.present? %>
 
       <%= render 'stories/shared/learn_more', { story: @story } %>
 
