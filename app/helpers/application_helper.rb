@@ -1,5 +1,11 @@
 module ApplicationHelper
 
+  def include_gon? controller, action
+    controller == 'stories' && ['index', 'show', 'edit'].include?(action) ||
+    controller == 'companies' && ['show', 'edit'].include?(action) ||
+    controller == 'profile' && action == 'edit'
+  end
+
   def company_widget_color company
     case company.subdomain
     when 'trunity'

@@ -39,7 +39,7 @@ function setAppData () {
   app.stories = (window.gon && gon.stories) || app.stories || null;
   app.current_user = (window.gon && gon.current_user) || app.current_user || null;
   app.env = (window.gon && gon.env) || app.env || null;
-  app.charts = (window.gon && gon.charts) || gon.charts || null;
+  app.charts = (window.gon && gon.charts) || app.charts || null;
   // console.log('app: ', app);
   getScreenSize();
 }

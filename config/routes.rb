@@ -45,7 +45,7 @@ Rails.application.routes.draw do
         resources :stories, only: [:create]
         resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
       end
-      resources :stories, except: [:index, :new, :show, :create] do
+      resources :stories, only: [:edit, :update, :destroy] do
         resources :results, only: [:create, :update, :destroy]
         member { put :ctas }
       end

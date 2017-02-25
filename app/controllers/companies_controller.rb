@@ -6,6 +6,7 @@ class CompaniesController < ApplicationController
   before_action :set_s3_direct_post, only: [:new, :edit, :create]
 
   def new
+    @profile_form_options = set_profile_form_options(params)
     @company = Company.new
   end
 
@@ -22,6 +23,7 @@ class CompaniesController < ApplicationController
   end
 
   def edit
+    @profile_form_options = set_profile_form_options(params)
     @category_select_options = @company.category_select_options
     @category_pre_selected_options = @company.story_categories.map { |category| category.id }
     @product_select_options = @company.product_select_options
@@ -32,7 +34,6 @@ class CompaniesController < ApplicationController
   def create
     @company = Company.new company_params
     if @company.save
-      @company.update_tags(params[:company_tags]) if params[:company_tags].present?
       @company.users << current_user
       @company.create_email_templates
       if current_user.linkedin_url.present?
@@ -48,9 +49,9 @@ class CompaniesController < ApplicationController
 
   end
 
+  # two response formats needed to handle the s3 upload
   def update
     if @company.update company_params
-      @company.update_tags(params[:company_tags]) if params[:company_tags].present?
       @flash_mesg = "Company updated"
       @flash_status = "success"
     else
@@ -62,16 +63,16 @@ class CompaniesController < ApplicationController
         redirect_to edit_company_path(@company),
           flash: { success: "Company updated" }
       end
-      format.js
+      format.js {}
     end
   end
-
 
   private
 
   def company_params
-    params.require(:company).permit(:name, :subdomain, :logo_url, :header_color_1,
-                                    :header_color_2, :header_text_color, :website, :gtm_id)
+    params.require(:company)
+          .permit(:name, :subdomain, :logo_url, :header_color_1,
+                  :header_color_2, :header_text_color, :website, :gtm_id)
   end
 
   def set_company
@@ -84,6 +85,24 @@ class CompaniesController < ApplicationController
     else
       render file: 'public/403', status: 403, layout: false
       false
+    end
+  end
+
+  def set_profile_form_options params
+    options = {
+      html: {
+        class: 'directUpload',
+        data: {
+          'form-data' => (@s3_direct_post.fields),
+          'url' => @s3_direct_post.url,
+          'host' => URI.parse(@s3_direct_post.url).host
+        }
+      }
+    }
+    if params[:action] == 'edit'
+      options.merge({ method: 'put', remote: 'true', authenticity_token: true })
+    else
+      options
     end
   end
 

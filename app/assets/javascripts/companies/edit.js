@@ -1,4 +1,7 @@
 
+function companiesEdit () {
+}
+
 function companiesEditListeners () {
   companyProfileListeners();
   templateEditorListeners();
@@ -215,44 +218,49 @@ function templateEditorListeners () {
 
 function companyProfileListeners() {
 
-  $(document).on('click', '#test-colors-btn', function () {
-    var color1 = $('input#company_header_color_1').val(),
-        color2 = $('input#company_header_color_2').val(),
-        headerTextColor = $('input#company_header_text_color').val();
-    $('.navbar').css(
-        'background', 'linear-gradient(45deg, ' + color1 + ' 0%, ' + color2 + ' 100%)');
-    $('.navbar').css('color', headerTextColor);
-  });
+  // CSP test-colors-btn
+  var defaultHeaderStyle = "background:linear-gradient(45deg, #FBFBFB 0%, #85CEE6 100%);color:#333333;",
+      defaultColorLeft = '#fbfbfb',
+      defaltColorRight = '#85cee6',
+      defaultTextColor = '#333333';
 
-  // Dynamically change the max-height of the select box
-  //   (a static setting doesn't work for some reason)
-  $(document).on('select2:open', '#company-profile', function () {
-    $(".select2-container--bootstrap .select2-results > .select2-results__options").css('max-height', 0);
-  });
+  $(document)
+    .on('click', '#test-colors-btn',
+      function () {
+        var color1 = $('input#company_header_color_1').val(),
+            color2 = $('input#company_header_color_2').val(),
+            headerTextColor = $('input#company_header_text_color').val();
+        $('.navbar, .logo-upload .thumbnail').css(
+            'background', 'linear-gradient(45deg, ' + color1 + ' 0%, ' + color2 + ' 100%)');
+        $('.navbar').css('color', headerTextColor);
+      })
+      // Dynamically change the max-height of the select box
+      //   (a static setting doesn't work for some reason)
 
-  $(document).on('click', '#restore-colors-btn', function () {
-    $('.navbar').attr('style', app.company.header_style);
-    $('#company_header_color_1').minicolors('value', app.company.header_color_1);
-    $('#company_header_color_2').minicolors('value', app.company.header_color_2);
-    $('#company_header_text_color').minicolors('value', app.company.header_text_color);
-  });
+    .on('select2:open', '#company-profile',
+      function () {
+        $(".select2-container--bootstrap .select2-results > .select2-results__options").css('max-height', 0);
+      })
+
+    .on('click', '#restore-colors-btn, #profile-form-reset',
+      function () {
+        var headerStyle = app.company ? app.company.header_style : defaultHeaderStyle,
+            colorLeft = app.company ? app.company.header_color_1 : defaultColorLeft,
+            colorRight = app.company ? app.company.header_color_2 : defaultColorRight,
+            textColor = app.company ? app.company.header_text_color : defaultTextColor;
+        if (this.id === 'restore-colors-btn') {
+          $('.navbar, .logo-upload .thumbnail').attr('style', headerStyle);
+        }
+        $('#company_header_color_1').minicolors('value', colorLeft);
+        $('#company_header_color_2').minicolors('value', colorRight);
+        $('#company_header_text_color').minicolors('value', textColor);
+      });
+
 }
 
-function initFormLogoBackground () {
-  var $thumbnails = $("form[id*='company'] .thumbnail");
-  var companyColor1 = $('nav').css('background')
-                              .match(/\(((\d|\s|,)+)\)/g)[1]
-                              .slice(1, -1)
-                              .split(', ')
-                              .map(function (color) {
-                                 var hexVal = parseInt(color, 10).toString(16);
-                                 if (hexVal.length === 1) {
-                                   hexVal += hexVal;
-                                 }
-                                 return hexVal;
-                               })
-                              .join('');
-  $thumbnails.each(function () {
-    $(this).css('background-color', '#' + companyColor1);
-  });
-}
+
+
+
+
+
+

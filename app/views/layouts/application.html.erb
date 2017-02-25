@@ -28,7 +28,7 @@
 </head>
 <body class="<%= controller_name %> <%= action_name %>">
 
-  <%= include_gon %>
+  <%= include_gon if include_gon?(controller_name, action_name) %>
 
   <% if ['companies', 'stories', 'profile'].include? controller_name %>
 

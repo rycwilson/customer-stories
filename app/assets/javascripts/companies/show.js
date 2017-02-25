@@ -1,4 +1,8 @@
 
+function companiesShow () {
+  adjustPromoCSSChecker();
+}
+
 function companiesShowListeners () {
   newStoryModalListeners();
   measureCharts();

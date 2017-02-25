@@ -1,12 +1,17 @@
 (function () {
 
-  var headerStyle = '<%= @company.header_style %>'
+  var headerStyle = '<%= @company.header_style %>',
+      colorLeft = '<%= @company.header_color_1 %>',
+      colorRight = '<%= @company.header_color_2 %>',
       flashMesg = '<%= @flash_mesg %>',
       flashStatus = '<%= @flash_status %>';
 
+  app.company.header_style = headerStyle;
+
   $('.navbar').attr('style', headerStyle);
 
-  $('.fileinput-preview').css('background-color', $('#company_header_color_1').val())
+  $('.logo-upload .thumbnail')
+    .css('background', 'linear-gradient(45deg, ' + colorLeft + ' 0%, ' + colorRight + ' 100%)');
 
   flashDisplay(flashMesg, flashStatus);
 

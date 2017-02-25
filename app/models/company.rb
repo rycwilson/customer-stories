@@ -1,5 +1,7 @@
 class Company < ActiveRecord::Base
 
+  CSP = self.find(5)
+
   before_validation :smart_add_url_protocol
 
   validates :name, presence: true, uniqueness: true
@@ -57,7 +59,6 @@ class Company < ActiveRecord::Base
           end
         end
       end
-      # grouped_options.unshift( [""] )
       grouped_options
     end
   end

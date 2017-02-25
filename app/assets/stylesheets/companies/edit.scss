@@ -5,13 +5,8 @@
     margin-top: 40px;
     overflow: hidden;
   }
-  .layout-main {
-    padding-top: 50px;
-  }
+
   #story-ctas {
-    .col-sm-6 {
-      padding-right: 40px;  // create some space
-    }
     .form-group {
       margin-bottom: 10px;
     }
@@ -25,8 +20,9 @@
           margin-bottom: 4px;
         }
       }
+      // 'Make primary' checkbox
       .row:nth-of-type(2) div[class^='col']:first-child {
-        padding-left: 30px;
+        padding-left: 28px;
       }
       #new-cta-inputs input {
         margin-bottom: 10px;
@@ -86,27 +82,12 @@
         padding: 0;
       }
     }
+
     #primary-cta, #secondary-ctas {
       .form-group:last-of-type {
         margin-bottom: 0
       }
     }
-  }
-
-  /***********************************************/
-  /*      company form logo
-  /***********************************************/
-
-  /* max height should mirror nav bar
-    (actually the bootstrap column will prevent it from ever getting this high) */
-
-  .fileinput .thumbnail {
-    max-height: 65px;
-    padding: 2.5%;
-  }
-
-  .thumbnail > img {
-    max-height: 45px !important;
   }
 
   /***********************************************/

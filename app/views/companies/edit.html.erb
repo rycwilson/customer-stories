@@ -12,9 +12,10 @@
   <div class="content">
     <div class="container">
       <div class="layout layout-main-right layout-stack-sm">
+
         <div class="col-sm-3 layout-sidebar">
 
-          <%= render 'companies/shared/edit/side_tabs' %>
+          <%= render 'companies/shared/side_tabs' %>
 
         </div> <!-- /.col -->
 
@@ -22,13 +23,9 @@
           <div class="tab-content stacked-content">
 
             <div class="tab-pane fade in active" id="company-profile">
-              <% if @company.new_record? %>
-                <div class="heading-block">
-                  <h3> Company Registration </h3>
-                </div>
-              <% end %>
 
-              <%= render 'companies/shared/edit/profile', { company: @company } %>
+              <%= render 'companies/shared/profile_form', { company: @company } %>
+
             </div>
 
             <div class="tab-pane fade" id="email-templates">

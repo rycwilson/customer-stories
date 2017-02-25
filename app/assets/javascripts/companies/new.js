@@ -1,9 +1,7 @@
 
-function companiesNewListeners () {
-
+function companiesNew () {
 }
 
-function companiesNew () {
-  $('header').css('background-color', 'white')
-             .css('border-color', '#dddddd');
+function companiesNewListeners () {
+  companyProfileListeners();
 }

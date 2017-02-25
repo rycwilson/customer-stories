@@ -17,25 +17,3 @@ function attachCompaniesListeners () {
   });
 }
 
-function companiesNew () {
-
-}
-
-function companiesShow () {
-  adjustPromoCSSChecker();
-}
-
-function companiesEdit () {
-  initFormLogoBackground();
-}
-
-
-// not the best solution for remembering active tab, but it works
-  // var lastCurateTab = localStorage.getItem('lastCurateTab');
-  // var lastSettingsTab = localStorage.getItem('lastSettingsTab');
-  // if (lastCurateTab) {
-  //   $('[href="' + lastCurateTab + '"]').tab('show');
-  // }
-  // if (lastSettingsTab) {
-  //   $('[href="' + lastSettingsTab + '"]').tab('show');
-  // }

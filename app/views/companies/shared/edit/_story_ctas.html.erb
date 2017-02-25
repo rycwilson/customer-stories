@@ -1,52 +1,56 @@
 
-<div class="col-sm-6">
+<div class="row">
 
-  <%= render 'ctas/new_cta_form', { company: company } %>
+  <div class="col-sm-6">
 
-</div>
-
-<div class="col-sm-6">
-
-  <!-- primary CTA -->
-  <div class="form-group cta-links" style='margin-bottom:20px'>
-
-    <%= label_tag nil, 'Primary CTA', class: 'control-label' %>
-
-    <ul id='primary-cta' class='list-group'>
-      <li class="list-group-item" data-cta-id='<%= company.ctas.primary.try(:id) %>'>
-
-      <% if company.ctas.primary %>
-
-        <%= render 'ctas/cta',
-          { company: company, cta: company.ctas.primary, is_primary: true } %>
-
-      <% else %>
-
-        <span>Add a primary CTA</span>
-
-      <% end %>
-
-      </li>
-    </ul>
+    <%= render 'ctas/new_cta_form', { company: company } %>
 
   </div>
 
-  <!-- additional CTAs -->
-  <div>
-    <label>Additional CTAs</label>
-    <ul id='secondary-ctas' class='list-group'>
+  <div class="col-sm-6">
 
-    <% company.ctas.secondary.order(created_at: :desc).each do |cta| %>
+    <!-- primary CTA -->
+    <div class="form-group cta-links" style='margin-bottom:20px'>
 
-      <li class="list-group-item" data-cta-id='<%= cta.id %>'>
+      <%= label_tag nil, 'Primary CTA', class: 'control-label' %>
 
-        <%= render 'ctas/cta', { cta: cta, is_primary: false } %>
+      <ul id='primary-cta' class='list-group'>
+        <li class="list-group-item" data-cta-id='<%= company.ctas.primary.try(:id) %>'>
 
-      </li>
+        <% if company.ctas.primary %>
 
-    <% end %>
+          <%= render 'ctas/cta',
+            { company: company, cta: company.ctas.primary, is_primary: true } %>
 
-    </ul>
+        <% else %>
+
+          <span>Add a primary CTA</span>
+
+        <% end %>
+
+        </li>
+      </ul>
+
+    </div>
+
+    <!-- additional CTAs -->
+    <div>
+      <label>Additional CTAs</label>
+      <ul id='secondary-ctas' class='list-group'>
+
+      <% company.ctas.secondary.order(created_at: :desc).each do |cta| %>
+
+        <li class="list-group-item" data-cta-id='<%= cta.id %>'>
+
+          <%= render 'ctas/cta', { cta: cta, is_primary: false } %>
+
+        </li>
+
+      <% end %>
+
+      </ul>
+    </div>
+
   </div>
 
 </div>
