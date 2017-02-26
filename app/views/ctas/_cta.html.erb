@@ -1,7 +1,7 @@
 
 <div class='cta-description'>
   <i class="fa fa-<%= cta.type == 'CTALink' ? 'link' : 'wpforms' %>"></i>
-  <span><%= cta.description %></span>
+  <span><%= cta.description || 'Add a primary CTA' %></span>
   <i class='glyphicon glyphicon-remove bip-clickable'></i>
   <i class='glyphicon glyphicon-pencil bip-clickable'
      data-toggle='collapse' data-target="#edit-cta-<%= cta.id %>">

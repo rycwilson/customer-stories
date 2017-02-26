@@ -13,10 +13,11 @@
 
             <div class="form-group">
               <!-- <label for="#story-ctas-select"></label> -->
-              <%= select_tag 'ctas[]',
-                    grouped_options_for_select(company.ctas.select_options, story.ctas.pluck(:id)),
-                    { id: 'story-ctas-select', class: 'form-control',
-                      multiple: true } %>
+
+      <%= select_tag 'ctas[]',
+            grouped_options_for_select(company.ctas.select_options, story.ctas.pluck(:id)),
+            { id: 'story-ctas-select', class: 'form-control', multiple: true } %>
+
             </div>
 
             <div class="form-group text-right">
