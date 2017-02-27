@@ -53,9 +53,7 @@
           <div id="settings-content" class="tab-content stacked-content">
 
             <div class="tab-pane fade in active" id="measure-summary-container">
-              <%= render 'companies/shared/measure/summary_charts',
-                   { company: company,
-                     story_select_options: @story_select_options } %>
+              <%= render 'companies/shared/measure/summary_charts', { company: company } %>
             </div>
 
             <div class="tab-pane fade" id="measure-stories-container">
@@ -63,9 +61,7 @@
             </div>
 
             <div class="tab-pane fade" id="measure-visitors-container">
-              <%= render 'companies/shared/measure/visitors_table',
-                         { company: company,
-                           story_select_options: @story_select_options } %>
+              <%= render 'companies/shared/measure/visitors_table', { company: company } %>
             </div>
 
             <div class="tab-pane fade" id="measure-activity-container">

@@ -56,36 +56,13 @@
       <div class="row" style='margin-bottom:15px'>
 
         <div class="col-sm-6">
-
           <%= render 'stories/shared/edit/edit_ctas',
-                { company: @company, story: @story } %>
-
+                     { company: @company, story: @story } %>
         </div>
 
-
         <div class="col-sm-6">
-          <!-- tags -->
-          <p class='lead' style='display:inline-block'>Tags</p>
-          <button type='submit' class='edit-tags hidden btn btn-sm btn-primary'
-            style='display:inline-block; margin-left:15px; margin-bottom:8px' form='story-tags-form'>
-            Save changes
-          </button>
-          <!-- <button id='edit-tags-cancel' class='edit-tags hidden btn btn-sm btn-default'
-              style='display:inline-block; margin-bottom:8px'>
-            Cancel
-          </button>  --> <!-- tags -->
-          <div class="well" style='padding:18px 0 18px 0;margin-bottom:10px'>
-            <div class="container-fluid">
-
-              <%= render 'stories/shared/edit/edit_tags',
-                          { story: @story,
-                            categories: @categories,
-                            categories_pre_select: @categories_pre_select,
-                            products: @products,
-                            products_pre_select: @products_pre_select } %>
-
-            </div>
-          </div>
+          <%= render 'stories/shared/edit/edit_tags',
+                      { company: @company, story: @story } %>
         </div>
 
       </div>

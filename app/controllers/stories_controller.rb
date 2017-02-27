@@ -3,7 +3,7 @@ class StoriesController < ApplicationController
   include StoriesHelper
 
   before_action :set_company
-  before_action :set_story, only: [:edit, :ctas, :approval]
+  before_action :set_story, only: [:edit, :ctas, :tags, :approval]
   before_action only: [:index, :show] { @is_curator = @company.curator?(current_user) }
   before_action only: [:edit] { user_authorized?(@story, current_user) }
   before_action only: [:index, :show, :edit] { set_gon(@company) }
@@ -70,12 +70,6 @@ class StoriesController < ApplicationController
 
   def edit
     @customer = @story.success.customer
-    @categories = @company.category_select_options
-    @categories_pre_select = @story.success.story_categories
-                                   .map { |category| category.id }
-    @products = @company.product_select_options
-    @products_pre_select = @story.success.products
-                                 .map { |category| category.id }
     @referrer_select = @story.success.contributions
                              .map { |c| [ c.contributor.full_name, c.contributor.id ] }
                              .unshift( [""] )
@@ -115,10 +109,7 @@ class StoriesController < ApplicationController
 
   def update
     story = Story.find params[:id]
-    if params[:story_tags]  # updated tags (this comes from a hidden field with value="")
-      story.update_tags(@company, params[:story])
-      respond_to { |format| format.js { render action: 'update_tags' } }
-    elsif params[:customer_logo_url]
+    if params[:customer_logo_url]
       story.success.customer.update logo_url: params[:customer_logo_url]
       respond_to { |format| format.json { render json: nil } }
     elsif params[:prompt]  # a prompt was edited
@@ -160,7 +151,12 @@ class StoriesController < ApplicationController
   end
 
   def ctas
-    @story.update_ctas( params[:ctas] )
+    @story.update_ctas( params[:ctas] || [] )
+    respond_to { |format| format.js }
+  end
+
+  def tags
+    @story.update_tags( params[:category_tags] || [], params[:product_tags] || [] )
     respond_to { |format| format.js }
   end
 

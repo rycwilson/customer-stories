@@ -1,9 +1,9 @@
 
 <%= render 'companies/shared/measure/filter_form',
-            { form_id: 'charts-filter-form',
+            { company: company,
+              form_id: 'charts-filter-form',
               form_path: charts_path,
               story_select_id: 'charts-story-select',
-              story_select_options: story_select_options,
               date_range_input_id: 'charts-date-range-input' } %>
 
 <div class="row">

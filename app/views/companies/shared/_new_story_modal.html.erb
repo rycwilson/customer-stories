@@ -18,7 +18,7 @@
             <div class='col-md-9'>
 
               <!-- if no customers (just empty placeholder) -->
-              <% if customer_select_options.length == 1 %>
+              <% if company.customers.select_options.length == 1 %>
 
                 <%= text_field_tag 'story[customer]', nil,
                   class: 'form-control',
@@ -27,7 +27,7 @@
               <% else %>
 
                 <%= select_tag 'story[customer]',
-                    options_for_select(customer_select_options),
+                    options_for_select(company.customers.select_options),
                     class: 'new-story-customer form-control',
                     style: 'width: 100%' %>
 
@@ -51,7 +51,7 @@
               <!-- Note the necessary '[]' notation below  -->
               <!-- if not present, will only return a single value  -->
               <%= select_tag "story[category_tags][]",
-                  options_for_select(category_select_options),
+                  options_for_select(company.story_categories.select_options),
                   { multiple: 'true', class: 'new-story-tags form-control',
                     style: 'width:100%'} %>
             </div>
@@ -62,7 +62,7 @@
                   class: 'col-md-3 control-label' %>
             <div class='col-md-9'>
               <%= select_tag "story[product_tags][]",
-                  options_for_select(product_select_options),
+                  options_for_select(company.products.select_options),
                   { multiple: 'true', class: 'new-story-tags form-control',
                     style: 'width:100%'} %>
             </div>

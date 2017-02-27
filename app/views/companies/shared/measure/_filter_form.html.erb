@@ -6,7 +6,7 @@
 
   <div class="form-group">
     <label for="<%= story_select_id %>">Story</label>&nbsp;&nbsp;
-    <%= select_tag :story_id, options_for_select(story_select_options),
+    <%= select_tag :story_id, options_for_select(company.stories.select_options),
         { id: story_select_id, class: 'form-control', style: 'width:340px' } %>
   </div>&nbsp;&nbsp;&nbsp;&nbsp;
 

@@ -1,0 +1,17 @@
+(function () {
+
+  $('#story-tags-form label').removeClass('dirtyField')
+
+  $('#story-tags-submit').prop('disabled', true);
+  $('#story-tags-reset').prop('disabled', true);
+
+  $('#story-tags-form .ajax-confirm').fadeToggle('fast', 'swing', function () {
+    var _$this = $(this)
+    setTimeout(function () {
+      _$this.fadeToggle('fast')
+    }, 3000);
+  })
+
+}());
+
+

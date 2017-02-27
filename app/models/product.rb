@@ -5,6 +5,7 @@ class Product < ActiveRecord::Base
   belongs_to :company
   has_many :products_successes, dependent: :destroy
   has_many :successes, through: :products_successes
+  has_many :stories, through: :successes
 
   validates :name, presence: true
   validates_uniqueness_of :name, scope: :company_id

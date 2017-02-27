@@ -44,14 +44,13 @@ Rails.application.routes.draw do
       resources :companies, only: [:show, :edit, :update] do
         resources :stories, only: [:create]
         resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
+        member { put :tags }
       end
       resources :stories, only: [:edit, :update, :destroy] do
         resources :results, only: [:create, :update, :destroy]
         member { put :ctas }
+        member { put :tags }
       end
-
-      # tags
-      put     '/companies/:id/tags', to: 'tags#update', as: 'update_tags'
 
       # analytics
       get '/analytics/charts', to: 'analytics#charts', as: 'charts'

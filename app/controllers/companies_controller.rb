@@ -2,7 +2,7 @@ class CompaniesController < ApplicationController
 
   before_action :user_authorized?, only: [:show, :edit]
   before_action :set_company, except: [:new, :create]
-  before_action only: [:show, :edit] { set_gon(@company) }
+  before_action only: [:show, :edit ] { set_gon(@company) }
   before_action :set_s3_direct_post, only: [:new, :edit, :create]
 
   def new
@@ -13,10 +13,6 @@ class CompaniesController < ApplicationController
   def show
     @workflow_tab = cookies[:csp_workflow_tab] || 'curate'
     cookies.delete(:csp_workflow_tab) if cookies[:csp_workflow_tab]
-    @customer_select_options = @company.customer_select_options
-    @category_select_options = @company.category_select_options
-    @product_select_options = @company.product_select_options
-    @story_select_options = @company.story_select_options
     @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
     @story_views_30_day_count = PageView.joins(:visitor_session)
                                  .company_story_views_since(@company.id, 30).count
@@ -24,10 +20,6 @@ class CompaniesController < ApplicationController
 
   def edit
     @profile_form_options = set_profile_form_options(params)
-    @category_select_options = @company.category_select_options
-    @category_pre_selected_options = @company.story_categories.map { |category| category.id }
-    @product_select_options = @company.product_select_options
-    @product_pre_selected_options = @company.products.map { |product| product.id }
     @templates_select = @company.templates_select
   end
 
@@ -65,6 +57,11 @@ class CompaniesController < ApplicationController
       end
       format.js {}
     end
+  end
+
+  def tags
+    @company.update_tags( params[:category_tags] || [], params[:product_tags] || [] )
+    respond_to { |format| format.js }
   end
 
   private

@@ -3,22 +3,19 @@ class Story < ActiveRecord::Base
   include FriendlyId
 
   belongs_to :success
+  has_one :company, through: :success
   has_one :customer, through: :success
   has_one :curator, through: :success, class_name: 'User'
   has_many :visitor_actions, through: :success
   has_many :page_views, through: :success, class_name: 'PageView'
   has_many :visitors, -> { distinct }, through: :page_views
+  has_many :category_tags, through: :success, source: :story_categories
+  has_many :product_tags, through: :success, source: :products
   has_many :ctas, through: :success, source: :ctas do
-    # don't need this! a story will never be associated with a primary cta
-    # def secondary
-    #   where(company_primary: false)
-    # end
-
     # for rendering modals
     def forms
       self.where(type: 'CTAForm')
     end
-
   end
 
   # Note: no explicit association to friendly_id_slugs, but it's there
@@ -187,66 +184,54 @@ class Story < ActiveRecord::Base
     end
   end
 
-  def update_tags company, new_tags
-    existing_category_tags = self.success.story_categories
-    existing_product_tags = self.success.products
+  def update_tags new_category_tags, new_product_tags
+    new_category_tags.map! { |id| id.to_i }
     category_tags_changed = false
+    new_product_tags.map! { |id| id.to_i }
     product_tags_changed = false
-
     # remove deleted category tags ...
-    existing_category_tags.each do |category|
-      unless (new_tags.try(:[], :category_tags)) &&
-          (new_tags.try(:[], :category_tags).include? category.id.to_s)
-        StoryCategoriesSuccess.where("success_id = ? AND story_category_id = ?",
-                                self.success.id, category.id)[0].destroy
+    self.category_tags.each do |category|
+      unless new_category_tags.include?(category.id)
+        self.success.story_categories.delete(category)
         category_tags_changed = true
       end
     end
     # add new category tags ...
-    unless new_tags.try(:[], :category_tags).nil?
-      new_tags[:category_tags].each do |category_id|
-        unless existing_category_tags.any? { |category| category.id == category_id.to_i }
-          self.success.story_categories << StoryCategory.find(category_id.to_i)
-          category_tags_changed = true
-        end
+    new_category_tags.each do |category_id|
+      unless self.category_tags.any? { |category| category.id == category_id }
+        self.success.story_categories << StoryCategory.find(category_id)
+        category_tags_changed = true
       end
     end
-
+    # expire cache
+    if category_tags_changed
+      self.company.expire_all_stories_cache(true)  # json only
+      if self.logo_published?
+        self.company.increment_public_category_select_fragments_memcache_iterator
+      end
+    end
     # remove deleted product tags ...
-    existing_product_tags.each do |product|
-      unless (new_tags.try(:[], :product_tags)) &&
-          (new_tags.try(:[], :product_tags).include? product.id.to_s)
-        ProductsSuccess.where("success_id = ? AND product_id = ?",
-                                  self.success.id, product.id)[0].destroy
+    self.product_tags.each do |product|
+      unless new_product_tags.include?(product.id)
+        self.success.products.delete(product)
         product_tags_changed = true
       end
     end
-
     # add new product tags ...
-    unless new_tags.try(:[], :product_tags).nil?
-      new_tags[:product_tags].each do |product_id|
-        unless existing_product_tags.any? { |product| product.id == product_id.to_i }
-          self.success.products << Product.find(product_id.to_i)
-          product_tags_changed = true
-        end
+    new_product_tags.each do |product_id|
+      unless self.product_tags.any? { |product| product.id == product_id }
+        self.success.products << Product.find(product_id)
+        product_tags_changed = true
       end
     end
-
     # expire cache
-    if category_tags_changed
-      company.expire_all_stories_cache(true)  # json only
-      if self.logo_published?
-        company.increment_public_category_select_fragments_memcache_iterator
-      end
-    end
     if product_tags_changed
-      company.expire_all_stories_cache(true)  # json only
+      self.company.expire_all_stories_cache(true)  # json only
       self.expire_csp_story_path_cache
       if self.logo_published?
-        company.increment_public_product_select_fragments_memcache_iterator
+        self.company.increment_public_product_select_fragments_memcache_iterator
       end
     end
-
   end
 
   # method returns a friendly id path that either contains or omits a product

@@ -13,9 +13,22 @@ class Company < ActiveRecord::Base
 
   has_many :users  # no dependent: :destroy users, handle more gracefully
 
-  has_many :customers, dependent: :destroy
+  has_many :customers, dependent: :destroy do
+    def select_options
+      self.map do |customer|
+        [ customer.name, customer.id ]
+      end
+      .unshift( [""] )  # empty option makes placeholder possible (only needed for single select)
+    end
+  end
   has_many :successes, through: :customers
-  has_many :stories, through: :successes
+  has_many :stories, through: :successes do
+    def select_options
+      self.select { |story| story.published }
+          .map { |story| [ story.title, story.id ] }
+          .unshift( ['All', 0] )
+    end
+  end
   has_many :visitor_actions
   has_many :page_views, class_name: "PageView"
   has_many :story_shares, class_name: "StoryShare"
@@ -25,8 +38,38 @@ class Company < ActiveRecord::Base
   has_many :visitor_sessions, -> { distinct }, through: :visitor_actions
   has_many :visitors, -> { distinct }, through: :visitor_sessions
 
-  has_many :story_categories, dependent: :destroy
-  has_many :products, dependent: :destroy
+  has_many :story_categories, dependent: :destroy do
+    def select_options
+      self.map do |category|
+        [ category.name, category.id, { data: { slug: category.slug } } ]
+      end.sort
+    end
+    def public_select_options
+      self.joins(:stories)
+          .where(stories: { logo_published: true })
+          .distinct
+          .map do |category|
+            [ category.name, category.id, { data: { slug: category.slug } } ]
+          end.sort.unshift ['All', 0]
+    end
+  end
+  has_many :products, dependent: :destroy do
+    def select_options
+      self.map do |product|
+        [ product.name, product.id, { data: { slug: product.slug } } ]
+      end.sort
+    end
+    def public_select_options
+      self.joins(:stories)
+        .where(stories: { logo_published: true })
+        .distinct
+        .map do |product|
+          [ product.name, product.id, { data: { slug: product.slug } } ]
+        end
+        .sort
+        .unshift ['All', 0]
+    end
+  end
   has_many :email_templates, dependent: :destroy
   has_one :cta_button, dependent: :destroy
   has_many :outbound_actions, dependent: :destroy
@@ -186,68 +229,58 @@ class Company < ActiveRecord::Base
     current_user.company_id == self.id
   end
 
+  def update_tags new_category_tags, new_product_tags
+    # remove deleted category tags ...
+    self.story_categories.each do |category|
+      unless new_category_tags.include?(category.id.to_s)
+        tag_instances =
+          StoryCategoriesSuccess.where(story_category_id: category.id)
+        # expire filter select fragment cache
+        self.expire_filter_select_fragments_on_tag_destroy('category', tag_instances)
+        # untag stories
+        tag_instances.destroy_all
+        category.destroy
+      end
+    end
+    # add new category tags ...
+    new_category_tags.each do |category_id|
+      if category_id.to_i == 0   # new (custom or default) tag
+        self.story_categories.create(name: category_id)
+        # expire filter select fragment cache
+        self.increment_curator_category_select_fragments_memcache_iterator
+      else
+        # do nothing
+      end
+    end
+    # remove deleted product tags ...
+    self.products.each do |product|
+      unless new_product_tags.include?(product.id.to_s)
+        tag_instances = ProductsSuccess.where(product_id: product.id)
+        # expire filter select fragment cache
+        self.expire_filter_select_fragments_on_tag_destroy('product', tag_instances)
+        # untag stories
+        tag_instances.destroy_all
+        product.destroy
+      end
+    end
+    # add new product tags ...
+    new_product_tags.each do |product_id|
+      if product_id.to_i == 0 # new tag
+        self.products.create(name: product_id)
+        # expire cache
+        self.increment_curator_product_select_fragments_memcache_iterator
+      else
+        # do nothing
+      end
+    end
+  end
+
   def create_email_templates
     self.email_templates.destroy_all
     # CSP.email_templates.each do |template|
     Company.find_by(name:'CSP').email_templates.each do |template|
       self.email_templates << template.dup
     end
-  end
-
-  def category_select_options
-    self.story_categories
-        .map do |category|
-          [ category.name, category.id, { data: { slug: category.slug } } ]
-        end.sort
-  end
-
-  # method returns an array of category tags for which
-  # a logo-published story exists for the given company (self)
-  def public_category_select_options
-    StoryCategory.joins(successes: { story: {}, customer: {} })
-                 .where(customers: { company_id: self.id },
-                          stories: { logo_published: true })
-                 .uniq
-                 .map do |category|
-                   [ category.name, category.id, { data: { slug: category.slug } } ]
-                 end.sort.unshift ['All', 0]
-  end
-
-  def product_select_options
-    self.products
-        .map do |product|
-          [ product.name, product.id, { data: { slug: product.slug } } ]
-        end.sort
-  end
-
-  # method returns an array of product tags for which
-  # a logo-published story exists for the given company
-  def public_product_select_options
-    Product.joins(successes: { story: {}, customer: {} })
-           .where(customers: { company_id: self.id },
-                    stories: { logo_published: true })
-           .uniq
-           .map do |product|
-             [ product.name, product.id, { data: { slug: product.slug } } ]
-           end
-           .sort
-           .unshift ['All', 0]
-  end
-
-  def customer_select_options
-    self.customers.map do |customer|
-      # name will appear as a selection, while its id will be the value submitted
-      [ customer.name, customer.id ]
-    end
-    .unshift( [""] )  # empty option makes placeholder possible (only needed for single select)
-  end
-
-
-
-  def story_select_options
-    self.stories.select { |story| story.published }
-                .map { |story| [ story.title, story.id ] }
-                .unshift( ['All', 0] )
   end
 
   def templates_select

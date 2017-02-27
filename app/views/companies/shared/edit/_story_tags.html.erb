@@ -1,6 +1,6 @@
 
-<%= form_tag update_tags_path(company.id), method: 'put', remote: true,
-      id: 'company-update-tags-form' do %>
+<%= form_tag tags_company_path(company), method: 'put', remote: true,
+      id: 'company-tags-form' do %>
 
   <div class="row">
 
@@ -8,10 +8,12 @@
 
       <div class="form-group">
 
-        <%= label_tag 'company_tags[category][]', 'Category tags',
-              class: 'control-label' %>
-        <%= select_tag 'company_tags[category][]',
-              options_for_select(category_select_options, category_pre_selected_options),
+        <%= label_tag 'category_tags[]', 'Category tags', class: 'control-label' %>
+        <%= select_tag 'category_tags[]',
+              options_for_select(
+                company.story_categories.select_options,
+                company.story_categories.pluck(:id)   # all pre-selected
+              ),
               { multiple: 'true', class: 'company-tags form-control',
                 # placeholder: doesn't work from here, set in js
                 style: 'width:100%' } %>
@@ -24,9 +26,12 @@
 
       <div class="form-group">
 
-        <%= label_tag 'Product tags', nil, class: 'control-label' %>
-        <%= select_tag 'company_tags[product][]',
-              options_for_select(product_select_options, product_pre_selected_options),
+        <%= label_tag 'product_tags[]', 'Product tags', class: 'control-label' %>
+        <%= select_tag 'product_tags[]',
+              options_for_select(
+                company.products.select_options,
+                company.products.pluck(:id)   # all pre-selected
+              ),
               { multiple: 'true', class: 'company-tags form-control',
                 style: 'width:100%' } %>
 

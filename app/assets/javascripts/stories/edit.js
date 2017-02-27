@@ -220,50 +220,17 @@ function storiesEditVideoInputHandler () {
 }
 
 function storiesEditCTAsListeners () {
-
   $(document).on('change', '#story-ctas-select',
     function () {
       $('#story-ctas-submit, #story-ctas-reset').prop('disabled', false);
     });
-
 }
 
 function storiesEditTagsListeners () {
-  /*
-    Remember the initial <option>s of the tag select inputs
-    If user cancels changes, revert to these (skipping for now)
-
-    var categoryTagsOptions = $('.select2-selection__rendered').eq(0).html();
-    var categoryTagsVal = $('#story_category_tags_').val();
-    var productCatTags = $('.select2-selection__rendered').eq(1).html();
-    var productTags = $('.select2-selection__rendered').eq(2).html();
-  */
-
-  $(document).on('change', '#story-tags-form select', function (e) {
-
-    if ($('.edit-tags').hasClass('hidden')) {
-      // un-hide the save/cancel buttons
-      $('.edit-tags').removeClass('hidden');
-    }
-    // console.log('category tags on change: ', $('#story_category_tags_').val());
-  });
-
-  // TODO: figure out how to reset select2 inputs
-  // commented code results in error when attempting
-  // to make changes after reset
-  $(document).on('click', '#edit-tags-cancel', function (e) {
-    e.preventDefault();
-    // reset the select input values
-    // $('.select2-selection__rendered').eq(0).html(categoryTagsOptions);
-    // $('#story_category_tags_').val(categoryTagsVal);
-    // $('.select2-selection__rendered').eq(1).html(productCatTags);
-    // $('.select2-selection__rendered').eq(2).html(productTags);
-    // console.log('category tags after cancel: ', $('#story_category_tags_').val());
-    // hide the save/cancel buttons
-    // $('.edit-tags').toggleClass('hidden');
-    // tagsFormDirty = false;
-  });
-
+  $(document).on('change', '.story-tags',
+    function () {
+      $('#story-tags-submit, #story-tags-reset').prop('disabled', false);
+    });
 }
 
 function storiesEditNewContributorListeners () {

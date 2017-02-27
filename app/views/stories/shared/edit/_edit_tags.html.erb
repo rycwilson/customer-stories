@@ -1,26 +1,68 @@
 
-<%= form_tag story_path(story.id), remote: true, method: "put",
-                id: 'story-tags-form', class: 'form-inline' do %>
+<div id='edit-story-tags'>
 
-  <!-- need this in the event all tag fields are empty ... -->
-  <%= hidden_field_tag :story_tags %>
+  <p class='lead'>Tags</p>
+  <div class="well">
+    <div class="container-fluid">
 
-  <div class="form-group col-sm-12" style='margin-bottom:10px'>
-    <%= label_tag "story[category_tags][]", 'Categories', for: 'story_category_tags_' %>
-    <!-- Note the necessary '[]' notation below  -->
-    <!-- if not present, will only return a single value  -->
-    <%= select_tag "story[category_tags][]",
-        options_for_select(categories, categories_pre_select),
-        { multiple: 'true', class: 'story-tags form-control', tabIndex: '-1',
-          style: 'width:100%' } %>
+      <%= form_tag(tags_story_path(story), method: "put", remote: true,
+                   id: 'story-tags-form') do %>
+
+      <div class="row">
+        <div class="col-sm-12">
+          <div class="form-group">
+            <%= label_tag "category_tags[]", 'Categories' %>
+            <!-- Note the necessary '[]' notation below  -->
+            <!-- if not present, will only return a single value  -->
+            <%= select_tag "category_tags[]",
+                options_for_select(
+                  company.story_categories.present? ? company.story_categories.select_options : ['none available'],
+                  { selected: story.category_tags.pluck(:id),
+                    disabled: ['none available'] }
+                ),
+                { multiple: 'true', class: 'story-tags form-control', tabIndex: '-1',
+                  style: 'width:100%' } %>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12">
+
+          <div class="form-group">
+            <%= label_tag "product_tags[]", 'Products' %>
+            <%= select_tag "product_tags[]",
+                options_for_select(
+                  company.products.present? ? company.products.select_options : ['none available'],
+                  { selected: story.product_tags.pluck(:id),
+                    disabled: ['none available'] }
+                ),
+                { multiple: 'true', class: 'story-tags form-control', tabIndex: '-1',
+                  style: 'width:100%' } %>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12">
+
+          <div class="form-group text-right">
+            <span class='ajax-confirm' style='display:none;color:green'>
+              <i class='fa fa-check'></i>
+            </span>&nbsp;
+            <input type='submit' id='story-tags-submit'
+                   class='btn btn-sm btn-primary' value="Save" disabled>&nbsp;
+            <button type="reset" id='story-tags-reset'
+                    class="btn btn-sm btn-default" disabled>Cancel</button>
+          </div>
+
+        </div>
+      </div>
+
+      <% end %>
+
+    </div>
   </div>
 
-  <div class="form-group col-sm-12" style='margin-bottom:10px'>
-    <%= label_tag "story[product_tags][]", 'Products', for: 'story_product_tags_' %>
-    <%= select_tag "story[product_tags][]",
-        options_for_select(products, products_pre_select),
-        { multiple: 'true', class: 'story-tags form-control', tabIndex: '-1',
-          style: 'width:100%' } %>
-  </div>
-
-<% end %>
+</div>

@@ -15,11 +15,7 @@
                { workflow_tab: @workflow_tab, company: @company } %>
 
     <%= render 'companies/shared/curate',
-               { workflow_tab: @workflow_tab,
-                 company: @company,
-                 customer_select_options: @customer_select_options,
-                 category_select_options: @category_select_options,
-                 product_select_options: @product_select_options } %>
+               { company: @company, workflow_tab: @workflow_tab } %>
 
     <%= render 'companies/shared/promote',
                { workflow_tab: @workflow_tab, company: @company } %>

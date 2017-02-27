@@ -4,28 +4,28 @@
 
   <!-- only render if there are at least two distinct tags to choose between -->
   <!-- includes 'All' placeholder (hence 2) -->
-  <% if is_curator && company.category_select_options.length > 2 %>
+  <% if is_curator && company.story_categories.select_options.length > 2 %>
 
     <div class='form-group'>
       <%= label_tag :category_select, "Category", class: 'col-xs-3 control-label' %>
       <div class='col-xs-6'>
        <%= select_tag :category_select,
         options_for_select(
-          company.category_select_options.unshift(["All", 0]),
+          company.story_categories.select_options.unshift(["All", 0]),
           pre_selected_filter[:tag] == 'category' ? [pre_selected_filter[:id]] : []
         ),
         { class: 'stories-filter category-select form-control' } %>
       </div>
     </div>
 
-  <% elsif company.public_category_select_options.length > 2 %>
+  <% elsif company.story_categories.public_select_options.length > 2 %>
 
     <div class='form-group'>
       <%= label_tag :category_select, "Category", class: 'col-xs-3 control-label' %>
       <div class='col-xs-6'>
        <%= select_tag :category_select,
         options_for_select(
-          company.public_category_select_options,
+          company.story_categories.public_select_options,
           pre_selected_filter[:tag] == 'category' ? [pre_selected_filter[:id]] : []
         ),
         { class: 'stories-filter category-select form-control' } %>
@@ -38,28 +38,28 @@
 
 <% cache(product_select_cache_key + '-xs', skip_digest: true) do %>
 
-  <% if is_curator && company.product_select_options.length > 2 %>
+  <% if is_curator && company.products.select_options.length > 2 %>
 
     <div class="form-group">
       <%= label_tag :product_select, "Product", class: 'col-xs-3 control-label' %>
       <div class="col-xs-6">
         <%= select_tag :product_select,
           options_for_select(
-            company.product_select_options.unshift(["All", 0]),
+            company.products.select_options.unshift(["All", 0]),
             pre_selected_filter[:tag] == 'product' ? [pre_selected_filter[:id]] : []
           ),
           { class: 'stories-filter product-select form-control' } %>
       </div>
     </div>
 
-  <% elsif company.public_product_select_options.length > 2 %>
+  <% elsif company.products.public_select_options.length > 2 %>
 
     <div class="form-group">
       <%= label_tag :product_select, "Product", class: 'col-xs-3 control-label' %>
       <div class="col-xs-6">
         <%= select_tag :product_select,
           options_for_select(
-            company.public_product_select_options,
+            company.products.public_select_options,
             pre_selected_filter[:tag] == 'product' ? [pre_selected_filter[:id]] : []
           ),
           { class: 'stories-filter product-select form-control' } %>

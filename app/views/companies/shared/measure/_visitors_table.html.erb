@@ -2,10 +2,10 @@
 <div id='measure-visitors'>
 
   <%= render 'companies/shared/measure/filter_form',
-              { form_id: 'visitors-filter-form',
+              { company: company,
+                form_id: 'visitors-filter-form',
                 form_path: measure_visitors_path,
                 story_select_id: 'visitors-story-select',
-                story_select_options: story_select_options,
                 date_range_input_id: 'visitors-date-range-input' } %>
 
   <table id='measure-visitors-table' width='100%'
