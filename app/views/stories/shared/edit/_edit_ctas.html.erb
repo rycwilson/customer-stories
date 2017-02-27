@@ -15,8 +15,10 @@
               <!-- <label for="#story-ctas-select"></label> -->
 
       <%= select_tag 'ctas[]',
-            grouped_options_for_select(company.ctas.select_options, story.ctas.pluck(:id)),
-            { id: 'story-ctas-select', class: 'form-control', multiple: true } %>
+            grouped_options_for_select(
+              company.ctas.select_options,
+              { selected: story.ctas.pluck(:id), disabled: ['none available'] }
+            ), { id: 'story-ctas-select', class: 'form-control', multiple: true } %>
 
             </div>
 
@@ -27,7 +29,7 @@
               <input type='submit' id='story-ctas-submit'
                      class='btn btn-sm btn-primary' value="Save" disabled>&nbsp;
               <button type="reset" id='story-ctas-reset'
-                      class="btn btn-default" disabled>Cancel</button>
+                      class="btn btn-sm btn-default" disabled>Cancel</button>
             </div>
 
           <% end %>
