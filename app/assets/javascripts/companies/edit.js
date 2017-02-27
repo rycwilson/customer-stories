@@ -7,6 +7,11 @@ function companiesEditListeners () {
   templateEditorListeners();
   storyTagsListeners();
   storyCTAsListeners();
+
+  $(document).on('click', '.nav-layout-sidebar a',
+    function () {
+
+    });
 }
 
 function storyTagsListeners () {
