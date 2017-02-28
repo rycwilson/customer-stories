@@ -13,6 +13,8 @@
 
   <%= form_tag cta_path(cta), method: :put, remote: true do %>
 
+    <%= hidden_field_tag 'cta[type]', cta.type %>
+
     <% if is_primary %>
 
       <%= hidden_field_tag :is_primary, true %>

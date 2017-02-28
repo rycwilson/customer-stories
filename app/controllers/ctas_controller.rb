@@ -35,13 +35,13 @@ class CtasController < ApplicationController
   def update
     @is_primary = params[:is_primary]
     @cta = CallToAction.find( params[:id] )
-    if params[:link_url]
+    if params['cta']['type'] == 'CTALink'
       @cta.update(
         description: params['cta']['description'],
         display_text: params['cta']['display_text'],
         link_url: params['cta']['link_url']
       )
-    else
+    elsif params['cta']['type'] == 'CTAForm'
       @cta.update(
         description: params['cta']['description'],
         display_text: params['cta']['display_text'],
