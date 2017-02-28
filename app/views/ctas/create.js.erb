@@ -13,6 +13,16 @@
   } else {
     $('#secondary-ctas').prepend( template({ cta: cta, isPrimary: false }) );
   }
-  $('#new-cta-form')[0].reset();
+
+  // add the form html via $.text so it's properly html-escaped
+  // (the underscore template will leave the field blank)
+  if (cta.type === 'CTAForm') {
+    $('li[data-cta-id="' + cta.id + '"] textarea').text(cta.form_html)
+  }
+
+  // reset everything except the radio buttons (don't want toggle action)
+  $('#new-cta-form').find('input, textarea').not('[name="new_cta[type]"]')
+      .each(function () { this.value = this.defaultValue; })
+  $('#new-cta-submit, #new-cta-reset').prop('disabled', true);
 
 }());

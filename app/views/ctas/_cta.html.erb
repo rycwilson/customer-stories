@@ -62,7 +62,7 @@
 
       <div class="form-group" style='margin-bottom: 10px'>
         <%= label_tag 'cta[form_html]', 'HTML' %>
-        <%= text_field_tag 'cta[form_html]', cta.form_html,
+        <%= text_area_tag 'cta[form_html]', cta.form_html, rows: 3,
               placeholder: 'html, e.g. <script> and <form> tags',
               class: 'form-control' %>
       </div>

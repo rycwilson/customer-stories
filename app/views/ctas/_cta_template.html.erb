@@ -121,9 +121,10 @@
 
           <div class="form-group" style='margin-bottom: 10px'>
             <label for='cta_form_html'>HTML</label>
-            <input type='text' id='cta_form_html' class='form-control'
-                   name='cta[form_html]' value='{{= cta.form_html }}'
-                   placeholder='html, e.g. <script> and <form> tags'
+            <textarea id='cta_form_html' class='form-control' rows='3'
+                      name='cta[form_html]' value=''
+                      placeholder='html, e.g. <script> and <form> tags'>
+            </textarea>
           </div>
 
         {{ } }}

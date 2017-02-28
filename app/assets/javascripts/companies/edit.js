@@ -46,11 +46,6 @@ function storyCTAsListeners () {
       function () {
         $('.link-input,.html-input').toggle();
         $('.link-input,.html-input').val('');
-        if ($('#cta_type').val() === 'CTALink') {
-          $('#cta_type').val('CTAForm');
-        } else if ($('#cta_type').val() === 'CTAForm') {
-          $('#cta_type').val('CTALink');
-        }
       })
     .on('input', '#new-cta-form',
       function () {

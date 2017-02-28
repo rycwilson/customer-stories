@@ -1,7 +1,7 @@
 class CtasController < ApplicationController
 
   before_action only: [:create, :update] do
-    @is_primary = params[:is_primary]
+    @is_primary = params['new_cta']['is_primary']
   end
 
   # return html for cta forms
@@ -12,8 +12,8 @@ class CtasController < ApplicationController
 
   def create
     @company = Company.find( params[:company_id] )
-    case params[:cta_type]
-    when 'CTALink'
+    case params['new_cta']['type']
+    when 'Link'
       @cta = CTALink.create(
                        description: params['new_cta']['link_description'],
                        display_text: params['new_cta']['link_display_text'],
@@ -21,7 +21,7 @@ class CtasController < ApplicationController
                        company_id: @company.id,
                        company_primary: @is_primary
                      )
-    when 'CTAForm'
+    when 'Web form'
       @cta = CTAForm.create(
                        description: params['new_cta']['form_description'],
                        display_text: params['new_cta']['form_display_text'],
