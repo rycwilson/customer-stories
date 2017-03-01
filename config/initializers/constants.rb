@@ -47,3 +47,7 @@ SAUCELABS_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-asset
 
 CCE_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/cce/cce_400x400.png"
 CCE_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/cce/cce_300x160.png"
+
+ZENIQ_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/zeniq/zeniq_400x400.png"
+ZENIQ_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/zeniq/zeniq_300x160.png"
+

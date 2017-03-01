@@ -107,6 +107,9 @@ module StoriesHelper
     when 'centerforcustomerengagement'
       provider == 'all' ? (image = CCE_400X400_URL) :
                           (image = CCE_300X160_URL) # linkedin
+    when 'zeniq'
+      provider == 'all' ? (image = ZENIQ_400X400_URL) :
+                          (image = ZENIQ_300X160_URL) # linkedin
     else
       width = '1200'
       height = '630'
