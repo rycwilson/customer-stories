@@ -8,10 +8,6 @@ function companiesEditListeners () {
   storyTagsListeners();
   storyCTAsListeners();
 
-  $(document).on('click', '.nav-layout-sidebar a',
-    function () {
-
-    });
 }
 
 function storyTagsListeners () {

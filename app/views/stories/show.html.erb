@@ -18,10 +18,31 @@
 
 <%= render 'stories/shared/video_modal' %>
 
-<%# unless @is_curator %>
-  <%#= render 'widgets/more_stories_widget',
+<!-- <div id='social-share-side-btns'>
+  <div>
+    <a href="<%#= LINKEDIN_SHARE_URL + @story.csp_story_url %>" target="_blank"
+       class="icon-button linkedin-share">
+      <i class="fa fa-linkedin"></i><span></span>
+    </a>
+  </div>
+  <div>
+    <a href="<%#= TWITTER_SHARE_URL + @story.csp_story_url %>" target="_blank"
+       class="icon-button twitter-share">
+      <i class="fa fa-twitter"></i><span></span>
+    </a>
+  </div>
+  <div>
+    <a href="<%#= FACEBOOK_SHARE_URL + @story.csp_story_url %>" target="_blank"
+       class="icon-button facebook-share">
+      <i class="fa fa-facebook"></i><span></span>
+    </a>
+  </div>
+</div> -->
+
+<% unless @is_curator %>
+  <%= render 'widgets/more_stories_widget',
              { company: @company, stories: @more_stories } %>
-<%# end %>
+<% end %>
 
 <% @story.ctas.forms.each do |form| %>
 

@@ -1,5 +1,9 @@
 module ApplicationHelper
 
+  def admin_navbar? controller
+    ['companies', 'stories', 'profile'].include?(controller)
+  end
+
   # don't go over 63!
   def header_title_max_height company
     case company.subdomain

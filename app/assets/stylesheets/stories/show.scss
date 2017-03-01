@@ -1,6 +1,12 @@
 
 .stories.show {
 
+  #social-share-side-btns {
+    position: fixed;
+    width: 38px;
+    right: 50px;
+  }
+
   #related-stories {
     padding-bottom: 15px;
     .row {
