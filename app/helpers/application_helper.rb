@@ -1,5 +1,38 @@
 module ApplicationHelper
 
+  # don't go over 63!
+  def header_title_max_height company
+    case company.subdomain
+    when 'trunity'
+      '63px'
+    when 'compas'
+      '56px'
+    when 'varmour'
+      '63px'
+    when 'centerforcustomerengagement'
+      '56px'
+    when 'zeniq'
+      '60px'
+    when 'corefact'
+      '40px'
+    when 'saucelabs'
+      '60px'
+    when 'juniper'
+      '60px'
+    when 'neonova'
+      '63px'
+    when 'kodacon'
+      '60px'
+    when 'zoommarketing'
+      '50px'
+    when 'acme-test'
+      '60px'
+    else
+      '60px'
+    end
+
+  end
+
   def include_gon? controller, action
     controller == 'stories' && ['index', 'show', 'edit'].include?(action) ||
     controller == 'companies' && ['show', 'edit'].include?(action) ||
