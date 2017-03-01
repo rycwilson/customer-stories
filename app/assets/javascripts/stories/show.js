@@ -61,7 +61,7 @@ function clickyListeners () {
   };
 
   $(document)
-    .on('click', '.company-logo', { type: 'logo' }, clickyLog)
+    .on('click', '.company-logo-clicky', { type: 'logo' }, clickyLog)
     .on('click', '.cta-link', { type: 'cta-link' }, clickyLog)
     .on('click', '.cta-form', { type: 'cta-form' }, clickyLog)
     .on('click', '.linkedin-share, .twitter-share, .facebook-share',

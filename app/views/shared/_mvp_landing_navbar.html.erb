@@ -1,10 +1,10 @@
 
 <%= render 'shared/flash' %>
 
-<nav class='navbar navbar-default' role="banner">
+<nav class='navbar navbar-default landing' role="banner">
   <div class="container">
 
-    <div class="navbar-header" style='margin-top:0.4%; margin-bottom:1%'>
+    <div class="navbar-header">
 
       <button class="navbar-toggle collapsed" type="button"
               data-toggle="collapse" data-target=".navbar-collapse">
@@ -12,9 +12,8 @@
         <i class="fa fa-bars"></i>
       </button>
 
-      <%= link_to root_path do %>
-        <%= image_tag 'mvp-landing/logo_full.png',
-            { class: 'navbar-brand', alt: 'CSP Logo' } %>
+      <%= link_to root_path, class: 'navbar-brand' do %>
+        <%= image_tag 'mvp-landing/logo_full.png', { alt: 'CSP Logo' } %>
       <% end %>
 
     </div> <!-- /.navbar-header -->

@@ -9,16 +9,21 @@
 
   <% if user_signed_in? && current_user.company_id.present? %>
 
-    <%= link_to File.join( request.protocol + current_user.company.subdomain +
-                           "." + request.domain + request.port_string,
-                           company_path(current_user.company_id) ) do %>
+    <li>
+      <%= link_to(
+            company_url(
+              subdomain: current_user.company.subdomain,
+              id: current_user.company_id
+            ),
+            class: 'navbar-brand' ) do %>
 
-      <% if current_user.company.logo_url.present? %>
-        <%= image_tag current_user.company.logo_url, class: 'navbar-brand navbar-brand-img' %>
-      <% else %>
-        <%= image_tag 'company-logo-missing.png', class: 'navbar-brand navbar-brand-img' %>
+        <% if current_user.company.logo_url.present? %>
+          <%= image_tag current_user.company.logo_url %>
+        <% else %>
+          <%= image_tag 'company-logo-missing.png' %>
+        <% end %>
       <% end %>
-    <% end %>
+    </li>
 
   <% else %>
 

@@ -1,0 +1,78 @@
+
+
+/***********************************************/
+/*          admin navbar
+/***********************************************/
+
+.fa-bars {
+  color: #555555;
+}
+
+.navbar.landing {
+
+  .navbar-brand {
+    img {
+      max-height: 100%
+    }
+  }
+  .navbar-right .navbar-brand {
+    padding-left: 26px;
+    line-height: 20px;          // for centering image vertically (matches font of adjacent items)
+    img {
+      display: inline-block;    // for centering image vertically
+      vertical-align: middle;   // for centering image vertically
+      margin: auto;             // for centering image vertically
+    }
+  }
+}
+
+.navbar.admin {
+  /* color1, color2, and text color are defined in company model */
+  /* background-color set to transparent in mvpready-admin.css */
+  background-clip: border-box;
+  border:0;
+  height: 65px;
+
+  .navbar-header {
+      line-height: 65px;          // for centering image vertically
+    .navbar-brand {
+      padding-right: 28px;
+      line-height: 65px;          // for centering image vertically
+      img {
+        display: inline-block;    // for centering image vertically
+        vertical-align: middle;   // for centering image vertically
+        margin: auto;             // for centering image vertically
+        max-height: 75%;
+      }
+    }
+    span {
+      font-size: 24px;
+      max-height: 60px;
+      font-family: 'Lato';
+      display: inline-block;    // for centering image vertically
+      vertical-align: middle;   // for centering image vertically
+      margin: auto;
+    }
+
+    @media (max-width: 550px) {
+      span {
+        display: none;
+      }
+    }
+  }
+
+}
+
+#primary-cta-btn {
+  margin-top: 15px;
+  font-weight: 400;
+  border-radius: 2px;
+  border: 1px solid;
+  min-width: 140px
+}
+
+#primary-cta-btn:hover, #primary-cta-btn:focus {
+  border: 1px solid;
+  box-shadow: 0 0 0 1px #fff inset;
+  outline: none !important;
+}
