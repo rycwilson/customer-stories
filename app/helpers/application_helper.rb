@@ -14,7 +14,7 @@ module ApplicationHelper
     when 'varmour'
       '63px'
     when 'centerforcustomerengagement'
-      '56px'
+      '54px'
     when 'zeniq'
       '60px'
     when 'corefact'

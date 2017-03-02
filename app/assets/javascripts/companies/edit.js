@@ -7,7 +7,59 @@ function companiesEditListeners () {
   templateEditorListeners();
   storyTagsListeners();
   storyCTAsListeners();
+  widgetConfigListeners();
 
+}
+
+function widgetConfigListeners () {
+
+
+  $(document)
+    .on('change', '[id="widget_config_open_on_load_true"], [id^="widget_config_open_on_load_false"]',
+      function () {
+        if ($(this).val() === 'true') {
+          $('[id^="widget_config_open_on_load_timeout"]').prop('disabled', false);
+        } else {
+          $('[id^="widget_config_open_on_load_timeout"]').prop('disabled', true);
+        }
+      })
+    .on('change', '[id="widget_config_open_on_load_timeout_true"], [id="widget_config_open_on_load_timeout_false"]',
+      function () {
+        if ($(this).val() === 'true') {
+          $('#widget_config_timeout_delay').prop('disabled', false);
+        } else {
+          $('#widget_config_timeout_delay').prop('disabled', true);
+        }
+      })
+    // ref http://bootsnipp.com/snippets/featured/input-spinner-with-min-and-max-values
+    .on('click', '.spinner .btn:first-of-type',
+      function() {
+        if ($(this).parent().prev().attr('id') === 'widget_config_timeout_delay' &&
+            $('#widget_config_timeout_delay').prop('disabled') === true) {
+          return false;
+        }
+        var btn = $(this), step = 100;
+        var input = btn.closest('.spinner').find('input');
+        if (input.attr('max') === undefined || parseInt(input.val()) < parseInt(input.attr('max'))) {
+          input.val(parseInt(input.val(), 10) + step);
+        } else {
+          btn.next("disabled", true);
+        }
+      })
+    .on('click', '.spinner .btn:last-of-type',
+      function() {
+        if ($(this).parent().prev().attr('id') === 'widget_config_timeout_delay' &&
+            $('#widget_config_timeout_delay').prop('disabled') === true) {
+          return false;
+        }
+        var btn = $(this), step = 100;
+        var input = btn.closest('.spinner').find('input');
+        if (input.attr('min') === undefined || parseInt(input.val()) > parseInt(input.attr('min'))) {
+          input.val(parseInt(input.val(), 10) - step);
+        } else {
+          btn.prev("disabled", true);
+        }
+      });
 }
 
 function storyTagsListeners () {

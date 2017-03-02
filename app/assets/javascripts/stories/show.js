@@ -10,7 +10,7 @@ function storiesShow () {
 
 function initMoreStories () {
 
-  $('#more-stories').imagesLoaded(function (a, b, c) {
+  $('#more-stories').imagesLoaded(function () {
       slideDrawerPlugin();
       moreStoriesScrollHandlers();
       centerLogos();

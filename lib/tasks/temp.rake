@@ -2,6 +2,10 @@ namespace :temp do
 
   desc "temp stuff"
 
+  task make_widget_configs: :environment do
+    Company.all.each { |company| company.create_widget_config }
+  end
+
   task cta: :environment do
 
     # OutboundAction -> CallToAction

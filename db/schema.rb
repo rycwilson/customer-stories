@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170222200625) do
+ActiveRecord::Schema.define(version: 20170301222922) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -400,6 +400,21 @@ ActiveRecord::Schema.define(version: 20170222200625) do
 
   add_index "visitors", ["clicky_uid"], name: "index_visitors_on_clicky_uid", unique: true, using: :btree
 
+  create_table "widget_configs", force: :cascade do |t|
+    t.integer  "company_id"
+    t.string   "tab_size",             default: "small"
+    t.integer  "load_delay",           default: 3000
+    t.boolean  "open_on_load",         default: false
+    t.boolean  "open_on_load_timeout", default: false
+    t.integer  "timeout_delay",        default: 3000
+    t.string   "tab_color",            default: "#ddd"
+    t.string   "text_color",           default: "#333"
+    t.datetime "created_at",                             null: false
+    t.datetime "updated_at",                             null: false
+  end
+
+  add_index "widget_configs", ["company_id"], name: "index_widget_configs_on_company_id", using: :btree
+
   add_foreign_key "call_to_actions", "companies"
   add_foreign_key "contributions", "successes"
   add_foreign_key "contributions", "users"
@@ -434,4 +449,5 @@ ActiveRecord::Schema.define(version: 20170222200625) do
   add_foreign_key "visitor_actions", "successes"
   add_foreign_key "visitor_actions", "visitor_sessions"
   add_foreign_key "visitor_sessions", "visitors"
+  add_foreign_key "widget_configs", "companies"
 end

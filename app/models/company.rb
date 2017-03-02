@@ -105,11 +105,16 @@ class Company < ActiveRecord::Base
       grouped_options
     end
   end
+  has_one :widget_config, dependent: :destroy
 
   # presently uploading direct to S3, paperclip not used
   # paperclip
   has_attached_file :logo, styles: { medium: "300x300>", thumb: "100x100>" }, default_url: "companies/:style/missing_logo.png"
   validates_attachment_content_type :logo, content_type: /\Aimage\/.*\Z/
+
+  after_commit on: :create do
+    self.create.widget_config
+  end
 
   after_commit :expire_fragment_cache, on: :update,
     if: Proc.new { |company|

@@ -64,12 +64,23 @@ class CompaniesController < ApplicationController
     respond_to { |format| format.js }
   end
 
+  def widget_config
+    @company.widget_config.update(widget_config_params)
+    respond_to { |format| format.js }
+  end
+
   private
 
   def company_params
     params.require(:company)
           .permit(:name, :subdomain, :logo_url, :header_color_1,
                   :header_color_2, :header_text_color, :website, :gtm_id)
+  end
+
+  def widget_config_params
+    params.require(:widget_config)
+          .permit(:load_delay, :open_on_load, :open_on_load_timeout, :timeout_delay,
+                  :tab_size, :tab_color, :text_color)
   end
 
   def set_company

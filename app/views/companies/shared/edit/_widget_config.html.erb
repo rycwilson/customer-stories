@@ -1,0 +1,132 @@
+
+<div class="row">
+  <div class="col-sm-6">
+
+    <%= form_for widget_config, url: widget_config_company_path(company),
+          method: :put, remote: true do |f| %>
+
+      <div class="form-group">
+        <div class="row color-picker">
+          <div class="col-sm-6">
+            <%= f.label :tab_color, 'Tab color', class: 'control-label' %>
+            <%= f.text_field :tab_color, class: 'form-control mini-colors' %>
+          </div>
+          <div class="col-sm-6">
+            <%= f.label :text_color, 'Text color', class: 'control-label' %>
+            <%= f.text_field :text_color, class: 'form-control mini-colors' %>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <div class="col-sm-6">
+          <label>Tab size</label>
+        </div>
+        <div class='btn-group col-sm-6' data-toggle="buttons">
+          <%= f.label :tab_size, class: 'radio-inline' do %>
+            <%= f.radio_button :tab_size, 'small' %>
+            Small
+          <% end %>
+          <%= f.label :tab_size, class: 'radio-inline' do %>
+            <%= f.radio_button :tab_size, 'large' %>
+            Large
+          <% end %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <!-- <label for="">Delay (milliseconds)</label> -->
+        <div class="row" style='display:flex;align-items:center'>
+          <div class="col-sm-6">
+            <%= f.label :load_delay, 'Show tab after (milliseconds)' %>
+          </div>
+          <div class="col-sm-6">
+            <div class="input-group spinner">
+              <%= f.text_field :load_delay, min: '0', class: 'form-control' %>
+              <div class="input-group-btn-vertical">
+                <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+                <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm-6">
+            <label>Open automatically</label>
+          </div>
+          <div class='col-sm-6 btn-group' data-toggle="buttons">
+              <%= f.label :open_on_load, class: 'radio-inline' do %>
+                <%= f.radio_button :open_on_load, true %>
+                Yes
+              <% end %>
+              <%= f.label :open_on_load, class: 'radio-inline' do %>
+                <%= f.radio_button :open_on_load, false %>
+                No
+              <% end %>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-6">
+            <label>Close automatically</label>
+          </div>
+          <div class='col-sm-6 btn-group' data-toggle="buttons">
+            <%= f.label :open_on_load_timeout, class: 'radio-inline' do %>
+              <%= f.radio_button :open_on_load_timeout, true,
+                                 disabled: !widget_config.open_on_load? %>
+              Yes
+            <% end %>
+            <%= f.label :open_on_load_timeout, class: 'radio-inline' do %>
+              <%= f.radio_button :open_on_load_timeout, false,
+                                 disabled: !widget_config.open_on_load? %>
+              No
+            <% end %>
+          </div>
+        </div>
+
+        <div class="row" style='display:flex;align-items:center'>
+          <div class="col-sm-6">
+            <%= f.label :timeout_delay, 'Close after (milliseconds)' %>
+          </div>
+          <div class="col-sm-6">
+            <div class="input-group spinner">
+              <%= f.text_field :timeout_delay, min: '0', class: 'form-control',
+                               disabled: !widget_config.open_on_load? ||
+                                         !widget_config.open_on_load_timeout? %>
+              <div class="input-group-btn-vertical">
+                <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+                <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <hr>
+
+      <div class="form-group text-right">
+
+        <span class='ajax-confirm' style='display:none;color:green'>
+          <i class='fa fa-check'></i>
+        </span>&nbsp;
+        <input type='submit' id='widget-config-form-submit' class='btn btn-primary'
+               value='Save'>
+        <button type="reset" id='widget-config-form-reset' class="btn btn-default">
+          Cancel
+        </button>
+
+      </div>
+
+    <% end %>
+
+  </div>
+
+  <div class="col-sm-6">
+
+
+  </div>
+
+</div>
