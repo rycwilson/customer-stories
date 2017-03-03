@@ -22,7 +22,8 @@
     $(function () {
 
       var tabColor = $('#cs-script').data('tab-color'),
-          fontColor = $('#cs-script').data('font-color'),
+          // old attribute name for legacy users
+          textColor = $('#cs-script').data('text-color') || $('#cs-script').data('font-color'),
           categoryFilter = $('#cs-script').data('category'),
           productFilter = $('#cs-script').data('product'),
           delay = $('#cs-script').data('delay'),
@@ -51,7 +52,7 @@
           url: "<%= URI.join(root_url, widget_data_path) %>",
           dataType: 'jsonp',
           data: { tabColor: tabColor,
-                  fontColor: fontColor,
+                  textColor: textColor,
                   category: categoryFilter,
                   product: productFilter },
           success: function (data) {

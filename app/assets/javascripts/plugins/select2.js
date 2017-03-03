@@ -53,7 +53,19 @@ function initSelect2 () {
 
   $('.templates-select').select2({
     theme: 'bootstrap',
-    placeholder: 'select a template ...'
+    placeholder: 'select template'
+  });
+
+  $('.widget-filter-category').select2({
+    theme: 'bootstrap',
+    placeholder: 'select category',
+    width: 'style'
+  });
+
+  $('.widget-filter-product').select2({
+    theme: 'bootstrap',
+    placeholder: 'select product',
+    width: 'style'
   });
 
   // has the curate tab content been rendered?

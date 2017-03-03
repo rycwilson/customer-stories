@@ -402,15 +402,16 @@ ActiveRecord::Schema.define(version: 20170301222922) do
 
   create_table "widget_configs", force: :cascade do |t|
     t.integer  "company_id"
-    t.string   "tab_size",             default: "small"
-    t.integer  "load_delay",           default: 3000
-    t.boolean  "open_on_load",         default: false
-    t.boolean  "open_on_load_timeout", default: false
-    t.integer  "timeout_delay",        default: 3000
-    t.string   "tab_color",            default: "#ddd"
-    t.string   "text_color",           default: "#333"
-    t.datetime "created_at",                             null: false
-    t.datetime "updated_at",                             null: false
+    t.string   "tab_size",      default: "small"
+    t.integer  "delay",         default: 3000
+    t.boolean  "show",          default: false
+    t.boolean  "timeout",       default: false
+    t.integer  "timeout_count", default: 3000
+    t.string   "tab_color",     default: "#ddd"
+    t.string   "text_color",    default: "#333"
+    t.string   "filter",        default: "none"
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
   end
 
   add_index "widget_configs", ["company_id"], name: "index_widget_configs_on_company_id", using: :btree

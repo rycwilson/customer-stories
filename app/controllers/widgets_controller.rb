@@ -36,7 +36,7 @@ class WidgetsController < ApplicationController
   # if invalid category or product filters, return all stories
   def widget_html params
     tab_color = params[:tabColor]
-    font_color = params[:fontColor]
+    text_color = params[:textColor]
     # TODO: allow for both category and product filters
     filter_attributes = params[:category].present? ?
                             { tag: 'category', slug: params[:category] } :
@@ -57,7 +57,7 @@ class WidgetsController < ApplicationController
 
     html = "<section class='cs-drawer' style='visibility:hidden'>
               <header class='text-center'
-                style='background-color:#{tab_color};color:#{font_color}'>
+                style='background-color:#{tab_color};color:#{text_color}'>
                 Customer Stories&nbsp;
                 <i class='fa fa-chevron-up'></i><i class='fa fa-chevron-down' style='display:none'></i>
               </header>
