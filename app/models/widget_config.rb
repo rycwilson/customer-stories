@@ -2,19 +2,24 @@ class WidgetConfig < ActiveRecord::Base
 
   belongs_to :company
 
-  def header_style tab_size, is_csp
-    case tab_size
+  def tab_style options, is_csp
+    tab_color = options[:tab_color] || self.tab_color
+    text_color = options[:text_color] || self.text_color
+    case options[:tab_size]
     when 'small'
-      width = is_csp ? '140px' : '170px'
+      width = is_csp ? '140px' : '170px'  # different widths for different text content
       height = line_height = '24px'
       font_size = '16px'
     when 'large'
       width = is_csp ? '206px' : '254px'
       height = line_height = '36px'
       font_size = '24px'
-    else
+    else  # default small
+      width = is_csp ? '140px' : '170px'
+      height = line_height = '24px'
+      font_size = '16px'
     end
-    "background-color:#{self.tab_color};color:#{self.text_color};height:#{height};width:#{width};line-height:#{line_height};font-size:#{font_size};"
+    "background-color:#{tab_color};color:#{text_color};height:#{height};width:#{width};line-height:#{line_height};font-size:#{font_size};"
   end
 
 end

@@ -52,9 +52,7 @@
         $.ajax({
           url: "<%= URI.join(root_url, widget_data_path) %>",
           dataType: 'jsonp',
-          data: { tabSize: tabSize,
-                  tabColor: tabColor,
-                  textColor: textColor,
+          data: { tab_options: { tab_size: tabSize, tab_color: tabColor, text_color: textColor },
                   category: category,
                   product: product },
           success: function (data) {
