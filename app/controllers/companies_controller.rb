@@ -79,8 +79,7 @@ class CompaniesController < ApplicationController
 
   def widget_config_params
     params.require(:widget_config)
-          .permit(:load_delay, :open_on_load, :open_on_load_timeout, :timeout_delay,
-                  :tab_size, :tab_color, :text_color)
+          .permit(:tab_color, :text_color, :tab_size, :delay, :show, :timeout, :timeout_count)
   end
 
   def set_company

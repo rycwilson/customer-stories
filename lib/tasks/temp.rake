@@ -3,7 +3,39 @@ namespace :temp do
   desc "temp stuff"
 
   task make_widget_configs: :environment do
-    Company.all.each { |company| company.create_widget_config }
+    Company.all.each do |company|
+      case company.subdomain
+      when 'trunity'
+        tab_color = '#FEBE57'
+      when 'compas'
+        tab_color = '#e55f53'
+      when 'varmour'
+        tab_color = '#60ccf3'
+      when 'centerforcustomerengagement'
+        tab_color = '#007fc5'
+      when 'zeniq'
+        tab_color = '#364150'
+      when 'corefact'
+        tab_color = '#1f9421'
+      when 'saucelabs'
+        tab_color = '#e2231a'
+      when 'juniper'
+        tab_color = '#3493c1'
+      when 'neonova'
+        tab_color = '#669bb2'
+      when 'kodacon'
+        tab_color = '#85cee6'
+      when 'zoommarketing'
+        tab_color = '#9e61a8'
+      when 'modeanalytics'
+        tab_color = '#37b067'
+      when 'acme-test'
+        tab_color = '#ff0000'
+      else
+        tab_color = 'rgb(14, 122, 254)'
+      end
+      company.create_widget_config(tab_color: tab_color, text_color:'#ffffff')
+    end
   end
 
   task cta: :environment do

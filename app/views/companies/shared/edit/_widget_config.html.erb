@@ -74,13 +74,11 @@
           </div>
           <div class='col-sm-6 btn-group text-right' data-toggle="buttons">
             <%= f.label :timeout, class: 'radio-inline' do %>
-              <%= f.radio_button :timeout, true,
-                                 disabled: !widget_config.show? %>
+              <%= f.radio_button :timeout, true, disabled: !widget_config.show? %>
               Yes
             <% end %>
             <%= f.label :timeout, class: 'radio-inline' do %>
-              <%= f.radio_button :timeout, false,
-                                 disabled: !widget_config.show? %>
+              <%= f.radio_button :timeout, false, disabled: !widget_config.show? %>
               No
             <% end %>
           </div>
@@ -177,8 +175,8 @@
       <p class="lead">Story page Widget</p>
       <p>Settings will apply to all story pages on customerstories.net</p>
       <input type='submit' form='<%= "edit_widget_config_#{widget_config.id}"  %>'
-             id='widget-config-form-submit' class='btn btn-primary' value='Save Configuration'>
-      <span class='ajax-confirm' style='display:none;color:green'>
+             id='widget-config-form-submit' class='btn btn-primary' value='Save Configuration'>&nbsp;&nbsp;
+      <span class='ajax-confirm' style='display:none;color:#5cb85c'>
             <i class='fa fa-check'></i>
           </span>&nbsp;
     </div>
@@ -193,7 +191,7 @@
         Generate HTML
       </button>
       <textarea class='form-control' id="widget-html"
-          style='width:100%;visibility:hidden' rows="8" readonly><script id='cs-script' type='text/javascript' src='//<%= company.subdomain %>.<%= ENV["HOST_NAME"] %>/widget/cs.js' data-tab-color='' data-text-color='' data-category='' data-product='' data-delay='' data-show='' data-timeout='' data-timeout-count=''></script>
+          style='width:100%;visibility:hidden' rows="8" readonly><script id='cs-script' type='text/javascript' src='//<%= company.subdomain %>.<%= ENV["HOST_NAME"] %>/widget/cs.js' data-tab-size='' data-tab-color='' data-text-color='' data-delay='' data-show='' data-timeout='' data-timeout-count='' data-category='' data-product=''></script>
 <div id='cs-container' class='cs-widget'></div></textarea>
     </div>
 

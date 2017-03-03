@@ -24,12 +24,13 @@
       var tabColor = $('#cs-script').data('tab-color'),
           // old attribute name for legacy users
           textColor = $('#cs-script').data('text-color') || $('#cs-script').data('font-color'),
-          categoryFilter = $('#cs-script').data('category'),
-          productFilter = $('#cs-script').data('product'),
+          tabSize = $('#cs-script').data('tab-size'),
           delay = $('#cs-script').data('delay'),
           showDrawer = $('#cs-script').data('show') || false,
           timeout = $('#cs-script').data('timeout') || false,
           timeoutCount = $('#cs-script').data('timeout-count'),
+          category = $('#cs-script').data('category'),
+          product = $('#cs-script').data('product'),
           $widgetStylesheet = $("<link>", {
             rel: "stylesheet",
             type: "text/css",
@@ -51,10 +52,11 @@
         $.ajax({
           url: "<%= URI.join(root_url, widget_data_path) %>",
           dataType: 'jsonp',
-          data: { tabColor: tabColor,
+          data: { tabSize: tabSize,
+                  tabColor: tabColor,
                   textColor: textColor,
-                  category: categoryFilter,
-                  product: productFilter },
+                  category: category,
+                  product: product },
           success: function (data) {
             $('#cs-container').html(data.html);
             // wait for all images to load so dimension calculations are correct ...

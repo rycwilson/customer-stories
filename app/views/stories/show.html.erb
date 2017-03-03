@@ -39,10 +39,10 @@
   </div>
 </div> -->
 
-<%# unless @is_curator %>
-  <%#= render 'widgets/more_stories_widget',
-             { company: @company, stories: @more_stories } %>
-<%# end %>
+<% unless @is_curator %>
+  <%= render 'widgets/more_stories_widget',
+        { widget: @company.widget_config, stories: @more_stories, is_csp: true } %>
+<% end %>
 
 <% @story.ctas.forms.each do |form| %>
 

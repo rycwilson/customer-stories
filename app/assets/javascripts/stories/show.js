@@ -4,31 +4,32 @@ function storiesShow () {
   loadVideoThumbnail();
   widgetsMonitor();
   clickyListeners();
-  setTimeout(initMoreStories, 3000);
-
+  setTimeout(initMoreStories, app.company.widget_config.delay);
 }
 
 function initMoreStories () {
 
+  slideDrawerPlugin();  // define the jquery plugin
+
   $('#more-stories').imagesLoaded(function () {
-      slideDrawerPlugin();
-      moreStoriesScrollHandlers();
-      centerLogos();
-      // if user is using a mouse, this will hose dimensions
-      // (in a somewhat random way)
-      // compensate for this ...
-      if ($('.cs-drawer-content').css('height') !== '141px') {
-        $('.cs-drawer-content').css('height', '141px');
-        $('.cs-drawer-items').css('height', '141px');
-      }
-      $('#more-stories').slideDrawer({
-        showDrawer: false, // drawer is hidden on page load
-        slideTimeout: true, // Sets the drawer to slide down after set count if set to true.
-        slideSpeed: 600, // Slide drawer speed.
-        slideTimeoutCount: 3000 // How long to wait before sliding drawer slides down.
-      });
-      $('#more-stories').css({ opacity: 0, visibility: "visible" })
-                        .animate({ opacity: 1 }, 200);
+    moreStoriesScrollHandlers();
+    centerLogos();
+    // if user is using a mouse, this will hose dimensions
+    // (in a somewhat random way)
+    // compensate for this ...
+    if ($('.cs-drawer-content').css('height') !== '141px') {
+      $('.cs-drawer-content').css('height', '141px');
+      $('.cs-drawer-items').css('height', '141px');
+    }
+    $('#more-stories')
+      .slideDrawer({
+        showDrawer: app.company.widget_config.show,
+        slideTimeout: app.company.widget_config.timeout,
+        slideSpeed: 600,
+        slideTimeoutCount: app.company.widget_config.timeout_count
+      })
+      .css({ opacity: 0, visibility: "visible" })
+      .animate({ opacity: 1 }, 200);
   });
 }
 

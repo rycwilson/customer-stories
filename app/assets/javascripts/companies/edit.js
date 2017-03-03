@@ -12,15 +12,15 @@ function companiesEditListeners () {
 }
 
 function widgetConfigListeners () {
-
-
   $(document)
     .on('change', '[name="widget_config[show]"]',
       function () {
         if ($(this).val() === 'true') {
           $('[name="widget_config[timeout]"]').prop('disabled', false);
         } else {
+          $('#widget_config_timeout_false').click();
           $('[name="widget_config[timeout]"]').prop('disabled', true);
+          $('#widget_config_timeout_count').prop('disabled', true);
         }
       })
     .on('change', '[name="widget_config[timeout]"]',
@@ -82,13 +82,13 @@ function widgetConfigListeners () {
                      $('[name="widget[filter]"]:checked').val() === 'product') {
             return $('.widget-filter-product').find(':selected').data('slug');
           } else {
-            return "'";
+            return "";
           }
         };
-        htmlText =
+        $('#widget-html').text(
           $('#widget-html').text()
-            .replace(/data-tab-color='.*?'/,
-              "data-tab-color='" + $('#widget_config_tab_color').val() + "'")
+            .replace(/data-tab-size='.*?'/,
+              "data-tab-size='" + $('[name="widget_config[tab_size]"]:checked').val() + "'")
             .replace(/data-tab-color='.*?'/,
               "data-tab-color='" + $('#widget_config_tab_color').val() + "'")
             .replace(/data-text-color='.*?'/,
@@ -101,11 +101,9 @@ function widgetConfigListeners () {
               $('[name="widget_config[timeout]"]:checked').val() + "'")
             .replace(/data-timeout-count='.*?'/,
               "data-timeout-count='" + $('#widget_config_timeout_count').val() + "'")
-            .replace(/data-category='.*?'/,
-              "data-category='" + filterValue('category') )
-            .replace(/data-product='.*?'/,
-              "data-product='" + filterValue('product') );
-        $('#widget-html').text(htmlText).css('visibility', 'visible');
+            .replace(/data-category='.*?'/, "data-category='" + filterValue('category') + "'")
+            .replace(/data-product='.*?'/, "data-product='" + filterValue('product') + "'")
+        ).css('visibility', 'visible');
       });
 }
 

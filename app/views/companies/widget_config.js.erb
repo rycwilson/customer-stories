@@ -1,7 +1,7 @@
 
 (function () {
 
-  $('form[id^="edit_widget_config"] .ajax-confirm').fadeToggle('fast', 'swing', function () {
+  $('#widget-config-form-submit + .ajax-confirm').fadeToggle('fast', 'swing', function () {
     var _$this = $(this)
     setTimeout(function () {
       _$this.fadeToggle('fast')

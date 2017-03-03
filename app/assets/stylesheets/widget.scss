@@ -13,14 +13,14 @@
   background: #000000;
   color: #ffffff;
   display: block;
-  height: 24px; // 36px;
-  line-height: 24px; // 36px;
-  font-size: 16px;   //20px;
+  // height: 24px;           // defined via company.widget_config.header_style
+  // line-height: 24px;      // defined via company.widget_config.header_style
+  // font-size: 16px;        // defined via company.widget_config.header_style
   overflow: hidden;
   padding-top: 7px;
   padding-bottom: 7px;
   // text-align: center;
-  width: 166px;
+  // width: 166px;           // defined via company.widget_config.header_style
   margin-left: auto;
   margin-right: 10%;
   -moz-border-radius-topleft: 6px 6px;
