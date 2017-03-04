@@ -61,7 +61,7 @@ class StoriesController < ApplicationController
     @related_stories = @story.related_stories
     @more_stories =
       @company.filter_stories_by_tag({ tag: 'all', id: '0' }, @is_curator)
-              .delete_if { |story| story.id == @story.id }
+              .delete_if { |story| story.id == @story.id || story.customer.logo_url.blank? }
               .map do |story|
                 { logo: story.customer.logo_url,
                   path: story.published ? story.csp_story_path : root_path }

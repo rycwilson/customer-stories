@@ -39,7 +39,7 @@
   </div>
 </div> -->
 
-<% unless @is_curator %>
+<% unless @is_curator || @more_stories.empty? %>
   <%= render 'widgets/more_stories_widget',
         { widget: @company.widget_config, stories: @more_stories, is_csp: true } %>
 <% end %>

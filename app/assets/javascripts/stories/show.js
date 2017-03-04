@@ -21,6 +21,9 @@ function initMoreStories () {
       $('.cs-drawer-content').css('height', '141px');
       $('.cs-drawer-items').css('height', '141px');
     }
+    if (app.company.widget_config.show) {
+      $('#more-stories i[class*="fa-chevron"]').toggle();
+    }
     $('#more-stories')
       .slideDrawer({
         showDrawer: app.company.widget_config.show,
