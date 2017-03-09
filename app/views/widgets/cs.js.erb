@@ -84,12 +84,12 @@
     if (<%= @company.widget.show %>) {
       widgetShowTimer = setTimeout(function () {
         $('#cs-container header').click();
-        if (<%= @company.widget.timeout %>) {
+        if (<%= @company.widget.hide %>) {
           widgetHideTimer = setTimeout(function () {
             $('#cs-container header').click();
-          }, <%= @company.widget.timeout_count %>);
+          }, <%= @company.widget.hide_delay %>);
         }
-      }, <%= @company.widget.delay %>);
+      }, <%= @company.widget.show_delay %>);
     }
     // adjust width for different font families
     $('#cs-container').find('header').css(

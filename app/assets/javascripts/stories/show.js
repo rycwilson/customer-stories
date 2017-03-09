@@ -30,12 +30,12 @@ function initMoreStories () {
     if (app.company.widget.show) {
       widgetShowTimer = setTimeout(function () {
         $('#more-stories header').click();
-        if (app.company.widget.timeout) {
+        if (app.company.widget.hide) {
           widgetHideTimer = setTimeout(function () {
             $('#more-stories header').click();
-          }, app.company.widget.timeout_count);
+          }, app.company.widget.hide_delay);
         }
-      }, app.company.widget.delay);
+      }, app.company.widget.show_delay);
     }
     // adjust width for different font families
     $('#more-stories').find('header').css(

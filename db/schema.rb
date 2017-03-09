@@ -402,14 +402,14 @@ ActiveRecord::Schema.define(version: 20170301222922) do
 
   create_table "widgets", force: :cascade do |t|
     t.integer  "company_id"
-    t.boolean  "show",          default: false
-    t.integer  "delay",         default: 5000
-    t.boolean  "timeout",       default: false
-    t.integer  "timeout_count", default: 5000
-    t.string   "tab_color",     default: "#ddd"
-    t.string   "text_color",    default: "#333"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
+    t.boolean  "show",       default: false
+    t.integer  "show_delay", default: 5000
+    t.boolean  "hide",       default: false
+    t.integer  "hide_delay", default: 5000
+    t.string   "tab_color",  default: "#ddd"
+    t.string   "text_color", default: "#333"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
   end
 
   add_index "widgets", ["company_id"], name: "index_widgets_on_company_id", using: :btree

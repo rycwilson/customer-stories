@@ -15,28 +15,28 @@ function widgetConfigListeners () {
     .on('change', '[name="widget[show]"]',
       function () {
         if ($(this).val() === 'true') {
-          $('.row.widget-delay').removeClass('disabled');
-          $('.row.widget-timeout').removeClass('disabled');
-          $('#widget_delay').prop('disabled', false);
-          $('[name="widget[timeout]"]').prop('disabled', false);
+          $('.row.widget-show-delay').removeClass('disabled');
+          $('.row.widget-hide').removeClass('disabled');
+          $('#widget_show_delay').prop('disabled', false);
+          $('[name="widget[hide]"]').prop('disabled', false);
         } else {
-          $('.row.widget-delay').addClass('disabled');
-          $('.row.widget-timeout').addClass('disabled');
-          $('.row.widget-timeout-count').addClass('disabled');
-          $('#widget_delay').prop('disabled', true);
-          $('#widget_timeout_false').click();
-          $('[name="widget[timeout]"]').prop('disabled', true);
-          $('#widget_timeout_count').prop('disabled', true);
+          $('.row.widget-show-delay').addClass('disabled');
+          $('.row.widget-hide').addClass('disabled');
+          $('.row.widget-hide-delay').addClass('disabled');
+          $('#widget_show_delay').prop('disabled', true);
+          $('#widget_hide_false').click();
+          $('[name="widget[hide]"]').prop('disabled', true);
+          $('#widget_hide_delay').prop('disabled', true);
         }
       })
-    .on('change', '[name="widget[timeout]"]',
+    .on('change', '[name="widget[hide]"]',
       function () {
         if ($(this).val() === 'true') {
-          $('.row.widget-timeout-count').removeClass('disabled');
-          $('#widget_timeout_count').prop('disabled', false);
+          $('.row.widget-hide-delay').removeClass('disabled');
+          $('#widget_hide_delay').prop('disabled', false);
         } else {
-          $('.row.widget-timeout-count').addClass('disabled');
-          $('#widget_timeout_count').prop('disabled', true);
+          $('.row.widget-hide-delay').addClass('disabled');
+          $('#widget_hide_delay').prop('disabled', true);
         }
       })
     .on('change', '[name="widget[filter]"]',
@@ -55,10 +55,10 @@ function widgetConfigListeners () {
     .on('click', '.spinner .btn:first-of-type',
       function () {
         var disabledInput =
-          ($(this).parent().prev().attr('id') === 'widget_timeout_count' &&
-           $('#widget_timeout_count').prop('disabled') === true) ||
-          ($(this).parent().prev().attr('id') === 'widget_delay' &&
-           $('#widget_delay').prop('disabled') === true);
+          ($(this).parent().prev().attr('id') === 'widget_hide_delay' &&
+           $('#widget_hide_delay').prop('disabled') === true) ||
+          ($(this).parent().prev().attr('id') === 'widget_show_delay' &&
+           $('#widget_show_delay').prop('disabled') === true);
         if (disabledInput) { return false; }
         var btn = $(this), step = 100;
         var input = btn.closest('.spinner').find('input');
@@ -71,10 +71,10 @@ function widgetConfigListeners () {
     .on('click', '.spinner .btn:last-of-type',
       function () {
         var disabledInput =
-          ($(this).parent().prev().attr('id') === 'widget_timeout_count' &&
-           $('#widget_timeout_count').prop('disabled') === true) ||
-          ($(this).parent().prev().attr('id') === 'widget_delay' &&
-           $('#widget_delay').prop('disabled') === true);
+          ($(this).parent().prev().attr('id') === 'widget_hide_delay' &&
+           $('#widget_hide_delay').prop('disabled') === true) ||
+          ($(this).parent().prev().attr('id') === 'widget_show_delay' &&
+           $('#widget_show_delay').prop('disabled') === true);
         if (disabledInput) { return false; }
         var btn = $(this), step = 100;
         var input = btn.closest('.spinner').find('input');
