@@ -257,7 +257,7 @@ class StoriesController < ApplicationController
       # https://www.youtube.com/watch?v=BAjqPZY8sFg
       # or
       # https://www.youtube.com/embed/BAjqPZY8sFg
-      youtube_id = new_embed_url.match(/(v=|\/)(?<id>\w+)$/)[:id]
+      youtube_id = new_embed_url.match(/(v=|\/)(?<id>\w+)(&|$)/)[:id]
       YOUTUBE_BASE_URL + "#{youtube_id}"
     elsif new_embed_url.include? "vimeo"
       vimeo_id = new_embed_url.match(/\/(?<id>\d+)$/)[:id]
