@@ -1,8 +1,12 @@
 
 <div class="row">
+  <!-- appearance and behavior -->
   <div class="col-sm-6">
 
-    <%= form_for widget_config, url: widget_config_company_path(company),
+
+    <p class='lead'>Appearance and Behavior</p>
+
+    <%= form_for widget, url: widget_company_path(company),
           method: :put, remote: true do |f| %>
 
       <div class="form-group">
@@ -18,44 +22,10 @@
         </div>
       </div>
 
-      <div class="form-group row">
-        <div class="col-sm-3">
-          <label>Tab size</label>
-        </div>
-        <div class='btn-group col-sm-9 text-right' data-toggle="buttons">
-          <%= f.label :tab_size, class: 'radio-inline' do %>
-            <%= f.radio_button :tab_size, 'small' %>
-            Small
-          <% end %>
-          <%= f.label :tab_size, class: 'radio-inline' do %>
-            <%= f.radio_button :tab_size, 'large' %>
-            Large
-          <% end %>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <!-- <label for="">Delay (milliseconds)</label> -->
-        <div class="row" style='display:flex;align-items:center'>
-          <div class="col-sm-6">
-            <%= f.label :delay, 'Show tab after (milliseconds)' %>
-          </div>
-          <div class="col-sm-6">
-            <div class="input-group spinner">
-              <%= f.text_field :delay, min: '0', class: 'form-control' %>
-              <div class="input-group-btn-vertical">
-                <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
-                <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
       <div class="form-group">
         <div class="row">
           <div class="col-sm-6">
-            <label>Open automatically</label>
+            <label>Show widget content?</label>
           </div>
           <div class='col-sm-6 btn-group text-right' data-toggle="buttons">
               <%= f.label :show, class: 'radio-inline' do %>
@@ -68,31 +38,50 @@
               <% end %>
           </div>
         </div>
-        <div class="row">
+        <div class="row widget-delay <%= widget.show? ? '' : 'disabled' %>"
+             style='display:flex;align-items:center'>
           <div class="col-sm-6">
-            <label>Close automatically</label>
+            <%= f.label :delay, 'Show after (milliseconds)' %>
+          </div>
+          <div class="col-sm-6">
+            <div class="input-group spinner">
+              <%= f.text_field :delay, min: '0',
+                    class: 'form-control', disabled: !widget.show? %>
+              <div class="input-group-btn-vertical">
+                <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+                <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="row widget-timeout <%= widget.show? ? '' : 'disabled' %>">
+          <div class="col-sm-6">
+            <label>Hide content after showing?</label>
           </div>
           <div class='col-sm-6 btn-group text-right' data-toggle="buttons">
             <%= f.label :timeout, class: 'radio-inline' do %>
-              <%= f.radio_button :timeout, true, disabled: !widget_config.show? %>
+              <%= f.radio_button :timeout, true, disabled: !widget.show? %>
               Yes
             <% end %>
             <%= f.label :timeout, class: 'radio-inline' do %>
-              <%= f.radio_button :timeout, false, disabled: !widget_config.show? %>
+              <%= f.radio_button :timeout, false, disabled: !widget.show? %>
               No
             <% end %>
           </div>
         </div>
 
-        <div class="row" style='display:flex;align-items:center'>
+        <div class="row widget-timeout-count <%= widget.timeout? ? '' : 'disabled' %>"
+             style='display:flex;align-items:center'>
           <div class="col-sm-6">
-            <%= f.label :timeout_count, 'Close after (milliseconds)' %>
+            <%= f.label :timeout_count, 'Hide after (milliseconds)' %>
           </div>
           <div class="col-sm-6">
             <div class="input-group spinner">
               <%= f.text_field :timeout_count, min: '0', class: 'form-control',
-                               disabled: !widget_config.show? ||
-                                         !widget_config.timeout? %>
+                      disabled: !widget.timeout? %>
               <div class="input-group-btn-vertical">
                 <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
                 <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -103,20 +92,33 @@
 
       </div>
 
-      <!-- <hr>
+      <hr>
 
-      <div class="form-group text-right">
+      <!-- <div class="form-group text-right">
 
-        <button type="reset" id='widget-config-form-reset' class="btn btn-default">
+        <button type="reset" id='widget-form-reset' class="btn btn-default">
           Cancel
         </button>
 
       </div> -->
+      <div class="form-group">
+        <div class="row">
+          <div class="col-sm-12 text-right">
+            <span class='widget-form-confirm' style='display:none;color:#5cb85c'>
+                  <i class='fa fa-check'></i>
+                </span>&nbsp;&nbsp;
+            <input type='submit' id='widget-form-submit'
+                class='btn btn-primary' value='Save'>
+          </div>
+        </div>
+      </div>
     <% end %>
+  </div>
 
-    <hr>
+  <!-- deploy to your site -->
+  <div class="col-sm-6">
 
-    <p>Filter settings apply only to the widget hosted on your site</p>
+    <p class='lead'>Deploy to your website</p>
 
     <div class="form-group">
 
@@ -140,7 +142,6 @@
         </div>
       </div>
 
-    <!-- filter selects are outside of the form as they only apply to generating script tags -->
       <div id='widget-filter-category-container'>
         <div class="row" style="display:flex;align-items:center">
           <div class="col-sm-3">
@@ -153,6 +154,7 @@
           </div>
         </div>
       </div>
+
       <div id='widget-filter-product-container'>
         <div class="row" style="display:flex;align-items:center">
           <div class="col-sm-3">
@@ -167,35 +169,24 @@
       </div>
     </div>
 
-  </div>
-
-  <div class="col-sm-6">
-
-    <div class="form-group">
-      <p class="lead">Story page Widget</p>
-      <p>Settings will apply to all story pages on customerstories.net</p>
-      <input type='submit' form='<%= "edit_widget_config_#{widget_config.id}"  %>'
-             id='widget-config-form-submit' class='btn btn-primary' value='Save Configuration'>&nbsp;&nbsp;
-      <span class='ajax-confirm' style='display:none;color:#5cb85c'>
-            <i class='fa fa-check'></i>
-          </span>&nbsp;
-    </div>
-
     <hr>
 
-<!-- leave spacing as is for textarea input -->
-    <div class="form-group">
-      <p class='lead'>Website Widget</p>
-      <p>Settings will apply to the widget hosted on your site</p>
-      <button type='button' id='widget-html-btn' class='btn btn-primary'>
-        Generate HTML
-      </button>
-      <textarea class='form-control' id="widget-html"
-          style='width:100%;visibility:hidden' rows="8" readonly><script id='cs-script' type='text/javascript' src='//<%= company.subdomain %>.<%= ENV["HOST_NAME"] %>/widget/cs.js' data-tab-size='' data-tab-color='' data-text-color='' data-delay='' data-show='' data-timeout='' data-timeout-count='' data-category='' data-product=''></script>
-<div id='cs-container' class='cs-widget'></div></textarea>
+    <div class="row">
+      <div class="col-sm-12 text-right">
+        <button type='button' id='widget-html-btn' class='btn btn-primary'>
+          Generate HTML
+        </button>
+      </div>
     </div>
 
-
-  </div>
+    <!-- leave spacing as is for textarea input -->
+    <div class="row">
+      <div class="col-sm-12">
+        <i id='html-to-clipboard' class="fa fa-clipboard bip-clickable"></i>
+        <textarea class='form-control' id="widget-html"
+            style='width:100%;visibility:hidden' rows="4" readonly><script id='cs-script' type='text/javascript' src='//<%= company.subdomain %>.<%= ENV["HOST_NAME"] %>/widget/cs.js' data-category='' data-product=''></script>
+    <div id='cs-container' class='cs-widget'></div></textarea>
+      </div>
+    </div>
 
 </div>

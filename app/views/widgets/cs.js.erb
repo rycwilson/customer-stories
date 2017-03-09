@@ -21,15 +21,7 @@
 
     $(function () {
 
-      var tabColor = $('#cs-script').data('tab-color'),
-          // old attribute name for legacy users
-          textColor = $('#cs-script').data('text-color') || $('#cs-script').data('font-color'),
-          tabSize = $('#cs-script').data('tab-size'),
-          delay = $('#cs-script').data('delay'),
-          showDrawer = $('#cs-script').data('show') || false,
-          timeout = $('#cs-script').data('timeout') || false,
-          timeoutCount = $('#cs-script').data('timeout-count'),
-          category = $('#cs-script').data('category'),
+      var category = $('#cs-script').data('category'),
           product = $('#cs-script').data('product'),
           $widgetStylesheet = $("<link>", {
             rel: "stylesheet",
@@ -52,8 +44,7 @@
         $.ajax({
           url: "<%= URI.join(root_url, widget_data_path) %>",
           dataType: 'jsonp',
-          data: { tab_options: { tab_size: tabSize, tab_color: tabColor, text_color: textColor },
-                  category: category,
+          data: { category: category,
                   product: product },
           success: function (data) {
             $('#cs-container').html(data.html);
@@ -61,13 +52,7 @@
             var $images = $('#cs-container img'), loadedImages = 0;
             $images.on('load', function (e) {
               if (++loadedImages === $images.length) {
-                if (delay) {
-                  setTimeout(function () {
-                    buildWidget(showDrawer, timeout, timeoutCount);
-                  }, delay)
-                } else {
-                  buildWidget(showDrawer, timeout, timeoutCount);
-                }
+                buildWidget();
               }
             })
           }
@@ -77,7 +62,7 @@
     });
   }
 
-  function buildWidget (showDrawer, timeout, timeoutCount) {
+  function buildWidget () {
     slideDrawerPlugin();
     xScrollBoundaries()
     scrollHandlers();
@@ -89,18 +74,25 @@
       $('.cs-drawer-content').css('height', '141px');
       $('.cs-drawer-items').css('height', '141px');
     }
-    $('#cs-container .cs-drawer').slideDrawer({
-      showDrawer: showDrawer, // drawer is hidden on page load
-      slideTimeout: timeout, // Sets the drawer to slide down after set count if set to true.
-      slideSpeed: 600, // Slide drawer speed.
-      slideTimeoutCount: timeoutCount // How long to wait before sliding drawer slides down.
-    });
-    // flip the caret if drawer is shown
-    if (showDrawer) {
-      $('#cs-container i[class*="fa-chevron"]').toggle();
+    if (<%= @company.widget.show %>) {
+      setTimeout(function () {
+        $('#cs-container header').click();
+        if (<%= @company.widget.timeout %>) {
+          setTimeout(function () {
+            $('#cs-container header').click();
+          }, <%= @company.widget.timeout_count %>);
+        }
+      }, <%= @company.widget.delay %>);
     }
-    $('#cs-container .cs-drawer').css({ opacity: 0, visibility: "visible" })
-                                 .animate({ opacity: 1 }, 400);
+    // adjust width for different font families
+    $('#cs-container').find('header').css(
+        'width',
+        (parseInt($('#cs-container header > span').css('width'), 10) + 30).toString() + "px"
+      );
+    $('#cs-container')
+      .slideDrawer()
+      .css({ opacity: 0, visibility: "visible" })
+      .animate({ opacity: 1 }, 200);
     trackVisitor();
   }
 

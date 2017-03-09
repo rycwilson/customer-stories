@@ -64,8 +64,8 @@ class CompaniesController < ApplicationController
     respond_to { |format| format.js }
   end
 
-  def widget_config
-    @company.widget_config.update(widget_config_params)
+  def widget
+    @company.widget.update(widget_params)
     respond_to { |format| format.js }
   end
 
@@ -77,9 +77,9 @@ class CompaniesController < ApplicationController
                   :header_color_2, :header_text_color, :website, :gtm_id)
   end
 
-  def widget_config_params
-    params.require(:widget_config)
-          .permit(:tab_color, :text_color, :tab_size, :delay, :show, :timeout, :timeout_count)
+  def widget_params
+    params.require(:widget)
+          .permit(:tab_color, :text_color, :show, :delay, :timeout, :timeout_count)
   end
 
   def set_company

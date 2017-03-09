@@ -4,13 +4,12 @@ function storiesShow () {
   loadVideoThumbnail();
   widgetsMonitor();
   clickyListeners();
-  setTimeout(initMoreStories, app.company.widget_config.delay);
+  initMoreStories();
 }
 
 function initMoreStories () {
 
   slideDrawerPlugin();  // define the jquery plugin
-
   $('#more-stories').imagesLoaded(function () {
     moreStoriesScrollHandlers();
     centerLogos();
@@ -21,16 +20,23 @@ function initMoreStories () {
       $('.cs-drawer-content').css('height', '141px');
       $('.cs-drawer-items').css('height', '141px');
     }
-    if (app.company.widget_config.show) {
-      $('#more-stories i[class*="fa-chevron"]').toggle();
+    if (app.company.widget.show) {
+      setTimeout(function () {
+        $('#more-stories header').click();
+        if (app.company.widget.timeout) {
+          setTimeout(function () {
+            $('#more-stories header').click();
+          }, app.company.widget.timeout_count);
+        }
+      }, app.company.widget.delay);
     }
+    // adjust width for different font families
+    $('#more-stories').find('header').css(
+        'width',
+        (parseInt($('#more-stories header > span').css('width'), 10) + 30).toString() + "px"
+      );
     $('#more-stories')
-      .slideDrawer({
-        showDrawer: app.company.widget_config.show,
-        slideTimeout: app.company.widget_config.timeout,
-        slideSpeed: 600,
-        slideTimeoutCount: app.company.widget_config.timeout_count
-      })
+      .slideDrawer()
       .css({ opacity: 0, visibility: "visible" })
       .animate({ opacity: 1 }, 200);
   });

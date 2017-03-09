@@ -41,7 +41,7 @@
 
 <% if @more_stories.present? %>
   <%= render 'widgets/more_stories_widget',
-        { widget: @company.widget_config, stories: @more_stories, is_csp: true } %>
+        { widget: @company.widget, stories: @more_stories } %>
 <% end %>
 
 <% @story.ctas.forms.each do |form| %>

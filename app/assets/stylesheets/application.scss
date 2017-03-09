@@ -51,7 +51,8 @@
 
 /*
  *  apply to all columns within a row to center vertically
-*/
+ *  ref: http://stackoverflow.com/questions/20547819/vertical-align-with-bootstrap-3
+ */
 .vcenter {
   display: inline-block;
   vertical-align: middle;

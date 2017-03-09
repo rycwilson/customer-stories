@@ -14,22 +14,20 @@
     background: #000000;
     color: #ffffff;
     display: block;
-    // height: 36px;        // defined via company.widget_config.tab_style
-    // line-height: 36px;   // defined via company.widget_config.tab_style
-    // font-size: 20px;     // defined via company.widget_config.tab_style
+    height: 24px;
+    line-height: 24px;
+    font-size: 16px;
     font-family: 'Lato';
     overflow: hidden;
     padding-top: 7px;
     padding-bottom: 7px;
-    // text-align: center;
-    // width: 180px;        // defined via company.widget_config.tab_style
     margin-left: auto;
     margin-right: 10%;
     -moz-border-radius-topleft: 6px 6px;
     -moz-border-radius-topright: 6px 6px;
     border-top-left-radius: 6px 6px;
     border-top-right-radius: 6px 6px;
-    i + i {
+    i:first-of-type {   // this will get toggled as soon as the widget tab loads
       display: none;
     }
   }

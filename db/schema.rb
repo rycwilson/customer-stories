@@ -400,21 +400,19 @@ ActiveRecord::Schema.define(version: 20170301222922) do
 
   add_index "visitors", ["clicky_uid"], name: "index_visitors_on_clicky_uid", unique: true, using: :btree
 
-  create_table "widget_configs", force: :cascade do |t|
+  create_table "widgets", force: :cascade do |t|
     t.integer  "company_id"
-    t.string   "tab_size",      default: "small"
-    t.integer  "delay",         default: 3000
     t.boolean  "show",          default: false
+    t.integer  "delay",         default: 3000
     t.boolean  "timeout",       default: false
     t.integer  "timeout_count", default: 3000
     t.string   "tab_color",     default: "#ddd"
     t.string   "text_color",    default: "#333"
-    t.string   "filter",        default: "none"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
   end
 
-  add_index "widget_configs", ["company_id"], name: "index_widget_configs_on_company_id", using: :btree
+  add_index "widgets", ["company_id"], name: "index_widgets_on_company_id", using: :btree
 
   add_foreign_key "call_to_actions", "companies"
   add_foreign_key "contributions", "successes"
@@ -450,5 +448,5 @@ ActiveRecord::Schema.define(version: 20170301222922) do
   add_foreign_key "visitor_actions", "successes"
   add_foreign_key "visitor_actions", "visitor_sessions"
   add_foreign_key "visitor_sessions", "visitors"
-  add_foreign_key "widget_configs", "companies"
+  add_foreign_key "widgets", "companies"
 end

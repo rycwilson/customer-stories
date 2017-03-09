@@ -105,7 +105,7 @@ class Company < ActiveRecord::Base
       grouped_options
     end
   end
-  has_one :widget_config, dependent: :destroy
+  has_one :widget, dependent: :destroy
 
   # presently uploading direct to S3, paperclip not used
   # paperclip

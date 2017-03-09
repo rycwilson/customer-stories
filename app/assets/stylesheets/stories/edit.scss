@@ -180,12 +180,6 @@
     display: none;
   }
 
-  .vcenter {
-    display: inline-block;
-    vertical-align: middle;
-    float: none;
-  }
-
   .required-input label:after {
     color: #D9534F;
     content: " *";

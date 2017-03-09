@@ -8,27 +8,35 @@ function companiesEditListeners () {
   storyTagsListeners();
   storyCTAsListeners();
   widgetConfigListeners();
-
 }
 
 function widgetConfigListeners () {
   $(document)
-    .on('change', '[name="widget_config[show]"]',
+    .on('change', '[name="widget[show]"]',
       function () {
         if ($(this).val() === 'true') {
-          $('[name="widget_config[timeout]"]').prop('disabled', false);
+          $('.row.widget-delay').removeClass('disabled');
+          $('.row.widget-timeout').removeClass('disabled');
+          $('#widget_delay').prop('disabled', false);
+          $('[name="widget[timeout]"]').prop('disabled', false);
         } else {
-          $('#widget_config_timeout_false').click();
-          $('[name="widget_config[timeout]"]').prop('disabled', true);
-          $('#widget_config_timeout_count').prop('disabled', true);
+          $('.row.widget-delay').addClass('disabled');
+          $('.row.widget-timeout').addClass('disabled');
+          $('.row.widget-timeout-count').addClass('disabled');
+          $('#widget_delay').prop('disabled', true);
+          $('#widget_timeout_false').click();
+          $('[name="widget[timeout]"]').prop('disabled', true);
+          $('#widget_timeout_count').prop('disabled', true);
         }
       })
-    .on('change', '[name="widget_config[timeout]"]',
+    .on('change', '[name="widget[timeout]"]',
       function () {
         if ($(this).val() === 'true') {
-          $('#widget_config_timeout_count').prop('disabled', false);
+          $('.row.widget-timeout-count').removeClass('disabled');
+          $('#widget_timeout_count').prop('disabled', false);
         } else {
-          $('#widget_config_timeout_count').prop('disabled', true);
+          $('.row.widget-timeout-count').addClass('disabled');
+          $('#widget_timeout_count').prop('disabled', true);
         }
       })
     .on('change', '[name="widget[filter]"]',
@@ -46,10 +54,12 @@ function widgetConfigListeners () {
     // ref http://bootsnipp.com/snippets/featured/input-spinner-with-min-and-max-values
     .on('click', '.spinner .btn:first-of-type',
       function () {
-        if ($(this).parent().prev().attr('id') === 'widget_config_timeout_count' &&
-            $('#widget_config_timeout_count').prop('disabled') === true) {
-          return false;
-        }
+        var disabledInput =
+          ($(this).parent().prev().attr('id') === 'widget_timeout_count' &&
+           $('#widget_timeout_count').prop('disabled') === true) ||
+          ($(this).parent().prev().attr('id') === 'widget_delay' &&
+           $('#widget_delay').prop('disabled') === true);
+        if (disabledInput) { return false; }
         var btn = $(this), step = 100;
         var input = btn.closest('.spinner').find('input');
         if (input.attr('max') === undefined || parseInt(input.val()) < parseInt(input.attr('max'))) {
@@ -60,10 +70,12 @@ function widgetConfigListeners () {
       })
     .on('click', '.spinner .btn:last-of-type',
       function () {
-        if ($(this).parent().prev().attr('id') === 'widget_config_timeout_count' &&
-            $('#widget_config_timeout_count').prop('disabled') === true) {
-          return false;
-        }
+        var disabledInput =
+          ($(this).parent().prev().attr('id') === 'widget_timeout_count' &&
+           $('#widget_timeout_count').prop('disabled') === true) ||
+          ($(this).parent().prev().attr('id') === 'widget_delay' &&
+           $('#widget_delay').prop('disabled') === true);
+        if (disabledInput) { return false; }
         var btn = $(this), step = 100;
         var input = btn.closest('.spinner').find('input');
         if (input.attr('min') === undefined || parseInt(input.val()) > parseInt(input.attr('min'))) {
@@ -87,23 +99,33 @@ function widgetConfigListeners () {
         };
         $('#widget-html').text(
           $('#widget-html').text()
-            .replace(/data-tab-size='.*?'/,
-              "data-tab-size='" + $('[name="widget_config[tab_size]"]:checked').val() + "'")
-            .replace(/data-tab-color='.*?'/,
-              "data-tab-color='" + $('#widget_config_tab_color').val() + "'")
-            .replace(/data-text-color='.*?'/,
-              "data-text-color='" + $('#widget_config_text_color').val() + "'")
-            .replace(/data-delay='.*?'/,
-              "data-delay='" + $('#widget_config_delay').val() + "'")
-            .replace(/data-show='.*?'/, "data-show='" +
-              $('[name="widget_config[show]"]:checked').val() + "'")
-            .replace(/data-timeout='.*?'/, "data-timeout='" +
-              $('[name="widget_config[timeout]"]:checked').val() + "'")
-            .replace(/data-timeout-count='.*?'/,
-              "data-timeout-count='" + $('#widget_config_timeout_count').val() + "'")
+            // .replace(/data-tab-size='.*?'/,
+            //   "data-tab-size='" + $('[name="widget[tab_size]"]:checked').val() + "'")
+            // .replace(/data-tab-color='.*?'/,
+            //   "data-tab-color='" + $('#widget_tab_color').val() + "'")
+            // .replace(/data-text-color='.*?'/,
+            //   "data-text-color='" + $('#widget_text_color').val() + "'")
+            // .replace(/data-delay='.*?'/,
+            //   "data-delay='" + $('#widget_delay').val() + "'")
+            // .replace(/data-show='.*?'/, "data-show='" +
+            //   $('[name="widget[show]"]:checked').val() + "'")
+            // .replace(/data-timeout='.*?'/, "data-timeout='" +
+            //   $('[name="widget[timeout]"]:checked').val() + "'")
+            // .replace(/data-timeout-count='.*?'/,
+            //   "data-timeout-count='" + $('#widget_timeout_count').val() + "'")
             .replace(/data-category='.*?'/, "data-category='" + filterValue('category') + "'")
             .replace(/data-product='.*?'/, "data-product='" + filterValue('product') + "'")
         ).css('visibility', 'visible');
+        $('#widget-html').parent().find('i').css('visibility', 'visible');
+      })
+    .on('click', '#html-to-clipboard',
+      function () {
+        var htmlText = $(this).parent().find('textarea').text();
+            $temp = $("<textarea></textarea>");
+        $("body").append($temp);
+        $temp.text(htmlText).select();
+        document.execCommand("copy");
+        $temp.remove();
       });
 }
 

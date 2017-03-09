@@ -2,7 +2,7 @@ namespace :temp do
 
   desc "temp stuff"
 
-  task make_widget_configs: :environment do
+  task make_widgets: :environment do
     Company.all.each do |company|
       case company.subdomain
       when 'trunity'
@@ -34,7 +34,7 @@ namespace :temp do
       else
         tab_color = 'rgb(14, 122, 254)'
       end
-      company.create_widget_config(tab_color: tab_color, text_color:'#ffffff')
+      company.create_widget(tab_color: tab_color, text_color:'#ffffff')
     end
   end
 
