@@ -67,6 +67,13 @@
     xScrollBoundaries()
     scrollHandlers();
     centerLogos();
+
+    var widgetShowTimer, widgetHideTimer;
+    $('#more-stories header').one('click', function () {
+      if (widgetShowTimer) { clearTimeout(widgetShowTimer); }
+      if (widgetHideTimer) { clearTimeout(widgetHideTimer); }
+    });
+
     // if user is using a mouse, this will hose dimensions
     // (in a somewhat random way)
     // compensate for this ...
@@ -75,10 +82,10 @@
       $('.cs-drawer-items').css('height', '141px');
     }
     if (<%= @company.widget.show %>) {
-      setTimeout(function () {
+      widgetShowTimer = setTimeout(function () {
         $('#cs-container header').click();
         if (<%= @company.widget.timeout %>) {
-          setTimeout(function () {
+          widgetHideTimer = setTimeout(function () {
             $('#cs-container header').click();
           }, <%= @company.widget.timeout_count %>);
         }

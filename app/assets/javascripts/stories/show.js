@@ -9,6 +9,13 @@ function storiesShow () {
 
 function initMoreStories () {
 
+  var widgetShowTimer, widgetHideTimer;
+
+  $('#more-stories header').one('click', function () {
+    if (widgetShowTimer) { clearTimeout(widgetShowTimer); }
+    if (widgetHideTimer) { clearTimeout(widgetHideTimer); }
+  });
+
   slideDrawerPlugin();  // define the jquery plugin
   $('#more-stories').imagesLoaded(function () {
     moreStoriesScrollHandlers();
@@ -21,10 +28,10 @@ function initMoreStories () {
       $('.cs-drawer-items').css('height', '141px');
     }
     if (app.company.widget.show) {
-      setTimeout(function () {
+      widgetShowTimer = setTimeout(function () {
         $('#more-stories header').click();
         if (app.company.widget.timeout) {
-          setTimeout(function () {
+          widgetHideTimer = setTimeout(function () {
             $('#more-stories header').click();
           }, app.company.widget.timeout_count);
         }
