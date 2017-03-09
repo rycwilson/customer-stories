@@ -403,7 +403,7 @@ ActiveRecord::Schema.define(version: 20170301222922) do
   create_table "widgets", force: :cascade do |t|
     t.integer  "company_id"
     t.boolean  "show",          default: false
-    t.integer  "delay",         default: 3000
+    t.integer  "delay",         default: 5000
     t.boolean  "timeout",       default: false
     t.integer  "timeout_count", default: 3000
     t.string   "tab_color",     default: "#ddd"

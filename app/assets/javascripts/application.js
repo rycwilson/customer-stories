@@ -13,7 +13,6 @@
 //= require init
 
 $(document).on('turbolinks:load', function (e) {
-  // console.log('turbolinks:load');
   setAppData();
   constructPlugins();
   app.init();

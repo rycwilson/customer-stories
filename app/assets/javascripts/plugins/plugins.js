@@ -110,8 +110,9 @@ function slideDrawerPlugin () {
 
     // Slide animation function
     slide: function (div, height, speed) {
-      $(div).animate({ 'height': height }, speed, 'swing', function () {
-          $('#more-stories i[class*="fa-chevron"]').toggle();
+      $(div).animate({ 'height': height }, speed, 'swing',
+        function () {
+          $('#more-stories header i[class*="fa-chevron"]').toggle();
         });
     },
 
