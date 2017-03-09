@@ -54,10 +54,11 @@ class WidgetsController < ApplicationController
               end
 
     html = "<section class='cs-drawer' style='visibility:hidden'>
-              <header class='text-center'
-                style='#{@company.widget.tab_style}'>
-                Customer Stories&nbsp;
-                <i class='fa fa-chevron-up'></i><i class='fa fa-chevron-down' style='display:none'></i>
+              <header class='text-center' style='#{@company.widget.tab_style}'>
+                <span>
+                  <span>Customer Stories</span>&nbsp;
+                  <i class='fa fa-chevron-up'></i><i class='fa fa-chevron-down'></i>
+                </span>
               </header>
               <div class='cs-drawer-content' style='border-top-color:#{@company.widget.tab_color}'>
                 <div class='cs-drawer-items'>

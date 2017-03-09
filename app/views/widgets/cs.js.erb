@@ -89,7 +89,7 @@
         'width',
         (parseInt($('#cs-container header > span').css('width'), 10) + 30).toString() + "px"
       );
-    $('#cs-container')
+    $('#cs-container .cs-drawer')
       .slideDrawer()
       .css({ opacity: 0, visibility: "visible" })
       .animate({ opacity: 1 }, 200);

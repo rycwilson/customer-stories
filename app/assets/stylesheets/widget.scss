@@ -25,6 +25,9 @@
   -moz-border-radius-topright: 6px 6px;
   border-top-left-radius: 6px 6px;
   border-top-right-radius: 6px 6px;
+  i:first-of-type {   // this will get toggled as soon as the widget tab loads
+    display: none;
+  }
 }
 
 .cs-drawer header:hover {
