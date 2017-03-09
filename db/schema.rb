@@ -405,7 +405,7 @@ ActiveRecord::Schema.define(version: 20170301222922) do
     t.boolean  "show",          default: false
     t.integer  "delay",         default: 5000
     t.boolean  "timeout",       default: false
-    t.integer  "timeout_count", default: 3000
+    t.integer  "timeout_count", default: 5000
     t.string   "tab_color",     default: "#ddd"
     t.string   "text_color",    default: "#333"
     t.datetime "created_at",                     null: false
