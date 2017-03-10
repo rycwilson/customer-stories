@@ -34,6 +34,7 @@ function initMasonry () {
 
   $('.grid').masonry('on', 'layoutComplete', function () {
     centerLogos();
+    $('.grid').css('visibility', 'visible');
   });
 
 }

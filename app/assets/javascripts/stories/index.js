@@ -9,10 +9,12 @@ function storiesIndexListeners () {
         filterSlug = $(this).find("option[value='" + filterId + "']").data('slug'),
         storiesTemplate = _.template($('#stories-template').html());
 
-    updateGallery($(storiesTemplate({
-                      stories: filterStories(filterTag, filterId, filterSlug),
-                      isCurator: app.current_user && app.current_user.is_curator
-                    })));
+    updateGallery(
+      $(storiesTemplate({
+          stories: filterStories(filterTag, filterId, filterSlug),
+          isCurator: app.current_user && app.current_user.is_curator
+        }))
+    );
     replaceStateStoriesIndex(filterTag, filterId, filterSlug);
     mutuallyExcludeFilters(filterTag, filterId, $categorySelect, $productSelect);
   });
@@ -29,12 +31,12 @@ function storiesIndex () {
       filterTag = categorySlug ? 'category' : (productSlug ? 'product' : null);
       filterSlug = categorySlug ? categorySlug : (productSlug ? productSlug : null);
 
-  updateGallery(
-    $(storiesTemplate({
-      stories: filterStories(filterTag, null, filterSlug),
-      isCurator: app.current_user && app.current_user.is_curator
-    }))
-  );
+  // updateGallery(
+  //   $(storiesTemplate({
+  //     stories: filterStories(filterTag, null, filterSlug),
+  //     isCurator: app.current_user && app.current_user.is_curator
+  //   }))
+  // );
 
   // selectBoxesTrackQueryString($categorySelect, categorySlug, $productSelect, productSlug);
 }
