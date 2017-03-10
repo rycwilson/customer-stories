@@ -136,18 +136,17 @@
 
 <% unless user_signed_in? %>
   <div class='hidden-xs' style='border:1px solid #e3e3e3;z-index:1000'>
-    <div class='container' style='padding:15px 0 15px 0' id='story-footer'>
+    <div class='container' style='padding:0 0 15px 0' id='story-footer'>
 
-      <div class="row" style='font-size:0'>
-        <div class="col-sm-6" style='display:inline-block;float:none'>
+      <div class="row" style="display:flex;align-items:center;font-size:0;height:100px">
+        <div class="col-sm-6">
           <a href="<%= csp_landing %>">
             <img src="<%= CS_POWERED_LOGO_URL %>" alt="Powered by Customer Stories">
           </a>
         </div>
-        <div class="col-sm-6 text-right" style='display:inline-block;float:none;vertical-align:middle'>
+        <div class="col-sm-6 text-right">
           <h5 style='margin:0'>
-          <%= @company.name %> Curators <%= link_to 'Login', new_user_session_path %>
-
+            <%= @company.name %> Curators <%= link_to 'Login', new_user_session_path %>
           </h5>
         </div>
       </div>
