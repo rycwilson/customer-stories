@@ -128,7 +128,7 @@ function widgetsMonitor () {
                      }).published_contributors,
       firstWidgetLoaded = false,
       firstWidgetIndex = null, currentWidgetIndex = null, relativeWidgetIndex = null,
-      pageLoadTimeoutDelay = 6000, firstWidgetReadyTimeoutDelay = 2000,
+      pageLoadTimeoutDelay = 10000, firstWidgetReadyTimeoutDelay = 10000,
       postMessageHandler = function (event) {
         if ($('body').hasClass('stories show')) {
           // For Chrome, the origin property is in the event.originalEvent object.
