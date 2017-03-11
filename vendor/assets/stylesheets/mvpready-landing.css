@@ -1754,7 +1754,7 @@ fieldset[disabled] .btn-transparent.active {
     width: 70%;
   }
 }
-#back-to-top {
+/*#back-to-top {
   position: fixed;
   right: 20px;
   bottom: 20px;
@@ -1781,7 +1781,7 @@ fieldset[disabled] .btn-transparent.active {
 }
 #back-to-top i {
   color: #fff;
-}
+}*/
 @media (min-width: 768px) {
   #back-to-top {
     width: 45px;

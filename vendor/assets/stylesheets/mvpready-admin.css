@@ -1623,7 +1623,7 @@ fieldset[disabled] .btn-transparent.active {
   margin-left: 1.5em;
   margin-left: 15px;
 }
-#back-to-top {
+/*#back-to-top {
   position: fixed;
   right: 20px;
   bottom: 20px;
@@ -1658,7 +1658,7 @@ fieldset[disabled] .btn-transparent.active {
     font-size: 16px;
     line-height: 45px;
   }
-}
+}*/
 .notifications-list > li {
   padding-top: 8px;
   padding-bottom: 8px;
