@@ -19,7 +19,7 @@ function initMoreStories () {
   slideDrawerPlugin();  // define the jquery plugin
   $('#more-stories').imagesLoaded(function () {
     moreStoriesScrollHandlers();
-    centerLogos();
+    // centerLogos();
     // if user is using a mouse, this will hose dimensions
     // (in a somewhat random way)
     // compensate for this ...
@@ -47,6 +47,9 @@ function initMoreStories () {
         'width',
         (parseInt($('#more-stories header > span').css('width'), 10) + 30).toString() + "px"
       );
+    $('#more-stories a.cs-thumbnail').hover(function () {
+      $(this).css('border-color', app.company.widget.tab_color);
+    });
     $('#more-stories')
       .slideDrawer()
       .css({ opacity: 0, visibility: "visible" })

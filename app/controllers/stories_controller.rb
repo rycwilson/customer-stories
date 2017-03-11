@@ -63,7 +63,8 @@ class StoriesController < ApplicationController
       @company.filter_stories_by_tag({ tag: 'all', id: '0' }, false)
               .delete_if { |story| story.id == @story.id || story.customer.logo_url.blank? }
               .map do |story|
-                { logo: story.customer.logo_url,
+                { title: story.title,
+                  logo: story.customer.logo_url,
                   path: story.published ? story.csp_story_path : root_path }
               end
   end

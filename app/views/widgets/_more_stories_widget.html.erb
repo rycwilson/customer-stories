@@ -16,10 +16,17 @@
       <!-- the bootstrap styling starts to break down after 30 stories -->
       <% stories.first(30).each do |story|  %>
 
-        <div class='col-xs-4 col-sm-3 col-md-2'>
+        <div class='col-xs-6 col-sm-5 col-md-3'>
+
           <a href="<%= story[:path] %>" class='cs-thumbnail'>
-            <img src="<%= story[:logo] %>" alt=''>
+            <div class="thumbnail-view">
+              <p class='thumbnail-view-hover'>
+                <%= story[:title] %>
+              </p>
+              <img src="<%= story[:logo] %>" alt=''>
+            </div>
           </a>
+
         </div>
 
       <% end %>
