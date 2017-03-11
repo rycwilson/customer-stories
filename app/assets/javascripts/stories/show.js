@@ -47,9 +47,10 @@ function initMoreStories () {
         'width',
         (parseInt($('#more-stories header > span').css('width'), 10) + 30).toString() + "px"
       );
-    $('#more-stories a.cs-thumbnail').hover(function () {
-      $(this).css('border-color', app.company.widget.tab_color);
-    });
+    $('#more-stories a.cs-thumbnail').hover(
+      function () { $(this).css('border-color', app.company.widget.tab_color); },
+      function () { $(this).css('border-color', '#ddd'); }
+    );
     $('#more-stories')
       .slideDrawer()
       .css({ opacity: 0, visibility: "visible" })
