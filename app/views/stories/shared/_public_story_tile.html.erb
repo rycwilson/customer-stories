@@ -8,7 +8,10 @@
 
     <div class="grid-item thumbnail <%= story.published ? '' : 'no-caption' %>">
 
-      <img src="<%= customer.logo_url || image_path('company-logo-missing.png') %>">
+      <div class="thumbnail-view">
+        <p class='thumbnail-view-hover'><%= story.title %></p>
+        <img src="<%= customer.logo_url || image_path('company-logo-missing.png') %>">
+      </div>
 
       <% if story.logo_published? %>
         <div class="caption"

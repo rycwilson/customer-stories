@@ -8,11 +8,16 @@
         <div class="grid-item thumbnail
               {{= !isCurator && !story.published ? 'no-caption' : '' }}">
 
+          <div class="thumbnail-view">
+            <p class='thumbnail-view-hover'>
+              {{= story.title }}
+            </p>
             {{ if (story.success.customer.logo_url) { }}
               <img src="{{= story.success.customer.logo_url }}">
             {{ } else { }}
               <img src="<%= asset_path('company-logo-missing.png') %>">
             {{ } }}
+          </div>
 
           {{ if (story.published) { }}
 

@@ -7,7 +7,10 @@
 
     <div class="grid-item thumbnail">
 
-      <img src="<%= customer.logo_url || image_path('company-logo-missing.png') %>">
+      <div class='thumbnail-view'>
+        <p class="thumbnail-view-hover"><%= story.title %></p>
+        <img src="<%= customer.logo_url || image_path('company-logo-missing.png') %>">
+      </div>
 
       <div class="caption"
            style="background-color:<%= story.published ? company.header_color_1 : '#f5f5f5' %>;color:<%= story.published ? company.header_text_color : '' %>">

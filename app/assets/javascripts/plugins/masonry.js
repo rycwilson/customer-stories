@@ -33,7 +33,7 @@ function initMasonry () {
   });
 
   $('.grid').masonry('on', 'layoutComplete', function () {
-    centerLogos();
+    // centerLogos();
     $('.grid').css('visibility', 'visible');
   });
 
