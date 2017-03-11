@@ -1,8 +1,8 @@
 
-<section id='more-stories' style='visibility:hidden'>
-  <header class='text-center' style="<%= widget.tab_style %>">
+<section class='cs-drawer' style='visibility:hidden'>
+  <header class='cs-header text-center' style="<%= widget.tab_style %>">
     <span>
-      <span>More Stories</span>&nbsp;&nbsp;
+      <span><%= title %></span>&nbsp;
       <i class='fa fa-chevron-up'></i><i class='fa fa-chevron-down'></i>
     </span>
   </header>
@@ -20,22 +20,17 @@
 
           <a href="<%= story[:path] %>" class='cs-thumbnail'>
 
-            <% if story[:path] == '/' %>
+            <div class="cs-thumbnail-view">
 
-              <div class="thumbnail-view">
-                <img src="<%= story[:logo] %>" alt=''>
-              </div>
-
-            <% else %>
-
-              <div class="thumbnail-view">
-                <p class='thumbnail-view-hover'>
-                  <%= story[:title] %>
-                </p>
-                <img src="<%= story[:logo] %>" alt=''>
-              </div>
-
+            <% if story[:is_published] %>
+              <p class='cs-thumbnail-view-hover'>
+                <%= story[:title] %>
+              </p>
             <% end %>
+
+              <img class='cs-img' src="<%= story[:logo] %>" alt=''>
+
+            </div>
 
           </a>
 

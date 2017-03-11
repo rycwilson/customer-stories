@@ -1,14 +1,13 @@
 
-#more-stories {
+.cs-drawer {
 
-  bottom: 0px;
-  // height: 183px;
-  overflow: hidden;
   position: fixed;
+  bottom: 0;
+  overflow: hidden;
   z-index: 1000;
   width: 100%;
 
-  header {
+  .cs-header {
     box-sizing: content-box !important;
     cursor: pointer;
     background: #000000;
@@ -17,7 +16,6 @@
     height: 24px;
     line-height: 24px;
     font-size: 16px;
-    font-family: 'Lato';
     overflow: hidden;
     padding-top: 7px;
     padding-bottom: 7px;
@@ -32,7 +30,7 @@
     }
   }
 
-  header:hover {
+  .cs-header:hover {
     color: #e2e2e2 !important;
   }
 
@@ -130,28 +128,41 @@
     }
   }
 
-  a.cs-thumbnail {
+  .cs-thumbnail {
     width: 170px;
     height: 100px;
     background-color: white;
     margin: 0;
     padding: 0;
     text-align: center;
-
-    .thumbnail-view {
+    .cs-thumbnail-view {
+      position: relative;
+      display: inline-block;
       height: 100%;
       width: 100%;
+      overflow: hidden;
       line-height: 95px;
       cursor: pointer;
-      p.thumbnail-view-hover {
+      .cs-thumbnail-view-hover {
+        display: block;
+        position: absolute;
+        right: 0;
+        z-index: 10;
+        width: 100%;
+        height: 100%;
         color: #fff;
         line-height: 18px;
         text-align: left;
         padding: 4px 8px;
         background: rgba(0, 0, 0, 0.8);
         border-radius: 3px;
+        -webkit-transform: translateY(-100%);
+        -moz-transform: translateY(-100%);
+        -ms-transform: translateY(-100%);
+        -o-transform: translateY(-100%);
+        transition: all 0.25s ease-in-out;
       }
-      img {
+      .cs-img {
         max-height: 100%;
         max-width: 100%;
         display: inline-block;
@@ -160,8 +171,13 @@
         padding: 8px;
       }
     }
+    .cs-thumbnail-view:hover .cs-thumbnail-view-hover {
+      -webkit-transform: translateY(0%);
+      -moz-transform: translateY(0%);
+      -ms-transform: translateY(0%);
+      -o-transform: translateY(0%);
+    }
   }
-
 
   .cs-scroll-left {
     position: absolute;

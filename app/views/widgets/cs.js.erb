@@ -1,7 +1,5 @@
 (function (window, document) {
-
   "use strict";
-
   var jQuery, $; // localize jquery variables
 
   if (window.jQuery === undefined || isOldVersion(window.jQuery.fn.jquery)) {
@@ -66,7 +64,6 @@
     slideDrawerPlugin();
     xScrollBoundaries()
     scrollHandlers();
-    centerLogos();
 
     var widgetShowTimer, widgetHideTimer;
     $('#cs-container header').one('click', function () {
@@ -95,11 +92,15 @@
       setCookie('cs-widget-hide', '1', date.toUTCString())
     }
     // adjust width for different font families
-    $('#cs-container').find('header').css(
+    $('#cs-container header').css(
         'width',
         (parseInt($('#cs-container header > span').css('width'), 10) + 30).toString() + "px"
       );
-    $('#cs-container .cs-drawer')
+    $('.cs-thumbnail').hover(
+      function () { $(this).css('border-color', '<%= @company.widget.tab_color %>'); },
+      function () { $(this).css('border-color', '#ddd'); }
+    );
+    $('.cs-drawer')
       .slideDrawer()
       .css({ opacity: 0, visibility: "visible" })
       .animate({ opacity: 1 }, 200);
@@ -206,18 +207,6 @@
       });
     };
 
-  }
-
-  function centerLogos () {
-    $('#cs-container img').each(function (image) {
-      var height = $(this).outerHeight(),
-          maxHeight = parseInt($(this).css('max-height')),
-          diff = maxHeight - height;
-      if (diff) {
-        $(this).css('margin-top', diff / 2);
-        $(this).css('margin-bottom', diff / 2);
-      }
-    });
   }
 
   /*
@@ -345,13 +334,11 @@
       .on('click', paginationScroll($carousel, pageWidth, paginationTrackScroll));
   }
 
-  function trackVisitor (companySubdomain) {
-
-    var companySubdomain = '<%= @company.subdomain %>'
+  function trackVisitor () {
 
     $('#cs-container').append(
       '<iframe class="cs-iframe" height="0" width="0" style="display:none" ' +
-      'src="https://' + companySubdomain + '.customerstories.net/track_widget"></iframe>');
+      'src="https://' + '<%= @company.subdomain %>' + '.customerstories.net/track_widget"></iframe>');
 
     // var trackingDoc = $('#cs-container').find('iframe')[0].contentWindow.document,
     //     trackingHost = (("https:" == document.location.protocol) ? "https://s.adroll.com" : "http://a.adroll.com"),

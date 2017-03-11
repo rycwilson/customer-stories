@@ -65,7 +65,8 @@ class StoriesController < ApplicationController
               .map do |story|
                 { title: story.title,
                   logo: story.customer.logo_url,
-                  path: story.published ? story.csp_story_path : root_path }
+                  path: story.published ? story.csp_story_path : root_path,
+                  is_published: story.is_published }
               end
   end
 

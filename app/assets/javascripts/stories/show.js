@@ -43,15 +43,15 @@ function initMoreStories () {
       });
     }
     // adjust width for different font families
-    $('#more-stories').find('header').css(
+    $('#more-stories header').css(
         'width',
         (parseInt($('#more-stories header > span').css('width'), 10) + 30).toString() + "px"
       );
-    $('#more-stories a.cs-thumbnail').hover(
+    $('.cs-thumbnail').hover(
       function () { $(this).css('border-color', app.company.widget.tab_color); },
       function () { $(this).css('border-color', '#ddd'); }
     );
-    $('#more-stories')
+    $('.cs-drawer')
       .slideDrawer()
       .css({ opacity: 0, visibility: "visible" })
       .animate({ opacity: 1 }, 200);

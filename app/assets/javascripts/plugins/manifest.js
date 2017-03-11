@@ -6,7 +6,7 @@
 //= require datatables/media/js/jquery.dataTables
 //= require datatables-plugins/integration/bootstrap/3/dataTables.bootstrap
 
-//= require bootstrap-jasny/js/fileinput.js
+//= require bootstrap-jasny/js/fileinput
 //= require mvpready-core
 //= require mvpready-helpers
 //= require mvpready-admin

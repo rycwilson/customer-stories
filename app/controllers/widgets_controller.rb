@@ -7,7 +7,6 @@ class WidgetsController < ApplicationController
   def script
     respond_to do |format|
       format.js { render action: 'cs' }
-      # format.html - might use this at some point
     end
   end
 
@@ -49,42 +48,14 @@ class WidgetsController < ApplicationController
     stories =
       @company.filter_stories_by_tag(filter_params || { tag: 'all', id: '0' }, false)
               .map do |story|
-                { logo: story.customer.logo_url,
-                  url: story.published ? story.csp_story_url : stories_index_url }
+                { title: story.title,
+                  logo: story.customer.logo_url,
+                  path: story.published ? story.csp_story_url : stories_index_url,
+                  is_published: story.published }
               end
-
-    html = "<section class='cs-drawer' style='visibility:hidden'>
-              <header class='text-center' style='#{@company.widget.tab_style}'>
-                <span>
-                  <span>Customer Stories</span>&nbsp;
-                  <i class='fa fa-chevron-up'></i><i class='fa fa-chevron-down'></i>
-                </span>
-              </header>
-              <div class='cs-drawer-content' style='border-top-color:#{@company.widget.tab_color}'>
-                <div class='cs-drawer-items'>
-                  <div class='cs-scroll-left'></div>
-                    <div class='cs-row cs-pagination-row text-center'>
-                    </div>
-                    <div class='cs-row row-horizon text-center'>"
-
-    xs_col_width = 4
-    sm_col_width = 3
-    md_col_width = 2
-
-    # the bootstrap styling starts to break down after 30 stories
-    stories.first(30).each do |story|
-      html <<         "<div class='col-xs-#{xs_col_width} col-sm-#{sm_col_width} col-md-#{md_col_width}'>
-                         <a href='#{story[:url]}' class='cs-thumbnail' target='_blank'>
-                           <img src='#{story[:logo]}' alt=''>
-                         </a>
-                       </div>"
-    end
-
-    html <<        "</div>
-                  <div class='cs-scroll-right'></div>
-                </div>
-              </div>
-            </section>"
+    render_to_string(partial: 'more_stories', layout: false,
+                     locals: { widget: @company.widget, stories: stories,
+                               title: 'Customer Stories' })
   end
 
   # filter attributes = { tag: ... , slug: ... }
