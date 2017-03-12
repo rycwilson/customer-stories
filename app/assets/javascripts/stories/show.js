@@ -15,18 +15,16 @@ function initMoreStories () {
     if (widgetShowTimer) { clearTimeout(widgetShowTimer); }
     if (widgetHideTimer) { clearTimeout(widgetHideTimer); }
   });
-
   slideDrawerPlugin();  // define the jquery plugin
   $('#more-stories').imagesLoaded(function () {
     moreStoriesScrollHandlers();
-    // centerLogos();
     // if user is using a mouse, this will hose dimensions
     // (in a somewhat random way)
     // compensate for this ...
-    if ($('.cs-drawer-content').css('height') !== '141px') {
-      $('.cs-drawer-content').css('height', '141px');
-      $('.cs-drawer-items').css('height', '141px');
-    }
+    // if ($('.cs-drawer-content').css('height') !== '141px') {
+    //   $('.cs-drawer-content').css('height', '141px');
+    //   $('.cs-drawer-items').css('height', '141px');
+    // }
     if ( app.company.widget.show &&
          !Cookies.get(app.company.subdomain + '-hide-widget') ) {
       widgetShowTimer = setTimeout(function () {
@@ -42,11 +40,6 @@ function initMoreStories () {
         expires: inOneHour
       });
     }
-    // adjust width for different font families
-    $('#more-stories header').css(
-        'width',
-        (parseInt($('#more-stories header > span').css('width'), 10) + 30).toString() + "px"
-      );
     $('.cs-thumbnail').hover(
       function () { $(this).css('border-color', app.company.widget.tab_color); },
       function () { $(this).css('border-color', '#ddd'); }

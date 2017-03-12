@@ -74,10 +74,10 @@
     // if user is using a mouse, this will hose dimensions
     // (in a somewhat random way)
     // compensate for this ...
-    if ($('.cs-drawer-content').css('height') !== '141px') {
-      $('.cs-drawer-content').css('height', '141px');
-      $('.cs-drawer-items').css('height', '141px');
-    }
+    // if ($('.cs-drawer-content').css('height') !== '141px') {
+    //   $('.cs-drawer-content').css('height', '141px');
+    //   $('.cs-drawer-items').css('height', '141px');
+    // }
     if ( <%= @company.widget.show %> && !getCookie('cs-widget-hide') ) {
       widgetShowTimer = setTimeout(function () {
         $('#cs-container header').click();
@@ -91,11 +91,6 @@
       date.setHours(date.getHours() + 1);
       setCookie('cs-widget-hide', '1', date.toUTCString())
     }
-    // adjust width for different font families
-    $('#cs-container header').css(
-        'width',
-        (parseInt($('#cs-container header > span').css('width'), 10) + 30).toString() + "px"
-      );
     $('.cs-thumbnail').hover(
       function () { $(this).css('border-color', '<%= @company.widget.tab_color %>'); },
       function () { $(this).css('border-color', '#ddd'); }

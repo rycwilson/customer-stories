@@ -66,7 +66,7 @@ class StoriesController < ApplicationController
                 { title: story.title,
                   logo: story.customer.logo_url,
                   path: story.published ? story.csp_story_path : root_path,
-                  is_published: story.is_published }
+                  is_published: story.published }
               end
   end
 
