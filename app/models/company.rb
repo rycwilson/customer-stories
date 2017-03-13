@@ -34,7 +34,7 @@ class Company < ActiveRecord::Base
   has_many :story_shares, class_name: "StoryShare"
   has_many :cta_clicks, class_name: "CtaClick"
   has_many :profile_clicks, class_name: "ProfileClick"
-  has_many :logo_clicks, class_name: "Logo_click"
+  has_many :logo_clicks, class_name: "LogoClick"
   has_many :visitor_sessions, -> { distinct }, through: :visitor_actions
   has_many :visitors, -> { distinct }, through: :visitor_sessions
 
