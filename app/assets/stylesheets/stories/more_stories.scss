@@ -1,26 +1,35 @@
 
 .cs-drawer {
-
   position: fixed;
   bottom: 0;
   overflow: hidden;
   z-index: 1000;
   width: 100%;
 
+  .cs-row {
+    margin: 0;
+    padding: 0;
+  }
+
+  .cs-scroll {
+    position: relative;
+  }
+
+  .cs-header-row {
+    height: 40px;   //  24 + 8 + 8
+  }
+
   .cs-header {
+    display: inline-block;
+    height: 100%;
     box-sizing: content-box !important;
     cursor: pointer;
     background: #000000;
     color: #ffffff;
-    display: inline-block;
-    height: 24px;
     line-height: 24px;
     font-size: 16px;
-    // overflow: hidden;
-    padding-top: 7px;
-    padding-bottom: 7px;
-    margin-left: 78%;
-    margin-right: auto;
+    padding-top: 8px;
+    padding-bottom: 8px;
     -moz-border-radius-topleft: 6px 6px;
     -moz-border-radius-topright: 6px 6px;
     border-top-left-radius: 6px 6px;
@@ -36,50 +45,16 @@
 
   .cs-drawer-content {
     position: relative;
+    width: 100%;
     background: rgba(0, 0, 0, 0.7);
     border-collapse: collapse;
     border-top: 4px solid #000000;
-    width: 100%;
   }
 
   .cs-drawer-items {
     line-height: normal;  // added to compenstate for a line-height of 1.9 that was inherited from body and was making .row-pagination too tall
     margin: auto;
-  }
-
-  .cs-row.row-horizon {
-    @media (max-width: 400px) {
-      margin-left: 40px;
-      margin-right: 40px;
-    }
-    @media (min-width: 401px) and (max-width: 450px) {
-      margin-left: 45px;
-      margin-right: 45px;
-    }
-    @media (min-width: 451px) and (max-width: 500px) {
-      margin-left: 50px;
-      margin-right: 50px;
-    }
-    @media (min-width: 501px) and (max-width: 550px) {
-      margin-left: 52px;
-      margin-right: 52px;
-    }
-    @media (min-width: 551px) and (max-width: 600px) {
-      margin-left: 55px;
-      margin-right: 55px;
-    }
-    @media (min-width: 601px) and (max-width: 650px) {
-      margin-left: 57px;
-      margin-right: 57px;
-    }
-    @media (min-width: 651px) and (max-width: 700px) {
-      margin-left: 59px;
-      margin-right: 59px;
-    }
-    @media (min-width: 701px) and (max-width: 767px) {
-      margin-left: 61px;
-      margin-right: 61px;
-    }
+    padding: 0;
   }
 
   .row-horizon {
@@ -87,41 +62,44 @@
     div[class^='col'] {
       box-sizing: border-box;
     }
+    // (why doesn't text-center work?)
     @media (max-width: 400px) {
-      .col-xs-6 { width: 62.5%; }
+      .col-xs-12 {
+        // width: 100%;
+      }
     }
-    @media (min-width: 400px) and (max-width: 450px) {
-      .col-xs-6 { width: 60.5%; }
-    }
-    @media (min-width: 451px) and (max-width: 500px) {
-      .col-xs-6 { width: 55.5%; }
-    }
+    // @media (min-width: 400px) and (max-width: 450px) {
+    //   .col-xs-6 { width: 60.5%; }
+    // }
+    // @media (min-width: 451px) and (max-width: 500px) {
+    //   .col-xs-6 { width: 55.5%; }
+    // }
     @media (min-width: 501px) and (max-width: 550px) {
-      .col-xs-6 { width: 47.5%; }
+      .col-xs-10 { width: 60%; }
     }
     @media (min-width: 551px) and (max-width: 600px) {
-      .col-xs-6 { width: 43.5%; }
+      .col-xs-10 { width: 55%; }
     }
     @media (min-width: 601px) and (max-width: 650px) {
-      .col-xs-6 { width: 38.5%; }
+      .col-xs-10 { width: 50%; }
     }
     @media (min-width: 651px) and (max-width: 700px) {
-      .col-xs-6 { width: 35.5%; }
+      .col-xs-10 { width: 45%; }
     }
     @media (min-width: 701px) and (max-width: 767px) {
-      .col-xs-6 { width: 32.5%; }
+      .col-xs-10 { width: 40%; }
     }
     @media (min-width: 768px) {
-      .col-sm-5 { width: 30.5%; }
+      .col-sm-5 { width: 34.5%; }
     }
     @media (min-width: 845px) {
-      .col-sm-5 { width: 27.5%; }
+      .col-sm-5 { width: 29.5%; }
     }
     @media (min-width: 920px) {
-      .col-sm-5 { width: 25.5%; }
+      .col-sm-5 { width: 27.5%; }
     }
     @media (min-width: 992px) {
-      .col-md-3 { width: 24.5%; }
+      .col-md-3 { width: 25.5%; }
     }
     @media (min-width: 1100px) {
       .col-md-3 { width: 22.5%; }
@@ -187,9 +165,10 @@
   .cs-scroll-left {
     position: absolute;
     cursor: pointer;
-    top: 40px;
+    top: 19px;
     left: 0;
-    margin-left: 2%;
+    right: 0;
+    margin: auto;
     z-index: 10;
     height: 60px;
     width: 32px;
@@ -205,9 +184,10 @@
   .cs-scroll-right {
     position: absolute;
     cursor: pointer;
-    top: 40px;
+    top: 19px;
+    left: 0;
     right: 0;
-    margin-right: 2%;
+    margin: auto;
     z-index: 10;
     height: 60px;
     width: 32px;
@@ -218,24 +198,6 @@
 
   .cs-scroll-right:hover {
     background-color: black;
-  }
-
-  @media (min-width: 768px) {
-    .cs-drawer-items {
-      width: 79%;
-    }
-  }
-
-  @media (min-width: 992px) {
-    .cs-drawer-items {
-      width: 82%;
-    }
-  }
-
-  @media (min-width: 1200px) {
-    .cs-drawer-items {
-      width: 84%;
-    }
   }
 
   .cs-page-dot {
