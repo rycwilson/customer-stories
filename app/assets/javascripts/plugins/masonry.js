@@ -6,8 +6,8 @@ function initMasonry () {
   if ($('body').hasClass('stories index')) {
     columnWidth = 220;
   } else if ($('body').hasClass('stories show')) {
-    columnWidth = 150;
-    gutter = 25;
+    columnWidth = 220;
+    // gutter = 20;
   }
 
   $('.grid').masonry({

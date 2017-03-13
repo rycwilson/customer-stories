@@ -8,10 +8,10 @@
   }
 
   #related-stories {
-    padding-bottom: 15px;
+    padding-bottom: 0;
     .row {
       font-size: 0;
-      margin-bottom: 20px;
+      margin-bottom: 24px;
       div[class^='col-'] {
         float: none;
         display: inline-block;
@@ -29,36 +29,43 @@
     .grid {
       margin: 0 auto;
     }
-    .grid-item {
-      width: 140px;
-      height: 100px;
-      // margin-left: 24px;
-      // margin-right: 24px;
-      margin-bottom: 20px;  // mirrors #stories-gallery-content
-      position: relative;  // this is for positioning the caption at the bottom
-      // border: 2px solid hsla(0, 0%, 0%, 0.5);
-    }
 
     .grid-item.thumbnail {
-      padding: 0   // define all in order to override bootstrap default
-    }
+      position: relative;  // this is for positioning the caption at the bottom
+      width: 170px;
+      height: 124px;
+      text-align: center;  // centers image horizontally
+      padding: 0;
+      margin-left: 24px;
+      margin-right: 24px;
+      margin-bottom: 30px;  // mirrors #stories-gallery-content
+      // border: 2px solid hsla(0, 0%, 0%, 0.5);
+      .thumbnail-view {
+        height: 100px;
+        line-height: 96px;
+        width: 100%;
+        cursor: pointer;
+        p.thumbnail-view-hover {
+          color: #fff;
+          line-height: 18px;
+          text-align: left;
+          padding: 4px 8px;
+          background: rgba(0, 0, 0, 0.8);
+        }
+        img {
+          max-height: 100%;
+          padding: 8px 8px 8px 8px;
+        }
+      }
 
-    .grid-item.thumbnail > img {
-      max-height: 78px;
-      padding: 5px 10px 5px 10px;
-    }
-
-    .grid-item.thumbnail.no-caption > img {
-      margin-top: 11px;
-      padding: 5px 10px 5px 10px;
-    }
-
-    .grid-item.thumbnail .caption {
-      padding: 2px 0 2px 6px;
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      border-radius: 0 0 3px 3px;
+      .caption {
+        text-align: left;
+        padding: 2px 0 2px 6px;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        border-radius: 0 0 3px 3px;
+      }
     }
   }
 
