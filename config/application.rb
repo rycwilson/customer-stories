@@ -43,7 +43,7 @@ module Csp
     # Minimum Sass number precision required by bootstrap-sass
     ::Sass::Script::Value::Number.precision = [8, ::Sass::Script::Value::Number.precision].max
 
-    # this will load any custom classes in lib/
+    # load custom classes
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
 
   end
