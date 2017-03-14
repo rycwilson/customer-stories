@@ -583,17 +583,17 @@ class Story < ActiveRecord::Base
                                       .delete_if { |story_id| story_id == self.id }
     end
     same_tag_stories = (same_product_stories + same_category_stories).uniq
-    if same_product_stories.length >= 3
-      related_stories = same_product_stories.sample(3)
-    elsif same_tag_stories.length >= 3
-      related_stories = same_tag_stories.sample(3)
+    if same_product_stories.length >= 2
+      related_stories = same_product_stories.sample(2)
+    elsif same_tag_stories.length >= 2
+      related_stories = same_tag_stories.sample(2)
     elsif same_tag_stories.length == 0
-      related_stories = published_stories.sample(3)
+      related_stories = published_stories.sample(2)
     else
       related_stories = same_tag_stories +
                         published_stories.delete_if do |story_id|
                           same_tag_stories.include?(story_id)
-                        end.sample(3 - same_tag_stories.length)
+                        end.sample(2 - same_tag_stories.length)
     end
     Story.find(related_stories)
   end
