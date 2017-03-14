@@ -5,6 +5,7 @@
   overflow: hidden;
   z-index: 1000;
   width: 100%;
+  -webkit-backface-visibility: hidden;
 
   .cs-row {
     margin: 0;
