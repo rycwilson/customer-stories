@@ -60,57 +60,45 @@
   .row-horizon {
     padding-bottom: 23px;
     div[class^='col'] {
+      position: relative;
+      height: 100px;
       box-sizing: border-box;
     }
-    // (why doesn't text-center work?)
-    @media (max-width: 400px) {
+    @media (max-width: 567px) {
       .col-xs-12 {
-        padding-left: 28px;
         width: 98%;
       }
     }
-    // @media (min-width: 400px) and (max-width: 450px) {
-    //   .col-xs-6 { width: 60.5%; }
-    // }
-    // @media (min-width: 451px) and (max-width: 500px) {
-    //   .col-xs-6 { width: 55.5%; }
-    // }
-    // @media (min-width: 501px) and (max-width: 550px) {
-    //   .col-xs-10 { width: 60%; }
-    // }
-    // @media (min-width: 551px) and (max-width: 600px) {
-    //   .col-xs-10 { width: 55%; }
-    // }
-    // @media (min-width: 601px) and (max-width: 650px) {
-    //   .col-xs-10 { width: 50%; }
-    // }
-    // @media (min-width: 651px) and (max-width: 700px) {
-    //   .col-xs-10 { width: 45%; }
-    // }
-    // @media (min-width: 701px) and (max-width: 767px) {
-    //   .col-xs-10 { width: 40%; }
-    // }
-    // @media (min-width: 768px) {
-    //   .col-sm-5 { width: 34.5%; }
-    // }
-    // @media (min-width: 845px) {
-    //   .col-sm-5 { width: 29.5%; }
-    // }
-    // @media (min-width: 920px) {
-    //   .col-sm-5 { width: 27.5%; }
-    // }
-    // @media (min-width: 992px) {
-    //   .col-md-3 { width: 25.5%; }
-    // }
-    // @media (min-width: 1100px) {
-    //   .col-md-3 { width: 22.5%; }
-    // }
-    // @media (min-width: 1200px) {
-    //   .col-md-3 { width: 19.5%; }
-    // }
+    @media (min-width: 568px) and (max-width: 767px) {
+      .col-xs-12 {
+        width: 50%
+      }
+    }
+    @media (min-width: 768px) {
+      .col-sm-5 { width: 34.5%; }
+    }
+    @media (min-width: 845px) {
+      .col-sm-5 { width: 29.5%; }
+    }
+    @media (min-width: 920px) {
+      .col-sm-5 { width: 27.5%; }
+    }
+    @media (min-width: 992px) {
+      .col-md-3 { width: 25.5%; }
+    }
+    @media (min-width: 1100px) {
+      .col-md-3 { width: 22.5%; }
+    }
+    @media (min-width: 1200px) {
+      .col-md-3 { width: 19.5%; }
+    }
   }
 
   .cs-thumbnail {
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: auto;
     width: 170px;
     height: 100px;
     background-color: white;
