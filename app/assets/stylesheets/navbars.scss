@@ -39,10 +39,23 @@
   border:0;
   height: 65px;
 
+  .row {
+    display: flex;
+    align-items: center;
+    div:last-child {
+      height: 38px;
+      padding-right: 28px;  // matches navbar header padding-left
+      a {
+        float: right;       // so it overflows to the left
+        line-height: 24px;
+      }
+    }
+  }
+
   .navbar-header {
-      line-height: 65px;          // for centering image vertically
+    line-height: 65px;          // for centering image vertically
     .navbar-brand {
-      padding-right: 28px;
+      padding: 0 28px;
       line-height: 60px;          // for centering image vertically
       img {
         display: inline-block;    // for centering image vertically
@@ -67,10 +80,11 @@
     }
   }
 
+
 }
 
 #primary-cta-btn {
-  margin-top: 15px;
+  // margin-top: 15px;
   font-weight: 400;
   border-radius: 2px;
   border: 1px solid;

@@ -21,16 +21,16 @@
 <nav class="navbar navbar-default admin" role="banner"
      style="<%= @company ? @company.header_style : Company::CSP.header_style %>">
   <div class="container">
-<!-- <div class="row"> -->
-    <div class="navbar-header col-xs-12 col-sm-9">
+<div class="row">
+    <div class="navbar-header col-xs-12 col-sm-8">
 
       <%= render 'shared/admin_navbar_header' %>
 
     </div>
 
-    <% if controller_name == 'stories' && action_name == 'show' %>
+    <% if controller_name == 'stories' && (['index', 'show'].include?(action_name)) %>
 
-      <div class='hidden-xs col-sm-3 text-right'>
+      <div class='hidden-xs col-sm-4 text-right'>
 
         <% if @company.ctas.primary %>
 
@@ -51,6 +51,6 @@
 
     <% end %>
 
-  <!-- </div> -->
+  </div>
   </div>
 </nav>

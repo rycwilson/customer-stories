@@ -38,6 +38,7 @@ module ApplicationHelper
   end
 
   def include_gon? controller, action
+    controller == 'site' && ['index', 'store_front'].include?(action) ||
     controller == 'stories' && ['index', 'show', 'edit'].include?(action) ||
     controller == 'companies' && ['show', 'edit'].include?(action) ||
     controller == 'profile' && action == 'edit'
