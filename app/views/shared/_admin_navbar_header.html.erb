@@ -31,7 +31,8 @@
 <% else %>
 
   <%= link_to @company.website, class: "navbar-brand navbar-brand-img company-logo-clicky", target: '_blank' do %>
-    <%= image_tag @company.logo_url, alt: "#{@company.name} logo" %>
+    <%= image_tag @company.logo_url, alt: "#{@company.name} logo",
+          class: 'img-responsive' %>
   <% end unless @company.logo_url.blank? %>
 
 <% end %>
