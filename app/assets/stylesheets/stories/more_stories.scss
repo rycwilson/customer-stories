@@ -95,14 +95,13 @@
   }
 
   .cs-thumbnail {
+    width: 170px;
+    height: 100px;
     position: absolute;
     left: 0;
     right: 0;
-    margin: auto;
-    width: 170px;
-    height: 100px;
+    margin: 0 auto;
     background-color: white;
-    margin: 0;
     padding: 0;
     text-align: center;
     .cs-thumbnail-view {

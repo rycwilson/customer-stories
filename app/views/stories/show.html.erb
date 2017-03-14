@@ -47,16 +47,14 @@
   </div>
 <% end %>
 
+
 <% @story.ctas.forms.each do |form| %>
-
   <%= render 'ctas/cta_form_modal', { form: form } %>
-
 <% end %>
 
+
 <% if @is_curator %>
-
   <%= render 'shared/company_navbar', { company: @company, workflow_tab: nil } %>
-
 <% end %>
 
 <div class="mainnav" style='min-height:42px!important;position:relative'>
