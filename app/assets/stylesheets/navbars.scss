@@ -36,7 +36,7 @@
   /* color1, color2, and text color are defined in company model */
   /* background-color set to transparent in mvpready-admin.css */
   background-clip: border-box;
-  border:0;
+  border: 0;
   height: 65px;
 
   .row {
@@ -44,7 +44,6 @@
     align-items: center;
     div:last-child {
       height: 38px;
-      padding-right: 28px;  // matches navbar header padding-left
       a {
         float: right;       // so it overflows to the left
         line-height: 24px;
@@ -55,7 +54,6 @@
   .navbar-header {
     line-height: 65px;          // for centering image vertically
     .navbar-brand {
-      padding: 0 28px;
       line-height: 60px;          // for centering image vertically
       img {
         display: inline-block;    // for centering image vertically

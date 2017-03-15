@@ -21,36 +21,35 @@
 <nav class="navbar navbar-default admin" role="banner"
      style="<%= @company ? @company.header_style : Company::CSP.header_style %>">
   <div class="container">
-<div class="row">
-    <div class="navbar-header col-xs-12 col-sm-8">
+    <div class="row">
 
-      <%= render 'shared/admin_navbar_header' %>
+      <div class="navbar-header col-xs-12 col-sm-8">
+        <%= render 'shared/admin_navbar_header' %>
+      </div>
+
+      <% if controller_name == 'stories' && (['index', 'show'].include?(action_name)) %>
+
+        <div class='hidden-xs col-sm-4 text-right'>
+
+          <% if @company.ctas.primary %>
+
+            <%= link_to(@company.ctas.primary.display_text,
+                  @company.ctas.primary.link_url, target: '_blank',
+                  id: 'primary-cta-btn', class: "btn cta-link",
+                  style: "background-color:#{@company.primary_cta_background_color};color:#{@company.primary_cta_text_color};border-color:#{@company.primary_cta_background_color}") %>
+
+          <% end %>
+
+        </div>
+
+      <% else %>
+
+        <div class="hidden-xs col-sm-4">
+          <!-- filler -->
+        </div>
+
+      <% end %>
 
     </div>
-
-    <% if controller_name == 'stories' && (['index', 'show'].include?(action_name)) %>
-
-      <div class='hidden-xs col-sm-4 text-right'>
-
-        <% if @company.ctas.primary %>
-
-          <%= link_to(@company.ctas.primary.display_text,
-                @company.ctas.primary.link_url, target: '_blank',
-                id: 'primary-cta-btn', class: "btn cta-link",
-                style: "background-color:#{@company.primary_cta_background_color};color:#{@company.primary_cta_text_color};border-color:#{@company.primary_cta_background_color}") %>
-
-        <% end %>
-
-      </div>
-
-    <% else %>
-
-      <div class="hidden-xs col-sm-3">
-        <!-- filler -->
-      </div>
-
-    <% end %>
-
-  </div>
   </div>
 </nav>

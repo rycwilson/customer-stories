@@ -4,8 +4,7 @@
 <div class="container">
   <div class='row'>
 
-    <div class="col-xs-10 col-xs-offset-1
-            <%= story.embed_url.present? ? 'visible-xs-block' : 'hidden' %>">
+    <div class="col-xs-12 <%= story.embed_url.present? ? 'visible-xs-block' : 'hidden' %>">
 
       <!-- <div itemprop='video' itemscope itemtype='//schema.org/VideoObject'> -->
         <!-- <meta itemprop='' itemcontent=''> -->
@@ -38,9 +37,9 @@
       <!-- </div> -->  <!-- meta VideoObject -->
     </div>
 
-    <div class="col-xs-1">
-      <!-- space filler -->
-    </div>
+    <!-- <div class="col-xs-1">
+      space filler
+    </div> -->
 
   </div>
 </div>

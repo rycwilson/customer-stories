@@ -2,14 +2,15 @@
 <% if curator_with_logo? %>
 
   <%= link_to @company.website, class: 'navbar-brand navbar-brand-img', target: '_blank' do %>
-    <%= image_tag current_user.company.logo_url, alt: "#{@company.name} logo" %>
+    <%= image_tag current_user.company.logo_url, alt: "#{@company.name} logo",
+          class: 'img-responsive' %>
   <% end %>
 
 <% elsif curator_without_logo? %>
 
   <%= link_to @company.website, class: "navbar-brand navbar-brand-img", target: '_blank' do %>
     <%= image_tag "company-logo-missing.png",
-          alt: "#{@company.name} logo placeholder" %>
+          alt: "#{@company.name} logo placeholder", class: 'img-responsive' %>
   <% end %>
 
 <% elsif registered_user_without_company? %>
@@ -17,13 +18,13 @@
   <% if controller_name == 'stories' %>
 
     <%= link_to root_path, class: 'navbar-brand navbar-brand-img' do %>
-      <%= image_tag(@company.logo_url, alt: "#{@company.name} logo") unless @company.logo_url.blank? %>
+      <%= image_tag(@company.logo_url, alt: "#{@company.name} logo", class: 'img-responsive') unless @company.logo_url.blank? %>
     <% end %>
 
   <% else %>
 
     <%= link_to root_path, class: 'navbar-brand navbar-brand-img' do %>
-      <%= image_tag "mvp-landing/logo_full.png", alt: 'CSP Logo' %>
+      <%= image_tag "mvp-landing/logo_full.png", alt: 'CSP Logo', class: 'img-responsive' %>
     <% end %>
 
   <% end %>

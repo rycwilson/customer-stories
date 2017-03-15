@@ -39,13 +39,13 @@
   </div>
 </div> -->
 
-<% if @more_stories.present? %>
+<%# if @more_stories.present? %>
   <div id='more-stories'>
-    <%= render 'widgets/more_stories',
+    <%#= render 'widgets/more_stories',
           { widget: @company.widget, stories: @more_stories,
             title: 'More Stories' } %>
   </div>
-<% end %>
+<%# end %>
 
 
 <% @story.ctas.forms.each do |form| %>
@@ -100,7 +100,9 @@
 
 </div>
 
-<div id='story-section-testimonial'>  <!-- includes video -->
+<!-- includes video -->
+<div id='story-section-testimonial'
+     class="<%= @story.embed_url.present? ? '' : 'no-video' %>">
 
   <% cache("#{@company.subdomain}/story-#{@story.id}-testimonial",
            skip_digest: true) do %>
@@ -110,7 +112,8 @@
 </div>
 
 <!-- video (xs only) -->
-<div id='story-section-video-xs' class='visible-xs'>
+<div id='story-section-video-xs'
+     class='visible-xs <%= @story.embed_url.present? ? '' : 'hidden' %>'>
 
   <% cache("#{@company.subdomain}/story-#{@story.id}-video-xs",
            skip_digest: true) do %>

@@ -5,7 +5,7 @@
   overflow: hidden;
   z-index: 1000;
   width: 100%;
-  -webkit-backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;  // ref: http://stackoverflow.com/questions/19254146
 
   .cs-row {
     margin: 0;

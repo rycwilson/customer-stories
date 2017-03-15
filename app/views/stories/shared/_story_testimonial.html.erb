@@ -7,78 +7,90 @@
   to properly load
   http://stackoverflow.com/questions/17600093/rails-javascript-not-loading-after-clicking-through-link-to-helper
 -->
-<div class="container" style='padding-top:12px'>
+<div class="container">
 
-  <div id='story-testimonial-col'
-      class="col-xs-12 <%= story.embed_url.present? ? 'col-sm-6 col-md-7' : 'no-video' %>">
+  <div class="row testimonial">
+    <div class="col-xs-12 <%= story.embed_url.present? ? 'col-sm-6 col-md-7' : 'no-video' %>">
 
-    <!-- logo -->
-    <div id='story-customer-logo-col'
-         class='text-center col-xs-3
-               <%= story.embed_url.present? ? 'col-sm-12' : '' %>'>
-      <img id='story-customer-logo'
-        src="<%= story.success.customer.logo_url || asset_path('company-logo-missing.png') %>">
-    </div>
+      <div class="row customer-logo customer-quote hidden-xs">
 
-    <!-- quote -->
-    <div id='story-quote-col'
-         class='story-text col-xs-9
-                <%= story.embed_url.present? ? 'col-sm-12' : 'col-md-8' %> '>
-      <p id='story-quote' class='lead story-text'>
-        <em>"<%= story.quote %>"</em>
-      </p>
+        <div class='customer-logo text-center <%= story.embed_url.present? ? 'col-sm-12' : 'col-sm-3' %>'>
+          <%= image_tag (story.customer.logo_url || asset_path('company-logo-missing.png')), class: 'img-responsive' %>
+        </div>
 
-      <div id='story-quote-attr-col'
-           class='col-sm-12 col-lg-11 text-right hidden-xs'>
-        <p id='story-quote-attr'>
-          &#8211;&nbsp;<%= story.quote_attr %>
-        </p>
-      </div>
+        <div class='customer-quote <%= story.embed_url.present? ? 'col-sm-12' : 'col-sm-8' %> '>
 
-      <div id='story-quote-attr-col'
-           class='col-xs-12 visible-xs'>
-        <p id='story-quote-attr'>
-          &#8211;&nbsp;<%= quote_attribution(story) %>
-        </p>
-      </div>
+          <p class='lead'><em>"<%= story.quote %>"</em></p>
 
-    </div>
-  </div>
-
-  <div id='story-video-col'
-       class="<%= story.embed_url.present? ? 'hidden-xs col-sm-6 col-md-5' : 'hidden' %>">
-
-    <!-- <div itemprop='video' itemscope itemtype='//schema.org/VideoObject'> -->
-      <!-- <meta itemprop='' content='' -->
-
-      <% if story.video_info[:provider] == 'wistia' %>
-
-        <script src="//fast.wistia.com/embed/medias/<%= story.video_info[:id] %>.jsonp" async></script>
-        <script src="//fast.wistia.com/assets/external/E-v1.js" async></script>
-        <div class="wistia_responsive_padding"
-             style="padding:56.25% 0 0 0; position:relative;">
-          <div class="wistia_responsive_wrapper"
-               style="height:100%;left:0;position:absolute;top:0;width:100%;">
-            <div class="wistia_embed wistia_async_<%= story.video_info[:id] %>
-                  popover=true popoverAnimateThumbnail=true videoFoam=true"
-                 style="display:inline-block; width:100%; height:100%">&nbsp;
+          <div class="row">
+            <div class='col-sm-12 col-lg-11 text-right'>
+              <p>&#8211;&nbsp;<%= story.quote_attr_name %>,&nbsp;<%= story.quote_attr_title %></p>
             </div>
           </div>
+
         </div>
 
-      <% else %>
+        <!-- filler -->
+        <div class="<%= story.embed_url.present? ? 'hidden' : 'col-sm-1' %>"></div>
 
-        <div class="video-thumb-container"
-             data-toggle='modal' data-target='#story-video-modal'
-             data-provider="<%= story.video_info[:provider] %>"
-             data-video-id="<%= story.video_info[:id] %>"
-             data-video-url="<%= story.embed_url %>">
+      </div>
+
+      <div class="row customer-quote visible-xs-block">
+        <div class='col-xs-12'>
+
+          <p class='lead'><em>"<%= story.quote %>"</em></p>
+
         </div>
+      </div>
 
-      <% end %>
+      <!-- visible-xs on columns so as not to collide with display: flex -->
+      <div class="row customer-quote-attr-xs">
+        <div class='customer-logo col-xs-5 text-center visible-xs-block'>
+          <%= image_tag (story.customer.logo_url || asset_path('company-logo-missing.png')), class: 'img-responsive' %>
+        </div>
+        <div class='customer-quote-attr col-xs-7 visible-xs-block'>
+          <p><%= story.quote_attr_name %></p>
+          <p><%= story.quote_attr_title %></p>
+        </div>
+      </div>
 
-    <!-- </div> -->  <!-- meta VideoObject -->
+    </div>
+
+    <div class="story-video <%= story.embed_url.present? ? 'hidden-xs col-sm-6 col-md-5' : 'hidden' %>">
+
+      <!-- <div itemprop='video' itemscope itemtype='//schema.org/VideoObject'> -->
+        <!-- <meta itemprop='' content='' -->
+
+        <% if story.video_info[:provider] == 'wistia' %>
+
+          <script src="//fast.wistia.com/embed/medias/<%= story.video_info[:id] %>.jsonp" async></script>
+          <script src="//fast.wistia.com/assets/external/E-v1.js" async></script>
+          <div class="wistia_responsive_padding"
+               style="padding:56.25% 0 0 0; position:relative;">
+            <div class="wistia_responsive_wrapper"
+                 style="height:100%;left:0;position:absolute;top:0;width:100%;">
+              <div class="wistia_embed wistia_async_<%= story.video_info[:id] %>
+                    popover=true popoverAnimateThumbnail=true videoFoam=true"
+                   style="display:inline-block; width:100%; height:100%">&nbsp;
+              </div>
+            </div>
+          </div>
+
+        <% else %>
+
+          <div class="video-thumb-container"
+               data-toggle='modal' data-target='#story-video-modal'
+               data-provider="<%= story.video_info[:provider] %>"
+               data-video-id="<%= story.video_info[:id] %>"
+               data-video-url="<%= story.embed_url %>">
+          </div>
+
+        <% end %>
+
+      <!-- </div> -->  <!-- meta VideoObject -->
+    </div>
   </div>
+
 </div>
 
 

@@ -77,11 +77,6 @@ module StoriesHelper
     keywords.present? ? keywords.join(', ') : ''
   end
 
-  def quote_attribution story
-    return "" if story.quote_attr.blank?
-    story.quote_attr.gsub(',', ",<br>&nbsp;&nbsp;").html_safe
-  end
-
   def og_image company, provider
     provider == 'all' ? (width = '400'; height = '400') :
                         (width = '300'; height = '160') # linkedin
