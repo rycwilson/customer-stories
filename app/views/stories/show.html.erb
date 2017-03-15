@@ -39,13 +39,13 @@
   </div>
 </div> -->
 
-<%# if @more_stories.present? %>
+<% if @more_stories.present? %>
   <div id='more-stories'>
-    <%#= render 'widgets/more_stories',
+    <%= render 'widgets/more_stories',
           { widget: @company.widget, stories: @more_stories,
             title: 'More Stories' } %>
   </div>
-<%# end %>
+<% end %>
 
 
 <% @story.ctas.forms.each do |form| %>
