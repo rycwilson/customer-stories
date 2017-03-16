@@ -114,7 +114,8 @@ function storiesPlayVideoListener () {
       });
 
       $modal.one('hidden.bs.modal', function () {
-        modalPlayerWindow.location.replace('');
+        // this causes the browser to hang (and appears to serve no real purpose)
+        // modalPlayerWindow.location.replace('');
       });
     }
   });
