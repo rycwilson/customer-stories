@@ -105,6 +105,9 @@ module StoriesHelper
     when 'zeniq'
       provider == 'all' ? (image = ZENIQ_400X400_URL) :
                           (image = ZENIQ_300X160_URL) # linkedin
+    when 'retailnext'
+      provider == 'all' ? (image = RETAILNEXT_400X400_URL) :
+                          (image = RETAILNEXT_300X160_URL) # linkedin
     else
       width = '1200'
       height = '630'

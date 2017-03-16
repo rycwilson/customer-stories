@@ -51,3 +51,6 @@ CCE_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/cce/
 ZENIQ_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/zeniq/zeniq_400x400.png"
 ZENIQ_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/zeniq/zeniq_300x160.png"
 
+RETAILNEXT_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/retailnext/retailnext_400x400.png"
+RETAILNEXT_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/retailnext/retailnext_300x160.png"
+
