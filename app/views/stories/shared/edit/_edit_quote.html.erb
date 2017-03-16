@@ -22,16 +22,34 @@
 
       <div class="row">
 
-        <div id='edit-story-quote-attr'
+        <div id='edit-story-quote-attr-name'
             style='position:absolute; right:20px; margin-top:-3px'>
           <span class='glyphicon glyphicon-pencil bip-clickable'></span>
         </div>
 
-        <div id='story-quote-attr' class='col-md-11'>
+        <div id='story-quote-attr-name' class='col-md-11'>
 
-          <%= best_in_place @story, :quote_attr, url: story_path(@story.id),
-              activator: '#edit-story-quote-attr',
-              place_holder: "Add an attribution ...",
+          <%= best_in_place @story, :quote_attr_name, url: story_path(@story.id),
+              activator: '#edit-story-quote-attr-name',
+              place_holder: "Add a name ...",
+              html_attrs: { style: 'width: 100%' } %>
+
+        </div>
+
+      </div> <!-- row -->
+
+      <div class="row"> <br>
+
+        <div id='edit-story-quote-attr-title'
+            style='position:absolute; right:20px; margin-top:-3px'>
+          <span class='glyphicon glyphicon-pencil bip-clickable'></span>
+        </div>
+
+        <div id='story-quote-attr-title' class='col-md-11'>
+
+          <%= best_in_place @story, :quote_attr_title, url: story_path(@story.id),
+              activator: '#edit-story-quote-attr-title',
+              place_holder: "Add a title ...",
               html_attrs: { style: 'width: 100%' } %>
 
         </div>
