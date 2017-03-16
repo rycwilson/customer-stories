@@ -48,4 +48,23 @@
     transform: translate(-50%, -50%);
   }
 
+  @media (max-width: 767px) {
+    #story-video-modal iframe {
+      height: 260px;
+    }
+  }
+  @media (min-width: 768px) {
+    #story-video-modal iframe {
+      height: 330px;
+    }
+  }
+  @media (min-width: 992px) {
+    #story-video-modal iframe {
+      height: 490px;
+    }
+  }
+  @media (min-width: 1200px) {
+
+  }
+
 }

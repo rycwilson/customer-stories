@@ -272,9 +272,6 @@
       padding-top: 0;
       padding-bottom: 0;
     }
-    #story-video-modal iframe {
-      height: 260px;
-    }
     #story-section-content {
       h3 {
         font-size: 22px;  // overrrides bootstrap 24
@@ -325,9 +322,6 @@
         font-size: 22px;
       }
     }
-    #story-video-modal iframe {
-      height: 330px;
-    }
   }
 
   @media (min-width: 992px) {
@@ -354,9 +348,6 @@
           }
         }
       }
-    }
-    #story-video-modal iframe {
-      height: 490px;
     }
     #story-section-content {
       h3 {
@@ -393,9 +384,6 @@
       padding-bottom: 30px;
     }
     #story-section-content {
-    }
-    #story-video-modal iframe {
-      height: 490px;
     }
   }
 
