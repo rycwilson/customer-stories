@@ -129,7 +129,7 @@ class StoriesController < ApplicationController
       @story_id = story.id
       @base_url = request.base_url  # needed for deleting a result
       respond_to { |format| format.js { render action: 'create_prompt_success' } }
-    elsif params[:story][:embed_url]  # embedded video
+    elsif params[:story][:embed_url]  # =>  embedded video
       story.update embed_url: new_embed_url_formatted(params[:story][:embed_url])
       # respond with json because we need to update the video iframe
       # with the modified url ...

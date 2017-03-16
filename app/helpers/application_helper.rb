@@ -5,34 +5,36 @@ module ApplicationHelper
   end
 
   # don't go over 63!
-  def header_title_max_height company
+  def header_title company
     case company.subdomain
+    when 'retailnext'
+      'max-height:60px;margin-top:-14px'
     when 'trunity'
-      '63px'
+      'max-height:63px'
     when 'compas'
-      '56px'
+      'max-height:56px'
     when 'varmour'
-      '63px'
+      'max-height:63px'
     when 'centerforcustomerengagement'
-      '54px'
+      'max-height:54px'
     when 'zeniq'
-      '60px'
+      'max-height:60px'
     when 'corefact'
-      '40px'
+      'max-height:40px'
     when 'saucelabs'
-      '60px'
+      'max-height:60px'
     when 'juniper'
-      '60px'
+      'max-height:60px'
     when 'neonova'
-      '63px'
+      'max-height:63px'
     when 'kodacon'
-      '60px'
+      'max-height:60px'
     when 'zoommarketing'
-      '50px'
+      'max-height:50px'
     when 'acme-test'
-      '60px'
+      'max-height:60px'
     else
-      '60px'
+      'max-height:60px'
     end
 
   end
