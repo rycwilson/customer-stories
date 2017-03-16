@@ -82,6 +82,7 @@ function moreStoriesScrollHandlers () {
           }
         };
       };
+
   // set up pagination
   for (var i = 0; i < numPages; i++) {
     if (i === 0) {
@@ -93,16 +94,20 @@ function moreStoriesScrollHandlers () {
     }
   }
 
-  $carousel.on('scroll', paginationTrackScroll);
+  if (numPages > 1) {
 
-  $('.cs-scroll-left')
-    .on('click', arrowScrollLeft($carousel, pageWidth));
+    $carousel.on('scroll', paginationTrackScroll);
+    $('.cs-scroll-left')
+      .on('click', arrowScrollLeft($carousel, pageWidth));
+    $('.cs-scroll-right')
+      .on('click', arrowScrollRight($carousel, pageWidth, scrollWidth));
+    $('.cs-page-dot')
+      .on('click', paginationScroll($carousel, pageWidth, paginationTrackScroll));
 
-  $('.cs-scroll-right')
-    .on('click', arrowScrollRight($carousel, pageWidth, scrollWidth));
-
-  $('.cs-page-dot')
-    .on('click', paginationScroll($carousel, pageWidth, paginationTrackScroll));
+  } else {
+    $('.cs-pagination-row, .cs-scroll-left, .cs-scroll-right')
+      .css('visibility', 'hidden');
+  }
 }
 
 // ref: http://stackoverflow.com/questions/8737709
