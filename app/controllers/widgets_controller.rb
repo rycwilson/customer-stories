@@ -55,7 +55,7 @@ class WidgetsController < ApplicationController
               end
     render_to_string(partial: 'more_stories', layout: false,
                      locals: { widget: @company.widget, stories: stories,
-                               title: 'Customer Stories' })
+                               title: 'Customer Stories', native: false })
   end
 
   # filter attributes = { tag: ... , slug: ... }
