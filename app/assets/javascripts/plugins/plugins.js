@@ -96,7 +96,7 @@ function slideDrawerPlugin () {
         drawer.hide(options, div);
       }
 
-      $('#more-stories header').on('click', function () {
+      $('#cs-tab').on('click', function (e) {
         drawer.toggle(options, div);
       });
     },
@@ -112,6 +112,7 @@ function slideDrawerPlugin () {
     slide: function (div, height, speed) {
       $(div).animate({ 'height': height }, speed, 'swing',
         function () {
+          // why doesn't #cs-tab selector work??
           $('#more-stories header i[class*="fa-chevron"]').toggle();
         });
     },

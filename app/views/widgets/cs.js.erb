@@ -65,12 +65,14 @@
     xScrollBoundaries()
     scrollHandlers();
 
-    var widgetShowTimer, widgetHideTimer;
-    $('#cs-container header').one('click', function () {
-      if (widgetShowTimer) { clearTimeout(widgetShowTimer); }
-      if (widgetHideTimer) { clearTimeout(widgetHideTimer); }
+    var widgetShowTimer = null, widgetHideTimer = null;
+    // cancel the timers if user interacts with widget
+    $('#cs-tab').one('click', function (e, data) {
+      if (!data.isAuto) {
+        if (widgetShowTimer) { clearTimeout(widgetShowTimer); }
+        if (widgetHideTimer) { clearTimeout(widgetHideTimer); }
+      }
     });
-
     // if user is using a mouse, this will hose dimensions
     // (in a somewhat random way)
     // compensate for this ...
@@ -80,15 +82,15 @@
     // }
     if ( <%= @company.widget.show %> && !getCookie('cs-widget-hide') ) {
       widgetShowTimer = setTimeout(function () {
-        $('#cs-container header').click();
+        $('#cs-tab').trigger('click', { isAuto: true } );
         if (<%= @company.widget.hide %>) {
           widgetHideTimer = setTimeout(function () {
-            $('#cs-container header').click();
+            $('#cs-tab').trigger('click', { isAuto: true } );
           }, <%= @company.widget.hide_delay %>);
         }
       }, <%= @company.widget.show_delay %>);
       var date = new Date();
-      date.setHours(date.getHours() + 1);
+      date.setDate(date.getDate() + <%= @company.widget.show_freq %>);
       setCookie('cs-widget-hide', '1', date.toUTCString())
     }
     $('.cs-thumbnail').hover(
@@ -150,7 +152,7 @@
           drawer.hide(options, div);
         }
 
-        $('#cs-container header').on('click', function () {
+        $('#cs-tab').on('click', function () {
           drawer.toggle(options, div);
         });
       },
@@ -165,6 +167,7 @@
       // Slide animation function
       slide: function (div, height, speed) {
         $(div).animate({ 'height': height }, speed, 'swing', function () {
+          // why doesn't #cs-tab selector work??
           $('#cs-container header i[class*="fa-chevron"]').toggle();
         });
       },

@@ -9,12 +9,16 @@ function storiesShow () {
 
 function initMoreStories () {
 
-  var widgetShowTimer, widgetHideTimer;
+  var widgetShowTimer = null, widgetHideTimer = null;
 
-  $('#more-stories header').one('click', function () {
-    if (widgetShowTimer) { clearTimeout(widgetShowTimer); }
-    if (widgetHideTimer) { clearTimeout(widgetHideTimer); }
+  // cancel the timers if user interacts with widget
+  $('#cs-tab').one('click', function (e, data) {
+    if (!data.isAuto) {
+      if (widgetShowTimer) { clearTimeout(widgetShowTimer); }
+      if (widgetHideTimer) { clearTimeout(widgetHideTimer); }
+    }
   });
+
   slideDrawerPlugin();  // define the jquery plugin
   $('#more-stories').imagesLoaded(function () {
     moreStoriesScrollHandlers();
@@ -28,17 +32,16 @@ function initMoreStories () {
     if ( app.company.widget.show &&
          !Cookies.get(app.company.subdomain + '-hide-widget') ) {
       widgetShowTimer = setTimeout(function () {
-        $('#more-stories header').click();
+        $('#cs-tab').trigger('click', { isAuto: true } );
         if (app.company.widget.hide) {
           widgetHideTimer = setTimeout(function () {
-            $('#more-stories header').click();
+            $('#cs-tab').trigger('click', { isAuto: true } );
           }, app.company.widget.hide_delay);
         }
       }, app.company.widget.show_delay);
-      var inOneHour = new Date(new Date().getTime() + 60 * 60 * 1000);
-      Cookies.set(app.company.subdomain + '-hide-widget', '1', {
-        expires: inOneHour
-      });
+      // var inOneHour = new Date(new Date().getTime() + 60 * 60 * 1000);
+      Cookies.set(app.company.subdomain + '-hide-widget', '1',
+                  { expires: app.company.widget.show_freq });
     }
     $('.cs-thumbnail').hover(
       function () { $(this).css('border-color', app.company.widget.tab_color); },

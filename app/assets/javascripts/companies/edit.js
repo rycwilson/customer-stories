@@ -15,15 +15,19 @@ function widgetConfigListeners () {
     .on('change', '[name="widget[show]"]',
       function () {
         if ($(this).val() === 'true') {
+          $('.row.widget-show-freq').removeClass('disabled');
           $('.row.widget-show-delay').removeClass('disabled');
           $('.row.widget-hide').removeClass('disabled');
           $('#widget_show_delay').prop('disabled', false);
+          $('#widget_show_freq').prop('disabled', false);
           $('[name="widget[hide]"]').prop('disabled', false);
         } else {
+          $('.row.widget-show-freq').addClass('disabled');
           $('.row.widget-show-delay').addClass('disabled');
           $('.row.widget-hide').addClass('disabled');
           $('.row.widget-hide-delay').addClass('disabled');
           $('#widget_show_delay').prop('disabled', true);
+          $('#widget_show_freq').prop('disabled', true);
           $('#widget_hide_false').click();
           $('[name="widget[hide]"]').prop('disabled', true);
           $('#widget_hide_delay').prop('disabled', true);
@@ -54,13 +58,17 @@ function widgetConfigListeners () {
     // ref http://bootsnipp.com/snippets/featured/input-spinner-with-min-and-max-values
     .on('click', '.spinner .btn:first-of-type',
       function () {
+        var widgetAttr = $(this).parent().prev().attr('id');
         var disabledInput =
-          ($(this).parent().prev().attr('id') === 'widget_hide_delay' &&
-           $('#widget_hide_delay').prop('disabled') === true) ||
-          ($(this).parent().prev().attr('id') === 'widget_show_delay' &&
-           $('#widget_show_delay').prop('disabled') === true);
+          ( widgetAttr === 'widget_hide_delay' &&
+            $('#widget_hide_delay').prop('disabled') === true ) ||
+          ( widgetAttr === 'widget_show_delay' &&
+            $('#widget_show_delay').prop('disabled') === true ) ||
+          ( widgetAttr === 'widget_show_freq' &&
+            $('#widget_show_freq').prop('disabled') === true );
         if (disabledInput) { return false; }
-        var btn = $(this), step = 100;
+        var btn = $(this);
+        var step = (widgetAttr === 'widget_show_freq') ? 1 : 100;
         var input = btn.closest('.spinner').find('input');
         if (input.attr('max') === undefined || parseInt(input.val()) < parseInt(input.attr('max'))) {
           input.val(parseInt(input.val(), 10) + step);
@@ -70,13 +78,17 @@ function widgetConfigListeners () {
       })
     .on('click', '.spinner .btn:last-of-type',
       function () {
+        var widgetAttr = $(this).parent().prev().attr('id');
         var disabledInput =
-          ($(this).parent().prev().attr('id') === 'widget_hide_delay' &&
-           $('#widget_hide_delay').prop('disabled') === true) ||
-          ($(this).parent().prev().attr('id') === 'widget_show_delay' &&
-           $('#widget_show_delay').prop('disabled') === true);
+          ( widgetAttr === 'widget_hide_delay' &&
+            $('#widget_hide_delay').prop('disabled') === true ) ||
+          ( widgetAttr === 'widget_show_delay' &&
+            $('#widget_show_delay').prop('disabled') === true ) ||
+          ( widgetAttr === 'widget_show_freq' &&
+            $('#widget_show_freq').prop('disabled') === true );
         if (disabledInput) { return false; }
-        var btn = $(this), step = 100;
+        var btn = $(this);
+        var step = (widgetAttr === 'widget_show_freq') ? 1 : 100;
         var input = btn.closest('.spinner').find('input');
         if (input.attr('min') === undefined || parseInt(input.val()) > parseInt(input.attr('min'))) {
           input.val(parseInt(input.val(), 10) - step);

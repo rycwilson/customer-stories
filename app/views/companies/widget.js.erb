@@ -1,6 +1,9 @@
 
 (function () {
 
+  // delete the cookie so curator can view the widget behavior
+  Cookies.remove(app.company.subdomain + '-hide-widget')
+
   $('.widget-form-confirm').fadeToggle('fast', 'swing', function () {
     var _$this = $(this)
     setTimeout(function () {

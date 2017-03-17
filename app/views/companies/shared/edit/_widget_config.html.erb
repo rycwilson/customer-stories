@@ -3,7 +3,6 @@
   <!-- appearance and behavior -->
   <div class="col-sm-6">
 
-
     <p class='lead'>Appearance and Behavior</p>
 
     <%= form_for widget, url: widget_company_path(company),
@@ -24,10 +23,10 @@
 
       <div class="form-group">
         <div class="row">
-          <div class="col-sm-6">
+          <div class="col-sm-7">
             <label>Show widget content?</label>
           </div>
-          <div class='col-sm-6 btn-group text-right' data-toggle="buttons">
+          <div class='col-sm-5 btn-group text-right' data-toggle="buttons">
               <%= f.label :show, class: 'radio-inline' do %>
                 <%= f.radio_button :show, true %>
                 Yes
@@ -38,6 +37,24 @@
               <% end %>
           </div>
         </div>
+
+        <div class="row widget-show-freq <%= widget.show? ? '' : 'disabled' %>"
+             style='display:flex;align-items:center'>
+          <div class="col-sm-6">
+            <%= f.label :show_freq, 'Show once per (days)' %>
+          </div>
+          <div class="col-sm-6">
+            <div class="input-group spinner">
+              <%= f.text_field :show_freq, min: '0', class: 'form-control',
+                                disabled: !widget.show? %>
+              <div class="input-group-btn-vertical">
+                <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+                <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="row widget-show-delay <%= widget.show? ? '' : 'disabled' %>"
              style='display:flex;align-items:center'>
           <div class="col-sm-6">
@@ -58,10 +75,10 @@
 
       <div class="form-group">
         <div class="row widget-hide <%= widget.show? ? '' : 'disabled' %>">
-          <div class="col-sm-6">
+          <div class="col-sm-7">
             <label>Hide content after showing?</label>
           </div>
-          <div class='col-sm-6 btn-group text-right' data-toggle="buttons">
+          <div class='col-sm-5 btn-group text-right' data-toggle="buttons">
             <%= f.label :hide, class: 'radio-inline' do %>
               <%= f.radio_button :hide, true, disabled: !widget.show? %>
               Yes
@@ -89,7 +106,6 @@
             </div>
           </div>
         </div>
-
       </div>
 
       <hr>
