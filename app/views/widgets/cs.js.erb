@@ -68,7 +68,8 @@
     var widgetShowTimer = null, widgetHideTimer = null;
     // cancel the timers if user interacts with widget
     $('.cs-header').one('click', function (e, data) {
-      if (data && !data.isAuto) {
+      var auto = data && data.isAuto;
+      if (!auto) {
         if (widgetShowTimer) { clearTimeout(widgetShowTimer); }
         if (widgetHideTimer) { clearTimeout(widgetHideTimer); }
       }
@@ -134,6 +135,30 @@
     else return false;
   }
 
+  // there are two headers: visible-xs and hidden-xs
+  // for auto-show behavior, the click event will be triggered on
+  // all headers, including the hidden ones.
+  // below two functions ensure only one toggle happens
+  function isXsWidgetAndScreen($clickTarget) {
+    var parent = $clickTarget.parent(),
+        screenWidth = parseInt($clickTarget.closest('.cs-row').css('width'), 10);
+    if (screenWidth <= 767 && parent.hasClass('visible-xs')) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  function isSmWidgetAndScreen($clickTarget) {
+    var parent = $clickTarget.parent(),
+        screenWidth = parseInt($clickTarget.closest('.cs-row').css('width'), 10);
+    if (screenWidth > 767 && parent.hasClass('hidden-xs')) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   function slideDrawerPlugin () {
 
     var drawer = {
@@ -153,18 +178,13 @@
         }
 
         $('.cs-header').on('click', function () {
-          // there are two headers: visible-xs and hidden-xs
-          // for auto-show behavior, the click event will be triggered on
-          // all headers, including the hidden ones.
-          // this ensures only one toggle happens
-          var parent = $(this).parent(),
-              containerWidth = parseInt($(this).closest('.cs-row').css('width'), 10);
-          if (containerWidth <= 767 && parent.hasClass('visible-xs')) {
+          if ( isXsWidgetAndScreen($(this)) ) {
             drawer.toggle(options, div);
-          } else if (containerWidth > 767 && parent.hasClass('hidden-xs')) {
+          } else if ( isSmWidgetAndScreen($(this)) ) {
             drawer.toggle(options, div);
           }
         });
+
       },
 
       //Toggle function

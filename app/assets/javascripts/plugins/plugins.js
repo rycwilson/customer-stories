@@ -96,6 +96,10 @@ function slideDrawerPlugin () {
         drawer.hide(options, div);
       }
 
+      // there are two headers: visible-xs and hidden-xs
+      // for auto-show behavior, the click event will be triggered on
+      // all headers, including the hidden ones.
+      // below ensures only one toggle happens
       $('.cs-header').on('click', function (e) {
         // there are two headers, visible-xs and hidden-xs
         // make sure only one toggles
