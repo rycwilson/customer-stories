@@ -154,7 +154,9 @@
 
         $('.cs-header').on('click', function () {
           // there are two headers: visible-xs and hidden-xs
-          // make sure only one toggles
+          // for auto-show behavior, the click event will be triggered on
+          // all headers, including the hidden ones.
+          // this ensures only one toggle happens
           var parent = $(this).parent(),
               containerWidth = parseInt($(this).closest('.cs-row').css('width'), 10);
           if (containerWidth <= 767 && parent.hasClass('visible-xs')) {
