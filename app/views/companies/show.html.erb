@@ -9,7 +9,7 @@
 
   <%= render 'shared/company_navbar', { company: @company, workflow_tab: @workflow_tab } %>
 
-  <div class='tab-content' style='margin-top:40px'>
+  <div class='tab-content'>
 
     <%= render 'companies/shared/pipeline',
                { workflow_tab: @workflow_tab, company: @company } %>

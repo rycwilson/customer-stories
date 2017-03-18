@@ -29,12 +29,14 @@ class User < ActiveRecord::Base
   # if user doesn't have a linkedin_url, unpublish any contributions
   after_commit :update_contributions, on: :update
 
-  after_commit :expire_published_contributor_cache, on: :update, if:
-      Proc.new { |user|
-        trigger_keys = ['first_name', 'last_name', 'linkedin_url', 'linkedin_title',
-            'linkedin_photo_url', 'linkedin_company', 'linkedin_location']
-        (user.previous_changes.keys & trigger_keys).any?
-      }
+  after_commit on: :update do
+    expire_published_contributor_cache
+    self.company.expire_curate_table_fragment_cache
+  end if Proc.new { |user|
+           trigger_keys = ['first_name', 'last_name', 'linkedin_url', 'linkedin_title',
+              'linkedin_photo_url', 'linkedin_company', 'linkedin_location']
+           (user.previous_changes.keys & trigger_keys).any?
+         }
 
   # for changing password
   attr_accessor :current_password

@@ -1,0 +1,8 @@
+
+(function () {
+
+  var storyId = <%= @story.id %>
+
+  $('tr[data-story-id="' + storyId + '"]').remove();
+
+}());

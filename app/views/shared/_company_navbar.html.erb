@@ -1,50 +1,48 @@
+
 <% if curator_story_view?(company.id) %>
 
   <style>.mainnav-main:after { content: none; }</style>
 
 <% end %>
 
-<nav class='mainnav mainnav-main' style="margin-bottom:0">
-  <div class='container'>
+<nav class='company-nav mainnav mainnav-main'>
+  <div class='container company-nav-container'>
+    <div class="row">
 
-    <div id='mainnav-workflow'
-        class="col-xs-8 col-sm-6 col-md-4 <%= gallery_view? ? 'hidden-xs hidden-sm' : '' %>">
-
-      <%= render 'shared/workflow_tabs',
-          { company: company, workflow_tab: workflow_tab } %>
-
-    </div>
-
-    <div id='collapsed-workflow-tabs'
-        class="col-xs-1 <%= gallery_view? ? '' : 'hidden-xs hidden-sm' %> hidden-md hidden-lg ">
-
-      <%= render 'shared/collapsed_workflow_tabs', { company: company } %>
-
-    </div>
-
-    <% if gallery_view? %>
-
-      <div id="stories-filters-container" class="col-xs-8 col-md-6">
-
-          <%= render 'stories/shared/stories_filters',
-             { company: company, is_curator: true,
-               category_select_cache_key: category_select_cache_key,
-               product_select_cache_key: product_select_cache_key,
-               pre_selected_filter: pre_selected_filter } %>
-
-          <%= render 'stories/shared/stories_filters_xs',
-             { company: company, is_curator: true,
-               category_select_cache_key: category_select_cache_key,
-               product_select_cache_key: product_select_cache_key,
-               pre_selected_filter: pre_selected_filter } %>
+      <div id='mainnav-workflow'
+           class="col-xs-8 col-sm-6 col-md-4 <%= gallery_view? ? 'hidden-xs hidden-sm' : '' %>">
+        <%= render 'shared/workflow_tabs',
+            { company: company, workflow_tab: workflow_tab } %>
       </div>
 
-    <% end %>
+      <div id='collapsed-workflow-tabs'
+           class="col-xs-1 <%= gallery_view? ? '' : 'hidden-xs hidden-sm' %> hidden-md hidden-lg">
+        <%= render 'shared/collapsed_workflow_tabs', { company: company } %>
+      </div>
 
-    <div class="col-xs-3 col-md-2 pull-right">
+      <% if gallery_view? %>
 
-      <%= render 'shared/mainnav_account_dropdowns', { company: company } %>
+        <div id="stories-filters-container" class="col-xs-8 col-md-6">
 
+            <%= render 'stories/shared/stories_filters',
+               { company: company, is_curator: true,
+                 category_select_cache_key: category_select_cache_key,
+                 product_select_cache_key: product_select_cache_key,
+                 pre_selected_filter: pre_selected_filter } %>
+
+            <%= render 'stories/shared/stories_filters_xs',
+               { company: company, is_curator: true,
+                 category_select_cache_key: category_select_cache_key,
+                 product_select_cache_key: product_select_cache_key,
+                 pre_selected_filter: pre_selected_filter } %>
+        </div>
+
+      <% end %>
+
+      <div class="col-xs-3 col-md-2 pull-right">
+
+        <%= render 'shared/mainnav_account_dropdowns', { company: company } %>
+      </div>
     </div>
 
   </div>  <!-- container -->

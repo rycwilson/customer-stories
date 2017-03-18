@@ -1,61 +1,11 @@
 
-.companies.show {
+#curate-panel {
 
-  /********** curate table **************/
-  .td-story-date {
-    width: 12%;
-  }
-  .td-story-status {
-    width: 15%;
-  }
-  .td-story-actions {
-    width: 10%;
-  }
-  // this will stretch the table cell to fit content
-  // (don't want to wrap a customer or curator name)
-  .td-story-curator,
-  .td-story-customer {
-    width:1%;
-    white-space:nowrap;
-  }
-  /***************************************/
-
-  /***********************************************/
-  /*      curate panel
-  /***********************************************/
-
-  /* New Story / Gallery View buttons
-    (rule applies to bootstrap row) */
-  @media (min-width: 768px) {
-    .curate-nav {
-      margin-top: -1.8%;
-      margin-bottom: 2.5%;
+  .container {
+    margin-top: -10px;
+    .table-responsive {
+      margin-top: -15px;
     }
   }
-
-  @media (min-width: 992px) {
-    .curate-nav {
-      margin-top: -1.4%;
-      margin-bottom: 2%;
-    }
-  }
-
-  @media (min-width: 1200px) {
-    .curate-nav {
-      margin-top: -1%;
-      margin-bottom: 1.8%;
-    }
-  }
-
-  #activity-feed-btn + .popover {
-    max-width: none;
-    width: 500px;
-  }
-
-  .activity-feed-popover {
-    top: -70px !important;
-  }
-
-
 
 }

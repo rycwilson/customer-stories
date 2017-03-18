@@ -15,8 +15,10 @@ class Customer < ActiveRecord::Base
                :expire_all_stories_json_cache, on: :update,
         if: Proc.new { |customer| customer.previous_changes.key?(:logo_url) }
 
-  after_commit :expire_csp_story_path_cache, on: :update,  # also calls story.expire_all_stories_cache
-    if: Proc.new { |customer| customer.previous_changes.key?(:name) }
+  after_commit on: :update do  # also calls story.expire_all_stories_cache
+    expire_csp_story_path_cache
+    self.company.expire_curate_table_fragment_cache
+  end if Proc.new { |customer| customer.previous_changes.key?(:name) }
 
   def should_generate_new_friendly_id?
     new_record? || name_changed? || slug.blank?

@@ -92,6 +92,7 @@ class Story < ActiveRecord::Base
 
   after_commit on: [:create, :destroy] do
     expire_all_stories_cache(false)
+    self.company.expire_curate_table_fragment_cache
   end
 
   # note: the _changed? methods for attributes don't work in the
@@ -102,30 +103,34 @@ class Story < ActiveRecord::Base
     expire_story_tile_fragment_cache
     expire_stories_index_fragment_cache
     expire_filter_select_fragment_cache
+    self.company.expire_curate_table_fragment_cache
     expire_all_stories_cache(true)
   end if Proc.new { |story|
-            (story.previous_changes.keys & ['published', 'logo_published']).any?
-          }
+           (story.previous_changes.keys & ['published', 'logo_published']).any?
+         }
 
-  after_commit :expire_story_video_info_cache,
-               :expire_story_video_xs_fragment_cache, on: :update, if:
-        Proc.new { |story|
-          story.previous_changes.key?('embed_url')
-        }
+  after_commit on: :update do
+    expire_story_video_info_cache
+    expire_story_video_xs_fragment_cache
+  end if Proc.new { |story|
+           story.previous_changes.key?('embed_url')
+         }
 
   after_commit :expire_story_testimonial_fragment_cache, on: :update, if:
         Proc.new { |story|
-          (story.previous_changes.keys & ['embed_url', 'quote', 'quote_attr']).any?
+          (story.previous_changes.keys &
+            ['embed_url', 'quote', 'quote_attr_name', 'quote_attr_title']).any?
         }
 
   after_commit :expire_csp_story_path_cache,
-               :expire_story_narration_fragment_cache, on: :update, if:
-        Proc.new { |story| story.previous_changes.key?('title') }
+               :expire_story_narration_fragment_cache,
+               on: :update, if: Proc.new { |story| story.previous_changes.key?('title') }
 
-  after_commit :expire_story_narration_fragment_cache, on: :update, if:
-        Proc.new { |story|
-          (story.previous_changes.keys & ['title', 'content']).any?
-        }
+  after_commit on: :update do
+    expire_story_narration_fragment_cache
+  end if Proc.new { |story|
+           (story.previous_changes.keys & ['title', 'content']).any?
+         }
 
   # method takes an active record relation
   def self.order stories_relation
@@ -249,10 +254,10 @@ class Story < ActiveRecord::Base
   end
 
   def expire_csp_story_path_cache
-    company = self.success.customer.company
-    company.expire_all_stories_cache(true)  # => json only
-    Rails.cache.delete("#{company.subdomain}/csp-story-#{self.id}-path")
+    self.company.expire_all_stories_cache(true)  # => json only
+    Rails.cache.delete("#{self.company.subdomain}/csp-story-#{self.id}-path")
     self.expire_fragment_cache_on_path_change
+    self.company.expire_curate_table_fragment_cache
   end
 
   # method returns a friendly id url that either contains or omits a product
@@ -502,33 +507,33 @@ class Story < ActiveRecord::Base
   end
 
   def expire_all_stories_cache json_only
-    company = self.success.customer.company
-    company.expire_all_stories_cache(json_only)
+    self.company.expire_all_stories_cache(json_only)
   end
 
   def expire_story_testimonial_fragment_cache
-    company = self.success.customer.company
-    self.expire_fragment("#{company.subdomain}/story-#{self.id}-testimonial")
+    self.expire_fragment("#{self.company.subdomain}/story-#{self.id}-testimonial")
   end
 
   def expire_story_video_info_cache
-    company = self.success.customer.company
-    Rails.cache.delete("#{company.subdomain}/story-#{self.id}-video-info")
+    Rails.cache.delete("#{self.company.subdomain}/story-#{self.id}-video-info")
   end
 
   def expire_story_video_xs_fragment_cache
-    company = self.success.customer.company
-    self.expire_fragment("#{company.subdomain}/story-#{self.id}-video-xs")
+    self.expire_fragment("#{self.company.subdomain}/story-#{self.id}-video-xs")
   end
 
   def expire_story_narration_fragment_cache
-    company = self.success.customer.company
-    self.expire_fragment("#{company.subdomain}/story-#{self.id}-narration")
+    self.expire_fragment("#{self.company.subdomain}/story-#{self.id}-narration")
   end
 
   def expire_results_fragment_cache
-    company = self.success.customer.company
-    self.expire_fragment("#{company.subdomain}/story-#{self.id}-results")
+    self.expire_fragment("#{self.company.subdomain}/story-#{self.id}-results")
+  end
+
+  def expire_cache_on_destroy
+    self.expire_stories_index_fragment_cache
+    self.expire_filter_select_fragment_cache
+    self.company.expire_all_stories_cache(false)
   end
 
   def contributors_jsonld

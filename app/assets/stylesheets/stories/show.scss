@@ -1,6 +1,10 @@
 
 .stories.show {
 
+  .mainnav.company-nav {
+    margin-bottom: 0;
+  }
+
   #social-share-side-btns {
     position: fixed;
     width: 38px;
@@ -110,7 +114,7 @@
       }
     }
     .hidden-xs {
-      padding-left: 12px;
+      padding-left: 15px;
       .social-buttons {
         a { margin-right: 4px; }
       }
@@ -294,7 +298,7 @@
           padding: 15px 30px 0 30px;
         }
         > div:first-child {
-          padding: 0 30px;
+          padding: 0 35px;
           .row.customer-logo {
             > div.customer-logo {
               margin-bottom: 15px
@@ -335,7 +339,6 @@
           padding: 15px 30px 0 30px;
         }
         > div:first-child {
-          padding: 0 30px;
           .row.customer-logo {
             > div.customer-logo {
               margin-bottom: 15px
@@ -357,16 +360,12 @@
   }
 
   @media (min-width: 1200px) {
-    .container {
-      width: 1080px;
-    }
     #social-buttons {
       padding-right: 34px;
     }
     #story-section-testimonial {
       .row.testimonial {
         > div:first-child {
-          padding: 0 30px;
           .row.customer-logo {
             > div.customer-logo {
               margin-bottom: 15px

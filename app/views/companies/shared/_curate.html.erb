@@ -3,11 +3,12 @@
 
 <!-- curate -->
 <div id='curate-panel'
-     class="<%= workflow_tab == 'curate' ? 'active tab-pane content' : 'tab-pane content' %>" role='tabpanel' style='margin-top:-10px'>
+     class="<%= workflow_tab == 'curate' ? 'active tab-pane content' : 'tab-pane content' %>" role='tabpanel'>
 
   <div class='container'>
 
     <div class="row curate-nav">
+
       <div class="col-xs-4 col-sm-3 col-md-2">
         <!-- new story modal -->
         <button type="button" class="btn btn-default" style='width:100%'
@@ -19,17 +20,16 @@
         <%= link_to 'Gallery View', root_path,
               { class: 'btn btn-default', style: 'width:100%' } %>
       </div>
-    <!--   <div class="col-xs-4 col-sm-3 col-md-2">
-        <%#= link_to 'Recent Activity', company_activity_path, remote: true,
-              id:'activity-feed-btn', class: 'btn btn-default', style: 'width:100%' %>
-      </div> -->
+
     </div>
 
-    <div class='col-sm-12'>
-      <div class='portlet portlet-default'>
-        <div class='portlet-body'>
-          <div class='table-responsive'>
+    <div class="row">
+      <div class='col-sm-12'>
+        <div class='portlet portlet-default'>
+          <div class='portlet-body'>
+            <div class='table-responsive'>
 
+  <% cache("#{company.subdomain}/curate-stories-table", skip_digest: true) do %>
     <table id='curate-table' class="datatable table table-striped table-bordered">
       <thead>
         <tr>
@@ -42,66 +42,64 @@
         </tr>
       </thead>
       <tbody>
-    <!-- <tbody> -->
-      <% Story.includes(:customer, :curator)
-              .company_all(company.id)
-              .order(updated_at: :desc)
-              .each do |story| %>
 
-        <tr>
-          <td class='td-story-customer valign-middle'>
-            <%= story.success.customer.name %>
-          </td>
-          <td class='td-story-curator valign-middle'>
-            <%= story.success.curator.full_name %>
-          </td>
-          <td class='td-story-title valign-middle'>
-            <%= story.title %>
-          </td>
-          <% if story.published? %>
-            <td class='td-story-status valign-middle'>
-              <%= link_to 'Published', story.csp_story_path %>
-            </td>
-            <td class='td-story-date valign-middle'>
-              <%= local_time(story.publish_date, '%m/%d/%y') %>
-            </td>
-          <% elsif story.logo_published? %>
-            <td class='td-story-status valign-middle'>
-              <%= link_to 'Logo published', story.csp_story_path %>
-            </td>
-            <td class='td-story-date valign-middle'>
-              <%= local_time(story.logo_publish_date, '%m/%d/%y') %>
-            </td>
-          <% else %>
-            <td class='td-story-status valign-middle'>
-              <%= link_to 'Pending curation', story.csp_story_path %>
-            </td>
-            <td class='valign-middle'>
-              N/A
-            </td>
-          <% end %>
-          <td class="td-story-actions text-center valign-middle">
-            <%= link_to edit_story_path(story.id),
-                class: "btn btn-xs btn-primary" do %>
-              <i class="fa fa-pencil"></i>
-            <% end %>
-            <%= link_to story_path(story.id),
-                method: 'delete',
-                data: { confirm: 'Are you sure?' },
-                class: 'btn btn-xs btn-secondary' do %>
-              <i class="fa fa-times"></i>
-            <% end %>
-          </td>
-        </tr>
+        <% Story.includes(:customer, :curator)
+                .company_all(company.id)
+                .order(updated_at: :desc)
+                .each do |story| %>
 
-      <% end %>
+          <tr data-story-id="<%= story.id %>">
+            <td class='td-story-customer valign-middle'>
+              <%= story.success.customer.name %>
+            </td>
+            <td class='td-story-curator valign-middle'>
+              <%= story.success.curator.full_name %>
+            </td>
+            <td class='td-story-title valign-middle'>
+              <%= story.title %>
+            </td>
+            <% if story.published? %>
+              <td class='td-story-status valign-middle'>
+                <%= link_to 'Published', story.csp_story_path %>
+              </td>
+              <td class='td-story-date valign-middle'>
+                <%= local_time(story.publish_date, '%m/%d/%y') %>
+              </td>
+            <% elsif story.logo_published? %>
+              <td class='td-story-status valign-middle'>
+                <%= link_to 'Logo published', story.csp_story_path %>
+              </td>
+              <td class='td-story-date valign-middle'>
+                <%= local_time(story.logo_publish_date, '%m/%d/%y') %>
+              </td>
+            <% else %>
+              <td class='td-story-status valign-middle'>
+                <%= link_to 'Pending curation', story.csp_story_path %>
+              </td>
+              <td class='valign-middle'>
+                N/A
+              </td>
+            <% end %>
+            <td class="text-center valign-middle">
+              <%= link_to edit_story_path(story.id) do %>
+                <i class="glyphicon glyphicon-pencil bip-clickable"></i><% end %>
+              <%= link_to story_path(story.id), method: 'delete', remote: true,
+                    data: { confirm: 'Are you sure?' } do %>
+                <i class="glyphicon glyphicon-remove bip-clickable"></i>
+              <% end %>
+            </td>
+          </tr>
+
+        <% end %>
 
       </tbody>
     </table>
+  <% end %>
 
-          </div>  <!-- table-responsive -->
-        </div>  <!-- portlet-body -->
-      </div>  <!-- portlet -->
+            </div>  <!-- table-responsive -->
+          </div>  <!-- portlet-body -->
+        </div>  <!-- portlet -->
+      </div>
     </div>  <!-- row -->
   </div>  <!-- container -->
 </div>  <!-- curate -->

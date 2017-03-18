@@ -12,53 +12,59 @@
 *= require ./workflow_nav
 */
 
-.companies.new, .companies.edit {
+.companies {
 
-  .layout-main {
-    padding: 50px 40px 0 30px;
+  .company-nav {
+    margin-bottom: 40px;
   }
 
-}
+  .nav-layout-sidebar {
+    .disabled-tab { color: #ccc; }
+  }
 
-#company-profile > form >, #story-tags > form >, #story-ctas >, #widget-config > {
-
-  .row > {
-    div:first-of-type {
-      padding: 0 15px 0 25px;
-    }
-    div:last-of-type, div:only-child {
-      padding: 0 25px 0 15px;
+  .companies.new, .companies.edit {
+    .layout-main {
+      padding: 50px 40px 0 30px;
     }
   }
 
+  #company-profile > form >, #story-tags > form >, #story-ctas >, #widget-config > {
+    .row > {
+      div:first-of-type {
+        padding: 0 15px 0 25px;
+      }
+      div:last-of-type, div:only-child {
+        padding: 0 25px 0 15px;
+      }
+    }
+  }
+
+  .logo-upload {
+    margin-bottom: 11px !important;  // override mvpadmin .form-group
+    .fileinput {
+      width: 100%
+    }
+    .fileinput .thumbnail {
+      width: 100%;
+      position: relative;
+      height: 65px;
+      padding: 0;
+      margin-bottom: 16px;
+    }
+    .fileinput .thumbnail > img {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 15px;
+      margin: auto;
+      max-height: 45px !important   // override .fileinput
+    }
+  }
+
 }
 
-.logo-upload {
 
-  margin-bottom: 11px !important;  // override mvpadmin .form-group
 
-  .fileinput {
-    width: 100%
-  }
-
-  .fileinput .thumbnail {
-    width: 100%;
-    position: relative;
-    height: 65px;
-    padding: 0;
-    margin-bottom: 16px;
-  }
-
-  .fileinput .thumbnail > img {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 15px;
-    margin: auto;
-    max-height: 45px !important   // override .fileinput
-  }
-
-}
 
 
 

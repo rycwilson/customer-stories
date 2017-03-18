@@ -3,7 +3,7 @@ class StoriesController < ApplicationController
   include StoriesHelper
 
   before_action :set_company
-  before_action :set_story, only: [:edit, :ctas, :tags, :approval]
+  before_action :set_story, only: [:edit, :ctas, :tags, :approval, :destroy]
   before_action only: [:index, :show] { @is_curator = @company.curator?(current_user) }
   before_action only: [:edit] { user_authorized?(@story, current_user) }
   before_action only: [:index, :show, :edit] { set_gon(@company) }
@@ -163,11 +163,9 @@ class StoriesController < ApplicationController
   end
 
   def destroy
-    story = Story.find params[:id]
-    expire_cache_on_story_destroy story
-    story.destroy
-    redirect_to company_path(@company_id),
-        flash: { info: "Story '#{story.title}' was deleted" }
+    @story.expire_cache_on_destroy
+    @story.destroy
+    respond_to { |format| format.js }
   end
 
   def approval
@@ -200,7 +198,7 @@ class StoriesController < ApplicationController
   end
 
   def set_story
-    @story = Story.find params[:id]
+    @story = Story.find(params[:id])
   end
 
   def set_contributors story
@@ -423,12 +421,6 @@ class StoriesController < ApplicationController
         company.public_product_select_fragments_memcache_iterator
       end
     end
-  end
-
-  def expire_cache_on_story_destroy story
-    story.expire_stories_index_fragment_cache
-    story.expire_filter_select_fragment_cache
-    story.success.customer.company.expire_all_stories_cache(false)
   end
 
 end

@@ -10,7 +10,9 @@ function initDataTables () {
     $('a[href="#measure-stories-container"]')[0].click();
   }
 
-  $('#curate-table').DataTable();
+  $('#curate-table').DataTable({
+    paging: false
+  });
 
   // Don't specify first column as type: 'date'
   // with moment.js install, doing so will only screw it up

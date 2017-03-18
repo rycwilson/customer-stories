@@ -28,6 +28,7 @@
  *= require companies/companies
  *= require stories/stories
  *= require contributions/contributions
+ *= require profile/profile
  *= require navbars
  *= require site
  */
@@ -37,17 +38,29 @@
  // comports with summernote docs
  @import "summernote";
 
+.stories.show, .stories.index {
+  @media (min-width: 1200px) {
+    .container:not(.navbar-container):not(.grid-container):not(.company-nav-container) {
+      width: 1080px;
+    }
+  }
+}
 
 .turbolinks-progress-bar {
   height: 1px;
   background-color: #00fbff;
 }
 
+// this gets rid of the vertical portion of the first tab for views
+// that employ the mvp tabbed content layout
+.content.clip {
+  margin-top: 30px;
+  overflow: hidden;
+}
 
 .content h3 {
   font-weight: 700;
 }
-
 
 /*
  *  apply to all columns within a row to center vertically
