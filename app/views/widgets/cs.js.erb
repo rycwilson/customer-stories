@@ -67,8 +67,8 @@
 
     var widgetShowTimer = null, widgetHideTimer = null;
     // cancel the timers if user interacts with widget
-    $('#cs-tab').one('click', function (e, data) {
-      if (!data.isAuto) {
+    $('.cs-header').one('click', function (e, data) {
+      if (data && !data.isAuto) {
         if (widgetShowTimer) { clearTimeout(widgetShowTimer); }
         if (widgetHideTimer) { clearTimeout(widgetHideTimer); }
       }
@@ -82,10 +82,10 @@
     // }
     if ( <%= @company.widget.show %> && !getCookie('cs-widget-hide') ) {
       widgetShowTimer = setTimeout(function () {
-        $('#cs-tab').trigger('click', { isAuto: true } );
+        $('.cs-header').trigger('click', { isAuto: true } );
         if (<%= @company.widget.hide %>) {
           widgetHideTimer = setTimeout(function () {
-            $('#cs-tab').trigger('click', { isAuto: true } );
+            $('.cs-header').trigger('click', { isAuto: true } );
           }, <%= @company.widget.hide_delay %>);
         }
       }, <%= @company.widget.show_delay %>);
@@ -152,8 +152,16 @@
           drawer.hide(options, div);
         }
 
-        $('#cs-tab').on('click', function () {
-          drawer.toggle(options, div);
+        $('.cs-header').on('click', function () {
+          // there are two headers: visible-xs and hidden-xs
+          // make sure only one toggles
+          var parent = $(this).parent(),
+              containerWidth = parseInt($(this).closest('.cs-row').css('width'), 10);
+          if (containerWidth <= 767 && parent.hasClass('visible-xs')) {
+            drawer.toggle(options, div);
+          } else if (containerWidth > 767 && parent.hasClass('hidden-xs')) {
+            drawer.toggle(options, div);
+          }
         });
       },
 
@@ -167,8 +175,7 @@
       // Slide animation function
       slide: function (div, height, speed) {
         $(div).animate({ 'height': height }, speed, 'swing', function () {
-          // why doesn't #cs-tab selector work??
-          $('#cs-container header i[class*="fa-chevron"]').toggle();
+          $('.cs-header i[class*="fa-chevron"]').toggle();
         });
       },
 

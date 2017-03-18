@@ -12,8 +12,8 @@ function initMoreStories () {
   var widgetShowTimer = null, widgetHideTimer = null;
 
   // cancel the timers if user interacts with widget
-  $('#cs-tab').one('click', function (e, data) {
-    if (!data.isAuto) {
+  $('.cs-header').one('click', function (e, data) {
+    if (data && !data.isAuto) {
       if (widgetShowTimer) { clearTimeout(widgetShowTimer); }
       if (widgetHideTimer) { clearTimeout(widgetHideTimer); }
     }
@@ -32,10 +32,10 @@ function initMoreStories () {
     if ( app.company.widget.show &&
          !Cookies.get(app.company.subdomain + '-hide-widget') ) {
       widgetShowTimer = setTimeout(function () {
-        $('#cs-tab').trigger('click', { isAuto: true } );
+        $('.cs-header').trigger('click', { isAuto: true } );
         if (app.company.widget.hide) {
           widgetHideTimer = setTimeout(function () {
-            $('#cs-tab').trigger('click', { isAuto: true } );
+            $('.cs-header').trigger('click', { isAuto: true } );
           }, app.company.widget.hide_delay);
         }
       }, app.company.widget.show_delay);
