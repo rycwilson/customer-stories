@@ -1,7 +1,14 @@
 
+<% content_for :head do %>
+
+  <!-- LI widget won't load if page is cached -->
+  <meta name="turbolinks-cache-control" content="no-cache">
+
+<% end %>
+
 <div class="wrapper">
 
-  <% if current_user.company_id.present? %>
+  <% if current_user.registered_company? %>
 
     <%= render 'shared/company_navbar', { company: @company, workflow_tab: nil } %>
 
@@ -11,151 +18,169 @@
 
   <% end %>
 
-  <div class="content" style='margin-top:30px; overflow:hidden'>
+  <div class="content clip">
     <div class="container">
       <div class="layout layout-main-right layout-stack-sm">
+
         <div class="col-md-3 col-sm-4 layout-sidebar">
-
           <%= render 'profile/shared/side_tabs' %>
+        </div>
 
-        </div> <!-- /.col -->
+        <div class="col-sm-8 col-md-9 layout-main">
 
-        <div class="col-md-9 col-sm-8 layout-main">
           <div class="tab-content stacked-content">
             <div class="tab-pane fade in active" id="profile-tab">
 
-              <div class="heading-block">
-                <% if current_user.linkedin_url.present? %>
-                  <h3> Account Profile </h3>
-                <% elsif current_user.company_id.blank? %>
-                  <span style='font-size:14px'>
-                    Want your LinkedIn profile to appear in a Customer Story?&nbsp;&nbsp;
-                    <%= link_to "Connect to LinkedIn", linkedin_connect_no_company_path,
-                        data: { turbolinks: false } %>
-                  </span>
-                <% else %>
-                  <%= link_to "Connect to LinkedIn", linkedin_connect_path,
-                      class: 'linkedin-connect btn btn-default',
-                      data: { turbolinks: false },
-                      style: 'background-color: #2672ae; color: white' %>
-                <% end %>
+<!--  -->
 
-                <br> <%= switch_user_select class: 'switch-user-select' %>
+  <% if current_user.admin? %>
+    <div class="row switch-user">
+      <div class="col-sm-12">
+        <%= switch_user_select class: 'switch-user-select' %>
+      </div>
+    </div>
+  <% end %>
 
+  <%= form_for @user, url: registration_path(@user),
+        method: 'put', remote: 'true', authenticity_token: true,
+        html: { class: 'directUpload',
+                 data: { 'form-data' => (@s3_direct_post.fields),
+                               'url' => @s3_direct_post.url,
+                              'host' => URI.parse(@s3_direct_post.url).host
+                       } } do |f| %>
+
+    <div class="row">
+      <div class="col-sm-6">
+
+        <label>Photo</label>  <!-- have to pull this out for proper styling -->
+        <div class="form-group">
+          <div class="fileinput <%= @user.photo_url.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">
+
+            <div class="fileinput-new thumbnail">
+              <%= image_tag "user-photo-missing.png", alt: 'photo missing' %>
+            </div>
+
+            <div class="fileinput-preview fileinput-exists thumbnail"
+                data-trigger="fileinput">
+              <img id='user-photo' src="<%= @user.photo_url %>" alt="Avatar">
+            </div>
+
+            <div class="photo-btns">
+              <div class="btn btn-default btn-file">
+                <div class="fileinput-new">
+                  Select image
+                </div>
+                <div class="fileinput-exists">
+                  Change
+                </div>
+                <%= f.file_field :photo_url %>
+                <!-- below doesn't work, must use form builder -->
+                <!-- <input type="file" name="user[photo_url]" class='form-control' id='user_photo_url'> -->
               </div>
+              <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">
+                Remove
+              </a>
+            </div>
 
-              <%= form_for @user, url: registration_path(@user),
-                    method: 'put', remote: 'true',
-                    authenticity_token: true,
-                   html: { class: 'directUpload',
-                            data: { 'form-data' => (@s3_direct_post.fields),
-                                          'url' => @s3_direct_post.url,
-                                         'host' => URI.parse(@s3_direct_post.url).host
-                                  } } do |f| %>
+          </div>  <!-- /.fileupload -->
+        </div>
 
-                <div class="col-md-3">
-                  <label>Photo</label>  <!-- have to pull this out for proper styling -->
-                  <div class="form-group">
-                    <div class="fileinput <%= @user.photo_url.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput" style='margin:0'>
-
-                      <div class="fileinput-new thumbnail"
-                          style="width: 100px; height: 100px;">
-                        <%= image_tag "user-photo-missing.png", alt: 'photo missing' %>
-                      </div>
-
-                      <div class="fileinput-preview fileinput-exists thumbnail"
-                          data-trigger="fileinput"
-                          style="width: 100px; height: 100px;">
-                        <img id='user-photo' src="<%= @user.photo_url %>" alt="Avatar">
-                      </div>
-
-                      <div>
-                        <span class="btn btn-default btn-file">
-                          <span class="fileinput-new">
-                            Select image
-                          </span>
-                          <span class="fileinput-exists">
-                            Change
-                          </span>
-                          <%= f.file_field :photo_url %>
-                          <!-- below doesn't work, must use form builder -->
-                          <!-- <input type="file" name="user[photo_url]" class='form-control' id='user_photo_url'> -->
-                        </span>
-                        <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">
-                          Remove
-                        </a>
-                      </div>
-                    </div>  <!-- /.fileupload -->
-                  </div>
-
-                  <div class="form-group">
-                    <%= f.label "First Name", class: 'control-label' %>
-                    <%= f.text_field :first_name, class: 'form-control' %>
-                  </div>
-
-                  <div class="form-group">
-                    <%= f.label "Last Name", nil, class: 'control-label' %>
-                    <%= f.text_field :last_name, class: 'form-control' %>
-                  </div>
-
-                </div>  <!-- col -->
-
-                <div class="col-md-4">
-
-                  <div class="form-group">
-                    <%= f.label "Company", nil, class: 'control-label' %>
-                    <%= f.text_field :company_id, class: 'form-control',
-                          value: @company.try(:name), disabled: 'true' %>
-                  </div>
-
-                  <div class="form-group">
-                    <%= f.label "Title", nil, class: 'control-label' %>
-                    <%= f.text_field :title, class: 'form-control' %>
-                  </div>
-
-                  <div class="form-group">
-                    <%= f.label "Email", nil, class: 'control-label' %>
-                    <%= f.text_field :email, class: 'form-control' %>
-                  </div>
-
-                  <div class="form-group">
-                    <%= f.label "Phone", nil, class: 'control-label' %>
-                    <%= f.text_field :phone, class: 'form-control' %>
-                  </div>
-
+        <div class="row">
+          <div class="col-sm-6">
+                <div class="form-group">
+                  <%= f.label "First Name", class: 'control-label' %>
+                  <%= f.text_field :first_name, class: 'form-control' %>
                 </div>
 
-                <div class="col-md-5">
-                  <% if current_user.linkedin_url %>
-                    <div class="form-group">
-                      <%= f.label "LinkedIn url", class: 'control-label' %>
-                      <%= f.text_field :linkedin_url, class: 'form-control' %>
-                    </div>
-
-                    <script type="IN/MemberProfile" data-id="<%= @user.linkedin_url %>" data-format="inline" data-width='300px' data-related="false"></script>
-                  <% end %>
+          </div>
+          <div class="col-sm-6">
+                <div class="form-group">
+                  <%= f.label "Last Name", nil, class: 'control-label' %>
+                  <%= f.text_field :last_name, class: 'form-control' %>
                 </div>
 
-                <div class="col-md-12">
-                  <hr style='margin-top:0'>
-                </div>
+          </div>
+        </div>
 
-                <div class="col-md-4 col-md-offset-8 text-right">
-                  <div class="form-group">
-                    <button type="submit" class="btn btn-primary">
-                      Save Changes
-                    </button>
-                    &nbsp;
-                    <button type="reset" class="btn btn-default">
-                      Cancel
-                    </button>
-                  </div>
-                </div>
+        <div class="form-group">
+          <%= f.label "Email", nil, class: 'control-label' %>
+          <%= f.text_field :email, class: 'form-control' %>
+        </div>
 
-              <% end %>
-            </div> <!-- /.tab-pane -->
+        <div class="row">
+          <div class="col-sm-6">
+            <div class="form-group">
+              <%= f.label "Phone", nil, class: 'control-label' %>
+              <%= f.text_field :phone, class: 'form-control' %>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <!-- filler -->
+          </div>
+        </div>
 
+      </div>
+      <div class="col-sm-6">
+
+        <div class="form-group">
+          <%= f.label "Company", nil, class: 'control-label' %>
+          <%= f.text_field :company_id, class: 'form-control',
+                value: @company.try(:name), disabled: 'true' %>
+        </div>
+
+        <div class="form-group">
+          <%= f.label "Title", nil, class: 'control-label' %>
+          <%= f.text_field :title, class: 'form-control' %>
+        </div>
+
+        <div class="row form-group linkedin-url <%= current_user.linkedin_url.present? ? 'url-present' : 'url-absent' %>">
+          <div class="<%= current_user.linkedin_url.present? ? 'col-sm-9' : 'col-sm-12' %>">
+            <%= f.label :linkedin_url, "LinkedIn URL",
+                        class: 'control-label linkedin-toggle' %>
+            <%= f.text_field :linkedin_url, class: 'form-control linkedin-toggle',
+                              disabled: true %>
+            <%= link_to "Connect to LinkedIn",
+                  current_user.registered_company? ? linkedin_connect_path : linkedin_connect_no_company_path,
+                  class: 'linkedin-connect btn btn-secondary linkedin-toggle',
+                  data: { turbolinks: false } %>
+          </div>
+          <div class="col-sm-3 <%= current_user.linkedin_url.blank? ? 'hidden' : '' %>">
+            <div class="btn btn-default linkedin-change">
+              Change
+            </div>
+          </div>
+        </div>
+
+        <% if current_user.linkedin_url.present? %>
+
+          <div class="text-center">
+            <script type="IN/MemberProfile" data-id="<%= current_user.linkedin_url %>" data-format="inline" data-width='360px' data-related="false"></script>
+          </div>
+
+        <% end %>
+
+      </div> <!-- .col-sm-6 -->
+    </div> <!-- .row -->
+
+    <hr>
+
+    <div class="row">
+      <div class="col-sm-12 text-right">
+        <button type="submit" class="btn btn-primary">
+          Save Changes
+        </button>&nbsp;
+        <button type="reset" class="btn btn-default">
+          Cancel
+        </button>
+      </div>
+    </div>
+
+  <% end %>  <!-- form -->
+
+<!--  -->
+            </div>  <!-- .tab-pane -->
             <div class="tab-pane fade" id="password-tab">
+
               <div class="heading-block">
                 <h3>Change Password</h3>
               </div> <br> <!-- /.heading-block -->
@@ -303,11 +328,12 @@
             </div> <!-- /.tab-pane -->
 
           </div> <!-- /.tab-content -->
-        </div> <!-- /.col -->
-      </div> <!-- /.row -->
-    </div> <!-- /.container -->
-  </div> <!-- .content -->
 
-</div>  <!-- wrapper -->
+        </div> <!-- .layout-sidebar -->
+
+      </div> <!-- .layout -->
+    </div> <!-- .container -->
+  </div> <!-- .content -->
+</div>  <!-- .wrapper -->
 
 

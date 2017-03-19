@@ -3,7 +3,7 @@
   var user = <%= raw @user.to_json %>,
       status = "<%= @status %>",
       flashMesg = "<%= @flash_mesg %>",
-      linkedinUpdate = <%= @linkedin_update %>
+      linkedinUpdate = <%= @linkedin_update %>,
       passwordUpdate = <%= @password_update %>;   // boolean
 
   if (passwordUpdate) {

@@ -5,4 +5,83 @@
     margin-bottom: 40px;
   }
 
+  #profile-tab {
+    .switch-user { margin-bottom: 15px; }
+    form > .row:first-of-type {
+      > div:first-of-type {
+        padding: 0 15px 0 25px;
+        .form-group:first-of-type {
+          margin-bottom: 18px;
+        }
+        .fileinput {
+          position: relative;
+          .thumbnail {
+            height: 110px;
+            width: 110px;
+          }
+          .photo-btns {
+            div:first-child {
+              margin-bottom: 8px;
+            }
+            position: absolute;
+            top: 0;
+            left: 120px;
+          }
+        }
+      }
+      > div:last-of-type {
+        padding: 0 25px 0 15px;
+        .form-group:nth-of-type(2) {
+          // margin-bottom: 32px;
+        }
+        .btn.linkedin-connect {
+          background-color: #2672ae;
+          color: white;
+          // padding: 10px 15px;
+        }
+        .btn.linkedin-connect:hover {
+          border-color: #245e98;
+        }
+        .row[class*='linkedin-url'] {
+          display: flex;
+          min-height: 34px;   // so the height doesn't collapse when absolutely positioned elements are toggled
+          > div:first-child {
+            position: relative;
+            padding-right: 0;
+            a {
+              position: absolute;
+              bottom: 0;
+              margin: auto;
+            }
+          }
+          > div:last-child {
+            position: relative;
+            .btn {
+              position: absolute;
+              bottom: 0;
+            }
+          }
+        }
+        .row.linkedin-url.url-present {
+          a {
+            display: none;
+            right: 0;
+            left: 15px;
+          }
+        }
+        .row.linkedin-url.url-absent {
+          margin-top: 48px;
+          label, input {
+            display: none;
+          }
+          a {
+            right: 50px;
+            left: 50px;
+          }
+        }
+
+      }
+    }
+  }
+
 }

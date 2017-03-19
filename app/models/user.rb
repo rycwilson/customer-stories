@@ -74,6 +74,10 @@ class User < ActiveRecord::Base
     self.linkedin_photo_url.present?
   end
 
+  def registered_company?
+    self.company_id.present?
+  end
+
   def update_contributions
     if self.linkedin_url.blank?
       self.own_contributions.each { |c| c.update publish_contributor: false }
