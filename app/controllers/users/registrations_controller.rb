@@ -64,6 +64,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # override the update action
   def update_resource user, params
+    binding.remote_pry
     @linkedin_update = (params[:linkedin_url] != @user.linkedin_url) ? true : false
     if params[:password].blank?
       resource.update_without_password params

@@ -11,18 +11,19 @@ function profileEdit () {
 function attachProfileListeners () {
 
   $(document)
-    .on('click', '.btn.linkedin-change',
+    .on('click', '.btn.linkedin-edit',
       function () {
-        $linkedinCard = $(this).closest('.row.linkedin-url').next();
-        $('.linkedin-toggle').toggle();
-        $('.row.linkedin-url').toggleClass('url-present url-absent');
-        if ($(this).text().trim() === 'Change') {
-          $(this).text('Cancel');
-          $linkedinCard.css('opacity', 0.5).css('pointer-events:none');
-        } else {
-          $(this).text('Change');
-          $linkedinCard.css('opacity', 1).css('pointer-events:auto');
-        }
+        $('.linkedin-connect').toggle();
+      })
+    .on('click', '#remove-li-profile-modal .btn-ok',
+      function () {
+        $('#user_linkedin_url').val('');
+        $('.linkedin-url').toggleClass('url-present url-absent');
+        $(document).one('hidden.bs.modal', '#remove-li-profile-modal',
+          function () {
+            $('.linkedin-container').empty();
+          });
+        $('#remove-li-profile-modal').modal('hide');
       })
     .on('shown.bs.tab', '.nav-stacked a[data-toggle="tab"]',
       function () {
@@ -32,7 +33,6 @@ function attachProfileListeners () {
         else
           sessionStorage.setItem('lastProfileTab', $(this).attr('href'));
       })
-
     .on('change', '.contributor-linkedin-checkbox',
       function () {
         if ($(this).find('#contribution_publish_contributor').prop('checked')) {  // unchecked
@@ -46,7 +46,6 @@ function attachProfileListeners () {
       function () {
         $(this).blur();
       });
-
 
 }
 
