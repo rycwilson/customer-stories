@@ -17,12 +17,12 @@ function attachProfileListeners () {
       })
     .on('click', '#remove-li-profile-modal .btn-ok',
       function () {
-        $('#user_linkedin_url').val('');
         $('.linkedin-url').toggleClass('url-present url-absent');
-        $(document).one('hidden.bs.modal', '#remove-li-profile-modal',
-          function () {
-            $('.linkedin-container').empty();
-          });
+        $('#user_linkedin_url').val('');
+        $('.linkedin-container').css('opacity', '0.5').css('pointer-events', 'none');
+        // $(document).one('hidden.bs.modal', '#remove-li-profile-modal',
+        //   function () {
+        //   });
         $('#remove-li-profile-modal').modal('hide');
       })
     .on('shown.bs.tab', '.nav-stacked a[data-toggle="tab"]',

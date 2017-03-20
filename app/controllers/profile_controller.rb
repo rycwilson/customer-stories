@@ -8,7 +8,6 @@ class ProfileController < ApplicationController
   before_action :set_s3_direct_post, only: [:linkedin_callback, :edit]
 
   def linkedin_callback
-
     if user_signed_in?  # curator or contributor
       if params[:error]
         redirect_to edit_profile_path,
@@ -20,7 +19,6 @@ class ProfileController < ApplicationController
               flash: { danger: 'LinkedIn error: ' + token_response['error_description'] }
         else
           token = token_response['access_token']
-          logger.debug "TOKEN #{token}"
           # save token to User model
           linkedin_data = get_linkedin_data(token)
           if false # errors

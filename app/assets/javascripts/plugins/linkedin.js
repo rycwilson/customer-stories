@@ -14,6 +14,7 @@ function initLinkedIn () {
       // do linkedin stuff
     });
   } else {
+    console.log('parsing')
     IN.parse();
   }
 

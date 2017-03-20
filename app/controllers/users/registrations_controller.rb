@@ -63,9 +63,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
   protected
 
   # override the update action
+  # user, @user, resource are all the same thing (weird)
   def update_resource user, params
-    binding.remote_pry
-    @linkedin_update = (params[:linkedin_url] != @user.linkedin_url) ? true : false
+    # @linkedin_url_changed = (params[:linkedin_url] != @user.linkedin_url) ? true : false
     if params[:password].blank?
       resource.update_without_password params
       @password_update = false
