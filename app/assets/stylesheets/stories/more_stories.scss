@@ -66,13 +66,13 @@
       box-sizing: border-box;
     }
     @media (max-width: 567px) {
-      .col-xs-12 {
-        width: 98%;
+      .col-xs-8 {
+        width: 53%;
       }
     }
     @media (min-width: 568px) and (max-width: 767px) {
-      .col-xs-12 {
-        width: 50%
+      .col-xs-8 {
+        width: 53%
       }
     }
     @media (min-width: 768px) {
