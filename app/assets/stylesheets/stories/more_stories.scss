@@ -59,20 +59,20 @@
   }
 
   .row-horizon {
-    padding-bottom: 23px;
+    padding: 0 10px 23px 10px;
     div[class^='col'] {
       position: relative;
       height: 100px;
       box-sizing: border-box;
     }
     @media (max-width: 567px) {
-      .col-xs-12 {
-        width: 98%;
+      .col-xs-8 {
+        width: 55%;
       }
     }
     @media (min-width: 568px) and (max-width: 767px) {
-      .col-xs-12 {
-        width: 50%
+      .col-xs-8 {
+        width: 55%
       }
     }
     @media (min-width: 768px) {
