@@ -33,6 +33,9 @@
   }
 
   @media (min-width: 1200px) {
+    #stories-filters.reader {
+      margin-left: 18px;
+    }
     #stories-filters.curator .stories-filter + span {
       width: 200px;
     }
