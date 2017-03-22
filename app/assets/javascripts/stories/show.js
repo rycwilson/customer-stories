@@ -12,7 +12,7 @@ function initMoreStories () {
   var widgetShowTimer = null, widgetHideTimer = null;
 
   // cancel the timers if user interacts with widget
-  $('.cs-header').one('click', function (e, data) {
+  $('.cs-header').on('click', function (e, data) {
     var auto = data && data.isAuto;
     if (!auto) {
       if (widgetShowTimer) { clearTimeout(widgetShowTimer); }
