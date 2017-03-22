@@ -21,20 +21,21 @@
 
       var category = $('#cs-script').data('category'),
           product = $('#cs-script').data('product'),
+          format = $('#cs-script').data('format'),
           $widgetStylesheet = $("<link>", {
             rel: "stylesheet",
-            type: "text/css",
-            href: "<%= URI.join(root_url, asset_path('cs-widget.css')).to_s %>"
+            type: "text/css"
           });
 
-          // get font awesome if it doesn't exist on host
-          if ($('link[href*="font-awesome"]').length === 0) {
-            $("<link>", {
-              rel: "stylesheet",
-              type: "text/css",
-              href: "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-            }).appendTo('head');
-          }
+      if (format === 'inline') {
+        $widgetStylesheet.attr('href',
+          "<%= URI.join(root_url, asset_path('cs-widget-inline.css')).to_s %>"
+        );
+      } else {
+        $widgetStylesheet.attr('href',
+          "<%= URI.join(root_url, asset_path('cs-widget.css')).to_s %>"
+        );
+      }
 
       // wait for stylesheet to load ...
       $widgetStylesheet.appendTo('head').on('load', function () {
@@ -43,14 +44,19 @@
           url: "<%= URI.join(root_url, widget_data_path) %>",
           dataType: 'jsonp',
           data: { category: category,
-                  product: product },
+                  product: product,
+                  widget_format: format },  // 'format' a reserved param
           success: function (data) {
             $('#cs-container').html(data.html);
             // wait for all images to load so dimension calculations are correct ...
             var $images = $('#cs-container img'), loadedImages = 0;
             $images.on('load', function (e) {
               if (++loadedImages === $images.length) {
-                buildWidget();
+                if (format === 'inline') {
+                  buildWidgetInline();
+                } else {
+                  buildWidget();
+                }
               }
             })
           }
@@ -60,6 +66,17 @@
     });
   }
 
+  function buildWidgetInline () {
+    xScrollBoundaries()
+    scrollHandlers();
+    $('.cs-thumbnail').hover(
+      function () { $(this).css('border-color', '<%= @company.widget.tab_color %>'); },
+      function () { $(this).css('border-color', '#ddd'); }
+    );
+    $('.cs-customer-stories').css('visibility', 'visible');
+    trackVisitor();
+  }
+
   function buildWidget () {
     slideDrawerPlugin();
     xScrollBoundaries()
@@ -67,7 +84,7 @@
 
     var widgetShowTimer = null, widgetHideTimer = null;
     // cancel the timers if user interacts with widget
-    $('.cs-header').one('click', function (e, data) {
+    $('.cs-header').on('click', function (e, data) {
       var auto = data && data.isAuto;
       if (!auto) {
         if (widgetShowTimer) { clearTimeout(widgetShowTimer); }
@@ -131,8 +148,9 @@
         minorRel = jqVer.split('.')[1];
     if (majorRel === '1' && parseInt(minorRel, 10) < 9) {
       return true;
+    } else {
+      return false;
     }
-    else return false;
   }
 
   // there are two headers: visible-xs and hidden-xs
