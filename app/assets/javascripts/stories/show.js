@@ -44,8 +44,12 @@ function initMoreStories () {
       Cookies.set(app.company.subdomain + '-hide-widget', '1',
                   { expires: app.company.widget.show_freq });
     }
-    $('.cs-thumbnail').hover(
+    $('.cs-thumbnail.published').hover(
       function () { $(this).css('border-color', app.company.widget.tab_color); },
+      function () { $(this).css('border-color', 'rgba(0, 0, 0, 0.7)'); }
+    );
+    $('.cs-thumbnail.logo-published').hover(
+      function () { $(this).css('border-color', '#ccc'); },
       function () { $(this).css('border-color', 'rgba(0, 0, 0, 0.7)'); }
     );
     $('.cs-drawer')
