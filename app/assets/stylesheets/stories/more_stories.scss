@@ -112,6 +112,16 @@
     }
   }
 
+  .cs-thumbnail.logo-published {
+    .cs-thumbnail-view {
+      height: 122px;
+      line-height: 116px;
+      .cs-img {
+        padding: 16px 8px;
+      }
+    }
+  }
+
   .cs-thumbnail {
     width: 186px;  // 3/2 aspect ratio for the tile
     height: 100%;  // 124px column height
@@ -123,13 +133,6 @@
     padding: 0;
     text-align: center;
     border-color: rgba(0, 0, 0, 0.7);
-    .cs-thumbnail-view.no-caption {
-      height: 122px;
-      line-height: 116px;
-      .cs-img {
-        padding: 16px 8px;
-      }
-    }
     .cs-thumbnail-view {
       position: relative;
       // display: inline-block;
@@ -174,6 +177,7 @@
       -o-transform: translateY(0%);
     }
     .cs-caption {
+      font-size: 13px;
       text-align: left;
       padding: 2px 0 2px 6px;
       position: absolute;
