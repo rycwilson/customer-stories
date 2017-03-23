@@ -37,6 +37,15 @@
         );
       }
 
+      // get font awesome if it doesn't exist on host
+      if ($('link[href*="font-awesome"]').length === 0) {
+        $("<link>", {
+          rel: "stylesheet",
+          type: "text/css",
+          href: "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        }).appendTo('head');
+      }
+
       // wait for stylesheet to load ...
       $widgetStylesheet.appendTo('head').on('load', function () {
 
@@ -113,7 +122,7 @@
     }
     $('.cs-thumbnail').hover(
       function () { $(this).css('border-color', '<%= @company.widget.tab_color %>'); },
-      function () { $(this).css('border-color', '#ddd'); }
+      function () { $(this).css('border-color', 'rgba(0, 0, 0, 0.7)'); }
     );
     $('.cs-drawer')
       .slideDrawer()

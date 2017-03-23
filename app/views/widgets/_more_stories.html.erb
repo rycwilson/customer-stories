@@ -23,6 +23,7 @@
   </div>
   <div class='cs-drawer-content' style='border-top-color:<%= widget.tab_color %>'>
     <div class='cs-drawer-items'>
+
       <div class='cs-row cs-pagination-row text-center'>
       </div>
 
@@ -44,17 +45,20 @@
               <a href="<%= story[:path] %>" class='cs-thumbnail'
                  target="<%= native ? '' : '_blank' %>">
 
-                <div class="cs-thumbnail-view">
-
-                <% if story[:is_published] %>
-                  <p class='cs-thumbnail-view-hover'>
-                    <%= story[:title] %>
-                  </p>
-                <% end %>
-
+                <div class="cs-thumbnail-view <%= story[:published] ? '' : 'no-caption' %>">
+                  <% if story[:published] %>
+                    <p class='cs-thumbnail-view-hover'>
+                      <%= story[:title] %>
+                    </p>
+                  <% end %>
                   <img class='cs-img' src="<%= story[:logo] %>" alt=''>
-
                 </div>
+
+                <% if story[:published] %>
+                  <div class="cs-caption" style="<%= widget.tab_style %>">
+                    Read story
+                  </div>
+                <% end %>
 
               </a>
 
