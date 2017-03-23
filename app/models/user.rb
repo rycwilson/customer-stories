@@ -31,7 +31,7 @@ class User < ActiveRecord::Base
 
   after_commit on: :update do
     expire_published_contributor_cache
-    self.company.expire_curate_table_fragment_cache
+    self.company.try(:expire_curate_table_fragment_cache)
   end if Proc.new { |user|
            trigger_keys = ['first_name', 'last_name', 'linkedin_url', 'linkedin_title',
               'linkedin_photo_url', 'linkedin_company', 'linkedin_location']
