@@ -46,7 +46,7 @@ function initMoreStories () {
     }
     $('.cs-thumbnail').hover(
       function () { $(this).css('border-color', app.company.widget.tab_color); },
-      function () { $(this).css('border-color', '#ddd'); }
+      function () { $(this).css('border-color', 'rgba(0, 0, 0, 0.7)'); }
     );
     $('.cs-drawer')
       .slideDrawer()
