@@ -5,14 +5,12 @@ function initMasonry () {
 
   if ($('body').hasClass('stories index')) {
     columnWidth = 210;
-    if (app.screenSize === 'xs') {
-      gutter = 40;
-    } else if (app.screenSize === 'sm') {
-      gutter = 40;
-    } else if (app.screenSize === 'md') {
-      gutter = 40;
-    } else if (app.screenSize === 'lg') {
+    if (app.screenSize === 'lg') {
       gutter = 60;
+    } else if (app.screenSize === 'md') {
+      gutter = 50;
+    } else {
+      gutter = 40;
     }
   } else if ($('body').hasClass('stories show')) {
     columnWidth = 250;

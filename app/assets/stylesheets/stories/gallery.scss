@@ -31,6 +31,9 @@
   }
 
   @media (min-width: 992px) {
+    #stories-filters.reader {
+      margin-left: 110px;
+    }
     #stories-filters.reader .stories-filter + span {
       width: 200px;
     }
@@ -38,7 +41,7 @@
 
   @media (min-width: 1200px) {
     #stories-filters.reader {
-      margin-left: 18px;
+      margin-left: 30px;
     }
     #stories-filters.curator .stories-filter + span {
       width: 200px;
