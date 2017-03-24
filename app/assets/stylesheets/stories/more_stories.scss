@@ -125,7 +125,7 @@
   .cs-thumbnail {
     width: 186px;  // 3/2 aspect ratio for the tile
     height: 100%;  // 124px column height
-    position: absolute;
+    position: absolute;  // center in the row-horizon column
     left: 0;
     right: 0;
     margin: 0 auto;
@@ -170,12 +170,6 @@
         padding: 8px;
       }
     }
-    .cs-thumbnail-view:hover .cs-thumbnail-view-hover {
-      -webkit-transform: translateY(0%);
-      -moz-transform: translateY(0%);
-      -ms-transform: translateY(0%);
-      -o-transform: translateY(0%);
-    }
     .cs-caption {
       font-size: 13px;
       text-align: left;
@@ -184,6 +178,14 @@
       bottom: 0;
       width: 100%;
       border-radius: 0 0 3px 3px;
+    }
+  }
+  .cs-thumbnail:hover {
+    .cs-thumbnail-view .cs-thumbnail-view-hover {
+      -webkit-transform: translateY(0%);
+      -moz-transform: translateY(0%);
+      -ms-transform: translateY(0%);
+      -o-transform: translateY(0%);
     }
   }
 

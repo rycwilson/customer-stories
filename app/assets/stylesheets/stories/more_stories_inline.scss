@@ -129,13 +129,6 @@
         padding: 8px;
       }
     }
-    .cs-thumbnail-view:hover .cs-thumbnail-view-hover {
-      background: rgba(0, 0, 0, 0.8);
-      -webkit-transform: translateY(0%);
-      -moz-transform: translateY(0%);
-      -ms-transform: translateY(0%);
-      -o-transform: translateY(0%);
-    }
     .cs-caption {
       font-size: 13px;
       text-align: left;
@@ -144,6 +137,15 @@
       bottom: 0;
       width: 100%;
       border-radius: 0 0 3px 3px;
+    }
+  }
+  .cs-thumbnail:hover {
+    .cs-thumbnail-view .cs-thumbnail-view-hover {
+      background: rgba(0, 0, 0, 0.8);
+      -webkit-transform: translateY(0%);
+      -moz-transform: translateY(0%);
+      -ms-transform: translateY(0%);
+      -o-transform: translateY(0%);
     }
   }
 

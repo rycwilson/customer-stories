@@ -1,6 +1,10 @@
 
 .stories.index {
 
+  .mainnav {
+    margin-bottom: 40px;
+  }
+
   #stories-filters-xs .form-group {
     margin: 1.5% auto;
   }
@@ -41,10 +45,6 @@
     }
   }
 
-  #stories-gallery-content {
-    margin-top: 40px;
-  }
-
   #collapsed-workflow-tabs .glyphicon-align-justify {
     padding-left: 5px;
   }
@@ -53,35 +53,59 @@
     margin: 0 auto;
   }
 
+  .grid-item.thumbnail.logo-published {
+    .thumbnail-view {
+      height: 138px;
+      line-height: 134px;
+      img {
+        padding: 24px 12px;
+      }
+    }
+  }
+
   .grid-item.thumbnail {
     position: relative;  // this is for positioning the caption at the bottom
-    width: 170px;
-    height: 124px;
+    width: 210px;        // matches masonry column width
+    height: 140px;       // 3/2 ratio
     text-align: center;  // centers image horizontally
     padding: 0;
-    margin-left: 24px;
-    margin-right: 24px;
-    margin-bottom: 40px;  // mirrors #stories-gallery-content
-    // border: 2px solid hsla(0, 0%, 0%, 0.5);
+    margin-bottom: 40px;
     .thumbnail-view {
-      height: 100px;
-      line-height: 96px;
+      position: relative;   // for thumbnail-view-hover
+      height: 114px;
+      line-height: 110px;
       width: 100%;
       cursor: pointer;
       p.thumbnail-view-hover {
+        position: absolute;
+        z-index: 10;
+        display: block;
+        // box-sizing: border-box;
+        font-size: 14px;
+        height: 100%;
+        width: 100%;
         color: #fff;
-        line-height: 18px;
+        line-height: 20px;
         text-align: left;
-        padding: 4px 8px;
+        padding: 5px 8px;
         background: rgba(0, 0, 0, 0.8);
+        border-radius: 3px 3px 0 0;
+        -webkit-transform: translateY(-100%);
+        -moz-transform: translateY(-100%);
+        -ms-transform: translateY(-100%);
+        -o-transform: translateY(-100%);
+        transition: all 0.2s ease-in-out;
       }
       img {
+        display: inline-block;
+        vertical-align: middle;
         max-height: 100%;
-        padding: 8px 8px 8px 8px;
+        max-width: 100%;
+        padding: 12px;
       }
     }
-
     .caption {
+      font-size: 14px;
       text-align: left;
       padding: 2px 0 2px 6px;
       position: absolute;
@@ -90,21 +114,14 @@
       border-radius: 0 0 3px 3px;
     }
   }
-
-  .grid-item.thumbnail.no-caption {
-    .thumbnail-view {
-      height: 122px;
-      line-height: 116px;
-      img {
-        padding: 14px 14px 14px 14px;
-      }
+  .grid-item.thumbnail:hover  {
+    border-color: #ccc;  // overrides bootstrapp
+     .thumbnail-view .thumbnail-view-hover {
+      -webkit-transform: translateY(0%);
+      -moz-transform: translateY(0%);
+      -ms-transform: translateY(0%);
+      -o-transform: translateY(0%);
     }
   }
-
-
-  /*
-    this will be helpful for centering images without the caption:
-    http://stackoverflow.com/questions/23477909/
-  */
 
 }
