@@ -113,7 +113,7 @@
 
 <!-- video (xs only) -->
 <div id='story-section-video-xs'
-     class='visible-xs <%= @story.embed_url.present? ? '' : 'hidden' %>'>
+     class='visible-xs-block <%= @story.embed_url.present? ? '' : 'hidden' %>'>
 
   <% cache("#{@company.subdomain}/story-#{@story.id}-video-xs",
            skip_digest: true) do %>
@@ -122,7 +122,7 @@
 
 </div>
 
-<div id='social-buttons-xs' class="visible-xs text-right">
+<div id='social-buttons-xs' class="visible-xs-block text-right">
 
   <% cache("story-social-buttons-xs", skip_digest: true) do %>
     <%= render 'stories/shared/social_buttons_xs', { story: @story } %>

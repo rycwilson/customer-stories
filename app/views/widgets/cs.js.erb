@@ -170,14 +170,14 @@
     }
   }
 
-  // there are two headers: visible-xs and hidden-xs
+  // there are two headers: visible-xs-block and hidden-xs
   // for auto-show behavior, the click event will be triggered on
   // all headers, including the hidden ones.
   // below two functions ensure only one toggle happens
   function isXsWidgetAndScreen($clickTarget) {
     var parent = $clickTarget.parent(),
         screenWidth = parseInt($clickTarget.closest('.cs-row').css('width'), 10);
-    if (screenWidth <= 767 && parent.hasClass('visible-xs')) {
+    if (screenWidth <= 767 && parent.hasClass('visible-xs-block')) {
       return true;
     } else {
       return false;
