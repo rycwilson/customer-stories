@@ -1,5 +1,5 @@
 
-section.cs-customer-stories {
+.cs-customer-stories {
   padding: 20px 0;
   h1 {
     color: #666;
@@ -11,19 +11,19 @@ section.cs-customer-stories {
   }
 
   .cs-pagination-row {
-    height: 18px;
+    height: 25px;
     padding: 0;
     .cs-page-dot {
       display: inline-block;
       height: 8px;
       width: 8px;
       margin: 1px 4px;
-      border: 1px solid white;
+      border: 1px solid #666;
       background: transparent;
       border-radius: 8px;
     }
     .cs-current-page-dot {
-      background: white !important;
+      background: #666 !important;
     }
   }
 

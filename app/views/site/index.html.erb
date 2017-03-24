@@ -179,10 +179,19 @@
       </div> <!-- /.container -->
     </section>
 
+<!-- inline widget demo -->
+<% if staging? %>
 
-<script id='cs-script' type='text/javascript' src='//compas.lvh.me:3000/widget/cs.js' data-format='inline' data-category='' data-product=''></script>
+<script id='cs-script' type='text/javascript' src='//centerforcustomerengagement.customerstories.org/widget/cs.js' data-format='inline' data-category='' data-product=''></script>
 <div id='cs-container'></div>
 
+<% elsif Rails.env.development? %>
+
+<script id='cs-script' type='text/javascript' src='//centerforcustomerengagement.lvh.me:3000/widget/cs.js' data-format='inline' data-category='' data-product=''></script>
+<div id='cs-container'></div>
+
+<% end %>
+<!-- inline widget demo -->
 
     <section id="section-testimonials" class="home-section">
 
