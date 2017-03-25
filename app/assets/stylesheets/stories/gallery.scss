@@ -56,13 +56,20 @@
     margin: 0 auto;
   }
 
-  .grid-item.thumbnail.logo-published {
-    .thumbnail-view {
+  .grid-item.thumbnail.public.logo-published {
+    pointer-events: none;
+    .thumbnail-view {   // adjust dimensions for missing caption
       height: 138px;
       line-height: 134px;
       img {
         padding: 24px 12px;
       }
+    }
+  }
+
+  .grid-item.thumbnail.pending-curation {
+    .caption {
+      background-color: #f5f5f5;
     }
   }
 
@@ -108,10 +115,10 @@
       }
     }
     .caption {
+      position: absolute;
       font-size: 14px;
       text-align: left;
       padding: 2px 0 2px 6px;
-      position: absolute;
       bottom: 0;
       width: 100%;
       border-radius: 0 0 3px 3px;

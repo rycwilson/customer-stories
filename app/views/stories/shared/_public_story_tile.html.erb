@@ -4,20 +4,17 @@
          skip_digest: true) do %>
 
   <a href="<%= story.published ? story.csp_story_path : 'javascript:;' %>"
-     class="grid-item thumbnail <%= story.published ? 'published' : 'logo-published' %>"
-     style="<%= story.published ? '' : 'pointer-events:none' %>">
+     class="grid-item thumbnail public <%= story.published ? 'published' : 'logo-published' %>">
 
     <div class="thumbnail-view">
-      <% if story.published? %>
-        <p class='thumbnail-view-hover'><%= story.title %></p>
-      <% end %>
+      <p class='thumbnail-view-hover'><%= story.title %></p>
       <img src="<%= customer.logo_url || image_path('company-logo-missing.png') %>">
     </div>
 
     <% if story.published? %>
       <div class="caption"
-           style="<%= story.published ? 'background-color:' + company.header_color_1 + ';color:' + company.header_text_color : 'visibility:hidden' %>">
-        <%= story.published ? 'Read story' : '' %>
+           style="<%= 'background-color:' + company.header_color_1 + ';color:' + company.header_text_color %>">
+        Read story
       </div>
     <% end %>
 
