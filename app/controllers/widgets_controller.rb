@@ -54,7 +54,7 @@ class WidgetsController < ApplicationController
                   published: story.published }
               end
     render_to_string(
-      partial: params[:widget_format] == 'inline' ? 'more_stories_inline' : 'more_stories',
+      partial: params[:position] == 'inline' ? 'more_stories_inline' : 'more_stories',
       layout: false,
       locals: { widget: @company.widget, stories: stories,
                 title: 'Customer Stories', native: false }

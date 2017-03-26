@@ -43,37 +43,35 @@
 
 <% end %>
 
-<div id='stories-gallery-content' class="content">
-  <div class="container grid-container">
-    <div class='grid' id="stories-gallery" style='visibility:hidden'>
+<div class="container grid-container">
+  <div class='grid' id="stories-gallery" style='visibility:hidden'>
 
-      <% cache(@stories_index_cache_key, skip_digest: true) do %>
+    <% cache(@stories_index_cache_key, skip_digest: true) do %>
 
-        <% if @is_curator %>
+      <% if @is_curator %>
 
-          <% @stories.each do |story| %>
+        <% @stories.each do |story| %>
 
-            <%= render 'stories/shared/curator_story_tile',
-                { company: @company, story: story,
-                  customer: story.success.customer } %>
+          <%= render 'stories/shared/curator_story_tile',
+              { company: @company, story: story,
+                customer: story.success.customer } %>
 
-          <% end %>
+        <% end %>
 
-        <% else %>
+      <% else %>
 
-          <% @stories.each do |story| %>
+        <% @stories.each do |story| %>
 
-            <%= render 'stories/shared/public_story_tile',
-                { company: @company, story: story,
-                  customer: story.success.customer } %>
-
-          <% end %>
+          <%= render 'stories/shared/public_story_tile',
+              { company: @company, story: story,
+                customer: story.success.customer } %>
 
         <% end %>
 
       <% end %>
 
-    </div>
+    <% end %>
+
   </div>
 </div>
 

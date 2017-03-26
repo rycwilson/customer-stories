@@ -11,8 +11,9 @@ Rails.application.config.assets.version = '1.0'
 # Rails.application.config.assets.precompile += %w( search.js )
 
 Rails.application.config.assets.precompile += %w(
-  cs-widget.css
-  cs-widget-inline.css
+  cs-widget-fixed.css
+  cs-widget-relative.css
+  cs-widget-both.css
   pdf.css
   social-share.css
   mvpready-landing.css

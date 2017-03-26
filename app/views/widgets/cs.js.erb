@@ -21,19 +21,27 @@
 
       var category = $('#cs-script').data('category'),
           product = $('#cs-script').data('product'),
-          format = $('#cs-script').data('format'),
+          position = $('#cs-script').data('position'),
           $widgetStylesheet = $("<link>", {
             rel: "stylesheet",
             type: "text/css"
           });
 
-      if (format === 'inline') {
+      if (position === 'relative') {
         $widgetStylesheet.attr('href',
-          "<%= URI.join(root_url, asset_path('cs-widget-inline.css')).to_s %>"
+          "<%= URI.join(root_url, asset_path('cs-widget-relative.css')).to_s %>"
+        );
+      } else if (position === 'fixed' {
+        $widgetStylesheet.attr('href',
+          "<%= URI.join(root_url, asset_path('cs-widget-fixed.css')).to_s %>"
+        );
+      } else if (position === 'both') {
+        $widgetStylesheet.attr('href',
+          "<%= URI.join(root_url, asset_path('cs-widget-both.css')).to_s %>"
         );
       } else {
         $widgetStylesheet.attr('href',
-          "<%= URI.join(root_url, asset_path('cs-widget.css')).to_s %>"
+          "<%= URI.join(root_url, asset_path('cs-widget-fixed.css')).to_s %>"
         );
       }
 
@@ -52,9 +60,11 @@
         $.ajax({
           url: "<%= URI.join(root_url, widget_data_path) %>",
           dataType: 'jsonp',
-          data: { category: category,
-                  product: product,
-                  widget_format: format },  // 'format' a reserved param
+          data: {
+            category: category,
+            product: product,
+            position: position
+          },
           success: function (data) {
             $('#cs-container').html(data.html);
             // wait for all images to load so dimension calculations are correct ...
