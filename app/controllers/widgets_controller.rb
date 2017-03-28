@@ -1,16 +1,17 @@
 
 class WidgetsController < ApplicationController
 
-  skip_before_action :verify_authenticity_token, only: [:script, :data]
+  skip_before_action :verify_authenticity_token, only: [:script, :html]
   before_action except: [:track] { @company = Company.find_by(subdomain: request.subdomain) }
 
   def script
+    @position = params[:position] || 'tab'
     respond_to do |format|
       format.js { render action: 'cs' }
     end
   end
 
-  def data
+  def html
     respond_to do |format|
       format.js do
         # Build a JSON object containing our HTML
@@ -54,7 +55,7 @@ class WidgetsController < ApplicationController
                   published: story.published }
               end
     render_to_string(
-      partial: params[:widget_format] == 'inline' ? 'more_stories_inline' : 'more_stories',
+      partial: params[:position] == 'tab' ? 'more_stories_tab' : 'more_stories_rel',
       layout: false,
       locals: { widget: @company.widget, stories: stories,
                 title: 'Customer Stories', native: false }

@@ -21,7 +21,7 @@ function initMoreStories () {
   });
 
   slideDrawerPlugin();  // define the jquery plugin
-  $('#more-stories').imagesLoaded(function () {
+  $('#more-stories-container').imagesLoaded(function () {
     moreStoriesScrollHandlers();
     // if user is using a mouse, this will hose dimensions
     // (in a somewhat random way)
@@ -52,7 +52,7 @@ function initMoreStories () {
       function () { $(this).css('border-color', '#ccc'); },
       function () { $(this).css('border-color', 'rgba(0, 0, 0, 0.7)'); }
     );
-    $('.cs-drawer')
+    $('.cs-section')
       .slideDrawer()
       .css({ opacity: 0, visibility: "visible" })
       .animate({ opacity: 1 }, 200);

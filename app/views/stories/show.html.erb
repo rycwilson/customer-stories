@@ -40,8 +40,8 @@
 </div> -->
 
 <% if @more_stories.present? %>
-  <div id='more-stories'>
-    <%= render 'widgets/more_stories',
+  <div id='more-stories-container'>
+    <%= render 'widgets/more_stories_tab',
           { widget: @company.widget, stories: @more_stories,
             title: 'More Stories', native: true } %>
   </div>
