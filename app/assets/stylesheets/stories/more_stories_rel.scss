@@ -1,5 +1,5 @@
 
-.cs-customer-stories {
+.cs-section {
   padding: 20px 0;
   h1 {
     color: #666;
@@ -44,31 +44,31 @@
       height: 124px;
       box-sizing: border-box;
     }
-    @media (max-width: 767px) {
+    @media only screen and (max-width: 767px) {
       padding: 0 10px 21px 10px;
     }
-    @media (max-width: 567px) {
+    @media only screen and (max-width: 567px) {
       .col-xs-8 {
         width: 53.5%;
       }
     }
-    @media (min-width: 568px) and (max-width: 667px) {
+    @media only screen and (min-width: 568px) and (max-width: 667px) {
       .col-xs-8 {
         width: 53.5%
       }
     }
-    @media (min-width: 668px) and (max-width: 767px) {
+    @media only screen and (min-width: 668px) and (max-width: 767px) {
       .col-xs-8 {
         width: 53.5%
       }
     }
-    @media (min-width: 768px) {
+    @media only screen and (min-width: 768px) {
       .col-sm-5 { width: 32.5%; }
     }
-    @media (min-width: 992px) {
+    @media only screen and (min-width: 992px) {
       .col-md-3 { width: 24.5%; }
     }
-    @media (min-width: 1200px) {
+    @media only screen and (min-width: 1200px) {
       .col-md-3 { width: 19.5%; }
     }
   }

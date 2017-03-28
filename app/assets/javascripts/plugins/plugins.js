@@ -130,7 +130,7 @@ function slideDrawerPlugin () {
   };
 
   $.fn.slideDrawer = function (options) {
-    var $drawerContent = $('#more-stories .cs-drawer-content'),  /* Content height of drawer */
+    var $drawerContent = $('#more-stories-container .cs-drawer-content'),  /* Content height of drawer */
         borderHeight = parseInt($drawerContent.css('border-top-width')); /* Border height of content */
 
     var drawerHeight = this.height() + borderHeight; /* Total drawer height + border height */

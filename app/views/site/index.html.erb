@@ -182,13 +182,13 @@
 <!-- inline widget demo -->
 <% if staging? %>
 
-<script id='cs-script' type='text/javascript' src='//centerforcustomerengagement.customerstories.org/widget/cs.js' data-format='inline' data-category='' data-product=''></script>
-<div id='cs-container'></div>
+<script type='text/javascript' src='//centerforcustomerengagement.customerstories.org/widgets/rel/cs.js' data-category='' data-product=''></script>
+<div id='cs-rel-container'></div>
 
 <% elsif Rails.env.development? %>
 
-<script id='cs-script' type='text/javascript' src='//centerforcustomerengagement.lvh.me:3000/widget/cs.js' data-format='inline' data-category='' data-product=''></script>
-<div id='cs-container'></div>
+<script type='text/javascript' src='//centerforcustomerengagement.lvh.me:3000/widgets/rel/cs.js' data-category='' data-product=''></script>
+<div id='cs-rel-container'></div>
 
 <% end %>
 <!-- inline widget demo -->
