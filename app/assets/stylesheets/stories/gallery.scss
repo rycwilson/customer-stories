@@ -18,7 +18,7 @@
     margin-top: 7px;
   }
 
-  @media (min-width: 768px) {
+  @media only screen and (min-width: 768px) {
     #stories-filters.reader {
       margin-left: 60px;
     }
@@ -30,7 +30,7 @@
     }
   }
 
-  @media (min-width: 992px) {
+  @media only screen and (min-width: 992px) {
     #stories-filters.reader {
       margin-left: 110px;
     }
@@ -39,7 +39,7 @@
     }
   }
 
-  @media (min-width: 1200px) {
+  @media only screen and (min-width: 1200px) {
     #stories-filters.reader {
       margin-left: 30px;
     }

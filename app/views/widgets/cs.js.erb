@@ -29,8 +29,6 @@
             type: "text/css"
           });
 
-          debugger;
-
       if (position === 'tab') {
         $stylesheet.attr('href',
           "<%= URI.join(root_url, asset_path('cs-widget-tab.css')).to_s %>"
@@ -99,7 +97,7 @@
   function buildTabWidget ($container) {
     slideDrawerPlugin($container);
     xScrollBoundaries()
-    scrollHandlers();
+    scrollHandlers($container);
 
     var $header = $container.find('.cs-header'),
         widgetShowTimer = null, widgetHideTimer = null;
