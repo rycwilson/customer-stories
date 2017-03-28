@@ -106,14 +106,14 @@
         position: absolute;
         z-index: 10;
         display: block;
-        font-size: 13px;
+        font-size: 13px !important;
         height: 100px;
         width: 100%;
-        color: #fff;
-        line-height: 18px;
+        color: #fff !important;
+        line-height: 18px !important;
         text-align: left;
         padding: 4px 8px;
-        background: #ddd;  // so there isn't a dark strip on top of the story tile, changes on hover
+        background: #ddd !important;  // so there isn't a dark strip on top of the story tile, changes on hover
         border-radius: 3px 3px 0 0;
         -webkit-transform: translateY(-100%);
         -moz-transform: translateY(-100%);
@@ -160,7 +160,7 @@
     margin: auto;
     height: 50px;
     line-height: 48px;
-    width: 35px;
+    width: 34px;
     border-radius: 5px;
     i {
       color: #666;
