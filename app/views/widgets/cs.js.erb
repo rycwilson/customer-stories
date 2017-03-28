@@ -79,8 +79,13 @@
   }
 
   function buildRelWidget ($container) {
+
+    var $carousel = $('.row-horizon');
+
+
     xScrollBoundaries()
     scrollHandlers($container);
+
 
     $container.find('.cs-thumbnail.published').hover(
       function () { $(this).css('border-color', '<%= @company.widget.tab_color %>'); },

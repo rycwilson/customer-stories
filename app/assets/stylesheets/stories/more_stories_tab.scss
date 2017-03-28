@@ -7,6 +7,10 @@
   width: 100%;
   -webkit-backface-visibility: hidden;  // ref: http://stackoverflow.com/questions/19254146
 
+  .cs-container-fluid {
+    padding: 0;
+  }
+
   .cs-row {
     margin: 0;
     padding: 0;
