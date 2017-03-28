@@ -60,13 +60,13 @@
   }
 
   .cs-pagination-row {
-    height: 18px;
+    height: 20px;
     padding: 0;
     .cs-page-dot {
       display: inline-block;
       height: 8px;
       width: 8px;
-      margin: 1px 4px;
+      margin: 6px 4px;
       border: 1px solid white;
       background: transparent;
       border-radius: 8px;
@@ -77,7 +77,7 @@
   }
 
   .row-horizon {
-    padding-bottom: 21px;
+    padding-bottom: 23px;
     div[class^='col'] {
       position: relative;
       height: 124px;
@@ -147,13 +147,15 @@
         display: block;
         // box-sizing: border-box;
         font-size: 13px;
+        font-weight: normal;
+        letter-spacing: normal;
         height: 100px;
         width: 100%;
         color: #fff;
         line-height: 18px;
         text-align: left;
         padding: 4px 8px;
-        background: rgba(0, 0, 0, 0.8);
+        background: rgba(0, 0, 0, 0.9);
         border-radius: 3px 3px 0 0;
         -webkit-transform: translateY(-100%);
         -moz-transform: translateY(-100%);
