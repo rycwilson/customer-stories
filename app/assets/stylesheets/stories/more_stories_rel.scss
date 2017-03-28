@@ -106,7 +106,10 @@
         position: absolute;
         z-index: 10;
         display: block;
+        font-family: inherit;
         font-size: 13px !important;
+        font-weight: normal;
+        letter-spacing: normal;
         height: 100px;
         width: 100%;
         color: #fff !important;
@@ -141,7 +144,7 @@
   }
   .cs-thumbnail:hover {
     .cs-thumbnail-view .cs-thumbnail-view-hover {
-      background: rgba(0, 0, 0, 0.8);
+      background: rgba(0, 0, 0, 0.9);
       -webkit-transform: translateY(0%);
       -moz-transform: translateY(0%);
       -ms-transform: translateY(0%);
