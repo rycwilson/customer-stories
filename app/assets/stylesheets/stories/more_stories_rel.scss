@@ -44,6 +44,7 @@
     padding-bottom: 21px;
     div[class^='col'] {
       position: relative;
+      width: 215px;
       height: 124px;
       box-sizing: border-box;
     }
@@ -52,27 +53,24 @@
     }
     @media only screen and (max-width: 567px) {
       .col-xs-8 {
-        width: 53.5%;
       }
     }
     @media only screen and (min-width: 568px) and (max-width: 667px) {
       .col-xs-8 {
-        width: 53.5%
       }
     }
     @media only screen and (min-width: 668px) and (max-width: 767px) {
       .col-xs-8 {
-        width: 53.5%
       }
     }
     @media only screen and (min-width: 768px) {
-      .col-sm-5 { width: 32.5%; }
+      .col-sm-5 {  }
     }
     @media only screen and (min-width: 992px) {
-      .col-md-3 { width: 24.5%; }
+      .col-md-3 {  }
     }
     @media only screen and (min-width: 1200px) {
-      .col-md-3 { width: 19.5%; }
+      .col-md-3 {  }
     }
   }
 
