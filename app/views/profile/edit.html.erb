@@ -35,13 +35,13 @@
 
 <!--  -->
 
-  <% if current_user.admin? %>
+  <%# if current_user.admin? %>
     <div class="row switch-user">
       <div class="col-sm-12">
         <%= switch_user_select class: 'switch-user-select' %>
       </div>
     </div>
-  <% end %>
+  <%# end %>
 
   <%= form_for @user, url: registration_path(@user),
         method: 'put', remote: 'true', authenticity_token: true,

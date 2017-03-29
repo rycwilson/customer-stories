@@ -20,7 +20,7 @@
             width: 110px;
           }
           .photo-btns {
-            div:first-child {
+            > div:first-child {
               margin-bottom: 8px;
             }
             position: absolute;

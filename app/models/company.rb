@@ -113,7 +113,7 @@ class Company < ActiveRecord::Base
   validates_attachment_content_type :logo, content_type: /\Aimage\/.*\Z/
 
   after_commit on: :create do
-    self.create.widget_config
+    self.create_widget
   end
 
   after_commit :expire_fragment_cache, on: :update,
