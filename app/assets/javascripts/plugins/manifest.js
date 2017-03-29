@@ -7,10 +7,10 @@
 //= require datatables-plugins/integration/bootstrap/3/dataTables.bootstrap
 
 //= require bootstrap-jasny/js/fileinput
-//= require mvpready-core
-//= require mvpready-helpers
-//= require mvpready-admin
-//= require mvpready-landing
+// require mvpready-core
+// require mvpready-helpers
+// require mvpready-admin
+// require mvpready-landing
 
 //= require select2/dist/js/select2
 //= require summernote

@@ -4,10 +4,19 @@ function initMasonry () {
   var columnWidth, gutter;
 
   if ($('body').hasClass('stories index')) {
-    columnWidth = 220;
+    columnWidth = 210;
+    if (app.screenSize === 'lg' || app.screenSize === 'md') {
+      gutter = 60;
+    } else {
+      gutter = 40;
+    }
   } else if ($('body').hasClass('stories show')) {
-    columnWidth = 220;
-    // gutter = 20;
+    columnWidth = 210;
+    if (app.screenSize === 'lg') {
+      gutter = 50;
+    } else if (app.screenSize === 'md') {
+      gutter = 35;
+    }
   }
 
   $('.grid').masonry({

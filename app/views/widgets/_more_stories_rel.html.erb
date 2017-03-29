@@ -1,0 +1,66 @@
+
+<section class='cs-section' style='visibility:hidden'>
+  <div class='cs-container-fluid'>
+
+    <div class="text-center">
+      <h1>Customer Stories</h1>
+    </div>
+
+    <div class='cs-row cs-pagination-row text-center'>
+    </div>
+
+    <div class="cs-row">
+
+      <div class="cs-scroll hidden-xs col-sm-1">
+        <div class='cs-scroll-left text-center'>
+          <i class='fa fa-2x fa-chevron-left'></i>
+        </div>
+      </div>
+
+      <div class="col-xs-12 col-sm-10" style='padding:0'>
+
+        <div class='cs-row row-horizon text-center' style='   '>
+
+        <!-- the bootstrap styling starts to break down after 30 stories -->
+        <% stories.first(18).each do |story|  %>
+
+          <div class='col-xs-8 col-sm-5 col-md-3'>
+
+            <a href="<%= story[:path] %>"
+               class='cs-thumbnail <%= story[:published] ? 'published' : 'logo-published' %>'
+               target="<%= native ? '' : '_blank' %>">
+
+              <div class="cs-thumbnail-view">
+                <% if story[:published] %>
+                  <p class='cs-thumbnail-view-hover'>
+                    <%= story[:title] %>
+                  </p>
+                <% end %>
+                <img class='cs-img' src="<%= story[:logo] %>" alt=''>
+              </div>
+
+              <% if story[:published] %>
+                <div class="cs-caption" style="<%= widget.tab_style %>">
+                  Read story
+                </div>
+              <% end %>
+
+            </a>
+
+          </div>
+
+        <% end %>
+
+        </div>
+      </div>
+
+      <div class="cs-scroll hidden-xs col-sm-1">
+        <div class='cs-scroll-right text-center'>
+          <i class='fa fa-2x fa-chevron-right'></i>
+        </div>
+      </div>
+
+    </div>
+
+  </section>
+</div>

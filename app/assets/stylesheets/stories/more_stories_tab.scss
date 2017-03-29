@@ -1,0 +1,240 @@
+
+.cs-section {
+  position: fixed;
+  bottom: 0;
+  overflow: hidden;
+  z-index: 1000;
+  width: 100%;
+  -webkit-backface-visibility: hidden;  // ref: http://stackoverflow.com/questions/19254146
+
+  .cs-container-fluid {
+    padding: 0;
+  }
+
+  .cs-row {
+    margin: 0;
+    padding: 0;
+  }
+
+  .cs-scroll {
+    position: relative;
+    height: 124px;
+  }
+
+  .cs-header-row {
+    height: 40px;   //  24 + 8 + 8
+  }
+
+  .cs-header {
+    display: inline-block;
+    height: 100%;
+    box-sizing: content-box !important;
+    cursor: pointer;
+    background: #000000;
+    color: #ffffff;
+    line-height: 24px;
+    font-size: 16px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    -moz-border-radius-topleft: 6px 6px;
+    -moz-border-radius-topright: 6px 6px;
+    border-top-left-radius: 6px 6px;
+    border-top-right-radius: 6px 6px;
+    i.fa-chevron-up {   // this will get toggled as soon as the widget tab loads
+      display: none;
+    }
+  }
+
+  .cs-header:hover {
+    color: #e2e2e2 !important;
+  }
+
+  .cs-drawer-content {
+    position: relative;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    border-collapse: collapse;
+    border-top: 3px solid #000000;
+  }
+
+  .cs-drawer-items {
+    line-height: normal;  // added to compenstate for a line-height of 1.9 that was inherited from body and was making .row-pagination too tall
+    margin: auto;
+    padding: 0;
+  }
+
+  .cs-pagination-row {
+    height: 20px;
+    padding: 0;
+    .cs-page-dot {
+      display: inline-block;
+      height: 8px;
+      width: 8px;
+      margin: 6px 4px;
+      border: 1px solid white;
+      background: transparent;
+      border-radius: 8px;
+    }
+    .cs-current-page-dot {
+      background: white !important;
+    }
+  }
+
+  .row-horizon {
+    padding-bottom: 23px;
+    div[class^='col'] {
+      position: relative;
+      width: 215px;
+      height: 124px;
+      box-sizing: border-box;
+    }
+    @media only screen and (max-width: 767px) {
+      padding: 0 10px 23px 10px;
+    }
+    @media only screen and (max-width: 567px) {
+      .col-xs-8 {
+      }
+    }
+    @media only screen and (min-width: 568px) and (max-width: 667px) {
+      .col-xs-8 {
+      }
+    }
+    @media only screen and (min-width: 668px) and (max-width: 767px) {
+      .col-xs-8 {
+      }
+    }
+    @media only screen and (min-width: 768px) {
+      .col-sm-5 {
+      }
+    }
+    @media only screen and (min-width: 992px) {
+      .col-md-3 {
+      }
+    }
+    @media only screen and (min-width: 1200px) {
+      .col-md-3 {
+      }
+    }
+  }
+
+  .cs-thumbnail.logo-published {
+    .cs-thumbnail-view {
+      height: 122px;
+      line-height: 116px;
+      .cs-img {
+        padding: 19px 8px;
+      }
+    }
+  }
+
+  .cs-thumbnail {
+    width: 186px;  // 3/2 aspect ratio for the tile
+    height: 100%;  // 124px column height
+    position: absolute;  // center in the row-horizon column
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    background-color: white;
+    padding: 0;
+    text-align: center;
+    border-color: rgba(0, 0, 0, 0.7);
+    .cs-thumbnail-view {
+      position: relative;
+      // display: inline-block;
+      height: 100px;
+      width: 100%;
+      // overflow: hidden;
+      line-height: 96px;
+      cursor: pointer;
+      .cs-thumbnail-view-hover {
+        position: absolute;
+        z-index: 10;
+        display: block;
+        // box-sizing: border-box;
+        font-family: inherit !important;
+        font-size: 13px;
+        font-weight: normal;
+        letter-spacing: normal;
+        height: 100px;
+        width: 100%;
+        color: #fff;
+        line-height: 18px;
+        text-align: left;
+        padding: 4px 8px;
+        background: rgba(0, 0, 0, 0.9);
+        border-radius: 3px 3px 0 0;
+        -webkit-transform: translateY(-100%);
+        -moz-transform: translateY(-100%);
+        -ms-transform: translateY(-100%);
+        -o-transform: translateY(-100%);
+        transition: all 0.2s ease-in-out;
+      }
+      .cs-img {
+        display: inline-block;
+        vertical-align: middle;
+        max-height: 100%;
+        max-width: 100%;
+        // margin: auto;
+        padding: 8px;
+      }
+    }
+    .cs-caption {
+      font-size: 13px;
+      text-align: left;
+      padding: 2px 0 2px 6px;
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      border-radius: 0 0 3px 3px;
+    }
+  }
+  .cs-thumbnail:hover {
+    .cs-thumbnail-view .cs-thumbnail-view-hover {
+      -webkit-transform: translateY(0%);
+      -moz-transform: translateY(0%);
+      -ms-transform: translateY(0%);
+      -o-transform: translateY(0%);
+    }
+  }
+
+  .cs-scroll-left {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    z-index: 10;
+    height: 60px;
+    width: 32px;
+    border-radius: 5px;
+    background: image-url('icon-chevron-left.png') no-repeat 0 0;
+    background-clip: content-box;
+  }
+
+  .cs-scroll-left:hover {
+    background-color: black;
+  }
+
+  .cs-scroll-right {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    z-index: 10;
+    height: 60px;
+    width: 32px;
+    border-radius: 5px;
+    background: image-url('icon-chevron-right.png') no-repeat 0 0;
+    background-clip: content-box;
+  }
+
+  .cs-scroll-right:hover {
+    background-color: black;
+  }
+
+}

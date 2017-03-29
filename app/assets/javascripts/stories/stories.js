@@ -18,7 +18,7 @@ function attachStoriesListeners () {
   // hidden, but the More Stories header doesn't appear
   // document.addEventListener('scroll', function () {
   //   if ($('body').hasClass('stories show') &&
-  //       $('#more-stories').css('visibility') === 'hidden' &&
+  //       $('#more-stories-container').css('visibility') === 'hidden' &&
   //       ($(window).scrollTop() - $('#story-section-testimonial').offset().top) > 0) {
   //         initMoreStories();
   //       }

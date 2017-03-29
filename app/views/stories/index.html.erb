@@ -3,8 +3,6 @@
 
   <meta name="turbolinks-cache-control" content="no-cache">
 
-  <%= render 'stories/shared/stories_index_template', { company: @company } %>
-
   <% if production? %>
     <% cache("#{@company.subdomain}/stories-index-meta-tags", expires_in: 1.week) do %>
       <%= render 'stories/shared/stories_index_meta_tags', { company: @company } %>
@@ -13,76 +11,68 @@
 
 <% end %>
 
-<div id='wrapper'>
+<% if @is_curator %>
 
-  <% if @is_curator %>
+  <%= render 'shared/company_navbar',
+       { company: @company, is_curator: true, workflow_tab: nil,
+         category_select_cache_key: @category_select_cache_key,
+         product_select_cache_key: @product_select_cache_key,
+         pre_selected_filter: @pre_selected_filter } %>
 
-    <%= render 'shared/company_navbar',
-         { company: @company, is_curator: true, workflow_tab: nil,
-           category_select_cache_key: @category_select_cache_key,
-           product_select_cache_key: @product_select_cache_key,
-           pre_selected_filter: @pre_selected_filter } %>
+<% else %>
 
-  <% else %>
+  <div class="mainnav">
+    <div class="container">
+      <div class="row">
 
-    <div class="mainnav">
-      <div class="container">
-        <div class="row">
+         <%= render 'stories/shared/stories_filters_xs',
+           { company: @company, is_curator: false,
+             category_select_cache_key: @category_select_cache_key,
+             product_select_cache_key: @product_select_cache_key,
+             pre_selected_filter: @pre_selected_filter } %>
 
-           <%= render 'stories/shared/stories_filters_xs',
-             { company: @company, is_curator: false,
-               category_select_cache_key: @category_select_cache_key,
-               product_select_cache_key: @product_select_cache_key,
-               pre_selected_filter: @pre_selected_filter } %>
+         <%= render 'stories/shared/stories_filters',
+           { company: @company, is_curator: false,
+             category_select_cache_key: @category_select_cache_key,
+             product_select_cache_key: @product_select_cache_key,
+             pre_selected_filter: @pre_selected_filter } %>
 
-           <%= render 'stories/shared/stories_filters',
-             { company: @company, is_curator: false,
-               category_select_cache_key: @category_select_cache_key,
-               product_select_cache_key: @product_select_cache_key,
-               pre_selected_filter: @pre_selected_filter } %>
-
-        </div>
       </div>
     </div>
+  </div>
 
-  <% end %>
+<% end %>
 
-  <div id='stories-gallery-content' class="content">
-    <div class="container grid-container">
-      <div class="portlet portlet-default">
-        <!--  <div> -->
-          <div class='grid' id="stories-gallery" style='visibility:hidden'>
+<div class="container grid-container">
+  <div class='grid' id="stories-gallery" style='visibility:hidden'>
 
-            <% cache(@stories_index_cache_key, skip_digest: true) do %>
+    <% cache(@stories_index_cache_key, skip_digest: true) do %>
 
-              <% if @is_curator %>
+      <% if @is_curator %>
 
-                <% @stories.each do |story| %>
+        <% @stories.each do |story| %>
 
-                  <%= render 'stories/shared/curator_story_tile',
-                      { company: @company, story: story,
-                        customer: story.success.customer } %>
+          <%= render 'stories/shared/curator_story_tile',
+              { company: @company, story: story,
+                customer: story.success.customer } %>
 
-                <% end %>
+        <% end %>
 
-              <% else %>
+      <% else %>
 
-                <% @stories.each do |story| %>
+        <% @stories.each do |story| %>
 
-                  <%= render 'stories/shared/public_story_tile',
-                      { company: @company, story: story,
-                        customer: story.success.customer } %>
+          <%= render 'stories/shared/public_story_tile',
+              { company: @company, story: story,
+                customer: story.success.customer } %>
 
-                <% end %>
+        <% end %>
 
-              <% end %>
+      <% end %>
 
-            <% end %>
+    <% end %>
 
-          </div>
-       <!--  </div> -->  <!-- portlet-body -->
-      </div>  <!-- portlet -->
-    </div>  <!-- container -->
-  </div>  <!-- content -->
-</div>  <!-- wrapper -->
+  </div>
+</div>
 
+<%= render 'stories/shared/stories_index_template', { company: @company } %>

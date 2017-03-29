@@ -19,38 +19,56 @@
 
     $(function () {
 
-      var category = $('#cs-script').data('category'),
-          product = $('#cs-script').data('product'),
-          $widgetStylesheet = $("<link>", {
+      var position = '<%= @position %>',
+          $container = (position === 'tab') ? $('#cs-tab-container') : $('#cs-rel-container'),
+          $script = (position === 'tab') ? $('script[href*="tab"]') : $('script[href*="rel"]'),
+          category = $script.data('category'),
+          product = $script.data('product'),
+          $stylesheet = $("<link>", {
             rel: "stylesheet",
-            type: "text/css",
-            href: "<%= URI.join(root_url, asset_path('cs-widget.css')).to_s %>"
+            type: "text/css"
           });
 
-          // get font awesome if it doesn't exist on host
-          if ($('link[href*="font-awesome"]').length === 0) {
-            $("<link>", {
-              rel: "stylesheet",
-              type: "text/css",
-              href: "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-            }).appendTo('head');
-          }
+      if (position === 'tab') {
+        $stylesheet.attr('href',
+          "<%= URI.join(root_url, asset_path('cs-widget-tab.css')).to_s %>"
+        );
+      } else if (position === 'rel') {
+        $stylesheet.attr('href',
+          "<%= URI.join(root_url, asset_path('cs-widget-rel.css')).to_s %>"
+        );
+      }
+
+      // get font awesome if it doesn't exist on host
+      if ($('link[href*="font-awesome"]').length === 0) {
+        $("<link>", {
+          rel: "stylesheet",
+          type: "text/css",
+          href: "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        }).appendTo('head');
+      }
 
       // wait for stylesheet to load ...
-      $widgetStylesheet.appendTo('head').on('load', function () {
+      $stylesheet.appendTo('head').on('load', function () {
 
         $.ajax({
-          url: "<%= URI.join(root_url, widget_data_path) %>",
+          url: "<%= URI.join( root_url, widget_html_path(@position) ) %>",
           dataType: 'jsonp',
-          data: { category: category,
-                  product: product },
+          data: {
+            category: category,
+            product: product
+          },
           success: function (data) {
-            $('#cs-container').html(data.html);
+            $container.html(data.html);
             // wait for all images to load so dimension calculations are correct ...
-            var $images = $('#cs-container img'), loadedImages = 0;
-            $images.on('load', function (e) {
+            var $images = $container.find('img'), loadedImages = 0;
+            $images.on('load', function () {
               if (++loadedImages === $images.length) {
-                buildWidget();
+                if (position === 'tab') {
+                  buildTabWidget($container);
+                } else {
+                  buildRelWidget($container);
+                }
               }
             })
           }
@@ -60,14 +78,35 @@
     });
   }
 
-  function buildWidget () {
-    slideDrawerPlugin();
-    xScrollBoundaries()
-    scrollHandlers();
+  function buildRelWidget ($container) {
 
-    var widgetShowTimer = null, widgetHideTimer = null;
+
+
+    xScrollBoundaries()
+    scrollHandlers($container);
+
+
+    $container.find('.cs-thumbnail.published').hover(
+      function () { $(this).css('border-color', '<%= @company.widget.tab_color %>'); },
+      function () { $(this).css('border-color', '#ddd'); }
+    );
+    $container.find('.cs-thumbnail.logo-published').hover(
+      function () { $(this).css('border-color', '#ccc'); },
+      function () { $(this).css('border-color', '#ddd'); }
+    );
+    $container.find('section').css('visibility', 'visible');
+    trackVisitor();
+  }
+
+  function buildTabWidget ($container) {
+    slideDrawerPlugin($container);
+    xScrollBoundaries()
+    scrollHandlers($container);
+
+    var $header = $container.find('.cs-header'),
+        widgetShowTimer = null, widgetHideTimer = null;
     // cancel the timers if user interacts with widget
-    $('.cs-header').one('click', function (e, data) {
+    $header.on('click', function (e, data) {
       var auto = data && data.isAuto;
       if (!auto) {
         if (widgetShowTimer) { clearTimeout(widgetShowTimer); }
@@ -83,10 +122,10 @@
     // }
     if ( <%= @company.widget.show %> && !getCookie('cs-widget-hide') ) {
       widgetShowTimer = setTimeout(function () {
-        $('.cs-header').trigger('click', { isAuto: true } );
+        $header.trigger('click', { isAuto: true } );
         if (<%= @company.widget.hide %>) {
           widgetHideTimer = setTimeout(function () {
-            $('.cs-header').trigger('click', { isAuto: true } );
+            $header.trigger('click', { isAuto: true } );
           }, <%= @company.widget.hide_delay %>);
         }
       }, <%= @company.widget.show_delay %>);
@@ -94,11 +133,15 @@
       date.setDate(date.getDate() + <%= @company.widget.show_freq %>);
       setCookie('cs-widget-hide', '1', date.toUTCString())
     }
-    $('.cs-thumbnail').hover(
+    $container.find('.cs-thumbnail.published').hover(
       function () { $(this).css('border-color', '<%= @company.widget.tab_color %>'); },
-      function () { $(this).css('border-color', '#ddd'); }
+      function () { $(this).css('border-color', 'rgba(0, 0, 0, 0.7)'); }
     );
-    $('.cs-drawer')
+    $container.find('.cs-thumbnail.logo-published').hover(
+      function () { $(this).css('border-color', '#ccc'); },
+      function () { $(this).css('border-color', 'rgba(0, 0, 0, 0.7)'); }
+    );
+    $container.find('section')
       .slideDrawer()
       .css({ opacity: 0, visibility: "visible" })
       .animate({ opacity: 1 }, 200);
@@ -131,18 +174,19 @@
         minorRel = jqVer.split('.')[1];
     if (majorRel === '1' && parseInt(minorRel, 10) < 9) {
       return true;
+    } else {
+      return false;
     }
-    else return false;
   }
 
-  // there are two headers: visible-xs and hidden-xs
+  // there are two headers: visible-xs-block and hidden-xs
   // for auto-show behavior, the click event will be triggered on
   // all headers, including the hidden ones.
   // below two functions ensure only one toggle happens
   function isXsWidgetAndScreen($clickTarget) {
     var parent = $clickTarget.parent(),
         screenWidth = parseInt($clickTarget.closest('.cs-row').css('width'), 10);
-    if (screenWidth <= 767 && parent.hasClass('visible-xs')) {
+    if (screenWidth <= 767 && parent.hasClass('visible-xs-block')) {
       return true;
     } else {
       return false;
@@ -159,7 +203,7 @@
     }
   }
 
-  function slideDrawerPlugin () {
+  function slideDrawerPlugin ($container) {
 
     var drawer = {
 
@@ -177,7 +221,7 @@
           drawer.hide(options, div);
         }
 
-        $('.cs-header').on('click', function () {
+        $container.find('.cs-header').on('click', function () {
           if ( isXsWidgetAndScreen($(this)) ) {
             drawer.toggle(options, div);
           } else if ( isSmWidgetAndScreen($(this)) ) {
@@ -186,21 +230,16 @@
         });
 
       },
-
-      //Toggle function
       toggle: function (options, div) {
         ($(div).height() + options.borderHeight === options.drawerHeight) ?
           drawer.slide( div, options.drawerHiddenHeight, options.slideSpeed ) :
           drawer.slide( div, options.drawerHeight-options.borderHeight, options.slideSpeed );
       },
-
-      // Slide animation function
       slide: function (div, height, speed) {
         $(div).animate({ 'height': height }, speed, 'swing', function () {
-          $('.cs-header i[class*="fa-chevron"]').toggle();
+          $container.find('.cs-header i[class*="fa-chevron"]').toggle();
         });
       },
-
       hide: function (options, div) {
         $(div).css('height', options.drawerHiddenHeight);
       },
@@ -209,7 +248,7 @@
     // Function wrapper
     $.fn.slideDrawer = function (options) {
 
-      var $drawerContent = $('#cs-container .cs-drawer-content'),  /* Content height of drawer */
+      var $drawerContent = $container.find('.cs-drawer-content'),  /* Content height of drawer */
           borderHeight = parseInt($drawerContent.css('border-top-width')); /* Border height of content */
 
       var drawerHeight = this.height() + borderHeight; /* Total drawer height + border height */
@@ -254,10 +293,10 @@
     });
   }
 
-  function scrollHandlers () {
+  function scrollHandlers ($container) {
 
-    var $carousel = $('.row-horizon'),
-        $paginationContainer = $('.cs-pagination-row'),
+    var $carousel = $container.find('.row-horizon'),
+        $paginationContainer = $container.find('.cs-pagination-row'),
         scrollWidth = $carousel.prop('scrollWidth'),
         maxScrollPosition = scrollWidth - $carousel.width(),
         numPages = Math.ceil(scrollWidth / $carousel.width()),
@@ -295,8 +334,8 @@
             // $('.cs-page-dot').off('click', paginationScroll)
 
             $(this).addClass('goto-page-dot');
-            $('.cs-current-page-dot').removeClass('cs-current-page-dot');
-            $('.cs-page-dot').each(function (index, pageDot) {
+            $container.find('.cs-current-page-dot').removeClass('cs-current-page-dot');
+            $container.find('.cs-page-dot').each(function (index, pageDot) {
               if ($(this).hasClass('goto-page-dot')) {
                 scrollTo = index * pageWidth;
                 $(this).addClass('cs-current-page-dot')
@@ -311,29 +350,31 @@
         },
         arrowScrollLeft = function ($carousel, pageWidth) {
           return function (e) {
-            var scrollPosition = $carousel.scrollLeft();
-            $('.cs-page-dot').off('click', paginationScroll);
+            var scrollPosition = $carousel.scrollLeft(),
+                $pageDots = $container.find('.cs-page-dot');
+            $pageDots.off('click', paginationScroll);
             if (scrollPosition >= pageWidth) {
               $carousel.animate({ scrollLeft: '-=' + pageWidth.toString() }, 1000,
-                function () { $('.cs-page-dot').on('click', paginationScroll); });
+                function () { $pageDots.on('click', paginationScroll); });
             }
             else {
               $carousel.animate({ scrollLeft: '-=' + scrollPosition.toString() }, 1000,
-                function () { $('.cs-page-dot').on('click', paginationScroll); });
+                function () { $pageDots.on('click', paginationScroll); });
             }
           };
         },
         arrowScrollRight = function ($carousel, pageWidth, scrollWidth) {
           return function (e) {
             var scrollPosition = $carousel.scrollLeft(),
-                scrollRemaining = scrollWidth - (scrollPosition + $carousel.width());
-            $('.cs-page-dot').off('click', paginationScroll);
+                scrollRemaining = scrollWidth - (scrollPosition + $carousel.width()),
+                $pageDots = $container.find('.cs-page-dot');
+            $pageDots.off('click', paginationScroll);
             if (scrollRemaining >= pageWidth) {
               $carousel.animate({ scrollLeft: '+=' + pageWidth.toString() }, 1000,
-                function () { $('.cs-page-dot').on('click', paginationScroll); });
+                function () { $pageDots.on('click', paginationScroll); });
             } else {
               $carousel.animate({ scrollLeft: '+=' + scrollRemaining.toString() }, 1000,
-                function () { $('.cs-page-dot').on('click', paginationScroll); });
+                function () { $pageDots.on('click', paginationScroll); });
             }
           };
         };
@@ -352,15 +393,15 @@
     if (numPages > 1) {
 
       $carousel.on('scroll', paginationTrackScroll);
-      $('.cs-scroll-left')
+      $container.find('.cs-scroll-left')
         .on('click', arrowScrollLeft($carousel, pageWidth));
-      $('.cs-scroll-right')
+      $container.find('.cs-scroll-right')
         .on('click', arrowScrollRight($carousel, pageWidth, scrollWidth));
-      $('.cs-page-dot')
+      $container.find('.cs-page-dot')
         .on('click', paginationScroll($carousel, pageWidth, paginationTrackScroll));
 
     } else {
-      $('.cs-pagination-row, .cs-scroll-left, .cs-scroll-right')
+      $container.find('.cs-pagination-row, .cs-scroll-left, .cs-scroll-right')
         .css('visibility', 'hidden');
     }
   }
@@ -369,12 +410,12 @@
 
     $('#cs-container').append(
       '<iframe class="cs-iframe" height="0" width="0" style="display:none" ' +
-      'src="https://' + '<%= @company.subdomain %>' + '.customerstories.net/track_widget"></iframe>');
+      'src="https://' + '<%= @company.subdomain %>' + '.customerstories.net/widgets/track"></iframe>');
 
+    // old approach:
     // var trackingDoc = $('#cs-container').find('iframe')[0].contentWindow.document,
     //     trackingHost = (("https:" == document.location.protocol) ? "https://s.adroll.com" : "http://a.adroll.com"),
     //     trackingUrl = trackingHost + '/j/roundtrip.js';
-
     // trackingDoc.open();
     // trackingDoc.write("<html><head><script>adroll_adv_id='" + advId + "';adroll_pix_id='" + pixId + "';</script><script src='" + trackingUrl + "'></script><script>setTimeout(function(){try{__adroll.record_user({'adroll_segments':'" + segmentId + "'})}catch(err){};},1000);</script></head></html>");
     // trackingDoc.close();

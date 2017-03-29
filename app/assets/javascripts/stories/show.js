@@ -12,7 +12,7 @@ function initMoreStories () {
   var widgetShowTimer = null, widgetHideTimer = null;
 
   // cancel the timers if user interacts with widget
-  $('.cs-header').one('click', function (e, data) {
+  $('.cs-header').on('click', function (e, data) {
     var auto = data && data.isAuto;
     if (!auto) {
       if (widgetShowTimer) { clearTimeout(widgetShowTimer); }
@@ -21,7 +21,7 @@ function initMoreStories () {
   });
 
   slideDrawerPlugin();  // define the jquery plugin
-  $('#more-stories').imagesLoaded(function () {
+  $('#more-stories-container').imagesLoaded(function () {
     moreStoriesScrollHandlers();
     // if user is using a mouse, this will hose dimensions
     // (in a somewhat random way)
@@ -44,11 +44,15 @@ function initMoreStories () {
       Cookies.set(app.company.subdomain + '-hide-widget', '1',
                   { expires: app.company.widget.show_freq });
     }
-    $('.cs-thumbnail').hover(
+    $('.cs-thumbnail.published').hover(
       function () { $(this).css('border-color', app.company.widget.tab_color); },
-      function () { $(this).css('border-color', '#ddd'); }
+      function () { $(this).css('border-color', 'rgba(0, 0, 0, 0.7)'); }
     );
-    $('.cs-drawer')
+    $('.cs-thumbnail.logo-published').hover(
+      function () { $(this).css('border-color', '#ccc'); },
+      function () { $(this).css('border-color', 'rgba(0, 0, 0, 0.7)'); }
+    );
+    $('.cs-section')
       .slideDrawer()
       .css({ opacity: 0, visibility: "visible" })
       .animate({ opacity: 1 }, 200);

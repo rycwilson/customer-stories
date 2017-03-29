@@ -96,14 +96,12 @@ function slideDrawerPlugin () {
         drawer.hide(options, div);
       }
 
-      // there are two headers: visible-xs and hidden-xs
+      // there are two headers: visible-xs-block and hidden-xs
       // for auto-show behavior, the click event will be triggered on
       // all headers, including the hidden ones.
       // below ensures only one toggle happens
       $('.cs-header').on('click', function (e) {
-        // there are two headers, visible-xs and hidden-xs
-        // make sure only one toggles
-        if (app.screenSize === 'xs' && $(this).parent().hasClass('visible-xs')) {
+        if (app.screenSize === 'xs' && $(this).parent().hasClass('visible-xs-block')) {
           drawer.toggle(options, div);
         } else if (app.screenSize !== 'xs' && $(this).parent().hasClass('hidden-xs')) {
           drawer.toggle(options, div);
@@ -132,7 +130,7 @@ function slideDrawerPlugin () {
   };
 
   $.fn.slideDrawer = function (options) {
-    var $drawerContent = $('#more-stories .cs-drawer-content'),  /* Content height of drawer */
+    var $drawerContent = $('#more-stories-container .cs-drawer-content'),  /* Content height of drawer */
         borderHeight = parseInt($drawerContent.css('border-top-width')); /* Border height of content */
 
     var drawerHeight = this.height() + borderHeight; /* Total drawer height + border height */

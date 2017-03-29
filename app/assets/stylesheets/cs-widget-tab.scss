@@ -1,0 +1,13 @@
+
+// pre-compiler doesn't like it if this is included inside .cs-widget
+// @import 'cleanslate/cleanslate.css';
+
+// namespace the widget css so as not to interfere with anything on host page
+#cs-tab-container {
+
+  @import 'bootstrap-sass/assets/stylesheets/_bootstrap-widget.scss';
+  @import 'bootstrap-horizon/bootstrap-horizon.scss';
+  @import 'stories/more_stories_tab.scss';
+
+}
+

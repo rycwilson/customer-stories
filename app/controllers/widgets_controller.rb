@@ -1,16 +1,17 @@
 
 class WidgetsController < ApplicationController
 
-  skip_before_action :verify_authenticity_token, only: [:script, :data]
+  skip_before_action :verify_authenticity_token, only: [:script, :html]
   before_action except: [:track] { @company = Company.find_by(subdomain: request.subdomain) }
 
   def script
+    @position = params[:position] || 'tab'
     respond_to do |format|
       format.js { render action: 'cs' }
     end
   end
 
-  def data
+  def html
     respond_to do |format|
       format.js do
         # Build a JSON object containing our HTML
@@ -51,11 +52,14 @@ class WidgetsController < ApplicationController
                 { title: story.title,
                   logo: story.customer.logo_url,
                   path: story.published ? story.csp_story_url : stories_index_url,
-                  is_published: story.published }
+                  published: story.published }
               end
-    render_to_string(partial: 'more_stories', layout: false,
-                     locals: { widget: @company.widget, stories: stories,
-                               title: 'Customer Stories', native: false })
+    render_to_string(
+      partial: params[:position] == 'tab' ? 'more_stories_tab' : 'more_stories_rel',
+      layout: false,
+      locals: { widget: @company.widget, stories: stories,
+                title: 'Customer Stories', native: false }
+    )
   end
 
   # filter attributes = { tag: ... , slug: ... }
