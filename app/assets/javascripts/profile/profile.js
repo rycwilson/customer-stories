@@ -1,10 +1,10 @@
 
 function profileEdit () {
+
   if (!app.current_user.is_curator) {
     $('header').css('background-color', 'white');
     $('header').css('border-color', '#dddddd');
   }
-
 
 }
 
