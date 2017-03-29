@@ -32,7 +32,7 @@ vendor/assets/bower_components
 /public/system
 
 # pre-compiled assets (uncomment for github push, comment for heroku)
-/public/assets
+# /public/assets
 
 # user-specific (uncomment for github push, comment for heroku)
 # /config/database.yml
