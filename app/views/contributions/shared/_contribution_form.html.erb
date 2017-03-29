@@ -22,6 +22,7 @@
         url: "/contributions/#{contribution.access_token}",
         method: "put", html: { id: 'contribution-submission-form'} do |f| %>
 
+    <%= hidden_field_tag "contribution[web_submission]", true %>
     <%= hidden_field_tag "contribution[status]", response_type %>
 
     <div class="form-group col-xs-12">
@@ -36,7 +37,8 @@
         <i class="fa fa-2x fa-linkedin-square" style="margin-top:-3px"></i>
       </div>
       <div class='col-xs-10 col-md-10 checkbox' style='margin-top: 0'>
-        After submitting, you will have the option to connect to your LinkedIn public profile. If you choose to connect, we will include your profile as part of the success story. You may also include or remove your profile at any point in the future.
+        <%= f.check_box :publish_contributor, style:'margin-top:6px;' %>
+        Leave this box checked if you would like us to include your LinkedIn profile as part of the success story. You may return at any point in the future to add or remove your profile.
       </div>
 
     </div>

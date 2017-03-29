@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170317211303) do
+ActiveRecord::Schema.define(version: 20170329223216) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,7 +90,7 @@ ActiveRecord::Schema.define(version: 20170317211303) do
     t.text     "notes"
     t.datetime "submitted_at"
     t.datetime "request_received_at"
-    t.boolean  "publish_contributor",     default: false
+    t.boolean  "publish_contributor",     default: true
     t.boolean  "contributor_unpublished", default: false
   end
 

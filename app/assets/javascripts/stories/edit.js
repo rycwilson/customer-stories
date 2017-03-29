@@ -1,7 +1,5 @@
 
 function storiesEdit () {
-  // $('#contributions-nav').find('a:last').tab('show');
-  // $("a[href='#collapse-connection-info-9']").click();
   loadVideoThumbnail();
   loadCspOrPlaceholderWidgets();
 }
@@ -11,7 +9,8 @@ function storiesEditListeners () {
   $(document)
     .on('shown.bs.collapse', '.contribution-card',
       function () {
-        if ($(this).find('.linkedin-checkbox-and-widget').hasClass('hidden')) {
+        if ($(this).find('.linkedin-container').length === 0 ||
+            $(this).find('.linkedin-checkbox-and-widget').hasClass('hidden')) {
           return false;
         } else {
           loadLIWidget($(this));
@@ -72,12 +71,14 @@ function loadCspOrPlaceholderWidgets() {
 }
 
 function loadLIWidget ($card) {
-  if ($card.find('.widget-container').data('linkedin-widget-loaded')) {
+  var alreadyLoaded = $card.find('.widget-container').data('linkedin-widget-loaded') ||
+                      $card.find('.csp-linkedin-widget');
+  if (alreadyLoaded) {
     return false;
   } else {
     var $linkedinWidgetContainer = $card.find('.linkedin-widget-container'),
-        $placeholderWidgetContainer = $card.find('.placeholder-widget-container'),
-        url = $linkedinWidgetContainer.data('url'),
+        $placeholderWidgetContainer = $card.find('.placeholder-widget-container');
+    var    url = $linkedinWidgetContainer.data('url'),
         widgetWidth = 322,
         widgetMarginTop = '-' + $card.find('.placeholder-widget-container')
                                      .outerHeight()
