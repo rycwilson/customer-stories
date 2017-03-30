@@ -69,6 +69,7 @@
                 } else {
                   buildRelWidget($container);
                 }
+                xScrollBoundaries()
               }
             })
           }
@@ -79,13 +80,7 @@
   }
 
   function buildRelWidget ($container) {
-
-
-
-    xScrollBoundaries()
     scrollHandlers($container);
-
-
     $container.find('.cs-thumbnail.published').hover(
       function () { $(this).css('border-color', '<%= @company.widget.tab_color %>'); },
       function () { $(this).css('border-color', '#ddd'); }
@@ -100,9 +95,7 @@
 
   function buildTabWidget ($container) {
     slideDrawerPlugin($container);
-    xScrollBoundaries()
     scrollHandlers($container);
-
     var $header = $container.find('.cs-header'),
         widgetShowTimer = null, widgetHideTimer = null;
     // cancel the timers if user interacts with widget
