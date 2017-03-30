@@ -20,7 +20,7 @@
     $(function () {
 
       var position = '<%= @position %>',
-          $container = (position === 'tab') ? $('#cs-tab-container') : $('#cs-rel-container'),
+          $container = (position === 'tab') ? ( $('#cs-tab-container').length > 0 ? $('#cs-tab-container') : $('#cs-container') ) : $('#cs-rel-container'),
           $script = (position === 'tab') ? $('script[href*="tab"]') : $('script[href*="rel"]'),
           category = $script.data('category'),
           product = $script.data('product'),
