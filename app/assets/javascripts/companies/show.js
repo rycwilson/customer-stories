@@ -1,9 +1,10 @@
 
 function companiesShow () {
-  adjustPromoCSSChecker();
 }
 
 function companiesShowListeners () {
+
+  promoteListeners();
   newStoryModalListeners();
   measureCharts();
   measureStories();
@@ -15,6 +16,15 @@ function companiesShowListeners () {
     function () {
       $(this).parent().prev().find('i').toggle();
   });
+
+}
+
+function promoteListeners () {
+
+  $(document).on('click', '#get-ads-btn',
+    function () {
+
+    });
 
 }
 
@@ -221,38 +231,6 @@ function newStoryModalListeners () {
     // select2 inputs to default values...
     $('.new-story-customer').select2('val', '');  // single select
     $('.new-story-tags').val('').trigger('change');  // multiple select
-  });
-}
-
-function adjustPromoCSSChecker () {
-  if ($('#promote').hasClass('active')) {
-    adjustPromoCSS();
-  } else {
-    $(document).on('shown.bs.tab', "a[href='#promote-panel']", function () {
-      adjustPromoCSS();
-    });
-  }
-}
-
-function adjustPromoCSS () {
-
-  var ad2LogoWidth = parseInt($('.ad2-logo').css('width'), 10);
-
-  $('.ad1-text').each(function () {
-    if ($(this).data('text-length') >= 85) {
-      $(this).css('font-size', '22px');
-    }
-  });
-
-  $('.ad2-text').each(function () {
-    $(this).css('padding-left', ad2LogoWidth + 20);
-    if ($(this).data('text-length') >= 85) {
-      $(this).css('font-size', '20px');
-      $(this).css('top', '10px');
-    } else if ($(this).data('text-length') >= 75) {
-      $(this).css('font-size', '22px');
-      $(this).css('top', '8px');
-    }
   });
 }
 
