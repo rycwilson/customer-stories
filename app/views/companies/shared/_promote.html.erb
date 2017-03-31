@@ -9,83 +9,8 @@
         <div class="portlet-header">
           <h5 class="portlet-title">
 
-            <b>Ad Networks: </b> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-            <span style='display:inline-block'>&nbsp;&nbsp; &nbsp;
 
-                <% if ['alpha', 'beta'].include? company.feature_flag %>
 
-                  <span class='tooltip-beta-promote' data-title='Coming soon'
-                        style='display:inline-block'>
-                    <input type="checkbox" style='pointer-events:none' disabled>
-                    <label>Enable Retargeting</label> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
-
-                    <input type="checkbox" style='pointer-events:none' disabled>
-                    <label>Enable CRM Targeting</label> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
-
-                    <input type="checkbox" style='pointer-events:none' disabled>
-                    <label>Enable Audience Targeting</label>
-                  </span>
-
-                <% else %>
-
-                  <span>
-                    <input type="checkbox">
-                    <label>Enable Retargeting</label> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
-
-                    <input type="checkbox">
-                    <label>Enable CRM Targeting</label> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
-
-                    <input type="checkbox">
-                    <label>Enable Audience Targeting</label>
-                  </span>
-
-                <% end %>
-
-            </span>
-          </h5>
-        </div>
-
-        <div class='portlet-body'>
-
-          <% company.stories.each do |story| %>
-            <% if story.success.results.present? %>
-              <% story.success.results.each do |result| %>
-
-                <% result.description[0] = result.description[0].downcase %>
-                <% ad_text = story.success.customer.name + " " +
-                            result.description + " with " + company.name %>
-
-                <div class="row">
-
-                  <div class="col-sm-4">
-                    <div class="ad1-wrap">
-                      <img class='ad1-logo' src="<%= company.logo_url %>">
-                      <div class="ad1-text" data-text-length="<%= ad_text.length %>">
-                        <%= ad_text %>
-                      </div>
-                      <button id='ad-btn' type='button'>Read Story</button>
-                      <img class="ad-powered" src="<%= CS_POWERED_LOGO_URL %>">
-                    </div> <br><br><br>
-                  </div><!-- /.col -->
-
-                  <!-- adding a data-text-length attribute because using jquery to
-                  capture the length isn't reliable -->
-                  <div class="col-sm-8">
-                    <div class="ad2-wrap">
-                      <img class="ad2-logo" src="<%= company.logo_url %>"/>
-                      <div class="ad2-text" data-text-length="<%= ad_text.length %>">
-                        <%= ad_text %>
-                      </div>
-                      <button id='ad-btn' type='button'>Read Story</button>
-                      <img class='ad-powered' src="<%= CS_POWERED_LOGO_URL %>"/>
-                    </div> <br><br><br>
-                  </div>
-
-                </div>
-
-              <% end %>
-            <% end %>
-          <% end %>
 
         </div>
 
