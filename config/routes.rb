@@ -27,6 +27,8 @@ Rails.application.routes.draw do
     # instead of stories_url in the widgets controller
     get '/', to: 'stories#index' #, as: 'csp_stories'
 
+    get '/ads', to: 'adwords#index', as: 'ads'
+
     get '/widgets/:position/cs', to: 'widgets#script'
     # specifying a default format here because (for unknown reason) ajax jsonp
     # request sent from IE11 was resulting in request interpreted as html

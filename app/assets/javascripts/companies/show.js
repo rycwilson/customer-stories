@@ -4,7 +4,6 @@ function companiesShow () {
 
 function companiesShowListeners () {
 
-  promoteListeners();
   newStoryModalListeners();
   measureCharts();
   measureStories();
@@ -16,15 +15,6 @@ function companiesShowListeners () {
     function () {
       $(this).parent().prev().find('i').toggle();
   });
-
-}
-
-function promoteListeners () {
-
-  $(document).on('click', '#get-ads-btn',
-    function () {
-
-    });
 
 }
 
