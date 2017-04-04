@@ -5,6 +5,7 @@ function companiesShow () {
 function companiesShowListeners () {
 
   newStoryModalListeners();
+  promoteListeners();
   measureCharts();
   measureStories();
   measureVisitors();
@@ -16,6 +17,20 @@ function companiesShowListeners () {
       $(this).parent().prev().find('i').toggle();
   });
 
+}
+
+function promoteListeners () {
+
+  $(document).on('click', 'a[href="#promote-panel"]',
+    function () {
+      $.get({
+        url: '/adwords/ads',
+        success: function (data, status, jqxhr) {
+
+        },
+        dataType: 'json'
+      });
+    })
 }
 
 function measureCharts () {

@@ -22,12 +22,11 @@ Rails.application.routes.draw do
 
   # valid subdomains (company/subdomain exists, excludes www)
   constraints(Subdomain) do
-
     # giving this route an alias so we can use csp_stories_url
     # instead of stories_url in the widgets controller
     get '/', to: 'stories#index' #, as: 'csp_stories'
 
-    get '/ads', to: 'adwords#index', as: 'ads'
+    get '/adwords/ads', to: 'adwords#index'
 
     get '/widgets/:position/cs', to: 'widgets#script'
     # specifying a default format here because (for unknown reason) ajax jsonp
