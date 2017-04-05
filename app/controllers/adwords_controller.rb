@@ -4,8 +4,18 @@ class AdwordsController < ApplicationController
   before_action { @company = Company.find_by(subdomain: request.subdomain) }
 
   def index
+
     topic_campaign = get_campaign(@company, 'topic')
     retarget_campaign = get_campaign(@company, 'retarget')
+
+    topic_ad_group = get_ad_group(@company, 'topic')
+    retarget_ad_group = get_ad_group(@company, 'retarget')
+
+    topic_ads = get_ads(@company, 'topic')
+    retarget_ads = get_ads(@company, 'retarget')
+
+    binding.remote_pry
+
     respond_to do |format|
       format.json do
         render({
@@ -20,10 +30,21 @@ class AdwordsController < ApplicationController
   private
 
   def get_api_version()
-    return :v201702
+    :v201702
   end
 
-  def get_campaign(company, campaign_type)
+  def get_adwords_api()
+    @api ||= create_adwords_api()
+  end
+
+  # Creates an instance of AdWords API class. Uses a configuration file and
+  # Rails config directory.
+  def create_adwords_api()
+    config_file = File.join(Rails.root, 'config', 'adwords_api.yml')
+    @api = AdwordsApi::Api.new(config_file)
+  end
+
+  def get_campaign(company, type)
     api = get_adwords_api()
     service = api.service(:CampaignService, get_api_version())
     selector = {
@@ -41,20 +62,54 @@ class AdwordsController < ApplicationController
     end
     result[:entries].find do |campaign|
       campaign[:labels].any? { |label| label[:name] == company.subdomain } &&
-      campaign[:labels].any? { |label| label[:name] == campaign_type }
+      campaign[:labels].any? { |label| label[:name] == type }
     end
   end
 
-  def get_adwords_api()
-    @api ||= create_adwords_api()
+  def get_ad_group(company, type)
+    api = get_adwords_api()
+    service = api.service(:AdGroupService, get_api_version())
+    selector = {
+      :fields => ['Id', 'Name', 'Status', 'Labels'],
+      :ordering => [{:field => 'Id', :sort_order => 'ASCENDING'}],
+      :paging => {:start_index => 0, :number_results => 50}
+    }
+    result = nil
+    begin
+      result = service.get(selector)
+    rescue AdwordsApi::Errors::ApiException => e
+      logger.fatal("Exception occurred: %s\n%s" % [e.to_s, e.message])
+      flash.now[:alert] =
+          'API request failed with an error, see logs for details'
+    end
+    result[:entries].find do |ad_group|
+      ad_group[:labels].any? { |label| label[:name] == company.subdomain } &&
+      ad_group[:labels].any? { |label| label[:name] == type }
+    end
   end
 
-  # Creates an instance of AdWords API class. Uses a configuration file and
-  # Rails config directory.
-  def create_adwords_api()
-    config_file = File.join(Rails.root, 'config', 'adwords_api.yml')
-    @api = AdwordsApi::Api.new(config_file)
+  def get_ads(company, type)
+    api = get_adwords_api()
+    service = api.service(:AdGroupAdService, get_api_version())
+    selector = {
+      :fields => ['Id', 'Name', 'Status', 'Labels'],
+      :ordering => [{:field => 'Id', :sort_order => 'ASCENDING'}],
+      :paging => {:start_index => 0, :number_results => 50}
+    }
+    result = nil
+    begin
+      result = service.get(selector)
+    rescue AdwordsApi::Errors::ApiException => e
+      logger.fatal("Exception occurred: %s\n%s" % [e.to_s, e.message])
+      flash.now[:alert] =
+          'API request failed with an error, see logs for details'
+    end
+    result[:entries].select do |ad|
+      ad[:labels].any? { |label| label[:name] == company.subdomain } &&
+      ad[:labels].any? { |label| label[:name] == type }
+    end
   end
+
 
 end
 
