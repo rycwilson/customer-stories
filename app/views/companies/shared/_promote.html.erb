@@ -1,20 +1,50 @@
 <!-- promote -->
 <div id='promote-panel'
      class="<%= workflow_tab == 'promote' ? 'active tab-pane content' : 'tab-pane content' %>" role='tabpanel'>
+  <div class="content clip">
+    <div class='container'>
 
-  <div class='container'>
-    <div class='row'>
-      <div class='portlet portlet-default'>
+      <div class="layout layout-main-right layout-stack-sm">
+        <div class="col-md-3 col-sm-4 layout-sidebar">
 
-        <%= form_tag '/ads', method: :get, remote: true, id: 'get-ads-form' do %>
+          <div class="nav-layout-sidebar-skip">
+            <strong>Tab Navigation</strong> / <a href="#settings-content">Skip to Content</a>
+          </div>
 
-          <button type='submit' class='btn btn-primary'>
-            Get Ads
-          </button>
+          <ul class="nav nav-layout-sidebar nav-stacked">
+            <li class='active'>
+              <a href="#campaign-management-container" data-toggle="tab">
+              <i class="fa fa-gear"></i>
+              &nbsp;&nbsp;Campaign Settings
+              </a>
+            </li>
+            <li>
+              <a href="#ads-preview-container" data-toggle="tab">
+              <i class="fa fa-search"></i>
+              &nbsp;&nbsp;Ads Preview
+              </a>
+            </li>
+          </ul>
 
-        <% end %>
+        </div>
 
-      </div>  <!-- portlet -->
-    </div>  <!-- row -->
-  </div>  <!-- container -->
+        <div class="col-md-9 col-sm-8 layout-main">
+
+          <div id="settings-content" class="tab-content stacked-content">
+
+            <div class="tab-pane fade in active" id="campaign-management-container">
+              <%= render 'adwords/campaign_management', { company: company } %>
+            </div>
+
+            <div class="tab-pane fade" id="ads-preview-container">
+              <%= render 'adwords/ads_preview', { company: company } %>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>  <!-- container -->
+  </div>
 </div>  <!-- promote
