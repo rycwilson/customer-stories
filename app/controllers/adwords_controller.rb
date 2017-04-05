@@ -14,7 +14,6 @@ class AdwordsController < ApplicationController
     topic_ads = get_ads(@company, 'topic')
     retarget_ads = get_ads(@company, 'retarget')
 
-    binding.remote_pry
 
     respond_to do |format|
       format.json do
