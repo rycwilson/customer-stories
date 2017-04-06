@@ -81,6 +81,42 @@
 
 }
 
+
+.companies.edit .company-nav {
+  #dropdowns-list {
+    margin: 0;
+    li.dropdown:first-child {  // first/last are reversed due to being pulled right
+      > a {
+        color: #4885ed;
+        border-color: transparent;
+        border-bottom: 1px solid #4885ed;
+      }
+      > a:hover, a:focus {
+        color: #4885ed;
+        border-bottom: 1px solid #4885ed;
+      }
+    }
+  }
+}
+
+.profile.edit .company-nav {
+  #dropdowns-list {
+    margin: 0;
+    li.dropdown:last-child {  // first/last are reversed due to being pulled right
+      > a {
+        color: #4885ed;
+        border-color: transparent;
+        border-bottom: 1px solid #4885ed;
+      }
+      > a:hover, a:focus {
+        color: #4885ed;
+        border-bottom: 1px solid #4885ed;
+      }
+    }
+  }
+}
+
+// example of bolding items without affecting spacing: http://jsfiddle.net/85LbG/
 .company-nav {
   position: relative;
   height: 48px;
@@ -93,10 +129,25 @@
   #workflow-tabs-list {
     margin-bottom: 0;
     font-size: 16px;
+
+    // li, a {
+    //   display: inline-block;
+    //   text-align: center;
+    // }
+    // li::after {
+    //   display: block;
+    //   content: attr(title);
+    //   font-weight: bold;
+    //   height: 1px;
+    //   color: transparent;
+    //   overflow: hidden;
+    //   visibility: hidden;
+    // }
+
     li.active {
       a {
         color: #4885ed;
-        font-weight: 400;
+        font-weight: bold;
         border: transparent;
         border-bottom: 1px solid #4885ed;
       }
@@ -107,19 +158,21 @@
     }
     li {
       a {
-        display: block;
+        text-decoration: none;
+        // display: block;
         background-color: #ffffff;
         margin: 0;
         font-family: 'Lato';
-        color: #777;
-        font-weight: 300;
-        padding: 12px 10px;
+        color: #666;
+        font-weight: 400;
+        padding: 12px 12px;
         letter-spacing: normal;
         border: 0;  // overrides bootstrap
       }
       a:hover, a:focus {
         background-color: #ffffff;
-        color: #111;
+        color: #222;
+        // font-weight: bold;
         border-color: transparent;
       }
     }
@@ -128,13 +181,12 @@
     margin: 0;
     li.dropdown.open {
       a {
-        color: #555;
-    //     font-weight: 400;
+        color: #222;
         border-color: transparent;
     //     border-bottom: 1px solid #4885ed;
       }
       a:hover, a:focus {
-        color: #555;
+        color: #222;
     //     border-bottom: 1px solid #4885ed;
       }
       // remove the caret from dropdown
@@ -144,14 +196,11 @@
     }
     li.dropdown {
       a {
-    //     position: relative;
-    //     display: block;
-    //     background-color: #ffffff;
-    //     margin: 0;
-
-        color: #777;
-
-    //     letter-spacing: normal;
+        // position: relative;
+        // display: block;
+        // background-color: #ffffff;
+        // margin: 0;
+        color: #666;
         border: 0;  // overrides bootstrap
       }
       a:hover, a:focus {

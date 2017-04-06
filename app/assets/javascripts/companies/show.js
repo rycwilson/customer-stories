@@ -17,6 +17,37 @@ function companiesShowListeners () {
       $(this).parent().prev().find('i').toggle();
   });
 
+  // apply styling when click on a dropdown option, or navigate away
+  $(document).on('click', 'a[href*="companies"], a[href*="profile"]',
+    function () {
+      var $thisDropdown = $(this).closest('li.dropdown'),
+          $otherDropdown = $thisDropdown.parent().find('li.dropdown:not(.open)'),
+          deactivateDropdown = function (dropdown) {
+            return function () {
+              dropdown
+                .find('a').css('border-bottom', 'transparent')
+                .find('i').css('color', '#666');
+              $(document).off('click', deactivateDropdown);
+              $(document).off('turbolinks:before-visit', deactivateDropdown);
+            }
+          }
+
+      $thisDropdown
+        .find('a').css('border-bottom', '1px solid #4885ed')
+        .find('i').css('color', '#4885ed')
+      $otherDropdown
+        .find('a').css('border-bottom', 'transparent')
+        .find('i').css('color', '#666')
+
+      // when navigating away, deactivate styling immediately,
+      // but need to kill these listeners when we move away
+
+      // $(document)
+      //   .one('click', '.workflow-tabs-list', deactivateDropdown($thisDropdown))
+      //   .one('turbolinks:before-visit', deactivateDropdown($thisDropdown))
+    })
+
+
 }
 
 function promoteListeners () {
