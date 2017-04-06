@@ -48,7 +48,7 @@ function attachAppListeners () {
   xScrollBoundaries();
   yScrollBoundaries();
 
-  $(document).on('click', '.workflow-tabs a', function (e) {
+  $(document).on('click', '#workflow-tabs-list a', function (e) {
     if ($('body').hasClass('companies show')) {
       return false;  // TODO: why does this work but not e.preventDefault()?
     }
@@ -96,7 +96,7 @@ function attachAppListeners () {
         // console.log('preview rendered');
 
         if ($('body').hasClass('not:companies not:show')) {
-          $('.workflow-tabs').find('.active').removeClass('active');
+          $('#workflow-tabs-list').find('.active').removeClass('active');
         }
         constructPlugins();
       }

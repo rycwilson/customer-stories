@@ -87,8 +87,12 @@
   margin-bottom: 40px;
   background-color: #ffffff;
   border-bottom: 1px solid #f2f2f2;
-  .workflow-tabs {
+  li {
+    position: relative;
+  }
+  #workflow-tabs-list {
     margin-bottom: 0;
+    font-size: 16px;
     li.active {
       a {
         color: #4885ed;
@@ -103,12 +107,10 @@
     }
     li {
       a {
-        position: relative;
         display: block;
         background-color: #ffffff;
         margin: 0;
         font-family: 'Lato';
-        font-size: 16px;
         color: #777;
         font-weight: 300;
         padding: 12px 10px;
@@ -122,10 +124,62 @@
       }
     }
   }
-  // remove the caret from dropdown
-  .nav > li > .dropdown-menu::after,
-  .nav > li > .dropdown-menu::before {
-    display:none;
+  #dropdowns-list {
+    margin: 0;
+    li.dropdown.open {
+      a {
+        color: #555;
+    //     font-weight: 400;
+        border-color: transparent;
+    //     border-bottom: 1px solid #4885ed;
+      }
+      a:hover, a:focus {
+        color: #555;
+    //     border-bottom: 1px solid #4885ed;
+      }
+      // remove the caret from dropdown
+      .dropdown-menu::after, .dropdown-menu::before {
+        display:none;
+      }
+    }
+    li.dropdown {
+      a {
+    //     position: relative;
+    //     display: block;
+    //     background-color: #ffffff;
+    //     margin: 0;
+
+        color: #777;
+
+    //     letter-spacing: normal;
+        border: 0;  // overrides bootstrap
+      }
+      a:hover, a:focus {
+        background-color: #ffffff;
+        color: #111;
+        border-color: transparent;
+      }
+      .dropdown-menu {
+        top: 105%;
+        border-color: #ccc;
+        border-top-right-radius: 0;
+        border-top-left-radius: 0;
+        li {
+          a {
+            font-size: 13px;
+            padding: 6px 12px;
+            border-radius: 4px;
+          }
+          a:hover, a:focus {
+            background-color: #ededed;
+          }
+        }
+      }
+    }
+    li.dropdown:hover, li.dropdown:focus {
+      background-color: #fff;
+    }
+
   }
 }
 
