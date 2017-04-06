@@ -81,6 +81,66 @@
 
 }
 
+.company-nav {
+  position: relative;
+  height: 48px;
+  margin-bottom: 40px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #f2f2f2;
+  .workflow-tabs {
+    margin-bottom: 0;
+    li.active {
+      a {
+        color: #4885ed;
+        font-weight: 400;
+        border: transparent;
+        border-bottom: 1px solid #4885ed;
+      }
+      a:hover, a:focus {
+        color: #4885ed;
+        border-bottom: 1px solid #4885ed;
+      }
+    }
+    li {
+      a {
+        position: relative;
+        display: block;
+        background-color: #ffffff;
+        margin: 0;
+        font-family: 'Lato';
+        font-size: 16px;
+        color: #777;
+        font-weight: 300;
+        padding: 12px 10px;
+        letter-spacing: normal;
+        border: 0;  // overrides bootstrap
+      }
+      a:hover, a:focus {
+        background-color: #ffffff;
+        color: #111;
+        border-color: transparent;
+      }
+    }
+  }
+  // remove the caret from dropdown
+  .nav > li > .dropdown-menu::after,
+  .nav > li > .dropdown-menu::before {
+    display:none;
+  }
+}
+
+.company-nav:after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  z-index: -1;
+  width: 100%;
+  height: 90px;
+  margin-top: -40px;
+  background-image: linear-gradient(to bottom, #f2f2f2 0%, #ffffff 100%);
+  background-repeat: repeat-x;
+}
+
 #primary-cta-btn {
   // margin-top: 15px;
   font-weight: 400;
