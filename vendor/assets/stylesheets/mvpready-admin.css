@@ -3475,7 +3475,8 @@ fieldset[disabled] .navbar .btn-link:focus {
   .mainnav-menu > li.active > a {
     /*border-bottom-color: #d74b4b;*/
     /* !important keeps the bottom border even when hover */
-    border-bottom-color: #4885ed !important;
+    /* csp => removed !important */
+    border-bottom-color: #4885ed;
   }
   .mainnav-menu .mainnav-caret {
     font-size: 13px;
