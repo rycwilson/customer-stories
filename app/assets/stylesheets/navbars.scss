@@ -129,21 +129,6 @@
   #workflow-tabs-list {
     margin-bottom: 0;
     font-size: 16px;
-
-    // li, a {
-    //   display: inline-block;
-    //   text-align: center;
-    // }
-    // li::after {
-    //   display: block;
-    //   content: attr(title);
-    //   font-weight: bold;
-    //   height: 1px;
-    //   color: transparent;
-    //   overflow: hidden;
-    //   visibility: hidden;
-    // }
-
     li.active {
       a {
         color: #d74b4b;  // #4885ed;
