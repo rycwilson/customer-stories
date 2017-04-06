@@ -6,6 +6,19 @@ function profileEdit () {
     $('header').css('border-color', '#dddddd');
   }
 
+  $('.dropdown.user-profile').addClass('active');
+  $(document)
+    .one('turbolinks:before-visit', function () {
+      if ($('.dropdown.user-profile').hasClass('active')) {
+        $('.dropdown.user-profile').removeClass('active');
+      }
+    })
+    .one('click', '.workflow-tabs-list', function () {
+      if ($('.dropdown.user-profile').hasClass('active')) {
+        $('.dropdown.user-profile').removeClass('active');
+      }
+    });
+
 }
 
 function attachProfileListeners () {

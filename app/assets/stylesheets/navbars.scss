@@ -82,39 +82,39 @@
 }
 
 
-.companies.edit .company-nav {
-  #dropdowns-list {
-    margin: 0;
-    li.dropdown:first-child {  // first/last are reversed due to being pulled right
-      > a {
-        color: #4885ed;
-        border-color: transparent;
-        border-bottom: 1px solid #4885ed;
-      }
-      > a:hover, a:focus {
-        color: #4885ed;
-        border-bottom: 1px solid #4885ed;
-      }
-    }
-  }
-}
+// .companies.edit .company-nav {
+//   #dropdowns-list {
+//     margin: 0;
+//     li.dropdown:first-child {  // first/last are reversed due to being pulled right
+//       > a {
+//         color: #4885ed;
+//         border-color: transparent;
+//         border-bottom: 1px solid #4885ed;
+//       }
+//       > a:hover, a:focus {
+//         color: #4885ed;
+//         border-bottom: 1px solid #4885ed;
+//       }
+//     }
+//   }
+// }
 
-.profile.edit .company-nav {
-  #dropdowns-list {
-    margin: 0;
-    li.dropdown:last-child {  // first/last are reversed due to being pulled right
-      > a {
-        color: #4885ed;
-        border-color: transparent;
-        border-bottom: 1px solid #4885ed;
-      }
-      > a:hover, a:focus {
-        color: #4885ed;
-        border-bottom: 1px solid #4885ed;
-      }
-    }
-  }
-}
+// .profile.edit .company-nav {
+//   #dropdowns-list {
+//     margin: 0;
+//     li.dropdown:last-child {  // first/last are reversed due to being pulled right
+//       > a {
+//         color: #4885ed;
+//         border-color: transparent;
+//         border-bottom: 1px solid #4885ed;
+//       }
+//       > a:hover, a:focus {
+//         color: #4885ed;
+//         border-bottom: 1px solid #4885ed;
+//       }
+//     }
+//   }
+// }
 
 // example of bolding items without affecting spacing: http://jsfiddle.net/85LbG/
 .company-nav {
@@ -179,11 +179,16 @@
   }
   #dropdowns-list {
     margin: 0;
+    li.dropdown.active {
+      a {
+        color: #4885ed;
+        border-bottom: 1px solid #4885ed;
+      }
+    }
     li.dropdown.open {
       a {
         color: #222;
         border-color: transparent;
-    //     border-bottom: 1px solid #4885ed;
       }
       a:hover, a:focus {
         color: #222;
