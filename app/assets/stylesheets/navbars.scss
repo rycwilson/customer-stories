@@ -164,10 +164,13 @@
   }
   #dropdowns-list {
     margin: 0;
-    li.dropdown.active {
-      a {
+    li.dropdown.active, li.dropdown.active.open {
+      > a {
         color: #d74b4b;  // #4885ed;
         border-bottom: 1px solid #d74b4b;  // #4885ed;
+      }
+      > a:hover, a:focus {
+        color: #d74b4b
       }
     }
     li.dropdown.open {

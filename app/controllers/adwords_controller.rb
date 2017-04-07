@@ -4,7 +4,7 @@ class AdwordsController < ApplicationController
   before_action { @company = Company.find_by(subdomain: request.subdomain) }
 
   def previews
-    @type = params[:type]
+    # @type = params[:type]
     varmour_marketing_img_url = "https://tpc.googlesyndication.com/simgad/14020142471839339698"
     story = Story.find_by(title: params[:story_title])
 
@@ -14,19 +14,31 @@ class AdwordsController < ApplicationController
     # @topic_ad_group = get_ad_group(@company, 'topic')
     # @retarget_ad_group = get_ad_group(@company, 'retarget')
 
-    @topic_ads = get_ads(@company, 'topic')
-    @retarget_ads = get_ads(@company, 'retarget')
+    # @topic_ads = get_ads(@company, 'topic')
+    # @retarget_ads = get_ads(@company, 'retarget')
 
-    @preview_html = render_to_string(
-                      partial: "adwords/ad_templates/#{@type}",
-                      locals: {
-                        company_name: @company.name,
-                        story_title: params[:story_title],
-                        story_url_encoded: url_encode(story.csp_story_url),
-                        marketing_img_url: varmour_marketing_img_url
-                      },
-                      layout: false
-                    )
+    @native_ads_preview_html =
+      render_to_string(
+        partial: "adwords/ad_templates/native",
+        locals: {
+          company_name: @company.name,
+          story_title: params[:story_title],
+          story_url_encoded: url_encode(story.csp_story_url),
+          marketing_img_url: varmour_marketing_img_url
+        },
+        layout: false
+      )
+    @image_ads_preview_html =
+      render_to_string(
+        partial: "adwords/ad_templates/image",
+        locals: {
+          company_name: @company.name,
+          story_title: params[:story_title],
+          story_url_encoded: url_encode(story.csp_story_url),
+          marketing_img_url: varmour_marketing_img_url
+        },
+        layout: false
+      )
     respond_to { |format| format.js }
   end
 

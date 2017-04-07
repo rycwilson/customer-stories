@@ -26,7 +26,7 @@ Rails.application.routes.draw do
     # instead of stories_url in the widgets controller
     get '/', to: 'stories#index' #, as: 'csp_stories'
 
-    get '/adwords/previews/:type', to: 'adwords#previews'
+    get '/adwords/previews', to: 'adwords#previews'
 
     get '/widgets/:position/cs', to: 'widgets#script'
     # specifying a default format here because (for unknown reason) ajax jsonp
