@@ -4,10 +4,11 @@
          skip_digest: true) do %>
 
   <a href="<%= story.published ? story.csp_story_path : edit_story_path(story.id) %>"
-     class="grid-item thumbnail curator <%= story.published ? 'published' : (story.logo_published ? 'logo-published' : 'pending-curation') %>">
+     class="grid-item thumbnail curator <%= story.published ? 'published' : (story.logo_published ? 'logo-published' : 'pending-curation') %>"
+     data-toggle='collapse'>
 
     <div class='thumbnail-view'>
-      <p class="thumbnail-view-hover"><%= story.title %></p>
+      <!-- <p class="thumbnail-view-hover"><%#= story.title %></p> -->
       <img src="<%= customer.logo_url || image_path('company-logo-missing.png') %>">
     </div>
 
@@ -17,5 +18,9 @@
     </div>
 
   </a>
+
+  <div>
+
+  </div>
 
 <% end %>
