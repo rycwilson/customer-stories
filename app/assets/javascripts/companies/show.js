@@ -38,12 +38,13 @@ function promoteListeners () {
 
   $(document).on('click', 'a[href="#promote-panel"]',
     function () {
-      $.get({
-        url: '/adwords/ads',
-        success: function (data, status, jqxhr) {
-
+      $.ajax({
+        url: '/adwords/previews/native',
+        method: 'get',
+        data: {
+          story_title: $('#ads-preview-story-select').find('option:first-of-type').text()
         },
-        dataType: 'json'
+        dataType: 'script'
       });
     })
 }

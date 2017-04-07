@@ -1,0 +1,23 @@
+(function () {
+
+  var retargetAds = <%= raw @retarget_ads.to_json %>,
+      previewHtml = <%= raw @preview_html.to_json %>,
+      adType = "<%= @type %>";  // native, image, text
+
+  // console.log(retargetAds);
+
+  if (adType === 'native') {
+
+    $('#native-ads-panel').html(previewHtml);
+
+  } else if (adType == 'image') {
+
+    $('#image-ads-panel').html(previewHtml);
+
+  } else if (adType == 'text') {
+
+    $('#text-ads-panel').html(previewHtml);
+
+  }
+
+}());

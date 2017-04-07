@@ -2,21 +2,14 @@
 <div class='row'>
   <div class='portlet portlet-default'>
 
-    <%= form_tag '/ads', method: :get, remote: true, id: 'get-ads-form' do %>
-
-      <button type='submit' class='btn btn-default'>
-        Get Ads
-      </button>
-
-    <% end %>
-
     <form class="form-horizontal">
       <div class="form-group" style='width:100%'> <!-- define width so select2 has parent width -->
         <label for="ads-preview-story-select" class='col-sm-2 control-label'>
           Story
         </label>
         <div class='col-sm-10'>
-          <%= select_tag :story_id, options_for_select(company.stories.select_options),
+          <!-- we don't want an 'All' option, so slice the options array -->
+          <%= select_tag :story_id, options_for_select(company.stories.select_options[1..-1]),
             { id: 'ads-preview-story-select', class: 'form-control', style: 'width:70%' } %>
 
         </div>
@@ -42,21 +35,19 @@
     </form>
 
 
-    <div id='native-ads-panel' class='tab-pane fade in active'>
+    <div id='native-ads-panel' class='tab-pane fade in active' style='position:relative'>
       <h3>Native</h3>
+
     </div>
 
     <div id='image-ads-panel' class='tab-pane fade'>
       <h3>Image</h3>
-      <div id="adsPreviewTabs___v_s2_v2__970x90__preview" style="vertical-align: top; position: relative; padding: 0px 10px 10px 0px; display: block;">
-        <div id="adContent" data-variation="bannerA" style="line-height: normal; background-color: rgb(238, 238, 238); position: absolute; top: 0px; left: 0px; width: 970px; height: 90px; overflow: hidden; border-radius: 0px;">
-        <div id="colorSlot1" data-type="shape" style="position: absolute; top: 0px; left: 0px; width: 970px; height: 90px; background-color: rgb(255, 255, 255);"></div><div id="product" data-type="product" style="position: absolute; top: 0px; left: 0px; width: 172px; height: 90px;"><img src="https://tpc.googlesyndication.com/simgad/14020142471839339698" style="display: block; position: absolute; top: 0px; left: 0px; width: 172px; height: 90px;"></div><div id="logo" data-type="logo" style="position: absolute; top: 21px; left: 217px; width: 48px; height: 48px;"><img src="https://tpc.googlesyndication.com/simgad/1818104764851848758" style="display: block; position: absolute; top: 0px; left: 0px; width: 48px; height: 48px;"></div><div id="text1" data-type="headline" dir="ltr" style="font-family: Roboto, Arial, sans-serif; font-weight: bold; font-style: normal; width: 236px; position: absolute; top: 5px; left: 289px; height: 81px; color: rgb(43, 43, 43); font-size: 24px;"><div style="position: absolute; top: 12px; left: 15px; width: 206px; height: 57px;"><div style="display: inline-block; height: 100%; vertical-align: middle;"></div><div style="display: inline-block; width: 100%; vertical-align: middle;"><span>vArmour Customer Stories</span></div></div></div><div id="text2" data-type="description" dir="ltr" style="font-family: Roboto, Arial, sans-serif; font-weight: lighter; font-style: normal; width: 265px; position: absolute; top: 5px; left: 525px; height: 80px; color: rgb(92, 92, 92); font-size: 18px;"><div style="position: absolute; top: 8px; left: 13px; width: 239px; height: 64px;"><div style="display: inline-block; height: 100%; vertical-align: middle;"></div><div style="display: inline-block; width: 100%; vertical-align: middle;"><span>John Muir Health Protects Community's Information with vArmour</span></div></div></div><div id="url" style="font-family: Roboto, Arial; font-weight: lighter; font-style: normal; display: none;"></div><div id="button" data-type="button" style="font-family: Times; font-weight: normal; font-style: normal; position: absolute; top: 22px; left: 857px; width: 47px; height: 47px; background-color: rgb(83, 84, 86);"><svg width="100%" height="100%" viewBox="0 0 26 42" style="position: absolute; top: 26%; left: 0px; width: 48%; height: 48%; margin: 0px 26%;"> <polyline fill="none" stroke="#ffffff" stroke-width="5" stroke-miterlimit="10" points="6,3 24,21 6,39"></polyline></svg></div><div id="adContent-border" style="border-color: rgb(229, 229, 229); border-radius: 0px; border-style: solid; border-width: 1px; position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; z-index: 500; box-sizing: border-box; pointer-events: none;"></div><a id="adContent-clickOverlay" href="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl=https%3A%2F%2Fvarmour.customerstories.net%2Fjohn-muir-health%2Fvarmour-protects-community-s-information-at-john-muir-health%3Futm_campaign%3Dpromote%26utm_content%3Dtopic%26utm_source%3D%26utm_medium%3D%26utm_term%3D" target="_blank" style="background: rgba(0, 0, 0, 0); z-index: 1000; cursor: pointer; position: absolute; left: 0px; top: 0px; width: 100%; height: 100%;"></a></div>
-      </div>
 
     </div>
 
     <div id='text-ads-panel' class='tab-pane fade'>
       <h3>Text</h3>
+
     </div>
 
 

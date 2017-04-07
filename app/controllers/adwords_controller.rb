@@ -3,27 +3,31 @@ class AdwordsController < ApplicationController
   require 'adwords_api'
   before_action { @company = Company.find_by(subdomain: request.subdomain) }
 
-  def index
+  def previews
+    @type = params[:type]
+    varmour_marketing_img_url = "https://tpc.googlesyndication.com/simgad/14020142471839339698"
+    story = Story.find_by(title: params[:story_title])
 
-    topic_campaign = get_campaign(@company, 'topic')
-    retarget_campaign = get_campaign(@company, 'retarget')
+    # @topic_campaign = get_campaign(@company, 'topic')
+    # @retarget_campaign = get_campaign(@company, 'retarget')
 
-    topic_ad_group = get_ad_group(@company, 'topic')
-    retarget_ad_group = get_ad_group(@company, 'retarget')
+    # @topic_ad_group = get_ad_group(@company, 'topic')
+    # @retarget_ad_group = get_ad_group(@company, 'retarget')
 
-    topic_ads = get_ads(@company, 'topic')
-    retarget_ads = get_ads(@company, 'retarget')
+    @topic_ads = get_ads(@company, 'topic')
+    @retarget_ads = get_ads(@company, 'retarget')
 
-
-    respond_to do |format|
-      format.json do
-        render({
-          json: {
-
-          }
-        })
-      end
-    end
+    @preview_html = render_to_string(
+                      partial: "adwords/ad_templates/#{@type}",
+                      locals: {
+                        company_name: @company.name,
+                        story_title: params[:story_title],
+                        story_url_encoded: url_encode(story.csp_story_url),
+                        marketing_img_url: varmour_marketing_img_url
+                      },
+                      layout: false
+                    )
+    respond_to { |format| format.js }
   end
 
   private
