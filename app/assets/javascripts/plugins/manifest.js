@@ -1,4 +1,5 @@
 
+//= require modernizr/modernizr
 
 // mvp ready
 //= require slimscroll/jquery.slimscroll
