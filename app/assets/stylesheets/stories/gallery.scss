@@ -2,7 +2,7 @@
 .stories.index {
 
   .mainnav {
-    margin-bottom: 40px;
+    margin-bottom: 18px;
   }
 
   #stories-filters-xs .form-group {
@@ -58,8 +58,9 @@
 
   .grid-item {
     display: inline-block;
-    margin: 0 28px;
+    margin: 8px 28px 18px 28px;
     vertical-align: top;
+    padding-top: 10px;
   }
 
   .grid-item.og-expanded > a::after {
@@ -70,15 +71,15 @@
     width: 0;
     position: absolute;
     pointer-events: none;
-    border-bottom-color: #ddd;
-    border-width: 15px;
+    border-bottom-color: #f2f2f2;
+    border-width: 18px;
     left: 50%;
-    margin: -20px 0 0 -15px;
+    margin: -5px 0 0 -15px;
   }
 
   .og-expander {
     position: absolute;
-    background: #ddd;
+    background: #f2f2f2;
     top: auto;
     left: 0;
     width: 100%;
