@@ -12,7 +12,7 @@
      class="thumbnail curator <%= story.published ? 'published' : (story.logo_published ? 'logo-published' : 'pending-curation') %>"
      data-logosrc="<%= story.customer.logo_url %>"
      data-summary="<%= FFaker::Lorem.paragraphs %>"
-     data-quote="<%= '"' + FFaker::Lorem.paragraph + '"' %>">
+     data-quote="<%= FFaker::Lorem.paragraph %>">
 
     <div class='thumbnail-view'>
       <!-- <p class="thumbnail-view-hover"><%#= story.title %></p> -->

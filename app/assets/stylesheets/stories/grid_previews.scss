@@ -75,7 +75,7 @@
       display: inline-block;
       vertical-align: middle;
       max-height: 100%;
-      max-width: 50%;
+      max-width: 30%;
       mix-blend-mode: multiply; // this makes white background transparent
     }
   }
@@ -97,6 +97,14 @@
       font-size: 16px;
       font-style: italic;
       line-height: 22px;
+    }
+    p:before {
+      color: #ccc;
+      content: open-quote;
+      font-size: 4em;
+      line-height: 0.1em;
+      margin-right: 0.25em;
+      vertical-align: -0.4em;
     }
   }
 
