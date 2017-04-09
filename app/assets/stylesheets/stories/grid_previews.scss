@@ -27,7 +27,7 @@
     overflow: hidden;
   }
   .og-expander-inner {
-    padding: 50px 30px;
+    padding: 40px 30px;
     height: 100%;
   }
   .og-close {
@@ -68,19 +68,21 @@
   .og-logo {
     width: 100%;
     height: 100px;
+    line-height: 96px;
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
     img {
       display: inline-block;
-      max-height: 90px;
+      vertical-align: middle;
+      max-height: 100%;
       max-width: 50%;
-      mix-blend-mode: multiply;
+      mix-blend-mode: multiply; // this makes white background transparent
     }
   }
 
   .og-summary {
     text-align: center;
-    padding: 0 50px 0 30px;
+    padding: 0 40px 0 40px;
     color: #777;
     p {
       text-align: left;
@@ -88,7 +90,7 @@
   }
 
   .og-testimonial {
-    padding: 0 30px 0 50px;
+    padding: 0 40px 0 40px;
     color: #777;
     p {
       font-weight: 400;
