@@ -70,8 +70,8 @@ class Story < ActiveRecord::Base
   }
   scope :company_public, ->(company_id) {
     joins(success: { customer: {} })
-    .where(logo_published: true,
-           customers: { company_id: company_id })
+    .where('preview_published = ? OR logo_published = ?', true, true)
+    .where(customers: { company_id: company_id })
   }
   scope :company_public_since, ->(company_id, days_ago) {
     company_public(company_id)
@@ -79,14 +79,14 @@ class Story < ActiveRecord::Base
   }
   scope :company_public_filter_category, ->(company_id, category_id) {
     joins(success: { customer: {}, story_categories: {} })
-    .where(logo_published: true,
-           customers: { company_id: company_id },
+    .where('preview_published = ? OR logo_published = ?', true, true)
+    .where(customers: { company_id: company_id },
            story_categories: { id: category_id })
   }
   scope :company_public_filter_product, ->(company_id, product_id) {
     joins(success: { customer: {}, products: {} })
-    .where(logo_published: true,
-           customers: { company_id: company_id },
+    .where('preview_published = ? OR logo_published = ?', true, true)
+    .where(customers: { company_id: company_id },
            products: { id: product_id })
   }
 
@@ -106,7 +106,7 @@ class Story < ActiveRecord::Base
     self.company.expire_curate_table_fragment_cache
     expire_all_stories_cache(true)
   end if Proc.new { |story|
-           (story.previous_changes.keys & ['published', 'logo_published']).any?
+           (story.previous_changes.keys & ['published', 'preview_published', 'logo_published']).any?
          }
 
   after_commit on: :update do

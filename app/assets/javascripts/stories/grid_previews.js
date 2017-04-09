@@ -109,7 +109,7 @@ function initEvents() {
   $items.on( 'click', 'span.og-close', function() {
     hidePreview();
     return false;
-  } ).children( 'a' ).on( 'click', function(e) {
+  } ).children( 'a.preview-published' ).on( 'click', function(e) {
     var $item = $( this ).parent();
     // check if item already opened
     current === $item.index() ? hidePreview() : showPreview( $item );

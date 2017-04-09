@@ -1,34 +1,30 @@
 
-  <!-- <a href="<%#= story.published ? story.csp_story_path : edit_story_path(story.id) %>" -->
-
-
 <% cache("#{company.subdomain}/curator-story-tile-#{story.id}-" +
          "memcache-iterator-#{company.story_tile_fragments_memcache_iterator}",
          skip_digest: true) do %>
 
-<li class='grid-item'>
+  <li class='grid-item'>
 
-  <a href=""
-     class="thumbnail curator <%= story.published ? 'published' : (story.logo_published ? 'logo-published' : 'pending-curation') %>"
-     data-logosrc="<%= story.customer.logo_url %>"
-     data-summary="<%= FFaker::Lorem.paragraphs %>"
-     data-quote="<%= FFaker::Lorem.paragraph %>">
+    <a href="<%= story.published ? story.csp_story_path : (story.preview_published ? 'javascript:;' : edit_story_path(story.id)) %>"
+       class="thumbnail curator <%= story.published ? 'published' : (story.preview_published ? 'preview-published' : (story.logo_published ? 'logo-published' : 'pending-curation')) %>"
+       data-logosrc="<%= story.customer.logo_url %>"
+       data-summary="<%= FFaker::Lorem.paragraphs %>"
+       data-quote="<%= FFaker::Lorem.paragraph %>">
 
-    <div class='thumbnail-view'>
-      <!-- <p class="thumbnail-view-hover"><%#= story.title %></p> -->
-      <img src="<%= customer.logo_url || image_path('company-logo-missing.png') %>">
-    </div>
+      <div class='thumbnail-view'>
+        <% if story.published? %>
+          <p class="thumbnail-view-hover"><%= story.title %></p>
+        <% end %>
+        <img src="<%= customer.logo_url || image_path('company-logo-missing.png') %>">
+      </div>
 
-    <div class="caption"
-         style="<%= story.published || story.logo_published ? 'background-color:' + company.header_color_1 + ';color:' + company.header_text_color : '' %>">
-      <%= story.published ? 'Read story' : (story.logo_published ? 'Logo published' : 'Pending curation') %>
-    </div>
+      <div class="caption"
+           style="<%= story.published || story.preview_published || story.logo_published ? 'background-color:' + company.header_color_1 + ';color:' + company.header_text_color : '' %>">
+        <%= story.published ? 'Published' : (story.preview_published ? 'Preview published' : (story.logo_published ? 'Logo published' : 'Pending curation')) %>
+      </div>
 
-  </a>
+    </a>
 
-
-
-</li>
-
+  </li>
 
 <% end %>
