@@ -10,8 +10,9 @@
 
   <a href=""
      class="thumbnail curator <%= story.published ? 'published' : (story.logo_published ? 'logo-published' : 'pending-curation') %>"
-     data-title="<%= FFaker::Lorem.sentence %>"
-     data-description="<%= FFaker::Lorem.paragraphs %>">
+     data-logosrc="<%= story.customer.logo_url %>"
+     data-summary="<%= FFaker::Lorem.paragraphs.join("\n") %>"
+     data-quote="<%= FFaker::Lorem.paragraph %>">
 
     <div class='thumbnail-view'>
       <!-- <p class="thumbnail-view-hover"><%#= story.title %></p> -->
@@ -25,20 +26,7 @@
 
   </a>
 
-  <div class="og-expander">
-    <div class="og-expander-inner">
-      <span class="og-close"></span>
-      <div class="og-fullimg">
-        <div class="og-loading"></div>
-        <img src="images/2.jpg" alt='image'>
-      </div>
-      <div class="og-details">
-        <h3>Veggies sunt bona vobis</h3>
-        <p>Komatsuna prairie turnip wattle seed artichoke mustard horseradish taro rutabaga ricebean carrot black-eyed pea turnip greens beetroot yarrow watercress kombu.</p>
-        <a href="http://cargocollective.com/jaimemartinez/">Visit website</a>
-      </div>
-    </div>
-  </div>
+
 
 </li>
 

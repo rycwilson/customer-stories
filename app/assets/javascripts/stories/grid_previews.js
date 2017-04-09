@@ -187,14 +187,15 @@ function Preview( $item ) {
 }
 Preview.prototype.create = function() {
   // create Preview structure:
-  this.$title = $( '<h3></h3>' );
-  this.$description = $( '<p></p>' );
-  this.$href = $( '<a href="#">Visit website</a>' );
-  this.$details = $( '<div class="og-details"></div>' ).append( this.$title, this.$description, this.$href );
   this.$loading = $( '<div class="og-loading"></div>' );
-  this.$fullimage = $( '<div class="og-fullimg"></div>' ).append( this.$loading );
+  this.$logoContainer = $( '<div class="og-logo"></div>').append( this.$loading );
+  this.$quote = $( '<p></p>' );
+  // this.$liCard = $( '<div></div' );
+  this.$testimonial = $( '<div class="og-testimonial"></div>' ).append( this.$quote );
+  this.$summary = $( '<p></p>' );
+  this.$summaryContainer = $( '<div class="og-summary"></div>' ).append( this.$summary );
   this.$closePreview = $( '<span class="og-close"></span>' );
-  this.$previewInner = $( '<div class="og-expander-inner"></div>' ).append( this.$closePreview, this.$fullimage, this.$details );
+  this.$previewInner = $( '<div class="og-expander-inner"></div>' ).append( this.$closePreview, this.$logoContainer, this.$summaryContainer, this.$testimonial );
   this.$previewEl = $( '<div class="og-expander"></div>' ).append( this.$previewInner );
   // append preview element to the item
   this.$item.append( this.getEl() );
@@ -230,32 +231,34 @@ Preview.prototype.update = function( $item ) {
   // update preview´s content
   var $itemEl = this.$item.children( 'a' ),
     eldata = {
-      href : $itemEl.attr( 'href' ),
-      largesrc : $itemEl.data( 'largesrc' ),
-      title : $itemEl.data( 'title' ),
-      description : $itemEl.data( 'description' )
+      logosrc : $itemEl.data( 'logosrc' ),
+      summary : $itemEl.data( 'summary' ),
+      quote : $itemEl.data( 'quote' )
     };
 
-  this.$title.html( eldata.title );
-  this.$description.html( eldata.description );
-  this.$href.attr( 'href', eldata.href );
+  this.$summary.html( eldata.summary );
+  this.$quote.html( eldata.quote );
 
   var self = this;
 
   // remove the current image in the preview
-  if( typeof self.$largeImg != 'undefined' ) {
-    self.$largeImg.remove();
+  if( typeof self.$logoImg != 'undefined' ) {
+    self.$logoImg.remove();
   }
 
-  // preload large image and add it to the preview
-  // for smaller screens we don´t display the large image (the last media query will hide the wrapper of the image)
-  if( self.$fullimage.is( ':visible' ) ) {
+  // preload logo image and add it to the preview
+  // for smaller screens we don´t display the logo image (the last media query will hide the wrapper of the image)
+  if( self.$logoContainer.is( ':visible' ) ) {
     this.$loading.show();
     $( '<img/>' ).load( function() {
-      self.$loading.hide();
-      self.$largeImg = $( this ).fadeIn( 350 );
-      self.$fullimage.append( self.$largeImg );
-    } ).attr( 'src', eldata.largesrc );
+      var $img = $( this );
+      if( $img.attr( 'src' ) === self.$item.children('a').data( 'logosrc' ) ) {
+        self.$loading.hide();
+        self.$logoContainer.find( 'img' ).remove();
+        self.$logoImg = $img.fadeIn( 350 );
+        self.$logoContainer.prepend( self.$logoImg );
+      }
+    } ).attr( 'src', eldata.logosrc );
   }
 };
 Preview.prototype.open = function() {
