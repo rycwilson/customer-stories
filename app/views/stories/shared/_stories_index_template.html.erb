@@ -3,12 +3,16 @@
 
     {{ stories.forEach(function (story) { }}
 
-      <a href="{{= (story.published && story.csp_story_path) || (isCurator && '/stories/' + story.id + '/edit') || 'javascript:;' }}"
-         class="grid-item thumbnail {{= isCurator ? 'curator' : 'public' }} {{= story.published ? 'published' : (story.logo_published ? 'logo-published' : 'pending-curation') }}"
-         style="{{= !isCurator && !story.published ? 'pointer-events:none' : '' }}">
+    <li class='grid-item'>
+
+      <a href="{{= (story.published && story.csp_story_path) || (story.preview_published && 'javascript:;') || (isCurator && '/stories/' + story.id + '/edit') || 'javascript:;' }}"
+         class="thumbnail {{= isCurator ? 'curator' : 'public' }} {{= story.published ? 'published' : (story.preview_published ? 'preview-published' : (story.logo_published ? 'logo-published' : 'pending-curation')) }}"
+         style="{{= !isCurator && !(story.published || story.preview_published) ? 'pointer-events:none' : '' }}">
 
         <div class="thumbnail-view">
-          <p class='thumbnail-view-hover'>{{= story.title }}</p>
+          {{ if (story.published) { }}
+            <p class='thumbnail-view-hover'>{{= story.title }}</p>
+          {{ } }}
           {{ if (story.success.customer.logo_url) { }}
             <img src="{{= story.success.customer.logo_url }}">
           {{ } else { }}
@@ -16,11 +20,11 @@
           {{ } }}
         </div>
 
-        {{ if (story.published || isCurator) { }}
+        {{ if (isCurator || story.published || story.preview_published) { }}
 
           <div class="caption"
-            style="{{= (story.published || story.logo_published) ? 'background-color:' + '<%= company.header_color_1 %>' + ';color:' + '<%= company.header_text_color %>' : '' }}">
-            {{= story.published ? 'Read story' : (story.logo_published ? 'Logo published' : 'Pending curation') }}
+            style="{{= (story.published || story.preview_published || story.logo_published) ? 'background-color:' + '<%= company.header_color_1 %>' + ';color:' + '<%= company.header_text_color %>' : '' }}">
+            {{= story.published ? (isCurator ? 'Published' : 'Read story') : (story.preview_published ? (isCurator ? 'Preview published' : 'Read preview') : (story.logo_published ? 'Logo published' : 'Pending curation')) }}
           </div>
 
         {{ } }}
