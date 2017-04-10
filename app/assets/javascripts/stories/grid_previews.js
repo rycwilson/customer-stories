@@ -209,14 +209,17 @@ Preview.prototype.update = function( $item ) {
 
   this.$summary.html( eldata.summary );
   this.$quote.html( eldata.quote );
-  this.$contributorProfile
-    .html( linkedinProfileTemplate({
-              contributor: eldata.contributor,
-              widgetWidth: widgetWidth
-           }) )
-    .imagesLoaded(function () {
-       self.$contributorProfile.find('.csp-linkedin-widget').removeClass('hidden');
-     });
+
+  if (eldata.contributor !== null) {
+    this.$contributorProfile
+      .html( linkedinProfileTemplate({
+                contributor: eldata.contributor,
+                widgetWidth: widgetWidth
+             }) )
+      .imagesLoaded(function () {
+         self.$contributorProfile.find('.csp-linkedin-widget').removeClass('hidden');
+       });
+  }
 
   // remove the current image in the preview
   if( typeof self.$logoImg != 'undefined' ) {
