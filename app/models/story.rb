@@ -6,6 +6,7 @@ class Story < ActiveRecord::Base
   has_one :company, through: :success
   has_one :customer, through: :success
   has_one :curator, through: :success, class_name: 'User'
+  has_many :contributions, through: :success
   has_many :contributors, through: :success
   has_many :visitor_actions, through: :success
   has_many :page_views, through: :success, class_name: 'PageView'
@@ -113,8 +114,8 @@ class Story < ActiveRecord::Base
              ['published', 'preview_published', 'logo_published'] ).any?
          }
 
-  # for any published or preview-published stories,
-  # expire stories gallery cache on change of title/summary data;
+  # for any published (title overlay) or preview-published (summary, quote) stories,
+  # expire stories gallery cache on change of title/summary/quote data;
   # also json cache
   after_commit on: :update do
     expire_story_tile_fragment_cache
@@ -588,8 +589,12 @@ class Story < ActiveRecord::Base
   # end
 
   def preview_contributor
-    self.contributors
-        .take.try(:slice, :first_name, :last_name, :linkedin_url, :linkedin_photo_url, :linkedin_title, :linkedin_company, :linkedin_location).to_json
+    self.contributions.find { |contribution| contribution.preview_contributor? }
+        .try(:contributor)
+        .try(:slice, :first_name, :last_name, :linkedin_url, :linkedin_photo_url, :linkedin_title, :linkedin_company, :linkedin_location)
+        .to_json
+    # self.contributors
+    #     .take.try(:slice, :first_name, :last_name, :linkedin_url, :linkedin_photo_url, :linkedin_title, :linkedin_company, :linkedin_location).to_json
   end
 
   def related_stories
