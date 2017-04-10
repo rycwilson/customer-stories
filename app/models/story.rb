@@ -114,13 +114,15 @@ class Story < ActiveRecord::Base
          }
 
   # for any published or preview-published stories,
-  # expire stories gallery cache on change of title/summary data
+  # expire stories gallery cache on change of title/summary data;
+  # also json cache
   after_commit on: :update do
     expire_story_tile_fragment_cache
     expire_stories_index_fragment_cache
+    expire_all_stories_cache(true)
   end if Proc.new { |story|
            ( (story.published? || story.preview_published?) &&
-             (story.previous_changes.keys & ['title', 'summary']).any? )
+             (story.previous_changes.keys & ['title', 'summary', 'quote']).any? )
          }
 
   after_commit on: :update do
