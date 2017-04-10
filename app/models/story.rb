@@ -572,6 +572,11 @@ class Story < ActiveRecord::Base
   #     content: content }
   # end
 
+  def preview_contributor
+    self.contributors
+        .take.try(:slice, :first_name, :last_name, :linkedin_url, :linkedin_photo_url, :linkedin_title, :linkedin_company, :linkedin_location).to_json
+  end
+
   def related_stories
     related_stories = []
     same_product_stories = []
