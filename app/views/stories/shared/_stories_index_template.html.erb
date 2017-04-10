@@ -9,7 +9,7 @@
          class="thumbnail {{= isCurator ? 'curator' : 'public' }} {{= story.published ? 'published' : (story.preview_published ? 'preview-published' : (story.logo_published ? 'logo-published' : 'pending-curation')) }}"
          data-logosrc="{{= story.success.customer.logo_url }}"
          data-summary="{{= story.summary }}"
-         data-quote="{{= story.summary }}"
+         data-quote="{{= story.quote }}"
          data-preview-contributor='{{= JSON.stringify(story.published_contributors[0]) }}'
          style="{{= !isCurator && !(story.published || story.preview_published) ? 'pointer-events:none' : ';' }}">
 
