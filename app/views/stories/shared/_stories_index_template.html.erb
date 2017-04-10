@@ -1,7 +1,7 @@
 
   <script type="text/template" id="stories-template">
 
-    {{ stories.forEach(function (story) { }}
+  {{ stories.forEach(function (story) { }}
 
     <li class='grid-item'>
 
@@ -10,7 +10,8 @@
          data-logosrc="{{= story.success.customer.logo_url }}"
          data-summary="<%= FFaker::Lorem.paragraphs %>"
          data-quote="<%= FFaker::Lorem.paragraph %>"
-         style="{{= !isCurator && !(story.published || story.preview_published) ? 'pointer-events:none' : '' }}">
+         data-preview-contributor='{{= JSON.stringify(story.published_contributors[0]) }}'
+         style="{{= !isCurator && !(story.published || story.preview_published) ? 'pointer-events:none' : ';' }}">
 
         <div class="thumbnail-view">
           {{ if (story.published) { }}
@@ -34,6 +35,8 @@
 
       </a>
 
-    {{ }); }}
+    </li>
+
+  {{ }); }}
 
   </script>

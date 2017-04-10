@@ -199,7 +199,7 @@ Preview.prototype.update = function( $item ) {
       logosrc : $itemEl.data( 'logosrc' ),
       summary : $itemEl.data( 'summary' ),
       quote : $itemEl.data( 'quote' ),
-      contributor : $itemEl.data( 'contributor' )
+      contributor : $itemEl.data( 'preview-contributor' )
     };
 
   linkedinProfileTemplate = _.template($('#csp-linkedin-widget-template').html());

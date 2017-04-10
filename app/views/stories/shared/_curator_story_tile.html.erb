@@ -10,7 +10,7 @@
        data-logosrc="<%= story.customer.logo_url %>"
        data-summary="<%= FFaker::Lorem.paragraphs %>"
        data-quote="<%= FFaker::Lorem.paragraph %>"
-       data-contributor="<%= story.contributors.take.try(:slice, :first_name, :last_name, :linkedin_url, :linkedin_photo_url, :linkedin_title, :linkedin_company, :linkedin_location).to_json %>">
+       data-preview-contributor="<%= story.contributors.take.try(:slice, :first_name, :last_name, :linkedin_url, :linkedin_photo_url, :linkedin_title, :linkedin_company, :linkedin_location).to_json %>">
 
       <div class='thumbnail-view'>
         <% if story.published? %>
