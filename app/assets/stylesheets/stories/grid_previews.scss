@@ -97,7 +97,7 @@
       font-size: 16px;
       font-style: italic;
       line-height: 22px;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
     }
     > p:before {
       color: #ccc;
@@ -148,5 +148,38 @@
     0% { background: #ddd; }
     33% { background: #ccc; box-shadow: 0 0 1px #ccc, 15px 30px 1px #ccc, -15px 30px 1px #ddd; }
     66% { background: #ccc; box-shadow: 0 0 1px #ccc, 15px 30px 1px #ddd, -15px 30px 1px #ccc; }
+  }
+
+  @media only screen and (max-width: 767px ) {
+
+    .og-expander-inner {
+      padding: 70px 15px 30px 15px;
+      .og-summary {
+        padding: 0;
+        width: 100%;
+      }
+      .og-testimonial {
+        display: none;
+        // width: 100%;
+        // padding: 0;
+        .og-contributor-profile {
+          display: none;
+        }
+      }
+    }
+
+  }
+
+  @media only screen and (min-width: 768px) and (max-width: 991px) {
+
+    .og-expander-inner {
+      padding: 30px 15px;
+    }
+    .og-summary {
+      padding: 0 20px 0 20px;
+    }
+    .og-testimonial {
+      padding: 0 20px 0 20px;
+    }
   }
 }

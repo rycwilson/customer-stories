@@ -150,7 +150,7 @@ function Preview( $item ) {
 Preview.prototype.create = function() {
   // create Preview structure:
   this.$loading = $( '<div class="og-loading"></div>' );
-  this.$logoContainer = $( '<div class="og-logo"></div>').append( this.$loading );
+  this.$logoContainer = $( '<div class="og-logo hidden-xs"></div>').append( this.$loading );
   this.$quote = $( '<p></p>' );
   this.$contributorProfile = $( '<div class="og-contributor-profile text-center"></div>' );
   this.$testimonial = $( '<div class="og-testimonial"></div>' ).append( this.$quote, this.$contributorProfile );
@@ -204,12 +204,16 @@ Preview.prototype.update = function( $item ) {
 
   linkedinProfileTemplate = _.template($('#csp-linkedin-widget-template').html());
 
-  var self = this;
+  var self = this,
+      widgetWidth = (app.screenSize === 'lg') ? 420 : 320;
 
   this.$summary.html( eldata.summary );
   this.$quote.html( eldata.quote );
   this.$contributorProfile
-    .html( linkedinProfileTemplate({ contributor: eldata.contributor, widgetWidth: 420 }) )
+    .html( linkedinProfileTemplate({
+              contributor: eldata.contributor,
+              widgetWidth: widgetWidth
+           }) )
     .imagesLoaded(function () {
        self.$contributorProfile.find('.csp-linkedin-widget').removeClass('hidden');
      });
