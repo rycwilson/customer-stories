@@ -108,13 +108,12 @@ function updateGallery ($stories) {
 
   var $gallery = $('#stories-gallery');
 
-  // if ($gallery.children().length) {  // trying to empty an already empty .grid element can lead to problems
-  //   $gallery.empty().masonry();
-  // }
   $stories.imagesLoaded(function () {
     $gallery.empty()
             .append($stories)
-            .hide().show('fast');
+            .hide().show('fast', function () {
+              initGridPreviews();
+            });
   });
 }
 

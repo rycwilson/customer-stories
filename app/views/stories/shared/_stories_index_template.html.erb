@@ -7,6 +7,9 @@
 
       <a href="{{= (story.published && story.csp_story_path) || (story.preview_published && 'javascript:;') || (isCurator && '/stories/' + story.id + '/edit') || 'javascript:;' }}"
          class="thumbnail {{= isCurator ? 'curator' : 'public' }} {{= story.published ? 'published' : (story.preview_published ? 'preview-published' : (story.logo_published ? 'logo-published' : 'pending-curation')) }}"
+         data-logosrc="{{= story.success.customer.logo_url }}"
+         data-summary="<%= FFaker::Lorem.paragraphs %>"
+         data-quote="<%= FFaker::Lorem.paragraph %>"
          style="{{= !isCurator && !(story.published || story.preview_published) ? 'pointer-events:none' : '' }}">
 
         <div class="thumbnail-view">
