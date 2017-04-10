@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170409212547) do
+ActiveRecord::Schema.define(version: 20170410174504) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -290,6 +290,7 @@ ActiveRecord::Schema.define(version: 20170409212547) do
     t.string   "quote_attr_name"
     t.string   "quote_attr_title"
     t.boolean  "preview_published", default: false
+    t.text     "summary"
   end
 
   add_index "stories", ["success_id"], name: "index_stories_on_success_id", using: :btree
