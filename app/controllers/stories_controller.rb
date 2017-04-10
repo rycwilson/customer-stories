@@ -185,8 +185,8 @@ class StoriesController < ApplicationController
   private
 
   def story_params
-    params.require(:story).permit(:title, :quote, :quote_attr_name, :quote_attr_title, :embed_url, :situation,
-        :challenge, :solution, :benefits, :published, :logo_published)
+    params.require(:story).permit(:title, :summary, :quote, :quote_attr_name, :quote_attr_title, :embed_url,
+        :published, :logo_published, :preview_published)
   end
 
   def set_company

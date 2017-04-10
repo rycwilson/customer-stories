@@ -1,6 +1,6 @@
 
 //= require plugins/manifest
-//= require plugins/masonry
+// = require plugins/masonry
 //= require plugins/select2
 //= require plugins/linkedin
 //= require plugins/summernote
@@ -12,7 +12,7 @@
 
 function constructPlugins () {
 
-  initMasonry();
+  // initMasonry();
   initSelect2();
   initLinkedIn();
   initDateRangePicker();

@@ -44,7 +44,7 @@
 <% end %>
 
 <div class="container grid-container">
-  <div class='grid' id="stories-gallery" style='visibility:hidden'>
+  <ul class='list-unstyled text-center' id="stories-gallery">
 
     <% cache(@stories_index_cache_key, skip_digest: true) do %>
 
@@ -53,8 +53,7 @@
         <% @stories.each do |story| %>
 
           <%= render 'stories/shared/curator_story_tile',
-              { company: @company, story: story,
-                customer: story.success.customer } %>
+              { company: @company, story: story } %>
 
         <% end %>
 
@@ -63,8 +62,7 @@
         <% @stories.each do |story| %>
 
           <%= render 'stories/shared/public_story_tile',
-              { company: @company, story: story,
-                customer: story.success.customer } %>
+              { company: @company, story: story } %>
 
         <% end %>
 
@@ -72,7 +70,8 @@
 
     <% end %>
 
-  </div>
+  </ul>
 </div>
 
 <%= render 'stories/shared/stories_index_template', { company: @company } %>
+<%= render 'stories/shared/csp_linkedin_widget_template' %>

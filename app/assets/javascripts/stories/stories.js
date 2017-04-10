@@ -2,6 +2,7 @@
 //= require ./index
 //= require ./show
 //= require ./edit
+//= require ./grid_previews
 
 function attachStoriesListeners () {
   storiesIndexListeners();

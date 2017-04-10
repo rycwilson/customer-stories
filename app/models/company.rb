@@ -204,8 +204,8 @@ class Company < ActiveRecord::Base
       JSON.parse(
         Story.order(Story.company_all(self.id))
         .to_json({
-          only: [:id, :title, :published, :logo_published, :publish_date, :updated_at],
-          methods: [:csp_story_path, :published_contributors],
+          only: [:id, :title, :summary, :quote, :published, :logo_published, :preview_published, :publish_date, :updated_at],
+          methods: [:csp_story_path, :published_contributors, :preview_contributor],
           include: {
             success: {
               only: [],

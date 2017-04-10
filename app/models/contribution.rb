@@ -3,6 +3,8 @@ class Contribution < ActiveRecord::Base
   belongs_to :contributor, class_name: 'User', foreign_key: 'user_id'
   belongs_to :referrer, class_name: 'User', foreign_key: 'referrer_id'
   belongs_to :success
+  has_one :company, through: :success
+  has_one :story, through: :success
   has_one :email_contribution_request, dependent: :destroy
 
   scope :story_all, ->(story_id) {
@@ -43,6 +45,17 @@ class Contribution < ActiveRecord::Base
         Proc.new { |contribution|
           contribution.previous_changes.key?('publish_contributor')
         }
+
+  # when selecting or de-selecting a preview contributor,
+  # expire the story tile and index as a whole
+  after_commit on: :update do
+    self.company.expire_all_stories_cache(true)
+    self.story.expire_story_tile_fragment_cache
+    self.company.increment_curator_stories_index_fragments_memcache_iterator
+    self.company.increment_public_stories_index_fragments_memcache_iterator
+  end if Proc.new { |contribution|
+           ( story.previous_changes.keys & ['preview_contributor'] ).any?
+         }
 
   def display_status
     case self.status

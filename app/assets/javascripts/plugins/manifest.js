@@ -1,4 +1,5 @@
 
+//= require modernizr/modernizr
 
 // mvp ready
 //= require slimscroll/jquery.slimscroll
@@ -14,7 +15,7 @@
 
 //= require select2/dist/js/select2
 //= require summernote
-//= require masonry/dist/masonry.pkgd
+// = require masonry/dist/masonry.pkgd
 //= require imagesloaded/imagesloaded
 
 // s3 upload

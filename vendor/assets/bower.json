@@ -15,6 +15,7 @@
     "js-cookie": "latest",
     "moment": "latest",
     "bootstrap-daterangepicker": "latest",
+    "modernizr": "latest",
     "fontawesome": "~4.4.0",
     "flot": "~0.8.3",
     "flot.tooltip": "~0.8.5",
