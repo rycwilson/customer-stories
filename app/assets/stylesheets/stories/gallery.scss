@@ -99,13 +99,14 @@
         display: block;
         // box-sizing: border-box;
         font-size: 14px;
+        font-weight: 600;
         height: 100%;
         width: 100%;
-        color: #fff;
+        color: #222;
         line-height: 20px;
         text-align: left;
         padding: 5px 8px;
-        background: rgba(0, 0, 0, 0.8);
+        background: rgba(211, 211, 211, 0.9);
         border-radius: 3px 3px 0 0;
         -webkit-transform: translateY(-100%);
         -moz-transform: translateY(-100%);

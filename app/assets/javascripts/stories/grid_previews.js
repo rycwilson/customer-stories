@@ -1,43 +1,6 @@
 
-// set some global variables
-// var $grid = $('#stories-gallery'),
-//     // the items
-//     $items,
-//     // current expanded item´s index
-//     current = -1,
-//     // position (top) of the expanded item
-//     // used to know if the preview will expand in a different row
-//     previewPos = -1,
-//     // extra amount of pixels to scroll the window
-//     scrollExtra = 0,
-//     // extra margin when expanded (between the preview element and the next item row)
-//     marginExpanded = 10,
-//     $window = $( window ), winsize,
-//     $body = $( 'html, body' ),
-//     // transitionend events
-//     transEndEventNames = {
-//       'WebkitTransition' : 'webkitTransitionEnd',
-//       'MozTransition' : 'transitionend',
-//       'OTransition' : 'oTransitionEnd',
-//       'msTransition' : 'MSTransitionEnd',
-//       'transition' : 'transitionend'
-//     },
-//     transEndEventName = transEndEventNames[ Modernizr.prefixed( 'transition' ) ],
-//     // support for csstransitions
-//     support = Modernizr.csstransitions,
-//     // default settings
-//     settings = {
-//       minHeight : 500,
-//       speed : 350,
-//       easing : 'ease'
-//     };
-
-
 function initGridPreviews (config) {
-  console.log('initGridPreviews()');
-
-// set the global variables
-// $(document).one('turbolinks:load', function () {
+  // set the global variables
   $grid = $('#stories-gallery');
   // the items
   $items = $grid.children( 'li' );
@@ -70,13 +33,11 @@ function initGridPreviews (config) {
     easing : 'ease'
   };
 
-// });  $(document).one(turbolinks:load ...)
   // the settings..
   settings = $.extend( true, {}, settings, config );
 
   // preload all images
   $grid.imagesLoaded( function() {
-
     // save item´s size and offset
     saveItemInfo( true );
     // get window´s size
