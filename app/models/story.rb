@@ -100,6 +100,8 @@ class Story < ActiveRecord::Base
   # after_commit callback;
   # note: the & operator interestects the arrays, returning any values
   # that exist in both
+
+  # on change of publish state
   after_commit on: :update do
     expire_story_tile_fragment_cache
     expire_stories_index_fragment_cache
@@ -107,7 +109,18 @@ class Story < ActiveRecord::Base
     self.company.expire_curate_table_fragment_cache
     expire_all_stories_cache(true)
   end if Proc.new { |story|
-           (story.previous_changes.keys & ['published', 'preview_published', 'logo_published']).any?
+           ( story.previous_changes.keys &
+             ['published', 'preview_published', 'logo_published'] ).any?
+         }
+
+  # for any published or preview-published stories,
+  # expire stories gallery cache on change of title/summary data
+  after_commit on: :update do
+    expire_story_tile_fragment_cache
+    expire_stories_index_fragment_cache
+  end if Proc.new { |story|
+           ( (story.published? || story.preview_published?) &&
+             (story.previous_changes.keys & ['title', 'summary']).any? )
          }
 
   after_commit on: :update do
