@@ -42,7 +42,9 @@ function filterStories (filterTag, filterId, filterSlug) {
 
   if (filterId === '0' || filterSlug === null) {  // all stories
     return isCurator ? app.stories :
-           app.stories.filter(function (story) { return story.logo_published; });
+           app.stories.filter(function (story) {
+             return story.logo_published || story.preview_published;
+           });
   }
   return app.stories.filter(function (story, index) {
     if (filterTag === 'category') {
@@ -52,7 +54,7 @@ function filterStories (filterTag, filterId, filterSlug) {
           return category.id == filterId || category.slug == filterSlug;
         });
       } else {
-        return story.logo_published &&
+        return (story.preview_published || story.logo_published) &&
           story.success.story_categories.some(function (category) {
             // loosely typed because former is string, latter is number ...
             return category.id == filterId || category.slug == filterSlug;
@@ -64,7 +66,7 @@ function filterStories (filterTag, filterId, filterSlug) {
           return product.id == filterId || product.slug == filterSlug;
         });
       } else {
-        return story.logo_published &&
+        return (story.preview_published || story.logo_published) &&
           story.success.products.some(function (product) {
             return product.id == filterId || product.slug == filterSlug;
           });
