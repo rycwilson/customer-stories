@@ -8,8 +8,8 @@
     <a href="<%= story.published ? story.csp_story_path : 'javascript:;' %>"
        class="thumbnail public <%= story.published ? 'published' : (story.preview_published ? 'preview-published' : 'logo-published') %>"
        data-logosrc="<%= story.customer.logo_url %>"
-       data-summary="<%= FFaker::Lorem.paragraphs %>"
-       data-quote="<%= FFaker::Lorem.paragraph %>"
+       data-summary="<%= story.summary || FFaker::Lorem.paragraphs %>"
+       data-quote="<%= story.quote || FFaker::Lorem.paragraph %>"
        data-preview-contributor="<%= story.preview_contributor %>">
 
       <div class="thumbnail-view">
