@@ -92,13 +92,14 @@
   .og-testimonial {
     padding: 0 40px 0 40px;
     color: #777;
-    p {
+    > p {    // don't let settings affect the linkedin profile card
       font-weight: 400;
       font-size: 16px;
       font-style: italic;
       line-height: 22px;
+      margin-bottom: 30px;
     }
-    p:before {
+    > p:before {
       color: #ccc;
       content: open-quote;
       font-size: 4em;

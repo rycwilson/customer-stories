@@ -99,8 +99,8 @@ function initEvents() {
 function showPreview( $item ) {
 
   var preview = $.data( this, 'preview' ),
-    // item´s offset top
-    position = $item.data( 'offsetTop' );
+      // item´s offset top
+      position = $item.data( 'offsetTop' );
 
   scrollExtra = 0;
 
@@ -146,13 +146,14 @@ function Preview( $item ) {
   this.create();
   this.update();
 }
+
 Preview.prototype.create = function() {
   // create Preview structure:
   this.$loading = $( '<div class="og-loading"></div>' );
   this.$logoContainer = $( '<div class="og-logo"></div>').append( this.$loading );
   this.$quote = $( '<p></p>' );
-  // this.$liCard = $( '<div></div' );
-  this.$testimonial = $( '<div class="og-testimonial"></div>' ).append( this.$quote );
+  this.$contributorProfile = $( '<div class="og-contributor-profile text-center"></div>' );
+  this.$testimonial = $( '<div class="og-testimonial"></div>' ).append( this.$quote, this.$contributorProfile );
   this.$summary = $( '<p></p>' );
   this.$summaryContainer = $( '<div class="og-summary"></div>' ).append( this.$summary );
   this.$closePreview = $( '<span class="og-close"></span>' );
@@ -165,13 +166,16 @@ Preview.prototype.create = function() {
     this.setTransition();
   }
 };
+
 Preview.prototype.setTransition = function () {
   this.$previewEl.css( 'transition', 'height ' + settings.speed + 'ms ' + settings.easing );
   this.$item.css( 'transition', 'height ' + settings.speed + 'ms ' + settings.easing );
 };
+
 Preview.prototype.getEl = function () {
   return this.$previewEl;
 };
+
 Preview.prototype.update = function( $item ) {
   // update with new item´s details
   if( $item ) {
@@ -194,13 +198,21 @@ Preview.prototype.update = function( $item ) {
     eldata = {
       logosrc : $itemEl.data( 'logosrc' ),
       summary : $itemEl.data( 'summary' ),
-      quote : $itemEl.data( 'quote' )
+      quote : $itemEl.data( 'quote' ),
+      contributor : $itemEl.data( 'contributor' )
     };
+
+  linkedinProfileTemplate = _.template($('#csp-linkedin-widget-template').html());
+
+  var self = this;
 
   this.$summary.html( eldata.summary );
   this.$quote.html( eldata.quote );
-
-  var self = this;
+  this.$contributorProfile
+    .html( linkedinProfileTemplate({ contributor: eldata.contributor, widgetWidth: 420 }) )
+    .imagesLoaded(function () {
+       self.$contributorProfile.find('.csp-linkedin-widget').removeClass('hidden');
+     });
 
   // remove the current image in the preview
   if( typeof self.$logoImg != 'undefined' ) {
@@ -222,6 +234,7 @@ Preview.prototype.update = function( $item ) {
     } ).attr( 'src', eldata.logosrc );
   }
 };
+
 Preview.prototype.open = function() {
 
   setTimeout( $.proxy( function() {
@@ -232,6 +245,7 @@ Preview.prototype.open = function() {
   }, this ), 25 );
 
 };
+
 Preview.prototype.setHeights = function() {
   var self = this,
     onEndFn = function() {
@@ -250,6 +264,7 @@ Preview.prototype.setHeights = function() {
   }
 
 };
+
 Preview.prototype.calcHeight = function() {
   var heightPreview = winsize.height - this.$item.data( 'height' ) - marginExpanded,
     itemHeight = winsize.height;
@@ -262,6 +277,7 @@ Preview.prototype.calcHeight = function() {
   this.height = heightPreview;
   this.itemHeight = itemHeight;
 };
+
 Preview.prototype.positionPreview = function() {
   // scroll page
   // case 1 : preview height + item height fits in window´s height
@@ -274,6 +290,7 @@ Preview.prototype.positionPreview = function() {
   $body.animate( { scrollTop : scrollVal }, settings.speed );
 
 };
+
 Preview.prototype.close = function() {
   var self = this,
     onEndFn = function() {

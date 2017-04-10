@@ -6,6 +6,7 @@ class Story < ActiveRecord::Base
   has_one :company, through: :success
   has_one :customer, through: :success
   has_one :curator, through: :success, class_name: 'User'
+  has_many :contributors, through: :success
   has_many :visitor_actions, through: :success
   has_many :page_views, through: :success, class_name: 'PageView'
   has_many :visitors, -> { distinct }, through: :page_views

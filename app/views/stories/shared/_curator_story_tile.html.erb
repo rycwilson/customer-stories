@@ -9,13 +9,14 @@
        class="thumbnail curator <%= story.published ? 'published' : (story.preview_published ? 'preview-published' : (story.logo_published ? 'logo-published' : 'pending-curation')) %>"
        data-logosrc="<%= story.customer.logo_url %>"
        data-summary="<%= FFaker::Lorem.paragraphs %>"
-       data-quote="<%= FFaker::Lorem.paragraph %>">
+       data-quote="<%= FFaker::Lorem.paragraph %>"
+       data-contributor="<%= story.contributors.take.try(:slice, :first_name, :last_name, :linkedin_url, :linkedin_photo_url, :linkedin_title, :linkedin_company, :linkedin_location).to_json %>">
 
       <div class='thumbnail-view'>
         <% if story.published? %>
           <p class="thumbnail-view-hover"><%= story.title %></p>
         <% end %>
-        <img src="<%= customer.logo_url || image_path('company-logo-missing.png') %>">
+        <img src="<%= story.customer.logo_url || image_path('company-logo-missing.png') %>">
       </div>
 
       <div class="caption"
