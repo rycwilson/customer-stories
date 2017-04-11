@@ -1,6 +1,5 @@
 
 //= require plugins/manifest
-// = require plugins/masonry
 //= require plugins/select2
 //= require plugins/linkedin
 //= require plugins/summernote
@@ -12,7 +11,6 @@
 
 function constructPlugins () {
 
-  // initMasonry();
   initSelect2();
   initLinkedIn();
   initDateRangePicker();
@@ -66,8 +64,6 @@ function deconstructPlugins () {
     }
 
   });
-
-  $('.grid').masonry('destroy');
 
   $('.datatable').DataTable().destroy();
 
