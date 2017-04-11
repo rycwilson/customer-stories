@@ -21,9 +21,9 @@
       </div>
 
 
-      <% if @related_stories.length >= 2 %>
+      <%# if @related_stories.length >= 2 %>
 
-        <div id='related-stories' class='well hidden-xs'>
+    <!--     <div id='related-stories' class='well hidden-xs'>
 
           <div class="row">
             <div class="col-sm-12">
@@ -33,18 +33,18 @@
           </div>
 
           <div class="grid">
-            <% @related_stories.each do |story| %>
+            <%# @related_stories.each do |story| %>
 
-              <%= render 'stories/shared/public_story_tile',
+              <%#= render 'stories/shared/public_story_tile',
                           { company: @company, story: story,
                             customer: story.success.customer } %>
 
-            <% end %>
+            <%# end %>
           </div>
 
-        </div>
+        </div> -->
 
-      <% end %>
+      <%# end %>
 
     </div>
 

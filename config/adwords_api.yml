@@ -1,0 +1,20 @@
+---
+:authentication:
+  :method: OAuth2
+  :oauth2_client_id: 329313322179-4u78ramnr8gm89m06khekpf793gi28nq.apps.googleusercontent.com
+  :oauth2_client_secret: IBC0J2aSA53pYY9yDXtIf1io
+  :developer_token: k65d1wRxWpRpQRpYMwU-pw
+  :client_customer_id: 266-136-8280
+  :user_agent: Customer Stories
+  :oauth2_token:
+    :access_token: ya29.GlsgBMzmFJOwkFpumkSneRZCHwVNwvtGPsr2Fg1ihHENANQE_wX3qVThIUUlYO3pQqtcCs4WEcK17LRW0UJXYo3PzNjC8shRrAt7MXzlieVco7uPzjys_1uJX41f
+    :refresh_token: 1/FyNdmS5WDq0xVXMg5djgJJLCUmumv4DHrbG0ohNj6Bg
+    :issued_at: 2017-03-31 17:31:49.147915000 -07:00
+    :expires_in: 3600
+    :id_token:
+:service:
+  :environment: PRODUCTION
+:connection:
+  :enable_gzip: false
+:library:
+  :log_level: INFO

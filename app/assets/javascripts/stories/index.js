@@ -1,4 +1,19 @@
 
+function storiesIndex () {
+
+  var $gallery = $('#stories-gallery'),
+      $categorySelect = $("[name='category_select']"),
+      categorySlug = getQueryString('category'),
+      $productSelect = $("[name='product_select']"),
+      productSlug = getQueryString('product'),
+      storiesTemplate = _.template($('#stories-template').html()),
+      filterTag = categorySlug ? 'category' : (productSlug ? 'product' : null);
+      filterSlug = categorySlug ? categorySlug : (productSlug ? productSlug : null);
+
+  initGridPreviews();
+
+}
+
 function storiesIndexListeners () {
 
   $(document).on('change', '.stories-filter', function () {
@@ -20,26 +35,6 @@ function storiesIndexListeners () {
   });
 }
 
-function storiesIndex () {
-
-  var $gallery = $('#stories-gallery'),
-      $categorySelect = $("[name='category_select']"),
-      categorySlug = getQueryString('category'),
-      $productSelect = $("[name='product_select']"),
-      productSlug = getQueryString('product'),
-      storiesTemplate = _.template($('#stories-template').html()),
-      filterTag = categorySlug ? 'category' : (productSlug ? 'product' : null);
-      filterSlug = categorySlug ? categorySlug : (productSlug ? productSlug : null);
-
-  // updateGallery(
-  //   $(storiesTemplate({
-  //     stories: filterStories(filterTag, null, filterSlug),
-  //     isCurator: app.current_user && app.current_user.is_curator
-  //   }))
-  // );
-
-  // selectBoxesTrackQueryString($categorySelect, categorySlug, $productSelect, productSlug);
-}
 
 function filterStories (filterTag, filterId, filterSlug) {
 
@@ -47,7 +42,9 @@ function filterStories (filterTag, filterId, filterSlug) {
 
   if (filterId === '0' || filterSlug === null) {  // all stories
     return isCurator ? app.stories :
-           app.stories.filter(function (story) { return story.logo_published; });
+           app.stories.filter(function (story) {
+             return story.logo_published || story.preview_published;
+           });
   }
   return app.stories.filter(function (story, index) {
     if (filterTag === 'category') {
@@ -57,7 +54,7 @@ function filterStories (filterTag, filterId, filterSlug) {
           return category.id == filterId || category.slug == filterSlug;
         });
       } else {
-        return story.logo_published &&
+        return (story.preview_published || story.logo_published) &&
           story.success.story_categories.some(function (category) {
             // loosely typed because former is string, latter is number ...
             return category.id == filterId || category.slug == filterSlug;
@@ -69,7 +66,7 @@ function filterStories (filterTag, filterId, filterSlug) {
           return product.id == filterId || product.slug == filterSlug;
         });
       } else {
-        return story.logo_published &&
+        return (story.preview_published || story.logo_published) &&
           story.success.products.some(function (product) {
             return product.id == filterId || product.slug == filterSlug;
           });
@@ -113,12 +110,12 @@ function updateGallery ($stories) {
 
   var $gallery = $('#stories-gallery');
 
-  if ($gallery.children().length) {  // trying to empty an already empty .grid element can lead to problems
-    $gallery.empty().masonry();
-  }
   $stories.imagesLoaded(function () {
-    $gallery.append($stories)
-            .masonry('appended', $stories);
+    $gallery.empty()
+            .append($stories)
+            .hide().show('fast', function () {
+              initGridPreviews();
+            });
   });
 }
 

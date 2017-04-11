@@ -6,6 +6,8 @@ class Story < ActiveRecord::Base
   has_one :company, through: :success
   has_one :customer, through: :success
   has_one :curator, through: :success, class_name: 'User'
+  has_many :contributions, through: :success
+  has_many :contributors, through: :success
   has_many :visitor_actions, through: :success
   has_many :page_views, through: :success, class_name: 'PageView'
   has_many :visitors, -> { distinct }, through: :page_views
@@ -70,8 +72,8 @@ class Story < ActiveRecord::Base
   }
   scope :company_public, ->(company_id) {
     joins(success: { customer: {} })
-    .where(logo_published: true,
-           customers: { company_id: company_id })
+    .where('preview_published = ? OR logo_published = ?', true, true)
+    .where(customers: { company_id: company_id })
   }
   scope :company_public_since, ->(company_id, days_ago) {
     company_public(company_id)
@@ -79,14 +81,14 @@ class Story < ActiveRecord::Base
   }
   scope :company_public_filter_category, ->(company_id, category_id) {
     joins(success: { customer: {}, story_categories: {} })
-    .where(logo_published: true,
-           customers: { company_id: company_id },
+    .where('preview_published = ? OR logo_published = ?', true, true)
+    .where(customers: { company_id: company_id },
            story_categories: { id: category_id })
   }
   scope :company_public_filter_product, ->(company_id, product_id) {
     joins(success: { customer: {}, products: {} })
-    .where(logo_published: true,
-           customers: { company_id: company_id },
+    .where('preview_published = ? OR logo_published = ?', true, true)
+    .where(customers: { company_id: company_id },
            products: { id: product_id })
   }
 
@@ -99,6 +101,8 @@ class Story < ActiveRecord::Base
   # after_commit callback;
   # note: the & operator interestects the arrays, returning any values
   # that exist in both
+
+  # on change of publish state
   after_commit on: :update do
     expire_story_tile_fragment_cache
     expire_stories_index_fragment_cache
@@ -106,7 +110,20 @@ class Story < ActiveRecord::Base
     self.company.expire_curate_table_fragment_cache
     expire_all_stories_cache(true)
   end if Proc.new { |story|
-           (story.previous_changes.keys & ['published', 'logo_published']).any?
+           ( story.previous_changes.keys &
+             ['published', 'preview_published', 'logo_published'] ).any?
+         }
+
+  # for any published (title overlay) or preview-published (summary, quote) stories,
+  # expire stories gallery cache on change of title/summary/quote data;
+  # also json cache
+  after_commit on: :update do
+    expire_story_tile_fragment_cache
+    expire_stories_index_fragment_cache
+    expire_all_stories_cache(true)
+  end if Proc.new { |story|
+           ( (story.published? || story.preview_published?) &&
+             (story.previous_changes.keys & ['title', 'summary', 'quote']).any? )
          }
 
   after_commit on: :update do
@@ -570,6 +587,15 @@ class Story < ActiveRecord::Base
   #     quote_attr: quote_attr,
   #     content: content }
   # end
+
+  def preview_contributor
+    self.contributions.find { |contribution| contribution.preview_contributor? }
+        .try(:contributor)
+        .try(:slice, :first_name, :last_name, :linkedin_url, :linkedin_photo_url, :linkedin_title, :linkedin_company, :linkedin_location)
+        .to_json
+    # self.contributors
+    #     .take.try(:slice, :first_name, :last_name, :linkedin_url, :linkedin_photo_url, :linkedin_title, :linkedin_company, :linkedin_location).to_json
+  end
 
   def related_stories
     related_stories = []

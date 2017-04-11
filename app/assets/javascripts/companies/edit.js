@@ -1,5 +1,19 @@
 
 function companiesEdit () {
+
+  $('.dropdown.company-settings').addClass('active');
+  $(document)
+    .one('turbolinks:before-visit', function () {
+      if ($('.dropdown.company-settings').hasClass('active')) {
+        $('.dropdown.company-settings').removeClass('active');
+      }
+    })
+    .one('click', '.workflow-tabs-list', function () {
+      if ($('.dropdown.company-settings').hasClass('active')) {
+        $('.dropdown.company-settings').removeClass('active');
+      }
+    });
+
 }
 
 function companiesEditListeners () {

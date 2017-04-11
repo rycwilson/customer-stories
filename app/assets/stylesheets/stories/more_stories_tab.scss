@@ -6,6 +6,15 @@
   z-index: 1000;
   width: 100%;
   -webkit-backface-visibility: hidden;  // ref: http://stackoverflow.com/questions/19254146
+  // if user is using a mouse the scrollbar spacing gets screwy.  just lose the scrollbar
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+
+  .cs-container-fluid {
+    padding: 0;
+  }
 
   .cs-row {
     margin: 0;
@@ -47,6 +56,7 @@
 
   .cs-drawer-content {
     position: relative;
+    // height: 160px;
     width: 100%;
     background: rgba(0, 0, 0, 0.7);
     border-collapse: collapse;
@@ -80,35 +90,36 @@
     padding-bottom: 23px;
     div[class^='col'] {
       position: relative;
+      width: 215px;
       height: 124px;
       box-sizing: border-box;
     }
     @media only screen and (max-width: 767px) {
-      padding: 0 10px 21px 10px;
+      padding: 0 10px 23px 10px;
     }
     @media only screen and (max-width: 567px) {
       .col-xs-8 {
-        width: 53.5%;
       }
     }
     @media only screen and (min-width: 568px) and (max-width: 667px) {
       .col-xs-8 {
-        width: 53.5%
       }
     }
     @media only screen and (min-width: 668px) and (max-width: 767px) {
       .col-xs-8 {
-        width: 53.5%
       }
     }
     @media only screen and (min-width: 768px) {
-      .col-sm-5 { width: 32.5%; }
+      .col-sm-5 {
+      }
     }
     @media only screen and (min-width: 992px) {
-      .col-md-3 { width: 24.5%; }
+      .col-md-3 {
+      }
     }
     @media only screen and (min-width: 1200px) {
-      .col-md-3 { width: 19.5%; }
+      .col-md-3 {
+      }
     }
   }
 
@@ -146,6 +157,7 @@
         z-index: 10;
         display: block;
         // box-sizing: border-box;
+        font-family: inherit !important;
         font-size: 13px;
         font-weight: normal;
         letter-spacing: normal;

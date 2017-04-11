@@ -1,95 +1,59 @@
-<!-- promote -->
+
+<!-- google stylesheet for ad previews -->
+<% content_for :head do %>
+
+  <link rel="stylesheet" href="https://tpc.googlesyndication.com/pagead/gadgets/suggestion_autolayout_V2/static_image_logo_v3.css">
+
+<% end %>
+
 <div id='promote-panel'
-     class="<%= workflow_tab == 'promote' ? 'active tab-pane content' : 'tab-pane content' %>" role='tabpanel'>
+     class="<%= workflow_tab == 'promote' ? 'active tab-pane fade in content' : 'tab-pane fade content' %>"role='tabpanel'>
+  <div class="content clip">
+    <div class='container'>
 
-  <div class='container'>
-    <div class='row'>
-      <div class='portlet portlet-default'>
+      <div class="layout layout-main-right layout-stack-sm">
+        <div class="col-md-3 col-sm-4 layout-sidebar">
 
-        <div class="portlet-header">
-          <h5 class="portlet-title">
+          <div class="nav-layout-sidebar-skip">
+            <strong>Tab Navigation</strong> / <a href="#settings-content">Skip to Content</a>
+          </div>
 
-            <b>Ad Networks: </b> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-            <span style='display:inline-block'>&nbsp;&nbsp; &nbsp;
-
-                <% if ['alpha', 'beta'].include? company.feature_flag %>
-
-                  <span class='tooltip-beta-promote' data-title='Coming soon'
-                        style='display:inline-block'>
-                    <input type="checkbox" style='pointer-events:none' disabled>
-                    <label>Enable Retargeting</label> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
-
-                    <input type="checkbox" style='pointer-events:none' disabled>
-                    <label>Enable CRM Targeting</label> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
-
-                    <input type="checkbox" style='pointer-events:none' disabled>
-                    <label>Enable Audience Targeting</label>
-                  </span>
-
-                <% else %>
-
-                  <span>
-                    <input type="checkbox">
-                    <label>Enable Retargeting</label> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
-
-                    <input type="checkbox">
-                    <label>Enable CRM Targeting</label> &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
-
-                    <input type="checkbox">
-                    <label>Enable Audience Targeting</label>
-                  </span>
-
-                <% end %>
-
-            </span>
-          </h5>
-        </div>
-
-        <div class='portlet-body'>
-
-          <% company.stories.each do |story| %>
-            <% if story.success.results.present? %>
-              <% story.success.results.each do |result| %>
-
-                <% result.description[0] = result.description[0].downcase %>
-                <% ad_text = story.success.customer.name + " " +
-                            result.description + " with " + company.name %>
-
-                <div class="row">
-
-                  <div class="col-sm-4">
-                    <div class="ad1-wrap">
-                      <img class='ad1-logo' src="<%= company.logo_url %>">
-                      <div class="ad1-text" data-text-length="<%= ad_text.length %>">
-                        <%= ad_text %>
-                      </div>
-                      <button id='ad-btn' type='button'>Read Story</button>
-                      <img class="ad-powered" src="<%= CS_POWERED_LOGO_URL %>">
-                    </div> <br><br><br>
-                  </div><!-- /.col -->
-
-                  <!-- adding a data-text-length attribute because using jquery to
-                  capture the length isn't reliable -->
-                  <div class="col-sm-8">
-                    <div class="ad2-wrap">
-                      <img class="ad2-logo" src="<%= company.logo_url %>"/>
-                      <div class="ad2-text" data-text-length="<%= ad_text.length %>">
-                        <%= ad_text %>
-                      </div>
-                      <button id='ad-btn' type='button'>Read Story</button>
-                      <img class='ad-powered' src="<%= CS_POWERED_LOGO_URL %>"/>
-                    </div> <br><br><br>
-                  </div>
-
-                </div>
-
-              <% end %>
-            <% end %>
-          <% end %>
+          <ul class="nav nav-layout-sidebar nav-stacked">
+            <li class='active'>
+              <a href="#campaign-management-container" data-toggle="tab">
+              <i class="fa fa-gear"></i>
+              &nbsp;&nbsp;Campaign Settings
+              </a>
+            </li>
+            <li>
+              <a href="#ads-preview-container" data-toggle="tab">
+              <i class="fa fa-search"></i>
+              &nbsp;&nbsp;Ads Preview
+              </a>
+            </li>
+          </ul>
 
         </div>
 
-      </div>  <!-- portlet -->
-    </div>  <!-- row -->
-  </div>  <!-- container -->
-</div>  <!-- promote
+        <div class="col-md-9 col-sm-8 layout-main">
+
+          <div id="settings-content" class="tab-content stacked-content">
+
+            <div class="tab-pane fade in active" id="campaign-management-container">
+              <%= render 'adwords/campaign_management', { company: company } %>
+            </div>
+
+            <div class="tab-pane fade" id="ads-preview-container">
+              <%= render 'adwords/ads_preview', { company: company } %>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>  <!-- container -->
+  </div>
+</div>  <!-- promote -->
+
+

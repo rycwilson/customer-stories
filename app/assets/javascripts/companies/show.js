@@ -1,10 +1,17 @@
 
 function companiesShow () {
-  adjustPromoCSSChecker();
+
+  // if this page was arrived at through history navigation,
+  // make sure there aren't any active dropdowns
+  $('dropdown.company-settings').removeClass('active')
+  $('dropdown.user-profile').removeClass('active')
+
 }
 
 function companiesShowListeners () {
+
   newStoryModalListeners();
+  promoteListeners();
   measureCharts();
   measureStories();
   measureVisitors();
@@ -16,6 +23,34 @@ function companiesShowListeners () {
       $(this).parent().prev().find('i').toggle();
   });
 
+  // apply styling when click on a dropdown option, or navigate away
+  $(document).on('click', 'a[href*="companies"], a[href*="profile"]',
+    function () {
+      var $thisDropdown = $(this).closest('li.dropdown'),
+          $otherDropdown = $thisDropdown.parent().find('li.dropdown:not(.open)');
+      $thisDropdown.addClass('active')
+      $otherDropdown.removeClass('active')
+    })
+
+}
+
+function promoteListeners () {
+
+  $(document).on('click', 'a[href="#promote-panel"]',
+
+    function () {
+
+      // $.getScript("https://adwords-displayads.googleusercontent.com/da/b/preview.js?client=dab-external-preview&obfuscatedCustomerId=3224978778&adGroupId=0&creativeId=189302204873&showInfoMessages=true&hl=en_US&showMulPreview=true&showVariations=true&showVariations=true&sig=ACiVB_yOr05R_pFJ9YPeqQAsfAlKp6Qzgw")
+
+      $.ajax({
+        url: '/adwords/previews',
+        method: 'get',
+        data: {
+          story_title: $('#ads-preview-story-select').find('option:first-of-type').text()
+        },
+        dataType: 'script'
+      });
+    })
 }
 
 function measureCharts () {
@@ -221,38 +256,6 @@ function newStoryModalListeners () {
     // select2 inputs to default values...
     $('.new-story-customer').select2('val', '');  // single select
     $('.new-story-tags').val('').trigger('change');  // multiple select
-  });
-}
-
-function adjustPromoCSSChecker () {
-  if ($('#promote').hasClass('active')) {
-    adjustPromoCSS();
-  } else {
-    $(document).on('shown.bs.tab', "a[href='#promote-panel']", function () {
-      adjustPromoCSS();
-    });
-  }
-}
-
-function adjustPromoCSS () {
-
-  var ad2LogoWidth = parseInt($('.ad2-logo').css('width'), 10);
-
-  $('.ad1-text').each(function () {
-    if ($(this).data('text-length') >= 85) {
-      $(this).css('font-size', '22px');
-    }
-  });
-
-  $('.ad2-text').each(function () {
-    $(this).css('padding-left', ad2LogoWidth + 20);
-    if ($(this).data('text-length') >= 85) {
-      $(this).css('font-size', '20px');
-      $(this).css('top', '10px');
-    } else if ($(this).data('text-length') >= 75) {
-      $(this).css('font-size', '22px');
-      $(this).css('top', '8px');
-    }
   });
 }
 

@@ -9,14 +9,9 @@
 *= require ./curate
 *= require ./promote
 *= require ./measure
-*= require ./workflow_nav
 */
 
 .companies {
-
-  .company-nav {
-    margin-bottom: 40px;
-  }
 
   .nav-layout-sidebar {
     .disabled-tab { color: #ccc; }

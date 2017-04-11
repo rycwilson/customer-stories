@@ -20,7 +20,7 @@
     $(function () {
 
       var position = '<%= @position %>',
-          $container = (position === 'tab') ? $('#cs-tab-container') : $('#cs-rel-container'),
+          $container = (position === 'tab') ? ( $('#cs-tab-container').length > 0 ? $('#cs-tab-container') : $('#cs-container') ) : $('#cs-rel-container'),
           $script = (position === 'tab') ? $('script[href*="tab"]') : $('script[href*="rel"]'),
           category = $script.data('category'),
           product = $script.data('product'),
@@ -69,6 +69,7 @@
                 } else {
                   buildRelWidget($container);
                 }
+                xScrollBoundaries()
               }
             })
           }
@@ -79,9 +80,7 @@
   }
 
   function buildRelWidget ($container) {
-    xScrollBoundaries()
     scrollHandlers($container);
-
     $container.find('.cs-thumbnail.published').hover(
       function () { $(this).css('border-color', '<%= @company.widget.tab_color %>'); },
       function () { $(this).css('border-color', '#ddd'); }
@@ -96,9 +95,7 @@
 
   function buildTabWidget ($container) {
     slideDrawerPlugin($container);
-    xScrollBoundaries()
     scrollHandlers($container);
-
     var $header = $container.find('.cs-header'),
         widgetShowTimer = null, widgetHideTimer = null;
     // cancel the timers if user interacts with widget
@@ -109,13 +106,6 @@
         if (widgetHideTimer) { clearTimeout(widgetHideTimer); }
       }
     });
-    // if user is using a mouse, this will hose dimensions
-    // (in a somewhat random way)
-    // compensate for this ...
-    // if ($('.cs-drawer-content').css('height') !== '141px') {
-    //   $('.cs-drawer-content').css('height', '141px');
-    //   $('.cs-drawer-items').css('height', '141px');
-    // }
     if ( <%= @company.widget.show %> && !getCookie('cs-widget-hide') ) {
       widgetShowTimer = setTimeout(function () {
         $header.trigger('click', { isAuto: true } );

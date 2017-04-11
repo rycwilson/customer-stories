@@ -1,4 +1,11 @@
+
 INDUSTRIES = ['Education', 'Government', 'Financial Services', 'Healthcare', 'Hospitality', 'Manufacturing', 'Media and Entertainment', 'Service Provider', 'Technology', 'IT', 'Telecommunications'];
+
+# AdWords accounts
+ADWORDS_CSP_TEST_MANAGER_CUSTOMER_ID = '811-996-7666'
+ADWORDS_CSP_TEST_CLIENT_CUSTOMER_ID = '266-136-8280'
+ADWORDS_CSP_PRODUCTION_MANAGER_CUSTOMER_ID = '569-145-2274'
+ADWORDS_CSP_PRODUCTION_CLIENT_CUSTOMER_ID = '836-316-8926'
 
 # the parameters can be hard-coded here because this will be used in a simple re-direct
 LINKEDIN_AUTHORIZE_BASE_URL = "https://www.linkedin.com/oauth/v2/authorization?\

@@ -3,21 +3,31 @@
          "memcache-iterator-#{company.story_tile_fragments_memcache_iterator}",
          skip_digest: true) do %>
 
-  <a href="<%= story.published ? story.csp_story_path : 'javascript:;' %>"
-     class="grid-item thumbnail public <%= story.published ? 'published' : 'logo-published' %>">
+  <li class="grid-item">
 
-    <div class="thumbnail-view">
-      <p class='thumbnail-view-hover'><%= story.title %></p>
-      <img src="<%= customer.logo_url || image_path('company-logo-missing.png') %>">
-    </div>
+    <a href="<%= story.published ? story.csp_story_path : 'javascript:;' %>"
+       class="thumbnail public <%= story.published ? 'published' : (story.preview_published ? 'preview-published' : 'logo-published') %>"
+       data-logosrc="<%= story.customer.logo_url %>"
+       data-summary="<%= story.summary %>"
+       data-quote="<%= story.quote %>"
+       data-preview-contributor="<%= story.preview_contributor %>">
 
-    <% if story.published? %>
-      <div class="caption"
-           style="<%= 'background-color:' + company.header_color_1 + ';color:' + company.header_text_color %>">
-        Read story
+      <div class="thumbnail-view">
+        <% if story.published? %>
+          <p class='thumbnail-view-hover'><%= story.title %></p>
+        <% end %>
+        <img src="<%= story.customer.logo_url || image_path('company-logo-missing.png') %>">
       </div>
-    <% end %>
 
-  </a>
+      <% if story.published? || story.preview_published? %>
+        <div class="caption"
+             style="<%= 'background-color:' + company.header_color_1 + ';color:' + company.header_text_color %>">
+          <%= story.published ? 'Read story' : 'See more' %>
+        </div>
+      <% end %>
+
+    </a>
+
+  </li>
 
 <% end %>

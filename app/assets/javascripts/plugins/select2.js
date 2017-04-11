@@ -107,10 +107,11 @@ function initSelect2 () {
     tags: true
   });
 
-  $('#charts-story-select, #visitors-story-select').select2({
-    theme: 'bootstrap',
-    width: 'style'
-  });
+  $('#charts-story-select, #visitors-story-select, #ads-preview-story-select')
+    .select2({
+      theme: 'bootstrap',
+      width: 'style'
+    });
 
 }
 

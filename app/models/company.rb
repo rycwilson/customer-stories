@@ -113,7 +113,7 @@ class Company < ActiveRecord::Base
   validates_attachment_content_type :logo, content_type: /\Aimage\/.*\Z/
 
   after_commit on: :create do
-    self.create.widget_config
+    self.create_widget
   end
 
   after_commit :expire_fragment_cache, on: :update,
@@ -204,8 +204,8 @@ class Company < ActiveRecord::Base
       JSON.parse(
         Story.order(Story.company_all(self.id))
         .to_json({
-          only: [:id, :title, :published, :logo_published, :publish_date, :updated_at],
-          methods: [:csp_story_path, :published_contributors],
+          only: [:id, :title, :summary, :quote, :published, :logo_published, :preview_published, :publish_date, :updated_at],
+          methods: [:csp_story_path, :published_contributors, :preview_contributor],
           include: {
             success: {
               only: [],

@@ -1,23 +1,23 @@
 
 <% if curator_story_view?(company.id) %>
 
-  <style>.mainnav-main:after { content: none; }</style>
+  <style>.company-nav:after{content:none;}.company-nav{margin-bottom:0;}</style>
 
 <% end %>
 
-<nav class='company-nav mainnav mainnav-main'>
+<nav class='company-nav'>
   <div class='container company-nav-container'>
     <div class="row">
 
       <div id='mainnav-workflow'
            class="col-xs-8 col-sm-6 col-md-4 <%= gallery_view? ? 'hidden-xs hidden-sm' : '' %>">
-        <%= render 'shared/workflow_tabs',
+        <%= render 'companies/shared/workflow_tabs',
             { company: company, workflow_tab: workflow_tab } %>
       </div>
 
       <div id='collapsed-workflow-tabs'
            class="col-xs-1 <%= gallery_view? ? '' : 'hidden-xs hidden-sm' %> hidden-md hidden-lg">
-        <%= render 'shared/collapsed_workflow_tabs', { company: company } %>
+        <%= render 'companies/shared/collapsed_workflow_tabs', { company: company } %>
       </div>
 
       <% if gallery_view? %>
@@ -37,12 +37,18 @@
                  pre_selected_filter: pre_selected_filter } %>
         </div>
 
+      <% else %>
+
+        <div class='col-xs-8 col-md-6'>
+          <!-- filler -->
+        </div>
+
       <% end %>
 
-      <div class="col-xs-3 col-md-2 pull-right">
-
-        <%= render 'shared/mainnav_account_dropdowns', { company: company } %>
+      <div class="col-xs-3 col-md-2">
+        <%= render 'companies/shared/company_nav_dropdowns', { company: company } %>
       </div>
+
     </div>
 
   </div>  <!-- container -->

@@ -1,13 +1,12 @@
 
-/*
-*= require ./show
-*= require ./edit
-*= require ./gallery
-*= require ./linkedin-widget
-*= require ./video
-*= require bootstrap-horizon/bootstrap-horizon
-*= require ./more_stories_tab
-*/
+@import 'show';
+@import 'edit';
+@import 'gallery';
+@import 'linkedin_widget';
+@import 'video';
+@import 'bootstrap-horizon/bootstrap-horizon';
+@import 'more_stories_tab';
+@import 'grid_previews';
 
 /***********************************************/
 /*      nav tabs
@@ -15,12 +14,3 @@
 .mainnav-main {
   border-bottom: 1px solid #f2f2f2;
 }
-
-
-/*
-a transparent input - might come in handy at some point
-input {
-  background-color: rgba(0,0,0,0);
-  border: none;
-}
-*/

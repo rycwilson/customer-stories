@@ -1,0 +1,185 @@
+
+.stories.index {
+
+  .grid-item.og-expanded > a::after {
+    bottom: -11px;
+    border: solid transparent;
+    content: " ";
+    height: 0;
+    width: 0;
+    position: absolute;
+    pointer-events: none;
+    border-bottom-color: #f2f2f2;
+    border-width: 17px;
+    left: 50%;
+    margin: 0 0 0 -15px;
+  }
+
+  .og-expander {
+    position: absolute;
+    background: #f2f2f2;
+    top: auto;
+    left: 0;
+    width: 100%;
+    margin-top: 10px;
+    text-align: left;
+    height: 0;
+    overflow: hidden;
+  }
+  .og-expander-inner {
+    padding: 40px 30px;
+    height: 100%;
+  }
+  .og-close {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    top: 20px;
+    right: 20px;
+    cursor: pointer;
+  }
+  .og-close::before,
+  .og-close::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    height: 1px;
+    background: #888;
+    transform: rotate(45deg);
+  }
+  .og-close::after {
+    transform: rotate(-45deg);
+  }
+  .og-close:hover::before,
+  .og-close:hover::after {
+    background: #333;
+  }
+
+  .og-summary,
+  .og-testimonial {
+    width: 50%;
+    float: left;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .og-logo {
+    width: 100%;
+    height: 100px;
+    line-height: 96px;
+    text-align: center;
+    margin-bottom: 40px;
+    img {
+      display: inline-block;
+      vertical-align: middle;
+      max-height: 100%;
+      max-width: 25%;
+      mix-blend-mode: multiply; // this makes white background transparent
+    }
+  }
+
+  .og-summary {
+    text-align: center;
+    padding: 0 40px 0 40px;
+    color: #777;
+    p {
+      text-align: left;
+    }
+  }
+
+  .og-testimonial {
+    padding: 0 40px 0 40px;
+    color: #777;
+    > p {    // don't let settings affect the linkedin profile card
+      font-weight: 400;
+      font-size: 16px;
+      font-style: italic;
+      line-height: 22px;
+      margin-bottom: 25px;
+    }
+    > p:before {
+      color: #ccc;
+      content: open-quote;
+      font-size: 4em;
+      line-height: 0.1em;
+      margin-right: 0.25em;
+      vertical-align: -0.4em;
+    }
+  }
+
+  // .og-testimonial a {
+  //   font-weight: 700;
+  //   font-size: 16px;
+  //   color: #333;
+  //   text-transform: uppercase;
+  //   letter-spacing: 2px;
+  //   padding: 10px 20px;
+  //   border: 3px solid #333;
+  //   display: inline-block;
+  //   margin: 30px 0 0;
+  //   outline: none;
+  // }
+  // .og-testimonial a::before {
+  //   content: '\2192';
+  //   display: inline-block;
+  //   margin-right: 10px;
+  // }
+  // .og-testimonial a:hover {
+  //   border-color: #999;
+  //   color: #999;
+  // }
+
+  .og-loading {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #ddd;
+    box-shadow: 0 0 1px #ccc, 15px 30px 1px #ccc, -15px 30px 1px #ccc;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin: -25px 0 0 -25px;
+    animation: loader 0.5s infinite ease-in-out both;
+  }
+
+  @keyframes loader {
+    0% { background: #ddd; }
+    33% { background: #ccc; box-shadow: 0 0 1px #ccc, 15px 30px 1px #ccc, -15px 30px 1px #ddd; }
+    66% { background: #ccc; box-shadow: 0 0 1px #ccc, 15px 30px 1px #ddd, -15px 30px 1px #ccc; }
+  }
+
+  @media only screen and (max-width: 767px ) {
+
+    .og-expander-inner {
+      padding: 70px 15px 30px 15px;
+      .og-summary {
+        padding: 0;
+        width: 100%;
+      }
+      .og-testimonial {
+        display: none;
+        // width: 100%;
+        // padding: 0;
+        .og-contributor-profile {
+          display: none;
+        }
+      }
+    }
+
+  }
+
+  @media only screen and (min-width: 768px) and (max-width: 991px) {
+
+    .og-expander-inner {
+      padding: 30px 15px;
+    }
+    .og-summary {
+      padding: 0 20px 0 20px;
+    }
+    .og-testimonial {
+      padding: 0 20px 0 20px;
+    }
+  }
+}

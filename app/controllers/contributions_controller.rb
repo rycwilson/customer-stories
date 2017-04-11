@@ -82,23 +82,10 @@ class ContributionsController < ApplicationController
     # TODO: should be able to make the update without password in registrations_controller,
     # but no big deal for now
     if params[:user]
-      contributor = @contribution.contributor
-      contributor.update user_params
-      respond_to { |format| format.json { respond_with_bip(contributor) } }
+      @contribution.contributor.update user_params
+      respond_to { |format| format.json { respond_with_bip(@contribution.contributor) } }
 
-    # contribution update from either profile (:publish_contributor, :contributor_unpublished)
-    # or contribution card (:publish_contributor OR :notes)
-    elsif params[:contribution].length <= 2
-      if @contribution.update contribution_params
-        @contribution.success.story
-          .expire_published_contributor_cache(@contribution.contributor.id)
-        respond_to { |format| format.json { render json: true } }  # http://stackoverflow.com/questions/12407328
-      else
-        # TODO: error
-      end
-
-    # contribution submission (via email link) ...
-    else
+    elsif params[:contribution][:web_submission]
       @contribution.submitted_at = Time.now
       if @contribution.update contribution_params
         UserMailer.alert_contribution_update(@contribution).deliver_now
@@ -120,7 +107,20 @@ class ContributionsController < ApplicationController
         flash.now[:danger] = @contribution.errors.full_messages.join(', ')
         render :edit
       end
+
+    # contribution update from either profile (:publish_contributor, :contributor_unpublished)
+    # or contribution card (:publish_contributor OR :notes)
+    else
+      if @contribution.update contribution_params
+        @contribution.success.story
+          .expire_published_contributor_cache(@contribution.contributor.id)
+        respond_to { |format| format.json { render json: true } }  # http://stackoverflow.com/questions/12407328
+      else
+        # TODO: error
+      end
     end
+
+    # contribution submission (via email link) ...
   end
 
   # responds with confirm_request.js

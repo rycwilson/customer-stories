@@ -3,8 +3,7 @@
   var user = <%= raw @user.to_json %>,
       status = "<%= @status %>",
       flashMesg = "<%= @flash_mesg %>",
-      linkedinUpdate = <%= @linkedin_update %>
-      passwordUpdate = <%= @password_update %>;   // boolean
+      passwordUpdate = <%= @password_update %>;
 
   if (passwordUpdate) {
     $('#password-update-form')[0].reset();
@@ -17,19 +16,27 @@
       $('#user_current_password').focus();
     }
   }
+
   else {
     if (status === 'success') {
-      $.getScript('//platform.linkedin.com/in.js', function () {
-        $("input[name='user[linkedin_url]']").parent().siblings().remove();
-        $("input[name='user[linkedin_url]']").parent().after(
-              "<script type='IN/MemberProfile' " +
-                "data-id='" + user.linkedin_url + "' " +
-                "data-format='inline' data-related='false' " +
-                "data-width='300'>" +
-              "</script>"
-            );
-        IN.parse();
-      });
+
+      if (!user.linkedin_url) {
+        if ($('.linkedin-url').hasClass('url-present')) {
+          $('.linkedin-url').toggleClass('url-present url-absent')
+        }
+        $('.linkedin-container > span').remove();
+      }
+      // $.getScript('//platform.linkedin.com/in.js', function () {
+      //   $("input[name='user[linkedin_url]']").parent().siblings().remove();
+      //   $("input[name='user[linkedin_url]']").parent().after(
+      //         "<script type='IN/MemberProfile' " +
+      //           "data-id='" + user.linkedin_url + "' " +
+      //           "data-format='inline' data-related='false' " +
+      //           "data-width='300'>" +
+      //         "</script>"
+      //       );
+      //   IN.parse();
+      // });
       flashDisplay("Account updated", status);
     }
     else {
