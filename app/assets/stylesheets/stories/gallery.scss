@@ -52,13 +52,15 @@
     padding-left: 5px;
   }
 
-  .grid {
-    margin: 0 auto;
-  }
+}
+
+
+.grid {
+  margin: 0 auto;
 
   .grid-item {
     display: inline-block;
-    margin: 8px 28px 18px 28px;
+    margin: 8px 28px 18px 28px;  // 10px difference in top/bottom due to padding
     vertical-align: top;
     padding-top: 10px;
   }
@@ -140,5 +142,4 @@
       -o-transform: translateY(0%);
     }
   }
-
 }
