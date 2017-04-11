@@ -15,7 +15,6 @@
     padding-bottom: 0;
     .row {
       font-size: 0;
-      margin-bottom: 22px;
       div[class^='col-'] {
         float: none;
         display: inline-block;
@@ -30,80 +29,8 @@
         font-size: 13px;
       }
     }
-
     .grid {
-      margin: 0 auto;
-    }
-
-    .grid-item.thumbnail.logo-published {
-      .thumbnail-view {
-        height: 138px;
-        line-height: 134px;
-        img {
-          padding: 24px 12px;
-        }
-      }
-    }
-
-    .grid-item.thumbnail {
-      position: relative;  // this is for positioning the caption at the bottom
-      width: 210px;        // matches masonry column width
-      height: 140px;       // 3/2 ratio
-      text-align: center;  // centers image horizontally
-      padding: 0;
-      margin-bottom: 40px;
-      .thumbnail-view {
-        position: relative;   // for thumbnail-view-hover
-        height: 114px;
-        line-height: 110px;
-        width: 100%;
-        cursor: pointer;
-        p.thumbnail-view-hover {
-          position: absolute;
-          z-index: 10;
-          display: block;
-          // box-sizing: border-box;
-          font-size: 14px;
-          height: 100%;
-          width: 100%;
-          color: #fff;
-          line-height: 20px;
-          text-align: left;
-          padding: 5px 8px;
-          background: rgba(0, 0, 0, 0.8);
-          border-radius: 3px 3px 0 0;
-          -webkit-transform: translateY(-100%);
-          -moz-transform: translateY(-100%);
-          -ms-transform: translateY(-100%);
-          -o-transform: translateY(-100%);
-          transition: all 0.2s ease-in-out;
-        }
-        img {
-          display: inline-block;
-          vertical-align: middle;
-          max-height: 100%;
-          max-width: 100%;
-          padding: 12px;
-        }
-      }
-      .caption {
-        font-size: 14px;
-        text-align: left;
-        padding: 2px 0 2px 6px;
-        position: absolute;
-        bottom: 0;
-        width: 100%;
-        border-radius: 0 0 3px 3px;
-      }
-    }
-    .grid-item.thumbnail:hover  {
-      border-color: #ccc;  // overrides bootstrapp
-       .thumbnail-view .thumbnail-view-hover {
-        -webkit-transform: translateY(0%);
-        -moz-transform: translateY(0%);
-        -ms-transform: translateY(0%);
-        -o-transform: translateY(0%);
-      }
+      margin: 15px 0;
     }
   }
 

@@ -113,7 +113,8 @@
         letter-spacing: normal;
         height: 100px;
         width: 100%;
-        color: #fff !important;
+        color: #444 !important;
+        font-weight: 600;
         line-height: 18px !important;
         text-align: left;
         padding: 4px 8px;
@@ -145,7 +146,7 @@
   }
   .cs-thumbnail:hover {
     .cs-thumbnail-view .cs-thumbnail-view-hover {
-      background: rgba(0, 0, 0, 0.9);
+      background: rgba(245, 245, 245, 0.94);
       -webkit-transform: translateY(0%);
       -moz-transform: translateY(0%);
       -ms-transform: translateY(0%);
@@ -174,8 +175,8 @@
   }
 
   .cs-scroll-left:hover, .cs-scroll-right:hover {
-    i { color: white; }
-    background-color: rgba(0, 0, 0, 0.7);
+    i { color: #222; }
+    // background-color: rgba(0, 0, 0, 0.7);
   }
 
 }

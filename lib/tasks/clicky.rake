@@ -34,7 +34,7 @@ namespace :clicky do
     visitors_list += get_visitors_range('2017-03-15,2017-03-21')
     visitors_list += get_visitors_range('2017-03-22,2017-03-31')
     visitors_list += get_visitors_range('2017-04-01,2017-04-07')
-    visitors_list += get_visitors_range('2017-04-08,2017-04-09')
+    visitors_list += get_visitors_range('2017-04-08,2017-04-10')
     visitors_list += get_data_since('visitors', args[:time_offset])
     visitor_sessions = create_sessions(visitors_list)
     create_actions(visitor_sessions)

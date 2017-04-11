@@ -35,8 +35,11 @@ class Company < ActiveRecord::Base
   has_many :cta_clicks, class_name: "CtaClick"
   has_many :profile_clicks, class_name: "ProfileClick"
   has_many :logo_clicks, class_name: "LogoClick"
-  has_many :visitor_sessions, -> { distinct }, through: :visitor_actions
-  has_many :visitors, -> { distinct }, through: :visitor_sessions
+  # include the select clause with extra fields,
+  # because these models have a default search order on those fields,
+  # so must be included in the select clause
+  has_many :visitor_sessions, -> { select('visitor_sessions.*, visitor_sessions.clicky_session_id, visitor_actions.timestamp').distinct }, through: :visitor_actions
+  has_many :visitors, -> { select('visitors.*, visitor_sessions.clicky_session_id, visitor_actions.timestamp').distinct }, through: :visitor_sessions
 
   has_many :story_categories, dependent: :destroy do
     def select_options
