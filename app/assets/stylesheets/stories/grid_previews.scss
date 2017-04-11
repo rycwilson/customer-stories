@@ -2,7 +2,7 @@
 .stories.index {
 
   .grid-item.og-expanded > a::after {
-    top: auto;
+    bottom: -11px;
     border: solid transparent;
     content: " ";
     height: 0;
@@ -12,7 +12,7 @@
     border-bottom-color: #f2f2f2;
     border-width: 17px;
     left: 50%;
-    margin: -3px 0 0 -15px;
+    margin: 0 0 0 -15px;
   }
 
   .og-expander {
