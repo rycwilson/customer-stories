@@ -1,4 +1,6 @@
 
+// ref https://tympanus.net/codrops/2013/03/19/thumbnail-grid-with-expanding-preview/
+
 function initGridPreviews (config) {
   // set the global variables
   $grid = $('#stories-gallery');
