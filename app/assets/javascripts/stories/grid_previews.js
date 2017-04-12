@@ -151,9 +151,10 @@ Preview.prototype.create = function() {
   // create Preview structure:
   this.$loading = $( '<div class="og-loading"></div>' );
   this.$logoContainer = $( '<div class="og-logo hidden-xs"></div>').append( this.$loading );
-  this.$quote = $( '<p></p>' );
+  this.$quote = $( '<blockquote class="og-quote"><p></p></blockquote>' );
+  this.$quoteAttr = $( '<div class="og-quote-attr"></div>');
   this.$contributorProfile = $( '<div class="og-contributor-profile text-center"></div>' );
-  this.$testimonial = $( '<div class="og-testimonial"></div>' ).append( this.$quote, this.$contributorProfile );
+  this.$testimonial = $( '<div class="og-testimonial"></div>' ).append( this.$quote, this.$quoteAttr, this.$contributorProfile );
   this.$summary = $( '<p></p>' );
   this.$summaryContainer = $( '<div class="og-summary"></div>' ).append( this.$summary );
   this.$closePreview = $( '<span class="og-close"></span>' );
@@ -197,22 +198,29 @@ Preview.prototype.update = function( $item ) {
   var $itemEl = this.$item.children( 'a' ),
     eldata = {
       logosrc : $itemEl.data( 'logosrc' ),
+      companyName : JSON.parse( $itemEl.data( 'company-name' ) ),
       summary : JSON.parse( $itemEl.data( 'summary' ) ),
       quote : JSON.parse( $itemEl.data( 'quote' ) ),
+      quoteAttrName: JSON.parse( $itemEl.data( 'quote-attr-name' ) ),
+      quoteAttrTitle: JSON.parse( $itemEl.data( 'quote-attr-title' ) ),
       contributor : $itemEl.data( 'preview-contributor' )
     };
 
-  linkedinProfileTemplate = _.template($('#csp-linkedin-widget-template').html());
+  contributorProfileTemplate = _.template($('#csp-linkedin-widget-template').html());
 
   var self = this,
       widgetWidth = (app.screenSize === 'lg') ? 420 : 320;
 
   this.$summary.html( eldata.summary );
-  this.$quote.html( eldata.quote );
+  this.$quote.find('p').html( eldata.quote );
+  this.$quoteAttr.html(
+      '<div class="text-right"><span>&#8211;&nbsp;' + eldata.quoteAttrName + ',&nbsp;' + eldata.quoteAttrTitle + '</span></div>' +
+      '<div class="text-right"><span>' + eldata.companyName + '</span></div>'
+    );
 
   if (eldata.contributor !== null) {
     this.$contributorProfile
-      .html( linkedinProfileTemplate({
+      .html( contributorProfileTemplate({
                 contributor: eldata.contributor,
                 widgetWidth: widgetWidth
              }) )

@@ -91,45 +91,33 @@
 
   .og-testimonial {
     padding: 0 40px 0 40px;
-    color: #777;
-    > p {    // don't let settings affect the linkedin profile card
-      font-weight: 400;
-      font-size: 16px;
-      font-style: italic;
-      line-height: 22px;
-      margin-bottom: 25px;
+    overflow: visible;  // for the quotation mark
+    blockquote {
+      border: none;
+      padding: 2px 0 0 0;
+      margin-bottom: 15px;
+      p {
+        color: #888;
+        font-size: 16px;
+        font-style: italic;
+        font-weight: 400;
+        line-height: 16px;
+      }
+      p:before {
+        font-family: 'Trebuchet MS', Georgia, "Times New Roman", Times, serif;
+        color: #999;
+        content: open-quote;
+        font-size: 50px;
+        margin-right: 0.25em;
+        vertical-align: -0.4em;
+      }
     }
-    > p:before {
-      color: #ccc;
-      content: open-quote;
-      font-size: 4em;
-      line-height: 0.1em;
-      margin-right: 0.25em;
-      vertical-align: -0.4em;
+    .og-quote-attr {
+      color: #777;
+      line-height: 22px;
+      margin-bottom: 15px;
     }
   }
-
-  // .og-testimonial a {
-  //   font-weight: 700;
-  //   font-size: 16px;
-  //   color: #333;
-  //   text-transform: uppercase;
-  //   letter-spacing: 2px;
-  //   padding: 10px 20px;
-  //   border: 3px solid #333;
-  //   display: inline-block;
-  //   margin: 30px 0 0;
-  //   outline: none;
-  // }
-  // .og-testimonial a::before {
-  //   content: '\2192';
-  //   display: inline-block;
-  //   margin-right: 10px;
-  // }
-  // .og-testimonial a:hover {
-  //   border-color: #999;
-  //   color: #999;
-  // }
 
   .og-loading {
     width: 20px;

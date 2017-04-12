@@ -7,9 +7,12 @@
 
     <a href="<%= story.published ? story.csp_story_path : 'javascript:;' %>"
        class="thumbnail public <%= story.published ? 'published' : (story.preview_published ? 'preview-published' : 'logo-published') %>"
+       data-company-name="<%= story.customer.name.to_json %>"
        data-logosrc="<%= story.customer.logo_url %>"
-       data-summary="<%= story.summary.to_json %>"
-       data-quote="<%= story.quote.to_json %>"
+       data-summary="<%= story.summary.try(:to_json) %>"
+       data-quote="<%= story.quote.try(:to_json) %>"
+       data-quote-attr-name="<%= story.quote_attr_name.try(:to_json) %>"
+       data-quote-attr-title="<%= story.quote_attr_title.try(:to_json) %>"
        data-preview-contributor="<%= story.preview_contributor %>">
 
       <div class="thumbnail-view">
