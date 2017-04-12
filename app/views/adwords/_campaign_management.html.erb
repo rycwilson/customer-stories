@@ -1,2 +1,29 @@
 
-<h4>Settings</h4>
+<label>Enable Promote Type</label>
+
+<% if ['varmour', 'retailnext'].include?(company.subdomain) %>
+
+  <span>
+    <label class="checkbox-inline" style='pointer-events:none'>
+      <input type="checkbox" checked> Topic & Re-targeting
+    </label>
+    <label class="checkbox-inline"
+           data-toggle='tooltip' data-placement='top' data-container='body'
+           data-title="Contact Customer Stories to subscribe to this feature">
+      <input type="checkbox" disabled> CRM Targeting
+    </label>
+  </span>
+
+<% else %>
+
+  <span data-toggle='tooltip' data-placement='top' data-container='body'
+        data-title="Contact Customer Stories to subscribe to this feature">
+    <label class="checkbox-inline">
+      <input type="checkbox" disabled> Topic & Re-targeting
+    </label>
+    <label class="checkbox-inline">
+      <input type="checkbox" disabled> CRM Targeting
+    </label>
+  </span>
+
+<% end %>
