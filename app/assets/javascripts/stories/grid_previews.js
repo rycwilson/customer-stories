@@ -197,8 +197,8 @@ Preview.prototype.update = function( $item ) {
   var $itemEl = this.$item.children( 'a' ),
     eldata = {
       logosrc : $itemEl.data( 'logosrc' ),
-      summary : $itemEl.data( 'summary' ),
-      quote : $itemEl.data( 'quote' ),
+      summary : JSON.parse( $itemEl.data( 'summary' ) ),
+      quote : JSON.parse( $itemEl.data( 'quote' ) ),
       contributor : $itemEl.data( 'preview-contributor' )
     };
 
