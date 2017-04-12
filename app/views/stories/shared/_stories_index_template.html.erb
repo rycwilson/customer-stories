@@ -8,8 +8,11 @@
       <a href="{{= (story.published && story.csp_story_path) || (story.preview_published && 'javascript:;') || (isCurator && '/stories/' + story.id + '/edit') || 'javascript:;' }}"
          class="thumbnail {{= isCurator ? 'curator' : 'public' }} {{= story.published ? 'published' : (story.preview_published ? 'preview-published' : (story.logo_published ? 'logo-published' : 'pending-curation')) }}"
          data-logosrc="{{= story.success.customer.logo_url }}"
+         data-company-name='{{= JSON.stringify(story.success.customer.name) }}'
          data-summary='{{= JSON.stringify(story.summary) }}'
          data-quote='{{= JSON.stringify(story.quote) }}'
+         data-quote-attr-name='{{= JSON.stringify(story.quote_attr_name) }}'
+         data-quote-attr-title='{{= JSON.stringify(story.quote_attr_title) }}'
          data-preview-contributor='{{= JSON.stringify(story.published_contributors[0]) }}'
          style="{{= !isCurator && !(story.published || story.preview_published) ? 'pointer-events:none' : ';' }}">
 

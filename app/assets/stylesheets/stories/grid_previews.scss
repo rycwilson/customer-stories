@@ -94,22 +94,22 @@
     overflow: visible;  // for the quotation mark
     blockquote {
       border: none;
-      padding: 2px 0 0 0;
+      padding: 0;
       margin-bottom: 15px;
       p {
         color: #888;
         font-size: 16px;
         font-style: italic;
         font-weight: 400;
-        line-height: 16px;
+        line-height: 22px;
       }
       p:before {
         font-family: 'Trebuchet MS', Georgia, "Times New Roman", Times, serif;
         color: #999;
         content: open-quote;
-        font-size: 50px;
+        font-size: 45px;
         margin-right: 0.25em;
-        vertical-align: -0.4em;
+        vertical-align: -10px;
       }
     }
     .og-quote-attr {
