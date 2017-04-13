@@ -213,10 +213,12 @@ Preview.prototype.update = function( $item ) {
 
   this.$summary.html( eldata.summary );
   this.$quote.find('p').html( eldata.quote );
-  this.$quoteAttr.html(
-      '<div class="text-right"><span>&#8211;&nbsp;' + eldata.quoteAttrName + ',&nbsp;' + eldata.quoteAttrTitle + '</span></div>'
-      // '<div class="text-right"><span>' + eldata.companyName + '</span></div>'
-    );
+  if (eldata.quoteAttrName !== "") {
+    this.$quoteAttr.html(
+        '<div class="text-right"><span>&#8211;&nbsp;' + eldata.quoteAttrName + ',&nbsp;' + eldata.quoteAttrTitle + '</span></div>'
+        // '<div class="text-right"><span>' + eldata.companyName + '</span></div>'
+      );
+  }
 
   if (eldata.contributor !== null) {
     this.$contributorProfile
