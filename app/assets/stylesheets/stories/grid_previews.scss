@@ -95,17 +95,17 @@
     blockquote {
       border: none;
       padding: 0;
-      margin-bottom: 15px;
+      margin-bottom: 10px;
       p {
-        color: #888;
-        font-size: 16px;
+        color: #999;
+        font-size: 15px;
         font-style: italic;
         font-weight: 400;
         line-height: 22px;
       }
       p:before {
         font-family: 'Trebuchet MS', Georgia, "Times New Roman", Times, serif;
-        color: #999;
+        color: #bbb;
         content: open-quote;
         font-size: 45px;
         margin-right: 0.25em;
