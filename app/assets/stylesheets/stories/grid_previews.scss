@@ -60,7 +60,7 @@
   .og-testimonial {
     width: 50%;
     float: left;
-    height: 100%;
+    max-height: 100%;
     overflow: hidden;
     position: relative;
   }
@@ -143,13 +143,13 @@
     .og-expander-inner {
       padding: 70px 15px 30px 15px;
       .og-summary {
-        padding: 0;
         width: 100%;
+        margin-bottom: 15px;
+        padding: 0;
       }
       .og-testimonial {
-        display: none;
-        // width: 100%;
-        // padding: 0;
+        width: 100%;
+        padding: 0;
         .og-contributor-profile {
           display: none;
         }
