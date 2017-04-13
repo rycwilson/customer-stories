@@ -35,13 +35,11 @@
 
 <!--  -->
 
-  <%# if current_user.admin? %>
-    <div class="row switch-user">
-      <div class="col-sm-12">
-        <%= switch_user_select class: 'switch-user-select' %>
-      </div>
+  <div class="row switch-user">
+    <div class="col-sm-12">
+      <%= switch_user_select class: 'switch-user-select' %>
     </div>
-  <%# end %>
+  </div>
 
   <%= form_for @user, url: registration_path(@user),
         method: 'put', remote: 'true', authenticity_token: true,
@@ -163,7 +161,7 @@
         <% if current_user.linkedin_url.present? %>
 
           <div class="text-center linkedin-container">
-            <script type="IN/MemberProfile" data-id="<%= current_user.linkedin_url %>" data-format="inline" data-width='360px' data-related="false"></script>
+            <script type="IN/MemberProfile" data-id="<%= current_user.linkedin_url %>" data-format="inline" data-width='390px' data-related="false"></script>
           </div>
 
         <% end %>
