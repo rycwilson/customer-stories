@@ -1,10 +1,10 @@
 
-<% if true %>
+<% if false %>
 
   <h4>Editing coming soon</h4>
 
 <% else %>
-<div class='row'>
+<!-- <div class='row'> -->
   <div class='portlet portlet-default'>
 
     <form class="form-horizontal">
@@ -25,38 +25,128 @@
           Display type
         </label>
         <div class='col-sm-10 ad-types btn-group' data-toggle="buttons">
-          <label class="btn btn-secondary active" data-toggle='tab' data-target='#native-ads-panel'>
-            <input type="radio" name="options" id="ads-native" autocomplete="off" checked> Native
+          <label class="btn btn-secondary active" data-toggle='tab' data-target='#native-ads-pane'>
+            <input type="radio" name="options" autocomplete="off" checked> Native
           </label>
-          <label class="btn btn-secondary" data-toggle='tab' data-target='#image-ads-panel'>
-            <input type="radio" name="options" id="ads-image" autocomplete="off"> Image
+          <label class="btn btn-secondary" data-toggle='tab' data-target='#image-ads-pane'>
+            <input type="radio" name="options" autocomplete="off"> Image
           </label>
-          <label class="btn btn-secondary" data-toggle='tab' data-target='#text-ads-panel'>
-            <input type="radio" name="options" id="ads-text" autocomplete="off"> Text
+          <label class="btn btn-secondary" data-toggle='tab' data-target='#text-ads-pane'>
+            <input type="radio" name="options" autocomplete="off"> Text
           </label>
         </div>
       </div>
 
     </form>
 
+    <div class='tab-content'>
 
-    <div id='native-ads-panel' class='tab-pane fade in active'>
-      <h3>Native</h3>
+      <div id='native-ads-pane' class='ads-pane tab-pane fade in active'>
+
+        <div class="row">
+
+          <div class="col-sm-6 text-center">
+            <div id="native-1">
+              <div id="adunit" class="content-ads" style="width: 300px; height: 250px; position: relative; overflow: hidden;"><div class="attribution">Ad</div>
+              <div id="ads" class="ads">
+              <div class="ad ad-1" id="taw0" style="">
+              <div class="image"><a class="image-link" data-ifc="[[[&quot;10,10,10,10&quot;,null,0,2]]]" href="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl=" target="_blank" data-original-click-url="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl="><img src="https://tpc.googlesyndication.com/simgad/14020142471839339698?w=600&amp;h=314"></a></div>
+              <div class="button">
+              <a class="button-link" href="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl=" target="_blank" data-original-click-url="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl=">
+              <span class="button-text">Visit Site</span>
+              <svg class="button-icon" enable-background="new 0 0 44 44" height="44px" version="1.1" viewBox="0 0 44 44" width="44px" x="0px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" y="0px">
+              <polyline class="button-icon-element" fill="#000" points="16.895,11.188 27.105,22.014 16.918,32.812">
+              </polyline>
+              </svg>
+              </a>
+              </div>
+              <div class="title"><a class="title-link" href="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl=" target="_blank" data-original-click-url="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl=">Equens Achieves Agile Security with vArmour and Atos</a></div>
+              <div class="body">
+              <a class="body-link" href="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl=" target="_blank" data-original-click-url="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl="></a>
+              </div>
+              <div class="url"><a class="url-link" href="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl=" target="_blank" data-original-click-url="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl=">vArmour Customer Stories</a></div>
+              </div></div></div>
+
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+
+            <div id="native-2">
+              <div id="adunit" class="content-ads" style="width: 300px; height: 100px; position: relative; overflow: hidden;"><div class="attribution">Ad</div>
+              <div id="ads" class="ads">
+              <div class="ad ad-1" id="taw0" style="">
+              <div class="image"><a class="image-link" data-ifc="[[[&quot;10,10,10,10&quot;,null,0,2]]]" href="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl=" target="_blank" data-original-click-url="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl="><img src="https://tpc.googlesyndication.com/simgad/12749669574152547592?w=300&amp;h=300"></a></div>
+              <div class="button">
+              <a class="button-link" href="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl=" target="_blank" data-original-click-url="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl=">
+              <span class="button-text">Visit Site</span>
+              <svg class="button-icon" enable-background="new 0 0 44 44" height="44px" version="1.1" viewBox="0 0 44 44" width="44px" x="0px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" y="0px">
+              <polyline class="button-icon-element" fill="#000" points="16.895,11.188 27.105,22.014 16.918,32.812">
+              </polyline>
+              </svg>
+              </a>
+              </div>
+              <div class="title"><a class="title-link" href="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl=" target="_blank" data-original-click-url="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl=">Equens Achieves Agile Security with vArmour and Atos</a></div>
+              <div class="body">
+              <a class="body-link" href="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl=" target="_blank" data-original-click-url="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl="></a>
+              </div>
+              <div class="url"><a class="url-link" href="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl=" target="_blank" data-original-click-url="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl=">vArmour Customer Stories</a></div>
+              </div></div></div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div id='image-ads-pane' class='ads-pane tab-pane fade'>
+
+        <div class="row">
+
+          <div class="col-sm-6 text-center">
+
+            <div id="image-1">
+              <div id="adContent" style="line-height: normal; background-color: rgb(238, 238, 238); overflow: hidden; position: relative; width: 300px; height: 250px; border-radius: 0px;" data-variation="squareA"><div id="colorSlot1" data-type="shape" style="position: absolute; top: 0px; left: 0px; width: 300px; height: 250px; background-color: rgb(255, 255, 255);"></div><div id="product" data-type="product" style="position: absolute; top: 0px; left: 0px; width: 300px; height: 157px;"><img src="https://tpc.googlesyndication.com/simgad/14020142471839339698" style="display: block; position: absolute; top: 0px; left: 0px; width: 300px; height: 157px;"></div><div id="logo" data-type="logo" style="position: absolute; top: 181px; left: 15px; width: 45px; height: 45px;"><img src="https://tpc.googlesyndication.com/simgad/1818104764851848758" style="display: block; position: absolute; top: 0px; left: 0px; width: 45px; height: 45px;"></div><div id="text1" style="font-family: Roboto, Arial, sans-serif; font-weight: bold; font-style: normal; width: 155px; position: absolute; top: 170px; left: 75px; height: 43px; color: rgb(43, 43, 43); font-size: 18px;" data-type="headline" dir="ltr"><div style="position: absolute; top: 0px; left: 0px; width: 155px; height: 43px;"><div style="display: inline-block; height: 100%; vertical-align: middle;"></div><div style="display: inline-block; width: 100%; vertical-align: middle;"><span>vArmour Customer Stories</span></div></div></div><div id="url" style="display: none;"></div><div id="button" style="font-family: Times; font-weight: normal; font-style: normal; position: absolute; top: 186px; left: 249px; width: 36px; height: 36px; background-color: rgb(83, 84, 86);" data-type="button"><svg width="100%" height="100%" viewBox="0 0 26 42" style="position: absolute; top: 26%; left: 0px; width: 48%; height: 48%; margin: 0px 26%;"> <polyline fill="none" stroke="rgba(255,255,255,1)" stroke-width="5" stroke-miterlimit="10" points="6,3 24,21 6,39"></polyline></svg></div><div id="text2" style="font-family: Roboto, Arial, sans-serif; font-weight: lighter; font-style: normal; width: 156px; position: absolute; top: 218px; left: 75px; height: 12px; color: rgb(92, 92, 92); font-size: 10px;" data-type="description" dir="ltr"><div style="position: absolute; top: 0px; left: 0px; width: 156px; height: 12px;"><div style="display: inline-block; height: 100%; vertical-align: middle;"></div><div style="display: inline-block; width: 100%; vertical-align: middle;"><span>Equens Achieves Agile Security wi...</span></div></div></div><div id="adContent-border" style="border-color: rgb(229, 229, 229); border-radius: 0px; border-style: solid; border-width: 1px; position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; z-index: 500; box-sizing: border-box; pointer-events: none;"></div></div>
+            </div>
+
+          </div>
+
+          <div class="col-sm-6">
+
+            <div id="image-2">
+              <div id="adContent" data-variation="squareA" style="line-height: normal; background-color: rgb(255, 255, 255); overflow: hidden; position: relative; width: 300px; height: 250px; border-radius: 0px;"><div id="color-slot1" data-type="shape" style="position: absolute; top: 0px; left: 0px; width: 300px; height: 157px; background-color: rgb(33, 33, 33);"></div><div id="color-slot2" data-type="shape" style="position: absolute; top: 157px; left: 0px; width: 300px; height: 35px; background-color: rgb(83, 83, 83);"></div><div id="color-slot3" data-type="shape" style="position: absolute; top: 192px; left: 0px; width: 300px; height: 58px; background-color: rgb(255, 255, 255);"></div><div id="product" data-type="product" style="position: absolute; top: 0px; left: 0px; width: 300px; height: 157px;"><img src="https://tpc.googlesyndication.com/simgad/14020142471839339698" style="display: block; position: absolute; top: 0px; left: 0px; width: 300px; height: 157px;"></div><div id="text1" data-type="headline" dir="ltr" style="font-family: Roboto, Arial, sans-serif; font-weight: bold; font-style: normal; width: 252px; position: absolute; top: 157px; left: 15px; height: 35px; color: rgb(255, 255, 255); font-size: 21px;"><div style="position: absolute; top: 5px; left: 0px; width: 252px; height: 25px;"><div style="display: inline-block; height: 100%; vertical-align: middle;"></div><div style="display: inline-block; width: 100%; vertical-align: middle;"><span>vArmour Customer Stories</span></div></div></div><div id="text2" data-type="description" dir="ltr" style="font-family: Roboto, Arial, sans-serif; font-weight: lighter; font-style: normal; width: 189px; position: absolute; top: 195px; left: 15px; height: 33px; color: rgb(0, 0, 0); font-size: 12px;"><div style="position: absolute; top: 2px; left: 0px; width: 189px; height: 29px;"><div style="display: inline-block; height: 100%; vertical-align: middle;"></div><div style="display: inline-block; width: 100%; vertical-align: middle;"><span>Equens Achieves Agile Security with vArmour and Atos</span></div></div></div><div id="button" data-type="button" style="font-family: Times; font-weight: normal; font-style: normal; position: absolute; top: 202px; left: 246px; width: 39px; height: 39px; background-color: rgb(33, 33, 33);"><svg width="100%" height="100%" viewBox="0 0 26 42" style="position: absolute; top: 26%; left: 0px; width: 48%; height: 48%; margin: 0px 26%;"> <polyline fill="none" stroke="rgba(255,255,255,1)" stroke-width="5" stroke-miterlimit="10" points="6,3 24,21 6,39"></polyline></svg></div><div id="url" style="font-family: Roboto, Arial, sans-serif; font-weight: lighter; font-style: normal; width: 153px; position: absolute; top: 228px; left: 15px; height: 15px; color: rgb(0, 0, 0); font-size: 12px;" data-type="url" dir="ltr"><div style="position: absolute; top: 0px; left: 0px; width: 153px; height: 15px;"><div style="display: inline-block; height: 100%; vertical-align: middle;"></div><div style="display: inline-block; width: 100%; vertical-align: middle;"><span>varmour.customerstories.net</span></div></div></div><div id="adContent-border" style="border-color: rgb(229, 229, 229); border-radius: 0px; border-style: solid; border-width: 1px; position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; z-index: 500; box-sizing: border-box; pointer-events: none;"></div><a id="adContent-clickOverlay" href="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl=" target="_blank" style="background: rgba(0, 0, 0, 0); z-index: 1000; cursor: pointer; position: absolute; left: 0px; top: 0px; width: 100%; height: 100%;"></a></div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div id='text-ads-pane' class='ads-pane tab-pane fade'>
+
+        <div class="row">
+
+          <div class="col-sm-6 text-center">
+            <div id="text-1">
+
+              <div id="adunit" data-rh-set-type="0"><div id="ads"><ul><li id="taw0" class="taw taw0" lang="en"><a class="rhbackground" href="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl=" target="_blank" data-original-click-url="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl="><div class="rh" data-ifc="[[[&quot;5,5,5,5&quot;,null,0,2]]]"><table><tbody><tr><td class="rh0c"><div class="rh0"><table><tbody><tr><td class="rh00c"><div class="rh-box-title rh-title rh00 collapsed-box" data-ifc="[[[null,null,1,1]]]"><a class="rhtitle rhdefaultcolored" href="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl=" target="_blank" title="" data-original-click-url="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl="><span>vArmour Customer Stories</span></a></div></td></tr></tbody></table></div></td></tr><tr><td class="rh1c"><div class="rh1"><table><tbody><tr><td class="rh10c"><div class="rh-body rh-box-body rh10"><a class="rhbody" href="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl=" target="_blank" title="" data-original-click-url="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl="><span>Equens Achieves Agile Security with vArmour and Atos</span></a></div></td></tr></tbody></table></div></td></tr><tr><td class="rh2c"><div class="rh2"><div class="rh-box-button rh-nessie-button-flat rh20" data-ifc="[[[null,null,1,1]]]"><div class="rhbutton-container"><a class="rhbutton" href="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl=" target="_blank" title="" data-original-click-url="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl="><div class="icon-container"><svg class="rhsvgpngicon" preserveAspectRatio="xMinYMin meet" version="1.1" xmlns="https://www.w3.org/2000/svg" xmlns:xlink="https://www.w3.org/1999/xlink" x="0px" y="0px" height="24px" width="15px" viewBox="0 0 26 42" enable-background="new 0 0 26 42" xml:space="preserve"><polyline fill="none" stroke="white" stroke-width="5" stroke-miterlimit="10" points="2.875,2.958 21.166,20.957 2.917,38.916"></polyline></svg></div></a></div></div></div></td></tr><tr><td class="rh3c"><div class="rh3"><table><tbody><tr><td class="rh30c"><div class="rh-box-empty rh30"></div></td><td class="rh31c"><div class="rh-box-url rh-url rh31" data-ifc="[[[null,null,1,1]]]"><div class="rhurlctr rhdefaultcolored rhurlctr_nowrap rhurlctr_clickable" dir="ltr"><a class="rhurl rhdefaultcolored" title="vArmour Customer Stories" href="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl=" target="_blank" data-original-click-url="http://www.googleadservices.com/pagead/aclk?sa=L&amp;ai=C5w5Q5BfkV_L3FpCUpgOo0qKgD97avuJG_ZHMuaUDwI23ARABIIjJgx1gye7thsijoBmIAQGgAbOkitQDyAEJqAMByANAqgRhT9Cb8XlvI9rmDHvtDOztiYG03MpbRGP3EgsUDxPAwsIT1UNsJRaVe70al7Iq7y1yNtj4DB8p8TGjMD3MskAVls917cFmLJoAeIGyeU8mKMCoZA-0-aa3n56SZy8NtPB-YYgGAaAGLoAHtdv1K6gHgcYbqAemvhvYBwDSCAUIgAEQAQ&amp;num=1&amp;cid=CAASEuRoMfoJsHkc87HBzkJy9UE8xQ&amp;sig=AOD64_0VVhsN3gbJxkywA3rOj9rzgkuhCg&amp;client=ca-mongoogle&amp;preview&amp;adurl="><span>vArmour Customer Stories</span></a></div></div></td></tr></tbody></table></div></td></tr></tbody></table></div></a></li></ul></div><div class="ads_chrome_top"></div><div class="ads_chrome_bottom"></div><div class="ads_chrome_left"></div><div class="ads_chrome_right"></div></div>
+            </div>
+          </div>
+
+          <div class="col-sm-6">
+
+          </div>
+
+        </div>
+
+      </div>
 
     </div>
-
-    <div id='image-ads-panel' class='tab-pane fade'>
-      <h3>Image</h3>
-
-    </div>
-
-    <div id='text-ads-panel' class='tab-pane fade'>
-      <h3>Text</h3>
-
-    </div>
-
 
   </div>  <!-- portlet -->
-</div>  <!-- row -->
+<!-- </div> -->  <!-- row -->
 
 <% end %>
