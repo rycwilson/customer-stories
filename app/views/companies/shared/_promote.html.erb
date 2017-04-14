@@ -1,11 +1,4 @@
 
-<!-- google stylesheet for ad previews -->
-<% content_for :head do %>
-
-  <link rel="stylesheet" href="https://tpc.googlesyndication.com/pagead/gadgets/suggestion_autolayout_V2/static_image_logo_v3.css">
-
-<% end %>
-
 <div id='promote-panel'
      class="<%= workflow_tab == 'promote' ? 'active tab-pane fade in content' : 'tab-pane fade content' %>"role='tabpanel'>
   <div class="content clip">
@@ -20,15 +13,15 @@
 
           <ul class="nav nav-layout-sidebar nav-stacked">
             <li class='active'>
-              <a href="#campaign-management-container" data-toggle="tab">
+              <a href=".tab-pane.promote-settings" data-toggle="tab">
               <i class="fa fa-gear"></i>
-              &nbsp;&nbsp;Campaign Settings
+              &nbsp;&nbsp;Settings
               </a>
             </li>
             <li>
-              <a href="#ads-preview-container" data-toggle="tab">
-              <i class="fa fa-search"></i>
-              &nbsp;&nbsp;Ads Preview
+              <a href=".tab-pane.promote-sponsored" data-toggle="tab">
+              <i class="fa fa-pencil"></i>
+              &nbsp;&nbsp;Sponsored Stories
               </a>
             </li>
           </ul>
@@ -39,11 +32,11 @@
 
           <div id="settings-content" class="tab-content stacked-content">
 
-            <div class="tab-pane fade in active" id="campaign-management-container">
+            <div class="promote-settings tab-pane fade in active">
               <%= render 'adwords/campaign_management', { company: company } %>
             </div>
 
-            <div class="tab-pane fade" id="ads-preview-container">
+            <div class="promote-sponsored tab-pane fade">
               <%= render 'adwords/ads_preview', { company: company } %>
             </div>
           </div>

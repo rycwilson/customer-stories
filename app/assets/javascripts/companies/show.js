@@ -3,8 +3,8 @@ function companiesShow () {
 
   // if this page was arrived at through history navigation,
   // make sure there aren't any active dropdowns
-  $('dropdown.company-settings').removeClass('active')
-  $('dropdown.user-profile').removeClass('active')
+  $('dropdown.company-settings').removeClass('active');
+  $('dropdown.user-profile').removeClass('active');
 
 }
 
@@ -28,9 +28,9 @@ function companiesShowListeners () {
     function () {
       var $thisDropdown = $(this).closest('li.dropdown'),
           $otherDropdown = $thisDropdown.parent().find('li.dropdown:not(.open)');
-      $thisDropdown.addClass('active')
-      $otherDropdown.removeClass('active')
-    })
+      $thisDropdown.addClass('active');
+      $otherDropdown.removeClass('active');
+    });
 
 }
 
@@ -42,15 +42,20 @@ function promoteListeners () {
 
       // $.getScript("https://adwords-displayads.googleusercontent.com/da/b/preview.js?client=dab-external-preview&obfuscatedCustomerId=3224978778&adGroupId=0&creativeId=189302204873&showInfoMessages=true&hl=en_US&showMulPreview=true&showVariations=true&showVariations=true&sig=ACiVB_yOr05R_pFJ9YPeqQAsfAlKp6Qzgw")
 
-      $.ajax({
-        url: '/adwords/previews',
-        method: 'get',
-        data: {
-          story_title: $('#ads-preview-story-select').find('option:first-of-type').text()
-        },
-        dataType: 'script'
-      });
-    })
+      // $.ajax({
+      //   url: '/adwords/previews',
+      //   method: 'get',
+      //   data: {
+      //     story_title: $('#ads-preview-story-select').find('option:first-of-type').text()
+      //   },
+      //   dataType: 'script'
+      // });
+    });
+
+  $(document).on('click', 'a[href=".tab-pane.promote-settings"], a[href=".tab-pane.promote-sponsored"]',
+    function () {
+      $('[data-toggle="tooltip"]').tooltip('hide');
+    });
 }
 
 function measureCharts () {

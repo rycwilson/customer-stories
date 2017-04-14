@@ -10,7 +10,7 @@ class Story < ActiveRecord::Base
   has_many :contributors, through: :success
   has_many :visitor_actions, through: :success
   has_many :page_views, through: :success, class_name: 'PageView'
-  has_many :visitors, -> { distinct }, through: :page_views
+  has_many :visitors, -> { select('visitors.*, visitor_actions.timestamp, visitor_sessions.clicky_session_id').distinct }, through: :page_views
   has_many :category_tags, through: :success, source: :story_categories
   has_many :product_tags, through: :success, source: :products
   has_many :ctas, through: :success, source: :ctas do

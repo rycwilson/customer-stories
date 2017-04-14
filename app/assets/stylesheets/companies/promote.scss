@@ -7,6 +7,21 @@
     }
     > .col-md-9 {
       width: 80%;
+      padding-top: 55px;
+    }
+  }
+
+
+  .promote-settings {
+    label {
+      margin-right: 30px;
+    }
+    label.checkbox-inline {
+      margin-right: 15px;
+      margin-bottom: 4px;
+    }
+    .tooltip {
+      z-index:10000000
     }
   }
 
@@ -21,6 +36,7 @@
     }
     label:nth-of-type(2) {
       margin: 0 15px;
+
       border-radius: 4px;
     }
     label:nth-of-type(3) {
