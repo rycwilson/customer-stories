@@ -24,9 +24,12 @@ class Company < ActiveRecord::Base
   has_many :successes, through: :customers
   has_many :stories, through: :successes do
     def select_options
-      self.select { |story| story.published }
+      self.select { |story| story.published? }
           .map { |story| [ story.title, story.id ] }
           .unshift( ['All', 0] )
+    end
+    def published
+      self.select { |story| story.published? }
     end
   end
   has_many :visitor_actions

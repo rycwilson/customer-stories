@@ -14,6 +14,10 @@ function initDataTables () {
     paging: false
   });
 
+  $('#promote-table').DataTable({
+    paging: false
+  });
+
   // Don't specify first column as type: 'date'
   // with moment.js install, doing so will only screw it up
   $('#story_views-table:not(.short)').DataTable({
@@ -52,7 +56,6 @@ function initDataTables () {
       { type: 'datetime-moment' }, null, null, null
     ]
   });
-
 
 
 }

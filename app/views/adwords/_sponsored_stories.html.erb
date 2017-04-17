@@ -1,1 +1,44 @@
-<h4>Sponsored stories</h4>
+
+
+<table id='sponsored-stories-table'
+       class="datatable table table-striped table-bordered">
+  <thead>
+    <tr>
+      <th>Customer</th>
+      <th>Story Title</th>
+      <th>Sponsored Story Title</th>
+      <th>Status</th>
+      <th>Preview</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <% company.stories.published.each do |story| %>
+
+      <tr>
+        <td><%= story.customer.name %></td>
+        <td><%= story.title %></td>
+        <td><%= story.title %></td>
+        <td class='dropdown status-dropdown'>
+          <a href="javascript:;" class="dropdown-toggle" data-toggle='dropdown'>
+            <% if true %>
+              <i class='fa fa-play'></i>&nbsp;
+            <% else %>
+              <i class='fa fa-pause'></i>
+            <% end %>
+            <i class='fa fa-caret-down'></i>
+          </a>
+          <ul class='dropdown-menu'>
+            <li><a href="javascript:;">Enable</a></li>
+            <li><a href="javascript:;">Pause</a></li>
+          </ul>
+        </td>
+        <td class='preview-window'>
+          <i class='glyphicon glyphicon-new-window bip-clickable'></i>
+        </td>
+      </tr>
+
+    <% end %>
+
+  </tbody>
+</table>

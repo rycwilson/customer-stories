@@ -12,8 +12,27 @@
     }
   }
 
+  .sponsored-stories {
+    .status-dropdown, .preview-window {
+      text-align: center;
+      vertical-align: middle;
+    }
+    .status-dropdown {
+      i:first-of-type {
+        font-size: 18px;
+      }
+      i:last-of-type {
+        font-size: 14px
+      }
+      > a:hover, a:focus {
+        text-decoration: none;
+      }
+    }
 
-  .promote-settings {
+  }
+
+
+  .settings {
     padding-left: 30px;
     label {
       margin-right: 30px;
@@ -21,9 +40,6 @@
     label.checkbox-inline {
       margin-right: 15px;
       margin-bottom: 4px;
-    }
-    .tooltip {
-      z-index:10000000
     }
   }
 
