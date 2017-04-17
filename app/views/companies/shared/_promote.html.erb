@@ -13,15 +13,15 @@
 
           <ul class="nav nav-layout-sidebar nav-stacked">
             <li class='active'>
-              <a href=".tab-pane.promote-settings" data-toggle="tab">
-              <i class="fa fa-gear"></i>
-              &nbsp;&nbsp;Settings
+              <a href=".tab-pane.sponsored-stories" data-toggle="tab">
+              <i class="fa fa-bullhorn"></i>
+              &nbsp;&nbsp;Sponsored Stories
               </a>
             </li>
             <li>
-              <a href=".tab-pane.promote-sponsored" data-toggle="tab">
-              <i class="fa fa-pencil"></i>
-              &nbsp;&nbsp;Sponsored Stories
+              <a href=".tab-pane.settings" data-toggle="tab">
+              <i class="fa fa-gear"></i>
+              &nbsp;&nbsp;Settings
               </a>
             </li>
           </ul>
@@ -30,14 +30,14 @@
 
         <div class="col-md-9 col-sm-8 layout-main">
 
-          <div id="settings-content" class="tab-content stacked-content">
+          <div class="tab-content stacked-content">
 
-            <div class="promote-settings tab-pane fade in active">
-              <%= render 'adwords/campaign_management', { company: company } %>
+            <div class="sponsored-stories tab-pane fade in active">
+              <%= render 'adwords/sponsored_stories', { company: company } %>
             </div>
 
-            <div class="promote-sponsored tab-pane fade">
-              <%= render 'adwords/ads_preview', { company: company } %>
+            <div class="settings tab-pane fade">
+              <%= render 'adwords/settings', { company: company } %>
             </div>
           </div>
 
