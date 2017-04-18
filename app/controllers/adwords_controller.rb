@@ -4,6 +4,11 @@ class AdwordsController < ApplicationController
   before_action { @company = Company.find_by(subdomain: request.subdomain) }
 
   def previews
+    render :previews, layout: false
+  end
+
+
+  def data
     # @type = params[:type]
     varmour_marketing_img_url = "https://tpc.googlesyndication.com/simgad/14020142471839339698"
     story = Story.find_by(title: params[:story_title])

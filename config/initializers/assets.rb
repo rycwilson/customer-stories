@@ -12,6 +12,8 @@ Rails.application.config.assets.version = '1.0'
 
 Rails.application.config.assets.precompile += %w(
   stories/more_stories_rel.css
+  companies/ads_preview.css
+  companies/ads_preview.js
   cs-widget-tab.css
   cs-widget-rel.css
   pdf.css

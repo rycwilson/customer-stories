@@ -14,7 +14,7 @@ function initDataTables () {
     paging: false
   });
 
-  $('#promote-table').DataTable({
+  $('#sponsored-stories-table').DataTable({
     paging: false
   });
 
