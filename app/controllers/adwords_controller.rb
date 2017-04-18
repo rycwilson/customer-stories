@@ -4,9 +4,9 @@ class AdwordsController < ApplicationController
   before_action { @company = Company.find_by(subdomain: request.subdomain) }
 
   def preview
-    story = Story.find( params[:id] )
+    story = Story.find(params[:id])
     @short_headline = "#{@company.name} Customer Stories"
-    @long_headline = story.title
+    @long_headline = story.adwords_config.long_headline
     # @sponsored_story_image = @company.adwords_image_url
     # @logo = @company.adwords_logo_url
     render :ads_preview, layout: false

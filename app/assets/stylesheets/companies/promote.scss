@@ -44,7 +44,7 @@
         padding: 2em;
         margin: -2em;
       }
-      > a:hover, a:focus {
+      > a:hover {   // :focus below (doesn't apply to .preview-window)
         color: #222;
         text-decoration: none;
         cursor: pointer;
@@ -52,7 +52,9 @@
 
     }
     .status-dropdown {
-      a.dropdown-toggle:hover, a.dropdown-toggle:focus {
+      a.dropdown-toggle:focus {
+        color: #222;
+        text-decoration: none
       }
       i:first-of-type {
         font-size: 18px;

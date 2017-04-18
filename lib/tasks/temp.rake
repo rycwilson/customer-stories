@@ -4,7 +4,7 @@ namespace :temp do
 
   task adwords: :environment do
     Story.where(published: true).each do |story|
-      story.create_adwords_config
+      story.create_adwords_config(long_headline: story.title)
     end
   end
 

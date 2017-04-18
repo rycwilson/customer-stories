@@ -163,7 +163,6 @@ class StoriesController < ApplicationController
   end
 
   def adwords_config
-    binding.remote_pry
     @story.adwords_config.update(
       enable: params[:adwords_config][:enable] || false,
       long_headline: params[:adwords_config][:long_headline]

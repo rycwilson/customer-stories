@@ -94,7 +94,7 @@ class Story < ActiveRecord::Base
   }
 
   after_commit on: [:update] do
-    self.create_adwords_config
+    self.create_adwords_config(long_headline: self.title)
   end if Proc.new { |story|
            ( story.previous_changes.keys & ['published'] ).any? &&
            story.published? &&
