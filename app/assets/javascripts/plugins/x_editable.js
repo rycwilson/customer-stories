@@ -21,7 +21,8 @@ function initXeditable () {
         dataType: 'json'
       },
       success: function (response, newValue) {
-
+        console.log(response);
+        console.log(newValue);
       },
       rows: 3,
       // showbuttons: false

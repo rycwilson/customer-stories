@@ -3,7 +3,7 @@ class StoriesController < ApplicationController
   include StoriesHelper
 
   before_action :set_company
-  before_action :set_story, only: [:edit, :ctas, :tags, :approval, :destroy]
+  before_action :set_story, only: [:edit, :ctas, :tags, :adwords_config, :approval, :destroy]
   before_action only: [:index, :show] { @is_curator = @company.curator?(current_user) }
   before_action only: [:edit] { user_authorized?(@story, current_user) }
   before_action only: [:index, :show, :edit] { set_gon(@company) }
@@ -163,7 +163,12 @@ class StoriesController < ApplicationController
   end
 
   def adwords_config
-
+    binding.remote_pry
+    @story.adwords_config.update(
+      enable: params[:adwords_config][:enable] || false,
+      long_headline: params[:adwords_config][:long_headline]
+    )
+    respond_to { |format| format.json { render(json: @story.adwords_config) } }
   end
 
   def destroy
