@@ -4,7 +4,7 @@ $(function () {
   $('.grid').masonry({
                itemSelector: '.grid-item',
                columnWidth: 160,
-               gutter: 50,
+               gutter: 30,
                // isFitWidth: true,
                // disable initial layout ...
                isInitLayout: false
