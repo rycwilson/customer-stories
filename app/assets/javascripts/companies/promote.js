@@ -2,7 +2,8 @@
 function promoteListeners () {
 
   $(document)
-
+    //
+    // get adwords campaign / ad group / ad data when navigating to Promote
     .on('click', 'a[href="#promote-panel"]',
       function () {
 
@@ -24,6 +25,7 @@ function promoteListeners () {
         $('[data-toggle="tooltip"]').tooltip('hide');
       })
 
+    // ad previews - separate window
     .on('click', '.preview-window a',
       function () {
         var storyId = $(this).closest('tr').data('story-id');

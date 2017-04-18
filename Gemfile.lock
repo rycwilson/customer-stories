@@ -354,6 +354,8 @@ GEM
       chronic (>= 0.6.3)
     wicked_pdf (1.1.0)
     wkhtmltopdf-binary (0.12.3)
+    x-editable-rails (1.5.5)
+      railties
     yard (0.9.5)
 
 PLATFORMS
@@ -403,6 +405,7 @@ DEPENDENCIES
   whenever
   wicked_pdf
   wkhtmltopdf-binary
+  x-editable-rails
 
 RUBY VERSION
    ruby 2.3.0p0

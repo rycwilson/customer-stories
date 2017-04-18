@@ -15,7 +15,7 @@ function initDataTables () {
   });
 
   $('#sponsored-stories-table').DataTable({
-    paging: false
+    paging: false,
   });
 
   // Don't specify first column as type: 'date'
