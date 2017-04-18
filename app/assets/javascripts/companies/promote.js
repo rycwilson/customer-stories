@@ -24,7 +24,7 @@ function promoteListeners () {
         $('[data-toggle="tooltip"]').tooltip('hide');
       })
 
-    .on('click', '.preview-window i',
+    .on('click', '.preview-window a',
       function () {
         var storyId = $(this).closest('tr').data('story-id');
         window.open('/stories/' + storyId +

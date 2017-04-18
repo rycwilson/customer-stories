@@ -16,20 +16,38 @@
     .status-dropdown, .preview-window {
       text-align: center;
       vertical-align: middle;
+      // ref: http://stackoverflow.com/questions/11078509/how-to-increase-the-clickable-area-of-a-a-tag-button
+      > a {
+        color: #666;
+        display: inline-block;
+        position: relative;
+        z-index: 1;
+        padding: 2em;
+        margin: -2em;
+      }
+      > a:hover, a:focus {
+        color: #222;
+        text-decoration: none;
+        cursor: pointer;
+      }
+
     }
     .status-dropdown {
+      a.dropdown-toggle:hover, a.dropdown-toggle:focus {
+      }
       i:first-of-type {
         font-size: 18px;
       }
       i:last-of-type {
         font-size: 14px
       }
-      > a:hover, a:focus {
-        text-decoration: none;
-      }
       .dropdown-menu {
         margin-top: -10px;
       }
+    }
+    .preview-window {
+      font-size: 18px;
+      i { padding-top: 2px; }
     }
 
   }
