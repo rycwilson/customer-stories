@@ -20,7 +20,7 @@ function promoteListeners () {
       })
 
     // manually hide the tooltip when navigating away (since it has container: body)
-    .on('click', 'a[href=".tab-pane.settings"], a[href=".tab-pane.sponsored-stories"]',
+    .on('mouseout', '.settings.tab-pane',
       function () {
         $('[data-toggle="tooltip"]').tooltip('hide');
       })
