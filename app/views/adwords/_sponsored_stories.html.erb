@@ -15,7 +15,7 @@
 
     <% company.stories.published.each do |story| %>
 
-      <tr>
+      <tr data-story-id="<%= story.id %>">
         <td><%= story.customer.name %></td>
         <td><%= story.title %></td>
         <td><%= story.title %></td>

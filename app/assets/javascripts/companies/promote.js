@@ -26,6 +26,8 @@ function promoteListeners () {
 
     .on('click', '.preview-window i',
       function () {
-        window.open('http://varmour.lvh.me:3000/sponsored_stories_preview', '_blank');
+        var storyId = $(this).closest('tr').data('story-id');
+        window.open('/stories/' + storyId +
+                    '/sponsored_story_preview', '_blank');
       });
 }

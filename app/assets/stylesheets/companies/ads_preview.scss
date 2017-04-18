@@ -6,7 +6,7 @@ body {
 
 .grid-item {
   // width: 320px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
 }
 
 .image-ad #button {
@@ -52,6 +52,10 @@ body {
   position: relative;
   background: #fff;
   div,ul,li{margin:0;padding:0;}.abgc{display:block;height:15px;position:absolute;right:0px;top:0px;text-rendering:geometricPrecision;width:15px;z-index:9020;}.abgb{display:block;height:15px;width:15px;}.abgc img{display:block;}.abgc svg{display:block;}.abgs{display:none;height:100%;}.abgl{text-decoration:none;}.abgi{fill-opacity:1.0;fill:#00aecd;stroke:none;}.abgbg{fill-opacity:1.0;fill:#cdcccc;stroke:none;}.abgtxt{fill:black;font-family:'Arial';font-size:100px;overflow:visible;stroke:none;}
+  // changes
+  #text1 {
+    font-size: 19px !important;
+  }
 }
 
 #image-5 {
@@ -75,7 +79,8 @@ body {
   // .rh3 {
   //   padding: 0;
   // }
-  .rh000, .rh-body {
+  .rh000 {
+    font-size: 30px;
     // width: 100%;
   }
 }
