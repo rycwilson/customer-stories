@@ -19,6 +19,7 @@ class Story < ActiveRecord::Base
       self.where(type: 'CTAForm')
     end
   end
+  has_one :adwords_config
 
   # Note: no explicit association to friendly_id_slugs, but it's there
   # Story has many friendly_id_slugs -> captures history of slug changes
@@ -91,6 +92,14 @@ class Story < ActiveRecord::Base
     .where(customers: { company_id: company_id },
            products: { id: product_id })
   }
+
+  after_commit on: [:update] do
+    self.create_adwords_config
+  end if Proc.new { |story|
+           ( story.previous_changes.keys & ['published'] ).any? &&
+           story.published? &&
+           story.adwords_config.nil?
+         }
 
   after_commit on: [:create, :destroy] do
     expire_all_stories_cache(false)

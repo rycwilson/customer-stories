@@ -51,6 +51,7 @@ Rails.application.routes.draw do
         resources :results, only: [:create, :update, :destroy]
         member { put :ctas }
         member { put :tags }
+        member { put :adwords_config }
         member do
           get '/sponsored_story_preview', to: 'adwords#preview'
         end

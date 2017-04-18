@@ -110,7 +110,6 @@ class StoriesController < ApplicationController
   end
 
   def update
-    binding.remote_pry
     story = Story.find params[:id]
     if params[:customer_logo_url]
       story.success.customer.update logo_url: params[:customer_logo_url]
@@ -161,6 +160,10 @@ class StoriesController < ApplicationController
   def tags
     @story.update_tags( params[:category_tags] || [], params[:product_tags] || [] )
     respond_to { |format| format.js }
+  end
+
+  def adwords_config
+
   end
 
   def destroy

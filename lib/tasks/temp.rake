@@ -2,6 +2,12 @@ namespace :temp do
 
   desc "temp stuff"
 
+  task adwords: :environment do
+    Story.where(published: true).each do |story|
+      story.create_adwords_config
+    end
+  end
+
   task quotes: :environment do
     Story.friendly.find('varmour-protects-community-s-information-at-john-muir-health')
          .update(quote_attr_name:'Jon Russell',

@@ -5,12 +5,11 @@ function initXeditable () {
   $('td.sponsored-story-title a').each(function () {
     $(this).editable({
       type: 'textarea',
-      model: 'story',
-      name: 'sponsored_story_title',
-      url: '/stories/' + $(this).data('pk'),
+      model: 'adwords_config',
+      name: 'long_headline',
+      url: '/stories/' + $(this).data('pk') + '/adwords_config',
       pk: $(this).data('pk'),
       title: 'Sponsored story title',
-      // inputclass: 'sponsored-story-title-editable',
       mode: 'inline',
       validate: function (title) {
         if (title.length > 80) {

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170410212151) do
+ActiveRecord::Schema.define(version: 20170418205110) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,6 +35,16 @@ ActiveRecord::Schema.define(version: 20170410212151) do
   end
 
   add_index "admins", ["email"], name: "index_admins_on_email", unique: true, using: :btree
+
+  create_table "adwords_configs", force: :cascade do |t|
+    t.boolean  "enable",        default: false
+    t.string   "long_headline"
+    t.integer  "story_id"
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
+  add_index "adwords_configs", ["story_id"], name: "index_adwords_configs_on_story_id", using: :btree
 
   create_table "call_to_actions", force: :cascade do |t|
     t.string   "type"
@@ -420,6 +430,7 @@ ActiveRecord::Schema.define(version: 20170410212151) do
 
   add_index "widgets", ["company_id"], name: "index_widgets_on_company_id", using: :btree
 
+  add_foreign_key "adwords_configs", "stories"
   add_foreign_key "call_to_actions", "companies"
   add_foreign_key "contributions", "successes"
   add_foreign_key "contributions", "users"
