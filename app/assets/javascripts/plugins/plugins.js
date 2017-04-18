@@ -8,6 +8,7 @@
 //= require plugins/datatables
 //= require plugins/daterangepicker
 //= require plugins/google_charts
+//= require plugins/x_editable
 
 function constructPlugins () {
 
@@ -19,6 +20,7 @@ function constructPlugins () {
   initSummernote();
   initTooltips();
   initClicky();
+  initXeditable();
 
   $('.best_in_place').best_in_place();
   $('.bs-switch').bootstrapSwitch({ size: 'small' });

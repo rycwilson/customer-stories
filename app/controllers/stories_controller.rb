@@ -110,6 +110,7 @@ class StoriesController < ApplicationController
   end
 
   def update
+    binding.remote_pry
     story = Story.find params[:id]
     if params[:customer_logo_url]
       story.success.customer.update logo_url: params[:customer_logo_url]
