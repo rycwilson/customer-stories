@@ -12,8 +12,8 @@ function initXeditable () {
       title: 'Sponsored story title',
       mode: 'inline',
       validate: function (title) {
-        if (title.length > 80) {
-          return "Max 80 characters";
+        if (title.length > 90) {
+          return "Max 90 characters";
         }
       },
       ajaxOptions: {

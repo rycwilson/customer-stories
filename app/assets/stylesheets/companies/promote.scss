@@ -85,6 +85,21 @@
       margin-right: 15px;
       margin-bottom: 4px;
     }
+    .fileinput {
+      position: relative;
+      .thumbnail {
+        height: 300px;
+        width: 300px;
+      }
+      .photo-btns {
+        > div:first-child {
+          margin-bottom: 8px;
+        }
+        position: absolute;
+        top: 0;
+        left: 225px;
+      }
+    }
   }
 
   // border-radius settings override bootstrap
