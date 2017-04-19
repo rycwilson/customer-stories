@@ -18,6 +18,9 @@
 
     // ref: https://github.com/vitalets/x-editable/issues/361
     td.sponsored-story-title {
+      a {
+        cursor: pointer;
+      }
       .editable-container.editable-inline,
       .editable-container.editable-inline .control-group.form-group,
       .editable-container.editable-inline .control-group.form-group .editable-input,
