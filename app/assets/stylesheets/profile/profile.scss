@@ -5,6 +5,17 @@
     margin-bottom: 40px;
   }
 
+  .layout-sidebar {
+    @media only screen and (min-width: 992px) {
+      width: 22%
+    }
+  }
+  .layout-main {
+    @media only screen and (min-width: 992px) {
+      width: 78%
+    }
+  }
+
   #profile-tab {
     .switch-user { margin-bottom: 15px; }
     form > .row:first-of-type {

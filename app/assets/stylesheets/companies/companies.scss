@@ -13,8 +13,16 @@
 
 .companies {
 
-  .nav-layout-sidebar {
+  .layout-sidebar {
+    @media only screen and (min-width: 992px) {
+      width: 22%
+    }
     .disabled-tab { color: #ccc; }
+  }
+  .layout-main {
+    @media only screen and (min-width: 992px) {
+      width: 78%
+    }
   }
 
   .companies.new, .companies.edit {
