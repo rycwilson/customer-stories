@@ -59,6 +59,23 @@ class CompaniesController < ApplicationController
     end
   end
 
+  def adwords_config
+    if @company.update company_params
+      @flash_mesg = "Sponsored Stories updated"
+      @flash_status = "success"
+    else
+      @flash_mesg = @company.errors.full_messages.join(', ')
+      @flash_status = "danger"
+    end
+    respond_to do |format|
+      format.html do
+        cookies[:csp_workflow_tab] = 'promote'
+        redirect_to(company_path(@company), flash: { success: "Sponsored Stories updated" })
+      end
+      format.js {}
+    end
+  end
+
   def tags
     @company.update_tags( params[:category_tags] || [], params[:product_tags] || [] )
     respond_to { |format| format.js }
@@ -74,7 +91,8 @@ class CompaniesController < ApplicationController
   def company_params
     params.require(:company)
           .permit(:name, :subdomain, :logo_url, :header_color_1,
-                  :header_color_2, :header_text_color, :website, :gtm_id)
+                  :header_color_2, :header_text_color, :website, :gtm_id,
+                  :adwords_short_headline, :adwords_logo_url, :adwords_image_url)
   end
 
   def widget_params

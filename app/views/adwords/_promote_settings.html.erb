@@ -1,0 +1,125 @@
+
+<div class="row enable-promote-type form-group">
+  <div class="col-sm-12">
+
+    <%= render 'adwords/enable_promote_type', { company: company } %>
+
+  </div>
+</div>
+
+<%= form_for company, url: adwords_config_company_path(company),
+      method: 'put', remote: 'true', authenticity_token: true,
+      html: {
+        class: 'directUpload',
+        data: { 'form-data' => (@s3_direct_post.fields),
+                'url' => @s3_direct_post.url,
+                'host' => URI.parse(@s3_direct_post.url).host
+      } } do |f| %>
+
+  <%= hidden_field_tag :adwords, true %>
+
+  <div class="form-inline">
+    <div class="form-group">
+
+        <%= f.label :adwords_short_headline, "Headline", class: 'control-label' %>
+        <%= f.text_field :adwords_short_headline, class: 'form-control', style: 'width:300px' %>
+
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class="col-sm-4 form-group">
+
+      <div>
+        <%= f.label :adwords_logo_url, 'Sponsored Stories Logo' %>
+      </div>
+
+      <div class="fileinput logo <%= company.adwords_logo_url.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">
+
+        <div class="fileinput-new thumbnail">
+          <%= image_tag ADWORDS_LOGO_PLACEHOLDER_URL, alt: 'logo image' %>
+        </div>
+
+        <div class="fileinput-preview fileinput-exists thumbnail"
+            data-trigger="fileinput">
+          <%= image_tag company.adwords_logo_url, alt: 'logo image' %>
+        </div>
+
+        <div class="photo-btns">
+          <div class="btn btn-default btn-file">
+            <div class="fileinput-new">
+              Select image
+            </div>
+            <div class="fileinput-exists">
+              Change
+            </div>
+            <%= f.file_field :adwords_logo_url %>
+            <!-- below doesn't work, must use form builder -->
+            <!-- <input type="file" name="user[photo_url]" class='form-control' id='user_photo_url'> -->
+          </div>
+          <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">
+            Remove
+          </a>
+        </div>
+
+      </div>  <!-- /.fileupload -->
+
+    </div>
+
+    <div class="col-sm-4 form-group">
+
+      <div>
+        <%= f.label :adwords_image_url, 'Sponsored Stories Image' %>
+      </div>
+
+      <div class="fileinput image <%= company.adwords_image_url.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">
+
+        <div class="fileinput-new thumbnail">
+          <%= image_tag ADWORDS_IMAGE_PLACEHOLDER_URL, alt: 'logo' %>
+        </div>
+
+        <div class="fileinput-preview fileinput-exists thumbnail"
+            data-trigger="fileinput">
+          <%= image_tag company.adwords_image_url, alt: 'marketing image' %>
+        </div>
+
+        <div class="photo-btns">
+          <div class="btn btn-default btn-file">
+            <div class="fileinput-new">
+              Select image
+            </div>
+            <div class="fileinput-exists">
+              Change
+            </div>
+            <%= f.file_field :adwords_image_url %>
+            <!-- below doesn't work, must use form builder -->
+            <!-- <input type="file" name="user[photo_url]" class='form-control' id='user_photo_url'> -->
+          </div>
+          <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">
+            Remove
+          </a>
+        </div>
+
+      </div>  <!-- /.fileupload -->
+
+    </div>
+    <div class="col-sm-4"></div>
+  </div>
+
+  <hr>
+
+  <div class="row">
+    <div class="col-sm-12 text-right">
+      <button type="submit" class="btn btn-primary">
+        Save Changes
+      </button>&nbsp;
+      <button type="reset" class="btn btn-default">
+        Cancel
+      </button>
+    </div>
+  </div>
+
+
+<% end %>
+

@@ -46,6 +46,7 @@ Rails.application.routes.draw do
         resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
         member { put :tags }
         member { put :widget }
+        member { put :adwords_config }
       end
       resources :stories, only: [:edit, :update, :destroy] do
         resources :results, only: [:create, :update, :destroy]

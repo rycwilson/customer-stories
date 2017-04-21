@@ -1,48 +1,59 @@
 
+<div class="row enable-promote-type">
+  <div class="col-sm-12">
 
-<table id='sponsored-stories-table'
-       class="datatable table table-striped table-bordered">
-  <thead>
-    <tr>
-      <th>Customer</th>
-      <th>Story Title</th>
-      <th>Sponsored Story Title</th>
-      <th>Status</th>
-      <th>Preview</th>
-    </tr>
-  </thead>
-  <tbody>
+    <%= render 'adwords/enable_promote_type', { company: company } %>
 
-    <% company.stories.published.each do |story| %>
+  </div>
+</div>
 
-      <tr data-story-id="<%= story.id %>">
-        <td><%= story.customer.name %></td>
-        <td><%= story.title %></td>
-        <td class='sponsored-story-title'>
-          <a data-pk="<%= story.id %>"><%= story.title %></a>
-        </td>
-        <td class='dropdown status-dropdown'>
-          <a href="javascript:;" class="dropdown-toggle" data-toggle='dropdown'>
-            <% if true %>
-              <i class='fa fa-play'></i>&nbsp;
-            <% else %>
-              <i class='fa fa-pause'></i>
-            <% end %>
-            <i class='fa fa-caret-down'></i>
-          </a>
-          <ul class='dropdown-menu'>
-            <li><a href="javascript:;">Enable</a></li>
-            <li><a href="javascript:;">Pause</a></li>
-          </ul>
-        </td>
-        <td class='preview-window'>
-          <a href="javascript:;">
-            <i class='glyphicon glyphicon-new-window'></i>
-          </a>
-        </td>
+<div class="sponsored-stories">
+
+  <table id='sponsored-stories-table'
+         class="datatable table table-striped table-bordered">
+    <thead>
+      <tr>
+        <th>Customer</th>
+        <th>Story Title</th>
+        <th>Sponsored Story Title</th>
+        <th>Status</th>
+        <th>Preview</th>
       </tr>
+    </thead>
+    <tbody>
 
-    <% end %>
+      <% company.stories.published.each do |story| %>
 
-  </tbody>
-</table>
+        <tr data-story-id="<%= story.id %>">
+          <td><%= story.customer.name %></td>
+          <td><%= story.title %></td>
+          <td class='sponsored-story-title'>
+            <a data-pk="<%= story.id %>"><%= story.title %></a>
+          </td>
+          <td class='dropdown status-dropdown'>
+            <a href="javascript:;" class="dropdown-toggle" data-toggle='dropdown'>
+              <% if true %>
+                <i class='fa fa-play'></i>&nbsp;
+              <% else %>
+                <i class='fa fa-pause'></i>
+              <% end %>
+              <i class='fa fa-caret-down'></i>
+            </a>
+            <ul class='dropdown-menu'>
+              <li><a href="javascript:;">Enable</a></li>
+              <li><a href="javascript:;">Pause</a></li>
+            </ul>
+          </td>
+          <td class='preview-window'>
+            <a href="javascript:;">
+              <i class='glyphicon glyphicon-new-window'></i>
+            </a>
+          </td>
+        </tr>
+
+      <% end %>
+
+    </tbody>
+  </table>
+
+</div>

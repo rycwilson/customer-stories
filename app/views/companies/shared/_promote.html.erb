@@ -1,6 +1,7 @@
 
 <div id='promote-panel'
-     class="<%= workflow_tab == 'promote' ? 'active tab-pane fade in content' : 'tab-pane fade content' %>"role='tabpanel'>
+     class="<%= workflow_tab == 'promote' ? 'active tab-pane fade in content' : 'tab-pane fade content' %>"
+     role='tabpanel'>
   <div class="content clip">
     <div class='container'>
 
@@ -13,13 +14,13 @@
 
           <ul class="nav nav-layout-sidebar nav-stacked">
             <li class='active'>
-              <a href=".tab-pane.sponsored-stories" data-toggle="tab">
+              <a href="#sponsored-stories-tab-pane" data-toggle="tab">
               <i class="fa fa-bullhorn"></i>
               &nbsp;&nbsp;Sponsored Stories
               </a>
             </li>
             <li>
-              <a href=".tab-pane.settings" data-toggle="tab">
+              <a href="#promote-settings-tab-pane" data-toggle="tab">
               <i class="fa fa-gear"></i>
               &nbsp;&nbsp;Settings
               </a>
@@ -32,12 +33,12 @@
 
           <div class="tab-content stacked-content">
 
-            <div class="sponsored-stories tab-pane fade in active">
+            <div id='sponsored-stories-tab-pane' class="tab-pane fade in active">
               <%= render 'adwords/sponsored_stories', { company: company } %>
             </div>
 
-            <div class="settings tab-pane fade">
-              <%= render 'adwords/settings', { company: company } %>
+            <div id='promote-settings-tab-pane' class="tab-pane fade">
+              <%= render 'adwords/promote_settings', { company: company } %>
             </div>
           </div>
 
