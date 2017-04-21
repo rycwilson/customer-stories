@@ -13,16 +13,16 @@
           </div>
 
           <ul class="nav nav-layout-sidebar nav-stacked">
-            <li class='active'>
+            <li class="<%= workflow_sub_tab.nil? ? 'active' : '' %>">
               <a href="#sponsored-stories-tab-pane" data-toggle="tab">
-              <i class="fa fa-bullhorn"></i>
-              &nbsp;&nbsp;Sponsored Stories
+                <i class="fa fa-bullhorn"></i>
+                &nbsp;&nbsp;Sponsored Stories
               </a>
             </li>
-            <li>
+            <li class="<%= workflow_sub_tab == 'promote-settings' ? 'active' : '' %>">
               <a href="#promote-settings-tab-pane" data-toggle="tab">
-              <i class="fa fa-gear"></i>
-              &nbsp;&nbsp;Settings
+                <i class="fa fa-gear"></i>
+                &nbsp;&nbsp;Settings
               </a>
             </li>
           </ul>
@@ -33,11 +33,13 @@
 
           <div class="tab-content stacked-content">
 
-            <div id='sponsored-stories-tab-pane' class="tab-pane fade in active">
+            <div id='sponsored-stories-tab-pane'
+                 class="tab-pane fade <%= workflow_sub_tab.nil? ? 'in active' : '' %>">
               <%= render 'adwords/sponsored_stories', { company: company } %>
             </div>
 
-            <div id='promote-settings-tab-pane' class="tab-pane fade">
+            <div id='promote-settings-tab-pane'
+                 class="tab-pane fade <%= workflow_sub_tab == 'promote-settings' ? 'in active' : '' %>">
               <%= render 'adwords/promote_settings', { company: company } %>
             </div>
           </div>

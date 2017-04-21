@@ -18,10 +18,11 @@
                { company: @company, workflow_tab: @workflow_tab } %>
 
     <%= render 'companies/shared/promote',
-               { workflow_tab: @workflow_tab, company: @company } %>
+               { company: @company, workflow_tab: @workflow_tab,
+                 workflow_sub_tab: @workflow_sub_tab } %>
 
     <%= render 'companies/shared/measure',
-                { workflow_tab: @workflow_tab, company: @company,
+                { company: @company, workflow_tab: @workflow_tab,
                   recent_activity: @recent_activity,
                   story_views_30_day_count: @story_views_30_day_count } %>
 

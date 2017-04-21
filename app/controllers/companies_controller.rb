@@ -11,8 +11,10 @@ class CompaniesController < ApplicationController
   end
 
   def show
-    @workflow_tab = cookies[:csp_workflow_tab] || 'curate'
-    cookies.delete(:csp_workflow_tab) if cookies[:csp_workflow_tab]
+    @workflow_tab = cookies[:workflow_tab] || 'curate'
+    @workflow_sub_tab = cookies[:workflow_sub_tab]
+    cookies.delete(:workflow_tab) if cookies[:workflow_tab]
+    cookies.delete(:workflow_sub_tab) if cookies[:workflow_sub_tab]
     @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
     @story_views_30_day_count = PageView.joins(:visitor_session)
                                  .company_story_views_since(@company.id, 30).count
@@ -69,7 +71,8 @@ class CompaniesController < ApplicationController
     end
     respond_to do |format|
       format.html do
-        cookies[:csp_workflow_tab] = 'promote'
+        cookies[:workflow_tab] = 'promote'
+        cookies[:workflow_sub_tab] = 'promote-settings'
         redirect_to(company_path(@company), flash: { success: "Sponsored Stories updated" })
       end
       format.js {}

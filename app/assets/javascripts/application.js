@@ -53,7 +53,7 @@ function attachAppListeners () {
       return false;  // TODO: why does this work but not e.preventDefault()?
     }
     var workflowTab = $(this).attr('href').substr(1, $(this).attr('href').indexOf('-')-1);
-    Cookies.set('csp_workflow_tab', workflowTab);
+    Cookies.set('workflow_tab', workflowTab);
     Turbolinks.visit('/companies/' + app.company.id.toString());
   });
 
