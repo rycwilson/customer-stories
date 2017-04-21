@@ -9,6 +9,7 @@
 
 <%= form_for company, url: adwords_config_company_path(company),
       method: 'put', remote: 'true', authenticity_token: true,
+      id: 'promote-settings-form',
       html: {
         class: 'directUpload',
         data: { 'form-data' => (@s3_direct_post.fields),
