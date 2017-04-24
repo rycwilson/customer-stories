@@ -90,7 +90,9 @@
       function () { $(this).css('border-color', '#ddd'); }
     );
     $container.find('section').css('visibility', 'visible');
-    trackVisitor();
+    if (<%= ENV['HOST_NAME'] == 'customerstories.net' %>) {
+      trackVisitor();
+    }
   }
 
   function buildTabWidget ($container) {
@@ -131,7 +133,9 @@
       .slideDrawer()
       .css({ opacity: 0, visibility: "visible" })
       .animate({ opacity: 1 }, 200);
-    trackVisitor();
+    if (<%= ENV['HOST_NAME'] == 'customerstories.net' %>) {
+      trackVisitor();
+    }
   }
 
   // slideout drawer plugin
@@ -394,7 +398,7 @@
 
   function trackVisitor () {
 
-    $('#cs-container').append(
+    $('#cs-container, #cs-tab-container, #cs-rel-container').append(
       '<iframe class="cs-iframe" height="0" width="0" style="display:none" ' +
       'src="https://' + '<%= @company.subdomain %>' + '.customerstories.net/widgets/track"></iframe>');
 

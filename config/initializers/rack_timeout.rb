@@ -4,3 +4,4 @@ if Rails.env.development?
 else
   Rack::Timeout.service_timeout = 20
 end
+
