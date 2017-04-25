@@ -6,6 +6,21 @@ function companiesShow () {
   $('dropdown.company-settings').removeClass('active');
   $('dropdown.user-profile').removeClass('active');
 
+  $('.adwords-logo.image-requirements, .adwords-image.image-requirements')
+    .popover({
+      html: true,
+      container: 'body',
+      template: '<div class="popover" style="max-width:500px" role="tooltip"><div class="arrow"></div><h3 class="popover-title label-secondary"></h3><div class="popover-content"></div></div>',
+      content: function () {
+        return '<ul>' +
+                 '<li><strong>Minimum dimensions</strong>: ' + $(this).data('min') + ' pixels</li>' +
+                 '<li><strong>Greater than minimum dimensions</strong>: Within 1% of the ' + $(this).data('ratio') + ' ratio</li>' +
+                 '<li><strong>Suggested dimensions</strong>: ' + $(this).data('suggest') + ' pixels</li>' +
+                 '<li><strong>Maximum size</strong>: 1MB (1,048,576 bytes)</li>' +
+               '</ul>';
+      }
+    });
+
 }
 
 function companiesShowListeners () {
