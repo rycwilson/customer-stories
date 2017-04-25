@@ -22,7 +22,7 @@
   <div class="form-inline">
     <div class="form-group">
 
-        <%= f.label :adwords_short_headline, "Headline", class: 'control-label' %>
+        <%= f.label :adwords_short_headline, "Headline (max 25 characters)", class: 'control-label' %>
         <%= f.text_field :adwords_short_headline, class: 'form-control', style: 'width:300px' %>
 
     </div>
@@ -33,10 +33,12 @@
     <div class="col-sm-4 form-group">
 
       <div>
-        <%= f.label :adwords_logo_url, 'Sponsored Stories Logo' %>
+        <%= f.label :adwords_logo_url, 'Sponsored Stories Logo',
+              class: 'adwords-logo' %>
+        &nbsp;&nbsp;<a href="#" class='image-requirements'>requirements</a>
       </div>
 
-      <div class="fileinput logo <%= company.adwords_logo_url.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">
+      <div class="fileinput adwords-logo <%= company.adwords_logo_url.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">
 
         <div class="fileinput-new thumbnail">
           <%= image_tag ADWORDS_LOGO_PLACEHOLDER_URL, alt: 'logo image' %>
@@ -68,13 +70,15 @@
 
     </div>
 
-    <div class="col-sm-4 form-group">
+    <div class="col-sm-8 form-group">
 
       <div>
-        <%= f.label :adwords_image_url, 'Sponsored Stories Image' %>
+        <%= f.label :adwords_image_url, 'Sponsored Stories Image (default)',
+              class: 'adwords-image' %>
+        &nbsp;&nbsp;<a href="#" class='image-requirements'>requirements</a>
       </div>
 
-      <div class="fileinput image <%= company.adwords_image_url.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">
+      <div class="fileinput adwords-image <%= company.adwords_image_url.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">
 
         <div class="fileinput-new thumbnail">
           <%= image_tag ADWORDS_IMAGE_PLACEHOLDER_URL, alt: 'logo' %>
@@ -105,8 +109,12 @@
       </div>  <!-- /.fileupload -->
 
     </div>
-    <div class="col-sm-4"></div>
   </div>
+
+  <label for="">Additional images for Sponsored Stories</label>
+  <div><button type='button' class='new-adwords-image btn btn-secondary'>Add image</button></div>
+
+  <ul class='adwords-images list-inline'></ul>
 
   <hr>
 
@@ -123,4 +131,16 @@
 
 
 <% end %>
+
+<script id='adwords-image-template' type="text/template">
+
+  <li class='adwords-image new-adwords-image hidden'>
+    <div class="fileinput fileinput-exists" data-provides="fileinput">
+      <div class="fileinput-preview thumbnail" data-trigger="fileinput"></div>
+      <input type="file" name="">
+      <span class="remove"></span>
+    </div>
+  </li>
+
+</script>
 

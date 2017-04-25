@@ -101,37 +101,85 @@
       margin-right: 10px;
     }
 
+    label.adwords-logo, label.adwords-image {
+      margin-bottom: 10px;
+    }
+
+    .fileinput, .fileinput-preview {
+      margin: 0;
+    }
+
     .fileinput {
       position: relative;
       .photo-btns {
         position: absolute;
         top: 0;
-        left: 150px;
         > div:first-child {
           margin-bottom: 8px;
         }
       }
     }
 
-    .fileinput.logo {
+    .fileinput.adwords-logo {
       .thumbnail {
-        height: 138px;
-        width: 138px;
+        height: 110px;
+        width: 110px;
       }
       .photo-btns {
-        left: 148px;
+        left: 120px;
       }
     }
 
-    .fileinput.image {
+    .fileinput.adwords-image {
       .thumbnail {
-        height: 138px;
-        width: 264px;
+        height: 110px;
+        width: 210px;
       }
       .photo-btns {
-        left: 274px;
+        left: 220px;
       }
     }
+
+    button.new-adwords-image {
+      margin-bottom: 20px;
+    }
+
+    li.adwords-image {
+      position: relative;
+      margin-right: 60px;
+
+      .fileinput .thumbnail {
+        height: 110px;
+        width: 210px;
+      }
+
+      .remove::before, .remove::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        height: 1px;
+        background: #888;
+        transform: rotate(45deg);
+      }
+      .remove {
+        position: absolute;
+        width: 30px;
+        height: 30px;
+        top: -5px;
+        right: -35px;
+        cursor: pointer;
+        color: #666
+      }
+      .remove::after {
+        transform: rotate(-45deg);
+      }
+      .remove:hover {
+        color: #222;
+      }
+
+    }
+
   }
 
 }

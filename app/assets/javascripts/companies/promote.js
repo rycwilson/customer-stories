@@ -31,5 +31,35 @@ function promoteListeners () {
         var storyId = $(this).closest('tr').data('story-id');
         window.open('/stories/' + storyId +
                     '/sponsored_story_preview', '_blank');
+      })
+
+    .on('click', 'button.new-adwords-image',
+      function () {
+        var template = _.template( $('#adwords-image-template').html() );
+
+        $('ul.adwords-images')
+          .append( template() );
+
+        $('li.new-adwords-image input[type="file"]')[0].click();
+
+      })
+
+    .on('change.bs.fileinput', 'li.new-adwords-image',
+      function () {
+        $(this)
+          .removeClass('hidden new-adwords-image')
+          .find('input[type="file"]').addClass('hidden')
       });
+
 }
+
+
+
+
+
+
+
+
+
+
+
