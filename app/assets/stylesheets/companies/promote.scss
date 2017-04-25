@@ -169,7 +169,6 @@
         top: -5px;
         right: -35px;
         cursor: pointer;
-        color: #666
       }
       .remove::after {
         transform: rotate(-45deg);
@@ -178,7 +177,15 @@
         color: #222;
       }
 
+      .remove.remove-image::before, .remove.remove-image::after {
+        background: #cc2d2d
+      }
+      .thumbnail.remove-image {
+        border-color: #cc2d2d;
+      }
+
     }
+
 
   }
 

@@ -49,6 +49,13 @@ function promoteListeners () {
         $(this)
           .removeClass('hidden new-adwords-image')
           .find('input[type="file"]').addClass('hidden');
+      })
+
+    .on('click', 'li.adwords-image span.remove',
+      function () {
+        $(this).toggleClass('remove-image');
+        $(this).closest('.fileinput').children('.thumbnail')
+               .toggleClass('remove-image');
       });
 
 }
