@@ -113,6 +113,7 @@ class Company < ActiveRecord::Base
   end
   has_one :widget, dependent: :destroy
   has_many :adwords_images, dependent: :destroy
+  accepts_nested_attributes_for :adwords_images, allow_destroy: true
 
   # presently uploading direct to S3, paperclip not used
   # paperclip
