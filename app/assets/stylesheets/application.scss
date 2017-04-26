@@ -65,6 +65,18 @@
   font-weight: 700;
 }
 
+.btn-success {
+  background-color: #007E33;
+  border-color: #006E33;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.btn-success:hover {
+  background-color: #006E33;
+  border-color: #005E33
+}
+
 /*
  *  apply to all columns within a row to center vertically
  *  ref: http://stackoverflow.com/questions/20547819/vertical-align-with-bootstrap-3

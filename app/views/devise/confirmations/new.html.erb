@@ -18,7 +18,7 @@
 <%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
   <%= devise_error_messages! %>
 
- 
+
 
   <div class="form group">
   <%= f.email_field :email, { autofocus: true,
@@ -28,7 +28,7 @@
 <br>
   <div class="form-group">
               <%= button_tag(type: 'Resend Confirmation', tabindex: '4',
-                  class: "btn btn-primary btn-block btn-lg") do %>
+                  class: "btn btn-success btn-block btn-lg") do %>
                 Resend Confirmation &nbsp; <i class="fa fa-play-circle"></i>
               <% end %>
             </div>
