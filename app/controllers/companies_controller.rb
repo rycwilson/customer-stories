@@ -45,20 +45,21 @@ class CompaniesController < ApplicationController
 
   # two response formats needed to handle the s3 upload
   def update
-    if @company.update company_params
-      @flash_mesg = "Company updated"
-      @flash_status = "success"
-    else
-      @flash_mesg = @company.errors.full_messages.join(', ')
-      @flash_status = "danger"
-    end
-    respond_to do |format|
-      format.html do
-        redirect_to edit_company_path(@company),
-          flash: { success: "Company updated" }
-      end
-      format.js {}
-    end
+    binding.remote_pry
+    # if @company.update company_params
+    #   @flash_mesg = "Company updated"
+    #   @flash_status = "success"
+    # else
+    #   @flash_mesg = @company.errors.full_messages.join(', ')
+    #   @flash_status = "danger"
+    # end
+    # respond_to do |format|
+    #   format.html do
+    #     redirect_to edit_company_path(@company),
+    #       flash: { success: "Company updated" }
+    #   end
+    #   format.js {}
+    # end
   end
 
   def adwords_config

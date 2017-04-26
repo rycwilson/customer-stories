@@ -124,12 +124,15 @@
 
   <ul class='adwords-images list-inline'>
 
-    <%= f.fields_for :adwords_images do |image_form| %>
+    <%= f.fields_for :adwords_images do |image_f| %>
 
       <li class='adwords-image'>
         <div class="fileinput fileinput-exists" data-provides="fileinput">
-          <div class="fileinput-preview thumbnail" data-trigger="fileinput"></div>
-          <input type="file" name="">
+          <div class="fileinput-preview thumbnail" data-trigger="fileinput">
+            <%= image_tag image_f.object.image_url, alt: 'adwords image' %>
+          </div>
+          <!-- <input type="file" name=""> -->
+          <%= image_f.file_field :image_url, class: 'hidden' %>
           <span class="remove"></span>
         </div>
       </li>
@@ -155,10 +158,14 @@
 
 <script id='adwords-image-template' type="text/template">
 
+  <!-- // locals: image_index -->
+
   <li class='adwords-image new-adwords-image hidden'>
     <div class="fileinput fileinput-exists" data-provides="fileinput">
       <div class="fileinput-preview thumbnail" data-trigger="fileinput"></div>
-      <input type="file" name="">
+      <input type="file"
+             name="company[adwords_images_attributes][{{= image_index }}][image_url]"
+             id="company_adwords_images_attributes_{{= image_index }}_image_url">
       <span class="remove"></span>
     </div>
   </li>
