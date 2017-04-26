@@ -20,6 +20,7 @@ class Story < ActiveRecord::Base
     end
   end
   has_one :adwords_config
+  has_one :adwords_image, through: :adwords_config
 
   # Note: no explicit association to friendly_id_slugs, but it's there
   # Story has many friendly_id_slugs -> captures history of slug changes

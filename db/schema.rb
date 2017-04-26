@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170420194657) do
+ActiveRecord::Schema.define(version: 20170426005958) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -45,6 +45,15 @@ ActiveRecord::Schema.define(version: 20170420194657) do
   end
 
   add_index "adwords_configs", ["story_id"], name: "index_adwords_configs_on_story_id", using: :btree
+
+  create_table "adwords_images", force: :cascade do |t|
+    t.integer  "company_id"
+    t.string   "url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "adwords_images", ["company_id"], name: "index_adwords_images_on_company_id", using: :btree
 
   create_table "call_to_actions", force: :cascade do |t|
     t.string   "type"
@@ -286,6 +295,16 @@ ActiveRecord::Schema.define(version: 20170420194657) do
 
   add_index "results", ["success_id"], name: "index_results_on_success_id", using: :btree
 
+  create_table "sponsored_stories_images", force: :cascade do |t|
+    t.integer  "adwords_config_id"
+    t.integer  "adwords_image_id"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+  end
+
+  add_index "sponsored_stories_images", ["adwords_config_id"], name: "index_sponsored_stories_images_on_adwords_config_id", using: :btree
+  add_index "sponsored_stories_images", ["adwords_image_id"], name: "index_sponsored_stories_images_on_adwords_image_id", using: :btree
+
   create_table "stories", force: :cascade do |t|
     t.string   "title",                                                                                                                                                                                                                                                                          null: false
     t.text     "quote"
@@ -434,6 +453,7 @@ ActiveRecord::Schema.define(version: 20170420194657) do
   add_index "widgets", ["company_id"], name: "index_widgets_on_company_id", using: :btree
 
   add_foreign_key "adwords_configs", "stories"
+  add_foreign_key "adwords_images", "companies"
   add_foreign_key "call_to_actions", "companies"
   add_foreign_key "contributions", "successes"
   add_foreign_key "contributions", "users"
@@ -457,6 +477,8 @@ ActiveRecord::Schema.define(version: 20170420194657) do
   add_foreign_key "products_successes", "successes"
   add_foreign_key "prompts", "successes"
   add_foreign_key "results", "successes"
+  add_foreign_key "sponsored_stories_images", "adwords_configs"
+  add_foreign_key "sponsored_stories_images", "adwords_images"
   add_foreign_key "stories", "successes"
   add_foreign_key "story_categories", "companies"
   add_foreign_key "story_categories_successes", "story_categories"

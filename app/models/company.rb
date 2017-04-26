@@ -112,6 +112,7 @@ class Company < ActiveRecord::Base
     end
   end
   has_one :widget, dependent: :destroy
+  has_many :adwords_images, dependent: :destroy
 
   # presently uploading direct to S3, paperclip not used
   # paperclip
