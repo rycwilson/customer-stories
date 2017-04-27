@@ -1,4 +1,6 @@
 
+<%= render 'adwords/image_select_modal', { company: company } %>
+
 <div class="row enable-promote-type">
   <div class="col-sm-12">
 
@@ -25,21 +27,25 @@
       <% company.stories.published.each do |story| %>
 
         <tr data-story-id="<%= story.id %>">
+
           <td><%= story.customer.name %></td>
+
           <td class='sponsored-story-title'>
             <p><%= story.title %></p>
             <p><a data-pk="<%= story.id %>"><%= story.title %></a></p>
           </td>
+
           <td class='sponsored-story-image'>
-            <div class="fileinput fileinput-exists" data-provides="fileinput">
-              <div class="fileinput-preview thumbnail" data-trigger="fileinput">
+            <div class="fileinput fileinput-exists" data-provides="fileinput"
+                 data-toggle='modal' data-target='#image-select-modal'>
+              <div class="fileinput-preview thumbnail">
                 <%= image_tag company.adwords_image_url, alt: 'adwords image' %>
               </div>
               <%= file_field_tag(:image_url, class: 'hidden') %>
-          <!--     <span><i class='change-image glyphicon glyphicon-pencil'></i></span>
-              <span><i class='remove-image glyphicon glyphicon-remove'></i></span> -->
+              <!-- click to change -->
             </div>
           </td>
+
           <td class='dropdown status-dropdown'>
             <div style='position:relative'>  <!-- div for styling only -->
               <a href="javascript:;" class="dropdown-toggle" data-toggle='dropdown'>

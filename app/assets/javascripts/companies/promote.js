@@ -12,6 +12,11 @@ function promoteListeners () {
         $('[data-toggle="tooltip"]').tooltip('hide');
       })
 
+    .on('click', '.sponsored-story-image .thumbnail',
+      function () {
+
+      })
+
     // ad previews - separate window
     .on('click', '.preview-window a',
       function () {

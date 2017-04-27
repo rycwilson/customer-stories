@@ -1,0 +1,35 @@
+
+<div id='image-select-modal' class="modal fade" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Select an image</h4>
+      </div>
+      <div class="modal-body">
+
+        <ul class='text-center list-inline'>
+
+          <% company.adwords_images.each do |image| %>
+
+            <li>
+              <div class="fileinput fileinput-exists" data-provides="fileinput">
+                <div class="fileinput-preview thumbnail">
+                  <%= image_tag image.image_url, alt: 'adwords image' %>
+                </div>
+                <%= file_field_tag(:image_url, class: 'hidden') %>
+              </div>
+            </li>
+
+          <% end %>
+
+        </ul>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success">Select image</button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
