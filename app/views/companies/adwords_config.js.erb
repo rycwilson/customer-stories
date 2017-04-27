@@ -1,6 +1,11 @@
 
 (function () {
 
-  $('a[href="#promote-settings-tab-pane"]').tab('show');
+  var flashMesg = "<%= @flash_mesg %>",
+      flashStatus = "<%= @flash_status %>";
+
+  flashDisplay(flashMesg, flashStatus);
+
+  $('.thumbnail.remove-image').closest('li.adwords-image').remove();
 
 }());

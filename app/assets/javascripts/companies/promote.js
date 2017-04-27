@@ -43,9 +43,15 @@ function promoteListeners () {
 
     .on('click', 'li.adwords-image span.remove',
       function () {
+
         $(this).toggleClass('remove-image');
-        $(this).closest('.fileinput').children('.thumbnail')
+        $(this).closest('.fileinput')
+               .children('.thumbnail')
                .toggleClass('remove-image');
+
+        var $destroy = $(this).closest('.fileinput').find(':checkbox');
+        $destroy.prop('checked', !$destroy.prop('checked'));
+
       });
 
 }

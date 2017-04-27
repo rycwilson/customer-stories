@@ -45,27 +45,25 @@ class CompaniesController < ApplicationController
 
   # two response formats needed to handle the s3 upload
   def update
-    binding.remote_pry
-    # if @company.update company_params
-    #   @flash_mesg = "Company updated"
-    #   @flash_status = "success"
-    # else
-    #   @flash_mesg = @company.errors.full_messages.join(', ')
-    #   @flash_status = "danger"
-    # end
-    # respond_to do |format|
-    #   format.html do
-    #     redirect_to edit_company_path(@company),
-    #       flash: { success: "Company updated" }
-    #   end
-    #   format.js {}
-    # end
+    if @company.update company_params
+      @flash_mesg = "Company updated"
+      @flash_status = "success"
+    else
+      @flash_mesg = @company.errors.full_messages.join(', ')
+      @flash_status = "danger"
+    end
+    respond_to do |format|
+      format.html do
+        redirect_to edit_company_path(@company),
+          flash: { success: "Company updated" }
+      end
+      format.js {}
+    end
   end
 
   def adwords_config
     # binding.remote_pry
     if @company.update company_params
-      # @company.adwords_images.build
       @flash_mesg = "Sponsored Stories updated"
       @flash_status = "success"
     else
@@ -99,7 +97,7 @@ class CompaniesController < ApplicationController
           .permit(:name, :subdomain, :logo_url, :header_color_1,
                   :header_color_2, :header_text_color, :website, :gtm_id,
                   :adwords_short_headline, :adwords_logo_url, :adwords_image_url,
-                  adwords_images_attributes: [:id, :image_url])
+                  adwords_images_attributes: [:id, :image_url, :_destroy])
   end
 
   def widget_params
