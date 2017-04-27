@@ -77,9 +77,6 @@ Rails.application.configure do
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
 
-  # paperclip search path
-  Paperclip.options[:command_path] = "/usr/local/bin/"
-
   # allow render on local network
   # config.web_console.whitelisted_ips = '73.231.35.0/16'
 

@@ -28,10 +28,28 @@
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-success">Select image</button>
       </div>
 
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+    </div>
+  </div>
+</div>
+
+<!-- modal footer content consists of story form generated on the fly -->
+<% content_for :underscore_templates do %>
+
+  <script id='image-select-form-template' type='text/template'>
+
+    <!-- // locals: storyId -->
+    <form action="/stories/{{= storyId }}/adwords_config" accept-charset="UTF-8"
+          method="put" data-remote="true">
+
+      <input name='adwords_image_id' type='hidden'>
+
+      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      <button type="submit" class="btn btn-success">Select image</button>
+
+    </form>
+
+  </script>
+
+<% end %>

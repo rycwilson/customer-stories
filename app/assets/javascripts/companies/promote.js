@@ -12,13 +12,28 @@ function promoteListeners () {
         $('[data-toggle="tooltip"]').tooltip('hide');
       })
 
+    // on clicking a sponsored story thumbnail,
+    // open the image select modal and create the story form
+    .on('click', 'td.sponsored-story-image .thumbnail',
+      function () {
+        var $modal = $('#image-select-modal'),
+            storyId = $(this).closest('tr').data('story-id'),
+            template = _.template( $('#image-select-form-template').html() );
+        $modal.find('.modal-footer').empty()
+              .append(template({ storyId: storyId }));
+        $modal.modal('show');
+      })
+
     .on('click', '#image-select-modal .thumbnail',
       function () {
         if ($(this).hasClass('selected')) {
           return false;
         } else {
-          $(this).addClass('selected');
           var selectedImageId = $(this).data('image-id');
+          $(this).addClass('selected');
+          // update the form's hidden field for image id
+          $(this).closest('.modal-content').find('input[type="hidden"]')
+                 .val(selectedImageId);
           $('#image-select-modal .thumbnail')
             // thumbnail is the raw html, $(this) is jquery
             .each(function (index, thumbnail) {

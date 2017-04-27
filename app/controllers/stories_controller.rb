@@ -163,11 +163,15 @@ class StoriesController < ApplicationController
   end
 
   def adwords_config
-    @story.adwords_config.update(
-      enable: params[:adwords_config][:enable] || false,
-      long_headline: params[:adwords_config][:long_headline]
-    )
-    respond_to { |format| format.json { render(json: @story.adwords_config) } }
+    if params[:adwords_image_id]
+      @story.adwords_config.adwords_image = AdwordsImage.find(params[:adwords_image_id])
+    else
+      @story.adwords_config.update(
+        enable: params[:adwords_config][:enable] || false,
+        long_headline: params[:adwords_config][:long_headline]
+      )
+    end
+    respond_to { |format| format.js }
   end
 
   def destroy
