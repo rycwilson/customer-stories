@@ -1,4 +1,6 @@
 
+<!-- turbolinks cache control -->
+<!-- seo meta tags -->
 <% content_for :head do %>
 
   <meta name="turbolinks-cache-control" content="no-cache">
@@ -8,8 +10,13 @@
       <%= render 'stories/shared/stories_index_meta_tags', { company: @company } %>
     <% end %>
   <% end %>
-
 <% end %>
+
+<!-- underscore templates -->
+<%= render 'stories/shared/stories_index_template', { company: @company } %>
+<%= render 'stories/shared/csp_linkedin_widget_template' %>
+
+<!--  -->
 
 <% if @is_curator %>
 
@@ -72,6 +79,3 @@
 
   </ul>
 </div>
-
-<%= render 'stories/shared/stories_index_template', { company: @company } %>
-<%= render 'stories/shared/csp_linkedin_widget_template' %>

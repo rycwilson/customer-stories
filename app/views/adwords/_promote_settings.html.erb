@@ -1,4 +1,25 @@
 
+<!-- adwords image template -->
+<% content_for :underscore_templates do %>
+
+  <script id='adwords-image-template' type="text/template">
+
+    <!-- // locals: image_index -->
+
+    <li class='adwords-image new-adwords-image hidden'>
+      <div class="fileinput fileinput-exists" data-provides="fileinput">
+        <div class="fileinput-preview thumbnail" data-trigger="fileinput"></div>
+        <input type="file"
+               name="company[adwords_images_attributes][{{= image_index }}][image_url]"
+               id="company_adwords_images_attributes_{{= image_index }}_image_url">
+        <span><i class='change-image glyphicon glyphicon-pencil'></i></span>
+        <span><i class='remove-image glyphicon glyphicon-remove'></i></span>
+      </div>
+    </li>
+
+  </script>
+<% end %>
+
 <div class="row enable-promote-type form-group">
   <div class="col-sm-12">
 
@@ -159,20 +180,7 @@
 
 <% end %>
 
-<script id='adwords-image-template' type="text/template">
 
-  <!-- // locals: image_index -->
 
-  <li class='adwords-image new-adwords-image hidden'>
-    <div class="fileinput fileinput-exists" data-provides="fileinput">
-      <div class="fileinput-preview thumbnail" data-trigger="fileinput"></div>
-      <input type="file"
-             name="company[adwords_images_attributes][{{= image_index }}][image_url]"
-             id="company_adwords_images_attributes_{{= image_index }}_image_url">
-      <span><i class='change-image glyphicon glyphicon-pencil'></i></span>
-      <span><i class='remove-image glyphicon glyphicon-remove'></i></span>
-    </div>
-  </li>
 
-</script>
 
