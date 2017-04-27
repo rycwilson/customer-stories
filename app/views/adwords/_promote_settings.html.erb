@@ -7,7 +7,8 @@
   </div>
 </div>
 
-<%= form_for company, method: 'put', remote: 'true', authenticity_token: true,
+<%= form_for company, url: adwords_config_company_path(company),
+      method: 'put', remote: 'true', authenticity_token: true,
       html: {
         id: 'promote-settings-form',
         class: 'directUpload',
@@ -123,6 +124,19 @@
   <div><button type='button' class='new-adwords-image btn btn-secondary'>Add image</button></div>
 
   <ul class='adwords-images list-inline'>
+
+ <!-- we know this works: -->
+ <!--    <li class='adwords-image'>
+      <div class="fileinput fileinput-exists" data-provides="fileinput">
+        <div class="fileinput-preview thumbnail" data-trigger="fileinput">
+          <%#= image_tag ADWORDS_IMAGE_PLACEHOLDER_URL, alt: 'adwords image' %>
+        </div>
+        <input type="file" class='hidden'
+               name="fart[image_url]"
+               id="fart_image_url">
+        <span class="remove"></span>
+      </div>
+    </li> -->
 
     <%= f.fields_for :adwords_images do |image_f| %>
 

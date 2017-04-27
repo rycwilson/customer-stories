@@ -26,7 +26,9 @@ function promoteListeners () {
         var $imagesList = $('ul.adwords-images'),
             template = _.template( $('#adwords-image-template').html() );
 
-        $imagesList.append( template({ image_index: $imagesList.length }) );
+        $imagesList.append( template({ image_index: $imagesList.find('li').length }) );
+
+        initS3Upload(); // init S3 for dynamically added file input
 
         $('li.new-adwords-image input[type="file"]')[0].click();
 

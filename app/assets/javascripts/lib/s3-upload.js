@@ -3,6 +3,7 @@
 // http://stackoverflow.com/questions/22387874/jquery-validate-plugin-bootstrap-jasny-bootstrap-file-input-regex-validation
 function initS3Upload () {
 
+console.log($('.directUpload').find("input:file"));
   $('.directUpload').find("input:file").each(function (i, elem) {
     var fileInput    = $(elem);
     var form         = $(fileInput.parents('form:first'));
