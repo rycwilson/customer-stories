@@ -125,19 +125,6 @@
 
   <ul class='adwords-images list-inline'>
 
- <!-- we know this works: -->
- <!--    <li class='adwords-image'>
-      <div class="fileinput fileinput-exists" data-provides="fileinput">
-        <div class="fileinput-preview thumbnail" data-trigger="fileinput">
-          <%#= image_tag ADWORDS_IMAGE_PLACEHOLDER_URL, alt: 'adwords image' %>
-        </div>
-        <input type="file" class='hidden'
-               name="fart[image_url]"
-               id="fart_image_url">
-        <span class="remove"></span>
-      </div>
-    </li> -->
-
     <%= f.fields_for :adwords_images do |image_f| %>
 
       <li class='adwords-image'>
@@ -145,7 +132,6 @@
           <div class="fileinput-preview thumbnail" data-trigger="fileinput">
             <%= image_tag image_f.object.image_url, alt: 'adwords image' %>
           </div>
-          <!-- <input type="file" name=""> -->
           <%= image_f.file_field(:image_url, class: 'hidden') %>
           <%= image_f.check_box(:_destroy, { class: 'hidden' }, 'true', 'false') %>
           <span class="remove"></span>

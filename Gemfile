@@ -41,7 +41,6 @@ gem 'bower-rails', "~> 0.10.0"
 gem 'font-awesome-rails'
 gem 'figaro'
 gem 'multi_json'
-gem "paperclip", "~> 4.3"
 gem 'best_in_place', '~> 3.0.1'
 gem 'jquery-minicolors-rails'
 gem 'jazz_hands', github: 'nixme/jazz_hands', branch: 'bring-your-own-debugger'
