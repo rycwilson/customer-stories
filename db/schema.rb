@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170426173228) do
+ActiveRecord::Schema.define(version: 20170427211511) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -49,8 +49,9 @@ ActiveRecord::Schema.define(version: 20170426173228) do
   create_table "adwords_images", force: :cascade do |t|
     t.integer  "company_id"
     t.string   "image_url"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+    t.boolean  "company_default", default: false
   end
 
   add_index "adwords_images", ["company_id"], name: "index_adwords_images_on_company_id", using: :btree
@@ -88,7 +89,6 @@ ActiveRecord::Schema.define(version: 20170426173228) do
     t.string   "primary_cta_background_color"
     t.string   "primary_cta_text_color"
     t.string   "adwords_logo_url"
-    t.string   "adwords_image_url"
     t.string   "adwords_short_headline"
   end
 

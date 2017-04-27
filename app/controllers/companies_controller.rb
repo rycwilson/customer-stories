@@ -63,6 +63,7 @@ class CompaniesController < ApplicationController
 
   def adwords_config
     # binding.remote_pry
+    update_default_adwords_image(@company, params[:company][:default_adwords_image])
     if @company.update company_params
       @flash_mesg = "Sponsored Stories updated"
       @flash_status = "success"
@@ -96,7 +97,7 @@ class CompaniesController < ApplicationController
     params.require(:company)
           .permit(:name, :subdomain, :logo_url, :header_color_1,
                   :header_color_2, :header_text_color, :website, :gtm_id,
-                  :adwords_short_headline, :adwords_logo_url, :adwords_image_url,
+                  :adwords_short_headline, :adwords_logo_url,
                   adwords_images_attributes: [:id, :image_url, :_destroy])
   end
 
@@ -134,6 +135,13 @@ class CompaniesController < ApplicationController
     else
       options
     end
+  end
+
+  def update_default_adwords_image company, image_url
+    binding.remote_pry
+    adwords_image = company.adwords_images.default ||
+                    AdwordsImage.create(company_id: company.id, company_default: true)
+    adwords_image.update(image_url: image_url)
   end
 
 end

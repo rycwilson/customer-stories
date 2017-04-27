@@ -112,7 +112,11 @@ class Company < ActiveRecord::Base
     end
   end
   has_one :widget, dependent: :destroy
-  has_many :adwords_images, dependent: :destroy
+  has_many :adwords_images, dependent: :destroy do
+    def default
+      where(company_default: true).take
+    end
+  end
   accepts_nested_attributes_for :adwords_images, allow_destroy: true
 
   after_commit on: :create do

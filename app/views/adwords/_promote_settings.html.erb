@@ -95,7 +95,7 @@
     <div class="col-sm-8 form-group">
 
       <div>
-        <%= f.label :adwords_image_url, 'Sponsored Stories Image (default)',
+        <%= f.label 'adwords_image[company_default]', 'Sponsored Stories Image (default)',
               class: 'adwords-image' %>&nbsp;&nbsp;
         <a tabindex='0' class='adwords-image image-requirements' role='button'
            data-toggle='popover' data-placement='top' data-trigger='focus'
@@ -103,7 +103,7 @@
            data-min='600x314' data-ratio='1.91:1' data-suggest='1200x628'>requirements</a>
       </div>
 
-      <div class="fileinput adwords-image <%= company.adwords_image_url.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">
+      <div class="fileinput adwords-image <%= company.adwords_images.default.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">
 
         <div class="fileinput-new thumbnail">
           <%= image_tag ADWORDS_IMAGE_PLACEHOLDER_URL, alt: 'logo' %>
@@ -111,7 +111,7 @@
 
         <div class="fileinput-preview fileinput-exists thumbnail"
             data-trigger="fileinput">
-          <%= image_tag company.adwords_image_url, alt: 'marketing image' %>
+          <%= image_tag company.adwords_images.default.try(:image_url), alt: 'marketing image' %>
         </div>
 
         <div class="photo-btns">
@@ -122,7 +122,7 @@
             <div class="fileinput-exists">
               Change
             </div>
-            <%= f.file_field :adwords_image_url %>
+            <%= f.file_field 'default_adwords_image' %>
             <!-- below doesn't work, must use form builder -->
             <!-- <input type="file" name="user[photo_url]" class='form-control' id='user_photo_url'> -->
           </div>
@@ -149,17 +149,21 @@
 
     <%= f.fields_for :adwords_images do |image_f| %>
 
-      <li class='adwords-image'>
-        <div class="fileinput fileinput-exists" data-provides="fileinput">
-          <div class="fileinput-preview thumbnail" data-trigger="fileinput">
-            <%= image_tag image_f.object.image_url, alt: 'adwords image' %>
+      <% unless image_f.object.company_default? %>
+
+        <li class='adwords-image'>
+          <div class="fileinput fileinput-exists" data-provides="fileinput">
+            <div class="fileinput-preview thumbnail" data-trigger="fileinput">
+              <%= image_tag image_f.object.image_url, alt: 'adwords image' %>
+            </div>
+            <%= image_f.file_field(:image_url, class: 'hidden') %>
+            <%= image_f.check_box(:_destroy, { class: 'hidden' }, 'true', 'false') %>
+            <span><i class='change-image glyphicon glyphicon-pencil'></i></span>
+            <span><i class='remove-image glyphicon glyphicon-remove'></i></span>
           </div>
-          <%= image_f.file_field(:image_url, class: 'hidden') %>
-          <%= image_f.check_box(:_destroy, { class: 'hidden' }, 'true', 'false') %>
-          <span><i class='change-image glyphicon glyphicon-pencil'></i></span>
-          <span><i class='remove-image glyphicon glyphicon-remove'></i></span>
-        </div>
-      </li>
+        </li>
+
+      <% end %>
 
     <% end %>
 
