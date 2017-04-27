@@ -153,36 +153,22 @@
         width: 210px;
       }
 
-      .remove::before, .remove::after {
-        content: '';
-        position: absolute;
-        width: 100%;
-        top: 50%;
-        height: 1px;
-        background: #888;
-        transform: rotate(45deg);
-      }
-      .remove {
-        position: absolute;
-        width: 30px;
-        height: 30px;
-        top: -5px;
-        right: -35px;
-        cursor: pointer;
-      }
-      .remove::after {
-        transform: rotate(-45deg);
-      }
-      .remove:hover {
-        color: #222;
-      }
-
-      .remove.remove-image::before, .remove.remove-image::after {
-        background: #cc2d2d
-      }
-      .thumbnail.remove-image {
+      .to-be-removed {
         border-color: #cc2d2d;
       }
+
+      .change-image, .remove-image {
+        position: absolute;
+        top: 0px;
+        font-size: 18px;
+        color: #666;
+        cursor: pointer;
+      }
+      .change-image:hover, .remove-image:hover {
+        color: #222;
+      }
+      .change-image { right: -25px; }
+      .remove-image { right: -50px; }
 
     }
 

@@ -116,6 +116,7 @@
   </div>
 
   <label for="">Additional images for Sponsored Stories</label>&nbsp;&nbsp;
+
   <a tabindex='0' class='adwords-image image-requirements' role='button'
      data-toggle='popover' data-placement='top' data-trigger='focus'
      title='Requirements - Sponsored Stories Image'
@@ -134,7 +135,8 @@
           </div>
           <%= image_f.file_field(:image_url, class: 'hidden') %>
           <%= image_f.check_box(:_destroy, { class: 'hidden' }, 'true', 'false') %>
-          <span class="remove"></span>
+          <span><i class='change-image glyphicon glyphicon-pencil'></i></span>
+          <span><i class='remove-image glyphicon glyphicon-remove'></i></span>
         </div>
       </li>
 
@@ -167,7 +169,8 @@
       <input type="file"
              name="company[adwords_images_attributes][{{= image_index }}][image_url]"
              id="company_adwords_images_attributes_{{= image_index }}_image_url">
-      <span class="remove"></span>
+      <span><i class='change-image glyphicon glyphicon-pencil'></i></span>
+      <span><i class='remove-image glyphicon glyphicon-remove'></i></span>
     </div>
   </li>
 

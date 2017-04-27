@@ -41,17 +41,18 @@ function promoteListeners () {
           .find('input[type="file"]').addClass('hidden');  // doesn't work if the input has class: hidden from the get-go
       })
 
-    .on('click', 'li.adwords-image span.remove',
+    .on('click', 'li.adwords-image .change-image',
       function () {
+        $(this).closest('.fileinput').children('.thumbnail')[0].click();
+      })
 
-        $(this).toggleClass('remove-image');
+    .on('click', 'li.adwords-image .remove-image',
+      function () {
         $(this).closest('.fileinput')
                .children('.thumbnail')
-               .toggleClass('remove-image');
-
+               .toggleClass('to-be-removed');
         var $destroy = $(this).closest('.fileinput').find(':checkbox');
         $destroy.prop('checked', !$destroy.prop('checked'));
-
       });
 
 }
