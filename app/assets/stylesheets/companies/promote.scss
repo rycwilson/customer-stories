@@ -24,6 +24,9 @@
       width: 210px;
       cursor: pointer;
     }
+    .thumbnail.selected {
+      border-color: #337ab7;  // from bootstrap $brand-primary
+    }
     .modal-body {
       background-color: #f2f2f2;
       li {

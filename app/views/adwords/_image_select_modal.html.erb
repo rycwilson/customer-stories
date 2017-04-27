@@ -14,7 +14,7 @@
 
             <li>
               <div class="fileinput fileinput-exists" data-provides="fileinput">
-                <div class="fileinput-preview thumbnail">
+                <div class="fileinput-preview thumbnail" data-image-id="<%= image.id %>">
                   <%= image_tag image.image_url, alt: 'adwords image' %>
                 </div>
                 <%= file_field_tag(:image_url, class: 'hidden') %>

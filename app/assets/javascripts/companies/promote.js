@@ -12,9 +12,21 @@ function promoteListeners () {
         $('[data-toggle="tooltip"]').tooltip('hide');
       })
 
-    .on('click', '.sponsored-story-image .thumbnail',
+    .on('click', '#image-select-modal .thumbnail',
       function () {
-
+        if ($(this).hasClass('selected')) {
+          return false;
+        } else {
+          $(this).addClass('selected');
+          var selectedImageId = $(this).data('image-id');
+          $('#image-select-modal .thumbnail')
+            // thumbnail is the raw html, $(this) is jquery
+            .each(function (index, thumbnail) {
+              if ($(this).data('image-id') !== selectedImageId) {
+                $(this).removeClass('selected');
+              }
+            });
+        }
       })
 
     // ad previews - separate window
