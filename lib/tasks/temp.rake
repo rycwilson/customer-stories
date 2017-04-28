@@ -4,11 +4,11 @@ namespace :temp do
 
 
   task adwords: :environment do
-    # Story.where(published: true).each do |story|
-    #   story.create_adwords_config(long_headline: story.title)
-    # end
+    Story.where(published: true).each do |story|
+      story.create_adwords_config(long_headline: story.title)
+    end
     Company.all.each do |company|
-      # company.update(adwords_short_headline: company.name + ' Customer Stories')
+      company.update(adwords_short_headline: company.name + ' Customer Stories')
     end
   end
 
