@@ -9,8 +9,6 @@ namespace :temp do
     # end
     Company.all.each do |company|
       # company.update(adwords_short_headline: company.name + ' Customer Stories')
-      company.adwords_images.create({
-                default: true, image_url: ADWORDS_IMAGE_PLACEHOLDER_URL })
     end
   end
 

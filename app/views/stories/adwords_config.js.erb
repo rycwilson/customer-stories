@@ -8,10 +8,13 @@
       flashStatus = "<%= @flash_status %>";
 
   // status updated
+  // (all handled by styling)
 
   // image updated
   $('#image-select-modal').modal('hide')
-  $row.find('.thumbnail img').attr('src', adwordsConfig.adwords_image.image_url)
+  if (adwordsConfig.adwords_image && adwordsConfig.adwords_image.image_url) {
+    $row.find('.thumbnail img').attr('src', adwordsConfig.adwords_image.image_url)
+  }
 
   flashDisplay(flashMesg, flashStatus);
 
