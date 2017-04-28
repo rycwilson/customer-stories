@@ -7,8 +7,10 @@ class AdwordsController < ApplicationController
     story = Story.find(params[:id])
     @short_headline = "#{@company.name} Customer Stories"
     @long_headline = story.adwords_config.long_headline
-    @image_url = story.adwords_config.adwords_image.image_url
-    @logo_url = @company.adwords_logo_url
+    @image_url = story.adwords_config.adwords_image.try(:image_url) ||
+                 @company.adwords_images.default.try(:image_url) ||
+                 ADWORDS_IMAGE_PLACEHOLDER_URL
+    @logo_url = @company.adwords_logo_url || ADWORDS_LOGO_PLACEHOLDER_URL
     render :ads_preview, layout: false
   end
 
