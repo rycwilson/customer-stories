@@ -12,6 +12,29 @@ function promoteListeners () {
         $('[data-toggle="tooltip"]').tooltip('hide');
       })
 
+    .on('click', 'td.status-dropdown .dropdown-menu a.pause, td.status-dropdown .dropdown-menu a.enable',
+      function () {
+
+        $(this).closest('.dropdown')
+               .find('a.dropdown-toggle')
+               .toggleClass('enabled paused')
+               .children(':first')
+               .toggleClass('fa-play fa-pause');
+        $(this).closest('.dropdown-menu').children('li').toggle();
+
+        $.ajax({
+          url: '/stories/' + $(this).closest('tr').data('story-id') + '/adwords_config',
+          method: 'put',
+          data: {
+            adwords_config: {
+              enabled: $(this).attr('class') === 'enable' ? true : false,
+            }
+          },
+          dataType: 'script'
+        });
+
+      })
+
     // on clicking a sponsored story thumbnail,
     // open the image select modal and create the story form
     .on('click', 'td.sponsored-story-image .thumbnail',

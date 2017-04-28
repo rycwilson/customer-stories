@@ -63,9 +63,14 @@
       }
     }
 
+    tr > th:last-of-type, tr > td:last-of-type {
+      max-width: 30px !important;
+    }
+
     td.sponsored-story-image {
       text-align: center;
       vertical-align: middle;
+      padding: 8px 14px;
       .fileinput {
         margin: 0;
         .thumbnail {
@@ -114,7 +119,7 @@
         a i {
           color: #666;
         }
-        a.paused-active i {
+        a.paused i {
           color: #222;
         }
         i.fa-play {

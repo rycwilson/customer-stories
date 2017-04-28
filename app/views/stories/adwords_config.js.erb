@@ -2,12 +2,17 @@
 (function () {
 
   var storyId = <%= @story.id %>,
-      adwordsConfig = <%= raw @story.adwords_config.to_json(include: { adwords_image: {} }) %>
+      adwordsConfig = <%= raw @story.adwords_config.to_json(include: { adwords_image: {} }) %>,
+      $row = $('tr[data-story-id="' + storyId + '"]'),
+      flashMesg = "<%= @flash_mesg %>",
+      flashStatus = "<%= @flash_status %>";
 
+  // status updated
+
+  // image updated
   $('#image-select-modal').modal('hide')
+  $row.find('.thumbnail img').attr('src', adwordsConfig.adwords_image.image_url)
 
-
-  $('tr[data-story-id="' + storyId + '"]')
-    .find('.thumbnail img').attr('src', adwordsConfig.adwords_image.image_url)
+  flashDisplay(flashMesg, flashStatus);
 
 }());

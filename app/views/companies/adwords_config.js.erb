@@ -6,7 +6,6 @@
       $deletedImages = $('.thumbnail.to-be-removed').closest('li.adwords-image');
 
   $deletedImages.each(function (index, li) {
-    debugger;
     $(this).next().remove();  // hidden input containing adword image id
     $(this).remove();
   })

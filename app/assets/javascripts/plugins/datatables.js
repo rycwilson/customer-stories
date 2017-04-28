@@ -16,6 +16,10 @@ function initDataTables () {
 
   $('#sponsored-stories-table').DataTable({
     paging: false,
+    "columnDefs": [{
+      "orderable": false,
+      "targets": [ 2, 4 ]
+    }]
   });
 
   // Don't specify first column as type: 'date'

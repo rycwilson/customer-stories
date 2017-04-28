@@ -16,7 +16,7 @@
     <thead>
       <tr>
         <th>Customer</th>
-        <th>Story Title <a>(hide)</a> / Sponsored Story Title</th>
+        <th>Story Title / Sponsored Story Title</th>
         <th>Sponsored Story Image</th>
         <th>Status</th>
         <th>Preview</th>
@@ -61,32 +61,60 @@
                 <% if story.adwords_config.enabled? %>
 
                   <li>
-                    <a href="javascript:;" class="enabled-active">
+                    <a href="javascript:;" class="enabled">
                       <i class='fa fa-play'></i>&nbsp;&nbsp;
                       <strong>Enabled</strong>
                     </a>
                   </li>
 
                   <li>
-                    <a href="javascript:;">
+                    <a href="javascript:;" class='pause'>
                       <i class='fa fa-pause'></i>&nbsp;&nbsp;
                       <span>Pause</span>
+                    </a>
+                  </li>
+
+                  <li style='display:none'>
+                    <a href="javascript:;" class='enable'>
+                      <i class='fa fa-play'></i>&nbsp;&nbsp;
+                      <span>Enable</span>
+                    </a>
+                  </li>
+
+                  <li style='display:none'>
+                    <a href="javascript:;" class="paused">
+                      <i class='fa fa-pause'></i>&nbsp;&nbsp;
+                      <strong>Paused</strong>
                     </a>
                   </li>
 
                 <% else %>
 
                   <li>
-                    <a href="javascript:;">
+                    <a href="javascript:;" class='enable'>
                       <i class='fa fa-play'></i>&nbsp;&nbsp;
                       <span>Enable</span>
                     </a>
                   </li>
 
                   <li>
-                    <a href="javascript:;" class="paused-active">
+                    <a href="javascript:;" class="paused">
                       <i class='fa fa-pause'></i>&nbsp;&nbsp;
                       <strong>Paused</strong>
+                    </a>
+                  </li>
+
+                  <li style='display:none'>
+                    <a href="javascript:;" class="enabled">
+                      <i class='fa fa-play'></i>&nbsp;&nbsp;
+                      <strong>Enabled</strong>
+                    </a>
+                  </li>
+
+                  <li style='display:none'>
+                    <a href="javascript:;" class='pause'>
+                      <i class='fa fa-pause'></i>&nbsp;&nbsp;
+                      <span>Pause</span>
                     </a>
                   </li>
 

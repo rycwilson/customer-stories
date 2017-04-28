@@ -164,12 +164,15 @@ class StoriesController < ApplicationController
 
   def adwords_config
     if params[:adwords_image_id]
-      @story.adwords_config.adwords_image = AdwordsImage.find(params[:adwords_image_id])
+      @story.adwords_config.adwords_image = AdwordsImage.find( params[:adwords_image_id] )
     else
-      @story.adwords_config.update(
-        enable: params[:adwords_config][:enable] || false,
-        long_headline: params[:adwords_config][:long_headline]
-      )
+      @story.adwords_config.update(adwords_params)
+      @flash_status = "success"
+      if adwords_params.keys.include?('enabled')
+        @flash_mesg = "Sponsored Story #{adwords_params['enabled'] == 'true' ? 'enabled' : 'paused'}"
+      else
+        @flash_mesg = "Sponsored Story updated"
+      end
     end
     respond_to { |format| format.js }
   end
@@ -199,6 +202,10 @@ class StoriesController < ApplicationController
   def story_params
     params.require(:story).permit(:title, :summary, :quote, :quote_attr_name, :quote_attr_title, :embed_url,
         :published, :logo_published, :preview_published)
+  end
+
+  def adwords_params
+    params.require(:adwords_config).permit(:enabled, :long_headline)
   end
 
   def set_company
