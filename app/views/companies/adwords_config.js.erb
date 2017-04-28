@@ -2,10 +2,15 @@
 (function () {
 
   var flashMesg = "<%= @flash_mesg %>",
-      flashStatus = "<%= @flash_status %>";
+      flashStatus = "<%= @flash_status %>",
+      $deletedImages = $('.thumbnail.to-be-removed').closest('li.adwords-image');
+
+  $deletedImages.each(function (index, li) {
+    debugger;
+    $(this).next().remove();  // hidden input containing adword image id
+    $(this).remove();
+  })
 
   flashDisplay(flashMesg, flashStatus);
-
-  $('.to-be-removed').closest('li.adwords-image').remove();
 
 }());

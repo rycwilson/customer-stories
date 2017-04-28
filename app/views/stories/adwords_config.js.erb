@@ -4,9 +4,8 @@
   var storyId = <%= @story.id %>,
       adwordsConfig = <%= raw @story.adwords_config.to_json(include: { adwords_image: {} }) %>
 
-  console.log(adwordsConfig);
+  $('#image-select-modal').modal('hide')
 
-  $('#image-select-modal').modal('hide');
 
   $('tr[data-story-id="' + storyId + '"]')
     .find('.thumbnail img').attr('src', adwordsConfig.adwords_image.image_url)

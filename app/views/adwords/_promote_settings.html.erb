@@ -149,7 +149,6 @@
 
     <%= f.fields_for :adwords_images do |image_f| %>
 
-      <!-- don't show the default image, but include it lest server thinks it's missing -->
       <li class="adwords-image <%= image_f.object.company_default? ? 'hidden' : '' %>">
         <div class="fileinput fileinput-exists" data-provides="fileinput">
           <div class="fileinput-preview thumbnail" data-trigger="fileinput">

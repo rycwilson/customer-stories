@@ -44,6 +44,12 @@ function promoteListeners () {
         }
       })
 
+    .on('hidden.bs.modal', '#image-select-modal',
+      function () {
+        $(this).find('.modal-footer').empty();
+        $(this).find('.thumbnail').removeClass('selected');
+      })
+
     // ad previews - separate window
     .on('click', '.preview-window a',
       function () {
