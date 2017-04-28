@@ -44,7 +44,12 @@
 
     // ref: https://github.com/vitalets/x-editable/issues/361
     td.sponsored-story-title {
-      p { margin: 0; }
+      p {
+        margin-bottom: 4px;
+      }
+      textarea {
+        margin-bottom: 6px;
+      }
       a { cursor: pointer; }
       .editable-container.editable-inline,
       .editable-container.editable-inline .control-group.form-group,
@@ -77,6 +82,15 @@
           width: 153px;
           cursor: pointer;
           margin: 0;
+          // backup image
+          img:before {
+            content: ' ';
+            display: block;
+            position: absolute;
+            height: 80px;
+            width: 100%;
+            background-image: url(ADWORDS_IMAGE_PLACEHOLDER_URL);
+          }
         }
       }
     }
