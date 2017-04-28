@@ -7,16 +7,15 @@ class AdwordsController < ApplicationController
     story = Story.find(params[:id])
     @short_headline = "#{@company.name} Customer Stories"
     @long_headline = story.adwords_config.long_headline
-    # @sponsored_story_image = @company.adwords_image_url
-    # @logo = @company.adwords_logo_url
+    @image_url = story.adwords_config.adwords_image.image_url
+    @logo_url = @company.adwords_logo_url
     render :ads_preview, layout: false
   end
 
 
   def data
     # @type = params[:type]
-    varmour_marketing_img_url = "https://tpc.googlesyndication.com/simgad/14020142471839339698"
-    story = Story.find_by(title: params[:story_title])
+    # story = Story.find_by(title: params[:story_title])
 
     # @topic_campaign = get_campaign(@company, 'topic')
     # @retarget_campaign = get_campaign(@company, 'retarget')
@@ -27,28 +26,7 @@ class AdwordsController < ApplicationController
     # @topic_ads = get_ads(@company, 'topic')
     # @retarget_ads = get_ads(@company, 'retarget')
 
-    @native_ads_preview_html =
-      render_to_string(
-        partial: "adwords/ad_templates/native",
-        locals: {
-          company_name: @company.name,
-          story_title: params[:story_title],
-          story_url_encoded: url_encode(story.csp_story_url),
-          marketing_img_url: varmour_marketing_img_url
-        },
-        layout: false
-      )
-    @image_ads_preview_html =
-      render_to_string(
-        partial: "adwords/ad_templates/image",
-        locals: {
-          company_name: @company.name,
-          story_title: params[:story_title],
-          story_url_encoded: url_encode(story.csp_story_url),
-          marketing_img_url: varmour_marketing_img_url
-        },
-        layout: false
-      )
+
     respond_to { |format| format.js }
   end
 
