@@ -39,7 +39,7 @@
             <div class="fileinput fileinput-exists" data-provides="fileinput">
               <div class="fileinput-preview thumbnail">
                 <%= image_tag story.adwords_image.try(:image_url) ||
-                              company.adwords_images.default.image_url ||
+                              company.adwords_images.default.try(:image_url) ||
                               ADWORDS_IMAGE_PLACEHOLDER_URL, alt: 'adwords image' %>
               </div>
               <%= file_field_tag(:image_url, class: 'hidden') %>
