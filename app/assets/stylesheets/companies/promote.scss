@@ -19,6 +19,7 @@
   }
 
   #image-select-modal {
+
     .thumbnail {
       height: 110px;
       width: 210px;
@@ -29,6 +30,8 @@
     }
     .modal-body {
       background-color: #f2f2f2;
+      max-height: 475px;
+      overflow-y: scroll;
       li {
         margin: 15px 20px;
       }
