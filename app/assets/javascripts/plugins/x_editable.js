@@ -3,6 +3,7 @@
 function initXeditable () {
 
   $('td.sponsored-story-title a').each(function () {
+
     $(this).editable({
       type: 'textarea',
       model: 'adwords_config',
@@ -18,19 +19,11 @@ function initXeditable () {
       },
       ajaxOptions: {
         type: 'put',
-        dataType: 'json'
+        dataType: 'script'
       },
-      success: function (response, newValue) {
-        console.log(response);
-        console.log(newValue);
-      },
-      rows: 3,
-      // showbuttons: false
-      // params: function (params) {
-
-      // }
-
+      rows: 3
     });
+
   });
 
 }

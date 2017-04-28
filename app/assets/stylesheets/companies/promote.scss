@@ -44,17 +44,15 @@
 
     // ref: https://github.com/vitalets/x-editable/issues/361
     td.sponsored-story-title {
-      a {
-        cursor: pointer;
-      }
+      p { margin: 0; }
+      a { cursor: pointer; }
       .editable-container.editable-inline,
       .editable-container.editable-inline .control-group.form-group,
       .editable-container.editable-inline .control-group.form-group .editable-input,
       .editable-container.editable-inline .control-group.form-group .editable-input textarea,
       .editable-container.editable-inline .control-group.form-group .editable-input select,
-      .editable-container.editable-inline .control-group.form-group .editable-input input:not([type=radio]):not([type=checkbox]):not([type=submit])
-      {
-          width: 100% !important;
+      .editable-container.editable-inline .control-group.form-group .editable-input input:not([type=radio]):not([type=checkbox]):not([type=submit]) {
+        width: 100% !important;
       }
       .editable-buttons {
         display: block;
@@ -63,6 +61,7 @@
       }
     }
 
+    // limit the Preview width
     tr > th:last-of-type, tr > td:last-of-type {
       max-width: 30px !important;
     }
