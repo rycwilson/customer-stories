@@ -66,10 +66,14 @@
     td.sponsored-story-image {
       text-align: center;
       vertical-align: middle;
-      .thumbnail {
-        height: 80px;
-        width: 153px;
-        cursor: pointer;
+      .fileinput {
+        margin: 0;
+        .thumbnail {
+          height: 80px;
+          width: 153px;
+          cursor: pointer;
+          margin: 0;
+        }
       }
     }
 
@@ -77,21 +81,49 @@
       text-align: center;
       vertical-align: middle;
       // ref: http://stackoverflow.com/questions/11078509/how-to-increase-the-clickable-area-of-a-a-tag-button
-      > a, > div > a {
-        color: #666;
+      > div > a, > a {
         display: inline-block;
         position: relative;
         z-index: 1;
         padding: 2em;
         margin: -2em;
+        color: #666;
       }
-      > div > a:hover {   // :focus below (doesn't apply to .preview-window)
+      > a:hover {
+        color: #222;
+      }
+      > div.open {
+        > a.paused { color: #222; }
+        > a.enabled { color: #456f59; }
+      }
+      > div > a.enabled {
+        color: #4d8664;
+      }
+      > div > a.enabled:hover {
+        color: #456f59;
+        text-decoration: none;
+      }
+      > div > a.paused {
+        color: #666;
+      }
+      > div > a.paused:hover {
         color: #222;
         text-decoration: none;
-        cursor: pointer;
+      }
+      .dropdown-menu {
+        a i {
+          color: #666;
+        }
+        a.paused-active i {
+          color: #222;
+        }
+        i.fa-play {
+          color: #4d8664;;
+        }
       }
 
     }
+
     .status-dropdown {
       a.dropdown-toggle:focus {
         color: #222;

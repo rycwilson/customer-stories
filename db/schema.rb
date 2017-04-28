@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170427211511) do
+ActiveRecord::Schema.define(version: 20170428001711) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 20170427211511) do
   add_index "admins", ["email"], name: "index_admins_on_email", unique: true, using: :btree
 
   create_table "adwords_configs", force: :cascade do |t|
-    t.boolean  "enable",        default: false
+    t.boolean  "enabled",       default: false
     t.string   "long_headline"
     t.integer  "story_id"
     t.datetime "created_at",                    null: false

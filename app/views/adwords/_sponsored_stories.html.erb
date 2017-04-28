@@ -49,17 +49,49 @@
 
           <td class='dropdown status-dropdown'>
             <div style='position:relative'>  <!-- div for styling only -->
-              <a href="javascript:;" class="dropdown-toggle" data-toggle='dropdown'>
-                <% if true %>
-                  <i class='fa fa-play'></i>&nbsp;
-                <% else %>
-                  <i class='fa fa-pause'></i>
-                <% end %>
+              <a href="javascript:;"
+                 class="dropdown-toggle <%= story.adwords_config.enabled ? 'enabled' : 'paused' %>" data-toggle='dropdown'>
+
+                <i class="fa <%= story.adwords_config.enabled ? 'fa-play' : 'fa-pause' %> "></i>&nbsp;
                 <i class='fa fa-caret-down'></i>
+
               </a>
               <ul class='dropdown-menu'>
-                <li><a href="javascript:;">Enable</a></li>
-                <li><a href="javascript:;">Pause</a></li>
+
+                <% if story.adwords_config.enabled? %>
+
+                  <li>
+                    <a href="javascript:;" class="enabled-active">
+                      <i class='fa fa-play'></i>&nbsp;&nbsp;
+                      <strong>Enabled</strong>
+                    </a>
+                  </li>
+
+                  <li>
+                    <a href="javascript:;">
+                      <i class='fa fa-pause'></i>&nbsp;&nbsp;
+                      <span>Pause</span>
+                    </a>
+                  </li>
+
+                <% else %>
+
+                  <li>
+                    <a href="javascript:;">
+                      <i class='fa fa-play'></i>&nbsp;&nbsp;
+                      <span>Enable</span>
+                    </a>
+                  </li>
+
+                  <li>
+                    <a href="javascript:;" class="paused-active">
+                      <i class='fa fa-pause'></i>&nbsp;&nbsp;
+                      <strong>Paused</strong>
+                    </a>
+                  </li>
+
+                <% end %>
+
               </ul>
             </div>
           </td>
