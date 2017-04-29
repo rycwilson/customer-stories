@@ -5,8 +5,7 @@
   <script id='adwords-image-template' type="text/template">
 
     <!-- // locals: image_index -->
-
-    <li class='adwords-image new-adwords-image hidden'>
+    <li class='well adwords-image new-adwords-image hidden'>
       <div class="fileinput fileinput-exists" data-provides="fileinput">
         <div class="fileinput-preview thumbnail" data-trigger="fileinput"></div>
         <input type="file"
@@ -60,33 +59,21 @@
            data-min='128x128' data-ratio='1:1' data-suggest='1200x1200'>requirements</a>
       </div>
 
-      <div class="fileinput adwords-logo <%= company.adwords_logo_url.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">
+      <div class="well fileinput adwords-default adwords-logo <%= company.adwords_logo_url.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">
 
-        <div class="fileinput-new thumbnail">
+        <div class="fileinput-new thumbnail" data-trigger="fileinput">
           <%= image_tag ADWORDS_LOGO_PLACEHOLDER_URL, alt: 'logo image' %>
         </div>
 
-        <div class="fileinput-preview fileinput-exists thumbnail"
-            data-trigger="fileinput">
+        <div class="fileinput-preview fileinput-exists thumbnail" data-trigger="fileinput">
           <%= image_tag company.adwords_logo_url, alt: 'logo image' %>
         </div>
 
-        <div class="photo-btns">
-          <div class="btn btn-default btn-file">
-            <div class="fileinput-new">
-              Select image
-            </div>
-            <div class="fileinput-exists">
-              Change
-            </div>
-            <%= f.file_field :adwords_logo_url %>
-            <!-- below doesn't work, must use form builder -->
-            <!-- <input type="file" name="user[photo_url]" class='form-control' id='user_photo_url'> -->
-          </div>
-          <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">
-            Remove
-          </a>
+        <div class="btn-file">
+          <%= f.file_field :adwords_logo_url %>
         </div>
+
+        <i class='change-image glyphicon glyphicon-pencil'></i>
 
       </div>  <!-- /.fileupload -->
 
@@ -103,33 +90,21 @@
            data-min='600x314' data-ratio='1.91:1' data-suggest='1200x628'>requirements</a>
       </div>
 
-      <div class="fileinput adwords-image <%= company.adwords_images.default.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">
+      <div class="well fileinput adwords-default adwords-image <%= company.adwords_images.default.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">
 
-        <div class="fileinput-new thumbnail">
+        <div class="fileinput-new thumbnail" data-trigger='fileinput'>
           <%= image_tag ADWORDS_IMAGE_PLACEHOLDER_URL, alt: 'logo' %>
         </div>
 
-        <div class="fileinput-preview fileinput-exists thumbnail"
-            data-trigger="fileinput">
+        <div class="fileinput-preview fileinput-exists thumbnail" data-trigger="fileinput">
           <%= image_tag company.adwords_images.default.try(:image_url), alt: 'marketing image' %>
         </div>
 
-        <div class="photo-btns">
-          <div class="btn btn-default btn-file">
-            <div class="fileinput-new">
-              Select image
-            </div>
-            <div class="fileinput-exists">
-              Change
-            </div>
-            <%= f.file_field 'default_adwords_image' %>
-            <!-- below doesn't work, must use form builder -->
-            <!-- <input type="file" name="user[photo_url]" class='form-control' id='user_photo_url'> -->
-          </div>
-          <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">
-            Remove
-          </a>
+        <div class="btn-file">
+          <%= f.file_field 'default_adwords_image' %>
         </div>
+
+        <i class='change-image glyphicon glyphicon-pencil'></i>
 
       </div>  <!-- /.fileupload -->
 
@@ -143,21 +118,25 @@
      title='Requirements - Sponsored Stories Image'
      data-min='600x314' data-ratio='1.91:1' data-suggest='1200x628'>requirements</a>
 
-  <div><button type='button' class='new-adwords-image btn btn-secondary'>Add image</button></div>
+  <div class='row'>
+    <div class="col-sm-12">
+      <button type='button' class='new-adwords-image btn btn-secondary'>Add image</button>
+    </div>
+  </div>
 
-  <ul class='adwords-images list-inline'>
+  <ul class='adwords-images list-inline text-center'>
 
     <%= f.fields_for :adwords_images do |image_f| %>
 
-      <li class="adwords-image <%= image_f.object.company_default? ? 'hidden' : '' %>">
+      <li class="well adwords-image <%= image_f.object.company_default? ? 'hidden' : '' %>">
         <div class="fileinput fileinput-exists" data-provides="fileinput">
           <div class="fileinput-preview thumbnail" data-trigger="fileinput">
             <%= image_tag image_f.object.image_url, alt: 'adwords image' %>
           </div>
           <%= image_f.file_field(:image_url, class: 'hidden') %>
           <%= image_f.check_box(:_destroy, { class: 'hidden' }, 'true', 'false') %>
-          <span><i class='change-image glyphicon glyphicon-pencil'></i></span>
-          <span><i class='remove-image glyphicon glyphicon-remove'></i></span>
+          <i class='change-image glyphicon glyphicon-pencil'></i>
+          <i class='remove-image glyphicon glyphicon-remove'></i>
         </div>
       </li>
 

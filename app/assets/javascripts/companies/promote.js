@@ -102,6 +102,18 @@ function promoteListeners () {
           .find('input[type="file"]').addClass('hidden');  // doesn't work if the input has class: hidden from the get-go
       })
 
+    .on('click', '.adwords-default .change-image',
+      function () {
+        var $previewImg = $(this).closest('.fileinput').children('.fileinput-preview img');
+        if ($previewImg.attr('src')) {
+          // click on the preview
+          $(this).closest('.fileinput').children('.thumbnail')[1].click();
+        } else {
+          // click on the placeholder
+          $(this).closest('.fileinput').children('.thumbnail')[0].click();
+        }
+      })
+
     .on('click', 'li.adwords-image .change-image',
       function () {
         $(this).closest('.fileinput').children('.thumbnail')[0].click();

@@ -188,45 +188,48 @@
       margin: 0;
     }
 
-    .fileinput {
+    .fileinput.adwords-logo, .fileinput.adwords-image {
       position: relative;
-      .photo-btns {
+      .change-image {
         position: absolute;
-        top: 0;
-        > div:first-child {
-          margin-bottom: 8px;
-        }
+        top: 15px;
+        right: 10px;
+        padding: 6px;
+        font-size: 18px;
+        color: #666;
+        cursor: pointer;
       }
+      .change-image:hover {
+        color: #222;
+      }
+
     }
 
     .fileinput.adwords-logo {
+      width: 180px;
       .thumbnail {
         height: 110px;
         width: 110px;
       }
-      .photo-btns {
-        left: 120px;
-      }
     }
 
     .fileinput.adwords-image {
+      width: 280px;
       .thumbnail {
         height: 110px;
         width: 210px;
       }
-      .photo-btns {
-        left: 220px;
-      }
     }
 
     button.new-adwords-image {
-      margin-bottom: 20px;
+      margin-bottom: 25px;
     }
 
     li.adwords-image {
       position: relative;
-      margin-right: 60px;
-      margin-bottom: 30px;
+      width: 250px;
+      margin: 0 15px 20px 15px;
+      padding-top: 40px;
 
       .fileinput .thumbnail {
         height: 110px;
@@ -240,6 +243,7 @@
       .change-image, .remove-image {
         position: absolute;
         top: 0px;
+        padding: 6px;
         font-size: 18px;
         color: #666;
         cursor: pointer;
@@ -247,8 +251,14 @@
       .change-image:hover, .remove-image:hover {
         color: #222;
       }
-      .change-image { right: -25px; }
-      .remove-image { right: -50px; }
+      .change-image {
+        right: 40px;
+        top: 5px;
+      }
+      .remove-image {
+        right: 10px;
+        top: 5px;
+      }
 
     }
 
