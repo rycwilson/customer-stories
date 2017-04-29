@@ -15,10 +15,10 @@
          class="datatable table table-striped table-bordered">
     <thead>
       <tr>
+        <th>Status</th>
         <th>Customer</th>
         <th>Story Title / Sponsored Story Title</th>
         <th>Sponsored Story Image</th>
-        <th>Status</th>
         <th>Preview</th>
       </tr>
     </thead>
@@ -27,25 +27,6 @@
       <% company.stories.published.each do |story| %>
 
         <tr data-story-id="<%= story.id %>">
-
-          <td><%= story.customer.name %></td>
-
-          <td class='sponsored-story-title'>
-            <p><%= story.title %></p>
-            <p><a data-pk="<%= story.id %>"><%= story.adwords_config.long_headline %></a></p>
-          </td>
-
-          <td class='sponsored-story-image'>
-            <div class="fileinput fileinput-exists" data-provides="fileinput">
-              <div class="fileinput-preview thumbnail">
-                <%= image_tag story.adwords_image.try(:image_url) ||
-                              company.adwords_images.default.try(:image_url) ||
-                              ADWORDS_IMAGE_PLACEHOLDER_URL, alt: 'adwords image' %>
-              </div>
-              <%= file_field_tag(:image_url, class: 'hidden') %>
-              <!-- click to change -->
-            </div>
-          </td>
 
           <td class='dropdown status-dropdown'>
             <div style='position:relative'>  <!-- div for styling only -->
@@ -123,6 +104,26 @@
               </ul>
             </div>
           </td>
+
+          <td><%= story.customer.name %></td>
+
+          <td class='sponsored-story-title'>
+            <p><%= story.title %></p>
+            <p><a data-pk="<%= story.id %>"><%= story.adwords_config.long_headline %></a></p>
+          </td>
+
+          <td class='sponsored-story-image'>
+            <div class="fileinput fileinput-exists" data-provides="fileinput">
+              <div class="fileinput-preview thumbnail">
+                <%= image_tag story.adwords_image.try(:image_url) ||
+                              company.adwords_images.default.try(:image_url) ||
+                              ADWORDS_IMAGE_PLACEHOLDER_URL, alt: 'adwords image' %>
+              </div>
+              <%= file_field_tag(:image_url, class: 'hidden') %>
+              <!-- click to change -->
+            </div>
+          </td>
+
           <td class='preview-window'>
             <a href="javascript:;">
               <i class='glyphicon glyphicon-new-window'></i>
