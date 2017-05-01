@@ -6,21 +6,6 @@ function companiesShow () {
   $('dropdown.company-settings').removeClass('active');
   $('dropdown.user-profile').removeClass('active');
 
-  $('.adwords-logo.image-requirements, .adwords-image.image-requirements')
-    .popover({
-      html: true,
-      container: 'body',
-      template: '<div class="popover" style="max-width:500px" role="tooltip"><div class="arrow"></div><h3 class="popover-title label-secondary"></h3><div class="popover-content"></div></div>',
-      content: function () {
-        return '<ul>' +
-                 '<li><strong>Minimum dimensions</strong>: ' + $(this).data('min') + ' pixels</li>' +
-                 '<li><strong>Greater than minimum dimensions</strong>: Within 1% of the ' + $(this).data('ratio') + ' ratio</li>' +
-                 '<li><strong>Suggested dimensions</strong>: ' + $(this).data('suggest') + ' pixels</li>' +
-                 '<li><strong>Maximum size</strong>: 1MB (1,048,576 bytes)</li>' +
-               '</ul>';
-      }
-    });
-
 }
 
 function companiesShowListeners () {
@@ -52,17 +37,6 @@ function companiesShowListeners () {
 
         promote();
 
-        // get adwords campaign / ad group / ad data when navigating to Promote
-        // $.getScript("https://adwords-displayads.googleusercontent.com/da/b/preview.js?client=dab-external-preview&obfuscatedCustomerId=3224978778&adGroupId=0&creativeId=189302204873&showInfoMessages=true&hl=en_US&showMulPreview=true&showVariations=true&showVariations=true&sig=ACiVB_yOr05R_pFJ9YPeqQAsfAlKp6Qzgw")
-
-        // $.ajax({
-        //   url: '/adwords/previews',
-        //   method: 'get',
-        //   data: {
-        //     story_title: $('#ads-preview-story-select').find('option:first-of-type').text()
-        //   },
-        //   dataType: 'script'
-        // });
       });
 
 }

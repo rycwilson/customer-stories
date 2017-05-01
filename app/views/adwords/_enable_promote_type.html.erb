@@ -1,7 +1,7 @@
 
 <label>Enable Promote Type</label>
 
-<% if ['varmour', 'retailnext'].include?(company.subdomain) %>
+<% if company.promote_tr? %>
 
   <span>
     <label class="checkbox-inline" style='pointer-events:none'>

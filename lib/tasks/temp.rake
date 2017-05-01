@@ -4,14 +4,14 @@ namespace :temp do
 
 
   task adwords: :environment do
-    Story.where(published: true).each do |story|
-      story.create_adwords_config(long_headline: story.title)
-    end
-    Company.all.each do |company|
-      company.update(adwords_short_headline: company.name + ' Customer Stories')
-    end
+    # Story.where(published: true).each do |story|
+    #   story.create_adwords_config(long_headline: story.title)
+    # end
+    # Company.all.each do |company|
+    #   company.update(adwords_short_headline: company.name + ' Customer Stories')
+    # end
     Company.find_by(subdomain:'varmour').update(promote_tr: true)
-    Company.find_by(subdomain:'retailnext').update(promote_crm: true)
+    Company.find_by(subdomain:'retailnext').update(promote_tr: true)
   end
 
   task quotes: :environment do

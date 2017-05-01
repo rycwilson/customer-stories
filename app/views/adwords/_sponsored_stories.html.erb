@@ -30,78 +30,22 @@
 
           <td class='dropdown status-dropdown'>
             <div style='position:relative'>  <!-- div for styling only -->
-              <a href="javascript:;"
-                 class="dropdown-toggle <%= story.adwords_config.enabled ? 'enabled' : 'paused' %>" data-toggle='dropdown'>
 
-                <i class="fa <%= story.adwords_config.enabled ? 'fa-play' : 'fa-pause' %> "></i>&nbsp;
-                <i class='fa fa-caret-down'></i>
+              <% if company.promote_tr? %>
 
-              </a>
-              <ul class='dropdown-menu'>
+                <%= render 'adwords/status_dropdown', { story: story } %>
 
-                <% if story.adwords_config.enabled? %>
+              <% else %>
 
-                  <li>
-                    <a href="javascript:;" class="enabled">
-                      <i class='fa fa-play'></i>&nbsp;&nbsp;
-                      <strong>Enabled</strong>
-                    </a>
-                  </li>
+                <a href="javascript:;" class="dropdown-toggle paused disabled"
+                   data-toggle='dropdown' disabled
+                   data-toggle='tooltip' title='Contact Customer Stories to subscribe to this feature'>
+                  <i class="fa fa-pause"></i>&nbsp;
+                  <i class='fa fa-caret-down'></i>
+                </a>
 
-                  <li>
-                    <a href="javascript:;" class='pause'>
-                      <i class='fa fa-pause'></i>&nbsp;&nbsp;
-                      <span>Pause</span>
-                    </a>
-                  </li>
+              <% end %>
 
-                  <li style='display:none'>
-                    <a href="javascript:;" class='enable'>
-                      <i class='fa fa-play'></i>&nbsp;&nbsp;
-                      <span>Enable</span>
-                    </a>
-                  </li>
-
-                  <li style='display:none'>
-                    <a href="javascript:;" class="paused">
-                      <i class='fa fa-pause'></i>&nbsp;&nbsp;
-                      <strong>Paused</strong>
-                    </a>
-                  </li>
-
-                <% else %>
-
-                  <li>
-                    <a href="javascript:;" class='enable'>
-                      <i class='fa fa-play'></i>&nbsp;&nbsp;
-                      <span>Enable</span>
-                    </a>
-                  </li>
-
-                  <li>
-                    <a href="javascript:;" class="paused">
-                      <i class='fa fa-pause'></i>&nbsp;&nbsp;
-                      <strong>Paused</strong>
-                    </a>
-                  </li>
-
-                  <li style='display:none'>
-                    <a href="javascript:;" class="enabled">
-                      <i class='fa fa-play'></i>&nbsp;&nbsp;
-                      <strong>Enabled</strong>
-                    </a>
-                  </li>
-
-                  <li style='display:none'>
-                    <a href="javascript:;" class='pause'>
-                      <i class='fa fa-pause'></i>&nbsp;&nbsp;
-                      <span>Pause</span>
-                    </a>
-                  </li>
-
-                <% end %>
-
-              </ul>
             </div>
           </td>
 
