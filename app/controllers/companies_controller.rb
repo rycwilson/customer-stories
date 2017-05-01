@@ -62,9 +62,9 @@ class CompaniesController < ApplicationController
   end
 
   def adwords_config
-    if @company.update company_params
+    if @company.update(company_params)
       # if the default image wasn't set or changed, parameter won't show up
-      if params[:company][:default_adwords_image]
+      if company_params[:default_adwords_image]
         update_default_adwords_image(@company, params[:company][:default_adwords_image])
       end
       @flash_mesg = "Sponsored Stories updated"
@@ -73,7 +73,13 @@ class CompaniesController < ApplicationController
       @flash_mesg = @company.errors.full_messages.join(', ')
       @flash_status = "danger"
     end
-    render 'adwords/update'
+    respond_to do |format|
+      format.html do
+        # forward params so new image urls can be uploaded to adwords api
+        redirect_to( adwords_update_path(request.parameters) )
+      end
+      format.js { render 'adwords/update' }
+    end
   end
 
   def tags

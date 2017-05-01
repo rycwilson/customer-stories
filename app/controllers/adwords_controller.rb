@@ -2,8 +2,13 @@ class AdwordsController < ApplicationController
 
   require 'adwords_api'
   before_action { @company = Company.find_by(subdomain: request.subdomain) }
+  before_action only: [:update] { get_ad_groups(@company) }
 
   def update
+    if new_images?(params[:company])
+      new_image_urls = get_new_image_urls(params[:company])
+    end
+    new_image_urls.each { |image_url| upload_image(image_url) }
     respond_to do |format|
       format.html do
         cookies[:workflow_tab] = 'promote'
@@ -60,7 +65,6 @@ class AdwordsController < ApplicationController
   end
 
   def get_campaign(company, type)
-    api = get_adwords_api()
     service = api.service(:CampaignService, get_api_version())
     selector = {
       :fields => ['Id', 'Name', 'Status', 'Labels'],
@@ -103,6 +107,34 @@ class AdwordsController < ApplicationController
     end
   end
 
+  def get_ad_groups(company)
+    @topic_ad_group = get_ad_group(company, 'topic')
+    @retarget_ad_group = get_ad_group(company, 'retarget')
+  end
+
+  def upload_image(image_url)
+    api = get_adwords_api()
+    media_srv = api.service(:MediaService, get_api_version())
+    img_url = image_url
+    img_data = AdsCommon::Http.get(img_url, api.config)
+    base64_image_data = Base64.encode64(img_data)
+    image = {
+      :xsi_type => 'Image',
+      :data => base64_image_data,
+      :type => 'IMAGE'
+    }
+    response = media_srv.upload([image])
+    if response and !response.empty?
+      ret_image = response.first
+      full_dimensions = ret_image[:dimensions]['FULL']
+      puts ("Image with ID %d, dimensions %dx%d and MIME type '%s' uploaded " +
+          "successfully.") % [ret_image[:media_id], full_dimensions[:height],
+           full_dimensions[:width], ret_image[:mime_type]]
+    else
+      puts 'No images uploaded.'
+    end
+  end
+
   def get_ads(company, type)
     api = get_adwords_api()
     service = api.service(:AdGroupAdService, get_api_version())
@@ -123,6 +155,18 @@ class AdwordsController < ApplicationController
       ad[:labels].any? { |label| label[:name] == company.subdomain } &&
       ad[:labels].any? { |label| label[:name] == type }
     end
+  end
+
+  def new_images?(params)
+    params[:adwords_images_attributes].any? do |index,atts|
+      atts.include?('image_url')
+    end
+  end
+
+  def get_new_image_urls(params)
+    params[:adwords_images_attributes]
+      .select { |index, atts| atts['image_url'].present? }
+      .to_a.map { |image| image[1]['image_url'] }
   end
 
 
