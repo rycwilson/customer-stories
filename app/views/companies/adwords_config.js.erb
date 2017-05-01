@@ -3,11 +3,19 @@
 
   var flashMesg = "<%= @flash_mesg %>",
       flashStatus = "<%= @flash_status %>",
+      $table = $('#sponsored-stories-table'),
       $deletedImages = $('.thumbnail.to-be-removed').closest('li.adwords-image');
 
   $deletedImages.each(function (index, li) {
     $(this).next().remove();  // hidden input containing adword image id
     $(this).remove();
+  })
+
+  // refresh the images - any that have been deleted will have a
+  // default background image that points to ADWORDS_IMAGE_PLACEHOLDER_URL
+  $table.find('img').each(function() {
+    var d = new Date()
+    $(this).attr('src', $(this).attr('src') + '?' + d.getTime())
   })
 
   flashDisplay(flashMesg, flashStatus);

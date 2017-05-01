@@ -81,8 +81,8 @@
       .fileinput {
         margin: 0;
         .thumbnail {
-          height: 80px;
-          width: 153px;
+          height: 70px;
+          width: 143px;
           cursor: pointer;
           margin: 0;
           // backup image
@@ -91,8 +91,9 @@
             display: block;
             position: absolute;
             height: 80px;
-            width: 100%;
-            background-image: url(ADWORDS_IMAGE_PLACEHOLDER_URL);
+            width: 153px;
+            background-image: url('<%= ADWORDS_IMAGE_PLACEHOLDER_URL %>');
+            background-size: contain;
           }
         }
       }
