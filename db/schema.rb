@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170428001711) do
+ActiveRecord::Schema.define(version: 20170501164333) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,6 +90,8 @@ ActiveRecord::Schema.define(version: 20170428001711) do
     t.string   "primary_cta_text_color"
     t.string   "adwords_logo_url"
     t.string   "adwords_short_headline"
+    t.boolean  "promote_tr",                   default: false
+    t.boolean  "promote_crm",                  default: false
   end
 
   add_index "companies", ["subdomain"], name: "index_companies_on_subdomain", unique: true, using: :btree
