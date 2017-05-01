@@ -3,6 +3,17 @@ class AdwordsController < ApplicationController
   require 'adwords_api'
   before_action { @company = Company.find_by(subdomain: request.subdomain) }
 
+  def update
+    respond_to do |format|
+      format.html do
+        cookies[:workflow_tab] = 'promote'
+        cookies[:workflow_sub_tab] = 'promote-settings'
+        redirect_to(company_path(@company), flash: { success: "Sponsored Stories updated" })
+      end
+      format.js {}
+    end
+  end
+
   def preview
     story = Story.find(params[:id])
     @short_headline = "#{@company.name} Customer Stories"
@@ -13,7 +24,6 @@ class AdwordsController < ApplicationController
     @logo_url = @company.adwords_logo_url || ADWORDS_LOGO_PLACEHOLDER_URL
     render :ads_preview, layout: false
   end
-
 
   def data
     # @type = params[:type]

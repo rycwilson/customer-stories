@@ -73,14 +73,7 @@ class CompaniesController < ApplicationController
       @flash_mesg = @company.errors.full_messages.join(', ')
       @flash_status = "danger"
     end
-    respond_to do |format|
-      format.html do
-        cookies[:workflow_tab] = 'promote'
-        cookies[:workflow_sub_tab] = 'promote-settings'
-        redirect_to(company_path(@company), flash: { success: "Sponsored Stories updated" })
-      end
-      format.js {}
-    end
+    render 'adwords/update'
   end
 
   def tags
