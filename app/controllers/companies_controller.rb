@@ -64,7 +64,7 @@ class CompaniesController < ApplicationController
   def adwords_config
     if @company.update(company_params)
       # if the default image wasn't set or changed, parameter won't show up
-      if company_params[:default_adwords_image]
+      if params[:company][:default_adwords_image]
         update_default_adwords_image(@company, params[:company][:default_adwords_image])
       end
       @flash_mesg = "Sponsored Stories updated"

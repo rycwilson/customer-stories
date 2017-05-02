@@ -8,7 +8,7 @@ class AdwordsController < ApplicationController
     if new_images?(params[:company])
       new_image_urls = get_new_image_urls(params[:company])
     end
-    new_image_urls.each { |image_url| upload_image(image_url) }
+    new_image_urls.try(:each) { |image_url| upload_image(image_url) }
     respond_to do |format|
       format.html do
         cookies[:workflow_tab] = 'promote'
