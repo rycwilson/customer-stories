@@ -6,9 +6,10 @@ class AdwordsController < ApplicationController
 
   def update
     if new_images?(params[:company])
-      new_image_urls = get_new_image_urls(params[:company])
+      get_new_image_urls(params[:company]).each do |image_url|
+        upload_image(image_url) or return
+      end
     end
-    new_image_urls.try(:each) { |image_url| upload_image(image_url) }
     respond_to do |format|
       format.html do
         cookies[:workflow_tab] = 'promote'
@@ -123,9 +124,36 @@ class AdwordsController < ApplicationController
       :data => base64_image_data,
       :type => 'IMAGE'
     }
-    response = media_srv.upload([image])
-    AdwordsImage.where(image_url: image_url).last
-                .update(adwords_media_id: response[0][:media_id])
+
+    begin
+      response = media_srv.upload([image])
+
+    rescue AdwordsApi::Errors::ApiException => e
+      puts "Message: %s" % e.message
+      puts 'Errors:'
+      e.errors.each_with_index do |error, index|
+        puts "\tError [%d]:" % (index + 1)
+        error.each do |field, value|
+          puts "\t\t%s: %s" % [field, value]
+        end
+      end
+      if e.message.match(/ImageError.UNEXPECTED_SIZE/)
+        flash_mesg = "Image does not meet size requirements"
+      else
+        flash_mesg = e.message
+      end
+      AdwordsImage.find_by(image_url: image_url).destroy
+    end
+    cookies[:workflow_tab] = 'promote'
+    cookies[:workflow_sub_tab] = 'promote-settings'
+    redirect_to(company_path(@company), flash: { danger: flash_mesg }) and return
+
+    # assign adwords_media_id
+    # if logo image, or if image was deleted due to not meeting size requirements,
+    # it won't be found
+    AdwordsImage.find_by(image_url: image_url)
+                .try(:update, { adwords_media_id: response[0][:media_id] })
+
     if response and !response.empty?
       ret_image = response.first
       full_dimensions = ret_image[:dimensions]['FULL']
@@ -159,14 +187,18 @@ class AdwordsController < ApplicationController
     end
   end
 
-  def new_images?(params)
-    params[:adwords_images_attributes].any? do |index,atts|
+  def new_images?(company_params)
+    company_params[:adwords_logo_url].present? ||
+    company_params[:default_adwords_image].present? ||
+    company_params[:adwords_images_attributes].any? do |index,atts|
       atts.include?('image_url')
     end
   end
 
-  def get_new_image_urls(params)
-    params[:adwords_images_attributes]
+  def get_new_image_urls(company_params)
+    (company_params[:adwords_logo_url].try(:split) || []) +
+    (company_params[:default_adwords_image].try(:split) || []) +
+    (company_params[:adwords_images_attributes] || [])
       .select { |index, atts| atts['image_url'].present? }
       .to_a.map { |image| image[1]['image_url'] }
   end
