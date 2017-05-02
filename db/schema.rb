@@ -49,10 +49,10 @@ ActiveRecord::Schema.define(version: 20170502000855) do
   create_table "adwords_images", force: :cascade do |t|
     t.integer  "company_id"
     t.string   "image_url"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
-    t.boolean  "company_default", default: false
-    t.integer  "adwords_id"
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
+    t.boolean  "company_default",            default: false
+    t.integer  "adwords_media_id", limit: 8
   end
 
   add_index "adwords_images", ["company_id"], name: "index_adwords_images_on_company_id", using: :btree

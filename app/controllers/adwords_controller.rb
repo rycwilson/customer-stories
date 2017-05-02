@@ -124,6 +124,8 @@ class AdwordsController < ApplicationController
       :type => 'IMAGE'
     }
     response = media_srv.upload([image])
+    AdwordsImage.where(image_url: image_url).last
+                .update(adwords_media_id: response[0][:media_id])
     if response and !response.empty?
       ret_image = response.first
       full_dimensions = ret_image[:dimensions]['FULL']
