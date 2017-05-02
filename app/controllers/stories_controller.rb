@@ -165,6 +165,7 @@ class StoriesController < ApplicationController
   def adwords_config
     if params[:adwords_image_id]
       @story.adwords_config.adwords_image = AdwordsImage.find( params[:adwords_image_id] )
+
     else
       @story.adwords_config.update(adwords_params)
       @flash_status = "success"

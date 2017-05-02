@@ -4,7 +4,10 @@ class AdwordsController < ApplicationController
   before_action { @company = Company.find_by(subdomain: request.subdomain) }
   before_action only: [:update] { get_ad_groups(@company) }
 
-  def update
+  def update_story
+  end
+
+  def update_company
     if new_images?(params[:company])
       get_new_image_urls(params[:company]).each do |image_url|
         upload_image(image_url) or return

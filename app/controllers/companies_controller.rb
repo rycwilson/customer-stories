@@ -76,9 +76,9 @@ class CompaniesController < ApplicationController
     respond_to do |format|
       format.html do
         # forward params so new image urls can be uploaded to adwords api
-        redirect_to( adwords_update_path(request.parameters) )
+        redirect_to( update_company_adwords_path(request.parameters) )
       end
-      format.js { render 'adwords/update' }
+      format.js { render 'adwords/update_company' }
     end
   end
 

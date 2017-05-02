@@ -41,9 +41,23 @@ function promoteListeners () {
       function () {
         var $modal = $('#image-select-modal'),
             storyId = $(this).closest('tr').data('story-id'),
+            currentImageUrl = $(this).children('img').attr('src'),
             template = _.template( $('#image-select-form-template').html() );
-        $modal.find('.modal-footer').empty()
-              .append(template({ storyId: storyId }));
+
+        // unhide any images that were hidden last time
+        $modal.find('li').removeClass('hidden');
+
+        // hide the current image
+        $modal.find('img[src="' + currentImageUrl + '"]')
+              .closest('li').addClass('hidden');
+
+        // add the form
+        $modal.find('.modal-footer')
+              .empty()
+              .append(template({
+                storyId: storyId
+              }));
+
         $modal.modal('show');
       })
 
