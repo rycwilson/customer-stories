@@ -4,7 +4,12 @@ class AdwordsController < ApplicationController
   before_action { @company = Company.find_by(subdomain: request.subdomain) }
   before_action only: [:update] { get_ad_groups(@company) }
 
+
   def update_story
+    story = Story.find( params[:story_id] )
+    adwords_media_id = params[:adwords_media_id]  # may be nil if image doesn't have one
+    binding.remote_pry
+    # update the ad associated with this story
   end
 
   def update_company

@@ -164,8 +164,14 @@ class StoriesController < ApplicationController
 
   def adwords_config
     if params[:adwords_image_id]
+      adwords_image = AdwordsImage.find( params[:adwords_image_id] )
       @story.adwords_config.adwords_image = AdwordsImage.find( params[:adwords_image_id] )
-
+      redirect_to(
+        update_story_adwords_path(
+          @story.id, { adwords_image_id: adwords_image.id,
+                       adwords_media_id: adwords_image.adwords_media_id }
+        )
+      ) and return
     else
       @story.adwords_config.update(adwords_params)
       @flash_status = "success"
