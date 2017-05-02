@@ -128,6 +128,14 @@ class AdwordsController < ApplicationController
     begin
       response = media_srv.upload([image])
 
+    rescue AdsCommon::Errors::HttpError => e
+      puts "HTTP Error: %s" % e
+      flash_mesg = e.message
+      AdwordsImage.find_by(image_url: image_url).destroy
+      cookies[:workflow_tab] = 'promote'
+      cookies[:workflow_sub_tab] = 'promote-settings'
+      redirect_to(company_path(@company), flash: { danger: flash_mesg }) and return
+
     rescue AdwordsApi::Errors::ApiException => e
       puts "Message: %s" % e.message
       puts 'Errors:'
@@ -143,10 +151,10 @@ class AdwordsController < ApplicationController
         flash_mesg = e.message
       end
       AdwordsImage.find_by(image_url: image_url).destroy
+      cookies[:workflow_tab] = 'promote'
+      cookies[:workflow_sub_tab] = 'promote-settings'
+      redirect_to(company_path(@company), flash: { danger: flash_mesg }) and return
     end
-    cookies[:workflow_tab] = 'promote'
-    cookies[:workflow_sub_tab] = 'promote-settings'
-    redirect_to(company_path(@company), flash: { danger: flash_mesg }) and return
 
     # assign adwords_media_id
     # if logo image, or if image was deleted due to not meeting size requirements,
@@ -163,6 +171,7 @@ class AdwordsController < ApplicationController
     else
       puts 'No images uploaded.'
     end
+    return true
   end
 
   def get_ads(company, type)
