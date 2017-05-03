@@ -24,7 +24,7 @@ function initXeditable () {
       success: function (response) {
         $.get({
           url: '/adwords/update/' + $(this).data('pk'),
-          data: { image_changed: true },
+          data: { long_headline_changed: true },
           dataType: 'script'
         });
       },

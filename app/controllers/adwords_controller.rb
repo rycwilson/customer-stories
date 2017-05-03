@@ -7,6 +7,8 @@ class AdwordsController < ApplicationController
     @story = Story.includes(:adwords_config, :adwords_image).find( params[:story_id] )
     @image_changed = params[:image_changed].present? ? true : false
     @status_changed = params[:status_changed].present? ? true : false
+    @long_headline_changed = !(@image_changed || @status_changed)
+
     # ads = get_ads(@company)
     # topic_ad = get_story_ad( story.adwords_config.topic_ad_id )
     # retarget_ad = get_story_ad( story.adwords_config.retarget_ad_id )
@@ -16,7 +18,7 @@ class AdwordsController < ApplicationController
     elsif @status_changed
       # update_ad_
 
-    else  # long headline
+    elsif @long_headline_changed
 
     end
 
