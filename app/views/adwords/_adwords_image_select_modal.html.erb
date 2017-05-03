@@ -1,5 +1,5 @@
 
-<div id='image-select-modal' class="modal fade" tabindex="-1" role="dialog">
+<div id='adwords-image-select-modal' class="modal fade" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
 
@@ -18,6 +18,7 @@
                 <div class="fileinput-preview thumbnail" data-image-id="<%= image.id %>">
                   <%= image_tag image.image_url, alt: 'adwords image' %>
                 </div>
+                <!-- won't render properly without this -->
                 <%= file_field_tag(:image_url, class: 'hidden') %>
               </div>
             </li>
@@ -37,11 +38,12 @@
 <!-- modal footer content consists of story form generated on the fly -->
 <% content_for :underscore_templates do %>
 
-  <script id='image-select-form-template' type='text/template'>
+  <script id='adwords-image-select-form-template' type='text/template'>
 
     <!-- // locals: storyId -->
-    <form action="/stories/{{= storyId }}/adwords_config" accept-charset="UTF-8"
-          method="put" data-remote="true">
+    <form id='adwords-image-select-form'
+          action="/stories/{{= storyId }}/adwords_config" accept-charset="UTF-8"
+          method="put" data-remote="true" data-type="json" data-story-id="{{= storyId }}">
 
       <input name='adwords_image_id' type='hidden'>
 

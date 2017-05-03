@@ -12,8 +12,10 @@ function promoteListeners () {
         $('[data-toggle="tooltip"]').tooltip('hide');
       })
 
+    // change sponsored story status
     .on('click', 'td.status-dropdown .dropdown-menu a.pause, td.status-dropdown .dropdown-menu a.enable',
       function () {
+        var storyId = $(this).closest('tr').data('story-id');
 
         $(this).closest('.dropdown')
                .find('a.dropdown-toggle')
@@ -22,15 +24,24 @@ function promoteListeners () {
                .toggleClass('fa-play fa-pause');
         $(this).closest('.dropdown-menu').children('li').toggle();
 
+        // first update story.adwords_config and return positive json response,
+        // then send a request to update adwords
         $.ajax({
-          url: '/stories/' + $(this).closest('tr').data('story-id') + '/adwords_config',
+          url: '/stories/' + storyId + '/adwords_config',
           method: 'put',
           data: {
             adwords_config: {
               enabled: $(this).attr('class') === 'enable' ? true : false,
             }
           },
-          dataType: 'script'
+          dataType: 'json',
+          success: function (data, status, xhr) {
+            $.get({
+              url: '/adwords/update/' + storyId,
+              data: { status_changed: true },
+              dataType: 'script'
+            });
+          },
         });
 
       })
@@ -39,29 +50,34 @@ function promoteListeners () {
     // open the image select modal and create the story form
     .on('click', 'td.sponsored-story-image .thumbnail',
       function () {
-        var $modal = $('#image-select-modal'),
+        var $modal = $('#adwords-image-select-modal'),
             storyId = $(this).closest('tr').data('story-id'),
             currentImageUrl = $(this).children('img').attr('src'),
-            template = _.template( $('#image-select-form-template').html() );
-
+            template = _.template( $('#adwords-image-select-form-template').html() );
         // unhide any images that were hidden last time
         $modal.find('li').removeClass('hidden');
-
         // hide the current image
         $modal.find('img[src="' + currentImageUrl + '"]')
               .closest('li').addClass('hidden');
-
         // add the form
-        $modal.find('.modal-footer')
-              .empty()
-              .append(template({
-                storyId: storyId
-              }));
-
+        $modal.find('.modal-footer').empty()
+              .append( template({ storyId: storyId }) );
         $modal.modal('show');
       })
 
-    .on('click', '#image-select-modal .thumbnail',
+    // on successful image select reponse, send request to update adwords
+    // see x_editable.js for request following long_headline update
+    .on('ajax:success', '#adwords-image-select-form',
+      function (event) {
+        $.get({
+          url: '/adwords/update/' + $(this).data('story-id'),
+          data: { image_changed: true },
+          dataType: 'script'
+        });
+      })
+
+    // on selecting an image, update a hidden field containing the selected image id
+    .on('click', '#adwords-image-select-modal .thumbnail',
       function () {
         if ($(this).hasClass('selected')) {
           return false;
@@ -71,7 +87,7 @@ function promoteListeners () {
           // update the form's hidden field for image id
           $(this).closest('.modal-content').find('input[type="hidden"]')
                  .val(selectedImageId);
-          $('#image-select-modal .thumbnail')
+          $('#adwords-image-select-modal .thumbnail')
             // thumbnail is the raw html, $(this) is jquery
             .each(function (index, thumbnail) {
               if ($(this).data('image-id') !== selectedImageId) {
@@ -81,7 +97,8 @@ function promoteListeners () {
         }
       })
 
-    .on('hidden.bs.modal', '#image-select-modal',
+    // reset the modal
+    .on('hidden.bs.modal', '#adwords-image-select-modal',
       function () {
         $(this).find('.modal-footer').empty();
         $(this).find('.thumbnail').removeClass('selected');
@@ -95,6 +112,7 @@ function promoteListeners () {
                     '/sponsored_story_preview', '_blank');
       })
 
+    // upload a new adwords image
     .on('click', 'button.new-adwords-image',
       function () {
 

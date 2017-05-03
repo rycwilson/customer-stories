@@ -19,7 +19,14 @@ function initXeditable () {
       },
       ajaxOptions: {
         type: 'put',
-        dataType: 'script'
+        dataType: 'json'
+      },
+      success: function (response) {
+        $.get({
+          url: '/adwords/update/' + $(this).data('pk'),
+          data: { image_changed: true },
+          dataType: 'script'
+        });
       },
       rows: 3
     });

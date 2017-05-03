@@ -2,14 +2,31 @@ class AdwordsController < ApplicationController
 
   require 'adwords_api'
   before_action { @company = Company.find_by(subdomain: request.subdomain) }
-  before_action only: [:update] { get_ad_groups(@company) }
-
 
   def update_story
-    story = Story.find( params[:story_id] )
-    adwords_media_id = params[:adwords_media_id]  # may be nil if image doesn't have one
-    binding.remote_pry
-    # update the ad associated with this story
+    @story = Story.includes(:adwords_config, :adwords_image).find( params[:story_id] )
+    @image_changed = params[:image_changed].present? ? true : false
+    @status_changed = params[:status_changed].present? ? true : false
+    # ads = get_ads(@company)
+    # topic_ad = get_story_ad( story.adwords_config.topic_ad_id )
+    # retarget_ad = get_story_ad( story.adwords_config.retarget_ad_id )
+    if @image_changed
+      # update_ad_image( story, topic_ad )
+      # update_ad_image( story, retarget_ad )
+    elsif @status_changed
+      # update_ad_
+
+    else  # long headline
+
+    end
+
+    @flash_status = "success"
+    if @status_changed
+      @flash_mesg = "Sponsored Story #{@story.adwords_config.enabled ? 'enabled' : 'paused'}"
+    else
+      @flash_mesg = "Sponsored Story updated"
+    end
+    respond_to { |format| format.js }
   end
 
   def update_company
@@ -164,11 +181,11 @@ class AdwordsController < ApplicationController
       redirect_to(company_path(@company), flash: { danger: flash_mesg }) and return
     end
 
-    # assign adwords_media_id
+    # assign adwords media_id
     # if logo image, or if image was deleted due to not meeting size requirements,
     # it won't be found
     AdwordsImage.find_by(image_url: image_url)
-                .try(:update, { adwords_media_id: response[0][:media_id] })
+                .try(:update, { media_id: response[0][:media_id] })
 
     if response and !response.empty?
       ret_image = response.first
@@ -182,7 +199,27 @@ class AdwordsController < ApplicationController
     return true
   end
 
-  def get_ads(company, type)
+  def get_story_ad (ad_id)
+    api = get_adwords_api()
+    service = api.service(:AdGroupAdService, get_api_version())
+    selector = {
+      :fields => ['Id', 'Name', 'Status', 'Labels'],
+      :ordering => [{:field => 'Id', :sort_order => 'ASCENDING'}],
+      :predicates => [ { field: 'Id', operator: 'IN', values: [ ad_id ] }],
+      :paging => {:start_index => 0, :number_results => 50}
+    }
+    result = nil
+    begin
+      result = service.get(selector)
+    rescue AdwordsApi::Errors::ApiException => e
+      logger.fatal("Exception occurred: %s\n%s" % [e.to_s, e.message])
+      flash.now[:alert] =
+          'API request failed with an error, see logs for details'
+    end
+    result[:entries][0]
+  end
+
+  def get_ads (company)
     api = get_adwords_api()
     service = api.service(:AdGroupAdService, get_api_version())
     selector = {
@@ -198,9 +235,58 @@ class AdwordsController < ApplicationController
       flash.now[:alert] =
           'API request failed with an error, see logs for details'
     end
-    result[:entries].select do |ad|
-      ad[:labels].any? { |label| label[:name] == company.subdomain } &&
-      ad[:labels].any? { |label| label[:name] == type }
+    return result[:entries].select do |ad|
+             ad[:labels].try(:any?) { |label| label[:name] == company.subdomain }
+           end || []
+  end
+
+  # in progress - not working
+  def update_ad_image (story, ad)
+    api = get_adwords_api()
+    service = api.service( :AdGroupAdService, get_api_version() )
+    # Prepare operation for updating ad
+
+    responsive_display_ad = {
+      :id => ad[:ad][:id],
+      :xsi_type => 'ResponsiveDisplayAd',
+      # This ad format does not allow the creation of an image using the
+      # Image.data field. An image must first be created using the MediaService,
+      # and Image.mediaId must be populated when creating the ad.
+      :marketing_image => {
+        :media_id => story.adwords_image.media_id
+      }
+    }
+
+    responsive_display_ad_group_ad = {
+      :ad_group_id => ad[:ad_group_id],
+      :ad => responsive_display_ad,
+      # Additional propertires (non-required).
+      :status => story.adwords_config.enabled ? 'ENABLED' : 'PAUSED'
+    }
+
+    responsive_display_ad_group_ad_operation = {
+      :operator => 'SET',
+      :operand => responsive_display_ad_group_ad
+    }
+
+    # operation = {
+    #   operator: 'SET',
+    #   operand: {
+    #     ad_group_id: ad[:ad_group_id],
+    #     ad: {
+    #       id: ad[:ad][:id],
+    #     image: { media_id: story.adwords_image.media_id }
+    #   }
+    #   }
+    # }
+    # Update ad.
+    response = service.mutate([responsive_display_ad_group_ad_operation])
+    if response and response[:value]
+      ad = response[:value].first
+      puts "Ad ID %d was successfully updated, status set to '%s'." %
+          [ad[:ad][:id], ad[:status]]
+    else
+      puts 'No ads were updated.'
     end
   end
 

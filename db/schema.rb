@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170502000855) do
+ActiveRecord::Schema.define(version: 20170503011209) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,11 +37,15 @@ ActiveRecord::Schema.define(version: 20170502000855) do
   add_index "admins", ["email"], name: "index_admins_on_email", unique: true, using: :btree
 
   create_table "adwords_configs", force: :cascade do |t|
-    t.boolean  "enabled",       default: false
+    t.boolean  "enabled",                        default: false
     t.string   "long_headline"
     t.integer  "story_id"
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
+    t.datetime "created_at",                                     null: false
+    t.datetime "updated_at",                                     null: false
+    t.integer  "retarget_ad_id",       limit: 8
+    t.integer  "topic_ad_id",          limit: 8
+    t.integer  "topic_ad_group_id",    limit: 8
+    t.integer  "retarget_ad_group_id", limit: 8
   end
 
   add_index "adwords_configs", ["story_id"], name: "index_adwords_configs_on_story_id", using: :btree
@@ -49,10 +53,10 @@ ActiveRecord::Schema.define(version: 20170502000855) do
   create_table "adwords_images", force: :cascade do |t|
     t.integer  "company_id"
     t.string   "image_url"
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
-    t.boolean  "company_default",            default: false
-    t.integer  "adwords_media_id", limit: 8
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
+    t.boolean  "company_default",           default: false
+    t.integer  "media_id",        limit: 8
   end
 
   add_index "adwords_images", ["company_id"], name: "index_adwords_images_on_company_id", using: :btree

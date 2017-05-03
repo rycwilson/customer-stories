@@ -1,0 +1,26 @@
+
+(function () {
+
+  var storyId = <%= @story.id %>,
+      storyAdwordsConfig = <%= raw @story.adwords_config.to_json(include: { adwords_image: {} }) %>,
+      $row = $('tr[data-story-id="' + storyId + '"]'),
+      imageChanged = <%= @image_changed %>,
+      statusChanged = <%= @status_changed %>,
+      flashMesg = "<%= @flash_mesg %>",
+      flashStatus = "<%= @flash_status %>";
+
+  if (imageChanged) {
+    $('#adwords-image-select-modal').modal('hide')
+    if ( storyAdwordsConfig.adwords_image &&
+         storyAdwordsConfig.adwords_image.image_url ) {
+      $row.find('.thumbnail img').attr('src', storyAdwordsConfig.adwords_image.image_url)
+    }
+  } else if (statusChanged) {
+    // handled by classes / styling
+  } else {
+    // long headline handled by xeditable plugin
+  }
+
+  flashDisplay(flashMesg, flashStatus);
+
+}());

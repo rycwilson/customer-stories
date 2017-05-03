@@ -163,25 +163,19 @@ class StoriesController < ApplicationController
   end
 
   def adwords_config
-    if params[:adwords_image_id]
-      adwords_image = AdwordsImage.find( params[:adwords_image_id] )
+    if params[:adwords_image_id].present?
       @story.adwords_config.adwords_image = AdwordsImage.find( params[:adwords_image_id] )
-      redirect_to(
-        update_story_adwords_path(
-          @story.id, { adwords_image_id: adwords_image.id,
-                       adwords_media_id: adwords_image.adwords_media_id }
-        )
-      ) and return
+    elsif @story.adwords_config.update( adwords_params )
+      # nothing to do here
     else
-      @story.adwords_config.update(adwords_params)
-      @flash_status = "success"
-      if adwords_params.keys.include?('enabled')
-        @flash_mesg = "Sponsored Story #{adwords_params['enabled'] == 'true' ? 'enabled' : 'paused'}"
-      else
-        @flash_mesg = "Sponsored Story updated"
-      end
+      # errors
     end
-    respond_to { |format| format.js }
+    respond_to do |format|
+      # :no_content works for all but long_headline;
+      # x-editable wants a json response with status 200
+      # format.json { head :no_content }
+      format.json { render json: {}, status: 200 }  # success
+    end
   end
 
   def destroy
