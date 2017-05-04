@@ -1,9 +1,15 @@
 class AdwordsController < ApplicationController
 
   require 'adwords_api'
-  before_action { @company = Company.find_by(subdomain: request.subdomain) }
+
+  before_action do
+    @company = Company.find_by( subdomain: request.subdomain )
+    get_adwords_api()
+  end
 
   def update_story
+    puts JSON.pretty_generate params
+
     @story = Story.includes(:adwords_config, :adwords_image).find( params[:story_id] )
     @image_changed = params[:image_changed].present? ? true : false
     @status_changed = params[:status_changed].present? ? true : false
@@ -13,12 +19,15 @@ class AdwordsController < ApplicationController
     # topic_ad = get_story_ad( story.adwords_config.topic_ad_id )
     # retarget_ad = get_story_ad( story.adwords_config.retarget_ad_id )
     if @image_changed
+      puts 'UPDATE IMAGE'
       # update_ad_image( story, topic_ad )
       # update_ad_image( story, retarget_ad )
     elsif @status_changed
-      # update_ad_
+      puts 'UPDATE STATUS'
+      update_ad_status( @story )
 
     elsif @long_headline_changed
+      puts 'UPDATE LONG HEADLINE'
 
     end
 
@@ -320,6 +329,65 @@ class AdwordsController < ApplicationController
     end
   end
 
+  def update_ad_status story
+    service = @api.service( :AdGroupAdService, get_api_version() )
+    # Prepare operation for updating ad.
+    story.adwords_config.slice(:topic_ad_group_id, :retarget_ad_group_id)
+      .each do |campaign_type, ad_group_id|
+        if campaign_type.include?('topic')
+         ad_id = story.adwords_config.topic_ad_id
+        else
+         ad_id = story.adwords_config.retarget_ad_id
+        end
+
+        begin
+
+        # Prepare operation for updating ad.
+        operation = {
+         :operator => 'SET',
+         :operand => {
+           :ad_group_id => ad_group_id,
+           :status => story.adwords_config.enabled? ? 'ENABLED' : 'PAUSED',
+           :ad => {:id => ad_id}
+         }
+        }
+
+        # Update ad.
+        response = service.mutate([operation])
+        if response and response[:value]
+          ad = response[:value].first
+          puts "Ad ID %d was successfully updated, status set to '%s'." %
+              [ad[:ad][:id], ad[:status]]
+        else
+          puts 'No ads were updated.'
+        end
+
+        # Authorization error.
+        rescue AdsCommon::Errors::OAuth2VerificationRequired => e
+          puts "Authorization credentials are not valid. Edit adwords_api.yml for " +
+              "OAuth2 client ID and secret and run misc/setup_oauth2.rb example " +
+              "to retrieve and store OAuth2 tokens."
+          puts "See this wiki page for more details:\n\n  " +
+              'https://github.com/googleads/google-api-ads-ruby/wiki/OAuth2'
+
+        # HTTP errors.
+        rescue AdsCommon::Errors::HttpError => e
+          puts "HTTP Error: %s" % e
+
+        # API errors.
+        rescue AdwordsApi::Errors::ApiException => e
+          puts "Message: %s" % e.message
+          puts 'Errors:'
+          e.errors.each_with_index do |error, index|
+            puts "\tError [%d]:" % (index + 1)
+            error.each do |field, value|
+              puts "\t\t%s: %s" % [field, value]
+            end
+          end
+        end
+      end
+  end
+
   def new_images?(company_params)
     company_params[:adwords_logo_url].present? ||
     company_params[:default_adwords_image_url].present? ||
@@ -335,7 +403,6 @@ class AdwordsController < ApplicationController
       .select { |index, atts| atts['image_url'].present? }
       .to_a.map { |image| image[1]['image_url'] }
   end
-
 
 end
 

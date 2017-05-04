@@ -152,15 +152,12 @@ function promoteListeners () {
     // make default checkboxes are mutually exclusive
     .on('change', 'li.adwords-image input[type="checkbox"]',
       function () {
-        console.log($(this))
         var $checkbox = $(this);
         $('li.adwords-image input[type="checkbox"]').each(
           function () {
-            if ($(this).is($checkbox)) {
-              // do nothing
-            } else {
-              $(this).prop('checked', false);
+            if ($(this).is($checkbox)) { // do nothing
             }
+            else { $(this).prop('checked', false); }
           });
       })
 
