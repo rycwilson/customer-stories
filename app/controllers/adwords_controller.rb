@@ -32,16 +32,45 @@ class AdwordsController < ApplicationController
   end
 
   def update_company
-    if new_images?(params[:company])
-      get_new_image_urls(params[:company]).each do |image_url|
-        upload_image(image_url) or return
+    company = params[:company]
+    # binding.remote_pry
+    # 1 - upload all new images (logo, default, additional)
+    # 2 - update all ads if logo or short headline changed
+    # 3 - update affected ads if default image changed
+    # changes = params[:company][:previous_changes]
+    # upload any new images (including logo and default landscape)
+
+    if new_images?(company)
+      get_new_image_urls(company).each do |image_url|
+        upload_image(image_url) or return # return if error
       end
     end
+
+    # async update
+    if company.dig(:previous_changes, :adwords_short_headline)
+      puts 'UPDATE SHORT HEADLINE'
+    end
+
+    # only with sync update
+    if company[:adwords_logo_url]
+      puts 'UPDATE LOGO'
+    end
+
+    # sync or async update
+    if company[:default_image_changed == 'true'] ||  # async
+       company[:default_adwords_image_url]           # sync
+      puts 'UPDATE IMAGE'
+
+    end
+
+    @flash_status = "success"
+    @flash_mesg = "Sponsored Stories updated"
+
     respond_to do |format|
       format.html do
         cookies[:workflow_tab] = 'promote'
         cookies[:workflow_sub_tab] = 'promote-settings'
-        redirect_to(company_path(@company), flash: { success: "Sponsored Stories updated" })
+        redirect_to(company_path(@company), flash: { success: @flash_mesg })
       end
       format.js {}
     end
@@ -294,15 +323,15 @@ class AdwordsController < ApplicationController
 
   def new_images?(company_params)
     company_params[:adwords_logo_url].present? ||
-    company_params[:default_adwords_image].present? ||
-    company_params[:adwords_images_attributes].any? do |index,atts|
+    company_params[:default_adwords_image_url].present? ||
+    company_params[:adwords_images_attributes].try(:any?) do |index,atts|
       atts.include?('image_url')
     end
   end
 
   def get_new_image_urls(company_params)
     (company_params[:adwords_logo_url].try(:split) || []) +
-    (company_params[:default_adwords_image].try(:split) || []) +
+    (company_params[:default_adwords_image_url].try(:split) || []) +
     (company_params[:adwords_images_attributes] || [])
       .select { |index, atts| atts['image_url'].present? }
       .to_a.map { |image| image[1]['image_url'] }

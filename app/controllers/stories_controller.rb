@@ -171,7 +171,7 @@ class StoriesController < ApplicationController
       # errors
     end
     respond_to do |format|
-      # :no_content works for all but long_headline;
+      # :no_content (below) works for all but long_headline;
       # x-editable wants a json response with status 200
       # format.json { head :no_content }
       format.json { render json: {}, status: 200 }  # success
