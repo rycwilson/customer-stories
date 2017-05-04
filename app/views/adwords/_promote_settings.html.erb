@@ -6,6 +6,13 @@
 
     <!-- // locals: image_index -->
     <li class='well adwords-image new-adwords-image hidden'>
+
+      <label class="checkbox-inline">
+        <input type='hidden' value='false'>
+        <input type='checkbox' name="company[make_default_adwords_image_url]", value="">
+        Make default
+      </label>
+
       <div class="fileinput fileinput-exists" data-provides="fileinput">
         <div class="fileinput-preview thumbnail" data-trigger="fileinput"></div>
         <input type="file"
@@ -14,6 +21,7 @@
         <span><i class='change-image glyphicon glyphicon-pencil'></i></span>
         <span><i class='remove-image glyphicon glyphicon-remove'></i></span>
       </div>
+
     </li>
 
   </script>
@@ -129,6 +137,13 @@
     <%= f.fields_for :adwords_images do |image_f| %>
 
       <li class="well adwords-image <%= image_f.object.company_default? ? 'hidden' : '' %>">
+
+        <label class="checkbox-inline">
+          <%= hidden_field_tag '', false %>
+          <%= check_box_tag "company[make_default_adwords_image_url]", image_f.object.image_url, false %>
+          Make default
+        </label>
+
         <div class="fileinput fileinput-exists" data-provides="fileinput">
           <div class="fileinput-preview thumbnail" data-trigger="fileinput">
             <%= image_tag image_f.object.image_url, alt: 'adwords image' %>
@@ -138,6 +153,7 @@
           <i class='change-image glyphicon glyphicon-pencil'></i>
           <i class='remove-image glyphicon glyphicon-remove'></i>
         </div>
+
       </li>
 
     <% end %>

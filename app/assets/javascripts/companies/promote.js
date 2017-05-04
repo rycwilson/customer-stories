@@ -127,11 +127,14 @@ function promoteListeners () {
 
       })
 
+    // on file uploaded
     .on('change.bs.fileinput', 'li.new-adwords-image',
       function () {
+        var imageUrl = $(this).find('.fileinput-preview.thumbnail').attr('src');
         $(this)
           .removeClass('hidden new-adwords-image')
           .find('input[type="file"]').addClass('hidden');  // doesn't work if the input has class: hidden from the get-go
+        $(this).find('input[type="checkbox"]').val(imageUrl);
       })
 
     .on('click', '.adwords-default .change-image',
@@ -144,6 +147,21 @@ function promoteListeners () {
           // click on the placeholder
           $(this).closest('.fileinput').children('.thumbnail')[0].click();
         }
+      })
+
+    // make default checkboxes are mutually exclusive
+    .on('change', 'li.adwords-image input[type="checkbox"]',
+      function () {
+        console.log($(this))
+        var $checkbox = $(this);
+        $('li.adwords-image input[type="checkbox"]').each(
+          function () {
+            if ($(this).is($checkbox)) {
+              // do nothing
+            } else {
+              $(this).prop('checked', false);
+            }
+          });
       })
 
     .on('click', 'li.adwords-image .change-image',

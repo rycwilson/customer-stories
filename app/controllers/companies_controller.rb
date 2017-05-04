@@ -64,8 +64,13 @@ class CompaniesController < ApplicationController
   def adwords_config
     if @company.update(company_params)
       # if the default image wasn't set or changed, parameter won't show up
-      if (@default_image_changed = params[:company][:default_adwords_image_url].present?)
-        update_default_adwords_image( @company, params[:company][:default_adwords_image_url] )
+      if ( @default_image_changed =
+           ( params[:company][:default_adwords_image_url].present? ||
+             params[:company][:make_default_adwords_image_url].present? ) )
+        update_default_adwords_image( @company,
+          params[:company][:default_adwords_image_url],
+          params[:company][:make_default_adwords_image_url]
+        )
       end
     else
       @flash_mesg = @company.errors.full_messages.join(', ')
@@ -137,10 +142,16 @@ class CompaniesController < ApplicationController
     end
   end
 
-  def update_default_adwords_image company, image_url
-    adwords_image = company.adwords_images.default ||
-                    AdwordsImage.create(company_id: company.id, company_default: true)
-    adwords_image.update(image_url: image_url)
+  def update_default_adwords_image company, new_image_url, existing_image_url
+    if new_image_url
+      adwords_image = company.adwords_images.default ||
+                      AdwordsImage.create(company_id: company.id, company_default: true)
+      adwords_image.update(image_url: image_url)
+    elsif existing_image_url
+      company.adwords_images.default.try( :update, { company_default: false } )
+      AdwordsImage.find_by( image_url: existing_image_url )
+                  .update( company_default: true )
+    end
   end
 
 end

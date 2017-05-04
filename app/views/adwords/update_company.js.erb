@@ -4,14 +4,26 @@
   var flashMesg = "<%= @flash_mesg %>",
       flashStatus = "<%= @flash_status %>",
       $table = $('#sponsored-stories-table'),
-      $deletedImages = $('.thumbnail.to-be-removed').closest('li.adwords-image');
+      $deletedImages = $('.thumbnail.to-be-removed').closest('li.adwords-image'),
+      $defaultImage = $('.adwords-default.adwords-image .fileinput-exists img'),
+      newDefaultImageUrl = "<%= @company.adwords_images.default.image_url %>";
 
+  // swap the default image with the new default image
+  $('li.adwords-image input[type="checkbox"]').each(
+    function () {
+      $(this).prop('checked', false)
+    })
+  $('li.adwords-image img[src="' + newDefaultImageUrl + '"]')
+    .attr('src', $defaultImage.attr('src'));
+  $defaultImage.attr('src', newDefaultImageUrl)
+
+  // remove deleted images
   $deletedImages.each(function (index, li) {
     $(this).next().remove();  // hidden input containing adword image id
     $(this).remove();
   })
 
-  // refresh the images - any that have been deleted will have a
+  // refresh table images - any that have been deleted will have a
   // default background image that points to ADWORDS_IMAGE_PLACEHOLDER_URL
   $table.find('img').each(function() {
     var d = new Date()

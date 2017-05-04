@@ -32,7 +32,6 @@ class AdwordsController < ApplicationController
   end
 
   def update_company
-    company = params[:company]
     # binding.remote_pry
     # 1 - upload all new images (logo, default, additional)
     # 2 - update all ads if logo or short headline changed
@@ -40,27 +39,27 @@ class AdwordsController < ApplicationController
     # changes = params[:company][:previous_changes]
     # upload any new images (including logo and default landscape)
 
-    if new_images?(company)
-      get_new_image_urls(company).each do |image_url|
+    if new_images?(params[:company])
+      get_new_image_urls(params[:company]).each do |image_url|
         upload_image(image_url) or return # return if error
       end
     end
 
     # async update
-    if company.dig(:previous_changes, :adwords_short_headline)
+    if params[:company].dig(:previous_changes, :adwords_short_headline)
       puts 'UPDATE SHORT HEADLINE'
     end
 
     # only with sync update
-    if company[:adwords_logo_url]
+    if params[:company][:adwords_logo_url]
       puts 'UPDATE LOGO'
     end
 
     # sync or async update
-    if company[:default_image_changed == 'true'] ||  # async
-       company[:default_adwords_image_url]           # sync
+    if params[:company][:default_image_changed == 'true'] ||  # async
+       params[:company][:default_adwords_image_url] ||        # sync
+       params[:company][:make_default_adwords_image_url]      # sync
       puts 'UPDATE IMAGE'
-
     end
 
     @flash_status = "success"
