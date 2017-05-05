@@ -86,7 +86,7 @@ class AdwordsController < ApplicationController
 
   def preview
     story = Story.find(params[:id])
-    @short_headline = "#{@company.name} Customer Stories"
+    @short_headline = @company.adwords_short_headline
     @long_headline = story.adwords_config.long_headline
     @image_url = story.adwords_config.adwords_image.try(:image_url) ||
                  @company.adwords_images.default.try(:image_url) ||
