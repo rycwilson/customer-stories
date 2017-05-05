@@ -8,10 +8,10 @@ class AdwordsController < ApplicationController
   end
 
   def update_story
-    puts JSON.pretty_generate params
+    # puts JSON.pretty_generate params
     @story = Story.includes(:adwords_config, :adwords_image).find( params[:story_id] )
-    @image_changed = params[:image_changed].present? ? true : false
-    @status_changed = params[:status_changed].present? ? true : false
+    @image_changed = params[:image_changed].present?
+    @status_changed = params[:status_changed].present?
     @long_headline_changed = !(@image_changed || @status_changed)
 
     # ads = get_ads(@company)
@@ -23,7 +23,7 @@ class AdwordsController < ApplicationController
       # update_ad_image( story, retarget_ad )
     elsif @status_changed
       puts 'UPDATE STATUS'
-      update_ad_status( @story )
+      # update_ad_status( @story )
 
     elsif @long_headline_changed
       puts 'UPDATE LONG HEADLINE'
@@ -40,7 +40,7 @@ class AdwordsController < ApplicationController
   end
 
   def update_company
-    puts JSON.pretty_generate params
+    # puts JSON.pretty_generate params
     # binding.remote_pry
     # 1 - upload all new images (logo, default, additional)
     # 2 - update all ads if logo or short headline changed
@@ -50,7 +50,7 @@ class AdwordsController < ApplicationController
 
     if new_images?(params[:company])
       get_new_image_urls(params[:company]).each do |image_url|
-        upload_image(image_url) or return # return if error
+        # upload_image(image_url) or return # return if error
       end
     end
 
@@ -66,8 +66,8 @@ class AdwordsController < ApplicationController
 
     # sync or async update
     if ( @default_image_changed =
-            params[:company][:default_image_changed] == 'true' ||  # async
-            params[:company][:default_adwords_image_url].present? )         # sync
+            params[:company][:default_image_changed] == 'true' ||     # async
+            params[:company][:default_adwords_image_url].present? )   # sync
       puts 'UPDATE IMAGE'
     end
 
