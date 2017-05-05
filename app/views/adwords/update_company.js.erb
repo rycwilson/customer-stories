@@ -23,9 +23,10 @@
     // update hidden input that contains the AdwordsImage id
     $newDefaultImage.closest('li').next().val($currentDefaultImage.data('id'))
 
-    // update the current default image
-    $currentDefaultImage.attr('src', newDefaultImageUrl)
-                        .data('id', newDefaultImageId)
+    $currentDefaultImage.attr({
+      src: newDefaultImageUrl,
+      "data-id": newDefaultImageId
+    });
 
     // update the hidden default image in the list
     $('ul.adwords-images li[class*="hidden"]').next().val(newDefaultImageId)
