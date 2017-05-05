@@ -12,6 +12,8 @@
 
   if (defaultImageChanged) {
     console.log('default image changed')
+    console.log('current url: ', currentDefaultImageUrl)
+    console.log('new url: ', newDefaultImageUrl)
     // uncheck 'make default'
     $('li.adwords-image input[name*="company_default"]').each(
       function () { $(this).prop('checked', false) })
@@ -20,8 +22,13 @@
       .attr('src', currentDefaultImageUrl);
     $defaultImage.attr('src', newDefaultImageUrl)
     // update the table
-    $table.find('.thumbnail img[src="' + currentDefaultImageUrl + '"]')
-          .attr('src', newDefaultImageUrl);
+    // there may be a query string present from refreshing images
+    $table.find('img').each(function () {
+      if ( $(this).attr('src')
+              .match(new RegExp(currentDefaultImageUrl + '(\\?\\d*)?$')) ) {
+        $(this).attr('src', newDefaultImageUrl);
+      }
+    })
   }
 
   // remove deleted images
@@ -33,8 +40,11 @@
   // refresh table images - any that have been deleted will have a
   // default background image that points to ADWORDS_IMAGE_PLACEHOLDER_URL
   $table.find('img').each(function() {
-    var d = new Date()
-    $(this).attr('src', $(this).attr('src') + '?' + d.getTime())
+    var thisUrl = $(this).attr('src'),
+        d = new Date();
+    // if there's already a query string, remove it first instead of adding on top of
+    $(this).attr('src',
+      thisUrl.slice(0, thisUrl.lastIndexOf('?') == -1 ? thisUrl.length : thisUrl.lastIndexOf('?')) + '?' + d.getTime())
   })
 
   flashDisplay(flashMesg, flashStatus);
