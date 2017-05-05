@@ -40,7 +40,7 @@ class AdwordsController < ApplicationController
   end
 
   def update_company
-    # puts JSON.pretty_generate params
+    puts JSON.pretty_generate params
     # binding.remote_pry
     # 1 - upload all new images (logo, default, additional)
     # 2 - update all ads if logo or short headline changed

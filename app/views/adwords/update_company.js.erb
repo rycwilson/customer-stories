@@ -11,6 +11,7 @@
       newDefaultImageUrl = "<%= @company.adwords_images.default.try(:image_url) %>";
 
   if (defaultImageChanged) {
+    console.log('default image changed')
     // uncheck 'make default'
     $('li.adwords-image input[name*="company_default"]').each(
       function () { $(this).prop('checked', false) })
