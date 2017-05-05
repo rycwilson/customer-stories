@@ -5,22 +5,30 @@
       flashStatus = "<%= @flash_status %>",
       $table = $('#sponsored-stories-table'),
       $deletedImages = $('.thumbnail.to-be-removed').closest('li.adwords-image'),
-      $defaultImage = $('.adwords-default.adwords-image .fileinput-exists img'),
-      defaultImageChanged = <%= @default_image_changed %>,
-      currentDefaultImageUrl = $defaultImage.attr('src'),
-      newDefaultImageUrl = "<%= @company.adwords_images.default.try(:image_url) %>";
+      defaultImageChanged = <%= @default_image_changed %>;
 
   if (defaultImageChanged) {
     console.log('default image changed')
-    console.log('current url: ', currentDefaultImageUrl)
-    console.log('new url: ', newDefaultImageUrl)
+    var newDefaultImageUrl = "<%= @company.adwords_images.default.try(:image_url) %>" || null,
+        $newDefaultImage = $('li.adwords-image img[src="' + newDefaultImageUrl + '"]'),
+        newDefaultImageId = $newDefaultImage.closest('li').next().val(),
+        $currentDefaultImage = $('.adwords-default.adwords-image .fileinput-exists img'),
+        currentDefaultImageUrl = $currentDefaultImage.attr('src');
+
+    console.log('current url: ', currentDefaultImageUrl);
+    console.log('new url: ', newDefaultImageUrl);
+
     // uncheck 'make default'
     $('li.adwords-image input[name*="company_default"]').each(
       function () { $(this).prop('checked', false) })
+
     // swap the current default image with the new default image
-    $('li.adwords-image img[src="' + newDefaultImageUrl + '"]')
-      .attr('src', currentDefaultImageUrl);
-    $defaultImage.attr('src', newDefaultImageUrl)
+    $newDefaultImage.attr('src', currentDefaultImageUrl);
+    // update hidden input that contains the AdwordsImage id
+    $newDefaultImage.closest('li').next().val($currentDefaultImage.data('id'))
+    $currentDefaultImage.attr('src', newDefaultImageUrl)
+                        .data('id', newDefaultImageId)
+
     // update the table
     // there may be a query string present from refreshing images
     $table.find('img').each(function () {
