@@ -13,7 +13,7 @@ class AdwordsImage < ActiveRecord::Base
           key: self.image_url[/.com\/(.+)/, 1]
         ]
       }
-    ) unless !self.image_url.is_a?(String)
+    ) unless !self.image_url.is_a?(String) || self.image_url.blank?
   end
 
 end
