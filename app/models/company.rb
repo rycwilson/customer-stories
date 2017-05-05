@@ -128,6 +128,8 @@ class Company < ActiveRecord::Base
       (company.previous_changes.keys & ['header_color_1', 'header_text_color']).any?
     }
 
+  attr_writer :default_adwords_image_url, :make_default_adwords_image_url
+
   def header_style
     "background:linear-gradient(45deg, #{self.header_color_1} 0%, #{self.header_color_2} 100%);color:#{self.header_text_color};"
   end
@@ -832,6 +834,20 @@ class Company < ActiveRecord::Base
       referrer_types: nil
     }
 
+  end
+
+  def update_default_adwords_image (uploaded_image_url)
+    if self.adwords_images.default.present?
+      self.adwords_images.default.update(image_url: uploaded_image_url)
+    else
+      AdwordsImage.create(company_id: self.id, company_default: true,
+                          image_url: uploaded_image_url)
+    end
+  end
+
+  def default_adwords_image_changed? (company_params, current_default_image)
+    company_params[:default_adwords_image_url].present? ||
+    current_default_image != self.adwords_images.default
   end
 
   private

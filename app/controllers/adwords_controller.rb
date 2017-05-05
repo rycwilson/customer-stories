@@ -9,7 +9,6 @@ class AdwordsController < ApplicationController
 
   def update_story
     puts JSON.pretty_generate params
-
     @story = Story.includes(:adwords_config, :adwords_image).find( params[:story_id] )
     @image_changed = params[:image_changed].present? ? true : false
     @status_changed = params[:status_changed].present? ? true : false
@@ -41,6 +40,7 @@ class AdwordsController < ApplicationController
   end
 
   def update_company
+    puts JSON.pretty_generate params
     # binding.remote_pry
     # 1 - upload all new images (logo, default, additional)
     # 2 - update all ads if logo or short headline changed
@@ -66,8 +66,7 @@ class AdwordsController < ApplicationController
 
     # sync or async update
     if params[:company][:default_image_changed == 'true'] ||  # async
-       params[:company][:default_adwords_image_url] ||        # sync
-       params[:company][:make_default_adwords_image_url]      # sync
+       params[:company][:default_adwords_image_url]       # sync
       puts 'UPDATE IMAGE'
     end
 
@@ -180,6 +179,7 @@ class AdwordsController < ApplicationController
   def upload_image(image_url)
     api = get_adwords_api()
     media_srv = api.service(:MediaService, get_api_version())
+    # if image_url is nil: Invalid URL: #<ActionDispatch::Http::UploadedFile:0x007f8615701348>
     img_url = image_url
     img_data = AdsCommon::Http.get(img_url, api.config)
     base64_image_data = Base64.encode64(img_data)

@@ -4,6 +4,7 @@ class CompaniesController < ApplicationController
   before_action :set_company, except: [:new, :create]
   before_action only: [:show, :edit ] { set_gon(@company) }
   before_action :set_s3_direct_post, only: [:new, :edit, :show, :create]
+  before_action only: [:adwords_config] { @current_default_image = @company.adwords_images.default }
 
   def new
     @profile_form_options = set_profile_form_options(params)
@@ -62,15 +63,13 @@ class CompaniesController < ApplicationController
   end
 
   def adwords_config
+    # puts JSON.pretty_generate(company_params)
     if @company.update(company_params)
       # if the default image wasn't set or changed, parameter won't show up
       if ( @default_image_changed =
-           ( params[:company][:default_adwords_image_url].present? ||
-             params[:company][:make_default_adwords_image_url].present? ) )
-        update_default_adwords_image( @company,
-          params[:company][:default_adwords_image_url],
-          params[:company][:make_default_adwords_image_url]
-        )
+             @company.default_adwords_image_changed?(company_params, @current_default_image) ) &&
+           company_params[:default_adwords_image_url].present?
+        @company.update_default_adwords_image( company_params[:default_adwords_image_url] )
       end
     else
       @flash_mesg = @company.errors.full_messages.join(', ')
@@ -103,7 +102,8 @@ class CompaniesController < ApplicationController
           .permit(:name, :subdomain, :logo_url, :header_color_1,
                   :header_color_2, :header_text_color, :website, :gtm_id,
                   :adwords_short_headline, :adwords_logo_url,
-                  adwords_images_attributes: [:id, :image_url, :_destroy])
+                  :default_adwords_image_url, :make_default_adwords_image_url,
+                  { adwords_images_attributes: [:id, :image_url, :company_default, :_destroy] } )
   end
 
   def widget_params
@@ -139,18 +139,6 @@ class CompaniesController < ApplicationController
       options.merge({ method: 'put', remote: 'true', authenticity_token: true })
     else
       options
-    end
-  end
-
-  def update_default_adwords_image company, new_image_url, existing_image_url
-    if new_image_url
-      adwords_image = company.adwords_images.default ||
-                      AdwordsImage.create(company_id: company.id, company_default: true)
-      adwords_image.update(image_url: image_url)
-    elsif existing_image_url
-      company.adwords_images.default.try( :update, { company_default: false } )
-      AdwordsImage.find_by( image_url: existing_image_url )
-                  .update( company_default: true )
     end
   end
 

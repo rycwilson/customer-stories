@@ -54,6 +54,10 @@ function promoteListeners () {
             storyId = $(this).closest('tr').data('story-id'),
             currentImageUrl = $(this).children('img').attr('src'),
             template = _.template( $('#adwords-image-select-form-template').html() );
+
+        // remove any query param that was used to refresh an image
+        currentImageUrl = currentImageUrl.slice(0, currentImageUrl.lastIndexOf('?'));
+
         // unhide any images that were hidden last time
         $modal.find('li').removeClass('hidden');
         // hide the current image
@@ -65,7 +69,7 @@ function promoteListeners () {
         $modal.modal('show');
       })
 
-    // on successful image select reponse, send request to update adwords
+    // on successful image select response, send request to update adwords
     // see x_editable.js for request following long_headline update
     .on('ajax:success', '#adwords-image-select-form',
       function (event) {
@@ -134,7 +138,6 @@ function promoteListeners () {
         $(this)
           .removeClass('hidden new-adwords-image')
           .find('input[type="file"]').addClass('hidden');  // doesn't work if the input has class: hidden from the get-go
-        $(this).find('input[type="checkbox"]').val(imageUrl);
       })
 
     .on('click', '.adwords-default .change-image',
@@ -150,15 +153,15 @@ function promoteListeners () {
       })
 
     // make default checkboxes are mutually exclusive
-    .on('change', 'li.adwords-image input[type="checkbox"]',
+    .on('change', 'li.adwords-image input[name*="company_default"]',
       function () {
-        var $checkbox = $(this);
-        $('li.adwords-image input[type="checkbox"]').each(
-          function () {
-            if ($(this).is($checkbox)) { // do nothing
-            }
-            else { $(this).prop('checked', false); }
-          });
+        var $checkbox = $(this),
+            $allCheckboxes = $('li.adwords-image input[name*="company_default"]');
+        // uncheck other images
+        $allCheckboxes.each(function () {
+          if ($(this).is($checkbox)) { // do nothing
+          } else { $(this).prop('checked', false); }
+        });
       })
 
     .on('click', 'li.adwords-image .change-image',

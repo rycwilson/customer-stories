@@ -8,8 +8,8 @@
     <li class='well adwords-image new-adwords-image hidden'>
 
       <label class="checkbox-inline">
-        <input type='hidden' value='false'>
-        <input type='checkbox' name="company[make_default_adwords_image_url]", value="">
+        <input name="company[adwords_images_attributes][{{= image_index }}][company_default]" type="hidden" value="false">
+        <input type="checkbox" value="true" name="company[adwords_images_attributes][{{= image_index }}][company_default]" id="company_adwords_images_attributes_{{= image_index }}_company_default">
         Make default
       </label>
 
@@ -139,8 +139,7 @@
       <li class="well adwords-image <%= image_f.object.company_default? ? 'hidden' : '' %>">
 
         <label class="checkbox-inline">
-          <%= hidden_field_tag '', false %>
-          <%= check_box_tag "company[make_default_adwords_image_url]", image_f.object.image_url, false %>
+          <%= image_f.check_box(:company_default, {}, 'true', 'false') %>
           Make default
         </label>
 
