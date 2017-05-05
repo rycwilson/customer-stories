@@ -6,20 +6,22 @@
       $table = $('#sponsored-stories-table'),
       $deletedImages = $('.thumbnail.to-be-removed').closest('li.adwords-image'),
       $defaultImage = $('.adwords-default.adwords-image .fileinput-exists img'),
+      defaultImageChanged = <%= @default_image_changed %>,
       currentDefaultImageUrl = $defaultImage.attr('src'),
-      newDefaultImageUrl = "<%= @company.adwords_images.default.image_url %>";
+      newDefaultImageUrl = "<%= @company.adwords_images.default.try(:image_url) %>";
 
-  // uncheck all
-  $('li.adwords-image input[type="checkbox"]').each(
-    function () { $(this).prop('checked', false) })
-  // swap the current default image with the new default image
-  $('li.adwords-image img[src="' + newDefaultImageUrl + '"]')
-    .attr('src', currentDefaultImageUrl);
-  $defaultImage.attr('src', newDefaultImageUrl)
-  // update the table
-  $table.find('.thumbnail img[src="' + currentDefaultImageUrl + '"]')
-        .attr('src', newDefaultImageUrl);
-
+  if (defaultImageChanged) {
+    // uncheck 'make default'
+    $('li.adwords-image input[name*="company_default"]').each(
+      function () { $(this).prop('checked', false) })
+    // swap the current default image with the new default image
+    $('li.adwords-image img[src="' + newDefaultImageUrl + '"]')
+      .attr('src', currentDefaultImageUrl);
+    $defaultImage.attr('src', newDefaultImageUrl)
+    // update the table
+    $table.find('.thumbnail img[src="' + currentDefaultImageUrl + '"]')
+          .attr('src', newDefaultImageUrl);
+  }
 
   // remove deleted images
   $deletedImages.each(function (index, li) {

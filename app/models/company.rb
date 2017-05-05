@@ -128,7 +128,7 @@ class Company < ActiveRecord::Base
       (company.previous_changes.keys & ['header_color_1', 'header_text_color']).any?
     }
 
-  attr_writer :default_adwords_image_url, :make_default_adwords_image_url
+  attr_writer :default_adwords_image_url
 
   def header_style
     "background:linear-gradient(45deg, #{self.header_color_1} 0%, #{self.header_color_2} 100%);color:#{self.header_text_color};"

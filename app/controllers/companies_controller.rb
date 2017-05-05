@@ -63,7 +63,7 @@ class CompaniesController < ApplicationController
   end
 
   def adwords_config
-    # puts JSON.pretty_generate(company_params)
+    puts JSON.pretty_generate(company_params)
     if @company.update(company_params)
       # if the default image wasn't set or changed, parameter won't show up
       if ( @default_image_changed =

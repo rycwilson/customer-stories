@@ -116,6 +116,8 @@ function promoteListeners () {
                     '/sponsored_story_preview', '_blank');
       })
 
+    // upload a new default adwords image
+    .on('change.bs.fileinput', '.adwords-default.adwords')
     // upload a new adwords image
     .on('click', 'button.new-adwords-image',
       function () {
@@ -131,7 +133,7 @@ function promoteListeners () {
 
       })
 
-    // on file uploaded
+    // on additional image uploaded
     .on('change.bs.fileinput', 'li.new-adwords-image',
       function () {
         var imageUrl = $(this).find('.fileinput-preview.thumbnail').attr('src');
