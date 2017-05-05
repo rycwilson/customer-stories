@@ -8,15 +8,11 @@
       defaultImageChanged = <%= @default_image_changed %>;
 
   if (defaultImageChanged) {
-    console.log('default image changed')
     var newDefaultImageUrl = "<%= @company.adwords_images.default.try(:image_url) %>" || null,
         $newDefaultImage = $('li.adwords-image img[src="' + newDefaultImageUrl + '"]'),
         newDefaultImageId = $newDefaultImage.closest('li').next().val(),
         $currentDefaultImage = $('.adwords-default.adwords-image .fileinput-exists img'),
         currentDefaultImageUrl = $currentDefaultImage.attr('src');
-
-    console.log('current url: ', currentDefaultImageUrl);
-    console.log('new url: ', newDefaultImageUrl);
 
     // uncheck 'make default'
     $('li.adwords-image input[name*="company_default"]').each(
@@ -26,8 +22,16 @@
     $newDefaultImage.attr('src', currentDefaultImageUrl);
     // update hidden input that contains the AdwordsImage id
     $newDefaultImage.closest('li').next().val($currentDefaultImage.data('id'))
+
+    // update the current default image
     $currentDefaultImage.attr('src', newDefaultImageUrl)
                         .data('id', newDefaultImageId)
+
+    // update the hidden default image in the list
+    $('ul.adwords-images li[class*="hidden"]').next().val(newDefaultImageId)
+    $('ul.adwords-images li[class*="hidden"]')
+      .find('input[name*="company_default"]')
+      .prop('checked', true)
 
     // update the table
     // there may be a query string present from refreshing images

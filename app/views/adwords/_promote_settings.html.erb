@@ -105,7 +105,7 @@
         </div>
 
         <div class="fileinput-preview fileinput-exists thumbnail" data-trigger="fileinput">
-          <%= image_tag company.adwords_images.default.try(:image_url), alt: 'marketing image', data: { id: company.adwords_images.default.id } %>
+          <%= image_tag company.adwords_images.default.try(:image_url), alt: 'marketing image', data: { id: company.adwords_images.default.try(:id) } %>
         </div>
 
         <div class="btn-file">
