@@ -67,7 +67,7 @@ class AdwordsController < ApplicationController
     # sync or async update
     if ( @default_image_changed =
             params[:company][:default_image_changed] == 'true' ||  # async
-            params[:company][:default_adwords_image_url] )         # sync
+            params[:company][:default_adwords_image_url].present? )         # sync
       puts 'UPDATE IMAGE'
     end
 
