@@ -27,11 +27,15 @@
             </li>
           </ul>
 
-          <%= form_tag adwords_data_path, method: :get, remote: true, data: { type: 'json' } do %>
+      <% if Rails.env.development? %>
 
-            <%= submit_tag 'Get data', class: 'btn btn-success' %>
+        <%= form_tag adwords_data_path, method: :get, remote: true, data: { type: 'json' } do %>
 
-          <% end %>
+          <%= submit_tag 'Get data', class: 'btn btn-success' %>
+
+        <% end %>
+
+      <% end %>
 
         </div>
 
