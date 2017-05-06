@@ -7,6 +7,9 @@ class AdwordsController < ApplicationController
     get_adwords_api()
   end
 
+  def create_ad
+  end
+
   def update_story
     # puts JSON.pretty_generate params
     @story = Story.includes(:adwords_config, :adwords_image).find( params[:story_id] )

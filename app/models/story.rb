@@ -100,14 +100,6 @@ class Story < ActiveRecord::Base
            products: { id: product_id })
   }
 
-  after_commit on: [:update] do
-    self.create_adwords_config(long_headline: self.title)
-  end if Proc.new { |story|
-           ( story.previous_changes.keys & ['published'] ).any? &&
-           story.published? &&
-           story.adwords_config.nil?
-         }
-
   after_commit on: [:create, :destroy] do
     expire_all_stories_cache(false)
     self.company.expire_curate_table_fragment_cache

@@ -137,12 +137,29 @@ class StoriesController < ApplicationController
         format.json { render json: story.as_json(only: :embed_url, methods: :video_info) }
       end
     elsif params[:story][:published]
-      update_publish_state story, params[:story]
+      update_publish_state( story, params[:story] )
       respond_to do |format|
-        # respond with the (possibly modified over user selection) publish state,
-        # so client js can make necessary adjustments
-        format.json { render json: story,
-                             only: [:published, :logo_published] }
+        # on client-side, two things will happen:
+        # 1 - publish switches will change if user selection was overridden
+        # 2 - if previous_changes includes :publish, create/update the adwords ad
+        format.json do
+          render json: story.as_json(
+            only: [:id, :published, :logo_published],
+            methods: [:previous_changes],
+            include: {
+              ads: {
+                only: [:ad_id, :status],
+                include: {
+                  ad_group: {
+                    only: [:ad_group_id, :status],
+                    include: {
+                      campaign: {
+                        only: [:campaign_id, :status],
+                        include: {
+                          company: { only: [:promote_tr, :promote_crm] }
+                        } }}}}}}
+          )
+        end
       end
     else  # all other updates
       story.update story_params

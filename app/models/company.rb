@@ -137,6 +137,7 @@ class Company < ActiveRecord::Base
       (company.previous_changes.keys & ['header_color_1', 'header_text_color']).any?
     }
 
+  # virtual attributes
   attr_writer :default_adwords_image_url
 
   def header_style

@@ -153,21 +153,45 @@ function storiesEditSettingsListeners () {
     $(this).parent().submit();
   });
 
-  $(document).on('ajax:success', '#story-publish-form', function (event, data) {
-    var $publish = $("#story_published"),
-        $logoPublish = $("#story_logo_published");
-    /*
-      server may have changed values to prevent invalid state ...
-      it either ...
-        - turned logo_publish on to track story_publish=on
-        - turned story_publish off to track logo_publish=off
-    */
-    if (!data.published && $publish.bootstrapSwitch('state') === true) {
-      $publish.bootstrapSwitch('state', false);
-    } else if (data.logo_published && $logoPublish.bootstrapSwitch('state') === false) {
-      $logoPublish.bootstrapSwitch('state', true);
-    }
-  });
+  $(document).on('ajax:success', '#story-publish-form',
+    function (event, story) {
+      var $publish = $("#story_published"),
+          $logoPublish = $("#story_logo_published"),
+          createAd = function (story) {
+            return false;
+          },
+          updateAd = function (story) {
+            return false;
+          };
+      /*
+        server may have changed values to prevent invalid state ...
+        it either ...
+          - turned logo_publish on to track story_publish=on
+          - turned story_publish off to track logo_publish=off
+      */
+      if (!story.published && $publish.bootstrapSwitch('state') === true) {
+        $publish.bootstrapSwitch('state', false);
+      } else if (story.logo_published && $logoPublish.bootstrapSwitch('state') === false) {
+        $logoPublish.bootstrapSwitch('state', true);
+      }
+
+      console.log(story);
+      if ( createAd() ) {
+        $.post({
+          url: '/adwords/' + story.id + '/create',
+          success: function () {
+
+          }
+        });
+      } else if ( updateAd() ) {
+        $.get({
+          url: '/adwords/update/' + story.id,
+          success: function () {
+
+          }
+        });
+      }
+    });
 
   $(document).on('click', '#approval-pdf-btn', function (e) {
     var missingInfo = $(this).data('missing-curator-info');
