@@ -1,0 +1,2 @@
+class TopicCampaign < AdwordsCampaign
+end

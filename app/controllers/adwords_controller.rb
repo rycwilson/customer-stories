@@ -96,20 +96,34 @@ class AdwordsController < ApplicationController
   end
 
   def data
-    # @type = params[:type]
-    # story = Story.find_by(title: params[:story_title])
+    @topic_campaign = get_campaign(@company, 'topic')
+    @retarget_campaign = get_campaign(@company, 'retarget')
 
-    # @topic_campaign = get_campaign(@company, 'topic')
-    # @retarget_campaign = get_campaign(@company, 'retarget')
+    @topic_ad_group = get_ad_group(@company, 'topic')
+    @retarget_ad_group = get_ad_group(@company, 'retarget')
 
-    # @topic_ad_group = get_ad_group(@company, 'topic')
-    # @retarget_ad_group = get_ad_group(@company, 'retarget')
+    @ads = get_ads(@company)
 
-    # @topic_ads = get_ads(@company, 'topic')
-    # @retarget_ads = get_ads(@company, 'retarget')
+    # puts JSON.pretty_generate(@topic_campaign)
+    # puts JSON.pretty_generate(@retarget_campaign)
 
+    puts JSON.pretty_generate(@topic_ad_group)
+    puts JSON.pretty_generate(@retarget_ad_group)
 
-    respond_to { |format| format.js }
+    # puts JSON.pretty_generate(@ads)
+
+    respond_to do |format|
+      format.json do
+        render json: {
+          topic_campaign: @topic_campaign,
+          retarget_campaign: @retarget_campaign,
+          topic_ad_group: @topic_ad_group,
+          retarget_ad_group: @retarget_ad_group,
+          topic_ads: @topic_ads,
+          retarget_ads: @retarget_ads,
+        }
+      end
+    end
   end
 
   private
@@ -130,7 +144,7 @@ class AdwordsController < ApplicationController
   end
 
   def get_campaign(company, type)
-    service = api.service(:CampaignService, get_api_version())
+    service = @api.service(:CampaignService, get_api_version())
     selector = {
       :fields => ['Id', 'Name', 'Status', 'Labels'],
       :ordering => [{:field => 'Id', :sort_order => 'ASCENDING'}],
@@ -151,8 +165,7 @@ class AdwordsController < ApplicationController
   end
 
   def get_ad_group(company, type)
-    api = get_adwords_api()
-    service = api.service(:AdGroupService, get_api_version())
+    service = @api.service(:AdGroupService, get_api_version())
     selector = {
       :fields => ['Id', 'Name', 'Status', 'Labels'],
       :ordering => [{:field => 'Id', :sort_order => 'ASCENDING'}],
@@ -178,8 +191,7 @@ class AdwordsController < ApplicationController
   end
 
   def upload_image(image_url)
-    api = get_adwords_api()
-    media_srv = api.service(:MediaService, get_api_version())
+    media_srv = @api.service(:MediaService, get_api_version())
     # if image_url is nil: Invalid URL: #<ActionDispatch::Http::UploadedFile:0x007f8615701348>
     img_url = image_url
     img_data = AdsCommon::Http.get(img_url, api.config)
@@ -240,8 +252,7 @@ class AdwordsController < ApplicationController
   end
 
   def get_story_ad (ad_id)
-    api = get_adwords_api()
-    service = api.service(:AdGroupAdService, get_api_version())
+    service = @api.service(:AdGroupAdService, get_api_version())
     selector = {
       :fields => ['Id', 'Name', 'Status', 'Labels'],
       :ordering => [{:field => 'Id', :sort_order => 'ASCENDING'}],
@@ -260,8 +271,7 @@ class AdwordsController < ApplicationController
   end
 
   def get_ads (company)
-    api = get_adwords_api()
-    service = api.service(:AdGroupAdService, get_api_version())
+    service = @api.service(:AdGroupAdService, get_api_version())
     selector = {
       :fields => ['Id', 'Name', 'Status', 'Labels'],
       :ordering => [{:field => 'Id', :sort_order => 'ASCENDING'}],

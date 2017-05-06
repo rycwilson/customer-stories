@@ -1,8 +1,9 @@
 class AdwordsImage < ActiveRecord::Base
 
   belongs_to :company
-  has_many :sponsored_stories_images, dependent: :destroy
-  has_many :stories, through: :sponsories_images
+  has_many :adwords_ads_images, dependent: :destroy
+  has_many :adwords_ads, through: :adwords_ads_images
+  alias_attribute :ads, :adwords_ads
 
   before_destroy :s3_delete
 

@@ -25,6 +25,7 @@ Rails.application.routes.draw do
     # instead of stories_url in the widgets controller
     get '/', to: 'stories#index' #, as: 'csp_stories'
 
+    get '/adwords/data', to: 'adwords#data', as: 'adwords_data'
     get '/adwords/update', to: 'adwords#update_company', as: 'update_company_adwords'
     get '/adwords/update/:story_id', to: 'adwords#update_story', as: 'update_story_adwords'
 

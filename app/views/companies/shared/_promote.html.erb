@@ -27,6 +27,12 @@
             </li>
           </ul>
 
+          <%= form_tag adwords_data_path, method: :get, remote: true, data: { type: 'json' } do %>
+
+            <%= submit_tag 'Get data', class: 'btn btn-success' %>
+
+          <% end %>
+
         </div>
 
         <div class="col-md-9 col-sm-8 layout-main">

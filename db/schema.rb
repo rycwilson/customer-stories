@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170503011209) do
+ActiveRecord::Schema.define(version: 20170506003459) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -35,6 +35,53 @@ ActiveRecord::Schema.define(version: 20170503011209) do
   end
 
   add_index "admins", ["email"], name: "index_admins_on_email", unique: true, using: :btree
+
+  create_table "adwords_ad_groups", force: :cascade do |t|
+    t.integer  "adwords_campaign_id"
+    t.integer  "ad_group_id",         limit: 8
+    t.string   "name"
+    t.string   "status",                        default: "PAUSED"
+    t.datetime "created_at",                                       null: false
+    t.datetime "updated_at",                                       null: false
+  end
+
+  add_index "adwords_ad_groups", ["adwords_campaign_id"], name: "index_adwords_ad_groups_on_adwords_campaign_id", using: :btree
+
+  create_table "adwords_ads", force: :cascade do |t|
+    t.integer  "adwords_ad_group_id"
+    t.integer  "story_id"
+    t.integer  "ad_id",               limit: 8
+    t.string   "status",                        default: "PAUSED"
+    t.string   "approval_status",               default: "UNCHECKED"
+    t.string   "long_headline"
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
+  end
+
+  add_index "adwords_ads", ["adwords_ad_group_id"], name: "index_adwords_ads_on_adwords_ad_group_id", using: :btree
+  add_index "adwords_ads", ["story_id"], name: "index_adwords_ads_on_story_id", using: :btree
+
+  create_table "adwords_ads_images", force: :cascade do |t|
+    t.integer  "adwords_ad_id"
+    t.integer  "adwords_image_id"
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
+  end
+
+  add_index "adwords_ads_images", ["adwords_ad_id"], name: "index_adwords_ads_images_on_adwords_ad_id", using: :btree
+  add_index "adwords_ads_images", ["adwords_image_id"], name: "index_adwords_ads_images_on_adwords_image_id", using: :btree
+
+  create_table "adwords_campaigns", force: :cascade do |t|
+    t.integer  "company_id"
+    t.integer  "campaign_id", limit: 8
+    t.string   "type"
+    t.string   "name"
+    t.string   "status",                default: "PAUSED"
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
+  end
+
+  add_index "adwords_campaigns", ["company_id"], name: "index_adwords_campaigns_on_company_id", using: :btree
 
   create_table "adwords_configs", force: :cascade do |t|
     t.boolean  "enabled",                        default: false
@@ -459,6 +506,12 @@ ActiveRecord::Schema.define(version: 20170503011209) do
 
   add_index "widgets", ["company_id"], name: "index_widgets_on_company_id", using: :btree
 
+  add_foreign_key "adwords_ad_groups", "adwords_campaigns"
+  add_foreign_key "adwords_ads", "adwords_ad_groups"
+  add_foreign_key "adwords_ads", "stories"
+  add_foreign_key "adwords_ads_images", "adwords_ads"
+  add_foreign_key "adwords_ads_images", "adwords_images"
+  add_foreign_key "adwords_campaigns", "companies"
   add_foreign_key "adwords_configs", "stories"
   add_foreign_key "adwords_images", "companies"
   add_foreign_key "call_to_actions", "companies"

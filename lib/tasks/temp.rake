@@ -2,28 +2,70 @@ namespace :temp do
 
   desc "temp stuff"
 
-
+  # NOTE - change id values for production environment
   task adwords: :environment do
-    # Company.all.each do |company|
-    #   company.update(adwords_short_headline: company.name + ' Customer Stories')
-    # end
-    # Story.where(published: true).each do |story|
-    #   story.create_adwords_config(long_headline: story.title)
-    # end
+    AdwordsCampaign.destroy_all
+    AdwordsAdGroup.destroy_all
+    AdwordsAd.destroy_all
     # Company.find_by(subdomain:'varmour').update(promote_tr: true)
     # Company.find_by(subdomain:'retailnext').update(promote_tr: true)
-    # note these are ads from test account!
+    Company.all.each do |company|
+      company.update(adwords_short_headline: company.name + ' Customer Stories')
+      if company.subdomain == 'varmour'
+        company.campaigns.create(
+          type:'TopicCampaign', status: 'ENABLED', campaign_id: 794123279, name: 'varmour display topic'
+        )
+        company.campaigns.create(
+          type:'RetargetCampaign', status: 'ENABLED', campaign_id: 794134055, name: 'vamour display retarget'
+        )
+        company.campaigns.topic.create_adwords_ad_group(
+          ad_group_id: 40779259429, status: 'ENABLED', name: 'varmour ad group display topic'
+        )
+        company.campaigns.retarget.create_adwords_ad_group(
+          ad_group_id: 38074094381, status: 'ENABLED', name: 'varmour ad group display retarget'
+        )
+      else
+        company.campaigns.create(type:'TopicCampaign')
+        company.campaigns.create(type:'RetargetCampaign')
+        company.campaigns.topic.create_adwords_ad_group()
+        company.campaigns.retarget.create_adwords_ad_group()
+      end
+    end
+    Story.where( published: true ).each do |story|
+      story.company.campaigns.topic.ad_group.ads.create(
+        story_id: story.id, long_headline: story.title
+      )
+      story.company.campaigns.retarget.ad_group.ads.create(
+        story_id: story.id, long_headline: story.title
+      )
+    end
 
+    # note these are ads from test account!
     # varmour - equens
-    Story.find(7).adwords_config.update(topic_ad_group_id: 40779259429, topic_ad_id: 191118170285, retarget_ad_group_id: 38074094381, retarget_ad_id: 191152234528 )
+    AdwordsAd.joins( adwords_ad_group: { adwords_campaign: {} } )
+             .where( story_id: 7, adwords_campaigns: { type: 'TopicCampaign' } ).take
+             .update( ad_id: 191118170285 )
+    AdwordsAd.joins( adwords_ad_group: { adwords_campaign: {} } )
+             .where( story_id: 7, adwords_campaigns: { type: 'RetargetCampaign' } ).take
+             .update( ad_id: 191152234528 )
     # Story.find(7).adwords_image.update(media_id: 2749038420)
 
     # varmour - john muir
-    Story.find(213).adwords_config.update(topic_ad_group_id: 40779259429,topic_ad_id: 193403020234, retarget_ad_group_id: 38074094381, retarget_ad_id: 191119635492 )
+    AdwordsAd.joins( adwords_ad_group: { adwords_campaign: {} } )
+             .where( story_id: 213, adwords_campaigns: { type: 'TopicCampaign' } ).take
+             .update( ad_id: 193403020234 )
+    AdwordsAd.joins( adwords_ad_group: { adwords_campaign: {} } )
+             .where( story_id: 213, adwords_campaigns: { type: 'RetargetCampaign' } ).take
+             .update( ad_id: 191119635492 )
     # Story.find(213).adwords_image.update(media_id: 2749038420)
 
     # varmour - fortune100
-    Story.find(225).adwords_config.update(topic_ad_group_id: 40779259429, topic_ad_id: 193374900161, retarget_ad_group_id: 38074094381, retarget_ad_id: 191119770138 )
+    AdwordsAd.joins( adwords_ad_group: { adwords_campaign: {} } )
+             .where( story_id: 225, adwords_campaigns: { type: 'TopicCampaign' } ).take
+             .update( ad_id: 193374900161 )
+    AdwordsAd.joins( adwords_ad_group: { adwords_campaign: {} } )
+             .where( story_id: 225, adwords_campaigns: { type: 'RetargetCampaign' } ).take
+             .update( ad_id: 191119770138 )
     # Story.find(225).adwords_image.update(media_id: 2749038420)
 
   end

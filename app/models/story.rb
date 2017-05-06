@@ -19,8 +19,14 @@ class Story < ActiveRecord::Base
       self.where(type: 'CTAForm')
     end
   end
-  has_one :adwords_config
-  has_one :adwords_image, through: :adwords_config, class_name: 'AdwordsImage'
+  has_many :adwords_ads  # topic and retarget
+  alias_attribute :ads, :adwords_ads
+  # has_one :topic_ad, -> (story) {
+  #   where(adwords_ad_group_id: story.company.adwords_campaigns.topic.ad_group.id)
+  # }, class_name: 'AdwordsAd'
+  # has_one :retarget_ad, -> (story) {
+  #   where(adwords_ad_group_id: story.company.adwords_campaigns.topic.ad_group.id)
+  # }, class_name: 'AdwordsAd'
 
   # Note: no explicit association to friendly_id_slugs, but it's there
   # Story has many friendly_id_slugs -> captures history of slug changes

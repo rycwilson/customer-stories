@@ -112,6 +112,15 @@ class Company < ActiveRecord::Base
     end
   end
   has_one :widget, dependent: :destroy
+  has_many :adwords_campaigns, dependent: :destroy do
+    def topic
+      where(type:'TopicCampaign').take
+    end
+    def retarget
+      where(type:'RetargetCampaign').take
+    end
+  end
+  alias_attribute :campaigns, :adwords_campaigns
   has_many :adwords_images, dependent: :destroy do
     def default
       where(company_default: true).take
