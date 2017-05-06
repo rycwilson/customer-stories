@@ -1,16 +1,16 @@
 
 <a href="javascript:;"
-   class="dropdown-toggle <%= story.adwords_config.enabled ? 'enabled' : 'paused' %>"
+   class="dropdown-toggle <%= story.ads.enabled? ? 'enabled' : 'paused' %>"
    data-toggle='dropdown'>
 
-  <i class="fa <%= story.adwords_config.enabled ? 'fa-play' : 'fa-pause' %> "></i>&nbsp;
+  <i class="fa <%= story.ads.enabled? ? 'fa-play' : 'fa-pause' %> "></i>&nbsp;
   <i class='fa fa-caret-down'></i>
 
 </a>
 
 <ul class='dropdown-menu'>
 
-  <% if story.adwords_config.enabled? %>
+  <% if story.ads.enabled? %>
 
     <li>
       <a href="javascript:;" class="enabled">

@@ -2,7 +2,6 @@
 (function () {
 
   var storyId = <%= @story.id %>,
-      storyAdwordsConfig = <%= raw @story.adwords_config.to_json(include: { adwords_image: {} }) %>,
       $row = $('tr[data-story-id="' + storyId + '"]'),
       imageChanged = <%= @image_changed %>,
       statusChanged = <%= @status_changed %>,
@@ -10,10 +9,10 @@
       flashStatus = "<%= @flash_status %>";
 
   if (imageChanged) {
+    var adwordsImage = <%= raw @story.adwords_image.to_json %>;
     $('#adwords-image-select-modal').modal('hide')
-    if ( storyAdwordsConfig.adwords_image &&
-         storyAdwordsConfig.adwords_image.image_url ) {
-      $row.find('.thumbnail img').attr('src', storyAdwordsConfig.adwords_image.image_url)
+    if ( adwordsImage && adwordsImage.image_url ) {
+      $row.find('.thumbnail img').attr('src', adwordsImage.image_url)
     }
   } else if (statusChanged) {
     // handled by classes / styling

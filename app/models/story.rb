@@ -19,14 +19,22 @@ class Story < ActiveRecord::Base
       self.where(type: 'CTAForm')
     end
   end
-  has_many :adwords_ads  # topic and retarget
+  has_many :adwords_ads do  # topic and retarget
+    def enabled?
+      self.all? { |ad| ad.status == 'ENABLED' }
+    end
+    def long_headline
+      self.first.long_headline  # same for each ad
+    end
+  end
   alias_attribute :ads, :adwords_ads
-  # has_one :topic_ad, -> (story) {
-  #   where(adwords_ad_group_id: story.company.adwords_campaigns.topic.ad_group.id)
-  # }, class_name: 'AdwordsAd'
-  # has_one :retarget_ad, -> (story) {
-  #   where(adwords_ad_group_id: story.company.adwords_campaigns.topic.ad_group.id)
-  # }, class_name: 'AdwordsAd'
+  has_one :topic_ad, -> (story) {
+    where(adwords_ad_group_id: story.company.adwords_campaigns.topic.ad_group.id)
+  }, class_name: 'AdwordsAd'
+  has_one :retarget_ad, -> (story) {
+    where(adwords_ad_group_id: story.company.adwords_campaigns.retarget.ad_group.id)
+  }, class_name: 'AdwordsAd'
+  has_one :adwords_image, through: :topic_ad
 
   # Note: no explicit association to friendly_id_slugs, but it's there
   # Story has many friendly_id_slugs -> captures history of slug changes

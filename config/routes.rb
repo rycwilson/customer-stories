@@ -25,10 +25,8 @@ Rails.application.routes.draw do
     # instead of stories_url in the widgets controller
     get '/', to: 'stories#index' #, as: 'csp_stories'
 
-    post '/adwords/:story_id/create_ads', to: 'adwords#create_ads', as: 'create_adwords_ads'
     get '/adwords/data', to: 'adwords#data', as: 'adwords_data'
     get '/adwords/update', to: 'adwords#update_company', as: 'update_company_adwords'
-    get '/adwords/update/:story_id', to: 'adwords#update_story', as: 'update_story_adwords'
 
     get '/widgets/:position/cs', to: 'widgets#script'
     # specifying a default format here because (for unknown reason) ajax jsonp
@@ -55,10 +53,9 @@ Rails.application.routes.draw do
         resources :results, only: [:create, :update, :destroy]
         member { put :ctas }
         member { put :tags }
-        member { put :adwords_config }
-        member do
-          get '/sponsored_story_preview', to: 'adwords#preview'
-        end
+        member { put :promote }
+        member { put '/adwords', to: 'adwords#update_story'}
+        member { get '/sponsored_story_preview', to: 'adwords#preview' }
       end
 
       # analytics

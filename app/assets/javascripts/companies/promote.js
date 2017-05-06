@@ -24,20 +24,21 @@ function promoteListeners () {
                .toggleClass('fa-play fa-pause');
         $(this).closest('.dropdown-menu').children('li').toggle();
 
-        // first update story.adwords_config and return positive json response,
+        // first update story.promote and return positive json response,
         // then send a request to update adwords
         $.ajax({
-          url: '/stories/' + storyId + '/adwords_config',
-          method: 'put',
+          url: '/stories/' + storyId + '/promote',
+          method: 'PUT',
           data: {
-            adwords_config: {
-              enabled: $(this).attr('class') === 'enable' ? true : false,
+            adwords: {
+              status: $(this).attr('class') === 'enable' ? 'ENABLED' : 'PAUSED',
             }
           },
           dataType: 'json',
           success: function (data, status, xhr) {
-            $.get({
-              url: '/adwords/update/' + storyId,
+            $.ajax({
+              url: '/stories/' + storyId + '/adwords',
+              method: 'PUT',
               data: { status_changed: true },
               dataType: 'script'
             });
@@ -73,8 +74,9 @@ function promoteListeners () {
     // see x_editable.js for request following long_headline update
     .on('ajax:success', '#adwords-image-select-form',
       function (event) {
-        $.get({
-          url: '/adwords/update/' + $(this).data('story-id'),
+        $.ajax({
+          url: '/stories/' + $(this).data('story-id') + '/adwords',
+          method: 'PUT',
           data: { image_changed: true },
           dataType: 'script'
         });

@@ -12,14 +12,14 @@ class AdwordsController < ApplicationController
 
   def update_story
     # puts JSON.pretty_generate params
-    @story = Story.includes(:adwords_config, :adwords_image).find( params[:story_id] )
+    @story = Story.includes(adwords_ads: { adwords_image: {} }).find( params[:id] )
     @image_changed = params[:image_changed].present?
     @status_changed = params[:status_changed].present?
     @long_headline_changed = !(@image_changed || @status_changed)
 
     # ads = get_ads(@company)
-    # topic_ad = get_story_ad( story.adwords_config.topic_ad_id )
-    # retarget_ad = get_story_ad( story.adwords_config.retarget_ad_id )
+    # topic_ad = get_ad( story.topic_ad.id )
+    # retarget_ad = get_ad( story.retarget_ad.id )
     if @image_changed
       puts 'UPDATE IMAGE'
       # update_ad_image( story, topic_ad )
@@ -35,7 +35,7 @@ class AdwordsController < ApplicationController
 
     @flash_status = "success"
     if @status_changed
-      @flash_mesg = "Sponsored Story #{@story.adwords_config.enabled ? 'enabled' : 'paused'}"
+      @flash_mesg = "Sponsored Story #{@story.ads.enabled? ? 'enabled' : 'paused'}"
     else
       @flash_mesg = "Sponsored Story updated"
     end
@@ -88,10 +88,10 @@ class AdwordsController < ApplicationController
   end
 
   def preview
-    story = Story.find(params[:id])
+    story = Story.find( params[:id] )
     @short_headline = @company.adwords_short_headline
-    @long_headline = story.adwords_config.long_headline
-    @image_url = story.adwords_config.adwords_image.try(:image_url) ||
+    @long_headline = story.ads.long_headline
+    @image_url = story.adwords_image.try(:image_url) ||
                  @company.adwords_images.default.try(:image_url) ||
                  ADWORDS_IMAGE_PLACEHOLDER_URL
     @logo_url = @company.adwords_logo_url || ADWORDS_LOGO_PLACEHOLDER_URL
@@ -254,7 +254,7 @@ class AdwordsController < ApplicationController
     return true
   end
 
-  def get_story_ad (ad_id)
+  def get_ad (ad_id)
     service = @api.service(:AdGroupAdService, get_api_version())
     selector = {
       :fields => ['Id', 'Name', 'Status', 'Labels'],
@@ -314,7 +314,7 @@ class AdwordsController < ApplicationController
       :ad_group_id => ad[:ad_group_id],
       :ad => responsive_display_ad,
       # Additional propertires (non-required).
-      :status => story.adwords_config.enabled ? 'ENABLED' : 'PAUSED'
+      :status => story.ads.enabled ? 'ENABLED' : 'PAUSED'
     }
 
     responsive_display_ad_group_ad_operation = {
@@ -346,60 +346,54 @@ class AdwordsController < ApplicationController
   def update_ad_status story
     service = @api.service( :AdGroupAdService, get_api_version() )
     # Prepare operation for updating ad.
-    story.adwords_config.slice(:topic_ad_group_id, :retarget_ad_group_id)
-      .each do |campaign_type, ad_group_id|
-        if campaign_type.include?('topic')
-         ad_id = story.adwords_config.topic_ad_id
-        else
-         ad_id = story.adwords_config.retarget_ad_id
-        end
+    story.ads.each do |ad|
 
-        begin
+      begin
 
-        # Prepare operation for updating ad.
-        operation = {
-         :operator => 'SET',
-         :operand => {
-           :ad_group_id => ad_group_id,
-           :status => story.adwords_config.enabled? ? 'ENABLED' : 'PAUSED',
-           :ad => {:id => ad_id}
-         }
-        }
+      # Prepare operation for updating ad.
+      operation = {
+       :operator => 'SET',
+       :operand => {
+         :ad_group_id => ad.adwords_ad_group_id,
+         :status => story.ads.enabled? ? 'ENABLED' : 'PAUSED',
+         :ad => {:id => ad.ad_id}
+       }
+      }
 
-        # Update ad.
-        response = service.mutate([operation])
-        if response and response[:value]
-          ad = response[:value].first
-          puts "Ad ID %d was successfully updated, status set to '%s'." %
-              [ad[:ad][:id], ad[:status]]
-        else
-          puts 'No ads were updated.'
-        end
+      # Update ad.
+      response = service.mutate([operation])
+      if response and response[:value]
+        ad = response[:value].first
+        puts "Ad ID %d was successfully updated, status set to '%s'." %
+            [ad[:ad][:id], ad[:status]]
+      else
+        puts 'No ads were updated.'
+      end
 
-        # Authorization error.
-        rescue AdsCommon::Errors::OAuth2VerificationRequired => e
-          puts "Authorization credentials are not valid. Edit adwords_api.yml for " +
-              "OAuth2 client ID and secret and run misc/setup_oauth2.rb example " +
-              "to retrieve and store OAuth2 tokens."
-          puts "See this wiki page for more details:\n\n  " +
-              'https://github.com/googleads/google-api-ads-ruby/wiki/OAuth2'
+      # Authorization error.
+      rescue AdsCommon::Errors::OAuth2VerificationRequired => e
+        puts "Authorization credentials are not valid. Edit adwords_api.yml for " +
+            "OAuth2 client ID and secret and run misc/setup_oauth2.rb example " +
+            "to retrieve and store OAuth2 tokens."
+        puts "See this wiki page for more details:\n\n  " +
+            'https://github.com/googleads/google-api-ads-ruby/wiki/OAuth2'
 
-        # HTTP errors.
-        rescue AdsCommon::Errors::HttpError => e
-          puts "HTTP Error: %s" % e
+      # HTTP errors.
+      rescue AdsCommon::Errors::HttpError => e
+        puts "HTTP Error: %s" % e
 
-        # API errors.
-        rescue AdwordsApi::Errors::ApiException => e
-          puts "Message: %s" % e.message
-          puts 'Errors:'
-          e.errors.each_with_index do |error, index|
-            puts "\tError [%d]:" % (index + 1)
-            error.each do |field, value|
-              puts "\t\t%s: %s" % [field, value]
-            end
+      # API errors.
+      rescue AdwordsApi::Errors::ApiException => e
+        puts "Message: %s" % e.message
+        puts 'Errors:'
+        e.errors.each_with_index do |error, index|
+          puts "\tError [%d]:" % (index + 1)
+          error.each do |field, value|
+            puts "\t\t%s: %s" % [field, value]
           end
         end
       end
+    end
   end
 
   def new_images?(company_params)

@@ -3,7 +3,7 @@ class StoriesController < ApplicationController
   include StoriesHelper
 
   before_action :set_company
-  before_action :set_story, only: [:edit, :ctas, :tags, :adwords_config, :approval, :destroy]
+  before_action :set_story, only: [:edit, :ctas, :tags, :promote, :approval, :destroy]
   before_action only: [:index, :show] { @is_curator = @company.curator?(current_user) }
   before_action only: [:edit] { user_authorized?(@story, current_user) }
   before_action only: [:index, :show, :edit] { set_gon(@company) }
@@ -179,18 +179,18 @@ class StoriesController < ApplicationController
     respond_to { |format| format.js }
   end
 
-  def adwords_config
+  def promote
     if params[:adwords_image_id].present?
-      @story.adwords_config.adwords_image = AdwordsImage.find( params[:adwords_image_id] )
-    elsif @story.adwords_config.update( adwords_params )
+      @story.ads.each { |ad| ad.adwords_image = AdwordsImage.find( params[:adwords_image_id] ) }
+    elsif @story.ads.all? { |ad| ad.update( adwords_params ) }
       # nothing to do here
     else
       # errors
     end
     respond_to do |format|
-      # :no_content (below) works for all but long_headline;
-      # x-editable wants a json response with status 200
-      # format.json { head :no_content }
+      # this works for all but long_headline:
+      #   format.json { head :no_content }  (or head :ok)
+      # but x-editable wants a json response with status 200
       format.json { render json: {}, status: 200 }  # success
     end
   end
@@ -223,7 +223,7 @@ class StoriesController < ApplicationController
   end
 
   def adwords_params
-    params.require(:adwords_config).permit(:enabled, :long_headline)
+    params.require(:adwords).permit(:status, :long_headline)
   end
 
   def set_company
@@ -235,7 +235,7 @@ class StoriesController < ApplicationController
   end
 
   def set_story
-    @story = Story.find(params[:id])
+    @story = Story.find( params[:id] )
   end
 
   def set_contributors story

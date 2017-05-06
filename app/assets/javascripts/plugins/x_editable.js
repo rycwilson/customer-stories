@@ -6,9 +6,9 @@ function initXeditable () {
 
     $(this).editable({
       type: 'textarea',
-      model: 'adwords_config',
+      model: 'adwords',
       name: 'long_headline',
-      url: '/stories/' + $(this).data('pk') + '/adwords_config',
+      url: '/stories/' + $(this).data('pk') + '/promote',
       pk: $(this).data('pk'),
       title: 'Sponsored story title',
       mode: 'inline',
@@ -22,8 +22,9 @@ function initXeditable () {
         dataType: 'json'
       },
       success: function (response) {
-        $.get({
-          url: '/adwords/update/' + $(this).data('pk'),
+        $.ajax({
+          url: '/stories/' + $(this).data('pk') + '/adwords',
+          method: 'PUT',
           data: { long_headline_changed: true },
           dataType: 'script'
         });

@@ -62,10 +62,10 @@ ActiveRecord::Schema.define(version: 20170506003459) do
   add_index "adwords_ads", ["story_id"], name: "index_adwords_ads_on_story_id", using: :btree
 
   create_table "adwords_ads_images", force: :cascade do |t|
-    t.integer  "adwords_ad_id"
-    t.integer  "adwords_image_id"
-    t.datetime "created_at",       null: false
-    t.datetime "updated_at",       null: false
+    t.integer  "adwords_ad_id",    limit: 8
+    t.integer  "adwords_image_id", limit: 8
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   add_index "adwords_ads_images", ["adwords_ad_id"], name: "index_adwords_ads_images_on_adwords_ad_id", using: :btree
