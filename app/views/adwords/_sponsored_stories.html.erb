@@ -59,7 +59,7 @@
           <td class='sponsored-story-image'>
             <div class="fileinput fileinput-exists" data-provides="fileinput">
               <div class="fileinput-preview thumbnail">
-                <%= image_tag story.adwords_image.try(:image_url) ||
+                <%= image_tag story.ads.adwords_image.try(:image_url) ||
                               company.adwords_images.default.try(:image_url) ||
                               ADWORDS_IMAGE_PLACEHOLDER_URL, alt: 'adwords image' %>
               </div>

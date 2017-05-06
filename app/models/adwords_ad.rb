@@ -6,8 +6,4 @@ class AdwordsAd < ActiveRecord::Base
   has_one :adwords_ads_image
   has_one :adwords_image, through: :adwords_ads_image
 
-  def enabled?
-    self.status == 'ENABLED'
-  end
-
 end

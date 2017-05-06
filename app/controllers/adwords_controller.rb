@@ -91,7 +91,7 @@ class AdwordsController < ApplicationController
     story = Story.find( params[:id] )
     @short_headline = @company.adwords_short_headline
     @long_headline = story.ads.long_headline
-    @image_url = story.adwords_image.try(:image_url) ||
+    @image_url = story.ads.adwords_image.try(:image_url) ||
                  @company.adwords_images.default.try(:image_url) ||
                  ADWORDS_IMAGE_PLACEHOLDER_URL
     @logo_url = @company.adwords_logo_url || ADWORDS_LOGO_PLACEHOLDER_URL
@@ -306,7 +306,7 @@ class AdwordsController < ApplicationController
       # Image.data field. An image must first be created using the MediaService,
       # and Image.mediaId must be populated when creating the ad.
       :marketing_image => {
-        :media_id => story.adwords_image.media_id
+        :media_id => story.ads.adwords_image.media_id
       }
     }
 
@@ -328,7 +328,7 @@ class AdwordsController < ApplicationController
     #     ad_group_id: ad[:ad_group_id],
     #     ad: {
     #       id: ad[:ad][:id],
-    #     image: { media_id: story.adwords_image.media_id }
+    #     image: { media_id: story.ads.adwords_image.media_id }
     #   }
     #   }
     # }
