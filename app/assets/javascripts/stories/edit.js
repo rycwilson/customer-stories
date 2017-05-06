@@ -178,14 +178,15 @@ function storiesEditSettingsListeners () {
       console.log(story);
       if ( createAd() ) {
         $.post({
-          url: '/adwords/' + story.id + '/create',
+          url: '/stories/' + story.id + '/adwords',
           success: function () {
 
           }
         });
       } else if ( updateAd() ) {
-        $.get({
-          url: '/adwords/update/' + story.id,
+        $.ajax({
+          url: '/stories/' + story.id + '/adwords',
+          method: 'PUT',
           success: function () {
 
           }

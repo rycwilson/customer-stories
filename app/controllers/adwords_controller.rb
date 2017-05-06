@@ -7,10 +7,10 @@ class AdwordsController < ApplicationController
     get_adwords_api()
   end
 
-  def create_ad
+  def create_story_ads
   end
 
-  def update_story
+  def update_story_ads
     # puts JSON.pretty_generate params
     @story = Story.includes(adwords_ads: { adwords_image: {} }).find( params[:id] )
     @image_changed = params[:image_changed].present?
