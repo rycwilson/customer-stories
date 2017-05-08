@@ -2,9 +2,9 @@ class CompaniesController < ApplicationController
 
   before_action :user_authorized?, only: [:show, :edit]
   before_action :set_company, except: [:new, :create]
-  before_action only: [:show, :edit ] { set_gon(@company) }
+  before_action only: [:show, :edit] { set_gon(@company) }
   before_action :set_s3_direct_post, only: [:new, :edit, :show, :create]
-  before_action only: [:adwords_config] { @current_default_image = @company.adwords_images.default }
+  before_action only: [:promote] { @current_default_image = @company.adwords_images.default }
 
   def new
     @profile_form_options = set_profile_form_options(params)
@@ -39,14 +39,14 @@ class CompaniesController < ApplicationController
     else
       # validation(s): presence / uniqueness of name, presence of subdomain
       flash[:danger] = @company.errors.full_messages.join(', ')
-      redirect_to new_company_path
+      redirect_to(new_company_path)
     end
 
   end
 
   # two response formats needed to handle the s3 upload
   def update
-    if @company.update company_params
+    if @company.update(company_params)
       @flash_mesg = "Company updated"
       @flash_status = "success"
     else
@@ -62,7 +62,7 @@ class CompaniesController < ApplicationController
     end
   end
 
-  def adwords_config
+  def promote
     puts JSON.pretty_generate(company_params)
     if @company.update(company_params)
       # if the default image wasn't set or changed, parameter won't show up
@@ -79,7 +79,7 @@ class CompaniesController < ApplicationController
       # image uploads are always synchronous
       format.html do
         # forward params so new image urls can be uploaded to adwords api
-        redirect_to( update_company_adwords_path( company: params[:company] ) )
+        redirect_to(adwords_company_path(@company, company: params[:company]))
       end
       format.js {} # js response will $.get the adwords update
     end
@@ -91,7 +91,7 @@ class CompaniesController < ApplicationController
   end
 
   def widget
-    @company.widget.update(widget_params)
+    @company.widget.update( widget_params )
     respond_to { |format| format.js }
   end
 

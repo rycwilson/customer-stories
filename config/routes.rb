@@ -25,9 +25,6 @@ Rails.application.routes.draw do
     # instead of stories_url in the widgets controller
     get '/', to: 'stories#index' #, as: 'csp_stories'
 
-    get '/adwords/data', to: 'adwords#data', as: 'adwords_data'
-    get '/adwords/update', to: 'adwords#update_company', as: 'update_company_adwords'
-
     get '/widgets/:position/cs', to: 'widgets#script'
     # specifying a default format here because (for unknown reason) ajax jsonp
     # request sent from IE11 was resulting in request interpreted as html
@@ -47,7 +44,12 @@ Rails.application.routes.draw do
         resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
         member { put :tags }
         member { put :widget }
-        member { put :adwords_config }
+        member { put :promote }
+        # need :get for the sync. response (redirect_to)
+        # and :put for the async. response (see companies/promote.js.erb)
+        member { get '/adwords', to: 'adwords#update_company' }
+        member { put '/adwords', to: 'adwords#update_company' }
+        member { get '/adwords/data', to: 'adwords#data', as: 'adwords_data' }
       end
       resources :stories, only: [:edit, :update, :destroy] do
         resources :results, only: [:create, :update, :destroy]

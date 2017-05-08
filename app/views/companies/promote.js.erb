@@ -1,0 +1,15 @@
+
+(function () {
+
+  var company = <%= raw @company.to_json({ only: [], methods: [:previous_changes] }) %>
+
+  company['default_image_changed'] = <%= @default_image_changed %>
+
+  $.ajax({
+    url: '<%= adwords_company_path(@company) %>',
+    method: 'put',
+    data: { company: company },
+    dataType: 'script'
+  });
+
+}());

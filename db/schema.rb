@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170506003459) do
+ActiveRecord::Schema.define(version: 20170508213331) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -82,20 +82,6 @@ ActiveRecord::Schema.define(version: 20170506003459) do
   end
 
   add_index "adwords_campaigns", ["company_id"], name: "index_adwords_campaigns_on_company_id", using: :btree
-
-  create_table "adwords_configs", force: :cascade do |t|
-    t.boolean  "enabled",                        default: false
-    t.string   "long_headline"
-    t.integer  "story_id"
-    t.datetime "created_at",                                     null: false
-    t.datetime "updated_at",                                     null: false
-    t.integer  "retarget_ad_id",       limit: 8
-    t.integer  "topic_ad_id",          limit: 8
-    t.integer  "topic_ad_group_id",    limit: 8
-    t.integer  "retarget_ad_group_id", limit: 8
-  end
-
-  add_index "adwords_configs", ["story_id"], name: "index_adwords_configs_on_story_id", using: :btree
 
   create_table "adwords_images", force: :cascade do |t|
     t.integer  "company_id"
@@ -174,18 +160,6 @@ ActiveRecord::Schema.define(version: 20170506003459) do
   add_index "contributions", ["success_id"], name: "index_contributions_on_success_id", using: :btree
   add_index "contributions", ["user_id"], name: "index_contributions_on_user_id", using: :btree
 
-  create_table "cta_buttons", force: :cascade do |t|
-    t.string   "btn_text"
-    t.string   "color",            default: "#fff"
-    t.string   "url"
-    t.integer  "company_id"
-    t.datetime "created_at",                           null: false
-    t.datetime "updated_at",                           null: false
-    t.string   "background_color", default: "#ff6600"
-  end
-
-  add_index "cta_buttons", ["company_id"], name: "index_cta_buttons_on_company_id", using: :btree
-
   create_table "ctas_successes", force: :cascade do |t|
     t.integer  "call_to_action_id"
     t.integer  "success_id"
@@ -242,25 +216,6 @@ ActiveRecord::Schema.define(version: 20170506003459) do
   add_index "friendly_id_slugs", ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id", using: :btree
   add_index "friendly_id_slugs", ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type", using: :btree
 
-  create_table "industries_successes", force: :cascade do |t|
-    t.integer  "industry_category_id"
-    t.integer  "success_id"
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
-  end
-
-  add_index "industries_successes", ["industry_category_id"], name: "index_industries_successes_on_industry_category_id", using: :btree
-  add_index "industries_successes", ["success_id"], name: "index_industries_successes_on_success_id", using: :btree
-
-  create_table "industry_categories", force: :cascade do |t|
-    t.string   "name"
-    t.integer  "company_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  add_index "industry_categories", ["company_id"], name: "index_industry_categories_on_company_id", using: :btree
-
   create_table "opt_outs", force: :cascade do |t|
     t.string   "email"
     t.datetime "created_at", null: false
@@ -289,25 +244,6 @@ ActiveRecord::Schema.define(version: 20170506003459) do
 
   add_index "outbound_actions_stories", ["outbound_action_id"], name: "index_outbound_actions_stories_on_outbound_action_id", using: :btree
   add_index "outbound_actions_stories", ["story_id"], name: "index_outbound_actions_stories_on_story_id", using: :btree
-
-  create_table "product_categories", force: :cascade do |t|
-    t.string   "name"
-    t.integer  "company_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  add_index "product_categories", ["company_id"], name: "index_product_categories_on_company_id", using: :btree
-
-  create_table "product_cats_successes", force: :cascade do |t|
-    t.integer  "success_id"
-    t.integer  "product_category_id"
-    t.datetime "created_at",          null: false
-    t.datetime "updated_at",          null: false
-  end
-
-  add_index "product_cats_successes", ["product_category_id"], name: "index_product_cats_successes_on_product_category_id", using: :btree
-  add_index "product_cats_successes", ["success_id"], name: "index_product_cats_successes_on_success_id", using: :btree
 
   create_table "products", force: :cascade do |t|
     t.string   "name",        null: false
@@ -348,16 +284,6 @@ ActiveRecord::Schema.define(version: 20170506003459) do
   end
 
   add_index "results", ["success_id"], name: "index_results_on_success_id", using: :btree
-
-  create_table "sponsored_stories_images", force: :cascade do |t|
-    t.integer  "adwords_config_id"
-    t.integer  "adwords_image_id"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
-  end
-
-  add_index "sponsored_stories_images", ["adwords_config_id"], name: "index_sponsored_stories_images_on_adwords_config_id", using: :btree
-  add_index "sponsored_stories_images", ["adwords_image_id"], name: "index_sponsored_stories_images_on_adwords_image_id", using: :btree
 
   create_table "stories", force: :cascade do |t|
     t.string   "title",                                                                                                                                                                                                                                                                          null: false
@@ -512,33 +438,23 @@ ActiveRecord::Schema.define(version: 20170506003459) do
   add_foreign_key "adwords_ads_images", "adwords_ads"
   add_foreign_key "adwords_ads_images", "adwords_images"
   add_foreign_key "adwords_campaigns", "companies"
-  add_foreign_key "adwords_configs", "stories"
   add_foreign_key "adwords_images", "companies"
   add_foreign_key "call_to_actions", "companies"
   add_foreign_key "contributions", "successes"
   add_foreign_key "contributions", "users"
-  add_foreign_key "cta_buttons", "companies"
   add_foreign_key "ctas_successes", "call_to_actions"
   add_foreign_key "ctas_successes", "successes"
   add_foreign_key "customers", "companies"
   add_foreign_key "email_contribution_requests", "contributions"
   add_foreign_key "email_templates", "companies"
-  add_foreign_key "industries_successes", "industry_categories"
-  add_foreign_key "industries_successes", "successes"
-  add_foreign_key "industry_categories", "companies"
   add_foreign_key "outbound_actions", "companies"
   add_foreign_key "outbound_actions_stories", "outbound_actions"
   add_foreign_key "outbound_actions_stories", "stories"
-  add_foreign_key "product_categories", "companies"
-  add_foreign_key "product_cats_successes", "product_categories"
-  add_foreign_key "product_cats_successes", "successes"
   add_foreign_key "products", "companies"
   add_foreign_key "products_successes", "products"
   add_foreign_key "products_successes", "successes"
   add_foreign_key "prompts", "successes"
   add_foreign_key "results", "successes"
-  add_foreign_key "sponsored_stories_images", "adwords_configs"
-  add_foreign_key "sponsored_stories_images", "adwords_images"
   add_foreign_key "stories", "successes"
   add_foreign_key "story_categories", "companies"
   add_foreign_key "story_categories_successes", "story_categories"

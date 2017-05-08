@@ -2,10 +2,8 @@ class AdwordsController < ApplicationController
 
   require 'adwords_api'
 
-  before_action do
-    @company = Company.find_by( subdomain: request.subdomain )
-    get_adwords_api()
-  end
+  before_action() { set_company(params) }
+  before_action({ except: [:preview] }) { get_adwords_api() }
 
   def create_story_ads
   end
@@ -88,7 +86,7 @@ class AdwordsController < ApplicationController
   end
 
   def preview
-    story = Story.find( params[:id] )
+    story = Story.find(params[:id])
     @short_headline = @company.adwords_short_headline
     @long_headline = story.ads.long_headline
     @image_url = story.ads.adwords_image.try(:image_url) ||
@@ -130,6 +128,14 @@ class AdwordsController < ApplicationController
   end
 
   private
+
+  def set_company( params )
+    if [:update_company, :data].include?(params[:action])
+      @company = Company.find(params[:id])
+    else
+      @company = Company.find_by({ subdomain: request.subdomain })
+    end
+  end
 
   def get_api_version()
     :v201702
