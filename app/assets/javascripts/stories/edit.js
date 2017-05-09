@@ -164,7 +164,10 @@ function storiesEditSettingsListeners () {
             } else { return false; }
           },
           updateAd = function (story) {
-            return false;
+            if (story.ads.length && story.previous_changes.published) {
+              return true;
+            }
+            else { return false; }
           };
       /*
         server may have changed values to prevent invalid state ...
@@ -193,10 +196,15 @@ function storiesEditSettingsListeners () {
       // pause or re-start the ad
       } else if ( updateAd(story) ) {
         $.ajax({
-          url: '/stories/' + story.id + '/adwords',
+          url: '/stories/' + story.id + '/promote',
           method: 'put',
-          success: function () {
-
+          success: function (data, status, xhr) {
+            $.ajax({
+              url: '/stories/' + story.id + '/adwords',
+              method: 'put',
+              data: { status_changed: true },
+              dataType: 'script'
+            });
           }
         });
       }

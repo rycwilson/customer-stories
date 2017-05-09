@@ -30,9 +30,15 @@ class AdwordsController < ApplicationController
 
   def update_story_ads
     # puts JSON.pretty_generate params
+    # use .present? so we're assigning a boolean instead of string
     @image_changed = params[:image_changed].present?
     @status_changed = params[:status_changed].present?
     @long_headline_changed = !(@image_changed || @status_changed)
+    # ad_update_params = {
+    #   image: @image_changed ? @story.ads.adwords_image : nil,
+    #   status: @status_changed ? @story.ads.status : nil,
+    #   long_headline: @long_headline_changed ? @story.ads.long_headline : nil
+    # }
 
     # ads = get_ads(@company)
     # topic_ad = get_ad( story.topic_ad.id )
@@ -42,8 +48,14 @@ class AdwordsController < ApplicationController
       # update_ad_image( story, topic_ad )
       # update_ad_image( story, retarget_ad )
     elsif @status_changed
-      puts 'UPDATE STATUS'
-      # update_ad_status( @story )
+      if @story.ads.all? { |ad| update_ad_status(ad) }
+        @flash = {
+          status: 'success',
+          mesg: "Sponsored Story #{@story.ads.enabled? ? 'enabled' : 'paused'}"
+        }
+      else
+        # @flash for exceptions is set in update_ad_status
+      end
 
     elsif @long_headline_changed
       puts 'UPDATE LONG HEADLINE'
@@ -52,7 +64,7 @@ class AdwordsController < ApplicationController
 
     @flash_status = "success"
     if @status_changed
-      @flash_mesg = "Sponsored Story #{@story.ads.enabled? ? 'enabled' : 'paused'}"
+      # @flash_mesg = "Sponsored Story #{@story.ads.enabled? ? 'enabled' : 'paused'}"
     else
       @flash_mesg = "Sponsored Story updated"
     end
@@ -422,60 +434,64 @@ class AdwordsController < ApplicationController
     end
   end
 
-  def update_ad_status story
-    service = @api.service( :AdGroupAdService, get_api_version() )
-    # Prepare operation for updating ad.
-    story.ads.each do |ad|
-
-      begin
-
-      # Prepare operation for updating ad.
-      operation = {
-       :operator => 'SET',
-       :operand => {
-         :ad_group_id => ad.adwords_ad_group_id,
-         :status => story.ads.enabled? ? 'ENABLED' : 'PAUSED',
-         :ad => {:id => ad.ad_id}
-       }
+  def update_ad_status (ad)
+    service = @api.service(:AdGroupAdService, get_api_version())
+    begin
+      operation =  {
+        operator: 'SET',
+        operand: {
+          ad_group_id: ad.ad_group.ad_group_id,
+          status: ad.status,
+          ad: { id: ad.ad_id }
+        }
       }
-
-      # Update ad.
       response = service.mutate([operation])
-      if response and response[:value]
-        ad = response[:value].first
-        puts "Ad ID %d was successfully updated, status set to '%s'." %
-            [ad[:ad][:id], ad[:status]]
+
+    # Authorization error.
+    rescue AdsCommon::Errors::OAuth2VerificationRequired => e
+      if Rails.env.development?
+        @flash = { status: 'danger', mesg: 'Invalid Adwords API credentials' }
       else
-        puts 'No ads were updated.'
+        @flash = { status: 'danger', mesg: 'Error updating Sponsored Story status' }
       end
-
-      # Authorization error.
-      rescue AdsCommon::Errors::OAuth2VerificationRequired => e
-        puts "Authorization credentials are not valid. Edit adwords_api.yml for " +
-            "OAuth2 client ID and secret and run misc/setup_oauth2.rb example " +
-            "to retrieve and store OAuth2 tokens."
-        puts "See this wiki page for more details:\n\n  " +
-            'https://github.com/googleads/google-api-ads-ruby/wiki/OAuth2'
-
-      # HTTP errors.
-      rescue AdsCommon::Errors::HttpError => e
-        puts "HTTP Error: %s" % e
-
-      # API errors.
-      rescue AdwordsApi::Errors::ApiException => e
-        puts "Message: %s" % e.message
-        puts 'Errors:'
-        e.errors.each_with_index do |error, index|
-          puts "\tError [%d]:" % (index + 1)
-          error.each do |field, value|
-            puts "\t\t%s: %s" % [field, value]
-          end
+    # HTTP errors.
+    rescue AdsCommon::Errors::HttpError => e
+      puts "HTTP Error: %s" % e
+      if Rails.env.development?
+        @flash = { status: 'danger', mesg: "HTTP error: #{e}" }
+      else
+        @flash = { status: 'danger', mesg: 'Error updating Sponsored Story status' }
+      end
+    # API errors.
+    rescue AdwordsApi::Errors::ApiException => e
+      puts "Message: %s" % e.message
+      puts 'Errors:'
+      e.errors.each_with_index do |error, index|
+        puts "\tError [%d]:" % (index + 1)
+        error.each do |field, value|
+          puts "\t\t%s: %s" % [field, value]
         end
       end
+      if Rails.env.development?
+        @flash = { status: 'danger', mesg: "Adwords API error: #{e.message}" }
+      else
+        @flash = { status: 'danger', mesg: 'Error updating Sponsored Story status' }
+      end
+    end
+
+    # response
+    if response and response[:value]
+      adwords_ad = response[:value].first
+      puts "Ad ID %d was successfully updated, status set to '%s'." %
+          [adwords_ad[:ad][:id], adwords_ad[:status]]
+      return true
+    else
+      puts 'No ads were updated.'
+      return false
     end
   end
 
-  def new_images?(company_params)
+  def new_images? (company_params)
     company_params[:adwords_logo_url].present? ||
     company_params[:default_adwords_image_url].present? ||
     company_params[:adwords_images_attributes].try(:any?) do |index,atts|
@@ -483,7 +499,7 @@ class AdwordsController < ApplicationController
     end
   end
 
-  def get_new_image_urls(company_params)
+  def get_new_image_urls (company_params)
     (company_params[:adwords_logo_url].try(:split) || []) +
     (company_params[:default_adwords_image_url].try(:split) || []) +
     (company_params[:adwords_images_attributes] || [])

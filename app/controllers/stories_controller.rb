@@ -189,7 +189,7 @@ class StoriesController < ApplicationController
     else # PUT
       if params[:adwords_image_id].present?
         @story.ads.each { |ad| ad.adwords_image = AdwordsImage.find(params[:adwords_image_id]) }
-      elsif @story.ads.all? { |ad| ad.update( adwords_params ) }
+      elsif @story.ads.all? { |ad| ad.update(adwords_params) }
         # nothing to do here
       else
         # errors

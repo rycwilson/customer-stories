@@ -23,6 +23,9 @@ class Story < ActiveRecord::Base
     def enabled?
       self.all? { |ad| ad.status == 'ENABLED' }
     end
+    def status
+      self.first.status  # same for each ad
+    end
     def long_headline
       self.first.long_headline  # same for each ad
     end

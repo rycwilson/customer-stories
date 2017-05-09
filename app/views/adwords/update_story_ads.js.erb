@@ -1,12 +1,11 @@
 
 (function () {
 
-  var storyId = <%= @story.id %>,
+  var flash = <%= raw @flash.to_json %>,
+      storyId = <%= @story.id %>,
       $row = $('tr[data-story-id="' + storyId + '"]'),
       imageChanged = <%= @image_changed %>,
-      statusChanged = <%= @status_changed %>,
-      flashMesg = "<%= @flash_mesg %>",
-      flashStatus = "<%= @flash_status %>";
+      statusChanged = <%= @status_changed %>;
 
   if (imageChanged) {
     var adwordsImage = <%= raw @story.ads.adwords_image.to_json %>;
@@ -20,6 +19,6 @@
     // long headline handled by xeditable plugin
   }
 
-  flashDisplay(flashMesg, flashStatus);
+  flashDisplay(flash.mesg, flash.status);
 
 }());
