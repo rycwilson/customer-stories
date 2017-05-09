@@ -3,14 +3,33 @@ class AdwordsController < ApplicationController
   require 'adwords_api'
 
   before_action() { set_company(params) }
-  before_action({ except: [:preview] }) { get_adwords_api() }
+  before_action() { set_story(params) }
+  before_action({ except: [:preview] }) { create_adwords_api() }
 
   def create_story_ads
+    ['topic', 'retarget'].each do |campaign_type|
+      begin
+        @res = create_ad(@company, @story, campaign_type)
+      # HTTP errors.
+      rescue AdsCommon::Errors::HttpError => e
+        puts "HTTP Error: %s" % e
+      # API errors.
+      rescue AdwordsApi::Errors::ApiException => e
+        puts "Message: %s" % e.message
+        puts 'Errors:'
+        e.errors.each_with_index do |error, index|
+          puts "\tError [%d]:" % (index + 1)
+          error.each do |field, value|
+            puts "\t\t%s: %s" % [field, value]
+          end
+        end
+      end
+    end
+    respond_to { |format| format.js }
   end
 
   def update_story_ads
     # puts JSON.pretty_generate params
-    @story = Story.includes(adwords_ads: { adwords_image: {} }).find( params[:id] )
     @image_changed = params[:image_changed].present?
     @status_changed = params[:status_changed].present?
     @long_headline_changed = !(@image_changed || @status_changed)
@@ -86,10 +105,9 @@ class AdwordsController < ApplicationController
   end
 
   def preview
-    story = Story.find(params[:id])
     @short_headline = @company.adwords_short_headline
-    @long_headline = story.ads.long_headline
-    @image_url = story.ads.adwords_image.try(:image_url) ||
+    @long_headline = @story.ads.long_headline
+    @image_url = @story.ads.adwords_image.try(:image_url) ||
                  @company.adwords_images.default.try(:image_url) ||
                  ADWORDS_IMAGE_PLACEHOLDER_URL
     @logo_url = @company.adwords_logo_url || ADWORDS_LOGO_PLACEHOLDER_URL
@@ -97,21 +115,22 @@ class AdwordsController < ApplicationController
   end
 
   def data
-    @topic_campaign = get_campaign(@company, 'topic')
-    @retarget_campaign = get_campaign(@company, 'retarget')
+    # @topic_campaign = get_campaign(@company, 'topic')
+    # @retarget_campaign = get_campaign(@company, 'retarget')
 
-    @topic_ad_group = get_ad_group(@company, 'topic')
-    @retarget_ad_group = get_ad_group(@company, 'retarget')
+    # @topic_ad_group = get_ad_group(@company, 'topic')
+    # @retarget_ad_group = get_ad_group(@company, 'retarget')
 
-    @ads = get_ads(@company)
+    @story = Story.find(7)
+    @ads = get_ads(@story)
 
     # puts JSON.pretty_generate(@topic_campaign)
     # puts JSON.pretty_generate(@retarget_campaign)
 
-    puts JSON.pretty_generate(@topic_ad_group)
-    puts JSON.pretty_generate(@retarget_ad_group)
+    # puts JSON.pretty_generate(@topic_ad_group)
+    # puts JSON.pretty_generate(@retarget_ad_group)
 
-    # puts JSON.pretty_generate(@ads)
+    puts JSON.pretty_generate(@ads)
 
     respond_to do |format|
       format.json do
@@ -129,20 +148,24 @@ class AdwordsController < ApplicationController
 
   private
 
-  def set_company( params )
-    if [:update_company, :data].include?(params[:action])
+  def set_company (params)
+    if ['update_company', 'data'].include?(params[:action])
       @company = Company.find(params[:id])
     else
       @company = Company.find_by({ subdomain: request.subdomain })
     end
   end
 
-  def get_api_version()
-    :v201702
+  def set_story (params)
+    if params[:action] == 'create_story_ads'
+      @story = Story.find(params[:id])
+    elsif ['update_story_ads', 'preview'].include?(params[:action])
+      @story = Story.includes(adwords_ads: { adwords_image: {} }).find(params[:id])
+    end
   end
 
-  def get_adwords_api()
-    @api ||= create_adwords_api()
+  def get_api_version()
+    :v201702
   end
 
   # Creates an instance of AdWords API class. Uses a configuration file and
@@ -279,12 +302,17 @@ class AdwordsController < ApplicationController
     result[:entries][0]
   end
 
-  def get_ads (company)
+  def get_ads (story)
     service = @api.service(:AdGroupAdService, get_api_version())
     selector = {
-      :fields => ['Id', 'Name', 'Status', 'Labels'],
-      :ordering => [{:field => 'Id', :sort_order => 'ASCENDING'}],
-      :paging => {:start_index => 0, :number_results => 50}
+      fields: ['Id', 'Name', 'Status', 'LongHeadline'],
+      ordering: [{ field: 'Id', sort_order: 'ASCENDING' }],
+      paging: { start_index: 0, number_results: 50 },
+      predicates: [{
+        field: 'LongHeadline',
+        operator: 'IN',
+        values: [ story.title ]
+      }],
     }
     result = nil
     begin
@@ -292,11 +320,8 @@ class AdwordsController < ApplicationController
     rescue AdwordsApi::Errors::ApiException => e
       logger.fatal("Exception occurred: %s\n%s" % [e.to_s, e.message])
       flash.now[:alert] =
-          'API request failed with an error, see logs for details'
+        'API request failed with an error, see logs for details'
     end
-    return result[:entries].select do |ad|
-             ad[:labels].try(:any?) { |label| label[:name] == company.subdomain }
-           end || []
   end
 
   # in progress - not working
@@ -346,6 +371,54 @@ class AdwordsController < ApplicationController
           [ad[:ad][:id], ad[:status]]
     else
       puts 'No ads were updated.'
+    end
+  end
+
+  # error handle - AdsCommon::Errors::UnexpectedParametersError
+  def create_ad (company, story, campaign_type)
+    service = @api.service(:AdGroupAdService, get_api_version())
+    ad_group_id = campaign_type == 'topic' ?
+                  company.campaigns.topic.ad_group.ad_group_id :
+                  company.campaigns.retarget.ad_group.ad_group_id
+    responsive_display_ad = {
+      xsi_type: 'ResponsiveDisplayAd',
+      # This ad format does not allow the creation of an image using the
+      # Image.data field. An image must first be created using the MediaService,
+      # and Image.mediaId must be populated when creating the ad.
+      logo_image: { media_id: company.adwords_logo_media_id },
+      marketing_image: { media_id: company.adwords_images.default.media_id },
+      short_headline: company.adwords_short_headline,
+      long_headline: "This is a test",
+      description: story.title,
+      business_name: company.adwords_short_headline,
+      url_custom_parameters: {  # not allowed in keys: _, -
+        parameters: [ { key: 'campaign', value: 'promote' },
+                      { key: 'content', value: campaign_type } ]
+      },
+      final_urls: [ story.csp_story_url + "?utm_campaign={_campaign}&utm_content={_content}" ]
+    }
+    # Create an ad group ad for the responsive display ad.
+    responsive_display_ad_group_ad = {
+      ad_group_id: ad_group_id,
+      ad: responsive_display_ad,
+      # Additional propertires (non-required).
+      status: 'PAUSED'
+    }
+    # Create operation.
+    responsive_display_ad_group_ad_operations = {
+      operator: 'ADD',
+      operand: responsive_display_ad_group_ad
+    }
+    # Add the responsive display ad.
+    result = service.mutate([responsive_display_ad_group_ad_operations])
+    # Display results.
+    if result && result[:value]
+      result[:value].each do |ad_group_ad|
+        puts ('New responsive display ad with id %d and short headline %s was ' +
+            'added.') % [ad_group_ad[:ad][:id], ad_group_ad[:ad][:short_headline]]
+      end
+    else
+      puts "No responsive display ads were added."
     end
   end
 

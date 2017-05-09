@@ -158,7 +158,10 @@ function storiesEditSettingsListeners () {
       var $publish = $("#story_published"),
           $logoPublish = $("#story_logo_published"),
           createAd = function (story) {
-            return false;
+            if (story.ads.length === 0 && story.published &&
+                story.previous_changes.published) {
+              return true;
+            } else { return false; }
           },
           updateAd = function (story) {
             return false;
@@ -175,18 +178,16 @@ function storiesEditSettingsListeners () {
         $logoPublish.bootstrapSwitch('state', true);
       }
 
-      console.log(story);
-      if ( createAd() ) {
+      if (createAd(story)) {
         $.post({
           url: '/stories/' + story.id + '/adwords',
-          success: function () {
-
-          }
+          dataType: 'script'
         });
-      } else if ( updateAd() ) {
+
+      } else if (updateAd(story)) {
         $.ajax({
           url: '/stories/' + story.id + '/adwords',
-          method: 'PUT',
+          method: 'put',
           success: function () {
 
           }

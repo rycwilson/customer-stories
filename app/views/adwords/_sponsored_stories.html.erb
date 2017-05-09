@@ -24,58 +24,7 @@
     </thead>
     <tbody>
 
-      <% company.stories.published.each do |story| %>
 
-        <tr data-story-id="<%= story.id %>">
-
-          <td class='dropdown status-dropdown'>
-            <div style='position:relative'>  <!-- div for styling only -->
-
-              <% if company.promote_tr? %>
-
-                <%= render 'adwords/status_dropdown', { story: story } %>
-
-              <% else %>
-
-                <a href="javascript:;" class="dropdown-toggle paused disabled"
-                   data-toggle='dropdown' disabled
-                   data-toggle='tooltip' title='Contact Customer Stories to subscribe to this feature'>
-                  <i class="fa fa-pause"></i>&nbsp;
-                  <i class='fa fa-caret-down'></i>
-                </a>
-
-              <% end %>
-
-            </div>
-          </td>
-
-          <td class='sponsored-story-customer'><%= story.customer.name %></td>
-
-          <td class='sponsored-story-title'>
-            <p><%= story.title %></p>
-            <p><a data-pk="<%= story.id %>"><%= story.ads.long_headline %></a></p>
-          </td>
-
-          <td class='sponsored-story-image'>
-            <div class="fileinput fileinput-exists" data-provides="fileinput">
-              <div class="fileinput-preview thumbnail">
-                <%= image_tag story.ads.adwords_image.try(:image_url) ||
-                              company.adwords_images.default.try(:image_url) ||
-                              ADWORDS_IMAGE_PLACEHOLDER_URL, alt: 'adwords image' %>
-              </div>
-              <%= file_field_tag(:image_url, class: 'hidden') %>
-              <!-- click to change -->
-            </div>
-          </td>
-
-          <td class='preview-window'>
-            <a href="javascript:;">
-              <i class='glyphicon glyphicon-new-window'></i>
-            </a>
-          </td>
-        </tr>
-
-      <% end %>
 
     </tbody>
   </table>

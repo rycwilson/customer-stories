@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170508213331) do
+ActiveRecord::Schema.define(version: 20170509024514) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -110,26 +110,27 @@ ActiveRecord::Schema.define(version: 20170508213331) do
 
   create_table "companies", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at",                                       null: false
-    t.datetime "updated_at",                                       null: false
+    t.datetime "created_at",                                                 null: false
+    t.datetime "updated_at",                                                 null: false
     t.string   "logo_file_name"
     t.string   "logo_content_type"
     t.integer  "logo_file_size"
     t.datetime "logo_updated_at"
     t.string   "logo_url"
     t.string   "subdomain"
-    t.string   "feature_flag",                 default: "beta"
-    t.string   "header_color_1",               default: "#FBFBFB"
-    t.string   "header_color_2",               default: "#85CEE6"
-    t.string   "header_text_color",            default: "#333333"
+    t.string   "feature_flag",                           default: "beta"
+    t.string   "header_color_1",                         default: "#FBFBFB"
+    t.string   "header_color_2",                         default: "#85CEE6"
+    t.string   "header_text_color",                      default: "#333333"
     t.string   "website"
     t.string   "gtm_id"
     t.string   "primary_cta_background_color"
     t.string   "primary_cta_text_color"
     t.string   "adwords_logo_url"
     t.string   "adwords_short_headline"
-    t.boolean  "promote_tr",                   default: false
-    t.boolean  "promote_crm",                  default: false
+    t.boolean  "promote_tr",                             default: false
+    t.boolean  "promote_crm",                            default: false
+    t.integer  "adwords_logo_media_id",        limit: 8
   end
 
   add_index "companies", ["subdomain"], name: "index_companies_on_subdomain", unique: true, using: :btree
