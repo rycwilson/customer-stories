@@ -37,12 +37,11 @@ class Story < ActiveRecord::Base
     end
   end
   alias_attribute :ads, :adwords_ads
-  # these aren't currently used, but nice to have
   has_one :topic_ad, -> (story) {
-    where(adwords_ad_group_id: story.company.adwords_campaigns.topic.ad_group.id)
+    where(adwords_ad_group_id: story.company.campaigns.topic.ad_group.id)
   }, class_name: 'AdwordsAd'
   has_one :retarget_ad, -> (story) {
-    where(adwords_ad_group_id: story.company.adwords_campaigns.retarget.ad_group.id)
+    where(adwords_ad_group_id: story.company.campaigns.retarget.ad_group.id)
   }, class_name: 'AdwordsAd'
 
   # Note: no explicit association to friendly_id_slugs, but it's there

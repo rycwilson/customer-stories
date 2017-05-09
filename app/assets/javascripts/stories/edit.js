@@ -164,10 +164,11 @@ function storiesEditSettingsListeners () {
             } else { return false; }
           },
           updateAd = function (story) {
-            if (story.ads.length && story.previous_changes.published) {
-              return true;
-            }
-            else { return false; }
+            return false;
+            // if (story.ads.length && story.previous_changes.published) {
+            //   return true;
+            // }
+            // else { return false; }
           };
       /*
         server may have changed values to prevent invalid state ...

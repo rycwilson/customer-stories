@@ -1,7 +1,7 @@
 (function () {
 
-  var res = <%= raw @res.to_json %>
+  var flash = <%= raw @flash.to_json %>
 
-  console.log(res);
+  flashDisplay(flash.mesg, flash.status)
 
 }());

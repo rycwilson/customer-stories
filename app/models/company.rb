@@ -31,6 +31,9 @@ class Company < ActiveRecord::Base
     def published
       self.select { |story| story.published? }
     end
+    def with_ads
+      self.select { |story| !story.topic_ad.nil? && !story.retarget_ad.nil? }
+    end
   end
   has_many :visitor_actions
   has_many :page_views, class_name: "PageView"

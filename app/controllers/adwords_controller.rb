@@ -8,21 +8,13 @@ class AdwordsController < ApplicationController
 
   def create_story_ads
     ['topic', 'retarget'].each do |campaign_type|
-      begin
-        @res = create_ad(@company, @story, campaign_type)
-      # HTTP errors.
-      rescue AdsCommon::Errors::HttpError => e
-        puts "HTTP Error: %s" % e
-      # API errors.
-      rescue AdwordsApi::Errors::ApiException => e
-        puts "Message: %s" % e.message
-        puts 'Errors:'
-        e.errors.each_with_index do |error, index|
-          puts "\tError [%d]:" % (index + 1)
-          error.each do |field, value|
-            puts "\t\t%s: %s" % [field, value]
-          end
-        end
+      if create_ad(@company, @story, campaign_type)
+        @flash = {
+          status: 'success',
+          mesg: 'Story published and Sponsored Story created'
+        }
+      else
+        # @flash set in create_ad
       end
     end
     respond_to { |format| format.js }
@@ -47,6 +39,7 @@ class AdwordsController < ApplicationController
       puts 'UPDATE IMAGE'
       # update_ad_image( story, topic_ad )
       # update_ad_image( story, retarget_ad )
+
     elsif @status_changed
       if @story.ads.all? { |ad| update_ad_status(ad) }
         @flash = {
@@ -58,16 +51,22 @@ class AdwordsController < ApplicationController
       end
 
     elsif @long_headline_changed
-      puts 'UPDATE LONG HEADLINE'
-
+      if @story.ads.all? { |ad| remove_ad(ad) }
+        # @flash = {
+        #   status: 'success',
+        #   mesg: "Sponsored Story updated"
+        # }
+      else
+        # @flash for exceptions is set in remove_and_replace_ad
+      end
     end
 
-    @flash_status = "success"
-    if @status_changed
-      # @flash_mesg = "Sponsored Story #{@story.ads.enabled? ? 'enabled' : 'paused'}"
-    else
-      @flash_mesg = "Sponsored Story updated"
-    end
+    # @flash_status = "success"
+    # if @status_changed
+    #   # @flash_mesg = "Sponsored Story #{@story.ads.enabled? ? 'enabled' : 'paused'}"
+    # else
+    #   @flash_mesg = "Sponsored Story updated"
+    # end
     respond_to { |format| format.js }
   end
 
@@ -127,19 +126,19 @@ class AdwordsController < ApplicationController
   end
 
   def data
-    # @topic_campaign = get_campaign(@company, 'topic')
+    @topic_campaign = get_campaign(@company, 'topic')
     # @retarget_campaign = get_campaign(@company, 'retarget')
 
-    # @topic_ad_group = get_ad_group(@company, 'topic')
+    @topic_ad_group = get_ad_group(@company, 'topic')
     # @retarget_ad_group = get_ad_group(@company, 'retarget')
 
     @story = Story.find(7)
     @ads = get_ads(@story)
 
-    # puts JSON.pretty_generate(@topic_campaign)
+    puts JSON.pretty_generate(@topic_campaign)
     # puts JSON.pretty_generate(@retarget_campaign)
 
-    # puts JSON.pretty_generate(@topic_ad_group)
+    puts JSON.pretty_generate(@topic_ad_group)
     # puts JSON.pretty_generate(@retarget_ad_group)
 
     puts JSON.pretty_generate(@ads)
@@ -336,71 +335,22 @@ class AdwordsController < ApplicationController
     end
   end
 
-  # in progress - not working
-  def update_ad_image (story, ad)
-    api = get_adwords_api()
-    service = api.service( :AdGroupAdService, get_api_version() )
-    # Prepare operation for updating ad
-
-    responsive_display_ad = {
-      :id => ad[:ad][:id],
-      :xsi_type => 'ResponsiveDisplayAd',
-      # This ad format does not allow the creation of an image using the
-      # Image.data field. An image must first be created using the MediaService,
-      # and Image.mediaId must be populated when creating the ad.
-      :marketing_image => {
-        :media_id => story.ads.adwords_image.media_id
-      }
-    }
-
-    responsive_display_ad_group_ad = {
-      :ad_group_id => ad[:ad_group_id],
-      :ad => responsive_display_ad,
-      # Additional propertires (non-required).
-      :status => story.ads.enabled ? 'ENABLED' : 'PAUSED'
-    }
-
-    responsive_display_ad_group_ad_operation = {
-      :operator => 'SET',
-      :operand => responsive_display_ad_group_ad
-    }
-
-    # operation = {
-    #   operator: 'SET',
-    #   operand: {
-    #     ad_group_id: ad[:ad_group_id],
-    #     ad: {
-    #       id: ad[:ad][:id],
-    #     image: { media_id: story.ads.adwords_image.media_id }
-    #   }
-    #   }
-    # }
-    # Update ad.
-    response = service.mutate([responsive_display_ad_group_ad_operation])
-    if response and response[:value]
-      ad = response[:value].first
-      puts "Ad ID %d was successfully updated, status set to '%s'." %
-          [ad[:ad][:id], ad[:status]]
-    else
-      puts 'No ads were updated.'
-    end
-  end
-
-  # error handle - AdsCommon::Errors::UnexpectedParametersError
   def create_ad (company, story, campaign_type)
     service = @api.service(:AdGroupAdService, get_api_version())
     ad_group_id = campaign_type == 'topic' ?
                   company.campaigns.topic.ad_group.ad_group_id :
                   company.campaigns.retarget.ad_group.ad_group_id
+    puts "Company Logo Media Id: #{company.adwords_logo_media_id}"
     responsive_display_ad = {
       xsi_type: 'ResponsiveDisplayAd',
       # This ad format does not allow the creation of an image using the
       # Image.data field. An image must first be created using the MediaService,
       # and Image.mediaId must be populated when creating the ad.
+      # media_id can't be nil
       logo_image: { media_id: company.adwords_logo_media_id },
       marketing_image: { media_id: company.adwords_images.default.media_id },
       short_headline: company.adwords_short_headline,
-      long_headline: "This is a test",
+      long_headline: story.title,
       description: story.title,
       business_name: company.adwords_short_headline,
       url_custom_parameters: {  # not allowed in keys: _, -
@@ -421,16 +371,58 @@ class AdwordsController < ApplicationController
       operator: 'ADD',
       operand: responsive_display_ad_group_ad
     }
-    # Add the responsive display ad.
-    result = service.mutate([responsive_display_ad_group_ad_operations])
+
+    begin
+      result = service.mutate([responsive_display_ad_group_ad_operations])
+
+    # Authorization error.
+    rescue AdsCommon::Errors::OAuth2VerificationRequired => e
+      if Rails.env.development?
+        @flash = { status: 'danger', mesg: 'Invalid Adwords API credentials' }
+      else
+        @flash = { status: 'danger', mesg: 'Error creating Sponsored Story' }
+      end
+    # HTTP errors.
+    rescue AdsCommon::Errors::HttpError => e
+      puts "HTTP Error: %s" % e
+      if Rails.env.development?
+        @flash = { status: 'danger', mesg: "HTTP error: #{e}" }
+      else
+        @flash = { status: 'danger', mesg: 'Error creating Sponsored Story' }
+      end
+    # API errors.
+    rescue AdwordsApi::Errors::ApiException => e
+      puts "Message: %s" % e.message
+      puts 'Errors:'
+      e.errors.each_with_index do |error, index|
+        puts "\tError [%d]:" % (index + 1)
+        error.each do |field, value|
+          puts "\t\t%s: %s" % [field, value]
+        end
+      end
+      if Rails.env.development?
+        @flash = { status: 'danger', mesg: "Adwords API error: #{e.message}" }
+      else
+        @flash = { status: 'danger', mesg: 'Error creating Sponsored Story' }
+      end
+    end
+
     # Display results.
     if result && result[:value]
+      puts "RESPONSE #{JSON.pretty_generate(result)}"
       result[:value].each do |ad_group_ad|
         puts ('New responsive display ad with id %d and short headline %s was ' +
             'added.') % [ad_group_ad[:ad][:id], ad_group_ad[:ad][:short_headline]]
       end
+      if campaign_type == 'topic'
+        story.topic_ad.update(ad_id: result[:value][0][:ad][:id])
+      else  # retarget
+        story.retarget_ad.update(ad_id: result[:value][0][:ad][:id])
+      end
+      return true
     else
       puts "No responsive display ads were added."
+      return false
     end
   end
 
@@ -489,6 +481,12 @@ class AdwordsController < ApplicationController
       puts 'No ads were updated.'
       return false
     end
+  end
+
+  def remove_ad (ad)
+    service = @api.service(:AdGroupAdService, get_api_version())
+
+
   end
 
   def new_images? (company_params)

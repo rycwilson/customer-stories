@@ -12,6 +12,7 @@ namespace :temp do
     Company.all.each do |company|
       company.update(adwords_short_headline: company.name + ' Customer Stories')
       if company.subdomain == 'varmour'
+        company.update(adwords_logo_media_id: 2751663760)
         company.campaigns.create(
           type:'TopicCampaign', status: 'ENABLED', campaign_id: 794123279, name: 'varmour display topic'
         )
