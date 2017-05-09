@@ -180,12 +180,20 @@ class StoriesController < ApplicationController
   end
 
   def promote
-    if params[:adwords_image_id].present?
-      @story.ads.each { |ad| ad.adwords_image = AdwordsImage.find( params[:adwords_image_id] ) }
-    elsif @story.ads.all? { |ad| ad.update( adwords_params ) }
-      # nothing to do here
-    else
-      # errors
+    if request.method == 'POST'
+      @story.ads.create({ adwords_ad_group_id: @company.campaigns.topic.ad_group.id,
+                          long_headline: @story.title })
+      @story.ads.create({ adwords_ad_group_id: @company.campaigns.retarget.ad_group.id,
+                          long_headline: @story.title })
+      @story.ads.adwords_image = @company.adwords_images.default
+    else # PUT
+      if params[:adwords_image_id].present?
+        @story.ads.each { |ad| ad.adwords_image = AdwordsImage.find(params[:adwords_image_id]) }
+      elsif @story.ads.all? { |ad| ad.update( adwords_params ) }
+        # nothing to do here
+      else
+        # errors
+      end
     end
     respond_to do |format|
       # this works for all but long_headline:

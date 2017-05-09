@@ -27,7 +27,10 @@ class Story < ActiveRecord::Base
       self.first.long_headline  # same for each ad
     end
     def adwords_image
-      self.first.adwords_image
+      self.first.adwords_image  # same for each ad
+    end
+    def adwords_image= (adwords_image)
+      self.each { |ad| ad.adwords_image = adwords_image }
     end
   end
   alias_attribute :ads, :adwords_ads

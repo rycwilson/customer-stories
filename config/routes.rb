@@ -55,7 +55,8 @@ Rails.application.routes.draw do
         resources :results, only: [:create, :update, :destroy]
         member { put :ctas }
         member { put :tags }
-        member { put :promote }
+        member { post '/promote', to: 'stories#promote' }
+        member { put '/promote/:ad_attr', to: 'stories#promote' }
         member { post '/adwords', to: 'adwords#create_story_ads' }
         member { put '/adwords', to: 'adwords#update_story_ads' }
         member { get '/sponsored_story_preview', to: 'adwords#preview' }

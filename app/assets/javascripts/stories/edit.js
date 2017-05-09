@@ -178,13 +178,20 @@ function storiesEditSettingsListeners () {
         $logoPublish.bootstrapSwitch('state', true);
       }
 
-      if (createAd(story)) {
+      // create the ad
+      if ( createAd(story) ) {
         $.post({
-          url: '/stories/' + story.id + '/adwords',
-          dataType: 'script'
+          url: '/stories/' + story.id + '/promote',
+          success: function (data, status, xhr) {
+            $.post({
+              url: '/stories/' + story.id + '/adwords',
+              dataType: 'script'
+            });
+          }
         });
 
-      } else if (updateAd(story)) {
+      // pause or re-start the ad
+      } else if ( updateAd(story) ) {
         $.ajax({
           url: '/stories/' + story.id + '/adwords',
           method: 'put',

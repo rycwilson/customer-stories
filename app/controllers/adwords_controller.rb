@@ -3,7 +3,7 @@ class AdwordsController < ApplicationController
   require 'adwords_api'
 
   before_action() { set_company(params) }
-  before_action() { set_story(params) }
+  before_action({ except: [:update_company, :data] }) { set_story(params) }
   before_action({ except: [:preview] }) { create_adwords_api() }
 
   def create_story_ads
