@@ -24,7 +24,7 @@ function initXeditable () {
       success: function (response) {
         $.ajax({
           url: '/stories/' + $(this).data('pk') + '/adwords',
-          method: 'PUT',
+          method: 'put',
           data: { long_headline_changed: true },
           dataType: 'script'
         });

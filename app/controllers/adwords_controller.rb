@@ -25,7 +25,7 @@ class AdwordsController < ApplicationController
     # use .present? so we're assigning a boolean instead of string
     @image_changed = params[:image_changed].present?
     @status_changed = params[:status_changed].present?
-    @long_headline_changed = !(@image_changed || @status_changed)
+    @long_headline_changed = params[:long_headline_changed].present?
     # ad_update_params = {
     #   image: @image_changed ? @story.ads.adwords_image : nil,
     #   status: @status_changed ? @story.ads.status : nil,
@@ -51,22 +51,23 @@ class AdwordsController < ApplicationController
       end
 
     elsif @long_headline_changed
-      if @story.ads.all? { |ad| remove_ad(ad) }
-        # @flash = {
-        #   status: 'success',
-        #   mesg: "Sponsored Story updated"
-        # }
+      if @story.ads.all? do |ad|
+        remove_ad({ ad_group_id: ad.ad_group.ad_group_id, ad_id: ad.ad_id })
+      end
+        if ['topic', 'retarget'].all? do |campaign_type|
+          create_ad(@company, @story, campaign_type, true)
+        end
+          @flash = {
+            status: 'success',
+            mesg: 'Sponsored Story updated'
+          }
+        else
+          # @flash for exceptions set in create_ad
+        end
       else
         # @flash for exceptions is set in remove_and_replace_ad
       end
     end
-
-    # @flash_status = "success"
-    # if @status_changed
-    #   # @flash_mesg = "Sponsored Story #{@story.ads.enabled? ? 'enabled' : 'paused'}"
-    # else
-    #   @flash_mesg = "Sponsored Story updated"
-    # end
     respond_to { |format| format.js }
   end
 
@@ -347,12 +348,11 @@ class AdwordsController < ApplicationController
     end
   end
 
-  def create_ad (company, story, campaign_type)
+  def create_ad (company, story, campaign_type, update=false)
     service = @api.service(:AdGroupAdService, get_api_version())
     ad_group_id = campaign_type == 'topic' ?
                   company.campaigns.topic.ad_group.ad_group_id :
                   company.campaigns.retarget.ad_group.ad_group_id
-    puts "Company Logo Media Id: #{company.adwords_logo_media_id}"
     responsive_display_ad = {
       xsi_type: 'ResponsiveDisplayAd',
       # This ad format does not allow the creation of an image using the
@@ -362,8 +362,8 @@ class AdwordsController < ApplicationController
       logo_image: { media_id: company.adwords_logo_media_id },
       marketing_image: { media_id: company.adwords_images.default.media_id },
       short_headline: company.adwords_short_headline,
-      long_headline: story.title,
-      description: story.title,
+      long_headline: update ? story.ads.long_headline : story.title,
+      description: update ? story.ads.long_headline : story.title,
       business_name: company.adwords_short_headline,
       url_custom_parameters: {  # not allowed in keys: _, -
         parameters: [ { key: 'campaign', value: 'promote' },
