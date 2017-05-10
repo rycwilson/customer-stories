@@ -70,6 +70,18 @@ class AdwordsController < ApplicationController
     respond_to { |format| format.js }
   end
 
+  def remove_story_ads
+    if params[:removed_ads].all? { |index, ad_params| remove_ad(ad_params) }
+      @flash = {
+        status: 'success',
+        mesg: 'Story unpublished and Sponsored Story removed'
+      }
+    else
+      # @flash set in remove_ad
+    end
+    respond_to { |format| format.js }
+  end
+
   def update_company
     puts JSON.pretty_generate params
     # binding.remote_pry
@@ -168,7 +180,7 @@ class AdwordsController < ApplicationController
   end
 
   def set_story (params)
-    if params[:action] == 'create_story_ads'
+    if ['create_story_ads', 'remove_story_ads'].include?(params[:action])
       @story = Story.find(params[:id])
     elsif ['update_story_ads', 'preview'].include?(params[:action])
       @story = Story.includes(adwords_ads: { adwords_image: {} }).find(params[:id])
@@ -428,15 +440,15 @@ class AdwordsController < ApplicationController
 
   def update_ad_status (ad)
     service = @api.service(:AdGroupAdService, get_api_version())
-    begin
-      operation =  {
-        operator: 'SET',
-        operand: {
-          ad_group_id: ad.ad_group.ad_group_id,
-          status: ad.status,
-          ad: { id: ad.ad_id }
-        }
+    operation =  {
+      operator: 'SET',
+      operand: {
+        ad_group_id: ad.ad_group.ad_group_id,
+        status: ad.status,
+        ad: { id: ad.ad_id }
       }
+    }
+    begin
       response = service.mutate([operation])
 
     # Authorization error.
@@ -483,9 +495,60 @@ class AdwordsController < ApplicationController
     end
   end
 
-  def remove_ad (ad)
+  def remove_ad (ad_params)
     service = @api.service(:AdGroupAdService, get_api_version())
+    operation = {
+      operator: 'REMOVE',
+      operand: {
+        ad_group_id: ad_params[:ad_group_id].to_i,
+        ad: {
+          xsi_type: 'ResponsiveDisplayAd',
+          id: ad_params[:ad_id].to_i
+        }
+      }
+    }
+    begin
+      response = service.mutate([operation])
+    # Authorization error.
+    rescue AdsCommon::Errors::OAuth2VerificationRequired => e
+      if Rails.env.development?
+        @flash = { status: 'danger', mesg: 'Invalid Adwords API credentials' }
+      else
+        @flash = { status: 'danger', mesg: 'Error removing Sponsored Story' }
+      end
+    # HTTP errors.
+    rescue AdsCommon::Errors::HttpError => e
+      puts "HTTP Error: %s" % e
+      if Rails.env.development?
+        @flash = { status: 'danger', mesg: "HTTP error: #{e}" }
+      else
+        @flash = { status: 'danger', mesg: 'Error removing Sponsored Story' }
+      end
+    # API errors.
+    rescue AdwordsApi::Errors::ApiException => e
+      puts "Message: %s" % e.message
+      puts 'Errors:'
+      e.errors.each_with_index do |error, index|
+        puts "\tError [%d]:" % (index + 1)
+        error.each do |field, value|
+          puts "\t\t%s: %s" % [field, value]
+        end
+      end
+      if Rails.env.development?
+        @flash = { status: 'danger', mesg: "Adwords API error: #{e.message}" }
+      else
+        @flash = { status: 'danger', mesg: 'Error removing Sponsored Story' }
+      end
+    end
 
+    if response and response[:value]
+      ad = response[:value].first
+      puts "Ad ID %d was successfully removed." % ad[:ad][:id]
+      return true
+    else
+      puts 'No ads were removed.'
+      return false
+    end
 
   end
 

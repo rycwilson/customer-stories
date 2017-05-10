@@ -57,8 +57,10 @@ Rails.application.routes.draw do
         member { put :tags }
         member { post '/promote', to: 'stories#promote' }
         member { put '/promote', to: 'stories#promote' }
+        member { delete '/promote', to: 'stories#promote' }
         member { post '/adwords', to: 'adwords#create_story_ads' }
         member { put '/adwords', to: 'adwords#update_story_ads' }
+        member { delete '/adwords', to: 'adwords#remove_story_ads' }
         member { get '/sponsored_story_preview', to: 'adwords#preview' }
       end
 

@@ -1,0 +1,8 @@
+
+(function () {
+
+  flash = <%= raw @flash.to_json %>
+
+  flashDisplay(flash.mesg, flash.status)
+
+}());

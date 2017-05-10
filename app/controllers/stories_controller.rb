@@ -180,13 +180,14 @@ class StoriesController < ApplicationController
   end
 
   def promote
+    response = {}
     if request.method == 'POST'
       @story.ads.create({ adwords_ad_group_id: @company.campaigns.topic.ad_group.id,
                           long_headline: @story.title })
       @story.ads.create({ adwords_ad_group_id: @company.campaigns.retarget.ad_group.id,
                           long_headline: @story.title })
       @story.ads.adwords_image = @company.adwords_images.default
-    else # PUT
+    elsif request.method == 'PUT'
       if params[:adwords_image_id].present?
         @story.ads.each { |ad| ad.adwords_image = AdwordsImage.find(params[:adwords_image_id]) }
       elsif @story.ads.all? { |ad| ad.update(adwords_params) }
@@ -194,12 +195,18 @@ class StoriesController < ApplicationController
       else
         # errors
       end
+    elsif request.method == 'DELETE'
+      response[:removed_ads] = []
+      @story.ads.each do |ad|
+        response[:removed_ads] << { ad_id: ad.ad_id, ad_group_id: ad.ad_group.ad_group_id }
+        ad.destroy
+      end
     end
     respond_to do |format|
       # this works for all but long_headline:
       #   format.json { head :no_content }  (or head :ok)
       # but x-editable wants a json response with status 200
-      format.json { render json: {}, status: 200 }  # success
+      format.json { render json: response, status: 200 }  # success
     end
   end
 
