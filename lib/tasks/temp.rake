@@ -4,27 +4,67 @@ namespace :temp do
 
   # NOTE - change id values for production environment
   task adwords: :environment do
+    prod_env = (ENV['ADWORDS_ENV'] == 'production')
+
     AdwordsCampaign.destroy_all
     AdwordsAdGroup.destroy_all
     AdwordsAd.destroy_all
-    # Company.find_by(subdomain:'varmour').update(promote_tr: true)
-    # Company.find_by(subdomain:'retailnext').update(promote_tr: true)
+
+    Company.find_by(subdomain:'varmour').update(promote_tr: true)
+    Company.find_by(subdomain:'retailnext').update(promote_tr: true)
+
     Company.all.each do |company|
       company.update(adwords_short_headline: company.name + ' Customer Stories')
+
       if company.subdomain == 'varmour'
-        company.update(adwords_logo_media_id: 2751663760)
+        varmour_params = {
+          topic_campaign_id: prod_env ? 1234 : 794123279,
+          topic_ad_group_id: prod_env ? 1234 : 40779259429,
+          retarget_campaign_id: prod_env ? 1234 : 794134055,
+          retarget_ad_group_id: prod_env ? 1234 : 38074094381,
+          adwords_logo_media_id: prod_env ? 1234 : 2751663760
+        }
+        company.update(adwords_logo_media_id: varmour_params[:adwords_logo_media_id])
         company.campaigns.create(
-          type:'TopicCampaign', status: 'ENABLED', campaign_id: 794123279, name: 'varmour display topic'
+          type:'TopicCampaign', status: 'ENABLED',
+          campaign_id: varmour_params[:topic_campaign_id], name: 'varmour display topic'
         )
         company.campaigns.create(
-          type:'RetargetCampaign', status: 'ENABLED', campaign_id: 794134055, name: 'vamour display retarget'
+          type:'RetargetCampaign', status: 'ENABLED',
+          campaign_id: varmour_params[:retarget_campaign_id], name: 'vamour display retarget'
         )
         company.campaigns.topic.create_adwords_ad_group(
-          ad_group_id: 40779259429, status: 'ENABLED', name: 'varmour ad group display topic'
+          ad_group_id: varmour[:topic_ad_group_id], status: 'ENABLED', name: 'varmour ad group display topic'
         )
         company.campaigns.retarget.create_adwords_ad_group(
-          ad_group_id: 38074094381, status: 'ENABLED', name: 'varmour ad group display retarget'
+          ad_group_id: varmour[:retarget_ad_group_id], status: 'ENABLED', name: 'varmour ad group display retarget'
         )
+
+      elsif company.subdomain == 'retailnext' && prod_env
+        retailnext_params = {
+          topic_campaign_id: prod_env ? 1234 : 5678,
+          topic_ad_group_id: prod_env ? 1234 : 5678,
+          retarget_campaign_id: prod_env ? 1234 : 5678,
+          retarget_ad_group_id: prod_env ? 1234 : 5678,
+          adwords_logo_media_id: prod_env ? 1234 : 5678
+        }
+        company.update(adwords_logo_media_id: retailnext_params[:adwords_logo_media_id])
+        company.campaigns.create(
+          type:'TopicCampaign', status: 'ENABLED',
+          campaign_id: retailnext_params[:topic_campaign_id], name: 'retailnext display topic'
+        )
+        company.campaigns.create(
+          type:'RetargetCampaign', status: 'ENABLED',
+          campaign_id: retailnext_params[:retarget_campaign_id], name: 'vamour display retarget'
+        )
+        company.campaigns.topic.create_adwords_ad_group(
+          ad_group_id: retailnext[:topic_ad_group_id], status: 'ENABLED', name: 'retailnext ad group display topic'
+        )
+        company.campaigns.retarget.create_adwords_ad_group(
+          ad_group_id: retailnext[:retarget_ad_group_id], status: 'ENABLED', name: 'retailnext ad group display retarget'
+        )
+
+      # all others
       else
         company.campaigns.create(type:'TopicCampaign')
         company.campaigns.create(type:'RetargetCampaign')
@@ -32,7 +72,10 @@ namespace :temp do
         company.campaigns.retarget.create_adwords_ad_group()
       end
     end
-    Story.where( published: true ).each do |story|
+
+    # all published stories have a Sponsored Story;
+    # status defaults to PAUSED, and will stay that way for non-subscribers
+    Story.where(published: true).each do |story|
       story.company.campaigns.topic.ad_group.ads.create(
         story_id: story.id, long_headline: story.title
       )
@@ -41,33 +84,36 @@ namespace :temp do
       )
     end
 
-    # note these are ads from test account!
-    # varmour - equens
-    AdwordsAd.joins( adwords_ad_group: { adwords_campaign: {} } )
-             .where( story_id: 7, adwords_campaigns: { type: 'TopicCampaign' } ).take
-             .update( ad_id: 191118170285 )
-    AdwordsAd.joins( adwords_ad_group: { adwords_campaign: {} } )
-             .where( story_id: 7, adwords_campaigns: { type: 'RetargetCampaign' } ).take
-             .update( ad_id: 191152234528 )
-    # Story.find(7).adwords_image.update(media_id: 2749038420)
+    if prod_env
+      # production ads
+    else
+      # varmour - equens - test
+      AdwordsAd.joins( adwords_ad_group: { adwords_campaign: {} } )
+               .where( story_id: 7, adwords_campaigns: { type: 'TopicCampaign' } ).take
+               .update( ad_id: 191118170285 )
+      AdwordsAd.joins( adwords_ad_group: { adwords_campaign: {} } )
+               .where( story_id: 7, adwords_campaigns: { type: 'RetargetCampaign' } ).take
+               .update( ad_id: 191152234528 )
+      # Story.find(7).adwords_image.update(media_id: 2749038420)
 
-    # varmour - john muir
-    AdwordsAd.joins( adwords_ad_group: { adwords_campaign: {} } )
-             .where( story_id: 213, adwords_campaigns: { type: 'TopicCampaign' } ).take
-             .update( ad_id: 193403020234 )
-    AdwordsAd.joins( adwords_ad_group: { adwords_campaign: {} } )
-             .where( story_id: 213, adwords_campaigns: { type: 'RetargetCampaign' } ).take
-             .update( ad_id: 191119635492 )
-    # Story.find(213).adwords_image.update(media_id: 2749038420)
+      # varmour - john muir - test
+      AdwordsAd.joins( adwords_ad_group: { adwords_campaign: {} } )
+               .where( story_id: 213, adwords_campaigns: { type: 'TopicCampaign' } ).take
+               .update( ad_id: 193403020234 )
+      AdwordsAd.joins( adwords_ad_group: { adwords_campaign: {} } )
+               .where( story_id: 213, adwords_campaigns: { type: 'RetargetCampaign' } ).take
+               .update( ad_id: 191119635492 )
+      # Story.find(213).adwords_image.update(media_id: 2749038420)
 
-    # varmour - fortune100
-    AdwordsAd.joins( adwords_ad_group: { adwords_campaign: {} } )
-             .where( story_id: 225, adwords_campaigns: { type: 'TopicCampaign' } ).take
-             .update( ad_id: 193374900161 )
-    AdwordsAd.joins( adwords_ad_group: { adwords_campaign: {} } )
-             .where( story_id: 225, adwords_campaigns: { type: 'RetargetCampaign' } ).take
-             .update( ad_id: 191119770138 )
-    # Story.find(225).adwords_image.update(media_id: 2749038420)
+      # varmour - fortune100 - test
+      AdwordsAd.joins( adwords_ad_group: { adwords_campaign: {} } )
+               .where( story_id: 225, adwords_campaigns: { type: 'TopicCampaign' } ).take
+               .update( ad_id: 193374900161 )
+      AdwordsAd.joins( adwords_ad_group: { adwords_campaign: {} } )
+               .where( story_id: 225, adwords_campaigns: { type: 'RetargetCampaign' } ).take
+               .update( ad_id: 191119770138 )
+      # Story.find(225).adwords_image.update(media_id: 2749038420)
+    end
 
   end
 
