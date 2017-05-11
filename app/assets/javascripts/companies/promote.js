@@ -1,4 +1,5 @@
 
+// function executes when promote tab is clicked on
 function promote () {
 
 }
@@ -28,7 +29,7 @@ function promoteListeners () {
         // then send a request to update adwords
         $.ajax({
           url: '/stories/' + storyId + '/promote',
-          method: 'PUT',
+          method: 'put',
           data: {
             adwords: {
               status: $(this).attr('class') === 'enable' ? 'ENABLED' : 'PAUSED',
@@ -38,7 +39,7 @@ function promoteListeners () {
           success: function (data, status, xhr) {
             $.ajax({
               url: '/stories/' + storyId + '/adwords',
-              method: 'PUT',
+              method: 'put',
               data: { status_changed: true },
               dataType: 'script'
             });
@@ -57,10 +58,10 @@ function promoteListeners () {
             template = _.template( $('#adwords-image-select-form-template').html() );
 
         // remove any query param that was used to refresh an image
-        currentImageUrl = currentImageUrl.slice(0, currentImageUrl.lastIndexOf('?'));
+        if (currentImageUrl.match(/\?\d+/)) {
+          currentImageUrl = currentImageUrl.slice(0, currentImageUrl.lastIndexOf('?'));
+        }
 
-        // unhide any images that were hidden last time
-        $modal.find('li').removeClass('hidden');
         // hide the current image
         $modal.find('img[src="' + currentImageUrl + '"]')
               .closest('li').addClass('hidden');
@@ -76,7 +77,7 @@ function promoteListeners () {
       function (event) {
         $.ajax({
           url: '/stories/' + $(this).data('story-id') + '/adwords',
-          method: 'PUT',
+          method: 'put',
           data: { image_changed: true },
           dataType: 'script'
         });
@@ -108,6 +109,7 @@ function promoteListeners () {
       function () {
         $(this).find('.modal-footer').empty();
         $(this).find('.thumbnail').removeClass('selected');
+        $(this).find('li').removeClass('hidden');
       })
 
     // ad previews - separate window
@@ -134,6 +136,29 @@ function promoteListeners () {
 
         $('li.new-adwords-image input[type="file"]')[0].click();
 
+      })
+
+    // when this event triggers (image upload), the image dimensons won't be ready
+    // if the validation is performed immediately
+    // $('img').on('load', ...) not working, probably because image is stored as data:
+    // so check the .complete property of the img element
+    .on('change.bs.fileinput',
+        '.adwords-default.adwords-image, .adwords-default.adwords-logo',
+      function () {
+        var $_this = $(this),
+            waitForImage,  // this will be a window timer id, need to declare in case it's never created
+            imgLoaded = function () {
+              if ($_this.find('.fileinput-exists img')[0].complete) {
+                window.clearTimeout(waitForImage);
+                $('#promote-settings-form').validator('validate');
+              }
+              else {
+                return 'false';
+              }
+            };
+        if (imgLoaded() === 'false') {
+          waitForImage = window.setTimeout(imgLoaded, 100);
+        }
       })
 
     // on additional image uploaded

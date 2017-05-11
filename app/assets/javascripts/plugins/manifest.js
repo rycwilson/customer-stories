@@ -55,3 +55,5 @@
 //= require editable/bootstrap-editable
 //= require editable/rails
 
+//= require bootstrap-validator/dist/validator
+

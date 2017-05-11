@@ -25,6 +25,27 @@ function companiesShow () {
     container: 'body'
   });
 
+  $('#promote-settings-form').validator({
+    custom: {
+      'image-requirements': function ($fileInput) {
+        var img = $fileInput.closest('.fileinput').find('.fileinput-exists img')[0],
+            minWidth = $fileInput.data('image-requirements').split('x')[0],
+            minHeight = $fileInput.data('image-requirements').split('x')[1],
+            width = img.naturalWidth,
+            height = img.naturalHeight,
+            type = minWidth / minHeight === 1 ? 'logo' : 'landscape',
+            ratio = width / height;
+        if (width < minWidth || height < minHeight) {
+          return "Image too small";
+        // ratio must be 1.91 +/- 1%
+        } else if ( type === 'landscape' && (ratio < 1.8909 || ratio > 1.929) ||
+                    type === 'logo' && (ratio < 0.99 || ratio > 1.01) ) {
+          return "Bad aspect ratio";
+        }
+      }
+    }
+  });
+
 }
 
 function companiesShowListeners () {

@@ -22,25 +22,13 @@ class AdwordsController < ApplicationController
 
   def update_story_ads
     # puts JSON.pretty_generate params
-    # use .present? so we're assigning a boolean instead of string
+
+    # use .present? to get boolean instead of string
     @image_changed = params[:image_changed].present?
     @status_changed = params[:status_changed].present?
     @long_headline_changed = params[:long_headline_changed].present?
-    # ad_update_params = {
-    #   image: @image_changed ? @story.ads.adwords_image : nil,
-    #   status: @status_changed ? @story.ads.status : nil,
-    #   long_headline: @long_headline_changed ? @story.ads.long_headline : nil
-    # }
 
-    # ads = get_ads(@company)
-    # topic_ad = get_ad( story.topic_ad.id )
-    # retarget_ad = get_ad( story.retarget_ad.id )
-    if @image_changed
-      puts 'UPDATE IMAGE'
-      # update_ad_image( story, topic_ad )
-      # update_ad_image( story, retarget_ad )
-
-    elsif @status_changed
+    if @status_changed
       if @story.ads.all? { |ad| update_ad_status(ad) }
         @flash = {
           status: 'success',
@@ -50,12 +38,12 @@ class AdwordsController < ApplicationController
         # @flash for exceptions is set in update_ad_status
       end
 
-    elsif @long_headline_changed
+    elsif @image_changed || @long_headline_changed
       if @story.ads.all? do |ad|
         remove_ad({ ad_group_id: ad.ad_group.ad_group_id, ad_id: ad.ad_id })
       end
         if ['topic', 'retarget'].all? do |campaign_type|
-          create_ad(@company, @story, campaign_type, true)
+          create_ad(@company, @story, campaign_type)
         end
           @flash = {
             status: 'success',
@@ -65,12 +53,13 @@ class AdwordsController < ApplicationController
           # @flash for exceptions set in create_ad
         end
       else
-        # @flash for exceptions is set in remove_and_replace_ad
+        # @flash for exceptions is set in remove_ad
       end
     end
     respond_to { |format| format.js }
   end
 
+  # the ids of removed ads are forwarded via params since they've been removed from csp
   def remove_story_ads
     if params[:removed_ads].all? { |index, ad_params| remove_ad(ad_params) }
       @flash = {
@@ -94,7 +83,7 @@ class AdwordsController < ApplicationController
 
     if new_images?(params[:company])
       get_new_image_urls(params[:company]).each do |image_url|
-        # upload_image(image_url) or return # return if error
+        upload_image(image_url) or return # return if error
       end
     end
 
@@ -139,19 +128,19 @@ class AdwordsController < ApplicationController
   end
 
   def data
-    @topic_campaign = get_campaign(@company, 'topic')
+    # @topic_campaign = get_campaign(@company, 'topic')
     # @retarget_campaign = get_campaign(@company, 'retarget')
 
-    @topic_ad_group = get_ad_group(@company, 'topic')
+    # @topic_ad_group = get_ad_group(@company, 'topic')
     # @retarget_ad_group = get_ad_group(@company, 'retarget')
 
     @story = Story.find(7)
     @ads = get_ads(@story)
 
-    puts JSON.pretty_generate(@topic_campaign)
+    # puts JSON.pretty_generate(@topic_campaign)
     # puts JSON.pretty_generate(@retarget_campaign)
 
-    puts JSON.pretty_generate(@topic_ad_group)
+    # puts JSON.pretty_generate(@topic_ad_group)
     # puts JSON.pretty_generate(@retarget_ad_group)
 
     puts JSON.pretty_generate(@ads)
@@ -247,10 +236,10 @@ class AdwordsController < ApplicationController
   end
 
   def upload_image(image_url)
-    media_srv = @api.service(:MediaService, get_api_version())
+    service = @api.service(:MediaService, get_api_version())
     # if image_url is nil: Invalid URL: #<ActionDispatch::Http::UploadedFile:0x007f8615701348>
     img_url = image_url
-    img_data = AdsCommon::Http.get(img_url, api.config)
+    img_data = AdsCommon::Http.get(img_url, @api.config)
     base64_image_data = Base64.encode64(img_data)
     image = {
       :xsi_type => 'Image',
@@ -259,7 +248,7 @@ class AdwordsController < ApplicationController
     }
 
     begin
-      response = media_srv.upload([image])
+      response = service.upload([image])
 
     rescue AdsCommon::Errors::HttpError => e
       puts "HTTP Error: %s" % e
@@ -303,6 +292,7 @@ class AdwordsController < ApplicationController
            full_dimensions[:width], ret_image[:mime_type]]
     else
       puts 'No images uploaded.'
+      return false
     end
     return true
   end
@@ -348,22 +338,20 @@ class AdwordsController < ApplicationController
     end
   end
 
-  def create_ad (company, story, campaign_type, update=false)
+  def create_ad (company, story, campaign_type)
     service = @api.service(:AdGroupAdService, get_api_version())
     ad_group_id = campaign_type == 'topic' ?
                   company.campaigns.topic.ad_group.ad_group_id :
                   company.campaigns.retarget.ad_group.ad_group_id
+
     responsive_display_ad = {
       xsi_type: 'ResponsiveDisplayAd',
-      # This ad format does not allow the creation of an image using the
-      # Image.data field. An image must first be created using the MediaService,
-      # and Image.mediaId must be populated when creating the ad.
       # media_id can't be nil
       logo_image: { media_id: company.adwords_logo_media_id },
-      marketing_image: { media_id: company.adwords_images.default.media_id },
+      marketing_image: { media_id: story.ads.adwords_image.media_id },
       short_headline: company.adwords_short_headline,
-      long_headline: update ? story.ads.long_headline : story.title,
-      description: update ? story.ads.long_headline : story.title,
+      long_headline: story.ads.long_headline,
+      description: story.ads.long_headline,
       business_name: company.adwords_short_headline,
       url_custom_parameters: {  # not allowed in keys: _, -
         parameters: [ { key: 'campaign', value: 'promote' },

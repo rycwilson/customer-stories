@@ -40,16 +40,19 @@
       html: {
         id: 'promote-settings-form',
         class: 'directUpload',
-        data: { 'form-data' => (@s3_direct_post.fields),
-                'url' => @s3_direct_post.url,
-                'host' => URI.parse(@s3_direct_post.url).host
-      } } do |f| %>
+        data: {
+          'form-data' => (@s3_direct_post.fields),
+          'url' => @s3_direct_post.url,
+          'host' => URI.parse(@s3_direct_post.url).host } } do |f| %>
 
   <div class="form-inline">
     <div class="form-group">
 
-      <%= f.label :adwords_short_headline, "Headline (max 25 characters)", class: 'control-label' %>
-      <%= f.text_field :adwords_short_headline, class: 'form-control', style: 'width:300px' %>
+      <%= f.label :adwords_short_headline, "Headline", class: 'control-label' %>
+      <%= f.text_field :adwords_short_headline, class: 'form-control', style: 'width:300px',
+            maxlength: '25', required: true %>
+      <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+      <div class="help-block with-errors" style='padding-left:75px'>Max 25 characters</div>
 
     </div>
   </div>
@@ -61,10 +64,6 @@
       <div>
         <%= f.label :adwords_logo_url, 'Sponsored Stories Logo',
               class: 'adwords-logo' %>&nbsp;&nbsp;
-        <a tabindex='0' class='adwords-logo image-requirements' role='button'
-           data-toggle='popover' data-placement='top' data-trigger='focus'
-           title='Requirements - Sponsored Stories Logo'
-           data-min='128x128' data-ratio='1:1' data-suggest='1200x1200'>requirements</a>
       </div>
 
       <div class="well fileinput adwords-default adwords-logo <%= company.adwords_logo_url.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">
@@ -78,10 +77,17 @@
         </div>
 
         <div class="btn-file">
-          <%= f.file_field :adwords_logo_url %>
+          <%= f.file_field :adwords_logo_url, data: { 'image-requirements': '128x128' } %>
         </div>
 
         <i class='change-image glyphicon glyphicon-pencil'></i>
+
+        <div class="help-block with-errors">
+          <a tabindex='0' class='adwords-logo image-requirements' role='button'
+             data-toggle='popover' data-placement='top' data-trigger='focus'
+             title='Requirements - Sponsored Stories Logo'
+             data-min='128x128' data-ratio='1:1' data-suggest='1200x1200'>Requirements</a>
+        </div>
 
       </div>  <!-- /.fileupload -->
 
@@ -92,10 +98,6 @@
       <div>
         <%= f.label 'default_adwords_image_url', 'Sponsored Stories Image (default)',
               class: 'adwords-image' %>&nbsp;&nbsp;
-        <a tabindex='0' class='adwords-image image-requirements' role='button'
-           data-toggle='popover' data-placement='top' data-trigger='focus'
-           title='Requirements - Sponsored Stories Image'
-           data-min='600x314' data-ratio='1.91:1' data-suggest='1200x628'>requirements</a>
       </div>
 
       <div class="well fileinput adwords-default adwords-image <%= company.adwords_images.default.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">
@@ -109,10 +111,18 @@
         </div>
 
         <div class="btn-file">
-          <%= f.file_field 'default_adwords_image_url' %>
+          <%= f.file_field 'default_adwords_image_url',
+                data: { 'image-requirements': '600x314' } %>
         </div>
 
         <i class='change-image glyphicon glyphicon-pencil'></i>
+
+        <div class="help-block with-errors">
+          <a tabindex='0' class='adwords-image image-requirements' role='button'
+             data-toggle='popover' data-placement='top' data-trigger='focus'
+             title='Requirements - Sponsored Stories Image'
+             data-min='600x314' data-ratio='1.91:1' data-suggest='1200x628'>Requirements</a>
+        </div>
 
       </div>  <!-- /.fileupload -->
 
