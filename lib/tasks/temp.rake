@@ -9,7 +9,8 @@ namespace :temp do
     AdwordsCampaign.destroy_all
     AdwordsAdGroup.destroy_all
     AdwordsAd.destroy_all
-    AdwordsImage.destroy_all
+    # leave the default images, as deleting them will also delete their s3 instance (url will be bad)
+    AdwordsImage.where.not(company_default: true).destroy_all
 
     Company.find_by(subdomain:'varmour').update(promote_tr: true)
     Company.find_by(subdomain:'retailnext').update(promote_tr: true)
@@ -19,13 +20,13 @@ namespace :temp do
       if company.subdomain == 'varmour'
         varmour_params = {
           short_headline: 'vArmour Customer Stories',
-          adwords_logo_url: prod_env ? "" : "https://csp-development-assets.s3-us-west-1.amazonaws.com/uploads/a33fc278-1b4f-42e9-8af9-47b605d2a200/varmour_1200x1200.png",
-          adwords_logo_media_id: prod_env ? 1234 : 2818593977,
+          adwords_logo_url: prod_env ? "" : "https://csp-development-assets.s3-us-west-1.amazonaws.com/uploads/bc2d8727-aab9-4825-a7da-0fd3386bcfc0/varmour_1200x1200.png",
+          adwords_logo_media_id: prod_env ? 1234 : 2751663760,
           topic_campaign_id: prod_env ? 1234 : 794123279,
           topic_ad_group_id: prod_env ? 1234 : 40779259429,
           retarget_campaign_id: prod_env ? 1234 : 794134055,
           retarget_ad_group_id: prod_env ? 1234 : 38074094381,
-          default_image_url: prod_env ? "" : "https://csp-development-assets.s3-us-west-1.amazonaws.com/uploads/80402b7c-0436-405d-97ca-29a983055c6c/varmour-existing.jpeg",
+          default_image_url: prod_env ? "" : "https://csp-development-assets.s3-us-west-1.amazonaws.com/uploads/d3fa2562-e9c8-4032-925d-e472f7b3758c/varmour-existing.jpeg",
           default_image_media_id: prod_env ? 1234 : 2749038420
         }
         company.update(
@@ -34,7 +35,8 @@ namespace :temp do
           adwords_logo_media_id: varmour_params[:adwords_logo_media_id]
         )
         company.adwords_images.create(
-          company_default: true, image_url: varmour_params[:default_image_url]
+          company_default: true, image_url: varmour_params[:default_image_url],
+          media_id: varmour_params[:default_image_media_id]
         )
         company.campaigns.create(
           type:'TopicCampaign', status: prod_env ? 'ENABLED' : 'PAUSED',
@@ -69,7 +71,8 @@ namespace :temp do
           adwords_logo_media_id: retailnext_params[:adwords_logo_media_id]
         )
         company.adwords_images.create(
-          company_default: true, image_url: retailnext_params[:default_image_url]
+          company_default: true, image_url: retailnext_params[:default_image_url],
+          media_id: 123
         )
         company.campaigns.create(
           type:'TopicCampaign', status: 'ENABLED',
@@ -111,33 +114,45 @@ namespace :temp do
     if prod_env
       # production ads
     else
+      # varmour
       equens = Story.find(7)
       equens.ads.each do |ad|
         if ad.ad_group.campaign.type == 'TopicCampaign'
-          ad.update(ad_id: 191118170285)
+          ad.update(ad_id: 191118170285, status: 'ENABLED')
         else
-          ad.update(ad_id: 191152234528)
+          ad.update(ad_id: 191152234528, status: 'ENABLED')
         end
         ad.adwords_image = equens.company.adwords_images.default
       end
       johnmuir = Story.find(213)
       johnmuir.ads.each do |ad|
         if ad.ad_group.campaign.type == 'TopicCampaign'
-          ad.update(ad_id: 193403020234)
+          ad.update(ad_id: 193403020234, status: 'ENABLED')
         else
-          ad.update(ad_id: 191119635492)
+          ad.update(ad_id: 191119635492, status: 'ENABLED')
         end
         ad.adwords_image = johnmuir.company.adwords_images.default
       end
       fortune100 = Story.find(225)
       fortune100.ads.each do |ad|
         if ad.ad_group.campaign.type == 'TopicCampaign'
-          ad.update(ad_id: 193374900161)
+          ad.update(ad_id: 193374900161, status: 'ENABLED')
         else
-          ad.update(ad_id: 191119770138)
+          ad.update(ad_id: 191119770138, status: 'ENABLED')
         end
         ad.adwords_image = fortune100.company.adwords_images.default
       end
+
+      # published but need an adwords_ad
+      varmour = Company.find(10)
+      varmour.stories.published.select { |story| story.ads.all? { |ad| ad.ad_id.nil? } }
+        .each do |story|
+          story.ads.adwords_image = varmour.adwords_images.default
+          ['topic', 'retarget'].each do |campaign_type|
+            AdwordsController.new::create_ad(varmour, story, campaign_type)
+          end
+        end
+
     end  # create_ads
 
   end
