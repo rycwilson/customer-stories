@@ -156,7 +156,7 @@ function promoteListeners () {
                 return 'false';
               }
             };
-        if (imgLoaded() === 'false') {
+        if ( imgLoaded() === 'false' ) {
           waitForImage = window.setTimeout(imgLoaded, 100);
         }
       })
@@ -164,10 +164,38 @@ function promoteListeners () {
     // on additional image uploaded
     .on('change.bs.fileinput', 'li.new-adwords-image',
       function () {
-        var imageUrl = $(this).find('.fileinput-preview.thumbnail').attr('src');
-        $(this)
-          .removeClass('hidden new-adwords-image')
-          .find('input[type="file"]').addClass('hidden');  // doesn't work if the input has class: hidden from the get-go
+        var $newImage = $(this),
+            img = $(this).find('img')[0],
+            meetsSizeRequirements = function (img) {
+              var minWidth = 600, minHeight = 314,
+                  ratio = img.naturalWidth / img.naturalHeight;
+              if ( img.naturalWidth < minWidth ||
+                   img.naturalHeight < minHeight ||
+                   ratio < 1.8909 || ratio > 1.929 ) {
+                return false;
+              } else { return true; }
+            },
+            waitForImage,  // this will be a window timer id, need to declare in case it's never created
+            imgLoaded = function () {
+              if (img.complete) {
+                window.clearTimeout(waitForImage);
+                if ( meetsSizeRequirements(img) ) {
+                  $newImage
+                    .removeClass('hidden new-adwords-image')
+                    .find('input[type="file"]').addClass('hidden');  // doesn't work if the input has class: hidden from the get-go
+                } else {
+                  $newImage.remove();
+                  flashDisplay("Image doesn't meet size requirements", 'danger');
+                }
+              }
+              else {
+                return 'false';
+              }
+            };
+
+        if ( imgLoaded() == 'false' ) {
+          waitForImage = window.setTimeout(imgLoaded, 100);
+        }
       })
 
     .on('click', '.adwords-default .change-image',

@@ -26,8 +26,8 @@ namespace :temp do
           topic_ad_group_id: prod_env ? 1234 : 40779259429,
           retarget_campaign_id: prod_env ? 1234 : 794134055,
           retarget_ad_group_id: prod_env ? 1234 : 38074094381,
-          default_image_url: prod_env ? "" : "https://csp-development-assets.s3-us-west-1.amazonaws.com/uploads/d3fa2562-e9c8-4032-925d-e472f7b3758c/varmour-existing.jpeg",
-          default_image_media_id: prod_env ? 1234 : 2749038420
+          default_image_url: prod_env ? "" : "https://csp-development-assets.s3-us-west-1.amazonaws.com/uploads/febab2ef-bdef-4174-ae9d-8b8c194066ab/varmour-existing.jpeg",
+          default_image_media_id: prod_env ? 1234 : 2820465306
         }
         company.update(
           adwords_short_headline: varmour_params[:short_headline],
