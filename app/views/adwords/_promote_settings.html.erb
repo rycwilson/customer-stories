@@ -68,12 +68,20 @@
 
       <div class="well fileinput adwords-default adwords-logo <%= company.adwords_logo_url.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">
 
-        <div class="fileinput-new thumbnail" data-trigger="fileinput">
-          <%= image_tag ADWORDS_LOGO_PLACEHOLDER_URL, alt: 'logo image' %>
+        <div class='image-requirements'>
+          <a tabindex='0' class='adwords-logo image-requirements' role='button'
+             data-toggle='popover' data-placement='top' data-trigger='focus'
+             title='Requirements - Sponsored Stories Logo'
+             data-min='128x128' data-ratio='1:1' data-suggest='1200x1200'>Requirements</a>
         </div>
 
-        <div class="fileinput-preview fileinput-exists thumbnail" data-trigger="fileinput">
-          <%= image_tag company.adwords_logo_url, alt: 'logo image' %>
+        <div class="text-center">
+          <div class="fileinput-new thumbnail" data-trigger="fileinput">
+            <%= image_tag ADWORDS_LOGO_PLACEHOLDER_URL, alt: 'logo image' %>
+          </div>
+          <div class="fileinput-preview fileinput-exists thumbnail" data-trigger="fileinput">
+            <%= image_tag company.adwords_logo_url, alt: 'logo image' %>
+          </div>
         </div>
 
         <div class="btn-file">
@@ -82,12 +90,8 @@
 
         <i class='change-image glyphicon glyphicon-pencil'></i>
 
-        <div class="help-block with-errors">
-          <a tabindex='0' class='adwords-logo image-requirements' role='button'
-             data-toggle='popover' data-placement='top' data-trigger='focus'
-             title='Requirements - Sponsored Stories Logo'
-             data-min='128x128' data-ratio='1:1' data-suggest='1200x1200'>Requirements</a>
-        </div>
+        <!-- bootstrap validator -->
+        <div style='height:20px' class="help-block with-errors"></div>
 
       </div>  <!-- /.fileupload -->
 
@@ -102,12 +106,20 @@
 
       <div class="well fileinput adwords-default adwords-image <%= company.adwords_images.default.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">
 
-        <div class="fileinput-new thumbnail" data-trigger='fileinput'>
-          <%= image_tag ADWORDS_IMAGE_PLACEHOLDER_URL, alt: 'logo' %>
+        <div class="image-requirements">
+          <a tabindex='0' class='adwords-image image-requirements' role='button'
+             data-toggle='popover' data-placement='top' data-trigger='focus'
+             title='Requirements - Sponsored Stories Image'
+             data-min='600x314' data-ratio='1.91:1' data-suggest='1200x628'>Requirements</a>
         </div>
 
-        <div class="fileinput-preview fileinput-exists thumbnail" data-trigger="fileinput">
-          <%= image_tag company.adwords_images.default.try(:image_url), alt: 'marketing image', data: { id: company.adwords_images.default.try(:id) } %>
+        <div class="text-center">
+          <div class="fileinput-new thumbnail" data-trigger='fileinput'>
+            <%= image_tag ADWORDS_IMAGE_PLACEHOLDER_URL, alt: 'logo' %>
+          </div>
+          <div class="fileinput-preview fileinput-exists thumbnail" data-trigger="fileinput">
+            <%= image_tag company.adwords_images.default.try(:image_url), alt: 'marketing image', data: { id: company.adwords_images.default.try(:id) } %>
+          </div>
         </div>
 
         <div class="btn-file">
@@ -117,12 +129,7 @@
 
         <i class='change-image glyphicon glyphicon-pencil'></i>
 
-        <div class="help-block with-errors">
-          <a tabindex='0' class='adwords-image image-requirements' role='button'
-             data-toggle='popover' data-placement='top' data-trigger='focus'
-             title='Requirements - Sponsored Stories Image'
-             data-min='600x314' data-ratio='1.91:1' data-suggest='1200x628'>Requirements</a>
-        </div>
+        <div style='height:20px' class="help-block with-errors"></div>
 
       </div>  <!-- /.fileupload -->
 

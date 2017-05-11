@@ -200,13 +200,13 @@ function promoteListeners () {
 
     .on('click', '.adwords-default .change-image',
       function () {
-        var $previewImg = $(this).closest('.fileinput').children('.fileinput-preview img');
+        var $previewImg = $(this).closest('.fileinput').find('.fileinput-preview img');
         if ($previewImg.attr('src')) {
           // click on the preview
-          $(this).closest('.fileinput').children('.thumbnail')[1].click();
+          $(this).closest('.fileinput').find('.thumbnail')[1].click();
         } else {
           // click on the placeholder
-          $(this).closest('.fileinput').children('.thumbnail')[0].click();
+          $(this).closest('.fileinput').find('.thumbnail')[0].click();
         }
       })
 
