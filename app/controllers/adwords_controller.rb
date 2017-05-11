@@ -128,19 +128,19 @@ class AdwordsController < ApplicationController
   end
 
   def data
-    # @topic_campaign = get_campaign(@company, 'topic')
+    @topic_campaign = get_campaign(@company, 'topic')
     # @retarget_campaign = get_campaign(@company, 'retarget')
 
-    # @topic_ad_group = get_ad_group(@company, 'topic')
+    @topic_ad_group = get_ad_group(@company, 'topic')
     # @retarget_ad_group = get_ad_group(@company, 'retarget')
 
     @story = Story.find(7)
     @ads = get_ads(@story)
 
-    # puts JSON.pretty_generate(@topic_campaign)
+    puts JSON.pretty_generate(@topic_campaign)
     # puts JSON.pretty_generate(@retarget_campaign)
 
-    # puts JSON.pretty_generate(@topic_ad_group)
+    puts JSON.pretty_generate(@topic_ad_group)
     # puts JSON.pretty_generate(@retarget_ad_group)
 
     puts JSON.pretty_generate(@ads)
