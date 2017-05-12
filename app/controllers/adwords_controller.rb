@@ -5,17 +5,25 @@ class AdwordsController < ApplicationController
   before_action() { set_company(params) }
   before_action({ except: [:update_company, :data] }) { set_story(params) }
   before_action({ except: [:preview] }) { create_adwords_api() }
+  before_action({ except: [:preview, :data] }) { @promote_enabled = @company.promote_tr? }
 
   def create_story_ads
-    ['topic', 'retarget'].each do |campaign_type|
-      if create_ad(@company, @story, campaign_type)
-        @flash = {
-          status: 'success',
-          mesg: 'Story published and Sponsored Story created'
-        }
-      else
-        # @flash set in create_ad
+    if @promote_enabled
+      ['topic', 'retarget'].each do |campaign_type|
+        if create_ad(@company, @story, campaign_type)
+          @flash = {
+            status: 'success',
+            mesg: 'Story published and Sponsored Story created'
+          }
+        else
+          # @flash set in create_ad
+        end
       end
+    else
+      @flash = {
+        status: 'success',
+        mesg: 'Story published and Sponsored Story created'
+      }
     end
     respond_to { |format| format.js }
   end
@@ -26,7 +34,7 @@ class AdwordsController < ApplicationController
     @status_changed = params[:status_changed].present?
     @long_headline_changed = params[:long_headline_changed].present?
 
-    if @status_changed
+    if @promote_enabled && @status_changed
       if @story.ads.all? { |ad| update_ad_status(ad) }
         @flash = {
           status: 'success',
@@ -36,7 +44,7 @@ class AdwordsController < ApplicationController
         # @flash for exceptions is set in update_ad_status
       end
 
-    elsif @image_changed || @long_headline_changed
+    elsif @promote_enabled && (@image_changed || @long_headline_changed)
       if @story.ads.all? do |ad|
         remove_ad({ ad_group_id: ad.ad_group.ad_group_id, ad_id: ad.ad_id })
       end
@@ -53,25 +61,39 @@ class AdwordsController < ApplicationController
       else
         # @flash for exceptions is set in remove_ad
       end
+
+    # promote not enabled
+    else
+      @flash = {
+        status: 'success',
+        mesg: 'Sponsored Story updated'
+      }
     end
     respond_to { |format| format.js }
   end
 
   # the ids of removed ads are forwarded via params since they've been removed from csp
   def remove_story_ads
-    if params[:removed_ads].all? { |index, ad_params| remove_ad(ad_params) }
+    if @promote_enabled
+      if params[:removed_ads].all? { |index, ad_params| remove_ad(ad_params) }
+        @flash = {
+          status: 'success',
+          mesg: 'Story unpublished and Sponsored Story removed'
+        }
+      else
+        # @flash set in remove_ad
+      end
+    else
       @flash = {
         status: 'success',
         mesg: 'Story unpublished and Sponsored Story removed'
       }
-    else
-      # @flash set in remove_ad
     end
     respond_to { |format| format.js }
   end
 
   def update_company
-    puts JSON.pretty_generate params
+    # puts JSON.pretty_generate params
     # binding.remote_pry
     # 1 - upload all new images (logo, default, additional)
     # 2 - update all ads if logo or short headline changed
@@ -79,24 +101,24 @@ class AdwordsController < ApplicationController
     # changes = params[:company][:previous_changes]
     # upload any new images (including logo and default landscape)
 
-    if new_images?(params[:company])
+    if @promote_enabled && new_images?(params[:company])
       get_new_image_urls(params[:company]).each do |image_url|
         upload_image(image_url) or return # return if error
       end
     end
 
     # async update
-    if params[:company].dig(:previous_changes, :adwords_short_headline)
+    if @promote_enabled && params[:company].dig(:previous_changes, :adwords_short_headline)
       puts 'UPDATE SHORT HEADLINE'
     end
 
     # only with sync update
-    if params[:company][:adwords_logo_url]
+    if @promote_enabled && params[:company][:adwords_logo_url]
       puts 'UPDATE LOGO'
     end
 
     # sync or async update
-    if ( @default_image_changed =
+    if @promote_enabled && ( @default_image_changed =
             params[:company][:default_image_changed] == 'true' ||     # async
             params[:company][:default_adwords_image_url].present? )   # sync
       puts 'UPDATE IMAGE'

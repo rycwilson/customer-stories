@@ -124,6 +124,8 @@ class Company < ActiveRecord::Base
     end
   end
   alias_attribute :campaigns, :adwords_campaigns
+  has_many :adwords_ads, through: :adwords_campaigns
+  alias_attribute :ads, :adwords_ads
   has_many :adwords_images, dependent: :destroy do
     def default
       where(company_default: true).take
@@ -849,12 +851,15 @@ class Company < ActiveRecord::Base
 
   end
 
+  # when a new default is uploaded, assign it as default or create it if it doesn't exist
+  # update any ads that don't currently have an image
   def update_default_adwords_image (uploaded_image_url)
     if self.adwords_images.default.present?
       self.adwords_images.default.update(image_url: uploaded_image_url)
     else
       AdwordsImage.create(company_id: self.id, company_default: true,
                           image_url: uploaded_image_url)
+      self.ads.each { |ad| ad.adwords_image = self.adwords_images.default }
     end
   end
 

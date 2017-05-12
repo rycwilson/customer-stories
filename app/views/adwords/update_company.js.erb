@@ -35,12 +35,18 @@
       .prop('checked', true)
 
     // update the table
-    // there may be a query string present from refreshing images
+    // any missing images can be replaced with the new default,
+    // as these ads will have had the new default image assigned to them
+    // (see company.update_default_adwords_image)
     $table.find('img').each(function () {
-      if ( $(this).attr('src')
-              .match(new RegExp(currentDefaultImageUrl + '(\\?\\d*)?$')) ) {
-        $(this).attr('src', newDefaultImageUrl);
+      if ( $(this).attr('src') === '' ) {
+        $(this).attr('src', newDefaultImageUrl)
       }
+      // old: looking for the old default and replacing it with new
+      // if ( $(this).attr('src')
+      //         .match(new RegExp(currentDefaultImageUrl + '(\\?\\d*)?$')) ) {
+      //   $(this).attr('src', newDefaultImageUrl);
+      // }
     })
   }
 

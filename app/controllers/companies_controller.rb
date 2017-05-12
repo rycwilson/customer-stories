@@ -63,13 +63,13 @@ class CompaniesController < ApplicationController
   end
 
   def promote
-    puts JSON.pretty_generate(company_params)
     if @company.update(company_params)
       # if the default image wasn't set or changed, parameter won't show up
       if ( @default_image_changed =
              @company.default_adwords_image_changed?(company_params, @current_default_image) ) &&
            company_params[:default_adwords_image_url].present?
         @company.update_default_adwords_image( company_params[:default_adwords_image_url] )
+        binding.remote_pry
       end
     else
       @flash_mesg = @company.errors.full_messages.join(', ')

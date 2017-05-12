@@ -46,6 +46,17 @@ function companiesShow () {
     }
   });
 
+  // add a tooltip message to stories that don't have an image
+  $('#sponsored-stories-table').find('img[src=""]').each(
+    function () {
+      $(this).closest('.fileinput')
+        .tooltip({
+          container: 'body',
+          placement: 'top',
+          title: 'To assign an image to this Sponsored Story, upload images under Settings'
+        });
+    });
+
 }
 
 function companiesShowListeners () {

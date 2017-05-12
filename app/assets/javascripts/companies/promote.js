@@ -52,6 +52,10 @@ function promoteListeners () {
     // open the image select modal and create the story form
     .on('click', 'td.sponsored-story-image .thumbnail',
       function () {
+        // if there's no image, that means a default hasn't been uploaded
+        if ( $(this).find('img').attr('src') === "" ) {
+          return false;
+        }
         var $modal = $('#adwords-image-select-modal'),
             storyId = $(this).closest('tr').data('story-id'),
             currentImageUrl = $(this).children('img').attr('src'),
