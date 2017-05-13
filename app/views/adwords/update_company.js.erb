@@ -4,6 +4,7 @@
   var flashMesg = "<%= @flash_mesg %>",
       flashStatus = "<%= @flash_status %>",
       $table = $('#sponsored-stories-table'),
+      $modal = $('#adwords-image-select-modal'),
       $removedImages = $('.thumbnail.to-be-removed').closest('li.adwords-image'),
       defaultImageChanged = <%= @default_image_changed %>;
 
@@ -53,17 +54,22 @@
   if ($removedImages.length) {
     var removedImagesStories = <%= raw @removed_images_stories.to_json %>,
         defaultImageUrl = "<%= @default_image_url %>"
+
+        debugger;
+
     // remove deleted images
     $removedImages.each(function (index, li) {
       $(this).next().remove();  // hidden input containing adword image id
       $(this).remove();
     })
     // update the table for stories affected by deleted images
-    $table.find('tr').each(function () {
+    $table.find('tr').each(function (index, tr) {
       if (removedImagesStories.includes( $(this).data('story-id') )) {
         $(this).find('img').attr('src', defaultImageUrl)
       }
     })
+    // remove images from the image select modal
+    $modal.find('.thumbnail[data-image-id="' +   + '"')
   }
 
   // refresh table images - any that have been deleted will have a

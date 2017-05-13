@@ -1,6 +1,5 @@
 
 function companiesShow () {
-
   // if this page was arrived at through history navigation,
   // make sure there aren't any active dropdowns
   $('dropdown.company-settings').removeClass('active');
@@ -28,13 +27,17 @@ function companiesShow () {
   $('#promote-settings-form').validator({
     custom: {
       'image-requirements': function ($fileInput) {
-        var img = $fileInput.closest('.fileinput').find('.fileinput-exists img')[0],
+        var $img = $fileInput.closest('.fileinput').find('.fileinput-exists img'),
             minWidth = $fileInput.data('image-requirements').split('x')[0],
             minHeight = $fileInput.data('image-requirements').split('x')[1],
-            width = img.naturalWidth,
-            height = img.naturalHeight,
+            width = $img[0].naturalWidth,
+            height = $img[0].naturalHeight,
             type = minWidth / minHeight === 1 ? 'logo' : 'landscape',
             ratio = width / height;
+
+        // console.log('img src: ', $img.attr('src'));
+        // debugger;
+
         if (width < minWidth || height < minHeight) {
           return "Image too small";
         // ratio must be 1.91 +/- 1%
@@ -45,6 +48,10 @@ function companiesShow () {
       }
     }
   });
+
+  $('#promote-settings-form').validator('validate');
+
+
 
   // add a tooltip message to stories that don't have an image
   $('#sponsored-stories-table').find('img[src=""]').each(

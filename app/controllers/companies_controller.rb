@@ -149,6 +149,7 @@ class CompaniesController < ApplicationController
   end
 
   def removed_adwords_images? (images_attributes)
+    return false if images_attributes.nil?
     images_attributes.any? { |index, attrs| attrs['_destroy'] == 'true' }
   end
 
@@ -162,6 +163,7 @@ class CompaniesController < ApplicationController
         # switch to default image
         ads.each { |ad| ad.adwords_image = company.adwords_images.default }
         {
+          image_id: image['id'],
           ads_params: ads.map do |ad|
             { ad_id: ad.ad_id, ad_group_id: ad.ad_group.ad_group_id,
               campaign_type: ad.campaign.type == 'TopicCampaign' ? 'topic' : 'retarget' }

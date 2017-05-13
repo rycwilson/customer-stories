@@ -124,9 +124,6 @@ function promoteListeners () {
                     '/sponsored_story_preview', '_blank');
       })
 
-    // upload a new default adwords image
-    // .on('change.bs.fileinput', '.adwords-default.adwords')
-
     // upload a new adwords image
     .on('click', 'button.new-adwords-image',
       function () {

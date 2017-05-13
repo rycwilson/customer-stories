@@ -59,7 +59,7 @@
 
   <div class="row">
 
-    <div class="col-sm-4 form-group">
+    <div class="col-sm-4 form-group has-feedback">
 
       <div>
         <%= f.label :adwords_logo_url, 'Sponsored Stories Logo',
@@ -75,17 +75,24 @@
              data-min='128x128' data-ratio='1:1' data-suggest='1200x1200'>Requirements</a>
         </div>
 
+        <span class="fileinput-filename hidden"><%= company.adwords_logo_url %></span>
+
         <div class="text-center">
           <div class="fileinput-new thumbnail" data-trigger="fileinput">
-            <%= image_tag ADWORDS_LOGO_PLACEHOLDER_URL, alt: 'logo image' %>
+            <%= image_tag ADWORDS_LOGO_PLACEHOLDER_URL, alt: 'logo placeholder' %>
           </div>
           <div class="fileinput-preview fileinput-exists thumbnail" data-trigger="fileinput">
             <%= image_tag company.adwords_logo_url, alt: 'logo image' %>
           </div>
         </div>
 
+        <!-- set required attribute conditionally, since the input field is
+        empty even if an image exists, thus triggering invalidation -->
         <div class="btn-file">
-          <%= f.file_field :adwords_logo_url, data: { 'image-requirements': '128x128' } %>
+          <%= f.file_field :adwords_logo_url,
+                required: company.adwords_logo_url.present? ? false : true,
+                    data: { 'image-requirements': '128x128',
+                            'required-error': 'Select an image' } %>
         </div>
 
         <i class='change-image glyphicon glyphicon-pencil'></i>
@@ -97,7 +104,7 @@
 
     </div>
 
-    <div class="col-sm-8 form-group">
+    <div class="col-sm-8 form-group has-feedback">
 
       <div>
         <%= f.label 'default_adwords_image_url', 'Sponsored Stories Image (default)',
@@ -115,16 +122,22 @@
 
         <div class="text-center">
           <div class="fileinput-new thumbnail" data-trigger='fileinput'>
-            <%= image_tag ADWORDS_IMAGE_PLACEHOLDER_URL, alt: 'logo' %>
+            <%= image_tag ADWORDS_IMAGE_PLACEHOLDER_URL, alt: 'marketing image placeholder' %>
           </div>
           <div class="fileinput-preview fileinput-exists thumbnail" data-trigger="fileinput">
-            <%= image_tag company.adwords_images.default.try(:image_url), alt: 'marketing image', data: { id: company.adwords_images.default.try(:id) } %>
+            <%= image_tag company.adwords_images.default.try(:image_url),
+                  data: { id: company.adwords_images.default.try(:id) },
+                  alt: 'marketing image' %>
           </div>
         </div>
 
+        <!-- set required attribute conditionally, since the input field is
+        empty even if an image exists, thus triggering invalidation -->
         <div class="btn-file">
           <%= f.file_field 'default_adwords_image_url',
-                data: { 'image-requirements': '600x314' } %>
+                required: company.adwords_images.default.present? ? false : true,
+                    data: { 'image-requirements': '600x314',
+                            'required-error': 'Select an image' } %>
         </div>
 
         <i class='change-image glyphicon glyphicon-pencil'></i>
