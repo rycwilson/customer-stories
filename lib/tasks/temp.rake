@@ -114,37 +114,8 @@ namespace :temp do
       # production ads
     else
       # varmour
-      equens = Story.find(7)
-      equens.ads.each do |ad|
-        if ad.ad_group.campaign.type == 'TopicCampaign'
-          ad.update(ad_id: 191118170285, status: 'ENABLED')
-        else
-          ad.update(ad_id: 191152234528, status: 'ENABLED')
-        end
-        ad.adwords_image = equens.company.adwords_images.default
-      end
-      johnmuir = Story.find(213)
-      johnmuir.ads.each do |ad|
-        if ad.ad_group.campaign.type == 'TopicCampaign'
-          ad.update(ad_id: 193403020234, status: 'ENABLED')
-        else
-          ad.update(ad_id: 191119635492, status: 'ENABLED')
-        end
-        ad.adwords_image = johnmuir.company.adwords_images.default
-      end
-      fortune100 = Story.find(225)
-      fortune100.ads.each do |ad|
-        if ad.ad_group.campaign.type == 'TopicCampaign'
-          ad.update(ad_id: 193374900161, status: 'ENABLED')
-        else
-          ad.update(ad_id: 191119770138, status: 'ENABLED')
-        end
-        ad.adwords_image = fortune100.company.adwords_images.default
-      end
-
-      # published but need an adwords_ad
       varmour = Company.find(10)
-      varmour.stories.published.select { |story| story.ads.all? { |ad| ad.ad_id.nil? } }
+      varmour.stories.published
         .each do |story|
           story.ads.adwords_image = varmour.adwords_images.default
           ['topic', 'retarget'].each do |campaign_type|

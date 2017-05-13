@@ -55,8 +55,6 @@
     var removedImagesStories = <%= raw @removed_images_stories.to_json %>,
         defaultImageUrl = "<%= @default_image_url %>"
 
-        debugger;
-
     // remove deleted images
     $removedImages.each(function (index, li) {
       $(this).next().remove();  // hidden input containing adword image id

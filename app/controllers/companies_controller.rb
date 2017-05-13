@@ -73,7 +73,7 @@ class CompaniesController < ApplicationController
       if ( @default_image_changed =
              @company.default_adwords_image_changed?(company_params, @current_default_image) ) &&
            company_params[:default_adwords_image_url].present?
-        @company.update_default_adwords_image( company_params[:default_adwords_image_url] )
+        @company.update_default_adwords_image(company_params[:default_adwords_image_url])
       end
     else
       @flash_mesg = @company.errors.full_messages.join(', ')

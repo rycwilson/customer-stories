@@ -46,8 +46,13 @@ class AdwordsController < ApplicationController
         if ['topic', 'retarget'].all? do |campaign_type|
           create_ad(@company, @story, campaign_type)
         end
-          @flash = { status: 'success',
-                       mesg: 'Sponsored Story updated' }
+          # reload to get the new ad_id
+          if @story.ads.reload.all? { |ad| update_ad_status(ad) }
+            @flash = { status: 'success',
+                         mesg: 'Sponsored Story updated' }
+          else
+            # @flash for exceptions set in update_ad_status
+          end
         else
           # @flash for exceptions set in create_ad
         end
@@ -93,25 +98,30 @@ class AdwordsController < ApplicationController
           if @promote_enabled
             remove_ad(ad_params)
             create_ad(@company, ad.story, ad_params[:campaign_type])
+            update_ad_status(ad)
           end
         end
       end
     end
 
     if @promote_enabled && new_images?(params[:company])
-      get_new_image_urls(params[:company]).each do |image_url|
-        upload_image(image_url) or return # return if error
+      get_new_images(params[:company]).each do |image_params|  # { type: , url: }
+        upload_image(@company, image_params) or return # return if error
       end
     end
 
-    # async update
-    if @promote_enabled && params[:company].dig(:previous_changes, :adwords_short_headline)
-      puts 'UPDATE SHORT HEADLINE'
-    end
+    # company logo or short headline
+    if @promote_enabled &&
+       ( params[:company].dig(:previous_changes, :adwords_short_headline) ||
+         params[:company][:adwords_logo_url] )
 
-    # only with sync update
-    if @promote_enabled && params[:company][:adwords_logo_url]
-      puts 'UPDATE LOGO'
+      @company.ads.each do |ad|
+        campaign_type = ad.ad_group.campaign.type == 'TopicCampaign' ? 'topic' : 'retarget'
+        ad_params = { ad_id: ad.ad_id, ad_group_id: ad.ad_group.ad_group_id }
+        remove_ad(ad_params)
+        create_ad(@company, ad.story, campaign_type)
+        update_ad_status(ad.reload)  # reload to get the new ad_id
+      end
     end
 
     # sync or async update
@@ -191,10 +201,10 @@ class AdwordsController < ApplicationController
     @api = AdwordsApi::Api.new(config_file)
   end
 
-  def upload_image(image_url)
+  def upload_image (company, image_params)
     service = @api.service(:MediaService, get_api_version())
     # if image_url is nil: Invalid URL: #<ActionDispatch::Http::UploadedFile:0x007f8615701348>
-    img_url = image_url
+    img_url = image_params[:url]
     img_data = AdsCommon::Http.get(img_url, @api.config)
     base64_image_data = Base64.encode64(img_data)
     image = {
@@ -209,7 +219,7 @@ class AdwordsController < ApplicationController
     rescue AdsCommon::Errors::HttpError => e
       puts "HTTP Error: %s" % e
       flash_mesg = e.message
-      AdwordsImage.find_by(image_url: image_url).destroy
+      AdwordsImage.find_by(image_url: image_params[:url]).destroy
       cookies[:workflow_tab] = 'promote'
       cookies[:workflow_sub_tab] = 'promote-settings'
       redirect_to(company_path(@company), flash: { danger: flash_mesg }) and return
@@ -228,17 +238,19 @@ class AdwordsController < ApplicationController
       else
         flash_mesg = e.message
       end
-      AdwordsImage.find_by(image_url: image_url).destroy
+      AdwordsImage.find_by(image_url: image_params[:url]).destroy
       cookies[:workflow_tab] = 'promote'
       cookies[:workflow_sub_tab] = 'promote-settings'
       redirect_to(company_path(@company), flash: { danger: flash_mesg }) and return
     end
 
     # assign adwords media_id
-    # if logo image, or if image was deleted due to not meeting size requirements,
-    # it won't be found
-    AdwordsImage.find_by(image_url: image_url)
-                .try(:update, { media_id: response[0][:media_id] })
+    if image_params[:type] == 'logo'
+      company.update(adwords_logo_media_id: response[0][:media_id])
+    elsif (image_params[:type] == 'landscape')
+      AdwordsImage.find_by(image_url: image_params[:url])
+                  .update(media_id: response[0][:media_id])
+    end
 
     if response and !response.empty?
       ret_image = response.first
@@ -259,7 +271,6 @@ class AdwordsController < ApplicationController
     ad_group_id = campaign_type == 'topic' ?
                   company.campaigns.topic.ad_group.ad_group_id :
                   company.campaigns.retarget.ad_group.ad_group_id
-
     responsive_display_ad = {
       xsi_type: 'ResponsiveDisplayAd',
       # media_id can't be nil
@@ -325,7 +336,6 @@ class AdwordsController < ApplicationController
 
     # on success, log and update adwords_ad.ad_id
     if result && result[:value]
-      puts "RESPONSE #{JSON.pretty_generate(result)}"
       result[:value].each do |ad_group_ad|
         puts ('New responsive display ad with id %d and short headline %s was ' +
             'added.') % [ad_group_ad[:ad][:id], ad_group_ad[:ad][:short_headline]]
@@ -545,17 +555,25 @@ class AdwordsController < ApplicationController
   def new_images? (company_params)
     company_params[:adwords_logo_url].present? ||
     company_params[:default_adwords_image_url].present? ||
-    company_params[:adwords_images_attributes].try(:any?) do |index,atts|
-      atts.include?('image_url')
+    company_params[:adwords_images_attributes].try(:any?) do |index, attrs|
+      attrs.include?('image_url')
     end
   end
 
-  def get_new_image_urls (company_params)
-    (company_params[:adwords_logo_url].try(:split) || []) +
-    (company_params[:default_adwords_image_url].try(:split) || []) +
-    (company_params[:adwords_images_attributes] || [])
-      .select { |index, atts| atts['image_url'].present? }
-      .to_a.map { |image| image[1]['image_url'] }
+  def get_new_images (company_params)
+    new_images = []
+    if company_params[:adwords_logo_url].present?
+      new_images << { type: 'logo', url: company_params[:adwords_logo_url] }
+    end
+    if company_params[:default_adwords_image_url].present?
+      new_images << { type: 'landscape', url: company_params[:default_adwords_image_url] }
+    end
+    if company_params[:adwords_images_attributes].present?
+      company_params[:adwords_images_attributes]
+        .select { |index, attrs| attrs[:image_url].present? }
+        .each { |index, attrs| new_images << { type: 'landscape', url: attrs[:image_url] } }
+    end
+    new_images
   end
 
 end
