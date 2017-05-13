@@ -52,8 +52,8 @@ function promoteListeners () {
     // open the image select modal and create the story form
     .on('click', 'td.sponsored-story-image .thumbnail',
       function () {
-        // if there's no image, that means a default hasn't been uploaded
-        if ( $(this).find('img').attr('src') === "" ) {
+        // if <= 1, there is no alterative to the current image
+        if ( $('#adwords-image-select-modal li').length <= 1 ) {
           return false;
         }
         var $modal = $('#adwords-image-select-modal'),

@@ -27,7 +27,7 @@ class CompaniesController < ApplicationController
   end
 
   def create
-    @company = Company.new company_params
+    @company = Company.new(company_params)
     if @company.save
       @company.users << current_user
       @company.create_email_templates
@@ -63,13 +63,17 @@ class CompaniesController < ApplicationController
   end
 
   def promote
+    # capture deleted image data (associated ads) prior to destroying image
+    if removed_adwords_images?(params[:company][:adwords_images_attributes])
+      params[:company][:removed_images_ads] =
+        removed_images_ads(@company, params[:company][:adwords_images_attributes])
+    end
     if @company.update(company_params)
       # if the default image wasn't set or changed, parameter won't show up
       if ( @default_image_changed =
              @company.default_adwords_image_changed?(company_params, @current_default_image) ) &&
            company_params[:default_adwords_image_url].present?
         @company.update_default_adwords_image( company_params[:default_adwords_image_url] )
-        binding.remote_pry
       end
     else
       @flash_mesg = @company.errors.full_messages.join(', ')
@@ -81,7 +85,10 @@ class CompaniesController < ApplicationController
         # forward params so new image urls can be uploaded to adwords api
         redirect_to(adwords_company_path(@company, company: params[:company]))
       end
-      format.js {} # js response will $.get the adwords update
+      # js response will PUT the adwords update
+      format.js {
+        @company_params = params[:company].except(:adwords_images_attributes)
+      }
     end
   end
 
@@ -101,8 +108,7 @@ class CompaniesController < ApplicationController
     params.require(:company)
           .permit(:name, :subdomain, :logo_url, :header_color_1,
                   :header_color_2, :header_text_color, :website, :gtm_id,
-                  :adwords_short_headline, :adwords_logo_url,
-                  :default_adwords_image_url, :make_default_adwords_image_url,
+                  :adwords_short_headline, :adwords_logo_url, :default_adwords_image_url,
                   { adwords_images_attributes: [:id, :image_url, :company_default, :_destroy] } )
   end
 
@@ -124,7 +130,7 @@ class CompaniesController < ApplicationController
     end
   end
 
-  def set_profile_form_options params
+  def set_profile_form_options (params)
     options = {
       html: {
         class: 'directUpload',
@@ -140,6 +146,28 @@ class CompaniesController < ApplicationController
     else
       options
     end
+  end
+
+  def removed_adwords_images? (images_attributes)
+    images_attributes.any? { |index, attrs| attrs['_destroy'] == 'true' }
+  end
+
+  # returns a hash containing ad/ad_group/campaign data associated with removed images
+  def removed_images_ads (company, images_attributes)
+    images_attributes
+      .select { |index, attrs| attrs['_destroy'] == 'true' }
+      .flatten.delete_if { |item| item.is_a?(String) }  # get rid of indices
+      .map do |image|
+        ads = AdwordsImage.find(image['id']).ads
+        # switch to default image
+        ads.each { |ad| ad.adwords_image = company.adwords_images.default }
+        {
+          ads_params: ads.map do |ad|
+            { ad_id: ad.ad_id, ad_group_id: ad.ad_group.ad_group_id,
+              campaign_type: ad.campaign.type == 'TopicCampaign' ? 'topic' : 'retarget' }
+          end
+        }
+      end
   end
 
 end

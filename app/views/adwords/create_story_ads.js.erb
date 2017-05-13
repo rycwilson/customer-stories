@@ -1,6 +1,8 @@
 (function () {
 
-  var flash = <%= raw @flash.to_json %>
+  var flash = <%= raw @flash.to_json %> ||
+        { status: 'success',
+          mesg: 'Story published and Sponsored Story created' };
 
   flashDisplay(flash.mesg, flash.status)
 

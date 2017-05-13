@@ -49,12 +49,14 @@ function companiesShow () {
   // add a tooltip message to stories that don't have an image
   $('#sponsored-stories-table').find('img[src=""]').each(
     function () {
-      $(this).closest('.fileinput')
-        .tooltip({
-          container: 'body',
-          placement: 'top',
-          title: 'To assign an image to this Sponsored Story, upload images under Settings'
-        });
+      if ( $('#adwords-image-select-modal li').length === 0 ) {
+        $(this).closest('.fileinput')
+          .tooltip({
+            container: 'body',
+            placement: 'top',
+            title: 'To assign an image to this Sponsored Story, upload images under Settings'
+          });
+      }
     });
 
 }

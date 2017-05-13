@@ -1,7 +1,9 @@
 
 (function () {
 
-  flash = <%= raw @flash.to_json %>
+  flash = <%= raw @flash.to_json %> ||
+            { status: 'success',
+                mesg: 'Story unpublished and Sponsored Story removed' };
 
   flashDisplay(flash.mesg, flash.status)
 

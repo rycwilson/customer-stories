@@ -4,7 +4,7 @@
   var flashMesg = "<%= @flash_mesg %>",
       flashStatus = "<%= @flash_status %>",
       $table = $('#sponsored-stories-table'),
-      $deletedImages = $('.thumbnail.to-be-removed').closest('li.adwords-image'),
+      $removedImages = $('.thumbnail.to-be-removed').closest('li.adwords-image'),
       defaultImageChanged = <%= @default_image_changed %>;
 
   if (defaultImageChanged) {
@@ -50,21 +50,31 @@
     })
   }
 
-  // remove deleted images
-  $deletedImages.each(function (index, li) {
-    $(this).next().remove();  // hidden input containing adword image id
-    $(this).remove();
-  })
+  if ($removedImages.length) {
+    var removedImagesStories = <%= raw @removed_images_stories.to_json %>,
+        defaultImageUrl = "<%= @default_image_url %>"
+    // remove deleted images
+    $removedImages.each(function (index, li) {
+      $(this).next().remove();  // hidden input containing adword image id
+      $(this).remove();
+    })
+    // update the table for stories affected by deleted images
+    $table.find('tr').each(function () {
+      if (removedImagesStories.includes( $(this).data('story-id') )) {
+        $(this).find('img').attr('src', defaultImageUrl)
+      }
+    })
+  }
 
   // refresh table images - any that have been deleted will have a
   // default background image that points to ADWORDS_IMAGE_PLACEHOLDER_URL
-  $table.find('img').each(function() {
-    var thisUrl = $(this).attr('src'),
-        d = new Date();
-    // if there's already a query string, remove it first instead of adding on top of
-    $(this).attr('src',
-      thisUrl.slice(0, thisUrl.lastIndexOf('?') == -1 ? thisUrl.length : thisUrl.lastIndexOf('?')) + '?' + d.getTime())
-  })
+  // $table.find('img').each(function() {
+  //   var thisUrl = $(this).attr('src'),
+  //       d = new Date();
+  //   // if there's already a query string, remove it first instead of adding on top of
+  //   $(this).attr('src',
+  //     thisUrl.slice(0, thisUrl.lastIndexOf('?') == -1 ? thisUrl.length : thisUrl.lastIndexOf('?')) + '?' + d.getTime())
+  // })
 
   flashDisplay(flashMesg, flashStatus);
 

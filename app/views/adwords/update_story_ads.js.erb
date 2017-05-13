@@ -1,7 +1,9 @@
 
 (function () {
 
-  var flash = <%= raw @flash.to_json %>,
+  var flash = <%= raw @flash.to_json %> ||
+        { status: 'success',
+            mesg: 'Sponsored Story updated' },
       storyId = <%= @story.id %>,
       $row = $('tr[data-story-id="' + storyId + '"]'),
       imageChanged = <%= @image_changed %>,

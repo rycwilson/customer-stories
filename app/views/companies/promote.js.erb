@@ -1,14 +1,15 @@
 
 (function () {
 
-  var company = <%= raw @company.to_json({ only: [], methods: [:previous_changes] }) %>
-
-  company['default_image_changed'] = <%= @default_image_changed %>
+  var company = <%= raw @company.to_json({ only: [], methods: [:previous_changes] }) %>,
+      companyParams = <%= raw @company_params.to_json %>;
 
   $.ajax({
     url: '<%= adwords_company_path(@company) %>',
     method: 'put',
-    data: { company: company },
+    data: {
+      company: JSON.stringify( $.extend(companyParams, company) )
+    },
     dataType: 'script'
   });
 

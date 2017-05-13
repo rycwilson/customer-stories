@@ -19,11 +19,6 @@ class AdwordsController < ApplicationController
           # @flash set in create_ad
         end
       end
-    else
-      @flash = {
-        status: 'success',
-        mesg: 'Story published and Sponsored Story created'
-      }
     end
     respond_to { |format| format.js }
   end
@@ -51,23 +46,14 @@ class AdwordsController < ApplicationController
         if ['topic', 'retarget'].all? do |campaign_type|
           create_ad(@company, @story, campaign_type)
         end
-          @flash = {
-            status: 'success',
-            mesg: 'Sponsored Story updated'
-          }
+          @flash = { status: 'success',
+                       mesg: 'Sponsored Story updated' }
         else
           # @flash for exceptions set in create_ad
         end
       else
         # @flash for exceptions is set in remove_ad
       end
-
-    # promote not enabled
-    else
-      @flash = {
-        status: 'success',
-        mesg: 'Sponsored Story updated'
-      }
     end
     respond_to { |format| format.js }
   end
@@ -76,30 +62,41 @@ class AdwordsController < ApplicationController
   def remove_story_ads
     if @promote_enabled
       if params[:removed_ads].all? { |index, ad_params| remove_ad(ad_params) }
-        @flash = {
-          status: 'success',
-          mesg: 'Story unpublished and Sponsored Story removed'
-        }
+        @flash = { status: 'success',
+                     mesg: 'Story unpublished and Sponsored Story removed' }
       else
         # @flash set in remove_ad
       end
-    else
-      @flash = {
-        status: 'success',
-        mesg: 'Story unpublished and Sponsored Story removed'
-      }
     end
     respond_to { |format| format.js }
   end
 
+  # TODO: update all ads if logo or short headline changed
   def update_company
-    # puts JSON.pretty_generate params
-    # binding.remote_pry
-    # 1 - upload all new images (logo, default, additional)
-    # 2 - update all ads if logo or short headline changed
-    # 3 - update affected ads if default image changed
-    # changes = params[:company][:previous_changes]
-    # upload any new images (including logo and default landscape)
+    # ajax request performed a JSON.stringify in order to preserve nested arrays
+    if request.format == :js
+      params[:company] = JSON.parse(params[:company])
+    end
+
+    # for any deleted images, re-create affected ads
+    # (affected ads have already been assigned default image)
+    # if promote isn't enabled, still need to respond with affected stories for table update
+    if params[:company][:removed_images_ads].present?
+      # gonna need this
+      @default_image_url = @company.adwords_images.default.image_url
+      # keep track of story ids to update sponsored stories table
+      @removed_images_stories = Set.new
+      params[:company][:removed_images_ads].each do |image|
+        image[:ads_params].each do |ad_params|
+          ad = AdwordsAd.includes(:story).find_by(ad_id: ad_params[:ad_id])
+          @removed_images_stories << ad.story.id
+          if @promote_enabled
+            remove_ad(ad_params)
+            create_ad(@company, ad.story, ad_params[:campaign_type])
+          end
+        end
+      end
+    end
 
     if @promote_enabled && new_images?(params[:company])
       get_new_image_urls(params[:company]).each do |image_url|
@@ -326,7 +323,7 @@ class AdwordsController < ApplicationController
       end
     end
 
-    # Display results.
+    # on success, log and update adwords_ad.ad_id
     if result && result[:value]
       puts "RESPONSE #{JSON.pretty_generate(result)}"
       result[:value].each do |ad_group_ad|

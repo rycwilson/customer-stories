@@ -9,8 +9,7 @@ namespace :temp do
     AdwordsCampaign.destroy_all
     AdwordsAdGroup.destroy_all
     AdwordsAd.destroy_all
-    # leave the default images, as deleting them will also delete their s3 instance (url will be bad)
-    AdwordsImage.where.not(company_default: true).destroy_all
+    AdwordsImage.destroy_all
 
     Company.find_by(subdomain:'varmour').update(promote_tr: true)
     Company.find_by(subdomain:'retailnext').update(promote_tr: true)
@@ -26,7 +25,7 @@ namespace :temp do
           topic_ad_group_id: prod_env ? 1234 : 40779259429,
           retarget_campaign_id: prod_env ? 1234 : 794134055,
           retarget_ad_group_id: prod_env ? 1234 : 38074094381,
-          default_image_url: prod_env ? "" : "https://csp-development-assets.s3-us-west-1.amazonaws.com/uploads/febab2ef-bdef-4174-ae9d-8b8c194066ab/varmour-existing.jpeg",
+          default_image_url: prod_env ? "" : "https://csp-development-assets.s3-us-west-1.amazonaws.com/uploads/122dadec-7229-4d1c-a3fc-1e71e0ff9a16/varmour-existing.jpeg",
           default_image_media_id: prod_env ? 1234 : 2820465306
         }
         company.update(
