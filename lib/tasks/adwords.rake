@@ -17,6 +17,9 @@ namespace :adwords do
 
   # create campaigns, ad groups, images
   Company.all.each do |company|
+    short_headline = "#{company.name} Customer Stories"
+    short_headline = short_headline.length <= 25 ? short_headline : nil
+    company.update(adwords_short_headline: short_headline)
     if company.subdomain == 'varmour'
       varmour_params = {
         short_headline: 'vArmour Customer Stories',
