@@ -156,7 +156,10 @@
 
   <div class='row'>
     <div class="col-sm-12">
-      <button type='button' class='new-adwords-image btn btn-secondary'>Add image</button>&nbsp;
+      <button type='button' class='new-adwords-image btn btn-secondary'
+              disabled="<%= company.adwords_images.default.blank? %>">
+        Add image
+      </button>&nbsp;
       <a tabindex='0' class='adwords-image image-requirements' role='button'
          data-toggle='popover' data-placement='top' data-trigger='focus'
          title='Requirements - Sponsored Stories Image'
