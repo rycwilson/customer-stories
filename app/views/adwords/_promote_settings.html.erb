@@ -63,7 +63,8 @@
 
       <div>
         <%= f.label :adwords_logo_url, 'Sponsored Stories Logo',
-              class: 'adwords-logo' %>&nbsp;&nbsp;
+              class: 'adwords-logo control-label',
+              for: 'adwords-logo-input' %>&nbsp;&nbsp;
       </div>
 
       <div class="well fileinput adwords-default adwords-logo <%= company.adwords_logo_url.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">
@@ -90,6 +91,7 @@
         empty even if an image exists, thus triggering invalidation -->
         <div class="btn-file">
           <%= f.file_field :adwords_logo_url,
+                id: 'adwords-logo-input',
                 required: company.adwords_logo_url.present? ? false : true,
                     data: { 'image-requirements': '128x128',
                             'required-error': 'Select an image' } %>
@@ -108,7 +110,7 @@
 
       <div>
         <%= f.label 'default_adwords_image_url', 'Sponsored Stories Image (default)',
-              class: 'adwords-image' %>&nbsp;&nbsp;
+              class: 'adwords-image control-label', for: 'default-adwords-image-input' %>&nbsp;&nbsp;
       </div>
 
       <div class="well fileinput adwords-default adwords-image <%= company.adwords_images.default.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">
@@ -135,6 +137,7 @@
         empty even if an image exists, thus triggering invalidation -->
         <div class="btn-file">
           <%= f.file_field 'default_adwords_image_url',
+                id: 'default-adwords-image-input',
                 required: company.adwords_images.default.present? ? false : true,
                     data: { 'image-requirements': '600x314',
                             'required-error': 'Select an image' } %>
