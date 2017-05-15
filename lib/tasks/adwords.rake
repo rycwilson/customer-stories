@@ -1,6 +1,9 @@
+namespace :adwords do
 
-# NOTE - change id values for production environment
-task seed: :environment do
+  desc "adwords tasks"
+
+  # NOTE - change id values for production environment
+  task seed: :environment do
 
   prod_env = (ENV['ADWORDS_ENV'] == 'production')
 
@@ -122,5 +125,7 @@ task seed: :environment do
       end
 
   end  # create_ads
+
+  end
 
 end
