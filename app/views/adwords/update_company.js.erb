@@ -53,21 +53,25 @@
 
   if ($removedImages.length) {
     var removedImagesStories = <%= raw @removed_images_stories.to_json %>,
-        defaultImageUrl = "<%= @default_image_url %>"
+        defaultImageUrl = "<%= @default_image_url %>";
 
     // remove deleted images
     $removedImages.each(function (index, li) {
       $(this).next().remove();  // hidden input containing adword image id
       $(this).remove();
     })
-    // update the table for stories affected by deleted images
-    $table.find('tr').each(function (index, tr) {
-      if (removedImagesStories.includes( $(this).data('story-id') )) {
-        $(this).find('img').attr('src', defaultImageUrl)
-      }
+
+    removedImagesStories.forEach(function (imageStory) {
+      // update the table for stories affected by deleted images
+      $table.find('tr[data-story-id="' + imageStory['story_id'] + '"]')
+            .each(function (index, tr) {
+              $(this).find('img').attr('src', defaultImageUrl)
+            } )
+      // remove images from the image select modal
+      $modal.find('li[data-image-id="' + imageStory['csp_image_id'] + '"]')
+            .each( function (index, li) { $(this).remove(); })
     })
-    // remove images from the image select modal
-    $modal.find('.thumbnail[data-image-id="' +   + '"')
+
   }
 
   // refresh table images - any that have been deleted will have a

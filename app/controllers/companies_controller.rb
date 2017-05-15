@@ -159,11 +159,11 @@ class CompaniesController < ApplicationController
       .select { |index, attrs| attrs['_destroy'] == 'true' }
       .flatten.delete_if { |item| item.is_a?(String) }  # get rid of indices
       .map do |image|
-        ads = AdwordsImage.find(image['id']).ads
+        ads = AdwordsImage.find(image[:id]).ads
         # switch to default image
         ads.each { |ad| ad.adwords_image = company.adwords_images.default }
         {
-          image_id: image['id'],
+          image_id: image[:id],
           ads_params: ads.map do |ad|
             { ad_id: ad.ad_id, ad_group_id: ad.ad_group.ad_group_id,
               campaign_type: ad.campaign.type == 'TopicCampaign' ? 'topic' : 'retarget' }

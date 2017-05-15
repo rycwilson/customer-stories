@@ -35,8 +35,8 @@ function companiesShow () {
             type = minWidth / minHeight === 1 ? 'logo' : 'landscape',
             ratio = width / height;
 
-        // console.log('img src: ', $img.attr('src'));
-        // debugger;
+        // TODO: check file size
+        // http://stackoverflow.com/questions/39488774
 
         if (width < minWidth || height < minHeight) {
           return "Image too small";
@@ -49,9 +49,9 @@ function companiesShow () {
     }
   });
 
+  // validation won't be triggered unless input fields change
+  // -> trigger manually so can detect missing logo or image
   $('#promote-settings-form').validator('validate');
-
-
 
   // add a tooltip message to stories that don't have an image
   $('#sponsored-stories-table').find('img[src=""]').each(

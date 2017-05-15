@@ -94,14 +94,16 @@ class AdwordsController < ApplicationController
       params[:company][:removed_images_ads].each do |image|
         image[:ads_params].each do |ad_params|
           ad = AdwordsAd.includes(:story).find_by(ad_id: ad_params[:ad_id])
-          @removed_images_stories << ad.story.id
+          @removed_images_stories << { csp_image_id: ad.adwords_image.id, story_id: ad.story.id }
           if @promote_enabled
             remove_ad(ad_params)
             create_ad(@company, ad.story, ad_params[:campaign_type])
-            update_ad_status(ad)
+            update_ad_status(ad.reload)  # reload to get the new ad.ad_id
           end
         end
       end
+      # every two successive ads (topic and retarget) will be associated with the same story
+      # @removed_images_stories.uniq
     end
 
     if @promote_enabled && new_images?(params[:company])

@@ -93,15 +93,15 @@ function promoteListeners () {
         if ($(this).hasClass('selected')) {
           return false;
         } else {
-          var selectedImageId = $(this).data('image-id');
+          var selectedImageId = $(this).closest('li').data('image-id');
           $(this).addClass('selected');
           // update the form's hidden field for image id
-          $(this).closest('.modal-content').find('input[type="hidden"]')
+          $(this).closest('.modal-content').find('.modal-footer input[type="hidden"]')
                  .val(selectedImageId);
           $('#adwords-image-select-modal .thumbnail')
             // thumbnail is the raw html, $(this) is jquery
             .each(function (index, thumbnail) {
-              if ($(this).data('image-id') !== selectedImageId) {
+              if ($(this).closest('li').data('image-id') !== selectedImageId) {
                 $(this).removeClass('selected');
               }
             });
