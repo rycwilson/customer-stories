@@ -5,7 +5,7 @@ class AdwordsController < ApplicationController
   before_action() { set_company(params) }
   before_action({ except: [:update_company, :data] }) { set_story(params) }
   before_action({ except: [:preview] }) { create_adwords_api() }
-  before_action({ except: [:preview, :data] }) { @promote_enabled = @company.promote_tr? }
+  before_action({ except: [:preview, :data] }) { @promote_enabled = false }
 
   def create_story_ads
     if @promote_enabled
@@ -106,7 +106,7 @@ class AdwordsController < ApplicationController
       # @removed_images_stories.uniq
     end
 
-    if @promote_enabled && new_images?(params[:company])
+    if new_images?(params[:company])
       get_new_images(params[:company]).each do |image_params|  # { type: , url: }
         upload_image(@company, image_params) or return # return if error
       end
@@ -157,22 +157,20 @@ class AdwordsController < ApplicationController
   end
 
   def data
-    # @topic_campaign = get_campaign(@company, 'topic')
-    @retarget_campaign = get_campaign(@company, 'retarget')
+    # @campaigns = get_campaigns(@company)
 
-    # @topic_ad_group = get_ad_group(@company, 'topic')
-    @retarget_ad_group = get_ad_group(@company, 'retarget')
+    # @ad_groups = get_ad_groups(@company)
 
-    @story = Story.find(7)
-    @ads = get_ads(@story)
+    @images = get_images()
 
-    # puts JSON.pretty_generate(@topic_campaign)
-    puts JSON.pretty_generate(@retarget_campaign)
+    # @story = Story.find(7)
+    # @ads = get_ads(@story)
 
-    # puts JSON.pretty_generate(@topic_ad_group)
-    puts JSON.pretty_generate(@retarget_ad_group)
+    # puts JSON.pretty_generate(@campaigns)
+    # puts JSON.pretty_generate(@ad_groups)
+    # puts JSON.pretty_generate(@images)
 
-    puts JSON.pretty_generate(@ads)
+    # puts JSON.pretty_generate(@ads)
 
     respond_to do |format|
       format.json do
@@ -189,7 +187,7 @@ class AdwordsController < ApplicationController
   end
 
   # to allow for creating ads from a seeds file, make some methods protected
-  # (can be killed as AdwordsController.new::create_adwords_api)
+  # ( can be called as AdwordsController.new::create_ad() )
   public
 
   def get_api_version ()
@@ -199,7 +197,11 @@ class AdwordsController < ApplicationController
   # Creates an instance of AdWords API class. Uses a configuration file and
   # Rails config directory.
   def create_adwords_api ()
-    config_file = File.join(Rails.root, 'config', 'adwords_api.yml')
+    if ENV['ADWORDS_ENV'] == 'test'
+      config_file = File.join(Rails.root, 'config', 'adwords_api_test.yml')
+    elsif ENV['ADWORDS_ENV'] == 'production'
+      config_file = File.join(Rails.root, 'config', 'adwords_api_prod.yml')
+    end
     @api = AdwordsApi::Api.new(config_file)
   end
 
@@ -410,93 +412,6 @@ class AdwordsController < ApplicationController
     end
   end
 
-  private
-
-  def set_company (params)
-    if ['update_company', 'data'].include?(params[:action])
-      @company = Company.find(params[:id])
-    else
-      @company = Company.find_by({ subdomain: request.subdomain })
-    end
-  end
-
-  def set_story (params)
-    if ['create_story_ads', 'remove_story_ads'].include?(params[:action])
-      @story = Story.find(params[:id])
-    elsif ['update_story_ads', 'preview'].include?(params[:action])
-      @story = Story.includes(adwords_ads: { adwords_image: {} }).find(params[:id])
-    end
-  end
-
-  def get_campaign(company, type)
-    service = @api.service(:CampaignService, get_api_version())
-    selector = {
-      :fields => ['Id', 'Name', 'Status', 'Labels'],
-      :ordering => [{:field => 'Id', :sort_order => 'ASCENDING'}],
-      :paging => {:start_index => 0, :number_results => 50}
-    }
-    result = nil
-    begin
-      result = service.get(selector)
-    rescue AdwordsApi::Errors::ApiException => e
-      logger.fatal("Exception occurred: %s\n%s" % [e.to_s, e.message])
-      flash.now[:alert] =
-          'API request failed with an error, see logs for details'
-    end
-    result[:entries].find do |campaign|
-      campaign[:labels].any? { |label| label[:name] == company.subdomain } &&
-      campaign[:labels].any? { |label| label[:name] == type }
-    end
-  end
-
-  def get_ad_group(company, type)
-    service = @api.service(:AdGroupService, get_api_version())
-    selector = {
-      :fields => ['Id', 'Name', 'Status', 'Labels'],
-      :ordering => [{:field => 'Id', :sort_order => 'ASCENDING'}],
-      :paging => {:start_index => 0, :number_results => 50}
-    }
-    result = nil
-    begin
-      result = service.get(selector)
-    rescue AdwordsApi::Errors::ApiException => e
-      logger.fatal("Exception occurred: %s\n%s" % [e.to_s, e.message])
-      flash.now[:alert] =
-          'API request failed with an error, see logs for details'
-    end
-    result[:entries].find do |ad_group|
-      ad_group[:labels].any? { |label| label[:name] == company.subdomain } &&
-      ad_group[:labels].any? { |label| label[:name] == type }
-    end
-  end
-
-  def get_ad_groups(company)
-    @topic_ad_group = get_ad_group(company, 'topic')
-    @retarget_ad_group = get_ad_group(company, 'retarget')
-  end
-
-  def get_ads (story)
-    service = @api.service(:AdGroupAdService, get_api_version())
-    selector = {
-      fields: ['Id', 'Name', 'Status', 'LongHeadline'],
-      ordering: [{ field: 'Id', sort_order: 'ASCENDING' }],
-      paging: { start_index: 0, number_results: 50 },
-      predicates: [{
-        field: 'LongHeadline',
-        operator: 'IN',
-        values: [ story.title ]
-      }],
-    }
-    result = nil
-    begin
-      result = service.get(selector)
-    rescue AdwordsApi::Errors::ApiException => e
-      logger.fatal("Exception occurred: %s\n%s" % [e.to_s, e.message])
-      flash.now[:alert] =
-        'API request failed with an error, see logs for details'
-    end
-  end
-
   def update_ad_status (ad)
     service = @api.service(:AdGroupAdService, get_api_version())
     operation =  {
@@ -554,6 +469,91 @@ class AdwordsController < ApplicationController
     end
   end
 
+  private
+
+  def set_company (params)
+    if ['update_company', 'data'].include?(params[:action])
+      @company = Company.find(params[:id])
+    else
+      @company = Company.find_by({ subdomain: request.subdomain })
+    end
+  end
+
+  def set_story (params)
+    if ['create_story_ads', 'remove_story_ads'].include?(params[:action])
+      @story = Story.find(params[:id])
+    elsif ['update_story_ads', 'preview'].include?(params[:action])
+      @story = Story.includes(adwords_ads: { adwords_image: {} }).find(params[:id])
+    end
+  end
+
+  def get_campaigns (company)
+    service = @api.service(:CampaignService, get_api_version())
+    selector = {
+      :fields => ['Id', 'Name', 'Status', 'Labels'],
+      :ordering => [{:field => 'Id', :sort_order => 'ASCENDING'}],
+      :paging => {:start_index => 0, :number_results => 50}
+    }
+    result = nil
+    begin
+      result = service.get(selector)
+    rescue AdwordsApi::Errors::ApiException => e
+      logger.fatal("Exception occurred: %s\n%s" % [e.to_s, e.message])
+      flash.now[:alert] =
+          'API request failed with an error, see logs for details'
+    end
+    result[:entries].find do |campaign|
+      campaign[:labels].any? { |label| label[:name] == company.subdomain }
+    end
+  end
+
+  # this will fail because not all ads have labels
+  # -> get data through the adwords UI
+  def get_ad_groups (company)
+    service = @api.service(:AdGroupService, get_api_version())
+    selector = {
+      fields: ['Id', 'Name', 'Status', 'Labels'],
+      ordering: [ { field: 'Id', sort_order: 'ASCENDING' } ],
+      paging: { start_index: 0, number_results: 50 },
+      predicates: [
+        { field: 'Name', operator: 'CONTAINS', values: [company.subdomain] }
+      ]
+    }
+    result = nil
+    begin
+      result = service.get(selector)
+    rescue AdwordsApi::Errors::ApiException => e
+      logger.fatal("Exception occurred: %s\n%s" % [e.to_s, e.message])
+      flash.now[:alert] =
+          'API request failed with an error, see logs for details'
+    end
+    result[:entries].find do |ad_group|
+      ad_group[:labels].any? { |label| label[:name] == company.subdomain }
+    end
+  end
+
+  def get_ads (story)
+    service = @api.service(:AdGroupAdService, get_api_version())
+    selector = {
+      fields: ['Id', 'Name', 'Status', 'LongHeadline'],
+      ordering: [{ field: 'Id', sort_order: 'ASCENDING' }],
+      paging: { start_index: 0, number_results: 50 },
+      predicates: [{
+        field: 'LongHeadline',
+        operator: 'IN',
+        values: [ story.title ]
+      }],
+    }
+    result = nil
+    begin
+      result = service.get(selector)
+    rescue AdwordsApi::Errors::ApiException => e
+      logger.fatal("Exception occurred: %s\n%s" % [e.to_s, e.message])
+      flash.now[:alert] =
+        'API request failed with an error, see logs for details'
+    end
+  end
+
   def new_images? (company_params)
     company_params[:adwords_logo_url].present? ||
     company_params[:default_adwords_image_url].present? ||
@@ -576,6 +576,61 @@ class AdwordsController < ApplicationController
         .each { |index, attrs| new_images << { type: 'landscape', url: attrs[:image_url] } }
     end
     new_images
+  end
+
+  def get_images
+    service = @api.service(:MediaService, get_api_version())
+    # Get all the images and videos.
+    selector = {
+      :fields => ['MediaId', 'Height', 'Width', 'MimeType', 'Urls'],
+      :ordering => [
+        {:field => 'MediaId', :sort_order => 'ASCENDING'}
+      ],
+      :predicates => [
+        {:field => 'Type', :operator => 'IN', :values => ['IMAGE', 'VIDEO']}
+      ],
+      :paging => {
+        :start_index => 0,
+        :number_results => 50
+      }
+    }
+
+    begin
+      result = service.get(selector)
+    # Authorization error.
+    rescue AdsCommon::Errors::OAuth2VerificationRequired => e
+      puts "Authorization credentials are not valid. Edit adwords_api.yml for " +
+          "OAuth2 client ID and secret and run misc/setup_oauth2.rb example " +
+          "to retrieve and store OAuth2 tokens."
+      puts "See this wiki page for more details:\n\n  " +
+          'https://github.com/googleads/google-api-ads-ruby/wiki/OAuth2'
+
+    # HTTP errors.
+    rescue AdsCommon::Errors::HttpError => e
+      puts "HTTP Error: %s" % e
+
+    # API errors.
+    rescue AdwordsApi::Errors::ApiException => e
+      puts "Message: %s" % e.message
+      puts 'Errors:'
+      e.errors.each_with_index do |error, index|
+        puts "\tError [%d]:" % (index + 1)
+        error.each do |field, value|
+          puts "\t\t%s: %s" % [field, value]
+        end
+      end
+    end
+    if result[:entries]
+      result[:entries].each do |entry|
+        full_dimensions = entry[:dimensions]['FULL']
+        puts "Entry ID %d with dimensions %dx%d and MIME type is '%s'" %
+            [entry[:media_id], full_dimensions[:height],
+             full_dimensions[:width], entry[:mime_type]]
+      end
+    end
+    if result.include?(:total_num_entries)
+      puts "\tFound %d entries." % result[:total_num_entries]
+    end
   end
 
 end

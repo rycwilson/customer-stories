@@ -8,7 +8,11 @@ class AdwordsImage < ActiveRecord::Base
 
   before_destroy :s3_delete
 
-  NO_DELETE = ["https://csp-development-assets.s3-us-west-1.amazonaws.com/uploads/122dadec-7229-4d1c-a3fc-1e71e0ff9a16/varmour-existing.jpeg"]
+  # don't delete these default adwords images; may be used to seed adwords
+  NO_DELETE = [
+    "https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/1f398239-e32f-4ae6-b3d1-224dbde4b9e6/retailnext_landscape_1.png",
+    "https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/7125d063-0f87-4d08-912d-ad62e281773f/varmour-existing.jpeg"
+  ]
 
   def s3_delete
     S3_BUCKET.delete_objects(
