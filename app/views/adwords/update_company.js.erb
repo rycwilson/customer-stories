@@ -3,6 +3,7 @@
 
   var flashMesg = "<%= @flash_mesg %>",
       flashStatus = "<%= @flash_status %>",
+      $form = $('#promote-settings-form'),
       $table = $('#sponsored-stories-table'),
       $modal = $('#adwords-image-select-modal'),
       $removedImages = $('.thumbnail.to-be-removed').closest('li.adwords-image'),
@@ -83,6 +84,8 @@
   //   $(this).attr('src',
   //     thisUrl.slice(0, thisUrl.lastIndexOf('?') == -1 ? thisUrl.length : thisUrl.lastIndexOf('?')) + '?' + d.getTime())
   // })
+
+  $form.find('.submit-toggle').toggle();
 
   flashDisplay(flashMesg, flashStatus);
 

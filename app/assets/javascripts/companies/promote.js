@@ -235,6 +235,12 @@ function promoteListeners () {
                .toggleClass('to-be-removed');
         var $destroy = $(this).closest('.fileinput').find(':checkbox');
         $destroy.prop('checked', !$destroy.prop('checked'));
+      })
+
+    // in progress icon on submit button
+    .on('submit', '#promote-settings-form',
+      function () {
+        $(this).find('.submit-toggle').toggle();
       });
 
 }
