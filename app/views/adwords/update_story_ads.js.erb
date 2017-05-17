@@ -12,6 +12,7 @@
   if (imageChanged) {
     var adwordsImage = <%= raw @story.ads.adwords_image.to_json %>;
     $('#adwords-image-select-modal').modal('hide')
+    $('#adwords-image-select-form .submit-toggle').toggle();
     if ( adwordsImage && adwordsImage.image_url ) {
       $row.find('.thumbnail img').attr('src', adwordsImage.image_url)
     }

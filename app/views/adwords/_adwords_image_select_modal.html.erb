@@ -43,12 +43,15 @@
     <!-- // locals: storyId -->
     <form id='adwords-image-select-form'
           action="/stories/{{= storyId }}/promote" accept-charset="UTF-8"
-          method="PUT" data-remote="true" data-type="json" data-story-id="{{= storyId }}">
+          method="put" data-remote="true" data-type="json" data-story-id="{{= storyId }}">
 
       <input name='adwords_image_id' type='hidden'>
 
       <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-      <button type="submit" class="btn btn-success">Select image</button>
+      <button type="submit" class="btn btn-success text-center" style='width:110px'>
+        <span class='submit-toggle'>Select image</span>
+        <i class='fa fa-spinner fa-pulse submit-toggle' style='display:none'></i>
+      </button>
 
     </form>
 

@@ -238,7 +238,7 @@ function promoteListeners () {
       })
 
     // in progress icon on submit button
-    .on('submit', '#promote-settings-form',
+    .on('submit', '#promote-settings-form, #adwords-image-select-form',
       function () {
         $(this).find('.submit-toggle').toggle();
       });
