@@ -413,6 +413,7 @@ class AdwordsController < ApplicationController
   end
 
   def update_ad_status (ad)
+    @api ||= create_adwords_api()  # in case method was called from outside controller
     service = @api.service(:AdGroupAdService, get_api_version())
     operation =  {
       operator: 'SET',
