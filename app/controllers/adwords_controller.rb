@@ -623,9 +623,9 @@ class AdwordsController < ApplicationController
     if result[:entries]
       result[:entries].each do |entry|
         full_dimensions = entry[:dimensions]['FULL']
-        puts "Entry ID %d with dimensions %dx%d and MIME type is '%s'" %
+        puts "Entry ID %d dimensions %dx%d MIME type '%s' url '%s'" %
             [entry[:media_id], full_dimensions[:height],
-             full_dimensions[:width], entry[:mime_type]]
+             full_dimensions[:width], entry[:mime_type], entry[:urls]['FULL']]
       end
     end
     if result.include?(:total_num_entries)
