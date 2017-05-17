@@ -5,7 +5,7 @@ class AdwordsController < ApplicationController
   before_action() { set_company(params) }
   before_action({ except: [:update_company, :data] }) { set_story(params) }
   before_action({ except: [:preview] }) { create_adwords_api() }
-  before_action({ except: [:preview, :data] }) { @promote_enabled = false }
+  before_action({ except: [:preview, :data] }) { @promote_enabled = @company.promote_tr? }
 
   def create_story_ads
     if @promote_enabled
@@ -106,7 +106,7 @@ class AdwordsController < ApplicationController
       # @removed_images_stories.uniq
     end
 
-    if new_images?(params[:company])
+    if @promote_enabled && new_images?(params[:company])
       get_new_images(params[:company]).each do |image_params|  # { type: , url: }
         upload_image(@company, image_params) or return # return if error
       end
