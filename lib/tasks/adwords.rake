@@ -108,10 +108,12 @@ namespace :adwords do
     # status defaults to PAUSED, and will stay that way for non-subscribers
     Story.where(published: true).each do |story|
       story.company.campaigns.topic.ad_group.ads.create(
-        story_id: story.id, long_headline: story.title
+        story_id: story.id, long_headline: story.title,
+        adwords_ad_group_id: story.company.campaigns.topic.ad_group.ad_group_id
       )
       story.company.campaigns.retarget.ad_group.ads.create(
-        story_id: story.id, long_headline: story.title
+        story_id: story.id, long_headline: story.title,
+        adwords_ad_group_id: story.company.campaigns.retarget.ad_group.ad_group_id
       )
     end
 
@@ -124,7 +126,8 @@ namespace :adwords do
       [varmour, retailnext].each() do |company|
         company.ads.each() do |ad|
           ad.adwords_image = company.adwords_images.default
-          AdwordsController.new::create_ad(company, ad.story, ad.campaign.type)
+          campaign_type = ad.campaign.type == 'TopicCampaign' ? 'topic' : 'retarget'
+          AdwordsController.new::create_ad(company, ad.story, campaign_type)
           # enabled ads
           if [7, 213, 225, 232, 233, 240].include?(ad.story.id)
             ad.update(status: 'ENABLED')
@@ -137,11 +140,12 @@ namespace :adwords do
     else
       varmour.ads.each() do |ad|
         ad.adwords_image = varmour.adwords_images.default
-        AdwordsController.new::create_ad(varmour, ad.story, ad.campaign.type)
+        campaign_type = ad.campaign.type == 'TopicCampaign' ? 'topic' : 'retarget'
+        AdwordsController.new::create_ad(varmour, ad.story, campaign_type)
         # enabled ads
         if [7, 213, 225].include?(ad.story.id)
           ad.update(status: 'ENABLED')
-          AdwordsController.new::update_ad_status(ad)
+          AdwordsController.new::update_ad_status(ad.reload)  # get the ad_id since it was updated
         end
       end
 
