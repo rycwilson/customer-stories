@@ -241,8 +241,12 @@ function promoteListeners () {
     .on('submit', '#promote-settings-form, #adwords-image-select-form',
       function () {
         $(this).find('.submit-toggle').toggle();
-      });
+      })
 
+    .on('ajax:success', '#adwords-data-form',
+      function (event, data) {
+        console.log(data);
+      });
 }
 
 

@@ -29,7 +29,8 @@
 
       <% if Rails.env.development? %>
 
-        <%= form_tag adwords_data_company_path, method: :get, remote: true, data: { type: 'json' } do %>
+        <%= form_tag adwords_data_company_path, method: :get, remote: true,
+              id: 'adwords-data-form', data: { type: 'json' } do %>
 
           <%= submit_tag 'Get data', class: 'btn btn-success' %>
 
