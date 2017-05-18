@@ -18,9 +18,10 @@ namespace :adwords do
     # create campaigns, ad groups, images
     Company.all.each do |company|
 
+      company_seeds = company_seeds_lookup(company, ENV['ADWORDS_ENV'])
+
       if company == varmour || (company == retailnext && ENV['ADWORDS_ENV'] == 'production')
 
-        company_seeds = company_seeds(company, ENV['ADWORDS_ENV'])
         ac = AdwordsController.new
 
         # short headline, logo, default image
@@ -61,6 +62,22 @@ namespace :adwords do
         retarget_ads = ac::get_ads(retarget_ad_group[:id])
 
         create_company_ads(company, topic_ads, retarget_ads)
+
+      # retailnext - staging
+      elsif company == retailnext && ENV['ADWORDS_ENV'] == 'test'
+        company.update(
+          adwords_short_headline: company_seeds[:short_headline],
+          adwords_logo_url: company_seeds[:adwords_logo_url],
+          adwords_logo_media_id: company_seeds[:adwords_logo_media_id]
+        )
+        company.adwords_images.create(
+          company_default: true, image_url: company_seeds[:default_image_url],
+          media_id: company_seeds[:default_image_media_id]
+        )
+        company.campaigns.create(type:'TopicCampaign')
+        company.campaigns.topic.create_adwords_ad_group()
+        company.campaigns.create(type:'RetargetCampaign')
+        company.campaigns.retarget.create_adwords_ad_group()
 
       # all others
       else
@@ -113,7 +130,7 @@ namespace :adwords do
 
   end  # seed task
 
-  def company_seeds (company, adwords_env)
+  def company_seeds_lookup (company, adwords_env)
     case company.subdomain
     when 'varmour'
       {
@@ -131,6 +148,8 @@ namespace :adwords do
         default_image_url: "https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/1f398239-e32f-4ae6-b3d1-224dbde4b9e6/retailnext_landscape_1.png",
         default_image_media_id: 2829811191
       }
+    else
+      {}
     end
   end
 
