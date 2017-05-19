@@ -63,7 +63,7 @@
           <div class="tab-content stacked-content">
 
             <div id='sponsored-stories-tab-pane'
-                 class="tab-pane fade <%= workflow_sub_tab.nil? ? 'in active' : '' %>">
+                 class="tab-pane fade <%= workflow_sub_tab == 'sponsored-stories' ? 'in active' : '' %>">
               <%= render 'adwords/sponsored_stories', { company: company } %>
             </div>
 
