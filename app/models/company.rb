@@ -80,7 +80,6 @@ class Company < ActiveRecord::Base
     end
   end
   has_many :email_templates, dependent: :destroy
-  has_one :cta_button, dependent: :destroy
   has_many :outbound_actions, dependent: :destroy
 
   has_many :call_to_actions, dependent: :destroy
