@@ -14,6 +14,7 @@ namespace :adwords do
     ActiveRecord::Base.connection.execute('ALTER SEQUENCE adwords_ads_id_seq RESTART WITH 1')
     ActiveRecord::Base.connection.execute('ALTER SEQUENCE adwords_images_id_seq RESTART WITH 1')
 
+    # acme = Company.find_by(subdomain: 'acme-test')
     varmour = Company.find_by(subdomain: 'varmour')
     varmour.update(promote_tr: true)
     retailnext = Company.find_by(subdomain: 'retailnext')
@@ -136,6 +137,14 @@ namespace :adwords do
 
   def company_seeds_lookup (company, adwords_env)
     case company.subdomain
+    when 'acme-test'
+      {
+        short_headline: 'Acme Customer Stories',
+        adwords_logo_url: "",
+        adwords_logo_media_id: adwords_env == 'production' ? 1 : 2,
+        default_image_url: "",
+        default_image_media_id: adwords_env == 'production' ? 3 : 4,
+      }
     when 'varmour'
       {
         short_headline: 'vArmour Customer Stories',

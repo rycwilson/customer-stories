@@ -862,10 +862,10 @@ class Company < ActiveRecord::Base
   # if this is the initial default uploaded, update any ads
   #   that don't currently have an image
   def update_uploaded_default_adwords_image (uploaded_image_url)
-    old_default = self.adwords_images.default
-    if old_default.present?
-      old_default.update(company_default: false)
-      AdwordsImage.create(company_default: true, image_url: uploaded_image_url)
+    if self.adwords_images.default.present?
+      self.adwords_images.default.update(company_default: false)
+      AdwordsImage.create(company_id: self.id, company_default: true,
+                          image_url: uploaded_image_url)
     else
       AdwordsImage.create(company_id: self.id, company_default: true,
                           image_url: uploaded_image_url)
@@ -925,7 +925,6 @@ class Company < ActiveRecord::Base
     self.adwords_logo_media_id.present? &&
     self.adwords_images.default.present? &&
     self.adwords_images.default.try(:media_id).present?
-    self.stories.published.present?
   end
 
   private

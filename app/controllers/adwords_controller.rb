@@ -82,7 +82,6 @@ class AdwordsController < ApplicationController
   def update_company
     # ajax request performed a JSON.stringify in order to preserve nested arrays
     if request.format == :js
-      puts "update_company"
       params[:company] = JSON.parse(params[:company])
       puts JSON.pretty_generate(params[:company])
     end
