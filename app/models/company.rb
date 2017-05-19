@@ -972,7 +972,8 @@ class Company < ActiveRecord::Base
       )
       csp_ad.adwords_image = self.adwords_images.default
       campaign_type = (campaign.type == 'TopicCampaign' ? 'topic' : 'retarget')
-      AdwordsController.new::create_ad(self, story, campaign_type)
+      # reload so the new ads can be accessed in create_ad
+      AdwordsController.new::create_ad(self, story.reload, campaign_type)
     end
   end
 
