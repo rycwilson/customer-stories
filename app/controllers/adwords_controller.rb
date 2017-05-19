@@ -6,8 +6,8 @@ class AdwordsController < ApplicationController
   before_action({ except: [:update_company, :sync_company] }) { set_story(params) }
   before_action({ except: [:preview] }) { create_adwords_api() }
   before_action({ except: [:ads_preview] }) do
-    @promote_enabled = false
-    # @promote_enabled = @company.promote_tr?
+    # @promote_enabled = false
+    @promote_enabled = @company.promote_tr?
   end
 
   def create_story_ads
