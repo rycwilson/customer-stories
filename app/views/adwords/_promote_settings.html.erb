@@ -14,11 +14,10 @@
       </label>
 
       <div class="fileinput fileinput-exists" data-provides="fileinput">
-        <div class="fileinput-preview thumbnail" data-trigger="fileinput"></div>
+        <div class="fileinput-preview thumbnail"></div>
         <input type="file"
                name="company[adwords_images_attributes][{{= image_index }}][image_url]"
                id="company_adwords_images_attributes_{{= image_index }}_image_url">
-        <span><i class='change-image glyphicon glyphicon-pencil'></i></span>
         <span><i class='remove-image glyphicon glyphicon-remove'></i></span>
       </div>
 
@@ -180,12 +179,11 @@
         </label>
 
         <div class="fileinput fileinput-exists" data-provides="fileinput">
-          <div class="fileinput-preview thumbnail" data-trigger="fileinput">
+          <div class="fileinput-preview thumbnail">
             <%= image_tag image_f.object.image_url, alt: 'adwords image' %>
           </div>
           <%= image_f.file_field(:image_url, class: 'hidden') %>
           <%= image_f.check_box(:_destroy, { class: 'hidden' }, 'true', 'false') %>
-          <i class='change-image glyphicon glyphicon-pencil'></i>
           <i class='remove-image glyphicon glyphicon-remove'></i>
         </div>
 

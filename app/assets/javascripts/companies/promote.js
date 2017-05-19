@@ -223,11 +223,6 @@ function promoteListeners () {
         });
       })
 
-    .on('click', 'li.adwords-image .change-image',
-      function () {
-        $(this).closest('.fileinput').children('.thumbnail')[0].click();
-      })
-
     .on('click', 'li.adwords-image .remove-image',
       function () {
         $(this).closest('.fileinput')
