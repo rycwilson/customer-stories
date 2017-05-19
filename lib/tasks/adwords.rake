@@ -8,11 +8,11 @@ namespace :adwords do
     AdwordsCampaign.destroy_all
     AdwordsAdGroup.destroy_all
     AdwordsAd.destroy_all
-    # AdwordsImage.destroy_all  # what's the point?
+    AdwordsImage.destroy_all
     ActiveRecord::Base.connection.execute('ALTER SEQUENCE adwords_campaigns_id_seq RESTART WITH 1')
     ActiveRecord::Base.connection.execute('ALTER SEQUENCE adwords_ad_groups_id_seq RESTART WITH 1')
     ActiveRecord::Base.connection.execute('ALTER SEQUENCE adwords_ads_id_seq RESTART WITH 1')
-    # ActiveRecord::Base.connection.execute('ALTER SEQUENCE adwords_images_id_seq RESTART WITH 1')
+    ActiveRecord::Base.connection.execute('ALTER SEQUENCE adwords_images_id_seq RESTART WITH 1')
 
     varmour = Company.find_by(subdomain: 'varmour')
     varmour.update(promote_tr: true)
