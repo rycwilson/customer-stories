@@ -154,7 +154,7 @@ class AdwordsController < ApplicationController
     render :ads_preview, layout: false
   end
 
-  def sync_company ()
+  def sync_company
     if @company.ready_for_adwords_sync?
       topic_campaign = get_campaign(@company, 'topic')
       topic_ad_group = get_ad_group(topic_campaign[:id])
@@ -171,7 +171,7 @@ class AdwordsController < ApplicationController
       flash = { danger: "Company not ready for syncing with AdWords" }
     end
     cookies[:workflow_tab] = 'promote'
-    cookies[:workflow_sub_tab] = 'promote-settings'
+    cookies[:workflow_sub_tab] = 'sponsored-stories'
     redirect_to(company_path(@company), flash: flash)
   end
 
