@@ -94,6 +94,8 @@ function promoteListeners () {
           return false;
         } else {
           var selectedImageId = $(this).closest('li').data('image-id');
+          $(this).closest('.modal-content')
+                 .find('button[type="submit"]').prop('disabled', false);
           $(this).addClass('selected');
           // update the form's hidden field for image id
           $(this).closest('.modal-content').find('.modal-footer input[type="hidden"]')
@@ -114,6 +116,7 @@ function promoteListeners () {
         $(this).find('.modal-footer').empty();
         $(this).find('.thumbnail').removeClass('selected');
         $(this).find('li').removeClass('hidden');
+        $(this).find('button[type="submit"]').prop('disabled', true);
       })
 
     // ad previews - separate window
@@ -143,8 +146,7 @@ function promoteListeners () {
     // if the validation is performed immediately
     // $('img').on('load', ...) not working, probably because image is stored as data:
     // so check the .complete property of the img element
-    .on('change.bs.fileinput',
-        '.adwords-default.adwords-image, .adwords-default.adwords-logo',
+    .on('change.bs.fileinput', '.adwords-default.adwords-image, .adwords-default.adwords-logo',
       function () {
         var $_this = $(this),
             waitForImage,  // this will be a window timer id, need to declare in case it's never created
