@@ -238,15 +238,11 @@ function promoteListeners () {
       })
 
     // in progress icon on submit button
-    .on('submit', '#promote-settings-form, #adwords-image-select-form',
+    .on('submit', '#promote-settings-form, #adwords-image-select-form, #adwords-sync-form',
       function () {
         $(this).find('.submit-toggle').toggle();
-      })
-
-    .on('ajax:success', '#adwords-data-form',
-      function (event, data) {
-        console.log(data);
       });
+
 }
 
 

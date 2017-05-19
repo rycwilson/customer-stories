@@ -8,7 +8,11 @@ namespace :adwords do
     AdwordsCampaign.destroy_all
     AdwordsAdGroup.destroy_all
     AdwordsAd.destroy_all
-    AdwordsImage.destroy_all
+    # AdwordsImage.destroy_all  # what's the point?
+    ActiveRecord::Base.connection.execute('ALTER SEQUENCE adwords_campaigns_id_seq RESTART WITH 1')
+    ActiveRecord::Base.connection.execute('ALTER SEQUENCE adwords_ad_groups_id_seq RESTART WITH 1')
+    ActiveRecord::Base.connection.execute('ALTER SEQUENCE adwords_ads_id_seq RESTART WITH 1')
+    # ActiveRecord::Base.connection.execute('ALTER SEQUENCE adwords_images_id_seq RESTART WITH 1')
 
     varmour = Company.find_by(subdomain: 'varmour')
     varmour.update(promote_tr: true)
@@ -61,7 +65,7 @@ namespace :adwords do
         )
         retarget_ads = ac::get_ads(retarget_ad_group[:id])
 
-        create_company_ads(company, topic_ads, retarget_ads)
+        create_csp_ads(company, topic_ads, retarget_ads)
 
       # retailnext - staging
       elsif company == retailnext && ENV['ADWORDS_ENV'] == 'test'
@@ -128,7 +132,7 @@ namespace :adwords do
       end
     end
 
-  end  # seed task
+  end  # sync task
 
   def company_seeds_lookup (company, adwords_env)
     case company.subdomain
@@ -160,37 +164,36 @@ namespace :adwords do
   ##  if a story isn't published, remove the adwords ad and don't create a csp ad
   ##  if a story wasn't given a story id label, remove it
   ##
-  def create_company_ads (company, topic_ads, retarget_ads)
+  def create_csp_ads (company, topic_ads, retarget_ads)
+    equens = Story.find(7)
     company.campaigns.each() do |campaign|
-      ads = (campaign.type == 'TopicCampaign') ? topic_ads : retarget_ads
-      ads.each do |ad|
-        # ads are tagged with story id
-        if ad[:labels].present?
-          story = Story.find_by(id: ad[:labels][0][:name])
-        else
-          story = nil
-        end
+      aw_ads = (campaign.type == 'TopicCampaign') ? topic_ads : retarget_ads
+      aw_ads.each do |aw_ad|
+        # ads are tagged willth story id
+        # if no story id label, try the long headline
+        story = Story.find_by(id: aw_ad[:labels].try(:[], 0).try(:[], :name)) ||
+                Story.find_by(title: aw_ad[:ad][:long_headline])
         if story.present? && story.published?
           csp_ad = campaign.ad_group.ads.create(
             story_id: story.id,
-            ad_id: ad[:ad][:id],
-            long_headline: ad[:ad][:long_headline],
-            status: ad[:status],
-            approval_status: ad[:approval_status]
+            ad_id: aw_ad[:ad][:id],
+            long_headline: aw_ad[:ad][:long_headline],
+            status: aw_ad[:status],
+            approval_status: aw_ad[:approval_status]
           )
           csp_ad.adwords_image =
             company.adwords_images.find() do |image|
-              image.media_id == ad[:ad][:marketing_image][:media_id]
+              image.media_id == aw_ad[:ad][:marketing_image][:media_id]
             end ||
             company.adwords_images.create(
-              media_id: ad[:ad][:marketing_image][:media_id],
-              image_url: ad[:ad][:marketing_image][:urls]['FULL']
+              media_id: aw_ad[:ad][:marketing_image][:media_id],
+              image_url: aw_ad[:ad][:marketing_image][:urls]['FULL']
             )
         else
           # remove the ad if
-          # - story can't be found by label or
+          # - story can't be found
           # - story isn't published
-          AdwordsController.new::remove_ad({ ad_id: ad[:ad][:id], ad_group_id: ad[:ad_group_id] })
+          AdwordsController.new::remove_ad({ ad_id: aw_ad[:ad][:id], ad_group_id: aw_ad[:ad_group_id] })
         end
       end
     end

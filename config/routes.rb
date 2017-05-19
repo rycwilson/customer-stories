@@ -49,7 +49,7 @@ Rails.application.routes.draw do
         # and :put for the async. response (see companies/promote.js.erb)
         member { get '/adwords', to: 'adwords#update_company' }
         member { put '/adwords', to: 'adwords#update_company' }
-        member { get '/adwords/data', to: 'adwords#data', as: 'adwords_data' }
+        member { put '/adwords/sync', to: 'adwords#sync_company', as: 'adwords_sync' }
       end
       resources :stories, only: [:edit, :update, :destroy] do
         resources :results, only: [:create, :update, :destroy]

@@ -3,9 +3,12 @@ class AdwordsController < ApplicationController
   require 'adwords_api'
 
   before_action() { set_company(params) }
-  before_action({ except: [:update_company, :data] }) { set_story(params) }
+  before_action({ except: [:update_company, :sync_company] }) { set_story(params) }
   before_action({ except: [:preview] }) { create_adwords_api() }
-  before_action({ except: [:preview, :data] }) { @promote_enabled = @company.promote_tr? }
+  before_action({ except: [:ads_preview] }) do
+    @promote_enabled = false
+    # @promote_enabled = @company.promote_tr?
+  end
 
   def create_story_ads
     if @promote_enabled
@@ -156,41 +159,25 @@ class AdwordsController < ApplicationController
     render :ads_preview, layout: false
   end
 
-  def data
-    topic_campaign = get_campaign(@company, 'topic')
-    topic_ad_group = get_ad_group(topic_campaign[:id])
-    topic_ads = get_ads(topic_ad_group[:id])
-    retarget_campaign = get_campaign(@company, 'retarget')
-    retarget_ad_group = get_ad_group(retarget_campaign[:id])
-    retarget_ads = get_ads(retarget_ad_group[:id])
-
-    # @ad_groups = get_ad_groups(@company)
-
-    # @images = get_images()
-
-    # @story = Story.find(7)
-    # @ads = get_ads(@story)
-
-    # puts JSON.pretty_generate(@campaigns)
-    # puts JSON.pretty_generate(@ad_groups)
-    # puts JSON.pretty_generate(@images)
-
-    # puts JSON.pretty_generate(@ads)
-
-    respond_to do |format|
-      format.json do
-        # render( json: "foo" )
-        render( json: {
-            topic_campaign: topic_campaign,
-            topic_ad_group: topic_ad_group,
-            topic_ads: topic_ads,
-            retarget_campaign: retarget_campaign,
-            retarget_ad_group: retarget_ad_group,
-            retarget_ads: retarget_ads,
-          }.delete_if() { |k,v| v.nil? }
-        )
-      end
+  def sync_company ()
+    if @company.ready_for_adwords_sync?
+      topic_campaign = get_campaign(@company, 'topic')
+      topic_ad_group = get_ad_group(topic_campaign[:id])
+      topic_ads = get_ads(topic_ad_group[:id])
+      retarget_campaign = get_campaign(@company, 'retarget')
+      retarget_ad_group = get_ad_group(retarget_campaign[:id])
+      retarget_ads = get_ads(retarget_ad_group[:id])
+      @company.sync_with_adwords(
+        topic_campaign, topic_ad_group, topic_ads,
+        retarget_campaign, retarget_ad_group, retarget_ads
+      )
+      flash = { success: "Successfully synced with AdWords" }
+    else
+      flash = { danger: "Company not ready for syncing with AdWords" }
     end
+    cookies[:workflow_tab] = 'promote'
+    cookies[:workflow_sub_tab] = 'promote-settings'
+    redirect_to(company_path(@company), flash: flash)
   end
 
   # to allow for creating ads from a seeds file, make some methods protected

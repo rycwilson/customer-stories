@@ -868,7 +868,108 @@ class Company < ActiveRecord::Base
     current_default_image != self.adwords_images.default
   end
 
+  # accepts adwords objects and creates csp campaigns / ad groups / ads
+  # NOTE: We need to build up the campaigns and associated ad groups and
+  #       ads, then when everything is built, save the campaign
+  #       (which will save the associated ad groups and ads.)
+  #       Else, the campaigns and ad groups will not be persisted
+  #       and attempting to create ads will result in error
+  def sync_with_adwords (topic_campaign, topic_ad_group, topic_ads,
+      retarget_campaign, retarget_ad_group, retarget_ads)
+
+    # destroy the ads, but not the campaigns and ad groups (unlike master seeds)
+    self.ads.each() { |ad| ad.destroy }
+
+    # topic campaign / ad group / ads
+    self.campaigns.topic.update(
+      campaign_id: topic_campaign[:id], status: topic_campaign[:status],
+      name: topic_campaign[:name]
+    )
+    self.campaigns.topic.ad_group.update(
+      ad_group_id: topic_ad_group[:id], status: topic_ad_group[:status],
+      name: topic_ad_group[:name]
+    )
+    # retarget campaign / ad group / ads
+    self.campaigns.retarget.update(
+      campaign_id: retarget_campaign[:id], status: retarget_campaign[:status],
+      name: retarget_campaign[:name]
+    )
+    self.campaigns.retarget.ad_group.update(
+      ad_group_id: retarget_ad_group[:id], status: retarget_ad_group[:status],
+      name: retarget_ad_group[:name]
+    )
+
+    # create csp ads to mirror adwords ads
+    create_csp_ads(topic_ads, retarget_ads)
+
+    # for any stories that are published but don't have an ad ...
+    # save ids in an array, as the ad must first be persisted in order for
+    # ActionController::create_ad to work correctly
+    self.stories.published.each do |story|
+      unless story.ads.present?
+        create_csp_and_aw_ads(story)
+      end
+    end
+  end  # sync_with_adwords
+
+  def ready_for_adwords_sync?
+    self.promote_tr? &&
+    self.adwords_short_headline.present?
+    self.adwords_logo_url.present? &&
+    self.adwords_logo_media_id.present? &&
+    self.adwords_images.default.present? &&
+    self.adwords_images.default.try(:media_id).present?
+    self.stories.published.present?
+  end
+
   private
+
+  # NOTE: campaigns haven't been saved when this method is called,
+  # but able to access via self.campaigns?
+  def create_csp_ads (topic_ads, retarget_ads)
+    self.campaigns.each() do |campaign|
+      aw_ads = (campaign.type == 'TopicCampaign') ? topic_ads : retarget_ads
+      aw_ads.each do |aw_ad|
+        # ads are tagged with story id
+        # if no story id label, try the long headline
+        story = Story.find_by(id: aw_ad[:labels].try(:[], 0).try(:[], :name)) ||
+                Story.find_by(title: aw_ad[:ad][:long_headline])
+        if story.present? && story.published?
+          csp_ad = campaign.ad_group.ads.create(
+            story_id: story.id,
+            ad_id: aw_ad[:ad][:id],
+            long_headline: aw_ad[:ad][:long_headline],
+            status: aw_ad[:status],
+            approval_status: aw_ad[:approval_status]
+          )
+          csp_ad.adwords_image =
+            self.adwords_images.find() do |image|
+              image.media_id == aw_ad[:ad][:marketing_image][:media_id]
+            end ||
+            self.adwords_images.create(
+              media_id: aw_ad[:ad][:marketing_image][:media_id],
+              image_url: aw_ad[:ad][:marketing_image][:urls]['FULL']
+            )
+        else
+          # remove the ad if
+          # - story can't be found
+          # - story isn't published
+          AdwordsController.new::remove_ad({ ad_id: aw_ad[:ad][:id], ad_group_id: aw_ad[:ad_group_id] })
+        end
+      end
+    end
+  end
+
+  def create_csp_and_aw_ads (story)
+    self.campaigns.each() do |campaign|
+      csp_ad = campaign.ad_group.ads.create(
+        story_id: story.id, long_headline: story.title
+      )
+      csp_ad.adwords_image = self.adwords_images.default
+      campaign_type = (campaign.type == 'TopicCampaign' ? 'topic' : 'retarget')
+      AdwordsController.new::create_ad(self, story, campaign_type)
+    end
+  end
 
   def fill_daily_gaps visitors, start_date, end_date
     all_dates = []

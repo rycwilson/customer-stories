@@ -27,14 +27,33 @@
             </li>
           </ul>
 
-      <% if Rails.env.development? %>
+      <% if admin_signed_in? %>
 
-        <%= form_tag adwords_data_company_path, method: :get, remote: true,
-              id: 'adwords-data-form', data: { type: 'json' } do %>
+        <div class="text-center">
+          <%= form_tag adwords_sync_company_path, method: :put,
+                id: 'adwords-sync-form' do %>
 
-          <%= submit_tag 'Get data', class: 'btn btn-success' %>
+            <% if company.ready_for_adwords_sync? %>
+              <button type="submit" class="btn btn-success text-center" style='width:152px'>
+                <span class='submit-toggle'>Sync with AdWords</span>
+                <i class='fa fa-spinner fa-pulse submit-toggle' style='display:none'></i>
+              </button>
+            <% else %>
+              <%= submit_tag 'Sync with AdWords', class: 'btn btn-success', disabled: true %>
+            <% end %>
 
-        <% end %>
+          <% end %>
+        </div> <br>
+        <label for='adwords-sync-checklist'>
+          Checklist
+        </label>
+        <ul id='adwords-sync-checklist'>
+          <li><%= company.subdomain %>.promote_tr = true</li>
+          <li>headline, logo, and default image in place</li>
+          <li>at least one published story</li>
+          <li>AdWords campaigns given proper labels</li>
+          <li>Adwords ads given story.id label (ok to skip if long headline matches story title)</li>
+        </ul>
 
       <% end %>
 
