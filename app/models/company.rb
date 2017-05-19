@@ -15,7 +15,7 @@ class Company < ActiveRecord::Base
 
   has_many :customers, dependent: :destroy do
     def select_options
-      self.map do |customer|
+      self.map() do |customer|
         [ customer.name, customer.id ]
       end
       .unshift( [""] )  # empty option makes placeholder possible (only needed for single select)
@@ -24,15 +24,16 @@ class Company < ActiveRecord::Base
   has_many :successes, through: :customers
   has_many :stories, through: :successes do
     def select_options
-      self.select { |story| story.published? }
-          .map { |story| [ story.title, story.id ] }
+      self.select() { |story| story.published? }
+          .map() { |story| [ story.title, story.id ] }
           .unshift( ['All', 0] )
     end
     def published
-      self.select { |story| story.published? }
+      self.select() { |story| story.published? }
     end
     def with_ads
-      self.select { |story| !story.topic_ad.nil? && !story.retarget_ad.nil? }
+      self.select() { |story| !story.topic_ad.nil? && !story.retarget_ad.nil? }
+          .sort_by() { |story| story.publish_date }.reverse()
     end
   end
   has_many :visitor_actions
