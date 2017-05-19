@@ -851,11 +851,22 @@ class Company < ActiveRecord::Base
 
   end
 
-  # when a new default is uploaded, assign it as default or create it if it doesn't exist
-  # update any ads that don't currently have an image
-  def update_default_adwords_image (uploaded_image_url)
-    if self.adwords_images.default.present?
-      self.adwords_images.default.update(image_url: uploaded_image_url)
+  def default_adwords_image_changed? (company_params)
+    company_params[:default_adwords_image_url].present? ||  # uploaded
+    company_params[:adwords_images_attributes]
+      .select { |index, image| image[:company_default] == 'true' }
+      .values[0].present?  # one of the additional images has been marked as default
+  end
+
+  # when a new default is uploaded, assign it as default or create it if it doesn't exist;
+  # save the old default as an additional image;
+  # if this is the initial default uploaded, update any ads
+  #   that don't currently have an image
+  def update_uploaded_default_adwords_image (uploaded_image_url)
+    old_default = self.adwords_images.default
+    if old_default.present?
+      old_default.update(company_default: false)
+      AdwordsImage.create(company_default: true, image_url: uploaded_image_url)
     else
       AdwordsImage.create(company_id: self.id, company_default: true,
                           image_url: uploaded_image_url)
@@ -863,10 +874,6 @@ class Company < ActiveRecord::Base
     end
   end
 
-  def default_adwords_image_changed? (company_params, current_default_image)
-    company_params[:default_adwords_image_url].present? ||
-    current_default_image != self.adwords_images.default
-  end
 
   # accepts adwords objects and creates csp campaigns / ad groups / ads
   # NOTE: We need to build up the campaigns and associated ad groups and

@@ -79,19 +79,22 @@ class AdwordsController < ApplicationController
     respond_to { |format| format.js }
   end
 
-  # TODO: update all ads if logo or short headline changed
   def update_company
     # ajax request performed a JSON.stringify in order to preserve nested arrays
     if request.format == :js
+      puts "update_company"
       params[:company] = JSON.parse(params[:company])
+      puts JSON.pretty_generate(params[:company])
     end
+
+    # changes to default image
+    @swapped_default_image = params[:company][:swapped_default_image].present?
+    @uploaded_default_image = params[:company][:uploaded_default_image].present?
 
     # for any deleted images, re-create affected ads
     # (affected ads have already been assigned default image)
     # if promote isn't enabled, still need to respond with affected stories for table update
     if params[:company][:removed_images_ads].present?
-      # gonna need this
-      @default_image_url = @company.adwords_images.default.image_url
       # keep track of story ids to update sponsored stories table
       @removed_images_stories = Set.new
       params[:company][:removed_images_ads].each do |image|
@@ -127,13 +130,6 @@ class AdwordsController < ApplicationController
         create_ad(@company, ad.story, campaign_type)
         update_ad_status(ad.reload)  # reload to get the new ad_id
       end
-    end
-
-    # sync or async update
-    if @promote_enabled && ( @default_image_changed =
-            params[:company][:default_image_changed] == 'true' ||     # async
-            params[:company][:default_adwords_image_url].present? )   # sync
-      puts 'UPDATE IMAGE'
     end
 
     @flash_status = "success"

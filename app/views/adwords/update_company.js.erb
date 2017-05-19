@@ -7,11 +7,12 @@
       $table = $('#sponsored-stories-table'),
       $modal = $('#adwords-image-select-modal'),
       $removedImages = $('.thumbnail.to-be-removed').closest('li.adwords-image'),
-      defaultImageChanged = <%= @default_image_changed %>;
+      swappedDefaultImage = <%= @swapped_default_image %>,
+      uploadedDefaultImage = <%= @uploaded_default_image %>,
+      defaultImageUrl = "<%= @company.adwords_images.default.try(:image_url) %>" || null;
 
-  if (defaultImageChanged) {
-    var newDefaultImageUrl = "<%= @company.adwords_images.default.try(:image_url) %>" || null,
-        $newDefaultImage = $('li.adwords-image img[src="' + newDefaultImageUrl + '"]'),
+  if (swappedDefaultImage) {
+    var $newDefaultImage = $('li.adwords-image img[src="' + defaultImageUrl + '"]'),
         newDefaultImageId = $newDefaultImage.closest('li').next().val(),
         $currentDefaultImage = $('.adwords-default.adwords-image .fileinput-exists img'),
         currentDefaultImageUrl = $currentDefaultImage.attr('src');
@@ -26,7 +27,7 @@
     $newDefaultImage.closest('li').next().val($currentDefaultImage.data('id'))
 
     $currentDefaultImage.attr({
-      src: newDefaultImageUrl,
+      src: defaultImageUrl,
       "data-id": newDefaultImageId
     });
 
@@ -36,13 +37,16 @@
       .find('input[name*="company_default"]')
       .prop('checked', true)
 
+  }
+
+  if (uploadedDefaultImage) {
     // update the table
     // any missing images can be replaced with the new default,
     // as these ads will have had the new default image assigned to them
     // (see company.update_default_adwords_image)
     $table.find('img').each(function () {
       if ( $(this).attr('src') === '' ) {
-        $(this).attr('src', newDefaultImageUrl)
+        $(this).attr('src', defaultImageUrl)
       }
       // old: looking for the old default and replacing it with new
       // if ( $(this).attr('src')
@@ -53,8 +57,7 @@
   }
 
   if ($removedImages.length) {
-    var removedImagesStories = <%= raw @removed_images_stories.to_json %>,
-        defaultImageUrl = "<%= @default_image_url %>";
+    var removedImagesStories = <%= raw @removed_images_stories.to_json %>;
 
     // remove deleted images
     $removedImages.each(function (index, li) {

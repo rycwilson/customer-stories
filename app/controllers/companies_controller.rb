@@ -4,7 +4,6 @@ class CompaniesController < ApplicationController
   before_action :set_company, except: [:new, :create]
   before_action only: [:show, :edit] { set_gon(@company) }
   before_action :set_s3_direct_post, only: [:new, :edit, :show, :create]
-  before_action only: [:promote] { @current_default_image = @company.adwords_images.default }
 
   def new
     @profile_form_options = set_profile_form_options(params)
@@ -68,12 +67,16 @@ class CompaniesController < ApplicationController
       params[:company][:removed_images_ads] =
         removed_images_ads(@company, params[:company][:adwords_images_attributes])
     end
+    # make this check before updating anything
+    # this will check for either uploaded or swapped default image
+    default_image_changed = @company.default_adwords_image_changed?(company_params)
     if @company.update(company_params)
-      # if the default image wasn't set or changed, parameter won't show up
-      if ( @default_image_changed =
-             @company.default_adwords_image_changed?(company_params, @current_default_image) ) &&
-           company_params[:default_adwords_image_url].present?
-        @company.update_default_adwords_image(company_params[:default_adwords_image_url])
+      # if a new default image was uploaded (param won't be present if it wasn't)
+      if default_image_changed && company_params[:default_adwords_image_url].present?
+        @company.update_uploaded_default_adwords_image(company_params[:default_adwords_image_url])
+        params[:company][:uploaded_default_image] = true
+      elsif default_image_changed  # swapping images
+        params[:company][:swapped_default_image] = true
       end
     else
       @flash_mesg = @company.errors.full_messages.join(', ')
