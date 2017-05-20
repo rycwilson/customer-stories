@@ -213,25 +213,57 @@ function promoteListeners () {
         }
       })
 
-    // make default checkboxes are mutually exclusive
+    // make default are mutually exclusive
     .on('change', 'li.adwords-image input[name*="company_default"]',
       function () {
         var $checkbox = $(this),
-            $allCheckboxes = $('li.adwords-image input[name*="company_default"]');
+            // $selectedImage = $(this).closest('li.adwords-image'),
+            // selectedImageId = $selectedImage.next().val(),
+            $allCheckboxes = $('li.adwords-image input[name*="company_default"]'),
+            defaultImageId = null;
         // uncheck other images
         $allCheckboxes.each(function () {
-          if ($(this).is($checkbox)) { // do nothing
-          } else { $(this).prop('checked', false); }
+          if ($(this).is($checkbox)) {
+            // do nothing
+          } else {
+            $(this).prop('checked', false);
+            // if this is the current default, swap id with the selected new default
+            // if ($(this).closest('.li.adwords-image').hasClass('hidden')) {
+            //   $(this).closest('.li.adwords-image').next().val()
+            // }
+
+          }
+
+
         });
+
       })
 
-    .on('click', 'li.adwords-image .remove-image',
+    .on('click', 'li.adwords-image .remove-image, li.adwords-image .cancel-remove-image',
       function () {
-        $(this).closest('.fileinput')
-               .children('.thumbnail')
-               .toggleClass('to-be-removed');
-        var $destroy = $(this).closest('.fileinput').find(':checkbox');
-        $destroy.prop('checked', !$destroy.prop('checked'));
+        var $li = $(this).closest('.adwords-image'),
+            $liControlTop = $li.find('.adwords-image-form-control-top'),
+            $liControlBottom = $li.find('.adwords-image-form-control-bottom'),
+            $destroyInput = $li.find(':checkbox.hidden');
+
+        if ($(this).hasClass('remove-image')) {
+          $li.addClass('to-be-removed');
+          $destroyInput.prop('checked', true);
+          $liControlBottom
+             .html('<span>Save changes below or <a class="cancel-remove-image">Cancel</a></span>');
+
+        } else {  // .cancel-remove-image
+          $li.removeClass('to-be-removed');
+          $destroyInput.prop('checked', false);
+          $liControlBottom.html('');
+        }
+
+      })
+
+    .on('click', 'li.adwords-image .cancel-add-image',
+      function () {
+        $(this).closest('li.adwords-image').remove();
+        // fix indices
       })
 
     // in progress icon on submit button

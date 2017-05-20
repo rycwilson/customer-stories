@@ -62,6 +62,7 @@ class CompaniesController < ApplicationController
   end
 
   def promote
+    JSON.pretty_generate(params[:company])
     # capture deleted image data (associated ads) prior to destroying image
     if removed_adwords_images?(params[:company][:adwords_images_attributes])
       params[:company][:removed_images_ads] =
@@ -76,6 +77,7 @@ class CompaniesController < ApplicationController
         @company.update_uploaded_default_adwords_image(company_params[:default_adwords_image_url])
         params[:company][:uploaded_default_image] = true
       elsif default_image_changed  # swapping images
+        puts "swapping defaults"
         params[:company][:swapped_default_image] = true
       end
     else
@@ -153,7 +155,7 @@ class CompaniesController < ApplicationController
 
   def removed_adwords_images? (images_attributes)
     return false if images_attributes.nil?
-    images_attributes.any? { |index, attrs| attrs['_destroy'] == 'true' }
+    images_attributes.any? { |index, attrs| attrs[:_destroy] == 'true' }
   end
 
   # returns a hash containing ad/ad_group/campaign data associated with removed images
@@ -168,8 +170,11 @@ class CompaniesController < ApplicationController
         {
           image_id: image[:id],
           ads_params: ads.map do |ad|
-            { ad_id: ad.ad_id, ad_group_id: ad.ad_group.ad_group_id,
-              campaign_type: ad.campaign.type == 'TopicCampaign' ? 'topic' : 'retarget' }
+            {
+              ad_id: ad.ad_id, ad_group_id: ad.ad_group.ad_group_id,
+              csp_ad_id: ad.id,
+              campaign_type: ad.campaign.type == 'TopicCampaign' ? 'topic' : 'retarget'
+            }
           end
         }
       end

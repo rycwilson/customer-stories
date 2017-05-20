@@ -6,10 +6,12 @@
       $form = $('#promote-settings-form'),
       $table = $('#sponsored-stories-table'),
       $modal = $('#adwords-image-select-modal'),
-      $removedImages = $('.thumbnail.to-be-removed').closest('li.adwords-image'),
+      $removedImages = $('li.adwords-image.to-be-removed'),
       swappedDefaultImage = <%= @swapped_default_image %>,
       uploadedDefaultImage = <%= @uploaded_default_image %>,
-      defaultImageUrl = "<%= @company.adwords_images.default.try(:image_url) %>" || null;
+      defaultImageUrl = "<%= @company.adwords_images.default.image_url %>";
+
+console.log('defaultImageUrl: ', defaultImageUrl)
 
   if (swappedDefaultImage) {
     var $newDefaultImage = $('li.adwords-image img[src="' + defaultImageUrl + '"]'),
@@ -17,7 +19,10 @@
         $currentDefaultImage = $('.adwords-default.adwords-image .fileinput-exists img'),
         currentDefaultImageUrl = $currentDefaultImage.attr('src');
 
-    // uncheck 'make default'
+// console.log('newDefaultImageId (before swap): ', newDefaultImageId)
+// console.log('currentDefaultImage (before swap): ', $currentDefaultImage.data('id'))
+
+    // uncheck 'make default for all
     $('li.adwords-image input[name*="company_default"]').each(
       function () { $(this).prop('checked', false) })
 
@@ -28,15 +33,16 @@
 
     $currentDefaultImage.attr({
       src: defaultImageUrl,
-      "data-id": newDefaultImageId
+      // "data-id": newDefaultImageId  // doesn't work!
     });
+    // do this instead...
+    $currentDefaultImage.data('id', newDefaultImageId)
 
     // update the hidden default image in the list
     $('ul.adwords-images li[class*="hidden"]').next().val(newDefaultImageId)
     $('ul.adwords-images li[class*="hidden"]')
       .find('input[name*="company_default"]')
       .prop('checked', true)
-
   }
 
   if (uploadedDefaultImage) {

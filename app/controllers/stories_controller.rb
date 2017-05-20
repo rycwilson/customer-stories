@@ -170,12 +170,12 @@ class StoriesController < ApplicationController
   end
 
   def ctas
-    @story.update_ctas( params[:ctas] || [] )
+    @story.update_ctas(params[:ctas] || [])
     respond_to { |format| format.js }
   end
 
   def tags
-    @story.update_tags( params[:category_tags] || [], params[:product_tags] || [] )
+    @story.update_tags(params[:category_tags] || [], params[:product_tags] || [])
     respond_to { |format| format.js }
   end
 

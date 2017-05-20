@@ -5,20 +5,26 @@
   <script id='adwords-image-template' type="text/template">
 
     <!-- // locals: image_index -->
-    <li class='well adwords-image new-adwords-image hidden'>
+    <li class='well adwords-image new-adwords-image to-be-added hidden'>
 
-      <label class="checkbox-inline">
-        <input name="company[adwords_images_attributes][{{= image_index }}][company_default]" type="hidden" value="false">
-        <input type="checkbox" value="true" name="company[adwords_images_attributes][{{= image_index }}][company_default]" id="company_adwords_images_attributes_{{= image_index }}_company_default">
-        Make default
-      </label>
+      <div class='adwords-image-form-control-top'>
+        <label class="checkbox-inline">
+          <input name="company[adwords_images_attributes][{{= image_index }}][company_default]" type="hidden" value="false">
+          <input type="checkbox" value="true" name="company[adwords_images_attributes][{{= image_index }}][company_default]" id="company_adwords_images_attributes_{{= image_index }}_company_default">
+          Make default
+        </label>
+        <i class='remove-image glyphicon glyphicon-remove'></i>
+      </div>
 
       <div class="fileinput fileinput-exists" data-provides="fileinput">
         <div class="fileinput-preview thumbnail"></div>
         <input type="file"
                name="company[adwords_images_attributes][{{= image_index }}][image_url]"
                id="company_adwords_images_attributes_{{= image_index }}_image_url">
-        <span><i class='remove-image glyphicon glyphicon-remove'></i></span>
+      </div>
+
+      <div class='adwords-image-form-control-bottom'>
+        <span>Save changes below or <a class='cancel-add-image'>Cancel</a></span>
       </div>
 
     </li>
@@ -173,10 +179,13 @@
 
       <li class="well adwords-image <%= image_f.object.company_default? ? 'hidden' : '' %>">
 
-        <label class="checkbox-inline">
-          <%= image_f.check_box(:company_default, {}, 'true', 'false') %>
-          Make default
-        </label>
+        <div class='adwords-image-form-control-top'>
+          <label class="checkbox-inline">
+            <%= image_f.check_box(:company_default, {}, 'true', 'false') %>
+            Make default
+          </label>
+          <i class='remove-image glyphicon glyphicon-remove'></i>
+        </div>
 
         <div class="fileinput fileinput-exists" data-provides="fileinput">
           <div class="fileinput-preview thumbnail">
@@ -184,8 +193,9 @@
           </div>
           <%= image_f.file_field(:image_url, class: 'hidden') %>
           <%= image_f.check_box(:_destroy, { class: 'hidden' }, 'true', 'false') %>
-          <i class='remove-image glyphicon glyphicon-remove'></i>
         </div>
+
+        <div class='adwords-image-form-control-bottom'></div>
 
       </li>
 

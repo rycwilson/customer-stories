@@ -107,15 +107,15 @@ namespace :adwords do
             )
             # reload since ads are new to the loaded story object
             story.ads.reload.adwords_image = company.adwords_images.default
-            puts "create ad for story #{story.id} topic"
+            puts "create adwords ad for story #{story.id} topic"
             puts "ad_group_id: #{story.company.campaigns.topic.ad_group.ad_group_id}"
             puts "image url: #{story.ads.adwords_image.image_url}"
-            puts "media id: #{story.ads.adwords_image.media_id}"
+            puts "media id: #{story.ads.adwords_image.media_id}\n"
             AdwordsController.new::create_ad(company, story, 'topic')
-            puts "create ad for story #{story.id} retarget"
+            puts "create adwords ad for story #{story.id} retarget"
             puts "ad_group_id: #{story.company.campaigns.retarget.ad_group.ad_group_id}"
             puts "image url: #{story.ads.adwords_image.image_url}"
-            puts "media id: #{story.ads.adwords_image.media_id}"
+            puts "media id: #{story.ads.adwords_image.media_id}\n"
             AdwordsController.new::create_ad(company, story, 'retarget')
           end
         end
@@ -151,6 +151,7 @@ namespace :adwords do
         story = Story.find_by(id: aw_ad[:labels].try(:[], 0).try(:[], :name)) ||
                 Story.find_by(title: aw_ad[:ad][:long_headline])
         if story.present? && story.published?
+          puts "create csp ad for ad #{aw_ad[:ad][:id]}\n"
           csp_ad = campaign.ad_group.ads.create(
             story_id: story.id,
             ad_id: aw_ad[:ad][:id],
@@ -170,6 +171,8 @@ namespace :adwords do
           # remove the ad if
           # - story can't be found
           # - story isn't published
+          puts "removing ad from #{company.subdomain} #{campaign.type} ad group #{aw_ad[:ad_group_id]}"
+          puts "because #{story.nil? ? 'story not found' : (story.published? ? 'unknown' : 'story not published') }\n"
           AdwordsController.new::remove_ad({ ad_id: aw_ad[:ad][:id], ad_group_id: aw_ad[:ad_group_id] })
         end
       end

@@ -247,10 +247,11 @@
 
     li.adwords-image {
       position: relative;
+      vertical-align: top;
       width: 250px;
       margin: 0 15px 20px 15px;
       padding-top: 42px;
-      padding-bottom: 24px;
+      padding-bottom: 0;
 
       label.checkbox-inline {
         position: absolute;
@@ -258,7 +259,9 @@
         top: 14px;
         margin: 0;
       }
-
+      .fileinput {
+        margin-bottom: 5px;
+      }
       .fileinput .thumbnail {
         height: 110px;
         width: 210px;
@@ -280,8 +283,38 @@
       .remove-image:hover {
         color: #222;
       }
+      .cancel-remove-image, .cancel-add-image {
+        cursor: pointer;
+      }
+      .adwords-image-form-control-bottom {
+        height: 18px;
+        margin-bottom: 6px;
+      }
+    }
 
+    li.adwords-image.to-be-removed {
+      background-color: #f2dede;
+      border-color: #ebccd1;
+      .adwords-image-form-control-top {
+        opacity: 0.5;
+        pointer-events: none;
+      }
+      .adwords-image-form-control-bottom {
+        color: #a94442
+      }
+    }
 
+    li.adwords-image.to-be-added {
+      background-color: #dff0d8;
+      border-color: #d6e9c6;
+      .adwords-image-form-control-top {
+        .remove-image {
+          display: none;
+        }
+      }
+      .adwords-image-form-control-bottom {
+        color: #3c763d;
+      }
     }
 
 

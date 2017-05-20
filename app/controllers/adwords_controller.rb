@@ -89,7 +89,12 @@ class AdwordsController < ApplicationController
     @swapped_default_image = params[:company][:swapped_default_image].present?
     @uploaded_default_image = params[:company][:uploaded_default_image].present?
 
-    # for any deleted images, re-create affected ads
+    ##
+    ##  method updates any ads that were affected by a removed image;
+    ##  csp changes apply to subscribers and non-subscribers alike;
+    ##
+    # for any deleted images, update affected ads
+    # (this is for subscribers and non-subscribers alike => ad id and ad group id may be nil)
     # (affected ads have already been assigned default image)
     # if promote isn't enabled, still need to respond with affected stories for table update
     if params[:company][:removed_images_ads].present?
@@ -97,7 +102,7 @@ class AdwordsController < ApplicationController
       @removed_images_stories = Set.new
       params[:company][:removed_images_ads].each do |image|
         image[:ads_params].each do |ad_params|
-          ad = AdwordsAd.includes(:story).find_by(ad_id: ad_params[:ad_id])
+          ad = AdwordsAd.includes(:story).find(ad_params[:csp_ad_id])
           @removed_images_stories << { csp_image_id: ad.adwords_image.id, story_id: ad.story.id }
           if @promote_enabled
             remove_ad(ad_params)
@@ -125,7 +130,7 @@ class AdwordsController < ApplicationController
         campaign_type = ad.ad_group.campaign.type == 'TopicCampaign' ? 'topic' : 'retarget'
         ad_params = { ad_id: ad.ad_id, ad_group_id: ad.ad_group.ad_group_id }
         remove_ad(ad_params)
-        create_ad(@company, ad.story, campaignaign_type)
+        create_ad(@company, ad.story, campaign_type)
         update_ad_status(ad.reload)  # reload to get the new ad_id
       end
     end
