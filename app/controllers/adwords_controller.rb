@@ -83,7 +83,6 @@ class AdwordsController < ApplicationController
     # ajax request performed a JSON.stringify in order to preserve nested arrays
     if request.format == :js
       params[:company] = JSON.parse(params[:company])
-      puts JSON.pretty_generate(params[:company])
     end
 
     # changes to default image
@@ -122,11 +121,11 @@ class AdwordsController < ApplicationController
        ( params[:company].dig(:previous_changes, :adwords_short_headline) ||
          params[:company][:adwords_logo_url] )
 
-      @company.ads.each do |ad|
+      @company.ads.each() do |ad|
         campaign_type = ad.ad_group.campaign.type == 'TopicCampaign' ? 'topic' : 'retarget'
         ad_params = { ad_id: ad.ad_id, ad_group_id: ad.ad_group.ad_group_id }
         remove_ad(ad_params)
-        create_ad(@company, ad.story, campaign_type)
+        create_ad(@company, ad.story, campaignaign_type)
         update_ad_status(ad.reload)  # reload to get the new ad_id
       end
     end
@@ -178,6 +177,62 @@ class AdwordsController < ApplicationController
   # to allow for creating ads from a seeds file, make some methods protected
   # ( can be called as AdwordsController.new::create_ad() )
   public
+
+  def get_images
+    @api ||= create_adwords_api()  # in case method was called from outside controller
+    service = @api.service(:MediaService, get_api_version())
+    # Get all the images and videos.
+    selector = {
+      :fields => ['MediaId', 'Height', 'Width', 'MimeType', 'Urls'],
+      :ordering => [
+        {:field => 'MediaId', :sort_order => 'ASCENDING'}
+      ],
+      :predicates => [
+        {:field => 'Type', :operator => 'IN', :values => ['IMAGE', 'VIDEO']}
+      ],
+      :paging => {
+        :start_index => 0,
+        :number_results => 150
+      }
+    }
+
+    begin
+      result = service.get(selector)
+    # Authorization error.
+    rescue AdsCommon::Errors::OAuth2VerificationRequired => e
+      puts "Authorization credentials are not valid. Edit adwords_api.yml for " +
+          "OAuth2 client ID and secret and run misc/setup_oauth2.rb example " +
+          "to retrieve and store OAuth2 tokens."
+      puts "See this wiki page for more details:\n\n  " +
+          'https://github.com/googleads/google-api-ads-ruby/wiki/OAuth2'
+
+    # HTTP errors.
+    rescue AdsCommon::Errors::HttpError => e
+      puts "HTTP Error: %s" % e
+
+    # API errors.
+    rescue AdwordsApi::Errors::ApiException => e
+      puts "Message: %s" % e.message
+      puts 'Errors:'
+      e.errors.each_with_index do |error, index|
+        puts "\tError [%d]:" % (index + 1)
+        error.each do |field, value|
+          puts "\t\t%s: %s" % [field, value]
+        end
+      end
+    end
+    if result[:entries]
+      result[:entries].each do |entry|
+        full_dimensions = entry[:dimensions]['FULL']
+        puts "Entry ID %d dimensions %dx%d MIME type '%s' url '%s'" %
+            [entry[:media_id], full_dimensions[:height],
+             full_dimensions[:width], entry[:mime_type], entry[:urls]['FULL']]
+      end
+    end
+    if result.include?(:total_num_entries)
+      puts "\tFound %d entries." % result[:total_num_entries]
+    end
+  end
 
   def get_api_version ()
     :v201702
@@ -571,60 +626,7 @@ class AdwordsController < ApplicationController
     new_images
   end
 
-  def get_images
-    service = @api.service(:MediaService, get_api_version())
-    # Get all the images and videos.
-    selector = {
-      :fields => ['MediaId', 'Height', 'Width', 'MimeType', 'Urls'],
-      :ordering => [
-        {:field => 'MediaId', :sort_order => 'ASCENDING'}
-      ],
-      :predicates => [
-        {:field => 'Type', :operator => 'IN', :values => ['IMAGE', 'VIDEO']}
-      ],
-      :paging => {
-        :start_index => 0,
-        :number_results => 50
-      }
-    }
 
-    begin
-      result = service.get(selector)
-    # Authorization error.
-    rescue AdsCommon::Errors::OAuth2VerificationRequired => e
-      puts "Authorization credentials are not valid. Edit adwords_api.yml for " +
-          "OAuth2 client ID and secret and run misc/setup_oauth2.rb example " +
-          "to retrieve and store OAuth2 tokens."
-      puts "See this wiki page for more details:\n\n  " +
-          'https://github.com/googleads/google-api-ads-ruby/wiki/OAuth2'
-
-    # HTTP errors.
-    rescue AdsCommon::Errors::HttpError => e
-      puts "HTTP Error: %s" % e
-
-    # API errors.
-    rescue AdwordsApi::Errors::ApiException => e
-      puts "Message: %s" % e.message
-      puts 'Errors:'
-      e.errors.each_with_index do |error, index|
-        puts "\tError [%d]:" % (index + 1)
-        error.each do |field, value|
-          puts "\t\t%s: %s" % [field, value]
-        end
-      end
-    end
-    if result[:entries]
-      result[:entries].each do |entry|
-        full_dimensions = entry[:dimensions]['FULL']
-        puts "Entry ID %d dimensions %dx%d MIME type '%s' url '%s'" %
-            [entry[:media_id], full_dimensions[:height],
-             full_dimensions[:width], entry[:mime_type], entry[:urls]['FULL']]
-      end
-    end
-    if result.include?(:total_num_entries)
-      puts "\tFound %d entries." % result[:total_num_entries]
-    end
-  end
 
   def create_story_label (story_id)  # story_id is a string
     @api ||= create_adwords_api()

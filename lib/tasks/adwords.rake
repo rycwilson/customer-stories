@@ -3,6 +3,11 @@ namespace :adwords do
 
   desc "adwords tasks"
 
+  task fart: :environment do
+    images = AdwordsController.new::get_images
+    puts images
+  end
+
   task seed: :environment do
 
     AdwordsCampaign.destroy_all
@@ -101,9 +106,10 @@ namespace :adwords do
               story_id: story.id, long_headline: story.title
             )
             # reload since the ads were just created
-            story.ads.reload.adwords_image = company.adwords_images.default
-            AdwordsController.new::create_ad(company, story, 'topic')
-            AdwordsController.new::create_ad(company, story, 'retarget')
+            story.ads.adwords_image = company.adwords_images.default
+            # reload so the new ads can be accessed in create_ad
+            AdwordsController.new::create_ad(company, story.reload, 'topic')
+            AdwordsController.new::create_ad(company, story.reload, 'retarget')
           end
         end
       else
@@ -129,6 +135,7 @@ namespace :adwords do
   ##  if a story wasn't given a story id label, remove it
   ##
   def create_csp_ads (company, topic_ads, retarget_ads)
+    return false if (topic_ads.nil? || retarget_ads.nil?)  # no ads
     company.campaigns.each() do |campaign|
       aw_ads = (campaign.type == 'TopicCampaign') ? topic_ads : retarget_ads
       aw_ads.each do |aw_ad|
