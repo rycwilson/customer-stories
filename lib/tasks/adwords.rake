@@ -97,7 +97,7 @@ namespace :adwords do
     ##
     Company.all.each do |company|
       if subscribers.values.include?(company)
-        company.stories.published.each do |story|
+        company.stories.published.each() do |story|
           unless story.ads.present?
             story.company.campaigns.topic.ad_group.ads.create(
               story_id: story.id, long_headline: story.title
@@ -105,11 +105,18 @@ namespace :adwords do
             story.company.campaigns.retarget.ad_group.ads.create(
               story_id: story.id, long_headline: story.title
             )
-            # reload since the ads were just created
-            story.ads.adwords_image = company.adwords_images.default
-            # reload so the new ads can be accessed in create_ad
-            AdwordsController.new::create_ad(company, story.reload, 'topic')
-            AdwordsController.new::create_ad(company, story.reload, 'retarget')
+            # reload since ads are new to the loaded story object
+            story.ads.reload.adwords_image = company.adwords_images.default
+            puts "create ad for story #{story.id} topic"
+            puts "ad_group_id: #{story.company.campaigns.topic.ad_group.ad_group_id}"
+            puts "image url: #{story.ads.adwords_image.image_url}"
+            puts "media id: #{story.ads.adwords_image.media_id}"
+            AdwordsController.new::create_ad(company, story, 'topic')
+            puts "create ad for story #{story.id} retarget"
+            puts "ad_group_id: #{story.company.campaigns.retarget.ad_group.ad_group_id}"
+            puts "image url: #{story.ads.adwords_image.image_url}"
+            puts "media id: #{story.ads.adwords_image.media_id}"
+            AdwordsController.new::create_ad(company, story, 'retarget')
           end
         end
       else
@@ -191,9 +198,9 @@ namespace :adwords do
       {
         short_headline: 'RetailNext Stories',
         adwords_logo_url: "https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/aa352ac1-9063-4c6b-a4d1-fb138bcc440d/retailnext_1200x1200.png",
-        adwords_logo_media_id: adwords_env == 'production' ? 123 : 2830867372,
+        adwords_logo_media_id: adwords_env == 'production' ? 123 : 2835690126,
         default_image_url: "https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/1f398239-e32f-4ae6-b3d1-224dbde4b9e6/retailnext_landscape_1.png",
-        default_image_media_id: adwords_env == 'production' ? 123 : 2829811191
+        default_image_media_id: adwords_env == 'production' ? 123 : 2836785967
       }
     else
       {}
