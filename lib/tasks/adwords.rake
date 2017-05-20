@@ -25,7 +25,7 @@ namespace :adwords do
     Company.all.each do |company|
 
       if subscribers.values.include?(company)
-        company_seeds = company_seeds_lookup(company)
+        company_seeds = company_seeds_lookup(company, ENV['ADWORDS_ENV'])
         ac = AdwordsController.new
 
         # short headline, logo, default image
