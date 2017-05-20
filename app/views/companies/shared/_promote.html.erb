@@ -13,7 +13,7 @@
           </div>
 
           <ul class="nav nav-layout-sidebar nav-stacked">
-            <li class="<%= workflow_sub_tab == 'sponsored-stories' ? 'active' : '' %>">
+            <li class="<%= workflow_sub_tab == 'sponsored-stories' ? 'in active' : (workflow_sub_tab.nil? ? 'in active' : '') %>">
               <a href="#sponsored-stories-tab-pane" data-toggle="tab">
                 <i class="fa fa-bullhorn"></i>
                 &nbsp;&nbsp;Sponsored Stories
@@ -63,7 +63,7 @@
           <div class="tab-content stacked-content">
 
             <div id='sponsored-stories-tab-pane'
-                 class="tab-pane fade <%= workflow_sub_tab == 'sponsored-stories' ? 'in active' : '' %>">
+                 class="tab-pane fade <%= workflow_sub_tab == 'sponsored-stories' ? 'in active' : (workflow_sub_tab.nil? ? 'in active' : '') %>">
               <%= render 'adwords/sponsored_stories', { company: company } %>
             </div>
 
