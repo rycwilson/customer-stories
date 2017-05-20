@@ -14,19 +14,18 @@ namespace :adwords do
     ActiveRecord::Base.connection.execute('ALTER SEQUENCE adwords_ads_id_seq RESTART WITH 1')
     ActiveRecord::Base.connection.execute('ALTER SEQUENCE adwords_images_id_seq RESTART WITH 1')
 
-    # acme = Company.find_by(subdomain: 'acme-test')
-    varmour = Company.find_by(subdomain: 'varmour')
-    varmour.update(promote_tr: true)
-    retailnext = Company.find_by(subdomain: 'retailnext')
-    retailnext.update(promote_tr: true)
+    subscribers = {
+      'acme-test' => Company.find_by(subdomain: 'acme-test'),
+      varmour: Company.find_by(subdomain: 'varmour'),
+      retailnext: Company.find_by(subdomain: 'retailnext')
+    }
+    subscribers.values.each() { |company| company.update(promote_tr: true) }
 
     # create campaigns, ad groups, images
     Company.all.each do |company|
 
-      company_seeds = company_seeds_lookup(company, ENV['ADWORDS_ENV'])
-
-      if company == varmour || (company == retailnext && ENV['ADWORDS_ENV'] == 'production')
-
+      if subscribers.values.include?(company)
+        company_seeds = company_seeds_lookup(company)
         ac = AdwordsController.new
 
         # short headline, logo, default image
@@ -40,7 +39,8 @@ namespace :adwords do
           media_id: company_seeds[:default_image_media_id]
         )
 
-        # topic campaign / ad group / ads
+        # create topic campaign / ad group
+        # get topic ads
         topic_campaign = ac::get_campaign(company, 'topic')
         company.campaigns.create(
           type: 'TopicCampaign', status: topic_campaign[:status],
@@ -53,7 +53,8 @@ namespace :adwords do
         )
         topic_ads = ac::get_ads(topic_ad_group[:id])
 
-        # retarget campaign / ad group / ads
+        # create retarget campaign / ad group /
+        # get retarget ads
         retarget_campaign = ac::get_campaign(company, 'retarget')
         company.campaigns.create(
           type: 'RetargetCampaign', status: retarget_campaign[:status],
@@ -66,23 +67,8 @@ namespace :adwords do
         )
         retarget_ads = ac::get_ads(retarget_ad_group[:id])
 
+        # create topic and retarget ads
         create_csp_ads(company, topic_ads, retarget_ads)
-
-      # retailnext - staging
-      elsif company == retailnext && ENV['ADWORDS_ENV'] == 'test'
-        company.update(
-          adwords_short_headline: company_seeds[:short_headline],
-          adwords_logo_url: company_seeds[:adwords_logo_url],
-          adwords_logo_media_id: company_seeds[:adwords_logo_media_id]
-        )
-        company.adwords_images.create(
-          company_default: true, image_url: company_seeds[:default_image_url],
-          media_id: company_seeds[:default_image_media_id]
-        )
-        company.campaigns.create(type:'TopicCampaign')
-        company.campaigns.topic.create_adwords_ad_group()
-        company.campaigns.create(type:'RetargetCampaign')
-        company.campaigns.retarget.create_adwords_ad_group()
 
       # all others
       else
@@ -102,11 +88,10 @@ namespace :adwords do
     ##
     ##  in the case of subscribers:
     ##  - skip this part if an ad was already created
-    ##  - create the csp ad AND an adwords ad if it wasn't
+    ##  - create the csp ad AND an adwords ad if it wasn't (e.g. newly published)
     ##
     Company.all.each do |company|
-      if company == varmour ||
-         (company == retailnext && ENV['ADWORDS_ENV'] == 'production')
+      if subscribers.values.include?(company)
         company.stories.published.each do |story|
           unless story.ads.present?
             story.company.campaigns.topic.ad_group.ads.create(
@@ -135,36 +120,6 @@ namespace :adwords do
 
   end  # sync task
 
-  def company_seeds_lookup (company, adwords_env)
-    case company.subdomain
-    when 'acme-test'
-      {
-        short_headline: 'Acme Customer Stories',
-        adwords_logo_url: "",
-        adwords_logo_media_id: adwords_env == 'production' ? 1 : 2,
-        default_image_url: "",
-        default_image_media_id: adwords_env == 'production' ? 3 : 4,
-      }
-    when 'varmour'
-      {
-        short_headline: 'vArmour Customer Stories',
-        adwords_logo_url: "https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/7125d063-0f87-4d08-912d-ad62e281773f/varmour_1200x1200.png",
-        adwords_logo_media_id: adwords_env == 'production' ? 2828012141 : 2751663760,
-        default_image_url: "https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/488cc685-1be1-420f-b111-20e8e8ade5a0/varmour-existing.jpeg",
-        default_image_media_id: adwords_env == 'production' ? 2828013101 : 2820465306,
-      }
-    when 'retailnext'
-      {
-        short_headline: 'RetailNext Stories',
-        adwords_logo_url: "https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/aa352ac1-9063-4c6b-a4d1-fb138bcc440d/retailnext_1200x1200.png",
-        adwords_logo_media_id: 2830867372,
-        default_image_url: "https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/1f398239-e32f-4ae6-b3d1-224dbde4b9e6/retailnext_landscape_1.png",
-        default_image_media_id: 2829811191
-      }
-    else
-      {}
-    end
-  end
 
   ##
   ##  method creates csp ads and associated adwords image (if image doesn't already exist)
@@ -174,11 +129,10 @@ namespace :adwords do
   ##  if a story wasn't given a story id label, remove it
   ##
   def create_csp_ads (company, topic_ads, retarget_ads)
-    equens = Story.find(7)
     company.campaigns.each() do |campaign|
       aw_ads = (campaign.type == 'TopicCampaign') ? topic_ads : retarget_ads
       aw_ads.each do |aw_ad|
-        # ads are tagged willth story id
+        # ads are tagged with story id
         # if no story id label, try the long headline
         story = Story.find_by(id: aw_ad[:labels].try(:[], 0).try(:[], :name)) ||
                 Story.find_by(title: aw_ad[:ad][:long_headline])
@@ -205,6 +159,37 @@ namespace :adwords do
           AdwordsController.new::remove_ad({ ad_id: aw_ad[:ad][:id], ad_group_id: aw_ad[:ad_group_id] })
         end
       end
+    end
+  end
+
+  def company_seeds_lookup (company, adwords_env)
+    case company.subdomain
+    when 'acme-test'
+      {
+        short_headline: 'Acme Customer Stories',
+        adwords_logo_url: "https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/413d1bfd-a71d-4f11-9af2-0cd886fadaba/acme_1200x1200.png",
+        adwords_logo_media_id: adwords_env == 'production' ? 123 : 2836731970,
+        default_image_url: "https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/413d1bfd-a71d-4f11-9af2-0cd886fadaba/acme_landscape.png",
+        default_image_media_id: adwords_env == 'production' ? 123 : 2833629302,
+      }
+    when 'varmour'
+      {
+        short_headline: 'vArmour Customer Stories',
+        adwords_logo_url: "https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/7125d063-0f87-4d08-912d-ad62e281773f/varmour_1200x1200.png",
+        adwords_logo_media_id: adwords_env == 'production' ? 2828012141 : 2751663760,
+        default_image_url: "https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/488cc685-1be1-420f-b111-20e8e8ade5a0/varmour-existing.jpeg",
+        default_image_media_id: adwords_env == 'production' ? 2828013101 : 2820465306,
+      }
+    when 'retailnext'
+      {
+        short_headline: 'RetailNext Stories',
+        adwords_logo_url: "https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/aa352ac1-9063-4c6b-a4d1-fb138bcc440d/retailnext_1200x1200.png",
+        adwords_logo_media_id: adwords_env == 'production' ? 123 : 2830867372,
+        default_image_url: "https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/1f398239-e32f-4ae6-b3d1-224dbde4b9e6/retailnext_landscape_1.png",
+        default_image_media_id: adwords_env == 'production' ? 123 : 2829811191
+      }
+    else
+      {}
     end
   end
 
