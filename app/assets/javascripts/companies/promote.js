@@ -267,9 +267,10 @@ function promoteListeners () {
             selectedImageIndex = parseInt($selectedImage.find('input[type="file"]')
                                      .attr('name').match(/\]\[(\d+)\]\[/)[1], 10);
 
+        // any images following the one that's removed?
         if ($selectedImage.next().length) {
           // find and decrement index that appears in name and id attributes
-          // of various inputs (for all succeeding images
+          // of various inputs (for all following images)
           $list
             .slice(selectedImageIndex + 1)
             .each(function () {
@@ -306,7 +307,7 @@ function promoteListeners () {
                         })
               });
             });
-          // now do the same for hidden inputs that contain the image_urls
+          // remove hidden inputs that contain the image_urls
           $('input[type="hidden"][name*="image_url"]')
             .slice((selectedImageIndex - $list.not('.to-be-added').length) + 1)
             .each(function () {
@@ -320,8 +321,8 @@ function promoteListeners () {
         }
         // remove the image from the list
         $selectedImage.remove();
-        // remove the first match because we're adjusting indices before removing
-        // anything, so the first encountered match will be the image that was removed;
+        // remove the first match because we've already adjused indices,
+        // so the first encountered match will be the image that was removed;
         // the second match we want to keep
         $('input[type="hidden"][name*="][' + selectedImageIndex.toString() + '][image_url]"]')
           .first().remove();
