@@ -398,11 +398,7 @@ class AdwordsController < ApplicationController
       long_headline: story.ads.long_headline,
       description: story.ads.long_headline,
       business_name: company.adwords_short_headline,
-      url_custom_parameters: {  # not allowed in keys: _, -
-        parameters: [ { key: 'campaign', value: 'promote' },
-                      { key: 'content', value: campaign_type } ]
-      },
-      final_urls: [ story.csp_story_url + "?utm_campaign={_campaign}&utm_content={_content}" ]
+      final_urls: [ story.csp_story_url + "?utm_campaign=promote&utm_content=#{ campaign_type }&utm_source=&utm_medium=&utm_term=" ]
     }
     # Create an ad group ad for the responsive display ad.
     responsive_display_ad_group_ad = {
