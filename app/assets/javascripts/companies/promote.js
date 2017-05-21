@@ -273,10 +273,24 @@ function promoteListeners () {
           $list
             .slice(selectedImageIndex + 1)
             .each(function () {
-              var $checkboxInput = $(this).find('input[name*="company_default"]'),
+              // we need to modify true and false checkbox inputs separately,
+              // because false doesn't have an id attribute
+              var $checkboxInputTrue = $(this).find('input[name*="company_default"][value="true"]'),
+                  $checkboxInputFalse = $(this).find('input[name*="company_default"][value="false"]'),
                   $fileInput = $(this).find('input[type="file"]');
-              $checkboxInput.attr({
-                name: $checkboxInput.attr('name')
+
+              $checkboxInputTrue.attr({
+                id: $checkboxInputTrue.attr('id')
+                      .replace(/_(\d+)_/, function (match, index) {
+                        return '_' + (parseInt(index,10) - 1).toString() + '_';
+                      }),
+                name: $checkboxInputTrue.attr('name')
+                        .replace(/\]\[(\d+)\]\[/, function (match, index) {
+                          return '][' + (parseInt(index,10) - 1).toString() + '][';
+                        })
+              });
+              $checkboxInputFalse.attr({
+                name: $checkboxInputFalse.attr('name')
                         .replace(/\]\[(\d+)\]\[/, function (match, index) {
                           return '][' + (parseInt(index,10) - 1).toString() + '][';
                         })
@@ -306,9 +320,10 @@ function promoteListeners () {
         }
         // remove the image from the list
         $selectedImage.remove();
-        // remove the first match here because we're adjusting indices before removing
-        // anything, so the first encountered match will be the image that was removed
-        $('input[type="hidden"][name*="][' + selectedImageIndex.toString() + ']["]')
+        // remove the first match because we're adjusting indices before removing
+        // anything, so the first encountered match will be the image that was removed;
+        // the second match we want to keep
+        $('input[type="hidden"][name*="][' + selectedImageIndex.toString() + '][image_url]"]')
           .first().remove();
       })
 
