@@ -15,7 +15,7 @@ namespace :adwords do
     ActiveRecord::Base.connection.execute('ALTER SEQUENCE adwords_images_id_seq RESTART WITH 1')
 
     subscribers = {
-      'acme-test' => Company.find_by(subdomain: 'acme-test'),
+      # 'acme-test' => Company.find_by(subdomain: 'acme-test'),
       varmour: Company.find_by(subdomain: 'varmour'),
       retailnext: Company.find_by(subdomain: 'retailnext')
     }
@@ -180,9 +180,9 @@ namespace :adwords do
       {
         short_headline: 'Acme Customer Stories',
         adwords_logo_url: "https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/413d1bfd-a71d-4f11-9af2-0cd886fadaba/acme_1200x1200.png",
-        adwords_logo_media_id: adwords_env == 'production' ? 123 : 2836731970,
+        adwords_logo_media_id: adwords_env == 'production' ? nil : 2836731970,
         default_image_url: "https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/413d1bfd-a71d-4f11-9af2-0cd886fadaba/acme_landscape.png",
-        default_image_media_id: adwords_env == 'production' ? 123 : 2833629302,
+        default_image_media_id: adwords_env == 'production' ? nil : 2833629302,
       }
     when 'varmour'
       {
