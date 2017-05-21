@@ -1,1 +1,0 @@
-$(function(){$(".grid").masonry({itemSelector:".grid-item",columnWidth:160,gutter:30,isInitLayout:!1}),$(".grid").imagesLoaded(function(){$(".grid").masonry()}),$(".grid").masonry("on","layoutComplete",function(){$(".grid").css("visibility","visible")})});
