@@ -62,7 +62,7 @@ class CompaniesController < ApplicationController
   end
 
   def promote
-    JSON.pretty_generate(params[:company])
+    puts params[:company]
     # capture deleted image data (associated ads) prior to destroying image
     if removed_adwords_images?(params[:company][:adwords_images_attributes])
       params[:company][:removed_images_ads] =

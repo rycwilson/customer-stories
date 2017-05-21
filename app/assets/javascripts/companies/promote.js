@@ -262,8 +262,54 @@ function promoteListeners () {
 
     .on('click', 'li.adwords-image .cancel-add-image',
       function () {
-        $(this).closest('li.adwords-image').remove();
-        // fix indices
+        var $list = $('ul.adwords-images li'),
+            $selectedImage = $(this).closest('li'),
+            selectedImageIndex = parseInt($selectedImage.find('input[type="file"]')
+                                     .attr('name').match(/\]\[(\d+)\]\[/)[1], 10);
+
+        if ($selectedImage.next().length) {
+          // find and decrement index that appears in name and id attributes
+          // of various inputs (for all succeeding images
+          $list
+            .slice(selectedImageIndex + 1)
+            .each(function () {
+              var $checkboxInput = $(this).find('input[name*="company_default"]'),
+                  $fileInput = $(this).find('input[type="file"]');
+              $checkboxInput.attr({
+                name: $checkboxInput.attr('name')
+                        .replace(/\]\[(\d+)\]\[/, function (match, index) {
+                          return '][' + (parseInt(index,10) - 1).toString() + '][';
+                        })
+              });
+              $fileInput.attr({
+                id: $fileInput.attr('id')
+                      .replace(/_(\d+)_/, function (match, index) {
+                        return '_' + (parseInt(index,10) - 1).toString() + '_';
+                      }),
+                name: $fileInput.attr('name')
+                        .replace(/\]\[(\d+)\]\[/, function (match, index) {
+                          return '][' + (parseInt(index,10) - 1).toString() + '][';
+                        })
+              });
+            });
+          // now do the same for hidden inputs that contain the image_urls
+          $('input[type="hidden"][name*="image_url"]')
+            .slice((selectedImageIndex - $list.not('.to-be-added').length) + 1)
+            .each(function () {
+              $(this).attr({
+                name: $(this).attr('name')
+                        .replace(/\]\[(\d+)\]\[/, function (match, index) {
+                          return '][' + (parseInt(index,10) - 1).toString() + '][';
+                      })
+              });
+            });
+        }
+        // remove the image from the list
+        $selectedImage.remove();
+        // remove the first match here because we're adjusting indices before removing
+        // anything, so the first encountered match will be the image that was removed
+        $('input[type="hidden"][name*="][' + selectedImageIndex.toString() + ']["]')
+          .first().remove();
       })
 
     // in progress icon on submit button

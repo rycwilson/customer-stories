@@ -11,16 +11,11 @@
       uploadedDefaultImage = <%= @uploaded_default_image %>,
       defaultImageUrl = "<%= @company.adwords_images.default.image_url %>";
 
-console.log('defaultImageUrl: ', defaultImageUrl)
-
   if (swappedDefaultImage) {
     var $newDefaultImage = $('li.adwords-image img[src="' + defaultImageUrl + '"]'),
         newDefaultImageId = $newDefaultImage.closest('li').next().val(),
         $currentDefaultImage = $('.adwords-default.adwords-image .fileinput-exists img'),
         currentDefaultImageUrl = $currentDefaultImage.attr('src');
-
-// console.log('newDefaultImageId (before swap): ', newDefaultImageId)
-// console.log('currentDefaultImage (before swap): ', $currentDefaultImage.data('id'))
 
     // uncheck 'make default for all
     $('li.adwords-image input[name*="company_default"]').each(
@@ -35,7 +30,7 @@ console.log('defaultImageUrl: ', defaultImageUrl)
       src: defaultImageUrl,
       // "data-id": newDefaultImageId  // doesn't work!
     });
-    // do this instead...
+    // do this instead
     $currentDefaultImage.data('id', newDefaultImageId)
 
     // update the hidden default image in the list
