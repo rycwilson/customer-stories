@@ -3,11 +3,6 @@ namespace :adwords do
 
   desc "adwords tasks"
 
-  task fart: :environment do
-    images = AdwordsController.new::get_images
-    puts images
-  end
-
   task seed: :environment do
 
     AdwordsCampaign.destroy_all

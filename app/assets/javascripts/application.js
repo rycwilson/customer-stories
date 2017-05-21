@@ -18,6 +18,7 @@ $(document).on('turbolinks:load', function (e) {
 });
 
 // attach listeners BEFORE running any page-specific js
+// (e.g. if page-specific js manually triggers an event)
 $(document).one('turbolinks:load', function () {
   attachAppListeners();
   attachCompaniesListeners();
