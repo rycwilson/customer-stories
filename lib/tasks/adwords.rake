@@ -90,7 +90,7 @@ namespace :adwords do
     ##  - skip this part if an ad was already created
     ##  - create the csp ad AND an adwords ad if it wasn't (e.g. newly published)
     ##
-    Company.all.each do |company|
+    Company.all.each() do |company|
       if subscribers.values.include?(company)
         company.stories.published.each() do |story|
           unless story.ads.present?
@@ -115,7 +115,7 @@ namespace :adwords do
           end
         end
       else
-        company.stories.published.each do |story|
+        company.stories.published.each() do |story|
           story.company.campaigns.topic.ad_group.ads.create(
             story_id: story.id, long_headline: story.title
           )
@@ -196,9 +196,9 @@ namespace :adwords do
       {
         short_headline: 'RetailNext Stories',
         adwords_logo_url: "https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/aa352ac1-9063-4c6b-a4d1-fb138bcc440d/retailnext_1200x1200.png",
-        adwords_logo_media_id: adwords_env == 'production' ? 123 : 2835690126,
+        adwords_logo_media_id: adwords_env == 'production' ? 2830867372 : 2835690126,
         default_image_url: "https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/1f398239-e32f-4ae6-b3d1-224dbde4b9e6/retailnext_landscape_1.png",
-        default_image_media_id: adwords_env == 'production' ? 123 : 2836785967
+        default_image_media_id: adwords_env == 'production' ? 2829811191 : 2836785967
       }
     else
       {}
