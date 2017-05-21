@@ -99,20 +99,24 @@ class AdwordsController < ApplicationController
     # if promote isn't enabled, still need to respond with affected stories for table update
     if params[:company][:removed_images_ads].present?
       # keep track of story ids to update sponsored stories table
+      # every two successive ads (topic and retarget) will be associated with the same story,
+      # so put in a Set to prevent duplicates
       @removed_images_stories = Set.new
       params[:company][:removed_images_ads].each do |image|
         image[:ads_params].each do |ad_params|
           ad = AdwordsAd.includes(:story).find(ad_params[:csp_ad_id])
           @removed_images_stories << { csp_image_id: ad.adwords_image.id, story_id: ad.story.id }
           if @promote_enabled
+            puts "removing ad #{ad_params[:ad_id]} associated with destroyed image #{ad_params[:csp_image_id]}..."
             remove_ad(ad_params)
+            puts "creating new ad to replace..."
             create_ad(@company, ad.story, ad_params[:campaign_type])
+            puts "updating ad status..."
             update_ad_status(ad.reload)  # reload to get the new ad.ad_id
           end
         end
       end
-      # every two successive ads (topic and retarget) will be associated with the same story
-      # @removed_images_stories.uniq
+      @removed_images_stories
     end
 
     if @promote_enabled && new_images?(params[:company])

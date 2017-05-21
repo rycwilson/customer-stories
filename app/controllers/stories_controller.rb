@@ -179,8 +179,14 @@ class StoriesController < ApplicationController
     respond_to { |format| format.js }
   end
 
+  ##
+  ##  this action is a catch-all for promote changes related to a given story
+  ##  - create ads for a story (POST)
+  ##  - modify ads for a story (PUT)
+  ##  - remove ads for a story (DELETE)
+  ##
   def promote
-    response = {}
+    response = {}  # this will be necessary if ads for an unpublished story are removed
     if request.method == 'POST'
       @story.ads.create({ adwords_ad_group_id: @company.campaigns.topic.ad_group.id,
                           long_headline: @story.title })
