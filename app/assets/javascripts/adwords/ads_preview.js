@@ -29,4 +29,9 @@ $(function () {
     animationCount++;
   }, 4000);
 
+  $('.slide-up-down #text2').textfill({
+    minFontPixels: 10,
+    maxFontPixels: 16
+  });
+
 });
