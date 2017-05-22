@@ -20,4 +20,13 @@ $(function () {
     $('.grid').css('visibility', 'visible');
   });
 
+  var animationCount = 0;
+
+  setInterval(function () {
+    $('.slide-up-down').animate({
+      top: (animationCount % 2 === 0) ? '-=50' : '+=50'
+    });
+    animationCount++;
+  }, 4000);
+
 });
