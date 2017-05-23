@@ -330,8 +330,10 @@ function promoteListeners () {
 
     // in progress icon on submit button
     .on('submit', '#promote-settings-form, #adwords-image-select-form, #adwords-sync-form',
-      function () {
-        if (!$(this).find('button[type="submit"]').prop('disabled')) {
+      function (e) {
+        if ($(this).find('button[type="submit"]').hasClass('disabled')) {
+          e.preventDefault();
+        } else {
           $(this).find('.submit-toggle').toggle();
         }
       });
