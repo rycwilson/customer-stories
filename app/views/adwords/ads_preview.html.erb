@@ -14,6 +14,13 @@
   <!-- csp -->
   <script src="<%= asset_path('adwords/ads_preview.js') %>"></script>
   <script src="<%= asset_path('jquery-textfill/source/jquery.textfill.js') %>"></script>
+  <script>
+    if ("<%= @is_production %>" === 'true') {
+      $(document).on('click', 'a', function (e) {
+        e.preventDefault();
+      });
+    }
+  </script>
 </head>
 <body>
 

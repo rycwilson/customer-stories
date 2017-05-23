@@ -1,12 +1,6 @@
 
 $(function () {
 
-  if ("<%= ENV['HOST_NAME'] %>" === 'customerstories.net') {
-    $(document).on('click', 'a', function (e) {
-      e.preventDefault();
-    });
-  }
-
   $('.grid').masonry({
                itemSelector: '.grid-item',
                columnWidth: 160,
