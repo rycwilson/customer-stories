@@ -157,6 +157,27 @@ class AdwordsController < ApplicationController
                  @company.adwords_images.default.try(:image_url) ||
                  ADWORDS_IMAGE_PLACEHOLDER_URL
     @logo_url = @company.adwords_logo_url || ADWORDS_LOGO_PLACEHOLDER_URL
+
+    case @long_headline.length
+    when 0..29
+      @text_horizontal_lg_left = '500px'
+      @text_horizontal_lg_right = '400px'
+    when 30..39
+      @text_horizontal_lg_left = '480px'
+      @text_horizontal_lg_right = '420px'
+    when 40..49
+      @text_horizontal_lg_left = '460px'
+      @text_horizontal_lg_right = '440px'
+    when 50..59
+      @text_horizontal_lg_left = '400px'
+      @text_horizontal_lg_right = '500px'
+    when 60..69
+      @text_horizontal_lg_left = '380px'
+      @text_horizontal_lg_right = '520px'
+    when 70..90
+      @text_horizontal_container_left = '340px'
+      @text_horizontal_container_right = '560px'
+    end
     render :ads_preview, layout: false
   end
 

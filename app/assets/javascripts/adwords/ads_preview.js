@@ -29,9 +29,26 @@ $(function () {
     animationCount++;
   }, 4000);
 
-  $('.slide-up-down #text2').textfill({
-    minFontPixels: 10,
-    maxFontPixels: 16
-  });
+  $('#image-horizontal-sm .slide-up-down #text2')
+    .textfill({
+      minFontPixels: 10,
+      maxFontPixels: 16,
+      debug: true
+    });
+
+  $('#text-horizontal-sm .short-headline')
+    .textfill({
+      minFontPixels: 12,
+      maxFontPixels: 22
+    });
+
+  $('#text-horizontal-sm .long-headline')
+    .textfill({
+      minFontPixels: 10,
+      maxFontPixels: 16,
+      explicitHeight: 50,
+      explicitWidth: 250
+    });
+
 
 });
