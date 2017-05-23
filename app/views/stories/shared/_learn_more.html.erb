@@ -9,7 +9,7 @@
         <% if cta.type == 'CTALink' %>
 
           <a class="cta-link" href="<%= cta.link_url %>" target='_blank'>
-            <%= cta.display_text %>
+            <p><%= cta.display_text %></p>
           </a>
 
         <% else %>
@@ -17,7 +17,7 @@
           <a href="#cta-form-<%= cta.id %>-modal"
              class="cta-form" data-toggle='modal'
              data-target="#cta-form-<%= cta.id %>-modal">
-            <%= cta.display_text %>
+            <p><%= cta.display_text %></p>
           </a>
 
         <% end %>
