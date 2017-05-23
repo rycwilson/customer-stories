@@ -160,27 +160,7 @@ class AdwordsController < ApplicationController
                  @company.adwords_images.default.try(:image_url) ||
                  ADWORDS_IMAGE_PLACEHOLDER_URL
     @logo_url = @company.adwords_logo_url || ADWORDS_LOGO_PLACEHOLDER_URL
-
-    case @long_headline.length
-    when 0..29
-      @text_horizontal_container_left = '500px'
-      @text_horizontal_container_right = '400px'
-    when 30..39
-      @text_horizontal_container_left = '480px'
-      @text_horizontal_container_right = '420px'
-    when 40..49
-      @text_horizontal_container_left = '460px'
-      @text_horizontal_container_right = '440px'
-    when 50..59
-      @text_horizontal_container_left = '400px'
-      @text_horizontal_container_right = '500px'
-    when 60..69
-      @text_horizontal_container_left = '380px'
-      @text_horizontal_container_right = '520px'
-    when 70..90
-      @text_horizontal_container_left = '340px'
-      @text_horizontal_container_right = '560px'
-    end
+    set_ad_dimensions(@long_headline)
     render :ads_preview, layout: false
   end
 
@@ -705,6 +685,53 @@ class AdwordsController < ApplicationController
         puts "Story label for ad ID %d and label ID %d was added.\n" %
             [ad_label[:ad_id], ad_label[:label_id]]
       end
+    end
+  end
+
+  def set_ad_dimensions (long_headline)
+    case @long_headline.length
+    when 0..29
+      @text_horizontal_container_left = '500px'
+      @text_horizontal_container_right = '400px'
+      @text_vertical_outer_height_top = '240px'
+      @text_vertical_inner_height_top = '206px'
+      @text_vertical_outer_height_bottom = '307px'
+      @text_vertical_inner_height_bottom = '273px'
+    when 30..39
+      @text_horizontal_container_left = '480px'
+      @text_horizontal_container_right = '420px'
+      @text_vertical_outer_height_top = '227px'
+      @text_vertical_inner_height_top = '193px'
+      @text_vertical_outer_height_bottom = '319px'
+      @text_vertical_inner_height_bottom = '285px'
+    when 40..49
+      @text_horizontal_container_left = '460px'
+      @text_horizontal_container_right = '440px'
+      @text_vertical_outer_height_top = '233px'
+      @text_vertical_inner_height_top = '186px'
+      @text_vertical_outer_height_bottom = '327px'
+      @text_vertical_inner_height_bottom = '293px'
+    when 50..59
+      @text_horizontal_container_left = '400px'
+      @text_horizontal_container_right = '500px'
+      @text_vertical_outer_height_top = '208px'
+      @text_vertical_inner_height_top = '174px'
+      @text_vertical_outer_height_bottom = '339px'
+      @text_vertical_inner_height_bottom = '305px'
+    when 60..69
+      @text_horizontal_container_left = '380px'
+      @text_horizontal_container_right = '520px'
+      @text_vertical_outer_height_top = '196px'
+      @text_vertical_inner_height_top = '163px'
+      @text_vertical_outer_height_bottom = '352px'
+      @text_vertical_inner_height_bottom = '319px'
+    when 70..90
+      @text_horizontal_container_left = '340px'
+      @text_horizontal_container_right = '560px'
+      @text_vertical_outer_height_top = '192px'
+      @text_vertical_inner_height_top = '158px'
+      @text_vertical_outer_height_bottom = '354px'
+      @text_vertical_inner_height_bottom = '320px'
     end
   end
 
