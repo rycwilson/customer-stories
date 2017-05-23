@@ -163,20 +163,20 @@ class AdwordsController < ApplicationController
 
     case @long_headline.length
     when 0..29
-      @text_horizontal_lg_left = '500px'
-      @text_horizontal_lg_right = '400px'
+      @text_horizontal_container_left = '500px'
+      @text_horizontal_container_right = '400px'
     when 30..39
-      @text_horizontal_lg_left = '480px'
-      @text_horizontal_lg_right = '420px'
+      @text_horizontal_container_left = '480px'
+      @text_horizontal_container_right = '420px'
     when 40..49
-      @text_horizontal_lg_left = '460px'
-      @text_horizontal_lg_right = '440px'
+      @text_horizontal_container_left = '460px'
+      @text_horizontal_container_right = '440px'
     when 50..59
-      @text_horizontal_lg_left = '400px'
-      @text_horizontal_lg_right = '500px'
+      @text_horizontal_container_left = '400px'
+      @text_horizontal_container_right = '500px'
     when 60..69
-      @text_horizontal_lg_left = '380px'
-      @text_horizontal_lg_right = '520px'
+      @text_horizontal_container_left = '380px'
+      @text_horizontal_container_right = '520px'
     when 70..90
       @text_horizontal_container_left = '340px'
       @text_horizontal_container_right = '560px'
