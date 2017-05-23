@@ -153,7 +153,6 @@ class AdwordsController < ApplicationController
   def preview
     # disable the ad links in production
     @is_production = ENV['HOST_NAME'] == 'customerstories.net'
-    binding.remote_pry
     @short_headline = @company.adwords_short_headline
     @long_headline = @story.ads.long_headline
     @image_url = @story.ads.adwords_image.try(:image_url) ||
