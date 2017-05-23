@@ -32,8 +32,7 @@ $(function () {
   $('#image-horizontal-sm .slide-up-down #text2')
     .textfill({
       minFontPixels: 10,
-      maxFontPixels: 16,
-      debug: true
+      maxFontPixels: 16
     });
 
   $('#text-horizontal-sm .short-headline')
@@ -44,10 +43,8 @@ $(function () {
 
   $('#text-horizontal-sm .long-headline')
     .textfill({
-      minFontPixels: 10,
-      maxFontPixels: 16,
-      explicitHeight: 50,
-      explicitWidth: 250
+      minFontPixels: 13,
+      maxFontPixels: 18,
     });
 
 
