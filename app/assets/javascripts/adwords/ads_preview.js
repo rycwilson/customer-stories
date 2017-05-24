@@ -52,7 +52,6 @@ $(function () {
       minFontPixels: 25,
       maxFontPixels: 32,
     });
-
   $('#text-vertical .long-headline')
     .textfill({
       minFontPixels: 20,
@@ -63,7 +62,14 @@ $(function () {
     .textfill({
       minFontPixels: 10,
       maxFontPiexls: 16,
-      debug: true
     });
+
+  $('#text-square .long-headline')
+    .textfill({
+      minFontPixels: 20,
+      maxFontPixels: 26
+    });
+
+
 
 });
