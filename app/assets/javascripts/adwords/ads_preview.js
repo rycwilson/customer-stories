@@ -47,5 +47,19 @@ $(function () {
       maxFontPixels: 18,
     });
 
+  $('#text-vertical .short-headline')
+    .textfill({
+      minFontPixels: 25,
+      maxFontPixels: 32,
+    });
+
+  $('#text-vertical .long-headline')
+    .textfill({
+      minFontPixels: 20,
+      maxFontPixels: 25,
+    });
+
+  console.log($('#text-vertical .long-headline').css('font-size'));
+
 
 });

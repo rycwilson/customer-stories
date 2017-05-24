@@ -688,51 +688,37 @@ class AdwordsController < ApplicationController
     end
   end
 
+  # padding for the lower half is 25px 11px
+  # "*_minus_padding" means minus 25x2 = 50
   def set_ad_dimensions (long_headline)
     case @long_headline.length
     when 0..29
       @text_horizontal_container_left = '500px'
       @text_horizontal_container_right = '400px'
-      @text_vertical_outer_height_top = '240px'
-      @text_vertical_inner_height_top = '206px'
-      @text_vertical_outer_height_bottom = '307px'
-      @text_vertical_inner_height_bottom = '273px'
     when 30..39
       @text_horizontal_container_left = '480px'
       @text_horizontal_container_right = '420px'
-      @text_vertical_outer_height_top = '227px'
-      @text_vertical_inner_height_top = '193px'
-      @text_vertical_outer_height_bottom = '319px'
-      @text_vertical_inner_height_bottom = '285px'
     when 40..49
       @text_horizontal_container_left = '460px'
       @text_horizontal_container_right = '440px'
-      @text_vertical_outer_height_top = '233px'
-      @text_vertical_inner_height_top = '186px'
-      @text_vertical_outer_height_bottom = '327px'
-      @text_vertical_inner_height_bottom = '293px'
     when 50..59
       @text_horizontal_container_left = '400px'
       @text_horizontal_container_right = '500px'
-      @text_vertical_outer_height_top = '208px'
-      @text_vertical_inner_height_top = '174px'
-      @text_vertical_outer_height_bottom = '339px'
-      @text_vertical_inner_height_bottom = '305px'
     when 60..69
       @text_horizontal_container_left = '380px'
       @text_horizontal_container_right = '520px'
-      @text_vertical_outer_height_top = '196px'
-      @text_vertical_inner_height_top = '163px'
-      @text_vertical_outer_height_bottom = '352px'
-      @text_vertical_inner_height_bottom = '319px'
     when 70..90
       @text_horizontal_container_left = '340px'
       @text_horizontal_container_right = '560px'
-      @text_vertical_outer_height_top = '192px'
-      @text_vertical_inner_height_top = '158px'
-      @text_vertical_outer_height_bottom = '354px'
-      @text_vertical_inner_height_bottom = '320px'
     end
+
+    # these numbers (except the last) are taken straight from a google ad preview
+    @text_vertical_outer_height_top = '214px'
+    @text_vertical_inner_height_top = '180px'  # hacked from 181 to make a correction
+    @text_vertical_outer_height_bottom = '334px'
+    @text_vertical_inner_height_bottom = '300px'  # hacked from 301 to make a correction
+    @text_vertical_inner_height_bottom_minus_padding = '251px'  # 25px x 2
+
   end
 
 end
