@@ -68,13 +68,20 @@ $(function () {
     .textfill({
       minFontPixels: 10,
       maxFontPiexls: 16,
-      debug: true,
       complete: function () {
-        if (parseInt($('#image-no-logo .long-headline span').css('font-size'), 10) <= 14) {
-          $('#image-no-logo #url')
-            .css('font-size', $('#image-no-logo .long-headline span').css('font-size'));
+        var $url = $('#image-no-logo #url'),
+            $longHeadline = $('#image-no-logo .long-headline span');
+        if (parseInt($longHeadline.css('font-size'), 10) <= 14) {
+          $url.css('font-size', $longHeadline.css('font-size'));
         } else {
-          $('#image-no-logo #url').css('font-size', '14px');
+          $url.css('font-size', '14px');
+        }
+        if ($url.css('font-size') === '10px') {
+          $url.css('top', '231px');
+        } else if ($url.css('font-size') === '12px') {
+          $url.css('top', '228px');
+        } else if ($url.css('font-size') === '14px') {
+          $url.css('top', '226px');
         }
       }
     });
@@ -85,6 +92,10 @@ $(function () {
       maxFontPixels: 26
     });
 
-
+  $('#image-vertical .long-headline')
+    .textfill({
+      minFontPixels: 14,
+      maxFontPixels: 18
+    });
 
 });
