@@ -61,7 +61,22 @@ $(function () {
   $('#image-logo .long-headline')
     .textfill({
       minFontPixels: 10,
+      maxFontPiexls: 16
+    });
+
+  $('#image-no-logo .long-headline')
+    .textfill({
+      minFontPixels: 10,
       maxFontPiexls: 16,
+      debug: true,
+      complete: function () {
+        if (parseInt($('#image-no-logo .long-headline span').css('font-size'), 10) <= 14) {
+          $('#image-no-logo #url')
+            .css('font-size', $('#image-no-logo .long-headline span').css('font-size'));
+        } else {
+          $('#image-no-logo #url').css('font-size', '14px');
+        }
+      }
     });
 
   $('#text-square .long-headline')
