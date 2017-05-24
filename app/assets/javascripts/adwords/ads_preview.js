@@ -59,7 +59,11 @@ $(function () {
       maxFontPixels: 25,
     });
 
-  console.log($('#text-vertical .long-headline').css('font-size'));
-
+  $('#image-logo .long-headline')
+    .textfill({
+      minFontPixels: 10,
+      maxFontPiexls: 16,
+      debug: true
+    });
 
 });
