@@ -25,7 +25,7 @@ $(function () {
   setInterval(function () {
     $('.slide-up-down').animate({
       top: (animationCount % 2 === 0) ? '-=50' : '+=50'
-    });
+    }, 600);
     animationCount++;
   }, 4000);
 
