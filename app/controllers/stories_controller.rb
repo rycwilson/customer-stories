@@ -202,10 +202,14 @@ class StoriesController < ApplicationController
         # errors
       end
     elsif request.method == 'DELETE'
-      response[:removed_ads] = []
-      @story.ads.each do |ad|
-        response[:removed_ads] << { ad_id: ad.ad_id, ad_group_id: ad.ad_group.ad_group_id }
-        ad.destroy
+      # this must go in the delayed job queue, so it happens after ad.remove()
+      if @story.ads.all? do |ad|
+        ad.update(status:'REMOVED')
+        ad.delay.destroy()  # queue this behind ad.remove() (which was just previously called in adwords controller)
+      end
+        flash.now[:notice] = 'Story unpublished and Sponsored Story removed'
+      else
+        flash.now[:alert] = 'Error removing Sponsored Story'
       end
     end
     respond_to do |format|
@@ -213,6 +217,8 @@ class StoriesController < ApplicationController
       #   format.json { head :no_content }  (or head :ok)
       # but x-editable wants a json response with status 200
       format.json { render json: response, status: 200 }  # success
+      # js response for removed ads
+      format.js {}
     end
   end
 

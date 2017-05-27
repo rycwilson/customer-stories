@@ -32,8 +32,12 @@ class Company < ActiveRecord::Base
       self.select() { |story| story.published? }
     end
     def with_ads
-      self.select() { |story| !story.topic_ad.nil? && !story.retarget_ad.nil? }
-          .sort_by() { |story| story.publish_date }.reverse()
+      # any ads with status 'REMOVED' have .destroy() calls in the delayed job queue
+      self.select() do |story|
+        story.topic_ad.present? && story.topic_ad.status != 'REMOVED' &&
+        story.retarget_ad.present? && story.retarget_ad.status != 'REMOVED'
+      end
+      .sort_by() { |story| story.publish_date }.reverse()
     end
   end
   has_many :visitor_actions

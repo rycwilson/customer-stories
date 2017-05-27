@@ -155,15 +155,15 @@ function storiesEditSettingsListeners () {
 
   $(document).on('ajax:success', '#story-publish-form',
     function (event, story) {
-      var $publish = $("#story_published"),
-          $logoPublish = $("#story_logo_published"),
-          createAd = function (story) {
+      var $publishSwitch = $("#story_published"),
+          $logoPublishSwitch = $("#story_logo_published"),
+          createAds = function (story) {
             if (story.ads.length === 0 && story.published &&
                 story.previous_changes.published) {
               return true;
             } else { return false; }
           },
-          removeAd = function (story) {
+          removeAds = function (story) {
             if (story.previous_changes.published && !story.published) {
               return true;
             }
@@ -175,14 +175,14 @@ function storiesEditSettingsListeners () {
           - turned logo_publish on to track story_publish=on
           - turned story_publish off to track logo_publish=off
       */
-      if (!story.published && $publish.bootstrapSwitch('state') === true) {
-        $publish.bootstrapSwitch('state', false);
-      } else if (story.logo_published && $logoPublish.bootstrapSwitch('state') === false) {
-        $logoPublish.bootstrapSwitch('state', true);
+      if (!story.published && $publishSwitch.bootstrapSwitch('state') === true) {
+        $publishSwitch.bootstrapSwitch('state', false);
+      } else if (story.logo_published && $logoPublishSwitch.bootstrapSwitch('state') === false) {
+        $logoPublishSwitch.bootstrapSwitch('state', true);
       }
 
       // create the ad
-      if ( createAd(story) ) {
+      if (createAds(story)) {
         $.post({
           url: '/stories/' + story.id + '/promote',
           success: function (data, status, xhr) {
@@ -193,18 +193,17 @@ function storiesEditSettingsListeners () {
           }
         });
 
-      // remove ad if story unpublished
-      } else if ( removeAd(story) ) {
+      // remove ad if story unpublished;
+      // remove the adwords ad first, as ad.ad_id will be necessary to make the api call
+      } else if (removeAds(story)) {
         $.ajax({
-          url: '/stories/' + story.id + '/promote',
+          url: '/stories/' + story.id + '/adwords',
           method: 'delete',
+          dataType: 'json',
           success: function (data, status, xhr) {
             $.ajax({
-              url: '/stories/' + story.id + '/adwords',
+              url: '/stories/' + story.id + '/promote',
               method: 'delete',
-              data: {
-                removed_ads: data.removed_ads
-              },
               dataType: 'script'
             });
           }

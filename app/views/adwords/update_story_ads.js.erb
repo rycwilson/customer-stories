@@ -1,10 +1,7 @@
 
 (function () {
 
-  var flash = <%= raw @flash.to_json %> ||
-        { status: 'success',
-            mesg: 'Sponsored Story updated' },
-      storyId = <%= @story.id %>,
+  var storyId = <%= @story.id %>,
       $row = $('tr[data-story-id="' + storyId + '"]'),
       imageChanged = <%= @image_changed %>,
       statusChanged = <%= @status_changed %>;
@@ -22,6 +19,11 @@
     // long headline handled by xeditable plugin
   }
 
-  flashDisplay(flash.mesg, flash.status);
+  if ("<%= notice() %>") {
+    flashDisplay('<%= notice() %>', 'success');
+  }
+  else if ("<%= alert() %>") {
+    flashDisplay('<%= alert() %>', 'danger')
+  }
 
 }());

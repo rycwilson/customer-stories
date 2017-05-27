@@ -30,7 +30,8 @@
             <div class='table-responsive'>
 
   <% cache("#{company.subdomain}/curate-table", skip_digest: true) do %>
-    <table id='curate-table' class="datatable table table-striped table-bordered">
+    <table id='curate-table' class="datatable table table-striped table-bordered"
+           width='100%'>
       <thead>
         <tr>
           <th>Customer</th>

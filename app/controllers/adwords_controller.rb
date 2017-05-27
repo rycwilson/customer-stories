@@ -6,19 +6,13 @@ class AdwordsController < ApplicationController
   before_action() { @promote_enabled = @company.promote_tr? }
   before_action({ except: [:update_company, :sync_company] }) { set_story(params) }
   before_action({ except: [:preview] }) { create_adwords_api() }
+  after_action({ except: [:preview, :sync_company] }) { flash.discard if request.xhr? }
 
   def create_story_ads
-    if @promote_enabled
-      ['topic', 'retarget'].each do |campaign_type|
-        if create_ad(@company, @story, campaign_type)
-          @flash = {
-            status: 'success',
-            mesg: 'Story published and Sponsored Story created'
-          }
-        else
-          # @flash set in create_ad
-        end
-      end
+    if @promote_enabled && @story.ads.all? { |ad| ad.delay.create() }
+      flash[:notice] = 'Story published and Sponsored Story created'
+    else
+      # flash[:alert] set in ad.create_ad
     end
     respond_to { |format| format.js }
   end
@@ -30,50 +24,36 @@ class AdwordsController < ApplicationController
     @long_headline_changed = params[:long_headline_changed].present?
 
     if @promote_enabled && @status_changed
-      if @story.ads.all? { |ad| update_ad_status(ad) }
-        @flash = {
-          status: 'success',
-          mesg: "Sponsored Story #{@story.ads.enabled? ? 'enabled' : 'paused'}"
-        }
+      if @story.ads.all? { |ad| ad.delay.update_status() }
+        flash[:notice] = "Sponsored Story #{@story.ads.enabled? ? 'enabled' : 'paused'}"
       else
-        # @flash for exceptions is set in update_ad_status
+        # flash[:alert] for exceptions is set in ad.update_status
       end
 
     elsif @promote_enabled && (@image_changed || @long_headline_changed)
-      if @story.ads.all? do |ad|
-        remove_ad({ ad_group_id: ad.ad_group.ad_group_id, ad_id: ad.ad_id })
-      end
-        if ['topic', 'retarget'].all? do |campaign_type|
-          create_ad(@company, @story, campaign_type)
-        end
+      if @story.ads.all? { |ad| ad.delay.remove() }
+        if @story.ads.all? { |ad| ad.delay.create() }
           # reload to get the new ad_id
-          if @story.ads.reload.all? { |ad| update_ad_status(ad) }
-            @flash = { status: 'success',
-                         mesg: 'Sponsored Story updated' }
+          if @story.ads.reload.all? { |ad| ad.delay.update_status() }
+            flash[:notice] = 'Sponsored Story updated'
           else
-            # @flash for exceptions set in update_ad_status
+            # flash[:alert] for exceptions set in ad.update_status
           end
         else
-          # @flash for exceptions set in create_ad
+          # flash[:alert] for exceptions set in ad.create
         end
       else
-        # @flash for exceptions is set in remove_ad
+        # flash[:alert] for exceptions is set in ad.remove
       end
     end
     respond_to { |format| format.js }
   end
 
-  # the ids of removed ads are forwarded via params since they've been removed from csp
   def remove_story_ads
     if @promote_enabled
-      if params[:removed_ads].all? { |index, ad_params| remove_ad(ad_params) }
-        @flash = { status: 'success',
-                     mesg: 'Story unpublished and Sponsored Story removed' }
-      else
-        # @flash set in remove_ad
-      end
+      @story.ads.each() { |ad| ad.delay.remove() }
     end
-    respond_to { |format| format.js }
+    respond_to { |format| format.json { head :no_content } }
   end
 
   def update_company
@@ -387,210 +367,6 @@ class AdwordsController < ApplicationController
     return true
   end
 
-  def create_ad (company, story, campaign_type)
-    @api ||= create_adwords_api()  # in case method was called from outside controller
-    service = @api.service(:AdGroupAdService, get_api_version())
-    ad_group_id = campaign_type == 'topic' ?
-                  company.campaigns.topic.ad_group.ad_group_id :
-                  company.campaigns.retarget.ad_group.ad_group_id
-    responsive_display_ad = {
-      xsi_type: 'ResponsiveDisplayAd',
-      # media_id can't be nil
-      logo_image: { media_id: company.adwords_logo_media_id },
-      marketing_image: { media_id: story.ads.adwords_image.media_id },
-      short_headline: company.adwords_short_headline,
-      long_headline: story.ads.long_headline,
-      description: story.ads.long_headline,
-      business_name: company.adwords_short_headline,
-      final_urls: [ story.csp_story_url + "?utm_campaign=promote&utm_content=#{ campaign_type }&utm_source=&utm_medium=&utm_term=" ]
-    }
-    # Create an ad group ad for the responsive display ad.
-    responsive_display_ad_group_ad = {
-      ad_group_id: ad_group_id,
-      ad: responsive_display_ad,
-      # Additional propertires (non-required).
-      status: 'PAUSED'
-    }
-    # Create operation.
-    responsive_display_ad_group_ad_operations = {
-      operator: 'ADD',
-      operand: responsive_display_ad_group_ad
-    }
-
-    begin
-      result = service.mutate([responsive_display_ad_group_ad_operations])
-
-    # Authorization error.
-    rescue AdsCommon::Errors::OAuth2VerificationRequired => e
-      if Rails.env.development?
-        @flash = { status: 'danger', mesg: 'Invalid Adwords API credentials' }
-      else
-        @flash = { status: 'danger', mesg: 'Error creating Sponsored Story' }
-      end
-    # HTTP errors.
-    rescue AdsCommon::Errors::HttpError => e
-      puts "HTTP Error: %s" % e
-      if Rails.env.development?
-        @flash = { status: 'danger', mesg: "HTTP error: #{e}" }
-      else
-        @flash = { status: 'danger', mesg: 'Error creating Sponsored Story' }
-      end
-    # API errors.
-    rescue AdwordsApi::Errors::ApiException => e
-      puts "Message: %s" % e.message
-      puts 'Errors:'
-      e.errors.each_with_index do |error, index|
-        puts "\tError [%d]:" % (index + 1)
-        error.each do |field, value|
-          puts "\t\t%s: %s" % [field, value]
-        end
-      end
-      if Rails.env.development?
-        @flash = { status: 'danger', mesg: "Adwords API error: #{e.message}" }
-      else
-        @flash = { status: 'danger', mesg: 'Error creating Sponsored Story' }
-      end
-    end
-
-    # on success, log and update adwords_ad.ad_id
-    if result && result[:value]
-      result[:value].each do |ad_group_ad|
-        puts ('New responsive display ad with id %d and short headline %s was ' +
-            'added.') % [ad_group_ad[:ad][:id], ad_group_ad[:ad][:short_headline]]
-      end
-      if campaign_type == 'topic'
-        story.topic_ad.update(ad_id: result[:value][0][:ad][:id])
-      else  # retarget
-        story.retarget_ad.update(ad_id: result[:value][0][:ad][:id])
-      end
-      # add a story label to the ad
-      story_label = get_story_label(story.id.to_s) ||
-                    create_story_label(story.id.to_s)
-      add_story_label_to_ad(
-        result[:value][0][:ad][:id], ad_group_id, story_label[:id]
-      )
-      return true
-    else
-      puts "No responsive display ads were added."
-      return false
-    end
-  end
-
-  def remove_ad (ad_params)
-    @api ||= create_adwords_api()  # in case method was called from outside controller
-    service = @api.service(:AdGroupAdService, get_api_version())
-    operation = {
-      operator: 'REMOVE',
-      operand: {
-        ad_group_id: ad_params[:ad_group_id].to_i,
-        ad: {
-          xsi_type: 'ResponsiveDisplayAd',
-          id: ad_params[:ad_id].to_i
-        }
-      }
-    }
-    begin
-      response = service.mutate([operation])
-    # Authorization error.
-    rescue AdsCommon::Errors::OAuth2VerificationRequired => e
-      if Rails.env.development?
-        @flash = { status: 'danger', mesg: 'Invalid Adwords API credentials' }
-      else
-        @flash = { status: 'danger', mesg: 'Error removing Sponsored Story' }
-      end
-    # HTTP errors.
-    rescue AdsCommon::Errors::HttpError => e
-      puts "HTTP Error: %s" % e
-      if Rails.env.development?
-        @flash = { status: 'danger', mesg: "HTTP error: #{e}" }
-      else
-        @flash = { status: 'danger', mesg: 'Error removing Sponsored Story' }
-      end
-    # API errors.
-    rescue AdwordsApi::Errors::ApiException => e
-      puts "Message: %s" % e.message
-      puts 'Errors:'
-      e.errors.each_with_index do |error, index|
-        puts "\tError [%d]:" % (index + 1)
-        error.each do |field, value|
-          puts "\t\t%s: %s" % [field, value]
-        end
-      end
-      if Rails.env.development?
-        @flash = { status: 'danger', mesg: "Adwords API error: #{e.message}" }
-      else
-        @flash = { status: 'danger', mesg: 'Error removing Sponsored Story' }
-      end
-    end
-
-    if response and response[:value]
-      ad = response[:value].first
-      puts "Ad ID %d was successfully removed." % ad[:ad][:id]
-      return true
-    else
-      puts 'No ads were removed.'
-      return false
-    end
-  end
-
-  def update_ad_status (ad)
-    @api ||= create_adwords_api()  # in case method was called from outside controller
-    service = @api.service(:AdGroupAdService, get_api_version())
-    operation =  {
-      operator: 'SET',
-      operand: {
-        ad_group_id: ad.ad_group.ad_group_id,
-        status: ad.status,
-        ad: { id: ad.ad_id }
-      }
-    }
-    begin
-      response = service.mutate([operation])
-
-    # Authorization error.
-    rescue AdsCommon::Errors::OAuth2VerificationRequired => e
-      if Rails.env.development?
-        @flash = { status: 'danger', mesg: 'Invalid Adwords API credentials' }
-      else
-        @flash = { status: 'danger', mesg: 'Error updating Sponsored Story status' }
-      end
-    # HTTP errors.
-    rescue AdsCommon::Errors::HttpError => e
-      puts "HTTP Error: %s" % e
-      if Rails.env.development?
-        @flash = { status: 'danger', mesg: "HTTP error: #{e}" }
-      else
-        @flash = { status: 'danger', mesg: 'Error updating Sponsored Story status' }
-      end
-    # API errors.
-    rescue AdwordsApi::Errors::ApiException => e
-      puts "Message: %s" % e.message
-      puts 'Errors:'
-      e.errors.each_with_index do |error, index|
-        puts "\tError [%d]:" % (index + 1)
-        error.each do |field, value|
-          puts "\t\t%s: %s" % [field, value]
-        end
-      end
-      if Rails.env.development?
-        @flash = { status: 'danger', mesg: "Adwords API error: #{e.message}" }
-      else
-        @flash = { status: 'danger', mesg: 'Error updating Sponsored Story status' }
-      end
-    end
-
-    # response
-    if response and response[:value]
-      adwords_ad = response[:value].first
-      puts "Ad ID %d was successfully updated, status set to '%s'." %
-          [adwords_ad[:ad][:id], adwords_ad[:status]]
-      return true
-    else
-      puts 'No ads were updated.'
-      return false
-    end
-  end
-
   private
 
   def set_company (params)
@@ -633,60 +409,6 @@ class AdwordsController < ApplicationController
     new_images
   end
 
-
-
-  def create_story_label (story_id)  # story_id is a string
-    @api ||= create_adwords_api()
-    service = @api.service(:LabelService, get_api_version())
-    operation = {
-      operator: 'ADD',
-      operand: {
-        xsi_type: 'TextLabel',
-        name: story_id
-      }
-    }
-    result = service.mutate([operation])
-    result[:value][0]  # return the new label
-  end
-
-  def get_story_label (story_id)  # story_id is a string
-    @api ||= create_adwords_api()
-    service = @api.service(:LabelService, get_api_version())
-    selector = {
-      fields: ['LabelName'],
-      ordering: [ { field: 'LabelName', sort_order: 'ASCENDING' } ],
-      paging: { start_index: 0, number_results: 50 },
-      predicates: [ { field: 'LabelName', operator: 'IN', values: [story_id] } ]
-    }
-    result = nil
-    begin
-      result = service.get(selector)
-    rescue AdwordsApi::Errors::ApiException => e
-      logger.fatal("Exception occurred: %s\n%s" % [e.to_s, e.message])
-      flash.now[:alert] =
-          'API request failed with an error, see logs for details'
-    end
-    result[:entries].try(:[], 0) || nil
-  end
-
-  def add_story_label_to_ad (ad_id, ad_group_id, story_label_id)
-    service = @api.service(:AdGroupAdService, get_api_version())
-    operation = {
-      operator: 'ADD',
-      operand: {
-        ad_id: ad_id,
-        ad_group_id: ad_group_id,
-        label_id: story_label_id
-      }
-    }
-    response = service.mutate_label([operation])
-    if response and response[:value]
-      response[:value].each do |ad_label|
-        puts "Story label for ad ID %d and label ID %d was added.\n" %
-            [ad_label[:ad_id], ad_label[:label_id]]
-      end
-    end
-  end
 
   # padding for the lower half is 25px 11px
   # "*_minus_padding" means minus 25x2 = 50

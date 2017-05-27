@@ -1,0 +1,14 @@
+
+// js response only needed for removed ads; all others are json
+(function () {
+
+  if ('<%= notice() %>') {
+    flashDisplay('<%= notice() %>', 'success')
+  } else if ('<%= alert() %>') {
+    flashDisplay('<%= alert() %>', 'danger')
+  }
+
+  $('#sponsored-stories-table tr[data-story-id="' + '<%= @story.id.to_s %>' + '"]')
+    .remove()
+
+}());
