@@ -78,7 +78,7 @@ class AdwordsAd < ActiveRecord::Base
     end
   end
 
-  def update_status
+  def update_status ()
     @api ||= create_adwords_api()
     service = @api.service(:AdGroupAdService, get_api_version())
     operation =  {

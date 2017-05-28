@@ -84,12 +84,12 @@ class AdwordsController < ApplicationController
           ad = AdwordsAd.includes(:story).find(ad_params[:csp_ad_id])
           @removed_images_stories << { csp_image_id: ad.adwords_image.id, story_id: ad.story.id }
           if @promote_enabled
-            puts "removing ad #{ad_params[:ad_id]} associated with destroyed image #{ad_params[:csp_image_id]}..."
-            remove_ad(ad_params)
-            puts "creating new ad to replace..."
-            create_ad(@company, ad.story, ad_params[:campaign_type])
-            puts "updating ad status..."
-            update_ad_status(ad.reload)  # reload to get the new ad.ad_id
+            puts "removing and re-creating ad #{ad.id} associated with destroyed image #{ad_params[:csp_image_id]}..."
+            ad.delay.remove()
+            ad.delay.create()
+            # WAIT ... we can only call update_status after create finishes
+            # need a callback!
+            ad.reload.delay.update_status()  # reload to get the new ad.ad_id
           end
         end
       end
