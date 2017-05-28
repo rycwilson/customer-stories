@@ -15,7 +15,7 @@ class AdwordsImage < ActiveRecord::Base
     "https://csp-production-assets.s3-us-west-1.amazonaws.com/uploads/413d1bfd-a71d-4f11-9af2-0cd886fadaba/acme_landscape.png"
   ]
 
-  def s3_delete
+  def s3_delete ()
     S3_BUCKET.delete_objects(
       delete: {
         objects: [

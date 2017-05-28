@@ -1,18 +1,15 @@
 class AdwordsController < ApplicationController
 
-  require 'adwords_api'
-
   before_action() { set_company(params) }
-  before_action() { @promote_enabled = @company.promote_tr? }
   before_action({ except: [:update_company, :sync_company] }) { set_story(params) }
-  before_action({ except: [:preview] }) { create_adwords_api() }
+  before_action() { @promote_enabled = @company.promote_tr? }
   after_action({ except: [:preview, :sync_company] }) { flash.discard if request.xhr? }
 
   def create_story_ads
-    if @promote_enabled && @story.ads.all? { |ad| ad.delay.create() }
+    if @promote_enabled && @story.ads.all?() { |ad| ad.delay.create() }
       flash[:notice] = 'Story published and Sponsored Story created'
     else
-      # flash[:alert] set in ad.create_ad
+      # TODO: attach errors to @story
     end
     respond_to { |format| format.js }
   end
@@ -24,26 +21,26 @@ class AdwordsController < ApplicationController
     @long_headline_changed = params[:long_headline_changed].present?
 
     if @promote_enabled && @status_changed
-      if @story.ads.all? { |ad| ad.delay.update_status() }
+      if @story.ads.all?() { |ad| ad.delay.update_status() }
         flash[:notice] = "Sponsored Story #{@story.ads.enabled? ? 'enabled' : 'paused'}"
       else
-        # flash[:alert] for exceptions is set in ad.update_status
+        # TODO: attach errors to @story
       end
 
     elsif @promote_enabled && (@image_changed || @long_headline_changed)
-      if @story.ads.all? { |ad| ad.delay.remove() }
-        if @story.ads.all? { |ad| ad.delay.create() }
+      if @story.ads.all?() { |ad| ad.delay.remove() }
+        if @story.ads.all?() { |ad| ad.delay.create() }
           # reload to get the new ad_id
           if @story.ads.reload.all? { |ad| ad.delay.update_status() }
             flash[:notice] = 'Sponsored Story updated'
           else
-            # flash[:alert] for exceptions set in ad.update_status
+            # TODO: attach errors to @story
           end
         else
-          # flash[:alert] for exceptions set in ad.create
+          # TODO: attach errors to @story
         end
       else
-        # flash[:alert] for exceptions is set in ad.remove
+        # TODO: attach errors to @story
       end
     end
     respond_to { |format| format.js }
@@ -87,9 +84,7 @@ class AdwordsController < ApplicationController
             puts "removing and re-creating ad #{ad.id} associated with destroyed image #{ad_params[:csp_image_id]}..."
             ad.delay.remove()
             ad.delay.create()
-            # WAIT ... we can only call update_status after create finishes
-            # need a callback!
-            ad.reload.delay.update_status()  # reload to get the new ad.ad_id
+            ad.delay.update_status()
           end
         end
       end
@@ -98,8 +93,8 @@ class AdwordsController < ApplicationController
 
     # upload any new images
     if @promote_enabled && new_images?(params[:company])
-      get_new_images(params[:company]).each do |image_params|  # { type: , url: }
-        upload_image(@company, image_params) or return # return if error
+      get_new_images(params[:company]).each() do |image_params|  # { type: , url: }
+        @company.delay.upload_adwords_image_or_logo(image_params) or return # return if error
       end
     end
 
@@ -107,13 +102,10 @@ class AdwordsController < ApplicationController
     if @promote_enabled &&
        ( params[:company].dig(:previous_changes, :adwords_short_headline) ||
          params[:company][:adwords_logo_url] )
-
       @company.ads.each() do |ad|
-        campaign_type = ad.ad_group.campaign.type == 'TopicCampaign' ? 'topic' : 'retarget'
-        ad_params = { ad_id: ad.ad_id, ad_group_id: ad.ad_group.ad_group_id }
-        remove_ad(ad_params)
-        create_ad(@company, ad.story, campaign_type)
-        update_ad_status(ad.reload)  # reload to get the new ad_id
+        ad.delay.remove()
+        ad.delay.create()
+        ad.delay.update_status()
       end
     end
 
@@ -145,226 +137,15 @@ class AdwordsController < ApplicationController
   end
 
   def sync_company
-    if @company.ready_for_adwords_sync?
-      topic_campaign = get_campaign(@company, 'topic')
-      topic_ad_group = get_ad_group(topic_campaign[:id])
-      topic_ads = get_ads(topic_ad_group[:id])
-      retarget_campaign = get_campaign(@company, 'retarget')
-      retarget_ad_group = get_ad_group(retarget_campaign[:id])
-      retarget_ads = get_ads(retarget_ad_group[:id])
-      @company.sync_with_adwords(
-        topic_campaign, topic_ad_group, topic_ads,
-        retarget_campaign, retarget_ad_group, retarget_ads
-      )
-      flash = { success: "Successfully synced with AdWords" }
+    if @company.ready_for_adwords_sync?()
+      @company.adwords_sync()
+      flash = { notice: "Successfully synced with AdWords" }
     else
-      flash = { danger: "Company not ready for syncing with AdWords" }
+      flash = { alert: "Company not ready for syncing with AdWords" }
     end
     cookies[:workflow_tab] = 'promote'
     cookies[:workflow_sub_tab] = 'sponsored-stories'
     redirect_to(company_path(@company), flash: flash)
-  end
-
-  # to allow for creating ads from a seeds file, make some methods protected
-  # ( can be called as AdwordsController.new::create_ad() )
-  public
-
-  def get_images
-    @api ||= create_adwords_api()  # in case method was called from outside controller
-    service = @api.service(:MediaService, get_api_version())
-    # Get all the images and videos.
-    selector = {
-      :fields => ['MediaId', 'Height', 'Width', 'MimeType', 'Urls'],
-      :ordering => [
-        {:field => 'MediaId', :sort_order => 'ASCENDING'}
-      ],
-      :predicates => [
-        {:field => 'Type', :operator => 'IN', :values => ['IMAGE', 'VIDEO']}
-      ],
-      :paging => {
-        :start_index => 0,
-        :number_results => 150
-      }
-    }
-
-    begin
-      result = service.get(selector)
-    # Authorization error.
-    rescue AdsCommon::Errors::OAuth2VerificationRequired => e
-      puts "Authorization credentials are not valid. Edit adwords_api.yml for " +
-          "OAuth2 client ID and secret and run misc/setup_oauth2.rb example " +
-          "to retrieve and store OAuth2 tokens."
-      puts "See this wiki page for more details:\n\n  " +
-          'https://github.com/googleads/google-api-ads-ruby/wiki/OAuth2'
-
-    # HTTP errors.
-    rescue AdsCommon::Errors::HttpError => e
-      puts "HTTP Error: %s" % e
-
-    # API errors.
-    rescue AdwordsApi::Errors::ApiException => e
-      puts "Message: %s" % e.message
-      puts 'Errors:'
-      e.errors.each_with_index do |error, index|
-        puts "\tError [%d]:" % (index + 1)
-        error.each do |field, value|
-          puts "\t\t%s: %s" % [field, value]
-        end
-      end
-    end
-    if result[:entries]
-      result[:entries].each do |entry|
-        full_dimensions = entry[:dimensions]['FULL']
-        puts "Entry ID %d dimensions %dx%d MIME type '%s' url '%s'" %
-            [entry[:media_id], full_dimensions[:height],
-             full_dimensions[:width], entry[:mime_type], entry[:urls]['FULL']]
-      end
-    end
-    if result.include?(:total_num_entries)
-      puts "\tFound %d entries." % result[:total_num_entries]
-    end
-  end
-
-  def get_api_version ()
-    :v201702
-  end
-
-  # Creates an instance of AdWords API class. Uses a configuration file and
-  # Rails config directory.
-  def create_adwords_api ()
-    if ENV['ADWORDS_ENV'] == 'test'
-      config_file = File.join(Rails.root, 'config', 'adwords_api_test.yml')
-    elsif ENV['ADWORDS_ENV'] == 'production'
-      config_file = File.join(Rails.root, 'config', 'adwords_api_prod.yml')
-    end
-    @api = AdwordsApi::Api.new(config_file)
-  end
-
-  def get_campaign (company, campaign_type)
-    @api ||= create_adwords_api()  # in case method was called from outside controller
-    service = @api.service(:CampaignService, get_api_version())
-    selector = {
-      :fields => ['Id', 'Name', 'Status', 'Labels'],
-      :ordering => [{:field => 'Id', :sort_order => 'ASCENDING'}],
-      :paging => {:start_index => 0, :number_results => 50}
-    }
-    result = nil
-    begin
-      result = service.get(selector)
-    rescue AdwordsApi::Errors::ApiException => e
-      logger.fatal("Exception occurred: %s\n%s" % [e.to_s, e.message])
-      flash.now[:alert] =
-          'API request failed with an error, see logs for details'
-    end
-    result[:entries].find do |campaign|
-      campaign[:labels].any? { |label| label[:name] == company.subdomain } &&
-      campaign[:labels].any? { |label| label[:name] == campaign_type }
-    end
-  end
-
-  def get_ad_group (campaign_id)
-    @api ||= create_adwords_api()  # in case method was called from outside controller
-    service = @api.service(:AdGroupService, get_api_version())
-    selector = {
-      fields: ['Id', 'Name', 'Status'],
-      ordering: [ { field: 'Id', sort_order: 'ASCENDING' } ],
-      paging: { start_index: 0, number_results: 50 },
-      predicates: [ { field: 'CampaignId', operator: 'IN', values: [campaign_id] } ]
-    }
-    result = nil
-    begin
-      result = service.get(selector)
-    rescue AdwordsApi::Errors::ApiException => e
-      logger.fatal("Exception occurred: %s\n%s" % [e.to_s, e.message])
-      flash.now[:alert] =
-          'API request failed with an error, see logs for details'
-    end
-    result[:entries][0]
-  end
-
-  def get_ads (ad_group_id)
-    @api ||= create_adwords_api()  # in case method was called from outside controller
-    service = @api.service(:AdGroupAdService, get_api_version())
-    selector = {
-      fields: ['Id', 'Name', 'Status', 'LongHeadline', 'Labels'],
-      ordering: [{ field: 'Id', sort_order: 'ASCENDING' }],
-      paging: { start_index: 0, number_results: 50 },
-      predicates: [ { field: 'AdGroupId', operator: 'IN', values: [ad_group_id] } ]
-    }
-    result = nil
-    begin
-      result = service.get(selector)
-    rescue AdwordsApi::Errors::ApiException => e
-      logger.fatal("Exception occurred: %s\n%s" % [e.to_s, e.message])
-      flash.now[:alert] =
-        'API request failed with an error, see logs for details'
-    end
-    result[:entries]
-  end
-
-  def upload_image (company, image_params)
-    @api ||= create_adwords_api()  # in case method was called from outside controller
-    service = @api.service(:MediaService, get_api_version())
-    # if image_url is nil: Invalid URL: #<ActionDispatch::Http::UploadedFile:0x007f8615701348>
-    img_url = image_params[:url]
-    img_data = AdsCommon::Http.get(img_url, @api.config)
-    base64_image_data = Base64.encode64(img_data)
-    image = {
-      :xsi_type => 'Image',
-      :data => base64_image_data,
-      :type => 'IMAGE'
-    }
-
-    begin
-      response = service.upload([image])
-
-    rescue AdsCommon::Errors::HttpError => e
-      puts "HTTP Error: %s" % e
-      flash_mesg = e.message
-      AdwordsImage.find_by(image_url: image_params[:url]).destroy
-      cookies[:workflow_tab] = 'promote'
-      cookies[:workflow_sub_tab] = 'promote-settings'
-      redirect_to(company_path(@company), flash: { danger: flash_mesg }) and return
-
-    rescue AdwordsApi::Errors::ApiException => e
-      puts "Message: %s" % e.message
-      puts 'Errors:'
-      e.errors.each_with_index do |error, index|
-        puts "\tError [%d]:" % (index + 1)
-        error.each do |field, value|
-          puts "\t\t%s: %s" % [field, value]
-        end
-      end
-      if e.message.match(/ImageError.UNEXPECTED_SIZE/)
-        flash_mesg = "Image does not meet size requirements"
-      else
-        flash_mesg = e.message
-      end
-      AdwordsImage.find_by(image_url: image_params[:url]).destroy
-      cookies[:workflow_tab] = 'promote'
-      cookies[:workflow_sub_tab] = 'promote-settings'
-      redirect_to(company_path(@company), flash: { danger: flash_mesg }) and return
-    end
-
-    # assign adwords media_id
-    if image_params[:type] == 'logo'
-      company.update(adwords_logo_media_id: response[0][:media_id])
-    elsif (image_params[:type] == 'landscape')
-      AdwordsImage.find_by(image_url: image_params[:url])
-                  .update(media_id: response[0][:media_id])
-    end
-
-    if response and !response.empty?
-      ret_image = response.first
-      full_dimensions = ret_image[:dimensions]['FULL']
-      puts ("Image with ID %d, dimensions %dx%d and MIME type '%s' uploaded " +
-          "successfully.") % [ret_image[:media_id], full_dimensions[:height],
-           full_dimensions[:width], ret_image[:mime_type]]
-    else
-      puts 'No images uploaded.'
-      return false
-    end
-    return true
   end
 
   private

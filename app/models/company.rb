@@ -1,5 +1,8 @@
 class Company < ActiveRecord::Base
 
+  require 'adwords_api'
+  ADWORDS_API_VERSION = :v201702
+
   CSP = self.find(5)
 
   before_validation :smart_add_url_protocol
@@ -885,11 +888,16 @@ class Company < ActiveRecord::Base
   #       (which will save the associated ad groups and ads.)
   #       Else, the campaigns and ad groups will not be persisted
   #       and attempting to create ads will result in error
-  def sync_with_adwords (topic_campaign, topic_ad_group, topic_ads,
-      retarget_campaign, retarget_ad_group, retarget_ads)
-
+  def adwords_sync ()
     # destroy the ads, but not the campaigns and ad groups (unlike master seeds)
-    self.ads.each() { |ad| ad.destroy }
+    self.ads.each() { |ad| ad.destroy() }
+
+    topic_campaign = self.get_adwords_campaign('topic')
+    topic_ad_group = self.get_adwords_ad_group(topic_campaign[:id])
+    topic_ads = self.get_adwords_ads(topic_ad_group[:id])
+    retarget_campaign = self.get_adwords_campaign('retarget')
+    retarget_ad_group = self.get_adwords_ad_group(retarget_campaign[:id])
+    retarget_ads = self.get_adwords_ads(retarget_ad_group[:id])
 
     # topic campaign / ad group / ads
     self.campaigns.topic.update(
@@ -911,7 +919,7 @@ class Company < ActiveRecord::Base
     )
 
     # create csp ads to mirror adwords ads
-    create_csp_ads(topic_ads, retarget_ads)
+    self.create_csp_ads(topic_ads, retarget_ads)
 
     # for any stories that are published but don't have an ad ...
     # save ids in an array, as the ad must first be persisted in order for
@@ -932,7 +940,189 @@ class Company < ActiveRecord::Base
     self.adwords_images.default.try(:media_id).present?
   end
 
-  private
+  def get_adwords_campaign (campaign_type)
+    api = create_adwords_api()
+    service = api.service(:CampaignService, ADWORDS_API_VERSION)
+    selector = {
+      :fields => ['Id', 'Name', 'Status', 'Labels'],
+      :ordering => [{:field => 'Id', :sort_order => 'ASCENDING'}],
+      :paging => {:start_index => 0, :number_results => 50}
+    }
+    result = nil
+    begin
+      result = service.get(selector)
+    rescue AdwordsApi::Errors::ApiException => e
+      logger.fatal("Exception occurred: %s\n%s" % [e.to_s, e.message])
+      flash.now[:alert] =
+          'API request failed with an error, see logs for details'
+    end
+    result[:entries].find do |campaign|
+      campaign[:labels].any? { |label| label[:name] == self.subdomain } &&
+      campaign[:labels].any? { |label| label[:name] == campaign_type }
+    end
+  end
+
+  def get_adwords_ad_group (campaign_id)
+    api = create_adwords_api()
+    service = api.service(:AdGroupService, ADWORDS_API_VERSION)
+    selector = {
+      fields: ['Id', 'Name', 'Status'],
+      ordering: [ { field: 'Id', sort_order: 'ASCENDING' } ],
+      paging: { start_index: 0, number_results: 50 },
+      predicates: [ { field: 'CampaignId', operator: 'IN', values: [campaign_id] } ]
+    }
+    result = nil
+    begin
+      result = service.get(selector)
+    rescue AdwordsApi::Errors::ApiException => e
+      logger.fatal("Exception occurred: %s\n%s" % [e.to_s, e.message])
+      flash.now[:alert] =
+          'API request failed with an error, see logs for details'
+    end
+    result[:entries][0]
+  end
+
+  def get_adwords_ads (ad_group_id)
+    api = create_adwords_api()
+    service = api.service(:AdGroupAdService, ADWORDS_API_VERSION)
+    selector = {
+      fields: ['Id', 'Name', 'Status', 'LongHeadline', 'Labels'],
+      ordering: [{ field: 'Id', sort_order: 'ASCENDING' }],
+      paging: { start_index: 0, number_results: 50 },
+      predicates: [ { field: 'AdGroupId', operator: 'IN', values: [ad_group_id] } ]
+    }
+    result = nil
+    begin
+      result = service.get(selector)
+    rescue AdwordsApi::Errors::ApiException => e
+      logger.fatal("Exception occurred: %s\n%s" % [e.to_s, e.message])
+      flash.now[:alert] =
+        'API request failed with an error, see logs for details'
+    end
+    result[:entries]
+  end
+
+  def get_adwords_images
+    api = create_adwords_api()
+    service = api.service(:MediaService, ADWORDS_API_VERSION)
+    # Get all the images and videos.
+    selector = {
+      :fields => ['MediaId', 'Height', 'Width', 'MimeType', 'Urls'],
+      :ordering => [
+        {:field => 'MediaId', :sort_order => 'ASCENDING'}
+      ],
+      :predicates => [
+        {:field => 'Type', :operator => 'IN', :values => ['IMAGE', 'VIDEO']}
+      ],
+      :paging => {
+        :start_index => 0,
+        :number_results => 150
+      }
+    }
+
+    begin
+      result = service.get(selector)
+    # Authorization error.
+    rescue AdsCommon::Errors::OAuth2VerificationRequired => e
+      puts "Authorization credentials are not valid. Edit adwords_api.yml for " +
+          "OAuth2 client ID and secret and run misc/setup_oauth2.rb example " +
+          "to retrieve and store OAuth2 tokens."
+      puts "See this wiki page for more details:\n\n  " +
+          'https://github.com/googleads/google-api-ads-ruby/wiki/OAuth2'
+
+    # HTTP errors.
+    rescue AdsCommon::Errors::HttpError => e
+      puts "HTTP Error: %s" % e
+
+    # API errors.
+    rescue AdwordsApi::Errors::ApiException => e
+      puts "Message: %s" % e.message
+      puts 'Errors:'
+      e.errors.each_with_index do |error, index|
+        puts "\tError [%d]:" % (index + 1)
+        error.each do |field, value|
+          puts "\t\t%s: %s" % [field, value]
+        end
+      end
+    end
+    if result[:entries]
+      result[:entries].each do |entry|
+        full_dimensions = entry[:dimensions]['FULL']
+        puts "Entry ID %d dimensions %dx%d MIME type '%s' url '%s'" %
+            [entry[:media_id], full_dimensions[:height],
+             full_dimensions[:width], entry[:mime_type], entry[:urls]['FULL']]
+      end
+    end
+    if result.include?(:total_num_entries)
+      puts "\tFound %d entries." % result[:total_num_entries]
+    end
+  end
+
+  # image_params = { type: 'landscape' || 'logo', url: url }
+  def upload_adwords_image_or_logo (image_params)
+    api = create_adwords_api()
+    service = api.service(:MediaService, ADWORDS_API_VERSION)
+    # if image_url is nil: Invalid URL: #<ActionDispatch::Http::UploadedFile:0x007f8615701348>
+    img_url = image_params[:url]
+    img_data = AdsCommon::Http.get(img_url, api.config)
+    base64_image_data = Base64.encode64(img_data)
+    image = {
+      :xsi_type => 'Image',
+      :data => base64_image_data,
+      :type => 'IMAGE'
+    }
+
+    begin
+      response = service.upload([image])
+
+    rescue AdsCommon::Errors::HttpError => e
+      puts "HTTP Error: %s" % e
+      flash_mesg = e.message
+      AdwordsImage.find_by(image_url: image_params[:url]).destroy
+      cookies[:workflow_tab] = 'promote'
+      cookies[:workflow_sub_tab] = 'promote-settings'
+      redirect_to(company_path(company), flash: { danger: flash_mesg }) and return
+
+    rescue AdwordsApi::Errors::ApiException => e
+      puts "Message: %s" % e.message
+      puts 'Errors:'
+      e.errors.each_with_index do |error, index|
+        puts "\tError [%d]:" % (index + 1)
+        error.each do |field, value|
+          puts "\t\t%s: %s" % [field, value]
+        end
+      end
+      if e.message.match(/ImageError.UNEXPECTED_SIZE/)
+        flash_mesg = "Image does not meet size requirements"
+      else
+        flash_mesg = e.message
+      end
+      AdwordsImage.find_by(image_url: image_params[:url]).destroy
+      cookies[:workflow_tab] = 'promote'
+      cookies[:workflow_sub_tab] = 'promote-settings'
+      redirect_to(company_path(self), flash: { danger: flash_mesg }) and return
+    end
+
+    # assign adwords media_id
+    if image_params[:type] == 'logo'
+      self.update(adwords_logo_media_id: response[0][:media_id])
+    elsif (image_params[:type] == 'landscape')
+      self.adwords_images.find() { |adwords_image| adwords_image.image_url == image_params[:url] }
+                  .update(media_id: response[0][:media_id])
+    end
+
+    if response and !response.empty?
+      ret_image = response.first
+      full_dimensions = ret_image[:dimensions]['FULL']
+      puts ("Image with ID %d, dimensions %dx%d and MIME type '%s' uploaded " +
+          "successfully.") % [ret_image[:media_id], full_dimensions[:height],
+           full_dimensions[:width], ret_image[:mime_type]]
+    else
+      puts 'No images uploaded.'
+      return false
+    end
+    return true
+  end
 
   # NOTE: campaigns haven't been saved when this method is called,
   # but able to access via self.campaigns?
@@ -961,13 +1151,23 @@ class Company < ActiveRecord::Base
               image_url: aw_ad[:ad][:marketing_image][:urls]['FULL']
             )
         else
-          # remove the ad if
-          # - story can't be found
-          # - story isn't published
-          AdwordsController.new::remove_ad({ ad_id: aw_ad[:ad][:id], ad_group_id: aw_ad[:ad_group_id] })
+          # remove the ad if story can't be found OR story isn't published
+          AdwordsAd.new({ ad_id: aw_ad[:ad][:id] }).remove()
         end
       end
     end
+  end
+
+  private
+
+  # Creates an instance of AdWords API class
+  def create_adwords_api ()
+    if ENV['ADWORDS_ENV'] == 'test'
+      config_file = File.join(Rails.root, 'config', 'adwords_api_test.yml')
+    elsif ENV['ADWORDS_ENV'] == 'production'
+      config_file = File.join(Rails.root, 'config', 'adwords_api_prod.yml')
+    end
+    AdwordsApi::Api.new(config_file)
   end
 
   def create_csp_and_aw_ads (story)
@@ -976,9 +1176,7 @@ class Company < ActiveRecord::Base
         story_id: story.id, long_headline: story.title
       )
       csp_ad.adwords_image = self.adwords_images.default
-      campaign_type = (campaign.type == 'TopicCampaign' ? 'topic' : 'retarget')
-      # reload so the new ads can be accessed in create_ad
-      AdwordsController.new::create_ad(self, story.reload, campaign_type)
+      csp_ad.create()
     end
   end
 

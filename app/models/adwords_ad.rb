@@ -1,7 +1,7 @@
 class AdwordsAd < ActiveRecord::Base
 
   require 'adwords_api'
-  attr_accessor :api
+  ADWORDS_API_VERSION = :v201702
 
   belongs_to :adwords_ad_group
   alias_attribute :ad_group, :adwords_ad_group
@@ -10,12 +10,11 @@ class AdwordsAd < ActiveRecord::Base
   has_one :company, through: :adwords_campaign
   belongs_to :story
   has_one :adwords_ads_image, dependent: :destroy
-  has_one :adwords_image, through: :adwords_ads_image
-
+  has_one :adwords_image, through: :adwords_ads_image\
 
   def create ()
-    @api ||= create_adwords_api()
-    service = @api.service(:AdGroupAdService, get_api_version())
+    api = create_adwords_api()
+    service = api.service(:AdGroupAdService, ADWORDS_API_VERSION)
     campaign_type = self.campaign.type == 'TopicCampaign' ? 'topic' : 'retarget'
     responsive_display_ad = {
       xsi_type: 'ResponsiveDisplayAd',
@@ -43,11 +42,11 @@ class AdwordsAd < ActiveRecord::Base
 
     # Authorization error.
     rescue AdsCommon::Errors::OAuth2VerificationRequired => e
-      flash[:alert] = Rails.env.development? ? 'Invalid Adwords API credentials' : 'Error creating Sponsored Story'
+      # flash[:alert] = Rails.env.development? ? 'Invalid Adwords API credentials' : 'Error creating Sponsored Story'
     # HTTP errors.
     rescue AdsCommon::Errors::HttpError => e
       puts "HTTP Error: %s" % e
-      flash[:alert] = Rails.env.development? ? "HTTP error: #{e}" : 'Error creating Sponsored Story'
+      # flash[:alert] = Rails.env.development? ? "HTTP error: #{e}" : 'Error creating Sponsored Story'
     # API errors.
     rescue AdwordsApi::Errors::ApiException => e
       puts "Message: %s" % e.message
@@ -58,7 +57,7 @@ class AdwordsAd < ActiveRecord::Base
           puts "\t\t%s: %s" % [field, value]
         end
       end
-      flash[:alert] = Rails.env.development? ? "API error: #{e.message}" : 'Error creating Sponsored Story'
+      # flash[:alert] = Rails.env.development? ? "API error: #{e.message}" : 'Error creating Sponsored Story'
     end
 
     # on success, log and update adwords_ad.ad_id
@@ -79,8 +78,8 @@ class AdwordsAd < ActiveRecord::Base
   end
 
   def update_status ()
-    @api ||= create_adwords_api()
-    service = @api.service(:AdGroupAdService, get_api_version())
+    api = create_adwords_api()
+    service = api.service(:AdGroupAdService, ADWORDS_API_VERSION)
     operation =  {
       operator: 'SET',
       operand: {
@@ -94,11 +93,11 @@ class AdwordsAd < ActiveRecord::Base
 
     # Authorization error.
     rescue AdsCommon::Errors::OAuth2VerificationRequired => e
-      flash[:alert] = Rails.env.development? ? 'Invalid Adwords API credentials' : 'Error updating Sponsored Story status'
+      # flash[:alert] = Rails.env.development? ? 'Invalid Adwords API credentials' : 'Error updating Sponsored Story status'
     # HTTP errors.
     rescue AdsCommon::Errors::HttpError => e
       puts "HTTP Error: %s" % e
-      flash[:alert] = Rails.env.development? ? "HTTP error: #{e}" : 'Error updating Sponsored Story status'
+      # flash[:alert] = Rails.env.development? ? "HTTP error: #{e}" : 'Error updating Sponsored Story status'
     # API errors.
     rescue AdwordsApi::Errors::ApiException => e
       puts "Message: %s" % e.message
@@ -109,7 +108,7 @@ class AdwordsAd < ActiveRecord::Base
           puts "\t\t%s: %s" % [field, value]
         end
       end
-      flash[:alert] = Rails.env.development? ? "Adwords API error: #{e.message}" : 'Error updating Sponsored Story status'
+      # flash[:alert] = Rails.env.development? ? "Adwords API error: #{e.message}" : 'Error updating Sponsored Story status'
     end
 
     # response
@@ -124,9 +123,9 @@ class AdwordsAd < ActiveRecord::Base
     end
   end
 
-  def remove
-    @api ||= create_adwords_api()
-    service = @api.service(:AdGroupAdService, get_api_version())
+  def remove ()
+    api = create_adwords_api()
+    service = api.service(:AdGroupAdService, ADWORDS_API_VERSION)
     operation = {
       operator: 'REMOVE',
       operand: {
@@ -141,11 +140,11 @@ class AdwordsAd < ActiveRecord::Base
       response = service.mutate([operation])
     # Authorization error.
     rescue AdsCommon::Errors::OAuth2VerificationRequired => e
-      flash[:alert] = Rails.env.development? ? 'Invalid Adwords API credentials' : 'Error removing Sponsored Story'
+      # flash[:alert] = Rails.env.development? ? 'Invalid Adwords API credentials' : 'Error removing Sponsored Story'
     # HTTP errors.
     rescue AdsCommon::Errors::HttpError => e
       puts "HTTP Error: %s" % e
-      flash[:alert] = Rails.env.development? ? "HTTP error: #{e}" : 'Error removing Sponsored Story'
+      # flash[:alert] = Rails.env.development? ? "HTTP error: #{e}" : 'Error removing Sponsored Story'
     # API errors.
     rescue AdwordsApi::Errors::ApiException => e
       puts "Message: %s" % e.message
@@ -156,7 +155,7 @@ class AdwordsAd < ActiveRecord::Base
           puts "\t\t%s: %s" % [field, value]
         end
       end
-      flash[:alert] = Rails.env.development? ? "Adwords API error: #{e.message}" : 'Error removing Sponsored Story'
+      # flash[:alert] = Rails.env.development? ? "Adwords API error: #{e.message}" : 'Error removing Sponsored Story'
     end
 
     if response and response[:value]
@@ -171,12 +170,7 @@ class AdwordsAd < ActiveRecord::Base
 
   private
 
-  def get_api_version ()
-    :v201702
-  end
-
-  # Creates an instance of AdWords API class. Uses a configuration file and
-  # Rails config directory.
+  # Creates an instance of AdWords API class
   def create_adwords_api ()
     if ENV['ADWORDS_ENV'] == 'test'
       config_file = File.join(Rails.root, 'config', 'adwords_api_test.yml')
@@ -186,8 +180,9 @@ class AdwordsAd < ActiveRecord::Base
     AdwordsApi::Api.new(config_file)
   end
 
-  def get_story_label
-    service = @api.service(:LabelService, get_api_version())
+  def get_story_label ()
+    api = create_adwords_api()
+    service = api.service(:LabelService, ADWORDS_API_VERSION)
     selector = {
       fields: ['LabelName'],
       ordering: [ { field: 'LabelName', sort_order: 'ASCENDING' } ],
@@ -199,13 +194,14 @@ class AdwordsAd < ActiveRecord::Base
       result = service.get(selector)
     rescue AdwordsApi::Errors::ApiException => e
       logger.fatal("Exception occurred: %s\n%s" % [e.to_s, e.message])
-      flash[:alert] = 'API request failed with an error, see logs for details'
+      # flash[:alert] = 'API request failed with an error, see logs for details'
     end
     result[:entries].try(:[], 0) || nil
   end
 
-  def create_story_label
-    service = @api.service(:LabelService, get_api_version())
+  def create_story_label ()
+    api = create_adwords_api()
+    service = api.service(:LabelService, ADWORDS_API_VERSION)
     operation = {
       operator: 'ADD',
       operand: {
@@ -218,7 +214,8 @@ class AdwordsAd < ActiveRecord::Base
   end
 
   def add_story_label (story_label_id)
-    service = @api.service(:AdGroupAdService, get_api_version())
+    api = create_adwords_api()
+    service = api.service(:AdGroupAdService, ADWORDS_API_VERSION)
     operation = {
       operator: 'ADD',
       operand: {

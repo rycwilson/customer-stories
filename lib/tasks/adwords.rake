@@ -26,7 +26,6 @@ namespace :adwords do
 
       if subscribers.values.include?(company)
         company_seeds = company_seeds_lookup(company, ENV['ADWORDS_ENV'])
-        ac = AdwordsController.new
 
         # short headline, logo, default image
         company.update(
@@ -41,34 +40,34 @@ namespace :adwords do
 
         # create topic campaign / ad group
         # get topic ads
-        topic_campaign = ac::get_campaign(company, 'topic')
+        topic_campaign = company.get_adwords_campaign('topic')
         company.campaigns.create(
           type: 'TopicCampaign', status: topic_campaign[:status],
           campaign_id: topic_campaign[:id], name: topic_campaign[:name]
         )
-        topic_ad_group = ac::get_ad_group(topic_campaign[:id])
+        topic_ad_group = company.get_adwords_ad_group(topic_campaign[:id])
         company.campaigns.topic.create_adwords_ad_group(
           ad_group_id: topic_ad_group[:id], status: topic_ad_group[:status],
           name: topic_ad_group[:name]
         )
-        topic_ads = ac::get_ads(topic_ad_group[:id])
+        topic_ads = company.get_adwords_ads(topic_ad_group[:id])
 
         # create retarget campaign / ad group /
         # get retarget ads
-        retarget_campaign = ac::get_campaign(company, 'retarget')
+        retarget_campaign = company.get_adwords_campaign('retarget')
         company.campaigns.create(
           type: 'RetargetCampaign', status: retarget_campaign[:status],
           campaign_id: retarget_campaign[:id], name: retarget_campaign[:name]
         )
-        retarget_ad_group = ac::get_ad_group(retarget_campaign[:id])
+        retarget_ad_group = company.get_adwords_ad_group(retarget_campaign[:id])
         company.campaigns.retarget.create_adwords_ad_group(
           ad_group_id: retarget_ad_group[:id], status: retarget_ad_group[:status],
           name: retarget_ad_group[:name]
         )
-        retarget_ads = ac::get_ads(retarget_ad_group[:id])
+        retarget_ads = company.get_adwords_ads(retarget_ad_group[:id])
 
         # create topic and retarget ads
-        create_csp_ads(company, topic_ads, retarget_ads)
+        company.create_csp_ads(topic_ads, retarget_ads)
 
       # all others
       else
