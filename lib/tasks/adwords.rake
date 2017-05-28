@@ -22,7 +22,7 @@ namespace :adwords do
     subscribers.values.each() { |company| company.update(promote_tr: true) }
 
     # create campaigns, ad groups, images
-    Company.all.each do |company|
+    Company.all.each() do |company|
 
       if subscribers.values.include?(company)
         company_seeds = company_seeds_lookup(company, ENV['ADWORDS_ENV'])
@@ -94,10 +94,10 @@ namespace :adwords do
       if subscribers.values.include?(company)
         company.stories.published.each() do |story|
           unless story.ads.present?
-            story.company.campaigns.topic.ad_group.ads.create(
+            topic_ad = story.company.campaigns.topic.ad_group.ads.create(
               story_id: story.id, long_headline: story.title
             )
-            story.company.campaigns.retarget.ad_group.ads.create(
+            retarget_ad = story.company.campaigns.retarget.ad_group.ads.create(
               story_id: story.id, long_headline: story.title
             )
             # reload since ads are new to the loaded story object
@@ -106,12 +106,12 @@ namespace :adwords do
             puts "ad_group_id: #{story.company.campaigns.topic.ad_group.ad_group_id}"
             puts "image url: #{story.ads.adwords_image.image_url}"
             puts "media id: #{story.ads.adwords_image.media_id}\n"
-            AdwordsController.new::create_ad(company, story, 'topic')
+            topic_ad.create()
             puts "create adwords ad for story #{story.id} retarget"
             puts "ad_group_id: #{story.company.campaigns.retarget.ad_group.ad_group_id}"
             puts "image url: #{story.ads.adwords_image.image_url}"
             puts "media id: #{story.ads.adwords_image.media_id}\n"
-            AdwordsController.new::create_ad(company, story, 'retarget')
+            retarget_ad.create()
           end
         end
       else
@@ -168,7 +168,7 @@ namespace :adwords do
           # - story isn't published
           puts "removing ad from #{company.subdomain} #{campaign.type} ad group #{aw_ad[:ad_group_id]}"
           puts "because #{story.nil? ? 'story not found' : (story.published? ? 'unknown' : 'story not published') }\n"
-          AdwordsController.new::remove_ad({ ad_id: aw_ad[:ad][:id], ad_group_id: aw_ad[:ad_group_id] })
+          campaign.ad_group.ads.build({ ad_id: aw_ad[:ad][:id] }).remove()
         end
       end
     end
