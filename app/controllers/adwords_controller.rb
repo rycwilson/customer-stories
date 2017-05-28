@@ -190,7 +190,6 @@ class AdwordsController < ApplicationController
     new_images
   end
 
-
   # padding for the lower half is 25px 11px
   # "*_minus_padding" means minus 25x2 = 50
   def set_ad_dimensions (long_headline)

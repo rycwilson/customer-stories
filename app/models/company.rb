@@ -1152,7 +1152,7 @@ class Company < ActiveRecord::Base
             )
         else
           # remove the ad if story can't be found OR story isn't published
-          AdwordsAd.new({ ad_id: aw_ad[:ad][:id] }).remove()
+          campaign.ad_group.ads.build({ ad_id: aw_ad[:ad][:id] }).remove()
         end
       end
     end
