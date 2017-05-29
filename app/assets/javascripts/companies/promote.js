@@ -128,7 +128,7 @@ function promoteListeners () {
       })
 
     // upload a new adwords image
-    .on('click', 'button.new-adwords-image',
+    .on('click', '.new-adwords-image-icon:not(.disabled)',
       function () {
 
         var $imagesList = $('ul.adwords-images'),
@@ -337,6 +337,7 @@ function promoteListeners () {
           $(this).find('.submit-toggle').toggle();
         }
       });
+
 
 }
 
