@@ -201,8 +201,8 @@ class StoriesController < ApplicationController
       else
         # errors
       end
-    elsif request.method == 'DELETE'
-      if @story.ads.all? do |ad|
+    elsif request.method == 'DELETE'  # js response
+      if @story.ads.all?() do |ad|
         ad.update(status:'REMOVED')
         # this must go in the delayed job queue, so it happens after ad.remove() (already queued)
         ad.delay.destroy()

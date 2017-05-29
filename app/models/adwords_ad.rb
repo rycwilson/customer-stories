@@ -42,7 +42,8 @@ class AdwordsAd < ActiveRecord::Base
 
     # Authorization error.
     rescue AdsCommon::Errors::OAuth2VerificationRequired => e
-      # flash[:alert] = Rails.env.development? ? 'Invalid Adwords API credentials' : 'Error creating Sponsored Story'
+      puts 'Invalid Adwords API Oauth2 credentials'
+      # flash[:alert] = Rails.env.development? ? 'Invalid Adwords API Oauth2 credentials' : 'Error creating Sponsored Story'
     # HTTP errors.
     rescue AdsCommon::Errors::HttpError => e
       puts "HTTP Error: %s" % e
