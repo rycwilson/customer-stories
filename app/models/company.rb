@@ -887,10 +887,10 @@ class Company < ActiveRecord::Base
 
     topic_campaign = self.get_adwords_campaign('topic')
     topic_ad_group = self.get_adwords_ad_group(topic_campaign[:id])
-    topic_ads = self.get_adwords_ads(topic_ad_group[:id])
+    topic_ads = self.get_adwords_ads(topic_ad_group[:id]) || []
     retarget_campaign = self.get_adwords_campaign('retarget')
     retarget_ad_group = self.get_adwords_ad_group(retarget_campaign[:id])
-    retarget_ads = self.get_adwords_ads(retarget_ad_group[:id])
+    retarget_ads = self.get_adwords_ads(retarget_ad_group[:id]) || []
 
     # topic campaign / ad group / ads
     self.campaigns.topic.update(
