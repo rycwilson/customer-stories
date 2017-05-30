@@ -858,13 +858,6 @@ class Company < ActiveRecord::Base
 
   end
 
-  def default_adwords_image_changed? (company_params)
-    company_params[:default_adwords_image_url].present? ||  # uploaded
-    company_params[:adwords_images_attributes]
-      .select { |index, image| image[:company_default] == 'true' }
-      .values[0].present?  # one of the additional images has been marked as default
-  end
-
   # when a new default is uploaded, assign it as default or create it if it doesn't exist;
   # save the old default as an additional image;
   # if this is the initial default uploaded, update any ads

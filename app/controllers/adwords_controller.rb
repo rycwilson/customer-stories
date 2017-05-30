@@ -88,7 +88,6 @@ class AdwordsController < ApplicationController
           end
         end
       end
-      @removed_images_stories
     end
 
     # upload any new images
