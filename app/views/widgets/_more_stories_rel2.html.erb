@@ -19,7 +19,7 @@
 
       <div class="col-xs-12 col-sm-10" style='padding:0'>
 
-        <div class='cs-row row-horizon text-center' style='   '>
+        <div class='cs-row row-horizon text-center'>
 
         <!-- the bootstrap styling starts to break down after 30 stories -->
         <% stories.first(18).each do |story|  %>
@@ -33,16 +33,13 @@
               <div class="cs-thumbnail-view">
                 <% if story[:published] %>
                   <div class='cs-thumbnail-view-hover story-title'>
-                    <p>
-                      <%= story[:title] %>
-                    </p>
+                    <p><%= story[:title] %></p>
                   </div>
                 <% end %>
                 <img class='cs-img' src="<%= story[:logo] %>" alt=''>
-                <% if story[:published] %>
+                <% if story[:published] && story[:quote].present? %>
                   <div class='cs-thumbnail-view-hover story-quote'>
-                    <p>This is a test paragraph. Customer quote blah blah blah, what a great product, blah blah.
-                    </p>
+                    <p>"<%= story[:quote].length > 250 ? story[:quote].truncate(250, separator:' ') : story[:quote] %>"</p>
                   </div>
                 <% end %>
               </div>

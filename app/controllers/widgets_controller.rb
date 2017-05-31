@@ -50,6 +50,7 @@ class WidgetsController < ApplicationController
       @company.filter_stories_by_tag(filter_params || { tag: 'all', id: '0' }, false)
               .map do |story|
                 { title: story.title,
+                  quote: story.quote,
                   logo: story.customer.logo_url,
                   path: story.published ? story.csp_story_url : stories_index_url,
                   published: story.published }
