@@ -68,7 +68,7 @@
                 } else if (position === 'rel-exp') {
                   buildRelExpWidget($container);
                 }
-                xScrollBoundaries()
+                xScrollBoundaries(position);
               }
             })
           }
@@ -300,9 +300,13 @@
     when scrolling past boundaries with trackpad, prevent default browser behavior
     (back/forward navigation)
   */
-  function xScrollBoundaries () {
+  function xScrollBoundaries (position) {
+
     var maxX = null;
     $(document).on('wheel', '.row-horizon', function (event) {
+      if (position === 'rel-exp') {
+        event.preventDefault();
+      }
       maxX = $(this).prop('scrollWidth') - $(this).prop('offsetWidth');
       // If this event looks like it will scroll beyond the bounds of the element,
       //  prevent it and set the scroll to the boundary manually
