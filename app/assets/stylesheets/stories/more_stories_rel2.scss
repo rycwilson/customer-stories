@@ -104,7 +104,8 @@
       // overflow: hidden;
       line-height: 148px;
       cursor: pointer;
-      .cs-thumbnail-view-hover {
+      overflow: hidden;
+      .cs-thumbnail-view-hover.story-title {
         display: flex;
         align-items: center;
         text-align: center;
@@ -112,7 +113,6 @@
         z-index: 10;
         height: 152px;
         width: 100%;
-        text-align: left;
         padding: 4px 8px;
         // background: #ddd !important;  // so there isn't a dark strip on top of the story tile, changes on hover
         border-radius: 3px 3px 0 0;
@@ -139,6 +139,32 @@
         max-width: 100%;
         padding: 8px;
       }
+      .cs-thumbnail-view-hover.story-quote {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        position: absolute;
+        z-index: 10;
+        height: 152px;
+        width: 100%;
+        padding: 4px 8px;
+        // background: #ddd !important;  // so there isn't a dark strip on top of the story tile, changes on hover
+        border-radius: 3px 3px 0 0;
+        -webkit-transform: translateY(0%);
+        -moz-transform: translateY(0%);
+        -ms-transform: translateY(0%);
+        -o-transform: translateY(0%);
+        transition: all 0.2s ease-in-out;
+        p {
+          font-family: inherit !important;
+          font-size: 20px !important;
+          text-align: center;
+          line-height: 28px !important;
+          font-weight: 600;
+          letter-spacing: normal;
+          color: #444 !important;
+        }
+      }
     }
     .cs-caption {
       font-size: 16px;
@@ -152,12 +178,12 @@
     }
   }
   .cs-thumbnail:hover {
-    .cs-thumbnail-view .cs-thumbnail-view-hover {
+    .cs-thumbnail-view .cs-thumbnail-view-hover:not(.story-quote) {
       // background: rgba(245, 245, 245, 0.94);
-      -webkit-transform: translateY(0%);
-      -moz-transform: translateY(0%);
-      -ms-transform: translateY(0%);
-      -o-transform: translateY(0%);
+      // -webkit-transform: translateY(0%);
+      // -moz-transform: translateY(0%);
+      // -ms-transform: translateY(0%);
+      // -o-transform: translateY(0%);
     }
     .cs-img {
       opacity: 0.1;

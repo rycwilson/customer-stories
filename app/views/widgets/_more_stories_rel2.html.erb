@@ -32,13 +32,19 @@
 
               <div class="cs-thumbnail-view">
                 <% if story[:published] %>
-                  <div class='cs-thumbnail-view-hover'>
+                  <div class='cs-thumbnail-view-hover story-title'>
                     <p>
                       <%= story[:title] %>
                     </p>
                   </div>
                 <% end %>
                 <img class='cs-img' src="<%= story[:logo] %>" alt=''>
+                <% if story[:published] %>
+                  <div class='cs-thumbnail-view-hover story-quote'>
+                    <p>This is a test paragraph. Customer quote blah blah blah, what a great product, blah blah.
+                    </p>
+                  </div>
+                <% end %>
               </div>
 
               <% if story[:published] %>

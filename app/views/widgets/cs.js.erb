@@ -80,16 +80,46 @@
   }
 
   function buildRelWidget ($container) {
+    var displayTimer,
+        transformUp = {
+                        '-webkit-transform' : 'translateY(-100%)',
+                        '-moz-transform'    : 'translateY(-100%)',
+                        '-ms-transform'     : 'translateY(-100%)',
+                        '-o-transform'      : 'translateY(-100%)',
+                        'transform'         : 'translateY(-100%)'
+                      },
+        transformDown = {
+                          '-webkit-transform' : 'translateY(0%)',
+                          '-moz-transform'    : 'translateY(0%)',
+                          '-ms-transform'     : 'translateY(0%)',
+                          '-o-transform'      : 'translateY(0%)',
+                          'transform'         : 'translateY(0%)'
+                        };
     scrollHandlers($container);
     $container.find('.cs-thumbnail.published').hover(
       function () {
-        $(this).css('border-color', '<%= @company.widget.tab_color %>');
-        // $(this).children('.cs-thumbnail-view').css('opacity', '0.1');
-        // $(this).children('.cs-caption').css('visibility', 'visible');
+        var $thumbnail = $(this), display = 'title',
+            $title = $(this).find('.cs-thumbnail-view-hover.story-title'),
+            $quote = $(this).find('.cs-thumbnail-view-hover.story-quote');
+        $thumbnail.css('border-color', '<%= @company.widget.tab_color %>');
+        $thumbnail.find('.cs-thumbnail-view-hover.story-title').css(transformDown);
+        displayTimer = window.setInterval(function () {
+          if (display === 'title') {
+            $title.css(transformUp);
+            $quote.css(transformUp);
+            display = 'quote';
+          } else if (display === 'quote') {
+            $title.css(transformDown);
+            $quote.css(transformDown);
+            display = 'title';
+          }
+        }, 4000);
       },
       function () {
         $(this).css('border-color', 'transparent');
-        // $(this).children('.cs-caption').css('visibility', 'hidden');
+        $(this).find('.cs-thumbnail-view-hover.story-title').css(transformUp);
+        $(this).find('.cs-thumbnail-view-hover.story-quote').css(transformDown);
+        window.clearInterval(displayTimer)
       }
     );
     $container.find('.cs-thumbnail.logo-published').hover(
