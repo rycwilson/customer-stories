@@ -82,8 +82,15 @@
   function buildRelWidget ($container) {
     scrollHandlers($container);
     $container.find('.cs-thumbnail.published').hover(
-      function () { $(this).css('border-color', '<%= @company.widget.tab_color %>'); },
-      function () { $(this).css('border-color', '#ddd'); }
+      function () {
+        $(this).css('border-color', '<%= @company.widget.tab_color %>');
+        // $(this).children('.cs-thumbnail-view').css('opacity', '0.1');
+        // $(this).children('.cs-caption').css('visibility', 'visible');
+      },
+      function () {
+        $(this).css('border-color', 'transparent');
+        // $(this).children('.cs-caption').css('visibility', 'hidden');
+      }
     );
     $container.find('.cs-thumbnail.logo-published').hover(
       function () { $(this).css('border-color', '#ccc'); },

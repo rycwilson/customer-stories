@@ -2,11 +2,11 @@
 <section class='cs-section' style='visibility:hidden'>
   <div class='cs-container-fluid'>
 
-    <div class="text-center">
+  <!--   <div class="text-center">
       <h1>Customer Stories</h1>
-    </div>
+    </div> -->
 
-    <div class='cs-row cs-pagination-row text-center'>
+    <div class='cs-row cs-pagination-row text-center' style='visibility:hidden'>
     </div>
 
     <div class="cs-row">
@@ -31,11 +31,13 @@
                target="<%= native ? '' : '_blank' %>">
 
               <div class="cs-thumbnail-view">
-                <%# if story[:published] %>
-                <!--   <p class='cs-thumbnail-view-hover'>
-                    <%#= story[:title] %>
-                  </p> -->
-                <%# end %>
+                <% if story[:published] %>
+                  <div class='cs-thumbnail-view-hover'>
+                    <p>
+                      <%= story[:title] %>
+                    </p>
+                  </div>
+                <% end %>
                 <img class='cs-img' src="<%= story[:logo] %>" alt=''>
               </div>
 

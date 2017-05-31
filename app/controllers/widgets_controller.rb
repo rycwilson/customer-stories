@@ -55,7 +55,7 @@ class WidgetsController < ApplicationController
                   published: story.published }
               end
     render_to_string(
-      partial: params[:position] == 'tab' ? 'more_stories_tab' : 'more_stories_rel',
+      partial: params[:position] == 'tab' ? 'more_stories_tab' : 'more_stories_rel2',
       layout: false,
       locals: { widget: @company.widget, stories: stories,
                 title: 'Customer Stories', native: false }
