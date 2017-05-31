@@ -32,21 +32,16 @@
 
               <div class="cs-thumbnail-view">
                 <% if story[:published] %>
-                  <div class='cs-thumbnail-view-hover story-title'>
+                  <div class='cs-thumbnail-view-hover'>
                     <p><%= story[:title] %></p>
                   </div>
                 <% end %>
                 <img class='cs-img' src="<%= story[:logo] %>" alt=''>
-                <% if story[:published] && story[:quote].present? %>
-                  <div class='cs-thumbnail-view-hover story-quote'>
-                    <p>"<%= story[:quote].length > 250 ? story[:quote].truncate(250, separator:' ') : story[:quote] %>"</p>
-                  </div>
-                <% end %>
               </div>
 
               <% if story[:published] %>
                 <div class="cs-caption" style="<%= widget.tab_style %>">
-                  Read story
+                  <%= story[:customer] %>
                 </div>
               <% end %>
 

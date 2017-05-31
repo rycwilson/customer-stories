@@ -17,6 +17,7 @@ Rails.application.config.assets.precompile += %w(
   adwords/ads_preview.css
   cs-widget-tab.css
   cs-widget-rel.css
+  cs-widget-rel-exp.css
   pdf.css
   social-share.css
   mvpready-landing.css

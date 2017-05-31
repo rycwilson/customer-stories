@@ -50,13 +50,13 @@ class WidgetsController < ApplicationController
       @company.filter_stories_by_tag(filter_params || { tag: 'all', id: '0' }, false)
               .map do |story|
                 { title: story.title,
-                  quote: story.quote,
+                  customer: story.customer.name,
                   logo: story.customer.logo_url,
                   path: story.published ? story.csp_story_url : stories_index_url,
                   published: story.published }
               end
     render_to_string(
-      partial: params[:position] == 'tab' ? 'more_stories_tab' : 'more_stories_rel2',
+      partial: params[:position] == 'tab' ? 'more_stories_tab' : (params[:position] == 'rel' ? 'more_stories_rel' : 'more_stories_rel_exp'),
       layout: false,
       locals: { widget: @company.widget, stories: stories,
                 title: 'Customer Stories', native: false }

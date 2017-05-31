@@ -18,27 +18,22 @@
   function main () {
 
     $(function () {
-
-      var position = '<%= @position %>',
-          $container = (position === 'tab') ? ( $('#cs-tab-container').length > 0 ? $('#cs-tab-container') : $('#cs-container') ) : $('#cs-rel-container'),
-          $script = (position === 'tab') ? $('script[href*="tab"]') : $('script[href*="rel"]'),
+      var position = '<%= @position %>', $container,
+          $script = (position === 'tab') ? $('script[href*="tab"]') :
+                      (position === 'rel' ? $('script[href*="rel/"]') : $('script[href*="rel-exp"]')),
           category = $script.data('category'),
           product = $script.data('product'),
-          $stylesheet = $("<link>", {
-            rel: "stylesheet",
-            type: "text/css"
-          });
+          $stylesheet = $("<link>", { rel: "stylesheet", type: "text/css" });
 
       if (position === 'tab') {
-        $stylesheet.attr('href',
-          "<%= URI.join(root_url, asset_path('cs-widget-tab.css')) %>"
-        );
+        $container = $('#cs-tab-container');
+        $stylesheet.attr('href', "<%= URI.join(root_url, asset_path('cs-widget-tab.css')) %>");
       } else if (position === 'rel') {
-        $stylesheet.attr('href',
-          "<%= URI.join(root_url, asset_path('cs-widget-rel.css')) %>"
-        );
-        // $.getScript("<%= URI.join(root_url, asset_path('jquery-textfill/source/jquery.textfill.js')) %>",
-        //   function () { textfillPlugin() });
+        $container = $('#cs-rel-container');
+        $stylesheet.attr('href', "<%= URI.join(root_url, asset_path('cs-widget-rel.css')) %>");
+      } else if (position === 'rel-exp') {
+        $container = $('#cs-rel-exp-container');
+        $stylesheet.attr('href', "<%= URI.join(root_url, asset_path('cs-widget-rel-exp.css')) %>");
       }
 
       // get font awesome if it doesn't exist on host
@@ -68,8 +63,10 @@
               if (++loadedImages === $images.length) {
                 if (position === 'tab') {
                   buildTabWidget($container);
-                } else {
+                } else if (position === 'rel') {
                   buildRelWidget($container);
+                } else if (position === 'rel-exp') {
+                  buildRelExpWidget($container);
                 }
                 xScrollBoundaries()
               }
@@ -82,61 +79,43 @@
   }
 
   function buildRelWidget ($container) {
-    var displayTimer,
-        // hack: 101% to get it centered
-        transformUp = {
-                        '-webkit-transform' : 'translateY(-101%)',
-                        '-moz-transform'    : 'translateY(-101%)',
-                        '-ms-transform'     : 'translateY(-101%)',
-                        '-o-transform'      : 'translateY(-101%)',
-                        'transform'         : 'translateY(-101%)'
-                      },
-        transformDown = {
-                          '-webkit-transform' : 'translateY(0%)',
-                          '-moz-transform'    : 'translateY(0%)',
-                          '-ms-transform'     : 'translateY(0%)',
-                          '-o-transform'      : 'translateY(0%)',
-                          'transform'         : 'translateY(0%)'
-                        };
+    scrollHandlers($container);
+    $container.find('.cs-thumbnail.published').hover(
+      function () { $(this).css('border-color', '<%= @company.widget.tab_color %>'); },
+      function () { $(this).css('border-color', '#ddd'); }
+    );
+    $container.find('.cs-thumbnail.logo-published').hover(
+      function () { $(this).css('border-color', '#ccc'); },
+      function () { $(this).css('border-color', '#ddd'); }
+    );
+    $container.find('section').css('visibility', 'visible');
+    if (<%= ENV['HOST_NAME'] == 'customerstories.net' %>) {
+      trackVisitor();
+    }
+  }
+
+  function buildRelExpWidget ($container) {
+    var borderColorHex = '<%= @company.widget.tab_color %>',
+        borderColorRgb = hexToRgb(borderColorHex),
+        borderOpacity = 0.8,
+        borderColorRgba = 'rgba(' + borderColorRgb.r.toString() + ',' + borderColorRgb.g.toString() + ',' + borderColorRgb.b.toString() + ',' + borderOpacity.toString()
+
+    $('#cs-rel-exp-container .cs-thumbnail').css('border-color', borderColorHex)
+    $('#cs-rel-exp-container .cs-caption').css('background-color', borderColorHex)
+
     scrollHandlers($container);
     textfillPlugin();
-    $('#cs-rel-container .cs-thumbnail.published .cs-thumbnail-view-hover.story-quote')
-      .each(function () {
-        console.log('textfill')
-        $(this).textfill({
-                  minFontPixels: 12,
-                  maxFontPixels: 20,
-                  innerTag: "p",
-                  // changeLineHeight: true,
-                  debug: true
-                })
-      });
-    $container.find('.cs-thumbnail.published').hover(
-      function () {
-        var $thumbnail = $(this), display = 'title',
-            $title = $(this).find('.cs-thumbnail-view-hover.story-title'),
-            $quote = $(this).find('.cs-thumbnail-view-hover.story-quote');
-        $thumbnail.css('border-color', '<%= @company.widget.tab_color %>');
-        $thumbnail.find('.cs-thumbnail-view-hover.story-title').css(transformDown);
-        displayTimer = window.setInterval(function () {
-          if (display === 'title' && $quote.length) {
-            $title.css(transformUp);
-            $quote.css(transformUp);
-            display = 'quote';
-          } else if (display === 'quote') {
-            $title.css(transformDown);
-            $quote.css(transformDown);
-            display = 'title';
-          }
-        }, 3000);
-      },
-      function () {
-        $(this).css('border-color', 'transparent');
-        $(this).find('.cs-thumbnail-view-hover.story-title').css(transformUp);
-        $(this).find('.cs-thumbnail-view-hover.story-quote').css(transformDown);
-        window.clearInterval(displayTimer)
-      }
-    );
+
+    // $container.find('.cs-thumbnail.published').hover(
+    //   function () {
+    //     // $(this).css('border-color', borderColorHex);
+    //     // $(this).children('.cs-caption').css('background-color', borderColorHex);
+    //   },
+    //   function () {
+    //     // $(this).css('border-color', borderColorRgba)
+    //     // $(this).children('.cs-caption').css('background-color', borderColorRgba);
+    //   }
+    // );
     $container.find('.cs-thumbnail.logo-published').hover(
       function () { $(this).css('border-color', '#ccc'); },
       function () { $(this).css('border-color', '#ddd'); }
@@ -491,6 +470,20 @@
     return(setStr);
   }
 
+  function hexToRgb (hex) {
+    // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+        return r + r + g + g + b + b;
+    });
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16)
+    } : null;
+  }
+
   function textfillPlugin () {
     $.fn.textfill = function (options) {
 
@@ -640,20 +633,6 @@
       };
 
       var Opts = $.extend(defaults, options);
-
-      // _______ _     _ __   _ _______ _______ _____  _____  __   _ _______
-      // |______ |     | | \  | |          |      |   |     | | \  | |______
-      // |       |_____| |  \_| |_____     |    __|__ |_____| |  \_| ______|
-      //
-      // Predefining the awesomeness
-
-
-
-      // _______ _______ _______  ______ _______
-      // |______    |    |_____| |_____/    |
-      // ______|    |    |     | |    \_    |
-          //
-      // Let's get it started (yeah)!
 
       _debug('[TextFill] Start Debug');
 
