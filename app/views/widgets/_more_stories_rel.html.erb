@@ -31,11 +31,11 @@
                target="<%= native ? '' : '_blank' %>">
 
               <div class="cs-thumbnail-view">
-                <%# if story[:published] %>
-                <!--   <p class='cs-thumbnail-view-hover'>
-                    <%#= story[:title] %>
-                  </p> -->
-                <%# end %>
+                <% if story[:published] %>
+                  <p class='cs-thumbnail-view-hover'>
+                    <%= story[:title] %>
+                  </p>
+                <% end %>
                 <img class='cs-img' src="<%= story[:logo] %>" alt=''>
               </div>
 
