@@ -324,20 +324,25 @@
   */
   function xScrollBoundaries (position) {
 
-    var maxX = null;
-    $(document).on('wheel', '.row-horizon', function (event) {
-      if (position === 'rel-exp') {
-        event.preventDefault();
-      }
-      maxX = $(this).prop('scrollWidth') - $(this).prop('offsetWidth');
-      // If this event looks like it will scroll beyond the bounds of the element,
-      //  prevent it and set the scroll to the boundary manually
-      if ($(this).prop('scrollLeft') + event.originalEvent.deltaX < 0 ||
-          $(this).prop('scrollLeft') + event.originalEvent.deltaX > maxX) {
-        event.preventDefault();
-        $(this).prop('scrollLeft', Math.max(0, Math.min(maxX, $(this).prop('scrollLeft') + event.originalEvent.deltaX)));
-      }
+    // no trackpad scrolling
+    $(document).on('wheel', '#cs-rel-exp-container .row-horizon', function (event) {
+      event.preventDefault();
     });
+
+    // constraign trackpad scrolling (don't go forward/back in browser)
+    var maxX = null;
+    $(document).on('wheel', '#cs-container .row-horizon, #cs-tab-container .row-horizon, #cs-rel-container .row-horizon',
+      function (event) {
+        maxX = $(this).prop('scrollWidth') - $(this).prop('offsetWidth');
+        // If this event looks like it will scroll beyond the bounds of the element,
+        //  prevent it and set the scroll to the boundary manually
+        if ($(this).prop('scrollLeft') + event.originalEvent.deltaX < 0 ||
+            $(this).prop('scrollLeft') + event.originalEvent.deltaX > maxX) {
+          event.preventDefault();
+          $(this).prop('scrollLeft', Math.max(0, Math.min(maxX, $(this).prop('scrollLeft') + event.originalEvent.deltaX)));
+        }
+      }
+    );
   }
 
   function scrollHandlers ($container) {
