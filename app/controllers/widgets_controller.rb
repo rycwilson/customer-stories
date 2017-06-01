@@ -52,7 +52,7 @@ class WidgetsController < ApplicationController
                 { title: story.title,
                   customer: story.customer.name,
                   logo: story.customer.logo_url,
-                  path: story.published ? story.csp_story_url : stories_index_url,
+                  url: story.published ? story.csp_story_url : stories_index_url,
                   published: story.published }
               end
     render_to_string(
