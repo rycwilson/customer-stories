@@ -26,7 +26,7 @@
           $stylesheet = $("<link>", { rel: "stylesheet", type: "text/css" });
 
       if (position === 'tab') {
-        $container = $('#cs-tab-container');
+        $container = $('#cs-container').length ? $('#cs-container') : $('#cs-tab-container');
         $stylesheet.attr('href', "<%= URI.join(root_url, asset_path('cs-widget-tab.css')) %>");
       } else if (position === 'rel') {
         $container = $('#cs-rel-container');
