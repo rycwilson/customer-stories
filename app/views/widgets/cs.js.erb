@@ -82,7 +82,6 @@
   }
 
   function buildRelWidget ($container) {
-    scrollHandlers($container);
     $container.find('.cs-thumbnail.published').hover(
       function () { $(this).css('border-color', '<%= @company.widget.tab_color %>'); },
       function () { $(this).css('border-color', '#ddd'); }
