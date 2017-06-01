@@ -58,8 +58,11 @@ class WidgetsController < ApplicationController
     render_to_string(
       partial: params[:position] == 'tab' ? 'more_stories_tab' : (params[:position] == 'rel' ? 'more_stories_rel' : 'more_stories_rel_exp'),
       layout: false,
-      locals: { widget: @company.widget, stories: stories,
-                title: 'Customer Stories', native: false }
+      locals: {
+        widget: @company.widget, stories: stories,
+        company_url: url_for(subdomain: @company.subdomain, controller:'stories', action:'index'),
+        title: 'Customer Stories', native: false
+      }
     )
   end
 

@@ -457,13 +457,7 @@
 
     var $carousel = $container.find('.row-horizon'),
         scrollWidth = $carousel.prop('scrollWidth'),
-        // maxScrollPosition = scrollWidth - $carousel.width(),
         numPages = Math.ceil(scrollWidth / $carousel.width()),
-        // pageWidth = Math.ceil(scrollWidth / numPages),
-        // currentPage = 1,
-        // scrollPosition = null, scrollRemaining = null,
-        // dynamicPage = null, lastPage = null,
-
         arrowScrollLeft = function ($carousel, pageWidth) {
           return function (e) {
             $carousel.animate({ scrollLeft: '-=' + $carousel.css('width') }, 500);
@@ -471,17 +465,7 @@
         },
         arrowScrollRight = function ($carousel, pageWidth, scrollWidth) {
           return function (e) {
-            // var scrollPosition = $carousel.scrollLeft(),
-            //     scrollRemaining = scrollWidth - (scrollPosition + $carousel.width()),
-            // var columnWidth = $carousel.find('div[class*="col-"]').first().width()
-
             $carousel.animate({ scrollLeft: '+=' + $carousel.css('width') }, 500)
-
-            // if (scrollRemaining >= pageWidth) {
-            //   $carousel.animate({ scrollLeft: '+=' + pageWidth.toString() }, 1000);
-            // } else {
-            //   $carousel.animate({ scrollLeft: '+=' + scrollRemaining.toString() }, 1000);
-            // }
           };
         };
 
