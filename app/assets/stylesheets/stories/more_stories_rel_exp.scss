@@ -28,41 +28,16 @@
       display: flex;
       align-items: center;
       color: #666;
-      margin-bottom: 20px;
     }
   }
 
   .row-horizon {
-    padding-bottom: 21px;
+    margin-bottom: 20px 0;
     div[class^='col'] {
       position: relative;
       width: 330px;
       height: 180px;
       box-sizing: border-box;
-    }
-    @media only screen and (max-width: 767px) {
-      // padding: 0 10px 21px 10px;
-    }
-    @media only screen and (max-width: 567px) {
-      .col-xs-8 {
-      }
-    }
-    @media only screen and (min-width: 568px) and (max-width: 667px) {
-      .col-xs-8 {
-      }
-    }
-    @media only screen and (min-width: 668px) and (max-width: 767px) {
-      .col-xs-8 {
-      }
-    }
-    @media only screen and (min-width: 768px) {
-      .col-sm-5 {  }
-    }
-    @media only screen and (min-width: 992px) {
-      .col-md-3 {  }
-    }
-    @media only screen and (min-width: 1200px) {
-      .col-md-3 {  }
     }
   }
 
