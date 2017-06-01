@@ -49,7 +49,7 @@
       box-sizing: border-box;
     }
     @media only screen and (max-width: 767px) {
-      padding: 0 10px 21px 10px;
+      // padding: 0 10px 21px 10px;
     }
     @media only screen and (max-width: 567px) {
       .col-xs-8 {
@@ -168,9 +168,16 @@
     }
   }
 
+  .cs-scroll-left-xs, .cs-scroll-right-xs {
+    cursor: pointer;
+  }
+
+  .cs-scroll-left-xs:hover, .cs-scroll-right-xs:hover {
+    color: #666;
+  }
+
   .cs-scroll-left, .cs-scroll-right {
     position: absolute;
-    z-index: 10;
     cursor: pointer;
     top: 0;
     bottom: 0;

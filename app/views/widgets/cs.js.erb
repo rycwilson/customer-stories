@@ -63,10 +63,13 @@
               if (++loadedImages === $images.length) {
                 if (position === 'tab') {
                   buildTabWidget($container);
+                  scrollHandlers($container);
                 } else if (position === 'rel') {
                   buildRelWidget($container);
+                  scrollHandlers($container);
                 } else if (position === 'rel-exp') {
                   buildRelExpWidget($container);
+                  scrollHandlersExp($container);
                 }
                 xScrollBoundaries(position);
               }
@@ -103,7 +106,6 @@
     $('#cs-rel-exp-container .cs-thumbnail').css('border-color', borderColorHex)
     $('#cs-rel-exp-container .cs-caption').css('background-color', borderColorHex)
 
-    scrollHandlers($container);
     textfillPlugin();
 
     // $container.find('.cs-thumbnail.published').hover(
@@ -120,6 +122,27 @@
       function () { $(this).css('border-color', '#ccc'); },
       function () { $(this).css('border-color', '#ddd'); }
     );
+
+    var $carousel = $container.find('.row-horizon'),
+        // columnWidth = parseInt($carousel.children('div[class*="col-"]').first().css('width'), 10),
+        storyWidth = 270,
+        scrollWidth = $carousel.prop('scrollWidth'),
+        maxScrollPosition = scrollWidth - $carousel.width();
+
+    // debugger;
+
+    if ($carousel.width() >= 3 * storyWidth) {
+      // do nothing
+
+    } else if ($carousel.width() >= 2 * storyWidth) {
+      $carousel.find('div[class*="col-"]')
+               .css('width', Math.floor($carousel.width() / 2).toString() + 'px')
+    } else {
+      $carousel.find('div[class*="col-"]')
+               .css('width', $carousel.css('width'))
+
+    }
+
     $container.find('section').css('visibility', 'visible');
     if (<%= ENV['HOST_NAME'] == 'customerstories.net' %>) {
       trackVisitor();
@@ -428,6 +451,51 @@
     } else {
       $container.find('.cs-pagination-row, .cs-scroll-left, .cs-scroll-right')
         .css('visibility', 'hidden');
+    }
+  }
+
+  function scrollHandlersExp ($container) {
+
+    var $carousel = $container.find('.row-horizon'),
+        scrollWidth = $carousel.prop('scrollWidth'),
+        // maxScrollPosition = scrollWidth - $carousel.width(),
+        numPages = Math.ceil(scrollWidth / $carousel.width()),
+        // pageWidth = Math.ceil(scrollWidth / numPages),
+        // currentPage = 1,
+        // scrollPosition = null, scrollRemaining = null,
+        // dynamicPage = null, lastPage = null,
+
+        arrowScrollLeft = function ($carousel, pageWidth) {
+          return function (e) {
+            $carousel.animate({ scrollLeft: '-=' + $carousel.css('width') }, 1000);
+          };
+        },
+        arrowScrollRight = function ($carousel, pageWidth, scrollWidth) {
+          return function (e) {
+            // var scrollPosition = $carousel.scrollLeft(),
+            //     scrollRemaining = scrollWidth - (scrollPosition + $carousel.width()),
+            // var columnWidth = $carousel.find('div[class*="col-"]').first().width()
+
+            $carousel.animate({ scrollLeft: '+=' + $carousel.css('width') }, 1000)
+
+            // if (scrollRemaining >= pageWidth) {
+            //   $carousel.animate({ scrollLeft: '+=' + pageWidth.toString() }, 1000);
+            // } else {
+            //   $carousel.animate({ scrollLeft: '+=' + scrollRemaining.toString() }, 1000);
+            // }
+          };
+        };
+
+    if (numPages > 1) {
+
+      $container.find('.cs-scroll-left, .cs-scroll-left-xs')
+                .on('click', arrowScrollLeft($carousel));
+      $container.find('.cs-scroll-right, .cs-scroll-right-xs')
+                .on('click', arrowScrollRight($carousel));
+
+    } else {
+      $container.find('.cs-scroll-left, .cs-scroll-left-xs, .cs-scroll-right, .cs-scroll-right-xs')
+                .css('visibility', 'hidden');
     }
   }
 
