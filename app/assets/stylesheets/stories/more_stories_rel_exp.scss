@@ -13,23 +13,6 @@
     display: none;
   }
 
-  .cs-pagination-row {
-    height: 25px;
-    padding: 0;
-    .cs-page-dot {
-      display: inline-block;
-      height: 8px;
-      width: 8px;
-      margin: 1px 4px;
-      border: 1px solid #666;
-      background: transparent;
-      border-radius: 8px;
-    }
-    .cs-current-page-dot {
-      background: #666 !important;
-    }
-  }
-
   .cs-row {
     margin: 0;
     padding: 0;
@@ -38,6 +21,15 @@
   .cs-scroll {
     position: relative;
     height: 180px;
+  }
+
+  .cs-scroll-xs {
+    > .cs-row {
+      display: flex;
+      align-items: center;
+      color: #666;
+      margin-bottom: 20px;
+    }
   }
 
   .row-horizon {
@@ -200,7 +192,7 @@
     // background-color: rgba(0, 0, 0, 0.7);
   }
 
-  .see-more {
+  .cs-see-more {
     overflow: hidden;
     h4 {
       a { color: #666; }
