@@ -200,4 +200,30 @@
     // background-color: rgba(0, 0, 0, 0.7);
   }
 
+  .see-more {
+    overflow: hidden;
+    h4 {
+      color: #666;
+      position: relative;
+      display: inline-block;
+      padding: 0 15px;
+    }
+    h4:before, h4:after {
+      background: #666;
+      content: "";
+      display: block;
+      height: 1px;
+      position: absolute;
+      top: 50%;
+      width: 400%;
+    }
+    h4:before {
+      right: 100%;
+    }
+
+    h4:after {
+      left: 100%;
+    }
+  }
+
 }
