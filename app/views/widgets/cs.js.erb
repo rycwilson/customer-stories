@@ -467,7 +467,7 @@
 
         arrowScrollLeft = function ($carousel, pageWidth) {
           return function (e) {
-            $carousel.animate({ scrollLeft: '-=' + $carousel.css('width') }, 1000);
+            $carousel.animate({ scrollLeft: '-=' + $carousel.css('width') }, 500);
           };
         },
         arrowScrollRight = function ($carousel, pageWidth, scrollWidth) {
@@ -476,7 +476,7 @@
             //     scrollRemaining = scrollWidth - (scrollPosition + $carousel.width()),
             // var columnWidth = $carousel.find('div[class*="col-"]').first().width()
 
-            $carousel.animate({ scrollLeft: '+=' + $carousel.css('width') }, 1000)
+            $carousel.animate({ scrollLeft: '+=' + $carousel.css('width') }, 500)
 
             // if (scrollRemaining >= pageWidth) {
             //   $carousel.animate({ scrollLeft: '+=' + pageWidth.toString() }, 1000);
