@@ -124,7 +124,7 @@
 
     var $carousel = $container.find('.row-horizon'),
         // columnWidth = parseInt($carousel.children('div[class*="col-"]').first().css('width'), 10),
-        storyWidth = 270,
+        storyWidth = 270,  // TODO constantize this number
         scrollWidth = $carousel.prop('scrollWidth'),
         maxScrollPosition = scrollWidth - $carousel.width();
 
@@ -132,7 +132,8 @@
 
     if ($carousel.width() >= 3 * storyWidth) {
       // do nothing
-
+      $carousel.find('div[class*="col-"]')
+               .css('width', Math.floor($carousel.width() / 3).toString() + 'px')
     } else if ($carousel.width() >= 2 * storyWidth) {
       $carousel.find('div[class*="col-"]')
                .css('width', Math.floor($carousel.width() / 2).toString() + 'px')
@@ -150,7 +151,6 @@
 
   function buildTabWidget ($container) {
     slideDrawerPlugin($container);
-    scrollHandlers($container);
     var $header = $container.find('.cs-header'),
         widgetShowTimer = null, widgetHideTimer = null;
     // cancel the timers if user interacts with widget
