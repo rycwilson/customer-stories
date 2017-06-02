@@ -94,7 +94,8 @@ function initEvents(callback) {
 
   } );
 
-  callback();
+  // callback only defined on initial page load
+  if (callback) { callback(); }
 
 }
 
