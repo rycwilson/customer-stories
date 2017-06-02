@@ -56,7 +56,7 @@ function loadVideoThumbnail () {
     });
 
   } else if (provider === 'vimeo') {
-    $.getJSON('//vimeo.com/api/oembed.json?url=https%3A//vimeo.com/' + videoId + '.json',
+    $.getJSON('//vimeo.com/api/oembed.json?url=https%3A//vimeo.com/' + videoId,
         function (data, status) {
           thumbSrc = data.thumbnail_url_with_play_button;
           $thumbContainer.append(
