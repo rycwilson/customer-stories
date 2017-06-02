@@ -102,10 +102,26 @@
         borderOpacity = 0.8,
         borderColorRgba = 'rgba(' + borderColorRgb.r.toString() + ',' + borderColorRgb.g.toString() + ',' + borderColorRgb.b.toString() + ',' + borderOpacity.toString()
 
-    $('#cs-rel-exp-container .cs-thumbnail').css('border-color', borderColorHex)
-    $('#cs-rel-exp-container .cs-caption').css('background-color', borderColorHex)
+    $container.find('.cs-thumbnail').css('border-color', borderColorHex)
+    $container.find('.cs-caption').css('background-color', borderColorHex)
 
     textfillPlugin();
+    $container.find('.cs-caption').each(function () {
+      $(this).textfill({ minFontPixels: 12, maxFontPixels: 16 });
+    })
+    $container.find('.cs-thumbnail-view-hover').each(function () {
+      $(this).textfill({
+        minFontPixels: 16,
+        maxFontPixels: 20,
+        innerTag: 'p',
+        explicitHeight: parseInt( $(this).css('height'), 10 ) -
+                        parseInt( $(this).css('padding-top'), 10 ) -
+                        parseInt( $(this).css('padding-bottom'), 10 ),
+        explicitWidth: parseInt( $(this).css('width'), 10 ) -
+                        parseInt( $(this).css('padding-right'), 10 ) -
+                        parseInt( $(this).css('padding-left'), 10 )
+      });
+    })
 
     // $container.find('.cs-thumbnail.published').hover(
     //   function () {

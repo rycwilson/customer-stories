@@ -49,7 +49,9 @@
               </div>
 
               <div class="cs-caption" style="<%= widget.tab_style %>">
-                <%= story[:published] || story[:preview_published] ? story[:customer] : "<em>coming soon...</em>".html_safe %>
+                <span>
+                  <%= story[:published] || story[:preview_published] ? story[:customer] : "<em>coming soon...</em>".html_safe %>
+                </span>
               </div>
 
             </a>
