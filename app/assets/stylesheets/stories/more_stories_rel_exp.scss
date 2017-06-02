@@ -87,11 +87,12 @@
         width: 100%;
         padding: 6px;
         // background: #ddd !important;  // so there isn't a dark strip on top of the story tile, changes on hover
-        border-radius: 3px 3px 0 0;
+        border-radius: 0;
         -webkit-transform: translateY(-100%);
         -moz-transform: translateY(-100%);
         -ms-transform: translateY(-100%);
         -o-transform: translateY(-100%);
+        transform: translateY(-100%);
         transition: all 0.2s ease-in-out;
         p {
           font-family: inherit !important;
@@ -111,6 +112,10 @@
         max-height: 100%;
         max-width: 100%;
         padding: 16px;
+        opacity: 1;
+        transition: opacity .2s ease-in-out;
+        -moz-transition: opacity .2s ease-in-out;
+        -webkit-transition: opacity .2s ease-in-out;
       }
     }
     .cs-caption {
@@ -124,11 +129,12 @@
     }
   }
   .cs-thumbnail:not(.logo-published):hover {
-    .cs-thumbnail-view .cs-thumbnail-view-hover:not(.story-quote) {
+    .cs-thumbnail-view .cs-thumbnail-view-hover {
       -webkit-transform: translateY(0%);
       -moz-transform: translateY(0%);
       -ms-transform: translateY(0%);
       -o-transform: translateY(0%);
+      transform: translateY(0%);
     }
     .cs-img {
       opacity: 0.1;
