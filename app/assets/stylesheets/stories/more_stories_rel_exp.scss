@@ -149,10 +149,6 @@
     margin: 0 5px;
   }
 
-  .cs-scroll-left-xs:hover, .cs-scroll-right-xs:hover {
-    color: #666;
-  }
-
   .cs-scroll-left, .cs-scroll-right {
     position: absolute;
     cursor: pointer;
@@ -172,7 +168,8 @@
     }
   }
 
-  .cs-scroll-left:hover, .cs-scroll-right:hover {
+  .cs-scroll-left:hover, .cs-scroll-right:hover,
+  .cs-scroll-left-xs:hover, .cs-scroll-right-xs:hover {
     i { color: #222; }
     // background-color: rgba(0, 0, 0, 0.7);
   }
