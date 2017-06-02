@@ -23,7 +23,21 @@ class StoriesController < ApplicationController
       filter_select_cache_key(
         @company, @is_curator, 'product', { tag: 'product', id: 0 })
 
-    if valid_query_string? params
+    # from widget clicks on a preview-published story
+    if params[:preview].present?
+      session[:preview_story_slug] = params[:preview]
+      redirect_to(root_url(subdomain: @company.subdomain))
+    elsif session[:preview_story_slug].present?
+      story = Story.friendly.exists?(session[:preview_story_slug]) &&
+              Story.friendly.find(session[:preview_story_slug])
+      if story && story.preview_published?
+        gon.push({ preview_story: story.id })
+        session.delete(:preview_story_slug)
+      end
+    end
+
+    # handle preview query string on the client
+    if valid_filter_params?(@company, params)
       #  ?category=automotive  =>  { tag: 'category', id: '42' }
       filter_params = get_filter_params_from_query(params)
       @stories_index_cache_key =
@@ -392,20 +406,20 @@ class StoriesController < ApplicationController
 
   # check validity of query string parameters
   # at this point, only category or product are acceptable
-  def valid_query_string? params
-    return false if request.query_string.blank?
-    company = Company.find_by subdomain: request.subdomain
+  def valid_filter_params? (company, params)
+    return false if request.query_string.blank? || params[:preview].present?
+    company = Company.find_by(subdomain: request.subdomain)
     query_hash = Rack::Utils.parse_nested_query request.query_string
     valid_category = params.try(:[], :category) &&
-                StoryCategory.joins(successes: { customer: {} })
-                             .where(slug: params[:category],
-                                    customers: { company_id: company.id } )
-                             .present?
+                     StoryCategory.joins(successes: { customer: {} })
+                                  .where(slug: params[:category],
+                                         customers: { company_id: company.id } )
+                                  .present?
     valid_product = params.try(:[], :product) &&
-                      Product.joins(successes: { customer: {} })
-                             .where(slug: params[:product],
-                                    customers: { company_id: company.id } )
-                             .present?
+                    Product.joins(successes: { customer: {} })
+                           .where(slug: params[:product],
+                                  customers: { company_id: company.id } )
+                           .present?
     if query_hash.length === 1 && (valid_category || valid_product)
       true
     else

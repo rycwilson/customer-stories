@@ -42,25 +42,34 @@ class WidgetsController < ApplicationController
                             { tag: 'product', slug: params[:product] } : nil)
     filter_params = filter_attributes ?
         validate_and_convert_filter_attributes(filter_attributes, @company) : nil
-    stories_index_url = filter_params ?
-        root_url(host: request.subdomain + '.' + request.domain) +
-                  '?' + filter_params[:tag] + '=' + filter_attributes[:slug] :
-        root_url(host: request.subdomain + '.' + request.domain)
+    # stories_index_url = filter_params ?
+    #     root_url(host: request.subdomain + '.' + request.domain) +
+    #               '?' + filter_params[:tag] + '=' + filter_attributes[:slug] :
+    #     root_url(host: request.subdomain + '.' + request.domain)
     stories =
       @company.filter_stories_by_tag(filter_params || { tag: 'all', id: '0' }, false)
               .map do |story|
-                { title: story.title,
+                if story.published?
+                  target_url = story.csp_story_url
+                elsif story.preview_published?
+                  target_url = root_url(subdomain: @company.subdomain) + "?preview=#{story.slug}"
+                elsif story.logo_published?
+                  target_url = 'javascript:;'
+                end
+                {
+                  title: story.title,
                   customer: story.customer.name,
                   logo: story.customer.logo_url,
-                  url: story.published ? story.csp_story_url : stories_index_url,
-                  published: story.published }
+                  url: target_url,
+                  published: story.published?,
+                  preview_published: story.preview_published?
+                }
               end
     render_to_string(
       partial: params[:position] == 'tab' ? 'more_stories_tab' : (params[:position] == 'rel' ? 'more_stories_rel' : 'more_stories_rel_exp'),
       layout: false,
       locals: {
-        widget: @company.widget, stories: stories,
-        company_url: url_for(subdomain: @company.subdomain, controller:'stories', action:'index'),
+        company: @company, widget: @company.widget, stories: stories,
         title: 'Customer Stories', native: false
       }
     )

@@ -1,7 +1,7 @@
 
 // ref https://tympanus.net/codrops/2013/03/19/thumbnail-grid-with-expanding-preview/
 
-function initGridPreviews (config) {
+function initGridPreviews (config, callback) {
   // set the global variables
   $grid = $('#stories-gallery');
   // the items
@@ -45,8 +45,7 @@ function initGridPreviews (config) {
     // get window´s size
     getWinSize();
     // initialize some events
-    initEvents();
-
+    initEvents(callback);
   } );
 
 }
@@ -65,7 +64,7 @@ function getWinSize() {
   winsize = { width : $window.width(), height : $window.height() };
 }
 
-function initEvents() {
+function initEvents(callback) {
   // when clicking an item, show the preview with the item´s info and large image;
   // close the item if already expanded.
   // also close if clicking on the item´s cross
@@ -77,7 +76,6 @@ function initEvents() {
     // check if item already opened
     current === $item.index() ? hidePreview() : showPreview( $item );
     return false;
-
   } );
 
   // on window resize get the window´s size again
@@ -95,6 +93,8 @@ function initEvents() {
     }
 
   } );
+
+  callback();
 
 }
 

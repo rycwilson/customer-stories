@@ -5,7 +5,7 @@
 
   {{ stories.forEach(function (story) { }}
 
-    <li class='grid-item'>
+    <li class='grid-item' data-story-id="{{= story.id }}" data-story-slug="{{= story.slug }}">
 
       <a href="{{= (story.published && story.csp_story_path) || (story.preview_published && 'javascript:;') || (isCurator && '/stories/' + story.id + '/edit') || 'javascript:;' }}"
          class="thumbnail {{= isCurator ? 'curator' : 'public' }} {{= story.published ? 'published' : (story.preview_published ? 'preview-published' : (story.logo_published ? 'logo-published' : 'pending-curation')) }}"

@@ -1,17 +1,23 @@
 
 function storiesIndex () {
-
   var $gallery = $('#stories-gallery'),
       $categorySelect = $("[name='category_select']"),
       categorySlug = getQueryString('category'),
       $productSelect = $("[name='product_select']"),
       productSlug = getQueryString('product'),
       storiesTemplate = _.template($('#stories-template').html()),
-      filterTag = categorySlug ? 'category' : (productSlug ? 'product' : null);
-      filterSlug = categorySlug ? categorySlug : (productSlug ? productSlug : null);
+      filterTag = categorySlug ? 'category' : (productSlug ? 'product' : null),
+      filterSlug = categorySlug ? categorySlug : (productSlug ? productSlug : null),
+      previewStorySlug = getQueryString('preview');
 
-  initGridPreviews();
-
+  // there's a timing issue if trying to click immediately per gon.preview_story,
+  // so pass a callback to initGridPreviews
+  initGridPreviews({}, function () {
+    if (gon.preview_story) {
+      $('li[data-story-id="' + gon.preview_story.toString() + '"] > a')[0].click();
+      delete gon.preview_story;
+    }
+  });
 }
 
 function storiesIndexListeners () {

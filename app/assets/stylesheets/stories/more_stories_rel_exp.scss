@@ -20,7 +20,7 @@
 
   .cs-scroll {
     position: relative;
-    height: 220px;
+    height: 220px;  //  180 + (margin = 20 x 2)
   }
 
   .cs-scroll-xs {
@@ -42,13 +42,14 @@
   }
 
   .cs-thumbnail.logo-published {
-    .cs-thumbnail-view {
-      height: 122px;
-      line-height: 116px;
-      .cs-img {
-        padding: 19px 8px;
-      }
-    }
+    pointer-events: none;
+    // .cs-thumbnail-view {
+    //   height: 122px;
+    //   line-height: 116px;
+    //   .cs-img {
+    //     padding: 19px 8px;
+    //   }
+    // }
   }
 
   .cs-thumbnail {
@@ -105,7 +106,7 @@
         vertical-align: middle;
         max-height: 100%;
         max-width: 100%;
-        padding: 8px;
+        padding: 16px;
       }
     }
     .cs-caption {
@@ -118,9 +119,8 @@
       border-radius: 0;
     }
   }
-  .cs-thumbnail:hover {
+  .cs-thumbnail:not(.logo-published):hover {
     .cs-thumbnail-view .cs-thumbnail-view-hover:not(.story-quote) {
-      // background: rgba(245, 245, 245, 0.94);
       -webkit-transform: translateY(0%);
       -moz-transform: translateY(0%);
       -ms-transform: translateY(0%);

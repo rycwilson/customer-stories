@@ -3,7 +3,7 @@
          "memcache-iterator-#{company.story_tile_fragments_memcache_iterator}",
          skip_digest: true) do %>
 
-  <li class="grid-item">
+  <li class="grid-item" data-story-id="<%= story.id %>" data-story-slug="<%= story.slug %>">
 
     <a href="<%= story.published ? story.csp_story_path : 'javascript:;' %>"
        class="thumbnail public <%= story.published ? 'published' : (story.preview_published ? 'preview-published' : 'logo-published') %>"
