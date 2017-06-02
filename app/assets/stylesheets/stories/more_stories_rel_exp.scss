@@ -33,6 +33,10 @@
 
   .row-horizon {
     margin: 20px 0;
+    // this takes care of a very slight width discrepancy that was resulting
+    // in scrolls that didn't quite center the story tiles;
+    // ref: https://stackoverflow.com/questions/5303897/css-width-doesnt-add-up
+    font-size: 0;
     div[class^='col'] {
       position: relative;
       width: 330px;

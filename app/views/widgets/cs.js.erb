@@ -117,20 +117,23 @@
 
     var $carousel = $container.find('.row-horizon'),
         // columnWidth = parseInt($carousel.children('div[class*="col-"]').first().css('width'), 10),
-        storyWidth = 270,  // TODO constantize this number
+        storyWidth = 300,  // 270 + padding
         scrollWidth = $carousel.prop('scrollWidth'),
         maxScrollPosition = scrollWidth - $carousel.width();
 
     // debugger;
 
     if ($carousel.width() >= 3 * storyWidth) {
-      // do nothing
+      console.log('yes')
+      var x = Math.floor($carousel.width() / 3)
+      console.log(x)
       $carousel.find('div[class*="col-"]')
                .css('width', Math.floor($carousel.width() / 3).toString() + 'px')
     } else if ($carousel.width() >= 2 * storyWidth) {
       $carousel.find('div[class*="col-"]')
                .css('width', Math.floor($carousel.width() / 2).toString() + 'px')
     } else {
+      console.log('no!')
       $carousel.find('div[class*="col-"]')
                .css('width', $carousel.css('width'))
 
