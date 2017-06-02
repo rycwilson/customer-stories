@@ -116,27 +116,24 @@
     // $container.find('.cs-thumbnail.logo-published').hover();
 
     var $carousel = $container.find('.row-horizon'),
-        // columnWidth = parseInt($carousel.children('div[class*="col-"]').first().css('width'), 10),
-        storyWidth = 300,  // 270 + padding
-        scrollWidth = $carousel.prop('scrollWidth'),
-        maxScrollPosition = scrollWidth - $carousel.width();
-
-    // debugger;
+        $columns = $carousel.children(),
+        storyWidth = parseInt( $columns.children().first().css('width'), 10 ) +
+                     parseInt( $columns.children().first().css('padding-left'), 10 ) +
+                     parseInt( $columns.children().first().css('padding-right'), 10 );
+        // scrollWidth = $carousel.prop('scrollWidth'),
+        // maxScrollPosition = scrollWidth - $carousel.width();
 
     if ($carousel.width() >= 3 * storyWidth) {
-      console.log('yes')
-      var x = Math.floor($carousel.width() / 3)
-      console.log(x)
-      $carousel.find('div[class*="col-"]')
-               .css('width', Math.floor($carousel.width() / 3).toString() + 'px')
-    } else if ($carousel.width() >= 2 * storyWidth) {
-      $carousel.find('div[class*="col-"]')
-               .css('width', Math.floor($carousel.width() / 2).toString() + 'px')
-    } else {
-      console.log('no!')
-      $carousel.find('div[class*="col-"]')
-               .css('width', $carousel.css('width'))
+      $columns.css('width', Math.floor($carousel.width() / 3).toString() + 'px')
+      if ($columns.length <= 3) { $('.cs-scroll div').hide() }
 
+    } else if ($carousel.width() >= 2 * storyWidth) {
+      $columns.css('width', Math.floor($carousel.width() / 2).toString() + 'px')
+      if ($columns.length <= 2) { $('.cs-scroll div').hide() }
+
+    } else {
+      $columns.css('width', $carousel.css('width'))
+      if ($columns.length === 1) { $('.cs-scroll div').hide() }
     }
 
     $container.find('section').css('visibility', 'visible');

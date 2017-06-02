@@ -26,7 +26,8 @@
 
       <div class="col-xs-12 col-sm-10" style='padding:0'>
 
-        <div class='cs-row row-horizon'>
+        <!-- text-center in case not enough stories to fill carousel -->
+        <div class='cs-row row-horizon text-center'>
 
         <!-- the bootstrap styling starts to break down after 30 stories -->
         <% stories.first(18).each do |story|  %>

@@ -36,7 +36,6 @@ class StoriesController < ApplicationController
       end
     end
 
-    # handle preview query string on the client
     if valid_filter_params?(@company, params)
       #  ?category=automotive  =>  { tag: 'category', id: '42' }
       filter_params = get_filter_params_from_query(params)
