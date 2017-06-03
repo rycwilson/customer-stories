@@ -7,6 +7,9 @@
 # Ignore bundler config.
 /.bundle
 
+# Ignore Mac Finder files
+.DS_Store
+
 # Ignore all logfiles and tempfiles.
 /log
 !/log/.keep
@@ -29,7 +32,7 @@ vendor/assets/bower_components
 /.env
 
 # pre-compiled assets (uncomment for github push, comment for heroku)
-# /public/assets
+/public/assets
 
 
 
