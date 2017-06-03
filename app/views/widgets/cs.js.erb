@@ -73,7 +73,7 @@
                   scrollHandlersExp($container);
                 } else if (type === 'varmour') {
                   buildVarmourWidget($container);
-                  scrollHandlersExp($container);
+                  scrollHandlersVarmour($container);
                 }
                 xScrollBoundaries(type);
               }
@@ -536,6 +536,51 @@
       $container.find('.cs-scroll-left, .cs-scroll-left-xs, .cs-scroll-right, .cs-scroll-right-xs')
                 .css('visibility', 'hidden');
     }
+  }
+
+  function scrollHandlersVarmour ($container) {
+
+    var $carousel = $container.find('.row-horizon'),
+        $pagination = $container.find('.cs-pagination'),
+        scrollWidth = $carousel.prop('scrollWidth'),
+        numPages = Math.ceil(scrollWidth / $carousel.width()),
+        currentPage = 0,  // 0-based paging
+        arrowScrollLeft = function ($carousel, pageWidth) {
+          return function (e) {
+                currentPage -= 1;
+                $pagination.children('.cs-current-page-dot')
+                           .removeClass('cs-current-page-dot')
+                $pagination.children().eq(currentPage).addClass('cs-current-page-dot')
+            $carousel.animate({ scrollLeft: '-=' + $carousel.css('width') }, 500,
+              function () {
+              });
+          };
+        },
+        arrowScrollRight = function ($carousel, pageWidth, scrollWidth) {
+          return function (e) {
+                currentPage += 1;
+                $pagination.children('.cs-current-page-dot')
+                           .removeClass('cs-current-page-dot')
+                $pagination.children().eq(currentPage).addClass('cs-current-page-dot')
+            $carousel.animate({ scrollLeft: '+=' + $carousel.css('width') }, 500,
+              function () {
+              });
+          };
+        };
+
+    // set up pagination
+    for (var i = 0; i < numPages; i++) {
+      if (i === 0) {
+        $pagination.append("<div class='cs-page-dot cs-current-page-dot'></div>");
+      } else {
+        $pagination.append("<div class='cs-page-dot'></div>");
+      }
+    }
+    // click listeners
+    $container.find('.cs-scroll-left, .cs-scroll-left-xs')
+              .on('click', arrowScrollLeft($carousel));
+    $container.find('.cs-scroll-right, .cs-scroll-right-xs')
+              .on('click', arrowScrollRight($carousel));
   }
 
   function trackVisitor () {
