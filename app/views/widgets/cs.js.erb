@@ -547,24 +547,24 @@
         currentPage = 0,  // 0-based paging
         arrowScrollLeft = function ($carousel, pageWidth) {
           return function (e) {
-                currentPage -= 1;
-                $pagination.children('.cs-current-page-dot')
-                           .removeClass('cs-current-page-dot')
-                $pagination.children().eq(currentPage).addClass('cs-current-page-dot')
-            $carousel.animate({ scrollLeft: '-=' + $carousel.css('width') }, 500,
-              function () {
-              });
+            if (currentPage !== 0) {
+              currentPage -= 1;
+              $pagination.children('.cs-current-page-dot')
+                         .removeClass('cs-current-page-dot')
+              $pagination.children().eq(currentPage).addClass('cs-current-page-dot')
+              $carousel.animate({ scrollLeft: '-=' + $carousel.css('width') }, 500);
+            }
           };
         },
         arrowScrollRight = function ($carousel, pageWidth, scrollWidth) {
           return function (e) {
-                currentPage += 1;
-                $pagination.children('.cs-current-page-dot')
-                           .removeClass('cs-current-page-dot')
-                $pagination.children().eq(currentPage).addClass('cs-current-page-dot')
-            $carousel.animate({ scrollLeft: '+=' + $carousel.css('width') }, 500,
-              function () {
-              });
+            if (currentPage !== numPages - 1) {
+              currentPage += 1;
+              $pagination.children('.cs-current-page-dot')
+                         .removeClass('cs-current-page-dot')
+              $pagination.children().eq(currentPage).addClass('cs-current-page-dot')
+              $carousel.animate({ scrollLeft: '+=' + $carousel.css('width') }, 500);
+            }
           };
         };
 
