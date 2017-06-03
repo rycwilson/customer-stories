@@ -50,6 +50,9 @@
 
               <div class="cs-caption">
                 <span><%= story[:customer].upcase %></span>
+                <% if story[:published] || story[:preview_published] %>
+                  <span><%= story[:published] ? '<em>Read their story...</em>'.html_safe : '<em>See more...</em>'.html_safe %></span>
+                <% end %>
               </div>
 
             </a>

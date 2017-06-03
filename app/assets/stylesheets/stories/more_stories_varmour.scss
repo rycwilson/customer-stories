@@ -122,6 +122,9 @@
       border-radius: 0;
       background: transparent;
       color: #5b5b5b;
+      span:last-child:not(:only-child) {
+        display: none;
+      }
     }
   }
   .cs-thumbnail:hover {

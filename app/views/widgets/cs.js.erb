@@ -169,6 +169,21 @@
       }).appendTo('head');
     }
 
+    $container.find('.cs-thumbnail').first().hover(
+      function () {
+        var $thumbnail = $(this);
+        setTimeout(function () {
+          $thumbnail.find('.cs-caption').children().toggle();
+        }, 500);  // matches logo transition
+      },
+      function () {
+        var $thumbnail = $(this);
+        // setTimeout(function () {
+          $thumbnail.find('.cs-caption').children().toggle();
+        // }, 200);  // matches logo transition
+      }
+    )
+
     var $carousel = $container.find('.row-horizon'),
         $columns = $carousel.children(),
         storyWidth = parseInt( $columns.children().first().css('width'), 10 ) +
