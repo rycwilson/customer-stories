@@ -192,5 +192,32 @@
     }
   }
 
+  .cs-see-more {
+    overflow: hidden;
+    h5 {
+      a { color: #666; }
+      a:hover { color: #222; }
+      position: relative;
+      display: inline-block;
+      padding: 0 15px;
+    }
+    h5:before, h5:after {
+      background: #666;
+      content: "";
+      display: block;
+      height: 1px;
+      position: absolute;
+      top: 50%;
+      width: 400%;
+    }
+    h5:before {
+      right: 100%;
+    }
+
+    h5:after {
+      left: 100%;
+    }
+  }
+
 
 }
