@@ -46,13 +46,6 @@
 
   .cs-thumbnail.logo-published {
     pointer-events: none;
-    // .cs-thumbnail-view {
-    //   height: 122px;
-    //   line-height: 116px;
-    //   .cs-img {
-    //     padding: 19px 8px;
-    //   }
-    // }
   }
 
   .cs-thumbnail {
@@ -77,10 +70,10 @@
       line-height: 147px;
       cursor: pointer;
       .cs-thumbnail-view-hover {
+        position: absolute;
         display: flex;
         align-items: center;
-        text-align: center;
-        position: absolute;
+        justify-content: center;
         z-index: 10;
         height: 149px;
         width: 266px;  // explicit for textfill
@@ -95,7 +88,7 @@
         transition: all 0.2s ease-in-out;
         p {
           font-family: inherit !important;
-          font-size: 20px !important;
+          font-size: 18px !important;
           text-align: center;
           line-height: 28px !important;
           font-weight: 600;
@@ -129,6 +122,9 @@
       // white-space: nowrap;  // textfill doesn't work with these settings
       // overflow: hidden;
       // text-overflow: ellipsis;
+      span:last-child:not(:only-child) {
+        display: none;
+      }
     }
   }
   .cs-thumbnail:not(.logo-published):hover {
