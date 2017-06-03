@@ -34,10 +34,8 @@
                 <img class='cs-img' src="<%= story[:logo] %>" alt=''>
               </div>
 
-              <div class="cs-caption" style="<%= widget.tab_style %>">
-                <span>
-                  <%= story[:published] || story[:preview_published] ? story[:customer] : "<em>coming soon...</em>".html_safe %>
-                </span>
+              <div class="cs-caption">
+                <span><%= story[:customer].upcase %></span>
               </div>
 
             </a>

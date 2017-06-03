@@ -19,7 +19,7 @@
 
   .cs-scroll {
     position: relative;
-    height: 220px;  //  180 + (margin = 20 x 2)
+    height: 230px;  //  190 + (margin = 20 x 2)
   }
 
   .cs-scroll-xs {
@@ -49,14 +49,15 @@
   }
 
   .cs-thumbnail {
-    width: 270px;  // 3/2 aspect ratio for the tile
-    height: 100%;  // 180px column height
+    width: 270px;
+    height: 100%;  // 190px column height
     position: absolute;
     left: 0;
     right: 0;
     margin: 0 auto;
-    background-color: transparent;
-    border: 2px solid;  // color set by widget js
+    background-color: #fff;
+    transition: background 0.5s ease-in-out;
+    border: 1px solid #e6e9ec;
     padding: 0;
     text-align: center;
     // border-color: rgba(0, 0, 0, 0.7);
@@ -64,18 +65,18 @@
     .cs-thumbnail-view {
       position: relative;
       // display: inline-block;
-      height: 159px;
+      height: 154px;
       width: 100%;
       // overflow: hidden;
-      line-height: 157px;
+      line-height: 152px;
       cursor: pointer;
       .cs-thumbnail-view-hover {
+        position: absolute;
         display: flex;
         align-items: center;
-        text-align: center;
-        position: absolute;
+        justify-content: center;
         z-index: 10;
-        height: 159px;
+        height: 154px;
         width: 100%;
         padding: 16px 10px;
         border-radius: 0;
@@ -84,44 +85,46 @@
         -ms-transform: translateY(-100%);
         -o-transform: translateY(-100%);
         transform: translateY(-100%);
-        transition: all 0.2s ease-in-out;
+        transition: all 0.5s ease-in-out;
         p {
           font-family: inherit !important;
-          font-size: 20px !important;
+          font-size: 16px !important;
           text-align: center;
           line-height: 28px !important;
           font-weight: 600;
           letter-spacing: normal;
-          color: #444 !important;
+          color: #434343 !important;
           margin-bottom: 0;
         }
       }
       .cs-img {
-        mix-blend-mode: multiply; // this makes white background transparent
         display: inline-block;
         vertical-align: middle;
         max-height: 100%;
         max-width: 100%;
         padding: 16px;
         opacity: 1;
-        transition: opacity .2s ease-in-out;
-        -moz-transition: opacity .2s ease-in-out;
-        -webkit-transition: opacity .2s ease-in-out;
+        transition: opacity 0.5s ease-in-out;
+        -moz-transition: opacity 0.5s ease-in-out;
+        -webkit-transition: opacity 0.5s ease-in-out;
       }
     }
     .cs-caption {
       position: absolute;
       bottom: 0;
-      font-size: 16px;
-      text-align: left;
-      padding: 3px 0 2px 6px;
-      height: 27px;  // needs to be explicit for textfill to work
-      width: 266px;  // needs to be explicit for textfill to work
+      font-size: 12px;
+      text-align: center;
+      padding: 0;
+      height: 32px;
+      width: 100%;
       border-radius: 0;
-      // white-space: nowrap;  // textfill doesn't work with these settings
-      // overflow: hidden;
-      // text-overflow: ellipsis;
+      background: transparent;
+      color: #5b5b5b;
     }
+  }
+  .cs-thumbnail:hover {
+    background-color: #edf5f8;
+    border-color: #e6e9ec;  // override bootstrap .thumbnail
   }
   .cs-thumbnail:not(.logo-published):hover {
     .cs-thumbnail-view .cs-thumbnail-view-hover {

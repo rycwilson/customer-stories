@@ -159,31 +159,7 @@
   }
 
   function buildVarmourWidget ($container) {
-    var borderColorHex = '<%= @company.widget.tab_color %>',
-        borderColorRgb = hexToRgb(borderColorHex),
-        borderOpacity = 0.8,
-        borderColorRgba = 'rgba(' + borderColorRgb.r.toString() + ',' + borderColorRgb.g.toString() + ',' + borderColorRgb.b.toString() + ',' + borderOpacity.toString()
 
-    $container.find('.cs-thumbnail').css('border-color', borderColorHex)
-    $container.find('.cs-caption').css('background-color', borderColorHex)
-
-    textfillPlugin();
-    $container.find('.cs-caption').each(function () {
-      $(this).textfill({ minFontPixels: 12, maxFontPixels: 16 });
-    })
-    $container.find('.cs-thumbnail-view-hover').each(function () {
-      $(this).textfill({
-        minFontPixels: 16,
-        maxFontPixels: 20,
-        innerTag: 'p',
-        explicitHeight: parseInt( $(this).css('height'), 10 ) -
-                        parseInt( $(this).css('padding-top'), 10 ) -
-                        parseInt( $(this).css('padding-bottom'), 10 ),
-        explicitWidth: parseInt( $(this).css('width'), 10 ) -
-                        parseInt( $(this).css('padding-right'), 10 ) -
-                        parseInt( $(this).css('padding-left'), 10 )
-      });
-    })
 
     // $container.find('.cs-thumbnail.published').hover(
     //   function () {
@@ -198,8 +174,6 @@
         storyWidth = parseInt( $columns.children().first().css('width'), 10 ) +
                      parseInt( $columns.children().first().css('padding-left'), 10 ) +
                      parseInt( $columns.children().first().css('padding-right'), 10 );
-        // scrollWidth = $carousel.prop('scrollWidth'),
-        // maxScrollPosition = scrollWidth - $carousel.width();
 
     if ($carousel.width() >= 3 * storyWidth) {
       $columns.css('width', Math.floor($carousel.width() / 3).toString() + 'px')
