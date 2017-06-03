@@ -1,0 +1,82 @@
+
+<section class='cs-section' style='visibility:hidden'>
+  <div class='cs-container-fluid'>
+
+    <div class="visible-xs-block cs-scroll-xs">
+      <div class="cs-row">
+        <div class="col-xs-3 cs-scroll-left-xs text-center">
+          <i class='fa fa-2x fa-chevron-left'></i>
+        </div>
+        <div class="cs-see-more col-xs-6 text-center">
+          <h4><a href="<%= root_url(subdomain: company.subdomain) %>" target='_blank'>SEE MORE</a></h4>
+        </div>
+        <div class="col-xs-3 cs-scroll-right-xs text-center">
+          <i class='fa fa-2x fa-chevron-right'></i>
+        </div>
+      </div>
+    </div>
+
+    <div class="cs-row">
+
+      <div class="cs-scroll hidden-xs col-sm-1">
+        <div class='cs-scroll-left text-center'>
+          <i class='fa fa-2x fa-chevron-left'></i>
+        </div>
+      </div>
+
+      <div class="col-xs-12 col-sm-10" style='padding:0'>
+
+        <!-- text-center in case not enough stories to fill carousel -->
+        <div class='cs-row row-horizon text-center'>
+
+        <!-- the bootstrap styling starts to break down after 30 stories -->
+        <% stories.first(18).each do |story|  %>
+
+          <div class='col-xs-8 col-sm-5 col-md-3'>
+
+            <a href="<%= story[:url] %>"
+               class='cs-thumbnail <%= story[:published] ? 'published' : (story[:preview_published] ? 'preview-published' : 'logo-published') %>'
+               target="<%= native ? '' : '_blank' %>">
+
+              <div class="cs-thumbnail-view">
+                <!-- there may be logo-published stories with no title -->
+                <% if story[:title].present? %>
+                  <div class='cs-thumbnail-view-hover'>
+                    <p><%= story[:title] %></p>
+                  </div>
+                <% end %>
+                <img class='cs-img' src="<%= story[:logo] %>" alt=''>
+              </div>
+
+              <div class="cs-caption" style="<%= widget.tab_style %>">
+                <span>
+                  <%= story[:published] || story[:preview_published] ? story[:customer] : "<em>coming soon...</em>".html_safe %>
+                </span>
+              </div>
+
+            </a>
+
+          </div>
+
+        <% end %>
+
+        </div>
+      </div>
+
+      <div class="cs-scroll hidden-xs col-sm-1">
+        <div class='cs-scroll-right text-center'>
+          <i class='fa fa-2x fa-chevron-right'></i>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="cs-row hidden-xs">
+      <div class="cs-see-more col-sm-6 col-sm-offset-3 text-center">
+        <h4><a href="<%= root_url(subdomain: company.subdomain) %>" target='_blank'>SEE MORE</a></h4>
+      </div>
+    </div>
+
+  </section>
+</div>
+

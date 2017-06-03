@@ -18,6 +18,7 @@ Rails.application.config.assets.precompile += %w(
   cs-widget-tab.css
   cs-widget-rel.css
   cs-widget-rel-exp.css
+  cs-widget-varmour.css
   pdf.css
   social-share.css
   mvpready-landing.css

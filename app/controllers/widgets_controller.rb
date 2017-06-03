@@ -5,7 +5,7 @@ class WidgetsController < ApplicationController
   before_action except: [:track] { @company = Company.find_by(subdomain: request.subdomain) }
 
   def script
-    @position = params[:position] || 'tab'
+    @type = params[:type] || 'tab'
     respond_to do |format|
       format.js { render action: 'cs' }
     end
@@ -65,8 +65,18 @@ class WidgetsController < ApplicationController
                   preview_published: story.preview_published?
                 }
               end
+    case params[:type]
+    when 'tab'
+      partial = 'more_stories_tab'
+    when 'rel'
+      partial = 'more_stories_rel'
+    when 'rel-exp'
+      partial = 'more_stories_rel_exp'
+    when 'varmour'
+      partial = 'more_stories_varmour'
+    end
     render_to_string(
-      partial: params[:position] == 'tab' ? 'more_stories_tab' : (params[:position] == 'rel' ? 'more_stories_rel' : 'more_stories_rel_exp'),
+      partial: partial,
       layout: false,
       locals: {
         company: @company, widget: @company.widget, stories: stories,

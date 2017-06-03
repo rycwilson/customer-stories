@@ -18,38 +18,39 @@
   function main () {
 
     $(function () {
-      var position = '<%= @position %>', $container,
-          $script = (position === 'tab') ? $('script[href*="tab"]') :
-                      (position === 'rel' ? $('script[href*="rel/"]') : $('script[href*="rel-exp"]')),
+      var type = '<%= @type %>', $container,
+          $script = (type === 'tab') ? $('script[href*="tab"]') :
+                      (type === 'rel' ? $('script[href*="rel/"]') : $('script[href*="rel-exp"]')),
           category = $script.data('category'),
           product = $script.data('product'),
           $stylesheet = $("<link>", { rel: "stylesheet", type: "text/css" });
 
-      if (position === 'tab') {
+      if (type === 'tab') {
         $container = $('#cs-container').length ? $('#cs-container') : $('#cs-tab-container');
         $stylesheet.attr('href', "<%= URI.join(root_url, asset_path('cs-widget-tab.css')) %>");
-      } else if (position === 'rel') {
+      } else if (type === 'rel') {
         $container = $('#cs-rel-container');
         $stylesheet.attr('href', "<%= URI.join(root_url, asset_path('cs-widget-rel.css')) %>");
-      } else if (position === 'rel-exp') {
+      } else if (type === 'rel-exp') {
         $container = $('#cs-rel-exp-container');
         $stylesheet.attr('href', "<%= URI.join(root_url, asset_path('cs-widget-rel-exp.css')) %>");
+      } else if (type === 'varmour') {
+        $container = $('#cs-varmour-container');
+        $stylesheet.attr('href', "<%= URI.join(root_url, asset_path('cs-widget-varmour.css')) %>");
       }
 
       // get font awesome if it doesn't exist on host
-      if ($('link[href*="font-awesome"]').length === 0) {
-        $("<link>", {
-          rel: "stylesheet",
-          type: "text/css",
-          href: "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-        }).appendTo('head');
-      }
+      $("<link>", {
+        rel: "stylesheet",
+        type: "text/css",
+        href: "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+      }).appendTo('head');
 
       // wait for stylesheet to load ...
       $stylesheet.appendTo('head').on('load', function () {
 
         $.ajax({
-          url: "<%= URI.join(root_url, widget_html_path(@position)) %>",
+          url: "<%= URI.join(root_url, widget_html_path(@type)) %>",
           dataType: 'jsonp',
           data: {
             category: category,
@@ -61,17 +62,20 @@
             var $images = $container.find('img'), loadedImages = 0;
             $images.on('load', function () {
               if (++loadedImages === $images.length) {
-                if (position === 'tab') {
+                if (type === 'tab') {
                   buildTabWidget($container);
                   scrollHandlers($container);
-                } else if (position === 'rel') {
+                } else if (type === 'rel') {
                   buildRelWidget($container);
                   scrollHandlers($container);
-                } else if (position === 'rel-exp') {
+                } else if (type === 'rel-exp') {
                   buildRelExpWidget($container);
                   scrollHandlersExp($container);
+                } else if (type === 'varmour') {
+                  buildVarmourWidget($container);
+                  scrollHandlersExp($container);
                 }
-                xScrollBoundaries(position);
+                xScrollBoundaries(type);
               }
             })
           }
@@ -97,6 +101,68 @@
   }
 
   function buildRelExpWidget ($container) {
+    var borderColorHex = '<%= @company.widget.tab_color %>',
+        borderColorRgb = hexToRgb(borderColorHex),
+        borderOpacity = 0.8,
+        borderColorRgba = 'rgba(' + borderColorRgb.r.toString() + ',' + borderColorRgb.g.toString() + ',' + borderColorRgb.b.toString() + ',' + borderOpacity.toString()
+
+    $container.find('.cs-thumbnail').css('border-color', borderColorHex)
+    $container.find('.cs-caption').css('background-color', borderColorHex)
+
+    textfillPlugin();
+    $container.find('.cs-caption').each(function () {
+      $(this).textfill({ minFontPixels: 12, maxFontPixels: 16 });
+    })
+    $container.find('.cs-thumbnail-view-hover').each(function () {
+      $(this).textfill({
+        minFontPixels: 16,
+        maxFontPixels: 20,
+        innerTag: 'p',
+        explicitHeight: parseInt( $(this).css('height'), 10 ) -
+                        parseInt( $(this).css('padding-top'), 10 ) -
+                        parseInt( $(this).css('padding-bottom'), 10 ),
+        explicitWidth: parseInt( $(this).css('width'), 10 ) -
+                        parseInt( $(this).css('padding-right'), 10 ) -
+                        parseInt( $(this).css('padding-left'), 10 )
+      });
+    })
+
+    // $container.find('.cs-thumbnail.published').hover(
+    //   function () {
+    //   },
+    //   function () {
+    //   }
+    // );
+    // $container.find('.cs-thumbnail.logo-published').hover();
+
+    var $carousel = $container.find('.row-horizon'),
+        $columns = $carousel.children(),
+        storyWidth = parseInt( $columns.children().first().css('width'), 10 ) +
+                     parseInt( $columns.children().first().css('padding-left'), 10 ) +
+                     parseInt( $columns.children().first().css('padding-right'), 10 );
+        // scrollWidth = $carousel.prop('scrollWidth'),
+        // maxScrollPosition = scrollWidth - $carousel.width();
+
+    if ($carousel.width() >= 3 * storyWidth) {
+      $columns.css('width', Math.floor($carousel.width() / 3).toString() + 'px')
+      if ($columns.length <= 3) { $('.cs-scroll div').hide() }
+
+    } else if ($carousel.width() >= 2 * storyWidth) {
+      $columns.css('width', Math.floor($carousel.width() / 2).toString() + 'px')
+      if ($columns.length <= 2) { $('.cs-scroll div').hide() }
+
+    } else {
+      $columns.css('width', $carousel.css('width'))
+      if ($columns.length === 1) { $('.cs-scroll div').hide() }
+    }
+
+    $container.find('section').css('visibility', 'visible');
+    if (<%= ENV['HOST_NAME'] == 'customerstories.net' %>) {
+      trackVisitor();
+    }
+  }
+
+  function buildVarmourWidget ($container) {
     var borderColorHex = '<%= @company.widget.tab_color %>',
         borderColorRgb = hexToRgb(borderColorHex),
         borderOpacity = 0.8,
@@ -331,16 +397,22 @@
     when scrolling past boundaries with trackpad, prevent default browser behavior
     (back/forward navigation)
   */
-  function xScrollBoundaries (position) {
+  function xScrollBoundaries (type) {
 
     // no trackpad scrolling
-    $(document).on('wheel', '#cs-rel-exp-container .row-horizon', function (event) {
-      event.preventDefault();
-    });
+    $(document).on('wheel',
+      '#cs-rel-exp-container .row-horizon, #cs-varmour-container .row-horizon',
+        function (event) {
+          // don't stop vertical scroll -> event.currentTarget.scrollTop
+          if (event.currentTarget.scrollLeft) {
+            event.preventDefault();
+          };
+        });
 
     // constraign trackpad scrolling (don't go forward/back in browser)
     var maxX = null;
-    $(document).on('wheel', '#cs-container .row-horizon, #cs-tab-container .row-horizon, #cs-rel-container .row-horizon',
+    $(document).on('wheel',
+      '#cs-container .row-horizon, #cs-tab-container .row-horizon, #cs-rel-container .row-horizon',
       function (event) {
         maxX = $(this).prop('scrollWidth') - $(this).prop('offsetWidth');
         // If this event looks like it will scroll beyond the bounds of the element,

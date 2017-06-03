@@ -25,10 +25,10 @@ Rails.application.routes.draw do
     # instead of stories_url in the widgets controller
     get '/', to: 'stories#index' #, as: 'csp_stories'
 
-    get '/widgets/:position/cs', to: 'widgets#script'
+    get '/widgets/:type/cs', to: 'widgets#script'
     # specifying a default format here because (for unknown reason) ajax jsonp
     # request sent from IE11 was resulting in request interpreted as html
-    get '/widgets/:position/html', to: 'widgets#html', as: 'widget_html', format: 'js'
+    get '/widgets/:type/html', to: 'widgets#html', as: 'widget_html', format: 'js'
     get '/widgets/track', to: 'widgets#track'
      # legacy widgets
     get '/widget/cs', to: 'widgets#script'
