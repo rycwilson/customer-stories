@@ -160,14 +160,14 @@
 
   function buildVarmourWidget ($container) {
 
-
-    // $container.find('.cs-thumbnail.published').hover(
-    //   function () {
-    //   },
-    //   function () {
-    //   }
-    // );
-    // $container.find('.cs-thumbnail.logo-published').hover();
+    // on weebly, get the Montserrat font to emulate proxima-nova
+    if (window.location.href.includes('weebly')) {
+      $("<link>", {
+        rel: "stylesheet",
+        type: "text/css",
+        href: "//fonts.googleapis.com/css?family=Montserrat:300,600"
+      }).appendTo('head');
+    }
 
     var $carousel = $container.find('.row-horizon'),
         $columns = $carousel.children(),

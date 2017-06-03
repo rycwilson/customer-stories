@@ -2,6 +2,8 @@
 .cs-section {
   position: relative;
   padding: 20px 0;
+  // Montserrat is a decent emulator for proxima-nova
+  font-family: "proxima-nova", "Montserrat", sans-serif;
 
   -webkit-backface-visibility: hidden;  // ref: http://stackoverflow.com/questions/19254146
   ::-webkit-scrollbar {
