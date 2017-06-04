@@ -106,8 +106,11 @@
         borderOpacity = 0.8,
         borderColorRgba = 'rgba(' + borderColorRgb.r.toString() + ',' + borderColorRgb.g.toString() + ',' + borderColorRgb.b.toString() + ',' + borderOpacity.toString()
 
-    $container.find('.cs-thumbnail').css('border-color', borderColorHex)
-    $container.find('.cs-caption').css('background-color', borderColorHex)
+    // disable horizontal scrolling
+    $container.find('.row-horizon').css('overflow-x', 'hidden');
+
+    $container.find('.cs-thumbnail').css('border-color', borderColorHex);
+    $container.find('.cs-caption').css('background-color', borderColorHex);
 
     textfillPlugin();
     $container.find('.cs-caption').each(function () {
@@ -169,6 +172,9 @@
       }).appendTo('head');
     }
 
+    // disable horizontal scrolling
+    $container.find('.row-horizon').css('overflow-x', 'hidden')
+
     $container.find('.cs-thumbnail').first().hover(
       function () {
         var $thumbnail = $(this);
@@ -178,9 +184,7 @@
       },
       function () {
         var $thumbnail = $(this);
-        // setTimeout(function () {
           $thumbnail.find('.cs-caption').children().toggle();
-        // }, 200);  // matches logo transition
       }
     )
 
@@ -383,17 +387,6 @@
     (back/forward navigation)
   */
   function xScrollBoundaries (type) {
-
-    // no trackpad scrolling
-    $(document).on('wheel',
-      '#cs-rel-exp-container .row-horizon, #cs-varmour-container .row-horizon',
-        function (event) {
-          // don't stop vertical scroll -> event.currentTarget.scrollTop
-          if (event.currentTarget.scrollLeft) {
-            event.preventDefault();
-          };
-        });
-
     // constraign trackpad scrolling (don't go forward/back in browser)
     var maxX = null;
     $(document).on('wheel',
@@ -600,9 +593,9 @@
 
   function trackVisitor () {
 
-    $('#cs-container, #cs-tab-container, #cs-rel-container').append(
-      '<iframe class="cs-iframe" height="0" width="0" style="display:none" ' +
-      'src="https://' + '<%= @company.subdomain %>' + '.customerstories.net/widgets/track"></iframe>');
+    $('#cs-container, #cs-tab-container, #cs-rel-container, #cs-rel-exp-container, #cs-varmour-container')
+      .append('<iframe class="cs-iframe" height="0" width="0" style="display:none" ' +
+              'src="https://' + '<%= @company.subdomain %>' + '.customerstories.net/widgets/track"></iframe>');
 
     // old approach:
     // var trackingDoc = $('#cs-container').find('iframe')[0].contentWindow.document,
