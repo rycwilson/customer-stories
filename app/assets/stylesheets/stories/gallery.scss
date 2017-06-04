@@ -97,23 +97,25 @@
       cursor: pointer;
       p.thumbnail-view-hover {
         position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         z-index: 10;
-        // box-sizing: border-box;
         font-size: 14px;
         font-weight: 600;
         height: 100%;
         width: 100%;
         color: #222;
-        line-height: 20px;
-        text-align: left;
-        padding: 5px 8px;
-        background: rgba(245, 245, 245, 0.94);
+        line-height: 22px;
+        margin-bottom: 0;
+        padding: 10px;
+        background: transparent;
         border-radius: 3px 3px 0 0;
         -webkit-transform: translateY(-100%);
         -moz-transform: translateY(-100%);
         -ms-transform: translateY(-100%);
         -o-transform: translateY(-100%);
-        transition: all 0.2s ease-in-out;
+        transition: all 0.3s ease-in-out;
       }
       img {
         display: inline-block;
@@ -121,6 +123,10 @@
         max-height: 100%;
         max-width: 100%;
         padding: 12px;
+        opacity: 1;
+        transition: opacity 0.3s ease-in-out;
+        -moz-transition: opacity 0.3s ease-in-out;
+        -webkit-transition: opacity 0.3s ease-in-out;
       }
     }
     .caption {
@@ -135,11 +141,14 @@
   }
   a.thumbnail:hover  {
     border-color: #ccc;  // overrides bootstrapp
-     .thumbnail-view .thumbnail-view-hover {
+    .thumbnail-view .thumbnail-view-hover {
       -webkit-transform: translateY(0%);
       -moz-transform: translateY(0%);
       -ms-transform: translateY(0%);
       -o-transform: translateY(0%);
+    }
+    img {
+      opacity: 0.1;
     }
   }
 }
