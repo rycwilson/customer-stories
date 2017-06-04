@@ -124,6 +124,7 @@
   }
 
   .cs-thumbnail.logo-published {
+    pointer-events: none;
     .cs-thumbnail-view {
       height: 122px;
       line-height: 116px;
