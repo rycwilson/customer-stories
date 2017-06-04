@@ -191,7 +191,7 @@
       border-radius: 8px;
     }
     .cs-current-page-dot {
-      background: #60ccf3 !important;
+      background: #60ccf3;
     }
   }
 
@@ -211,7 +211,7 @@
       }
     }
     h5:before, h5:after {
-      background: #a2a1a1;
+      background: #a2a1a1;  // matches arrows
       content: "";
       display: block;
       height: 1px;
