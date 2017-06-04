@@ -146,43 +146,48 @@
     border-color: rgba(0, 0, 0, 0.7);
     .cs-thumbnail-view {
       position: relative;
-      // display: inline-block;
       height: 100px;
       width: 100%;
       // overflow: hidden;
-      line-height: 96px;
+      line-height: 98px;
       cursor: pointer;
       .cs-thumbnail-view-hover {
         position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         z-index: 10;
-        display: block;
-        // box-sizing: border-box;
-        font-family: inherit !important;
-        font-size: 13px;
-        font-weight: normal;
-        letter-spacing: normal;
         height: 100px;
         width: 100%;
-        color: #fff;
-        font-weight: 500;
-        line-height: 18px;
-        text-align: left;
-        padding: 4px 8px;
-        background: rgba(0, 0, 0, 0.84);
+        padding: 0 6px;
+        background: transparent;
         border-radius: 3px 3px 0 0;
         -webkit-transform: translateY(-100%);
         -moz-transform: translateY(-100%);
         -ms-transform: translateY(-100%);
         -o-transform: translateY(-100%);
-        transition: all 0.2s ease-in-out;
+        transition: all 0.3s ease-in-out;
+        p {
+          color: #ccc;
+          font-family: inherit !important;
+          font-size: 13px;
+          line-height: 19px;
+          font-weight: 600;
+          letter-spacing: normal;
+          color: #444 !important;
+          margin-bottom: 0;
+        }
       }
       .cs-img {
         display: inline-block;
         vertical-align: middle;
         max-height: 100%;
         max-width: 100%;
-        // margin: auto;
         padding: 8px;
+        opacity: 1;
+        transition: opacity 0.3s ease-in-out;
+        -moz-transition: opacity 0.3s ease-in-out;
+        -webkit-transition: opacity 0.3s ease-in-out;
       }
     }
     .cs-caption {
@@ -201,6 +206,9 @@
       -moz-transform: translateY(0%);
       -ms-transform: translateY(0%);
       -o-transform: translateY(0%);
+    }
+    .cs-img {
+      opacity: 0.1;
     }
   }
 

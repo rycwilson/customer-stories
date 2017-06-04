@@ -55,9 +55,9 @@
 
                   <div class="cs-thumbnail-view">
                     <% if story[:published] %>
-                      <p class='cs-thumbnail-view-hover'>
-                        <%= story[:title] %>
-                      </p>
+                      <div class="cs-thumbnail-view-hover">
+                        <p><%= story[:title] %></p>
+                      </div>
                     <% end %>
                     <img class='cs-img' src="<%= story[:logo] %>" alt=''>
                   </div>
