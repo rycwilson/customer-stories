@@ -19,19 +19,6 @@
     padding: 0;
   }
 
-  .cs-scroll {
-    position: relative;
-    height: 230px;  //  190 + (margin = 20 x 2)
-  }
-
-  .cs-scroll-xs {
-    > .cs-row {
-      display: flex;
-      align-items: center;
-      color: #666;
-    }
-  }
-
   .row-horizon {
     margin: 20px 0;
     // this takes care of a very slight width discrepancy that was resulting
@@ -144,6 +131,20 @@
     }
   }
 
+  .cs-scroll {
+    position: relative;
+    height: 230px;  //  190 + (margin = 20 x 2)
+    color: #a2a1a1;
+  }
+
+  .cs-scroll-xs {
+    > .cs-row {
+      display: flex;
+      align-items: center;
+      color: #a2a1a1;
+    }
+  }
+
   .cs-scroll-left-xs, .cs-scroll-right-xs {
     cursor: pointer;
     margin: 0 5px;
@@ -162,7 +163,6 @@
     width: 34px;
     border-radius: 5px;
     i {
-      color: #a2a1a1;
       display: inline-block;
       vertical-align: middle;
     }
@@ -170,7 +170,7 @@
 
   .cs-scroll-left:hover, .cs-scroll-right:hover,
   .cs-scroll-left-xs:hover, .cs-scroll-right-xs:hover {
-    i { color: #a2a1a1; }
+    i { color: #838383; }
     // background-color: rgba(0, 0, 0, 0.7);
   }
 
@@ -198,14 +198,20 @@
   .cs-see-more {
     overflow: hidden;
     h5 {
-      a { color: #666; }
-      a:hover { color: #222; }
       position: relative;
       display: inline-block;
-      padding: 0 15px;
+      padding: 2px 15px 0 15px;
+      font-weight: 600;
+      a {
+        color: #5b5b5b;
+      }
+      a:hover {
+        text-decoration: none;
+        color: #33baff;
+      }
     }
     h5:before, h5:after {
-      background: #666;
+      background: #a2a1a1;
       content: "";
       display: block;
       height: 1px;
