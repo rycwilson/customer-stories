@@ -175,12 +175,13 @@
     // disable horizontal scrolling
     $container.find('.row-horizon').css('overflow-x', 'hidden')
 
+    // animate on hover
     $container.find('.cs-thumbnail').first().hover(
       function () {
         var $thumbnail = $(this);
         setTimeout(function () {
           $thumbnail.find('.cs-caption').children().toggle();
-        }, 300);  // matches logo transition
+        }, 300);
       },
       function () {
         var $thumbnail = $(this);
@@ -188,6 +189,20 @@
       }
     )
 
+    // column widths responsive to screen width;
+    // adjust as necessary on page load and device orientation change
+    adjustColumnsWidth($container);
+    $(document).on('orientationchange', function () {
+      adjustColumnsWidth($container);
+    })
+
+    $container.find('section').css('visibility', 'visible');
+    if (<%= ENV['HOST_NAME'] == 'customerstories.net' %>) {
+      trackVisitor();
+    }
+  }
+
+  function adjustColumnsWidth ($container) {
     var $carousel = $container.find('.row-horizon'),
         $columns = $carousel.children(),
         storyWidth = parseInt( $columns.children().first().css('width'), 10 ) +
@@ -207,10 +222,6 @@
       if ($columns.length === 1) { $('.cs-scroll div').hide() }
     }
 
-    $container.find('section').css('visibility', 'visible');
-    if (<%= ENV['HOST_NAME'] == 'customerstories.net' %>) {
-      trackVisitor();
-    }
   }
 
   function buildTabWidget ($container) {
