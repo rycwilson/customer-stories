@@ -82,7 +82,7 @@
           line-height: 28px !important;
           font-weight: 600;
           letter-spacing: normal;
-          color: #434343 !important;
+          color: #333 !important;
           margin-bottom: 0;
         }
       }
@@ -96,6 +96,11 @@
         transition: opacity 0.3s ease-in-out;
         -moz-transition: opacity 0.3s ease-in-out;
         -webkit-transition: opacity 0.3s ease-in-out;
+        // this compensates for a bug in chrome, which causes images of a
+        // certain aspect ratio to expand and contract very slightly on
+        // hover and opacity transition
+        // ref: https://stackoverflow.com/questions/20886991
+        -webkit-transform: translateZ(0);
       }
     }
     .cs-caption {
