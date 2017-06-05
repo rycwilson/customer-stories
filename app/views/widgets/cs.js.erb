@@ -162,7 +162,7 @@
     $container.find('.row-horizon').css('overflow-x', 'hidden')
 
     // animate on hover
-    $container.find('.cs-thumbnail').first().hover(
+    $container.find('.cs-thumbnail').hover(
       function () {
         var $thumbnail = $(this);
         setTimeout(function () {
@@ -170,8 +170,7 @@
         }, 300);
       },
       function () {
-        var $thumbnail = $(this);
-          $thumbnail.find('.cs-caption').children().toggle();
+        $(this).find('.cs-caption').children().toggle();
       }
     )
 
