@@ -4,7 +4,7 @@
     <!-- bootstrap type: success, info, warning, danger -->
     <!-- devise uses built-in types notice and alert,
           map those to bootstrap: -->
-    <% if msg.is_a?(String) %>
+    <% if msg.present? && msg.is_a?(String) %>
       <% type = 'success' if type == 'notice' %>
       <% type = 'danger' if type == 'alert' %>
 
