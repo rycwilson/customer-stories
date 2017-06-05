@@ -192,7 +192,7 @@
     // column widths responsive to screen width;
     // adjust as necessary on page load and device orientation change
     adjustColumnsWidth($container);
-    $(document).on('orientationchange', function () {
+    $(window).on('orientationchange', function () {
       adjustColumnsWidth($container);
     })
 
