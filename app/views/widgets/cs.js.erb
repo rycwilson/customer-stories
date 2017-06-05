@@ -146,7 +146,7 @@
       $columns.css('width', Math.floor($carousel.width() / 4).toString() + 'px')
       if ($columns.length <= 4) { $('.cs-scroll div').hide() }
 
-    if ($carousel.width() >= 3 * storyWidth) {
+    } else if ($carousel.width() >= 3 * storyWidth) {
       $columns.css('width', Math.floor($carousel.width() / 3).toString() + 'px')
       if ($columns.length <= 3) { $('.cs-scroll div').hide() }
 
