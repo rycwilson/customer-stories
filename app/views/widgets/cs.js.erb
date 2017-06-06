@@ -194,6 +194,7 @@
                      parseInt( $columns.first().css('padding-left'), 10 ) +
                      parseInt( $columns.first().css('padding-right'), 10 );
 
+
     if ($carousel.width() >= 4 * storyWidth) {
       $columns.css('width', Math.floor($carousel.width() / 4).toString() + 'px')
       if ($columns.length <= 4) { $('.cs-scroll div').hide() }
@@ -203,8 +204,45 @@
       if ($columns.length <= 3) { $('.cs-scroll div').hide() }
 
     } else if ($carousel.width() >= 2 * storyWidth) {
+      var lastIsPartial = $columns.length % 2 !== 0;
+
       $columns.css('width', Math.floor($carousel.width() / 2).toString() + 'px')
-      if ($columns.length <= 2) { $('.cs-scroll div').hide() }
+
+      if ($columns.length <= 2) {
+        $('.cs-scroll div').hide()
+      } else {
+        // make nav arrows wider
+        // CHALLENGE with this is that it changes the carousel width that was just
+        // compared to storyWidth, thus nullifying the comparison. stories will get squished
+        // $('.cs-scroll').css('width', '+=' + ($container.width() * scrollFudge).toString() + 'px');
+        // $carousel.parent().css('width', '-=' + (($container.width() * scrollFudge) * 2).toString() + 'px');
+      }
+
+      if ($columns.length % 2 !== 0) {
+        $columns.last().css('width', $carousel.width())
+      }
+
+      // console.log($columns.first().width())
+      // console.log($columns.first().children('a').width())
+      // var scaleFactor = $columns.first().width() - $columns.first().children('a').width()
+      // if (scaleFactor > 80) {
+        // $columns.each(function (index, column) {
+        //   // CHALLENGE: don't do this for narrower containers
+        //   if (index % 2 === 0) {
+        //     if (lastIsPartial && index === $columns.length - 1) {
+        //       // don't adjust last item; it will occupy entire width
+        //     } else {
+        //       $(this).children('a').css(
+        //         'margin-right', '-=' + ($container.width() * (scaleFactor/2800)).toString() + 'px'
+        //       );
+        //     }
+        //   } else {
+        //     $(this).children('a').css(
+        //       'margin-left', '-=' + ($container.width() * (scaleFactor/2800)).toString() + 'px'
+        //     );
+        //   }
+        // });
+      // }
 
     } else {
       $columns.css('width', $carousel.css('width'))
