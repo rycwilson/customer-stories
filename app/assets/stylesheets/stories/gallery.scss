@@ -127,6 +127,11 @@
         transition: opacity 0.3s ease-in-out;
         -moz-transition: opacity 0.3s ease-in-out;
         -webkit-transition: opacity 0.3s ease-in-out;
+        // this compensates for a bug in chrome, which causes images of a
+        // certain aspect ratio to expand and contract very slightly on
+        // hover and opacity transition
+        // ref: https://stackoverflow.com/questions/20886991
+        -webkit-transform: translateZ(0);
       }
     }
     .caption {
@@ -139,8 +144,10 @@
       border-radius: 0 0 3px 3px;
     }
   }
-  a.thumbnail:hover  {
-    border-color: #ccc;  // overrides bootstrapp
+  a.thumbnail:hover {
+    border-color: #ccc;  // overrides bootstrap
+  }
+  a.thumbnail:hover:not(.pending-curation)  {
     .thumbnail-view .thumbnail-view-hover {
       -webkit-transform: translateY(0%);
       -moz-transform: translateY(0%);
