@@ -147,7 +147,7 @@
   a.thumbnail:hover {
     border-color: #ccc;  // overrides bootstrap
   }
-  a.thumbnail:hover:not(.pending-curation)  {
+  a.thumbnail:hover:not(.pending-curation):not(.preview-published)  {
     .thumbnail-view .thumbnail-view-hover {
       -webkit-transform: translateY(0%);
       -moz-transform: translateY(0%);
