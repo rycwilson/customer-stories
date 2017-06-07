@@ -69,7 +69,7 @@ class CompaniesController < ApplicationController
     end
     # make this check before updating anything
     # this will check for either uploaded or swapped default image
-    default_image_changed = default_adwords_image_changed?(company_params, @company.adwords_images.default.id)
+    default_image_changed = default_adwords_image_changed?(company_params, @company.adwords_images.default.try(:id))
     if @company.update(company_params)
       # if a new default image was uploaded (param won't be present if it wasn't)
       if default_image_changed && company_params[:default_adwords_image_url].present?
