@@ -6,7 +6,7 @@
   <li class='grid-item' data-story-id="<%= story.id %>">
 
     <a href="<%= story.published ? story.csp_story_path : (story.preview_published ? 'javascript:;' : edit_story_path(story.id)) %>"
-       class="thumbnail curator <%= story.published ? 'published' : (story.preview_published ? 'preview-published' : (story.logo_published ? 'logo-published' : 'pending-curation')) %>"
+       class="thumbnail curator <%= story.published ? 'published' : (story.preview_published ? 'preview-published' : (story.logo_published ? 'logo-published' : 'pending-curation')) %> <%= story.title.present? ? 'title-present' : '' %>"
        data-logosrc="<%= story.customer.logo_url %>"
        data-company-name="<%= story.customer.name.to_json %>"
        data-summary="<%= story.summary.try(:to_json) %>"
@@ -16,7 +16,7 @@
        data-preview-contributor="<%= story.preview_contributor %>">
 
       <div class='thumbnail-view'>
-        <% if story.published? %>
+        <% if story.title.present? %>
           <p class="thumbnail-view-hover"><%= story.title %></p>
         <% end %>
         <img src="<%= story.customer.logo_url || image_path('company-logo-missing.png') %>">

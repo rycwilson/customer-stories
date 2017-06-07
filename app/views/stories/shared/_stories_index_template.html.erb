@@ -8,7 +8,7 @@
     <li class='grid-item' data-story-id="{{= story.id }}">
 
       <a href="{{= (story.published && story.csp_story_path) || (story.preview_published && 'javascript:;') || (isCurator && '/stories/' + story.id + '/edit') || 'javascript:;' }}"
-         class="thumbnail {{= isCurator ? 'curator' : 'public' }} {{= story.published ? 'published' : (story.preview_published ? 'preview-published' : (story.logo_published ? 'logo-published' : 'pending-curation')) }}"
+         class="thumbnail {{= isCurator ? 'curator' : 'public' }} {{= story.published ? 'published' : (story.preview_published ? 'preview-published' : (story.logo_published ? 'logo-published' : 'pending-curation')) }} {{= story.title ? 'title-present' : '' }}"
          data-logosrc="{{= story.success.customer.logo_url }}"
          data-company-name='{{= JSON.stringify(story.success.customer.name) }}'
          data-summary='{{= JSON.stringify(story.summary) }}'
