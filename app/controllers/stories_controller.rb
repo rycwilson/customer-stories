@@ -201,6 +201,7 @@ class StoriesController < ApplicationController
   def promote
     response = {}  # this will be necessary if ads for an unpublished story are removed
     if request.method == 'POST'
+      @company.create_shell_campaigns() if @company.campaigns.empty?
       @story.ads.create({ adwords_ad_group_id: @company.campaigns.topic.ad_group.id,
                           long_headline: @story.title })
       @story.ads.create({ adwords_ad_group_id: @company.campaigns.retarget.ad_group.id,

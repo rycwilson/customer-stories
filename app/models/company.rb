@@ -933,6 +933,13 @@ class Company < ActiveRecord::Base
     self.adwords_images.default.try(:media_id).present?
   end
 
+  def create_shell_campaigns
+    topic_campaign = self.campaigns.create(type:'TopicCampaign')
+    topic_campaign.ad_group.create()
+    retarget_campaign = self.campaigns.create(type:'RetargetCampaign')
+    retarget_campaign.ad_group.create()
+  end
+
   def get_adwords_campaign (campaign_type)
     api = create_adwords_api()
     service = api.service(:CampaignService, ADWORDS_API_VERSION)
