@@ -18,7 +18,6 @@ asset 'bootstrap-daterangepicker'
 asset 'bootstrap-validator'
 asset 'jquery-textfill'
 asset 'color-thief'
-asset 'addyosmani-jquery-ui-bootstrap'
 
 # dependencies for MVP theme
 asset 'fontawesome', '~4.4.0'

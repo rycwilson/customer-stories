@@ -1,6 +1,4 @@
 
-
-
 //= require modernizr/modernizr
 
 // mvp ready
