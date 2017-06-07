@@ -935,9 +935,9 @@ class Company < ActiveRecord::Base
 
   def create_shell_campaigns
     topic_campaign = self.campaigns.create(type:'TopicCampaign')
-    topic_campaign.ad_group.create()
+    topic_campaign.create_ad_group()
     retarget_campaign = self.campaigns.create(type:'RetargetCampaign')
-    retarget_campaign.ad_group.create()
+    retarget_campaign.create_ad_group()
   end
 
   def get_adwords_campaign (campaign_type)
