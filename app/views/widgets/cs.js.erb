@@ -197,56 +197,47 @@
 
     if ($carousel.width() >= 4 * storyWidth) {
       $columns.css('width', Math.floor($carousel.width() / 4).toString() + 'px')
-      if ($columns.length <= 4) { $('.cs-scroll div').hide() }
+      if ($columns.length <= 4) {
+        $container.find('.cs-scroll div').hide();
+      }
 
     } else if ($carousel.width() >= 3 * storyWidth) {
       $columns.css('width', Math.floor($carousel.width() / 3).toString() + 'px')
-      if ($columns.length <= 3) { $('.cs-scroll div').hide() }
+      if ($columns.length <= 3) {
+        $container.find('.cs-scroll div').hide();
+      }
 
     } else if ($carousel.width() >= 2 * storyWidth) {
-      var lastIsPartial = $columns.length % 2 !== 0;
-
-      $columns.css('width', Math.floor($carousel.width() / 2).toString() + 'px')
 
       if ($columns.length <= 2) {
-        $('.cs-scroll div').hide()
-      } else {
-        // make nav arrows wider
-        // CHALLENGE with this is that it changes the carousel width that was just
-        // compared to storyWidth, thus nullifying the comparison. stories will get squished
-        // $('.cs-scroll').css('width', '+=' + ($container.width() * scrollFudge).toString() + 'px');
-        // $carousel.parent().css('width', '-=' + (($container.width() * scrollFudge) * 2).toString() + 'px');
+        $container.find('.cs-scroll div').hide();
       }
 
-      if ($columns.length % 2 !== 0) {
-        $columns.last().css('width', $carousel.width())
-      }
+      // adjust column size
+      $columns.css('width', Math.floor($carousel.width() / 2).toString() + 'px')
 
-      // console.log($columns.first().width())
-      // console.log($columns.first().children('a').width())
-      // var scaleFactor = $columns.first().width() - $columns.first().children('a').width()
-      // if (scaleFactor > 80) {
-        // $columns.each(function (index, column) {
-        //   // CHALLENGE: don't do this for narrower containers
-        //   if (index % 2 === 0) {
-        //     if (lastIsPartial && index === $columns.length - 1) {
-        //       // don't adjust last item; it will occupy entire width
-        //     } else {
-        //       $(this).children('a').css(
-        //         'margin-right', '-=' + ($container.width() * (scaleFactor/2800)).toString() + 'px'
-        //       );
-        //     }
-        //   } else {
-        //     $(this).children('a').css(
-        //       'margin-left', '-=' + ($container.width() * (scaleFactor/2800)).toString() + 'px'
-        //     );
-        //   }
-        // });
-      // }
+      var minGutterWidth = 80,
+          actualGutterWidth = $columns.first().outerWidth() -
+                              $columns.first().children('a').width(),
+          gutterDelta = (actualGutterWidth - minGutterWidth) / 2;
+
+      if (actualGutterWidth > 80) {
+        $('.cs-scroll-left').css('left', '+=' + gutterDelta.toString() + 'px');
+        $('.cs-scroll-right').css('right', '+=' + gutterDelta.toString() + 'px');
+        $columns.each(function (index, column) {
+          if (index % 2 === 0) {
+            $(this).children('a').css('margin-right', '-=' + gutterDelta.toString() + 'px');
+          } else {
+            $(this).children('a').css('margin-left', '-=' + gutterDelta.toString() + 'px');
+          }
+        });
+      }
 
     } else {
       $columns.css('width', $carousel.css('width'))
-      if ($columns.length === 1) { $('.cs-scroll div').hide() }
+      if ($columns.length === 1) {
+        $container.find('.cs-scroll div').hide();
+      }
     }
 
   }
