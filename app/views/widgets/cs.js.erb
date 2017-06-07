@@ -208,25 +208,30 @@
       }
 
     } else if ($carousel.width() >= 2 * storyWidth) {
-
       if ($columns.length <= 2) {
         $container.find('.cs-scroll div').hide();
       }
-
       // adjust column size
+      var lastIsSingle = $columns % 2 !== 0;
       $columns.css('width', Math.floor($carousel.width() / 2).toString() + 'px')
-
+      if (lastIsSingle) {
+        $columns.last().css('width', $carousel.width().toString() + 'px');
+      }
+      // adjust gutter width if too big
       var minGutterWidth = 80,
           actualGutterWidth = $columns.first().outerWidth() -
                               $columns.first().children('a').width(),
           gutterDelta = (actualGutterWidth - minGutterWidth) / 2;
-
       if (actualGutterWidth > 80) {
         $('.cs-scroll-left').css('left', '+=' + gutterDelta.toString() + 'px');
         $('.cs-scroll-right').css('right', '+=' + gutterDelta.toString() + 'px');
         $columns.each(function (index, column) {
           if (index % 2 === 0) {
-            $(this).children('a').css('margin-right', '-=' + gutterDelta.toString() + 'px');
+            if (lastIsSingle && index === $columns.length - 1) {
+              // don't adjust last item; it will occupy entire width
+            } else {
+              $(this).children('a').css('margin-right', '-=' + gutterDelta.toString() + 'px');
+            }
           } else {
             $(this).children('a').css('margin-left', '-=' + gutterDelta.toString() + 'px');
           }
