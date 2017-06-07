@@ -223,7 +223,10 @@
                               $columns.first().children('a').width(),
           gutterDelta = (actualGutterWidth - minGutterWidth) / 2;
       if (actualGutterWidth > 80) {
+        console.log('adjust gutter');
         $('.cs-scroll-left').css('left', '+=' + gutterDelta.toString() + 'px');
+        $('.cs-scroll-left').css('right', '-=' + gutterDelta.toString() + 'px');
+        $('.cs-scroll-right').css('left', '-=' + gutterDelta.toString() + 'px');
         $('.cs-scroll-right').css('right', '+=' + gutterDelta.toString() + 'px');
         $columns.each(function (index, column) {
           if (index % 2 === 0) {
