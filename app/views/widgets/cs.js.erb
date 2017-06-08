@@ -73,7 +73,6 @@
                   scrollHandlersExp($container);
                 } else if (type === 'varmour') {
                   buildVarmourWidget($container);
-                  scrollHandlersVarmour($container);
                 }
                 xScrollBoundaries(type);
               }
@@ -148,8 +147,129 @@
   }
 
   function buildVarmourWidget ($container) {
+    // disable horizontal scrolling
+    $container.find('.row-horizon').css('overflow-x', 'hidden');
+    varmourAltFont();
 
-    // on weebly, get the Montserrat font to emulate proxima-nova
+    var $carousel = $container.find('.row-horizon'),
+        $columns = $carousel.children(),
+        $stories = $columns.children(),
+        storyWidth = parseInt( $stories.first().css('width'), 10 ) +
+                     parseInt( $columns.first().css('padding-left'), 10 ) +
+                     parseInt( $columns.first().css('padding-right'), 10 ),
+        $pagination = $container.find('.cs-pagination'),
+        scrollWidth = $carousel.prop('scrollWidth'),
+        numPages = Math.ceil(scrollWidth / $carousel.width()),
+        currentPage = 0,  // 0-based paging
+        arrowLeft = function () {
+          if (currentPage !== 0) {
+            currentPage -= 1;
+            $pagination.children('.cs-current-page-dot')
+                       .removeClass('cs-current-page-dot')
+            $pagination.children().eq(currentPage).addClass('cs-current-page-dot')
+            $carousel.animate({ scrollLeft: '-=' + $carousel.css('width') }, 500);
+          }
+        },
+        arrowRight = function () {
+          if (currentPage !== numPages - 1) {
+            currentPage += 1;
+            $pagination.children('.cs-current-page-dot')
+                       .removeClass('cs-current-page-dot')
+            $pagination.children().eq(currentPage).addClass('cs-current-page-dot')
+            $carousel.animate({ scrollLeft: '+=' + $carousel.css('width') }, 500);
+          }
+        },
+        adjustColumns = function () {
+          if ($carousel.width() >= 4 * storyWidth) {
+            // in case margins were adjusted, adjust them back
+            $columns.children('a').css('margin', 'auto');
+            $columns.css('width', Math.floor($carousel.width() / 4).toString() + 'px')
+            if ($columns.length <= 4) {
+              $container.find('.cs-scroll div').hide();
+            }
+
+          } else if ($carousel.width() >= 3 * storyWidth) {
+            // in case margins were adjusted, adjust them back
+            $columns.children('a').css('margin', 'auto');
+            $columns.css('width', Math.floor($carousel.width() / 3).toString() + 'px')
+            if ($columns.length <= 3) {
+              $container.find('.cs-scroll div').hide();
+            }
+
+          } else if ($carousel.width() >= 2 * storyWidth) {
+            if ($columns.length <= 2) {
+              $container.find('.cs-scroll div').hide();
+            }
+            // adjust column size
+            // var lastIsSingle = $columns % 2 !== 0;
+            $columns.css('width', Math.floor($carousel.width() / 2).toString() + 'px')
+
+            // adjust gutter width if too big
+            // var minGutterWidth = 80,
+            //     actualGutterWidth = $columns.first().outerWidth() -
+            //                         $columns.first().children('a').width(),
+            //     gutterDelta = (actualGutterWidth - minGutterWidth) / 2;
+            // if (actualGutterWidth > 80) {
+            //   $columns.each(function (index, column) {
+            //     if (index % 2 === 0) {
+            //       if (lastIsSingle && index === $columns.length - 1) {
+            //         // don't adjust last item; it will occupy entire width
+            //       } else {
+            //         $(this).children('a').css('margin-right', '10%');
+            //       }
+            //     } else {
+            //       $(this).children('a').css('margin-left', '10%');
+            //     }
+            //   });
+            // }
+
+          } else {
+            // in case margins were adjusted, adjust them back
+            $columns.children('a').css('margin', 'auto');
+            $columns.css('width', $carousel.css('width'))
+            if ($columns.length === 1) {
+              $container.find('.cs-scroll div').hide();
+            }
+          }
+        }
+
+    // animate stories
+    varmourHover($stories);
+
+    // set up pagination
+    for (var i = 0; i < numPages; i++) {
+      if (i === 0) {
+        $pagination.append("<div class='cs-page-dot cs-current-page-dot'></div>");
+      } else {
+        $pagination.append("<div class='cs-page-dot'></div>");
+      }
+    }
+
+    // scroll listeners
+    $container.find('.cs-scroll-left, .cs-scroll-xs-left').on('click', arrowLeft);
+    $container.find('.cs-scroll-right, .cs-scroll-xs-right').on('click', arrowRight);
+
+    // make adjustments on window resize
+    // ref: https://stackoverflow.com/questions/599288
+    var resizeTimer;
+    $(window).on('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(adjustColumns, 100);
+    });
+    $(window).on('orientationchange', adjustColumns);
+
+    // initial adjustment
+    adjustColumns();
+
+    // turn on the widget, enable tracking
+    $container.find('section').css('visibility', 'visible');
+    if (<%= ENV['HOST_NAME'] == 'customerstories.net' %>) {
+      trackVisitor();
+    }
+  }
+
+  // on weebly, get the Montserrat font to emulate proxima-nova
+  function varmourAltFont () {
     if (window.location.href.includes('weebly')) {
       $("<link>", {
         rel: "stylesheet",
@@ -157,103 +277,21 @@
         href: "//fonts.googleapis.com/css?family=Montserrat:300,600"
       }).appendTo('head');
     }
+  }
 
-    // disable horizontal scrolling
-    $container.find('.row-horizon').css('overflow-x', 'hidden')
-
-    // animate on hover
-    $container.find('.cs-thumbnail').hover(
+  // doing this in js so we can have timeout delay in one direction only
+  function varmourHover ($stories) {
+    $stories.hover(
       function () {
-        var $thumbnail = $(this);
+        var $story = $(this);
         setTimeout(function () {
-          $thumbnail.find('.cs-caption').children().toggle();
+          $story.find('.cs-caption').children().toggle();
         }, 300);
       },
       function () {
         $(this).find('.cs-caption').children().toggle();
       }
     )
-
-    // column widths responsive to screen width;
-    // adjust as necessary on page load and device orientation change
-    adjustColumnsWidth($container);
-    $(window).on('orientationchange', function () {
-      adjustColumnsWidth($container);
-    })
-
-    var resizeTimer;
-    $(window).on('resize', function() {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(function () {
-        adjustColumnsWidth($container)
-      }, 100);
-    });
-
-    $container.find('section').css('visibility', 'visible');
-    if (<%= ENV['HOST_NAME'] == 'customerstories.net' %>) {
-      trackVisitor();
-    }
-  }
-
-  function adjustColumnsWidth ($container) {
-    var $carousel = $container.find('.row-horizon'),
-        $columns = $carousel.children(),
-        storyWidth = parseInt( $columns.children().first().css('width'), 10 ) +
-                     parseInt( $columns.first().css('padding-left'), 10 ) +
-                     parseInt( $columns.first().css('padding-right'), 10 );
-
-    if ($carousel.width() >= 4 * storyWidth) {
-      // in case margins were adjusted, adjust them back
-      $columns.children('a').css('margin', 'auto');
-      $columns.css('width', Math.floor($carousel.width() / 4).toString() + 'px')
-      if ($columns.length <= 4) {
-        $container.find('.cs-scroll div').hide();
-      }
-
-    } else if ($carousel.width() >= 3 * storyWidth) {
-      // in case margins were adjusted, adjust them back
-      $columns.children('a').css('margin', 'auto');
-      $columns.css('width', Math.floor($carousel.width() / 3).toString() + 'px')
-      if ($columns.length <= 3) {
-        $container.find('.cs-scroll div').hide();
-      }
-
-    } else if ($carousel.width() >= 2 * storyWidth) {
-      if ($columns.length <= 2) {
-        $container.find('.cs-scroll div').hide();
-      }
-      // adjust column size
-      var lastIsSingle = $columns % 2 !== 0;
-      $columns.css('width', Math.floor($carousel.width() / 2).toString() + 'px')
-
-      // adjust gutter width if too big
-      var minGutterWidth = 80,
-          actualGutterWidth = $columns.first().outerWidth() -
-                              $columns.first().children('a').width(),
-          gutterDelta = (actualGutterWidth - minGutterWidth) / 2;
-      if (actualGutterWidth > 80) {
-        $columns.each(function (index, column) {
-          if (index % 2 === 0) {
-            if (lastIsSingle && index === $columns.length - 1) {
-              // don't adjust last item; it will occupy entire width
-            } else {
-              $(this).children('a').css('margin-right', '10%');
-            }
-          } else {
-            $(this).children('a').css('margin-left', '10%');
-          }
-        });
-      }
-
-    } else {
-      // in case margins were adjusted, adjust them back
-      $columns.children('a').css('margin', 'auto');
-      $columns.css('width', $carousel.css('width'))
-      if ($columns.length === 1) {
-        $container.find('.cs-scroll div').hide();
-      }
-    }
-
   }
 
   function buildTabWidget ($container) {
@@ -587,51 +625,6 @@
       $container.find('.cs-scroll-left, .cs-scroll-left-xs, .cs-scroll-right, .cs-scroll-right-xs')
                 .css('visibility', 'hidden');
     }
-  }
-
-  function scrollHandlersVarmour ($container) {
-
-    var $carousel = $container.find('.row-horizon'),
-        $pagination = $container.find('.cs-pagination'),
-        scrollWidth = $carousel.prop('scrollWidth'),
-        numPages = Math.ceil(scrollWidth / $carousel.width()),
-        currentPage = 0,  // 0-based paging
-        arrowScrollLeft = function ($carousel, pageWidth) {
-          return function (e) {
-            if (currentPage !== 0) {
-              currentPage -= 1;
-              $pagination.children('.cs-current-page-dot')
-                         .removeClass('cs-current-page-dot')
-              $pagination.children().eq(currentPage).addClass('cs-current-page-dot')
-              $carousel.animate({ scrollLeft: '-=' + $carousel.css('width') }, 500);
-            }
-          };
-        },
-        arrowScrollRight = function ($carousel, pageWidth, scrollWidth) {
-          return function (e) {
-            if (currentPage !== numPages - 1) {
-              currentPage += 1;
-              $pagination.children('.cs-current-page-dot')
-                         .removeClass('cs-current-page-dot')
-              $pagination.children().eq(currentPage).addClass('cs-current-page-dot')
-              $carousel.animate({ scrollLeft: '+=' + $carousel.css('width') }, 500);
-            }
-          };
-        };
-
-    // set up pagination
-    for (var i = 0; i < numPages; i++) {
-      if (i === 0) {
-        $pagination.append("<div class='cs-page-dot cs-current-page-dot'></div>");
-      } else {
-        $pagination.append("<div class='cs-page-dot'></div>");
-      }
-    }
-    // click listeners
-    $container.find('.cs-scroll-left, .cs-scroll-xs-left')
-              .on('click', arrowScrollLeft($carousel));
-    $container.find('.cs-scroll-right, .cs-scroll-xs-right')
-              .on('click', arrowScrollRight($carousel));
   }
 
   function trackVisitor () {
