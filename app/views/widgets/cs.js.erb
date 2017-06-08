@@ -158,8 +158,7 @@
                      parseInt( $columns.first().css('padding-left'), 10 ) +
                      parseInt( $columns.first().css('padding-right'), 10 ),
         $pagination = $container.find('.cs-pagination'),
-        scrollWidth = $carousel.prop('scrollWidth'),
-        numPages = Math.ceil(scrollWidth / $carousel.width()),
+        numPages = Math.ceil($carousel.prop('scrollWidth') / $carousel.width()),
         currentPage = 0,  // 0-based paging
         arrowLeft = function () {
           if (currentPage !== 0) {
@@ -180,6 +179,11 @@
           }
         },
         adjustColumns = function () {
+          // console.log('adjustColumns()', $pagination);
+          // console.log('$pagination: ', $pagination);
+          // console.log('$pagination length: ', $pagination.children().length);
+          // based on the current $carousel.width() and currentPage, figure which
+          // story we're on
           if ($carousel.width() >= 4 * storyWidth) {
             // in case margins were adjusted, adjust them back
             $columns.children('a').css('margin', 'auto');
@@ -201,27 +205,27 @@
               $container.find('.cs-scroll div').hide();
             }
             // adjust column size
-            // var lastIsSingle = $columns % 2 !== 0;
+            var lastIsSingle = $columns % 2 !== 0;
             $columns.css('width', Math.floor($carousel.width() / 2).toString() + 'px')
 
             // adjust gutter width if too big
-            // var minGutterWidth = 80,
-            //     actualGutterWidth = $columns.first().outerWidth() -
-            //                         $columns.first().children('a').width(),
-            //     gutterDelta = (actualGutterWidth - minGutterWidth) / 2;
-            // if (actualGutterWidth > 80) {
-            //   $columns.each(function (index, column) {
-            //     if (index % 2 === 0) {
-            //       if (lastIsSingle && index === $columns.length - 1) {
-            //         // don't adjust last item; it will occupy entire width
-            //       } else {
-            //         $(this).children('a').css('margin-right', '10%');
-            //       }
-            //     } else {
-            //       $(this).children('a').css('margin-left', '10%');
-            //     }
-            //   });
-            // }
+            var minGutterWidth = 80,
+                actualGutterWidth = $columns.first().outerWidth() -
+                                    $columns.first().children('a').width(),
+                gutterDelta = (actualGutterWidth - minGutterWidth) / 2;
+            if (actualGutterWidth > 80) {
+              $columns.each(function (index, column) {
+                if (index % 2 === 0) {
+                  if (lastIsSingle && index === $columns.length - 1) {
+                    // don't adjust last item; it will occupy entire width
+                  } else {
+                    $(this).children('a').css('margin-right', '10%');
+                  }
+                } else {
+                  $(this).children('a').css('margin-left', '10%');
+                }
+              });
+            }
 
           } else {
             // in case margins were adjusted, adjust them back
@@ -231,7 +235,21 @@
               $container.find('.cs-scroll div').hide();
             }
           }
-        }
+
+          // reset pagination
+          numPages = Math.ceil($carousel.prop('scrollWidth') / $carousel.width());
+          if ($pagination) {
+            $pagination.empty();
+            for (var i = 0; i < numPages; i++) {
+              if (i === 0) {
+                $pagination.append("<div class='cs-page-dot cs-current-page-dot'></div>");
+              } else {
+                $pagination.append("<div class='cs-page-dot'></div>");
+              }
+            }
+          }
+
+        }; // adjust columns
 
     // animate stories
     varmourHover($stories);
@@ -252,10 +270,12 @@
     // make adjustments on window resize
     // ref: https://stackoverflow.com/questions/599288
     var resizeTimer;
-    $(window).on('resize', function() {
+    var resizeCallback = function (event) {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(adjustColumns, 100);
-    });
+    };
+    // debugger;
+    $(window).on('resize', resizeCallback);
     $(window).on('orientationchange', adjustColumns);
 
     // initial adjustment
