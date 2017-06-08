@@ -204,20 +204,28 @@
             if ($columns.length <= 2) {
               $container.find('.cs-scroll div').hide();
             }
+
+            // what is the current story given currentPage / numPages
+            // var currentStoryIndex =
+
             // adjust column size
-            var lastIsSingle = $columns % 2 !== 0;
             $columns.css('width', Math.floor($carousel.width() / 2).toString() + 'px')
 
-            // adjust gutter width if too big
+            // adjust story margins (squish them together) if gutter too big
             var minGutterWidth = 80,
                 actualGutterWidth = $columns.first().outerWidth() -
                                     $columns.first().children('a').width(),
                 gutterDelta = (actualGutterWidth - minGutterWidth) / 2;
-            if (actualGutterWidth > 80) {
+            if (actualGutterWidth > minGutterWidth) {
+              // if odd number of stories, give last one full width and don't adjust margin below
+              var lastIsSingle = $columns % 2 !== 0;
+              if (lastIsSingle) {
+                $columns.last().css('width', $carousel.width());
+              }
               $columns.each(function (index, column) {
                 if (index % 2 === 0) {
                   if (lastIsSingle && index === $columns.length - 1) {
-                    // don't adjust last item; it will occupy entire width
+                    // do nothing
                   } else {
                     $(this).children('a').css('margin-right', '10%');
                   }
