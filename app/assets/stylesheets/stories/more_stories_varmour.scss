@@ -144,7 +144,8 @@
     .cs-row {
       display: flex;
       align-items: center;
-      color: #a2a1a1;
+      justify-content: center;
+      color: #999;
       .cs-scroll-xs {
         position: relative;
       }

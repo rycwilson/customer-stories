@@ -159,7 +159,8 @@
                      parseInt( $columns.first().css('padding-right'), 10 ),
         $pagination = $container.find('.cs-pagination'),
         $paginationXs = $container.find('.cs-pagination-xs'),
-        numPages, pageWidth,  // these will get set after adjustment
+        currentStoryIndex,  // this is set before adjusting
+        numPages, pageWidth,  // these are set after adjustment
         currentPage = 0,  // 0-based paging
         initialAdjust = true,
         arrowLeft = function () {
@@ -183,6 +184,9 @@
           }
         },
         adjustColumns = function () {
+          // need to capture the current story so we can scroll to it after adjusting
+          var currentStoryIndex = Math.floor($carousel.prop('scrollLeft') / $columns.first().outerWidth());
+
           if ($carousel.width() >= 4 * storyWidth) {
             // in case margins were adjusted (when displaying two stories), adjust them back
             $columns.children('a').css('margin', 'auto');
@@ -203,8 +207,6 @@
             if ($columns.length <= 2) {
               $container.find('.cs-scroll div').hide();
             }
-            // need to capture the current story so we can scroll to it after adjusting
-            var currentStoryIndex = Math.floor($carousel.prop('scrollLeft') / $columns.first().outerWidth());
             // adjust column size
             $columns.css('width', Math.floor($carousel.width() / 2).toString() + 'px')
             // adjust story margins (squish them together) if gutter too big
@@ -230,8 +232,6 @@
                 }
               });
             }
-            // scroll to current story (wherever previous scroll was)
-            $carousel.prop('scrollLeft', currentStoryIndex * $columns.first().outerWidth());
 
           } else {
             // in case margins were adjusted (when displaying two stories), adjust them back
@@ -241,6 +241,9 @@
               $container.find('.cs-scroll div').hide();
             }
           }
+
+          // scroll to current story (wherever previous scroll was)
+          $carousel.prop('scrollLeft', currentStoryIndex * $columns.first().outerWidth());
           // update number of pages
           numPages = Math.ceil($carousel.prop('scrollWidth') / $carousel.width());
           // reset pagination if this is a resize
@@ -290,9 +293,9 @@
 
     // set up pagination (numPages calculation needs to be after adjustment)
     numPages = Math.ceil($carousel.prop('scrollWidth') / $carousel.width());
-      if (numPages > 8 && $(window).width() <= 500) {
-      $pagination
-        .append('<span style="color: #999">' +
+    if (numPages > 8 && $(window).width() <= 500) {
+      $paginationXs
+        .append('<span style="color:#999">' +
                   (currentPage + 1).toString() + ' of ' + numPages.toString() +
                 '</span>');
     } else {
