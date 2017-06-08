@@ -140,6 +140,7 @@
   }
 
   .cs-scroll-xs-container {
+    display: none;
     .cs-row {
       display: flex;
       align-items: center;
@@ -248,6 +249,16 @@
 
     h5:after {
       left: 100%;
+    }
+  }
+
+  @media only screen and (max-width: 500px) {
+    .cs-scroll div {
+      display: none;
+    }
+    .cs-scroll-xs-container {
+      display: block;
+      > .cs-row { height: 40px; }
     }
   }
 

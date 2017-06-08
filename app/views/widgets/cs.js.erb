@@ -204,8 +204,7 @@
 
     if ($carousel.width() >= 4 * storyWidth) {
       // in case margins were adjusted, adjust them back
-      $columns.children('a').css('margin-right', 'auto');
-      $columns.children('a').css('margin-left', 'auto');
+      $columns.children('a').css('margin', 'auto');
       $columns.css('width', Math.floor($carousel.width() / 4).toString() + 'px')
       if ($columns.length <= 4) {
         $container.find('.cs-scroll div').hide();
@@ -213,8 +212,7 @@
 
     } else if ($carousel.width() >= 3 * storyWidth) {
       // in case margins were adjusted, adjust them back
-      $columns.children('a').css('margin-right', 'auto');
-      $columns.children('a').css('margin-left', 'auto');
+      $columns.children('a').css('margin', 'auto');
       $columns.css('width', Math.floor($carousel.width() / 3).toString() + 'px')
       if ($columns.length <= 3) {
         $container.find('.cs-scroll div').hide();
@@ -227,9 +225,7 @@
       // adjust column size
       var lastIsSingle = $columns % 2 !== 0;
       $columns.css('width', Math.floor($carousel.width() / 2).toString() + 'px')
-      // if (lastIsSingle) {
-      //   $columns.last().css('width', $carousel.width().toString() + 'px');
-      // }
+
       // adjust gutter width if too big
       var minGutterWidth = 80,
           actualGutterWidth = $columns.first().outerWidth() -
@@ -251,8 +247,7 @@
 
     } else {
       // in case margins were adjusted, adjust them back
-      $columns.children('a').css('margin-right', 'auto');
-      $columns.children('a').css('margin-left', 'auto');
+      $columns.children('a').css('margin', 'auto');
       $columns.css('width', $carousel.css('width'))
       if ($columns.length === 1) {
         $container.find('.cs-scroll div').hide();
