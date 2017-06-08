@@ -158,8 +158,9 @@
                      parseInt( $columns.first().css('padding-left'), 10 ) +
                      parseInt( $columns.first().css('padding-right'), 10 ),
         $pagination = $container.find('.cs-pagination'),
-        numPages = Math.ceil($carousel.prop('scrollWidth') / $carousel.width()),
+        numPages, pageWidth,  // these will get set after adjustment
         currentPage = 0,  // 0-based paging
+        initialAdjust = true,
         arrowLeft = function () {
           if (currentPage !== 0) {
             currentPage -= 1;
@@ -179,13 +180,8 @@
           }
         },
         adjustColumns = function () {
-          // console.log('adjustColumns()', $pagination);
-          // console.log('$pagination: ', $pagination);
-          // console.log('$pagination length: ', $pagination.children().length);
-          // based on the current $carousel.width() and currentPage, figure which
-          // story we're on
           if ($carousel.width() >= 4 * storyWidth) {
-            // in case margins were adjusted, adjust them back
+            // in case margins were adjusted (when displaying two stories), adjust them back
             $columns.children('a').css('margin', 'auto');
             $columns.css('width', Math.floor($carousel.width() / 4).toString() + 'px')
             if ($columns.length <= 4) {
@@ -193,7 +189,7 @@
             }
 
           } else if ($carousel.width() >= 3 * storyWidth) {
-            // in case margins were adjusted, adjust them back
+            // in case margins were adjusted (when displaying two stories), adjust them back
             $columns.children('a').css('margin', 'auto');
             $columns.css('width', Math.floor($carousel.width() / 3).toString() + 'px')
             if ($columns.length <= 3) {
@@ -205,8 +201,8 @@
               $container.find('.cs-scroll div').hide();
             }
 
-            // what is the current story given currentPage / numPages
-            // var currentStoryIndex =
+            // need to capture the current story so we can scroll to it after adjusting
+            var currentStoryIndex = Math.floor($carousel.prop('scrollLeft') / $columns.first().outerWidth());
 
             // adjust column size
             $columns.css('width', Math.floor($carousel.width() / 2).toString() + 'px')
@@ -234,9 +230,11 @@
                 }
               });
             }
+            // scroll to current story (wherever previous scroll was)
+            $carousel.prop('scrollLeft', currentStoryIndex * $columns.first().outerWidth());
 
           } else {
-            // in case margins were adjusted, adjust them back
+            // in case margins were adjusted (when displaying two stories), adjust them back
             $columns.children('a').css('margin', 'auto');
             $columns.css('width', $carousel.css('width'))
             if ($columns.length === 1) {
@@ -244,32 +242,27 @@
             }
           }
 
-          // reset pagination
+          // update number of pages
           numPages = Math.ceil($carousel.prop('scrollWidth') / $carousel.width());
-          if ($pagination) {
+          // reset pagination if this is a resize
+          if (!initialAdjust) {
+            pageWidth = Math.floor($carousel.prop('scrollWidth') / numPages);
+            currentPage = Math.floor($carousel.prop('scrollLeft') / pageWidth);
             $pagination.empty();
             for (var i = 0; i < numPages; i++) {
-              if (i === 0) {
+              if (i === currentPage) {
                 $pagination.append("<div class='cs-page-dot cs-current-page-dot'></div>");
               } else {
                 $pagination.append("<div class='cs-page-dot'></div>");
               }
             }
           }
+          initialAdjust = false;
 
         }; // adjust columns
 
     // animate stories
     varmourHover($stories);
-
-    // set up pagination
-    for (var i = 0; i < numPages; i++) {
-      if (i === 0) {
-        $pagination.append("<div class='cs-page-dot cs-current-page-dot'></div>");
-      } else {
-        $pagination.append("<div class='cs-page-dot'></div>");
-      }
-    }
 
     // scroll listeners
     $container.find('.cs-scroll-left, .cs-scroll-xs-left').on('click', arrowLeft);
@@ -282,12 +275,21 @@
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(adjustColumns, 100);
     };
-    // debugger;
     $(window).on('resize', resizeCallback);
     $(window).on('orientationchange', adjustColumns);
 
     // initial adjustment
     adjustColumns();
+
+    // set up pagination (numPages calculation needs to be after adjustment)
+    numPages = Math.ceil($carousel.prop('scrollWidth') / $carousel.width());
+    for (var i = 0; i < numPages; i++) {
+      if (i === 0) {
+        $pagination.append("<div class='cs-page-dot cs-current-page-dot'></div>");
+      } else {
+        $pagination.append("<div class='cs-page-dot'></div>");
+      }
+    }
 
     // turn on the widget, enable tracking
     $container.find('section').css('visibility', 'visible');
