@@ -223,7 +223,6 @@
                               $columns.first().children('a').width(),
           gutterDelta = (actualGutterWidth - minGutterWidth) / 2;
       if (actualGutterWidth > 80) {
-        console.log('adjust gutter');
         $('.cs-scroll-left').css('left', '+=' + gutterDelta.toString() + 'px');
         $('.cs-scroll-left').css('right', '-=' + gutterDelta.toString() + 'px');
         $('.cs-scroll-right').css('left', '-=' + gutterDelta.toString() + 'px');
@@ -233,10 +232,10 @@
             if (lastIsSingle && index === $columns.length - 1) {
               // don't adjust last item; it will occupy entire width
             } else {
-              $(this).children('a').css('margin-right', '-=' + gutterDelta.toString() + 'px');
+              $(this).children('a').css('margin-right', '10%');
             }
           } else {
-            $(this).children('a').css('margin-left', '-=' + gutterDelta.toString() + 'px');
+            $(this).children('a').css('margin-left', '10%');
           }
         });
       }
