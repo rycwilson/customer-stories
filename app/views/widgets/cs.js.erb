@@ -181,6 +181,14 @@
       adjustColumnsWidth($container);
     })
 
+    var resizeTimer;
+    $(window).on('resize', function() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () {
+        adjustColumnsWidth($container)
+      }, 100);
+    });
+
     $container.find('section').css('visibility', 'visible');
     if (<%= ENV['HOST_NAME'] == 'customerstories.net' %>) {
       trackVisitor();
@@ -194,14 +202,19 @@
                      parseInt( $columns.first().css('padding-left'), 10 ) +
                      parseInt( $columns.first().css('padding-right'), 10 );
 
-
     if ($carousel.width() >= 4 * storyWidth) {
+      // in case margins were adjusted, adjust them back
+      $columns.children('a').css('margin-right', 'auto');
+      $columns.children('a').css('margin-left', 'auto');
       $columns.css('width', Math.floor($carousel.width() / 4).toString() + 'px')
       if ($columns.length <= 4) {
         $container.find('.cs-scroll div').hide();
       }
 
     } else if ($carousel.width() >= 3 * storyWidth) {
+      // in case margins were adjusted, adjust them back
+      $columns.children('a').css('margin-right', 'auto');
+      $columns.children('a').css('margin-left', 'auto');
       $columns.css('width', Math.floor($carousel.width() / 3).toString() + 'px')
       if ($columns.length <= 3) {
         $container.find('.cs-scroll div').hide();
@@ -214,19 +227,15 @@
       // adjust column size
       var lastIsSingle = $columns % 2 !== 0;
       $columns.css('width', Math.floor($carousel.width() / 2).toString() + 'px')
-      if (lastIsSingle) {
-        $columns.last().css('width', $carousel.width().toString() + 'px');
-      }
+      // if (lastIsSingle) {
+      //   $columns.last().css('width', $carousel.width().toString() + 'px');
+      // }
       // adjust gutter width if too big
       var minGutterWidth = 80,
           actualGutterWidth = $columns.first().outerWidth() -
                               $columns.first().children('a').width(),
           gutterDelta = (actualGutterWidth - minGutterWidth) / 2;
       if (actualGutterWidth > 80) {
-        $('.cs-scroll-left').css('left', '+=' + gutterDelta.toString() + 'px');
-        $('.cs-scroll-left').css('right', '-=' + gutterDelta.toString() + 'px');
-        $('.cs-scroll-right').css('left', '-=' + gutterDelta.toString() + 'px');
-        $('.cs-scroll-right').css('right', '+=' + gutterDelta.toString() + 'px');
         $columns.each(function (index, column) {
           if (index % 2 === 0) {
             if (lastIsSingle && index === $columns.length - 1) {
@@ -241,6 +250,9 @@
       }
 
     } else {
+      // in case margins were adjusted, adjust them back
+      $columns.children('a').css('margin-right', 'auto');
+      $columns.children('a').css('margin-left', 'auto');
       $columns.css('width', $carousel.css('width'))
       if ($columns.length === 1) {
         $container.find('.cs-scroll div').hide();
