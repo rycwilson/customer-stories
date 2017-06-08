@@ -214,7 +214,7 @@
                 gutterDelta = (actualGutterWidth - minGutterWidth) / 2;
             if (actualGutterWidth > minGutterWidth) {
               // if odd number of stories, give last one full width and don't adjust margin below
-              var lastIsSingle = $columns % 2 !== 0;
+              var lastIsSingle = $columns.length % 2 !== 0;
               if (lastIsSingle) {
                 $columns.last().css('width', $carousel.width());
               }
