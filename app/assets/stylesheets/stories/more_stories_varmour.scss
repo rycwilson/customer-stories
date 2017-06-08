@@ -172,7 +172,6 @@
   .cs-scroll {
     position: relative;
     height: 230px;  //  190 + (margin = 20 x 2)
-    color: #a2a1a1;
     .cs-scroll-left, .cs-scroll-right {
       position: absolute;
       cursor: pointer;
@@ -186,10 +185,6 @@
       line-height: 48px;
       border-radius: 5px;
       background-size: cover;
-      // i {
-      //   display: inline-block;
-      //   vertical-align: middle;
-      // }
     }
     .cs-scroll-left {
       background-image: url('https://s3-us-west-1.amazonaws.com/csp-production-assets/varmour/nav-arrow-left.png');
@@ -199,7 +194,7 @@
     }
   }
 
-  .cs-pagination {
+  .cs-pagination, .cs-pagination-xs {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -219,39 +214,6 @@
     }
   }
 
-  .cs-see-more {
-    overflow: hidden;
-    h5 {
-      position: relative;
-      display: inline-block;
-      padding: 2px 15px 0 15px;
-      font-weight: 600;
-      a {
-        color: #5b5b5b;
-      }
-      a:hover {
-        text-decoration: none;
-        color: #33baff;
-      }
-    }
-    h5:before, h5:after {
-      background: #dedede;  // matches arrows
-      content: "";
-      display: block;
-      height: 1px;
-      position: absolute;
-      top: 50%;
-      width: 400%;
-    }
-    h5:before {
-      right: 100%;
-    }
-
-    h5:after {
-      left: 100%;
-    }
-  }
-
   @media only screen and (max-width: 500px) {
     .cs-scroll div {
       display: none;
@@ -260,7 +222,9 @@
       display: block;
       > .cs-row { height: 40px; }
     }
+    .cs-pagination {
+      display: none;
+    }
   }
-
 
 }
