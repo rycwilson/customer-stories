@@ -269,6 +269,14 @@
                 .append('<span style="color: #999">' +
                           (currentPage + 1).toString() + ' of ' + numPages.toString() +
                         '</span>');
+            } else if ($(window).width() <= 500) {
+              for (var i = 0; i < numPages; i++) {
+                if (i === currentPage) {
+                  $paginationXs.append("<div class='cs-page-dot cs-current-page-dot'></div>");
+                } else {
+                  $paginationXs.append("<div class='cs-page-dot'></div>");
+                }
+              }
             } else {
               for (var i = 0; i < numPages; i++) {
                 if (i === currentPage) {
@@ -299,6 +307,14 @@
         .append('<span style="color:#999">' +
                   (currentPage + 1).toString() + ' of ' + numPages.toString() +
                 '</span>');
+    } else if ($(window).width() <= 500) {
+      for (var i = 0; i < numPages; i++) {
+        if (i === 0) {
+          $paginationXs.append("<div class='cs-page-dot cs-current-page-dot'></div>");
+        } else {
+          $paginationXs.append("<div class='cs-page-dot'></div>");
+        }
+      }
     } else {
       for (var i = 0; i < numPages; i++) {
         if (i === 0) {
