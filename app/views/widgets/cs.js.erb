@@ -236,7 +236,8 @@
                 if (lastIsSingle && index === $stories.length - 1) {
                   // do nothing
                 } else {  // per specs of max gutter 70px
-                  $(this).css('margin-' + (index % 2 === 0) ? 'right' : 'left', '35px');
+                  console.log((index % 2 === 0))
+                  $(this).css('margin-' + (index % 2 === 0 ? 'right' : 'left'), '35px');
                 }
               });
             }
@@ -347,6 +348,8 @@
         type: "text/css",
         href: "//fonts.googleapis.com/css?family=Montserrat:300,600"
       }).appendTo('head');
+      // adjust container padding as necessary
+      $('.wsite-section-content > .container').css('padding', '0');
     }
   }
 
