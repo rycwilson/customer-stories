@@ -206,6 +206,10 @@
   .cs-scroll-xs-container {
     padding: 0;
   }
+  .cs-scroll-xs-container, .cs-pagination {
+    margin-bottom: 20px;
+  }
+
   .cs-pagination, .cs-pagination-xs {
     display: flex;
     align-items: center;
