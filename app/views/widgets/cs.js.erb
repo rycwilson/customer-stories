@@ -149,7 +149,7 @@
   function buildVarmourWidget ($container) {
     // alternative font for test environment
     varmourAltFont();
-    // disable horizontal scrolling
+    // disable horizontal mouse/trackpad scrolling
     $container.find('.row-horizon').css('overflow-x', 'hidden');
 
     var $carousel = $container.find('.row-horizon'),
@@ -161,7 +161,7 @@
         $pagination = $container.find('.cs-pagination'),
         $paginationXs = $container.find('.cs-pagination-xs'),
         currentStoryIndex,  // this is set before adjusting
-        numPages, pageWidth,  // these are set after adjustment
+        numPages, pageWidth,  // these are set after adjusting
         currentPage = 0,  // 0-based paging
         initialAdjust = true,
         currentDevice = $(window).width() < 768 ? 'xs' :
@@ -170,21 +170,23 @@
         arrowLeft = function () {
           if (currentPage !== 0) {
             currentPage -= 1;
+            var scrollTime = Math.round($carousel.width() / 2);
             [ $pagination, $paginationXs ].forEach(function ($p) {
               $p.children('.cs-current-page-dot').removeClass('cs-current-page-dot');
               $p.children().eq(currentPage).addClass('cs-current-page-dot');
             });
-            $carousel.animate({ scrollLeft: '-=' + $carousel.css('width') }, 500);
+            $carousel.animate({ scrollLeft: '-=' + $carousel.css('width') }, scrollTime);
           }
         },
         arrowRight = function () {
           if (currentPage !== numPages - 1) {
             currentPage += 1;
+            var scrollTime = Math.round($carousel.width() / 2);
             [ $pagination, $paginationXs ].forEach(function ($p) {
               $p.children('.cs-current-page-dot').removeClass('cs-current-page-dot');
               $p.children().eq(currentPage).addClass('cs-current-page-dot');
             });
-            $carousel.animate({ scrollLeft: '+=' + $carousel.css('width') }, 500);
+            $carousel.animate({ scrollLeft: '+=' + $carousel.css('width') }, scrollTime);
           }
         },
         adjustColumns = function () {
