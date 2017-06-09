@@ -233,14 +233,10 @@
                 $columns.last().css('width', $carousel.width());
               }
               $stories.each(function (index, column) {
-                if (index % 2 === 0) {  // even
-                  if (lastIsSingle && index === $stories.length - 1) {
-                    // do nothing
-                  } else {
-                    $(this).css('margin-right', '10%');
-                  }
-                } else {  // odd
-                  $(this).css('margin-left', '10%');
+                if (lastIsSingle && index === $stories.length - 1) {
+                  // do nothing
+                } else {  // per specs of max gutter 70px
+                  $(this).css('margin-' + (index % 2 === 0) ? 'right' : 'left', '35px');
                 }
               });
             }
