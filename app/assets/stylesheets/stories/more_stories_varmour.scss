@@ -232,6 +232,9 @@
     .cs-scroll-xs-container {
       display: block;
       > .cs-row { height: 40px; }
+      .cs-pagination-xs {
+        width: 200px;  // = story width - 70px (35 x 2) for arrows
+      }
     }
     .cs-pagination {
       display: none;
