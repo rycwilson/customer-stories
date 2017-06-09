@@ -147,9 +147,10 @@
   }
 
   function buildVarmourWidget ($container) {
+    // alternative font for test environment
+    varmourAltFont();
     // disable horizontal scrolling
     $container.find('.row-horizon').css('overflow-x', 'hidden');
-    varmourAltFont();
 
     var $carousel = $container.find('.row-horizon'),
         $columns = $carousel.children(),
@@ -163,6 +164,9 @@
         numPages, pageWidth,  // these are set after adjustment
         currentPage = 0,  // 0-based paging
         initialAdjust = true,
+        currentDevice = $(window).width() < 768 ? 'xs' :
+                         ( $(window).width() < 992 ? 'sm' :
+                           ( $(window).width() < 1200 ? 'md' : 'lg' ) ),
         arrowLeft = function () {
           if (currentPage !== 0) {
             currentPage -= 1;
@@ -184,12 +188,19 @@
           }
         },
         adjustColumns = function () {
+          var device = $(window).width() < 768 ? 'xs' :
+                     ( $(window).width() < 992 ? 'sm' :
+                       ( $(window).width() < 1200 ? 'md' : 'lg' ) )
+          if (device !== currentDevice) {
+            currentDevice = device;
+            $stories.css('margin', '0 auto');
+          }
           // need to capture the current story so we can scroll to it after adjusting
           var currentStoryIndex = Math.floor($carousel.prop('scrollLeft') / $columns.first().outerWidth());
 
           if ($carousel.width() >= 4 * storyWidth) {
             // in case margins were adjusted (when displaying two stories), adjust them back
-            $columns.children('a').css('margin', 'auto');
+            $stories.css('margin', '0 auto');
             $columns.css('width', Math.floor($carousel.width() / 4).toString() + 'px')
             if ($columns.length <= 4) {
               $container.find('.cs-scroll div').hide();
@@ -197,7 +208,7 @@
 
           } else if ($carousel.width() >= 3 * storyWidth) {
             // in case margins were adjusted (when displaying two stories), adjust them back
-            $columns.children('a').css('margin', 'auto');
+            $stories.css('margin', '0 auto');
             $columns.css('width', Math.floor($carousel.width() / 3).toString() + 'px')
             if ($columns.length <= 3) {
               $container.find('.cs-scroll div').hide();
@@ -211,31 +222,31 @@
             $columns.css('width', Math.floor($carousel.width() / 2).toString() + 'px')
             // adjust story margins (squish them together) if gutter too big
             var minGutterWidth = 80,
-                actualGutterWidth = $columns.first().outerWidth() -
-                                    $stories.first().width(),
+                actualGutterWidth = $columns.first().outerWidth() - $stories.first().width(),
                 gutterDelta = (actualGutterWidth - minGutterWidth) / 2;
             if (actualGutterWidth > minGutterWidth) {
+              console.log('adjusting gutter')
               // if odd number of stories, give last one full width and don't adjust margin below
               var lastIsSingle = $columns.length % 2 !== 0;
               if (lastIsSingle) {
                 $columns.last().css('width', $carousel.width());
               }
-              $columns.each(function (index, column) {
+              $stories.each(function (index, column) {
                 if (index % 2 === 0) {  // even
-                  if (lastIsSingle && index === $columns.length - 1) {
+                  if (lastIsSingle && index === $stories.length - 1) {
                     // do nothing
                   } else {
-                    $(this).children('a').css('margin-right', '10%');
+                    $(this).css('margin-right', '10%');
                   }
                 } else {  // odd
-                  $(this).children('a').css('margin-left', '10%');
+                  $(this).css('margin-left', '10%');
                 }
               });
             }
 
           } else {
             // in case margins were adjusted (when displaying two stories), adjust them back
-            $columns.children('a').css('margin', 'auto');
+            $stories.css('margin', '0 auto');
             $columns.css('width', $carousel.css('width'))
             if ($columns.length === 1) {
               $container.find('.cs-scroll div').hide();
@@ -278,16 +289,6 @@
     $container.find('.cs-scroll-left, .cs-scroll-xs-left').on('click', arrowLeft);
     $container.find('.cs-scroll-right, .cs-scroll-xs-right').on('click', arrowRight);
 
-    // make adjustments on window resize
-    // ref: https://stackoverflow.com/questions/599288
-    var resizeTimer;
-    var resizeCallback = function (event) {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(adjustColumns, 100);
-    };
-    $(window).on('resize', resizeCallback);
-    $(window).on('orientationchange', adjustColumns);
-
     // initial adjustment
     adjustColumns();
 
@@ -307,6 +308,16 @@
         }
       }
     }
+
+    // make adjustments on window resize
+    // ref: https://stackoverflow.com/questions/599288
+    var resizeTimer;
+    var resizeCallback = function () {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(adjustColumns, 100);
+    };
+    $(window).on('resize', resizeCallback);
+    $(window).on('orientationchange', adjustColumns);
 
     // turn on the widget, enable tracking
     $container.find('section').css('visibility', 'visible');
@@ -1013,3 +1024,4 @@
   }
 
 }(window, document));
+
