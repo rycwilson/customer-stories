@@ -42,10 +42,6 @@ class WidgetsController < ApplicationController
                             { tag: 'product', slug: params[:product] } : nil)
     filter_params = filter_attributes ?
         validate_and_convert_filter_attributes(filter_attributes, @company) : nil
-    # stories_index_url = filter_params ?
-    #     root_url(host: request.subdomain + '.' + request.domain) +
-    #               '?' + filter_params[:tag] + '=' + filter_attributes[:slug] :
-    #     root_url(host: request.subdomain + '.' + request.domain)
     stories =
       @company.filter_stories_by_tag(filter_params || { tag: 'all', id: '0' }, false)
               .map do |story|
@@ -62,9 +58,13 @@ class WidgetsController < ApplicationController
                   logo: story.customer.logo_url,
                   url: target_url,
                   published: story.published?,
-                  preview_published: story.preview_published?
+                  preview_published: story.preview_published?,
+                  updated_at: story.updated_at
                 }
               end
+    if @company.subdomain == 'varmour'
+      stories = stories.sort_by { |story| story[:updated_at] }.reverse
+    end
     case params[:type]
     when 'tab'
       partial = 'more_stories_tab'
