@@ -225,7 +225,6 @@
                 actualGutterWidth = $columns.first().outerWidth() - $stories.first().width(),
                 gutterDelta = (actualGutterWidth - minGutterWidth) / 2;
             if (actualGutterWidth > minGutterWidth) {
-              console.log('adjusting gutter')
               // if odd number of stories, give last one full width and don't adjust margin below
               var lastIsSingle = $columns.length % 2 !== 0;
               if (lastIsSingle) {

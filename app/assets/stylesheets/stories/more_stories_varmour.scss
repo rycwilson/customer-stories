@@ -25,7 +25,7 @@
     // in scrolls that didn't quite center the story tiles;
     // ref: https://stackoverflow.com/questions/5303897/css-width-doesnt-add-up
     font-size: 0;
-    div[class^='col'] {
+    div[class^='col-'] {
       position: relative;
       // width: 330px;  // jquery will set this
       height: 190px;
@@ -150,9 +150,11 @@
       color: #999;
       .cs-scroll-xs {
         position: relative;
+        width: 35px;
       }
       .cs-scroll-xs-left, .cs-scroll-xs-right {
         position: absolute;
+        text-align: center;
         cursor: pointer;
         top: 0;
         right: 0;
@@ -197,6 +199,9 @@
     }
   }
 
+  .cs-scroll-xs-container {
+    padding: 0;
+  }
   .cs-pagination, .cs-pagination-xs {
     display: flex;
     align-items: center;
@@ -218,8 +223,11 @@
   }
 
   @media only screen and (max-width: 500px) {
-    .cs-scroll div {
+    .cs-scroll {
       display: none;
+    }
+    .rh-container {
+      width: 100%;
     }
     .cs-scroll-xs-container {
       display: block;
