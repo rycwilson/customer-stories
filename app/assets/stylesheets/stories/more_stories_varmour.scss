@@ -19,19 +19,23 @@
     padding: 0;
   }
 
-  .row-horizon {
-    margin: 20px 0;
-    // this takes care of a very slight width discrepancy that was resulting
-    // in scrolls that didn't quite center the story tiles;
-    // ref: https://stackoverflow.com/questions/5303897/css-width-doesnt-add-up
-    font-size: 0;
-    div[class^='col-'] {
-      position: relative;
-      // width: 330px;  // jquery will set this
-      height: 190px;
-      padding-left: 16px;  // modified from 15 so 2 stories on an ipad
-      padding-right: 16px;
-      box-sizing: border-box;
+  .cs-rh-container {
+    padding: 0;
+
+    .row-horizon {
+      margin: 20px 0;
+      // this takes care of a very slight width discrepancy that was resulting
+      // in scrolls that didn't quite center the story tiles;
+      // ref: https://stackoverflow.com/questions/5303897/css-width-doesnt-add-up
+      font-size: 0;
+      div[class^='col-'] {
+        position: relative;
+        // width: 330px;  // jquery will set this
+        height: 190px;
+        padding-left: 16px;  // modified from 15 so 2 stories on an ipad
+        padding-right: 16px;
+        box-sizing: border-box;
+      }
     }
   }
 
@@ -238,6 +242,69 @@
     }
     .cs-pagination {
       display: none;
+    }
+  }
+
+  // bootstrap devices
+  @media only screen and (min-width: 501px) and (max-width: 767px) {
+    .cs-scroll {
+      .cs-scroll-left {
+        right: 15px;  // align to padding
+        left: auto;
+      }
+      .cs-scroll-right {
+        left: 15px;  // align to padding
+        right: auto;
+      }
+    }
+  }
+
+  @media only screen and (min-width: 768px) {
+    .cs-scroll {
+      width: 10%;
+      .cs-scroll-left {
+        right: 15px;  // align to padding
+        left: auto;
+      }
+      .cs-scroll-right {
+        left: 15px;  // align to padding
+        right: auto;
+      }
+    }
+    .cs-rh-container {
+      width: 80%;
+    }
+  }
+  @media only screen and (min-width: 992px) {
+    .cs-scroll {
+      width: 12%;
+      .cs-scroll-left {
+        right: 15px;  // align to padding
+        left: auto;
+      }
+      .cs-scroll-right {
+        left: 15px;  // align to padding
+        right: auto;
+      }
+    }
+    .cs-rh-container {
+      width: 76%;
+    }
+  }
+  @media only screen and (min-width: 1200px) {
+    .cs-scroll {
+      width: 10%;
+      .cs-scroll-left {
+        right: 15px;  // align to padding
+        left: auto;
+      }
+      .cs-scroll-right {
+        left: 15px;  // align to padding
+        right: auto;
+      }
+    }
+    .cs-rh-container {
+      width: 80%;
     }
   }
 
