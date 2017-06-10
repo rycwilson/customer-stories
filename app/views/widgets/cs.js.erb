@@ -211,9 +211,44 @@
           } else if ($carousel.width() >= 3 * storyWidth) {
             // in case margins were adjusted (when displaying two stories), adjust them back
             $stories.css('margin', '0 auto');
-            $columns.css('width', Math.floor($carousel.width() / 3).toString() + 'px')
             if ($columns.length <= 3) {
               $container.find('.cs-scroll div').hide();
+            }
+            $columns.css('width', Math.floor($carousel.width() / 3).toString() + 'px')
+            // adjust story margins (squish them together) if gutter too big
+            var minGutterWidth = 70,
+                actualGutterWidth = $columns.first().outerWidth() - $stories.first().width(),
+                gutterDelta = actualGutterWidth - minGutterWidth,
+                lastIsSingle = $columns.length % 3 === 1, lastIsDouble = $columns.length % 3 === 2;
+            if (actualGutterWidth > minGutterWidth) {
+              if (lastIsSingle) {
+                $columns.last().css('width', $carousel.width());
+              } else if (lastIsDouble) {
+                $columns.slice(-2).css('width', Math.round($carousel.width() / 2).toString() + 'px');
+              }
+              $stories.each(function (index, column) {
+                if (lastIsSingle && index === $stories.length - 1) {
+                  // last frame single, do nothing
+                } else if (lastIsDouble && index >= $stories.length - 2) {
+                  // last frame double
+                  $(this).css('margin-' + (index === $stories.length - 1 ? 'left' : 'right'),
+                              Math.round(minGutterWidth / 2) + 'px');
+                } else if (index / 3 < 1) {  // first frame
+                  if (index === 1) {
+                    // center story, do nothing
+                  } else {
+                    $(this).css('margin-' + (index === 0 ? 'right' : 'left'),
+                                '-=' + gutterDelta.toString() + 'px');
+                  }
+                } else {  // all other groups of three
+                  if (index % 3 === 1) {
+                    // center story, do nothing
+                  } else {
+                    $(this).css('margin-' + (index % 3 === 0 ? 'right' : 'left'),
+                                '-=' + gutterDelta.toString() + 'px');
+                  }
+                }
+              });
             }
 
           } else if ($carousel.width() >= 2 * storyWidth) {
@@ -223,9 +258,8 @@
             // adjust column size
             $columns.css('width', Math.floor($carousel.width() / 2).toString() + 'px')
             // adjust story margins (squish them together) if gutter too big
-            var minGutterWidth = 80,
-                actualGutterWidth = $columns.first().outerWidth() - $stories.first().width(),
-                gutterDelta = (actualGutterWidth - minGutterWidth) / 2;
+            var minGutterWidth = 70, marginShift = minGutterWidth / 2,
+                actualGutterWidth = $columns.first().outerWidth() - $stories.first().width();
             if (actualGutterWidth > minGutterWidth) {
               // if odd number of stories, give last one full width and don't adjust margin below
               var lastIsSingle = $columns.length % 2 !== 0;
@@ -236,8 +270,7 @@
                 if (lastIsSingle && index === $stories.length - 1) {
                   // do nothing
                 } else {  // per specs of max gutter 70px
-                  console.log((index % 2 === 0))
-                  $(this).css('margin-' + (index % 2 === 0 ? 'right' : 'left'), '35px');
+                  $(this).css('margin-' + (index % 2 === 0 ? 'right' : 'left'), marginShift + 'px');
                 }
               });
             }
