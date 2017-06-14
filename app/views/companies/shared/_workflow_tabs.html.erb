@@ -2,24 +2,13 @@
 <ul id='workflow-tabs-list'
     class='nav nav-tabs' role='tablist' style='border-bottom:0'>
 
-  <% if ['alpha', 'beta', 'demo'].include? company.feature_flag %>
-  <!--   <li id='pipeline-tab'
-        style='margin-bottom: 0px; display:inline-block'
-        data-title="This section is currently disabled">
-      <a href='#pipeline' role='tab' aria-controls='pipeline'
-          style='pointer-events:none' disabled>
-        Pipeline
-      </a>
-    </li> -->
-  <% else %>
-    <li id='pipeline-tab' class="<%= workflow_tab == 'pipeline' ? 'active' : '' %>"
-        role='presentation' style='margin-bottom: 0px'>
-      <a href='#pipeline-panel' role='tab' data-toggle='tab' aria-controls='pipeline'
-          data-turbolinks='false'>
-        Pipeline
-      </a>
-    </li>
-  <% end %>
+  <li id='crowdsource-tab' class="<%= workflow_tab == 'crowdsource' ? 'active' : '' %>"
+      role='presentation' style='margin-bottom: 0px'>
+    <a href='#crowdsource-panel' role='tab' data-toggle='tab' aria-controls='crowdsource'
+        data-turbolinks='false'>
+      Crowdsource
+    </a>
+  </li>
 
   <li id='curate-tab' class="<%= workflow_tab == 'curate' ? 'active' : '' %>"
       role='presentation' style='margin-bottom: 0px'>
@@ -44,6 +33,5 @@
       Measure
     </a>
   </li>
-
 
 </ul>

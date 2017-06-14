@@ -10,7 +10,7 @@
     <div class="row">
 
       <div id='mainnav-workflow'
-           class="col-xs-8 col-sm-6 col-md-4 <%= gallery_view? ? 'hidden-xs hidden-sm' : '' %>">
+           class="col-xs-8 col-sm-6 col-md-5 <%= gallery_view? ? 'hidden-xs hidden-sm' : '' %>">
         <%= render 'companies/shared/workflow_tabs',
             { company: company, workflow_tab: workflow_tab } %>
       </div>
@@ -22,7 +22,7 @@
 
       <% if gallery_view? %>
 
-        <div id="stories-filters-container" class="col-xs-8 col-md-6">
+        <div id="stories-filters-container" class="col-xs-8 col-md-5">
 
             <%= render 'stories/shared/stories_filters',
                { company: company, is_curator: true,

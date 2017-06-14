@@ -11,8 +11,8 @@
 
   <div class='tab-content'>
 
-    <%= render 'companies/shared/pipeline',
-               { workflow_tab: @workflow_tab, company: @company } %>
+    <%= render 'companies/shared/crowdsource',
+               { company: @company, workflow_tab: @workflow_tab } %>
 
     <%= render 'companies/shared/curate',
                { company: @company, workflow_tab: @workflow_tab } %>
