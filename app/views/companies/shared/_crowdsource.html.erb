@@ -1,0 +1,71 @@
+
+<%= render 'companies/shared/new_customer_modal', { company: @company } %>
+
+<!-- crowdsource -->
+<div id='crowdsource-panel'
+     class="<%= workflow_tab == 'crowdsource' ? 'active tab-pane fade in content' : 'tab-pane fade content' %>" role='tabpanel'>
+
+  <div class="content clip">
+    <div class='container'>
+
+
+      <div class="layout layout-main-right layout-stack-sm">
+        <div class="col-md-3 col-sm-4 layout-sidebar">
+
+          <div class="nav-layout-sidebar-skip">
+            <strong>Tab Navigation</strong> / <a href="#settings-content">Skip to Content</a>
+          </div>
+
+          <ul class="nav nav-layout-sidebar nav-stacked">
+            <li class="<%= workflow_sub_tab == 'customers' ? 'in active' : (workflow_sub_tab.nil? ? 'in active' : '') %>">
+              <a href="#customers-tab-pane" data-toggle="tab">
+                <i class="fa fa-handshake-o"></i>
+                &nbsp;&nbsp;Customers
+              </a>
+            </li>
+            <li class="<%= workflow_sub_tab == 'opportunities' ? 'active' : '' %>">
+              <a href="#opportunities-tab-pane" data-toggle="tab">
+                <i class="fa fa-rocket"></i>
+                &nbsp;&nbsp;Opportunities
+              </a>
+            </li>
+            <li class="<%= workflow_sub_tab == 'contributors' ? 'active' : '' %>">
+              <a href="#contributors-tab-pane" data-toggle="tab">
+                <i class="fa fa-users"></i>
+                &nbsp;&nbsp;Contributors
+              </a>
+            </li>
+          </ul>
+
+        </div>
+
+        <div class="col-md-9 col-sm-8 layout-main">
+
+          <div class="tab-content stacked-content">
+
+            <div id='customers-tab-pane'
+                 class="tab-pane fade <%= workflow_sub_tab == 'customers' ? 'in active' : (workflow_sub_tab.nil? ? 'in active' : '') %>">
+              <%= render 'companies/crowdsource/customers', { company: company } %>
+            </div>
+
+            <div id='opportunities-tab-pane'
+                 class="tab-pane fade <%= workflow_sub_tab == 'opportunities' ? 'in active' : '' %>">
+              <%= render 'companies/crowdsource/opportunities', { company: company } %>
+            </div>
+
+            <div id='contributors-tab-pane'
+                 class="tab-pane fade <%= workflow_sub_tab == 'contributors' ? 'in active' : '' %>">
+              <%= render 'companies/crowdsource/contributors', { company: company } %>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </div>  <!-- container -->
+
+</div>  <!-- curate -->
+

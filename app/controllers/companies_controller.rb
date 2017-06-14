@@ -11,7 +11,7 @@ class CompaniesController < ApplicationController
   end
 
   def show
-    @workflow_tab = cookies[:workflow_tab] || 'curate'
+    @workflow_tab = cookies[:workflow_tab] || 'crowdsource'
     @workflow_sub_tab = cookies[:workflow_sub_tab]
     cookies.delete(:workflow_tab) if cookies[:workflow_tab]
     cookies.delete(:workflow_sub_tab) if cookies[:workflow_sub_tab]

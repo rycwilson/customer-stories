@@ -7,12 +7,14 @@
 
 <div id='wrapper'>
 
-  <%= render 'shared/company_navbar', { company: @company, workflow_tab: @workflow_tab } %>
+  <%= render 'shared/company_navbar',
+        { company: @company, workflow_tab: @workflow_tab } %>
 
   <div class='tab-content'>
 
     <%= render 'companies/shared/crowdsource',
-               { company: @company, workflow_tab: @workflow_tab } %>
+               { company: @company, workflow_tab: @workflow_tab,
+                 workflow_sub_tab: @workflow_sub_tab } %>
 
     <%= render 'companies/shared/curate',
                { company: @company, workflow_tab: @workflow_tab } %>
