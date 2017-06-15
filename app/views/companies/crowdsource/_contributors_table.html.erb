@@ -1,0 +1,40 @@
+
+<!-- it's actually a contributions table, but presented to user as Contributors -->
+<table id='contributors-table' class='datatable table table-striped table-bordered'
+       width='100%'>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Customer</th>
+      <th>Opportunity</th>
+      <th>Curator</th>
+      <th>Status</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <% company.contributions.each() do |contribution| %>
+
+      <tr>
+        <td><%= contribution.contributor.full_name %></td>
+        <td><%= contribution.success.customer.name %></td>
+        <td>contribution.success.name</td>
+        <td><%= contribution.success.curator.full_name %></td>
+        <td><%= contribution.status %></td>
+
+        <td class='dropdown actions-dropdown'>
+          <div style='position:relative'>  <!-- div for styling only -->
+
+            <%= render 'companies/crowdsource/contributors_dropdown',
+                  { contribution: contribution } %>
+
+          </div>
+        </td>
+
+      </tr>
+
+    <% end %>
+
+  </tbody>
+</table>

@@ -1,0 +1,46 @@
+
+<div class="row">
+<button type='button' class='btn btn-default'
+        data-toggle='modal' data-target='#new-customer-modal'>
+  New Customer
+</button>
+
+</div>
+
+<table id='customers-table' class='datatable table table-striped table-bordered'
+       width='100%'>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Pending Opportunities</th>
+      <th>Stories published</th>
+      <th>Last story published</th>
+      <th>Type</th>
+      <th>Logo</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    <% company.customers.each() do |customer| %>
+
+      <tr>
+        <td><%= customer.name %></td>
+        <td><%= rand(5) %></td>
+        <td><%= rand(20) %></td>
+        <td><%= Date.today() %></td>
+        <td>Business</td>
+        <td class='customer-logo'>
+          <div class="fileinput fileinput-exists" data-provides="fileinput">
+            <div class="fileinput-preview thumbnail">
+              <%= image_tag customer.logo_url, alt: 'marketing image' %>
+            </div>
+            <%#= file_field_tag(:image_url, class: 'hidden') %>
+            <!-- click to change -->
+          </div>
+        </td>
+      </tr>
+
+    <% end %>
+
+  </tbody>
+</table>

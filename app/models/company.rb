@@ -25,6 +25,9 @@ class Company < ActiveRecord::Base
     end
   end
   has_many :successes, through: :customers
+  has_many :curators, -> { select('users.*').distinct }, through: :successes
+  has_many :contributions, -> { includes(:contributor, :referrer, success:{customer:{}}) },
+            through: :successes
   has_many :stories, through: :successes do
     def select_options
       self.select() { |story| story.published? }

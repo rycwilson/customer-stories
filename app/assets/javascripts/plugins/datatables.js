@@ -10,6 +10,30 @@ function initDataTables () {
     $('a[href="#measure-stories-container"]')[0].click();
   }
 
+  $('#customers-table').DataTable({
+    "columnDefs": [{
+      "orderable": false,
+      "targets": [ 5 ]
+    }],
+    paging: false
+  });
+
+  $('#successes-table').DataTable({
+    "columnDefs": [{
+      "orderable": false,
+      "targets": [ 5 ]
+    }],
+    paging: false
+  });
+
+  $('#contributors-table').DataTable({
+    "columnDefs": [{
+      "orderable": false,
+      "targets": [ 2, 4 ]
+    }],
+    paging: false
+  });
+
   $('#curate-table').DataTable({
     paging: false
   });

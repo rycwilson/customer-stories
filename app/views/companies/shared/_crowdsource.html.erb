@@ -8,7 +8,6 @@
   <div class="content clip">
     <div class='container'>
 
-
       <div class="layout layout-main-right layout-stack-sm">
         <div class="col-md-3 col-sm-4 layout-sidebar">
 
@@ -17,14 +16,14 @@
           </div>
 
           <ul class="nav nav-layout-sidebar nav-stacked">
-            <li class="<%= workflow_sub_tab == 'customers' ? 'in active' : (workflow_sub_tab.nil? ? 'in active' : '') %>">
+            <li class="<%= workflow_sub_tab == 'customers' ? 'active' : (workflow_sub_tab.nil? ? 'active' : '') %>">
               <a href="#customers-tab-pane" data-toggle="tab">
                 <i class="fa fa-handshake-o"></i>
                 &nbsp;&nbsp;Customers
               </a>
             </li>
-            <li class="<%= workflow_sub_tab == 'opportunities' ? 'active' : '' %>">
-              <a href="#opportunities-tab-pane" data-toggle="tab">
+            <li class="<%= workflow_sub_tab == 'successes' ? 'active' : '' %>">
+              <a href="#successes-tab-pane" data-toggle="tab">
                 <i class="fa fa-rocket"></i>
                 &nbsp;&nbsp;Opportunities
               </a>
@@ -45,17 +44,17 @@
 
             <div id='customers-tab-pane'
                  class="tab-pane fade <%= workflow_sub_tab == 'customers' ? 'in active' : (workflow_sub_tab.nil? ? 'in active' : '') %>">
-              <%= render 'companies/crowdsource/customers', { company: company } %>
+              <%= render 'companies/crowdsource/customers_table', { company: company } %>
             </div>
 
-            <div id='opportunities-tab-pane'
-                 class="tab-pane fade <%= workflow_sub_tab == 'opportunities' ? 'in active' : '' %>">
-              <%= render 'companies/crowdsource/opportunities', { company: company } %>
+            <div id='successes-tab-pane'
+                 class="tab-pane fade <%= workflow_sub_tab == 'successes' ? 'in active' : '' %>">
+              <%= render 'companies/crowdsource/successes_table', { company: company } %>
             </div>
 
             <div id='contributors-tab-pane'
                  class="tab-pane fade <%= workflow_sub_tab == 'contributors' ? 'in active' : '' %>">
-              <%= render 'companies/crowdsource/contributors', { company: company } %>
+              <%= render 'companies/crowdsource/contributors_table', { company: company } %>
             </div>
 
           </div>

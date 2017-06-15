@@ -1,0 +1,51 @@
+
+#crowdsource-panel {
+
+  #customers-table {
+    td.customer-logo {
+      text-align: center;
+      vertical-align: middle;
+      padding: 8px 14px;
+      .fileinput {
+        margin: 0;
+        .thumbnail {
+          height: 80px;
+          width: 153px;
+          cursor: pointer;
+          margin: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          // backup image
+          // ref: http://stackoverflow.com/questions/980855
+          img:before {
+            content: ' ';
+            display: block;
+            position: absolute;
+            height: 70px;
+            width: 143px;
+            background-image: url('<%= ADWORDS_LOGO_PLACEHOLDER_URL %>');
+            background-size: contain;
+          }
+        }
+      }
+    }
+  }
+
+  td.actions-dropdown {
+    text-align: center;
+    vertical-align: middle;
+    a {
+      color: #666;
+    }
+    a:hover {
+      color: #222;
+    }
+    a.dropdown-toggle:focus {
+      color: #222;
+      text-decoration: none;
+    }
+
+  }
+
+}
