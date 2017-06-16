@@ -2,9 +2,11 @@
 #crowdsource-panel {
 
   #customers-table {
+    td {
+      vertical-align: middle;
+    }
     td.customer-logo {
       text-align: center;
-      vertical-align: middle;
       padding: 8px 14px;
       .fileinput {
         margin: 0;
@@ -32,8 +34,13 @@
     }
   }
 
-  td.actions-dropdown {
+  .actions-dropdown {
     text-align: center;
+    width: 60px;
+    padding: 8px
+  }
+  td.actions-dropdown {
+    // text-align: center;
     vertical-align: middle;
     a {
       color: #666;
@@ -46,6 +53,15 @@
       text-decoration: none;
     }
 
+  }
+
+  .dropdown-menu {
+    left: -50px;
+  }
+
+  tr.group,
+  tr.group:hover {
+      background-color: #ddd !important;
   }
 
 }

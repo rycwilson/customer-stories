@@ -1,15 +1,18 @@
 
-<table id='successes-table' class='datatable table table-striped table-bordered'
+<table id='successes-table' class='datatable table table-hover table-striped table-bordered'
        width='100%'>
+
   <thead>
     <tr>
       <th>Name</th>
       <th>Customer</th>
       <th>Brand</th>
+      <th>Curator</th>
       <th>Status</th>
-      <th>Actions</th>
+      <th class='actions-dropdown'>Actions</th>
     </tr>
   </thead>
+
   <tbody>
 
     <% company.successes.each() do |success| %>
@@ -18,6 +21,7 @@
         <td><%= success.story.try(:title) %></td>
         <td><%= success.customer.name %></td>
         <td>business</td>
+        <td><%= success.curator.full_name %></td>
         <td></td>
 
         <td class='dropdown actions-dropdown'>

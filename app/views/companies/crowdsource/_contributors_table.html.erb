@@ -1,26 +1,29 @@
 
 <!-- it's actually a contributions table, but presented to user as Contributors -->
-<table id='contributors-table' class='datatable table table-striped table-bordered'
+<table id='contributors-table' class='datatable table table-hover table-striped table-bordered'
        width='100%'>
+
   <thead>
     <tr>
       <th>Name</th>
-      <th>Customer</th>
+      <th>Title</th>
       <th>Opportunity</th>
-      <th>Curator</th>
+      <th>Email Template</th>
       <th>Status</th>
-      <th>Actions</th>
+      <th class='actions-dropdown'>Actions</th>
     </tr>
   </thead>
+
   <tbody>
 
     <% company.contributions.each() do |contribution| %>
 
       <tr>
         <td><%= contribution.contributor.full_name %></td>
-        <td><%= contribution.success.customer.name %></td>
-        <td>contribution.success.name</td>
-        <td><%= contribution.success.curator.full_name %></td>
+        <td><%= contribution.contributor.title %></td>
+        <td><%= ("#{contribution.customer.name}:" + "&nbsp;&nbsp;" +
+                "#{contribution.story.try(:title)}").html_safe %></td>
+        <td>template</td>
         <td><%= contribution.status %></td>
 
         <td class='dropdown actions-dropdown'>

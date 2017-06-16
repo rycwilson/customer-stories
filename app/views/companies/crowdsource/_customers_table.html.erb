@@ -7,16 +7,14 @@
 
 </div>
 
-<table id='customers-table' class='datatable table table-striped table-bordered'
+<table id='customers-table' class='datatable table table-hover table-striped table-bordered'
        width='100%'>
   <thead>
     <tr>
       <th>Name</th>
-      <th>Pending Opportunities</th>
-      <th>Stories published</th>
+      <th>Success Contact</th>
       <th>Last story published</th>
-      <th>Type</th>
-      <th>Logo</th>
+      <th class='customer-logo'>Logo</th>
     </tr>
   </thead>
   <tbody>
@@ -25,10 +23,8 @@
 
       <tr>
         <td><%= customer.name %></td>
-        <td><%= rand(5) %></td>
-        <td><%= rand(20) %></td>
+        <td>Joe Success</td>
         <td><%= Date.today() %></td>
-        <td>Business</td>
         <td class='customer-logo'>
           <div class="fileinput fileinput-exists" data-provides="fileinput">
             <div class="fileinput-preview thumbnail">

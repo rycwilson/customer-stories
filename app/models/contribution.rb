@@ -3,6 +3,7 @@ class Contribution < ActiveRecord::Base
   belongs_to :contributor, class_name: 'User', foreign_key: 'user_id'
   belongs_to :referrer, class_name: 'User', foreign_key: 'referrer_id'
   belongs_to :success
+  has_one :customer, through: :success
   has_one :company, through: :success
   has_one :story, through: :success
   has_one :email_contribution_request, dependent: :destroy
