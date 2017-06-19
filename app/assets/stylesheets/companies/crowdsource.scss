@@ -3,7 +3,7 @@
 
   tr.group,
   tr.group:hover {
-      background-color: #ddd;
+    background-color: #ddd;
   }
 
   .actions-dropdown {
@@ -11,20 +11,29 @@
     // max-width: 60px !important;
     padding: 8px;
   }
+  tr:not(.active) {
+  }
+  th.actions-dropdown {
+  }
   td.actions-dropdown {
     vertical-align: middle;
-    .dropdown-menu {
-      left: -50px;
-    }
-    a {
-      color: #666;
-    }
-    a:hover {
-      color: #222;
+    color: #666;
+    // ref: http://stackoverflow.com/questions/11078509/how-to-increase-the-clickable-area-of-a-a-tag-button
+    div > a {
+      color: inherit;
+      display: inline-block;
+      position: relative;
+      z-index: 1;
+      padding: 2em;
+      margin: -2em;
+      // color: #666;
     }
     a.dropdown-toggle:focus {
-      color: #222;
+      color: white;
       text-decoration: none;
+    }
+    .dropdown-menu {
+      left: -50px;
     }
   }
 

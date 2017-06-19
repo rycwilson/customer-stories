@@ -34,16 +34,18 @@ function crowdsourceListeners () {
     // contributors child rows
     .on('click', '#contributors-table td.contributor-details',
       function () {
-        var table = $(this).closest('table').DataTable();
-        var tr = $(this).closest('tr');
-        var row = table.row(tr);
-        if (row.child.isShown()) {
-          row.child.hide();
-          tr.removeClass('shown');
+        var $table = $(this).closest('table').DataTable(),
+            $tr = $(this).closest('tr'),
+            $contribution = $table.row($tr);
+        if ($contribution.child.isShown()) {
+          $contribution.child.hide();
+          $tr.children().last().css('color', '#666');
+          $tr.removeClass('shown active');
         }
         else {
-          row.child( contributorDetails(row.data()) ).show();
-          tr.addClass('shown');
+          $contribution.child( contributorDetails($contribution.data()) ).show();
+          $tr.children().last().css('color', 'white');
+          $tr.addClass('shown active');
         }
         $(this).children().toggle();  // toggle caret icons
       })
@@ -56,6 +58,7 @@ function crowdsourceListeners () {
     .on('hidden.bs.dropdown', '.actions-dropdown',
       function () {
         $(this).closest('tr').removeClass('active');
+        // $(this).children().last().css('color', '#666');
       });
 
 }
