@@ -31,7 +31,24 @@ function initXeditable () {
       },
       rows: 3
     });
-
   });
+
+  // $('td.contribution-email-template a').each(function () {
+  //   $(this).editable({
+  //     type: 'select2',
+  //     model: 'contribution',
+  //     name: 'template',
+  //     url: '/contributions/' + $(this).data('pk'),
+  //     pk: $(this).data('pk'),
+  //     mode: 'inline',
+  //     ajaxOptions: {
+  //       type: 'put',
+  //       dataType: 'json'
+  //     },
+  //     success: function (response) {
+  //       console.log(response);
+  //     }
+  //   });
+  // });
 
 }

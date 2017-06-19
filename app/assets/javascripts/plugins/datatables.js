@@ -19,12 +19,12 @@ function initDataTables () {
     ],
   });
 
-  var $successes = $('#successes-table').DataTable({
+  $('#successes-table').DataTable({
     paging: false,
     order: [[ 1, 'asc' ]],
     columnDefs: [
       { visible: false, targets: [ 1 ] },
-      { orderable: false, targets: [ 5 ] }
+      { orderable: false, targets: [ 6 ] }
     ],
     drawCallback: function (settings) {
       var api = this.api();
@@ -33,53 +33,42 @@ function initDataTables () {
       api.column(1, { page: 'current' }).data().each(function (group, i) {
         if (last !== group) {
           $(rows).eq(i).before(
-            '<tr class="group"><td colspan="5">' + group + '</td></tr>'
+            '<tr class="group"><td colspan="6">' + group + '</td></tr>'
           );
           last = group;
         }
       });
     }
   });
-  // Order by the grouping
-  $('#successes-table tbody').on('click', 'tr.group', function () {
-    var currentOrder = $successes.order()[0];
-    if (currentOrder[0] === 1 && currentOrder[1] === 'asc') {
-      $successes.order([ 1, 'desc' ]).draw();
-    }
-    else {
-      $successes.order([ 1, 'asc' ]).draw();
-    }
-  });
 
-  var $contributors = $('#contributors-table').DataTable({
+  var successIndex = 2, conColumnsCount = 6;
+  $('#contributors-table').DataTable({
     paging: false,
-    order: [[ 2, 'asc' ]],
+    autoWidth: false,
+    order: [[ successIndex, 'asc' ]],
+    // columns: [ { width: '60px' }, null, null, null, null, null, null ],
     columnDefs: [
-      { visible: false, targets: [ 2 ] },
-      { orderable: false, targets: [ 5 ] }
+      { visible: false, targets: [ successIndex ] },
+      { orderable: false, targets: [ 0, conColumnsCount - 1 ] },
+      { width: '5%', targets: 0 },
+      { width: '33%', targets: 1 },
+      { width: '33%', targets: 2 },
+      { width: '33%', targets: 3 },
+      { width: '20%', targets: 4 },
+      { width: '6%', targets: 5 }
     ],
     drawCallback: function (settings) {
       var api = this.api();
       var rows = api.rows( { page:'current' } ).nodes();
       var last = null;
-      api.column(2, { page: 'current' }).data().each(function (group, i) {
+      api.column(successIndex, { page: 'current' }).data().each(function (group, i) {
         if (last !== group) {
           $(rows).eq(i).before(
-            '<tr class="group"><td colspan="5">' + group + '</td></tr>'
+            '<tr class="group"><td colspan="' + (conColumnsCount - 1).toString() + '">' + group + '</td></tr>'
           );
           last = group;
         }
       });
-    }
-  });
-  // Order by the grouping
-  $('#contributors-table tbody').on('click', 'tr.group', function () {
-    var currentOrder = $contributors.order()[0];
-    if (currentOrder[0] === 2 && currentOrder[1] === 'asc') {
-      $contributors.order([ 2, 'desc' ]).draw();
-    }
-    else {
-      $contributors.order([ 2, 'asc' ]).draw();
     }
   });
 
@@ -133,6 +122,5 @@ function initDataTables () {
       { type: 'datetime-moment' }, null, null, null
     ]
   });
-
 
 }

@@ -1,6 +1,33 @@
 
 #crowdsource-panel {
 
+  tr.group,
+  tr.group:hover {
+      background-color: #ddd;
+  }
+
+  .actions-dropdown {
+    text-align: center;
+    // max-width: 60px !important;
+    padding: 8px;
+  }
+  td.actions-dropdown {
+    vertical-align: middle;
+    .dropdown-menu {
+      left: -50px;
+    }
+    a {
+      color: #666;
+    }
+    a:hover {
+      color: #222;
+    }
+    a.dropdown-toggle:focus {
+      color: #222;
+      text-decoration: none;
+    }
+  }
+
   #customers-table {
     td {
       vertical-align: middle;
@@ -34,34 +61,17 @@
     }
   }
 
-  .actions-dropdown {
-    text-align: center;
-    width: 60px;
-    padding: 8px
-  }
-  td.actions-dropdown {
-    // text-align: center;
-    vertical-align: middle;
-    a {
-      color: #666;
-    }
-    a:hover {
-      color: #222;
-    }
-    a.dropdown-toggle:focus {
-      color: #222;
-      text-decoration: none;
-    }
+  #successes-table {
 
   }
 
-  .dropdown-menu {
-    left: -50px;
-  }
-
-  tr.group,
-  tr.group:hover {
-      background-color: #ddd !important;
+  #contributors-table {
+    .contributor-details {
+      // width: 50px !important;
+      vertical-align: middle;
+      text-align: center;
+      cursor: pointer;
+    }
   }
 
 }

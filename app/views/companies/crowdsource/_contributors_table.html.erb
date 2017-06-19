@@ -1,12 +1,12 @@
 
 <!-- it's actually a contributions table, but presented to user as Contributors -->
 <table id='contributors-table' class='datatable table table-hover table-striped table-bordered'
-       width='100%'>
+       cellspacing='0' width='100%'>
 
   <thead>
     <tr>
+      <th class='contributor-details'></th>
       <th>Name</th>
-      <th>Title</th>
       <th>Opportunity</th>
       <th>Email Template</th>
       <th>Status</th>
@@ -19,19 +19,27 @@
     <% company.contributions.each() do |contribution| %>
 
       <tr>
+        <td class='contributor-details'>
+          <i class='fa fa-caret-right'></i>
+          <i class='fa fa-caret-down' style='display:none'></i>
+        </td>
         <td><%= contribution.contributor.full_name %></td>
-        <td><%= contribution.contributor.title %></td>
-        <td><%= ("#{contribution.customer.name}:" + "&nbsp;&nbsp;" +
-                "#{contribution.story.try(:title)}").html_safe %></td>
-        <td>template</td>
-        <td><%= contribution.status %></td>
+        <td><%= ("<span style='font-weight:600'>#{contribution.customer.name}</span>" +
+                 "&nbsp;&nbsp;&#8211;&nbsp;&nbsp;" +
+                 "<a href='#{ contribution.story.published ? contribution.story.csp_story_path : edit_story_path(contribution.story) }'>" +
+                   "#{contribution.story.try(:title)}</a>").html_safe %></td>
+        <td class='contribution-email-template'>
+
+        </td>
+        <td class='contribution-status'>
+          <%= render 'companies/crowdsource/contributors_status',
+                    { contribution: contribution } %>
+        </td>
 
         <td class='dropdown actions-dropdown'>
           <div style='position:relative'>  <!-- div for styling only -->
-
             <%= render 'companies/crowdsource/contributors_dropdown',
-                  { contribution: contribution } %>
-
+                       { contribution: contribution } %>
           </div>
         </td>
 

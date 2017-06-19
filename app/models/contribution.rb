@@ -84,6 +84,32 @@ class Contribution < ActiveRecord::Base
     end
   end
 
+  def table_status
+    case self.status
+      when 'pre_request'
+        return "Ready for request"
+      when 'request'
+        return "Request Sent"
+      when 'remind1'
+        return "Second request sent"
+      when 'remind2'
+        return "Third request sent"
+      when 'did_not_respond'
+        return "No response"
+      when 'contribution'
+        return 'contribution submitted'
+      when 'feedback'
+        return 'Feedback completed'
+      when 'unsubscribe'
+        return "Contribution completed"
+      when 'opt_out'
+        return "Opted out"
+      when 're_send'
+        return "Final request sent"
+    end
+  end
+
+
   def self.send_reminders
     # logs to log/cron.log in development environment (output set in schedule.rb)
     # TODO: log in production environment

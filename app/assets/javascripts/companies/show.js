@@ -20,6 +20,12 @@ function companiesShow () {
       }
     });
 
+  $('td .contribution, td .feedback')
+    .popover({
+      container: 'body',
+      template: '<div class="popover" style="max-width:360px" role="tooltip"><div class="arrow"></div><h3 class="popover-title label-secondary"></h3><div class="popover-content"></div></div>'
+    });
+
   $('td.status-dropdown a.disabled').tooltip({
     container: 'body'
   });
@@ -71,6 +77,7 @@ function companiesShow () {
 function companiesShowListeners () {
 
   newStoryModalListeners();
+  crowdsourceListeners();
   promoteListeners();
   measureCharts();
   measureStories();

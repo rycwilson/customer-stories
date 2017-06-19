@@ -90,6 +90,7 @@ Rails.application.routes.draw do
 
 
     # Contributions
+
     post  '/contribution_requests', to: 'contribution_requests#create'
     post  '/stories/:id/contributions', to: 'contributions#create',
                                         as: 'story_contributions'
