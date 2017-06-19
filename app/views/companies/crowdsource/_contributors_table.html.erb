@@ -18,19 +18,24 @@
 
     <% company.contributions.each() do |contribution| %>
 
-      <tr>
+      <tr data-contribution-id="<%= contribution.id %>"
+          data-contributor-id="<%= contribution.contributor.id %>">
+
         <td class='contributor-details'>
           <i class='fa fa-caret-right'></i>
           <i class='fa fa-caret-down' style='display:none'></i>
         </td>
+
         <td><%= contribution.contributor.full_name %></td>
+
         <td><%= ("<span style='font-weight:600'>#{contribution.customer.name}</span>" +
                  "&nbsp;&nbsp;&#8211;&nbsp;&nbsp;" +
                  "<a href='#{ contribution.story.published ? contribution.story.csp_story_path : edit_story_path(contribution.story) }'>" +
                    "#{contribution.story.try(:title)}</a>").html_safe %></td>
-        <td class='contribution-email-template'>
 
+        <td class='contribution-email-template'>
         </td>
+
         <td class='contribution-status'>
           <%= render 'companies/crowdsource/contributors_status',
                     { contribution: contribution } %>

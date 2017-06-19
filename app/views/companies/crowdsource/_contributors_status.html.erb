@@ -4,7 +4,7 @@
   <a tabindex='0' role='button' class="<%= contribution.status %>"
      data-toggle='popover' data-placement='top' data-trigger='focus'
      data-content="<%= contribution.status == 'contribution' ? contribution.contribution : contribution.feedback %>"
-     title="<%= contribution.status.capitalize + ' from ' + contribution.contributor.full_name %>"><%= contribution.status == 'contribution' ? 'Contribution completed' : 'Feedback completed' %></a>
+     title="<%= contribution.status.capitalize + ' from ' + contribution.contributor.full_name %>"><%= contribution.table_status %></a>
 
 <% else %>
 

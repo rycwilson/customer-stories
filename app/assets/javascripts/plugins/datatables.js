@@ -19,21 +19,22 @@ function initDataTables () {
     ],
   });
 
+  var customerIndex = 1, succColumnsCount = 6;
   $('#successes-table').DataTable({
     paging: false,
-    order: [[ 1, 'asc' ]],
+    order: [[ customerIndex, 'asc' ]],
     columnDefs: [
-      { visible: false, targets: [ 1 ] },
-      { orderable: false, targets: [ 6 ] }
+      { visible: false, targets: [ customerIndex ] },
+      { orderable: false, targets: [ succColumnsCount - 1 ] }
     ],
     drawCallback: function (settings) {
       var api = this.api();
       var rows = api.rows( { page:'current' } ).nodes();
       var last = null;
-      api.column(1, { page: 'current' }).data().each(function (group, i) {
+      api.column(customerIndex, { page: 'current' }).data().each(function (group, i) {
         if (last !== group) {
           $(rows).eq(i).before(
-            '<tr class="group"><td colspan="6">' + group + '</td></tr>'
+            '<tr class="group"><td colspan="' + (succColumnsCount - 1).toString() + '">' + group + '</td></tr>'
           );
           last = group;
         }

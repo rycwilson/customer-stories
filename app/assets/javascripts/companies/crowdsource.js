@@ -1,6 +1,8 @@
 
 function crowdsourceListeners () {
 
+  var _contributorTemplate = _.template($('#contributor-template').html());
+
   // successes - order by customer grouping
   $(document)
     .on('click', '#successes-table tr.group',
@@ -43,7 +45,7 @@ function crowdsourceListeners () {
           $tr.removeClass('shown active');
         }
         else {
-          $contribution.child( contributorDetails($contribution.data()) ).show();
+          $contribution.child( _contributorTemplate({ contributor: null }) ).show();
           $tr.children().last().css('color', 'white');
           $tr.addClass('shown active');
         }
@@ -61,27 +63,4 @@ function crowdsourceListeners () {
         // $(this).children().last().css('color', '#666');
       });
 
-}
-
-function contributorDetails (d) {
-  return '<div class="container-fluid">' +
-         '<div class="row" style="height:60px">' +
-           '<div class="col-sm-6" style="height:100%;background:red"></div>' +
-           '<div class="col-sm-6" style="height:100%;background:green"></div>' +
-         '</div>' +
-         '</div>';
-  // return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-  //     '<tr>'+
-  //         '<td>Full name:</td>'+
-  //         '<td>'+d.name+'</td>'+
-  //     '</tr>'+
-  //     '<tr>'+
-  //         '<td>Extension number:</td>'+
-  //         '<td>'+d.extn+'</td>'+
-  //     '</tr>'+
-  //     '<tr>'+
-  //         '<td>Extra info:</td>'+
-  //         '<td>And any further details here (images etc)...</td>'+
-  //     '</tr>'+
-  // '</table>';
 }

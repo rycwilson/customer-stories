@@ -232,9 +232,9 @@ class Company < ActiveRecord::Base
          .sort_by { |story| story_ids.index(story.id) }
   end
 
-  # all_stories_json returns data included in the client via the gon object
-  def all_stories_json
-    Rails.cache.fetch("#{self.subdomain}/all_stories_json") do
+  # stories_json returns data included in the client via the gon object
+  def stories_json
+    Rails.cache.fetch("#{self.subdomain}/stories_json") do
       JSON.parse(
         Story.order(Story.company_all(self.id))
         .to_json({
@@ -252,13 +252,13 @@ class Company < ActiveRecord::Base
     end
   end
 
-  # all_stories_json contains a bunch of association data;
+  # stories_json contains a bunch of association data;
   # all_stories is just an array of ids
   def expire_all_stories_cache json_only
     if json_only
-      Rails.cache.delete("#{self.subdomain}/all_stories_json")
+      Rails.cache.delete("#{self.subdomain}/stories_json")
     else
-      Rails.cache.delete("#{self.subdomain}/all_stories_json")
+      Rails.cache.delete("#{self.subdomain}/stories_json")
       Rails.cache.delete("#{self.subdomain}/all_stories")
     end
   end

@@ -1,5 +1,8 @@
 
 <%= render 'companies/shared/new_customer_modal', { company: @company } %>
+<% content_for :underscore_templates do %>
+  <%= render 'companies/crowdsource/contributor_template' %>
+<% end %>
 
 <!-- crowdsource -->
 <div id='crowdsource-panel'
@@ -55,6 +58,7 @@
             <div id='contributors-tab-pane'
                  class="tab-pane fade <%= workflow_sub_tab == 'contributors' ? 'in active' : '' %>">
               <%= render 'companies/crowdsource/contributors_table', { company: company } %>
+
             </div>
 
           </div>

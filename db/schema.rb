@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170527002429) do
+ActiveRecord::Schema.define(version: 20170619195542) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -156,6 +156,7 @@ ActiveRecord::Schema.define(version: 20170527002429) do
     t.boolean  "publish_contributor",     default: true
     t.boolean  "contributor_unpublished", default: false
     t.boolean  "preview_contributor",     default: false
+    t.boolean  "complete",                default: false
   end
 
   add_index "contributions", ["success_id"], name: "index_contributions_on_success_id", using: :btree

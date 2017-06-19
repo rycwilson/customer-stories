@@ -97,11 +97,11 @@ class Contribution < ActiveRecord::Base
       when 'did_not_respond'
         return "No response"
       when 'contribution'
-        return 'contribution submitted'
+        return 'Contribution submitted'
       when 'feedback'
-        return 'Feedback completed'
+        return 'Feedback submitted'
       when 'unsubscribe'
-        return "Contribution completed"
+        return "Contribution submitted"
       when 'opt_out'
         return "Opted out"
       when 're_send'
