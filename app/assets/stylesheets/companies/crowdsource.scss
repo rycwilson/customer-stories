@@ -75,11 +75,41 @@
   }
 
   #contributors-table {
-    .contributor-details {
+    td.contributor-details {
       // width: 50px !important;
       vertical-align: middle;
       text-align: center;
       cursor: pointer;
+    }
+    div.contributor-details {
+      > .row > div[class^='col-']:nth-child(1) {
+
+        .form-group {
+          width: 100%;
+          margin-bottom: 8px;
+          > label:first-child {
+            width: 26%;
+          }
+          > div:last-child {  // inputs
+            width: 74%;
+            padding: 0 8px;
+          }
+          input {
+            width: 100%;
+          }
+          label {
+            padding-left: 0;
+            padding-right: 8px;
+          }
+        }
+
+      }
+      > .row > div[class^='col-']:nth-child(2) {
+        background: blue;
+      }
+      > .row > div[class^='col-']:nth-child(3) {
+        background: green;
+      }
     }
   }
 
