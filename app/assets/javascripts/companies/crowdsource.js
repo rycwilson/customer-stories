@@ -1,8 +1,6 @@
 
 function crowdsourceListeners () {
 
-  var _contributorTemplate = _.template($('#contributor-template').html());
-
   // successes - order by customer grouping
   $(document)
     .on('click', '#successes-table tr.group',
@@ -38,18 +36,37 @@ function crowdsourceListeners () {
       function () {
         var $table = $(this).closest('table').DataTable(),
             $tr = $(this).closest('tr'),
-            $contribution = $table.row($tr);
-        if ($contribution.child.isShown()) {
-          $contribution.child.hide();
+            $cRow = $table.row($tr),
+            template = _.template($('#contributor-template').html()),
+            cId = $tr.data('contribution-id'),
+            cData = app.contributions.find(function (c) {
+              return c.id === cId;
+            });
+
+        if ($cRow.child.isShown()) {
+          $cRow.child.hide();
           $tr.children().last().css('color', '#666');
+          $tr.find('td.contributor-name > span').removeClass('shown');
           $tr.removeClass('shown active');
         }
         else {
-          $contribution.child( _contributorTemplate({ contributor: null }) ).show();
+          $cRow.child( template({ contribution: cData }) ).show();
           $tr.children().last().css('color', 'white');
+          $tr.find('td.contributor-name > span').addClass('shown');
+          $tr.find('form input').each(function () {
+            $(this).prop('readonly', false);
+          });
           $tr.addClass('shown active');
         }
         $(this).children().toggle();  // toggle caret icons
+      })
+
+    .on('click', 'td.contributor-name i',
+      function () {
+        $(this).closest('tr').next().find('form input').each(
+          function () {
+            $(this).prop('readonly', false);
+          });
       })
 
     .on('shown.bs.dropdown', '.actions-dropdown',

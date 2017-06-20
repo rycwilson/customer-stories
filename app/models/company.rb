@@ -27,7 +27,22 @@ class Company < ActiveRecord::Base
   has_many :successes, through: :customers
   has_many :curators, -> { select('users.*').distinct }, through: :successes
   has_many :contributions, -> { includes(:contributor, :referrer, success:{customer:{}}) },
-            through: :successes
+            through: :successes do
+    def pending
+      where(complete: false).to_json(
+        only: [:id, :contribution, :feedback, :linkedin, :notes],
+        methods: [],
+        include: {
+          contributor: {
+            only: [:id, :first_name, :last_name, :title, :email, :phone,
+                   :linkedin_url, :linkedin_company, :linkedin_title,
+                   :linkedin_location, :linkedin_photo_url],
+            methods: [:full_name]
+          }
+        }
+      )
+    end
+  end
   has_many :stories, through: :successes do
     def select_options
       self.select() { |story| story.published? }

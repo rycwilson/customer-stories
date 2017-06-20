@@ -35,7 +35,7 @@ class ApplicationController < ActionController::Base
                       email: current_user.email,
                       is_curator: is_curator } : nil,
       # pending contributions only
-      contributions: company.present? ? company.contributions.select { |contribution| !contribution.complete? } : nil,
+      contributions: company.present? ? company.contributions.pending : nil,
       stories: company.present? ? company.stories_json : nil,
       env: csp_environment
     })

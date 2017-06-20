@@ -26,7 +26,12 @@
           <i class='fa fa-caret-down' style='display:none'></i>
         </td>
 
-        <td><%= contribution.contributor.full_name %></td>
+        <td class='contributor-name'>
+          <span>
+            <i class='glyphicon glyphicon-pencil'></i>
+            <span><%= contribution.contributor.full_name %></span>
+          </span>
+        </td>
 
         <td><%= ("<span style='font-weight:600'>#{contribution.customer.name}</span>" +
                  "&nbsp;&nbsp;&#8211;&nbsp;&nbsp;" +
