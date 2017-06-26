@@ -151,6 +151,7 @@ function storiesEditSettingsListeners () {
 
   $(document).on('switchChange.bootstrapSwitch', '.bs-switch', function (event, state) {
     $(this).parent().submit();
+    $(this).closest('form').find('input.bs-switch').bootstrapSwitch('disabled', true);
   });
 
   $(document).on('ajax:success', '#story-publish-form',
@@ -204,7 +205,13 @@ function storiesEditSettingsListeners () {
             $.ajax({
               url: '/stories/' + story.id + '/promote',
               method: 'delete',
-              dataType: 'script'
+              dataType: 'script',
+              success: function () {
+                // corresponds to flash timeout
+                setTimeout(function () {
+                  $('input.bs-switch').bootstrapSwitch('disabled', false);
+                }, 3000);
+              }
             });
           }
         });

@@ -150,7 +150,7 @@ class StoriesController < ApplicationController
         format.json { render json: story.as_json(only: :embed_url, methods: :video_info) }
       end
     elsif params[:story][:published]
-      update_publish_state( story, params[:story] )
+      update_publish_state(story, params[:story])
       respond_to do |format|
         # on client-side, two things will happen:
         # 1 - publish switches will change if user selection was overridden

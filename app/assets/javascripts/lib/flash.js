@@ -11,7 +11,7 @@ function flashTimeout () {
 }
 
 // status should be one of: success, info, warning, danger
-function flashDisplay (mesg, status) {
+function flashDisplay (mesg, status, callback) {
   $('#flash').removeClass('hidden')
              .addClass('alert-' + status)
              .append(mesg)
@@ -19,6 +19,7 @@ function flashDisplay (mesg, status) {
 
   setTimeout(function () {
     $('#flash').slideUp();
+    if (callback) { callback(); }
   }, 3000);
 
   setTimeout(function () {
