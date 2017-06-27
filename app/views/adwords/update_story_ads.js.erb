@@ -4,7 +4,7 @@
   var storyId = <%= @story.id %>,
       $row = $('tr[data-story-id="' + storyId + '"]'),
       imageChanged = <%= @image_changed %>,
-      statusChanged = <%= @status_changed %>,
+      statusChanged = <%= @status_changed %>;
 
   if (imageChanged) {
     var adwordsImage = <%= raw @story.ads.adwords_image.to_json %>;
