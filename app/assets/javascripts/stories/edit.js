@@ -159,8 +159,7 @@ function storiesEditSettingsListeners () {
       var $publishSwitch = $("#story_published"),
           $logoPublishSwitch = $("#story_logo_published"),
           createAds = function (story) {
-            if (story.ads.length === 0 && story.published &&
-                story.previous_changes.published) {
+            if (story.published && story.previous_changes.published) {
               return true;
             } else { return false; }
           },
