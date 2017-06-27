@@ -85,7 +85,7 @@
       cursor: pointer;
     }
     // contributor details child row
-    tr[data-contribution-id] + tr {
+    tr[data-contribution-id] + tr:not([data-contribution-id]) {
       background-color: #f5f5f5;
     }
     td.contributor-name {
