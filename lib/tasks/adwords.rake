@@ -127,52 +127,6 @@ namespace :adwords do
 
   end  # sync task
 
-
-  ##
-  ##  method creates csp ads and associated adwords image (if image doesn't already exist)
-  ##  from adwords ads (topic_ads and retarget_ads)
-  ##
-  ##  if a story isn't published, remove the adwords ad and don't create a csp ad
-  ##  if a story wasn't given a story id label, remove it
-  ##
-  def create_csp_ads (company, topic_ads, retarget_ads)
-    return false if (topic_ads.nil? || retarget_ads.nil?)  # no ads
-    company.campaigns.each() do |campaign|
-      aw_ads = (campaign.type == 'TopicCampaign') ? topic_ads : retarget_ads
-      aw_ads.each do |aw_ad|
-        # ads are tagged with story id
-        # if no story id label, try the long headline
-        story = Story.find_by(id: aw_ad[:labels].try(:[], 0).try(:[], :name)) ||
-                Story.find_by(title: aw_ad[:ad][:long_headline])
-        if story.present? && story.published?
-          puts "create csp ad for ad #{aw_ad[:ad][:id]}\n"
-          csp_ad = campaign.ad_group.ads.create(
-            story_id: story.id,
-            ad_id: aw_ad[:ad][:id],
-            long_headline: aw_ad[:ad][:long_headline],
-            status: aw_ad[:status],
-            approval_status: aw_ad[:approval_status]
-          )
-          csp_ad.adwords_image =
-            company.adwords_images.find() do |image|
-              image.media_id == aw_ad[:ad][:marketing_image][:media_id]
-            end ||
-            company.adwords_images.create(
-              media_id: aw_ad[:ad][:marketing_image][:media_id],
-              image_url: aw_ad[:ad][:marketing_image][:urls]['FULL']
-            )
-        else
-          # remove the ad if
-          # - story can't be found
-          # - story isn't published
-          puts "removing ad from #{company.subdomain} #{campaign.type} ad group #{aw_ad[:ad_group_id]}"
-          puts "because #{story.nil? ? 'story not found' : (story.published? ? 'unknown' : 'story not published') }\n"
-          campaign.ad_group.ads.build({ ad_id: aw_ad[:ad][:id] }).remove()
-        end
-      end
-    end
-  end
-
   def company_seeds_lookup (company, adwords_env)
     case company.subdomain
     when 'acme-test'
