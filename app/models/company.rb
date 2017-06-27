@@ -1142,12 +1142,21 @@ class Company < ActiveRecord::Base
     return true
   end
 
+  ##
+  ##  method creates csp ads and associated adwords image (if image doesn't already exist)
+  ##  from adwords ads (topic_ads and retarget_ads)
+  ##
+  ##  if a story isn't published, remove the adwords ad and don't create a csp ad
+  ##  if a story wasn't given a story id label, remove it
+  ##
+  #
   # NOTE: campaigns haven't been saved when this method is called,
   # but able to access via self.campaigns?
   def create_csp_ads (topic_ads, retarget_ads)
+    return false if (topic_ads.nil? || retarget_ads.nil?)  # no ads
     self.campaigns.each() do |campaign|
       aw_ads = (campaign.type == 'TopicCampaign') ? topic_ads : retarget_ads
-      aw_ads.each do |aw_ad|
+      aw_ads.each() do |aw_ad|
         # ads are tagged with story id
         # if no story id label, try the long headline
         story = Story.find_by(id: aw_ad[:labels].try(:[], 0).try(:[], :name)) ||
