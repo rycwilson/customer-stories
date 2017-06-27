@@ -63,7 +63,7 @@ class WidgetsController < ApplicationController
                 }
               end
     if @company.subdomain == 'varmour'
-      stories = stories.sort_by { |story| story[:updated_at] }.reverse
+      stories = stories.sort_by { |s| [ !s.published? ? 0 : 1, s.updated_at ] }.reverse
     end
     case params[:type]
     when 'tab'
@@ -100,6 +100,16 @@ class WidgetsController < ApplicationController
                                    customers: { company_id: company.id } )
                             .take.try(:id)
         return product_id ? { tag: 'product', id: product_id } : nil
+    end
+  end
+
+  # method allows for sorting on multiple fields (updated_at and published)
+  # with different directions for each
+  def multi_sort (stories, order)
+    stories.sort_by do |story|
+      order.collect do |key, direction|
+        story[key]*DIRECTION_MULTIPLIER[direction]
+      end
     end
   end
 
