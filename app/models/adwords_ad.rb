@@ -64,7 +64,7 @@ class AdwordsAd < ActiveRecord::Base
     # on success, log and update adwords_ad.ad_id
     if result && result[:value]
       result[:value].each do |ad_group_ad|
-        puts ('New responsive display ad with id %d and short headline %s was ' +
+        logger.info ('New responsive display ad with id %d and short headline %s was ' +
             'added.') % [ad_group_ad[:ad][:id], ad_group_ad[:ad][:short_headline]]
       end
       # update the ad_id (but not status; csp will manage that)
@@ -73,7 +73,7 @@ class AdwordsAd < ActiveRecord::Base
       add_story_label( (get_story_label || create_story_label)[:id] )
       return true
     else
-      puts "No responsive display ads were added."
+      logger.info "No responsive display ads were added."
       return false
     end
   end

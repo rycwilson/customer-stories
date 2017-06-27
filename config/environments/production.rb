@@ -62,7 +62,7 @@ Rails.application.configure do
   if ENV['HOST_NAME'] == 'customerstories.net'
     config.log_level = :warn
   else
-    config.log_level = :debug
+    config.log_level = :info
   end
 
   # Prepend all log lines with the following tags.
