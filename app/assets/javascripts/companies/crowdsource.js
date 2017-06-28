@@ -313,7 +313,7 @@ function toggleStriped ($table) {
     $table.find('tr.even:not(.group)').css('background-color', '#fff');
     $table.find('tr.odd:not(.group)').css('background-color', '#f9f9f9');
   } else {
-    // $table.find('tr:not(.group)').css('background-color', '#fff');
+    $table.find('tr:not(.group)').css('background-color', '#fff');
     $table.find('tr:not(.group)')
       .each(function () {
         $(this).removeClass('even odd');
