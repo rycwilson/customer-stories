@@ -64,7 +64,7 @@ class WidgetsController < ApplicationController
               end
     if @company.subdomain == 'varmour'
       # ref: https://stackoverflow.com/questions/33732208
-      stories = stories.sort_by { |s| [ s.published ? 1 : 0, s.updated_at ] }.reverse
+      stories = stories.sort_by { |s| [ !s[:published] ? 0 : 1, s[:updated_at] ] }.reverse
     end
     case params[:type]
     when 'tab'

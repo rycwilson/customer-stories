@@ -185,6 +185,7 @@ function crowdsourceListeners () {
             $(this).prop('readonly', true);
           });
           loadCspOrPlaceholderWidget($tr.next(), contribution);
+          loadLinkedinWidget($tr.next());
           $tr.addClass('shown active');
         }
         $(this).children().toggle();  // toggle caret icons
@@ -212,7 +213,6 @@ function crowdsourceListeners () {
 }
 
 function loadCspOrPlaceholderWidget ($tr, contribution) {
-
   var widgetWidth = 380,
       template = _.template($('#csp-linkedin-widget-template').html());
 
@@ -236,48 +236,44 @@ function loadCspOrPlaceholderWidget ($tr, contribution) {
      });
 }
 
-function loadLinkedinWidget ($card) {
-  var alreadyLoaded = $card.find('.widget-container').data('linkedin-widget-loaded') ||
-                      $card.find('.csp-linkedin-widget');
-  if (alreadyLoaded) {
-    return false;
-  } else {
-    var $linkedinWidgetContainer = $card.find('.linkedin-widget-container'),
-        $placeholderWidgetContainer = $card.find('.placeholder-widget-container');
-    var    url = $linkedinWidgetContainer.data('url'),
-        widgetWidth = 322,
-        widgetMarginTop = '-' + $card.find('.placeholder-widget-container')
-                                     .outerHeight()
-                                     .toString() + 'px',
+function loadLinkedinWidget ($tr) {
+  var widgetWidth = 380,
+      cspWidgetIsPresent = $tr.find('.widget-container > .csp-widget-container').length;
+  if (cspWidgetIsPresent) { return false; }
+  else {
+    var $placeholderWidgetContainer = $tr.find('.placeholder-widget-container'),
+        $linkedinWidgetContainer = $tr.find('.linkedin-widget-container'),
+        url = $linkedinWidgetContainer.data('url'),
+        widgetMarginTop = '-' + $placeholderWidgetContainer.outerHeight().toString() + 'px',
         $widget = $("<script type='IN/MemberProfile' " +
-                            "data-id='" + url + "' " +
-                            "data-format='inline' data-related='false' " +
-                            "data-width='" + widgetWidth.toString() + "'></script>"),
-        newWidgetPostMesgHandler = function () {
-          if ($('body').hasClass('stories edit')) {
-            // For Chrome, the origin property is in the event.originalEvent object.
+                      "data-id='" + url + "' " +
+                      "data-format='inline' data-related='false' " +
+                      "data-width='" + widgetWidth.toString() + "'></script>"),
+        newWidgetPostMesgHandler = function (event) {
+          // console.log(event);
+          if ( $('body').hasClass('companies show') ) {
+            // in Chrome, the origin property is in the event.originalEvent object.
             var  origin = event.origin || event.originalEvent.origin,
-                 newWidgetId = $linkedinWidgetContainer
-                                 .find('iframe').attr('id')
-                                 .match(/^\w+(li_gen\w+)_provider/)[1];
-            if (origin === "https://platform.linkedin.com" &&
-                event.data.includes('widgetReady')) {
+                 newWidgetId = $linkedinWidgetContainer.find('iframe').attr('id');
+            if ( origin === "https://platform.linkedin.com" &&
+                 event.data.includes('widgetReady') ) {
               var widgetReadyId = event.data.match(/^(\w+)\s/)[1];
-              if (widgetReadyId === newWidgetId) {
+              if (widgetReadyId === newWidgetId.match(/^\w+(li_gen\w+)_provider/)[1]) {
                 $linkedinWidgetContainer
                   .css('margin-top', widgetMarginTop)  // height of the placeholder container (for overlay)
-                  .removeClass('hidden')
-                  .closest('.widget-container')
-                  .data('linkedin-widget-loaded', true);
+                  .removeClass('hidden');
+                  // .closest('.widget-container')
+                  // .data('linkedin-widget-loaded', true);
               }
             }  // widgetReady event
           }
         };  // var declarations
+
     $linkedinWidgetContainer.append($widget);
     window.addEventListener('message', newWidgetPostMesgHandler, false);
     IN.parse();
     setTimeout(function () {
-      if ($card.find('.widget-container').data('linkedin-widget-loaded')) {
+      if ($tr.find('.widget-container').data('linkedin-widget-loaded')) {
         // success (just leave the placeholder; removing or emptying will affect layout)
       } else {
         // failure
@@ -294,9 +290,12 @@ function loadLinkedinWidget ($card) {
   }
 }
 
+// manipulate table stripes when alternating between row grouping and no row grouping
 function toggleStriped ($table) {
+
   $table.find('tr.group').toggle();
   $table.toggleClass('table-striped');
+
   if ( $table.hasClass('table-striped') ) {
     $table.find('tr:not(.group)')
       .each(function (index) {
@@ -312,6 +311,7 @@ function toggleStriped ($table) {
       });
     $table.find('tr.even:not(.group)').css('background-color', '#fff');
     $table.find('tr.odd:not(.group)').css('background-color', '#f9f9f9');
+
   } else {
     $table.find('tr:not(.group)').css('background-color', '#fff');
     $table.find('tr:not(.group)')
