@@ -119,12 +119,14 @@ function crowdsourceListeners () {
         }
       })
 
+    // no striping for grouped rows, yes striping for ungrouped
+    // manipulate via jquery; insufficient to just change even/odd classes
     .on('change', '#toggle-group-by-success, #toggle-group-by-customer',
       function () {
         if ($(this).attr('id') === 'toggle-group-by-success') {
-          $('#contributors-table tr.group').toggle();
+          toggleStriped($('#contributors-table'));
         } else {
-          $('#successes-table tr.group').toggle();
+          toggleStriped($('#successes-table'));
         }
       })
 
@@ -289,5 +291,37 @@ function loadLinkedinWidget ($card) {
     $(document).one('turbolinks:before-visit', function () {
       window.removeEventListener('message', newWidgetPostMesgHandler, false);
     });
+  }
+}
+
+function toggleStriped ($table) {
+  $table.find('tr.group').toggle();
+  $table.toggleClass('table-striped');
+  if ( $table.hasClass('table-striped') ) {
+    $table.find('tr:not(.group)')
+      .each(function (index) {
+        $(this).removeClass('even odd');
+        $(this).addClass(index % 2 === 0 ? 'even' : 'odd');
+        // reset the hover behavior, lest the new background color override bootstrap
+        $(this).hover(
+          function () { $(this).css('background-color', '#f5f5f5'); },
+          function () {
+            $(this).css('background-color', index % 2 === 0 ? '#fff' : '#f9f9f9');
+          }
+        );
+      });
+    $table.find('tr.even:not(.group)').css('background-color', '#fff');
+    $table.find('tr.odd:not(.group)').css('background-color', '#f9f9f9');
+  } else {
+    // $table.find('tr:not(.group)').css('background-color', '#fff');
+    $table.find('tr:not(.group)')
+      .each(function () {
+        $(this).removeClass('even odd');
+        // reset the hover behavior, lest the new background color override bootstrap
+        $(this).hover(
+          function () { $(this).css('background-color', '#f5f5f5'); },
+          function () { $(this).css('background-color', '#fff'); }
+        );
+      });
   }
 }
