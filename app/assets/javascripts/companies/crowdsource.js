@@ -2,7 +2,6 @@
 function crowdsourceListeners () {
 
   $(document)
-    .one('click', '#crowdsource-panel', loadCspOrPlaceholderWidgets)
 
     // adding linkedin widget to contributor details
     // TODO: put this in js response to PUT contributions/:id
@@ -117,6 +116,15 @@ function crowdsourceListeners () {
           }, 8000);
           $research.attr('href', url);
           $research.html("<i class='fa fa-linkedin-square bip-clickable-fa'>");
+        }
+      })
+
+    .on('change', '#toggle-group-by-success, #toggle-group-by-customer',
+      function () {
+        if ($(this).attr('id') === 'toggle-group-by-success') {
+          $('#contributors-table tr.group').toggle();
+        } else {
+          $('#successes-table tr.group').toggle();
         }
       })
 
