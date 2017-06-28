@@ -1,7 +1,7 @@
 
 function storiesEdit () {
   loadVideoThumbnail();
-  loadCspOrPlaceholderWidgets();
+  // loadCspOrPlaceholderWidgets();
 }
 
 function storiesEditListeners () {

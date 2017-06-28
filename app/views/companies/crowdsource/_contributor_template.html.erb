@@ -3,7 +3,7 @@
 
   <div class="container-fluid contributor-details">
 
-    <form id='edit-contribution-form' class='form-horizontal' method='post' action='/contributions/{{= contribution.id }}'>
+    <form id='contributor-details-form' class='form-horizontal' method='post' action='/contributions/{{= contribution.id }}'>
       <input type="hidden" name="_method" value="put">
 
       <div class="row">
@@ -66,6 +66,76 @@
 
             </div>
           </div>
+
+          <!-- // linkedin profile: publish checkbox and widget (or placeholder) -->
+          <div class="linkedin-container">
+
+            <div class="linkedin-checkbox-and-widget {{= contribution.contributor.linkedin_url ? '' : 'hidden' }}" >
+              <!-- // tooltip wrapper -->
+              <div
+                data-toggle="{{= contribution.contributor_unpublished ? 'tooltip' : '' }}"
+                data-placement="{{= contribution.contributor_unpublished ? 'top' : '' }}"
+                title="{{= contribution.contributor_unpublished ? 'Contributor has removed their profile from this story' : '' }}">
+
+                <div class="linkedin-checkbox-container {{= contribution.contributor_unpublished ? 'contributor-unpublished' : '' }}">
+
+                  <form id='curator-linkedin-checkbox'
+                        action='/contributions/{{= contribution.id }}'
+                        method='post'>
+                    <input type="hidden" name="_method" value="put">
+                    <label for="contribution[publish_contributor]">
+                      <input type='checkbox'>
+                      <span>&nbsp;&nbsp;Publish profile with this Story</span>
+                    </label>
+                  </form>
+
+                  <span class='ajax-confirm hidden' style='color:#5cb85c'>
+                    &nbsp;&nbsp;<i class='fa fa-check'></i>
+                    saved
+                  </span>
+
+                </div>
+              </div>  <!-- // tooltip wrapper -->
+
+              <!-- // profile widget -->
+              <div class="widget-container">
+
+        <!-- // render csp widget in client so width can be determined dynamically -->
+                {{ if (contribution.contributor['linkedin_data?']) { }}
+
+                  <div class="csp-widget-container text-center"
+                       data-first-name="{{= contribution.contributor.first_name }}"
+                       data-last-name="{{= contribution.contributor.last_name }}"
+                       data-linkedin-url="{{= contribution.contributor.linkedin_url }}"
+                       data-linkedin-title="{{= contribution.contributor.linkedin_title }}"
+                       data-linkedin-company="{{= contribution.contributor.linkedin_company }}"
+                       data-linkedin-location="{{= contribution.contributor.linkedin_location }}"
+                       data-linkedin-photo-url="{{= contribution.contributor.linkedin_photo_url }}">
+                  </div>
+
+                {{ } else { }}
+
+          <!-- // placeholder rendered, replaced if/when linkedin widget arrives -->
+                  <div class='placeholder-widget-container text-center'
+                       style='min-height:128px'
+                       data-first-name="{{= contribution.contributor.first_name }}"
+                       data-last-name="{{= contribution.contributor.last_name }}"
+                       data-linkedin-url="{{= contribution.contributor.linkedin_url }}">
+                  </div>
+
+        <!-- // widget is fetched when contributor child row is expanded -->
+                  <div class='linkedin-widget-container hidden text-center'
+                       style='min-height:128px;position:relative'
+                       data-url='{{= contribution.contributor.linkedin_url }}'>
+                  </div>
+
+                {{ } }}
+
+              </div>  <!-- // widget container -->
+
+            </div>
+
+          </div>  <!-- // linkedin-container -->
         </div>
 
       </div>

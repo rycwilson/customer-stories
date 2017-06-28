@@ -62,7 +62,7 @@
             position: absolute;
             height: 70px;
             width: 143px;
-            background-image: url('<%= ADWORDS_LOGO_PLACEHOLDER_URL %>');
+            background-image: url("<%= ADWORDS_LOGO_PLACEHOLDER_URL %>");
             background-size: contain;
           }
         }
@@ -103,11 +103,8 @@
     }
 
     div.contributor-details {
-      > .row > div[class^='col-'] {
-        height: 210px;
-      }
       // horizontal form
-      form {
+      #contributor-details-form {
         // > .row > div:first-child {
         // }
         .form-group {
@@ -128,7 +125,7 @@
           }
         }
         > .row:last-child {
-          div:only-child {
+          > div:only-child {
             padding-right: 30px;
           }
         }

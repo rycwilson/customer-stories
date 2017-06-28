@@ -34,7 +34,7 @@ function initDataTables () {
       api.column(customerIndex, { page: 'current' }).data().each(function (group, i) {
         if (last !== group) {
           $(rows).eq(i).before(
-            '<tr class="group"><td colspan="' + (succColumnsCount - 1).toString() + '">' + group + '</td></tr>'
+            '<tr class="group" style="font-weight:600"><td colspan="' + (succColumnsCount - 1).toString() + '">' + group + '</td></tr>'
           );
           last = group;
         }

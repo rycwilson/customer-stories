@@ -1,12 +1,14 @@
 
 <%= render 'companies/shared/new_customer_modal', { company: @company } %>
+
 <% content_for :underscore_templates do %>
   <%= render 'companies/crowdsource/contributor_template' %>
+  <%= render 'companies/crowdsource/csp_linkedin_widget_template' %>
 <% end %>
 
 <!-- crowdsource -->
-<div id='crowdsource-panel'
-     class="<%= workflow_tab == 'crowdsource' ? 'active tab-pane fade in content' : 'tab-pane fade content' %>" role='tabpanel'>
+<div id='crowdsource-panel' role='tabpanel'
+     class="<%= workflow_tab == 'crowdsource' ? 'active tab-pane fade in content' : 'tab-pane fade content' %>">
 
   <div class="content clip">
     <div class='container'>
@@ -19,22 +21,22 @@
           </div>
 
           <ul class="nav nav-layout-sidebar nav-stacked">
-            <li class="<%= workflow_sub_tab == 'customers' ? 'active' : (workflow_sub_tab.nil? ? 'active' : '') %>">
-              <a href="#customers-tab-pane" data-toggle="tab">
-                <i class="fa fa-handshake-o"></i>
-                &nbsp;&nbsp;Customers
+            <li class="<%= workflow_sub_tab == 'contributors' ? 'active' : '' %>">
+              <a href="#contributors-tab-pane" data-toggle="tab">
+                <i class="fa fa-users"></i>
+                &nbsp;&nbsp;Story Contributors
               </a>
             </li>
             <li class="<%= workflow_sub_tab == 'successes' ? 'active' : '' %>">
               <a href="#successes-tab-pane" data-toggle="tab">
                 <i class="fa fa-rocket"></i>
-                &nbsp;&nbsp;Opportunities
+                &nbsp;&nbsp;Story Candidates
               </a>
             </li>
-            <li class="<%= workflow_sub_tab == 'contributors' ? 'active' : '' %>">
-              <a href="#contributors-tab-pane" data-toggle="tab">
-                <i class="fa fa-users"></i>
-                &nbsp;&nbsp;Contributors
+            <li class="<%= workflow_sub_tab == 'customers' ? 'active' : (workflow_sub_tab.nil? ? 'active' : '') %>">
+              <a href="#customers-tab-pane" data-toggle="tab">
+                <i class="fa fa-handshake-o"></i>
+                &nbsp;&nbsp;Customers
               </a>
             </li>
           </ul>
