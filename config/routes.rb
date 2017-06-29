@@ -64,6 +64,9 @@ Rails.application.routes.draw do
         member { get '/sponsored_story_preview', to: 'adwords#preview' }
       end
 
+      # contributions
+      put '/contributions/:id', to: 'contributions#update'
+
       # analytics
       get '/analytics/charts', to: 'analytics#charts', as: 'charts'
       get '/analytics/visitors', to: 'analytics#visitors', as: 'measure_visitors'

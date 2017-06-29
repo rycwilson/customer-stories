@@ -1,10 +1,13 @@
 
 <script type='text/template' id='contributor-template'>
 
+  {{ var AUTH_TOKEN = $('meta[name=csrf-token]').attr('content'); }}
+
   <div class="container contributor-details" style='width:100%'>
 
     <form id='contributor-form' class='form-horizontal' method='post' action='/contributions/{{= contribution.id }}'>
       <input type="hidden" name="_method" value="put">
+      <input type="hidden" name="authenticity_token" value="{{= AUTH_TOKEN }}">
 
       <div class="row">
 
@@ -15,35 +18,50 @@
               First name
             </label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" id='contributor-first-name' name="contribution[contributor][first_name]" value="{{= contribution.contributor.first_name }}" readonly>
+              <input type="text" class="form-control"
+                id='contributor-first-name'
+                name="contribution[contributor][first_name]"
+                value="{{= contribution.contributor.first_name }}">
             </div>
           </div>
 
           <div class='form-group'>
             <label for="contributor-last-name" class="col-sm-3 control-label">Last name</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" id="contributor-last-name" name='contribution[contributor][last_name]' value="{{= contribution.contributor.last_name }}"readonly>
+              <input type="text" class="form-control"
+                id="contributor-last-name"
+                name='contribution[contributor][last_name]'
+                value="{{= contribution.contributor.last_name }}">
             </div>
           </div>
 
           <div class='form-group'>
             <label for="contributor-position" class="col-sm-3 control-label">Position</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" id="contributor-position" name='contribution[contributor][position]' value="{{= contribution.contributor.title }}" readonly>
+              <input type="text" class="form-control"
+                id="contributor-position"
+                name='contribution[contributor][position]'
+                value="{{= contribution.contributor.title }}">
             </div>
           </div>
 
           <div class='form-group'>
             <label for="inputEmail3" class="col-sm-3 control-label">Email</label>
             <div class="col-sm-9">
-              <input type="email" class="form-control" id="contributor-email" name='contribution[contributor][email]' value="{{= contribution.contributor.email }}" readonly>
+              <input type="email" class="form-control"
+                id="contributor-email"
+                name='contribution[contributor][email]'
+                value="{{= contribution.contributor.email }}">
             </div>
           </div>
 
           <div class='form-group'>
             <label for="contributor-phone" class="col-sm-3 control-label">Phone</label>
             <div class="col-sm-9">
-              <input type="tel" class="form-control" id="contributor-phone" name='contribution[contributor][phone]' value="{{= contribution.contributor.phone }}" readonly>
+              <input type="tel" class="form-control"
+                id="contributor-phone"
+                name='contribution[contributor][phone]'
+                value="{{= contribution.contributor.phone }}">
             </div>
           </div>
         </div>
@@ -53,11 +71,14 @@
           <div class='form-group'>
             <label for="contributor-linkedin" class="col-sm-3 control-label">LinkedIn</label>
             <div class="col-sm-9">
-              <input type="text" class="form-control" id="contributor-linkedin" name='contribution[contributor][phone]' value="{{= contribution.contributor.linkedin_url }}" readonly>
+              <input type="text" class="form-control"
+                id="contributor-linkedin"
+                name='contribution[contributor][phone]'
+                value="{{= contribution.contributor.linkedin_url }}">
             </div>
           </div>
 
-    <!-- // linkedin profile: publish checkbox and widget (or placeholder) -->
+  <!-- // linkedin profile: publish checkbox and widget (or placeholder) -->
           <div class="linkedin-container">
 
             <div class="linkedin-checkbox-and-widget {{= contribution.contributor.linkedin_url ? '' : 'hidden' }}" >
@@ -68,51 +89,53 @@
                 title="{{= contribution.contributor_unpublished ? 'Contributor has removed their profile from this story' : '' }}">
 
                 <div class="linkedin-checkbox-container {{= contribution.contributor_unpublished ? 'contributor-unpublished' : '' }}">
-                  <input type="hidden" name="_method" value="put">
-                  <label for="contribution[publish_contributor]">
-                    <input type='checkbox'>
+                  <label for='contribution_publish_contributor'>
+                    <input type='checkbox'
+                      id='contribution_publish_contributor'
+                      name='contribution[publish_contributor]'
+                      checked='{{= contribution.publish_contributor }}'>
                     <span>&nbsp;&nbsp;Publish profile with this Story</span>
                   </label>
-
                 </div>
+
               </div>  <!-- // tooltip wrapper -->
-
-              <!-- // profile widget -->
-              <div class="widget-container">
-        <!-- // render csp widget in client so width can be determined dynamically -->
-                {{ if (contribution.contributor['linkedin_data?']) { }}
-
-                  <div class="csp-widget-container text-center"
-                       data-first-name="{{= contribution.contributor.first_name }}"
-                       data-last-name="{{= contribution.contributor.last_name }}"
-                       data-linkedin-url="{{= contribution.contributor.linkedin_url }}"
-                       data-linkedin-title="{{= contribution.contributor.linkedin_title }}"
-                       data-linkedin-company="{{= contribution.contributor.linkedin_company }}"
-                       data-linkedin-location="{{= contribution.contributor.linkedin_location }}"
-                       data-linkedin-photo-url="{{= contribution.contributor.linkedin_photo_url }}">
-                  </div>
-
-                {{ } else { }}
-
-          <!-- // placeholder rendered, replaced if/when linkedin widget arrives -->
-                  <div class='placeholder-widget-container text-center'
-                       style='min-height:128px'
-                       data-first-name="{{= contribution.contributor.first_name }}"
-                       data-last-name="{{= contribution.contributor.last_name }}"
-                       data-linkedin-url="{{= contribution.contributor.linkedin_url }}">
-                  </div>
-
-        <!-- // widget is fetched when contributor child row is expanded -->
-                  <div class='linkedin-widget-container hidden text-center'
-                       style='min-height:128px;position:relative'
-                       data-url='{{= contribution.contributor.linkedin_url }}'>
-                  </div>
-
-                {{ } }}
-
-              </div>  <!-- // widget container -->
-
             </div>
+
+  <!-- // profile widget -->
+  <!-- // render csp widget in client so width can be determined dynamically -->
+            <div class="widget-container">
+
+              {{ if (contribution.contributor['linkedin_data?']) { }}
+
+                <div class="csp-widget-container text-center"
+                     data-first-name="{{= contribution.contributor.first_name }}"
+                     data-last-name="{{= contribution.contributor.last_name }}"
+                     data-linkedin-url="{{= contribution.contributor.linkedin_url }}"
+                     data-linkedin-title="{{= contribution.contributor.linkedin_title }}"
+                     data-linkedin-company="{{= contribution.contributor.linkedin_company }}"
+                     data-linkedin-location="{{= contribution.contributor.linkedin_location }}"
+                     data-linkedin-photo-url="{{= contribution.contributor.linkedin_photo_url }}">
+                </div>
+
+              {{ } else { }}
+
+            <!-- // placeholder rendered, replaced if/when linkedin widget arrives -->
+                <div class='placeholder-widget-container text-center'
+                     style='min-height:128px'
+                     data-first-name="{{= contribution.contributor.first_name }}"
+                     data-last-name="{{= contribution.contributor.last_name }}"
+                     data-linkedin-url="{{= contribution.contributor.linkedin_url }}">
+                </div>
+
+      <!-- // widget is fetched when contributor child row is expanded -->
+                <div class='linkedin-widget-container hidden text-center'
+                     style='min-height:128px;position:relative'
+                     data-url='{{= contribution.contributor.linkedin_url }}'>
+                </div>
+
+              {{ } }}
+
+            </div>  <!-- // widget container -->
 
           </div>  <!-- // linkedin-container -->
         </div>

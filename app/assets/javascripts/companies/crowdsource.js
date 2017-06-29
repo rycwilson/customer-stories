@@ -191,13 +191,13 @@ function crowdsourceListeners () {
         $(this).children().toggle();  // toggle caret icons
       })
 
-    .on('click', 'td.contributor-name i',
-      function () {
-        $(this).closest('tr').next().find('form input').each(
-          function () {
-            $(this).prop('readonly', false);
-          });
-      })
+    // .on('click', 'td.contributor-name i',
+    //   function () {
+    //     $(this).closest('tr').next().find('form input').each(
+    //       function () {
+    //         $(this).prop('readonly', false);
+    //       });
+    //   })
 
     .on('shown.bs.dropdown', '.actions-dropdown',
       function () {

@@ -30,7 +30,7 @@ class Company < ActiveRecord::Base
             through: :successes do
     def pending
       where(complete: false).to_json(
-        only: [:id, :contribution, :feedback, :linkedin, :notes, :contributor_unpublished],
+        only: [:id, :contribution, :feedback, :linkedin, :notes, :publish_contributor, :contributor_unpublished],
         methods: [],
         include: {
           contributor: {
