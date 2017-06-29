@@ -104,16 +104,6 @@ class WidgetsController < ApplicationController
     end
   end
 
-  # method allows for sorting on multiple fields (updated_at and published)
-  # with different directions for each
-  def multi_sort (stories, order)
-    stories.sort_by do |story|
-      order.collect do |key, direction|
-        story[key]*DIRECTION_MULTIPLIER[direction]
-      end
-    end
-  end
-
 end
 
 

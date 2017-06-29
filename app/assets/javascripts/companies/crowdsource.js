@@ -213,7 +213,7 @@ function crowdsourceListeners () {
 }
 
 function loadCspOrPlaceholderWidget ($tr, contribution) {
-  var widgetWidth = 380,
+  var widgetWidth = 400,
       template = _.template($('#csp-linkedin-widget-template').html());
 
   // populate csp widgets and placeholder widgets;
@@ -237,7 +237,7 @@ function loadCspOrPlaceholderWidget ($tr, contribution) {
 }
 
 function loadLinkedinWidget ($tr) {
-  var widgetWidth = 380,
+  var widgetWidth = 400,
       cspWidgetIsPresent = $tr.find('.widget-container > .csp-widget-container').length;
   if (cspWidgetIsPresent) { return false; }
   else {
