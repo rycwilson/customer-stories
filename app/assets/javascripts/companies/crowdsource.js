@@ -2,123 +2,6 @@
 function crowdsourceListeners () {
 
   $(document)
-
-    // adding linkedin widget to contributor details
-    // TODO: put this in js response to PUT contributions/:id
-    .on("ajax:success", ".best_in_place[data-bip-attribute='linkedin_url']",
-      function (event) {
-        var urlInput = $(this), url = $(this).text(), widgetWidth = 322,
-          validUrl = function ($url) {
-            // detect valid url by comparing to the input placeholder
-            return $url.html() !== urlInput.attr('data-bip-placeholder');
-          },
-          template = _.template($('#csp-linkedin-widget-template').html()),
-          $card = $(this).closest('.contribution-card'),
-          $checkboxAndWidget = $card.find('.linkedin-checkbox-and-widget'),
-          $widgetContainer = $card.find('.widget-container'),
-          $research = $card.find('.research'),
-          $placeholderWidgetContainer =
-            $("<div class='placeholder-widget-container text-center'" +
-                   "style='min-height:128px'>" +
-              "</div>"),
-          $linkedinWidgetContainer =
-            $("<div class='linkedin-widget-container hidden text-center' " +
-                   "style='min-height:128px;position:relative'>" +
-                "<script type='IN/MemberProfile' " +
-                        "data-id='" + url + "' " +
-                        "data-format='inline' data-related='false' " +
-                        "data-width='" + widgetWidth.toString() + "'></script>" +
-              "</div>"),
-          contributor = {
-            first_name: $card.find('.contributor-name').text().trim().split(' ')[0],
-            last_name: $card.find('.contributor-name').text().trim().split(' ')[1],
-            linkedin_url: url
-          },
-          newWidgetPostMesgHandler = function ($linkedinWidgetContainer) {
-            return function (event) {
-              if ($('body').hasClass('stories edit')) {
-                // For Chrome, the origin property is in the event.originalEvent object.
-                var  origin = event.origin || event.originalEvent.origin,
-                     newWidgetId = $linkedinWidgetContainer
-                                     .find('iframe').attr('id')
-                                     .match(/^\w+(li_gen\w+)_provider/)[1];
-                if (origin === "https://platform.linkedin.com" &&
-                    event.data.includes('widgetReady')) {
-                  var widgetReadyId = event.data.match(/^(\w+)\s/)[1];
-                  if (widgetReadyId === newWidgetId) {
-                    $linkedinWidgetContainer
-                      .css('margin-top', '-128px')  // height of the placeholder container (for overlay)
-                      .removeClass('hidden')
-                      .closest('.widget-container')
-                      .data('linkedin-widget-loaded', true);
-                  }
-                }  // widgetReady event
-              }
-            };
-          };
-
-        // remove whatever is there
-        $widgetContainer.empty();
-        $widgetContainer.data('linkedin-widget-loaded', false);
-
-        if (!validUrl(urlInput)) {  // blank or invalid (not currently validating)
-          $checkboxAndWidget.addClass('hidden');
-
-          // update the research button
-          // TODO: better way to have all this data available
-          $.get('/contributions/' + $card.data('contribution-id'), function (contribution, status) {
-            if (contribution.role == 'customer') {
-              $research.attr('href',
-                "//google.com/search?q=" +
-                contribution.contributor.first_name + "+" +
-                contribution.contributor.last_name + "+" +
-                contribution.success.customer.name);
-            } else {
-              $research.attr('href',
-                "//google.com/search?q=" +
-                contribution.contributor.first_name + "+" +
-                contribution.contributor.last_name + "+");
-            }
-          }, 'json');
-          $research.html("<i class='glyphicon glyphicon-user bip-clickable'></i>");
-
-        } else {
-          $checkboxAndWidget.removeClass('hidden');
-          $widgetContainer
-            .append($placeholderWidgetContainer)
-            .append($linkedinWidgetContainer)
-            .find('.placeholder-widget-container')
-            .append(template({
-                      loading: true,
-                      contributor: contributor,
-                      widgetWidth: widgetWidth
-                    }))
-            .imagesLoaded(function () {
-              // unhide placeholder
-              $('.csp-linkedin-widget.hidden').removeClass('hidden');
-            });
-          window.addEventListener('message', newWidgetPostMesgHandler($linkedinWidgetContainer), false);
-          IN.parse();
-          setTimeout(function () {
-            // $widgetContainer = $card.find('.widget-container');
-            // time's up -> remove the post message listener
-            window.removeEventListener('message', newWidgetPostMesgHandler, false);
-            // did the linkedin widget arrive?
-            if ($widgetContainer.data('linkedin-widget-loaded')) {
-              // success
-            } else {
-              // failure
-              $placeholderWidgetContainer
-                .find('.member-info > p')
-                .css('color', 'red')
-                .text('Profile data not available');
-            }
-          }, 8000);
-          $research.attr('href', url);
-          $research.html("<i class='fa fa-linkedin-square bip-clickable-fa'>");
-        }
-      })
-
     // no striping for grouped rows, yes striping for ungrouped
     // manipulate via jquery; insufficient to just change even/odd classes
     .on('change', '#toggle-group-by-success, #toggle-group-by-customer',
@@ -181,11 +64,10 @@ function crowdsourceListeners () {
           $cRow.child( template({ contribution: contribution }) ).show();
           $tr.children().last().css('color', 'white');
           $tr.find('td.contributor-name > span').addClass('shown');
-          $tr.find('form input').each(function () {
-            $(this).prop('readonly', true);
-          });
-          loadCspOrPlaceholderWidget($tr.next(), contribution);
-          loadLinkedinWidget($tr.next());
+          if (contribution.contributor.linkedin_url) {
+            loadCspOrPlaceholderWidget($tr.next(), contribution);
+            loadLinkedinWidget($tr.next(), contribution);
+          }
           $tr.addClass('shown active');
         }
         $(this).children().toggle();  // toggle caret icons
@@ -236,29 +118,30 @@ function loadCspOrPlaceholderWidget ($tr, contribution) {
      });
 }
 
-function loadLinkedinWidget ($tr) {
+function loadLinkedinWidget ($tr, contribution) {
   var widgetWidth = 400,
       cspWidgetIsPresent = $tr.find('.widget-container > .csp-widget-container').length;
   if (cspWidgetIsPresent) { return false; }
   else {
     var $placeholderWidgetContainer = $tr.find('.placeholder-widget-container'),
         $linkedinWidgetContainer = $tr.find('.linkedin-widget-container'),
-        url = $linkedinWidgetContainer.data('url'),
-        widgetMarginTop = '-' + $placeholderWidgetContainer.outerHeight().toString() + 'px',
         $widget = $("<script type='IN/MemberProfile' " +
-                      "data-id='" + url + "' " +
+                      "data-id='" + contribution.contributor.linkedin_url + "' " +
                       "data-format='inline' data-related='false' " +
                       "data-width='" + widgetWidth.toString() + "'></script>"),
+        widgetMarginTop = '-' + $placeholderWidgetContainer.css('height'),
         newWidgetPostMesgHandler = function (event) {
-          // console.log(event);
+          console.log(event);
           if ( $('body').hasClass('companies show') ) {
-            // in Chrome, the origin property is in the event.originalEvent object.
-            var  origin = event.origin || event.originalEvent.origin,
-                 newWidgetId = $linkedinWidgetContainer.find('iframe').attr('id');
+            // in Chrome, the origin property is in the event.originalEvent object
+            var origin = event.origin || event.originalEvent.origin;
             if ( origin === "https://platform.linkedin.com" &&
                  event.data.includes('widgetReady') ) {
-              var widgetReadyId = event.data.match(/^(\w+)\s/)[1];
-              if (widgetReadyId === newWidgetId.match(/^\w+(li_gen\w+)_provider/)[1]) {
+              var newWidgetId = $linkedinWidgetContainer.find('iframe').attr('id'),
+                  widgetReadyId = event.data.match(/^(\w+)\s/)[1];
+                  console.log('newWidgetId: ', newWidgetId);
+              if (newWidgetId &&
+                  widgetReadyId === newWidgetId.match(/^\w+(li_gen\w+)_provider/)[1]) {
                 $linkedinWidgetContainer
                   .css('margin-top', widgetMarginTop)  // height of the placeholder container (for overlay)
                   .removeClass('hidden');

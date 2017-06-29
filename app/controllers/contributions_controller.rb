@@ -4,7 +4,7 @@ class ContributionsController < ApplicationController
   before_action :set_contribution, only: [:show, :confirm, :confirm_request, :send_request]
   before_action :check_opt_out_list, only: [:create, :confirm_request]
 
-  respond_to :html, :json
+  respond_to :html, :json, :js
 
   #
   # GET '/contributions/:token/:type'
@@ -77,13 +77,9 @@ class ContributionsController < ApplicationController
   #
   # PUT /contributions/:token
   def update
-    # user updates from contribution card (linkedin_url, phone) are sent here
-    # instead of registrations_controller so that the update can be made without user password
-    # TODO: should be able to make the update without password in registrations_controller,
-    # but no big deal for now
-    if params[:user]
-      @contribution.contributor.update user_params
-      respond_to { |format| format.json { respond_with_bip(@contribution.contributor) } }
+    if params[:contribution][:contributor]
+      @contribution.contributor.update(contribution_params[:contributor])
+      respond_to { |format| format.js { render action: 'update_contributor' } }
 
     elsif params[:contribution][:web_submission]
       @contribution.submitted_at = Time.now
@@ -119,7 +115,6 @@ class ContributionsController < ApplicationController
         # TODO: error
       end
     end
-
     # contribution submission (via email link) ...
   end
 
@@ -142,14 +137,11 @@ class ContributionsController < ApplicationController
   private
 
   def contribution_params
-    params.require(:contribution)
-          .permit(:status, :contribution, :feedback, :access_token,
-                  :publish_contributor, :contributor_unpublished,
-                  :notes, :submitted_at)
-  end
-
-  def user_params
-    params.require(:user).permit(:linkedin_url, :phone)
+    params.require(:contribution).permit(
+      :status, :contribution, :feedback, :access_token, :publish_contributor,
+      :contributor_unpublished, :notes, :submitted_at,
+      contributor: [:first_name, :last_name, :title, :email, :phone, :linkedin_url]
+    )
   end
 
   def set_contribution
@@ -193,8 +185,12 @@ class ContributionsController < ApplicationController
   end
 
   def set_contribution_if_valid_token?
-    if @contribution = Contribution.find_by(access_token: params[:token])
+    # contributor update
+    if params[:token] && (@contribution = Contribution.find_by(access_token: params[:token]))
       @contribution
+    # curator update
+    elsif request.path.match(/\/contributions\/\d+/)
+      @contribution = Contribution.find(params[:id])
     else
       render file: 'public/404.html', status: 404, layout: false
       false
