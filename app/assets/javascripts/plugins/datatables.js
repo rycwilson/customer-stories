@@ -14,18 +14,18 @@ function initDataTables () {
   $('#customers-table').DataTable({
     paging: false,
     columnDefs: [
-      { orderable: false, targets: [ 3 ] },
-      { width: '160px', targets: 3 }
+      { orderable: false, targets: [ 2 ] },
+      { width: '160px', targets: 2 }
     ],
   });
 
-  var customerIndex = 1, succColumnsCount = 6;
+  var customerIndex = 2, succColumnsCount = 6;
   $('#successes-table').DataTable({
     paging: false,
     order: [[ customerIndex, 'asc' ]],
     columnDefs: [
       { visible: false, targets: [ customerIndex ] },
-      { orderable: false, targets: [ succColumnsCount - 1 ] }
+      { orderable: false, targets: [ 0, succColumnsCount - 1 ] }
     ],
     drawCallback: function (settings) {
       var api = this.api();

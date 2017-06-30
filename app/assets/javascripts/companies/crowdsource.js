@@ -73,6 +73,27 @@ function crowdsourceListeners () {
         $(this).children().toggle();  // toggle caret icons
       })
 
+    .on('click', 'td.success-details',
+      function () {
+        var $table = $(this).closest('table').DataTable(),
+            $tr = $(this).closest('tr'),
+            $sRow = $table.row($tr),
+            template = _.template($('#success-template').html()),
+            sId = $tr.data('success-id');
+
+        if ($sRow.child.isShown()) {
+          $sRow.child.hide();
+          $tr.children().last().css('color', '#666');
+          $tr.removeClass('shown active');
+        }
+        else {
+          $sRow.child( template({}) ).show();
+          $tr.children().last().css('color', 'white');
+          $tr.addClass('shown active');
+        }
+        $(this).children().toggle();  // toggle caret icons
+      })
+
     // .on('click', 'td.contributor-name i',
     //   function () {
     //     $(this).closest('tr').next().find('form input').each(

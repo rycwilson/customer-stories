@@ -4,11 +4,11 @@
 
   <thead>
     <tr>
+      <th class='success-details'></th>
       <th>Project / Deal / Opportunity</th>
       <th>Customer</th>
-      <th>Tags</th>
+      <th>Success Contact</th>
       <th>Curator</th>
-      <th>Status</th>
       <th class='actions-dropdown'>Actions</th>
     </tr>
   </thead>
@@ -17,13 +17,15 @@
 
     <% company.successes.each() do |success| %>
 
-      <tr>
+      <tr data-success-id='<%= success.id %>'>
+        <td class='success-details'>
+          <i class='fa fa-caret-right'></i>
+          <i class='fa fa-caret-down' style='display:none'></i>
+        </td>
         <td><%= success.story.try(:title) %></td>
         <td><%= success.customer.name %></td>
         <td></td>
         <td><%= success.curator.full_name %></td>
-        <td></td>
-
         <td class='dropdown actions-dropdown'>
           <div style='position:relative'>  <!-- div for styling only -->
 

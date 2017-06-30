@@ -71,14 +71,20 @@
   }
 
   #successes-table {
-
+    td.success-details {
+      vertical-align: middle;
+      text-align: center;
+      cursor: pointer;
+    }
+    tr[data-success-id] + tr:not([data-success-id]):not(.group) {
+      background-color: #f5f5f5;
+      > td {
+        padding: 20px 8px;
+      }
+    }
   }
 
   #contributors-table {
-    .container-fluid.contributor-details {
-      background: #f5f5f5;
-      padding: 8px 0;
-    }
     td.contributor-details {
       vertical-align: middle;
       text-align: center;

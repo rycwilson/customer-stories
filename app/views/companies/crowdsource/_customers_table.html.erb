@@ -1,18 +1,17 @@
 
-<div class="row">
+<!-- <div class="row">
 <button type='button' class='btn btn-default'
         data-toggle='modal' data-target='#new-customer-modal'>
   New Customer
 </button>
 
-</div>
+</div> -->
 
 <table id='customers-table' class='datatable table table-hover table-striped table-bordered'
        width='100%'>
   <thead>
     <tr>
       <th>Name</th>
-      <th>Success Contact</th>
       <th>Last story published</th>
       <th class='customer-logo'>Logo</th>
     </tr>
@@ -23,7 +22,6 @@
 
       <tr>
         <td><%= customer.name %></td>
-        <td>Joe Success</td>
         <td><%= Date.today() %></td>
         <td class='customer-logo'>
           <div class="fileinput fileinput-exists" data-provides="fileinput">
