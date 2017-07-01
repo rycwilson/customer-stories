@@ -4,11 +4,12 @@
 
   <thead>
     <tr>
-      <th class='success-details'></th>
+      <th class='success-details'>
+        <i class='fa fa-plus-circle fa-2x' aria-hidden='true' style='color:#6685a4'></i>
+      </th>
       <th>Project / Deal / Opportunity</th>
       <th>Customer</th>
-      <th>Success Contact</th>
-      <th>Curator</th>
+      <th>Next Step</th>
       <th class='actions-dropdown'>Actions</th>
     </tr>
   </thead>
@@ -25,7 +26,6 @@
         <td class='success-name'><%= success.story.try(:title) %></td>
         <td><%= success.customer.name %></td>
         <td></td>
-        <td><%= success.curator.full_name %></td>
         <td class='dropdown actions-dropdown'>
           <div style='position:relative'>  <!-- div for styling only -->
 

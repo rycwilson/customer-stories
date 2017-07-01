@@ -19,18 +19,24 @@ function initDataTables () {
     ],
   });
 
-  var customerIndex = 2, succColumnsCount = 6;
+  var customerIndex = 2, succColumnsCount = 5;
   $('#successes-table').DataTable({
     paging: false,
     order: [[ customerIndex, 'asc' ]],
     columnDefs: [
       { visible: false, targets: [ customerIndex ] },
-      { orderable: false, targets: [ 0, succColumnsCount - 1 ] }
+      { orderable: false, targets: [ 0, succColumnsCount - 1 ] },
+      { width: '5%', targets: 0 },
+      { width: '55%', targets: 1 },
+      { width: '0%', targets: 2 },
+      { width: '30%', targets: 3 },
+      { width: '10%', targets: 4 },
     ],
     drawCallback: function (settings) {
       var api = this.api();
       var rows = api.rows( { page:'current' } ).nodes();
       var last = null;
+      // row grouping
       api.column(customerIndex, { page: 'current' }).data().each(function (group, i) {
         if (last !== group) {
           $(rows).eq(i).before(
@@ -49,8 +55,23 @@ function initDataTables () {
         .children('[class*="col-"]:first-child')
         .append('<label for="toggle-group-by-customer">' +
                   '<input type="checkbox" id="toggle-group-by-customer" checked>' +
-                  '&nbsp;&nbsp;<span>Group by Customer</span>' +
+                  '&nbsp;&nbsp;<span>Group Candidates by Customer</span>' +
                 '</label>');
+
+      $('#successes-table_wrapper')
+        .prepend('<div class="row" style="display:flex; align-items:center; margin-bottom:15px">' +
+                   '<div class="col-sm-6">' +
+                     '<button type="button" class="btn btn-secondary" ' +
+                        'data-toggle="modal" data-target="">' +
+                       'Import Story Candidates' +
+                     '</button>' +
+                   '</div>' +
+                   '<div class="col-sm-6 pull-right">' +
+                     '<select>' +
+                     '</select>' +
+                   '</div>' +
+                 '</div>');
+
       $('#successes-table_filter > label')
         .append('<i class="clear-search glyphicon glyphicon-remove"></i>');
 
@@ -95,8 +116,23 @@ function initDataTables () {
         .children('[class*="col-"]:first-child')
         .append('<label for="toggle-group-by-success">' +
                   '<input type="checkbox" id="toggle-group-by-success" checked>' +
-                  '&nbsp;&nbsp;<span>Group by Customer / Story Candidate</span>' +
+                  '&nbsp;&nbsp;<span>Group Contributors by Customer&nbsp;&nbsp;&#8211;&nbsp;&nbsp;Story Candidate</span>' +
                 '</label>');
+
+      $('#contributors-table_wrapper')
+        .prepend('<div class="row" style="display:flex; align-items:center; margin-bottom:15px">' +
+                   '<div class="col-sm-6">' +
+                     '<button type="button" class="btn btn-secondary" ' +
+                        'data-toggle="modal" data-target="">' +
+                       'Import Contributors' +
+                     '</button>' +
+                   '</div>' +
+                   '<div class="col-sm-6">' +
+                     '<select>' +
+                     '</select>' +
+                   '</div>' +
+                 '</div>');
+
       $('#contributors-table_filter > label')
         .append('<span class="clear-search glyphicon glyphicon-remove"></span>');
     }
