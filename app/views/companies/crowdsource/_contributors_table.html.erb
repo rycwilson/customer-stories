@@ -35,8 +35,8 @@
 
         <td><%= ("<span style='font-weight:600'>#{contribution.customer.name}</span>" +
                  "&nbsp;&nbsp;&#8211;&nbsp;&nbsp;" +
-                 "<a href='#{ contribution.story.try(:published) ? contribution.story.csp_story_path : ( contribution.story.present? ? edit_story_path(contribution.story) : 'javascript:;' ) }'>" +
-                   "#{contribution.story.try(:title) || 'Opportunity name'}</a>").html_safe %></td>
+                 "<a href='javascript:;' class='success-name'>" +
+                   "#{contribution.story.try(:title) || 'Story Candidate name'}</a>").html_safe %></td>
 
         <td class='contribution-email-template'>
         </td>

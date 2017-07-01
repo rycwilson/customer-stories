@@ -50,23 +50,11 @@
 
             <div id='successes-tab-pane'
                  class="tab-pane fade <%= workflow_sub_tab == 'successes' ? 'in active' : (workflow_sub_tab.nil? ? 'in active' : '') %>">
-
-              <label for="toggle-group-by-customer">
-                <input type="checkbox" id="toggle-group-by-customer" checked>
-                &nbsp;&nbsp;<span>Group by Customer</span>
-              </label>
-
               <%= render 'companies/crowdsource/successes_table', { company: company } %>
             </div>
 
             <div id='contributors-tab-pane'
                  class="tab-pane fade <%= workflow_sub_tab == 'contributors' ? 'in active' : '' %>">
-
-              <label for="toggle-group-by-success">
-                <input type="checkbox" id="toggle-group-by-success" checked>
-                &nbsp;&nbsp;<span>Group by Customer / Story Candidate</span>
-              </label>
-
               <%= render 'companies/crowdsource/contributors_table',
                           { company: company } %>
             </div>

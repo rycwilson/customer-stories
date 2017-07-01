@@ -39,6 +39,21 @@ function initDataTables () {
           last = group;
         }
       });
+    },
+    initComplete: function (settings, json) {
+      $('#successes-table_wrapper > .row:first-child')
+        .css({
+          display: 'flex',
+          'align-items': 'center'
+        })
+        .children('[class*="col-"]:first-child')
+        .append('<label for="toggle-group-by-customer">' +
+                  '<input type="checkbox" id="toggle-group-by-customer" checked>' +
+                  '&nbsp;&nbsp;<span>Group by Customer</span>' +
+                '</label>');
+      $('#successes-table_filter > label')
+        .append('<i class="clear-search glyphicon glyphicon-remove"></i>');
+
     }
   });
 
@@ -70,6 +85,20 @@ function initDataTables () {
           last = group;
         }
       });
+    },
+    initComplete: function (settings, json) {
+      $('#contributors-table_wrapper > .row:first-child')
+        .css({
+          display: 'flex',
+          'align-items': 'center'
+        })
+        .children('[class*="col-"]:first-child')
+        .append('<label for="toggle-group-by-success">' +
+                  '<input type="checkbox" id="toggle-group-by-success" checked>' +
+                  '&nbsp;&nbsp;<span>Group by Customer / Story Candidate</span>' +
+                '</label>');
+      $('#contributors-table_filter > label')
+        .append('<span class="clear-search glyphicon glyphicon-remove"></span>');
     }
   });
 

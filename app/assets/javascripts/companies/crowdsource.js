@@ -2,6 +2,31 @@
 function crowdsourceListeners () {
 
   $(document)
+
+    .on('click', '.success-actions-dropdown a.contributors',
+      function (e) {
+        // can't put customer name in td class because grouping makes it disappear
+        var customerName = $(this).closest('tr').data('customer-name'),
+            successName = $(this).closest('tr').children('.success-name').text(),
+            searchRegEx = customerName + '.+' + successName,
+            $table = $('#contributors-table').DataTable();
+        // if (no contributions) { e.preventDefault(); }
+        $('a[href="#contributors-tab-pane"]').tab('show');
+        $table.search(searchRegEx, true).draw();  // true => treat as RegEx
+      })
+    .on('click', '#contributors-table a.success-name',
+      function (e) {
+        var successName = $(this).text(),
+            $table = $('#successes-table').DataTable();
+        $('a[href="#successes-tab-pane"]').tab('show');
+        $table.search(successName).draw();
+      })
+    .on('click', 'div[id*="table_filter"] .clear-search',
+      function () {
+        $(this).closest('div[id*="table_wrapper"]').find('table').DataTable()
+               .search('').draw();
+      })
+
     // no striping for grouped rows, yes striping for ungrouped
     // manipulate via jquery; insufficient to just change even/odd classes
     .on('change', '#toggle-group-by-success, #toggle-group-by-customer',

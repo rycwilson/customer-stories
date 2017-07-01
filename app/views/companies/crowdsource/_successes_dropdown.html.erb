@@ -4,7 +4,7 @@
   <i class='fa fa-caret-down'></i>
 </a>
 
-<ul class='dropdown-menu'>
+<ul class='dropdown-menu success-actions-dropdown'>
 
   <% if success.story.try(:published?) %>
 
@@ -32,6 +32,13 @@
     </li>
 
   <% end %>
+
+  <li>
+    <a href="javascript:;" class='contributors'>
+      <!-- <i class='glyphicon glyphicon-remove'></i>&nbsp;&nbsp; -->
+      <span>Manage Contributors</span>
+    </a>
+  </li>
 
   <li>
     <a href="javascript:;">
