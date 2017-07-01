@@ -88,11 +88,11 @@ function initDataTables () {
       { visible: false, targets: [ successIndex ] },
       { orderable: false, targets: [ 0, conColumnsCount - 1 ] },
       { width: '5%', targets: 0 },
-      { width: '33%', targets: 1 },
-      { width: '33%', targets: 2 },
-      { width: '33%', targets: 3 },
-      { width: '20%', targets: 4 },
-      { width: '6%', targets: 5 }
+      { width: '30%', targets: 1 },
+      { width: '0%', targets: 2 },
+      { width: '30%', targets: 3 },
+      { width: '25%', targets: 4 },
+      { width: '10%', targets: 5 }
     ],
     drawCallback: function (settings) {
       var api = this.api();
