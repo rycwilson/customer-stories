@@ -1,6 +1,8 @@
 
 function companiesShow () {
 
+  crowdsource();
+
   // if this page was arrived at through history navigation,
   // make sure there aren't any active dropdowns
   $('dropdown.company-settings').removeClass('active');

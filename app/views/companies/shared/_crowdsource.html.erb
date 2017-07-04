@@ -5,6 +5,8 @@
   <%= render 'companies/crowdsource/success_template' %>
   <%= render 'companies/crowdsource/contributor_template' %>
   <%= render 'companies/crowdsource/csp_linkedin_widget_template' %>
+  <%= render 'companies/crowdsource/successes_table_header_template' %>
+  <%= render 'companies/crowdsource/contributors_table_header_template' %>
 <% end %>
 
 <!-- crowdsource -->
@@ -50,7 +52,8 @@
 
             <div id='successes-tab-pane'
                  class="tab-pane fade <%= workflow_sub_tab == 'successes' ? 'in active' : (workflow_sub_tab.nil? ? 'in active' : '') %>">
-              <%= render 'companies/crowdsource/successes_table', { company: company } %>
+              <%= render 'companies/crowdsource/successes_table',
+                          { company: company } %>
             </div>
 
             <div id='contributors-tab-pane'
@@ -60,7 +63,7 @@
             </div>
 
      <!--        <div id='customers-tab-pane'
-                 class="tab-pane fade <%= workflow_sub_tab == 'customers' ? 'in active' : '' %>">
+                 class="tab-pane fade <%#= workflow_sub_tab == 'customers' ? 'in active' : '' %>">
 
               <%#= render 'companies/crowdsource/customers_table', { company: company } %>
             </div> -->

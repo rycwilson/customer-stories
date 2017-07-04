@@ -3,23 +3,43 @@ div[id*="table_wrapper"] {
   margin-top: 8px;
 }
 
+#successes-filter, #contributors-filter, .curator-select {
+  width: 250px;
+}
+
+.row.successes-header, .row.contributors-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  // select + span {
+  //   margin-left: 0.5em;  // matches datatables
+  // }
+  select + span > span:first-child > span {
+    padding-right: 30px; // matches search box
+    text-align: left;
+  }
+}
+.row.successes-header:nth-of-type(2), .row.contributors-header:nth-of-type(2) {
+  margin-bottom: 5px;
+}
+
 div[id*="table_filter"] {
-  position: relative;
-  input[type='search'] {
-    width: 220px;
-    padding-right: 30px;  // leaves space for X
-  }
-  .clear-search {
-    position: absolute;
-    right: 1px;
-    top: 1px;
-    bottom: 0;
-    height: 14px;
-    margin: 7px;
-    font-size: 14px;
-    cursor: pointer;
-    color: #ccc;
-  }
+  // position: relative;
+  // input[type='search'] {
+  //   width: 220px;
+  //   // padding-right: 30px;  // leaves space for X
+  // }
+  // .clear-search {
+  //   position: absolute;
+  //   right: 1px;
+  //   top: 1px;
+  //   bottom: 0;
+  //   height: 14px;
+  //   margin: 9px 7px;
+  //   font-size: 14px;
+  //   cursor: pointer;
+  //   color: #aaa;
+  // }
 }
 
 #crowdsource-panel {

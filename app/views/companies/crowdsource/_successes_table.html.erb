@@ -5,11 +5,12 @@
   <thead>
     <tr>
       <th class='success-details'>
-        <i class='fa fa-plus-circle fa-2x' aria-hidden='true' style='color:#6685a4'></i>
+        <i class='fa fa-plus-square fa-2x' aria-hidden='true' style='color:#6685a4'></i>
       </th>
       <th>Project / Deal / Opportunity</th>
       <th>Customer</th>
       <th>Next Step</th>
+      <th>Curator</th>  <!--  hidden -->
       <th class='actions-dropdown'>Actions</th>
     </tr>
   </thead>
@@ -23,9 +24,10 @@
           <i class='fa fa-caret-right'></i>
           <i class='fa fa-caret-down' style='display:none'></i>
         </td>
-        <td class='success-name'><%= success.story.try(:title) %></td>
-        <td><%= success.customer.name %></td>
-        <td></td>
+        <td class='success-name' data-search="<%= success.id %>"><%= success.story.try(:title) %></td>
+        <td data-search="<%= success.customer.id %>"><%= success.customer.name %></td>
+        <td><%= ["Action 1", "Action 2"].sample() %></td>
+        <td data-search="<%= success.curator.id %>"></td>  <!-- curator hidden, use id for search -->
         <td class='dropdown actions-dropdown'>
           <div style='position:relative'>  <!-- div for styling only -->
 

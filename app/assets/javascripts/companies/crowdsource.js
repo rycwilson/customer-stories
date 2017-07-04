@@ -1,7 +1,72 @@
 
+function crowdsource() {
+
+  // pre-selected curators
+  $('.curator-select').each(function () {
+    $(this).val(
+      $(this).children('[value="' + app.current_user.id.toString() + '"]').val()
+    ).trigger('change', { auto: true });
+  });
+
+}
+
 function crowdsourceListeners () {
 
+  var liveSearch = function (e) {
+    var $input = e.data['$input'], $table = e.data['$table'];
+    if ($input.val()) {  // don't show 'No results found'
+      $input.parent().next().find('.select2-results__message').hide();
+    }
+    $table.search($input.val()).draw();
+  };
+
   $(document)
+
+    .on('change', '.curator-select, #successes-filter, #contributors-filter',
+      function (e, data) {
+        var $tableWrapper = $(this).closest('div[id*="table_wrapper"]'),
+            dt = $tableWrapper.find('table').DataTable(),
+            curatorCol = 4,
+            curatorId = $tableWrapper.find('.curator-select').val(),
+            filterData = $tableWrapper.find('.dt-filter').select2('data'),
+            filterCol = filterData[0].id,
+            filterStr = filterData[0].text;
+
+        // all candidates / all contributors
+        if (filterCol === '0') {
+          dt.columns().search('')
+            .columns( [curatorCol] ).search(curatorId === '0' ? '' : curatorId)
+            .draw();
+
+        } else {
+          dt.columns( [curatorCol] ).search(curatorId === '0' ? '' : curatorId)
+            .columns( [filterCol] ).search(filterStr)
+            .draw();
+        }
+
+        // change the other curator select
+        if (!(data && data.auto) && $(this).hasClass('curator-select')) {
+          var $other = $('.curator-select').not($(this));
+          $other.val($(this).val()).trigger('change', { auto: true });
+        }
+      })
+
+    .on('select2:open', function (e) {
+      var $input = $('.select2-container--open input.select2-search__field');
+      if ($(e.target).attr('id') === 'successes-filter') {
+        $input.on('input', { $table: $('#successes-table').DataTable(), $input: $input },
+          liveSearch
+        );
+
+      } else if ($(e.target).attr('id') === 'contributors-filter') {
+        $input.on('input', { $table: $('#contributors-table').DataTable(), $input: $input },
+          liveSearch
+        );
+      }
+    })
+    .on('select2:close', function () {
+      $(document).off('input', liveSearch);
+    })
 
     .on('click', '.success-actions-dropdown a.contributors',
       function (e) {
@@ -14,6 +79,7 @@ function crowdsourceListeners () {
         $('a[href="#contributors-tab-pane"]').tab('show');
         $table.search(searchRegEx, true).draw();  // true => treat as RegEx
       })
+
     .on('click', '#contributors-table a.success-name',
       function (e) {
         var successName = $(this).text(),
@@ -21,11 +87,12 @@ function crowdsourceListeners () {
         $('a[href="#successes-tab-pane"]').tab('show');
         $table.search(successName).draw();
       })
-    .on('click', 'div[id*="table_filter"] .clear-search',
-      function () {
-        $(this).closest('div[id*="table_wrapper"]').find('table').DataTable()
-               .search('').draw();
-      })
+
+    // .on('click', 'div[id*="table_filter"] .clear-search',
+    //   function () {
+    //     $(this).closest('div[id*="table_wrapper"]').find('table').DataTable()
+    //            .search('').draw();
+    //   })
 
     // no striping for grouped rows, yes striping for ungrouped
     // manipulate via jquery; insufficient to just change even/odd classes

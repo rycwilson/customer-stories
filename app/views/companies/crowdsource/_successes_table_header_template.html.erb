@@ -1,0 +1,55 @@
+
+<script id='successes-table-header-template' type='text/template'>
+
+  <div class='row successes-header'>
+
+    <div class='col-sm-6'>
+    </div>
+
+    <div class='col-sm-6 text-right'>
+      <label>Curator&nbsp;</label>
+      <select class='curator-select form-control text-left' style="width:{{= selectWidth.toString() + 'px' }};">
+
+        <option value='0' selected>All Curators<option>
+
+        {{ _.each(curators, function (curator, index) { }}
+
+          <option value="{{= curator.id }}">{{= curator.first_name + ' ' + curator.last_name }}</option>
+
+        {{ }); }}
+
+      </select>
+    </div>
+
+  </div>
+
+  <div class='row successes-header'>
+
+    <div class='col-sm-6'>
+
+      <label for="toggle-group-by-customer">
+        <input type="checkbox" id="toggle-group-by-customer" checked>
+        <span>&nbsp;&nbsp;Group Candidates by Customer</span>
+      </label>
+
+    </div>
+
+    <div class='col-sm-6 text-right'>
+
+      <label>Filter&nbsp;</label>
+      <select id='successes-filter' class='dt-filter form-control text-left' style="width:{{= selectWidth.toString() + 'px' }};">
+        <option value='0' selected>All Candidates</option>
+        <optgroup label='Next step'>
+          <!-- // value refers to column number -->
+          <option value='3'>Action 1</option>
+          <option value='3'>Action 2</option>
+        </optgroup>
+      </select>
+
+    </div>
+
+  </div>
+
+</script>
+
+

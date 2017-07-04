@@ -1,5 +1,6 @@
 
-function configUnderscore() {
+(function () {
+
   // this changes underscore to use {{ }} delimiters
   // (so doesn't clash with erb <% %>)
   _.templateSettings = {
@@ -14,4 +15,6 @@ function configUnderscore() {
       callback.call(this, this.slice(i, i + size));
     }
   };
-}
+
+}());
+

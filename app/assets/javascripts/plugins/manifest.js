@@ -55,5 +55,7 @@
 
 //= require bootstrap-validator/dist/validator
 
+//= require arrive/src/arrive
+
 
 

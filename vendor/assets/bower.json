@@ -18,7 +18,7 @@
     "bootstrap-validator": "latest",
     "jquery-textfill": "latest",
     "color-thief": "latest",
-    "addyosmani-jquery-ui-bootstrap": "latest",
+    "arrive": "latest",
     "fontawesome": "~4.4.0",
     "flot": "~0.8.3",
     "flot.tooltip": "~0.8.5",

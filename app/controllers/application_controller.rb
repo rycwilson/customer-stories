@@ -28,12 +28,15 @@ class ApplicationController < ActionController::Base
   def set_gon company=nil
     is_curator = (user_signed_in? && (current_user.company_id == company.try(:id)))
     gon.push({
-      company: company.present? ?
-                  JSON.parse(company.to_json({ methods: [:header_style, :widget] })) : nil,
+      company: company.present? ? JSON.parse(company.to_json({
+        methods: [:curators, :header_style, :widget]
+      })) : nil,
       current_user: user_signed_in? ? {
-                      name: current_user.full_name,
-                      email: current_user.email,
-                      is_curator: is_curator } : nil,
+        id: current_user.id,
+        name: current_user.full_name,
+        email: current_user.email,
+        is_curator: is_curator
+      } : nil,
       # pending contributions only
       contributions: company.present? ? company.contributions.pending : nil,
       stories: company.present? ? company.stories_json : nil,

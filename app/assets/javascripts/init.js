@@ -11,7 +11,6 @@ window.app = window.app || {
     var controller = $('body').attr('class').split(' ')[0],
         action = $('body').attr('class').split(' ')[1];
 
-    configUnderscore();
     initS3Upload();
 
     // page-specific stuff
