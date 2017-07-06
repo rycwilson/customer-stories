@@ -24,7 +24,11 @@ class Company < ActiveRecord::Base
       .unshift( [""] )  # empty option makes placeholder possible (only needed for single select)
     end
   end
-  has_many :successes, through: :customers
+  has_many :successes, -> { includes(:story) }, through: :customers do
+    def story_candidates
+      select { |success| success.story.blank? }
+    end
+  end
   has_many :curators, -> { select('users.*').distinct }, through: :successes
   has_many :contributions, -> { includes(:contributor, :referrer, success:{customer:{}}) },
             through: :successes do

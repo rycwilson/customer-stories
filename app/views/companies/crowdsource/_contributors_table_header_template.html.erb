@@ -14,7 +14,7 @@
 
         {{ _.each(curators, function (curator) { }}
 
-          <option value="{{= curator.id }}">{{= curator.first_name + ' ' + curator.last_name }}</option>
+          <option value="{{= curator.id }}" column="{{= curatorCol }}">{{= curator.first_name + ' ' + curator.last_name }}</option>
 
         {{ }); }}
 
@@ -38,12 +38,36 @@
 
       <label>Filter&nbsp;</label>
       <select id='contributors-filter' class='dt-filter form-control text-left' style="width:{{= selectWidth.toString() + 'px' }};">
-        <option value='0'>All Contributors</option>
+        <option value='0' selected>All Contributors</option>
+
+        <!-- // value='-1' implies no db object w/ id for Next Step -->
+        <!-- // data-col='5' represents the Next Step column -->
         <optgroup label='Next step'>
-          <option>Action 1</option>
-          <option>Action 2</option>
-          <option>Action 3</option>
+          <option value='' data-col='5'>Next Step 1</option>
+          <option value='' data-col='5'>Next Step 2</option>
         </optgroup>
+
+        <optgroup label='Customer'>
+
+          {{ _.each(customers, function (customer) { }}
+
+            <option value="c{{= customer.id }}" data-col='{{= customerCol }}'>{{= customer.name || "no customer name" }}</option>
+
+          {{ }); }}
+
+        </optgroup>
+
+        <!-- // data-col='2' represents the story candidate column -->
+        <optgroup label='Story Candidate'>
+
+          {{ _.each(successes, function (success) { }}
+
+            <option value="s{{= success.id }}" data-col='{{= successCol }}'>{{= success.name || "no name" }}</option>
+
+          {{ }); }}
+
+        </optgroup>
+
       </select>
 
     </div>

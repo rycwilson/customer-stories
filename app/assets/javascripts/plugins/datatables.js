@@ -20,14 +20,14 @@ function initDataTables () {
   });
 
   // curator index applies to both successes and contributors
-  var customerIndex = 2, curatorIndex = 4, successesColCount = 6;
+  var successesCustomerIndex = 2, curatorIndex = 4, successesColCount = 6;
   $('#successes-table').DataTable({
     paging: true,
     pageLength: 100,
     lengthChange: false,
-    order: [[ customerIndex, 'asc' ]],
+    order: [[ successesCustomerIndex, 'asc' ]],
     columnDefs: [
-      { visible: false, targets: [ customerIndex, curatorIndex ] },
+      { visible: false, targets: [ successesCustomerIndex, curatorIndex ] },
       { orderable: false, targets: [ 0, successesColCount - 1 ] },
       { width: '5%', targets: 0 },
       { width: '55%', targets: 1 },
@@ -41,9 +41,9 @@ function initDataTables () {
       var rows = api.rows( { page:'current' } ).nodes();
       var last = null;
       // row grouping
-      api.column(customerIndex, { page: 'current' }).data().each(function (group, i) {
+      api.column(successesCustomerIndex, { page: 'current' }).data().each(function (group, i) {
         if (last !== group) {
-          // subtract two rows (customer, curator)
+          // subtract hidden rows: customer, curator
           $(rows).eq(i).before(
             '<tr class="group" style="font-weight:600"><td colspan="' + (successesColCount - 2).toString() + '">' + group + '</td></tr>'
           );
@@ -52,18 +52,26 @@ function initDataTables () {
       });
     },
     initComplete: function (settings, json) {
-      var $table = $('#successes-table_wrapper'),
+      var $tableWrapper = $('#successes-table_wrapper'),
           template = _.template( $('#successes-table-header-template').html() );
+
       // remove default search field.  Disabling via options also disables api, so can't do that
-      $table.children('.row:first-child').remove();
-      $table.prepend(
+      $tableWrapper.children('.row:first-child').remove();
+
+      $tableWrapper.prepend(
         template({
           currentUser: app.current_user,
           curators: app.company.curators,
+          curatorCol: $(this).data('curator-col'),
+          customers: app.company.customers,
+          customerCol: $(this).data('customer-col'),
+          successes: app.company.successes,
+          successCol: $(this).data('success-col'),
           selectWidth: 250
         })
       );
-      var $curatorSelect = $table.find('.curator-select');
+
+      var $curatorSelect = $tableWrapper.find('.curator-select');
       $curatorSelect.select2({
         theme: 'bootstrap',
         width: 'style',
@@ -73,30 +81,29 @@ function initDataTables () {
       $curatorSelect.children('option').not('[value]').remove();
       $('#successes-filter').select2({
         theme: 'bootstrap',
-        width: 'style',
-        placeholder: 'type or select'
+        width: 'style'
         // allowClear: true
       });
-
+      $(this).css('visibility', 'visible');
     }
   });
 
-  var successIndex = 2, contributorsColCount = 7;
+  var contributorsCustomerIndex = 5, successIndex = 2, contributorsColCount = 8;
   $('#contributors-table').DataTable({
     paging: false,
     autoWidth: false,
     order: [[ successIndex, 'asc' ]],
-    // columns: [ { width: '60px' }, null, null, null, null, null, null ],
     columnDefs: [
-      { visible: false, targets: [ successIndex, curatorIndex ] },
+      { visible: false, targets: [ successIndex, curatorIndex, contributorsCustomerIndex ] },
       { orderable: false, targets: [ 0, contributorsColCount - 1 ] },
       { width: '5%', targets: 0 },
       { width: '30%', targets: 1 },
       { width: '0%', targets: 2 },  // success
       { width: '30%', targets: 3 },
       { width: '0%', targets: 4 },  // curator
-      { width: '25%', targets: 5 },
-      { width: '10%', targets: 6 }
+      { width: '0%', targets: 5 },  // customer
+      { width: '25%', targets: 6 },
+      { width: '10%', targets: 7 }
     ],
     drawCallback: function (settings) {
       var api = this.api();
@@ -104,39 +111,46 @@ function initDataTables () {
       var last = null;
       api.column(successIndex, { page: 'current' }).data().each(function (group, i) {
         if (last !== group) {
-          // subtract two rows - success and curator
+          // subtract hidden rows: success, curator, customer
           $(rows).eq(i).before(
-            '<tr class="group"><td colspan="' + (contributorsColCount - 2).toString() + '">' + group + '</td></tr>'
+            '<tr class="group"><td colspan="' + (contributorsColCount - 3).toString() + '">' + group + '</td></tr>'
           );
           last = group;
         }
       });
     },
     initComplete: function (settings, json) {
-      var $table = $('#contributors-table_wrapper'),
+      var $tableWrapper = $('#contributors-table_wrapper'),
           template = _.template( $('#contributors-table-header-template').html() );
       // remove default search field.  Disabling via options also disables api, so can't do that
-      $table.children('.row:first-child').remove();
-      $table.prepend(
+      $tableWrapper.children('.row:first-child').remove();
+      $tableWrapper.prepend(
         template({
           currentUser: app.current_user,
           curators: app.company.curators,
+          curatorCol: $(this).data('curator-col'),
+          successes: app.company.customers.successes,
+          successCol: $(this).data('success-col'),
+          customers: app.company.customers,
+          customerCol: $(this).data('customer-col'),
           selectWidth: 250
         })
       );
-      $table.find('.curator-select').select2({
+
+      $tableWrapper.find('.curator-select').select2({
         theme: 'bootstrap',
         width: 'style',
         minimumResultsForSearch: -1   // hides text input
       });
       // select2 is inserting an empty <option> for some reason
-      $table.find('.curator-select > option').not('[value]').remove();
+      $tableWrapper.find('.curator-select > option').not('[value]').remove();
       $('#contributors-filter').select2({
         theme: 'bootstrap',
         width: 'style'
         // placeholder: 'type or select'
         // allowClear: true
       });
+      $(this).css('visibility', 'visible');
     }
   });
 

@@ -1,6 +1,5 @@
 
 function crowdsource() {
-
   // pre-selected curators
   $('.curator-select').each(function () {
     $(this).val(
@@ -25,29 +24,65 @@ function crowdsourceListeners () {
     .on('change', '.curator-select, #successes-filter, #contributors-filter',
       function (e, data) {
         var $tableWrapper = $(this).closest('div[id*="table_wrapper"]'),
-            dt = $tableWrapper.find('table').DataTable(),
-            curatorCol = 4,
+            $table = $tableWrapper.find('table'),
+            dt = $table.DataTable(),
+            $filter = $tableWrapper.find('.dt-filter'),
             curatorId = $tableWrapper.find('.curator-select').val(),
-            filterData = $tableWrapper.find('.dt-filter').select2('data'),
-            filterCol = filterData[0].id,
-            filterStr = filterData[0].text;
+            curatorCol = $table.data('curator-col'),
+            filterData = $filter.select2('data'),
+            filterVal = filterData[0].id,
+            filterText = filterData[0].text,
+            filterCol = $(filterData[0].element).data('col');
 
-        // all candidates / all contributors
-        if (filterCol === '0') {
-          dt.columns().search('')
-            .columns( [curatorCol] ).search(curatorId === '0' ? '' : curatorId)
-            .draw();
-
-        } else {
-          dt.columns( [curatorCol] ).search(curatorId === '0' ? '' : curatorId)
-            .columns( [filterCol] ).search(filterStr)
-            .draw();
+        if ($(this).hasClass('curator-select')) {
+          // only include options for items owned by the curator
+          var successes = app.company.successes.filter(function (success) {
+                            return success.curator_id == curatorId;
+                          }),
+              customers = app.company.customers.filter(function (customer) {
+                            return successes.some(function (success) {
+                              return success.customer_id === customer.id;
+                            });
+                          }),
+              $customersOptgroup = $filter.find('optgroup[label="Customer"]'),
+              $successesOptgroup = $filter.find('optgroup[label="Story Candidate"]');
+          // remove and replace optgroups in this table's filter>
+          $customersOptgroup.empty();
+          _.each(customers, function (customer) {
+            $customersOptgroup.append(
+              '<option value="c' + customer.id + '" ' + 'data-col="' + $table.data('customer-col') + '">' + customer.name + '</option>'
+            );
+          });
+          $successesOptgroup.empty();
+          _.each(successes, function (success) {
+            $successesOptgroup.append(
+              '<option value="s' + success.id + '" ' + 'data-col="' + $table.data('success-col') + '">' + success.name + '</option>'
+            );
+          });
+          $filter.val('0').trigger('change.select2');  // change select input without triggering change event
+          // find entries owned by curator
+          dt.columns([curatorCol]).search(curatorId === '0' ? '' : curatorId);
+          // update the other curator select (only once)
+          if (!(data && data.auto)) {
+            var $other = $('.curator-select').not($(this));
+            $other.val($(this).val()).trigger('change', { auto: true });
+          }
         }
 
-        // change the other curator select
-        if (!(data && data.auto) && $(this).hasClass('curator-select')) {
-          var $other = $('.curator-select').not($(this));
-          $other.val($(this).val()).trigger('change', { auto: true });
+        // successes-filter or contributors-filter
+        else {
+          // curator && all candidates/contributors
+          if (filterVal === '0') {
+            dt.columns().search('')
+              .columns([curatorCol]).search(curatorId === '0' ? '' : curatorId)
+              .draw();
+
+          // curator && filter column
+          } else {
+            dt.columns([curatorCol]).search(curatorId === '0' ? '' : curatorId)
+              .columns([filterCol]).search(filterVal)
+              .draw();
+          }
         }
       })
 
@@ -70,29 +105,18 @@ function crowdsourceListeners () {
 
     .on('click', '.success-actions-dropdown a.contributors',
       function (e) {
-        // can't put customer name in td class because grouping makes it disappear
-        var customerName = $(this).closest('tr').data('customer-name'),
-            successName = $(this).closest('tr').children('.success-name').text(),
-            searchRegEx = customerName + '.+' + successName,
-            $table = $('#contributors-table').DataTable();
-        // if (no contributions) { e.preventDefault(); }
+        // // if (no contributions) { e.preventDefault(); }
+        var successId = $(this).closest('tr').data('success-id');
         $('a[href="#contributors-tab-pane"]').tab('show');
-        $table.search(searchRegEx, true).draw();  // true => treat as RegEx
+        $('#contributors-filter').val('s' + successId).trigger('change');
       })
 
     .on('click', '#contributors-table a.success-name',
       function (e) {
-        var successName = $(this).text(),
-            $table = $('#successes-table').DataTable();
+        var successId = $(this).closest('tr').next().data('success-id');
         $('a[href="#successes-tab-pane"]').tab('show');
-        $table.search(successName).draw();
+        $('#successes-filter').val('s' + successId).trigger('change');
       })
-
-    // .on('click', 'div[id*="table_filter"] .clear-search',
-    //   function () {
-    //     $(this).closest('div[id*="table_wrapper"]').find('table').DataTable()
-    //            .search('').draw();
-    //   })
 
     // no striping for grouped rows, yes striping for ungrouped
     // manipulate via jquery; insufficient to just change even/odd classes
@@ -244,7 +268,7 @@ function loadLinkedinWidget ($tr, contribution) {
                       "data-width='" + widgetWidth.toString() + "'></script>"),
         widgetMarginTop = '-' + $placeholderWidgetContainer.css('height'),
         newWidgetPostMesgHandler = function (event) {
-          console.log(event);
+          // console.log(event);
           if ( $('body').hasClass('companies show') ) {
             // in Chrome, the origin property is in the event.originalEvent object
             var origin = event.origin || event.originalEvent.origin;
@@ -252,7 +276,7 @@ function loadLinkedinWidget ($tr, contribution) {
                  event.data.includes('widgetReady') ) {
               var newWidgetId = $linkedinWidgetContainer.find('iframe').attr('id'),
                   widgetReadyId = event.data.match(/^(\w+)\s/)[1];
-                  console.log('newWidgetId: ', newWidgetId);
+                  // console.log('newWidgetId: ', newWidgetId);
               if (newWidgetId &&
                   widgetReadyId === newWidgetId.match(/^\w+(li_gen\w+)_provider/)[1]) {
                 $linkedinWidgetContainer

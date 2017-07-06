@@ -2,6 +2,14 @@ namespace :temp do
 
   desc "temp stuff"
 
+  task success_names: :environment do
+    Success.all.each() do |success|
+      if success.story.present?
+        success.update(name: success.story.title)
+      end
+    end
+  end
+
   task make_widgets: :environment do
     Company.all.each do |company|
       case company.subdomain
