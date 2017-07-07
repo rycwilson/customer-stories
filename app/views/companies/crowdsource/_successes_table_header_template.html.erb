@@ -14,7 +14,7 @@
 
         {{ _.each(curators, function (curator, index) { }}
 
-          <option value="{{= curator.id }}" data-column="{{= curatorCol }}">{{= curator.first_name + ' ' + curator.last_name }}</option>
+          <option value="{{= curator.id }}">{{= curator.first_name + ' ' + curator.last_name }}</option>
 
         {{ }); }}
 
@@ -42,8 +42,8 @@
         <option value='0' selected>All Candidates</option>
 
         <optgroup label='Next step'>
-          <option value='-1'>Next Step 1</option>
-          <option value='-1'>Next Step 2</option>
+          <option value=''>Next Step 1</option>
+          <option value=''>Next Step 2</option>
         </optgroup>
 
         <optgroup label='Customer'>

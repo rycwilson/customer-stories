@@ -25,7 +25,7 @@
           <i class='fa fa-caret-right'></i>
           <i class='fa fa-caret-down' style='display:none'></i>
         </td>
-        <td class='success-name' data-search="s<%= success.id %>"><%= success.story.try(:title) %></td>
+        <td class='success-name' data-search="s<%= success.id %>, <%= success.name %>"><%= success.name %></td>
         <td data-search="c<%= success.customer.id %>"><%= success.customer.name %></td>
         <td><%= ["Next Step 1", "Next Step 2"].sample() %></td>
         <td data-search="<%= success.curator.id %>"></td>  <!-- curator hidden, use id for search -->

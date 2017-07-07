@@ -32,14 +32,14 @@
           <i class='fa fa-caret-down' style='display:none'></i>
         </td>
 
-        <td class='contributor-name'>
+        <td data-search="<%= contribution.contributor.full_name %>" class='contributor-name'>
           <span>
             <i class='glyphicon glyphicon-pencil'></i>
             <span><%= contribution.contributor.full_name %></span>
           </span>
         </td>
 
-        <td data-search="s<%= contribution.success.id %>"><%= ("<span style='font-weight:600'>#{ contribution.customer.name }</span>&nbsp;&nbsp;&#8211;&nbsp;&nbsp;<a href='javascript:;' class='success-name'>#{ contribution.story.try(:title) || 'no name' }</a>").html_safe %></td>
+        <td data-search="s<%= contribution.success.id %>, <%= contribution.success.name %>"><%= ("<span style='font-weight:600'>#{ contribution.customer.name }</span>&nbsp;&nbsp;&#8211;&nbsp;&nbsp;<a href='javascript:;' class='success-name'>#{ contribution.story.try(:title) || 'no name' }</a>").html_safe %></td>
 
         <td class='contribution-email-template'>
         </td>
@@ -47,7 +47,7 @@
         <!-- curator hidden -->
         <td data-search="<%= contribution.success.curator.id %>"></td>
         <!-- customer hidden -->
-        <td data-search="<%= contribution.customer.id %>"><%= contribution.customer.name %></td>
+        <td data-search="c<%= contribution.customer.id %>, <%= contribution.customer.name %>"><%= contribution.customer.name %></td>
 
         <td class='contribution-status'>
           <%= render 'companies/crowdsource/contributors_status',

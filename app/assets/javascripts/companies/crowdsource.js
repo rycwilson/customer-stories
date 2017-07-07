@@ -11,15 +11,27 @@ function crowdsource() {
 
 function crowdsourceListeners () {
 
-  var liveSearch = function (e) {
-    var $input = e.data['$input'], $table = e.data['$table'];
-    if ($input.val()) {  // don't show 'No results found'
-      $input.parent().next().find('.select2-results__message').hide();
-    }
-    $table.search($input.val()).draw();
-  };
-
   $(document)
+
+    .on('keyup', '.select2-search',
+      function () {
+        var $table, searchCols, curatorCol, curatorId,
+            $input = $(this).find('input');
+
+        if ($(this).next().find('#select2-successes-filter-results').length) {
+          $table = $('#successes-table');
+          searchCols = [1,2,4];
+        } else if ($(this).next().find('#select2-contributors-filter-results').length) {
+          $table = $('#contributors-table');
+          searchCols = [1,2,4,5];
+        }
+        curatorCol = $table.data('curator-col');
+        curatorId = $table.closest('[id*="table_wrapper"]').find('.curator-select').val();
+        console.log(curatorCol, curatorId, searchCols, $input.val())
+        $table.DataTable()
+              .column(curatorCol).search(curatorId)
+              .columns(searchCols).search($input.val()).draw();
+      })
 
     .on('change', '.curator-select, #successes-filter, #contributors-filter',
       function (e, data) {
@@ -37,7 +49,7 @@ function crowdsourceListeners () {
         if ($(this).hasClass('curator-select')) {
           // only include options for items owned by the curator
           var successes = app.company.successes.filter(function (success) {
-                            return success.curator_id == curatorId;
+                            return (success.curator_id == curatorId) || curatorId === '0';
                           }),
               customers = app.company.customers.filter(function (customer) {
                             return successes.some(function (success) {
@@ -59,9 +71,12 @@ function crowdsourceListeners () {
               '<option value="s' + success.id + '" ' + 'data-col="' + $table.data('success-col') + '">' + success.name + '</option>'
             );
           });
+          // when changing curators, start with all candidates/contributors
           $filter.val('0').trigger('change.select2');  // change select input without triggering change event
           // find entries owned by curator
-          dt.columns([curatorCol]).search(curatorId === '0' ? '' : curatorId);
+          dt.search('')
+            .columns().search('')
+            .columns([curatorCol]).search(curatorId === '0' ? '' : curatorId).draw();
           // update the other curator select (only once)
           if (!(data && data.auto)) {
             var $other = $('.curator-select').not($(this));
@@ -73,35 +88,40 @@ function crowdsourceListeners () {
         else {
           // curator && all candidates/contributors
           if (filterVal === '0') {
-            dt.columns().search('')
+            dt.search('')
+              .columns().search('')
               .columns([curatorCol]).search(curatorId === '0' ? '' : curatorId)
               .draw();
 
           // curator && filter column
           } else {
-            dt.columns([curatorCol]).search(curatorId === '0' ? '' : curatorId)
-              .columns([filterCol]).search(filterVal)
+            // heads up: 'c18' matches 'c180' => solved by treating as RegEx
+            dt.search('')
+              .columns().search('')
+              .columns([curatorCol]).search(curatorId === '0' ? '' : curatorId)
+              .columns([filterCol]).search('^' + filterVal + '(,|$)', true)
               .draw();
           }
         }
       })
 
-    .on('select2:open', function (e) {
-      var $input = $('.select2-container--open input.select2-search__field');
-      if ($(e.target).attr('id') === 'successes-filter') {
-        $input.on('input', { $table: $('#successes-table').DataTable(), $input: $input },
-          liveSearch
-        );
+    // .on('select2:open', function (e) {
+    //   var $input = $('.select2-container--open input.select2-search__field');
+    //   if ($(e.target).attr('id') === 'successes-filter') {
+    //     console.log($(e.target).select2('data'))
+    //     // $input.on('keyup', { $table: $('#successes-table').DataTable(), $input: $input },
+    //     //   liveSearch
+    //     // );
 
-      } else if ($(e.target).attr('id') === 'contributors-filter') {
-        $input.on('input', { $table: $('#contributors-table').DataTable(), $input: $input },
-          liveSearch
-        );
-      }
-    })
-    .on('select2:close', function () {
-      $(document).off('input', liveSearch);
-    })
+    //   } else if ($(e.target).attr('id') === 'contributors-filter') {
+    //     $input.on('keydown', { $table: $('#contributors-table').DataTable(), $input: $input },
+    //       liveSearch
+    //     );
+    //   }
+    // })
+    // .on('select2:close', function () {
+    //   $(document).off('input', liveSearch);
+    // })
 
     .on('click', '.success-actions-dropdown a.contributors',
       function (e) {
@@ -132,28 +152,28 @@ function crowdsourceListeners () {
     // successes - order by customer grouping
     .on('click', '#successes-table tr.group',
       function () {
-        var $successes = $('#successes-table').DataTable(),
+        var dt = $('#successes-table').DataTable(),
             currentOrder = $successes.order()[0];
         if (currentOrder[0] === 1 && currentOrder[1] === 'asc') {
-          $successes.order([ 1, 'desc' ]).draw();
+          dt.order([ 1, 'desc' ]).draw();
         }
         else {
-          $successes.order([ 1, 'asc' ]).draw();
+          dt.order([ 1, 'asc' ]).draw();
         }
       })
 
     // contributors - order by success
     .on('click', '#contributors-table tr.group',
       function (e) {
-        var $contributors = $('#contributors-table').DataTable(),
+        var dt = $('#contributors-table').DataTable(),
             successIndex = 2,
-            currentOrder = $contributors.order()[0];
+            currentOrder = dt.order()[0];
         if (! $(e.target).is('a') ) {
           if (currentOrder[0] === successIndex && currentOrder[1] === 'asc') {
-            $contributors.order([ successIndex, 'desc' ]).draw();
+            dt.order([ successIndex, 'desc' ]).draw();
           }
           else {
-            $contributors.order([ successIndex, 'asc' ]).draw();
+            dt.order([ successIndex, 'asc' ]).draw();
           }
         }
       })
@@ -161,23 +181,23 @@ function crowdsourceListeners () {
     // contributors child rows
     .on('click', '#contributors-table td.contributor-details',
       function () {
-        var $table = $(this).closest('table').DataTable(),
+        var dt = $(this).closest('table').DataTable(),
             $tr = $(this).closest('tr'),
-            $cRow = $table.row($tr),
+            dtRow = dt.row($tr),
             template = _.template($('#contributor-template').html()),
-            cId = $tr.data('contribution-id'),
+            contributionId = $tr.data('contribution-id'),
             contribution = app.contributions.find(function (c) {
-              return c.id === cId;
+              return c.id === contributionId;
             });
 
-        if ($cRow.child.isShown()) {
-          $cRow.child.hide();
+        if (dtRow.child.isShown()) {
+          dtRow.child.hide();
           $tr.children().last().css('color', '#666');
           $tr.find('td.contributor-name > span').removeClass('shown');
           $tr.removeClass('shown active');
         }
         else {
-          $cRow.child( template({ contribution: contribution }) ).show();
+          dtRow.child( template({ contribution: contribution }) ).show();
           $tr.children().last().css('color', 'white');
           $tr.find('td.contributor-name > span').addClass('shown');
           if (contribution.contributor.linkedin_url) {
@@ -191,32 +211,23 @@ function crowdsourceListeners () {
 
     .on('click', 'td.success-details',
       function () {
-        var $table = $(this).closest('table').DataTable(),
+        var dt = $(this).closest('table').DataTable(),
             $tr = $(this).closest('tr'),
-            $sRow = $table.row($tr),
-            template = _.template($('#success-template').html()),
-            sId = $tr.data('success-id');
+            dtRow = dt.row($tr),
+            template = _.template($('#success-template').html());
 
-        if ($sRow.child.isShown()) {
-          $sRow.child.hide();
+        if (dtRow.child.isShown()) {
+          dtRow.child.hide();
           $tr.children().last().css('color', '#666');
           $tr.removeClass('shown active');
         }
         else {
-          $sRow.child( template({}) ).show();
+          dtRow.child( template({}) ).show();
           $tr.children().last().css('color', 'white');
           $tr.addClass('shown active');
         }
         $(this).children().toggle();  // toggle caret icons
       })
-
-    // .on('click', 'td.contributor-name i',
-    //   function () {
-    //     $(this).closest('tr').next().find('form input').each(
-    //       function () {
-    //         $(this).prop('readonly', false);
-    //       });
-    //   })
 
     .on('shown.bs.dropdown', '.actions-dropdown',
       function () {
