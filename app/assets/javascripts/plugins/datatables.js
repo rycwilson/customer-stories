@@ -30,9 +30,9 @@ function initDataTables () {
       { visible: false, targets: [ successesCustomerIndex, curatorIndex ] },
       { orderable: false, targets: [ 0, successesColCount - 1 ] },
       { width: '5%', targets: 0 },
-      { width: '55%', targets: 1 },
+      { width: '50%', targets: 1 },
       { width: '0%', targets: 2 },  // customer
-      { width: '30%', targets: 3 },
+      { width: '35%', targets: 3 },
       { width: '0%', targets: 4 },  // curator
       { width: '10%', targets: 5 }
     ],

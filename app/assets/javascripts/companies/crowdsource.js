@@ -20,17 +20,16 @@ function crowdsourceListeners () {
 
         if ($(this).next().find('#select2-successes-filter-results').length) {
           $table = $('#successes-table');
-          searchCols = [1,2,4];
         } else if ($(this).next().find('#select2-contributors-filter-results').length) {
           $table = $('#contributors-table');
-          searchCols = [1,2,4,5];
         }
         curatorCol = $table.data('curator-col');
         curatorId = $table.closest('[id*="table_wrapper"]').find('.curator-select').val();
-        console.log(curatorCol, curatorId, searchCols, $input.val())
         $table.DataTable()
-              .column(curatorCol).search(curatorId)
-              .columns(searchCols).search($input.val()).draw();
+              .search('')
+              .columns().search('')
+              .columns(curatorCol).search(curatorId === '0' ? '' : curatorId)
+              .columns(1,2,4,5).search($input.val()).draw();
       })
 
     .on('change', '.curator-select, #successes-filter, #contributors-filter',
@@ -48,16 +47,19 @@ function crowdsourceListeners () {
 
         if ($(this).hasClass('curator-select')) {
           // only include options for items owned by the curator
-          var successes = app.company.successes.filter(function (success) {
-                            return (success.curator_id == curatorId) || curatorId === '0';
+          var successes = curatorId === '0' ? app.company.successes :
+                          app.company.successes.filter(function (success) {
+                            return (success.curator_id == curatorId);
                           }),
-              customers = app.company.customers.filter(function (customer) {
+              customers = curatorId === '0' ? app.company.customers :
+                          app.company.customers.filter(function (customer) {
                             return successes.some(function (success) {
                               return success.customer_id === customer.id;
                             });
                           }),
               $customersOptgroup = $filter.find('optgroup[label="Customer"]'),
               $successesOptgroup = $filter.find('optgroup[label="Story Candidate"]');
+
           // remove and replace optgroups in this table's filter>
           $customersOptgroup.empty();
           _.each(customers, function (customer) {

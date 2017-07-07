@@ -7,7 +7,8 @@
   <thead>
     <tr>
       <th class='contributor-details'>
-        <i class='fa fa-plus-square fa-2x' aria-hidden='true' style='color:#6685a4'></i>
+        <!-- padding ensures a min width; spec'ed in dt init but may fall short -->
+        <i class='fa fa-user' style='color:#666; padding: 0 6px'></i>
       </th>
       <th>Contributor</th>
       <th>Story Candidate</th>
@@ -47,7 +48,7 @@
         <!-- curator hidden -->
         <td data-search="<%= contribution.success.curator.id %>"></td>
         <!-- customer hidden -->
-        <td data-search="c<%= contribution.customer.id %>, <%= contribution.customer.name %>"><%= contribution.customer.name %></td>
+        <td data-search="c<%= contribution.customer.id %>"><%= contribution.customer.name %></td>
 
         <td class='contribution-status'>
           <%= render 'companies/crowdsource/contributors_status',
