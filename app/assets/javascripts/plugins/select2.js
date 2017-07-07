@@ -76,8 +76,8 @@ function initSelect2 () {
 
       $(".new-story-customer").select2({  // single select
         theme: "bootstrap",
-        tags: true,  // to allow new company creation
-        placeholder: 'select or add a new customer',
+        tags: true,  // to allow new customer creation
+        placeholder: 'select or create a new customer',
         // allowClear: true
       });
     }
@@ -113,6 +113,12 @@ function initSelect2 () {
       width: 'style'
     });
 
+  $(".new-success-customer").select2({
+      theme: "bootstrap",
+      tags: true,  // to allow new customer creation
+      placeholder: 'select or create a new customer',
+      // allowClear: true
+    });
 }
 
 function select2Listeners () {

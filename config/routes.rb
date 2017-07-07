@@ -40,6 +40,8 @@ Rails.application.routes.draw do
     # Company home / Story curation - authentication required
     authenticate :user do
       resources :companies, only: [:show, :edit, :update] do
+        resources :customers, only: [:create, :update, :destroy], shallow: true
+        resources :successes, only: [:create, :update, :destroy], shallow: true
         resources :stories, only: [:create]
         resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
         member { put :tags }

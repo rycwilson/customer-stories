@@ -4,11 +4,13 @@
   <div class='row successes-header'>
 
     <div class='col-sm-6'>
+      <button type='button' style='margin:0 10px;height:32px' class='btn btn-secondary btn-sm' data-toggle='modal' data-target='#new-success-modal'><i class='glyphicon glyphicon-plus-sign' style='font-size:15px;top:2px'></i>&nbsp;&nbsp;&nbsp;New Candidate&nbsp;</button>
+      <button type='button' style='margin:0 10px;height:32px' class='btn btn-secondary btn-sm'><i class='glyphicon glyphicon-import' style='font-size:15px;top:2px'></i>&nbsp&nbsp;&nbsp;Import Candidates&nbsp;</button>
     </div>
 
     <div class='col-sm-6 text-right'>
       <label>Curator&nbsp;</label>
-      <select class='curator-select form-control text-left' style="width:{{= selectWidth.toString() + 'px' }};">
+      <select class='curator-select form-control input-sm text-left' style="width:{{= selectWidth.toString() + 'px' }};">
 
         <option value='0' selected>All Curators<option>
 
@@ -27,9 +29,9 @@
 
     <div class='col-sm-6'>
 
-      <label for="toggle-group-by-customer">
+      <label style='padding-left:10px;margin:0' for="toggle-group-by-customer">
         <input type="checkbox" id="toggle-group-by-customer" checked>
-        <span>&nbsp;&nbsp;Group Candidates by Customer</span>
+        <span>&nbsp;&nbsp;Group by Customer</span>
       </label>
 
     </div>

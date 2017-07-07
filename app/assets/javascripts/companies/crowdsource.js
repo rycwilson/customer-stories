@@ -155,7 +155,7 @@ function crowdsourceListeners () {
     .on('click', '#successes-table tr.group',
       function () {
         var dt = $('#successes-table').DataTable(),
-            currentOrder = $successes.order()[0];
+            currentOrder = dt.order()[0];
         if (currentOrder[0] === 1 && currentOrder[1] === 'asc') {
           dt.order([ 1, 'desc' ]).draw();
         }
@@ -216,7 +216,7 @@ function crowdsourceListeners () {
         var dt = $(this).closest('table').DataTable(),
             $tr = $(this).closest('tr'),
             dtRow = dt.row($tr),
-            template = _.template($('#success-template').html());
+            template = _.template($('#success-details-template').html());
 
         if (dtRow.child.isShown()) {
           dtRow.child.hide();
