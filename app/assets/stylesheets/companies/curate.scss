@@ -1,12 +1,22 @@
 
 #curate-panel {
 
-  .container {
-    margin-top: -10px;
-    .table-responsive {
-      margin-top: -15px;
-      overflow-x: hidden;
+  #curate-filters {
+    display: flex;
+    align-items: center;
+    form {
+      width: 100%;
+      .form-group {
+        margin-bottom: 15px;
+      }
+      .form-group:nth-of-type(3) {
+        margin-bottom: 20px;
+      }
     }
+  }
+
+  #curate-gallery {
+
   }
 
 }

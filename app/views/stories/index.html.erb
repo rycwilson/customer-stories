@@ -12,9 +12,10 @@
   <% end %>
 <% end %>
 
-<!-- underscore templates -->
-<%= render 'stories/shared/stories_index_template', { company: @company } %>
-<%= render 'stories/shared/csp_linkedin_widget_template' %>
+<% content_for(:underscore_templates) do %>
+  <%= render 'stories/shared/stories_index_template', { company: @company } %>
+  <%= render 'stories/shared/csp_linkedin_widget_template' %>
+<% end %>
 
 <!--  -->
 

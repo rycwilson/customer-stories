@@ -1,0 +1,31 @@
+
+<% content_for :underscore_templates do %>
+  <%= render 'stories/shared/stories_index_template', { company: company } %>
+  <%#= render 'companies/curate/curator_story_tile_template',
+        { company: company } %>
+<% end %>
+
+
+<div id='curate-panel' role='tabpanel' class="<%= workflow_tab == 'curate' ? 'active tab-pane fade in content' : 'tab-pane fade content' %>">
+  <div class="content clip">
+    <div class='container'>
+      <div class="layout">
+
+        <div class="col-md-3 col-sm-4 layout-sidebar">
+
+          <%= render 'companies/curate/filters', { company: company } %>
+
+        </div>
+
+        <div class="col-md-9 col-sm-8 layout-main">
+
+          <ul id="curate-gallery" class='grid list-unstyled text-center'>
+          </ul>
+
+        </div>
+
+      </div>
+    </div>  <!-- container -->
+  </div>
+</div>
+

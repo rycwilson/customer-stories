@@ -1,12 +1,79 @@
 
+// table also appears in curate section
+[id*="-contributors-table"] {
+  th.contributor-details, td.contributor-details {
+    // padding necessary to override datatables css that adds padding-right: 30px to the th,
+    // thus preventing text from centering horizontally
+    padding: 8px;
+    vertical-align: middle;
+    text-align: center;
+    cursor: pointer;
+  }
+  // contributor details child row
+  tr[data-contribution-id] + tr:not([data-contribution-id]):not(.group) {
+    background-color: #f5f5f5;
+    > td {
+      padding: 20px 8px;
+    }
+  }
+  td.contributor-name {
+    overflow: hidden;
+    > span {
+      margin-left: -32px;
+      i {
+        padding: 0 10px 0 6px;
+        // cursor: pointer;
+      }
+    }
+    span.shown {
+      margin-left: 0;
+    }
+  }
+
+  div.contributor-details {
+    // horizontal form
+    #contributor-form {
+      > .row > div:last-child {
+        padding-left: 0;
+      }
+      .form-group {
+        width: 100%;
+        margin-bottom: 15px;
+        label {
+          width: 22%;
+          padding: 7px 0 0 0;
+        }
+        > div:last-child:not(.linkedin-checkbox-container) {  // inputs
+          width: 78%;
+        }
+        .form-control {
+          font-size: 13px;
+        }
+        input:not([type='checkbox']) {
+          width: 100%;
+        }
+      }
+      .linkedin-checkbox-container {
+        width: 100%;
+        label {
+          width: 100%;
+          padding-left: 36px;
+        }
+      }
+      > .row:last-child {
+        > div:only-child {
+          padding-right: 20px;
+        }
+      }
+
+    }
+  }
+}
+
 #new-success-modal {
   .form-group {
     margin-bottom: 15px;  // bootstrap over mvp
   }
-}
-
-div[id*="table_wrapper"] {
-  margin-top: 8px;
 }
 
 #successes-filter, #contributors-filter, .curator-select {
@@ -29,26 +96,11 @@ div[id*="table_wrapper"] {
   margin-bottom: 5px;
 }
 
-div[id*="table_filter"] {
-  // position: relative;
-  // input[type='search'] {
-  //   width: 220px;
-  //   // padding-right: 30px;  // leaves space for X
-  // }
-  // .clear-search {
-  //   position: absolute;
-  //   right: 1px;
-  //   top: 1px;
-  //   bottom: 0;
-  //   height: 14px;
-  //   margin: 9px 7px;
-  //   font-size: 14px;
-  //   cursor: pointer;
-  //   color: #aaa;
-  // }
-}
-
 #crowdsource-panel {
+
+  div[id*="table_wrapper"] {
+    margin-top: 8px;
+  }
 
   tr.group,
   tr.group:hover {
@@ -86,38 +138,38 @@ div[id*="table_filter"] {
     }
   }
 
-  #customers-table {
-    td {
-      vertical-align: middle;
-    }
-    td.customer-logo {
-      text-align: center;
-      padding: 8px 14px;
-      .fileinput {
-        margin: 0;
-        .thumbnail {
-          height: 80px;
-          width: 153px;
-          cursor: pointer;
-          margin: 0;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          // backup image
-          // ref: http://stackoverflow.com/questions/980855
-          img:before {
-            content: ' ';
-            display: block;
-            position: absolute;
-            height: 70px;
-            width: 143px;
-            background-image: url("<%= ADWORDS_LOGO_PLACEHOLDER_URL %>");
-            background-size: contain;
-          }
-        }
-      }
-    }
-  }
+  // #customers-table {
+  //   td {
+  //     vertical-align: middle;
+  //   }
+  //   td.customer-logo {
+  //     text-align: center;
+  //     padding: 8px 14px;
+  //     .fileinput {
+  //       margin: 0;
+  //       .thumbnail {
+  //         height: 80px;
+  //         width: 153px;
+  //         cursor: pointer;
+  //         margin: 0;
+  //         display: flex;
+  //         align-items: center;
+  //         justify-content: center;
+  //         // backup image
+  //         // ref: http://stackoverflow.com/questions/980855
+  //         img:before {
+  //           content: ' ';
+  //           display: block;
+  //           position: absolute;
+  //           height: 70px;
+  //           width: 143px;
+  //           background-image: url("<%= ADWORDS_LOGO_PLACEHOLDER_URL %>");
+  //           background-size: contain;
+  //         }
+  //       }
+  //     }
+  //   }
+  // }
 
   #successes-table {
     th.success-details, td.success-details {
@@ -136,74 +188,5 @@ div[id*="table_filter"] {
     }
   }
 
-  #contributors-table {
-    th.contributor-details, td.contributor-details {
-      // padding necessary to override datatables css that adds padding-right: 30px to the th,
-      // thus preventing text from centering horizontally
-      padding: 8px;
-      vertical-align: middle;
-      text-align: center;
-      cursor: pointer;
-    }
-    // contributor details child row
-    tr[data-contribution-id] + tr:not([data-contribution-id]):not(.group) {
-      background-color: #f5f5f5;
-      > td {
-        padding: 20px 8px;
-      }
-    }
-    td.contributor-name {
-      overflow: hidden;
-      > span {
-        margin-left: -32px;
-        i {
-          padding: 0 10px 0 6px;
-          // cursor: pointer;
-        }
-      }
-      span.shown {
-        margin-left: 0;
-      }
-    }
-
-    div.contributor-details {
-      // horizontal form
-      #contributor-form {
-        > .row > div:last-child {
-          padding-left: 0;
-        }
-        .form-group {
-          width: 100%;
-          margin-bottom: 15px;
-          label {
-            width: 22%;
-            padding: 7px 0 0 0;
-          }
-          > div:last-child:not(.linkedin-checkbox-container) {  // inputs
-            width: 78%;
-          }
-          .form-control {
-            font-size: 13px;
-          }
-          input:not([type='checkbox']) {
-            width: 100%;
-          }
-        }
-        .linkedin-checkbox-container {
-          width: 100%;
-          label {
-            width: 100%;
-            padding-left: 36px;
-          }
-        }
-        > .row:last-child {
-          > div:only-child {
-            padding-right: 20px;
-          }
-        }
-
-      }
-    }
-  }
 
 }

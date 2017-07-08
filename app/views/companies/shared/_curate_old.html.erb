@@ -1,6 +1,4 @@
 
-<%= render 'companies/shared/new_story_modal', { company: @company } %>
-
 <!-- curate -->
 <div id='curate-panel'
      class="<%= workflow_tab == 'curate' ? 'active tab-pane fade in content' : 'tab-pane fade content' %>" role='tabpanel'>
@@ -25,9 +23,8 @@
 
     <div class="row">
       <div class='col-sm-12'>
-        <div class='portlet portlet-default'>
-          <div class='portlet-body'>
-            <div class='table-responsive'>
+
+        <div class='table-responsive'>
 
   <% cache("#{company.subdomain}/curate-table", skip_digest: true) do %>
     <table id='curate-table' class="datatable table table-striped table-bordered"
@@ -98,8 +95,6 @@
   <% end %>
 
             </div>  <!-- table-responsive -->
-          </div>  <!-- portlet-body -->
-        </div>  <!-- portlet -->
       </div>
     </div>  <!-- row -->
   </div>  <!-- container -->

@@ -1,0 +1,53 @@
+
+<div id='curate-filters'>
+
+  <form >
+
+    <div class="form-group">
+      <label for="">Curator</label>
+      <%= select_tag('curator_select',
+            options_for_select(company.curators.map() { |c| [c.full_name, c.id] }),
+            { class: 'curate curator-select form-control', style: 'width:100%' }
+          ) %>
+    </div>
+
+    <div class="form-group">
+      <label for="">Story Category</label>
+      <%= select_tag('category_select',
+            options_for_select(company.story_categories.select_options),
+            { class: 'curate category-select form-control', style: 'width:100%' }
+          ) %>
+    </div>
+
+    <div class="form-group">
+      <label for="">Product</label>
+      <%= select_tag('product_select',
+            options_for_select(company.products.select_options),
+            { class: 'curate product-select form-control', style: 'width:100%' }
+          ) %>
+    </div>
+
+    <div class="form-group">
+      <div>
+        <label for="filter-published">
+          <input id='filter-published' type="checkbox" checked>&nbsp;
+          Published
+        </label>
+      </div>
+        <label for="filter-logo-published">
+          <input id='filter-logo-published' type="checkbox" checked>&nbsp;
+          Logo published
+        </label>
+      <div>
+      </div>
+      <div>
+        <label for="filter-pending">
+          <input id='filter-pending' type="checkbox" checked>&nbsp;
+          Pending curation
+        </label>
+      </div>
+    </div>
+
+  </form>
+
+</div>

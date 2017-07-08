@@ -5,6 +5,9 @@
   <meta name="turbolinks-cache-control" content="no-preview">
 <% end %>
 
+<%= render 'companies/shared/new_story_modal', { company: @company } %>
+<%= render 'contributions/shared/new_contributor_modal' %>
+
 <div id='wrapper'>
 
   <%= render 'shared/company_navbar',
@@ -12,18 +15,18 @@
 
   <div class='tab-content'>
 
-    <%= render 'companies/shared/crowdsource',
+    <%= render 'companies/crowdsource/crowdsource',
                { company: @company, workflow_tab: @workflow_tab,
                  workflow_sub_tab: @workflow_sub_tab } %>
 
-    <%= render 'companies/shared/curate',
-               { company: @company, workflow_tab: @workflow_tab } %>
+    <%= render 'companies/curate/curate', { company: @company,
+          workflow_tab: @workflow_tab, workflow_sub_tab: @workflow_sub_tab } %>
 
-    <%= render 'companies/shared/promote',
+    <%= render 'companies/promote/promote',
                { company: @company, workflow_tab: @workflow_tab,
                  workflow_sub_tab: @workflow_sub_tab } %>
 
-    <%= render 'companies/shared/measure',
+    <%= render 'companies/measure/measure',
                 { company: @company, workflow_tab: @workflow_tab,
                   recent_activity: @recent_activity,
                   story_views_30_day_count: @story_views_30_day_count } %>

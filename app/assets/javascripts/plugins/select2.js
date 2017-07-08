@@ -14,7 +14,7 @@ function initSelect2 () {
 // ref: http://stackoverflow.com/questions/36497723
 // console.log('uninitialized s2: ', $(document).find('select.stories-filter').not('.select2-hidden-accessible'));
 
-  $('.stories-filter').select2({
+  $('.curator-select, .category-select, .product-select').select2({
     theme: 'bootstrap',
     width: 'style'
   });
@@ -119,6 +119,7 @@ function initSelect2 () {
       placeholder: 'select or create a new customer',
       // allowClear: true
     });
+
 }
 
 function select2Listeners () {

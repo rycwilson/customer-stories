@@ -1,20 +1,13 @@
 
-function crowdsource() {
-  // pre-selected curators
-  $('.curator-select').each(function () {
-    $(this).val(
-      $(this).children('[value="' + app.current_user.id.toString() + '"]').val()
-    ).trigger('change', { auto: true });
-  });
+function crowdsource() {}
 
-}
-
+// lots of this will also apply to curate contributors
 function crowdsourceListeners () {
 
   $(document)
 
     .on('keyup', '.select2-search',
-      function () {
+      function (e) {
         var $table, searchCols, curatorCol, curatorId,
             $input = $(this).find('input');
 
@@ -22,9 +15,11 @@ function crowdsourceListeners () {
           $table = $('#successes-table');
         } else if ($(this).next().find('#select2-contributors-filter-results').length) {
           $table = $('#contributors-table');
+        } else {
+          e.preventDefault();
         }
         curatorCol = $table.data('curator-col');
-        curatorId = $table.closest('[id*="table_wrapper"]').find('.curator-select').val();
+        curatorId = $table.closest('[id*="table_wrapper"]').find('.crowdsource-curator-select').val();
         $table.DataTable()
               .search('')
               .columns().search('')
@@ -32,20 +27,19 @@ function crowdsourceListeners () {
               .columns(1,2,4,5).search($input.val()).draw();
       })
 
-    .on('change', '.curator-select, #successes-filter, #contributors-filter',
+    .on('change', '.crowdsource-curator-select, #successes-filter, #contributors-filter',
       function (e, data) {
         var $tableWrapper = $(this).closest('div[id*="table_wrapper"]'),
-            $table = $tableWrapper.find('table'),
-            dt = $table.DataTable(),
+            $table = $tableWrapper.find('table'), dt = $table.DataTable(),
             $filter = $tableWrapper.find('.dt-filter'),
-            curatorId = $tableWrapper.find('.curator-select').val(),
+            curatorId = $tableWrapper.find('.crowdsource-curator-select').val(),
             curatorCol = $table.data('curator-col'),
             filterData = $filter.select2('data'),
             filterVal = filterData[0].id,
             filterText = filterData[0].text,
             filterCol = $(filterData[0].element).data('col');
 
-        if ($(this).hasClass('curator-select')) {
+        if ($(this).hasClass('crowdsource-curator-select')) {
           // only include options for items owned by the curator
           var successes = curatorId === '0' ? app.company.successes :
                           app.company.successes.filter(function (success) {
@@ -81,7 +75,7 @@ function crowdsourceListeners () {
             .columns([curatorCol]).search(curatorId === '0' ? '' : curatorId).draw();
           // update the other curator select (only once)
           if (!(data && data.auto)) {
-            var $other = $('.curator-select').not($(this));
+            var $other = $('.crowdsource-curator-select').not($(this));
             $other.val($(this).val()).trigger('change', { auto: true });
           }
         }

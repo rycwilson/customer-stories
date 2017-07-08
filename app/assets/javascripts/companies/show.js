@@ -2,6 +2,7 @@
 function companiesShow () {
 
   crowdsource();
+  curate();
 
   // if this page was arrived at through history navigation,
   // make sure there aren't any active dropdowns
@@ -75,12 +76,20 @@ function companiesShow () {
       }
     });
 
+  // curator is signed in user
+  $('.curator-select').each(function () {
+    $(this).val(
+      $(this).children('[value="' + app.current_user.id.toString() + '"]').val()
+    ).trigger('change', { auto: true });
+  });
+
 }
 
 function companiesShowListeners () {
 
   newStoryModalListeners();
   crowdsourceListeners();
+  curateListeners();
   promoteListeners();
   measureCharts();
   measureStories();

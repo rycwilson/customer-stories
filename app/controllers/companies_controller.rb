@@ -11,13 +11,16 @@ class CompaniesController < ApplicationController
   end
 
   def show
-    @workflow_tab = cookies[:workflow_tab] || 'crowdsource'
+    @workflow_tab = cookies[:workflow_tab] || 'curate'
     @workflow_sub_tab = cookies[:workflow_sub_tab]
     cookies.delete(:workflow_tab) if cookies[:workflow_tab]
     cookies.delete(:workflow_sub_tab) if cookies[:workflow_sub_tab]
     @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
     @story_views_30_day_count = PageView.joins(:visitor_session)
                                  .company_story_views_since(@company.id, 30).count
+    story_ids = @company.all_stories
+    @stories = Story.find(story_ids)
+                    .sort_by { |story| story_ids.index(story.id) }
   end
 
   def edit

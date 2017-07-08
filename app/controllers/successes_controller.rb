@@ -4,7 +4,6 @@ class SuccessesController < ApplicationController
   before_action(except: [:create]) { @success = Success.find(params[:id]) }
 
   def create
-    binding.remote_pry
     @success = Success.create(success_params)
     # if @success.save
     # else

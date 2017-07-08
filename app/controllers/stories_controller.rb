@@ -84,14 +84,20 @@ class StoriesController < ApplicationController
   end
 
   def edit
-    @customer = @story.success.customer
-    @referrer_select = @story.success.contributions
-                             .map { |c| [ c.contributor.full_name, c.contributor.id ] }
-                             .unshift( [""] )
-    @results = @story.success.results
-    @prompts = @story.success.prompts
-    # this is needed for the Result delete button...
-    @base_url = request.base_url
+    if request.xhr?
+      render({
+        partial: 'new_edit', locals: { company: @company, story: @story }
+      })
+    else
+      @customer = @story.success.customer
+      @referrer_select = @story.success.contributions
+                               .map { |c| [ c.contributor.full_name, c.contributor.id ] }
+                               .unshift( [""] )
+      @results = @story.success.results
+      @prompts = @story.success.prompts
+      # this is needed for the Result delete button...
+      @base_url = request.base_url
+    end
   end
 
   # Notice how nested hash keys are treated as strings in the params hash

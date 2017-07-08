@@ -1,9 +1,5 @@
 
-<%#= render 'companies/shared/new_customer_modal', { company: @company } %>
-
-<%= render 'companies/crowdsource/new_success_modal',
-            { company: company } %>
-<%= render 'contributions/shared/new_contributor_modal' %>
+<%= render 'companies/crowdsource/new_success_modal', { company: company } %>
 
 <% content_for :underscore_templates do %>
   <%= render 'companies/crowdsource/success_details_template' %>
@@ -35,7 +31,7 @@
               </a>
             </li>
             <li class="<%= workflow_sub_tab == 'contributors' ? 'active' : '' %>">
-              <a href="#contributors-tab-pane" data-toggle="tab">
+              <a href="#crowdsource-contributors-tab-pane" data-toggle="tab">
                 <i class="fa fa-users"></i>
                 &nbsp;&nbsp;Success Contributors
               </a>
@@ -60,10 +56,10 @@
                           { company: company } %>
             </div>
 
-            <div id='contributors-tab-pane'
+            <div id='crowdsource-contributors-tab-pane'
                  class="tab-pane fade <%= workflow_sub_tab == 'contributors' ? 'in active' : '' %>">
               <%= render 'companies/crowdsource/contributors_table',
-                          { company: company } %>
+                      { company: company, workflow_state: 'crowdsource' } %>
             </div>
 
      <!--        <div id='customers-tab-pane'

@@ -39,11 +39,25 @@ Rails.application.routes.draw do
 
     # Company home / Story curation - authentication required
     authenticate :user do
+
       resources :companies, only: [:show, :edit, :update] do
         resources :customers, only: [:create, :update, :destroy], shallow: true
         resources :successes, only: [:create, :update, :destroy], shallow: true
+        resources :stories, only: [:edit, :update, :destroy], shallow: true do
+          resources :results, only: [:create, :update, :destroy]
+          member { put :ctas }
+          member { put :tags }
+          member { post '/promote', to: 'stories#promote' }
+          member { put '/promote', to: 'stories#promote' }
+          member { delete '/promote', to: 'stories#promote' }
+          member { post '/adwords', to: 'adwords#create_story_ads' }
+          member { put '/adwords', to: 'adwords#update_story_ads' }
+          member { delete '/adwords', to: 'adwords#remove_story_ads' }
+          member { get '/sponsored_story_preview', to: 'adwords#preview' }
+        end
         resources :stories, only: [:create]
         resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
+        # member { get '/curate/:story_id', to: 'stories#edit' }
         member { put :tags }
         member { put :widget }
         member { put :promote }
@@ -53,18 +67,18 @@ Rails.application.routes.draw do
         member { put '/adwords', to: 'adwords#update_company' }
         member { put '/adwords/sync', to: 'adwords#sync_company', as: 'adwords_sync' }
       end
-      resources :stories, only: [:edit, :update, :destroy] do
-        resources :results, only: [:create, :update, :destroy]
-        member { put :ctas }
-        member { put :tags }
-        member { post '/promote', to: 'stories#promote' }
-        member { put '/promote', to: 'stories#promote' }
-        member { delete '/promote', to: 'stories#promote' }
-        member { post '/adwords', to: 'adwords#create_story_ads' }
-        member { put '/adwords', to: 'adwords#update_story_ads' }
-        member { delete '/adwords', to: 'adwords#remove_story_ads' }
-        member { get '/sponsored_story_preview', to: 'adwords#preview' }
-      end
+      # resources :stories, only: [:edit, :update, :destroy] do
+      #   resources :results, only: [:create, :update, :destroy]
+      #   member { put :ctas }
+      #   member { put :tags }
+      #   member { post '/promote', to: 'stories#promote' }
+      #   member { put '/promote', to: 'stories#promote' }
+      #   member { delete '/promote', to: 'stories#promote' }
+      #   member { post '/adwords', to: 'adwords#create_story_ads' }
+      #   member { put '/adwords', to: 'adwords#update_story_ads' }
+      #   member { delete '/adwords', to: 'adwords#remove_story_ads' }
+      #   member { get '/sponsored_story_preview', to: 'adwords#preview' }
+      # end
 
       # contributions
       put '/contributions/:id', to: 'contributions#update'
