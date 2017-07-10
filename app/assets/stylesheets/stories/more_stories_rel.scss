@@ -30,6 +30,9 @@
       background: transparent;
       border-color: black;
     }
+    .cs-page-dot:hover {
+      cursor: pointer;
+    }
     .cs-page-dot:not(.cs-current-page-dot):hover {
       background: black;
       border-color: black;
