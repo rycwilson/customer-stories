@@ -75,6 +75,7 @@
   }
 
   .cs-thumbnail.logo-published {
+    pointer-events: none;
     .cs-thumbnail-view {
       height: 122px;
       line-height: 116px;
@@ -87,52 +88,63 @@
   .cs-thumbnail {
     width: 186px;  // 3/2 aspect ratio for the tile
     height: 100%;  // 124px column height
-    position: absolute;
+    position: absolute;  // center in the row-horizon column
     left: 0;
     right: 0;
     margin: 0 auto;
     background-color: white;
     padding: 0;
     text-align: center;
-    // border-color: rgba(0, 0, 0, 0.7);
+    border-color: #ddd;
     .cs-thumbnail-view {
       position: relative;
-      // display: inline-block;
       height: 100px;
       width: 100%;
       // overflow: hidden;
-      line-height: 96px;
+      line-height: 98px;
       cursor: pointer;
       .cs-thumbnail-view-hover {
         position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         z-index: 10;
-        display: block;
-        font-family: inherit !important;
-        font-size: 13px !important;
-        font-weight: normal;
-        letter-spacing: normal;
         height: 100px;
         width: 100%;
-        color: #444 !important;
-        font-weight: 600;
-        line-height: 18px !important;
-        text-align: left;
-        padding: 4px 8px;
-        // background: #ddd !important;  // so there isn't a dark strip on top of the story tile, changes on hover
+        padding: 0 6px;
+        background: transparent;
         border-radius: 3px 3px 0 0;
         -webkit-transform: translateY(-100%);
         -moz-transform: translateY(-100%);
         -ms-transform: translateY(-100%);
         -o-transform: translateY(-100%);
-        transition: all 0.2s ease-in-out;
+        transition: all 0.3s ease-in-out;
+        p {
+          color: #ccc;
+          font-family: inherit !important;
+          font-size: 13px;
+          line-height: 19px;
+          font-weight: 600;
+          letter-spacing: normal;
+          color: #444 !important;
+          margin-bottom: 0;
+        }
       }
       .cs-img {
-        mix-blend-mode: multiply; // this makes white background transparent
         display: inline-block;
         vertical-align: middle;
         max-height: 100%;
         max-width: 100%;
         padding: 8px;
+        opacity: 1;
+        transition: opacity 0.3s ease-in-out;
+        -moz-transition: opacity 0.3s ease-in-out;
+        -webkit-transition: opacity 0.3s ease-in-out;
+        // this compensates for a bug in chrome, which causes images of a
+        // certain aspect ratio to expand and contract very slightly on
+        // hover and opacity transition
+        // ref: https://stackoverflow.com/questions/20886991
+        -webkit-transform: translateZ(0);
       }
     }
     .cs-caption {
@@ -147,11 +159,13 @@
   }
   .cs-thumbnail:hover {
     .cs-thumbnail-view .cs-thumbnail-view-hover {
-      background: rgba(245, 245, 245, 0.94);
       -webkit-transform: translateY(0%);
       -moz-transform: translateY(0%);
       -ms-transform: translateY(0%);
       -o-transform: translateY(0%);
+    }
+    .cs-img.published {
+      opacity: 0.1;
     }
   }
 

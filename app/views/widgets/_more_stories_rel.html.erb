@@ -2,9 +2,6 @@
 <section class='cs-section' style='visibility:hidden'>
   <div class='cs-container-fluid'>
 
-    <div class='cs-row cs-pagination-row text-center'>
-    </div>
-
     <div class="cs-row">
 
       <div class="cs-scroll hidden-xs col-sm-1">
@@ -28,11 +25,11 @@
 
               <div class="cs-thumbnail-view">
                 <% if story[:published] %>
-                  <p class='cs-thumbnail-view-hover'>
-                    <%= story[:title] %>
-                  </p>
+                  <div class="cs-thumbnail-view-hover">
+                    <p><%= story[:title] %></p>
+                  </div>
                 <% end %>
-                <img class='cs-img' src="<%= story[:logo] %>" alt=''>
+                <img class="cs-img <%= story[:published] ? 'published' : '' %>" src="<%= story[:logo] %>" alt=''>
               </div>
 
               <% if story[:published] %>
@@ -56,6 +53,9 @@
         </div>
       </div>
 
+    </div>
+
+    <div class='cs-row cs-pagination-row text-center'>
     </div>
 
   </section>

@@ -89,8 +89,9 @@
       function () { $(this).css('border-color', '<%= @company.widget.tab_color %>'); },
       function () { $(this).css('border-color', '#ddd'); }
     );
+    // override bootstrap blue borders...
     $container.find('.cs-thumbnail.logo-published').hover(
-      function () { $(this).css('border-color', '#ccc'); },
+      function () { $(this).css('border-color', '#ddd'); },
       function () { $(this).css('border-color', '#ddd'); }
     );
     $container.find('section').css('visibility', 'visible');
