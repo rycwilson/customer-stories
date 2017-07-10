@@ -31,7 +31,7 @@
     }
   }
 
-  .cs-row {
+  .cs-row:not(.cs-pagination-row) {
     margin: 0;
     padding: 0;
   }
