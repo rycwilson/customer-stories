@@ -15,6 +15,7 @@
 
   .cs-pagination-row {
     height: 25px;
+    margin: 15px 0;
     padding: 0;
     .cs-page-dot {
       display: inline-block;
@@ -41,7 +42,6 @@
   }
 
   .row-horizon {
-    padding-bottom: 21px;
     div[class^='col'] {
       position: relative;
       width: 210px;
