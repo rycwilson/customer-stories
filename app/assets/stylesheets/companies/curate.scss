@@ -16,7 +16,13 @@
   }
 
   #curate-gallery {
-
+    li .thumbnail-view-hover i {
+      display: none;
+    }
+    li.selected {
+      .thumbnail-view-hover p { display: none; }
+      .thumbnail-view-hover i { display: block; }
+    }
   }
 
 }

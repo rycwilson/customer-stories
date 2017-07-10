@@ -10,6 +10,7 @@ function curateListeners () {
       function (e) {
         e.preventDefault();
         var $story = $(this).closest('li');
+        selectStory($story);
         $.ajax({
           url: '/stories/' + $story.data('story-id') + '/edit',
           method: 'get',
@@ -45,5 +46,21 @@ function initGallery () {
       isCurator: true,
     })
   );
+  $('#curate-gallery').children().hover(
+    function () {},
+    function () {
+      console.log('hover out');
+    }
+  );
 
+}
+
+// when a story is selected,
+// - disallow pointer events on other stories
+// - stay in persistent hover state
+function selectStory ($story) {
+  $story.addClass('selected');
+  $('#curate-gallery li').not($story).css('pointer-events', 'none');
+  $story.find('.thumbnail-view-hover').css('transform', 'none');
+  $story.find('img').css('opacity', '0.1');
 }

@@ -89,26 +89,22 @@
     text-align: center;  // centers image horizontally
     padding: 0;
     margin-bottom: 0;
+    border-color: #ddd;
     .thumbnail-view {
       position: relative;   // for thumbnail-view-hover
       height: 114px;
       line-height: 110px;
       width: 100%;
       cursor: pointer;
-      p.thumbnail-view-hover {
+      .thumbnail-view-hover {
         position: absolute;
         display: flex;
         align-items: center;
         justify-content: center;
         z-index: 10;
-        font-size: 14px;
-        font-weight: 600;
         height: 100%;
         width: 100%;
-        color: #222;
-        line-height: 22px;
-        margin-bottom: 0;
-        padding: 10px;
+        padding: 0 6px;
         background: transparent;
         border-radius: 3px 3px 0 0;
         -webkit-transform: translateY(-100%);
@@ -116,6 +112,16 @@
         -ms-transform: translateY(-100%);
         -o-transform: translateY(-100%);
         transition: all 0.3s ease-in-out;
+        p {
+          color: #ccc;
+          font-family: inherit !important;
+          font-size: 13px;
+          line-height: 19px;
+          font-weight: 600;
+          letter-spacing: normal;
+          color: #444 !important;
+          margin-bottom: 0;
+        }
       }
       img {
         display: inline-block;
