@@ -71,7 +71,7 @@ function initDataTables () {
         })
       );
 
-      var $curatorSelect = $tableWrapper.find('.crowdsource-curator-select');
+      var $curatorSelect = $tableWrapper.find('.curator-select');
       $curatorSelect.select2({
         theme: 'bootstrap',
         width: 'style',

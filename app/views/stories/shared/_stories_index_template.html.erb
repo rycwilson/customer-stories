@@ -5,6 +5,7 @@
 
   {{ stories.forEach(function (story) { }}
 
+    {{ console.log(story) }}
     <li class='grid-item' data-story-id="{{= story.id }}">
 
       <a href="{{= (story.published && story.csp_story_path) || (story.preview_published && 'javascript:;') || (isCurator && '/stories/' + story.id + '/edit') || 'javascript:;' }}"
@@ -19,7 +20,7 @@
          style="{{= !isCurator && !(story.published || story.preview_published) ? 'pointer-events:none' : ';' }}">
 
         <div class="thumbnail-view">
-          {{ if (story.published) { }}
+          {{ if (story.title) { }}
             <p class='thumbnail-view-hover'>{{= story.title }}</p>
           {{ } }}
           {{ if (story.success.customer.logo_url) { }}

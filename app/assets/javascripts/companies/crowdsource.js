@@ -27,7 +27,7 @@ function crowdsourceListeners () {
               .columns(1,2,4,5).search($input.val()).draw();
       })
 
-    .on('change', '.crowdsource-curator-select, #successes-filter, #contributors-filter',
+    .on('change', '.crowdsource.curator-select, #successes-filter, #contributors-filter',
       function (e, data) {
         var $tableWrapper = $(this).closest('div[id*="table_wrapper"]'),
             $table = $tableWrapper.find('table'), dt = $table.DataTable(),
@@ -39,7 +39,7 @@ function crowdsourceListeners () {
             filterText = filterData[0].text,
             filterCol = $(filterData[0].element).data('col');
 
-        if ($(this).hasClass('crowdsource-curator-select')) {
+        if ($(this).hasClass('.curator-select')) {
           // only include options for items owned by the curator
           var successes = curatorId === '0' ? app.company.successes :
                           app.company.successes.filter(function (success) {
@@ -75,7 +75,7 @@ function crowdsourceListeners () {
             .columns([curatorCol]).search(curatorId === '0' ? '' : curatorId).draw();
           // update the other curator select (only once)
           if (!(data && data.auto)) {
-            var $other = $('.crowdsource-curator-select').not($(this));
+            var $other = $('.crowdsource.curator-select').not($(this));
             $other.val($(this).val()).trigger('change', { auto: true });
           }
         }
