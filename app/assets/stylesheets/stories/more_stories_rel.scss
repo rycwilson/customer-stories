@@ -30,6 +30,10 @@
       background: transparent;
       border-color: black;
     }
+    .cs-page-dot:not(.cs-current-page-dot):hover {
+      background: black;
+      border-color: black;
+    }
   }
 
   .cs-row:not(.cs-pagination-row) {
