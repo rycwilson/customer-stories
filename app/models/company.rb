@@ -261,7 +261,7 @@ class Company < ActiveRecord::Base
           methods: [:csp_story_path, :published_contributors, :preview_contributor],
           include: {
             success: {
-              only: [],
+              only: [:curator_id],
               include: {
                 customer: { only: [:name, :logo_url] },
                 story_categories: { only: [:id, :name, :slug] },
