@@ -19,75 +19,7 @@ function initDataTables () {
     ],
   });
 
-  // curator index applies to both successes and contributors
-  var sCuratorIndex = 4, sCustomerIndex = 2, sColCount = 6;
-  $('#successes-table').DataTable({
-    paging: true,
-    pageLength: 100,
-    lengthChange: false,
-    order: [[ sCustomerIndex, 'asc' ]],
-    columnDefs: [
-      { visible: false, targets: [ sCustomerIndex, sCuratorIndex ] },
-      { orderable: false, targets: [ 0, sColCount - 1 ] },
-      { width: '5%', targets: 0 },
-      { width: '50%', targets: 1 },
-      { width: '0%', targets: 2 },  // customer
-      { width: '35%', targets: 3 },
-      { width: '0%', targets: 4 },  // curator
-      { width: '10%', targets: 5 }
-    ],
-    drawCallback: function (settings) {
-      var api = this.api();
-      var rows = api.rows( { page:'current' } ).nodes();
-      var last = null;
-      // row grouping
-      api.column(sCustomerIndex, { page: 'current' }).data().each(function (group, i) {
-        if (last !== group) {
-          // subtract hidden rows: customer, curator
-          $(rows).eq(i).before(
-            '<tr class="group" style="font-weight:600"><td colspan="' + (sColCount - 2).toString() + '">' + group + '</td></tr>'
-          );
-          last = group;
-        }
-      });
-    },
-    initComplete: function (settings, json) {
-      var $tableWrapper = $('#successes-table_wrapper'),
-          template = _.template( $('#successes-table-header-template').html() );
-
-      // remove default search field.  Disabling via options also disables api, so can't do that
-      $tableWrapper.children('.row:first-child').remove();
-
-      $tableWrapper.prepend(
-        template({
-          currentUser: app.current_user,
-          curators: app.company.curators,
-          curatorCol: $(this).data('curator-col'),
-          customers: app.company.customers,
-          customerCol: $(this).data('customer-col'),
-          successes: app.company.successes,
-          successCol: $(this).data('success-col'),
-          selectWidth: 250
-        })
-      );
-
-      var $curatorSelect = $tableWrapper.find('.curator-select');
-      $curatorSelect.select2({
-        theme: 'bootstrap',
-        width: 'style',
-        minimumResultsForSearch: -1   // hides text input
-      });
-      // select2 is inserting an empty <option> for some reason
-      $curatorSelect.children('option').not('[value]').remove();
-      $('#successes-filter').select2({
-        theme: 'bootstrap',
-        width: 'style'
-        // allowClear: true
-      });
-      $(this).css('visibility', 'visible');
-    }
-  });
-
+  initSuccessesTable();
   initContributorsTable('crowdsource');
 
   $('#curate-table').DataTable({
@@ -143,15 +75,85 @@ function initDataTables () {
 
 }
 
+function initSuccessesTable () {
+  var curatorIndex = 4, customerIndex = 2, colCount = 6;
+  $('#successes-table').DataTable({
+    paging: true,
+    pageLength: 100,
+    lengthChange: false,
+    order: [[ customerIndex, 'asc' ]],
+    columnDefs: [
+      { visible: false, targets: [ customerIndex, curatorIndex ] },
+      { orderable: false, targets: [ 0, colCount - 1 ] },
+      { width: '5%', targets: 0 },
+      { width: '50%', targets: 1 },
+      { width: '0%', targets: 2 },  // customer
+      { width: '35%', targets: 3 },
+      { width: '0%', targets: 4 },  // curator
+      { width: '10%', targets: 5 }
+    ],
+    drawCallback: function (settings) {
+      var api = this.api();
+      var rows = api.rows( { page:'current' } ).nodes();
+      var last = null;
+      // row grouping
+      api.column(customerIndex, { page: 'current' }).data().each(function (group, i) {
+        if (last !== group) {
+          // subtract hidden rows: customer, curator
+          $(rows).eq(i).before(
+            '<tr class="group" style="font-weight:600"><td colspan="' + (colCount - 2).toString() + '">' + group + '</td></tr>'
+          );
+          last = group;
+        }
+      });
+    },
+    initComplete: function (settings, json) {
+      var $tableWrapper = $('#successes-table_wrapper'),
+          template = _.template( $('#successes-table-header-template').html() );
+
+      // remove default search field.  Disabling via options also disables api, so can't do that
+      $tableWrapper.children('.row:first-child').remove();
+
+      $tableWrapper.prepend(
+        template({
+          currentUser: app.current_user,
+          curators: app.company.curators,
+          curatorCol: $(this).data('curator-col'),
+          customers: app.company.customers,
+          customerCol: $(this).data('customer-col'),
+          successes: app.company.successes,
+          successCol: $(this).data('success-col'),
+          selectWidth: 250
+        })
+      );
+
+      var $curatorSelect = $tableWrapper.find('.curator-select');
+      $curatorSelect.select2({
+        theme: 'bootstrap',
+        width: 'style',
+        minimumResultsForSearch: -1   // hides text input
+      });
+      // select2 is inserting an empty <option> for some reason
+      $curatorSelect.children('option').not('[value]').remove();
+      $('#successes-filter').select2({
+        theme: 'bootstrap',
+        width: 'style'
+        // allowClear: true
+      });
+      $(this).css('visibility', 'visible');
+    }
+  });
+}
+
 function initContributorsTable (workflowState) {
-  var cCuratorIndex = 4, cCustomerIndex = 5, cSuccessIndex = 2, cColCount = 8;
+  var curatorIndex = 4, customerIndex = 5, successIndex = 2, colCount = 8;
   $('[id="' + workflowState + '-contributors-table"]').DataTable({
     paging: false,
     autoWidth: false,
-    order: [[ cSuccessIndex, 'asc' ]],
+    order: [[ successIndex, 'asc' ]],
     columnDefs: [
-      { visible: false, targets: [ cSuccessIndex, cCuratorIndex, cCustomerIndex ] },
-      { orderable: false, targets: [ 0, cColCount - 1 ] },
+      { visible: false, targets: [ successIndex, curatorIndex, customerIndex ] },
+      { orderable: false, targets: [ 0, colCount - 1 ] },
       { width: '5%', targets: 0 },
       { width: '30%', targets: 1 },
       { width: '0%', targets: 2 },  // success
@@ -165,11 +167,11 @@ function initContributorsTable (workflowState) {
       var api = this.api();
       var rows = api.rows( { page:'current' } ).nodes();
       var last = null;
-      api.column(cSuccessIndex, { page: 'current' }).data().each(function (group, i) {
+      api.column(successIndex, { page: 'current' }).data().each(function (group, i) {
         if (last !== group) {
           // subtract hidden rows: success, curator, customer
           $(rows).eq(i).before(
-            '<tr class="group"><td colspan="' + (cColCount - 3).toString() + '">' + group + '</td></tr>'
+            '<tr class="group"><td colspan="' + (colCount - 3).toString() + '">' + group + '</td></tr>'
           );
           last = group;
         }

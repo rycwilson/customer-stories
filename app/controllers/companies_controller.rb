@@ -11,16 +11,33 @@ class CompaniesController < ApplicationController
   end
 
   def show
-    @workflow_tab = cookies[:workflow_tab] || 'curate'
-    @workflow_sub_tab = cookies[:workflow_sub_tab]
-    cookies.delete(:workflow_tab) if cookies[:workflow_tab]
-    cookies.delete(:workflow_sub_tab) if cookies[:workflow_sub_tab]
-    @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
-    @story_views_30_day_count = PageView.joins(:visitor_session)
-                                 .company_story_views_since(@company.id, 30).count
-    story_ids = @company.all_stories
-    @stories = Story.find(story_ids)
-                    .sort_by { |story| story_ids.index(story.id) }
+    if request.xhr?
+      case request.path
+      when /crowdsource-successes/
+        render({
+          partial: 'companies/crowdsource/successes_table', locals: { company: @company }
+        })
+      when /crowdsource-contributors/
+        render({
+          partial: 'companies/crowdsource/contributors_table',
+          locals: { company: @company, workflow_state: 'crowdsource' }
+        })
+      when /curate/
+      when /promote/
+      when /measure/
+      end
+    else
+      @workflow_tab = cookies[:workflow_tab] || 'curate'
+      @workflow_sub_tab = cookies[:workflow_sub_tab]
+      cookies.delete(:workflow_tab) if cookies[:workflow_tab]
+      cookies.delete(:workflow_sub_tab) if cookies[:workflow_sub_tab]
+      @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
+      @story_views_30_day_count = PageView.joins(:visitor_session)
+                                   .company_story_views_since(@company.id, 30).count
+      story_ids = @company.all_stories
+      @stories = Story.find(story_ids)
+                      .sort_by { |story| story_ids.index(story.id) }
+    end
   end
 
   def edit

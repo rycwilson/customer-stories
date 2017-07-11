@@ -57,7 +57,8 @@ Rails.application.routes.draw do
         end
         resources :stories, only: [:create]
         resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
-        # member { get '/curate/:story_id', to: 'stories#edit' }
+        member { get '/crowdsource-successes', to: 'companies#show' }
+        member { get '/crowdsource-contributors', to: 'companies#show' }
         member { put :tags }
         member { put :widget }
         member { put :promote }

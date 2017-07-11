@@ -1,10 +1,34 @@
 
-function crowdsource() {}
+function crowdsource () {}
 
 // lots of this will also apply to curate contributors
 function crowdsourceListeners () {
 
   $(document)
+
+    .on('click', 'a[href="#crowdsource-panel"]',
+      function () {
+        if ($('#successes-tab-pane').children().length === 0) {
+          $.get('/companies/' + app.company.id + '/crowdsource-successes',
+            function (html, status, xhr) {
+              $('#successes-tab-pane').append(html)
+                .fadeIn({ duration: 150, easing: 'linear' });
+              initSuccessesTable();
+              // now get the contributors table...
+              $.get('/companies/' + app.company.id + '/crowdsource-contributors',
+                function (html, status, xhr) {
+                  $('#crowdsource-contributors-tab-pane').append(html)
+                    .fadeIn({ duration: 150, easing: 'linear' });
+                  initContributorsTable('crowdsource');
+                  $('i.in-progress').toggle();
+                  $('#crowdsource-panel .layout-main').css({
+                    opacity: 1,
+                    'pointer-events': 'auto'
+                  });
+                });
+            });
+        }
+      })
 
     .on('keyup', '.select2-search',
       function (e) {

@@ -7,6 +7,12 @@ function curate () {
 function curateListeners () {
 
   $(document)
+
+    .on('click', '#curate-panel a.all-stories',
+      function () {
+        $(this).find('i.in-progress').toggle();
+      })
+
     .on('click', '#curate-gallery a.logo-published, #curate-gallery a.pending-curation',
       function (e) {
         e.preventDefault();
