@@ -1,7 +1,6 @@
 
 function curate () {
-
-
+  // don't need to call this here as the auto curator-select change event will trigger it
   // filterCurateGallery();
 }
 
@@ -56,18 +55,12 @@ function filterCurateGallery () {
       showPublished = $('.curate.published').prop('checked'),
       showLogoPublished = $('.curate.logo-published').prop('checked'),
       showPendingCuration = $('.curate.pending-curation').prop('checked');
-      console.log('curator: ', curatorId);
-      console.log('category: ', categoryId, typeof categoryId);
-      console.log('product: ', productId);
-      console.log('published: ', showPublished);
-      console.log('logo published: ', showLogoPublished);
-      console.log('pending curation: ', showPendingCuration);
 
   var curatorStoryIds = (curatorId === '0') ? _.pluck(app.stories, 'id') :
         _.pluck(app.stories.filter(function (story) {
                   return story.success.curator_id == curatorId;
         }), 'id');
-        console.log(curatorStoryIds)
+        // console.log(curatorStoryIds)
   var categoryStoryIds = (categoryId === '0') ? _.pluck(app.stories, 'id') :
         _.pluck(app.stories.filter(function (story) {
                   return story.success.story_categories &&
@@ -75,7 +68,7 @@ function filterCurateGallery () {
                        return category.id == categoryId;
                      });
         }), 'id');
-        console.log(categoryStoryIds)
+        // console.log(categoryStoryIds)
   var productStoryIds = (productId === '0') ? _.pluck(app.stories, 'id') :
         _.pluck(app.stories.filter(function (story) {
                   return story.success.products &&
@@ -83,7 +76,7 @@ function filterCurateGallery () {
                       return product.id == productId;
                     });
         }), 'id');
-        console.log(productStoryIds)
+        // console.log(productStoryIds)
   var publishedStoryIds =
         _.pluck(app.stories.filter(function (story) {
                   return story.published;
@@ -98,38 +91,20 @@ function filterCurateGallery () {
         _.pluck(app.stories.filter(function (story) {
                   return !story.published && !story.logo_published;
         }), 'id');
-// console.log(pendingStoryIds)
+      // console.log(pendingStoryIds)
 
   storyIds = _.intersection(curatorStoryIds, categoryStoryIds, productStoryIds);
-  console.log('after intersection: ', storyIds);
+  // console.log('after intersection: ', storyIds);
   storyIds = showPublished ? storyIds : _.difference(storyIds, publishedStoryIds);
-  console.log('after removing published (if necessary): ', storyIds)
+  // console.log('after removing published (if necessary): ', storyIds)
   storyIds = showLogoPublished ? storyIds : _.difference(storyIds, logoStoryIds);
-  console.log('after removing logo published (if necessary): ', storyIds)
+  // console.log('after removing logo published (if necessary): ', storyIds)
   storyIds = showPendingCuration ? storyIds : _.difference(storyIds, pendingStoryIds);
-  console.log('after removing pending (if necessary): ', storyIds)
+  // console.log('after removing pending (if necessary): ', storyIds)
   stories = app.stories.filter(function (story) {
               return storyIds.includes(story.id);
             });
-
-  // stories = app.stories.filter(function (story) {
-  //   return (
-  //     (curatorId === '0' ? true : story.success.curator_id == curatorId) &&
-  //     (categoryId === '0' ? true :
-  //       story.success.story_categories && story.success.story_categories.some(
-  //         function (category) { return category.id == categoryId; }
-  //       )) &&
-  //     (productId === '0' ? true :
-  //       story.success.products && story.success.products.some(
-  //         function (product) { return product.id == productId; }
-  //       )) &&
-  //     (isPublished ? story.published : !story.published) &&
-  //     (isLogoPublished ? story.logo_published : !story.logo_published) &&
-  //     (isPendingCuration ? story.pending_curation : !story.pending_curation)
-  //   );
-  // });
-
-  console.log('results: ', stories);
+  // console.log('results: ', stories);
 
   $gallery.empty()
     .append(
