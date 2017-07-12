@@ -206,35 +206,34 @@ function crowdsourceListeners () {
       })
 
     // contributors child rows
-    .on('click', '#contributors-table td.contributor-details',
-      function () {
-        var dt = $(this).closest('table').DataTable(),
-            $tr = $(this).closest('tr'),
-            dtRow = dt.row($tr),
-            template = _.template($('#contributor-template').html()),
-            contributionId = $tr.data('contribution-id'),
-            contribution = app.contributions.find(function (c) {
-              return c.id === contributionId;
-            });
+    .on('click', 'td.contributor-details', function () {
+      var dt = $(this).closest('table').DataTable(),
+          $tr = $(this).closest('tr'),
+          dtRow = dt.row($tr),
+          template = _.template($('#contributor-template').html()),
+          contributionId = $tr.data('contribution-id'),
+          contribution = app.contributions.find(function (c) {
+            return c.id === contributionId;
+          });
 
-        if (dtRow.child.isShown()) {
-          dtRow.child.hide();
-          $tr.children().last().css('color', '#666');
-          $tr.find('td.contributor-name > span').removeClass('shown');
-          $tr.removeClass('shown active');
+      if (dtRow.child.isShown()) {
+        dtRow.child.hide();
+        $tr.children().last().css('color', '#666');
+        $tr.find('td.contributor-name > span').removeClass('shown');
+        $tr.removeClass('shown active');
+      }
+      else {
+        dtRow.child( template({ contribution: contribution }) ).show();
+        $tr.children().last().css('color', 'white');
+        $tr.find('td.contributor-name > span').addClass('shown');
+        if (contribution.contributor.linkedin_url) {
+          loadCspOrPlaceholderWidget($tr.next(), contribution);
+          loadLinkedinWidget($tr.next(), contribution);
         }
-        else {
-          dtRow.child( template({ contribution: contribution }) ).show();
-          $tr.children().last().css('color', 'white');
-          $tr.find('td.contributor-name > span').addClass('shown');
-          if (contribution.contributor.linkedin_url) {
-            loadCspOrPlaceholderWidget($tr.next(), contribution);
-            loadLinkedinWidget($tr.next(), contribution);
-          }
-          $tr.addClass('shown active');
-        }
-        $(this).children().toggle();  // toggle caret icons
-      })
+        $tr.addClass('shown active');
+      }
+      $(this).children().toggle();  // toggle caret icons
+    })
 
     .on('click', 'td.success-details',
       function () {
