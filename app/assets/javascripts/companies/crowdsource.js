@@ -1,5 +1,7 @@
 
-function crowdsource () {}
+function crowdsource () {
+
+}
 
 // lots of this will also apply to curate contributors
 function crowdsourceListeners () {
@@ -9,7 +11,7 @@ function crowdsourceListeners () {
     .on('click', 'a[href="#crowdsource-panel"]',
       function () {
         if ($('#successes-tab-pane').children().length === 0) {
-          $.get('/companies/' + app.company.id + '/crowdsource-successes',
+          $.get('/companies/' + app.company.id + '/successes',
             function (html, status, xhr) {
               $('#successes-tab-pane').append(html)
                 .fadeIn({ duration: 150, easing: 'linear' });

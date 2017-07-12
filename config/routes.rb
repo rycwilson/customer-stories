@@ -57,8 +57,11 @@ Rails.application.routes.draw do
         end
         resources :stories, only: [:create]
         resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
-        member { get '/crowdsource-successes', to: 'companies#show' }
+        member { get '/successes', to: 'companies#show' }
         member { get '/crowdsource-contributors', to: 'companies#show' }
+        member { get '/sponsored-stories', to: 'companies#show' }
+        member { get '/promote-settings', to: 'companies#show' }
+
         member { put :tags }
         member { put :widget }
         member { put :promote }

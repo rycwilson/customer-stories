@@ -1,80 +1,15 @@
 
 function companiesShow () {
 
+  // TODO: need these?  they aren't doing anything
   crowdsource();
   curate();
+  promote();
 
   // if this page was arrived at through history navigation,
   // make sure there aren't any active dropdowns
   $('dropdown.company-settings').removeClass('active');
   $('dropdown.user-profile').removeClass('active');
-
-  $('.adwords-logo.image-requirements, .adwords-image.image-requirements')
-    .popover({
-      html: true,
-      container: 'body',
-      template: '<div class="popover" style="max-width:500px" role="tooltip"><div class="arrow"></div><h3 class="popover-title label-secondary"></h3><div class="popover-content"></div></div>',
-      content: function () {
-        return '<ul>' +
-                 '<li><strong>Minimum dimensions</strong>: ' + $(this).data('min') + ' pixels</li>' +
-                 '<li><strong>Greater than minimum dimensions</strong>: Within 1% of the ' + $(this).data('ratio') + ' ratio</li>' +
-                 '<li><strong>Suggested dimensions</strong>: ' + $(this).data('suggest') + ' pixels</li>' +
-                 '<li><strong>Maximum size</strong>: 1MB (1,048,576 bytes)</li>' +
-               '</ul>';
-      }
-    });
-
-  $('td .contribution, td .feedback')
-    .popover({
-      container: 'body',
-      template: '<div class="popover" style="max-width:360px" role="tooltip"><div class="arrow"></div><h3 class="popover-title label-secondary"></h3><div class="popover-content"></div></div>'
-    });
-
-  $('td.status-dropdown a.disabled').tooltip({
-    container: 'body'
-  });
-
-  $('#promote-settings-form').validator({
-    custom: {
-      'image-requirements': function ($fileInput) {
-        var $img = $fileInput.closest('.fileinput').find('.fileinput-exists img'),
-            minWidth = $fileInput.data('image-requirements').split('x')[0],
-            minHeight = $fileInput.data('image-requirements').split('x')[1],
-            width = $img[0].naturalWidth,
-            height = $img[0].naturalHeight,
-            type = minWidth / minHeight === 1 ? 'logo' : 'landscape',
-            ratio = width / height;
-
-        // TODO: check file size
-        // http://stackoverflow.com/questions/39488774
-
-        if (width < minWidth || height < minHeight) {
-          return "Image too small";
-        // ratio must be 1.91 +/- 1%
-        } else if ( type === 'landscape' && (ratio < 1.8909 || ratio > 1.929) ||
-                    type === 'logo' && (ratio < 0.99 || ratio > 1.01) ) {
-          return "Bad aspect ratio";
-        }
-      }
-    }
-  });
-
-  // validation won't be triggered unless input fields change
-  // -> trigger manually so can detect missing logo or image
-  $('#promote-settings-form').validator('validate');
-
-  // add a tooltip message to stories that don't have an image
-  $('#sponsored-stories-table').find('img[src=""]').each(
-    function () {
-      if ( $('#adwords-image-select-modal li').length === 0 ) {
-        $(this).closest('.fileinput')
-          .tooltip({
-            container: 'body',
-            placement: 'top',
-            title: 'To assign an image to this Sponsored Story, upload images under Settings'
-          });
-      }
-    });
 
   // curator is signed in user
   $('.curator-select').each(function () {

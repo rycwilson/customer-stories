@@ -13,7 +13,7 @@ class CompaniesController < ApplicationController
   def show
     if request.xhr?
       case request.path
-      when /crowdsource-successes/
+      when /successes/
         render({
           partial: 'companies/crowdsource/successes_table', locals: { company: @company }
         })
@@ -23,7 +23,14 @@ class CompaniesController < ApplicationController
           locals: { company: @company, workflow_state: 'crowdsource' }
         })
       when /curate/
-      when /promote/
+      when /sponsored-stories/
+        render({
+          partial: 'adwords/sponsored_stories', locals: { company: @company }
+        })
+      when /promote-settings/
+        render({
+          partial: 'adwords/promote_settings', locals: { company: @company }
+        })
       when /measure/
       end
     else

@@ -19,20 +19,14 @@ function initDataTables () {
     ],
   });
 
-  initSuccessesTable();
-  initContributorsTable('crowdsource');
+  // initSuccessesTable();
+  // initContributorsTable('crowdsource');
+  // initSponsoredStoriesTable();
 
   $('#curate-table').DataTable({
     paging: false
   });
 
-  $('#sponsored-stories-table').DataTable({
-    paging: false,
-    columnDefs: [{
-      orderable: false,
-      targets: [ 2, 4 ]
-    }]
-  });
 
   // Don't specify first column as type: 'date'
   // with moment.js install, doing so will only screw it up
@@ -215,5 +209,15 @@ function initContributorsTable (workflowState) {
       }
       $(this).css('visibility', 'visible');
     }
+  });
+}
+
+function initSponsoredStoriesTable () {
+  $('#sponsored-stories-table').DataTable({
+    paging: false,
+    columnDefs: [{
+      orderable: false,
+      targets: [ 2, 4 ]
+    }]
   });
 }
