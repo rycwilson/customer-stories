@@ -12,7 +12,7 @@ function promoteListeners () {
           $.get('/companies/' + app.company.id + '/sponsored-stories',
             function (html, status, xhr) {
               $('#sponsored-stories-tab-pane').append(html)
-                .fadeIn({ duration: 150, easing: 'linear' });
+                .fadeIn({ duration: 500, easing: 'linear' });
               initSponsoredStoriesTable();
               $('#loading-sponsored-stories').toggle();
               $.get('/companies/' + app.company.id + '/promote-settings',

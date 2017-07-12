@@ -452,7 +452,7 @@ class Story < ActiveRecord::Base
     end
   end
 
-  def expire_published_contributor_cache contributor_id
+  def expire_published_contributor_cache(contributor_id)
     company = self.success.customer.company
     Rails.cache.delete("#{company.subdomain}/story-#{self.id}-published-contributors")
     company.expire_all_stories_cache(true)  # json only

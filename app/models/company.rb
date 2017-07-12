@@ -414,6 +414,7 @@ class Company < ActiveRecord::Base
     self.expire_fragment("#{self.subdomain}/curate-table")
   end
 
+
   # invalidation of any story tile fragment will invalidate
   # - curator stories index (all stories)
   # - curator stories index (filters in which the tile appears)

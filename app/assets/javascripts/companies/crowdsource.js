@@ -13,14 +13,14 @@ function crowdsourceListeners () {
         if ($('#successes-tab-pane').children().length === 0) {
           $.get('/companies/' + app.company.id + '/successes',
             function (html, status, xhr) {
-              $('#successes-tab-pane').append(html)
-                .fadeIn({ duration: 150, easing: 'linear' });
+              $('#successes-tab-pane').append(html);
+                // .fadeIn({ duration: 150, easing: 'linear' });
               initSuccessesTable();
               // now get the contributors table...
               $.get('/companies/' + app.company.id + '/crowdsource-contributors',
                 function (html, status, xhr) {
                   $('#crowdsource-contributors-tab-pane').append(html)
-                    .fadeIn({ duration: 150, easing: 'linear' });
+                    .fadeIn({ duration: 300, easing: 'linear' });
                   initContributorsTable('crowdsource');
                   $('.crowdsource.curator-select').each(function () {
                     $(this).val(

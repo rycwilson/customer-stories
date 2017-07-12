@@ -23,11 +23,35 @@ class Success < ActiveRecord::Base
   has_many :ctas_successes, dependent: :destroy
   has_many :ctas, through: :ctas_successes, source: :call_to_action
 
+  after_commit(on: [:create, :destroy]) do
+    self.expire_table_fragment_cache()
+  end
+
+  after_commit(on: [:update]) do
+    changes = self.previous_changes
+    if (changes.keys & [:name, :description]).any?
+      self.expire_tr_fragment_cache()
+    end
+    if changes.key?(:name)
+      self.contributions.each() { |c| c.expire_tr_fragment cache() }
+    end
+  end
+
   def create_default_prompts
     self.prompts << Prompt.create(description: "What was the challenge?") <<
                     Prompt.create(description: "What was the solution?") <<
                     Prompt.create(description: "What was the measure of success achieved?")
   end
+
+  def expire_table_fragment_cache
+    self.expire_fragment("#{self.company.subdomain}/successes-table") if fragment_exist?("#{self.company.subdomain}/successes-table")
+  end
+
+  def expire_tr_fragment_cache
+    self.expire_fragment("#{self.company.subdomain}/successes/#{self.id}") if fragment_exist?("#{self.company.subdomain}/successes/#{self.id}")
+    self.expire_table_fragment_cache()
+  end
+
 
 end
 

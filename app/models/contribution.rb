@@ -42,21 +42,28 @@ class Contribution < ActiveRecord::Base
   validates :remind_1_wait, numericality: { only_integer: true }
   validates :remind_2_wait, numericality: { only_integer: true }
 
-  after_commit :expire_published_contributor_cache, on: :update, if:
-        Proc.new { |contribution|
-          contribution.previous_changes.key?('publish_contributor')
-        }
+  after_commit(on: [:create, :destroy]) do
+    self.expire_table_fragment_cache()
+  end
 
-  # when selecting or de-selecting a preview contributor,
-  # expire the story tile and index as a whole
-  after_commit on: :update do
-    self.company.expire_all_stories_cache(true)
-    self.story.expire_story_tile_fragment_cache
-    self.company.increment_curator_stories_index_fragments_memcache_iterator
-    self.company.increment_public_stories_index_fragments_memcache_iterator
-  end if Proc.new { |contribution|
-           ( story.previous_changes.keys & ['preview_contributor'] ).any?
-         }
+  after_commit(on: [:update]) do
+    if (self.previous_changes.keys &
+        ['status', 'contribution', 'feedback', 'notes', 'request_received_at',
+         'complete', 'publish_contributor', 'preview_contributor']).any?
+      expire_tr_fragment_cache()
+    end
+
+    expire_published_contributor_cache if self.previous_changes.key?('publish_contributor')
+
+    if self.previous_changes.key?('preview_contributor')
+      # when selecting or de-selecting a preview contributor,
+      # expire the story tile and index as a whole
+      self.company.expire_all_stories_cache(true)
+      self.story.expire_story_tile_fragment_cache
+      self.company.increment_curator_stories_index_fragments_memcache_iterator
+      self.company.increment_public_stories_index_fragments_memcache_iterator
+    end
+  end
 
   def display_status
     case self.status
@@ -190,6 +197,15 @@ class Contribution < ActiveRecord::Base
   def expire_published_contributor_cache
     story = self.success.story
     story.expire_published_contributor_cache(self.contributor.id)
+  end
+
+  def expire_table_fragment_cache
+    self.expire_fragment("#{self.company.subdomain}/contributions-table") if fragment_exists?("#{self.company.subdomain}/contributions-table")
+  end
+
+  def expire_tr_fragment_cache
+    self.expire_fragment("#{self.company.subdomain}/contributions/#{self.id}") if fragment_exists?("#{self.company.subdomain}/contributions/#{self.id}")
+    self.expire_table_fragment_cache()
   end
 
 end

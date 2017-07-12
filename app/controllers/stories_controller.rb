@@ -459,7 +459,7 @@ class StoriesController < ApplicationController
   # xx is the selected filter id (0 if none selected)
   # yy is the memcache iterator
   #
-  def stories_index_cache_key company, is_curator, filter_params
+  def stories_index_cache_key (company, is_curator, filter_params)
     if is_curator
       memcache_iterator = company.curator_stories_index_fragments_memcache_iterator
     else

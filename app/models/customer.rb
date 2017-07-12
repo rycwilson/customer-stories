@@ -4,6 +4,7 @@ class Customer < ActiveRecord::Base
 
   belongs_to :company
   has_many :successes, dependent: :destroy
+  has_many :contributions, through: :successes
   has_many :stories, through: :successes
 
   validates :name, presence: true
@@ -15,9 +16,11 @@ class Customer < ActiveRecord::Base
                :expire_all_stories_json_cache, on: :update,
         if: Proc.new { |customer| customer.previous_changes.key?(:logo_url) }
 
-  after_commit on: :update do  # also calls story.expire_all_stories_cache
+  after_commit(on: [:update]) do  # also calls story.expire_all_stories_cache
     expire_csp_story_path_cache
     self.company.expire_curate_table_fragment_cache
+    self.successes.each() { |s| s.expire_tr_fragment_cache() }
+    self.contributions.each() { |c| c.expire_tr_cache() }
   end if Proc.new { |customer| customer.previous_changes.key?(:name) }
 
   def should_generate_new_friendly_id?
