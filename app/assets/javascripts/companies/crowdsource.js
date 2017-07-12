@@ -22,7 +22,12 @@ function crowdsourceListeners () {
                   $('#crowdsource-contributors-tab-pane').append(html)
                     .fadeIn({ duration: 150, easing: 'linear' });
                   initContributorsTable('crowdsource');
-                  $('i.in-progress').toggle();
+                  $('.crowdsource.curator-select').each(function () {
+                    $(this).val(
+                      $(this).children('[value="' + app.current_user.id.toString() + '"]').val()
+                    ).trigger('change', { auto: true });
+                  });
+                  $('#loading-successes').toggle();
                   $('#crowdsource-panel .layout-main').css({
                     opacity: 1,
                     'pointer-events': 'auto'
@@ -58,7 +63,7 @@ function crowdsourceListeners () {
         var $tableWrapper = $(this).closest('div[id*="table_wrapper"]'),
             $table = $tableWrapper.find('table'), dt = $table.DataTable(),
             $filter = $tableWrapper.find('.dt-filter'),
-            curatorId = $tableWrapper.find('.crowdsource-curator-select').val(),
+            curatorId = $tableWrapper.find('.crowdsource.curator-select').val(),
             curatorCol = $table.data('curator-col'),
             filterData = $filter.select2('data'),
             filterVal = filterData[0].id,

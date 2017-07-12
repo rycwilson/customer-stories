@@ -14,7 +14,7 @@ function promoteListeners () {
               $('#sponsored-stories-tab-pane').append(html)
                 .fadeIn({ duration: 150, easing: 'linear' });
               initSponsoredStoriesTable();
-              $('a[href="#sponsored-stories-tab-pane"]').find('.in-progress').toggle();
+              $('#loading-sponsored-stories').toggle();
               $.get('/companies/' + app.company.id + '/promote-settings',
                 function (html, status, xhr) {
                   $('#promote-settings-tab-pane').append(html)

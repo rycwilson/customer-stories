@@ -10,14 +10,6 @@ function companiesShow () {
   // make sure there aren't any active dropdowns
   $('dropdown.company-settings').removeClass('active');
   $('dropdown.user-profile').removeClass('active');
-
-  // curator is signed in user
-  $('.curator-select').each(function () {
-    $(this).val(
-      $(this).children('[value="' + app.current_user.id.toString() + '"]').val()
-    ).trigger('change', { auto: true });
-  });
-
 }
 
 function companiesShowListeners () {

@@ -2,6 +2,13 @@
 function curate () {
   // don't need to call this here as the auto curator-select change event will trigger it
   // filterCurateGallery();
+
+  $('.curate.curator-select').each(function () {
+    $(this).val(
+      $(this).children('[value="' + app.current_user.id.toString() + '"]').val()
+    ).trigger('change', { auto: true });
+  });
+
 }
 
 function curateListeners () {
@@ -10,7 +17,7 @@ function curateListeners () {
 
     .on('click', '#curate-panel a.all-stories',
       function () {
-        $(this).find('i.in-progress').toggle();
+        $('#loading-stories').toggle();
       })
 
     .on('click', '#curate-gallery a.logo-published, #curate-gallery a.pending-curation',
