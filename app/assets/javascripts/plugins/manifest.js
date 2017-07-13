@@ -6,6 +6,7 @@
 //= require magnific-popup/dist/jquery.magnific-popup
 //= require datatables/media/js/jquery.dataTables
 //= require datatables-plugins/integration/bootstrap/3/dataTables.bootstrap
+//= require datatables-editor-trial/js/dataTables.editor
 
 //= require bootstrap-jasny/js/fileinput
 // require mvpready-core
@@ -55,7 +56,6 @@
 
 //= require bootstrap-validator/dist/validator
 
-//= require arrive/src/arrive
 
 
 

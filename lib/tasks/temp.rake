@@ -2,6 +2,13 @@ namespace :temp do
 
   desc "temp stuff"
 
+  task trunity_et_assign: :environment do
+    trunity = Company.find_by(subdomain:'trunity')
+    trunity.contributions.each() do |c|
+      c.update(email_template_id: rand(76..78))
+    end
+  end
+
   task success_names: :environment do
     Success.all.each() do |success|
       if success.story.present?

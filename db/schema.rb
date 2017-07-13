@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170707180128) do
+ActiveRecord::Schema.define(version: 20170712221424) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -157,8 +157,10 @@ ActiveRecord::Schema.define(version: 20170707180128) do
     t.boolean  "contributor_unpublished", default: false
     t.boolean  "preview_contributor",     default: false
     t.boolean  "complete",                default: false
+    t.integer  "email_template_id"
   end
 
+  add_index "contributions", ["email_template_id"], name: "index_contributions_on_email_template_id", using: :btree
   add_index "contributions", ["success_id"], name: "index_contributions_on_success_id", using: :btree
   add_index "contributions", ["user_id"], name: "index_contributions_on_user_id", using: :btree
 
@@ -460,6 +462,7 @@ ActiveRecord::Schema.define(version: 20170707180128) do
   add_foreign_key "adwords_campaigns", "companies"
   add_foreign_key "adwords_images", "companies"
   add_foreign_key "call_to_actions", "companies"
+  add_foreign_key "contributions", "email_templates"
   add_foreign_key "contributions", "successes"
   add_foreign_key "contributions", "users"
   add_foreign_key "ctas_successes", "call_to_actions"

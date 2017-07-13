@@ -1,6 +1,7 @@
 class EmailTemplate < ActiveRecord::Base
 
   belongs_to :company
+  has_many :contributions
   validates :subject, presence: true
   validates :body, presence: true
 

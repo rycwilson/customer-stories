@@ -20,18 +20,22 @@ function crowdsourceListeners () {
               $.get('/companies/' + app.company.id + '/crowdsource-contributors',
                 function (html, status, xhr) {
                   $('#crowdsource-contributors-tab-pane').append(html)
-                    .fadeIn({ duration: 300, easing: 'linear' });
-                  initContributorsTable('crowdsource');
-                  $('.crowdsource.curator-select').each(function () {
-                    $(this).val(
-                      $(this).children('[value="' + app.current_user.id.toString() + '"]').val()
-                    ).trigger('change', { auto: true });
-                  });
-                  $('#loading-successes').toggle();
-                  $('#crowdsource-panel .layout-main').css({
-                    opacity: 1,
-                    'pointer-events': 'auto'
-                  });
+                    .fadeIn({
+                      duration: 300, easing: 'linear',
+                      complete: function () {
+                        initContributorsTable('crowdsource');
+                        $('.crowdsource.curator-select').each(function () {
+                          $(this).val(
+                            $(this).children('[value="' + app.current_user.id.toString() + '"]').val()
+                          ).trigger('change', { auto: true });
+                        });
+                        $('#loading-successes').toggle();
+                        $('#crowdsource-panel .layout-main').css({
+                          opacity: 1,
+                          'pointer-events': 'auto'
+                        });
+                      }
+                    });
                 });
             });
         }
@@ -45,7 +49,7 @@ function crowdsourceListeners () {
         if ($(this).next().find('#select2-successes-filter-results').length) {
           $table = $('#successes-table');
         } else if ($(this).next().find('#select2-contributors-filter-results').length) {
-          $table = $('#contributors-table');
+          $table = $('#crowdsource-contributors-table');
         } else {
           e.preventDefault();
         }
@@ -70,7 +74,7 @@ function crowdsourceListeners () {
             filterText = filterData[0].text,
             filterCol = $(filterData[0].element).data('col');
 
-        if ($(this).hasClass('.curator-select')) {
+        if ($(this).hasClass('curator-select')) {
           // only include options for items owned by the curator
           var successes = curatorId === '0' ? app.company.successes :
                           app.company.successes.filter(function (success) {
@@ -106,6 +110,7 @@ function crowdsourceListeners () {
             .columns([curatorCol]).search(curatorId === '0' ? '' : curatorId).draw();
           // update the other curator select (only once)
           if (!(data && data.auto)) {
+            console.log('manual curator change -> change other curator')
             var $other = $('.crowdsource.curator-select').not($(this));
             $other.val($(this).val()).trigger('change', { auto: true });
           }
@@ -132,33 +137,15 @@ function crowdsourceListeners () {
         }
       })
 
-    // .on('select2:open', function (e) {
-    //   var $input = $('.select2-container--open input.select2-search__field');
-    //   if ($(e.target).attr('id') === 'successes-filter') {
-    //     console.log($(e.target).select2('data'))
-    //     // $input.on('keyup', { $table: $('#successes-table').DataTable(), $input: $input },
-    //     //   liveSearch
-    //     // );
-
-    //   } else if ($(e.target).attr('id') === 'contributors-filter') {
-    //     $input.on('keydown', { $table: $('#contributors-table').DataTable(), $input: $input },
-    //       liveSearch
-    //     );
-    //   }
-    // })
-    // .on('select2:close', function () {
-    //   $(document).off('input', liveSearch);
-    // })
-
     .on('click', '.success-actions-dropdown a.contributors',
       function (e) {
         // // if (no contributions) { e.preventDefault(); }
         var successId = $(this).closest('tr').data('success-id');
-        $('a[href="#contributors-tab-pane"]').tab('show');
+        $('a[href="#crowdsource-contributors-tab-pane"]').tab('show');
         $('#contributors-filter').val('s' + successId).trigger('change');
       })
 
-    .on('click', '#contributors-table a.success-name',
+    .on('click', '#crowdsource-contributors-table a.success-name',
       function (e) {
         var successId = $(this).closest('tr').next().data('success-id');
         $('a[href="#successes-tab-pane"]').tab('show');
@@ -170,7 +157,7 @@ function crowdsourceListeners () {
     .on('change', '#toggle-group-by-success, #toggle-group-by-customer',
       function () {
         if ($(this).attr('id') === 'toggle-group-by-success') {
-          toggleStriped($('#contributors-table'));
+          toggleStriped($('#crowdsource-contributors-table'));
         } else {
           toggleStriped($('#successes-table'));
         }
@@ -190,9 +177,9 @@ function crowdsourceListeners () {
       })
 
     // contributors - order by success
-    .on('click', '#contributors-table tr.group',
+    .on('click', '#crowdsource-contributors-table tr.group',
       function (e) {
-        var dt = $('#contributors-table').DataTable(),
+        var dt = $('#crowdsource-contributors-table').DataTable(),
             successIndex = 2,
             currentOrder = dt.order()[0];
         if (! $(e.target).is('a') ) {

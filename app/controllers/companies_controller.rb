@@ -20,7 +20,7 @@ class CompaniesController < ApplicationController
       when /crowdsource-contributors/
         render({
           partial: 'companies/crowdsource/contributors_table',
-          locals: { company: @company, workflow_state: 'crowdsource' }
+          locals: { company: @company, workflow_stage: 'crowdsource' }
         })
       when /curate/
       when /sponsored-stories/

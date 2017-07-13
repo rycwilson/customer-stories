@@ -59,7 +59,7 @@
       <div id='curate-contributors-tab-pane' class="tab-pane">
 
         <%= render 'companies/crowdsource/contributors_table',
-              { company: company, workflow_state: 'curate' } %>
+              { company: company, workflow_stage: 'curate' } %>
 
       </div>
 
@@ -67,6 +67,7 @@
   </div>
 </div>
 
+<!-- styling adjustments -->
 <%= javascript_tag do %>
 (function () {
 

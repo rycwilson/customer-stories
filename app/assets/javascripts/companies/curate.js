@@ -33,19 +33,12 @@ function curateListeners () {
             $('#curate-panel .container').children()
                 .fadeOut({ duration: 150, easing: 'linear',
                   complete: function () {
-                    $('#curate-panel .container').append(html)
+                    $('#curate-panel .container').empty()
+                      .append(html)
                       .fadeIn({ duration: 150, easing: 'linear' });
+                      initContributorsTable('curate');
                   }
               });
-            initContributorsTable('curate');
-            var $table = $('#curate-contributors-table'), dt = $table.DataTable(),
-                curatorCol = $table.data('curator-col'),
-                curatorId = app.current_user.id,
-                successCol = $table.data('success-col'),
-                successId = $('#story-settings-tab-pane').data('success-id');
-            dt.columns(curatorCol).search(curatorId)
-              .columns(successCol).search(successId)
-              .draw();
           }
         });
       })

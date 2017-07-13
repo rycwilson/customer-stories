@@ -3,6 +3,7 @@ class Contribution < ActiveRecord::Base
   belongs_to :contributor, class_name: 'User', foreign_key: 'user_id'
   belongs_to :referrer, class_name: 'User', foreign_key: 'referrer_id'
   belongs_to :success
+  belongs_to :email_template
   has_one :customer, through: :success
   has_one :company, through: :success
   has_one :story, through: :success
@@ -200,11 +201,11 @@ class Contribution < ActiveRecord::Base
   end
 
   def expire_table_fragment_cache
-    self.expire_fragment("#{self.company.subdomain}/contributions-table") if fragment_exists?("#{self.company.subdomain}/contributions-table")
+    self.expire_fragment("#{self.company.subdomain}/contributions-table") if fragment_exist?("#{self.company.subdomain}/contributions-table")
   end
 
   def expire_tr_fragment_cache
-    self.expire_fragment("#{self.company.subdomain}/contributions/#{self.id}") if fragment_exists?("#{self.company.subdomain}/contributions/#{self.id}")
+    self.expire_fragment("#{self.company.subdomain}/contributions/#{self.id}") if fragment_exist?("#{self.company.subdomain}/contributions/#{self.id}")
     self.expire_table_fragment_cache()
   end
 

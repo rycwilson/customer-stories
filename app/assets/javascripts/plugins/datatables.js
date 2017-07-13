@@ -102,7 +102,7 @@ function initSuccessesTable () {
       });
     },
     initComplete: function (settings, json) {
-      var $tableWrapper = $('#successes-table_wrapper'),
+      var $tableWrapper = $(this).closest('[id*="table_wrapper"]'),
           template = _.template( $('#successes-table-header-template').html() );
 
       // remove default search field.  Disabling via options also disables api, so can't do that
@@ -139,9 +139,24 @@ function initSuccessesTable () {
   });
 }
 
-function initContributorsTable (workflowState) {
+function initContributorsTable (workflowStage) {
   var curatorIndex = 4, customerIndex = 5, successIndex = 2, colCount = 8;
-  $('[id="' + workflowState + '-contributors-table"]').DataTable({
+  // var editor = new $.fn.dataTable.Editor({
+  //   table: '#' + workflowStage + '-contributors-table',
+  //   fields: [ { name: 'a' }, { name: 'b' }, { name: 'c' },
+  //     {
+  //       label: "Email template:",
+  //       name: "email_template",
+  //       type: 'select',
+  //       options: ['Choice 1', 'Choice 2', 'Choice 3']
+  //     },
+  //   { name: 'd' }, { name: 'e' }, { name: 'f' }, { name: 'g' }]
+
+  // });
+
+
+
+  $('[id="' + workflowStage + '-contributors-table"]').DataTable({
     paging: false,
     autoWidth: false,
     order: [[ successIndex, 'asc' ]],
@@ -157,19 +172,27 @@ function initContributorsTable (workflowState) {
       { width: '25%', targets: 6 },
       { width: '10%', targets: 7 }
     ],
+    // buttons: [
+    //     { extend: 'create', editor: editor },
+    //     { extend: 'edit',   editor: editor },
+    //     { extend: 'remove', editor: editor }
+    // ],
     drawCallback: function (settings) {
       var api = this.api();
       var rows = api.rows( { page:'current' } ).nodes();
       var last = null;
-      api.column(successIndex, { page: 'current' }).data().each(function (group, i) {
-        if (last !== group) {
-          // subtract hidden rows: success, curator, customer
-          $(rows).eq(i).before(
-            '<tr class="group"><td colspan="' + (colCount - 3).toString() + '">' + group + '</td></tr>'
-          );
-          last = group;
-        }
-      });
+
+      // if (workflowStage == 'crowdsource') {
+        api.column(successIndex, { page: 'current' }).data().each(function (group, i) {
+          if (last !== group) {
+            // subtract hidden rows: success, curator, customer
+            $(rows).eq(i).before(
+              '<tr class="group"><td colspan="' + (colCount - 3).toString() + '">' + group + '</td></tr>'
+            );
+            last = group;
+          }
+        });
+      // }
     },
     initComplete: function (settings, json) {
       var $tableWrapper = $(this).closest('[id*="table_wrapper"]'),
@@ -177,18 +200,14 @@ function initContributorsTable (workflowState) {
 
       // remove default search field.  Disabling via options also disables api, so can't do that
       $tableWrapper.children('.row:first-child').remove();
-
-      // contributors under a Story don't have curator and filter selects
-      if (workflowState === 'crowdsource') {
+      if (workflowStage === 'crowdsource') {
         $tableWrapper.prepend(
           template({
-            currentUser: app.current_user,
-            workflowState: workflowState,
             curators: app.company.curators,
-            curatorCol: $(this).data('curator-col'),
-            successes: app.company.customers.successes,
-            successCol: $(this).data('success-col'),
+            successes: app.company.successes,
             customers: app.company.customers,
+            curatorCol: $(this).data('curator-col'),
+            successCol: $(this).data('success-col'),
             customerCol: $(this).data('customer-col'),
             selectWidth: 250
           })
@@ -200,12 +219,25 @@ function initContributorsTable (workflowState) {
         });
         // select2 is inserting an empty <option> for some reason
         $tableWrapper.find('.curator-select > option').not('[value]').remove();
-        $tableWrapper.find('.contributors-filter').select2({
+        $('#contributors-filter').select2({
           theme: 'bootstrap',
           width: 'style'
           // placeholder: 'type or select'
           // allowClear: true
         });
+
+      // workflowStage == curate
+      // contributors under a Story don't have curator and filter selects
+      } else {
+        var dt = $(this).DataTable(),
+            curatorCol = $(this).data('curator-col'),
+            curatorId = app.current_user.id,
+            successCol = $(this).data('success-col'),
+            successId = $('#story-settings-tab-pane').data('success-id');
+            dt.columns(curatorCol).search(curatorId)
+              .columns(successCol).search(successId)
+              .draw();
+
       }
       $(this).css('visibility', 'visible');
     }

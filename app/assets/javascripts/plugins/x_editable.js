@@ -33,7 +33,7 @@ function initXeditable () {
     });
   });
 
-  // $('td.contribution-email-template a').each(function () {
+  // $('td.email-template a').each(function () {
   //   $(this).editable({
   //     type: 'select2',
   //     model: 'contribution',

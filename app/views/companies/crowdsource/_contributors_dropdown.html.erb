@@ -5,33 +5,23 @@
 
 <ul class='dropdown-menu'>
 
-  <% if contribution.status == 'pre_request' %>
-    <li>
-      <a href="javascript:;">
-        <span>Send Request</span>  <!-- toggle with View Request -->
-      </a>
-    </li>
-  <% else %>
-    <li>
-      <a href="javascript:;">
-        <span>View Sent Request</span>  <!-- toggle with View Request -->
-      </a>
-    </li>
-  <% end %>
+  <li>
+    <a href="javascript:;">
+      <span>Send Request</span>  <!-- toggle with View Request -->
+    </a>
+  </li>
 
-  <% if contribution.story.try(:published?) %>
-    <li>
-      <a href="javascript:;">
-        <span>View Story</span>
-      </a>
-    </li>
-  <% elsif contribution.story.present? %>
-    <li>
-      <a href="javascript:;">
-        <span>Edit Story</span>
-      </a>
-    </li>
-  <% end %>
+  <li>
+    <a href="javascript:;">
+      <span>View Sent Request</span>  <!-- toggle with View Request -->
+    </a>
+  </li>
+
+  <li>
+    <a href="javascript:;">
+      <span>View Story Candidate</span>
+    </a>
+  </li>
 
   <li>
     <a href="javascript:;">

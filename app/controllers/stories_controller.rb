@@ -86,7 +86,8 @@ class StoriesController < ApplicationController
   def edit
     if request.xhr?
       render({
-        partial: 'new_edit', locals: { company: @company, story: @story }
+        partial: 'new_edit',
+        locals: { company: @company, story: @story, workflow_stage: 'curate' }
       })
     else
       @customer = @story.success.customer
