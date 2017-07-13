@@ -33,7 +33,7 @@ class Success < ActiveRecord::Base
       self.expire_tr_fragment_cache()
     end
     if changes.key?(:name)
-      self.contributions.each() { |c| c.expire_tr_fragment cache() }
+      self.contributions.each() { |c| c.expire_tr_fragment_cache() }
     end
   end
 
