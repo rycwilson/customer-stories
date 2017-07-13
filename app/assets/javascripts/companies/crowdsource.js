@@ -110,7 +110,6 @@ function crowdsourceListeners () {
             .columns([curatorCol]).search(curatorId === '0' ? '' : curatorId).draw();
           // update the other curator select (only once)
           if (!(data && data.auto)) {
-            console.log('manual curator change -> change other curator')
             var $other = $('.crowdsource.curator-select').not($(this));
             $other.val($(this).val()).trigger('change', { auto: true });
           }

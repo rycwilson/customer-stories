@@ -201,7 +201,7 @@ class Contribution < ActiveRecord::Base
   end
 
   def expire_table_fragment_cache
-    self.expire_fragment("#{self.company.subdomain}/contributions-table") if fragment_exist?("#{self.company.subdomain}/contributions-table")
+    self.expire_fragment("#{self.company.subdomain}/contributions-table-body") if fragment_exist?("#{self.company.subdomain}/contributions-table-body")
   end
 
   def expire_tr_fragment_cache

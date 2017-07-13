@@ -182,7 +182,7 @@ function initContributorsTable (workflowStage) {
       var rows = api.rows( { page:'current' } ).nodes();
       var last = null;
 
-      // if (workflowStage == 'crowdsource') {
+      if (workflowStage == 'crowdsource') {
         api.column(successIndex, { page: 'current' }).data().each(function (group, i) {
           if (last !== group) {
             // subtract hidden rows: success, curator, customer
@@ -192,7 +192,7 @@ function initContributorsTable (workflowStage) {
             last = group;
           }
         });
-      // }
+      }
     },
     initComplete: function (settings, json) {
       var $tableWrapper = $(this).closest('[id*="table_wrapper"]'),
