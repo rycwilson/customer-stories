@@ -20,7 +20,7 @@ function initDataTables () {
   });
 
   // initSuccessesTable();
-  // initContributorsTable('crowdsource');
+  initContributorsTable('crowdsource');
   // initSponsoredStoriesTable();
 
   $('#curate-table').DataTable({
@@ -129,6 +129,7 @@ function initSuccessesTable () {
       });
       // select2 is inserting an empty <option> for some reason
       $curatorSelect.children('option').not('[value]').remove();
+
       $('#successes-filter').select2({
         theme: 'bootstrap',
         width: 'style'
@@ -139,80 +140,141 @@ function initSuccessesTable () {
   });
 }
 
+
+// TODO: <tr> elements get data-success-id, data-contribution-id, data-contributor.id ?
 function initContributorsTable (workflowStage) {
-  var curatorIndex = 4, customerIndex = 5, successIndex = 2, colCount = 8;
-  // var editor = new $.fn.dataTable.Editor({
-  //   table: '#' + workflowStage + '-contributors-table',
-  //   fields: [ { name: 'a' }, { name: 'b' }, { name: 'c' },
-  //     {
-  //       label: "Email template:",
-  //       name: "email_template",
-  //       type: 'select',
-  //       options: ['Choice 1', 'Choice 2', 'Choice 3']
-  //     },
-  //   { name: 'd' }, { name: 'e' }, { name: 'f' }, { name: 'g' }]
-
-  // });
-
-
-
+  var successIndex = 2, curatorIndex = 4, customerIndex = 5, colCount = 8;
   $('[id="' + workflowStage + '-contributors-table"]').DataTable({
+    ajax: {
+      url: '/contributions',
+      dataSrc: ''
+    },
     paging: false,
     autoWidth: false,
     order: [[ successIndex, 'asc' ]],
+    columns: [
+
+      { // td.contributor-details
+        render: function (data, type, row) {
+                  return "<i class='fa fa-caret-right'></i>" +
+                         "<i class='fa fa-caret-down' style='display:none'></i>";
+                }
+      },
+      { // td.contributor-name
+        name: 'contributor',
+        data: 'contributor.full_name'
+      },  // contributor
+      // <td data-search="s<%= contribution.success.id %>, <%= contribution.success.name %>">
+      {
+        name: 'success',
+        defaultContent: 'Unknown Opportunity',
+        data: 'success.name',
+        // render: {
+        //   _: 'success.name',
+        //   display: function (data, type, contributionRow, meta) {
+        //   // console.log(data)
+        //   // console.log(type)
+        //   // console.log(contributionRow)
+        //   // console.log(meta)
+        //           return "<span style='font-weight:600'>" +
+        //                     contributionRow.success.customer.name +
+        //                  "</span>&nbsp;&nbsp;&#8211;&nbsp;&nbsp;" +
+        //                  "<a href='javascript:;' class='success-name'>" +
+        //                     contributionRow.success.name +
+        //                  "</a>";}
+        // }
+      },           // story candidate
+      // <td data-search="t<%#= contribution.email_template_id  %>" class='email-template'>
+      { name: 'email_template',
+        data: 'email_template.name' },     // email template
+
+      {  // <td data-search="<%= contribution.success.curator.id %>"></td>
+        name: 'curator',
+        data: {
+          _: 'success.curator.full_name',  // not used, but _ is required
+          filter: 'success.curator.id'
+        }
+      },      // curator
+       // <td data-search="c<%= contribution.customer.id %>"><%= contribution.customer.name %></td>
+      {
+        name: 'customer',
+        data: 'success.customer.name'
+      },
+      // <td class='contribution-status'>
+      {
+        name: 'next_step',
+        data: 'status'
+        // render: function (data, type, row) {} },
+        // <td class='dropdown actions-dropdown'>
+      },
+      {
+        render: function () {
+                  return _.template(
+                            $('#contributors-dropdown-template').html()
+                          )({});
+                }
+      },
+    ],
     columnDefs: [
       { visible: false, targets: [ successIndex, curatorIndex, customerIndex ] },
-      { orderable: false, targets: [ 0, colCount - 1 ] },
+      { orderable: false, targets: [0, colCount - 1] },
+      { searchable: false, targets: [0, colCount - 1]},
+      { width: '0%', targets: [2, 4, 5] },  // success, curator, customer
       { width: '5%', targets: 0 },
-      { width: '30%', targets: 1 },
-      { width: '0%', targets: 2 },  // success
-      { width: '30%', targets: 3 },
-      { width: '0%', targets: 4 },  // curator
-      { width: '0%', targets: 5 },  // customer
+      { width: '30%', targets: [1, 3] },
       { width: '25%', targets: 6 },
       { width: '10%', targets: 7 }
     ],
+    rowGroup: {
+      dataSrc: 'success.name',
+      startRender: function (groupRows, successName) {
+        // console.log($(this))   //  [RowGroup]
+        // console.log(groupRows.data())
+        return $('<tr/>').append(
+                  '<td colspan="5">' +
+                     '<span style="font-weight:600">' +
+                        groupRows.data()[0].success.customer.name +
+                     '</span>' +
+                     '<span style="font-weight: normal">' +  // em-dash not bold
+                       '&nbsp;&nbsp;&#8211;&nbsp;&nbsp;' +
+                     '</span>' +
+                     '<a href="javascript:;" class="success-name" style="font-weight:600">' +
+                        successName +
+                     '</a>' +
+                  '</td>');
+      }
+    },
     // buttons: [
     //     { extend: 'create', editor: editor },
     //     { extend: 'edit',   editor: editor },
     //     { extend: 'remove', editor: editor }
     // ],
-    drawCallback: function (settings) {
-      var api = this.api();
-      var rows = api.rows( { page:'current' } ).nodes();
-      var last = null;
-
-      if (workflowStage == 'crowdsource') {
-        api.column(successIndex, { page: 'current' }).data().each(function (group, i) {
-          if (last !== group) {
-            // subtract hidden rows: success, curator, customer
-            $(rows).eq(i).before(
-              '<tr class="group"><td colspan="' + (colCount - 3).toString() + '">' + group + '</td></tr>'
-            );
-            last = group;
-          }
-        });
-      }
-    },
+    // createdRow: function( row, data, dataIndex ) {
+    //   if ( data[4] == "A" ) {
+    //     $(row).addClass( 'important' );
+    //   }
+    // }
+    // drawCallback: function (settings) {
+    // },
     initComplete: function (settings, json) {
       var $tableWrapper = $(this).closest('[id*="table_wrapper"]'),
           template = _.template($('#contributors-table-header-template').html());
 
       // remove default search field.  Disabling via options also disables api, so can't do that
       $tableWrapper.children('.row:first-child').remove();
+
       if (workflowStage === 'crowdsource') {
         $tableWrapper.prepend(
           template({
             curators: app.company.curators,
+            contributors: _.pluck(app.contributions, 'contributor'),
             successes: app.company.successes,
             customers: app.company.customers,
-            curatorCol: $(this).data('curator-col'),
-            successCol: $(this).data('success-col'),
-            customerCol: $(this).data('customer-col'),
             selectWidth: 250
           })
         );
-        $tableWrapper.find('.curator-select').select2({
+        var $curatorSelect = $tableWrapper.find('.curator-select');
+        $curatorSelect.select2({
           theme: 'bootstrap',
           width: 'style',
           minimumResultsForSearch: -1   // hides text input
@@ -224,6 +286,30 @@ function initContributorsTable (workflowStage) {
           width: 'style'
           // placeholder: 'type or select'
           // allowClear: true
+        });
+
+        $curatorSelect.val( app.current_user.id.toString() )
+          .trigger('change', { auto: true });
+
+        // need to put this in the global space so it can be seen by
+        // functions in crowdsourceListeners()
+        contributorsEditor = new $.fn.dataTable.Editor({
+          table: '#crowdsource-contributors-table',
+          fields: [
+            { name: 'contributor_details' },
+            { name: 'contributor' },
+            { name: 'story_candidate' },
+            {
+              label: "Email template:",
+              name: "email_template",
+              type: 'select',
+              options: ['Choice 1', 'Choice 2', 'Choice 3']
+            },
+            { name: 'curator' },
+            { name: 'customer' },
+            { name: 'next_step' },
+            { name: 'actions' }
+          ]
         });
 
       // workflowStage == curate

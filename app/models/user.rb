@@ -111,4 +111,8 @@ class User < ActiveRecord::Base
   #   end
   # end
 
+  def id_as_string
+    self.id.to_s
+  end
+
 end

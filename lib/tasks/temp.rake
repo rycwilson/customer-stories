@@ -2,10 +2,22 @@ namespace :temp do
 
   desc "temp stuff"
 
-  task trunity_et_assign: :environment do
+  task et_assign: :environment do
     trunity = Company.find_by(subdomain:'trunity')
     trunity.contributions.each() do |c|
-      c.update(email_template_id: rand(76..78))
+      if c.role.blank?
+        c.update(role: 'blank', email_template_id: rand(76..78))
+      else
+        c.update(email_template_id: rand(76..78))
+      end
+    end
+    cce = Company.find_by(subdomain:'centerforcustomerengagement')
+    cce.contributions.each() do |c|
+      if c.role.blank?
+        c.update(role: 'blank', email_template_id: rand(91..93))
+      else
+        c.update(email_template_id: rand(91..93))
+      end
     end
   end
 

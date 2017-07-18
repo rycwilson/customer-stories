@@ -37,9 +37,10 @@ Rails.application.routes.draw do
     resources :stories, only: :index
     # see below for route to public story page
 
+    get '/contributions', to: 'contributions#index'
+
     # Company home / Story curation - authentication required
     authenticate :user do
-
       resources :companies, only: [:show, :edit, :update] do
         resources :customers, only: [:create, :update, :destroy], shallow: true
         resources :successes, only: [:create, :update, :destroy], shallow: true
@@ -85,6 +86,9 @@ Rails.application.routes.draw do
       # end
 
       # contributions
+      # (Don't really need to nest under companies resource,
+      #  because the subdomain effectively already does that)
+
       put '/contributions/:id', to: 'contributions#update'
 
       # analytics

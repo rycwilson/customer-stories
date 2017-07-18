@@ -6,6 +6,32 @@ class ContributionsController < ApplicationController
 
   respond_to :html, :json, :js
 
+  def index
+    company = Company.find_by(subdomain: request.subdomain)
+    respond_to() do |format|
+      format.json do
+        render({
+          json: company.contributions.to_json({
+                  only: [:id, :status], methods: [],
+                  include: {
+                    success: {
+                      only: [:id, :name],
+                      include: {
+                        curator: { only: [:id], methods: [:full_name] },
+                        customer: { only: [:id, :name] }
+                      }
+                    },
+                    contributor: { only: [:id], methods: [:full_name] },
+                    referrer: { only: [:id], methods: [:full_name] },
+                    email_template: { only: [:id, :name] },
+                  }
+                })
+
+        })
+      end
+    end
+  end
+
   #
   # GET '/contributions/:token/:type'
   #   type is 'contribution', 'feedback', 'unsubscribe', opt_out'

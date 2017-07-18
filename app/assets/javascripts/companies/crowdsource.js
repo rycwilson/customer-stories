@@ -13,37 +13,42 @@ function crowdsourceListeners () {
         if ($('#successes-tab-pane').children().length === 0) {
           $.get('/companies/' + app.company.id + '/successes',
             function (html, status, xhr) {
-              $('#successes-tab-pane').append(html);
-                // .fadeIn({ duration: 150, easing: 'linear' });
+              $('#successes-tab-pane').append(html)
+                .fadeIn({ duration: 150, easing: 'linear' });
               initSuccessesTable();
+              $('#loading-successes').toggle();
+              $('#crowdsource-panel .layout-main').css({
+                opacity: 1,
+                'pointer-events': 'auto'
+              });
               // now get the contributors table...
-              $.get('/companies/' + app.company.id + '/crowdsource-contributors',
-                function (html, status, xhr) {
-                  $('#crowdsource-contributors-tab-pane').append(html)
-                    .fadeIn({
-                      duration: 300, easing: 'linear',
-                      complete: function () {
-                        initContributorsTable('crowdsource');
-                        $('.crowdsource.curator-select').each(function () {
-                          $(this).val(
-                            $(this).children('[value="' + app.current_user.id.toString() + '"]').val()
-                          ).trigger('change', { auto: true });
-                        });
-                        $('#loading-successes').toggle();
-                        $('#crowdsource-panel .layout-main').css({
-                          opacity: 1,
-                          'pointer-events': 'auto'
-                        });
-                      }
-                    });
-                });
+              // $.get('/companies/' + app.company.id + '/crowdsource-contributors',
+                // function (html, status, xhr) {
+                //   $('#crowdsource-contributors-tab-pane').append(html)
+                //     .fadeIn({
+                //       duration: 300, easing: 'linear',
+                //       complete: function () {
+                //         initContributorsTable('crowdsource');
+                //         $('.crowdsource.curator-select').each(function () {
+                //           $(this).val(
+                //             $(this).children('[value="' + app.current_user.id.toString() + '"]').val()
+                //           ).trigger('change', { auto: true });
+                //         });
+                //         $('#loading-successes').toggle();
+                //         $('#crowdsource-panel .layout-main').css({
+                //           opacity: 1,
+                //           'pointer-events': 'auto'
+                //         });
+                //       }
+                //     });
+                // });
             });
         }
       })
 
     .on('keyup', '.select2-search',
       function (e) {
-        var $table, searchCols, curatorCol, curatorId,
+        var $table, searchCols, curatorId,
             $input = $(this).find('input');
 
         if ($(this).next().find('#select2-successes-filter-results').length) {
@@ -53,13 +58,16 @@ function crowdsourceListeners () {
         } else {
           e.preventDefault();
         }
-        curatorCol = $table.data('curator-col');
-        curatorId = $table.closest('[id*="table_wrapper"]').find('.crowdsource-curator-select').val();
+        curatorId = $table.closest('[id*="table_wrapper"]').find('.crowdsource.curator-select').val();
+        // console.log('table: ', $table);
+        // console.log('filter: ', $input.val());
+        // console.log('curatorCol: ', curatorCol);
+        // console.log('curatorId: ', curatorId);
         $table.DataTable()
-              .search('')
-              .columns().search('')
-              .columns(curatorCol).search(curatorId === '0' ? '' : curatorId)
-              .columns(1,2,4,5).search($input.val()).draw();
+          .search('')
+          .search($input.val())
+          .column('curator:name').search(curatorId === '0' ? '' : curatorId)
+          .draw();
       })
 
     .on('change', '.crowdsource.curator-select, #successes-filter, #contributors-filter',
@@ -68,46 +76,84 @@ function crowdsourceListeners () {
             $table = $tableWrapper.find('table'), dt = $table.DataTable(),
             $filter = $tableWrapper.find('.dt-filter'),
             curatorId = $tableWrapper.find('.crowdsource.curator-select').val(),
-            curatorCol = $table.data('curator-col'),
             filterData = $filter.select2('data'),
             filterVal = filterData[0].id,
             filterText = filterData[0].text,
-            filterCol = $(filterData[0].element).data('col');
+            filterCol = $(this).find('option:selected').attr('class');
 
         if ($(this).hasClass('curator-select')) {
           // only include options for items owned by the curator
-          var successes = curatorId === '0' ? app.company.successes :
+          var successes = (curatorId === '0') ? app.company.successes :
                           app.company.successes.filter(function (success) {
-                            return (success.curator_id == curatorId);
+                            return success.curator_id == curatorId;
                           }),
-              customers = curatorId === '0' ? app.company.customers :
+              customers = (curatorId === '0') ? app.company.customers :
                           app.company.customers.filter(function (customer) {
+                            // customer has >= 1 success
                             return successes.some(function (success) {
                               return success.customer_id === customer.id;
                             });
                           }),
-              $customersOptgroup = $filter.find('optgroup[label="Customer"]'),
               $successesOptgroup = $filter.find('optgroup[label="Story Candidate"]');
+              $customersOptgroup = $filter.find('optgroup[label="Customer"]');
 
-          // remove and replace optgroups in this table's filter>
+          if ($table.is('#crowdsource-contributors-table')) {
+            // >= 1 contributor
+            var contributors = (
+                  (curatorId === '0') ? app.contributions
+                    : app.contributions.filter(function (contribution) {
+                          return successes.some(function (success) {
+                                  return success.id === contribution.success_id;
+                                 });
+                        })
+                ).map(function (contribution) { return contribution.contributor; }),
+
+                customersWithC = customers.filter(function (customer) {
+                          return successes.some(function (success) {
+                            return success.customer_id === customer.id &&
+                              app.contributions.some(function (contribution) {
+                                return contribution.success_id === success.id;
+                              });
+                          });
+                        }),
+
+                successesWithC = successes.filter(function (success) {
+                          app.contributions.some(function (contribution) {
+                            return contribution.success_id === success.id;
+                          });
+                        }),
+
+                $contributorsOptgroup = $filter.find('optgroup[label="Contributor"]');
+
+            $contributorsOptgroup.empty();
+            _.each(contributors, function (contributor) {
+              $contributorsOptgroup.append(
+                '<option value="contributor-' + contributor.id + '">' + contributor.full_name + '</option>'
+              );
+            });
+          }
+
+      // remove and replace optgroups in this table's filter>
           $customersOptgroup.empty();
           _.each(customers, function (customer) {
             $customersOptgroup.append(
-              '<option value="c' + customer.id + '" ' + 'data-col="' + $table.data('customer-col') + '">' + customer.name + '</option>'
+              '<option value="customer-' + customer.id + '">' + customer.name + '</option>'
             );
           });
+
           $successesOptgroup.empty();
           _.each(successes, function (success) {
             $successesOptgroup.append(
-              '<option value="s' + success.id + '" ' + 'data-col="' + $table.data('success-col') + '">' + success.name + '</option>'
+              '<option value="success-' + success.id + '">' + success.name + '</option>'
             );
           });
+
           // when changing curators, start with all candidates/contributors
           $filter.val('0').trigger('change.select2');  // change select input without triggering change event
           // find entries owned by curator
           dt.search('')
             .columns().search('')
-            .columns([curatorCol]).search(curatorId === '0' ? '' : curatorId).draw();
+            .column('curator:name').search(curatorId === '0' ? '' : curatorId).draw();
           // update the other curator select (only once)
           if (!(data && data.auto)) {
             var $other = $('.crowdsource.curator-select').not($(this));
@@ -121,7 +167,7 @@ function crowdsourceListeners () {
           if (filterVal === '0') {
             dt.search('')
               .columns().search('')
-              .columns([curatorCol]).search(curatorId === '0' ? '' : curatorId)
+              .column('curator:name').search(curatorId === '0' ? '' : curatorId)
               .draw();
 
           // curator && filter column
@@ -129,8 +175,8 @@ function crowdsourceListeners () {
             // heads up: 'c18' matches 'c180' => solved by treating as RegEx
             dt.search('')
               .columns().search('')
-              .columns([curatorCol]).search(curatorId === '0' ? '' : curatorId)
-              .columns([filterCol]).search('^' + filterVal + '(,|$)', true)
+              .column('curator:name').search(curatorId === '0' ? '' : curatorId)
+              .columns(filterCol + ':name').search('^' + filterVal + '(,|$)', true)
               .draw();
           }
         }
@@ -150,6 +196,11 @@ function crowdsourceListeners () {
         $('a[href="#successes-tab-pane"]').tab('show');
         $('#successes-filter').val('s' + successId).trigger('change');
       })
+
+    .on('click', '#crowdsource-contributors-table td.email-template', function (e) {
+      console.log(contributorsEditor)
+      contributorsEditor.inline(this);
+    })
 
     // no striping for grouped rows, yes striping for ungrouped
     // manipulate via jquery; insufficient to just change even/odd classes
