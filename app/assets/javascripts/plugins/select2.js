@@ -14,11 +14,11 @@ function initSelect2 () {
 // ref: http://stackoverflow.com/questions/36497723
 // console.log('uninitialized s2: ', $(document).find('select.stories-filter').not('.select2-hidden-accessible'));
 
-  // $('.curator-select, .category-select, .product-select').select2({
-  //   theme: 'bootstrap',
-  //   width: 'style'
-  // });
-  // $('.stories-filter').data('init', true);
+  $('.curator-select, .category-select, .product-select').select2({
+    theme: 'bootstrap',
+    width: 'style'
+  });
+  $('.stories-filter').data('init', true);
 
   // $('.stories-filter').each(function () {
   //   if ($(this)[0].getAttribute('data-init') === null) {

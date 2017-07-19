@@ -174,13 +174,15 @@
   // }
 
   #successes-table {
+    td.success-details {
+      cursor: pointer;
+    }
     th.success-details, td.success-details {
       // padding necessary to override datatables css that adds padding-right: 30px to the th,
       // thus preventing text from centering horizontally
       padding: 8px;
       vertical-align: middle;
       text-align: center;
-      cursor: pointer;
     }
     tr[data-success-id] + tr:not([data-success-id]):not(.group) {
       background-color: #f5f5f5;

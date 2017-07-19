@@ -19,7 +19,11 @@
  *= require bootstrap-jasny/dist/css/jasny-bootstrap.css
  *= require magnific-popup/dist/magnific-popup
 
- *= require Datatables/datatables
+ datatables-plugins is left over from mvp 2.1.1 (all other DataTables assets
+ downloaded upgraded with direct download from datatables.net)
+ *= require datatables-plugins/integration/bootstrap/3/dataTables.bootstrap
+ *= require DataTables/DataTables-1.10.15/css/dataTables.bootstrap
+ *= require DataTables/datatables
  *= require datatables-editor-trial/css/dataTables.editor
 
  *= require select2/dist/css/select2
