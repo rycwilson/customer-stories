@@ -1,7 +1,7 @@
 
 <% content_for(:underscore_templates) do %>
 
-  <script type='text/template' id='contributors-dropdown-template'>
+  <script type='text/template' id='successes-dropdown-template'>
 
     <div style='position:relative'>
 
@@ -9,30 +9,18 @@
         <i class='fa fa-caret-down'></i>
       </a>
 
-      <ul class='dropdown-menu'>
+      <ul class='dropdown-menu success-actions-dropdown'>
 
         <li>
           <a href="javascript:;">
-            <span>Send Request</span>
+            <span>Create Story</span>
           </a>
         </li>
 
         <li>
-          <a href="javascript:;">
-            <span>View Sent Request</span>
-          </a>
-        </li>
-
-        <li class='story-candidate'>
-          <a href="javascript:;">
-            <span>View Story Candidate</span>
-          </a>
-        </li>
-
-        <li>
-          <a href="javascript:;">
+          <a href="javascript:;" class='contributors'>
             <!-- // <i class='glyphicon glyphicon-remove'></i>&nbsp;&nbsp; -->
-            <span>Mark as Complete</span>
+            <span>Manage Contributors</span>
           </a>
         </li>
 

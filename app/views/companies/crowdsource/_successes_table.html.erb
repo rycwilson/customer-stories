@@ -1,54 +1,25 @@
 
-<% cache("#{company.subdomain}/successes-table", skip_digest: true) do %>
 
-  <table id='successes-table' class='datatable table table-hover table-bordered'
-         data-success-col='1' data-customer-col='2' data-curator-col='4' width='100%'
-         style='visibility:hidden'>
+<table id='successes-table' class='datatable table table-hover table-bordered'
+       data-success-col='1' data-customer-col='2' data-curator-col='4' width='100%'
+       style='visibility:hidden'>
 
-    <thead>
-      <tr>
-        <th class='success-details'>
-        <!-- padding ensures a min width; spec'ed in dt init but may fall short -->
-          <i class='fa fa-rocket' style='color:#666; padding: 0 6px'></i>
-        </th>
-        <th>Project / Deal / Opportunity</th>
-        <th>Customer</th>  <!-- row grouping -->
-        <th>Next Step</th>
-        <th>Curator</th>  <!--  hidden -->
-        <th class='actions-dropdown'>Actions</th>
-      </tr>
-    </thead>
-
-    <tbody>
-
-      <% company.successes.each() do |success| %>
-
-        <% cache("#{company.subdomain}/successes/#{success.id}", skip_digest: true) do %>
-
-    <tr data-success-id="<%= success.id %>">
-      <td class='success-details'>
-        <i class='fa fa-caret-right'></i>
-        <i class='fa fa-caret-down' style='display:none'></i>
-      </td>
-      <td class='success-name' data-search="s<%= success.id %>, <%= success.name %>"><%= success.name %></td>
-      <td data-search="c<%= success.customer.id %>"><%= success.customer.name %></td>
-      <td><%= ["Next Step 1", "Next Step 2"].sample() %></td>
-      <td data-search="<%= success.curator.id %>"></td>  <!-- curator hidden, use id for search -->
-      <td class='dropdown actions-dropdown'>
-        <div style='position:relative'>  <!-- div for styling only -->
-
-          <%= render 'companies/crowdsource/successes_dropdown', { success: success } %>
-
-        </div>
-      </td>
-
+  <thead>
+    <tr>
+      <th class='success-details'>
+      <!-- padding ensures a min width; spec'ed in dt init but may fall short -->
+        <i class='fa fa-rocket' style='color:#666; padding: 0 6px'></i>
+      </th>
+      <th>Project / Deal / Opportunity</th>
+      <th>Customer</th>  <!-- row grouping -->
+      <th>Next Step</th>
+      <th>Curator</th>  <!--  hidden -->
+      <th class='actions-dropdown'>Actions</th>
     </tr>
+  </thead>
 
-        <% end %>
+  <tbody>
+  </tbody>
 
-      <% end %>
+</table>
 
-    </tbody>
-  </table>
-
-<% end %>

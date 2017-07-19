@@ -1,6 +1,5 @@
 
 function crowdsource () {
-
 }
 
 // lots of this will also apply to curate contributors
@@ -10,47 +9,45 @@ function crowdsourceListeners () {
 
     .on('click', 'a[href="#crowdsource-panel"]',
       function () {
-        if ($('#successes-tab-pane').children().length === 0) {
-          $.get('/companies/' + app.company.id + '/successes',
-            function (html, status, xhr) {
-              $('#successes-tab-pane').append(html)
-                .fadeIn({ duration: 150, easing: 'linear' });
-              initSuccessesTable();
-              $('#loading-successes').toggle();
-              $('#crowdsource-panel .layout-main').css({
-                opacity: 1,
-                'pointer-events': 'auto'
-              });
-              // now get the contributors table...
-              // $.get('/companies/' + app.company.id + '/crowdsource-contributors',
-                // function (html, status, xhr) {
-                //   $('#crowdsource-contributors-tab-pane').append(html)
-                //     .fadeIn({
-                //       duration: 300, easing: 'linear',
-                //       complete: function () {
-                //         initContributorsTable('crowdsource');
-                //         $('.crowdsource.curator-select').each(function () {
-                //           $(this).val(
-                //             $(this).children('[value="' + app.current_user.id.toString() + '"]').val()
-                //           ).trigger('change', { auto: true });
-                //         });
-                //         $('#loading-successes').toggle();
-                //         $('#crowdsource-panel .layout-main').css({
-                //           opacity: 1,
-                //           'pointer-events': 'auto'
-                //         });
-                //       }
-                //     });
-                // });
-            });
-        }
+        // if ($('#successes-tab-pane').children().length === 0) {
+        //   $.get('/companies/' + app.company.id + '/successes',
+        //     function (html, status, xhr) {
+        //       $('#successes-tab-pane').append(html)
+        //         .fadeIn({ duration: 150, easing: 'linear' });
+        //       initSuccessesTable();
+        //       $('#loading-successes').toggle();
+        //       $('#crowdsource-panel .layout-main').css({
+        //         opacity: 1,
+        //         'pointer-events': 'auto'
+        //       });
+        //       // now get the contributors table...
+        //       $.get('/companies/' + app.company.id + '/crowdsource-contributors',
+        //         function (html, status, xhr) {
+        //           $('#crowdsource-contributors-tab-pane').append(html)
+        //             .fadeIn({
+        //               duration: 300, easing: 'linear',
+        //               complete: function () {
+        //                 initContributorsTable('crowdsource');
+        //                 $('.crowdsource.curator-select').each(function () {
+        //                   $(this).val(
+        //                     $(this).children('[value="' + app.current_user.id.toString() + '"]').val()
+        //                   ).trigger('change', { auto: true });
+        //                 });
+        //                 $('#loading-successes').toggle();
+        //                 $('#crowdsource-panel .layout-main').css({
+        //                   opacity: 1,
+        //                   'pointer-events': 'auto'
+        //                 });
+        //               }
+        //             });
+        //         });
+        //     });
+        // }
       })
 
     .on('keyup', '.select2-search',
       function (e) {
-        var $table, searchCols, curatorId,
-            $input = $(this).find('input');
-
+        var $table, curatorId, $input = $(this).find('input');
         if ($(this).next().find('#select2-successes-filter-results').length) {
           $table = $('#successes-table');
         } else if ($(this).next().find('#select2-contributors-filter-results').length) {
@@ -74,16 +71,13 @@ function crowdsourceListeners () {
       function (e, data) {
         var $tableWrapper = $(this).closest('div[id*="table_wrapper"]'),
             $table = $tableWrapper.find('table'), dt = $table.DataTable(),
-            $filter = $tableWrapper.find('.dt-filter'),
-            curatorId = $tableWrapper.find('.crowdsource.curator-select').val(),
-            filterData = $filter.select2('data'),
-            filterVal = filterData[0].id,
-            filterText = filterData[0].text,
-            filterCol = $(this).find('option:selected').attr('class');
+            curatorId;
 
         if ($(this).hasClass('curator-select')) {
-          // only include options for items owned by the curator
-          var successes = (curatorId === '0') ? app.company.successes :
+          curatorId = $(this).val();
+          // modify filter options to reflect curator's associations
+          var $filter = $tableWrapper.find('.dt-filter'),
+              successes = (curatorId === '0') ? app.company.successes :
                           app.company.successes.filter(function (success) {
                             return success.curator_id == curatorId;
                           }),
@@ -98,15 +92,21 @@ function crowdsourceListeners () {
               $customersOptgroup = $filter.find('optgroup[label="Customer"]');
 
           if ($table.is('#crowdsource-contributors-table')) {
-            // >= 1 contributor
-            var contributors = (
-                  (curatorId === '0') ? app.contributions
-                    : app.contributions.filter(function (contribution) {
-                          return successes.some(function (success) {
-                                  return success.id === contribution.success_id;
-                                 });
-                        })
-                ).map(function (contribution) { return contribution.contributor; }),
+            var contributors =
+                  app.contributions.filter(function (contribution) {
+                    return successes.some(function (success) {
+                      return (success.id === contribution.success_id) &&
+                        (curatorId === '0' ? true : success.curator_id == curatorId);
+                    });
+                  })
+                  .map(function (contribution) { return contribution.contributor; }),
+
+                // >= 1 contributor
+                successesWithC = successes.filter(function (success) {
+                          app.contributions.some(function (contribution) {
+                            return contribution.success_id === success.id;
+                          });
+                        }),
 
                 customersWithC = customers.filter(function (customer) {
                           return successes.some(function (success) {
@@ -116,19 +116,12 @@ function crowdsourceListeners () {
                               });
                           });
                         }),
-
-                successesWithC = successes.filter(function (success) {
-                          app.contributions.some(function (contribution) {
-                            return contribution.success_id === success.id;
-                          });
-                        }),
-
                 $contributorsOptgroup = $filter.find('optgroup[label="Contributor"]');
 
             $contributorsOptgroup.empty();
             _.each(contributors, function (contributor) {
               $contributorsOptgroup.append(
-                '<option value="contributor-' + contributor.id + '">' + contributor.full_name + '</option>'
+                '<option value="' + contributor.id + '" data-column="contributor">' + contributor.full_name + '</option>'
               );
             });
           }
@@ -137,22 +130,23 @@ function crowdsourceListeners () {
           $customersOptgroup.empty();
           _.each(customers, function (customer) {
             $customersOptgroup.append(
-              '<option value="customer-' + customer.id + '">' + customer.name + '</option>'
+              '<option value="' + customer.id + '" data-column="customer">' + customer.name + '</option>'
             );
           });
 
           $successesOptgroup.empty();
           _.each(successes, function (success) {
             $successesOptgroup.append(
-              '<option value="success-' + success.id + '">' + success.name + '</option>'
+              '<option value="' + success.id + '" data-column="success">' + success.name + '</option>'
             );
           });
 
           // when changing curators, start with all candidates/contributors
           $filter.val('0').trigger('change.select2');  // change select input without triggering change event
+
           // find entries owned by curator
           dt.search('')
-            .columns().search('')
+            // .columns().search('')
             .column('curator:name').search(curatorId === '0' ? '' : curatorId).draw();
           // update the other curator select (only once)
           if (!(data && data.auto)) {
@@ -163,6 +157,10 @@ function crowdsourceListeners () {
 
         // successes-filter or contributors-filter
         else {
+          curatorId = $tableWrapper.find('.crowdsource.curator-select').val();
+          // filterCol matches a table column name (see initContributorsTable)
+          var filterCol = $(this).find('option:selected').data('column'),
+              filterVal = $(this).val();
           // curator && all candidates/contributors
           if (filterVal === '0') {
             dt.search('')
@@ -172,11 +170,14 @@ function crowdsourceListeners () {
 
           // curator && filter column
           } else {
-            // heads up: 'c18' matches 'c180' => solved by treating as RegEx
+            console.log('curatorId: ', curatorId)
+            console.log('filterCol: ', filterCol)
+            console.log('filterVal: ', filterVal)
+            // heads up: 'customer-18' matches 'customer-180' => solved by treating as RegEx
             dt.search('')
-              .columns().search('')
+              // .columns().search('')
               .column('curator:name').search(curatorId === '0' ? '' : curatorId)
-              .columns(filterCol + ':name').search('^' + filterVal + '(,|$)', true)
+              .column(filterCol + ':name').search('^' + filterVal + '(,|$)', true)
               .draw();
           }
         }

@@ -1,5 +1,4 @@
 
-
   <!-- it's actually a contributions table, but presented to user as Contributors -->
   <table id="crowdsource-contributors-table" class='datatable table table-hover table-bordered' data-success-col='2' data-curator-col='4' data-customer-col='5' cellspacing='0' width='100%'>
 
@@ -19,51 +18,8 @@
       </tr>
     </thead>
 
-
     <tbody>
-
-      <% company.contributions.each() do |contribution| %>
-
-    <tr data-contribution-id="<%= contribution.id %>"
-        data-contributor-id="<%= contribution.contributor.id %>"
-        data-success-id="<%= contribution.success.id %>">
-
-      <td class='contributor-details'>
-        <i class='fa fa-caret-right'></i>
-        <i class='fa fa-caret-down' style='display:none'></i>
-      </td>
-
-      <td data-search="<%= contribution.contributor.full_name %>" class='contributor-name'>
-        <%= contribution.contributor.full_name %>
-      </td>
-
-      <td data-search="s<%= contribution.success.id %>, <%= contribution.success.name %>"><%= ("<span style='font-weight:600'>#{ contribution.customer.name }</span>&nbsp;&nbsp;&#8211;&nbsp;&nbsp;<a href='javascript:;' class='success-name'>#{ contribution.story.try(:title) || 'no name' }</a>").html_safe %></td>
-
-      <td data-search="t<%= contribution.email_template_id  %>" class='email-template'>
-        <%= contribution.email_template.try(:name) %>
-      </td>
-
-      <!-- curator hidden -->
-      <td data-search="<%= contribution.success.curator.id %>"></td>
-      <!-- customer hidden -->
-      <td data-search="c<%= contribution.customer.id %>"><%= contribution.customer.name %></td>
-
-      <td class='contribution-status'>
-        <%= render 'companies/crowdsource/contributors_status',
-                  { contribution: contribution } %>
-      </td>
-
-      <td class='dropdown actions-dropdown'>
-        <div style='position:relative'>  <!-- div for styling only -->
-          <%= render 'companies/crowdsource/contributors_dropdown',
-                     { contribution: contribution } %>
-        </div>
-      </td>
-
-    </tr>
-
-      <% end %>
-
     </tbody>
+
   </table>
 

@@ -12,11 +12,11 @@
       <label>Curator&nbsp;</label>
       <select class='crowdsource curator-select form-control text-left' style="width:{{= selectWidth.toString() + 'px' }};">
 
-        <option value='0' selected>All Curators<option>
+        <option value='0' data-column='curator' selected>All Curators<option>
 
         {{ _.each(curators, function (curator, index) { }}
 
-          <option value="{{= curator.id }}">{{= curator.first_name + ' ' + curator.last_name }}</option>
+          <option value="{{= curator.id }}" data-column='curator'>{{= curator.first_name + ' ' + curator.last_name }}</option>
 
         {{ }); }}
 
@@ -41,7 +41,7 @@
       <label>Filter&nbsp;</label>
       <select id='successes-filter' class='dt-filter form-control text-left' style="width:{{= selectWidth.toString() + 'px' }};">
 
-        <option value='0' selected>All Candidates</option>
+        <option value='0' data-column='success' selected>All Candidates</option>
 
         <optgroup label='Next step'>
           <option value=''>Next Step 1</option>
@@ -49,23 +49,19 @@
         </optgroup>
 
         <optgroup label='Customer'>
-
           {{ _.each(customers, function (customer) { }}
 
-            <option value="c{{= customer.id }}" data-col="{{= customerCol }}">{{= customer.name || "no customer name" }}</option>
+            <option value="{{= customer.id }}" data-column='customer'>{{= customer.name }}</option>
 
           {{ }); }}
-
         <optgroup>
 
         <optgroup label='Story Candidate'>
-
           {{ _.each(successes, function (success) { }}
 
-            <option value="s{{= success.id }}" data-col="{{= successCol }}">{{= success.name || "no success name" }}</option>
+            <option value="{{= success.id }}" data-column='success'>{{= success.name }}</option>
 
           {{ }); }}
-
         <optgroup>
 
       </select>

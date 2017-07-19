@@ -16,7 +16,7 @@
 
         {{ _.each(curators, function (curator) { }}
 
-          <option class='curator' value="{{= curator.id }}">{{= curator.first_name + ' ' + curator.last_name }}</option>
+          <option data-column='curator' value="{{= curator.id }}">{{= curator.first_name + ' ' + curator.last_name }}</option>
 
         {{ }); }}
 
@@ -41,25 +41,25 @@
       <label>Filter&nbsp;</label>
       <select id='contributors-filter' class='dt-filter form-control text-left' style="width:{{= selectWidth.toString() + 'px' }};">
 
-        <option value='0' selected>All Contributors</option>
+        <option value='0' data-column='contributor' selected>All Contributors</option>
 
         <optgroup label='Contributor'>
           {{ _.each(contributors, function (contributor) { }}
 
-            <option class='contributor' value="contributor-{{= contributor.id }}">{{= contributor.name }}</option>
+            <option value="{{= contributor.id }}" data-column='contributor'>{{= contributor.full_name }}</option>
 
-          {{ }); }}
+          {{ }) }}
         </optgroup>
 
         <optgroup label='Next step'>
-          <option value='' data-col='5'>Next Step 1</option>
-          <option value='' data-col='5'>Next Step 2</option>
+          <option value='' data-column='email_template'>Next Step 1</option>
+          <option value='' data-column='email_template'>Next Step 2</option>
         </optgroup>
 
         <optgroup label='Customer'>
           {{ _.each(customers, function (customer) { }}
 
-            <option class='customer' value="customer-{{= customer.id }}">{{= customer.name }}</option>
+            <option value="{{= customer.id }}" data-column='customer'>{{= customer.name }}</option>
 
           {{ }); }}
         </optgroup>
@@ -67,7 +67,7 @@
         <optgroup label='Story Candidate'>
           {{ _.each(successes, function (success) { }}
 
-            <option class='success' value="success-{{= success.id }}">{{= success.name }}</option>
+            <option value="{{= success.id }}" data-column='success'>{{= success.name }}</option>
 
           {{ }); }}
         </optgroup>

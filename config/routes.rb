@@ -37,7 +37,9 @@ Rails.application.routes.draw do
     resources :stories, only: :index
     # see below for route to public story page
 
+    # public for now, so can access via curl
     get '/contributions', to: 'contributions#index'
+    get '/successes', to: 'successes#index'
 
     # Company home / Story curation - authentication required
     authenticate :user do

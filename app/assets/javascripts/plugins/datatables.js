@@ -19,7 +19,7 @@ function initDataTables () {
     ],
   });
 
-  // initSuccessesTable();
+  initSuccessesTable();
   initContributorsTable('crowdsource');
   // initSponsoredStoriesTable();
 
@@ -69,16 +69,72 @@ function initDataTables () {
 
 }
 
+// TODO: <tr data-success-id="<%= success.id %>">
 function initSuccessesTable () {
-  var curatorIndex = 4, customerIndex = 2, colCount = 6;
+  var customerIndex = 2, curatorIndex = 4, colCount = 6;
   $('#successes-table').DataTable({
+    ajax: {
+      url: '/successes',
+      dataSrc: ''
+    },
     paging: true,
     pageLength: 100,
     lengthChange: false,
     order: [[ customerIndex, 'asc' ]],
+    columns: [
+      { // td.success-details
+        data: null,
+        render: function (data, type, row) {
+                  return "<i class='fa fa-caret-right'></i>" +
+                         "<i class='fa fa-caret-down' style='display:none'></i>";
+                }
+      },
+      {  // success
+        name: 'success',
+        data: {
+          _: 'name',
+          filter: 'id'
+        }
+      },
+      {  // customer
+        name: 'customer',
+        data: 'customer.name'
+      },
+      {  // next step
+        render: function () {
+          return '<span>Next step</span>';
+        }
+      },
+      {  // curator
+        name: 'curator',
+        data: {
+          _: 'curator.full_name',
+          filter: 'curator.id'
+        }
+      },
+      {  // td.dropdown.actions-dropdown
+        data: null,
+        render: function () {
+                  return _.template(
+                            $('#successes-dropdown-template').html()
+                          )({});
+                }
+      }
+    ],
     columnDefs: [
-      { visible: false, targets: [ customerIndex, curatorIndex ] },
-      { orderable: false, targets: [ 0, colCount - 1 ] },
+      { visible: false, targets: [customerIndex, curatorIndex] },
+      {
+        targets: [0, colCount - 1],
+        orderable: false,
+        searchable: false,
+        createdCell: function (td, cellData, rowData, row, col) {
+          if (col === 0) {
+            $(td).addClass('success-details');
+          } else {
+            $(td).addClass('dropdown actions-dropdown');
+          }
+        }
+      },
       { width: '5%', targets: 0 },
       { width: '50%', targets: 1 },
       { width: '0%', targets: 2 },  // customer
@@ -86,21 +142,23 @@ function initSuccessesTable () {
       { width: '0%', targets: 4 },  // curator
       { width: '10%', targets: 5 }
     ],
-    drawCallback: function (settings) {
-      var api = this.api();
-      var rows = api.rows( { page:'current' } ).nodes();
-      var last = null;
-      // row grouping
-      api.column(customerIndex, { page: 'current' }).data().each(function (group, i) {
-        if (last !== group) {
-          // subtract hidden rows: customer, curator
-          $(rows).eq(i).before(
-            '<tr class="group" style="font-weight:600"><td colspan="' + (colCount - 2).toString() + '">' + group + '</td></tr>'
-          );
-          last = group;
-        }
-      });
+    rowGroup: {
+      dataSrc: 'customer.name',
+      startRender: function (groupRows, successName) {
+        // console.log($(this))   //  [RowGroup]
+        return $('<tr/>').append(
+                  '<td colspan="4">' +
+                     '<span style="font-weight:600">' +
+                        groupRows.data()[0].customer.name +
+                     '</span>' +
+                  '</td>');
+      }
     },
+    createdRow: function (row, data, index) {
+      $(row).attr('data-success-id', data.id);
+    },
+    // drawCallback: function (settings) {
+    // },
     initComplete: function (settings, json) {
       var $tableWrapper = $(this).closest('[id*="table_wrapper"]'),
           template = _.template( $('#successes-table-header-template').html() );
@@ -112,11 +170,8 @@ function initSuccessesTable () {
         template({
           currentUser: app.current_user,
           curators: app.company.curators,
-          curatorCol: $(this).data('curator-col'),
           customers: app.company.customers,
-          customerCol: $(this).data('customer-col'),
           successes: app.company.successes,
-          successCol: $(this).data('success-col'),
           selectWidth: 250
         })
       );
@@ -127,6 +182,7 @@ function initSuccessesTable () {
         width: 'style',
         minimumResultsForSearch: -1   // hides text input
       });
+
       // select2 is inserting an empty <option> for some reason
       $curatorSelect.children('option').not('[value]').remove();
 
@@ -135,13 +191,15 @@ function initSuccessesTable () {
         width: 'style'
         // allowClear: true
       });
+
+      $curatorSelect.val( app.current_user.id.toString() )
+          .trigger('change', { auto: true });
+
       $(this).css('visibility', 'visible');
     }
   });
 }
 
-
-// TODO: <tr> elements get data-success-id, data-contribution-id, data-contributor.id ?
 function initContributorsTable (workflowStage) {
   var successIndex = 2, curatorIndex = 4, customerIndex = 5, colCount = 8;
   $('[id="' + workflowStage + '-contributors-table"]').DataTable({
@@ -155,6 +213,7 @@ function initContributorsTable (workflowStage) {
     columns: [
 
       { // td.contributor-details
+        data: null,
         render: function (data, type, row) {
                   return "<i class='fa fa-caret-right'></i>" +
                          "<i class='fa fa-caret-down' style='display:none'></i>";
@@ -162,7 +221,10 @@ function initContributorsTable (workflowStage) {
       },
       { // td.contributor-name
         name: 'contributor',
-        data: 'contributor.full_name'
+        data: {
+          _: 'contributor.full_name',
+          filter: 'contributor.id'
+        }
       },  // contributor
       // <td data-search="s<%= contribution.success.id %>, <%= contribution.success.name %>">
       {
@@ -208,6 +270,7 @@ function initContributorsTable (workflowStage) {
         // <td class='dropdown actions-dropdown'>
       },
       {
+        data: null,
         render: function () {
                   return _.template(
                             $('#contributors-dropdown-template').html()
@@ -217,8 +280,18 @@ function initContributorsTable (workflowStage) {
     ],
     columnDefs: [
       { visible: false, targets: [ successIndex, curatorIndex, customerIndex ] },
-      { orderable: false, targets: [0, colCount - 1] },
-      { searchable: false, targets: [0, colCount - 1]},
+      {
+        targets: [0, colCount - 1],
+        orderable: false,
+        searchable: false,
+        createdCell: function (td, cellData, rowData, row, col) {
+          if (col === 0) {
+            $(td).addClass('contributor-details');
+          } else {
+            $(td).addClass('dropdown actions-dropdown');
+          }
+        }
+      },
       { width: '0%', targets: [2, 4, 5] },  // success, curator, customer
       { width: '5%', targets: 0 },
       { width: '30%', targets: [1, 3] },
@@ -243,6 +316,11 @@ function initContributorsTable (workflowStage) {
                      '</a>' +
                   '</td>');
       }
+    },
+    createdRow: function (row, data, index) {
+      $(row).attr('data-contribution-id', data.id);
+      $(row).attr('data-success-id', data.success.id);
+      $(row).attr('data-contributor-id', data.contributor.id);
     },
     // buttons: [
     //     { extend: 'create', editor: editor },

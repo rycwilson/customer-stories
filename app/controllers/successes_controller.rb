@@ -1,7 +1,24 @@
 
 class SuccessesController < ApplicationController
 
-  before_action(except: [:create]) { @success = Success.find(params[:id]) }
+  before_action(except: [:index, :create]) { @success = Success.find(params[:id]) }
+
+  def index
+    company = Company.find_by(subdomain: request.subdomain)
+    respond_to() do |format|
+      format.json do
+        render({
+          json: company.successes.to_json({
+                  only: [:id, :name, :description], methods: [],
+                  include: {
+                    curator: { only: [:id], methods: [:full_name] },
+                    customer: { only: [:id, :name] }
+                  }
+                })
+        })
+      end
+    end
+  end
 
   def create
     @success = Success.create(success_params)
