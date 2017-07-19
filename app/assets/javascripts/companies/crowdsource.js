@@ -5,6 +5,8 @@ function crowdsource () {
 // lots of this will also apply to curate contributors
 function crowdsourceListeners () {
 
+  var lastSuccessesColumnSearch = null, lastContributorsColumnSearch = null;
+
   $(document)
 
     .on('click', 'a[href="#crowdsource-panel"]',
@@ -47,7 +49,7 @@ function crowdsourceListeners () {
 
     .on('keyup', '.select2-search',
       function (e) {
-        var $table, curatorId, $input = $(this).find('input');
+        var $table, curatorId, $input = $(this).find('input'), dtSearch;
         if ($(this).next().find('#select2-successes-filter-results').length) {
           $table = $('#successes-table');
         } else if ($(this).next().find('#select2-contributors-filter-results').length) {
@@ -55,16 +57,27 @@ function crowdsourceListeners () {
         } else {
           e.preventDefault();
         }
-        curatorId = $table.closest('[id*="table_wrapper"]').find('.crowdsource.curator-select').val();
-        // console.log('table: ', $table);
-        // console.log('filter: ', $input.val());
-        // console.log('curatorCol: ', curatorCol);
-        // console.log('curatorId: ', curatorId);
-        $table.DataTable()
-          .search('')
+        // curator is search by id, filter is search by text value
+        curatorId = $table.closest('[id*="table_wrapper"]')
+                          .find('.crowdsource.curator-select').val();
+        // the table search needs to be reset depending on whether a prior column
+        // search was performed
+        if ($table.is('#successes-table') && lastSuccessesColumnSearch) {
+          dtSearch = $table.DataTable().search('')
+                        .column(lastSuccessesColumnSearch + ':name').search('');
+          lastSuccessesColumnSearch = null;
+        } else if ($table.is('#crowdsource-contributors-table') && lastContributorsColumnSearch) {
+          dtSearch = $table.DataTable().search('')
+                        .column(lastContributorsColumnSearch + ':name').search('');
+          lastContributorsColumnSearch = null;
+        } else {
+          dtSearch = $table.DataTable().search('');
+        }
+        dtSearch
           .search($input.val())
           .column('curator:name').search(curatorId === '0' ? '' : curatorId)
           .draw();
+
       })
 
     .on('change', '.crowdsource.curator-select, #successes-filter, #contributors-filter',
@@ -146,8 +159,8 @@ function crowdsourceListeners () {
 
           // find entries owned by curator
           dt.search('')
-            // .columns().search('')
             .column('curator:name').search(curatorId === '0' ? '' : curatorId).draw();
+
           // update the other curator select (only once)
           if (!(data && data.auto)) {
             var $other = $('.crowdsource.curator-select').not($(this));
@@ -160,26 +173,42 @@ function crowdsourceListeners () {
           curatorId = $tableWrapper.find('.crowdsource.curator-select').val();
           // filterCol matches a table column name (see initContributorsTable)
           var filterCol = $(this).find('option:selected').data('column'),
-              filterVal = $(this).val();
+              filterVal = $(this).find('option:selected').val() === '0' ? '0' :
+                          $(this).find('option:selected').text(),
+              dtSearch;
+
           // curator && all candidates/contributors
           if (filterVal === '0') {
-            dt.search('')
-              .columns().search('')
+            if ($table.is('#successes-table') && lastSuccessesColumnSearch) {
+              dtSearch = $table.DataTable().search('')
+                            .column(lastSuccessesColumnSearch + ':name').search('');
+              lastSuccessesColumnSearch = null;
+            } else if ($table.is('#crowdsource-contributors-table') && lastContributorsColumnSearch) {
+              dtSearch = $table.DataTable().search('')
+                            .column(lastContributorsColumnSearch + ':name').search('');
+              lastContributorsColumnSearch = null;
+            } else {
+              dtSearch = $table.DataTable().search('');
+            }
+            dtSearch
               .column('curator:name').search(curatorId === '0' ? '' : curatorId)
               .draw();
 
           // curator && filter column
           } else {
-            console.log('curatorId: ', curatorId)
-            console.log('filterCol: ', filterCol)
-            console.log('filterVal: ', filterVal)
-            // heads up: 'customer-18' matches 'customer-180' => solved by treating as RegEx
+            // heads up: '18' matches '180' => solved by treating as RegEx
+            // (disregard this as we're now searching on the option text value)
             dt.search('')
-              // .columns().search('')
               .column('curator:name').search(curatorId === '0' ? '' : curatorId)
-              .column(filterCol + ':name').search('^' + filterVal + '(,|$)', true)
+              .column(filterCol + ':name').search(filterVal)
               .draw();
+            if ($table.is('#successes-table')) {
+              lastSuccessesColumnSearch = filterCol;
+            } else {
+              lastContributorsColumnSearch = filterCol;
+            }
           }
+
         }
       })
 
@@ -188,14 +217,14 @@ function crowdsourceListeners () {
         // // if (no contributions) { e.preventDefault(); }
         var successId = $(this).closest('tr').data('success-id');
         $('a[href="#crowdsource-contributors-tab-pane"]').tab('show');
-        $('#contributors-filter').val('s' + successId).trigger('change');
+        $('#contributors-filter').val(successId).trigger('change');
       })
 
-    .on('click', '#crowdsource-contributors-table a.success-name',
+    .on('click', '#crowdsource-contributors-table a.success',
       function (e) {
         var successId = $(this).closest('tr').next().data('success-id');
         $('a[href="#successes-tab-pane"]').tab('show');
-        $('#successes-filter').val('s' + successId).trigger('change');
+        $('#successes-filter').val(successId).trigger('change');
       })
 
     .on('click', '#crowdsource-contributors-table td.email-template', function (e) {

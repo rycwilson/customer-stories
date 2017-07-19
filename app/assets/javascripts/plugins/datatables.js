@@ -91,10 +91,7 @@ function initSuccessesTable () {
       },
       {  // success
         name: 'success',
-        data: {
-          _: 'name',
-          filter: 'id'
-        }
+        data: 'name'
       },
       {  // customer
         name: 'customer',
@@ -135,11 +132,10 @@ function initSuccessesTable () {
           }
         }
       },
+      { width: '0%', targets: [2, 4] },  // customer, curator
       { width: '5%', targets: 0 },
       { width: '50%', targets: 1 },
-      { width: '0%', targets: 2 },  // customer
       { width: '35%', targets: 3 },
-      { width: '0%', targets: 4 },  // curator
       { width: '10%', targets: 5 }
     ],
     rowGroup: {
@@ -221,13 +217,9 @@ function initContributorsTable (workflowStage) {
       },
       { // td.contributor-name
         name: 'contributor',
-        data: {
-          _: 'contributor.full_name',
-          filter: 'contributor.id'
-        }
-      },  // contributor
-      // <td data-search="s<%= contribution.success.id %>, <%= contribution.success.name %>">
-      {
+        data: 'contributor.full_name'
+      },
+      {  // <td data-search="s<%= contribution.success.id %>, <%= contribution.success.name %>">
         name: 'success',
         defaultContent: 'Unknown Opportunity',
         data: 'success.name',
@@ -311,7 +303,7 @@ function initContributorsTable (workflowStage) {
                      '<span style="font-weight: normal">' +  // em-dash not bold
                        '&nbsp;&nbsp;&#8211;&nbsp;&nbsp;' +
                      '</span>' +
-                     '<a href="javascript:;" class="success-name" style="font-weight:600">' +
+                     '<a href="javascript:;" class="success" style="font-weight:600">' +
                         successName +
                      '</a>' +
                   '</td>');
