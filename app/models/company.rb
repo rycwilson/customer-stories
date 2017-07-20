@@ -28,6 +28,12 @@ class Company < ActiveRecord::Base
     def story_candidates
       select { |success| success.story.blank? }
     end
+    def select_options
+      self.map() do |success|
+        [ success.name, success.id ]
+      end
+      .unshift( [""] )  # empty option makes placeholder possible (only needed for single select)
+    end
   end
   has_many :curators, -> { select('users.*').distinct }, through: :successes
   has_many :contributions, -> { includes(:contributor, :referrer, success:{customer:{}}) },

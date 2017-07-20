@@ -38,8 +38,6 @@ Rails.application.routes.draw do
     # see below for route to public story page
 
     # public for now, so can access via curl
-    get '/contributions', to: 'contributions#index'
-    get '/successes', to: 'successes#index'
 
     # Company home / Story curation - authentication required
     authenticate :user do
@@ -60,11 +58,8 @@ Rails.application.routes.draw do
         end
         resources :stories, only: [:create]
         resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
-        member { get '/successes', to: 'companies#show' }
-        member { get '/crowdsource-contributors', to: 'companies#show' }
         member { get '/sponsored-stories', to: 'companies#show' }
         member { get '/promote-settings', to: 'companies#show' }
-
         member { put :tags }
         member { put :widget }
         member { put :promote }
@@ -87,10 +82,9 @@ Rails.application.routes.draw do
       #   member { get '/sponsored_story_preview', to: 'adwords#preview' }
       # end
 
-      # contributions
-      # (Don't really need to nest under companies resource,
-      #  because the subdomain effectively already does that)
-
+      get '/successes', to: 'successes#index'
+      post '/successes/:id/contributions', to: 'contributions#create', as: 'success_contributions'
+      get 'contributions', to: 'contributions#index'
       put '/contributions/:id', to: 'contributions#update'
 
       # analytics
@@ -119,10 +113,9 @@ Rails.application.routes.draw do
 
 
     # Contributions
-
     post  '/contribution_requests', to: 'contribution_requests#create'
-    post  '/stories/:id/contributions', to: 'contributions#create',
-                                        as: 'story_contributions'
+    # post  '/stories/:id/contributions', to: 'contributions#create',
+    #                                     as: 'story_contributions'
     put   '/contributions/:id/request_contribution',
                     to: 'contributions#request_contribution',
                     as: 'request_contribution'

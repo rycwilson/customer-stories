@@ -1,0 +1,65 @@
+
+<div id='new-contributor-modal' class="modal fade" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">New Success Contributor</h4>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- :id will be filled in when a success is selected -->
+        <%= form_for Contribution.new, url: '/successes/:id/contributions',
+              html: { remote: true, id: 'new-contribution-form',
+                      class: 'form-horizontal' } do |f| %>
+
+          <div class="form-group required-input">
+            <label for="success_customer" class='col-sm-3 control-label'>
+              Customer
+            </label>
+            <div class="col-sm-9">
+              <%= select_tag 'contribution[customer_id]',
+                    options_for_select(company.customers.select_options),
+                    { class: 'new-contributor-customer form-control',
+                      style: 'width:100%', autofocus: true } %>
+            </div>
+          </div>
+
+          <div class="form-group required-input">
+            <label for="success_name" class='col-sm-3 control-label'>
+              Story Candidate
+            </label>
+            <div class="col-sm-9">
+              <%= f.select :success_id,
+                    options_for_select(company.successes.select_options), {},
+                    { class: 'new-contributor-success form-control',
+                      style: 'width:100%', autofocus: true } %>
+            </div>
+          </div>
+
+          <div class="form-group required-input">
+            <label for="success_name" class='col-sm-3 control-label'>
+              Referred by
+            </label>
+            <div class="col-sm-9">
+              <%= select_tag :referrer_id,
+                    options_for_select(company.curators.map() { |curator| [ curator.full_name, curator.id ] }.unshift([''])),
+                    { class: 'new-contributor-referrer form-control',
+                      style: 'width:100%', autofocus: true } %>
+            </div>
+          </div>
+
+        <% end %>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-success">Add Contributor</button>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

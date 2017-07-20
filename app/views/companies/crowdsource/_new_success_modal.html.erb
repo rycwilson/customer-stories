@@ -31,7 +31,8 @@
               Opportunity
             </label>
             <div class="col-sm-9">
-              <%= f.text_field :name, class: 'form-control' %>
+              <%= f.text_field :name, class: 'form-control',
+                  placeholder: 'brief description' %>
             </div>
           </div>
 
@@ -41,8 +42,8 @@
             </label>
             <div class="col-sm-9">
               <%= select_tag 'success[referrer_id]',
-                    options_for_select(company.curators.map() { |curator| [ curator.full_name, curator.id ] }),
-                    { class: 'new-success-customer form-control', style: 'width:100%',
+                    options_for_select(company.curators.map() { |curator| [ curator.full_name, curator.id ] }.unshift([''])),
+                    { class: 'new-success-referrer form-control', style: 'width:100%',
                       autofocus: true } %>
             </div>
           </div>
@@ -52,17 +53,20 @@
               Description
             </label>
             <div class="col-sm-9">
-              <%= f.text_area :description, rows: 6, class: 'form-control' %>
+              <%= f.text_area :description, rows: 6, class: 'form-control',
+                    placeholder: 'detailed description'  %>
             </div>
           </div>
 
         <% end %>
 
       </div>
+
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         <button type="submit" class="btn btn-success">Create Candidate</button>
       </div>
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+
+    </div>  <!-- /.modal-content -->
+  </div>  <!-- /.modal-dialog -->
+</div>  <!-- /.modal -->

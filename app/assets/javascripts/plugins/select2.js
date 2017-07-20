@@ -35,6 +35,10 @@ function initSelect2 () {
   $('.new-contributor-role').select2({
     theme: 'bootstrap'
   });
+  $('.new-success-referrer').select2({
+    theme: 'bootstrap',
+    placeholder: 'Who referred you to this opportunity?'
+  });
   $('.new-contributor-referrer').select2({
     theme: 'bootstrap',
     placeholder: 'Who referred you to this contributor?'
@@ -117,7 +121,16 @@ function initSelect2 () {
       theme: "bootstrap",
       tags: true,  // to allow new customer creation
       placeholder: 'select or create a new customer',
-      // allowClear: true
+    });
+
+  $(".new-contributor-customer").select2({
+      theme: "bootstrap",
+      placeholder: 'select',
+    });
+
+  $(".new-contributor-success").select2({
+      theme: "bootstrap",
+      placeholder: 'select',
     });
 
 }
