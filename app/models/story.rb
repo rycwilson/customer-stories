@@ -120,7 +120,6 @@ class Story < ActiveRecord::Base
 
   after_commit on: [:create, :destroy] do
     expire_all_stories_cache(false)
-    self.company.expire_curate_table_fragment_cache
   end
 
   # note: the _changed? methods for attributes don't work in the
@@ -133,7 +132,6 @@ class Story < ActiveRecord::Base
     expire_story_tile_fragment_cache
     expire_stories_index_fragment_cache
     expire_filter_select_fragment_cache
-    self.company.expire_curate_table_fragment_cache
     expire_all_stories_cache(true)
   end if Proc.new { |story|
            ( story.previous_changes.keys &
@@ -300,7 +298,6 @@ class Story < ActiveRecord::Base
     self.company.expire_all_stories_cache(true)  # => json only
     Rails.cache.delete("#{self.company.subdomain}/csp-story-#{self.id}-path")
     self.expire_fragment_cache_on_path_change
-    self.company.expire_curate_table_fragment_cache
   end
 
   # method returns a friendly id url that either contains or omits a product

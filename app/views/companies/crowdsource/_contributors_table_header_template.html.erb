@@ -46,7 +46,7 @@
         <optgroup label='Contributor'>
           {{ _.each(contributors, function (contributor) { }}
 
-            <option value="{{= contributor.id }}" data-column='contributor'>{{= contributor.full_name }}</option>
+            <option value="contributor-{{= contributor.id }}" data-column='contributor'>{{= contributor.full_name }}</option>
 
           {{ }) }}
         </optgroup>
@@ -59,7 +59,7 @@
         <optgroup label='Customer'>
           {{ _.each(customers, function (customer) { }}
 
-            <option value="{{= customer.id }}" data-column='customer'>{{= customer.name }}</option>
+            <option value="customer-{{= customer.id }}" data-column='customer'>{{= customer.name }}</option>
 
           {{ }); }}
         </optgroup>
@@ -67,7 +67,7 @@
         <optgroup label='Story Candidate'>
           {{ _.each(successes, function (success) { }}
 
-            <option value="{{= success.id }}" data-column='success'>{{= success.name }}</option>
+            <option value="success-{{= success.id }}" data-column='success'>{{= success.name }}</option>
 
           {{ }); }}
         </optgroup>

@@ -2,50 +2,12 @@
 function crowdsource () {
 }
 
-// lots of this will also apply to curate contributors
 function crowdsourceListeners () {
 
+  // keep track of the last column search, so table can be reset on the next search
   var lastSuccessesColumnSearch = null, lastContributorsColumnSearch = null;
 
   $(document)
-
-    .on('click', 'a[href="#crowdsource-panel"]',
-      function () {
-        // if ($('#successes-tab-pane').children().length === 0) {
-        //   $.get('/companies/' + app.company.id + '/successes',
-        //     function (html, status, xhr) {
-        //       $('#successes-tab-pane').append(html)
-        //         .fadeIn({ duration: 150, easing: 'linear' });
-        //       initSuccessesTable();
-        //       $('#loading-successes').toggle();
-        //       $('#crowdsource-panel .layout-main').css({
-        //         opacity: 1,
-        //         'pointer-events': 'auto'
-        //       });
-        //       // now get the contributors table...
-        //       $.get('/companies/' + app.company.id + '/crowdsource-contributors',
-        //         function (html, status, xhr) {
-        //           $('#crowdsource-contributors-tab-pane').append(html)
-        //             .fadeIn({
-        //               duration: 300, easing: 'linear',
-        //               complete: function () {
-        //                 initContributorsTable('crowdsource');
-        //                 $('.crowdsource.curator-select').each(function () {
-        //                   $(this).val(
-        //                     $(this).children('[value="' + app.current_user.id.toString() + '"]').val()
-        //                   ).trigger('change', { auto: true });
-        //                 });
-        //                 $('#loading-successes').toggle();
-        //                 $('#crowdsource-panel .layout-main').css({
-        //                   opacity: 1,
-        //                   'pointer-events': 'auto'
-        //                 });
-        //               }
-        //             });
-        //         });
-        //     });
-        // }
-      })
 
     .on('keyup', '.select2-search',
       function (e) {
@@ -134,7 +96,7 @@ function crowdsourceListeners () {
             $contributorsOptgroup.empty();
             _.each(contributors, function (contributor) {
               $contributorsOptgroup.append(
-                '<option value="' + contributor.id + '" data-column="contributor">' + contributor.full_name + '</option>'
+                '<option value="contributor-' + contributor.id + '" data-column="contributor">' + contributor.full_name + '</option>'
               );
             });
           }
@@ -143,14 +105,14 @@ function crowdsourceListeners () {
           $customersOptgroup.empty();
           _.each(customers, function (customer) {
             $customersOptgroup.append(
-              '<option value="' + customer.id + '" data-column="customer">' + customer.name + '</option>'
+              '<option value="customer-' + customer.id + '" data-column="customer">' + customer.name + '</option>'
             );
           });
 
           $successesOptgroup.empty();
           _.each(successes, function (success) {
             $successesOptgroup.append(
-              '<option value="' + success.id + '" data-column="success">' + success.name + '</option>'
+              '<option value="success-' + success.id + '" data-column="success">' + success.name + '</option>'
             );
           });
 
@@ -217,14 +179,14 @@ function crowdsourceListeners () {
         // // if (no contributions) { e.preventDefault(); }
         var successId = $(this).closest('tr').data('success-id');
         $('a[href="#crowdsource-contributors-tab-pane"]').tab('show');
-        $('#contributors-filter').val(successId).trigger('change');
+        $('#contributors-filter').val('success-' + successId).trigger('change');
       })
 
     .on('click', '#crowdsource-contributors-table a.success',
       function (e) {
         var successId = $(this).closest('tr').next().data('success-id');
         $('a[href="#successes-tab-pane"]').tab('show');
-        $('#successes-filter').val(successId).trigger('change');
+        $('#successes-filter').val('success-' + successId).trigger('change');
       })
 
     .on('click', '#crowdsource-contributors-table td.email-template', function (e) {

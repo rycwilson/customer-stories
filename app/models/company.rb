@@ -410,10 +410,6 @@ class Company < ActiveRecord::Base
     self.increment_story_tile_fragments_memcache_iterator
   end
 
-  def expire_curate_table_fragment_cache
-    self.expire_fragment("#{self.subdomain}/curate-table")
-  end
-
 
   # invalidation of any story tile fragment will invalidate
   # - curator stories index (all stories)

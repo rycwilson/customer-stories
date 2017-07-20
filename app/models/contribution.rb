@@ -43,18 +43,17 @@ class Contribution < ActiveRecord::Base
   validates :remind_1_wait, numericality: { only_integer: true }
   validates :remind_2_wait, numericality: { only_integer: true }
 
-  after_commit(on: [:create, :destroy]) do
-    self.expire_table_fragment_cache()
-  end
+  # after_commit(on: [:create, :destroy]) do
+  # end
 
   after_commit(on: [:update]) do
-    if (self.previous_changes.keys &
-        ['status', 'contribution', 'feedback', 'notes', 'request_received_at',
-         'complete', 'publish_contributor', 'preview_contributor']).any?
-      expire_tr_fragment_cache()
+    # if (self.previous_changes.keys &
+    #     ['status', 'contribution', 'feedback', 'notes', 'request_received_at',
+    #      'complete', 'publish_contributor', 'preview_contributor']).any?
+    # end
+    if self.previous_changes.key?('publish_contributor')
+      expire_published_contributor_cache
     end
-
-    expire_published_contributor_cache if self.previous_changes.key?('publish_contributor')
 
     if self.previous_changes.key?('preview_contributor')
       # when selecting or de-selecting a preview contributor,
@@ -198,15 +197,6 @@ class Contribution < ActiveRecord::Base
   def expire_published_contributor_cache
     story = self.success.story
     story.expire_published_contributor_cache(self.contributor.id)
-  end
-
-  def expire_table_fragment_cache
-    self.expire_fragment("#{self.company.subdomain}/contributions-table-body") if fragment_exist?("#{self.company.subdomain}/contributions-table-body")
-  end
-
-  def expire_tr_fragment_cache
-    self.expire_fragment("#{self.company.subdomain}/contributions/#{self.id}") if fragment_exist?("#{self.company.subdomain}/contributions/#{self.id}")
-    self.expire_table_fragment_cache()
   end
 
 end
