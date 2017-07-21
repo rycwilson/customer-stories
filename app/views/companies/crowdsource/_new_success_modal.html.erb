@@ -22,7 +22,7 @@
               <%= f.select :customer_id,
                     options_for_select(company.customers.select_options), {},
                     { class: 'new-success-customer form-control', style: 'width:100%',
-                      autofocus: true } %>
+                      autofocus: true, } %>
             </div>
           </div>
 
@@ -32,7 +32,7 @@
             </label>
             <div class="col-sm-9">
               <%= f.text_field :name, class: 'form-control',
-                  placeholder: 'brief description' %>
+                  placeholder: 'Brief description' %>
             </div>
           </div>
 
@@ -54,7 +54,7 @@
             </label>
             <div class="col-sm-9">
               <%= f.text_area :description, rows: 6, class: 'form-control',
-                    placeholder: 'detailed description'  %>
+                    placeholder: 'Detailed description'  %>
             </div>
           </div>
 

@@ -9,16 +9,80 @@ function crowdsourceListeners () {
 
   $(document)
 
+    .on('reset', '#new-contributor-modal form', function () {
+      $('.new-or-existing-contributor.new').css('display', 'block');
+      $('.new-or-existing-contributor.existing').css('display', 'none');
+    })
+
+    .on('change', '.new-or-existing-contributor.buttons input[type="radio"]',
+      function (e) {
+        // if came from modal close / form reset, check values
+        $('.new-or-existing-contributor:not(.buttons)').toggle();
+      })
+
+    .on('change', 'select.new-contributor-customer',
+      function (e) {
+        var customerId = $(this).val(),
+            successes = app.company.successes.filter(function (success) {
+                  return success.customer_id == customerId;
+                })
+                .map(function (success) {
+                  return { id: success.id, text: success.name || "Unknown Story Candidate" };
+                });
+            successes.unshift({ id: '', text: '' });
+            contributors = app.contributions.filter(function (contribution) {
+                return successes.some(function (success) {
+                  return contribution.success_id === success.id;
+                });
+              })
+              .map(function (contribution) {
+                return { id: contribution.contributor.id,
+                         text: contribution.contributor.full_name };
+              });
+            contributors.unshift({ id: '', text: '' });
+        // ref: https://github.com/select2/select2/issues/2830#issuecomment-229710429
+        $('select.new-contributor-success')
+          .select2('destroy').empty()
+          .select2({
+            theme: "bootstrap",
+            placeholder: 'Select',
+            data: successes
+          });
+        $('select.new-contributor-existing')
+          .select2('destroy').empty()
+          .select2({
+            theme: "bootstrap",
+            placeholder: 'Select',
+            data: contributors
+          });
+        if (contributors.length === 1) {  // empty (1 because placeholder)
+          if ($('.new-or-existing-contributor.buttons input:radio:checked')
+                  .val() === 'exists') {
+            $('.new-or-existing-contributor.buttons input[value="new"]')
+              .trigger('click');
+          }
+          $('.new-or-existing-contributor.buttons input[value="exists"]')
+            .prop('disabled', true);
+        } else {
+          $('.new-or-existing-contributor.buttons input[value="exists"]')
+            .prop('disabled', false);
+        }
+
+      })
+
     .on('keyup', '.select2-search',
       function (e) {
         var $table, curatorId, $input = $(this).find('input'), dtSearch;
+
+        // is this #successes-filter or #contributors-filter ?
         if ($(this).next().find('#select2-successes-filter-results').length) {
           $table = $('#successes-table');
         } else if ($(this).next().find('#select2-contributors-filter-results').length) {
           $table = $('#crowdsource-contributors-table');
         } else {
-          e.preventDefault();
+          return false;
         }
+
         // curator is search by id, filter is search by text value
         curatorId = $table.closest('[id*="table_wrapper"]')
                           .find('.crowdsource.curator-select').val();

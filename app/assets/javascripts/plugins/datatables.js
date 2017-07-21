@@ -309,6 +309,8 @@ function initContributorsTable (workflowStage) {
                   '</td>');
       }
     },
+    // TODO: td attributes can be set here instead of createdCell
+    // (so everything in one place)
     createdRow: function (row, data, index) {
       $(row).attr('data-contribution-id', data.id);
       $(row).attr('data-success-id', data.success.id);
@@ -319,11 +321,6 @@ function initContributorsTable (workflowStage) {
     //     { extend: 'edit',   editor: editor },
     //     { extend: 'remove', editor: editor }
     // ],
-    // createdRow: function( row, data, dataIndex ) {
-    //   if ( data[4] == "A" ) {
-    //     $(row).addClass( 'important' );
-    //   }
-    // }
     // drawCallback: function (settings) {
     // },
     initComplete: function (settings, json) {

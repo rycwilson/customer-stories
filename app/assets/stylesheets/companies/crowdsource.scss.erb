@@ -72,9 +72,15 @@
   }
 }
 
-#new-success-modal {
+#new-success-modal, #new-contributor-modal {
+  .modal-body {
+    padding: 20px;
+  }
   .form-group {
-    margin-bottom: 15px;  // bootstrap over mvp
+    margin-bottom: 20px;
+  }
+  .form-group:last-of-type {
+    margin-bottom: 10px;
   }
   // mimic select2
   input, textarea {

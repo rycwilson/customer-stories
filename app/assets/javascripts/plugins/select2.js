@@ -32,17 +32,6 @@ function initSelect2 () {
   // });
 
 // }
-  $('.new-contributor-role').select2({
-    theme: 'bootstrap'
-  });
-  $('.new-success-referrer').select2({
-    theme: 'bootstrap',
-    placeholder: 'Who referred you to this opportunity?'
-  });
-  $('.new-contributor-referrer').select2({
-    theme: 'bootstrap',
-    placeholder: 'Who referred you to this contributor?'
-  });
 
   /*
     Company tags are for maintaining a list of options for Story tagging
@@ -52,23 +41,23 @@ function initSelect2 () {
   $('.company-tags').select2({
     theme: 'bootstrap',
     tags: true,
-    placeholder: 'add tags'
+    placeholder: 'Add tags'
   });
 
   $('.templates-select').select2({
     theme: 'bootstrap',
-    placeholder: 'select template'
+    placeholder: 'Select template'
   });
 
   $('.widget-filter-category').select2({
     theme: 'bootstrap',
-    placeholder: 'select category',
+    placeholder: 'Select category',
     width: 'style'
   });
 
   $('.widget-filter-product').select2({
     theme: 'bootstrap',
-    placeholder: 'select product',
+    placeholder: 'Select product',
     width: 'style'
   });
 
@@ -81,7 +70,7 @@ function initSelect2 () {
       $(".new-story-customer").select2({  // single select
         theme: "bootstrap",
         tags: true,  // to allow new customer creation
-        placeholder: 'select or create a new customer',
+        placeholder: 'select or add a new customer',
         // allowClear: true
       });
     }
@@ -91,7 +80,7 @@ function initSelect2 () {
     // TODO: enable new tags from here?
     $(".new-story-tags").select2({
       theme: 'bootstrap',
-      placeholder: 'select tag(s)'
+      placeholder: 'Select tag(s)'
     });
 
   }
@@ -107,7 +96,7 @@ function initSelect2 () {
 
   $('#story-ctas-select').select2({
     theme: 'bootstrap',
-    placeholder: 'select CTAs',
+    placeholder: 'Select CTAs',
     tags: true
   });
 
@@ -118,21 +107,47 @@ function initSelect2 () {
     });
 
   $(".new-success-customer").select2({
-      theme: "bootstrap",
-      tags: true,  // to allow new customer creation
-      placeholder: 'select or create a new customer',
-    });
+    theme: "bootstrap",
+    tags: true,  // to allow new customer creation
+    selectOnClose: true,
+    placeholder: 'Select or add a new customer',
+  });
+
+  $('.new-success-referrer').select2({
+    theme: 'bootstrap',
+    placeholder: 'Who referred you to this opportunity?'
+  });
 
   $(".new-contributor-customer").select2({
-      theme: "bootstrap",
-      placeholder: 'select',
-    });
+    theme: "bootstrap",
+    placeholder: 'Select'
+  });
 
   $(".new-contributor-success").select2({
-      theme: "bootstrap",
-      placeholder: 'select',
-    });
+    theme: "bootstrap",
+    placeholder: 'Select'
+  });
 
+  $(".new-contributor-success-contact").select2({
+    theme: "bootstrap",
+    placeholder: 'Select'
+  });
+
+  $('.new-contributor-role').select2({
+    theme: 'bootstrap',
+    placeholder: 'Select'
+  });
+
+  $('.new-contributor-referrer').select2({
+    theme: 'bootstrap',
+    placeholder: 'Who referred you to this contributor?'
+  });
+
+
+  $('.new-contributor-existing').select2({
+    theme: 'bootstrap',
+    placeholder: 'Select'
+  });
 }
 
 function select2Listeners () {

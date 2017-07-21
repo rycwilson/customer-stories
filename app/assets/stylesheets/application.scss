@@ -104,7 +104,7 @@
   float: none;
 }
 
-.required-input label:after {
+.required-input label:not(.radio-inline):after {
   color: #D9534F;
   content: " *";
 }

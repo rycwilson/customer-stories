@@ -32,22 +32,103 @@
               Story Candidate
             </label>
             <div class="col-sm-9">
-              <%= f.select :success_id,
-                    options_for_select(company.successes.select_options), {},
+              <%= f.select :success_id, [], {},
                     { class: 'new-contributor-success form-control',
-                      style: 'width:100%', autofocus: true } %>
+                      style: 'width:100%' } %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class='col-sm-3 control-label'>
+              Referred by
+            </label>
+            <div class="col-sm-9">
+              <%= f.select :referrer_id,
+                    options_for_select(company.curators.map() { |curator| [ curator.full_name, curator.id ] }.unshift([''])), {},
+                    { class: 'new-contributor-referrer form-control',
+                      style: 'width:100%' } %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class='col-sm-3 control-label'>
+              Success Contact
+            </label>
+            <div class="col-sm-9">
+              <%= select_tag 'contribution[success_contact]', [],
+                    { class: 'new-contributor-success-contact form-control',
+                      style: 'width:100%' } %>
             </div>
           </div>
 
           <div class="form-group required-input">
-            <label for="success_name" class='col-sm-3 control-label'>
-              Referred by
+            <label for="" class='col-sm-3 control-label'>
+              Contributor Role
             </label>
             <div class="col-sm-9">
-              <%= select_tag :referrer_id,
-                    options_for_select(company.curators.map() { |curator| [ curator.full_name, curator.id ] }.unshift([''])),
-                    { class: 'new-contributor-referrer form-control',
-                      style: 'width:100%', autofocus: true } %>
+              <%= f.select :role, [], {},
+                    { class: 'new-contributor-role form-control',
+                      style: 'width:100%' } %>
+            </div>
+          </div>
+
+          <div class="form-group new-or-existing-contributor buttons">
+            <label for="" class='col-sm-3 control-label'>
+              Already exists?
+            </label>
+            <div class="col-sm-9 btn-group" data-toggle='buttons'>
+              <label class='radio-inline active'>
+                <input name='new-or-existing-contributor' type="radio" value='exists'>
+                Yes
+              </label>
+              <label class='radio-inline'>
+                <input name='new-or-existing-contributor' type="radio" value='new' checked>
+                No
+              </label>
+            </div>
+          </div>
+
+          <div class='new-or-existing-contributor new'>
+
+            <div class="form-group required-input">
+              <label for="" class='col-sm-3 control-label'>
+                First Name
+              </label>
+              <div class="col-sm-9">
+                <%= text_field_tag 'contribution[contributor_first_name]', nil,
+                      class: 'form-control', placeholder: 'Contributor first name' %>
+              </div>
+            </div>
+
+            <div class="form-group required-input">
+              <label for="" class='col-sm-3 control-label'>
+                Last Name
+              </label>
+              <div class="col-sm-9">
+                <%= text_field_tag 'contribution[contributor_last_name]', nil,
+                      class: 'form-control', placeholder: 'Contributor last name' %>
+              </div>
+            </div>
+
+            <div class="form-group required-input">
+              <label for="" class='col-sm-3 control-label'>
+                Email
+              </label>
+              <div class="col-sm-9">
+                <%= email_field_tag 'contribution[contributor_email]', nil,
+                      class: 'form-control', placeholder: 'Contributor email' %>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group new-or-existing-contributor existing" style='display:none'>
+            <label class='col-sm-3 control-label'>
+              Contributor
+            </label>
+            <div class="col-sm-9">
+              <%= select_tag 'contribution[contributor_id]', [],
+                    { class: 'new-contributor-existing form-control',
+                      style: 'width:100%' } %>
             </div>
           </div>
 
