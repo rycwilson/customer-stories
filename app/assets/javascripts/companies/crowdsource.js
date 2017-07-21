@@ -12,9 +12,10 @@ function crowdsourceListeners () {
     .on('reset', '#new-contributor-modal form', function () {
       $('.new-or-existing-contributor.new').css('display', 'block');
       $('.new-or-existing-contributor.existing').css('display', 'none');
+      $(this).find('select').select2('val', '');
     })
 
-    .on('change', '.new-or-existing-contributor.buttons input[type="radio"]',
+    .on('change', '.new-or-existing-contributor.buttons input:radio',
       function (e) {
         // if came from modal close / form reset, check values
         $('.new-or-existing-contributor:not(.buttons)').toggle();
