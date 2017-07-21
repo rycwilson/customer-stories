@@ -75,17 +75,20 @@
 #new-success-modal, #new-contributor-modal {
   .modal-body {
     padding: 20px;
-  }
-  .form-group {
-    margin-bottom: 20px;
-  }
-  .form-group:last-of-type {
-    margin-bottom: 10px;
-  }
-  // mimic select2
-  input, textarea {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    padding-left: 12px;
+    label:not(.radio-inline) {
+      padding-right: 5px;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group:last-of-type {
+      margin-bottom: 10px;
+    }
+    // mimic select2
+    input, textarea {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      padding-left: 12px;
+    }
   }
 }
 
