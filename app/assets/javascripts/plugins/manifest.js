@@ -8,7 +8,7 @@
 
 //= require DataTables/datatables
 //= require datatables-editor-trial/js/dataTables.editor
-
+//= require datatables-plugins/select2/editor.select2.js
 
 //= require bootstrap-jasny/js/fileinput
 // require mvpready-core

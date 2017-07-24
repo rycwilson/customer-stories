@@ -4,7 +4,7 @@ class ContributionsController < ApplicationController
   before_action :set_contribution, only: [:show, :confirm, :confirm_request, :send_request]
   before_action :check_opt_out_list, only: [:create, :confirm_request]
 
-  respond_to :html, :json, :js
+  respond_to(:html, :json, :js)
 
   def index
     company = Company.find_by(subdomain: request.subdomain)

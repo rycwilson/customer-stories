@@ -9,6 +9,11 @@ function crowdsourceListeners () {
 
   $(document)
 
+    .on('click', 'td.email-template',
+      function (e) {
+        contributorsEditor.inline(this);
+      })
+
     .on('reset', '#new-contributor-modal form', function () {
       $('.new-or-existing-contributor.new').css('display', 'block');
       $('.new-or-existing-contributor.existing').css('display', 'none');

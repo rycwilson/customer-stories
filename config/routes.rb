@@ -84,7 +84,7 @@ Rails.application.routes.draw do
 
       get '/successes', to: 'successes#index'
       post '/successes/:id/contributions', to: 'contributions#create', as: 'success_contributions'
-      get 'contributions', to: 'contributions#index'
+      get '/contributions', to: 'contributions#index'
       put '/contributions/:id', to: 'contributions#update'
 
       # analytics

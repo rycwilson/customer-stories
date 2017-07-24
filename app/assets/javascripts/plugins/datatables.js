@@ -203,11 +203,11 @@ function initContributorsTable (workflowStage) {
       url: '/contributions',
       dataSrc: ''
     },
-    paging: false,
+    dom: 'ti',  // table and info only; no length change control or pagination
+    // select: true,  // https://datatables.net/extensions/select/
     autoWidth: false,
     order: [[ successIndex, 'asc' ]],
     columns: [
-
       { // td.contributor-details
         data: null,
         render: function (data, type, row) {
@@ -239,8 +239,10 @@ function initContributorsTable (workflowStage) {
         // }
       },           // story candidate
       // <td data-search="t<%#= contribution.email_template_id  %>" class='email-template'>
-      { name: 'email_template',
-        data: 'email_template.name' },     // email template
+      {
+        name: 'email_template',
+        data: 'email_template.name',     // email template
+      },
 
       {  // <td data-search="<%= contribution.success.curator.id %>"></td>
         name: 'curator',
@@ -276,13 +278,6 @@ function initContributorsTable (workflowStage) {
         targets: [0, colCount - 1],
         orderable: false,
         searchable: false,
-        createdCell: function (td, cellData, rowData, row, col) {
-          if (col === 0) {
-            $(td).addClass('contributor-details');
-          } else {
-            $(td).addClass('dropdown actions-dropdown');
-          }
-        }
       },
       { width: '0%', targets: [2, 4, 5] },  // success, curator, customer
       { width: '5%', targets: 0 },
@@ -315,6 +310,15 @@ function initContributorsTable (workflowStage) {
       $(row).attr('data-contribution-id', data.id);
       $(row).attr('data-success-id', data.success.id);
       $(row).attr('data-contributor-id', data.contributor.id);
+      // make sure to skip the hidden columns (2, 4, 5)
+        $(row).children().eq(0).addClass('contributor-details');
+        $(row).children().eq(1).addClass('contributor');
+        // $(row).children().eq(2).addClass('success');
+        $(row).children().eq(2).addClass('email-template');
+        // $(row).children().eq(4).addClass('curator');
+        // $(row).children().eq(5).addClass('customer');
+        $(row).children().eq(3).addClass('next-step');
+        $(row).children().eq(4).addClass('dropdown actions-dropdown');
     },
     // buttons: [
     //     { extend: 'create', editor: editor },
@@ -328,7 +332,7 @@ function initContributorsTable (workflowStage) {
           template = _.template($('#contributors-table-header-template').html());
 
       // remove default search field.  Disabling via options also disables api, so can't do that
-      $tableWrapper.children('.row:first-child').remove();
+      // $tableWrapper.children('.row:first-child').remove();
 
       if (workflowStage === 'crowdsource') {
         $tableWrapper.prepend(
@@ -360,24 +364,30 @@ function initContributorsTable (workflowStage) {
 
         // need to put this in the global space so it can be seen by
         // functions in crowdsourceListeners()
+        // NOTE: skip the hidden columns
         contributorsEditor = new $.fn.dataTable.Editor({
+          ajax: '/contributions',
           table: '#crowdsource-contributors-table',
+          idSrc: 'id',
           fields: [
             { name: 'contributor_details' },
             { name: 'contributor' },
-            { name: 'story_candidate' },
+            // { name: 'success' },
             {
-              label: "Email template:",
-              name: "email_template",
-              type: 'select',
-              options: ['Choice 1', 'Choice 2', 'Choice 3']
+              label: 'Select an email template',
+              name: 'email_template.name',  // should match columns.data
+              type: 'select2',
+              options: app.company.email_templates.map(function (template) {
+                          return { label: template.name, value: template.id };
+                        })
             },
-            { name: 'curator' },
-            { name: 'customer' },
+            // { name: 'curator' },
+            // { name: 'customer' },
             { name: 'next_step' },
             { name: 'actions' }
           ]
         });
+
 
       // workflowStage == curate
       // contributors under a Story don't have curator and filter selects

@@ -1,6 +1,9 @@
 
 // table also appears in curate section
 [id*="-contributors-table"] {
+  td {
+    vertical-align: middle !important;  // override bootstrap for case of inline editor expanding row height
+  }
   th.contributor-details, td.contributor-details {
     // padding necessary to override datatables css that adds padding-right: 30px to the th,
     // thus preventing text from centering horizontally
