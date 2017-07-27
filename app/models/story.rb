@@ -664,4 +664,23 @@ class Story < ActiveRecord::Base
     unique_visitors.length
   end
 
+  # TODO: (following four methods): the assoiation extensions don't work well with to_json,
+  # so supplement with this for now and revisit later. Consider jbuilder or something similar
+  # (these methods so far only used in stories#promoted)
+  def ads_enabled?
+    self.ads.all? { |ad| ad.status == 'ENABLED' }
+  end
+
+  def ads_status
+    self.ads.first.status  # same for each ad
+  end
+
+  def ads_long_headline
+    self.ads.first.long_headline  # same for each ad
+  end
+
+  def ads_image_url
+    self.ads.first.adwords_image.try(:image_url)  # same for each ad
+  end
+
 end

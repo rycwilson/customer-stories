@@ -1104,8 +1104,8 @@ class Company < ActiveRecord::Base
       puts "HTTP Error: %s" % e
       flash_mesg = e.message
       AdwordsImage.find_by(image_url: image_params[:url]).destroy
-      cookies[:workflow_tab] = 'promote'
-      cookies[:workflow_sub_tab] = 'promote-settings'
+      cookies[:workflow_stage] = 'promote'
+      cookies[:workflow_substage] = 'promote-settings'
       redirect_to(company_path(company), flash: { danger: flash_mesg }) and return
 
     rescue AdwordsApi::Errors::ApiException => e
@@ -1123,8 +1123,8 @@ class Company < ActiveRecord::Base
         flash_mesg = e.message
       end
       AdwordsImage.find_by(image_url: image_params[:url]).destroy
-      cookies[:workflow_tab] = 'promote'
-      cookies[:workflow_sub_tab] = 'promote-settings'
+      cookies[:workflow_stage] = 'promote'
+      cookies[:workflow_substage] = 'promote-settings'
       redirect_to(company_path(self), flash: { danger: flash_mesg }) and return
     end
 

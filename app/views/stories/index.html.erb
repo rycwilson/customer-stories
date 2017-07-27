@@ -22,7 +22,7 @@
 <% if @is_curator %>
 
   <%= render 'shared/company_navbar',
-       { company: @company, is_curator: true, workflow_tab: nil,
+       { company: @company, is_curator: true, workflow_stage: nil,
          category_select_cache_key: @category_select_cache_key,
          product_select_cache_key: @product_select_cache_key,
          pre_selected_filter: @pre_selected_filter } %>

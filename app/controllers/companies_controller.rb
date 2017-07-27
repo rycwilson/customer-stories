@@ -1,6 +1,6 @@
 class CompaniesController < ApplicationController
 
-  before_action :user_authorized?, only: [:show, :edit]
+  before_action :user_authorized?, only: [:edit, :show]
   before_action :set_company, except: [:new, :create]
   before_action only: [:show, :edit] { set_gon(@company) }
   before_action :set_s3_direct_post, only: [:new, :edit, :show, :create]
@@ -11,43 +11,22 @@ class CompaniesController < ApplicationController
   end
 
   def show
-    if request.xhr?
-      case request.path
-      when /successes/
-        render({
-          partial: 'companies/crowdsource/successes_table', locals: { company: @company }
-        })
-      when /crowdsource-contributors/
-        render({
-          partial: 'companies/crowdsource/contributors_table',
-          locals: { company: @company, workflow_stage: 'crowdsource' }
-        })
-      when /curate/
-      when /sponsored-stories/
-        render({
-          partial: 'adwords/sponsored_stories', locals: { company: @company }
-        })
-      when /promote-settings/
-        render({
-          partial: 'adwords/promote_settings', locals: { company: @company }
-        })
-      when /measure/
-      end
-    else
-      @workflow_tab = cookies[:workflow_tab] || 'curate'
-      @workflow_sub_tab = cookies[:workflow_sub_tab]
-      cookies.delete(:workflow_tab) if cookies[:workflow_tab]
-      cookies.delete(:workflow_sub_tab) if cookies[:workflow_sub_tab]
-      @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
-      @story_views_30_day_count = PageView.joins(:visitor_session)
-                                   .company_story_views_since(@company.id, 30).count
-      story_ids = @company.all_stories
-      @stories = Story.find(story_ids)
-                      .sort_by { |story| story_ids.index(story.id) }
-    end
+    redirect_to(company_main_path) if request.path.match(/\/companies\/\d+/)
+    @workflow_stage = cookies[:csp_workflow_stage]
+    cookies.delete(:csp_workflow_stage) if cookies[:csp_workflow_stage]
+    # binding.remote_pry
+    # @workflow_substage = cookies[:csp_workflow_substage]
+    # cookies.delete(:workflow_substage) if cookies[:workflow_substage]
+    @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
+    @story_views_30_day_count = PageView.joins(:visitor_session)
+                                 .company_story_views_since(@company.id, 30).count
+    story_ids = @company.all_stories
+    @stories = Story.find(story_ids)
+                    .sort_by { |story| story_ids.index(story.id) }
   end
 
   def edit
+    redirect_to(company_settings_path) if request.path.match(/\/companies\/\d+/)
     @profile_form_options = set_profile_form_options(params)
     @templates_select = @company.templates_select
   end
@@ -149,7 +128,7 @@ class CompaniesController < ApplicationController
   end
 
   def set_company
-    @company = Company.find params[:id]
+    @company = Company.find(params[:id])
   end
 
   def user_authorized?

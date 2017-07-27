@@ -71,7 +71,7 @@ function initGoogleCharts (asyncLoad, charts) {
     google.charts.load('current', { packages: ['corechart'] });
     if (asyncLoad === true) {
       drawCharts(google);
-    } else if ($('#measure-panel').hasClass('active')) {
+    } else if ($('#measure').hasClass('active')) {
       $('#charts-filter-form').trigger('submit');
     }
   } ;

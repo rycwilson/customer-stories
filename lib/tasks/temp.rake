@@ -3,6 +3,30 @@ namespace :temp do
   desc "temp stuff"
 
   task et_assign: :environment do
+    cce = Company.find_by(subdomain:'centerforcustomerengagement')
+    cce.contributions.each() do |c|
+      if c.role.blank?
+        c.update(role: 'blank', email_template_id: rand(76..78))
+      else
+        c.update(email_template_id: rand(76..78))
+      end
+    end
+    varmour = Company.find_by(subdomain:'varmour')
+    varmour.contributions.each() do |c|
+      if c.role.blank?
+        c.update(role: 'blank', email_template_id: rand(76..78))
+      else
+        c.update(email_template_id: rand(76..78))
+      end
+    end
+    acme = Company.find_by(subdomain:'acme-test')
+    acme.contributions.each() do |c|
+      if c.role.blank?
+        c.update(role: 'blank', email_template_id: rand(76..78))
+      else
+        c.update(email_template_id: rand(76..78))
+      end
+    end
     trunity = Company.find_by(subdomain:'trunity')
     trunity.contributions.each() do |c|
       if c.role.blank?

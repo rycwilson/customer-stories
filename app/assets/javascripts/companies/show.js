@@ -1,7 +1,20 @@
 
 function companiesShow () {
 
-  // TODO: need these?  they aren't doing anything
+  var $tabs = $('#workflow-tabs-list'), defaultTab = '#curate';
+  if ($tabs.find('.active').length === 0) {
+    if (window.location.hash) {
+      console.log('yes hash')
+      $('#workflow-tabs-list a[href="' + window.location.hash + '"]').tab('show');
+    } else {
+      console.log('no hash')
+      $('#workflow-tabs-list a[href="' + defaultTab + '"]').tab('show');
+    }
+  }
+  // don't scroll to anchor
+  setTimeout(function() { window.scrollTo(0, 0); }, 1);
+
+  // panel-specific stuff
   crowdsource();
   curate();
   promote();
@@ -38,7 +51,7 @@ function companiesShowListeners () {
         $otherDropdown.removeClass('active');
       })
 
-    .on('click', 'a[href="#promote-panel"]',
+    .on('click', 'a[href="#promote"]',
       function () {
 
         promote();

@@ -1,4 +1,7 @@
-
+#
+# this comes in handy if the current_user is needed
+# request.env['warden'].user(:user)
+#
 Rails.application.routes.default_url_options = {
     protocol: Rails.env.development? ? 'http' : 'https',
     host: ENV['HOST_NAME']
@@ -38,16 +41,28 @@ Rails.application.routes.draw do
     # see below for route to public story page
 
     # public for now, so can access via curl
+    get '/stories/promoted', to: 'stories#promoted'
 
-    # Company home / Story curation - authentication required
     authenticate :user do
+      # current_user = request.env['warden'].user(:user).company_id
+
+      get '/main', to: 'companies#show',
+            constraints: lambda { |params, request|
+              params[:id] = request.env['warden'].user(:user).company_id.to_s
+              true
+            }, as: 'company_main'
+      get '/company-settings', to: 'companies#edit',
+            constraints: lambda { |params, request|
+              params[:id] = request.env['warden'].user(:user).company_id.to_s
+              true
+            }, as: 'company_settings'
+
       resources :companies, only: [:show, :edit, :update] do
         resources :customers, only: [:create, :update, :destroy], shallow: true
         resources :successes, only: [:create, :update, :destroy], shallow: true
         resources :stories, only: [:edit, :update, :destroy], shallow: true do
           resources :results, only: [:create, :update, :destroy]
-          member { put :ctas }
-          member { put :tags }
+          collection { get 'promoted', to: 'stories#promoted' }
           member { post '/promote', to: 'stories#promote' }
           member { put '/promote', to: 'stories#promote' }
           member { delete '/promote', to: 'stories#promote' }
@@ -55,10 +70,11 @@ Rails.application.routes.draw do
           member { put '/adwords', to: 'adwords#update_story_ads' }
           member { delete '/adwords', to: 'adwords#remove_story_ads' }
           member { get '/sponsored_story_preview', to: 'adwords#preview' }
+          member { put :ctas }
+          member { put :tags }
         end
         resources :stories, only: [:create]
         resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
-        member { get '/sponsored-stories', to: 'companies#show' }
         member { get '/promote-settings', to: 'companies#show' }
         member { put :tags }
         member { put :widget }
@@ -87,6 +103,7 @@ Rails.application.routes.draw do
       get '/contributions', to: 'contributions#index'
       put '/contributions/:id', to: 'contributions#update'
 
+
       # analytics
       get '/analytics/charts', to: 'analytics#charts', as: 'charts'
       get '/analytics/visitors', to: 'analytics#visitors', as: 'measure_visitors'
@@ -96,8 +113,8 @@ Rails.application.routes.draw do
       delete '/prompts/:id', to: 'prompts#destroy'
 
       # user profile
-      get   '/profile/edit', to: 'profile#edit', as: 'edit_profile'
-      get   '/profile/linkedin_connect', to: 'profile#linkedin_connect',
+      get   '/user-profile', to: 'profile#edit', as: 'edit_profile'
+      get   '/user-profile/linkedin_connect', to: 'profile#linkedin_connect',
                                          as: 'linkedin_connect'
       # approval PDF
       get '/stories/:id/approval', to: 'stories#approval', as: 'story_approval'
@@ -105,7 +122,7 @@ Rails.application.routes.draw do
     end
 
     # no authentication required (may come from a submission)
-    get   '/profile/linkedin_callback', to: 'profile#linkedin_callback'
+    get   '/user-profile/linkedin-callback', to: 'profile#linkedin_callback'
 
     # Email Templates
     resources :email_templates, only: [:show, :update]
@@ -173,9 +190,9 @@ Rails.application.routes.draw do
   # user profile - company not registered (Curator or Contributor)
   # (need to give the route a different alias to distinguish from the one
   #  under subdomains)
-  get   '/profile/edit', to: 'profile#edit', as: 'edit_profile_no_company'
-  get   '/profile/linkedin_connect', to: 'profile#linkedin_connect', as: 'linkedin_connect_no_company'
-  get   '/profile/linkedin_callback', to: 'profile#linkedin_callback', as: 'linkedin_callback'
+  get   '/user-profile', to: 'profile#edit', as: 'edit_profile_no_company'
+  get   '/user-profile/linkedin-connect', to: 'profile#linkedin_connect', as: 'linkedin_connect_no_company'
+  get   '/user-profile/linkedin-callback', to: 'profile#linkedin_callback', as: 'linkedin_callback'
 
   # above comments about distinguishing the route apply to below as well
   #

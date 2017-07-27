@@ -17,7 +17,7 @@ function measureCharts () {
   };
 
   $(document)
-    .on('click', 'a[href="#measure-panel"]',
+    .on('click', 'a[href="#measure"]',
       function () {
         // if current page is not companies#show, let initGoogleCharts handle it
         if ($('#measure-summary-container').length === 0) {

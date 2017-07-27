@@ -13,6 +13,7 @@
   <%= render 'companies/crowdsource/successes_dropdown_template' %>
   <%= render 'companies/crowdsource/contributors_table_header_template' %>
   <%= render 'companies/crowdsource/contributors_dropdown_template' %>
+  <%= render 'companies/promote/adwords_status_dropdown_template' %>
 <% end %>
 
 <%= render 'companies/crowdsource/new_success_modal', { company: @company } %>
@@ -22,23 +23,23 @@
 <div id='wrapper'>
 
   <%= render 'shared/company_navbar',
-        { company: @company, workflow_tab: @workflow_tab } %>
+        { company: @company, workflow_stage: @workflow_stage } %>
 
   <div class='tab-content'>
 
     <%= render 'companies/crowdsource/crowdsource',
-               { company: @company, workflow_tab: @workflow_tab,
-                 workflow_sub_tab: @workflow_sub_tab } %>
+               { company: @company, workflow_stage: @workflow_stage,
+                 workflow_substage: @workflow_substage } %>
 
     <%= render 'companies/curate/curate', { company: @company,
-          workflow_tab: @workflow_tab, workflow_sub_tab: @workflow_sub_tab } %>
+          workflow_stage: @workflow_stage, workflow_substage: @workflow_substage } %>
 
     <%= render 'companies/promote/promote',
-               { company: @company, workflow_tab: @workflow_tab,
-                 workflow_sub_tab: @workflow_sub_tab } %>
+               { company: @company, workflow_stage: @workflow_stage,
+                 workflow_substage: @workflow_substage } %>
 
     <%= render 'companies/measure/measure',
-                { company: @company, workflow_tab: @workflow_tab,
+                { company: @company, workflow_stage: @workflow_stage,
                   recent_activity: @recent_activity,
                   story_views_30_day_count: @story_views_30_day_count } %>
 

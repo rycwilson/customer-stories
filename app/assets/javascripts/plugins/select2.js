@@ -63,14 +63,15 @@ function initSelect2 () {
 
   // has the curate tab content been rendered?
   //   (it may not have been if company not yet registered)
-  if ($('#curate-panel').length) {
+  if ($('#curate').length) {
     // is there a list of existing customers to choose from?
     if ($('.new-story-customer').length) {
 
       $(".new-story-customer").select2({  // single select
         theme: "bootstrap",
         tags: true,  // to allow new customer creation
-        placeholder: 'select or add a new customer',
+        selectOnClose: true,
+        placeholder: 'Select or add a new customer'
         // allowClear: true
       });
     }
@@ -80,7 +81,7 @@ function initSelect2 () {
     // TODO: enable new tags from here?
     $(".new-story-tags").select2({
       theme: 'bootstrap',
-      placeholder: 'Select tag(s)'
+      placeholder: 'Select'
     });
 
   }

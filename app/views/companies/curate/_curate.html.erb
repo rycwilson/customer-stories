@@ -5,12 +5,20 @@
         { company: company } %>
 <% end %>
 
-<div id='curate-panel' role='tabpanel' class="<%= workflow_tab == 'curate' ? 'active tab-pane fade in content' : 'tab-pane fade content' %>">
+<div id='curate' role='tabpanel' class="<%= workflow_stage == 'curate' ? 'active tab-pane fade in' : 'tab-pane fade' %>">
   <div class="content">  <!-- removed 'clip' class - n/a -->
     <div class='container'>
       <div class="layout">
 
         <div class="col-md-3 col-sm-4 layout-sidebar">
+
+          <h4 class='lead'>Customer Stories</h4>
+
+          <hr style='margin-bottom: 0'>
+
+          <button type='button' style='width:160px; height:32px; margin:25px 0;' class='btn btn-secondary btn-sm' data-toggle='modal' data-target='#new-story-modal'><i class='glyphicon glyphicon-plus-sign' style='font-size:15px;top:2px'></i>&nbsp;&nbsp;&nbsp;New Story&nbsp;</button>
+
+          <h5 style='font-size:17px'>Filter Stories</h5>
 
           <%= render 'companies/curate/filters', { company: company } %>
 

@@ -199,6 +199,28 @@ class StoriesController < ApplicationController
     respond_to { |format| format.js }
   end
 
+  def promoted
+    respond_to() do |format|
+      format.json do
+        render({
+          json: @company.stories.with_ads.to_json({
+                  only: [:id, :title],
+                  methods: [:ads_enabled?, :ads_status, :ads_long_headline, :ads_image_url],
+                  include: {
+                    success: {
+                      only: [],
+                      include: {
+                        customer: { only: [:name] }
+                      }
+                    }
+                  }
+                })
+
+        })
+      end
+    end
+  end
+
   ##
   ##  this action is a catch-all for promote changes related to a given story
   ##  - create ads for a story (POST)
@@ -276,9 +298,9 @@ class StoriesController < ApplicationController
 
   def set_company
     if params[:company_id]  # create story
-      @company = Company.find params[:company_id]
+      @company = Company.find(params[:company_id])
     else
-      @company = Company.find_by subdomain: request.subdomain
+      @company = Company.find_by(subdomain: request.subdomain)
     end
   end
 

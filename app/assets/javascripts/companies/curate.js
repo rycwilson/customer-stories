@@ -15,7 +15,7 @@ function curateListeners () {
 
   $(document)
 
-    .on('click', '#curate-panel a.all-stories',
+    .on('click', '#curate a.all-stories',
       function () {
         $('#loading-stories').toggle();
       })
@@ -30,10 +30,10 @@ function curateListeners () {
           method: 'get',
           dataType: 'html',
           success: function (html, status, xhr) {
-            $('#curate-panel .container').children()
+            $('#curate .container').children()
                 .fadeOut({ duration: 150, easing: 'linear',
                   complete: function () {
-                    $('#curate-panel .container').empty()
+                    $('#curate .container').empty()
                       .append(html)
                       .fadeIn({ duration: 150, easing: 'linear' });
                       initContributorsTable('curate');

@@ -260,7 +260,6 @@ function crowdsourceListeners () {
       })
 
     .on('click', '#crowdsource-contributors-table td.email-template', function (e) {
-      console.log(contributorsEditor)
       contributorsEditor.inline(this);
     })
 

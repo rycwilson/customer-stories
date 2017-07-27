@@ -56,13 +56,31 @@ function attachAppListeners () {
   yScrollBoundaries();
 
   $(document).on('click', '#workflow-tabs-list a', function (e) {
+
+    var workflowStage = $(this).attr('href');
+
+    // already in main
     if ($('body').hasClass('companies show')) {
-      return false;  // TODO: why does this work but not e.preventDefault()?
+      if (typeof window.history.state.turbolinks === 'object') {
+        history.replaceState({ turbolinks: false }, null, workflowStage);
+      } else {
+        history.pushState({ turbolinks: false }, null, workflowStage);
+      }
+
+    // entering main
+    } else {
+      Cookies.set('csp_workflow_stage', workflowStage.slice(1, workflowStage.length));
+      Turbolinks.visit('/main' + workflowStage);
     }
-    var workflowTab = $(this).attr('href').substr(1, $(this).attr('href').indexOf('-')-1);
-    Cookies.set('workflow_tab', workflowTab);
-    Turbolinks.visit('/companies/' + app.company.id.toString());
+
   });
+
+  window.onpopstate = function (e) {
+    var workflowTab = $('#workflow-tabs-list a[href="' + window.location.hash + '"]');
+    if (workflowTab.length) {
+      workflowTab.tab('show');
+    }
+  };
 
   $(document)
     .on('turbolinks:click', function () {
@@ -77,6 +95,7 @@ function attachAppListeners () {
     .on('turbolinks:request-start', function () {
       // console.log('turbolinks:request-start');
       // debugger;
+
     })
     .on('turbolinks:visit', function () {
       // console.log('turbolinks:visit');
@@ -88,6 +107,8 @@ function attachAppListeners () {
       // debugger;
     })
 
+    // this event appears to work best for doing stuff prior to leaving a page
+    // note: this event occurs after the history state has been changed
     .on('turbolinks:before-cache', function () {
       // console.log('turbolinks:before-cache');
       deconstructPlugins();
@@ -107,6 +128,7 @@ function attachAppListeners () {
         }
         constructPlugins();
       }
+
     });
 }
 
@@ -123,6 +145,9 @@ function getScreenSize () {
     }
   })(jQuery, ResponsiveBootstrapToolkit);
 }
+
+
+
 
 
 

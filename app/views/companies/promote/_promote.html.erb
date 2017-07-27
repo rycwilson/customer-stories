@@ -1,6 +1,6 @@
 
-<div id='promote-panel'
-     class="<%= workflow_tab == 'promote' ? 'active tab-pane fade in' : 'tab-pane fade' %>"
+<div id='promote'
+     class="<%= workflow_stage == 'promote' ? 'active tab-pane fade in' : 'tab-pane fade' %>"
      role='tabpanel'>
   <div class="content clip">
     <div class='container'>
@@ -13,16 +13,13 @@
           </div>
 
           <ul class="nav nav-layout-sidebar nav-stacked">
-            <li class="<%= workflow_sub_tab == 'sponsored-stories' ? 'active' : (workflow_sub_tab.nil? ? 'active' : '') %>">
-              <a href="#sponsored-stories-tab-pane" data-toggle="tab">
+            <li class="<%= workflow_substage == 'promoted-stories' ? 'active' : (workflow_substage.nil? ? 'active' : '') %>">
+              <a href="#promoted-stories-tab-pane" data-toggle="tab">
                 <i class="fa fa-bullhorn"></i>
                 &nbsp;&nbsp;Sponsored Stories
-                <span class='pull-right'>
-                  <i id='loading-sponsored-stories' class='fa fa-spinner fa-pulse' style='color:#666'></i>
-                </span>
               </a>
             </li>
-            <li class="<%= workflow_sub_tab == 'promote-settings' ? 'active' : '' %>">
+            <li class="<%= workflow_substage == 'promote-settings' ? 'active' : '' %>">
               <a href="#promote-settings-tab-pane" data-toggle="tab">
                 <i class="fa fa-gear"></i>
                 &nbsp;&nbsp;Settings
@@ -65,14 +62,14 @@
 
           <div class="tab-content stacked-content">
 
-            <div id='sponsored-stories-tab-pane'
-                 class="tab-pane fade <%= workflow_sub_tab == 'sponsored-stories' ? 'in active' : (workflow_sub_tab.nil? ? 'in active' : '') %>">
-              <%#= render 'adwords/sponsored_stories', { company: company } %>
+            <div id='promoted-stories-tab-pane'
+                 class="tab-pane fade <%= workflow_substage == 'promoted-stories' ? 'in active' : (workflow_substage.nil? ? 'in active' : '') %>">
+              <%= render 'companies/promote/promoted_stories_table', { company: company } %>
             </div>
 
             <div id='promote-settings-tab-pane'
-                 class="tab-pane fade <%= workflow_sub_tab == 'promote-settings' ? 'in active' : '' %>">
-              <%#= render 'adwords/promote_settings', { company: company } %>
+                 class="tab-pane fade <%= workflow_substage == 'promote-settings' ? 'in active' : '' %>">
+              <%= render 'companies/promote/promote_settings', { company: company } %>
             </div>
           </div>
 

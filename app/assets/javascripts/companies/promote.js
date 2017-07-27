@@ -6,29 +6,30 @@ function promoteListeners () {
 
   $(document)
 
-    .on('click', 'a[href="#promote-panel"]',
+    .on('click', 'a[href="#promote"]',
       function () {
-        if ($('#sponsored-stories-tab-pane').children().length === 0) {
-          $.get('/companies/' + app.company.id + '/sponsored-stories',
-            function (html, status, xhr) {
-              $('#sponsored-stories-tab-pane').append(html)
-                .fadeIn({ duration: 500, easing: 'linear' });
-              initSponsoredStoriesTable();
-              $('#loading-sponsored-stories').toggle();
-              $.get('/companies/' + app.company.id + '/promote-settings',
-                function (html, status, xhr) {
-                  $('#promote-settings-tab-pane').append(html)
-                    .fadeIn({ duration: 150, easing: 'linear' });
-                  initPromoteSettingsValidator();
-        // validation won't be triggered unless input fields change
-        // -> trigger manually so can detect missing logo or image
-                  $('#promote-settings-form').validator('validate');
-                  promoteTooltips();
-                  promotePopovers();
-                });
-            });
-        }
+        // if ($('#sponsored-stories-tab-pane').children().length === 0) {
+        //   $.get('/companies/' + app.company.id + '/sponsored-stories',
+        //     function (html, status, xhr) {
+        //       $('#sponsored-stories-tab-pane').append(html)
+        //         .fadeIn({ duration: 500, easing: 'linear' });
+        //       initSponsoredStoriesTable();
+        //       $('#loading-sponsored-stories').toggle();
+        //       $.get('/companies/' + app.company.id + '/promote-settings',
+        //         function (html, status, xhr) {
+        //           $('#promote-settings-tab-pane').append(html)
+        //             .fadeIn({ duration: 150, easing: 'linear' });
+        //           initPromoteSettingsValidator();
+        // // validation won't be triggered unless input fields change
+        // // -> trigger manually so can detect missing logo or image
+        //           $('#promote-settings-form').validator('validate');
+        //           promoteTooltips();
+        //           promotePopovers();
+        //         });
+        //     });
+        // }
       })
+
     // changing the scroll-on-focus offset for bootstrap validator not working,
     // so do this instead...
     .on('click', 'a[href="#promote-settings-tab-pane"]',
@@ -46,7 +47,7 @@ function promoteListeners () {
         $('[data-toggle="tooltip"]').tooltip('hide');
       })
 
-    // change sponsored story status
+    // change promoted story status
     .on('click', 'td.status-dropdown .dropdown-menu a.pause, td.status-dropdown .dropdown-menu a.enable',
       function () {
         var storyId = $(this).closest('tr').data('story-id');
@@ -81,15 +82,14 @@ function promoteListeners () {
 
       })
 
-    // on clicking a sponsored story thumbnail,
+    // on clicking a promoted story thumbnail,
     // open the image select modal and create the story form
-    .on('click', 'td.sponsored-story-image .thumbnail',
+    .on('click', 'td.promoted-story-image .thumbnail',
       function () {
         // if <= 1, there is no alterative to the current image
-        if ( $('#adwords-image-select-modal li').length <= 1 ) {
-          return false;
-        }
-        var $modal = $('#adwords-image-select-modal'),
+        if ( $('#ad-image-select-modal li').length <= 1 ) { return false; }
+
+        var $modal = $('#ad-image-select-modal'),
             storyId = $(this).closest('tr').data('story-id'),
             currentImageUrl = $(this).children('img').attr('src'),
             template = _.template( $('#adwords-image-select-form-template').html() );
@@ -121,7 +121,7 @@ function promoteListeners () {
       })
 
     // on selecting an image, update a hidden field containing the selected image id
-    .on('click', '#adwords-image-select-modal .thumbnail',
+    .on('click', '#ad-image-select-modal .thumbnail',
       function () {
         if ($(this).hasClass('selected')) {
           return false;
@@ -133,7 +133,7 @@ function promoteListeners () {
           // update the form's hidden field for image id
           $(this).closest('.modal-content').find('.modal-footer input[type="hidden"]')
                  .val(selectedImageId);
-          $('#adwords-image-select-modal .thumbnail')
+          $('#ad-image-select-modal .thumbnail')
             // thumbnail is the raw html, $(this) is jquery
             .each(function (index, thumbnail) {
               if ($(this).closest('li').data('image-id') !== selectedImageId) {
@@ -144,7 +144,7 @@ function promoteListeners () {
       })
 
     // reset the modal
-    .on('hidden.bs.modal', '#adwords-image-select-modal',
+    .on('hidden.bs.modal', '#ad-image-select-modal',
       function () {
         $(this).find('.modal-footer').empty();
         $(this).find('.thumbnail').removeClass('selected');
@@ -153,7 +153,7 @@ function promoteListeners () {
       })
 
     // ad previews - separate window
-    .on('click', '.preview-window a',
+    .on('click', '.promoted-story-preview a',
       function () {
         var storyId = $(this).closest('tr').data('story-id');
         window.open('/stories/' + storyId +
@@ -407,9 +407,9 @@ function initPromoteSettingsValidator () {
 
 function promoteTooltips () {
   // add a tooltip message to stories that don't have an image
-  $('#sponsored-stories-table').find('img[src=""]').each(
+  $('#promoted-stories-table').find('img[src=""]').each(
     function () {
-      if ( $('#adwords-image-select-modal li').length === 0 ) {
+      if ( $('#ad-image-select-modal li').length === 0 ) {
         $(this).closest('.fileinput')
           .tooltip({
             container: 'body',

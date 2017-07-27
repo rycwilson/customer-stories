@@ -1,10 +1,11 @@
 
 //= require modernizr/modernizr
 
+//= require bootstrap-tab-history
+
 // mvp ready
 //= require slimscroll/jquery.slimscroll
 //= require magnific-popup/dist/jquery.magnific-popup
-
 
 //= require DataTables/datatables
 //= require datatables-editor-trial/js/dataTables.editor

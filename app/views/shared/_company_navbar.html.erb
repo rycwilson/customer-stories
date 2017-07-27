@@ -12,7 +12,7 @@
       <div id='mainnav-workflow'
            class="col-xs-8 col-sm-6 col-md-5 <%= gallery_view? ? 'hidden-xs hidden-sm' : '' %>">
         <%= render 'companies/shared/workflow_tabs',
-            { company: company, workflow_tab: workflow_tab } %>
+            { company: company, workflow_stage: workflow_stage } %>
       </div>
 
       <div id='collapsed-workflow-tabs'

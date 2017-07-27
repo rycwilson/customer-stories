@@ -102,8 +102,9 @@ class ApplicationController < ActionController::Base
             subdomain: resource.company.subdomain,
             controller: '/companies',
             action: 'show',
-            id: resource.company.id
-          })
+            id: resource.company.id,
+            anchor: 'curate'
+        })
       else
         edit_profile_no_company_path
       end

@@ -72,7 +72,7 @@ class AdwordsController < ApplicationController
     # (affected ads have already been assigned default image)
     # if promote isn't enabled, still need to respond with affected stories for table update
     if params[:company][:removed_images_ads].present?
-      # keep track of story ids to update sponsored stories table
+      # keep track of story ids to update promoted stories table
       # every two successive ads (topic and retarget) will be associated with the same story,
       # so put in a Set to prevent duplicates
       @removed_images_stories = Set.new
@@ -113,8 +113,8 @@ class AdwordsController < ApplicationController
 
     respond_to do |format|
       format.html do
-        cookies[:workflow_tab] = 'promote'
-        cookies[:workflow_sub_tab] = 'promote-settings'
+        cookies[:workflow_stage] = 'promote'
+        cookies[:workflow_substage] = 'promote-settings'
         redirect_to(company_path(@company), flash: { success: @flash_mesg })
       end
       format.js {}
@@ -142,8 +142,8 @@ class AdwordsController < ApplicationController
     else
       flash = { alert: "Company not ready for syncing with AdWords" }
     end
-    cookies[:workflow_tab] = 'promote'
-    cookies[:workflow_sub_tab] = 'sponsored-stories'
+    cookies[:workflow_stage] = 'promote'
+    cookies[:workflow_substage] = 'promoted-stories'
     redirect_to(company_path(@company), flash: flash)
   end
 

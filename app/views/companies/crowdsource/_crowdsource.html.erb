@@ -1,6 +1,6 @@
 
-<div id='crowdsource-panel' role='tabpanel'
-    class="<%= @workflow_tab == 'crowdsource' ? 'active tab-pane fade in' : 'tab-pane fade' %>">
+<div id='crowdsource' role='tabpanel'
+    class="<%= @workflow_stage == 'crowdsource' ? 'active tab-pane fade in' : 'tab-pane fade' %>">
 
   <div class="content clip">
     <div class='container'>
@@ -14,14 +14,14 @@
 
           <ul class="nav nav-layout-sidebar nav-stacked">
 
-            <li class="<%= workflow_sub_tab == 'successes' ? 'active' : (workflow_sub_tab.nil? ? 'active' : '')  %>">
+            <li class="<%= workflow_substage == 'successes' ? 'active' : (workflow_substage.nil? ? 'active' : '')  %>">
               <a href="#successes-tab-pane" data-toggle="tab">
                 <i class="fa fa-rocket"></i>
                 &nbsp;&nbsp;Story Candidates
               </a>
             </li>
 
-            <li class="<%= workflow_sub_tab == 'contributors' ? 'active' : '' %>">
+            <li class="<%= workflow_substage == 'contributors' ? 'active' : '' %>">
               <a href="#crowdsource-contributors-tab-pane" data-toggle="tab">
                 <i class="fa fa-users"></i>
                 &nbsp;&nbsp;Success Contributors
@@ -37,13 +37,13 @@
           <div class="tab-content stacked-content">
 
             <div id='successes-tab-pane'
-                 class="tab-pane fade <%= workflow_sub_tab == 'successes' ? 'in active' : (workflow_sub_tab.nil? ? 'in active' : '') %>">
+                 class="tab-pane fade <%= workflow_substage == 'successes' ? 'in active' : (workflow_substage.nil? ? 'in active' : '') %>">
               <%= render 'companies/crowdsource/successes_table',
                           { company: company } %>
             </div>
 
             <div id='crowdsource-contributors-tab-pane'
-                 class="tab-pane fade <%= workflow_sub_tab == 'contributors' ? 'in active' : '' %>">
+                 class="tab-pane fade <%= workflow_substage == 'contributors' ? 'in active' : '' %>">
               <%= render 'companies/crowdsource/contributors_table',
                       { company: company, workflow_stage: 'crowdsource' } %>
             </div>

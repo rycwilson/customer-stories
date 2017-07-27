@@ -2,34 +2,34 @@
 <ul id='workflow-tabs-list'
     class='nav nav-tabs' role='tablist' style='border-bottom:0'>
 
-  <li id='crowdsource-tab' class="<%= workflow_tab == 'crowdsource' ? 'active' : '' %>"
+  <li id='crowdsource-tab' class="<%= workflow_stage == 'crowdsource' ? 'active' : '' %>"
       role='presentation' style='margin-bottom: 0px'>
-    <a href='#crowdsource-panel' role='tab' data-toggle='tab' aria-controls='crowdsource'
-        data-turbolinks='false'>
+    <a href='#crowdsource' role='tab' data-toggle='tab'
+       aria-controls='crowdsource'>
       Crowdsource
     </a>
   </li>
 
-  <li id='curate-tab' class="<%= workflow_tab == 'curate' ? 'active' : '' %>"
+  <li id='curate-tab' class="<%= workflow_stage == 'curate' ? 'active' : '' %>"
       role='presentation' style='margin-bottom: 0px'>
-    <a href='#curate-panel' role='tab' data-toggle='tab' aria-controls='curate'
-       data-turbolinks='false'>
+    <a href='#curate' role='tab' data-toggle='tab'
+       aria-controls='curate'>
       Curate
     </a>
   </li>
 
-  <li id='promote-tab' class="<%= workflow_tab == 'promote' ? 'active' : '' %>"
+  <li id='promote-tab' class="<%= workflow_stage == 'promote' ? 'active' : '' %>"
       role='presentation' style='margin-bottom: 0px'>
-    <a href='#promote-panel' role='tab' data-toggle='tab' aria-controls='promote'
-        data-turbolinks='false'>
+    <a href='#promote' role='tab' data-toggle='tab'
+       aria-controls='promote'>
       Promote
     </a>
   </li>
 
-  <li id='measure-tab' class="<%= workflow_tab == 'measure' ? 'active' : '' %>"
+  <li id='measure-tab' class="<%= workflow_stage == 'measure' ? 'active' : '' %>"
       role='presentation' style='margin-bottom: 0px'>
-    <a href='#measure-panel' role='tab' data-toggle='tab' aria-controls='measure'
-        data-turbolinks='false'>
+    <a href='#measure' role='tab' data-toggle='tab'
+       aria-controls='measure'>
       Measure
     </a>
   </li>
