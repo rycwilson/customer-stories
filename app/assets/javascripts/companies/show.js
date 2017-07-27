@@ -1,18 +1,18 @@
 
 function companiesShow () {
 
-  var $tabs = $('#workflow-tabs-list'), defaultTab = '#curate';
-  if ($tabs.find('.active').length === 0) {
-    if (window.location.hash) {
-      console.log('yes hash')
-      $('#workflow-tabs-list a[href="' + window.location.hash + '"]').tab('show');
-    } else {
-      console.log('no hash')
-      $('#workflow-tabs-list a[href="' + defaultTab + '"]').tab('show');
-    }
-  }
-  // don't scroll to anchor
-  setTimeout(function() { window.scrollTo(0, 0); }, 1);
+  // var $tabs = $('#workflow-tabs'), defaultTab = '#curate';
+  // if ($tabs.find('.active').length === 0) {
+  //   if (window.location.hash) {
+  //     console.log('yes hash')
+  //     $('#workflow-tabs a[href="' + window.location.hash + '"]').tab('show');
+  //   } else {
+  //     console.log('no hash')
+  //     $('#workflow-tabs a[href="' + defaultTab + '"]').tab('show');
+  //   }
+  // }
+  // // don't scroll to anchor
+  // setTimeout(function() { window.scrollTo(0, 0); }, 1);
 
   // panel-specific stuff
   crowdsource();
@@ -43,19 +43,12 @@ function companiesShowListeners () {
       })
 
     // apply styling when click on a dropdown option, or navigate away
-    .on('click', 'a[href*="companies"], a[href*="profile"]',
+    .on('click', 'a[href="/company-settings"], a[href="/user-profile"]',
       function () {
         var $thisDropdown = $(this).closest('li.dropdown'),
             $otherDropdown = $thisDropdown.parent().find('li.dropdown:not(.open)');
         $thisDropdown.addClass('active');
         $otherDropdown.removeClass('active');
-      })
-
-    .on('click', 'a[href="#promote"]',
-      function () {
-
-        promote();
-
       });
 
 }

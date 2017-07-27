@@ -8,7 +8,7 @@ function companiesEdit () {
         $('.dropdown.company-settings').removeClass('active');
       }
     })
-    .one('click', '.workflow-tabs-list', function () {
+    .one('click', '.workflow-tabs', function () {
       if ($('.dropdown.company-settings').hasClass('active')) {
         $('.dropdown.company-settings').removeClass('active');
       }

@@ -11,10 +11,10 @@ class CompaniesController < ApplicationController
   end
 
   def show
-    redirect_to(company_main_path) if request.path.match(/\/companies\/\d+/)
-    @workflow_stage = cookies[:csp_workflow_stage]
-    cookies.delete(:csp_workflow_stage) if cookies[:csp_workflow_stage]
-    # binding.remote_pry
+    redirect_to('/curate') if request.path.match(/\/companies\/\d+/)
+    @workflow_stage = params[:workflow_stage]
+    # @workflow_stage = cookies[:csp_workflow_stage] || 'curate'
+    # cookies.delete(:csp_workflow_stage) if cookies[:csp_workflow_stage]
     # @workflow_substage = cookies[:csp_workflow_substage]
     # cookies.delete(:workflow_substage) if cookies[:workflow_substage]
     @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }

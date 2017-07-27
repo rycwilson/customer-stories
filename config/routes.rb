@@ -44,13 +44,15 @@ Rails.application.routes.draw do
     get '/stories/promoted', to: 'stories#promoted'
 
     authenticate :user do
-      # current_user = request.env['warden'].user(:user).company_id
 
-      get '/main', to: 'companies#show',
+      # using constraints to get access to the request object and thereby the signed in user,
+      # this allows us to provide the company_id parameter that's missing from the route
+      get '/:workflow_stage', to: 'companies#show',
             constraints: lambda { |params, request|
               params[:id] = request.env['warden'].user(:user).company_id.to_s
-              true
+              params[:workflow_stage].match(/(crowdsource|curate|promote|measure)/)
             }, as: 'company_main'
+
       get '/company-settings', to: 'companies#edit',
             constraints: lambda { |params, request|
               params[:id] = request.env['warden'].user(:user).company_id.to_s

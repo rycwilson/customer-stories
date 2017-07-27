@@ -55,31 +55,32 @@ function attachAppListeners () {
   xScrollBoundaries();
   yScrollBoundaries();
 
-  $(document).on('click', '#workflow-tabs-list a', function (e) {
 
-    var workflowStage = $(this).attr('href');
+  $(document)
 
-    // already in main
-    if ($('body').hasClass('companies show')) {
-      if (typeof window.history.state.turbolinks === 'object') {
-        history.replaceState({ turbolinks: false }, null, workflowStage);
+    .on('click', '#company-nav-dropdowns a', function (e) {
+      var currentWorkflowPath = window.location.pathname;
+      if ($('body').hasClass('companies show')) {
+        history.replaceState({ turbolinks: true }, null, currentWorkflowPath);
+      }
+    })
+    .on('click', '#workflow-tabs a', function (e) {
+      var currentWorkflowPath = window.location.pathname,
+          newWorkflowPath = '/' + $(this).attr('href').slice(1, $(this).attr('href').length);
+
+      if ($('body').hasClass('companies show')) {
+        history.replaceState({ turbolinks: false }, null, currentWorkflowPath);
+        history.pushState({ turbolinks: true }, null, newWorkflowPath);
+
       } else {
-        history.pushState({ turbolinks: false }, null, workflowStage);
+        Turbolinks.visit(newWorkflowPath);
       }
 
-    // entering main
-    } else {
-      Cookies.set('csp_workflow_stage', workflowStage.slice(1, workflowStage.length));
-      Turbolinks.visit('/main' + workflowStage);
-    }
-
-  });
+    });
 
   window.onpopstate = function (e) {
-    var workflowTab = $('#workflow-tabs-list a[href="' + window.location.hash + '"]');
-    if (workflowTab.length) {
-      workflowTab.tab('show');
-    }
+    var workflowTab = $('#workflow-tabs a[href="#' + window.location.pathname.slice(1, window.location.pathname.length) + '"]');
+    if (workflowTab.length) { workflowTab.tab('show'); }
   };
 
   $(document)
@@ -122,10 +123,6 @@ function attachAppListeners () {
       // console.log('turbolinks:render');
       if (document.documentElement.hasAttribute('data-turbolinks-preview')) {
         // console.log('preview rendered');
-
-        if ($('body').hasClass('not:companies not:show')) {
-          $('#workflow-tabs-list').find('.active').removeClass('active');
-        }
         constructPlugins();
       }
 

@@ -37,6 +37,8 @@ function curateListeners () {
                       .append(html)
                       .fadeIn({ duration: 150, easing: 'linear' });
                       initContributorsTable('curate');
+
+                    window.history.pushState({ turbolinks: false}, null, '/');
                   }
               });
           }

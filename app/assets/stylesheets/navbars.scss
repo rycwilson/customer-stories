@@ -126,7 +126,7 @@
   li {
     position: relative;
   }
-  #workflow-tabs-list {
+  #workflow-tabs {
     margin-bottom: 0;
     font-size: 16px;
     li.active {
@@ -162,7 +162,7 @@
       }
     }
   }
-  #dropdowns-list {
+  #company-nav-dropdowns {
     margin: 0;
     li.dropdown.active, li.dropdown.active.open {
       > a {
