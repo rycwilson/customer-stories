@@ -30,6 +30,7 @@ function companiesShowListeners () {
   newStoryModalListeners();
   crowdsourceListeners();
   curateListeners();
+  storiesEditListeners();
   promoteListeners();
   measureCharts();
   measureStories();

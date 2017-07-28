@@ -6,7 +6,6 @@
 
 function attachStoriesListeners () {
   storiesIndexListeners();
-  storiesEditListeners();
   storiesPlayVideoListener();
 
   $(document).on('click', '.cta-form',

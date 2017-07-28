@@ -7,125 +7,59 @@ function storiesEdit () {
 function storiesEditListeners () {
 
   $(document)
-    .on('shown.bs.collapse', '.contribution-card',
-      function () {
-        if ($(this).find('.linkedin-container').length === 0 ||
-            $(this).find('.linkedin-checkbox-and-widget').hasClass('hidden')) {
-          return false;
-        } else {
-          loadLIWidget($(this));
-        }
+    .on('click', '#curate a.all-stories', function (e) {
+      $('#loading-stories').toggle();
+      var stylingAdjustments = function () {
+        $('#curate > .content').removeClass('clip');
+        $('#curate .layout-sidebar, #curate .layout-main').css('padding-top', '40px');
+        // $('#curate .layout').css('visibility', 'visible');
+      };
+
+      window.history.replaceState(
+        { turbolinks: false }, null, window.location.pathname
+      );
+      window.history.pushState(
+        { turbolinks: true }, null, '/curate'
+      );
+
+      $.ajax({
+          url: '/curate',
+          method: 'get',
+          dataType: 'html',
+          success: function (html, status, xhr) {
+            $.when(
+              $('#curate .container').children()
+                .fadeOut({ duration: 150, easing: 'linear' })
+            ).then(function () {
+                $.when(
+                  $('#curate .container').empty().append(html)
+                    .fadeIn({ duration: 150, easing: 'linear' })
+                ).then(function () {
+
+    stylingAdjustments();
+    // select curator (has the effect of calling filterCurateGallery())
+    $('.curate.curator-select').val(
+      $('.curate.curator-select').children('[value="' + app.current_user.id.toString() + '"]').val()
+    ).trigger('change', { auto: true });
+    // ... ;
+    // init select2
+
+                  });
+              });
+          }
+        });
       });
 
-  storiesEditBIPListeners();
-  storiesEditSettingsListeners();
-  storiesEditVideoInputHandler();
-  storiesEditCTAsListeners();
-  storiesEditTagsListeners();
-  storiesEditNewContributorListeners();
-  storiesEditResultsListeners();
-  storiesEditPromptsListeners();
-  storiesEditContributionsListeners();
-  storiesEditContentEditorListeners();
-}
-
-function loadCspOrPlaceholderWidgets() {
-
-  var widgetWidth = 322,
-      template = _.template($('#csp-linkedin-widget-template').html());
-
-  // populate csp widgets and placeholder widgets;
-  // the placeholders will be swapped out for linkedin widgets as they arrive
-  $('.csp-widget-container').each(function () {
-    var $container = $(this), contributor = {};
-    contributor.first_name = $container.data('first-name');
-    contributor.last_name = $container.data('last-name');
-    contributor.linkedin_url = $container.data('linkedin-url');
-    contributor.linkedin_title = $container.data('linkedin-title');
-    contributor.linkedin_company = $container.data('linkedin-company');
-    contributor.linkedin_photo_url = $container.data('linkedin-photo-url');
-    contributor.linkedin_location = $container.data('linkedin-location');
-    $container
-      .append(template({ contributor: contributor,
-                         widgetWidth: widgetWidth }))
-      .imagesLoaded(function () {
-         $container.find('.csp-linkedin-widget').removeClass('hidden');
-       });
-  });
-
-  $('.placeholder-widget-container').each(function () {
-    var $container = $(this), contributor = {};
-    contributor.first_name = $container.data('first-name');
-    contributor.last_name = $container.data('last-name');
-    contributor.linkedin_url = $container.data('linkedin-url');
-    $container
-      .append(template({ loading: true,
-                         contributor: contributor,
-                         widgetWidth: widgetWidth }))
-      .imagesLoaded(function () {
-        // .csp-linkedin-widget may be a csp widget populated with data,
-        // or (in this case) the placeholder widget
-         $container.find('.csp-linkedin-widget').removeClass('hidden');
-       });
-  });
-}
-
-function loadLIWidget ($card) {
-  var alreadyLoaded = $card.find('.widget-container').data('linkedin-widget-loaded') ||
-                      $card.find('.csp-linkedin-widget');
-  if (alreadyLoaded) {
-    return false;
-  } else {
-    var $linkedinWidgetContainer = $card.find('.linkedin-widget-container'),
-        $placeholderWidgetContainer = $card.find('.placeholder-widget-container');
-    var    url = $linkedinWidgetContainer.data('url'),
-        widgetWidth = 322,
-        widgetMarginTop = '-' + $card.find('.placeholder-widget-container')
-                                     .outerHeight()
-                                     .toString() + 'px',
-        $widget = $("<script type='IN/MemberProfile' " +
-                            "data-id='" + url + "' " +
-                            "data-format='inline' data-related='false' " +
-                            "data-width='" + widgetWidth.toString() + "'></script>"),
-        newWidgetPostMesgHandler = function () {
-          if ($('body').hasClass('stories edit')) {
-            // For Chrome, the origin property is in the event.originalEvent object.
-            var  origin = event.origin || event.originalEvent.origin,
-                 newWidgetId = $linkedinWidgetContainer
-                                 .find('iframe').attr('id')
-                                 .match(/^\w+(li_gen\w+)_provider/)[1];
-            if (origin === "https://platform.linkedin.com" &&
-                event.data.includes('widgetReady')) {
-              var widgetReadyId = event.data.match(/^(\w+)\s/)[1];
-              if (widgetReadyId === newWidgetId) {
-                $linkedinWidgetContainer
-                  .css('margin-top', widgetMarginTop)  // height of the placeholder container (for overlay)
-                  .removeClass('hidden')
-                  .closest('.widget-container')
-                  .data('linkedin-widget-loaded', true);
-              }
-            }  // widgetReady event
-          }
-        };  // var declarations
-    $linkedinWidgetContainer.append($widget);
-    window.addEventListener('message', newWidgetPostMesgHandler, false);
-    IN.parse();
-    setTimeout(function () {
-      if ($card.find('.widget-container').data('linkedin-widget-loaded')) {
-        // success (just leave the placeholder; removing or emptying will affect layout)
-      } else {
-        // failure
-        $placeholderWidgetContainer
-          .find('.member-info > p')
-          .css('color', 'red')
-          .text('Profile data not available');
-      }
-    }, 7000);
-    // remove the listener when navigating away from this page
-    $(document).one('turbolinks:before-visit', function () {
-      window.removeEventListener('message', newWidgetPostMesgHandler, false);
-    });
-  }
+      storiesEditBIPListeners();
+      storiesEditSettingsListeners();
+      storiesEditVideoInputHandler();
+      storiesEditCTAsListeners();
+      storiesEditTagsListeners();
+      storiesEditNewContributorListeners();
+      storiesEditResultsListeners();
+      storiesEditPromptsListeners();
+      // storiesEditContributionsListeners();
+      storiesEditContentEditorListeners();
 }
 
 function storiesEditBIPListeners () {

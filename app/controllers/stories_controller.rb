@@ -86,10 +86,11 @@ class StoriesController < ApplicationController
   def edit
     if request.xhr?
       render({
-        partial: 'new_edit',
+        partial: 'edit',
         locals: { company: @company, story: @story, workflow_stage: 'curate' }
       })
     else
+      # provide data for both stories#edit and companies#show views (except curate)
       @customer = @story.success.customer
       @referrer_select = @story.success.contributions
                                .map { |c| [ c.contributor.full_name, c.contributor.id ] }
@@ -98,6 +99,11 @@ class StoriesController < ApplicationController
       @prompts = @story.success.prompts
       # this is needed for the Result delete button...
       @base_url = request.base_url
+
+      # measure
+      @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
+      @story_views_30_day_count = PageView.joins(:visitor_session)
+                                    .company_story_views_since(@company.id, 30).count
     end
   end
 

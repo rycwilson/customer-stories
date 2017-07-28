@@ -61,7 +61,7 @@ function attachAppListeners () {
     .on('click', '#company-nav-dropdowns a', function (e) {
       var currentWorkflowPath = window.location.pathname;
       if ($('body').hasClass('companies show')) {
-        history.replaceState({ turbolinks: true }, null, currentWorkflowPath);
+        window.history.replaceState({ turbolinks: true }, null, currentWorkflowPath);
       }
     })
     .on('click', '#workflow-tabs a', function (e) {
@@ -69,8 +69,8 @@ function attachAppListeners () {
           newWorkflowPath = '/' + $(this).attr('href').slice(1, $(this).attr('href').length);
 
       if ($('body').hasClass('companies show')) {
-        history.replaceState({ turbolinks: false }, null, currentWorkflowPath);
-        history.pushState({ turbolinks: true }, null, newWorkflowPath);
+        window.history.replaceState({ turbolinks: false }, null, currentWorkflowPath);
+        window.history.pushState({ turbolinks: true }, null, newWorkflowPath);
 
       } else {
         Turbolinks.visit(newWorkflowPath);
@@ -81,6 +81,8 @@ function attachAppListeners () {
   window.onpopstate = function (e) {
     var workflowTab = $('#workflow-tabs a[href="#' + window.location.pathname.slice(1, window.location.pathname.length) + '"]');
     if (workflowTab.length) { workflowTab.tab('show'); }
+
+    // if (window.location.pathname === '/curate')
   };
 
   $(document)

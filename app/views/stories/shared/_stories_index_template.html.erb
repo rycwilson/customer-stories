@@ -5,7 +5,9 @@
 
   {{ stories.forEach(function (story) { }}
 
-    <li class='grid-item' data-story-id="{{= story.id }}">
+    {{ var storySlug = story.csp_story_path.slice(story.csp_story_path.lastIndexOf('/') + 1, story.csp_story_path.length); }}
+
+    <li class='grid-item' data-story-id="{{= story.id }}" data-story-slug="{{= storySlug }}">
 
       <a href="{{= (story.published && story.csp_story_path) || (story.preview_published && 'javascript:;') || (isCurator && '/stories/' + story.id + '/edit') || 'javascript:;' }}"
          class="thumbnail {{= isCurator ? 'curator' : 'public' }} {{= story.published ? 'published' : (story.preview_published ? 'preview-published' : (story.logo_published ? 'logo-published' : 'pending-curation')) }} {{= story.title ? 'title-present' : '' }}"

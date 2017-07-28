@@ -409,7 +409,7 @@ function initContributorsTable (workflowStage) {
 function initPromotedStoriesTable () {
   $('#promoted-stories-table').DataTable({
     ajax: {
-      url: '/stories/promoted',
+      url: '/companies/' + app.company.id.toString() + '/stories/promoted',
       dataSrc: ''
     },
     dom: 'tfi',

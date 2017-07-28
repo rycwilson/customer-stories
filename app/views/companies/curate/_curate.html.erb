@@ -1,38 +1,27 @@
 
-<% content_for :underscore_templates do %>
-  <%= render 'stories/shared/stories_index_template', { company: company } %>
-  <%#= render 'companies/curate/curator_story_tile_template',
-        { company: company } %>
-<% end %>
+<div class="layout">
 
-<div id='curate' role='tabpanel' class="<%= workflow_stage == 'curate' ? 'active tab-pane fade in' : 'tab-pane fade' %>">
-  <div class="content">  <!-- removed 'clip' class - n/a -->
-    <div class='container'>
-      <div class="layout">
+  <div class="col-md-3 col-sm-4 layout-sidebar">
 
-        <div class="col-md-3 col-sm-4 layout-sidebar">
+    <h4 class='lead'>Customer Stories</h4>
 
-          <h4 class='lead'>Customer Stories</h4>
+    <hr style='margin-bottom: 0'>
 
-          <hr style='margin-bottom: 0'>
+    <button type='button' style='width:160px; height:32px; margin:25px 0;' class='btn btn-secondary btn-sm' data-toggle='modal' data-target='#new-story-modal'><i class='glyphicon glyphicon-plus-sign' style='font-size:15px;top:2px'></i>&nbsp;&nbsp;&nbsp;New Story&nbsp;</button>
 
-          <button type='button' style='width:160px; height:32px; margin:25px 0;' class='btn btn-secondary btn-sm' data-toggle='modal' data-target='#new-story-modal'><i class='glyphicon glyphicon-plus-sign' style='font-size:15px;top:2px'></i>&nbsp;&nbsp;&nbsp;New Story&nbsp;</button>
+    <h5 class='lead' style='font-size:20px; margin-bottom:12px'>Search</h5>
 
-          <h5 style='font-size:17px'>Filter Stories</h5>
+    <%= render 'companies/curate/filters', { company: company } %>
 
-          <%= render 'companies/curate/filters', { company: company } %>
-
-        </div>
-
-        <div class="col-md-9 col-sm-8 layout-main">
-
-          <ul id="curate-gallery" class='grid list-unstyled text-center'>
-          </ul>
-
-        </div>
-
-      </div>
-    </div>  <!-- container -->
   </div>
+
+  <div class="col-md-9 col-sm-8 layout-main">
+
+    <ul id="curate-gallery" class='grid list-unstyled text-center'>
+    </ul>
+
+  </div>
+
 </div>
+
 

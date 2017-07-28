@@ -41,7 +41,7 @@ Rails.application.routes.draw do
     # see below for route to public story page
 
     # public for now, so can access via curl
-    get '/stories/promoted', to: 'stories#promoted'
+    # get '/stories/promoted', to: 'stories#promoted'
 
     authenticate :user do
 
@@ -49,10 +49,15 @@ Rails.application.routes.draw do
       # this allows us to provide the company_id parameter that's missing from the route
       get '/:workflow_stage', to: 'companies#show',
             constraints: lambda { |params, request|
+              puts "WORKFLOW #{params[:workflow_stage]}"
               params[:id] = request.env['warden'].user(:user).company_id.to_s
               params[:workflow_stage].match(/(crowdsource|curate|promote|measure)/)
             }, as: 'company_main'
-
+      get '/curate/:story_slug', to: 'stories#edit',
+            constraints: lambda { |params, request|
+              Story.friendly.exists?(params[:story_slug]) &&
+              params[:id] = Story.friendly.find(params[:story_slug]).id
+            }, as: 'edit_story'
       get '/company-settings', to: 'companies#edit',
             constraints: lambda { |params, request|
               params[:id] = request.env['warden'].user(:user).company_id.to_s
@@ -64,7 +69,7 @@ Rails.application.routes.draw do
         resources :successes, only: [:create, :update, :destroy], shallow: true
         resources :stories, only: [:edit, :update, :destroy], shallow: true do
           resources :results, only: [:create, :update, :destroy]
-          collection { get 'promoted', to: 'stories#promoted' }
+          collection { get '/promoted', to: 'stories#promoted' }
           member { post '/promote', to: 'stories#promote' }
           member { put '/promote', to: 'stories#promote' }
           member { delete '/promote', to: 'stories#promote' }

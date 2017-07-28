@@ -3,48 +3,60 @@ function curate () {
   // don't need to call this here as the auto curator-select change event will trigger it
   // filterCurateGallery();
 
-  $('.curate.curator-select').each(function () {
-    $(this).val(
-      $(this).children('[value="' + app.current_user.id.toString() + '"]').val()
+  $('.curate.curator-select').val(
+      $('.curate.curator-select').children('[value="' + app.current_user.id.toString() + '"]').val()
     ).trigger('change', { auto: true });
-  });
-
 }
+
 
 function curateListeners () {
 
   $(document)
 
-    .on('click', '#curate a.all-stories',
-      function () {
-        $('#loading-stories').toggle();
-      })
-
     .on('click', '#curate-gallery a.logo-published, #curate-gallery a.pending-curation',
       function (e) {
         e.preventDefault();
-        var $story = $(this).closest('li');
+        var $story = $(this).closest('li'), storySlug = $story.data('story-slug'),
+            selectStory = function ($story) {
+              $story.addClass('selected');
+              $('#curate-gallery li').not($story).css('pointer-events', 'none');
+              $story.find('.thumbnail-view-hover').css('transform', 'none');
+              $story.find('img').css('opacity', '0.1');
+            },
+            stylingAdjustments = function () {
+              $('#curate > .content').addClass('clip');
+              $('#curate .layout-sidebar, #curate .layout-main').css('padding-top', '40px');
+            };
         selectStory($story);
+
+        window.history.replaceState(
+          { turbolinks: false }, null, '/curate'
+        );
+        window.history.pushState(
+          { turbolinks: true }, null, '/curate/' + storySlug
+        );
+
         $.ajax({
           url: '/stories/' + $story.data('story-id') + '/edit',
           method: 'get',
           dataType: 'html',
           success: function (html, status, xhr) {
-            $('#curate .container').children()
-                .fadeOut({ duration: 150, easing: 'linear',
-                  complete: function () {
-                    $('#curate .container').empty()
-                      .append(html)
-                      .fadeIn({ duration: 150, easing: 'linear' });
-                      initContributorsTable('curate');
-
-                    window.history.pushState({ turbolinks: false}, null, '/');
-                  }
+            $.when(
+              $('#curate .container').children()
+                .fadeOut({ duration: 150, easing: 'linear' })
+            ).then(function () {
+              $.when(
+                $('#curate .container').empty()
+                  .append(html)
+                  .fadeIn({ duration: 150, easing: 'linear' })
+                ).then(function () {
+                    stylingAdjustments();
+                    initContributorsTable('curate');
+                  });
               });
           }
         });
       })
-
     .on('change', '.curate.curator-select, .curate.category-select,' +
         '.curate.product-select, .curate.published, .curate.logo-published,' +
         '.curate.pending-curation',
@@ -124,12 +136,7 @@ function filterCurateGallery () {
 // when a story is selected,
 // - disallow pointer events on other stories
 // - stay in persistent hover state
-function selectStory ($story) {
-  $story.addClass('selected');
-  $('#curate-gallery li').not($story).css('pointer-events', 'none');
-  $story.find('.thumbnail-view-hover').css('transform', 'none');
-  $story.find('img').css('opacity', '0.1');
-}
+
 
 
 

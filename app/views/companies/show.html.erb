@@ -2,9 +2,11 @@
 <% content_for :head do %>
   <!-- challenge: get the cache preview to be responsive to tab selection
        workaround: no preview-cache  -->
-  <meta name="turbolinks-cache-control" content="no-preview">
+       <!-- changed to no-cache for consistency with edit -->
+  <meta name="turbolinks-cache-control" content="no-cache">
 <% end %>
 
+<!-- include templates for both show and edit -->
 <% content_for :underscore_templates do %>
   <%= render 'companies/crowdsource/success_details_template' %>
   <%= render 'companies/crowdsource/contributor_template' %>
@@ -14,8 +16,13 @@
   <%= render 'companies/crowdsource/contributors_table_header_template' %>
   <%= render 'companies/crowdsource/contributors_dropdown_template' %>
   <%= render 'companies/promote/adwords_status_dropdown_template' %>
+  <%= render 'stories/shared/stories_index_template', { company: @company } %>
+  <%= render 'stories/shared/edit/video_template' %>
+  <%= render 'stories/shared/edit/prompt_template' %>
+  <%= render 'stories/shared/edit/result_template' %>
 <% end %>
 
+<!-- include modals for both show and edit -->
 <%= render 'companies/crowdsource/new_success_modal', { company: @company } %>
 <%= render 'companies/crowdsource/new_contributor_modal', { company: @company } %>
 <%= render 'companies/shared/new_story_modal', { company: @company } %>
@@ -31,8 +38,17 @@
                { company: @company, workflow_stage: @workflow_stage,
                  workflow_substage: @workflow_substage } %>
 
-    <%= render 'companies/curate/curate', { company: @company,
-          workflow_stage: @workflow_stage, workflow_substage: @workflow_substage } %>
+    <!-- curate partial is templated by server and served via ajax -->
+    <div id='curate' role='tabpanel' class="<%= @workflow_stage == 'curate' ? 'active tab-pane fade in' : 'tab-pane fade' %>">
+      <div class="content">
+        <div class='container'>
+
+          <%= render 'companies/curate/curate', { company: @company,
+                workflow_stage: @workflow_stage, workflow_substage: @workflow_substage } %>
+
+        </div>
+      </div>
+    </div>
 
     <%= render 'companies/promote/promote',
                { company: @company, workflow_stage: @workflow_stage,
