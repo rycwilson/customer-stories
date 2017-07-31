@@ -2,82 +2,80 @@
 <div id='promote'
      class="<%= workflow_stage == 'promote' ? 'active tab-pane fade in' : 'tab-pane fade' %>"
      role='tabpanel'>
-  <div class="content clip">
-    <div class='container'>
+  <div class="container clip">
 
-      <div class="layout layout-main-right layout-stack-sm">
-        <div class="col-md-3 col-sm-4 layout-sidebar">
+    <div class="layout layout-main-right layout-stack-sm">
+      <div class="col-md-3 col-sm-4 layout-sidebar">
 
-          <div class="nav-layout-sidebar-skip">
-            <strong>Tab Navigation</strong> / <a href="#settings-content">Skip to Content</a>
-          </div>
-
-          <ul class="nav nav-layout-sidebar nav-stacked">
-            <li class="<%= workflow_substage == 'promoted-stories' ? 'active' : (workflow_substage.nil? ? 'active' : '') %>">
-              <a href="#promoted-stories-tab-pane" data-toggle="tab">
-                <i class="fa fa-bullhorn"></i>
-                &nbsp;&nbsp;Sponsored Stories
-              </a>
-            </li>
-            <li class="<%= workflow_substage == 'promote-settings' ? 'active' : '' %>">
-              <a href="#promote-settings-tab-pane" data-toggle="tab">
-                <i class="fa fa-gear"></i>
-                &nbsp;&nbsp;Settings
-              </a>
-            </li>
-          </ul>
-
-      <% if admin_signed_in? %>
-
-        <div class="text-center">
-          <%= form_tag adwords_sync_company_path, method: :put,
-                id: 'adwords-sync-form' do %>
-
-            <% if company.ready_for_adwords_sync? %>
-              <button type="submit" class="btn btn-success text-center" style='width:152px'>
-                <span class='submit-toggle'>Sync with AdWords</span>
-                <i class='fa fa-spinner fa-pulse submit-toggle' style='display:none'></i>
-              </button>
-            <% else %>
-              <%= submit_tag 'Sync with AdWords', class: 'btn btn-success', disabled: true %>
-            <% end %>
-
-          <% end %>
-        </div> <br>
-        <label for='adwords-sync-checklist'>
-          Checklist
-        </label>
-        <ul id='adwords-sync-checklist'>
-          <li>company.promote_tr = true</li>
-          <li>headline, logo, and default image in place</li>
-          <li>AdWords campaigns given proper labels</li>
-          <li>Adwords ads given story.id label (ok to skip if long headline matches story title)</li>
-        </ul>
-
-      <% end %>
-
+        <div class="nav-layout-sidebar-skip">
+          <strong>Tab Navigation</strong> / <a href="#settings-content">Skip to Content</a>
         </div>
 
-        <div class="col-md-9 col-sm-8 layout-main">
+        <ul class="nav nav-layout-sidebar nav-stacked">
+          <li class="active">
+            <a href="#promoted-stories-tab-pane" data-toggle="tab">
+              <i class="fa fa-bullhorn"></i>
+              &nbsp;&nbsp;Sponsored Stories
+            </a>
+          </li>
+          <li>
+            <a href="#promote-settings-tab-pane" data-toggle="tab">
+              <i class="fa fa-gear"></i>
+              &nbsp;&nbsp;Settings
+            </a>
+          </li>
+        </ul>
 
-          <div class="tab-content stacked-content">
+    <% if admin_signed_in? %>
 
-            <div id='promoted-stories-tab-pane'
-                 class="tab-pane fade <%= workflow_substage == 'promoted-stories' ? 'in active' : (workflow_substage.nil? ? 'in active' : '') %>">
-              <%= render 'companies/promote/promoted_stories_table', { company: company } %>
-            </div>
+      <div class="text-center">
+        <%= form_tag adwords_sync_company_path, method: :put,
+              id: 'adwords-sync-form' do %>
 
-            <div id='promote-settings-tab-pane'
-                 class="tab-pane fade <%= workflow_substage == 'promote-settings' ? 'in active' : '' %>">
-              <%= render 'companies/promote/promote_settings', { company: company } %>
-            </div>
+          <% if company.ready_for_adwords_sync? %>
+            <button type="submit" class="btn btn-success text-center" style='width:152px'>
+              <span class='submit-toggle'>Sync with AdWords</span>
+              <i class='fa fa-spinner fa-pulse submit-toggle' style='display:none'></i>
+            </button>
+          <% else %>
+            <%= submit_tag 'Sync with AdWords', class: 'btn btn-success', disabled: true %>
+          <% end %>
+
+        <% end %>
+      </div> <br>
+      <label for='adwords-sync-checklist'>
+        Checklist
+      </label>
+      <ul id='adwords-sync-checklist'>
+        <li>company.promote_tr = true</li>
+        <li>headline, logo, and default image in place</li>
+        <li>AdWords campaigns given proper labels</li>
+        <li>Adwords ads given story.id label (ok to skip if long headline matches story title)</li>
+      </ul>
+
+    <% end %>
+
+      </div>
+
+      <div class="col-md-9 col-sm-8 layout-main">
+
+        <div class="tab-content stacked-content">
+
+          <div id='promoted-stories-tab-pane'
+               class="tab-pane fade in active">
+            <%= render 'companies/promote/promoted_stories_table', { company: company } %>
           </div>
 
+          <div id='promote-settings-tab-pane'
+               class="tab-pane fade">
+            <%= render 'companies/promote/promote_settings', { company: company } %>
+          </div>
         </div>
 
       </div>
 
-    </div>  <!-- container -->
+    </div>
+
   </div>
 </div>  <!-- promote -->
 

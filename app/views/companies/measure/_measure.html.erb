@@ -1,83 +1,80 @@
 
 <div id='measure' class="<%= workflow_stage == 'measure' ? 'active tab-pane fade in' : 'tab-pane fade' %>" role='tabpanel'>
 
-  <div class="content clip">
+  <div class="container clip">
 
-    <div class="container">
+    <div class="layout layout-main-right layout-stack-sm">
 
-      <div class="layout layout-main-right layout-stack-sm">
+      <div class="col-md-3 col-sm-4 layout-sidebar">
 
-        <div class="col-md-3 col-sm-4 layout-sidebar">
-
-          <div class="nav-layout-sidebar-skip">
-            <strong>Tab Navigation</strong> / <a href="#settings-content">Skip to Content</a>
-          </div>
-
-          <ul class="nav nav-layout-sidebar nav-stacked">
-
-            <li class='active'>
-              <a href="#measure-summary-container" data-toggle="tab">
-              <i class="fa fa-bar-chart"></i>
-              &nbsp;&nbsp;Summary
-              </a>
-            </li>
-
-            <li>
-              <a href="#measure-stories-container" data-toggle="tab">
-              <i class="fa fa-newspaper-o"></i>
-              &nbsp;&nbsp;Stories
-              </a>
-            </li>
-
-            <li>
-              <a href="#measure-visitors-container" data-toggle="tab">
-              <i class="fa fa-users"></i>
-              &nbsp;&nbsp;Visitors
-              </a>
-            </li>
-
-            <li>
-              <a href="#measure-activity-container" data-toggle="tab">
-              <i class="fa fa-line-chart"></i>
-              &nbsp;&nbsp;Recent activity
-              </a>
-            </li>
-
-
-          </ul>
-
+        <div class="nav-layout-sidebar-skip">
+          <strong>Tab Navigation</strong> / <a href="#settings-content">Skip to Content</a>
         </div>
 
-        <div class="col-md-9 col-sm-8 layout-main">
+        <ul class="nav nav-layout-sidebar nav-stacked">
 
-          <div id="settings-content" class="tab-content stacked-content">
+          <li class='active'>
+            <a href="#measure-summary-container" data-toggle="tab">
+            <i class="fa fa-bar-chart"></i>
+            &nbsp;&nbsp;Summary
+            </a>
+          </li>
 
-            <div class="tab-pane fade in active" id="measure-summary-container">
-              <%= render 'companies/measure/summary_charts', { company: company } %>
-            </div>
+          <li>
+            <a href="#measure-stories-container" data-toggle="tab">
+            <i class="fa fa-newspaper-o"></i>
+            &nbsp;&nbsp;Stories
+            </a>
+          </li>
 
-            <div class="tab-pane fade" id="measure-stories-container">
-              <%= render 'companies/measure/stories_table' %>
-            </div>
+          <li>
+            <a href="#measure-visitors-container" data-toggle="tab">
+            <i class="fa fa-users"></i>
+            &nbsp;&nbsp;Visitors
+            </a>
+          </li>
 
-            <div class="tab-pane fade" id="measure-visitors-container">
-              <%= render 'companies/measure/visitors_table', { company: company } %>
-            </div>
+          <li>
+            <a href="#measure-activity-container" data-toggle="tab">
+            <i class="fa fa-line-chart"></i>
+            &nbsp;&nbsp;Recent activity
+            </a>
+          </li>
 
-            <div class="tab-pane fade" id="measure-activity-container">
 
-              <% cache("#{company.subdomain}/recent-activity", skip_digest: true) do %>
-                <%= render 'companies/measure/activity_table',
-                      { recent_activity: recent_activity,
-                        story_views_30_day_count: @story_views_30_day_count } %>
-              <% end %>
+        </ul>
 
-            </div>
+      </div>
 
-          <!-- </div> -->
+      <div class="col-md-9 col-sm-8 layout-main">
 
-        </div> <!-- /.col -->
-      </div> <!-- layout -->
-    </div> <!-- container -->
-  </div> <!-- content -->
+        <div id="settings-content" class="tab-content stacked-content">
+
+          <div class="tab-pane fade in active" id="measure-summary-container">
+            <%= render 'companies/measure/summary_charts', { company: company } %>
+          </div>
+
+          <div class="tab-pane fade" id="measure-stories-container">
+            <%= render 'companies/measure/stories_table' %>
+          </div>
+
+          <div class="tab-pane fade" id="measure-visitors-container">
+            <%= render 'companies/measure/visitors_table', { company: company } %>
+          </div>
+
+          <div class="tab-pane fade" id="measure-activity-container">
+
+            <% cache("#{company.subdomain}/recent-activity", skip_digest: true) do %>
+              <%= render 'companies/measure/activity_table',
+                    { recent_activity: recent_activity,
+                      story_views_30_day_count: @story_views_30_day_count } %>
+            <% end %>
+
+          </div>
+
+        <!-- </div> -->
+
+      </div> <!-- /.col -->
+    </div> <!-- layout -->
+  </div> <!-- container -->
 </div>  <!-- measure -->

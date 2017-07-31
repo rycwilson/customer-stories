@@ -58,17 +58,13 @@ function attachAppListeners () {
 
   $(document)
 
-    .on('click', '#company-nav-dropdowns a', function (e) {
-      var currentWorkflowPath = window.location.pathname;
-      if ($('body').hasClass('companies show')) {
-        window.history.replaceState({ turbolinks: true }, null, currentWorkflowPath);
-      }
-    })
     .on('click', '#workflow-tabs a', function (e) {
+      e.preventDefault();
       var currentWorkflowPath = window.location.pathname,
           newWorkflowPath = '/' + $(this).attr('href').slice(1, $(this).attr('href').length);
 
       if ($('body').hasClass('companies show')) {
+        // replacing state ensure turbolinks:false for the first tab state
         window.history.replaceState({ turbolinks: false }, null, currentWorkflowPath);
         window.history.pushState({ turbolinks: true }, null, newWorkflowPath);
 
@@ -78,11 +74,31 @@ function attachAppListeners () {
 
     });
 
+  //
   window.onpopstate = function (e) {
-    var workflowTab = $('#workflow-tabs a[href="#' + window.location.pathname.slice(1, window.location.pathname.length) + '"]');
-    if (workflowTab.length) { workflowTab.tab('show'); }
+    // console.log('popstate')
+    var workflowMatch = window.location.pathname.match(
+            /(crowdsource|curate|promote|measure)(\/(\w|-)+)?/
+          ),
+        workflowStage = workflowMatch && workflowMatch[1],
+        curateView = workflowStage && (workflowStage === 'curate') ?
+                        (workflowMatch[2] ? 'story' : 'stories') : null;
 
-    // if (window.location.pathname === '/curate')
+    if (workflowStage) {
+      $('#workflow-tabs a[href="#' + workflowStage + '"]').tab('show');
+      if (curateView) {
+        console.log('curateView: ', curateView)
+        $('a[href="#curate-' + curateView + '"]').tab('show');
+        // don't scroll to panel
+        setTimeout(function() { window.scrollTo(0, 0); }, 1);
+        if (curateView === 'stories') {
+          $('.curate.curator-select').val(
+            $('.curate.curator-select').children('[value="' + app.current_user.id.toString() + '"]').val()
+          ).trigger('change', { auto: true });
+        }
+      }
+    }
+
   };
 
   $(document)
@@ -113,7 +129,7 @@ function attachAppListeners () {
     // this event appears to work best for doing stuff prior to leaving a page
     // note: this event occurs after the history state has been changed
     .on('turbolinks:before-cache', function () {
-      // console.log('turbolinks:before-cache');
+      console.log('turbolinks:before-cache');
       deconstructPlugins();
     })
 

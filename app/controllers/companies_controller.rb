@@ -11,29 +11,13 @@ class CompaniesController < ApplicationController
   end
 
   def show
-    if request.xhr?
-      @is_xhr = true
-      render({
-        partial: 'companies/curate/curate',
-        locals: { company: @company, xhr: @is_xhr }
-      })
-    else
-      @is_xhr = false
-    end
     redirect_to('/curate') if request.path.match(/\/companies\/\d+/)
     @workflow_stage = params[:workflow_stage]
-    # @workflow_stage = cookies[:csp_workflow_stage] || 'curate'
-    # cookies.delete(:csp_workflow_stage) if cookies[:csp_workflow_stage]
-    # @workflow_substage = cookies[:csp_workflow_substage]
-    # cookies.delete(:workflow_substage) if cookies[:workflow_substage]
     @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
     @story_views_30_day_count = PageView.joins(:visitor_session)
                                  .company_story_views_since(@company.id, 30).count
-
-    # story data is obtained via json
-    # story_ids = @company.all_stories
-    # @stories = Story.find(story_ids)
-    #                 .sort_by { |story| story_ids.index(story.id) }
+    @curate_view = 'stories'
+    # note: app data is obtained via json
   end
 
   def edit

@@ -10,22 +10,10 @@ function initDataTables () {
     $('a[href="#measure-stories-container"]')[0].click();
   }
 
-  $('#customers-table').DataTable({
-    paging: false,
-    columnDefs: [
-      { orderable: false, targets: [ 2 ] },
-      { width: '160px', targets: 2 }
-    ],
-  });
-
   initSuccessesTable();
   initContributorsTable('crowdsource');
+  initContributorsTable('curate');
   initPromotedStoriesTable();
-
-  $('#curate-table').DataTable({
-    paging: false
-  });
-
 
   // Don't specify first column as type: 'date'
   // with moment.js install, doing so will only screw it up
@@ -190,6 +178,7 @@ function initSuccessesTable () {
       $curatorSelect.val( app.current_user.id.toString() )
           .trigger('change', { auto: true });
 
+      // $('#crowdsource a[href="#successes"]').find('.fa-spinner').hide();
       $(this).css('visibility', 'visible');
     }
   });
@@ -197,7 +186,7 @@ function initSuccessesTable () {
 
 function initContributorsTable (workflowStage) {
   var successIndex = 2, curatorIndex = 4, customerIndex = 5, colCount = 8;
-  $('[id="' + workflowStage + '-contributors-table"]').DataTable({
+  $('table[id="' + workflowStage + '-contributors-table"]').DataTable({
     ajax: {
       url: '/contributions',
       dataSrc: ''
@@ -401,6 +390,8 @@ function initContributorsTable (workflowStage) {
               .draw();
 
       }
+      // $('#' + workflowStage + ' a[href="#' + workflowStage + '-contributors"]')
+      //   .find('.fa-spinner').hide();
       $(this).css('visibility', 'visible');
     }
   });

@@ -8,58 +8,36 @@ function storiesEditListeners () {
 
   $(document)
     .on('click', '#curate a.all-stories', function (e) {
-      $('#loading-stories').toggle();
-      var stylingAdjustments = function () {
-        $('#curate > .content').removeClass('clip');
-        $('#curate .layout-sidebar, #curate .layout-main').css('padding-top', '40px');
-        // $('#curate .layout').css('visibility', 'visible');
-      };
-
+      // replacing state ensure turbolinks:false for the first tab state
       window.history.replaceState(
         { turbolinks: false }, null, window.location.pathname
       );
       window.history.pushState(
         { turbolinks: true }, null, '/curate'
       );
+      $('a[href="#curate-stories"]').tab('show');
+      setTimeout(function() { window.scrollTo(0, 0); }, 1);
+      // TODO: why does the tab switch fail if the below code is absent??
+      $('.curate.curator-select').val(
+        $('.curate.curator-select').children('[value="' + app.current_user.id.toString() + '"]').val()
+      ).trigger('change', { auto: true });
 
-      $.ajax({
-          url: '/curate',
-          method: 'get',
-          dataType: 'html',
-          success: function (html, status, xhr) {
-            $.when(
-              $('#curate .container').children()
-                .fadeOut({ duration: 150, easing: 'linear' })
-            ).then(function () {
-                $.when(
-                  $('#curate .container').empty().append(html)
-                    .fadeIn({ duration: 150, easing: 'linear' })
-                ).then(function () {
+      // $.when(
+      // ).then(function () {
+      // });
 
-    stylingAdjustments();
-    // select curator (has the effect of calling filterCurateGallery())
-    $('.curate.curator-select').val(
-      $('.curate.curator-select').children('[value="' + app.current_user.id.toString() + '"]').val()
-    ).trigger('change', { auto: true });
-    // ... ;
-    // init select2
+    });
 
-                  });
-              });
-          }
-        });
-      });
-
-      storiesEditBIPListeners();
-      storiesEditSettingsListeners();
-      storiesEditVideoInputHandler();
-      storiesEditCTAsListeners();
-      storiesEditTagsListeners();
-      storiesEditNewContributorListeners();
-      storiesEditResultsListeners();
-      storiesEditPromptsListeners();
-      // storiesEditContributionsListeners();
-      storiesEditContentEditorListeners();
+    storiesEditBIPListeners();
+    storiesEditSettingsListeners();
+    storiesEditVideoInputHandler();
+    storiesEditCTAsListeners();
+    storiesEditTagsListeners();
+    storiesEditNewContributorListeners();
+    storiesEditResultsListeners();
+    storiesEditPromptsListeners();
+    // storiesEditContributionsListeners();
+    storiesEditContentEditorListeners();
 }
 
 function storiesEditBIPListeners () {

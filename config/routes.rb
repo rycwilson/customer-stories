@@ -49,9 +49,9 @@ Rails.application.routes.draw do
       # this allows us to provide the company_id parameter that's missing from the route
       get '/:workflow_stage', to: 'companies#show',
             constraints: lambda { |params, request|
-              puts "WORKFLOW #{params[:workflow_stage]}"
-              params[:id] = request.env['warden'].user(:user).company_id.to_s
-              params[:workflow_stage].match(/(crowdsource|curate|promote|measure)/)
+              params[:id] = request.env['warden'].user(:user).try(:company_id).to_s
+              params[:workflow_stage].match(/(crowdsource|curate|promote|measure)/) &&
+              params[:id].present?  # i.e. user signed in
             }, as: 'company_main'
       get '/curate/:story_slug', to: 'stories#edit',
             constraints: lambda { |params, request|

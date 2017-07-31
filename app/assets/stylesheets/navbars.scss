@@ -164,6 +164,9 @@
   }
   #company-nav-dropdowns {
     margin: 0;
+    a.dropdown-toggle {
+      padding: 12px 14px;
+    }
     li.dropdown.active, li.dropdown.active.open {
       > a {
         color: #d74b4b;  // #4885ed;

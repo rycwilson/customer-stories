@@ -1,60 +1,58 @@
 
 <div id='crowdsource' role='tabpanel'
-    class="<%= @workflow_stage == 'crowdsource' ? 'active tab-pane fade in' : 'tab-pane fade' %>">
+    class="tab-pane fade <%= workflow_stage == 'crowdsource' ? 'active in' : '' %>">
 
-  <div class="content clip">
-    <div class='container'>
+  <div class='container clip'>
 
-      <div class="layout layout-main-right layout-stack-sm">
-        <div class="col-md-3 col-sm-4 layout-sidebar">
+    <div class="layout layout-main-right layout-stack-sm">
+      <div class="col-md-3 col-sm-4 layout-sidebar">
 
-          <div class="nav-layout-sidebar-skip">
-            <strong>Tab Navigation</strong> / <a href="#settings-content">Skip to Content</a>
+        <ul class="nav nav-layout-sidebar nav-stacked">
+
+          <li class="active">
+            <a href="#successes" data-toggle="tab">
+              <i class="fa fa-rocket"></i>
+              &nbsp;&nbsp;Story Candidates
+            <!--   <span class='pull-right'>
+                <i class='fa fa-spinner fa-pulse' style='color:#666'></i>
+              </span> -->
+            </a>
+          </li>
+
+          <li>
+            <a href="#crowdsource-contributors" data-toggle="tab">
+              <i class="fa fa-users"></i>
+              &nbsp;&nbsp;Success Contributors
+              <!-- <span class='pull-right'>
+                <i class='fa fa-spinner fa-pulse' style='color:#666'></i>
+              </span> -->
+            </a>
+          </li>
+
+        </ul>
+
+      </div>
+
+      <div class="col-md-9 col-sm-8 layout-main">
+
+        <div class="tab-content stacked-content">
+
+          <div id='successes' class="tab-pane fade in active">
+            <%= render 'companies/crowdsource/successes_table',
+                        { company: company } %>
           </div>
 
-          <ul class="nav nav-layout-sidebar nav-stacked">
-
-            <li class="<%= workflow_substage == 'successes' ? 'active' : (workflow_substage.nil? ? 'active' : '')  %>">
-              <a href="#successes-tab-pane" data-toggle="tab">
-                <i class="fa fa-rocket"></i>
-                &nbsp;&nbsp;Story Candidates
-              </a>
-            </li>
-
-            <li class="<%= workflow_substage == 'contributors' ? 'active' : '' %>">
-              <a href="#crowdsource-contributors-tab-pane" data-toggle="tab">
-                <i class="fa fa-users"></i>
-                &nbsp;&nbsp;Success Contributors
-              </a>
-            </li>
-
-          </ul>
-
-        </div>
-
-        <div class="col-md-9 col-sm-8 layout-main">
-
-          <div class="tab-content stacked-content">
-
-            <div id='successes-tab-pane'
-                 class="tab-pane fade <%= workflow_substage == 'successes' ? 'in active' : (workflow_substage.nil? ? 'in active' : '') %>">
-              <%= render 'companies/crowdsource/successes_table',
-                          { company: company } %>
-            </div>
-
-            <div id='crowdsource-contributors-tab-pane'
-                 class="tab-pane fade <%= workflow_substage == 'contributors' ? 'in active' : '' %>">
-              <%= render 'companies/crowdsource/contributors_table',
-                      { company: company, workflow_stage: 'crowdsource' } %>
-            </div>
-
+          <div id='crowdsource-contributors' class="tab-pane fade">
+            <%= render 'companies/crowdsource/contributors_table',
+                    { company: company, workflow_stage: 'crowdsource' } %>
           </div>
 
         </div>
 
-      </div>  <!-- .layout -->
+      </div>
 
-    </div>
+    </div>  <!-- .layout -->
+
   </div>
 
 </div>

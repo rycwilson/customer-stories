@@ -8,29 +8,9 @@ function promoteListeners () {
 
     .on('click', 'a[href="#promote"]',
       function () {
-        // if ($('#sponsored-stories-tab-pane').children().length === 0) {
-        //   $.get('/companies/' + app.company.id + '/sponsored-stories',
-        //     function (html, status, xhr) {
-        //       $('#sponsored-stories-tab-pane').append(html)
-        //         .fadeIn({ duration: 500, easing: 'linear' });
-        //       initSponsoredStoriesTable();
-        //       $('#loading-sponsored-stories').toggle();
-        //       $.get('/companies/' + app.company.id + '/promote-settings',
-        //         function (html, status, xhr) {
-        //           $('#promote-settings-tab-pane').append(html)
-        //             .fadeIn({ duration: 150, easing: 'linear' });
-        //           initPromoteSettingsValidator();
-        // // validation won't be triggered unless input fields change
-        // // -> trigger manually so can detect missing logo or image
-        //           $('#promote-settings-form').validator('validate');
-        //           promoteTooltips();
-        //           promotePopovers();
-        //         });
-        //     });
-        // }
       })
 
-    // changing the scroll-on-focus offset for bootstrap validator not working,
+    // changing the scroll-on-focus offset for bootstrap validator isn't working,
     // so do this instead...
     .on('click', 'a[href="#promote-settings-tab-pane"]',
       function () {

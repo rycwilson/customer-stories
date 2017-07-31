@@ -90,7 +90,7 @@ class StoriesController < ApplicationController
         locals: { company: @company, story: @story, workflow_stage: 'curate' }
       })
     else
-      # provide data for both stories#edit and companies#show views (except curate)
+      # provide data for both stories#edit and companies#show views
       @customer = @story.success.customer
       @referrer_select = @story.success.contributions
                                .map { |c| [ c.contributor.full_name, c.contributor.id ] }
@@ -104,6 +104,9 @@ class StoriesController < ApplicationController
       @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
       @story_views_30_day_count = PageView.joins(:visitor_session)
                                     .company_story_views_since(@company.id, 30).count
+      @workflow_stage = 'curate'
+      @curate_view = 'story'  # instead of 'stories'
+      render('companies/show')
     end
   end
 

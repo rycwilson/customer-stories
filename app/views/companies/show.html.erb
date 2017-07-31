@@ -34,25 +34,16 @@
 
   <div class='tab-content'>
 
-    <%= render 'companies/crowdsource/crowdsource',
-               { company: @company, workflow_stage: @workflow_stage,
-                 workflow_substage: @workflow_substage } %>
+    <%= render 'companies/crowdsource/crowdsource', {
+            company: @company, workflow_stage: @workflow_stage
+          } %>
 
-    <!-- curate partial is templated by server and served via ajax -->
-    <div id='curate' role='tabpanel' class="<%= @workflow_stage == 'curate' ? 'active tab-pane fade in' : 'tab-pane fade' %>">
-      <div class="content">
-        <div class='container'>
-
-          <%= render 'companies/curate/curate', { company: @company,
-                workflow_stage: @workflow_stage, workflow_substage: @workflow_substage } %>
-
-        </div>
-      </div>
-    </div>
+    <%= render 'companies/curate/curate', { company: @company, story: @story,
+            workflow_stage: @workflow_stage, curate_view: @curate_view
+          } %>
 
     <%= render 'companies/promote/promote',
-               { company: @company, workflow_stage: @workflow_stage,
-                 workflow_substage: @workflow_substage } %>
+          { company: @company, workflow_stage: @workflow_stage, } %>
 
     <%= render 'companies/measure/measure',
                 { company: @company, workflow_stage: @workflow_stage,

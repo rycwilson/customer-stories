@@ -1,38 +1,45 @@
 
 #curate {
 
-  .layout-sidebar {
-    padding-top: 30px;
-  }
-  .layout-main {
-    padding-top: 34px;
+  .sidebar-contents {
+    margin-top: -10px;
   }
 
-  #curate-filters {
-    display: flex;
-    align-items: center;
-    form {
-      width: 100%;
-      .form-group {
-        margin-bottom: 15px;
+  #curate-stories {
+    h4 {
+      margin-top: 3px  // so it doesn't get clipped by clip class
+    }
+    .grid-item {  // overrides stories.scss
+      padding: 0;
+      margin: 4px 30px 30px 30px;
+    }
+    #curate-filters {
+      display: flex;
+      align-items: center;
+      form {
+        width: 100%;
+        .form-group {
+          margin-bottom: 15px;
+        }
+        .form-group:nth-of-type(3) {
+          margin-bottom: 20px;
+        }
       }
-      .form-group:nth-of-type(3) {
-        margin-bottom: 20px;
+    }
+    #curate-gallery {
+      li .thumbnail-view-hover i {
+        display: none;
+      }
+      li.selected {
+        .thumbnail-view-hover p { display: none; }
+        .thumbnail-view-hover i { display: block; }
       }
     }
   }
 
-  #curate-contributors-table .story-candidate {
-    display: none;
-  }
-
-  #curate-gallery {
-    li .thumbnail-view-hover i {
+  #curate-story {
+    #curate-contributors-table .story-candidate {
       display: none;
-    }
-    li.selected {
-      .thumbnail-view-hover p { display: none; }
-      .thumbnail-view-hover i { display: block; }
     }
   }
 

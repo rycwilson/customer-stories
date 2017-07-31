@@ -56,6 +56,21 @@
   }
 }
 
+// .stories.edit essentially falls under .companies.show
+.companies, .stories.edit {
+  .layout-sidebar {
+    @media only screen and (min-width: 992px) {
+      width: 22%
+    }
+    .disabled-tab { color: #ccc; }
+  }
+  .layout-main {
+    @media only screen and (min-width: 992px) {
+      width: 78%
+    }
+  }
+}
+
 .turbolinks-progress-bar {
   height: 1px;
   background-color: #00fbff;
@@ -63,7 +78,7 @@
 
 // this gets rid of the vertical portion of the first tab for views
 // that employ the mvp tabbed content layout
-.content.clip {
+.container.clip {
   margin-top: 30px;
   overflow: hidden;
   padding-bottom: 100px;  // this leaves room for dropdowns in Crowdsource

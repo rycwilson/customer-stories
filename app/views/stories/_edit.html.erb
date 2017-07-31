@@ -1,5 +1,6 @@
 
 <div class="layout layout-main-right layout-stack-sm">
+
   <div class="col-md-3 col-sm-4 layout-sidebar">
 
     <%= render 'stories/edit/side_tabs' %>
@@ -10,11 +11,12 @@
     <div class="tab-content stacked-content">
 
       <div class="row">
-        <h4><%= story.title %></h4>
+        <h4><%= story.try(:title) %></h4>
       </div>
 
       <div id='story-settings-tab-pane' class="tab-pane fade in active"
-           data-success-id="<%= story.success.id %>" data-story-id="<%= story.id %>" >
+           data-success-id="<%= story.try(:success).try(:id) %>"
+           data-story-id="<%= story.try(:id) %>" >
 
       </div>
 
@@ -22,7 +24,7 @@
 
       </div>
 
-      <div id='curate-contributors-tab-pane' class="tab-pane">
+      <div id='curate-contributors-tab-pane' class="tab-pane fade">
 
         <%= render 'companies/crowdsource/contributors_table',
               { company: company, workflow_stage: 'curate' } %>
@@ -31,5 +33,6 @@
 
     </div>
   </div>
+
 </div>
 

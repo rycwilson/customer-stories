@@ -103,7 +103,6 @@ class ApplicationController < ActionController::Base
             controller: '/companies',
             action: 'show',
             id: resource.company.id,
-            anchor: 'curate'
         })
       else
         edit_profile_no_company_path

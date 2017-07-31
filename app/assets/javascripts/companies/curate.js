@@ -2,7 +2,6 @@
 function curate () {
   // don't need to call this here as the auto curator-select change event will trigger it
   // filterCurateGallery();
-
   $('.curate.curator-select').val(
       $('.curate.curator-select').children('[value="' + app.current_user.id.toString() + '"]').val()
     ).trigger('change', { auto: true });
@@ -16,22 +15,23 @@ function curateListeners () {
     .on('click', '#curate-gallery a.logo-published, #curate-gallery a.pending-curation',
       function (e) {
         e.preventDefault();
-        var $story = $(this).closest('li'), storySlug = $story.data('story-slug'),
-            selectStory = function ($story) {
-              $story.addClass('selected');
-              $('#curate-gallery li').not($story).css('pointer-events', 'none');
-              $story.find('.thumbnail-view-hover').css('transform', 'none');
-              $story.find('img').css('opacity', '0.1');
-            },
-            stylingAdjustments = function () {
-              $('#curate > .content').addClass('clip');
-              $('#curate .layout-sidebar, #curate .layout-main').css('padding-top', '40px');
-            };
-        selectStory($story);
+        var $story = $(this).closest('li'), storySlug = $story.data('story-slug');
 
+    //     selectStory = function ($story) {
+    //       $story.addClass('selected');
+    //       // $('#curate-gallery li').not($story).css('pointer-events', 'none');
+    //       $story.find('.thumbnail-view-hover').css('transform', 'none');
+    //       $story.find('img').css('opacity', '0.1');
+    //     };
+    // selectStory($story);
+
+    // replacing state ensure turbolinks:false for the first tab state
         window.history.replaceState(
           { turbolinks: false }, null, '/curate'
         );
+    // default to true, though this will lead to unnecessary requests in the case
+    // of back/forward navigation (but that's better than not making a turbolinks
+    // request when necessary)
         window.history.pushState(
           { turbolinks: true }, null, '/curate/' + storySlug
         );
@@ -42,18 +42,11 @@ function curateListeners () {
           dataType: 'html',
           success: function (html, status, xhr) {
             $.when(
-              $('#curate .container').children()
-                .fadeOut({ duration: 150, easing: 'linear' })
-            ).then(function () {
-              $.when(
-                $('#curate .container').empty()
-                  .append(html)
-                  .fadeIn({ duration: 150, easing: 'linear' })
-                ).then(function () {
-                    stylingAdjustments();
-                    initContributorsTable('curate');
-                  });
-              });
+                $('#curate-story').empty().append(html)
+              ).then(function () {
+                  initContributorsTable('curate');
+                  $('a[href="#curate-story"]').tab('show');
+                });
           }
         });
       })

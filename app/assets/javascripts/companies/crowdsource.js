@@ -9,6 +9,10 @@ function crowdsourceListeners () {
 
   $(document)
 
+    .on('click', '#crowdsource .layout-sidebar a', function () {
+      Cookies.set('crowdsource-tab', $(this).attr('href'));
+    })
+
     .on('click', 'td.email-template',
       function (e) {
         contributorsEditor.inline(this);
@@ -255,7 +259,7 @@ function crowdsourceListeners () {
     .on('click', '#crowdsource-contributors-table a.success',
       function (e) {
         var successId = $(this).closest('tr').next().data('success-id');
-        $('a[href="#successes-tab-pane"]').tab('show');
+        $('a[href="#successes"]').tab('show');
         $('#successes-filter').val('success-' + successId).trigger('change');
       })
 
