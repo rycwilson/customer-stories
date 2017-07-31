@@ -61,6 +61,7 @@ Rails.application.routes.draw do
       get '/company-settings', to: 'companies#edit',
             constraints: lambda { |params, request|
               params[:id] = request.env['warden'].user(:user).company_id.to_s
+              puts "COMPANY ID IS #{params[:id]}"
               true
             }, as: 'company_settings'
 
