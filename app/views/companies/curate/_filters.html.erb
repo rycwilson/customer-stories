@@ -36,11 +36,19 @@
           Published
         </label>
       </div>
+      <% if company.stories.select { |story| story.preview_published? }.present? %>
+        <div>
+          <label>
+            <input class='curate preview-published' type="checkbox" checked='true'>&nbsp;
+            Preview published
+          </label>
+        </div>
+      <% end %>
+      <div>
         <label>
           <input class='curate logo-published' type="checkbox" checked='true'>&nbsp;
           Logo published
         </label>
-      <div>
       </div>
       <div>
         <label>

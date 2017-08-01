@@ -51,12 +51,11 @@ function curateListeners () {
         });
       })
     .on('change', '.curate.curator-select, .curate.category-select,' +
-        '.curate.product-select, .curate.published, .curate.logo-published,' +
-        '.curate.pending-curation',
+        '.curate.product-select, .curate.published, .curate.preview-published, ' +
+        '.curate.logo-published, .curate.pending-curation',
       function (e) {
         filterCurateGallery();
       });
-
 }
 
 function filterCurateGallery () {
@@ -66,6 +65,7 @@ function filterCurateGallery () {
       categoryId = $('.curate.category-select').val(),
       productId = $('.curate.product-select').val(),
       showPublished = $('.curate.published').prop('checked'),
+      showPreviewPublished = $('.curate.preview-published').prop('checked'),
       showLogoPublished = $('.curate.logo-published').prop('checked'),
       showPendingCuration = $('.curate.pending-curation').prop('checked');
 
@@ -95,14 +95,18 @@ function filterCurateGallery () {
                   return story.published;
         }), 'id');
         // console.log(publishedStoryIds)
+  var previewStoryIds =
+        _.pluck(app.stories.filter(function (story) {
+                  return !story.published && story.preview_published;
+        }), 'id');
   var logoStoryIds =
         _.pluck(app.stories.filter(function (story) {
-                  return !story.published && story.logo_published;
+                  return !story.published && !story.preview_published && story.logo_published;
         }), 'id');
         // console.log(logoStoryIds)
   var pendingStoryIds =
         _.pluck(app.stories.filter(function (story) {
-                  return !story.published && !story.logo_published;
+                  return !story.published && !story.preview_published && !story.logo_published;
         }), 'id');
       // console.log(pendingStoryIds)
 
@@ -110,6 +114,7 @@ function filterCurateGallery () {
   // console.log('after intersection: ', storyIds);
   storyIds = showPublished ? storyIds : _.difference(storyIds, publishedStoryIds);
   // console.log('after removing published (if necessary): ', storyIds)
+  storyIds = showPreviewPublished ? storyIds : _.difference(storyIds, previewStoryIds);
   storyIds = showLogoPublished ? storyIds : _.difference(storyIds, logoStoryIds);
   // console.log('after removing logo published (if necessary): ', storyIds)
   storyIds = showPendingCuration ? storyIds : _.difference(storyIds, pendingStoryIds);
@@ -117,12 +122,13 @@ function filterCurateGallery () {
   stories = app.stories.filter(function (story) {
               return storyIds.includes(story.id);
             });
-  // console.log('results: ', stories);
 
+  // console.log('results: ', stories);
   $gallery.empty()
     .append(
       $(storiesTemplate({ stories: stories, isCurator: true }))
-    ).hide().show('fast');
+    )
+    .hide().show('fast');
 
 }
 
