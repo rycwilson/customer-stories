@@ -190,14 +190,6 @@ class Company < ActiveRecord::Base
     end
   end
 
-  def all_stories_filter_category category_id
-    Story.order(Story.company_all_filter_category(self.id, category_id)).pluck(:id)
-  end
-
-  def all_stories_filter_product product_id
-    Story.order(Story.company_all_filter_product(self.id, product_id)).pluck(:id)
-  end
-
   def published_stories
     Story.order(Story.company_published(self.id)).pluck(:id)
   end
@@ -210,26 +202,27 @@ class Company < ActiveRecord::Base
     Story.order(Story.company_published_filter_product(self.id, product_id)).pluck(:id)
   end
 
+  # public stories are logo_published or published
   def public_stories
     Story.order(Story.company_public(self.id)).pluck(:id)
   end
 
-  def public_stories_filter_category category_id
+  def public_stories_filter_category (category_id)
     Story.order(Story.company_public_filter_category(self.id, category_id)).pluck(:id)
   end
 
-  def public_stories_filter_product product_id
+  def public_stories_filter_product (product_id)
     Story.order(Story.company_public_filter_product(self.id, product_id)).pluck(:id)
   end
 
   # TODO: faster? http://stackoverflow.com/questions/20014292
-  def filter_stories_by_tag filter_params, is_curator
+  def filter_stories_by_tag filter_params
     if filter_params[:id] == '0'  # all stories
-      story_ids = is_curator ? story_ids = self.all_stories : self.public_stories
+      story_ids = self.public_stories
     else
       case filter_params[:tag]  # all || category || product
         when 'all'
-          story_ids = is_curator ? self.all_stories : self.public_stories
+          story_ids = self.public_stories
         when 'category'
           # use the slug to look up the category id,
           # unless filter_params[:id] already represents the id
@@ -238,8 +231,7 @@ class Company < ActiveRecord::Base
                            .find(filter_params[:id]) # will find whether id or slug
                            .id unless filter_params[:id].to_i != 0).try(:to_i) ||
                         filter_params[:id].to_i
-          story_ids = is_curator ? self.all_stories_filter_category(category_id) :
-                                   self.public_stories_filter_category(category_id)
+          story_ids = self.public_stories_filter_category(category_id)
         when 'product'
           # use the slug to look up the product id,
           # unless filter_params[:id] already represents the id
@@ -248,13 +240,76 @@ class Company < ActiveRecord::Base
                           .find(filter_params[:id])
                           .id unless filter_params[:id].to_i != 0).try(:to_i) ||
                        filter_params[:id].to_i
-          story_ids = is_curator ? self.all_stories_filter_product(product_id) :
-                                   self.public_stories_filter_product(product_id)
+          story_ids = self.public_stories_filter_product(product_id)
         else
       end
     end
-    Story.find(story_ids)
-         .sort_by { |story| story_ids.index(story.id) }
+    Story.find(story_ids).sort_by { |story| story_ids.index(story.id) }
+  end
+
+  #
+  # method returns a fragment cache key that looks like this:
+  #
+  #   #{self.subdomain}/stories-index-{tag}-xx-memcache-iterator-yy
+  #
+  # tag is 'all', 'category', or 'product'
+  # xx is the selected filter id (0 if none selected)
+  # yy is the memcache iterator
+  #
+  def stories_index_cache_key (filter_params)
+    memcache_iterator = self.stories_index_fragments_memcache_iterator
+    "#{self.subdomain}/" +
+    "stories-index-#{filter_params[:tag]}-#{filter_params[:id]}-" +  # id = 0 -> all
+    "memcache-iterator-#{memcache_iterator}"
+  end
+
+  #
+  # two methods below return a fragment cache key that looks like this:
+  #
+  #   trunity/category-select-xx-memcache-iterator-yy
+  #
+  #   xx is the selected category id (0 if none selected)
+  #   yy is the memcache iterator
+  #
+  def category_select_cache_key (category_id)
+    "#{self.subdomain}/" +
+    "category-select-#{category_id}-memcache-iterator-" +
+    "#{self.category_select_fragments_memcache_iterator}"
+  end
+
+  def product_select_cache_key (product_id)
+    "#{self.subdomain}/" +
+    "product-select-#{product_id}-memcache-iterator-" +
+    "#{self.product_select_fragments_memcache_iterator}"
+  end
+
+  #
+  # category/product select fragments (all and pre-selected) invalidated by:
+  # -> attach/detach tags IF the story has logo published
+  # -> story publish state IF story is tagged
+  #
+  def category_select_fragments_memcache_iterator
+    Rails.cache.fetch(
+      "#{self.subdomain}/category-select-fragments-memcache-iterator"
+    ) { rand(10) }
+  end
+
+  def increment_category_select_fragments_memcache_iterator
+    Rails.cache.write(
+      "#{self.subdomain}/category-select-fragments-memcache-iterator",
+      self.category_select_fragments_memcache_iterator + 1
+    )
+  end
+
+  def product_select_fragments_memcache_iterator
+    Rails.cache.fetch(
+      "#{self.subdomain}/product-select-fragments-memcache-iterator") { rand(10) }
+  end
+
+  def increment_product_select_fragments_memcache_iterator
+    Rails.cache.write(
+      "#{self.subdomain}/product-select-fragments-memcache-iterator",
+      self.product_select_fragments_memcache_iterator + 1)
   end
 
   # stories_json returns data included in the client via the gon object
@@ -293,7 +348,7 @@ class Company < ActiveRecord::Base
     current_user.company_id == self.id
   end
 
-  def update_tags new_category_tags, new_product_tags
+  def update_tags (new_category_tags, new_product_tags)
     # remove deleted category tags ...
     self.story_categories.each do |category|
       unless new_category_tags.include?(category.id.to_s)
@@ -311,7 +366,7 @@ class Company < ActiveRecord::Base
       if category_id.to_i == 0   # new (custom or default) tag
         self.story_categories.create(name: category_id)
         # expire filter select fragment cache
-        self.increment_curator_category_select_fragments_memcache_iterator
+        self.increment_category_select_fragments_memcache_iterator
       else
         # do nothing
       end
@@ -331,8 +386,8 @@ class Company < ActiveRecord::Base
     new_product_tags.each do |product_id|
       if product_id.to_i == 0 # new tag
         self.products.create(name: product_id)
-        # expire cache
-        self.increment_curator_product_select_fragments_memcache_iterator
+        # expire filter select fragment cache
+        self.increment_product_select_fragments_memcache_iterator
       else
         # do nothing
       end
@@ -355,24 +410,14 @@ class Company < ActiveRecord::Base
     .unshift( [""] )
   end
 
-  #
-  # when destroying a tag,
-  # 1 - expire all curator filter select fragments
-  # 2 - expire public filter select fragments that are affected
-  #
-  def expire_filter_select_fragments_on_tag_destroy tag, tag_instances
-    if tag == 'category'
-      self.increment_curator_category_select_fragments_memcache_iterator
-    elsif tag == 'product'
-      self.increment_curator_product_select_fragments_memcache_iterator
-    end
-    # check for tagged stories -> expire public filter select fragments
+  # when destroying a tag, expire affected filter select fragments
+  def expire_filter_select_fragments_on_tag_destroy (tag, tag_instances)
     tag_instances.each do |tag_instance|
       if tag_instance.success.story.logo_published?
         if tag == 'category'
-          self.increment_public_category_select_fragments_memcache_iterator
+          self.increment_category_select_fragments_memcache_iterator
         elsif tag == 'product'
-          self.increment_public_product_select_fragments_memcache_iterator
+          self.increment_product_select_fragments_memcache_iterator
         end
       end
     end
@@ -411,35 +456,21 @@ class Company < ActiveRecord::Base
 
   # changes to company colors expires all gallery fragments
   def expire_fragment_cache
-    self.increment_curator_stories_index_fragments_memcache_iterator
-    self.increment_public_stories_index_fragments_memcache_iterator
+    self.increment_stories_index_fragments_memcache_iterator
     self.increment_story_tile_fragments_memcache_iterator
   end
 
-
-  # invalidation of any story tile fragment will invalidate
-  # - curator stories index (all stories)
-  # - curator stories index (filters in which the tile appears)
-  def curator_stories_index_fragments_memcache_iterator
-    Rails.cache.fetch("#{self.subdomain}/curator-stories-index-fragments-memcache-iterator") { rand(10) }
-  end
-
-  def increment_curator_stories_index_fragments_memcache_iterator
-    Rails.cache.write(
-      "#{self.subdomain}/curator-stories-index-fragments-memcache-iterator",
-      self.curator_stories_index_fragments_memcache_iterator + 1)
-  end
-
   # expiration of a story tile fragment with logo published
-  # expires all public stories index fragments
-  def public_stories_index_fragments_memcache_iterator
-    Rails.cache.fetch("#{self.subdomain}/public-stories-index-fragments-memcache-iterator") { rand(10) }
+  # expires all stories index fragments
+  # rand(10) provides an initial value if none exists
+  def stories_index_fragments_memcache_iterator
+    Rails.cache.fetch("#{self.subdomain}/stories-index-fragments-memcache-iterator") { rand(10) }
   end
 
-  def increment_public_stories_index_fragments_memcache_iterator
+  def increment_stories_index_fragments_memcache_iterator
     Rails.cache.write(
-      "#{self.subdomain}/public-stories-index-fragments-memcache-iterator",
-      self.public_stories_index_fragments_memcache_iterator + 1)
+      "#{self.subdomain}/stories-index-fragments-memcache-iterator",
+      self.stories_index_fragments_memcache_iterator + 1)
   end
 
   # all story fragments must be expired if these attributes change: header_color_1, header_text_color
@@ -451,59 +482,6 @@ class Company < ActiveRecord::Base
     Rails.cache.write(
       "#{self.subdomain}/stories-tile-fragments-memcache-iterator",
       self.story_tile_fragments_memcache_iterator + 1)
-  end
-
-  #
-  # curator category select fragments (all and pre-selected) invalidated by:
-  # -> create/delete company tags (see story_category.rb)
-  #
-  def curator_category_select_fragments_memcache_iterator
-    Rails.cache.fetch(
-      "#{self.subdomain}/curator-category-select-fragments-memcache-iterator") { rand(10) }
-  end
-
-  def increment_curator_category_select_fragments_memcache_iterator
-    Rails.cache.write(
-      "#{self.subdomain}/curator-category-select-fragments-memcache-iterator",
-      self.curator_category_select_fragments_memcache_iterator + 1)
-  end
-
-  def curator_product_select_fragments_memcache_iterator
-    Rails.cache.fetch(
-      "#{self.subdomain}/curator-product-select-fragments-memcache-iterator") { rand(10) }
-  end
-
-  def increment_curator_product_select_fragments_memcache_iterator
-    Rails.cache.write(
-      "#{self.subdomain}/curator-product-select-fragments-memcache-iterator",
-      self.curator_product_select_fragments_memcache_iterator + 1)
-  end
-
-  #
-  # public category/product select fragments (all and pre-selected) invalidated by:
-  # -> attach/detach tags IF the story has logo published
-  # -> story publish state IF story is tagged
-  #
-  def public_category_select_fragments_memcache_iterator
-    Rails.cache.fetch(
-      "#{self.subdomain}/public-category-select-fragments-memcache-iterator") { rand(10) }
-  end
-
-  def increment_public_category_select_fragments_memcache_iterator
-    Rails.cache.write(
-      "#{self.subdomain}/public-category-select-fragments-memcache-iterator",
-      self.public_category_select_fragments_memcache_iterator + 1)
-  end
-
-  def public_product_select_fragments_memcache_iterator
-    Rails.cache.fetch(
-      "#{self.subdomain}/public-product-select-fragments-memcache-iterator") { rand(10) }
-  end
-
-  def increment_public_product_select_fragments_memcache_iterator
-    Rails.cache.write(
-      "#{self.subdomain}/public-product-select-fragments-memcache-iterator",
-      self.public_product_select_fragments_memcache_iterator + 1)
   end
 
   def recent_activity days_offset  # today = 0

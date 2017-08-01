@@ -24,9 +24,7 @@ Rails.application.routes.draw do
 
   # valid subdomains (company/subdomain exists, excludes www)
   constraints(Subdomain) do
-    # giving this route an alias so we can use csp_stories_url
-    # instead of stories_url in the widgets controller
-    get '/', to: 'stories#index' #, as: 'csp_stories'
+    get '/', to: 'stories#index'
 
     get '/widgets/:type/cs', to: 'widgets#script'
     # specifying a default format here because (for unknown reason) ajax jsonp
@@ -36,7 +34,6 @@ Rails.application.routes.draw do
      # legacy widgets
     get '/widget/cs', to: 'widgets#script'
 
-    # Stories - public access
     resources :stories, only: :index
     # see below for route to public story page
 
@@ -57,13 +54,14 @@ Rails.application.routes.draw do
             constraints: lambda { |params, request|
               Story.friendly.exists?(params[:story_slug]) &&
               params[:id] = Story.friendly.find(params[:story_slug]).id
-            }, as: 'edit_story'
+            }, as: 'curate_story'
       get '/company-settings', to: 'companies#edit',
             constraints: lambda { |params, request|
               params[:id] = request.env['warden'].user(:user).company_id.to_s
-              puts "COMPANY ID IS #{params[:id]}"
               true
             }, as: 'company_settings'
+
+
 
       resources :companies, only: [:show, :edit, :update] do
         resources :customers, only: [:create, :update, :destroy], shallow: true
@@ -166,7 +164,7 @@ Rails.application.routes.draw do
                      constraints: { devise: 'users', method: 'sign_in' }
     end
 
-    # public story route moved down here so it doesn't hijack any other routes.
+    # public story route moved down here so it doesn't hijack any other routes via dynamic segments.
     # don't call this route 'story' or it will leave the PUT and DELETE routes (above)
     # without an alias
     constraints(StoryPathConstraint) do

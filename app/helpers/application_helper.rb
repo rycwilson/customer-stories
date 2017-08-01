@@ -111,6 +111,10 @@ module ApplicationHelper
     (controller_name == 'profile' && current_user.company_id.present?)
   end
 
+  def curator?(company_id)
+    user_signed_in? && (current_user.company_id == company_id)
+  end
+
   def curator_with_logo?
     user_signed_in? && current_user.company.try(:logo_url).present?
   end

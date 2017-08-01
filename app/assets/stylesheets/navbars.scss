@@ -123,9 +123,25 @@
   margin-bottom: 40px;
   background-color: #ffffff;
   border-bottom: 1px solid #f2f2f2;
+
+  .row {
+    height: 48px;
+    display: flex;
+    align-items: center;
+  }
+
   li {
     position: relative;
   }
+
+  i.glyphicon-home {
+    color: #666;
+    font-size: 18px;
+  }
+  i.glyphicon-home:hover {
+    color: #222;
+  }
+
   #workflow-tabs {
     margin-bottom: 0;
     font-size: 16px;
@@ -165,6 +181,7 @@
   #company-nav-dropdowns {
     margin: 0;
     a.dropdown-toggle {
+      height: 45px;
       padding: 12px 14px;
     }
     li.dropdown.active, li.dropdown.active.open {

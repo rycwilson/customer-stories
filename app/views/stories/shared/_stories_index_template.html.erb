@@ -23,9 +23,6 @@
         <div class="thumbnail-view">
           <div class='thumbnail-view-hover'>
             <p>{{= story.title }}</p>
-            {{ if (isCurator) { }}
-              <i class='fa fa-spinner fa-pulse' style='color:#666;'></i>
-            {{ } }}
           </div>
           {{ if (story.success.customer.logo_url) { }}
             <img src="{{= story.success.customer.logo_url }}">

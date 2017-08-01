@@ -10,6 +10,7 @@
       <%= render 'stories/shared/stories_index_meta_tags', { company: @company } %>
     <% end %>
   <% end %>
+
 <% end %>
 
 <% content_for(:underscore_templates) do %>
@@ -19,13 +20,14 @@
 
 <!--  -->
 
-<% if @is_curator %>
+<% if curator?(@company.id) %>
 
-  <%= render 'shared/company_navbar',
-       { company: @company, is_curator: true, workflow_stage: nil,
-         category_select_cache_key: @category_select_cache_key,
-         product_select_cache_key: @product_select_cache_key,
-         pre_selected_filter: @pre_selected_filter } %>
+  <%= render 'shared/company_navbar', {
+        company: @company, is_curator: true, workflow_stage: nil,
+        category_select_cache_key: @category_select_cache_key,
+        product_select_cache_key: @product_select_cache_key,
+        pre_selected_filter: @pre_selected_filter
+      } %>
 
 <% else %>
 
@@ -56,23 +58,10 @@
 
     <% cache(@stories_index_cache_key, skip_digest: true) do %>
 
-      <% if @is_curator %>
+      <% @stories.each do |story| %>
 
-        <% @stories.each do |story| %>
-
-          <%= render 'stories/shared/curator_story_tile',
+        <%= render 'stories/shared/public_story_tile',
               { company: @company, story: story } %>
-
-        <% end %>
-
-      <% else %>
-
-        <% @stories.each do |story| %>
-
-          <%= render 'stories/shared/public_story_tile',
-              { company: @company, story: story } %>
-
-        <% end %>
 
       <% end %>
 

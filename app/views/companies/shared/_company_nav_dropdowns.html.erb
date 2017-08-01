@@ -1,10 +1,8 @@
 
-<!-- locals: { company: @company } -->
-
-<ul id='company-nav-dropdowns' class='nav nav-tabs mainnav-menu' role='tablist'
+<ul id='company-nav-dropdowns' class='nav nav-tabs mainnav-menu pull-right' role='tablist'
     style='border-bottom:0'>
 
-  <% if company_curator? company.id %>
+  <% if company_curator?(company.id) && !public_view? %>
 
     <li class="dropdown company-settings pull-right">
       <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
@@ -26,34 +24,43 @@
 
   <% end %>
 
-  <li class="dropdown user-profile pull-right">
-    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
-      <span class="visible-xs-inline" style="display: inline !important">
+  <% if public_view? && curator?(company.id) %>
 
-        <i class='glyphicon glyphicon-user' style='margin-right:2px'></i>
-      </span>
-      <i class="fa fa-caret-down"></i>
+    <a href='/curate'>
+      <i class='glyphicon glyphicon-home' style='font-size: 18px; '></i>
     </a>
 
-    <ul class="dropdown-menu" role="menu">
+  <% else %>
 
-      <% if company_curator?(company.id) %>
-        <li>
-          <a href='/user-profile'>
-            <%= current_user.full_name %>
-          </a>
-        </li>
-      <% else %>
-        <li>
-          <%= link_to edit_profile_no_company_path do %>
-            <%= current_user.full_name %>
-          <% end %>
-        </li>
-      <% end %>
-      <li>
-        <%= link_to 'Sign out', destroy_user_session_path, method: :delete %>
-      </li>
+    <li class="dropdown user-profile">
+      <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
+        <span class="visible-xs-inline" style="display: inline !important">
+          <i class='glyphicon glyphicon-user' style='margin-right:2px'></i>
+        </span>
+        <i class="fa fa-caret-down"></i>
+      </a>
 
-    </ul>
-  </li>
+      <ul class="dropdown-menu" style='right:0;left:auto' role="menu">
+
+        <% if curator?(company.id) %>
+          <li>
+            <a href='/user-profile'>
+              <%= current_user.full_name %>
+            </a>
+          </li>
+        <% else %>
+          <li>
+            <%= link_to edit_profile_no_company_path do %>
+              <%= current_user.full_name %>
+            <% end %>
+          </li>
+        <% end %>
+        <li>
+          <%= link_to 'Sign out', destroy_user_session_path, method: :delete %>
+        </li>
+
+      </ul>
+    </li>
+
+  <% end %>
 </ul>

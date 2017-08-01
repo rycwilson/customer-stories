@@ -3,6 +3,14 @@ namespace :temp do
   desc "temp stuff"
 
   task et_assign: :environment do
+    retailnext = Company.find_by(subdomain:'retailnext')
+    retailnext.contributions.each() do |c|
+      if c.role.blank?
+        c.update(role: 'blank', email_template_id: rand(76..78))
+      else
+        c.update(email_template_id: rand(76..78))
+      end
+    end
     cce = Company.find_by(subdomain:'centerforcustomerengagement')
     cce.contributions.each() do |c|
       if c.role.blank?

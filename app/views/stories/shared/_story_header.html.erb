@@ -6,7 +6,7 @@
     <div class="hidden-xs col-sm-9">
       <h3>Customer Story
       <% if is_curator %>
-        <%= link_to edit_story_path(story.id) do %>
+        <%= link_to curate_story_path(story.slug) do %>
           <i class='glyphicon glyphicon-pencil bip-clickable'></i>
         <% end %>
       <% end %>

@@ -87,7 +87,6 @@ function attachAppListeners () {
     if (workflowStage) {
       $('#workflow-tabs a[href="#' + workflowStage + '"]').tab('show');
       if (curateView) {
-        console.log('curateView: ', curateView)
         $('a[href="#curate-' + curateView + '"]').tab('show');
         // don't scroll to panel
         setTimeout(function() { window.scrollTo(0, 0); }, 1);

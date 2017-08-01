@@ -33,7 +33,7 @@ function storiesIndexListeners () {
     updateGallery(
       $(storiesTemplate({
           stories: filterStories(filterTag, filterId, filterSlug),
-          isCurator: app.current_user && app.current_user.is_curator
+          isCurator: false
         }))
     );
     replaceStateStoriesIndex(filterTag, filterId, filterSlug);
@@ -44,39 +44,23 @@ function storiesIndexListeners () {
 
 function filterStories (filterTag, filterId, filterSlug) {
 
-  var isCurator = app.current_user && app.current_user.is_curator;
-
   if (filterId === '0' || filterSlug === null) {  // all stories
-    return isCurator ? app.stories :
-           app.stories.filter(function (story) {
+    return app.stories.filter(function (story) {
              return story.logo_published || story.preview_published;
            });
   }
   return app.stories.filter(function (story, index) {
     if (filterTag === 'category') {
-      if (isCurator) {
-        return story.success.story_categories.some(function (category) {
+      return (story.preview_published || story.logo_published) &&
+        story.success.story_categories.some(function (category) {
           // loosely typed because former is string, latter is number ...
           return category.id == filterId || category.slug == filterSlug;
         });
-      } else {
-        return (story.preview_published || story.logo_published) &&
-          story.success.story_categories.some(function (category) {
-            // loosely typed because former is string, latter is number ...
-            return category.id == filterId || category.slug == filterSlug;
-          });
-      }
     } else if (filterTag === 'product') {
-      if (isCurator) {
-        return story.success.products.some(function (product) {
+      return (story.preview_published || story.logo_published) &&
+        story.success.products.some(function (product) {
           return product.id == filterId || product.slug == filterSlug;
         });
-      } else {
-        return (story.preview_published || story.logo_published) &&
-          story.success.products.some(function (product) {
-            return product.id == filterId || product.slug == filterSlug;
-          });
-      }
     } else {
       // TODO: error
     }

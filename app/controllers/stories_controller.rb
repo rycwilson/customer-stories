@@ -4,7 +4,7 @@ class StoriesController < ApplicationController
 
   before_action :set_company
   before_action :set_story, only: [:edit, :ctas, :tags, :promote, :approval, :destroy]
-  before_action only: [:index, :show] { @is_curator = @company.curator?(current_user) }
+  before_action only: [:show] { @is_curator = @company.curator?(current_user) }
   before_action only: [:edit] { user_authorized?(@story, current_user) }
   before_action only: [:index, :show, :edit] { set_gon(@company) }
   before_action only: [:show] { set_public_story_or_redirect(@company) }
@@ -12,16 +12,11 @@ class StoriesController < ApplicationController
   before_action :set_s3_direct_post, only: :edit
 
   def index
-    # these will get overwritten below if there's a query filter ...
+    # these instance variables will get overwritten below if there's a query filter
     @pre_selected_filter = { tag: 'all', id: 0 }
-    @stories_index_cache_key =
-      stories_index_cache_key(@company, @is_curator, @pre_selected_filter)
-    @category_select_cache_key =
-      filter_select_cache_key(
-        @company, @is_curator, 'category', { tag: 'category', id: 0 })
-    @product_select_cache_key =
-      filter_select_cache_key(
-        @company, @is_curator, 'product', { tag: 'product', id: 0 })
+    @stories_index_cache_key = @company.stories_index_cache_key(@pre_selected_filter)
+    @category_select_cache_key = @company.category_select_cache_key(0)
+    @product_select_cache_key = @company.product_select_cache_key(0)
 
     # from widget clicks on a preview-published story
     if params[:preview].present?
@@ -37,27 +32,19 @@ class StoriesController < ApplicationController
     end
 
     if valid_filter_params?(@company, params)
-      #  ?category=automotive  =>  { tag: 'category', id: '42' }
+      # ?category=automotive  =>  { tag: 'category', id: '42' }
       filter_params = get_filter_params_from_query(params)
-      @stories_index_cache_key =
-        stories_index_cache_key(@company, @is_curator, filter_params)
+      @stories_index_cache_key = @company.stories_index_cache_key(filter_params)
       unless fragment_exist?(@stories_index_cache_key)
-        @stories = @company.filter_stories_by_tag(filter_params, @is_curator)
+        @stories = @company.filter_stories_by_tag(filter_params)
       end
       @pre_selected_filter = filter_params # needed for options_for_select()
-      @category_select_cache_key =
-        filter_select_cache_key(@company, @is_curator, 'category', filter_params)
-      @product_select_cache_key =
-        filter_select_cache_key(@company, @is_curator, 'product', filter_params)
-
-    elsif @is_curator
-      unless fragment_exist?(@stories_index_cache_key)
-        story_ids = @company.all_stories
-        @stories = Story.find(story_ids)
-                        .sort_by { |story| story_ids.index(story.id) }
+      if filter_params[:tag] == 'category'
+        @category_select_cache_key = @company.category_select_cache_key(filter_params[:id])
+      elsif filter_params[:tag] == 'product'
+        @product_select_cache_key = @company.product_select_cache_key(filter_params[:id])
       end
-
-    else  # public reader
+    else
       unless fragment_exist?(@stories_index_cache_key)
         public_story_ids = @company.public_stories
         # sort order is lost when .find takes an array of ids, so need to re-sort;
@@ -84,7 +71,7 @@ class StoriesController < ApplicationController
   end
 
   def edit
-    if request.xhr?
+    if request.xhr? && !request.env["HTTP_TURBOLINKS_REFERRER"]
       render({
         partial: 'edit',
         locals: { company: @company, story: @story, workflow_stage: 'curate' }
@@ -480,63 +467,6 @@ class StoriesController < ApplicationController
       # a query string with category= or product=
     end
     filter
-  end
-
-  #
-  # method returns a fragment cache key that looks like this:
-  #
-  #   trunity/curator-stories-index-{tag}-xx-memcache-iterator-yy
-  #
-  # tag is 'all', 'category', or 'product'
-  # xx is the selected filter id (0 if none selected)
-  # yy is the memcache iterator
-  #
-  def stories_index_cache_key (company, is_curator, filter_params)
-    if is_curator
-      memcache_iterator = company.curator_stories_index_fragments_memcache_iterator
-    else
-      memcache_iterator = company.public_stories_index_fragments_memcache_iterator
-    end
-    "#{company.subdomain}/" +
-    "#{is_curator ? 'curator' : 'public'}-" +
-    "stories-index-#{filter_params[:tag]}-#{filter_params[:id]}-" +  # id = 0 -> all
-    "memcache-iterator-#{memcache_iterator}"
-  end
-
-  #
-  # method returns a fragment cache key that looks like this:
-  #
-  #   trunity/curator-category-select-xx-memcache-iterator-yy
-  #
-  #   xx is the selected category id (0 if none selected)
-  #   yy is the memcache iterator
-  #
-  def filter_select_cache_key company, is_curator, filter_tag, filter_params
-    if filter_tag == filter_params[:tag]  # is this the filter that was selected?
-      filter_id = filter_params[:id]
-    else
-      filter_id = 0
-    end
-    "#{company.subdomain}/" +
-    "#{is_curator ? 'curator' : 'public'}-" +
-    "#{filter_tag}-select-#{filter_id}-memcache-iterator-" +
-    "#{filter_select_memcache_iterator(company, is_curator, filter_tag)}"
-  end
-
-  def filter_select_memcache_iterator company, is_curator, filter_tag
-    if is_curator
-      if filter_tag == 'category'
-        company.curator_category_select_fragments_memcache_iterator
-      else
-        company.curator_product_select_fragments_memcache_iterator
-      end
-    else
-      if filter_tag == 'category'
-        company.public_category_select_fragments_memcache_iterator
-      else
-        company.public_product_select_fragments_memcache_iterator
-      end
-    end
   end
 
 end

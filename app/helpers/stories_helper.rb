@@ -22,7 +22,7 @@ module StoriesHelper
     company_curator?(company_id) && controller_name == 'stories' && action_name == 'show'
   end
 
-  def gallery_view?
+  def public_view?
     controller_name == 'stories' && action_name == 'index'
   end
 

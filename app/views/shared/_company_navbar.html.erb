@@ -9,47 +9,40 @@
   <div class='container company-nav-container'>
     <div class="row">
 
-      <div id='mainnav-workflow'
-           class="col-xs-8 col-sm-6 col-md-5 <%= gallery_view? ? 'hidden-xs hidden-sm' : '' %>">
-        <%= render 'companies/shared/workflow_tabs',
-            { company: company, workflow_stage: workflow_stage } %>
-      </div>
+      <% unless public_view? %>
 
-      <div id='collapsed-workflow-tabs'
-           class="col-xs-1 <%= gallery_view? ? '' : 'hidden-xs hidden-sm' %> hidden-md hidden-lg">
-        <%= render 'companies/shared/collapsed_workflow_tabs', { company: company } %>
-      </div>
+        <div id='mainnav-workflow' class="col-sm-7">
+          <%= render 'companies/shared/workflow_tabs',
+              { company: company, workflow_stage: workflow_stage } %>
+        </div>
 
-      <% if gallery_view? %>
-
-        <div id="stories-filters-container" class="col-xs-8 col-md-5">
-
-            <%= render 'stories/shared/stories_filters',
-               { company: company, is_curator: true,
-                 category_select_cache_key: category_select_cache_key,
-                 product_select_cache_key: product_select_cache_key,
-                 pre_selected_filter: pre_selected_filter } %>
-
-            <%= render 'stories/shared/stories_filters_xs',
-               { company: company, is_curator: true,
-                 category_select_cache_key: category_select_cache_key,
-                 product_select_cache_key: product_select_cache_key,
-                 pre_selected_filter: pre_selected_filter } %>
+        <div class="col-sm-5">
+          <%= render 'companies/shared/company_nav_dropdowns', { company: company } %>
         </div>
 
       <% else %>
 
-        <div class='col-xs-8 col-md-5'>
-          <!-- filler -->
+        <div class="col-sm-7">
+          <%= render 'stories/shared/stories_filters', {
+                company: company,
+                category_select_cache_key: category_select_cache_key,
+                product_select_cache_key: product_select_cache_key,
+                pre_selected_filter: pre_selected_filter
+              } %>
+        </div>
+
+        <div class="col-sm-5">
+          <%= render 'companies/shared/company_nav_dropdowns', { company: company } %>
         </div>
 
       <% end %>
 
-      <div class="col-xs-3 col-md-2">
-        <%= render 'companies/shared/company_nav_dropdowns', { company: company } %>
-      </div>
+      <!-- <div id='collapsed-workflow-tabs'
+           class="col-xs-1 <%#= gallery_view? ? '' : 'hidden-xs hidden-sm' %> hidden-md hidden-lg">
+        <%#= render 'companies/shared/collapsed_workflow_tabs', { company: company } %>
+      </div> -->
 
     </div>
 
-  </div>  <!-- container -->
-</nav>  <!-- mainnav -->
+  </div>
+</nav>
