@@ -9,7 +9,7 @@
 
   <div class="col-sm-6">
 
-    <div id='publish-control' class="form-inline" style='position:relative;margin-bottom: 29px'>
+    <div id='publish-control' class="form-inline" style='margin-bottom: 29px'>
 
       <div class="form-group" style='margin-right:30px'>
         <div>
@@ -24,9 +24,9 @@
         </div>
         <%= f.check_box :published, class: "bs-switch form-control" %>
       </div>
-
+      &nbsp;
       <%= link_to 'Approval PDF', story_approval_path(story.id, format: :pdf),
-            id: 'approval-pdf-btn', style: 'vertical-align: bottom; position:absolute; bottom:0; left:210px',
+            id: 'approval-pdf-btn', style: 'vertical-align: bottom; ',
             data: { missing_curator_info: story.success.curator.missing_info.to_json,
                     missing_company_info: company.missing_info.to_json,
                     turbolinks: false },
