@@ -10,21 +10,38 @@
   <div class="col-md-9 col-sm-8 layout-main">
     <div class="tab-content stacked-content">
 
-      <div class="row">
-        <h4><%= story.try(:title) %></h4>
+
+      <div class='row' style='height:45px;margin-bottom:20px;display:flex;align-items:center'>
+        <div class="col-sm-12">
+          <span>
+            <label style='margin:0'>Customer</label>&nbsp;&nbsp;
+            <span style='font-size:20px;color:#999'><%= story.customer.name %></span>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <label style='margin:0'>Story Title</label>&nbsp;&nbsp;
+          <!-- no turbolinks, so linkedin widgets load properly -->
+          <!-- ref: http://stackoverflow.com/questions/17600093/rails-javascript-not-loading-after-clicking-through-link-to-helper -->
+            <a href="<%= story.csp_story_path %>" data-turbolinks='false'
+                style='font-size:20px;color:#999'>
+              <%= story.try(:title) %>
+            </a>
+          <span>
+        </div>
       </div>
 
-      <div id='story-settings-tab-pane' class="tab-pane fade in active"
-           data-success-id="<%= story.try(:success).try(:id) %>"
-           data-story-id="<%= story.try(:id) %>" >
+      <div id='story-settings' class='tab-pane fade in active'
+           data-story-id='<%= story.try(:id) %>'>
+
+        <%= render 'stories/edit/settings', { company: company, story: story } %>
+
+      </div>  <!-- story-settings -->
+
+      <div id='story-content' class='tab-pane fade'>
+
+        <%= render 'stories/edit/content', { company: company, story: story } %>
 
       </div>
 
-      <div id='story-content-tab-pane' class="tab-pane">
-
-      </div>
-
-      <div id='curate-contributors-tab-pane' class="tab-pane fade">
+      <div id='curate-contributors' class='tab-pane fade'>
 
         <%= render 'companies/crowdsource/contributors_table',
               { company: company, workflow_stage: 'curate' } %>

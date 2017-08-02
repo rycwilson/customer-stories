@@ -12,7 +12,9 @@ function curateListeners () {
 
   $(document)
 
-    .on('click', '#curate-gallery a.logo-published, #curate-gallery a.pending-curation',
+    .on('click', '#curate-gallery a.logo-published,' +
+                 '#curate-gallery a.preview-published,' +
+                 '#curate-gallery a.pending-curation',
       function (e) {
         e.preventDefault();
         var $story = $(this).closest('li'), storySlug = $story.data('story-slug');
@@ -50,6 +52,7 @@ function curateListeners () {
           }
         });
       })
+
     .on('change', '.curate.curator-select, .curate.category-select,' +
         '.curate.product-select, .curate.published, .curate.preview-published, ' +
         '.curate.logo-published, .curate.pending-curation',

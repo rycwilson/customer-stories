@@ -55,7 +55,8 @@
 
         <% if curate_view == 'story' %>
 
-          <%= render(partial: 'stories/edit', locals: { company: company, story: story }) %>
+          <%= render(partial: 'stories/edit',
+                      locals: { company: company, story: story }) %>
 
         <% end %>
 

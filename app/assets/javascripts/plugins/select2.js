@@ -8,7 +8,7 @@ function initSelect2 () {
 
   $('.story-tags').select2({
     theme: 'bootstrap',
-    placeholder: 'select tags'
+    placeholder: 'Select tags'
   });
 
 // ref: http://stackoverflow.com/questions/36497723

@@ -61,8 +61,6 @@ Rails.application.routes.draw do
               true
             }, as: 'company_settings'
 
-
-
       resources :companies, only: [:show, :edit, :update] do
         resources :customers, only: [:create, :update, :destroy], shallow: true
         resources :successes, only: [:create, :update, :destroy], shallow: true
