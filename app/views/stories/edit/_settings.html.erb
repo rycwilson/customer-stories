@@ -1,10 +1,10 @@
 
-<%= form_for(story, url: story_path(story.id), method: 'put', remote: true,
+<%= form_for(story, url: story_path(story.id), html: { method: 'put', remote: true,
       id: 'customer-logo-form', class: 'directUpload',
       data: { 'form-data' => (@s3_direct_post.fields),
                     'url' => @s3_direct_post.url,
                    'host' => URI.parse(@s3_direct_post.url).host
-      }) do |f| %>
+      } }) do |f| %>
 
   <div class="row">
 
@@ -28,12 +28,18 @@
         &nbsp;
         <%= link_to 'Approval PDF', story_approval_path(story.id, format: :pdf),
               id: 'approval-pdf-btn', style: 'vertical-align: bottom; ',
-              data: { missing_curator_info: story.success.curator.missing_info.to_json,
+              data: { missing_curator_info: story.curator.missing_info.to_json,
                       missing_company_info: company.missing_info.to_json,
                       turbolinks: false },
               target: '_blank' %>
 
       </div>  <!-- publish control -->
+
+      <div class="form-group">
+        <%= f.label(:title) %>
+        <%= f.text_field(:title, class: 'form-control') %>
+      </div>
+
 
       <div class="customer-logo row" style='margin-bottom: 25px;'>
         <div class="col-sm-12">
@@ -83,17 +89,6 @@
 
       <div class="form-group">
 
-        <label for="#story-ctas-select">CTAs</label>
-        <%= select_tag 'ctas[]',
-              grouped_options_for_select(
-                company.ctas.select_options,
-                { selected: story.ctas.pluck(:id), disabled: ['none available'] }
-              ), { id: 'story-ctas-select', class: 'form-control', multiple: true } %>
-
-      </div>
-
-      <div class="form-group">
-
         <%= label_tag "category_tags[]", 'Category Tags' %>
         <!-- Note the necessary '[]' notation below  -->
         <!-- if not present, will only return a single value  -->
@@ -119,6 +114,18 @@
             ),
             { multiple: 'true', class: 'story-tags form-control', tabIndex: '-1',
               style: 'width:100%' } %>
+
+      </div>
+
+      <div class="form-group">
+
+        <label for="#story-ctas-select">CTAs</label>
+        <%= select_tag 'ctas[]',
+              grouped_options_for_select(
+                company.ctas.select_options,
+                { selected: story.ctas.pluck(:id), disabled: ['none available'] }
+              ), { id: 'story-ctas-select', class: 'form-control', multiple: true,
+                   style: 'width:100%' } %>
 
       </div>
 

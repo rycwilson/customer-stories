@@ -1,7 +1,7 @@
 class ResultsController < ApplicationController
 
   def create
-    story = Story.find params[:story_id]
+    story = Story.find(params[:story_id])
     @story_id = story.id
     @base_url = request.base_url
     @result = Result.new description: params[:description]
@@ -14,12 +14,6 @@ class ResultsController < ApplicationController
       @flash_error = "Result can't exceed 70 characters"
       respond_to { |format| format.js }
     end
-  end
-
-  def update
-    @result = Result.find params[:id]
-    @result.update description: params[:result][:description]
-    respond_to { |format| format.json { respond_with_bip(@result) } }
   end
 
   # method responds with the deleted Result object's id

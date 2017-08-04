@@ -47,6 +47,17 @@ function curateListeners () {
                 $('#curate-story').empty().append(html)
               ).then(function () {
                   initContributorsTable('curate');
+                  $('.bs-switch').bootstrapSwitch({ size: 'small' });
+                  $('.story-tags').select2({
+                    theme: 'bootstrap',
+                    placeholder: 'Select tags'
+                  });
+                  $('#story-ctas-select').select2({
+                    theme: 'bootstrap',
+                    placeholder: 'Select CTAs',
+                    tags: true
+                  });
+                  initSummernote();
                   $('a[href="#curate-story"]').tab('show');
                 });
           }

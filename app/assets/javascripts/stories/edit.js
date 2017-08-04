@@ -26,6 +26,29 @@ function storiesEditListeners () {
       // ).then(function () {
       // });
 
+    })
+
+    .on('click', '#curate-story .add-result', function (e) {
+      $('#curate-story .success-results').append(
+        _.template($('#new-result-template').html())()
+      );
+    })
+    .on('click', '#curate-story .success-result .remove-result, ' +
+                 '#curate-story .success-result .cancel-remove-result', function (e) {
+      var $destroyResult = $(this).next();
+      if ($(this).hasClass('remove-result')) {
+        $(this).closest('.success-result').addClass('to-be-removed');
+        $(this).removeClass('remove-result').addClass('cancel-remove-result');
+        $destroyResult.prop('checked', true);
+      } else {
+        $(this).closest('.success-result').removeClass('to-be-removed');
+        $(this).removeClass('cancel-remove-result').addClass('remove-result');
+        $destroyResult.prop('checked', false);
+      }
+
+    })
+    .on('click', '#curate-story .new-result .remove-result', function (e) {
+      $(this).closest('.new-result').remove();
     });
 
     storiesEditBIPListeners();
@@ -61,10 +84,10 @@ function storiesEditBIPListeners () {
 
 function storiesEditSettingsListeners () {
 
-  $(document).on('switchChange.bootstrapSwitch', '.bs-switch', function (event, state) {
-    $(this).parent().submit();
-    $(this).closest('form').find('input.bs-switch').bootstrapSwitch('disabled', true);
-  });
+  // $(document).on('switchChange.bootstrapSwitch', '.bs-switch', function (event, state) {
+  //   $(this).parent().submit();
+  //   $(this).closest('form').find('input.bs-switch').bootstrapSwitch('disabled', true);
+  // });
 
   $(document).on('ajax:success', '#story-publish-form',
     function (event, story) {

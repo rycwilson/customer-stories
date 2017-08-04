@@ -36,7 +36,7 @@
 
       <div class="form-group logo-upload">
 
-        <label>Logo</label>
+        <label>Header Logo</label>
         <div class="fileinput <%= @company.logo_url.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">
 
             <div class="fileinput-new thumbnail"
@@ -53,10 +53,10 @@
             <div>
               <span class="btn btn-default btn-file" style='margin-bottom:7px'>
                 <span class="fileinput-new">
-                  Select image
+                  Select Logo
                 </span>
                 <span class="fileinput-exists">
-                  Change
+                  Change Logo
                 </span>
                 <%= f.file_field :logo_url %>
               </span>

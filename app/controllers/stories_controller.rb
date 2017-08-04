@@ -3,7 +3,7 @@ class StoriesController < ApplicationController
   include StoriesHelper
 
   before_action :set_company
-  before_action :set_story, only: [:edit, :ctas, :tags, :promote, :approval, :destroy]
+  before_action :set_story, only: [:edit, :update, :ctas, :tags, :promote, :approval, :destroy]
   before_action only: [:show] { @is_curator = @company.curator?(current_user) }
   before_action only: [:edit] { user_authorized?(@story, current_user) }
   before_action only: [:index, :show, :edit] { set_gon(@company) }
@@ -126,7 +126,6 @@ class StoriesController < ApplicationController
   end
 
   def update
-    story = Story.find params[:id]
     if params[:customer_logo_url]
       story.success.customer.update logo_url: params[:customer_logo_url]
       respond_to { |format| format.json { render json: nil } }

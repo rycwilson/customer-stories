@@ -63,9 +63,10 @@ Rails.application.routes.draw do
 
       resources :companies, only: [:show, :edit, :update] do
         resources :customers, only: [:create, :update, :destroy], shallow: true
-        resources :successes, only: [:create, :update, :destroy], shallow: true
+        resources :successes, only: [:create, :update, :destroy], shallow: true do
+          resources :results, only: [:create, :destroy]
+        end
         resources :stories, only: [:edit, :update, :destroy], shallow: true do
-          resources :results, only: [:create, :update, :destroy]
           collection { get '/promoted', to: 'stories#promoted' }
           member { post '/promote', to: 'stories#promote' }
           member { put '/promote', to: 'stories#promote' }

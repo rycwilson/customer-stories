@@ -13,6 +13,7 @@ class Story < ActiveRecord::Base
   has_many :visitors, -> { select('visitors.*, visitor_actions.timestamp, visitor_sessions.clicky_session_id').distinct }, through: :page_views
   has_many :category_tags, through: :success, source: :story_categories
   has_many :product_tags, through: :success, source: :products
+  has_many :results, through: :success
   has_many :ctas, through: :success, source: :ctas do
     # for rendering modals
     def forms
@@ -45,6 +46,8 @@ class Story < ActiveRecord::Base
     where(adwords_ad_group_id: story.company.campaigns.present? &&
                                story.company.campaigns.retarget.ad_group.id)
   }, class_name: 'AdwordsAd'
+
+  accepts_nested_attributes_for(:results, allow_destroy: true)
 
   # Note: no explicit association to friendly_id_slugs, but it's there
   # Story has many friendly_id_slugs -> captures history of slug changes

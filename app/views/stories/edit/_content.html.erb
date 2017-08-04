@@ -1,0 +1,73 @@
+
+<%= form_for(story, url: story_path(story.id),
+      html: { id: 'story-content-form', method: :put, remote: true }) do |f| %>
+
+  <div class="row">
+
+    <div class="col-lg-6" style='margin-bottom:20px'>
+
+      <div class="form-group" style='margin-bottom:20px'>
+        <%= f.label(:quote, 'Customer Quote') %>
+        <%= f.text_area(:quote, rows: 6, class: 'form-control') %>
+      </div>
+
+      <div class="form-group" style='margin-bottom:20px'>
+        <%= f.label(:quote_attr_name, 'Quoted Customer Name') %>
+        <%= f.text_field(:quote_attr_name, class: 'form-control') %>
+      </div>
+
+      <div class="form-group">
+        <%= f.label(:quote_attr_title, 'Quoted Customer Position') %>
+        <%= f.text_field(:quote_attr_title, class: 'form-control') %>
+      </div>
+
+    </div>
+
+    <div class="col-lg-6">
+
+      <div class="form-group">
+        <%= f.label(:embed_url, 'Video URL') %>
+        <%= f.text_field(:embed_url, class: 'form-control',
+              placeholder: 'YouTube, Vimeo, or Wistia') %>
+      </div>
+
+      <%= render 'stories/edit/video', { story: story } %>
+
+    </div>
+
+  </div>
+
+  <div class="row">
+
+    <div class="col-lg-8">
+
+      <%= f.label(:content, 'Narration') %>
+      <%= f.text_area(:content, id: 'story-content-editor',
+              data: { provider: 'summernote' }) %>
+
+    </div>
+
+    <div class="success-results col-lg-4">
+
+      <%= render 'stories/edit/results', { story: story, f: f } %>
+
+    </div>
+
+  </div>
+
+  <hr>
+
+  <div class="row">
+    <div class="col-sm-12 text-right">
+      <div class="form-group">
+
+        <button type="reset" class="btn btn-default">Cancel</button>
+        <input type='submit' class='btn btn-success' value="Save changes">
+
+      </div>
+    </div>
+  </div>
+
+<% end %>
+
+

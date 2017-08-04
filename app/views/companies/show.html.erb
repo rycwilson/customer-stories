@@ -6,7 +6,7 @@
   <meta name="turbolinks-cache-control" content="no-cache">
 <% end %>
 
-<!-- include templates for both show and edit -->
+<!-- include templates for both companies#show and stories#edit -->
 <% content_for :underscore_templates do %>
   <%= render 'companies/crowdsource/success_details_template' %>
   <%= render 'companies/crowdsource/contributor_template' %>
@@ -22,10 +22,11 @@
   <%= render 'stories/shared/edit/result_template' %>
 <% end %>
 
-<!-- include modals for both show and edit -->
+<!-- include modals for both companies#show and edit -->
 <%= render 'companies/crowdsource/new_success_modal', { company: @company } %>
 <%= render 'companies/crowdsource/new_contributor_modal', { company: @company } %>
 <%= render 'companies/shared/new_story_modal', { company: @company } %>
+<%= render 'stories/shared/video_modal' %>
 
 <div id='wrapper'>
 

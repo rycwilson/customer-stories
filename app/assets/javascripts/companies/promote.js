@@ -6,10 +6,6 @@ function promoteListeners () {
 
   $(document)
 
-    .on('click', 'a[href="#promote"]',
-      function () {
-      })
-
     // changing the scroll-on-focus offset for bootstrap validator isn't working,
     // so do this instead...
     .on('click', 'a[href="#promote-settings-tab-pane"]',
@@ -257,17 +253,17 @@ function promoteListeners () {
         var $li = $(this).closest('.adwords-image'),
             $liControlTop = $li.find('.adwords-image-form-control-top'),
             $liControlBottom = $li.find('.adwords-image-form-control-bottom'),
-            $destroyInput = $li.find(':checkbox.hidden');
+            $destroyImage = $li.find(':checkbox.hidden');
 
         if ($(this).hasClass('remove-image')) {
           $li.addClass('to-be-removed');
-          $destroyInput.prop('checked', true);
+          $destroyImage.prop('checked', true);
           $liControlBottom
              .html('<span>Save changes below or <a class="cancel-remove-image">Cancel</a></span>');
 
         } else {  // .cancel-remove-image
           $li.removeClass('to-be-removed');
-          $destroyInput.prop('checked', false);
+          $destroyImage.prop('checked', false);
           $liControlBottom.html('');
         }
 
