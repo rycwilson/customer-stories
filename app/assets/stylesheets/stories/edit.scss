@@ -4,7 +4,7 @@
   .success-results {
     position: relative;
     label {
-      margin-bottom: 12px;
+      margin-left: -5px;
     }
     label + span {
       position: absolute;
@@ -16,11 +16,14 @@
       color: #516c87;
       cursor: pointer;
     }
-    div[class*='col-'] {
+    div[class*='col-']:first-child {
+      padding: 0 10px;
+    }
+    div[class*='col-']:last-child {
       padding: 0;
     }
-    div[class*='col-']:first-child {
-      padding-left: 15px;
+    p, textarea {
+      margin: 10px 0;
     }
     .success-result:hover, .new-result:hover {
       background: #f5f5f5;
@@ -30,6 +33,7 @@
       border-color: #ebccd1;
     }
     i.fa-remove {
+      margin-top: 10px;
       font-size: 20px;
       color: #666;
     }
