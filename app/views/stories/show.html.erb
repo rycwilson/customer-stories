@@ -39,7 +39,7 @@
   </div>
 </div> -->
 
-<% if @more_stories.present? %>
+<% if @more_stories.present? && @company.subdomain != 'varmour' %>
   <div id='more-stories-container'>
     <%= render 'widgets/more_stories_tab',
           { widget: @company.widget, stories: @more_stories,
