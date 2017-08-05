@@ -1,4 +1,6 @@
 
+// #curate-story view may be loaded synchronously under stories#edit
+// or asynchronously under companies#show
 .stories.edit #curate-story, .companies.show #curate-story {
 
   .success-results {
@@ -9,37 +11,39 @@
     label + span {
       position: absolute;
       top: -15px;
-      left: 55px;
+      left: 60px;
       color: #6685a4;
     }
     label + span:hover {
       color: #516c87;
       cursor: pointer;
     }
-    div[class*='col-']:first-child {
-      padding: 0 10px;
+    li.success-result {
+      div[class*='col-']:first-child {
+        padding: 0 10px;
+      }
+      div[class*='col-']:last-child {
+        padding: 0;
+      }
+      p, textarea {
+        margin: 10px 0;
+      }
+      i.fa-remove {
+        margin-top: 10px;
+        font-size: 20px;
+        color: #666;
+      }
+      i.fa-remove:hover {
+        color: #222;
+        cursor: pointer;
+      }
     }
-    div[class*='col-']:last-child {
-      padding: 0;
-    }
-    p, textarea {
-      margin: 10px 0;
-    }
-    .success-result:hover, .new-result:hover {
+    .success-result .row:hover {
       background: #f5f5f5;
     }
-    .success-result.to-be-removed {
+    .success-result.to-be-removed .row {
       background-color: #f2dede;
       border-color: #ebccd1;
-    }
-    i.fa-remove {
-      margin-top: 10px;
-      font-size: 20px;
-      color: #666;
-    }
-    i.fa-remove:hover {
-      color: #222;
-      cursor: pointer;
     }
     .new-result textarea {
       margin-bottom: 10px;

@@ -29,10 +29,13 @@ function storiesEditListeners () {
     })
 
     .on('click', '#curate-story .add-result', function (e) {
-      $('#curate-story .success-results').append(
-        _.template($('#new-result-template').html())()
+      $('#curate-story .success-results ul').append(
+        _.template( $('#new-result-template').html() )(
+          { resultIndex: $(this).find('li').length }
+        )
       );
     })
+
     .on('click', '#curate-story .success-result .remove-result, ' +
                  '#curate-story .success-result .cancel-remove-result', function (e) {
       var $destroyResult = $(this).next();
@@ -47,6 +50,7 @@ function storiesEditListeners () {
       }
 
     })
+
     .on('click', '#curate-story .new-result .remove-result', function (e) {
       $(this).closest('.new-result').remove();
     });

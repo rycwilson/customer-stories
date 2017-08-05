@@ -1,63 +1,59 @@
 
-<div style='position:relative'>
-
-  <%= label_tag('Results') %>&nbsp;&nbsp;
+<div>
+  <label>Results</label>
   <span class="add-result fa-stack fa-lg">
     <i class="fa fa-circle fa-stack-2x" style='font-size:27px;top:7px'></i>
     <i class="fa fa-plus fa-stack-1x fa-inverse" style='font-size:16px;top:4px'></i>
   </span>
-
 </div>
 
-<%= f.fields_for(:results) do |result_f|  %>
+<ul class='list-unstyled'>
 
-  <div class="row success-result">
+  <%= f.fields_for(:results) do |result_f|  %>
 
-    <div class='col-sm-11'>
-      <p><%= result_f.object.description %></p>
-    </div>
+    <li class="success-result">
 
-    <div class="col-sm-1">
-      <i class='remove-result fa fa-remove'></i>
-      <%= result_f.check_box(:_destroy, { class: 'hidden' }, 'true', 'false') %>
-    </div>
+      <div class="row">
 
-  </div>
+        <div class='col-sm-11'>
+          <p><%= result_f.object.description %></p>
+        </div>
+
+        <div class="col-sm-1">
+          <i class='remove-result fa fa-remove'></i>
+          <%= result_f.check_box(:_destroy, { class: 'hidden' }, 'true', 'false') %>
+        </div>
+
+      </div>
+
+    </li>
+
+  <% end %>
+
+</ul>
+
+<% content_for(:underscore_templates) do %>
+
+  <script type="text/template" id='new-result-template'>
+
+    <li class="success-result new-result">
+
+      <div class='row'>
+
+        <div class="col-sm-11">
+          <textarea class="form-control" rows="3" placeholder="Add a measurable result for this customer success" name="story[results_attributes][{{ resultIndex }}][description]" id="story[results_attributes][{{ resultIndex }}][description]"></textarea>
+        </div>
+
+        <div class="col-sm-1">
+          <i class="remove-result fa fa-remove"></i>
+          <input name="story[results_attributes][{{= resultIndex }}][_destroy]" type="hidden" value="false">
+          <input class="hidden" type="checkbox" value="true" name="story[results_attributes][{{= resultIndex }}][_destroy]" id="story_results_attributes_{{= resultIndex }}__destroy">
+        </div>
+
+      </div>
+
+    </li>
+
+  </script>
 
 <% end %>
-
-<!-- template this... -->
-<!-- <div class="row">
-
-  <div class="col-sm-11">
-
-    <%#= f.fields_for(Result.new) do |result_f| %>
-
-      <%#= result_f.text_area(:description, class: 'form-control', rows: 3,
-            placeholder: 'Add a measurable result for this customer success') %>
-
-    <%# end %>
-
-  </div>
-
-  <div class="col-sm-1 text-center">
-    <i class='fa fa-remove'></i>
-  </div>
-
-</div> -->
-
-<script type="text/template" id='new-result-template'>
-
-  <div class="row new-result">
-
-    <div class="col-sm-11">
-      <textarea class="form-control" rows="3" placeholder="Add a measurable result for this customer success" name="story[result][description]" id="story_result_description"></textarea>
-    </div>
-
-    <div class="col-sm-1">
-      <i class="remove-result fa fa-remove"></i>
-    </div>
-
-  </div>
-
-</script>
