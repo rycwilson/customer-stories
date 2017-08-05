@@ -49,7 +49,7 @@
 
               <div class='col-xs-8 col-sm-5 col-md-3'>
 
-                <a href="<%= story[:url] %>"
+                <a href="<%= story[:url] || story[:path] %>"
                    class='cs-thumbnail <%= story[:published] ? 'published' : 'logo-published' %>'
                    target="<%= native ? '' : '_blank' %>">
 

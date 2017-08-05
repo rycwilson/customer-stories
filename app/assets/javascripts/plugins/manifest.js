@@ -4,7 +4,7 @@
 // mvp ready
 //= require slimscroll/jquery.slimscroll
 //= require magnific-popup/dist/jquery.magnific-popup
-//= require datatables/media/js/jquery.dataTables
+//= require datatables-old/media/js/jquery.dataTables
 //= require datatables-plugins/integration/bootstrap/3/dataTables.bootstrap
 
 //= require bootstrap-jasny/js/fileinput
