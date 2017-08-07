@@ -252,7 +252,7 @@ function crowdsourceListeners () {
       function (e) {
         // // if (no contributions) { e.preventDefault(); }
         var successId = $(this).closest('tr').data('success-id');
-        $('a[href="#crowdsource-contributors-tab-pane"]').tab('show');
+        $('a[href="#crowdsource-contributors"]').tab('show');
         $('#contributors-filter').val('success-' + successId).trigger('change');
       })
 
