@@ -248,12 +248,24 @@ function crowdsourceListeners () {
         }
       })
 
-    .on('click', '.success-actions-dropdown a.contributors',
+    .on('click', '.success-actions-dropdown .manage-contributors',
       function (e) {
         // // if (no contributions) { e.preventDefault(); }
         var successId = $(this).closest('tr').data('success-id');
         $('a[href="#crowdsource-contributors"]').tab('show');
         $('#contributors-filter').val('success-' + successId).trigger('change');
+      })
+
+    .on('click', '.success-actions-dropdown .add-contributor',
+      function (e) {
+        var customerId = $(this).closest('tr').data('customer-id'),
+            successId = $(this).closest('tr').data('success-id'),
+            $modal = $('#new-contributor-modal');
+        $('a[href="#crowdsource-contributors"]').tab('show');
+        $('#contributors-filter').val('success-' + successId).trigger('change');
+        $modal.modal('show');
+        $modal.find('#contribution_customer_id').val(customerId).trigger('change');
+        $modal.find('#contribution_success_id').val(successId).trigger('change');
       })
 
     .on('click', '#crowdsource-contributors-table a.success',

@@ -9,7 +9,7 @@ class SuccessesController < ApplicationController
       format.json do
         render({
           json: company.successes.to_json({
-                  only: [:id, :name, :description], methods: [],
+                  only: [:id, :name, :description], methods: [:contributions_count],
                   include: {
                     curator: { only: [:id], methods: [:full_name] },
                     customer: { only: [:id, :name] }

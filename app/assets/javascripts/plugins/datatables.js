@@ -97,11 +97,11 @@ function initSuccessesTable () {
         }
       },
       {  // td.dropdown.actions-dropdown
-        data: null,
-        render: function () {
+        data: 'contributions_count',
+        render: function (data, type, row, meta) {
                   return _.template(
                             $('#successes-dropdown-template').html()
-                          )({});
+                          )({ contributionsCount: data });
                 }
       }
     ],
@@ -138,6 +138,7 @@ function initSuccessesTable () {
       }
     },
     createdRow: function (row, data, index) {
+      $(row).attr('data-customer-id', data.customer.id);
       $(row).attr('data-success-id', data.id);
     },
     // drawCallback: function (settings) {

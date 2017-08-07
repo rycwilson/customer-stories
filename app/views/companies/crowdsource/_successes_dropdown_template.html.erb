@@ -3,7 +3,7 @@
 
   <script type='text/template' id='successes-dropdown-template'>
 
-    <div style='position:relative'>
+    <div>
 
       <a href="javascript:;" class="dropdown-toggle" data-toggle='dropdown'>
         <i class='fa fa-caret-down'></i>
@@ -17,12 +17,23 @@
           </a>
         </li>
 
-        <li>
-          <a href="javascript:;" class='contributors'>
-            <!-- // <i class='glyphicon glyphicon-remove'></i>&nbsp;&nbsp; -->
-            <span>Manage Contributors</span>
-          </a>
-        </li>
+        {{ if (contributionsCount > 0) { }}
+
+          <li>
+            <a href="javascript:;" class='manage-contributors'>
+              <span>Manage Contributors</span>
+            </a>
+          </li>
+
+        {{ } else { }}
+
+          <li>
+            <a href="javascript:;" class='add-contributor'>
+              <span>Add Contributor</span>
+            </a>
+          </li>
+
+        {{ } }}
 
         <li>
           <a href="javascript:;">

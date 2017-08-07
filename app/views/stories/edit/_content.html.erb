@@ -35,7 +35,7 @@
 
     <div class="col-lg-8">
 
-      <%= f.label(:content, 'Main Content') %>
+      <%= f.label(:content, "Main Content&nbsp;&nbsp;/&nbsp;&nbsp;HTML Editor".html_safe) %>
       <%= f.text_area(:content, id: 'story-content-editor',
               data: { provider: 'summernote' }) %>
 

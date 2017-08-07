@@ -35,5 +35,11 @@ class Success < ActiveRecord::Base
                     Prompt.create(description: "What was the measure of success achieved?")
   end
 
+  # method is used for passing the contributions count to datatables / successes dropdown
+  # see successes#index
+  def contributions_count
+    self.contributions.count
+  end
+
 end
 
