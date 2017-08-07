@@ -3,6 +3,16 @@
 // or asynchronously under companies#show
 .stories.edit #curate-story, .companies.show #curate-story {
 
+  .video-container {
+    min-height: 234px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    overflow: hidden;
+    img#video-placeholder {
+      width: 100%;
+    }
+  }
+
   .success-results {
     position: relative;
     label {

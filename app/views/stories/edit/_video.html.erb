@@ -6,7 +6,7 @@
   <%= hidden_field_tag('story[formatted_video_url]') %>
 </div>
 
-<div class="video-container text-center"
+<div class="video-container text-center" style='border:1px solid #ccc;border-radius:4px;overflow:hidden'
        data-placeholder="<%= asset_path('video_placeholder.jpg') %>">
 
   <% if story.video_info[:provider] == 'wistia' %>
