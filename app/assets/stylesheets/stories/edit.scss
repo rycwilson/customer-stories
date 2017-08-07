@@ -3,6 +3,10 @@
 // or asynchronously under companies#show
 .stories.edit #curate-story, .companies.show #curate-story {
 
+  #story_quote {
+    font-style: italic;
+  }
+
   .video-container {
     min-height: 234px;
     border: 1px solid #ccc;

@@ -38,7 +38,16 @@
   }
 
   #curate-story {
-    #curate-contributors-table .story-candidate {
+
+    // most settings for this table are in crowdsource.scss
+    #curate-contributors-table {
+      td.actions-dropdown {
+        .dropdown-menu {
+          left: -70px;
+        }
+      }
+    }
+    .story-candidate {
       display: none;
     }
   }

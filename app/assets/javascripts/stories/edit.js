@@ -117,7 +117,7 @@ function storiesEditListeners () {
     // storiesEditResultsListeners();
     storiesEditPromptsListeners();
     // storiesEditContributionsListeners();
-    storiesEditContentEditorListeners();
+    // storiesEditContentEditorListeners();
 }
 
 function storiesEditBIPListeners () {
@@ -534,47 +534,24 @@ function storiesEditContributionsListeners () {
 
 function storiesEditContentEditorListeners () {
 
-  $(document).on('click', '#edit-story-content', function () {
-    var $storyContentEditor = $('#story-content-editor'),
-        $summernote = $storyContentEditor.next(),
-        $editor = $summernote.find('.note-editable'),
-        $saveButton = $("[type='submit'][form='story-content-form']"),
-        $formButtons = $("[form='story-content-form']"),
-        $toolbarButtons = $summernote.find('.note-toolbar > .note-btn-group > button, .note-toolbar > .note-btn-group > .note-btn-group > button');
-    $(this).css({
-      'pointer-events': 'none',
-      color: '#e3e3e3'
-    });
-    $editor.attr('contenteditable', 'true')
-           .css({
-             'background-color': 'white',
-             'pointer-events': 'auto'
-           });
-    $toolbarButtons.css({
-                      'background-color': 'white',
-                      'pointer-events': 'auto'
-                    });
-    $formButtons.removeClass('hidden');
-  });
-
   // this function can be generalized and used elsewhere ...
   // $('form').has('[data-provider="summernote"]').on('reset', function () {
-  $(document).on('reset', '#story-content-form', function () {
-    // revert to last saved content ...
-    var $storyContentEditor = $('#story-content-editor'),
-        $saveButton = $("[type='submit'][form='story-content-form']");
-    $storyContentEditor.summernote('code', $storyContentEditor.text());
-    $saveButton.click();
-  });
+  // $(document).on('reset', '#story-content-form', function () {
+  //   // revert to last saved content ...
+  //   var $storyContentEditor = $('#story-content-editor'),
+  //       $saveButton = $("[type='submit'][form='story-content-form']");
+  //   $storyContentEditor.summernote('code', $storyContentEditor.text());
+  //   $saveButton.click();
+  // });
 
-  $(document).on('click', '.note-view', function () {
-    var $formButtons = $("[form='story-content-form']");
-    if ($formButtons.prop('disabled')) {
-      $formButtons.prop('disabled', false);
-    } else {
-      $formButtons.prop('disabled', true);
-    }
-  });
+  // $(document).on('click', '.note-view', function () {
+  //   var $formButtons = $("[form='story-content-form']");
+  //   if ($formButtons.prop('disabled')) {
+  //     $formButtons.prop('disabled', false);
+  //   } else {
+  //     $formButtons.prop('disabled', true);
+  //   }
+  // });
 }
 
 

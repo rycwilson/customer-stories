@@ -32,7 +32,8 @@
       <hr style='margin-bottom: 24px'>
 
       <div id='story-settings' class='tab-pane fade in active'
-           data-story-id='<%= story.try(:id) %>'>
+           data-story-id='<%= story.try(:id) %>'
+           data-success-name="<%= story.success.name %>">
 
         <%= render 'stories/edit/settings', { company: company, story: story } %>
 

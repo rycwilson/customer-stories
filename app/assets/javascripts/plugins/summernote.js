@@ -49,20 +49,20 @@ function initSummernote () {
     ],
   });
 
-  if ($('body').hasClass('stories edit')) {
-    var $storyContentEditor = $('#story-content-editor'),
-        $summernote = $storyContentEditor.next(),
-        $editor = $summernote.find('.note-editable'),
-        $toolbarButtons = $summernote.find('.note-toolbar > .note-btn-group > button, .note-toolbar > .note-btn-group > .note-btn-group > button');
-    // disable the editor until edit button is clicked
-    $editor.attr('contenteditable', 'false')
-           .css({
-            'background-color': '#f5f5f5',
-            'pointer-events': 'none'
-           });
-    $toolbarButtons.css({
-                    'background-color': '#f5f5f5',
-                    'pointer-events': 'none'
-                   });
-  }
+  // if ($('body').hasClass('stories edit')) {
+  //   var $storyContentEditor = $('#story-content-editor'),
+  //       $summernote = $storyContentEditor.next(),
+  //       $editor = $summernote.find('.note-editable'),
+  //       $toolbarButtons = $summernote.find('.note-toolbar > .note-btn-group > button, .note-toolbar > .note-btn-group > .note-btn-group > button');
+  //   // disable the editor until edit button is clicked
+  //   $editor.attr('contenteditable', 'false')
+  //          .css({
+  //           'background-color': '#f5f5f5',
+  //           'pointer-events': 'none'
+  //          });
+  //   $toolbarButtons.css({
+  //                   'background-color': '#f5f5f5',
+  //                   'pointer-events': 'none'
+  //                  });
+  // }
 }
