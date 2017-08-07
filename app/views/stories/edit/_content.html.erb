@@ -25,13 +25,7 @@
 
     <div class="col-lg-6">
 
-      <div class="form-group">
-        <%= f.label(:embed_url, 'Video URL') %>
-        <%= f.text_field(:embed_url, class: 'form-control',
-              placeholder: 'YouTube, Vimeo, or Wistia') %>
-      </div>
-
-      <%= render 'stories/edit/video', { story: story } %>
+      <%= render 'stories/edit/video', { story: story, f: f } %>
 
     </div>
 

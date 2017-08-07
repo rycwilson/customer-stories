@@ -157,13 +157,13 @@ class Story < ActiveRecord::Base
     expire_story_video_info_cache
     expire_story_video_xs_fragment_cache
   end if Proc.new { |story|
-           story.previous_changes.key?('embed_url')
+           story.previous_changes.key?('video_url')
          }
 
   after_commit :expire_story_testimonial_fragment_cache, on: :update, if:
         Proc.new { |story|
           (story.previous_changes.keys &
-            ['embed_url', 'quote', 'quote_attr_name', 'quote_attr_title']).any?
+            ['video_url', 'quote', 'quote_attr_name', 'quote_attr_title']).any?
         }
 
   after_commit :expire_csp_story_path_cache,
@@ -328,7 +328,7 @@ class Story < ActiveRecord::Base
   end
 
   ##
-  #  embed_url looks like one of these ...
+  #  video_url looks like one of these ...
   #
   #  "https://www.youtube.com/embed/#{youtube_id}"
   #  "https://player.vimeo.com/video/#{vimeo_id}"
@@ -337,16 +337,16 @@ class Story < ActiveRecord::Base
   def video_info
     company = self.success.customer.company
     Rails.cache.fetch("#{company.subdomain}/story-#{self.id}-video-info") do
-      return { provider: nil, id: nil } if self.embed_url.blank?
-      if self.embed_url.include? "youtube"
+      return { provider: nil, id: nil } if self.video_url.blank?
+      if self.video_url.include? "youtube"
         { provider: 'youtube',
-          id: embed_url.slice(embed_url.rindex('/') + 1, embed_url.length) }
-      elsif self.embed_url.include? "vimeo"
+          id: video_url.slice(video_url.rindex('/') + 1, video_url.length) }
+      elsif self.video_url.include? "vimeo"
         { provider: 'vimeo',
-          id: embed_url.slice(embed_url.rindex('/') + 1, embed_url.length) }
-      elsif self.embed_url.include? "wistia"
+          id: video_url.slice(video_url.rindex('/') + 1, video_url.length) }
+      elsif self.video_url.include? "wistia"
         { provider: 'wistia',
-          id: self.embed_url.match(/\/(?<id>\w+)(\.\w+$)/)[:id] }
+          id: self.video_url.match(/\/(?<id>\w+)(\.\w+$)/)[:id] }
       else
         # error
       end

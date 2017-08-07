@@ -6,6 +6,11 @@ function storiesEdit () {
 
 function storiesEditListeners () {
 
+  var youtubeBaseUrl = "https://www.youtube.com/embed/",
+      vimeoBaseUrl = "https://player.vimeo.com/video/",
+      wistiaBaseUrl = "https://fast.wistia.com/embed/medias/",
+      videoTemplate = _.template($('#video-template').html());
+
   $(document)
     .on('click', '#curate a.all-stories', function (e) {
       // replacing state ensure turbolinks:false for the first tab state
@@ -26,6 +31,55 @@ function storiesEditListeners () {
       // ).then(function () {
       // });
 
+    })
+
+    // TODO: https://stackoverflow.com/questions/2742813
+    .on('input', '#story_video_url', function (e) {
+      // https://www.youtube.com/watch?v=BAjqPZY8sFg or
+      // https://www.youtube.com/embed/BAjqPZY8sFg
+      var youtubeId = $(this).val().includes('youtube') &&
+                      $(this).val().match(/(v=|\/)(\w+)(&|$)/) &&
+                      $(this).val().match(/(v=|\/)(\w+)(&|$)/)[2],
+          vimeoId = $(this).val().includes('vimeo') &&
+                    $(this).val().match(/\/(\d+)$/) &&
+                    $(this).val().match(/\/(\d+)$/)[1],
+          // https://fast.wistia.com/embed/medias/avk9twrrbn.jsonp (standard)
+          // https://fast.wistia.net/embed/iframe/avk9twrrbn (fallback)
+          wistiaId = $(this).val().includes('wistia') &&
+                     $(this).val().match(/\/(\w+)($|\.\w+$)/) &&
+                     $(this).val().match(/\/(\w+)($|\.\w+$)/)[1],
+          loadTemplate = function (provider, videoId, videoUrl) {
+            $('.video-container').empty().append(
+              videoTemplate({
+                provider: provider,
+                videoId: videoId,
+                videoUrl: videoUrl
+              })
+            );
+          };
+
+      if (wistiaId && (typeof Wistia === 'undefined')) {
+          $.getScript('//fast.wistia.com/assets/external/E-v1.js', function () {
+            loadTemplate('wistia', wistiaId);
+            $('input[name="story[formatted_video_url]"]').val(wistiaBaseUrl + wistiaId);
+          });
+      } else if (wistiaId) {
+        loadTemplate('wistia', wistiaId);
+        $('input[name="story[formatted_video_url]"]').val(wistiaBaseUrl + wistiaId);
+      } else if (youtubeId || vimeoId) {
+        $.when(
+          loadTemplate(
+            youtubeId ? 'youtube' : 'vimeo',
+            youtubeId || vimeoId,
+            youtubeId ? youtubeBaseUrl + youtubeId : vimeoBaseUrl + vimeoId
+          )
+        ).then(function () {
+          loadVideoThumbnail();
+          $('input[name="story[formatted_video_url]"]').val(
+            youtubeId ? youtubeBaseUrl + youtubeId : vimeoBaseUrl + vimeoId
+          );
+        });
+      }
     })
 
     .on('click', '#curate-story .add-result', function (e) {
@@ -57,7 +111,6 @@ function storiesEditListeners () {
 
     storiesEditBIPListeners();
     storiesEditSettingsListeners();
-    storiesEditVideoInputHandler();
     storiesEditCTAsListeners();
     storiesEditTagsListeners();
     storiesEditNewContributorListeners();
@@ -167,46 +220,6 @@ function storiesEditSettingsListeners () {
 
 }
 
-function storiesEditVideoInputHandler () {
-
-  $(document).on('ajax:success',
-                 ".best_in_place[data-bip-attribute='embed_url']",
-                  function (event, data) {
-
-    var res = JSON.parse(data),
-        provider = res.video_info.provider,
-        videoUrl = res.embed_url,
-        videoId = res.video_info.id,
-        $placeholder = $("<img src='" + $('.video-container').data('placeholder') + "'>"),
-        inputPlaceholder = "Video URL (YouTube, Vimeo, or Wistia)",
-        template = _.template($('#video-template').html());
-
-    if (!videoUrl) {
-      $('.video-container').empty().append($placeholder);
-
-    } else if (provider === 'wistia') {  // wistia
-      if (typeof Wistia === 'undefined') {
-        // $.getScript(videoUrl); # apparently not required, but came from docs
-        $.getScript('//fast.wistia.com/assets/external/E-v1.js');
-      }
-      $('.video-container')
-        .empty()
-        .append(template({ provider: provider,
-                            videoId: videoId }));
-    } else {  // youtube or vimeo
-      $('.video-container')
-        .empty()
-        .append(template({ provider: provider,
-                            videoId: videoId,
-                            videoUrl: videoUrl }));
-      loadVideoThumbnail();
-    }
-
-    $(".best_in_place[data-bip-attribute='embed_url']").text(videoUrl || inputPlaceholder);
-
-  });
-}
-
 function storiesEditCTAsListeners () {
   $(document).on('change', '#story-ctas-select',
     function () {
@@ -249,33 +262,33 @@ function storiesEditNewContributorListeners () {
 
 }
 
-function storiesEditResultsListeners () {
-  /*
-    new result form - submit is disabled until value entered.
-    listens for input event instead of change event, as latter only fires after
-    focus moves away from input field, while former fires after all edits
-  */
-  $(document).on('input', '#new-result', function () {
-    if ($(this).val().length > 0)
-      $(this).closest('form').find('button').prop('disabled', false);
-    else
-      $(this).closest('form').find('button').prop('disabled', true);
-  });
+// function storiesEditResultsListeners () {
+//   /*
+//     new result form - submit is disabled until value entered.
+//     listens for input event instead of change event, as latter only fires after
+//     focus moves away from input field, while former fires after all edits
+//   */
+//   $(document).on('input', '#new-result', function () {
+//     if ($(this).val().length > 0)
+//       $(this).closest('form').find('button').prop('disabled', false);
+//     else
+//       $(this).closest('form').find('button').prop('disabled', true);
+//   });
 
-   // delete a result
-  $(document).on('click', '.delete-result', function () {
-    var $deleteButton = $(this);
-    $.ajax({
-      url: $deleteButton.data('action'),
-      method: 'delete',
-      success: function (data, status, xhr) {
-        $deleteButton.closest('.row').next('br').remove();
-        $deleteButton.closest('.row').remove();
-      }
-    });
-  });
+//    // delete a result
+//   $(document).on('click', '.delete-result', function () {
+//     var $deleteButton = $(this);
+//     $.ajax({
+//       url: $deleteButton.data('action'),
+//       method: 'delete',
+//       success: function (data, status, xhr) {
+//         $deleteButton.closest('.row').next('br').remove();
+//         $deleteButton.closest('.row').remove();
+//       }
+//     });
+//   });
 
-}
+// }
 
 function storiesEditPromptsListeners () {
 

@@ -354,27 +354,6 @@ class StoriesController < ApplicationController
     end
   end
 
-  def new_embed_url_formatted new_embed_url
-    if new_embed_url.include? "youtube"
-      # https://www.youtube.com/watch?v=BAjqPZY8sFg
-      # or
-      # https://www.youtube.com/embed/BAjqPZY8sFg
-      youtube_id = new_embed_url.match(/(v=|\/)(?<id>\w+)(&|$)/)[:id]
-      YOUTUBE_BASE_URL + "#{youtube_id}"
-    elsif new_embed_url.include? "vimeo"
-      vimeo_id = new_embed_url.match(/\/(?<id>\d+)$/)[:id]
-      VIMEO_BASE_URL + "#{vimeo_id}"
-    elsif new_embed_url.include? "wistia"
-      # https://fast.wistia.com/embed/medias/avk9twrrbn.jsonp (standard)
-      # or
-      # https://fast.wistia.net/embed/iframe/avk9twrrbn (fallback)
-      wistia_id = new_embed_url.match(/\/(?<id>\w+)($|\.\w+$)/)[:id]
-      WISTIA_BASE_URL + "#{wistia_id}.jsonp"
-    elsif new_embed_url.blank?
-      nil
-    end
-  end
-
   def user_authorized? story, current_user
     if current_user.try(:company_id) == story.success.customer.company.id
       true

@@ -77,7 +77,7 @@
 
 <!-- includes video -->
 <div id='story-section-testimonial'
-     class="<%= @story.embed_url.present? ? '' : 'no-video' %>">
+     class="<%= @story.video_url.present? ? '' : 'no-video' %>">
 
   <% cache("#{@company.subdomain}/story-#{@story.id}-testimonial",
            skip_digest: true) do %>
@@ -88,7 +88,7 @@
 
 <!-- video (xs only) -->
 <div id='story-section-video-xs'
-     class='visible-xs-block <%= @story.embed_url.present? ? '' : 'hidden' %>'>
+     class='visible-xs-block <%= @story.video_url.present? ? '' : 'hidden' %>'>
 
   <% cache("#{@company.subdomain}/story-#{@story.id}-video-xs",
            skip_digest: true) do %>

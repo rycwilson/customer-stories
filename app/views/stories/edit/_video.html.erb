@@ -1,4 +1,11 @@
 
+<div class="form-group">
+  <%= f.label(:video_url, 'Video URL') %>
+  <%= f.text_field(:video_url, class: 'form-control',
+        placeholder: 'YouTube, Vimeo, or Wistia') %>
+  <%= hidden_field_tag('story[formatted_video_url]') %>
+</div>
+
 <div class="video-container text-center"
        data-placeholder="<%= asset_path('video_placeholder.jpg') %>">
 
@@ -17,19 +24,20 @@
       </div>
     </div>
 
-  <% elsif story.embed_url.present? %>
+  <% elsif story.video_url.present? %>
 
     <div class="video-thumb-container"
          data-toggle='modal' data-target='#story-video-modal'
          data-provider="<%= story.video_info[:provider] %>"
          data-video-id="<%= story.video_info[:id] %>"
-         data-video-url="<%= story.embed_url %>">
+         data-video-url="<%= story.video_url %>">
     </div>
 
   <% else %>
 
     <img id='video-placeholder' src="<%= asset_path('video_placeholder.jpg') %>"
-         class="<%= story.embed_url.present? ? 'hidden' : '' %>" alt="video placeholder">
+         class="<%= story.video_url.present? ? 'hidden' : '' %>" alt="video placeholder">
 
   <% end %>
+
 </div>
