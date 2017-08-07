@@ -18,15 +18,10 @@
     label {
       margin-left: -5px;
     }
-    label + span {
+    button {
       position: absolute;
       top: -15px;
-      left: 60px;
-      color: #6685a4;
-    }
-    label + span:hover {
-      color: #516c87;
-      cursor: pointer;
+      right: 8px;
     }
     li.success-result {
       div[class*='col-']:first-child {

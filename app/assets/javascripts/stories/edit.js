@@ -114,7 +114,7 @@ function storiesEditListeners () {
     storiesEditCTAsListeners();
     storiesEditTagsListeners();
     storiesEditNewContributorListeners();
-    storiesEditResultsListeners();
+    // storiesEditResultsListeners();
     storiesEditPromptsListeners();
     // storiesEditContributionsListeners();
     storiesEditContentEditorListeners();
