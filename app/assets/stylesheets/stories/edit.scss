@@ -6,6 +6,9 @@
   #story_quote {
     font-style: italic;
   }
+  #story_quote::-webkit-input-placeholder {
+    font-style: normal;
+  }
 
   .video-container {
     min-height: 234px;

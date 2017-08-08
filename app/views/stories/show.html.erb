@@ -4,7 +4,6 @@
 
   <meta name="turbolinks-cache-control" content="no-cache">
 
-  <%= render 'companies/crowdsource/csp_linkedin_widget_template' %>
 
   <% if production? %>
     <% cache("#{@company.subdomain}/story-#{@story.id}-meta-tags",
@@ -14,6 +13,10 @@
     <% end %>
   <% end %>
 
+<% end %>
+
+<% content_for(:underscore_templates) do %>
+  <%= render 'companies/crowdsource/csp_linkedin_widget_template' %>
 <% end %>
 
 <%= render 'stories/shared/video_modal' %>

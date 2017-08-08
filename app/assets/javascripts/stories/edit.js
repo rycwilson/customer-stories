@@ -8,8 +8,7 @@ function storiesEditListeners () {
 
   var youtubeBaseUrl = "https://www.youtube.com/embed/",
       vimeoBaseUrl = "https://player.vimeo.com/video/",
-      wistiaBaseUrl = "https://fast.wistia.com/embed/medias/",
-      videoTemplate = _.template($('#video-template').html());
+      wistiaBaseUrl = "https://fast.wistia.com/embed/medias/";
 
   $(document)
     .on('click', '#curate a.all-stories', function (e) {
@@ -48,6 +47,7 @@ function storiesEditListeners () {
           wistiaId = $(this).val().includes('wistia') &&
                      $(this).val().match(/\/(\w+)($|\.\w+$)/) &&
                      $(this).val().match(/\/(\w+)($|\.\w+$)/)[1],
+          template = _.template($('#video-template').html()),
           loadTemplate = function (provider, videoId, videoUrl) {
             $('.video-container').empty().append(
               videoTemplate({

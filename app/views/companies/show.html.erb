@@ -17,12 +17,10 @@
   <%= render 'companies/crowdsource/contributors_dropdown_template' %>
   <%= render 'companies/promote/adwords_status_dropdown_template' %>
   <%= render 'stories/shared/stories_index_template', { company: @company } %>
-  <%= render 'stories/shared/edit/video_template' %>
   <%= render 'stories/shared/edit/prompt_template' %>
-  <%= render 'stories/shared/edit/result_template' %>
 <% end %>
 
-<!-- include modals for both companies#show and edit -->
+<!-- include modals for both companies#show and stories#edit -->
 <%= render 'companies/crowdsource/new_success_modal', { company: @company } %>
 <%= render 'companies/crowdsource/new_contributor_modal', { company: @company } %>
 <%= render 'companies/shared/new_story_modal', { company: @company } %>

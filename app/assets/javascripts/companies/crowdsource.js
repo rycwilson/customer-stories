@@ -256,11 +256,19 @@ function crowdsourceListeners () {
         $('#contributors-filter').val('success-' + successId).trigger('change');
       })
 
-    .on('click', '.success-actions-dropdown .add-contributor',
+    .on('click', '.success-actions-dropdown .create-story',
+      function () {
+        var $modal = $('#new-story-modal'),
+            customerId = $(this).closest('tr').data('customer-id');
+        $modal.modal('show');
+        $modal.find('#story_customer').val(customerId).trigger('change');
+      })
+
+    .on('click', '.success-actions-dropdown .new-contributor',
       function (e) {
-        var customerId = $(this).closest('tr').data('customer-id'),
-            successId = $(this).closest('tr').data('success-id'),
-            $modal = $('#new-contributor-modal');
+        var $modal = $('#new-contributor-modal'),
+            customerId = $(this).closest('tr').data('customer-id'),
+            successId = $(this).closest('tr').data('success-id');
         $('a[href="#crowdsource-contributors"]').tab('show');
         $('#contributors-filter').val('success-' + successId).trigger('change');
         $modal.modal('show');
