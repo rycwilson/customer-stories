@@ -1,28 +1,11 @@
 
 function companiesShow () {
 
-  // var $tabs = $('#workflow-tabs'), defaultTab = '#curate';
-  // if ($tabs.find('.active').length === 0) {
-  //   if (window.location.hash) {
-  //     console.log('yes hash')
-  //     $('#workflow-tabs a[href="' + window.location.hash + '"]').tab('show');
-  //   } else {
-  //     console.log('no hash')
-  //     $('#workflow-tabs a[href="' + defaultTab + '"]').tab('show');
-  //   }
-  // }
-  // // don't scroll to anchor
-  // setTimeout(function() { window.scrollTo(0, 0); }, 1);
-
   // panel-specific stuff
   crowdsource();
   curate();
   promote();
 
-  // if this page was arrived at through history navigation,
-  // make sure there aren't any active dropdowns
-  $('dropdown.company-settings').removeClass('active');
-  $('dropdown.user-profile').removeClass('active');
 }
 
 function companiesShowListeners () {

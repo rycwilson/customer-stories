@@ -13,9 +13,7 @@
       padding: 0;
       margin: 4px 30px 30px 30px;
     }
-    #curate-filters {
-      display: flex;
-      align-items: center;
+    #curate-filters  {
       form {
         width: 100%;
         .form-group {
@@ -38,6 +36,11 @@
   }
 
   #curate-story {
+
+    // don't make visible until plugins have loaded
+    .layout-main {
+      visibility: hidden;
+    }
 
     // most settings for this table are in crowdsource.scss
     #curate-contributors-table {

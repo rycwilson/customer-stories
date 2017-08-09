@@ -2,6 +2,11 @@
 function storiesEdit () {
   loadVideoThumbnail();
   // loadCspOrPlaceholderWidgets();
+
+  $.when( constructPlugins() )
+    .then(function () {
+      $('#curate-story .layout-main').css('visibility', 'visible');
+    });
 }
 
 function storiesEditListeners () {
@@ -30,6 +35,15 @@ function storiesEditListeners () {
       // ).then(function () {
       // });
 
+    })
+
+    .on('click', '#approval-pdf-btn', function (e) {
+      var missingInfo = $(this).data('missing-curator-info');
+      if (missingInfo.length) {
+        e.preventDefault();
+        var flashMesg = "Can't generate document because the following Curator fields are missing: " + missingInfo.join(', ');
+        flashDisplay(flashMesg, 'danger');
+      }
     })
 
     .on('click', '.customer-logo .change-image',
@@ -122,7 +136,6 @@ function storiesEditListeners () {
     });
 
     storiesEditBIPListeners();
-    storiesEditSettingsListeners();
     storiesEditCTAsListeners();
     storiesEditTagsListeners();
     storiesEditNewContributorListeners();
@@ -151,19 +164,7 @@ function storiesEditBIPListeners () {
   });
 }
 
-function storiesEditSettingsListeners () {
 
-
-  $(document).on('click', '#approval-pdf-btn', function (e) {
-    var missingInfo = $(this).data('missing-curator-info');
-    if (missingInfo.length) {
-      e.preventDefault();
-      var flashMesg = "Can't generate document because the following Curator fields are missing: " + missingInfo.join(', ');
-      flashDisplay(flashMesg, 'danger');
-    }
-  });
-
-}
 
 function storiesEditCTAsListeners () {
   $(document).on('change', '#story-ctas-select',

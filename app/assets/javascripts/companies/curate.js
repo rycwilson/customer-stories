@@ -1,12 +1,30 @@
 
 function curate () {
+
+  $.when( constructPlugins() )
+    .then(function () {
+      $('#curate-filters').css('visibility', 'visible');
+      preselectFilters();
+    });
   // don't need to call this here as the auto curator-select change event will trigger it
   // filterCurateGallery();
-  $('.curate.curator-select').val(
-      $('.curate.curator-select').children('[value="' + app.current_user.id.toString() + '"]').val()
-    ).trigger('change', { auto: true });
+  // $('.curate.curator-select').val(
+  //     $('.curate.curator-select').children('[value="' + app.current_user.id.toString() + '"]').val()
+  //   ).trigger('change', { auto: true });
 }
 
+// keep track of filters with session cookies
+function preselectFilters () {
+  $('.curate.curator-select').val(Cookies.get('csp-curate-curator-select') || app.current_user.id).trigger('change');
+  $('.curate.category-select').val(Cookies.get('csp-curate-category-select') || 0).trigger('change');
+  $('.curate.product-select').val(Cookies.get('csp-curate-product-select') || 0).trigger('change');
+
+  // control the default by choosing 'true' or 'false' for comparison
+  $('.curate.published').prop('checked', Cookies.get('csp-curate-published') === 'true' ? true : false).trigger('change');
+  $('.curate.logo-published').prop('checked', Cookies.get('csp-curate-logo-published') === 'false' ? false : true).trigger('change');
+  $('.curate.preview-published').prop('checked', Cookies.get('csp-curate-preview-published') === 'false' ? false : true).trigger('change');
+  $('.curate.pending-curation').prop('checked', Cookies.get('csp-curate-pending-curation') === 'false' ? false : true).trigger('change');
+}
 
 function curateListeners () {
 
@@ -58,8 +76,17 @@ function curateListeners () {
         '.curate.product-select, .curate.published, .curate.preview-published, ' +
         '.curate.logo-published, .curate.pending-curation',
       function (e) {
+        var filterCookieName = $(this).attr('class').split(' ').slice(0,2).join('-').replace(/^/, 'csp-'),
+            filterCookieVal;
+        if (filterCookieName.includes('select')) {
+          filterCookieVal = $(this).val();
+        } else {
+          filterCookieVal = $(this).prop('checked').toString();
+        }
+        Cookies.set(filterCookieName, filterCookieVal);
         filterCurateGallery();
       });
+
 }
 
 function initCurateStoryPlugins () {
@@ -76,6 +103,8 @@ function initCurateStoryPlugins () {
   });
   initSummernote();
   initS3Upload();
+  // make the section visible once plugins are loaded
+  $('#curate-story .layout-main').css('visibility', 'visible');
 }
 
 function filterCurateGallery () {
