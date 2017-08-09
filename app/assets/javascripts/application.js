@@ -12,11 +12,6 @@
 //= require profile/profile
 //= require init
 
-$(document).on('turbolinks:load', function (e) {
-  setAppData();
-
-});
-
 // attach listeners BEFORE running any page-specific js
 // (e.g. if page-specific js manually triggers an event)
 $(document).one('turbolinks:load', function () {
@@ -25,6 +20,11 @@ $(document).one('turbolinks:load', function () {
   attachStoriesListeners();
   attachProfileListeners();
   attachContributionsListeners();
+});
+
+$(document).on('turbolinks:load', function (e) {
+  setAppData();
+  constructPlugins();
 });
 
 $(document).on('turbolinks:load', function (e) {

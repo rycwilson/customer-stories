@@ -1,0 +1,59 @@
+
+(function () {
+
+  var story = <%= raw @story.to_json({ only: [:id, :published], methods: [:previous_changes] }) %>,
+      $publishSwitch = $("#story_published"),
+      $logoPublishSwitch = $("#story_logo_published"),
+      createAds = function (story) {
+        return (story.published && story.previous_changes.published) ? true : false;
+      },
+      removeAds = function (story) {
+        return (!story.published && story.previous_changes.published) ? true : false;
+      };
+
+  // server may have changed values to prevent invalid state ...
+  // it either ...
+  //   - turned logo_publish on to track story_publish=on
+  //   - turned story_publish off to track logo_publish=off
+  if (!story.published && $publishSwitch.bootstrapSwitch('state') === true) {
+    $publishSwitch.bootstrapSwitch('state', false);
+  } else if (story.logo_published && $logoPublishSwitch.bootstrapSwitch('state') === false) {
+    $logoPublishSwitch.bootstrapSwitch('state', true);
+  }
+
+  // create the ad
+  if (createAds(story)) {
+    $.post({
+      url: '/stories/' + story.id + '/promote',
+      success: function (data, status, xhr) {
+        $.post({
+          url: '/stories/' + story.id + '/adwords',
+          dataType: 'script'
+        });
+      }
+    });
+
+  // remove ad if story unpublished;
+  // remove the adwords ad first, as ad.ad_id will be necessary to make the api call
+  } else if (removeAds(story)) {
+    $.ajax({
+      url: '/stories/' + story.id + '/adwords',
+      method: 'delete',
+      dataType: 'json',
+      success: function (data, status, xhr) {
+        $.ajax({
+          url: '/stories/' + story.id + '/promote',
+          method: 'delete',
+          dataType: 'script',
+          success: function () {
+            // corresponds to flash timeout
+            setTimeout(function () {
+              $('input.bs-switch').bootstrapSwitch('disabled', false);
+            }, 3000);
+          }
+        });
+      }
+    });
+  }
+
+}());
