@@ -68,9 +68,9 @@
     <div class="col-sm-4 form-group has-feedback">
 
       <div>
-        <%= f.label :adwords_logo_url, 'Sponsored Stories Logo',
+        <%= f.label(:adwords_logo_url, 'Sponsored Stories Logo',
               class: 'adwords-logo control-label',
-              for: 'adwords-logo-input' %>&nbsp;&nbsp;
+              for: 'adwords-logo-input') %>&nbsp;&nbsp;
       </div>
 
       <div class="well fileinput adwords-default adwords-logo <%= company.adwords_logo_url.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">

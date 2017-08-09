@@ -71,10 +71,12 @@ class StoriesController < ApplicationController
   end
 
   def edit
+    # want to catch an ajax request for _edit partial, but ignore tubolinks ajax requests
     if request.xhr? && !request.env["HTTP_TURBOLINKS_REFERRER"]
       render({
         partial: 'edit',
-        locals: { company: @company, story: @story, workflow_stage: 'curate' }
+        locals: { company: @company, story: @story,
+                  workflow_stage: 'curate', tab_select: 'story-settings' }
       })
     else
       # provide data for both stories#edit and companies#show views
@@ -82,15 +84,11 @@ class StoriesController < ApplicationController
       @referrer_select = @story.success.contributions
                                .map { |c| [ c.contributor.full_name, c.contributor.id ] }
                                .unshift( [""] )
-      @results = @story.success.results
-      @prompts = @story.success.prompts
-      # this is needed for the Result delete button...
-      @base_url = request.base_url
-
       # measure
       @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
       @story_views_30_day_count = PageView.joins(:visitor_session)
                                     .company_story_views_since(@company.id, 30).count
+      @tab_select = params[:tab_select] || nil
       @workflow_stage = 'curate'
       @curate_view = 'story'  # instead of 'stories'
       render('companies/show')
@@ -126,62 +124,78 @@ class StoriesController < ApplicationController
   end
 
   def update
-    if params[:customer_logo_url]
-      story.success.customer.update logo_url: params[:customer_logo_url]
-      respond_to { |format| format.json { render json: nil } }
-    elsif params[:prompt]  # a prompt was edited
-      Prompt.find(params[:prompt_id].to_i).update description: params[:prompt][:description]
-      respond_to { |format| format.json { render json: nil } }
-    # params[:story]* items must appear below, else error
-    # (there is no params[:story] when params[:story_tags] or params[:result] are present)
-    elsif params[:story][:content]
-      story.update content: params[:story][:content]
-      @new_content = story.content
-      respond_to { |format| format.js { render action: 'update_content' } }
-    elsif params[:story][:new_prompt]
-      story.success.prompts << Prompt.create(description: params[:story][:new_prompt])
-      @prompts = story.success.prompts
-      @story_id = story.id
-      @base_url = request.base_url  # needed for deleting a result
-      respond_to { |format| format.js { render action: 'create_prompt_success' } }
-    elsif params[:story][:embed_url]  # =>  embedded video
-      story.update embed_url: new_embed_url_formatted(params[:story][:embed_url])
-      # respond with json because we need to update the video iframe
-      # with the modified url ...
+    if params[:story][:form] == 'settings'
+      update_publish_state(@story, story_params)
+      @story.update_tags(params[:category_tags] || [], params[:product_tags] || [])
+      @story.update(story_params)
       respond_to do |format|
-        format.json { render json: story.as_json(only: :embed_url, methods: :video_info) }
-      end
-    elsif params[:story][:published]
-      update_publish_state(story, params[:story])
-      respond_to do |format|
-        # on client-side, two things will happen:
-        # 1 - publish switches will change if user selection was overridden
-        # 2 - if previous_changes includes :publish, create/update the adwords ad
-        format.json do
-          render json: story.as_json(
-            only: [:id, :published, :logo_published],
-            methods: [:previous_changes],
-            include: {
-              ads: {
-                only: [:ad_id, :status],
-                include: {
-                  ad_group: {
-                    only: [:ad_group_id, :status],
-                    include: {
-                      campaign: {
-                        only: [:campaign_id, :status],
-                        include: {
-                          company: { only: [:promote_tr, :promote_crm] }
-                        } }}}}}}
+        format.html do
+          redirect_to(
+            curate_story_path(@story.slug, tab_select: 'story-settings'),
+            flash: { success: "Story Settings updated" }
           )
         end
+        format.js { render(action: 'update_settings') }
       end
-    else  # all other updates
-      story.update story_params
-      respond_to do |format|
-        format.json { respond_with_bip(story) }
-      end
+    else
     end
+
+    # if params[:customer_logo_url]
+    #   story.success.customer.update logo_url: params[:customer_logo_url]
+    #   respond_to { |format| format.json { render json: nil } }
+    # elsif params[:prompt]  # a prompt was edited
+    #   Prompt.find(params[:prompt_id].to_i).update description: params[:prompt][:description]
+    #   respond_to { |format| format.json { render json: nil } }
+    # # params[:story]* items must appear below, else error
+    # # (there is no params[:story] when params[:story_tags] or params[:result] are present)
+    # elsif params[:story][:content]
+    #   story.update content: params[:story][:content]
+    #   @new_content = story.content
+    #   respond_to { |format| format.js { render action: 'update_content' } }
+    # elsif params[:story][:new_prompt]
+    #   story.success.prompts << Prompt.create(description: params[:story][:new_prompt])
+    #   @prompts = story.success.prompts
+    #   @story_id = story.id
+    #   @base_url = request.base_url  # needed for deleting a result
+    #   respond_to { |format| format.js { render action: 'create_prompt_success' } }
+    # elsif params[:story][:embed_url]  # =>  embedded video
+    #   story.update embed_url: new_embed_url_formatted(params[:story][:embed_url])
+    #   # respond with json because we need to update the video iframe
+    #   # with the modified url ...
+    #   respond_to do |format|
+    #     format.json { render json: story.as_json(only: :embed_url, methods: :video_info) }
+    #   end
+    # elsif params[:story][:published]
+    #   update_publish_state(story, params[:story])
+    #   respond_to do |format|
+    #     # on client-side, two things will happen:
+    #     # 1 - publish switches will change if user selection was overridden
+    #     # 2 - if previous_changes includes :publish, create/update the adwords ad
+    #     format.json do
+    #       render json: story.as_json(
+    #         only: [:id, :published, :logo_published],
+    #         methods: [:previous_changes],
+    #         include: {
+    #           ads: {
+    #             only: [:ad_id, :status],
+    #             include: {
+    #               ad_group: {
+    #                 only: [:ad_group_id, :status],
+    #                 include: {
+    #                   campaign: {
+    #                     only: [:campaign_id, :status],
+    #                     include: {
+    #                       company: { only: [:promote_tr, :promote_crm] }
+    #                     } }}}}}}
+    #       )
+    #     end
+    #   end
+    # else  # all other updates
+    #   story.update story_params
+    #   respond_to do |format|
+    #     format.json { respond_with_bip(story) }
+    #   end
+    # end
   end
 
   def ctas
@@ -300,7 +314,7 @@ class StoriesController < ApplicationController
   end
 
   def set_story
-    @story = Story.find( params[:id] )
+    @story = Story.find(params[:id])
   end
 
   def set_contributors story
@@ -363,7 +377,7 @@ class StoriesController < ApplicationController
     end
   end
 
-  def update_publish_state story, story_params
+  def update_publish_state (story, story_params)
     publish_story = story_params[:published] == '1' ? true : false
     publish_logo = story_params[:logo_published] == '1' ? true : false
     # only update if the value has changed ...

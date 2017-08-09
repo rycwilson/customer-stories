@@ -1,87 +1,50 @@
 
-<%= form_for(story, url: story_path(story.id), html: { method: 'put', remote: true,
-      id: 'customer-logo-form', class: 'directUpload',
-      data: { 'form-data' => (@s3_direct_post.fields),
-                    'url' => @s3_direct_post.url,
-                   'host' => URI.parse(@s3_direct_post.url).host
-      } }) do |f| %>
+<%= form_for(story, url: story_path(story.id), authenticity_token: true,
+      html: { method: 'put', remote: true, id: 'story-settings-form',
+              class: 'directUpload',
+              data: { 'form-data' => (@s3_direct_post.fields),
+                      'url' => @s3_direct_post.url,
+                      'host' => URI.parse(@s3_direct_post.url).host
+              } }) do |f| %>
+
+  <%= hidden_field_tag('story[form]', 'settings') %>
 
   <div class="row">
 
     <div class="col-sm-6">
 
-      <div id='publish-control' class="form-inline" style='margin-bottom: 29px'>
+      <div id='publish-control' class="form-inline">
 
         <div class="form-group" style='margin-right:30px'>
           <div>
             <label for="logo_published">Publish Logo</label>&nbsp;
           </div>
-          <%= f.check_box :logo_published, class: "bs-switch form-control" %>
+          <%= f.check_box(:logo_published, class: "bs-switch form-control",
+                value: true) %>
         </div>
 
         <div class="form-group">
           <div>
             <label for='published'>Publish Story</label>&nbsp;
           </div>
-          <%= f.check_box :published, class: "bs-switch form-control" %>
+          <%= f.check_box(:published, class: "bs-switch form-control") %>
         </div>
         &nbsp;
-        <%= link_to 'Approval PDF', story_approval_path(story.id, format: :pdf),
+        <%= link_to('Approval PDF', story_approval_path(story.id, format: :pdf),
               id: 'approval-pdf-btn', style: 'vertical-align: bottom; ',
               data: { missing_curator_info: story.curator.missing_info.to_json,
                       missing_company_info: company.missing_info.to_json,
                       turbolinks: false },
-              target: '_blank' %>
+              target: '_blank') %>
 
       </div>  <!-- publish control -->
 
-      <div class="form-group">
+      <div class="form-group required-input">
         <%= f.label(:title) %>
         <%= f.text_field(:title, class: 'form-control') %>
       </div>
 
-
-      <div class="customer-logo row" style='margin-bottom: 25px;'>
-        <div class="col-sm-12">
-          <label for='customer_logo_url'>Customer Logo</label>
-        </div>
-        <!--
-          Note the absence of method:put and remote:true
-          We are only using this form for the S3 upload (necessary data attributes)
-          Submission must be triggered by file select, however calling $.submit()
-            messes with the response type called for by remote:true (instead of
-            javascript it gets changed to HTML, resulting in server error: unknown format)
-          So, submission is done via AJAX. See stories.js
-          UPDATE: ajax upload happens in the S3 config function (application.js)
-         -->
-        <div class="col-sm-12 fileinput <%= story.customer.logo_url.present? ? 'fileinput-exists' : 'fileinput-new' %>" data-provides="fileinput">
-          <div class="fileinput-new thumbnail col-sm-7">
-            <%= image_tag "company-logo-missing.png", alt: 'photo missing' %>
-          </div>
-
-          <div class="fileinput-preview fileinput-exists thumbnail col-sm-7"
-              data-trigger="fileinput">
-            <img src="<%= story.customer.logo_url %>" alt="Avatar">
-          </div>
-
-          <div class="col-sm-5">
-            <span id='story-edit-logo-buttons' class="btn btn-default btn-file">
-              <span class="fileinput-new">
-                Select
-              </span>
-              <span class="fileinput-exists">
-                Change
-              </span>
-              <%= file_field_tag :customer_logo_url %>
-            </span>
-            <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">
-              Remove
-            </a>
-          </div>
-
-        </div>  <!-- /.fileupload -->
-
-      </div>
+      <%= render 'stories/edit/customer_logo', { story: story, f: f } %>
 
     </div>
 

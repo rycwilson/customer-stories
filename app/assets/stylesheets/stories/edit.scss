@@ -3,6 +3,11 @@
 // or asynchronously under companies#show
 .stories.edit #curate-story, .companies.show #curate-story {
 
+  #story-settings {
+    #publish-control {
+      margin-bottom: 29px;
+    }
+  }
   #story_quote {
     font-style: italic;
   }
@@ -25,11 +30,29 @@
     label {
       margin-left: -5px;
     }
-    button {
+    label + span {
       position: absolute;
       top: -15px;
-      right: 8px;
+      left: 60px;
+      color: #6685a4;
+      i:first-child {
+        font-size: 28px;
+        top: 6px;
+      }
+      i:last-child {
+        font-size: 16px;
+        top: 3px;
+      }
     }
+    label + span:hover {
+      color: #516c87;
+      cursor: pointer;
+    }
+    // button {
+    //   position: absolute;
+    //   top: -15px;
+    //   right: 8px;
+    // }
     li.success-result {
       div[class*='col-']:first-child {
         padding: 0 10px;
@@ -75,73 +98,7 @@
   // }
 
 
-  /***********************************************/
-  /*      contribution card
-  /***********************************************/
 
-  .contribution-card {
-    label {
-      margin-bottom: 0;
-    }
-    .contributor-name-and-actions {
-      line-height: 25px;
-      font-size: 14px;
-    }
-    .contribution-status {
-      line-height: 25px;
-    }
-    .role-field, .email-field, .phone-field, .referrer-field {
-      line-height: 24px;
-    }
-    .phone-field {
-      position: relative;
-      i {
-        position: absolute;
-        top: -3px;
-        right: 0;
-      }
-      div {
-        width: 87%;
-      }
-    }
-    .notes-field {
-      position: relative;
-      line-height: auto;
-      i {
-        position: absolute;
-        top: 4px;
-        right: 0;
-      }
-      label {
-        line-height: 24px;
-      }
-      div {
-        width: 87%;
-      }
-    }
-    .linkedin-url-field {
-      position: relative;
-      line-height: auto;
-      i {
-        position: absolute;
-        top: 0;
-        right: 0;
-      }
-      label {
-        line-height: 28px;
-      }
-      div {
-        width: 87%
-      }
-    }
-    .linkedin-checkbox-container.contributor-unpublished {
-      pointer-events: none;
-      opacity: 0.4;
-    }
-    .linkedin-checkbox-container {
-      line-height: 34px;
-    }
-  }  // .contribution-card
 
 
   /***********************************************/
@@ -162,20 +119,45 @@
     overflow-y: auto;
   }
 
-
-
-  /***********************************************/
-  /*          stories#edit customer logo
-  /***********************************************/
-
-  .fileinput .thumbnail {
-    background-color: #f5f5f5;
-    padding: 10px;
-  }
-
-
-  #customer-logo-form img {
-    max-height: 90px !important;
+  .fileinput.customer-logo {
+    position: relative;  // for positioning .change-image
+    padding-top: 14px;
+    padding-bottom: 0;
+    .thumbnail {
+      position: relative;  // for positioning image
+      height: 100px;
+      width: 270px;
+      img {
+        max-height: 90px;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+      }
+    }
+    div.image-requirements {
+      margin-bottom: 10px;
+    }
+    .change-image {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      padding: 6px;
+      font-size: 18px;
+      color: #666;
+      cursor: pointer;
+    }
+    .change-image:hover {
+      color: #222;
+    }
+    .thumbnail {
+      margin: 0;
+    }
+    .help-block {
+      margin: 6px 0;
+    }
   }
 
 

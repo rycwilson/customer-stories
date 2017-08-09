@@ -38,8 +38,8 @@
           } %>
 
     <%= render 'companies/curate/curate', { company: @company, story: @story,
-            workflow_stage: @workflow_stage, curate_view: @curate_view
-          } %>
+            workflow_stage: @workflow_stage, curate_view: @curate_view,
+            tab_select: @tab_select } %>
 
     <%= render 'companies/promote/promote',
           { company: @company, workflow_stage: @workflow_stage, } %>

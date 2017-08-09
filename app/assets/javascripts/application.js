@@ -14,7 +14,7 @@
 
 $(document).on('turbolinks:load', function (e) {
   setAppData();
-  constructPlugins();
+
 });
 
 // attach listeners BEFORE running any page-specific js

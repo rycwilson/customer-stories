@@ -3,9 +3,6 @@
   var flash = <%= raw @flash.to_json %> ||
         { status: 'success',
           mesg: 'Story published and Sponsored Story created' },
-      enableSwitches = function () {
-        $('input.bs-switch').bootstrapSwitch('disabled', false);
-      };
 
   flashDisplay(flash.mesg, flash.status, enableSwitches)
 

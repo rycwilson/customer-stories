@@ -3,7 +3,7 @@
 
   <div class="col-md-3 col-sm-4 layout-sidebar">
 
-    <%= render 'stories/edit/side_tabs' %>
+    <%= render 'stories/edit/side_tabs', { tab_select: tab_select } %>
 
   </div>
 
@@ -13,12 +13,12 @@
       <div class='row'>
         <div class="col-sm-12">
           <div>
-            <label style='margin:0'>Customer</label>&nbsp;&nbsp;
+            <label style='margin:0'>Customer</label>&nbsp;&nbsp;&nbsp;
             <span style='font-family:"Lato";font-size:18px;color:#999'><%= story.customer.name %></span>
           </div>
           <div>
             <!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
-            <label style='margin:0'>Story Title</label>&nbsp;&nbsp;
+            <label style='margin:0'>Story Title</label>&nbsp;&nbsp;&nbsp;
           <!-- no turbolinks, so linkedin widgets load properly -->
           <!-- ref: http://stackoverflow.com/questions/17600093/rails-javascript-not-loading-after-clicking-through-link-to-helper -->
             <a href="<%= story.csp_story_path %>" data-turbolinks='false'

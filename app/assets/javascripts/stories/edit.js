@@ -32,6 +32,18 @@ function storiesEditListeners () {
 
     })
 
+    .on('click', '.customer-logo .change-image',
+      function () {
+        var $previewImg = $(this).closest('.fileinput').find('.fileinput-preview img');
+        if ($previewImg.attr('src')) {
+          // click on the preview
+          $(this).closest('.fileinput').find('.thumbnail')[1].click();
+        } else {
+          // click on the placeholder
+          $(this).closest('.fileinput').find('.thumbnail')[0].click();
+        }
+      })
+
     // TODO: https://stackoverflow.com/questions/2742813
     .on('input', '#story_video_url', function (e) {
       // https://www.youtube.com/watch?v=BAjqPZY8sFg or
@@ -141,73 +153,6 @@ function storiesEditBIPListeners () {
 
 function storiesEditSettingsListeners () {
 
-  // $(document).on('switchChange.bootstrapSwitch', '.bs-switch', function (event, state) {
-  //   $(this).parent().submit();
-  //   $(this).closest('form').find('input.bs-switch').bootstrapSwitch('disabled', true);
-  // });
-
-  $(document).on('ajax:success', '#story-publish-form',
-    function (event, story) {
-      var $publishSwitch = $("#story_published"),
-          $logoPublishSwitch = $("#story_logo_published"),
-          createAds = function (story) {
-            if (story.published && story.previous_changes.published) {
-              return true;
-            } else { return false; }
-          },
-          removeAds = function (story) {
-            if (story.previous_changes.published && !story.published) {
-              return true;
-            }
-            else { return false; }
-          };
-      /*
-        server may have changed values to prevent invalid state ...
-        it either ...
-          - turned logo_publish on to track story_publish=on
-          - turned story_publish off to track logo_publish=off
-      */
-      if (!story.published && $publishSwitch.bootstrapSwitch('state') === true) {
-        $publishSwitch.bootstrapSwitch('state', false);
-      } else if (story.logo_published && $logoPublishSwitch.bootstrapSwitch('state') === false) {
-        $logoPublishSwitch.bootstrapSwitch('state', true);
-      }
-
-      // create the ad
-      if (createAds(story)) {
-        $.post({
-          url: '/stories/' + story.id + '/promote',
-          success: function (data, status, xhr) {
-            $.post({
-              url: '/stories/' + story.id + '/adwords',
-              dataType: 'script'
-            });
-          }
-        });
-
-      // remove ad if story unpublished;
-      // remove the adwords ad first, as ad.ad_id will be necessary to make the api call
-      } else if (removeAds(story)) {
-        $.ajax({
-          url: '/stories/' + story.id + '/adwords',
-          method: 'delete',
-          dataType: 'json',
-          success: function (data, status, xhr) {
-            $.ajax({
-              url: '/stories/' + story.id + '/promote',
-              method: 'delete',
-              dataType: 'script',
-              success: function () {
-                // corresponds to flash timeout
-                setTimeout(function () {
-                  $('input.bs-switch').bootstrapSwitch('disabled', false);
-                }, 3000);
-              }
-            });
-          }
-        });
-      }
-    });
 
   $(document).on('click', '#approval-pdf-btn', function (e) {
     var missingInfo = $(this).data('missing-curator-info');

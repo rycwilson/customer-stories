@@ -11,21 +11,21 @@
     </a>
   </li>
 
-  <li class="active">
+  <li class="<%= tab_select == 'story-settings' ? 'active' : (tab_select.nil? ? 'active' : '') %>">
     <a href="#story-settings" data-toggle="tab">
       <i class="fa fa-gear"></i>
       &nbsp;&nbsp;Story Settings
     </a>
   </li>
 
-  <li>
+  <li class="<%= tab_select == 'story-content' ? 'active' : '' %>">
     <a href="#story-content" data-toggle="tab">
       <i class="fa fa-edit"></i>
       &nbsp;&nbsp;Story Content
     </a>
   </li>
 
-  <li>
+  <li class="<%= tab_select == 'curate-contributors' ? 'active' : '' %>">
     <a href="#curate-contributors" data-toggle="tab">
       <i class="fa fa-users"></i>
       &nbsp;&nbsp;Success Contributors
