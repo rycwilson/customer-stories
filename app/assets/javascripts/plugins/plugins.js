@@ -22,9 +22,9 @@ function constructPlugins () {
   initClicky();
   initXeditable();
 
-  $('.best_in_place').best_in_place();
+  // $('.best_in_place').best_in_place();
   $('.bs-switch').bootstrapSwitch({ size: 'small' });
-  $("input[type='tel']").inputmask("999-999-9999");
+  // $("input[type='tel']").inputmask("999-999-9999");
   $('.mini-colors').minicolors({ theme: 'bootstrap' });
   /*
     dirtyFields() plugin will apply .dirtyField class to label on input change
@@ -32,23 +32,7 @@ function constructPlugins () {
     Ensure "for" attribute is present on label tag
     and matches the id attribute of the corresponding input field.
   */
-  $('#story-tags-form').dirtyFields();
   $('#outbound-links-form').dirtyFields();
-
-  $('#activity-feed-btn').popover({
-    title: "Last day's activity",
-    placement: 'right',
-    html: 'true',
-    trigger: 'manual',
-    template: '<div class="popover activity-feed-popover" role="tooltip">' +
-                '<div class="arrow"></div>' +
-                '<div style="position:relative">' +
-                  '<h3 class="popover-title"></h3>' +
-                  '<button style="z-index:1;position:absolute;top:3px;right:8px" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
-                '</div>' +
-                '<div class="popover-content"></div>' +
-              '</div>'
-  });
 
 }
 

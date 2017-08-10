@@ -10,7 +10,6 @@ function companiesShow () {
 
 function companiesShowListeners () {
 
-  newStoryModalListeners();
   crowdsourceListeners();
   curateListeners();
   storiesEditListeners();
@@ -37,40 +36,7 @@ function companiesShowListeners () {
 
 }
 
-function newStoryModalListeners () {
 
-  // jquery-ujs functionality gets lost after turbolinks navigation,
-  // so handle it manually ... (limited to modals?)
-  $(document).on('click', '#new-story-modal input[type="submit"]',
-    function (event) {
-      event.preventDefault();
-      $.rails.handleRemote($('#new-story-modal form'));
-    });
-
-  /*
-    Detect changes in new story modal required inputs, and enable
-    submit button accordingly.
-    'change' event is for the select boxes; 'input' for text box
-  */
-  $(document).on('change input', '#new-story-modal', function () {
-    if ($('#story_customer').val() &&
-        $('#story_title').val()) {
-      $(this).find("[type='submit']").prop('disabled', false);
-    }
-    else {
-      $(this).find("[type='submit']").prop('disabled', true);
-    }
-  });
-
-  // reset new story modal form
-  $(document).on('hidden.bs.modal', '#new-story-modal', function () {
-    // form inputs to default values... (in this case just title)
-    $(this).find('form')[0].reset();
-    // select2 inputs to default values...
-    $('.new-story-customer').select2('val', '');  // single select
-    $('.new-story-tags').val('').trigger('change');  // multiple select
-  });
-}
 
 
 

@@ -99,26 +99,30 @@ class StoriesController < ApplicationController
   # -> due to the way form parameters are name-spaced
   def create
     new_story = params[:story]
-    if new_customer? new_story[:customer]
-      customer = Customer.new name: new_story[:customer], company_id: @company.id
+    if new_customer?(new_story[:customer])
+      customer = Customer.new(name: new_story[:customer], company_id: @company.id)
       unless customer.save
         @errors = "Customer is required"
         respond_to { |format| format.js } and return
       end
     else
-      customer = Customer.find new_story[:customer]
+      customer = Customer.find(new_story[:customer])
     end
-    success = Success.create customer_id: customer.id, curator_id: current_user.id
-    story = Story.new title: new_story[:title], success_id: success.id
-    if story.save
-      story.assign_tags new_story
-      story.success.create_default_prompts
+    if params[:story][:success_id].present?
+      success = Success.find(params[:story][:success_id])
+    else
+      success = Success.create(name: new_story[:title], customer_id: customer.id, curator_id: current_user.id)
+    end
+    @story = Story.new(title: new_story[:title], success_id: success.id)
+    if @story.save
+      @story.assign_tags(new_story)
+      @story.success.create_default_prompts
       # flash[:success] = "Story created successfully"
       # # prevent js response from killing flash message
       # flash.keep(:success)
-      @redirect_url = File.join request.base_url, edit_story_path(story.id)
+      # redirect_to(curate_story_path(@story.slug))
     else
-      @errors = story.errors.full_messages.join(', ')
+      @errors = @story.errors.full_messages.join(', ')
     end
     respond_to { |format| format.js }
   end
@@ -341,7 +345,7 @@ class StoriesController < ApplicationController
   # or a string (new customer)
   # this method ensures that a number is treated as a number and a string is
   # treated as a string, e.g. "3M" is treated as a string
-  def new_customer? customer
+  def new_customer? (customer)
     !Float(customer)  # if a number then customer already exists -> return false
     rescue ArgumentError  # if error then customer is a string -> return true
       true

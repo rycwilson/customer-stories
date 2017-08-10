@@ -24,6 +24,7 @@ $(document).one('turbolinks:load', function () {
 
 $(document).on('turbolinks:load', function (e) {
   setAppData();
+  constructPlugins();
   app.init();
   // ref: https://clicky.com/help/apps-plugins#rails4turbo
   // clicky.log( document.location.pathname + document.location.search, document.title, 'pageview' )

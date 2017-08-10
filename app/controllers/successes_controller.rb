@@ -8,7 +8,7 @@ class SuccessesController < ApplicationController
     respond_to() do |format|
       format.json do
         render({
-          json: company.successes.to_json({
+          json: company.successes.story_candidates.to_json({
                   only: [:id, :name, :description], methods: [:contributions_count],
                   include: {
                     curator: { only: [:id], methods: [:full_name] },

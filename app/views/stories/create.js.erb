@@ -1,11 +1,12 @@
 (function () {
 
-  $('#new-story-modal').modal('hide');
+  var story = <%= raw @story.to_json %>;
 
-  if ('<%= @redirect_url %>') {
-    window.location = '<%= @redirect_url %>'
-  } else {
+  if ('<%= @errors %>') {
     flashDisplay('<%= @errors %>', 'danger')
+
+  } else {
+    Turbolinks.visit('/curate/' + story.slug)
   }
 
 }());

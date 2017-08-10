@@ -259,10 +259,17 @@ function crowdsourceListeners () {
     .on('click', '.success-actions-dropdown .create-story',
       function () {
         var $modal = $('#new-story-modal'),
-            customerId = $(this).closest('tr').data('customer-id');
-        $modal.modal('show');
+            customerId = $(this).closest('tr').data('customer-id'),
+            successId = $(this).closest('tr').data('success-id');
         $modal.find('#story_customer').val(customerId).trigger('change');
+        $modal.find('#story_success_id').val(successId);
+        $modal.modal('show');
       })
+    .on('shown.bs.modal', '#new-story-modal', function () {
+      if (window.location.pathname === '/crowdsource') {
+        $(this).find('#story_customer')[0].focus();
+      }
+    })
 
     .on('click', '.success-actions-dropdown .new-contributor',
       function (e) {
@@ -289,9 +296,9 @@ function crowdsourceListeners () {
 
     // no striping for grouped rows, yes striping for ungrouped
     // manipulate via jquery; insufficient to just change even/odd classes
-    .on('change', '#toggle-group-by-success, #toggle-group-by-customer',
+    .on('change', '#toggle-group-by-customer, #toggle-group-by-success',
       function () {
-        if ($(this).attr('id') === 'toggle-group-by-success') {
+        if ($(this).is('#toggle-group-by-success')) {
           toggleStriped($('#crowdsource-contributors-table'));
         } else {
           toggleStriped($('#successes-table'));

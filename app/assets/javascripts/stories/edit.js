@@ -3,10 +3,10 @@ function storiesEdit () {
   loadVideoThumbnail();
   // loadCspOrPlaceholderWidgets();
 
-  $.when( constructPlugins() )
-    .then(function () {
-      $('#curate-story .layout-main').css('visibility', 'visible');
-    });
+  // $.when( constructPlugins() )
+  //   .then(function () {
+
+  //   });
 }
 
 function storiesEditListeners () {

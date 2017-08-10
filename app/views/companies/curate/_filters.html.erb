@@ -1,72 +1,69 @@
 
+<div id='curate-filters'>
 
+  <h5 class='lead' style='font-size:20px; margin-bottom:12px'>Search</h5>
 
-<div id='curate-filters' style='visibility:hidden'>
+  <div>
 
+    <form>
 
-<h5 class='lead' style='font-size:20px; margin-bottom:12px'>Search</h5>
-
-
-<div>
-  <form>
-
-    <div class="form-group">
-      <label for="">Curator</label>
-      <%= select_tag('curator_select',
-            options_for_select(company.curators.map() do |c|
-              [c.full_name, c.id]
-            end.unshift(['All Curators', 0])),
-            { class: 'curate curator-select form-control', style: 'width:100%' }
-          ) %>
-    </div>
-
-    <div class="form-group">
-      <label for="">Story Category</label>
-      <%= select_tag('category_select',
-            options_for_select(company.story_categories.select_options.unshift(['All Categories', 0])),
-            { class: 'curate category-select form-control', style: 'width:100%' }
-          ) %>
-    </div>
-
-    <div class="form-group">
-      <label for="">Product</label>
-      <%= select_tag('product_select',
-            options_for_select(company.products.select_options.unshift(['All Products', 0])),
-            { class: 'curate product-select form-control', style: 'width:100%' }
-          ) %>
-    </div>
-
-    <div class="form-group">
-      <div>
-        <label>
-          <input class='curate published' type="checkbox">&nbsp;
-          Published
-        </label>
+      <div class="form-group">
+        <label for="">Curator</label>
+        <%= select_tag('curator_select',
+              options_for_select(company.curators.map() do |c|
+                [c.full_name, c.id]
+              end.unshift(['All Curators', 0])),
+              { class: 'curate curator-select form-control', style: 'width:100%' }
+            ) %>
       </div>
-      <% if company.stories.select { |story| story.preview_published? }.present? %>
+
+      <div class="form-group">
+        <label for="">Story Category</label>
+        <%= select_tag('category_select',
+              options_for_select(company.story_categories.select_options.unshift(['All Categories', 0])),
+              { class: 'curate category-select form-control', style: 'width:100%' }
+            ) %>
+      </div>
+
+      <div class="form-group">
+        <label for="">Product</label>
+        <%= select_tag('product_select',
+              options_for_select(company.products.select_options.unshift(['All Products', 0])),
+              { class: 'curate product-select form-control', style: 'width:100%' }
+            ) %>
+      </div>
+
+      <div class="form-group">
         <div>
           <label>
-            <input class='curate preview-published' type="checkbox" checked='true'>&nbsp;
-            Preview published
+            <input class='curate published' type="checkbox">&nbsp;
+            Published
           </label>
         </div>
-      <% end %>
-      <div>
-        <label>
-          <input class='curate logo-published' type="checkbox" checked='true'>&nbsp;
-          Logo published
-        </label>
+        <% if company.stories.select { |story| story.preview_published? }.present? %>
+          <div>
+            <label>
+              <input class='curate preview-published' type="checkbox" checked='true'>&nbsp;
+              Preview published
+            </label>
+          </div>
+        <% end %>
+        <div>
+          <label>
+            <input class='curate logo-published' type="checkbox" checked='true'>&nbsp;
+            Logo published
+          </label>
+        </div>
+        <div>
+          <label>
+            <input class='curate pending-curation' type="checkbox" checked='true'>&nbsp;
+            Pending curation
+          </label>
+        </div>
       </div>
-      <div>
-        <label>
-          <input class='curate pending-curation' type="checkbox" checked='true'>&nbsp;
-          Pending curation
-        </label>
-      </div>
-    </div>
 
-  </form>
+    </form>
 
-</div>
+  </div>
 
 </div>

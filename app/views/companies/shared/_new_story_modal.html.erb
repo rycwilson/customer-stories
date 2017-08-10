@@ -11,8 +11,10 @@
       <div class="modal-body">
 
         <!-- Note: all form inputs name-spaced under 'story' -->
-        <%= form_tag company_stories_path(company), remote: true,
-              class: 'form-horizontal' do %>
+        <%= form_tag(company_stories_path(company), remote: true,
+              id: 'new-story-form', class: 'form-horizontal') do %>
+
+          <%= hidden_field_tag('story[success_id]', nil) %>
 
           <div class='form-group required-input'>
             <%= label_tag 'story[customer]', 'Customer',
@@ -70,6 +72,8 @@
             </div>
           </div>
 
+        <% end %>  <!-- form -->
+
       </div>
 
       <div class="modal-footer">
@@ -78,9 +82,9 @@
           Cancel
         </button>
 
-          <%= submit_tag 'Create Story', class: 'btn btn-success', disabled: true %>
-
-        <% end %>  <!-- form_for -->
+        <button type='submit' form='new-story-form' class='btn btn-success' disabled>
+          Create Story
+        </button>
 
       </div>
 

@@ -1,16 +1,11 @@
 
 function curate () {
 
-  $.when( constructPlugins() )
-    .then(function () {
-      $('#curate-filters').css('visibility', 'visible');
-      preselectFilters();
-    });
   // don't need to call this here as the auto curator-select change event will trigger it
   // filterCurateGallery();
-  // $('.curate.curator-select').val(
-  //     $('.curate.curator-select').children('[value="' + app.current_user.id.toString() + '"]').val()
-  //   ).trigger('change', { auto: true });
+  $('.curate.curator-select').val(
+      $('.curate.curator-select').children('[value="' + app.current_user.id.toString() + '"]').val()
+    ).trigger('change', { auto: true });
 }
 
 // keep track of filters with session cookies
@@ -85,6 +80,30 @@ function curateListeners () {
         }
         Cookies.set(filterCookieName, filterCookieVal);
         filterCurateGallery();
+      })
+
+      /*
+        Detect changes in new story modal required inputs, and enable
+        submit button accordingly.
+        'change' event is for the select boxes; 'input' for text box
+      */
+      .on('change input', '#new-story-modal', function () {
+        if ($('#story_customer').val() &&
+            $('#story_title').val()) {
+          $(this).find("[type='submit']").prop('disabled', false);
+        }
+        else {
+          $(this).find("[type='submit']").prop('disabled', true);
+        }
+      })
+
+      // reset new story modal form
+      .on('hidden.bs.modal', '#new-story-modal', function () {
+        // form inputs to default values... (in this case just title)
+        $(this).find('form')[0].reset();
+        // select2 inputs to default values...
+        $('.new-story-customer').select2('val', '');  // single select
+        $('.new-story-tags').val('').trigger('change');  // multiple select
       });
 
 }
