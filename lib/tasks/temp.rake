@@ -55,8 +55,10 @@ namespace :temp do
 
   task success_names: :environment do
     Success.all.each() do |success|
-      if success.story.present?
+      if success.name.blank? && success.story.present?
         success.update(name: success.story.title)
+      elsif success.name.blank?
+        success.update(name: success.customer.name + ' - Customer Success')
       end
     end
   end
