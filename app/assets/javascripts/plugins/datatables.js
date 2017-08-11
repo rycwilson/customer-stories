@@ -64,9 +64,8 @@ function initSuccessesTable () {
       url: '/successes',
       dataSrc: ''
     },
-    paging: true,
+    dom: 'tip',
     pageLength: 100,
-    lengthChange: false,
     order: [[ customerIndex, 'asc' ]],
     columns: [
       { // td.success-details
@@ -192,8 +191,9 @@ function initContributorsTable (workflowStage) {
       url: '/contributions',
       dataSrc: ''
     },
-    dom: 'ti',  // table and info only; no length change control or pagination
+    dom: 'tip',
     // select: true,  // https://datatables.net/extensions/select/
+    pageLength: 100,
     autoWidth: false,
     order: [[ successIndex, 'asc' ]],
     columns: [
@@ -281,6 +281,20 @@ function initContributorsTable (workflowStage) {
       startRender: function (groupRows, successName) {
         // console.log($(this))   //  [RowGroup]
         // console.log(groupRows.data())
+        var link; // link to either the success or story (if story exists)
+        if (groupRows.data()[0].success.story) {
+          link = '<span style="font-weight:600">' +
+                   '<a href="/curate/' + groupRows.data()[0].success.story.slug + '" class="story">' +
+                      groupRows.data()[0].success.story.title +
+                   '</a>' + '\xa0\xa0(Story)' +
+                 '</span>';
+        } else {
+          link = '<span style="font-weight:600">' +
+                   '<a href="javascript:;" class="success">' +
+                      successName +
+                   '</a>' + '\xa0\xa0(Story Candidate)' +
+                 '</span>';
+        }
         return $('<tr/>').append(
                   '<td colspan="5">' +
                      '<span style="font-weight:600">' +
@@ -289,9 +303,7 @@ function initContributorsTable (workflowStage) {
                      '<span style="font-weight: normal">' +  // em-dash not bold
                        '&nbsp;&nbsp;&#8211;&nbsp;&nbsp;' +
                      '</span>' +
-                     '<a href="javascript:;" class="success" style="font-weight:600">' +
-                        successName +
-                     '</a>' +
+                     link +
                   '</td>');
       }
     },
@@ -300,14 +312,14 @@ function initContributorsTable (workflowStage) {
       $(row).attr('data-success-id', data.success.id);
       $(row).attr('data-contributor-id', data.contributor.id);
       // make sure to skip the hidden columns (2, 4, 5)
-        $(row).children().eq(0).addClass('contributor-details');
-        $(row).children().eq(1).addClass('contributor');
-        // $(row).children().eq(2).addClass('success');
-        $(row).children().eq(2).addClass('email-template');
-        // $(row).children().eq(4).addClass('curator');
-        // $(row).children().eq(5).addClass('customer');
-        $(row).children().eq(3).addClass('next-step');
-        $(row).children().eq(4).addClass('dropdown actions-dropdown');
+      $(row).children().eq(0).addClass('contributor-details');
+      $(row).children().eq(1).addClass('contributor');
+      // $(row).children().eq(2).addClass('success');
+      $(row).children().eq(2).addClass('email-template');
+      // $(row).children().eq(4).addClass('curator');
+      // $(row).children().eq(5).addClass('customer');
+      $(row).children().eq(3).addClass('next-step');
+      $(row).children().eq(4).addClass('dropdown actions-dropdown');
     },
     // buttons: [
     //     { extend: 'create', editor: editor },
@@ -348,8 +360,8 @@ function initContributorsTable (workflowStage) {
           // allowClear: true
         });
 
-        $curatorSelect.val( app.current_user.id.toString() )
-          .trigger('change', { auto: true });
+        // $curatorSelect.val( app.current_user.id.toString() )
+        //   .trigger('change', { auto: true });
 
         // need to put this in the global space so it can be seen by
         // functions in crowdsourceListeners()
@@ -376,7 +388,6 @@ function initContributorsTable (workflowStage) {
             { name: 'actions' }
           ]
         });
-
 
       // workflowStage == curate
       // contributors under a Story don't have curator and filter selects

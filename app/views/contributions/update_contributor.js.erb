@@ -7,7 +7,7 @@
                          }) %>,
       $tr = $('tr[data-contribution-id="' + contribution.id.toString() + '"]').next(),
       updateAppData = function (contribution) {
-        cIndex = app.contributions.findIndex(function (c) {
+        var cIndex = app.contributions.findIndex(function (c) {
           return c.id == contribution.id
         })
         for (attr in contribution.previous_changes) {
@@ -17,6 +17,11 @@
           app.contributions[cIndex].contributor[attr] = contribution.contributor[attr];
         }
       };
+
+  $tr.find('.fa-spinner, .fa-check').toggle();
+  window.setTimeout(function () {
+    $tr.find('.fa-check, span').toggle();
+  }, 2000);
 
   updateAppData(contribution);
 

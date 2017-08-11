@@ -18,7 +18,8 @@ class ContributionsController < ApplicationController
                       only: [:id, :name],
                       include: {
                         curator: { only: [:id], methods: [:full_name] },
-                        customer: { only: [:id, :name] }
+                        customer: { only: [:id, :name] },
+                        story: { only: [:id, :title, :slug] }
                       }
                     },
                     contributor: { only: [:id], methods: [:full_name] },
@@ -141,7 +142,6 @@ class ContributionsController < ApplicationController
         # TODO: error
       end
     end
-    # contribution submission (via email link) ...
   end
 
   # responds with confirm_request.js

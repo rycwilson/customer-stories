@@ -84,23 +84,27 @@
 
           <div class="linkedin-profile {{= contribution.contributor.linkedin_url ? '' : 'hidden' }}" >
 
-            <!-- // tooltip wrapper -->
-            <div class='form-group'
-              data-toggle="{{= contribution.contributor_unpublished ? 'tooltip' : '' }}"
-              data-placement="{{= contribution.contributor_unpublished ? 'top' : '' }}"
-              title="{{= contribution.contributor_unpublished ? 'Contributor has removed their profile from this story' : '' }}">
+            <!-- // don't render checkbox if still in the crowdsource stage -->
+            {{ if (workflowStage === 'curate') { }}
+              <!-- // tooltip wrapper -->
+              <div class='form-group'
+                data-toggle="{{= contribution.contributor_unpublished ? 'tooltip' : '' }}"
+                data-placement="{{= contribution.contributor_unpublished ? 'top' : '' }}"
+                title="{{= contribution.contributor_unpublished ? 'Contributor has removed their profile from this story' : '' }}">
 
-              <div class="linkedin-checkbox-container {{= contribution.contributor_unpublished ? 'contributor-unpublished' : '' }}">
-                <label for='contribution-publish-contributor-{{= contribution.contributor.id }}'>
-                  <input type='checkbox'
-                    id='contribution-publish-contributor-{{= contribution.contributor.id }}'
-                    name='contribution[publish_contributor]'
-                    checked='{{= contribution.publish_contributor }}'>
-                  <span>&nbsp;&nbsp;Publish profile with this Story</span>
-                </label>
-              </div>
+                <div class="linkedin-checkbox-container {{= contribution.contributor_unpublished ? 'contributor-unpublished' : '' }}">
+                  <label for='contribution-publish-contributor-{{= contribution.contributor.id }}'>
+                    <input type='checkbox'
+                      id='contribution-publish-contributor-{{= contribution.contributor.id }}'
+                      name='contribution[publish_contributor]'
+                      checked='{{= contribution.publish_contributor }}'>
+                    <span>&nbsp;&nbsp;Publish profile with this Story</span>
+                  </label>
+                </div>
 
-            </div>  <!-- // tooltip wrapper -->
+              </div>  <!-- // tooltip wrapper -->
+
+            {{ } }}
 
       <!-- // profile widget -->
       <!-- // render csp widget in client so width can be determined dynamically -->
@@ -140,9 +144,9 @@
             Cancel
           </button>
           <button type="submit" class="btn btn-sm btn-success text-center">
-            <span class='submit-toggle'>Save changes</span>
-            <i class='fa fa-spinner fa-pulse submit-toggle'
-               style='display:none'></i>
+            <span>Save changes</span>
+            <i class='fa fa-spinner fa-pulse' style='display:none'></i>
+            <i class='fa fa-check' style='display:none'></i>
           </button>&nbsp;
         </div>
       </div>

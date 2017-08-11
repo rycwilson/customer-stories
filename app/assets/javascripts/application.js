@@ -13,7 +13,7 @@
 //= require init
 
 // attach listeners BEFORE running any page-specific js
-// (e.g. if page-specific js manually triggers an event)
+// (e.g. if page-specific js manually triggers an event as in promote settings)
 $(document).one('turbolinks:load', function () {
   attachAppListeners();
   attachCompaniesListeners();
@@ -54,7 +54,6 @@ function attachAppListeners () {
 
 
   $(document)
-
     .on('click', '#workflow-tabs a', function (e) {
       e.preventDefault();
       var currentWorkflowPath = window.location.pathname,
@@ -68,8 +67,15 @@ function attachAppListeners () {
       } else {
         Turbolinks.visit(newWorkflowPath);
       }
-
-    });
+    })
+    // apply styling when clicking on a company nav dropdown option,
+    .on('click', 'a[href="/company-settings"], a[href="/user-profile"]',
+      function () {
+        var $thisDropdown = $(this).closest('li.dropdown'),
+            $otherDropdown = $thisDropdown.parent().find('li.dropdown:not(.open)');
+        $thisDropdown.addClass('active');
+        $otherDropdown.removeClass('active');
+      });
 
   //
   window.onpopstate = function (e) {

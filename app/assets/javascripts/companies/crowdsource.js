@@ -248,6 +248,11 @@ function crowdsourceListeners () {
         }
       })
 
+    .on('submit', '#contributor-form', function () {
+      $(this).find('span').toggle();
+      $(this).find('.fa-spinner').toggle();
+    })
+
     .on('click', '.success-actions-dropdown .manage-contributors',
       function (e) {
         // // if (no contributions) { e.preventDefault(); }
@@ -336,10 +341,12 @@ function crowdsourceListeners () {
 
     // contributors child rows
     .on('click', 'td.contributor-details', function () {
-      var dt = $(this).closest('table').DataTable(),
+      var $table = $(this).closest('table'),
+          dt = $(this).closest('table').DataTable(),
           $tr = $(this).closest('tr'),
           dtRow = dt.row($tr),
           template = _.template($('#contributor-template').html()),
+          workflowStage = $table.attr('id').slice(0, $table.attr('id').indexOf('-')),
           contributionId = $tr.data('contribution-id'),
           contribution = app.contributions.find(function (c) {
             return c.id === contributionId;
@@ -352,8 +359,11 @@ function crowdsourceListeners () {
         $tr.removeClass('shown active');
       }
       else {
-        dtRow.child( template({ contribution: contribution }) ).show();
+        dtRow.child(
+          template({ contribution: contribution, workflowStage: workflowStage })
+        ).show();
         $tr.children().last().css('color', 'white');
+        $("input[type='tel']").inputmask("999-999-9999");
         $tr.find('td.contributor-name > span').addClass('shown');
         if (contribution.contributor.linkedin_url) {
           loadCspOrPlaceholderWidget($tr.next(), contribution);

@@ -24,7 +24,7 @@ function constructPlugins () {
 
   // $('.best_in_place').best_in_place();
   $('.bs-switch').bootstrapSwitch({ size: 'small' });
-  // $("input[type='tel']").inputmask("999-999-9999");
+  $("input[type='tel']").inputmask("999-999-9999");
   $('.mini-colors').minicolors({ theme: 'bootstrap' });
   /*
     dirtyFields() plugin will apply .dirtyField class to label on input change
