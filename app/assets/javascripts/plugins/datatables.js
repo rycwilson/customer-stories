@@ -10,10 +10,13 @@ function initDataTables () {
     $('a[href="#measure-stories-container"]')[0].click();
   }
 
-  initSuccessesTable();
-  initContributorsTable('crowdsource');
-  initContributorsTable('curate');
-  initPromotedStoriesTable();
+  // if curator signed in ...
+  if (app.company) {
+    initSuccessesTable();
+    initContributorsTable('crowdsource');
+    initContributorsTable('curate');
+    initPromotedStoriesTable();
+  }
 
   // Don't specify first column as type: 'date'
   // with moment.js install, doing so will only screw it up

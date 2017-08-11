@@ -12,6 +12,54 @@
 //= require profile/profile
 //= require init
 
+// $(document).on('turbolinks:load', function (e) {
+//   setAppData();
+//   constructPlugins();
+// });
+
+// // attach listeners BEFORE running any page-specific js
+// // (e.g. if page-specific js manually triggers an event)
+// $(document).one('turbolinks:load', function () {
+//   attachAppListeners();
+//   attachCompaniesListeners();
+//   attachStoriesListeners();
+//   attachProfileListeners();
+//   attachContributionsListeners();
+// });
+
+// $(document).on('turbolinks:load', function (e) {
+//   app.init();
+//   // ref: https://clicky.com/help/apps-plugins#rails4turbo
+//   // clicky.log( document.location.pathname + document.location.search, document.title, 'pageview' )
+// });
+
+$(document).on('turbolinks:load', function (e) {
+  setAppData();
+  constructPlugins();
+});
+
+// attach listeners BEFORE running any page-specific js
+// (e.g. if page-specific js manually triggers an event)
+$(document).one('turbolinks:load', function () {
+  attachAppListeners();
+  attachCompaniesListeners();
+  attachStoriesListeners();
+  attachProfileListeners();
+  attachContributionsListeners();
+});
+
+$(document).on('turbolinks:load', function (e) {
+  app.init();
+  // ref: https://clicky.com/help/apps-plugins#rails4turbo
+  // clicky.log( document.location.pathname + document.location.search, document.title, 'pageview' )
+});
+
+
+
+
+
+
+
 // attach listeners BEFORE running any page-specific js
 // (e.g. if page-specific js manually triggers an event as in promote settings)
 $(document).one('turbolinks:load', function () {
@@ -24,7 +72,6 @@ $(document).one('turbolinks:load', function () {
 
 $(document).on('turbolinks:load', function (e) {
   setAppData();
-  constructPlugins();
   app.init();
   // ref: https://clicky.com/help/apps-plugins#rails4turbo
   // clicky.log( document.location.pathname + document.location.search, document.title, 'pageview' )
