@@ -360,8 +360,8 @@ function initContributorsTable (workflowStage) {
           // allowClear: true
         });
 
-        // $curatorSelect.val( app.current_user.id.toString() )
-        //   .trigger('change', { auto: true });
+        $curatorSelect.val( app.current_user.id.toString() )
+          .trigger('change', { auto: true });
 
         // need to put this in the global space so it can be seen by
         // functions in crowdsourceListeners()
