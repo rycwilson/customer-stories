@@ -26,7 +26,6 @@ function crowdsourceListeners () {
 
     .on('change', '.new-or-existing-contributor.buttons input:radio',
       function (e) {
-        console.log('HEY FUCKHEAD')
         // if came from modal close / form reset, check values
         $('.new-or-existing-contributor:not(.buttons)').toggle();
       })

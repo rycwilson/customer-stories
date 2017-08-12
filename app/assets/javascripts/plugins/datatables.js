@@ -395,10 +395,19 @@ function initContributorsTable (workflowStage) {
       // workflowStage == curate
       // contributors under a Story don't have curator and filter selects
       } else {
+
         $(this).DataTable()
           .column('curator:name').search(app.current_user.id)
           .column('success:name').search($('#story-settings').data('success-name'))
           .draw();
+
+        // no row grouping for curate-contributors
+        if ($(this).attr('id').includes('curate')) {
+          $(this).find('tr.group').remove();
+        }
+        // since no row grouping, add .table-striped
+        $(this).addClass('table-striped');
+
       }
       // $('#' + workflowStage + ' a[href="#' + workflowStage + '-contributors"]')
       //   .find('.fa-spinner').hide();
