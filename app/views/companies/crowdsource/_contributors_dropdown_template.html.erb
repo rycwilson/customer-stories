@@ -9,34 +9,51 @@
 
     <ul class='dropdown-menu'>
 
-      <li>
-        <a href="javascript:;">
-          <span>Send Request</span>
-        </a>
-      </li>
+      {{ if (status === 'pre_request') { }}
+
+        <li>
+          <a href="javascript:;">
+            <i class='fa fa-envelope-o action'></i>&nbsp;
+            <span>Send Request</span>
+          </a>
+        </li>
+
+      {{ } else { }}
+
+        <li>
+          <a href="javascript:;">
+            <i class='fa fa-search action'></i>&nbsp;
+            <span>View Sent Request</span>
+          </a>
+        </li>
+
+      {{ } }}
+
+      {{ if (workflowStage === 'crowdsource') { }}
+
+        <li class='story-candidate'>
+          <a href="javascript:;">
+            <i class='fa fa-search action'></i>&nbsp;
+            <span>View Story{{= story? '' : ' Candidate' }}</span>
+          </a>
+        </li>
+
+      {{ } }}
+
+      {{ if (status === 'contribution' || status === 'feedback') { }}
+
+        <li>
+          <a href="javascript:;">
+            <i class='fa fa-check action'></i>&nbsp;
+            <span>Mark as Complete</span>
+          </a>
+        </li>
+
+      {{ } }}
 
       <li>
         <a href="javascript:;">
-          <span>View Sent Request</span>
-        </a>
-      </li>
-
-      <li class='story-candidate'>
-        <a href="javascript:;">
-          <span>View Story Candidate</span>
-        </a>
-      </li>
-
-      <li>
-        <a href="javascript:;">
-          <!-- // <i class='glyphicon glyphicon-remove'></i>&nbsp;&nbsp; -->
-          <span>Mark as Complete</span>
-        </a>
-      </li>
-
-      <li>
-        <a href="javascript:;">
-          <!-- // <i class='glyphicon glyphicon-remove'></i>&nbsp;&nbsp; -->
+          <i class='fa fa-remove action'></i>&nbsp;
           <span>Remove</span>
         </a>
       </li>

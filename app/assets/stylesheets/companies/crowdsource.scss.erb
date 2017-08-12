@@ -29,8 +29,15 @@
       margin: -2em;
       // color: #666;
     }
+    i.action {
+      color: #666;
+      width: 17px;
+    }
+    i.action + span {
+      color: #444;
+    }
   }
-  tr.active i {
+  tr.active i:not(.action) {
     color: white;
     text-decoration: none;
   }
@@ -66,7 +73,7 @@
 
   td.actions-dropdown {
     .dropdown-menu {
-      left: -80px;
+      left: -76px;
     }
   }
 
@@ -175,7 +182,7 @@
       > div {
         position: relative;
         .dropdown-menu {
-          left: -90px;
+          left: -120px;
         }
       }
     }

@@ -256,11 +256,15 @@ function initContributorsTable (workflowStage) {
         // <td class='dropdown actions-dropdown'>
       },
       {
-        data: null,
-        render: function () {
+        data: 'status',
+        render: function (data, type, row, meta) {
                   return _.template(
                             $('#contributors-dropdown-template').html()
-                          )({});
+                          )({
+                              status: data,
+                              workflowStage: workflowStage,
+                              story: row.success.story  // might be nil
+                            });
                 }
       },
     ],
