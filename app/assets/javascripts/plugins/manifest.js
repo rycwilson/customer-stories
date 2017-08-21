@@ -10,6 +10,8 @@
 //= require DataTables/datatables
 //= require datatables-editor-trial/js/dataTables.editor
 //= require datatables-plugins/select2/editor.select2.js
+// = require datatables-old/media/js/jquery.dataTables
+//= require datatables-plugins/integration/bootstrap/3/dataTables.bootstrap
 
 //= require bootstrap-jasny/js/fileinput
 // require mvpready-core
