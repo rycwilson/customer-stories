@@ -65,6 +65,8 @@ function crowdsourceListeners () {
             placeholder: 'Select',
             data: contributors
           });
+
+        // if no contributors for this customer, disable the radio button and engage the tooltip
         if (contributors.length === 1) {  // empty (1 because placeholder)
           if ($('.new-or-existing-contributor.buttons input:radio:checked')
                   .val() === 'exists') {
@@ -73,9 +75,18 @@ function crowdsourceListeners () {
           }
           $('.new-or-existing-contributor.buttons input[value="exists"]')
             .prop('disabled', true);
+          $('.new-or-existing-contributor').find('[data-toggle="tooltip"]')
+            .tooltip({
+              placement: 'top',
+              title: 'To select an existing Contributor, first select a Customer for which Contributors exist'
+            });
+
         } else {
           $('.new-or-existing-contributor.buttons input[value="exists"]')
             .prop('disabled', false);
+          // setting the title to empty string will effectively kill the tooltip
+          $('.new-or-existing-contributor').find('[data-toggle="tooltip"]')
+            .tooltip('destroy');
         }
 
       })

@@ -10,9 +10,9 @@
   <div class="col-md-9 col-sm-8 layout-main">
     <div class="tab-content stacked-content">
 
-      <div class='row'>
+      <div class='row' style='margin-top: -5px;'>
         <div class="col-sm-12">
-          <div>
+          <div style='margin-bottom: 6px;'>
             <label style='margin:0'>Customer</label>&nbsp;&nbsp;&nbsp;
             <span style='font-family:"Lato";font-size:18px;color:#999'><%= story.customer.name %></span>
           </div>
@@ -46,6 +46,8 @@
       </div>
 
       <div id='curate-contributors' class='tab-pane fade'>
+
+        <button type='button' style='margin:0 0 10px 0;height:32px' class='btn btn-secondary btn-sm' data-toggle='modal' data-target='#new-contributor-modal'><i class='glyphicon glyphicon-plus-sign' style='font-size:15px;top:2px'></i>&nbsp;&nbsp;&nbsp;Add New Contributor&nbsp;</button>
 
         <%= render 'companies/crowdsource/contributors_table',
               { company: company, workflow_stage: 'curate' } %>

@@ -69,6 +69,10 @@ function initSuccessesTable () {
     },
     dom: 'tip',
     pageLength: 100,
+    language: {
+      emptyTable: 'No Story Candidates found',
+      zeroRecords: 'No Story Candidates found'
+    },
     order: [[ customerIndex, 'asc' ]],
     columns: [
       { // td.success-details
@@ -198,6 +202,10 @@ function initContributorsTable (workflowStage) {
     // select: true,  // https://datatables.net/extensions/select/
     pageLength: 100,
     autoWidth: false,
+    language: {
+      emptyTable: 'No Contributors found',
+      zeroRecords: 'No Contributors found'
+    },
     order: [[ successIndex, 'asc' ]],
     columns: [
       { // td.contributor-details

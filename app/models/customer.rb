@@ -5,6 +5,7 @@ class Customer < ActiveRecord::Base
   belongs_to :company
   has_many :successes, dependent: :destroy
   has_many :contributions, through: :successes
+  has_many :contributors, through: :contributions, class_name: 'User', foreign_key: 'user_id'
   has_many :stories, through: :successes
 
   validates :name, presence: true

@@ -11,9 +11,9 @@
       <div class="modal-body">
 
         <!-- :id will be filled in when a success is selected -->
-        <%= form_for Contribution.new, url: '/successes/:id/contributions',
+        <%= form_for(Contribution.new, url: '/successes/:id/contributions',
               html: { remote: true, id: 'new-contribution-form',
-                      class: 'form-horizontal' } do |f| %>
+                      class: 'form-horizontal' }) do |f| %>
 
           <div class="form-group required-input">
             <label for="success_customer" class='col-sm-3 control-label'>
@@ -77,8 +77,8 @@
               Contributor exists?
             </label>
             <div class="col-sm-9 btn-group" data-toggle='buttons'>
-              <label class='radio-inline active'>
-                <input name='new-or-existing-contributor' type="radio" value='exists'>
+              <label class='radio-inline' data-toggle='tooltip' data-placement='top' title='To select an existing Contributor, first select a Customer for which Contributors exist'>
+                <input name='new-or-existing-contributor' type="radio" value='exists' disabled>
                 Yes
               </label>
               <label class='radio-inline'>
@@ -121,7 +121,7 @@
             </div>
           </div>
 
-          <div class="form-group new-or-existing-contributor existing" style='display:none'>
+          <div class="form-group new-or-existing-contributor existing required-input" style='display:none'>
             <label class='col-sm-3 control-label'>
               Contributor
             </label>
