@@ -31,7 +31,18 @@
   <div class="form-group">
     <%= label_tag "template[subject]", "Subject", class: "control-label col-sm-2" %>
     <div class="col-sm-8">
-      <%= text_field_tag "template[subject]", nil, class: 'form-control' %>
+      <div class="input-group">
+        <%= text_field_tag "template[subject]", nil, class: 'form-control' %>
+        <div class="input-group-btn">
+          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Insert&nbsp;&nbsp;<span class="caret"></span></button>
+            <ul class="dropdown-menu">
+              <li><a href="#">Company name</a></li>
+              <li><a href="#">Customer name</a></li>
+              <li><a href="#">Contributor first name</a></li>
+              <li><a href="#">Contributor last name</a></li>
+            </ul>
+        </div>
+      </div>
     </div>
     <div class="col-sm-2">
       <button id='test-template' type='button' class='btn btn-default' disabled='true'>
