@@ -1,94 +1,15 @@
 (function () {
 
-  var contributionsPreRequest = <%= raw @contributions_pre_request.to_json({ include: { contributor: { methods: :full_name }, referrer: { methods: :full_name }, success: { include: :customer } } }) %>,
-      allContributors = <%= raw @contributors.to_json %>,
-       connections = <%= raw @contributions.to_json({ methods: :display_status, include: { contributor: { methods: :full_name }, referrer: { methods: :full_name }, success: { include: :customer } } }) %>,
-         flashMesg = "<%= @flash_mesg %>",
-       flashStatus = "<%= @flash_status %>",
-          template = _.template($('#cc-template').html());
+  var contribution = <%= raw @contribution.to_json %>;
 
-  $('#new-contributor-modal').one('hidden.bs.modal', function () {
-    if (flashStatus === "danger") {
-      flashDisplay(flashMesg, flashStatus);
-    } else {
-      renderPreRequestContributions();
-      renderConnections();
-      updateReferrerSelectOptions(allContributors);
-      // dynamically added elements must be re-configured as best-in-place
-      $('#contributions-pre-request .best_in_place').best_in_place();
-      $('#contribution-connections .best_in_place').best_in_place();
+  $('#new-contributor-modal').modal('hide');
 
-      /*
-        attach listeners to dynamically added elements ...
-        TODO: define these in stories.js
-      */
-      $('a.accordion-toggle').on('focus', function () {
-        var $_this = $(this);
-        window.setTimeout(function () { $_this.blur(); }, 200);
-      });
-      // only one accordion panel open at a time
-      $('.accordion-toggle').on('click', function () {
-        if ($(this).attr('href').match(/info/)) {
-          var $readPanel = $(this).closest('.accordion')
-                                  .find("div.accordion-body[id*='submission']");
-          if ($readPanel.hasClass('in'))
-            $readPanel.removeClass('in');
-        } else if ($(this).attr('href').match(/submission/)) {
-          var $infoPanel = $(this).closest('.accordion')
-                                  .find("div.accordion-body[id*='info']");
-          if ($infoPanel.hasClass('in'))
-            $infoPanel.removeClass('in');
-        }
-      });
-    }
-  });
-
-  $('#new-contributor-modal').modal('hide')
-
-  function renderPreRequestContributions () {
-    $('#contributions-pre-request')
-      .empty()
-      .append(
-        template({ contributions: contributionsPreRequest,
-                            type: 'pre-request' })
-      );
-  }
-
-  function renderConnections () {
-    $('#contribution-connections')
-      .empty()
-      .append(
-        template({ contributions: connections,
-                            type: 'connection' })
-      );
-    /*
-      since we don't want a <script> inside of a <script>, the contribution
-      card template will leave a space for the linkedin widget, and we'll
-      fill it in here ...
-    */
-    $('.linkedin-widget-container').each(function () {
-      $(this).append(
-        "<script type='IN/MemberProfile' " +
-          "data-id='" + $(this).data('linkedin-url') + "' " +
-          "data-format='inline' data-related='false' " +
-          "data-width='322'></script>" );
-    });
-    // parse and disable tab index'ing
-    initLinkedIn();
-    loadLinkedInWidgets();  // attach post message handler
-  }
-
-  /*
-    update the referrer select options with any newly added contributors
-  */
-  function updateReferrerSelectOptions (contributors) {
-    var newOptions = "<option value></option>";
-    contributors.forEach(function (contributor, index) {
-      newOptions += "<option value='" + contributor.id + "'>" +
-                    contributor.first_name + " " +
-                    contributor.last_name + "</option>";
-    });
-    $('#contributor_referrer').html(newOptions).change();
+  if ('<%= alert() %>') {
+    flashDisplay('Error adding Contributor: <%= alert() %>', 'danger')
+  } else {
+    $('table[id*="contributors-table"]').reload(function () {
+      console.log('reloaded!')
+    })
   }
 
 }());

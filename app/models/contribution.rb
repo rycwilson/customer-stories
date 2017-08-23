@@ -30,6 +30,8 @@ class Contribution < ActiveRecord::Base
     company(company_id).where('request_received_at >= ?', days_ago.days.ago)
   }
 
+  validates :user_id, presence: true
+  validates :success_id, presence: true
   validates :role, presence: true
   validates :contribution, presence: true,
                 if: Proc.new { |contribution| contribution.status == 'contribution'}

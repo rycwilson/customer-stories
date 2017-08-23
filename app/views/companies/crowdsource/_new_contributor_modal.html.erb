@@ -11,8 +11,8 @@
       <div class="modal-body">
 
         <!-- :id will be filled in when a success is selected -->
-        <%= form_for(Contribution.new, url: '/successes/:id/contributions',
-              html: { remote: true, id: 'new-contribution-form',
+        <%= form_for(Contribution.new, url: contributions_path,
+              html: { id: 'new-contribution-form', remote: true,
                       class: 'form-horizontal' }) do |f| %>
 
           <div class="form-group required-input">
@@ -66,7 +66,7 @@
               Contributor Role
             </label>
             <div class="col-sm-9">
-              <%= f.select :role, [], {},
+              <%= f.select :role, ['Customer', 'Partner', 'Sales'], {},
                     { class: 'new-contributor-role form-control',
                       style: 'width:100%' } %>
             </div>
@@ -78,11 +78,11 @@
             </label>
             <div class="col-sm-9 btn-group" data-toggle='buttons'>
               <label class='radio-inline' data-toggle='tooltip' data-placement='top' title='To select an existing Contributor, first select a Customer for which Contributors exist'>
-                <input name='new-or-existing-contributor' type="radio" value='exists' disabled>
+                <input name='contribution[existing_contributor]' type="radio" value='yes' disabled>
                 Yes
               </label>
               <label class='radio-inline'>
-                <input name='new-or-existing-contributor' type="radio" value='new' checked>
+                <input name='contribution[existing_contributor]' type="radio" value='no' checked>
                 No
               </label>
             </div>
@@ -126,9 +126,9 @@
               Contributor
             </label>
             <div class="col-sm-9">
-              <%= select_tag 'contribution[contributor_id]', [],
+              <%= select_tag('contribution[contributor_id]', [],
                     { class: 'new-contributor-existing form-control',
-                      style: 'width:100%' } %>
+                      style: 'width:100%' }) %>
             </div>
           </div>
 
@@ -138,7 +138,7 @@
 
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-success">Add Contributor</button>
+        <button type="submit" form='new-contribution-form' class="btn btn-success">Add Contributor</button>
       </div>
 
     </div><!-- /.modal-content -->

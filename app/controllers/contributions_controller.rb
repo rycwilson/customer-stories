@@ -2,7 +2,7 @@ class ContributionsController < ApplicationController
 
   before_action :set_contribution_if_valid_token?, only: [:edit, :update]
   before_action :set_contribution, only: [:show, :confirm, :confirm_request, :send_request]
-  before_action :check_opt_out_list, only: [:create, :confirm_request]
+  before_action :check_opt_out_list, only: [:confirm_request]
 
   respond_to(:html, :json, :js)
 
@@ -58,44 +58,45 @@ class ContributionsController < ApplicationController
           contributor: {}, referrer: {}, success: { include: :customer } }
   end
 
-  #
-  # respond_to { |format| format.js }   => this is implied by the request
-  #
+  # js response
   def create
-    story = Story.find params[:id]
-    existing_user = User.find_by email: params[:contributor][:email]
-    contributor = existing_user || new_user(params[:contributor])
-
-    # existing user gets a phone number if he doesn't have one already ...
-    contributor.phone = params[:contributor][:phone] if params[:contributor][:phone].present?
-
-    if !contributor.changed? || contributor.save  # don't save if not necessary
-      contribution = new_contribution story.success.id, contributor.id, params
-      if contribution.save
-        if contribution.contributor.linkedin_url.present?
-          contribution.update(publish_contributor: true)
-        end
-        # respond with all pre-request contributions, most recent additions first
-        @contributions_pre_request = story.contributions_pre_request
-        # all contributors needed to populate referrer select box ...
-        @contributors = story.success.contributors
-        # all contributions to build connections list
-        # leave out contributors who unsubscribed or opted out
-        @contributions = story.success.contributions
-                                      .where("status NOT IN ('unsubscribe', 'opt_out')")
-      else
-        @flash_status = 'danger'
-        @flash_mesg = 'User already has a contribution for this story'
+    contributor = params[:contribution][:existing_contributor] == 'yes' ?
+                    User.find_by(id: params[:contribution][:contributor_id]) :
+                    new_contributor(params[:contribution])
+    if !contributor.try(:changed?) || contributor.save  # don't save if existing
+      contribution = Contribution.new(
+                        success_id: params[:contribution][:success_id],
+                        user_id: contributor.try(:id),
+                        referrer_id: params[:contribution][:referrer_id],
+                        role: params[:contribution][:role],
+                        status: 'pre_request',
+                        access_token: SecureRandom.hex
+                      )
+      unless contribution.save
+        flash.now[:alert] = contribution.errors.full_messages
+            .map! do |msg|
+              if msg == "User can't be blank"
+                "No Contributor selected"
+              elsif msg == "Success can't be blank"
+                "No Story Candidate selected"
+              elsif msg == "Role can't be blank"
+                "No Contributor role selected"
+              end
+            end
+            .join(', ')
       end
     else
-      @flash_status = "danger"
-      @flash_mesg = contribution.errors
-                      .full_messages
-                      .map! do |msg|
-                        msg == "User has already been taken" ?
-                               "User already has a contribution for this story" : msg
-                      end
-                      .join(', ')
+      flash.now[:alert] = contributor.errors.full_messages
+          .map! do |msg|
+            if msg == "User has already been taken"
+              "Contributor has already been added to this Story"
+            elsif msg == "First name can't be blank" ||
+                  msg == "Last name can't be blank" ||
+                  msg == "Email can't be blank"
+              "Contributor contact details are missing"
+            end
+          end
+          .uniq.join(', ') # uniq => remove 'contact details missing' duplicates
     end
   end
 
@@ -174,15 +175,6 @@ class ContributionsController < ApplicationController
     @contribution = Contribution.find params[:id]
   end
 
-  def new_contribution success_id, contributor_id, params
-    Contribution.new( user_id: contributor_id,
-                  referrer_id: params[:contributor][:referrer],
-                   success_id: success_id,
-                         role: params[:contributor][:role],
-                       status: 'pre_request',
-                 access_token: SecureRandom.hex )
-  end
-
   def check_opt_out_list
     # contributor email depends on the action (create or update)
     # note: Ruby 2.3 offers .dig method for checking hashes
@@ -197,14 +189,15 @@ class ContributionsController < ApplicationController
     end
   end
 
-  def new_user contributor_params
-    User.new(first_name: contributor_params[:first_name],
-              last_name: contributor_params[:last_name],
-                  email: contributor_params[:email],
-                  phone: contributor_params[:phone],
-             # password is necessary, so just set it to the email
-               password: contributor_params[:email],
-           sign_up_code: 'csp_beta')
+  def new_contributor(contribution_params)
+    User.new(
+      first_name: contribution_params[:contributor_first_name],
+      last_name: contribution_params[:contributor_last_name],
+      email: contribution_params[:contributor_email],
+      # password is necessary, so just set it to the email
+      password: contribution_params[:email] || 'password',  # don't want a validation error here
+      sign_up_code: 'csp_beta'
+    )
     # Note - skipping confirmation means the user can log in
     #   with these credentials
     # contributor.skip_confirmation!  this is undefined when :confirmable is disabled

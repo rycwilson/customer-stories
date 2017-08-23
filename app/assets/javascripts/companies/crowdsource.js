@@ -23,6 +23,9 @@ function crowdsourceListeners () {
       $('.new-or-existing-contributor.existing').css('display', 'none');
       $(this).find('select').select2('val', '');
     })
+    .on('shown.bs.modal', '#new-contributor-modal', function () {
+      $(this).find('#contribution_customer_id').select2('open');
+    })
 
     .on('change', '.new-or-existing-contributor.buttons input:radio',
       function (e) {
@@ -68,12 +71,11 @@ function crowdsourceListeners () {
 
         // if no contributors for this customer, disable the radio button and engage the tooltip
         if (contributors.length === 1) {  // empty (1 because placeholder)
-          if ($('.new-or-existing-contributor.buttons input:radio:checked')
-                  .val() === 'exists') {
-            $('.new-or-existing-contributor.buttons input[value="new"]')
+          if ($('input[name="contribution[existing_contributor]"]').val() === 'yes') {
+            $('input[name="contribution[existing_contributor]"][value="no"]')
               .trigger('click');
           }
-          $('.new-or-existing-contributor.buttons input[value="exists"]')
+          $('input[name="contribution[existing_contributor]"][value="yes"]')
             .prop('disabled', true);
           $('.new-or-existing-contributor').find('[data-toggle="tooltip"]')
             .tooltip({
@@ -82,7 +84,7 @@ function crowdsourceListeners () {
             });
 
         } else {
-          $('.new-or-existing-contributor.buttons input[value="exists"]')
+          $('input[name="contribution[existing_contributor]"][value="yes"]')
             .prop('disabled', false);
           // setting the title to empty string will effectively kill the tooltip
           $('.new-or-existing-contributor').find('[data-toggle="tooltip"]')
