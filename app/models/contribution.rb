@@ -8,6 +8,7 @@ class Contribution < ActiveRecord::Base
   has_one :company, through: :success
   has_one :story, through: :success
   has_one :email_contribution_request, dependent: :destroy
+  belongs_to :crowdsourcing_template
 
   scope :story_all, ->(story_id) {
     joins(success: { story: {} })

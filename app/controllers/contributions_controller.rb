@@ -24,7 +24,7 @@ class ContributionsController < ApplicationController
                     },
                     contributor: { only: [:id], methods: [:full_name] },
                     referrer: { only: [:id], methods: [:full_name] },
-                    email_template: { only: [:id, :name] },
+                    crowdsourcing_template: { only: [:id, :name] },
                   }
                 })
 

@@ -2,53 +2,42 @@ namespace :temp do
 
   desc "temp stuff"
 
-  task et_assign: :environment do
-    retailnext = Company.find_by(subdomain:'retailnext')
-    retailnext.contributions.each() do |c|
-      if c.role.blank?
-        c.update(role: 'blank', email_template_id: rand(76..78))
-      else
-        c.update(email_template_id: rand(76..78))
-      end
+  task create_default_contributor_questions: :environment do
+    ContributorQuestion.destroy_all
+    Company.all.each do |company|
+      company.contributor_questions =
+        ContributorQuestion.create(question: "What was the challenge?", default: true),
+        ContributorQuestion.create(question: "What was the solution?", default: true),
+        ContributorQuestion.create(question: "What was the measure of success achieved?", default: true),
+        ContributorQuestion.create(question: "Would you recommend it to a friend?", default: true)
     end
-    cce = Company.find_by(subdomain:'centerforcustomerengagement')
-    cce.contributions.each() do |c|
-      if c.role.blank?
-        c.update(role: 'blank', email_template_id: rand(76..78))
-      else
-        c.update(email_template_id: rand(76..78))
-      end
+  end
+
+  task create_crowdsourcing_templates: :environment do
+    CrowdsourcingTemplate.destroy_all
+    EmailTemplate.all.each do |email_template|
+      template = CrowdsourcingTemplate.create(
+        name: email_template.name,
+        request_subject: email_template.subject,
+        request_body: email_template.body,
+        company_id: email_template.company_id
+      )
     end
-    varmour = Company.find_by(subdomain:'varmour')
-    varmour.contributions.each() do |c|
-      if c.role.blank?
-        c.update(role: 'blank', email_template_id: rand(76..78))
-      else
-        c.update(email_template_id: rand(76..78))
-      end
-    end
-    acme = Company.find_by(subdomain:'acme-test')
-    acme.contributions.each() do |c|
-      if c.role.blank?
-        c.update(role: 'blank', email_template_id: rand(76..78))
-      else
-        c.update(email_template_id: rand(76..78))
-      end
-    end
-    trunity = Company.find_by(subdomain:'trunity')
-    trunity.contributions.each() do |c|
-      if c.role.blank?
-        c.update(role: 'blank', email_template_id: rand(76..78))
-      else
-        c.update(email_template_id: rand(76..78))
-      end
-    end
-    cce = Company.find_by(subdomain:'centerforcustomerengagement')
-    cce.contributions.each() do |c|
-      if c.role.blank?
-        c.update(role: 'blank', email_template_id: rand(91..93))
-      else
-        c.update(email_template_id: rand(91..93))
+    Company.all.each do |company|
+      customer_template = company.crowdsourcing_templates.select { |t| t.name == 'Customer' }[0]
+      partner_template = company.crowdsourcing_templates.select { |t| t.name == 'Partner' }[0]
+      sales_template = company.crowdsourcing_templates.select { |t| t.name == 'Sales' }[0]
+      company.contributions.each do |contribution|
+        # TODO: Should be ok for a contributor not to have a template, as this may happen with
+        # curators. But this causes errors with datatables
+        contribution.update(role: 'customer') if contribution.role.blank?
+        if contribution.role == 'customer'
+          contribution.update(crowdsourcing_template_id: customer_template.id)
+        elsif contribution.role == 'partner'
+          contribution.update(crowdsourcing_template_id: partner_template.id)
+        elsif contribution.role == 'sales'
+          contribution.update(crowdsourcing_template_id: sales_template.id)
+        end
       end
     end
   end

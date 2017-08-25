@@ -29,12 +29,6 @@ class Success < ActiveRecord::Base
   # after_commit(on: [:update]) do
   # end
 
-  def create_default_prompts
-    self.prompts << Prompt.create(description: "What was the challenge?") <<
-                    Prompt.create(description: "What was the solution?") <<
-                    Prompt.create(description: "What was the measure of success achieved?")
-  end
-
   # method is used for passing the contributions count to datatables / successes dropdown
   # see successes#index
   def contributions_count

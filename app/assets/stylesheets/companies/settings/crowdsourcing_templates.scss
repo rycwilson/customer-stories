@@ -1,0 +1,67 @@
+
+.companies.edit {
+
+  .request-subject {
+    margin-bottom: 25px;
+  }
+
+  .contributor-questions {
+    position: relative;
+    .row {
+      background: #f2f2f2;
+    }
+    label {
+      margin-left: -5px;
+    }
+    label + span {
+      position: absolute;
+      top: -15px;
+      left: 155px;
+      color: #6685a4;
+      i:first-child {
+        font-size: 28px;
+        top: 6px;
+      }
+      i:last-child {
+        font-size: 16px;
+        top: 3px;
+      }
+    }
+    label + span:hover {
+      color: #516c87;
+      cursor: pointer;
+    }
+    li.contributor-question {
+      div[class*='col-']:first-child {
+        padding: 0 10px;
+      }
+      div[class*='col-']:last-child {
+        padding: 0;
+      }
+      p, textarea {
+        margin: 10px 0;
+      }
+      i.fa-remove {
+        margin-top: 10px;
+        font-size: 20px;
+        color: #666;
+      }
+      i.fa-remove:hover {
+        color: #222;
+        cursor: pointer;
+      }
+    }
+    .contributor-question .row:hover {
+      background: #e6e6e6;
+    }
+    .contributor-question.to-be-removed .row {
+      background-color: #f2dede;
+      border-color: #ebccd1;
+    }
+    .new-contributor-question textarea {
+      margin-bottom: 10px;
+    }
+
+  }
+
+}

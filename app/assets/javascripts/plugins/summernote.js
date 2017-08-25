@@ -66,3 +66,21 @@ function initSummernote () {
   //                  });
   // }
 }
+
+function initEmailRequestEditor () {
+  $('#email-request-editor').summernote({
+    toolbar: [
+      // ['style', ['style']],
+      ['font', ['bold', 'italic', 'underline']], //, 'clear']],
+      ['fontname', ['fontname']],
+      ['fontsize', ['fontsize']],
+      // ['color', ['color']],
+      ['para', ['ul', 'ol', 'paragraph']],
+      ['height', ['height']],
+      // ['table', ['table']],
+      ['insert', ['link', 'picture', 'hr']],
+      ['view', ['codeview']],
+      // ['help', ['help']]
+    ],
+  });
+}

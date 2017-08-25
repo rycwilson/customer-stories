@@ -30,7 +30,6 @@ class CompaniesController < ApplicationController
     @company = Company.new(company_params)
     if @company.save
       @company.users << current_user
-      @company.create_email_templates
       if current_user.linkedin_url.present?
         redirect_to File.join(request.protocol + "#{@company.subdomain}." + request.domain + request.port_string, company_path(@company)), flash: { success: "Account setup complete" }
       else

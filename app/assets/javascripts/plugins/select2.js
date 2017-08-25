@@ -46,7 +46,7 @@ function initSelect2 () {
 
   $('.templates-select').select2({
     theme: 'bootstrap',
-    placeholder: 'Select template'
+    placeholder: 'Select'
   });
 
   $('.widget-filter-category').select2({

@@ -238,10 +238,10 @@ function initContributorsTable (workflowStage) {
         //                  "</a>";}
         // }
       },           // story candidate
-      // <td data-search="t<%#= contribution.email_template_id  %>" class='email-template'>
+      // <td data-search="t<%#= contribution.crowdsourcing_template_id  %>" class='crowdsourcing-template'>
       {
-        name: 'email_template',
-        data: 'email_template.name',     // email template
+        name: 'crowdsourcing_template',
+        data: 'crowdsourcing_template.name',
       },
 
       {  // <td data-search="<%= contribution.success.curator.id %>"></td>
@@ -330,7 +330,7 @@ function initContributorsTable (workflowStage) {
       $(row).children().eq(0).addClass('contributor-details');
       $(row).children().eq(1).addClass('contributor');
       // $(row).children().eq(2).addClass('success');
-      $(row).children().eq(2).addClass('email-template');
+      $(row).children().eq(2).addClass('crowdsourcing-template');
       // $(row).children().eq(4).addClass('curator');
       // $(row).children().eq(5).addClass('customer');
       $(row).children().eq(3).addClass('next-step');
@@ -390,10 +390,10 @@ function initContributorsTable (workflowStage) {
             { name: 'contributor' },
             // { name: 'success' },
             {
-              label: 'Select an email template',
-              name: 'email_template.name',  // should match columns.data
+              label: 'Select a crowdsourcing template',
+              name: 'crowdsourcing_template.name',  // should match columns.data
               type: 'select2',
-              options: app.company.email_templates.map(function (template) {
+              options: app.company.crowdsourcing_templates.map(function (template) {
                           return { label: template.name, value: template.id };
                         })
             },

@@ -1,0 +1,53 @@
+
+<%= form_for(@template,
+      url: company_crowdsourcing_template_path(@company, @template),
+      html: { method: 'put', remote: true, class: 'form-horizontal',
+              id: 'crowdsourcing-template-form' }) do |f| %>
+
+  <div class="row">
+
+    <div class="col-lg-8">
+
+      <div class="request-subject">
+        <%= f.label(:request_subject, "Email Request&nbsp;&#8211;&nbsp;Subject".html_safe) %>
+        <div class="input-group">
+          <%= f.text_field(:request_subject, class: 'form-control') %>
+          <div class="input-group-btn">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Insert&nbsp;&nbsp;<span class="caret"></span></button>
+              <ul class="dropdown-menu">
+                <li><a href="#">Company name</a></li>
+                <li><a href="#">Customer name</a></li>
+                <li><a href="#">Contributor first name</a></li>
+                <li><a href="#">Contributor last name</a></li>
+              </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="request-body">
+        <%= f.label(:request_body, "Email Request&nbsp;&#8211;&nbsp;Body".html_safe) %>
+        <%= f.text_area(:request_body, id: 'email-request-editor',
+                data: { provider: 'summernote' }) %>
+      </div>
+
+    </div>
+
+    <div class="contributor-questions col-lg-4">
+      <%= render('companies/settings/contributor_questions',
+              { template: @template, f: f }) %>
+    </div>
+
+  </div>
+
+  <div class="row">
+    <div class="col-sm-12 text-right">
+      <div class="form-group">
+
+        <button type="reset" class="btn btn-default">Cancel</button>
+        <input type='submit' class='btn btn-success' value="Save changes">
+
+      </div>
+    </div>
+  </div>
+
+<% end %>

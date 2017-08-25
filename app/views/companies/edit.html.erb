@@ -23,14 +23,12 @@
         <div class="tab-content stacked-content">
 
           <div class="tab-pane fade in active" id="company-profile">
-
             <%= render 'companies/settings/profile', { company: @company } %>
-
           </div>
 
           <div class="tab-pane fade" id="crowdsourcing-templates">
             <%= render 'companies/settings/crowdsourcing_templates',
-                       { templates_select: @templates_select } %>
+                   { company: @company, templates_select: @templates_select } %>
           </div>
 
           <div class="tab-pane fade" id="story-tags">

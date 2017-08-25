@@ -116,6 +116,12 @@ class Company < ActiveRecord::Base
     end
   end
   has_many :email_templates, dependent: :destroy
+  has_many :contributor_questions, dependent: :destroy do
+    def default
+      where(default: true)
+    end
+  end
+  has_many :crowdsourcing_templates, dependent: :destroy
   has_many :outbound_actions, dependent: :destroy
 
   has_many :call_to_actions, dependent: :destroy
@@ -170,6 +176,15 @@ class Company < ActiveRecord::Base
 
   after_commit on: :create do
     self.create_widget
+    # default contributor questions
+    self.contributor_questions << ContributorQuestion.create(question: "What was the challenge?", default: true) <<
+      ContributorQuestion.create(question: "What was the solution?", default: true) <<
+      ContributorQuestion.create(question: "What was the measure of success achieved?", default: true) <<
+      ContributorQuestion.create(question: "Would you recommend to a friend?", default: true)
+    # default crowdsourcing templates (formerly email templates)
+    Company.find_by(name:'CSP').crowdsourcing_templates.each do |template|
+      self.crowdsourcing_templates << template.dup
+    end
   end
 
   after_commit :expire_fragment_cache, on: :update,
@@ -391,14 +406,6 @@ class Company < ActiveRecord::Base
       else
         # do nothing
       end
-    end
-  end
-
-  def create_email_templates
-    self.email_templates.destroy_all
-    # CSP.email_templates.each do |template|
-    Company.find_by(name:'CSP').email_templates.each do |template|
-      self.email_templates << template.dup
     end
   end
 

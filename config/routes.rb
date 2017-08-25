@@ -8,6 +8,7 @@ Rails.application.routes.default_url_options = {
 }
 
 Rails.application.routes.draw do
+
   devise_for :admins
 
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
@@ -80,6 +81,7 @@ Rails.application.routes.draw do
         end
         resources :stories, only: [:create]
         resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
+        resources :crowdsourcing_templates, only: [:show, :edit, :create, :update, :destroy]
         member { get '/promote-settings', to: 'companies#show' }
         member { put :tags }
         member { put :widget }

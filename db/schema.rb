@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170807002949) do
+ActiveRecord::Schema.define(version: 20170824185519) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -142,27 +142,48 @@ ActiveRecord::Schema.define(version: 20170807002949) do
     t.text     "contribution"
     t.text     "feedback"
     t.string   "status"
-    t.boolean  "linkedin",                default: false
-    t.datetime "created_at",                              null: false
-    t.datetime "updated_at",                              null: false
+    t.boolean  "linkedin",                  default: false
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
     t.datetime "remind_at"
-    t.integer  "remind_1_wait",           default: 1
-    t.integer  "remind_2_wait",           default: 2
+    t.integer  "remind_1_wait",             default: 1
+    t.integer  "remind_2_wait",             default: 2
     t.string   "access_token"
     t.integer  "referrer_id"
     t.text     "notes"
     t.datetime "submitted_at"
     t.datetime "request_received_at"
-    t.boolean  "publish_contributor",     default: true
-    t.boolean  "contributor_unpublished", default: false
-    t.boolean  "preview_contributor",     default: false
-    t.boolean  "complete",                default: false
-    t.integer  "email_template_id"
+    t.boolean  "publish_contributor",       default: true
+    t.boolean  "contributor_unpublished",   default: false
+    t.boolean  "preview_contributor",       default: false
+    t.boolean  "complete",                  default: false
+    t.integer  "crowdsourcing_template_id"
   end
 
-  add_index "contributions", ["email_template_id"], name: "index_contributions_on_email_template_id", using: :btree
+  add_index "contributions", ["crowdsourcing_template_id"], name: "index_contributions_on_crowdsourcing_template_id", using: :btree
   add_index "contributions", ["success_id"], name: "index_contributions_on_success_id", using: :btree
   add_index "contributions", ["user_id"], name: "index_contributions_on_user_id", using: :btree
+
+  create_table "contributor_questions", force: :cascade do |t|
+    t.integer  "company_id"
+    t.string   "question"
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
+    t.boolean  "default",    default: false
+  end
+
+  add_index "contributor_questions", ["company_id"], name: "index_contributor_questions_on_company_id", using: :btree
+
+  create_table "crowdsourcing_templates", force: :cascade do |t|
+    t.integer  "company_id"
+    t.string   "name"
+    t.string   "request_subject"
+    t.string   "request_body"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
+  end
+
+  add_index "crowdsourcing_templates", ["company_id"], name: "index_crowdsourcing_templates_on_company_id", using: :btree
 
   create_table "ctas_successes", force: :cascade do |t|
     t.integer  "call_to_action_id"
@@ -362,6 +383,13 @@ ActiveRecord::Schema.define(version: 20170807002949) do
   add_index "successes", ["curator_id"], name: "index_successes_on_curator_id", using: :btree
   add_index "successes", ["customer_id"], name: "index_successes_on_customer_id", using: :btree
 
+  create_table "templates_questions", force: :cascade do |t|
+    t.integer  "crowdsourcing_template_id"
+    t.integer  "contributor_question_id"
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "",    null: false
     t.string   "encrypted_password",     default: "",    null: false
@@ -462,9 +490,10 @@ ActiveRecord::Schema.define(version: 20170807002949) do
   add_foreign_key "adwords_campaigns", "companies"
   add_foreign_key "adwords_images", "companies"
   add_foreign_key "call_to_actions", "companies"
-  add_foreign_key "contributions", "email_templates"
   add_foreign_key "contributions", "successes"
   add_foreign_key "contributions", "users"
+  add_foreign_key "contributor_questions", "companies"
+  add_foreign_key "crowdsourcing_templates", "companies"
   add_foreign_key "ctas_successes", "call_to_actions"
   add_foreign_key "ctas_successes", "successes"
   add_foreign_key "customers", "companies"
