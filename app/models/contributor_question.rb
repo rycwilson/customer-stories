@@ -4,4 +4,6 @@ class ContributorQuestion < ActiveRecord::Base
   has_many :templates_questions, dependent: :destroy
   has_many :crowdsourcing_templates, through: :templates_questions
 
+  default_scope { order(created_at: :asc) }
+
 end

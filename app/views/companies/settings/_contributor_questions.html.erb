@@ -26,34 +26,14 @@
 
       </div>
 
+      <div class="row">
+        <div class="col-sm-12 save-or-cancel text-center hidden">
+          <span>Save changes below or <a class='cancel-remove-question'>Cancel</a></span>
+        </div>
+      </div>
+
     </li>
 
   <% end %>
 
 </ul>
-
-<% content_for(:underscore_templates) do %>
-
-  <script type="text/template" id='new-contributor-question-template'>
-
-    <li class="contributor-question new-question">
-
-      <div class='row'>
-
-        <div class="col-sm-11">
-          <textarea class="form-control" rows="3" placeholder="Add a question that will help Contributors provide useful input" name="template[contributor_questions_attributes][{{ questionIndex }}][question]" id="template[contributor_questions_attributes][{{ questionIndex }}][question]"></textarea>
-        </div>
-
-        <div class="col-sm-1">
-          <i class="remove-question fa fa-remove"></i>
-          <input name="template[contributor_questions_attributes][{{= questionIndex }}][_destroy]" type="hidden" value="false">
-          <input class="hidden" type="checkbox" value="true" name="template[contributor_questions_attributes][{{= questionIndex }}][_destroy]" id="template_contributor_questions_attributes_{{= questionIndex }}__destroy">
-        </div>
-
-      </div>
-
-    </li>
-
-  </script>
-
-<% end %>

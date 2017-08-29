@@ -4,6 +4,8 @@
       html: { method: 'put', remote: true, class: 'form-horizontal',
               id: 'crowdsourcing-template-form' }) do |f| %>
 
+  <%= f.hidden_field(:name) %>
+
   <div class="row">
 
     <div class="col-lg-8">
@@ -39,12 +41,18 @@
 
   </div>
 
+  <hr>
+
   <div class="row">
     <div class="col-sm-12 text-right">
       <div class="form-group">
 
         <button type="reset" class="btn btn-default">Cancel</button>
-        <input type='submit' class='btn btn-success' value="Save changes">
+        <button type="submit" class="btn btn-success text-center" style='width:114px'>
+          <span>Save changes</span>
+          <i class='fa fa-spinner fa-pulse' style='display:none'></i>
+          <i class='fa fa-check' style='display:none'></i>
+        </button>
 
       </div>
     </div>

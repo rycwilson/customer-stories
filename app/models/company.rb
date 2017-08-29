@@ -121,12 +121,16 @@ class Company < ActiveRecord::Base
       where(default: true)
     end
   end
+  # alias
+  has_many :ctas, class_name: 'ContributorQuestion', foreign_key: 'company_id'
   has_many :crowdsourcing_templates, dependent: :destroy
+  # alias
+  has_many :templates, class_name: 'CrowdsourcingTemplate', foreign_key: 'company_id'
   has_many :outbound_actions, dependent: :destroy
 
   has_many :call_to_actions, dependent: :destroy
   # alias and methods
-  has_many :ctas, foreign_key: 'company_id', class_name: 'CallToAction' do
+  has_many :ctas, class_name: 'CallToAction', foreign_key: 'company_id' do
     def primary
       where(company_primary: true).take
     end

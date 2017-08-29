@@ -1,0 +1,18 @@
+
+(function () {
+
+  var contributorQuestions = <%= raw @template.contributor_questions.to_json %>
+
+  $('.contributor-questions ul').empty()
+    .append(
+      _.template( $('#contributor-questions-template').html() )(
+        { contributorQuestions: contributorQuestions }
+      )
+    );
+
+  $('button[type="submit"]').find('.fa-spinner, .fa-check').toggle()
+  window.setTimeout(function () {
+    $('button[type="submit"]').find('.fa-check, span').toggle();
+  }, 2000);
+
+}());
