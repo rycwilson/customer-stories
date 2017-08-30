@@ -149,6 +149,7 @@ function initSelect2 () {
     theme: 'bootstrap',
     placeholder: 'Select'
   });
+
 }
 
 function select2Listeners () {

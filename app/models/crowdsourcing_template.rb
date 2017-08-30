@@ -6,9 +6,9 @@ class CrowdsourcingTemplate < ActiveRecord::Base
   has_many :contributor_questions, through: :templates_questions
   accepts_nested_attributes_for :contributor_questions, allow_destroy: true
 
-  after_commit(on: :create) do
-    self.contributor_questions << self.company.contributor_questions.default
-  end
+  # after_commit(on: :create) do
+  #   self.contributor_questions << self.company.contributor_questions.default
+  # end
 
   before_update() { |template| template.format_for_storage() }
 

@@ -404,7 +404,7 @@ class Story < ActiveRecord::Base
       .where.not("status IN ('unsubscribe', 'opt_out')")
       .order("CASE role
                 WHEN 'customer' THEN '1'
-                WHEN 'partner' THEN '2'
+                WHEN 'customer success' THEN '2'
                 WHEN 'sales' THEN '3'
               END")
   end
@@ -422,7 +422,7 @@ class Story < ActiveRecord::Base
                    contributions: { publish_contributor: true })
             .order("CASE contributions.role
                       WHEN 'customer' THEN '1'
-                      WHEN 'partner' THEN '2'
+                      WHEN 'customer success' THEN '2'
                       WHEN 'sales' THEN '3'
                     END")
             .map do |contributor|

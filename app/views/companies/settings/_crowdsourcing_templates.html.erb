@@ -119,9 +119,6 @@
 
           <div class='col-sm-11'>
             <p>{{= question.question }}</p>
-            <div class='save-or-cancel text-center hidden'>
-              <span>Save changes below or <a class='cancel-remove-question'>Cancel</a></span>
-            </div>
           </div>
 
           <div class="col-sm-1">
@@ -132,9 +129,16 @@
 
         </div>
 
+        <div class='row'>
+          <div class="col-sm-12 save-or-cancel text-center hidden">
+            <span>Save changes below or <a class='cancel'>Cancel</a></span>
+          </div>
+        </div>
+
       </li>
 
       <input type="hidden" value="{{= question.id }}" name="crowdsourcing_template[contributor_questions_attributes][{{= index }}][id]" id="crowdsourcing_template_contributor_questions_attributes_{{= index }}_id">
+      <input type="hidden" value="{{= company.id }}" name="crowdsourcing_template[contributor_questions_attributes][{{= index }}][company_id]" id="crowdsourcing_template_contributor_questions_attributes_{{= index }}_company_id">
 
     {{ }) }}
 
@@ -147,10 +151,22 @@
       <div class='row'>
         <div class='col-sm-12'>
 
-          <textarea class="form-control" rows="3" placeholder="Add a question" name="crowdsourcing_template[contributor_questions_attributes][{{= questionIndex }}][question]" id="template[contributor_questions_attributes][{{= questionIndex }}][question]"></textarea>
+          <input type="hidden" value="{{= company.id }}" name="crowdsourcing_template[contributor_questions_attributes][{{= index }}][company_id]" id="crowdsourcing_template_contributor_questions_attributes_{{= index }}_company_id">
+
+          {{ if (existingQuestion) { }}
+
+            <p>{{= existingQuestion.question }}</p>
+
+            <input type="hidden" value="{{= existingQuestion.id }}" name="crowdsourcing_template[contributor_questions_attributes][{{= index }}][id]" id="crowdsourcing_template_contributor_questions_attributes_{{= index }}_id">
+
+          {{ } else { }}
+
+            <textarea class="form-control" rows="3" placeholder="New question" name="crowdsourcing_template[contributor_questions_attributes][{{= index }}][question]" id="crowdsourcing_template_contributor_questions_attributes_{{= index }}_question"></textarea>
+
+          {{ } }}
 
           <div class='save-or-cancel text-center'>
-            <span>Save changes below or <a class='cancel-add-question'>Cancel</a></span>
+            <span>Save changes below or <a class='cancel'>Cancel</a></span>
           </div>
 
         </div>

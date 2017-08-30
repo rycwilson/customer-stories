@@ -117,13 +117,29 @@ class Company < ActiveRecord::Base
   end
   has_many :email_templates, dependent: :destroy
   has_many :contributor_questions, dependent: :destroy do
-    def default
-      where(default: true)
+    def customer
+      where(role: 'customer')
+    end
+    def customer_success
+      where(role: 'customer_success')
+    end
+    def sales
+      where(role: 'sales')
     end
   end
   # alias
   has_many :ctas, class_name: 'ContributorQuestion', foreign_key: 'company_id'
-  has_many :crowdsourcing_templates, dependent: :destroy
+  has_many :crowdsourcing_templates, dependent: :destroy do
+    def customer
+      where(name: 'Customer').take
+    end
+    def customer_success
+      where(name: 'Customer Success').take
+    end
+    def sales
+      where(name: 'Sales').take
+    end
+  end
   # alias
   has_many :templates, class_name: 'CrowdsourcingTemplate', foreign_key: 'company_id'
   has_many :outbound_actions, dependent: :destroy
@@ -181,10 +197,19 @@ class Company < ActiveRecord::Base
   after_commit on: :create do
     self.create_widget
     # default contributor questions
-    self.contributor_questions << ContributorQuestion.create(question: "What was the challenge?", default: true) <<
-      ContributorQuestion.create(question: "What was the solution?", default: true) <<
-      ContributorQuestion.create(question: "What was the measure of success achieved?", default: true) <<
-      ContributorQuestion.create(question: "Would you recommend to a friend?", default: true)
+    self.contributor_questions =
+        ContributorQuestion.create(question: "What was the challenge?", role: 'customer'),
+        ContributorQuestion.create(question: "What was the solution?", role: 'customer'),
+        ContributorQuestion.create(question: "What was the measure of success achieved?", role: 'customer'),
+        ContributorQuestion.create(question: "Would you recommend it to a friend?", role: 'customer'),
+        ContributorQuestion.create(question: "Customer Success question #1", role: 'customer success'),
+        ContributorQuestion.create(question: "Customer Success question #2", role: 'customer success'),
+        ContributorQuestion.create(question: "Customer Success question #3", role: 'customer success'),
+        ContributorQuestion.create(question: "Customer Success question #4", role: 'customer success'),
+        ContributorQuestion.create(question: "Sales question #1", role: 'sales'),
+        ContributorQuestion.create(question: "Sales question #2", role: 'sales'),
+        ContributorQuestion.create(question: "Sales question #3", role: 'sales'),
+        ContributorQuestion.create(question: "Sales question #4", role: 'sales')
     # default crowdsourcing templates (formerly email templates)
     Company.find_by(name:'CSP').crowdsourcing_templates.each do |template|
       self.crowdsourcing_templates << template.dup

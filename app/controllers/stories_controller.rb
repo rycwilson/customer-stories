@@ -330,7 +330,7 @@ class StoriesController < ApplicationController
                    contributions: { publish_contributor: true })
             .order("CASE contributions.role
                       WHEN 'customer' THEN '1'
-                      WHEN 'partner' THEN '2'
+                      WHEN 'customer success' THEN '2'
                       WHEN 'sales' THEN '3'
                     END")
             .to_a

@@ -11,7 +11,7 @@
       background: #f2f2f2;
     }
     label {
-      margin-left: -5px;
+      margin-left: -15px;
     }
     label + span {
       position: absolute;
@@ -57,7 +57,12 @@
     li.contributor-question.to-be-removed {
       .row {
         background-color: #f2dede;
-        border-color: #ebccd1;
+      }
+      .row:first-of-type {
+        border-top: 1px solid #ebccd1;
+      }
+      .row:last-of-type {
+        border-bottom: 1px solid #ebccd1;
       }
       .save-or-cancel {
         color: #a94442;
@@ -65,7 +70,6 @@
         margin-bottom: 10px;
       }
     }
-
     li.contributor-question.new-question {
       .row {
         background-color: #dff0d8;
@@ -75,12 +79,25 @@
           padding-right: 15px;
         }
       }
+      .row:first-of-type {
+        border-top: 1px solid #d6e9c6;
+      }
+      .row:last-of-type {
+        border-bottom: 1px solid #d6e9c6;;
+      }
       .save-or-cancel {
         color: #3c763d;
         margin-bottom: 10px;
       }
     }
-    .cancel-add-question, .cancel-remove-question {
+    // prevent double borders on adjacent questions
+    li.contributor-question.to-be-removed + input + li.contributor-question.to-be-removed,
+    li.contributor-question.new-question + li.contributor-question.new-question {
+      .row:first-of-type {
+        border-top: 0;
+      }
+    }
+    .cancel {
       cursor: pointer;
     }
   }

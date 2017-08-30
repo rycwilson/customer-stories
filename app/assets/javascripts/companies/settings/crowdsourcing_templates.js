@@ -21,38 +21,76 @@ function crowdsourcingTemplatesListeners () {
           $.when( $('#crowdsourcing-template-container').empty().append(html) )
             .then(function () {
               initEmailRequestEditor();
+              // empty option for placeholder
+              $('.contributor-questions-select')
+                .prepend('<option selected/>')
+                .select2({
+                  theme: 'bootstrap',
+                  placeholder: 'Add a question'
+                });
             });
         }
       });
     })
 
-    .on('click', '.contributor-questions .add-question', function (e) {
-      var questionIndex = $('.contributor-questions').find('li').length.toString();
-      $.when(
-        $('.contributor-questions ul').append(
-          _.template( $('#new-contributor-question-template').html() )(
-            { questionIndex: questionIndex }
-        ))
-      ).then(function () {
-        // scroll up if the last question falls below screen...
-        var $lastQuestion = $('.contributor-questions li').last(),
-            bottomOffset = $lastQuestion.offset().top + $lastQuestion.height();
-        if (bottomOffset > $(window).height()) {
-          $('html, body').animate({
-            scrollTop: (bottomOffset - $(window).height()) + ($(window).height() / 2)
-          }, 400);
-        }
-      });
+    .on('change', '.contributor-questions-select', function (e) {
+
+      var $newQuestion,
+          questionId = $(this).select2('data')[0].id,
+          questionText = $(this).select2('data')[0].text,
+          currentIndex = $('.contributor-questions').find('li').length.toString(),
+          template = _.template($('#new-contributor-question-template').html()),
+          scrollToQuestion = function ($question) {
+            // scroll up if the new question falls below window...
+            var bottomOffset = $question.offset().top + $question.height();
+            if (bottomOffset > $(window).height()) {
+              $('html, body').animate({
+                scrollTop: (bottomOffset - $(window).height()) + ($(window).height() / 2)
+              }, 400);
+            }
+          };
+
+      // reset select
+      $(this).val('').trigger('change.select2');
+
+      // create new question
+      if (questionId === '0') {
+        $.when(
+          $('.contributor-questions ul').append(
+            template({ company: app.company, index: currentIndex, existingQuestion: null })
+          )
+        ).then(function () {
+          $newQuestion = $('.contributor-questions li').last();
+          scrollToQuestion($newQuestion);
+          $newQuestion.find('textarea')[0].focus();
+        });
+
+      // add existing question
+      } else {
+        $.when(
+          $('.contributor-questions ul').append(
+            template(
+              { company: app.company, index: currentIndex,
+                existingQuestion: { id: questionId, question: questionText } }
+            )
+          )
+        ).then(function () {
+          $newQuestion = $('.contributor-questions li').last();
+          scrollToQuestion($newQuestion);
+        });
+      }
+
+
     })
 
     .on('click', '.contributor-question .remove-question', function () {
       var $question = $(this).closest('.contributor-question');
       $question.addClass('to-be-removed');
       $question.find('.save-or-cancel').removeClass('hidden');
-      $(this).next().prop('checked', true);  // _destroy checkbox
+      $question.find('input[type="checkbox"]').prop('checked', true);  // _destroy checkbox
     })
 
-    .on('click', '.contributor-question .cancel-remove-question, ' +
+    .on('click', '.contributor-question.to-be-removed .cancel, ' +
                  '.contributor-question.to-be-removed .remove-question', function () {
       var $question = $(this).closest('.contributor-question');
       $question.removeClass('to-be-removed');
@@ -60,30 +98,9 @@ function crowdsourcingTemplatesListeners () {
       $question.find('.save-or-cancel').addClass('hidden');
     })
 
-    .on('click', '.new-question .cancel-add-question', function () {
+    .on('click', '.contributor-question.new-question .cancel', function () {
       $(this).closest('li.new-question').remove();
     })
-
-    // .on('click', 'li.contributor-question .remove-question, ' +
-    //              'li.contributor-question .cancel-remove-question',
-    //   function () {
-    //     var $li = $(this).closest('.contributor-question'),
-    //         $liControlBottom = $li.find('.new-question-form-control-bottom'),
-    //         $removeQuestion = $li.find(':checkbox.hidden');
-
-    //     if ($(this).hasClass('remove-question')) {
-    //       $li.addClass('to-be-removed');
-    //       $removeQuestion.prop('checked', true);
-    //       $liControlBottom
-    //          .html('<span>Save changes below or <a class="cancel-remove-question">Cancel</a></span>');
-
-    //     } else {  // .cancel-remove-image
-    //       $li.removeClass('to-be-removed');
-    //       $removeQuestion.prop('checked', false);
-    //       $liControlBottom.html('');
-    //     }
-
-    //   })
 
     .on('submit', '#crowdsourcing-template-form', function () {
       $(this).find('button[type="submit"] span').toggle();

@@ -1,12 +1,14 @@
 
 (function () {
 
-  var contributorQuestions = <%= raw @template.contributor_questions.to_json %>
+  var company = <%= raw @company.to_json({ only: [:id] }) %>,
+      contributorQuestions = <%= raw @template.contributor_questions
+                                  .to_json({ only: [:id, :company_id, :question] }) %>;
 
   $('.contributor-questions ul').empty()
     .append(
       _.template( $('#contributor-questions-template').html() )(
-        { contributorQuestions: contributorQuestions }
+        { company: company, contributorQuestions: contributorQuestions }
       )
     );
 
