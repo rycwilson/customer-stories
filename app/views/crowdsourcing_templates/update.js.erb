@@ -4,10 +4,9 @@
   var company = <%= raw @company.to_json({ only: [:id] }) %>,
       contributorQuestions = <%= raw @template.contributor_questions
                                   .to_json({ only: [:id, :company_id, :role, :question] }) %>,
-      questionsSelectData = <%= raw @contributor_questions_grouped_options_select2.to_json %>
+      questionsSelectData = <%= raw @contributor_questions_grouped_options_select2.to_json %>;
 
-// debugger;
-
+  // update questions list
   $('.contributor-questions ul').empty()
     .append(
       _.template( $('#contributor-questions-template').html() )(
@@ -15,6 +14,7 @@
       )
     );
 
+  // update select options
   $('select.contributor-questions')
     .select2('destroy').empty()
     .prepend('<option selected/>')  // placeholder

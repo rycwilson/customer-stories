@@ -12,6 +12,16 @@ function crowdsourcingTemplatesListeners () {
       if ($(this).val() === null)
         return false;
 
+      var initTemplate = function () {
+        initEmailRequestEditor();
+        $('select.contributor-questions')
+          .prepend('<option selected/>')  // empty option for placeholder
+          .select2({
+            theme: 'bootstrap',
+            placeholder: 'Add a question'
+          });
+      };
+
       $.ajax({
         url: '/companies/' + app.company.id +
                 '/crowdsourcing_templates/' + $(this).val() + '/edit',
@@ -19,15 +29,7 @@ function crowdsourcingTemplatesListeners () {
         dataType: 'html',
         success: function (html, status, xhr) {
           $.when( $('#crowdsourcing-template-container').empty().append(html) )
-            .then(function () {
-              initEmailRequestEditor();
-              $('select.contributor-questions')
-                .prepend('<option selected/>')  // empty option for placeholder
-                .select2({
-                  theme: 'bootstrap',
-                  placeholder: 'Add a question'
-                });
-            });
+            .then(function () { initTemplate(); });
         }
       });
     })

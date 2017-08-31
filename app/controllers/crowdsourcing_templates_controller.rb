@@ -60,7 +60,6 @@ class CrowdsourcingTemplatesController < ApplicationController
 
   def contributor_questions_grouped_options_select2 (company, template)
     unselected_questions = company.contributor_questions - template.contributor_questions
-    puts JSON.pretty_generate(unselected_questions)
     [
       {
         text: 'Custom',
