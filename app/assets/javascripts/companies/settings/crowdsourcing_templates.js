@@ -21,9 +21,8 @@ function crowdsourcingTemplatesListeners () {
           $.when( $('#crowdsourcing-template-container').empty().append(html) )
             .then(function () {
               initEmailRequestEditor();
-              // empty option for placeholder
-              $('.contributor-questions-select')
-                .prepend('<option selected/>')
+              $('select.contributor-questions')
+                .prepend('<option selected/>')  // empty option for placeholder
                 .select2({
                   theme: 'bootstrap',
                   placeholder: 'Add a question'
@@ -33,15 +32,14 @@ function crowdsourcingTemplatesListeners () {
       });
     })
 
-    .on('change', '.contributor-questions-select', function (e) {
-
+    .on('change', 'select.contributor-questions', function (e) {
       var $newQuestion,
           questionId = $(this).select2('data')[0].id,
           questionText = $(this).select2('data')[0].text,
           currentIndex = $('.contributor-questions').find('li').length.toString(),
           template = _.template($('#new-contributor-question-template').html()),
           scrollToQuestion = function ($question) {
-            // scroll up if the new question falls below window...
+            // scroll down if the new question falls below window...
             var bottomOffset = $question.offset().top + $question.height();
             if (bottomOffset > $(window).height()) {
               $('html, body').animate({
@@ -49,10 +47,8 @@ function crowdsourcingTemplatesListeners () {
               }, 400);
             }
           };
-
-      // reset select
+      // reset select to placeholder
       $(this).val('').trigger('change.select2');
-
       // create new question
       if (questionId === '0') {
         $.when(
@@ -64,7 +60,6 @@ function crowdsourcingTemplatesListeners () {
           scrollToQuestion($newQuestion);
           $newQuestion.find('textarea')[0].focus();
         });
-
       // add existing question
       } else {
         $.when(
@@ -79,8 +74,6 @@ function crowdsourcingTemplatesListeners () {
           scrollToQuestion($newQuestion);
         });
       }
-
-
     })
 
     .on('click', '.contributor-question .remove-question', function () {
