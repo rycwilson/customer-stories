@@ -4,7 +4,7 @@
   var company = <%= raw @company.to_json({ only: [:id] }) %>,
       contributorQuestions = <%= raw @template.contributor_questions
                                   .to_json({ only: [:id, :company_id, :role, :question] }) %>,
-      questionsSelectData = <%= raw @contributor_questions_grouped_options_select2.to_json %>;
+      questionsSelectData = <%= raw @contributor_questions_grouped_select2_options.to_json %>;
 
   // update questions list
   $('.contributor-questions ul').empty()

@@ -1,10 +1,13 @@
 
-.companies.edit {
+#crowdsourcing-templates {
 
-  .request-subject {
+  > .row:first-of-type {
+    margin-top: 7px;
     margin-bottom: 25px;
   }
-
+  .request-subject {
+    margin-bottom: 20px;
+  }
   .contributor-questions {
     position: relative;
     .row {

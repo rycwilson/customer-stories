@@ -15,7 +15,7 @@ function crowdsourcingTemplatesListeners () {
       var initTemplate = function () {
         initEmailRequestEditor();
         $('select.contributor-questions')
-          .prepend('<option selected/>')  // empty option for placeholder
+          // .prepend('<option selected/>')  // empty option for placeholder
           .select2({
             theme: 'bootstrap',
             placeholder: 'Add a question'

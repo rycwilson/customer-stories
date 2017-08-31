@@ -126,6 +126,55 @@ class Company < ActiveRecord::Base
     def sales
       where(role: 'sales')
     end
+    def grouped_select_options (template)
+      unselected_questions = self - template.contributor_questions
+      {
+        'Custom' => unselected_questions
+                      .select { |q| q.role.nil? }
+                      .map { |q| [q.question, q.id] }
+                      .unshift( ['- Create new question -', '0'] ),
+        'Role: Customer' => unselected_questions
+                              .select { |q| q.role == 'customer' }
+                              .map { |q| [q.question, q.id] },
+        'Role: Customer Success' => unselected_questions
+                                      .select { |q| q.role == 'customer success' }
+                                      .map { |q| [q.question, q.id] },
+        'Role: Sales' => unselected_questions
+                            .select { |q| q.role == 'sales' }
+                            .map { |q| [q.question, q.id] },
+      }
+    end
+    # method formats grouped options for js select2 initialization
+    def grouped_select2_options (template)
+      unselected_questions = self - template.contributor_questions
+      [
+        {
+          text: 'Custom',
+          children: unselected_questions
+                      .select { |q| q.role.nil? }
+                      .map { |q| { id: q.id, text: q.question } }
+                      .unshift({ id: 0, text: '- Create new question -' })
+        },
+        {
+          text: 'Role: Customer',
+          children: unselected_questions
+                      .select { |q| q.role == 'customer' }
+                      .map { |q| { id: q.id, text: q.question } }
+        },
+        {
+          text: 'Role: Customer Success',
+          children: unselected_questions
+                      .select { |q| q.role == 'customer success' }
+                      .map { |q| { id: q.id, text: q.question } }
+        },
+        {
+          text: 'Role: Sales',
+          children: unselected_questions
+                      .select { |q| q.role == 'sales' }
+                      .map { |q| { id: q.id, text: q.question } }
+        }
+      ]
+    end
   end
   # alias
   has_many :ctas, class_name: 'ContributorQuestion', foreign_key: 'company_id'
@@ -138,6 +187,14 @@ class Company < ActiveRecord::Base
     end
     def sales
       where(name: 'Sales').take
+    end
+    def grouped_select_options
+      {
+        'Custom' => self.where.not("name IN ('Customer', 'Customer Success', 'Sales')")
+                        .map { |template| [template.name, template.id] },
+        'Defaults' => self.where("name IN ('Customer', 'Customer Success', 'Sales')")
+                          .map { |template| [template.name, template.id] }
+      }
     end
   end
   # alias

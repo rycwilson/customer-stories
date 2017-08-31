@@ -35,10 +35,8 @@
     </div>
 
     <div class="contributor-questions col-lg-4">
-      <%= render('companies/settings/contributor_questions', {
-            template: @template, f: f,
-            contributor_questions_grouped_options: contributor_questions_grouped_options
-          }) %>
+      <%= render('companies/settings/contributor_questions',
+            { company: @company, template: @template, f: f }) %>
     </div>
 
   </div>

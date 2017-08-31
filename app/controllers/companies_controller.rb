@@ -23,7 +23,6 @@ class CompaniesController < ApplicationController
   def edit
     redirect_to(company_settings_path) if request.path.match(/\/companies\/\d+/)
     @profile_form_options = set_profile_form_options(params)
-    @templates_select = @company.templates_select
   end
 
   def create
