@@ -3,6 +3,27 @@ function crowdsourcingTemplatesListeners () {
 
   $(document)
 
+    .on('click', 'a.new-template', function () {
+
+      $.ajax({
+        url: '/companies/' + app.company.id + '/crowdsourcing_templates/new',
+        method: 'get',
+        dataType: 'html',
+        success: function (html, status, xhr) {
+          $.when( $('#crowdsourcing-template-container').empty().append(html) )
+            .then(function () {
+              initEmailRequestEditor();
+              $('select.contributor-questions')
+                // .prepend('<option selected/>')  // empty option for placeholder
+                .select2({
+                  theme: 'bootstrap',
+                  placeholder: 'Add a question'
+                });
+            });
+        }
+      });
+    })
+
     .on('change', 'select[name="template[name]"]', function () {
       /*
         This event will get triggered by a re-populating of the select options,
@@ -22,6 +43,13 @@ function crowdsourcingTemplatesListeners () {
           });
       };
 
+      var enableActions = function () {
+        $('#template-actions-dropdown .copy-template, ' +
+          '#template-actions-dropdown .test-template, ' +
+          '#template-actions-dropdown .delete-template')
+            .each(function () { $(this).parent().removeClass('disabled'); });
+      };
+
       $.ajax({
         url: '/companies/' + app.company.id +
                 '/crowdsourcing_templates/' + $(this).val() + '/edit',
@@ -29,9 +57,13 @@ function crowdsourcingTemplatesListeners () {
         dataType: 'html',
         success: function (html, status, xhr) {
           $.when( $('#crowdsourcing-template-container').empty().append(html) )
-            .then(function () { initTemplate(); });
+            .then(function () {
+              initTemplate();
+              enableActions();
+            });
         }
       });
+
     })
 
     .on('change', 'select.contributor-questions', function (e) {

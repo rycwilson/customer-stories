@@ -1,19 +1,18 @@
 
-<%= form_for(@template,
-      url: company_crowdsourcing_template_path(@company, @template),
-      html: { method: 'put', remote: true, class: 'form-horizontal',
-              id: 'crowdsourcing-template-form' }) do |f| %>
+<%= form_for(template, url: url,
+      html: { method: method, remote: true, class: 'form-horizontal',
+              id: 'crowdsourcing-template-form' }) do |template_form| %>
 
-  <%= f.hidden_field(:name) %>
+  <%= template_form.hidden_field(:name) %>
 
   <div class="row">
 
     <div class="col-lg-8">
 
       <div class="request-subject">
-        <%= f.label(:request_subject, "Email Request&nbsp;&#8211;&nbsp;Subject".html_safe) %>
+        <%= template_form.label(:request_subject, "Email Request&nbsp;&#8211;&nbsp;Subject".html_safe) %>
         <div class="input-group">
-          <%= f.text_field(:request_subject, class: 'form-control') %>
+          <%= template_form.text_field(:request_subject, class: 'form-control') %>
           <div class="input-group-btn">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Insert&nbsp;&nbsp;<span class="caret"></span></button>
               <ul class="dropdown-menu">
@@ -27,8 +26,8 @@
       </div>
 
       <div class="request-body">
-        <%= f.label(:request_body, "Email Request&nbsp;&#8211;&nbsp;Body".html_safe) %>
-        <%= f.text_area(:request_body, id: 'email-request-editor',
+        <%= template_form.label(:request_body, "Email Request&nbsp;&#8211;&nbsp;Body".html_safe) %>
+        <%= template_form.text_area(:request_body, id: 'email-request-editor',
                 data: { provider: 'summernote' }) %>
       </div>
 
@@ -36,7 +35,7 @@
 
     <div class="contributor-questions col-lg-4">
       <%= render('companies/settings/contributor_questions',
-            { company: @company, template: @template, f: f }) %>
+            { company: company, template: template, template_form: template_form }) %>
     </div>
 
   </div>
@@ -48,8 +47,9 @@
       <div class="form-group">
 
         <button type="reset" class="btn btn-default">Cancel</button>
-        <button type="submit" class="btn btn-success text-center" style='width:114px'>
-          <span>Save changes</span>
+        <button type="submit" class="btn btn-success text-center"
+                style='<%= method == 'post' ? '135px' : '114px' %>'>
+          <span><%= method == 'post' ? 'Create template' : 'Save changes' %></span>
           <i class='fa fa-spinner fa-pulse' style='display:none'></i>
           <i class='fa fa-check' style='display:none'></i>
         </button>

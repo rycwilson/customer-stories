@@ -1,8 +1,19 @@
 
 class CrowdsourcingTemplatesController < ApplicationController
 
-  before_action({ only: [:edit, :update] }) { @company = Company.find(params[:company_id]) }
-  before_action() { @template = params[:id] == '0' ? nil : CrowdsourcingTemplate.find(params[:id]) }
+  before_action() { @company = Company.find(params[:company_id]) }
+  before_action({ except: [:new, :create] }) do
+    @template = params[:id] == '0' ? nil : CrowdsourcingTemplate.find(params[:id])
+  end
+
+  def new
+    @template = CrowdsourcingTemplate.new
+    render({
+      partial: 'companies/settings/crowdsourcing_template_form',
+      locals: { company: @company, template: @template, method: 'post',
+                url: company_crowdsourcing_templates_path(@company) }
+    })
+  end
 
   def show
   end
@@ -11,7 +22,8 @@ class CrowdsourcingTemplatesController < ApplicationController
     @template.format_for_editor(current_user)
     render({
       partial: 'companies/settings/crowdsourcing_template_form',
-      locals: { company: @company, template: @template }
+      locals: { company: @company, template: @template, method: 'put',
+                url: company_crowdsourcing_template_path(@company, @template) }
     })
   end
 
