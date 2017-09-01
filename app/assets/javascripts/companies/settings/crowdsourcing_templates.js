@@ -3,15 +3,20 @@ function crowdsourcingTemplatesListeners () {
 
   $(document)
 
-    .on('click', 'a.new-template', function () {
+    .on('click', 'a.new-template, a.copy-template', function () {
+
 
       $.ajax({
         url: '/companies/' + app.company.id + '/crowdsourcing_templates/new',
         method: 'get',
+        data: {
+          copyTemplate: $(this).hasClass('copy-template')
+        },
         dataType: 'html',
         success: function (html, status, xhr) {
           $.when( $('#crowdsourcing-template-container').empty().append(html) )
             .then(function () {
+              $('#new-template-name-row').removeClass('hidden');
               initEmailRequestEditor();
               $('select.contributor-questions')
                 // .prepend('<option selected/>')  // empty option for placeholder
@@ -24,7 +29,7 @@ function crowdsourcingTemplatesListeners () {
       });
     })
 
-    .on('change', 'select[name="template[name]"]', function () {
+    .on('change', 'select.crowdsourcing-template', function () {
       /*
         This event will get triggered by a re-populating of the select options,
         such as happens when all templates are restored to default.
@@ -32,6 +37,8 @@ function crowdsourcingTemplatesListeners () {
       */
       if ($(this).val() === null)
         return false;
+
+      $('#new-template-name-row').addClass('hidden');
 
       var initTemplate = function () {
         initEmailRequestEditor();
@@ -137,7 +144,7 @@ function crowdsourcingTemplatesListeners () {
 
 
     // load selected email template for editing
-    // .on('change', '.templates-select', function () {
+    // .on('change', 'select.crowdsourcing-template', function () {
     //   /*
     //     This event will get triggered by a re-populating of the select options,
     //     such as happens when all templates are restored to default.
@@ -234,7 +241,7 @@ function crowdsourcingTemplatesListeners () {
           // select2 doesn't currently support wholesale replacement of options;
           // here's a workaround:
           // (https://github.com/select2/select2/issues/2830#issuecomment-74971872)
-          $('.templates-select').html(newOptions).change();
+          $('select.crowdsourcing-template').html(newOptions).change();
           flashDisplay(data.flash, 'success');
         }
       });
@@ -248,7 +255,7 @@ function crowdsourcingTemplatesListeners () {
            body: $('.note-editable').html()
       };
       $.post(
-          '/email_templates/' + $('.templates-select').val() + '/test',
+          '/email_templates/' + $('select.crowdsourcing-template').val() + '/test',
           data,
           function (data, status) {
             flashDisplay(data.flash, 'info');
@@ -257,7 +264,7 @@ function crowdsourcingTemplatesListeners () {
     })
 
     .on('click', '#cancel-template', function () {
-      $('.templates-select').trigger('change');
+      $('select.crowdsourcing-template').trigger('change');
     });
 
 }

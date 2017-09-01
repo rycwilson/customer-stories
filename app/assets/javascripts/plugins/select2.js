@@ -44,7 +44,7 @@ function initSelect2 () {
     placeholder: 'Add tags'
   });
 
-  $('.templates-select').select2({
+  $('select.crowdsourcing-template').select2({
     theme: 'bootstrap',
     placeholder: 'Select'
   });

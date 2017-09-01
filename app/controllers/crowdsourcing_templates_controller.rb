@@ -28,6 +28,7 @@ class CrowdsourcingTemplatesController < ApplicationController
   end
 
   def create
+    binding.remote_pry
   end
 
   def update

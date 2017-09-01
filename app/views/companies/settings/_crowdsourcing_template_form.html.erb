@@ -1,15 +1,18 @@
 
 <%= form_for(template, url: url,
-      html: { method: method, remote: true, class: 'form-horizontal',
+      html: { method: method, remote: true,
               id: 'crowdsourcing-template-form' }) do |template_form| %>
-
-  <%= template_form.hidden_field(:name) %>
 
   <div class="row">
 
     <div class="col-lg-8">
 
-      <div class="request-subject">
+      <div class="form-group">
+        <%= template_form.label(:name, "Name") %>
+        <%= template_form.text_field(:name, class: 'form-control') %>
+      </div>
+
+      <div class="form-group request-subject">
         <%= template_form.label(:request_subject, "Email Request&nbsp;&#8211;&nbsp;Subject".html_safe) %>
         <div class="input-group">
           <%= template_form.text_field(:request_subject, class: 'form-control') %>
@@ -25,7 +28,7 @@
         </div>
       </div>
 
-      <div class="request-body">
+      <div class="form-group request-body">
         <%= template_form.label(:request_body, "Email Request&nbsp;&#8211;&nbsp;Body".html_safe) %>
         <%= template_form.text_area(:request_body, id: 'email-request-editor',
                 data: { provider: 'summernote' }) %>
@@ -33,7 +36,7 @@
 
     </div>
 
-    <div class="contributor-questions col-lg-4">
+    <div class="form-group contributor-questions col-lg-4">
       <%= render('companies/settings/contributor_questions',
             { company: company, template: template, template_form: template_form }) %>
     </div>
@@ -48,7 +51,7 @@
 
         <button type="reset" class="btn btn-default">Cancel</button>
         <button type="submit" class="btn btn-success text-center"
-                style='<%= method == 'post' ? '135px' : '114px' %>'>
+                style='<%= method == 'post' ? 'width: 135px' : 'width: 114px' %>'>
           <span><%= method == 'post' ? 'Create template' : 'Save changes' %></span>
           <i class='fa fa-spinner fa-pulse' style='display:none'></i>
           <i class='fa fa-check' style='display:none'></i>
