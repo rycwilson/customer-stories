@@ -28,7 +28,6 @@ class CrowdsourcingTemplatesController < ApplicationController
   end
 
   def create
-    binding.remote_pry
   end
 
   def update
@@ -40,6 +39,18 @@ class CrowdsourcingTemplatesController < ApplicationController
   end
 
   def destroy
+  end
+
+  def test
+    template = CrowdsourcingTemplate.new(
+                  request_subject: params[:subject],
+                  request_body: params[:body]
+                )
+    template.format_for_storage
+    UserMailer.test_template(template, current_user).deliver_now
+    respond_to do |format|
+      format.json { render json: { flash: "Test email sent to #{current_user.email}" } }
+    end
   end
 
   private

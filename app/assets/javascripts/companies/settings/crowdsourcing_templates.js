@@ -1,6 +1,8 @@
 
 function crowdsourcingTemplatesListeners () {
 
+  var dirtyForm = false;
+
   $(document)
 
     .on('click', 'a.new-template, a.copy-template', function () {
@@ -29,7 +31,17 @@ function crowdsourcingTemplatesListeners () {
       });
     })
 
+    .on('input', '#crowdsourcing-template-form input, ' +
+                 '#crowdsourcing-template-form .note-editable', function () {
+                  dirtyForm = true;
+    })
+
     .on('change', 'select.crowdsourcing-template', function () {
+
+      if (dirtyForm === true) {
+
+      }
+
       /*
         This event will get triggered by a re-populating of the select options,
         such as happens when all templates are restored to default.
@@ -141,6 +153,22 @@ function crowdsourcingTemplatesListeners () {
       $(this).find('button[type="submit"] .fa-spinner').toggle();
     })
 
+    .on('click', 'a.test-template', function () {
+      // don't use .serialize() or it will send a PUT request
+      // (not that it really matters what kind of request it is - POST or PUT is fine)
+      var data = {
+        subject: $('#crowdsourcing_template_request_subject').val(),
+           body: $('.note-editable').html()
+      };
+      $.post(
+          '/companies/' + app.company.id + '/crowdsourcing_templates/' + $('select.crowdsourcing-template').val() + '/test',
+          data,
+          function (data, status) {
+            flashDisplay(data.flash, 'info');
+          }
+      );
+    })
+
 
 
     // load selected email template for editing
@@ -247,21 +275,7 @@ function crowdsourcingTemplatesListeners () {
       });
     })
 
-    .on('click', '#test-template', function () {
-      // don't use .serialize() or it will send a PUT request
-      // (not that it really matters what kind of request it is - POST or PUT is fine)
-      var data = {
-        subject: $('#template_subject').val(),
-           body: $('.note-editable').html()
-      };
-      $.post(
-          '/email_templates/' + $('select.crowdsourcing-template').val() + '/test',
-          data,
-          function (data, status) {
-            flashDisplay(data.flash, 'info');
-          }
-      );
-    })
+
 
     .on('click', '#cancel-template', function () {
       $('select.crowdsourcing-template').trigger('change');

@@ -64,11 +64,11 @@ class UserMailer < ApplicationMailer
     send_mail 'alert', curator, curator, subject
   end
 
-  def test_template template, curator
-    subject = template.subject
+  def test_template (template, curator)
+    subject = template.request_subject
                 .sub("[customer_name]", "CustomerCompany")
                 .sub("[company_name]", curator.company.name)
-    @body = template.body
+    @body = template.request_body
               .gsub("[customer_name]", "CustomerCompany")
               .gsub("[company_name]", curator.company.name)
               .gsub("[product_name]", "CompanyProduct")
@@ -85,7 +85,7 @@ class UserMailer < ApplicationMailer
               .gsub("[opt_out_url]", "#")
               .gsub("[curator_img_url]", curator.photo_url || "")
               .html_safe
-    send_mail 'test', curator, curator, subject
+    send_mail('test', curator, curator, subject)
   end
 
   # type is one of: request, remind, alert, test
