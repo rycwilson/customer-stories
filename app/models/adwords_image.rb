@@ -6,7 +6,7 @@ class AdwordsImage < ActiveRecord::Base
   alias_attribute :ads, :adwords_ads
   has_many :stories, through: :adwords_ads
 
-  before_destroy :s3_delete
+  before_destroy(:s3_delete) if ENV['HOST_NAME'] == 'customerstories.net'
 
   # don't delete these default adwords images; may be used to seed adwords
   NO_DELETE = [
