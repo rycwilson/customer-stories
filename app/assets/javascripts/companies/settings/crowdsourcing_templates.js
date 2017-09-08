@@ -94,7 +94,8 @@ function crowdsourcingTemplatesListeners () {
         ).then(function () {
           $newQuestion = $('.contributor-questions li').last();
           scrollToQuestion($newQuestion);
-          $newQuestion.find('textarea')[0].focus();
+          // ref: https://stackoverflow.com/questions/8380759 (2nd answer)
+          setTimeout(function () { $newQuestion.find('textarea')[0].focus(); }, 0);
         });
       // add existing question
       } else {
