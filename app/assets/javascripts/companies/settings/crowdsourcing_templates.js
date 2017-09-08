@@ -5,8 +5,8 @@ function crowdsourcingTemplatesListeners () {
 
   $(document)
 
-    .on('click', 'a.new-template, a.copy-template', function () {
-
+    .on('click', '#template-actions-dropdown .new-template, ' +
+                 '#template-actions-dropdown .copy-template', function () {
 
       $.ajax({
         url: '/companies/' + app.company.id + '/crowdsourcing_templates/new',
@@ -38,6 +38,10 @@ function crowdsourcingTemplatesListeners () {
 
     .on('change', 'select.crowdsourcing-template', function () {
 
+      var isDefaultTemplate = $(this).find('option:selected')
+                                     .closest('optgroup')
+                                     .attr('label') == 'Defaults' ? true : false;
+
       if (dirtyForm === true) {
 
       }
@@ -63,11 +67,19 @@ function crowdsourcingTemplatesListeners () {
       };
 
       var toggleActions = function () {
+        var $dropdown = $('#template-actions-dropdown');
+
         // options enabled for any template
-        $('#template-actions-dropdown .copy-template, ' +
-          '#template-actions-dropdown .test-template, ' +
-          '#template-actions-dropdown .delete-template')
-            .each(function () { $(this).parent().removeClass('disabled'); });
+        $dropdown.find('.copy-template, .test-template, .delete-template')
+          .each(function () { $(this).removeClass('disabled'); });
+
+        // restore current template only applies to defaults
+        if (isDefaultTemplate) {
+          $dropdown.find('.restore-current').removeClass('disabled');
+        } else {
+          $dropdown.find('.restore-current').addClass('disabled');
+        }
+
       };
 
       $.ajax({
@@ -158,7 +170,7 @@ function crowdsourcingTemplatesListeners () {
       $(this).find('button[type="submit"] .fa-spinner').toggle();
     })
 
-    .on('click', 'a.test-template', function () {
+    .on('click', '#template-actions-dropdown .test-template', function () {
       // don't use .serialize() or it will send a PUT request
       // (not that it really matters what kind of request it is - POST or PUT is fine)
       var data = {
