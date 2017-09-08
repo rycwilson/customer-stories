@@ -10,7 +10,8 @@
 <div style='margin-bottom:15px; margin-left:-15px; margin-right:-15px'>
   <%= select_tag('',
         grouped_options_for_select(
-          company.contributor_questions.grouped_select_options(template)
+          company.contributor_questions.grouped_select_options(),
+          { disabled: template.contributor_questions.map { |q| q.id } }
         ),
         {
           include_blank: true,
@@ -41,7 +42,7 @@
 
       <div class="row">
         <div class="col-sm-12 save-or-cancel text-center hidden">
-          <span>Save changes to remove Question, or <a class='cancel'>Cancel</a></span>
+          <span>Save changes to remove this Question, or <a class='cancel'>Cancel</a></span>
         </div>
       </div>
 

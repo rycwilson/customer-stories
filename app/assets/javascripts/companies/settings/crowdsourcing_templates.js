@@ -69,9 +69,9 @@ function crowdsourcingTemplatesListeners () {
     })
 
     .on('change', 'select.contributor-questions', function (e) {
-      var $newQuestion,
-          questionId = $(this).select2('data')[0].id,
-          questionText = $(this).select2('data')[0].text,
+      var $newQuestion, $select = $(this),
+          questionId = $select.select2('data')[0].id,
+          questionText = $select.select2('data')[0].text,
           currentIndex = $('.contributor-questions').find('li').length.toString(),
           template = _.template($('#new-contributor-question-template').html()),
           scrollToQuestion = function ($question) {
@@ -84,7 +84,7 @@ function crowdsourcingTemplatesListeners () {
             }
           };
       // reset select to placeholder
-      $(this).val('').trigger('change.select2');
+      $select.val('').trigger('change.select2');
       // create new question
       if (questionId === '0') {
         $.when(
@@ -106,6 +106,11 @@ function crowdsourcingTemplatesListeners () {
             )
           )
         ).then(function () {
+          // disable the selected question option
+          $select.find('option[value="' + questionId + '"]').prop('disabled', true);
+          // re-init select2 for disabled option to take effect
+          $select.select2('destroy')
+                 .select2({ theme: 'bootstrap', placeholder: 'Add a question' });
           $newQuestion = $('.contributor-questions li').last();
           scrollToQuestion($newQuestion);
         });
@@ -128,7 +133,16 @@ function crowdsourcingTemplatesListeners () {
     })
 
     .on('click', '.contributor-question.new-question .cancel', function () {
-      $(this).closest('li.new-question').remove();
+      var $select = $('select.contributor-questions'),
+          $question = $(this).closest('li.new-question'),
+          questionId = $question.find('input[type="hidden"]:last-of-type').val();
+
+      // enable the question option
+      $select.find('option[value="' + questionId + '"]').prop('disabled', false);
+      // re-init select2 for property change to take effect
+      $select.select2('destroy')
+             .select2({ theme: 'bootstrap', placeholder: 'Add a question' });
+      $question.remove();
     })
 
     .on('submit', '#crowdsourcing-template-form', function () {
@@ -159,77 +173,59 @@ function crowdsourcingTemplatesListeners () {
       });
     })
 
+    // .on('click', '#restore-current-template', function () {
+    //   if ($(this).parent().hasClass('disabled'))
+    //     return false;
 
-    /*
-      Detect changes in template editor (subject or body)
-    */
-    .on('input summernote.change',
-                   '#template_subject, #email-template-editor', function () {
-      // textarea responds to .text(); text field responds to .val()
-      if ($(this).text().length > 0 || $(this).val().length > 0) {
-        $('#save-template').prop('disabled', false);
-        $('#test-template').prop('disabled', false);
-        $('#cancel-template').prop('disabled', false);
-      } else {
-        $('#save-template').prop('disabled', true);
-        $('#test-template').prop('disabled', true);
-        // cancel stays active once a change is made
-      }
-    })
+    //   var $a = $(this);
+    //   $.ajax({
+    //     url: '/email_templates/' +
+    //             $('#email-templates-form').find('select:first').val(),
+    //     method: 'put',
+    //     data: { 'restore': true },
+    //     success: function (data, status, xhr) {
+    //       $('#template-subject').text(data.template.subject);
+    //       $('.note-editable').html(data.template.body);
+    //       $a.closest('form').find('[type=submit]').prop('disabled', true);
+    //       $('#cancel-template').prop('disabled', true);
+    //       flashDisplay(data.flash, 'success');
+    //     }
+    //   });
+    // })
 
-    .on('click', '#restore-current-template', function () {
-      if ($(this).parent().hasClass('disabled'))
-        return false;
-
-      var $a = $(this);
-      $.ajax({
-        url: '/email_templates/' +
-                $('#email-templates-form').find('select:first').val(),
-        method: 'put',
-        data: { 'restore': true },
-        success: function (data, status, xhr) {
-          $('#template-subject').text(data.template.subject);
-          $('.note-editable').html(data.template.body);
-          $a.closest('form').find('[type=submit]').prop('disabled', true);
-          $('#cancel-template').prop('disabled', true);
-          flashDisplay(data.flash, 'success');
-        }
-      });
-    })
-
-    .on('click', '#restore-all-templates', function () {
-      var templateId = $('#email-templates-form').find('select:first').val(),
-          newOptions = "",
-          responseTemplateId;
-      if (templateId === "")
-        templateId = 0;
-      $.ajax({
-        url: '/email_templates/' + templateId,
-        method: 'put',
-        data: { 'restore_all': true },
-        success: function (data, status, xhr) {
-          // if no loaded template when request was made,
-          // a null current_template is returned
-          responseTemplateId = (data.current_template || { id: 0 }).id;
-          data.templates_select.forEach(function (option, index) {
-            // if this is the first option AND no template was loaded,
-            // first option to allow for placeholder
-            if (index === 0 && responseTemplateId === 0) {
-              newOptions += "<option value></option>";
-            } else if (option[1] === responseTemplateId) {
-              newOptions += "<option selected='selected' value='" + option[1] + "'>" + option[0] + "</option>";
-            } else {
-              newOptions += "<option value='" + option[1] + "'>" + option[0] + "</option>";
-            }
-          });
-          // select2 doesn't currently support wholesale replacement of options;
-          // here's a workaround:
-          // (https://github.com/select2/select2/issues/2830#issuecomment-74971872)
-          $('select.crowdsourcing-template').html(newOptions).change();
-          flashDisplay(data.flash, 'success');
-        }
-      });
-    })
+    // .on('click', '#restore-all-templates', function () {
+    //   var templateId = $('#email-templates-form').find('select:first').val(),
+    //       newOptions = "",
+    //       responseTemplateId;
+    //   if (templateId === "")
+    //     templateId = 0;
+    //   $.ajax({
+    //     url: '/email_templates/' + templateId,
+    //     method: 'put',
+    //     data: { 'restore_all': true },
+    //     success: function (data, status, xhr) {
+    //       // if no loaded template when request was made,
+    //       // a null current_template is returned
+    //       responseTemplateId = (data.current_template || { id: 0 }).id;
+    //       data.templates_select.forEach(function (option, index) {
+    //         // if this is the first option AND no template was loaded,
+    //         // first option to allow for placeholder
+    //         if (index === 0 && responseTemplateId === 0) {
+    //           newOptions += "<option value></option>";
+    //         } else if (option[1] === responseTemplateId) {
+    //           newOptions += "<option selected='selected' value='" + option[1] + "'>" + option[0] + "</option>";
+    //         } else {
+    //           newOptions += "<option value='" + option[1] + "'>" + option[0] + "</option>";
+    //         }
+    //       });
+    //       // select2 doesn't currently support wholesale replacement of options;
+    //       // here's a workaround:
+    //       // (https://github.com/select2/select2/issues/2830#issuecomment-74971872)
+    //       $('select.crowdsourcing-template').html(newOptions).change();
+    //       flashDisplay(data.flash, 'success');
+    //     }
+    //   });
+    // })
 
     .on('click', '#cancel-template', function () {
       $('select.crowdsourcing-template').trigger('change');
@@ -267,14 +263,16 @@ function selectTemplate ($select) {
     var $dropdown = $('#template-actions-dropdown');
 
     // options enabled for any template
-    $dropdown.find('.copy-template, .test-template, .delete-template')
+    $dropdown.find('.copy-template, .test-template')
       .each(function () { $(this).removeClass('disabled'); });
 
     // restore current template only applies to defaults
     if (isDefaultTemplate) {
       $dropdown.find('.restore-current').removeClass('disabled');
+      $dropdown.find('.delete-template').addClass('disabled');
     } else {
       $dropdown.find('.restore-current').addClass('disabled');
+      $dropdown.find('.delete-template').removeClass('disabled');
     }
 
   };

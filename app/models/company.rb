@@ -117,61 +117,79 @@ class Company < ActiveRecord::Base
   end
   has_many :email_templates, dependent: :destroy
   has_many :contributor_questions, dependent: :destroy do
-    def customer
+    def customer ()
       where(role: 'customer')
     end
-    def customer_success
+    def customer_success ()
       where(role: 'customer_success')
     end
-    def sales
+    def sales ()
       where(role: 'sales')
     end
-    def grouped_select_options (template)
-      unselected_questions = self - template.contributor_questions
+    def grouped_select_options ()
       {
-        'Custom' => unselected_questions
-                      .select { |q| q.role.nil? }
-                      .map { |q| [q.question, q.id] }
-                      .unshift( ['- Create new question -', '0'] ),
-        'Role: Customer' => unselected_questions
-                              .select { |q| q.role == 'customer' }
-                              .map { |q| [q.question, q.id] },
-        'Role: Customer Success' => unselected_questions
-                                      .select { |q| q.role == 'customer success' }
-                                      .map { |q| [q.question, q.id] },
-        'Role: Sales' => unselected_questions
-                            .select { |q| q.role == 'sales' }
-                            .map { |q| [q.question, q.id] },
+        'Custom' => self.select { |q| q.role.nil? }
+                        .map { |q| [q.question, q.id] }
+                        .unshift( ['- Create new question -', '0'] ),
+        'Customer' => self.select { |q| q.role == 'customer' }
+                          .map { |q| [q.question, q.id] },
+        'Customer Success' => self.select { |q| q.role == 'customer success' }
+                                  .map { |q| [q.question, q.id] },
+        'Sales' => self.select { |q| q.role == 'sales' }
+                       .map { |q| [q.question, q.id] },
       }
     end
     # method formats grouped options for js select2 initialization
     def grouped_select2_options (template)
-      unselected_questions = self - template.contributor_questions
       [
         {
           text: 'Custom',
-          children: unselected_questions
-                      .select { |q| q.role.nil? }
-                      .map { |q| { id: q.id, text: q.question } }
-                      .unshift({ id: 0, text: '- Create new question -' })
+          children: self.select { |q| q.role.nil? }
+                        .map do |q|
+                          {
+                            id: q.id, text: q.question,
+                            disabled: template.contributor_questions.any? do |ques|
+                                        ques.id == q.id
+                                      end
+                          }
+                        end
+                        .unshift({ id: 0, text: '- Create new question -' })
         },
         {
-          text: 'Role: Customer',
-          children: unselected_questions
-                      .select { |q| q.role == 'customer' }
-                      .map { |q| { id: q.id, text: q.question } }
+          text: 'Customer',
+          children: self.select { |q| q.role == 'customer' }
+                        .map do |q|
+                          {
+                            id: q.id, text: q.question,
+                            disabled: template.contributor_questions.any? do |ques|
+                                        ques.id == q.id
+                                      end
+                          }
+                        end
         },
         {
-          text: 'Role: Customer Success',
-          children: unselected_questions
-                      .select { |q| q.role == 'customer success' }
-                      .map { |q| { id: q.id, text: q.question } }
+          text: 'Customer Success',
+          children: self.select { |q| q.role == 'customer success' }
+                        .map do |q|
+                          {
+                            id: q.id, text: q.question,
+                            disabled: template.contributor_questions.any? do |ques|
+                                        ques.id == q.id
+                                      end
+                          }
+                        end
         },
         {
-          text: 'Role: Sales',
-          children: unselected_questions
-                      .select { |q| q.role == 'sales' }
-                      .map { |q| { id: q.id, text: q.question } }
+          text: 'Sales',
+          children: self.select { |q| q.role == 'sales' }
+                        .map do |q|
+                          {
+                            id: q.id, text: q.question,
+                            disabled: template.contributor_questions.any? do |ques|
+                                        ques.id == q.id
+                                      end
+                          }
+                        end
         }
       ]
     end
