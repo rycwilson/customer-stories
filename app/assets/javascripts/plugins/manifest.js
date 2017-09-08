@@ -61,6 +61,8 @@
 
 //= require bootstrap-validator/dist/validator
 
+//= require bootbox/bootbox
+
 
 
 

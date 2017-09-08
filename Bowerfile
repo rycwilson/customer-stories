@@ -19,13 +19,14 @@ asset 'bootstrap-validator'
 asset 'jquery-textfill'
 asset 'color-thief'
 asset 'arrive'
+asset 'bootbox'
 
 # dependencies for MVP theme
 asset 'fontawesome', '~4.4.0'
 asset 'flot', '~0.8.3'
 asset 'flot.tooltip', '~0.8.5'
 asset 'flot.orderbars', '*'
-asset 'datatables', '~1.10.8'
+# asset 'datatables', '~1.10.8'  # installed manually since it was purchased
 asset 'datatables-plugins', '*'
 asset 'select2', '~4.0.0'
 asset 'magnific-popup', '~0.9.9'

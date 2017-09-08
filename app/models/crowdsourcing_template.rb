@@ -36,4 +36,8 @@ class CrowdsourcingTemplate < ActiveRecord::Base
                          '<a href="[\1_url]">\3</a>' )
   end
 
+  def default?
+    ['Customer', 'Customer Success', 'Sales'].include?(self.name)
+  end
+
 end

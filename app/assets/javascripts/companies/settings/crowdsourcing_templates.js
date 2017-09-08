@@ -33,68 +33,34 @@ function crowdsourcingTemplatesListeners () {
 
     .on('input', '#crowdsourcing-template-form input, ' +
                  '#crowdsourcing-template-form .note-editable', function () {
-                  dirtyForm = true;
+      dirtyForm = true;
     })
 
     .on('change', 'select.crowdsourcing-template', function () {
 
-      var isDefaultTemplate = $(this).find('option:selected')
-                                     .closest('optgroup')
-                                     .attr('label') == 'Defaults' ? true : false;
-
-      if (dirtyForm === true) {
-
+      if (dirtyForm) {
+        var $this = $(this);
+        bootbox.confirm({
+          size: 'small',
+          closeButton: false,
+          message: "<i class='fa fa-warning'></i>\xa0\xa0\xa0<span>Unsaved changes will be lost</span>",
+          buttons: {
+            confirm: {
+              label: 'Continue without saving',
+              className: 'btn-default'
+            },
+            cancel: {
+              label: 'Cancel',
+              className: 'btn-default'
+            }
+          },
+          callback: function (continueWithoutSave) {
+            if (continueWithoutSave) { selectTemplate($this); }
+          }
+        });
+      } else {
+        selectTemplate( $(this) );
       }
-
-      /*
-        This event will get triggered by a re-populating of the select options,
-        such as happens when all templates are restored to default.
-        When this happens, if no template has been loaded, do not send a GET
-      */
-      if ($(this).val() === null)
-        return false;
-
-      $('#new-template-name-row').addClass('hidden');
-
-      var initTemplate = function () {
-        initEmailRequestEditor();
-        $('select.contributor-questions')
-          // .prepend('<option selected/>')  // empty option for placeholder
-          .select2({
-            theme: 'bootstrap',
-            placeholder: 'Add a question'
-          });
-      };
-
-      var toggleActions = function () {
-        var $dropdown = $('#template-actions-dropdown');
-
-        // options enabled for any template
-        $dropdown.find('.copy-template, .test-template, .delete-template')
-          .each(function () { $(this).removeClass('disabled'); });
-
-        // restore current template only applies to defaults
-        if (isDefaultTemplate) {
-          $dropdown.find('.restore-current').removeClass('disabled');
-        } else {
-          $dropdown.find('.restore-current').addClass('disabled');
-        }
-
-      };
-
-      $.ajax({
-        url: '/companies/' + app.company.id +
-                '/crowdsourcing_templates/' + $(this).val() + '/edit',
-        method: 'get',
-        dataType: 'html',
-        success: function (html, status, xhr) {
-          $.when( $('#crowdsourcing-template-container').empty().append(html) )
-            .then(function () {
-              initTemplate();
-              toggleActions();
-            });
-        }
-      });
 
     })
 
@@ -194,40 +160,6 @@ function crowdsourcingTemplatesListeners () {
     })
 
 
-
-    // load selected email template for editing
-    // .on('change', 'select.crowdsourcing-template', function () {
-    //   /*
-    //     This event will get triggered by a re-populating of the select options,
-    //     such as happens when all templates are restored to default.
-    //     When this happens, if no template has been loaded, do not send a GET
-    //   */
-    //   if ($(this).val() === null)
-    //     return false;
-
-    //   $.get('/email_templates/' + $(this).val(), function (data, status, xhr) {
-    //     // enable the editor
-    //     $('.note-editable').attr('contenteditable', 'true');
-    //     $('#template_subject').val(data.subject);
-    //     $('.note-editable').html(data.body);
-    //     $('#email-templates-form').attr('action', '/email_templates/' + data.id);
-    //     $('.note-editable').trigger('loadTemplate');
-    //   });
-    // })
-
-    .on('loadTemplate', '.note-editable', function () {
-      // show the editor
-      // $(this).closest('form-group')
-      // restore this template
-      $('#restore-current-template').parent().removeClass('disabled');
-      // test template
-      $('#test-template').prop('disabled', false);
-      // save
-      $(this).closest('form').find('[type=submit]').prop('disabled', true);
-      // cancel
-      $('#cancel-template').prop('disabled', true);
-    })
-
     /*
       Detect changes in template editor (subject or body)
     */
@@ -299,12 +231,67 @@ function crowdsourcingTemplatesListeners () {
       });
     })
 
-
-
     .on('click', '#cancel-template', function () {
       $('select.crowdsourcing-template').trigger('change');
     });
 
+}
+
+
+function selectTemplate ($select) {
+
+  var isDefaultTemplate = $select.find('option:selected')
+                                 .closest('optgroup')
+                                 .attr('label') == 'Defaults' ? true : false;
+  /*
+    This event will get triggered by a re-populating of the select options,
+    such as happens when all templates are restored to default.
+    When this happens, if no template has been loaded, do not send a GET
+  */
+  if ($select.val() === null)
+    return false;
+
+  $('#new-template-name-row').addClass('hidden');
+
+  var initTemplate = function () {
+    initEmailRequestEditor();
+    $('select.contributor-questions')
+      // .prepend('<option selected/>')  // empty option for placeholder
+      .select2({
+        theme: 'bootstrap',
+        placeholder: 'Add a question'
+      });
+  };
+
+  var toggleActions = function () {
+    var $dropdown = $('#template-actions-dropdown');
+
+    // options enabled for any template
+    $dropdown.find('.copy-template, .test-template, .delete-template')
+      .each(function () { $(this).removeClass('disabled'); });
+
+    // restore current template only applies to defaults
+    if (isDefaultTemplate) {
+      $dropdown.find('.restore-current').removeClass('disabled');
+    } else {
+      $dropdown.find('.restore-current').addClass('disabled');
+    }
+
+  };
+
+  $.ajax({
+    url: '/companies/' + app.company.id +
+            '/crowdsourcing_templates/' + $select.val() + '/edit',
+    method: 'get',
+    dataType: 'html',
+    success: function (html, status, xhr) {
+      $.when( $('#crowdsourcing-template-container').empty().append(html) )
+        .then(function () {
+          initTemplate();
+          toggleActions();
+        });
+    }
+  });
 }
 
 function insertText (elementId, text) {

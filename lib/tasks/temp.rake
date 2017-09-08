@@ -2,9 +2,9 @@ namespace :temp do
 
   desc "temp stuff"
 
-  task update_crowdsourcing_templates do
+  # task update_crowdsourcing_templates do
 
-  end
+  # end
 
   task create_crowdsourcing_templates: :environment do
     CrowdsourcingTemplate.destroy_all

@@ -1,4 +1,19 @@
 
+.bootbox.modal {
+  .modal-content {
+    background-color: #fcf8e3;
+    border-color: #faebcc;
+    color: #8a6d3b;
+    overflow: hidden;  // so background color doesn't extend past border radius
+  }
+  .modal-footer {
+    background-color: #fff;
+  }
+  .modal-body {
+    font-size: 16px !important;
+  }
+}
+
 #crowdsourcing-templates {
 
   > .row:first-of-type {
@@ -15,6 +30,7 @@
   .form-horizontal {
     // margin-left: -50px;
   }
+
   .request-subject:not(.insert-data) {
     margin-bottom: 25px;
   }
