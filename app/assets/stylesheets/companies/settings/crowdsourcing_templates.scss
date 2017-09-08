@@ -4,13 +4,21 @@
   > .row:first-of-type {
     margin-top: 7px;
     margin-bottom: 20px;
+
+    #template-actions-dropdown {
+      i.action {
+        width: 17px;
+        color: #666;
+      }
+    }
   }
   .form-horizontal {
     // margin-left: -50px;
   }
-  .request-subject {
+  .request-subject:not(.insert-data) {
     margin-bottom: 25px;
   }
+
   .contributor-questions {
     position: relative;
     .row {
@@ -37,6 +45,9 @@
       color: #516c87;
       cursor: pointer;
     }
+
+
+
     li.contributor-question {
       div[class*='col-']:first-child {
         padding: 0 10px;

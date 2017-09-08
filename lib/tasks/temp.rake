@@ -2,6 +2,10 @@ namespace :temp do
 
   desc "temp stuff"
 
+  task update_crowdsourcing_templates do
+
+  end
+
   task create_crowdsourcing_templates: :environment do
     CrowdsourcingTemplate.destroy_all
     EmailTemplate.all.each do |email_template|

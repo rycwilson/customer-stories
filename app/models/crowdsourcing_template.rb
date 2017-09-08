@@ -22,7 +22,7 @@ class CrowdsourcingTemplate < ActiveRecord::Base
     end
     # give anchor links a format that allows for editing text of the link
     # don't want to include actual links, as they'll be broken (placeholders instead of actual urls)
-    self.request_body.gsub!(/<a\shref=('|\")\[(\w+)\]('|\")>(.+?)<\/a>/, '[\2 link_text="\4"]')
+    self.request_body.gsub!(/<a\shref=('|\")\[(\w+)_url\]('|\")>(.+?)<\/a>/, '[\2_link="\4"]')
     # highlight all placeholders, links, and urls
     self.request_body.gsub!(/(\[.+?\])/, '<span>\1</span>')
   end
@@ -32,8 +32,8 @@ class CrowdsourcingTemplate < ActiveRecord::Base
     self.request_body.sub!( /(id=('|")curator-img('|") src=)('|")(https:\S+|\/assets\S+)('|")/,
                         '\1"[curator_img_url]"' ) # outside single quote necessary for capture reference to work correctly
     # re-construct anchor links
-    self.request_body.gsub!( /\[(\w+)\slink_text=('|")(.+?)('|")\]/,
-                         '<a href="[\1]">\3</a>' )
+    self.request_body.gsub!( /\[(\w+)_link=('|")(.+?)('|")\]/,
+                         '<a href="[\1_url]">\3</a>' )
   end
 
 end

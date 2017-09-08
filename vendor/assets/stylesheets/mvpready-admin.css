@@ -747,11 +747,13 @@ fieldset[disabled] .btn-transparent.active {
 .dropup .btn-twitter .caret {
   border-bottom-color: #fff;
 }
-.dropdown-menu > li {
+.dropdown-menu > li,
+.dropdown-menu > ul > li {  /* csp - covers summernote custom button */
   margin-right: .5em;
   margin-left: .5em;
 }
-.dropdown-menu > li > a {
+.dropdown-menu > li > a,
+.dropdown-menu > ul > li > a {  /* csp - covers summernote custom button */
   padding: 6px 12px;
   font-size: 13px;
   outline: none;
@@ -761,12 +763,17 @@ fieldset[disabled] .btn-transparent.active {
   border-bottom-left-radius: 4px;
 }
 .dropdown-menu > li > a:hover,
-.dropdown-menu > li > a:focus {
+.dropdown-menu > ul > li > a:hover,  /* csp - covers summernote custom button */
+.dropdown-menu > li > a:focus,
+.dropdown-menu > ul > li > a:focus {  /* csp - covers summernote custom button */
   background-color: #ededed;
 }
 .dropdown-menu > .active > a,
+.dropdown-menu > ul > .active > a  /* csp - covers summernote custom button */
 .dropdown-menu > .active > a:hover,
-.dropdown-menu > .active > a:focus {
+.dropdown-menu > ul > .active > a:hover,  /* csp - covers summernote custom button */
+.dropdown-menu > .active > a:focus,
+.dropdown-menu > ul > .active > a:focus {  /* csp - covers summernote custom button */
   color: #444;
   background-color: #dbdbdb;
 }

@@ -84,34 +84,48 @@
     </div>
 
     <div class="col-sm-2 btn-group" id="template-actions-dropdown" style='padding-left:0'>
-      <button type="button" class="btn btn-secondary dropdown-toggle" style='width:100%'
-          data-toggle="dropdown" aria-haspopup="true"aria-expanded="false">
-        Actions&nbsp;&nbsp;&nbsp;<span class="caret"></span>
+      <button type="button" class="btn btn-secondary dropdown-toggle text-center"
+              style='width:100%'data-toggle="dropdown" aria-haspopup="true"aria-expanded="false">
+        <span>Actions&nbsp;&nbsp;&nbsp;<span class="caret"></span></span>
+        <i class='fa fa-spinner fa-pulse' style='display:none'></i>
+        <i class='fa fa-check' style='display:none'></i>
       </button>
       <ul class="dropdown-menu">
         <li>
           <a class='new-template' href='javascript:;'>
-            New blank template</a>
+            <i class='action fa fa-file-o'></i>&nbsp;
+            <span>New blank template</span>
+          </a>
         </li>
         <li class='disabled'>
           <a class='copy-template' href='javascript:;'>
-            Copy selected template</a>
+            <i class='action fa fa-copy'></i>&nbsp;
+            <span>Copy selected template</span>
+          </a>
         </li>
         <li class='disabled'>
           <a class='test-template' href='javascript:;'>
-            Test selected template</a>
+            <i class='action fa fa-envelope'></i>&nbsp;
+            <span>Test selected template</span>
+          </a>
         </li>
         <li class='disabled'>
           <a class='delete-template' href='javascript:;'>
-            Delete selected template</a>
+            <i class="action fa fa-remove"></i>&nbsp;
+            <span>Delete selected template</span>
+          </a>
         </li>
         <li class='disabled'>
           <a class='restore-current' href="javascript:;">
-            Restore selected default template</a>
+            <i class="action fa fa-repeat"></i>&nbsp;
+            <span>Restore selected default template</span>
+          </a>
         </li>
         <li>
           <a class='restore-all' href="javascript:;">
-            Restore all default templates</a>
+            <i class="action fa fa-repeat"></i>&nbsp;
+            <span>Restore all default templates</span>
+          </a>
         </li>
       </ul>
     </div>

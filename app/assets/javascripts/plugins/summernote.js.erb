@@ -1,0 +1,184 @@
+
+function initSummernote () {
+
+  $('#email-confirmation-editor').summernote({
+    focus: false,  // this does not appear to work
+    toolbar: [
+      // ['style', ['style']],
+      ['font', ['bold', 'italic', 'underline']], //, 'clear']],
+      // ['fontname', ['fontname']],
+      // ['color', ['color']],
+      ['para', ['ul', 'ol', 'paragraph']],
+      // ['height', ['height']],
+      // ['table', ['table']],
+      // ['insert', ['link', 'picture', 'hr']],
+      // ['view', ['codeview']],
+      // ['help', ['help']]
+    ],
+  });
+
+  $('#email-template-editor').summernote({
+    toolbar: [
+      // ['style', ['style']],
+      ['font', ['bold', 'italic', 'underline']], //, 'clear']],
+      ['fontname', ['fontname']],
+      ['fontsize', ['fontsize']],
+      // ['color', ['color']],
+      ['para', ['ul', 'ol', 'paragraph']],
+      ['height', ['height']],
+      // ['table', ['table']],
+      ['insert', ['link', 'picture', 'hr']],
+      ['view', ['codeview']],
+      // ['help', ['help']]
+    ],
+  });
+
+  $('#story-content-editor').summernote({
+    toolbar: [
+      ['style', ['style']],
+      ['font', ['bold', 'italic', 'underline']], //, 'clear']],
+      ['fontname', ['fontname']],
+      ['fontsize', ['fontsize']],
+      // ['color', ['color']],
+      ['para', ['ul', 'ol', 'paragraph']],
+      ['height', ['height']],
+      ['table', ['table']],
+      ['insert', ['link', 'picture', 'hr']],
+      ['view', ['codeview']],
+      ['help', ['help']]
+    ],
+  });
+
+  // if ($('body').hasClass('stories edit')) {
+  //   var $storyContentEditor = $('#story-content-editor'),
+  //       $summernote = $storyContentEditor.next(),
+  //       $editor = $summernote.find('.note-editable'),
+  //       $toolbarButtons = $summernote.find('.note-toolbar > .note-btn-group > button, .note-toolbar > .note-btn-group > .note-btn-group > button');
+  //   // disable the editor until edit button is clicked
+  //   $editor.attr('contenteditable', 'false')
+  //          .css({
+  //           'background-color': '#f5f5f5',
+  //           'pointer-events': 'none'
+  //          });
+  //   $toolbarButtons.css({
+  //                   'background-color': '#f5f5f5',
+  //                   'pointer-events': 'none'
+  //                  });
+  // }
+}
+
+function initEmailRequestEditor () {
+
+  var curatorPhotoPlaceholder = "<%= asset_path('user-photo-missing.png') %>";
+
+  var PlaceholderDropdown = function (context) {
+    var ui = $.summernote.ui;
+    var button = ui.buttonGroup([
+      ui.button({
+        className: 'btn btn-default dropdown-toggle',
+        data: {
+          toggle: 'dropdown',
+          placement: 'top'
+        },
+        contents: 'Insert\xa0\xa0<span class="caret"></span>',
+        // tooltip: 'Insert a data placeholder'
+      }),
+      ui.dropdown({
+        className: 'summernote-custom',
+        contents: '<ul class="list-unstyled" style="margin-bottom:0">' +
+                    '<li data-text="<span contenteditable=&quot;false&quot;>[company_name]</span>">' +
+                      '<a href="javascript:;">' +
+                        'Company name' +
+                      '</a>' +
+                    '</li>' +
+                    '<li data-text="<span contenteditable=&quot;false&quot;>[customer_name]</span>">' +
+                      '<a href="javascript:;">' +
+                        'Customer name' +
+                      '</a>' +
+                    '</li>' +
+                    '<li data-text="<span contenteditable=&quot;false&quot;>[contributor_first_name]</span>">' +
+                      '<a href="javascript:;">' +
+                        'Contributor first name' +
+                      '</a>' +
+                    '</li>' +
+                    '<li data-text="<span contenteditable=&quot;false&quot;>[contributor_full_name]</span>">' +
+                      '<a href="javascript:;">' +
+                        'Contributor full name' +
+                      '</a>' +
+                    '</li>' +
+                    '<li data-text="<span>[contribution_submission_link=&quot;Link text goes here&quot;]</span>">' +
+                      '<a href="javascript:;">' +
+                        'Contribution submission link' +
+                      '</a>' +
+                    '</li>' +
+                    '<li data-text="<img id=&quot;curator-img&quot; src=&quot;' + curatorPhotoPlaceholder +
+                          '&quot; style=&quot;width:80px&quot; alt=&quot;curator photo&quot;>">' +
+                      '<a href="javascript:;">' +
+                        'Curator photo' +
+                      '</a>' +
+                    '</li>' +
+                    '<li data-text="<span contenteditable=&quot;false&quot;>[curator_full_name]</span>">' +
+                      '<a href="javascript:;">' +
+                        'Curator full name' +
+                      '</a>' +
+                    '</li>' +
+                    '<li data-text="<span contenteditable=&quot;false&quot;>[curator_position]</span>">' +
+                      '<a href="javascript:;">' +
+                        'Curator position' +
+                      '</a>' +
+                    '</li>' +
+                    '<li data-text="<span contenteditable=&quot;false&quot;>[curator_email]</span>">' +
+                      '<a href="javascript:;">' +
+                        'Curator email' +
+                      '</a>' +
+                    '</li>' +
+                    '<li data-text="<span contenteditable=&quot;false&quot;>[curator_phone]</span>">' +
+                      '<a href="javascript:;">' +
+                        'Curator phone' +
+                      '</a>' +
+                    '</li>' +
+                    '<li data-text="<span>[feedback_submission_link=&quot;Link text goes here&quot;]</span>">' +
+                      '<a href="javascript:;">' +
+                        'Feedback submission link' +
+                      '</a>' +
+                    '</li>' +
+                    '<li data-text="<span>[unsubscribe_link=&quot;Link text goes here&quot;]</span>">' +
+                      '<a href="javascript:;">' +
+                        'Unsubscribe link' +
+                      '</a>' +
+                    '</li>' +
+                  '</ul>',
+        callback: function ($dropdown) {
+          $dropdown.find('li').each(function () {
+            $(this).on('click', function () {
+              context.invoke('editor.saveRange');
+              context.invoke('editor.pasteHTML', $(this).data('text'));
+              context.invoke('editor.restoreRange');
+            });
+          });
+        }
+      })
+    ]);
+    return button.render();   // return button as jquery object
+  };
+
+  $('#email-request-body-editor').summernote({
+    toolbar: [
+      // ['style', ['style']],
+      ['font', ['bold', 'italic', 'underline']], //, 'clear']],
+      ['fontname', ['fontname']],
+      ['fontsize', ['fontsize']],
+      // ['color', ['color']],
+      ['para', ['ul', 'ol', 'paragraph']],
+      ['height', ['height']],
+      // ['table', ['table']],
+      ['insert', ['link', 'picture', 'hr']],
+      ['view', ['codeview']],
+      // ['help', ['help']]
+      ['customButton', ['placeholderDropdown']]
+    ],
+    buttons: {
+      placeholderDropdown: PlaceholderDropdown
+    }
+  });
+}

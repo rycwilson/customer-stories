@@ -62,7 +62,8 @@ function crowdsourcingTemplatesListeners () {
           });
       };
 
-      var enableActions = function () {
+      var toggleActions = function () {
+        // options enabled for any template
         $('#template-actions-dropdown .copy-template, ' +
           '#template-actions-dropdown .test-template, ' +
           '#template-actions-dropdown .delete-template')
@@ -78,11 +79,15 @@ function crowdsourcingTemplatesListeners () {
           $.when( $('#crowdsourcing-template-container').empty().append(html) )
             .then(function () {
               initTemplate();
-              enableActions();
+              toggleActions();
             });
         }
       });
 
+    })
+
+    .on('click', '.request-subject .data-placeholders li', function () {
+      insertText('crowdsourcing_template_request_subject', $(this).data('placeholder'));
     })
 
     .on('change', 'select.contributor-questions', function (e) {
@@ -160,13 +165,20 @@ function crowdsourcingTemplatesListeners () {
         subject: $('#crowdsourcing_template_request_subject').val(),
            body: $('.note-editable').html()
       };
-      $.post(
-          '/companies/' + app.company.id + '/crowdsourcing_templates/' + $('select.crowdsourcing-template').val() + '/test',
-          data,
-          function (data, status) {
-            flashDisplay(data.flash, 'info');
-          }
-      );
+
+      $('#template-actions-dropdown button[type="button"] span').toggle();
+      $('#template-actions-dropdown button[type="button"] .fa-spinner').toggle();
+
+      $.ajax({
+        url: '/companies/' + app.company.id + '/crowdsourcing_templates/' + $('select.crowdsourcing-template').val() + '/test',
+        method: 'post',
+        data: data,
+        success: function (data, status) {
+          $('#template-actions-dropdown button[type="button"] .fa-spinner').toggle();
+          $('#template-actions-dropdown button[type="button"] span').toggle();
+          flashDisplay(data.flash, 'info');
+        }
+      });
     })
 
 
@@ -281,4 +293,40 @@ function crowdsourcingTemplatesListeners () {
       $('select.crowdsourcing-template').trigger('change');
     });
 
+}
+
+function insertText (elementId, text) {
+  var inputEl = document.getElementById(elementId);
+  if (!inputEl) { return; }
+
+  var scrollPos = inputEl.scrollTop;
+  var strPos = 0;
+  var br = ((inputEl.selectionStart || inputEl.selectionStart == '0') ?
+    "ff" : (document.selection ? "ie" : false ) );
+  if (br == "ie") {
+    inputEl.focus();
+    var range = document.selection.createRange();
+    range.moveStart ('character', -inputEl.value.length);
+    strPos = range.text.length;
+  } else if (br == "ff") {
+    strPos = inputEl.selectionStart;
+  }
+
+  var front = (inputEl.value).substring(0, strPos);
+  var back = (inputEl.value).substring(strPos, inputEl.value.length);
+  inputEl.value = front + text + back;
+  strPos = strPos + text.length;
+  if (br == "ie") {
+    inputEl.focus();
+    var ieRange = document.selection.createRange();
+    ieRange.moveStart ('character', -inputEl.value.length);
+    ieRange.moveStart ('character', strPos);
+    ieRange.moveEnd ('character', 0);
+    ieRange.select();
+  } else if (br == "ff") {
+    inputEl.selectionStart = strPos;
+    inputEl.selectionEnd = strPos;
+    inputEl.focus();
+  }
+  inputEl.scrollTop = scrollPos;
 }
