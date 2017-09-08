@@ -68,7 +68,7 @@
       div[class*='col-']:first-child {
         padding: 0 10px;
       }
-      div[class*='col-']:last-child {
+      div[class*='col-']:last-child:not(.save-or-cancel) {
         padding: 0;
       }
       .row:hover {
@@ -99,7 +99,6 @@
       }
       .save-or-cancel {
         color: #a94442;
-        height: 18px;
         margin-bottom: 10px;
       }
     }
