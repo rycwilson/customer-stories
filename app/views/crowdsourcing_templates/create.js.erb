@@ -1,0 +1,38 @@
+
+(function () {
+
+  var template = <%= raw @template.to_json({ only: :id }) %>,
+      templatesSelect2Data = <%= raw @templates_grouped_select2_options.to_json %>;
+
+  // changes have been saved, no longer dirty
+  $('#crowdsourcing-template-form').data('dirty', '')
+  // this will be used to tell the server to send a flash message
+  $('#crowdsourcing-template-form').data('new', '1')
+
+  // update template select options
+  $('select.crowdsourcing-template')
+    .select2('destroy').empty()
+    .prepend('<option selected/>')  // placeholder
+    .select2({
+      theme: 'bootstrap',
+      placeholder: 'Select',
+      data: templatesSelect2Data
+    })
+    .val(template.id).trigger('change')  // get the new template
+
+  // update contributor questions select options
+  // $('select.contributor-questions')
+  //   .select2('destroy').empty()
+  //   .prepend('<option selected/>')  // placeholder
+  //   .select2({
+  //     theme: "bootstrap",
+  //     placeholder: 'Add a question',
+  //     data: questionsSelectData
+  //   })
+
+  // $('button[type="submit"]').find('.fa-spinner, .fa-check').toggle()
+  // window.setTimeout(function () {
+  //   $('button[type="submit"]').find('.fa-check, span').toggle();
+  // }, 2000);
+
+}());

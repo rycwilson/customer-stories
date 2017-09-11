@@ -1,7 +1,19 @@
 
+<% if method == 'put' && template_is_new %>
+
+  <script>
+    var templateName = "<%= template.name %>";
+    flashDisplay('Created new template: ' + templateName, 'success');
+  </script>
+
+<% end %>
+
 <%= form_for(template, url: url,
       html: { method: method, remote: true,
               id: 'crowdsourcing-template-form' }) do |template_form| %>
+
+  <%= template_form.hidden_field(:company_id) %>
+
 
   <div class="row">
 

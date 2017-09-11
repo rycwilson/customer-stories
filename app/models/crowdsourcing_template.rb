@@ -12,6 +12,7 @@ class CrowdsourcingTemplate < ActiveRecord::Base
   #   self.contributor_questions << self.company.contributor_questions.default
   # end
 
+  before_create() { |template| template.format_for_storage() }
   before_update() { |template| template.format_for_storage() }
 
   def format_for_editor(curator)
@@ -34,6 +35,15 @@ class CrowdsourcingTemplate < ActiveRecord::Base
     # re-construct anchor links
     self.request_body.gsub!( /\[(\w+)_link=('|")(.+?)('|")\]/,
                          '<a href="[\1_url]">\3</a>' )
+  end
+
+  # method adds a new contributor question associations
+  def add_contributor_questions (question_params)
+    question_params.each do |index, attrs|
+      if attrs[:id] && self.contributor_questions.find_by(id: attrs[:id]).nil?
+        self.contributor_questions << ContributorQuestion.find(attrs[:id])
+      end
+    end
   end
 
   def default?

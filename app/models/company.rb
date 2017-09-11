@@ -130,7 +130,7 @@ class Company < ActiveRecord::Base
       {
         'Custom' => self.select { |q| q.role.nil? }
                         .map { |q| [q.question, q.id] }
-                        .unshift( ['- Create new question -', '0'] ),
+                        .unshift( ['- New question -', '0'] ),
         'Customer' => self.select { |q| q.role == 'customer' }
                           .map { |q| [q.question, q.id] },
         'Customer Success' => self.select { |q| q.role == 'customer success' }
@@ -153,7 +153,7 @@ class Company < ActiveRecord::Base
                                       end
                           }
                         end
-                        .unshift({ id: 0, text: '- Create new question -' })
+                        .unshift({ id: 0, text: '- New question -' })
         },
         {
           text: 'Customer',
@@ -209,10 +209,31 @@ class Company < ActiveRecord::Base
     def grouped_select_options
       {
         'Custom' => self.where.not("name IN ('Customer', 'Customer Success', 'Sales')")
-                        .map { |template| [template.name, template.id] },
+                        .map { |template| [template.name, template.id] }
+                        .unshift( ['- New template -', '0'] ) ,
         'Defaults' => self.where("name IN ('Customer', 'Customer Success', 'Sales')")
                           .map { |template| [template.name, template.id] }
       }
+    end
+    def grouped_select2_options (template_id)
+      [
+        {
+          text: 'Custom',
+          children: self.where.not("name IN ('Customer', 'Customer Success', 'Sales')")
+                        .map do |template|
+                          {
+                            id: template.id, text: template.name
+                            # selected: template.id == template_id
+                          }
+                        end
+                        .unshift({ id: 0, text: '- New template -' })
+        },
+        {
+          text: 'Defaults',
+          children: self.where("name IN ('Customer', 'Customer Success', 'Sales')")
+                        .map { |template| { id: template.id, text: template.name } }
+        }
+      ]
     end
   end
   # alias

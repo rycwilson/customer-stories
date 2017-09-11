@@ -1,13 +1,10 @@
 
 function crowdsourcingTemplatesListeners () {
 
-  var dirtyForm = false;
-
   $(document)
 
     .on('click', '#template-actions-dropdown .new-template, ' +
                  '#template-actions-dropdown .copy-template', function () {
-
       $.ajax({
         url: '/companies/' + app.company.id + '/crowdsourcing_templates/new',
         method: 'get',
@@ -33,12 +30,12 @@ function crowdsourcingTemplatesListeners () {
 
     .on('input', '#crowdsourcing-template-form input, ' +
                  '#crowdsourcing-template-form .note-editable', function () {
-      dirtyForm = true;
+      $('#crowdsourcing-template-form').attr('data-dirty', '1');
     })
 
     .on('change', 'select.crowdsourcing-template', function () {
 
-      if (dirtyForm) {
+      if ($('#crowdsourcing-template-form').data('dirty')) {
         var $this = $(this);
         bootbox.confirm({
           size: 'small',
@@ -62,10 +59,6 @@ function crowdsourcingTemplatesListeners () {
         selectTemplate( $(this) );
       }
 
-    })
-
-    .on('click', '.request-subject .data-placeholders li', function () {
-      insertText('crowdsourcing_template_request_subject', $(this).data('placeholder'));
     })
 
     .on('change', 'select.contributor-questions', function (e) {
@@ -116,6 +109,10 @@ function crowdsourcingTemplatesListeners () {
           scrollToQuestion($newQuestion);
         });
       }
+    })
+
+    .on('click', '.request-subject .data-placeholders li', function () {
+      insertText('crowdsourcing_template_request_subject', $(this).data('placeholder'));
     })
 
     .on('click', '.contributor-question .remove-question', function () {
@@ -248,6 +245,14 @@ function selectTemplate ($select) {
   if ($select.val() === null)
     return false;
 
+  // new template
+  if ($select.val() === '0') {
+    // reset select to placeholder
+    $select.val('').trigger('change.select2');
+    $('#template-actions-dropdown .new-template').trigger('click');
+    return false;
+  }
+
   $('#new-template-name-row').addClass('hidden');
 
   var initTemplate = function () {
@@ -282,12 +287,17 @@ function selectTemplate ($select) {
     url: '/companies/' + app.company.id +
             '/crowdsourcing_templates/' + $select.val() + '/edit',
     method: 'get',
+    data: {
+      // was this template just created? (if undefined nothing will be sent)
+      new_template: $('#crowdsourcing-template-form').data('new')
+    },
     dataType: 'html',
     success: function (html, status, xhr) {
       $.when( $('#crowdsourcing-template-container').empty().append(html) )
         .then(function () {
           initTemplate();
           toggleActions();
+          $('#crowdsourcing-template-form').data('new', '');
         });
     }
   });
