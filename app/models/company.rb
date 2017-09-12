@@ -206,7 +206,7 @@ class Company < ActiveRecord::Base
     def sales
       where(name: 'Sales').take
     end
-    def grouped_select_options
+    def grouped_select_options ()
       {
         'Custom' => self.where.not("name IN ('Customer', 'Customer Success', 'Sales')")
                         .map { |template| [template.name, template.id] }
@@ -215,16 +215,12 @@ class Company < ActiveRecord::Base
                           .map { |template| [template.name, template.id] }
       }
     end
-    def grouped_select2_options (template_id)
+    def grouped_select2_options ()
       [
         {
           text: 'Custom',
           children: self.where.not("name IN ('Customer', 'Customer Success', 'Sales')")
-                        .map do |template|
-                          {
-                            id: template.id, text: template.name
-                            # selected: template.id == template_id
-                          }
+                        .map do |template| { id: template.id, text: template.name }
                         end
                         .unshift({ id: 0, text: '- New template -' })
         },

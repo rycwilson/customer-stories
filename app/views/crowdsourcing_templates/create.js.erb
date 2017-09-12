@@ -1,11 +1,9 @@
 
 (function () {
 
-  var template = <%= raw @template.to_json({ only: :id }) %>,
-      templatesSelect2Data = <%= raw @templates_grouped_select2_options.to_json %>;
-
   // changes have been saved, no longer dirty
   $('#crowdsourcing-template-form').data('dirty', '')
+
   // this will be used to tell the server to send a flash message
   $('#crowdsourcing-template-form').data('new', '1')
 
@@ -16,8 +14,8 @@
     .select2({
       theme: 'bootstrap',
       placeholder: 'Select',
-      data: templatesSelect2Data
+      data: <%= raw @company.crowdsourcing_templates.grouped_select2_options().to_json %>
     })
-    .val(template.id).trigger('change')  // get the new template
+    .val('<%= @template.id %>').trigger('change')  // get the new template
 
 }());

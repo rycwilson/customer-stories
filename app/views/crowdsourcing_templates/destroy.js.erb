@@ -1,7 +1,20 @@
 
 (function () {
 
+  var templatesSelect2Data =
+        <%= raw @company.crowdsourcing_templates.grouped_select2_options.to_json %>;
+
   $('select.crowdsourcing-template').val('').trigger('change.select2');
   $('#crowdsourcing-template-container').empty();
+
+  // update template select options
+  $('select.crowdsourcing-template')
+    .select2('destroy').empty()
+    .prepend('<option selected/>')  // placeholder
+    .select2({
+      theme: 'bootstrap',
+      placeholder: 'Select',
+      data: templatesSelect2Data
+    })
 
 }());

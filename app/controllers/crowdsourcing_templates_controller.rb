@@ -45,22 +45,17 @@ class CrowdsourcingTemplatesController < ApplicationController
         template_params.select { |k, v| k != 'contributor_questions_attributes' }
       )
     if @template.save()
-      # this adds new question associations - must come before next step
+      # this adds new contributor question associations - must come before next step
       @template.add_contributor_questions(template_params[:contributor_questions_attributes])
-      # this handles creation of new questions
+      # this handles creation of new contributor questions
       @template.update(template_params)
-      @templates_grouped_select2_options =
-        @company.crowdsourcing_templates.grouped_select2_options(@template.id)
-      @contributor_questions_grouped_select2_options =
-        @company.contributor_questions.grouped_select2_options(@template)
     end
   end
 
   def update
     @template.add_contributor_questions(template_params[:contributor_questions_attributes])
     if @template.update(template_params)
-      @contributor_questions_grouped_select2_options =
-        @company.contributor_questions.grouped_select2_options(@template)
+      # ok
     else
       # remove the contributor questions associations
     end
