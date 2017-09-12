@@ -5,24 +5,30 @@ function crowdsourcingTemplatesListeners () {
 
     .on('click', '#template-actions-dropdown .new-template, ' +
                  '#template-actions-dropdown .copy-template', function () {
+
+      if ($(this).hasClass('copy-template')) {
+        copyTemplateId = $('select.crowdsourcing-template').val();
+      } else {
+        copyTemplateId = undefined;
+      }
+
       $.ajax({
         url: '/companies/' + app.company.id + '/crowdsourcing_templates/new',
         method: 'get',
-        data: {
-          copyTemplate: $(this).hasClass('copy-template')
-        },
+        data: { copy_template_id: copyTemplateId },
         dataType: 'html',
         success: function (html, status, xhr) {
           $.when( $('#crowdsourcing-template-container').empty().append(html) )
             .then(function () {
-              $('#new-template-name-row').removeClass('hidden');
               initEmailRequestEditor();
               $('select.contributor-questions')
-                // .prepend('<option selected/>')  // empty option for placeholder
                 .select2({
                   theme: 'bootstrap',
                   placeholder: 'Add a question'
                 });
+              $('#crowdsourcing-template-form input[id="crowdsourcing_template_name"]')[0].focus();
+              // reset select to placeholder
+              $('select.crowdsourcing-template').val('').trigger('change.select2');
             });
         }
       });
@@ -253,7 +259,7 @@ function selectTemplate ($select) {
     return false;
   }
 
-  $('#new-template-name-row').addClass('hidden');
+  $('#template-actions-dropdown button').prop('disabled', true);
 
   var initTemplate = function () {
     initEmailRequestEditor();
@@ -295,8 +301,9 @@ function selectTemplate ($select) {
     success: function (html, status, xhr) {
       $.when( $('#crowdsourcing-template-container').empty().append(html) )
         .then(function () {
-          initTemplate();
+          $('#template-actions-dropdown button').prop('disabled', false);
           toggleActions();
+          initTemplate();
           $('#crowdsourcing-template-form').data('new', '');
         });
     }

@@ -7,7 +7,14 @@ class CrowdsourcingTemplatesController < ApplicationController
   end
 
   def new
-    @template = CrowdsourcingTemplate.new({ company_id: @company.id })
+    if params[:copy_template_id].present?
+      copy_template = CrowdsourcingTemplate.find(params[:copy_template_id])
+      @template = copy_template.dup
+      @template.name = 'Copy: ' + copy_template.name
+      copy_template.contributor_questions.each { |q| @template.contributor_questions << q }
+    else
+      @template = CrowdsourcingTemplate.new({ company_id: @company.id })
+    end
     render({
       partial: 'companies/settings/crowdsourcing_template_form',
       locals: { company: @company, template: @template, method: 'post',
