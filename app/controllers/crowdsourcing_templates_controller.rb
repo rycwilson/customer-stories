@@ -67,6 +67,7 @@ class CrowdsourcingTemplatesController < ApplicationController
   end
 
   def destroy
+    @template.destroy()
   end
 
   def test

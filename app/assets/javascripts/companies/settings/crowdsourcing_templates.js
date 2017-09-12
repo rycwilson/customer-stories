@@ -3,6 +3,35 @@ function crowdsourcingTemplatesListeners () {
 
   $(document)
 
+    .on('change', 'select.crowdsourcing-template', function () {
+
+      if ($('#crowdsourcing-template-form').data('dirty')) {
+        var $this = $(this);
+        bootbox.confirm({
+          size: 'small',
+          className: 'confirm-unsaved-changes',
+          closeButton: false,
+          message: "<i class='fa fa-warning'></i>\xa0\xa0\xa0<span>Unsaved changes will be lost</span>",
+          buttons: {
+            confirm: {
+              label: 'Continue without saving',
+              className: 'btn-default'
+            },
+            cancel: {
+              label: 'Cancel',
+              className: 'btn-default'
+            }
+          },
+          callback: function (continueWithoutSave) {
+            if (continueWithoutSave) { selectTemplate($this); }
+          }
+        });
+      } else {
+        selectTemplate( $(this) );
+      }
+
+    })
+
     .on('click', '#template-actions-dropdown .new-template, ' +
                  '#template-actions-dropdown .copy-template', function () {
 
@@ -34,38 +63,43 @@ function crowdsourcingTemplatesListeners () {
       });
     })
 
+    .on('click', '#template-actions-dropdown .delete-template', function () {
+
+      var deleteTemplateId = $('select.crowdsourcing-template').select2('data')[0].id;
+
+      bootbox.confirm({
+        size: 'small',
+        className: 'confirm-delete-template',
+        closeButton: false,
+        message: "<i class='fa fa-warning'></i>\xa0\xa0\xa0<span>Are you sure?</span>",
+        buttons: {
+          confirm: {
+            label: 'Delete',
+            className: 'btn-danger'
+          },
+          cancel: {
+            label: 'Cancel',
+            className: 'btn-default'
+          }
+        },
+        callback: function (confirmDelete) {
+          if (confirmDelete) {
+            $.ajax({
+              url: '/companies/' + app.company.id + '/crowdsourcing_templates/' + deleteTemplateId,
+              method: 'delete',
+              dataType: 'script'
+            });
+          }
+        }
+      });
+    })
+
     .on('input', '#crowdsourcing-template-form input, ' +
                  '#crowdsourcing-template-form .note-editable', function () {
       $('#crowdsourcing-template-form').attr('data-dirty', '1');
     })
 
-    .on('change', 'select.crowdsourcing-template', function () {
 
-      if ($('#crowdsourcing-template-form').data('dirty')) {
-        var $this = $(this);
-        bootbox.confirm({
-          size: 'small',
-          closeButton: false,
-          message: "<i class='fa fa-warning'></i>\xa0\xa0\xa0<span>Unsaved changes will be lost</span>",
-          buttons: {
-            confirm: {
-              label: 'Continue without saving',
-              className: 'btn-default'
-            },
-            cancel: {
-              label: 'Cancel',
-              className: 'btn-default'
-            }
-          },
-          callback: function (continueWithoutSave) {
-            if (continueWithoutSave) { selectTemplate($this); }
-          }
-        });
-      } else {
-        selectTemplate( $(this) );
-      }
-
-    })
 
     .on('change', 'select.contributor-questions', function (e) {
       var $newQuestion, $select = $(this),

@@ -1,9 +1,24 @@
 
-.bootbox.modal {
+.bootbox.modal.confirm-unsaved-changes {
   .modal-content {
     background-color: #fcf8e3;
     border-color: #faebcc;
     color: #8a6d3b;
+    overflow: hidden;  // so background color doesn't extend past border radius
+  }
+  .modal-footer {
+    background-color: #fff;
+  }
+  .modal-body {
+    font-size: 16px !important;
+  }
+}
+
+.bootbox.modal.confirm-delete-template {
+  .modal-content {
+    background-color: #f2dede;
+    border-color: #ebccd1;
+    color: #a94442;
     overflow: hidden;  // so background color doesn't extend past border radius
   }
   .modal-footer {
