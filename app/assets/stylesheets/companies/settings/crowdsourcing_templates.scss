@@ -1,4 +1,20 @@
 
+.bootbox.modal.confirm-restore {
+  .modal-content {
+    background-color: #d9edf7;
+    border-color: #bce8f1;
+    color: #31708f;
+    overflow: hidden;  // so background color doesn't extend past border radius
+  }
+  .modal-body, .modal-footer {
+    color: #333;
+    background-color: #fff;
+  }
+  .modal-body {
+    // font-size: 16px !important;
+  }
+}
+
 .bootbox.modal.confirm-unsaved-changes {
   .modal-content {
     background-color: #fcf8e3;

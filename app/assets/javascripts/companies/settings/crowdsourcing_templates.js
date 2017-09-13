@@ -14,7 +14,7 @@ function crowdsourcingTemplatesListeners () {
           message: "<i class='fa fa-warning'></i>\xa0\xa0\xa0<span>Unsaved changes will be lost</span>",
           buttons: {
             confirm: {
-              label: 'Continue without saving',
+              label: 'Continue',
               className: 'btn-default'
             },
             cancel: {
@@ -29,7 +29,6 @@ function crowdsourcingTemplatesListeners () {
       } else {
         selectTemplate( $(this) );
       }
-
     })
 
     .on('click', '#template-actions-dropdown .new-template, ' +
@@ -59,6 +58,29 @@ function crowdsourcingTemplatesListeners () {
               // reset select to placeholder
               $('select.crowdsourcing-template').val('').trigger('change.select2');
             });
+        }
+      });
+    })
+
+    .on('click', '#template-actions-dropdown .test-template', function () {
+      // don't use .serialize() or it will send a PUT request
+      // (not that it really matters what kind of request it is - POST or PUT is fine)
+      var data = {
+        subject: $('#crowdsourcing_template_request_subject').val(),
+           body: $('.note-editable').html()
+      };
+
+      $('#template-actions-dropdown button[type="button"] span').toggle();
+      $('#template-actions-dropdown button[type="button"] .fa-spinner').toggle();
+
+      $.ajax({
+        url: '/companies/' + app.company.id + '/crowdsourcing_templates/' + $('select.crowdsourcing-template').val() + '/test',
+        method: 'post',
+        data: data,
+        success: function (data, status) {
+          $('#template-actions-dropdown button[type="button"] .fa-spinner').toggle();
+          $('#template-actions-dropdown button[type="button"] span').toggle();
+          flashDisplay(data.flash, 'info');
         }
       });
     })
@@ -94,12 +116,44 @@ function crowdsourcingTemplatesListeners () {
       });
     })
 
+    .on('click', '#template-actions-dropdown .restore-selected, ' +
+                 '#template-actions-dropdown .restore-all', function () {
+      var message;
+      if ($(this).hasClass('restore-selected')) {
+        var templateName = $('select.crowdsourcing-template').select2('data')[0].text;
+        message = "<p>This action will restore the " + templateName + " crowdsourcing template to factory default content.</p>";
+      } else {
+        message = "<p>This action will restore the following crowdsourcing templates to factory default content.</p>" +
+                  "<ul><li>Customer</li><li>Customer Success</li><li>Sales</li>";
+      }
+
+      var $this = $(this);
+
+      bootbox.confirm({
+        className: 'confirm-restore',
+        closeButton: false,
+        title: "<i class='fa fa-question-circle-o'></i>\xa0\xa0\xa0<span>Confirm</span>",
+        message: message,
+        buttons: {
+          confirm: {
+            label: 'Restore',
+            className: 'btn-secondary'
+          },
+          cancel: {
+            label: 'Cancel',
+            className: 'btn-default'
+          }
+        },
+        callback: function (confirmRestore) {
+          if (confirmRestore) { restoreTemplates($this); }
+        }
+      });
+    })
+
     .on('input', '#crowdsourcing-template-form input, ' +
                  '#crowdsourcing-template-form .note-editable', function () {
       $('#crowdsourcing-template-form').attr('data-dirty', '1');
     })
-
-
 
     .on('change', 'select.contributor-questions', function (e) {
       var $newQuestion, $select = $(this),
@@ -186,87 +240,6 @@ function crowdsourcingTemplatesListeners () {
     .on('submit', '#crowdsourcing-template-form', function () {
       $(this).find('button[type="submit"] span').toggle();
       $(this).find('button[type="submit"] .fa-spinner').toggle();
-    })
-
-    .on('click', '#template-actions-dropdown .test-template', function () {
-      // don't use .serialize() or it will send a PUT request
-      // (not that it really matters what kind of request it is - POST or PUT is fine)
-      var data = {
-        subject: $('#crowdsourcing_template_request_subject').val(),
-           body: $('.note-editable').html()
-      };
-
-      $('#template-actions-dropdown button[type="button"] span').toggle();
-      $('#template-actions-dropdown button[type="button"] .fa-spinner').toggle();
-
-      $.ajax({
-        url: '/companies/' + app.company.id + '/crowdsourcing_templates/' + $('select.crowdsourcing-template').val() + '/test',
-        method: 'post',
-        data: data,
-        success: function (data, status) {
-          $('#template-actions-dropdown button[type="button"] .fa-spinner').toggle();
-          $('#template-actions-dropdown button[type="button"] span').toggle();
-          flashDisplay(data.flash, 'info');
-        }
-      });
-    })
-
-    // .on('click', '#restore-current-template', function () {
-    //   if ($(this).parent().hasClass('disabled'))
-    //     return false;
-
-    //   var $a = $(this);
-    //   $.ajax({
-    //     url: '/email_templates/' +
-    //             $('#email-templates-form').find('select:first').val(),
-    //     method: 'put',
-    //     data: { 'restore': true },
-    //     success: function (data, status, xhr) {
-    //       $('#template-subject').text(data.template.subject);
-    //       $('.note-editable').html(data.template.body);
-    //       $a.closest('form').find('[type=submit]').prop('disabled', true);
-    //       $('#cancel-template').prop('disabled', true);
-    //       flashDisplay(data.flash, 'success');
-    //     }
-    //   });
-    // })
-
-    // .on('click', '#restore-all-templates', function () {
-    //   var templateId = $('#email-templates-form').find('select:first').val(),
-    //       newOptions = "",
-    //       responseTemplateId;
-    //   if (templateId === "")
-    //     templateId = 0;
-    //   $.ajax({
-    //     url: '/email_templates/' + templateId,
-    //     method: 'put',
-    //     data: { 'restore_all': true },
-    //     success: function (data, status, xhr) {
-    //       // if no loaded template when request was made,
-    //       // a null current_template is returned
-    //       responseTemplateId = (data.current_template || { id: 0 }).id;
-    //       data.templates_select.forEach(function (option, index) {
-    //         // if this is the first option AND no template was loaded,
-    //         // first option to allow for placeholder
-    //         if (index === 0 && responseTemplateId === 0) {
-    //           newOptions += "<option value></option>";
-    //         } else if (option[1] === responseTemplateId) {
-    //           newOptions += "<option selected='selected' value='" + option[1] + "'>" + option[0] + "</option>";
-    //         } else {
-    //           newOptions += "<option value='" + option[1] + "'>" + option[0] + "</option>";
-    //         }
-    //       });
-    //       // select2 doesn't currently support wholesale replacement of options;
-    //       // here's a workaround:
-    //       // (https://github.com/select2/select2/issues/2830#issuecomment-74971872)
-    //       $('select.crowdsourcing-template').html(newOptions).change();
-    //       flashDisplay(data.flash, 'success');
-    //     }
-    //   });
-    // })
-
-    .on('click', '#cancel-template', function () {
-      $('select.crowdsourcing-template').trigger('change');
     });
 
 }
@@ -314,10 +287,10 @@ function selectTemplate ($select) {
 
     // restore current template only applies to defaults
     if (isDefaultTemplate) {
-      $dropdown.find('.restore-current').removeClass('disabled');
+      $dropdown.find('.restore-selected').removeClass('disabled');
       $dropdown.find('.delete-template').addClass('disabled');
     } else {
-      $dropdown.find('.restore-current').addClass('disabled');
+      $dropdown.find('.restore-selected').addClass('disabled');
       $dropdown.find('.delete-template').removeClass('disabled');
     }
 
@@ -341,6 +314,28 @@ function selectTemplate ($select) {
           $('#crowdsourcing-template-form').data('new', '');
         });
     }
+  });
+}
+
+function restoreTemplates ($this) {
+
+  var $select = $('select.crowdsourcing-template'),
+      restoreTemplateIds =
+        $this.hasClass('restore-selected') ? [$select.select2('data')[0].id] :
+        $.map( $select.find('optgroup[label="Defaults"] option'), function (option) {
+          return option.value;
+        });
+
+  $.ajax({
+    // pass array of template ids to the route
+    url: '/companies/' + app.company.id + '/crowdsourcing_templates/' + JSON.stringify(restoreTemplateIds),
+    method: 'put',
+    data: {
+      restore: true,
+      template_ids: restoreTemplateIds,
+      refresh_template: restoreTemplateIds.indexOf($select.select2('data')[0].id) !== -1
+    },
+    dataType: 'script'
   });
 }
 

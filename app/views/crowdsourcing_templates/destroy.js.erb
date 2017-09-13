@@ -1,9 +1,6 @@
 
 (function () {
 
-  var templatesSelect2Data =
-        <%= raw @company.crowdsourcing_templates.grouped_select2_options.to_json %>;
-
   $('select.crowdsourcing-template').val('').trigger('change.select2');
   $('#crowdsourcing-template-container').empty();
 
@@ -14,7 +11,7 @@
     .select2({
       theme: 'bootstrap',
       placeholder: 'Select',
-      data: templatesSelect2Data
+      data: <%= raw @company.crowdsourcing_templates.grouped_select2_options().to_json %>
     })
 
 }());

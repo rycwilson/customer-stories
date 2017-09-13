@@ -1,72 +1,4 @@
 
-<%#= form_tag "/", method: :put, remote: true,
-      class: 'form-horizontal', id: 'email-templates-form' do %>
-
-<!--   <div class="form-group">
-    <%#= label_tag "Template", nil, class: "control-label col-sm-2" %>
-    <div class="col-sm-8">
-      <%#= select_tag "template[name]",
-            options_for_select(templates_select),
-           { class: 'templates-select form-control', style: 'width:100%' } %>
-    </div>
-    <div class="col-sm-2 btn-group" id="restore-dropdown">
-      <button type="button" class="btn btn-default dropdown-toggle"
-          data-toggle="dropdown" aria-haspopup="true"
-          aria-expanded="false">
-        Defaults <span class="caret"></span>
-      </button>
-      <ul class="dropdown-menu">
-        <li>
-          <a id='restore-all-templates' href="javascript:;">Restore all templates</a>
-        </li>
-        <li class='disabled'>
-          <a id='restore-current-template' href="javascript:;">Restore this template</a>
-        </li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <%#= label_tag "template[subject]", "Subject", class: "control-label col-sm-2" %>
-    <div class="col-sm-8">
-      <div class="input-group">
-        <%#= text_field_tag "template[subject]", nil, class: 'form-control' %>
-        <div class="input-group-btn">
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Insert&nbsp;&nbsp;<span class="caret"></span></button>
-            <ul class="dropdown-menu">
-              <li><a href="#">Company name</a></li>
-              <li><a href="#">Customer name</a></li>
-              <li><a href="#">Contributor first name</a></li>
-              <li><a href="#">Contributor last name</a></li>
-            </ul>
-        </div>
-      </div>
-    </div>
-    <div class="col-sm-2">
-      <button id='test-template' type='button' class='btn btn-default' disabled='true'>
-        Test
-      </button>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <%#= label_tag "Body", nil, class: "control-label col-sm-2" %>
-    <div class="col-sm-8">
-      <%#= text_area_tag "template[body]", nil, data: { provider: 'summernote'},
-              id: 'email-template-editor', class: 'form-control' %>
-    </div>
-    <div class="col-sm-2">
-      <%#= submit_tag "Save changes", class: "btn btn-success",
-            id: 'save-template', disabled: true %> <br><br>
-      <button id='cancel-template' type='button' class='btn btn-default' disabled='true'>
-        Cancel
-      </button>
-
-    </div>
-  </div> -->
-
-<%# end %>
-
 <div class="row">
   <div class="form-horizontal" style=''>
 
@@ -115,7 +47,7 @@
             <span>Delete selected template</span>
           </a>
         </li>
-        <li class='restore-current disabled'>
+        <li class='restore-selected disabled'>
           <a href="javascript:;">
             <i class="action fa fa-repeat"></i>&nbsp;
             <span>Restore selected default template</span>

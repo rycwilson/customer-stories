@@ -3,7 +3,9 @@ class CrowdsourcingTemplatesController < ApplicationController
 
   before_action() { @company = Company.find(params[:company_id]) }
   before_action({ except: [:new, :create] }) do
-    @template = params[:id] == '0' ? nil : CrowdsourcingTemplate.find(params[:id])
+    unless params[:restore].present?
+      @template = params[:id] == '0' ? nil : CrowdsourcingTemplate.find(params[:id])
+    end
   end
 
   def new
@@ -35,7 +37,6 @@ class CrowdsourcingTemplatesController < ApplicationController
     })
   end
 
-
   def create
     @template = CrowdsourcingTemplate.new(
         # creating associations in this step will only work when using .build
@@ -53,11 +54,14 @@ class CrowdsourcingTemplatesController < ApplicationController
   end
 
   def update
-    @template.add_contributor_questions(template_params[:contributor_questions_attributes])
-    if @template.update(template_params)
-      # ok
+    if params[:restore].present?
+      restore_templates(JSON.parse(params[:id]))
+      @refresh_template = params[:refresh_template]
+      @selected_or_all = JSON.parse(params[:id]).length == 1 ? 'selected' : 'all'
+      respond_to { |format| format.js { render action: 'restore' } }
     else
-      # remove the contributor questions associations
+      @template.add_contributor_questions(template_params[:contributor_questions_attributes])
+      @template.update(template_params)
     end
   end
 
@@ -83,6 +87,20 @@ class CrowdsourcingTemplatesController < ApplicationController
     params.require(:crowdsourcing_template)
           .permit(:name, :request_subject, :request_body, :company_id,
                   { contributor_questions_attributes: [:id, :company_id, :question, :_destroy] })
+  end
+
+  def restore_templates (template_ids)
+    factory_defaults = Company.find_by(name:'CSP').crowdsourcing_templates
+    template_ids.each() do |template_id|
+      template = CrowdsourcingTemplate.find(template_id)
+      default = factory_defaults.find() { |t| t.name == template.name }
+      template.update({
+        request_subject: default.request_subject,
+        request_body: default.request_body
+      })
+      template.contributor_questions.delete_all()
+      default.contributor_questions.each() { |q| template.contributor_questions << q }
+    end
   end
 
 end
