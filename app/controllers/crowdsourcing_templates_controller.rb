@@ -62,6 +62,7 @@ class CrowdsourcingTemplatesController < ApplicationController
     else
       @template.add_contributor_questions(template_params[:contributor_questions_attributes])
       @template.update(template_params)
+      contributor_questions_cleanup(template_params[:contributor_questions_attributes])
     end
   end
 
@@ -100,6 +101,20 @@ class CrowdsourcingTemplatesController < ApplicationController
       })
       template.contributor_questions.delete_all()
       default.contributor_questions.each() { |q| template.contributor_questions << q }
+    end
+  end
+
+  # method destroys any contributor questions that are no longer associated with
+  # any crowdsourcing templates (and aren't default questions, which are never deleted)
+  def contributor_questions_cleanup (questions_attrs)
+    questions_attrs.each() do |i, q|
+      if q['_destroy'] == 'true'
+        removed_question = ContributorQuestion.find(q['id'])
+        if removed_question.crowdsourcing_templates.count == 0 &&
+           removed_question.role.nil?  # custom question, not a default
+          removed_question.destroy()
+        end
+      end
     end
   end
 
