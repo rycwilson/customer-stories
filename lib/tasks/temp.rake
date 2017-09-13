@@ -2,8 +2,11 @@ namespace :temp do
 
   desc "temp stuff"
 
-  # task update_crowdsourcing_templates do
-
+  # task update_crowdsourcing_templates: :environment do
+  #   CrowdsourcingTemplate.all.each() do |template|
+  #     template.update(
+  #       request_body:
+  #   end
   # end
 
   task create_crowdsourcing_templates: :environment do
@@ -12,7 +15,11 @@ namespace :temp do
       CrowdsourcingTemplate.create(
         name: email_template.name,
         request_subject: email_template.subject,
-        request_body: email_template.body,
+        request_body: email_template.body
+                        .gsub('[contribution_url]', '[contribution_submission_url]')
+                        .gsub('[feedback_url]', '[feedback_submission_url]')
+                        .gsub('[curator_title]', '[curator_position]')
+                        .gsub(/([a-zA-Z]|\s|\.)+<\/a>/, 'Link text goes here</a>'),
         company_id: email_template.company_id
       )
     end

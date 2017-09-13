@@ -66,24 +66,20 @@ class UserMailer < ApplicationMailer
 
   def test_template (template, curator)
     subject = template.request_subject
-                .sub("[customer_name]", "CustomerCompany")
-                .sub("[company_name]", curator.company.name)
+                # .sub("[customer_name]", "CustomerCompany")
+                # .sub("[company_name]", curator.company.name)
     @body = template.request_body
-              .gsub("[customer_name]", "CustomerCompany")
-              .gsub("[company_name]", curator.company.name)
-              .gsub("[product_name]", "CompanyProduct")
-              .gsub("[contributor_first_name]", "Contributor")
-              .gsub("[curator_first_name]", curator.first_name)
-              .gsub("[referral_intro]", "John Doe referred me to you. ")
+              .gsub("[referral_intro]", "John Doe referred me to you.")
               .gsub("[contribution_submission_url]", "#")
               .gsub("[feedback_submission_url]", "#")
+              .gsub("[curator_img_url]", curator.photo_url || "")
               .gsub("[curator_full_name]", curator.full_name)
+              .gsub("[curator_position]", curator.title || "")
+              .gsub("[company_name]", curator.company.name || "")
               .gsub("[curator_email]", curator.email)
               .gsub("[curator_phone]", curator.phone || "")
-              .gsub("[curator_title]", curator.title || "")
               .gsub("[unsubscribe_url]", "#")
               .gsub("[opt_out_url]", "#")
-              .gsub("[curator_img_url]", curator.photo_url || "")
               .html_safe
     send_mail('test', curator, curator, subject)
   end

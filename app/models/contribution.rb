@@ -174,7 +174,7 @@ class Contribution < ActiveRecord::Base
                       .sub("[product_name]", success.products.take.try(:name) || "")
     host = "http://#{curator.company.subdomain}.#{ENV['HOST_NAME']}"
     referral_intro = self.referrer_id.present? ?
-                     self.referrer.full_name + " referred me to you. " : ""
+                     self.referrer.full_name + " referred me to you." : ""
     body = template.body
                     .gsub("[customer_name]", success.customer.name)
                     .gsub("[company_name]", curator.company.name)
