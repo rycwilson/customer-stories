@@ -13,11 +13,12 @@
     $.when(
       $('select.crowdsourcing-template').trigger('change')
     ).then(function () {
-      console.log('restore.js.erb');
+      // would be good to make sure the bootbox modal has closed first
       flashDisplay(flashMesg, 'success');
     })
 
   } else {
+    // would be good to make sure the bootbox modal has closed first
     flashDisplay(flashMesg, 'success')
   }
 

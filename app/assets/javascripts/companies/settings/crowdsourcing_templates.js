@@ -118,16 +118,15 @@ function crowdsourcingTemplatesListeners () {
 
     .on('click', '#template-actions-dropdown .restore-selected, ' +
                  '#template-actions-dropdown .restore-all', function () {
-      var message;
-      if ($(this).hasClass('restore-selected')) {
-        var templateName = $('select.crowdsourcing-template').select2('data')[0].text;
-        message = "<p>This action will restore the " + templateName + " crowdsourcing template to factory default content.</p>";
-      } else {
-        message = "<p>This action will restore the following crowdsourcing templates to factory default content.</p>" +
-                  "<ul><li>Customer</li><li>Customer Success</li><li>Sales</li>";
-      }
 
-      var $this = $(this);
+      var $action = $(this), $select = $('select.crowdsourcing-template'),
+          restoreTemplateNames =
+            $action.hasClass('restore-selected') ? [$select.select2('data')[0].text] :
+            $.map( $select.find('optgroup[label="Defaults"] option'), function (option) {
+              return option.label;
+            }),
+          message = '<p>This action will restore the following Crowdsourcing Templates to factory default content</p><ul><li>' +
+                    restoreTemplateNames.join('</li><li>') + '</li></ul>';
 
       bootbox.confirm({
         className: 'confirm-restore',
@@ -145,7 +144,7 @@ function crowdsourcingTemplatesListeners () {
           }
         },
         callback: function (confirmRestore) {
-          if (confirmRestore) { restoreTemplates($this); }
+          if (confirmRestore) { restoreTemplates($action, $select); }
         }
       });
     })
@@ -317,11 +316,10 @@ function selectTemplate ($select) {
   });
 }
 
-function restoreTemplates ($this) {
+function restoreTemplates ($action, $select) {
 
-  var $select = $('select.crowdsourcing-template'),
-      restoreTemplateIds =
-        $this.hasClass('restore-selected') ? [$select.select2('data')[0].id] :
+  var restoreTemplateIds =
+        $action.hasClass('restore-selected') ? [$select.select2('data')[0].id] :
         $.map( $select.find('optgroup[label="Defaults"] option'), function (option) {
           return option.value;
         });
