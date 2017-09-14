@@ -19,8 +19,8 @@
 
     $(function () {
       var type = '<%= @type %>', $container,
-          $script = (type === 'tab') ? $('script[href*="tab"]') :
-                      (type === 'rel' ? $('script[href*="rel/"]') : $('script[href*="rel-exp"]')),
+          $script = (type === 'tab') ? $('script[src*="tab"]') :
+                      (type === 'rel' ? $('script[src*="rel/"]') : $('script[src*="rel-exp"]')),
           category = $script.data('category'),
           product = $script.data('product'),
           $stylesheet = $("<link>", { rel: "stylesheet", type: "text/css" });
