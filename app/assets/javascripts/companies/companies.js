@@ -2,7 +2,7 @@
 //= require ./new
 //= require ./show
 //= require ./edit
-//= require ./crowdsource
+//= require ./crowdsource/crowdsource
 //= require ./curate
 //= require ./promote
 //= require ./measure

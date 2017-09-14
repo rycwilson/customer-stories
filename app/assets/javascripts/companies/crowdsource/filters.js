@@ -1,0 +1,175 @@
+
+function crowdsourceFiltersListeners () {
+
+  // keep track of the last column search, so table can be reset on the next search
+  var lastSuccessesColumnSearch = null, lastContributorsColumnSearch = null;
+
+  $(document)
+    .on('change', '.crowdsource.curator-select, ' +
+                  '#successes-filter, #contributors-filter', function (e, data) {
+
+      var $tableWrapper = $(this).closest('div[id*="table_wrapper"]'),
+          $table = $tableWrapper.find('table'), dt = $table.DataTable(),
+          curatorId;
+
+      if ($(this).hasClass('curator-select')) {
+        curatorId = $(this).val();
+        // modify filter options to reflect curator's associations
+        var $filter = $tableWrapper.find('.dt-filter'),
+            successes = (curatorId === '0') ? app.company.successes :
+                        app.company.successes.filter(function (success) {
+                          return success.curator_id == curatorId;
+                        }),
+            customers = (curatorId === '0') ? app.company.customers :
+                        app.company.customers.filter(function (customer) {
+                          // customer has >= 1 success
+                          return successes.some(function (success) {
+                            return success.customer_id === customer.id;
+                          });
+                        }),
+            $successesOptgroup = $filter.find('optgroup[label="Story Candidate"]');
+            $customersOptgroup = $filter.find('optgroup[label="Customer"]');
+
+        if ($table.is('#crowdsource-contributors-table')) {
+          var contributors =
+                app.contributions.filter(function (contribution) {
+                  return successes.some(function (success) {
+                    return (success.id === contribution.success_id) &&
+                      (curatorId === '0' ? true : success.curator_id == curatorId);
+                  });
+                })
+                .map(function (contribution) { return contribution.contributor; }),
+
+              // >= 1 contributor
+              successesWithC = successes.filter(function (success) {
+                        app.contributions.some(function (contribution) {
+                          return contribution.success_id === success.id;
+                        });
+                      }),
+
+              customersWithC = customers.filter(function (customer) {
+                        return successes.some(function (success) {
+                          return success.customer_id === customer.id &&
+                            app.contributions.some(function (contribution) {
+                              return contribution.success_id === success.id;
+                            });
+                        });
+                      }),
+              $contributorsOptgroup = $filter.find('optgroup[label="Contributor"]');
+
+          $contributorsOptgroup.empty();
+          _.each(contributors, function (contributor) {
+            $contributorsOptgroup.append(
+              '<option value="contributor-' + contributor.id + '" data-column="contributor">' + contributor.full_name + '</option>'
+            );
+          });
+        }
+
+    // remove and replace optgroups in this table's filter>
+        $customersOptgroup.empty();
+        _.each(customers, function (customer) {
+          $customersOptgroup.append(
+            '<option value="customer-' + customer.id + '" data-column="customer">' + customer.name + '</option>'
+          );
+        });
+
+        $successesOptgroup.empty();
+        _.each(successes, function (success) {
+          $successesOptgroup.append(
+            '<option value="success-' + success.id + '" data-column="success">' + success.name + '</option>'
+          );
+        });
+
+        // when changing curators, start with all candidates/contributors
+        $filter.val('0').trigger('change.select2');  // change select input without triggering change event
+
+        // find entries owned by curator
+        dt.search('')
+          .column('curator:name').search(curatorId === '0' ? '' : curatorId).draw();
+
+        // update the other curator select (only once)
+        if (!(data && data.auto)) {
+          var $other = $('.crowdsource.curator-select').not($(this));
+          $other.val($(this).val()).trigger('change', { auto: true });
+        }
+      }
+
+      // successes-filter or contributors-filter
+      else {
+        curatorId = $tableWrapper.find('.crowdsource.curator-select').val();
+        // filterCol matches a table column name (see initContributorsTable)
+        var filterCol = $(this).find('option:selected').data('column'),
+            filterVal = $(this).find('option:selected').val() === '0' ? '0' :
+                        $(this).find('option:selected').text(),
+            dtSearch;
+
+        // curator && all candidates/contributors
+        if (filterVal === '0') {
+          if ($table.is('#successes-table') && lastSuccessesColumnSearch) {
+            dtSearch = $table.DataTable().search('')
+                          .column(lastSuccessesColumnSearch + ':name').search('');
+            lastSuccessesColumnSearch = null;
+          } else if ($table.is('#crowdsource-contributors-table') && lastContributorsColumnSearch) {
+            dtSearch = $table.DataTable().search('')
+                          .column(lastContributorsColumnSearch + ':name').search('');
+            lastContributorsColumnSearch = null;
+          } else {
+            dtSearch = $table.DataTable().search('');
+          }
+          dtSearch
+            .column('curator:name').search(curatorId === '0' ? '' : curatorId)
+            .draw();
+
+        // curator && filter column
+        } else {
+          // heads up: '18' matches '180' => solved by treating as RegEx
+          // (disregard this as we're now searching on the option text value)
+          dt.search('')
+            .column('curator:name').search(curatorId === '0' ? '' : curatorId)
+            .column(filterCol + ':name').search(filterVal)
+            .draw();
+          if ($table.is('#successes-table')) {
+            lastSuccessesColumnSearch = filterCol;
+          } else {
+            lastContributorsColumnSearch = filterCol;
+          }
+        }
+
+      }
+    })
+
+    .on('keyup', '.select2-search', function (e) {
+      var $table, curatorId, $input = $(this).find('input'), dtSearch;
+
+      // is this #successes-filter or #contributors-filter ?
+      if ($(this).next().find('#select2-successes-filter-results').length) {
+        $table = $('#successes-table');
+      } else if ($(this).next().find('#select2-contributors-filter-results').length) {
+        $table = $('#crowdsource-contributors-table');
+      } else {
+        return false;
+      }
+
+      // curator is search by id, filter is search by text value
+      curatorId = $table.closest('[id*="table_wrapper"]')
+                        .find('.crowdsource.curator-select').val();
+      // the table search needs to be reset depending on whether a prior column
+      // search was performed
+      if ($table.is('#successes-table') && lastSuccessesColumnSearch) {
+        dtSearch = $table.DataTable().search('')
+                      .column(lastSuccessesColumnSearch + ':name').search('');
+        lastSuccessesColumnSearch = null;
+      } else if ($table.is('#crowdsource-contributors-table') && lastContributorsColumnSearch) {
+        dtSearch = $table.DataTable().search('')
+                      .column(lastContributorsColumnSearch + ':name').search('');
+        lastContributorsColumnSearch = null;
+      } else {
+        dtSearch = $table.DataTable().search('');
+      }
+      dtSearch
+        .search($input.val())
+        .column('curator:name').search(curatorId === '0' ? '' : curatorId)
+        .draw();
+
+    });
+}
