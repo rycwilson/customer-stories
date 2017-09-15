@@ -20,7 +20,7 @@
     .prepend('<option selected/>')  // placeholder
     .select2({
       theme: "bootstrap",
-      placeholder: 'Add a question',
+      placeholder: 'Add a Question',
       data: <%= raw @company.contributor_questions.grouped_select2_options(@template).to_json %>
     })
 

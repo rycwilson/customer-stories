@@ -74,27 +74,6 @@
     label {
       margin-left: -15px;
     }
-    label + span {
-      position: absolute;
-      top: -15px;
-      left: 155px;
-      color: #6685a4;
-      i:first-child {
-        font-size: 28px;
-        top: 6px;
-      }
-      i:last-child {
-        font-size: 16px;
-        top: 3px;
-      }
-    }
-    label + span:hover {
-      color: #516c87;
-      cursor: pointer;
-    }
-
-
-
     li.contributor-question {
       div[class*='col-']:first-child {
         padding: 0 10px;

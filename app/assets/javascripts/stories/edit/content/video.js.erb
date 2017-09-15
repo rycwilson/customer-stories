@@ -1,0 +1,59 @@
+
+function storiesEditVideoListeners () {
+
+  $(document)
+    // TODO: https://stackoverflow.com/questions/2742813
+    .on('input', '#story_video_url', function (e) {
+
+      // https://www.youtube.com/watch?v=BAjqPZY8sFg or
+      // https://www.youtube.com/embed/BAjqPZY8sFg
+      var youtubeId = $(this).val().includes('youtube') &&
+                      $(this).val().match(/(v=|\/)(\w+)(&|$)/) &&
+                      $(this).val().match(/(v=|\/)(\w+)(&|$)/)[2],
+          vimeoId = $(this).val().includes('vimeo') &&
+                    $(this).val().match(/\/(\d+)$/) &&
+                    $(this).val().match(/\/(\d+)$/)[1],
+          // https://fast.wistia.com/embed/medias/avk9twrrbn.jsonp (standard)
+          // https://fast.wistia.net/embed/iframe/avk9twrrbn (fallback)
+          wistiaId = $(this).val().includes('wistia') &&
+                     $(this).val().match(/\/(\w+)($|\.\w+$)/) &&
+                     $(this).val().match(/\/(\w+)($|\.\w+$)/)[1],
+          loadTemplate = function (provider, videoId, videoUrl) {
+            $('.video-container').empty().append(
+               _.template( $('#video-template').html() )({
+                provider: provider,
+                videoId: videoId,
+                videoUrl: videoUrl
+              })
+            );
+          };
+
+      if (wistiaId && (typeof Wistia === 'undefined')) {
+          $.getScript('//fast.wistia.com/assets/external/E-v1.js', function () {
+            loadTemplate('wistia', wistiaId);
+            $('input[name="story[formatted_video_url]"]')
+              .val('<%= WISTIA_BASE_URL %>' + wistiaId);
+          });
+
+      } else if (wistiaId) {
+        loadTemplate('wistia', wistiaId);
+        $('input[name="story[formatted_video_url]"]')
+          .val('<%= WISTIA_BASE_URL %>' + wistiaId);
+
+      } else if (youtubeId || vimeoId) {
+        $.when(
+          loadTemplate(
+            youtubeId ? 'youtube' : 'vimeo',
+            youtubeId || vimeoId,
+            youtubeId ? '<%= YOUTUBE_BASE_URL %>' + youtubeId : '<%= VIMEO_BASE_URL %>' + vimeoId
+          )
+        ).then(function () {
+          loadVideoThumbnail();
+          $('input[name="story[formatted_video_url]"]').val(
+            youtubeId ? '<%= YOUTUBE_BASE_URL %>' + youtubeId : '<%= VIMEO_BASE_URL %>' + vimeoId
+          );
+        });
+      }
+    });
+
+}

@@ -35,5 +35,16 @@ class Success < ActiveRecord::Base
     self.contributions.count
   end
 
+  # method adds a new contributor question associations
+  # def add_contributor_questions (question_params)
+  #   if question_params.present?
+  #     question_params.each() do |index, attrs|
+  #       if attrs[:id] && self.contributor_questions.find_by(id: attrs[:id]).nil?
+  #         self.contributor_questions << ContributorQuestion.find(attrs[:id])
+  #       end
+  #     end
+  #   end
+  # end
+
 end
 

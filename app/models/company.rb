@@ -130,7 +130,7 @@ class Company < ActiveRecord::Base
       {
         'Custom' => self.select { |q| q.role.nil? }
                         .map { |q| [q.question, q.id] }
-                        .unshift( ['- New question -', '0'] ),
+                        .unshift( ['- New Question -', '0'] ),
         'Customer' => self.select { |q| q.role == 'customer' }
                           .map { |q| [q.question, q.id] },
         'Customer Success' => self.select { |q| q.role == 'customer success' }

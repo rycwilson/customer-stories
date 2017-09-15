@@ -132,6 +132,7 @@ class StoriesController < ApplicationController
       update_publish_state(@story, story_params)
       @story.update_tags(params[:category_tags] || [], params[:product_tags] || [])
       @story.update(story_params)
+      # html response necessary for uploading customer logo image
       respond_to do |format|
         format.html do
           redirect_to(
@@ -141,7 +142,9 @@ class StoriesController < ApplicationController
         end
         format.js { render(action: 'update_settings') }
       end
-    else
+    elsif params[:story][:form] == 'content'
+      @story.update(story_params)
+      respond_to { |format| format.js { render({ action: 'edit/content/update' }) } }
     end
 
     # if params[:customer_logo_url]
@@ -152,23 +155,7 @@ class StoriesController < ApplicationController
     #   respond_to { |format| format.json { render json: nil } }
     # # params[:story]* items must appear below, else error
     # # (there is no params[:story] when params[:story_tags] or params[:result] are present)
-    # elsif params[:story][:content]
-    #   story.update content: params[:story][:content]
-    #   @new_content = story.content
-    #   respond_to { |format| format.js { render action: 'update_content' } }
-    # elsif params[:story][:new_prompt]
-    #   story.success.prompts << Prompt.create(description: params[:story][:new_prompt])
-    #   @prompts = story.success.prompts
-    #   @story_id = story.id
-    #   @base_url = request.base_url  # needed for deleting a result
-    #   respond_to { |format| format.js { render action: 'create_prompt_success' } }
-    # elsif params[:story][:embed_url]  # =>  embedded video
-    #   story.update embed_url: new_embed_url_formatted(params[:story][:embed_url])
-    #   # respond with json because we need to update the video iframe
-    #   # with the modified url ...
-    #   respond_to do |format|
-    #     format.json { render json: story.as_json(only: :embed_url, methods: :video_info) }
-    #   end
+
     # elsif params[:story][:published]
     #   update_publish_state(story, params[:story])
     #   respond_to do |format|
@@ -301,8 +288,10 @@ class StoriesController < ApplicationController
   private
 
   def story_params
-    params.require(:story).permit(:title, :summary, :quote, :quote_attr_name, :quote_attr_title, :embed_url,
-        :published, :logo_published, :preview_published)
+    params.require(:story).permit(
+        :title, :summary, :quote, :quote_attr_name, :quote_attr_title, :video_url,
+        :content, :published, :logo_published, :preview_published,
+        results_attributes: [:id, :success_id, :description, :_destroy] )
   end
 
   def adwords_params

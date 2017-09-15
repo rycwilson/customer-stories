@@ -1,0 +1,39 @@
+
+<div>
+  <label>Results</label>
+  <span class="add-result fa-stack fa-lg">
+    <i class="fa fa-circle-o fa-stack-2x"></i>
+    <i class="fa fa-plus fa-stack-1x"></i>
+  </span>
+</div>
+
+<ul class='list-unstyled'>
+
+  <%= story_form.fields_for(:results) do |result_form|  %>
+
+    <li class="success-result">
+
+      <div class="row">
+
+        <div class='col-sm-11'>
+          <p><%= result_form.object.description %></p>
+        </div>
+
+        <div class="col-sm-1">
+          <i class='remove-result fa fa-remove'></i>
+          <%= result_form.check_box(:_destroy, { class: 'hidden' }, 'true', 'false') %>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-sm-12 save-or-cancel text-center hidden">
+          <span>Save changes to remove this Result<br><a class='cancel'>Cancel</a></span>
+        </div>
+      </div>
+
+    </li>
+
+  <% end %>
+
+</ul>
