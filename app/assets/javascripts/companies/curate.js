@@ -58,7 +58,7 @@ function curateListeners () {
           success: function (html, status, xhr) {
             $.when( $('#curate-story').empty().append(html) )
               .then(function () {
-                $.when( initCurateStoryPlugins() )
+                $.when( initCurateStory() )
                   .then(function () {
                     $('a[href="#curate-story"]').tab('show');
                   });
@@ -108,7 +108,7 @@ function curateListeners () {
 
 }
 
-function initCurateStoryPlugins () {
+function initCurateStory () {
   initContributorsTable('curate');
   $('.bs-switch').bootstrapSwitch({ size: 'small' });
   $('.story-tags').select2({
@@ -122,6 +122,7 @@ function initCurateStoryPlugins () {
   });
   initSummernote();
   initS3Upload();
+  loadVideoThumbnail();
   // make the section visible once plugins are loaded
   $('#curate-story .layout-main').css('visibility', 'visible');
 }
