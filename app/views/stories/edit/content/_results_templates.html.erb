@@ -1,62 +1,59 @@
 
-<% content_for(:underscore_templates) do %>
+<script type='text/template' id='success-results-template'>
 
-  <script type='text/template' id='success-results-template'>
+  {{ _.each(successResults, function (result, index) { }}
 
-    {{ _.each(successResults, function (result, index) { }}
+    <li class="success-result">
 
-      <li class="success-result">
+      <div class="row">
 
-        <div class="row">
-
-          <div class='col-sm-11'>
-            <p>{{= result.description }}</p>
-          </div>
-
-          <div class="col-sm-1">
-            <i class='remove-result fa fa-remove'></i>
-            <input name="story[results_attributes][{{= index }}][_destroy]" type="hidden" value="false">
-            <input class="hidden" type="checkbox" value="true" name="story[results_attributes][{{= index }}][_destroy]" id="story_results_attributes_{{= index }}__destroy">
-          </div>
-
+        <div class='col-sm-11'>
+          <p>{{= result.description }}</p>
         </div>
 
-        <div class='row'>
-          <div class="col-sm-12 save-or-cancel text-center hidden">
-            <span>Save changes to remove this Result<br><a class='cancel'>Cancel</a></span>
-          </div>
-        </div>
-
-      </li>
-
-      <input type="hidden" value="{{= result.id }}" name="story[results_attributes][{{= index }}][id]" id="story_results_attributes_{{= index }}_id">
-      <input type="hidden" value="{{= success.id }}" name="story[results_attributes][{{= index }}][success_id]" id="story_results_attributes_{{= index }}_success_id">
-
-    {{ }) }}
-
-  </script>
-
-  <script type="text/template" id='new-success-result-template'>
-
-    <li class="success-result new-result">
-
-      <div class='row'>
-        <div class='col-sm-12'>
-
-          <input type="hidden" value="{{= successId }}" name="story[results_attributes][{{= index }}][success_id]" id="story_results_attributes_{{= index }}_success_id">
-
-          <textarea class="form-control" rows="3" placeholder="New Result" name="story[results_attributes][{{ index }}][description]" id="story[results_attributes][{{ index }}][description]"></textarea>
-
-          <div class='save-or-cancel text-center'>
-            <span>Save changes to add this Result<br><a class='cancel'>Cancel</a></span>
-          </div>
-
+        <div class="col-sm-1">
+          <i class='remove-result fa fa-remove'></i>
+          <input name="story[results_attributes][{{= index }}][_destroy]" type="hidden" value="false">
+          <input class="hidden" type="checkbox" value="true" name="story[results_attributes][{{= index }}][_destroy]" id="story_results_attributes_{{= index }}__destroy">
         </div>
 
       </div>
 
+      <div class='row'>
+        <div class="col-sm-12 save-or-cancel text-center hidden">
+          <span>Save changes to remove this Result<br><a class='cancel'>Cancel</a></span>
+        </div>
+      </div>
+
     </li>
 
-  </script>
+    <input type="hidden" value="{{= result.id }}" name="story[results_attributes][{{= index }}][id]" id="story_results_attributes_{{= index }}_id">
+    <input type="hidden" value="{{= success.id }}" name="story[results_attributes][{{= index }}][success_id]" id="story_results_attributes_{{= index }}_success_id">
 
-<% end %>
+  {{ }) }}
+
+</script>
+
+<script type="text/template" id='new-success-result-template'>
+
+  <li class="success-result new-result">
+
+    <div class='row'>
+      <div class='col-sm-12'>
+
+        <input type="hidden" value="{{= successId }}" name="story[results_attributes][{{= index }}][success_id]" id="story_results_attributes_{{= index }}_success_id">
+
+        <textarea class="form-control" rows="3" placeholder="New Result" name="story[results_attributes][{{ index }}][description]" id="story[results_attributes][{{ index }}][description]"></textarea>
+
+        <div class='save-or-cancel text-center'>
+          <span>Save changes to add this Result<br><a class='cancel'>Cancel</a></span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </li>
+
+</script>
+
