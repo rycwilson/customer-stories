@@ -81,9 +81,7 @@ Rails.application.routes.draw do
         end
         resources :stories, only: [:create]
         resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
-        resources :crowdsourcing_templates, except: [:index] do
-          member { post '/test', to: 'crowdsourcing_templates#test'}
-        end
+        resources :crowdsourcing_templates, except: [:index]
         member { get '/promote-settings', to: 'companies#show' }
         member { put :tags }
         member { put :widget }

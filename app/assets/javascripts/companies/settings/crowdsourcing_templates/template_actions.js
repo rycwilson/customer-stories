@@ -33,29 +33,6 @@ function templateActionsListeners () {
       });
     })
 
-    .on('click', '#template-actions-dropdown .test-template', function () {
-      // don't use .serialize() or it will send a PUT request
-      // (not that it really matters what kind of request it is - POST or PUT is fine)
-      var data = {
-        subject: $('#crowdsourcing_template_request_subject').val(),
-           body: $('.note-editable').html()
-      };
-
-      $('#template-actions-dropdown button[type="button"] span').toggle();
-      $('#template-actions-dropdown button[type="button"] .fa-spinner').toggle();
-
-      $.ajax({
-        url: '/companies/' + app.company.id + '/crowdsourcing_templates/' + $('select.crowdsourcing-template').val() + '/test',
-        method: 'post',
-        data: data,
-        success: function (data, status) {
-          $('#template-actions-dropdown button[type="button"] .fa-spinner').toggle();
-          $('#template-actions-dropdown button[type="button"] span').toggle();
-          flashDisplay(data.flash, 'info');
-        }
-      });
-    })
-
     .on('click', '#template-actions-dropdown .delete-template', function () {
 
       var deleteTemplateId = $('select.crowdsourcing-template').select2('data')[0].id;
