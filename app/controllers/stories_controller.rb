@@ -140,7 +140,7 @@ class StoriesController < ApplicationController
             flash: { success: "Story Settings updated" }
           )
         end
-        format.js { render(action: 'update_settings') }
+        format.js { render({ action: 'edit/settings/update' }) }
       end
     elsif params[:story][:form] == 'content'
       @story.update(story_params)

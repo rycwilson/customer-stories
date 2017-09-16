@@ -59,8 +59,12 @@ class Story < ActiveRecord::Base
   friendly_id :title, use: [:slugged, :finders, :history]
 
   # scrub user-supplied html input using whitelist
-  before_save :scrub_html_input, on: [:create, :update],
-              if: Proc.new { self.content.present? && self.content_changed? }
+  before_save(:scrub_html_input, on: [:create, :update],
+    if: Proc.new { self.content.present? && self.content_changed? })
+
+  # save video urls in a standard format
+  before_save(:format_video_url, on: [:create, :update],
+    if: Proc.new { self.video_url.present? && self.video_url_changed? })
 
   scope :company_all, ->(company_id) {
     joins(success: { customer: {} })
@@ -325,6 +329,27 @@ class Story < ActiveRecord::Base
   def csp_edit_story_path
     url_helpers = Rails.application.routes.url_helpers
     url_helpers.edit_story_path(self.id)
+  end
+
+  def format_video_url ()
+    if self.video_url.include? "youtube"
+      # https://www.youtube.com/watch?v=BAjqPZY8sFg
+      # or
+      # https://www.youtube.com/embed/BAjqPZY8sFg
+      youtube_id = self.video_url.match(/(v=|\/)(?<id>\w+)(&|$)/)[:id]
+      self.video_url = YOUTUBE_BASE_URL + "#{youtube_id}"
+    elsif self.video_url.include? "vimeo"
+      vimeo_id = self.video_url.match(/\/(?<id>\d+)$/)[:id]
+      VIMEO_BASE_URL + "#{vimeo_id}"
+    elsif self.video_url.include? "wistia"
+      # https://fast.wistia.com/embed/medias/avk9twrrbn.jsonp (standard)
+      # or
+      # https://fast.wistia.net/embed/iframe/avk9twrrbn (fallback)
+      wistia_id = self.video_url.match(/\/(?<id>\w+)($|\.\w+$)/)[:id]
+      WISTIA_BASE_URL + "#{wistia_id}.jsonp"
+    elsif self.video_url.blank?
+      nil
+    end
   end
 
   ##

@@ -39,7 +39,7 @@ function loadVideoThumbnail () {
 
   if (provider === 'youtube') {
     // ref: http://stackoverflow.com/questions/2068344
-    thumbSrc = '//i1.ytimg.com/vi/' + videoId + '/hqdefault.jpg';
+    thumbSrc = '//img.youtube.com/vi/' + videoId + '/hqdefault.jpg';
     $thumbContainer.append(
       "<div>" +
         "<img class='video-thumb' src='" + thumbSrc + "'>" +

@@ -96,7 +96,17 @@ function attachAppListeners () {
             $otherDropdown = $thisDropdown.parent().find('li.dropdown:not(.open)');
         $thisDropdown.addClass('active');
         $otherDropdown.removeClass('active');
-      });
+      })
+
+    .on('submit', 'form', function () {
+
+      // presently limited to these forms
+      if ($(this).attr('id') === 'story-settings-form') {
+        $(this).find('button[type="submit"] span').toggle();
+        $(this).find('button[type="submit"] .fa-spinner').toggle();
+      }
+
+    });
 
   //
   window.onpopstate = function (e) {

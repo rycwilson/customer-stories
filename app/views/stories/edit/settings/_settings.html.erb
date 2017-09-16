@@ -9,9 +9,9 @@
 
   <%= hidden_field_tag('story[form]', 'settings') %>
 
-  <div class="row">
 
-    <div class="col-sm-6">
+  <div class="row">
+    <div class="col-sm-4">
 
       <div id='publish-control' class="form-inline">
 
@@ -30,7 +30,7 @@
           <%= f.check_box(:published, class: "bs-switch form-control") %>
         </div>
         &nbsp;
-        <%= link_to('Approval PDF', story_approval_path(story.id, format: :pdf),
+        <%= link_to('Approval', story_approval_path(story.id, format: :pdf),
               id: 'approval-pdf-btn', style: 'vertical-align: bottom; ',
               data: { missing_curator_info: story.curator.missing_info.to_json,
                       missing_company_info: company.missing_info.to_json,
@@ -39,12 +39,22 @@
 
       </div>  <!-- publish control -->
 
+    </div>
+    <div class="col-sm-8">
+
       <div class="form-group required-input">
         <%= f.label(:title) %>
         <%= f.text_field(:title, class: 'form-control') %>
       </div>
 
-      <%= render 'stories/edit/customer_logo', { story: story, f: f } %>
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class="col-sm-6">
+
+      <%= render 'stories/edit/settings/customer_logo', { story: story, f: f } %>
 
     </div>
 
@@ -98,15 +108,6 @@
 
   <hr>
 
-  <div class="row">
-    <div class="col-sm-12 text-right">
-      <div class="form-group">
-
-        <button type="reset" class="btn btn-default">Cancel</button>
-        <input type='submit' class='btn btn-success' value="Save changes">
-
-      </div>
-    </div>
-  </div>
+  <%= render 'shared/form_submit' %>
 
 <% end %>

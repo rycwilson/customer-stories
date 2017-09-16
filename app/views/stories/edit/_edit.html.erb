@@ -3,7 +3,7 @@
 
   <div class="col-md-3 col-sm-4 layout-sidebar">
 
-    <%= render 'stories/edit/side_tabs', { tab_select: tab_select } %>
+    <%= render 'stories/edit/tabs', { tab_select: tab_select } %>
 
   </div>
 
@@ -35,7 +35,8 @@
            data-story-id='<%= story.try(:id) %>'
            data-success-name="<%= story.success.name %>">
 
-        <%= render 'stories/edit/settings', { company: company, story: story } %>
+        <%= render 'stories/edit/settings/settings',
+              { company: company, story: story } %>
 
       </div>  <!-- story-settings -->
 

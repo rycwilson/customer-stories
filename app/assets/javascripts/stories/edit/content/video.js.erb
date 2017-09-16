@@ -1,6 +1,17 @@
 
 function storiesEditVideoListeners () {
 
+  // $('#video-container').imagesLoaded()
+  //   .always(function () {
+  //     console.log('always')
+  //   })
+  //   .done(function (instance) {
+  //     console.log('instance: ', instance)
+  //   })
+  //   .fail(function () {
+  //     console.log('image load failure')
+  //   })
+
   $(document)
     // TODO: https://stackoverflow.com/questions/2742813
     .on('input', '#story_video_url', function (e) {
@@ -18,8 +29,9 @@ function storiesEditVideoListeners () {
           wistiaId = $(this).val().includes('wistia') &&
                      $(this).val().match(/\/(\w+)($|\.\w+$)/) &&
                      $(this).val().match(/\/(\w+)($|\.\w+$)/)[1],
+          placeholderUrl = $('#video-container').data('placeholder'),
           loadTemplate = function (provider, videoId, videoUrl) {
-            $('.video-container').empty().append(
+            $('#video-container').empty().append(
                _.template( $('#video-template').html() )({
                 provider: provider,
                 videoId: videoId,
@@ -53,7 +65,15 @@ function storiesEditVideoListeners () {
             youtubeId ? '<%= YOUTUBE_BASE_URL %>' + youtubeId : '<%= VIMEO_BASE_URL %>' + vimeoId
           );
         });
+
       }
+
+      // else if ( $('#video-container').find('#video-placeholder').length === 0 ) {
+      //   $('#video-container').empty().append(
+      //     '<img id="video-placeholder" src="' + placeholderUrl + '" alt="video placeholder">'
+      //   )
+      // }
+
     });
 
 }

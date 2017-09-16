@@ -54,6 +54,14 @@
         });
       }
     });
+
+  } else {
+
+    $('button[type="submit"]').find('.fa-spinner, .fa-check').toggle()
+    window.setTimeout(function () {
+      $('button[type="submit"]').find('.fa-check, span').toggle();
+    }, 2000);
+
   }
 
 }());
