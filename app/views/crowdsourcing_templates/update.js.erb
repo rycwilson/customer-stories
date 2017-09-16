@@ -24,9 +24,10 @@
       data: <%= raw @company.contributor_questions.grouped_select2_options(@template).to_json %>
     })
 
-  $('button[type="submit"]').find('.fa-spinner, .fa-check').toggle()
+  $('#crowdsourcing-template-form button[type="submit"]')
+    .find('.fa-spinner, .fa-check').toggle()
   window.setTimeout(function () {
-    $('button[type="submit"]').find('.fa-check, span').toggle();
+    $('#crowdsourcing-template-form button[type="submit"]').find('.fa-check, span').toggle();
   }, 2000);
 
 }());
