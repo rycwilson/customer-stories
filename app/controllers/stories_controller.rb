@@ -74,7 +74,7 @@ class StoriesController < ApplicationController
     # want to catch an ajax request for _edit partial, but ignore tubolinks ajax requests
     if request.xhr? && !request.env["HTTP_TURBOLINKS_REFERRER"]
       render({
-        partial: 'edit',
+        partial: 'stories/edit/edit',
         locals: { company: @company, story: @story,
                   workflow_stage: 'curate', tab_select: 'story-settings' }
       })
