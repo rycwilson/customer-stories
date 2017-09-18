@@ -1,17 +1,6 @@
 
 function storiesEditVideoListeners () {
 
-  // $('#video-container').imagesLoaded()
-  //   .always(function () {
-  //     console.log('always')
-  //   })
-  //   .done(function (instance) {
-  //     console.log('instance: ', instance)
-  //   })
-  //   .fail(function () {
-  //     console.log('image load failure')
-  //   })
-
   $(document)
     // TODO: https://stackoverflow.com/questions/2742813
     .on('input', '#story_video_url', function (e) {
@@ -29,7 +18,13 @@ function storiesEditVideoListeners () {
           wistiaId = $(this).val().includes('wistia') &&
                      $(this).val().match(/\/(\w+)($|\.\w+$)/) &&
                      $(this).val().match(/\/(\w+)($|\.\w+$)/)[1],
-          placeholderUrl = $('#video-container').data('placeholder'),
+
+          loadPlaceholder = function () {
+            var placeholderUrl = $('#video-container').data('placeholder');
+            $('#video-container').empty().append(
+              '<img id="video-placeholder" src="' + placeholderUrl + '" alt="video placeholder">'
+            )
+          }
           loadTemplate = function (provider, videoId, videoUrl) {
             $('#video-container').empty().append(
                _.template( $('#video-template').html() )({
@@ -61,19 +56,33 @@ function storiesEditVideoListeners () {
           )
         ).then(function () {
           loadVideoThumbnail();
-          $('input[name="story[formatted_video_url]"]').val(
-            youtubeId ? '<%= YOUTUBE_BASE_URL %>' + youtubeId : '<%= VIMEO_BASE_URL %>' + vimeoId
-          );
+          // did thumbnail load successfully? youtube sometimes doesn't
+          $('#video-container').imagesLoaded()
+            .done(function (instance) {
+              // original width of 120 indicates youtube thumbnail not available
+              if ( youtubeId && $('#video-container img')[0].naturalWidth === 120 ) {
+                loadPlaceholder();
+                $('input[name="story[formatted_video_url]"]').val('')
+              } else {
+                $('input[name="story[formatted_video_url]"]').val(
+                  youtubeId ? '<%= YOUTUBE_BASE_URL %>' + youtubeId :
+                    '<%= VIMEO_BASE_URL %>' + vimeoId
+                );
+              }
+            })
         });
 
       }
-
-      // else if ( $('#video-container').find('#video-placeholder').length === 0 ) {
-      //   $('#video-container').empty().append(
-      //     '<img id="video-placeholder" src="' + placeholderUrl + '" alt="video placeholder">'
-      //   )
-      // }
+      // if there's no provider id and placeholder hasn't already been loaded,
+      // load placeholder
+      else if ( $('#video-container').find('#video-placeholder').length === 0 ) {
+        loadPlaceholder();
+      }
 
     });
+
+}
+
+function getVideoId ($input) {
 
 }

@@ -99,11 +99,8 @@ function attachAppListeners () {
       })
 
     .on('submit', 'form', function () {
-console.log('form: ', $(this))
-console.log('form id: ', $(this).attr('id'))
       // presently limited to these forms
       if ($(this).attr('id') === 'story-settings-form') {
-        console.log('form submit')
         $(this).find('button[type="submit"] span').toggle();
         $(this).find('button[type="submit"] .fa-spinner').toggle();
       }
@@ -164,7 +161,7 @@ console.log('form id: ', $(this).attr('id'))
     // this event appears to work best for doing stuff prior to leaving a page
     // note: this event occurs after the history state has been changed
     .on('turbolinks:before-cache', function () {
-      console.log('turbolinks:before-cache');
+      // console.log('turbolinks:before-cache');
       deconstructPlugins();
     })
 

@@ -143,6 +143,8 @@ class StoriesController < ApplicationController
         format.js { render({ action: 'edit/settings/update' }) }
       end
     elsif params[:story][:form] == 'content'
+      # the video url in standardized format is sent in a hidden field
+      params[:story][:video_url] = params[:story][:formatted_video_url]
       @story.update(story_params)
       respond_to { |format| format.js { render({ action: 'edit/content/update' }) } }
     end
@@ -290,7 +292,7 @@ class StoriesController < ApplicationController
   def story_params
     params.require(:story).permit(
         :title, :summary, :quote, :quote_attr_name, :quote_attr_title, :video_url,
-        :content, :published, :logo_published, :preview_published,
+        :formatted_video_url, :content, :published, :logo_published, :preview_published,
         results_attributes: [:id, :success_id, :description, :_destroy] )
   end
 
