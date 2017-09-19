@@ -47,7 +47,7 @@ class Story < ActiveRecord::Base
                                story.company.campaigns.retarget.ad_group.id)
   }, class_name: 'AdwordsAd'
 
-  accepts_nested_attributes_for(:results, allow_destroy: true)
+  accepts_nested_attributes_for(:success)
 
   # virtual attribute for accepting a standard format video url
   attr_accessor :formatted_video_url

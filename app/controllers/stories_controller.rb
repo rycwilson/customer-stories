@@ -293,7 +293,7 @@ class StoriesController < ApplicationController
     params.require(:story).permit(
         :title, :summary, :quote, :quote_attr_name, :quote_attr_title, :video_url,
         :formatted_video_url, :content, :published, :logo_published, :preview_published,
-        results_attributes: [:id, :success_id, :description, :_destroy] )
+        success_attributes: [:id, results_attributes: [:id, :description, :_destroy]] )
   end
 
   def adwords_params

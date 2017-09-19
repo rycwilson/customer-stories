@@ -1,7 +1,6 @@
 
 <%= form_for(story, url: story_path(story.id),
-      html: { id: 'story-content-form', method: :put, remote: true,
-              data: { 'success-id': story.success.id } }) do |story_form| %>
+      html: { id: 'story-content-form', method: :put, remote: true }) do |story_form| %>
 
   <%= hidden_field_tag('story[form]', 'content') %>
 

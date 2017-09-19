@@ -5,6 +5,8 @@ function storiesEditResultsListeners () {
     .on('click', '#curate-story .add-result', function (e) {
 
       var template = _.template( $('#new-success-result-template').html() ),
+          currentIndex = $('.success-results ul').find('li').length;
+
       scrollToResult = function ($result) {
         // scroll down if the new result falls below window...
         var bottomOffset = $result.offset().top + $result.height();
@@ -14,12 +16,10 @@ function storiesEditResultsListeners () {
           }, 400);
         }
       };
+
       $.when(
         $('#curate-story .success-results ul').append(
-          template({
-            successId: $(this).closest('form').data('success-id'),
-            index: $(this).find('li').length
-          })
+          template({ index: currentIndex })
         )
       ).then(function () {
         $newResult = $('.success-results li').last();
@@ -27,6 +27,7 @@ function storiesEditResultsListeners () {
         // ref: https://stackoverflow.com/questions/8380759 (2nd answer)
         setTimeout(function () { $newResult.find('textarea')[0].focus(); }, 0);
       });
+
     })
 
     .on('click', '.success-result .remove-result', function () {

@@ -23,6 +23,8 @@ class Success < ActiveRecord::Base
   has_many :ctas_successes, dependent: :destroy
   has_many :ctas, through: :ctas_successes, source: :call_to_action
 
+  accepts_nested_attributes_for(:results, allow_destroy: true)
+
   # after_commit(on: [:create, :destroy]) do
   # end
 

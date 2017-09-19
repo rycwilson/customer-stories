@@ -7,33 +7,40 @@
   </span>
 </div>
 
-<ul class='list-unstyled'>
+<hr class="<%= story.results.present? ? 'hidden' : '' %>"
+    style='margin:0 -15px 0 -15px; border-top:1px solid #e5e5e5' >
 
-  <%= story_form.fields_for(:results) do |result_form|  %>
+<%= story_form.fields_for(:success) do |success_form| %>
 
-    <li class="success-result">
+  <ul class='list-unstyled'>
 
-      <div class="row">
+    <%= success_form.fields_for(:results) do |result_form|  %>
 
-        <div class='col-sm-11'>
-          <p><%= result_form.object.description %></p>
+      <li class="success-result">
+
+        <div class="row">
+
+          <div class='col-sm-11'>
+            <p><%= result_form.object.description %></p>
+          </div>
+
+          <div class="col-sm-1">
+            <i class='remove-result fa fa-remove'></i>
+            <%= result_form.check_box(:_destroy, { class: 'hidden' }, 'true', 'false') %>
+          </div>
+
         </div>
 
-        <div class="col-sm-1">
-          <i class='remove-result fa fa-remove'></i>
-          <%= result_form.check_box(:_destroy, { class: 'hidden' }, 'true', 'false') %>
+        <div class="row">
+          <div class="col-sm-12 save-or-cancel text-center hidden">
+            <span>Save changes to remove this Result<br><a class='cancel'>Cancel</a></span>
+          </div>
         </div>
 
-      </div>
+      </li>
 
-      <div class="row">
-        <div class="col-sm-12 save-or-cancel text-center hidden">
-          <span>Save changes to remove this Result<br><a class='cancel'>Cancel</a></span>
-        </div>
-      </div>
+    <% end %>
 
-    </li>
+  </ul>
 
-  <% end %>
-
-</ul>
+<% end %>
