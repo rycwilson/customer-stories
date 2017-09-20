@@ -6,6 +6,8 @@
 */
 function initSelect2 () {
 
+  select2ScrollBoundaries();
+
   // story settings has its own init routine
   $('.story-tags:not(.story-settings)').select2({
     theme: 'bootstrap',
@@ -159,4 +161,19 @@ function select2Listeners () {
                    $(this).select2('close');
                  }
                });
+}
+
+// ref: http://stackoverflow.com/questions/8737709
+function select2ScrollBoundaries () {
+  var maxY = null;
+  $(document).on('wheel', '.select2-results__options', function (event) {
+    maxY = $(this).prop('scrollHeight') - $(this).prop('offsetHeight');
+    // If this event looks like it will scroll beyond the bounds of the element,
+    // prevent it and set the scroll to the boundary manually
+    if ($(this).prop('scrollTop') + event.originalEvent.deltaY < 0 ||
+        $(this).prop('scrollTop') + event.originalEvent.deltaY > maxY) {
+      event.preventDefault();
+      $(this).prop('scrollTop', Math.max(0, Math.min(maxY, $(this).prop('scrollTop') + event.originalEvent.deltaY)));
+    }
+  });
 }

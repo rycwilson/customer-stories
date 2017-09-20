@@ -71,8 +71,6 @@ function setAppData () {
 function attachAppListeners () {
 
   xScrollBoundaries();
-  yScrollBoundaries();
-
 
   $(document)
     .on('click', '#workflow-tabs a', function (e) {
