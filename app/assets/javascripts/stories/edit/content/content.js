@@ -20,3 +20,9 @@ function storiesEditContentListeners () {
     });
 
 }
+
+function initStoriesEditContent () {
+  initSummernote();
+  loadVideoThumbnail();
+}
+

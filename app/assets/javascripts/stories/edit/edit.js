@@ -11,6 +11,13 @@ function storiesEdit () {
 
 }
 
+// this is used for asynchronous loads of stories/edit/_edit
+function initStoriesEdit (cbShowTab) {
+  initStoriesEditSettings(cbShowTab);
+  initStoriesEditContent();
+  initContributorsTable('curate');
+}
+
 function storiesEditListeners () {
 
   storiesEditSettingsListeners();

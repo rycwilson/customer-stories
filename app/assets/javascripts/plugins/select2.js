@@ -6,7 +6,8 @@
 */
 function initSelect2 () {
 
-  $('.story-tags').select2({
+  // story settings has its own init routine
+  $('.story-tags:not(.story-settings)').select2({
     theme: 'bootstrap',
     placeholder: 'Select'
   });
@@ -93,12 +94,6 @@ function initSelect2 () {
         (preSelect = $(this).data('pre-select'))) {
       $(this).val(preSelect.toString()).trigger('change.select2');
     }
-  });
-
-  $('#story-ctas-select').select2({
-    theme: 'bootstrap',
-    placeholder: 'Select',
-    tags: true
   });
 
   $('#charts-story-select, #visitors-story-select, #ads-preview-story-select')

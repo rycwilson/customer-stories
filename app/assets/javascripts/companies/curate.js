@@ -56,13 +56,11 @@ function curateListeners () {
           method: 'get',
           dataType: 'html',
           success: function (html, status, xhr) {
+            var cbShowTab = function () {
+              $('a[href="#curate-story"]').tab('show');
+            };
             $.when( $('#curate-story').empty().append(html) )
-              .then(function () {
-                $.when( initCurateStory() )
-                  .then(function () {
-                    $('a[href="#curate-story"]').tab('show');
-                  });
-              });
+             .then(function () { initStoriesEdit(cbShowTab); });
           }
         });
       })
@@ -106,25 +104,6 @@ function curateListeners () {
         $('.new-story-tags').val('').trigger('change');  // multiple select
       });
 
-}
-
-function initCurateStory () {
-  initContributorsTable('curate');
-  $('.bs-switch').bootstrapSwitch({ size: 'small' });
-  $('.story-tags').select2({
-    theme: 'bootstrap',
-    placeholder: 'Select tags'
-  });
-  $('#story-ctas-select').select2({
-    theme: 'bootstrap',
-    placeholder: 'Select CTAs',
-    tags: true
-  });
-  initSummernote();
-  initS3Upload();
-  loadVideoThumbnail();
-  // make the section visible once plugins are loaded
-  $('#curate-story .layout-main').css('visibility', 'visible');
 }
 
 function filterCurateGallery () {
