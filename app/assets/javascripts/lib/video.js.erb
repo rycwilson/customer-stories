@@ -1,0 +1,121 @@
+
+function loadVideoThumbnail (cbSuccess) {
+
+  var $thumbContainer = $("#video-thumb-container");
+
+  if ($thumbContainer === undefined) { return undefined; }
+
+  var provider = $thumbContainer.data('provider'),
+      videoId = $thumbContainer.data('video-id'),
+      videoUrl = $thumbContainer.data("video-url"),
+      videoQuery = '', thumbSrc = '',
+      loadPlaceholder = function () {
+        var placeholderUrl = "<%= asset_path('video_placeholder.jpg') %>";
+        $thumbContainer.empty().append(
+          '<img id="video-placeholder" src="' + placeholderUrl + '" alt="video placeholder">'
+        );
+        // strange but necessary css setting adds a huge bottom padding, see video.scss
+        // needs to be removed for the placeholder
+        $thumbContainer.css('padding-bottom', '0');
+      };
+
+  if (provider === 'youtube') {
+    // ref: http://stackoverflow.com/questions/2068344
+    thumbSrc = '//img.youtube.com/vi/' + videoId + '/hqdefault.jpg';
+    $.when( $thumbContainer.append(
+        "<div><img class='video-thumb' src='" + thumbSrc + "'></div>"
+      )).then(function () {
+        $thumbContainer.imagesLoaded().done(function () {
+          // original width of 120 indicates youtube thumbnail not available
+          if ($thumbContainer.find('img')[0].naturalWidth === 120) {
+            // flashDisplay("Couldn't get video thumbnail image", "danger");
+            loadPlaceholder();
+          } else {
+            $thumbContainer.find('img').after(
+              "<div class='play-button'>" +
+                "<i class='fa fa-2x fa-inverse fa-play'></i>" +
+              "</div>"
+            );
+            if (cbSuccess) { cbSuccess(); }
+          }
+        });
+      });
+
+  } else if (provider === 'vimeo') {
+
+    $.ajax({
+      url: '//vimeo.com/api/oembed.json?url=https%3A//vimeo.com/' + videoId,
+      method: 'get',
+      dataType: 'json',
+      success: function (data, status, xhr) {
+        thumbSrc = data.thumbnail_url_with_play_button;
+        $thumbContainer.append(
+          "<div>" +
+            "<img class='video-thumb' src='" + thumbSrc + "'>" +
+          "</div>"
+        );
+      },
+      error: function (data, status) {
+        if ( $('body').hasClass('stories show') ) {
+          // removeVideo();
+        }
+        loadPlaceholder();
+      }
+    });
+
+  }
+} // loadThumbnail
+
+function playVideoListener () {
+
+  $(document).on('click',
+    '#video-thumb-container img, #video-thumb-container .play-button',
+    function (e) {
+
+    var $thumbContainer = $('#video-thumb-container'),
+        $modal = $('#story-video-modal'),
+        provider = $thumbContainer.data('provider'),
+        videoId = $thumbContainer.data('video-id'),
+        videoUrl = $thumbContainer.data("video-url"),
+        modalPlayerWindow = $modal.find('iframe')[0].contentWindow,
+        pausePlayer = function () {
+          if (provider === 'youtube') {
+            modalPlayerWindow.postMessage(
+              '{"event":"command","func":"pauseVideo","args":""}', '*'
+            );
+          } else if (provider === 'vimeo') {
+            modalPlayerWindow.postMessage(
+              '{"method":"pause"}', '*'
+            );
+          }
+        };
+
+    if (provider === 'youtube') {
+      videoQuery = '/?autoplay=1&enablejsapi=1&controls=0&iv_load_policy=3&showinfo=0&rel=0';
+    } else if (provider === 'vimeo') {
+      videoQuery = '/?autoplay=1';
+    }
+
+    if ($(document).width() < 600) {
+      e.stopPropagation();  // stop modal from being triggered
+      $(this).parent().replaceWith($("<iframe src='" + videoUrl + videoQuery + "'frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>"));
+
+    } else { // play video in modal
+
+      modalPlayerWindow.location.replace(videoUrl + videoQuery);
+
+      $modal.find('button.close').on('click', function () {
+        pausePlayer();
+      });
+
+      $modal.one('hide.bs.modal', function () {
+        pausePlayer();
+      });
+
+      $modal.one('hidden.bs.modal', function () {
+        // this causes the browser to hang (and appears to serve no real purpose)
+        // modalPlayerWindow.location.replace('');
+      });
+    }
+  });
+}

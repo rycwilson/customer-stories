@@ -9,6 +9,11 @@ function storiesEditSettingsListeners () {
 
   $(document)
 
+    .on('switchChange.bootstrapSwitch', 'input', function (e) {
+      var $input = $(this);
+      console.log($(this).val());
+    })
+
     .on('click', '#approval-pdf-btn', function (e) {
 
       var missingInfo = $(this).data('missing-curator-info');

@@ -5,8 +5,9 @@
 //= require ./grid_previews
 
 function attachStoriesListeners () {
+
   storiesIndexListeners();
-  storiesPlayVideoListener();
+  playVideoListener();
 
   $(document).on('click', '.cta-form',
     function () {

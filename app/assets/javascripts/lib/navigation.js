@@ -128,11 +128,3 @@ function xScrollBoundaries () {
   });
 }
 
-// function buttonListeners () {
-//   $(document).on('focus', 'button', function () {
-//     var _this = $(this);
-//     window.setTimeout(function () {
-//       _this.blur();
-//     }, 200);
-//   });
-// }

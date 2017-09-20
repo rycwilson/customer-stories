@@ -2,6 +2,8 @@
 function storiesShow () {
 
   loadVideoThumbnail();
+
+
   widgetsMonitor();
   clickyListeners();
   initMoreStories();

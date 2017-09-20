@@ -21,9 +21,9 @@
         </div>
       </div>
 
-    <% elsif @story.embed_url.present? %>
+    <% elsif @story.video_url.present? %>
 
-      <div class="video-thumb-container"
+      <div id="video-thumb-container"
            data-toggle='modal' data-target='#story-video-modal'
            data-provider="<%= @story.video_info[:provider] %>"
            data-video-id="<%= @story.video_info[:id] %>"

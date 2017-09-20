@@ -43,14 +43,5 @@ function storiesEditListeners () {
 
     });
 
-    // old stuff
-    // storiesEditBIPListeners();
-    // storiesEditCTAsListeners();
-    // storiesEditTagsListeners();
-    // storiesEditNewContributorListeners();
-    // storiesEditResultsListeners();
-    // storiesEditPromptsListeners();
-    // storiesEditContributionsListeners();
-    // storiesEditContentEditorListeners();
 }
 

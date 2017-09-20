@@ -21,7 +21,7 @@
           <div>
             <label for="logo_published">Publish Logo</label>&nbsp;
           </div>
-          <%= f.check_box(:logo_published, class: "bs-switch form-control") %>
+          <%= f.check_box(:logo_published, class: 'bs-switch form-control') %>
         </div>
 
         <div class="form-group">
@@ -29,8 +29,8 @@
             <label for='published'>Publish Story</label>&nbsp;
           </div>
           <%= f.check_box(:published, class: "bs-switch form-control") %>
-        </div>
-        &nbsp;
+        </div>&nbsp;
+
         <%= link_to('Approval', story_approval_path(story.id, format: :pdf),
               id: 'approval-pdf-btn', style: 'vertical-align: bottom; ',
               data: { missing_curator_info: story.curator.missing_info.to_json,
