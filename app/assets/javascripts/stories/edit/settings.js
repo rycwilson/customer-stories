@@ -60,7 +60,12 @@ function initStoriesEditSettings (cbShowTab) {
       // without the timeout, one switch is briefly on (?)
       setTimeout(function () {
         $('#story-settings-form').parent().removeClass('hidden');
-        if (cbShowTab) { cbShowTab(); }
+        if (cbShowTab) {
+          $(window).one('shown.bs.tab', function () {
+            window.scrollTo(0,0);
+          });
+          cbShowTab();
+        }
       }, 0);
     }
   });
