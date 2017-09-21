@@ -2,7 +2,7 @@
 .stories.show, .stories.edit {
 
   // ref: http://www.labnol.org/internet/light-youtube-embeds/27941/
-  #video-thumb-container {
+  .video-thumb-container {
     // width: 100%; /* assuming that the video has a 16:9 ratio */
     padding-bottom: 56.25%;  // ??  but apparently necessary
     overflow: hidden;
