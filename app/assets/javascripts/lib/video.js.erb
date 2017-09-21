@@ -7,7 +7,7 @@ function loadVideoThumbnail (cbSuccess) {
   // no video, or wistia video
   if ( $('#story-section-testimonial').hasClass('no-video') ||
        $thumbContainers.length === 0 ) {
-    cbSuccess();
+    if (cbSuccess) { cbSuccess(); }
     return false;
   }
 
@@ -54,7 +54,7 @@ function loadVideoThumbnail (cbSuccess) {
                 "<i class='fa fa-2x fa-inverse fa-play'></i>" +
               "</div>"
             );
-            cbSuccess();
+            if (cbSuccess) { cbSuccess(); }
           }
         });
       });
@@ -72,8 +72,7 @@ function loadVideoThumbnail (cbSuccess) {
             "<img class='video-thumb' src='" + thumbSrc + "'>" +
           "</div>"
         )).then(function () {
-          console.log('whats up')
-          cbSuccess();
+          if (cbSuccess) { cbSuccess(); }
         });
       },
       error: function (data, status) {
