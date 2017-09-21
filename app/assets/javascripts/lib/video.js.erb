@@ -144,8 +144,8 @@ function playVideoListener () {
       });
 
       $modal.one('hidden.bs.modal', function () {
-        // this causes the browser to hang (and appears to serve no real purpose)
-        // modalPlayerWindow.location.replace('');
+        // warning: this has historically caused browser to hang
+        modalPlayerWindow.location.replace('');
       });
     }
   });
