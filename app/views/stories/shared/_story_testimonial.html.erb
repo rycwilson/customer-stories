@@ -22,7 +22,7 @@
 
           <p class='lead'><em>"<%= story.quote %>"</em></p>
 
-          <div class="row">
+          <div class="row <%= story.quote_attr_name.blank? ? 'hidden' : '' %>">
             <div class='col-sm-12 col-lg-11 text-right'>
               <p>&#8211;&nbsp;<%= story.quote_attr_name %>,&nbsp;<%= story.quote_attr_title %></p>
             </div>
