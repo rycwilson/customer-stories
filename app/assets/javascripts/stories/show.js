@@ -1,12 +1,14 @@
 
 function storiesShow () {
 
-  loadVideoThumbnail();
-
+  // story is initially hidden in case video failure prompts removal
+  var cbSuccess = function () { $('.story-wrapper').removeClass('hidden'); };
+  loadVideoThumbnail(cbSuccess);
 
   widgetsMonitor();
   clickyListeners();
   initMoreStories();
+
 }
 
 function initMoreStories () {

@@ -56,6 +56,19 @@ class StoriesController < ApplicationController
   end
 
   def show
+    if params[:remove_video].present?
+      if params[:xs_screen]
+        render({
+          partial: 'stories/shared/story_video_xs',
+          locals: { story: @story, include_video: false }
+        })
+      else
+        render({
+          partial: 'stories/shared/story_testimonial',
+          locals: { story: @story, include_video: false }
+        })
+      end
+    end
     # convert the story content to plain text (for SEO tags)
     @story_content_text = HtmlToPlainText.plain_text(@story.content)
     @related_stories = @story.related_stories
@@ -454,6 +467,10 @@ class StoriesController < ApplicationController
       # a query string with category= or product=
     end
     filter
+  end
+
+  def remove_video? ()
+    # request.xhr? &&  && params[:remove_video].present?
   end
 
 end

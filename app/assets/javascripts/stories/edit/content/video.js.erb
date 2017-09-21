@@ -18,12 +18,6 @@ function storiesEditVideoListeners () {
           wistiaId = $(this).val().includes('wistia') &&
                      $(this).val().match(/\/(\w+)($|\.\w+$)/) &&
                      $(this).val().match(/\/(\w+)($|\.\w+$)/)[1],
-          loadPlaceholder = function () {
-            var placeholderUrl = "<%= asset_path('video_placeholder.jpg') %>";
-            $thumbContainer.empty().append(
-              '<img id="video-placeholder" src="' + placeholderUrl + '" alt="video placeholder">'
-            );
-          },
           updateHiddenInput = function (formattedUrl) {
             $('input[name="story[formatted_video_url]"]').val(formattedUrl);
           },
@@ -76,7 +70,7 @@ function storiesEditVideoListeners () {
 
       // if there's no provider id and placeholder hasn't already been loaded, load placeholder
       else if ( $('#video-placeholder').length === 0 ) {
-        loadPlaceholder();
+        loadVideoPlaceholder();
       }
 
     });

@@ -78,63 +78,69 @@
 
 </div>
 
-<!-- includes video -->
-<div id='story-section-testimonial'
-     class="<%= @story.video_url.present? ? '' : 'no-video' %>">
+<div class="story-wrapper hidden">
 
-  <% cache("#{@company.subdomain}/story-#{@story.id}-testimonial",
-           skip_digest: true) do %>
-    <%= render 'stories/shared/story_testimonial', { story: @story } %>
-  <% end %>
+  <!-- includes video -->
+  <div id='story-section-testimonial' class="<%= @story.video_url.present? ? '' : 'no-video' %>">
 
-</div>
+    <% cache("#{@company.subdomain}/story-#{@story.id}-testimonial",
+             skip_digest: true) do %>
+      <%= render 'stories/shared/story_testimonial',
+            { story: @story, include_video: @story.video_url.present? } %>
+    <% end %>
 
-<!-- video (xs only) -->
-<div id='story-section-video-xs'
-     class='visible-xs-block <%= @story.video_url.present? ? '' : 'hidden' %>'>
-
-  <% cache("#{@company.subdomain}/story-#{@story.id}-video-xs",
-           skip_digest: true) do %>
-    <%= render 'stories/shared/story_video_xs', { story: @story } %>
-  <% end %>
-
-</div>
-
-<div id='social-buttons-xs' class="visible-xs-block text-right">
-
-  <% cache("story-social-buttons-xs", skip_digest: true) do %>
-    <%= render 'stories/shared/social_buttons_xs', { story: @story } %>
-  <% end %>
-
-</div>
-
-<!-- story content, results, contributing team -->
-<div id='story-section-content'>
-
-  <%= render 'stories/shared/story_content',
-      { company: @company, story: @story, contributors: @contributors } %>
-
-</div>
-
-<% unless user_signed_in? %>
-  <div class='hidden-xs' style='border:1px solid #e3e3e3;z-index:1000'>
-    <div class='container' style='padding:0 0 15px 0' id='story-footer'>
-
-      <div class="row" style="display:flex;align-items:center;font-size:0;height:100px">
-        <div class="col-sm-6">
-          <a href="<%= csp_landing %>">
-            <img src="<%= CS_POWERED_LOGO_URL %>" alt="Powered by Customer Stories">
-          </a>
-        </div>
-        <div class="col-sm-6 text-right">
-          <h5 style='margin:0'>
-            <%= @company.name %> Curators <%= link_to 'Login', new_user_session_path %>
-          </h5>
-        </div>
-      </div>
-
-    </div>
   </div>
-<% end %>
+
+  <!-- video (xs only) -->
+  <div id='story-section-video-xs'
+       class="visible-xs-block <%= @story.video_url.present? ? '' : 'hidden' %>">
+
+    <% cache("#{@company.subdomain}/story-#{@story.id}-video-xs",
+             skip_digest: true) do %>
+      <%= render 'stories/shared/story_video_xs',
+            { story: @story, include_video: @story.video_url.present? } %>
+    <% end %>
+
+  </div>
+
+  <div id='social-buttons-xs' class="visible-xs-block text-right">
+
+    <% cache("story-social-buttons-xs", skip_digest: true) do %>
+      <%= render 'stories/shared/social_buttons_xs', { story: @story } %>
+    <% end %>
+
+  </div>
+
+  <!-- story content, results, contributing team -->
+  <div id='story-section-content'>
+
+    <%= render 'stories/shared/story_content',
+        { company: @company, story: @story, contributors: @contributors } %>
+
+  </div>
+
+  <% unless user_signed_in? %>
+    <div class='hidden-xs' style='border:1px solid #e3e3e3;z-index:1000'>
+      <div class='container' style='padding:0 0 15px 0' id='story-footer'>
+
+        <div class="row" style="display:flex;align-items:center;font-size:0;height:100px">
+          <div class="col-sm-6">
+            <a href="<%= csp_landing %>">
+              <img src="<%= CS_POWERED_LOGO_URL %>" alt="Powered by Customer Stories">
+            </a>
+          </div>
+          <div class="col-sm-6 text-right">
+            <h5 style='margin:0'>
+              <%= @company.name %> Curators <%= link_to 'Login', new_user_session_path %>
+            </h5>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  <% end %>
+
+</div>  <!-- story wrapper -->
+
 
 

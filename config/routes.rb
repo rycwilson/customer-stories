@@ -38,9 +38,6 @@ Rails.application.routes.draw do
     resources :stories, only: :index
     # see below for route to public story page
 
-    # public for now, so can access via curl
-    # get '/stories/promoted', to: 'stories#promoted'
-
     authenticate :user do
 
       # using constraints to get access to the request object and thereby the signed in user,

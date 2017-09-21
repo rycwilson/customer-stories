@@ -3,20 +3,34 @@ function loadVideoThumbnail (cbSuccess) {
 
   var $thumbContainer = $("#video-thumb-container");
 
-  if ($thumbContainer === undefined) { return undefined; }
+  // no video, or wistia video
+  if ( $('#story-section-testimonial').hasClass('no-video') ||
+       $thumbContainer.length === 0 ) {
+    cbSuccess();
+    return false;
+  }
 
   var provider = $thumbContainer.data('provider'),
       videoId = $thumbContainer.data('video-id'),
       videoUrl = $thumbContainer.data("video-url"),
       videoQuery = '', thumbSrc = '',
-      loadPlaceholder = function () {
-        var placeholderUrl = "<%= asset_path('video_placeholder.jpg') %>";
-        $thumbContainer.empty().append(
-          '<img id="video-placeholder" src="' + placeholderUrl + '" alt="video placeholder">'
-        );
-        // strange but necessary css setting adds a huge bottom padding, see video.scss
-        // needs to be removed for the placeholder
-        $thumbContainer.css('padding-bottom', '0');
+
+      removeVideo = function () {
+        if (app.screenSize === 'xs') {
+          $.when( $('#story-section-video-xs').remove() )
+            .then(function () { cbSuccess(); });
+        } else {
+          $.ajax({
+            url: window.location.pathname,
+            method: 'get',
+            data: { remove_video: true },
+            dataType: 'html',
+            success: function (html, status, xhr) {
+              $.when( $('#story-section-testimonial').empty().append(html) )
+                .then(function () { cbSuccess(); });
+            }
+          });
+        }
       };
 
   if (provider === 'youtube') {
@@ -27,16 +41,19 @@ function loadVideoThumbnail (cbSuccess) {
       )).then(function () {
         $thumbContainer.imagesLoaded().done(function () {
           // original width of 120 indicates youtube thumbnail not available
-          if ($thumbContainer.find('img')[0].naturalWidth === 120) {
-            // flashDisplay("Couldn't get video thumbnail image", "danger");
-            loadPlaceholder();
+          if ( $thumbContainer.find('img')[0].naturalWidth === 120 ) {
+            if ( $('body').hasClass('stories show') ) {
+              removeVideo();
+            } else {
+              loadVideoPlaceholder();
+            }
           } else {
             $thumbContainer.find('img').after(
               "<div class='play-button'>" +
                 "<i class='fa fa-2x fa-inverse fa-play'></i>" +
               "</div>"
             );
-            if (cbSuccess) { cbSuccess(); }
+            cbSuccess();
           }
         });
       });
@@ -49,22 +66,33 @@ function loadVideoThumbnail (cbSuccess) {
       dataType: 'json',
       success: function (data, status, xhr) {
         thumbSrc = data.thumbnail_url_with_play_button;
-        $thumbContainer.append(
+        $.when( $thumbContainer.append(
           "<div>" +
             "<img class='video-thumb' src='" + thumbSrc + "'>" +
           "</div>"
-        );
+        )).then(function () { cbSuccess(); });
       },
       error: function (data, status) {
         if ( $('body').hasClass('stories show') ) {
-          // removeVideo();
+          removeVideo();
+        } else {
+          loadVideoPlaceholder();
+          // strange but necessary css setting adds a huge bottom padding, see video.scss
+          // needs to be removed for the placeholder
+          $thumbContainer.css('padding-bottom', '0');
         }
-        loadPlaceholder();
       }
     });
 
   }
 } // loadThumbnail
+
+function loadVideoPlaceholder () {
+  var placeholderUrl = "<%= asset_path('video_placeholder.jpg') %>";
+  $('#video-thumb-container').empty().append(
+    '<img id="video-placeholder" src="' + placeholderUrl + '" alt="video placeholder">'
+  );
+}
 
 function playVideoListener () {
 
