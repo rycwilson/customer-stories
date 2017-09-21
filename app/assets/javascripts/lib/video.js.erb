@@ -37,7 +37,7 @@ function loadVideoThumbnail (cbSuccess) {
   if (provider === 'youtube') {
     // ref: http://stackoverflow.com/questions/2068344
     thumbSrc = '//img.youtube.com/vi/' + videoId + '/hqdefault.jpg';
-    $.when( $thumbContainer.append(
+    $.when( $thumbContainers.append(
         "<div><img class='video-thumb' src='" + thumbSrc + "'></div>"
       )).then(function () {
         $thumbContainers.imagesLoaded().done(function () {
