@@ -11,7 +11,7 @@
 <div class="form-group required-input">
 
   <div>
-    <%= f.label(:customer_logo_url, 'Customer Logo') %>
+    <%= story_form.label(:customer_logo_url, 'Customer Logo') %>
   </div>
 
   <div class="well fileinput customer-logo <%= story.customer.logo_url.present? ? 'fileinput-exists' : 'fileinput-new' %>" data-provides="fileinput">
@@ -36,7 +36,7 @@
     </div>
 
     <div class="btn-file">
-      <%= f.file_field(:customer_logo_url) %>
+      <%= story_form.file_field(:customer_logo_url) %>
     </div>
 
     <i class='change-image glyphicon glyphicon-pencil'></i>

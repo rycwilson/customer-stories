@@ -1,28 +1,31 @@
 
 (function () {
 
-  var story = <%= raw @story.to_json({ only: [:id, :published], methods: [:previous_changes] }) %>,
-      $publishSwitch = $("#story_published"),
-      $logoPublishSwitch = $("#story_logo_published"),
-      createAds = function (story) {
+  var story = <%= raw @story.to_json({
+                    only: [:id, :title, :logo_published, :preview_published, :published],
+                    methods: [:previous_changes, :csp_story_path]
+                  }) %>,
+      createAds = function () {
         return (story.published && story.previous_changes.published) ? true : false;
       },
-      removeAds = function (story) {
+      removeAds = function () {
         return (!story.published && story.previous_changes.published) ? true : false;
+      },
+      // update any story attributes that fall under Settings
+      updateStory = function () {
+        var storyIndex = app.stories.findIndex(function (st) { return st.id === story.id });
+        app.stories[storyIndex].csp_story_path = story.csp_story_path;
+        app.stories[storyIndex].logo_published = story.logo_published;
+        app.stories[storyIndex].preview_published = story.preview_published;
+        app.stories[storyIndex].published = story.published;
+        app.stories[storyIndex].title = story.title;
+        $('a.story-title').text(story.title);
       };
 
-  // server may have changed values to prevent invalid state ...
-  // it either ...
-  //   - turned logo_publish on to track story_publish=on
-  //   - turned story_publish off to track logo_publish=off
-  if (!story.published && $publishSwitch.bootstrapSwitch('state') === true) {
-    $publishSwitch.bootstrapSwitch('state', false);
-  } else if (story.logo_published && $logoPublishSwitch.bootstrapSwitch('state') === false) {
-    $logoPublishSwitch.bootstrapSwitch('state', true);
-  }
+  updateStory();
 
   // create the ad
-  if (createAds(story)) {
+  if ( createAds() ) {
     $.post({
       url: '/stories/' + story.id + '/promote',
       success: function (data, status, xhr) {
@@ -35,7 +38,7 @@
 
   // remove ad if story unpublished;
   // remove the adwords ad first, as ad.ad_id will be necessary to make the api call
-  } else if (removeAds(story)) {
+  } else if ( removeAds() ) {
     $.ajax({
       url: '/stories/' + story.id + '/adwords',
       method: 'delete',

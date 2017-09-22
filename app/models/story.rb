@@ -61,10 +61,6 @@ class Story < ActiveRecord::Base
 
   friendly_id :title, use: [:slugged, :finders, :history]
 
-  # scrub user-supplied html input using whitelist
-  before_save(:scrub_html_input, on: [:create, :update],
-    if: Proc.new { self.content.present? && self.content_changed? })
-
   scope :company_all, ->(company_id) {
     joins(success: { customer: {} })
     .where(customers: { company_id: company_id })
@@ -123,6 +119,13 @@ class Story < ActiveRecord::Base
     .where(customers: { company_id: company_id },
            products: { id: product_id })
   }
+
+  # scrub user-supplied html input using whitelist
+  before_update(:scrub_html_input, on: [:create, :update],
+    if: Proc.new { self.content.present? && self.content_changed? })
+
+  # update timestamps
+  before_update(:update_publish_state, on: [:create, :update])
 
   after_commit on: [:create, :destroy] do
     expire_all_stories_cache(false)
@@ -211,28 +214,6 @@ class Story < ActiveRecord::Base
       new_story[:product_tags].each do |selection|
         self.success.products << Product.find(selection)
       end
-    end
-  end
-
-  # Note: the story.ctas association is read-only, because it goes through success
-  def update_ctas new_ctas
-    ctas_changed = false
-    # remove deleted ctas ...
-    self.ctas.each do |cta|
-      unless new_ctas.include?(cta.id.to_s)
-        self.success.ctas.delete(cta)
-        ctas_changed = true
-      end
-    end
-    # add new ctas ...
-    new_ctas.each do |new_cta|
-      unless self.ctas.any? { |cta| cta.id == new_cta.to_i }
-        self.success.ctas << CallToAction.find(new_cta.to_i)
-      end
-    end
-    # clear cache ...
-    if ctas_changed
-      # clear Learn More cache
     end
   end
 
@@ -651,6 +632,24 @@ class Story < ActiveRecord::Base
 
   def ads_image_url
     self.ads.first.adwords_image.try(:image_url)  # same for each ad
+  end
+
+  def update_publish_state
+    if self.logo_published? && self.logo_published_was == false
+      self.logo_publish_date = Time.now
+    elsif !self.logo_published? && self.logo_published_was == true
+      self.logo_publish_date = nil
+    end
+    if self.preview_published? && self.preview_published_was == false
+      self.preview_publish_date = Time.now
+    elsif !self.preview_published? && self.preview_published_was == true
+      self.preview_publish_date = nil
+    end
+    if self.published? && self.published_was == false
+      self.publish_date = Time.now
+    elsif !self.published? && self.published_was == true
+      self.publish_date = nil
+    end
   end
 
 end

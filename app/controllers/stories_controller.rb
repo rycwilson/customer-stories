@@ -142,8 +142,9 @@ class StoriesController < ApplicationController
 
   def update
     if params[:story][:form] == 'settings'
-      update_publish_state(@story, story_params)
+      pp params
       @story.update_tags(params[:category_tags] || [], params[:product_tags] || [])
+      @story.success.cta_ids = params[:ctas]
       @story.update(story_params)
       # html response necessary for uploading customer logo image
       respond_to do |format|
@@ -165,11 +166,6 @@ class StoriesController < ApplicationController
     # if params[:customer_logo_url]
     #   story.success.customer.update logo_url: params[:customer_logo_url]
     #   respond_to { |format| format.json { render json: nil } }
-    # elsif params[:prompt]  # a prompt was edited
-    #   Prompt.find(params[:prompt_id].to_i).update description: params[:prompt][:description]
-    #   respond_to { |format| format.json { render json: nil } }
-    # # params[:story]* items must appear below, else error
-    # # (there is no params[:story] when params[:story_tags] or params[:result] are present)
 
     # elsif params[:story][:published]
     #   update_publish_state(story, params[:story])
@@ -202,11 +198,6 @@ class StoriesController < ApplicationController
     #     format.json { respond_with_bip(story) }
     #   end
     # end
-  end
-
-  def ctas
-    @story.update_ctas(params[:ctas] || [])
-    respond_to { |format| format.js }
   end
 
   def tags
@@ -304,9 +295,11 @@ class StoriesController < ApplicationController
 
   def story_params
     params.require(:story).permit(
-        :title, :summary, :quote, :quote_attr_name, :quote_attr_title, :video_url,
-        :formatted_video_url, :content, :published, :logo_published, :preview_published,
-        success_attributes: [:id, results_attributes: [:id, :description, :_destroy]] )
+      :title, :summary, :quote, :quote_attr_name, :quote_attr_title, :video_url,
+      :formatted_video_url, :content, :published, :logo_published, :preview_published,
+      success_attributes: [ :id, product_ids: [], story_category_ids: [],
+        results_attributes: [:id, :description, :_destroy] ]
+    )
   end
 
   def adwords_params
@@ -383,34 +376,6 @@ class StoriesController < ApplicationController
       render file: 'public/403', status: 403, layout: false
       false
     end
-  end
-
-  def update_publish_state (story, story_params)
-    publish_story = story_params[:published] == '1' ? true : false
-    publish_logo = story_params[:logo_published] == '1' ? true : false
-    # only update if the value has changed ...
-    if publish_story && !story.published?
-      story.published = true
-      story.publish_date = Time.now
-    elsif !publish_story && story.published?
-      story.published = false
-      story.publish_date = nil
-    elsif publish_logo && !story.logo_published?
-      story.logo_published = true
-      story.logo_publish_date = Time.now
-    elsif !publish_logo && story.logo_published?
-      story.logo_published = false
-      story.logo_publish_date = nil
-    end
-    # prevent false state ...
-    if (publish_story && !publish_logo) && story.published_changed?
-      story.logo_published = true
-      story.logo_publish_date = Time.now
-    elsif (publish_story && !publish_logo) && story.logo_published_changed?
-      story.published = false
-      story.publish_date = nil
-    end
-    story.save
   end
 
   # async filter requests may contain either the tag's numeric id or its slug

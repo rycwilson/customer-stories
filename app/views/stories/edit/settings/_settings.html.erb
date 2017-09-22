@@ -7,7 +7,7 @@
               data: { 'form-data' => (@s3_direct_post.fields),
                       'url' => @s3_direct_post.url,
                       'host' => URI.parse(@s3_direct_post.url).host
-              } }) do |f| %>
+              } }) do |story_form| %>
 
   <%= hidden_field_tag('story[form]', 'settings') %>
 
@@ -21,14 +21,14 @@
           <div>
             <label for="logo_published">Publish Logo</label>&nbsp;
           </div>
-          <%= f.check_box(:logo_published, class: 'bs-switch form-control') %>
+          <%= story_form.check_box(:logo_published, class: 'bs-switch form-control') %>
         </div>
 
         <div class="form-group">
           <div>
             <label for='published'>Publish Story</label>&nbsp;
           </div>
-          <%= f.check_box(:published, class: "bs-switch form-control") %>
+          <%= story_form.check_box(:published, class: "bs-switch form-control") %>
         </div>&nbsp;
 
         <%= link_to('Approval', story_approval_path(story.id, format: :pdf),
@@ -40,53 +40,52 @@
 
       </div>  <!-- publish control -->
 
-      <%= render 'stories/edit/settings/customer_logo', { story: story, f: f } %>
+      <%= render 'stories/edit/settings/customer_logo',
+            { story: story, story_form: story_form } %>
 
     </div>
     <div class="col-sm-7">
 
       <div class="form-group required-input">
-        <%= f.label(:title) %>
-        <%= f.text_field(:title, class: 'form-control') %>
+        <%= story_form.label(:title) %>
+        <%= story_form.text_field(:title, class: 'form-control') %>
       </div>
 
+      <%= story_form.fields_for(:success) do |success_form| %>
       <div class="form-group">
 
-        <%= label_tag "category_tags[]", 'Category Tags' %>
-        <!-- Note the necessary '[]' notation below  -->
-        <!-- if not present, will only return a single value  -->
-        <%= select_tag "category_tags[]",
-            options_for_select(
-              company.story_categories.present? ? company.story_categories.select_options : ['none available'],
-              { selected: story.category_tags.pluck(:id),
-                disabled: ['none available'] }
-            ),
-            { multiple: 'true', class: 'story-settings story-tags form-control', tabIndex: '-1', style: 'width:100%' } %>
+        <label>Category Tags</label>
+        <%= success_form.collection_select(:story_category_ids,
+              company.story_categories, :id, :name, {},
+              { class: 'story-settings story-tags form-control',
+                multiple: true, style: 'width:100%' }
+            ) %>
 
-      </div>
-
-      <div class="form-group">
-
-        <%= label_tag "product_tags[]", 'Product Tags' %>
-        <%= select_tag "product_tags[]",
-            options_for_select(
-              company.products.present? ? company.products.select_options : ['none available'],
-              { selected: story.product_tags.pluck(:id),
-                disabled: ['none available'] }
-            ),
-            { multiple: 'true', class: 'story-settings story-tags form-control', tabIndex: '-1', style: 'width:100%' } %>
 
       </div>
 
       <div class="form-group">
 
+        <label>Product Tags</label>
+        <%= success_form.collection_select(:product_ids, company.products,
+              :id, :name, {},
+              { class: 'story-settings story-tags form-control',
+                multiple: true, style: 'width:100%' }
+            ) %>
+
+      </div>
+      <% end %>
+
+      <div class="form-group">
         <label for="#story-ctas-select">CTAs</label>
-        <%= select_tag 'ctas[]',
+
+        <%= select_tag('ctas[]',
               grouped_options_for_select(
                 company.ctas.select_options,
                 { selected: story.ctas.pluck(:id), disabled: ['none available'] }
-              ), { id: 'story-ctas-select', class: 'form-control', multiple: true,
-                   style: 'width:100%' } %>
+              ),
+              { id: 'story-ctas-select', class: 'form-control', multiple: true,
+                style: 'width:100%' }) %>
 
       </div>
 

@@ -9,9 +9,21 @@ function storiesEditSettingsListeners () {
 
   $(document)
 
-    .on('switchChange.bootstrapSwitch', 'input', function (e) {
-      var $input = $(this);
-      console.log($(this).val());
+    // ensure only valid logo/story publish states
+    .on('switchChange.bootstrapSwitch', 'input', function (e, data) {
+      var $publishLogo = $('input[name="story[logo_published]"]').eq(1),
+          $publishStory = $('input[name="story[published]"]').eq(1),
+          $current = $(this);
+
+      if ($current.is($publishLogo) &&
+          $publishLogo.bootstrapSwitch('state') === false &&
+          $publishStory.bootstrapSwitch('state') === true) {
+        $publishStory.bootstrapSwitch('toggleState');
+      } else if ($current.is($publishStory) &&
+          $publishStory.bootstrapSwitch('state') === true &&
+          $publishLogo.bootstrapSwitch('state') === false) {
+        $publishLogo.bootstrapSwitch('toggleState');
+      }
     })
 
     .on('click', '#approval-pdf-btn', function (e) {
@@ -43,7 +55,7 @@ function storiesEditSettingsListeners () {
 
 // the select2 boxes initialize synchronously, i.e. subsequent code doesn't
 // execute until initilization is complete.
-// bs-switch has an init callback
+// pass the cbShowTab callback to the bs-switch onInit property
 function initStoriesEditSettings (cbShowTab) {
 
   initS3Upload();
@@ -55,8 +67,7 @@ function initStoriesEditSettings (cbShowTab) {
 
   $('#story-ctas-select').select2({
     theme: 'bootstrap',
-    placeholder: 'Select',
-    tags: true
+    placeholder: 'Select'
   });
 
   $('.bs-switch').bootstrapSwitch({
