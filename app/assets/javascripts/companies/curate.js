@@ -25,46 +25,61 @@ function curateListeners () {
 
   $(document)
 
+    .on('show.bs.tab', 'a[href="#curate-stories"]', function () {
+      // clear any loading indicators
+      $('#curate-stories').find('a.thumbnail').each(function () {
+        $(this).find('.thumbnail-view, .caption').css('opacity', '1');
+        $(this).find('.loading').css('display', 'none');
+      });
+    })
+
     .on('click', '#curate-gallery a.logo-published,' +
                  '#curate-gallery a.preview-published,' +
-                 '#curate-gallery a.pending-curation',
-      function (e) {
-        e.preventDefault();
-        var $story = $(this).closest('li'), storySlug = $story.data('story-slug');
+                 '#curate-gallery a.pending-curation', function (e) {
 
+      e.preventDefault();
 
-    //     selectStory = function ($story) {
-    //       $story.addClass('selected');
-    //       // $('#curate-gallery li').not($story).css('pointer-events', 'none');
-    //       $story.find('.thumbnail-view-hover').css('transform', 'none');
-    //       $story.find('img').css('opacity', '0.1');
-    //     };
-    // selectStory($story);
+      var $story = $(this).closest('li'), storySlug = $story.data('story-slug');
+      var loading = function () {
+        $story.find('.thumbnail-view, .caption').css('opacity', '0.1');
+        $story.find('.loading').toggle();
+      };
 
-    // replacing state ensure turbolinks:false for the first tab state
-        window.history.replaceState(
-          { turbolinks: false }, null, '/curate'
-        );
-    // default to true, though this will lead to unnecessary requests in the case
-    // of back/forward navigation (but that's better than not making a turbolinks
-    // request when necessary)
-        window.history.pushState(
-          { turbolinks: true }, null, '/curate/' + storySlug
-        );
+      // show loading indicator after one second
+      setTimeout(loading, 1000);
 
-        $.ajax({
-          url: '/stories/' + $story.data('story-id') + '/edit',
-          method: 'get',
-          dataType: 'html',
-          success: function (html, status, xhr) {
-            var cbShowTab = function () {
-              $('a[href="#curate-story"]').tab('show');
-            };
-            $.when( $('#curate-story').empty().append(html) )
-             .then(function () { initStoriesEdit(cbShowTab); });
-          }
-        });
-      })
+  //     selectStory = function ($story) {
+  //       $story.addClass('selected');
+  //       // $('#curate-gallery li').not($story).css('pointer-events', 'none');
+  //       $story.find('.thumbnail-view-hover').css('transform', 'none');
+  //       $story.find('img').css('opacity', '0.1');
+  //     };
+  // selectStory($story);
+
+  // replacing state ensure turbolinks:false for the first tab state
+      window.history.replaceState(
+        { turbolinks: false }, null, '/curate'
+      );
+  // default to true, though this will lead to unnecessary requests in the case
+  // of back/forward navigation (but that's better than not making a turbolinks
+  // request when necessary)
+      window.history.pushState(
+        { turbolinks: true }, null, '/curate/' + storySlug
+      );
+
+      $.ajax({
+        url: '/stories/' + $story.data('story-id') + '/edit',
+        method: 'get',
+        dataType: 'html',
+        success: function (html, status, xhr) {
+          var cbShowTab = function () {
+            $('a[href="#curate-story"]').tab('show');
+          };
+          $.when( $('#curate-story').empty().append(html) )
+           .then(function () { initStoriesEdit(cbShowTab); });
+        }
+      });
+    })
 
     .on('change', '.curate.curator-select, .curate.category-select,' +
         '.curate.product-select, .curate.published, .curate.preview-published, ' +
