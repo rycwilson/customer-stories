@@ -162,4 +162,9 @@
       opacity: 0.1;
     }
   }
+  li.loading {
+    img {
+      opacity: 0.1 !important;
+    }
+  }
 }

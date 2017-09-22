@@ -23,15 +23,21 @@ function preselectFilters () {
 
 function curateListeners () {
 
+  var loading = function ($story) {
+        $story.addClass('loading');
+        setTimeout(function () { $story.addClass('loading-icon'); }, 1000);
+        $('#curate-gallery li').css('pointer-events', 'none');
+      },
+      cancelLoading = function () {
+        $('#curate-stories li').each(function () {
+          $(this).removeClass('loading loading-icon');
+          $(this).css('pointer-events', 'auto');
+        });
+      };
+
   $(document)
 
-    .on('show.bs.tab', 'a[href="#curate-stories"]', function () {
-      // clear any loading indicators
-      $('#curate-stories').find('a.thumbnail').each(function () {
-        $(this).find('.thumbnail-view, .caption').css('opacity', '1');
-        $(this).find('.loading').css('display', 'none');
-      });
-    })
+    .on('show.bs.tab', 'a[href="#curate-stories"]', cancelLoading)
 
     .on('click', '#curate-gallery a.logo-published,' +
                  '#curate-gallery a.preview-published,' +
@@ -40,21 +46,7 @@ function curateListeners () {
       e.preventDefault();
 
       var $story = $(this).closest('li'), storySlug = $story.data('story-slug');
-      var loading = function () {
-        $story.find('.thumbnail-view, .caption').css('opacity', '0.1');
-        $story.find('.loading').toggle();
-      };
-
-      // show loading indicator after one second
-      setTimeout(loading, 1000);
-
-  //     selectStory = function ($story) {
-  //       $story.addClass('selected');
-  //       // $('#curate-gallery li').not($story).css('pointer-events', 'none');
-  //       $story.find('.thumbnail-view-hover').css('transform', 'none');
-  //       $story.find('img').css('opacity', '0.1');
-  //     };
-  // selectStory($story);
+      loading($story);
 
   // replacing state ensure turbolinks:false for the first tab state
       window.history.replaceState(
@@ -76,7 +68,7 @@ function curateListeners () {
             $('a[href="#curate-story"]').tab('show');
           };
           $.when( $('#curate-story').empty().append(html) )
-           .then(function () { initStoriesEdit(cbShowTab); });
+            .then(function () { initStoriesEdit(cbShowTab); });
         }
       });
     })

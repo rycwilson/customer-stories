@@ -10,9 +10,20 @@ function initLinkedIn () {
   }
 
   if (typeof(IN) !== 'object') {
-    $.getScript('//platform.linkedin.com/in.js', function () {
+
+    $.ajax({
+      url: '//platform.linkedin.com/in.js',
+      method: 'get',
+      dataType: 'script',
+      timeout: 6000
+    })
+    .done(function () {
       // do linkedin stuff
+    })
+    .fail(function () {
+      console.log('in.js timed out');
     });
+
   } else {
     IN.parse();
   }
