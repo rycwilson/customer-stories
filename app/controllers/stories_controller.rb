@@ -142,8 +142,6 @@ class StoriesController < ApplicationController
 
   def update
     if params[:story][:form] == 'settings'
-      pp params
-      @story.update_tags(params[:category_tags] || [], params[:product_tags] || [])
       @story.success.cta_ids = params[:ctas]
       @story.update(story_params)
       # html response necessary for uploading customer logo image
@@ -198,11 +196,6 @@ class StoriesController < ApplicationController
     #     format.json { respond_with_bip(story) }
     #   end
     # end
-  end
-
-  def tags
-    @story.update_tags(params[:category_tags] || [], params[:product_tags] || [])
-    respond_to { |format| format.js }
   end
 
   def promoted

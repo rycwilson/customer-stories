@@ -217,56 +217,6 @@ class Story < ActiveRecord::Base
     end
   end
 
-  def update_tags new_category_tags, new_product_tags
-    new_category_tags.map! { |id| id.to_i }
-    category_tags_changed = false
-    new_product_tags.map! { |id| id.to_i }
-    product_tags_changed = false
-    # remove deleted category tags ...
-    self.category_tags.each do |category|
-      unless new_category_tags.include?(category.id)
-        self.success.story_categories.delete(category)
-        category_tags_changed = true
-      end
-    end
-    # add new category tags ...
-    new_category_tags.each do |category_id|
-      unless self.category_tags.any? { |category| category.id == category_id }
-        self.success.story_categories << StoryCategory.find(category_id)
-        category_tags_changed = true
-      end
-    end
-    # expire cache
-    if category_tags_changed
-      self.company.expire_all_stories_cache(true)  # json only
-      if self.logo_published?
-        self.company.increment_category_select_fragments_memcache_iterator
-      end
-    end
-    # remove deleted product tags ...
-    self.product_tags.each do |product|
-      unless new_product_tags.include?(product.id)
-        self.success.products.delete(product)
-        product_tags_changed = true
-      end
-    end
-    # add new product tags ...
-    new_product_tags.each do |product_id|
-      unless self.product_tags.any? { |product| product.id == product_id }
-        self.success.products << Product.find(product_id)
-        product_tags_changed = true
-      end
-    end
-    # expire cache
-    if product_tags_changed
-      self.company.expire_all_stories_cache(true)  # json only
-      self.expire_csp_story_path_cache
-      if self.logo_published?
-        self.company.increment_product_select_fragments_memcache_iterator
-      end
-    end
-  end
-
   # method returns a friendly id path that either contains or omits a product
   def csp_story_path
     Rails.cache.fetch("#{self.company.subdomain}/csp-story-#{self.id}-path") do

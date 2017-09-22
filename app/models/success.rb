@@ -6,9 +6,11 @@ class Success < ActiveRecord::Base
 
   has_one :story, dependent: :destroy
   has_many :products_successes, dependent: :destroy
-  has_many :products, through: :products_successes
+  has_many :products, through: :products_successes,
+    after_add: :expire_product_tags_cache, after_remove: :expire_product_tags_cache
   has_many :story_categories_successes, dependent: :destroy
-  has_many :story_categories, through: :story_categories_successes
+  has_many :story_categories, through: :story_categories_successes,
+    after_add: :expire_category_tags_cache, after_remove: :expire_category_tags_cache
   has_many :contributions, dependent: :destroy
   has_many :results, -> { order(created_at: :asc) }, dependent: :destroy
   has_many :prompts, -> { order(created_at: :asc) }, dependent: :destroy
@@ -47,6 +49,16 @@ class Success < ActiveRecord::Base
   #     end
   #   end
   # end
+
+  def expire_category_tags_cache (category)
+    self.company.expire_all_stories_cache(true)  # json only
+    self.company.increment_category_select_fragments_memcache_iterator
+  end
+
+  def expire_product_tags_cache (product)
+    self.company.expire_all_stories_cache(true)  # json only
+    self.company.increment_product_select_fragments_memcache_iterator
+  end
 
 end
 
