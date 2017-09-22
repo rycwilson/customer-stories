@@ -25,12 +25,21 @@
       }
     }
     #curate-gallery {
-      li .thumbnail-view-hover i {
+      // the icon needs to be wrapped in a div in order for the transform to work
+      // (center if element is centered, not top-left of element)
+      // IN PROGRESS
+      a.thumbnail .loading {
+        position: absolute;
         display: none;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 20px;
+        color: #666;
       }
       li.selected {
         .thumbnail-view-hover p { display: none; }
-        .thumbnail-view-hover i { display: block; }
+        // .thumbnail-view-hover i { display: block; }
       }
     }
   }

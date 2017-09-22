@@ -32,6 +32,7 @@ function curateListeners () {
         e.preventDefault();
         var $story = $(this).closest('li'), storySlug = $story.data('story-slug');
 
+
     //     selectStory = function ($story) {
     //       $story.addClass('selected');
     //       // $('#curate-gallery li').not($story).css('pointer-events', 'none');

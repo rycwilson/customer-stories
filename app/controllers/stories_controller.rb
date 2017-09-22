@@ -160,42 +160,6 @@ class StoriesController < ApplicationController
       @story.update(story_params)
       respond_to { |format| format.js { render({ action: 'edit/content/update' }) } }
     end
-
-    # if params[:customer_logo_url]
-    #   story.success.customer.update logo_url: params[:customer_logo_url]
-    #   respond_to { |format| format.json { render json: nil } }
-
-    # elsif params[:story][:published]
-    #   update_publish_state(story, params[:story])
-    #   respond_to do |format|
-    #     # on client-side, two things will happen:
-    #     # 1 - publish switches will change if user selection was overridden
-    #     # 2 - if previous_changes includes :publish, create/update the adwords ad
-    #     format.json do
-    #       render json: story.as_json(
-    #         only: [:id, :published, :logo_published],
-    #         methods: [:previous_changes],
-    #         include: {
-    #           ads: {
-    #             only: [:ad_id, :status],
-    #             include: {
-    #               ad_group: {
-    #                 only: [:ad_group_id, :status],
-    #                 include: {
-    #                   campaign: {
-    #                     only: [:campaign_id, :status],
-    #                     include: {
-    #                       company: { only: [:promote_tr, :promote_crm] }
-    #                     } }}}}}}
-    #       )
-    #     end
-    #   end
-    # else  # all other updates
-    #   story.update story_params
-    #   respond_to do |format|
-    #     format.json { respond_with_bip(story) }
-    #   end
-    # end
   end
 
   def promoted
@@ -218,6 +182,13 @@ class StoriesController < ApplicationController
         })
       end
     end
+  end
+
+
+  def destroy
+    @story.expire_cache_on_destroy
+    @story.destroy
+    respond_to { |format| format.js }
   end
 
   ##
@@ -262,12 +233,6 @@ class StoriesController < ApplicationController
       # js response for removed ads
       format.js {}
     end
-  end
-
-  def destroy
-    @story.expire_cache_on_destroy
-    @story.destroy
-    respond_to { |format| format.js }
   end
 
   def approval

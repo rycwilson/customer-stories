@@ -1,100 +1,106 @@
 
 <div class="hidden">
 
-<%= form_for(story, url: story_path(story.id), authenticity_token: true,
-      html: { method: 'put', remote: true, id: 'story-settings-form',
-              class: 'directUpload',
-              data: { 'form-data' => (@s3_direct_post.fields),
-                      'url' => @s3_direct_post.url,
-                      'host' => URI.parse(@s3_direct_post.url).host
-              } }) do |story_form| %>
+  <%= form_for(story, url: story_path(story.id), authenticity_token: true,
+        html: { method: 'put', remote: true, id: 'story-settings-form',
+                class: 'directUpload',
+                data: { 'form-data' => (@s3_direct_post.fields),
+                        'url' => @s3_direct_post.url,
+                        'host' => URI.parse(@s3_direct_post.url).host
+                } }) do |story_form| %>
 
-  <%= hidden_field_tag('story[form]', 'settings') %>
+    <%= hidden_field_tag('story[form]', 'settings') %>
 
 
-  <div class="row">
-    <div class="col-sm-5">
+    <div class="row">
+      <div class="col-sm-5">
 
-      <div id='publish-control' class="form-inline">
+        <div id='publish-control' class="form-inline">
 
-        <div class="form-group" style='margin-right:30px'>
-          <div>
-            <label for="logo_published">Publish Logo</label>&nbsp;
+          <div class="form-group" style='margin-right:30px'>
+            <div>
+              <label for="logo_published">Publish Logo</label>&nbsp;
+            </div>
+            <%= story_form.check_box(:logo_published, class: 'bs-switch form-control') %>
           </div>
-          <%= story_form.check_box(:logo_published, class: 'bs-switch form-control') %>
+
+          <div class="form-group">
+            <div>
+              <label for='published'>Publish Story</label>&nbsp;
+            </div>
+            <%= story_form.check_box(:published, class: "bs-switch form-control") %>
+          </div>&nbsp;
+
+          <%= link_to('Approval', story_approval_path(story.id, format: :pdf),
+                id: 'approval-pdf-btn', style: 'vertical-align: bottom; ',
+                data: { missing_curator_info: story.curator.missing_info.to_json,
+                        missing_company_info: company.missing_info.to_json,
+                        turbolinks: false },
+                target: '_blank') %>
+
+        </div>  <!-- publish control -->
+
+        <%= render 'stories/edit/settings/customer_logo',
+              { story: story, story_form: story_form } %>
+
+      </div>
+      <div class="col-sm-7">
+
+        <div class="form-group required-input">
+          <%= story_form.label(:title) %>
+          <%= story_form.text_field(:title, class: 'form-control') %>
         </div>
 
-        <div class="form-group">
-          <div>
-            <label for='published'>Publish Story</label>&nbsp;
+        <%= story_form.fields_for(:success) do |success_form| %>
+
+          <div class="form-group">
+
+            <label for='story_success_attributes_story_category_ids'>
+              Category Tags
+            </label>
+            <%= success_form.collection_select(:story_category_ids,
+                  company.story_categories, :id, :name, {},
+                  { class: 'story-settings story-tags form-control',
+                    multiple: true, style: 'width:100%' }
+                ) %>
+
           </div>
-          <%= story_form.check_box(:published, class: "bs-switch form-control") %>
-        </div>&nbsp;
 
-        <%= link_to('Approval', story_approval_path(story.id, format: :pdf),
-              id: 'approval-pdf-btn', style: 'vertical-align: bottom; ',
-              data: { missing_curator_info: story.curator.missing_info.to_json,
-                      missing_company_info: company.missing_info.to_json,
-                      turbolinks: false },
-              target: '_blank') %>
+          <div class="form-group">
 
-      </div>  <!-- publish control -->
+            <label for='story_success_attributes_product_ids'>
+              Product Tags
+            </label>
+            <%= success_form.collection_select(:product_ids, company.products,
+                  :id, :name, {},
+                  { class: 'story-settings story-tags form-control',
+                    multiple: true, style: 'width:100%' }
+                ) %>
 
-      <%= render 'stories/edit/settings/customer_logo',
-            { story: story, story_form: story_form } %>
+          </div>
 
+        <% end %>
+
+        <div class="form-group">
+          <label for="#story-ctas-select">CTAs</label>
+
+          <%= select_tag('ctas[]', grouped_options_for_select(
+                  company.ctas.select_options,
+                  { selected: story.ctas.pluck(:id), disabled: ['none available'] }
+                ),
+                { id: 'story-ctas-select', class: 'form-control', multiple: true,
+                  style: 'width:100%' }
+              ) %>
+
+        </div>
+
+      </div>
     </div>
-    <div class="col-sm-7">
 
-      <div class="form-group required-input">
-        <%= story_form.label(:title) %>
-        <%= story_form.text_field(:title, class: 'form-control') %>
-      </div>
+    <hr>
 
-      <%= story_form.fields_for(:success) do |success_form| %>
-      <div class="form-group">
+    <%= render 'shared/form_submit' %>
 
-        <label>Category Tags</label>
-        <%= success_form.collection_select(:story_category_ids,
-              company.story_categories, :id, :name, {},
-              { class: 'story-settings story-tags form-control',
-                multiple: true, style: 'width:100%' }
-            ) %>
+  <% end %>
 
-
-      </div>
-
-      <div class="form-group">
-
-        <label>Product Tags</label>
-        <%= success_form.collection_select(:product_ids, company.products,
-              :id, :name, {},
-              { class: 'story-settings story-tags form-control',
-                multiple: true, style: 'width:100%' }
-            ) %>
-
-      </div>
-      <% end %>
-
-      <div class="form-group">
-        <label for="#story-ctas-select">CTAs</label>
-
-        <%= select_tag('ctas[]',
-              grouped_options_for_select(
-                company.ctas.select_options,
-                { selected: story.ctas.pluck(:id), disabled: ['none available'] }
-              ),
-              { id: 'story-ctas-select', class: 'form-control', multiple: true,
-                style: 'width:100%' }) %>
-
-      </div>
-
-    </div>
-  </div>
-
-  <hr>
-
-  <%= render 'shared/form_submit' %>
-
-<% end %>
 </div>
