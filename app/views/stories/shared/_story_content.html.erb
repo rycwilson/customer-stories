@@ -11,10 +11,10 @@
           <h3><%= story.title %></h3>
 
           <div class="visible-md-block visible-lg-block">
-            <%= simple_format story.content %>
+            <%= story.content.html_safe %>
           </div>
           <div class="hidden-md hidden-lg">
-            <%= simple_format story.content %>
+            <%= story.content.html_safe %>
           </div>
         <% end %>
 
