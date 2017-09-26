@@ -35,6 +35,55 @@
 
   <div class="row">
 
+    <div class="col-sm-6">
+
+      <label for="story_summary">Summary</label>
+      <%= story_form.text_area(:summary, class: 'form-control', rows: 10) %>
+
+    </div>
+
+    <div class="col-sm-6">
+      <div class="carousel-slide" data-ride='carousel' data-interval='false'>
+
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner" role="listbox">
+
+          <% story.contributions.each_with_index do |contribution, index| %>
+
+            <div class="item <%= index == 0 ? 'active' : '' %>">
+              <img src="//s3-us-west-1.amazonaws.com/csp-development-assets/carousel_background.png" alt="...">
+
+             <!--  <p><%= contribution.contribution %></p> -->
+
+              <div class="carousel-caption-custom">
+                <p><%= contribution.contribution %></p>
+                <p><%= contribution.contributor.full_name %></p>
+              </div>
+
+            </div>
+
+          <% end %>
+
+          <!-- Controls -->
+          <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+          </a>
+          <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+          </a>
+
+        </div>
+      </div>
+
+
+    </div>
+
+  </div>
+
+  <div class="row">
+
     <div class="col-lg-8">
 
       <div class="form-group">
