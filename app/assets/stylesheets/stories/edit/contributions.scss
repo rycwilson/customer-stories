@@ -14,25 +14,18 @@
 
     .carousel-control {
       opacity: 1;
-      .glyphicon {
-        text-shadow: none;
-        color: #666;
-      }
-      .glyphicon:hover {
-        color: #222;
-      }
-    }
-
-    .carousel-control {
+      color: #666;
       .glyphicon {
         margin-top: -15px;  // changed from bs default 10px to center icons (??)
+        text-shadow: none;
       }
     }
-
+    .carousel-control:hover, .carousel-control:focus {
+      color: #222;
+    }
     .left.carousel-control {
       background: linear-gradient(to right, #e3e3e3 0%, #f5f5f5 100%);
     }
-
     .right.carousel-control {
       background: linear-gradient(to left, #e3e3e3 0%, #f5f5f5 100%)
     }

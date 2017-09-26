@@ -33,7 +33,7 @@
 
   </div>
 
-  <div class="row" style='margin-bottom: 35px'>
+  <div class="row">
 
     <div class="col-sm-6">
 
@@ -93,10 +93,16 @@
 
     </div>
 
-    <div class="col-sm-6">
+    <div class="col-sm-6 form-group has-feedback" style='margin-bottom: 15px'>
 
       <label for="story_summary">Summary</label>
-      <%= story_form.text_area(:summary, class: 'form-control') %>
+      <%= story_form.text_area(:summary, class: 'form-control',
+              data: { 'max-summary-length': '150' }) %>
+
+      <!-- bootstrap validator -->
+      <div style='height:20px' class="help-block with-errors">
+        Max 150 words
+      </div>
 
     </div>
 

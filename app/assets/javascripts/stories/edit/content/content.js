@@ -1,10 +1,12 @@
 
 //= require ./video
 //= require ./results
+//= require ./form_validator
 
 function storiesEditContent () {
 
   loadVideoThumbnail();
+  storyFormValidator();
 
 }
 
@@ -34,7 +36,10 @@ function storiesEditContentListeners () {
 }
 
 function initStoriesEditContent () {
+
   initSummernote();
   loadVideoThumbnail();
+  storyFormValidator();
+
 }
 
