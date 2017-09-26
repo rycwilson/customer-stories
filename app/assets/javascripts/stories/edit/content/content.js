@@ -20,9 +20,6 @@ function storiesEditContentListeners () {
     })
 
     .on('wheel', '.carousel-caption-custom', function (event) {
-      // console.log('scrollHeight: ', $(this).prop('scrollHeight'))
-      // console.log('offsetHeight: ', $(this).prop('offsetHeight'))
-      // console.log('scrollTop: ', $(this).prop('scrollTop'))
       var maxY = $(this).prop('scrollHeight') - $(this).prop('offsetHeight');
       // If this event looks like it will scroll beyond the bounds of the element,
       //  prevent it and set the scroll to the boundary manually

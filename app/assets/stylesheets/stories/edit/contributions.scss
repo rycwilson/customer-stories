@@ -2,7 +2,7 @@
 .carousel-slide {
 
   .carousel-inner {
-    height: 213px;
+    // height: 213px;
 
     .carousel-control {
       opacity: 1;
@@ -33,8 +33,8 @@
         padding-right: 15px  // leaves space for the scroll bar
       }
       position: absolute;
-      top: 15px;
-      bottom: 15px;
+      top: 5%;
+      bottom: 5%;
       left: 17%;
       right: 17%;
       overflow-y: scroll;
