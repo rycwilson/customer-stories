@@ -1,8 +1,8 @@
 
-.carousel-slide {
+.carousel {
 
   .carousel-inner {
-    // height: 213px;
+    // height: 300px;
 
     .carousel-control {
       opacity: 1;
@@ -15,8 +15,14 @@
       }
     }
 
+    .carousel-control {
+      .glyphicon {
+        margin-top: -15px;  // changed from bs default 10px to center icons (??)
+      }
+    }
+
     .left.carousel-control {
-      background: linear-gradient(to right, #e3e3e3 0%, #f5f5f5 100%)
+      background: linear-gradient(to right, #e3e3e3 0%, #f5f5f5 100%);
     }
 
     .right.carousel-control {
@@ -28,16 +34,35 @@
       background: #f5f5f5;
     }
 
-    .carousel-caption-custom {  // overrides bootstrap .carousel-caption
-      p {
-        padding-right: 15px  // leaves space for the scroll bar
-      }
+    .contributor-name {
       position: absolute;
       top: 5%;
-      bottom: 5%;
+      left: 17%;
+      right: 17%;
+      p {
+        padding-right: 15px;  // space for scrollbar
+        font-weight: 600;
+      }
+    }
+
+    .contribution-content {  // overrides bootstrap .carousel-caption
+      p {
+        padding-right: 15px  // space for scroll bar
+      }
+      position: absolute;
+      top: 14%;
+      bottom: 14%;
       left: 17%;
       right: 17%;
       overflow-y: scroll;
+    }
+
+    .carousel-indicators {
+      bottom: 1%;
+      li {
+        background-color: #666;
+        border-color: #666;
+      }
     }
 
   }

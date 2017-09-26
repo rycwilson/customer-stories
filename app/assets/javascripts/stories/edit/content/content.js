@@ -19,7 +19,7 @@ function storiesEditContentListeners () {
       $(this).find('button[type="submit"] .fa-spinner').toggle();
     })
 
-    .on('wheel', '.carousel-caption-custom', function (event) {
+    .on('wheel', '.contribution-content', function (event) {
       var maxY = $(this).prop('scrollHeight') - $(this).prop('offsetHeight');
       // If this event looks like it will scroll beyond the bounds of the element,
       //  prevent it and set the scroll to the boundary manually
