@@ -31,7 +31,15 @@ function storiesEditContentListeners () {
         event.preventDefault();
         $(this).prop('scrollTop', Math.max(0, Math.min(maxY, $(this).prop('scrollTop') + event.originalEvent.deltaY)));
       }
-    });
+    })
+
+  .on('click', '.carousel-control', function () {
+    if ( $(this).hasClass('right') ) {
+      $(this).closest('.carousel-slide').carousel('next');
+    } else {
+      $(this).closest('.carousel-slide').carousel('prev');
+    }
+  });
 
 }
 

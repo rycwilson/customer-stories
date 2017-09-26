@@ -1,0 +1,44 @@
+
+.carousel-slide {
+
+  .carousel-inner {
+    height: 213px;
+
+    .carousel-control {
+      opacity: 1;
+      .glyphicon {
+        text-shadow: none;
+        color: #666;
+      }
+      .glyphicon:hover {
+        color: #222;
+      }
+    }
+
+    .left.carousel-control {
+      background: linear-gradient(to right, #e3e3e3 0%, #f5f5f5 100%)
+    }
+
+    .right.carousel-control {
+      background: linear-gradient(to left, #e3e3e3 0%, #f5f5f5 100%)
+    }
+
+    .item {
+      overflow: scroll;
+      background: #f5f5f5;
+    }
+
+    .carousel-caption-custom {  // overrides bootstrap .carousel-caption
+      p {
+        padding-right: 15px  // leaves space for the scroll bar
+      }
+      position: absolute;
+      top: 15px;
+      bottom: 15px;
+      left: 17%;
+      right: 17%;
+      overflow-y: scroll;
+    }
+
+  }
+}

@@ -4,6 +4,7 @@
 // or asynchronously under companies#show
 .stories.edit #curate-story, .companies.show #curate-story {
 
+  @import 'contributions';
   @import 'results';
 
   #story-settings {
@@ -20,9 +21,6 @@
 
   #video-container {
     min-height: 234px;
-    // border: 1px solid #ccc;
-    // border-radius: 4px;
-    // overflow: hidden;
     img#video-placeholder {
       width: 100%;
     }
@@ -32,34 +30,7 @@
     border-color: #ccc;
   }
 
-  .carousel-slide {
-    .carousel-control {
-      opacity: 1;
-      background: #f5f5f5;
-      .glyphicon {
-        text-shadow: none;
-        color: #666;
-      }
-      .glyphicon:hover {
-        color: #222;
-      }
-    }
-    .item {
-      overflow: scroll;
-      background: #f5f5f5;
-    }
-    .carousel-caption-custom {
-      p {
-        padding-right: 15px  // leaves space for the scroll bar
-      }
-      position: absolute;
-      top: 15px;
-      bottom: 15px;
-      left: 17%;
-      right: 17%;
-      overflow-y: scroll;
-    }
-  }
+
 
   /***********************************************/
   /*      email request confirmation modal
