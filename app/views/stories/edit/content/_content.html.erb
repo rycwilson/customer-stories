@@ -37,7 +37,13 @@
 
     <div class="col-sm-6">
 
-      <label>Contributions</label>
+      <label>Contributions</label>&nbsp;&nbsp;
+      <i class='contributions-info fa fa-info-circle' data-toggle='tooltip' title='Contributions are not published. They are provided here for your reference.'></i>
+
+   <!--    <a href="#contributions-carousel" class='pull-right' data-toggle='collapse'>
+        <span>Show</span><span style='display:none'>Hide</span>
+      </a> -->
+
       <div id='contributions-carousel' class="carousel slide" data-ride='carousel' data-interval='false'>
 
         <!-- Wrapper for slides -->
@@ -45,6 +51,7 @@
 
           <% story.contributions.each_with_index do |contribution, index| %>
 
+            <!-- the image is necessary; its size dicatates size of the carousel -->
             <div class="item <%= index == 0 ? 'active' : '' %>">
               <img src="//s3-us-west-1.amazonaws.com/csp-development-assets/carousel_background2.png" alt="...">
 
@@ -55,10 +62,6 @@
               <div class="contribution-content">
                 <p><%= contribution.contribution %></p>
               </div>
-
-       <!--        <div class="attribution">
-
-              </div> -->
 
             </div>
 
@@ -72,6 +75,7 @@
           <a class="right carousel-control" href="#contributions-carousel" role="button" data-slide="next">
             <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
             <span class="sr-only">Next</span>
+
           </a>
 
           <ol class="carousel-indicators">
@@ -92,7 +96,7 @@
     <div class="col-sm-6">
 
       <label for="story_summary">Summary</label>
-      <%= story_form.text_area(:summary, class: 'form-control', rows: 10) %>
+      <%= story_form.text_area(:summary, class: 'form-control') %>
 
     </div>
 

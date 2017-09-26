@@ -1,8 +1,16 @@
 
 .carousel {
 
+  .contributions-info {
+    position: absolute;
+    width: 100%;
+    top: 4%;
+    text-align: center;
+    text-shadow: none;
+    color: #666;
+  }
+
   .carousel-inner {
-    // height: 300px;
 
     .carousel-control {
       opacity: 1;
