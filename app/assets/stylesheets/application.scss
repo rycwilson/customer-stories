@@ -97,7 +97,8 @@
 }
 
 .btn-success:hover, .btn-success:focus, .btn-success:active, .btn-success.disabled:hover,
-.btn-success.disabled:focus, .btn-success:active:hover, .btn-success:active:focus,
+.btn-success[disabled]:hover, .btn-success.disabled:focus, .btn-success[disabled]:focus,
+.btn-success:active:hover, .btn-success:active:focus,
 .btn.editable-submit:hover, .btn.editable-submit:focus, .btn.editable-submit:active,
 .btn-editable-submit:active:hover, .btn.editable-submit:active:focus {
   background-color: #456f59;
