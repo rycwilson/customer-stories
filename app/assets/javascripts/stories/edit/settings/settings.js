@@ -29,14 +29,15 @@ function storiesEditSettingsListeners () {
         if ( $('#story_summary').val() === '') {
           flashDisplay('There is no Summary for this Story. Create one under Story Content.', 'danger');
           $publishPreview.bootstrapSwitch('toggleState');
+        } else {
+          if ($publishLogo.bootstrapSwitch('state') === false) {
+            $publishLogo.bootstrapSwitch('toggleState');
+          }
+          if ($publishStory.bootstrapSwitch('state') === true) {
+            $publishStory.bootstrapSwitch('toggleState');
+          }
         }
 
-        if ($publishLogo.bootstrapSwitch('state') === false) {
-          $publishLogo.bootstrapSwitch('toggleState');
-        }
-        if ($publishStory.bootstrapSwitch('state') === true) {
-          $publishStory.bootstrapSwitch('toggleState');
-        }
       } else if ($current.is($publishStory) && $publishStory.bootstrapSwitch('state') === true) {
         if ($publishLogo.bootstrapSwitch('state') === false) {
           $publishLogo.bootstrapSwitch('toggleState');

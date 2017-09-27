@@ -25,37 +25,7 @@
       }
     }
     #curate-gallery {
-      li:not(.loading-icon) {
-        i.fa-spinner {
-          display: none;
-        }
-      }
-      li.loading {
-        a.thumbnail {
-          border-color: #ccc;
-          .thumbnail-view-hover {
-            transform: none;
-          }
-        }
-        // see gallery.css for disallowing img hover behavior
-      }
-      li.loading.loading-icon {
-        .thumbnail-view, .caption {
-          opacity: 0.1;
-        }
-        // the icon needs to be wrapped in a div in order for the transform to work
-        // (center if element is centered, not top-left of element)
-        // IN PROGRESS
-        .loading-icon-container {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          font-size: 20px;
-          color: #666;
-        }
-      }
-
+      // see gallery.scss
     }
   }
 
