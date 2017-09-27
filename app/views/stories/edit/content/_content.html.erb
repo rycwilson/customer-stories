@@ -35,64 +35,6 @@
 
   <div class="row">
 
-    <div class="col-sm-6">
-
-      <label>Contributions</label>&nbsp;&nbsp;
-      <i class='contributions-info fa fa-info-circle' data-toggle='tooltip' title='Contributions are not published. They are provided here for your reference.'></i>
-
-   <!--    <a href="#contributions-carousel" class='pull-right' data-toggle='collapse'>
-        <span>Show</span><span style='display:none'>Hide</span>
-      </a> -->
-
-      <div id='contributions-carousel' class="carousel slide" data-ride='carousel' data-interval='false'>
-
-        <!-- Wrapper for slides -->
-        <div class="carousel-inner" role="listbox">
-
-          <% story.contributions.each_with_index do |contribution, index| %>
-
-            <!-- the image is necessary; its size dicatates size of the carousel -->
-            <div class="item <%= index == 0 ? 'active' : '' %>">
-              <img src="//s3-us-west-1.amazonaws.com/csp-development-assets/carousel_background2.png" alt="...">
-
-              <div class="contributor-name">
-                <p><%= contribution.contributor.full_name %></p>
-              </div>
-
-              <div class="contribution-content">
-                <p><%= contribution.contribution %></p>
-              </div>
-
-            </div>
-
-          <% end %>
-
-          <!-- Controls -->
-          <a class="left carousel-control" href="#contributions-carousel" role="button" data-slide="prev">
-            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
-            <span class="sr-only">Previous</span>
-          </a>
-          <a class="right carousel-control" href="#contributions-carousel" role="button" data-slide="next">
-            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
-            <span class="sr-only">Next</span>
-
-          </a>
-
-          <ol class="carousel-indicators">
-
-            <% story.contributions.each_with_index do |contribution, index|%>
-
-              <li data-target="#contributions-carousel" class="<%= index == 0 ? 'active' : '' %>" data-slide-to="<%= index %>"></li>
-
-            <% end %>
-
-          </ol>
-
-        </div>
-      </div>
-
-    </div>
-
     <div class="col-sm-6 form-group has-feedback" style='margin-bottom: 15px'>
 
       <label for="story_summary">Summary</label>
@@ -107,23 +49,40 @@
 
     </div>
 
+    <div class="col-sm-6 success-results">
+
+      <%= render 'stories/edit/content/results', { story: story, story_form: story_form } %>
+
+    </div>
+
   </div>
 
   <div class="row">
 
     <div class="col-lg-8">
 
+      <%= render('stories/edit/content/contributions', { contributions: story.contributions }) %>
+
       <div class="form-group">
+
         <%= story_form.label(:content, 'Main Content') %>
+
+        <label class='contributions-collapse pull-right'>
+          <a href="#contributions-carousel" data-toggle='collapse'>
+            <span>Show Contributions</span><span style='display:none'>Hide Contributions</span>
+          </a>&nbsp;&nbsp;
+          <i class='pull-right fa fa-info-circle' data-toggle='tooltip' data-container='body' title='Contributions are not published. They are provided here for your reference.'></i>
+        </label>
+
         <%= story_form.text_area(:content, id: 'story-content-editor',
                 data: { provider: 'summernote' }) %>
       </div>
 
     </div>
 
-    <div class="success-results col-lg-4">
+    <div class="col-lg-4">
 
-      <%= render 'stories/edit/content/results', { story: story, story_form: story_form } %>
+
 
     </div>
 

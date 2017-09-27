@@ -151,8 +151,8 @@
   a.thumbnail:hover {
     border-color: #ccc;  // overrides bootstrap
   }
-  a.thumbnail.title-present:not(.preview-published):hover {
-    .thumbnail-view .thumbnail-view-hover {
+  a.thumbnail.title-present:hover {
+    .thumbnail-view-hover {
       -webkit-transform: translateY(0%);
       -moz-transform: translateY(0%);
       -ms-transform: translateY(0%);
