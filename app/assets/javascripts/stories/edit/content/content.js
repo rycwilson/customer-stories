@@ -28,8 +28,8 @@ function storiesEditContentListeners () {
       $('[href="#contributions-carousel"][data-toggle="collapse"] > span').toggle();
     })
 
-    .on('wheel', '.contribution-content', function (event) {
-      var maxY = $(this).prop('scrollHeight') - $(this).prop('offsetHeight');
+    .on('wheel', '.contribution-content, #story_summary', function (event) {
+      var maxY = $(this).prop('scrollHeight') - $(this).prop('clientHeight');
       // If this event looks like it will scroll beyond the bounds of the element,
       //  prevent it and set the scroll to the boundary manually
       if ($(this).prop('scrollTop') + event.originalEvent.deltaY < 0 ||

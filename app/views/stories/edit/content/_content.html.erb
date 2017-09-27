@@ -38,13 +38,13 @@
     <div class="col-sm-6 form-group has-feedback" style='margin-bottom: 15px'>
 
       <label for="story_summary">Summary</label>
-      <%= story_form.text_area(:summary, class: 'form-control',
+      <%= story_form.text_area(:summary, class: 'form-control', rows: 10,
               placeholder: 'Provide a brief story summary that will appear in a preview window along with the Customer Testimonial',
               data: { 'summary-range': '50-150' }) %>
 
       <!-- bootstrap validator -->
       <div style='height:20px' class="help-block with-errors">
-        Not required, but if present must be between 50 and 150 words
+        Minimum 50 words, Maximum 150 words
       </div>
 
     </div>
@@ -80,17 +80,23 @@
 
     </div>
 
-    <div class="col-lg-4">
+    <div class="col-lg-4 text-center">
 
+      <hr>
 
+      <button type="reset" class="btn btn-default">Cancel</button>
+      <button type="submit" class="btn btn-success text-center" style='width: 136px'>
+        <span>Save all changes</span>
+        <i class='fa fa-spinner fa-pulse' style='display:none'></i>
+        <i class='fa fa-check' style='display:none'></i>
+      </button>
 
     </div>
 
   </div>
 
-  <hr>
 
-  <div class="row">
+<!--   <div class="row">
     <div class="col-sm-12 text-right">
       <div class="form-group">
 
@@ -103,7 +109,7 @@
 
       </div>
     </div>
-  </div>
+  </div> -->
 
 <% end %>
 

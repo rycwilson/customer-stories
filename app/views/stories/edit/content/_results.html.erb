@@ -24,7 +24,7 @@
             <p><%= result_form.object.description %></p>
           </div>
 
-          <div class="col-sm-1">
+          <div class="col-sm-1 text-center">
             <i class='remove-result fa fa-remove'></i>
             <%= result_form.check_box(:_destroy, { class: 'hidden' }, 'true', 'false') %>
           </div>
@@ -33,7 +33,7 @@
 
         <div class="row">
           <div class="col-sm-12 save-or-cancel text-center hidden">
-            <span>Save changes to remove this Result<br><a class='cancel'>Cancel</a></span>
+            <span>Save changes to remove this Result or <a class='cancel'>Cancel</a></span>
           </div>
         </div>
 

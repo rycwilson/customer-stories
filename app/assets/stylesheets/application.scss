@@ -76,6 +76,10 @@
   background-color: #00fbff;
 }
 
+hr {
+  border-top: 1px solid #e5e5e5;
+}
+
 // this gets rid of the vertical portion of the first tab for views
 // that employ the mvp tabbed content layout
 .container.clip {
