@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170830172044) do
+ActiveRecord::Schema.define(version: 20170926221301) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -327,24 +327,25 @@ ActiveRecord::Schema.define(version: 20170830172044) do
   add_index "results", ["success_id"], name: "index_results_on_success_id", using: :btree
 
   create_table "stories", force: :cascade do |t|
-    t.string   "title",                                                                                                                                                                                                                                                                          null: false
+    t.string   "title",                                                                                                                                                                                                                                                                             null: false
     t.text     "quote"
     t.text     "quote_attr"
     t.string   "video_url"
     t.integer  "success_id"
-    t.datetime "created_at",                                                                                                                                                                                                                                                                     null: false
-    t.datetime "updated_at",                                                                                                                                                                                                                                                                     null: false
-    t.boolean  "approved",          default: false
-    t.boolean  "published",         default: false
-    t.boolean  "logo_published",    default: false
+    t.datetime "created_at",                                                                                                                                                                                                                                                                        null: false
+    t.datetime "updated_at",                                                                                                                                                                                                                                                                        null: false
+    t.boolean  "approved",             default: false
+    t.boolean  "published",            default: false
+    t.boolean  "logo_published",       default: false
     t.datetime "publish_date"
     t.datetime "logo_publish_date"
     t.string   "slug"
-    t.text     "content",           default: "<p><strong>Situation</strong></p><p>Situation description</p><p><strong>Challenge</strong></p><p>Challenge description</p><p><strong>Solution</strong></p><p>Solution description</p><p><strong>Benefits</strong></p><p>Benefits description</p>"
+    t.text     "content",              default: "<p><strong>Situation</strong></p><p>Situation description</p><p><strong>Challenge</strong></p><p>Challenge description</p><p><strong>Solution</strong></p><p>Solution description</p><p><strong>Benefits</strong></p><p>Benefits description</p>"
     t.string   "quote_attr_name"
     t.string   "quote_attr_title"
-    t.boolean  "preview_published", default: false
+    t.boolean  "preview_published",    default: false
     t.text     "summary"
+    t.datetime "preview_publish_date"
   end
 
   add_index "stories", ["success_id"], name: "index_stories_on_success_id", using: :btree

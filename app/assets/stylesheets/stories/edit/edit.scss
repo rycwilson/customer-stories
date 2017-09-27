@@ -9,7 +9,25 @@
 
   #story-settings {
     #publish-control {
-      margin-bottom: 29px;
+      margin-bottom: 60px;
+      .form-group {
+        position: relative;
+        .bootstrap-switch {
+          position: absolute;
+          left: 50%;
+          right: 50%;
+          transform: translate(-50%, -50%);
+          bottom: -45px;
+        }
+      }
+      .form-group:nth-of-type(2) {
+        margin: 0 20px;
+      }
+      #approval-pdf {
+        position: absolute;
+        left: 15px;
+        bottom: -50px;
+      }
     }
   }
   #story_quote {

@@ -1,5 +1,5 @@
 
-//= require ./settings
+//= require ./settings/settings
 //= require ./content/content
 //= require ./contributors
 

@@ -37,6 +37,7 @@ function storiesEditContentListeners () {
 
 function initStoriesEditContent () {
 
+  $("[data-toggle='tooltip']").tooltip();
   initSummernote();
   loadVideoThumbnail();
   storyFormValidator();

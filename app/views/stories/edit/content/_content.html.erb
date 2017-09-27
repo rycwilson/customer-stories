@@ -97,11 +97,12 @@
 
       <label for="story_summary">Summary</label>
       <%= story_form.text_area(:summary, class: 'form-control',
-              data: { 'max-summary-length': '150' }) %>
+              placeholder: 'Provide a brief story summary that will appear in a preview window along with the Customer Testimonial',
+              data: { 'summary-range': '50-150' }) %>
 
       <!-- bootstrap validator -->
       <div style='height:20px' class="help-block with-errors">
-        Max 150 words
+        Not required, but if present must be between 50 and 150 words
       </div>
 
     </div>

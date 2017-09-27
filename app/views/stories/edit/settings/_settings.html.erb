@@ -17,7 +17,7 @@
 
         <div id='publish-control' class="form-inline">
 
-          <div class="form-group" style='margin-right:30px'>
+          <div class="form-group">
             <div>
               <label for="logo_published">Publish Logo</label>&nbsp;
             </div>
@@ -26,17 +26,24 @@
 
           <div class="form-group">
             <div>
+              <label for='preview_published'>Publish Preview</label>&nbsp;
+            </div>
+            <%= story_form.check_box(:preview_published, class: "bs-switch form-control") %>
+          </div>&nbsp;
+
+          <div class="form-group">
+            <div>
               <label for='published'>Publish Story</label>&nbsp;
             </div>
             <%= story_form.check_box(:published, class: "bs-switch form-control") %>
+            <%= link_to('Approval', story_approval_path(story.id, format: :pdf),
+                  id: 'approval-pdf', target: '_blank',
+                  data: { missing_curator_info: story.curator.missing_info.to_json,
+                          missing_company_info: company.missing_info.to_json,
+                          turbolinks: false },
+                  ) %>
           </div>&nbsp;
 
-          <%= link_to('Approval', story_approval_path(story.id, format: :pdf),
-                id: 'approval-pdf-btn', style: 'vertical-align: bottom; ',
-                data: { missing_curator_info: story.curator.missing_info.to_json,
-                        missing_company_info: company.missing_info.to_json,
-                        turbolinks: false },
-                target: '_blank') %>
 
         </div>  <!-- publish control -->
 

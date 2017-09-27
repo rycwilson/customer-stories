@@ -36,18 +36,16 @@
       <div class="form-group">
         <div>
           <label>
-            <input class='curate published' type="checkbox">&nbsp;
+            <input class='curate published' checked='true' type="checkbox">&nbsp;
             Published
           </label>
         </div>
-        <% if company.stories.select { |story| story.preview_published? }.present? %>
-          <div>
-            <label>
-              <input class='curate preview-published' type="checkbox" checked='true'>&nbsp;
-              Preview published
-            </label>
-          </div>
-        <% end %>
+        <div>
+          <label>
+            <input class='curate preview-published' type="checkbox" checked='true'>&nbsp;
+            Preview published
+          </label>
+        </div>
         <div>
           <label>
             <input class='curate logo-published' type="checkbox" checked='true'>&nbsp;
