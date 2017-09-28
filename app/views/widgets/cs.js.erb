@@ -85,7 +85,7 @@
   }
 
   function buildRelWidget ($container) {
-    $container.find('.cs-thumbnail.published').hover(
+    $container.find('.cs-thumbnail.published, .cs-thumbnail.preview-published').hover(
       function () { $(this).css('border-color', '<%= @company.widget.tab_color %>'); },
       function () { $(this).css('border-color', '#ddd'); }
     );
@@ -456,7 +456,7 @@
       date.setDate(date.getDate() + <%= @company.widget.show_freq %>);
       setCookie('cs-widget-hide', '1', date.toUTCString())
     }
-    $container.find('.cs-thumbnail.published').hover(
+    $container.find('.cs-thumbnail.published, .cs-thumbnail.preview-published').hover(
       function () { $(this).css('border-color', '<%= @company.widget.tab_color %>'); },
       function () { $(this).css('border-color', 'rgba(0, 0, 0, 0.7)'); }
     );
