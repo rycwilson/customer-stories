@@ -48,8 +48,9 @@ Rails.application.routes.draw do
               params[:workflow_stage].match(/(crowdsource|curate|promote|measure)/) &&
               params[:id].present?  # i.e. user signed in
             }, as: 'company_main'
-      get '/curate/:story_slug', to: 'stories#edit',
+      get '/curate/:customer_slug/:story_slug', to: 'stories#edit',
             constraints: lambda { |params, request|
+              Customer.friendly.exists?(params[:customer_slug]) &&
               Story.friendly.exists?(params[:story_slug]) &&
               params[:id] = Story.friendly.find(params[:story_slug]).id
             }, as: 'curate_story'
@@ -77,6 +78,7 @@ Rails.application.routes.draw do
           member { put :tags }
         end
         resources :stories, only: [:create]
+        resources :contributions, except: [:new]
         resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
         resources :crowdsourcing_templates, except: [:index]
         member { get '/promote-settings', to: 'companies#show' }
@@ -103,10 +105,11 @@ Rails.application.routes.draw do
       # end
 
       get '/successes', to: 'successes#index'
-      post '/contributions', to: 'contributions#create'
-      get '/contributions', to: 'contributions#index'
-      put '/contributions/:id', to: 'contributions#update'
 
+      # moving these under company resources
+      # post '/contributions', to: 'contributions#create'
+      # get '/contributions', to: 'contributions#index'
+      # put '/contributions/:id', to: 'contributions#update'
 
       # analytics
       get '/analytics/charts', to: 'analytics#charts', as: 'charts'

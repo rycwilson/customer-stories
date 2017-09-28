@@ -7,6 +7,14 @@ function newContributorListeners() {
     //   $(this).find('#contribution_customer_id').select2('open');
     // })
 
+    .on('show.bs.modal', '#new-contributor-modal', function () {
+
+      // $.ajax({
+      //   url: '/companies/' + app.company.id + '/contributions',
+      //   method: 'get',
+      //   data: { customer: }
+      // })
+    })
     .on('reset', '#new-contributor-modal form', function () {
       $('.new-or-existing-contributor.new').css('display', 'block');
       $('.new-or-existing-contributor.existing').css('display', 'none');

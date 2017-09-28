@@ -45,7 +45,8 @@ function curateListeners () {
 
       e.preventDefault();
 
-      var $story = $(this).closest('li'), storySlug = $story.data('story-slug');
+      var $story = $(this).closest('li'), storySlug = $story.data('story-slug'),
+          customerSlug = $story.data('customer-slug');
       loading($story);
 
   // replacing state ensure turbolinks:false for the first tab state
@@ -56,7 +57,7 @@ function curateListeners () {
   // of back/forward navigation (but that's better than not making a turbolinks
   // request when necessary)
       window.history.pushState(
-        { turbolinks: true }, null, '/curate/' + storySlug
+        { turbolinks: true }, null, '/curate/' + customerSlug + '/' + storySlug
       );
 
       $.ajax({

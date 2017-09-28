@@ -195,7 +195,7 @@ function initContributorsTable (workflowStage) {
   var successIndex = 2, curatorIndex = 4, customerIndex = 5, colCount = 8;
   $('table[id="' + workflowStage + '-contributors-table"]').DataTable({
     ajax: {
-      url: '/contributions',
+      url: '/companies/' + app.company.id + '/contributions',
       dataSrc: ''
     },
     dom: 'tip',
@@ -299,7 +299,8 @@ function initContributorsTable (workflowStage) {
         var link; // link to either the success or story (if story exists)
         if (groupRows.data()[0].success.story) {
           link = '<span style="font-weight:600">' +
-                   '<a href="/curate/' + groupRows.data()[0].success.story.slug + '" class="story">' +
+                   '<a href="/curate/' + groupRows.data()[0].success.customer.slug + '/' +
+                      groupRows.data()[0].success.story.slug + '" class="story">' +
                       groupRows.data()[0].success.story.title +
                    '</a>' + '\xa0\xa0(Story)' +
                  '</span>';
@@ -410,7 +411,7 @@ function initContributorsTable (workflowStage) {
 
         $(this).DataTable()
           .column('curator:name').search(app.current_user.id)
-          .column('success:name').search($('#story-settings').data('success-name'))
+          .column('success:name').search($('#curate-story-layout').data('success-name'))
           .draw();
 
         // no row grouping for curate-contributors

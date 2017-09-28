@@ -201,7 +201,7 @@ Preview.prototype.update = function( $item ) {
   var $itemEl = this.$item.children( 'a' ),
     eldata = {
       logosrc : $itemEl.data( 'logosrc' ),
-      companyName : JSON.parse( $itemEl.data( 'company-name' ) ),
+      customer : JSON.parse( $itemEl.data( 'customer' ) ),
       summary : JSON.parse( $itemEl.data( 'summary' ) ),
       quote : JSON.parse( $itemEl.data( 'quote' ) ),
       quoteAttrName: JSON.parse( $itemEl.data( 'quote-attr-name' ) ),
@@ -219,7 +219,7 @@ Preview.prototype.update = function( $item ) {
   if (eldata.quoteAttrName !== "") {
     this.$quoteAttr.html(
         '<div class="text-right"><span>&#8211;&nbsp;' + eldata.quoteAttrName + ',&nbsp;' + eldata.quoteAttrTitle + '</span></div>'
-        // '<div class="text-right"><span>' + eldata.companyName + '</span></div>'
+        // '<div class="text-right"><span>' + eldata.customer + '</span></div>'
       );
   }
 

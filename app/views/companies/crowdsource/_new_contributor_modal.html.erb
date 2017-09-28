@@ -11,7 +11,7 @@
       <div class="modal-body">
 
         <!-- :id will be filled in when a success is selected -->
-        <%= form_for(Contribution.new, url: contributions_path,
+        <%= form_for(Contribution.new, url: company_contributions_path(company.id),
               html: { id: 'new-contribution-form', remote: true,
                       class: 'form-horizontal' }) do |f| %>
 
@@ -63,7 +63,7 @@
 
           <div class="form-group required-input">
             <label for="" class='col-sm-3 control-label'>
-              Contributor Role
+              Crowdsourcing Template
             </label>
             <div class="col-sm-9">
               <%= f.select :role, ['Customer', 'Partner', 'Sales'], {},
@@ -74,9 +74,11 @@
 
           <div class="form-group new-or-existing-contributor buttons">
             <label for="" class='col-sm-3 control-label'>
-              Contributor exists?
+              Contributor
             </label>
-            <div class="col-sm-9 btn-group" data-toggle='buttons'>
+
+
+        <!--     <div class="col-sm-9 btn-group" data-toggle='buttons'>
               <label class='radio-inline' data-toggle='tooltip' data-placement='top' title='To select an existing Contributor, first select a Customer for which Contributors exist'>
                 <input name='contribution[existing_contributor]' type="radio" value='yes' disabled>
                 Yes
@@ -85,7 +87,7 @@
                 <input name='contribution[existing_contributor]' type="radio" value='no' checked>
                 No
               </label>
-            </div>
+            </div> -->
           </div>
 
           <div class='new-or-existing-contributor new'>
