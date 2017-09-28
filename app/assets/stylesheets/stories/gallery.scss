@@ -149,8 +149,14 @@
     }
   }
   a.thumbnail:hover {
-    border-color: #ccc;  // overrides bootstrap
+    border-color: #ddd;  // overrides bootstrap
+    box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
   }
+  a.thumbnail:active {
+    -webkit-filter: brightness(88%);
+    box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.12)
+  }
+
   a.thumbnail.title-present:hover {
     .thumbnail-view-hover {
       -webkit-transform: translateY(0%);
@@ -175,6 +181,8 @@
     }
     a.thumbnail {
       border-color: #ccc;
+      box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
+      -webkit-filter: brightness(96%);
       .thumbnail-view-hover {
         transform: none;
       }
