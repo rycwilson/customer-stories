@@ -43,7 +43,7 @@ class WidgetsController < ApplicationController
     filter_params = filter_attributes ?
         validate_and_convert_filter_attributes(filter_attributes, @company) : nil
     stories =
-      @company.filter_stories_by_tag(filter_params || { tag: 'all', id: '0' }, false)
+      @company.filter_stories_by_tag(filter_params || { tag: 'all', id: '0' })
               .map do |story|
                 if story.published?
                   target_url = story.csp_story_url
