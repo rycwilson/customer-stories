@@ -1,9 +1,11 @@
 
-<div class="form-group">
+<div class="form-group video">
+
   <%= story_form.label(:video_url, 'Video URL') %>
   <%= story_form.text_field(:video_url, class: 'form-control',
         placeholder: 'YouTube, Vimeo, or Wistia') %>
   <%= hidden_field_tag('story[formatted_video_url]') %>
+
 </div>
 
 <div id='video-container' class="text-center">

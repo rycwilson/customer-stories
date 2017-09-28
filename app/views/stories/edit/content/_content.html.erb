@@ -6,14 +6,14 @@
 
   <div class="row">
 
-    <div class="col-lg-6" style='margin-bottom:10px'>
+    <div class="col-lg-6">
 
-      <div class="form-group" style='margin-bottom:23px'>
+      <div class="form-group">
         <%= story_form.label(:quote, 'Customer Testimonial') %>
         <%= story_form.text_area(:quote, rows: 6, class: 'form-control', placeholder: 'Add a quote from a happy customer...') %>
       </div>
 
-      <div class="form-group" style='margin-bottom:23px'>
+      <div class="form-group">
         <%= story_form.label(:quote_attr_name, 'Customer Name') %>
         <%= story_form.text_field(:quote_attr_name, class: 'form-control') %>
       </div>
@@ -35,7 +35,7 @@
 
   <div class="row">
 
-    <div class="col-sm-6 form-group has-feedback" style='margin-bottom: 15px'>
+    <div class="col-sm-6 form-group has-feedback">
 
       <label for="story_summary">Summary</label>
       <%= story_form.text_area(:summary, class: 'form-control', rows: 11,
@@ -85,8 +85,8 @@
       <hr>
 
       <button type="reset" class="btn btn-default">Cancel</button>
-      <button type="submit" class="btn btn-success text-center" style='width: 136px'>
-        <span>Save all changes</span>
+      <button type="submit" class="btn btn-success text-center" style='width: 114px'>
+        <span>Save changes</span>
         <i class='fa fa-spinner fa-pulse' style='display:none'></i>
         <i class='fa fa-check' style='display:none'></i>
       </button>
@@ -94,22 +94,6 @@
     </div>
 
   </div>
-
-
-<!--   <div class="row">
-    <div class="col-sm-12 text-right">
-      <div class="form-group">
-
-        <button type="reset" class="btn btn-default">Cancel</button>
-        <button type="submit" class="btn btn-success text-center" style='width: 114px'>
-          <span>Save changes</span>
-          <i class='fa fa-spinner fa-pulse' style='display:none'></i>
-          <i class='fa fa-check' style='display:none'></i>
-        </button>
-
-      </div>
-    </div>
-  </div> -->
 
 <% end %>
 

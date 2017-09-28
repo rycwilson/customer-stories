@@ -30,16 +30,16 @@ function storiesEditContentListeners () {
 
     .on('wheel', '.contribution-content, #story_summary', function (event) {
       var maxY = $(this).prop('scrollHeight') - $(this).prop('clientHeight');
-      // If this event looks like it will scroll beyond the bounds of the element,
-      //  prevent it and set the scroll to the boundary manually
-      if ($(this).prop('scrollTop') + event.originalEvent.deltaY < 0 ||
-          $(this).prop('scrollTop') + event.originalEvent.deltaY > maxY) {
-        event.preventDefault();
-        $(this).prop('scrollTop', Math.max(0, Math.min(maxY, $(this).prop('scrollTop') + event.originalEvent.deltaY)));
+      if (maxY > 0) {
+        // If this event looks like it will scroll beyond the bounds of the element,
+        //  prevent it and set the scroll to the boundary manually
+        if ($(this).prop('scrollTop') + event.originalEvent.deltaY < 0 ||
+            $(this).prop('scrollTop') + event.originalEvent.deltaY > maxY) {
+          event.preventDefault();
+          $(this).prop('scrollTop', Math.max(0, Math.min(maxY, $(this).prop('scrollTop') + event.originalEvent.deltaY)));
+        }
       }
     });
-
-
 }
 
 function initStoriesEditContent () {
