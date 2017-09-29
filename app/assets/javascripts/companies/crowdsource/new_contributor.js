@@ -1,74 +1,99 @@
 
 function newContributorListeners() {
 
+  var $customerSelect = $('select.new-contributor.customer'),
+      $successSelect = $('select.new-contributor.success'),
+      $contributorSelect = $('select.new-contributor.contributor'),
+      validForm = function () {
+        return $customerSelect.val() && $successSelect.val() &&
+        (
+          !['', '0'].includes($contributorSelect.val()) ||
+          (
+            $('#contribution_user_first_name').val() &&
+            $('#contribution_user_last_name').val() &&
+            $('#contribution_user_email').val()
+          )
+        );
+      },
+      validateForm = function () {
+        return validForm() ? $('button[type="submit"]').prop('disabled', false) :
+                             $('button[type="submit"]').prop('disabled', true);
+      };
+
   $(document)
 
-    .on('reset', '#new-contributor-modal form', function () {
-      $('.new-or-existing-contributor.new').css('display', 'block');
-      $('.new-or-existing-contributor.existing').css('display', 'none');
-      $(this).find('select').select2('val', '');
+    .on('input', '#new-contributor-modal', function () {
+      validateForm();
+
+    })
+    .on('change', '#new-contributor-modal', function () {
+      validateForm();
     })
 
-    .on('change', 'select.new-contributor-customer', function (e) {
+    .on('change', 'select.new-contributor.customer', function (e) {
+
       var customerId = $(this).val(),
+          // $successSelect = $('select.new-contributor.success'),
+          // $contributorSelect = $('select.new-contributor.contributor'),
           successes = app.company.successes.filter(function (success) {
                 return success.customer_id == customerId;
               })
               .map(function (success) {
                 return { id: success.id, text: success.name || "Unknown Story Candidate" };
-              });
-          successes.unshift({ id: '', text: '' });
+              }),
           contributors = app.contributions.filter(function (contribution) {
-              return successes.some(function (success) {
-                return contribution.success_id === success.id;
+                return successes.some(function (success) {
+                  return contribution.success_id === success.id;
+                });
+              })
+              .map(function (contribution) {
+                return { id: contribution.contributor.id,
+                         text: contribution.contributor.full_name };
               });
-            })
-            .map(function (contribution) {
-              return { id: contribution.contributor.id,
-                       text: contribution.contributor.full_name };
-            });
-          contributors.unshift({ id: '', text: '' });
+
+      // empty option for placeholder
+      successes.unshift({ id: '', text: '' });
+      contributors.unshift({ id: '', text: '' }, { id: 0, text: '- New Contributor -' });
+
       // ref: https://github.com/select2/select2/issues/2830#issuecomment-229710429
-      $('select.new-contributor.success')
-        .select2('destroy').empty()
+      $successSelect.select2('destroy').empty()
         .select2({
           theme: "bootstrap",
           placeholder: 'Select',
           data: successes
-        });
+        })
+        .prop('disabled', false);
 
-      // $('select.new-contributor-existing')
-      //   .select2('destroy').empty()
-      //   .select2({
-      //     theme: "bootstrap",
-      //     placeholder: 'Select',
-      //     data: contributors
-      //   });
+      $contributorSelect.select2('destroy').empty()
+        .select2({
+          theme: "bootstrap",
+          placeholder: 'Select',
+          data: contributors
+        })
+        .prop('disabled', false);
 
-      // if no contributors for this customer, disable the radio button and engage the tooltip
-      if (contributors.length === 1) {  // empty (1 because placeholder)
-        if ($('input[name="contribution[existing_contributor]"]').val() === 'yes') {
-          $('input[name="contribution[existing_contributor]"][value="no"]')
-            .trigger('click');
-        }
-        $('input[name="contribution[existing_contributor]"][value="yes"]')
-          .prop('disabled', true);
-        $('.new-or-existing-contributor').find('[data-toggle="tooltip"]')
-          .tooltip({
-            placement: 'top',
-            title: 'To select an existing Contributor, first select a Customer for which Contributors exist'
-          });
-
+      // if no contributors for this customer, select New Contributor
+      // (length of 2 accounts for empty option and New Contributor option)
+      if (contributors.length === 2) {
+        $contributorSelect.val('0').trigger('change');
       } else {
-        $('input[name="contribution[existing_contributor]"][value="yes"]')
-          .prop('disabled', false);
-        // setting the title to empty string will effectively kill the tooltip
-        $('.new-or-existing-contributor').find('[data-toggle="tooltip"]')
-          .tooltip('destroy');
+        $contributorSelect.val('').trigger('change');
       }
 
     })
 
+    // reset modal
+    .on('hidden.bs.modal', '#new-contributor-modal', function () {
+      $(this).find('.create-contributor').addClass('hidden');
+      $(this).find('select').val('').trigger('change');
+      // for a select that has an option with val === 0, this approach is necessary:
+      $('select.new-contributor.contributor').select2('val', '');
+      $('select.new-contributor.success, select.new-contributor.contributor')
+        .prop('disabled', true);
+      $(this).find('form')[0].reset();
+    })
+
+    // toggle New Contributor fields
     .on('change', '.new-contributor.contributor', function (e) {
       if ($(this).val() === '0') {
         $('.create-contributor').removeClass('hidden');
