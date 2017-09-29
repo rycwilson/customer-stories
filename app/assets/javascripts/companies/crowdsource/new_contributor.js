@@ -103,14 +103,8 @@ function newContributorListeners() {
     })
 
     .on('submit', '#new-contributor-form', function (e) {
-      e.preventDefault()
+      // e.preventDefault()
       // $(this).find('span').toggle();
       // $(this).find('.fa-spinner').toggle();
-      if ($('.create-contributor').hasClass('hidden')) {
-        $('.create-contributor input').each(function () {
-          $(this).attr('name', '');
-        });
-      }
-      $(this).submit();
     });
 }
