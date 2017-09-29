@@ -9,9 +9,9 @@ function newContributorListeners() {
         (
           !['', '0'].includes($contributorSelect.val()) ||
           (
-            $('#contribution_user_first_name').val() &&
-            $('#contribution_user_last_name').val() &&
-            $('#contribution_user_email').val()
+            $('#contribution_contributor_attributes_first_name').val() &&
+            $('#contribution_contributor_attributes_last_name').val() &&
+            $('#contribution_contributor_attributes_email').val()
           )
         );
       },
@@ -102,8 +102,15 @@ function newContributorListeners() {
       }
     })
 
-    .on('submit', '#contributor-form', function () {
-      $(this).find('span').toggle();
-      $(this).find('.fa-spinner').toggle();
+    .on('submit', '#new-contributor-form', function (e) {
+      e.preventDefault()
+      // $(this).find('span').toggle();
+      // $(this).find('.fa-spinner').toggle();
+      if ($('.create-contributor').hasClass('hidden')) {
+        $('.create-contributor input').each(function () {
+          $(this).attr('name', '');
+        });
+      }
+      $(this).submit();
     });
 }

@@ -12,30 +12,28 @@
 
         <!-- :id will be filled in when a success is selected -->
         <%= form_for(Contribution.new, url: company_contributions_path(company.id),
-              html: { id: 'new-contribution-form', remote: true,
+              html: { id: 'new-contributor-form', remote: true,
                       class: 'form-horizontal' }) do |contribution_form| %>
 
           <div class="form-group required-input">
 
-            <label for="contribution_success_customer_id" class='col-sm-3 control-label'>
+            <label for="" class='col-sm-3 control-label'>
               Customer
             </label>
 
             <div class="col-sm-9">
 
-              <%= contribution_form.fields_for(:success) do |success_form| %>
-
-                <%= success_form.collection_select(:customer_id,
-                      company.customers.sort_by() { |customer| customer.name.downcase },
-                      :id, :name,
-                      { include_blank: true,
-                        disabled: lambda { |customer| customer.successes.blank? } },
-                      { class: 'new-contributor customer form-control',
-                        style: 'width:100%', required: true }) %>
-
-              <% end %>
+              <!-- not submitted with form -->
+              <%= collection_select('', '',
+                    company.customers.sort_by() { |customer| customer.name.downcase },
+                    :id, :name,
+                    { include_blank: true,
+                      disabled: lambda { |customer| customer.successes.blank? } },
+                    { class: 'new-contributor customer form-control',
+                      style: 'width:100%', required: true }) %>
 
             </div>
+
           </div>
 
           <div class="form-group required-input">
@@ -79,7 +77,11 @@
 
           <div class="create-contributor hidden">
 
-            <%= contribution_form.fields_for(:user) do |contributor_form| %>
+            <%= contribution_form.fields_for(:contributor,
+                  contribution_form.object.build_contributor) do |contributor_form| %>
+
+              <%= contributor_form.hidden_field(:sign_up_code, value: 'csp_beta') %>
+              <%= contributor_form.hidden_field(:password, value: 'password') %>
 
               <div class="form-group required-input">
 

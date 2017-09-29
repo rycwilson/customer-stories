@@ -7,11 +7,6 @@ class Customer < ActiveRecord::Base
   has_many :stories, through: :successes
   has_many :contributions, through: :successes
   has_many :contributors, through: :contributions, class_name: 'User', foreign_key: 'user_id'
-  #   def select2_options ()
-  #     self.map { |contributor| { id: contributor.id, text: contributor.full_name } }
-  #         .unshift({ id: 0, text: '- New Contributor -' })
-  #   end
-  # end
 
   validates :name, presence: true
   validates_uniqueness_of :name, scope: :company_id

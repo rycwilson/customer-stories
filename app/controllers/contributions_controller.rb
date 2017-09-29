@@ -8,27 +8,22 @@ class ContributionsController < ApplicationController
 
   def index
     company = Company.find(params[:company_id])
-    if params[:customer_slug]
-      customer = Customer.friendly.find(params[:customer_slug])
-      data = customer.contributor_ids
-    else
-      data = company.contributions.to_json({
-                only: [:id, :status], methods: [],
-                include: {
-                  success: {
-                    only: [:id, :name],
-                    include: {
-                      curator: { only: [:id], methods: [:full_name] },
-                      customer: { only: [:id, :name] },
-                      story: { only: [:id, :title, :slug] }
-                    }
-                  },
-                  contributor: { only: [:id], methods: [:full_name] },
-                  referrer: { only: [:id], methods: [:full_name] },
-                  crowdsourcing_template: { only: [:id, :name] },
-                }
-              })
-    end
+    data = company.contributions.to_json({
+              only: [:id, :status], methods: [],
+              include: {
+                success: {
+                  only: [:id, :name],
+                  include: {
+                    curator: { only: [:id], methods: [:full_name] },
+                    customer: { only: [:id, :name] },
+                    story: { only: [:id, :title, :slug] }
+                  }
+                },
+                contributor: { only: [:id], methods: [:full_name] },
+                referrer: { only: [:id], methods: [:full_name] },
+                crowdsourcing_template: { only: [:id, :name] },
+              }
+            })
     respond_to() { |format| format.json { render({ json: data }) } }
   end
 
@@ -57,52 +52,53 @@ class ContributionsController < ApplicationController
           contributor: {}, referrer: {}, success: { include: :customer } }
   end
 
-  # js response
   def create
-    contributor = params[:contribution][:existing_contributor] == 'yes' ?
-                    User.find_by(id: params[:contribution][:contributor_id]) :
-                    new_contributor(params[:contribution])
-    if !contributor.try(:changed?) || contributor.save  # don't save if existing
-      contribution = Contribution.new(
-                        success_id: params[:contribution][:success_id],
-                        user_id: contributor.try(:id),
-                        referrer_id: params[:contribution][:referrer_id],
-                        role: params[:contribution][:role],
-                        status: 'pre_request',
-                        access_token: SecureRandom.hex
-                      )
-      unless contribution.save
-        flash.now[:alert] = contribution.errors.full_messages
-            .map! do |msg|
-              if msg == "User can't be blank"
-                "No Contributor selected"
-              elsif msg == "Success can't be blank"
-                "No Story Candidate selected"
-              elsif msg == "Role can't be blank"
-                "No Contributor role selected"
-              end
-            end
-            .join(', ')
-      end
-    else
-      flash.now[:alert] = contributor.errors.full_messages
-          .map! do |msg|
-            if msg == "User has already been taken"
-              "Contributor has already been added to this Story"
-            elsif msg == "First name can't be blank" ||
-                  msg == "Last name can't be blank" ||
-                  msg == "Email can't be blank"
-              "Contributor contact details are missing"
-            end
-          end
-          .uniq.join(', ') # uniq => remove 'contact details missing' duplicates
-    end
+    # binding.remote_pry
+    pp contribution_params
+    @contribution = Contribution.create(contribution_params)
+    pp @contribution.errors.full_messages
+
+    # contributor = params[:contribution][:existing_contributor] == 'yes' ?
+    #                 User.find_by(id: params[:contribution][:contributor_id]) :
+    #                 new_contributor(params[:contribution])
+    # if !contributor.try(:changed?) || contributor.save  # don't save if existing
+    #   contribution = Contribution.new(
+    #                     success_id: params[:contribution][:success_id],
+    #                     user_id: contributor.try(:id),
+    #                     referrer_id: params[:contribution][:referrer_id],
+    #                     role: params[:contribution][:role],
+    #                     status: 'pre_request',
+    #                     access_token: SecureRandom.hex
+    #                   )
+    #   unless contribution.save
+    #     flash.now[:alert] = contribution.errors.full_messages
+    #         .map! do |msg|
+    #           if msg == "User can't be blank"
+    #             "No Contributor selected"
+    #           elsif msg == "Success can't be blank"
+    #             "No Story Candidate selected"
+    #           elsif msg == "Role can't be blank"
+    #             "No Contributor role selected"
+    #           end
+    #         end
+    #         .join(', ')
+    #   end
+    # else
+    #   flash.now[:alert] = contributor.errors.full_messages
+    #       .map! do |msg|
+    #         if msg == "User has already been taken"
+    #           "Contributor has already been added to this Story"
+    #         elsif msg == "First name can't be blank" ||
+    #               msg == "Last name can't be blank" ||
+    #               msg == "Email can't be blank"
+    #           "Contributor contact details are missing"
+    #         end
+    #       end
+    #       .uniq.join(', ') # uniq => remove 'contact details missing' duplicates
+    # end
+    respond_to() { |format| format.js }
   end
 
-  #
-  # params = { contribution: { status: <type> }, { <type>: <content> } }
-  #
-  # PUT /contributions/:token
   def update
     if params[:contribution][:contributor]
       @contribution.contributor.update(contribution_params[:contributor])
@@ -164,9 +160,10 @@ class ContributionsController < ApplicationController
 
   def contribution_params
     params.require(:contribution).permit(
+      :success_id, :crowdsourcing_template_id, :user_id, :referrer_id,
       :status, :contribution, :feedback, :access_token, :publish_contributor,
       :contributor_unpublished, :notes, :submitted_at,
-      contributor: [:first_name, :last_name, :title, :email, :phone, :linkedin_url]
+      contributor_attributes: [:first_name, :last_name, :title, :email, :phone, :linkedin_url, :sign_up_code, :password]
     )
   end
 

@@ -133,7 +133,7 @@ class StoriesController < ApplicationController
       # flash[:success] = "Story created successfully"
       # # prevent js response from killing flash message
       # flash.keep(:success)
-      # redirect_to(curate_story_path(@story.slug))
+      # redirect_to(curate_story_path(@story.customer.slug, @story.slug))
     else
       @errors = @story.errors.full_messages.join(', ')
     end
@@ -148,7 +148,7 @@ class StoriesController < ApplicationController
       respond_to do |format|
         format.html do
           redirect_to(
-            curate_story_path(@story.slug, tab_select: 'story-settings'),
+            curate_story_path(@story.customer.slug, @story.slug, tab_select: 'story-settings'),
             flash: { success: "Story Settings updated" }
           )
         end

@@ -33,13 +33,13 @@ class Contribution < ActiveRecord::Base
     company(company_id).where('request_received_at >= ?', days_ago.days.ago)
   }
 
-  validates :user_id, presence: true
-  validates :success_id, presence: true
-  validates :role, presence: true
-  validates :contribution, presence: true,
-                if: Proc.new { |contribution| contribution.status == 'contribution'}
-  validates :feedback, presence: true,
-                if: Proc.new { |contribution| contribution.status == 'feedback'}
+  # validates :user_id, presence: true
+  # validates :success_id, presence: true
+  # validates :role, presence: true
+  # validates :contribution, presence: true,
+  #               if: Proc.new { |contribution| contribution.status == 'contribution'}
+  # validates :feedback, presence: true,
+  #               if: Proc.new { |contribution| contribution.status == 'feedback'}
 
   # contributor may have only one contribution per story
   validates_uniqueness_of :user_id, scope: :success_id
