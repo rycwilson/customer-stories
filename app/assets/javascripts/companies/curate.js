@@ -63,14 +63,12 @@ function curateListeners () {
       $.ajax({
         url: '/stories/' + $story.data('story-id') + '/edit',
         method: 'get',
-        dataType: 'html',
-        success: function (html, status, xhr) {
-          var cbShowTab = function () {
-            $('a[href="#curate-story"]').tab('show');
-          };
-          $.when( $('#curate-story').empty().append(html) )
-            .then(function () { initStoriesEdit(cbShowTab); });
-        }
+        dataType: 'html'
+      })
+      .done(function (html, status, xhr) {
+        var cbShowTab = function () { $('a[href="#curate-story"]').tab('show'); };
+        $.when( $('#curate-story').empty().append(html) )
+          .then(function () { initStoriesEdit(cbShowTab); });
       });
     })
 

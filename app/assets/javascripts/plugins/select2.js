@@ -116,35 +116,20 @@ function initSelect2 () {
     placeholder: 'Who referred you to this opportunity?'
   });
 
-  $(".new-contributor-customer").select2({
+
+  $('.new-contributor:not(.contributor):not(.referrer)').select2({
     theme: "bootstrap",
     placeholder: 'Select'
   });
 
-  $(".new-contributor-success").select2({
-    theme: "bootstrap",
-    placeholder: 'Select'
-  });
-
-  $(".new-contributor-success-contact").select2({
-    theme: "bootstrap",
-    placeholder: 'Select'
-  });
-
-  $('.new-contributor-role').select2({
+  $('.new-contributor.contributor').select2({
     theme: 'bootstrap',
-    placeholder: 'Select'
+    placeholder: 'Select or Add'
   });
 
-  $('.new-contributor-referrer').select2({
+  $('.new-contributor.referrer').select2({
     theme: 'bootstrap',
-    placeholder: 'Who referred you to this contributor?'
-  });
-
-
-  $('.new-contributor-existing').select2({
-    theme: 'bootstrap',
-    placeholder: 'Select'
+    placeholder: 'Who referred you to this Contributor?'
   });
 
 }

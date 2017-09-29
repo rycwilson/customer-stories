@@ -7,30 +7,29 @@ class ContributionsController < ApplicationController
   respond_to(:html, :json, :js)
 
   def index
-    company = Company.find_by(subdomain: request.subdomain)
-    respond_to() do |format|
-      format.json do
-        render({
-          json: company.contributions.to_json({
-                  only: [:id, :status], methods: [],
-                  include: {
-                    success: {
-                      only: [:id, :name],
-                      include: {
-                        curator: { only: [:id], methods: [:full_name] },
-                        customer: { only: [:id, :name] },
-                        story: { only: [:id, :title, :slug] }
-                      }
-                    },
-                    contributor: { only: [:id], methods: [:full_name] },
-                    referrer: { only: [:id], methods: [:full_name] },
-                    crowdsourcing_template: { only: [:id, :name] },
-                  }
-                })
-
-        })
-      end
+    company = Company.find(params[:company_id])
+    if params[:customer_slug]
+      customer = Customer.friendly.find(params[:customer_slug])
+      data = customer.contributor_ids
+    else
+      data = company.contributions.to_json({
+                only: [:id, :status], methods: [],
+                include: {
+                  success: {
+                    only: [:id, :name],
+                    include: {
+                      curator: { only: [:id], methods: [:full_name] },
+                      customer: { only: [:id, :name] },
+                      story: { only: [:id, :title, :slug] }
+                    }
+                  },
+                  contributor: { only: [:id], methods: [:full_name] },
+                  referrer: { only: [:id], methods: [:full_name] },
+                  crowdsourcing_template: { only: [:id, :name] },
+                }
+              })
     end
+    respond_to() { |format| format.json { render({ json: data }) } }
   end
 
   #

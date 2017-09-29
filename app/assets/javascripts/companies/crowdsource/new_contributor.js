@@ -3,18 +3,6 @@ function newContributorListeners() {
 
   $(document)
 
-    // .on('shown.bs.modal', '#new-contributor-modal', function () {
-    //   $(this).find('#contribution_customer_id').select2('open');
-    // })
-
-    .on('show.bs.modal', '#new-contributor-modal', function () {
-
-      // $.ajax({
-      //   url: '/companies/' + app.company.id + '/contributions',
-      //   method: 'get',
-      //   data: { customer: }
-      // })
-    })
     .on('reset', '#new-contributor-modal form', function () {
       $('.new-or-existing-contributor.new').css('display', 'block');
       $('.new-or-existing-contributor.existing').css('display', 'none');
@@ -41,20 +29,21 @@ function newContributorListeners() {
             });
           contributors.unshift({ id: '', text: '' });
       // ref: https://github.com/select2/select2/issues/2830#issuecomment-229710429
-      $('select.new-contributor-success')
+      $('select.new-contributor.success')
         .select2('destroy').empty()
         .select2({
           theme: "bootstrap",
           placeholder: 'Select',
           data: successes
         });
-      $('select.new-contributor-existing')
-        .select2('destroy').empty()
-        .select2({
-          theme: "bootstrap",
-          placeholder: 'Select',
-          data: contributors
-        });
+
+      // $('select.new-contributor-existing')
+      //   .select2('destroy').empty()
+      //   .select2({
+      //     theme: "bootstrap",
+      //     placeholder: 'Select',
+      //     data: contributors
+      //   });
 
       // if no contributors for this customer, disable the radio button and engage the tooltip
       if (contributors.length === 1) {  // empty (1 because placeholder)
@@ -80,11 +69,13 @@ function newContributorListeners() {
 
     })
 
-    .on('change', '.new-or-existing-contributor.buttons input:radio',
-      function (e) {
-        // if came from modal close / form reset, check values
-        $('.new-or-existing-contributor:not(.buttons)').toggle();
-      })
+    .on('change', '.new-contributor.contributor', function (e) {
+      if ($(this).val() === '0') {
+        $('.create-contributor').removeClass('hidden');
+      } else {
+        $('.create-contributor').addClass('hidden');
+      }
+    })
 
     .on('submit', '#contributor-form', function () {
       $(this).find('span').toggle();

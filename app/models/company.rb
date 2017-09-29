@@ -53,6 +53,7 @@ class Company < ActiveRecord::Base
       )
     end
   end
+  has_many :contributors, through: :contributions, class_name: 'User'
   has_many :stories, through: :successes do
     def select_options
       self.select() { |story| story.published? }

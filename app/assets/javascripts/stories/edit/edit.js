@@ -16,6 +16,7 @@ function initStoriesEdit (cbShowTab) {
   initStoriesEditSettings(cbShowTab);
   initStoriesEditContent();
   initContributorsTable('curate');
+
 }
 
 function storiesEditListeners () {

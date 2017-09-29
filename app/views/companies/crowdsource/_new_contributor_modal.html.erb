@@ -13,125 +13,146 @@
         <!-- :id will be filled in when a success is selected -->
         <%= form_for(Contribution.new, url: company_contributions_path(company.id),
               html: { id: 'new-contribution-form', remote: true,
-                      class: 'form-horizontal' }) do |f| %>
+                      class: 'form-horizontal' }) do |contribution_form| %>
 
           <div class="form-group required-input">
-            <label for="success_customer" class='col-sm-3 control-label'>
+
+            <label for="contribution_success_customer_id" class='col-sm-3 control-label'>
               Customer
             </label>
+
             <div class="col-sm-9">
-              <%= select_tag 'contribution[customer_id]',
-                    options_for_select(company.customers.select_options),
-                    { class: 'new-contributor-customer form-control',
-                      style: 'width:100%', autofocus: true } %>
+
+              <%= contribution_form.fields_for(:success) do |success_form| %>
+
+                <%= success_form.collection_select(:customer_id,
+                      company.customers.sort_by() { |customer| customer.name },
+                      :id, :name, { include_blank: true },
+                      { class: 'new-contributor customer form-control',
+                        style: 'width:100%', autofocus: true }) %>
+
+              <% end %>
+
             </div>
           </div>
 
           <div class="form-group required-input">
-            <label for="success_name" class='col-sm-3 control-label'>
+
+            <label for="contribution_success_id" class='col-sm-3 control-label'>
               Story Candidate
             </label>
-            <div class="col-sm-9">
-              <%= f.select :success_id, [], {},
-                    { class: 'new-contributor-success form-control',
-                      style: 'width:100%' } %>
-            </div>
-          </div>
 
-          <div class="form-group">
-            <label class='col-sm-3 control-label'>
-              Referred by
-            </label>
             <div class="col-sm-9">
-              <%= f.select :referrer_id,
-                    options_for_select(company.curators.map() { |curator| [ curator.full_name, curator.id ] }.unshift([''])), {},
-                    { class: 'new-contributor-referrer form-control',
-                      style: 'width:100%' } %>
-            </div>
-          </div>
 
-          <div class="form-group">
-            <label class='col-sm-3 control-label'>
-              Success Contact
-            </label>
-            <div class="col-sm-9">
-              <%= select_tag 'contribution[success_contact]', [],
-                    { class: 'new-contributor-success-contact form-control',
-                      style: 'width:100%' } %>
+              <%= contribution_form.collection_select(:success_id,
+                    company.successes.sort_by() { |success| success.name },
+                    :id, :name, { include_blank: true },
+                    { class: 'new-contributor success form-control',
+                      style: 'width:100%' }) %>
             </div>
+
           </div>
 
           <div class="form-group required-input">
-            <label for="" class='col-sm-3 control-label'>
-              Crowdsourcing Template
+
+            <label for="contribution_crowdsourcing_template_id" class='col-sm-3 control-label' style='position:relative'>
+              <span style='position:absolute;right:16px;top:-3px'>Crowdsourcing</span>
+              <span style='position:absolute;right:50px;bottom:-8px'>Template</span>
             </label>
+
             <div class="col-sm-9">
-              <%= f.select :role, ['Customer', 'Partner', 'Sales'], {},
-                    { class: 'new-contributor-role form-control',
-                      style: 'width:100%' } %>
-            </div>
-          </div>
-
-          <div class="form-group new-or-existing-contributor buttons">
-            <label for="" class='col-sm-3 control-label'>
-              Contributor
-            </label>
-
-
-        <!--     <div class="col-sm-9 btn-group" data-toggle='buttons'>
-              <label class='radio-inline' data-toggle='tooltip' data-placement='top' title='To select an existing Contributor, first select a Customer for which Contributors exist'>
-                <input name='contribution[existing_contributor]' type="radio" value='yes' disabled>
-                Yes
-              </label>
-              <label class='radio-inline'>
-                <input name='contribution[existing_contributor]' type="radio" value='no' checked>
-                No
-              </label>
-            </div> -->
-          </div>
-
-          <div class='new-or-existing-contributor new'>
-
-            <div class="form-group required-input">
-              <label for="" class='col-sm-3 control-label'>
-                First Name
-              </label>
-              <div class="col-sm-9">
-                <%= text_field_tag 'contribution[contributor_first_name]', nil,
-                      class: 'form-control', placeholder: 'Contributor first name' %>
-              </div>
-            </div>
-
-            <div class="form-group required-input">
-              <label for="" class='col-sm-3 control-label'>
-                Last Name
-              </label>
-              <div class="col-sm-9">
-                <%= text_field_tag 'contribution[contributor_last_name]', nil,
-                      class: 'form-control', placeholder: 'Contributor last name' %>
-              </div>
-            </div>
-
-            <div class="form-group required-input">
-              <label for="" class='col-sm-3 control-label'>
-                Email
-              </label>
-              <div class="col-sm-9">
-                <%= email_field_tag 'contribution[contributor_email]', nil,
-                      class: 'form-control', placeholder: 'Contributor email' %>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-group new-or-existing-contributor existing required-input" style='display:none'>
-            <label class='col-sm-3 control-label'>
-              Contributor
-            </label>
-            <div class="col-sm-9">
-              <%= select_tag('contribution[contributor_id]', [],
-                    { class: 'new-contributor-existing form-control',
+              <%= contribution_form.collection_select(:crowdsourcing_template_id,
+                    company.crowdsourcing_templates.sort_by() { |t| t.name },
+                    :id, :name, { include_blank: true },
+                    { class: 'new-contributor template form-control',
                       style: 'width:100%' }) %>
             </div>
+
+          </div>
+
+          <div class="form-group required-input">
+
+            <label for="contribution_user_id" class='col-sm-3 control-label'>
+              Contributor
+            </label>
+
+            <div class="col-sm-9">
+              <%= contribution_form.collection_select(:user_id,
+                    company.contributors.sort_by() do |contributor|
+                      contributor.last_name
+                    end.unshift(
+                      User.new(id: 0, first_name: '- New Contributor -', last_name:'')
+                    ),
+                    :id, :full_name, { include_blank: true },
+                    { class: 'new-contributor contributor form-control',
+                      style: 'width:100%' }) %>
+
+            </div>
+
+          </div>
+
+          <div class="create-contributor hidden">
+
+            <%= contribution_form.fields_for(:user) do |contributor_form| %>
+
+              <div class="form-group required-input">
+
+                <label for="" class='col-sm-3 control-label'>
+                  First Name
+                </label>
+
+                <div class="col-sm-9">
+                  <%= contributor_form.text_field(:first_name, class: 'form-control',
+                        placeholder: 'Contributor first name') %>
+                </div>
+
+              </div>
+
+              <div class="form-group required-input">
+
+                <label for="" class='col-sm-3 control-label'>
+                  Last Name
+                </label>
+
+                <div class="col-sm-9">
+                  <%= contributor_form.text_field(:last_name, class: 'form-control',
+                        placeholder: 'Contributor last name') %>
+                </div>
+
+              </div>
+
+              <div class="form-group required-input">
+
+                <label for="" class='col-sm-3 control-label'>
+                  Email
+                </label>
+
+                <div class="col-sm-9">
+                  <%= contributor_form.email_field(:email, class: 'form-control',
+                        placeholder: 'Contributor email') %>
+                </div>
+
+              </div>
+
+            <% end %>
+
+          </div>
+
+          <div class="form-group">
+
+            <label for='contribution_referrer_id' class='col-sm-3 control-label'>
+              Referred by
+            </label>
+
+            <div class="col-sm-9">
+
+              <%= contribution_form.collection_select(:referrer_id,
+                    company.curators, :id, :full_name, { include_blank: true },
+                    { class: 'new-contributor referrer form-control',
+                      style: 'width:100%' }) %>
+
+            </div>
+
           </div>
 
         <% end %>

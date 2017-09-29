@@ -1,14 +1,14 @@
 
-//= require plugins/manifest
-//= require plugins/select2
-//= require plugins/linkedin
-//= require plugins/summernote
-//= require plugins/tooltips
-//= require plugins/clicky
-//= require plugins/datatables
-//= require plugins/daterangepicker
-//= require plugins/google_charts
-//= require plugins/x_editable
+//= require ./manifest
+//= require ./select2
+//= require ./linkedin
+//= require ./summernote
+//= require ./tooltips
+//= require ./clicky
+//= require ./datatables/csp_datatables
+//= require ./daterangepicker
+//= require ./google_charts
+//= require ./x_editable
 
 function constructPlugins () {
 

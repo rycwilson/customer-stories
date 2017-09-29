@@ -10,6 +10,8 @@ class Contribution < ActiveRecord::Base
   has_one :email_contribution_request, dependent: :destroy
   belongs_to :crowdsourcing_template
 
+  accepts_nested_attributes_for(:contributor, allow_destroy: false)
+
   scope :story_all, ->(story_id) {
     joins(success: { story: {} })
     .where(stories: { id: story_id })
