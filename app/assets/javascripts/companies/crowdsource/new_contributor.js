@@ -7,6 +7,7 @@ function newContributorListeners() {
       customerId, successId, successContributorIds,
       customerSuccesses, customerSuccessesSelect2Options,
       customerContributors, customerContributorsSelect2Options,
+      contributor_attrs = ['first_name', 'last_name', 'email', 'sign_up_code', 'password'],
       noCustomerContributors = function ($contributorSelect) {
         return $contributorSelect.find('option').length === 2;
       },
@@ -133,28 +134,16 @@ function newContributorListeners() {
     .on('change', '.new-contributor.contributor', function (e) {
       if ($(this).val() === '0') {
         $('.create-contributor').removeClass('hidden');
-        $('#contribution_contributor_attributes_sign_up_code')
-          .attr('name', 'contribution[contributor_attributes][sign_up_code]');
-        $('#contribution_contributor_attributes_password')
-          .attr('name', 'contribution[contributor_attributes][password]');
-        $('#contribution_contributor_attributes_first_name')
-          .attr('name', 'contribution[contributor_attributes][first_name]');
-        $('#contribution_contributor_attributes_last_name')
-          .attr('name', 'contribution[contributor_attributes][last_name]');
-        $('#contribution_contributor_attributes_email')
-          .attr('name', 'contribution[contributor_attributes][email]');
+        contributor_attrs.forEach(function (attr) {
+          $('#contribution_contributor_attributes_' + attr)
+            .attr('name', 'contribution[contributor_attributes][' + attr + ']');
+        });
       } else {
         $('.create-contributor').addClass('hidden');
-        $('#contribution_contributor_attributes_sign_up_code')
-          .attr('name', '');
-        $('#contribution_contributor_attributes_password')
-          .attr('name', '');
-        $('#contribution_contributor_attributes_first_name')
-          .attr('name', '');
-        $('#contribution_contributor_attributes_last_name')
-          .attr('name', '');
-        $('#contribution_contributor_attributes_email')
-          .attr('name', '');
+        contributor_attrs.forEach(function (attr) {
+          $('#contribution_contributor_attributes_' + attr)
+            .attr('name', '');
+        });
       }
     })
 
