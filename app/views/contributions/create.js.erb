@@ -7,9 +7,11 @@
   // if ('<%= alert() %>') {
   //   flashDisplay('Error adding Contributor: <%= alert() %>', 'danger')
   // } else {
-  //   $('table[id*="contributors-table"]').reload(function () {
-  //     console.log('reloaded!')
-  //   })
+
+    $('table[id*="contributors-table"]').ajax.reload(function () {
+      console.log('reloaded!')
+    })
+
   // }
 
 }());
