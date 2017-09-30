@@ -53,49 +53,7 @@ class ContributionsController < ApplicationController
   end
 
   def create
-    # binding.remote_pry
-    pp contribution_params
     @contribution = Contribution.create(contribution_params)
-    pp @contribution.errors.full_messages
-
-    # contributor = params[:contribution][:existing_contributor] == 'yes' ?
-    #                 User.find_by(id: params[:contribution][:contributor_id]) :
-    #                 new_contributor(params[:contribution])
-    # if !contributor.try(:changed?) || contributor.save  # don't save if existing
-    #   contribution = Contribution.new(
-    #                     success_id: params[:contribution][:success_id],
-    #                     user_id: contributor.try(:id),
-    #                     referrer_id: params[:contribution][:referrer_id],
-    #                     role: params[:contribution][:role],
-    #                     status: 'pre_request',
-    #                     access_token: SecureRandom.hex
-    #                   )
-    #   unless contribution.save
-    #     flash.now[:alert] = contribution.errors.full_messages
-    #         .map! do |msg|
-    #           if msg == "User can't be blank"
-    #             "No Contributor selected"
-    #           elsif msg == "Success can't be blank"
-    #             "No Story Candidate selected"
-    #           elsif msg == "Role can't be blank"
-    #             "No Contributor role selected"
-    #           end
-    #         end
-    #         .join(', ')
-    #   end
-    # else
-    #   flash.now[:alert] = contributor.errors.full_messages
-    #       .map! do |msg|
-    #         if msg == "User has already been taken"
-    #           "Contributor has already been added to this Story"
-    #         elsif msg == "First name can't be blank" ||
-    #               msg == "Last name can't be blank" ||
-    #               msg == "Email can't be blank"
-    #           "Contributor contact details are missing"
-    #         end
-    #       end
-    #       .uniq.join(', ') # uniq => remove 'contact details missing' duplicates
-    # end
     respond_to() { |format| format.js }
   end
 
