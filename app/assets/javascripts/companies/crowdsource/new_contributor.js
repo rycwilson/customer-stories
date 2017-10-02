@@ -34,7 +34,7 @@ function newContributorListeners() {
                              $('button[type="submit"]').prop('disabled', true);
       },
       isCurateView = function () {
-        return ( $('#workflow-tabs li.active a').attr('href') === '#curate' );
+        return $('#workflow-tabs li.active a').attr('href') === '#curate';
       },
       preSelectCustomerAndSuccess = function () {
         var customerId = $('#curate-story-layout').data('customer-id'),
@@ -49,7 +49,7 @@ function newContributorListeners() {
 
     // pre-select fields if adding contributors from the curate view
     .on('show.bs.modal', '#new-contributor-modal', function () {
-      if (isCurateView) {
+      if ( isCurateView() ) {
         preSelectCustomerAndSuccess();
       }
     })
