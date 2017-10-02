@@ -83,11 +83,14 @@ function newContributorListeners() {
           });
         });
 
-      customerContributorsSelect2Options = customerContributors
-        .map(function (contribution) {
-          return { id: contribution.contributor.id,
-                   text: contribution.contributor.full_name };
-        });
+      customerContributorsSelect2Options = _.uniq(
+        customerContributors
+          .map(function (contribution) {
+            return { id: contribution.contributor.id,
+                     text: contribution.contributor.full_name };
+          }),
+        function (contributor, key, id) { return contributor.id; }
+      );
       customerContributorsSelect2Options
         .unshift({ id: '', text: '' }, { id: 0, text: '- New Contributor -' });
 
