@@ -52,6 +52,7 @@ function initContributorsTable (workflowStage) {
       {
         name: 'crowdsourcing_template',
         data: 'crowdsourcing_template.name',
+        defaultContent: '<span style="color: #999">Select</span>'
       },
 
       {  // <td data-search="<%= contribution.success.curator.id %>"></td>
@@ -68,12 +69,16 @@ function initContributorsTable (workflowStage) {
       },
       // <td class='contribution-status'>
       {
-        name: 'next_step',
-        data: 'status'
-        // render: function (data, type, row) {} },
-        // <td class='dropdown actions-dropdown'>
+        name: 'status',
+        data: 'display_status',
+        render: function (data, type, row) {
+                  // debugger;
+                  console.log(data)
+                  return data;
+                },
       },
       {
+        // data is status as this will determine actions available
         data: 'status',
         render: function (data, type, row, meta) {
                   return _.template(
@@ -97,8 +102,8 @@ function initContributorsTable (workflowStage) {
       },
       { width: '0%', targets: [2, 4, 5] },  // success, curator, customer
       { width: '5%', targets: 0 },
-      { width: '30%', targets: [1, 3] },
-      { width: '25%', targets: 6 },
+      { width: '33%', targets: [1, 3] },  // contributor, template
+      { width: '19%', targets: 6 },  // status
       { width: '10%', targets: 7 }
     ],
     rowGroup: {
@@ -144,7 +149,7 @@ function initContributorsTable (workflowStage) {
       $(row).children().eq(2).addClass('crowdsourcing-template');
       // $(row).children().eq(4).addClass('curator');
       // $(row).children().eq(5).addClass('customer');
-      $(row).children().eq(3).addClass('next-step');
+      $(row).children().eq(3).addClass('status');
       $(row).children().eq(4).addClass('dropdown actions-dropdown');
     },
     // buttons: [
@@ -160,6 +165,9 @@ function initContributorsTable (workflowStage) {
 
       // remove default search field.  Disabling via options also disables api, so can't do that
       // $tableWrapper.children('.row:first-child').remove();
+
+      // this is for the question mark icons that go with status= unsubscribe or opt_out
+      $('[data-toggle="tooltip"]').tooltip();
 
       if (workflowStage === 'crowdsource') {
         $tableWrapper.prepend(
@@ -193,7 +201,7 @@ function initContributorsTable (workflowStage) {
         // functions in crowdsourceListeners()
         // NOTE: skip the hidden columns
         contributorsEditor = new $.fn.dataTable.Editor({
-          ajax: '/contributions',
+          ajax: 'companies/' + app.company.id + '/contributions',
           table: '#crowdsource-contributors-table',
           idSrc: 'id',
           fields: [
@@ -201,7 +209,7 @@ function initContributorsTable (workflowStage) {
             { name: 'contributor' },
             // { name: 'success' },
             {
-              label: 'Select a crowdsourcing template',
+              label: 'Select a template',
               name: 'crowdsourcing_template.name',  // should match columns.data
               type: 'select2',
               options: app.company.crowdsourcing_templates.map(function (template) {
@@ -210,7 +218,7 @@ function initContributorsTable (workflowStage) {
             },
             // { name: 'curator' },
             // { name: 'customer' },
-            { name: 'next_step' },
+            { name: 'status' },
             { name: 'actions' }
           ]
         });

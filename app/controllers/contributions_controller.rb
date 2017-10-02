@@ -9,7 +9,7 @@ class ContributionsController < ApplicationController
   def index
     company = Company.find(params[:company_id])
     data = company.contributions.to_json({
-              only: [:id, :status], methods: [],
+              only: [:id, :status], methods: [:display_status],
               include: {
                 success: {
                   only: [:id, :name],

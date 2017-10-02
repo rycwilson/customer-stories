@@ -8,8 +8,11 @@
   //   flashDisplay('Error adding Contributor: <%= alert() %>', 'danger')
   // } else {
 
-    $('table[id*="contributors-table"]').DataTable().ajax.reload(function () {
-      console.log('reloaded!')
+    $('table[id*="contributors-table"]').DataTable()
+      .ajax.reload(function (contributions) {
+      // $(this) = [Window]
+
+
     })
 
   // }

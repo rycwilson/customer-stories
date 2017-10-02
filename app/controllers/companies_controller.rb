@@ -13,6 +13,7 @@ class CompaniesController < ApplicationController
   def show
     redirect_to('/curate') if request.path.match(/\/companies\/\d+/)
     @workflow_stage = params[:workflow_stage]
+    @crowdsource_tab = request.cookies['crowdsource-tab'] || '#successes'
     @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
     @story_views_30_day_count = PageView.joins(:visitor_session)
                                  .company_story_views_since(@company.id, 30).count

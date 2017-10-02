@@ -9,7 +9,7 @@
 
         <ul class="nav nav-layout-sidebar nav-stacked">
 
-          <li class="active">
+          <li class="<%= tab == '#successes' ? 'active' : '' %>">
             <a href="#successes" data-toggle="tab">
               <i class="fa fa-rocket"></i>
               &nbsp;&nbsp;Story Candidates
@@ -19,7 +19,7 @@
             </a>
           </li>
 
-          <li>
+          <li class="<%= tab == '#crowdsource-contributors' ? 'active' : ''%>">
             <a href="#crowdsource-contributors" data-toggle="tab">
               <i class="fa fa-users"></i>
               &nbsp;&nbsp;Success Contributors
@@ -37,12 +37,13 @@
 
         <div class="tab-content stacked-content">
 
-          <div id='successes' class="tab-pane fade in active">
-            <%= render 'companies/crowdsource/successes_table',
-                        { company: company } %>
+          <div id='successes'
+              class="tab-pane fade <%= tab == '#successes' ? 'active in' : ''%>">
+            <%= render 'companies/crowdsource/successes_table', { company: company } %>
           </div>
 
-          <div id='crowdsource-contributors' class="tab-pane fade">
+          <div id='crowdsource-contributors'
+              class="tab-pane fade <%= tab == '#crowdsource-contributors' ? 'active in' : ''%>">
             <%= render 'companies/crowdsource/contributors_table',
                     { company: company, workflow_stage: 'crowdsource' } %>
           </div>

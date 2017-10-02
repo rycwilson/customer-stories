@@ -72,23 +72,23 @@ class Contribution < ActiveRecord::Base
   def display_status
     case self.status
       when 'pre_request'
-        return "added #{self.created_at.strftime('%-m/%-d/%y')}"
+        return "awaiting request\n(added #{self.created_at.strftime('%-m/%-d/%y')})"
       when 'request'
-        return "request sent #{(self.remind_at - self.remind_1_wait.days).strftime('%-m/%-d/%y')} (email #{self.request_received_at.present? ? '' : 'not' } opened)"
+        return "request sent\n#{(self.remind_at - self.remind_1_wait.days).strftime('%-m/%-d/%y')} (email #{self.request_received_at.present? ? '' : 'not' } opened)"
       when 'remind1'
-        return "first reminder sent #{(self.remind_at - self.remind_2_wait.days).strftime('%-m/%-d/%y')} (email #{self.request_received_at.present? ? '' : 'not' } opened)"
+        return "first reminder sent\n#{(self.remind_at - self.remind_2_wait.days).strftime('%-m/%-d/%y')} (email #{self.request_received_at.present? ? '' : 'not' } opened)"
       when 'remind2'
-        return "second reminder sent #{(self.remind_at - self.remind_2_wait.days).strftime('%-m/%-d/%y')} (email #{self.request_received_at.present? ? '' : 'not' } opened)"
+        return "second reminder sent\n#{(self.remind_at - self.remind_2_wait.days).strftime('%-m/%-d/%y')} (email #{self.request_received_at.present? ? '' : 'not' } opened)"
       when 'did_not_respond'
-        return "follow up (email #{self.request_received_at.present? ? '' : 'not' } opened)"
+        return "did not respond\n(email #{self.request_received_at.present? ? '' : 'not' } opened)"
       when 'contribution'
         return 'contribution submitted'
       when 'feedback'
-        return 'review feedback'
+        return 'feedback submitted'
       when 'unsubscribe'
-        return "unsubscribed from story"
+        return "unsubscribed&nbsp;&nbsp;<i data-toggle='tooltip' data-placement='top' title='Contributor has unsubscribed from emails related to this Story Candidate / Story' style='font-size:16px;color:#666' class='fa fa-question-circle-o'></i>".html_safe
       when 'opt_out'
-        return "opted out of all emails"
+        return "opted out&nbsp;&nbsp;<i data-toggle='tooltip' data-placement='top' title='Contributor has opted out of all Customer Stories emails' style='font-size:16px;color:#666' class='fa fa-question-circle-o'></i>".html_safe
       when 're_send'
         # hack: remind_at holds the re-send date
         return "request re-sent #{self.remind_at.strftime('%-m/%-d/%y')}"
