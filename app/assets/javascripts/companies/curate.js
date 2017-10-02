@@ -109,7 +109,11 @@ function curateListeners () {
         // select2 inputs to default values...
         $('.new-story-customer').select2('val', '');  // single select
         $('.new-story-tags').val('').trigger('change');  // multiple select
-      });
+      })
+
+    // .on('click', '#curate-story-layout .layout-sidebar a', function () {
+    //   Cookies.set('curate-story-tab', $(this).attr('href'));
+    // });
 
 }
 

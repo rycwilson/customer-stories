@@ -70,12 +70,7 @@ function initContributorsTable (workflowStage) {
       // <td class='contribution-status'>
       {
         name: 'status',
-        data: 'display_status',
-        render: function (data, type, row) {
-                  // debugger;
-                  console.log(data)
-                  return data;
-                },
+        data: 'display_status'
       },
       {
         // data is status as this will determine actions available
@@ -238,17 +233,6 @@ function initContributorsTable (workflowStage) {
         }
         // since no row grouping, add .table-striped
         $(this).addClass('table-striped');
-
-        // populate the new contributor modal select box
-        // $.ajax({
-        //   url: '/companies/' + app.company.id + '/contribuions',
-        //   method: 'get',
-        //   data: {
-        //     customer_slug: $('#curate-story-layout').data('customer-slug')
-        //   },
-        //   dataType: 'json'
-
-        // })
 
       }
       // $('#' + workflowStage + ' a[href="#' + workflowStage + '-contributors"]')

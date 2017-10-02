@@ -32,9 +32,27 @@ function newContributorListeners() {
       validateForm = function () {
         return formIsValid() ? $('button[type="submit"]').prop('disabled', false) :
                              $('button[type="submit"]').prop('disabled', true);
+      },
+      isCurateView = function () {
+        return ( $('#workflow-tabs li.active a').attr('href') === '#curate' );
+      },
+      preSelectCustomerAndSuccess = function () {
+        var customerId = $('#curate-story-layout').data('customer-id'),
+            successId = $('#curate-story-layout').data('success-id');
+        $customerSelect
+          .val(customerId).trigger('change').prop('disabled', true);
+        $successSelect
+          .val(successId).trigger('change').prop('disabled', true);
       };
 
   $(document)
+
+    // pre-select fields if adding contributors from the curate view
+    .on('show.bs.modal', '#new-contributor-modal', function () {
+      if (isCurateView) {
+        preSelectCustomerAndSuccess();
+      }
+    })
 
     .on('input', '#new-contributor-modal', validateForm)
     .on('change', '#new-contributor-modal', validateForm)

@@ -9,6 +9,14 @@ namespace :temp do
   #   end
   # end
 
+  # fix any data oddities that cause errors
+  task db_fixes: :environment do
+    # this success and story had a \n character in the name/title that was hosing datatables search
+    Success.find(27).update(name:'How to Deploy a Customer Reference Application for Your Sales Team')
+    Success.find(27).story.update(title:'How to Deploy a Customer Reference Application for Your Sales Team')
+  end
+
+
   task create_crowdsourcing_templates: :environment do
     CrowdsourcingTemplate.destroy_all
     EmailTemplate.all.each do |email_template|

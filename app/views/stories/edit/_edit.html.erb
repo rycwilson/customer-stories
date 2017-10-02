@@ -1,7 +1,6 @@
 
 <div id='curate-story-layout' class="layout layout-main-right layout-stack-sm"
-    data-story-id="<%= story.try(:id) %>" data-success-name="<%= story.success.name %>"
-    data-customer-slug="<%= story.customer.slug %>">
+    data-story-id="<%= story.try(:id) %>" data-success-id="<%= story.success.id %>" data-success-name="<%= story.success.name %>" data-customer-id="<%= story.customer.id %>" data-customer-slug="<%= story.customer.slug %>">
 
   <div class="col-md-3 col-sm-4 layout-sidebar">
 
@@ -47,7 +46,7 @@
 
       </div>
 
-      <div id='success-contributors' class='tab-pane fade'>
+      <div id='curate-contributors' class='tab-pane fade'>
 
         <button type='button' style='margin:0 0 10px 0;height:32px' class='btn btn-secondary btn-sm' data-toggle='modal' data-target='#new-contributor-modal'><i class='glyphicon glyphicon-plus-sign' style='font-size:15px;top:2px'></i>&nbsp;&nbsp;&nbsp;Add New Contributor&nbsp;</button>
 
