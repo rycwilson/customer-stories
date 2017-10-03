@@ -78,7 +78,7 @@ Rails.application.routes.draw do
           member { put :tags }
         end
         resources :stories, only: [:create]
-        resources :contributions, except: [:new]
+        resources :contributions, except: [:new, :edit]
         resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
         resources :crowdsourcing_templates, except: [:index]
         member { get '/promote-settings', to: 'companies#show' }
@@ -91,18 +91,7 @@ Rails.application.routes.draw do
         member { put '/adwords', to: 'adwords#update_company' }
         member { put '/adwords/sync', to: 'adwords#sync_company', as: 'adwords_sync' }
       end
-      # resources :stories, only: [:edit, :update, :destroy] do
-      #   resources :results, only: [:create, :update, :destroy]
-      #   member { put :ctas }
-      #   member { put :tags }
-      #   member { post '/promote', to: 'stories#promote' }
-      #   member { put '/promote', to: 'stories#promote' }
-      #   member { delete '/promote', to: 'stories#promote' }
-      #   member { post '/adwords', to: 'adwords#create_story_ads' }
-      #   member { put '/adwords', to: 'adwords#update_story_ads' }
-      #   member { delete '/adwords', to: 'adwords#remove_story_ads' }
-      #   member { get '/sponsored_story_preview', to: 'adwords#preview' }
-      # end
+
 
       get '/successes', to: 'successes#index'
 
@@ -131,9 +120,9 @@ Rails.application.routes.draw do
     # no authentication required (may come from a submission)
     get   '/user-profile/linkedin-callback', to: 'profile#linkedin_callback'
 
-    # Email Templates
-    resources :email_templates, only: [:show, :update]
-    post   '/email_templates/:id/test', to: 'email_templates#test'
+    # # Email Templates
+    # resources :email_templates, only: [:show, :update]
+    # post   '/email_templates/:id/test', to: 'email_templates#test'
 
 
     # Contributions
@@ -149,8 +138,7 @@ Rails.application.routes.draw do
     get   '/contributions/:id/confirm_request', to: 'contributions#confirm_request',
                                         as: 'confirm_contribution_request'
     # type is: contribution, feedback, unsubscribe, opt_out
-    get   '/contributions/:token/:type', to: 'contributions#edit',
-                                         as: 'edit_contribution',
+    get   '/contributions/:token/:type', to: 'contributions#edit', as: 'edit_contribution',
                     constraints: { type: /(contribution|feedback|unsubscribe|opt_out)/ }
     # this route returns json data for the contribution
     # presently only need this when removing a linkedin_url from a contribution

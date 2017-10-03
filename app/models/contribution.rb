@@ -36,6 +36,12 @@ class Contribution < ActiveRecord::Base
   }
 
   before_create(:generate_access_token)
+  before_create(:copy_crowdsourcing_template, if: Proc.new do
+      self.crowdsourcing_template_id.present?
+    end)
+  before_update(:copy_crowdsourcing_template, if: Proc.new do
+      self.crowdsourcing_template_id.present? && self.crowdsourcing_template_id_changed?
+    end)
 
   # validates :user_id, presence: true
   # validates :success_id, presence: true
@@ -51,9 +57,6 @@ class Contribution < ActiveRecord::Base
   # represents number of days between reminder emails
   validates :remind_1_wait, numericality: { only_integer: true }
   validates :remind_2_wait, numericality: { only_integer: true }
-
-  # after_commit(on: [:create, :destroy]) do
-  # end
 
   after_commit(on: [:update]) do
     # if (self.previous_changes.keys &
@@ -93,7 +96,7 @@ class Contribution < ActiveRecord::Base
         return "unsubscribed&nbsp;&nbsp;<i data-toggle='tooltip' data-placement='top' title='Contributor has unsubscribed from emails related to this Story Candidate / Story' style='font-size:16px;color:#666' class='fa fa-question-circle-o'></i>".html_safe
       when 'opted_out'
         return "opted out&nbsp;&nbsp;<i data-toggle='tooltip' data-placement='top' title='Contributor has opted out of all Customer Stories emails' style='font-size:16px;color:#666' class='fa fa-question-circle-o'></i>".html_safe
-      when 're_sent'
+      when 'request_re_sent'
         # hack: remind_at holds the re-send date
         return "request re-sent #{self.remind_at.strftime('%-m/%-d/%y')}"
     end
@@ -142,38 +145,8 @@ class Contribution < ActiveRecord::Base
                 .each { |c| c.update status: 'opt_out' }
   end
 
-  # returns a hash with subject and body, all placeholders populated with data
   def generate_request_email
-    success = self.success
-    curator = success.curator
-    template = curator.company.email_templates
-                              .where(name: self.role.capitalize).take
-    subject = template.subject
-                      .sub("[customer_name]", success.customer.name)
-                      .sub("[company_name]", curator.company.name)
-                      .sub("[product_name]", success.products.take.try(:name) || "")
-    host = "http://#{curator.company.subdomain}.#{ENV['HOST_NAME']}"
-    referral_intro = self.referrer_id.present? ?
-                     self.referrer.full_name + " referred me to you." : ""
-    body = template.body
-                    .gsub("[customer_name]", success.customer.name)
-                    .gsub("[company_name]", curator.company.name)
-                    .gsub("[product_name]", success.products.take.try(:name) || "")
-                    .gsub("[contributor_first_name]", self.contributor.first_name)
-                    .gsub("[contributor_last_name]", self.contributor.last_name)
-                    .gsub("[curator_first_name]", curator.first_name)
-                    .gsub("[referral_intro]", referral_intro)
-                    .gsub("[curator_full_name]", curator.full_name)
-                    .gsub("[curator_email]", curator.email)
-                    .gsub("[curator_phone]", curator.phone || "")
-                    .gsub("[curator_title]", curator.title || "")
-                    .gsub("[curator_img_url]", curator.photo_url || "")
-                    .gsub("[contribution_url]", "#{host}/contributions/#{self.access_token}/contribution")
-                    .gsub("[feedback_url]", "#{host}/contributions/#{self.access_token}/feedback")
-                    .gsub("[unsubscribe_url]", "#{host}/contributions/#{self.access_token}/unsubscribe")
-                    .gsub("[opt_out_url]", "#{host}/contributions/#{self.access_token}/opt_out")
-                    .html_safe
-    { subject: subject, body: body }
+    # replaced by copy_crowdsourcing_template
   end
 
   def expire_published_contributor_cache
@@ -186,6 +159,43 @@ class Contribution < ActiveRecord::Base
   def generate_access_token
     self.access_token = SecureRandom.urlsafe_base64
     # recursive call to ensure uniqueness
-    generate_token if Contribution.exists?(access_token: self.access_token)
+    generate_access_token if Contribution.exists?(access_token: self.access_token)
   end
+
+  def copy_crowdsourcing_template
+    referral_intro = self.referrer_id.present? ?
+                     self.referrer.full_name + " referred me to you." : ""
+    self.request_subject = self.crowdsourcing_template.request_subject
+      .sub('[customer_name]', self.customer.name)
+      .sub('[company_name]', self.company.name)
+      .sub('[contributor_first_name', self.contributor.first_name)
+      .sub('[contributor_full_name', self.contributor.full_name)
+    self.request_body = self.crowdsourcing_template.request_body
+      .gsub("[customer_name]", self.customer.name)
+      .gsub("[company_name]", curator.company.name)
+      .gsub("[product_name]", success.products.take.try(:name) || "")
+      .gsub("[contributor_first_name]", self.contributor.first_name)
+      .gsub("[contributor_last_name]", self.contributor.last_name)
+      .gsub("[curator_first_name]", curator.first_name)
+      .gsub("[referral_intro]", referral_intro)
+      .gsub("[curator_full_name]", curator.full_name)
+      .gsub("[curator_email]", curator.email)
+      .gsub("[curator_phone]", curator.phone || "")
+      .gsub("[curator_title]", curator.title || "")
+      .gsub("[curator_img_url]", curator.photo_url || "")
+      .gsub("[contribution_url]", contribution_submission_url('contribution'))
+      .gsub("[feedback_url]", contribution_submission_url('feedback'))
+      .gsub("[unsubscribe_url]", contribution_submission_url('unsubscribe'))
+      .gsub("[opt_out_url]", contribution_submission_url('opt_out'))
+      .html_safe
+  end
+
+  def contribution_submission_url (type)
+    return Rails.application.routes.url_helpers.url_for(
+      subdomain: self.company.subdomain,
+      controller: 'contributions', action: 'edit',
+      token: self.access_token, type: type
+    )
+  end
+
 end

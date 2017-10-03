@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171003205654) do
+ActiveRecord::Schema.define(version: 20171003222649) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -158,6 +158,8 @@ ActiveRecord::Schema.define(version: 20171003205654) do
     t.boolean  "preview_contributor",       default: false
     t.boolean  "complete",                  default: false
     t.integer  "crowdsourcing_template_id"
+    t.string   "request_subject"
+    t.text     "request_body"
   end
 
   add_index "contributions", ["crowdsourcing_template_id"], name: "index_contributions_on_crowdsourcing_template_id", using: :btree
