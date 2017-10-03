@@ -1,6 +1,18 @@
 (function () {
 
-  var contribution = <%= raw @contribution.to_json %>;
+  // this mirrors company.contributions.pending
+  var contribution = <%= raw @contribution.to_json({
+    only: [:id, :contribution, :feedback, :linkedin, :notes, :publish_contributor, :contributor_unpublished, :success_id],
+    methods: [],
+    include: {
+      contributor: {
+        only: [:id, :first_name, :last_name, :title, :email, :phone,
+               :linkedin_url, :linkedin_company, :linkedin_title,
+               :linkedin_location, :linkedin_photo_url],
+        methods: [:full_name, :linkedin_data?]
+      }
+    }
+  }) %>;
 
   $('#new-contributor-modal').modal('hide');
 
@@ -8,12 +20,20 @@
   //   flashDisplay('Error adding Contributor: <%= alert() %>', 'danger')
   // } else {
 
+    // update app.contributions
+    app.contributions.push(contribution)
+
     $('table[id*="contributors-table"]').DataTable()
       .ajax.reload(function (contributions) {
-      // $(this) = [Window]
-
-
-    })
+        var $trContribution = $('tr[data-contribution-id="' + contribution.id + '"]'),
+            $trGroup = $trContribution.prev(),
+            openContributorDetails = function () {
+              $trContribution.find('.contributor-details').trigger('click');
+            }
+        $('html').animate({
+          scrollTop: $trGroup.offset().top
+        }, 400, 'swing', openContributorDetails);
+      })
 
   // }
 

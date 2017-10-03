@@ -12,6 +12,8 @@ class Contribution < ActiveRecord::Base
 
   accepts_nested_attributes_for(:contributor, allow_destroy: false)
 
+  default_scope { order(created_at: :desc) }
+
   scope :story_all, ->(story_id) {
     joins(success: { story: {} })
     .where(stories: { id: story_id })

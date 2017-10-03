@@ -3,6 +3,7 @@
 
   {{ var AUTH_TOKEN = $('meta[name=csrf-token]').attr('content'); }}
 
+{{ console.log(contribution) }}
   <div class="container contributor-details" style='width:100%'>
 
     <form id='contributor-form' class='form-horizontal' method='post'

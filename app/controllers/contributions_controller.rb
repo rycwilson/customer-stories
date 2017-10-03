@@ -8,7 +8,7 @@ class ContributionsController < ApplicationController
 
   def index
     company = Company.find(params[:company_id])
-    data = company.contributions.sort_by() { |c| c.created_at }.to_json({
+    data = company.contributions.to_json({
               only: [:id, :status], methods: [:display_status],
               include: {
                 success: {
