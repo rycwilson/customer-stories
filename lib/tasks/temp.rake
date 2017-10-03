@@ -16,7 +16,8 @@ namespace :temp do
         when 'unsubscribe'
           new_status = 'unsubscribed'
       end
-      contribution.update(status: new_status, access_token: SecureRandom.urlsafe_base64)
+    end
+    contribution.update(status: new_status, access_token: SecureRandom.urlsafe_base64)
   end
 
   # fix any data oddities that cause errors
