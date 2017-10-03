@@ -2,10 +2,21 @@ namespace :temp do
 
   desc "temp stuff"
 
-  task change_access_tokens: :environment do
-    Contribution.all.each() do |c|
-      c.update(status: 'pre_request') if c.status == nil
-      c.update(access_token: SecureRandom.urlsafe_base64)
+  task update_contributions: :environment do
+    Contribution.all.each() do |contribution|
+      case contribution.status
+        when 'contribution'
+          new_status = 'contribution_submitted'
+        when 'feedback'
+          new_status = 'feedback_submitted'
+        when 'unsubscribe'
+          new_status = 'unsubscribed'
+        when 'opt_out'
+          new_status = 'opted_out'
+        when 'unsubscribe'
+          new_status = 'unsubscribed'
+      end
+      contribution.update(status: new_status, access_token: SecureRandom.urlsafe_base64)
   end
 
   # fix any data oddities that cause errors
