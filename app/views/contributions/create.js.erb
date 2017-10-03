@@ -2,7 +2,7 @@
 
   // this mirrors company.contributions.pending
   var contribution = <%= raw @contribution.to_json({
-    only: [:id, :contribution, :feedback, :linkedin, :notes, :publish_contributor, :contributor_unpublished, :success_id],
+    only: [:id, :status, :contribution, :feedback, :linkedin, :notes, :publish_contributor, :contributor_unpublished, :success_id],
     methods: [],
     include: {
       contributor: {
@@ -30,7 +30,8 @@
             openContributorDetails = function () {
               $trContribution.find('.contributor-details').trigger('click');
             }
-        $('html').animate({
+        // ref: https://stackoverflow.com/questions/6677035
+        $('html body').animate({
           scrollTop: $trGroup.offset().top
         }, 400, 'swing', openContributorDetails);
       })

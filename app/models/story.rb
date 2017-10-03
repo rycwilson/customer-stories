@@ -287,62 +287,6 @@ class Story < ActiveRecord::Base
     end
   end
 
-  def contributions_pre_request
-    Contribution
-      .story_all(self.id)
-      .includes(:contributor, :referrer)
-      .where(status: 'pre_request')
-      .order(created_at: :desc)  # most recent first
-  end
-
-  # sort oldest to newest (according to status)
-  def contributions_in_progress
-    status_options = ['opt_out', 'unsubscribe', 'remind2', 'remind1', 'request', 're_send']
-    Contribution
-      .story_all(self.id)
-      .includes(:contributor, :referrer)
-      .where('status IN (?)', status_options)
-      .sort do |a,b|  # sorts as per order of status_options
-        if status_options.index(a.status) < status_options.index(b.status)
-          -1
-        elsif status_options.index(a.status) > status_options.index(b.status)
-          1
-        else 0
-        end
-      end
-  end
-
-  def contributions_next_steps
-    Contribution
-      .story_all(self.id)
-      .includes(:contributor, :referrer)
-      .where('status IN (?)', ['feedback', 'did_not_respond'])
-      .order("CASE status
-                WHEN 'feedback' THEN '1'
-                WHEN 'did_not_respond' THEN '2'
-              END")
-  end
-
-  def contributions_submitted
-    Contribution
-      .story_all(self.id)
-      .includes(:contributor, :referrer)
-      .where(status: 'contribution')
-      .order(submitted_at: :desc)
-  end
-
-  def contributions_as_connections
-    Contribution
-      .story_all_except_curator(self.id, self.success.curator.id)
-      .includes(:contributor, :referrer)
-      .where.not("status IN ('unsubscribe', 'opt_out')")
-      .order("CASE role
-                WHEN 'customer' THEN '1'
-                WHEN 'customer success' THEN '2'
-                WHEN 'sales' THEN '3'
-              END")
-  end
-
   # this method closely resembles the 'set_contributors' method in stories controller;
   # adds contributor linkedin data, which is necessary client-side for widgets
   # that fail to load

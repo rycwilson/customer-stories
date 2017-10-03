@@ -1,0 +1,44 @@
+
+<div id='contribution-content-modal' class="modal fade" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Contribution</h4>
+      </div>
+
+      <div class="modal-body" style='min-height: 200px'>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<%= content_for(:underscore_templates) do %>
+
+  <script id='contribution-content-template' type='text/template'>
+
+    {{ if (['contribution_submitted', 'feedback_submitted'].includes(contribution.status)) { }}
+
+      <p>{{= contribution.contribution || contribution.feedback }}</p>
+
+      <p style='text-align: right'>
+        {{= contribution.contributor.full_name }}
+      </p>
+      <p style='text-align: right'>
+        {{= contribution.contributor.title || "No position specified" }}
+      </p>
+
+    {{ } else { }}
+
+    {{ } }}
+
+  </script>
+
+<% end %>

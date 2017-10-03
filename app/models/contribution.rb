@@ -75,73 +75,47 @@ class Contribution < ActiveRecord::Base
     case self.status
       when 'pre_request'
         return "awaiting request\n(added #{self.created_at.strftime('%-m/%-d/%y')})"
-      when 'request'
+      when 'request_sent'
         return "request sent\n#{(self.remind_at - self.remind_1_wait.days).strftime('%-m/%-d/%y')} (email #{self.request_received_at.present? ? '' : 'not' } opened)"
-      when 'remind1'
+      when 'first_reminder_sent'
         return "first reminder sent\n#{(self.remind_at - self.remind_2_wait.days).strftime('%-m/%-d/%y')} (email #{self.request_received_at.present? ? '' : 'not' } opened)"
-      when 'remind2'
+      when 'second_reminder_sent'
         return "second reminder sent\n#{(self.remind_at - self.remind_2_wait.days).strftime('%-m/%-d/%y')} (email #{self.request_received_at.present? ? '' : 'not' } opened)"
       when 'did_not_respond'
         return "did not respond\n(email #{self.request_received_at.present? ? '' : 'not' } opened)"
-      when 'contribution'
+      when 'contribution_submitted'
         return 'contribution submitted'
-      when 'feedback'
+      when 'feedback_submitted'
         return 'feedback submitted'
-      when 'unsubscribe'
+      when 'unsubscribed'
         return "unsubscribed&nbsp;&nbsp;<i data-toggle='tooltip' data-placement='top' title='Contributor has unsubscribed from emails related to this Story Candidate / Story' style='font-size:16px;color:#666' class='fa fa-question-circle-o'></i>".html_safe
-      when 'opt_out'
+      when 'opted_out'
         return "opted out&nbsp;&nbsp;<i data-toggle='tooltip' data-placement='top' title='Contributor has opted out of all Customer Stories emails' style='font-size:16px;color:#666' class='fa fa-question-circle-o'></i>".html_safe
-      when 're_send'
+      when 're_sent'
         # hack: remind_at holds the re-send date
         return "request re-sent #{self.remind_at.strftime('%-m/%-d/%y')}"
     end
   end
 
-  def table_status
-    case self.status
-      when 'pre_request'
-        return "Ready for request"
-      when 'request'
-        return "Request Sent"
-      when 'remind1'
-        return "Second request sent"
-      when 'remind2'
-        return "Third request sent"
-      when 'did_not_respond'
-        return "No response"
-      when 'contribution'
-        return 'Contribution submitted'
-      when 'feedback'
-        return 'Feedback submitted'
-      when 'unsubscribe'
-        return "Contribution submitted"
-      when 'opt_out'
-        return "Opted out"
-      when 're_send'
-        return "Final request sent"
-    end
-  end
-
-
   def self.send_reminders
     # logs to log/cron.log in development environment (output set in schedule.rb)
     # TODO: log in production environment
     # logger.info "sending reminders - #{Time.now.strftime('%-m/%-d/%y at %I:%M %P')}"
-    Contribution.where("status IN ('request', 'remind1', 'remind2', 're_send')")
+    Contribution.where("status IN ('request', 'first_reminder_sent', 'second_reminder_sent', 're_sent')")
                 .each do |contribution|
       # puts "processing contribution #{contribution.id} with status #{contribution.status}"
       if contribution.remind_at.past?
-        unless ['remind2', 're_send'].include? contribution.status
+        unless ['second_reminder_sent', 're_sent'].include? contribution.status
           UserMailer.send_contribution_reminder(contribution).deliver_now
         end
-        if contribution.status == 'request'
-          new_status = 'remind1'
+        if contribution.status == 'request_sent'
+          new_status = 'first_reminder_sent'
           new_remind_at = Time.now + contribution.remind_2_wait.days
-        elsif contribution.status == 'remind1'
-          new_status = 'remind2'
+        elsif contribution.status == 'first_reminder_sent'
+          new_status = 'second_reminder_sent'
           # no more reminders, but need to trigger when to change status to 'did_not_respond'
           new_remind_at = Time.now + contribution.remind_2_wait.days
-        elsif contribution.status == 're_send'
+        elsif contribution.status == 're_sent'
           # for re_send, remind_at captures when it was re-sent
           if contribution.remind_at < contribution.remind_2_wait.days.ago
             new_status = 'did_not_respond'

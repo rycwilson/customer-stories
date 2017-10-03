@@ -1,7 +1,7 @@
 
-//= require ./successes
-//= require ./contributors
-//= require ./promoted_stories
+//= require ./dt_successes
+//= require ./dt_contributors
+//= require ./dt_promoted_stories
 
 function initDataTables () {
 

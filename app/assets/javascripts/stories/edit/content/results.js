@@ -11,7 +11,7 @@ function storiesEditResultsListeners () {
         // scroll down if the new result falls below window...
         var bottomOffset = $result.offset().top + $result.height();
         if (bottomOffset > $(window).height()) {
-          $('html, body').animate({
+          $('html body').animate({
             scrollTop: (bottomOffset - $(window).height()) + ($(window).height() / 2)
           }, 400);
         }

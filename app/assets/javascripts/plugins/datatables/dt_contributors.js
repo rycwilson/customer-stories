@@ -76,14 +76,17 @@ function initContributorsTable (workflowStage) {
         // data is status as this will determine actions available
         data: 'status',
         render: function (data, type, row, meta) {
-                  return _.template(
-                            $('#contributors-dropdown-template').html()
-                          )({
-                              status: data,
-                              workflowStage: workflowStage,
-                              story: row.success.story  // might be nil
-                            });
-                }
+          return _.template(
+                    $('#contributors-dropdown-template').html()
+                  )({
+                      status: data,
+                      workflowStage: workflowStage,
+                      story: row.success.story, // might be nil
+                      curateStoryPath: row.success.story &&
+                        '/curate/' + row.success.customer.slug + '/' +
+                        row.success.story.slug
+                    });
+        }
       },
     ],
     columnDefs: [

@@ -45,7 +45,7 @@ class ContributionsController < ApplicationController
         Contribution.update_opt_out_status contributor_email
       end
     elsif @response_type == 'unsubscribe'
-      @contribution.update status: 'unsubscribe'
+      @contribution.update status: 'unsubscribed'
     end
   end
 
