@@ -2,12 +2,11 @@ namespace :temp do
 
   desc "temp stuff"
 
-  # task update_crowdsourcing_templates: :environment do
-  #   CrowdsourcingTemplate.all.each() do |template|
-  #     template.update(
-  #       request_body:
-  #   end
-  # end
+  task change_access_tokens: :environment do
+    Contribution.all.each() do |c|
+      c.update(status: 'pre_request') if c.status == nil
+      c.update(access_token: SecureRandom.urlsafe_base64)
+  end
 
   # fix any data oddities that cause errors
   task db_fixes: :environment do
