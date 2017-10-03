@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170926221301) do
+ActiveRecord::Schema.define(version: 20171003205654) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -141,10 +141,10 @@ ActiveRecord::Schema.define(version: 20170926221301) do
     t.string   "role"
     t.text     "contribution"
     t.text     "feedback"
-    t.string   "status"
+    t.string   "status",                    default: "pre_request"
     t.boolean  "linkedin",                  default: false
-    t.datetime "created_at",                                null: false
-    t.datetime "updated_at",                                null: false
+    t.datetime "created_at",                                        null: false
+    t.datetime "updated_at",                                        null: false
     t.datetime "remind_at"
     t.integer  "remind_1_wait",             default: 1
     t.integer  "remind_2_wait",             default: 2

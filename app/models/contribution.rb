@@ -35,6 +35,8 @@ class Contribution < ActiveRecord::Base
     company(company_id).where('request_received_at >= ?', days_ago.days.ago)
   }
 
+  before_create(:generate_access_token)
+
   # validates :user_id, presence: true
   # validates :success_id, presence: true
   # validates :role, presence: true
@@ -179,4 +181,11 @@ class Contribution < ActiveRecord::Base
     story.expire_published_contributor_cache(self.contributor.id)
   end
 
+  protected
+
+  def generate_access_token
+    self.access_token = SecureRandom.urlsafe_base64
+    # recursive call to ensure uniqueness
+    generate_token if Contribution.exists?(access_token: self.access_token)
+  end
 end
