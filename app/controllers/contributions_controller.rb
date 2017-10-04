@@ -101,18 +101,6 @@ class ContributionsController < ApplicationController
     end
   end
 
-  # responds with confirm_request.js
-  def confirm_request
-    curator_missing_info = @contribution.success.curator.missing_info
-    if curator_missing_info.empty?
-      @request_email = @contribution.generate_request_email
-    else
-      @flash_status = "danger"
-      @flash_mesg =
-        "Can't send email because the following Curator fields are missing: #{curator_missing_info.join(', ')}"
-    end
-  end
-
   def confirm
     @curator = @contribution.success.curator
   end

@@ -58,16 +58,6 @@ class User < ActiveRecord::Base
     self.first_name + " " + self.last_name
   end
 
-  def missing_info
-    missing = []
-    missing << "first name" unless self.first_name.present?
-    missing << "last name" unless self.last_name.present?
-    missing << "photo" unless self.photo_url.present?
-    missing << "phone" unless self.phone.present?
-    missing << "title" unless self.title.present?
-    missing
-  end
-
   def linkedin_data?
     self.linkedin_title.present? &&
     self.linkedin_company.present? &&

@@ -8,13 +8,13 @@
 
 <!-- include templates for both companies#show and stories#edit -->
 <% content_for :underscore_templates do %>
-  <%= render 'companies/crowdsource/success_details_template' %>
-  <%= render 'companies/crowdsource/contributor_template' %>
-  <%= render 'companies/crowdsource/csp_linkedin_widget_template' %>
-  <%= render 'companies/crowdsource/successes_table_header_template' %>
-  <%= render 'companies/crowdsource/successes_dropdown_template' %>
-  <%= render 'companies/crowdsource/contributors_table_header_template' %>
-  <%= render 'companies/crowdsource/contributors_dropdown_template' %>
+  <%= render 'companies/crowdsource//successes/successes_table_header_template' %>
+  <%= render 'companies/crowdsource/successes/success_details_template' %>
+  <%= render 'companies/crowdsource/successes/successes_dropdown_template' %>
+  <%= render 'companies/crowdsource/contributors/contributors_table_header_template' %>
+  <%= render 'companies/crowdsource/contributors/contributor_template' %>
+  <%= render 'companies/crowdsource/contributors/contributors_dropdown_template' %>
+  <%= render 'companies/crowdsource/contributors/csp_linkedin_widget_template' %>
   <%= render 'companies/promote/adwords_status_dropdown_template' %>
   <%= render 'stories/shared/stories_index_template', { company: @company } %>
   <%= render 'stories/edit/content/results_templates' %>
@@ -22,9 +22,9 @@
 <% end %>
 
 <!-- include modals for both companies#show and stories#edit -->
-<%= render 'companies/crowdsource/new_success_modal', { company: @company } %>
-<%= render 'companies/crowdsource/new_contributor_modal', { company: @company } %>
-<%= render 'companies/crowdsource/contribution_content_modal' %>
+<%= render 'companies/crowdsource/successes/new_success_modal', { company: @company } %>
+<%= render 'companies/crowdsource/contributors/new_contributor_modal', { company: @company } %>
+<%= render 'companies/crowdsource/contributors/contribution_content_modal' %>
 <%= render 'companies/shared/new_story_modal', { company: @company } %>
 <%= render 'stories/shared/video_modal' %>
 

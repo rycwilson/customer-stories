@@ -11,7 +11,7 @@
 
       {{ if (status === 'pre_request') { }}
 
-        <li>
+        <li class='send-request'>
           <a href="javascript:;">
             <i class='fa fa-envelope-o action'></i>&nbsp;
             <span>Send Contribution Request</span>
@@ -20,7 +20,7 @@
 
       {{ } else { }}
 
-        <li>
+        <li class='view-request'>
           <a href="javascript:;">
             <i class='fa fa-search action'></i>&nbsp;
             <span>View Sent Request</span>
@@ -31,7 +31,7 @@
 
       {{ if (workflowStage === 'crowdsource') { }}
 
-        <li>
+        <li class='view-story'>
           <a href="{{= curateStoryPath }}"}>
             <i class='fa fa-search action'></i>&nbsp;
             <span>View Story{{= story? '' : ' Candidate' }}</span>
@@ -42,7 +42,7 @@
 
       {{ if (['contribution_submitted', 'feedback_submitted'].includes(status)) { }}
 
-        <li>
+        <li class='view-submission'>
           <a href="#contribution-content-modal" data-toggle='modal'>
             <i class='fa fa-search action'></i>&nbsp;
             <span>View {{= status === 'contribution_submitted' ? 'contribution' : 'feedback' }}</span>

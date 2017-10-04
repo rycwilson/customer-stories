@@ -3,6 +3,10 @@ function contributorActionsListeners () {
 
   $(document)
 
+    .on('click', '.send-request', function () {
+
+    })
+
     .on('click', 'a[href="#contribution-content-modal"]', function () {
 
       var contributionId = $(this).closest('tr').data('contribution-id'),

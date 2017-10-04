@@ -135,8 +135,7 @@ Rails.application.routes.draw do
 
     get   '/contributions/:id/confirm', to: 'contributions#confirm',
                                         as: 'confirm_contribution'
-    get   '/contributions/:id/confirm_request', to: 'contributions#confirm_request',
-                                        as: 'confirm_contribution_request'
+
     # type is: contribution, feedback, unsubscribe, opt_out
     get   '/contributions/:token/:type', to: 'contributions#edit', as: 'edit_contribution',
                     constraints: { type: /(contribution|feedback|unsubscribe|opt_out)/ }
