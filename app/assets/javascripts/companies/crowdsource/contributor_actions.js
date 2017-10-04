@@ -5,6 +5,20 @@ function contributorActionsListeners () {
 
     .on('click', '.send-request', function () {
 
+      var missingCuratorInfo = function () {
+              return ['first_name', 'last_name', 'photo', 'phone', 'position']
+                .filter(function (item) { return app.current_user[item] === '' ; });
+            };
+
+      if (missingCuratorInfo().length > 0) {
+        flashDisplay("Can't send email because the following Curator fields are missing: "  +
+          missingCuratorInfo().join(', '), 'danger');
+        return false;
+
+      } else {
+
+      }
+
     })
 
     .on('click', 'a[href="#contribution-content-modal"]', function () {
