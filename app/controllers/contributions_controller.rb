@@ -1,7 +1,7 @@
 class ContributionsController < ApplicationController
 
   before_action :set_contribution_if_valid_token?, only: [:edit, :update]
-  before_action :set_contribution, only: [:show, :confirm, :confirm_request, :send_request]
+  before_action :set_contribution, only: [:show, :request, :confirm]
   before_action :check_opt_out_list, only: [:confirm_request]
 
   respond_to(:html, :json, :js)
@@ -50,8 +50,15 @@ class ContributionsController < ApplicationController
   end
 
   def show
-    respond_with @contribution, include: {
-          contributor: {}, referrer: {}, success: { include: :customer } }
+    if params[:get_contribution_request]
+      respond_with(
+        @contribution, only: [:request_subject, :request_body],
+        include: { contributor: { only: [:email], methods: [:full_name] } }
+      )
+    else
+      respond_with @contribution, include: {
+            contributor: {}, referrer: {}, success: { include: :customer } }
+    end
   end
 
 
@@ -101,6 +108,10 @@ class ContributionsController < ApplicationController
     end
   end
 
+  def send_request
+
+  end
+
   def confirm
     @curator = @contribution.success.curator
   end
@@ -117,7 +128,7 @@ class ContributionsController < ApplicationController
   end
 
   def set_contribution
-    @contribution = Contribution.find params[:id]
+    @contribution = Contribution.find(params[:id])
   end
 
   def check_opt_out_list

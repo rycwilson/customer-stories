@@ -6,6 +6,7 @@ class Contribution < ActiveRecord::Base
   belongs_to :email_template
   has_one :customer, through: :success
   has_one :company, through: :success
+  has_one :curator, through: :success
   has_one :story, through: :success
   has_one :email_contribution_request, dependent: :destroy
   belongs_to :crowdsourcing_template
@@ -154,14 +155,6 @@ class Contribution < ActiveRecord::Base
     story.expire_published_contributor_cache(self.contributor.id)
   end
 
-  protected
-
-  def generate_access_token
-    self.access_token = SecureRandom.urlsafe_base64
-    # recursive call to ensure uniqueness
-    generate_access_token if Contribution.exists?(access_token: self.access_token)
-  end
-
   def copy_crowdsourcing_template
     referral_intro = self.referrer_id.present? ?
                      self.referrer.full_name + " referred me to you." : ""
@@ -171,24 +164,31 @@ class Contribution < ActiveRecord::Base
       .sub('[contributor_first_name', self.contributor.first_name)
       .sub('[contributor_full_name', self.contributor.full_name)
     self.request_body = self.crowdsourcing_template.request_body
-      .gsub("[customer_name]", self.customer.name)
-      .gsub("[company_name]", curator.company.name)
-      .gsub("[product_name]", success.products.take.try(:name) || "")
-      .gsub("[contributor_first_name]", self.contributor.first_name)
-      .gsub("[contributor_last_name]", self.contributor.last_name)
-      .gsub("[curator_first_name]", curator.first_name)
-      .gsub("[referral_intro]", referral_intro)
-      .gsub("[curator_full_name]", curator.full_name)
-      .gsub("[curator_email]", curator.email)
-      .gsub("[curator_phone]", curator.phone || "")
-      .gsub("[curator_title]", curator.title || "")
-      .gsub("[curator_img_url]", curator.photo_url || "")
-      .gsub("[contribution_url]", contribution_submission_url('contribution'))
-      .gsub("[feedback_url]", contribution_submission_url('feedback'))
-      .gsub("[unsubscribe_url]", contribution_submission_url('unsubscribe'))
-      .gsub("[opt_out_url]", contribution_submission_url('opt_out'))
+      .gsub('[customer_name]', self.customer.name)
+      .gsub('[company_name]', self.company.name)
+      .gsub('[contributor_first_name]', self.contributor.first_name)
+      .gsub('[contributor_last_name]', self.contributor.last_name)
+      .gsub('[referral_intro]', referral_intro)
+      .gsub('[curator_full_name]', self.curator.full_name)
+      .gsub('[curator_email]', self.curator.email)
+      .gsub('[curator_phone]', self.curator.phone || '')
+      .gsub('[curator_position]', self.curator.title || '')
+      .gsub('[curator_img_url]', self.curator.photo_url || '')
+      .gsub('[contribution_url]', contribution_submission_url('contribution'))
+      .gsub('[feedback_url]', contribution_submission_url('feedback'))
+      .gsub('[unsubscribe_url]', contribution_submission_url('unsubscribe'))
+      .gsub('[opt_out_url]', contribution_submission_url('opt_out'))
       .html_safe
   end
+
+  protected
+
+  def generate_access_token
+    self.access_token = SecureRandom.urlsafe_base64
+    # recursive call to ensure uniqueness
+    generate_access_token if Contribution.exists?(access_token: self.access_token)
+  end
+
 
   def contribution_submission_url (type)
     return Rails.application.routes.url_helpers.url_for(

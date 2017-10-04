@@ -78,7 +78,9 @@ Rails.application.routes.draw do
           member { put :tags }
         end
         resources :stories, only: [:create]
-        resources :contributions, except: [:new, :edit]
+        resources :contributions, except: [:new, :edit] do
+          member { put '/send_request', to: 'contributions#send_request' }
+        end
         resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
         resources :crowdsourcing_templates, except: [:index]
         member { get '/promote-settings', to: 'companies#show' }
@@ -92,21 +94,12 @@ Rails.application.routes.draw do
         member { put '/adwords/sync', to: 'adwords#sync_company', as: 'adwords_sync' }
       end
 
-
       get '/successes', to: 'successes#index'
-
-      # moving these under company resources
-      # post '/contributions', to: 'contributions#create'
-      # get '/contributions', to: 'contributions#index'
-      # put '/contributions/:id', to: 'contributions#update'
 
       # analytics
       get '/analytics/charts', to: 'analytics#charts', as: 'charts'
       get '/analytics/visitors', to: 'analytics#visitors', as: 'measure_visitors'
       get '/analytics/stories', to: 'analytics#stories', as: 'measure_stories'
-
-      # delete a Prompt
-      delete '/prompts/:id', to: 'prompts#destroy'
 
       # user profile
       get   '/user-profile', to: 'profile#edit', as: 'edit_profile'
@@ -125,20 +118,11 @@ Rails.application.routes.draw do
     # post   '/email_templates/:id/test', to: 'email_templates#test'
 
 
-    # Contributions
-    post  '/contribution_requests', to: 'contribution_requests#create'
-    # post  '/stories/:id/contributions', to: 'contributions#create',
-    #                                     as: 'story_contributions'
-    put   '/contributions/:id/request_contribution',
-                    to: 'contributions#request_contribution',
-                    as: 'request_contribution'
-
-    get   '/contributions/:id/confirm', to: 'contributions#confirm',
-                                        as: 'confirm_contribution'
-
     # type is: contribution, feedback, unsubscribe, opt_out
     get   '/contributions/:token/:type', to: 'contributions#edit', as: 'edit_contribution',
                     constraints: { type: /(contribution|feedback|unsubscribe|opt_out)/ }
+    get   '/contributions/:id/confirm', to: 'contributions#confirm',
+                                        as: 'confirm_contribution'
     # this route returns json data for the contribution
     # presently only need this when removing a linkedin_url from a contribution
     get   '/contributions/:id', to: 'contributions#show'

@@ -1,14 +1,19 @@
 
 function contributorActionsListeners () {
 
+  var contributionPath = function (id) {
+        return '/companies/' + app.company.id + '/contributions/' + id;
+      },
+      missingCuratorInfo = function () {
+        return ['first_name', 'last_name', 'photo', 'phone', 'position']
+          .filter(function (item) { return app.current_user[item] === '' ; });
+      };
+
   $(document)
 
     .on('click', '.send-request', function () {
 
-      var missingCuratorInfo = function () {
-              return ['first_name', 'last_name', 'photo', 'phone', 'position']
-                .filter(function (item) { return app.current_user[item] === '' ; });
-            };
+      var contributionId = $(this).closest('tr').data('contribution-id');
 
       if (missingCuratorInfo().length > 0) {
         flashDisplay("Can't send email because the following Curator fields are missing: "  +
@@ -17,6 +22,15 @@ function contributorActionsListeners () {
 
       } else {
 
+        $.ajax({
+          url: contributionPath(contributionId),
+          method: 'get',
+          data: { get_contribution_request: true },
+          dataType: 'json',
+        })
+        .done(function (data, status, xhr) {
+          console.log(data, status, xhr);
+        });
       }
 
     })

@@ -24,6 +24,7 @@
 <!-- include modals for both companies#show and stories#edit -->
 <%= render 'companies/crowdsource/successes/new_success_modal', { company: @company } %>
 <%= render 'companies/crowdsource/contributors/new_contributor_modal', { company: @company } %>
+<%= render 'companies/crowdsource/contributors/contribution_request_modal', { company: @company} %>
 <%= render 'companies/crowdsource/contributors/contribution_content_modal' %>
 <%= render 'companies/shared/new_story_modal', { company: @company } %>
 <%= render 'stories/shared/video_modal' %>

@@ -15,15 +15,16 @@
       </div>
       <div class="modal-body">
 
-        <%= form_tag '/contribution_requests', remote: true,
-              id: 'confirm-email-form' do  %>
+        <%= form_tag('/companies/' + company.id.to_s + '/contributions/:id/request' ,
+              id: 'contribution-request-form', remote: true) do  %>
 
-          <%= hidden_field_tag 'contribution_id', nil %>
+          <%#= hidden_field_tag 'contribution_id', nil %>
 
-          <%= text_field_tag 'contribution_request[subject]', nil,
+          <%= text_field_tag 'contribution[request_subject]', nil,
                 class: 'form-control' %> <br>
 
-          <%= text_area_tag 'contribution_request[body]', nil, id: 'email-confirmation-editor',
+          <%= text_area_tag 'contribution[request_body]', nil,
+              id: 'request-contribution-editor',
               data: { provider: 'summernote' }, class: 'form-control' %>
 
         <% end %>

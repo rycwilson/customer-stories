@@ -15,7 +15,7 @@
 
 <% content_for(:underscore_templates) do %>
   <%= render 'stories/shared/stories_index_template', { company: @company } %>
-  <%= render 'companies/crowdsource/csp_linkedin_widget_template' %>
+  <%= render 'companies/crowdsource/contributors/csp_linkedin_widget_template' %>
 <% end %>
 
 <% if curator?(@company.id) %>
