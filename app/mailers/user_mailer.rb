@@ -6,18 +6,18 @@ class UserMailer < ApplicationMailer
 
   CSP_EMAILS = ['***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***']
 
-  def request_contribution contribution
+  def contribution_request (contribution)
     # don't track emails sent from dev or staging ...
-    headers['X-SMTPAPI'] = { unique_args: {
-                                contribution_id: contribution.id
-                             }}.to_json if production?
-    curator = contribution.success.curator
-    contributor = contribution.contributor
-    @body = contribution.email_contribution_request.body.html_safe
-    send_mail 'request', curator, contributor, contribution.email_contribution_request.subject
+    headers['X-SMTPAPI'] = {
+      unique_args: {
+        contribution_id: contribution.id
+      }
+    }.to_json if production?
+    @body = contribution.request_body.html_safe
+    send_mail('contribution_request', contribution.curator, contribution.contributor, contribution.request_subject)
   end
 
-  def send_contribution_reminder contribution
+  def send_contribution_reminder (contribution)
     # TODO: modify seeds so this check isn't necessary ...
     # (a seeded user may have status 'request' with no email_contribution_request)
     return false if contribution.email_contribution_request.nil?
@@ -35,7 +35,7 @@ class UserMailer < ApplicationMailer
     send_mail 'remind', curator, contributor, subject
   end
 
-  def alert_contribution_update contribution
+  def alert_contribution_update (contribution)
     success = contribution.success
     story = success.story
     company = success.customer.company
@@ -65,7 +65,7 @@ class UserMailer < ApplicationMailer
   end
 
   # type is one of: request, remind, alert, test
-  def send_mail type, sender, recipient, subject
+  def send_mail (type, sender, recipient, subject)
     if Rails.env == 'development'
       if CSP_EMAILS.include? recipient.email
         # if sender and recipient are same, provide a fake sender address

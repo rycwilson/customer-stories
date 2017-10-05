@@ -68,7 +68,12 @@ class ContributionsController < ApplicationController
   end
 
   def update
-    if params[:contribution][:contributor]
+    if params[:send_request]
+      @contribution.update(contribution_params)
+      UserMailer.contribution_request(@contribution).deliver_now()
+      respond_to { |format| format.js { render action: 'send_request' } }
+
+    elsif params[:contribution][:contributor]
       @contribution.contributor.update(contribution_params[:contributor])
       respond_to { |format| format.js { render action: 'update_contributor' } }
 
@@ -108,10 +113,6 @@ class ContributionsController < ApplicationController
     end
   end
 
-  def send_request
-
-  end
-
   def confirm
     @curator = @contribution.success.curator
   end
@@ -122,6 +123,7 @@ class ContributionsController < ApplicationController
     params.require(:contribution).permit(
       :success_id, :crowdsourcing_template_id, :user_id, :referrer_id,
       :status, :contribution, :feedback, :access_token, :publish_contributor,
+      :request_subject, :request_body,
       :contributor_unpublished, :notes, :submitted_at,
       contributor_attributes: [:first_name, :last_name, :title, :email, :phone, :linkedin_url, :sign_up_code, :password]
     )

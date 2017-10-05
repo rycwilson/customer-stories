@@ -78,9 +78,7 @@ Rails.application.routes.draw do
           member { put :tags }
         end
         resources :stories, only: [:create]
-        resources :contributions, except: [:new, :edit] do
-          member { put '/send_request', to: 'contributions#send_request' }
-        end
+        resources :contributions, except: [:new, :edit]
         resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
         resources :crowdsourcing_templates, except: [:index]
         member { get '/promote-settings', to: 'companies#show' }

@@ -10,16 +10,13 @@ function contributorActionsListeners () {
       contributionPath = function (id) {
         return '/companies/' + app.company.id + '/contributions/' + id;
       },
-      sendContributionRequestPath = function (id) {
-        return contributionPath(id) + '/send_reqeust';
-      },
       missingCuratorInfo = function () {
         return ['first_name', 'last_name', 'photo', 'phone', 'position']
           .filter(function (item) { return app.current_user[item] === '' ; });
       },
       populateContributionRequestModal = function (contributionRequest) {
         $contributionRequestModal.find('form')
-          .attr('action', sendContributionRequestPath(contributionRequest.id));
+          .attr('action', contributionPath(contributionRequest.id));
         $contributionRequestModal.find('#request-recipient')
           .html(
             'Recipient:&nbsp;&nbsp;' + contributionRequest.contributor.full_name +
@@ -64,6 +61,11 @@ function contributorActionsListeners () {
           });
       }
 
+    })
+
+    .on('submit', '#contribution-request-form', function () {
+      $(this).closest('.modal-content').find('.modal-title').addClass('hidden');
+      $(this).closest('.modal-content').find('.progress').removeClass('hidden');
     })
 
     // scroll can't be adjusted while the modal is hidden

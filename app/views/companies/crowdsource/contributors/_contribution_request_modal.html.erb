@@ -19,12 +19,14 @@
         <%= form_tag('', id: 'contribution-request-form',
                       remote: true, method: :put) do  %>
 
-          <%= text_field_tag 'contribution[request_subject]', nil,
-                class: 'form-control' %> <br>
+          <%= hidden_field_tag(:send_request, value: true) %>
 
-          <%= text_area_tag 'contribution[request_body]', nil,
+          <%= text_field_tag('contribution[request_subject]', nil,
+                class: 'form-control') %> <br>
+
+          <%= text_area_tag('contribution[request_body]', nil,
               id: 'contribution-request-editor',
-              data: { provider: 'summernote' }, class: 'form-control' %>
+              data: { provider: 'summernote' }, class: 'form-control') %>
 
         <% end %>
 
