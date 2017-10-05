@@ -7,24 +7,74 @@ function contributorActionsListeners () {
       $contributionRequestEditor = $contributionRequestModal
                                      .find("[data-provider='summernote']"),
       $contributionContentModal = $('#contribution-content-modal'),
-      contributionPath = function (id) {
-        return '/companies/' + app.company.id + '/contributions/' + id;
+      contributionPath = function (contributionId) {
+        return '/companies/' + app.company.id + '/contributions/' + contributionId;
       },
       missingCuratorInfo = function () {
         return ['first_name', 'last_name', 'photo', 'phone', 'position']
           .filter(function (item) { return app.current_user[item] === '' ; });
       },
-      populateContributionRequestModal = function (contributionRequest) {
+      populateContributionRequest = function (contributionRequest, type) {
+        var formattedDate = function (date) {
+              return moment(date).calendar(null, {
+                sameDay: '[today]',
+                lastDay: '[yesterday]',
+                lastWeek: '['+ moment(date).fromNow() +']',
+                sameElse: 'M/DD/YY'
+              }).split('at')[0];
+            };
+
+        // send or readonly
+        $contributionRequestModal.find('.modal-content').addClass(type);
+        if (type === 'send') {
+          $contributionRequestModal.find('.modal-content').removeClass('readonly');
+        } else {
+          $contributionRequestModal.find('.modal-content').removeClass('send');
+        }
+        // set the readonly title (null is ok; formattedDate returns "Invalid")
+        $contributionRequestModal.find('.readonly.modal-title span:last-child')
+          .text(formattedDate(contributionRequest.sent_at));
+        // set the path
         $contributionRequestModal.find('form')
           .attr('action', contributionPath(contributionRequest.id));
-        $contributionRequestModal.find('#request-recipient')
-          .html(
-            contributionRequest.contributor.full_name + '&nbsp;&nbsp;' +
-            '&lt' + contributionRequest.contributor.email + '&gt'
-          );
+        // recipient
+        $contributionRequestModal.find('#request-recipient').html(
+          contributionRequest.contributor.full_name + '&nbsp;&nbsp;' +
+          '&lt' + contributionRequest.contributor.email + '&gt'
+        );
+        // request subject
         $contributionRequestModal.find('[name="contribution[request_subject]"]')
-          .val(contributionRequest.subject);
+          .val(contributionRequest.subject)
+          .attr('readonly', type === 'readonly' ? true : false);
+        // request body
         $contributionRequestEditor.summernote('code', contributionRequest.body);
+        // enable or disable editor
+        $contributionRequestEditor.summernote(
+          type === 'readonly' ? 'disable' : 'enable'
+        );
+
+      },
+      showContributionRequest = function (contributionId, type) {
+        $.ajax({
+          url: contributionPath(contributionId),
+          method: 'get',
+          data: { get_contribution_request: true },
+          dataType: 'json',
+        })
+          .done(function (contribution, status, xhr) {
+            contributionRequest = {
+              id: contribution.id,
+              subject: contribution.request_subject,
+              body: contribution.request_body,
+              contributor: {
+                full_name: contribution.contributor.full_name,
+                email: contribution.contributor.email
+              },
+              sent_at: contribution.request_sent_at
+            };
+            populateContributionRequest(contributionRequest, type);
+            $contributionRequestModal.modal('show');
+          });
       },
       toggleEmailProgress = function (state) {
         if (state === 'on') {
@@ -48,26 +98,7 @@ function contributorActionsListeners () {
         return false;
 
       } else {
-
-        $.ajax({
-          url: contributionPath(contributionId),
-          method: 'get',
-          data: { get_contribution_request: true },
-          dataType: 'json',
-        })
-          .done(function (contribution, status, xhr) {
-            contributionRequest = {
-              id: contribution.id,
-              subject: contribution.request_subject,
-              body: contribution.request_body,
-              contributor: {
-                full_name: contribution.contributor.full_name,
-                email: contribution.contributor.email
-              }
-            };
-            populateContributionRequestModal(contributionRequest);
-            $contributionRequestModal.modal('show');
-          });
+        showContributionRequest(contributionId, 'send');
       }
 
     })
@@ -81,6 +112,11 @@ function contributorActionsListeners () {
       // there are a bunch of modals within the summernote editor, hence indexing
       $(this).find('.modal-body').eq(0).scrollTop(0);
       toggleEmailProgress('off');
+    })
+
+    .on('click', '.view-request', function () {
+      var contributionId = $(this).closest('tr').data('contribution-id');
+      showContributionRequest(contributionId, 'readonly');
     })
 
     .on('click', 'a[href="#contribution-content-modal"]', function () {

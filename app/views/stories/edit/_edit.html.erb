@@ -50,7 +50,7 @@
 
         <button type='button' style='margin:0 0 10px 0;height:32px' class='btn btn-secondary btn-sm' data-toggle='modal' data-target='#new-contributor-modal'><i class='glyphicon glyphicon-plus-sign' style='font-size:15px;top:2px'></i>&nbsp;&nbsp;&nbsp;Add New Contributor&nbsp;</button>
 
-        <%= render 'companies/crowdsource/contributors_table',
+        <%= render 'companies/crowdsource/contributors/contributors_table',
               { company: company, workflow_stage: 'curate' } %>
 
       </div>

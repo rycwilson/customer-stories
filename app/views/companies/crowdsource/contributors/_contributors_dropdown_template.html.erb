@@ -31,12 +31,34 @@
 
       {{ if (workflowStage === 'crowdsource') { }}
 
-        <li class='view-story'>
-          <a href="{{= curateStoryPath }}"}>
-            <i class='fa fa-search action'></i>&nbsp;
-            <span>View Story{{= story? '' : ' Candidate' }}</span>
-          </a>
-        </li>
+        {{ if (story && story.published) { }}
+
+          <li class='view-story'>
+            <a href="{{= viewStoryPath }}"}>
+              <i class='fa fa-search action'></i>&nbsp;
+              <span>View Story</span>
+            </a>
+          </li>
+
+        {{ } else if (story) { }}
+
+          <li class='curate-story'>
+            <a href="{{= curateStoryPath }}"}>
+              <i class='fa fa-edit action'></i>&nbsp;
+              <span>Curate Story</span>
+            </a>
+          </li>
+
+        {{ } else { }}
+
+          <li class='view-candidate'>
+            <a href="javascript:;"}>
+              <i class='fa fa-search action'></i>&nbsp;
+              <span>View Candidate</span>
+            </a>
+          </li>
+
+        {{ } }}
 
       {{ } }}
 

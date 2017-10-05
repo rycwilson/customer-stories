@@ -16,7 +16,8 @@ class ContributionsController < ApplicationController
                   include: {
                     curator: { only: [:id], methods: [:full_name] },
                     customer: { only: [:id, :name, :slug] },
-                    story: { only: [:id, :title, :slug] }
+                    story: { only: [:id, :title, :published, :slug],
+                             methods: [:csp_story_path] }
                   }
                 },
                 contributor: { only: [:id], methods: [:full_name] },
@@ -52,7 +53,7 @@ class ContributionsController < ApplicationController
   def show
     if params[:get_contribution_request]
       respond_with(
-        @contribution, only: [:id, :request_subject, :request_body],
+        @contribution, only: [:id, :request_subject, :request_body, :request_sent_at],
         include: { contributor: { only: [:email], methods: [:full_name] } }
       )
     else

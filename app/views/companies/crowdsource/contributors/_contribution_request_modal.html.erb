@@ -1,10 +1,14 @@
 
 <div class="modal fade" id="contribution-request-modal" role="dialog">
   <div class="modal-dialog" role="document">
-    <div class="modal-content" >
+    <div class="modal-content">
 
       <div class="modal-header">
-        <h4 class="modal-title">Send Contribution Request</h4>
+        <h4 class="send modal-title">Send Contribution Request</h4>
+        <h4 class="readonly modal-title">
+          <span>Contribution Request&nbsp;&#8211;&nbsp;sent </span>
+          <span></span>
+        </h4>
         <div class="progress hidden">
           <div class="progress-bar progress-bar-info progress-bar-striped active"
                 role='progressbar' style='width:100%'
@@ -41,10 +45,13 @@
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">
+        <button type="button" class="readonly btn btn-default" data-dismiss="modal">
+          Close
+        </button>
+        <button type="button" class="send btn btn-default" data-dismiss="modal">
           Cancel
         </button>
-        <button type="submit" form='contribution-request-form' class="btn btn-success">
+        <button type="submit" form='contribution-request-form' class="send btn btn-success">
           Send
         </button>
       </div>

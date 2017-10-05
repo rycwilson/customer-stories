@@ -78,15 +78,16 @@ function initContributorsTable (workflowStage) {
         data: 'status',
         render: function (data, type, row, meta) {
           return _.template(
-                    $('#contributors-dropdown-template').html()
-                  )({
-                      status: data,
-                      workflowStage: workflowStage,
-                      story: row.success.story, // might be nil
-                      curateStoryPath: row.success.story &&
-                        '/curate/' + row.success.customer.slug + '/' +
-                        row.success.story.slug
-                    });
+              $('#contributors-dropdown-template').html()
+            )({
+                status: data,
+                workflowStage: workflowStage,
+                story: row.success.story, // might be nil
+                viewStoryPath: row.success.story && row.success.story.csp_story_path,
+                curateStoryPath: row.success.story &&
+                  '/curate/' + row.success.customer.slug + '/' +
+                  row.success.story.slug
+              });
         }
       },
     ],

@@ -92,6 +92,11 @@ hr {
   font-weight: 700;
 }
 
+// summernote mirrors bootstrap
+.note-editor.note-frame {
+  border: 1px solid #ccc
+}
+
 // the shadow settings are copied from mvp
 .btn-success, .btn.editable-submit {
   background-color: #4d8664;

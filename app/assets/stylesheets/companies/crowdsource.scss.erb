@@ -34,6 +34,18 @@
       }
     }
   }
+  .modal-content.send {
+    .readonly { display: none }
+  }
+  .modal-content.readonly {
+    .send, .note-toolbar {
+      display: none
+    }
+    .note-editable[contenteditable="false"] {
+      // mirrors disabled input
+      background: #eee;
+    }
+  }
 }
 
 #successes-table, [id*="-contributors-table"] {
