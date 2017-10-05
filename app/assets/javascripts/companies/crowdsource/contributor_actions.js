@@ -19,12 +19,21 @@ function contributorActionsListeners () {
           .attr('action', contributionPath(contributionRequest.id));
         $contributionRequestModal.find('#request-recipient')
           .html(
-            'Recipient:&nbsp;&nbsp;' + contributionRequest.contributor.full_name +
-            '&nbsp;&nbsp;&lt' + contributionRequest.contributor.email + '&gt'
+            contributionRequest.contributor.full_name + '&nbsp;&nbsp;' +
+            '&lt' + contributionRequest.contributor.email + '&gt'
           );
         $contributionRequestModal.find('[name="contribution[request_subject]"]')
           .val(contributionRequest.subject);
         $contributionRequestEditor.summernote('code', contributionRequest.body);
+      },
+      toggleEmailProgress = function (state) {
+        if (state === 'on') {
+          $contributionRequestModal.find('.modal-title').addClass('hidden');
+          $contributionRequestModal.find('.progress').removeClass('hidden');
+        } else {
+          $contributionRequestModal.find('.modal-title').removeClass('hidden');
+          $contributionRequestModal.find('.progress').addClass('hidden');
+        }
       };
 
   $(document)
@@ -64,14 +73,14 @@ function contributorActionsListeners () {
     })
 
     .on('submit', '#contribution-request-form', function () {
-      $(this).closest('.modal-content').find('.modal-title').addClass('hidden');
-      $(this).closest('.modal-content').find('.progress').removeClass('hidden');
+      toggleEmailProgress('on');
     })
 
     // scroll can't be adjusted while the modal is hidden
     .on('hide.bs.modal', '#contribution-request-modal', function () {
       // there are a bunch of modals within the summernote editor, hence indexing
       $(this).find('.modal-body').eq(0).scrollTop(0);
+      toggleEmailProgress('off');
     })
 
     .on('click', 'a[href="#contribution-content-modal"]', function () {

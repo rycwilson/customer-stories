@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171003222649) do
+ActiveRecord::Schema.define(version: 20171005180750) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -146,8 +146,8 @@ ActiveRecord::Schema.define(version: 20171003222649) do
     t.datetime "created_at",                                        null: false
     t.datetime "updated_at",                                        null: false
     t.datetime "remind_at"
-    t.integer  "remind_1_wait",             default: 1
-    t.integer  "remind_2_wait",             default: 2
+    t.integer  "first_reminder_wait",       default: 1
+    t.integer  "second_reminder_wait",      default: 2
     t.string   "access_token"
     t.integer  "referrer_id"
     t.text     "notes"
@@ -160,6 +160,7 @@ ActiveRecord::Schema.define(version: 20171003222649) do
     t.integer  "crowdsourcing_template_id"
     t.string   "request_subject"
     t.text     "request_body"
+    t.datetime "request_sent_at"
   end
 
   add_index "contributions", ["crowdsourcing_template_id"], name: "index_contributions_on_crowdsourcing_template_id", using: :btree

@@ -74,6 +74,7 @@ function initContributorsTable (workflowStage) {
       },
       {
         // data is status as this will determine actions available
+        // TODO: error
         data: 'status',
         render: function (data, type, row, meta) {
           return _.template(
@@ -100,8 +101,8 @@ function initContributorsTable (workflowStage) {
       },
       { width: '0%', targets: [2, 4, 5] },  // success, curator, customer
       { width: '5%', targets: 0 },
-      { width: '33%', targets: [1, 3] },  // contributor, template
-      { width: '19%', targets: 6 },  // status
+      { width: '32%', targets: [1, 3] },  // contributor, template
+      { width: '21%', targets: 6 },  // status
       { width: '10%', targets: 7 }
     ],
     rowGroup: {

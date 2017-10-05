@@ -37,12 +37,22 @@ class Contribution < ActiveRecord::Base
   }
 
   before_create(:generate_access_token)
-  before_create(:copy_crowdsourcing_template, if: Proc.new do
-      self.crowdsourcing_template_id.present?
-    end)
-  before_update(:copy_crowdsourcing_template, if: Proc.new do
+  before_create(:copy_crowdsourcing_template,
+    if: Proc.new { self.crowdsourcing_template_id.present? }
+  )
+  before_update(:copy_crowdsourcing_template,
+    if: Proc.new {
       self.crowdsourcing_template_id.present? && self.crowdsourcing_template_id_changed?
-    end)
+    }
+  )
+  before_update(:set_request_sent_at,
+    if: Proc.new { self.status_changed? && self.status == 'request_sent' }
+  )
+  before_update(:set_request_remind_at,
+    if: Proc.new {
+      self.status_changed? && ['request_sent', 'first_reminder_sent'].include?(self.status)
+    }
+  )
 
   # validates :user_id, presence: true
   # validates :success_id, presence: true
@@ -56,8 +66,8 @@ class Contribution < ActiveRecord::Base
   validates_uniqueness_of :user_id, scope: :success_id
 
   # represents number of days between reminder emails
-  validates :remind_1_wait, numericality: { only_integer: true }
-  validates :remind_2_wait, numericality: { only_integer: true }
+  validates :first_reminder_wait, numericality: { only_integer: true }
+  validates :second_reminder_wait, numericality: { only_integer: true }
 
   after_commit(on: [:update]) do
     # if (self.previous_changes.keys &
@@ -82,11 +92,11 @@ class Contribution < ActiveRecord::Base
       when 'pre_request'
         return "awaiting request\n(added #{self.created_at.strftime('%-m/%-d/%y')})"
       when 'request_sent'
-        return "request sent\n#{(self.remind_at - self.remind_1_wait.days).strftime('%-m/%-d/%y')} (email #{self.request_received_at.present? ? '' : 'not' } opened)"
+        return "request sent #{(self.request_sent_at).strftime('%-m/%-d/%y')}\n(email #{self.request_received_at.present? ? '' : 'not' } opened)"
       when 'first_reminder_sent'
-        return "first reminder sent\n#{(self.remind_at - self.remind_2_wait.days).strftime('%-m/%-d/%y')} (email #{self.request_received_at.present? ? '' : 'not' } opened)"
+        return "reminder sent #{(self.request_sent_at + self.first_reminder_wait.days).strftime('%-m/%-d/%y')}\n(email #{self.request_received_at.present? ? '' : 'not' } opened)"
       when 'second_reminder_sent'
-        return "second reminder sent\n#{(self.remind_at - self.remind_2_wait.days).strftime('%-m/%-d/%y')} (email #{self.request_received_at.present? ? '' : 'not' } opened)"
+        return "reminder sent #{(self.request_sent_at + self.second_reminder_wait.days).strftime('%-m/%-d/%y')}\n(email #{self.request_received_at.present? ? '' : 'not' } opened)"
       when 'did_not_respond'
         return "did not respond\n(email #{self.request_received_at.present? ? '' : 'not' } opened)"
       when 'contribution_submitted'
@@ -146,10 +156,6 @@ class Contribution < ActiveRecord::Base
                 .each { |c| c.update status: 'opt_out' }
   end
 
-  def generate_request_email
-    # replaced by copy_crowdsourcing_template
-  end
-
   def expire_published_contributor_cache
     story = self.success.story
     story.expire_published_contributor_cache(self.contributor.id)
@@ -196,6 +202,18 @@ class Contribution < ActiveRecord::Base
       controller: 'contributions', action: 'edit',
       token: self.access_token, type: type
     )
+  end
+
+  def set_request_sent_at
+    self.request_sent_at = Time.now();
+  end
+
+  def set_request_remind_at
+    if self.status == 'request_sent'
+      self.remind_at = Time.now() + self.first_reminder_wait.days()
+    elsif self.status == 'first_reminder_sent'
+      self.remind_at = Time.now() + self.second_reminder_wait.days()
+    end
   end
 
 end

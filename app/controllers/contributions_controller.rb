@@ -69,9 +69,13 @@ class ContributionsController < ApplicationController
 
   def update
     if params[:send_request]
-      @contribution.update(contribution_params)
-      UserMailer.contribution_request(@contribution).deliver_now()
-      respond_to { |format| format.js { render action: 'send_request' } }
+      # assign any edits to request_subject and request_body
+      @contribution.assign_attributes(contribution_params)
+      if (UserMailer.contribution_request(@contribution).deliver_now())
+        params[:contribution][:status] = 'request_sent'
+        @contribution.update(contribution_params)
+        respond_to { |format| format.js { render action: 'send_request' } }
+      end
 
     elsif params[:contribution][:contributor]
       @contribution.contributor.update(contribution_params[:contributor])
@@ -121,8 +125,8 @@ class ContributionsController < ApplicationController
 
   def contribution_params
     params.require(:contribution).permit(
-      :success_id, :crowdsourcing_template_id, :user_id, :referrer_id,
-      :status, :contribution, :feedback, :access_token, :publish_contributor,
+      :user_id, :referrer_id, :success_id, :crowdsourcing_template_id,
+      :status, :contribution, :feedback, :publish_contributor,
       :request_subject, :request_body,
       :contributor_unpublished, :notes, :submitted_at,
       contributor_attributes: [:first_name, :last_name, :title, :email, :phone, :linkedin_url, :sign_up_code, :password]

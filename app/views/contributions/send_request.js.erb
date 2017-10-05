@@ -1,7 +1,16 @@
 
 (function () {
 
-  $('#contribution-request-modal').modal('hide')
-  console.log('sent!')
+  var contribution = <%= raw @contribution.to_json({
+          only: [:id], include: { contributor: { only: [], methods: [:full_name] } }
+      }) %>;
+
+  // update app.contributions
+
+  $('table[id*="contributors-table"]').DataTable()
+    .ajax.reload(function (contributions) {
+       $('#contribution-request-modal').modal('hide')
+       flashDisplay('Contribution Request sent to ' + contribution.contributor.full_name, 'info');
+    })
 
 }());

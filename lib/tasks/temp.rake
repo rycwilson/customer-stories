@@ -57,6 +57,7 @@ namespace :temp do
 
   task create_contributor_questions: :environment do
     ContributorQuestion.destroy_all
+    ActiveRecord::Base.connection.execute('ALTER SEQUENCE contributor_questions_id_seq RESTART WITH 1')
     Company.all.each do |company|
       company.contributor_questions =
         ContributorQuestion.create(question: "What was the challenge?", role: 'customer'),

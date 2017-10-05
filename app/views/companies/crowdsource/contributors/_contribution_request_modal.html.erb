@@ -11,6 +11,7 @@
                 aria-valuenow='80' aria-valuemin="0" aria-valuemax='100'>
           </div>
         </div>
+        <span style='color:#333;font-weight:600;'>To</span>&nbsp;&nbsp;&nbsp;
         <span id='request-recipient'></span>
       </div>
 
@@ -21,8 +22,15 @@
 
           <%= hidden_field_tag(:send_request, value: true) %>
 
-          <%= text_field_tag('contribution[request_subject]', nil,
-                class: 'form-control') %> <br>
+          <div class="form-inline">
+            <div class="form-group subject">
+
+              <%= label_tag('contribution_request_subject', 'Subject') %><!--
+           --><%= text_field_tag('contribution[request_subject]', nil,
+                    class: 'form-control') %>
+
+            </div>
+          </div>
 
           <%= text_area_tag('contribution[request_body]', nil,
               id: 'contribution-request-editor',
