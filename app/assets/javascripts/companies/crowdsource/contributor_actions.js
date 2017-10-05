@@ -1,12 +1,33 @@
 
 function contributorActionsListeners () {
 
-  var contributionPath = function (id) {
+  var contributionRequest,  // { contributor: ..., subject: ..., body: ... }
+      $contributionRequestModal = $('#contribution-request-modal'),
+      // things go haywire if a different selector is used, e.g. $('textarea')
+      $contributionRequestEditor = $contributionRequestModal
+                                     .find("[data-provider='summernote']"),
+      $contributionContentModal = $('#contribution-content-modal'),
+      contributionPath = function (id) {
         return '/companies/' + app.company.id + '/contributions/' + id;
+      },
+      sendContributionRequestPath = function (id) {
+        return contributionPath(id) + '/send_reqeust';
       },
       missingCuratorInfo = function () {
         return ['first_name', 'last_name', 'photo', 'phone', 'position']
           .filter(function (item) { return app.current_user[item] === '' ; });
+      },
+      populateContributionRequestModal = function (contributionRequest) {
+        $contributionRequestModal.find('form')
+          .attr('action', sendContributionRequestPath(contributionRequest.id));
+        $contributionRequestModal.find('#request-recipient')
+          .html(
+            'Recipient:&nbsp;&nbsp;' + contributionRequest.contributor.full_name +
+            '&nbsp;&nbsp;&lt' + contributionRequest.contributor.email + '&gt'
+          );
+        $contributionRequestModal.find('[name="contribution[request_subject]"]')
+          .val(contributionRequest.subject);
+        $contributionRequestEditor.summernote('code', contributionRequest.body);
       };
 
   $(document)
@@ -28,11 +49,27 @@ function contributorActionsListeners () {
           data: { get_contribution_request: true },
           dataType: 'json',
         })
-        .done(function (data, status, xhr) {
-          console.log(data, status, xhr);
-        });
+          .done(function (contribution, status, xhr) {
+            contributionRequest = {
+              id: contribution.id,
+              subject: contribution.request_subject,
+              body: contribution.request_body,
+              contributor: {
+                full_name: contribution.contributor.full_name,
+                email: contribution.contributor.email
+              }
+            };
+            populateContributionRequestModal(contributionRequest);
+            $contributionRequestModal.modal('show');
+          });
       }
 
+    })
+
+    // scroll can't be adjusted while the modal is hidden
+    .on('hide.bs.modal', '#contribution-request-modal', function () {
+      // there are a bunch of modals within the summernote editor, hence indexing
+      $(this).find('.modal-body').eq(0).scrollTop(0);
     })
 
     .on('click', 'a[href="#contribution-content-modal"]', function () {
@@ -48,6 +85,5 @@ function contributorActionsListeners () {
       );
 
     });
-
 
 }

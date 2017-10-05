@@ -2,26 +2,6 @@ namespace :temp do
 
   desc "temp stuff"
 
-  task update_contributions: :environment do
-    Contribution.all.each() do |contribution|
-      case contribution.status
-        when 'contribution'
-          new_status = 'contribution_submitted'
-        when 'feedback'
-          new_status = 'feedback_submitted'
-        when 'unsubscribe'
-          new_status = 'unsubscribed'
-        when 'opt_out'
-          new_status = 'opted_out'
-        when 'unsubscribe'
-          new_status = 'unsubscribed'
-      end
-      contribution.update(status: new_status, access_token: SecureRandom.urlsafe_base64)
-      # make this method protected after this task is run
-      contribution.copy_crowdsourcing_template
-    end
-  end
-
   # fix any data oddities that cause errors
   task db_fixes: :environment do
     # this success and story had a \n character in the name/title that was hosing datatables search
@@ -29,9 +9,9 @@ namespace :temp do
     Success.find(27).story.update(title:'How to Deploy a Customer Reference Application for Your Sales Team')
   end
 
-
   task create_crowdsourcing_templates: :environment do
     CrowdsourcingTemplate.destroy_all
+    ActiveRecord::Base.connection.execute('ALTER SEQUENCE crowdsourcing_templates_id_seq RESTART WITH 1')
     EmailTemplate.all.each do |email_template|
       CrowdsourcingTemplate.create(
         name: email_template.name,
@@ -60,7 +40,6 @@ namespace :temp do
       company.contributions.each do |contribution|
         # TODO: Should be ok for a contributor not to have a template, as this may happen with
         # curators. But this causes errors with datatables
-        contribution.update(role: 'customer') if contribution.role.blank?
         if contribution.role == 'customer'
           contribution.update(crowdsourcing_template_id: customer_template.id)
         elsif contribution.role == 'customer success'
@@ -68,6 +47,10 @@ namespace :temp do
         elsif contribution.role == 'sales'
           contribution.update(crowdsourcing_template_id: sales_template.id)
         end
+        # populate the crowdsourcing template with data and assign
+        # to contribution attributes
+        # make this method protected after this task is run
+        contribution.copy_crowdsourcing_template
       end
     end
   end
@@ -94,6 +77,30 @@ namespace :temp do
   task partner_to_customer_success: :environment do
     EmailTemplate.where(name:'Partner').each { |t| t.update(name:'Customer Success') }
     Contribution.where(role:'partner').each { |c| c.update(role:'customer success') }
+  end
+
+  task update_contributions: :environment do
+    Contribution.all.each() do |contribution|
+      # ensure no blank roles
+      contribution.update(role: 'customer') if contribution.role.blank?
+      new_status = contribution.status  # default to the existing value
+      case contribution.status
+        when 'remind1'
+          new_status = 'first_reminder_sent'
+        when 'remind2'
+          new_status = 'second_reminder_sent'
+        when 'contribution'
+          new_status = 'contribution_submitted'
+        when 'feedback'
+          new_status = 'feedback_submitted'
+        when 'unsubscribe'
+          new_status = 'unsubscribed'
+        when 'opt_out'
+          new_status = 'opted_out'
+      end
+      # change access token to make it url safe
+      contribution.update(status: new_status, access_token: SecureRandom.urlsafe_base64)
+    end
   end
 
   task success_names: :environment do

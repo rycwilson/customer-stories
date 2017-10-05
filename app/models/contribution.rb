@@ -189,7 +189,7 @@ class Contribution < ActiveRecord::Base
     generate_access_token if Contribution.exists?(access_token: self.access_token)
   end
 
-
+  # this works because the route in question is aliased to 'edit_contribution'
   def contribution_submission_url (type)
     return Rails.application.routes.url_helpers.url_for(
       subdomain: self.company.subdomain,

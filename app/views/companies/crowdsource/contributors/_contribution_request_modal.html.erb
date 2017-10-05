@@ -1,9 +1,9 @@
 
-<div class="modal fade" id="email-confirmation-modal" role="dialog">
+<div class="modal fade" id="contribution-request-modal" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content" >
+
       <div class="modal-header">
-        <!-- <i class='glyphicon glyphicon-pencil bip-clickable pull-right'></i> -->
         <h4 class="modal-title">Send Contribution Request</h4>
         <div class="progress hidden">
           <div class="progress-bar progress-bar-info progress-bar-striped active"
@@ -13,27 +13,32 @@
         </div>
         <span id='request-recipient'></span>
       </div>
+
       <div class="modal-body">
 
-        <%= form_tag('/companies/' + company.id.to_s + '/contributions/:id/request' ,
-              id: 'contribution-request-form', remote: true) do  %>
-
-          <%#= hidden_field_tag 'contribution_id', nil %>
+        <%= form_tag('', id: 'contribution-request-form',
+                      remote: true, method: :put) do  %>
 
           <%= text_field_tag 'contribution[request_subject]', nil,
                 class: 'form-control' %> <br>
 
           <%= text_area_tag 'contribution[request_body]', nil,
-              id: 'request-contribution-editor',
+              id: 'contribution-request-editor',
               data: { provider: 'summernote' }, class: 'form-control' %>
 
         <% end %>
 
       </div>
+
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-        <button type="submit" form='confirm-email-form' class="btn btn-primary">Send</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">
+          Cancel
+        </button>
+        <button type="submit" form='contribution-request-form' class="btn btn-success">
+          Send
+        </button>
       </div>
+
     </div>
   </div>
 </div>

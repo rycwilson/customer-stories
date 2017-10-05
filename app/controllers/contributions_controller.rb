@@ -52,7 +52,7 @@ class ContributionsController < ApplicationController
   def show
     if params[:get_contribution_request]
       respond_with(
-        @contribution, only: [:request_subject, :request_body],
+        @contribution, only: [:id, :request_subject, :request_body],
         include: { contributor: { only: [:email], methods: [:full_name] } }
       )
     else
