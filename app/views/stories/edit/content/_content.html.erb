@@ -61,18 +61,23 @@
 
     <div class="col-lg-8">
 
-      <%= render('stories/edit/content/contributions', { contributions: story.contributions }) %>
+      <% if story.contributions.submissions.present? %>
+        <%= render('stories/edit/content/contributions',
+                { contributions: story.contributions }) %>
+      <% end %>
 
       <div class="form-group">
 
         <%= story_form.label(:content, 'Main Content') %>
 
-        <label class='contributions-collapse pull-right'>
-          <a href="#contributions-carousel" data-toggle='collapse'>
-            <span>Show Contributions</span><span style='display:none'>Hide Contributions</span>
-          </a>&nbsp;&nbsp;
-          <i class='pull-right fa fa-info-circle' data-toggle='tooltip' data-container='body' title='Contributions are not published. They are provided here for your reference.'></i>
-        </label>
+        <% if story.contributions.submissions.present? %>
+          <label class='contributions-collapse pull-right'>
+            <a href="#contributions-carousel" data-toggle='collapse'>
+              <span >Show Contributions</span><span style='display:none'>Hide Contributions</span>
+            </a>&nbsp;&nbsp;
+            <i class='pull-right fa fa-info-circle' data-toggle='tooltip' data-container='body' title='Contributions are not published. They are provided here for your reference.'></i>
+          </label>
+        <% end %>
 
         <%= story_form.text_area(:content, id: 'story-content-editor',
                 data: { provider: 'summernote' }) %>
