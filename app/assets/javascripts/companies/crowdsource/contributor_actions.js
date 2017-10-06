@@ -85,11 +85,32 @@ function contributorActionsListeners () {
           $contributionRequestModal.find('.modal-title').removeClass('hidden');
           $contributionRequestModal.find('.progress').addClass('hidden');
         }
+      },
+      removeContribution = function (id) {
+        $.ajax({
+          url: contributionPath(id),
+          method: 'delete',
+          dataType: 'json'
+        })
+          .done(function (contribution, status, xhr) {
+            // might just be one table if other hasn't loaded
+            var $tables = $('table[id*="contributors-table"]');
+            $tables.find('tr[data-contribution-id="' + contribution.id + '"]')
+                   .remove();
+            // if this was the only contribution under a group, remove the group
+            $tables.find('tr.group').each(function () {
+              if ($(this).next().hasClass('group')) { $(this).remove(); }
+            });
+            // update app data
+            app.contributions = app.contributions.filter(function (c) {
+              return c.id == contribution.id;
+            });
+          });
       };
 
   $(document)
 
-    .on('click', '.send-request', function () {
+    .on('click', '.contributor-actions .send-request', function () {
       var contributionId = $(this).closest('tr').data('contribution-id');
 
       if (missingCuratorInfo().length > 0) {
@@ -103,7 +124,7 @@ function contributorActionsListeners () {
 
     })
 
-    .on('click', '.re-send-request', function () {
+    .on('click', '.contributor-actions .re-send-request', function () {
       var contributionId = $(this).closest('tr').data('contribution-id');
 
       if (missingCuratorInfo().length > 0) {
@@ -115,6 +136,29 @@ function contributorActionsListeners () {
         showContributionRequest(contributionId, 'send');
       }
 
+    })
+
+    .on('click', '.contributor-actions .remove', function () {
+      var contributionId = $(this).closest('tr').data('contribution-id');
+      bootbox.confirm({
+        size: 'small',
+        className: 'confirm-remove-contributor',
+        closeButton: false,
+        message: "<i class='fa fa-warning'></i>\xa0\xa0\xa0<span>Are you sure?</span>",
+        buttons: {
+          confirm: {
+            label: 'Remove',
+            className: 'btn-danger'
+          },
+          cancel: {
+            label: 'Cancel',
+            className: 'btn-default'
+          }
+        },
+        callback: function (confirmRemove) {
+          if (confirmRemove) { removeContribution(contributionId); }
+        }
+      });
     })
 
     .on('submit', '#contribution-request-form', function () {
@@ -128,7 +172,7 @@ function contributorActionsListeners () {
       toggleEmailProgress('off');
     })
 
-    .on('click', '.view-request', function () {
+    .on('click', '.contributor-actions .view-request', function () {
       var contributionId = $(this).closest('tr').data('contribution-id');
       showContributionRequest(contributionId, 'readonly');
     })

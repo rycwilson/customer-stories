@@ -1,7 +1,7 @@
 class ContributionsController < ApplicationController
 
   before_action :set_contribution_if_valid_token?, only: [:edit, :update]
-  before_action :set_contribution, only: [:show, :request, :confirm]
+  before_action :set_contribution, only: [:show, :confirm, :destroy]
   before_action :check_opt_out_list, only: [:confirm_request]
 
   respond_to(:html, :json, :js)
@@ -118,6 +118,13 @@ class ContributionsController < ApplicationController
     end
   end
 
+  def destroy
+    @contribution.destroy
+    respond_to do |format|
+      format.json { render({ json: @contribution.to_json({ only: [:id] }) }) }
+    end
+  end
+
   def confirm
     @curator = @contribution.success.curator
   end
@@ -138,6 +145,19 @@ class ContributionsController < ApplicationController
     @contribution = Contribution.find(params[:id])
   end
 
+  def set_contribution_if_valid_token?
+    # contributor update
+    if params[:token] && (@contribution = Contribution.find_by(access_token: params[:token]))
+      @contribution
+    # curator update
+    elsif request.path.match(/\/contributions\/\d+/)
+      @contribution = Contribution.find(params[:id])
+    else
+      render file: 'public/404.html', status: 404, layout: false
+      false
+    end
+  end
+
   def check_opt_out_list
     # contributor email depends on the action (create or update)
     # note: Ruby 2.3 offers .dig method for checking hashes
@@ -149,33 +169,6 @@ class ContributionsController < ApplicationController
       respond_to { |format| format.js }
     else
       true
-    end
-  end
-
-  def new_contributor(contribution_params)
-    User.new(
-      first_name: contribution_params[:contributor_first_name],
-      last_name: contribution_params[:contributor_last_name],
-      email: contribution_params[:contributor_email],
-      # password is necessary, so just set it to the email
-      password: contribution_params[:email] || 'password',  # don't want a validation error here
-      sign_up_code: 'csp_beta'
-    )
-    # Note - skipping confirmation means the user can log in
-    #   with these credentials
-    # contributor.skip_confirmation!  this is undefined when :confirmable is disabled
-  end
-
-  def set_contribution_if_valid_token?
-    # contributor update
-    if params[:token] && (@contribution = Contribution.find_by(access_token: params[:token]))
-      @contribution
-    # curator update
-    elsif request.path.match(/\/contributions\/\d+/)
-      @contribution = Contribution.find(params[:id])
-    else
-      render file: 'public/404.html', status: 404, layout: false
-      false
     end
   end
 
