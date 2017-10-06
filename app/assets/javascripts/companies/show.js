@@ -12,12 +12,8 @@ function companiesShowListeners () {
 
   crowdsourceListeners();
   curateListeners();
-  storiesEditListeners();
   promoteListeners();
   measureListeners();
-  measureCharts();
-  measureStories();
-  measureVisitors();
 
 }
 

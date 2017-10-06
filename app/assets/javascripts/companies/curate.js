@@ -196,9 +196,6 @@ function filterCurateGallery () {
 
 }
 
-// when a story is selected,
-// - disallow pointer events on other stories
-// - stay in persistent hover state
 
 
 

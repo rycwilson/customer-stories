@@ -1,6 +1,10 @@
 
 function measureListeners () {
 
+  measureCharts();
+  measureStories();
+  measureVisitors();
+
   $(document)
     // toggle display Recent activity groups
     .on('show.bs.collapse hidden.bs.collapse', '#activity-groups .hiddenRow',

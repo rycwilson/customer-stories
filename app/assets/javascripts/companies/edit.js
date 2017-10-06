@@ -20,16 +20,16 @@ function companiesEdit () {
       }
     });
 
-
-
 }
 
 function companiesEditListeners () {
+
   companyProfileListeners();
   crowdsourcingTemplatesListeners();
   storyTagsListeners();
   storyCTAsListeners();
   widgetConfigListeners();
+
 }
 
 

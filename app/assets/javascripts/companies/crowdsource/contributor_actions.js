@@ -2,11 +2,6 @@
 function contributorActionsListeners () {
 
   var contributionRequest,  // { contributor: ..., subject: ..., body: ... }
-      $contributionRequestModal = $('#contribution-request-modal'),
-      // things go haywire if a different selector is used, e.g. $('textarea')
-      $contributionRequestEditor = $contributionRequestModal
-                                     .find("[data-provider='summernote']"),
-      $contributionContentModal = $('#contribution-content-modal'),
       contributionPath = function (contributionId) {
         return '/companies/' + app.company.id + '/contributions/' + contributionId;
       },
@@ -15,8 +10,11 @@ function contributorActionsListeners () {
           .filter(function (item) { return app.current_user[item] === '' ; });
       },
       // type is 'send' or 'readonly'
-      populateContributionRequest = function (contributionRequest, type) {
-        var formattedDate = function (date) {
+      loadContributionRequest = function (contributionRequest, type) {
+        // things go haywire if a different selector is used, e.g. $('textarea')
+        var $modal = $('#contribution-request-modal'),
+            $editor = $modal.find("[data-provider='summernote']");
+            formattedDate = function (date) {
               return moment(date).calendar(null, {
                 sameDay: '[today]',
                 lastDay: '[yesterday]',
@@ -26,31 +24,31 @@ function contributorActionsListeners () {
             };
 
         // send or readonly
-        $contributionRequestModal.find('.modal-content').addClass(type);
+        $modal.find('.modal-content').addClass(type);
         if (type === 'send') {
-          $contributionRequestModal.find('.modal-content').removeClass('readonly');
+          $modal.find('.modal-content').removeClass('readonly');
         } else {
-          $contributionRequestModal.find('.modal-content').removeClass('send');
+          $modal.find('.modal-content').removeClass('send');
         }
         // set the readonly title (null is ok; formattedDate returns "Invalid")
-        $contributionRequestModal.find('.readonly.modal-title span:last-child')
+        $modal.find('.readonly.modal-title span:last-child')
           .text(formattedDate(contributionRequest.sent_at));
         // set the path
-        $contributionRequestModal.find('form')
+        $modal.find('form')
           .attr('action', contributionPath(contributionRequest.id));
         // recipient
-        $contributionRequestModal.find('#request-recipient').html(
+        $modal.find('#request-recipient').html(
           contributionRequest.contributor.full_name + '&nbsp;&nbsp;' +
           '&lt' + contributionRequest.contributor.email + '&gt'
         );
         // request subject
-        $contributionRequestModal.find('[name="contribution[request_subject]"]')
+        $modal.find('[name="contribution[request_subject]"]')
           .val(contributionRequest.subject)
           .attr('readonly', type === 'readonly' ? true : false);
         // request body
-        $contributionRequestEditor.summernote('code', contributionRequest.body);
+        $editor.summernote('code', contributionRequest.body);
         // enable or disable editor
-        $contributionRequestEditor.summernote(
+        $editor.summernote(
           type === 'readonly' ? 'disable' : 'enable'
         );
 
@@ -73,17 +71,21 @@ function contributorActionsListeners () {
               },
               sent_at: contribution.request_sent_at
             };
-            populateContributionRequest(contributionRequest, type);
-            $contributionRequestModal.modal('show');
+            $.when(loadContributionRequest(contributionRequest, type))
+              .then(function () {
+                $('#contribution-request-modal').modal('show');
+              });
+
           });
       },
       toggleEmailProgress = function (state) {
+        var $modal = $('#contribution-request-modal');
         if (state === 'on') {
-          $contributionRequestModal.find('.modal-title').addClass('hidden');
-          $contributionRequestModal.find('.progress').removeClass('hidden');
+          $modal.find('.modal-title').addClass('hidden');
+          $modal.find('.progress').removeClass('hidden');
         } else {
-          $contributionRequestModal.find('.modal-title').removeClass('hidden');
-          $contributionRequestModal.find('.progress').addClass('hidden');
+          $modal.find('.modal-title').removeClass('hidden');
+          $modal.find('.progress').addClass('hidden');
         }
       },
       removeContribution = function (id) {
