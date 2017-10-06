@@ -72,7 +72,7 @@ function curateListeners () {
       });
     })
 
-    .on('change', '.curate.curator-select, .curate.category-select,' +
+    .on('change', '.curate.customer-select, .curate.curator-select, .curate.category-select,' +
         '.curate.product-select, .curate.published, .curate.preview-published, ' +
         '.curate.logo-published, .curate.pending-curation',
       function (e) {
@@ -109,7 +109,7 @@ function curateListeners () {
         // select2 inputs to default values...
         $('.new-story-customer').select2('val', '');  // single select
         $('.new-story-tags').val('').trigger('change');  // multiple select
-      })
+      });
 
     // .on('click', '#curate-story-layout .layout-sidebar a', function () {
     //   Cookies.set('curate-story-tab', $(this).attr('href'));
@@ -120,6 +120,7 @@ function curateListeners () {
 function filterCurateGallery () {
   var stories = [], $gallery= $('#curate-gallery'),
       storiesTemplate = _.template($('#stories-template').html()),
+      customerId = $('.curate.customer-select').val(),
       curatorId = $('.curate.curator-select').val(),
       categoryId = $('.curate.category-select').val(),
       productId = $('.curate.product-select').val(),
@@ -128,48 +129,53 @@ function filterCurateGallery () {
       showLogoPublished = $('.curate.logo-published').prop('checked'),
       showPendingCuration = $('.curate.pending-curation').prop('checked');
 
+  var customerStoryIds = (customerId === '0') ? _.pluck(app.stories, 'id') :
+        _.pluck(app.stories.filter(function (story) {
+          return story.success.customer.id == customerId;
+        }), 'id');
+
   var curatorStoryIds = (curatorId === '0') ? _.pluck(app.stories, 'id') :
         _.pluck(app.stories.filter(function (story) {
-                  return story.success.curator_id == curatorId;
+          return story.success.curator_id == curatorId;
         }), 'id');
         // console.log(curatorStoryIds)
   var categoryStoryIds = (categoryId === '0') ? _.pluck(app.stories, 'id') :
         _.pluck(app.stories.filter(function (story) {
-                  return story.success.story_categories &&
-                     story.success.story_categories.some(function (category) {
-                       return category.id == categoryId;
-                     });
+          return story.success.story_categories &&
+             story.success.story_categories.some(function (category) {
+               return category.id == categoryId;
+             });
         }), 'id');
         // console.log(categoryStoryIds)
   var productStoryIds = (productId === '0') ? _.pluck(app.stories, 'id') :
         _.pluck(app.stories.filter(function (story) {
-                  return story.success.products &&
-                    story.success.products.some(function (product) {
-                      return product.id == productId;
-                    });
+          return story.success.products &&
+            story.success.products.some(function (product) {
+              return product.id == productId;
+            });
         }), 'id');
         // console.log(productStoryIds)
   var publishedStoryIds =
         _.pluck(app.stories.filter(function (story) {
-                  return story.published;
+          return story.published;
         }), 'id');
         // console.log(publishedStoryIds)
   var previewStoryIds =
         _.pluck(app.stories.filter(function (story) {
-                  return !story.published && story.preview_published;
+          return !story.published && story.preview_published;
         }), 'id');
   var logoStoryIds =
         _.pluck(app.stories.filter(function (story) {
-                  return !story.published && !story.preview_published && story.logo_published;
+          return !story.published && !story.preview_published && story.logo_published;
         }), 'id');
         // console.log(logoStoryIds)
   var pendingStoryIds =
         _.pluck(app.stories.filter(function (story) {
-                  return !story.published && !story.preview_published && !story.logo_published;
+          return !story.published && !story.preview_published && !story.logo_published;
         }), 'id');
       // console.log(pendingStoryIds)
 
-  storyIds = _.intersection(curatorStoryIds, categoryStoryIds, productStoryIds);
+  storyIds = _.intersection(customerStoryIds, curatorStoryIds, categoryStoryIds, productStoryIds);
   // console.log('after intersection: ', storyIds);
   storyIds = showPublished ? storyIds : _.difference(storyIds, publishedStoryIds);
   // console.log('after removing published (if necessary): ', storyIds)
@@ -178,9 +184,8 @@ function filterCurateGallery () {
   // console.log('after removing logo published (if necessary): ', storyIds)
   storyIds = showPendingCuration ? storyIds : _.difference(storyIds, pendingStoryIds);
   // console.log('after removing pending (if necessary): ', storyIds)
-  stories = app.stories.filter(function (story) {
-              return storyIds.includes(story.id);
-            });
+
+  stories = app.stories.filter(function (story) { return storyIds.includes(story.id); });
 
   // console.log('results: ', stories);
   $gallery.empty()

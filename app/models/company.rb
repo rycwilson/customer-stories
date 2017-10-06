@@ -21,7 +21,6 @@ class Company < ActiveRecord::Base
       self.map() do |customer|
         [ customer.name, customer.id ]
       end
-      .unshift( [""] )  # empty option makes placeholder possible (only needed for single select)
     end
   end
   has_many :successes, -> { includes(:story) }, through: :customers do
@@ -461,7 +460,7 @@ class Company < ActiveRecord::Base
             success: {
               only: [:curator_id],
               include: {
-                customer: { only: [:name, :logo_url] },
+                customer: { only: [:id, :name, :logo_url] },
                 story_categories: { only: [:id, :name, :slug] },
                 products: { only: [:id, :name, :slug] } }}}
         })

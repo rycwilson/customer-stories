@@ -17,7 +17,7 @@ function initSelect2 () {
 // ref: http://stackoverflow.com/questions/36497723
 // console.log('uninitialized s2: ', $(document).find('select.stories-filter').not('.select2-hidden-accessible'));
 
-  $('.curator-select, .category-select, .product-select').select2({
+  $('.customer-select, .curator-select, .category-select, .product-select').select2({
     theme: 'bootstrap',
     width: 'style'
   });
