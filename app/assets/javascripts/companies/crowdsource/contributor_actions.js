@@ -10,7 +10,7 @@ function contributorActionsListeners () {
           .filter(function (item) { return app.current_user[item] === '' ; });
       },
       // type is 'send' or 'readonly'
-      loadContributionRequest = function (contributionRequest, type) {
+      loadContributionRequest = function (contributionRequest, type, callback) {
         // things go haywire if a different selector is used, e.g. $('textarea')
         var $modal = $('#contribution-request-modal'),
             $editor = $modal.find("[data-provider='summernote']");
@@ -52,8 +52,13 @@ function contributorActionsListeners () {
           type === 'readonly' ? 'disable' : 'enable'
         );
 
+        callback();
+
       },
       showContributionRequest = function (contributionId, type) {
+        var callback = function () {
+          $('#contribution-request-modal').modal('show');
+        };
         $.ajax({
           url: contributionPath(contributionId),
           method: 'get',
@@ -71,11 +76,7 @@ function contributorActionsListeners () {
               },
               sent_at: contribution.request_sent_at
             };
-            $.when(loadContributionRequest(contributionRequest, type))
-              .then(function () {
-                $('#contribution-request-modal').modal('show');
-              });
-
+            loadContributionRequest(contributionRequest, type, callback);
           });
       },
       toggleEmailProgress = function (state) {
