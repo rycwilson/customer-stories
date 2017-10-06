@@ -38,6 +38,9 @@
     .readonly { display: none }
   }
   .modal-content.readonly {
+    .modal-body * {
+      pointer-events: none;
+    }
     .send, .note-toolbar {
       display: none
     }

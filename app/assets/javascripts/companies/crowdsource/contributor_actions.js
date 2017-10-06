@@ -14,6 +14,7 @@ function contributorActionsListeners () {
         return ['first_name', 'last_name', 'photo', 'phone', 'position']
           .filter(function (item) { return app.current_user[item] === '' ; });
       },
+      // type is 'send' or 'readonly'
       populateContributionRequest = function (contributionRequest, type) {
         var formattedDate = function (date) {
               return moment(date).calendar(null, {
