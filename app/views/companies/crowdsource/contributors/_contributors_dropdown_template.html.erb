@@ -29,6 +29,17 @@
 
       {{ } }}
 
+      {{ if (status === 'did_not_respond') { }}
+
+        <li class='re-send-request'>
+          <a href="javascript:;">
+            <i class='fa fa-envelope-o action'></i>&nbsp;
+            <span>Re-send Request</span>
+          </a>
+        </li>
+
+      {{ } }}
+
       {{ if (workflowStage === 'crowdsource') { }}
 
         {{ if (story && story.published) { }}

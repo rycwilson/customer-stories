@@ -49,9 +49,10 @@ class Contribution < ActiveRecord::Base
     if: Proc.new { self.status_changed? && self.status == 'request_sent' }
   )
   before_update(:set_request_remind_at,
-    if: Proc.new {
-      self.status_changed? && ['request_sent', 'first_reminder_sent'].include?(self.status)
-    }
+    if: Proc.new do
+      self.status_changed? &&
+      ['request_sent', 'first_reminder_sent', 'second_reminder_sent'].include?(self.status)
+    end
   )
 
   # validates :user_id, presence: true
@@ -213,6 +214,8 @@ class Contribution < ActiveRecord::Base
       self.remind_at = Time.now() + self.first_reminder_wait.days()
     elsif self.status == 'first_reminder_sent'
       self.remind_at = Time.now() + self.second_reminder_wait.days()
+    elsif self.status == 'second_reminder_sent'
+      self.remind_at = nil
     end
   end
 

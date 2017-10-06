@@ -90,7 +90,20 @@ function contributorActionsListeners () {
   $(document)
 
     .on('click', '.send-request', function () {
+      var contributionId = $(this).closest('tr').data('contribution-id');
 
+      if (missingCuratorInfo().length > 0) {
+        flashDisplay("Can't send email because the following Curator fields are missing: "  +
+          missingCuratorInfo().join(', '), 'danger');
+        return false;
+
+      } else {
+        showContributionRequest(contributionId, 'send');
+      }
+
+    })
+
+    .on('click', '.re-send-request', function () {
       var contributionId = $(this).closest('tr').data('contribution-id');
 
       if (missingCuratorInfo().length > 0) {
