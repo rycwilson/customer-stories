@@ -52,7 +52,7 @@ function initContributorsTable (workflowStage) {
       {
         name: 'crowdsourcing_template',
         data: 'crowdsourcing_template.name',
-        defaultContent: '<span style="color: #999">Select</span>'
+        defaultContent: '<span class="placeholder">Select</span>'
       },
 
       {  // <td data-search="<%= contribution.success.curator.id %>"></td>
