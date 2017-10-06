@@ -9,6 +9,17 @@ namespace :temp do
     Success.find(27).story.update(title:'How to Deploy a Customer Reference Application for Your Sales Team')
   end
 
+  task copy_old_contribution_requests: :environment do
+    EmailContributionRequest.all.each do |contribution_request|
+      contribution_request.contribution.update(
+        crowdsourcing_template_id: nil,
+        request_subject: contribution_request.subject,
+        request_body: contribution_request.body,
+        request_sent_at: contribution_request.created_at
+      )
+    end
+  end
+
   task create_crowdsourcing_templates: :environment do
     CrowdsourcingTemplate.destroy_all
     ActiveRecord::Base.connection.execute('ALTER SEQUENCE crowdsourcing_templates_id_seq RESTART WITH 1')
