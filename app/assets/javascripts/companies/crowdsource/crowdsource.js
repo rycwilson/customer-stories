@@ -27,7 +27,26 @@ function crowdsourceListeners () {
 
     .on('click', 'td.crowdsourcing-template',
       function (e) {
-        contributorsEditor.inline(this);
+        var $row = $(this).parent();
+        // default options: https://editor.datatables.net/reference/option/formOptions.inline
+        contributorsEditor.inline(this, 'crowdsourcing_template.id',
+          {
+            onComplete: function (editor) {
+              var dt = $(editor.s.table).DataTable(), rowData = dt.row($row).data();
+              editor.close();
+              // the drawType option isn't forcing a re-draw (?),
+              // so re-draw the individual row
+              // forum discussion: https://datatables.net/forums/discussion/45189
+              dt.row($row).data(rowData).draw();
+            },
+            drawType: true,
+            buttons: {
+              label: 'Save',
+              className: 'btn-success btn-sm',
+              fn: function () { this.submit(); }
+            }
+          }
+        );
       })
 
     .on('click', '#crowdsource-contributors-table a.success',
@@ -36,10 +55,6 @@ function crowdsourceListeners () {
         $('a[href="#successes"]').tab('show');
         $('#successes-filter').val('success-' + successId).trigger('change');
       })
-
-    .on('click', '#crowdsource-contributors-table td.email-template', function (e) {
-      contributorsEditor.inline(this);
-    })
 
     // no striping for grouped rows, yes striping for ungrouped
     // manipulate via jquery; insufficient to just change even/odd classes

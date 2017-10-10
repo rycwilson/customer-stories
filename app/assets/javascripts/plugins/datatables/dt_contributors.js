@@ -1,6 +1,33 @@
 
 function initContributorsTable (workflowStage) {
 
+  // need to put these in the global space so they can be seen by
+  // functions in crowdsourceListeners() / curateListeners()
+  contributorsEditor = new $.fn.dataTable.Editor({
+    table: '#crowdsource-contributors-table',
+    ajax: {
+      edit: {
+        type: 'PUT',
+        url:  '/companies/' + app.company.id + '/contributions/_id_'
+      },
+    },
+    idSrc: 'id',
+    fields: [
+      {
+        label: 'Select a template',
+        name: 'crowdsourcing_template.id',  // should match columns.data
+        data: {
+          _: 'crowdsourcing_template.id',
+          display: 'crowdsourcing_template.name'
+        },
+        type: 'select2',
+        options: app.company.crowdsourcing_templates.map(function (template) {
+                    return { label: template.name, value: template.id };
+                  })
+      },
+    ]
+  });
+
   var successIndex = 2, curatorIndex = 4, customerIndex = 5, colCount = 8;
 
   $('table[id="' + workflowStage + '-contributors-table"]').DataTable({
@@ -32,26 +59,15 @@ function initContributorsTable (workflowStage) {
       {  // <td data-search="s<%= contribution.success.id %>, <%= contribution.success.name %>">
         name: 'success',
         defaultContent: 'Unknown Opportunity',
-        data: 'success.name',
-        // render: {
-        //   _: 'success.name',
-        //   display: function (data, type, contributionRow, meta) {
-        //   // console.log(data)
-        //   // console.log(type)
-        //   // console.log(contributionRow)
-        //   // console.log(meta)
-        //           return "<span style='font-weight:600'>" +
-        //                     contributionRow.success.customer.name +
-        //                  "</span>&nbsp;&nbsp;&#8211;&nbsp;&nbsp;" +
-        //                  "<a href='javascript:;' class='success-name'>" +
-        //                     contributionRow.success.name +
-        //                  "</a>";}
-        // }
-      },           // story candidate
+        data: 'success.name'
+      },
       // <td data-search="t<%#= contribution.crowdsourcing_template_id  %>" class='crowdsourcing-template'>
       {
         name: 'crowdsourcing_template',
-        data: 'crowdsourcing_template.name',
+        data: {
+          _: 'crowdsourcing_template.id',
+          display: 'crowdsourcing_template.name'
+        },
         defaultContent: '<span class="placeholder">Select</span>'
       },
 
@@ -145,6 +161,7 @@ function initContributorsTable (workflowStage) {
           );
       }
     },
+
     createdRow: function (row, data, index) {
       $(row).attr('data-contribution-id', data.id);
       $(row).attr('data-success-id', data.success.id);
@@ -159,13 +176,7 @@ function initContributorsTable (workflowStage) {
       $(row).children().eq(3).addClass('status');
       $(row).children().eq(4).addClass('dropdown actions-dropdown');
     },
-    // buttons: [
-    //     { extend: 'create', editor: editor },
-    //     { extend: 'edit',   editor: editor },
-    //     { extend: 'remove', editor: editor }
-    // ],
-    // drawCallback: function (settings) {
-    // },
+
     initComplete: function (settings, json) {
       var $tableWrapper = $(this).closest('[id*="table_wrapper"]'),
           template = _.template($('#contributors-table-header-template').html());
@@ -207,28 +218,26 @@ function initContributorsTable (workflowStage) {
         // need to put this in the global space so it can be seen by
         // functions in crowdsourceListeners()
         // NOTE: skip the hidden columns
-        contributorsEditor = new $.fn.dataTable.Editor({
-          ajax: 'companies/' + app.company.id + '/contributions',
-          table: '#crowdsource-contributors-table',
-          idSrc: 'id',
-          fields: [
-            { name: 'contributor_details' },
-            { name: 'contributor' },
-            // { name: 'success' },
-            {
-              label: 'Select a template',
-              name: 'crowdsourcing_template.name',  // should match columns.data
-              type: 'select2',
-              options: app.company.crowdsourcing_templates.map(function (template) {
-                          return { label: template.name, value: template.id };
-                        })
-            },
-            // { name: 'curator' },
-            // { name: 'customer' },
-            { name: 'status' },
-            { name: 'actions' }
-          ]
-        });
+        // contributorsEditor = new $.fn.dataTable.Editor({
+        //   ajax: {
+        //     edit: {
+        //       type: 'PUT',
+        //       url:  '/companies/' + app.company.id + '/contributions/_id_'
+        //     },
+        //   },
+        //   table: '#crowdsource-contributors-table',
+        //   idSrc: 'id',
+        //   fields: [
+        //     {
+        //       label: 'Select a template',
+        //       name: 'crowdsourcing_template.id',  // should match columns.data
+        //       type: 'select2',
+        //       options: app.company.crowdsourcing_templates.map(function (template) {
+        //                   return { label: template.name, value: template.id };
+        //                 })
+        //     },
+        //   ]
+        // });
 
       // workflowStage == curate
       // contributors under a Story don't have curator and filter selects

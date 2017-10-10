@@ -1,0 +1,99 @@
+
+// applies to both crowdsource-contributors and curate-contributors tables
+[id*="-contributors-table"] {
+  td {
+    vertical-align: middle !important;  // override bootstrap for case of inline editor expanding row height
+  }
+  // contributor details child row
+  tr[data-contribution-id] + tr:not([data-contribution-id]):not(.group) {
+    background-color: #f5f5f5;
+    > td {
+      padding: 20px 8px;
+    }
+  }
+
+  td.crowdsourcing-template {
+    span.select2 {
+      margin-bottom: 8px;
+    }
+    .btn-success {
+      float: right;
+    }
+    .placeholder {
+      color: #999;
+    }
+  }
+  tr.active td.crowdsourcing-template .placeholder {
+    color: #fff !important;
+  }
+
+  td.contributor-name {
+    // these were settings used for an edit icon that would appear when
+    // child row was opened...
+    // overflow: hidden;
+    // > span {
+    //   margin-left: -32px;
+    //   i {
+    //     padding: 0 10px 0 6px;
+    //     // cursor: pointer;
+    //   }
+    // }
+    // span.shown {
+    //   margin-left: 0;
+    // }
+  }
+
+  td.status {
+    // this ensures newlines will be respected
+    // ref: https://stackoverflow.com/questions/10937218
+    white-space: pre;
+  }
+
+  td.actions-dropdown {
+    .dropdown-menu-right {
+      right: -10px;
+    }
+  }
+
+  div.contributor-details {
+    // horizontal form
+    #contributor-form {
+      > .row > div:last-child {
+        padding-left: 0;
+      }
+      .form-group {
+        width: 100%;
+        margin-bottom: 15px;
+        label {
+          width: 22%;
+          padding: 7px 0 0 0;
+        }
+        > div:last-child:not(.linkedin-checkbox-container) {  // inputs
+          width: 78%;
+        }
+        .form-control {
+          font-size: 13px;
+        }
+        input:not([type='checkbox']) {
+          width: 100%;
+        }
+      }
+      .linkedin-checkbox-container {
+        width: 100%;
+        label {
+          width: 100%;
+          padding-left: 36px;
+        }
+      }
+      > .row:last-child {
+        button[type=submit] {
+          width: 98px;
+        }
+        > div:only-child {
+          padding-right: 20px;
+        }
+      }
+
+    }
+  }
+}

@@ -1,0 +1,44 @@
+
+#successes-table, [id*="-contributors-table"] {
+
+  th[class*='details'], td[class*='details'] {
+    // padding necessary to override datatables css that adds padding-right: 30px to the th,
+    // thus preventing text from centering horizontally
+    padding: 8px;
+    vertical-align: middle;
+    text-align: center;
+    cursor: pointer;
+    color: #666
+  }
+
+  th.actions-dropdown {
+    text-align: center;
+    padding: 8px 12px;
+  }
+  td.actions-dropdown {
+    text-align: center;
+    vertical-align: middle;
+    color: #666;
+    // ref: http://stackoverflow.com/questions/11078509/how-to-increase-the-clickable-area-of-a-a-tag-button
+    div > a {
+      color: inherit;
+      display: inline-block;
+      position: relative;
+      z-index: 1;
+      padding: 10% 50%;
+      margin: -2em;
+      // color: #666;
+    }
+    i.action {
+      color: #666;
+      width: 17px;
+    }
+    i.action + span {
+      color: #444;
+    }
+  }
+  tr.active i:not(.action) {
+    color: white;
+    text-decoration: none;
+  }
+}

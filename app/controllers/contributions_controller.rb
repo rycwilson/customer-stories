@@ -6,6 +6,7 @@ class ContributionsController < ApplicationController
 
   respond_to(:html, :json, :js)
 
+  # datatables source data
   def index
     company = Company.find(params[:company_id])
     data = company.contributions.to_json({
@@ -69,7 +70,35 @@ class ContributionsController < ApplicationController
   end
 
   def update
-    if params[:send_request]
+    if params[:data]  # crowdsourcing template (datatables inline editor)
+      # binding.remote_pry
+      @contribution.crowdsourcing_template_id =
+          params[:data].values[0][:crowdsourcing_template][:id]
+      @contribution.save
+      dt_data = [ JSON.parse(@contribution.to_json({
+        only: [:id, :status], methods: [:display_status],
+        include: {
+          success: {
+            only: [:id, :name],
+            include: {
+              curator: { only: [:id], methods: [:full_name] },
+              customer: { only: [:id, :name, :slug] },
+              story: { only: [:id, :title, :published, :slug],
+                       methods: [:csp_story_path] }
+            }
+          },
+          contributor: { only: [:id], methods: [:full_name] },
+          referrer: { only: [:id], methods: [:full_name] },
+          crowdsourcing_template: { only: [:id, :name] },
+        }
+      })) ]
+      respond_to do |format|
+        format.json do
+          render({ json: { data: dt_data }.to_json })
+        end
+      end
+
+    elsif params[:send_request]
       # assign any edits to request_subject and request_body
       @contribution.assign_attributes(contribution_params)
       if (UserMailer.contribution_request(@contribution).deliver_now())
