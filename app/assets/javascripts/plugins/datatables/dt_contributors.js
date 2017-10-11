@@ -166,15 +166,18 @@ function initContributorsTable (workflowStage) {
       $(row).attr('data-contribution-id', data.id);
       $(row).attr('data-success-id', data.success.id);
       $(row).attr('data-contributor-id', data.contributor.id);
-      // make sure to skip the hidden columns (2, 4, 5)
       $(row).children().eq(0).addClass('contributor-details');
       $(row).children().eq(1).addClass('contributor');
-      // $(row).children().eq(2).addClass('success');
-      $(row).children().eq(2).addClass('crowdsourcing-template');
-      // $(row).children().eq(4).addClass('curator');
-      // $(row).children().eq(5).addClass('customer');
+      $(row).children().eq(2)
+        .addClass('crowdsourcing-template')
+        .append('<i class="fa fa-caret-down"></i>');
       $(row).children().eq(3).addClass('status');
       $(row).children().eq(4).addClass('dropdown actions-dropdown');
+      // don't allow selection of crowdsourcing template if request has been sent
+      if ( $(row).children().eq(3).text().includes('sent') ) {
+        $(row).children().eq(2).addClass('view-request')
+          .html('<em><a href="javascript:;">View Sent Request</a></em>');
+      }
     },
 
     initComplete: function (settings, json) {
@@ -214,30 +217,6 @@ function initContributorsTable (workflowStage) {
 
         $curatorSelect.val( app.current_user.id.toString() )
           .trigger('change', { auto: true });
-
-        // need to put this in the global space so it can be seen by
-        // functions in crowdsourceListeners()
-        // NOTE: skip the hidden columns
-        // contributorsEditor = new $.fn.dataTable.Editor({
-        //   ajax: {
-        //     edit: {
-        //       type: 'PUT',
-        //       url:  '/companies/' + app.company.id + '/contributions/_id_'
-        //     },
-        //   },
-        //   table: '#crowdsource-contributors-table',
-        //   idSrc: 'id',
-        //   fields: [
-        //     {
-        //       label: 'Select a template',
-        //       name: 'crowdsourcing_template.id',  // should match columns.data
-        //       type: 'select2',
-        //       options: app.company.crowdsourcing_templates.map(function (template) {
-        //                   return { label: template.name, value: template.id };
-        //                 })
-        //     },
-        //   ]
-        // });
 
       // workflowStage == curate
       // contributors under a Story don't have curator and filter selects

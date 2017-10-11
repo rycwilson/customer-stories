@@ -25,36 +25,57 @@ function crowdsourceListeners () {
       Cookies.set('crowdsource-tab', $(this).attr('href'));
     })
 
-    .on('click', 'td.crowdsourcing-template',
-      function (e) {
-        var $row = $(this).parent();
-        // default options: https://editor.datatables.net/reference/option/formOptions.inline
-        contributorsEditor.inline(this, 'crowdsourcing_template.id',
-          {
-            onComplete: function (editor) {
-              var dt = $(editor.s.table).DataTable(), rowData = dt.row($row).data();
-              editor.close();
-              // the drawType option isn't forcing a re-draw (?),
-              // so re-draw the individual row
-              // forum discussion: https://datatables.net/forums/discussion/45189
-              dt.row($row).data(rowData).draw();
-            },
-            drawType: true,
-            buttons: {
-              label: 'Save',
-              className: 'btn-success btn-sm',
-              fn: function () { this.submit(); }
-            }
-          }
-        );
-      })
+    // the close event happens shortly after blur; to ensure smooth transition...
+    .on('blur', 'td.crowdsourcing-template', function () {
+      var $td = $(this);
+      contributorsEditor.one('close', function () {
+        $td.removeClass('editor-open');
+      });
+    })
 
-    .on('click', '#crowdsource-contributors-table a.success',
-      function (e) {
-        var successId = $(this).closest('tr').next().data('success-id');
-        $('a[href="#successes"]').tab('show');
-        $('#successes-filter').val('success-' + successId).trigger('change');
-      })
+    .on('click', 'td.crowdsourcing-template', function (e) {
+
+      var $row = $(this).parent();
+
+      // don't allow template change if request already sent (or re-sent)
+      // (see createdRow property of datatables config)
+      if ( $(this).hasClass('view-request') ) { return false; }
+
+      $(this).addClass('editor-open');  // styling adjustment
+
+      // default options: https://editor.datatables.net/reference/option/formOptions.inline
+      contributorsEditor.inline(this, 'crowdsourcing_template.id',
+        {
+          onComplete: function (editor) {
+            var dt = $(editor.s.table).DataTable(), rowData = dt.row($row).data();
+            editor.close();
+            // the drawType option isn't forcing a re-draw (?),
+            // so re-draw the individual row
+            // forum discussion: https://datatables.net/forums/discussion/45189
+            dt.row($row).data(rowData).draw();
+            $row.find('td.crowdsourcing-template').append(
+              '<i class="fa fa-check" style="color:#456f59"></i>' +
+              '<i class="fa fa-caret-down" style="display:none"></i>'
+            );
+            setTimeout(function () {
+              $row.find('td.crowdsourcing-template i').toggle();
+            }, 2000);
+          },
+          drawType: true,
+          buttons: {
+            label: 'Save',
+            className: 'btn-success btn-sm',
+            fn: function () { this.submit(); }
+          }
+        }
+      );
+    })
+
+    .on('click', '#crowdsource-contributors-table a.success', function (e) {
+      var successId = $(this).closest('tr').next().data('success-id');
+      $('a[href="#successes"]').tab('show');
+      $('#successes-filter').val('success-' + successId).trigger('change');
+    })
 
     // no striping for grouped rows, yes striping for ungrouped
     // manipulate via jquery; insufficient to just change even/odd classes
@@ -68,44 +89,40 @@ function crowdsourceListeners () {
       })
 
     // successes - order by customer grouping
-    .on('click', '#successes-table tr.group',
-      function () {
-        var dt = $('#successes-table').DataTable(),
-            currentOrder = dt.order()[0];
-        if (currentOrder[0] === 1 && currentOrder[1] === 'asc') {
-          dt.order([ 1, 'desc' ]).draw();
-        }
-        else {
-          dt.order([ 1, 'asc' ]).draw();
-        }
-      })
+    .on('click', '#successes-table tr.group', function () {
+      var dt = $('#successes-table').DataTable(),
+          currentOrder = dt.order()[0];
+      if (currentOrder[0] === 1 && currentOrder[1] === 'asc') {
+        dt.order([ 1, 'desc' ]).draw();
+      }
+      else {
+        dt.order([ 1, 'asc' ]).draw();
+      }
+    })
 
     // contributors - order by success
-    .on('click', '#crowdsource-contributors-table tr.group',
-      function (e) {
-        var dt = $('#crowdsource-contributors-table').DataTable(),
-            successIndex = 2,
-            currentOrder = dt.order()[0];
-        if (! $(e.target).is('a') ) {
-          if (currentOrder[0] === successIndex && currentOrder[1] === 'asc') {
-            dt.order([ successIndex, 'desc' ]).draw();
-          }
-          else {
-            dt.order([ successIndex, 'asc' ]).draw();
-          }
+    .on('click', '#crowdsource-contributors-table tr.group', function (e) {
+      var dt = $('#crowdsource-contributors-table').DataTable(),
+          successIndex = 2,
+          currentOrder = dt.order()[0];
+      if (! $(e.target).is('a') ) {
+        if (currentOrder[0] === successIndex && currentOrder[1] === 'asc') {
+          dt.order([ successIndex, 'desc' ]).draw();
         }
-      })
+        else {
+          dt.order([ successIndex, 'asc' ]).draw();
+        }
+      }
+    })
 
-    .on('shown.bs.dropdown', '.actions-dropdown',
-      function () {
-        $(this).closest('tr').addClass('active');
-      })
+    .on('shown.bs.dropdown', '.actions-dropdown', function () {
+      $(this).closest('tr').addClass('active');
+    })
 
-    .on('hidden.bs.dropdown', '.actions-dropdown',
-      function () {
-        $(this).closest('tr').removeClass('active');
-        // $(this).children().last().css('color', '#666');
-      });
+    .on('hidden.bs.dropdown', '.actions-dropdown', function () {
+      $(this).closest('tr').removeClass('active');
+      // $(this).children().last().css('color', '#666');
+    });
 
 }
 

@@ -175,7 +175,8 @@ function contributorActionsListeners () {
       toggleEmailProgress('off');
     })
 
-    .on('click', '.contributor-actions .view-request', function () {
+    .on('click', '.contributor-actions .view-request, ' +
+                 'td.crowdsourcing-template.view-request a', function () {
       var contributionId = $(this).closest('tr').data('contribution-id');
       showContributionRequest(contributionId, 'readonly');
     })

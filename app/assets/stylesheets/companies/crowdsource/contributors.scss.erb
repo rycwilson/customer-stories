@@ -3,6 +3,7 @@
 [id*="-contributors-table"] {
   td {
     vertical-align: middle !important;  // override bootstrap for case of inline editor expanding row height
+    i { color: #666; }
   }
   // contributor details child row
   tr[data-contribution-id] + tr:not([data-contribution-id]):not(.group) {
@@ -12,6 +13,20 @@
     }
   }
 
+  td.crowdsourcing-template:not(.view-request) {
+    cursor: pointer;
+    position: relative;
+    padding-right: 40px;
+    i {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translate(0, -50%);
+    }
+  }
+  td.crowdsourcing-template.editor-open {
+    padding-right: 8px;
+  }
   td.crowdsourcing-template {
     span.select2 {
       margin-bottom: 8px;
