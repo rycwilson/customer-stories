@@ -3,66 +3,67 @@
 
   {{ var AUTH_TOKEN = $('meta[name=csrf-token]').attr('content'); }}
 
-{{ console.log(contribution) }}
   <div class="container contributor-details" style='width:100%'>
 
-    <form id='contributor-form' class='form-horizontal' method='post'
-          action='/contributions/{{= contribution.id }}'
-          data-remote='true' data-type='script'>
+    <form action='{{= contributionPath }}' method='post' data-remote='true' data-type='script' class='form-horizontal contributor-form'>
 
       <input type="hidden" name="_method" value="put">
       <input type="hidden" name="authenticity_token" value="{{= AUTH_TOKEN }}">
+      <input type="hidden" name="contributor" value="{{= true }}">
+
+      <!-- // without this it will try to create a new record! -->
+      <input type="hidden" name="contribution[contributor_attributes][id]" value="{{= contribution.contributor.id }}">
 
       <div class="row">
 
         <div class="col-sm-6">
 
           <div class='form-group'>
-            <label for="contributor-{{= contribution.contributor.id }}-first-name" class="col-sm-3 control-label">First name</label>
+            <label for="contribution_contributor_attributes_first_name" class="col-sm-3 control-label">First name</label>
             <div class="col-sm-9">
               <input type="text" class="form-control"
-                id='contributor-{{= contribution.contributor.id }}-first-name'
-                name="contribution[contributor][first_name]"
+                id='contribution_contributor_attributes_first_name'
+                name="contribution[contributor_attributes][first_name]"
                 value="{{= contribution.contributor.first_name }}">
             </div>
           </div>
 
           <div class='form-group'>
-            <label for="contributor-{{= contribution.contributor.id }}-last-name" class="col-sm-3 control-label">Last name</label>
+            <label for="contribution_contributor_attributes_last_name" class="col-sm-3 control-label">Last name</label>
             <div class="col-sm-9">
               <input type="text" class="form-control"
-                id="contributor-{{= contribution.contributor.id }}-last-name"
-                name='contribution[contributor][last_name]'
+                id="contribution_contributor_attributes_last_name"
+                name='contribution[contributor_attributes][last_name]'
                 value="{{= contribution.contributor.last_name }}">
             </div>
           </div>
 
           <div class='form-group'>
-            <label for="contributor-{{= contribution.contributor.id }}-title" class="col-sm-3 control-label">Position</label>
+            <label for="contribution_contributor_attributes_title" class="col-sm-3 control-label">Position</label>
             <div class="col-sm-9">
               <input type="text" class="form-control"
-                id="contributor-{{= contribution.contributor.id }}-title"
-                name='contribution[contributor][title]'
+                id="contribution_contributor_attributes_title"
+                name='contribution[contributor_attributes][title]'
                 value="{{= contribution.contributor.title }}">
             </div>
           </div>
 
           <div class='form-group'>
-            <label for="contributor-{{= contribution.contributor.id }}-email" class="col-sm-3 control-label">Email</label>
+            <label for="contribution_contributor_attributes_email" class="col-sm-3 control-label">Email</label>
             <div class="col-sm-9">
               <input type="email" class="form-control"
-                id="contributor-{{= contribution.contributor.id }}-email"
-                name='contribution[contributor][email]'
+                id="contribution_contributor_attributes_email"
+                name='contribution[contributor_attributes][email]'
                 value="{{= contribution.contributor.email }}">
             </div>
           </div>
 
           <div class='form-group'>
-            <label for="contributor-{{= contribution.contributor.id }}-phone" class="col-sm-3 control-label">Phone</label>
+            <label for="contribution_contributor_attributes_phone" class="col-sm-3 control-label">Phone</label>
             <div class="col-sm-9">
               <input type="tel" class="form-control"
-                id="contributor-{{= contribution.contributor.id }}-phone"
-                name='contribution[contributor][phone]'
+                id="contribution_contributor_attributes_phone"
+                name='contribution[contributor_attributes][phone]'
                 value="{{= contribution.contributor.phone }}">
             </div>
           </div>
@@ -71,11 +72,11 @@
         <div class="col-sm-6">
 
           <div class='form-group'>
-            <label for="contributor-{{= contribution.contributor.id }}-linkedin-url" class="col-sm-3 control-label">LinkedIn</label>
+            <label for="contribution_contributor_attributes_linkedin_url" class="col-sm-3 control-label">LinkedIn</label>
             <div class="col-sm-9">
               <input type="text" class="form-control"
-                id="contributor-{{= contribution.contributor.id }}-linkedin-url"
-                name='contribution[contributor][linkedin_url]'
+                id="contribution_contributor_attributes_linkedin_url"
+                name='contribution[contributor_attributes][linkedin_url]'
                 placeholder='Profile URL'
                 value="{{= contribution.contributor.linkedin_url }}">
             </div>
@@ -144,10 +145,10 @@
           <button type="reset" class="btn btn-sm btn-default">
             Cancel
           </button>
-          <button type="submit" class="btn btn-sm btn-success text-center">
+          <button type="submit" class="btn btn-sm btn-success text-center" style='width:114px; color:#fff'>
             <span>Save changes</span>
-            <i class='fa fa-spinner fa-pulse' style='display:none'></i>
-            <i class='fa fa-check' style='display:none'></i>
+            <i class='fa fa-spinner fa-pulse submit' style='display:none'></i>
+            <i class='fa fa-check submit' style='display:none'></i>
           </button>&nbsp;
         </div>
       </div>

@@ -3,7 +3,7 @@
 [id*="-contributors-table"] {
   td {
     vertical-align: middle !important;  // override bootstrap for case of inline editor expanding row height
-    i { color: #666; }
+    i:not(.submit) { color: #666; }
   }
   // contributor details child row
   tr[data-contribution-id] + tr:not([data-contribution-id]):not(.group) {
@@ -13,7 +13,7 @@
     }
   }
 
-  td.crowdsourcing-template:not(.view-request) {
+  td.crowdsourcing-template:not(.disabled) {
     cursor: pointer;
     position: relative;
     padding-right: 40px;
@@ -72,7 +72,7 @@
 
   div.contributor-details {
     // horizontal form
-    #contributor-form {
+    form {
       > .row > div:last-child {
         padding-left: 0;
       }

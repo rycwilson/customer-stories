@@ -71,7 +71,6 @@ class ContributionsController < ApplicationController
 
   def update
     if params[:data]  # crowdsourcing template (datatables inline editor)
-      # binding.remote_pry
       @contribution.crowdsourcing_template_id =
           params[:data].values[0][:crowdsourcing_template][:id]
       @contribution.save
@@ -107,8 +106,8 @@ class ContributionsController < ApplicationController
         respond_to { |format| format.js { render action: 'send_request' } }
       end
 
-    elsif params[:contribution][:contributor]
-      @contribution.contributor.update(contribution_params[:contributor])
+    elsif params[:contributor]
+      @contribution.update(contribution_params)
       respond_to { |format| format.js { render action: 'update_contributor' } }
 
     elsif params[:contribution][:web_submission]
@@ -166,7 +165,7 @@ class ContributionsController < ApplicationController
       :status, :contribution, :feedback, :publish_contributor,
       :request_subject, :request_body,
       :contributor_unpublished, :notes, :submitted_at,
-      contributor_attributes: [:first_name, :last_name, :title, :email, :phone, :linkedin_url, :sign_up_code, :password]
+      contributor_attributes: [:id, :first_name, :last_name, :title, :email, :phone, :linkedin_url, :sign_up_code, :password]
     )
   end
 

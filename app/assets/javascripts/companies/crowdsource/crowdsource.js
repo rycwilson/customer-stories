@@ -39,7 +39,7 @@ function crowdsourceListeners () {
 
       // don't allow template change if request already sent (or re-sent)
       // (see createdRow property of datatables config)
-      if ( $(this).hasClass('view-request') ) { return false; }
+      if ( $(this).hasClass('disabled') ) { return false; }
 
       $(this).addClass('editor-open');  // styling adjustment
 

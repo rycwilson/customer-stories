@@ -11,6 +11,8 @@ function contributorDetailsListeners () {
           template = _.template($('#contributor-template').html()),
           workflowStage = $table.attr('id').slice(0, $table.attr('id').indexOf('-')),
           contributionId = $tr.data('contribution-id'),
+          contributionPath = '/companies/' + app.company.id +
+                             '/contributions/' + contributionId,
           contribution = app.contributions.find(function (c) {
             return c.id === contributionId;
           });
@@ -23,7 +25,11 @@ function contributorDetailsListeners () {
       }
       else {
         dtRow.child(
-          template({ contribution: contribution, workflowStage: workflowStage })
+          template({
+            contribution: contribution,
+            contributionPath: contributionPath,
+            workflowStage: workflowStage
+          })
         ).show();
         $tr.children().last().css('color', 'white');
         $("input[type='tel']").inputmask("999-999-9999");
@@ -36,8 +42,12 @@ function contributorDetailsListeners () {
       }
       $(this).children().toggle();  // toggle caret icons
 
-    });
+    })
 
+    .on('submit', '.contributor-form', function () {
+      $(this).find('button[type="submit"] span').toggle();
+      $(this).find('button[type="submit"] .fa-spinner').toggle();
+    });
 }
 
 function loadCspOrPlaceholderWidget ($tr, contribution) {

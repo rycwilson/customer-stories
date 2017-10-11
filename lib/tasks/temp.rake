@@ -2,6 +2,16 @@ namespace :temp do
 
   desc "temp stuff"
 
+  task crowdsource_update: :environment do
+    Rake::Task["temp:success_names"].invoke
+    Rake::Task["temp:update_contributions"].invoke
+    Rake::Task["temp:partner_to_customer_success"].invoke
+    Rake::Task["temp:create_contributor_questions"].invoke
+    Rake::Task["temp:create_crowdsourcing_templates"].invoke
+    Rake::Task["temp:copy_old_contribution_requests"].invoke
+    Rake::Task["temp:db_fixes"].invoke
+  end
+
   # fix any data oddities that cause errors
   task db_fixes: :environment do
     # this success and story had a \n character in the name/title that was hosing datatables search
@@ -12,7 +22,7 @@ namespace :temp do
   task copy_old_contribution_requests: :environment do
     EmailContributionRequest.all.each do |contribution_request|
       contribution_request.contribution.update(
-        crowdsourcing_template_id: nil,
+        # crowdsourcing_template_id: nil,
         request_subject: contribution_request.subject,
         request_body: contribution_request.body,
         request_sent_at: contribution_request.created_at

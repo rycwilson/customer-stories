@@ -175,8 +175,7 @@ function initContributorsTable (workflowStage) {
       $(row).children().eq(4).addClass('dropdown actions-dropdown');
       // don't allow selection of crowdsourcing template if request has been sent
       if ( $(row).children().eq(3).text().includes('sent') ) {
-        $(row).children().eq(2).addClass('view-request')
-          .html('<em><a href="javascript:;">View Sent Request</a></em>');
+        $(row).children().eq(2).addClass('disabled').find('i').remove();
       }
     },
 
