@@ -83,9 +83,9 @@ function crowdsourceFiltersListeners () {
         // when changing curators, start with all candidates/contributors
         $filter.val('0').trigger('change.select2');  // change select input without triggering change event
 
-        // find entries owned by curator
-        dt.search('')
-          .column('curator:name').search(curatorId === '0' ? '' : curatorId).draw();
+        dt.search('').column('curator:name')
+          .search(curatorId === '0' ? '' : '^' + curatorId + '$', true, false)
+          .draw();
 
         // update the other curator select (only once)
         if (!(data && data.auto)) {
@@ -116,17 +116,15 @@ function crowdsourceFiltersListeners () {
           } else {
             dtSearch = $table.DataTable().search('');
           }
-          dtSearch
-            .column('curator:name').search(curatorId === '0' ? '' : curatorId)
+          dtSearch.column('curator:name')
+            .search(curatorId === '0' ? '' : '^' + curatorId + '$', true, false)
             .draw();
 
         // curator && filter column
         } else {
-          // heads up: '18' matches '180' => solved by treating as RegEx
-          // (disregard this as we're now searching on the option text value)
           dt.search('')
-            .column('curator:name').search(curatorId === '0' ? '' : curatorId)
-            .column(filterCol + ':name').search(filterVal)
+            .column('curator:name').search(curatorId === '0' ? '' : '^' + curatorId + '$', true, false)
+            .column(filterCol + ':name').search('^' + filterVal + '$', true, false)
             .draw();
           if ($table.is('#successes-table')) {
             lastSuccessesColumnSearch = filterCol;
@@ -167,8 +165,8 @@ function crowdsourceFiltersListeners () {
         dtSearch = $table.DataTable().search('');
       }
       dtSearch
-        .search($input.val())
-        .column('curator:name').search(curatorId === '0' ? '' : curatorId)
+        .search('^' + $input.val() + '$', true, false)
+        .column('curator:name').search(curatorId === '0' ? '' : '^' + curatorId + '$', true, false)
         .draw();
 
     });

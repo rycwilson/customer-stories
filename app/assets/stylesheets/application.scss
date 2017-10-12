@@ -98,18 +98,17 @@ hr {
 }
 
 // the shadow settings are copied from mvp
-.btn-success, .btn.editable-submit {
+.btn-success {
   background-color: #4d8664;
   border-color: #45715a;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
 }
 
+// .note-link-btn is summernote dialog
 .btn-success:hover, .btn-success:focus, .btn-success:active, .btn-success.disabled:hover,
 .btn-success[disabled]:hover, .btn-success.disabled:focus, .btn-success[disabled]:focus,
-.btn-success:active:hover, .btn-success:active:focus,
-.btn.editable-submit:hover, .btn.editable-submit:focus, .btn.editable-submit:active,
-.btn-editable-submit:active:hover, .btn.editable-submit:active:focus {
+.btn-success:active:hover, .btn-success:active:focus {
   background-color: #456f59;
   border-color: #395f4e;
 }

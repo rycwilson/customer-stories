@@ -52,6 +52,8 @@ function contributorActionsListeners () {
           type === 'readonly' ? 'disable' : 'enable'
         );
 
+
+
         callback();
 
       },
@@ -109,6 +111,12 @@ function contributorActionsListeners () {
               return c.id == contribution.id;
             });
           });
+      },
+      modifyLinkDialog = function () {
+        $('.link-dialog .note-link-url').prop('disabled', true);
+        $('.link-dialog input[type="checkbox"]').prop('checked', true);
+        $('.link-dialog input[type="checkbox"]').prop('disabled', true);
+        $('.link-dialog .note-link-btn').removeClass('btn-primary').addClass('btn-success');  // for stying
       };
 
   $(document)
@@ -193,6 +201,14 @@ function contributorActionsListeners () {
         template({ contribution: contribution })
       );
 
+    })
+
+    // keep link dialog modifications limited to contribution request
+    .on('shown.bs.modal', '#contribution-request-modal', function () {
+      $(document).on('shown.bs.modal', '.link-dialog', modifyLinkDialog);
+    })
+    .on('hidden.bs.modal', '#contribution-request-modal', function () {
+      $(document).off('shown.bs.modal', '.link-dialog', modifyLinkDialog);
     });
 
 }

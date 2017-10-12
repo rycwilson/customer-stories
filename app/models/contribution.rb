@@ -181,10 +181,10 @@ class Contribution < ActiveRecord::Base
       .gsub('[curator_phone]', self.curator.phone || '')
       .gsub('[curator_position]', self.curator.title || '')
       .gsub('[curator_img_url]', self.curator.photo_url || '')
-      .gsub('[contribution_url]', contribution_submission_url('contribution'))
-      .gsub('[feedback_url]', contribution_submission_url('feedback'))
-      .gsub('[unsubscribe_url]', contribution_submission_url('unsubscribe'))
-      .gsub('[opt_out_url]', contribution_submission_url('opt_out'))
+      .gsub('[contribution_submission_url]', contribution_request_link('contribution'))
+      .gsub('[feedback_submission_url]', contribution_request_link('feedback'))
+      .gsub('[unsubscribe_url]', contribution_request_link('unsubscribe'))
+      .gsub('[opt_out_url]', contribution_request_link('opt_out'))
       .html_safe
   end
 
@@ -197,7 +197,7 @@ class Contribution < ActiveRecord::Base
   end
 
   # this works because the route in question is aliased to 'edit_contribution'
-  def contribution_submission_url (type)
+  def contribution_request_link (type)
     return Rails.application.routes.url_helpers.url_for(
       subdomain: self.company.subdomain,
       controller: 'contributions', action: 'edit',

@@ -204,11 +204,13 @@ function initContributorsTable (workflowStage) {
       // contributors under a Story don't have curator and filter selects
       } else {
 
-        $(this).DataTable()
-          .column('curator:name').search(app.current_user.id)
-          .column('success:name').search($('#curate-story-layout').data('success-id'))
+        // use regex search to prevent search of '18' from matching '185', '218', etc
+        $(this).DataTable().column('success:name')
+          .search(
+            '^' + $('#curate-story-layout').data('success-id') + '$',
+            true, false
+          )
           .draw();
-
         // global so can be accessed from crowdsourceListeners
         curateContributorsEditor = newContributorsEditor(
           'curate', crowdsourcingTemplateSelectOptions

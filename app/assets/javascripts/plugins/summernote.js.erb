@@ -2,6 +2,7 @@
 function initSummernote () {
 
   $('#contribution-request-editor').summernote({
+    dialogsInBody: true,
     focus: false,  // this does not appear to work (or does it?)
     toolbar: [
       // ['style', ['style']],
@@ -13,22 +14,6 @@ function initSummernote () {
       // ['table', ['table']],
       // ['insert', ['link', 'picture', 'hr']],
       // ['view', ['codeview']],
-      // ['help', ['help']]
-    ],
-  });
-
-  $('#email-template-editor').summernote({
-    toolbar: [
-      // ['style', ['style']],
-      ['font', ['bold', 'italic', 'underline']], //, 'clear']],
-      ['fontname', ['fontname']],
-      ['fontsize', ['fontsize']],
-      // ['color', ['color']],
-      ['para', ['ul', 'ol', 'paragraph']],
-      ['height', ['height']],
-      // ['table', ['table']],
-      ['insert', ['link', 'picture', 'hr']],
-      ['view', ['codeview']],
       // ['help', ['help']]
     ],
   });

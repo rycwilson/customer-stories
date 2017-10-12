@@ -15,7 +15,7 @@ class CrowdsourcingTemplate < ActiveRecord::Base
   before_create() { |template| template.format_for_storage() }
   before_update() { |template| template.format_for_storage() }
 
-  def format_for_editor(curator)
+  def format_for_editor (curator)
     if curator.photo_url.present?
       self.request_body.sub!("[curator_img_url]", curator.photo_url)
     else
@@ -28,7 +28,7 @@ class CrowdsourcingTemplate < ActiveRecord::Base
     self.request_body.gsub!(/(\[.+?\])/, '<span>\1</span>')
   end
 
-  def format_for_storage()
+  def format_for_storage
     # re-construct curator photo placeholder
     self.request_body.sub!( /(id=('|")curator-img('|") src=)('|")(https:\S+|\/assets\S+)('|")/,
                         '\1"[curator_img_url]"' ) # outside single quote necessary for capture reference to work correctly
