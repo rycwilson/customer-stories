@@ -26,8 +26,7 @@ class ContributionsController < ApplicationController
                 crowdsourcing_template: { only: [:id, :name] },
               }
             })
-    pp(JSON.parse(data))
-    logger.ap(JSON.parse(data))
+    # pp(JSON.parse(data))
     respond_to() { |format| format.json { render({ json: data }) } }
   end
 

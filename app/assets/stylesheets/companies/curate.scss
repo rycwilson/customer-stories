@@ -30,24 +30,9 @@
   }
 
   #curate-story {
-
-    // don't make visible until plugins have loaded
-    .layout-main {
-      // visibility: hidden;
-    }
-
-    // most settings for this table are in crowdsource.scss
+    // settings for this table are in crowdsource.scss
     #curate-contributors-table {
-      td.actions-dropdown {
-        .dropdown-menu {
-          left: -74px;
-        }
-      }
-      td.dataTables_empty {
-
-      }
     }
-
   }
 
 }
