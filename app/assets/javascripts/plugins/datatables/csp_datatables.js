@@ -2,6 +2,7 @@
 //= require ./dt_successes
 //= require ./dt_contributors
 //= require ./dt_promoted_stories
+//= require ./dt_editors
 
 function initDataTables () {
 

@@ -3,7 +3,7 @@ function contributorActionsListeners () {
 
   var contributionRequest,  // { contributor: ..., subject: ..., body: ... }
       contributionPath = function (contributionId) {
-        return '/companies/' + app.company.id + '/contributions/' + contributionId;
+        return '/contributions/' + contributionId;
       },
       missingCuratorInfo = function () {
         return ['first_name', 'last_name', 'photo', 'phone', 'position']

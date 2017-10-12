@@ -18,7 +18,7 @@ class Company < ActiveRecord::Base
 
   has_many :customers, dependent: :destroy do
     def select_options
-      self.map() do |customer|
+      self.sort_by { |c| c.name }.map() do |customer|
         [ customer.name, customer.id ]
       end
     end

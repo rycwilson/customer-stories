@@ -28,47 +28,23 @@ function crowdsourceListeners () {
     // the close event happens shortly after blur; to ensure smooth transition...
     .on('blur', 'td.crowdsourcing-template', function () {
       var $td = $(this);
-      contributorsEditor.one('close', function () {
+      crowdsourceContributorsEditor.one('close', function () {
         $td.removeClass('editor-open');
       });
     })
 
     .on('click', 'td.crowdsourcing-template', function (e) {
-
-      var $row = $(this).parent();
-
+      var $row = $(this).parent(),
+          workflowStage = $(this).closest('table').attr('id').match(/^(\w+)\-/)[1];
       // don't allow template change if request already sent (or re-sent)
       // (see createdRow property of datatables config)
       if ( $(this).hasClass('disabled') ) { return false; }
-
       $(this).addClass('editor-open');  // styling adjustment
-
-      // default options: https://editor.datatables.net/reference/option/formOptions.inline
-      contributorsEditor.inline(this, 'crowdsourcing_template.id',
-        {
-          onComplete: function (editor) {
-            var dt = $(editor.s.table).DataTable(), rowData = dt.row($row).data();
-            editor.close();
-            // the drawType option isn't forcing a re-draw (?),
-            // so re-draw the individual row
-            // forum discussion: https://datatables.net/forums/discussion/45189
-            dt.row($row).data(rowData).draw();
-            $row.find('td.crowdsourcing-template').append(
-              '<i class="fa fa-check" style="color:#456f59"></i>' +
-              '<i class="fa fa-caret-down" style="display:none"></i>'
-            );
-            setTimeout(function () {
-              $row.find('td.crowdsourcing-template i').toggle();
-            }, 2000);
-          },
-          drawType: true,
-          buttons: {
-            label: 'Save',
-            className: 'btn-success btn-sm',
-            fn: function () { this.submit(); }
-          }
-        }
-      );
+      if (workflowStage === 'crowdsource') {
+        openContributorsEditor(crowdsourceContributorsEditor, $row);
+      } else {
+        openContributorsEditor(curateContributorsEditor, $row);
+      }
     })
 
     .on('click', '#crowdsource-contributors-table a.success', function (e) {

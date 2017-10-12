@@ -1,33 +1,6 @@
 
 function initContributorsTable (workflowStage) {
 
-  // need to put these in the global space so they can be seen by
-  // functions in crowdsourceListeners() / curateListeners()
-  contributorsEditor = new $.fn.dataTable.Editor({
-    table: '#crowdsource-contributors-table',
-    ajax: {
-      edit: {
-        type: 'PUT',
-        url:  '/companies/' + app.company.id + '/contributions/_id_'
-      },
-    },
-    idSrc: 'id',
-    fields: [
-      {
-        label: 'Select a template',
-        name: 'crowdsourcing_template.id',  // should match columns.data
-        data: {
-          _: 'crowdsourcing_template.id',
-          display: 'crowdsourcing_template.name'
-        },
-        type: 'select2',
-        options: app.company.crowdsourcing_templates.map(function (template) {
-                    return { label: template.name, value: template.id };
-                  })
-      },
-    ]
-  });
-
   var successIndex = 2, curatorIndex = 4, customerIndex = 5, colCount = 8;
 
   $('table[id="' + workflowStage + '-contributors-table"]').DataTable({
@@ -59,7 +32,10 @@ function initContributorsTable (workflowStage) {
       {  // <td data-search="s<%= contribution.success.id %>, <%= contribution.success.name %>">
         name: 'success',
         defaultContent: 'Unknown Opportunity',
-        data: 'success.name'
+        data: {
+          _: 'success.name',
+          filter: 'success.id'
+        }
       },
       // <td data-search="t<%#= contribution.crowdsourcing_template_id  %>" class='crowdsourcing-template'>
       {
@@ -181,17 +157,24 @@ function initContributorsTable (workflowStage) {
 
     initComplete: function (settings, json) {
       var $tableWrapper = $(this).closest('[id*="table_wrapper"]'),
-          template = _.template($('#contributors-table-header-template').html());
-
-      // remove default search field.  Disabling via options also disables api, so can't do that
-      // $tableWrapper.children('.row:first-child').remove();
+          tableHeaderTemplate = _.template($('#contributors-table-header-template').html()),
+          crowdsourcingTemplateSelectOptions =
+              app.company.crowdsourcing_templates.map(function (template) {
+                return { label: template.name, value: template.id };
+              });
 
       // this is for the question mark icons that go with status= unsubscribe or opt_out
       $('[data-toggle="tooltip"]').tooltip();
 
       if (workflowStage === 'crowdsource') {
+
+        // global so can be accessed from crowdsourceListeners
+        crowdsourceContributorsEditor = newContributorsEditor(
+          'crowdsource', crowdsourcingTemplateSelectOptions
+        );
+
         $tableWrapper.prepend(
-          template({
+          tableHeaderTemplate({
             curators: app.company.curators,
             contributors: _.pluck(app.contributions, 'contributor'),
             successes: app.company.successes,
@@ -223,8 +206,13 @@ function initContributorsTable (workflowStage) {
 
         $(this).DataTable()
           .column('curator:name').search(app.current_user.id)
-          .column('success:name').search($('#curate-story-layout').data('success-name'))
+          .column('success:name').search($('#curate-story-layout').data('success-id'))
           .draw();
+
+        // global so can be accessed from crowdsourceListeners
+        curateContributorsEditor = newContributorsEditor(
+          'curate', crowdsourcingTemplateSelectOptions
+        );
 
         // no row grouping for curate-contributors
         if ($(this).attr('id').includes('curate')) {

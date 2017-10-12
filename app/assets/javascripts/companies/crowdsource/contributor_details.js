@@ -11,8 +11,7 @@ function contributorDetailsListeners () {
           template = _.template($('#contributor-template').html()),
           workflowStage = $table.attr('id').slice(0, $table.attr('id').indexOf('-')),
           contributionId = $tr.data('contribution-id'),
-          contributionPath = '/companies/' + app.company.id +
-                             '/contributions/' + contributionId,
+          contributionPath = '/contributions/' + contributionId,
           contribution = app.contributions.find(function (c) {
             return c.id === contributionId;
           });

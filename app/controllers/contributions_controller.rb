@@ -8,7 +8,7 @@ class ContributionsController < ApplicationController
 
   # datatables source data
   def index
-    company = Company.find(params[:company_id])
+    company = Company.find_by(subdomain: request.subdomain)
     data = company.contributions.to_json({
               only: [:id, :status], methods: [:display_status],
               include: {
