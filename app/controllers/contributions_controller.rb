@@ -54,7 +54,6 @@ class ContributionsController < ApplicationController
   end
 
   def update
-    binding.remote_pry
     if params[:data]  # crowdsourcing template (datatables inline editor)
       @contribution.crowdsourcing_template_id =
           params[:data].values[0][:crowdsourcing_template][:id]
@@ -182,7 +181,6 @@ class ContributionsController < ApplicationController
     elsif request.path.match(/\/contributions\/\d+/)
       @contribution = Contribution.find(params[:id])
     else
-      binding.remote_pry
       render file: 'public/404.html', status: 404, layout: false
       false
     end
