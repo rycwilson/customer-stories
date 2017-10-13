@@ -124,17 +124,24 @@ class Contribution < ActiveRecord::Base
     # logs to log/cron.log in development environment (output set in schedule.rb)
     # TODO: log in production environment
     # logger.info "sending reminders - #{Time.now.strftime('%-m/%-d/%y at %I:%M %P')}"
-    Contribution.where("status IN ('request_sent', 'first_reminder_sent')")
+    Contribution.where("status IN ('request_sent', 'first_reminder_sent', 'second_reminder_sent', 'request_re_sent')")
                 .each do |contribution|
-      if contribution.remind_at.past?
+      if contribution.remind_at.try(:past?)
         UserMailer.contribution_reminder(contribution).deliver_now
         if contribution.status == 'request_sent'
           new_status = 'first_reminder_sent'
-        else
+        elsif contribution.status == 'first_reminder_sent'
           new_status = 'second_reminder_sent'
         end
-        contribution.update(status: new_status)
+      elsif
+        ( contribution.status == 'second_reminder_sent' &&
+          Time.now > contribution.request_sent_at + contribution.first_reminder_wait.days +
+          (2 * contribution.second_reminder_wait.days) ) ||
+        ( contribution.status == 'request_re_sent' &&
+          Time.now > contribution.request_sent_at + contribution.second_reminder_wait.days )
+        new_status = 'did_not_respond'
       end
+      contribution.update(status: new_status)
     end
   end
 
