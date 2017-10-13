@@ -47,7 +47,7 @@ class Contribution < ActiveRecord::Base
     end
   )
   before_update(:set_request_sent_at, if: Proc.new do
-      self.status_changed? && self.status == 'request_sent'
+      self.status_changed? && (self.status == 'request_sent' || self.status == 'request_re_sent')
     end
   )
   before_update(:set_request_remind_at, if: Proc.new do
@@ -124,31 +124,16 @@ class Contribution < ActiveRecord::Base
     # logs to log/cron.log in development environment (output set in schedule.rb)
     # TODO: log in production environment
     # logger.info "sending reminders - #{Time.now.strftime('%-m/%-d/%y at %I:%M %P')}"
-    Contribution.where("status IN ('request', 'first_reminder_sent', 'second_reminder_sent', 're_sent')")
+    Contribution.where("status IN ('request_sent', 'first_reminder_sent')")
                 .each do |contribution|
-      # puts "processing contribution #{contribution.id} with status #{contribution.status}"
       if contribution.remind_at.past?
-        unless ['second_reminder_sent', 're_sent'].include? contribution.status
-          UserMailer.send_contribution_reminder(contribution).deliver_now
-        end
+        UserMailer.contribution_reminder(contribution).deliver_now
         if contribution.status == 'request_sent'
           new_status = 'first_reminder_sent'
-          new_remind_at = Time.now + contribution.remind_2_wait.days
-        elsif contribution.status == 'first_reminder_sent'
-          new_status = 'second_reminder_sent'
-          # no more reminders, but need to trigger when to change status to 'did_not_respond'
-          new_remind_at = Time.now + contribution.remind_2_wait.days
-        elsif contribution.status == 're_sent'
-          # for re_send, remind_at captures when it was re-sent
-          if contribution.remind_at < contribution.remind_2_wait.days.ago
-            new_status = 'did_not_respond'
-            new_remind_at = nil
-          end
         else
-          new_status = 'did_not_respond'
-          new_remind_at = nil
+          new_status = 'second_reminder_sent'
         end
-        contribution.update(status: new_status, remind_at: new_remind_at)
+        contribution.update(status: new_status)
       end
     end
   end
@@ -221,16 +206,16 @@ class Contribution < ActiveRecord::Base
   end
 
   def set_request_sent_at
-    self.request_sent_at = Time.now();
+    self.request_sent_at = Time.now;
   end
 
   def set_request_remind_at
     if self.status == 'request_sent'
-      self.remind_at = Time.now() + self.first_reminder_wait.days()
+      self.request_remind_at = Time.now + self.first_reminder_wait.days
     elsif self.status == 'first_reminder_sent'
-      self.remind_at = Time.now() + self.second_reminder_wait.days()
+      self.request_remind_at = Time.now + self.second_reminder_wait.days
     elsif self.status == 'second_reminder_sent'
-      self.remind_at = nil
+      self.request_remind_at = nil
     end
   end
 

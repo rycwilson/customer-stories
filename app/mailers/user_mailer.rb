@@ -17,22 +17,19 @@ class UserMailer < ApplicationMailer
     send_mail('contribution_request', contribution.curator, contribution.contributor, contribution.request_subject)
   end
 
-  def send_contribution_reminder (contribution)
-    # TODO: modify seeds so this check isn't necessary ...
-    # (a seeded user may have status 'request' with no email_contribution_request)
-    return false if contribution.email_contribution_request.nil?
-    headers['X-SMTPAPI'] = { unique_args: {
-                                contribution_id: contribution.id
-                             }}.to_json if production?
-    curator = contribution.success.curator
-    contributor = contribution.contributor
-    if contribution.status == 'request'
-      subject = contribution.email_contribution_request.subject.prepend("Reminder: ")
+  def contribution_reminder (contribution)
+    headers['X-SMTPAPI'] = {
+      unique_args: {
+        contribution_id: contribution.id
+      }
+    }.to_json if production?
+    if contribution.status == 'request_sent'
+      subject = contribution.request_subject.prepend("Reminder: ")
     else
-      subject = contribution.email_contribution_request.subject.prepend("Final reminder: ")
+      subject = contribution.request_subject.prepend("Final reminder: ")
     end
-    @body = contribution.email_contribution_request.body.html_safe
-    send_mail 'remind', curator, contributor, subject
+    @body = contribution.request_body.html_safe
+    send_mail('remind', contribution.curator, contribution.contributor, subject)
   end
 
   def contribution_alert (contribution)

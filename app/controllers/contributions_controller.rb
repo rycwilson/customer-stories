@@ -82,8 +82,12 @@ class ContributionsController < ApplicationController
     elsif params[:send_request]
       # assign any edits to request_subject and request_body
       @contribution.assign_attributes(contribution_params)
-      if (UserMailer.contribution_request(@contribution).deliver_now())
-        params[:contribution][:status] = 'request_sent'
+      if UserMailer.contribution_request(@contribution).deliver_now
+        if @contribution.status == 'pre_request'
+          params[:contribution][:status] = 'request_sent'
+        elsif @contribution.status == 'did_not_respond'
+          params[:contribution][:status] = 'request_re_sent'
+        end
         @contribution.update(contribution_params)
         respond_to { |format| format.js { render action: 'send_request' } }
       end

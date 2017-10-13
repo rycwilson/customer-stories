@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171005180750) do
+ActiveRecord::Schema.define(version: 20171013231744) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -145,7 +145,7 @@ ActiveRecord::Schema.define(version: 20171005180750) do
     t.boolean  "linkedin",                  default: false
     t.datetime "created_at",                                        null: false
     t.datetime "updated_at",                                        null: false
-    t.datetime "remind_at"
+    t.datetime "request_remind_at"
     t.integer  "first_reminder_wait",       default: 1
     t.integer  "second_reminder_wait",      default: 2
     t.string   "access_token"
