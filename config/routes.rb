@@ -25,6 +25,7 @@ Rails.application.routes.draw do
 
   # valid subdomains (company/subdomain exists, excludes www)
   constraints(Subdomain) do
+
     get '/', to: 'stories#index'
 
     get '/widgets/:type/cs', to: 'widgets#script'
@@ -79,9 +80,10 @@ Rails.application.routes.draw do
         end
         resources :stories, only: [:create]
         resources :contributions, except: [:new, :edit, :update], shallow: true do
-          # need to distinguish this from '/contributions/token'
-          member { put '/contributions/:id', to: 'contributions#update',
-                    constraints: { id: /\d+/ }}
+          # need to distinguish '/contributions/:id' routes from '/contributions/:token' routes;
+          # hence :update is excluded above and added below
+          # (note :edit always uses '/contributions/:token/:type' route
+          member { put :update, constraints: { id: /\d+/ } }
         end
         resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
         resources :crowdsourcing_templates, except: [:index]
@@ -105,8 +107,7 @@ Rails.application.routes.draw do
 
       # user profile
       get   '/user-profile', to: 'profile#edit', as: 'edit_profile'
-      get   '/user-profile/linkedin_connect', to: 'profile#linkedin_connect',
-                                         as: 'linkedin_connect'
+
       # approval PDF
       get '/stories/:id/approval', to: 'stories#approval', as: 'story_approval'
 
@@ -121,13 +122,9 @@ Rails.application.routes.draw do
     put '/contributions/:token', to: 'contributions#update', as: 'submission',
           constraints: { submission: true }
 
-    # no authentication required (may come from a submission)
-    get  '/user-profile/linkedin-callback', to: 'profile#linkedin_callback'
-
-    # # Email Templates
-    # resources :email_templates, only: [:show, :update]
-    # post   '/email_templates/:id/test', to: 'email_templates#test'
-
+    # linkedin
+    get '/user-profile/linkedin_connect', to: 'profile#linkedin_connect', as: 'linkedin_connect'
+    get '/user-profile/linkedin_callback', to: 'profile#linkedin_callback'
 
     # need to pick up on devise sign-in route here, without doing so explicitly
     # as that will conflict with devise routes declared below
@@ -153,7 +150,6 @@ Rails.application.routes.draw do
     # broken links
     get '/*all', to: 'site#valid_subdomain_bad_path'
 
-
   end
 
   # all other subdomains
@@ -170,8 +166,8 @@ Rails.application.routes.draw do
   # (need to give the route a different alias to distinguish from the one
   #  under subdomains)
   get   '/user-profile', to: 'profile#edit', as: 'edit_profile_no_company'
-  get   '/user-profile/linkedin-connect', to: 'profile#linkedin_connect', as: 'linkedin_connect_no_company'
-  get   '/user-profile/linkedin-callback', to: 'profile#linkedin_callback', as: 'linkedin_callback'
+  get   '/user-profile/linkedin_connect', to: 'profile#linkedin_connect', as: 'linkedin_connect_no_company'
+  get   '/user-profile/linkedin_callback', to: 'profile#linkedin_callback'
 
   # above comments about distinguishing the route apply to below as well
   #

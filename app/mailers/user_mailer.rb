@@ -40,8 +40,8 @@ class UserMailer < ApplicationMailer
       story_link = contribution.story.csp_story_url
     else
       story_link = Rails.application.routes.url_helpers.curate_story_url(
-                     contribution.customer.slug, contribution.story.slug
-                   )
+        contribution.customer.slug, contribution.story.slug
+      )
     end
     subject = "#{contribution.contributor.full_name} of the #{contribution.customer.name} success story submitted #{contribution.status == 'contribution_submitted' ? 'a contribution' : 'feedback'}"
     @body = "<p>#{contribution.curator.first_name},</p>

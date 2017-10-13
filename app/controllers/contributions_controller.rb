@@ -97,14 +97,8 @@ class ContributionsController < ApplicationController
         params[:contribution][:contribution] = consolidate_answers(params[:answers])
       end
       if @contribution.update(contribution_params)
-        if @contribution.publish_contributor? &&
-           @contribution.contributor.linkedin_url.blank?
-          redirect_to url_for({
-            # remove the subdomain to avoid csp authentication
-            subdomain: nil,
-            controller: 'profile', action: 'linkedin_connect',
-            params: { contribution_id: @contribution.id }
-          })
+        if connect_to_linkedin?(@contribution)
+          redirect_to(connect_to_linkedin_url(@contribution))
         else
           redirect_to(confirm_submission_path(@contribution.access_token))
         end
@@ -193,7 +187,6 @@ class ContributionsController < ApplicationController
     end
   end
 
-
   def consolidate_answers (answers)
     contribution = ""
     answers.each do |question_id, answer|
@@ -202,6 +195,18 @@ class ContributionsController < ApplicationController
       contribution << "<p><em>#{answer}</em></p>"
     end
     return contribution
+  end
+
+  def connect_to_linkedin? (contribution)
+    contribution.publish_contributor? && contribution.contributor.linkedin_url.blank?
+  end
+
+  def connect_to_linkedin_url (contribution)
+    url_for({
+      subdomain: contribution.company.subdomain,
+      controller: 'profile', action: 'linkedin_connect',
+      params: { contribution_id: contribution.id }
+    })
   end
 
 end

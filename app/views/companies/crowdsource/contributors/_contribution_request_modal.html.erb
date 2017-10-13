@@ -24,7 +24,7 @@
         <%= form_tag('', id: 'contribution-request-form',
                       remote: true, method: :put) do  %>
 
-          <%= hidden_field_tag(:send_request, value: true) %>
+          <%= hidden_field_tag(:send_request, true) %>
 
           <div class="form-inline">
             <div class="form-group subject">
