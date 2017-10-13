@@ -204,7 +204,7 @@ class Contribution < ActiveRecord::Base
 
   # this works because the route in question is aliased to 'edit_contribution'
   def contribution_request_link (type)
-    if ['contribution', 'feedback'].includes?(type)
+    if ['contribution', 'feedback'].include?(type)
       Rails.application.routes.url_helpers.url_for({
         subdomain: self.company.subdomain,
         controller: 'contributions', action: 'edit',
