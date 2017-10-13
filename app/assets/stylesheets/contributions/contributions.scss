@@ -5,7 +5,7 @@ body.contributions {
 
   .web-submission {
     background-color: #fff;
-    padding: 30px;
+    padding: 30px 50px;
     border-left: 1px solid #ccc;
     border-right: 1px solid #ccc;
     overflow: hidden;  // this is needed so height is enough to accommodate floated content (.col-centered)
@@ -16,6 +16,7 @@ body.contributions {
     }
     .checkbox {
       margin: 0;
+      line-height: 20px;
     }
     input[type="checkbox"] {
       margin-top: 6px;
@@ -48,18 +49,29 @@ body.contributions {
     }
   }
 
-  .web-submission.col-xs-12 {
-    max-width: 600px;
-  }
-
   .col-centered {
     float: none;
     margin: 0 auto;
   }
 
+  @media only screen and (max-width: 599px) {
+    .col-xs-12 {
+      padding-right: 15px;
+      padding-left: 15px;
+    }
+  }
+
+  @media only screen and (min-width: 600px) and (max-width: 767px) {
+    .col-xs-12 {
+      max-width: 600px;
+      padding-right: 30px;
+      padding-left: 30px;
+    }
+  }
+
   @media only screen and (min-width: 768px) {
     .col-sm-10 {
-      width: 82%
+      width: 84%
     }
   }
 
@@ -71,7 +83,7 @@ body.contributions {
 
   @media only screen and (min-width: 1200px) {
     .col-lg-8 {
-      width: 54%
+      width: 56%
     }
   }
 
