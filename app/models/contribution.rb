@@ -42,24 +42,24 @@ class Contribution < ActiveRecord::Base
       self.crowdsourcing_template_id.present?
     end
   )
-  before_update(:copy_crowdsourcing_template, if: Proc.new do
-      self.crowdsourcing_template_id.present? && self.crowdsourcing_template_id_changed?
-    end
-  )
-  before_update(:set_request_sent_at, if: Proc.new do
-      self.status_changed? && self.status == 'request_sent'
-    end
-  )
-  before_update(:set_request_remind_at, if: Proc.new do
-      self.status_changed? &&
-      ['request_sent', 'first_reminder_sent', 'second_reminder_sent'].include?(self.status)
-    end
-  )
-  before_update(:set_submitted_at, :send_alert, if: Proc.new do
-      self.status_changed? &&
-      ['contribution_submitted', 'feedback_submitted'].include?(self.status)
-    end
-  )
+  # before_update(:copy_crowdsourcing_template, if: Proc.new do
+  #     self.crowdsourcing_template_id.present? && self.crowdsourcing_template_id_changed?
+  #   end
+  # )
+  # before_update(:set_request_sent_at, if: Proc.new do
+  #     self.status_changed? && self.status == 'request_sent'
+  #   end
+  # )
+  # before_update(:set_request_remind_at, if: Proc.new do
+  #     self.status_changed? &&
+  #     ['request_sent', 'first_reminder_sent', 'second_reminder_sent'].include?(self.status)
+  #   end
+  # )
+  # before_update(:set_submitted_at, :send_alert, if: Proc.new do
+  #     self.status_changed? &&
+  #     ['contribution_submitted', 'feedback_submitted'].include?(self.status)
+  #   end
+  # )
 
   # validates :user_id, presence: true
   # validates :success_id, presence: true
