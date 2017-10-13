@@ -19,7 +19,7 @@ body.contributions {
       line-height: 20px;
     }
     input[type="checkbox"] {
-      margin-top: 6px;
+      margin: 6px 0 0 -23px;
     }
     .tos {
       font-size: 12px;
@@ -54,6 +54,7 @@ body.contributions {
     margin: 0 auto;
   }
 
+
   @media only screen and (max-width: 599px) {
     .col-xs-12 {
       padding-right: 15px;
@@ -70,6 +71,14 @@ body.contributions {
   }
 
   @media only screen and (min-width: 768px) {
+    // for the linkedin icon and checkbox
+    .col-sm-1 {
+      width: 12%;
+    }
+    // for the linkedin icon and checkbox
+    .col-sm-11 {
+      width: 88%
+    }
     .col-sm-10 {
       width: 84%
     }
