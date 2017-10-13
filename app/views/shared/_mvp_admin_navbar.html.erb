@@ -24,7 +24,7 @@
     <div class="row">
 
       <div class="navbar-header col-xs-12 col-sm-8">
-        <%= render 'shared/admin_navbar_header' %>
+        <%= render('shared/admin_navbar_header', { company: @company }) %>
       </div>
 
       <% if controller_name == 'stories' && (['index', 'show'].include?(action_name)) %>
