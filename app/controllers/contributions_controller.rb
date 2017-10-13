@@ -54,6 +54,7 @@ class ContributionsController < ApplicationController
   end
 
   def update
+    binding.remote_pry
     if params[:data]  # crowdsourcing template (datatables inline editor)
       @contribution.crowdsourcing_template_id =
           params[:data].values[0][:crowdsourcing_template][:id]
@@ -94,25 +95,24 @@ class ContributionsController < ApplicationController
       @contribution.update(contribution_params)
       respond_to { |format| format.js { render action: 'update_contributor' } }
 
-    elsif params[:web_submission]
-      @contribution.submitted_at = Time.now
-      if @contribution.update contribution_params
-        UserMailer.alert_contribution_update(@contribution).deliver_now
+    elsif params[:submission]
+      if params[:contribution][:status] == 'contribution'
+        params[:contribution][:contribution] = consolidate_answers(params[:answers])
+      end
+      if @contribution.update(contribution_params)
         if @contribution.publish_contributor? &&
            @contribution.contributor.linkedin_url.blank?
-          redirect_to url_for({  # remove the subdomain to avoid csp authentication
-                        subdomain: nil,
-                        controller: 'profile',
-                        action: 'linkedin_connect',
-                        params: { contribution_id: @contribution.id }
-                      })
+          redirect_to url_for({
+            # remove the subdomain to avoid csp authentication
+            subdomain: nil,
+            controller: 'profile', action: 'linkedin_connect',
+            params: { contribution_id: @contribution.id }
+          })
         else
-          redirect_to confirm_contribution_path(@contribution)
+          redirect_to(confirm_contribution_path(@contribution))
         end
       else
-        @response_type = params[:contribution][:status]
-        @curator = @contribution.success.curator
-        @prompts = @contribution.success.prompts
+        @submission_type = params[:contribution][:status].split('_')[0]
         flash.now[:danger] = @contribution.errors.full_messages.join(', ')
         render :edit
       end
@@ -129,7 +129,7 @@ class ContributionsController < ApplicationController
       #   @opt_out_link = url_for({
       #     subdomain: self.company.subdomain,
       #     controller: 'contributions', action: 'update',
-      #     token: self.access_token, type: 'opt_out', web_submission: true
+      #     token: self.access_token, type: 'opt_out', submission: true
       #   })
       # end
 
@@ -182,6 +182,7 @@ class ContributionsController < ApplicationController
     elsif request.path.match(/\/contributions\/\d+/)
       @contribution = Contribution.find(params[:id])
     else
+      binding.remote_pry
       render file: 'public/404.html', status: 404, layout: false
       false
     end
@@ -199,6 +200,16 @@ class ContributionsController < ApplicationController
     else
       true
     end
+  end
+
+  def consolidate_answers (answers)
+    contribution = ""
+    answers.each do |question_id, answer|
+      question = ContributorQuestion.find(question_id).question
+      contribution << "<p style='font-weight:600'>#{question}</p>"
+      contribution << "<p>#{answer}</p>"
+    end
+    return contribution
   end
 
 end

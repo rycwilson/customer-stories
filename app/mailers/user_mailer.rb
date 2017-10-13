@@ -35,7 +35,7 @@ class UserMailer < ApplicationMailer
     send_mail 'remind', curator, contributor, subject
   end
 
-  def alert_contribution_update (contribution)
+  def contribution_alert (contribution)
     success = contribution.success
     story = success.story
     company = success.customer.company

@@ -1,4 +1,3 @@
-<!-- <br><br> -->
 
 <div class="container">
   <div class="row">
@@ -19,65 +18,8 @@
 
       </div>
 
-      <%= form_for(@contribution, url: web_submission_path(@contribution.access_token),
-            method: "put", html: { id: 'web-submission-form'}) do |f| %>
-
-        <%= hidden_field_tag("[web_submission]", true) %>
-        <%= hidden_field_tag("contribution[status]", @submission_type + '_submitted') %>
-
-        <% if @submission_type == 'contribution' %>
-
-          <% @contribution.contributor_questions.each do |question| %>
-
-            <div class="form-group">
-              <%= label_tag("answers[question_#{question.id}]", question.question) %>
-              <%= text_area_tag("answers[question_#{question.id}]", nil,
-                    rows: 8, class: 'form-control') %>
-            </div>
-
-          <% end %>
-
-          <div class="form-group">
-
-            <div class="row">
-
-              <div class='col-xs-2 text-center'>
-                <i class="fa fa-2x fa-linkedin-square"></i>
-              </div>
-              <div class='col-xs-10 checkbox'>
-                <%= f.check_box(:publish_contributor, checked: true) %>
-                Leave this box checked if you would like us to include your LinkedIn profile as part of the success story. You may return at any point in the future to add or remove your profile.
-              </div>
-
-            </div>
-
-          </div>
-
-        <% else %>
-
-          <div class="form-group">
-            <%= f.label(:feedback) %>
-            <%= f.text_area(:feedback, rows: 11, class: 'form-control') %>
-          </div>
-
-        <% end %>
-
-        <div class="form-group text-center hidden-xs">
-          <%= f.submit('Submit', class: 'btn btn-success', style: 'width:65%') %>
-        </div>
-
-        <div class="form-group text-center visible-xs" >
-          <%= f.submit('Submit', class: 'btn btn-success', style: 'width:100%;max-width:350px') %>
-        </div>
-
-
-        <div class='form-group text-center'>
-          <p class='tos'>
-            By submitting you are agreeing to the <%= link_to 'Terms of Service', "#{ request.protocol + request.domain + request.port_string + '/tos' }", target: '_blank' %>
-          </p>
-        </div>
-
-      <% end %>
+      <%= render('contributions/submission_form',
+            { contribution: @contribution, type: @submission_type }) %>
 
       <p style='font-weight:600; margin-bottom:6px'>Story Curator</p>
 

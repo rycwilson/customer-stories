@@ -12,8 +12,8 @@ class CrowdsourcingTemplate < ActiveRecord::Base
   #   self.contributor_questions << self.company.contributor_questions.default
   # end
 
-  before_create() { |template| template.format_for_storage() }
-  before_update() { |template| template.format_for_storage() }
+  before_create() { self.format_for_storage() }
+  before_update() { self.format_for_storage() }
 
   def format_for_editor (curator)
     if curator.photo_url.present?

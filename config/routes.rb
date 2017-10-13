@@ -78,7 +78,11 @@ Rails.application.routes.draw do
           member { put :tags }
         end
         resources :stories, only: [:create]
-        resources :contributions, except: [:new, :edit], shallow: true
+        resources :contributions, except: [:new, :edit, :update], shallow: true do
+          # need to distinguish this from '/contributions/token'
+          member { put '/contributions/:id', to: 'contributions#update',
+                    constraints: { id: /\d+/ }}
+        end
         resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
         resources :crowdsourcing_templates, except: [:index]
         member { get '/promote-settings', to: 'companies#show' }
@@ -112,7 +116,8 @@ Rails.application.routes.draw do
     get '/contributions/:token/:type', to: 'contributions#edit', as: 'edit_contribution',
                 constraints: { type: /(contribution|feedback|unsubscribe|opt_out)/ }
     get '/contributions/:token/confirm', to: 'contributions#confirm', as: 'confirm_submission'
-    put '/contributions/:token', to: 'contributions#update', as: 'web_submission'
+    put '/contributions/:token', to: 'contributions#update', as: 'submission',
+          constraints: { submission: true }
     # this route returns json data for the contribution
     # presently only need this when removing a linkedin_url from a contribution
     get '/contributions/:id', to: 'contributions#show'
@@ -124,7 +129,6 @@ Rails.application.routes.draw do
     # # Email Templates
     # resources :email_templates, only: [:show, :update]
     # post   '/email_templates/:id/test', to: 'email_templates#test'
-
 
 
     # need to pick up on devise sign-in route here, without doing so explicitly
