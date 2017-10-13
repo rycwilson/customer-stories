@@ -199,7 +199,7 @@ class ContributionsController < ApplicationController
     answers.each do |question_id, answer|
       question = question_id.to_i != 0 ? ContributorQuestion.find(question_id).question : "Additional thoughts"
       contribution << "<p style='font-weight:600'>#{question}</p>"
-      contribution << "<p>#{answer}</p>"
+      contribution << "<p><em>#{answer}</em></p>"
     end
     return contribution
   end

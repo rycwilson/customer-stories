@@ -36,32 +36,18 @@ class UserMailer < ApplicationMailer
   end
 
   def contribution_alert (contribution)
-    success = contribution.success
-    story = success.story
-    company = success.customer.company
-    customer_name = success.customer.name
-    # http - so it works in development
-    story_link = "http://#{company.subdomain}.#{ENV['HOST_NAME']}/stories/#{story.id}/edit"
-    curator = success.curator
-    contributor = contribution.contributor
-    if contribution.status == 'contribution'
-      subject = "#{contributor.full_name} of the
-        #{customer_name} success story submitted a contribution"
-      @body = "<p>#{curator.first_name},</p>
-        <p>#{contributor.full_name} of the story \"#{story.title}\"
-           submitted a contribution:</p>
-        <p><i>\"#{contribution.contribution}\"</i></p>
-        <p><a href='#{story_link}'>Go to story</a></p>".html_safe
-    elsif contribution.status == 'feedback'
-      subject = "#{contributor.full_name} of the
-        #{customer_name} success story submitted feedback"
-      @body = "<p>#{curator.first_name},</p>
-        <p>#{contributor.full_name} of the story \"#{story.title}\"
-           submitted feedback:</p>
-        <p><i>\"#{contribution.feedback}\"</i></p>
-        <p><a href='#{story_link}'>Go to story</a></p>".html_safe
+    if contribution.story.published?
+      story_link = contribution.story.csp_story_url
+    else
+      story_link = Rails.application.routes.url_helpers.curate_story_url(
+                     contribution.customer.slug, contribution.story.slug
+                   )
     end
-    send_mail 'alert', curator, curator, subject
+    subject = "#{contribution.contributor.full_name} of the #{contribution.customer.name} success story submitted #{contribution.status == 'contribution_submitted' ? 'a contribution' : 'feedback'}"
+    @body = "<p>#{contribution.curator.first_name},</p>
+      <p style='margin-bottom:25px'>#{contribution.contributor.full_name} of the story <a href='#{story_link}'>#{contribution.story.title}</a> submitted a contribution:</p>
+      #{contribution.contribution}".html_safe
+    send_mail('alert', contribution.curator, contribution.curator, subject)
   end
 
   # type is one of: request, remind, alert, test
