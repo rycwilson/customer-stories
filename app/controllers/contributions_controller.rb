@@ -200,6 +200,7 @@ class ContributionsController < ApplicationController
     end
   end
 
+
   def consolidate_answers (answers)
     contribution = ""
     answers.each do |question_id, answer|
