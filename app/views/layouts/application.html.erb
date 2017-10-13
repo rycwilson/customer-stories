@@ -34,7 +34,7 @@
 
   <% if admin_navbar?(controller_name) %>
 
-    <%= render 'shared/mvp_admin_navbar' %>
+    <%= render('shared/mvp_admin_navbar', { company: @company }) %>
 
   <% elsif controller_name == 'contributions' %>
     <!-- render nothing (just flash) -->
@@ -42,7 +42,7 @@
 
   <% else %>
     <!-- more logic within the navbar to handle signed in users... -->
-    <%= render 'shared/mvp_landing_navbar' %>
+    <%= render('shared/mvp_landing_navbar') %>
 
   <% end %>
 

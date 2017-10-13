@@ -87,12 +87,10 @@ module ApplicationHelper
   end
 
   def mvp_stylesheet
-    if ['companies', 'stories', 'profile'].include? controller_name
-      stylesheet_link_tag 'mvpready-admin', media: 'all',
-                          'data-turbolinks-track' => 'reload'
+    if ['companies', 'stories', 'profile', 'contributions'].include?(controller_name)
+      stylesheet_link_tag('mvpready-admin', media: 'all', 'data-turbolinks-track' => 'reload')
     else
-      stylesheet_link_tag 'mvpready-landing', media: 'all',
-                          'data-turbolinks-track' => 'reload'
+      stylesheet_link_tag('mvpready-landing', media: 'all', 'data-turbolinks-track' => 'reload')
     end
   end
 

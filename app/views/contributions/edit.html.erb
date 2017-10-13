@@ -1,41 +1,128 @@
-<br><br>
+<!-- <br><br> -->
 
 <div class="container">
-  <div class='contribution-submission col-xs-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 <%= (@response_type == 'contribution' || @response_type == 'feedback') ? 'show' : 'hidden' %>'>
+  <div class="row">
 
-    <% if @response_type == 'contribution' %>
+    <div class='web-submission col-centered col-xs-12 col-sm-10 col-lg-8'>
 
-      <%= render partial: 'contributions/shared/contribution_form',
-                  locals: {      curator: @curator,
-                            contribution: @contribution,
-                           response_type: @response_type, } %> <br>
+      <div class="form-group">
 
-    <% elsif @response_type == 'feedback' %>
+        <% if @submission_type == 'contribution' %>
 
-      <%= render partial: 'contributions/shared/feedback_form',
-                  locals: {      curator: @curator,
-                            contribution: @contribution,
-                           response_type: @response_type } %> <br>
+          <p>Thank you for contributing to the success story. Following are some questions intended to help you share your experience.</p>
 
-    <% end %>
+        <% else %>
 
-  </div>
+          <p>Thank you for your feedback.</p>
 
-  <div class="contribution-submission col-xs-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 <%= (@response_type == 'unsubscribe' || @response_type == 'opt_out') ? 'show' : 'hidden' %>">
+        <% end %>
 
-    <% if @response_type == 'unsubscribe' %>
+      </div>
 
-      <p>Thanks for your response. We won't send you any more emails about this success story.</p>
+      <%= form_for(@contribution, url: web_submission_path(@contribution.access_token),
+            method: "put", html: { id: 'web-submission-form'}) do |f| %>
 
-      <p>To opt out of all future requests, <a href="https://<%= @curator.company.subdomain %>/contributions/<%= @contribution.access_token %>/opt_out">click here</a>.</p>
+        <%= hidden_field_tag("[web_submission]", true) %>
+        <%= hidden_field_tag("contribution[status]", @submission_type + '_submitted') %>
 
-    <% elsif @response_type == 'opt_out' %>
+        <% if @submission_type == 'contribution' %>
 
-      <p>Thanks for your response.</p>
+          <% @contribution.contributor_questions.each do |question| %>
 
-      <p><%= @contribution.contributor.email %> will be permanently removed from our list.</p>
+            <div class="form-group">
+              <%= label_tag("answers[question_#{question.id}]", question.question) %>
+              <%= text_area_tag("answers[question_#{question.id}]", nil,
+                    rows: 8, class: 'form-control') %>
+            </div>
 
-    <% end %>
+          <% end %>
+
+          <div class="form-group">
+
+            <div class="row">
+
+              <div class='col-xs-2 text-center'>
+                <i class="fa fa-2x fa-linkedin-square"></i>
+              </div>
+              <div class='col-xs-10 checkbox'>
+                <%= f.check_box(:publish_contributor) %>
+                Leave this box checked if you would like us to include your LinkedIn profile as part of the success story. You may return at any point in the future to add or remove your profile.
+              </div>
+
+            </div>
+
+          </div>
+
+        <% else %>
+
+          <div class="form-group">
+            <%= f.label(:feedback) %>
+            <%= f.text_area(:feedback, rows: 11, class: 'form-control') %>
+          </div>
+
+        <% end %>
+
+        <div class="form-group text-center hidden-xs">
+          <%= f.submit('Submit', class: 'btn btn-success', style: 'width:65%') %>
+        </div>
+
+        <div class="form-group text-center visible-xs" >
+          <%= f.submit('Submit', class: 'btn btn-success', style: 'width:100%;max-width:350px') %>
+        </div>
+
+
+        <div class='form-group text-center'>
+          <p class='tos'>
+            By submitting you are agreeing to the <%= link_to 'Terms of Service', "#{ request.protocol + request.domain + request.port_string + '/tos' }", target: '_blank' %>
+          </p>
+        </div>
+
+      <% end %>
+
+      <p>Your story curator</p>
+
+      <!-- http://www.no-margin-for-errors.com/blog/2009/12/10/css-tip-float-an-image-without-text-wrapping-under-it/ -->
+      <div id='footer'>
+
+        <img class='curator' src="<%= @contribution.curator.photo_url %>" alt="curator photo">
+
+        <div class="curator">
+
+          <p><%= @contribution.curator.full_name %></p>
+          <p><%= @contribution.curator.title %></p>
+          <p><%= @contribution.company.name %></p>
+          <p><a href="mailto:<%= @contribution.curator.email %>">
+            <%= @contribution.curator.email %></a></p>
+          <p><%= @contribution.curator.phone %></p>
+
+        </div>
+
+        <div class="logo text-center">
+          <%= image_tag CS_POWERED_LOGO_URL, class: 'logo', alt:'powered-by-csp' %>
+        </div>
+
+      </div>
+
+    </div>
 
   </div>
 </div>
+
+<!--   <div class="web-submission col-xs-12 col-md-10 col-md-offset-1 col-lg-8 col-lg-offset-2 <%#= (@submission_type == 'unsubscribe' || @submission_type == 'opt_out') ? 'show' : 'hidden' %>">
+
+    <%# if @submission_type == 'unsubscribe' %>
+
+      <p>Thanks for your response. We won't send you any more emails about this success story.</p>
+
+      <p>To opt out of all future requests, <a href="<%#= @opt_out_link %>">click here</a></p>
+
+    <%# elsif @submission_type == 'opt_out' %>
+
+      <p>Thanks for your response.</p>
+
+      <p><%#= @contribution.contributor.email %> will be permanently removed from our list.</p>
+
+    <%# end %>
+
+  </div> -->
+

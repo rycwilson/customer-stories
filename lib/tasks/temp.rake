@@ -2,6 +2,8 @@ namespace :temp do
 
   desc "temp stuff"
 
+  # remember to move methods to protected after this:
+  # copy_crowdsourcing_template
   task crowdsource_update: :environment do
     Rake::Task["temp:success_names"].invoke
     Rake::Task["temp:update_contributions"].invoke

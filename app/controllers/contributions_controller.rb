@@ -30,24 +30,9 @@ class ContributionsController < ApplicationController
     respond_to() { |format| format.json { render({ json: data }) } }
   end
 
-  #
   # GET '/contributions/:token/:type'
-  #   type is 'contribution', 'feedback', 'unsubscribe', opt_out'
-  #
   def edit
-    @curator = @contribution.success.curator
-    @prompts = @contribution.success.prompts
-    contributor_email = @contribution.contributor.email
-    @response_type = params[:type]
-    if @response_type == 'opt_out'
-      unless OptOut.find_by email: contributor_email # already opted out
-        OptOut.create email: contributor_email
-        # update all contributions for this contributor
-        Contribution.update_opt_out_status contributor_email
-      end
-    elsif @response_type == 'unsubscribe'
-      @contribution.update status: 'unsubscribed'
-    end
+    @submission_type = params[:type]  # type IN ('contribution', 'feedback')
   end
 
   def show
@@ -109,7 +94,7 @@ class ContributionsController < ApplicationController
       @contribution.update(contribution_params)
       respond_to { |format| format.js { render action: 'update_contributor' } }
 
-    elsif params[:contribution][:web_submission]
+    elsif params[:web_submission]
       @contribution.submitted_at = Time.now
       if @contribution.update contribution_params
         UserMailer.alert_contribution_update(@contribution).deliver_now
@@ -131,6 +116,23 @@ class ContributionsController < ApplicationController
         flash.now[:danger] = @contribution.errors.full_messages.join(', ')
         render :edit
       end
+
+    elsif params[:unsubscribe] || params[:opt_out]
+      # if @submission_type == 'opt_out'
+      #   unless OptOut.find_by email: contributor_email # already opted out
+      #     OptOut.create email: contributor_email
+      #     # update all contributions for this contributor
+      #     Contribution.update_opt_out_status contributor_email
+      #   end
+      # elsif @submission_type == 'unsubscribe'
+      #   @contribution.update(status: 'unsubscribed')
+      #   @opt_out_link = url_for({
+      #     subdomain: self.company.subdomain,
+      #     controller: 'contributions', action: 'update',
+      #     token: self.access_token, type: 'opt_out', web_submission: true
+      #   })
+      # end
+
 
     # contribution update from either profile (:publish_contributor, :contributor_unpublished)
     # or contribution card (:publish_contributor OR :notes)

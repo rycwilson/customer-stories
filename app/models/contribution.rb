@@ -10,6 +10,7 @@ class Contribution < ActiveRecord::Base
   has_one :story, through: :success
   has_one :email_contribution_request, dependent: :destroy
   belongs_to :crowdsourcing_template
+  has_many :contributor_questions, through: :crowdsourcing_template
 
   accepts_nested_attributes_for(:contributor, allow_destroy: false)
 
@@ -198,11 +199,20 @@ class Contribution < ActiveRecord::Base
 
   # this works because the route in question is aliased to 'edit_contribution'
   def contribution_request_link (type)
-    return Rails.application.routes.url_helpers.url_for(
-      subdomain: self.company.subdomain,
-      controller: 'contributions', action: 'edit',
-      token: self.access_token, type: type
-    )
+    if ['contribution', 'feedback'].includes?(type)
+      Rails.application.routes.url_helpers.url_for({
+        subdomain: self.company.subdomain,
+        controller: 'contributions', action: 'edit',
+        token: self.access_token, type: type
+      })
+    else  # unsubscribe, opt_out
+      Rails.application.routes.url_helpers.url_for({
+        subdomain: self.company.subdomain,
+        controller: 'contributions', action: 'update',
+        token: self.access_token, unsubscribe: type == 'unsubscribe',
+        opt_out: type == 'opt_out'
+      })
+    end
   end
 
   def set_request_sent_at

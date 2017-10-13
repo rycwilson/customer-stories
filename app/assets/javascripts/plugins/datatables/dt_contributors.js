@@ -206,10 +206,7 @@ function initContributorsTable (workflowStage) {
 
         // use regex search to prevent search of '18' from matching '185', '218', etc
         $(this).DataTable().column('success:name')
-          .search(
-            '^' + $('#curate-story-layout').data('success-id') + '$',
-            true, false
-          )
+          .search('^' + $('#curate-story-layout').data('success-id') + '$', true, false)
           .draw();
         // global so can be accessed from crowdsourceListeners
         curateContributorsEditor = newContributorsEditor(
