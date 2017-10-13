@@ -48,11 +48,19 @@
   <% end %>
 
   <div class="form-group text-center hidden-xs">
-    <%= f.submit('Submit', class: 'btn btn-success', style: 'width:65%') %>
+    <button type="submit" class="btn btn-success" style='width: 65%'>
+      <span>Submit</span>
+      <i class='fa fa-spinner fa-pulse' style='display:none'></i>
+      <i class='fa fa-check' style='display:none'></i>
+    </button>
   </div>
 
   <div class="form-group text-center visible-xs" >
-    <%= f.submit('Submit', class: 'btn btn-success', style: 'width:100%;max-width:350px') %>
+    <button type="submit" class="btn btn-success" style='width:100%; max-width:350px'>
+      <span>Submit</span>
+      <i class='fa fa-spinner fa-pulse' style='display:none'></i>
+      <i class='fa fa-check' style='display:none'></i>
+    </button>
   </div>
 
 

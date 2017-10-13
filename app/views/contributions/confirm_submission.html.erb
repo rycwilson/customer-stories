@@ -1,0 +1,22 @@
+
+<div class="container">
+  <div class="row">
+
+    <div class='col-centered confirmation col-xs-12 col-sm-10 col-lg-8'>
+
+      <% if @contribution.status == 'contribution_submitted' %>
+
+        <h3>Thank you for submitting your contribution.</h3>
+        <p class='next-step'>Once the story is finished, we will send an email with instructions for adding a media link to your LinkedIn profile.</p>
+
+      <% else %>
+
+        <h3>Thank you for submitting your feedback.</h3>
+        <p class='next-step'>Once we review your feedback, we may reach out in an effort to address any issues.</p>
+
+      <% end %>
+
+    <%= render('contributions/submission_footer', { contribution: @contribution }) %>
+
+  </div>
+</div>

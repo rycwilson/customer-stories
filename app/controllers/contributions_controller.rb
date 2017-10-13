@@ -1,8 +1,7 @@
 class ContributionsController < ApplicationController
 
-  before_action :set_contribution_if_valid_token?, only: [:edit, :update]
-  before_action :set_contribution, only: [:show, :confirm, :destroy]
-  before_action :check_opt_out_list, only: [:confirm_request]
+  before_action :set_contribution, except: [:index, :create]
+  # before_action :check_opt_out_list, only: [:confirm_request]
 
   respond_to(:html, :json, :js)
 
@@ -30,11 +29,6 @@ class ContributionsController < ApplicationController
     respond_to() { |format| format.json { render({ json: data }) } }
   end
 
-  # GET '/contributions/:token/:type'
-  def edit
-    @submission_type = params[:type]  # type IN ('contribution', 'feedback')
-  end
-
   def show
     if params[:get_contribution_request]
       respond_with(
@@ -47,6 +41,10 @@ class ContributionsController < ApplicationController
     end
   end
 
+  # GET '/contributions/:token/:type'
+  def edit
+    @submission_type = params[:type]  # type IN ('contribution', 'feedback')
+  end
 
   def create
     @contribution = Contribution.create(contribution_params)
@@ -95,7 +93,7 @@ class ContributionsController < ApplicationController
       respond_to { |format| format.js { render action: 'update_contributor' } }
 
     elsif params[:submission]
-      if params[:contribution][:status] == 'contribution'
+      if params[:contribution][:status] == 'contribution_submitted'
         params[:contribution][:contribution] = consolidate_answers(params[:answers])
       end
       if @contribution.update(contribution_params)
@@ -108,7 +106,7 @@ class ContributionsController < ApplicationController
             params: { contribution_id: @contribution.id }
           })
         else
-          redirect_to(confirm_contribution_path(@contribution))
+          redirect_to(confirm_submission_path(@contribution.access_token))
         end
       else
         @submission_type = params[:contribution][:status].split('_')[0]
@@ -154,7 +152,6 @@ class ContributionsController < ApplicationController
   end
 
   def confirm
-    @curator = @contribution.success.curator
   end
 
   private
@@ -170,16 +167,12 @@ class ContributionsController < ApplicationController
   end
 
   def set_contribution
-    @contribution = Contribution.find(params[:id])
-  end
-
-  def set_contribution_if_valid_token?
-    # contributor update
+    # contributor
     if params[:token] && (@contribution = Contribution.find_by(access_token: params[:token]))
       @contribution
-    # curator update
-    elsif request.path.match(/\/contributions\/\d+/)
-      @contribution = Contribution.find(params[:id])
+    # curator
+    elsif params[:id] && (@contribution = Contribution.find(params[:id]))
+      @contribution
     else
       render file: 'public/404.html', status: 404, layout: false
       false

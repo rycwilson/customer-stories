@@ -112,16 +112,14 @@ Rails.application.routes.draw do
 
     end
 
+    # token needed for access outside of user-authorized routes
     # type IN ('contribution', 'feedback', 'unsubscribe', 'opt_out')
     get '/contributions/:token/:type', to: 'contributions#edit', as: 'edit_contribution',
                 constraints: { type: /(contribution|feedback|unsubscribe|opt_out)/ }
-    get '/contributions/:token/confirm', to: 'contributions#confirm', as: 'confirm_submission'
+    get '/contributions/:token/confirm', to: 'contributions#confirm_submission',
+            as: 'confirm_submission'
     put '/contributions/:token', to: 'contributions#update', as: 'submission',
           constraints: { submission: true }
-    # this route returns json data for the contribution
-    # presently only need this when removing a linkedin_url from a contribution
-    get '/contributions/:id', to: 'contributions#show'
-
 
     # no authentication required (may come from a submission)
     get  '/user-profile/linkedin-callback', to: 'profile#linkedin_callback'

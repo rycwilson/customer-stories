@@ -1,0 +1,23 @@
+
+<div id='footer'>
+
+  <p style='font-weight:600; margin-bottom:6px'>Story Curator</p>
+
+  <img class='curator' src="<%= contribution.curator.photo_url %>" alt="curator photo">
+
+  <div class="curator">
+
+    <p><%= contribution.curator.full_name %></p>
+    <p><%= contribution.curator.title %></p>
+    <p><%= contribution.company.name %></p>
+    <p><a href="mailto:<%= contribution.curator.email %>">
+      <%= contribution.curator.email %></a></p>
+    <p><%= contribution.curator.phone %></p>
+
+  </div>
+
+  <div class="logo text-center">
+    <%= image_tag CS_POWERED_LOGO_URL, class: 'logo', alt:'powered-by-csp' %>
+  </div>
+
+</div>
