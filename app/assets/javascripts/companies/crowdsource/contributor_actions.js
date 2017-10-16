@@ -202,8 +202,18 @@ function contributorActionsListeners () {
           contribution = app.contributions.find(function (contribution) {
               return contribution.id == contributionId;
             }),
-          template = _.template( $('#contribution-content-template').html() );
+          template = _.template( $('#contribution-content-template').html() ),
+          formattedDate = function (date) {
+              return moment(date).calendar(null, {
+                sameDay: '[today]',
+                lastDay: '[yesterday]',
+                lastWeek: '['+ moment(date).fromNow() +']',
+                sameElse: 'M/DD/YY'
+              }).split('at')[0];
+            };
 
+      $('#contribution-content-modal .modal-title span:last-child')
+          .text(formattedDate(new Date(contribution.submitted_at)));
       $('#contribution-content-modal .modal-body').empty().append(
         template({ contribution: contribution })
       );

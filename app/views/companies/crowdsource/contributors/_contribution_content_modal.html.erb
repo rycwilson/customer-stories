@@ -5,20 +5,22 @@
 
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title">Contribution</h4>
+        <h4 class="modal-title">
+          <span>Contribution&nbsp;&nbsp;&#8212;&nbsp;&nbsp;submitted </span>
+          <span></span>
+        </h4>
       </div>
 
       <div class="modal-body" style='min-height: 200px'>
-
       </div>
 
       <div class="modal-footer">
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
       </div>
 
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+    </div> <!-- /.modal-content -->
+  </div> <!-- /.modal-dialog -->
+</div> <!-- /.modal -->
 
 <%= content_for(:underscore_templates) do %>
 
@@ -26,18 +28,23 @@
 
     {{ if (['contribution_submitted', 'feedback_submitted'].includes(contribution.status)) { }}
 
-      <p>{{= contribution.contribution || contribution.feedback }}</p>
+      <div class='contributor'>
 
-      <p style='text-align: right'>
-        {{= contribution.contributor.full_name }}
-      </p>
-      <p style='text-align: right'>
-        {{= contribution.contributor.title || "No position specified" }}
-      </p>
+        <p>{{= contribution.contributor.full_name }}</p>
+        <p>{{= contribution.contributor.title || "<span style='color:#D9534F'>No position specified</span>" }}</p>
+        <p>{{= contribution.customer.name }}</p>
+
+      </div>
+
+      <hr>
+
+      {{= contribution.contribution || "<p>contribution.feedback</p>" }}
 
     {{ } else { }}
 
     {{ } }}
+
+
 
   </script>
 
