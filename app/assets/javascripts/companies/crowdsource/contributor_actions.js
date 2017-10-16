@@ -9,8 +9,9 @@ function contributorActionsListeners () {
         return ['first_name', 'last_name', 'photo', 'phone', 'position']
           .filter(function (item) { return app.current_user[item] === '' ; });
       },
+
       // type is 'send' or 'readonly'
-      loadContributionRequest = function (contributionRequest, type, callback) {
+      showContributionRequest = function (contributionRequest, type) {
         // things go haywire if a different selector is used, e.g. $('textarea')
         var $modal = $('#contribution-request-modal'),
             $editor = $modal.find("[data-provider='summernote']");
@@ -23,44 +24,46 @@ function contributorActionsListeners () {
               }).split('at')[0];
             };
 
-        // send or readonly
-        $modal.find('.modal-content').addClass(type);
-        if (type === 'send') {
-          $modal.find('.modal-content').removeClass('readonly');
-        } else {
-          $modal.find('.modal-content').removeClass('send');
-        }
-        // set the readonly title (null is ok; formattedDate returns "Invalid")
-        $modal.find('.readonly.modal-title span:last-child')
-          .text(formattedDate(contributionRequest.sent_at));
-        // set the path
-        $modal.find('form')
-          .attr('action', contributionPath(contributionRequest.id));
-        // recipient
-        $modal.find('#request-recipient').html(
-          contributionRequest.contributor.full_name + '&nbsp;&nbsp;' +
-          '&lt' + contributionRequest.contributor.email + '&gt'
-        );
-        // request subject
-        $modal.find('[name="contribution[request_subject]"]')
-          .val(contributionRequest.subject)
-          .attr('readonly', type === 'readonly' ? true : false);
-        // request body
-        $editor.summernote('code', contributionRequest.body);
-        // enable or disable editor
-        $editor.summernote(
-          type === 'readonly' ? 'disable' : 'enable'
-        );
+        $modal.one('hidden.bs.modal', function () {
+          $(this).find('.modal-body, .modal-footer').css('visibility', 'hidden');
+          $(this).find('#request-recipient').text('');
+        });
 
-
-
-        callback();
-
+        $modal.one('shown.bs.modal', function () {
+          // send or readonly
+          $modal.find('.modal-content').addClass(type);
+          if (type === 'send') {
+            $modal.find('.modal-content').removeClass('readonly');
+          } else {
+            $modal.find('.modal-content').removeClass('send');
+          }
+          // set the readonly title (null is ok; formattedDate returns "Invalid")
+          $modal.find('.readonly.modal-title span:last-child')
+            .text(formattedDate(contributionRequest.sent_at));
+          // set the path
+          $modal.find('form')
+            .attr('action', contributionPath(contributionRequest.id));
+          // recipient
+          $modal.find('#request-recipient').html(
+            contributionRequest.contributor.full_name + '&nbsp;&nbsp;' +
+            '&lt' + contributionRequest.contributor.email + '&gt'
+          );
+          // request subject
+          $modal.find('[name="contribution[request_subject]"]')
+            .val(contributionRequest.subject)
+            .attr('readonly', type === 'readonly' ? true : false);
+          // request body
+          $editor.summernote('code', contributionRequest.body);
+          // enable or disable editor
+          $editor.summernote(
+            type === 'readonly' ? 'disable' : 'enable'
+          );
+          $modal.find('.modal-body, .modal-footer').css('visibility', 'visible');
+        });
+        $modal.modal('show');
       },
-      showContributionRequest = function (contributionId, type) {
-        var callback = function () {
-          $('#contribution-request-modal').modal('show');
-        };
+
+      getContributionRequest = function (contributionId, type) {
         $.ajax({
           url: contributionPath(contributionId),
           method: 'get',
@@ -78,9 +81,10 @@ function contributorActionsListeners () {
               },
               sent_at: contribution.request_sent_at
             };
-            loadContributionRequest(contributionRequest, type, callback);
+            showContributionRequest(contributionRequest, type);
           });
       },
+
       toggleEmailProgress = function (state) {
         var $modal = $('#contribution-request-modal');
         if (state === 'on') {
@@ -91,6 +95,7 @@ function contributorActionsListeners () {
           $modal.find('.progress').addClass('hidden');
         }
       },
+
       removeContribution = function (id) {
         $.ajax({
           url: contributionPath(id),
@@ -112,6 +117,7 @@ function contributorActionsListeners () {
             });
           });
       },
+
       modifyLinkDialog = function () {
         $('.link-dialog .note-link-url').prop('disabled', true);
         $('.link-dialog input[type="checkbox"]').prop('checked', true);
@@ -120,6 +126,8 @@ function contributorActionsListeners () {
       };
 
   $(document)
+
+
 
     .on('click', '.contributor-actions .send-request', function () {
       var contributionId = $(this).closest('tr').data('contribution-id');
@@ -130,7 +138,7 @@ function contributorActionsListeners () {
         return false;
 
       } else {
-        showContributionRequest(contributionId, 'send');
+        getContributionRequest(contributionId, 'send');
       }
 
     })
@@ -144,7 +152,7 @@ function contributorActionsListeners () {
         return false;
 
       } else {
-        showContributionRequest(contributionId, 'send');
+        getContributionRequest(contributionId, 'send');
       }
 
     })
@@ -186,7 +194,7 @@ function contributorActionsListeners () {
     .on('click', '.contributor-actions .view-request, ' +
                  'td.crowdsourcing-template.view-request a', function () {
       var contributionId = $(this).closest('tr').data('contribution-id');
-      showContributionRequest(contributionId, 'readonly');
+      getContributionRequest(contributionId, 'readonly');
     })
 
     .on('click', 'a[href="#contribution-content-modal"]', function () {
