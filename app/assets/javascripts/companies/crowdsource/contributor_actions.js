@@ -25,8 +25,7 @@ function contributorActionsListeners () {
             };
 
         $modal.one('hidden.bs.modal', function () {
-          $(this).find('.modal-body, .modal-footer').css('visibility', 'hidden');
-          $(this).find('#request-recipient').text('');
+          $(this).find('#to-contributor, .modal-body, .modal-footer').css('visibility', 'hidden');
         });
 
         $modal.one('shown.bs.modal', function () {
@@ -44,7 +43,7 @@ function contributorActionsListeners () {
           $modal.find('form')
             .attr('action', contributionPath(contributionRequest.id));
           // recipient
-          $modal.find('#request-recipient').html(
+          $modal.find('#to-contributor span:last-child').html(
             contributionRequest.contributor.full_name + '&nbsp;&nbsp;' +
             '&lt' + contributionRequest.contributor.email + '&gt'
           );
@@ -58,7 +57,7 @@ function contributorActionsListeners () {
           $editor.summernote(
             type === 'readonly' ? 'disable' : 'enable'
           );
-          $modal.find('.modal-body, .modal-footer').css('visibility', 'visible');
+          $modal.find('#to-contributor, .modal-body, .modal-footer').css('visibility', 'visible');
         });
         $modal.modal('show');
       },
