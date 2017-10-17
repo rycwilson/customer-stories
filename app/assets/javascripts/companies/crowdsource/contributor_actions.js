@@ -212,12 +212,45 @@ function contributorActionsListeners () {
               }).split('at')[0];
             };
 
-      $('#contribution-content-modal .modal-title span:last-child')
-          .text(formattedDate(new Date(contribution.submitted_at)));
+      $('#contribution-content-modal .modal-title span:last-child').text(
+        formattedDate( new Date(contribution.submitted_at) )
+      );
+
       $('#contribution-content-modal .modal-body').empty().append(
         template({ contribution: contribution })
       );
 
+    })
+
+    .on('click', '.contributor-actions .completed', function () {
+
+      var dt = $(this).closest('table').DataTable(),
+          $row = $(this).closest('tr'),
+          rowData = dt.row($row).data(),
+          $tdStatus = $row.find('td.status'),
+          contributionId = $row.data('contribution-id');
+
+      $.ajax({
+        url: contributionPath(contributionId),
+        method: 'put',
+        data: { completed: true },
+        dataType: 'json'
+      })
+        .done(function (data, status, xhr) {
+          rowData.status = 'completed';
+          rowData.display_status = data.display_status;
+          dt.row($row).data(rowData);
+          $tdStatus.find('i').toggle();
+          setTimeout(function () {
+            $tdStatus.find('i').toggle();
+          }, 2000);
+          setTimeout(function () {
+            if ( $('#show-completed').length &&
+                 $('#show-completed').prop('checked') === false ) {
+              $('#show-completed').trigger('change');
+            }
+          }, 2200);
+        });
     })
 
     // keep link dialog modifications limited to contribution request

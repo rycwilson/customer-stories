@@ -32,10 +32,7 @@ function initContributorsTable (workflowStage) {
       {  // <td data-search="s<%= contribution.success.id %>, <%= contribution.success.name %>">
         name: 'success',
         defaultContent: 'Unknown Opportunity',
-        data: {
-          _: 'success.name',
-          filter: 'success.id'
-        }
+        data: 'success.name'
       },
       // <td data-search="t<%#= contribution.crowdsourcing_template_id  %>" class='crowdsourcing-template'>
       {
@@ -59,10 +56,12 @@ function initContributorsTable (workflowStage) {
         name: 'customer',
         data: 'success.customer.name'
       },
-      // <td class='contribution-status'>
       {
         name: 'status',
-        data: 'display_status'
+        data: {
+          _: 'status',
+          display: 'display_status'
+        }
       },
       {
         // data is status as this will determine actions available
@@ -149,8 +148,18 @@ function initContributorsTable (workflowStage) {
         .append('<i class="fa fa-caret-down"></i>');
       $(row).children().eq(3).addClass('status');
       $(row).children().eq(4).addClass('dropdown actions-dropdown');
-      // don't allow selection of crowdsourcing template if request has been sent
-      if ( $(row).children().eq(3).text().includes('sent') ) {
+
+      // crowdsourcing template can only be selected if
+      // (a) request hasn't been sent yet
+      // (b) did not respond (ready for re-send)
+      var statusText = $(row).children().eq(3).text(),
+          enableTemplateSelect = function () {
+            return !['awaiting request', 'did not respond'].some(function (status) {
+              text.includes(status);
+            });
+          };
+
+      if ( enableTemplateSelect(statusText) ) {
         $(row).children().eq(2).addClass('disabled').find('i').remove();
       }
     },
@@ -206,7 +215,7 @@ function initContributorsTable (workflowStage) {
 
         // use regex search to prevent search of '18' from matching '185', '218', etc
         $(this).DataTable().column('success:name')
-          .search('^' + $('#curate-story-layout').data('success-id') + '$', true, false)
+          .search( $('#curate-story-layout').data('success-name') )
           .draw();
         // global so can be accessed from crowdsourceListeners
         curateContributorsEditor = newContributorsEditor(

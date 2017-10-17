@@ -128,6 +128,13 @@ class ContributionsController < ApplicationController
       #   })
       # end
 
+    elsif params[:completed]
+      @contribution.update(status: 'completed')
+      respond_to do |format|
+        format.json do
+          render({ json: { display_status: @contribution.display_status } })
+        end
+      end
 
     # contribution update from either profile (:publish_contributor, :contributor_unpublished)
     # or contribution card (:publish_contributor OR :notes)
