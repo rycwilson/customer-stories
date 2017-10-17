@@ -9,17 +9,17 @@
     <div class="col-lg-6">
 
       <div class="form-group">
-        <%= story_form.label(:quote, 'Customer Testimonial') %>
-        <%= story_form.text_area(:quote, rows: 6, class: 'form-control', placeholder: 'Add a quote from a happy customer...') %>
+        <%= story_form.label(:quote, 'Customer Quote') %>
+        <%= story_form.text_area(:quote, rows: 6, class: 'form-control', placeholder: 'Add a quote from a happy customer') %>
       </div>
 
       <div class="form-group">
-        <%= story_form.label(:quote_attr_name, 'Customer Name') %>
+        <%= story_form.label(:quote_attr_name, 'Quoted Customer Name') %>
         <%= story_form.text_field(:quote_attr_name, class: 'form-control') %>
       </div>
 
       <div class="form-group">
-        <%= story_form.label(:quote_attr_title, 'Customer Position') %>
+        <%= story_form.label(:quote_attr_title, 'Quoted Customer Title') %>
         <%= story_form.text_field(:quote_attr_title, class: 'form-control') %>
       </div>
 
@@ -39,7 +39,7 @@
 
       <label for="story_summary">Summary</label>
       <%= story_form.text_area(:summary, class: 'form-control', rows: 11,
-              placeholder: 'Provide a brief story summary that will appear in a preview window along with the Customer Testimonial',
+              placeholder: 'Provide a brief story summary that will appear in a preview window along with the Customer Quote',
               data: { 'summary-range': '50-150' }) %>
 
       <!-- bootstrap validator -->
