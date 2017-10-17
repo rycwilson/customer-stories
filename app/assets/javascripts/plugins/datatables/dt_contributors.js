@@ -153,7 +153,7 @@ function initContributorsTable (workflowStage) {
       // (a) request hasn't been sent yet
       // (b) did not respond (ready for re-send)
       var statusText = $(row).children().eq(3).text(),
-          enableTemplateSelect = function () {
+          enableTemplateSelect = function (text) {
             return !['awaiting request', 'did not respond'].some(function (status) {
               text.includes(status);
             });

@@ -73,7 +73,7 @@
 
       {{ } }}
 
-      {{ if (['contribution_submitted', 'feedback_submitted'].includes(status)) { }}
+      {{ if ( ['contribution_submitted', 'feedback_submitted', 'completed'].includes(status) ) { }}
 
         <li class='view-submission'>
           <a href="#contribution-content-modal" data-toggle='modal'>
@@ -82,12 +82,16 @@
           </a>
         </li>
 
-        <li class='completed'>
-          <a href="javascript:;">
-            <i class='fa fa-check action'></i>&nbsp;
-            <span>Mark as Completed</span>
-          </a>
-        </li>
+        if (status !== 'completed') {{ { }}
+
+          <li class='completed'>
+            <a href="javascript:;">
+              <i class='fa fa-check action'></i>&nbsp;
+              <span>Mark as Completed</span>
+            </a>
+          </li>
+
+        {{ } }}
 
       {{ } }}
 
