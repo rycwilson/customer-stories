@@ -38,7 +38,7 @@ class Company < ActiveRecord::Base
   has_many :contributions, -> { includes(:contributor, :referrer, success:{customer:{}}) },
             through: :successes do
     def pending
-      where(complete: false).to_json(
+      where(completed: false).to_json(
         only: [:id, :status, :contribution, :feedback, :linkedin, :notes, :publish_contributor, :contributor_unpublished, :success_id, :submitted_at],
         methods: [],
         include: {

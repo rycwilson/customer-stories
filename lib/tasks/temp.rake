@@ -19,6 +19,7 @@ namespace :temp do
     # this success and story had a \n character in the name/title that was hosing datatables search
     Success.find(27).update(name:'How to Deploy a Customer Reference Application for Your Sales Team')
     Success.find(27).story.update(title:'How to Deploy a Customer Reference Application for Your Sales Team')
+    Contribution.where(status: nil).destroy_all
   end
 
   task copy_old_contribution_requests: :environment do

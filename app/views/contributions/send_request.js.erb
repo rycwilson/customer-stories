@@ -10,7 +10,7 @@
   $('table[id*="contributors-table"]').DataTable()
     .ajax.reload(function (contributions) {
        $('#contribution-request-modal').modal('hide')
-       flashDisplay('Contribution Request sent to ' + contribution.contributor.full_name, 'info');
+       flashDisplay('Contribution Request sent to ' + contribution.contributor.full_name, 'success');
     })
 
 }());

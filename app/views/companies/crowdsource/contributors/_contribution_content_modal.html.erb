@@ -26,25 +26,17 @@
 
   <script id='contribution-content-template' type='text/template'>
 
-    {{ if (['contribution_submitted', 'feedback_submitted'].includes(contribution.status)) { }}
+    <div class='contributor'>
 
-      <div class='contributor'>
+      <p>{{= contribution.contributor.full_name }}</p>
+      <p>{{= contribution.contributor.title || "<span style='color:#D9534F'>No position specified</span>" }}</p>
+      <p>{{= contribution.customer.name }}</p>
 
-        <p>{{= contribution.contributor.full_name }}</p>
-        <p>{{= contribution.contributor.title || "<span style='color:#D9534F'>No position specified</span>" }}</p>
-        <p>{{= contribution.customer.name }}</p>
+    </div>
 
-      </div>
+    <hr>
 
-      <hr>
-
-      {{= contribution.contribution || "<p>contribution.feedback</p>" }}
-
-    {{ } else { }}
-
-    {{ } }}
-
-
+    {{= contribution.contribution || "<p>contribution.feedback</p>" }}
 
   </script>
 

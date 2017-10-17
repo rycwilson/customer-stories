@@ -9,7 +9,7 @@ class ContributionsController < ApplicationController
   def index
     company = Company.find_by(subdomain: request.subdomain)
     data = company.contributions.to_json({
-              only: [:id, :status], methods: [:display_status],
+              only: [:id, :status, :completed], methods: [:display_status],
               include: {
                 success: {
                   only: [:id, :name],
@@ -33,7 +33,17 @@ class ContributionsController < ApplicationController
     if params[:get_contribution_request]
       respond_with(
         @contribution, only: [:id, :request_subject, :request_body, :request_sent_at],
-        include: { contributor: { only: [:email], methods: [:full_name] } }
+        include: {
+          contributor: { only: [:email], methods: [:full_name] }
+        }
+      )
+    elsif params[:get_contribution_content]
+      respond_with(
+        @contribution, only: [:id, :status, :contribution, :feedback, :submitted_at],
+        include: {
+          contributor: { only: [:title], methods: [:full_name] },
+          customer: { only: [:name] }
+        }
       )
     else
       respond_with @contribution, include: {
@@ -129,10 +139,19 @@ class ContributionsController < ApplicationController
       # end
 
     elsif params[:completed]
-      @contribution.update(status: 'completed')
+      if @contribution.contribution.present?
+        @contribution.update(status: 'contribution_completed')
+      else
+        @contribution.udpate(status: 'feedback_completed')
+      end
       respond_to do |format|
         format.json do
-          render({ json: { display_status: @contribution.display_status } })
+          render({
+            json: {
+              status: @contribution.status,
+              display_status: @contribution.display_status
+            }
+          })
         end
       end
 

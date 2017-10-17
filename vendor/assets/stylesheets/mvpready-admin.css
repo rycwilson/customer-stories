@@ -670,11 +670,12 @@ fieldset[disabled] .btn-transparent.active {
 .alert-success .alert-link {
   color: #e6e6e6;
 }
-.alert-info {
+/*overridden in application.scss*/
+/*.alert-info {
   background-color: #5bc0de;
   border-color: #5bc0de;
   color: #ffffff;
-}
+}*/
 .alert-info hr {
   border-top-color: #46b8da;
 }

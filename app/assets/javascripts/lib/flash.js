@@ -1,15 +1,4 @@
 
-function flashTimeout () {
-  setTimeout(function () {
-    $('#flash').slideUp();
-  }, 3000);
-  setTimeout(function () {
-    $('#flash').addClass('hidden')
-               .removeClass('alert-success alert-info alert-warning alert-danger')
-               .empty();
-  }, 3500);
-}
-
 // status should be one of: success, info, warning, danger
 function flashDisplay (mesg, status, callback) {
   $('#flash').removeClass('hidden')

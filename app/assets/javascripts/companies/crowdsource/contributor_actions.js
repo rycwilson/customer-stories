@@ -199,9 +199,6 @@ function contributorActionsListeners () {
     .on('click', 'a[href="#contribution-content-modal"]', function () {
 
       var contributionId = $(this).closest('tr').data('contribution-id'),
-          contribution = app.contributions.find(function (contribution) {
-              return contribution.id == contributionId;
-            }),
           template = _.template( $('#contribution-content-template').html() ),
           formattedDate = function (date) {
               return moment(date).calendar(null, {
@@ -212,13 +209,22 @@ function contributorActionsListeners () {
               }).split('at')[0];
             };
 
-      $('#contribution-content-modal .modal-title span:last-child').text(
-        formattedDate( new Date(contribution.submitted_at) )
-      );
-
-      $('#contribution-content-modal .modal-body').empty().append(
-        template({ contribution: contribution })
-      );
+      $.ajax({
+        url: contributionPath(contributionId),
+        method: 'get',
+        data: {
+          get_contribution_content: true
+        },
+        dataType: 'json'
+      })
+        .done(function (contribution, status, xhr) {
+          $('#contribution-content-modal .modal-title span:last-child').text(
+            formattedDate( new Date(contribution.submitted_at) )
+          );
+          $('#contribution-content-modal .modal-body').empty().append(
+            template({ contribution: contribution })
+          );
+        });
 
     })
 
@@ -237,7 +243,7 @@ function contributorActionsListeners () {
         dataType: 'json'
       })
         .done(function (data, status, xhr) {
-          rowData.status = 'completed';
+          rowData.status = data.status;
           rowData.display_status = data.display_status;
           dt.row($row).data(rowData);
           $tdStatus.find('i').toggle();

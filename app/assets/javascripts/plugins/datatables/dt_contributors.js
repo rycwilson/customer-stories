@@ -65,11 +65,10 @@ function initContributorsTable (workflowStage) {
       },
       {
         // data is status as this will determine actions available
-        // TODO: error
         data: 'status',
         render: function (data, type, row, meta) {
           return _.template(
-              $('#contributors-dropdown-template').html()
+              $('#contributor-actions-dropdown-template').html()
             )({
                 status: data,
                 workflowStage: workflowStage,

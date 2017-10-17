@@ -76,8 +76,10 @@
   background-color: #00fbff;
 }
 
-.progress-bar-info {
+.progress-bar-info, .alert-info {
   background-color: #6685a4;  // btn-secondary
+  border-color: #54718d;
+  color: #fff;
 }
 
 hr {

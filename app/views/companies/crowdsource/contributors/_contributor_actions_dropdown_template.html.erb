@@ -1,5 +1,5 @@
 
-<script type='text/template' id='contributors-dropdown-template'>
+<script type='text/template' id='contributor-actions-dropdown-template'>
 
   <div style='position:relative'>
 
@@ -40,6 +40,19 @@
 
       {{ } }}
 
+
+      {{ if ( status.match(/(contribution|feedback)/) ) { }}
+
+        <li>
+          <a href="#contribution-content-modal" data-toggle='modal'>
+            <i class='fa fa-search action'></i>&nbsp;
+            <span>View {{= status.includes('contribution') ? 'contribution' : 'feedback' }}</span>
+          </a>
+        </li>
+
+
+      {{ } }}
+
       {{ if (workflowStage === 'crowdsource') { }}
 
         {{ if (story && story.published) { }}
@@ -73,25 +86,14 @@
 
       {{ } }}
 
-      {{ if ( ['contribution_submitted', 'feedback_submitted', 'completed'].includes(status) ) { }}
+      {{ if ( !status.match(/completed/) ) { }}
 
-        <li class='view-submission'>
-          <a href="#contribution-content-modal" data-toggle='modal'>
-            <i class='fa fa-search action'></i>&nbsp;
-            <span>View {{= status === 'contribution_submitted' ? 'contribution' : 'feedback' }}</span>
+        <li class='completed'>
+          <a href="javascript:;">
+            <i class='fa fa-check action'></i>&nbsp;
+            <span>Mark as Completed</span>
           </a>
         </li>
-
-        if (status !== 'completed') {{ { }}
-
-          <li class='completed'>
-            <a href="javascript:;">
-              <i class='fa fa-check action'></i>&nbsp;
-              <span>Mark as Completed</span>
-            </a>
-          </li>
-
-        {{ } }}
 
       {{ } }}
 
