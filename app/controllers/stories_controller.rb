@@ -129,7 +129,6 @@ class StoriesController < ApplicationController
     @story = Story.new(title: new_story[:title], success_id: success.id)
     if @story.save
       @story.assign_tags(new_story)
-      @story.success.create_default_prompts
       # flash[:success] = "Story created successfully"
       # # prevent js response from killing flash message
       # flash.keep(:success)
