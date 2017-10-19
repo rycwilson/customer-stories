@@ -3,81 +3,94 @@
 
   <div class='row contributors-header'>
 
-    <div class='col-sm-6'>
-      <button type='button' style='margin:0 10px;height:32px' class='btn btn-secondary btn-sm' data-toggle='modal' data-target='#new-contributor-modal'><i class='glyphicon glyphicon-plus-sign' style='font-size:15px;top:2px'></i>&nbsp;&nbsp;&nbsp;Add New Contributor&nbsp;</button>
-      <button type='button' style='margin:0 10px;height:32px' class='btn btn-secondary btn-sm'><i class='glyphicon glyphicon-import' style='font-size:15px;top:2px'></i>&nbsp&nbsp;&nbsp;Import Contributors&nbsp;</button>
+    <div class='col-sm-3 buttons'>
+
+      <div>
+        <button type='button' class='btn btn-secondary btn-sm' data-toggle='modal' data-target='#new-contributor-modal'><i class='glyphicon glyphicon-plus-sign'></i>&nbsp;&nbsp;&nbsp;Add New Contributor&nbsp;</button>
+      </div>
+
+      <div>
+        <button type='button' class='btn btn-secondary btn-sm'><i class='glyphicon glyphicon-import'></i>&nbsp&nbsp;&nbsp;Import Contributors&nbsp;</button>
+      </div>
+
     </div>
 
-    <div class='col-sm-6 text-right'>
-      <label>Curator&nbsp;</label>
-      <select class='crowdsource curator-select form-control text-left' style="width:{{= selectWidth.toString() + 'px' }};">
+    <div class='col-sm-5 checkbox-filters'>
 
-        <option value='0' selected>All Curators<option>
-
-        {{ _.each(curators, function (curator) { }}
-
-          <option data-column='curator' value="{{= curator.id }}">{{= curator.first_name + ' ' + curator.last_name }}</option>
-
-        {{ }); }}
-
-      </select>
-    </div>
-
-  </div>
-
-  <div class='row contributors-header'>
-
-    <div class='col-sm-6'>
-
-      <label style='padding-left:10px;margin-bottom:5px' for="toggle-group-by-success">
+      <label class='checkbox-filter' style='padding-left:10px' for="toggle-group-by-success">
         <input type="checkbox" id="toggle-group-by-success" checked>
         <span>&nbsp;&nbsp;Group by Customer&nbsp;&nbsp;&#8211;&nbsp;&nbsp;Story Candidate&nbsp;/&nbsp;Story</span>
       </label>
 
-      <label style='padding-left:10px;margin:0' for="show-completed">
+      <label class='checkbox-filter' style='padding-left:10px' for="show-completed">
         <input type="checkbox" id="show-completed">
-        <span>&nbsp;&nbsp;Show completed</span>
+        <span>&nbsp;&nbsp;Show Contributors with Status = completed</span>
+      </label>
+
+      <label class='checkbox-filter' style='padding-left:10px' for="show-published">
+        <input type="checkbox" id="show-published">
+        <span>&nbsp;&nbsp;Show Contributors to published Stories</span>
       </label>
 
     </div>
 
-    <div class='col-sm-6 text-right'>
+    <div class='col-sm-4 select-filters'>
 
-      <label>Filter&nbsp;</label>
-      <select id='contributors-filter' class='dt-filter form-control text-left' style="width:{{= selectWidth.toString() + 'px' }};">
+      <div>
+        <label>Curator&nbsp;</label>
+        <select class='crowdsource curator-select form-control text-left' style="width:{{= selectWidth.toString() + 'px' }};">
 
-        <option value='0' data-column='contributor' selected>All Contributors</option>
+          <option value='0' selected>All Curators<option>
 
-        <optgroup label='Contributor'>
-          {{ _.each(contributors, function (contributor) { }}
+          {{ _.each(curators, function (curator) { }}
 
-            <option value="contributor-{{= contributor.id }}" data-column='contributor'>{{= contributor.full_name }}</option>
-
-          {{ }) }}
-        </optgroup>
-
-        <optgroup label='Next step'>
-          <option value='' data-column='email_template'>Next Step 1</option>
-          <option value='' data-column='email_template'>Next Step 2</option>
-        </optgroup>
-
-        <optgroup label='Customer'>
-          {{ _.each(customers, function (customer) { }}
-
-            <option value="customer-{{= customer.id }}" data-column='customer'>{{= customer.name }}</option>
+            <option data-column='curator' value="{{= curator.id }}">{{= curator.first_name + ' ' + curator.last_name }}</option>
 
           {{ }); }}
-        </optgroup>
 
-        <optgroup label='Story Candidate'>
-          {{ _.each(successes, function (success) { }}
+        </select>
+      </div>
 
-            <option value="success-{{= success.id }}" data-column='success'>{{= success.name }}</option>
+      <div>
 
-          {{ }); }}
-        </optgroup>
+        <label>Filter&nbsp;</label>
+        <select id='contributors-filter' class='dt-filter form-control text-left' style="width:{{= selectWidth.toString() + 'px' }};">
 
-      </select>
+          <option value='0' data-column='contributor' selected>All Contributors</option>
+
+          <optgroup label='Contributor'>
+
+            {{ _.each(contributors, function (contributor) { }}
+
+              <option value="contributor-{{= contributor.id }}" data-column='contributor'>{{= contributor.full_name }}</option>
+
+            {{ }) }}
+
+          </optgroup>
+
+          <optgroup label='Customer'>
+
+            {{ _.each(customers, function (customer) { }}
+
+              <option value="customer-{{= customer.id }}" data-column='customer'>{{= customer.name }}</option>
+
+            {{ }); }}
+
+          </optgroup>
+
+          <optgroup label='Story Candidate'>
+
+            {{ _.each(successes, function (success) { }}
+
+              <option value="success-{{= success.id }}" data-column='success'>{{= success.name }}</option>
+
+            {{ }); }}
+
+          </optgroup>
+
+        </select>
+
+      </div>
 
     </div>
 

@@ -2,6 +2,7 @@
 /*
 *= require ./successes
 *= require ./contributors
+*= require ./contributors_modals
 */
 
 .link-dialog {
@@ -12,81 +13,6 @@
     }
   }
 }
-
-#contribution-content-modal {
-  .modal-content {
-    overflow: hidden;
-    .modal-header, .modal-footer {
-      background: #f5f5f5;
-    }
-    .modal-body {
-      max-height: 440px;
-      overflow-y: auto;
-      hr {
-        margin: 15px 0;
-      }
-      .contributor {
-        p:first-of-type {
-          font-weight: 600;
-        }
-        p {
-          margin-bottom: 0;
-        }
-      }
-    }
-    textarea {
-      width: 100%;
-    }
-  }
-}
-
-#contribution-request-modal {
-  .modal-content {
-    overflow: hidden;  // this forces .modal-header background to respect border-radius
-    .modal-header, .modal-footer {
-      background: #f5f5f5;
-    }
-    .modal-title, .progress {
-      margin-bottom: 10px;
-    }
-    .progress {
-      margin-top: 5px;
-    }
-    .modal-body {
-      max-height: 440px;
-      overflow-y: auto;
-      .form-group.subject {
-        width: 100%;
-        margin-bottom: 15px;
-        label {
-          width: 10%;
-          // these three settings for vertical centering
-          display: inline-block;
-          vertical-align: middle;
-          margin-bottom: 0;
-        }
-        input { width: 90%; }
-      }
-    }
-  }
-  .modal-content.send {
-    .readonly { display: none }
-  }
-  .modal-content.readonly {
-    .modal-body * {
-      pointer-events: none;
-    }
-    .send, .note-toolbar {
-      display: none
-    }
-    .note-editable[contenteditable="false"] {
-      // mirrors disabled input
-      background: #eee;
-    }
-  }
-}
-
-.link-
 
 .bootbox.modal.confirm-remove-contributor {
   .modal-content {
@@ -127,10 +53,10 @@
   width: 250px;
 }
 
-.row.successes-header, .row.contributors-header {
+.row.successes-header {
   display: flex;
-  align-items: center;
-  margin-bottom: 15px;
+  align-items: bottom;
+  // margin-bottom: 15px;
   // select + span {
   //   margin-left: 0.5em;  // matches datatables
   // }
@@ -139,7 +65,7 @@
     text-align: left;
   }
 }
-.row.successes-header:nth-of-type(2), .row.contributors-header:nth-of-type(2) {
+.row.successes-header:nth-of-type(2) {
   margin-bottom: 16px;
 }
 

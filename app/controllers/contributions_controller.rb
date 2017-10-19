@@ -9,7 +9,7 @@ class ContributionsController < ApplicationController
   def index
     company = Company.find_by(subdomain: request.subdomain)
     data = company.contributions.to_json({
-              only: [:id, :status, :completed], methods: [:display_status],
+              only: [:id, :status], methods: [:display_status],
               include: {
                 success: {
                   only: [:id, :name],

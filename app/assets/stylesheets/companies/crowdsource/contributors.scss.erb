@@ -1,4 +1,42 @@
 
+
+// .row.contributors-header {
+
+//   margin-bottom: 15px;
+//   // select + span {
+//   //   margin-left: 0.5em;  // matches datatables
+//   // }
+//   select + span > span:first-child > span {
+//     padding-right: 30px; // matches search box
+//     text-align: left;
+//   }
+.row.contributors-header {
+  .buttons, .checkbox-filters {
+    padding-top: 23px;
+  }
+  button {
+    width: 170px;
+    height: 34px;
+    i {
+      font-size:15px;
+      top:2px;
+    }
+  }
+  button[data-target='#new-contributor-modal'] {
+    margin-bottom: 15px;
+  }
+  label.checkbox-filter {
+    margin-bottom: 10px;
+  }
+  select + span > span:first-child > span {
+    padding-right: 30px; // matches search box
+    text-align: left;
+  }
+  select + span.select2 {
+    margin-bottom: 10px;
+  }
+}
+
 // applies to both crowdsource-contributors and curate-contributors tables
 [id*="-contributors-table"] {
   td {
@@ -24,9 +62,11 @@
       transform: translate(0, -50%);
     }
   }
+
   td.crowdsourcing-template.editor-open {
     padding-right: 8px;
   }
+
   td.crowdsourcing-template {
     span.select2 {
       margin-bottom: 8px;

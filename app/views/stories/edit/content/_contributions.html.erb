@@ -15,7 +15,7 @@
         </div>
 
         <div class="contribution-content">
-          <%= contribution.contribution.html_safe %>
+          <%= contribution.contribution.try(:html_safe) %>
         </div>
 
       </div>

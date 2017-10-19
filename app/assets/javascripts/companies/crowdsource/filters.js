@@ -3,8 +3,7 @@ function crowdsourceFiltersListeners () {
 
   // keep track of the last column search, so table can be reset on the next search;
   // the value will be the name of the column
-  var lastSuccessesSearchColumn = null, lastSuccessesSearchValue = null,
-      lastContributorsSearchColumn = null, lastContributorsSearchValue = null;
+  var lastSuccessesSearchColumn = null, lastContributorsSearchColumn = null;
 
   $(document)
     .on('change', '.crowdsource.curator-select, ' +
@@ -18,7 +17,9 @@ function crowdsourceFiltersListeners () {
         curatorId = $(this).val();
         // modify filter options to reflect curator's associations
         var $filter = $tableWrapper.find('.dt-filter'),
-            successes = (curatorId === '0') ? app.company.successes :
+            successes =
+
+            (curatorId === '0') ? app.company.successes :
                         app.company.successes.filter(function (success) {
                           return success.curator_id == curatorId;
                         }),
@@ -32,7 +33,7 @@ function crowdsourceFiltersListeners () {
             $successesOptgroup = $filter.find('optgroup[label="Story Candidate"]');
             $customersOptgroup = $filter.find('optgroup[label="Customer"]');
 
-        if ($table.is('#crowdsource-contributors-table')) {
+        if ( $table.is('#crowdsource-contributors-table') ) {
           var contributors =
                 app.contributions.filter(function (contribution) {
                   return successes.some(function (success) {
@@ -103,37 +104,39 @@ function crowdsourceFiltersListeners () {
         var filterCol = $(this).find('option:selected').data('column'),
             filterVal = $(this).find('option:selected').val() === '0' ? '0' :
                         $(this).find('option:selected').text(),
-            dtSearch;
+            // incorporate checkbox filters
+            dtSearch = dt.search('')
+              .column('status:name')
+              .search($('#show-completed').prop('checked') ? '' : '^((?!complete).)*$', true, false)
+              .column('storyPublished:name')
+              .search($('#show-published').prop('checked') ? '' : 'false');
 
         // curator && all candidates/contributors
         if (filterVal === '0') {
           if ($table.is('#successes-table') && lastSuccessesSearchColumn) {
-            dtSearch = $table.DataTable().search('')
-                          .column(lastSuccessesSearchColumn + ':name').search('');
+            // TODO: is this really necessary?
+            dtSearch = dtSearch.column(lastSuccessesSearchColumn + ':name').search('');
             lastSuccessesSearchColumn = null;
           } else if ($table.is('#crowdsource-contributors-table') && lastContributorsSearchColumn) {
-            dtSearch = $table.DataTable().search('')
-                          .column(lastContributorsSearchColumn + ':name').search('');
+            dtSearch = dtSearch.column(lastContributorsSearchColumn + ':name').search('');
             lastContributorsSearchColumn = null;
-          } else {
-            dtSearch = $table.DataTable().search('');
           }
-          dtSearch.column('curator:name')
+          dtSearch
+            .column('curator:name')
             .search(curatorId === '0' ? '' : '^' + curatorId + '$', true, false)
             .draw();
 
         // curator && filter column
         } else {
-          dt.search('')
-            .column('curator:name').search(curatorId === '0' ? '' : '^' + curatorId + '$', true, false)
+          dtSearch
+            .column('curator:name')
+            .search(curatorId === '0' ? '' : '^' + curatorId + '$', true, false)
             .column(filterCol + ':name').search('^' + filterVal + '$', true, false)
             .draw();
           if ($table.is('#successes-table')) {
             lastSuccessesSearchColumn = filterCol;
-            lastSuccessesSearchValue = filterVal;
           } else {
             lastContributorsSearchColumn = filterCol;
-            lastContributorsSearchValue = filterVal;
           }
         }
 
@@ -142,6 +145,15 @@ function crowdsourceFiltersListeners () {
 
     .on('keyup', '.select2-search', function (e) {
       var $table, curatorId, $input = $(this).find('input'), dtSearch;
+
+      if ( $table.is('#crowdsource-contributors-table') ) {
+        // incorporate checkbox filters
+        dtSearch = dt.search('')
+          .column('status:name')
+          .search($('#show-completed').prop('checked') ? '' : '^((?!complete).)*$', true, false)
+          .column('storyPublished:name')
+          .search($('#show-published').prop('checked') ? '' : 'false');
+      }
 
       // is this #successes-filter or #contributors-filter ?
       if ($(this).next().find('#select2-successes-filter-results').length) {
@@ -157,14 +169,14 @@ function crowdsourceFiltersListeners () {
                         .find('.crowdsource.curator-select').val();
       // the table search needs to be reset depending on whether a prior column
       // search was performed
-      if ($table.is('#successes-table') && lastSuccessesColumnSearch) {
+      if ($table.is('#successes-table') && lastSuccessesSearchColumn) {
         dtSearch = $table.DataTable().search('')
-                      .column(lastSuccessesColumnSearch + ':name').search('');
-        lastSuccessesColumnSearch = null;
-      } else if ($table.is('#crowdsource-contributors-table') && lastContributorsColumnSearch) {
+                      .column(lastSuccessesSearchColumn + ':name').search('');
+        lastSuccessesSearchColumn = null;
+      } else if ($table.is('#crowdsource-contributors-table') && lastContributorsSearchColumn) {
         dtSearch = $table.DataTable().search('')
-                      .column(lastContributorsColumnSearch + ':name').search('');
-        lastContributorsColumnSearch = null;
+                      .column(lastContributorsSearchColumn + ':name').search('');
+        lastContributorsSearchColumn = null;
       } else {
         dtSearch = $table.DataTable().search('');
       }
@@ -175,10 +187,9 @@ function crowdsourceFiltersListeners () {
 
     })
 
-    .on('change', '#show-completed', function () {
+    .on('change', '#show-completed, #show-published', function () {
 
-      var showCompleted = $(this).prop('checked'),
-          dt = $('#crowdsource-contributors-table').DataTable(),
+      var dt = $('#crowdsource-contributors-table').DataTable(),
           curatorId = $('.crowdsource.curator-select').val(), dtSearch,
           filterCol = $('#contributors-filter').find('option:selected').data('column'),
           filterVal = $('#contributors-filter').find('option:selected').val() === '0' ? '0' :
@@ -197,12 +208,24 @@ function crowdsourceFiltersListeners () {
                      .search(filterVal);
       }
 
-      if (showCompleted) {
-        dtSearch.column('status:name').search('').draw();
+      if ( $(this).is('#show-completed') ) {
+        var showCompleted = $(this).prop('checked');
+        if ( showCompleted ) {
+          dtSearch.column('status:name').search('').draw();
+        } else {
+          dtSearch.column('status:name').search('^((?!complete).)*$', true, false).draw();
+        }
 
-      } else {
-        dtSearch.column('status:name').search('^((?!complete).)*$', true, false).draw();
+      } else if ( $(this).is('#show-published')) {
+        var showPublished = $(this).prop('checked');
+        if ( showPublished ) {
+          dtSearch.column('storyPublished:name').search('').draw();
+
+        } else {
+          dtSearch.column('storyPublished:name').search('false').draw();
+        }
       }
 
     });
+
 }

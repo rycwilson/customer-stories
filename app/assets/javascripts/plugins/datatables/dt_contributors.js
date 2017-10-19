@@ -1,7 +1,9 @@
 
 function initContributorsTable (workflowStage) {
 
-  var successIndex = 2, curatorIndex = 4, customerIndex = 5, colCount = 8;
+  var contributorIndex = 1, successIndex = 2, crowdsourcingTemplateIndex = 3,
+      curatorIndex = 4, customerIndex = 5, statusIndex = 6, actionsIndex = 7,
+      storyPublishedIndex = 8;
 
   $('table[id="' + workflowStage + '-contributors-table"]').DataTable({
     ajax: {
@@ -16,23 +18,34 @@ function initContributorsTable (workflowStage) {
       emptyTable: 'No Contributors found',
       zeroRecords: 'No Contributors found'
     },
-    order: [[ successIndex, 'asc' ]],
+    order: [[ customerIndex, 'asc' ]],
     columns: [
-      { // td.contributor-details
+      {
         data: null,
         render: function (data, type, row) {
                   return "<i class='fa fa-caret-right'></i>" +
                          "<i class='fa fa-caret-down' style='display:none'></i>";
                 }
       },
-      { // td.contributor-name
+      {
         name: 'contributor',
-        data: 'contributor.full_name'
+        data: {
+          _: function (row, type, set, meta) {
+            return { id: row.contributor.id, full_name: row.contributor.full_name };
+          },
+          display: 'contributor.full_name',
+          filter: 'contributor.full_name'
+        }
       },
       {  // <td data-search="s<%= contribution.success.id %>, <%= contribution.success.name %>">
         name: 'success',
-        defaultContent: 'Unknown Opportunity',
-        data: 'success.name'
+        defaultContent: 'Unknown Customer Success',
+        data: {
+          _: function (row, type, set, meta) {
+            return { id: row.success.id, name: row.success.name };
+          },
+          filter: 'success.name'
+        }
       },
       // <td data-search="t<%#= contribution.crowdsourcing_template_id  %>" class='crowdsourcing-template'>
       {
@@ -54,7 +67,13 @@ function initContributorsTable (workflowStage) {
        // <td data-search="c<%= contribution.customer.id %>"><%= contribution.customer.name %></td>
       {
         name: 'customer',
-        data: 'success.customer.name'
+        data: {
+          _: function (row, type, set, meta) {
+            return { id: row.success.customer.id, name: row.success.customer.name };
+          },
+          filter: 'success.customer.name',
+          sort: 'success.customer.name'
+        }
       },
       {
         name: 'status',
@@ -80,21 +99,26 @@ function initContributorsTable (workflowStage) {
               });
         }
       },
+      {
+        name: 'storyPublished',
+        data: 'success.story.published',
+        defaultContent: 'false'
+      },
     ],
     columnDefs: [
       {
-        targets: [successIndex, curatorIndex, customerIndex],
+        targets: [successIndex, curatorIndex, customerIndex, storyPublishedIndex],
         visible: false,  },
       {
-        targets: [0, colCount - 1],
+        targets: [0, actionsIndex],
         orderable: false,
         searchable: false,
       },
-      { width: '0%', targets: [2, 4, 5] },  // success, curator, customer
+      { width: '0%', targets: [successIndex, curatorIndex, customerIndex, storyPublishedIndex] },
       { width: '5%', targets: 0 },
-      { width: '32%', targets: [1, 3] },  // contributor, template
-      { width: '21%', targets: 6 },  // status
-      { width: '10%', targets: 7 }
+      { width: '32%', targets: [contributorIndex, crowdsourcingTemplateIndex] },
+      { width: '21%', targets: statusIndex },
+      { width: '10%', targets: actionsIndex }
     ],
     rowGroup: {
       dataSrc: 'success.name',
@@ -140,6 +164,8 @@ function initContributorsTable (workflowStage) {
       $(row).attr('data-contribution-id', data.id);
       $(row).attr('data-success-id', data.success.id);
       $(row).attr('data-contributor-id', data.contributor.id);
+      // note: these indices won't align with *index variables,
+      // as these are only the unhidden columns
       $(row).children().eq(0).addClass('contributor-details');
       $(row).children().eq(1).addClass('contributor');
       $(row).children().eq(2)
@@ -161,10 +187,12 @@ function initContributorsTable (workflowStage) {
       if ( enableTemplateSelect(statusText) ) {
         $(row).children().eq(2).addClass('disabled').find('i').remove();
       }
+
     },
 
     initComplete: function (settings, json) {
       var $tableWrapper = $(this).closest('[id*="table_wrapper"]'),
+          dt = $(this).DataTable(),
           tableHeaderTemplate = _.template($('#contributors-table-header-template').html()),
           crowdsourcingTemplateSelectOptions =
               app.company.crowdsourcing_templates.map(function (template) {
@@ -184,12 +212,13 @@ function initContributorsTable (workflowStage) {
         $tableWrapper.prepend(
           tableHeaderTemplate({
             curators: app.company.curators,
-            contributors: _.pluck(app.contributions, 'contributor'),
-            successes: app.company.successes,
-            customers: app.company.customers,
+            contributors: dt.column(contributorIndex).data(),
+            successes: dt.column(successIndex).data(),
+            customers: dt.column(customerIndex).data(),
             selectWidth: 250
           })
         );
+
         var $curatorSelect = $tableWrapper.find('.curator-select');
         $curatorSelect.select2({
           theme: 'bootstrap',
@@ -208,11 +237,14 @@ function initContributorsTable (workflowStage) {
         $curatorSelect.val( app.current_user.id.toString() )
           .trigger('change', { auto: true });
 
+        // trigger filters (these are unchecked by default)
+        $('#show-completed').trigger('change');
+        $('#show-published').trigger('change');
+
       // workflowStage == curate
       // contributors under a Story don't have curator and filter selects
       } else {
 
-        // use regex search to prevent search of '18' from matching '185', '218', etc
         $(this).DataTable().column('success:name')
           .search( $('#curate-story-layout').data('success-name') )
           .draw();
