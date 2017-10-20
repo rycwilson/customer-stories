@@ -5,92 +5,89 @@ function crowdsourceFiltersListeners () {
   // the value will be the name of the column
   var lastSuccessesSearchColumn = null, lastContributorsSearchColumn = null;
 
+  var loadSelectOptions = function (curatorId, $filter) {
+
+    var companySuccesses, companyCustomers, companyContributors,
+        successes, customers, contributors,
+        $customerOptgroup = $filter.find('optgroup[label="Customer"]'),
+        $successOptgroup = $filter.find('optgroup[label="Customer Win"]'),
+        $contributorOptgroup = $filter.find('optgroup[label="Contributor"]');
+        // $successContactOptgroup = $filter.find('optgroup[label="Customer Success Contact"]');
+
+    companySuccesses = $('#successes-table').DataTable().column(1).data().toArray();
+    successes = (curatorId === '0') ? companySuccesses :
+      companySuccesses.filter(function (success) {
+        return success.curatorId == curatorId;
+      });
+    companyCustomers = _.uniq(
+      $('#successes-table').DataTable().column(2).data().toArray(), true,
+      function (customer, index) { return customer.id; }
+    );
+    customers = (curatorId === '0') ? companyCustomers :
+      companyCustomers.filter(function (customer) {
+        return successes.some(function (success) {
+          return success.curatorId == curatorId &&
+                 success.customerId == customer.id;
+        });
+      });
+    // the source data is contributions; pull unique values for contributor.id
+    companyContributors = _.uniq(
+      $('#crowdsource-contributors-table').DataTable().column(1).data().toArray(), true,
+      function (contributor, index) { return contributor.id; }
+    );
+    contributors = (curatorId === '0') ? companyContributors :
+      companyContributors.filter(function (contributor) {
+        return contributor.curatorId == curatorId;
+      });
+
+    // populate <select> options (both tables)
+    $contributorOptgroup.empty();
+    _.each(contributors, function (contributor) {
+      $contributorOptgroup.append(
+        '<option value="contributor-' + contributor.id +
+        '" data-column="contributor">' + contributor.fullName + '</option>'
+      );
+    });
+    $customerOptgroup.empty();
+    _.each(customers, function (customer) {
+      $customerOptgroup.append(
+        '<option value="customer-' + customer.id + '" data-column="customer">' + customer.name + '</option>'
+      );
+    });
+
+    if ( $filter.is('#crowdsource-contributors-filter') ) {
+
+      // populate <select> options (unique to contributors table)
+      $successOptgroup.empty();
+      _.each(successes, function (success) {
+        $successOptgroup.append(
+          '<option value="success-' + success.id + '" data-column="success">' + success.name + '</option>'
+        );
+      });
+
+    }
+  };
+
   $(document)
     .on('change', '.crowdsource.curator-select, ' +
                   '#successes-filter, #contributors-filter', function (e, data) {
 
-      var $tableWrapper = $(this).closest('div[id*="table_wrapper"]'),
+      var $tableWrapper = $(this).closest('[id*="table_wrapper"]'),
           $table = $tableWrapper.find('table'), dt = $table.DataTable(),
+          $filter = $tableWrapper.find('.dt-filter'),
           curatorId;
 
       if ( $(this).hasClass('curator-select') ) {
         curatorId = $(this).val();
-        // modify filter options to reflect curator's associations
-        var $filter = $tableWrapper.find('.dt-filter'),
-            successes =
-
-            (curatorId === '0') ? app.company.successes :
-                        app.company.successes.filter(function (success) {
-                          return success.curator_id == curatorId;
-                        }),
-            customers = (curatorId === '0') ? app.company.customers :
-                        app.company.customers.filter(function (customer) {
-                          // customer has >= 1 success
-                          return successes.some(function (success) {
-                            return success.customer_id === customer.id;
-                          });
-                        }),
-            $successesOptgroup = $filter.find('optgroup[label="Story Candidate"]');
-            $customersOptgroup = $filter.find('optgroup[label="Customer"]');
-
-        if ( $table.is('#crowdsource-contributors-table') ) {
-          var contributors =
-                app.contributions.filter(function (contribution) {
-                  return successes.some(function (success) {
-                    return (success.id === contribution.success_id) &&
-                      (curatorId === '0' ? true : success.curator_id == curatorId);
-                  });
-                })
-                .map(function (contribution) { return contribution.contributor; }),
-
-              // >= 1 contributor
-              successesWithC = successes.filter(function (success) {
-                        app.contributions.some(function (contribution) {
-                          return contribution.success_id === success.id;
-                        });
-                      }),
-
-              customersWithC = customers.filter(function (customer) {
-                        return successes.some(function (success) {
-                          return success.customer_id === customer.id &&
-                            app.contributions.some(function (contribution) {
-                              return contribution.success_id === success.id;
-                            });
-                        });
-                      }),
-              $contributorsOptgroup = $filter.find('optgroup[label="Contributor"]');
-
-          $contributorsOptgroup.empty();
-          _.each(contributors, function (contributor) {
-            $contributorsOptgroup.append(
-              '<option value="contributor-' + contributor.id + '" data-column="contributor">' + contributor.full_name + '</option>'
-            );
-          });
-        }
-
-        // remove and replace optgroups in this table's filter
-        $customersOptgroup.empty();
-        _.each(customers, function (customer) {
-          $customersOptgroup.append(
-            '<option value="customer-' + customer.id + '" data-column="customer">' + customer.name + '</option>'
-          );
-        });
-
-        $successesOptgroup.empty();
-        _.each(successes, function (success) {
-          $successesOptgroup.append(
-            '<option value="success-' + success.id + '" data-column="success">' + success.name + '</option>'
-          );
-        });
-
-        // when changing curators, start with all candidates/contributors
+        loadSelectOptions( curatorId, $filter );
+        // when changing curators, set filter to All
         $filter.val('0').trigger('change.select2');  // change select input without triggering change event
-
-        dt.search('').column('curator:name')
+        // search
+        dt.search('')
+          .column('curator:name')
           .search(curatorId === '0' ? '' : '^' + curatorId + '$', true, false)
           .draw();
-
-        // update the other curator select (only once)
+        // update the other curator select (if auto, halt the chain)
         if (!(data && data.auto)) {
           var $other = $('.crowdsource.curator-select').not($(this));
           $other.val($(this).val()).trigger('change', { auto: true });
@@ -99,7 +96,7 @@ function crowdsourceFiltersListeners () {
 
       // successes-filter or contributors-filter
       else {
-        curatorId = $tableWrapper.find('.crowdsource.curator-select').val();
+        curatorId = $tableWrapper.find('.curator-select').val();
         // filterCol matches a table column name (see initContributorsTable)
         var filterCol = $(this).find('option:selected').data('column'),
             filterVal = $(this).find('option:selected').val() === '0' ? '0' :
@@ -111,7 +108,7 @@ function crowdsourceFiltersListeners () {
               .column('storyPublished:name')
               .search($('#show-published').prop('checked') ? '' : 'false');
 
-        // curator && all candidates/contributors
+        // curator && all successes/contributors
         if (filterVal === '0') {
           if ($table.is('#successes-table') && lastSuccessesSearchColumn) {
             // TODO: is this really necessary?
@@ -144,22 +141,19 @@ function crowdsourceFiltersListeners () {
     })
 
     .on('keyup', '.select2-search', function (e) {
-      var $table, curatorId, $input = $(this).find('input'), dtSearch;
-
-      if ( $table.is('#crowdsource-contributors-table') ) {
-        // incorporate checkbox filters
-        dtSearch = dt.search('')
-          .column('status:name')
-          .search($('#show-completed').prop('checked') ? '' : '^((?!complete).)*$', true, false)
-          .column('storyPublished:name')
-          .search($('#show-published').prop('checked') ? '' : 'false');
-      }
+      var curatorId, $input = $(this).find('input'), dtSearch;
 
       // is this #successes-filter or #contributors-filter ?
       if ($(this).next().find('#select2-successes-filter-results').length) {
         $table = $('#successes-table');
       } else if ($(this).next().find('#select2-contributors-filter-results').length) {
         $table = $('#crowdsource-contributors-table');
+        // incorporate checkbox filters
+        dtSearch = $table.DataTable().search('')
+          .column('status:name')
+          .search($('#show-completed').prop('checked') ? '' : '^((?!complete).)*$', true, false)
+          .column('storyPublished:name')
+          .search($('#show-published').prop('checked') ? '' : 'false');
       } else {
         return false;
       }

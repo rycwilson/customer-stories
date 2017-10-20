@@ -58,35 +58,10 @@
 
           <option value='0' data-column='contributor' selected>All Contributors</option>
 
-          <optgroup label='Contributor'>
-
-            {{ _.each(contributors, function (contributor) { }}
-
-              <option value="contributor-{{= contributor.id }}" data-column='contributor'>{{= contributor.full_name }}</option>
-
-            {{ }) }}
-
-          </optgroup>
-
-          <optgroup label='Customer'>
-
-            {{ _.each(customers, function (customer) { }}
-
-              <option value="customer-{{= customer.id }}" data-column='customer'>{{= customer.name }}</option>
-
-            {{ }); }}
-
-          </optgroup>
-
-          <optgroup label='Story Candidate'>
-
-            {{ _.each(successes, function (success) { }}
-
-              <option value="success-{{= success.id }}" data-column='success'>{{= success.name }}</option>
-
-            {{ }); }}
-
-          </optgroup>
+          <optgroup label='Contributor'></optgroup>
+          <optgroup label='Customer'></optgroup>
+          <optgroup label='Customer Success'></optgroup>
+          <optgroup label='Customer Success Contact'></optgroup>
 
         </select>
 

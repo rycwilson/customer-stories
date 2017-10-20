@@ -24,9 +24,6 @@ class Company < ActiveRecord::Base
     end
   end
   has_many :successes, -> { includes(:story) }, through: :customers do
-    def story_candidates
-      select { |success| success.story.blank? }
-    end
     def select_options
       self.map() do |success|
         [ success.name, success.id ]

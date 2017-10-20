@@ -17,10 +17,58 @@ function initDataTables () {
 
   // if curator signed in ...
   if (app.company) {
-    initSuccessesTable();
-    initContributorsTable('crowdsource');
-    initContributorsTable('curate');
-    initPromotedStoriesTable();
+
+    var dtSuccessesInit = $.Deferred(),
+        dtContributorsInit = $.Deferred(),
+        showTables = function () {
+          $('#successes-table, #crowdsource-contributors-table')
+            .css('visibility', 'visible');
+        },
+        initSelectFilters = function ($tableWrapper) {
+          $tableWrapper.find('.curator-select')
+            .select2({
+              theme: 'bootstrap',
+              width: 'style',
+              minimumResultsForSearch: -1   // hides text input
+            })
+            // select2 is inserting an empty <option> for some reason
+            .children('option').not('[value]').remove();
+          $tableWrapper.find('.curator-select')
+            .val( app.current_user.id )
+            .trigger( 'change', { auto: true } );
+          $tableWrapper.find('.dt-filter').select2({
+            theme: 'bootstrap',
+            width: 'style'
+            // allowClear: true
+          });
+        },
+        initCheckboxFilters = function () {
+          $('#show-completed').trigger('change');
+          $('#show-published').trigger('change');
+        };
+
+    // the isDataTable() checks might come in handy
+    // if ( !$.fn.dataTable.isDataTable($('#successes-table')) ) {
+      initSuccessesTable(dtSuccessesInit);
+    // }
+    // if ( !$.fn.dataTable.isDataTable($('#crowdsource-contributors-table')) ) {
+      initContributorsTable('crowdsource', dtContributorsInit);
+    // }
+    // if ( !$.fn.dataTable.isDataTable($('#curate-contributors-table')) ) {
+      initContributorsTable('curate');
+    // }
+    // if ( !$.fn.dataTable.isDataTable($('#promoted-stories-table')) ) {
+      initPromotedStoriesTable();
+    // }
+
+    $.when(dtSuccessesInit, dtContributorsInit)
+      .done(function () {
+        initSelectFilters( $('#successes-table').closest('[id*="table_wrapper"]') );
+        initSelectFilters( $('#crowdsource-contributors-table').closest('[id*="table_wrapper"]') );
+        initCheckboxFilters();
+        showTables();
+      });
+
   }
 
   // Don't specify first column as type: 'date'

@@ -1,5 +1,5 @@
 
-function initContributorsTable (workflowStage) {
+function initContributorsTable (workflowStage, dtContributorsInit) {
 
   var contributorIndex = 1, successIndex = 2, crowdsourcingTemplateIndex = 3,
       curatorIndex = 4, customerIndex = 5, statusIndex = 6, actionsIndex = 7,
@@ -23,15 +23,20 @@ function initContributorsTable (workflowStage) {
       {
         data: null,
         render: function (data, type, row) {
-                  return "<i class='fa fa-caret-right'></i>" +
-                         "<i class='fa fa-caret-down' style='display:none'></i>";
-                }
+            return "<i class='fa fa-caret-right'></i>" +
+                   "<i class='fa fa-caret-down' style='display:none'></i>";
+          }
       },
       {
         name: 'contributor',
         data: {
           _: function (row, type, set, meta) {
-            return { id: row.contributor.id, full_name: row.contributor.full_name };
+            return {
+              id: row.contributor.id,
+              fullName: row.contributor.full_name,
+              contributionId: row.id,
+              curatorId: row.success.curator.id
+            };
           },
           display: 'contributor.full_name',
           filter: 'contributor.full_name'
@@ -86,18 +91,16 @@ function initContributorsTable (workflowStage) {
         // data is status as this will determine actions available
         data: 'status',
         render: function (data, type, row, meta) {
-          return _.template(
-              $('#contributor-actions-dropdown-template').html()
-            )({
-                status: data,
-                workflowStage: workflowStage,
-                story: row.success.story, // might be nil
-                viewStoryPath: row.success.story && row.success.story.csp_story_path,
-                curateStoryPath: row.success.story &&
-                  '/curate/' + row.success.customer.slug + '/' +
-                  row.success.story.slug
-              });
-        }
+            return _.template( $('#contributor-actions-dropdown-template').html() )({
+              status: data,
+              workflowStage: workflowStage,
+              story: row.success.story, // might be nil
+              viewStoryPath: row.success.story && row.success.story.csp_story_path,
+              curateStoryPath: row.success.story &&
+                '/curate/' + row.success.customer.slug + '/' +
+                row.success.story.slug
+            });
+          }
       },
       {
         name: 'storyPublished',
@@ -191,13 +194,14 @@ function initContributorsTable (workflowStage) {
     },
 
     initComplete: function (settings, json) {
-      var $tableWrapper = $(this).closest('[id*="table_wrapper"]'),
-          dt = $(this).DataTable(),
-          tableHeaderTemplate = _.template($('#contributors-table-header-template').html()),
+      var $table = $(this),
+          $tableWrapper = $table.closest('[id*="table_wrapper"]'),
+          dt = $table.DataTable(),
           crowdsourcingTemplateSelectOptions =
               app.company.crowdsourcing_templates.map(function (template) {
                 return { label: template.name, value: template.id };
-              });
+              }),
+          showTable = function () { $table.css('visibility', 'visible'); };
 
       // this is for the question mark icons that go with status= unsubscribe or opt_out
       $('[data-toggle="tooltip"]').tooltip();
@@ -210,7 +214,7 @@ function initContributorsTable (workflowStage) {
         );
 
         $tableWrapper.prepend(
-          tableHeaderTemplate({
+          _.template( $('#contributors-table-header-template').html() )({
             curators: app.company.curators,
             contributors: dt.column(contributorIndex).data(),
             successes: dt.column(successIndex).data(),
@@ -219,27 +223,7 @@ function initContributorsTable (workflowStage) {
           })
         );
 
-        var $curatorSelect = $tableWrapper.find('.curator-select');
-        $curatorSelect.select2({
-          theme: 'bootstrap',
-          width: 'style',
-          minimumResultsForSearch: -1   // hides text input
-        });
-        // select2 is inserting an empty <option> for some reason
-        $tableWrapper.find('.curator-select > option').not('[value]').remove();
-        $('#contributors-filter').select2({
-          theme: 'bootstrap',
-          width: 'style'
-          // placeholder: 'type or select'
-          // allowClear: true
-        });
-
-        $curatorSelect.val( app.current_user.id.toString() )
-          .trigger('change', { auto: true });
-
-        // trigger filters (these are unchecked by default)
-        $('#show-completed').trigger('change');
-        $('#show-published').trigger('change');
+        dtContributorsInit.resolve();
 
       // workflowStage == curate
       // contributors under a Story don't have curator and filter selects
@@ -260,10 +244,10 @@ function initContributorsTable (workflowStage) {
         // since no row grouping, add .table-striped
         $(this).addClass('table-striped');
 
+        showTable();
+
       }
-      // $('#' + workflowStage + ' a[href="#' + workflowStage + '-contributors"]')
-      //   .find('.fa-spinner').hide();
-      $(this).css('visibility', 'visible');
+
     }
   });
 }

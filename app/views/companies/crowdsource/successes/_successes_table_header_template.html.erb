@@ -41,28 +41,11 @@
       <label>Filter&nbsp;</label>
       <select id='successes-filter' class='dt-filter form-control text-left' style="width:{{= selectWidth.toString() + 'px' }};">
 
-        <option value='0' data-column='success' selected>All Story Candidates</option>
+        <option value='0' data-column='success' selected>All Customer Successes</option>
 
-        <optgroup label='Next step'>
-          <option value=''>Next Step 1</option>
-          <option value=''>Next Step 2</option>
-        </optgroup>
-
-        <optgroup label='Customer'>
-          {{ _.each(customers, function (customer) { }}
-
-            <option value="customer-{{= customer.id }}" data-column='customer'>{{= customer.name }}</option>
-
-          {{ }); }}
-        <optgroup>
-
-        <optgroup label='Story Candidate'>
-          {{ _.each(successes, function (success) { }}
-
-            <option value="success-{{= success.id }}" data-column='success'>{{= success.name }}</option>
-
-          {{ }); }}
-        <optgroup>
+        <optgroup label='Customer'><optgroup>
+        <optgroup label='Customer Success Contact'><optgroup>
+        <optgroup label='Contributor'><optgroup>
 
       </select>
 
