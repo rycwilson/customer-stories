@@ -44,7 +44,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
       },
       {  // <td data-search="s<%= contribution.success.id %>, <%= contribution.success.name %>">
         name: 'success',
-        defaultContent: 'Unknown Customer Success',
+        defaultContent: 'Customer Win',
         data: {
           _: function (row, type, set, meta) {
             return { id: row.success.id, name: row.success.name };
@@ -140,13 +140,13 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
           link = '<span style="font-weight:600">' +
                    '<a href="' + storyPath + '" class="story">' +
                       storyTitle +
-                   '</a>' + '\xa0\xa0(Story)' +
+                   '</a>' + '\xa0\xa0(Customer Story)' +
                  '</span>';
         } else {
           link = '<span style="font-weight:600">' +
                    '<a href="javascript:;" class="success">' +
                       successName +
-                   '</a>' + '\xa0\xa0(Story Candidate)' +
+                   '</a>' + '\xa0\xa0(Customer Win)' +
                  '</span>';
         }
         return $('<tr/>').append(

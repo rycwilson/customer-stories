@@ -38,7 +38,8 @@ function initDataTables () {
             .trigger( 'change', { auto: true } );
           $tableWrapper.find('.dt-filter').select2({
             theme: 'bootstrap',
-            width: 'style'
+            width: 'style',
+            placeholder: 'search'
             // allowClear: true
           });
         },

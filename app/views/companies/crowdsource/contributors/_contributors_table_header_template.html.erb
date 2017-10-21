@@ -19,17 +19,17 @@
 
       <label class='checkbox-filter' style='padding-left:10px' for="toggle-group-by-success">
         <input type="checkbox" id="toggle-group-by-success" checked>
-        <span>&nbsp;&nbsp;Group by Customer&nbsp;&nbsp;&#8211;&nbsp;&nbsp;Story Candidate&nbsp;/&nbsp;Story</span>
+        <span>&nbsp;&nbsp;Group by Customer&nbsp;&nbsp;&#8211;&nbsp;&nbsp;Opportunity</span>
       </label>
 
       <label class='checkbox-filter' style='padding-left:10px' for="show-completed">
         <input type="checkbox" id="show-completed">
-        <span>&nbsp;&nbsp;Show Contributors with Status = completed</span>
+        <span>&nbsp;&nbsp;Show Contributors with completed Contribution</span>
       </label>
 
       <label class='checkbox-filter' style='padding-left:10px' for="show-published">
         <input type="checkbox" id="show-published">
-        <span>&nbsp;&nbsp;Show Contributors to published Stories</span>
+        <span>&nbsp;&nbsp;Show Contributors to published Customer Stories</span>
       </label>
 
     </div>
@@ -56,12 +56,13 @@
         <label>Filter&nbsp;</label>
         <select id='contributors-filter' class='dt-filter form-control text-left' style="width:{{= selectWidth.toString() + 'px' }};">
 
+          <option></option>
+
           <option value='0' data-column='contributor' selected>All Contributors</option>
 
           <optgroup label='Contributor'></optgroup>
           <optgroup label='Customer'></optgroup>
-          <optgroup label='Customer Success'></optgroup>
-          <optgroup label='Customer Success Contact'></optgroup>
+          <optgroup label='Customer Win'></optgroup>
 
         </select>
 

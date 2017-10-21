@@ -8,8 +8,8 @@ class ContributionsController < ApplicationController
   # datatables source data
   def index
     company = Company.find_by(subdomain: request.subdomain)
-    data = Rails.cache.fetch("#{company.subdomain}/dt-contributors") do
-      company.contributions.to_json({
+    # data = Rails.cache.fetch("#{company.subdomain}/dt-contributors") do
+    data = company.contributions.to_json({
         only: [:id, :status], methods: [:display_status],
         include: {
           success: {
@@ -26,7 +26,7 @@ class ContributionsController < ApplicationController
           crowdsourcing_template: { only: [:id, :name] },
         }
       })
-    end
+    # end
     # pp(JSON.parse(data))
     respond_to() { |format| format.json { render({ json: data }) } }
   end

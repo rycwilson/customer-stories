@@ -107,13 +107,15 @@ class Contribution < ActiveRecord::Base
       when 'did_not_respond'
         return "did not respond\n(email #{self.request_received_at.present? ? '' : 'not' } opened)"
       when 'contribution_submitted'
-        return 'contribution submitted'
+        return '<span><a href="#contribution-content-modal" data-toggle="modal">Contribution</a> submitted</span>'.html_safe
       when 'feedback_submitted'
-        return 'feedback submitted'
-      when 'contribution_completed' || 'feedback_completed'
-        return "completed<i class='fa fa-check pull-right'></i>".html_safe
+        return '<span><a href="#contribution-content-modal" data-toggle="modal">Feedback</a> submitted</span>'.html_safe
+      when 'contribution_completed'
+        return '<span><a href="#contribution-content-modal" data-toggle="modal">Contribution</a> completed<i class="fa fa-check pull-right"></i></span>'.html_safe
+      when 'feedback_completed'
+        return '<span><a href="#contribution-content-modal" data-toggle="modal">Feedback</a> completed<i class="fa fa-check pull-right"></i></span>'.html_safe
       when 'unsubscribed'
-        return "unsubscribed&nbsp;&nbsp;<i data-toggle='tooltip' data-placement='top' title='Contributor has unsubscribed from emails related to this Story Candidate / Story' style='font-size:16px;color:#666' class='fa fa-question-circle-o'></i>".html_safe
+        return "unsubscribed&nbsp;&nbsp;<i data-toggle='tooltip' data-placement='top' title='Contributor has unsubscribed from emails related to this Customer Win/Story' style='font-size:16px;color:#666' class='fa fa-question-circle-o'></i>".html_safe
       when 'opted_out'
         return "opted out&nbsp;&nbsp;<i data-toggle='tooltip' data-placement='top' title='Contributor has opted out of all Customer Stories emails' style='font-size:16px;color:#666' class='fa fa-question-circle-o'></i>".html_safe
       when 'request_re_sent'

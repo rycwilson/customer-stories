@@ -12,8 +12,8 @@ function initSuccessesTable (dtSuccessesInit) {
     dom: 'tip',
     pageLength: 100,
     language: {
-      emptyTable: 'No Story Candidates found',
-      zeroRecords: 'No Story Candidates found'
+      emptyTable: 'No Customer Wins found',
+      zeroRecords: 'No Customer Wins found'
     },
     order: [[ customerIndex, 'asc' ]],
     columns: [

@@ -38,7 +38,6 @@ function setAppData () {
   }
   app.company = (window.gon && gon.company) || app.company || null;
   app.contributions = (window.gon && JSON.parse(gon.contributions)) || app.contributions || null;
-  app.storyCandidates = (window.gon && gon.storyCandidates) || app.storyCandidates || null;
   app.stories = (window.gon && gon.stories) || app.stories || null;
   app.current_user = (window.gon && gon.current_user) || app.current_user || null;
   app.env = (window.gon && gon.env) || app.env || null;

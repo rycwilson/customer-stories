@@ -181,6 +181,13 @@ function crowdsourceFiltersListeners () {
 
     })
 
+    .on("select2:open", ".dt-filter", function() {
+        $(".select2-search--dropdown .select2-search__field").attr("placeholder", "search");
+    })
+    .on("select2:close",".dt-filter", function() {
+        $(".select2-search--dropdown .select2-search__field").attr("placeholder", null);
+    })
+
     .on('change', '#show-completed, #show-published', function () {
 
       var dt = $('#crowdsource-contributors-table').DataTable(),

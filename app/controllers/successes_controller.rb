@@ -5,8 +5,8 @@ class SuccessesController < ApplicationController
 
   def index
     company = Company.find_by(subdomain: request.subdomain)
-    data = Rails.cache.fetch("#{company.subdomain}/dt-successes") do
-      company.successes.to_json({
+    # data = Rails.cache.fetch("#{company.subdomain}/dt-successes") do
+    data = company.successes.to_json({
         only: [:id, :name, :description], methods: [:contributions_count],
         include: {
           curator: { only: [:id], methods: [:full_name] },
@@ -14,7 +14,7 @@ class SuccessesController < ApplicationController
           story: { only: [:id, :title] }
         }
       })
-    end
+    # end
     respond_to { |format| format.json { render({ json: data }) } }
   end
 

@@ -76,7 +76,7 @@ function newContributorListeners() {
 
       customerSuccessesSelect2Options = customerSuccesses
         .map(function (success) {
-          return { id: success.id, text: success.name || "Unknown Story Candidate" };
+          return { id: success.id, text: success.name || "Customer Win" };
         });
       customerSuccessesSelect2Options
         .unshift({ id: '', text: '' });
