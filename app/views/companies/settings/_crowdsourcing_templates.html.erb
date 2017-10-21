@@ -1,65 +1,63 @@
 
+<label class='control-label'>
+  Contribution Request Template
+</label>
 <div class="row">
-  <div class="form-horizontal" style=''>
 
-    <label class='control-label col-sm-1'>
-      Template
-    </label>
-    <div class="col-sm-7">
-      <%= select_tag('',
-            grouped_options_for_select(
-              company.crowdsourcing_templates.grouped_select_options
-            ), {
-              include_blank: true,
-              class: 'crowdsourcing-template form-control', style: 'width:100%'
-            }) %>
-    </div>
-
-    <div class="col-sm-2 btn-group" id="template-actions-dropdown" style='padding-left:0'>
-      <button type="button" class="btn btn-secondary dropdown-toggle text-center"
-              style='width:100%'data-toggle="dropdown" aria-haspopup="true"aria-expanded="false">
-        <span>Actions&nbsp;&nbsp;&nbsp;<span class="caret"></span></span>
-        <i class='fa fa-spinner fa-pulse' style='display:none'></i>
-        <i class='fa fa-check' style='display:none'></i>
-      </button>
-      <ul class="dropdown-menu">
-        <li class='new-template'>
-          <a href='javascript:;'>
-            <i class='action fa fa-file-o'></i>&nbsp;
-            <span>New template</span>
-          </a>
-        </li>
-        <li class='copy-template disabled'>
-          <a href='javascript:;'>
-            <i class='action fa fa-copy'></i>&nbsp;
-            <span>Copy selected template</span>
-          </a>
-        </li>
-        <li class='delete-template disabled'>
-          <a href='javascript:;'>
-            <i class="action fa fa-remove"></i>&nbsp;
-            <span>Delete selected template</span>
-          </a>
-        </li>
-        <li class='restore-selected disabled'>
-          <a href="javascript:;">
-            <i class="action fa fa-repeat"></i>&nbsp;
-            <span>Restore selected default template</span>
-          </a>
-        </li>
-        <li class='restore-all'>
-          <a href="javascript:;">
-            <i class="action fa fa-repeat"></i>&nbsp;
-            <span>Restore all default templates</span>
-          </a>
-        </li>
-      </ul>
-    </div>
-    <div class="col-sm-2">
-      <!-- filler -->
-    </div>
-
+  <div class="col-sm-7">
+    <%= select_tag('',
+          grouped_options_for_select(
+            company.crowdsourcing_templates.grouped_select_options
+          ), {
+            include_blank: true,
+            class: 'crowdsourcing-template form-control', style: 'width:100%'
+          }) %>
   </div>
+
+  <div class="col-sm-2 btn-group" id="template-actions-dropdown" style='padding-left:0'>
+    <button type="button" class="btn btn-secondary dropdown-toggle text-center"
+            style='width:100%'data-toggle="dropdown" aria-haspopup="true"aria-expanded="false">
+      <span>Actions&nbsp;&nbsp;&nbsp;<span class="caret"></span></span>
+      <i class='fa fa-spinner fa-pulse' style='display:none'></i>
+      <i class='fa fa-check' style='display:none'></i>
+    </button>
+    <ul class="dropdown-menu">
+      <li class='new-template'>
+        <a href='javascript:;'>
+          <i class='action fa fa-file-o'></i>&nbsp;
+          <span>New template</span>
+        </a>
+      </li>
+      <li class='copy-template disabled'>
+        <a href='javascript:;'>
+          <i class='action fa fa-copy'></i>&nbsp;
+          <span>Copy selected template</span>
+        </a>
+      </li>
+      <li class='delete-template disabled'>
+        <a href='javascript:;'>
+          <i class="action fa fa-remove"></i>&nbsp;
+          <span>Delete selected template</span>
+        </a>
+      </li>
+      <li class='restore-selected disabled'>
+        <a href="javascript:;">
+          <i class="action fa fa-repeat"></i>&nbsp;
+          <span>Restore selected default template</span>
+        </a>
+      </li>
+      <li class='restore-all'>
+        <a href="javascript:;">
+          <i class="action fa fa-repeat"></i>&nbsp;
+          <span>Restore all default templates</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="col-sm-3">
+    <!-- filler -->
+  </div>
+
 </div>
 
 <hr style='margin-top:25px; margin-bottom:25px'>
