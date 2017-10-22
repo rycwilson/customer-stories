@@ -58,21 +58,22 @@
   }
 
   .story-header {
+    position: relative;
     display: flex;
     align-items: center;
     height: 42px;
     color: #cacaca;
     font-size: 0;
     h3 {
-      position: relative;
       margin-bottom: -6px;
       font-weight: 300;
       font-size: 24px;
-      i {
-        position: absolute;
-        left: 180px;
-        top: -4px;
-      }
+    }
+    a.curate-story {
+      position: absolute;
+      left: 200px;
+      top: 50%;
+      transform: translate(0, -50%)
     }
     .hidden-xs {
       padding-left: 15px;
