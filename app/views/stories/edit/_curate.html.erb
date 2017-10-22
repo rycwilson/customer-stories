@@ -4,7 +4,7 @@
 
   <div class="col-md-3 col-sm-4 layout-sidebar">
 
-    <%= render 'stories/edit/tabs', { tab_select: tab_select } %>
+    <%= render 'stories/edit/tabs', { tab: tab } %>
 
   </div>
 
@@ -32,21 +32,21 @@
 
       <hr style='margin-bottom: 24px; border-top: 1px solid #e5e5e5'>
 
-      <div id='story-settings' class='tab-pane fade in active'>
+      <div id='story-settings' class="tab-pane fade <%= (tab == 'settings' || tab.nil?) ? 'in active' : '' %>">
 
         <%= render 'stories/edit/settings/settings',
               { company: company, story: story } %>
 
       </div>
 
-      <div id='story-content' class='tab-pane fade'>
+      <div id='story-content' class="tab-pane fade <%= tab == 'content' ? 'in active' : '' %>">
 
         <%= render 'stories/edit/content/content',
               { company: company, story: story } %>
 
       </div>
 
-      <div id='curate-contributors' class='tab-pane fade'>
+      <div id='curate-contributors' class="tab-pane fade <%= tab == 'contributors' ? 'in active' : '' %>">
 
         <button type='button' style='margin:0 0 10px 0;height:32px' class='btn btn-secondary btn-sm' data-toggle='modal' data-target='#new-contributor-modal'><i class='glyphicon glyphicon-plus-sign' style='font-size:15px;top:2px'></i>&nbsp;&nbsp;&nbsp;Add New Contributor&nbsp;</button>
 

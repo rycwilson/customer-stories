@@ -8,7 +8,7 @@
   <% if production? %>
     <% cache("#{@company.subdomain}/story-#{@story.id}-meta-tags",
              skip_digest: true, expires_in: 1.week) do %>
-      <%= render 'stories/shared/story_meta_tags',
+      <%= render 'stories/show/story_meta_tags',
             { company: @company, success: @story.success, story: @story } %>
     <% end %>
   <% end %>
@@ -19,7 +19,7 @@
   <%= render 'companies/crowdsource/contributors/csp_linkedin_widget_template' %>
 <% end %>
 
-<%= render 'stories/shared/video_modal' %>
+<%= render 'stories/show/video_modal' %>
 
 <!-- <div id='social-share-side-btns'>
   <div>
@@ -81,11 +81,11 @@
 <div class="story-wrapper hidden">
 
   <!-- includes video -->
-  <div id='story-section-testimonial' class="<%= @story.video_url.present? ? '' : 'no-video' %>">
+  <div id='testimonial' class="<%= @story.video_url.present? ? '' : 'no-video' %>">
 
     <% cache("#{@company.subdomain}/story-#{@story.id}-testimonial",
              skip_digest: true) do %>
-      <%= render 'stories/shared/story_testimonial',
+      <%= render 'stories/show/testimonial',
             { story: @story, include_video: @story.video_url.present? } %>
     <% end %>
 
@@ -97,7 +97,7 @@
 
     <% cache("#{@company.subdomain}/story-#{@story.id}-video-xs",
              skip_digest: true) do %>
-      <%= render 'stories/shared/story_video_xs',
+      <%= render 'stories/show/video_xs',
             { story: @story, include_video: @story.video_url.present? } %>
     <% end %>
 
@@ -114,7 +114,7 @@
   <!-- story content, results, contributing team -->
   <div id='story-section-content'>
 
-    <%= render 'stories/shared/story_content',
+    <%= render 'stories/show/story_content',
         { company: @company, story: @story, contributors: @contributors } %>
 
   </div>

@@ -38,7 +38,7 @@
           <ul class="grid list-unstyled text-center">
             <% @related_stories.each do |story| %>
 
-              <%= render 'stories/shared/public_story_tile',
+              <%= render 'stories/shared/card',
                           { company: @company, story: story } %>
 
             <% end %>
@@ -134,7 +134,7 @@
           <div class="grid">
             <% @related_stories.each do |story| %>
 
-              <%= render 'stories/shared/public_story_tile',
+              <%= render 'stories/shared/card',
                           { company: @company, story: story,
                             customer: story.success.customer } %>
 

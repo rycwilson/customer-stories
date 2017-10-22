@@ -21,7 +21,7 @@ function attachStoriesListeners () {
   // document.addEventListener('scroll', function () {
   //   if ($('body').hasClass('stories show') &&
   //       $('#more-stories-container').css('visibility') === 'hidden' &&
-  //       ($(window).scrollTop() - $('#story-section-testimonial').offset().top) > 0) {
+  //       ($(window).scrollTop() - $('#testimonial').offset().top) > 0) {
   //         initMoreStories();
   //       }
   // });

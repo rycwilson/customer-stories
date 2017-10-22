@@ -16,7 +16,7 @@
   <%= render 'companies/crowdsource/contributors/contributor_actions_dropdown_template' %>
   <%= render 'companies/crowdsource/contributors/csp_linkedin_widget_template' %>
   <%= render 'companies/promote/adwords_status_dropdown_template' %>
-  <%= render 'stories/shared/stories_index_template', { company: @company } %>
+  <%= render 'stories/index/index_template', { company: @company } %>
   <%= render 'stories/edit/content/results_templates' %>
   <%= render 'stories/edit/content/video_templates' %>
 <% end %>
@@ -27,7 +27,7 @@
 <%= render 'companies/crowdsource/contributors/contribution_request_modal', { company: @company} %>
 <%= render 'companies/crowdsource/contributors/contribution_content_modal' %>
 <%= render 'companies/shared/new_story_modal', { company: @company } %>
-<%= render 'stories/shared/video_modal' %>
+<%= render 'stories/show/video_modal' %>
 
 <div id='wrapper'>
 
@@ -42,7 +42,7 @@
 
     <%= render 'companies/curate/curate', { company: @company, story: @story,
             workflow_stage: @workflow_stage, curate_view: @curate_view,
-            tab_select: @tab_select } %>
+            curate_story_tab: @curate_story_tab } %>
 
     <%= render 'companies/promote/promote',
           { company: @company, workflow_stage: @workflow_stage, } %>

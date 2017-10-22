@@ -7,14 +7,14 @@
 
   <% if production? %>
     <% cache("#{@company.subdomain}/stories-index-meta-tags", expires_in: 1.week) do %>
-      <%= render 'stories/shared/stories_index_meta_tags', { company: @company } %>
+      <%= render 'stories/index/index_meta_tags', { company: @company } %>
     <% end %>
   <% end %>
 
 <% end %>
 
 <% content_for(:underscore_templates) do %>
-  <%= render 'stories/shared/stories_index_template', { company: @company } %>
+  <%= render 'stories/index/index_template', { company: @company } %>
   <%= render 'companies/crowdsource/contributors/csp_linkedin_widget_template' %>
 <% end %>
 
@@ -33,13 +33,13 @@
     <div class="container">
       <div class="row">
 
-         <%= render 'stories/shared/stories_filters_xs',
+         <%= render 'stories/shared/filters_xs',
            { company: @company, is_curator: false,
              category_select_cache_key: @category_select_cache_key,
              product_select_cache_key: @product_select_cache_key,
              pre_selected_filter: @pre_selected_filter } %>
 
-         <%= render 'stories/shared/stories_filters',
+         <%= render 'stories/shared/filters',
            { company: @company, is_curator: false,
              category_select_cache_key: @category_select_cache_key,
              product_select_cache_key: @product_select_cache_key,
@@ -58,7 +58,7 @@
 
       <% @stories.each do |story| %>
 
-        <%= render 'stories/shared/public_story_tile',
+        <%= render 'stories/shared/card',
               { company: @company, story: story } %>
 
       <% end %>

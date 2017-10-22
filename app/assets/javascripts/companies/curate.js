@@ -111,10 +111,6 @@ function curateListeners () {
         $('.new-story-tags').val('').trigger('change');  // multiple select
       });
 
-    // .on('click', '#curate-story-layout .layout-sidebar a', function () {
-    //   Cookies.set('curate-story-tab', $(this).attr('href'));
-    // });
-
 }
 
 function filterCurateGallery () {

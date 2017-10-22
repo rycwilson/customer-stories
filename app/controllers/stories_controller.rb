@@ -59,12 +59,12 @@ class StoriesController < ApplicationController
     if params[:remove_video].present?
       if params[:xs_screen]
         render({
-          partial: 'stories/shared/story_video_xs',
+          partial: 'stories/show/video_xs',
           locals: { story: @story, include_video: false }
         })
       else
         render({
-          partial: 'stories/shared/story_testimonial',
+          partial: 'stories/show/testimonial',
           locals: { story: @story, include_video: false }
         })
       end
@@ -87,9 +87,9 @@ class StoriesController < ApplicationController
     # want to catch an ajax request for _edit partial, but ignore tubolinks ajax requests
     if request.xhr? && !request.env["HTTP_TURBOLINKS_REFERRER"]
       render({
-        partial: 'stories/edit/edit',
+        partial: 'stories/edit/curate',
         locals: { company: @company, story: @story,
-                  workflow_stage: 'curate', tab_select: 'story-settings' }
+                  workflow_stage: 'curate', tab: 'settings' }
       })
     else
       # provide data for both stories#edit and companies#show views
@@ -101,9 +101,9 @@ class StoriesController < ApplicationController
       @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
       @story_views_30_day_count = PageView.joins(:visitor_session)
                                     .company_story_views_since(@company.id, 30).count
-      @tab_select = params[:tab_select] || nil
       @workflow_stage = 'curate'
       @curate_view = 'story'  # instead of 'stories'
+      @curate_story_tab = params[:csp_curate_story]
       render('companies/show')
     end
   end
@@ -147,7 +147,7 @@ class StoriesController < ApplicationController
       respond_to do |format|
         format.html do
           redirect_to(
-            curate_story_path(@story.customer.slug, @story.slug, tab_select: 'story-settings'),
+            curate_story_path(@story.customer.slug, @story.slug, tab: 'settings'),
             flash: { success: "Story Settings updated" }
           )
         end
@@ -238,7 +238,7 @@ class StoriesController < ApplicationController
     respond_to do |format|
       format.pdf do
         render pdf: "#{@company.subdomain}-customer-story-#{@story.success.customer.slug}",
-               template: "stories/approval.pdf.erb",
+               template: "stories/edit/approval.pdf.erb",
                locals: { story: @story,
                          company: @company,
                          customer_name: @story.success.customer.name,

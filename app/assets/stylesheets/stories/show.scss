@@ -93,7 +93,7 @@
    padding: 0;
   }
 
-  #story-section-testimonial {
+  #testimonial {
     position: relative;
     /* make some room for the trailing color gradient (see below) */
     // margin: 0 0 70px 0;
@@ -144,7 +144,7 @@
       }
     }
   }
-  #story-section-testimonial:after {
+  #testimonial:after {
     content: '';
     position: absolute;
     top: 100%;
@@ -226,7 +226,7 @@
       height: 40px;
       margin-top: -10px;
     }
-    #story-section-testimonial {
+    #testimonial {
       margin-bottom: 40px;
       .customer-quote {
         .lead {
@@ -234,7 +234,7 @@
         }
       }
     }
-    #story-section-testimonial:after {
+    #testimonial:after {
       height: 40px;
     }
     #story-section-video-xs {
@@ -259,7 +259,7 @@
     .mainnav {
       margin-bottom: 42px;
     }
-    #story-section-testimonial {
+    #testimonial {
       margin-bottom: 90px;
       .row.testimonial {
         > div.no-video:first-child {
@@ -283,7 +283,7 @@
         margin: 0 0 10px 0;
       }
     }
-    #story-section-testimonial.no-video {
+    #testimonial.no-video {
       padding-bottom: 30px;
     }
     #story-section-content {
@@ -300,7 +300,7 @@
     #social-buttons {
       padding-right: 25px;
     }
-    #story-section-testimonial {
+    #testimonial {
       margin-bottom: 90px;
       .row.testimonial {
         > div.no-video:first-child {
@@ -331,7 +331,7 @@
     #social-buttons {
       padding-right: 34px;
     }
-    #story-section-testimonial {
+    #testimonial {
       .row.testimonial {
         > div:first-child {
           .row.customer-logo {
@@ -347,7 +347,7 @@
         }
       }
     }
-    #story-section-testimonial.no-video {
+    #testimonial.no-video {
       padding-bottom: 30px;
     }
     #story-section-content {

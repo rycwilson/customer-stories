@@ -1,5 +1,5 @@
 
-<% cache("#{company.subdomain}/public-story-tile-#{story.id}-" +
+<% cache("#{company.subdomain}/story-#{story.id}-card" +
          "memcache-iterator-#{company.story_tile_fragments_memcache_iterator}",
          skip_digest: true) do %>
 
