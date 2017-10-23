@@ -217,8 +217,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
             curators: app.company.curators,
             contributors: dt.column(contributorIndex).data(),
             successes: dt.column(successIndex).data(),
-            customers: dt.column(customerIndex).data(),
-            selectWidth: 250
+            customers: dt.column(customerIndex).data()
           })
         );
 

@@ -21,7 +21,8 @@ function initDataTables () {
     var dtSuccessesInit = $.Deferred(),
         dtContributorsInit = $.Deferred(),
         showTables = function () {
-          $('#successes-table, #crowdsource-contributors-table')
+          $('.successes-header, #successes-table, ' +
+            '.contributors-header, #crowdsource-contributors-table')
             .css('visibility', 'visible');
         },
         initSelectFilters = function ($tableWrapper) {
@@ -33,19 +34,18 @@ function initDataTables () {
             })
             // select2 is inserting an empty <option> for some reason
             .children('option').not('[value]').remove();
-          $tableWrapper.find('.curator-select')
-            .val( app.current_user.id )
-            .trigger( 'change', { auto: true } );
           $tableWrapper.find('.dt-filter').select2({
             theme: 'bootstrap',
             width: 'style',
-            placeholder: 'search'
             // allowClear: true
           });
+          $tableWrapper.find('.curator-select')
+            .val( app.current_user.id )
+            .trigger( 'change', { auto: true } );
         },
         initCheckboxFilters = function () {
-          $('#show-completed').trigger('change');
-          $('#show-published').trigger('change');
+          $('#show-wins-with-story, #show-completed, #show-published')
+            .trigger('change');
         };
 
     // the isDataTable() checks might come in handy

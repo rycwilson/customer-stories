@@ -1,53 +1,77 @@
 
 <script id='successes-table-header-template' type='text/template'>
 
-  <div class='row successes-header'>
+  <div class='row successes-header' style='visibility:hidden'>
 
-    <div class='col-sm-6'>
-      <button type='button' style='margin:0 10px;height:32px' class='btn btn-secondary btn-sm' data-toggle='modal' data-target='#new-success-modal'><i class='glyphicon glyphicon-plus-sign' style='font-size:15px;top:2px'></i>&nbsp;&nbsp;&nbsp;Add New Customer Win&nbsp;</button>
-      <button type='button' style='margin:0 10px;height:32px' class='btn btn-secondary btn-sm'><i class='glyphicon glyphicon-import' style='font-size:15px;top:2px'></i>&nbsp&nbsp;&nbsp;Import Customer Wins&nbsp;</button>
-    </div>
+    <div class='col-sm-4'>
 
-    <div class='col-sm-6 text-right'>
-      <label>Curator&nbsp;</label>
-      <select class='crowdsource curator-select form-control text-left' style="width:{{= selectWidth.toString() + 'px' }};">
+      <div class='buttons'>
+        <div class='text-center'>
+          <button type='button' class='btn btn-secondary btn-sm' data-toggle='modal' data-target='#new-success-modal'><i class='glyphicon glyphicon-plus-sign'></i>&nbsp;&nbsp;&nbsp;Add Customer Win&nbsp;</button>
+        </div>
 
-        <option value='0' data-column='curator' selected>All Curators<option>
+        <div class='text-center'>
+          <button type='button' class='btn btn-secondary btn-sm'><i class='glyphicon glyphicon-import'></i>&nbsp&nbsp;&nbsp;Import Customer Wins&nbsp;</button>
+        </div>
+      </div>
 
-        {{ _.each(curators, function (curator, index) { }}
-
-          <option value="{{= curator.id }}" data-column='curator'>{{= curator.first_name + ' ' + curator.last_name }}</option>
-
-        {{ }); }}
-
-      </select>
-    </div>
-
-  </div>
-
-  <div class='row successes-header'>
-
-    <div class='col-sm-6'>
-
-      <label style='padding-left:10px;margin:0' for="toggle-group-by-customer">
-        <input type="checkbox" id="toggle-group-by-customer" checked>
-        <span>&nbsp;&nbsp;Group by Customer</span>
-      </label>
+      <div>
+        <label class='checkbox-filter' for="toggle-group-by-customer">
+          <input type="checkbox" id="toggle-group-by-customer" checked>
+          <span>&nbsp;&nbsp;Group by Customer</span>
+        </label>
+      </div>
 
     </div>
 
-    <div class='col-sm-6 text-right'>
+    <div class='col-sm-7 col-sm-offset-1 form-horizontal select-filters'>
+      <div class='form-group'>
+        <label class='col-sm-3 control-label'>Curator</label>
+        <div class='col-sm-9'>
 
-      <label>Filter&nbsp;</label>
-      <select id='successes-filter' class='dt-filter form-control text-left' style="width:{{= selectWidth.toString() + 'px' }};">
+          <select class='crowdsource curator-select form-control text-left'>
 
-        <option value='0' data-column='success' selected>All Customer Wins</option>
+            <option value='0' selected>All Curators<option>
 
-        <optgroup label='Customer'><optgroup>
-        <optgroup label='Customer Success Contact'><optgroup>
-        <optgroup label='Contributor'><optgroup>
+            {{ _.each(curators, function (curator) { }}
 
-      </select>
+              <option data-column='curator' value="{{= curator.id }}">{{= curator.first_name + ' ' + curator.last_name }}</option>
+
+            {{ }); }}
+
+          </select>
+
+        </div>
+      </div>
+
+      <div class='form-group'>
+        <label class='col-sm-3 control-label'>Search</label>
+        <div class='col-sm-9'>
+
+          <select id='successes-filter' class='dt-filter form-control text-left'>
+
+            <option></option>
+            <option value='0' data-column='success' selected>All Customer Wins</option>
+            <optgroup label='Customer'><optgroup>
+
+          </select>
+
+        </div>
+      </div>
+
+      <div class='form-group'>
+        <label class='col-sm-3 control-label'>Show</label>
+        <div class='col-sm-9'>
+          <div class='checkbox checkbox-filters'>
+
+            <label class='checkbox-filter' for="show-wins-with-story">
+              <input type="checkbox" id="show-wins-with-story">
+              <span>&nbsp;&nbsp;Customer Wins with Story under curation</span>
+            </label>
+
+          </div>
+        </div>
+      </div>
 
     </div>
 

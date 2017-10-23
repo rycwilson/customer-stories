@@ -5,6 +5,27 @@ function crowdsourceFiltersListeners () {
   // the value will be the name of the column
   var lastSuccessesSearchColumn = null, lastContributorsSearchColumn = null;
 
+  var setSearch = function ($table) {
+    var dt = $table.DataTable(), $tableWrapper = $table.closest('[id*="table_wrapper"]'),
+        curatorId = $tableWrapper.find('.curator-select').val(),
+        filterCol = $tableWrapper.find('.dt-filter option:selected').data('column'),
+        filterVal = $tableWrapper.find('.dt-filter option:selected').val() === '0' ? '0' :
+                      $tableWrapper.find('.dt-filter option:selected').text();
+
+    if (filterVal === '0') {
+        return dt.search('')
+                 .column('curator:name')
+                 .search(curatorId === '0' ? '' : '^' + curatorId + '$', true, false);
+
+    } else {
+        return dt.search('')
+                 .column('curator:name')
+                 .search(curatorId === '0' ? '' : '^' + curatorId + '$', true, false)
+                 .column(filterCol + ':name')
+                 .search(filterVal);
+    }
+  };
+
   var loadSelectOptions = function (curatorId, $filter) {
 
     var companySuccesses, companyCustomers, companyContributors,
@@ -14,11 +35,13 @@ function crowdsourceFiltersListeners () {
         $contributorOptgroup = $filter.find('optgroup[label="Contributor"]');
         // $successContactOptgroup = $filter.find('optgroup[label="Customer Success Contact"]');
 
+    // <select> data (contributors only)
     companySuccesses = $('#successes-table').DataTable().column(1).data().toArray();
     successes = (curatorId === '0') ? companySuccesses :
       companySuccesses.filter(function (success) {
         return success.curatorId == curatorId;
       });
+    // <select> data (both tables)
     companyCustomers = _.uniq(
       $('#successes-table').DataTable().column(2).data().toArray(), true,
       function (customer, index) { return customer.id; }
@@ -30,24 +53,8 @@ function crowdsourceFiltersListeners () {
                  success.customerId == customer.id;
         });
       });
-    // the source data is contributions; pull unique values for contributor.id
-    companyContributors = _.uniq(
-      $('#crowdsource-contributors-table').DataTable().column(1).data().toArray(), true,
-      function (contributor, index) { return contributor.id; }
-    );
-    contributors = (curatorId === '0') ? companyContributors :
-      companyContributors.filter(function (contributor) {
-        return contributor.curatorId == curatorId;
-      });
 
     // populate <select> options (both tables)
-    $contributorOptgroup.empty();
-    _.each(contributors, function (contributor) {
-      $contributorOptgroup.append(
-        '<option value="contributor-' + contributor.id +
-        '" data-column="contributor">' + contributor.fullName + '</option>'
-      );
-    });
     $customerOptgroup.empty();
     _.each(customers, function (customer) {
       $customerOptgroup.append(
@@ -57,7 +64,24 @@ function crowdsourceFiltersListeners () {
 
     if ( $filter.is('#crowdsource-contributors-filter') ) {
 
-      // populate <select> options (unique to contributors table)
+      // the source data is contributions; pull unique values for contributor.id
+      companyContributors = _.uniq(
+        $('#crowdsource-contributors-table').DataTable().column(1).data().toArray(), true,
+        function (contributor, index) { return contributor.id; }
+      );
+      contributors = (curatorId === '0') ? companyContributors :
+        companyContributors.filter(function (contributor) {
+          return contributor.curatorId == curatorId;
+        });
+
+      // populate <select> options (contributors only)
+      $contributorOptgroup.empty();
+      _.each(contributors, function (contributor) {
+        $contributorOptgroup.append(
+          '<option value="contributor-' + contributor.id +
+          '" data-column="contributor">' + contributor.fullName + '</option>'
+        );
+      });
       $successOptgroup.empty();
       _.each(successes, function (success) {
         $successOptgroup.append(
@@ -188,43 +212,41 @@ function crowdsourceFiltersListeners () {
         $(".select2-search--dropdown .select2-search__field").attr("placeholder", null);
     })
 
-    .on('change', '#show-completed, #show-published', function () {
+    .on('change', '#show-completed', function () {
 
-      var dt = $('#crowdsource-contributors-table').DataTable(),
-          curatorId = $('.crowdsource.curator-select').val(), dtSearch,
-          filterCol = $('#contributors-filter').find('option:selected').data('column'),
-          filterVal = $('#contributors-filter').find('option:selected').val() === '0' ? '0' :
-                        $('#contributors-filter').find('option:selected').text();
+      var showCompleted = $(this).prop('checked'),
+          dtSearch = setSearch( $('#crowdsource-contributors-table') );
 
-      if (filterVal === '0') {
-        dtSearch = dt.search('')
-                     .column('curator:name')
-                     .search(curatorId === '0' ? '' : '^' + curatorId + '$', true, false);
-
+      if ( showCompleted ) {
+        dtSearch.column('status:name').search('').draw();
       } else {
-        dtSearch = dt.search('')
-                     .column('curator:name')
-                     .search(curatorId === '0' ? '' : '^' + curatorId + '$', true, false)
-                     .column(filterCol + ':name')
-                     .search(filterVal);
+        dtSearch.column('status:name').search('^((?!complete).)*$', true, false).draw();
       }
 
-      if ( $(this).is('#show-completed') ) {
-        var showCompleted = $(this).prop('checked');
-        if ( showCompleted ) {
-          dtSearch.column('status:name').search('').draw();
-        } else {
-          dtSearch.column('status:name').search('^((?!complete).)*$', true, false).draw();
-        }
+    })
 
-      } else if ( $(this).is('#show-published')) {
-        var showPublished = $(this).prop('checked');
-        if ( showPublished ) {
-          dtSearch.column('storyPublished:name').search('').draw();
+    .on('change', '#show-published', function () {
 
-        } else {
-          dtSearch.column('storyPublished:name').search('false').draw();
-        }
+      var showPublished = $(this).prop('checked'),
+          dtSearch = setSearch( $('#crowdsource-contributors-table') );
+
+      if ( showPublished ) {
+        dtSearch.column('storyPublished:name').search('').draw();
+      } else {
+        dtSearch.column('storyPublished:name').search('false').draw();
+      }
+
+    })
+
+    .on('change', '#show-wins-with-story', function () {
+
+      var showWinsWithStory = $(this).prop('checked'),
+          dtSearch = setSearch( $('#successes-table') );
+
+      if ( showWinsWithStory ) {
+        dtSearch.column('story:name').search('').draw();
+      } else {
+        dtSearch.column('story:name').search('false').draw();
       }
 
     });

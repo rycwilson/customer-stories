@@ -45,7 +45,9 @@ function initSuccessesTable (dtSuccessesInit) {
           _: function (row, type, set, meta) {
             return { id: row.customer.id, name: row.customer.name };
           },
-          display: 'customer.name'
+          display: 'customer.name',
+          filter: 'customer.name',
+          sort: 'customer.name'
         }
       },
       {  // curator
@@ -130,8 +132,7 @@ function initSuccessesTable (dtSuccessesInit) {
       $tableWrapper.prepend(
         _.template( $('#successes-table-header-template').html() )({
           currentUser: app.current_user,
-          curators: app.company.curators,
-          selectWidth: 250
+          curators: app.company.curators
         })
       );
 
