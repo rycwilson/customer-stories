@@ -35,13 +35,12 @@ function crowdsourceFiltersListeners () {
         $contributorOptgroup = $filter.find('optgroup[label="Contributor"]');
         // $successContactOptgroup = $filter.find('optgroup[label="Customer Success Contact"]');
 
-    // <select> data (contributors only)
+    // <select> data (both tables)
     companySuccesses = $('#successes-table').DataTable().column(1).data().toArray();
     successes = (curatorId === '0') ? companySuccesses :
       companySuccesses.filter(function (success) {
         return success.curatorId == curatorId;
       });
-    // <select> data (both tables)
     companyCustomers = _.uniq(
       $('#successes-table').DataTable().column(2).data().toArray(), true,
       function (customer, index) { return customer.id; }
@@ -61,8 +60,14 @@ function crowdsourceFiltersListeners () {
         '<option value="customer-' + customer.id + '" data-column="customer">' + customer.name + '</option>'
       );
     });
+    $successOptgroup.empty();
+    _.each(successes, function (success) {
+      $successOptgroup.append(
+        '<option value="success-' + success.id + '" data-column="success">' + success.name + '</option>'
+      );
+    });
 
-    if ( $filter.is('#crowdsource-contributors-filter') ) {
+    if ( $filter.is('#contributors-filter') ) {
 
       // the source data is contributions; pull unique values for contributor.id
       companyContributors = _.uniq(
@@ -80,12 +85,6 @@ function crowdsourceFiltersListeners () {
         $contributorOptgroup.append(
           '<option value="contributor-' + contributor.id +
           '" data-column="contributor">' + contributor.fullName + '</option>'
-        );
-      });
-      $successOptgroup.empty();
-      _.each(successes, function (success) {
-        $successOptgroup.append(
-          '<option value="success-' + success.id + '" data-column="success">' + success.name + '</option>'
         );
       });
 

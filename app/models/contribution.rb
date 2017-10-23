@@ -97,7 +97,7 @@ class Contribution < ActiveRecord::Base
   def display_status
     case self.status
       when 'pre_request'
-        return "awaiting request\n(added #{self.created_at.strftime('%-m/%-d/%y')})"
+        return "waiting for invitation\n(added #{self.created_at.strftime('%-m/%-d/%y')})"
       when 'request_sent'
         return "request sent #{(self.request_sent_at).strftime('%-m/%-d/%y')}\n(email #{self.request_received_at.present? ? '' : 'not' } opened)"
       when 'first_reminder_sent'

@@ -183,7 +183,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
       // (b) did not respond (ready for re-send)
       var statusDisplay = $(row).children().eq(3).text(),
           disableTemplateSelect = function (statusDisplay) {
-            return !['awaiting request', 'did not respond'].some(function (status) {
+            return !['waiting', 'did not respond'].some(function (status) {
               return statusDisplay.includes(status);
             });
           };

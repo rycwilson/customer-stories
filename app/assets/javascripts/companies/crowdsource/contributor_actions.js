@@ -228,6 +228,12 @@ function contributorActionsListeners () {
 
     })
 
+    .on('click', '.contributor-actions .view-customer-win', function () {
+      var successId = $(this).closest('tr').data('success-id');
+      $('a[href="#successes"]').tab('show');
+        $('#successes-filter').val('success-' + successId).trigger('change');
+    })
+
     .on('click', '.contributor-actions .completed', function () {
 
       var dt = $(this).closest('table').DataTable(),
