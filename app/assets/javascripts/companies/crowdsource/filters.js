@@ -33,7 +33,7 @@ function crowdsourceFiltersListeners () {
         $customerOptgroup = $filter.find('optgroup[label="Customer"]'),
         $successOptgroup = $filter.find('optgroup[label="Customer Win"]'),
         $contributorOptgroup = $filter.find('optgroup[label="Contributor"]');
-        // $successContactOptgroup = $filter.find('optgroup[label="Customer Success Contact"]');
+        // $successContactOptgroup = $filter.find('optgroup[label="Customer Win Contact"]');
 
     // <select> data (both tables)
     companySuccesses = $('#successes-table').DataTable().column(1).data().toArray();

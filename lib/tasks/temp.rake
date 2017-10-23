@@ -133,7 +133,7 @@ namespace :temp do
       if success.name.blank? && success.story.present?
         success.update(name: success.story.title)
       elsif success.name.blank?
-        success.update(name: success.customer.name + ' - Customer Success')
+        success.update(name: success.customer.name + ' - Customer Win')
       end
     end
   end

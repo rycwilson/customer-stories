@@ -5,6 +5,17 @@
 *= require ./contributors_modals
 */
 
+
+td {
+  vertical-align: middle !important;  // override bootstrap for case of inline editor expanding row height
+  i:not(.submit) { color: #666; }
+}
+td.status {
+  // this ensures newlines will be respected
+  // ref: https://stackoverflow.com/questions/10937218
+  white-space: pre;
+}
+
 .link-dialog {
   .modal-content {
     overflow: hidden;  // this forces .modal-header background to respect border-radius

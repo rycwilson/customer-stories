@@ -7,10 +7,7 @@
 
 // applies to both crowdsource-contributors and curate-contributors tables
 [id*="-contributors-table"] {
-  td {
-    vertical-align: middle !important;  // override bootstrap for case of inline editor expanding row height
-    i:not(.submit) { color: #666; }
-  }
+
   // contributor details child row
   tr[data-contribution-id] + tr:not([data-contribution-id]):not(.group) {
     background-color: #f5f5f5;
@@ -77,12 +74,6 @@
     // span.shown {
     //   margin-left: 0;
     // }
-  }
-
-  td.status {
-    // this ensures newlines will be respected
-    // ref: https://stackoverflow.com/questions/10937218
-    white-space: pre;
   }
 
   td.actions-dropdown {

@@ -2,7 +2,7 @@
 function initSuccessesTable (dtSuccessesInit) {
 
   var successIndex = 1, customerIndex = 2, curatorIndex = 3,
-      successContactIndex = 4, storyIndex = 5, actionsIndex = 6;
+      statusIndex = 4, storyIndex = 5, actionsIndex = 6;
 
   $('#successes-table').DataTable({
     ajax: {
@@ -57,14 +57,11 @@ function initSuccessesTable (dtSuccessesInit) {
           filter: 'curator.id'
         }
       },
-      // using curator as placeholder for real successContact data
       {
-        name: 'curator',
+        name: 'status',
         data: {
-          _: 'curator',
-          display: function (row, type, set, meta) {
-            return '';
-          }
+          _: 'id',  // unused, but need a real value here
+          display: 'display_status'
         }
       },
       {
@@ -101,8 +98,8 @@ function initSuccessesTable (dtSuccessesInit) {
       },
       { width: '0%', targets: [customerIndex, curatorIndex, storyIndex] },  // hidden
       { width: '5%', targets: 0 },
-      { width: '50%', targets: successIndex },
-      { width: '35%', targets: successContactIndex },
+      { width: '60%', targets: successIndex },
+      { width: '25%', targets: statusIndex },
       { width: '10%', targets: actionsIndex }
     ],
     rowGroup: {
@@ -120,6 +117,10 @@ function initSuccessesTable (dtSuccessesInit) {
     createdRow: function (row, data, index) {
       $(row).attr('data-customer-id', data.customer.id);
       $(row).attr('data-success-id', data.id);
+      $(row).children().eq(0).addClass('success-details');
+      // $(row).children().eq(1).addClass('success');
+      $(row).children().eq(2).addClass('status');
+      $(row).children().eq(3).addClass('dropdown actions-dropdown');
     },
     initComplete: function (settings, json) {
 

@@ -7,7 +7,7 @@ class SuccessesController < ApplicationController
     company = Company.find_by(subdomain: request.subdomain)
     # data = Rails.cache.fetch("#{company.subdomain}/dt-successes") do
     data = company.successes.to_json({
-        only: [:id, :name, :description], methods: [:contributions_count],
+        only: [:id, :name, :description], methods: [:display_status, :contributions_count],
         include: {
           curator: { only: [:id], methods: [:full_name] },
           customer: { only: [:id, :name] },

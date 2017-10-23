@@ -11,7 +11,14 @@ class Success < ActiveRecord::Base
   has_many :story_categories_successes, dependent: :destroy
   has_many :story_categories, through: :story_categories_successes,
     after_add: :expire_category_tags_cache, after_remove: :expire_category_tags_cache
-  has_many :contributions, dependent: :destroy
+  has_many :contributions, dependent: :destroy do
+    def invitation_sent
+      where.not(status: 'pre_request')
+    end
+    def submitted
+      where.not(contribution: nil)
+    end
+  end
   has_many :results, -> { order(created_at: :asc) }, dependent: :destroy
   has_many :prompts, -> { order(created_at: :asc) }, dependent: :destroy
   # alias the association to user -> Success.find(id).contributors
@@ -49,6 +56,17 @@ class Success < ActiveRecord::Base
   #     end
   #   end
   # end
+
+  def display_status
+    if (self.contributions.count == 0)
+      return "0&nbsp;&nbsp;Contributors added".html_safe
+    elsif (self.contributions.invitation_sent.length == 0)
+      return "0&nbsp;&nbsp;Contributors invited".html_safe
+    else
+      return "#{self.contributions.invitation_sent.length}&nbsp;&nbsp;Contributors invited\n" +
+             "#{self.contributions.submitted.length}&nbsp;&nbsp;Contributions submitted".html_safe
+    end
+  end
 
   def expire_category_tags_cache (category)
     self.company.expire_all_stories_cache(true)  # json only
