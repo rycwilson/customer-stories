@@ -60,8 +60,7 @@ function initSuccessesTable (dtSuccessesInit) {
       {
         name: 'status',
         data: {
-          _: 'id',  // unused, but need a real value here
-          display: 'display_status'
+          _: 'display_status',
         }
       },
       {
@@ -73,13 +72,13 @@ function initSuccessesTable (dtSuccessesInit) {
         },
         defaultContent: 'false'
       },
-      {  // td.dropdown.actions-dropdown
-        data: 'contributions_count',
+      {
+        data: 'display_status',
         render: function (data, type, row, meta) {
-                  return _.template(
-                            $('#success-actions-dropdown-template').html()
-                          )({ contributionsCount: data });
-                }
+            return _.template(
+                $('#success-actions-dropdown-template').html()
+              )({ status: data });
+          }
       }
     ],
     columnDefs: [

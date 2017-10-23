@@ -117,7 +117,7 @@ function loadLinkedinWidget ($tr, contribution) {
         // failure
         $placeholderWidgetContainer
           .find('.member-info > p')
-          .css('color', 'red')
+          .css('color', '#D9534F')
           .text('Profile data not available');
       }
     }, 7000);

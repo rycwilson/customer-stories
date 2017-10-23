@@ -12,27 +12,36 @@
       <ul class='success-actions dropdown-menu'>
 
         <li>
-          <a href="javascript:;" class='create-story'>
+          <a href="javascript:;" class='begin-curation'>
             <i class='fa fa-check-square-o action'></i>&nbsp;
             <span>Begin Story Curation</span>
           </a>
         </li>
 
-        {{ if (contributionsCount > 0) { }}
+        {{ if (status.match(/0.+Contributors\sadded/)) { }}
+
+          <li>
+            <a href="javascript:;" class='add-contributor'>
+              <i class='fa fa-users action'></i>&nbsp;
+              <span>Add Contributor</span>
+            </a>
+          </li>
+
+        {{ } else if (status.match(/0.+Contributors\sinvited/)) { }}
 
           <li>
             <a href="javascript:;" class='manage-contributors'>
               <i class='fa fa-users action'></i>&nbsp;
-              <span>Manage Contributors</span>
+              <span>Invite Contributors</span>
             </a>
           </li>
 
         {{ } else { }}
 
           <li>
-            <a href="javascript:;" class='new-contributor'>
-              <i class='fa fa-user action'></i>&nbsp;
-              <span>Add Contributor</span>
+            <a href="javascript:;" class='manage-contributors'>
+              <i class='fa fa-users action'></i>&nbsp;
+              <span>Manage Contributors</span>
             </a>
           </li>
 

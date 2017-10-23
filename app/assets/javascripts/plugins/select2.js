@@ -124,7 +124,7 @@ function initSelect2 () {
 
   $('.new-contributor.contributor').select2({
     theme: 'bootstrap',
-    placeholder: 'Select or Add'
+    placeholder: 'Select or Add New Contributor'
   });
 
   $('.new-contributor.referrer').select2({

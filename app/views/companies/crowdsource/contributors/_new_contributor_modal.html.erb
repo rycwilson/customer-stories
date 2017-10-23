@@ -25,11 +25,12 @@
 
               <!-- not submitted with form -->
               <%= collection_select('', '',
-                    company.customers.sort_by() { |customer| customer.name.downcase },
+                    company.customers.sort_by { |customer| customer.name.downcase },
                     :id, :name,
                     { include_blank: true,
                       disabled: lambda { |customer| customer.successes.blank? } },
-                    { class: 'new-contributor customer form-control',
+                    { id: 'contribution_customer_id',
+                      class: 'new-contributor customer form-control',
                       style: 'width:100%', required: true }) %>
 
             </div>
@@ -45,7 +46,7 @@
             <div class="col-sm-9">
 
               <%= contribution_form.collection_select(:success_id,
-                    company.successes.sort_by() { |success| success.name },
+                    company.successes.sort_by { |success| success.name },
                     :id, :name, { include_blank: true },
                     { class: 'new-contributor success form-control',
                       style: 'width:100%', disabled: true, required: true }) %>
@@ -62,7 +63,7 @@
             <div class="col-sm-9">
 
               <%= contribution_form.collection_select(:user_id,
-                    company.contributors.sort_by() do |contributor|
+                    company.contributors.sort_by do |contributor|
                       contributor.last_name
                     end.unshift(
                       User.new(id: 0, first_name: '- New Contributor -', last_name:'')
