@@ -178,20 +178,18 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
       $(row).children().eq(3).addClass('status');
       $(row).children().eq(4).addClass('dropdown actions-dropdown');
 
-      // crowdsourcing template can only be selected if
+      // template can only be selected if status is in
       // (a) request hasn't been sent yet
       // (b) did not respond (ready for re-send)
-      var statusText = $(row).children().eq(3).text(),
-          enableTemplateSelect = function (text) {
+      var statusDisplay = $(row).children().eq(3).text(),
+          disableTemplateSelect = function (statusDisplay) {
             return !['awaiting request', 'did not respond'].some(function (status) {
-              text.includes(status);
+              return statusDisplay.includes(status);
             });
           };
-
-      if ( enableTemplateSelect(statusText) ) {
+      if ( disableTemplateSelect(statusDisplay) ) {
         $(row).children().eq(2).addClass('disabled').find('i').remove();
       }
-
     },
 
     initComplete: function (settings, json) {
