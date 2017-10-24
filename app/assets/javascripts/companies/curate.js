@@ -85,16 +85,9 @@ function curateListeners () {
         }
         Cookies.set(filterCookieName, filterCookieVal);
         filterCurateGallery();
-      })
-
-      // reset new story modal form
-      .on('hidden.bs.modal', '#new-story-modal', function () {
-        // form inputs to default values... (in this case just title)
-        $(this).find('form')[0].reset();
-        // select2 inputs to default values...
-        $('.new-story-customer').select2('val', '');  // single select
-        $('.new-story-tags').val('').trigger('change');  // multiple select
       });
+
+
 
 }
 

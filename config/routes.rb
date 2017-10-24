@@ -66,7 +66,7 @@ Rails.application.routes.draw do
         resources :successes, only: [:create, :update, :destroy], shallow: true do
           resources :results, only: [:create, :destroy]
         end
-        resources :stories, only: [:edit, :update, :destroy], shallow: true do
+        resources :stories, only: [:edit, :create, :update, :destroy], shallow: true do
           collection { get '/promoted', to: 'stories#promoted' }
           member { post '/promote', to: 'stories#promote' }
           member { put '/promote', to: 'stories#promote' }
@@ -78,7 +78,7 @@ Rails.application.routes.draw do
           member { put :ctas }
           member { put :tags }
         end
-        resources :stories, only: [:create]
+        # resources :stories, only: [:create]
         resources :contributions, except: [:new, :edit, :update], shallow: true do
           # need to distinguish '/contributions/:id' routes from '/contributions/:token' routes;
           # hence :update is excluded above and added below

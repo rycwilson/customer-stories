@@ -111,6 +111,13 @@ function initSelect2 () {
     placeholder: 'Create a new Customer, or select an existing one',
   });
 
+  $(".new-story.success").select2({
+    theme: "bootstrap",
+    tags: true,  // to allow new customer creation
+    selectOnClose: true,
+    placeholder: 'Create a new Customer Win, or select an existing one',
+  });
+
   $('.new-success-referrer').select2({
     theme: 'bootstrap',
     placeholder: 'Who referred you to this opportunity?'

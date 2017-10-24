@@ -391,7 +391,7 @@ class Story < ActiveRecord::Base
     end
   end
 
-  def expire_all_stories_cache json_only
+  def expire_all_stories_cache (json_only)
     self.company.expire_all_stories_cache(json_only)
   end
 

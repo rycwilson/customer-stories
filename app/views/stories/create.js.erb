@@ -1,6 +1,6 @@
 (function () {
 
-  // var story = <%= raw @story.to_json %>;
+  var story = <%= raw @story.to_json %>;
 
   // if ('<%= @errors %>') {
   //   flashDisplay('<%= @errors %>', 'danger')
@@ -8,6 +8,7 @@
   // } else {
   //   Turbolinks.visit('/curate/' + story.slug)
   // }
-  console.log('ok')
+  $('#new-story-modal').modal('hide')
+  console.log(story)
 
 }());

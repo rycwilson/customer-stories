@@ -109,33 +109,11 @@ class StoriesController < ApplicationController
   end
 
   def create
+    pp(story_params)
+    @story = Story.new(story_params)
+      # if @story.save
+      #   redirect_to(curate_story_path(@story))
 
-binding.remote_pry
-    # new_story = params[:story]
-    # if new_customer?(new_story[:customer])
-    #   customer = Customer.new(name: new_story[:customer], company_id: @company.id)
-    #   unless customer.save
-    #     @errors = "Customer is required"
-    #     respond_to { |format| format.js } and return
-    #   end
-    # else
-    #   customer = Customer.find(new_story[:customer])
-    # end
-    # if params[:story][:success_id].present?
-    #   success = Success.find(params[:story][:success_id])
-    # else
-    #   success = Success.create(name: new_story[:title], customer_id: customer.id, curator_id: current_user.id)
-    # end
-    # @story = Story.new(title: new_story[:title], success_id: success.id)
-    # if @story.save
-    #   @story.assign_tags(new_story)
-    #   # flash[:success] = "Story created successfully"
-    #   # # prevent js response from killing flash message
-    #   # flash.keep(:success)
-    #   # redirect_to(curate_story_path(@story.customer.slug, @story.slug))
-    # else
-    #   @errors = @story.errors.full_messages.join(', ')
-    # end
     respond_to { |format| format.js }
   end
 
@@ -252,10 +230,13 @@ binding.remote_pry
 
   def story_params
     params.require(:story).permit(
-      :title, :summary, :quote, :quote_attr_name, :quote_attr_title, :video_url,
+      :success_id, :title, :summary, :quote, :quote_attr_name, :quote_attr_title, :video_url,
       :formatted_video_url, :content, :published, :logo_published, :preview_published,
-      success_attributes: [ :id, :customer_id, product_ids: [], story_category_ids: [],
-        results_attributes: [:id, :description, :_destroy] ]
+      success_attributes: [ :id, :name, :customer_id, :curator_id,
+        product_ids: [], story_category_ids: [],
+        results_attributes: [:id, :description, :_destroy] ,
+        customer_attributes: [:id, :name]
+      ]
     )
   end
 

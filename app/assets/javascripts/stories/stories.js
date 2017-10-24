@@ -1,4 +1,5 @@
 
+//= require_tree ./shared
 //= require ./index
 //= require ./show
 //= require ./edit/edit
@@ -9,6 +10,7 @@ function attachStoriesListeners () {
   storiesIndexListeners();
   storiesEditListeners();
   playVideoListener();
+  newStoryListeners();
 
   $(document).on('click', '.cta-form',
     function () {

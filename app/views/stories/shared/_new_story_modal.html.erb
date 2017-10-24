@@ -14,13 +14,16 @@
               html: { id: 'new-story-form', remote: true,
                       class: 'form-horizontal' }) do |story_form| %>
 
+          <!-- default to 0, change if success is selected -->
+          <%= story_form.hidden_field(:success_id) %>
+
           <div class='form-group required-input'>
 
             <label for="story_title" class='col-sm-3 control-label'>
               Story Title
             </label>
             <div class='col-sm-9'>
-              <%= story_form.text_field(:title, class: 'form-control', autofocus: true) %>
+              <%= story_form.text_field(:title, class: 'form-control') %>
             </div>
 
           </div>
@@ -29,6 +32,18 @@
               story_form.object.build_success) do |success_form| %>
 
           <%= success_form.hidden_field(:id) %>
+          <%= success_form.hidden_field(:name) %>
+          <%= success_form.hidden_field(:customer_id) %>
+          <%= success_form.hidden_field(:curator_id, value: current_user.id) %>
+
+          <%= success_form.fields_for(:customer,
+                success_form.object.build_customer) do |customer_form| %>
+
+            <%= customer_form.hidden_field(:id) %>
+            <%= customer_form.hidden_field(:name) %>
+            <%= customer_form.hidden_field(:company_id, value: company.id) %>
+
+          <% end %>
 
           <div class='form-group required-input'>
 
@@ -37,7 +52,7 @@
             </label>
             <div class='col-md-9'>
 
-              <%= success_form.collection_select(:customer_id,
+              <%= collection_select(nil, nil,
                     company.customers.sort_by do |customer|
                       customer.name
                     end,
@@ -47,6 +62,27 @@
                   ) %>
 
             </div>
+          </div>
+
+
+          <div class="form-group success">
+
+            <label class='col-sm-3 control-label' for="story_success_attributes_customer_id">
+              Customer Win
+            </label>
+            <div class='col-md-9'>
+
+              <%= collection_select(nil, nil,
+                    company.successes.sort_by do |success|
+                      success.name
+                    end,
+                    :id, :name, { include_blank: true },
+                    { class: 'new-story success form-control',
+                      style: 'width:100%' }
+                  ) %>
+
+            </div>
+
           </div>
 
           <div class="form-group">
@@ -70,8 +106,8 @@
               Product Tags
             </label>
             <div class="col-sm-9">
-              <%= success_form.collection_select(:product_ids, company.products,
-                    :id, :name, {},
+              <%= success_form.collection_select(:product_ids,
+                    company.products, :id, :name, {},
                     { class: 'story-tags form-control',
                       multiple: true, style: 'width:100%' }
                   ) %>

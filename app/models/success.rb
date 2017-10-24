@@ -32,6 +32,7 @@ class Success < ActiveRecord::Base
   has_many :ctas_successes, dependent: :destroy
   has_many :ctas, through: :ctas_successes, source: :call_to_action
 
+  accepts_nested_attributes_for(:customer, allow_destroy: false)
   accepts_nested_attributes_for(:results, allow_destroy: true)
 
   # after_commit(on: [:create, :destroy]) do
@@ -74,6 +75,7 @@ class Success < ActiveRecord::Base
   end
 
   def expire_product_tags_cache (product)
+    binding.remote_pry
     self.company.expire_all_stories_cache(true)  # json only
     self.company.increment_product_select_fragments_memcache_iterator
   end
