@@ -142,7 +142,7 @@ function newContributorListeners() {
       // refresh select2
       $contributorSelect.select2({
         theme: 'bootstrap',
-        placeholder: 'Select or Add'
+        placeholder: 'Create a new Contributor, or select an existing one'
       })
       .prop('disabled', false);
 

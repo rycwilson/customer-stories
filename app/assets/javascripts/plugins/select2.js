@@ -74,7 +74,7 @@ function initSelect2 () {
         theme: "bootstrap",
         tags: true,  // to allow new customer creation
         selectOnClose: true,
-        placeholder: 'Select or add a new customer'
+        placeholder: 'Select or add a new Customer'
         // allowClear: true
       });
     }
@@ -108,7 +108,7 @@ function initSelect2 () {
     theme: "bootstrap",
     tags: true,  // to allow new customer creation
     selectOnClose: true,
-    placeholder: 'Select or add a new customer',
+    placeholder: 'Select or add a new Customer',
   });
 
   $('.new-success-referrer').select2({
@@ -124,7 +124,7 @@ function initSelect2 () {
 
   $('.new-contributor.contributor').select2({
     theme: 'bootstrap',
-    placeholder: 'Select or Add New Contributor'
+    placeholder: 'Create a new Contributor, or select an existing one'
   });
 
   $('.new-contributor.referrer').select2({
