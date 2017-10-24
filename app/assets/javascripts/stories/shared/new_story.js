@@ -4,7 +4,7 @@ function newStoryListeners () {
   $(document)
 
     .on('click', '.success-actions .begin-curation', function () {
-console.log('noo')
+
       var customerId = $(this).closest('tr').data('customer-id'),
           successId = $(this).closest('tr').data('success-id');
 
@@ -20,7 +20,7 @@ console.log('noo')
 
     })
 
-    // new story modal (also accessed from Customer Wins table)
+    // new story modal (accessed from both Prospect and Curate)
     .on('show.bs.modal', '#new-story-modal', function () {
       if ( $('a[href="#curate"]').parent().hasClass('active') ) {
         $('.form-group.success').addClass('hidden');
@@ -40,22 +40,19 @@ console.log('noo')
     // update hidden fields on customer change
     .on('change', '#new-story-form select.customer', function () {
       $('#new-story-form #story_success_attributes_customer_id, ' +
-        '#new-story-form #story_success_attributes_customer_attributes_id')
+          '#new-story-form #story_success_attributes_customer_attributes_id')
         .val( isNaN($(this).val()) ? null : $(this).val() );
       $('#new-story-form #story_success_attributes_customer_attributes_name')
         .val( $(this).find('option:selected').text() );
     })
 
     // update hidden fields on success change
-    // (this will only happen once from Customer Wins table)
     .on('change', '#new-story-form select.success', function () {
-      $('#new-story-form #story_success_id')
-        .val( $(this).val() );
-      $('#new-story-form #story_success_attributes_id')
-        .val( $(this).val() );
+      $('#new-story-form #story_success_id ' +
+          '#new-story-form #story_success_attributes_id')
+        .val( isNaN($(this).val()) ? null : $(this).val() );
       $('#new-story-form #story_success_attributes_name')
         .val( $(this).find('option:selected').text() );
-
     })
 
     // reset modal

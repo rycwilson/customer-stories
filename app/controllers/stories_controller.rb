@@ -111,6 +111,7 @@ class StoriesController < ApplicationController
   def create
     pp(story_params)
     @story = Story.new(story_params)
+    binding.remote_pry
       # if @story.save
       #   redirect_to(curate_story_path(@story))
 
