@@ -73,8 +73,8 @@ function newStoryListeners () {
     })
 
     .on('submit', '#new-story-form', function () {
-      $(this).find('button[type="submit"] span').toggle();
-      $(this).find('button[type="submit"] .fa-spinner').toggle();
+      $('button[type="submit"][form="new-story-form"] span').toggle();
+      $('button[type="submit"][form="new-story-form"] .fa-spinner').toggle();
     });
 
 }
