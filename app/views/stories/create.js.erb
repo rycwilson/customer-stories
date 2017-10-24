@@ -1,14 +1,7 @@
 (function () {
 
-  var story = <%= raw @story.to_json %>;
+  var story = <%= raw @story.to_json({ only: [], methods: [:csp_story_path] }) %>;
 
-  // if ('<%= @errors %>') {
-  //   flashDisplay('<%= @errors %>', 'danger')
-
-  // } else {
-  //   Turbolinks.visit('/curate/' + story.slug)
-  // }
-  $('#new-story-modal').modal('hide')
-  console.log(story)
+  window.location.pathname = window.location.pathname + story.csp_story_path;
 
 }());

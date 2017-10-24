@@ -70,6 +70,11 @@ function newStoryListeners () {
         .val('').trigger('change.select2');
       $('#new-story-form .story-tags')
         .val('').trigger('change.select2');
+    })
+
+    .on('submit', '#new-story-form', function () {
+      $(this).find('button[type="submit"] span').toggle();
+      $(this).find('button[type="submit"] .fa-spinner').toggle();
     });
 
 }

@@ -111,10 +111,8 @@ class StoriesController < ApplicationController
   def create
     pp(story_params)
     @story = Story.new(story_params)
-    binding.remote_pry
-      # if @story.save
-      #   redirect_to(curate_story_path(@story))
-
+    if @story.save
+    end
     respond_to { |format| format.js }
   end
 
@@ -236,7 +234,7 @@ class StoriesController < ApplicationController
       success_attributes: [ :id, :name, :customer_id, :curator_id,
         product_ids: [], story_category_ids: [],
         results_attributes: [:id, :description, :_destroy] ,
-        customer_attributes: [:id, :name]
+        customer_attributes: [:id, :name, :company_id]
       ]
     )
   end

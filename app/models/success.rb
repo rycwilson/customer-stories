@@ -70,14 +70,13 @@ class Success < ActiveRecord::Base
   end
 
   def expire_category_tags_cache (category)
-    self.company.expire_all_stories_cache(true)  # json only
-    self.company.increment_category_select_fragments_memcache_iterator
+    category.company.expire_all_stories_cache(true)  # json only
+    category.company.increment_category_select_fragments_memcache_iterator
   end
 
   def expire_product_tags_cache (product)
-    binding.remote_pry
-    self.company.expire_all_stories_cache(true)  # json only
-    self.company.increment_product_select_fragments_memcache_iterator
+    product.company.expire_all_stories_cache(true)  # json only
+    product.company.increment_product_select_fragments_memcache_iterator
   end
 
 end
