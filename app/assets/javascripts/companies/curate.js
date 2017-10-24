@@ -87,21 +87,6 @@ function curateListeners () {
         filterCurateGallery();
       })
 
-      /*
-        Detect changes in new story modal required inputs, and enable
-        submit button accordingly.
-        'change' event is for the select boxes; 'input' for text box
-      */
-      .on('change input', '#new-story-modal', function () {
-        if ($('#story_customer').val() &&
-            $('#story_title').val()) {
-          $(this).find("[type='submit']").prop('disabled', false);
-        }
-        else {
-          $(this).find("[type='submit']").prop('disabled', true);
-        }
-      })
-
       // reset new story modal form
       .on('hidden.bs.modal', '#new-story-modal', function () {
         // form inputs to default values... (in this case just title)

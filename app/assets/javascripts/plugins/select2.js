@@ -74,7 +74,7 @@ function initSelect2 () {
         theme: "bootstrap",
         tags: true,  // to allow new customer creation
         selectOnClose: true,
-        placeholder: 'Select or add a new Customer'
+        placeholder: 'Create a new Customer, or select an existing one'
         // allowClear: true
       });
     }
@@ -104,11 +104,11 @@ function initSelect2 () {
       width: 'style'
     });
 
-  $(".new-success-customer").select2({
+  $(".new-success-customer, .new-story.customer").select2({
     theme: "bootstrap",
     tags: true,  // to allow new customer creation
     selectOnClose: true,
-    placeholder: 'Select or add a new Customer',
+    placeholder: 'Create a new Customer, or select an existing one',
   });
 
   $('.new-success-referrer').select2({

@@ -16,16 +16,16 @@ function successActionsListeners () {
         var $modal = $('#new-story-modal'),
             customerId = $(this).closest('tr').data('customer-id'),
             successId = $(this).closest('tr').data('success-id');
-        $modal.find('#story_customer').val(customerId).trigger('change');
-        $modal.find('#story_success_id').val(successId);
+        $modal.find('#story_success_attributes_customer_id').val(customerId).trigger('change.select2');
+        $modal.find('#story_success_attributes_id').val(successId);
         $modal.modal('show');
       })
 
-    .on('shown.bs.modal', '#new-story-modal', function () {
-      if (window.location.pathname === '/crowdsource') {
-        $(this).find('#story_customer')[0].focus();
-      }
-    })
+    // .on('shown.bs.modal', '#new-story-modal', function () {
+    //   if (window.location.pathname === '/crowdsource') {
+    //     $(this).find('#story_customer')[0].focus();
+    //   }
+    // })
 
     .on('click', '.success-actions .add-contributor',
       function (e) {
