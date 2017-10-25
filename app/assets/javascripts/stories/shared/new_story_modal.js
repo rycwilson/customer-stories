@@ -48,7 +48,7 @@ function newStoryListeners () {
 
     // update hidden fields on success change
     .on('change', '#new-story-form select.success', function () {
-      $('#new-story-form #story_success_id ' +
+      $('#new-story-form #story_success_id, ' +
           '#new-story-form #story_success_attributes_id')
         .val( isNaN($(this).val()) ? null : $(this).val() );
       $('#new-story-form #story_success_attributes_name')

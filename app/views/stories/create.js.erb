@@ -1,7 +1,8 @@
 (function () {
 
-  var story = <%= raw @story.to_json({ only: [], methods: [:csp_story_path] }) %>;
+  var story = <%= raw @story.to_json({ only: [:id] }) %>,
+      redirectPath = "<%= @redirect_path %>";
 
-  window.location.pathname = window.location.pathname + story.csp_story_path;
+  window.location.pathname = redirectPath;
 
 }());
