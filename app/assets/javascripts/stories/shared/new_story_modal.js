@@ -3,17 +3,17 @@ function newStoryListeners () {
 
   $(document)
 
-    .on('click', '.success-actions .begin-curation', function () {
+    .on('click', '.success-actions .start-curation', function () {
 
       var customerId = $(this).closest('tr').data('customer-id'),
           successId = $(this).closest('tr').data('success-id');
 
       $('#new-story-form select.customer')
-        .val(customerId).trigger('change')
+        .val( customerId ).trigger('change')
         .prop('disabled', true);
 
       $('#new-story-form select.success')
-        .val(successId).trigger('change')
+        .val( successId ).trigger('change')
         .prop('disabled', true);
 
       $('#new-story-modal').modal('show');

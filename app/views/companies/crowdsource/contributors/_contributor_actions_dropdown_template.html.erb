@@ -7,13 +7,13 @@
       <i class='fa fa-caret-down'></i>
     </a>
 
-    <ul class='contributor-actions dropdown-menu dropdown-menu-right'>
+    <ul class='contributor-actions dropdown-menu dropdown-menu-right csp-actions-dropdown'>
 
       {{ if (status === 'pre_request') { }}
 
         <li class='send-request'>
           <a href="javascript:;">
-            <i class='fa fa-envelope-o action'></i>&nbsp;
+            <i class='fa fa-envelope-o fa-fw action'></i>&nbsp;&nbsp;
             <span>Send Invitation</span>
           </a>
         </li>
@@ -22,7 +22,7 @@
 
         <li class='view-request'>
           <a href="javascript:;">
-            <i class='fa fa-search action'></i>&nbsp;
+            <i class='fa fa-search fa-fw action'></i>&nbsp;&nbsp;
             <span>View Sent Invitation</span>
           </a>
         </li>
@@ -33,7 +33,7 @@
 
         <li class='re-send-request'>
           <a href="javascript:;">
-            <i class='fa fa-envelope-o action'></i>&nbsp;
+            <i class='fa fa-envelope-o fa-fw action'></i>&nbsp;&nbsp;
             <span>Re-send Invitation</span>
           </a>
         </li>
@@ -45,7 +45,7 @@
 
         <li>
           <a href="#contribution-content-modal" data-toggle='modal'>
-            <i class='fa fa-search action'></i>&nbsp;
+            <i class='fa fa-search fa-fw action'></i>&nbsp;&nbsp;
             <span>View {{= status.includes('contribution') ? 'Contribution' : 'Feedback' }}</span>
           </a>
         </li>
@@ -54,7 +54,7 @@
 
           <li class='completed'>
             <a href="javascript:;">
-              <i class='fa fa-check action'></i>&nbsp;
+              <i class='fa fa-check fa-fw action'></i>&nbsp;&nbsp;
               <span>Mark as completed</span>
             </a>
           </li>
@@ -70,7 +70,7 @@
 
           <li class='view-story'>
             <a href="{{= viewStoryPath }}"}>
-              <i class='fa fa-search action'></i>&nbsp;
+              <i class='fa fa-search fa-fw action'></i>&nbsp;&nbsp;
               <span>View Customer Story</span>
             </a>
           </li>
@@ -79,7 +79,7 @@
 
           <li class='curate-story'>
             <a href="{{= curateStoryPath }}"}>
-              <i class='fa fa-edit action'></i>&nbsp;
+              <i class='fa fa-edit fa-fw action'></i>&nbsp;&nbsp;
               <span>Curate Customer Story</span>
             </a>
           </li>
@@ -88,7 +88,7 @@
 
           <li class='view-customer-win'>
             <a href="javascript:;"}>
-              <i class='fa fa-rocket action'></i>&nbsp;
+              <i class='fa fa-rocket fa-fw action'></i>&nbsp;&nbsp;
               <span>View Customer Win</span>
             </a>
           </li>
@@ -99,7 +99,7 @@
 
       <li class='remove'>
         <a href="javascript:;">
-          <i class='fa fa-remove action'></i>&nbsp;
+          <i class='fa fa-remove fa-fw action'></i>&nbsp;&nbsp;
           <span>Remove</span>
         </a>
       </li>

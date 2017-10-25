@@ -9,16 +9,13 @@
         <i class='fa fa-caret-down'></i>
       </a>
 
-      <ul class='success-actions dropdown-menu'>
-
-
-
+      <ul class='success-actions dropdown-menu csp-actions-dropdown'>
 
         {{ if (status.match(/0.+Contributors\sadded/)) { }}
 
           <li>
             <a href="javascript:;" class='add-contributor'>
-              <i class='fa fa-users action'></i>&nbsp;
+              <i class='fa fa-user fa-fw action'></i>&nbsp;&nbsp;
               <span>Add Contributor</span>
             </a>
           </li>
@@ -27,7 +24,7 @@
 
           <li>
             <a href="javascript:;" class='manage-contributors'>
-              <i class='fa fa-users action'></i>&nbsp;
+              <i class='fa fa-users fa-fw action'></i>&nbsp;&nbsp;
               <span>Invite Contributors</span>
             </a>
           </li>
@@ -36,7 +33,7 @@
 
           <li>
             <a href="javascript:;" class='manage-contributors'>
-              <i class='fa fa-users action'></i>&nbsp;
+              <i class='fa fa-users fa-fw action'></i>&nbsp;&nbsp;
               <span>Manage Contributors</span>
             </a>
           </li>
@@ -46,9 +43,9 @@
         {{ if (!story) { }}
 
           <li>
-            <a href="javascript:;" class='begin-curation'>
-              <i class='fa fa-check-square-o action'></i>&nbsp;
-              <span>Begin Story Curation</span>
+            <a href="javascript:;" class='start-curation'>
+              <i class='fa fa-play fa-fw action'></i>&nbsp;&nbsp;
+              <span>Start Story Curation</span>
             </a>
           </li>
 
@@ -56,7 +53,7 @@
 
         <li>
           <a href="javascript:;">
-            <i class='fa fa-remove action'></i>&nbsp;
+            <i class='fa fa-remove fa-fw action'></i>&nbsp;&nbsp;
             <span>Remove</span>
           </a>
         </li>

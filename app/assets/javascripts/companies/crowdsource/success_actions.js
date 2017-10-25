@@ -9,7 +9,7 @@ function successActionsListeners () {
       $('#contributors-filter').val('success-' + successId).trigger('change');
     })
 
-    .on('click', '.success-actions .begin-curation', function () {
+    .on('click', '.success-actions .start-curation', function () {
       // see stories/shared/new_story.js
     })
 
