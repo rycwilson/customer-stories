@@ -22,7 +22,7 @@ function crowdsourceListeners () {
   $(document)
 
     .on('click', '#crowdsource .layout-sidebar a', function () {
-      Cookies.set('crowdsource-tab', $(this).attr('href'));
+      Cookies.set('prospect-tab', $(this).attr('href'));
     })
 
     // the close event happens shortly after blur; to ensure smooth transition...
