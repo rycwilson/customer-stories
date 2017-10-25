@@ -39,7 +39,7 @@
           </div>
 
           <div class='form-group'>
-            <label for="contribution_contributor_attributes_title" class="col-sm-3 control-label">Position</label>
+            <label for="contribution_contributor_attributes_title" class="col-sm-3 control-label">Job Title</label>
             <div class="col-sm-9">
               <input type="text" class="form-control"
                 id="contribution_contributor_attributes_title"
@@ -84,7 +84,7 @@
 
   <!-- // linkedin profile: publish checkbox and widget (or placeholder) -->
 
-          <div class="linkedin-profile {{= contribution.contributor.linkedin_url ? '' : 'hidden' }}" >
+          <div class="linkedin-profile {{= contribution.contributor.linkedin_url ? '' : 'hidden' }}">
 
             <!-- // don't render checkbox if still in the crowdsource stage -->
             {{ if (workflowStage === 'curate') { }}
@@ -120,13 +120,11 @@
               {{ } else { }}
 
       <!-- // placeholder rendered, replaced if/when linkedin widget arrives -->
-                <div class='placeholder-widget-container text-center'
-                     style='height:128px'>
+                <div class='placeholder-widget-container text-center' style='height:128px'>
                 </div>
 
       <!-- // widget is fetched when contributor child row is expanded -->
-                <div class='linkedin-widget-container hidden text-center'
-                     style='position:relative'>
+                <div class='linkedin-widget-container hidden text-center' style='position:relative'>
                 </div>
 
               {{ } }}
