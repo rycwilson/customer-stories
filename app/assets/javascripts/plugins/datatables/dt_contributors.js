@@ -205,7 +205,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
       // this is for the question mark icons that go with status= unsubscribe or opt_out
       $('[data-toggle="tooltip"]').tooltip();
 
-      if (workflowStage === 'crowdsource') {
+      if (workflowStage === 'prospect') {
 
         // global so can be accessed from crowdsourceListeners
         crowdsourceContributorsEditor = newContributorsEditor(

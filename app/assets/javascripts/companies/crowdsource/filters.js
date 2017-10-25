@@ -26,7 +26,7 @@ function crowdsourceFiltersListeners () {
         .column('story:name')
         .search($('#show-wins-with-story').prop('checked') ? '' :  '^false$', true, false);
 
-    } else if ( $table.is($('#crowdsource-contributors-table')) ) {
+    } else if ( $table.is($('#prospect-contributors-table')) ) {
       // clear last column search, and keep track of current search
       dtSearch = dtSearch.column(lastContributorsSearchColumn + ':name').search('');
       lastContributorsSearchColumn = filterCol;
@@ -96,7 +96,7 @@ function crowdsourceFiltersListeners () {
 
       // the source data is contributions; pull unique values for contributor.id
       companyContributors = _.uniq(
-        $('#crowdsource-contributors-table').DataTable().column(1).data().toArray(), true,
+        $('#prospect-contributors-table').DataTable().column(1).data().toArray(), true,
         function (contributor, index) { return contributor.id; }
       );
       contributors = (curatorId === '0') ? companyContributors :
@@ -156,7 +156,7 @@ function crowdsourceFiltersListeners () {
         setSearch( $('#successes-table'), false, searchVal ).draw();
       // #contributors-filter
       } else if ( $(this).next().find('#select2-contributors-filter-results').length ) {
-        setSearch( $('#crowdsource-contributors-table'), false, searchVal ).draw();
+        setSearch( $('#prospect-contributors-table'), false, searchVal ).draw();
       // something else
       } else {
         return false;
@@ -176,7 +176,7 @@ function crowdsourceFiltersListeners () {
     })
 
     .on('change', '#show-published, #show-completed', function () {
-      setSearch( $('#crowdsource-contributors-table'), true ).draw();
+      setSearch( $('#prospect-contributors-table'), true ).draw();
     });
 
 

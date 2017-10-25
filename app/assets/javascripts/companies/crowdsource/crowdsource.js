@@ -40,14 +40,14 @@ function crowdsourceListeners () {
       // (see createdRow property of datatables config)
       if ( $(this).hasClass('disabled') ) { return false; }
       $(this).addClass('editor-open');  // styling adjustment
-      if (workflowStage === 'crowdsource') {
+      if (workflowStage === 'prospect') {
         openContributorsEditor(crowdsourceContributorsEditor, $row);
       } else {
         openContributorsEditor(curateContributorsEditor, $row);
       }
     })
 
-    .on('click', '#crowdsource-contributors-table a.success', function (e) {
+    .on('click', '#prospect-contributors-table a.success', function (e) {
       var successId = $(this).closest('tr').next().data('success-id');
       $('a[href="#successes"]').tab('show');
       $('#successes-filter').val('success-' + successId).trigger('change');
@@ -58,7 +58,7 @@ function crowdsourceListeners () {
     .on('change', '#toggle-group-by-customer, #toggle-group-by-success',
       function () {
         if ($(this).is('#toggle-group-by-success')) {
-          toggleStriped($('#crowdsource-contributors-table'));
+          toggleStriped($('#prospect-contributors-table'));
         } else {
           toggleStriped($('#successes-table'));
         }
@@ -77,8 +77,8 @@ function crowdsourceListeners () {
     })
 
     // contributors - order by success
-    .on('click', '#crowdsource-contributors-table tr.group', function (e) {
-      var dt = $('#crowdsource-contributors-table').DataTable(),
+    .on('click', '#prospect-contributors-table tr.group', function (e) {
+      var dt = $('#prospect-contributors-table').DataTable(),
           successIndex = 2,
           currentOrder = dt.order()[0];
       if (! $(e.target).is('a') ) {

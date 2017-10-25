@@ -22,7 +22,7 @@ function initDataTables () {
         dtContributorsInit = $.Deferred(),
         showTables = function () {
           $('.successes-header, #successes-table, ' +
-            '.contributors-header, #crowdsource-contributors-table')
+            '.contributors-header, #prospect-contributors-table')
             .css('visibility', 'visible');
         },
         initSelectFilters = function ($tableWrapper) {
@@ -52,8 +52,8 @@ function initDataTables () {
     // if ( !$.fn.dataTable.isDataTable($('#successes-table')) ) {
       initSuccessesTable(dtSuccessesInit);
     // }
-    // if ( !$.fn.dataTable.isDataTable($('#crowdsource-contributors-table')) ) {
-      initContributorsTable('crowdsource', dtContributorsInit);
+    // if ( !$.fn.dataTable.isDataTable($('#prospect-contributors-table')) ) {
+      initContributorsTable('prospect', dtContributorsInit);
     // }
     // if ( !$.fn.dataTable.isDataTable($('#curate-contributors-table')) ) {
       initContributorsTable('curate');
@@ -65,7 +65,7 @@ function initDataTables () {
     $.when(dtSuccessesInit, dtContributorsInit)
       .done(function () {
         initSelectFilters( $('#successes-table').closest('[id*="table_wrapper"]') );
-        initSelectFilters( $('#crowdsource-contributors-table').closest('[id*="table_wrapper"]') );
+        initSelectFilters( $('#prospect-contributors-table').closest('[id*="table_wrapper"]') );
         initCheckboxFilters();
         showTables();
       });

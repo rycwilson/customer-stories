@@ -5,7 +5,7 @@ function successActionsListeners () {
 
     .on('click', '.success-actions .manage-contributors', function (e) {
       var successId = $(this).closest('tr').data('success-id');
-      $('a[href="#crowdsource-contributors"]').tab('show');
+      $('a[href="#prospect-contributors"]').tab('show');
       $('#contributors-filter').val('success-' + successId).trigger('change');
     })
 
@@ -19,7 +19,7 @@ function successActionsListeners () {
           customerId = $(this).closest('tr').data('customer-id'),
           successId = $(this).closest('tr').data('success-id');
 
-      $('a[href="#crowdsource-contributors"]').tab('show');
+      $('a[href="#prospect-contributors"]').tab('show');
       $('#contributors-filter').val('success-' + successId).trigger('change');
       $modal.modal('show');
       $modal.find('#contribution_customer_id').val(customerId).trigger('change');

@@ -87,7 +87,7 @@ function attachAppListeners () {
   window.onpopstate = function (e) {
     // console.log('popstate')
     var workflowMatch = window.location.pathname.match(
-            /(crowdsource|curate|promote|measure)(\/(\w|-)+)?/
+            /(prospect|curate|promote|measure)(\/(\w|-)+)?/
           ),
         workflowStage = workflowMatch && workflowMatch[1],
         curateView = workflowStage && (workflowStage === 'curate') ?
