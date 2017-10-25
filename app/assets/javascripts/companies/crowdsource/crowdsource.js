@@ -21,7 +21,7 @@ function crowdsourceListeners () {
 
   $(document)
 
-    .on('click', '#crowdsource .layout-sidebar a', function () {
+    .on('click', '#prospect .layout-sidebar a', function () {
       Cookies.set('prospect-tab', $(this).attr('href'));
     })
 
