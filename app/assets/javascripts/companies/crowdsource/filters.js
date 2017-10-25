@@ -4,17 +4,17 @@ function crowdsourceFiltersListeners () {
   // keep track of the last column search, so table can be reset on the next search
   var lastSuccessesSearchColumn = 'success', lastContributorsSearchColumn = 'contributor';
 
-  var setSearch = function ($table, useRegExSearch) {
+  var setSearch = function ($table, useRegExSearch, searchStr) {
     var dt = $table.DataTable(), $tableWrapper = $table.closest('[id*="table_wrapper"]'),
         curatorId = $tableWrapper.find('.curator-select').val(),
         filterCol = $tableWrapper.find('.dt-filter option:selected').data('column'),
-        filterVal = $tableWrapper.find('.dt-filter option:selected').val() === '0' ? '0' :
-                      $tableWrapper.find('.dt-filter option:selected').text(),
+        filterVal = searchStr ? searchStr :
+                      ( $tableWrapper.find('.dt-filter option:selected').val() === '0' ? '0' :
+                        $tableWrapper.find('.dt-filter option:selected').text() ),
         // set curator
         dtSearch = dt.search('')
            .column('curator:name')
            .search(curatorId === '0' ? '' : '^' + curatorId + '$', true, false);
-
 
     if ( $table.is($('#successes-table')) ) {
       // clear last column search, and keep track of current search
@@ -150,13 +150,13 @@ function crowdsourceFiltersListeners () {
     })
 
     .on('keyup', '.select2-search', function (e) {
-      var $table, $input = $(this).find('input');
+      var searchVal = $(this).find('input').val();
       // #successes-filter
       if ( $(this).next().find('#select2-successes-filter-results').length ) {
-        setSearch( $('#successes-table') ).draw();
+        setSearch( $('#successes-table'), false, searchVal ).draw();
       // #contributors-filter
       } else if ( $(this).next().find('#select2-contributors-filter-results').length ) {
-        setSearch( $('#crowdsource-contributors-table') ).draw();
+        setSearch( $('#crowdsource-contributors-table'), false, searchVal ).draw();
       // something else
       } else {
         return false;
