@@ -1,9 +1,10 @@
 
 .row.successes-header {
-  .buttons {
-    margin-bottom: 10px;
-    button {
-      width: 200px;
+  height: 125px;
+  .dropdown {
+    width: 200px;
+    .dropdown-menu-right {
+      right: -16px;
     }
   }
 }
@@ -24,10 +25,10 @@
     text-align: center;
     padding: 8px 12px;
   }
+
   td.actions-dropdown {
     text-align: center;
     vertical-align: middle;
-    color: #666;
     // ref: http://stackoverflow.com/questions/11078509/how-to-increase-the-clickable-area-of-a-a-tag-button
     div > a {
       color: inherit;
@@ -37,13 +38,6 @@
       padding: 10% 50%;
       margin: -2em;
       // color: #666;
-    }
-    i.action {
-      color: #666;
-      width: 17px;
-    }
-    i.action + span {
-      color: #444;
     }
   }
   tr.active i:not(.action) {

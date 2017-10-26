@@ -61,28 +61,25 @@ td.status {
 }
 
 .successes-header, .contributors-header {
-  display: flex;
   margin-bottom: 12px;
-  label.checkbox-filter {
-    font-weight: normal;
-    margin-bottom: 5px;
-  }
   > [class*="col-"]:first-child {
-    margin-top: auto;  // pulls contents to bottom
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
     padding-bottom: 2px;  // hack to account for checkbox height discrepancy
-    button {
-      margin-bottom: 12px;
-      i {
-        font-size:15px;
-        top:2px;
-      }
+    .dropdown {
+      margin: 20px 30px;
     }
     label.checkbox-filter {
       margin-left: 17px;
     }
   }
   > [class*="col-"]:last-child {
-    // margin-top: auto;
+    label.checkbox-filter {
+      font-weight: normal;
+      margin-bottom: 5px;
+    }
   }
   .form-group {
     width: 100%;

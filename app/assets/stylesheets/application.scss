@@ -71,8 +71,13 @@
   }
 }
 
-.dropdown-menu.csp-actions-dropdown > li > a {
+
+.dropdown-menu.dropdown-actions > li > a {
   padding: 6px 12px 6px 6px;
+  color: #444;
+  i.action {
+    color: #666;
+  }
 }
 
 .turbolinks-progress-bar {

@@ -5,14 +5,25 @@
 
     <div class='col-sm-6'>
 
-      <div class='buttons'>
-        <div style='padding: 0 15px;'>
-          <button type='button' class='btn btn-secondary btn-sm' data-toggle='modal' data-target='#new-success-modal'><i class='glyphicon glyphicon-plus-sign'></i>&nbsp;&nbsp;&nbsp;Add New Customer Win&nbsp;</button>
-        </div>
-
-        <div style='padding: 0 15px;'>
-          <button type='button' class='btn btn-secondary btn-sm'><i class='glyphicon glyphicon-import'></i>&nbsp&nbsp;&nbsp;Import Customer Wins&nbsp;</button>
-        </div>
+      <div class="dropdown">
+        <button class="btn btn-default btn-secondary dropdown-toggle" style='margin:0 15px' type="button" id="add-customer-wins" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <i class='fa fa-plus-circle fa-fw'></i>&nbsp;&nbsp;Add Customer Wins
+          &nbsp;&nbsp;<span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right dropdown-actions" aria-labelledby="add-customer-wins">
+          <li class='new-success'>
+            <a href="#new-success-modal" data-toggle='modal'>
+              <i class='fa fa-rocket fa-fw action'></i>&nbsp;&nbsp;
+              <span>New Customer Win</span>
+            </a>
+          </li>
+          <li class='import-successes'>
+            <a href="javascript:;">
+              <i class='fa fa-cloud-download fa-fw action'></i>&nbsp;&nbsp;
+              <span>Import from CRM</span>
+            </a>
+          </li>
+        </ul>
       </div>
 
       <div>

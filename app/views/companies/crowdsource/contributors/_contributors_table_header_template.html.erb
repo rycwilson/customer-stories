@@ -5,15 +5,25 @@
 
     <div class='col-sm-6'>
 
-      <div class='buttons'>
-
-        <div style='padding:0 15px'>
-          <button type='button' class='btn btn-secondary btn-sm' data-toggle='modal' data-target='#new-contributor-modal'><i class='glyphicon glyphicon-plus-sign'></i>&nbsp;&nbsp;&nbsp;Add New Contributor&nbsp;</button>
-        </div>
-
-        <div style='padding:0 15px'>
-          <button type='button' class='btn btn-secondary btn-sm'><i class='glyphicon glyphicon-import'></i>&nbsp&nbsp;&nbsp;Import Contributors&nbsp;</button>
-        </div>
+      <div class="dropdown">
+        <button class="btn btn-default btn-secondary dropdown-toggle" style='margin:0 15px' type="button" id="add-contributors" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+          <i class='fa fa-plus-circle fa-fw'></i>&nbsp;&nbsp;Add Contributors
+          &nbsp;&nbsp;<span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-right dropdown-actions" aria-labelledby="add-contributors">
+          <li class='new-contributor'>
+            <a href="#new-contributor-modal" data-toggle='modal'>
+              <i class='fa fa-user fa-fw action'></i>&nbsp;&nbsp;
+              <span>New Contributor</span>
+            </a>
+          </li>
+          <li class='import-contributors'>
+            <a href="javascript:;">
+              <i class='fa fa-cloud-download fa-fw action'></i>&nbsp;&nbsp;
+              <span>Import from CRM</span>
+            </a>
+          </li>
+        </ul>
       </div>
 
       <div>
