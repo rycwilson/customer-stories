@@ -43,7 +43,7 @@
 
       {{ if ( status.match(/(contribution|feedback)/) ) { }}
 
-        <li>
+        <li class='view-contribution'>
           <a href="#contribution-content-modal" data-toggle='modal'>
             <i class='fa fa-search fa-fw action'></i>&nbsp;&nbsp;
             <span>View {{= status.includes('contribution') ? 'Contribution' : 'Feedback' }}</span>
@@ -64,6 +64,8 @@
 
       {{ } }}
 
+      <li role="separator" class="divider"></li>
+
       {{ if (workflowStage === 'prospect') { }}
 
         <!-- // defaultContent is 'false' -->
@@ -72,7 +74,7 @@
           <li class='view-story'>
             <a href="{{= viewStoryPath }}"}>
               <i class='fa fa-search fa-fw action'></i>&nbsp;&nbsp;
-              <span>View Customer Story</span>
+              <span>View this Story</span>
             </a>
           </li>
 
@@ -81,7 +83,7 @@
           <li class='curate-story'>
             <a href="{{= curateStoryPath }}"}>
               <i class='fa fa-edit fa-fw action'></i>&nbsp;&nbsp;
-              <span>Curate Customer Story</span>
+              <span>Curate this Story</span>
             </a>
           </li>
 
@@ -97,6 +99,8 @@
         {{ } }}
 
       {{ } }}
+
+      <li role="separator" class="divider"></li>
 
       <li class='remove'>
         <a href="javascript:;">

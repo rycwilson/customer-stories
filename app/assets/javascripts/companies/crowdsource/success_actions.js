@@ -1,14 +1,36 @@
 
 function successActionsListeners () {
 
-  var forceFilters = function (successId) {
-    // if the success is not in the result data set after filter is applied,
-    // enable a checkbox filter that will amke it appear
-    // how to choose which filter?
-    // choose the show-published filter, because we want to show all contributors
-    // to a given win/story, not just toggle individual users
-    // but if
-  }
+  var contributionPath = function (contributionId) {
+          return '/contributions/' + contributionId;
+        },
+      formattedDate = function (date) {
+          return moment(date).calendar(null, {
+            sameDay: '[today]',
+            lastDay: '[yesterday]',
+            lastWeek: '['+ moment(date).fromNow() +']',
+            sameElse: 'M/DD/YY'
+          }).split('at')[0];
+        },
+      renderSuccessContributions = function (successId, contributions) {
+        // return function () {
+        //   console.log('not here?')
+          $('#contribution-content-modal .modal-content').empty().append(
+            _.template( $('#contribution-content-template').html() )({
+              contributions: contributions,
+              successId: successId,
+              formattedDate: formattedDate
+            })
+          );
+        // };
+      },
+      showSuccessContributions = function (successId, contributions) {
+        $.when( renderSuccessContributions(successId, contributions) )
+          .done(function () {
+            // console.log('but wait...')
+            $('#contribution-content-modal').modal('show');
+          });
+      };
 
   $(document)
 
@@ -18,6 +40,40 @@ function successActionsListeners () {
       $('#contributors-filter').val('success-' + successId).trigger('change');
       // for a filtered view, default to checkbox filters all applied (nothing hidden)
       $('.contributors.checkbox-filter input').prop('checked', true).trigger('change');
+    })
+
+    .on('click', '.success-actions .view-contributions', function () {
+
+      var successId = $(this).closest('tr').data('success-id'),
+          contributionIds = [], contributions = [];
+
+      // can't search on successId given current setup of the table data
+      contributionIds = $('#prospect-contributors-table').DataTable().rows().data().toArray()
+        .filter(function (contribution) {
+          return contribution.success.id == successId &&
+                 contribution.status.match(/(contribution|feedback)/);
+        })
+        .map(function (contribution) { return contribution.id; });
+
+      contributionIds.forEach(function (id) {
+
+        $.ajax({
+          url: contributionPath(id),
+          method: 'get',
+          data: {
+            get_contribution_content: true
+          },
+          dataType: 'json'
+        })
+          .done(function (contribution, status, xhr) {
+            contributions.push(contribution);
+            if (contributionIds.length === contributions.length) {
+              showSuccessContributions(successId, contributions);
+            }
+          });
+
+      });
+
     })
 
     .on('click', '.success-actions .start-curation', function () {

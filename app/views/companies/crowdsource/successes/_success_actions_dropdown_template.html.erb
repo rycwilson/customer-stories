@@ -9,9 +9,9 @@
         <i class='fa fa-caret-down'></i>
       </a>
 
-      <ul class='success-actions dropdown-menu dropdown-actions'>
+      <ul class='success-actions dropdown-menu dropdown-menu-right dropdown-actions'>
 
-        {{ if (status.match(/0.+Contributors\sadded/)) { }}
+        {{ if ( status.match(/0.+Contributors\sadded/) ) { }}
 
           <li>
             <a href="javascript:;" class='add-contributor'>
@@ -20,7 +20,7 @@
             </a>
           </li>
 
-        {{ } else if (status.match(/0.+Contributors\sinvited/)) { }}
+        {{ } else if ( status.match(/0.+Contributors\sinvited/) ) { }}
 
           <li>
             <a href="javascript:;" class='manage-contributors'>
@@ -30,6 +30,17 @@
           </li>
 
         {{ } else { }}
+
+          {{ if ( !status.match(/0.+Contributions\ssubmitted/) ) { }}
+
+            <li>
+              <a href="javascript:;" class='view-contributions'>
+                <i class='fa fa-comments fa-fw action'></i>&nbsp;&nbsp;
+                <span>View Contributions & Feedback</span>
+              </a>
+            </li>
+
+          {{ } }}
 
           <li>
             <a href="javascript:;" class='manage-contributors'>

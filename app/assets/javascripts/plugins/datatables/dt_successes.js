@@ -118,6 +118,7 @@ function initSuccessesTable (dtSuccessesInit) {
       $(row).attr('data-success-id', data.id);
       $(row).children().eq(0).addClass('success-details');
       // $(row).children().eq(1).addClass('success');
+      $(row).children().eq(1).attr('data-filter', data.id);
       $(row).children().eq(2).addClass('status');
       $(row).children().eq(3).addClass('dropdown actions-dropdown');
     },

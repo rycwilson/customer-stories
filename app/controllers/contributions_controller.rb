@@ -9,26 +9,26 @@ class ContributionsController < ApplicationController
   def index
     company = Company.find_by(subdomain: request.subdomain)
     # data = Rails.cache.fetch("#{company.subdomain}/dt-contributors") do
-    data = company.contributions.to_json({
-        only: [:id, :status], methods: [:display_status],
-        include: {
-          success: {
-            only: [:id, :curator_id, :name],
-            include: {
-              curator: { only: [:id], methods: [:full_name] },
-              customer: { only: [:id, :name, :slug] },
-              story: { only: [:id, :title, :published, :slug],
-                       methods: [:csp_story_path] }
-            }
-          },
-          contributor: { only: [:id], methods: [:full_name] },
-          referrer: { only: [:id], methods: [:full_name] },
-          crowdsourcing_template: { only: [:id, :name] },
-        }
-      })
+      data = company.contributions.to_json({
+          only: [:id, :status], methods: [:display_status],
+          include: {
+            success: {
+              only: [:id, :curator_id, :name],
+              include: {
+                curator: { only: [:id], methods: [:full_name] },
+                customer: { only: [:id, :name, :slug] },
+                story: { only: [:id, :title, :published, :slug],
+                         methods: [:csp_story_path] }
+              }
+            },
+            contributor: { only: [:id], methods: [:full_name] },
+            referrer: { only: [:id], methods: [:full_name] },
+            crowdsourcing_template: { only: [:id, :name] },
+          }
+        })
     # end
     # pp(JSON.parse(data))
-    respond_to() { |format| format.json { render({ json: data }) } }
+    respond_to { |format| format.json { render({ json: data }) } }
   end
 
   def show

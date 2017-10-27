@@ -42,7 +42,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
           filter: 'contributor.full_name'
         }
       },
-      {  // <td data-search="s<%= contribution.success.id %>, <%= contribution.success.name %>">
+      {
         name: 'success',
         defaultContent: 'Customer Win',
         data: {

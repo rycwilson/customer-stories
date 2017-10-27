@@ -126,8 +126,6 @@ function contributorActionsListeners () {
 
   $(document)
 
-
-
     .on('click', '.contributor-actions .send-request', function () {
       var contributionId = $(this).closest('tr').data('contribution-id');
 
@@ -196,10 +194,10 @@ function contributorActionsListeners () {
       getContributionRequest(contributionId, 'readonly');
     })
 
-    .on('click', 'a[href="#contribution-content-modal"]', function () {
+    // BEWARE this will also fire from Successes view
+    .on('click', '.contributor-actions .view-contribution', function () {
 
       var contributionId = $(this).closest('tr').data('contribution-id'),
-          template = _.template( $('#contribution-content-template').html() ),
           formattedDate = function (date) {
               return moment(date).calendar(null, {
                 sameDay: '[today]',
@@ -218,12 +216,18 @@ function contributorActionsListeners () {
         dataType: 'json'
       })
         .done(function (contribution, status, xhr) {
-          $('#contribution-content-modal .modal-title span:last-child').text(
-            formattedDate( new Date(contribution.submitted_at) )
-          );
-          $('#contribution-content-modal .modal-body').empty().append(
-            template({ contribution: contribution })
-          );
+          $.when(
+            $('#contribution-content-modal .modal-content').empty().append(
+              _.template( $('#contribution-content-template').html() )({
+                contributions: [contribution],
+                successId: null,
+                formattedDate: formattedDate
+              })
+            )
+          )
+            .done(function () {
+              $('#contribution-content-modal').modal('show');
+            });
         });
 
     })
