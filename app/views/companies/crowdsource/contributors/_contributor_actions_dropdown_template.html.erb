@@ -64,9 +64,10 @@
 
       {{ } }}
 
-      {{ if (workflowStage === 'crowdsource') { }}
+      {{ if (workflowStage === 'prospect') { }}
 
-        {{ if (story && story.published) { }}
+        <!-- // defaultContent is 'false' -->
+        {{ if (story !== 'false' && story.published) { }}
 
           <li class='view-story'>
             <a href="{{= viewStoryPath }}"}>

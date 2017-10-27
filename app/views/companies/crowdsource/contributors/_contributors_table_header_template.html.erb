@@ -7,10 +7,10 @@
 
       <div class="dropdown">
         <button class="btn btn-default btn-secondary dropdown-toggle" type="button" id="add-contributors" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-          <i class='fa fa-plus-circle fa-fw'></i>&nbsp;&nbsp;Add Contributors
+          <i class='fa fa-plus-circle fa-fw'></i>&nbsp;&nbsp;Contributors
           &nbsp;&nbsp;<span class="caret"></span>
         </button>
-        <ul class="dropdown-menu dropdown-menu-right dropdown-actions" aria-labelledby="add-contributors">
+        <ul class="dropdown-menu dropdown-menu-left dropdown-actions" aria-labelledby="add-contributors">
           <li class='new-contributor'>
             <a href="#new-contributor-modal" data-toggle='modal'>
               <i class='fa fa-user fa-fw action'></i>&nbsp;&nbsp;
@@ -27,7 +27,7 @@
       </div>
 
       <div>
-        <label class='checkbox-filter' for="toggle-group-by-success">
+        <label class='group checkbox-filter' for="toggle-group-by-success">
           <input type="checkbox" id="toggle-group-by-success" checked>
           <span>&nbsp;&nbsp;Group by Customer Win / Story</span>
         </label>
@@ -79,12 +79,12 @@
         <div class='col-sm-9' style='padding:0'>
           <div class='checkbox checkbox-filters'>
 
-            <label class='checkbox-filter' for="show-completed">
+            <label class='contributors checkbox-filter' for="show-completed">
               <input type="checkbox" id="show-completed">
               <span>&nbsp;&nbsp;Contributors with a completed Contribution</span>
             </label>
 
-            <label class='checkbox-filter' for="show-published">
+            <label class='contributors checkbox-filter' for="show-published">
               <input type="checkbox" id="show-published">
               <span>&nbsp;&nbsp;Contributors to published Customer Stories</span>
             </label>
