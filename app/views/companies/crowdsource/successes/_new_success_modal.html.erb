@@ -52,6 +52,8 @@
           <%= success_form.fields_for(:contributions,
                 success_form.object.contributions.build) do |contribution_form| %>
 
+            <%= contribution_form.hidden_field(:user_id) %>
+
             <div class="form-group">
               <label for="success_contribution_attributes_0_referrer_id"
                   class='col-sm-3 control-label'>

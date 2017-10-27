@@ -43,7 +43,7 @@ class SuccessesController < ApplicationController
     params.require(:success).permit(:name, :description, :customer_id, :curator_id,
       customer_attributes: [:id, :name, :company_id],
       contributions_attributes: [
-        :referrer_id,
+        :user_id, :referrer_id,
         contributor_attributes: [
           :id, :first_name, :last_name, :email, :sign_up_code, :password
         ]

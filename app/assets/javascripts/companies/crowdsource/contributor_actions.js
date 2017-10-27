@@ -63,6 +63,7 @@ function contributorActionsListeners () {
       },
 
       getContributionRequest = function (contributionId, type) {
+
         $.ajax({
           url: contributionPath(contributionId),
           method: 'get',

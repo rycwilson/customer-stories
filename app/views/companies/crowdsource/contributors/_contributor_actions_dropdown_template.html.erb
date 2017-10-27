@@ -68,8 +68,7 @@
 
       {{ if (workflowStage === 'prospect') { }}
 
-        <!-- // defaultContent is 'false' -->
-        {{ if (story !== 'false' && story.published) { }}
+        {{ if (story && story.published) { }}
 
           <li class='view-story'>
             <a href="{{= viewStoryPath }}"}>

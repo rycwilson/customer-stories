@@ -11,7 +11,8 @@ function newSuccessListeners () {
 
   $(document)
 
-    .on('change', '#new-success-form #success_contributions_attributes_0_referrer_id', function () {
+    .on('change', '#new-success-form ' +
+          '#success_contributions_attributes_0_referrer_id', function () {
 
       // if creating a new referrer with this success, enable contributor attributes
       if ($(this).val() === '0') {
@@ -19,9 +20,12 @@ function newSuccessListeners () {
         disableContributorAttrs(false);
 
       // if not, disable contributor attributes
-      // (referrer_id disabled at submit click bleow)
+      // (referrer_id disabled at submit click below)
       } else {
         $('.create-referrer').addClass('hidden');
+        // the referrer will be both contributor and referrer for this contribution
+        $('#new-success-form #success_contributions_attributes_0_user_id')
+          .val( $(this).val() );
         disableContributorAttrs(true);
       }
 
