@@ -104,7 +104,7 @@ function initSelect2 () {
       width: 'style'
     });
 
-  $(".new-success-customer, .new-story.customer").select2({
+  $(".new-success.customer, .new-story.customer").select2({
     theme: "bootstrap",
     tags: true,  // to allow new customer creation
     selectOnClose: true,
@@ -118,9 +118,9 @@ function initSelect2 () {
     placeholder: 'Create a new Customer Win, or select an existing one',
   });
 
-  $('.new-success-referrer').select2({
+  $('.new-success.referrer').select2({
     theme: 'bootstrap',
-    placeholder: 'Who referred you to this opportunity?'
+    placeholder: 'Customer Win Contact'
   });
 
 

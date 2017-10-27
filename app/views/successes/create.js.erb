@@ -1,9 +1,24 @@
 
 (function () {
 
-  var success = <%= raw @success.to_json() %>
+  var success = <%= raw @success.to_json %>
 
-  console.log('create.js.erb()')
-  console.log(success)
+  $('#successes-table').DataTable()
+    .ajax.reload(function (successes) {
+
+      var $trSuccess = $('tr[data-success-id="' + success.id + '"]'),
+          $trGroup = $trSuccess.prev(),
+          openSuccessDetails = function () {
+            $trSuccess.find('.success-details').trigger('click');
+          }
+
+      $('#new-success-modal').modal('hide');
+
+      // ref: https://stackoverflow.com/questions/6677035
+      $('html body').animate({
+        scrollTop: $trGroup.offset().top
+      }, 400, 'swing', openSuccessDetails);
+
+    })
 
 }());

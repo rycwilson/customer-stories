@@ -14,7 +14,11 @@ class Company < ActiveRecord::Base
   validates_format_of :subdomain, with: /\A[a-z0-9-]*\z/, on: [:create, :update], message: "may only contain lowercase alphanumerics or hyphens"
   validates_exclusion_of :subdomain, in: ['www', 'mail', 'ftp'], message: "is not available"
 
-  has_many :users  # no dependent: :destroy users, handle more gracefully
+  has_many :users do # no dependent: :destroy users, handle more gracefully
+    # def referrers
+    #   joins(:referred_contributions)
+    # end
+  end
 
   has_many :customers, dependent: :destroy do
     def select_options
@@ -31,7 +35,7 @@ class Company < ActiveRecord::Base
       .unshift( [""] )  # empty option makes placeholder possible (only needed for single select)
     end
   end
-  has_many :curators, -> { select('users.*').distinct }, through: :successes
+  has_many :curators, -> { distinct }, through: :successes, source: :curator
   has_many :contributions, -> { includes(:contributor, :referrer, success:{customer:{}}) },
             through: :successes do
     def pending
@@ -50,7 +54,8 @@ class Company < ActiveRecord::Base
       )
     end
   end
-  has_many :contributors, through: :contributions, class_name: 'User'
+  has_many :contributors, -> { distinct }, through: :customers, source: :contributors
+  has_many :referrers, -> { distinct }, through: :contributions, source: :referrer
   has_many :stories, through: :successes do
     def select_options
       self.select() { |story| story.published? }

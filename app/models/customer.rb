@@ -6,7 +6,7 @@ class Customer < ActiveRecord::Base
   has_many :successes, dependent: :destroy
   has_many :stories, through: :successes
   has_many :contributions, through: :successes
-  has_many :contributors, through: :contributions, class_name: 'User', foreign_key: 'user_id'
+  has_many :contributors, -> { distinct }, through: :contributions, source: :contributor
 
   validates :name, presence: true
   validates_uniqueness_of :name, scope: :company_id

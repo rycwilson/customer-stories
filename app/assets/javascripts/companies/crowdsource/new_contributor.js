@@ -188,7 +188,14 @@ function newContributorListeners() {
       $successSelect.prop('disabled', true);
       $contributorSelect.prop('disabled', true);
       $(this).find('form')[0].reset();
+      $('button[type="submit"][form="new-contributor-form"] span').css('display', 'inline');
+      $('button[type="submit"][form="new-contributor-form"] i').css('display', 'none');
 
+    })
+
+    .on('submit', '#new-contributor-form', function () {
+      $('button[type="submit"][form="new-contributor-form"] span').toggle();
+      $('button[type="submit"][form="new-contributor-form"] .fa-spinner').toggle();
     });
 
 }

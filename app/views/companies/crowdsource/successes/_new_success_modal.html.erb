@@ -10,51 +10,127 @@
 
       <div class="modal-body">
 
-        <%= form_for Success.new, url: company_successes_path(company.id),
+        <%= form_for(Success.new, url: company_successes_path(company),
               html: { remote: true, id: 'new-success-form',
-                      class: 'form-horizontal' } do |f| %>
+                      class: 'form-horizontal' }) do |success_form| %>
+
+          <%= success_form.hidden_field(:curator_id, value: current_user.id) %>
+          <%= success_form.hidden_field(:customer_id) %>
+
+          <%= success_form.fields_for(:customer,
+                success_form.object.build_customer) do |customer_form| %>
+            <%= customer_form.hidden_field(:id) %>
+            <%= customer_form.hidden_field(:name) %>
+            <%= customer_form.hidden_field(:company_id, value: company.id) %>
+          <% end %>
 
           <div class="form-group required-input">
-            <label for="success_customer" class='col-sm-3 control-label'>
+            <label for="success_customer_id" class='col-sm-3 control-label'>
               Customer
             </label>
             <div class="col-sm-9">
-              <%= f.select :customer_id,
-                    options_for_select(company.customers.select_options), {},
-                    { class: 'new-success-customer form-control', style: 'width:100%',
-                      autofocus: true, } %>
+              <%= collection_select(nil, nil,
+                    company.customers.sort_by do |customer|
+                      customer.name
+                    end,
+                    :id, :name, { include_blank: true },
+                    { class: 'new-success customer form-control', style: 'width:100%' }
+                  ) %>
             </div>
           </div>
 
           <div class="form-group required-input">
             <label for="success_name" class='col-sm-3 control-label'>
-              Opportunity
+              Name
             </label>
             <div class="col-sm-9">
-              <%= f.text_field :name, class: 'form-control',
-                  placeholder: 'Name of Opportunity from CRM' %>
+              <%= success_form.text_field(:name, class: 'form-control',
+                  placeholder: 'Name of Project / Deal / Opportunity from CRM') %>
             </div>
           </div>
 
-          <div class="form-group required-input">
-            <label for="success_name" class='col-sm-3 control-label'>
-              Referred by
-            </label>
-            <div class="col-sm-9">
-              <%= select_tag 'success[referrer_id]',
-                    options_for_select(company.curators.map() { |curator| [ curator.full_name, curator.id ] }.unshift([''])),
-                    { class: 'new-success-referrer form-control', style: 'width:100%',
-                      autofocus: true } %>
-            </div>
-          </div>
+          <%= success_form.fields_for(:contributions,
+                success_form.object.contributions.build) do |contribution_form| %>
 
+            <div class="form-group">
+              <label for="success_contribution_attributes_0_referrer_id"
+                  class='col-sm-3 control-label'>
+                Referred by
+              </label>
+              <div class="col-sm-9">
+                <%= contribution_form.collection_select(:referrer_id,
+                      company.referrers.sort_by do |referrer|
+                        referrer.last_name
+                      end.unshift(
+                        User.new(id: 0, first_name: '- New Contact -', last_name:'')
+                      ),
+                      :id, :full_name,
+                      { include_blank: true },
+                      { class: 'new-success referrer form-control',
+                        style: 'width:100%' }
+                    ) %>
+              </div>
+            </div>
+
+            <div class="create-referrer hidden">
+
+              <%= contribution_form.fields_for(:contributor,
+                    contribution_form.object.build_contributor) do |contributor_form| %>
+
+                <%= contributor_form.hidden_field(:sign_up_code, disabled: true) %>
+                <%= contributor_form.hidden_field(:password, disabled: true) %>
+
+                <div class="form-group required-input">
+
+                  <label for="contribution_user_first_name" class='col-sm-3 control-label'>
+                    First Name
+                  </label>
+
+                  <div class="col-sm-9">
+                    <%= contributor_form.text_field(:first_name, class: 'form-control',
+                          disabled: true, placeholder: 'Contributor first name') %>
+                  </div>
+
+                </div>
+
+                <div class="form-group required-input">
+
+                  <label for="contribution_user_last_name" class='col-sm-3 control-label'>
+                    Last Name
+                  </label>
+
+                  <div class="col-sm-9">
+                    <%= contributor_form.text_field(:last_name, class: 'form-control',
+                          disabled: true, placeholder: 'Contributor last name') %>
+                  </div>
+
+                </div>
+
+                <div class="form-group required-input">
+
+                  <label for="contribution_user_email" class='col-sm-3 control-label'>
+                    Email
+                  </label>
+
+                  <div class="col-sm-9">
+                    <%= contributor_form.email_field(:email, class: 'form-control',
+                          disabled: true, placeholder: 'Contributor email') %>
+                  </div>
+
+                </div>
+
+              <% end %>
+
+            </div>
+
+          <% end %>
           <div class="form-group">
             <label for="success_description" class='col-sm-3 control-label'>
               Description
             </label>
             <div class="col-sm-9">
-              <%= f.text_area :description, rows: 6, class: 'form-control',
-                    placeholder: 'Opportunity description'  %>
+              <%= success_form.text_area :description, rows: 4, class: 'form-control',
+                    placeholder: 'Description of Project / Deal / Opportunity from CRM' %>
             </div>
           </div>
 
@@ -63,8 +139,14 @@
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-success">Create Customer Win</button>
+
+        <button type="reset" class="btn btn-default" data-dismiss='modal'>Cancel</button>
+        <button type="submit" class="btn btn-success text-center" style='width:166px' form='new-success-form'>
+          <span>Create Customer Win</span>
+          <i class='fa fa-spinner fa-pulse' style='display:none'></i>
+          <i class='fa fa-check' style='display:none'></i>
+        </button>
+
       </div>
 
     </div>  <!-- /.modal-content -->

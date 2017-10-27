@@ -20,10 +20,10 @@ class Success < ActiveRecord::Base
     end
   end
   has_many :results, -> { order(created_at: :asc) }, dependent: :destroy
-  has_many :prompts, -> { order(created_at: :asc) }, dependent: :destroy
   # alias the association to user -> Success.find(id).contributors
   # note: contributor is an alias - see contribution.rb
   has_many :contributors, through: :contributions, source: :contributor
+  has_many :referrers, through: :contributions, source: :referrer
   has_many :page_views, class_name: 'PageView'
   has_many :story_shares, class_name: 'StoryShare'
   has_many :visitor_actions
@@ -34,6 +34,7 @@ class Success < ActiveRecord::Base
 
   accepts_nested_attributes_for(:customer, allow_destroy: false)
   accepts_nested_attributes_for(:results, allow_destroy: true)
+  accepts_nested_attributes_for(:contributions, allow_destroy: false)
 
   # after_commit(on: [:create, :destroy]) do
   # end

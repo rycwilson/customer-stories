@@ -1,5 +1,6 @@
 
 //= require ./filters
+//= require ./new_success
 //= require ./new_contributor
 //= require ./success_details
 //= require ./success_actions
@@ -13,6 +14,7 @@ function crowdsource () {
 function crowdsourceListeners () {
 
   crowdsourceFiltersListeners();
+  newSuccessListeners();
   newContributorListeners();
   successDetailsListeners();
   successActionsListeners();

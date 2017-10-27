@@ -14,7 +14,10 @@ class Contribution < ActiveRecord::Base
 
   accepts_nested_attributes_for(:contributor, allow_destroy: false)
 
-  default_scope { order(created_at: :desc) }
+  # the default_scope introduces difficulty to, e.g., this:
+  # has_many :contributors, -> { distinct }, through: :contributions, source: :contributor
+  # => #<ActiveRecord::StatementInvalid: PG::InvalidColumnReference: ERROR:  for SELECT DISTINCT, ORDER BY expressions must appear in select list
+  # default_scope { order(created_at: :desc) }
 
   scope :story_all, ->(story_id) {
     joins(success: { story: {} })

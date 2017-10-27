@@ -31,13 +31,13 @@ function newStoryListeners () {
     })
 
      // if Curate view, success name mirrors story title
-    .on('change', '#new-story-modal #story_title', function () {
+    .on('change', '#new-story-form #story_title', function () {
       if ( $('a[href="#curate"]').parent().hasClass('active') ) {
         $('#new-story-form #story_success_attributes_name').val( $(this).val() );
       }
     })
 
-    // update hidden fields on customer change
+    // select customer by id or create a new customer
     .on('change', '#new-story-form select.customer', function () {
       $('#new-story-form #story_success_attributes_customer_id, ' +
           '#new-story-form #story_success_attributes_customer_attributes_id')

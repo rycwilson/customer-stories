@@ -19,11 +19,16 @@ class SuccessesController < ApplicationController
   end
 
   def create
-    @success = Success.create(success_params)
-    # if @success.save
-    # else
-    # end
-    respond_to() { format.js() {} }
+    # binding.remote_pry
+    pp success_params
+    @success = Success.new(success_params)
+
+    if @success.save
+    else
+      pp @success.errors.full_messages
+    end
+
+    respond_to { |format| format.js {} }
   end
 
   def update
@@ -35,7 +40,15 @@ class SuccessesController < ApplicationController
   private
 
   def success_params
-    params.require(:success).permit(:name, :description, :customer_id)
+    params.require(:success).permit(:name, :description, :customer_id, :curator_id,
+      customer_attributes: [:id, :name, :company_id],
+      contributions_attributes: [
+        :referrer_id,
+        contributor_attributes: [
+          :id, :first_name, :last_name, :email, :sign_up_code, :password
+        ]
+      ],
+    )
   end
 
 end
