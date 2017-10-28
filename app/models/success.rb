@@ -1,5 +1,14 @@
 class Success < ActiveRecord::Base
 
+  # virtual attribute for keeping track of a new Success that is also created with
+  # new contribution (as when a referrer is specified);
+  # this only works if the inverse_of option is used on the Success/Contribution association;
+  # otherwise, the virtual attribute won't be seen from the contribution callback
+  attr_accessor :is_new_record
+  def is_new_record?
+    !!self.is_new_record
+  end
+
   belongs_to :customer
   has_one :company, through: :customer
   belongs_to :curator, class_name: 'User', foreign_key: 'curator_id'
@@ -11,7 +20,7 @@ class Success < ActiveRecord::Base
   has_many :story_categories_successes, dependent: :destroy
   has_many :story_categories, through: :story_categories_successes,
     after_add: :expire_category_tags_cache, after_remove: :expire_category_tags_cache
-  has_many :contributions, dependent: :destroy do
+  has_many :contributions, inverse_of: :success, dependent: :destroy do
     def invitation_sent
       where.not(status: 'pre_request')
     end
@@ -41,6 +50,10 @@ class Success < ActiveRecord::Base
 
   # after_commit(on: [:update]) do
   # end
+
+  before_save(on: :create) do
+    self.is_new_record = true
+  end
 
   # method is used for passing the contributions count to datatables / successes dropdown
   # see successes#index

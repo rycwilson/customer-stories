@@ -165,7 +165,6 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
     },
 
     createdRow: function (row, data, index) {
-      console.log('createdRow data: ', data)
       $(row).attr('data-contribution-id', data.id);
       $(row).attr('data-success-id', data.success.id);
       $(row).attr('data-contributor-id', data.contributor.id);

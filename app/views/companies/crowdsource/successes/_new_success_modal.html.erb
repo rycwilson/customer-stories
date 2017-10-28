@@ -53,6 +53,11 @@
                 success_form.object.contributions.build) do |contribution_form| %>
 
             <%= contribution_form.hidden_field(:user_id) %>
+            <%= contribution_form.hidden_field(:crowdsourcing_template_id,
+                  value: company.crowdsourcing_templates.select do |template|
+                      template.name == 'Customer Success'
+                    end[0].id
+                ) %>
 
             <div class="form-group">
               <label for="success_contribution_attributes_0_referrer_id"
@@ -68,7 +73,8 @@
                       ),
                       :id, :full_name,
                       { include_blank: true },
-                      { class: 'new-success referrer form-control',
+                      # effectively disabled by default by giving it a blank name
+                      { name: '', class: 'new-success referrer form-control',
                         style: 'width:100%' }
                     ) %>
               </div>
@@ -79,8 +85,9 @@
               <%= contribution_form.fields_for(:contributor,
                     contribution_form.object.build_contributor) do |contributor_form| %>
 
-                <%= contributor_form.hidden_field(:sign_up_code, disabled: true) %>
-                <%= contributor_form.hidden_field(:password, disabled: true) %>
+
+                <%= contributor_form.hidden_field(:sign_up_code, value: 'csp_beta', disabled: true) %>
+                <%= contributor_form.hidden_field(:password, value: 'password', disabled: true) %>
 
                 <div class="form-group required-input">
 

@@ -19,15 +19,16 @@ class SuccessesController < ApplicationController
   end
 
   def create
-    # binding.remote_pry
-    pp success_params
+    # Success.new will set up all the associations, but must save contribution before success else success.save will error;
+    # no such requirement for new customer
+    # why is @success.errors.messages empty when success.save fails?
+    # saving contribution will save contributor
     @success = Success.new(success_params)
-
-    if @success.save
+    if @success.contributions.present? &&
+      @success.contributions[0].save && @success.save
+    elsif @success.save
     else
-      pp @success.errors.full_messages
     end
-
     respond_to { |format| format.js {} }
   end
 
@@ -43,7 +44,7 @@ class SuccessesController < ApplicationController
     params.require(:success).permit(:name, :description, :customer_id, :curator_id,
       customer_attributes: [:id, :name, :company_id],
       contributions_attributes: [
-        :user_id, :referrer_id,
+        :user_id, :referrer_id, :crowdsourcing_template_id,
         contributor_attributes: [
           :id, :first_name, :last_name, :email, :sign_up_code, :password
         ]

@@ -33,6 +33,7 @@ class ContributionsController < ApplicationController
 
   def show
     if params[:get_contribution_request]
+      @contribution.copy_crowdsourcing_template if @contribution.request_sent_at.nil?
       respond_with(
         @contribution, only: [:id, :request_subject, :request_body, :request_sent_at],
         include: {

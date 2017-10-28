@@ -120,7 +120,7 @@ function initSelect2 () {
 
   $('.new-success.referrer').select2({
     theme: 'bootstrap',
-    placeholder: 'Customer Win Contact'
+    placeholder: 'Create a new Contact, or select an existing one'
   });
 
 

@@ -1,33 +1,9 @@
 class Contribution < ActiveRecord::Base
 
-  belongs_to :contributor, class_name: 'User', foreign_key: 'user_id'
-  belongs_to :referrer, class_name: 'User', foreign_key: 'referrer_id'
-  belongs_to :success
-  belongs_to :email_template
-  has_one :customer, through: :success
-  has_one :company, through: :success
-  has_one :curator, through: :success
-  has_one :story, through: :success
-  has_one :email_contribution_request, dependent: :destroy
-  belongs_to :crowdsourcing_template
-  has_many :contributor_questions, through: :crowdsourcing_template
-
-  accepts_nested_attributes_for(:contributor, allow_destroy: false)
-
   # the default_scope introduces difficulty to, e.g., this:
   # has_many :contributors, -> { distinct }, through: :contributions, source: :contributor
   # => #<ActiveRecord::StatementInvalid: PG::InvalidColumnReference: ERROR:  for SELECT DISTINCT, ORDER BY expressions must appear in select list
   # default_scope { order(created_at: :desc) }
-
-  scope :story_all, ->(story_id) {
-    joins(success: { story: {} })
-    .where(stories: { id: story_id })
-  }
-  scope :story_all_except_curator, ->(story_id, curator_id) {
-    story_all(story_id)
-    .where.not(user_id: curator_id)
-  }
-
   scope :company, ->(company_id) {
     includes(:contributor, success: { story: {}, customer: {} })
     .joins(success: { customer: {} })
@@ -39,14 +15,33 @@ class Contribution < ActiveRecord::Base
   scope :company_requests_received_since, ->(company_id, days_ago) {
     company(company_id).where('request_received_at >= ?', days_ago.days.ago)
   }
+  scope :story_all, ->(story_id) {
+    joins(success: { story: {} })
+    .where(stories: { id: story_id })
+  }
+  scope :story_all_except_curator, ->(story_id, curator_id) {
+    story_all(story_id)
+    .where.not(user_id: curator_id)
+  }
+
+  # associations
+  belongs_to :success, inverse_of: :contributions
+  belongs_to :contributor, class_name: 'User', foreign_key: 'user_id'
+  belongs_to :referrer, class_name: 'User', foreign_key: 'referrer_id'
+  has_one :customer, through: :success
+  has_one :company, through: :success
+  has_one :curator, through: :success
+  has_one :story, through: :success
+  has_one :email_contribution_request, dependent: :destroy
+  belongs_to :crowdsourcing_template
+  has_many :contributor_questions, through: :crowdsourcing_template
+
+  accepts_nested_attributes_for(:contributor, allow_destroy: false)
 
   before_create(:generate_access_token)
-  before_create(:copy_crowdsourcing_template, if: Proc.new do
-      self.crowdsourcing_template_id.present?
-    end
-  )
-  before_update(:copy_crowdsourcing_template, if: Proc.new do
-      self.crowdsourcing_template_id.present? && self.crowdsourcing_template_id_changed?
+  # if self.success is a new record, then this contribution represents a referrer
+  before_create(:match_referrer_id_to_user_id, if: Proc.new do
+      self.success.is_new_record?
     end
   )
   before_update(:set_request_sent_at, if: Proc.new do
@@ -234,11 +229,16 @@ class Contribution < ActiveRecord::Base
   end
 
   def set_submitted_at
-    self.submitted_at = Time.now();
+    self.submitted_at = Time.now;
   end
 
   def send_alert
-    UserMailer.contribution_alert(self).deliver_now()
+    UserMailer.contribution_alert(self).deliver_now
+  end
+
+  def match_referrer_id_to_user_id
+    self.referrer_id = self.user_id
+    self.success.is_new_record = false
   end
 
 end
