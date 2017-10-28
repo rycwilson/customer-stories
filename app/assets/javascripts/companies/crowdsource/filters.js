@@ -67,7 +67,7 @@ function crowdsourceFiltersListeners () {
         return success.curatorId == curatorId;
       });
     companyCustomers = _.uniq(
-      $('#successes-table').DataTable().column(2).data().toArray(), true,
+      $('#successes-table').DataTable().column(2).data().toArray(), false,
       function (customer, index) { return customer.id; }
     );
     customers = (curatorId === '0') ? companyCustomers :
@@ -96,7 +96,7 @@ function crowdsourceFiltersListeners () {
 
       // the source data is contributions; pull unique values for contributor.id
       companyContributors = _.uniq(
-        $('#prospect-contributors-table').DataTable().column(1).data().toArray(), true,
+        $('#prospect-contributors-table').DataTable().column(1).data().toArray(), false,
         function (contributor, index) { return contributor.id; }
       );
       contributors = (curatorId === '0') ? companyContributors :
