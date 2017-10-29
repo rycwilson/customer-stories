@@ -2,7 +2,7 @@
 function newSuccessListeners () {
 
   var disableContributionAttrs = function (disabled) {
-        ['user_id', 'referrer_id', 'crowdsourcing_template_id']
+        ['referrer_id', 'crowdsourcing_template_id']
           .forEach(function (attribute) {
             // don't disable referrer_id since it's visible, instead blank the [name]
             if (attribute === 'referrer_id') {
@@ -26,15 +26,14 @@ function newSuccessListeners () {
         }
         ['first_name', 'last_name', 'email', 'sign_up_code', 'password']
           .forEach(function (attribute) {
-            $('#success_contributions_attributes_0_contributor_attributes_' + attribute)
+            $('#success_contributions_attributes_0_referrer_attributes_' + attribute)
               .prop('disabled', disabled);
         });
       };
 
   $(document)
 
-    .on('change', '#new-success-form ' +
-          '#success_contributions_attributes_0_referrer_id', function () {
+    .on('change', '#new-success-form input[id*="referrer_id"]', function () {
 
       // if no referrer provided, disable all attributes
       if ( $(this).val() === '' ) {
@@ -46,13 +45,16 @@ function newSuccessListeners () {
       } else if ( $(this).val() === '0' ) {
         disableContributionAttrs(false);
         disableContributorAttrs(false);
+        setTimeout(function () {
+          $('#new-success-form [id*="referrer_attributes_first_name"]')[0].focus();
+          }, 0);
 
       // if existing referrer, disable contributor attributes
       } else {
         disableContributionAttrs(false);
         disableContributorAttrs(true);
         // the referrer will be both contributor and referrer for this contribution
-        $('#new-success-form #success_contributions_attributes_0_user_id')
+        $('#new-success-form #success_contributions_attributes_0_referrer_id')
           .val( $(this).val() );
       }
 
@@ -65,6 +67,11 @@ function newSuccessListeners () {
         .val( isNaN($(this).val()) ? null : $(this).val() );
       $('#new-success-form #success_customer_attributes_name')
         .val( $(this).find('option:selected').text() );
+    })
+
+    .on('change', '#new-success-form input[id*="email"]', function () {
+      $(this).closest('.create-referrer')
+             .find('input[id*="password"').val( $(this).val() );
     })
 
     // reset modal
@@ -91,7 +98,7 @@ function newSuccessListeners () {
       $('button[type="submit"][form="new-success-form"] .fa-spinner').toggle();
       // if a referrer wasn't selected, hide the contribution attributes
       // so a contribution isn't created
-      if ( $('#success_contributions_attributes_0_referrer_id').val() === '' ) {
+      if ( $('#new-success-form [id*="referrer_id"]').val() === '' ) {
         e.preventDefault();
         disableContributionAttrs(true);
         $('#new-success-form').submit();

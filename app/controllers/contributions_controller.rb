@@ -13,7 +13,7 @@ class ContributionsController < ApplicationController
           only: [:id, :status], methods: [:display_status],
           include: {
             success: {
-              only: [:id, :curator_id, :name],
+              only: [:id, :customer_id, :curator_id, :name],
               include: {
                 curator: { only: [:id], methods: [:full_name] },
                 customer: { only: [:id, :name, :slug] },
@@ -189,7 +189,13 @@ class ContributionsController < ApplicationController
       :status, :contribution, :feedback, :publish_contributor,
       :request_subject, :request_body,
       :contributor_unpublished, :notes, :submitted_at,
-      contributor_attributes: [:id, :first_name, :last_name, :title, :email, :phone, :linkedin_url, :sign_up_code, :password]
+      contributor_attributes: [
+        :id, :first_name, :last_name, :title, :email, :phone, :linkedin_url, :sign_up_code, :password
+      ],
+      referrer_attributes: [
+        :id, :first_name, :last_name, :email, :sign_up_code, :password
+      ]
+
     )
   end
 

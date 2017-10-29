@@ -52,7 +52,6 @@
           <%= success_form.fields_for(:contributions,
                 success_form.object.contributions.build) do |contribution_form| %>
 
-            <%= contribution_form.hidden_field(:user_id) %>
             <%= contribution_form.hidden_field(:crowdsourcing_template_id,
                   value: company.crowdsourcing_templates.select do |template|
                       template.name == 'Customer Success'
@@ -60,16 +59,14 @@
                 ) %>
 
             <div class="form-group">
-              <label for="success_contribution_attributes_0_referrer_id"
-                  class='col-sm-3 control-label'>
-                Referred by
-              </label>
+
+              <%= label_tag(:referrer_id, 'Referred by', class: 'col-sm-3 control-label') %>
               <div class="col-sm-9">
                 <%= contribution_form.collection_select(:referrer_id,
                       company.referrers.sort_by do |referrer|
                         referrer.last_name
                       end.unshift(
-                        User.new(id: 0, first_name: '- New Contact -', last_name:'')
+                        User.new(id: 0, first_name: '- Create New Contact -', last_name:'')
                       ),
                       :id, :full_name,
                       { include_blank: true },
@@ -78,59 +75,10 @@
                         style: 'width:100%' }
                     ) %>
               </div>
-            </div>
-
-            <div class="create-referrer hidden">
-
-              <%= contribution_form.fields_for(:contributor,
-                    contribution_form.object.build_contributor) do |contributor_form| %>
-
-
-                <%= contributor_form.hidden_field(:sign_up_code, value: 'csp_beta', disabled: true) %>
-                <%= contributor_form.hidden_field(:password, value: 'password', disabled: true) %>
-
-                <div class="form-group required-input">
-
-                  <label for="contribution_user_first_name" class='col-sm-3 control-label'>
-                    First Name
-                  </label>
-
-                  <div class="col-sm-9">
-                    <%= contributor_form.text_field(:first_name, class: 'form-control',
-                          disabled: true, placeholder: 'Contributor first name') %>
-                  </div>
-
-                </div>
-
-                <div class="form-group required-input">
-
-                  <label for="contribution_user_last_name" class='col-sm-3 control-label'>
-                    Last Name
-                  </label>
-
-                  <div class="col-sm-9">
-                    <%= contributor_form.text_field(:last_name, class: 'form-control',
-                          disabled: true, placeholder: 'Contributor last name') %>
-                  </div>
-
-                </div>
-
-                <div class="form-group required-input">
-
-                  <label for="contribution_user_email" class='col-sm-3 control-label'>
-                    Email
-                  </label>
-
-                  <div class="col-sm-9">
-                    <%= contributor_form.email_field(:email, class: 'form-control',
-                          disabled: true, placeholder: 'Contributor email') %>
-                  </div>
-
-                </div>
-
-              <% end %>
 
             </div>
+
+            <%= render('companies/shared/create_referrer', { contribution_form: contribution_form }) %>
 
           <% end %>
           <div class="form-group">

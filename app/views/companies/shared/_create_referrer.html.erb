@@ -1,0 +1,46 @@
+
+ <div class="create-referrer hidden">
+
+  <%= contribution_form.fields_for(:referrer,
+        contribution_form.object.build_referrer) do |referrer_form| %>
+
+    <%= referrer_form.hidden_field(:sign_up_code, value: 'csp_beta', disabled: true) %>
+    <%= referrer_form.hidden_field(:password, disabled: true) %>
+
+    <div class="form-group required-input">
+
+      <%= label_tag(:first_name, 'First Name', class: 'col-sm-3 control-label') %>
+      <div class="col-sm-9">
+        <i class='fa fa-ellipsis-v'></i>
+
+        <%= referrer_form.text_field(:first_name, class: 'form-control', disabled: true) %>
+      </div>
+
+    </div>
+
+    <div class="form-group required-input">
+
+      <%= label_tag(:last_name, 'Last Name', class: 'col-sm-3 control-label') %>
+      <div class="col-sm-9">
+        <i class='fa fa-ellipsis-v'></i>
+
+        <%= referrer_form.text_field(:last_name, class: 'form-control', disabled: true) %>
+
+      </div>
+
+    </div>
+
+    <div class="form-group required-input">
+
+      <%= label_tag(:email, 'Email', class: 'col-sm-3 control-label') %>
+      <div class="col-sm-9">
+        <i class='fa fa-ellipsis-v'></i>
+
+        <%= referrer_form.email_field(:email, class: 'form-control', disabled: true) %>
+      </div>
+
+    </div>
+
+  <% end %>
+
+</div>

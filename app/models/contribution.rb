@@ -37,10 +37,13 @@ class Contribution < ActiveRecord::Base
   has_many :contributor_questions, through: :crowdsourcing_template
 
   accepts_nested_attributes_for(:contributor, allow_destroy: false)
+  accepts_nested_attributes_for(:referrer, allow_destroy: false)
 
   before_create(:generate_access_token)
-  # if self.success is a new record, then this contribution represents a referrer
-  before_create(:match_referrer_id_to_user_id, if: Proc.new do
+  # if self.success is a new record, then this contribution represents a
+  # success referrer (either new or existing)
+  # in this case, the contributor === referrer, so match user_id to referrer_id
+  before_create(:match_user_id_to_referrer_id, if: Proc.new do
       self.success.is_new_record?
     end
   )
@@ -68,7 +71,7 @@ class Contribution < ActiveRecord::Base
   #               if: Proc.new { |contribution| contribution.status == 'feedback'}
 
   # contributor may have only one contribution per story
-  validates_uniqueness_of :user_id, scope: :success_id
+  validates_uniqueness_of(:user_id, scope: :success_id)
 
   # represents number of days between reminder emails
   validates :first_reminder_wait, numericality: { only_integer: true }
@@ -236,9 +239,9 @@ class Contribution < ActiveRecord::Base
     UserMailer.contribution_alert(self).deliver_now
   end
 
-  def match_referrer_id_to_user_id
-    self.referrer_id = self.user_id
-    self.success.is_new_record = false
+  def match_user_id_to_referrer_id
+    self.user_id = self.referrer_id
+    # self.success.is_new_record = false  # don't think this is necessary
   end
 
 end

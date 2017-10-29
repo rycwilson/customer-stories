@@ -49,7 +49,7 @@
                     company.successes.sort_by { |success| success.name },
                     :id, :name, { include_blank: true },
                     { class: 'new-contributor success form-control',
-                      style: 'width:100%', disabled: true, required: true }) %>
+                      style: 'width:100%', required: true }) %>
             </div>
 
           </div>
@@ -65,11 +65,11 @@
                     company.contributors.sort_by do |contributor|
                       contributor.last_name
                     end.unshift(
-                      User.new(id: 0, first_name: '- New Contributor -', last_name:'')
+                      User.new(id: 0, first_name: '- Create New Contributor -', last_name:'')
                     ),
                     :id, :full_name, { include_blank: true },
                     { class: 'new-contributor contributor form-control',
-                      style: 'width:100%', disabled: true, required: true }) %>
+                      style: 'width:100%', required: true }) %>
 
             </div>
 
@@ -81,43 +81,37 @@
                   contribution_form.object.build_contributor) do |contributor_form| %>
 
               <%= contributor_form.hidden_field(:sign_up_code, value: 'csp_beta') %>
-              <%= contributor_form.hidden_field(:password, value: 'password') %>
+              <%= contributor_form.hidden_field(:password) %>
 
               <div class="form-group required-input">
 
-                <label for="contribution_user_first_name" class='col-sm-3 control-label'>
-                  First Name
-                </label>
-
+                <%= label_tag(:first_name, 'First Name', class: 'col-sm-3 control-label') %>
                 <div class="col-sm-9">
-                  <%= contributor_form.text_field(:first_name, class: 'form-control',
-                        placeholder: 'Contributor first name') %>
+                  <i class='fa fa-ellipsis-v'></i>
+
+                  <%= contributor_form.text_field(:first_name, class: 'form-control') %>
                 </div>
 
               </div>
 
               <div class="form-group required-input">
 
-                <label for="contribution_user_last_name" class='col-sm-3 control-label'>
-                  Last Name
-                </label>
-
+                <%= label_tag(:last_name, 'Last Name', class: 'col-sm-3 control-label') %>
                 <div class="col-sm-9">
-                  <%= contributor_form.text_field(:last_name, class: 'form-control',
-                        placeholder: 'Contributor last name') %>
+                  <i class='fa fa-ellipsis-v'></i>
+
+                  <%= contributor_form.text_field(:last_name, class: 'form-control') %>
                 </div>
 
               </div>
 
               <div class="form-group required-input">
 
-                <label for="contribution_user_email" class='col-sm-3 control-label'>
-                  Email
-                </label>
-
+                <%= label_tag(:email, 'Email', class: 'col-sm-3 control-label') %>
                 <div class="col-sm-9">
-                  <%= contributor_form.email_field(:email, class: 'form-control',
-                        placeholder: 'Contributor email') %>
+                  <i class='fa fa-ellipsis-v'></i>
+
+                  <%= contributor_form.email_field(:email, class: 'form-control') %>
                 </div>
 
               </div>
@@ -136,13 +130,13 @@
               <%= contribution_form.collection_select(:crowdsourcing_template_id,
                     company.crowdsourcing_templates.sort_by() { |t| t.name },
                     :id, :name, { include_blank: true },
-                    { class: 'new-contributor template form-control',
+                    { class: 'new-contributor invitation-template form-control',
                       style: 'width:100%' }) %>
             </div>
 
           </div>
 
-          <div class="form-group referral">
+          <div class="form-group">
 
             <label for='contribution_referrer_id' class='col-sm-3 control-label'>
               Referred by
@@ -158,6 +152,8 @@
             </div>
 
           </div>
+
+          <%= render('companies/shared/create_referrer', { contribution_form: contribution_form }) %>
 
         <% end %>
 

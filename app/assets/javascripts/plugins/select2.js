@@ -8,6 +8,49 @@ function initSelect2 () {
 
   // select2ScrollBoundaries();
 
+
+  /**
+   * customer
+   */
+  $(".new-success.customer, .new-contributor.customer, .new-story.customer").select2({
+    theme: "bootstrap",
+    tags: true,  // to allow new customer creation
+    selectOnClose: true,
+    placeholder: 'Select or Create',
+  });
+
+  /**
+   * success
+   */
+  $(".new-contributor.success, .new-story.success").select2({
+    theme: "bootstrap",
+    tags: true,  // to allow custom input
+    selectOnClose: true,
+    placeholder: 'Select or Create',
+  });
+
+  /**
+   * contributor
+   */
+  $('.new-contributor.contributor').select2({
+    theme: 'bootstrap',
+    placeholder: 'Select or Create'
+  });
+
+  /**
+   * referrer
+   */
+  $('.new-success.referrer, .new-contributor.referrer').select2({
+    theme: 'bootstrap',
+    placeholder: 'Select or Create'
+  });
+
+  $('.new-contributor.invitation-template').select2({
+    theme: "bootstrap",
+    placeholder: 'Select'
+  });
+
+
   // story settings has its own init routine
   $('.story-tags:not(.story-settings)').select2({
     theme: 'bootstrap',
@@ -36,10 +79,10 @@ function initSelect2 () {
 
 // }
 
-  /*
-    Company tags are for maintaining a list of options for Story tagging
-    Thus, company tag select boxes should not show a list of options, because the
-    options are being created at this stage.  There is nothing to select.
+/*
+  Company tags are for maintaining a list of options for Story tagging
+  Thus, company tag select boxes should not show a list of options, because the
+  options are being created at this stage.  There is nothing to select.
   */
   $('.company-tags').select2({
     theme: 'bootstrap',
@@ -64,31 +107,6 @@ function initSelect2 () {
     width: 'style'
   });
 
-  // has the curate tab content been rendered?
-  //   (it may not have been if company not yet registered)
-  if ($('#curate').length) {
-    // is there a list of existing customers to choose from?
-    if ($('.new-story-customer').length) {
-
-      $(".new-story-customer").select2({  // single select
-        theme: "bootstrap",
-        tags: true,  // to allow new customer creation
-        selectOnClose: true,
-        placeholder: 'Create a new Customer, or select an existing one'
-        // allowClear: true
-      });
-    }
-
-    // when tagging stories, user can't create new tags,
-    // has to do so under company settings
-    // TODO: enable new tags from here?
-    $(".new-story-tags").select2({
-      theme: 'bootstrap',
-      placeholder: 'Select'
-    });
-
-  }
-
   // restore last selected value
   // change the selected item, but avoid 'change' event
   $('select').each(function () {
@@ -103,41 +121,6 @@ function initSelect2 () {
       theme: 'bootstrap',
       width: 'style'
     });
-
-  $(".new-success.customer, .new-story.customer").select2({
-    theme: "bootstrap",
-    tags: true,  // to allow new customer creation
-    selectOnClose: true,
-    placeholder: 'Create a new Customer, or select an existing one',
-  });
-
-  $(".new-story.success").select2({
-    theme: "bootstrap",
-    tags: true,  // to allow new customer creation
-    selectOnClose: true,
-    placeholder: 'Create a new Customer Win, or select an existing one',
-  });
-
-  $('.new-success.referrer').select2({
-    theme: 'bootstrap',
-    placeholder: 'Create a new Contact, or select an existing one'
-  });
-
-
-  $('.new-contributor:not(.contributor):not(.referrer)').select2({
-    theme: "bootstrap",
-    placeholder: 'Select'
-  });
-
-  $('.new-contributor.contributor').select2({
-    theme: 'bootstrap',
-    placeholder: 'Create a new Contributor, or select an existing one'
-  });
-
-  $('.new-contributor.referrer').select2({
-    theme: 'bootstrap',
-    placeholder: 'Who referred you to this Contributor?'
-  });
 
 }
 

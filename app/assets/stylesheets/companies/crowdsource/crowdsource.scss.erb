@@ -49,13 +49,21 @@ td.status {
     .form-group {
       margin-bottom: 20px;
     }
-    .form-group.referral {
-      margin-bottom: 10px;
-    }
     // mimic select2
     input, textarea {
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       padding-left: 12px;
+    }
+    .create-referrer, .create-contributor {
+      .col-sm-9 {
+        position: relative;
+      }
+      i.fa-ellipsis-v {
+        position: absolute;
+        color: #ccc;
+        top: -15px;
+        left: 30px;
+      }
     }
   }
 }

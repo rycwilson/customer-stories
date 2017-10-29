@@ -45,9 +45,9 @@ class SuccessesController < ApplicationController
       customer_attributes: [:id, :name, :company_id],
       contributions_attributes: [
         :user_id, :referrer_id, :crowdsourcing_template_id,
-        contributor_attributes: [
+        referrer_attributes: [
           :id, :first_name, :last_name, :email, :sign_up_code, :password
-        ]
+        ],
       ],
     )
   end
