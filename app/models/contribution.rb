@@ -41,11 +41,16 @@ class Contribution < ActiveRecord::Base
   accepts_nested_attributes_for(:referrer, allow_destroy: false)
 
   before_create(:generate_access_token)
-  # if self.success is a new record, then this contribution represents a
-  # success referrer (either new or existing)
-  # in this case, the contributor === referrer, so match user_id to referrer_id
-  before_create(:match_user_id_to_referrer_id, if: Proc.new do
-      self.success.is_new_record?
+
+  # when creating a new success with referrer, a contribution is created
+  # with referrer_id == user_id (i.e. contributor and referrer are same)
+  before_create(:set_user_id_for_new_success_referrer, if: Proc.new do
+      # use a success virtual attribute so we can see from here if it's a new record
+      # also note that the inverse_of setting is necessary for the success -> contributions relationship
+      # (so self and self.success are related to each other in memory)
+      self.success.is_new_record? &&
+      self.referrer_id.present? &&
+      self.user_id.nil?
     end
   )
   before_update(:set_request_sent_at, if: Proc.new do
@@ -240,9 +245,8 @@ class Contribution < ActiveRecord::Base
     UserMailer.contribution_alert(self).deliver_now
   end
 
-  def match_user_id_to_referrer_id
+  def match_user_id_for_new_success_referrer
     self.user_id = self.referrer_id
-    # self.success.is_new_record = false  # don't think this is necessary
   end
 
 end

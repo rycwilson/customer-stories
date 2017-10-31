@@ -253,7 +253,7 @@ function newContributorListeners() {
         $('.create-contributor').removeClass('hidden');
 
         // update hidden fields
-        $form.find('#contribution_user_id').val('');
+        // $form.find('#contribution_user_id').val('');
         $form.find('input[id*="contributor_attributes"]').each(function () {
             $(this).prop('disabled', false);
           });
@@ -261,7 +261,7 @@ function newContributorListeners() {
         $('.create-contributor').addClass('hidden');
 
         // update hidden fields
-        $form.find('#contribution_user_id').val($(this).val());
+        // $form.find('#contribution_user_id').val($(this).val());
         $form.find('input[id*="contributor_attributes"]').each(function () {
             $(this).prop('disabled', true);
           });
@@ -285,7 +285,7 @@ function newContributorListeners() {
     })
 
     // select2 needs a hack for search placeholder
-    .on("select2:open", "select.new-contributor.customer", function() {
+    .on("select2:open", "select.new-contributor", function() {
       var placeholder;
       if ( $(this).hasClass('customer') ) {
         placeholder = "Select or enter the name of a new Customer";

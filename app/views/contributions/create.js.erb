@@ -31,7 +31,6 @@
               $trContribution.find('.contributor-details').trigger('click');
             }
         // ref: https://stackoverflow.com/questions/6677035
-        console.log($trGroup.offset().top)
         $('html, body').animate({ scrollTop: $trGroup.offset().top - 25 }, 400)
           .promise().then(openContributorDetails);
       })

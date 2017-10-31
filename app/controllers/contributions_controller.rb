@@ -60,8 +60,10 @@ class ContributionsController < ApplicationController
   end
 
   def create
-    binding.remote_pry
-    # @contribution = Contribution.create(contribution_params)
+    @contribution = Contribution.new(contribution_params)
+    if @contribution.save
+    else
+    end
     respond_to { |format| format.js }
   end
 
@@ -191,7 +193,7 @@ class ContributionsController < ApplicationController
       :request_subject, :request_body,
       :contributor_unpublished, :notes, :submitted_at,
       success_attributes: [
-        :id, :name, :customer_id,
+        :id, :name, :customer_id, :curator_id,
         customer_attributes: [:id, :name, :company_id]
       ],
       contributor_attributes: [
@@ -200,7 +202,6 @@ class ContributionsController < ApplicationController
       referrer_attributes: [
         :id, :first_name, :last_name, :email, :sign_up_code, :password
       ]
-
     )
   end
 

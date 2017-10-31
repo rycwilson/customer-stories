@@ -9,6 +9,8 @@ function initSelect2 () {
   // select2ScrollBoundaries();
 
 
+  // TODO: What does this do?
+  //  minimumResultsForSearch: -1
   /**
    * customer
    */
@@ -34,6 +36,7 @@ function initSelect2 () {
    */
   $('.new-contributor.contributor').select2({
     theme: 'bootstrap',
+    // minimumResultsForSearch: -1,
     placeholder: 'Select or Create'
   });
 

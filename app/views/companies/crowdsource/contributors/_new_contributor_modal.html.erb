@@ -15,10 +15,6 @@
                       class: 'form-horizontal' }) do |contribution_form| %>
 
           <%= contribution_form.hidden_field(:success_id) %>
-<!--           TODO: use this hidden value instaed of the select value, so you can leave the '0'
-          value in place. the collection select shouldn't be tied to object -->
-          <!-- or: will allowing the collection select to submit with a value of 0 trigger a new contributor? -->
-          <%= contribution_form.hidden_field(:user_id) %>
 
           <%= contribution_form.fields_for(:success,
                 contribution_form.object.build_success) do |success_form| %>
@@ -26,6 +22,7 @@
             <%= success_form.hidden_field(:id) %>
             <%= success_form.hidden_field(:name) %>
             <%= success_form.hidden_field(:customer_id) %>
+            <%= success_form.hidden_field(:curator_id, value: current_user.id) %>
 
             <%= success_form.fields_for(:customer,
                   success_form.object.build_customer) do |customer_form| %>
@@ -43,8 +40,7 @@
             </label>
             <div class="col-sm-9">
 
-              <!-- not submitted with form -->
-              <%= collection_select('', '',
+              <%= collection_select(nil, nil,
                     company.customers.sort_by { |customer| customer.name.downcase },
                     :id, :name,
                     { include_blank: true,
@@ -64,7 +60,7 @@
             </label>
             <div class="col-sm-9">
 
-              <%= collection_select('', '',
+              <%= collection_select(nil, nil,
                     company.successes.sort_by { |success| success.name },
                     :id, :name, { include_blank: true },
                     { class: 'new-contributor success form-control',
