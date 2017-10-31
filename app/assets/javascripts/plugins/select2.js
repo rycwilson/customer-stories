@@ -14,7 +14,7 @@ function initSelect2 () {
    */
   $(".new-success.customer, .new-contributor.customer, .new-story.customer").select2({
     theme: "bootstrap",
-    tags: true,  // to allow new customer creation
+    tags: true,  // to allow custom input
     selectOnClose: true,
     placeholder: 'Select or Create',
   });
@@ -144,8 +144,8 @@ function select2ScrollBoundaries () {
   $(document).on('wheel', '.select2-results__options', function (event) {
 
     maxY = $(this).prop('scrollHeight') - $(this).prop('offsetHeight');
-    console.log('scrollHeight: ', $(this).prop('scrollHeight'))
-    console.log('offsetHeight: ', $(this).prop('offsetHeight'))
+    // console.log('scrollHeight: ', $(this).prop('scrollHeight'))
+    // console.log('offsetHeight: ', $(this).prop('offsetHeight'))
     // If this event looks like it will scroll beyond the bounds of the element,
     // prevent it and set the scroll to the boundary manually
     if ($(this).prop('scrollTop') + event.originalEvent.deltaY < 0 ||

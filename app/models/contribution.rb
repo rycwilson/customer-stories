@@ -36,6 +36,7 @@ class Contribution < ActiveRecord::Base
   belongs_to :crowdsourcing_template
   has_many :contributor_questions, through: :crowdsourcing_template
 
+  accepts_nested_attributes_for(:success, allow_destroy: false)
   accepts_nested_attributes_for(:contributor, allow_destroy: false)
   accepts_nested_attributes_for(:referrer, allow_destroy: false)
 

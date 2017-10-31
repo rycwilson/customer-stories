@@ -24,9 +24,10 @@
       $('#new-success-modal').modal('hide');
 
       // ref: https://stackoverflow.com/questions/6677035
-      $('html body').animate({
+      $('html, body').animate({
         scrollTop: $trGroup.offset().top
-      }, 400, 'swing', openSuccessDetails);
+      }, 400)
+        .promise().then(openSuccessDetails);
 
     })
 

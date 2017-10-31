@@ -1,16 +1,19 @@
 
 function newContributorListeners() {
 
-  var customerId, successId,
+  var $form, customerVal, customerId, successVal, successId,
       customerSuccesses, successOptionsData,
       customerContributors, contributorOptionsData,
-      contributor_attrs = ['first_name', 'last_name', 'email', 'sign_up_code', 'password'],
-      noCustomerContributors = function ($contributorSelect) {
-        return $contributorSelect.find('option').length === 2;
+
+      noCustomerContributors = function () {
+        // length of 2 accounts for empty option and - Create New Contributor -
+        return $('select.new-contributor.contributor').find('option').length === 2;
       },
-      noAvailableContributors = function ($contributorSelect) {
-        return $contributorSelect.find('option').toArray()
-          .slice(2, $contributorSelect.find('option').length)
+
+      // returns true if all contributor options are disabled
+      noAvailableContributors = function () {
+        return $('select.new-contributor.contributor').find('option').toArray()
+          .slice(2, $('select.new-contributor.contributor').find('option').length)
           .every(function (option) {
             return option.disabled;
           });
@@ -36,6 +39,7 @@ function newContributorListeners() {
       isCurateView = function () {
         return $('#workflow-tabs li.active a').attr('href') === '#curate';
       },
+
       preSelectCustomerAndSuccess = function () {
         var $customerSelect = $('select.new-contributor.customer'),
             $successSelect = $('select.new-contributor.success');
@@ -46,10 +50,11 @@ function newContributorListeners() {
         $successSelect
           .val(successId).trigger('change').prop('disabled', true);
       },
-      setSuccessOptions = function (customerId) {
-        if (customerId === 0) {
-          successOptionsData = [];
-        } else {
+
+      updateSuccessOptions = function (customerId) {
+        // default options data
+        successOptionsData = [{ id: '', text: '' }];
+        if (customerId) {
           customerSuccesses = $('#successes-table').DataTable().rows().data().toArray()
             .filter(function (success) {
               return success.customer.id == customerId;
@@ -64,17 +69,21 @@ function newContributorListeners() {
         $('select.new-contributor.success').select2('destroy').empty()
           .select2({
             theme: "bootstrap",
+            tags: true,
+            selectOnClose: true,
             placeholder: 'Select or Create',
             data: successOptionsData
           })
           .prop('disabled', false);
       },
-      setContributorOptions = function (customerId) {
 
-        if (customerId === 0) {
-          contributorOptionsData = [];
-
-        } else {
+      updateContributorOptions = function (customerId) {
+        // default options data
+        contributorOptionsData = [
+          { id: '', text: '' },
+          { id: 0, text: '- Create New Contributor -' }
+        ];
+        if (customerId) {
           customerContributors = $('#prospect-contributors-table').DataTable().rows().data().toArray()
             .filter(function (contribution) {
               return contribution.success.customer_id == customerId;
@@ -126,6 +135,19 @@ function newContributorListeners() {
             theme: "bootstrap",
             placeholder: 'Select or Create'
           });
+      },
+
+      disableReferrerAttrs = function (disabled) {
+        if (disabled) {
+          $('#new-contributor-form .create-referrer').addClass('hidden');
+        } else {
+          $('#new-contributor-form .create-referrer').removeClass('hidden');
+        }
+        ['first_name', 'last_name', 'email', 'sign_up_code', 'password']
+          .forEach(function (attribute) {
+            $('#new-contributor-form [id*="referrer_attributes_' + attribute + '"]')
+              .prop('disabled', disabled);
+          });
       };
 
   $(document)
@@ -140,130 +162,162 @@ function newContributorListeners() {
     .on('input', '#new-contributor-modal', validateForm)
     .on('change', '#new-contributor-modal', validateForm)
 
+    // select or create customer
     .on('change', 'select.new-contributor.customer', function (e) {
+      $form = $('#new-contributor-form');
+      customerVal = $(this).val();
+      customerId = isNaN(customerVal) ? null : customerVal;
 
-      var $successSelect = $('select.new-contributor.success'),
-          $contributorSelect = $('select.new-contributor.contributor');
+      // update hidden customer_id
+      $form.find('input[id*="success_attributes_customer_id"]').val(customerId);
 
-      // $contributorSelect.prop('disabled', true);
-      // $('.create-contributor').addClass('hidden');
+      if (customerId) {
+        // turn off customer attributes
+        $form.find('input[id*="customer_attributes"]').each(function () {
+            $(this).prop('disabled', true);
+          });
 
-      /**
-       * if an existing customer:
-       * - change select.success options (ok)
-       * - blank select.success if current selection is not a customer success
-       * - blank select.contributor if no contribution to a customer success
-       *
-       * if a new customer:
-       * - blank select.success unless it's a custom value
-       * - blank select.contributor
-       *
-       */
+      } else {
+        // update and enable customer attributes
+        $form.find('input[id*="customer_attributes_id"]').val('');
+        $form.find('input[id*="customer_attributes_name"]').val(customerVal);
+        $form.find('input[id*="customer_attributes"]').prop('disabled', false);
 
-      if ( isNaN($(this).val()) ) {
-        // clear select.success if existing success is currently selected
+        // update select options
         if ( Number.isInteger(parseInt($('select.new-contributor.success').val(), 10)) ) {
           $('select.new-contributor.success').val('').trigger('change.select2');
         }
-        // same for contributor select
-        if ( Number.isInteger(parseInt($('select.new-contributor.contributor').val(), 10)) ) {
+        if ( $('select.new-contributor.contributor').val() !== '0' ) {
+          console.log($('select.new-contributor.contributor').val())
           $('select.new-contributor.contributor').val('').trigger('change.select2');
         }
-        setSuccessOptions(0);
-        setContributorOptions(0);
+
+      }
+      // update select options
+      updateSuccessOptions(customerId);
+      updateContributorOptions(customerId);
+
+    })
+
+    .on('change', 'select.new-contributor.success', function () {
+      $form = $('#new-contributor-form');
+      successVal = $(this).val();
+      customerVal = $('select.new-contributor.customer').val();
+      successId = isNaN(successVal) ? null : successVal;
+
+      var success = $('#successes-table').DataTable()
+        .column(1).data().toArray().find(function (success) {
+          return success.id == successId;
+        });
+
+      customerId = (success && success.customerId) ||
+        (isNaN(customerVal) ? null : customerVal);
+
+      // existing success
+      if (successId) {
+        // update hidden success_id
+        $form.find('input[id*="contribution_success_id"]').val(successId);
+
+        // this will include customer attributes
+        $form.find('input[id*="success_attributes"]').each(function () {
+            $(this).prop('disabled', true);
+          });
+
+        // change select.customer
+        // (change.select2 as we don't want the event to propagate - ?)
+        $('select.new-contributor.customer').val(customerId).trigger('change.select2');
+
+      // create success
       } else {
-        customerId = $(this).val();
-        setSuccessOptions(customerId);
-        setContributorOptions(customerId);
-      }
+        // update hidden fields
+        $form.find('input[id*="contribution_success_id"]').val('');
+        $form.find('input[id*="success_attributes_id"]').val('');
+        $form.find('input[id*="success_attributes_name"]').val(successVal);
 
+        // let the 'change' handler for select.customer manage customer attributes
+        $form.find('input[id*="success_attributes"]')
+             .not('input[id*="customer_attributes"]')
+             .prop('disabled', false);
+      }
+      // update select options
+      updateContributorOptions(customerId);
+      disableExistingContributors(successId);
 
     })
 
-    // disallow adding any contributors that have already been added to a success
-    .on('change', '.new-contributor.success', function () {
+    .on('change', 'select.new-contributor.contributor', function (e) {
+      $form = $('#new-contributor-form');
 
-      var $contributorSelect = $('select.new-contributor.contributor'),
-          successId = $(this).val(),
-          success = $('#successes-table').DataTable()
-            .column(1).data().toArray().find(function (success) {
-              return success.id == successId;
-            }),
-          customerId = success && success.customerId;
-
-      // if success exists, update the customer
-      if (customerId) {
-        // this will also trigger a change to contributor select options
-        $('select.new-contributor.customer')
-          .val(customerId).trigger('change.select2');
-        setContributorOptions(customerId);
-        disableExistingContributors(successId);
-      }
-
-
-
-      // // refresh select2
-      // $contributorSelect.select2({
-      //   theme: 'bootstrap',
-      //   placeholder: 'Select an existing Contributor, or create a new one'
-      // })
-      // .prop('disabled', false);
-
-      // // conditionally expose New Contributor
-      // if ( noCustomerContributors($contributorSelect) ||
-      //      noAvailableContributors($contributorSelect) ) {
-      //   $contributorSelect.val('0').trigger('change');
-      // } else {
-      //   $contributorSelect.val('').trigger('change');
-      // }
-
-    })
-
-    // toggle New Contributor fields
-    .on('change', '.new-contributor.contributor', function (e) {
-
+      // create contributor
       if ($(this).val() === '0') {
         $('.create-contributor').removeClass('hidden');
-        contributor_attrs.forEach(function (attr) {
-          $('#contribution_contributor_attributes_' + attr)
-            .attr('name', 'contribution[contributor_attributes][' + attr + ']');
-        });
+
+        // update hidden fields
+        $form.find('#contribution_user_id').val('');
+        $form.find('input[id*="contributor_attributes"]').each(function () {
+            $(this).prop('disabled', false);
+          });
       } else {
         $('.create-contributor').addClass('hidden');
-        contributor_attrs.forEach(function (attr) {
-          $('#contribution_contributor_attributes_' + attr)
-            .attr('name', '');
-        });
+
+        // update hidden fields
+        $form.find('#contribution_user_id').val($(this).val());
+        $form.find('input[id*="contributor_attributes"]').each(function () {
+            $(this).prop('disabled', true);
+          });
       }
 
+    })
+
+    .on('change', 'select.new-contributor.referrer', function () {
+      if ($(this).val() === '0') {
+        disableReferrerAttrs(false);
+      } else {
+        disableReferrerAttrs(true);
+      }
     })
 
     // if a new user is created, their password is their email address
     .on('change', '#new-contributor-form input[id*="email"]', function () {
       // could be .create-contributor or .create-referrer
       $(this).closest('div[class*="create-"]')
-             .find('input[id*="password"').val( $(this).val() );
+             .find('input[id*="password"]').val( $(this).val() );
+    })
+
+    // select2 needs a hack for search placeholder
+    .on("select2:open", "select.new-contributor.customer", function() {
+      var placeholder;
+      if ( $(this).hasClass('customer') ) {
+        placeholder = "Select or enter the name of a new Customer";
+      } else if ( $(this).hasClass('success') ) {
+        placeholder = "Select or enter the name of a new Customer Win";
+      } else {
+        placeholder = "";
+      }
+      $(".select2-search--dropdown .select2-search__field").attr("placeholder", placeholder);
+    })
+    .on("select2:close", "select.new-contributor", function() {
+        $(".select2-search--dropdown .select2-search__field").attr("placeholder", null);
     })
 
     // reset modal
     .on('hidden.bs.modal', '#new-contributor-modal', function () {
 
-      var $successSelect = $('select.new-contributor.success'),
-          $contributorSelect = $('select.new-contributor.contributor');
-
       $(this).find('.create-contributor').addClass('hidden');
       $(this).find('select').val('').trigger('change');
       // for a select that has an option with val === 0, this approach is necessary:
-      $contributorSelect.select2('val', '');
+       $('select.new-contributor.contributor').select2('val', '');
       $(this).find('form')[0].reset();
       $('button[type="submit"][form="new-contributor-form"] span').css('display', 'inline');
       $('button[type="submit"][form="new-contributor-form"] i').css('display', 'none');
 
     })
 
-    .on('submit', '#new-contributor-form', function () {
+    .on('click', 'button[type="submit"][form="new-contributor-form"]', function (e) {
+
       $('button[type="submit"][form="new-contributor-form"] span').toggle();
       $('button[type="submit"][form="new-contributor-form"] .fa-spinner').toggle();
+
     });
 
 }

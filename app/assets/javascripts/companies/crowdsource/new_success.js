@@ -1,7 +1,8 @@
 
 function newSuccessListeners () {
 
-  var disableContributionAttrs = function (disabled) {
+  var $form,
+      disableContributionAttrs = function (disabled) {
         ['referrer_id', 'crowdsourcing_template_id']
           .forEach(function (attribute) {
             // don't disable referrer_id since it's visible, instead blank the [name]
@@ -18,7 +19,7 @@ function newSuccessListeners () {
             }
           });
       },
-      disableContributorAttrs = function (disabled) {
+      disableReferrerAttrs = function (disabled) {
         if (disabled) {
           $('#new-success-form .create-referrer').addClass('hidden');
         } else {
@@ -34,17 +35,17 @@ function newSuccessListeners () {
   $(document)
 
     .on('change', '#new-success-form input[id*="referrer_id"]', function () {
-
+      $form = $('#new-success-form');
       // if no referrer provided, disable all attributes
       if ( $(this).val() === '' ) {
         disableContributionAttrs(true);
-        disableContributorAttrs(true);
+        disableReferrerAttrs(true);
 
       // if creating a new referrer with this success,
       // enable contribution and contributor attributes
       } else if ( $(this).val() === '0' ) {
         disableContributionAttrs(false);
-        disableContributorAttrs(false);
+        disableReferrerAttrs(false);
         setTimeout(function () {
           $('#new-success-form [id*="referrer_attributes_first_name"]')[0].focus();
           }, 0);
@@ -52,7 +53,7 @@ function newSuccessListeners () {
       // if existing referrer, disable contributor attributes
       } else {
         disableContributionAttrs(false);
-        disableContributorAttrs(true);
+        disableReferrerAttrs(true);
         // the referrer will be both contributor and referrer for this contribution
         $('#new-success-form #success_contributions_attributes_0_referrer_id')
           .val( $(this).val() );
@@ -60,16 +61,30 @@ function newSuccessListeners () {
 
     })
 
-    // select customer by id or create a new customer
-    .on('change', '#new-success-form select.customer', function () {
-      $('#new-success-form #success_customer_id, ' +
-          '#new-success-form #success_customer_attributes_id')
-        .val( isNaN($(this).val()) ? null : $(this).val() );
-      $('#new-success-form #success_customer_attributes_name')
-        .val( $(this).find('option:selected').text() );
+    // select or create customer
+    .on('change', 'select.new-success.customer', function () {
+      $form = $('#new-contributor-form');
+      customerVal = $(this).val();
+      customerId = isNaN(customerVal) ? null : customerVal;
+
+      // update hidden customer_id
+      $form.find('#success_customer_id').val(customerId);
+
+      if (customerId) {
+        // turn off customer attributes
+        $form.find('input[id*="customer_attributes"]').each(function () {
+            $(this).prop('disabled', true);
+          });
+      } else {
+        // update and enable customer attributes
+        $form.find('input[id*="customer_attributes_id"]').val('');
+        $form.find('input[id*="customer_attributes_name"]').val(customerVal);
+        $form.find('input[id*="customer_attributes"]').prop('disabled', false);
+      }
     })
 
     .on('change', '#new-success-form input[id*="email"]', function () {
+      $form = $('#new-contributor-form');
       $(this).closest('.create-referrer')
              .find('input[id*="password"').val( $(this).val() );
     })
@@ -82,7 +97,7 @@ function newSuccessListeners () {
 
       $(this).find('form')[0].reset();
       disableContributionAttrs(true);
-      disableContributorAttrs(true);
+      disableReferrerAttrs(true);
       $(this).find('.create-referrer').addClass('hidden');
       $(this).find('select').val('').trigger('change');
       $('button[type="submit"][form="new-success-form"] span').css('display', 'inline');

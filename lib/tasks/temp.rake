@@ -2,7 +2,6 @@ namespace :temp do
 
   desc "temp stuff"
 
-  # NOTE: move methods to protected after running (copy_crowdsourcing_template)
   # NOTE: disable request-related callbacks in contribution.rb before running
   task crowdsource_update: :environment do
     Rake::Task["temp:success_names"].invoke

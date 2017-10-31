@@ -60,8 +60,9 @@ class ContributionsController < ApplicationController
   end
 
   def create
-    @contribution = Contribution.create(contribution_params)
-    respond_to() { |format| format.js }
+    binding.remote_pry
+    # @contribution = Contribution.create(contribution_params)
+    respond_to { |format| format.js }
   end
 
   def update
@@ -189,6 +190,10 @@ class ContributionsController < ApplicationController
       :status, :contribution, :feedback, :publish_contributor,
       :request_subject, :request_body,
       :contributor_unpublished, :notes, :submitted_at,
+      success_attributes: [
+        :id, :name, :customer_id,
+        customer_attributes: [:id, :name, :company_id]
+      ],
       contributor_attributes: [
         :id, :first_name, :last_name, :title, :email, :phone, :linkedin_url, :sign_up_code, :password
       ],

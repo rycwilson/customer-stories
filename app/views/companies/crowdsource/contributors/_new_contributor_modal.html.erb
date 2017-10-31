@@ -10,17 +10,37 @@
 
       <div class="modal-body">
 
-        <!-- :id will be filled in when a success is selected -->
-        <%= form_for(Contribution.new, url: company_contributions_path(company.id),
+        <%= form_for(Contribution.new, url: company_contributions_path(company),
               html: { id: 'new-contributor-form', remote: true,
                       class: 'form-horizontal' }) do |contribution_form| %>
 
+          <%= contribution_form.hidden_field(:success_id) %>
+<!--           TODO: use this hidden value instaed of the select value, so you can leave the '0'
+          value in place. the collection select shouldn't be tied to object -->
+          <!-- or: will allowing the collection select to submit with a value of 0 trigger a new contributor? -->
+          <%= contribution_form.hidden_field(:user_id) %>
+
+          <%= contribution_form.fields_for(:success,
+                contribution_form.object.build_success) do |success_form| %>
+
+            <%= success_form.hidden_field(:id) %>
+            <%= success_form.hidden_field(:name) %>
+            <%= success_form.hidden_field(:customer_id) %>
+
+            <%= success_form.fields_for(:customer,
+                  success_form.object.build_customer) do |customer_form| %>
+              <%= customer_form.hidden_field(:id) %>
+              <%= customer_form.hidden_field(:name) %>
+              <%= customer_form.hidden_field(:company_id, value: company.id) %>
+            <% end %>
+
+          <% end %>
+
           <div class="form-group required-input">
 
-            <label for="" class='col-sm-3 control-label'>
+            <label class='col-sm-3 control-label'>
               Customer
             </label>
-
             <div class="col-sm-9">
 
               <!-- not submitted with form -->
@@ -31,7 +51,7 @@
                       disabled: lambda { |customer| customer.successes.blank? } },
                     { id: 'contribution_customer_id',
                       class: 'new-contributor customer form-control',
-                      style: 'width:100%', required: true }) %>
+                      style: 'width:100%' }) %>
 
             </div>
 
@@ -39,17 +59,16 @@
 
           <div class="form-group required-input">
 
-            <label for="contribution_success_id" class='col-sm-3 control-label'>
+            <label class='col-sm-3 control-label'>
               Customer Win
             </label>
-
             <div class="col-sm-9">
 
-              <%= contribution_form.collection_select(:success_id,
+              <%= collection_select('', '',
                     company.successes.sort_by { |success| success.name },
                     :id, :name, { include_blank: true },
                     { class: 'new-contributor success form-control',
-                      style: 'width:100%', required: true }) %>
+                      style: 'width:100%' }) %>
             </div>
 
           </div>
@@ -69,7 +88,7 @@
                     ),
                     :id, :full_name, { include_blank: true },
                     { class: 'new-contributor contributor form-control',
-                      style: 'width:100%', required: true }) %>
+                      style: 'width:100%' }) %>
 
             </div>
 
@@ -145,7 +164,12 @@
             <div class="col-sm-9">
 
               <%= contribution_form.collection_select(:referrer_id,
-                    company.curators, :id, :full_name, { include_blank: true },
+                    company.referrers.sort_by do |referrer|
+                        referrer.last_name
+                      end.unshift(
+                        User.new(id: 0, first_name: '- Create New Contact -', last_name:'')
+                      ),
+                      :id, :full_name, { include_blank: true },
                     { class: 'new-contributor referrer form-control',
                       style: 'width:100%' }) %>
 
@@ -160,11 +184,11 @@
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">
-          Close
-        </button>
-        <button type="submit" form='new-contributor-form' class="btn btn-success" disabled>
-          Add Contributor
+        <button type="reset" class="btn btn-default" data-dismiss='modal'>Cancel</button>
+        <button type="submit" class="btn btn-success text-center" style='width:132px' form='new-contributor-form'>
+          <span>Add Contributor</span>
+          <i class='fa fa-spinner fa-pulse' style='display:none'></i>
+          <i class='fa fa-check' style='display:none'></i>
         </button>
       </div>
 
