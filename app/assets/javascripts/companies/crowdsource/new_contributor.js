@@ -5,6 +5,10 @@ function newContributorListeners() {
       customerSuccesses, successOptionsData,
       customerContributors, contributorOptionsData,
 
+      isCurateView = function () {
+        return $('#workflow-tabs li.active a').attr('href') === '#curate';
+      },
+
       noCustomerContributors = function () {
         // length of 2 accounts for empty option and - Create New Contributor -
         return $('select.new-contributor.contributor').find('option').length === 2;
@@ -18,6 +22,7 @@ function newContributorListeners() {
             return option.disabled;
           });
       },
+
       formIsValid = function () {
         var $customerSelect = $('select.new-contributor.customer'),
             $successSelect = $('select.new-contributor.success'),
@@ -32,23 +37,24 @@ function newContributorListeners() {
           )
         );
       },
+
       validateForm = function () {
         return formIsValid() ? $('button[type="submit"]').prop('disabled', false) :
                              $('button[type="submit"]').prop('disabled', true);
       },
-      isCurateView = function () {
-        return $('#workflow-tabs li.active a').attr('href') === '#curate';
-      },
 
       preSelectCustomerAndSuccess = function () {
-        var $customerSelect = $('select.new-contributor.customer'),
-            $successSelect = $('select.new-contributor.success');
-        customerId = $('#curate-story-layout').data('customer-id');
-        successId = $('#curate-story-layout').data('success-id');
-        $customerSelect
-          .val(customerId).trigger('change').prop('disabled', true);
-        $successSelect
-          .val(successId).trigger('change').prop('disabled', true);
+        $('select.new-contributor.customer').val(
+            $('#curate-story-layout').data('customer-id')
+          )
+          .trigger('change.select2')
+          .prop('disabled', true);
+        $('select.new-contributor.success')
+          .val(
+            $('#curate-story-layout').data('success-id')
+          )
+          .trigger('change')
+          .prop('disabled', true);
       },
 
       updateSuccessOptions = function (customerId) {
@@ -167,6 +173,8 @@ function newContributorListeners() {
       $form = $('#new-contributor-form');
       customerVal = $(this).val();
       customerId = isNaN(customerVal) ? null : customerVal;
+      successVal = $('select.new-contributor.success').val();
+      successId = isNaN(successVal) ? null : successVal;
 
       // update hidden customer_id
       $form.find('input[id*="success_attributes_customer_id"]').val(customerId);
@@ -183,12 +191,20 @@ function newContributorListeners() {
         $form.find('input[id*="customer_attributes_name"]').val(customerVal);
         $form.find('input[id*="customer_attributes"]').prop('disabled', false);
 
-        // update select options
-        if ( Number.isInteger(parseInt($('select.new-contributor.success').val(), 10)) ) {
+
+        /**
+         * reset select.success if an existing success was previously selected
+         * TODO: check if success belongs to selected customer (if so there's no need to reset)
+         */
+        if (successId) {
           $('select.new-contributor.success').val('').trigger('change.select2');
         }
+
+        /**
+         * reset select.new-contributor if an existing contributor was previously selected
+         * TODO: check if contributor belongs to selected customer (if so there's no need to reset)
+         */
         if ( $('select.new-contributor.contributor').val() !== '0' ) {
-          console.log($('select.new-contributor.contributor').val())
           $('select.new-contributor.contributor').val('').trigger('change.select2');
         }
 

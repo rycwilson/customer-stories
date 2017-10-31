@@ -48,7 +48,7 @@
 
       <div id='curate-contributors' class="tab-pane fade <%= tab == 'contributors' ? 'in active' : '' %>">
 
-        <button type='button' style='width:180px;margin:0 0 10px 0;' class='btn btn-secondary btn-sm' data-toggle='modal' data-target='#new-contributor-modal'><i class='glyphicon glyphicon-plus-sign' style='font-size:15px;top:2px'></i>&nbsp;&nbsp;&nbsp;Add New Contributor&nbsp;</button>
+        <button type='button' style='margin:0 0 10px 0;' class='btn btn-secondary btn-sm' data-toggle='modal' data-target='#new-contributor-modal'><i class='glyphicon glyphicon-plus-sign' style='font-size:15px;top:2px'></i>&nbsp;&nbsp;&nbsp;New Contributor&nbsp;</button>
 
         <%= render 'companies/crowdsource/contributors/contributors_table',
               { company: company, workflow_stage: 'curate' } %>
