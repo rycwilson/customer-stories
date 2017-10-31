@@ -8,12 +8,17 @@
 
 td {
   vertical-align: middle !important;  // override bootstrap for case of inline editor expanding row height
-  i:not(.submit) { color: #666; }
+  i:not(.submit) { color: #999; }
 }
 td.status {
   // this ensures newlines will be respected
   // ref: https://stackoverflow.com/questions/10937218
   white-space: pre;
+}
+td.actions-dropdown {
+  .dropdown-menu {
+    padding: 9px 0;
+  }
 }
 
 .link-dialog {

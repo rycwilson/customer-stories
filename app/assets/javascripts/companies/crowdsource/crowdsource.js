@@ -41,7 +41,6 @@ function crowdsourceListeners () {
       // don't allow template change if request already sent (or re-sent)
       // (see createdRow property of datatables config)
       if ( $(this).hasClass('disabled') ) { return false; }
-      console.log(workflowStage)
       $(this).addClass('editor-open');  // styling adjustment
       if (workflowStage === 'prospect') {
         openContributorsEditor(contributorsEditor, $row);

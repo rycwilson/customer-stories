@@ -25,12 +25,13 @@
 
             <div class='sidebar-contents'>
 
-              <h4 class='lead' style='margin-bottom:0'>Customer Stories</h4>
-              <span><a href='/'>Public View</a></span>
+              <h4 class='lead' style='margin-bottom:0'>
+                <a href='/'>Customer Stories</a>
+              </h4>
 
               <hr style='margin-bottom: 0'>
 
-              <button type='button' style='width:160px; height:32px; margin:25px 0;' class='btn btn-secondary btn-sm' data-toggle='modal' data-target='#new-story-modal'><i class='glyphicon glyphicon-plus-sign' style='font-size:15px;top:2px'></i>&nbsp;&nbsp;&nbsp;Add New Story&nbsp;</button>
+              <button type='button' style='width:100%; margin:25px 0;' class='btn btn-secondary' data-toggle='modal' data-target='#new-story-modal'><i class='fa fa-plus-circle fa-fw'></i>&nbsp;New Story</button>
 
               <%= render 'companies/curate/filters', { company: company } %>
 

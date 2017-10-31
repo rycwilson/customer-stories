@@ -12,13 +12,8 @@
               methods: [:full_name, :linkedin_data?]
             }
           }
-        }) %>,
-      // resetFilters = function () {
-      //   $('#prospect-contributors-table').closest('[id*="table_wrapper"]')
-      //     .find('.curator-select')
-      // }
+        }) %>;
 
-  $('#new-contributor-modal').modal('hide');
 
   // if ('<%= alert() %>') {
   //   flashDisplay('Error adding Contributor: <%= alert() %>', 'danger')
@@ -29,16 +24,23 @@
 
     $('table[id*="contributors-table"]').DataTable()
       .ajax.reload(function (contributions) {
+
         var $trContribution = $('tr[data-contribution-id="' + contribution.id + '"]'),
             openContributorDetails = function () {
               $trContribution.find('.contributor-details').trigger('click');
+            },
+            hideModal = function () {
+              $('#new-contributor-modal').modal('hide');
             }
 
-        // resetFilters(  );
-
         // ref: https://stackoverflow.com/questions/6677035
-        $('html, body').animate({ scrollTop: $trContribution.offset().top - 100 }, 400)
-          .promise().then(openContributorDetails);
+        $('html, body').animate({ scrollTop: $trContribution.offset().top - 80 }, 400)
+          .promise()
+          .then(function () {
+            openContributorDetails()
+            hideModal();
+          });
+
       })
 
   // }
