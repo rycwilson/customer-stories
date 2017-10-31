@@ -30,7 +30,7 @@ function crowdsourceListeners () {
     // the close event happens shortly after blur; to ensure smooth transition...
     .on('blur', 'td.crowdsourcing-template', function () {
       var $td = $(this);
-      crowdsourceContributorsEditor.one('close', function () {
+      contributorsEditor.one('close', function () {
         $td.removeClass('editor-open');
       });
     })
@@ -41,11 +41,12 @@ function crowdsourceListeners () {
       // don't allow template change if request already sent (or re-sent)
       // (see createdRow property of datatables config)
       if ( $(this).hasClass('disabled') ) { return false; }
+      console.log(workflowStage)
       $(this).addClass('editor-open');  // styling adjustment
       if (workflowStage === 'prospect') {
-        openContributorsEditor(crowdsourceContributorsEditor, $row);
+        openContributorsEditor(contributorsEditor, $row);
       } else {
-        openContributorsEditor(curateContributorsEditor, $row);
+        openContributorsEditor(contributorsEditor, $row);
       }
     })
 
