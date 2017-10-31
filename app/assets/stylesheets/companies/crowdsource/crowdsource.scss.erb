@@ -92,6 +92,17 @@ td.status {
   .form-group {
     width: 100%;
   }
+  .form-group.search > div {
+    position: relative;
+    i {
+      position: absolute;
+      color: #999;
+      right: 30px;
+      top: 10px;
+      z-index: 100;
+      cursor: pointer;
+    }
+  }
   select + span > span:first-child > span {
     padding-right: 30px; // matches search box
     text-align: left;

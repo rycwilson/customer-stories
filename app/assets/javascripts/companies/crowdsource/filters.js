@@ -177,7 +177,11 @@ function crowdsourceFiltersListeners () {
 
     .on('change', '#show-published, #show-completed', function () {
       setSearch( $('#prospect-contributors-table'), true ).draw();
-    });
+    })
 
+    // search reset
+    .on('click', '.search .search-all', function () {
+      $(this).next().val('0').trigger('change');
+    });
 
 }

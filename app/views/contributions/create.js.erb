@@ -2,17 +2,21 @@
 
   // this mirrors company.contributions.pending
   var contribution = <%= raw @contribution.to_json({
-    only: [:id, :status, :contribution, :feedback, :linkedin, :notes, :publish_contributor, :contributor_unpublished, :success_id],
-    methods: [],
-    include: {
-      contributor: {
-        only: [:id, :first_name, :last_name, :title, :email, :phone,
-               :linkedin_url, :linkedin_company, :linkedin_title,
-               :linkedin_location, :linkedin_photo_url],
-        methods: [:full_name, :linkedin_data?]
-      }
-    }
-  }) %>;
+          only: [:id, :status, :contribution, :feedback, :linkedin, :notes, :publish_contributor, :contributor_unpublished, :success_id],
+          methods: [],
+          include: {
+            contributor: {
+              only: [:id, :first_name, :last_name, :title, :email, :phone,
+                     :linkedin_url, :linkedin_company, :linkedin_title,
+                     :linkedin_location, :linkedin_photo_url],
+              methods: [:full_name, :linkedin_data?]
+            }
+          }
+        }) %>,
+      // resetFilters = function () {
+      //   $('#prospect-contributors-table').closest('[id*="table_wrapper"]')
+      //     .find('.curator-select')
+      // }
 
   $('#new-contributor-modal').modal('hide');
 
@@ -26,12 +30,14 @@
     $('table[id*="contributors-table"]').DataTable()
       .ajax.reload(function (contributions) {
         var $trContribution = $('tr[data-contribution-id="' + contribution.id + '"]'),
-            $trGroup = $trContribution.prev(),
             openContributorDetails = function () {
               $trContribution.find('.contributor-details').trigger('click');
             }
+
+        // resetFilters(  );
+
         // ref: https://stackoverflow.com/questions/6677035
-        $('html, body').animate({ scrollTop: $trGroup.offset().top - 100 }, 400)
+        $('html, body').animate({ scrollTop: $trContribution.offset().top - 100 }, 400)
           .promise().then(openContributorDetails);
       })
 
