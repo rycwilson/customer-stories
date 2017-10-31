@@ -2,20 +2,23 @@
 (function () {
 
   var success = <%= raw @success.to_json(
-                      only: [:id],
-                      include: { contributors: { only: [:id] } }
-                    ) %>
-console.log('success: ', success)
-  if (success.contributors) {
-    $('#prospect-contributors-table').DataTable().ajax.reload();
-    $('#prospect-contributors-table').closest('[id*="table_wrapper')
-      .find('.curator-select').trigger('change')
-  }
+          only: [:id], include: { contributions: { only: [:id] } }
+        ) %>,
+      reloadContributors = function () {
+        $('#prospect-contributors-table').DataTable()
+          .ajax.reload(function (contributions) {
+            $('#prospect-contributors-table').closest('[id*="table_wrapper"]')
+            .find('.curator-select').trigger('change')
+          });
+      }
 
   $('#successes-table').DataTable()
     .ajax.reload(function (successes) {
 
       var $trSuccess = $('tr[data-success-id="' + success.id + '"]'),
+
+          // .prev works because the new success is added to the top of the list
+          // TOFIX: but what if there is no row grouping?
           $trGroup = $trSuccess.prev(),
           openSuccessDetails = function () {
             $trSuccess.find('.success-details').trigger('click');
@@ -25,10 +28,14 @@ console.log('success: ', success)
 
       // ref: https://stackoverflow.com/questions/6677035
       $('html, body').animate({
-        scrollTop: $trGroup.offset().top
+        scrollTop: $trSuccess.offset().top - 100
       }, 400)
         .promise().then(openSuccessDetails);
 
     })
+
+  if (success.contributions) {
+    reloadContributors();
+  }
 
 }());

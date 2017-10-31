@@ -25,7 +25,7 @@
           <% end %>
 
           <div class="form-group required-input">
-            <label for="success_customer_id" class='col-sm-3 control-label'>
+            <label class='col-sm-3 control-label'>
               Customer
             </label>
             <div class="col-sm-9">
@@ -34,7 +34,7 @@
                       customer.name
                     end,
                     :id, :name, { include_blank: true },
-                    { class: 'new-success customer form-control', style: 'width:100%' }
+                    { name: '', class: 'new-success customer form-control', style: 'width:100%' }
                   ) %>
             </div>
           </div>

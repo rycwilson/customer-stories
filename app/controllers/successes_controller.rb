@@ -19,17 +19,10 @@ class SuccessesController < ApplicationController
   end
 
   def create
-    # Success.new will set up all the associations, but must save contribution before success else success.save will error;
-    # no such requirement for new customer
-    # why is @success.errors.messages empty when success.save fails?
-    # saving contribution will save contributor
-    @success = Success.new(success_params)
-    logger.debug "#{@success}"
     pp success_params
+    @success = Success.new(success_params)
     pp @success
-    if @success.contributions.present? &&
-      @success.contributions[0].save && @success.save
-    elsif @success.save
+    if @success.save
     else
       pp @success.errors.full_messages
     end

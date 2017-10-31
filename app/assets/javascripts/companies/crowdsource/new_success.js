@@ -74,7 +74,6 @@ function newSuccessListeners () {
 
       // if existing referrer, disable contributor attributes
       } else {
-        console.log('existing referrer')
         disableContributionAttrs(false);
         disableReferrerAttrs(true);
         // the referrer will be both contributor and referrer for this contribution
@@ -88,7 +87,7 @@ function newSuccessListeners () {
     .on('change', '#new-success-form input[id*="email"]', function () {
       $form = $('#new-contributor-form');
       $(this).closest('.create-referrer')
-             .find('input[id*="password"').val( $(this).val() );
+             .find('input[id*="password"]').val( $(this).val() );
     })
 
     // reset modal
