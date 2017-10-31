@@ -34,36 +34,8 @@ function newSuccessListeners () {
 
   $(document)
 
-    .on('change', '#new-success-form input[id*="referrer_id"]', function () {
-      $form = $('#new-success-form');
-      // if no referrer provided, disable all attributes
-      if ( $(this).val() === '' ) {
-        disableContributionAttrs(true);
-        disableReferrerAttrs(true);
-
-      // if creating a new referrer with this success,
-      // enable contribution and contributor attributes
-      } else if ( $(this).val() === '0' ) {
-        disableContributionAttrs(false);
-        disableReferrerAttrs(false);
-        setTimeout(function () {
-          $('#new-success-form [id*="referrer_attributes_first_name"]')[0].focus();
-          }, 0);
-
-      // if existing referrer, disable contributor attributes
-      } else {
-        disableContributionAttrs(false);
-        disableReferrerAttrs(true);
-        // the referrer will be both contributor and referrer for this contribution
-        $('#new-success-form #success_contributions_attributes_0_referrer_id')
-          .val( $(this).val() );
-      }
-
-    })
-
-    // select or create customer
     .on('change', 'select.new-success.customer', function () {
-      $form = $('#new-contributor-form');
+      $form = $('#new-success-form');
       customerVal = $(this).val();
       customerId = isNaN(customerVal) ? null : customerVal;
 
@@ -82,6 +54,36 @@ function newSuccessListeners () {
         $form.find('input[id*="customer_attributes"]').prop('disabled', false);
       }
     })
+
+    .on('change', 'select.new-success.referrer', function () {
+      $form = $('#new-success-form');
+
+      // if no referrer provided, disable all attributes
+      if ( $(this).val() === '' ) {
+        disableContributionAttrs(true);
+        disableReferrerAttrs(true);
+
+      // if creating a new referrer with this success,
+      // enable contribution and contributor attributes
+      } else if ( $(this).val() === '0' ) {
+        disableContributionAttrs(false);
+        disableReferrerAttrs(false);
+        setTimeout(function () {
+          $('#new-success-form [id*="referrer_attributes_first_name"]')[0].focus();
+          }, 0);
+
+      // if existing referrer, disable contributor attributes
+      } else {
+        console.log('existing referrer')
+        disableContributionAttrs(false);
+        disableReferrerAttrs(true);
+        // the referrer will be both contributor and referrer for this contribution
+        $('#new-success-form #success_contributions_attributes_0_referrer_id')
+          .val( $(this).val() );
+      }
+
+    })
+
 
     .on('change', '#new-success-form input[id*="email"]', function () {
       $form = $('#new-contributor-form');
@@ -111,14 +113,19 @@ function newSuccessListeners () {
 
       $('button[type="submit"][form="new-success-form"] span').toggle();
       $('button[type="submit"][form="new-success-form"] .fa-spinner').toggle();
+
       // if a referrer wasn't selected, hide the contribution attributes
       // so a contribution isn't created
-      if ( $('#new-success-form [id*="referrer_id"]').val() === '' ) {
+      if ( $('select.new-success.referrer').val() === '' ) {
         e.preventDefault();
         disableContributionAttrs(true);
         $('#new-success-form').submit();
       }
 
+    })
+
+    .on('submit', '#new-success-form', function () {
+      console.log( $(this).serializeArray() );
     });
 }
 

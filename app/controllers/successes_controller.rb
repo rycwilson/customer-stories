@@ -24,10 +24,14 @@ class SuccessesController < ApplicationController
     # why is @success.errors.messages empty when success.save fails?
     # saving contribution will save contributor
     @success = Success.new(success_params)
+    logger.debug "#{@success}"
+    pp success_params
+    pp @success
     if @success.contributions.present? &&
       @success.contributions[0].save && @success.save
     elsif @success.save
     else
+      pp @success.errors.full_messages
     end
     respond_to { |format| format.js {} }
   end
@@ -44,7 +48,7 @@ class SuccessesController < ApplicationController
     params.require(:success).permit(:name, :description, :customer_id, :curator_id,
       customer_attributes: [:id, :name, :company_id],
       contributions_attributes: [
-        :user_id, :referrer_id, :crowdsourcing_template_id,
+        :referrer_id, :crowdsourcing_template_id,
         referrer_attributes: [
           :id, :first_name, :last_name, :email, :sign_up_code, :password
         ],

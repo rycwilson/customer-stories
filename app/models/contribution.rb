@@ -44,13 +44,14 @@ class Contribution < ActiveRecord::Base
 
   # when creating a new success with referrer, a contribution is created
   # with referrer_id == user_id (i.e. contributor and referrer are same)
-  before_create(:set_user_id_for_new_success_referrer, if: Proc.new do
+  before_create(:set_contributor_id_for_new_success_referrer, if: Proc.new do
       # use a success virtual attribute so we can see from here if it's a new record
       # also note that the inverse_of setting is necessary for the success -> contributions relationship
       # (so self and self.success are related to each other in memory)
-      self.success.is_new_record? &&
+      puts
+      (self.success.is_new_record? &&
       self.referrer_id.present? &&
-      self.user_id.nil?
+      self.user_id.nil?)
     end
   )
   before_update(:set_request_sent_at, if: Proc.new do
@@ -245,7 +246,7 @@ class Contribution < ActiveRecord::Base
     UserMailer.contribution_alert(self).deliver_now
   end
 
-  def match_user_id_for_new_success_referrer
+  def set_contributor_id_for_new_success_referrer
     self.user_id = self.referrer_id
   end
 

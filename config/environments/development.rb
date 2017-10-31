@@ -3,7 +3,7 @@
 
 Rails.application.configure do
 
-  config.log_level = :debug
+  config.log_level = :info
 
   # config.cache_store = :null_store
   # global memcached enable/disable
