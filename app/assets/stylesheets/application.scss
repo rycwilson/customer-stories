@@ -71,6 +71,18 @@
   }
 }
 
+.modal:not(#video-modal) {
+  .modal-content {
+    overflow: hidden;
+    .modal-header {
+      background: #f5f5f5;
+      color: #666;
+    }
+    .modal-footer {
+      background: #f5f5f5;
+    }
+  }
+}
 
 .dropdown-menu.dropdown-actions > li > a {
   padding: 6px 12px 6px 6px;
