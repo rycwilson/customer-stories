@@ -19,7 +19,7 @@
 /ssl
 
 # front-end dependencies
-vendor/assets
+# vendor/assets
 
 # figaro-managed credentials
 # no push to either github or heroku
