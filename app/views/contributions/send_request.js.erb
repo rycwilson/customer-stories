@@ -1,16 +1,44 @@
 
 (function () {
 
+  // these should mirror contributions#index and successes#index
   var contribution = <%= raw @contribution.to_json({
-          only: [:id], include: { contributor: { only: [], methods: [:full_name] } }
-      }) %>;
-
-  // update app.contributions
+          only: [:id, :status], methods: [:display_status],
+          include: {
+            success: {
+              only: [:id, :customer_id, :curator_id, :name],
+              include: {
+                curator: { only: [:id], methods: [:full_name] },
+                customer: { only: [:id, :name, :slug] },
+                story: { only: [:id, :title, :published, :slug],
+                         methods: [:csp_story_path] }
+              }
+            },
+            contributor: { only: [:id], methods: [:full_name] },
+            referrer: { only: [:id], methods: [:full_name] },
+            crowdsourcing_template: { only: [:id, :name] },
+          }
+        }) %>,
+      success = <%= raw @contribution.success.to_json({
+          only: [:id, :name, :description], methods: [:display_status],
+          include: {
+            curator: { only: [:id], methods: [:full_name] },
+            customer: { only: [:id, :name, :slug] },
+            story: { only: [:id, :title, :slug] }
+          }
+        }) %>;
 
   $('table[id*="contributors-table"]').DataTable()
-    .ajax.reload(function (contributions) {
-       $('#contribution-request-modal').modal('hide')
-       flashDisplay('Contribution Request sent to ' + contribution.contributor.full_name, 'success');
-    })
+    .row( $('[data-contribution-id="' + contribution.id + '"]') )
+    .data(contribution)
+    .draw()
+
+  $('#successes-table').DataTable()
+    .row( $('[data-success-id="' + contribution.success.id + '"]') )
+    .data(success)
+    .draw()
+
+  $('#contribution-request-modal').modal('hide')
+  flashDisplay('Contribution Request sent to ' + contribution.contributor.full_name, 'success');
 
 }());

@@ -27,15 +27,19 @@ function newContributorListeners() {
         var $customerSelect = $('select.new-contributor.customer'),
             $successSelect = $('select.new-contributor.success'),
             $contributorSelect = $('select.new-contributor.contributor');
-        return $customerSelect.val() && $successSelect.val() &&
-        (
-          !['', '0'].includes($contributorSelect.val()) ||
-          (
-            $('#contribution_contributor_attributes_first_name').val() &&
-            $('#contribution_contributor_attributes_last_name').val() &&
-            $('#contribution_contributor_attributes_email').val()
-          )
-        );
+        return $customerSelect.val() && $successSelect.val() && (
+            !['0', ''].includes($contributorSelect.val()) || (
+                $('#contribution_contributor_attributes_first_name').val() &&
+                $('#contribution_contributor_attributes_last_name').val() &&
+                $('#contribution_contributor_attributes_email').val()
+              )
+          ) && (
+            $('select.new-contributor.referrer').val() !== '0' || (
+                $('#contribution_referrer_attributes_first_name').val() &&
+                $('#contribution_referrer_attributes_last_name').val() &&
+                $('#contribution_referrer_attributes_email').val()
+              )
+          );
       },
 
       validateForm = function () {

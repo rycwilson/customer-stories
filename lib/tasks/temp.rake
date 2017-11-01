@@ -61,8 +61,6 @@ namespace :temp do
         end
       end
       company.contributions.each do |contribution|
-        # TODO: Should be ok for a contributor not to have a template, as this may happen with
-        # curators. But this causes errors with datatables
         if contribution.role == 'customer'
           contribution.update(crowdsourcing_template_id: customer_template.id)
         elsif contribution.role == 'customer success'
@@ -70,10 +68,6 @@ namespace :temp do
         elsif contribution.role == 'sales'
           contribution.update(crowdsourcing_template_id: sales_template.id)
         end
-        # populate the crowdsourcing template with data and assign
-        # to contribution attributes
-        # make this method protected after this task is run
-        contribution.copy_crowdsourcing_template
       end
     end
   end

@@ -48,10 +48,9 @@ class Contribution < ActiveRecord::Base
       # use a success virtual attribute so we can see from here if it's a new record
       # also note that the inverse_of setting is necessary for the success -> contributions relationship
       # (so self and self.success are related to each other in memory)
-      puts
-      (self.success.is_new_record? &&
+      self.success.is_new_record? &&
       self.referrer_id.present? &&
-      self.user_id.nil?)
+      self.user_id.nil?
     end
   )
   before_update(:set_request_sent_at, if: Proc.new do
@@ -107,7 +106,7 @@ class Contribution < ActiveRecord::Base
       when 'pre_request'
         return "waiting for invitation\n(added #{self.created_at.strftime('%-m/%-d/%y')})"
       when 'request_sent'
-        return "request sent #{(self.request_sent_at).strftime('%-m/%-d/%y')}\n(email #{self.request_received_at.present? ? '' : 'not' } opened)"
+        return "invitation sent #{(self.request_sent_at).strftime('%-m/%-d/%y')}\n(email #{self.request_received_at.present? ? '' : 'not' } opened)"
       when 'first_reminder_sent'
         return "reminder sent #{(self.request_sent_at + self.first_reminder_wait.days).strftime('%-m/%-d/%y')}\n(email #{self.request_received_at.present? ? '' : 'not' } opened)"
       when 'second_reminder_sent'

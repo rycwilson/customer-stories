@@ -1,7 +1,7 @@
 
 function contributorActionsListeners () {
 
-  var contributionRequest,  // { contributor: ..., subject: ..., body: ... }
+  var invitation,  // { contributor: ..., subject: ..., body: ... }
       contributionPath = function (contributionId) {
         return '/contributions/' + contributionId;
       },
@@ -11,7 +11,7 @@ function contributorActionsListeners () {
       },
 
       // type is 'send' or 'readonly'
-      showContributionRequest = function (contributionRequest, type) {
+      showInvitation = function (invitation, type) {
         // things go haywire if a different selector is used, e.g. $('textarea')
         var $modal = $('#contribution-request-modal'),
             $editor = $modal.find("[data-provider='summernote']");
@@ -38,21 +38,21 @@ function contributorActionsListeners () {
           }
           // set the readonly title (null is ok; formattedDate returns "Invalid")
           $modal.find('.readonly.modal-title span:last-child')
-            .text(formattedDate(contributionRequest.sent_at));
+            .text(formattedDate(invitation.sent_at));
           // set the path
           $modal.find('form')
-            .attr('action', contributionPath(contributionRequest.id));
+            .attr('action', contributionPath(invitation.contributionId));
           // recipient
           $modal.find('#to-contributor span:last-child').html(
-            contributionRequest.contributor.full_name + '&nbsp;&nbsp;' +
-            '&lt' + contributionRequest.contributor.email + '&gt'
+            invitation.contributor.full_name + '&nbsp;&nbsp;' +
+            '&lt' + invitation.contributor.email + '&gt'
           );
           // request subject
           $modal.find('[name="contribution[request_subject]"]')
-            .val(contributionRequest.subject)
+            .val(invitation.subject)
             .attr('readonly', type === 'readonly' ? true : false);
           // request body
-          $editor.summernote('code', contributionRequest.body);
+          $editor.summernote('code', invitation.body);
           // enable or disable editor
           $editor.summernote(
             type === 'readonly' ? 'disable' : 'enable'
@@ -62,17 +62,20 @@ function contributorActionsListeners () {
         $modal.modal('show');
       },
 
-      getContributionRequest = function (contributionId, type) {
+      getInvitation = function (contributionId, type) {
 
         $.ajax({
           url: contributionPath(contributionId),
           method: 'get',
-          data: { get_contribution_request: true },
+          data: {
+            get_invitation: true,
+            send: type == 'send' ? true : false
+          },
           dataType: 'json',
         })
           .done(function (contribution, status, xhr) {
-            contributionRequest = {
-              id: contribution.id,
+            invitation = {
+              contributionId: contribution.id,
               subject: contribution.request_subject,
               body: contribution.request_body,
               contributor: {
@@ -81,7 +84,7 @@ function contributorActionsListeners () {
               },
               sent_at: contribution.request_sent_at
             };
-            showContributionRequest(contributionRequest, type);
+            showInvitation(invitation, type);
           });
       },
 
@@ -136,7 +139,7 @@ function contributorActionsListeners () {
         return false;
 
       } else {
-        getContributionRequest(contributionId, 'send');
+        getInvitation(contributionId, 'send');
       }
 
     })
@@ -150,7 +153,7 @@ function contributorActionsListeners () {
         return false;
 
       } else {
-        getContributionRequest(contributionId, 'send');
+        getInvitation(contributionId, 'send');
       }
 
     })
@@ -192,7 +195,7 @@ function contributorActionsListeners () {
     .on('click', '.contributor-actions .view-request, ' +
                  'td.crowdsourcing-template.view-request a', function () {
       var contributionId = $(this).closest('tr').data('contribution-id');
-      getContributionRequest(contributionId, 'readonly');
+      getInvitation(contributionId, 'readonly');
     })
 
     // BEWARE this will also fire from Successes view

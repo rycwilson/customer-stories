@@ -32,8 +32,8 @@ class ContributionsController < ApplicationController
   end
 
   def show
-    if params[:get_contribution_request]
-      @contribution.copy_crowdsourcing_template if @contribution.request_sent_at.nil?
+    if params[:get_invitation]
+      @contribution.copy_crowdsourcing_template if params[:send]
       respond_with(
         @contribution, only: [:id, :request_subject, :request_body, :request_sent_at],
         include: {
@@ -97,7 +97,7 @@ class ContributionsController < ApplicationController
         end
       end
 
-    elsif params[:send_request]
+    elsif params[:send_invitation]
       # assign any edits to request_subject and request_body
       @contribution.assign_attributes(contribution_params)
       if UserMailer.contribution_request(@contribution).deliver_now
