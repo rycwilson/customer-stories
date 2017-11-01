@@ -3,18 +3,17 @@ function newSuccessListeners () {
 
   var $form,
       formIsValid = function () {
-        console.log($('select.new-success.referrer').val());
-          return $('select.new-success.customer').val() &&
-            $('#success_name').val() &&
+        return $('select.new-success.customer').val() &&
+          $('#success_name').val() &&
+          (
+            $('select.new-success.referrer').val() !== '0' ||
             (
-              $('select.new-success.referrer').val() !== '0' ||
-              (
-                $('#new-success-form [id*="first_name"]').val() &&
-                $('#new-success-form [id*="last_name"]').val() &&
-                $('#new-success-form [id*="email"]').val()
-              )
-            );
-        },
+              $('#new-success-form [id*="first_name"]').val() &&
+              $('#new-success-form [id*="last_name"]').val() &&
+              $('#new-success-form [id*="email"]').val()
+            )
+          );
+      },
 
       validateForm = function () {
         return formIsValid() ? $('button[type="submit"]').prop('disabled', false) :

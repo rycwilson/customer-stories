@@ -2,15 +2,58 @@
 (function () {
 
   var success = <%= raw @success.to_json(
-          only: [:id], include: { contributions: { only: [:id] } }
+          only: [:id, :name, :customer_id],
+          include: {
+            customer: { only: [:name], methods: [:previous_changes] },
+            contributions: {
+              only: [:id, :referrer_id],
+              include: {
+                referrer: {
+                  only: [], methods: [:full_name]
+                }
+              }
+            }
+          }
         ) %>,
+      /**
+       * the datatable filter state persists through a reload,
+       *
+       */
       reloadContributors = function () {
         $('#prospect-contributors-table').DataTable()
           .ajax.reload(function (contributions) {
-            $('#prospect-contributors-table').closest('[id*="table_wrapper"]')
-            .find('.curator-select').trigger('change')
+            // $('#prospect-contributors-table').closest('[id*="table_wrapper"]')
+            //   .find('.search-all').trigger('click')
           });
+      },
+
+      updateFilterOptions = function () {
+        $('.dt-filter')
+          .find('optgroup[label="Customer Win"]')
+          .prepend(
+            $('<option value="success-' + success.id.toString() + '"' +
+                ' data-column="success">' + success.name + '</option>')
+          )
+        if (success.contributions.length) {
+          $('#contributors-filter')
+            .find('optgroup[label="Contributor"]')
+            .prepend(
+              $('<option value="contributor-' + success.contributions[0].referrer_id.toString() + '"' +
+                  ' data-column="contributor">' + success.contributions[0].referrer.full_name + '</option>')
+            )
+        }
+        // new customer
+        if (success.customer.previous_changes.id) {
+          $('.dt-filter')
+            .find('optgroup[label="Customer"]')
+            .prepend(
+              $('<option value="customer-' + success.customer_id.toString() + '"' +
+                  ' data-column="customer">' + success.customer.name + '</option>')
+            )
+        }
       }
+
+  updateFilterOptions();
 
   $('#successes-table').DataTable()
     .ajax.reload(function (successes) {

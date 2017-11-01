@@ -1,19 +1,55 @@
 (function () {
 
-  // this mirrors company.contributions.pending
+  // this mirrors company.contributions.pending (with some additions)
   var contribution = <%= raw @contribution.to_json({
           only: [:id, :status, :contribution, :feedback, :linkedin, :notes, :publish_contributor, :contributor_unpublished, :success_id],
           methods: [],
           include: {
+            success: {
+              only: [:customer_id], methods: [:previous_changes],
+              include: {
+                customer: { only: [:name], methods: [:previous_changes] }
+              }
+            }.
             contributor: {
               only: [:id, :first_name, :last_name, :title, :email, :phone,
                      :linkedin_url, :linkedin_company, :linkedin_title,
                      :linkedin_location, :linkedin_photo_url],
-              methods: [:full_name, :linkedin_data?]
+              methods: [:full_name, :linkedin_data?, :previous_changes]
             }
           }
-        }) %>;
+        }) %>,
 
+        updateFilterOptions = function () {
+          // new customer was created
+          if (contribution.success.customer.previous_changes.id) {
+            $('.dt-filter')
+              .find('optgroup[label="Customer"]')
+              .prepend(
+                $('<option value="customer-' + contribution.success.customer_id.toString() + '"' +
+                    ' data-column="customer">' + contribution.success.customer.name + '</option>')
+              )
+          }
+          // new success was created
+          if (contribution.success.previous_changes.id) {
+            $('.dt-filter')
+              .find('optgroup[label="Customer Win"]')
+              .prepend(
+                $('<option value="success-' + contribution.success_id.toString() + '"' +
+                    ' data-column="success">' + contribution.success.name + '</option>')
+              )
+          }
+          // new contributor was created
+          if (contribution.contributor.previous_changes.id) {
+            $('#contributors-filter')
+              .find('optgroup[label="Contributor"]')
+              .prepend(
+                $('<option value="contributor-' + contribution.contributor.id.toString() + '"' +
+                    ' data-column="contributor">' + contribution.contributor.full_name + '</option>')
+            )
+        }
+
+  updateFilterOptions();
 
   // if ('<%= alert() %>') {
   //   flashDisplay('Error adding Contributor: <%= alert() %>', 'danger')
