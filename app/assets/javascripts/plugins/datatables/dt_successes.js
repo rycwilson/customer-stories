@@ -75,7 +75,6 @@ function initSuccessesTable (dtSuccessesInit) {
       {
         data: 'display_status',
         render: function (data, type, row, meta) {
-          console.log(row.story)
             return _.template( $('#success-actions-dropdown-template').html() )({
                 status: data,
                 story: row.story,
