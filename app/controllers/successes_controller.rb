@@ -10,8 +10,8 @@ class SuccessesController < ApplicationController
         only: [:id, :name, :description], methods: [:display_status],
         include: {
           curator: { only: [:id], methods: [:full_name] },
-          customer: { only: [:id, :name] },
-          story: { only: [:id, :title] }
+          customer: { only: [:id, :name, :slug] },
+          story: { only: [:id, :title, :slug] }
         }
       })
     # end

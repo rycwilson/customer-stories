@@ -75,9 +75,13 @@ function initSuccessesTable (dtSuccessesInit) {
       {
         data: 'display_status',
         render: function (data, type, row, meta) {
-            return _.template(
-                $('#success-actions-dropdown-template').html()
-              )({ status: data, story: row.story });
+          console.log(row.story)
+            return _.template( $('#success-actions-dropdown-template').html() )({
+                status: data,
+                story: row.story,
+                curateStoryPath: row.story &&
+                  '/curate/' + row.customer.slug + '/' + row.story.slug
+              });
           }
       }
     ],

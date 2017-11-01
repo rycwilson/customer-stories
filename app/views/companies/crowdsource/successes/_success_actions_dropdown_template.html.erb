@@ -11,16 +11,16 @@
 
       <ul class='success-actions dropdown-menu dropdown-menu-right dropdown-actions'>
 
-        {{ if ( status.match(/0.+Contributors\sadded/) ) { }}
+        {{ if (status.match(/0.+Contributors\sadded/)) { }}
 
           <li>
             <a href="javascript:;" class='add-contributor'>
-              <i class='fa fa-user fa-fw action'></i>&nbsp;&nbsp;
-              <span>Add Contributor</span>
+              <i class='fa fa-users fa-fw action'></i>&nbsp;&nbsp;
+              <span>Add Contributors</span>
             </a>
           </li>
 
-        {{ } else if ( status.match(/0.+Contributors\sinvited/) ) { }}
+        {{ } else if (status.match(/0.+Contributors\sinvited/)) { }}
 
           <li>
             <a href="javascript:;" class='manage-contributors'>
@@ -31,7 +31,7 @@
 
         {{ } else { }}
 
-          {{ if ( !status.match(/0.+Contributions\ssubmitted/) ) { }}
+          {{ if (!status.match(/0.+Contributions\ssubmitted/) ) { }}
 
             <li>
               <a href="javascript:;" class='view-contributions'>
@@ -59,6 +59,15 @@
             <a href="javascript:;" class='start-curation'>
               <i class='fa fa-play fa-fw action'></i>&nbsp;&nbsp;
               <span>Start Story Curation</span>
+            </a>
+          </li>
+
+        {{ } else { }}
+
+          <li>
+            <a href="{{= curateStoryPath }}">
+              <i class='fa fa-edit fa-fw action'></i>&nbsp;&nbsp;
+              <span>Curate Story</span>
             </a>
           </li>
 

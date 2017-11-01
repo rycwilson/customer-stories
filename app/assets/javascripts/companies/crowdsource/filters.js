@@ -165,7 +165,7 @@ function crowdsourceFiltersListeners () {
 
     // select2 needs a hack for search placeholder
     .on("select2:open", ".dt-filter", function() {
-        $(".select2-search--dropdown .select2-search__field").attr("placeholder", "Select or Search");
+        $(".select2-search--dropdown .select2-search__field").attr("placeholder", "Select or search");
     })
     .on("select2:close",".dt-filter", function() {
         $(".select2-search--dropdown .select2-search__field").attr("placeholder", null);

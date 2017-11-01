@@ -100,7 +100,8 @@ function crowdsourceListeners () {
     .on('hidden.bs.dropdown', '.actions-dropdown', function () {
       $(this).closest('tr').removeClass('active');
       // $(this).children().last().css('color', '#666');
-    });
+    })
+
 
 }
 
