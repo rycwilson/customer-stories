@@ -68,40 +68,45 @@ function crowdsourceListeners () {
 
     // successes - order by customer grouping
     .on('click', '#successes-table tr.group', function () {
-      var dt = $('#successes-table').DataTable(),
-          currentOrder = dt.order()[0];
-      if (currentOrder[0] === 1 && currentOrder[1] === 'asc') {
-        dt.order([ 1, 'desc' ]).draw();
-      }
-      else {
-        dt.order([ 1, 'asc' ]).draw();
-      }
-    })
+        var dt = $('#successes-table').DataTable(),
+            currentOrder = dt.order()[0];
+        if (currentOrder[0] === 1 && currentOrder[1] === 'asc') {
+          dt.order([ 1, 'desc' ]).draw();
+        }
+        else {
+          dt.order([ 1, 'asc' ]).draw();
+        }
+      })
 
     // contributors - order by success
     .on('click', '#prospect-contributors-table tr.group', function (e) {
-      var dt = $('#prospect-contributors-table').DataTable(),
-          successIndex = 2,
-          currentOrder = dt.order()[0];
-      if (! $(e.target).is('a') ) {
-        if (currentOrder[0] === successIndex && currentOrder[1] === 'asc') {
-          dt.order([ successIndex, 'desc' ]).draw();
+        var dt = $('#prospect-contributors-table').DataTable(),
+            successIndex = 2,
+            currentOrder = dt.order()[0];
+        if (! $(e.target).is('a') ) {
+          if (currentOrder[0] === successIndex && currentOrder[1] === 'asc') {
+            dt.order([ successIndex, 'desc' ]).draw();
+          }
+          else {
+            dt.order([ successIndex, 'asc' ]).draw();
+          }
         }
-        else {
-          dt.order([ successIndex, 'asc' ]).draw();
-        }
-      }
-    })
+      })
 
     .on('shown.bs.dropdown', '.actions-dropdown', function () {
-      $(this).closest('tr').addClass('active');
-    })
+        $(this).closest('tr').addClass('active');
+      })
 
     .on('hidden.bs.dropdown', '.actions-dropdown', function () {
-      $(this).closest('tr').removeClass('active');
-      // $(this).children().last().css('color', '#666');
-    })
+        $(this).closest('tr').removeClass('active');
+        // $(this).children().last().css('color', '#666');
+      })
 
+    // https://www.gyrocode.com/articles/jquery-datatables-column-width-issues-with-bootstrap-tabs/
+    .on('shown.bs.tab', '#prospect a[data-toggle="tab"]', function(e) {
+         $($.fn.dataTable.tables(true)).DataTable()
+            .columns.adjust();
+      });
 
 }
 
