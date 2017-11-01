@@ -9,7 +9,7 @@
               only: [:id, :referrer_id],
               include: {
                 referrer: {
-                  only: [], methods: [:full_name]
+                  only: [], methods: [:full_name, :previous_changes]
                 }
               }
             }
@@ -34,7 +34,9 @@
             $('<option value="success-' + success.id.toString() + '"' +
                 ' data-column="success">' + success.name + '</option>')
           )
-        if (success.contributions.length) {
+        // new referrer
+        if (success.contributions.length &&
+            success.contributions[0].referrer.previous_changes.id) {
           $('#contributors-filter')
             .find('optgroup[label="Contributor"]')
             .prepend(
