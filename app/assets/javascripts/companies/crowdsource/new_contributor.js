@@ -50,14 +50,12 @@ function newContributorListeners() {
       preSelectCustomerAndSuccess = function () {
         $('select.new-contributor.customer').val(
             $('#curate-story-layout').data('customer-id')
-          )
-          .trigger('change.select2')
-          .prop('disabled', true);
+          ).trigger('change');
         $('select.new-contributor.success')
           .val(
             $('#curate-story-layout').data('success-id')
-          )
-          .trigger('change')
+          ).trigger('change');
+        $('select.new-contributor.customer, select.new-contributor.success')
           .prop('disabled', true);
       },
 
@@ -164,7 +162,7 @@ function newContributorListeners() {
 
     // pre-select fields if adding contributors from the curate view
     .on('show.bs.modal', '#new-contributor-modal', function () {
-      if ( isCurateView() ) {
+      if (isCurateView()) {
         preSelectCustomerAndSuccess();
       }
     })

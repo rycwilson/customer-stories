@@ -224,7 +224,6 @@ function contributorActionsListeners () {
         dataType: 'json'
       })
         .done(function (contribution, status, xhr) {
-          console.log(contribution)
           $.when(
             $('#contribution-content-modal .modal-content').empty().append(
               _.template( $('#contribution-content-template').html() )({

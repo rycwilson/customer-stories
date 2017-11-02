@@ -64,6 +64,7 @@ Rails.application.routes.draw do
       resources :companies, only: [:show, :edit, :update] do
         resources :customers, only: [:create, :update, :destroy], shallow: true
         resources :successes, only: [:create, :update, :destroy], shallow: true do
+          resources :contributions, only: [:index]
           resources :results, only: [:create, :destroy]
         end
         resources :stories, only: [:edit, :create, :update, :destroy], shallow: true do

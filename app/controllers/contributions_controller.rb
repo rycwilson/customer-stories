@@ -5,28 +5,32 @@ class ContributionsController < ApplicationController
 
   respond_to(:html, :json, :js)
 
-  # datatables source data
+  # datatables source data (contributors)
   def index
     company = Company.find_by(subdomain: request.subdomain)
+    if params[:success_id]
+      contributions = Success.find(params[:success_id]).contributions
+    else
+      contributions = company.contributions
+    end
     # data = Rails.cache.fetch("#{company.subdomain}/dt-contributors") do
-      data = company.contributions.to_json({
-          only: [:id, :status], methods: [:display_status],
-          include: {
-            success: {
-              only: [:id, :customer_id, :curator_id, :name],
-              include: {
-                curator: { only: [:id], methods: [:full_name] },
-                customer: { only: [:id, :name, :slug] },
-                story: { only: [:id, :title, :published, :slug],
-                         methods: [:csp_story_path] }
-              }
-            },
-            contributor: { only: [:id], methods: [:full_name] },
-            referrer: { only: [:id], methods: [:full_name] },
-            crowdsourcing_template: { only: [:id, :name] },
-          }
-        })
-    # end
+      data = contributions.to_json({
+        only: [:id, :status], methods: [:display_status],
+        include: {
+          success: {
+            only: [:id, :customer_id, :curator_id, :name],
+            include: {
+              curator: { only: [:id], methods: [:full_name] },
+              customer: { only: [:id, :name, :slug] },
+              story: { only: [:id, :title, :published, :slug],
+                       methods: [:csp_story_path] }
+            }
+          },
+          contributor: { only: [:id], methods: [:full_name] },
+          referrer: { only: [:id], methods: [:full_name] },
+          crowdsourcing_template: { only: [:id, :name] },
+        }
+      })
     # pp(JSON.parse(data))
     respond_to { |format| format.json { render({ json: data }) } }
   end

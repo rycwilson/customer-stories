@@ -3,11 +3,19 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
 
   var contributorIndex = 1, successIndex = 2, crowdsourcingTemplateIndex = 3,
       curatorIndex = 4, customerIndex = 5, statusIndex = 6, actionsIndex = 7,
-      storyPublishedIndex = 8;
+      storyPublishedIndex = 8,
+      successId, contributionsPath;
+
+  if (workflowStage === 'prospect') {
+    contributionsPath = '/companies/' + app.company.id + '/contributions';
+  } else {
+    successId = $('#curate-story-layout').data('success-id');
+    contributionsPath = '/successes/' + successId + '/contributions';
+  }
 
   $('table[id="' + workflowStage + '-contributors-table"]').DataTable({
     ajax: {
-      url: '/companies/' + app.company.id + '/contributions',
+      url: contributionsPath,
       dataSrc: ''
     },
     dom: 'tip',
@@ -128,7 +136,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
       { width: '21%', targets: statusIndex },
       { width: '10%', targets: actionsIndex }
     ],
-    rowGroup: {
+    rowGroup: workflowStage === 'curate' ? null : {
       dataSrc: 'success.name',
       startRender: function (groupRows, successName) {
         // customer and story (if exists) data same for all rows, so just look at [0]th row
@@ -168,7 +176,6 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
           );
       }
     },
-
     createdRow: function (row, data, index) {
       $(row).attr('data-contribution-id', data.id);
       $(row).attr('data-success-id', data.success.id);
@@ -232,14 +239,6 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
       // workflowStage == curate
       // contributors under a Story don't have curator and filter selects
       } else {
-        successId = $('#curate-story-layout').data('success-id');
-
-        console.log('success: ', successId)
-
-        dt.column('childRow:name')
-          .search('^' + successId + '$', true, false)
-          .draw();
-
         // global so can be accessed from crowdsourceListeners
         curateContributorsEditor = newContributorsEditor(
           'curate', crowdsourcingTemplateSelectOptions
