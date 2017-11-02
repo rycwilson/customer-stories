@@ -6,7 +6,7 @@
           methods: [],
           include: {
             success: {
-              only: [:customer_id], methods: [:previous_changes],
+              only: [:name, :customer_id], methods: [:previous_changes],
               include: {
                 customer: { only: [:name], methods: [:previous_changes] }
               }
