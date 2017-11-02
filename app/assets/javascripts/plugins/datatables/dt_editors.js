@@ -27,7 +27,6 @@ function newContributorsEditor (workflowStage, templateSelectOptions) {
 }
 
 function openContributorsEditor (contributorsEditor, $row) {
-
   contributorsEditor.inline(
     $row.find('td.crowdsourcing-template')[0],
     'crowdsourcing_template.id',
@@ -39,6 +38,7 @@ function openContributorsEditor (contributorsEditor, $row) {
             dt = $table.DataTable(),
             rowData = dt.row($row).data(),
             $rowOther, dtOther;
+
         editor.close();
         // the drawType option isn't forcing a re-draw (?), so re-draw the individual row(s)
         // forum discussion: https://datatables.net/forums/discussion/45189
@@ -51,9 +51,8 @@ function openContributorsEditor (contributorsEditor, $row) {
           $row.find('td.crowdsourcing-template i').toggle();
         }, 2000);
         // re-draw the other table (if present)
-        // (this appears to be unnecessary for now => always a sync. load to get back and forth)
         if ($tableOther.length) {
-          $rowOther = $tableOther.find('tr[contribution-id="' + contributionId + ']"');
+          $rowOther = $tableOther.find('tr[data-contribution-id="' + contributionId + '"]');
           dtOther = $tableOther.DataTable();
           dtOther.row($rowOther).data(rowData).draw();
         }

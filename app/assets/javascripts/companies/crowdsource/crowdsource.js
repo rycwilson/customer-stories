@@ -29,8 +29,13 @@ function crowdsourceListeners () {
 
     // the close event happens shortly after blur; to ensure smooth transition...
     .on('blur', 'td.crowdsourcing-template', function () {
-      var $td = $(this);
-      contributorsEditor.one('close', function () {
+      var $td = $(this), editor;
+      if ( $td.closest('table').is('#prospect-contributors-table') ) {
+        editor = prospectContributorsEditor;
+      } else {
+        editor = curateContributorsEditor;
+      }
+      editor.one('close', function () {
         $td.removeClass('editor-open');
       });
     })
@@ -43,9 +48,9 @@ function crowdsourceListeners () {
       if ( $(this).hasClass('disabled') ) { return false; }
       $(this).addClass('editor-open');  // styling adjustment
       if (workflowStage === 'prospect') {
-        openContributorsEditor(contributorsEditor, $row);
+        openContributorsEditor(prospectContributorsEditor, $row);
       } else {
-        openContributorsEditor(contributorsEditor, $row);
+        openContributorsEditor(curateContributorsEditor, $row);
       }
     })
 

@@ -221,7 +221,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
       if (workflowStage === 'prospect') {
 
         // global so can be accessed from crowdsourceListeners
-        contributorsEditor = newContributorsEditor(
+        prospectContributorsEditor = newContributorsEditor(
           'prospect', crowdsourcingTemplateSelectOptions
         );
 
