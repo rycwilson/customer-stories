@@ -7,8 +7,20 @@
 
     <form>
 
-      <div class="form-group">
+      <div class="form-group search">
+        <label for="">Curator</label>
+        <i class='fa fa-remove search-all fa-fw'></i>
+        <%= select_tag('curator_select',
+              options_for_select(company.curators.map() do |c|
+                [c.full_name, c.id]
+              end.unshift(['All Curators', 0])),
+              { class: 'curate curator-select form-control', style: 'width:100%' }
+            ) %>
+      </div>
+
+      <div class="form-group search">
         <label for="">Customer</label>
+        <i class='fa fa-remove search-all fa-fw'></i>
         <%= select_tag('customer_select',
               options_for_select(
                 company.customers.select_options.unshift(['All Customers', 0]),
@@ -18,31 +30,24 @@
             ) %>
       </div>
 
-      <div class="form-group">
+      <div class="form-group search">
         <label for="">Story Category</label>
+        <i class='fa fa-remove search-all fa-fw'></i>
         <%= select_tag('category_select',
               options_for_select(company.story_categories.select_options.unshift(['All Categories', 0])),
               { class: 'curate category-select form-control', style: 'width:100%' }
             ) %>
       </div>
 
-      <div class="form-group">
+      <div class="form-group search">
         <label for="">Product</label>
+        <i class='fa fa-remove search-all fa-fw'></i>
         <%= select_tag('product_select',
               options_for_select(company.products.select_options.unshift(['All Products', 0])),
               { class: 'curate product-select form-control', style: 'width:100%' }
             ) %>
       </div>
 
-      <div class="form-group">
-        <label for="">Curator</label>
-        <%= select_tag('curator_select',
-              options_for_select(company.curators.map() do |c|
-                [c.full_name, c.id]
-              end.unshift(['All Curators', 0])),
-              { class: 'curate curator-select form-control', style: 'width:100%' }
-            ) %>
-      </div>
 
     </form>
 

@@ -179,7 +179,7 @@ function crowdsourceFiltersListeners () {
       setSearch( $('#prospect-contributors-table'), true ).draw();
     })
 
-    // search reset
+    // search reset (prospect and curate sections)
     .on('click', '.search .search-all', function () {
       $(this).next().val('0').trigger('change');
     });

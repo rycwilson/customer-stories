@@ -1,8 +1,22 @@
 
 #curate {
 
-  .sidebar-contents {
-    margin-top: -10px;
+  .layout-sidebar {
+    padding-right: 0;
+    .sidebar-contents {
+      margin-top: -10px;
+      .form-group.search {
+        position: relative;
+        i {
+          position: absolute;
+          color: #999;
+          right: 30px;
+          bottom: 11px;
+          z-index: 100;
+          cursor: pointer;
+        }
+      }
+    }
   }
 
   #curate-stories {
