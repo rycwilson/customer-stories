@@ -1,8 +1,8 @@
 
 function successActionsListeners () {
 
-  var contributionPath = function (contributionId) {
-          return '/contributions/' + contributionId;
+  var successPath = function (successId) {
+          return '/successes/' + successId;
         },
       formattedDate = function (date) {
           return moment(date).calendar(null, {
@@ -29,6 +29,31 @@ function successActionsListeners () {
           .done(function () {
             // console.log('but wait...')
             $('#contribution-content-modal').modal('show');
+          });
+      },
+
+      removeSuccess = function (id) {
+        $.ajax({
+          url: successPath(id),
+          method: 'delete',
+          dataType: 'json'
+        })
+          .done(function (success, status, xhr) {
+            $('#successes-table').DataTable()
+              .row( $('[data-success-id="' + success.id + '"]') )
+              .remove()
+              .draw();
+
+            // if this was the only success under a group, remove the group
+            $('#successes-table').find('tr.group').each(function () {
+                  if ($(this).next().hasClass('group')) {
+                    $(this).remove();
+                  }
+                });
+            // update app data
+            // app.contributions = app.contributions.filter(function (c) {
+            //   return c.id == contribution.id;
+            // });
           });
       };
 
@@ -74,6 +99,29 @@ function successActionsListeners () {
 
       });
 
+    })
+
+    .on('click', '.success-actions .remove', function () {
+      var successId = $(this).closest('tr').data('success-id');
+      bootbox.confirm({
+        size: 'small',
+        className: 'confirm-remove-success',
+        closeButton: false,
+        message: "<i class='fa fa-warning'></i>\xa0\xa0\xa0<span>Are you sure?</span>",
+        buttons: {
+          confirm: {
+            label: 'Remove',
+            className: 'btn-danger'
+          },
+          cancel: {
+            label: 'Cancel',
+            className: 'btn-default'
+          }
+        },
+        callback: function (confirmRemove) {
+          if (confirmRemove) { removeSuccess(successId); }
+        }
+      });
     })
 
     .on('click', '.success-actions .start-curation', function () {

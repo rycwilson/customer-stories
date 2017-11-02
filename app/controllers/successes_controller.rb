@@ -33,6 +33,10 @@ class SuccessesController < ApplicationController
   end
 
   def destroy
+    @success.destroy
+    respond_to do |format|
+      format.json { render({ json: @success.to_json({ only: [:id] }) }) }
+    end
   end
 
   private

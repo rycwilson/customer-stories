@@ -108,16 +108,19 @@ function contributorActionsListeners () {
           .done(function (contribution, status, xhr) {
             // might just be one table if other hasn't loaded
             var $tables = $('table[id*="contributors-table"]');
-            $tables.find('tr[data-contribution-id="' + contribution.id + '"]')
-                   .remove();
+            $tables.DataTable()
+              .row( $('[data-contribution-id="' + contribution.id + '"]') )
+              .remove()
+              .draw();
+
             // if this was the only contribution under a group, remove the group
             $tables.find('tr.group').each(function () {
               if ($(this).next().hasClass('group')) { $(this).remove(); }
             });
             // update app data
-            app.contributions = app.contributions.filter(function (c) {
-              return c.id == contribution.id;
-            });
+            // app.contributions = app.contributions.filter(function (c) {
+            //   return c.id == contribution.id;
+            // });
           });
       },
 

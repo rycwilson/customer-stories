@@ -71,7 +71,7 @@
   }
 }
 
-.modal:not(#video-modal) {
+.modal:not(#video-modal):not(.bootbox) {
   .modal-content {
     overflow: hidden;
     .modal-header {
