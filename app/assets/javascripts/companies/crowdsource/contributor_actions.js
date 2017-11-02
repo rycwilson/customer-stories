@@ -199,7 +199,8 @@ function contributorActionsListeners () {
     })
 
     // BEWARE this will also fire from Successes view
-    .on('click', '.contributor-actions .view-contribution', function () {
+    .on('click', '.contributor-actions .view-contribution, ' +
+                 'td.status .view-contribution', function () {
 
       var contributionId = $(this).closest('tr').data('contribution-id'),
           formattedDate = function (date) {
