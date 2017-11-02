@@ -118,7 +118,7 @@ class ContributionsController < ApplicationController
       @contribution.update(contribution_params)
       respond_to { |format| format.js { render action: 'update_contributor' } }
 
-    elsif params[:submission]
+    elsif ['contribution', 'feedback'].include?(params[:type])
       if params[:contribution][:status] == 'contribution_submitted'
         params[:contribution][:contribution] = consolidate_answers(params[:answers])
       end
@@ -134,21 +134,24 @@ class ContributionsController < ApplicationController
         render :edit
       end
 
-    elsif params[:unsubscribe] || params[:opt_out]
-      # if @submission_type == 'opt_out'
-      #   unless OptOut.find_by email: contributor_email # already opted out
-      #     OptOut.create email: contributor_email
-      #     # update all contributions for this contributor
-      #     Contribution.update_opt_out_status contributor_email
-      #   end
-      # elsif @submission_type == 'unsubscribe'
-      #   @contribution.update(status: 'unsubscribed')
-      #   @opt_out_link = url_for({
-      #     subdomain: self.company.subdomain,
-      #     controller: 'contributions', action: 'update',
-      #     token: self.access_token, type: 'opt_out', submission: true
-      #   })
-      # end
+    elsif ['unsubscribe', 'opt_out'].include?(params[:type])
+      if params[:type] == 'opt_out'
+        @contribution.update(status: 'opted_out')
+        # add to the opt out list
+        unless OptOut.find_by(email: @contribution.contributor.email)
+          OptOut.create(email: @contribution.contributor.email)
+          # update all contributions for this contributor
+          Contribution.update_opt_out_status(@contribution.contributor.email)
+        end
+      else
+        @contribution.update(status: 'unsubscribed')
+        @opt_out_link = url_for({
+          subdomain: @contribution.company.subdomain,
+          controller: 'contributions', action: 'update',
+          token: @contribution.access_token, type: 'opt_out'
+        })
+      end
+      render :confirm_unsubscribe_opt_out
 
     elsif params[:completed]
       if @contribution.contribution.present?

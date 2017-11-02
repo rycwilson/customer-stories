@@ -1,0 +1,32 @@
+
+<div class="container">
+  <div class="row">
+
+    <div class='col-centered confirmation col-xs-12 col-sm-10 col-lg-8'>
+
+      <h3>Thanks for your response.</h3>
+
+      <% if @contribution.status == 'unsubscribed' %>
+
+        <p>
+          <%= "We won't contact you again regarding the #{@contribution.customer.name} success story." %>
+        </p>
+        <p>
+          <%= "If you would prefer not to receive any emails from us at all, you may opt out <a href='#{@opt_out_link}'>here</a>".html_safe %>
+        </p>
+
+      <% else %>
+
+        <p>You won't receive any further emails from us.</p>
+
+      <% end %>
+
+      <div class="logo text-center" style='margin-top:40px'>
+        <%= image_tag CS_POWERED_LOGO_URL, class: 'logo', alt:'powered-by-csp' %>
+      </div>
+
+    </div>
+
+
+  </div>
+</div>

@@ -1,5 +1,5 @@
 
-<%= form_for(contribution, url: submission_path(contribution.access_token),
+<%= form_for(contribution, url: contributor_submission_path(contribution.access_token),
       method: "put", html: { id: 'submission-form'}) do |f| %>
 
   <%= hidden_field_tag("submission", true) %>

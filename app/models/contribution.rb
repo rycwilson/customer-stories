@@ -160,10 +160,10 @@ class Contribution < ActiveRecord::Base
   # "Fetch all Contributions where the Contributor has this email and update them"
   # note: need to use the actual table name (users) instead of the alias (contributors)
   #
-  def self.update_opt_out_status opt_out_email
+  def self.update_opt_out_status (opt_out_email)
     Contribution.joins(:contributor)
                 .where(users: { email: opt_out_email })
-                .each { |c| c.update status: 'opt_out' }
+                .each { |c| c.update status: 'opted_out' }
   end
 
   def expire_published_contributor_cache
@@ -190,10 +190,10 @@ class Contribution < ActiveRecord::Base
       .gsub('[curator_phone]', self.curator.phone || '')
       .gsub('[curator_position]', self.curator.title || '')
       .gsub('[curator_img_url]', self.curator.photo_url || '')
-      .gsub('[contribution_submission_url]', contribution_request_link('contribution'))
-      .gsub('[feedback_submission_url]', contribution_request_link('feedback'))
-      .gsub('[unsubscribe_url]', contribution_request_link('unsubscribe'))
-      .gsub('[opt_out_url]', contribution_request_link('opt_out'))
+      .gsub('[contribution_submission_url]', invitation_link('contribution'))
+      .gsub('[feedback_submission_url]', invitation_link('feedback'))
+      .gsub('[unsubscribe_url]', invitation_link('unsubscribe'))
+      .gsub('[opt_out_url]', invitation_link('opt_out'))
       .html_safe
   end
 
@@ -206,21 +206,13 @@ class Contribution < ActiveRecord::Base
   end
 
   # this works because the route in question is aliased to 'edit_contribution'
-  def contribution_request_link (type)
-    if ['contribution', 'feedback'].include?(type)
-      Rails.application.routes.url_helpers.url_for({
-        subdomain: self.company.subdomain,
-        controller: 'contributions', action: 'edit',
-        token: self.access_token, type: type
-      })
-    else  # unsubscribe, opt_out
-      Rails.application.routes.url_helpers.url_for({
-        subdomain: self.company.subdomain,
-        controller: 'contributions', action: 'update',
-        token: self.access_token, unsubscribe: type == 'unsubscribe',
-        opt_out: type == 'opt_out'
-      })
-    end
+  def invitation_link (type)
+    Rails.application.routes.url_helpers.url_for({
+      subdomain: self.company.subdomain,
+      controller: 'contributions',
+      action: ['contribution', 'feedback'].include?(type) ? 'edit' : 'update',
+      token: self.access_token, type: type
+    })
   end
 
   def set_request_sent_at

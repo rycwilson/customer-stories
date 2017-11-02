@@ -1,12 +1,12 @@
 class CrowdsourcingTemplate < ActiveRecord::Base
 
+  default_scope { order(name: :asc) }
+
   belongs_to :company
   has_many :contributions
   has_many :templates_questions, dependent: :destroy
   has_many :contributor_questions, through: :templates_questions
   accepts_nested_attributes_for :contributor_questions, allow_destroy: true
-
-  default_scope { order(name: :asc) }
 
   # after_commit(on: :create) do
   #   self.contributor_questions << self.company.contributor_questions.default
