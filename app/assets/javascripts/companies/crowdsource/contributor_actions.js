@@ -219,11 +219,12 @@ function contributorActionsListeners () {
         url: contributionPath(contributionId),
         method: 'get',
         data: {
-          get_contribution_content: true
+          get_submission: true
         },
         dataType: 'json'
       })
         .done(function (contribution, status, xhr) {
+          console.log(contribution)
           $.when(
             $('#contribution-content-modal .modal-content').empty().append(
               _.template( $('#contribution-content-template').html() )({

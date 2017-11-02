@@ -2,8 +2,11 @@
 function successActionsListeners () {
 
   var successPath = function (successId) {
-          return '/successes/' + successId;
-        },
+        return '/successes/' + successId;
+      },
+      contributionPath = function (contributionId) {
+        return '/contributions/' + contributionId;
+      },
       formattedDate = function (date) {
           return moment(date).calendar(null, {
             sameDay: '[today]',
@@ -67,7 +70,7 @@ function successActionsListeners () {
       $('.contributors.checkbox-filter input').prop('checked', true).trigger('change');
     })
 
-    .on('click', '.success-actions .view-contributions', function () {
+    .on('click', '.success-actions .view-submissions', function () {
 
       var successId = $(this).closest('tr').data('success-id'),
           contributionIds = [], contributions = [];
@@ -80,13 +83,14 @@ function successActionsListeners () {
         })
         .map(function (contribution) { return contribution.id; });
 
+
       contributionIds.forEach(function (id) {
 
         $.ajax({
           url: contributionPath(id),
           method: 'get',
           data: {
-            get_contribution_content: true
+            get_submission: true
           },
           dataType: 'json'
         })

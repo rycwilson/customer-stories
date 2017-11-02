@@ -40,7 +40,7 @@ class ContributionsController < ApplicationController
           contributor: { only: [:email], methods: [:full_name] }
         }
       )
-    elsif params[:get_contribution_content]
+    elsif params[:get_submission]
       respond_with(
         @contribution, only: [:id, :status, :contribution, :feedback, :submitted_at],
         include: {

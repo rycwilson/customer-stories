@@ -1,24 +1,25 @@
+
 (function () {
 
   // this mirrors company.contributions.pending (with some additions)
   var contribution = <%= raw @contribution.to_json({
-          only: [:id, :status, :contribution, :feedback, :linkedin, :notes, :publish_contributor, :contributor_unpublished, :success_id],
-          methods: [],
-          include: {
-            success: {
-              only: [:name, :customer_id], methods: [:previous_changes],
-              include: {
-                customer: { only: [:name], methods: [:previous_changes] }
-              }
-            },
-            contributor: {
-              only: [:id, :first_name, :last_name, :title, :email, :phone,
-                     :linkedin_url, :linkedin_company, :linkedin_title,
-                     :linkedin_location, :linkedin_photo_url],
-              methods: [:full_name, :linkedin_data?, :previous_changes]
+        only: [:id, :status, :contribution, :feedback, :linkedin, :notes, :publish_contributor, :contributor_unpublished, :success_id],
+        methods: [],
+        include: {
+          success: {
+            only: [:name, :customer_id], methods: [:previous_changes],
+            include: {
+              customer: { only: [:name], methods: [:previous_changes] }
             }
+          },
+          contributor: {
+            only: [:id, :first_name, :last_name, :title, :email, :phone,
+                   :linkedin_url, :linkedin_company, :linkedin_title,
+                   :linkedin_location, :linkedin_photo_url],
+            methods: [:full_name, :linkedin_data?, :previous_changes]
           }
-        }) %>,
+        }
+      }) %>,
 
       updateFilterOptions = function () {
         // new customer was created

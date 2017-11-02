@@ -1,0 +1,29 @@
+
+<div id='learn-more' class='well' style='margin-top:15px!important'>
+  <h3 class='text-center'>Learn More</h3>
+  <ul class='list-unstyled' style='line-height:26px'>
+
+    <% story.ctas.each do |cta| %>
+
+      <li>
+        <% if cta.type == 'CTALink' %>
+
+          <a class="cta-link" href="<%= cta.link_url %>" target='_blank'>
+            <p><%= cta.display_text %></p>
+          </a>
+
+        <% else %>
+
+          <a href="#cta-form-<%= cta.id %>-modal"
+             class="cta-form" data-toggle='modal'
+             data-target="#cta-form-<%= cta.id %>-modal">
+            <p><%= cta.display_text %></p>
+          </a>
+
+        <% end %>
+       </li>
+
+    <% end %>
+
+  </ul>
+</div>
