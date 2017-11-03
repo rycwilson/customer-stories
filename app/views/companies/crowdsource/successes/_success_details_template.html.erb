@@ -1,14 +1,51 @@
 
 <script type='text/template' id='success-details-template'>
 
-  <ul class='list-unstyled'>
-    <li>Story Candidate description/notes</li>
-    <li>Curator / Success Contact details</li>
-    <li>List of contributors, next steps</li>
-    <li>category / product tags</li>
-    <li>contribution request prompts</li>
-    <li>default email template</li>
-    <li>...</li>
-  </ul>
+  {{ var AUTH_TOKEN = $('meta[name=csrf-token]').attr('content'); }}
+
+  <div class="container success-details" style='width:100%'>
+
+    <form action='{{= successPath }}' method='post' data-remote='true' data-type='script' class='success-form'>
+
+      <input type="hidden" name="_method" value="put">
+      <input type="hidden" name="authenticity_token" value="{{= AUTH_TOKEN }}">
+
+      <div class="row">
+        <div class='col-sm-6'>
+
+          <div class='form-group' style='width:100%'>
+            <label for='curator_name'>Curator</label>
+              <input type="text" id='curator_name' class="form-control" value="{{= success.curator.full_name }}" style='width:100%' readonly>
+          </div>
+
+        </div>
+        <div class='col-sm-6'>
+
+          <div class='form-group' style='width:100%'>
+            <label for='success_description'>Description</label>
+              <textarea id='success_description' name="success[description]" class="form-control" rows='8' style='width:100%'>{{= success.description }}</textarea>
+          </div>
+
+        </div>
+      </div>
+
+      <hr>
+
+      <div class='row'>
+        <div class="col-sm-12 text-right">
+          <button type="reset" class="btn btn-sm btn-default">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-sm btn-success text-center" style='width:48px'>
+            <span>Save</span>
+            <i class='fa fa-spinner fa-pulse submit' style='display:none'></i>
+            <i class='fa fa-check submit' style='display:none'></i>
+          </button>&nbsp;
+        </div>
+      </div>
+
+    </form>
+
+  </div>
 
 </script>

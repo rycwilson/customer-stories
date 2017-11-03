@@ -21,6 +21,34 @@ td.actions-dropdown {
   }
 }
 
+// child rows
+.datatable tr:not(.group) > td[colspan] {
+  padding: 20px 10px;
+  background-color: #f5f5f5;
+  .form-group {
+    width: 100%;
+    margin-bottom: 15px;
+    .form-control {
+      width: 100%;
+      font-size: 13px;
+    }
+  }
+  .col-sm-3 {
+    padding-left: 0;
+  }
+  .col-sm-9 {
+    padding: 0;
+  }
+   .linkedin-checkbox-container {
+        width: 100%;
+        label {
+          width: 100%;
+          padding-left: 36px;
+        }
+      }
+
+}
+
 .link-dialog {
   .modal-content {
     overflow: hidden;  // this forces .modal-header background to respect border-radius
@@ -135,12 +163,6 @@ td.actions-dropdown {
   }
 
   #successes-table {
-    tr[data-success-id] + tr:not([data-success-id]):not(.group) {
-      background-color: #f5f5f5;
-      > td {
-        padding: 20px 8px;
-      }
-    }
     td.actions-dropdown {
       > div {
         position: relative;

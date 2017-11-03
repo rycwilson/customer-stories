@@ -6,6 +6,7 @@
 //= require ./success_actions
 //= require ./contributor_details
 //= require ./contributor_actions
+//= require ./linkedin_util
 
 function crowdsource () {
 

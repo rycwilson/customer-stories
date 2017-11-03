@@ -1,0 +1,160 @@
+
+<script type='text/template' id='contributor-details-template'>
+
+  {{ var AUTH_TOKEN = $('meta[name=csrf-token]').attr('content'); }}
+
+  <div class="container contributor-details" style='width:100%'>
+
+    <form action='{{= contributionPath }}' method='post' data-remote='true' data-type='script' class='form-horizontal contributor-form'>
+
+      <input type="hidden" name="_method" value="put">
+      <input type="hidden" name="authenticity_token" value="{{= AUTH_TOKEN }}">
+      <input type="hidden" name="contributor" value="{{= true }}">
+
+      <!-- // without this it will try to create a new record! -->
+      <input type="hidden" name="contribution[contributor_attributes][id]" value="{{= contribution.contributor.id }}">
+
+      <div class="row">
+        <div class="col-sm-6">
+          <div class='row'>
+
+            <div class='form-group'>
+              <label for="contribution_contributor_attributes_first_name" class="col-sm-3 control-label">First name</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control"
+                  id='contribution_contributor_attributes_first_name'
+                  name="contribution[contributor_attributes][first_name]"
+                  value="{{= contribution.contributor.first_name }}">
+              </div>
+            </div>
+
+            <div class='form-group'>
+              <label for="contribution_contributor_attributes_last_name" class="col-sm-3 control-label">Last name</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control"
+                  id="contribution_contributor_attributes_last_name"
+                  name='contribution[contributor_attributes][last_name]'
+                  value="{{= contribution.contributor.last_name }}">
+              </div>
+            </div>
+
+            <div class='form-group'>
+              <label for="contribution_contributor_attributes_title" class="col-sm-3 control-label">Job Title</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control"
+                  id="contribution_contributor_attributes_title"
+                  name='contribution[contributor_attributes][title]'
+                  value="{{= contribution.contributor.title }}">
+              </div>
+            </div>
+
+            <div class='form-group'>
+              <label for="contribution_contributor_attributes_email" class="col-sm-3 control-label">Email</label>
+              <div class="col-sm-9">
+                <input type="email" class="form-control"
+                  id="contribution_contributor_attributes_email"
+                  name='contribution[contributor_attributes][email]'
+                  value="{{= contribution.contributor.email }}">
+              </div>
+            </div>
+
+            <div class='form-group'>
+              <label for="contribution_contributor_attributes_phone" class="col-sm-3 control-label">Phone</label>
+              <div class="col-sm-9">
+                <input type="tel" class="form-control"
+                  id="contribution_contributor_attributes_phone"
+                  name='contribution[contributor_attributes][phone]'
+                  value="{{= contribution.contributor.phone }}">
+              </div>
+            </div>
+
+          </div>
+        </div>
+        <div class="col-sm-6">
+          <div class='row'>
+
+            <div class='form-group'>
+              <label for="contribution_contributor_attributes_linkedin_url" class="col-sm-3 control-label">LinkedIn</label>
+              <div class="col-sm-9">
+                <input type="text" class="form-control"
+                  id="contribution_contributor_attributes_linkedin_url"
+                  name='contribution[contributor_attributes][linkedin_url]'
+                  placeholder='Profile URL'
+                  value="{{= contribution.contributor.linkedin_url }}">
+              </div>
+            </div>
+
+    <!-- // linkedin profile: publish checkbox and widget (or placeholder) -->
+
+            <div class="linkedin-profile {{= contribution.contributor.linkedin_url ? '' : 'hidden' }}">
+
+              <!-- // don't render checkbox if still in the crowdsource stage -->
+              {{ if (workflowStage === 'curate') { }}
+                <!-- // tooltip wrapper -->
+                <div class='form-group'
+                  data-toggle="{{= contribution.contributor_unpublished ? 'tooltip' : '' }}"
+                  data-placement="{{= contribution.contributor_unpublished ? 'top' : '' }}"
+                  title="{{= contribution.contributor_unpublished ? 'Contributor has removed their profile from this story' : '' }}">
+
+                  <div class="linkedin-checkbox-container {{= contribution.contributor_unpublished ? 'contributor-unpublished' : '' }}">
+                    <label for='contribution-publish-contributor-{{= contribution.contributor.id }}'>
+                      <input type='checkbox'
+                        id='contribution-publish-contributor-{{= contribution.contributor.id }}'
+                        name='contribution[publish_contributor]'
+                        checked='{{= contribution.publish_contributor }}'>
+                      <span>&nbsp;&nbsp;Publish profile with this Story</span>
+                    </label>
+                  </div>
+
+                </div>  <!-- // tooltip wrapper -->
+
+              {{ } }}
+
+        <!-- // profile widget -->
+        <!-- // render csp widget in client so width can be determined dynamically -->
+              <div class="widget-container">
+
+                {{ if (contribution.contributor['linkedin_data?']) { }}
+
+                  <div class="csp-widget-container text-center"
+                  </div>
+
+                {{ } else { }}
+
+        <!-- // placeholder rendered, replaced if/when linkedin widget arrives -->
+                  <div class='placeholder-widget-container text-center' style='height:128px'>
+                  </div>
+
+        <!-- // widget is fetched when contributor child row is expanded -->
+                  <div class='linkedin-widget-container hidden text-center' style='position:relative'>
+                  </div>
+
+                {{ } }}
+
+              </div>  <!-- // .widget-container -->
+            </div>  <!-- // .linkedin-profile -->
+
+          </div>
+        </div>
+      </div>
+
+      <hr>
+
+      <div class="row">
+        <div class="col-sm-12 text-right">
+          <button type="reset" class="btn btn-sm btn-default">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-sm btn-success text-center" style='width:48px'>
+            <span>Save</span>
+            <i class='fa fa-spinner fa-pulse submit' style='display:none'></i>
+            <i class='fa fa-check submit' style='display:none'></i>
+          </button>&nbsp;
+        </div>
+      </div>
+
+    </form>
+
+  </div>
+
+</script>

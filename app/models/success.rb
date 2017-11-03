@@ -32,7 +32,6 @@ class Success < ActiveRecord::Base
   # alias the association to user -> Success.find(id).contributors
   # note: contributor is an alias - see contribution.rb
   has_many :contributors, through: :contributions, source: :contributor
-  has_many :referrers, through: :contributions, source: :referrer
   has_many :page_views, class_name: 'PageView'
   has_many :story_shares, class_name: 'StoryShare'
   has_many :visitor_actions
@@ -93,5 +92,14 @@ class Success < ActiveRecord::Base
     product.company.increment_product_select_fragments_memcache_iterator
   end
 
+  def referrer
+    if self.contributions.first.try(:referrer_id) &&
+       self.contributions.first.try(:user_id) &&
+       self.contributions.first.referrer_id == self.contributions.first.user_id
+      self.contributions.first.referrer.slice(:id, :first_name, :last_name, :email, :title, :phone, :linkedin_url)
+    else
+      nil
+    end
+  end
 end
 

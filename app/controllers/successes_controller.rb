@@ -7,7 +7,7 @@ class SuccessesController < ApplicationController
     company = Company.find_by(subdomain: request.subdomain)
     # data = Rails.cache.fetch("#{company.subdomain}/dt-successes") do
     data = company.successes.to_json({
-        only: [:id, :name, :description], methods: [:display_status],
+        only: [:id, :name, :description], methods: [:display_status, :referrer],
         include: {
           curator: { only: [:id], methods: [:full_name] },
           customer: { only: [:id, :name, :slug] },
@@ -30,6 +30,8 @@ class SuccessesController < ApplicationController
   end
 
   def update
+    @success.update(success_params)
+    respond_to { |format| format.js {} }
   end
 
   def destroy

@@ -8,23 +8,7 @@
   }
 }
 
-.table-hover > tbody > tr:hover {
-  // background-color: #f5f5f5;    // bootstrap does this part
-  .select2-dropdown:hover {
-    background-color: #f5f5f5;
-  }
-}
-
-// applies to both prospect-contributors and curate-contributors tables
 [id*="-contributors-table"] {
-
-  // contributor details child row
-  tr[data-contribution-id] + tr:not([data-contribution-id]):not(.group) {
-    background-color: #f5f5f5;
-    > td {
-      padding: 20px 8px;
-    }
-  }
 
   td.crowdsourcing-template:not(.disabled) {
     cursor: pointer;
@@ -70,61 +54,7 @@
     color: #fff !important;
   }
 
-  td.contributor-name {
-    // these were settings used for an edit icon that would appear when
-    // child row was opened...
-    // overflow: hidden;
-    // > span {
-    //   margin-left: -32px;
-    //   i {
-    //     padding: 0 10px 0 6px;
-    //     // cursor: pointer;
-    //   }
-    // }
-    // span.shown {
-    //   margin-left: 0;
-    // }
-  }
-
   td.actions-dropdown {
   }
 
-  div.contributor-details {
-    // horizontal form
-    form {
-      > .row > div:last-child {
-        padding-left: 0;
-      }
-      .form-group {
-        width: 100%;
-        margin-bottom: 15px;
-        label {
-          width: 22%;
-          padding: 7px 0 0 0;
-        }
-        > div:last-child:not(.linkedin-checkbox-container) {  // inputs
-          width: 78%;
-        }
-        .form-control {
-          font-size: 13px;
-        }
-        input:not([type='checkbox']) {
-          width: 100%;
-        }
-      }
-      .linkedin-checkbox-container {
-        width: 100%;
-        label {
-          width: 100%;
-          padding-left: 36px;
-        }
-      }
-      > .row:last-child {
-        > div:only-child {
-          padding-right: 20px;
-        }
-      }
-
-    }
-  }
 }
