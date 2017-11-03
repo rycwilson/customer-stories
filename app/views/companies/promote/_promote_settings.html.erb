@@ -32,13 +32,13 @@
   </script>
 <% end %>
 
-<div class="row enable-promote-type form-group">
+<!-- <div class="row enable-promote-type form-group">
   <div class="col-sm-12">
 
-    <%= render 'companies/promote/enable_promote_type', { company: company } %>
+    <%#= render 'companies/promote/enable_promote_type', { company: company } %>
 
   </div>
-</div>
+</div> -->
 
 <%= form_for company, url: promote_company_path(company),
       method: 'put', remote: 'true', authenticity_token: true,
