@@ -232,9 +232,10 @@ class StoriesController < ApplicationController
 
   def story_params
     params.require(:story).permit(
-      :success_id, :title, :summary, :quote, :quote_attr_name, :quote_attr_title, :video_url,
+      :title, :summary, :quote, :quote_attr_name, :quote_attr_title, :video_url, :success_id,
       :formatted_video_url, :content, :published, :logo_published, :preview_published,
-      success_attributes: [ :id, :name, :customer_id, :curator_id,
+      success_attributes: [
+        :id, :name, :customer_id, :curator_id,
         product_ids: [], story_category_ids: [],
         results_attributes: [:id, :description, :_destroy] ,
         customer_attributes: [:id, :name, :company_id]

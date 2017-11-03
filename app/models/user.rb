@@ -73,7 +73,7 @@ class User < ActiveRecord::Base
 
   def expire_published_contributor_cache
     self.own_contributions.each do |contribution|
-      if contribution.publish_contributor?
+      if contribution.publish_contributor? && contribution.story.present?
         contribution.story.expire_published_contributor_cache(self.id)
       end
     end
