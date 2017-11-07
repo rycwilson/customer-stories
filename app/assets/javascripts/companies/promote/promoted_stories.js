@@ -49,7 +49,7 @@ function promotedStoriesListeners () {
       var dt = $('#promoted-stories-table').DataTable(),
           story = dt.row($(this).closest('tr')).data();
       window.open(
-        '/sponsored-story-preview/' + story.success.customer.slug + '/' + story.slug, '_blank'
+        '/promote/preview/' + story.slug, '_blank'
       );
     });
 
