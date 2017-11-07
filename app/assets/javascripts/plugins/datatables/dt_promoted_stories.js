@@ -11,7 +11,7 @@ function initPromotedStoriesTable () {
       dataSrc: ''
     },
 
-    dom: 'tfi',
+    dom: 't',
 
     columns: [
       {
