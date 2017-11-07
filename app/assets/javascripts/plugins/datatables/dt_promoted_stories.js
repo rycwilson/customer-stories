@@ -1,32 +1,19 @@
 
 function initPromotedStoriesTable () {
+
+  var imageIndex = 0, storyTitleIndex = 1, customerIndex = 2, statusIndex = 3, actionsIndex = 4,
+      storyTitleRequirements = "Max 90 characters";
+
   $('#promoted-stories-table').DataTable({
+
     ajax: {
       url: '/companies/' + app.company.id.toString() + '/stories/promoted',
       dataSrc: ''
     },
+
     dom: 'tfi',
+
     columns: [
-      {
-        name: 'status',
-        data: 'ads_status',
-        render: function (data, type, row) {
-          return '<div style="position: relative">' +
-                   _.template($('#adwords-status-dropdown-template').html())({
-                     promoteEnabled: app.company.promote_tr,
-                     adsEnabled: data['ads_enabled?']
-                   }) +
-                 '</div>';
-        }
-      },
-      {
-        name: 'customer',
-        data: 'success.customer.name'
-      },
-      {
-        name: 'long_headline',
-        data: 'ads_long_headline'
-      },
       {
         name: 'image_url',
         data: 'ads_image_url',
@@ -40,53 +27,69 @@ function initPromotedStoriesTable () {
         }
       },
       {
+        name: 'long_headline',
+        data: 'ads_long_headline'
+      },
+      {
+        name: 'customer',
+        data: 'success.customer.name'
+      },
+      {
+        name: 'status',
+        data: 'ads_status',  // 'ENABLED' or 'PAUSED'
+        render: function (data, type, row, meta) {
+          return _.template( $('#adwords-status-dropdown-template').html() )({
+                   promoteEnabled: app.company.promote_tr,
+                   adsEnabled: data === 'ENABLED' ? true : false
+                 });
+        }
+      },
+      {
+        name: 'actions',
         data: null,
         render: function (data, type, row, meta) {
-          return '<a href="javascript:;"><i class="glyphicon glyphicon-new-window"></i></a>';
+          return _.template( $('#promoted-story-actions-dropdown-template').html() )({
+            // no parameters required at this point
+          });
         }
       },
     ],
+
     columnDefs: [
       {
-        targets: [2, 4],
+        targets: [storyTitleIndex, actionsIndex],
         orderable: false
       },
       {
-        targets: [0, 2, 4],
+        targets: [statusIndex, storyTitleIndex, actionsIndex],
         searchable: false
-      }
+      },
+      // { width: '31%', targets: storyTitleIndex },
+      // { width: '22%', targets: [imageIndex, customerIndex] },
+      { width: '10%', targets: statusIndex },
+      { width: '8%', targets: actionsIndex }
     ],
+
     createdRow: function (row, data, index) {
       $(row).attr('data-story-id', data.id);
-      $(row).children().eq(0).addClass('dropdown status-dropdown');
-      $(row).children().eq(1).addClass('promoted-story-customer');
-      $(row).children().eq(2).addClass('promoted-story-title')
+      $(row).children().eq(0).addClass('promoted-story-image');
+      $(row).children().eq(1).addClass('promoted-story-title')
                              .attr('data-title', data.title);
-      $(row).children().eq(3).addClass('promoted-story-image');
-      $(row).children().eq(4).addClass('promoted-story-preview');
+      $(row).children().eq(2).addClass('promoted-story-customer');
+      $(row).children().eq(3).addClass('dropdown status-dropdown');
+      $(row).children().eq(4).addClass('dropdown actions-dropdown');
     },
+
     initComplete: function (settings, json) {
-      proStoriesEditor = new $.fn.dataTable.Editor({
-        ajax: 'stories',   // TODO: '/stories/' + storyId + '/promote'
-        table: '#promoted-stories-table',
-        idSrc: 'id',
-        fields: [
-          { name: 'status' },
-          { name: 'customer.name' },
-          // { name: 'success' },
-          {
-            label: 'Story title:',
-            name: 'ads_long_headline',  // should match columns.data
-            type: 'textarea',
-          },
-          // { name: 'curator' },
-          // { name: 'customer' },
-          { name: 'ads_image' },
-          { name: 'actions' }
-        ]
+
+      promotedStoriesEditor = newPromotedStoriesEditor();
+      promotedStoriesEditor.on('open', function() {
+        $('.DTE_Form_Buttons')
+          .prepend('<span class="help-block">' + storyTitleRequirements + '</span>');
       });
+      $(this).css('visibility', 'visible');
+
     },
-    preSubmit: function () {
-    }
+
   });
 }

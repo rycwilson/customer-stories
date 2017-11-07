@@ -115,7 +115,7 @@ class AdwordsController < ApplicationController
       format.html do
         cookies[:workflow_stage] = 'promote'
         cookies[:workflow_substage] = 'promote-settings'
-        redirect_to(company_path(@company), flash: { success: @flash_mesg })
+        redirect_to(company_main_path('promote'), flash: { success: @flash_mesg })
       end
       format.js {}
     end

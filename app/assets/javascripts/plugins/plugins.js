@@ -8,7 +8,6 @@
 //= require ./datatables/csp_datatables
 //= require ./daterangepicker
 //= require ./google_charts
-//= require ./x_editable
 
 function constructPlugins () {
 
@@ -20,7 +19,6 @@ function constructPlugins () {
   initSummernote();
   initTooltips();
   initClicky();
-  initXeditable();
 
   $("input[type='tel']").inputmask("999-999-9999");
   $('.mini-colors').minicolors({ theme: 'bootstrap' });

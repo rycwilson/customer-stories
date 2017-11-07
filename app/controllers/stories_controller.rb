@@ -111,7 +111,6 @@ class StoriesController < ApplicationController
   def create
     pp(story_params)
     @story = Story.new(story_params)
-    # binding.remote_pry
     if @story.save
       @redirect_path = curate_story_path(@story.customer.slug, @story.slug)
     end
@@ -147,7 +146,7 @@ class StoriesController < ApplicationController
         render({
           json: @company.stories.with_ads.to_json({
                   only: [:id, :title],
-                  methods: [:ads_enabled?, :ads_status, :ads_long_headline, :ads_image_url],
+                  methods: [:ads_status, :ads_long_headline, :ads_image_url],
                   include: {
                     success: {
                       only: [],
@@ -193,6 +192,28 @@ class StoriesController < ApplicationController
       else
         # errors
       end
+      # this is the datatables data needed for a promoted story row
+      dt_data = [
+        JSON.parse(
+          @story.to_json({
+            only: [:id, :title],
+            methods: [:ads_status, :ads_long_headline, :ads_image_url],
+            include: {
+              success: {
+                only: [],
+                include: {
+                  customer: { only: [:name] }
+                }
+              }
+            }
+          })
+        )
+      ]
+      respond_to do |format|
+        format.json do
+          render({ json: { data: dt_data }.to_json })
+        end
+      end and return
     elsif request.method == 'DELETE'  # js response
       if @story.ads.all?() do |ad|
         ad.update(status:'REMOVED')

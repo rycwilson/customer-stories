@@ -1,11 +1,9 @@
 
-#promote {
+/*
+*= require ./image_select_modal
+*/
 
-  .layout {
-    > .col-md-9 {
-      padding-top: 55px;
-    }
-  }
+#promote {
 
   .enable-promote-type {
     margin-top: 1px;  // line up with Sponsored Stories text-align: left;
@@ -18,59 +16,31 @@
     }
   }
 
-  #ad-image-select-modal {
-    .thumbnail {
-      height: 110px;
-      width: 210px;
-      cursor: pointer;
-    }
-    .thumbnail.selected {
-      border-color: #337ab7;  // from bootstrap $brand-primary
-    }
-    .modal-body {
-      background-color: #f2f2f2;
-      max-height: 475px;
-      overflow-y: scroll;
-      li {
-        margin: 15px 20px;
-      }
-    }
-  }
-
   #promoted-stories {
+    margin-top: -6px;
 
-    td.promoted-story-customer {
-      vertical-align: middle;
-    }
-
-    // ref: https://github.com/vitalets/x-editable/issues/361
     td.promoted-story-title {
-      p {
-        margin-bottom: 4px;
-        line-height: 20px;
-      }
+      cursor: pointer;
       textarea {
-        margin-bottom: 6px;
+        width: 100%;
+        margin-bottom: 4px;
       }
-      a { cursor: pointer; }
-      .editable-container.editable-inline,
-      .editable-container.editable-inline .control-group.form-group,
-      .editable-container.editable-inline .control-group.form-group .editable-input,
-      .editable-container.editable-inline .control-group.form-group .editable-input textarea,
-      .editable-container.editable-inline .control-group.form-group .editable-input select,
-      .editable-container.editable-inline .control-group.form-group .editable-input input:not([type=radio]):not([type=checkbox]):not([type=submit]) {
-        width: 100% !important;
-      }
-      .editable-buttons {
-        display: block;
-        float: right;
-        margin-top: 5px;
+      .DTE_Form_Buttons {
+        .help-block {
+          display: inline-block;
+          margin-top: 0;
+          text-decoration: none;
+        }
+        .btn {
+          float: right;
+        }
+        .btn:first-of-type {
+          margin-left: 8px;  // matches td padding
+        }
       }
     }
-
-    // limit the Preview width
-    tr > th:last-of-type, tr > td:last-of-type {
-      max-width: 30px !important;
+    td.promoted-story-title:hover {
+      text-decoration: underline;
     }
 
     td.promoted-story-image {
@@ -99,21 +69,7 @@
       }
     }
 
-    .status-dropdown, .promoted-story-preview {
-      text-align: center;
-      vertical-align: middle;
-      // ref: http://stackoverflow.com/questions/11078509/how-to-increase-the-clickable-area-of-a-a-tag-button
-      > div > a, > a {
-        display: inline-block;
-        position: relative;
-        z-index: 1;
-        padding: 2em;
-        margin: -2em;
-        color: #666;
-      }
-      > a:hover {
-        color: #222;
-      }
+    td.status-dropdown {
       > div.open {
         > a.paused { color: #222; }
         > a.enabled { color: #456f59; }
@@ -147,24 +103,16 @@
     }
 
     .status-dropdown {
+      > div > a > i.fa-play,
+      > div > a > i.fa-pause {
+        font-size: 18px;
+      }
       a.dropdown-toggle:focus {
         color: #222;
         text-decoration: none
       }
-      i:first-of-type {
-        font-size: 18px;
-      }
-      i:last-of-type {
-        font-size: 14px
-      }
-      .dropdown-menu {
-        margin-top: 15px;
-      }
     }
-    .promoted-story-preview {
-      font-size: 18px;
-      i { padding-top: 2px; }
-    }
+
   }
 
   #promote-settings {
@@ -175,6 +123,9 @@
 
     // headline
     .form-inline {
+      .form-group:first-of-type {
+        margin-top: 6px;
+      }
       .help-block {
         margin-bottom: 0;
         ul { margin-bottom: 0; }
@@ -182,7 +133,7 @@
     }
 
     .form-group {
-      margin-bottom: 25px;  // bootstrap default, also covers div.form-inline (normally 0)
+      margin-bottom: 30px;  // bootstrap default, also covers div.form-inline (normally 0)
     }
 
     label[for="company_adwords_short_headline"] {

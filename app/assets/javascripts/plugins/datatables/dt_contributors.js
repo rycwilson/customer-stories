@@ -132,9 +132,9 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
       },
       { width: '0%', targets: [successIndex, curatorIndex, customerIndex, storyPublishedIndex] },
       { width: '5%', targets: 0 },
-      { width: '32%', targets: [contributorIndex, crowdsourcingTemplateIndex] },
-      { width: '21%', targets: statusIndex },
-      { width: '10%', targets: actionsIndex }
+      { width: '33%', targets: [contributorIndex, crowdsourcingTemplateIndex] },
+      { width: '22%', targets: statusIndex },
+      { width: '8%', targets: actionsIndex }
     ],
     rowGroup: workflowStage === 'curate' ? null : {
       dataSrc: 'success.name',

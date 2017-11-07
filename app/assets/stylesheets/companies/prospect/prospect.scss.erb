@@ -3,51 +3,59 @@
 *= require ./successes
 *= require ./contributors
 *= require ./contributors_modals
+*= require ./contributor_invitation_modal
+*= require ./contribution_content_modal
+*= require ./bootbox_modals
 */
 
+#prospect {
 
-td {
-  vertical-align: middle !important;  // override bootstrap for case of inline editor expanding row height
-  i:not(.submit) { color: #999; }
-}
-td.status {
-  // this ensures newlines will be respected
-  // ref: https://stackoverflow.com/questions/10937218
-  white-space: pre;
-}
-td.actions-dropdown {
-  .dropdown-menu {
-    padding: 9px 0;
+  div[id*="table_wrapper"] {
+    margin-top: 8px;
   }
-}
 
-// child rows
-.datatable tr:not(.group) > td[colspan] {
-  padding: 20px 10px;
-  background-color: #f5f5f5;
-  .form-group {
-    width: 100%;
-    margin-bottom: 15px;
-    .form-control {
-      width: 100%;
-      font-size: 13px;
+  table {
+
+    td.status {
+      // this ensures newlines will be respected
+      // ref: https://stackoverflow.com/questions/10937218
+      white-space: pre;
     }
-  }
-  .col-sm-3 {
-    padding-left: 0;
-  }
-  .col-sm-9 {
-    padding: 0;
-  }
-   .linkedin-checkbox-container {
+
+    tr.group,
+    tr.group:hover {
+      background-color: #ddd;
+    }
+
+    // child rows
+    .datatable tr:not(.group) > td[colspan] {
+      padding: 20px 10px;
+      background-color: #f5f5f5;
+      .form-group {
         width: 100%;
-        label {
+        margin-bottom: 15px;
+        .form-control {
           width: 100%;
-          padding-left: 36px;
+          font-size: 13px;
         }
       }
+      .col-sm-3 {
+        padding-left: 0;
+      }
+      .col-sm-9 {
+        padding: 0;
+      }
+       .linkedin-checkbox-container {
+            width: 100%;
+            label {
+              width: 100%;
+              padding-left: 36px;
+            }
+          }
+    }
+  }
 
-}
+} // #prospect
 
 .link-dialog {
   .modal-content {
@@ -58,23 +66,7 @@ td.actions-dropdown {
   }
 }
 
-.bootbox.modal.confirm-remove-contributor,
-.bootbox.modal.confirm-remove-success {
-  .modal-content {
-    background-color: #f2dede;
-    border-color: #ebccd1;
-    color: #a94442;
-    overflow: hidden;  // so background color doesn't extend past border radius
-  }
-  .modal-footer {
-    background-color: #fff;
-    border-top: 1px solid #ebccd1;
-  }
-  .modal-body {
-    font-size: 16px !important;
-    border-color: #ebccd1;
-  }
-}
+
 
 #new-success-modal, #new-contributor-modal {
   .modal-body {
@@ -149,25 +141,4 @@ td.actions-dropdown {
   .select2-container {
     width: 100%;
   }
-}
-
-#prospect {
-
-  div[id*="table_wrapper"] {
-    margin-top: 8px;
-  }
-
-  tr.group,
-  tr.group:hover {
-    background-color: #ddd;
-  }
-
-  #successes-table {
-    td.actions-dropdown {
-      > div {
-        position: relative;
-      }
-    }
-  }
-
 }

@@ -1,4 +1,73 @@
 
+function newPromotedStoriesEditor() {
+  return new $.fn.dataTable.Editor({
+    table: '#promoted-stories-table',
+    ajax: {
+      url: '/stories/_id_/promote',
+      type: 'put',
+      data: function (data) {
+        var storyId = Object.keys(data.data)[0];
+        return {
+          adwords: {
+            long_headline: data.data[storyId].long_headline
+          }
+        };
+      }
+    },
+    idSrc: 'id',
+    fields: [
+      {
+        label: 'Sponsored Story Title',
+        name: 'long_headline',
+        data: 'ads_long_headline',
+        type: 'textarea'
+      }
+    ]
+  });
+}
+
+function openPromotedStoriesEditor (promotedStoriesEditor, $row) {
+  promotedStoriesEditor.inline(
+    $row.find('td.promoted-story-title')[0],
+    'long_headline',
+    { // default options: https://editor.datatables.net/reference/option/formOptions.inline
+      onComplete: function (editor) {
+        var storyId = $row.data('story-id'),
+            $table = $(editor.s.table),
+            dt = $table.DataTable(),
+            rowData = dt.row($row).data();
+        editor.close();
+
+        // the drawType option isn't forcing a re-draw (?), so re-draw the individual row(s)
+        // forum discussion: https://datatables.net/forums/discussion/45189
+        dt.row($row).data(rowData).draw();
+
+        // update adwords
+        $.ajax({
+          url: '/stories/' + storyId + '/adwords',
+          method: 'put',
+          data: { long_headline_changed: true },
+          dataType: 'script'
+        });
+      },
+      drawType: true,
+      // buttons are in reverse order of how they're diplayed because they both have float:right
+      buttons: [
+        {
+          label: 'Save',
+          className: 'btn btn-sm btn-success',
+          fn: function () { this.submit(); }
+        },
+        {
+          label: 'Cancel',
+          className: 'btn btn-sm btn-default',
+          fn: function () { this.close(); }
+        }
+      ]
+    }
+  );
+}
+
 function newContributorsEditor (workflowStage, templateSelectOptions) {
 
   return new $.fn.dataTable.Editor({

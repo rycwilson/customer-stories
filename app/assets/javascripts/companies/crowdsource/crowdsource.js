@@ -99,15 +99,6 @@ function crowdsourceListeners () {
         }
       })
 
-    .on('shown.bs.dropdown', '.actions-dropdown', function () {
-        $(this).closest('tr').addClass('active');
-      })
-
-    .on('hidden.bs.dropdown', '.actions-dropdown', function () {
-        $(this).closest('tr').removeClass('active');
-        // $(this).children().last().css('color', '#666');
-      })
-
     // https://www.gyrocode.com/articles/jquery-datatables-column-width-issues-with-bootstrap-tabs/
     .on('shown.bs.tab', '#prospect a[data-toggle="tab"]', function(e) {
          $($.fn.dataTable.tables(true)).DataTable()

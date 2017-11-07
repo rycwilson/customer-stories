@@ -100,9 +100,9 @@ function initSuccessesTable (dtSuccessesInit) {
       },
       { width: '0%', targets: [customerIndex, curatorIndex, storyIndex] },  // hidden
       { width: '5%', targets: 0 },
-      { width: '60%', targets: successIndex },
-      { width: '25%', targets: statusIndex },
-      { width: '10%', targets: actionsIndex }
+      { width: '61%', targets: successIndex },
+      { width: '26%', targets: statusIndex },
+      { width: '8%', targets: actionsIndex }
     ],
     rowGroup: {
       dataSrc: 'customer.name',

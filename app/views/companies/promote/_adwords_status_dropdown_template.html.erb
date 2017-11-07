@@ -1,90 +1,59 @@
 
 <script type='text/template' id='adwords-status-dropdown-template'>
 
-  {{ if (promoteEnabled) { }}
+  <div>
 
-    <a href="javascript:;" class="dropdown-toggle {{= adsEnabled ? 'enabled' : 'paused' }}" data-toggle='dropdown'>
+    {{ if (promoteEnabled) { }}
 
-      <i class="fa {{= adsEnabled ? 'fa-play' : 'fa-pause' }}"></i>&nbsp;
-      <i class='fa fa-caret-down'></i>
-    </a>
+      <a href="javascript:;" class="dropdown-toggle {{= adsEnabled ? 'enabled' : 'paused' }}" data-toggle='dropdown'>
+        <i class="fa {{= adsEnabled ? 'fa-play' : 'fa-pause' }}"></i>&nbsp;
+        <i class='fa fa-caret-down'></i>
+      </a>
 
-    <ul class='dropdown-menu'>
+      <ul class='dropdown-menu dropdown-menu-right'>
 
-      {{ if (adsEnabled) { }}
-
-        <li>
+        <li class="ads-enabled" style="{{= adsEnabled ? '' : 'display:none' }}">
           <a href="javascript:;" class="enabled">
-            <i class='fa fa-play'></i>&nbsp;&nbsp;
+            <i class='fa fa-play fa-fw'></i>&nbsp;&nbsp;
             <strong>Enabled</strong>
           </a>
         </li>
 
-        <li>
+        <li class="ads-enabled" style="{{= adsEnabled ? '' : 'display:none' }}">
           <a href="javascript:;" class='pause'>
-            <i class='fa fa-pause'></i>&nbsp;&nbsp;
+            <i class='fa fa-pause fa-fw'></i>&nbsp;&nbsp;
             <span>Pause</span>
           </a>
         </li>
 
-        <li style='display:none'>
+        <li class="ads-disabled" style="{{= adsEnabled ? 'display:none' : '' }}">
           <a href="javascript:;" class='enable'>
-            <i class='fa fa-play'></i>&nbsp;&nbsp;
+            <i class='fa fa-play fa-fw'></i>&nbsp;&nbsp;
             <span>Enable</span>
           </a>
         </li>
 
-        <li style='display:none'>
+        <li class="ads-disabled" style="{{= adsEnabled ? 'display:none' : '' }}">
           <a href="javascript:;" class="paused">
-            <i class='fa fa-pause'></i>&nbsp;&nbsp;
+            <i class='fa fa-pause fa-fw'></i>&nbsp;&nbsp;
             <strong>Paused</strong>
           </a>
         </li>
 
-      {{ } else { }}
+      </ul>
 
-        <li>
-          <a href="javascript:;" class='enable'>
-            <i class='fa fa-play'></i>&nbsp;&nbsp;
-            <span>Enable</span>
-          </a>
-        </li>
+    {{ } else { }}
 
-        <li>
-          <a href="javascript:;" class="paused">
-            <i class='fa fa-pause'></i>&nbsp;&nbsp;
-            <strong>Paused</strong>
-          </a>
-        </li>
+      <a href="javascript:;" class="dropdown-toggle paused disabled"
+         data-toggle='dropdown' disabled
+         data-toggle='tooltip' title='Contact Customer Stories to subscribe to this feature'>
+        <i class="fa fa-pause"></i>&nbsp;
+        <i class='fa fa-caret-down'></i>
+      </a>
 
-        <li style='display:none'>
-          <a href="javascript:;" class="enabled">
-            <i class='fa fa-play'></i>&nbsp;&nbsp;
-            <strong>Enabled</strong>
-          </a>
-        </li>
+    {{ } }}
 
-        <li style='display:none'>
-          <a href="javascript:;" class='pause'>
-            <i class='fa fa-pause'></i>&nbsp;&nbsp;
-            <span>Pause</span>
-          </a>
-        </li>
-
-      {{ } }}
-
-    </ul>
-
-  {{ } else { }}
-
-    <a href="javascript:;" class="dropdown-toggle paused disabled"
-       data-toggle='dropdown' disabled
-       data-toggle='tooltip' title='Contact Customer Stories to subscribe to this feature'>
-      <i class="fa fa-pause"></i>&nbsp;
-      <i class='fa fa-caret-down'></i>
-    </a>
-
-  {{ } }}
+  </div>
 
 </script>
 

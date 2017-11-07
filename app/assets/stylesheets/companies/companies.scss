@@ -3,10 +3,10 @@
 *= require ./new
 *= require ./show
 *= require ./edit
-*= require ./crowdsource/crowdsource
-*= require ./curate
-*= require ./promote
-*= require ./measure
+*= require ./prospect/prospect
+*= require ./curate/curate
+*= require ./promote/promote
+*= require ./measure/measure
 */
 
 .companies {
@@ -50,6 +50,45 @@
     }
   }
 
+}
+
+.datatable {
+
+  tr.active i:not(.action) {
+    color: white;
+    text-decoration: none;
+  }
+
+  td {
+    vertical-align: middle !important;  // override bootstrap for case of inline editor expanding row height
+    i[class*="fa-caret"] { color: #999; }
+  }
+
+  th.actions-dropdown {
+    text-align: center;
+    padding: 8px 12px;
+  }
+
+  td.status-dropdown, td.actions-dropdown {
+    text-align: center;
+    > div {
+      position: relative;
+      // ref: http://stackoverflow.com/questions/11078509/how-to-increase-the-clickable-area-of-a-a-tag-button
+      > a {
+        position: relative;
+        display: inline-block;
+        background: transparent;
+        border: transparent;
+        z-index: 1;
+        padding: 2em;
+        margin: -2em;
+        // color: #666;
+      }
+      .dropdown-menu {
+        padding: 9px 0;
+      }
+    }
+  }
 }
 
 

@@ -1,7 +1,7 @@
 
 //= require ./promoted_stories
 //= require ./promote_settings
-//= require ./image_select_modal
+//= require ./image_select
 
 function promote () {
 }

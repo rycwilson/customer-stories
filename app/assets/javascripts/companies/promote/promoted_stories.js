@@ -3,6 +3,12 @@ function promotedStoriesListeners () {
 
   $(document)
 
+    // change long headline
+    .on('click', 'td.promoted-story-title', function () {
+      var $row = $(this).parent();
+      openPromotedStoriesEditor(promotedStoriesEditor, $row);
+    })
+
     // change status
     .on('click', 'td.status-dropdown .dropdown-menu a.pause, ' +
                  'td.status-dropdown .dropdown-menu a.enable', function () {
@@ -38,36 +44,11 @@ function promotedStoriesListeners () {
 
     })
 
-    // story image select
-    .on('click', 'td.promoted-story-image .thumbnail', function () {
-      // if <= 1, there is no alterative to the current image
-      if ( $('#ad-image-select-modal li').length <= 1 ) { return false; }
-
-      var $modal = $('#ad-image-select-modal'),
-          storyId = $(this).closest('tr').data('story-id'),
-          currentImageUrl = $(this).children('img').attr('src'),
-          template = _.template( $('#adwords-image-select-form-template').html() );
-
-      // remove any query param that was used to refresh an image
-      if (currentImageUrl.match(/\?\d+/)) {
-        currentImageUrl = currentImageUrl.slice(0, currentImageUrl.lastIndexOf('?'));
-      }
-
-      // hide the current image
-      $modal.find('img[src="' + currentImageUrl + '"]')
-            .closest('li').addClass('hidden');
-      // add the form
-      $modal.find('.modal-footer').empty()
-            .append( template({ storyId: storyId }) );
-      $modal.modal('show');
-    })
-
-
     // ad previews - separate window
-    .on('click', '.promoted-story-preview a', function () {
+    .on('click', '.promoted-story-actions .preview', function () {
       var storyId = $(this).closest('tr').data('story-id');
       window.open('/stories/' + storyId +
                   '/sponsored_story_preview', '_blank');
-    })
+    });
 
 }
