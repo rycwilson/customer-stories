@@ -13,6 +13,8 @@ function initPromotedStoriesTable () {
 
     dom: 't',
 
+    order: [[ statusIndex, 'asc' ]],
+
     columns: [
       {
         name: 'image_url',
@@ -36,12 +38,16 @@ function initPromotedStoriesTable () {
       },
       {
         name: 'status',
-        data: 'ads_status',  // 'ENABLED' or 'PAUSED'
+        data: 'ads_status',
         render: function (data, type, row, meta) {
-          return _.template( $('#adwords-status-dropdown-template').html() )({
-                   promoteEnabled: app.company.promote_tr,
-                   adsEnabled: data === 'ENABLED' ? true : false
-                 });
+          if (type === 'display') {
+            return _.template( $('#adwords-status-dropdown-template').html() )({
+                     promoteEnabled: app.company.promote_tr,
+                     adsEnabled: data === 'ENABLED' ? true : false
+                   });
+          } else {
+            return data;
+          }
         }
       },
       {
@@ -57,7 +63,7 @@ function initPromotedStoriesTable () {
 
     columnDefs: [
       {
-        targets: [storyTitleIndex, actionsIndex],
+        targets: [imageIndex, storyTitleIndex, actionsIndex],
         orderable: false
       },
       {
