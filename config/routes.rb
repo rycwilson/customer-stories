@@ -55,6 +55,12 @@ Rails.application.routes.draw do
               Story.friendly.exists?(params[:story_slug]) &&
               params[:id] = Story.friendly.find(params[:story_slug]).id
             }, as: 'curate_story'
+      get '/sponsored-story-preview/:customer_slug/:story_slug', to: 'adwords#preview',
+            constraints: lambda { |params, request|
+              Customer.friendly.exists?(params[:customer_slug]) &&
+              Story.friendly.exists?(params[:story_slug]) &&
+              params[:id] = Story.friendly.find(params[:story_slug]).id
+            }
       get '/company-settings', to: 'companies#edit',
             constraints: lambda { |params, request|
               params[:id] = request.env['warden'].user(:user).company_id.to_s
@@ -75,7 +81,6 @@ Rails.application.routes.draw do
           member { post '/adwords', to: 'adwords#create_story_ads' }
           member { put '/adwords', to: 'adwords#update_story_ads' }
           member { delete '/adwords', to: 'adwords#remove_story_ads' }
-          member { get '/sponsored_story_preview', to: 'adwords#preview' }
           member { put :ctas }
           member { put :tags }
         end

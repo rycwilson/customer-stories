@@ -46,9 +46,11 @@ function promotedStoriesListeners () {
 
     // ad previews - separate window
     .on('click', '.promoted-story-actions .preview', function () {
-      var storyId = $(this).closest('tr').data('story-id');
-      window.open('/stories/' + storyId +
-                  '/sponsored_story_preview', '_blank');
+      var dt = $('#promoted-stories-table').DataTable(),
+          story = dt.row($(this).closest('tr')).data();
+      window.open(
+        '/sponsored-story-preview/' + story.success.customer.slug + '/' + story.slug, '_blank'
+      );
     });
 
 }

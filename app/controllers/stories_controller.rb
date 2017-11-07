@@ -145,13 +145,13 @@ class StoriesController < ApplicationController
       format.json do
         render({
           json: @company.stories.with_ads.to_json({
-                  only: [:id, :title],
+                  only: [:id, :title, :slug],
                   methods: [:ads_status, :ads_long_headline, :ads_image_url],
                   include: {
                     success: {
                       only: [],
                       include: {
-                        customer: { only: [:name] }
+                        customer: { only: [:name, :slug] }
                       }
                     }
                   }
