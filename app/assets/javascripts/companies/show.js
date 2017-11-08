@@ -2,7 +2,7 @@
 function companiesShow () {
 
   // panel-specific stuff
-  crowdsource();
+  prospect();
   curate();
   promote();
 
@@ -10,7 +10,7 @@ function companiesShow () {
 
 function companiesShowListeners () {
 
-  crowdsourceListeners();
+  prospectListeners();
   curateListeners();
   promoteListeners();
   measureListeners();

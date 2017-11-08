@@ -86,12 +86,14 @@
 
     <!-- // linkedin profile: publish checkbox and widget (or placeholder) -->
 
-            <div class="linkedin-profile {{= contribution.contributor.linkedin_url ? '' : 'hidden' }}">
+            <div class="form-group linkedin-profile {{= contribution.contributor.linkedin_url ? '' : 'hidden' }}">
 
               <!-- // don't render checkbox if still in the crowdsource stage -->
               {{ if (workflowStage === 'curate') { }}
+
                 <!-- // tooltip wrapper -->
-                <div class='form-group'
+                <label class="col-sm-3 control-label"></label>
+                <div class="col-sm-9" style="padding-bottom:10px"
                   data-toggle="{{= contribution.contributor_unpublished ? 'tooltip' : '' }}"
                   data-placement="{{= contribution.contributor_unpublished ? 'top' : '' }}"
                   title="{{= contribution.contributor_unpublished ? 'Contributor has removed their profile from this story' : '' }}">
@@ -106,13 +108,13 @@
                     </label>
                   </div>
 
-                </div>  <!-- // tooltip wrapper -->
+                </div>
 
               {{ } }}
 
         <!-- // profile widget -->
         <!-- // render csp widget in client so width can be determined dynamically -->
-              <div class="widget-container">
+              <div class="widget-container" style='padding-left:24px'>
 
                 {{ if (contribution.contributor['linkedin_data?']) { }}
 

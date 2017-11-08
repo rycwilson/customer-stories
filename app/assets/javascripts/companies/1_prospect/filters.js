@@ -1,5 +1,5 @@
 
-function crowdsourceFiltersListeners () {
+function prospectFiltersListeners () {
 
   // keep track of the last column search, so table can be reset on the next search
   var lastSuccessesSearchColumn = 'success', lastContributorsSearchColumn = 'contributor';

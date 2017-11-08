@@ -8,13 +8,13 @@
 //= require ./contributor_actions
 //= require ./linkedin_util
 
-function crowdsource () {
+function prospect () {
 
 }
 
-function crowdsourceListeners () {
+function prospectListeners () {
 
-  crowdsourceFiltersListeners();
+  prospectFiltersListeners();
   newSuccessListeners();
   newContributorListeners();
   successDetailsListeners();

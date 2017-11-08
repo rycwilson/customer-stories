@@ -72,11 +72,11 @@
     .col-sm-9 {
       padding: 0;
     }
-   .linkedin-checkbox-container {
-      width: 100%;
-      label {
-        width: 100%;
-        padding-left: 36px;
+   .linkedin-profile {
+
+      // publish checkbox
+      > div:first-child {
+        margin-bottom: 10px;
       }
     }
   }

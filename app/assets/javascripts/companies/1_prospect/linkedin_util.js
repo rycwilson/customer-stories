@@ -36,8 +36,9 @@ function loadLinkedinWidget ($tr, contribution) {
                       "data-width='" + widgetWidth.toString() + "'></script>"),
         widgetMarginTop = '-' + $placeholderWidgetContainer.css('height'),
         newWidgetPostMesgHandler = function (event) {
-          // console.log(event);
-          if ( $('body').hasClass('companies show') ) {
+
+          // TOFIX: manage body class when async loading stories#edit
+          if ( $('body').hasClass('companies show') || $('body').hasClass('stories edit') ) {
             // in Chrome, the origin property is in the event.originalEvent object
             var origin = event.origin || event.originalEvent.origin;
             if ( origin === "https://platform.linkedin.com" &&

@@ -2,10 +2,10 @@
 //= require ./new
 //= require ./show
 //= require ./edit
-//= require ./crowdsource/crowdsource
-//= require ./curate/curate
-//= require ./promote/promote
-//= require ./measure/measure
+//= require ./1_prospect/prospect
+//= require ./2_curate/curate
+//= require ./3_promote/promote
+//= require ./4_measure/measure
 
 function attachCompaniesListeners () {
 
