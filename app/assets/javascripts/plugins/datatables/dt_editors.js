@@ -81,7 +81,7 @@ function newContributorsEditor (workflowStage, templateSelectOptions) {
     idSrc: 'id',
     fields: [
       {
-        label: 'Select a template',
+        label: 'Invitation Template',
         name: 'crowdsourcing_template.id',  // should match columns.data
         data: {
           _: 'crowdsourcing_template.id',

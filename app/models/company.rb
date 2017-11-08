@@ -26,6 +26,10 @@ class Company < ActiveRecord::Base
         [ customer.name, customer.id ]
       end
     end
+    def curator_customers(curator_id)
+      joins(:successes)
+      .where(successes: { curator_id: curator_id })
+    end
   end
   has_many :successes, -> { includes(:story) }, through: :customers do
     def select_options
@@ -33,6 +37,9 @@ class Company < ActiveRecord::Base
         [ success.name, success.id ]
       end
       .unshift( [""] )  # empty option makes placeholder possible (only needed for single select)
+    end
+    def curator_successes(curator_id)
+      where(curator_id: curator_id)
     end
   end
   has_many :curators, -> { distinct }, through: :successes, source: :curator

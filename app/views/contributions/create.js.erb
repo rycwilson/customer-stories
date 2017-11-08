@@ -71,12 +71,10 @@
     .ajax.reload(function (contributions) {
       if (!isCurateView()) {
         $trContribution = $('#prospect-contributors-table tr[data-contribution-id="' + contribution.id + '"]');
+        openContributorDetails($trContribution)
         $('html, body').animate({ scrollTop: $trContribution.offset().top - 80 }, 200)
           .promise()
-          .then(function () {
-            openContributorDetails($trContribution);
-            hideModal();
-          });
+          .then(function () { hideModal(); });
       }
     });
 
@@ -84,12 +82,10 @@
     .ajax.reload(function (contributions) {
       if (isCurateView()) {
         $trContribution = $('#curate-contributors-table tr[data-contribution-id="' + contribution.id + '"]');
+        openContributorDetails($trContribution);
         $('html, body').animate({ scrollTop: 65 }, 200)
           .promise()
-          .then(function () {
-            openContributorDetails($trContribution);
-            hideModal();
-          });
+          .then(function () { hideModal(); });
       }
     })
 

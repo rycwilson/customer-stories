@@ -10,10 +10,13 @@
       <div class="form-group search">
         <label for="">Curator</label>
         <i class='fa fa-remove search-all fa-fw'></i>
-        <%= select_tag('curator_select',
-              options_for_select(company.curators.map() do |c|
-                [c.full_name, c.id]
-              end.unshift(['All Curators', 0])),
+        <%= select_tag(
+              'curator_select',
+              options_for_select(
+                company.curators.map do |c|
+                  [c.full_name, c.id]
+                end.unshift(['All Curators', 0])
+              ),
               { class: 'curate curator-select form-control', style: 'width:100%' }
             ) %>
       </div>
@@ -24,7 +27,6 @@
         <%= select_tag('customer_select',
               options_for_select(
                 company.customers.select_options.unshift(['All Customers', 0]),
-                includ_blank: true
               ),
               { class: 'curate customer-select form-control', style: 'width:100%' }
             ) %>

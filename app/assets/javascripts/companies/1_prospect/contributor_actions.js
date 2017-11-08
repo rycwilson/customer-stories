@@ -6,8 +6,10 @@ function contributorActionsListeners () {
         return '/contributions/' + contributionId;
       },
       missingCuratorInfo = function () {
-        return ['first_name', 'last_name', 'photo', 'phone', 'position']
-          .filter(function (item) { return app.current_user[item] === '' ; });
+        return ['first_name', 'last_name', 'photo', 'phone', 'title']
+          .filter(function (item) {
+            return app.current_user[item] === '' ;
+          });
       },
 
       // type is 'send' or 'readonly'
