@@ -3,88 +3,84 @@
 
   <script type='text/template' id='success-actions-dropdown-template'>
 
-    <div>
+    <a href="javascript:;" class="dropdown-toggle" data-toggle='dropdown'>
+      <i class='fa fa-caret-down'></i>
+    </a>
 
-      <a href="javascript:;" class="dropdown-toggle" data-toggle='dropdown'>
-        <i class='fa fa-caret-down'></i>
-      </a>
+    <ul class='success-actions dropdown-menu dropdown-menu-right dropdown-actions'>
 
-      <ul class='success-actions dropdown-menu dropdown-menu-right dropdown-actions'>
+      {{ if (status.match(/0.+Contributors\sadded/)) { }}
 
-        {{ if (status.match(/0.+Contributors\sadded/)) { }}
-
-          <li class='add-contributor'>
-            <a href="javascript:;">
-              <i class='fa fa-users fa-fw action'></i>&nbsp;&nbsp;
-              <span>Add Contributors</span>
-            </a>
-          </li>
-
-        {{ } else if (status.match(/0.+Contributors\sinvited/)) { }}
-
-          <li class='manage-contributors'>
-            <a href="javascript:;">
-              <i class='fa fa-users fa-fw action'></i>&nbsp;&nbsp;
-              <span>Invite Contributors</span>
-            </a>
-          </li>
-
-        {{ } else { }}
-
-          {{ if (!status.match(/0.+Contributions\ssubmitted/) ) { }}
-
-            <li class='view-submissions'>
-              <a href="javascript:;">
-                <i class='fa fa-comments fa-fw action'></i>&nbsp;&nbsp;
-                <span>View Contributions & Feedback</span>
-              </a>
-            </li>
-
-          {{ } }}
-
-          <li class='manage-contributors'>
-            <a href="javascript:;">
-              <i class='fa fa-users fa-fw action'></i>&nbsp;&nbsp;
-              <span>Manage Contributors</span>
-            </a>
-          </li>
-
-        {{ } }}
-
-        <li role="separator" class="divider"></li>
-
-        {{ if (!story) { }}
-
-          <li class='start-curation'>
-            <a href="javascript:;">
-              <i class='fa fa-play fa-fw action'></i>&nbsp;&nbsp;
-              <span>Start Story Curation</span>
-            </a>
-          </li>
-
-        {{ } else { }}
-
-          <li>
-            <a href="{{= curateStoryPath }}">
-              <i class='fa fa-edit fa-fw action'></i>&nbsp;&nbsp;
-              <span>Curate Story</span>
-            </a>
-          </li>
-
-        {{ } }}
-
-        <li role="separator" class="divider"></li>
-
-        <li class='remove'>
+        <li class='add-contributor'>
           <a href="javascript:;">
-            <i class='fa fa-remove fa-fw action'></i>&nbsp;&nbsp;
-            <span>Remove</span>
+            <i class='fa fa-users fa-fw action'></i>&nbsp;&nbsp;
+            <span>Add Contributors</span>
           </a>
         </li>
 
-      </ul>
+      {{ } else if (status.match(/0.+Contributors\sinvited/)) { }}
 
-    </div>
+        <li class='manage-contributors'>
+          <a href="javascript:;">
+            <i class='fa fa-users fa-fw action'></i>&nbsp;&nbsp;
+            <span>Invite Contributors</span>
+          </a>
+        </li>
+
+      {{ } else { }}
+
+        {{ if (!status.match(/0.+Contributions\ssubmitted/) ) { }}
+
+          <li class='view-submissions'>
+            <a href="javascript:;">
+              <i class='fa fa-comments fa-fw action'></i>&nbsp;&nbsp;
+              <span>View Contributions & Feedback</span>
+            </a>
+          </li>
+
+        {{ } }}
+
+        <li class='manage-contributors'>
+          <a href="javascript:;">
+            <i class='fa fa-users fa-fw action'></i>&nbsp;&nbsp;
+            <span>Manage Contributors</span>
+          </a>
+        </li>
+
+      {{ } }}
+
+      <li role="separator" class="divider"></li>
+
+      {{ if (!story) { }}
+
+        <li class='start-curation'>
+          <a href="javascript:;">
+            <i class='fa fa-play fa-fw action'></i>&nbsp;&nbsp;
+            <span>Start Story Curation</span>
+          </a>
+        </li>
+
+      {{ } else { }}
+
+        <li>
+          <a href="{{= curateStoryPath }}">
+            <i class='fa fa-edit fa-fw action'></i>&nbsp;&nbsp;
+            <span>Curate Story</span>
+          </a>
+        </li>
+
+      {{ } }}
+
+      <li role="separator" class="divider"></li>
+
+      <li class='remove'>
+        <a href="javascript:;">
+          <i class='fa fa-remove fa-fw action'></i>&nbsp;&nbsp;
+          <span>Remove</span>
+        </a>
+      </li>
+
+    </ul>
 
   </script>
 

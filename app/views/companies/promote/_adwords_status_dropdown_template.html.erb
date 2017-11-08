@@ -1,59 +1,55 @@
 
 <script type='text/template' id='adwords-status-dropdown-template'>
 
-  <div>
+  {{ if (promoteEnabled) { }}
 
-    {{ if (promoteEnabled) { }}
+    <a href="javascript:;" class="dropdown-toggle {{= adsEnabled ? 'enabled' : 'paused' }}" data-toggle='dropdown'>
+      <i class="fa {{= adsEnabled ? 'fa-play' : 'fa-pause' }}"></i>&nbsp;
+      <i class='fa fa-caret-down'></i>
+    </a>
 
-      <a href="javascript:;" class="dropdown-toggle {{= adsEnabled ? 'enabled' : 'paused' }}" data-toggle='dropdown'>
-        <i class="fa {{= adsEnabled ? 'fa-play' : 'fa-pause' }}"></i>&nbsp;
-        <i class='fa fa-caret-down'></i>
-      </a>
+    <ul class='dropdown-menu dropdown-menu-right'>
 
-      <ul class='dropdown-menu dropdown-menu-right'>
+      <li class="ads-enabled" style="{{= adsEnabled ? '' : 'display:none' }}">
+        <a href="javascript:;" class="enabled">
+          <i class='fa fa-play fa-fw'></i>&nbsp;&nbsp;
+          <strong>Enabled</strong>
+        </a>
+      </li>
 
-        <li class="ads-enabled" style="{{= adsEnabled ? '' : 'display:none' }}">
-          <a href="javascript:;" class="enabled">
-            <i class='fa fa-play fa-fw'></i>&nbsp;&nbsp;
-            <strong>Enabled</strong>
-          </a>
-        </li>
+      <li class="ads-enabled" style="{{= adsEnabled ? '' : 'display:none' }}">
+        <a href="javascript:;" class='pause'>
+          <i class='fa fa-pause fa-fw'></i>&nbsp;&nbsp;
+          <span>Pause</span>
+        </a>
+      </li>
 
-        <li class="ads-enabled" style="{{= adsEnabled ? '' : 'display:none' }}">
-          <a href="javascript:;" class='pause'>
-            <i class='fa fa-pause fa-fw'></i>&nbsp;&nbsp;
-            <span>Pause</span>
-          </a>
-        </li>
+      <li class="ads-disabled" style="{{= adsEnabled ? 'display:none' : '' }}">
+        <a href="javascript:;" class='enable'>
+          <i class='fa fa-play fa-fw'></i>&nbsp;&nbsp;
+          <span>Enable</span>
+        </a>
+      </li>
 
-        <li class="ads-disabled" style="{{= adsEnabled ? 'display:none' : '' }}">
-          <a href="javascript:;" class='enable'>
-            <i class='fa fa-play fa-fw'></i>&nbsp;&nbsp;
-            <span>Enable</span>
-          </a>
-        </li>
+      <li class="ads-disabled" style="{{= adsEnabled ? 'display:none' : '' }}">
+        <a href="javascript:;" class="paused">
+          <i class='fa fa-pause fa-fw'></i>&nbsp;&nbsp;
+          <strong>Paused</strong>
+        </a>
+      </li>
 
-        <li class="ads-disabled" style="{{= adsEnabled ? 'display:none' : '' }}">
-          <a href="javascript:;" class="paused">
-            <i class='fa fa-pause fa-fw'></i>&nbsp;&nbsp;
-            <strong>Paused</strong>
-          </a>
-        </li>
+    </ul>
 
-      </ul>
+  {{ } else { }}
 
-    {{ } else { }}
+    <a href="javascript:;" class="dropdown-toggle paused disabled"
+       data-toggle='dropdown' disabled
+       data-toggle='tooltip' title='Contact Customer Stories to subscribe to this feature'>
+      <i class="fa fa-pause"></i>&nbsp;
+      <i class='fa fa-caret-down'></i>
+    </a>
 
-      <a href="javascript:;" class="dropdown-toggle paused disabled"
-         data-toggle='dropdown' disabled
-         data-toggle='tooltip' title='Contact Customer Stories to subscribe to this feature'>
-        <i class="fa fa-pause"></i>&nbsp;
-        <i class='fa fa-caret-down'></i>
-      </a>
-
-    {{ } }}
-
-  </div>
+  {{ } }}
 
 </script>
 

@@ -117,6 +117,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
         defaultContent: 'false'
       },
     ],
+
     columnDefs: [
       {
         targets: [successIndex, curatorIndex, customerIndex, storyPublishedIndex],
@@ -136,6 +137,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
       { width: '22%', targets: statusIndex },
       { width: '8%', targets: actionsIndex }
     ],
+
     rowGroup: workflowStage === 'curate' ? null : {
       dataSrc: 'success.name',
       startRender: function (groupRows, successName) {
@@ -189,7 +191,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
         .addClass('crowdsourcing-template')
         .append('<i class="fa fa-caret-down"></i>');
       $(row).children().eq(3).addClass('status');
-      $(row).children().eq(4).addClass('dropdown actions-dropdown');
+      $(row).children().eq(4).addClass('actions dropdown');
 
       // template can only be selected if status is in
       // (a) request hasn't been sent yet

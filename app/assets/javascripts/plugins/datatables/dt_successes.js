@@ -75,7 +75,7 @@ function initSuccessesTable (dtSuccessesInit) {
       {
         data: 'display_status',
         render: function (data, type, row, meta) {
-            return _.template( $('#success-actions-dropdown-template').html() )({
+            return _.template($('#success-actions-dropdown-template').html())({
                 status: data,
                 story: row.story,
                 curateStoryPath: row.story &&
@@ -123,7 +123,7 @@ function initSuccessesTable (dtSuccessesInit) {
       // $(row).children().eq(1).addClass('success');
       $(row).children().eq(1).attr('data-filter', data.id);
       $(row).children().eq(2).addClass('status');
-      $(row).children().eq(3).addClass('dropdown actions-dropdown');
+      $(row).children().eq(3).addClass('actions dropdown');
     },
     initComplete: function (settings, json) {
 

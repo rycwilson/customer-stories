@@ -10,8 +10,8 @@ function promotedStoriesListeners () {
     })
 
     // change status
-    .on('click', 'td.status-dropdown .dropdown-menu a.pause, ' +
-                 'td.status-dropdown .dropdown-menu a.enable', function () {
+    .on('click', 'td.status.dropdown .dropdown-menu a.pause, ' +
+                 'td.status.dropdown .dropdown-menu a.enable', function () {
       var storyId = $(this).closest('tr').data('story-id');
 
       $(this).closest('.dropdown')

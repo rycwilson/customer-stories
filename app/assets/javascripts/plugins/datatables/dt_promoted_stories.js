@@ -82,8 +82,8 @@ function initPromotedStoriesTable () {
       $(row).children().eq(1).addClass('promoted-story-title')
                              .attr('data-title', data.title);
       $(row).children().eq(2).addClass('promoted-story-customer');
-      $(row).children().eq(3).addClass('dropdown status-dropdown');
-      $(row).children().eq(4).addClass('dropdown actions-dropdown');
+      $(row).children().eq(3).addClass('status dropdown');
+      $(row).children().eq(4).addClass('actions dropdown');
     },
 
     initComplete: function (settings, json) {

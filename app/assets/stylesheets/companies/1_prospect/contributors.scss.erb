@@ -1,0 +1,60 @@
+
+.row.contributors-header {
+  height: 150px;
+  .dropdown {
+    button, .dropdown-menu {
+      width: 170px
+    }
+  }
+}
+
+[id*="-contributors-table"] {
+
+  tr.active {
+    td.crowdsourcing-template .placeholder {
+      color: #fff !important;
+    }
+  }
+
+  td.crowdsourcing-template:not(.disabled) {
+    cursor: pointer;
+    position: relative;
+    padding-right: 40px;
+    i {
+      position: absolute;
+      right: 20px;
+      top: 50%;
+      transform: translate(0, -50%);
+    }
+  }
+
+  td.crowdsourcing-template.editor-open {
+    padding-right: 8px;
+  }
+
+  td.crowdsourcing-template {
+    span.select2 {
+      margin-bottom: 8px;
+    }
+    .btn-success {
+      float: right;
+    }
+    .placeholder {
+      color: #999;
+    }
+  }
+
+  td.status {
+    position: relative;
+    i {
+      position: absolute;
+      display: none;
+      right: 10px;
+      top: 50%;
+      transform: translate(0, -50%);
+      color: #456f59;
+    }
+  }
+
+
+}

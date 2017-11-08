@@ -3,13 +3,13 @@
 *= require ./new
 *= require ./show
 *= require ./edit
-*= require ./prospect/prospect
-*= require ./curate/curate
-*= require ./promote/promote
-*= require ./measure/measure
+*= require ./1_prospect/prospect
+*= require ./2_curate/curate
+*= require ./3_promote/promote
+*= require ./4_measure/measure
 */
 
-.companies {
+.companies.show, .stories.edit {
 
   .companies.new, .companies.edit {
     .layout-main {
@@ -91,31 +91,36 @@
     i[class*="fa-caret"] { color: #999; }
   }
 
-  th.actions-dropdown {
+  th.actions {
     text-align: center;
     padding: 8px 12px;
   }
 
-  td.status-dropdown, td.actions-dropdown {
+  td.status.dropdown, td.actions.dropdown {
     text-align: center;
-    > div {
+
+    // ref: http://stackoverflow.com/questions/11078509/how-to-increase-the-clickable-area-of-a-a-tag-button
+    > a {
       position: relative;
-      // ref: http://stackoverflow.com/questions/11078509/how-to-increase-the-clickable-area-of-a-a-tag-button
-      > a {
-        position: relative;
-        display: inline-block;
-        background: transparent;
-        border: transparent;
-        z-index: 1;
-        padding: 2em;
-        margin: -2em;
-        // color: #666;
-      }
-      .dropdown-menu {
-        padding: 9px 0;
-      }
+      display: inline-block;
+      background: transparent;
+      border: transparent;
+      z-index: 1;
+      padding: 2em;
+      margin: -2em;
+    }
+    .dropdown-menu {
+      padding: 9px 0;
     }
   }
+  td.status.dropdown.open, td.actions.dropdown.open {
+    border-bottom: 1px solid #d74b4b;
+    .dropdown-menu {
+      border-top-right-radius: 0;
+      margin: 1px 0;
+    }
+  }
+
 }
 
 

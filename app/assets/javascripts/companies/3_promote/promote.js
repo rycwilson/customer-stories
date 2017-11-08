@@ -76,7 +76,7 @@ function promoteTooltips () {
       }
     });
 
-  $('td.status-dropdown a.disabled').tooltip({
+  $('td.status.dropdown a.disabled').tooltip({
     container: 'body'
   });
 
