@@ -20,7 +20,16 @@
           }
         }
       }) %>,
-
+      $trContribution,
+      isCurateView = function () {
+        return $('a[href="#curate-contributors"]').parent().hasClass('active')
+      },
+      hideModal = function () {
+        $('#new-contributor-modal').modal('hide');
+      }
+      openContributorDetails = function ($tr) {
+        $tr.find('.contributor-details').trigger('click');
+      },
       updateFilterOptions = function () {
         // new customer was created
         if (contribution.success.customer.previous_changes.id) {
@@ -53,35 +62,36 @@
 
   updateFilterOptions();
 
-  // if ('<%= alert() %>') {
-  //   flashDisplay('Error adding Contributor: <%= alert() %>', 'danger')
-  // } else {
+  // update app.contributions
+  app.contributions.push(contribution)
 
-    // update app.contributions
-    app.contributions.push(contribution)
-
-    $('table[id*="contributors-table"]').DataTable()
-      .ajax.reload(function (contributions) {
-
-        var $trContribution = $('tr[data-contribution-id="' + contribution.id + '"]'),
-            openContributorDetails = function () {
-              $trContribution.find('.contributor-details').trigger('click');
-            },
-            hideModal = function () {
-              $('#new-contributor-modal').modal('hide');
-            }
-
-        // ref: https://stackoverflow.com/questions/6677035
+  // reload tables and scroll to new contributor
+  // (reload tables with separate .reload calls to ensure scroll only happens once)
+  $('#prospect-contributors-table').DataTable()
+    .ajax.reload(function (contributions) {
+      if (!isCurateView()) {
+        $trContribution = $('#prospect-contributors-table tr[data-contribution-id="' + contribution.id + '"]');
         $('html, body').animate({ scrollTop: $trContribution.offset().top - 80 }, 200)
           .promise()
           .then(function () {
-            openContributorDetails()
+            openContributorDetails($trContribution);
             hideModal();
           });
+      }
+    });
 
-      })
-
-  // }
+  $('#curate-contributors-table').DataTable()
+    .ajax.reload(function (contributions) {
+      if (isCurateView()) {
+        $trContribution = $('#curate-contributors-table tr[data-contribution-id="' + contribution.id + '"]');
+        $('html, body').animate({ scrollTop: 65 }, 200)
+          .promise()
+          .then(function () {
+            openContributorDetails($trContribution);
+            hideModal();
+          });
+      }
+    })
 
 }());
 

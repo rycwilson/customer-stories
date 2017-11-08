@@ -14,33 +14,6 @@
     margin-top: 8px;
   }
 
-  table {
-    th[class*='details'], td[class*='details'] {
-      // padding necessary to override datatables css that adds padding-right: 30px to the th,
-      // thus preventing text from centering horizontally
-      padding: 8px;
-      vertical-align: middle;
-      text-align: center;
-      cursor: pointer;
-      color: #666;
-    }
-    tr.active {
-      i:not(.action) {
-        color: white;
-        text-decoration: none;
-      }
-    }
-    tr.group,
-    tr.group:hover {
-      background-color: #ddd;
-    }
-    td.status {
-      // this ensures newlines will be respected
-      // ref: https://stackoverflow.com/questions/10937218
-      white-space: pre;
-    }
-  }
-
 }
 
 .link-dialog {
