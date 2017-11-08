@@ -15,10 +15,6 @@ function contributorDetailsListeners () {
           contribution = app.contributions.find(function (c) {
             return c.id === contributionId;
           });
-console.log('open contributor details')
-console.log('contribution: ', contribution)
-console.log('contributionPath: ', contributionPath)
-console.log('workflowStage: ', workflowStage)
       if (dtRow.child.isShown()) {
         dtRow.child.hide();
         $tr.children().last().css('color', '#666');
@@ -36,8 +32,6 @@ console.log('workflowStage: ', workflowStage)
         $tr.children().last().css('color', 'white');
         $("input[type='tel']").inputmask("999-999-9999");
         $tr.find('td.contributor-name > span').addClass('shown');
-        console.log('typeof in.js: ', typeof IN)
-        console.log('linkedin_url: ', contribution.contributor.linkedin_url)
         if (contribution.contributor.linkedin_url) {
           loadCspOrPlaceholderWidget($tr.next(), contribution);
           loadLinkedinWidget($tr.next(), contribution);
