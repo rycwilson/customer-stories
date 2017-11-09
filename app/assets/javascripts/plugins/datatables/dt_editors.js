@@ -127,11 +127,19 @@ function openContributorsEditor (contributorsEditor, $row) {
         }
       },
       drawType: true,
-      buttons: {
-        label: 'Save',
-        className: 'btn-success btn-sm',
-        fn: function () { this.submit(); }
-      }
+      // buttons are in reverse order of how they're diplayed because they both have float:right
+      buttons: [
+        {
+          label: 'Save',
+          className: 'btn btn-sm btn-success',
+          fn: function () { this.submit(); }
+        },
+        {
+          label: 'Cancel',
+          className: 'btn btn-sm btn-default',
+          fn: function () { this.close(); }
+        }
+      ]
     }
   );
 

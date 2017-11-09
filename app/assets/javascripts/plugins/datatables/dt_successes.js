@@ -104,6 +104,7 @@ function initSuccessesTable (dtSuccessesInit) {
       { width: '26%', targets: statusIndex },
       { width: '8%', targets: actionsIndex }
     ],
+
     rowGroup: {
       dataSrc: 'customer.name',
       startRender: function (groupRows, successName) {
@@ -116,15 +117,16 @@ function initSuccessesTable (dtSuccessesInit) {
                   '</td>');
       }
     },
+
     createdRow: function (row, data, index) {
       $(row).attr('data-customer-id', data.customer.id);
       $(row).attr('data-success-id', data.id);
       $(row).children().eq(0).addClass('success-details');
-      // $(row).children().eq(1).addClass('success');
       $(row).children().eq(1).attr('data-filter', data.id);
       $(row).children().eq(2).addClass('status');
       $(row).children().eq(3).addClass('actions dropdown');
     },
+
     initComplete: function (settings, json) {
 
       var $table = $(this),
@@ -142,7 +144,7 @@ function initSuccessesTable (dtSuccessesInit) {
 
       // trigger curator select and show tables
       dtSuccessesInit.resolve();
-
     }
+
   });
 }

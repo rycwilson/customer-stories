@@ -103,6 +103,11 @@ function prospectListeners () {
     .on('shown.bs.tab', '#prospect a[data-toggle="tab"]', function(e) {
          $($.fn.dataTable.tables(true)).DataTable()
             .columns.adjust();
+      })
+
+    .on('click', 'div.success-details button[type="reset"], ' +
+                 'div.contributor-details button[type="reset"]', function () {
+        $(this).closest('tr').prev().find('td[class*="details"]').trigger('click');
       });
 
 }
