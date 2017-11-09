@@ -37,7 +37,7 @@
             <%= story_form.check_box(:published, class: "bs-switch form-control") %>
             <%= link_to('Approval', story_approval_path(story.id, format: :pdf),
                   id: 'approval-pdf', target: '_blank',
-m                  data: { missing_curator_info: story.curator.missing_info.to_json,
+                  data: { missing_curator_info: story.curator.missing_info.to_json,
                           missing_company_info: company.missing_info.to_json,
                           turbolinks: false },
                   ) %>
