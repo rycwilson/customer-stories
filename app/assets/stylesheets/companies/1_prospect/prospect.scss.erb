@@ -25,6 +25,53 @@
   }
 }
 
+#successes-table, [id*="contributors-table"] {
+  th[class*="details"], td[class*="details"] {
+    // padding necessary to override datatables css that adds padding-right: 30px to the th,
+    // thus preventing text from centering horizontally
+    padding: 8px;
+    vertical-align: middle;
+    text-align: center;
+    cursor: pointer;
+    color: #666;
+  }
+  // child rows
+  tr:not(.group) > td[colspan]:not(.dataTables_empty) {
+    padding: 20px 10px;
+    background-color: #f5f5f5;
+    border: 1px solid #08c;
+    .form-group {
+      width: 100%;
+      margin-bottom: 15px;
+      .form-control {
+        width: 100%;
+        font-size: 13px;
+      }
+    }
+    .col-sm-3 {
+      padding-left: 0;
+    }
+    .col-sm-9 {
+      padding: 0;
+    }
+   .linkedin-profile {
+
+      // publish checkbox
+      > div:first-child {
+        margin-bottom: 10px;
+      }
+    }
+  }
+  tr.group,
+  tr.group:hover {
+    background-color: #ddd;
+  }
+  td.status {
+    // this ensures newlines will be respected
+    // ref: https://stackoverflow.com/questions/10937218
+    white-space: pre;
+  }
+}
 
 
 #new-success-modal, #new-contributor-modal {
