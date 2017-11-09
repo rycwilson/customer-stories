@@ -94,7 +94,7 @@ function initSuccessesTable (dtSuccessesInit) {
           if (col === 0) {
             $(td).addClass('success-details');
           } else {
-            $(td).addClass('dropdown actions-dropdown');
+            $(td).addClass('actions dropdown');
           }
         }
       },
