@@ -91,6 +91,11 @@
     color: #666;
   }
 }
+.dropdown-menu.dropdown-actions > li > a.disabled {
+  pointer-events: none;
+  cursor: default;
+  opacity: 0.5;
+}
 
 .turbolinks-progress-bar {
   height: 1px;

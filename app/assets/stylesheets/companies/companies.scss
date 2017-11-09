@@ -79,10 +79,11 @@
     white-space: pre;
   }
 
-    // child rows
-  tr:not(.group) > td[colspan] {
+  // child rows
+  tr:not(.group) > td[colspan]:not(.dataTables_empty) {
     padding: 20px 10px;
     background-color: #f5f5f5;
+    border: 1px solid #08c;
     .form-group {
       width: 100%;
       margin-bottom: 15px;
@@ -106,9 +107,17 @@
     }
   }
 
-  tr.active i:not(.action) {
-    color: white;
-    text-decoration: none;
+  tr.active {
+    td:first-child {
+      border-left: 1px solid #08c;
+    }
+    td:last-child {
+      border-right: 1px solid #08c;
+    }
+    i:not(.action) {
+      color: white;
+      text-decoration: none;
+    }
   }
 
   td {

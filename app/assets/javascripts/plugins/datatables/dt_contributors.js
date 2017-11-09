@@ -100,9 +100,11 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
         // data is status as this will determine actions available
         data: 'status',
         render: function (data, type, row, meta) {
+          console.log(row)
             return _.template( $('#contributor-actions-dropdown-template').html() )({
               status: data,
               workflowStage: workflowStage,
+              invitationTemplate: row.crowdsourcing_template,
               story: row.success.story, // might be nil
               viewStoryPath: row.success.story && row.success.story.csp_story_path,
               curateStoryPath: row.success.story &&
