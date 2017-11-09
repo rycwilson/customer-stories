@@ -132,21 +132,22 @@ function contributorActionsListeners () {
 
   $(document)
 
-    .on('click', '.contributor-actions .send-request', function () {
-      var contributionId = $(this).closest('tr').data('contribution-id');
-
-      if (missingCuratorInfo().length > 0) {
+    .on('click', '.contributor-actions .send-invitation', function (e) {
+      if ($(this).hasClass('disabled')) {
+        return false;
+      }
+      else if (missingCuratorInfo().length > 0) {
         flashDisplay("Can't send email because the following Curator fields are missing: "  +
           missingCuratorInfo().join(', '), 'danger');
         return false;
-
       } else {
+        var contributionId = $(this).closest('tr').data('contribution-id');
         getInvitation(contributionId, 'send');
       }
 
     })
 
-    .on('click', '.contributor-actions .re-send-request', function () {
+    .on('click', '.contributor-actions .re-send-invitation', function () {
       var contributionId = $(this).closest('tr').data('contribution-id');
 
       if (missingCuratorInfo().length > 0) {

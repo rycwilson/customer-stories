@@ -9,8 +9,8 @@
 
     {{ if (status === 'pre_request') { }}
 
-      <li class='send-request'>
-        <a href="javascript:;" class="{{= invitationTemplate ? '' : 'disabled' }}">
+      <li class="send-invitation {{= invitationTemplate ? '' : 'disabled' }}">
+        <a href="javascript:;">
           <i class='fa fa-envelope-o fa-fw action'></i>&nbsp;&nbsp;
           <span>Send Invitation</span>
         </a>
@@ -29,7 +29,7 @@
 
     {{ if (status === 'did_not_respond') { }}
 
-      <li class='re-send-request'>
+      <li class='re-send-invitation'>
         <a href="javascript:;">
           <i class='fa fa-envelope-o fa-fw action'></i>&nbsp;&nbsp;
           <span>Re-send Invitation</span>

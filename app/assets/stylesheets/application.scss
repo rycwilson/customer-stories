@@ -86,15 +86,12 @@
 
 .dropdown-menu.dropdown-actions > li > a {
   padding: 6px 12px 6px 6px;
+}
+.dropdown-menu.dropdown-actions > li:not(.disabled) > a {
   color: #444;
   i.action {
     color: #666;
   }
-}
-.dropdown-menu.dropdown-actions > li > a.disabled {
-  pointer-events: none;
-  cursor: default;
-  opacity: 0.5;
 }
 
 .turbolinks-progress-bar {
