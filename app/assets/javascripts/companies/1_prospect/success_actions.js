@@ -64,8 +64,16 @@ function successActionsListeners () {
 
     .on('click', '.success-actions .manage-contributors', function (e) {
       var successId = $(this).closest('tr').data('success-id');
-      $('a[href="#prospect-contributors"]').tab('show');
       $('#contributors-filter').val('success-' + successId).trigger('change');
+      $('#contributors-filter').select2('focus');
+      $(document)
+        .one('click', function () {
+          $('#contributors-filter').next().removeClass('select2-container--focus');
+        })
+        .one('shown.bs.tab', 'a[href="#prospect-contributors"]', function () {
+          $('html, body').animate({ scrollTop: 65 }, 200);
+        });
+      $('a[href="#prospect-contributors"]').tab('show');
       // for a filtered view, default to checkbox filters all applied (nothing hidden)
       $('.contributors.checkbox-filter input').prop('checked', true).trigger('change');
     })

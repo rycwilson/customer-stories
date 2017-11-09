@@ -73,6 +73,18 @@
       text-decoration: none;
     }
   }
+  tr.active:hover {
+    td:first-child {
+      border-left-color: #0075b0 !important;
+    }
+    td:last-child {
+      border-right-color: #0075b0 !important;
+    }
+  }
+  // child row
+  tr.active:hover + tr:not(.group) > td[colspan]:not(.dataTables_empty) {
+    border-color: #0075b0 !important
+  }
 
   td {
     vertical-align: middle !important;  // override bootstrap for case of inline editor expanding row height

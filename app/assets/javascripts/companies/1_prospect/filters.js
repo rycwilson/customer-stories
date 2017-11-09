@@ -181,7 +181,17 @@ function prospectFiltersListeners () {
 
     // search reset (prospect and curate sections)
     .on('click', '.search .search-all', function () {
+      var $table = $(this).closest('[id*="table_wrapper"]').find('table'),
+          dt = $table.DataTable();
       $(this).next().val('0').trigger('change');
+
+      // close any open child rows
+      $table.find('tr').each(function () {
+          if (dt.row($(this)).child.isShown()) {
+            dt.row($(this)).child.hide();
+          }
+          $(this).removeClass('active');
+        });
     });
 
 }

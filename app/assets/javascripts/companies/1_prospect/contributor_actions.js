@@ -242,8 +242,16 @@ function contributorActionsListeners () {
 
     .on('click', '.contributor-actions .view-customer-win', function () {
       var successId = $(this).closest('tr').data('success-id');
+      $('#successes-filter').val('success-' + successId).trigger('change');
+      $('#successes-filter').select2('focus');
+      $(document)
+        .one('click', function () {
+          $('#successes-filter').next().removeClass('select2-container--focus');
+        })
+        .one('shown.bs.tab', 'a[href="#successes"]', function () {
+          $('html, body').animate({ scrollTop: 65 }, 200);
+        });
       $('a[href="#successes"]').tab('show');
-        $('#successes-filter').val('success-' + successId).trigger('change');
     })
 
     .on('click', '.contributor-actions .completed', function () {

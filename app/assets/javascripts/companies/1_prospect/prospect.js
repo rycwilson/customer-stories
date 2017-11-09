@@ -105,6 +105,7 @@ function prospectListeners () {
             .columns.adjust();
       })
 
+    // close a child row
     .on('click', 'div.success-details button[type="reset"], ' +
                  'div.contributor-details button[type="reset"]', function () {
         $(this).closest('tr').prev().find('td[class*="details"]').trigger('click');

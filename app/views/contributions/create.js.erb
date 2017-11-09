@@ -24,9 +24,6 @@
       isCurateView = function () {
         return $('a[href="#curate-contributors"]').parent().hasClass('active')
       },
-      hideModal = function () {
-        $('#new-contributor-modal').modal('hide');
-      }
       openContributorDetails = function ($tr) {
         $tr.find('.contributor-details').trigger('click');
       },
@@ -71,14 +68,19 @@
     .ajax.reload(function (contributions) {
       if (!isCurateView()) {
         $trContribution = $('#prospect-contributors-table tr[data-contribution-id="' + contribution.id + '"]');
-        console.log('contribution: ', contribution)
-        console.log('$trContribution: ', $trContribution)
         // TOFIX: $trContribution isn't found because a filter is keeping it from being displayed
         // instead, identify the source data and then turn on filters as necessary to expose it
-        openContributorDetails($trContribution)
-        $('html, body').animate({ scrollTop: $trContribution.offset().top - 80 }, 200)
+        $('html, body').animate({ scrollTop: 65 }, 200)
           .promise()
-          .then(function () { hideModal(); });
+          .then(function () {
+            $('#contributors-filter').val('contributor-' + contribution.contributor.id).trigger('change');
+            openContributorDetails($trContribution);
+            $('#contributors-filter').select2('focus');
+            $(document).one('click', function () {
+              $('#contributors-filter').next().removeClass('select2-container--focus');
+            })
+            $('#new-contributor-modal').modal('hide');
+          });
       }
     });
 
@@ -86,10 +88,12 @@
     .ajax.reload(function (contributions) {
       if (isCurateView()) {
         $trContribution = $('#curate-contributors-table tr[data-contribution-id="' + contribution.id + '"]');
-        openContributorDetails($trContribution);
         $('html, body').animate({ scrollTop: 65 }, 200)
           .promise()
-          .then(function () { hideModal(); });
+          .then(function () {
+            openContributorDetails($trContribution);
+            $('#new-contributor-modal').modal('hide');
+          });
       }
     })
 

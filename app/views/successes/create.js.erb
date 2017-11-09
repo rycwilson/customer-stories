@@ -59,19 +59,17 @@
 
   $('#successes-table').DataTable()
     .ajax.reload(function (successes) {
-      var $trSuccess = $('tr[data-success-id="' + success.id + '"]'),
-          openSuccessDetails = function () {
-            $trSuccess.find('.success-details').trigger('click');
-          },
-          hideModal = function () {
-            $('#new-success-modal').modal('hide');
-          }
-
       // ref: https://stackoverflow.com/questions/6677035
-      $('html, body').animate({ scrollTop: $trSuccess.offset().top - 80 }, 200)
-        .promise().then(function () {
-          openSuccessDetails();
-          hideModal();
+      $('html, body').animate({ scrollTop: 65 }, 200)
+        .promise()
+        .then(function () {
+          $('#successes-filter').val('success-' + success.id).trigger('change');
+          $('#successes-table td.success-details').trigger('click');
+          $('#successes-filter').select2('focus');
+          $(document).one('click', function () {
+            $('#successes-filter').next().removeClass('select2-container--focus');
+          })
+          $('#new-success-modal').modal('hide')
         });
     })
 

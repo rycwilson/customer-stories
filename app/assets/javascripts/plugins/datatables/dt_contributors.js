@@ -100,7 +100,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
         // data is status as this will determine actions available
         data: 'status',
         render: function (data, type, row, meta) {
-          console.log(row)
+          // console.log(row)
             return _.template( $('#contributor-actions-dropdown-template').html() )({
               status: data,
               workflowStage: workflowStage,
