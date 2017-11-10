@@ -120,8 +120,8 @@ class ContributionsController < ApplicationController
       @contribution.update(contribution_params)
       respond_to { |format| format.js { render action: 'update_contributor' } }
 
-    elsif ['contribution', 'feedback'].include?(params[:type])
-      if params[:contribution][:status] == 'contribution_submitted'
+    elsif ['contribution', 'feedback'].include?(contribution_params[:status])
+      if contribution_params[:status] == 'contribution_submitted'
         params[:contribution][:contribution] = consolidate_answers(params[:answers])
       end
       if @contribution.update(contribution_params)
@@ -136,9 +136,9 @@ class ContributionsController < ApplicationController
         render :edit
       end
 
-    elsif ['unsubscribe', 'opt_out'].include?(params[:type])
-      if params[:type] == 'opt_out'
-        @contribution.update(status: 'opted_out')
+    elsif ['unsubscribe', 'opt_out'].include?(contribution_params[:status])
+      if contribution_params[:status] == 'opt_out'
+        @contribution.update(contribution_params)
         # add to the opt out list
         unless OptOut.find_by(email: @contribution.contributor.email)
           OptOut.create(email: @contribution.contributor.email)
@@ -146,7 +146,7 @@ class ContributionsController < ApplicationController
           Contribution.update_opt_out_status(@contribution.contributor.email)
         end
       else
-        @contribution.update(status: 'unsubscribed')
+        @contribution.update(contribution_params)
         @opt_out_link = url_for({
           subdomain: @contribution.company.subdomain,
           controller: 'contributions', action: 'update',
