@@ -75,7 +75,7 @@ class ContributionsController < ApplicationController
   end
 
   def update
-    # pp params
+    pp params
     if params[:data]  # crowdsourcing template (datatables inline editor)
       @contribution.crowdsourcing_template_id =
           params[:data].values[0][:crowdsourcing_template][:id]
