@@ -60,7 +60,7 @@ Rails.application.routes.draw do
               Story.friendly.exists?(params[:story_slug]) &&
               params[:id] = Story.friendly.find(params[:story_slug]).id
             }
-      get '/company-settings', to: 'companies#edit',
+      get '/settings', to: 'companies#edit',
             constraints: lambda { |params, request|
               params[:id] = request.env['warden'].user(:user).company_id.to_s
               true
