@@ -33,13 +33,11 @@ class UserMailer < ApplicationMailer
   end
 
   def contribution_alert (contribution)
-    story_link = contribution.story.published? ? contribution.story.csp_story_url :
-      Rails.application.routes.url_helpers.curate_story_url(
-        contribution.customer.slug, contribution.story.slug
-      )
+    link = contribution.story.present? ? contribution.story.csp_story_url :
+      Rails.application.routes.url_helpers.company_main_url('prospect')
     subject = "#{contribution.contributor.full_name} of the #{contribution.customer.name} success story submitted #{contribution.status == 'contribution_submitted' ? 'a contribution' : 'feedback'}"
     @body = "<p>#{contribution.curator.first_name},</p>
-      <p style='margin-bottom:25px'>#{contribution.contributor.full_name} of the story <a href='#{story_link}'>#{contribution.story.title}</a> submitted a contribution:</p>
+      <p style='margin-bottom:25px'>#{contribution.contributor.full_name} of the #{contribution.story.present? ? 'Customer Story' : 'Customer Win' } <a href='#{link}'>#{contribution.story.try(:title) || contribution.success.name}</a> submitted a contribution:</p>
       #{contribution.contribution}".html_safe
     send_mail('alert', contribution.curator, contribution.curator, subject)
   end
