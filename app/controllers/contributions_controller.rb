@@ -75,7 +75,6 @@ class ContributionsController < ApplicationController
   end
 
   def update
-    pp params
     if params[:data]  # crowdsourcing template (datatables inline editor)
       @contribution.crowdsourcing_template_id =
           params[:data].values[0][:crowdsourcing_template][:id]
@@ -120,7 +119,8 @@ class ContributionsController < ApplicationController
       @contribution.update(contribution_params)
       respond_to { |format| format.js { render action: 'update_contributor' } }
 
-    elsif ['contribution', 'feedback'].include?(contribution_params[:status])
+    elsif params[:submission]
+      pp params
       if contribution_params[:status] == 'contribution_submitted'
         params[:contribution][:contribution] = consolidate_answers(params[:answers])
       end
