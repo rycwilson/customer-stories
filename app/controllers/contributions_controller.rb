@@ -136,9 +136,9 @@ class ContributionsController < ApplicationController
         render :edit
       end
 
-    elsif ['unsubscribe', 'opt_out'].include?(contribution_params[:status])
-      if contribution_params[:status] == 'opt_out'
-        @contribution.update(contribution_params)
+    elsif ['unsubscribe', 'opt_out'].include?(params[:type])
+      if params[:type] == 'opt_out'
+        @contribution.update(status: 'opted_out')
         # add to the opt out list
         unless OptOut.find_by(email: @contribution.contributor.email)
           OptOut.create(email: @contribution.contributor.email)
@@ -146,7 +146,7 @@ class ContributionsController < ApplicationController
           Contribution.update_opt_out_status(@contribution.contributor.email)
         end
       else
-        @contribution.update(contribution_params)
+        @contribution.update(status: 'unsubscribed')
         @opt_out_link = url_for({
           subdomain: @contribution.company.subdomain,
           controller: 'contributions', action: 'update',
