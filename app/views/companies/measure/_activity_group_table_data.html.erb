@@ -63,9 +63,12 @@
 <td ><%= local_time(DateTime.parse(item[:timestamp]), '%m-%d-%y %l:%M %p') %></td>
 <td><%= item[:contribution]['success']['customer']['name'] %></td>
 <td><%= item[:contribution]['contributor']['full_name'] %></td>
-<td><a href="<%= item[:contribution]['success']['story']['csp_edit_story_path'] %>">
-  <%= item[:contribution]['success']['story']['title'] %>
-</a></td>
+<td>
+  <a href="<%= (item[:contribution]['success']['story'] && item[:contribution]['success']['story']['csp_edit_story_path']) || '#' %>">
+    <%= (item[:contribution]['success']['story'] && item[:contribution]['success']['story']['title']) ||
+          item[:contribution]['success']['name'] %>
+  </a>
+</td>
 
       <% end %>
 
