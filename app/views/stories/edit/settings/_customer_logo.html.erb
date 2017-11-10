@@ -8,10 +8,8 @@
     UPDATE: ajax upload happens in the S3 config function (application.js)
    -->
 
-<div class="form-group required-input">
-
   <div>
-    <%= story_form.label(:customer_logo_url, 'Customer Logo') %>
+    <%= customer_form.label(:customer_logo_url, 'Customer Logo') %>
   </div>
 
   <div class="well fileinput customer-logo <%= story.customer.logo_url.present? ? 'fileinput-exists' : 'fileinput-new' %>" data-provides="fileinput">
@@ -36,7 +34,7 @@
     </div>
 
     <div class="btn-file">
-      <%= story_form.file_field(:customer_logo_url) %>
+      <%= customer_form.file_field(:logo_url) %>
     </div>
 
     <i class='change-image glyphicon glyphicon-pencil'></i>
@@ -60,5 +58,3 @@
     </div> -->
 
   </div>  <!-- /.fileupload -->
-
-</div>

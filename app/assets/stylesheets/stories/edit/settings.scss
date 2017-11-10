@@ -1,0 +1,77 @@
+
+#story-settings {
+
+  .form-group.tags {
+    margin-bottom: 15px;
+  }
+
+  #publish-control {
+    margin-bottom: 60px;
+
+    .form-group {
+      position: relative;
+      label {
+        margin-bottom: 6px;
+      }
+      .bootstrap-switch {
+        position: absolute;
+        left: 50%;
+        right: 50%;
+        transform: translate(-50%, -50%);
+        bottom: -45px;
+      }
+    }
+
+    .form-group:nth-of-type(2) {
+      margin: 0 20px;
+    }
+
+
+    #approval-pdf {
+      position: absolute;
+      left: 15px;
+      bottom: -50px;
+    }
+  }
+
+  .fileinput.customer-logo {
+    position: relative;  // for positioning .change-image
+    width: 100%;
+    padding: 36px 0;
+    .thumbnail {
+      position: relative;  // for positioning image
+      height: 100px;
+      width: 270px;
+      img {
+        max-height: 90px;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin: auto;
+      }
+    }
+    div.image-requirements {
+      margin-bottom: 10px;
+    }
+    .change-image {
+      position: absolute;
+      top: 5px;
+      right: 10px;
+      padding: 6px;
+      font-size: 18px;
+      color: #666;
+      cursor: pointer;
+    }
+    .change-image:hover {
+      color: #222;
+    }
+    .thumbnail {
+      margin: 0;
+    }
+    .help-block {
+      margin: 6px 0;
+    }
+  }
+}

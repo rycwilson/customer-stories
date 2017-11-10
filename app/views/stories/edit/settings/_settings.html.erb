@@ -1,15 +1,27 @@
 
 <div class="hidden">
 
-  <%= form_for(story, url: story_path(story.id), authenticity_token: true,
-        html: { method: 'put', remote: true, id: 'story-settings-form',
-                class: 'directUpload',
-                data: { 'form-data' => (@s3_direct_post.fields),
-                        'url' => @s3_direct_post.url,
-                        'host' => URI.parse(@s3_direct_post.url).host
-                } }) do |story_form| %>
+  <%= form_for(
+        story,
+        url: story_path(story.id),
+        authenticity_token: true,
+        html: {
+          id: 'story-settings-form',
+          method: 'put',
+          remote: true,
+          class: 'directUpload',
+          data: {
+            'form-data' => (@s3_direct_post.fields),
+            'url' => @s3_direct_post.url,
+            'host' => URI.parse(@s3_direct_post.url).host
+          }
+        }
+      ) do |story_form| %>
 
-    <%= hidden_field_tag('story[form]', 'settings') %>
+    <%= story_form.fields_for(:success) do |success_form| %>
+    <%= success_form.fields_for(:customer) do |customer_form| %>
+
+    <%= hidden_field_tag('settings', true) %>
 
     <div class="row">
       <div class="col-sm-5">
@@ -46,8 +58,14 @@
 
         </div>  <!-- publish control -->
 
-        <%= render 'stories/edit/settings/customer_logo',
-              { story: story, story_form: story_form } %>
+        <div class="form-group required-input">
+
+          <%= render({
+                partial: 'stories/edit/settings/customer_logo',
+                locals: { story: story, customer_form: customer_form },
+              }) %>
+
+        </div>
 
       </div>
       <div class="col-sm-7">
@@ -57,7 +75,6 @@
           <%= story_form.text_field(:title, class: 'form-control') %>
         </div>
 
-        <%= story_form.fields_for(:success) do |success_form| %>
 
           <div class="form-group tags">
 
@@ -85,7 +102,6 @@
 
           </div>
 
-        <% end %>
 
         <div class="form-group">
           <label for="#story-ctas-select">CTAs</label>
@@ -106,6 +122,9 @@
     <hr>
 
     <%= render 'shared/form_submit' %>
+
+    <% end %>
+    <% end %>
 
   <% end %>
 

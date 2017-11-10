@@ -65,11 +65,11 @@ function curateListeners () {
         method: 'get',
         dataType: 'html'
       })
-      .done(function (html, status, xhr) {
-        var cbShowTab = function () { $('a[href="#curate-story"]').tab('show'); };
-        $.when( $('#curate-story').empty().append(html) )
-          .then(function () { initStoriesEdit(cbShowTab); });
-      });
+        .done(function (html, status, xhr) {
+          var cbShowTab = function () { $('a[href="#curate-story"]').tab('show'); };
+          $.when( $('#curate-story').empty().append(html) )
+            .then(function () { initStoriesEdit(cbShowTab); });
+        });
     })
 
     .on('change', '.curate.customer-select, .curate.curator-select, .curate.category-select,' +

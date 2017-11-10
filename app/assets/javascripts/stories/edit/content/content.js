@@ -6,7 +6,7 @@
 function storiesEditContent () {
 
   loadVideoThumbnail();
-  storyFormValidator();
+  // storyFormValidator();
 
 }
 
@@ -47,7 +47,7 @@ function initStoriesEditContent () {
   $("[data-toggle='tooltip']").tooltip();
   initSummernote();
   loadVideoThumbnail();
-  storyFormValidator();
+  // storyFormValidator();
 
 }
 

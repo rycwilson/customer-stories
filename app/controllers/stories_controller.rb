@@ -87,7 +87,7 @@ class StoriesController < ApplicationController
     # want to catch an ajax request for _edit partial, but ignore tubolinks ajax requests
     if request.xhr? && !request.env["HTTP_TURBOLINKS_REFERRER"]
       render({
-        partial: 'stories/edit/curate',
+        partial: 'stories/edit/edit',
         locals: { company: @company, story: @story,
                   workflow_stage: 'curate', tab: 'settings' }
       })
@@ -119,7 +119,8 @@ class StoriesController < ApplicationController
   end
 
   def update
-    if params[:story][:form] == 'settings'
+    if params[:settings]
+      pp params
       @story.success.cta_ids = params[:ctas]
       @story.update(story_params)
       # html response necessary for uploading customer logo image
@@ -252,16 +253,17 @@ class StoriesController < ApplicationController
   private
 
   def story_params
-    params.require(:story).permit(
-      :title, :summary, :quote, :quote_attr_name, :quote_attr_title, :video_url, :success_id,
-      :formatted_video_url, :content, :published, :logo_published, :preview_published,
-      success_attributes: [
-        :id, :name, :customer_id, :curator_id,
-        product_ids: [], story_category_ids: [],
-        results_attributes: [:id, :description, :_destroy] ,
-        customer_attributes: [:id, :name, :company_id]
-      ]
-    )
+    params.require(:story)
+      .permit(
+        :title, :summary, :quote, :quote_attr_name, :quote_attr_title, :video_url, :success_id,
+        :formatted_video_url, :content, :published, :logo_published, :preview_published,
+        success_attributes: [
+          :id, :name, :customer_id, :curator_id,
+          product_ids: [], story_category_ids: [],
+          results_attributes: [:id, :description, :_destroy] ,
+          customer_attributes: [:id, :name, :logo_url, :company_id]
+        ]
+      )
   end
 
   def adwords_params

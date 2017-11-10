@@ -90,10 +90,10 @@
 
         <% if curate_view == 'story' %>
 
-          <%= render(
-                partial: 'stories/edit/curate',
+          <%= render({
+                partial: 'stories/edit/edit',
                 locals: { company: company, story: story, tab: curate_story_tab }
-              ) %>
+              }) %>
 
         <% end %>
 
