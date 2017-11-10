@@ -60,7 +60,8 @@
   $('#successes-table').DataTable()
     .ajax.reload(function (successes) {
       // ref: https://stackoverflow.com/questions/6677035
-      $('html, body').animate({ scrollTop: 65 }, 200)
+      $('html, body')
+        .animate({ scrollTop: 65 }, 200)
         .promise()
         .then(function () {
           $('#successes-filter').val('success-' + success.id).trigger('change');

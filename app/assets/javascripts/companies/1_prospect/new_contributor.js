@@ -48,13 +48,12 @@ function newContributorListeners() {
       },
 
       preSelectCustomerAndSuccess = function () {
-        $('select.new-contributor.customer').val(
-            $('#curate-story-layout').data('customer-id')
-          ).trigger('change');
+        $('select.new-contributor.customer')
+          .val($('#curate-story-layout').data('customer-id'))
+          .trigger('change');
         $('select.new-contributor.success')
-          .val(
-            $('#curate-story-layout').data('success-id')
-          ).trigger('change');
+          .val($('#curate-story-layout').data('success-id'))
+          .trigger('change');
         $('select.new-contributor.customer, select.new-contributor.success')
           .prop('disabled', true);
       },

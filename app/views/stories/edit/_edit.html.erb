@@ -34,8 +34,10 @@
 
       <div id='story-settings' class="tab-pane fade <%= (tab == 'settings' || tab.nil?) ? 'in active' : '' %>">
 
-        <%= render 'stories/edit/settings/settings',
-              { company: company, story: story } %>
+        <%= render({
+              partial: 'stories/edit/settings/settings',
+              locals: { company: company, story: story }
+            }) %>
 
       </div>
 
@@ -48,10 +50,14 @@
 
       <div id='curate-contributors' class="tab-pane fade <%= tab == 'contributors' ? 'in active' : '' %>">
 
-        <button type='button' style='margin:0 0 10px 0;' class='btn btn-secondary btn-sm' data-toggle='modal' data-target='#new-contributor-modal'><i class='glyphicon glyphicon-plus-sign' style='font-size:15px;top:2px'></i>&nbsp;&nbsp;&nbsp;New Contributor&nbsp;</button>
+        <button type='button' style='margin:0 0 10px 0;' class='btn btn-secondary btn-sm' data-toggle='modal' data-target='#new-contributor-modal'>
+          <i class='fa fa-plus-circle fa-fw'></i>&nbsp;New Contributor&nbsp;
+        </button>
 
-        <%= render 'companies/crowdsource/contributors/contributors_table',
-              { company: company, workflow_stage: 'curate' } %>
+        <%= render({
+              partial: 'companies/crowdsource/contributors/contributors_table',
+              locals: { company: company, workflow_stage: 'curate' }
+            }) %>
 
       </div>
 
