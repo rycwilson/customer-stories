@@ -8,12 +8,14 @@ function newStoryListeners () {
       var customerId = $(this).closest('tr').data('customer-id'),
           successId = $(this).closest('tr').data('success-id');
 
-      $('#new-story-form select.customer')
-        .val( customerId ).trigger('change')
+      $('select.new-story.customer')
+        .val( customerId ).trigger('change');
+      $('select.new-story.customer')
         .prop('disabled', true);
 
-      $('#new-story-form select.success')
-        .val( successId ).trigger('change')
+      $('select.new-story.success')
+        .val( successId ).trigger('change');
+      $('select.new-story.success')
         .prop('disabled', true);
 
       $('#new-story-modal').modal('show');
