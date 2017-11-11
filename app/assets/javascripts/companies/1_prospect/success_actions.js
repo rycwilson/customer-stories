@@ -148,8 +148,9 @@ function successActionsListeners () {
       $('a[href="#prospect-contributors"]').tab('show');
       $('#contributors-filter').val('success-' + successId).trigger('change');
       $('#new-contributor-modal').modal('show');
-      $('select.new-contributor.customer').val(customerId).trigger('change');
-      $('select.new-contributor.success').val(successId).trigger('change');
+      $('select.new-contributor.customer').prop('disabled', true).val(customerId).trigger('change');
+      $('select.new-contributor.success').prop('disabled', true).val(successId).trigger('change');
+
 
     });
 }
