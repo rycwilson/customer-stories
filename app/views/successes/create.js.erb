@@ -17,7 +17,6 @@
         ) %>,
       /**
        * the datatable filter state persists through a reload,
-       *
        */
       reloadContributors = function () {
         $('#prospect-contributors-table').DataTable()
@@ -27,35 +26,56 @@
           });
       },
 
-      updateFilterOptions = function () {
+      updateSelectOptions = function () {
+        // new success
         $('.dt-filter')
           .find('optgroup[label="Customer Win"]')
           .prepend(
-            $('<option value="success-' + success.id.toString() + '"' +
+            $('<option value="success-' + success.id + '"' +
                 ' data-column="success">' + success.name + '</option>')
           )
-        // new referrer
-        if (success.contributions.length &&
-            success.contributions[0].referrer.previous_changes.id) {
-          $('#contributors-filter')
-            .find('optgroup[label="Contributor"]')
-            .prepend(
-              $('<option value="contributor-' + success.contributions[0].referrer_id.toString() + '"' +
-                  ' data-column="contributor">' + success.contributions[0].referrer.full_name + '</option>')
-            )
-        }
+        $('select.success')
+          .find('option:first-of-type') // empty placeholder option
+          .after(
+            $('<option value="success-' + success.id + '"' +
+              ' data-column="success">' + success.name + '</option>')
+          )
+
         // new customer
         if (success.customer.previous_changes.id) {
           $('.dt-filter')
             .find('optgroup[label="Customer"]')
             .prepend(
-              $('<option value="customer-' + success.customer_id.toString() + '"' +
-                  ' data-column="customer">' + success.customer.name + '</option>')
+              $('<option value="customer-' + success.customer_id + '"' +
+                ' data-column="customer">' + success.customer.name + '</option>')
+            )
+          $('select.customer')
+            .find('option:first-of-type') // empty placeholder option
+            .after(
+              $('<option value="customer-' + success.customer_id + '"' +
+                ' data-column="customer">' + success.customer.name + '</option>')
+            )
+
+        }
+
+        // new referrer
+        if (success.contributions.length && success.contributions[0].referrer.previous_changes.id) {
+          $('#contributors-filter')
+            .find('optgroup[label="Contributor"]')
+            .prepend(
+              $('<option value="contributor-' + success.contributions[0].referrer_id + '"' +
+                  ' data-column="contributor">' + success.contributions[0].referrer.full_name + '</option>')
+            )
+          $('select.referrer')
+            .find('option[value="0"]') // - Create New Contact -
+            .after(
+              $('<option value="' + success.contributions[0].referrer.id + '">' +
+                  success.contributions[0].referrer.full_name + '</option>')
             )
         }
       }
 
-  updateFilterOptions();
+  updateSelectOptions();
 
   $('#successes-table').DataTable()
     .ajax.reload(function (successes) {
