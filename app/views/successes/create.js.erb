@@ -8,9 +8,7 @@
             contributions: {
               only: [:id, :referrer_id],
               include: {
-                referrer: {
-                  only: [], methods: [:full_name, :previous_changes]
-                }
+                referrer: { only: [], methods: [:full_name, :previous_changes] }
               }
             }
           }
@@ -36,10 +34,7 @@
           )
         $('select.success')
           .find('option:first-of-type') // empty placeholder option
-          .after(
-            $('<option value="success-' + success.id + '"' +
-              ' data-column="success">' + success.name + '</option>')
-          )
+          .after($('<option value="' + success.id + '">' + success.name + '</option>'))
 
         // new customer
         if (success.customer.previous_changes.id) {
@@ -51,11 +46,7 @@
             )
           $('select.customer')
             .find('option:first-of-type') // empty placeholder option
-            .after(
-              $('<option value="customer-' + success.customer_id + '"' +
-                ' data-column="customer">' + success.customer.name + '</option>')
-            )
-
+            .after($('<option value="' + success.customer_id + '">' + success.customer.name + '</option>'))
         }
 
         // new referrer

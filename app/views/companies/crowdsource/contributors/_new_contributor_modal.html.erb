@@ -10,14 +10,22 @@
 
       <div class="modal-body">
 
-        <%= form_for(Contribution.new, url: company_contributions_path(company),
-              html: { id: 'new-contributor-form', remote: true,
-                      class: 'form-horizontal' }) do |contribution_form| %>
+        <%= form_for(
+              Contribution.new,
+              url: company_contributions_path(company),
+              html: {
+                id: 'new-contributor-form',
+                remote: true,
+                class: 'form-horizontal'
+              }
+            ) do |contribution_form| %>
 
           <%= contribution_form.hidden_field(:success_id) %>
 
-          <%= contribution_form.fields_for(:success,
-                contribution_form.object.build_success) do |success_form| %>
+          <%= contribution_form.fields_for(
+                :success,
+                contribution_form.object.build_success
+              ) do |success_form| %>
 
             <%= success_form.hidden_field(:id) %>
             <%= success_form.hidden_field(:name) %>
@@ -41,13 +49,12 @@
             <div class="col-sm-9">
 
               <%= collection_select(nil, nil,
-                    company.customers.curator_customers(current_user.id)
+                    company.customers(current_user.id)
                       .sort_by { |customer| customer.name.downcase },
                     :id, :name,
                     { include_blank: true,
                       disabled: lambda { |customer| customer.successes.blank? } },
-                    { id: 'contribution_customer_id',
-                      class: 'new-contributor customer form-control',
+                    { class: 'new-contributor customer form-control',
                       style: 'width:100%' }) %>
 
             </div>
@@ -62,7 +69,7 @@
             <div class="col-sm-9">
 
               <%= collection_select(nil, nil,
-                    company.successes.curator_successes(current_user.id)
+                    company.successes(current_user.id)
                       .sort_by { |success| success.name },
                     :id, :name, { include_blank: true },
                     { class: 'new-contributor success form-control',
