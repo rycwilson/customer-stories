@@ -52,6 +52,12 @@ function newSuccessListeners () {
 
   $(document)
 
+    .on('show.bs.modal', '#new-success-modal', function () {
+      $('select.new-success.curator')
+        .val($('.crowdsource.curator-select').val())
+        .trigger('change');
+    })
+
     .on('change', 'select.new-success.customer', function () {
       $form = $('#new-success-form');
       customerVal = $(this).val();

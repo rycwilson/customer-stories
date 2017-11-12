@@ -19,12 +19,12 @@ class SuccessesController < ApplicationController
   end
 
   def create
-    pp success_params
+    # pp success_params
     @success = Success.new(success_params)
-    pp @success
+    # pp @success
     if @success.save
     else
-      pp @success.errors.full_messages
+      # pp @success.errors.full_messages
     end
     respond_to { |format| format.js {} }
   end

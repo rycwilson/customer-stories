@@ -11,7 +11,7 @@
         <label for="">Curator</label>
         <i class='fa fa-remove search-all fa-fw'></i>
         <%= select_tag(
-              'curator_select',
+              '',
               options_for_select(
                 company.curators.map do |c|
                   [c.full_name, c.id]
@@ -24,7 +24,8 @@
       <div class="form-group search">
         <label for="">Customer</label>
         <i class='fa fa-remove search-all fa-fw'></i>
-        <%= select_tag('customer_select',
+        <%= select_tag(
+              '',
               options_for_select(
                 company.customers.select_options.unshift(['All Customers', 0]),
               ),
@@ -35,7 +36,8 @@
       <div class="form-group search">
         <label for="">Story Category</label>
         <i class='fa fa-remove search-all fa-fw'></i>
-        <%= select_tag('category_select',
+        <%= select_tag(
+              '',
               options_for_select(company.story_categories.select_options.unshift(['All Categories', 0])),
               { class: 'curate category-select form-control', style: 'width:100%' }
             ) %>
@@ -44,7 +46,8 @@
       <div class="form-group search">
         <label for="">Product</label>
         <i class='fa fa-remove search-all fa-fw'></i>
-        <%= select_tag('product_select',
+        <%= select_tag(
+              '',
               options_for_select(company.products.select_options.unshift(['All Products', 0])),
               { class: 'curate product-select form-control', style: 'width:100%' }
             ) %>

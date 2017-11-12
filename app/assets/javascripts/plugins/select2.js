@@ -48,6 +48,14 @@ function initSelect2 () {
     placeholder: 'Select or Create'
   });
 
+  /**
+   * curator
+   */
+   $('.new-success.curator').select2({
+      theme: 'bootstrap',
+      placeholder: 'Select'
+    });
+
   $('.new-contributor.invitation-template').select2({
     theme: "bootstrap",
     placeholder: 'Select'

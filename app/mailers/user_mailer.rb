@@ -45,15 +45,8 @@ class UserMailer < ApplicationMailer
   # type is one of: request, remind, alert, test
   def send_mail (type, sender, recipient, subject)
     if Rails.env == 'development'
-      if CSP_EMAILS.include? recipient.email
-        # if sender and recipient are same, provide a fake sender address
-        sender_email = (recipient.email == sender.email ? "dev-test@customerstories.net" : sender.email)
-        recipient_address = "#{recipient.full_name} <#{recipient.email}>"
-        sender_address = "#{sender.full_name} <#{sender_email}>"
-      else
-        recipient_address = "#{recipient.full_name} <***REMOVED***>"
-        sender_address = "#{sender.full_name} <#{sender.email}>"
-      end
+      recipient_address = "#{recipient.full_name} <***REMOVED***>"
+      sender_address = "#{sender.full_name} <dev-test@customerstories.net>"
     elsif ENV['HOST_NAME'] == 'customerstories.org'  # staging
       recipient_address = "#{recipient.full_name} <***REMOVED***>"
       sender_address = "#{sender.full_name} <#{sender.email}>"

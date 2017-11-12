@@ -10,24 +10,34 @@
 
       <div class="modal-body">
 
-        <%= form_for(Success.new, url: company_successes_path(company),
-              html: { remote: true, id: 'new-success-form',
-                      class: 'form-horizontal' }) do |success_form| %>
+        <%= form_for(
+              Success.new,
+              url: company_successes_path(company),
+              html: { id: 'new-success-form', remote: true, class: 'form-horizontal' },
+            ) do |success_form| %>
 
-          <%= success_form.hidden_field(:curator_id, value: current_user.id) %>
           <%= success_form.hidden_field(:customer_id) %>
-
-          <%= success_form.fields_for(:customer,
-                success_form.object.build_customer) do |customer_form| %>
+          <%= success_form.fields_for(
+                :customer,
+                success_form.object.build_customer
+              ) do |customer_form| %>
             <%= customer_form.hidden_field(:id) %>
             <%= customer_form.hidden_field(:name) %>
             <%= customer_form.hidden_field(:company_id, value: company.id) %>
           <% end %>
+          <%= success_form.fields_for(
+                :contributions,
+                success_form.object.contributions.build
+              ) do |contribution_form| %>
+            <%= contribution_form.hidden_field(
+                  :crowdsourcing_template_id,
+                  value: company.crowdsourcing_templates.select do |template|
+                      template.name == 'Customer Success'
+                    end[0].id
+                ) %>
 
           <div class="form-group required-input">
-            <label class='col-sm-3 control-label'>
-              Customer
-            </label>
+            <label class='col-sm-3 control-label'>Customer</label>
             <div class="col-sm-9">
               <%= collection_select(nil, nil,
                     company.customers.sort_by do |customer|
@@ -40,47 +50,54 @@
           </div>
 
           <div class="form-group required-input">
-            <label for="success_name" class='col-sm-3 control-label'>
-              Name
-            </label>
+            <label for="success_name" class='col-sm-3 control-label'>Name</label>
             <div class="col-sm-9">
               <%= success_form.text_field(:name, class: 'form-control',
                   placeholder: 'Name of Project / Deal / Opportunity from CRM') %>
             </div>
           </div>
 
-          <%= success_form.fields_for(:contributions,
-                success_form.object.contributions.build) do |contribution_form| %>
 
-            <%= contribution_form.hidden_field(:crowdsourcing_template_id,
-                  value: company.crowdsourcing_templates.select do |template|
-                      template.name == 'Customer Success'
-                    end[0].id
-                ) %>
+          <div class="form-group required-input">
 
-            <div class="form-group">
-
-              <%= label_tag(:referrer_id, 'Referred by', class: 'col-sm-3 control-label') %>
-              <div class="col-sm-9">
-                <%= contribution_form.collection_select(:referrer_id,
-                      company.referrers.sort_by do |referrer|
-                        referrer.last_name
-                      end.unshift(
-                        User.new(id: 0, first_name: '- Create New Contact -', last_name:'')
-                      ),
-                      :id, :full_name,
-                      { include_blank: true },
-                      # effectively disabled by default by giving it a blank name
-                      { name: '', class: 'new-success referrer form-control',
-                        style: 'width:100%' }
-                    ) %>
-              </div>
-
+            <%= label_tag(:curator_id, 'Curator', class: 'col-sm-3 control-label') %>
+            <div class="col-sm-9">
+              <%= success_form.collection_select(
+                    :curator_id,
+                    company.curators.sort_by { |c| c.last_name },
+                    :id, :full_name,
+                    { include_blank: true },
+                    {
+                      class: 'new-success curator form-control',
+                      style: 'width:100%'
+                    }
+                  ) %>
             </div>
 
-            <%= render('companies/shared/create_referrer', { contribution_form: contribution_form }) %>
+          </div>
 
-          <% end %>
+          <div class="form-group">
+
+            <%= label_tag(:referrer_id, 'Referred by', class: 'col-sm-3 control-label') %>
+            <div class="col-sm-9">
+              <%= contribution_form.collection_select(:referrer_id,
+                    company.referrers.sort_by do |referrer|
+                      referrer.last_name
+                    end.unshift(
+                      User.new(id: 0, first_name: '- Create New Contact -', last_name:'')
+                    ),
+                    :id, :full_name,
+                    { include_blank: true },
+                    # effectively disabled by default by giving it a blank name
+                    { name: '', class: 'new-success referrer form-control',
+                      style: 'width:100%' }
+                  ) %>
+            </div>
+
+          </div>
+
+          <%= render('companies/shared/create_referrer', { contribution_form: contribution_form }) %>
+
           <div class="form-group">
             <label for="success_description" class='col-sm-3 control-label'>
               Description
@@ -91,6 +108,7 @@
             </div>
           </div>
 
+          <% end %>  <!-- contribution_form -->
         <% end %>
 
       </div>
