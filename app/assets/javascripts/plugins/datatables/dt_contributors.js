@@ -149,9 +149,8 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
             story = groupRows.data()[0].success.story,
             storySlug = story && story.slug,
             storyTitle = story && story.title,
-            storyQuery = "/?csp_curate_story=contributors",
-            storyPath = story && (story.published ? story.csp_story_path + storyQuery :
-              '/curate/' + customerSlug + '/' + storySlug + storyQuery),
+            storyPath = story &&
+              (story.published ? story.csp_story_path : '/curate/' + customerSlug + '/' + storySlug),
             link; // to success or story
 
         if (story) {

@@ -11,7 +11,7 @@
 
         <div class="hidden-xs">
           <%= link_to(
-                curate_story_path(story.customer.slug, story.slug, csp_curate_story: 'content'),
+                curate_story_path(story.customer.slug, story.slug),
                 { class: 'btn btn-secondary curate-story', style: 'width: 140px' }
               ) do %>
             <i class='fa fa-pencil fa-fw'></i>&nbsp;

@@ -28,6 +28,10 @@ function prospectListeners () {
       Cookies.set('prospect-tab', $(this).attr('href'));
     })
 
+    .on('click', '#prospect-contributors-table tr.group a.story', function () {
+      Cookies.set('csp-curate-story', 'settings');
+    })
+
     // the close event happens shortly after blur; to ensure smooth transition...
     .on('blur', 'td.crowdsourcing-template', function () {
       var $td = $(this), editor;

@@ -14,13 +14,11 @@ class CompaniesController < ApplicationController
     redirect_to('/curate') if request.path.match(/\/companies\/\d+/)
     @workflow_stage = params[:workflow_stage]
     @prospect_tab = request.cookies['prospect-tab'] || '#successes'
-    @curate_story_tab = request.cookies['curate-story-tab']
     @recent_activity = Rails.cache.fetch("#{@company.subdomain}/recent-activity") { @company.recent_activity(30) }
     @story_views_30_day_count = PageView.joins(:visitor_session)
                                  .company_story_views_since(@company.id, 30).count
     @curate_view = 'stories'
-    @curate_story_tab = params[:csp_curate_story]
-    # note: app data is obtained via json
+    # note: app data is obtained via json (see set_gon() in application controller)
   end
 
   def edit

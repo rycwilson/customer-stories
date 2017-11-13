@@ -88,8 +88,12 @@ class StoriesController < ApplicationController
     if request.xhr? && !request.env["HTTP_TURBOLINKS_REFERRER"]
       render({
         partial: 'stories/edit/edit',
-        locals: { company: @company, story: @story,
-                  workflow_stage: 'curate', tab: 'settings' }
+        locals: {
+          company: @company,
+          story: @story,
+          workflow_stage: 'curate',
+          tab: 'settings'
+        }
       })
     else
       # provide data for both stories#edit and companies#show views
@@ -103,7 +107,7 @@ class StoriesController < ApplicationController
                                     .company_story_views_since(@company.id, 30).count
       @workflow_stage = 'curate'
       @curate_view = 'story'  # instead of 'stories'
-      @curate_story_tab = params[:csp_curate_story]
+      @curate_story_tab = cookies['csp-curate-story']
       render('companies/show')
     end
   end

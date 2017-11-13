@@ -9,6 +9,10 @@ function storiesShow () {
   clickyListeners();
   initMoreStories();
 
+  $(document).on('click', 'a.curate-story', function () {
+    Cookies.set('csp-curate-story', 'content');
+  });
+
 }
 
 function initMoreStories () {
