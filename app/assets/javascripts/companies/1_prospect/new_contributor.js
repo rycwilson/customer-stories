@@ -8,6 +8,15 @@ function newContributorListeners() {
       isCurateView = function () {
         return $('#workflow-tabs li.active a').attr('href') === '#curate';
       },
+      isFilteredView = function () {
+        if ($('#contributors-filter').val() !== '0') {
+
+          // return the filter applied, i.e. 'customer' or 'success'
+          return $('#contributors-filter').val().match(/(\w+)-/)[1];
+        } else {
+          return false;
+        }
+      },
 
       noCustomerContributors = function () {
         // length of 2 accounts for empty option and - Create New Contributor -
@@ -47,15 +56,13 @@ function newContributorListeners() {
                              $('button[type="submit"]').prop('disabled', true);
       },
 
-      preSelectCustomerAndSuccess = function () {
-        $('select.new-contributor.customer')
-          .val($('#curate-story-layout').data('customer-id'))
-          .trigger('change');
-        $('select.new-contributor.success')
-          .val($('#curate-story-layout').data('success-id'))
-          .trigger('change');
-        $('select.new-contributor.customer, select.new-contributor.success')
-          .prop('disabled', true);
+      preSelectCustomerAndSuccess = function (customerId, successId) {
+        $('select.new-contributor.customer').val(customerId).trigger('change');
+        $('select.new-contributor.success').val(successId).trigger('change');
+        if (isCurateView()) {
+          $('select.new-contributor.customer, select.new-contributor.success')
+            .prop('disabled', true);
+        }
       },
 
       updateSuccessOptions = function (customerId) {
@@ -159,10 +166,24 @@ function newContributorListeners() {
 
   $(document)
 
-    // pre-select fields if adding contributors from the curate view
+    /**
+     * pre-select fields if adding contributors from the curate view,
+     * or if adding contributors while a filter is applied (success or customer)
+     */
     .on('show.bs.modal', '#new-contributor-modal', function () {
+      var customerId, successId,
+          dtSuccesses = $('#successes-table').DataTable();
       if (isCurateView()) {
-        preSelectCustomerAndSuccess();
+        customerId = $('#curate-story-layout').data('customer-id');
+        successId = $('#curate-story-layout').data('success-id');
+        preSelectCustomerAndSuccess(customerId, successId);
+      } else if (isFilteredView() === 'customer') {
+        customerId = $('#contributors-filter').val().match(/-(\d+)/)[1];
+        preSelectCustomerAndSuccess(customerId, null);
+      } else if (isFilteredView() === 'success') {
+        successId = $('#contributors-filter').val().match(/-(\d+)/)[1];
+        customerId = dtSuccesses.row('[data-success-id="' + successId + '"]').data().customer.id;
+        successId = preSelectCustomerAndSuccess(customerId, successId);
       }
     })
 
