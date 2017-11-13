@@ -53,6 +53,11 @@ function newSuccessListeners () {
   $(document)
 
     .on('show.bs.modal', '#new-success-modal', function () {
+      if ($('#successes-filter').val().match(/customer/)) {
+        $('select.new-success.customer')
+          .val($('#successes-filter').val().match(/customer-(\d+)/)[1])
+          .trigger('change');
+      }
       $('select.new-success.curator')
         .val($('.crowdsource.curator-select').val())
         .trigger('change');
