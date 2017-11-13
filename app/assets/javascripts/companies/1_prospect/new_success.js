@@ -112,6 +112,14 @@ function newSuccessListeners () {
 
     })
 
+    // select2 hack for search placeholder
+    .on("select2:open", ".new-success.customer", function() {
+        $(".select2-search--dropdown .select2-search__field").attr("placeholder", "Select or enter the name of a new Customer");
+    })
+    .on("select2:close",".new-success.customer", function() {
+        $(".select2-search--dropdown .select2-search__field").attr("placeholder", null);
+    })
+
     .on('input', '#new-success-modal', validateForm)
     .on('change', '#new-success-modal', validateForm)
 
