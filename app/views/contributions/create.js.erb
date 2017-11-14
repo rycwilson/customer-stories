@@ -1,7 +1,6 @@
 
 (function () {
 
-
   var $trContribution,
 
       // this mirrors company.contributions.pending (with some additions)
@@ -71,7 +70,7 @@
         }
 
         // new referrer
-        if (contribution.referrer.previous_changes.id) {
+        if (contribution.referrer && contribution.referrer.previous_changes.id) {
           $('select.referrer')
             .find('option[value="0"]') // - Create New Contact -
             .after(

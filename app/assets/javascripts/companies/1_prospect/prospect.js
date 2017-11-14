@@ -29,7 +29,7 @@ function prospectListeners () {
     })
 
     .on('click', '#prospect-contributors-table tr.group a.story', function () {
-      Cookies.set('csp-curate-story', 'settings');
+      Cookies.set('csp-curate-story', 'contributors');
     })
 
     // the close event happens shortly after blur; to ensure smooth transition...
