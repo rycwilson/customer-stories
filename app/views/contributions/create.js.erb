@@ -8,10 +8,13 @@
         only: [:id, :status, :contribution, :feedback, :linkedin, :notes, :publish_contributor, :contributor_unpublished, :success_id],
         methods: [],
         include: {
+          # success source data, with addition of previous_changes methods
           success: {
-            only: [:name, :customer_id], methods: [:previous_changes],
+            only: [:id, :name, :description], methods: [:display_status, :referrer, :previous_changes],
             include: {
-              customer: { only: [:name], methods: [:previous_changes] }
+              curator: { only: [:id], methods: [:full_name] },
+              customer: { only: [:id, :name, :slug], methods: [:previous_changes] },
+              story: { only: [:id, :title, :slug] }
             }
           },
           contributor: {
@@ -29,6 +32,12 @@
       },
       openContributorDetails = function ($tr) {
         $tr.find('.contributor-details').trigger('click');
+      },
+      updateSuccess = function (success) {
+        $('#successes-table').DataTable()
+          .row('[data-success-id="' + success.id + '"]')
+          .data(success)
+          .draw();
       },
       updateSelectOptions = function () {
         // new customer
@@ -82,6 +91,7 @@
       };
 
   updateSelectOptions();
+  updateSuccess(contribution.success);
 
   // update app.contributions
   app.contributions.push(contribution)
