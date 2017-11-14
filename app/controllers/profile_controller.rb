@@ -54,12 +54,12 @@ class ProfileController < ApplicationController
                     }) and return
       end
       if params[:error]
-        redirect_to confirm_submission_path(contribution),
+        redirect_to confirm_submission_path(contribution.access_token),
                     flash: { warning: params[:error_description] }
       elsif params[:code]
         token_response = get_linkedin_token(params[:code], @linkedin_callback)
         if token_response['error']
-          redirect_to confirm_submission_path(contribution),
+          redirect_to confirm_submission_path(contribution.access_token),
                       flash: { danger: 'LinkedIn error: ' + token_response['error_description'] }
         else
           token = token_response['access_token']
@@ -68,9 +68,9 @@ class ProfileController < ApplicationController
           # not checking for errors here,
           # what's the point of telling contributor?
           if update_user_linkedin_data(contributor, linkedin_data)
-            redirect_to confirm_submission_path(contribution)
+            redirect_to confirm_submission_path(contribution.access_token)
           else
-            redirect_to confirm_submission_path(contribution),
+            redirect_to confirm_submission_path(contribution.access_token),
                 flash: {
                   warning: "Submission successful, but errors saving LinkedIn data: #{contributor.errors.full_messages.join(', ')}"
                 }

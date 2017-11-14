@@ -68,6 +68,24 @@ class Contribution < ActiveRecord::Base
     end
   )
 
+  after_commit(on: [:update]) do
+    # if (self.previous_changes.keys &
+    #     ['status', 'contribution', 'feedback', 'notes', 'request_received_at',
+    #      'complete', 'publish_contributor', 'preview_contributor']).any?
+    # end
+    if self.previous_changes.key?('publish_contributor') && self.story.present?
+      expire_published_contributor_cache
+    end
+
+    if self.previous_changes.key?('preview_contributor')
+      # when selecting or de-selecting a preview contributor,
+      # expire the story tile and index as a whole
+      self.company.expire_all_stories_cache(true)
+      self.story.expire_story_tile_fragment_cache
+      self.company.increment_stories_index_fragments_memcache_iterator
+    end
+  end
+
   # validates :user_id, presence: true
   # validates :success_id, presence: true
   # validates :role, presence: true
@@ -83,23 +101,6 @@ class Contribution < ActiveRecord::Base
   validates :first_reminder_wait, numericality: { only_integer: true }
   validates :second_reminder_wait, numericality: { only_integer: true }
 
-  after_commit(on: [:update]) do
-    # if (self.previous_changes.keys &
-    #     ['status', 'contribution', 'feedback', 'notes', 'request_received_at',
-    #      'complete', 'publish_contributor', 'preview_contributor']).any?
-    # end
-    if self.previous_changes.key?('publish_contributor')
-      expire_published_contributor_cache
-    end
-
-    if self.previous_changes.key?('preview_contributor')
-      # when selecting or de-selecting a preview contributor,
-      # expire the story tile and index as a whole
-      self.company.expire_all_stories_cache(true)
-      self.story.expire_story_tile_fragment_cache
-      self.company.increment_stories_index_fragments_memcache_iterator
-    end
-  end
 
   def display_status
     case self.status
@@ -167,8 +168,7 @@ class Contribution < ActiveRecord::Base
   end
 
   def expire_published_contributor_cache
-    story = self.success.story
-    story.expire_published_contributor_cache(self.contributor.id)
+    self.story && self.story.expire_published_contributor_cache(self.contributor.id)
   end
 
   def copy_crowdsourcing_template

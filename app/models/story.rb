@@ -328,12 +328,10 @@ class Story < ActiveRecord::Base
   end
 
   def expire_published_contributor_cache(contributor_id)
-    company = self.success.customer.company
-    Rails.cache.delete("#{company.subdomain}/story-#{self.id}-published-contributors")
     company.expire_all_stories_cache(true)  # json only
-    self.expire_fragment("#{company.subdomain}/story-#{self.id}-contributors")
-    self.expire_fragment(
-      "#{company.subdomain}/story-#{self.id}-contributor-#{contributor_id}")
+    Rails.cache.delete("#{self.company.subdomain}/story-#{self.id}-published-contributors")
+    self.expire_fragment("#{self.company.subdomain}/story-#{self.id}-contributors")
+    self.expire_fragment("#{self.company.subdomain}/story-#{self.id}-contributor-#{contributor_id}")
   end
 
   # expire fragment cache for a single story tile
