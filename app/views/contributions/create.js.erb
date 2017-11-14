@@ -1,6 +1,43 @@
 
 (function () {
 
+  console.log('start create.js.erb(), button is disabled? ',
+      $('#contribution-request-modal').find('button[type="submit"]').prop('disabled'))
+
+  var moCallback = function (records, mo) {
+    console.log('records: ', records)
+    console.log('mo: ', mo)
+
+  }
+  var moTestCallback = function (records, moTest) {
+    console.log('records: ', records)
+    console.log('moTest: ', moTest)
+  }
+
+  moTest = new MutationObserver(moTestCallback)
+  moTest.observe(
+    $('#workflow-tabs')[0],
+    {
+      childList: true,
+      attributes: true,
+      attributeOldValue: true,
+      characterData: true
+    }
+
+  )
+
+  var mo = new MutationObserver(moCallback)
+  mo.observe(
+    $('#contribution-request-modal button[type="submit"]')[0],
+    {
+      childList: true,
+      attributes: true,
+      attributeOldValue: true,
+      characterData: true
+    }
+  )
+
+
   var $trContribution,
 
       // this mirrors company.contributions.pending (with some additions)
@@ -104,7 +141,10 @@
               $('#contributors-filter').next().removeClass('select2-container--focus');
             })
             $('#new-contributor-modal').modal('hide');
+            console.log('finish create.js.erb(), button is disabled? ',
+      $('#contribution-request-modal').find('button[type="submit"]').prop('disabled'))
           });
+
       }
     });
 
@@ -117,6 +157,8 @@
           .then(function () {
             openContributorDetails($trContribution);
             $('#new-contributor-modal').modal('hide');
+            console.log('finish create.js.erb(), button is disabled? ',
+      $('#contribution-request-modal').find('button[type="submit"]').prop('disabled'))
           });
       }
     })

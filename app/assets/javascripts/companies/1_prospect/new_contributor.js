@@ -340,22 +340,17 @@ function newContributorListeners() {
 
     // reset modal
     .on('hidden.bs.modal', '#new-contributor-modal', function () {
-
       $(this).find('form')[0].reset();
       $(this).find('.create-contributor').addClass('hidden');
-      $(this).find('select').val('').trigger('change');
+      $(this).find('select').val('').trigger('change.select2');
       $(this).find('select').prop('disabled', false);
-      // for a select that has an option with val === 0, this approach is necessary:
-      $('select.new-contributor.contributor').select2('val', '');
       $('button[type="submit"][form="new-contributor-form"] span').css('display', 'inline');
       $('button[type="submit"][form="new-contributor-form"] i').css('display', 'none');
     })
 
     .on('click', 'button[type="submit"][form="new-contributor-form"]', function (e) {
-
       $('button[type="submit"][form="new-contributor-form"] span').toggle();
       $('button[type="submit"][form="new-contributor-form"] .fa-spinner').toggle();
-
     });
 
 }

@@ -23,8 +23,7 @@
 
       <div class="modal-body" style='visibility:hidden'>
 
-        <%= form_tag('', id: 'contribution-request-form',
-              remote: true, method: :put) do  %>
+        <%= form_tag('', id: 'contribution-request-form', remote: true, method: :put) do  %>
 
           <%= hidden_field_tag(:send_invitation, true) %>
 
