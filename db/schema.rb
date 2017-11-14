@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171017183738) do
+ActiveRecord::Schema.define(version: 20171114215347) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -156,7 +156,6 @@ ActiveRecord::Schema.define(version: 20171017183738) do
     t.boolean  "publish_contributor",       default: true
     t.boolean  "contributor_unpublished",   default: false
     t.boolean  "preview_contributor",       default: false
-    t.boolean  "completed",                 default: false
     t.integer  "crowdsourcing_template_id"
     t.string   "request_subject"
     t.text     "request_body"
