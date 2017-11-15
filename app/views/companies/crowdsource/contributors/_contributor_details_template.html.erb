@@ -12,7 +12,7 @@
       <input type="hidden" name="contributor" value="{{= true }}">
 
       <!-- // without this it will try to create a new record! -->
-      <input type="hidden" name="contribution[contributor_attributes][id]" value="{{= contribution.contributor.id }}">
+      <input type="hidden" name="contribution[contributor_attributes][id]" value="{{= contributor.id }}">
 
       <div class="row">
         <div class="col-sm-6">
@@ -24,7 +24,7 @@
                 <input type="text" class="form-control"
                   id='contribution_contributor_attributes_first_name'
                   name="contribution[contributor_attributes][first_name]"
-                  value="{{= contribution.contributor.first_name }}">
+                  value="{{= contributor.first_name }}">
               </div>
             </div>
 
@@ -34,7 +34,7 @@
                 <input type="text" class="form-control"
                   id="contribution_contributor_attributes_last_name"
                   name='contribution[contributor_attributes][last_name]'
-                  value="{{= contribution.contributor.last_name }}">
+                  value="{{= contributor.last_name }}">
               </div>
             </div>
 
@@ -44,7 +44,7 @@
                 <input type="text" class="form-control"
                   id="contribution_contributor_attributes_title"
                   name='contribution[contributor_attributes][title]'
-                  value="{{= contribution.contributor.title }}">
+                  value="{{= contributor.title }}">
               </div>
             </div>
 
@@ -54,7 +54,7 @@
                 <input type="email" class="form-control"
                   id="contribution_contributor_attributes_email"
                   name='contribution[contributor_attributes][email]'
-                  value="{{= contribution.contributor.email }}">
+                  value="{{= contributor.email }}">
               </div>
             </div>
 
@@ -64,7 +64,7 @@
                 <input type="tel" class="form-control"
                   id="contribution_contributor_attributes_phone"
                   name='contribution[contributor_attributes][phone]'
-                  value="{{= contribution.contributor.phone }}">
+                  value="{{= contributor.phone }}">
               </div>
             </div>
 
@@ -80,18 +80,18 @@
                   id="contribution_contributor_attributes_linkedin_url"
                   name='contribution[contributor_attributes][linkedin_url]'
                   placeholder='Profile URL'
-                  value="{{= contribution.contributor.linkedin_url }}">
+                  value="{{= contributor.linkedin_url }}">
               </div>
             </div>
 
-    <!-- // linkedin profile: publish checkbox and widget (or placeholder) -->
+            <!-- // linkedin profile: publish checkbox and widget (or placeholder) -->
+            <div class="form-group linkedin-profile {{= contributor.linkedin_url ? '' : 'hidden' }}">
 
-            <div class="form-group linkedin-profile {{= contribution.contributor.linkedin_url ? '' : 'hidden' }}">
-
-              <!-- // don't render checkbox if still in the crowdsource stage -->
+              <!-- // don't render checkbox if still in the prospect stage -->
               {{ if (workflowStage === 'curate') { }}
 
                 <!-- // tooltip wrapper -->
+                <!-- // control-label column is used here to ensure styling similarity with other controls -->
                 <label class="col-sm-3 control-label"></label>
                 <div class="col-sm-9" style="padding-bottom:10px"
                   data-toggle="{{= contribution.contributor_unpublished ? 'tooltip' : '' }}"
@@ -99,9 +99,9 @@
                   title="{{= contribution.contributor_unpublished ? 'Contributor has removed their profile from this story' : '' }}">
 
                   <div class="linkedin-checkbox-container {{= contribution.contributor_unpublished ? 'contributor-unpublished' : '' }}">
-                    <label for='contribution-publish-contributor-{{= contribution.contributor.id }}'>
+                    <label for='contribution-publish-contributor-{{= contributor.id }}'>
                       <input type='checkbox'
-                        id='contribution-publish-contributor-{{= contribution.contributor.id }}'
+                        id='contribution-publish-contributor-{{= contributor.id }}'
                         name='contribution[publish_contributor]'
                         checked='{{= contribution.publish_contributor }}'>
                       <span>&nbsp;&nbsp;Publish profile with this Story</span>
@@ -116,7 +116,8 @@
         <!-- // render csp widget in client so width can be determined dynamically -->
               <div class="widget-container" style='padding-left:24px'>
 
-                {{ if (contribution.contributor['linkedin_data?']) { }}
+            <!-- // disabling this for now -->
+                {{ if (contributor['linkedin_data_present?'] && false) { }}
 
                   <div class="csp-widget-container text-center"
                   </div>
@@ -134,6 +135,7 @@
                 {{ } }}
 
               </div>  <!-- // .widget-container -->
+
             </div>  <!-- // .linkedin-profile -->
 
           </div>

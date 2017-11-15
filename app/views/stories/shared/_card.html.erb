@@ -21,7 +21,7 @@
             <p><%= story.title %></p>
           </div>
         <% end %>
-        <img src="<%= story.customer.logo_url || image_path('company-logo-missing.png') %>">
+        <img src="<%= story.customer.logo_url || image_path('logo-missing.png') %>">
       </div>
 
       <% if story.published? || story.preview_published? %>

@@ -17,15 +17,6 @@ class ApplicationController < ActionController::Base
 
   protected
 
-  def csp_environment
-    if ENV['HOST_NAME'] == 'customerstories.net'
-      return 'production'
-    elsif ENV['HOST_NAME'] == 'customerstories.org'
-      return 'staging'
-    else
-      return 'development'
-    end
-  end
 
   def set_gon company=nil
     is_curator = (user_signed_in? && (current_user.company_id == company.try(:id)))
@@ -44,11 +35,19 @@ class ApplicationController < ActionController::Base
         photo: current_user.photo_url,
         is_curator: is_curator
       } : nil,
-      # pending contributions only
-      contributions: company.present? ? company.contributions.pending : nil,
       stories: company.present? ? company.stories_json : nil,
       env: csp_environment
     })
+  end
+
+  def csp_environment
+    if ENV['HOST_NAME'] == 'customerstories.net'
+      return 'production'
+    elsif ENV['HOST_NAME'] == 'customerstories.org'
+      return 'staging'
+    else
+      return 'development'
+    end
   end
 
   #  this method ensures signed in users can't jump to a subdomain they don't belong to

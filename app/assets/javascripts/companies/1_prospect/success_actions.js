@@ -53,10 +53,6 @@ function successActionsListeners () {
                     $(this).remove();
                   }
                 });
-            // update app data
-            // app.contributions = app.contributions.filter(function (c) {
-            //   return c.id == contribution.id;
-            // });
           });
       };
 

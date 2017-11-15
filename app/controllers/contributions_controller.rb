@@ -16,7 +16,7 @@ class ContributionsController < ApplicationController
     end
     # data = Rails.cache.fetch("#{company.subdomain}/dt-contributors") do
       data = contributions.to_json({
-        only: [:id, :status], methods: [:display_status],
+        only: [:id, :status, :publish_contributor, :contributor_unpublished], methods: [:display_status],
         include: {
           success: {
             only: [:id, :customer_id, :curator_id, :name],
@@ -40,10 +40,9 @@ class ContributionsController < ApplicationController
     if params[:get_invitation]
       @contribution.copy_crowdsourcing_template if params[:send]
       respond_with(
-        @contribution, only: [:id, :request_subject, :request_body, :request_sent_at],
-        include: {
-          contributor: { only: [:email], methods: [:full_name] }
-        }
+        @contribution,
+        only: [:id, :request_subject, :request_body, :request_sent_at],
+        include: { contributor: { only: [:email], methods: [:full_name] } }
       )
     elsif params[:get_submission]
       respond_with(
@@ -52,6 +51,11 @@ class ContributionsController < ApplicationController
           contributor: { only: [:title], methods: [:full_name] },
           customer: { only: [:name] }
         }
+      )
+    elsif params[:get_contributor]
+      respond_with(
+        @contribution.contributor,
+        only: [:id, :first_name, :last_name, :title, :email, :phone, :linkedin_url]
       )
     else
       respond_with @contribution, include: {

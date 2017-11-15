@@ -20,7 +20,7 @@
         <% if current_user.company.logo_url.present? %>
           <%= image_tag current_user.company.logo_url %>
         <% else %>
-          <%= image_tag 'company-logo-missing.png' %>
+          <%= image_tag 'logo-missing.png' %>
         <% end %>
       <% end %>
     </li>

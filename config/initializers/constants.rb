@@ -30,7 +30,7 @@ YOUTUBE_BASE_URL = "https://www.youtube.com/embed/"
 VIMEO_BASE_URL = "https://player.vimeo.com/video/"
 WISTIA_BASE_URL = "https://fast.wistia.com/embed/medias/"
 
-ADWORDS_LOGO_PLACEHOLDER_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/company-logo-missing.png"
+ADWORDS_LOGO_PLACEHOLDER_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/logo-missing.png"
 ADWORDS_IMAGE_PLACEHOLDER_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/adwords/adwords_image_placeholder.png"
 
 CS_LOGO_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/cs_logo.png"

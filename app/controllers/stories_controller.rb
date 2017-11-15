@@ -243,14 +243,18 @@ class StoriesController < ApplicationController
   def approval
     respond_to do |format|
       format.pdf do
-        render pdf: "#{@company.subdomain}-customer-story-#{@story.success.customer.slug}",
-               template: "stories/edit/approval.pdf.erb",
-               locals: { story: @story,
-                         company: @company,
-                         customer_name: @story.success.customer.name,
-                         contributors: @contributors },
-               footer: { right: '[page] of [topage]' }
-        end
+        render({
+          pdf: "#{@company.subdomain}-customer-story-#{@story.customer.slug}",
+          template: "stories/edit/approval.pdf.erb",
+          locals: {
+            story: @story,
+            company: @company,
+            customer_name: @story.customer.name,
+            contributors: @contributors
+          },
+          footer: { right: '[page] of [topage]' }
+        })
+      end
     end
   end
 

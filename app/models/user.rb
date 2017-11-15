@@ -52,7 +52,7 @@ class User < ActiveRecord::Base
     self.first_name + " " + self.last_name
   end
 
-  def linkedin_data?
+  def linkedin_data_present?
     self.linkedin_title.present? &&
     self.linkedin_company.present? &&
     self.linkedin_photo_url.present?

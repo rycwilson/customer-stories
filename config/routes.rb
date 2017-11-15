@@ -73,15 +73,17 @@ Rails.application.routes.draw do
           resources :results, only: [:create, :destroy]
         end
         resources :stories, only: [:edit, :create, :update, :destroy], shallow: true do
-          collection { get '/promoted', to: 'stories#promoted' }
-          member { post '/promote', to: 'stories#promote' }
-          member { put '/promote', to: 'stories#promote' }
-          member { delete '/promote', to: 'stories#promote' }
-          member { post '/adwords', to: 'adwords#create_story_ads' }
-          member { put '/adwords', to: 'adwords#update_story_ads' }
-          member { delete '/adwords', to: 'adwords#remove_story_ads' }
-          member { put :ctas }
-          member { put :tags }
+          get '/promoted', on: :collection, to: 'stories#promoted'
+          member do
+            post '/promote', to: 'stories#promote'
+            put '/promote', to: 'stories#promote'
+            delete '/promote', to: 'stories#promote'
+            post '/adwords', to: 'adwords#create_story_ads'
+            put '/adwords', to: 'adwords#update_story_ads'
+            delete '/adwords', to: 'adwords#remove_story_ads'
+            put :ctas
+            put :tags
+          end
         end
         # resources :stories, only: [:create]
         resources :contributions, except: [:new, :edit, :update], shallow: true do

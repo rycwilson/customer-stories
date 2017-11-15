@@ -1,42 +1,40 @@
 
 (function () {
 
-  var contribution = <%= raw @contribution.to_json({
-                           include: { contributor: { methods: [:previous_changes] } },
-                           methods: [:previous_changes]
-                         }) %>,
-      $tr = $('tr[data-contribution-id="' + contribution.id.toString() + '"]').next(),
-      updateAppData = function (contribution) {
-        var cIndex = app.contributions.findIndex(function (c) {
-          return c.id == contribution.id
-        })
-        for (attr in contribution.previous_changes) {
-          app.contributions[cIndex][attr] = contribution[attr];
-        }
-        for (attr in contribution.contributor.previous_changes) {
-          app.contributions[cIndex].contributor[attr] = contribution.contributor[attr];
-        }
-      };
+  var contribution = <%= raw @contribution.to_json({ only: [:id] }) %>,
+      contributor = <%= raw @contribution.contributor.to_json({
+                      only: [:id, :first_name, :last_name, :linkedin_url],
+                      methods: [:full_name, :previous_changes]
+                    }) %>,
+      $trContribution = $('tr[data-contribution-id="' + contribution.id + '"]'),
+      $trContributor = $trContribution.next();
 
-  $tr.find('.fa-spinner, .fa-check').toggle();
-  window.setTimeout(function () {
-    $tr.find('.fa-check, span').toggle();
-  }, 2000);
+  // linkedin profile
+  // .. removed
+  if (contributor.previous_changes.linkedin_url && !contributor.linkedin_url) {
+    $trContributor.find('.csp-widget-container').empty();
+    $trContributor.find('.placeholder-widget-container').empty();
+    $trContributor.find('.linkedin-widget-container').empty().addClass('hidden');
+    $trContributor.find('.linkedin-profile').addClass('hidden');
 
-  updateAppData(contribution);
-
-  if ( contribution.contributor.previous_changes.linkedin_url &&
-       ( contribution.contributor.linkedin_url === '' ||
-         contribution.contributor.linkedin_url === undefined ) ) {
-    $tr.find('.csp-widget-container').empty();
-    $tr.find('.placeholder-widget-container').empty();
-    $tr.find('.linkedin-widget-container').empty().addClass('hidden');
-    $tr.find('.linkedin-profile').addClass('hidden');
-
-  } else if ( contribution.contributor.previous_changes.linkedin_url ) {
-    loadCspOrPlaceholderWidget($tr, contribution);
-    loadLinkedinWidget($tr, contribution);
-    $tr.find('.linkedin-profile').removeClass('hidden');
+  // ... added
+  } else if (contributor.previous_changes.linkedin_url) {
+    loadCspOrPlaceholderWidget($trContributor, contributor);
+    loadLinkedinWidget($trContributor, contributor);
+    $trContributor.find('.linkedin-profile').removeClass('hidden');
   }
+
+  // update datatables
+  $('#prospect-contributors-table, #curate-contributors-table').DataTable()
+    .rows('[data-contributor-id="' + contributor.id + '"]')
+    .every(function (rowIndex, tableLoop, rowLoop) {
+      this.data( Object.assign(this.data(), { contributor: contributor }) )
+    })
+
+  // submit button
+  $trContributor.find('button[type="submit"] i').toggle();
+  window.setTimeout(function () {
+    $trContributor.find('button[type="submit"] i.fa-check, button[type="submit"] span').toggle();
+  }, 2000);
 
 }());

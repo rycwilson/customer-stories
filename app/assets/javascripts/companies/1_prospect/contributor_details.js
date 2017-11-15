@@ -1,19 +1,25 @@
 
 function contributorDetailsListeners () {
 
+  var contributionPath = function (contributionId) {
+        return '/contributions/' + contributionId;
+      },
+      getContributor = function (contributionId) {
+        return $.ajax({
+                  url: contributionPath(contributionId),
+                  method: 'get',
+                  data: { get_contributor: true },
+                  dataType: 'json'
+                });
+      };
+
   $(document)
     .on('click', 'td.contributor-details', function () {
-
-      var $table = $(this).closest('table'),
-          dt = $table.DataTable(),
-          $tr = $(this).closest('tr'),
-          dtRow = dt.row($tr),
-          workflowStage = $table.attr('id').slice(0, $table.attr('id').indexOf('-')),
-          contributionId = $tr.data('contribution-id'),
-          contributionPath = '/contributions/' + contributionId,
-          contribution = app.contributions.find(function (c) {
-            return c.id === contributionId;
-          });
+      var $tr = $(this).closest('tr'),
+          $table = $tr.closest('table'),
+          dtRow = $table.DataTable().row($tr),
+          contribution = dtRow.data(),
+          workflowStage = $table.attr('id').slice(0, $table.attr('id').indexOf('-'));
 
       if (dtRow.child.isShown()) {
         dtRow.child.hide();
@@ -22,24 +28,35 @@ function contributorDetailsListeners () {
         $tr.removeClass('shown active');
       }
       else {
+        $tr.find('td.contributor-name > span').addClass('shown');
+        $tr.children().last().css('color', 'white');
+        $tr.addClass('shown active');
         dtRow.child(
           _.template($('#contributor-details-template').html())({
-            contribution: contribution,
-            contributionPath: contributionPath,
+            contributionPath: contributionPath(contribution.id),
+            contribution: {},
+            contributor: {},
             workflowStage: workflowStage
           })
         ).show();
-        $tr.next().one('input', function (e) {
-          $(this).find('button[type="submit"]').prop('disabled', false);
+        getContributor(contribution.id).done(function (contributor) {
+          dtRow.child(
+            _.template($('#contributor-details-template').html())({
+              contributionPath: contributionPath(contribution.id),
+              contribution: contribution,
+              contributor: contributor,
+              workflowStage: workflowStage
+            })
+          ).show();
+          $tr.next().one('input', function (e) {
+            $(this).find('button[type="submit"]').prop('disabled', false);
+          });
+          $("input[type='tel']").inputmask("999-999-9999");
+          if (contributor.linkedin_url) {
+            loadCspOrPlaceholderWidget($tr.next(), contributor);
+            loadLinkedinWidget($tr.next(), contributor);
+          }
         });
-        $tr.children().last().css('color', 'white');
-        $("input[type='tel']").inputmask("999-999-9999");
-        $tr.find('td.contributor-name > span').addClass('shown');
-        if (contribution.contributor.linkedin_url) {
-          loadCspOrPlaceholderWidget($tr.next(), contribution);
-          loadLinkedinWidget($tr.next(), contribution);
-        }
-        $tr.addClass('shown active');
       }
       $(this).children().toggle();  // toggle caret icons
 

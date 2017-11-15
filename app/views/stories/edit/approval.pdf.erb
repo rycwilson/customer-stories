@@ -1,15 +1,24 @@
 
 <div class='header'>
+
   <div>
     <div>
-      <%= image_tag embed_remote_image(story.success.customer.company.logo_url, 'image/png'),
-            id: 'company-logo-pdf' %>
+      <%= image_tag(
+            embed_remote_image(
+              story.company.logo_url || asset_url('logo-missing.png'), 'image/png'
+            ),
+            id: 'company-logo-pdf'
+          ) %>
     </div>
     <h4 id='customer-name'>Customer Story &#8211; <%= customer_name %></h4>
   </div>
 
-  <%= image_tag embed_remote_image(story.success.curator.photo_url, 'image/png'),
-        id: 'curator-photo', class: 'pull-right' %>
+  <%= image_tag(
+        embed_remote_image(
+          story.curator.photo_url || asset_url('logo-missing.png'), 'image/png'
+        ),
+        id: 'curator-photo', class: 'pull-right'
+      ) %>
 
   <div id='curator-contact' class='pull-right text-right' >
     <div>
@@ -35,8 +44,10 @@
 
 <div class="row logo-quote">
   <div class='col-xs-3 text-center'>
-    <%= image_tag embed_remote_image(story.success.customer.logo_url, 'image/png'),
-          id: 'customer-logo' %>
+    <%= image_tag(
+          embed_remote_image(story.customer.logo_url || asset_url('logo-missing.png'), 'image/png'),
+          id: 'customer-logo'
+        ) %>
   </div>  <!-- logo -->
 
   <!-- quote -->

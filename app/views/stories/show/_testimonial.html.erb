@@ -15,7 +15,7 @@
       <div class="row customer-logo customer-quote hidden-xs">
 
         <div class='customer-logo text-center <%= include_video ? 'col-sm-12' : 'col-sm-3' %>'>
-          <%= image_tag (story.customer.logo_url || asset_path('company-logo-missing.png')), class: 'img-responsive' %>
+          <%= image_tag (story.customer.logo_url || asset_path('logo-missing.png')), class: 'img-responsive' %>
         </div>
 
         <div class='customer-quote <%= include_video ? 'col-sm-12' : 'col-sm-8' %> '>
@@ -46,7 +46,7 @@
       <!-- visible-xs on columns so as not to collide with display: flex -->
       <div class="row customer-quote-attr-xs">
         <div class='customer-logo col-xs-5 text-center visible-xs-block'>
-          <%= image_tag (story.customer.logo_url || asset_path('company-logo-missing.png')), class: 'img-responsive' %>
+          <%= image_tag (story.customer.logo_url || asset_path('logo-missing.png')), class: 'img-responsive' %>
         </div>
         <div class='customer-quote-attr col-xs-7 visible-xs-block'>
           <p><%= story.quote_attr_name %></p>
