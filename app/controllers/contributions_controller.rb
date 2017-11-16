@@ -124,7 +124,6 @@ class ContributionsController < ApplicationController
       respond_to { |format| format.js { render action: 'update_contributor' } }
 
     elsif params[:submission]
-      pp params
       if contribution_params[:status] == 'contribution_submitted'
         params[:contribution][:contribution] = consolidate_answers(params[:answers])
       end

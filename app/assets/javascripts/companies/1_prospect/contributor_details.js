@@ -48,7 +48,7 @@ function contributorDetailsListeners () {
               workflowStage: workflowStage
             })
           ).show();
-          $tr.next().one('input', function (e) {
+          $tr.next().one('input, change', function (e) {
             $(this).find('button[type="submit"]').prop('disabled', false);
           });
           $("input[type='tel']").inputmask("999-999-9999");
