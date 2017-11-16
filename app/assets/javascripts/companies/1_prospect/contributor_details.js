@@ -15,22 +15,23 @@ function contributorDetailsListeners () {
 
   $(document)
     .on('click', 'td.contributor-details', function () {
-      var $tr = $(this).closest('tr'),
-          $table = $tr.closest('table'),
-          dtRow = $table.DataTable().row($tr),
+      var $trContribution = $(this).closest('tr'),
+          $trContributor, // child row
+          $table = $trContribution.closest('table'),
+          dtRow = $table.DataTable().row($trContribution),
           contribution = dtRow.data(),
           workflowStage = $table.attr('id').slice(0, $table.attr('id').indexOf('-'));
 
       if (dtRow.child.isShown()) {
         dtRow.child.hide();
-        $tr.children().last().css('color', '#666');
-        $tr.find('td.contributor-name > span').removeClass('shown');
-        $tr.removeClass('shown active');
+        $trContribution.children().last().css('color', '#666');
+        $trContribution.find('td.contributor-name > span').removeClass('shown');
+        $trContribution.removeClass('shown active');
       }
       else {
-        $tr.find('td.contributor-name > span').addClass('shown');
-        $tr.children().last().css('color', 'white');
-        $tr.addClass('shown active');
+        $trContribution.find('td.contributor-name > span').addClass('shown');
+        $trContribution.children().last().css('color', 'white');
+        $trContribution.addClass('shown active');
         dtRow.child(
           _.template($('#contributor-details-template').html())({
             contributionPath: contributionPath(contribution.id),
@@ -48,13 +49,14 @@ function contributorDetailsListeners () {
               workflowStage: workflowStage
             })
           ).show();
-          $tr.next().one('input, change', function (e) {
+          $trContributor = $trContribution.next();
+          $trContributor.one('input change', function () {
             $(this).find('button[type="submit"]').prop('disabled', false);
           });
           $("input[type='tel']").inputmask("999-999-9999");
           if (contributor.linkedin_url) {
-            loadCspOrPlaceholderWidget($tr.next(), contributor);
-            loadLinkedinWidget($tr.next(), contributor);
+            loadCspOrPlaceholderWidget($trContributor, contributor);
+            loadLinkedinWidget($trContributor, contributor);
           }
         });
       }
