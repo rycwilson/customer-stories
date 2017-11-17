@@ -61,7 +61,7 @@ function newStoryListeners () {
     .on("select2:open", "select.new-story.customer", function() {
       $(".select2-search--dropdown .select2-search__field").attr("placeholder", 'Search or enter the name of a new Customer');
     })
-    .on("select2:close", "select.new-contributor", function() {
+    .on("select2:close", "select.new-story.customer", function() {
         $(".select2-search--dropdown .select2-search__field").attr("placeholder", null);
     })
 
