@@ -52,8 +52,10 @@
                     company.customers(current_user.id)
                       .sort_by { |customer| customer.name.downcase },
                     :id, :name,
-                    { include_blank: true,
-                      disabled: lambda { |customer| customer.successes.blank? } },
+                    {
+                      include_blank: true,
+                      # disabled: lambda { |customer| customer.successes.blank? }
+                    },
                     { class: 'new-contributor customer form-control',
                       style: 'width:100%' }) %>
 

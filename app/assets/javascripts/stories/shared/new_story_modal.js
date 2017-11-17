@@ -57,6 +57,14 @@ function newStoryListeners () {
         .val( $(this).find('option:selected').text() );
     })
 
+     // select2 needs a hack for search placeholder
+    .on("select2:open", "select.new-story.customer", function() {
+      $(".select2-search--dropdown .select2-search__field").attr("placeholder", 'Search previous, or enter name of new Customer');
+    })
+    .on("select2:close", "select.new-contributor", function() {
+        $(".select2-search--dropdown .select2-search__field").attr("placeholder", null);
+    })
+
     // reset modal
     .on('hidden.bs.modal', '#new-story-modal', function () {
       // form inputs to default values

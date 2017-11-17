@@ -252,7 +252,7 @@ function newContributorListeners() {
       showContributorOptions(true);
 
       // not sure why the timeout is necessary here!
-      setTimeout(function () { $('input.select2-search__field').attr("placeholder", 'Search'); }, 0);
+      setTimeout(function () { $('input.select2-search__field').attr("placeholder", 'Search previous, or select - Create New Contributor -'); }, 0);
       $('input.select2-search__field').data('prev', '');
       $('input.select2-search__field').on('input', monitorNewContributorSearch);
     })
@@ -398,10 +398,12 @@ function newContributorListeners() {
     // select2 needs a hack for search placeholder
     .on("select2:open", "select.new-contributor", function() {
       var placeholder;
-      if ( $(this).hasClass('customer') ) {
-        placeholder = "Select or enter the name of a new Customer";
+      if ($(this).hasClass('customer')) {
+        placeholder = "Search previous, or enter name of new Customer";
       } else if ( $(this).hasClass('success') ) {
-        placeholder = "Select or enter the name of a new Customer Win";
+        placeholder = "Search previous, or enter name of new Customer Win";
+      } else if ($(this).hasClass('invitation-template')) {
+        placeholder = "Search";
       } else {
         placeholder = "";
       }
