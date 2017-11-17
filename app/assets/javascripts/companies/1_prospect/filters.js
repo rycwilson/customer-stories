@@ -165,7 +165,7 @@ function prospectFiltersListeners () {
 
     // select2 needs a hack for search placeholder
     .on("select2:open", ".dt-filter", function() {
-        $(".select2-search--dropdown .select2-search__field").attr("placeholder", "Select or search");
+        $(".select2-search--dropdown .select2-search__field").attr("placeholder", "Search");
     })
     .on("select2:close",".dt-filter", function() {
         $(".select2-search--dropdown .select2-search__field").attr("placeholder", null);
