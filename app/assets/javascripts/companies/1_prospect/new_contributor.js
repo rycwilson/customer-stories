@@ -3,7 +3,6 @@ function newContributorListeners() {
 
   var $form, customerVal, customerId, successVal, successId,
       customerSuccesses, successOptionsData,
-      customerContributors, contributorOptionsData,
 
       isCurateView = function () {
         return $('#workflow-tabs li.active a').attr('href') === '#curate';
@@ -17,12 +16,10 @@ function newContributorListeners() {
           return false;
         }
       },
-
       noCustomerContributors = function () {
         // length of 2 accounts for empty option and - Create New Contributor -
         return $('select.new-contributor.contributor').find('option').length === 2;
       },
-
       // returns true if all contributor options are disabled
       noAvailableContributors = function () {
         return $('select.new-contributor.contributor').find('option').toArray()
@@ -31,7 +28,6 @@ function newContributorListeners() {
             return option.disabled;
           });
       },
-
       formIsValid = function () {
         var $customerSelect = $('select.new-contributor.customer'),
             $successSelect = $('select.new-contributor.success'),
@@ -50,12 +46,10 @@ function newContributorListeners() {
               )
           );
       },
-
       validateForm = function () {
         return formIsValid() ? $('button[type="submit"]').prop('disabled', false) :
                              $('button[type="submit"]').prop('disabled', true);
       },
-
       preSelectCustomerAndSuccess = function (customerId, successId) {
         $('select.new-contributor.customer').val(customerId).trigger('change');
         $('select.new-contributor.success').val(successId).trigger('change');
@@ -64,7 +58,6 @@ function newContributorListeners() {
             .prop('disabled', true);
         }
       },
-
       updateSuccessOptions = function (customerId) {
         // default options data
         successOptionsData = [{ id: '', text: '' }];
@@ -87,35 +80,39 @@ function newContributorListeners() {
             selectOnClose: true,
             placeholder: 'Select or Create',
             data: successOptionsData
-          })
-          .prop('disabled', false);
+          });
+          // .prop('disabled', false);
       },
-
       updateContributorOptions = function (customerId) {
-        // default options data
-        contributorOptionsData = [
-          { id: '', text: '' },
-          { id: 0, text: '- Create New Contributor -' }
-        ];
+        var companyContributions = $('#prospect-contributors-table').DataTable().rows().data().toArray(),
+            customerContributions,
+            contributorOptionsData = [
+              { id: '', text: '' },
+              { id: 0, text: '- Create New Contributor -' }
+            ];
         if (customerId) {
-          customerContributors = $('#prospect-contributors-table').DataTable().rows().data().toArray()
-            .filter(function (contribution) {
+          customerContributions = companyContributions.filter(function (contribution) {
               return contribution.success.customer_id == customerId;
             });
-          contributorOptionsData = _.uniq(
-              customerContributors, false,
-              function (contribution, index) { return contribution.contributor.id; }
-            )
-            .map(function (contribution) {
-              return {
-                id: contribution.contributor.id,
-                text: contribution.contributor.full_name
-              };
-            });
-          contributorOptionsData.unshift(
-            { id: '', text: '' },
-            { id: 0, text: '- Create New Contributor -' }
-          );
+          contributorOptionsData = contributorOptionsData.concat(
+              _.uniq(
+                customerContributions, false,
+                function (contribution, index) { return contribution.contributor.id; }
+              )
+              .map(function (contribution) {
+                return { id: contribution.contributor.id, text: contribution.contributor.full_name };
+              })
+            );
+        } else {
+          contributorOptionsData = contributorOptionsData.concat(
+              _.uniq(
+                companyContributions, false,
+                function (contribution, index) { return contribution.contributor.id; }
+              )
+              .map(function (contribution) {
+                return { id: contribution.contributor.id, text: contribution.contributor.full_name };
+              })
+            );
         }
         $('select.new-contributor.contributor').select2('destroy').empty()
           .select2({
@@ -124,7 +121,6 @@ function newContributorListeners() {
             data: contributorOptionsData
           });
       },
-
       disableExistingContributors = function (successId) {
         var successContributorIds = $('#prospect-contributors-table').DataTable()
               .rows().data().toArray().filter(function (contribution) {
@@ -150,7 +146,6 @@ function newContributorListeners() {
             placeholder: 'Select or Create'
           });
       },
-
       disableReferrerAttrs = function (disabled) {
         if (disabled) {
           $('#new-contributor-form .create-referrer').addClass('hidden');
@@ -162,6 +157,68 @@ function newContributorListeners() {
             $('#new-contributor-form [id*="referrer_attributes_' + attribute + '"]')
               .prop('disabled', disabled);
           });
+      },
+      tagCustomerContributors = function (customerId) {
+        var companyContributions = $('#prospect-contributors-table').DataTable().rows().data().toArray(),
+            customerContributions = companyContributions.filter(function (contribution) {
+                return contribution.success.customer_id == customerId;
+              }),
+            customerContributorIds = _.uniq(
+                customerContributions, false,
+                function (contribution, index) { return contribution.contributor.id; }
+              )
+              .map(function (contribution) {
+                return contribution.contributor.id.toString();
+              });
+        $('select.new-contributor.contributor option').each(function () {
+          if (customerContributorIds.includes($(this).val())) {
+            $(this).data('customer', true);
+          } else {
+            $(this).data('customer', false);
+          }
+        });
+      },
+      showContributorOptions = function (showSuggested) {
+        $('.select2-results').css('display', 'none'); // avoid flicker (see below)
+        var customerVal = $('select.new-contributor.customer').val(),
+            customerId = Number.isInteger(parseInt(customerVal, 10)) ? customerVal : null,
+            contributorId, customerContributorIds = [];
+
+        // get the contributors for selected customer (if there is one)
+        if (customerId) {
+          $('select.new-contributor.contributor option').each(function () {
+            if ($(this).data('customer')) customerContributorIds.push($(this).val());
+          });
+        }
+
+        // go through options and hide/show as necessary
+        // (timeout needed since options are still loading at this point)
+        setTimeout(function () {
+          $('.select2-results__option').each(function (index) {
+            contributorId = $(this).attr('id').match(/-(\d+)$/)[1];
+            if (showSuggested &&
+                customerId &&
+                index > 0 && // skip over first option (- Create New Contributor -)
+                !customerContributorIds.includes(contributorId)) {
+              $(this).css('display', 'none');
+            } else {
+              $(this).css('display', 'block');
+            }
+            $('.select2-results').css('display', 'initial'); // avoid flicker (see above)
+          });
+        }, 0);
+      },
+      monitorNewContributorSearch = function (e, data) {
+        var $input = $(e.target),
+            prev = $input.data('prev'),
+            curr = $input.val(),
+            customerId = $('select.new-contributor.customer').val();
+        if (prev === '') {
+          showContributorOptions(false); // show all company contributors
+        } else if (curr === '') {
+          showContributorOptions(true); // show suggested (customer) contributors
+        }
+        $input.data('prev', curr);
       };
 
   $(document)
@@ -187,8 +244,22 @@ function newContributorListeners() {
       }
     })
 
-    .on('input', '#new-contributor-modal', validateForm)
-    .on('change', '#new-contributor-modal', validateForm)
+    .on('input change', '#new-contributor-modal', validateForm)
+
+    // with blank new contributor search field, show suggestions; else show all
+    .on('select2:open', 'select.new-contributor.contributor', function () {
+      // if a customer is selected, show contributors that belong to that customer
+      showContributorOptions(true);
+
+      // not sure why the timeout is necessary here!
+      setTimeout(function () { $('input.select2-search__field').attr("placeholder", 'Search'); }, 0);
+      $('input.select2-search__field').data('prev', '');
+      $('input.select2-search__field').on('input', monitorNewContributorSearch);
+    })
+    .on('select2:close','select.new-contributor.contributor', function() {
+      $('input.select2-search__field').off('input', monitorNewContributorSearch);
+      $('input.select2-search__field').attr("placeholder", null);
+    })
 
     // select or create customer
     .on('change', 'select.new-contributor.customer', function (e) {
@@ -206,6 +277,8 @@ function newContributorListeners() {
         $form.find('input[id*="customer_attributes"]').each(function () {
             $(this).prop('disabled', true);
           });
+
+        tagCustomerContributors(customerId);
 
       } else {
         // update and enable customer attributes
@@ -233,7 +306,7 @@ function newContributorListeners() {
       }
       // update select options
       updateSuccessOptions(customerId);
-      updateContributorOptions(customerId);
+      // updateContributorOptions(customerId);
 
     })
 
