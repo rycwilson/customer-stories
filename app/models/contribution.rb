@@ -127,7 +127,6 @@ class Contribution < ActiveRecord::Base
       when 'opted_out'
         return "opted out&nbsp;&nbsp;<i data-toggle='tooltip' data-placement='top' title='Contributor has opted out of all Customer Stories emails' style='font-size:16px;color:#666' class='fa fa-question-circle-o'></i>".html_safe
       when 'request_re_sent'
-        # hack: remind_at holds the re-send date
         return "request re-sent #{self.request_sent_at.strftime('%-m/%-d/%y')}"
     end
   end
