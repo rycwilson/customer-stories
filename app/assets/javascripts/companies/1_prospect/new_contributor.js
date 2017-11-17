@@ -262,7 +262,9 @@ function newContributorListeners() {
       showContributorOptions(true);
 
       // not sure why the timeout is necessary here!
-      setTimeout(function () { $('input.select2-search__field').attr("placeholder", 'Search or select - Create New Contributor -'); }, 0);
+      setTimeout(function () {
+        $('input.select2-search__field').attr("placeholder", 'Search or Create New Contributor');
+      }, 0);
       $('input.select2-search__field').data('prev', '');
       $('input.select2-search__field').on('input', monitorNewContributorSearch);
     })
@@ -410,13 +412,13 @@ function newContributorListeners() {
     .on("select2:open", "select.new-contributor", function() {
       var placeholder;
       if ($(this).hasClass('customer')) {
-        placeholder = "Search or enter the name of a new Customer";
+        placeholder = "Search or enter the name of a New Customer";
       } else if ( $(this).hasClass('success') ) {
-        placeholder = "Search or enter the name of a new Customer Win";
+        placeholder = "Search or enter the name of a New Customer Win";
       } else if ($(this).hasClass('invitation-template')) {
         placeholder = "Search";
       } else if ($(this).hasClass('referrer')) {
-        placeholder = 'Search or select - Create New Contact -';
+        placeholder = 'Search or Create New Contact';
       } else {
         placeholder = "";
       }

@@ -59,7 +59,7 @@ function newStoryListeners () {
 
      // select2 needs a hack for search placeholder
     .on("select2:open", "select.new-story.customer", function() {
-      $(".select2-search--dropdown .select2-search__field").attr("placeholder", 'Search or enter the name of a new Customer');
+      $(".select2-search--dropdown .select2-search__field").attr("placeholder", 'Search or enter the name of a New Customer');
     })
     .on("select2:close", "select.new-story.customer", function() {
         $(".select2-search--dropdown .select2-search__field").attr("placeholder", null);

@@ -116,11 +116,11 @@ function newSuccessListeners () {
     .on("select2:open", "select.new-success", function() {
       var placeholder;
       if ($(this).hasClass('customer')) {
-        placeholder = "Search or enter the name of a new Customer";
+        placeholder = "Search or enter the name of a New Customer";
       } else if ($(this).hasClass('curator')) {
         placeholder = 'Search';
       } else if ($(this).hasClass('referrer')) {
-        placeholder = 'Search or select - Create New Contact -';
+        placeholder = 'Search or Create New Contact';
       }
       $(".select2-search--dropdown .select2-search__field").attr("placeholder", placeholder);
     })
