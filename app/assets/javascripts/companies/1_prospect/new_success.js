@@ -120,7 +120,7 @@ function newSuccessListeners () {
       } else if ($(this).hasClass('curator')) {
         placeholder = 'Search';
       } else if ($(this).hasClass('referrer')) {
-        placeholder = 'Search or select - Create New Contatct -';
+        placeholder = 'Search or select - Create New Contact -';
       }
       $(".select2-search--dropdown .select2-search__field").attr("placeholder", placeholder);
     })

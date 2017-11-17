@@ -252,7 +252,7 @@ function newContributorListeners() {
       showContributorOptions(true);
 
       // not sure why the timeout is necessary here!
-      setTimeout(function () { $('input.select2-search__field').attr("placeholder", 'Search previous, or select - Create New Contributor -'); }, 0);
+      setTimeout(function () { $('input.select2-search__field').attr("placeholder", 'Search or select - Create New Contributor -'); }, 0);
       $('input.select2-search__field').data('prev', '');
       $('input.select2-search__field').on('input', monitorNewContributorSearch);
     })
