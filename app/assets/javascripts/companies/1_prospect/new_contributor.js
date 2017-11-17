@@ -158,23 +158,33 @@ function newContributorListeners() {
               .prop('disabled', disabled);
           });
       },
-      tagCustomerContributors = function (customerId) {
+      tagSuggestedContributors = function (customerId) {
         var companyContributions = $('#prospect-contributors-table').DataTable().rows().data().toArray(),
+            customerSuccessContributions = companyContributions.filter(function (contribution) {
+                return contribution.crowdsourcing_template &&
+                       contribution.crowdsourcing_template.name === 'Customer Success';
+              }),
             customerContributions = companyContributions.filter(function (contribution) {
                 return contribution.success.customer_id == customerId;
               }),
-            customerContributorIds = _.uniq(
+            suggestedContributorIds = _.uniq(
                 customerContributions, false,
                 function (contribution, index) { return contribution.contributor.id; }
+              )
+              .concat(
+                _.uniq(
+                  customerSuccessContributions, false,
+                  function (contribution, index) { return contribution.contributor.id; }
+                )
               )
               .map(function (contribution) {
                 return contribution.contributor.id.toString();
               });
         $('select.new-contributor.contributor option').each(function () {
-          if (customerContributorIds.includes($(this).val())) {
-            $(this).data('customer', true);
+          if (suggestedContributorIds.includes($(this).val())) {
+            $(this).data('suggested', true);
           } else {
-            $(this).data('customer', false);
+            $(this).data('suggested', false);
           }
         });
       },
@@ -187,7 +197,7 @@ function newContributorListeners() {
         // get the contributors for selected customer (if there is one)
         if (customerId) {
           $('select.new-contributor.contributor option').each(function () {
-            if ($(this).data('customer')) customerContributorIds.push($(this).val());
+            if ($(this).data('suggested')) customerContributorIds.push($(this).val());
           });
         }
 
@@ -278,7 +288,7 @@ function newContributorListeners() {
             $(this).prop('disabled', true);
           });
 
-        tagCustomerContributors(customerId);
+        tagSuggestedContributors(customerId);
 
 
       } else {
