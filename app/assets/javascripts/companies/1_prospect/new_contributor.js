@@ -280,6 +280,7 @@ function newContributorListeners() {
 
         tagCustomerContributors(customerId);
 
+
       } else {
         // update and enable customer attributes
         $form.find('input[id*="customer_attributes_id"]').val('');
