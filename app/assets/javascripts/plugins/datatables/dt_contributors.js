@@ -157,13 +157,13 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
           link = '<span style="font-weight:600">' +
                    '<a href="' + storyPath + '" class="story">' +
                       storyTitle +
-                   '</a>' + '\xa0\xa0<span style="font-weight:normal">(Customer Story)</span>' +
+                   '</a>' + '\xa0\xa0<span style="font-weight:normal;font-size:12px">(Customer Story)</span>' +
                  '</span>';
         } else {
           link = '<span style="font-weight:600">' +
                    '<a href="javascript:;" class="success">' +
                       successName +
-                   '</a>' + '\xa0\xa0<span style="font-weight:normal">(Customer Win)</span' +
+                   '</a>' + '\xa0\xa0<span style="font-weight:normal;font-size:12px">(Customer Win)</span' +
                  '</span>';
         }
         return $('<tr/>').append(
