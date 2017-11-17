@@ -399,11 +399,13 @@ function newContributorListeners() {
     .on("select2:open", "select.new-contributor", function() {
       var placeholder;
       if ($(this).hasClass('customer')) {
-        placeholder = "Search previous, or enter name of new Customer";
+        placeholder = "Search or enter the name of a new Customer";
       } else if ( $(this).hasClass('success') ) {
-        placeholder = "Search previous, or enter name of new Customer Win";
+        placeholder = "Search or enter the name of a new Customer Win";
       } else if ($(this).hasClass('invitation-template')) {
         placeholder = "Search";
+      } else if ($(this).hasClass('referrer')) {
+        placeholder = 'Search or select - Create New Contact -';
       } else {
         placeholder = "";
       }
