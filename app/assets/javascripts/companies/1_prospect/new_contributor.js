@@ -496,14 +496,14 @@ function newContributorListeners() {
     // reset modal
     .on('hidden.bs.modal', '#new-contributor-modal', function () {
       $(this).find('form')[0].reset();
-      $(this).find('.create-contributor').addClass('hidden');
+      $(this).find('.create-contributor, .create-referrer').addClass('hidden');
       $(this).find('select').val('').trigger('change.select2');
       $(this).find('select').prop('disabled', false);
-      $(this).find('select, input').each(function () {
-        $(this).closest('.form-group').removeClass('has-error');
-      });
-      $(this).find('.create-contributor input, .create-referrer input')
-        .prop('required', false);
+      $(this).find('.form-group').removeClass('has-error');
+      // $(this).find('select, input').each(function () {
+        // $(this).closest('.form-group').removeClass('has-error');
+      // });
+      $(this).find('.create-contributor input, .create-referrer input').prop('required', false);
       $('button[type="submit"][form="new-contributor-form"] span').css('display', 'inline');
       $('button[type="submit"][form="new-contributor-form"] i').css('display', 'none');
     })
