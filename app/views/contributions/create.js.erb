@@ -25,6 +25,11 @@
       openContributorDetails = function ($tr) {
         $tr.find('.contributor-details').trigger('click');
       },
+      errorsPresent = function (contribution) {
+        return Object.keys(contribution.contributor.errors).length ||
+               ( contribution.referrer &&
+                 Object.keys(contribution.referrer.errors).length )
+      }
       updateSuccess = function (success) {
         delete success.previous_changes
         $('#successes-table').DataTable()
@@ -88,8 +93,7 @@
       };
 
   // only possible error is a duplicate contributor (or referrer) email
-  if (Object.keys(contribution.contributor.errors).length ||
-      Object.keys(contribution.referrer.errors).length) {
+  if (errorsPresent(contribution)) {
     if (Object.keys(contribution.contributor.errors).length) {
       $('.form-group.contributor-email')
         .addClass('has-error')
