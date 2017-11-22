@@ -9,7 +9,6 @@
 //= require ./linkedin_util
 
 function prospect () {
-
 }
 
 function prospectListeners () {

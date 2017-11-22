@@ -3,7 +3,6 @@ function newContributorListeners() {
 
   var $form, customerVal, customerId, successVal, successId,
       customerSuccesses, successOptionsData,
-
       isCurateView = function () {
         return $('#workflow-tabs li.active a').attr('href') === '#curate';
       },
@@ -28,27 +27,48 @@ function newContributorListeners() {
             return option.disabled;
           });
       },
-      formIsValid = function () {
-        var $customerSelect = $('select.new-contributor.customer'),
-            $successSelect = $('select.new-contributor.success'),
-            $contributorSelect = $('select.new-contributor.contributor');
-        return $customerSelect.val() && $successSelect.val() && (
-            !['0', ''].includes($contributorSelect.val()) || (
-                $('#contribution_contributor_attributes_first_name').val() &&
-                $('#contribution_contributor_attributes_last_name').val() &&
-                $('#contribution_contributor_attributes_email').val()
-              )
-          ) && (
-            $('select.new-contributor.referrer').val() !== '0' || (
-                $('#contribution_referrer_attributes_first_name').val() &&
-                $('#contribution_referrer_attributes_last_name').val() &&
-                $('#contribution_referrer_attributes_email').val()
-              )
-          );
+      attachFormValidationListeners = function () {
+        /**
+         * since the 'invalid' event doesn't bubble up,
+         * the listener can't be delegated and must be attached directly to the inputs
+         * (or form if calling formEl.checkValidity())
+         */
+        $('select.new-contributor, .create-contributor input, .create-referrer input')
+          .on('invalid', function (e) {
+            $(this).closest('.form-group').addClass('has-error');
+
+            /**
+             * the only form input(s) that can have a validation error other than 'required'
+             * is the contributor (or referrer) email, which can be missing, improperly formatted or a duplicate;
+             * first two handled by client, duplicate handled by server
+             */
+            if ($(this).is('[id*="contributor_attributes_email"]') ||
+                $(this).is('[id*="referrer_attributes_email"]')) {
+              if ($(this)[0].validity.typeMismatch) {
+                $(this).next().text('Invalid email format');
+              } else {
+                $(this).next().text('Required');
+              }
+            }
+        });
       },
+      // ref: https://stackoverflow.com/questions/8597595
       validateForm = function () {
-        return formIsValid() ? $('button[type="submit"]').prop('disabled', false) :
-                             $('button[type="submit"]').prop('disabled', true);
+        var $form = $('#new-contributor-form'), formIsValid = true;
+        $('select.new-contributor[required]').each(function (index, select) {
+          if (!select.checkValidity()) formIsValid = false;
+        });
+        if ($('select.new-contributor.contributor').val() === '0') {
+          $form.find('.create-contributor input:not([type="hidden"])').each(function (index, input) {
+            if (!input.checkValidity()) formIsValid = false;
+          });
+        }
+        if ($('select.new-contributor.referrer').val() === '0') {
+          $form.find('.create-referrer input:not([type="hidden"])').each(function (index, input) {
+            if (!input.checkValidity()) formIsValid = false;
+          });
+        }
+        return formIsValid;
       },
       preSelectCustomerAndSuccess = function (customerId, successId) {
         $('select.new-contributor.customer').val(customerId).trigger('change');
@@ -83,44 +103,52 @@ function newContributorListeners() {
           });
           // .prop('disabled', false);
       },
-      updateContributorOptions = function (customerId) {
-        var companyContributions = $('#prospect-contributors-table').DataTable().rows().data().toArray(),
-            customerContributions,
-            contributorOptionsData = [
-              { id: '', text: '' },
-              { id: 0, text: '- Create New Contributor -' }
-            ];
-        if (customerId) {
-          customerContributions = companyContributions.filter(function (contribution) {
-              return contribution.success.customer_id == customerId;
-            });
-          contributorOptionsData = contributorOptionsData.concat(
-              _.uniq(
-                customerContributions, false,
-                function (contribution, index) { return contribution.contributor.id; }
-              )
-              .map(function (contribution) {
-                return { id: contribution.contributor.id, text: contribution.contributor.full_name };
-              })
-            );
-        } else {
-          contributorOptionsData = contributorOptionsData.concat(
-              _.uniq(
-                companyContributions, false,
-                function (contribution, index) { return contribution.contributor.id; }
-              )
-              .map(function (contribution) {
-                return { id: contribution.contributor.id, text: contribution.contributor.full_name };
-              })
-            );
-        }
-        $('select.new-contributor.contributor').select2('destroy').empty()
-          .select2({
-            theme: "bootstrap",
-            placeholder: 'Select or Create',
-            data: contributorOptionsData
-          });
-      },
+      // updateContributorOptions = function (customerId) {
+      //   var companyContributions = $('#prospect-contributors-table').DataTable().rows().data().toArray(),
+      //       customerContributions,
+      //       contributorOptionsData = [
+      //         { id: '', text: '' },
+      //         { id: 0, text: '- Create New Contributor -' }
+      //       ],
+      //       existingSelection;
+      //   if (customerId) {
+      //     customerContributions = companyContributions.filter(function (contribution) {
+      //         return contribution.success.customer_id == customerId;
+      //       });
+      //     contributorOptionsData = contributorOptionsData.concat(
+      //         _.uniq(
+      //           customerContributions, false,
+      //           function (contribution, index) { return contribution.contributor.id; }
+      //         )
+      //         .map(function (contribution) {
+      //           return { id: contribution.contributor.id, text: contribution.contributor.full_name };
+      //         })
+      //       );
+      //   } else {
+      //     contributorOptionsData = contributorOptionsData.concat(
+      //         _.uniq(
+      //           companyContributions, false,
+      //           function (contribution, index) { return contribution.contributor.id; }
+      //         )
+      //         .map(function (contribution) {
+      //           return { id: contribution.contributor.id, text: contribution.contributor.full_name };
+      //         })
+      //       );
+      //   }
+
+      //   /**
+      //    * reset select2 with new options, apply existing selection
+      //    */
+      //   existingSelection = $('select.new-contributor.contributor').val();
+      //   $('select.new-contributor.contributor')
+      //     .select2('destroy').empty()
+      //     .select2({
+      //       theme: "bootstrap",
+      //       placeholder: 'Select or Create',
+      //       data: contributorOptionsData
+      //     })
+      //     .val(existingSelection).trigger('change.select2');
+      // },
       disableExistingContributors = function (successId) {
         var successContributorIds = $('#prospect-contributors-table').DataTable()
               .rows().data().toArray().filter(function (contribution) {
@@ -147,16 +175,33 @@ function newContributorListeners() {
           });
       },
       disableReferrerAttrs = function (disabled) {
+        var $form = $('#new-contributor-form');
         if (disabled) {
-          $('#new-contributor-form .create-referrer').addClass('hidden');
+          $form.find('.create-referrer').addClass('hidden');
+
+          // don't validate referrer fields
+          $form.find('.create-referrer input:not([type="hidden"])').each(function () {
+            $(this).prop('required', false);
+          });
         } else {
-          $('#new-contributor-form .create-referrer').removeClass('hidden');
+          $form.find('.create-referrer').removeClass('hidden');
+
+          // validate referrer fields
+          $form.find('.create-referrer input:not([type="hidden"])')
+            .each(function () {
+              $(this).prop('required', true);
+            });
         }
         ['first_name', 'last_name', 'email', 'sign_up_code', 'password']
           .forEach(function (attribute) {
             $('#new-contributor-form [id*="referrer_attributes_' + attribute + '"]')
               .prop('disabled', disabled);
           });
+        if (!disabled) {
+          setTimeout(function () {
+            $form.find('.create-referrer input[id*="first_name"]')[0].focus();
+          }, 0);
+        }
       },
       tagSuggestedContributors = function (customerId) {
         var companyContributions = $('#prospect-contributors-table').DataTable().rows().data().toArray(),
@@ -200,9 +245,10 @@ function newContributorListeners() {
             if ($(this).data('suggested')) customerContributorIds.push($(this).val());
           });
         }
-
-        // go through options and hide/show as necessary
-        // (timeout needed since options are still loading at this point)
+        /**
+         * go through options and hide/show as necessary
+         * (timeout needed since options are still loading at this point)
+         */
         setTimeout(function () {
           $('.select2-results__option').each(function (index) {
             contributorId = $(this).attr('id').match(/-(\d+)$/)[1];
@@ -238,8 +284,10 @@ function newContributorListeners() {
      * or if adding contributors while a filter is applied (success or customer)
      */
     .on('show.bs.modal', '#new-contributor-modal', function () {
-      var customerId, successId,
+      var $form = $('#new-contributor-form'),
+          customerId, successId,
           dtSuccesses = $('#successes-table').DataTable();
+      attachFormValidationListeners();
       if (isCurateView()) {
         customerId = $('#curate-story-layout').data('customer-id');
         successId = $('#curate-story-layout').data('success-id');
@@ -254,12 +302,18 @@ function newContributorListeners() {
       }
     })
 
-    .on('input change', '#new-contributor-modal', validateForm)
+    .on('change', 'select.new-contributor, .create-contributor input, .create-referrer input',
+      function () {
+        if ($(this)[0].checkValidity()) {
+          $(this).closest('.form-group')
+            .removeClass('has-error')
+            .find('.help-block').text('');
+        }
+      })
 
     // with blank new contributor search field, show suggestions; else show all
     .on('select2:open', 'select.new-contributor.contributor', function () {
-      // if a customer is selected, show contributors that belong to that customer
-      showContributorOptions(true);
+      showContributorOptions(true); // true => show suggested options if customer selected
 
       // not sure why the timeout is necessary here!
       setTimeout(function () {
@@ -319,7 +373,6 @@ function newContributorListeners() {
       }
       // update select options
       updateSuccessOptions(customerId);
-      // updateContributorOptions(customerId);
 
     })
 
@@ -364,7 +417,6 @@ function newContributorListeners() {
              .prop('disabled', false);
       }
       // update select options
-      updateContributorOptions(customerId);
       disableExistingContributors(successId);
 
     })
@@ -375,14 +427,27 @@ function newContributorListeners() {
       // create contributor
       if ($(this).val() === '0') {
         $('.create-contributor').removeClass('hidden');
+        setTimeout(function () {
+          $('.create-contributor input[id*="first_name"]')[0].focus();
+        }, 0);
+
+        // validate contributor fields
+        $('.create-contributor').find('input:not([type="hidden"])').each(function () {
+          $(this).prop('required', true);
+        });
 
         // update hidden fields
         // $form.find('#contribution_user_id').val('');
         $form.find('input[id*="contributor_attributes"]').each(function () {
-            $(this).prop('disabled', false);
-          });
+          $(this).prop('disabled', false);
+        });
       } else {
         $('.create-contributor').addClass('hidden');
+
+        // don't validate contributor fields
+        $('.create-contributor').find('input:not([type="hidden"])').each(function () {
+          $(this).prop('required', false);
+        });
 
         // update hidden fields
         // $form.find('#contribution_user_id').val($(this).val());
@@ -434,13 +499,27 @@ function newContributorListeners() {
       $(this).find('.create-contributor').addClass('hidden');
       $(this).find('select').val('').trigger('change.select2');
       $(this).find('select').prop('disabled', false);
+      $(this).find('select, input').each(function () {
+        $(this).closest('.form-group').removeClass('has-error');
+      });
+      $(this).find('.create-contributor input, .create-referrer input')
+        .prop('required', false);
       $('button[type="submit"][form="new-contributor-form"] span').css('display', 'inline');
       $('button[type="submit"][form="new-contributor-form"] i').css('display', 'none');
     })
 
+    // need to listen for the click on the submit button instead of 'submit' on 'new-contributor-form'
+    // => the button is outside the form, linked to it through form= attribute
+    // => submit event doesn't bubble up to form, so e.preventDefault() doesn't work
     .on('click', 'button[type="submit"][form="new-contributor-form"]', function (e) {
-      $('button[type="submit"][form="new-contributor-form"] span').toggle();
-      $('button[type="submit"][form="new-contributor-form"] .fa-spinner').toggle();
+      e.preventDefault();
+      if (validateForm()) {
+        $('button[type="submit"][form="new-contributor-form"] span').toggle();
+        $('button[type="submit"][form="new-contributor-form"] .fa-spinner').toggle();
+        $('#new-contributor-form').submit();
+      } else {
+
+      }
     });
 
 }

@@ -70,10 +70,9 @@ class ContributionsController < ApplicationController
 
   def create
     @contribution = Contribution.new(contribution_params)
-    pp @contribution
     if @contribution.save
     else
-      pp @contribution.errors
+      pp @contribution.contributor.errors
     end
     respond_to { |format| format.js }
   end

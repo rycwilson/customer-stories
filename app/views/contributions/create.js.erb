@@ -15,8 +15,8 @@
               story: { only: [:id, :title, :slug] }
             }
           },
-          contributor: { only: [:id], methods: [:full_name, :previous_changes] },
-          referrer: { only: [:id], methods: [:full_name, :previous_changes] }
+          contributor: { only: [:id], methods: [:full_name, :previous_changes, :errors] },
+          referrer: { only: [:id], methods: [:full_name, :previous_changes, :errors] }
         }
       }) %>,
       isCurateView = function () {
@@ -32,6 +32,10 @@
           .data(success)
           .draw();
       },
+      toggleSubmit = function () {
+        $('button[type="submit"][form="new-contributor-form"] span').toggle();
+        $('button[type="submit"][form="new-contributor-form"] .fa-spinner').toggle();
+      }
       updateSelectOptions = function () {
         // new customer
         if (contribution.success.customer.previous_changes.id) {
@@ -83,6 +87,25 @@
 
       };
 
+  // only possible error is a duplicate contributor (or referrer) email
+  if (Object.keys(contribution.contributor.errors).length ||
+      Object.keys(contribution.referrer.errors).length) {
+    if (Object.keys(contribution.contributor.errors).length) {
+      $('.form-group.contributor-email')
+        .addClass('has-error')
+        .find('.help-block')
+        .text('Contributor with this email already exists')
+    }
+    if (Object.keys(contribution.referrer.errors).length) {
+      $('.form-group.referrer-email')
+        .addClass('has-error')
+        .find('.help-block')
+        .text('Contact with this email already exists')
+    }
+    toggleSubmit();
+    return;
+  }
+
   updateSelectOptions();
   updateSuccess(contribution.success);
 
@@ -92,8 +115,11 @@
     .ajax.reload(function (contributions) {
       if (!isCurateView()) {
         $trContribution = $('#prospect-contributors-table tr[data-contribution-id="' + contribution.id + '"]');
-        // TOFIX: $trContribution isn't found because a filter is keeping it from being displayed
-        // instead, identify the source data and then turn on filters as necessary to expose it
+
+        /**
+         * TOFIX: $trContribution isn't found because a filter is keeping it from being displayed
+         * instead, identify the source data and then turn on filters as necessary to expose it
+         */
         $('html, body').animate({ scrollTop: 65 }, 200)
           .promise()
           .then(function () {

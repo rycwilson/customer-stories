@@ -7,36 +7,40 @@
     <%= referrer_form.hidden_field(:sign_up_code, value: 'csp_beta', disabled: true) %>
     <%= referrer_form.hidden_field(:password, disabled: true) %>
 
-    <div class="form-group required-input">
+    <div class="form-group referrer-first-name required-input">
 
       <%= label_tag(:first_name, 'First Name', class: 'col-sm-3 control-label') %>
       <div class="col-sm-9">
-        <i class='fa fa-ellipsis-v'></i>
 
-        <%= referrer_form.text_field(:first_name, class: 'form-control', disabled: true) %>
+        <!-- tabindex: '-1' allows manual focus -->
+        <%= referrer_form.text_field(:first_name,
+              class: 'form-control', disabled: true, tabindex: '-1') %>
+        <span class="help-block">Required</span>
+
       </div>
 
     </div>
 
-    <div class="form-group required-input">
+    <div class="form-group referrer-last-name required-input">
 
       <%= label_tag(:last_name, 'Last Name', class: 'col-sm-3 control-label') %>
       <div class="col-sm-9">
-        <i class='fa fa-ellipsis-v'></i>
 
         <%= referrer_form.text_field(:last_name, class: 'form-control', disabled: true) %>
+        <span class="help-block">Required</span>
 
       </div>
 
     </div>
 
-    <div class="form-group required-input">
+    <div class="form-group referrer-email required-input">
 
       <%= label_tag(:email, 'Email', class: 'col-sm-3 control-label') %>
       <div class="col-sm-9">
-        <i class='fa fa-ellipsis-v'></i>
 
         <%= referrer_form.email_field(:email, class: 'form-control', disabled: true) %>
+        <span class="help-block"></span>
+
       </div>
 
     </div>
