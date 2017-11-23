@@ -74,7 +74,7 @@ class ContributionsController < ApplicationController
     else
       pp @contribution.contributor.errors
     end
-    respond_to { |format| format.js }
+    respond_to { |format| format.js {} }
   end
 
   def update

@@ -1,25 +1,14 @@
 
 function newSuccessListeners () {
 
-  var $form,
-      formIsValid = function () {
-        return $('select.new-success.customer').val() &&
-          $('#success_name').val() &&
-          (
-            $('select.new-success.referrer').val() !== '0' ||
-            (
-              $('#new-success-form [id*="first_name"]').val() &&
-              $('#new-success-form [id*="last_name"]').val() &&
-              $('#new-success-form [id*="email"]').val()
-            )
-          );
+  // ref: https://stackoverflow.com/questions/8597595
+  var validateForm = function () {
+        var $form = $('#new-success-form'), formIsValid = true;
+        $form.find('select[required], input[required]').each(function (index, input) {
+          if (!input.checkValidity()) formIsValid = false;
+        });
+        return formIsValid;
       },
-
-      validateForm = function () {
-        return formIsValid() ? $('button[type="submit"]').prop('disabled', false) :
-                             $('button[type="submit"]').prop('disabled', true);
-      },
-
       disableContributionAttrs = function (disabled) {
         ['referrer_id', 'crowdsourcing_template_id']
           .forEach(function (attribute) {
@@ -38,16 +27,32 @@ function newSuccessListeners () {
           });
       },
       disableReferrerAttrs = function (disabled) {
+        var $form = $('#new-success-form');
         if (disabled) {
-          $('#new-success-form .create-referrer').addClass('hidden');
+          $form.find('.create-referrer').addClass('hidden');
+
+          // don't validate referrer fields
+          $form.find('.create-referrer input:not([type="hidden"])').each(function () {
+            $(this).prop('required', false);
+          });
         } else {
-          $('#new-success-form .create-referrer').removeClass('hidden');
+          $form.find('.create-referrer').removeClass('hidden');
+
+          // validate referrer fields
+          $form.find('.create-referrer input:not([type="hidden"])').each(function () {
+            $(this).prop('required', true);
+          });
         }
         ['first_name', 'last_name', 'email', 'sign_up_code', 'password']
           .forEach(function (attribute) {
             $('#success_contributions_attributes_0_referrer_attributes_' + attribute)
               .prop('disabled', disabled);
         });
+        if (!disabled) {
+          setTimeout(function () {
+            $form.find('.create-referrer input[id*="first_name"]')[0].focus();
+          }, 0);
+        }
       };
 
   $(document)
@@ -56,7 +61,7 @@ function newSuccessListeners () {
       if ($('#successes-filter').val().match(/customer/)) {
         $('select.new-success.customer')
           .val($('#successes-filter').val().match(/customer-(\d+)/)[1])
-          .trigger('change');
+          .trigger('change.select2');
       }
       $('select.new-success.curator')
         .val($('.crowdsource.curator-select').val())
@@ -64,7 +69,7 @@ function newSuccessListeners () {
     })
 
     .on('change', 'select.new-success.customer', function () {
-      $form = $('#new-success-form');
+      var $form = $('#new-success-form');
       customerVal = $(this).val();
       customerId = isNaN(customerVal) ? null : customerVal;
 
@@ -85,31 +90,26 @@ function newSuccessListeners () {
     })
 
     .on('change', 'select.new-success.referrer', function () {
-      $form = $('#new-success-form');
+      var $form = $('#new-success-form');
 
-      // if no referrer provided, disable all attributes
-      if ( $(this).val() === '' ) {
+      // if no referrer provided, disable all contribution and referrer attributes
+      // TODO: allow selection of NO referrer after one is selected
+      if ($(this).val() === '') {
         disableContributionAttrs(true);
         disableReferrerAttrs(true);
 
-      // if creating a new referrer with this success,
-      // enable contribution and contributor attributes
-      } else if ( $(this).val() === '0' ) {
+      // if creating a new referrer with this success, enable contribution and referrer attributes
+      } else if ($(this).val() === '0') {
         disableContributionAttrs(false);
         disableReferrerAttrs(false);
-        setTimeout(function () {
-          $('#new-success-form [id*="referrer_attributes_first_name"]')[0].focus();
-          }, 0);
 
       // if existing referrer, disable contributor attributes
       } else {
         disableContributionAttrs(false);
         disableReferrerAttrs(true);
         // the referrer will be both contributor and referrer for this contribution
-        $('#new-success-form #success_contributions_attributes_0_referrer_id')
-          .val( $(this).val() );
+        $form.find('[id*="referrer_id"]').val($(this).val());
       }
-
     })
 
     // select2 hack for search placeholder
@@ -128,26 +128,21 @@ function newSuccessListeners () {
       $(".select2-search--dropdown .select2-search__field").attr("placeholder", null);
     })
 
-    .on('input', '#new-success-modal', validateForm)
-    .on('change', '#new-success-modal', validateForm)
-
     .on('change', '#new-success-form input[id*="email"]', function () {
-      $form = $('#new-contributor-form');
+      var $form = $('#new-contributor-form');
       $(this).closest('.create-referrer')
              .find('input[id*="password"]').val( $(this).val() );
     })
 
     // reset modal
     .on('hidden.bs.modal', '#new-success-modal', function () {
-
-      var $customerSelect = $('select.new-success.customer'),
-          $referrerSelect = $('select.new-success.referrer');
-
       $(this).find('form')[0].reset();
       disableContributionAttrs(true);
       disableReferrerAttrs(true);
       $(this).find('.create-referrer').addClass('hidden');
       $(this).find('select').val('').trigger('change');
+      $(this).find('.form-group').removeClass('has-error');
+      $(this).find('.create-referrer input').prop('required', false);
       $('button[type="submit"][form="new-success-form"] span').css('display', 'inline');
       $('button[type="submit"][form="new-success-form"] i').css('display', 'none');
     })
@@ -156,18 +151,20 @@ function newSuccessListeners () {
     // => the button is outside the form, linked to it through form= attribute
     // => submit event doesn't bubble up to form, so e.preventDefault() doesn't work
     .on('click', 'button[type="submit"][form="new-success-form"]', function (e) {
+      e.preventDefault();
+      if (validateForm()) {
+        $('button[type="submit"][form="new-success-form"] span').toggle();
+        $('button[type="submit"][form="new-success-form"] .fa-spinner').toggle();
 
-      $('button[type="submit"][form="new-success-form"] span').toggle();
-      $('button[type="submit"][form="new-success-form"] .fa-spinner').toggle();
-
-      // if a referrer wasn't selected, hide the contribution attributes
-      // so a contribution isn't created
-      if ( $('select.new-success.referrer').val() === '' ) {
-        e.preventDefault();
-        disableContributionAttrs(true);
+        // if a referrer wasn't selected, hide the contribution attributes
+        // so a contribution isn't created
+        if ( $('select.new-success.referrer').val() === '' ) {
+          disableContributionAttrs(true);
+        }
         $('#new-success-form').submit();
-      }
+      } else {
 
+      }
     })
 
     .on('submit', '#new-success-form', function () {

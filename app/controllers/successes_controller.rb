@@ -24,7 +24,7 @@ class SuccessesController < ApplicationController
     # pp @success
     if @success.save
     else
-      # pp @success.errors.full_messages
+      pp @success.errors.full_messages
     end
     respond_to { |format| format.js {} }
   end

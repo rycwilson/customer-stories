@@ -1,19 +1,8 @@
 
 function newContributorListeners() {
 
-  var $form, customerVal, customerId, successVal, successId,
-      customerSuccesses, successOptionsData,
-      isCurateView = function () {
+  var isCurateView = function () {
         return $('#workflow-tabs li.active a').attr('href') === '#curate';
-      },
-      isFilteredView = function () {
-        if ($('#contributors-filter').val() !== '0') {
-
-          // return the filter applied, i.e. 'customer' or 'success'
-          return $('#contributors-filter').val().match(/(\w+)-/)[1];
-        } else {
-          return false;
-        }
       },
       noCustomerContributors = function () {
         // length of 2 accounts for empty option and - Create New Contributor -
@@ -27,47 +16,12 @@ function newContributorListeners() {
             return option.disabled;
           });
       },
-      attachFormValidationListeners = function () {
-        /**
-         * since the 'invalid' event doesn't bubble up,
-         * the listener can't be delegated and must be attached directly to the inputs
-         * (or form if calling formEl.checkValidity())
-         */
-        $('select.new-contributor, .create-contributor input, .create-referrer input')
-          .on('invalid', function (e) {
-            $(this).closest('.form-group').addClass('has-error');
-
-            /**
-             * the only form input(s) that can have a validation error other than 'required'
-             * is the contributor (or referrer) email, which can be missing, improperly formatted or a duplicate;
-             * first two handled by client, duplicate handled by server
-             */
-            if ($(this).is('[id*="contributor_attributes_email"]') ||
-                $(this).is('[id*="referrer_attributes_email"]')) {
-              if ($(this)[0].validity.typeMismatch) {
-                $(this).next().text('Invalid email format');
-              } else {
-                $(this).next().text('Required');
-              }
-            }
-        });
-      },
       // ref: https://stackoverflow.com/questions/8597595
       validateForm = function () {
         var $form = $('#new-contributor-form'), formIsValid = true;
-        $('select.new-contributor[required]').each(function (index, select) {
-          if (!select.checkValidity()) formIsValid = false;
+        $form.find('select[required], input[required]').each(function (index, input) {
+          if (!input.checkValidity()) formIsValid = false;
         });
-        if ($('select.new-contributor.contributor').val() === '0') {
-          $form.find('.create-contributor input:not([type="hidden"])').each(function (index, input) {
-            if (!input.checkValidity()) formIsValid = false;
-          });
-        }
-        if ($('select.new-contributor.referrer').val() === '0') {
-          $form.find('.create-referrer input:not([type="hidden"])').each(function (index, input) {
-            if (!input.checkValidity()) formIsValid = false;
-          });
-        }
         return formIsValid;
       },
       preSelectCustomerAndSuccess = function (customerId, successId) {
@@ -79,8 +33,8 @@ function newContributorListeners() {
         }
       },
       updateSuccessOptions = function (customerId) {
-        // default options data
-        successOptionsData = [{ id: '', text: '' }];
+        var customerSuccesses,
+            successOptionsData = [{ id: '', text: '' }]; // default options data
         if (customerId) {
           customerSuccesses = $('#successes-table').DataTable().rows().data().toArray()
             .filter(function (success) {
@@ -103,52 +57,6 @@ function newContributorListeners() {
           });
           // .prop('disabled', false);
       },
-      // updateContributorOptions = function (customerId) {
-      //   var companyContributions = $('#prospect-contributors-table').DataTable().rows().data().toArray(),
-      //       customerContributions,
-      //       contributorOptionsData = [
-      //         { id: '', text: '' },
-      //         { id: 0, text: '- Create New Contributor -' }
-      //       ],
-      //       existingSelection;
-      //   if (customerId) {
-      //     customerContributions = companyContributions.filter(function (contribution) {
-      //         return contribution.success.customer_id == customerId;
-      //       });
-      //     contributorOptionsData = contributorOptionsData.concat(
-      //         _.uniq(
-      //           customerContributions, false,
-      //           function (contribution, index) { return contribution.contributor.id; }
-      //         )
-      //         .map(function (contribution) {
-      //           return { id: contribution.contributor.id, text: contribution.contributor.full_name };
-      //         })
-      //       );
-      //   } else {
-      //     contributorOptionsData = contributorOptionsData.concat(
-      //         _.uniq(
-      //           companyContributions, false,
-      //           function (contribution, index) { return contribution.contributor.id; }
-      //         )
-      //         .map(function (contribution) {
-      //           return { id: contribution.contributor.id, text: contribution.contributor.full_name };
-      //         })
-      //       );
-      //   }
-
-      //   /**
-      //    * reset select2 with new options, apply existing selection
-      //    */
-      //   existingSelection = $('select.new-contributor.contributor').val();
-      //   $('select.new-contributor.contributor')
-      //     .select2('destroy').empty()
-      //     .select2({
-      //       theme: "bootstrap",
-      //       placeholder: 'Select or Create',
-      //       data: contributorOptionsData
-      //     })
-      //     .val(existingSelection).trigger('change.select2');
-      // },
       disableExistingContributors = function (successId) {
         var successContributorIds = $('#prospect-contributors-table').DataTable()
               .rows().data().toArray().filter(function (contribution) {
@@ -287,15 +195,14 @@ function newContributorListeners() {
       var $form = $('#new-contributor-form'),
           customerId, successId,
           dtSuccesses = $('#successes-table').DataTable();
-      attachFormValidationListeners();
       if (isCurateView()) {
         customerId = $('#curate-story-layout').data('customer-id');
         successId = $('#curate-story-layout').data('success-id');
         preSelectCustomerAndSuccess(customerId, successId);
-      } else if (isFilteredView() === 'customer') {
+      } else if ($('#contributors-filter').val().match(/customer/)) {
         customerId = $('#contributors-filter').val().match(/-(\d+)/)[1];
         preSelectCustomerAndSuccess(customerId, null);
-      } else if (isFilteredView() === 'success') {
+      } else if ($('#contributors-filter').val().match(/success/)) {
         successId = $('#contributors-filter').val().match(/-(\d+)/)[1];
         customerId = dtSuccesses.row('[data-success-id="' + successId + '"]').data().customer.id;
         successId = preSelectCustomerAndSuccess(customerId, successId);
@@ -329,11 +236,11 @@ function newContributorListeners() {
 
     // select or create customer
     .on('change', 'select.new-contributor.customer', function (e) {
-      $form = $('#new-contributor-form');
-      customerVal = $(this).val();
-      customerId = isNaN(customerVal) ? null : customerVal;
-      successVal = $('select.new-contributor.success').val();
-      successId = isNaN(successVal) ? null : successVal;
+      var $form = $('#new-contributor-form'),
+          customerVal = $(this).val(),
+          customerId = isNaN(customerVal) ? null : customerVal,
+          successVal = $('select.new-contributor.success').val(),
+          successId = isNaN(successVal) ? null : successVal;
 
       // update hidden customer_id
       $form.find('input[id*="success_attributes_customer_id"]').val(customerId);
@@ -343,16 +250,12 @@ function newContributorListeners() {
         $form.find('input[id*="customer_attributes"]').each(function () {
             $(this).prop('disabled', true);
           });
-
         tagSuggestedContributors(customerId);
-
-
       } else {
         // update and enable customer attributes
         $form.find('input[id*="customer_attributes_id"]').val('');
         $form.find('input[id*="customer_attributes_name"]').val(customerVal);
         $form.find('input[id*="customer_attributes"]').prop('disabled', false);
-
 
         /**
          * reset select.success if an existing success was previously selected
@@ -377,18 +280,15 @@ function newContributorListeners() {
     })
 
     .on('change', 'select.new-contributor.success', function () {
-      $form = $('#new-contributor-form');
-      successVal = $(this).val();
-      customerVal = $('select.new-contributor.customer').val();
-      successId = isNaN(successVal) ? null : successVal;
-
-      var success = $('#successes-table').DataTable()
-        .column(1).data().toArray().find(function (success) {
-          return success.id == successId;
-        });
-
-      customerId = (success && success.customerId) ||
-        (isNaN(customerVal) ? null : customerVal);
+      var $form = $('#new-contributor-form'),
+          successVal = $(this).val(),
+          customerVal = $('select.new-contributor.customer').val(),
+          successId = isNaN(successVal) ? null : successVal,
+          success = $('#successes-table').DataTable()
+            .column(1).data().toArray().find(function (success) {
+              return success.id == successId;
+            }),
+          customerId = (success && success.customerId) || (isNaN(customerVal) ? null : customerVal);
 
       // existing success
       if (successId) {
@@ -422,7 +322,7 @@ function newContributorListeners() {
     })
 
     .on('change', 'select.new-contributor.contributor', function (e) {
-      $form = $('#new-contributor-form');
+      var $form = $('#new-contributor-form');
 
       // create contributor
       if ($(this).val() === '0') {
@@ -500,9 +400,6 @@ function newContributorListeners() {
       $(this).find('select').val('').trigger('change.select2');
       $(this).find('select').prop('disabled', false);
       $(this).find('.form-group').removeClass('has-error');
-      // $(this).find('select, input').each(function () {
-        // $(this).closest('.form-group').removeClass('has-error');
-      // });
       $(this).find('.create-contributor input, .create-referrer input').prop('required', false);
       $('button[type="submit"][form="new-contributor-form"] span').css('display', 'inline');
       $('button[type="submit"][form="new-contributor-form"] i').css('display', 'none');

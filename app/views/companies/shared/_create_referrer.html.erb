@@ -1,5 +1,5 @@
 
- <div class="create-referrer hidden">
+ <div class="<%= form %> create-referrer hidden">
 
   <%= contribution_form.fields_for(:referrer,
         contribution_form.object.build_referrer) do |referrer_form| %>
@@ -13,8 +13,9 @@
       <div class="col-sm-9">
 
         <!-- tabindex: '-1' allows manual focus -->
-        <%= referrer_form.text_field(:first_name,
-              class: 'form-control', disabled: true, tabindex: '-1') %>
+        <%= referrer_form.text_field(
+              :first_name, class: "form-control", disabled: true, tabindex: "-1"
+            ) %>
         <span class="help-block">Required</span>
 
       </div>
