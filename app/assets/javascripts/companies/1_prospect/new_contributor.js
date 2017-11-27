@@ -70,7 +70,7 @@ function newContributorListeners() {
         $('select.new-contributor.contributor').find('option')
           .each(function () {
             var $option = $(this);
-            if ( successContributorIds.includes($option.val()) ) {
+            if (successContributorIds.includes($option.val())) {
               $option.prop('disabled', true);
             }
           });
@@ -243,6 +243,9 @@ function newContributorListeners() {
           successVal = $('select.new-contributor.success').val(),
           successId = isNaN(successVal) ? null : successVal;
 
+      // re-enable any contributor options that were disabled via success selection
+      $('select.new-contributor.contributor').find('option:disabled').prop('disabled', false);
+
       // update hidden customer_id
       $form.find('input[id*="success_attributes_customer_id"]').val(customerId);
 
@@ -291,6 +294,9 @@ function newContributorListeners() {
             }),
           customerId = (success && success.customerId) || (isNaN(customerVal) ? null : customerVal);
 
+      // re-enable any contributor options that were disabled via previous success selection
+      $('select.new-contributor.contributor').find('option:disabled').prop('disabled', false);
+
       // existing success
       if (successId) {
         // update hidden success_id
@@ -305,6 +311,9 @@ function newContributorListeners() {
         // (change.select2 as we don't want the event to propagate - ?)
         $('select.new-contributor.customer').val(customerId).trigger('change.select2');
 
+        // update select options
+        disableExistingContributors(successId);
+
       // create success
       } else {
         // update hidden fields
@@ -317,8 +326,6 @@ function newContributorListeners() {
              .not('input[id*="customer_attributes"]')
              .prop('disabled', false);
       }
-      // update select options
-      disableExistingContributors(successId);
 
     })
 
@@ -399,7 +406,7 @@ function newContributorListeners() {
       $(this).find('form')[0].reset();
       $(this).find('.create-contributor, .create-referrer').addClass('hidden');
       $(this).find('select').val('').trigger('change.select2');
-      $(this).find('select').prop('disabled', false);
+      $(this).find('select, select option').prop('disabled', false);
       $(this).find('.form-group').removeClass('has-error');
       $(this).find('.create-contributor input, .create-referrer input').prop('required', false);
       $('button[type="submit"][form="new-contributor-form"] span').css('display', 'inline');
