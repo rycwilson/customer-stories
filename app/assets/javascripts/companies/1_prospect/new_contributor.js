@@ -117,6 +117,10 @@ function newContributorListeners() {
                 return contribution.crowdsourcing_template &&
                        contribution.crowdsourcing_template.name === 'Customer Success';
               }),
+            salesContributions = companyContributions.filter(function (contribution) {
+                return contribution.crowdsourcing_template &&
+                       contribution.crowdsourcing_template.name === 'Sales';
+              }),
             customerContributions = companyContributions.filter(function (contribution) {
                 return contribution.success.customer_id == customerId;
               }),
@@ -127,6 +131,12 @@ function newContributorListeners() {
               .concat(
                 _.uniq(
                   customerSuccessContributions, false,
+                  function (contribution, index) { return contribution.contributor.id; }
+                )
+              )
+              .concat(
+                _.uniq(
+                  salesContributions, false,
                   function (contribution, index) { return contribution.contributor.id; }
                 )
               )
@@ -208,15 +218,6 @@ function newContributorListeners() {
         successId = preSelectCustomerAndSuccess(customerId, successId);
       }
     })
-
-    .on('change', 'select.new-contributor, .create-contributor input, .create-referrer input',
-      function () {
-        if ($(this)[0].checkValidity()) {
-          $(this).closest('.form-group')
-            .removeClass('has-error')
-            .find('.help-block').text('');
-        }
-      })
 
     // with blank new contributor search field, show suggestions; else show all
     .on('select2:open', 'select.new-contributor.contributor', function () {

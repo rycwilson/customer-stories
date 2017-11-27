@@ -51,6 +51,15 @@ function prospectListeners () {
   contributorDetailsListeners();
   contributorActionsListeners();
 
+  // new success and new contributor forms
+  var validateInput = function ($input) {
+    if ($input[0].checkValidity()) {
+      $input.closest('.form-group')
+            .removeClass('has-error')
+            .find('.help-block').text('');
+    }
+  };
+
   $(document)
 
     .on('click', '#prospect .layout-sidebar a', function () {
@@ -142,7 +151,15 @@ function prospectListeners () {
     .on('click', 'div.success-details button[type="reset"], ' +
                  'div.contributor-details button[type="reset"]', function () {
         $(this).closest('tr').prev().find('td[class*="details"]').trigger('click');
-      });
+      })
+
+    // validate form inputs
+    .on('change', '#new-success-form select, #new-contributor-form select', function () {
+      validateInput($(this));
+    })
+    .on('input', '#new-success-form input, #new-contributor-form input', function () {
+      validateInput($(this));
+    });
 
 }
 
