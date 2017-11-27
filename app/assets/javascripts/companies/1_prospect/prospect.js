@@ -54,9 +54,13 @@ function prospectListeners () {
   // new success and new contributor forms
   var validateInput = function ($input) {
     if ($input[0].checkValidity()) {
-      $input.closest('.form-group')
-            .removeClass('has-error')
-            .find('.help-block').text('');
+      $input.closest('.form-group').removeClass('has-error');
+
+      /**
+       * email field(s) are the only ones that have more than one potential validation failure mode,
+       * thus requiring that the .help-block be cleared
+       */
+      if ($input.is('[id*="email"]')) $input.next().text('');
     }
   };
 
