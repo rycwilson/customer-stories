@@ -144,15 +144,15 @@ class Contribution < ActiveRecord::Base
         elsif contribution.status == 'first_reminder_sent'
           new_status = 'second_reminder_sent'
         end
+        contribution.update(status: new_status)
       elsif
-        ( contribution.status == 'second_reminder_sent' &&
-          Time.now > contribution.request_sent_at + contribution.first_reminder_wait.days +
-          (2 * contribution.second_reminder_wait.days) ) ||
-        ( contribution.status == 'request_re_sent' &&
-          Time.now > contribution.request_sent_at + contribution.second_reminder_wait.days )
-        new_status = 'did_not_respond'
+          ( contribution.status == 'second_reminder_sent' &&
+            Time.now > contribution.request_sent_at + contribution.first_reminder_wait.days +
+            (2 * contribution.second_reminder_wait.days) ) ||
+          ( contribution.status == 'request_re_sent' &&
+            Time.now > contribution.request_sent_at + contribution.second_reminder_wait.days )
+        contribution.update(status: 'did_not_respond')
       end
-      contribution.update(status: new_status)
     end
   end
 
