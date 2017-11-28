@@ -160,7 +160,7 @@ function prospectListeners () {
     // validate form inputs
     .on(
       'change',
-      '#new-success-form select, #new-success-form input, new-contributor-form select, #new-contributor-form input',
+      '#new-success-form select, #new-success-form input, #new-contributor-form select, #new-contributor-form input',
       function () {
         validateInput($(this));
       }
