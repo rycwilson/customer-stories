@@ -158,12 +158,13 @@ function prospectListeners () {
       })
 
     // validate form inputs
-    .on('change', '#new-success-form select, #new-contributor-form select', function () {
-      validateInput($(this));
-    })
-    .on('input', '#new-success-form input, #new-contributor-form input', function () {
-      validateInput($(this));
-    });
+    .on(
+      'change',
+      '#new-success-form select, #new-success-form input, new-contributor-form select, #new-contributor-form input',
+      function () {
+        validateInput($(this));
+      }
+    );
 
 }
 

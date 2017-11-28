@@ -46,9 +46,8 @@ function prospectFiltersListeners () {
         dtSearch = dtSearch.column(filterCol + ':name').search(filterVal);
       }
     }
-
+    // console.log('dtSearch: ', dtSearch)
     return dtSearch;
-
   };
 
   var loadSelectOptions = function (curatorId, $filter) {
@@ -144,6 +143,7 @@ function prospectFiltersListeners () {
 
       // successes-filter or contributors-filter
       else {
+        // console.log('setSearch()')
         setSearch($table, true).draw();
       }
 
