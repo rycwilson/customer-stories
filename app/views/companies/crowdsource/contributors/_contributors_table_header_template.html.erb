@@ -1,25 +1,25 @@
 
-<script id='contributors-table-header-template' type='text/template'>
+<script id="contributors-table-header-template" type="text/template">
 
-  <div class='row contributors-header' style='visibility:hidden'>
+  <div class="row contributors-header" style="visibility:hidden">
 
-    <div class='col-sm-6'>
+    <div class="col-sm-6">
 
       <div class="dropdown">
         <button type="button" class="btn btn-default btn-secondary dropdown-toggle" id="add-contributors" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-          <i class='fa fa-plus-circle fa-fw'></i>&nbsp;Contributors
+          <i class="fa fa-plus-circle fa-fw"></i>&nbsp;Contributors
           &nbsp;&nbsp;&nbsp;&nbsp;<span class="caret"></span>
         </button>
         <ul class="dropdown-menu dropdown-menu-left dropdown-actions" aria-labelledby="add-contributors">
-          <li class='new-contributor'>
-            <a href="#new-contributor-modal" data-toggle='modal'>
-              <i class='fa fa-user fa-fw action'></i>&nbsp;&nbsp;
+          <li class="new-contributor">
+            <a href="#new-contributor-modal" data-toggle="modal">
+              <i class="fa fa-user fa-fw action"></i>&nbsp;&nbsp;
               <span>New Contributor</span>
             </a>
           </li>
-          <li class='import-contributors'>
+          <li class="import-contributors">
             <a href="javascript:;">
-              <i class='fa fa-cloud-download fa-fw action'></i>&nbsp;&nbsp;
+              <i class="fa fa-cloud-download fa-fw action"></i>&nbsp;&nbsp;
               <span>Import from CRM</span>
             </a>
           </li>
@@ -27,7 +27,7 @@
       </div>
 
       <div>
-        <label class='group checkbox-filter' for="toggle-group-by-success">
+        <label class="group checkbox-filter" for="toggle-group-by-success">
           <input type="checkbox" id="toggle-group-by-success" checked>
           <span>&nbsp;&nbsp;Group by Customer Win / Story</span>
         </label>
@@ -35,18 +35,18 @@
 
     </div>
 
-    <div class='col-sm-6 form-horizontal select-filters'>
-      <div class='form-group'>
-        <label class='col-sm-3 control-label'>Curator</label>
-        <div class='col-sm-9' style='padding:0'>
+    <div class="col-sm-6 form-horizontal select-filters">
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Curator</label>
+        <div class="col-sm-9" style="padding:0">
 
-          <select class='crowdsource curator-select form-control text-left'>
+          <select class="crowdsource curator-select form-control text-left">
 
-            <option value='0' selected>All Curators<option>
+            <option value="0">All Curators<option>
 
             {{ _.each(curators, function (curator) { }}
 
-              <option data-column='curator' value="{{= curator.id }}">{{= curator.first_name + ' ' + curator.last_name }}</option>
+              <option data-column="curator" value="{{= curator.id }}">{{= curator.first_name + " " + curator.last_name }}</option>
 
             {{ }); }}
 
@@ -55,38 +55,58 @@
         </div>
       </div>
 
-      <div class='form-group search'>
-        <label class='col-sm-3 control-label'>Search</label>
-        <div class='col-sm-9' style='padding:0;'>
+      <div class="form-group search">
+        <label class="col-sm-3 control-label">Search</label>
+        <div class="col-sm-9" style="padding:0;">
 
-          <i class='fa fa-remove search-all fa-fw'></i>
+          <i class="fa fa-remove search-all fa-fw"></i>
 
-          <select id='contributors-filter' class='dt-filter form-control text-left'>
-
+          <select id="contributors-filter" class="dt-filter form-control text-left">
             <option></option>
+            <option value="0" data-column="contributor" selected>All Contributors</option>
+            <optgroup label="Contributor">
 
-            <option value='0' data-column='contributor' selected>All Contributors</option>
+              {{ _.each(contributors, function (contributor) { }}
 
-            <optgroup label='Customer'></optgroup>
-            <optgroup label='Customer Win'></optgroup>
-            <optgroup label='Contributor'></optgroup>
+                <option data-column="contributor" value="contributor-{{= contributor.id }}">{{= contributor.fullName }}</option>
 
+              {{ }); }}
+
+            </optgroup>
+            <optgroup label="Customer Win">
+
+              {{ _.each(successes, function (success) { }}
+
+                <option data-column="success" value="success-{{= success.id }}">{{= success.name }}</option>
+
+              {{ }); }}
+
+            </optgroup>
+            <optgroup label="Customer">
+
+              {{ _.each(customers, function (customer) { }}
+
+                <option data-column="customer" value="customer-{{= customer.id }}">{{= customer.name }}</option>
+
+              {{ }); }}
+
+            </optgroup>
           </select>
 
         </div>
       </div>
 
-      <div class='form-group'>
-        <label class='col-sm-3 control-label'>Show</label>
-        <div class='col-sm-9' style='padding:0'>
-          <div class='checkbox checkbox-filters'>
+      <div class="form-group">
+        <label class="col-sm-3 control-label">Show</label>
+        <div class="col-sm-9" style="padding:0">
+          <div class="checkbox checkbox-filters">
 
-            <label class='contributors checkbox-filter' for="show-completed">
+            <label class="contributors checkbox-filter" for="show-completed">
               <input type="checkbox" id="show-completed">
               <span>&nbsp;&nbsp;Contributors with a completed Contribution</span>
             </label>
 
-            <label class='contributors checkbox-filter' for="show-published">
+            <label class="contributors checkbox-filter" for="show-published">
               <input type="checkbox" id="show-published">
               <span>&nbsp;&nbsp;Contributors to published Customer Stories</span>
             </label>

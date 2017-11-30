@@ -94,8 +94,6 @@
 
   // only possible error is a duplicate contributor (or referrer) email
   if (errorsPresent(contribution)) {
-    console.log('errors')
-    console.log(contribution)
     if (Object.keys(contribution.contributor.errors).length) {
       $('.form-group.contributor-email')
         .addClass('has-error')

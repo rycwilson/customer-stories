@@ -104,7 +104,6 @@ function initSuccessesTable (dtSuccessesInit) {
       { width: '26%', targets: statusIndex },
       { width: '8%', targets: actionsIndex }
     ],
-
     rowGroup: {
       dataSrc: 'customer.name',
       startRender: function (groupRows, successName) {
@@ -117,7 +116,6 @@ function initSuccessesTable (dtSuccessesInit) {
                   '</td>');
       }
     },
-
     createdRow: function (row, data, index) {
       $(row).attr('data-customer-id', data.customer.id);
       $(row).attr('data-success-id', data.id);
@@ -126,19 +124,20 @@ function initSuccessesTable (dtSuccessesInit) {
       $(row).children().eq(2).addClass('status');
       $(row).children().eq(3).addClass('actions dropdown');
     },
-
     initComplete: function (settings, json) {
-
       var $table = $(this),
-          $tableWrapper = $table.closest('[id*="table_wrapper"]');
+          $tableWrapper = $table.closest('[id*="table_wrapper"]'),
+          dt = $table.DataTable();
 
       // remove default search field.  Disabling via options also disables api, so can't do that
       $tableWrapper.children('.row:first-child').remove();
 
+      // add the header
       $tableWrapper.prepend(
         _.template( $('#successes-table-header-template').html() )({
-          currentUser: app.current_user,
-          curators: app.company.curators
+          curators: app.company.curators,
+          successes: dt.column(successIndex).data().toArray(),
+          customers: dt.column(customerIndex).data().toArray(),
         })
       );
 

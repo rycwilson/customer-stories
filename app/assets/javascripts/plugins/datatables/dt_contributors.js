@@ -74,8 +74,10 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
       {  // <td data-search="<%= contribution.success.curator.id %>"></td>
         name: 'curator',
         data: {
-          _: 'success.curator.full_name',  // not used, but _ is required
-          filter: 'success.curator.id'
+          _: function (row, type, set, meta) {
+            return { id: row.success.curator.id, fullName: row.success.curator.full_name };
+          },
+          filter: 'success.curator.full_name',
         }
       },      // curator
        // <td data-search="c<%= contribution.customer.id %>"><%= contribution.customer.name %></td>
@@ -228,15 +230,24 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
           'prospect', crowdsourcingTemplateSelectOptions
         );
 
+        // add the header
         $tableWrapper.prepend(
           _.template( $('#contributors-table-header-template').html() )({
             curators: app.company.curators,
-            contributors: dt.column(contributorIndex).data(),
-            successes: dt.column(successIndex).data(),
-            customers: dt.column(customerIndex).data()
+            contributors: _.uniq(
+              dt.column(contributorIndex).data().toArray(), false,
+              function (contributor, index) { return contributor.id; }
+            ),
+            successes: _.uniq(
+              dt.column(successIndex).data().toArray(), false,
+              function (success, index) { return success.id; }
+            ),
+            customers: _.uniq(
+              dt.column(customerIndex).data().toArray(), false,
+              function (customer, index) { return customer.id; }
+            )
           })
         );
-
         dtContributorsInit.resolve();
 
       // workflowStage == curate

@@ -40,8 +40,8 @@ function initDataTables () {
             // allowClear: true
           });
           $tableWrapper.find('.curator-select')
-            .val( app.current_user.id )
-            .trigger( 'change', { auto: true } );
+            .val(app.current_user.id)
+            .trigger('change', { auto: true });
         },
         initCheckboxFilters = function () {
           $('#show-wins-with-story, #show-completed, #show-published')
@@ -64,8 +64,8 @@ function initDataTables () {
 
     $.when(dtSuccessesInit, dtContributorsInit)
       .done(function () {
-        initSelectFilters( $('#successes-table').closest('[id*="table_wrapper"]') );
-        initSelectFilters( $('#prospect-contributors-table').closest('[id*="table_wrapper"]') );
+        initSelectFilters($('#successes-table').closest('[id*="table_wrapper"]'));
+        initSelectFilters($('#prospect-contributors-table').closest('[id*="table_wrapper"]'));
         initCheckboxFilters();
         showTables();
       });
