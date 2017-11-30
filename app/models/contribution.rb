@@ -176,8 +176,8 @@ class Contribution < ActiveRecord::Base
     self.request_subject = self.crowdsourcing_template.request_subject
       .sub('[customer_name]', self.customer.name)
       .sub('[company_name]', self.company.name)
-      .sub('[contributor_first_name', self.contributor.first_name)
-      .sub('[contributor_full_name', self.contributor.full_name)
+      .sub('[contributor_first_name]', self.contributor.first_name)
+      .sub('[contributor_full_name]', self.contributor.full_name)
     self.request_body = self.crowdsourcing_template.request_body
       .gsub('[customer_name]', self.customer.name)
       .gsub('[company_name]', self.company.name)
