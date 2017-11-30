@@ -5,7 +5,7 @@
       videoUrl = story.video_url,
       results = <%= raw @story.success.results.to_json({ only: [:id, :description] }) %>,
       template = _.template( $('#success-results-template').html() );
-
+console.log('story: ', story)
   // re-build results list (may not be necessary, but that's ok)
   $('.success-results ul, .success-results input').remove()
   $('.success-results').append(
@@ -22,9 +22,9 @@
   // replace video url with formatted version
   $('#story_video_url').val(videoUrl);
 
-  $('#story-content-form button[type="submit"]').find('.fa-spinner, .fa-check').toggle()
+  $('button[type="submit"][form="story-content-form"]').find('.fa-spinner, .fa-check').toggle()
   window.setTimeout(function () {
-    $('#story-content-form button[type="submit"]').find('.fa-check, span').toggle();
+    $('button[type="submit"][form="story-content-form"]').find('.fa-check, span').toggle();
   }, 2000);
 
   // old:

@@ -17,8 +17,8 @@ function storiesEditContentListeners () {
 
   $(document)
     .on('submit', '#story-content-form', function (e) {
-      $(this).find('button[type="submit"] span').toggle();
-      $(this).find('button[type="submit"] .fa-spinner').toggle();
+      $('button[type="submit"][form="story-content-form"] span').toggle();
+      $('button[type="submit"][form="story-content-form"] .fa-spinner').toggle();
     })
 
     .on('shown.bs.collapse', '#contributions-carousel', function () {
@@ -27,6 +27,10 @@ function storiesEditContentListeners () {
     .on('hidden.bs.collapse', '#contributions-carousel', function () {
       $('[href="#contributions-carousel"][data-toggle="collapse"] > span').toggle();
     })
+
+    // form changes
+    .on('input', '#story-content-form', function () {})
+    .on('click', '.add-result, .remove-result', function () {})
 
     .on('wheel', '.contribution-content, #story_summary', function (event) {
       var maxY = $(this).prop('scrollHeight') - $(this).prop('clientHeight');

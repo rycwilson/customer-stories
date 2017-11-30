@@ -85,21 +85,28 @@
 
     </div>
 
-    <div class="col-lg-4 text-center">
-
-      <hr>
-
-      <button type="reset" class="btn btn-default">Cancel</button>
-      <button type="submit" class="btn btn-success text-center" style='width: 114px'>
-        <span>Save changes</span>
-        <i class='fa fa-spinner fa-pulse' style='display:none'></i>
-        <i class='fa fa-check' style='display:none'></i>
-      </button>
-
-    </div>
+    <div class="col-lg-4"><!-- filler --></div>
 
   </div>
 
 <% end %>
+
+<div id='story-content-submit' class="container">
+  <div class="row">
+    <div class="col-sm-4 col-md-3 layout-sidebar"></div>
+    <div class="col-sm-8 col-md-9 layout-main">
+      <div class="tab-content stacked-content">
+
+        <!-- <button type="reset" class="btn btn-default">Clear changes</button> -->
+        <button type="submit" form="story-content-form" class="btn btn-success text-center" style='width: 114px'>
+          <span>Save changes</span>
+          <i class='fa fa-spinner fa-pulse' style='display:none'></i>
+          <i class='fa fa-check' style='display:none'></i>
+        </button>
+
+      </div>
+    </div>
+  </div>
+</div>
 
 

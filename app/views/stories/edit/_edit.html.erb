@@ -11,9 +11,10 @@
   <div class="col-md-9 col-sm-8 layout-main">
     <div class="tab-content stacked-content">
 
-      <div class='row' style='margin-top: -5px;'>
+      <div id='story-edit-header' class='row'>
         <div class="col-sm-12">
-          <div style='margin-bottom: 6px;'>
+
+          <div>
             <label style='margin:0'>Customer</label>&nbsp;&nbsp;&nbsp;
             <span style='font-family:"Lato";font-size:18px;color:#999'><%= story.customer.name %></span>
           </div>
@@ -27,10 +28,9 @@
               <%= story.try(:title) %>
             </a>
           </div>
+
         </div>
       </div>
-
-      <hr style='margin-bottom: 24px; border-top: 1px solid #e5e5e5'>
 
       <div id='story-settings' class="tab-pane fade <%= (tab == 'settings' || tab.nil?) ? 'in active' : '' %>">
 
