@@ -77,7 +77,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
           _: function (row, type, set, meta) {
             return { id: row.success.curator.id, fullName: row.success.curator.full_name };
           },
-          filter: 'success.curator.full_name',
+          filter: 'success.curator.id',
         }
       },      // curator
        // <td data-search="c<%= contribution.customer.id %>"><%= contribution.customer.name %></td>
