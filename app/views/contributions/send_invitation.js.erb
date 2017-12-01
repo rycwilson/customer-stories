@@ -28,17 +28,21 @@
           }
         }) %>;
 
-  $('table[id*="contributors-table"]').DataTable()
-    .row( $('[data-contribution-id="' + contribution.id + '"]') )
+  $('#prospect-contributors-table, #curate-contributors-table').each(function () {
+    $(this).DataTable()
+    .row('[data-contribution-id="' + contribution.id + '"]')
+    .invalidate()
     .data(contribution)
     .draw()
+  })
 
   $('#successes-table').DataTable()
-    .row( $('[data-success-id="' + contribution.success.id + '"]') )
+    .row('[data-success-id="' + contribution.success.id + '"]')
+    .invalidate()
     .data(success)
     .draw()
 
   $('#contribution-request-modal').modal('hide')
-  flashDisplay('Contribution Request sent to ' + contribution.contributor.full_name, 'success');
+  flashDisplay('Contributor Invitation sent to ' + contribution.contributor.full_name, 'success');
 
 }());

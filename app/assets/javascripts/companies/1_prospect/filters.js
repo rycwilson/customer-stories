@@ -136,9 +136,6 @@ function prospectFiltersListeners () {
                .search(curatorId === '0' ? '' : '^' + curatorId + '$', true, false);
 
         if ($table.is($('#successes-table'))) {
-console.log('successes curatorId: ', curatorId)
-console.log('successes filterCol: ', filterCol)
-console.log('successes filterVal: ', filterVal)
           // clear last column search, and keep track of current search
           dtSearch = dtSearch.column(lastSuccessesSearchColumn + ':name').search('');
           lastSuccessesSearchColumn = filterCol;
@@ -149,9 +146,6 @@ console.log('successes filterVal: ', filterVal)
             .search($('#show-wins-with-story').prop('checked') ? '' :  '^false$', true, false);
 
         } else if ($table.is($('#prospect-contributors-table'))) {
-console.log('contributors curatorId: ', curatorId)
-console.log('contributors filterCol: ', filterCol)
-console.log('contributors filterVal: ', filterVal)
           // clear last column search, and keep track of current search
           dtSearch = dtSearch.column(lastContributorsSearchColumn + ':name').search('');
           lastContributorsSearchColumn = filterCol;

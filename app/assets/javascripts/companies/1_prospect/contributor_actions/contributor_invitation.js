@@ -1,5 +1,5 @@
 
-function contributorActionsListeners () {
+function contributorInvitationListeners() {
 
   var invitation,  // { contributor: ..., subject: ..., body: ... }
       contributionPath = function (contributionId) {
@@ -11,9 +11,7 @@ function contributorActionsListeners () {
             return app.current_user[item] === '' ;
           });
       },
-
-      // type is 'send' or 'readonly'
-      showInvitation = function (invitation, type) {
+      showInvitation = function (invitation, type) { // type is 'send' or 'readonly'
         // things go haywire if a different selector is used, e.g. $('textarea')
         var $modal = $('#contribution-request-modal'),
             $editor = $modal.find("[data-provider='summernote']");
@@ -63,9 +61,7 @@ function contributorActionsListeners () {
         });
         $modal.modal('show');
       },
-
       getInvitation = function (contributionId, type) {
-
         $.ajax({
           url: contributionPath(contributionId),
           method: 'get',
@@ -89,7 +85,6 @@ function contributorActionsListeners () {
             showInvitation(invitation, type);
           });
       },
-
       toggleEmailProgress = function (state) {
         var $modal = $('#contribution-request-modal');
         if (state === 'on') {
@@ -100,29 +95,6 @@ function contributorActionsListeners () {
           $modal.find('.progress').addClass('hidden');
         }
       },
-
-      removeContribution = function (id) {
-        $.ajax({
-          url: contributionPath(id),
-          method: 'delete',
-          dataType: 'json'
-        })
-          .done(function (contribution, status, xhr) {
-            $('table[id*="contributors-table"]').each(function () {
-              var $table = $(this);
-              $table.DataTable()
-                .row('[data-contribution-id="' + contribution.id + '"]')
-                .remove()
-                .draw();
-              $table.find('tr.group').each(function () {
-                if ($(this).next().hasClass('group')) {
-                  $(this).remove();
-                }
-              });
-            });
-          });
-      },
-
       modifyLinkDialog = function () {
         $('.link-dialog .note-link-url').prop('disabled', true);
         $('.link-dialog input[type="checkbox"]').prop('checked', true);
@@ -131,7 +103,6 @@ function contributorActionsListeners () {
       };
 
   $(document)
-
     .on('click', '.contributor-actions .send-invitation', function (e) {
       if ($(this).hasClass('disabled')) {
         return false;
@@ -146,7 +117,6 @@ function contributorActionsListeners () {
       }
 
     })
-
     .on('click', '.contributor-actions .re-send-invitation', function () {
       var contributionId = $(this).closest('tr').data('contribution-id');
 
@@ -160,30 +130,12 @@ function contributorActionsListeners () {
       }
 
     })
-
-    .on('click', '.contributor-actions .remove', function () {
-      var contributionId = $(this).closest('tr').data('contribution-id');
-      bootbox.confirm({
-        size: 'small',
-        className: 'confirm-remove-contributor',
-        closeButton: false,
-        message: "<i class='fa fa-warning'></i>\xa0\xa0\xa0<span>Are you sure?</span>",
-        buttons: {
-          confirm: {
-            label: 'Remove',
-            className: 'btn-danger'
-          },
-          cancel: {
-            label: 'Cancel',
-            className: 'btn-default'
-          }
-        },
-        callback: function (confirmRemove) {
-          if (confirmRemove) { removeContribution(contributionId); }
-        }
-      });
-    })
-
+    .on('click', '.contributor-actions .view-request, td.crowdsourcing-template.view-request a',
+      function () {
+        var contributionId = $(this).closest('tr').data('contribution-id');
+        getInvitation(contributionId, 'readonly');
+      }
+    )
     .on('submit', '#contribution-request-form', function () {
       toggleEmailProgress('on');
     })
@@ -193,96 +145,6 @@ function contributorActionsListeners () {
       // there are a bunch of modals within the summernote editor, hence indexing
       $(this).find('.modal-body').eq(0).scrollTop(0);
       toggleEmailProgress('off');
-    })
-
-    .on('click', '.contributor-actions .view-request, ' +
-                 'td.crowdsourcing-template.view-request a', function () {
-      var contributionId = $(this).closest('tr').data('contribution-id');
-      getInvitation(contributionId, 'readonly');
-    })
-
-    // BEWARE this will also fire from Successes view
-    .on('click', '.contributor-actions .view-contribution, ' +
-                 'td.status .view-contribution', function () {
-
-      var contributionId = $(this).closest('tr').data('contribution-id'),
-          formattedDate = function (date) {
-              return moment(date).calendar(null, {
-                sameDay: '[today]',
-                lastDay: '[yesterday]',
-                lastWeek: '['+ moment(date).fromNow() +']',
-                sameElse: 'M/DD/YY'
-              }).split('at')[0];
-            };
-
-      $.ajax({
-        url: contributionPath(contributionId),
-        method: 'get',
-        data: {
-          get_submission: true
-        },
-        dataType: 'json'
-      })
-        .done(function (contribution, status, xhr) {
-          $.when(
-            $('#contribution-content-modal .modal-content').empty().append(
-              _.template( $('#contribution-content-template').html() )({
-                contributions: [contribution],
-                successId: null,
-                formattedDate: formattedDate
-              })
-            )
-          )
-            .done(function () {
-              $('#contribution-content-modal').modal('show');
-            });
-        });
-
-    })
-
-    .on('click', '.contributor-actions .view-customer-win', function () {
-      var successId = $(this).closest('tr').data('success-id');
-      $('#successes-filter').val('success-' + successId).trigger('change');
-      $('#successes-filter').select2('focus');
-      $(document)
-        .one('click', function () {
-          $('#successes-filter').next().removeClass('select2-container--focus');
-        })
-        .one('shown.bs.tab', 'a[href="#successes"]', function () {
-          $('html, body').animate({ scrollTop: 65 }, 200);
-        });
-      $('a[href="#successes"]').tab('show');
-    })
-
-    .on('click', '.contributor-actions .completed', function () {
-
-      var dt = $(this).closest('table').DataTable(),
-          $row = $(this).closest('tr'),
-          rowData = dt.row($row).data(),
-          $tdStatus = $row.find('td.status'),
-          contributionId = $row.data('contribution-id');
-
-      $.ajax({
-        url: contributionPath(contributionId),
-        method: 'put',
-        data: { completed: true },
-        dataType: 'json'
-      })
-        .done(function (data, status, xhr) {
-          rowData.status = data.status;
-          rowData.display_status = data.display_status;
-          dt.row($row).data(rowData);
-          $tdStatus.find('i').toggle();
-          setTimeout(function () {
-            $tdStatus.find('i').toggle();
-          }, 2000);
-          setTimeout(function () {
-            if ( $('#show-completed').length &&
-                 $('#show-completed').prop('checked') === false ) {
-              $('#show-completed').trigger('change');
-            }
-          }, 2200);
-        });
     })
 
     // keep link dialog modifications limited to contribution request

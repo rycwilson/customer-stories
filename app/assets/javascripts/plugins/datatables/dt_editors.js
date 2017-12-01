@@ -103,7 +103,7 @@ function openContributorsEditor (contributorsEditor, $row) {
       onComplete: function (editor) {
         var contributionId = $row.data('contribution-id'),
             $table = $(editor.s.table),
-            $tableOther = $('table[id*="contributors-table"]').not($table),
+            $tableOther = $('#prospect-contributors-table, #curate-contributors-table').not($table),
             dt = $table.DataTable(),
             rowData = dt.row($row).data(),
             $rowOther, dtOther;

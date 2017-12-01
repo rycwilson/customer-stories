@@ -115,7 +115,7 @@ class ContributionsController < ApplicationController
           params[:contribution][:status] = 'request_re_sent'
         end
         @contribution.update(contribution_params)
-        respond_to { |format| format.js { render action: 'send_request' } }
+        respond_to { |format| format.js { render action: 'send_invitation' } }
       end
 
     elsif params[:contributor]

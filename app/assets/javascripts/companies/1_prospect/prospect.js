@@ -5,7 +5,7 @@
 //= require ./success_details
 //= require ./success_actions
 //= require ./contributor_details
-//= require ./contributor_actions
+//= require ./contributor_actions/contributor_actions
 //= require ./linkedin_util
 
 function prospect () {
@@ -50,6 +50,7 @@ function prospectListeners () {
   successActionsListeners();
   contributorDetailsListeners();
   contributorActionsListeners();
+  contributorInvitationListeners();
 
   // new success and new contributor forms
   var validateInput = function ($input) {
