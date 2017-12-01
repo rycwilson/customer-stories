@@ -136,6 +136,11 @@ function contributorInvitationListeners() {
         getInvitation(contributionId, 'readonly');
       }
     )
+
+    // ref https://stackoverflow.com/questions/895171
+    .on('keypress', '#contribution-request-form :input:not(textarea):not([type="submit"])', function (e) {
+      return e.keyCode != 13;
+    })
     .on('submit', '#contribution-request-form', function () {
       toggleEmailProgress('on');
     })
