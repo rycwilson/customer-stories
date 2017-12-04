@@ -141,17 +141,24 @@ function contributorInvitationListeners() {
     .on('keypress', '#contribution-request-form :input:not(textarea):not([type="submit"])', function (e) {
       return e.keyCode != 13;
     })
-    .on('submit', '#contribution-request-form', function () {
-      toggleEmailProgress('on');
+    .on('submit', '#contribution-request-form', function (e) {
+      if ($(this).hasClass('submitted')) e.preventDefault();
+      $(this).addClass('submitted');
+      // toggleEmailProgress('on');
+      $('button[type="submit"][form="contribution-request-form"]').find('span, .fa-spin').toggle();
     })
+
 
     // scroll can't be adjusted while the modal is hidden
     .on('hide.bs.modal', '#contribution-request-modal', function () {
       // there are a bunch of modals within the summernote editor, hence indexing
       $(this).find('.modal-body').eq(0).scrollTop(0);
-      toggleEmailProgress('off');
+      // toggleEmailProgress('off');
     })
-
+    .on('hidden.bs.modal', '#contribution-request-modal', function () {
+      $('button[type="submit"][form="contribution-request-form"] span').css('display', 'inline');
+      $('button[type="submit"][form="contribution-request-form"] i').css('display', 'none');
+    })
     // keep link dialog modifications limited to contribution request
     .on('shown.bs.modal', '#contribution-request-modal', function () {
       $(document).on('shown.bs.modal', '.link-dialog', modifyLinkDialog);

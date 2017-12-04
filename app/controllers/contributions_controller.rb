@@ -108,7 +108,8 @@ class ContributionsController < ApplicationController
     elsif params[:send_invitation]
       # assign any edits to request_subject and request_body
       @contribution.assign_attributes(contribution_params)
-      if UserMailer.contribution_request(@contribution).deliver_now
+      if ['request_sent', 'request_re_sent'].exclude?(@contribution.status) &&
+          UserMailer.contribution_request(@contribution).deliver_now
         if @contribution.status == 'pre_request'
           params[:contribution][:status] = 'request_sent'
         elsif @contribution.status == 'did_not_respond'
@@ -116,6 +117,8 @@ class ContributionsController < ApplicationController
         end
         @contribution.update(contribution_params)
         respond_to { |format| format.js { render action: 'send_invitation' } }
+      else
+        # email error or already sent
       end
 
     elsif params[:contributor]

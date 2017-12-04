@@ -9,12 +9,12 @@
           <span>Contributor Invitation&nbsp;&nbsp;&#8212;&nbsp;&nbsp;sent </span>
           <span></span>
         </h4>
-        <div class="progress hidden">
+<!--         <div class="progress hidden">
           <div class="progress-bar progress-bar-info progress-bar-striped active"
                 role='progressbar' style='width:100%'
                 aria-valuenow='80' aria-valuemin="0" aria-valuemax='100'>
           </div>
-        </div>
+        </div> -->
         <div id='to-contributor' style='visibility:hidden'>
           <span style='font-weight:600;'>To</span>&nbsp;&nbsp;
           <span></span>
@@ -52,8 +52,10 @@
         <button type="button" class="send btn btn-default" data-dismiss="modal">
           Cancel
         </button>
-        <button type="submit" form='contribution-request-form' class="send btn btn-success">
-          Send Invitation
+        <button type="submit" form='contribution-request-form' style="width:124px" class="send btn btn-success">
+          <span>Send Invitation</span>
+          <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
+          <i class='fa fa-check' style='display:none'></i>
         </button>
       </div>
 

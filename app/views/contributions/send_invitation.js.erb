@@ -1,6 +1,5 @@
 
 (function () {
-
   // these should mirror contributions#index and successes#index
   var contribution = <%= raw @contribution.to_json({
           only: [:id, :status], methods: [:display_status],
@@ -43,6 +42,7 @@
     .draw()
 
   $('#contribution-request-modal').modal('hide')
+  $('#contribution-request-form').removeClass('submitted')
   flashDisplay('Contributor Invitation sent to ' + contribution.contributor.full_name, 'success');
 
 }());
