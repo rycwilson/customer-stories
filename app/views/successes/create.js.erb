@@ -24,7 +24,7 @@
           });
       },
       errorsPresent = function (success) {
-        return success.contributions && Object.keys(success.contributions[0].referrer.errors).length;
+        return success.contributions.length && Object.keys(success.contributions[0].referrer.errors).length;
       }
       toggleSubmit = function () {
         $('button[type="submit"][form="new-success-form"] span').toggle();
@@ -73,7 +73,7 @@
       }
 
   if (errorsPresent(success)) {
-    if (Object.keys(success.contributions && success.contributions[0].referrer.errors).length) {
+    if (Object.keys(success.contributions.length && success.contributions[0].referrer.errors).length) {
       $('.form-group.referrer-email')
         .addClass('has-error')
         .find('.help-block')
@@ -102,7 +102,7 @@
         });
     })
 
-  if (success.contributions) {
+  if (success.contributions.length) {
     reloadContributors();
   }
 
