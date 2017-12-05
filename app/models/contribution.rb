@@ -196,6 +196,10 @@ class Contribution < ActiveRecord::Base
       .html_safe
   end
 
+  def timestamp
+    self.created_at.to_i
+  end
+
   protected
 
   def generate_access_token

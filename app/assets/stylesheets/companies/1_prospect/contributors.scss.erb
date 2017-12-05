@@ -8,7 +8,16 @@
   }
 }
 
-[id*="-contributors-table"] {
+#prospect-contributors-table, #curate-contributors-table {
+  /**
+   * hide sorting icon for contributors; doesn't presently work in light of row grouping
+   */
+  th[aria-label*="Contributor"] {
+    pointer-events: none;
+  }
+  th[aria-label*="Contributor"]:after {
+    content: "" !important;
+  }
 
   tr.active {
     td.crowdsourcing-template .placeholder {

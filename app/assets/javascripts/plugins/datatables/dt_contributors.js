@@ -26,7 +26,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
       emptyTable: 'No Contributors found',
       zeroRecords: 'No Contributors found'
     },
-    order: [[ customerIndex, 'asc' ]],
+    order: [[ customerIndex, 'asc' ], [contributorIndex, 'desc']],
     columns: [
       {
         name: 'childRow',
@@ -48,7 +48,8 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
             };
           },
           display: 'contributor.full_name',
-          filter: 'contributor.full_name'
+          filter: 'contributor.full_name',
+          sort: 'timestamp'  // contribution.created_at
         }
       },
       {
