@@ -126,20 +126,10 @@ function initSuccessesTable (dtSuccessesInit) {
     },
     initComplete: function (settings, json) {
       var $table = $(this),
-          $tableWrapper = $table.closest('[id*="table_wrapper"]'),
-          dt = $table.DataTable();
+          $tableWrapper = $table.closest('[id*="table_wrapper"]');
 
       // remove default search field.  Disabling via options also disables api, so can't do that
       $tableWrapper.children('.row:first-child').remove();
-
-      // add the header
-      $tableWrapper.prepend(
-        _.template( $('#successes-table-header-template').html() )({
-          curators: app.company.curators,
-          successes: dt.column(successIndex).data().toArray(),
-          customers: dt.column(customerIndex).data().toArray(),
-        })
-      );
 
       // trigger curator select and show tables
       dtSuccessesInit.resolve();

@@ -25,8 +25,37 @@ function initDataTables () {
             '.contributors-header, #prospect-contributors-table')
             .css('visibility', 'visible');
         },
+        renderTableHeaders = function () {
+          var dtSuccesses = $('#successes-table').DataTable(),
+              dtContributors = $('#prospect-contributors-table').DataTable(),
+              curators = app.company.curators,
+              contributors = _.uniq(
+                dtContributors.column(1).data().toArray(), false,
+                function (contributor, index) { return contributor.id; }
+              ),
+              successes = dtSuccesses.column(1).data().toArray(),
+              customers = _.uniq(
+                dtSuccesses.column(2).data().toArray(), false,
+                function (customer, index) { return customer.id; }
+              );
+            $('#successes-table').closest('[id*="table_wrapper"]').prepend(
+              _.template($('#successes-table-header-template').html())({
+                curators: app.company.curators,
+                successes: successes,
+                customers: customers
+              })
+            );
+            $('#prospect-contributors-table').closest('[id*="table_wrapper"]').prepend(
+              _.template($('#contributors-table-header-template').html())({
+                curators: app.company.curators,
+                contributors: contributors,
+                successes: successes,
+                customers: customers
+              })
+            );
+        },
         initSelectFilters = function ($tableWrapper) {
-          $tableWrapper.find('.curator-select')
+          $('.crowdsource.curator-select')
             .select2({
               theme: 'bootstrap',
               width: 'style',
@@ -34,12 +63,12 @@ function initDataTables () {
             })
             // select2 is inserting an empty <option> for some reason
             .children('option').not('[value]').remove();
-          $tableWrapper.find('.dt-filter').select2({
+          $('.dt-filter').select2({
             theme: 'bootstrap',
             width: 'style',
             // allowClear: true
           });
-          $tableWrapper.find('.curator-select')
+          $('.crowdsource.curator-select')
             .val(app.current_user.id)
             .trigger('change', { auto: true });
         },
@@ -64,8 +93,8 @@ function initDataTables () {
 
     $.when(dtSuccessesInit, dtContributorsInit)
       .done(function () {
-        initSelectFilters($('#successes-table').closest('[id*="table_wrapper"]'));
-        initSelectFilters($('#prospect-contributors-table').closest('[id*="table_wrapper"]'));
+        renderTableHeaders();
+        initSelectFilters();
         initCheckboxFilters();
         showTables();
       });

@@ -224,29 +224,9 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
       $('[data-toggle="tooltip"]').tooltip();
 
       if (workflowStage === 'prospect') {
-
         // global so can be accessed from crowdsourceListeners
         prospectContributorsEditor = newContributorsEditor(
           'prospect', crowdsourcingTemplateSelectOptions
-        );
-
-        // add the header
-        $tableWrapper.prepend(
-          _.template( $('#contributors-table-header-template').html() )({
-            curators: app.company.curators,
-            contributors: _.uniq(
-              dt.column(contributorIndex).data().toArray(), false,
-              function (contributor, index) { return contributor.id; }
-            ),
-            successes: _.uniq(
-              dt.column(successIndex).data().toArray(), false,
-              function (success, index) { return success.id; }
-            ),
-            customers: _.uniq(
-              dt.column(customerIndex).data().toArray(), false,
-              function (customer, index) { return customer.id; }
-            )
-          })
         );
         dtContributorsInit.resolve();
 
