@@ -15,7 +15,7 @@ function initSuccessesTable (dtSuccessesInit) {
       emptyTable: 'No Customer Wins found',
       zeroRecords: 'No Customer Wins found'
     },
-    order: [[ customerIndex, 'asc' ]],
+    order: [[customerIndex, 'asc'], [successIndex, 'desc']],
     columns: [
       {
         data: null,
@@ -36,7 +36,8 @@ function initSuccessesTable (dtSuccessesInit) {
             };
           },
           display: 'name',
-          filter: 'name'
+          filter: 'name',
+          sort: 'timestamp' // success.created_at
         },
       },
       {

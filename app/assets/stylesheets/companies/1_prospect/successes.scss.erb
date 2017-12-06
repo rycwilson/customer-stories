@@ -7,3 +7,15 @@
     }
   }
 }
+
+#successes-table {
+  /**
+   * hide sorting icon for successes; doesn't presently work in light of row grouping
+   */
+  th[aria-label*="Customer Win"] {
+    pointer-events: none;
+  }
+  th[aria-label*="Customer Win"]:after {
+    content: "" !important;
+  }
+}

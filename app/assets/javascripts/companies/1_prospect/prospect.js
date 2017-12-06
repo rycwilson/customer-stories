@@ -64,6 +64,8 @@ function prospectListeners () {
       if ($input.is('[id*="email"]')) $input.next().text('');
     }
   };
+  var lastSuccessesSortDirection = 'asc',
+      lastContributorsSortDirection = 'asc';
 
   $(document)
 
@@ -119,31 +121,45 @@ function prospectListeners () {
         }
       })
 
-    // successes - order by customer grouping
+    // successes - order by customer grouping, secondarily by timestamp
     .on('click', '#successes-table tr.group', function () {
-        var dt = $('#successes-table').DataTable(),
-            currentOrder = dt.order()[0];
-        if (currentOrder[0] === 1 && currentOrder[1] === 'asc') {
-          dt.order([ 1, 'desc' ]).draw();
+        var $table = $('#successes-table'),
+            dt = $table.DataTable(),
+            successIndex = 1, customerIndex = 2, statusIndex = 4,
+            currentSortColumn = dt.order()[0][0],
+            currentSortDirection = dt.order()[0][1],
+            direction;
+        if (currentSortColumn === customerIndex) {
+          direction = currentSortDirection === 'asc' ? 'desc' : 'asc';
         }
-        else {
-          dt.order([ 1, 'asc' ]).draw();
+        else if (currentSortColumn === statusIndex) {
+          direction = lastSuccessesSortDirection;
+          $table.find('th[aria-label*="Status"]').removeClass('sorting_asc sorting_desc').addClass('sorting');
         }
+        dt.order([[customerIndex, direction], [successIndex, 'desc']]).draw();
+        lastSuccessesSortDirection = direction;
       })
 
-    // contributors - order by success
+    // contributors - order by customer, then success name, then contributor timestamp
     .on('click', '#prospect-contributors-table tr.group', function (e) {
-        var dt = $('#prospect-contributors-table').DataTable(),
-            successIndex = 2,
-            currentOrder = dt.order()[0];
-        if (! $(e.target).is('a') ) {
-          if (currentOrder[0] === successIndex && currentOrder[1] === 'asc') {
-            dt.order([ successIndex, 'desc' ]).draw();
-          }
-          else {
-            dt.order([ successIndex, 'asc' ]).draw();
-          }
+        var $table = $('#prospect-contributors-table'),
+            dt = $table.DataTable(),
+            contributorIndex = 1, successIndex = 2, invitationTemplateIndex = 3,
+            customerIndex = 5, statusIndex = 6,
+            currentSortColumn = dt.order()[0][0],
+            currentSortDirection = dt.order()[0][1],
+            direction;
+        if (currentSortColumn === customerIndex) {
+          direction = currentSortDirection === 'asc' ? 'desc' : 'asc';
+        } else if (currentSortColumn === invitationTemplateIndex) {
+          direction = lastContributorsSortDirection;
+          $table.find('th[aria-label*="Invitation"]').removeClass('sorting_asc sorting_desc').addClass('sorting');
+        } else if (currentSortColumn === statusIndex) {
+          direction = lastContributorsSortDirection;
+          $table.find('th[aria-label*="Status"]').removeClass('sorting_asc sorting_desc').addClass('sorting');
         }
+        dt.order([[customerIndex, direction], [successIndex, 'asc'], [contributorIndex, 'desc']]).draw();
+        lastContributorsSortDirection = direction;
       })
 
     // https://www.gyrocode.com/articles/jquery-datatables-column-width-issues-with-bootstrap-tabs/

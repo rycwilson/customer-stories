@@ -3,6 +3,7 @@
 
   var success = <%= raw @success.to_json(
           only: [:id, :name, :customer_id],
+          methods: [:timestamp],
           include: {
             customer: { only: [:name], methods: [:previous_changes] },
             contributions: {

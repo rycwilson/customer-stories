@@ -4,7 +4,7 @@
   var $trContribution,
       // this is a subset of contribution source data; don't need all of it since tables are being ajax.reloaded
       contribution = <%= raw @contribution.to_json({
-        only: [:id],
+        only: [:id], methods: [:timestamp],
         include: {
           # success source data needed to update successes table (with addition of previous_changes method)
           success: {

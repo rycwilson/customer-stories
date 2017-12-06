@@ -1,7 +1,7 @@
 
 function initContributorsTable (workflowStage, dtContributorsInit) {
 
-  var contributorIndex = 1, successIndex = 2, crowdsourcingTemplateIndex = 3,
+  var contributorIndex = 1, successIndex = 2, invitationTemplateIndex = 3,
       curatorIndex = 4, customerIndex = 5, statusIndex = 6, actionsIndex = 7,
       storyPublishedIndex = 8,
       successId, contributionsPath;
@@ -140,7 +140,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
       },
       { width: '0%', targets: [successIndex, curatorIndex, customerIndex, storyPublishedIndex] },
       { width: '5%', targets: 0 },
-      { width: '33%', targets: [contributorIndex, crowdsourcingTemplateIndex] },
+      { width: '33%', targets: [contributorIndex, invitationTemplateIndex] },
       { width: '22%', targets: statusIndex },
       { width: '8%', targets: actionsIndex }
     ],
@@ -218,7 +218,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
       var $table = $(this),
           $tableWrapper = $table.closest('[id*="table_wrapper"]'),
           dt = $table.DataTable(),
-          crowdsourcingTemplateSelectOptions =
+          invitationTemplateSelectOptions =
               app.company.crowdsourcing_templates.map(function (template) {
                 return { label: template.name, value: template.id };
               }),
@@ -230,7 +230,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
       if (workflowStage === 'prospect') {
         // global so can be accessed from crowdsourceListeners
         prospectContributorsEditor = newContributorsEditor(
-          'prospect', crowdsourcingTemplateSelectOptions
+          'prospect', invitationTemplateSelectOptions
         );
         dtContributorsInit.resolve();
 
@@ -239,7 +239,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
       } else {
         // global so can be accessed from crowdsourceListeners
         curateContributorsEditor = newContributorsEditor(
-          'curate', crowdsourcingTemplateSelectOptions
+          'curate', invitationTemplateSelectOptions
         );
 
         // no row grouping for curate-contributors

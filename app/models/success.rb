@@ -101,5 +101,10 @@ class Success < ActiveRecord::Base
       nil
     end
   end
+
+  def timestamp
+    self.created_at.to_i
+  end
+
 end
 

@@ -15,7 +15,8 @@ class ContributionsController < ApplicationController
     end
     # data = Rails.cache.fetch("#{company.subdomain}/dt-contributors") do
       data = contributions.to_json({
-        only: [:id, :status, :publish_contributor, :contributor_unpublished], methods: [:display_status, :timestamp],
+        only: [:id, :status, :publish_contributor, :contributor_unpublished],
+        methods: [:display_status, :timestamp],
         include: {
           success: {
             only: [:id, :customer_id, :curator_id, :name],
