@@ -26,7 +26,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
       emptyTable: 'No Contributors found',
       zeroRecords: 'No Contributors found'
     },
-    order: [[ customerIndex, 'asc' ], [contributorIndex, 'desc']],
+    order: [[customerIndex, 'asc'], [successIndex, 'asc'], [contributorIndex, 'desc']],
     columns: [
       {
         name: 'childRow',
@@ -50,7 +50,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
           display: 'contributor.full_name',
           filter: 'contributor.full_name',
           sort: 'timestamp'  // contribution.created_at
-        }
+        },
       },
       {
         name: 'success',
@@ -59,7 +59,8 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
           _: function (row, type, set, meta) {
             return { id: row.success.id, name: row.success.name };
           },
-          filter: 'success.name'
+          filter: 'success.name',
+          sort: 'success.name'
         }
       },
       // <td data-search="t<%#= contribution.crowdsourcing_template_id  %>" class='crowdsourcing-template'>
@@ -90,7 +91,8 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
           },
           filter: 'success.customer.name',
           sort: 'success.customer.name'
-        }
+        },
+        // orderData: [[customerIndex, 'asc'], [successIndex, 'asc'], [contributorIndex, 'desc']]
       },
       {
         name: 'status',
@@ -146,6 +148,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
     rowGroup: workflowStage === 'curate' ? null : {
       dataSrc: 'success.name',
       startRender: function (groupRows, successName) {
+        // console.log(successName + ': ', groupRows);
         // customer and story (if exists) data same for all rows, so just look at [0]th row
         var customerSlug = groupRows.data()[0].success.customer.slug,
             customerName = groupRows.data()[0].success.customer.name,

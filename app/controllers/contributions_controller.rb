@@ -10,7 +10,6 @@ class ContributionsController < ApplicationController
     company = Company.find_by(subdomain: request.subdomain)
     if params[:success_id]
       contributions = Success.find(params[:success_id]).contributions
-                             .sort_by { |c| c.created_at }.reverse
     else
       contributions = company.contributions
     end

@@ -116,7 +116,9 @@
   // reload tables and scroll to new contributor
   // (reload tables with separate .reload calls to ensure scroll only happens once)
   $('#prospect-contributors-table').DataTable()
-    .ajax.reload(function (contributions) {
+    .ajax.reload(function (contributions, arg2, arg3) {
+      var rowsAreGrouped = $('#toggle-group-by-success').prop('checked'),
+          groupIndex;
       if (!isCurateView()) {
         $trContribution = $('#prospect-contributors-table tr[data-contribution-id="' + contribution.id + '"]');
 
@@ -127,7 +129,7 @@
         $('html, body').animate({ scrollTop: 65 }, 200)
           .promise()
           .then(function () {
-            $('#contributors-filter').val('contributor-' + contribution.contributor.id).trigger('change');
+            $('#contributors-filter').val('success-' + contribution.success.id).trigger('change');
             openContributorDetails($trContribution);
             $('#contributors-filter').select2('focus');
             $(document).one('click', function () {
@@ -143,6 +145,9 @@
     .ajax.reload(function (contributions) {
       if (isCurateView()) {
         $trContribution = $('#curate-contributors-table tr[data-contribution-id="' + contribution.id + '"]');
+
+        // this will work for curate (but may not even be necessary)
+        // $('#curate-contributors-table').DataTable().order([1, 'desc']).draw(); // most recently added
         $('html, body').animate({ scrollTop: 65 }, 200)
           .promise()
           .then(function () {
