@@ -106,6 +106,7 @@ class ContributionsController < ApplicationController
       end
 
     elsif params[:send_invitation]
+      puts "UPDATE"
       # assign any edits to request_subject and request_body
       @contribution.assign_attributes(contribution_params)
       if ['request_sent', 'request_re_sent'].exclude?(@contribution.status) &&

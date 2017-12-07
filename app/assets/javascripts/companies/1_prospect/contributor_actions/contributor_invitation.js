@@ -85,16 +85,6 @@ function contributorInvitationListeners() {
             showInvitation(invitation, type);
           });
       },
-      toggleEmailProgress = function (state) {
-        var $modal = $('#contribution-request-modal');
-        if (state === 'on') {
-          $modal.find('.modal-title').addClass('hidden');
-          $modal.find('.progress').removeClass('hidden');
-        } else {
-          $modal.find('.modal-title').removeClass('hidden');
-          $modal.find('.progress').addClass('hidden');
-        }
-      },
       modifyLinkDialog = function () {
         $('.link-dialog .note-link-url').prop('disabled', true);
         $('.link-dialog input[type="checkbox"]').prop('checked', true);
@@ -137,27 +127,21 @@ function contributorInvitationListeners() {
       }
     )
 
-    // ref https://stackoverflow.com/questions/895171
+    /**
+     * don't allow submit on hitting enter on input
+     * ref https://stackoverflow.com/questions/895171
+     */
     .on('keypress', '#contribution-request-form :input:not(textarea):not([type="submit"])', function (e) {
       return e.keyCode != 13;
     })
-    .on('submit', '#contribution-request-form', function (e) {
-      if ($(this).data('submitted') === '1') {
-        e.preventDefault();
-        // return false;
-      }
-      $(this).data('submitted', '1');
-      $('button[type="submit"][form="contribution-request-form"]').find('span, .fa-spin').toggle();
-    })
-
 
     // scroll can't be adjusted while the modal is hidden
     .on('hide.bs.modal', '#contribution-request-modal', function () {
       // there are a bunch of modals within the summernote editor, hence indexing
       $(this).find('.modal-body').eq(0).scrollTop(0);
-      // toggleEmailProgress('off');
     })
     .on('hidden.bs.modal', '#contribution-request-modal', function () {
+      $('#contribution-request-form').data('submitted', '');
       $('button[type="submit"][form="contribution-request-form"] span').css('display', 'inline');
       $('button[type="submit"][form="contribution-request-form"] i').css('display', 'none');
     })
