@@ -137,6 +137,7 @@ class CompaniesController < ApplicationController
   def set_profile_form_options (params)
     options = {
       html: {
+        id: 'company-profile-form',
         class: 'directUpload',
         data: {
           'form-data' => (@s3_direct_post.fields),

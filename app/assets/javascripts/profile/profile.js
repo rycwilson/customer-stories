@@ -58,7 +58,16 @@ function attachProfileListeners () {
     .on('focus', '.contributor-linkedin-checkbox',
       function () {
         $(this).blur();
-      });
+      })
+    .on('click', 'button[type="submit"][form="user-profile-form"]', function (e) {
+      var $form = $('#user-profile-form'), $button = $(this);
+      if ($form.data('submitted')) {
+        e.preventDefault();
+        return false;
+      }
+      $form.data('submitted', '1');
+      $button.find('span, .fa-spin').toggle();
+    });
 
 }
 

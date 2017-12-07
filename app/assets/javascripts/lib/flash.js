@@ -1,5 +1,6 @@
 
 function flashTimeout () {
+  // console.log('flashTimeout()')
   setTimeout(function () {
     $('#flash').slideUp();
   }, 3000);
@@ -16,12 +17,7 @@ function flashDisplay (mesg, status, callback) {
              .addClass('alert-' + status)
              .append(mesg)
              .hide().append(flash).fadeIn('fast');
-
-  setTimeout(function () {
-    $('#flash').slideUp();
-    if (callback) { callback(); }
-  }, 3000);
-
+  setTimeout(function () { $('#flash').slideUp(400, callback); }, 3000);
   setTimeout(function () {
     $('#flash').addClass('hidden')
                .removeClass('alert-' + status);

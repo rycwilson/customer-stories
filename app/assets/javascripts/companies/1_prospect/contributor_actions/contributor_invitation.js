@@ -142,9 +142,11 @@ function contributorInvitationListeners() {
       return e.keyCode != 13;
     })
     .on('submit', '#contribution-request-form', function (e) {
-      if ($(this).hasClass('submitted')) e.preventDefault();
-      $(this).addClass('submitted');
-      // toggleEmailProgress('on');
+      if ($(this).data('submitted') === '1') {
+        e.preventDefault();
+        // return false;
+      }
+      $(this).data('submitted', '1');
       $('button[type="submit"][form="contribution-request-form"]').find('span, .fa-spin').toggle();
     })
 

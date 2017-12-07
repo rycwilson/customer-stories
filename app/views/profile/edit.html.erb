@@ -40,13 +40,17 @@
   </div>
 </div>
 
-<%= form_for @user, url: registration_path(@user),
-      method: 'put', remote: 'true', authenticity_token: true,
-      html: { class: 'directUpload',
-               data: { 'form-data' => (@s3_direct_post.fields),
-                             'url' => @s3_direct_post.url,
-                            'host' => URI.parse(@s3_direct_post.url).host
-                     } } do |f| %>
+<%= form_for(@user, url: registration_path(@user), method: 'put', remote: 'true', authenticity_token: true,
+      html: {
+        id: 'user-profile-form',
+        class: 'directUpload',
+        data: {
+          'form-data' => (@s3_direct_post.fields),
+          'url' => @s3_direct_post.url,
+          'host' => URI.parse(@s3_direct_post.url).host
+        }
+      }
+    ) do |f| %>
 
   <div class="row">
     <div class="col-sm-6">
@@ -172,11 +176,13 @@
 
   <div class="row">
     <div class="col-sm-12 text-right">
-      <button type="submit" class="btn btn-success">
-        Save Changes
-      </button>&nbsp;
-      <button type="reset" class="btn btn-default">
+      <!-- <button type="reset" class="btn btn-default">
         Cancel
+      </button> -->
+      <button type="submit" class="btn btn-success text-center" form="user-profile-form" style="width:114px">
+        <span>Save changes</span>
+        <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
+        <i class='fa fa-check' style='display:none'></i>
       </button>
     </div>
   </div>

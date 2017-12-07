@@ -1,5 +1,5 @@
 
-<%= form_for @company, @profile_form_options do |f| %>
+<%= form_for(@company, @profile_form_options) do |f| %>
 
   <div class="row">
 
@@ -112,15 +112,18 @@
 
   <div class="row">
     <div class="col-sm-12 text-right">
-      <div class="form-group">
+      <!-- <div class="form-group"> -->
 
-        <button type="reset" id='profile-form-reset' class="btn btn-default">
+<!--         <button type="reset" id='profile-form-reset' class="btn btn-default">
           Cancel
+        </button> -->
+        <button type="submit" class="btn btn-success" form="company-profile-form" style="width:114px">
+          <span><%= @company.new_record? ? 'Register' : 'Save changes' %></span>
+          <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
+          <i class='fa fa-check' style='display:none'></i>
         </button>
-        <input type='submit' id='profile-form-submit' class='btn btn-success'
-          value="<%= @company.new_record? ? 'Register' : 'Save changes' %>">
 
-      </div>
+      <!-- </div> -->
     </div>
   </div>
 

@@ -1,18 +1,21 @@
 (function () {
 
   var headerStyle = '<%= @company.header_style %>',
-      colorLeft = '<%= @company.header_color_1 %>',
-      colorRight = '<%= @company.header_color_2 %>',
-      flashMesg = '<%= @flash_mesg %>',
-      flashStatus = '<%= @flash_status %>';
+      toggleSubmit = function () {
+        $('#company-profile-form button[type="submit"]').find('span, .fa-spin').toggle();
+      },
+      toggleForm = function () {
+        $('#company-profile-form').data('submitted', '');
+      };
 
   app.company.header_style = headerStyle;
+  toggleSubmit();
 
   $('.navbar').attr('style', headerStyle);
 
   $('.logo-upload .thumbnail')
-    .css('background', 'linear-gradient(45deg, ' + colorLeft + ' 0%, ' + colorRight + ' 100%)');
+    .css('background', 'linear-gradient(45deg, <%= @company.header_color_1 %> 0%, <%= @company.header_color_2 %> 100%)');
 
-  flashDisplay(flashMesg, flashStatus);
+  flashDisplay('<%= @flash_mesg %>', '<%= @flash_status %>', toggleForm);
 
 }());

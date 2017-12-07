@@ -5,6 +5,8 @@
       flashMesg = "<%= @flash_mesg %>",
       passwordUpdate = <%= @password_update %>;
 
+  $('button[type="submit"][form="user-profile-form"]').find('span, .fa-spin').toggle()
+
   if (passwordUpdate) {
     $('#password-update-form')[0].reset();
     if (status === 'success') {
@@ -19,7 +21,6 @@
 
   else {
     if (status === 'success') {
-
       if (!user.linkedin_url) {
         if ($('.linkedin-url').hasClass('url-present')) {
           $('.linkedin-url').toggleClass('url-present url-absent')
@@ -37,10 +38,14 @@
       //       );
       //   IN.parse();
       // });
-      flashDisplay("Account updated", status);
+      flashDisplay('Account updated', status, function () {
+        $('#user-profile-form').data('submitted', '');
+      })
     }
     else {
-      flashDisplay(flashMesg, status);
+      flashDisplay(flashMesg, status, function () {
+        $('#user-profile-form').data('submitted', '');
+      });
     }
   }
 

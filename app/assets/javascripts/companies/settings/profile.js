@@ -38,6 +38,16 @@ function companyProfileListeners() {
         $('#company_header_color_1').minicolors('value', colorLeft);
         $('#company_header_color_2').minicolors('value', colorRight);
         $('#company_header_text_color').minicolors('value', textColor);
-      });
+      })
+
+    .on('click', 'button[type="submit"][form="company-profile-form"]', function (e) {
+      var $form = $('#company-profile-form'), $button = $(this);
+      if ($form.data('submitted')) {
+        e.preventDefault();
+        return false;
+      }
+      $form.data('submitted', '1');
+      $button.find('span, .fa-spin').toggle();
+    });
 
 }
