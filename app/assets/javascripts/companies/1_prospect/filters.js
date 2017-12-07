@@ -192,6 +192,13 @@ function prospectFiltersListeners () {
 
     .on('change', '#successes-filter, #contributors-filter', function () {
       var $table = $(this).closest('[id*="table_wrapper"]').find('table');
+
+      // toggle the X icon
+      if ($(this).val() === '0') {
+        $(this).prev().css('display', 'none');
+      } else {
+        $(this).prev().css('display', 'inline-block');
+      }
       setSearch($table, true).draw();
     })
 

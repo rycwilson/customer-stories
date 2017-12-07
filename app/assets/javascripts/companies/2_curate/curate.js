@@ -78,6 +78,14 @@ function curateListeners () {
       function (e) {
         var filterCookieName = $(this).attr('class').split(' ').slice(0,2).join('-').replace(/^/, 'csp-'),
             filterCookieVal;
+
+        // toggle the X icon
+        if ($(this).val() === '0') {
+          $(this).prev().css('display', 'none');
+        } else {
+          $(this).prev().css('display', 'inline-block');
+        }
+
         if (filterCookieName.includes('select')) {
           filterCookieVal = $(this).val();
         } else {
