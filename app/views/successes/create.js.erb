@@ -1,19 +1,18 @@
 
 (function () {
-
   var success = <%= raw @success.to_json(
-          only: [:id, :name, :customer_id],
-          methods: [:timestamp],
-          include: {
-            customer: { only: [:name], methods: [:previous_changes] },
-            contributions: {
-              only: [:id, :referrer_id],
-              include: {
-                referrer: { only: [], methods: [:full_name, :previous_changes, :errors] }
-              }
+        only: [:id, :name, :customer_id],
+        methods: [:timestamp],
+        include: {
+          customer: { only: [:name], methods: [:previous_changes] },
+          contributions: {
+            only: [:id, :referrer_id],
+            include: {
+              referrer: { only: [], methods: [:full_name, :previous_changes, :errors] }
             }
           }
-        ) %>,
+        }
+      ) %>,
       /**
        * the datatable filter state persists through a reload,
        */
@@ -26,10 +25,6 @@
       },
       errorsPresent = function (success) {
         return success.contributions.length && Object.keys(success.contributions[0].referrer.errors).length;
-      }
-      toggleSubmit = function () {
-        $('button[type="submit"][form="new-success-form"] span').toggle();
-        $('button[type="submit"][form="new-success-form"] .fa-spinner').toggle();
       }
       updateSelectOptions = function () {
         // new success
@@ -80,7 +75,7 @@
         .find('.help-block')
         .text('Contact with this email already exists')
     }
-    toggleSubmit();
+    toggleFormButton($('#new-success-form'));
     return;
   }
 

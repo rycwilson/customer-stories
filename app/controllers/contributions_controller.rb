@@ -83,10 +83,11 @@ class ContributionsController < ApplicationController
           params[:data].values[0][:crowdsourcing_template][:id]
       @contribution.save
       dt_data = [ JSON.parse(@contribution.to_json({
-        only: [:id, :status], methods: [:display_status],
+        only: [:id, :status, :publish_contributor, :contributor_unpublished],
+        methods: [:display_status, :timestamp],
         include: {
           success: {
-            only: [:id, :name],
+            only: [:id, :customer_id, :curator_id, :name],
             include: {
               curator: { only: [:id], methods: [:full_name] },
               customer: { only: [:id, :name, :slug] },

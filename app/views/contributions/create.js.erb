@@ -1,6 +1,5 @@
 
 (function () {
-
   var $trContribution,
       // this is a subset of contribution source data; don't need all of it since tables are being ajax.reloaded
       contribution = <%= raw @contribution.to_json({
@@ -8,7 +7,7 @@
         include: {
           # success source data needed to update successes table (with addition of previous_changes method)
           success: {
-            only: [:id, :name, :description], methods: [:display_status, :referrer, :previous_changes],
+            only: [:id, :name, :description], methods: [:display_status, :referrer, :previous_changes, :timestamp],
             include: {
               curator: { only: [:id], methods: [:full_name] },
               customer: { only: [:id, :name, :slug], methods: [:previous_changes] },
@@ -37,10 +36,6 @@
           .data(success)
           .draw();
       },
-      toggleSubmit = function () {
-        $('button[type="submit"][form="new-contributor-form"] span').toggle();
-        $('button[type="submit"][form="new-contributor-form"] .fa-spinner').toggle();
-      }
       updateSelectOptions = function () {
         // new customer
         if (contribution.success.customer.previous_changes.id) {
@@ -106,7 +101,7 @@
         .find('.help-block')
         .text('Contact with this email already exists')
     }
-    toggleSubmit();
+    toggleFormButton($('#new-contributor-form'));
     return;
   }
 
@@ -117,8 +112,7 @@
   // (reload tables with separate .reload calls to ensure scroll only happens once)
   $('#prospect-contributors-table').DataTable()
     .ajax.reload(function (contributions, arg2, arg3) {
-      var rowsAreGrouped = $('#toggle-group-by-success').prop('checked'),
-          groupIndex;
+      var rowsAreGrouped = $('#toggle-group-by-success').prop('checked'), groupIndex;
       if (!isCurateView()) {
         $trContribution = $('#prospect-contributors-table tr[data-contribution-id="' + contribution.id + '"]');
 
