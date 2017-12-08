@@ -128,7 +128,7 @@ function contributorInvitationListeners() {
     )
 
     /**
-     * don't allow submit on hitting enter on input
+     * don't allow submit on hitting enter from subject input
      * ref https://stackoverflow.com/questions/895171
      */
     .on('keypress', '#contribution-request-form :input:not(textarea):not([type="submit"])', function (e) {

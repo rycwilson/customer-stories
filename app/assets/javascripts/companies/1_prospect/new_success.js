@@ -137,6 +137,7 @@ function newSuccessListeners () {
     // reset modal
     .on('hidden.bs.modal', '#new-success-modal', function () {
       $(this).find('form')[0].reset();
+      resetFormSubmit($('#new-success-form'));
       disableContributionAttrs(true);
       disableReferrerAttrs(true);
       $(this).find('.create-referrer').addClass('hidden');
@@ -151,25 +152,21 @@ function newSuccessListeners () {
     // => the button is outside the form, linked to it through form= attribute
     // => submit event doesn't bubble up to form, so e.preventDefault() doesn't work
     .on('click', 'button[type="submit"][form="new-success-form"]', function (e) {
+      var $form = $('#new-success-form'), $button = $(this);
       e.preventDefault();
-      if (validateForm()) {
-        $('button[type="submit"][form="new-success-form"] span').toggle();
-        $('button[type="submit"][form="new-success-form"] .fa-spinner').toggle();
-
-        // if a referrer wasn't selected, hide the contribution attributes
-        // so a contribution isn't created
-        if ( $('select.new-success.referrer').val() === '' ) {
-          disableContributionAttrs(true);
-        }
-        $('#new-success-form').submit();
+      if (!$form.data('submitted') && validateForm()) {
+        // if a referrer wasn't selected, hide the contribution attributes so a contribution isn't created
+        if ($('select.new-success.referrer').val() === '') disableContributionAttrs(true);
+        $form.data('submitted', '1').submit();
+        $button.find('span, .fa-spin').toggle();
       } else {
 
       }
-    })
-
-    .on('submit', '#new-success-form', function () {
-      // console.log( $(this).serializeArray() );
     });
+
+    // .on('submit', '#new-success-form', function () {
+    //   console.log( $(this).serializeArray() );
+    // });
 }
 
 
