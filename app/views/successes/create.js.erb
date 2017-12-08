@@ -4,6 +4,7 @@
         only: [:id, :name, :customer_id],
         methods: [:timestamp],
         include: {
+          curator: { only: [:id] },
           customer: { only: [:name], methods: [:previous_changes] },
           contributions: {
             only: [:id, :referrer_id],
@@ -88,6 +89,7 @@
         .animate({ scrollTop: 65 }, 200)
         .promise()
         .then(function () {
+          $('.successes.curator-select').val(success.curator.id).trigger('change.select2')
           $('#successes-filter').val('success-' + success.id).trigger('change');
           $('#successes-table td.success-details').trigger('click');
           $('#successes-filter').select2('focus');
