@@ -73,28 +73,28 @@ function attachAppListeners () {
         $otherDropdown.removeClass('active');
       })
 
-    .on('submit', 'form', function () {
-      // presently limited to these forms
-      if ($(this).attr('id') === 'story-settings-form') {
-        $(this).find('button[type="submit"] span').toggle();
-        $(this).find('button[type="submit"] .fa-spinner').toggle();
-      }
-
-    })
-
     .on('click', 'button[type="submit"]', function (e) {
-      var $form = $(this).closest('form') || $('#' + $(this).attr('form')),
+      var $form = ($(this).closest('form').length && $(this).closest('form')) ||
+                  $('#' + $(this).attr('form')),
           $button = $(this);
       if (!$form.is('#new-success-form') &&
           ($form.is('#contribution-request-form') ||
-           $form.is('[id*="success-form-"]'))) {
+           $form.is('[id*="success-form-"]') ||
+           $form.is('[id*="contribution-form-"') ||
+           $form.is('#new-story-form') ||
+           $form.is('#story-settings-form') ||
+           $form.is('#story-content-form') ||
+           $form.is('#promote-settings-form'))) {
         if ($form.data('submitted')) {
           // console.log('not submitted');
           e.preventDefault();
           return false;
+        } else {
+          // console.log('submit')
+          // console.log($form)
+          // console.log($button)
+          toggleFormWorking($form);
         }
-        // console.log('submit')
-        toggleFormWorking($form);
       }
     });
 

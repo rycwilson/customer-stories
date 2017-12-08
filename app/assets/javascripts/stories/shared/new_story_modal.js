@@ -80,11 +80,6 @@ function newStoryListeners () {
         .val('').trigger('change.select2');
       $('#new-story-form .story-tags')
         .val('').trigger('change.select2');
-    })
-
-    .on('submit', '#new-story-form', function () {
-      $('button[type="submit"][form="new-story-form"] span').toggle();
-      $('button[type="submit"][form="new-story-form"] .fa-spinner').toggle();
     });
 
 }

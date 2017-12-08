@@ -16,11 +16,6 @@ function storiesEditContentListeners () {
   storiesEditResultsListeners();
 
   $(document)
-    .on('submit', '#story-content-form', function (e) {
-      $('button[type="submit"][form="story-content-form"] span').toggle();
-      $('button[type="submit"][form="story-content-form"] .fa-spinner').toggle();
-    })
-
     .on('shown.bs.collapse', '#contributions-carousel', function () {
       $('[href="#contributions-carousel"][data-toggle="collapse"] > span').toggle();
     })

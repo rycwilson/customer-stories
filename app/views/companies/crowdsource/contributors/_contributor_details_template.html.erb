@@ -5,7 +5,7 @@
 
   <div class="container contributor-details" style="width:100%">
 
-    <form action="{{= contributionPath }}" method="post" data-remote="true" data-type="script" class="form-horizontal contributor-form">
+    <form id="contribution-form-{{= contribution.id }}" action="{{= contributionPath }}" method="post" data-remote="true" data-type="script" class="form-horizontal">
 
       <input type="hidden" name="_method" value="put">
       <input type="hidden" name="authenticity_token" value="{{= AUTH_TOKEN }}">
@@ -152,7 +152,7 @@
             Close
           </button>
           <button type="submit" disabled class="btn btn-sm btn-success text-center" style='width:97px'>
-            <span>Save</span>
+            <span>Save changes</span>
             <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
             <i class='fa fa-check' style='display:none'></i>
           </button>&nbsp;

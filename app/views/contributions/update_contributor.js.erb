@@ -31,10 +31,6 @@
       this.data( Object.assign(this.data(), { contributor: contributor }) )
     })
 
-  // submit button
-  $trContributor.find('button[type="submit"] i').toggle();
-  window.setTimeout(function () {
-    $trContributor.find('button[type="submit"] i.fa-check, button[type="submit"] span').toggle();
-  }, 2000);
+  toggleFormDone($('#contribution-form-' + contribution.id), true);
 
 }());

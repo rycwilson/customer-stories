@@ -3,7 +3,7 @@ function toggleFormWorking ($form) {
   var $button = ($form.find('button[type="submit"]').length && $form.find('button[type="submit"]')) ||
                 $('button[form="' + $form.attr('id') + '"]');
   $form.data('submitted', '1');
-  $button.find('span, .fa-spin').toggle();
+  $button.find('.fa-spin, span').toggle();
 }
 
 function toggleFormDone ($form, useCheckIcon) {

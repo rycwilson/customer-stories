@@ -1,10 +1,7 @@
 
 <div class="hidden">
 
-  <%= form_for(
-        story,
-        url: story_path(story.id),
-        authenticity_token: true,
+  <%= form_for(story, url: story_path(story.id), authenticity_token: true,
         html: {
           id: 'story-settings-form',
           method: 'put',
