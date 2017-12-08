@@ -121,7 +121,7 @@ function prospectFiltersListeners () {
           showCuratorOptions($filter, true); // show curator-specific items
         }
         $input.data('prev', curr);
-      };
+      },
       setSearch = function ($table, useRegExSearch, searchStr) {
         var dt = $table.DataTable(),
             $tableWrapper = $table.closest('[id*="table_wrapper"]'),
@@ -166,8 +166,15 @@ function prospectFiltersListeners () {
             dtSearch = dtSearch.column(filterCol + ':name').search(filterVal);
           }
         }
-      return dtSearch;
-    };
+        return dtSearch;
+      },
+      toggleClear = function ($filter) {
+        if ($filter.val() === '0') {
+          $filter.prev().css('display', 'none');
+        } else {
+          $filter.prev().css('display', 'inline-block');
+        }
+      };
 
   $(document)
 
@@ -192,13 +199,7 @@ function prospectFiltersListeners () {
 
     .on('change', '#successes-filter, #contributors-filter', function () {
       var $table = $(this).closest('[id*="table_wrapper"]').find('table');
-
-      // toggle the X icon
-      if ($(this).val() === '0') {
-        $(this).prev().css('display', 'none');
-      } else {
-        $(this).prev().css('display', 'inline-block');
-      }
+      toggleClear($(this)); // toggle the X icon
       setSearch($table, true).draw();
     })
 

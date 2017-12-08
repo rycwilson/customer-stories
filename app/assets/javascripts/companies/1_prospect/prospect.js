@@ -175,13 +175,18 @@ function prospectListeners () {
       })
 
     // validate form inputs
-    .on(
-      'change',
+    .on('change',
       '#new-success-form select, #new-success-form input, #new-contributor-form select, #new-contributor-form input',
       function () {
         validateInput($(this));
       }
-    );
+    )
+    .on('click', 'a.all-curators', function () {
+      var $tableWrapper = $(this).closest('[id*="table_wrapper"]'),
+          filterVal = $tableWrapper.find('.dt-filter').val();
+      $tableWrapper.find('.curator-select').val('0').trigger('change');
+      $tableWrapper.find('.dt-filter').val(filterVal).trigger('change');
+    });
 
 }
 

@@ -126,7 +126,7 @@ function initSuccessesTable (dtSuccessesInit) {
       $(row).children().eq(3).addClass('actions dropdown');
     },
     initComplete: function (settings, json) {
-      var $table = $(this),
+      var $table = $(this), dt = $table.DataTable();
           $tableWrapper = $table.closest('[id*="table_wrapper"]');
 
       // remove default search field.  Disabling via options also disables api, so can't do that
