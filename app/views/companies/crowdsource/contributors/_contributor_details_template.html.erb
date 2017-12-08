@@ -1,11 +1,11 @@
 
-<script type='text/template' id='contributor-details-template'>
+<script type="text/template" id="contributor-details-template">
 
-  {{ var AUTH_TOKEN = $('meta[name=csrf-token]').attr('content'); }}
+  {{ var AUTH_TOKEN = $("meta[name=csrf-token]").attr("content"); }}
 
-  <div class="container contributor-details" style='width:100%'>
+  <div class="container contributor-details" style="width:100%">
 
-    <form action='{{= contributionPath }}' method='post' data-remote='true' data-type='script' class='form-horizontal contributor-form'>
+    <form action="{{= contributionPath }}" method="post" data-remote="true" data-type="script" class="form-horizontal contributor-form">
 
       <input type="hidden" name="_method" value="put">
       <input type="hidden" name="authenticity_token" value="{{= AUTH_TOKEN }}">
@@ -16,29 +16,29 @@
 
       <div class="row">
         <div class="col-sm-6">
-          <div class='row'>
+          <div class="row">
 
-            <div class='form-group'>
+            <div class="form-group">
               <label for="contribution_contributor_attributes_first_name" class="col-sm-3 control-label">First name</label>
               <div class="col-sm-9">
                 <input type="text" class="form-control"
-                  id='contribution_contributor_attributes_first_name'
+                  id="contribution_contributor_attributes_first_name"
                   name="contribution[contributor_attributes][first_name]"
                   value="{{= contributor.first_name }}">
               </div>
             </div>
 
-            <div class='form-group'>
+            <div class="form-group">
               <label for="contribution_contributor_attributes_last_name" class="col-sm-3 control-label">Last name</label>
               <div class="col-sm-9">
                 <input type="text" class="form-control"
                   id="contribution_contributor_attributes_last_name"
-                  name='contribution[contributor_attributes][last_name]'
+                  name="contribution[contributor_attributes][last_name]"
                   value="{{= contributor.last_name }}">
               </div>
             </div>
 
-            <div class='form-group'>
+            <div class="form-group">
               <label for="contribution_contributor_attributes_title" class="col-sm-3 control-label">Job Title</label>
               <div class="col-sm-9">
                 <input type="text" class="form-control"
@@ -71,15 +71,15 @@
           </div>
         </div>
         <div class="col-sm-6">
-          <div class='row'>
+          <div class="row">
 
-            <div class='form-group'>
+            <div class="form-group">
               <label for="contribution_contributor_attributes_linkedin_url" class="col-sm-3 control-label">LinkedIn</label>
               <div class="col-sm-9">
                 <input type="text" class="form-control"
                   id="contribution_contributor_attributes_linkedin_url"
-                  name='contribution[contributor_attributes][linkedin_url]'
-                  placeholder='Profile URL'
+                  name="contribution[contributor_attributes][linkedin_url]"
+                  placeholder="Profile URL"
                   value="{{= contributor.linkedin_url }}">
               </div>
             </div>
@@ -127,11 +127,11 @@
                 {{ } else { }}
 
         <!-- // placeholder rendered, replaced if/when linkedin widget arrives -->
-                  <div class='placeholder-widget-container text-center' style='height:128px'>
+                  <div class="placeholder-widget-container text-center" style="height:128px">
                   </div>
 
         <!-- // widget is fetched when contributor child row is expanded -->
-                  <div class='linkedin-widget-container hidden text-center' style='position:relative'>
+                  <div class="linkedin-widget-container hidden text-center" style="position:relative">
                   </div>
 
                 {{ } }}
@@ -151,10 +151,10 @@
           <button type="reset" class="btn btn-sm btn-default">
             Close
           </button>
-          <button type="submit" disabled class="btn btn-sm btn-success text-center" style='width:48px'>
+          <button type="submit" disabled class="btn btn-sm btn-success text-center" style='width:97px'>
             <span>Save</span>
-            <i class='fa fa-spinner fa-pulse submit' style='display:none'></i>
-            <i class='fa fa-check submit' style='display:none'></i>
+            <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
+            <i class='fa fa-check' style='display:none'></i>
           </button>&nbsp;
         </div>
       </div>
