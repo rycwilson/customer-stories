@@ -77,18 +77,18 @@ namespace :temp do
     ActiveRecord::Base.connection.execute('ALTER SEQUENCE contributor_questions_id_seq RESTART WITH 1')
     Company.all.each do |company|
       company.contributor_questions =
-        ContributorQuestion.create(question: "What was the challenge?", role: 'customer'),
-        ContributorQuestion.create(question: "What was the solution?", role: 'customer'),
-        ContributorQuestion.create(question: "What was the measure of success achieved?", role: 'customer'),
-        ContributorQuestion.create(question: "Would you recommend it to a friend?", role: 'customer'),
-        ContributorQuestion.create(question: "Customer Success question #1", role: 'customer success'),
-        ContributorQuestion.create(question: "Customer Success question #2", role: 'customer success'),
-        ContributorQuestion.create(question: "Customer Success question #3", role: 'customer success'),
-        ContributorQuestion.create(question: "Customer Success question #4", role: 'customer success'),
-        ContributorQuestion.create(question: "Sales question #1", role: 'sales'),
-        ContributorQuestion.create(question: "Sales question #2", role: 'sales'),
-        ContributorQuestion.create(question: "Sales question #3", role: 'sales'),
-        ContributorQuestion.create(question: "Sales question #4", role: 'sales')
+        ContributorQuestion.create(question: "What was the challenge or disruption requiring action?", role: 'customer'),
+        ContributorQuestion.create(question: "What were the hurdles to solving the challenge?", role: 'customer'),
+        ContributorQuestion.create(question: "What was the journey to solving the challenge?", role: 'customer'),
+        ContributorQuestion.create(question: "What were the positive outcomes for you and the company?", role: 'customer'),
+        ContributorQuestion.create(question: "What was the customer’s challenge or disruption requiring action?", role: 'customer success'),
+        ContributorQuestion.create(question: "What were the customer’s hurdles to solving the challenge?", role: 'customer success'),
+        ContributorQuestion.create(question: "What was your joint journey to helping them solve the challenge?", role: 'customer success'),
+        ContributorQuestion.create(question: "What were the positive outcomes for the stakeholders and the company?", role: 'customer success'),
+        ContributorQuestion.create(question: "What was the customer’s challenge or disruption requiring action?", role: 'sales'),
+        ContributorQuestion.create(question: "What were the customer’s hurdles to solving the challenge?", role: 'sales'),
+        ContributorQuestion.create(question: "What was your joint journey to helping them solve the challenge?", role: 'sales'),
+        ContributorQuestion.create(question: "What were the positive outcomes for the stakeholders and the company?", role: 'sales')
     end
   end
 
