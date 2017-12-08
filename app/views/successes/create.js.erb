@@ -75,7 +75,7 @@
         .find('.help-block')
         .text('Contact with this email already exists')
     }
-    toggleFormButton($('#new-success-form'));
+    toggleFormDone($('#new-success-form'));
     return;
   }
 
@@ -94,6 +94,7 @@
           $(document).one('click', function () {
             $('#successes-filter').next().removeClass('select2-container--focus');
           })
+          toggleFormDone($('#new-success-form'));
           $('#new-success-modal').modal('hide')
         });
     })

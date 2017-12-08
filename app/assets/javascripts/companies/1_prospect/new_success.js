@@ -137,7 +137,6 @@ function newSuccessListeners () {
     // reset modal
     .on('hidden.bs.modal', '#new-success-modal', function () {
       $(this).find('form')[0].reset();
-      resetFormSubmit($('#new-success-form'));
       disableContributionAttrs(true);
       disableReferrerAttrs(true);
       $(this).find('.create-referrer').addClass('hidden');
@@ -157,8 +156,8 @@ function newSuccessListeners () {
       if (!$form.data('submitted') && validateForm()) {
         // if a referrer wasn't selected, hide the contribution attributes so a contribution isn't created
         if ($('select.new-success.referrer').val() === '') disableContributionAttrs(true);
-        $form.data('submitted', '1').submit();
-        $button.find('span, .fa-spin').toggle();
+        toggleFormWorking($form);
+        $form.submit();
       } else {
 
       }

@@ -101,7 +101,7 @@
         .find('.help-block')
         .text('Contact with this email already exists')
     }
-    toggleFormButton($('#new-contributor-form'));
+    toggleFormDone($('#new-contributor-form'));
     return;
   }
 
@@ -129,6 +129,7 @@
             $(document).one('click', function () {
               $('#contributors-filter').next().removeClass('select2-container--focus');
             })
+            toggleFormDone($('#new-contributor-form'));
             $('#new-contributor-modal').modal('hide');
           });
 

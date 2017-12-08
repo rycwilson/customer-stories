@@ -1,10 +1,9 @@
 
 (function () {
 
-  $('.success-form button[type="submit"]')
-    .find('.fa-spinner, .fa-check').toggle()
-  setTimeout(function () {
-    $('.success-form button[type="submit"]').find('.fa-check, span').toggle();
-  }, 2000);
+  var success = <%= raw @success.to_json %>,
+      $form = $('#success-form-' + success.id.toString());
+
+  toggleFormDone($form, true);
 
 }());

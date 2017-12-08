@@ -83,17 +83,18 @@ function attachAppListeners () {
     })
 
     .on('click', 'button[type="submit"]', function (e) {
-      var $form = $('#' + $(this).attr('form')) || $(this).closest('form'), $button = $(this);
-      if ($form.is('#contribution-request-form') &&
-          !$form.is('#new-success-form')) {
+      var $form = $(this).closest('form') || $('#' + $(this).attr('form')),
+          $button = $(this);
+      if (!$form.is('#new-success-form') &&
+          ($form.is('#contribution-request-form') ||
+           $form.is('[id*="success-form-"]'))) {
         if ($form.data('submitted')) {
           // console.log('not submitted');
           e.preventDefault();
           return false;
         }
         // console.log('submit')
-        $form.data('submitted', '1');
-        $button.find('span, .fa-spin').toggle();
+        toggleFormWorking($form);
       }
     });
 

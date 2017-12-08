@@ -31,10 +31,5 @@ function successDetailsListeners () {
         $tr.addClass('shown active');
       }
       $(this).children().toggle();  // toggle caret icons
-    })
-
-    .on('submit', '.success-form', function () {
-      $(this).find('button[type="submit"] span').toggle();
-      $(this).find('button[type="submit"] .fa-spinner').toggle();
     });
 }

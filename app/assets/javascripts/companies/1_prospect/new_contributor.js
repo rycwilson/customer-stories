@@ -404,7 +404,6 @@ function newContributorListeners() {
     // reset modal
     .on('hidden.bs.modal', '#new-contributor-modal', function () {
       $(this).find('form')[0].reset();
-      resetFormSubmit($('#new-contributor-form'));
       $(this).find('.create-contributor, .create-referrer').addClass('hidden');
       $(this).find('select').val('').trigger('change.select2');
       $(this).find('select, select option').prop('disabled', false);
@@ -418,11 +417,12 @@ function newContributorListeners() {
     // => the button is outside the form, linked to it through form= attribute
     // => submit event doesn't bubble up to form, so e.preventDefault() doesn't work
     .on('click', 'button[type="submit"][form="new-contributor-form"]', function (e) {
-      var $form = $('#new-contributor-form'), $button = $(this);
+      var $form = $('#new-contributor-form'),
+          $button = $(this);
       e.preventDefault();
       if (!$form.data('submitted') && validateForm()) {
-        $('#new-contributor-form').data('submitted', '1').submit();
-        $button.find('span, .fa-spin').toggle();
+        toggleFormWorking($form);
+        $form.submit();
       } else {
 
       }

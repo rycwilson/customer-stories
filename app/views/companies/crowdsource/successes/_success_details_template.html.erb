@@ -5,7 +5,7 @@
 
   <div class="container success-details" style='width:100%'>
 
-    <form action='{{= successPath }}' method='post' data-remote='true' data-type='script' class='success-form'>
+    <form id="success-form-{{= success.id }}" action='{{= successPath }}' method='post' data-remote='true' data-type='script' class='success-form'>
 
       <input type="hidden" name="_method" value="put">
       <input type="hidden" name="authenticity_token" value="{{= AUTH_TOKEN }}">
@@ -36,10 +36,10 @@
           <button type="reset" class="btn btn-sm btn-default">
             Close
           </button>
-          <button type="submit" disabled class="btn btn-sm btn-success text-center" style='width:48px'>
-            <span>Save</span>
-            <i class='fa fa-spinner fa-pulse submit' style='display:none'></i>
-            <i class='fa fa-check submit' style='display:none'></i>
+          <button type="submit" disabled class="btn btn-sm btn-success text-center" style="width:97px">
+            <span>Save changes</span>
+            <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
+            <i class='fa fa-check' style='display:none'></i>
           </button>&nbsp;
         </div>
       </div>
