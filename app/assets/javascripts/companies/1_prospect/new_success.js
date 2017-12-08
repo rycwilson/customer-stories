@@ -58,14 +58,17 @@ function newSuccessListeners () {
   $(document)
 
     .on('show.bs.modal', '#new-success-modal', function () {
+      var curatorId = $('#successes-table').closest('[id*="table_wrapper"]').find('.curator-select').val();
       if ($('#successes-filter').val().match(/customer/)) {
         $('select.new-success.customer')
           .val($('#successes-filter').val().match(/customer-(\d+)/)[1])
           .trigger('change.select2');
       }
-      $('select.new-success.curator')
-        .val($('.crowdsource.curator-select').val())
-        .trigger('change');
+      if (curatorId !== '0') {
+        $('select.new-success.curator')
+          .val($('.crowdsource.curator-select').val())
+          .trigger('change');
+      }
     })
 
     .on('change', 'select.new-success.customer', function () {
