@@ -147,6 +147,7 @@
           .promise()
           .then(function () {
             openContributorDetails($trContribution);
+            toggleFormDone($('#new-contributor-form'));
             $('#new-contributor-modal').modal('hide');
           });
       }
