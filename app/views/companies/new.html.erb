@@ -9,7 +9,7 @@
 
         <div class="col-sm-3 layout-sidebar">
 
-          <%= render 'companies/shared/side_tabs' %>
+          <%= render 'companies/settings/side_tabs' %>
 
         </div> <!-- /.col -->
 
@@ -18,7 +18,7 @@
 
             <div class="tab-pane fade in active" id="company-profile">
 
-              <%= render 'companies/shared/profile_form', { company: @company } %>
+              <%= render 'companies/settings/profile', { company: @company } %>
 
             </div>
 
