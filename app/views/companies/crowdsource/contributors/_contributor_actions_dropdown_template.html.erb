@@ -39,7 +39,7 @@
     {{ } }}
 
 
-    {{ if ( status.match(/(contribution|feedback)/) ) { }}
+    {{ if (status && status.match(/(contribution|feedback)/)) { }}
 
       <li class='view-contribution'>
         <a href="#contribution-content-modal" data-toggle='modal'>
@@ -48,7 +48,7 @@
         </a>
       </li>
 
-      {{ if ( status.match(/submitted/) ) { }}
+      {{ if (status && status.match(/submitted/)) { }}
 
         <li class='completed'>
           <a href="javascript:;">

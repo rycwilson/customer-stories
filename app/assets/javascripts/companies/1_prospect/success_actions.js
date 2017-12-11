@@ -83,10 +83,9 @@ function successActionsListeners () {
       contributionIds = $('#prospect-contributors-table').DataTable().rows().data().toArray()
         .filter(function (contribution) {
           return contribution.success.id == successId &&
-                 contribution.status.match(/(contribution|feedback)/);
+                 (contribution.status && contribution.status.match(/(contribution|feedback)/));
         })
         .map(function (contribution) { return contribution.id; });
-
 
       contributionIds.forEach(function (id) {
 
