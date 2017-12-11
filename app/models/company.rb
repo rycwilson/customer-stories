@@ -32,8 +32,8 @@ class Company < ActiveRecord::Base
     end
   end
 
-  # exclude test accounts
-  has_many :curators, -> { where.not("email LIKE ?", "%customerstories.net%") }, class_name: "User"
+  # exclude test accounts (1 = acme-test, 5 = CSP)
+  has_many :curators, -> { where.not("email LIKE ? AND company_id NOT IN (1,5)", "%customerstories.net%") }, class_name: "User"
   has_many :contributions, -> { includes(:contributor, :referrer, success:{customer:{}}) }, through: :successes
   has_many :contributors, -> { distinct }, through: :customers, source: :contributors
   has_many :referrers, -> { distinct }, through: :contributions, source: :referrer
