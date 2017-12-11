@@ -31,7 +31,9 @@ class Company < ActiveRecord::Base
       .unshift( [""] )  # empty option makes placeholder possible (only needed for single select)
     end
   end
-  has_many :curators, -> { distinct }, through: :successes, source: :curator
+
+  # exclude test accounts
+  has_many :curators, -> { where.not("email LIKE ?", "%customerstories.net%") }, class_name: "User"
   has_many :contributions, -> { includes(:contributor, :referrer, success:{customer:{}}) }, through: :successes
   has_many :contributors, -> { distinct }, through: :customers, source: :contributors
   has_many :referrers, -> { distinct }, through: :contributions, source: :referrer
