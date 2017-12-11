@@ -24,9 +24,11 @@ class UserMailer < ApplicationMailer
       }
     }.to_json if production?
     if contribution.status == 'request_sent'
-      subject = contribution.request_subject.prepend("Reminder: ")
+      subject = contribution.request_subject # don't chain .prepend here; it will persist the data
+      subject.prepend("Reminder: ")
     else
-      subject = contribution.request_subject.prepend("Final reminder: ")
+      subject = contribution.request_subject
+      subject.prepend("Final reminder: ")
     end
     @body = contribution.request_body.html_safe
     send_mail('remind', contribution.curator, contribution.contributor, subject)
