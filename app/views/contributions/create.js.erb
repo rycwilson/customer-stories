@@ -95,7 +95,7 @@
         .find('.help-block')
         .text('Contributor with this email already exists')
     }
-    if (Object.keys(contribution.referrer.errors).length) {
+    if (contribution.referrer && Object.keys(contribution.referrer.errors).length) {
       $('.form-group.referrer-email')
         .addClass('has-error')
         .find('.help-block')

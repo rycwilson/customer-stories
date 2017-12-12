@@ -424,7 +424,6 @@ function newContributorListeners() {
         toggleFormWorking($form);
         $form.submit();
       } else {
-
       }
     });
 
