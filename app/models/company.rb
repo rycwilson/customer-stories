@@ -298,11 +298,11 @@ class Company < ActiveRecord::Base
     sales_template = self.crowdsourcing_templates.where(name:'Sales').take
     self.contributor_questions.each do |question|
       if question.role == 'customer'
-        question.crowdsourcing_template = customer_template
+        customer_template.contributor_questions << question
       elsif question.role == 'customer success'
-        question.crowdsourcing_template = customer_success_template
+        customer_success_template.contributor_questions << question
       elsif question.role == 'sales'
-        question.crowsourcing_tmeplate = sales_template
+        sales_template.contributor_questions << question
       end
     end
   end
