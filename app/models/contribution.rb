@@ -140,11 +140,12 @@ class Contribution < ActiveRecord::Base
       if contribution.request_remind_at.try(:past?)
         UserMailer.contribution_reminder(contribution).deliver_now
         if contribution.status == 'request_sent'
-          new_status = 'first_reminder_sent'
+          contribution.update(status: 'first_reminder_sent')
         elsif contribution.status == 'first_reminder_sent'
-          new_status = 'second_reminder_sent'
+          contribution.update(status: 'second_reminder_sent')
+        else
+          # should not be here!
         end
-        contribution.update(status: new_status)
       elsif
           ( contribution.status == 'second_reminder_sent' &&
             Time.now > contribution.request_sent_at + contribution.first_reminder_wait.days +

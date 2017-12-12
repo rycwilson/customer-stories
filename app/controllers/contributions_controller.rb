@@ -107,7 +107,6 @@ class ContributionsController < ApplicationController
       end
 
     elsif params[:send_invitation]
-      puts "UPDATE"
       # assign any edits to request_subject and request_body
       @contribution.assign_attributes(contribution_params)
       if ['request_sent', 'request_re_sent'].exclude?(@contribution.status) &&
@@ -116,6 +115,8 @@ class ContributionsController < ApplicationController
           params[:contribution][:status] = 'request_sent'
         elsif @contribution.status == 'did_not_respond'
           params[:contribution][:status] = 'request_re_sent'
+        else
+          # should not be here!
         end
         @contribution.update(contribution_params)
         respond_to { |format| format.js { render action: 'send_invitation' } }
