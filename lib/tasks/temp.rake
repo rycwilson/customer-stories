@@ -14,7 +14,7 @@ namespace :temp do
   end
 
   task change_reminder_wait: :environment do
-    Contribution.all.each { |c| c.update(first_reminder_wait: 3, second_reminder_wait: 3) }
+    Contribution.all.each { |c| c.update(first_reminder_wait: 2, second_reminder_wait: 3) }
   end
 
   # fix any data oddities that cause errors
