@@ -11,6 +11,7 @@ namespace :temp do
     Rake::Task["temp:create_crowdsourcing_templates"].invoke
     Rake::Task["temp:copy_old_contribution_requests"].invoke
     Rake::Task["temp:db_fixes"].invoke
+    Rake::Task["temp:change_reminder_wait"].invoke
   end
 
   task change_reminder_wait: :environment do
