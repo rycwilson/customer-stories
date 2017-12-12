@@ -111,15 +111,13 @@ function selectBoxesTrackQueryString ($categorySelect, categorySlug, $productSel
 }
 
 function updateGallery ($stories) {
-
-  var $gallery = $('#stories-gallery');
-
   $stories.imagesLoaded(function () {
-    $gallery.empty()
-            .append($stories)
-            .hide().show('fast', function () {
-              initGridPreviews();
-            });
+    $('#stories-gallery')
+      .empty()
+      .append($stories)
+      .hide().show('fast', function () {
+        initGridPreviews();
+      });
   });
 }
 

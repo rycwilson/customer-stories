@@ -100,7 +100,8 @@ function curateListeners () {
 }
 
 function filterCurateGallery () {
-  var stories = [], $gallery= $('#curate-gallery'),
+  var stories = [],
+      $gallery= $('#curate-gallery'),
       storiesTemplate = _.template($('#stories-template').html()),
       customerId = $('.curate.customer-select').val(),
       curatorId = $('.curate.curator-select').val(),
@@ -169,12 +170,18 @@ function filterCurateGallery () {
 
   stories = app.stories.filter(function (story) { return storyIds.includes(story.id); });
 
-  // console.log('results: ', stories);
-  $gallery.empty()
-    .append(
-      $(storiesTemplate({ stories: stories, isCurator: true }))
-    )
-    .hide().show('fast');
+
+  $gallery.empty();
+
+  if (stories.length === 0) {
+    $gallery.append('<li><h3 class="lead grid-item">No Stories found</h3></li>');
+  } else {
+    $gallery.append(
+        $(storiesTemplate({ stories: stories, isCurator: true }))
+      )
+      .hide().show('fast');
+  }
+
 
 }
 
