@@ -13,6 +13,10 @@ namespace :temp do
     Rake::Task["temp:db_fixes"].invoke
   end
 
+  task change_reminder_wait: :environment do
+    Contribution.all.each { |c| c.update(first_reminder_wait: 3, second_reminder_wait: 3) }
+  end
+
   # fix any data oddities that cause errors
   task db_fixes: :environment do
     # this success and story had a \n character in the name/title that was hosing datatables search
