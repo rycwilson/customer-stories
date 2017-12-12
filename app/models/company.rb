@@ -269,25 +269,41 @@ class Company < ActiveRecord::Base
   end
   accepts_nested_attributes_for :adwords_images, allow_destroy: true
 
-  after_commit on: :create do
+  after_commit({ on: [:create] }) do
     self.create_widget
-    # default contributor questions
-    self.contributor_questions =
-        ContributorQuestion.create(question: "What was the challenge?", role: 'customer'),
-        ContributorQuestion.create(question: "What was the solution?", role: 'customer'),
-        ContributorQuestion.create(question: "What was the measure of success achieved?", role: 'customer'),
-        ContributorQuestion.create(question: "Would you recommend it to a friend?", role: 'customer'),
-        ContributorQuestion.create(question: "Customer Success question #1", role: 'customer success'),
-        ContributorQuestion.create(question: "Customer Success question #2", role: 'customer success'),
-        ContributorQuestion.create(question: "Customer Success question #3", role: 'customer success'),
-        ContributorQuestion.create(question: "Customer Success question #4", role: 'customer success'),
-        ContributorQuestion.create(question: "Sales question #1", role: 'sales'),
-        ContributorQuestion.create(question: "Sales question #2", role: 'sales'),
-        ContributorQuestion.create(question: "Sales question #3", role: 'sales'),
-        ContributorQuestion.create(question: "Sales question #4", role: 'sales')
+
     # default crowdsourcing templates (formerly email templates)
     Company.find_by(name:'CSP').crowdsourcing_templates.each do |template|
       self.crowdsourcing_templates << template.dup
+    end
+
+    # default contributor questions
+    self.contributor_questions =
+      ContributorQuestion.create(question: "What was the challenge or disruption requiring action?", role: 'customer'),
+      ContributorQuestion.create(question: "What were the hurdles to solving the challenge?", role: 'customer'),
+      ContributorQuestion.create(question: "What was the journey to solving the challenge?", role: 'customer'),
+      ContributorQuestion.create(question: "What were the positive outcomes for you and the company?", role: 'customer'),
+      ContributorQuestion.create(question: "What was the customer’s challenge or disruption requiring action?", role: 'customer success'),
+      ContributorQuestion.create(question: "What were the customer’s hurdles to solving the challenge?", role: 'customer success'),
+      ContributorQuestion.create(question: "What was your joint journey to helping them solve the challenge?", role: 'customer success'),
+      ContributorQuestion.create(question: "What were the positive outcomes for the stakeholders and the company?", role: 'customer success'),
+      ContributorQuestion.create(question: "What was the customer’s challenge or disruption requiring action?", role: 'sales'),
+      ContributorQuestion.create(question: "What were the customer’s hurdles to solving the challenge?", role: 'sales'),
+      ContributorQuestion.create(question: "What was your joint journey to helping them solve the challenge?", role: 'sales'),
+      ContributorQuestion.create(question: "What were the positive outcomes for the stakeholders and the company?", role: 'sales')
+
+    # assign default questions to default templates
+    customer_template = self.crowdsourcing_templates.where(name:'Customer').take
+    customer_success_template = self.crowdsourcing_templates.where(name:'Customer Success').take
+    sales_template = self.crowdsourcing_templates.where(name:'Sales').take
+    self.contributor_questions.each do |question|
+      if question.role == 'customer'
+        question.crowdsourcing_template = customer_template
+      elsif question.role == 'customer success'
+        question.crowdsourcing_template = customer_success_template
+      elsif question.role == 'sales'
+        question.crowsourcing_tmeplate = sales_template
+      end
     end
   end
 
