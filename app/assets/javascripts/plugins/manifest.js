@@ -29,10 +29,6 @@
 //= require jquery-file-upload/js/jquery.fileupload
 
 //= require bootstrap-switch/dist/js/bootstrap-switch
-//= require best_in_place
-// for best-in-place validation errors ...
-//= require best_in_place.purr
-//= require jquery.purr
 
 //= require jquery.inputmask/dist/inputmask/inputmask
 //= require jquery.inputmask/dist/inputmask/inputmask.phone.extensions
@@ -55,9 +51,6 @@
 
 //= require jstz
 //= require browser_timezone_rails/set_time_zone
-
-//= require editable/bootstrap-editable
-//= require editable/rails
 
 //= require bootstrap-validator/dist/validator
 

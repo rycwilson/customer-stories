@@ -67,9 +67,6 @@ GEM
     aws-sdk-resources (2.5.11)
       aws-sdk-core (= 2.5.11)
     bcrypt (3.1.11)
-    best_in_place (3.0.3)
-      actionpack (>= 3.2)
-      railties (>= 3.2)
     better_errors (2.1.1)
       coderay (>= 1.0.0)
       erubis (>= 2.6.6)
@@ -350,8 +347,6 @@ GEM
       chronic (>= 0.6.3)
     wicked_pdf (1.1.0)
     wkhtmltopdf-binary (0.12.3)
-    x-editable-rails (1.5.5)
-      railties
     yard (0.9.5)
 
 PLATFORMS
@@ -359,7 +354,6 @@ PLATFORMS
 
 DEPENDENCIES
   aws-sdk (~> 2)
-  best_in_place (~> 3.0.1)
   better_errors
   binding_of_caller
   bootstrap-tab-history-rails
@@ -402,7 +396,6 @@ DEPENDENCIES
   whenever
   wicked_pdf
   wkhtmltopdf-binary
-  x-editable-rails
 
 RUBY VERSION
    ruby 2.3.0p0

@@ -40,9 +40,6 @@
  *= require site
  */
 
-
- @import "editable/bootstrap-editable";
-
 // had to change from require to this due to the error described here:
  // https://github.com/summernote/summernote-rails/issues/46
  // comports with summernote docs
