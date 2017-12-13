@@ -254,7 +254,8 @@ class ContributionsController < ApplicationController
   def consolidate_answers (answers)
     contribution = ""
     answers.each do |question_id, answer|
-      question = question_id.to_i != 0 ? ContributorQuestion.find(question_id).question : "Additional thoughts"
+      # question = question_id.to_i != 0 ? ContributorQuestion.find(question_id).question : "Additional thoughts"
+      question = ContributorQuestion.find(question_id).question
       contribution << "<p style='font-weight:600'>#{question}</p>"
       contribution << "<p><em>#{answer}</em></p>"
     end
