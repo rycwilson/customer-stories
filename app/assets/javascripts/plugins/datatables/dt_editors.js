@@ -130,7 +130,7 @@ function openContributorsEditor (contributorsEditor, $row) {
       // buttons are in reverse order of how they're diplayed because they both have float:right
       buttons: [
         {
-          label: 'Save',
+          label: '<span>Save</span><i class="fa fa-spin fa-circle-o-notch" style="display:none"></i>',
           className: 'btn btn-sm btn-success',
           fn: function () { this.submit(); }
         },
