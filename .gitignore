@@ -32,7 +32,7 @@
 /.env
 
 # pre-compiled assets (uncomment for github push, comment for heroku)
-public/assets
+# public/assets
 
 
 
