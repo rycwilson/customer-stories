@@ -3,7 +3,15 @@
   var flash = <%= raw @flash.to_json %> ||
         { status: 'success',
           mesg: 'Story published and Sponsored Story created' },
+      toggleSubmitButton = function () {
+        $('#story-settings-form button[type="submit"]').find('span, .fa-spin').toggle();
+      },
+      flashCallback = function () {
+        $('input.bs-switch').bootstrapSwitch('disabled', false);
+        $('#story-settings-form').data('submitted', '');
+      }
 
-  flashDisplay(flash.mesg, flash.status, enableSwitches)
+  toggleSubmitButton();
+  flashDisplay(flash.mesg, flash.status, flashCallback);
 
 }());

@@ -6,7 +6,7 @@ class AdwordsController < ApplicationController
   after_action({ except: [:preview, :sync_company] }) { flash.discard if request.xhr? }
 
   def create_story_ads
-    if @promote_enabled && @story.ads.all?() { |ad| ad.delay.create() }
+    if @promote_enabled && @story.ads.all? { |ad| ad.delay.create }
       flash[:notice] = 'Story published and Sponsored Story created'
     else
       # TODO: attach errors to @story
@@ -48,7 +48,7 @@ class AdwordsController < ApplicationController
 
   def remove_story_ads
     if @promote_enabled
-      @story.ads.each() { |ad| ad.delay.remove() }
+      @story.ads.each { |ad| ad.delay.remove }
     end
     respond_to { |format| format.json { head :no_content } }
   end

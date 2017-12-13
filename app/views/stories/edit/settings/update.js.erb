@@ -25,43 +25,33 @@
   updateStory();
 
   // create the ad
-  if ( createAds() ) {
-    $.post({
-      url: '/stories/' + story.id + '/promote',
-      success: function (data, status, xhr) {
+  if (createAds()) {
+    $.post('/stories/' + story.id + '/promote')
+      .done(function () {
         $.post({
           url: '/stories/' + story.id + '/adwords',
           dataType: 'script'
         });
-      }
-    });
+      })
 
   // remove ad if story unpublished;
   // remove the adwords ad first, as ad.ad_id will be necessary to make the api call
-  } else if ( removeAds() ) {
+  } else if (removeAds()) {
     $.ajax({
       url: '/stories/' + story.id + '/adwords',
       method: 'delete',
-      dataType: 'json',
-      success: function (data, status, xhr) {
+      dataType: 'json'
+    })
+      .done(function () {
         $.ajax({
           url: '/stories/' + story.id + '/promote',
           method: 'delete',
-          dataType: 'script',
-          success: function () {
-            // corresponds to flash timeout
-            setTimeout(function () {
-              $('input.bs-switch').bootstrapSwitch('disabled', false);
-            }, 3000);
-          }
-        });
-      }
-    });
+          dataType: 'script'
+        })
+      })
 
   } else {
-
     toggleFormDone($('#story-settings-form'), true)
-
   }
 
 }());

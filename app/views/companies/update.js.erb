@@ -1,7 +1,7 @@
 (function () {
 
   var headerStyle = '<%= @company.header_style %>',
-      toggleSubmit = function () {
+      toggleSubmitButton = function () {
         $('#company-profile-form button[type="submit"]').find('span, .fa-spin').toggle();
       },
       toggleForm = function () {
@@ -9,7 +9,7 @@
       };
 
   app.company.header_style = headerStyle;
-  toggleSubmit();
+  toggleSubmitButton();
 
   $('.navbar').attr('style', headerStyle);
 
