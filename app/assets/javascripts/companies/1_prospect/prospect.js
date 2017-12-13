@@ -187,7 +187,7 @@ function prospectListeners () {
       $tableWrapper.find('.curator-select').val('0').trigger('change');
       $tableWrapper.find('.dt-filter').val(filterVal).trigger('change');
     })
-    .on('click', '.DTE_Form_Buttons :first-child', function () {
+    .on('click', 'td.crowdsourcing-template .DTE_Form_Buttons :first-child', function () {
       $(this).find('span, .fa-spin').toggle();
     });
 

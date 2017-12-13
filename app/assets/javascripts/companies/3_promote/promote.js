@@ -91,8 +91,11 @@ function promoteListeners () {
     // manually hide the tooltip when navigating away (since it has container: body)
     .on('mouseout', '#promote-settings-tab-pane', function () {
       $('[data-toggle="tooltip"]').tooltip('hide');
-    });
+    })
 
+    .on('click', 'td.promoted-story-title .DTE_Form_Buttons > :nth-child(2)', function () {
+      $(this).find('span, .fa-spin').toggle();
+    });
 }
 
 
