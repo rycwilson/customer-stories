@@ -29,13 +29,12 @@
     <% if admin_signed_in? %>
 
       <div class="text-center">
-        <%= form_tag adwords_sync_company_path, method: :put,
-              id: 'adwords-sync-form' do %>
+        <%= form_tag adwords_sync_company_path, method: :put, id: 'adwords-sync-form' do %>
 
           <% if company.ready_for_adwords_sync? %>
             <button type="submit" class="btn btn-success text-center" style='width:152px'>
-              <span class='submit-toggle'>Sync with AdWords</span>
-              <i class='fa fa-spinner fa-pulse submit-toggle' style='display:none'></i>
+              <span>Sync with AdWords</span>
+              <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
             </button>
           <% else %>
             <%= submit_tag 'Sync with AdWords', class: 'btn btn-success', disabled: true %>

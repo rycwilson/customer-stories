@@ -85,12 +85,13 @@ function attachAppListeners () {
            $form.is('#story-settings-form') ||
            $form.is('#story-content-form') ||
            $form.is('#promote-settings-form') ||
-           $form.is('#crowdsourcing-template-form'))) {
+           $form.is('#crowdsourcing-template-form') ||
+           $form.is('#adwords-sync-form'))) {
         if ($form.data('submitted')) {
           // console.log('not submitted');
           e.preventDefault();
           return false;
-        } else {
+      } else {
           // console.log('submit')
           // console.log($form)
           // console.log($button)

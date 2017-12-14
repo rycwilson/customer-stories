@@ -138,13 +138,11 @@ class AdwordsController < ApplicationController
   def sync_company
     if @company.ready_for_adwords_sync?()
       @company.adwords_sync()
-      flash = { notice: "Successfully synced with AdWords" }
+      flash = { notice: "Successfully sync'ed with AdWords" }
     else
-      flash = { alert: "Company not ready for syncing with AdWords" }
+      flash = { alert: "Company not ready for sync'ing with AdWords" }
     end
-    cookies[:workflow_stage] = 'promote'
-    cookies[:workflow_substage] = 'promoted-stories'
-    redirect_to(company_path(@company), flash: flash)
+    redirect_to('/promote', flash: flash)
   end
 
   private
