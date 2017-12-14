@@ -15,6 +15,11 @@ function storiesEditContentListeners () {
   storiesEditVideoListeners();
   storiesEditResultsListeners();
 
+  var openFormControls = function () {
+    // $('#story-content-submit').removeClass('hidden');
+    $('#story-content-submit').addClass('show');
+  };
+
   $(document)
     .on('shown.bs.collapse', '#contributions-carousel', function () {
       $('[href="#contributions-carousel"][data-toggle="collapse"] > span').toggle();
@@ -37,6 +42,17 @@ function storiesEditContentListeners () {
           event.preventDefault();
           $(this).prop('scrollTop', Math.max(0, Math.min(maxY, $(this).prop('scrollTop') + event.originalEvent.deltaY)));
         }
+      }
+    })
+
+    .on('input', '#story-content-form', openFormControls)
+    .on('click', '#story-content-form .add-result, #story-content-form .remove-result', openFormControls)
+    .on('scroll', function () {
+      if (!$('a[href="#story-content"]').parent().hasClass('active')) {
+        return false;
+      }
+      if ($(document).scrollTop() > (($('.main-content').offset().top + 200) - $(window).height())) {
+        openFormControls();
       }
     });
 }

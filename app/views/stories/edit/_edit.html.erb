@@ -15,16 +15,15 @@
         <div class="col-sm-12">
 
           <div>
-            <label style='margin:0'>Customer</label>&nbsp;&nbsp;&nbsp;
-            <span style='font-family:"Lato";font-size:18px;color:#999'><%= story.customer.name %></span>
+            <label>Customer</label>&nbsp;&nbsp;&nbsp;
+            <span><%= story.customer.name %></span>
           </div>
           <div>
             <!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
-            <label style='margin:0'>Story Title</label>&nbsp;&nbsp;&nbsp;
+            <label>Story Title</label>&nbsp;&nbsp;&nbsp;
           <!-- no turbolinks, so linkedin widgets load properly -->
           <!-- ref: http://stackoverflow.com/questions/17600093/rails-javascript-not-loading-after-clicking-through-link-to-helper -->
-            <a href="<%= story.csp_story_path %>" class='story-title' data-turbolinks='false'
-                style='font-family:"Lato";font-size:18px;color:#999'>
+            <a href="<%= story.csp_story_path %>" class='story-title' data-turbolinks='false'>
               <%= story.try(:title) %>
             </a>
           </div>
