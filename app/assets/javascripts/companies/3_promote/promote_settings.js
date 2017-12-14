@@ -203,7 +203,6 @@ function promoteSettingsListeners () {
         if ($(this).find('button[type="submit"]').hasClass('disabled')) {
           e.preventDefault();
         } else {
-          $(this).find('.submit-toggle').toggle();
         }
       });
 }

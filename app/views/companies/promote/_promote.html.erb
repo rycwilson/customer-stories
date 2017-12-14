@@ -12,13 +12,13 @@
         </div>
 
         <ul class="nav nav-layout-sidebar nav-stacked">
-          <li class="active">
+          <li class="<%= tab == '#promoted-stories' ? 'active' : '' %>">
             <a href="#promoted-stories" data-toggle="tab">
               <i class="fa fa-bullhorn"></i>
               &nbsp;&nbsp;Promoted Stories
             </a>
           </li>
-          <li>
+          <li class="<%= tab == '#promote-settings' ? 'active' : '' %>">
             <a href="#promote-settings" data-toggle="tab">
               <i class="fa fa-gear"></i>
               &nbsp;&nbsp;Settings
@@ -61,13 +61,11 @@
 
         <div class="tab-content stacked-content">
 
-          <div id='promoted-stories'
-               class="tab-pane fade in active">
+          <div id='promoted-stories' class="tab-pane fade <%= tab == '#promoted-stories' ? 'active in' : '' %>">
             <%= render 'companies/promote/promoted_stories_table', { company: company } %>
           </div>
 
-          <div id='promote-settings'
-               class="tab-pane fade">
+          <div id='promote-settings' class="tab-pane fade <%= tab == '#promote-settings' ? 'active in' : '' %>">
             <%= render 'companies/promote/promote_settings', { company: company } %>
           </div>
         </div>

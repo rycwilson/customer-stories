@@ -86,8 +86,7 @@
   //     thisUrl.slice(0, thisUrl.lastIndexOf('?') == -1 ? thisUrl.length : thisUrl.lastIndexOf('?')) + '?' + d.getTime())
   // })
 
-  $form.find('.submit-toggle').toggle();
-
-  flashDisplay(flashMesg, flashStatus);
+  $form.find('button[type="submit"]').find('span, .fa-spin').toggle();
+  flashDisplay(flashMesg, flashStatus, function () { $form.data('submitted', ''); });
 
 }());

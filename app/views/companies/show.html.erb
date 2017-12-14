@@ -38,15 +38,14 @@
   <div class='tab-content'>
 
     <%= render 'companies/crowdsource/crowdsource',
-          { company: @company, workflow_stage: @workflow_stage,
-            tab: @prospect_tab } %>
+          { company: @company, workflow_stage: @workflow_stage, tab: @prospect_tab } %>
 
     <%= render 'companies/curate/curate', { company: @company, story: @story,
             workflow_stage: @workflow_stage, curate_view: @curate_view,
             curate_story_tab: @curate_story_tab } %>
 
     <%= render 'companies/promote/promote',
-          { company: @company, workflow_stage: @workflow_stage, } %>
+          { company: @company, workflow_stage: @workflow_stage, tab: @promote_tab} %>
 
     <%= render 'companies/measure/measure',
                 { company: @company, workflow_stage: @workflow_stage,

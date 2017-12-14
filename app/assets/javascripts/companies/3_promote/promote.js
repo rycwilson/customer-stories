@@ -65,9 +65,13 @@ function promoteListeners () {
 
   $(document)
 
+    .on('click', '#promote .layout-sidebar a', function () {
+      Cookies.set('promote-tab', $(this).attr('href'));
+    })
+
     // changing the scroll-on-focus offset for bootstrap validator isn't working,
     // so do this instead...
-    .on('click', 'a[href="#promote-settings-tab-pane"]', function () {
+    .on('click', 'a[href="#promote-settings"]', function () {
       if ($('#company_adwords_short_headline').val() === '') {
         var position = $(window).scrollTop();
         $('#company_adwords_short_headline').focus();
