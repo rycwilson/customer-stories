@@ -58,7 +58,7 @@ function initPromotedStoriesTable () {
         data: null,
         render: function (data, type, row, meta) {
           return _.template( $('#promoted-story-actions-dropdown-template').html() )({
-            // no parameters required at this point
+            viewStoryPath: row.csp_story_path
           });
         }
       },
