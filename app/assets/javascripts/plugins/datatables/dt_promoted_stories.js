@@ -1,7 +1,7 @@
 
 function initPromotedStoriesTable () {
 
-  var imageIndex = 0, storyTitleIndex = 1, customerIndex = 2, statusIndex = 3, actionsIndex = 4,
+  var imageIndex = 0, titleIndex = 1, customerIndex = 2, statusIndex = 3, actionsIndex = 4,
       storyTitleRequirements = "Max 90 characters";
 
   $('#promoted-stories-table').DataTable({
@@ -66,17 +66,20 @@ function initPromotedStoriesTable () {
 
     columnDefs: [
       {
-        targets: [imageIndex, storyTitleIndex, actionsIndex],
+        targets: [imageIndex, titleIndex, actionsIndex],
         orderable: false
       },
       {
-        targets: [statusIndex, storyTitleIndex, actionsIndex],
+        targets: [statusIndex, titleIndex, actionsIndex],
         searchable: false
       },
       // { width: '31%', targets: storyTitleIndex },
       // { width: '22%', targets: [imageIndex, customerIndex] },
-      { width: '10%', targets: statusIndex },
-      { width: '8%', targets: actionsIndex }
+      { width: '20%', targets: imageIndex },
+      { width: '44%', targets: titleIndex },
+      { width: '20%', targets: customerIndex },
+      { width: '8%', targets: statusIndex },
+      { width: '8%', targets: actionsIndex },
     ],
 
     createdRow: function (row, data, index) {
