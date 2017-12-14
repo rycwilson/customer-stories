@@ -12,7 +12,10 @@ function initPromotedStoriesTable () {
     },
 
     dom: 't',
-
+    language: {
+      emptyTable: 'No Promoted Stories found',
+      zeroRecords: 'No Promoted Stories found'
+    },
     order: [[ statusIndex, 'asc' ]],
 
     columns: [
