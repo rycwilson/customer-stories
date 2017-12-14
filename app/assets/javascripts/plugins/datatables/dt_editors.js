@@ -17,7 +17,7 @@ function newPromotedStoriesEditor() {
     idSrc: 'id',
     fields: [
       {
-        label: 'Sponsored Story Title',
+        label: 'Promoted Story Title',
         name: 'long_headline',
         data: 'ads_long_headline',
         type: 'textarea'

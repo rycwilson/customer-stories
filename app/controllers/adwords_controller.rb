@@ -7,7 +7,7 @@ class AdwordsController < ApplicationController
 
   def create_story_ads
     if @promote_enabled && @story.ads.all? { |ad| ad.delay.create }
-      flash[:notice] = 'Story published and Sponsored Story created'
+      flash[:notice] = 'Story published and Promoted Story created'
     else
       # TODO: attach errors to @story
     end
@@ -22,7 +22,7 @@ class AdwordsController < ApplicationController
 
     if @promote_enabled && @status_changed
       if @story.ads.all?() { |ad| ad.delay.update_status() }
-        flash[:notice] = "Sponsored Story #{@story.ads.enabled? ? 'enabled' : 'paused'}"
+        flash[:notice] = "Promoted Story #{@story.ads.enabled? ? 'enabled' : 'paused'}"
       else
         # TODO: attach errors to @story
       end
@@ -32,7 +32,7 @@ class AdwordsController < ApplicationController
         if @story.ads.all?() { |ad| ad.delay.create() }
           # reload to get the new ad_id
           if @story.ads.reload.all? { |ad| ad.delay.update_status() }
-            flash[:notice] = 'Sponsored Story updated'
+            flash[:notice] = 'Promoted Story updated'
           else
             # TODO: attach errors to @story
           end
@@ -109,7 +109,7 @@ class AdwordsController < ApplicationController
     end
 
     @flash_status = "success"
-    @flash_mesg = "Sponsored Stories updated"
+    @flash_mesg = "Promoted Stories updated"
 
     respond_to do |format|
       format.html do

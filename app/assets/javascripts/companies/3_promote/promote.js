@@ -43,7 +43,7 @@ function promote () {
                 .tooltip({
                   container: 'body',
                   placement: 'top',
-                  title: 'To assign an image to this Sponsored Story, upload images under Settings'
+                  title: 'To assign an image to this Promoted Story, upload images under Settings'
                 });
             }
           });

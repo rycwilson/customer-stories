@@ -43,11 +43,11 @@ class AdwordsAd < ActiveRecord::Base
     # Authorization error.
     rescue AdsCommon::Errors::OAuth2VerificationRequired => e
       puts 'Invalid Adwords API Oauth2 credentials'
-      # flash[:alert] = Rails.env.development? ? 'Invalid Adwords API Oauth2 credentials' : 'Error creating Sponsored Story'
+      # flash[:alert] = Rails.env.development? ? 'Invalid Adwords API Oauth2 credentials' : 'Error creating Promoted Story'
     # HTTP errors.
     rescue AdsCommon::Errors::HttpError => e
       puts "HTTP Error: %s" % e
-      # flash[:alert] = Rails.env.development? ? "HTTP error: #{e}" : 'Error creating Sponsored Story'
+      # flash[:alert] = Rails.env.development? ? "HTTP error: #{e}" : 'Error creating Promoted Story'
     # API errors.
     rescue AdwordsApi::Errors::ApiException => e
       puts "Message: %s" % e.message
@@ -58,7 +58,7 @@ class AdwordsAd < ActiveRecord::Base
           puts "\t\t%s: %s" % [field, value]
         end
       end
-      # flash[:alert] = Rails.env.development? ? "API error: #{e.message}" : 'Error creating Sponsored Story'
+      # flash[:alert] = Rails.env.development? ? "API error: #{e.message}" : 'Error creating Promoted Story'
     end
 
     # on success, log and update adwords_ad.ad_id
@@ -94,11 +94,11 @@ class AdwordsAd < ActiveRecord::Base
 
     # Authorization error.
     rescue AdsCommon::Errors::OAuth2VerificationRequired => e
-      # flash[:alert] = Rails.env.development? ? 'Invalid Adwords API credentials' : 'Error updating Sponsored Story status'
+      # flash[:alert] = Rails.env.development? ? 'Invalid Adwords API credentials' : 'Error updating Promoted Story status'
     # HTTP errors.
     rescue AdsCommon::Errors::HttpError => e
       puts "HTTP Error: %s" % e
-      # flash[:alert] = Rails.env.development? ? "HTTP error: #{e}" : 'Error updating Sponsored Story status'
+      # flash[:alert] = Rails.env.development? ? "HTTP error: #{e}" : 'Error updating Promoted Story status'
     # API errors.
     rescue AdwordsApi::Errors::ApiException => e
       puts "Message: %s" % e.message
@@ -109,7 +109,7 @@ class AdwordsAd < ActiveRecord::Base
           puts "\t\t%s: %s" % [field, value]
         end
       end
-      # flash[:alert] = Rails.env.development? ? "Adwords API error: #{e.message}" : 'Error updating Sponsored Story status'
+      # flash[:alert] = Rails.env.development? ? "Adwords API error: #{e.message}" : 'Error updating Promoted Story status'
     end
 
     # response
@@ -141,11 +141,11 @@ class AdwordsAd < ActiveRecord::Base
       response = service.mutate([operation])
     # Authorization error.
     rescue AdsCommon::Errors::OAuth2VerificationRequired => e
-      # flash[:alert] = Rails.env.development? ? 'Invalid Adwords API credentials' : 'Error removing Sponsored Story'
+      # flash[:alert] = Rails.env.development? ? 'Invalid Adwords API credentials' : 'Error removing Promoted Story'
     # HTTP errors.
     rescue AdsCommon::Errors::HttpError => e
       puts "HTTP Error: %s" % e
-      # flash[:alert] = Rails.env.development? ? "HTTP error: #{e}" : 'Error removing Sponsored Story'
+      # flash[:alert] = Rails.env.development? ? "HTTP error: #{e}" : 'Error removing Promoted Story'
     # API errors.
     rescue AdwordsApi::Errors::ApiException => e
       puts "Message: %s" % e.message
@@ -156,7 +156,7 @@ class AdwordsAd < ActiveRecord::Base
           puts "\t\t%s: %s" % [field, value]
         end
       end
-      # flash[:alert] = Rails.env.development? ? "Adwords API error: #{e.message}" : 'Error removing Sponsored Story'
+      # flash[:alert] = Rails.env.development? ? "Adwords API error: #{e.message}" : 'Error removing Promoted Story'
     end
 
     if response and response[:value]

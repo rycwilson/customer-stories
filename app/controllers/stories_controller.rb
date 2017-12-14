@@ -228,9 +228,9 @@ class StoriesController < ApplicationController
         # this must go in the delayed job queue, so it happens after ad.remove() (already queued)
         ad.delay.destroy
       end
-        flash.now[:notice] = 'Story unpublished and Sponsored Story removed'
+        flash.now[:notice] = 'Story unpublished and Promoted Story removed'
       else
-        flash.now[:alert] = 'Error removing Sponsored Story'
+        flash.now[:alert] = 'Error removing Promoted Story'
       end
     end
     respond_to do |format|

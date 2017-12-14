@@ -82,7 +82,7 @@ namespace :adwords do
     end
 
     ##
-    ##  all published stories have a Sponsored Story;
+    ##  all published stories have a Promoted Story;
     ##  status defaults to PAUSED, and will stay that way for non-subscribers
     ##
     ##  in the case of subscribers:
