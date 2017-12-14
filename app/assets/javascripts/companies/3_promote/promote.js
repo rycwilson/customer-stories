@@ -34,20 +34,7 @@ function promote () {
           }
         });
       },
-      initTooltips = function() {
-        // add a tooltip message to stories that don't have an image
-        $('#promoted-stories-table').find('img[src=""]').each(
-          function () {
-            if ($('#ad-image-select-modal li').length === 0) {
-              $(this).closest('.fileinput')
-                .tooltip({
-                  container: 'body',
-                  placement: 'top',
-                  title: 'To assign an image to this Promoted Story, upload images under Settings'
-                });
-            }
-          });
-      },
+
       initPopovers = function () {
         $('.adwords-logo.image-requirements, .adwords-image.image-requirements')
           .popover({

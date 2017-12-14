@@ -90,7 +90,26 @@ function initPromotedStoriesTable () {
     },
 
     initComplete: function (settings, json) {
+      // console.log($table.find('[data-toggle="tooltip"]'))
 
+      var $table = $(this),
+          initTooltips = function() {
+            $table.find('[data-toggle="tooltip"]').tooltip({ container: 'body' });
+            // add a tooltip message to stories that don't have an image
+            $table.find('img[src=""]').each(
+              function () {
+                if ($('#ad-image-select-modal li').length === 0) {
+                  $(this).closest('.fileinput')
+                    .tooltip({
+                      container: 'body',
+                      placement: 'top',
+                      title: 'To assign an image to this Promoted Story, upload images under Settings'
+                    });
+                }
+              });
+          };
+
+      initTooltips();
       promotedStoriesEditor = newPromotedStoriesEditor();
       promotedStoriesEditor.on('open', function() {
         $('.DTE_Form_Buttons')
