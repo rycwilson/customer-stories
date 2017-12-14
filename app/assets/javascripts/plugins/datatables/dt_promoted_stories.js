@@ -22,7 +22,7 @@ function initPromotedStoriesTable () {
         render: function (image_url, type, row, meta) {
           return '<div class="fileinput fileinput-exists" data-provides="fileinput">' +
                    '<div class="fileinput-preview thumbnail">' +
-                     '<img src="' + image_url + '" alt="sponsored story image">' +
+                     '<img src="' + image_url + '" alt="promoted story image">' +
                    '</div>' +
                    '<input type="file" name="image_url" id="image_url" class="hidden" ' +
                  '</div>';
