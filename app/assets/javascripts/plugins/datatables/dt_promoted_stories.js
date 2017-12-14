@@ -7,7 +7,7 @@ function initPromotedStoriesTable () {
   $('#promoted-stories-table').DataTable({
 
     ajax: {
-      url: '/companies/' + app.company.id.toString() + '/stories/promoted',
+      url: '/companies/' + app.company.id + '/stories/promoted',
       dataSrc: ''
     },
 

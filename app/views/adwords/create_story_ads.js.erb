@@ -14,4 +14,9 @@
   toggleSubmitButton();
   flashDisplay(flash.mesg, flash.status, flashCallback);
 
+  $('#promoted-stories-table').DataTable()
+    .ajax.reload(function () {
+      //
+    })
+
 }());
