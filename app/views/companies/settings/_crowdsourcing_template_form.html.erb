@@ -3,7 +3,9 @@
 
   <script>
     var templateName = "<%= template.name %>";
-    flashDisplay('Created new template: ' + templateName, 'success');
+    flashDisplay('Created new template: ' + templateName, 'success', function () {
+      $('#crowdsourcing-template-form').data('submitted', '');
+    });
   </script>
 
 <% end %>
@@ -59,24 +61,6 @@
             { company: company, template: template, template_form: template_form }) %>
     </div>
 
-  </div>
-
-  <hr>
-
-  <div class="row">
-    <div class="col-sm-12 text-right">
-      <div class="form-group">
-
-        <button type="reset" class="btn btn-default">Cancel</button>
-        <button type="submit" class="btn btn-success text-center"
-                style='<%= method == 'post' ? 'width: 135px' : 'width: 114px' %>'>
-          <span><%= method == 'post' ? 'Create template' : 'Save changes' %></span>
-          <i class='fa fa-spinner fa-pulse' style='display:none'></i>
-          <i class='fa fa-check' style='display:none'></i>
-        </button>
-
-      </div>
-    </div>
   </div>
 
 <% end %>

@@ -120,9 +120,49 @@
       margin: 1px 0;
     }
   }
-
 }
 
+/**
+ * this needs to be in global scope due to fixed position
+ */
+#story-content-submit, #crowdsourcing-template-submit {
+  position: fixed;
+  bottom: -66px;
+  left: 0;
+  right: 0;
+  // border-top-right-radius: 3px;
+  // border-top-left-radius: 3px;
+
+
+  // use the layout* classes to stay consistent with page
+  .layout-sidebar {
+    padding: 0;
+    border: none;
+    box-shadow: none;
+  }
+  .layout-main {
+    padding: 0 0 0 15px;
+    .tab-content {
+      border-top-right-radius: 3px;
+      border-top-left-radius: 3px;
+      background-color: rgba(255, 255, 224, 0.9);
+      border: 1px solid #e5e5c9;
+      padding: 15px;
+      text-align: right;
+      p {
+        font-size: 18px;
+        color: #666;
+        margin-bottom: 0;
+      }
+    }
+   }
+   transition: bottom 0s;
+}
+
+#story-content-submit.show, #crowdsourcing-template-submit.show {
+  bottom: 0;
+  transition: bottom 0.3s ease-out;
+}
 
 
 

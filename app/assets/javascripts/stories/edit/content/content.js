@@ -16,7 +16,6 @@ function storiesEditContentListeners () {
   storiesEditResultsListeners();
 
   var openFormControls = function () {
-    // $('#story-content-submit').removeClass('hidden');
     $('#story-content-submit').addClass('show');
   };
 

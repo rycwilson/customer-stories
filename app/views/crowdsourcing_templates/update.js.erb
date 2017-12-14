@@ -6,6 +6,9 @@
         <%= raw @template.contributor_questions
                          .to_json({ only: [:id, :company_id, :role, :question] }) %>;
 
+
+  toggleFormDone($('#crowdsourcing-template-form'), true);
+
   // update questions list
   $('.contributor-questions ul').empty()
     .append(
@@ -23,11 +26,5 @@
       placeholder: 'Add a Question',
       data: <%= raw @company.contributor_questions.grouped_select2_options(@template).to_json %>
     })
-
-  $('#crowdsourcing-template-form button[type="submit"]')
-    .find('.fa-spinner, .fa-check').toggle()
-  window.setTimeout(function () {
-    $('#crowdsourcing-template-form button[type="submit"]').find('.fa-check, span').toggle();
-  }, 2000);
 
 }());
