@@ -5,36 +5,35 @@ function promoteSettingsListeners () {
 
     // upload a new adwords image
     .on('click', '.new-adwords-image-icon:not(.disabled)', function () {
-
-      var $imagesList = $('ul.adwords-images'),
-          template = _.template( $('#adwords-image-template').html() );
-
-      $imagesList.append( template({ imageIndex: $imagesList.find('li').length }) );
-
+      var $imagesList = $('ul.adwords-images');
+      $imagesList.append(
+        _.template($('#adwords-image-template').html())({
+          imageIndex: $imagesList.find('li').length
+        })
+      );
       initS3Upload(); // init S3 for dynamically added file input
-
       $('li.new-adwords-image input[type="file"]')[0].click();
-
     })
 
     // when this event triggers (image upload), the image dimensons won't be ready
     // if the validation is performed immediately
     // $('img').on('load', ...) not working, probably because image is stored as data:
     // so check the .complete property of the img element
-    .on('change.bs.fileinput', '.adwords-default.adwords-image, .adwords-default.adwords-logo',
+    .on('change.bs.fileinput', '.adwords-default.adwords-logo, .adwords-default.adwords-image',
       function () {
-        var $_this = $(this),
+        var $imgContainer = $(this),
             waitForImage,  // this will be a window timer id, need to declare in case it's never created
             imgLoaded = function () {
-              if ($_this.find('.fileinput-exists img')[0].complete) {
+              if ($imgContainer.find('.fileinput-exists img')[0].complete) {
                 window.clearTimeout(waitForImage);
                 $('#promote-settings-form').validator('validate');
+                return true;
               }
               else {
-                return 'false';
+                return false;
               }
             };
-        if ( imgLoaded() === 'false' ) {
+        if (!imgLoaded()) {
           waitForImage = window.setTimeout(imgLoaded, 100);
         }
       })
@@ -56,21 +55,23 @@ function promoteSettingsListeners () {
           imgLoaded = function () {
             if (img.complete) {
               window.clearTimeout(waitForImage);
-              if ( meetsSizeRequirements(img) ) {
+              if (meetsSizeRequirements(img)) {
                 $newImage
                   .removeClass('hidden new-adwords-image')
                   .find('input[type="file"]').addClass('hidden');  // doesn't work if the input has class: hidden from the get-go
               } else {
                 $newImage.remove();
+                // remove the hidden input for the image_url that AWS S3 added
+                $('#promote-settings-form > input:last-child').remove();
                 flashDisplay("Image doesn't meet size requirements", 'danger');
               }
+              return true;
             }
             else {
-              return 'false';
+              return false;
             }
           };
-
-      if ( imgLoaded() == 'false' ) {
+      if (!imgLoaded()) {
         waitForImage = window.setTimeout(imgLoaded, 100);
       }
     })

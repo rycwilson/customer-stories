@@ -63,13 +63,12 @@ class CompaniesController < ApplicationController
   end
 
   def promote
-    puts "companies#promote()"
+    # puts "companies#promote()"
+    # pp params
     # capture deleted image data (associated ads) prior to destroying image
     if removed_adwords_images?(params[:company][:adwords_images_attributes])
-      puts "params[:company][:removed_images_ads] :"
       params[:company][:removed_images_ads] =
         removed_images_ads(@company, params[:company][:adwords_images_attributes])
-      pp params[:company][:removed_images_ads]
     end
     # make this check before updating anything
     # this will check for either uploaded or swapped default image
@@ -80,7 +79,6 @@ class CompaniesController < ApplicationController
         @company.update_uploaded_default_adwords_image(company_params[:default_adwords_image_url])
         params[:company][:uploaded_default_image] = true
       elsif default_image_changed  # swapping images
-        puts "swapping defaults"
         params[:company][:swapped_default_image] = true
       end
     else
