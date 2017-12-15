@@ -171,22 +171,18 @@ class CompaniesController < ApplicationController
         ads = AdwordsImage.find(image[:id]).ads
         # switch to default image, TODO: also need to push the change to adwords
         ads.each { |ad| ad.adwords_image = company.adwords_images.default }
-        if ads.empty?
-          {}
-        else
-          {
-            image_id: image[:id],
-            ads_params: ads.map do |ad|
-              {
-                ad_id: ad.ad_id, ad_group_id: ad.ad_group.ad_group_id,
-                csp_ad_id: ad.id,
-                campaign_type: ad.campaign.type == 'TopicCampaign' ? 'topic' : 'retarget'
-              }
-            end
-          }
-        end
+        {
+          image_id: image[:id],
+          ads_params: ads.map do |ad|
+            {
+              ad_id: ad.ad_id, ad_group_id: ad.ad_group.ad_group_id,
+              csp_ad_id: ad.id,
+              campaign_type: ad.campaign.type == 'TopicCampaign' ? 'topic' : 'retarget'
+            }
+          end
+        }
       end
-      .delete_if { |item| item.empty? }
+      .delete_if { |image_ads| image_ads[:ads_params].empty? }  # no affected ads
   end
 
   def default_adwords_image_changed? (company_params, default_image_id)
