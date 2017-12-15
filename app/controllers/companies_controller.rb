@@ -186,6 +186,7 @@ class CompaniesController < ApplicationController
           }
         end
       end
+      .delete_if { |item| item.empty? }
   end
 
   def default_adwords_image_changed? (company_params, default_image_id)
