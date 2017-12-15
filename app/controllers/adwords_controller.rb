@@ -54,6 +54,9 @@ class AdwordsController < ApplicationController
   end
 
   def update_company
+    puts "adwords#update_company()"
+    puts "params[:company]:"
+    pp params[:company]
     # ajax request performed a JSON.stringify in order to preserve nested arrays
     if request.format == :js
       params[:company] = JSON.parse(params[:company])
@@ -77,7 +80,7 @@ class AdwordsController < ApplicationController
       # so put in a Set to prevent duplicates
       @removed_images_stories = Set.new
       params[:company][:removed_images_ads].each do |image|
-        image[:ads_params].each() do |ad_params|
+        image[:ads_params].each do |ad_params|
           ad = AdwordsAd.includes(:story).find(ad_params[:csp_ad_id])
           @removed_images_stories << { csp_image_id: ad.adwords_image.id, story_id: ad.story.id }
           if @promote_enabled

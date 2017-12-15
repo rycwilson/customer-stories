@@ -63,10 +63,13 @@ class CompaniesController < ApplicationController
   end
 
   def promote
+    puts "companies#promote()"
     # capture deleted image data (associated ads) prior to destroying image
     if removed_adwords_images?(params[:company][:adwords_images_attributes])
+      puts "params[:company][:removed_images_ads] :"
       params[:company][:removed_images_ads] =
         removed_images_ads(@company, params[:company][:adwords_images_attributes])
+      pp params[:company][:removed_images_ads]
     end
     # make this check before updating anything
     # this will check for either uploaded or swapped default image
@@ -166,18 +169,22 @@ class CompaniesController < ApplicationController
       .flatten.delete_if { |item| item.is_a?(String) }  # get rid of indices
       .map do |image|
         ads = AdwordsImage.find(image[:id]).ads
-        # switch to default image
+        # switch to default image, TODO: also need to push the change to adwords
         ads.each { |ad| ad.adwords_image = company.adwords_images.default }
-        {
-          image_id: image[:id],
-          ads_params: ads.map do |ad|
-            {
-              ad_id: ad.ad_id, ad_group_id: ad.ad_group.ad_group_id,
-              csp_ad_id: ad.id,
-              campaign_type: ad.campaign.type == 'TopicCampaign' ? 'topic' : 'retarget'
-            }
-          end
-        }
+        if ads.empty?
+          {}
+        else
+          {
+            image_id: image[:id],
+            ads_params: ads.map do |ad|
+              {
+                ad_id: ad.ad_id, ad_group_id: ad.ad_group.ad_group_id,
+                csp_ad_id: ad.id,
+                campaign_type: ad.campaign.type == 'TopicCampaign' ? 'topic' : 'retarget'
+              }
+            end
+          }
+        end
       end
   end
 
