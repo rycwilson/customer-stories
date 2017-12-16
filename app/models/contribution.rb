@@ -53,20 +53,20 @@ class Contribution < ActiveRecord::Base
       self.user_id.nil?
     end
   )
-  # before_update(:set_request_sent_at, if: Proc.new do
-  #     self.status_changed? && (self.status == 'request_sent' || self.status == 'request_re_sent')
-  #   end
-  # )
-  # before_update(:set_request_remind_at, if: Proc.new do
-  #     self.status_changed? &&
-  #     ['request_sent', 'first_reminder_sent', 'second_reminder_sent'].include?(self.status)
-  #   end
-  # )
-  # before_update(:set_submitted_at, :send_alert, if: Proc.new do
-  #     self.status_changed? &&
-  #     ['contribution_submitted', 'feedback_submitted'].include?(self.status)
-  #   end
-  # )
+  before_update(:set_request_sent_at, if: Proc.new do
+      self.status_changed? && (self.status == 'request_sent' || self.status == 'request_re_sent')
+    end
+  )
+  before_update(:set_request_remind_at, if: Proc.new do
+      self.status_changed? &&
+      ['request_sent', 'first_reminder_sent', 'second_reminder_sent'].include?(self.status)
+    end
+  )
+  before_update(:set_submitted_at, :send_alert, if: Proc.new do
+      self.status_changed? &&
+      ['contribution_submitted', 'feedback_submitted'].include?(self.status)
+    end
+  )
 
   after_commit(on: [:update]) do
     # if (self.previous_changes.keys &
