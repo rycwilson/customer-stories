@@ -269,41 +269,19 @@ class Company < ActiveRecord::Base
   end
   accepts_nested_attributes_for :adwords_images, allow_destroy: true
 
-  after_commit({ on: [:create] }) do
+  after_commit(on: [:create]) do
     self.create_widget
 
-    # default crowdsourcing templates (formerly email templates)
-    Company.find_by(name:'CSP').crowdsourcing_templates.each do |template|
-      self.crowdsourcing_templates << template.dup
-    end
-
-    # default contributor questions
-    self.contributor_questions =
-      ContributorQuestion.create(question: "What was the challenge or disruption requiring action?", role: 'customer'),
-      ContributorQuestion.create(question: "What were the hurdles to solving the challenge?", role: 'customer'),
-      ContributorQuestion.create(question: "What was the journey to solving the challenge?", role: 'customer'),
-      ContributorQuestion.create(question: "What were the positive outcomes for you and the company?", role: 'customer'),
-      ContributorQuestion.create(question: "What was the customer’s challenge or disruption requiring action?", role: 'customer success'),
-      ContributorQuestion.create(question: "What were the customer’s hurdles to solving the challenge?", role: 'customer success'),
-      ContributorQuestion.create(question: "What was your joint journey to helping them solve the challenge?", role: 'customer success'),
-      ContributorQuestion.create(question: "What were the positive outcomes for the stakeholders and the company?", role: 'customer success'),
-      ContributorQuestion.create(question: "What was the customer’s challenge or disruption requiring action?", role: 'sales'),
-      ContributorQuestion.create(question: "What were the customer’s hurdles to solving the challenge?", role: 'sales'),
-      ContributorQuestion.create(question: "What was your joint journey to helping them solve the challenge?", role: 'sales'),
-      ContributorQuestion.create(question: "What were the positive outcomes for the stakeholders and the company?", role: 'sales')
-
-    # assign default questions to default templates
-    customer_template = self.crowdsourcing_templates.where(name:'Customer').take
-    customer_success_template = self.crowdsourcing_templates.where(name:'Customer Success').take
-    sales_template = self.crowdsourcing_templates.where(name:'Sales').take
-    self.contributor_questions.each do |question|
-      if question.role == 'customer'
-        customer_template.contributor_questions << question
-      elsif question.role == 'customer success'
-        customer_success_template.contributor_questions << question
-      elsif question.role == 'sales'
-        sales_template.contributor_questions << question
+    # default crowdsourcing templates (formerly email templates, futurely invitation templates)
+    Company::CSP.crowdsourcing_templates.each do |factory_template|
+      company_template = factory_template.dup
+      self.crowdsourcing_templates << company_template
+      factory_template.contributor_questions.each do |factory_question|
+        new_question = factory_question.dup
+        self.contributor_questions << new_question
+        company_template.contributor_questions << new_question
       end
+      company_template.save
     end
   end
 
@@ -553,6 +531,7 @@ class Company < ActiveRecord::Base
   # this is used for validating the company's website address
   # see lib/website_validator.rb
   def smart_add_url_protocol
+    return false if self.website.blank?
     unless self.website[/\Ahttp:\/\//] || self.website[/\Ahttps:\/\//]
       self.website = "http://#{self.website}"
     end
