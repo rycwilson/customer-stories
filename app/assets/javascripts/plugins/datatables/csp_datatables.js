@@ -58,15 +58,22 @@ function initDataTables () {
           // if no search results, prompt to search All Curators
           $('#successes-table, #prospect-contributors-table').on('draw.dt', function () {
             var $tableWrapper = $(this).closest('[id*="table_wrapper"]'),
-                curatorId = $tableWrapper.find('.curator-select').val();
-            if ($tableWrapper.find('td.dataTables_empty').length &&  // no records
-                curatorId !== '0' &&               // curator is selected
-                $tableWrapper.find('td.dataTables_empty a').length === 0) {
-              $tableWrapper.find('td.dataTables_empty').html(
-                '<span style="line-height:25px">' + $('td.dataTables_empty').text() + '</span><br>' +
-                '<span style="line-height:25px">Try searching <a href="javascript:;" class="all-curators">All Curators</a></span>'
-              );
-            }
+                curatorId = $tableWrapper.find('.curator-select').val(),
+                mesg = $(this).find('td.dataTables_empty').text(),
+                timer;
+
+            // need a timer as there are multiple draw events that occur in quick succession
+            clearTimeout(timer);
+            timer = setTimeout(function () {
+              if ($tableWrapper.find('td.dataTables_empty').length &&  // no records
+                  curatorId !== '0' &&               // curator is selected
+                  $tableWrapper.find('td.dataTables_empty a').length === 0) {
+                $tableWrapper.find('td.dataTables_empty').html(
+                  '<span style="line-height:25px">' + mesg + '</span><br>' +
+                  '<span style="line-height:25px">Try searching <a href="javascript:;" class="all-curators">All Curators</a></span>'
+                );
+              }
+            }, 0);
           });
         },
         initSelectFilters = function ($tableWrapper) {
