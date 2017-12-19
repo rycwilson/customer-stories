@@ -5,7 +5,7 @@
         'Templates restored: Customer, Customer Success, Sales' :
         'Template restored: ' + $('select.crowdsourcing-template').select2('data')[0].text;
 
-  if (<%= @refresh_template %>) {
+  if (<%= @needs_refresh %>) {
 
     // don't trigger an unsaved changes warning
     $('#crowdsourcing-template-form').data('dirty', '');

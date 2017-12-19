@@ -1,23 +1,38 @@
 
 function templateActionsListeners () {
 
-  $(document)
-    .on('click', '#template-actions-dropdown .new-template, ' +
-                 '#template-actions-dropdown .copy-template', function () {
+  var restoreTemplates = function (templates) {
+    var templateIds = templates.map(function (t) { return t.id; });
+    $.ajax({
+      // pass array of template ids to the route
+      url: '/companies/' + app.company.id + '/crowdsourcing_templates/' + JSON.stringify(templateIds),
+      method: 'put',
+      data: {
+        restore: true,
+        template_ids: templateIds,
+        needs_refresh: templateIds.indexOf($('select.crowdsourcing-template').select2('data')[0].id) !== -1
+      },
+      dataType: 'script'
+    });
+  };
 
+  $(document)
+
+    .on('click', 'button.new-template, button.copy-template', function () {
+      $('#crowdsourcing-template-submit').removeClass('show');
       if ($(this).hasClass('copy-template')) {
         copyTemplateId = $('select.crowdsourcing-template').val();
       } else {
         copyTemplateId = undefined;
       }
-
       $.ajax({
         url: '/companies/' + app.company.id + '/crowdsourcing_templates/new',
         method: 'get',
         data: { copy_template_id: copyTemplateId },
-        dataType: 'html',
-        success: function (html, status, xhr) {
-          $.when( $('#crowdsourcing-template-container').empty().append(html) )
+        dataType: 'html'
+      })
+        .done(function (html, status, xhr) {
+          $.when($('#crowdsourcing-template-container').empty().append(html))
             .then(function () {
               initEmailRequestEditor();
               $('select.contributor-questions')
@@ -28,15 +43,15 @@ function templateActionsListeners () {
               $('#crowdsourcing-template-form input[id="crowdsourcing_template_name"]')[0].focus();
               // reset select to placeholder
               $('select.crowdsourcing-template').val('').trigger('change.select2');
+              $('#crowdsourcing-template-submit p').empty().append('New template');
+              $('#crowdsourcing-template-submit').find('button').css('width', '135px').find('span').text('Create template');
+              $('#crowdsourcing-template-submit').addClass('show');
             });
-        }
-      });
+        });
     })
 
-    .on('click', '#template-actions-dropdown .delete-template', function () {
-
+    .on('click', 'button.delete-template', function () {
       var deleteTemplateId = $('select.crowdsourcing-template').select2('data')[0].id;
-
       bootbox.confirm({
         size: 'small',
         className: 'confirm-delete-template',
@@ -64,23 +79,29 @@ function templateActionsListeners () {
       });
     })
 
-    .on('click', '#template-actions-dropdown .restore-selected, ' +
-                 '#template-actions-dropdown .restore-all', function () {
+    .on('click', 'button.restore-template', function () {
+      // removed 'restore-selected' and 'restore-all'
+      var $action = $(this),
+          $select = $('select.crowdsourcing-template'),
+          templates = [],
+          confirmMesg = '<p>This action will restore the following invitation templates to factory default content</p>';
 
-      var $action = $(this), $select = $('select.crowdsourcing-template'),
-          restoreTemplateNames =
-            $action.hasClass('restore-selected') ? [$select.select2('data')[0].text] :
-            $.map( $select.find('optgroup[label="Defaults"] option'), function (option) {
-              return option.label;
-            }),
-          message = '<p>This action will restore the following Crowdsourcing Templates to factory default content</p><ul><li>' +
-                    restoreTemplateNames.join('</li><li>') + '</li></ul>';
-
+      // the if block will always execute
+      if ($action.hasClass('restore-template')) {
+        templates = [ { id: $select.val(), name: $select.find('option:selected').text() } ];
+      }
+      else {
+        templates = $.map(
+          $select.find('optgroup[label="Defaults"] option'), function (option) {
+            return { id: option.value, name: option.label };
+          }
+        );
+      }
       bootbox.confirm({
         className: 'confirm-restore',
         closeButton: false,
         title: "<i class='fa fa-question-circle-o'></i>\xa0\xa0\xa0<span>Confirm</span>",
-        message: message,
+        message: confirmMesg + '<ul><li>' + templates.map(function (t) { return t.name; }).join('</li><li>') + '</li></ul>',
         buttons: {
           confirm: {
             label: 'Restore',
@@ -92,30 +113,9 @@ function templateActionsListeners () {
           }
         },
         callback: function (confirmRestore) {
-          if (confirmRestore) { restoreTemplates($action, $select); }
+          if (confirmRestore) { restoreTemplates(templates); }
         }
       });
     });
 
-}
-
-function restoreTemplates ($action, $select) {
-
-  var restoreTemplateIds =
-        $action.hasClass('restore-selected') ? [$select.select2('data')[0].id] :
-        $.map( $select.find('optgroup[label="Defaults"] option'), function (option) {
-          return option.value;
-        });
-
-  $.ajax({
-    // pass array of template ids to the route
-    url: '/companies/' + app.company.id + '/crowdsourcing_templates/' + JSON.stringify(restoreTemplateIds),
-    method: 'put',
-    data: {
-      restore: true,
-      template_ids: restoreTemplateIds,
-      refresh_template: restoreTemplateIds.indexOf($select.select2('data')[0].id) !== -1
-    },
-    dataType: 'script'
-  });
 }

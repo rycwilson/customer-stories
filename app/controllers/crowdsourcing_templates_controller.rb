@@ -45,7 +45,7 @@ class CrowdsourcingTemplatesController < ApplicationController
         # we'll add them separately below
         template_params.select { |k, v| k != 'contributor_questions_attributes' }
       )
-    if @template.save()
+    if @template.save
       # this adds new contributor question associations - must come before next step
       @template.add_contributor_questions(template_params[:contributor_questions_attributes])
       # this handles creation of new contributor questions
@@ -54,9 +54,9 @@ class CrowdsourcingTemplatesController < ApplicationController
   end
 
   def update
-    if params[:restore].present?
+    if params[:restore]
       restore_templates(JSON.parse(params[:id]))
-      @refresh_template = params[:refresh_template]
+      @needs_refresh = params[:needs_refresh]
       @selected_or_all = JSON.parse(params[:id]).length == 1 ? 'selected' : 'all'
       respond_to { |format| format.js { render action: 'restore' } }
     else

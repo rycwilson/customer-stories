@@ -14,48 +14,23 @@
           }) %>
   </div>
 
-  <div class="col-sm-2 btn-group" id="template-actions-dropdown" style='padding-left:0'>
-    <button type="button" class="btn btn-secondary dropdown-toggle text-center"
-            style='width:100%'data-toggle="dropdown" aria-haspopup="true"aria-expanded="false">
-      <span>Actions&nbsp;&nbsp;&nbsp;<span class="caret"></span></span>
-      <i class='fa fa-spinner fa-pulse' style='display:none'></i>
-      <i class='fa fa-check' style='display:none'></i>
-    </button>
-    <ul class="invitation-template-actions dropdown-menu dropdown-actions">
-      <li class='new-template'>
-        <a href='javascript:;'>
-          <i class='action fa fa-file-o fa-fw'></i>&nbsp;&nbsp;
-          <span>New template</span>
-        </a>
-      </li>
-      <li class='copy-template disabled'>
-        <a href='javascript:;'>
-          <i class='action fa fa-copy fa-fw'></i>&nbsp;&nbsp;
-          <span>Copy selected template</span>
-        </a>
-      </li>
-      <li class='delete-template disabled'>
-        <a href='javascript:;'>
-          <i class="action fa fa-remove fa-fw"></i>&nbsp;&nbsp;
-          <span>Delete selected template</span>
-        </a>
-      </li>
-      <li class='restore-selected disabled'>
-        <a href="javascript:;">
-          <i class="action fa fa-repeat fa-fw"></i>&nbsp;&nbsp;
-          <span>Restore selected default template</span>
-        </a>
-      </li>
-      <li class='restore-all'>
-        <a href="javascript:;">
-          <i class="action fa fa-repeat fa-fw"></i>&nbsp;&nbsp;
-          <span>Restore all default templates</span>
-        </a>
-      </li>
-    </ul>
-  </div>
-  <div class="col-sm-3">
-    <!-- filler -->
+  <div class="col-sm-5">
+    <div class="btn-toolbar" role="toolbar">
+      <div class="btn-group">
+        <button type="button" class="btn btn-default new-template" data-toggle="tooltip" title="New template">
+          <i class="fa fa-fw fa-file-o"></i>
+        </button>
+        <button type="button" class="btn btn-default copy-template" data-toggle="tooltip" title="Copy template" disabled>
+          <i class="fa fa-fw fa-copy"></i>
+        </button>
+        <button type="button" class="btn btn-default restore-template" data-toggle="tooltip" title="Restore template to factory default" disabled>
+          <i class="fa fa-fw fa-repeat"></i>
+        </button>
+        <button type="button" class="btn btn-default delete-template" data-toggle="tooltip" title="Delete template" disabled>
+          <i class="fa fa-fw fa-remove"></i>
+        </button>
+      </div>
+    </div>
   </div>
 
 </div>

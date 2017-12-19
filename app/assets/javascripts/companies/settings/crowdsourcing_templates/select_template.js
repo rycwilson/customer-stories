@@ -1,98 +1,87 @@
 
 function selectTemplateListeners () {
+  var previousTemplateId, // keep track of previous selection in case a change is canceled
+      initTemplate = function () {
+        initEmailRequestEditor();
+        $('select.contributor-questions')
+          // .prepend('<option selected/>')  // empty option for placeholder
+          .select2({
+            theme: 'bootstrap',
+            placeholder: 'Add a Question'
+          });
+      },
+      toggleButtons = function (isDefault) {
+        $('button.copy-template').prop('disabled', false);
 
-  // keep track of previous selection in case a change is canceled
-  var previousTemplateId;
-
-  var initTemplate = function () {
-    initEmailRequestEditor();
-    $('select.contributor-questions')
-      // .prepend('<option selected/>')  // empty option for placeholder
-      .select2({
-        theme: 'bootstrap',
-        placeholder: 'Add a Question'
-      });
-  };
-
-  var toggleActions = function (isDefault) {
-    var $dropdown = $('#template-actions-dropdown');
-
-    // options enabled for any template
-    $dropdown.find('.copy-template').removeClass('disabled');
-
-    // restore current template only applies to defaults
-    if (isDefault) {
-      $dropdown.find('.restore-selected').removeClass('disabled');
-      $dropdown.find('.delete-template').addClass('disabled');
-    } else {
-      $dropdown.find('.restore-selected').addClass('disabled');
-      $dropdown.find('.delete-template').removeClass('disabled');
-    }
-  };
-
-  var selectTemplate = function ($select, templateId) {
-
-    // new selection (now that we're past confirmation)
-    $select.val(templateId).trigger('change.select2');
+        // restore current template only applies to defaults
+        if (isDefault) {
+          $('button.restore-template').prop('disabled', false);
+          $('button.delete-template').prop('disabled', true);
+        } else {
+          $('button.restore-template').prop('disabled', true);
+          $('button.delete-template').prop('disabled', false);
+        }
+      },
+      selectTemplate = function ($select, templateId) {
+        // new selection (now that we're past confirmation)
+        $select.val(templateId).trigger('change.select2');
 
         var isDefault = $select.find('option:selected').closest('optgroup')
-                      .attr('label') == 'Defaults' ? true : false,
-        initFormControls = function () {
-          setTimeout(function () {
-            var $form = $('#crowdsourcing-template-form'),
-                $button = $('button[type="submit"][form="crowdsourcing-template-form"]');
-            if ($form.find('input[name="_method"][value="put"]').length) {
-              $button.css('width', '114px').find('span').text('Save changes');
-            } else {
-              $button.css('width', '135px').find('span').text('Create template');
-            }
-            $('#crowdsourcing-template-submit p').empty();
-            if ($('select.crowdsourcing-template').val()) {
-              $('#crowdsourcing-template-submit p').append(
-                'Template: ' + $('select.crowdsourcing-template').find('option:selected').text()
-              );
-            } else {
-              $('#crowdsourcing-template-submit p').append('New template');
-            }
-            $('#crowdsourcing-template-submit').addClass('show');
-          }, 200);
-        };
+                            .attr('label') == 'Defaults' ? true : false,
+            initFormControls = function () {
+              setTimeout(function () {
+                var $form = $('#crowdsourcing-template-form'),
+                    $button = $('button[type="submit"][form="crowdsourcing-template-form"]'),
+                    isNewTemplate = $form.find('input[name="_method"][value="put"]').length === 0;
+                $('#crowdsourcing-template-submit p').empty();
+                if (isNewTemplate) {
+                  $button.css('width', '135px').find('span').text('Create template');
+                  $('#crowdsourcing-template-submit p').append('New template');
+                } else {
+                  $button.css('width', '114px').find('span').text('Save changes');
+                  $('#crowdsourcing-template-submit p').append(
+                    'Template:\xa0\xa0' + $('select.crowdsourcing-template').find('option:selected').text()
+                  );
+                }
+                $('#crowdsourcing-template-submit').addClass('show');
+              }, 200);
+            };
 
-    // new template
-    if ($select.val() === '0') {
-      // reset select to placeholder
-      $select.val('').trigger('change.select2');
-      $('#template-actions-dropdown .new-template').trigger('click');
-      initFormControls();
-      return;
-    }
-
-    $('#template-actions-dropdown button').prop('disabled', true);
-
-    $.ajax({
-      url: '/companies/' + app.company.id + '/crowdsourcing_templates/' + $select.val() + '/edit',
-      method: 'get',
-      data: {
-        // was this template just created? (if undefined nothing will be sent)
-        new_template: $('#crowdsourcing-template-form').data('new')
-      },
-      dataType: 'html'
-    })
-      .done(function (html, status, xhr) {
-        if ($('button[type="submit"][form="crowdsourcing-template-form"]').find('span').css('display') === 'none') {
-          $('button[type="submit"][form="crowdsourcing-template-form"]').find('span, .fa-spin').toggle();
+        // new template
+        if ($select.val() === '0') {
+          // reset select to placeholder
+          $select.val('').trigger('change.select2');
+          $('.btn-toolbar button.new-template').trigger('click');
+          initFormControls();
+          return;
         }
-        $.when($('#crowdsourcing-template-container').empty().append(html))
-          .then(function () {
-            $('#crowdsourcing-template-form').data('new', '');
-            $('#template-actions-dropdown button').prop('disabled', false);
-            toggleActions(isDefault);
-            initTemplate();
-            initFormControls();
-            previousTemplateId = templateId;
+
+        $('.btn-toolbar button').prop('disabled', true);
+
+        $.ajax({
+          url: '/companies/' + app.company.id + '/crowdsourcing_templates/' + $select.val() + '/edit',
+          method: 'get',
+          data: {
+            // was this template just created? (if undefined nothing will be sent)
+            new_template: $('#crowdsourcing-template-form').data('new')
+          },
+          dataType: 'html'
+        })
+          .done(function (html, status, xhr) {
+            if ($('button[type="submit"][form="crowdsourcing-template-form"]').find('span').css('display') === 'none') {
+              $('button[type="submit"][form="crowdsourcing-template-form"]').find('span, .fa-spin').toggle();
+            }
+            $.when($('#crowdsourcing-template-container').empty().append(html))
+              .then(function () {
+                $('#crowdsourcing-template-form').data('new', '');
+                $('#crowdsourcing-templates .btn-toolbar button').prop('disabled', false);
+                toggleButtons(isDefault);
+                initTemplate();
+                initFormControls();
+                previousTemplateId = templateId;
+              });
           });
-      });
-  };
+      };
 
   $(document)
     .on('focus', 'select.crowdsourcing-template', function () {
