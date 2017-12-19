@@ -81,6 +81,8 @@ class Company < ActiveRecord::Base
           end.sort.unshift ['All', 0]
     end
   end
+  # alias
+  has_many :category_tags, class_name: 'StoryCategory'
   has_many :products, dependent: :destroy do
     def select_options
       self.map do |product|
@@ -98,6 +100,8 @@ class Company < ActiveRecord::Base
         .unshift ['All', 0]
     end
   end
+  # alias
+  has_many :product_tags, class_name: 'Product'
   has_many :email_templates, dependent: :destroy
   has_many :contributor_questions, dependent: :destroy do
     def customer ()
@@ -465,8 +469,7 @@ class Company < ActiveRecord::Base
     # remove deleted category tags ...
     self.story_categories.each do |category|
       unless new_category_tags.include?(category.id.to_s)
-        tag_instances =
-          StoryCategoriesSuccess.where(story_category_id: category.id)
+        tag_instances = StoryCategoriesSuccess.where(story_category_id: category.id)
         # expire filter select fragment cache
         self.expire_filter_select_fragments_on_tag_destroy('category', tag_instances)
         # untag stories

@@ -1,21 +1,25 @@
 (function () {
 
-  var headerStyle = '<%= @company.header_style %>',
-      toggleSubmitButton = function () {
+  var isProfileUpdate = $('[href="#company-profile"]').parent().hasClass('active'),
+      isTagsUpdate = $('[href="#story-tags"]').parent().hasClass('active'),
+      headerStyle = '<%= @company.header_style %>',
+      toggleProfileSubmit = function () {
         $('#company-profile-form button[type="submit"]').find('span, .fa-spin').toggle();
       },
-      toggleForm = function () {
+      toggleProfileForm = function () {
         $('#company-profile-form').data('submitted', '');
       };
 
-  app.company.header_style = headerStyle;
-  toggleSubmitButton();
+  if (isProfileUpdate) {
+    app.company.header_style = headerStyle;
+    toggleProfileSubmit();
+    $('.navbar').attr('style', headerStyle);
+    $('.logo-upload .thumbnail')
+      .css('background', 'linear-gradient(45deg, <%= @company.header_color_1 %> 0%, <%= @company.header_color_2 %> 100%)');
+    flashDisplay('<%= @flash_mesg %>', '<%= @flash_status %>', toggleProfileForm);
 
-  $('.navbar').attr('style', headerStyle);
-
-  $('.logo-upload .thumbnail')
-    .css('background', 'linear-gradient(45deg, <%= @company.header_color_1 %> 0%, <%= @company.header_color_2 %> 100%)');
-
-  flashDisplay('<%= @flash_mesg %>', '<%= @flash_status %>', toggleForm);
+  } else if (isTagsUpdate) {
+    toggleFormDone($('#company-tags-form'), true)
+  }
 
 }());

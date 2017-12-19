@@ -1,9 +1,6 @@
 
 function storyTagsListeners () {
 
-  $(document).on('change', '.company-tags', function () {
-      $('#company-tags-submit, #company-tags-reset').prop('disabled', false);
-    });
 }
 
 function storyCTAsListeners () {

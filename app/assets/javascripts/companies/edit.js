@@ -19,14 +19,12 @@ function companiesEdit () {
         $('.dropdown.company-settings').removeClass('active');
       }
     });
-
 }
 
 function companiesEditListeners () {
 
   companyProfileListeners();
   crowdsourcingTemplatesListeners();
-  storyTagsListeners();
   storyCTAsListeners();
   widgetConfigListeners();
 

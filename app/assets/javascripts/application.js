@@ -86,9 +86,9 @@ function attachAppListeners () {
            $form.is('#story-content-form') ||
            $form.is('#promote-settings-form') ||
            $form.is('#crowdsourcing-template-form') ||
-           $form.is('#adwords-sync-form'))) {
+           $form.is('#adwords-sync-form') ||
+           $form.is('#company-tags-form'))) {
         if ($form.data('submitted')) {
-          // console.log('not submitted');
           e.preventDefault();
           return false;
       } else {

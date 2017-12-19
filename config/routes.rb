@@ -95,7 +95,6 @@ Rails.application.routes.draw do
         resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
         resources :crowdsourcing_templates, except: [:index]
         member { get '/promote-settings', to: 'companies#show' }
-        member { put :tags }
         member { put :widget }
         member { put :promote }
         # need :get for the sync. response (redirect_to)

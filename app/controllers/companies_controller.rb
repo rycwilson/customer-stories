@@ -46,17 +46,21 @@ class CompaniesController < ApplicationController
 
   # two response formats needed to handle the s3 upload
   def update
-    if @company.update(company_params)
-      @flash_mesg = "Company updated"
-      @flash_status = "success"
+    if params[:tags]
+      @company.update_tags(params[:category_tags] || [], params[:product_tags] || [])
     else
-      @flash_mesg = @company.errors.full_messages.join(', ')
-      @flash_status = "danger"
+      if @company.update(company_params)
+        @flash_mesg = "Company Profile updated"
+        @flash_status = "success"
+      else
+        @flash_mesg = @company.errors.full_messages.join(', ')
+        @flash_status = "danger"
+      end
     end
     respond_to do |format|
       format.html do
         redirect_to edit_company_path(@company),
-          flash: { success: "Company updated" }
+          flash: { success: "Company Profile updated" }
       end
       format.js {}
     end
@@ -98,11 +102,6 @@ class CompaniesController < ApplicationController
     end
   end
 
-  def tags
-    @company.update_tags( params[:category_tags] || [], params[:product_tags] || [] )
-    respond_to { |format| format.js }
-  end
-
   def widget
     @company.widget.update( widget_params )
     respond_to { |format| format.js }
@@ -112,10 +111,9 @@ class CompaniesController < ApplicationController
 
   def company_params
     params.require(:company)
-          .permit(:name, :subdomain, :logo_url, :header_color_1,
-                  :header_color_2, :header_text_color, :website, :gtm_id,
-                  :adwords_short_headline, :adwords_logo_url, :default_adwords_image_url,
-                  { adwords_images_attributes: [:id, :image_url, :company_default, :_destroy] } )
+      .permit(:name, :subdomain, :logo_url, :website, :gtm_id, :header_color_1, :header_color_2, :header_text_color,
+              :adwords_short_headline, :adwords_logo_url, :default_adwords_image_url,
+              { adwords_images_attributes: [:id, :image_url, :company_default, :_destroy] } )
   end
 
   def widget_params

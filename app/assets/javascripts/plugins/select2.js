@@ -8,7 +8,6 @@ function initSelect2 () {
 
   // select2ScrollBoundaries();
 
-
   // TODO: What does this do?
   //  minimumResultsForSearch: -1
   /**
@@ -98,7 +97,8 @@ function initSelect2 () {
   $('.company-tags').select2({
     theme: 'bootstrap',
     tags: true,
-    placeholder: 'Add tags'
+    placeholder: 'Add tags',
+    selectOnClose: true
   });
 
   $('select.crowdsourcing-template').select2({
@@ -135,18 +135,19 @@ function initSelect2 () {
 
 }
 
+// this works, but only hides options on removing a tag
+// for hiding options whether adding or removing a tag, css is used to hide the results
+// ref: https://github.com/select2/select2/issues/3320
 function select2Listeners () {
-  // prevents the options list from showing when a tag is removed
-  $('.select2').prev()
-               .on('select2:unselecting', function (e) {
-                 $(this).data('unselecting', true);
-               })
-               .on('select2:open', function (e) { // note the open event is important
-                 if ($(this).data('unselecting')) {
-                   $(this).removeData('unselecting'); // you need to unset this before close
-                   $(this).select2('close');
-                 }
-               });
+    // .on('select2:unselecting', function (e) {
+    //   $(this).data('unselecting', true);
+    // })
+    // .on('select2:open', function (e) { // note the open event is important
+    //   if ($(this).data('unselecting')) {
+    //     $(this).removeData('unselecting'); // you need to unset this before close
+    //     $(this).select2('close');
+    //   }
+    // });
 }
 
 // ref: http://stackoverflow.com/questions/8737709

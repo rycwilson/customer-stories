@@ -1,32 +1,29 @@
 
-<%= form_tag tags_company_path(company), method: 'put', remote: true,
-      id: 'company-tags-form' do %>
+<%= form_tag(company_path(company), id: 'company-tags-form', method: 'put', remote: true) do %>
+
+  <%= hidden_field_tag(:tags, true) %>
 
   <div class="row">
-
     <div class="col-sm-6">
-
       <div class="form-group">
 
-        <%= label_tag 'category_tags[]', 'Category tags', class: 'control-label' %>
-        <%= select_tag 'category_tags[]',
+        <%= label_tag('category_tags[]', 'Category Tags', class: 'control-label') %>
+        <%= select_tag('category_tags[]',
               options_for_select(
                 company.story_categories.select_options,
                 company.story_categories.pluck(:id)   # all pre-selected
               ),
               { multiple: 'true', class: 'company-tags form-control',
                 # placeholder: doesn't work from here, set in js
-                style: 'width:100%' } %>
+                style: 'width:100%' }
+            ) %>
 
       </div>
-
     </div>
-
     <div class="col-sm-6">
-
       <div class="form-group">
 
-        <%= label_tag 'product_tags[]', 'Product tags', class: 'control-label' %>
+        <%= label_tag 'product_tags[]', 'Product Tags', class: 'control-label' %>
         <%= select_tag 'product_tags[]',
               options_for_select(
                 company.products.select_options,
@@ -36,7 +33,6 @@
                 style: 'width:100%' } %>
 
       </div>
-
     </div>
   </div>
 
@@ -49,18 +45,11 @@
   <div class="row">
     <div class="col-sm-12 text-right">
 
-      <div class="form-group">
-
-        <span class='ajax-confirm' style='display:none;color:#5cb85c'>
-          <i class='fa fa-check'></i>
-        </span>&nbsp;
-        <input id='company-tags-submit' type='submit' class='btn btn-success'
-               value="Save" disabled>&nbsp;
-        <button id='company-tags-reset' type="reset" class="btn btn-default" disabled>
-          Cancel
-        </button>
-
-      </div>
+      <button type="submit" class="btn btn-success" form="company-tags-form" style="width:114px">
+        <span>Save changes</span>
+        <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
+        <i class='fa fa-check' style='display:none'></i>
+      </button>
 
     </div>
   </div>
