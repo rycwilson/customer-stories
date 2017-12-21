@@ -102,10 +102,7 @@
                     <label for="contribution-publish-contributor-{{= contributor.id }}">
                       <input type="hidden" name="contribution[publish_contributor]"
                         checked="{{= !contribution.publish_contributor }" value="false">
-                      <input type="checkbox"
-                        id="contribution-publish-contributor-{{= contributor.id }}"
-                        name="contribution[publish_contributor]"
-                        checked="{{= contribution.publish_contributor }}" value="true">
+                      <input type="checkbox" id="contribution-publish-contributor-{{= contributor.id }}" name="contribution[publish_contributor]" value="true" "{{= contribution.publish_contributor ? 'checked' : '' }}">
                       <span>&nbsp;&nbsp;Publish profile with this Story</span>
                     </label>
                   </div>
