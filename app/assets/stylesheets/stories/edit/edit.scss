@@ -10,22 +10,50 @@
   @import 'results';
 
   #story-edit-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin: 0 0 25px 0;
     background: #f5f5f5; // #fff7e5; // #f9edbe; // #f5f5f5;
     padding: 15px 5px;
     // border: 1px solid #e5dece;  // #ddd;
     border: 1px solid #ddd;
     border-radius: 4px;
-    > div > div:first-of-type {
-      margin-bottom: 2px;
-    }
     label {
       margin: 0;
     }
-    span, a:not(.preview) {
-      font-family: "Lato";
-      font-size: 16px;
-      color: #666;
+    > div[class*="col-sm"]:first-of-type {
+      @media only screen and (min-width: 768px) {
+        width: 11%
+      }
+      align-self: flex-start; // top-aligned
+      > div {
+        line-height: 23px;
+      }
+      > div:first-of-type {
+        margin-bottom: 3px;
+      }
+    }
+    > div[class*="col-sm"]:nth-of-type(2) {
+      @media only screen and (min-width: 768px) {
+        width: 69%
+      }
+      > div {
+        line-height: 22px;
+      }
+      > div:first-of-type {
+        margin-bottom: 3px;
+      }
+      span, a {
+        font-family: "Lato";
+        font-size: 16px;
+        color: #666;
+      }
+    }
+    > div[class*="col-sm"]:nth-of-type(3) {
+      @media only screen and (min-width: 768px) {
+        width: 20%
+      }
     }
   }
 

@@ -11,16 +11,23 @@
   <div class="col-md-9 col-sm-8 layout-main">
     <div class="tab-content stacked-content">
 
-      <div id='story-edit-header' class='row' style="display:flex; align-items: center">
-        <div class="col-sm-9">
+      <div id='story-edit-header' class='row'>
+        <div class="col-sm-2">
 
           <div>
-            <label>Customer</label>&nbsp;&nbsp;&nbsp;
+            <span><label>Customer</label></span>
+          </div>
+          <div>
+            <span><label>Story Title</label></span>
+          </div>
+
+        </div>
+        <div class="col-sm-7">
+
+          <div>
             <span><%= story.customer.name %></span>
           </div>
           <div>
-            <!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
-            <label>Story Title</label>&nbsp;&nbsp;&nbsp;
           <!-- no turbolinks, so linkedin widgets load properly -->
           <!-- ref: http://stackoverflow.com/questions/17600093/rails-javascript-not-loading-after-clicking-through-link-to-helper -->
             <a href="<%= story.csp_story_path %>" class='story-title' data-turbolinks='false'>
