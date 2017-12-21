@@ -28,7 +28,7 @@
         app.stories[storyIndex].published = story.published;
         app.stories[storyIndex].title = story.title;
         $('a.story-title').text(story.title);
-        $('#story-edit-header label:contains("Customer")').next().text(story.success.customer.name)
+        $('#story-edit-header span.customer').text(story.success.customer.name)
       };
 
   updateStory();
