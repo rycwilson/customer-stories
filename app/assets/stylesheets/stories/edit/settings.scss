@@ -2,11 +2,11 @@
 #story-settings {
 
   .form-group.tags {
-    margin-bottom: 15px;
+    // margin-bottom: 15px;
   }
 
   #publish-control {
-    margin-bottom: 60px;
+    margin-bottom: 28px;
 
     .form-group {
       position: relative;
@@ -14,11 +14,11 @@
         margin-bottom: 6px;
       }
       .bootstrap-switch {
-        position: absolute;
-        left: 50%;
-        right: 50%;
-        transform: translate(-50%, -50%);
-        bottom: -45px;
+          // position: absolute;
+          // left: 50%;
+          // right: 50%;
+          // transform: translate(-50%, -50%);
+          // bottom: -45px;
       }
     }
 
@@ -30,7 +30,7 @@
     #approval-pdf {
       position: absolute;
       left: 15px;
-      bottom: -50px;
+      bottom: -23px;
     }
   }
 

@@ -61,6 +61,7 @@ class Customer < ActiveRecord::Base
 
   def expire_csp_story_path_cache
     self.successes.each do |success|
+      next if success.story.nil?
       success.story.expire_csp_story_path_cache
     end
   end

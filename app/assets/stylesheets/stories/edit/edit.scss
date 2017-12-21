@@ -22,7 +22,7 @@
     label {
       margin: 0;
     }
-    span, a {
+    span, a:not(.preview) {
       font-family: "Lato";
       font-size: 18px;
       color: #666;

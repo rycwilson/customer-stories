@@ -3,7 +3,15 @@
 
   var story = <%= raw @story.to_json({
                     only: [:id, :title, :logo_published, :preview_published, :published],
-                    methods: [:previous_changes, :csp_story_path]
+                    methods: [:previous_changes, :csp_story_path],
+                    include: {
+                      success: {
+                        only: [],
+                        include: {
+                          customer: { only: [:name] }
+                        }
+                      }
+                    }
                   }) %>,
       createAds = function () {
         return (story.published && story.previous_changes.published) ? true : false;
@@ -20,9 +28,11 @@
         app.stories[storyIndex].published = story.published;
         app.stories[storyIndex].title = story.title;
         $('a.story-title').text(story.title);
+        $('#story-edit-header label:contains("Customer")').next().text(story.success.customer.name)
       };
 
   updateStory();
+
 
   // create the ad
   if (createAds()) {
