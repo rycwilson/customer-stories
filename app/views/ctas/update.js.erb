@@ -1,18 +1,12 @@
 (function () {
 
   var id = '<%= @cta.id %>',
-      description = '<%= @cta.description %>';
+      description = '<%= @cta.description %>',
+      hideCta = function () { $('#edit-cta-' + id).collapse('hide'); }
 
   // update description field
-  $('li[data-cta-id="' + id + '"] .cta-description span')
-    .text(description);
+  $('li[data-cta-id="' + id + '"] .cta-description span').text(description);
 
-  // ajax confirm
-  $('form[action*="' + id + '"] .ajax-confirm').fadeToggle('fast', 'swing', function () {
-    var _$this = $(this)
-    setTimeout(function () {
-      _$this.fadeToggle('fast')
-    }, 3000);
-  })
+  toggleFormDone($('#cta-' + id + '-form'), true, hideCta)
 
 }());

@@ -87,14 +87,13 @@ function attachAppListeners () {
            $form.is('#promote-settings-form') ||
            $form.is('#crowdsourcing-template-form') ||
            $form.is('#adwords-sync-form') ||
-           $form.is('#company-tags-form'))) {
+           $form.is('#company-tags-form') ||
+           $form.is('#new-cta-form') ||
+           $form.is('[id*="cta-"]'))) {
         if ($form.data('submitted')) {
           e.preventDefault();
           return false;
-      } else {
-          // console.log('submit')
-          // console.log($form)
-          // console.log($button)
+        } else {
           toggleFormWorking($form);
         }
       }

@@ -227,10 +227,10 @@ class Company < ActiveRecord::Base
   # alias and methods
   has_many :ctas, class_name: 'CallToAction', foreign_key: 'company_id' do
     def primary
-      where(company_primary: true).take
+      where(primary: true).take
     end
     def secondary
-      where(company_primary: false)
+      where(primary: false)
     end
     def select_options
       grouped_options =

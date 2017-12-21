@@ -1,4 +1,6 @@
 
+<%= content_for(:underscore_templates) { render('ctas/cta_template') } %>
+
 <div class="row">
 
   <div class="col-sm-6">
@@ -15,16 +17,15 @@
       <%= label_tag nil, 'Primary CTA', class: 'control-label' %>
 
       <ul id='primary-cta' class='list-group'>
-        <li class="list-group-item" data-cta-id='<%= company.ctas.primary.try(:id) %>'>
+        <li class="list-group-item" data-primary="true" data-cta-id='<%= company.ctas.primary.try(:id) %>'>
 
         <% if company.ctas.primary %>
 
-          <%= render 'ctas/cta',
-            { company: company, cta: company.ctas.primary, is_primary: true } %>
+          <%= render 'ctas/cta', { company: company, cta: company.ctas.primary, is_primary: true } %>
 
         <% else %>
 
-          <span>Add a primary CTA</span>
+          <em>Add a primary CTA</em>
 
         <% end %>
 

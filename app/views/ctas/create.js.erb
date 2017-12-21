@@ -2,16 +2,16 @@
 (function () {
 
   var cta = <%= raw @cta.to_json({ methods: [:type] }) %>,
-      isPrimary = <%= @is_primary %>,
-      template = _.template( $('#cta-template').html() );
+      prevPrimary = <%= @prev_primary.present? %> && <%= raw @prev_primary.to_json({ methods: [:type] }) %>,
+      template = _.template($('#cta-template').html());
 
-  if (isPrimary) {
-    $('#primary-cta')
-      .empty().append( template({ cta: cta, isPrimary: true }) );
-    $('input[type="checkbox"][id="is_primary"]').prop('disabled', true);
-
+  if (cta.primary) {
+    if (prevPrimary) {
+      $('#secondary-ctas').prepend(template({ cta: prevPrimary, isPrimary: false }))
+    }
+    $('#primary-cta').empty().append(template({ cta: cta, isPrimary: true }) );
   } else {
-    $('#secondary-ctas').prepend( template({ cta: cta, isPrimary: false }) );
+    $('#secondary-ctas').prepend(template({ cta: cta, isPrimary: false }));
   }
 
   // add the form html via $.text so it's properly html-escaped
@@ -21,8 +21,10 @@
   }
 
   // reset everything except the radio buttons (don't want toggle action)
-  $('#new-cta-form').find('input, textarea').not('[name="new_cta[type]"]')
+  $('#new-cta-form').find('input, textarea').not('[name="cta[type]"]')
       .each(function () { this.value = this.defaultValue; })
-  $('#new-cta-submit, #new-cta-reset').prop('disabled', true);
+
+  toggleFormDone($('#new-cta-form'), true);
+  $('[id="cta_is_primary"]').prop('checked', false);
 
 }());

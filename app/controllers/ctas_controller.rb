@@ -2,30 +2,33 @@ class CtasController < ApplicationController
 
   # return html for cta forms
   def show
-    @form = CTAForm.find( params[:id] )
+    @form = CTAForm.find(params[:id])
     render layout: false
   end
 
   def create
-    @is_primary = params['new_cta']['is_primary']
-    @company = Company.find( params[:company_id] )
-    case params['new_cta']['type']
-    when 'Link'
+    @company = Company.find(params[:company_id])
+    if params[:cta][:is_primary]
+      @prev_primary = @company.ctas.primary
+      @prev_primary.try(:update, { primary: false })
+    end
+    case params[:cta][:type]
+    when 'link'
       @cta = CTALink.create(
-                       description: params['new_cta']['link_description'],
-                       display_text: params['new_cta']['link_display_text'],
-                       link_url: params['new_cta']['link_url'],
-                       company_id: @company.id,
-                       company_primary: @is_primary
-                     )
-    when 'Web form'
+        description: params[:cta][:link_description],
+        display_text: params[:cta][:link_display_text],
+        link_url: params[:cta][:link_url],
+        company_id: @company.id,
+        primary: params[:cta][:is_primary]
+      )
+    when 'form'
       @cta = CTAForm.create(
-                       description: params['new_cta']['form_description'],
-                       display_text: params['new_cta']['form_display_text'],
-                       form_html: params['new_cta']['form_html'],
-                       company_id: @company.id,
-                       company_primary: @is_primary
-                     )
+        description: params[:cta][:form_description],
+        display_text: params[:cta][:form_display_text],
+        form_html: params[:cta][:form_html],
+        company_id: @company.id,
+        primary: params[:cta][:is_primary]
+      )
     else
       # error
     end
@@ -33,8 +36,8 @@ class CtasController < ApplicationController
   end
 
   def update
+    @cta = CallToAction.find(params[:id])
     @is_primary = params[:is_primary]
-    @cta = CallToAction.find( params[:id] )
     if params['cta']['type'] == 'CTALink'
       @cta.update(
         description: params['cta']['description'],
@@ -58,11 +61,11 @@ class CtasController < ApplicationController
   end
 
   def destroy
-    cta = CallToAction.find( params[:id] )
+    cta = CallToAction.find(params[:id])
     cta.destroy
     respond_to do |format|
       format.json do
-        render json: { id: cta.id, isPrimary: cta.company_primary? }
+        render json: { id: cta.id, isPrimary: cta.primary? }
       end
     end
   end

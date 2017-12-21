@@ -1,53 +1,42 @@
 
-<%= form_tag company_ctas_path(company), remote: true, id: 'new-cta-form' do %>
+<%= form_tag(company_ctas_path(company), id: 'new-cta-form', remote: true) do %>
+
+  <%= hidden_field_tag('cta[is_primary]', false) %>
 
   <div class="form-group">
 
-    <!-- radio button group -->
-    <div class='row btn-group' data-toggle="buttons">
-      <div class="col-sm-12">
-        <label>Add a CTA</label>
+    <div class='btn-group' data-toggle="buttons">
+      <label>Add a CTA</label>
+      <span class='pull-right'>
         <label id='link-radio' class="active radio-inline">
-          <%= radio_button_tag 'new_cta[type]', 'Link', true %>
-          Link
+          <%= radio_button_tag('cta[type]', 'link', true) %>
+          Web link
         </label>
         <label id='html-radio' class="radio-inline">
-          <%= radio_button_tag 'new_cta[type]', 'Web form', false %>
+          <%= radio_button_tag('cta[type]', 'form', false) %>
           Web form
         </label>
-      </div>
+      </span>
     </div>
 
     <div class="row">
-      <div class="col-sm-8 col-sm-offset-2">
-        <label class="checkbox-inline">
-          <%= hidden_field_tag 'new_cta[is_primary]', false %>
-          <%= check_box_tag 'new_cta[is_primary]', true, false,
-                            disabled: !!company.ctas.primary %>
-          Make primary
-        </label>
-      </div>
-    </div>
-
-    <!-- link / web form entry -->
-    <div class="row">
-      <div id='new-cta-inputs' class="col-sm-12">
-        <%= text_field_tag 'new_cta[link_description]', nil,
+      <div class="col-sm-12">
+        <%= text_field_tag 'cta[link_description]', nil,
               class: 'form-control link-input', autocomplete: 'off',
               placeholder: 'description' %>
-        <%= text_field_tag 'new_cta[link_display_text]', nil,
+        <%= text_field_tag 'cta[link_display_text]', nil,
               class: 'form-control link-input', autocomplete: 'off',
               placeholder: 'display text' %>
-        <%= text_field_tag 'new_cta[link_url]', nil,
+        <%= text_field_tag 'cta[link_url]', nil,
               class: 'form-control link-input', autocomplete: 'off',
               placeholder: 'website address' %>
-        <%= text_field_tag 'new_cta[form_description]', nil,
+        <%= text_field_tag 'cta[form_description]', nil,
               class: 'form-control html-input', autocomplete: 'off',
               placeholder: 'description' %>
-        <%= text_field_tag 'new_cta[form_display_text]', nil,
+        <%= text_field_tag 'cta[form_display_text]', nil,
               class: 'form-control html-input', autocomplete: 'off',
               placeholder: 'display text' %>
-        <%= text_area_tag 'new_cta[form_html]', nil,
+        <%= text_area_tag 'cta[form_html]', nil,
               class: 'form-control html-input', rows: 3,
               placeholder: 'html, e.g. <script> and <form> tags' %>
       </div>
@@ -55,17 +44,26 @@
 
   </div>
 
-  <div class="form-group text-right">
+  <div class="row text-right">
+    <div class="col-sm-12">
+      <div class="checkbox">
+        <label>
+          <%= check_box_tag('cta[is_primary]', true, false) %>
+          Make primary
+        </label>
+      </div>
+    </div>
+  </div>
 
-    <span class='ajax-confirm' style='display:none;color:#5cb85c'>
-      <i class='fa fa-check'></i>
-    </span>&nbsp;
-    <input id='new-cta-submit' type='submit' class='btn btn-success'
-           value="Add" disabled>&nbsp;
-    <button id='new-cta-reset' type="reset" class="btn btn-default" disabled>
-      Cancel
-    </button>
-
+  <div class="row text-right">
+    <div class="col-sm-12">
+      <!-- <button type="reset" class="btn btn-default">Clear</button> -->
+      <button type="submit" class="btn btn-success pull-right" form="new-cta-form" style="width:60px">
+        <span>Add</span>
+        <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
+        <i class='fa fa-check' style='display:none'></i>
+      </button>
+    </div>
   </div>
 
 <% end %>

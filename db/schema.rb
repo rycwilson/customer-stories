@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171212040300) do
+ActiveRecord::Schema.define(version: 20171220223040) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -101,9 +101,9 @@ ActiveRecord::Schema.define(version: 20171212040300) do
     t.string   "description"
     t.text     "form_html"
     t.string   "display_text"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
-    t.boolean  "company_primary", default: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+    t.boolean  "primary",      default: false
   end
 
   add_index "call_to_actions", ["company_id"], name: "index_call_to_actions_on_company_id", using: :btree

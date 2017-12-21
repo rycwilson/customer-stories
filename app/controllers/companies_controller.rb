@@ -48,6 +48,8 @@ class CompaniesController < ApplicationController
   def update
     if params[:tags]
       @company.update_tags(params[:category_tags] || [], params[:product_tags] || [])
+    elsif params[:ctas]
+
     else
       if @company.update(company_params)
         @flash_mesg = "Company Profile updated"

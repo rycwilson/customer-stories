@@ -1,23 +1,26 @@
 
-<div class='cta-description'>
-  <i class="fa fa-<%= cta.type == 'CTALink' ? 'link' : 'wpforms' %>"></i>
-  <span><%= cta.description || 'Add a primary CTA' %></span>
-  <i class='glyphicon glyphicon-remove bip-clickable'></i>
-  <i class='glyphicon glyphicon-pencil bip-clickable'
-     data-toggle='collapse' data-target="#edit-cta-<%= cta.id %>">
-  </i>
+<div class="cta-description">
+  <i class="fa fa-fw fa-<%= cta.type == 'CTALink' ? 'link' : 'wpforms' %>"></i>
+  <span><%= cta.description %></span>
+  <a href="javascript:;" class="edit" data-toggle="collapse" data-target="#edit-cta-<%= cta.id %>">
+    <i class="glyphicon glyphicon-pencil"></i>
+  </a>
+  <a href="javascript:;" class="delete">
+    <i class="glyphicon glyphicon-remove"></i>
+  </a>
 </div>
 
 <div id="edit-cta-<%= cta.id %>" class='collapse edit-cta'>
-  <hr>
 
-  <%= form_tag cta_path(cta), method: :put, remote: true do %>
+  <hr style="margin-bottom: 15px;border-top: 1px solid #ddd">
 
-    <%= hidden_field_tag 'cta[type]', cta.type %>
+  <%= form_tag(cta_path(cta), id: "cta-#{cta.id}-form", method: "put", remote: true) do %>
+
+    <%= hidden_field_tag('cta[type]', cta.type) %>
 
     <% if is_primary %>
 
-      <%= hidden_field_tag :is_primary, true %>
+      <%= hidden_field_tag(:is_primary, true) %>
 
       <div id='primary-cta-colors' class="form-group row">
         <%= label_tag 'primary_cta[background_color]', 'Button',
@@ -40,13 +43,13 @@
 
   <!-- note: the inline styling is necessary to prevent jerky collapse behavior -->
 
-    <div class="form-group" style='margin-bottom: 10px'>
+    <div class="form-group" style='margin-bottom: 15px'>
       <%= label_tag 'cta[description]', 'Description' %>
       <%= text_field_tag 'cta[description]', cta.description,
             placeholder: 'description', class: 'form-control' %>
     </div>
 
-    <div class="form-group" style='margin-bottom: 10px'>
+    <div class="form-group" style='margin-bottom: 15px'>
       <%= label_tag 'cta[display_text]', 'Display text' %>
       <%= text_field_tag 'cta[display_text]', cta.display_text,
             placeholder: 'display text', class: 'form-control' %>
@@ -54,7 +57,7 @@
 
     <% if cta.type == 'CTALink' %>
 
-      <div class="form-group" style='margin-bottom: 10px'>
+      <div class="form-group" style='margin-bottom: 15px'>
         <%= label_tag 'cta[link_url]', 'Website address' %>
         <%= text_field_tag 'cta[link_url]', cta.link_url,
               placeholder: 'website address', class: 'form-control' %>
@@ -62,7 +65,7 @@
 
     <% elsif cta.type == 'CTAForm' %>
 
-      <div class="form-group" style='margin-bottom: 10px'>
+      <div class="form-group" style='margin-bottom: 15px'>
         <%= label_tag 'cta[form_html]', 'HTML' %>
         <%= text_area_tag 'cta[form_html]', cta.form_html, rows: 3,
               placeholder: 'html, e.g. <script> and <form> tags',
@@ -72,13 +75,11 @@
     <% end %>
 
     <div class="form-group text-right">
-      <span class='ajax-confirm' style='display:none;color:#5cb85c'>
-        <i class='fa fa-check'></i>
-      </span>&nbsp;
-      <input type='submit' id='cta-<%= cta.id %>-submit'
-             class='btn btn-sm btn-success' value="Save">&nbsp;
-      <button type="reset" id='cta-<%= cta.id %>-reset'
-              class="btn btn-sm btn-default">Cancel</button>
+      <button type="submit" class="btn btn-sm btn-success" form="cta-<%= cta.id %>-form" style="width: 98px">
+        <span>Save changes</span>
+        <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
+        <i class='fa fa-check' style='display:none'></i>
+      </button>
     </div>
 
   <% end %>

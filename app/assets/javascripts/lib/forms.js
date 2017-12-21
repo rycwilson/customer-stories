@@ -6,7 +6,7 @@ function toggleFormWorking ($form) {
   $button.find('.fa-spin, span').toggle();
 }
 
-function toggleFormDone ($form, useCheckIcon) {
+function toggleFormDone ($form, useCheckIcon, cb) {
   var $button = ($form.find('button[type="submit"]').length && $form.find('button[type="submit"]')) ||
                 $('button[form="' + $form.attr('id') + '"]');
   if (useCheckIcon) {
@@ -14,9 +14,11 @@ function toggleFormDone ($form, useCheckIcon) {
     setTimeout(function () {
       $form.data('submitted', '');
       $button.find('.fa-check, span').toggle();
+      if (cb) cb();
     }, 2000);
   } else {
     $form.data('submitted', '');
     $button.find('.fa-spin, span').toggle();
+    if (cb) cb();
   }
 }
