@@ -7,10 +7,9 @@
 
   #publish-control {
     margin-bottom: 28px;
-
     .form-group {
       position: relative;
-      margin: 0 15px;
+      margin: 0;
       label {
         margin-bottom: 6px;
       }
@@ -22,12 +21,9 @@
           // bottom: -45px;
       }
     }
-
     .form-group:nth-of-type(2) {
-      margin: 0 20px;
+      margin: 0 40px;
     }
-
-
     #approval-pdf {
       position: absolute;
       left: 15px;
