@@ -29,7 +29,7 @@
 
 <% else %>
 
-  <div class="mainnav">
+  <header id="search-bar">
     <div class="container">
       <div class="row">
 
@@ -47,11 +47,12 @@
 
       </div>
     </div>
-  </div>
+  </header>
 
 <% end %>
 
 <div class="container grid-container">
+
   <ul class='grid list-unstyled text-center' id="stories-gallery">
 
     <% cache(@stories_index_cache_key, skip_digest: true) do %>
