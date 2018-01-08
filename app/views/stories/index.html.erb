@@ -80,46 +80,61 @@
 
   </ul>
 
-  <div class="row visible-sm-block">
-    <div class="col-xs-12">
-      <form class="form-inline">
+  <% if include_filters?(@company) %>
 
-        <div class="form-group" style="width: 50%">
-          <%= label_tag(:category_select_sm, "Category", class: "control-label") %>&nbsp;&nbsp;<!--
-       --><%= select_tag(:category_select_sm,
-                options_for_select(
-                  @company.story_categories.public_select_options,
-                  @pre_selected_filter[:tag] == 'category' ? [@pre_selected_filter[:id]] : []
-                ),
-                { class: 'stories-filter category-select form-control input-sm', style: "width: 280px" }
-              ) %>
-        </div><!--
+    <div class="visible-sm-block">
 
-     --><div class="form-group" style="width: 50%">
-          <%= label_tag(:product_select_sm, "Product") %>&nbsp;&nbsp;<!--
-       --><%= select_tag(:product_select_sm,
-                options_for_select(
-                  @company.products.public_select_options,
-                  @pre_selected_filter[:tag] == 'product' ? [@pre_selected_filter[:id]] : []
-                ),
-                { class: 'stories-filter product-select form-control input-sm', style: "width: 280px" }
-              ) %>
+      <div class="row">
+        <div class="col-xs-12">
+          <form class="form-inline">
+
+            <% if include_category_filter?(@company) %>
+
+              <div class="form-group" style="width: 50%">
+                <%= label_tag(:category_select, "Category", class: "control-label") %>&nbsp;&nbsp;<!--
+             --><%= select_tag(:category_select,
+                      options_for_select(
+                        @company.story_categories.public_select_options,
+                        @pre_selected_filter[:tag] == 'category' ? [@pre_selected_filter[:id]] : []
+                      ),
+                      { class: 'stories-filter category-select form-control input-sm', style: "width: 280px" }
+                    ) %>
+              </div><!--
+
+         --><% end %><!--
+
+         --><% if include_product_filter?(@company) %><!--
+
+           --><div class="form-group" style="width: 50%">
+                <%= label_tag(:product_select, "Product") %>&nbsp;&nbsp;<!--
+             --><%= select_tag(:product_select,
+                      options_for_select(
+                        @company.products.public_select_options,
+                        @pre_selected_filter[:tag] == 'product' ? [@pre_selected_filter[:id]] : []
+                      ),
+                      { class: 'stories-filter product-select form-control input-sm', style: "width: 280px" }
+                    ) %>
+              </div>
+
+            <% end %>
+
+          </form>
         </div>
+      </div>
 
-      </form>
+      <ul class="stories-gallery grid list-unstyled text-center">
+        <% cache(@stories_index_cache_key, skip_digest: true) do %>
+          <% @stories.each do |story| %>
+
+            <%= render 'stories/shared/card', { company: @company, story: story } %>
+
+          <% end %>
+        <% end %>
+      </ul>
+
     </div>
 
-    <ul class="stories-gallery grid list-unstyled text-center">
-      <% cache(@stories_index_cache_key, skip_digest: true) do %>
-        <% @stories.each do |story| %>
-
-          <%= render 'stories/shared/card', { company: @company, story: story } %>
-
-        <% end %>
-      <% end %>
-    </ul>
-
-  </div>
+  <% end %>
 
   <div class="row visible-md-block visible-lg-block">
 
