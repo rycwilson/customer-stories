@@ -1,13 +1,6 @@
 
 .stories.index {
 
-  .mainnav, .company-nav {
-    margin-bottom: 18px;
-  }
-
-  // #stories-filters-xs .form-group {
-  //   margin: 1.5% auto;
-  // }
 
   #stories-filters-xs .stories-filter + span {
     width: 200px;
@@ -28,6 +21,8 @@
     #stories-filters.curator .stories-filter + span {
       width: 150px;
     }
+
+
   }
 
   @media only screen and (min-width: 992px) {
@@ -60,156 +55,312 @@
   margin: 0 15px
 }
 
-.grid {
-  margin: 0 auto;
+.grid-container {
 
-  .grid-item {
-    display: inline-block;
-    margin: 8px 28px 18px 28px;  // 10px difference in top/bottom due to padding
-    vertical-align: top;
-    padding-top: 10px;
-  }
+  .grid {
+    margin: 0 auto;
 
-  a.thumbnail.public.logo-published {
-    pointer-events: none;
-    .thumbnail-view {   // adjust dimensions for missing caption
-      height: 138px;
-      line-height: 134px;
-      img {
-        padding: 24px 12px;
+    .grid-item {
+      display: inline-block;
+      margin: 8px 28px 18px 28px;  // 10px difference in top/bottom due to padding
+      vertical-align: top;
+      // padding-top: 10px;
+    }
+
+    a.thumbnail.public.logo-published {
+      pointer-events: none;
+    }
+
+    a.thumbnail.pending-curation {
+      .caption {
+        background-color: #f2f2f2;
       }
     }
-  }
 
-  a.thumbnail.pending-curation {
-    .caption {
-      background-color: #f2f2f2;
-    }
-  }
-
-  a.thumbnail {
-    position: relative;  // this is for positioning the caption at the bottom
-    width: 210px;        // matches masonry column width
-    height: 140px;       // 3/2 ratio
-    text-align: center;  // centers image horizontally
-    padding: 0;
-    margin-bottom: 0;
-    border: 1px solid transparent;
-    border-radius: 0;
-    // following settings lifted from chrome new tab page
-    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
-    transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    .thumbnail-view {
-      position: relative;   // for thumbnail-view-hover
-      height: 114px;
-      line-height: 110px;
-      width: 100%;
-      cursor: pointer;
-      .thumbnail-view-hover {
-        position: absolute;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        // z-index: 10;
-        height: 100%;
+    a.thumbnail {
+      position: relative;  // this is for positioning the caption at the bottom
+      width: 210px;        // matches masonry column width
+      height: 140px;       // 3/2 ratio
+      text-align: center;  // centers image horizontally
+      padding: 0;
+      margin-bottom: 0;
+      border: 1px solid transparent;
+      border-radius: 0;
+      // following settings lifted from chrome new tab page
+      box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+      transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      .thumbnail-view {
+        position: relative;   // for thumbnail-view-hover
+        height: 114px;
+        line-height: 110px;
         width: 100%;
-        padding: 10px;
-        background: transparent;
-        border-radius: 3px 3px 0 0;
-        -webkit-transform: translateY(-100%);
-        -moz-transform: translateY(-100%);
-        -ms-transform: translateY(-100%);
-        -o-transform: translateY(-100%);
-        transition: all 0.2s ease-in-out;
-        p {
-          color: #444;
-          font-size: 13px;
-          line-height: 19px;
-          font-weight: 600;
-          letter-spacing: normal;
-          margin-bottom: 0;
+        cursor: pointer;
+        .thumbnail-view-hover {
+          position: absolute;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          // z-index: 10;
+          height: 100%;
+          width: 100%;
+          padding: 10px;
+          background: transparent;
+          border-radius: 3px 3px 0 0;
+          -webkit-transform: translateY(-100%);
+          -moz-transform: translateY(-100%);
+          -ms-transform: translateY(-100%);
+          -o-transform: translateY(-100%);
+          transition: all 0.2s ease-in-out;
+          p {
+            font-family: 'Lato', 'Trebuchet MS', 'Open Sans', arial, sans-serif;
+            color: #444;
+            font-size: 13px;
+            line-height: 19px;
+            font-weight: 600;
+            letter-spacing: normal;
+            margin-bottom: 0;
+          }
+        }
+        img {
+          display: inline-block;
+          vertical-align: middle;
+          max-height: 100%;
+          max-width: 100%;
+          padding: 16px;
+          opacity: 1;
+          transition: opacity 0.2s ease-in-out;
+          // -moz-transition: opacity 0.3s ease-in-out;
+          // -webkit-transition: opacity 0.3s ease-in-out;
+          // this compensates for a bug in chrome, which causes images of a
+          // certain aspect ratio to expand and contract very slightly on
+          // hover and opacity transition
+          // ref: https://stackoverflow.com/questions/20886991
+          -webkit-transform: translateZ(0);
         }
       }
-      img {
-        display: inline-block;
-        vertical-align: middle;
-        max-height: 100%;
-        max-width: 100%;
-        padding: 16px;
-        opacity: 1;
-        transition: opacity 0.2s ease-in-out;
-        // -moz-transition: opacity 0.3s ease-in-out;
-        // -webkit-transition: opacity 0.3s ease-in-out;
-        // this compensates for a bug in chrome, which causes images of a
-        // certain aspect ratio to expand and contract very slightly on
-        // hover and opacity transition
-        // ref: https://stackoverflow.com/questions/20886991
-        -webkit-transform: translateZ(0);
+      .caption {
+        position: absolute;
+        font-size: 14px;
+        text-align: left;
+        padding: 2px 0 2px 6px;
+        bottom: 0;
+        width: 100%;
+        border-radius: 0 0 3px 3px;
       }
     }
-    .caption {
-      position: absolute;
-      font-size: 14px;
-      text-align: left;
-      padding: 2px 0 2px 6px;
-      bottom: 0;
-      width: 100%;
-      border-radius: 0 0 3px 3px;
+    a.thumbnail:hover {
+      border: 1px solid transparent;
+      box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08)
     }
-  }
-  a.thumbnail:hover {
-    border: 1px solid transparent;
-    box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08)
-  }
-  a.thumbnail:active {
-    -webkit-filter: brightness(94%);
-    box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08)
-  }
+    a.thumbnail:active {
+      -webkit-filter: brightness(94%);
+      box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08)
+    }
 
-  a.thumbnail.title-present:hover {
-    .thumbnail-view-hover {
-      -webkit-transform: translateY(0%);
-      -moz-transform: translateY(0%);
-      -ms-transform: translateY(0%);
-      -o-transform: translateY(0%);
-    }
-    img {
-      opacity: 0.05;
-    }
-  }
-
-
-  li:not(.loading-icon) {
-    i.fa-spin {
-      display: none;
-    }
-  }
-  li.loading {
-    img {
-      opacity: 0.05 !important;
-    }
-    a.thumbnail {
-      border-color: #ccc;
-      box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
-      -webkit-filter: brightness(96%);
+    a.thumbnail.title-present:hover {
       .thumbnail-view-hover {
-        transform: none;
+        -webkit-transform: translateY(0%);
+        -moz-transform: translateY(0%);
+        -ms-transform: translateY(0%);
+        -o-transform: translateY(0%);
+      }
+      img {
+        opacity: 0.05;
+      }
+    }
+
+
+    li:not(.loading-icon) {
+      i.fa-spin {
+        display: none;
+      }
+    }
+    li.loading {
+      img {
+        opacity: 0.05 !important;
+      }
+      a.thumbnail {
+        border-color: #ccc;
+        box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
+        -webkit-filter: brightness(96%);
+        .thumbnail-view-hover {
+          transform: none;
+        }
+      }
+    }
+    li.loading.loading-icon {
+      .thumbnail-view, .caption {
+        opacity: 0.05;
+      }
+      // the icon needs to be wrapped in a div in order for the transform to work
+      // (center if element is centered, not top-left of element)
+      .loading-icon-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 20px;
+        color: #666;
+      }
+    } // a.thumbnail
+
+  } // .grid
+}
+
+@media only screen and (max-width: 767px) {
+  .grid-container {
+    .grid {
+      .grid-item {
+        margin: 15px;
+        a.thumbnail {
+          width: 240px;  // 210
+          height: 160px;  // 140
+          .thumbnail-view {
+            height: 136px;  // 160 - ( caption_height=22 + border=2*1px )
+            line-height: 132px;
+            .thumbnail-view-hover p {
+              font-size: 16px;
+              line-height: 23px;
+              font-weight: 400;
+            }
+            img {
+              padding: 23px;
+            }
+          }
+          .caption {
+            font-size: 13px;
+          }
+        }
+      }
+      a.thumbnail.public.logo-published {
+        .thumbnail-view {   // adjust dimensions for missing caption
+          height: 160px;
+          line-height: 156px;
+          img {
+            padding: 34px;
+          }
+        }
       }
     }
   }
-  li.loading.loading-icon {
-    .thumbnail-view, .caption {
-      opacity: 0.05;
+}
+
+@media only screen and (min-width: 768px) {
+  .grid-container {
+    .grid {
+      .grid-item {
+        margin: 15px;
+        a.thumbnail {
+          width: 200px;  // 210
+          height: 133px;  // 140
+          .thumbnail-view {
+            height: 109px;  // 133 - ( caption_height=22 + border=2*1px )
+            line-height: 104px;
+            .thumbnail-view-hover p {
+              font-size: 14px;
+              line-height: 19px;
+              font-weight: 400;
+            }
+          }
+          .caption {
+            font-size: 13px;
+          }
+        }
+        a.thumbnail.public.logo-published {
+          .thumbnail-view {   // adjust dimensions for missing caption
+            height: 133px;
+            line-height: 129px;
+            img {
+              padding: 28px;
+            }
+          }
+        }
+      }
     }
-    // the icon needs to be wrapped in a div in order for the transform to work
-    // (center if element is centered, not top-left of element)
-    .loading-icon-container {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 20px;
-      color: #666;
+  }
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+  .grid-container {
+    [class*="col-"]:first-child:not(.col-md-12) {
+      width: 28%;
+    }
+    [class*="col-"]:last-child:not(.col-md-12) {
+      width: 72%;
+    }
+    .grid {
+      margin-right: -15px;  // pull it over a bit;
+      .grid-item {
+        margin: 10px;
+        a.thumbnail {
+          width: 200px;  // 210
+          height: 133px;  // 140
+          .thumbnail-view {
+            height: 109px;  // 133 - ( caption_height=22 + border=2*1px )
+            line-height: 104px;
+            .thumbnail-view-hover p {
+              font-size: 14px;
+              line-height: 19px;
+              font-weight: 400;
+            }
+            img {
+              padding: 18px;
+            }
+          }
+          .caption {
+            font-size: 13px;
+          }
+        }
+        a.thumbnail.public.logo-published {
+          .thumbnail-view {   // adjust dimensions for missing caption
+            height: 133px;
+            line-height: 129px;
+            img {
+              padding: 28px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+@media only screen and (min-width: 1200px) {
+  .grid-container {
+    .grid {
+      margin-right: -25px; // pull it over a bit
+      .grid-item {
+        margin: 18px;
+        a.thumbnail {
+          width: 240px;  // 210
+          height: 160px;  // 140
+          .thumbnail-view {
+            height: 136px;  // 133 - ( caption_height=22 + border=2*1px )
+            line-height: 132px;
+            .thumbnail-view-hover p {
+              font-size: 16px;
+              line-height: 23px;
+              font-weight: 400;
+            }
+            img {
+              padding: 23px;
+            }
+          }
+          .caption {
+            font-size: 13px;
+          }
+        }
+        a.thumbnail.public.logo-published {
+          .thumbnail-view {   // adjust dimensions for missing caption
+            height: 160px;
+            line-height: 156px;
+            img {
+              padding: 34px;
+            }
+          }
+        }
+      }
     }
   }
 }

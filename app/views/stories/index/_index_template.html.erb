@@ -26,7 +26,7 @@
           {{ if (story.success.customer.logo_url) { }}
             <img src="{{= story.success.customer.logo_url }}">
           {{ } else { }}
-            <img src="<%= asset_path('logo-missing.png') %>">
+            <img src="<%= LOGO_PLACEHOLDER_URL %>">
           {{ } }}
         </div>
 

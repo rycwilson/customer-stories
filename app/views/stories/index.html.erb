@@ -29,42 +29,161 @@
 
 <% else %>
 
-  <header id="search-bar">
-    <div class="container">
+  <nav id="nav-secondary" class="navbar navbar-default <%= @company.subdomain %>">
+    <div class="container navbar-container">
       <div class="row">
+        <div class="navbar-header col-xs-12">
 
-         <%= render 'stories/shared/filters_xs',
-           { company: @company, is_curator: false,
-             category_select_cache_key: @category_select_cache_key,
-             product_select_cache_key: @product_select_cache_key,
-             pre_selected_filter: @pre_selected_filter } %>
+          <h3>Customer Stories</h3>
 
-         <%= render 'stories/shared/filters',
-           { company: @company, is_curator: false,
-             category_select_cache_key: @category_select_cache_key,
-             product_select_cache_key: @product_select_cache_key,
-             pre_selected_filter: @pre_selected_filter } %>
-
+        </div>
       </div>
+      <!-- <div class="collapse navbar-collapse"></div> -->
     </div>
-  </header>
+  </nav>
 
 <% end %>
 
 <div class="container grid-container">
 
-  <ul class='grid list-unstyled text-center' id="stories-gallery">
+  <% if include_filters?(@company) %>
+
+    <div class="row visible-xs-block stories-filter-xs">
+      <div class="col-xs-12">
+        <div class="form-group">
+
+          <%= select_tag('stories-filter-xs',
+                grouped_options_for_select(
+                  @company.stories_filter_grouped_options,
+                  @pre_selected_filter[:tag] == 'category' ? [@pre_selected_filter[:id]] : []
+                ),
+                { include_blank: true, class: 'grouped-stories-filter form-control', style: 'width: 100%' }
+              ) %>
+
+        </div>
+      </div>
+    </div>
+
+  <% end %>
+
+  <ul class="stories-gallery grid list-unstyled text-center visible-xs-block">
 
     <% cache(@stories_index_cache_key, skip_digest: true) do %>
 
       <% @stories.each do |story| %>
 
-        <%= render 'stories/shared/card',
-              { company: @company, story: story } %>
+        <%= render 'stories/shared/card', { company: @company, story: story } %>
 
       <% end %>
 
     <% end %>
 
   </ul>
+
+  <div class="row visible-sm-block">
+    <div class="col-xs-12">
+      <form class="form-inline">
+
+        <div class="form-group" style="width: 50%">
+          <%= label_tag(:category_select_sm, "Category", class: "control-label") %>&nbsp;&nbsp;<!--
+       --><%= select_tag(:category_select_sm,
+                options_for_select(
+                  @company.story_categories.public_select_options,
+                  @pre_selected_filter[:tag] == 'category' ? [@pre_selected_filter[:id]] : []
+                ),
+                { class: 'stories-filter category-select form-control input-sm', style: "width: 280px" }
+              ) %>
+        </div><!--
+
+     --><div class="form-group" style="width: 50%">
+          <%= label_tag(:product_select_sm, "Product") %>&nbsp;&nbsp;<!--
+       --><%= select_tag(:product_select_sm,
+                options_for_select(
+                  @company.products.public_select_options,
+                  @pre_selected_filter[:tag] == 'product' ? [@pre_selected_filter[:id]] : []
+                ),
+                { class: 'stories-filter product-select form-control input-sm', style: "width: 280px" }
+              ) %>
+        </div>
+
+      </form>
+    </div>
+
+    <ul class="stories-gallery grid list-unstyled text-center">
+      <% cache(@stories_index_cache_key, skip_digest: true) do %>
+        <% @stories.each do |story| %>
+
+          <%= render 'stories/shared/card', { company: @company, story: story } %>
+
+        <% end %>
+      <% end %>
+    </ul>
+
+  </div>
+
+  <div class="row visible-md-block visible-lg-block">
+
+    <% if include_filters?(@company) %>
+
+      <div class="col-md-4 col-lg-3">
+
+        <% if include_category_filter?(@company) %>
+
+          <% cache(@category_select_cache_key, skip_digest: true) do %>
+            <div class='form-group'>
+              <%= label_tag(:category_select, "Category") %>
+              <%= select_tag(:category_select,
+                    options_for_select(
+                      @company.story_categories.public_select_options,
+                      @pre_selected_filter[:tag] == 'category' ? [@pre_selected_filter[:id]] : []
+                    ),
+                    { class: 'stories-filter category-select form-control', style: 'width: 100%' }
+                  ) %>
+            </div>
+          <% end %>
+
+        <% end %>
+
+        <% if include_product_filter?(@company) %>
+
+          <% cache(@product_select_cache_key, skip_digest: true) do %>
+            <div class="form-group">
+              <%= label_tag(:product_select, "Product") %>
+              <%= select_tag(:product_select,
+                    options_for_select(
+                      @company.products.public_select_options,
+                      @pre_selected_filter[:tag] == 'product' ? [@pre_selected_filter[:id]] : []
+                    ),
+                    { class: 'stories-filter product-select form-control', style: 'width: 100%' }
+                  ) %>
+            </div>
+          <% end %>
+
+        <% end %>
+
+      </div>
+
+    <% end %>
+
+    <div class="<%= include_filters?(@company) ? 'col-md-8 col-lg-9' : 'col-md-12' %>">
+
+      <ul class="stories-gallery grid list-unstyled text-center">
+
+        <% cache(@stories_index_cache_key, skip_digest: true) do %>
+
+          <% @stories.each do |story| %>
+
+            <%= render 'stories/shared/card', { company: @company, story: story } %>
+
+          <% end %>
+
+        <% end %>
+
+      </ul>
+
+    </div>
+
+  </div>
+
+
 </div>

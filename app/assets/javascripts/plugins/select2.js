@@ -76,6 +76,12 @@ function initSelect2 () {
   });
   $('.stories-filter').data('init', true);
 
+  $('.grouped-stories-filter').select2({
+    theme: 'bootstrap',
+    width: 'style',
+    placeholder: 'Filter'
+  });
+
   // $('.stories-filter').each(function () {
   //   if ($(this)[0].getAttribute('data-init') === null) {
   //     console.log("init'ing select2");

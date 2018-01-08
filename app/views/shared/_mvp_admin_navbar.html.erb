@@ -18,12 +18,11 @@
 
 <% end %>
 
-<nav class="navbar navbar-default admin" role="banner"
-     style="<%= @company ? @company.header_style : Company::CSP.header_style %>">
+<nav class="navbar navbar-default admin <%= @company.subdomain == 'compas' ? 'navbar-fixed-top' : '' %>" role="banner" style="<%= @company ? @company.header_style : Company::CSP.header_style %>">
   <div class="container navbar-container">
     <div class="row">
 
-      <div class="navbar-header col-xs-12 col-sm-8">
+      <div class="navbar-header col-xs-12">
         <%= render('shared/admin_navbar_header', { company: @company }) %>
       </div>
 
@@ -31,12 +30,12 @@
 
         <div class='hidden-xs col-sm-4 text-right'>
 
-          <% if @company.ctas.primary %>
+          <% if @company.ctas.primary.present? %>
 
             <%= link_to(@company.ctas.primary.display_text,
                   @company.ctas.primary.link_url, target: '_blank',
-                  id: 'primary-cta-btn', class: "btn cta-link",
-                  style: "background-color:#{@company.primary_cta_background_color};color:#{@company.primary_cta_text_color};border-color:#{@company.primary_cta_background_color}") %>
+                  id: 'primary-cta-btn', class: "btn cta-link #{@company.subdomain}",
+                  style: primary_cta_style(@company)) %>
 
           <% end %>
 
@@ -45,7 +44,6 @@
       <% else %>
 
         <div class="hidden-xs col-sm-4">
-          <!-- filler -->
         </div>
 
       <% end %>

@@ -113,14 +113,6 @@ module ApplicationHelper
     user_signed_in? && (current_user.company_id == company_id)
   end
 
-  def curator_with_logo?
-    user_signed_in? && current_user.company.try(:logo_url).present?
-  end
-
-  def curator_without_logo?
-    user_signed_in? && current_user.company_id.present? && current_user.company.logo_url.blank?
-  end
-
   def registered_user_without_company?
     user_signed_in? && current_user.company_id.blank?
   end

@@ -1,16 +1,6 @@
 
-/***********************************************/
-/*          admin navbar
-/***********************************************/
-
 .fa-bars {
   color: #555555;
-}
-
-.navbar {
-  .container {
-    padding: 0;
-  }
 }
 
 .navbar.landing {
@@ -36,48 +26,83 @@
   /* background-color set to transparent in mvpready-admin.css */
   background-clip: border-box;
   border: 0;
-  height: 65px;
-
-  .row {
-    display: flex;
-    align-items: center;
-    div:last-child {
-      height: 38px;
-      a {
-        float: right;       // so it overflows to the left
-        line-height: 24px;
+  height: 70px;
+  .navbar-container {
+    height: 100%;
+    .row {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      .navbar-header {
+        a {
+          display: flex;
+          align-items: center;
+          padding: 0;
+          img {
+            max-height: 50px;
+          }
+        }
       }
     }
   }
+}
 
-  .navbar-header {
-    line-height: 65px;          // for centering image vertically
-    .navbar-brand {
-      line-height: 60px;          // for centering image vertically
-      img {
-        display: inline-block;    // for centering image vertically
-        vertical-align: middle;   // for centering image vertically
-        margin: auto;             // for centering image vertically
-        max-height: 75%;
-      }
-    }
-    span {
-      font-size: 24px;
-      max-height: 60px;
-      font-family: 'Lato';
-      display: inline-block;    // for centering image vertically
-      vertical-align: middle;   // for centering image vertically
-      margin: auto 10px;
-    }
-
-    @media only screen and (max-width: 550px) {
-      span {
-        display: none;
+#nav-secondary {
+  height: 40px;
+  min-height: 40px;  // overrides bootstrap 50px
+  background: #fff;
+  border: 0;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 1px -1px rgba(0, 0, 0, 0.08);
+  .navbar-container {
+    height: 100%;
+    .row {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      .navbar-header {
+        h3 {
+          font-size: 22px;
+          margin-bottom: 0;
+        }
       }
     }
   }
+}
 
+#nav-secondary.compas {
+  margin-top: 70px;
+  background: rgba(228,21,22, 0.7);
+  color: #fff;
+}
 
+@media only screen and (max-width: 767px) {
+  #nav-secondary {
+    .navbar-container {
+      .row {
+        .navbar-header {
+          h3 {
+            font-size: 20px;
+          }
+        }
+      }
+    }
+  }
+}
+@media only screen and (min-width: 768px) {
+  #nav-secondary {
+    margin-bottom: 30px;
+  }
+}
+@media only screen and (min-width: 992px) {
+  #nav-secondary {
+    margin-bottom: 20px;
+  }
+}
+@media only screen and (min-width: 1200px) {
+  #nav-secondary {
+    margin-bottom: 18px;
+  }
 }
 
 
@@ -265,9 +290,29 @@
   border: 1px solid;
   min-width: 140px
 }
-
 #primary-cta-btn:hover, #primary-cta-btn:focus {
   border: 1px solid;
   box-shadow: 0 0 0 1px #fff inset;
   outline: none !important;
 }
+
+#primary-cta-btn.compas {
+  font-size: 13px;
+  color: #e41516;
+  border: 1px solid #e41516;
+  border-radius: 20px;
+  line-height: 38px;
+  padding: 0 26px;
+  text-align: center;
+  font-weight: 600;
+  transition: background .25s ease
+}
+#primary-cta-btn.compas:hover {
+  background: #e41516;
+  color: #fff;
+}
+
+
+
+
+

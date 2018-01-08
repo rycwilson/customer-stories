@@ -3,9 +3,9 @@
 
 function initGridPreviews (config, callback) {
   // set the global variables
-  $grid = $('#stories-gallery');
+  $grids = $('.stories-gallery');
   // the items
-  $items = $grid.children( 'li' );
+  $items = $grids.children( 'li' );
   // current expanded item´s index
   current = -1;
   // position (top) of the expanded item
@@ -39,7 +39,7 @@ function initGridPreviews (config, callback) {
   settings = $.extend( true, {}, settings, config );
 
   // preload all images
-  $grid.imagesLoaded( function() {
+  $grids.imagesLoaded( function() {
     // save item´s size and offset
     saveItemInfo( true );
     // get window´s size

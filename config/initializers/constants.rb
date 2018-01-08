@@ -1,6 +1,8 @@
 
 INDUSTRIES = ['Education', 'Government', 'Financial Services', 'Healthcare', 'Hospitality', 'Manufacturing', 'Media and Entertainment', 'Service Provider', 'Technology', 'IT', 'Telecommunications'];
 
+LOGO_PLACEHOLDER_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/shared/logo-placeholder.png"
+
 # AdWords accounts
 ADWORDS_CSP_TEST_MANAGER_CUSTOMER_ID = '811-996-7666'
 ADWORDS_CSP_TEST_CLIENT_CUSTOMER_ID = '266-136-8280'

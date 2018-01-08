@@ -298,7 +298,11 @@ class Company < ActiveRecord::Base
   attr_writer :default_adwords_image_url
 
   def header_style
-    "background:linear-gradient(45deg, #{self.header_color_1} 0%, #{self.header_color_2} 100%);color:#{self.header_text_color};"
+    if self.subdomain == 'compas'
+      "background:rgba(255,255,255,0.9)"
+    else
+      "background:linear-gradient(45deg, #{self.header_color_1} 0%, #{self.header_color_2} 100%);color:#{self.header_text_color};"
+    end
   end
 
   def all_stories
@@ -362,6 +366,13 @@ class Company < ActiveRecord::Base
       end
     end
     Story.find(story_ids).sort_by { |story| story_ids.index(story.id) }
+  end
+
+  def stories_filter_grouped_options
+    {
+      'Category' => self.category_tags.map { |tag| [tag.name, tag.id, { data: { slug: tag.slug } }] },
+      'Product' => self.product_tags.map { |tag| [tag.name, tag.id, { data: { slug: tag.slug } }] }
+    }
   end
 
   #

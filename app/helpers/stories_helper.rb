@@ -26,6 +26,26 @@ module StoriesHelper
     controller_name == 'stories' && action_name == 'index'
   end
 
+  def primary_cta_style (company)
+    if company.subdomain == 'compas'
+      ""
+    else
+      "background-color:#{company.primary_cta_background_color};color:#{company.primary_cta_text_color};border-color:#{company.primary_cta_background_color}"
+    end
+  end
+
+  def include_filters? (company)
+    include_category_filter?(company) || include_product_filter?(company)
+  end
+
+  def include_category_filter? (company)
+    company.story_categories.public_select_options.length > 2
+  end
+
+  def include_product_filter? (company)
+    company.products.public_select_options.length > 2
+  end
+
   def csp_landing
     if ENV['HOST_NAME'] == 'customerstories.net'
       'https://customerstories.net'

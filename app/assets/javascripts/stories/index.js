@@ -1,7 +1,6 @@
 
 function storiesIndex () {
-  var $gallery = $('#stories-gallery'),
-      $categorySelect = $("[name='category_select']"),
+  var $categorySelect = $("[name='category_select']"),
       categorySlug = getQueryString('category'),
       $productSelect = $("[name='product_select']"),
       productSlug = getQueryString('product'),
@@ -25,7 +24,7 @@ function storiesIndexListeners () {
   var loading = function ($story) {
         $story.addClass('loading');
         setTimeout(function () { $story.addClass('loading-icon'); }, 1000);
-        $('#stories-gallery li').css('pointer-events', 'none');
+        $('.stories-gallery li').css('pointer-events', 'none');
       };
 
   $(document)
@@ -33,6 +32,23 @@ function storiesIndexListeners () {
     .on('click', 'a.published', function (e) {
       var $story = $(this).closest('li');
       loading($story);
+    })
+
+    .on('change', '.grouped-stories-filter', function () {
+      var filterTag = $(this).find('option:selected').closest('optgroup').attr('label').toLowerCase(),
+          filterId = $(this).val(),
+          filterSlug = $(this).find('option:selected').data('slug'),
+          storiesTemplate = _.template($('#stories-template').html());
+
+      updateGallery(
+        $(storiesTemplate({
+            stories: filterStories(filterTag, filterId, filterSlug),
+            isCurator: false
+          }))
+      );
+
+      replaceStateStoriesIndex(filterTag, filterId, filterSlug);
+
     })
 
     .on('change', '.stories-filter', function () {
@@ -112,12 +128,14 @@ function selectBoxesTrackQueryString ($categorySelect, categorySlug, $productSel
 
 function updateGallery ($stories) {
   $stories.imagesLoaded(function () {
-    $('#stories-gallery')
+    $('.stories-gallery').each(function () {
+    $ (this)
       .empty()
       .append($stories)
       .hide().show('fast', function () {
         initGridPreviews();
       });
+    });
   });
 }
 
