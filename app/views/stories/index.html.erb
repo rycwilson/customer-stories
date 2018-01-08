@@ -66,7 +66,7 @@
 
   <% end %>
 
-  <ul class="stories-gallery grid list-unstyled text-center visible-xs-block">
+  <ul class="stories-gallery grid xs list-unstyled text-center visible-xs-block">
 
     <% cache(@stories_index_cache_key, skip_digest: true) do %>
 
@@ -97,7 +97,7 @@
                         @company.story_categories.public_select_options,
                         @pre_selected_filter[:tag] == 'category' ? [@pre_selected_filter[:id]] : []
                       ),
-                      { class: 'stories-filter category-select form-control input-sm', style: "width: 280px" }
+                      { class: 'stories-filter xs category-select form-control', style: "width: 280px" }
                     ) %>
               </div><!--
 
@@ -112,7 +112,7 @@
                         @company.products.public_select_options,
                         @pre_selected_filter[:tag] == 'product' ? [@pre_selected_filter[:id]] : []
                       ),
-                      { class: 'stories-filter product-select form-control input-sm', style: "width: 280px" }
+                      { class: 'stories-filter xs product-select form-control', style: "width: 280px" }
                     ) %>
               </div>
 
@@ -122,7 +122,10 @@
         </div>
       </div>
 
-      <ul class="stories-gallery grid list-unstyled text-center">
+<!--       <div class="row">
+        <div class="col-sm-12"> -->
+
+      <ul class="stories-gallery grid sm list-unstyled text-center">
         <% cache(@stories_index_cache_key, skip_digest: true) do %>
           <% @stories.each do |story| %>
 
@@ -131,6 +134,8 @@
           <% end %>
         <% end %>
       </ul>
+<!--         </div>
+      </div> -->
 
     </div>
 
@@ -182,7 +187,7 @@
 
     <div class="<%= include_filters?(@company) ? 'col-md-8 col-lg-9' : 'col-md-12' %>">
 
-      <ul class="stories-gallery grid list-unstyled text-center">
+      <ul class="stories-gallery grid md list-unstyled text-center">
 
         <% cache(@stories_index_cache_key, skip_digest: true) do %>
 

@@ -58,10 +58,7 @@ function storiesIndexListeners () {
           filterId = $(this).val(),
           filterSlug = $(this).find("option[value='" + filterId + "']").data('slug'),
           storiesTemplate = _.template($('#stories-template').html());
-console.log(filterTag)
-console.log(filterId)
-console.log(filterSlug)
-console.log(filterStories(filterTag, filterId, filterSlug))
+
       updateGallery(
         $(storiesTemplate({
             stories: filterStories(filterTag, filterId, filterSlug),
@@ -130,15 +127,11 @@ function selectBoxesTrackQueryString ($categorySelect, categorySlug, $productSel
 }
 
 function updateGallery ($stories) {
-  $('.stories-gallery').each(function () {
-    var $gallery = $(this);
-    $gallery.imagesLoaded(function () {
-      $gallery.empty()
-              .append($stories)
-              .hide().show('fast', function () {
-                initGridPreviews();
-              });
-    });
+  $('.stories-gallery').imagesLoaded(function () {
+    $('.stories-gallery')
+      .empty()
+      .append($stories)
+      .hide().show('fast', function () { initGridPreviews(); });
   });
 }
 
