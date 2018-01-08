@@ -1,0 +1,46 @@
+
+<div id="stories-filters" class="form-inline hidden-xs">
+
+  <% cache(category_select_cache_key, skip_digest: true) do %>
+
+    <!-- only renders if there are at least two distinct tags to choose between -->
+    <!-- includes 'All' placeholder (hence 2) -->
+    <% if company.story_categories.public_select_options.length > 2 %>
+
+      <div class='form-group'>
+        <%= label_tag :category_select, "Category" %>&nbsp;
+        <%= select_tag :category_select,
+              options_for_select(
+                company.story_categories.public_select_options,
+                pre_selected_filter[:tag] == 'category' ? [pre_selected_filter[:id]] : []
+              ),
+              { class: 'stories-filter category-select form-control',
+                style: 'width: 220px' } %>
+      </div>&nbsp;&nbsp;&nbsp;&nbsp;
+
+    <% end %>
+
+  <% end %>
+
+  <% cache(product_select_cache_key, skip_digest: true) do %>
+
+    <% if company.products.public_select_options.length > 2 %>
+
+      <div class="form-group">
+        <%= label_tag :product_select, "Product" %>&nbsp;
+        <%= select_tag :product_select,
+          options_for_select(
+            company.products.public_select_options,
+            pre_selected_filter[:tag] == 'product' ? [pre_selected_filter[:id]] : []
+          ),
+          { class: 'stories-filter product-select form-control',
+            style: 'width: 220px' } %>
+      </div>
+
+    <% end %>
+
+  <% end %>
+
+</div>
+
+
