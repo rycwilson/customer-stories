@@ -34,7 +34,7 @@
 
   <% if admin_navbar?(controller_name) %>
 
-    <%= render('shared/mvp_admin_navbar', { company: @company }) %>
+    <%= render('shared/navbars/mvp_admin_navbar', { company: @company }) %>
 
   <% elsif controller_name == 'contributions' %>
     <!-- render nothing (just flash) -->

@@ -57,26 +57,10 @@
 
 
 <% if @is_curator %>
-  <%#= render 'shared/company_navbar', { company: @company, workflow_tab: nil } %>
+  <%#= render 'shared/navbars/company_navbar', { company: @company, workflow_tab: nil } %>
 <% end %>
 
-<div class="mainnav" style='min-height:42px!important;position:relative'>
-
-  <% if @is_curator %>
-
-    <% cache("#{@company.subdomain}/curator-story-#{@story.id}-header", skip_digest: true) do %>
-      <%= render 'stories/shared/story_header', { story: @story, is_curator: true } %>
-    <% end %>
-
-  <% else %>
-
-    <% cache("#{@company.subdomain}/public-story-#{@story.id}-header", skip_digest: true) do %>
-      <%= render 'stories/shared/story_header', { story: @story, is_curator: false } %>
-    <% end %>
-
-  <% end %>
-
-</div>
+<%= render('shared/navbars/secondary', { company: @company, action: 'show' }) %>
 
 <div class="story-wrapper hidden">
 

@@ -1,6 +1,49 @@
 
 .stories.show {
 
+  #nav-secondary {
+    position: relative;
+  }
+
+  #nav-secondary:after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    z-index: -1;
+    width: 100%;
+    height: 90px;
+    margin-top: -40px;
+    background-image: linear-gradient(to bottom, #f2f2f2 0%, #ffffff 100%);
+    background-repeat: repeat-x;
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2f2f2', endColorstr='#ffffffff', GradientType=0);
+  }
+
+  .story-header {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 42px;
+    color: #cacaca;
+    font-size: 0;
+    h3 {
+      margin-bottom: -6px;
+      font-weight: 300;
+      font-size: 24px;
+    }
+    a.curate-story {
+      position: absolute;
+      left: 200px;
+      top: 50%;
+      transform: translate(0, -50%)
+    }
+    .hidden-xs {
+      padding-left: 15px;
+      .social-buttons {
+        a { margin-right: 4px; }
+      }
+    }
+  }
+
   .mainnav.company-nav {
     margin-bottom: 0;
   }
@@ -57,31 +100,6 @@
     }
   }
 
-  .story-header {
-    position: relative;
-    display: flex;
-    align-items: center;
-    height: 42px;
-    color: #cacaca;
-    font-size: 0;
-    h3 {
-      margin-bottom: -6px;
-      font-weight: 300;
-      font-size: 24px;
-    }
-    a.curate-story {
-      position: absolute;
-      left: 200px;
-      top: 50%;
-      transform: translate(0, -50%)
-    }
-    .hidden-xs {
-      padding-left: 15px;
-      .social-buttons {
-        a { margin-right: 4px; }
-      }
-    }
-  }
 
   #social-buttons-xs {
     background-color: #f2f2f2;

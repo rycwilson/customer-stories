@@ -12,11 +12,11 @@
 
   <% if current_user.registered_company? %>
 
-    <%= render 'shared/company_navbar', { company: @company, workflow_stage: nil } %>
+    <%= render 'shared/navbars/company_navbar', { company: @company, workflow_stage: nil } %>
 
   <% else %>
 
-    <%= render 'shared/mainnav_no_company' %>
+    <%= render 'shared/navbars/mainnav_no_company' %>
 
   <% end %>
 

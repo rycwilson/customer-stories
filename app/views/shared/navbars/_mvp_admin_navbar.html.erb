@@ -23,7 +23,7 @@
     <div class="row">
 
       <div class="navbar-header col-xs-12">
-        <%= render('shared/admin_navbar_header', { company: @company }) %>
+        <%= render('shared/navbars/admin_navbar_header', { company: @company }) %>
       </div>
 
       <% if controller_name == 'stories' && (['index', 'show'].include?(action_name)) %>

@@ -90,18 +90,24 @@
   }
 }
 @media only screen and (min-width: 768px) {
-  #nav-secondary {
+  #nav-secondary.index {
+    margin-bottom: 30px;
+  }
+  #nav-secondary.show {
     margin-bottom: 30px;
   }
 }
 @media only screen and (min-width: 992px) {
-  #nav-secondary {
+  #nav-secondary.index {
     margin-bottom: 20px;
   }
 }
 @media only screen and (min-width: 1200px) {
-  #nav-secondary {
+  #nav-secondary.index {
     margin-bottom: 18px;
+  }
+  #nav-secondary.show {
+    margin-bottom: 40px;
   }
 }
 
