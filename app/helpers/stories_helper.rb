@@ -39,11 +39,11 @@ module StoriesHelper
   end
 
   def include_category_filter? (company)
-    company.story_categories.public_select_options.length > 2
+    company.story_categories.public_select_options.length > 1
   end
 
   def include_product_filter? (company)
-    company.products.public_select_options.length > 2
+    company.products.public_select_options.length > 1
   end
 
   def csp_landing
