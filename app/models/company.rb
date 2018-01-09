@@ -369,10 +369,17 @@ class Company < ActiveRecord::Base
   end
 
   def stories_filter_grouped_options
-    {
-      'Category' => self.category_tags.map { |tag| [tag.name, tag.id, { data: { slug: tag.slug } }] },
-      'Product' => self.product_tags.map { |tag| [tag.name, tag.id, { data: { slug: tag.slug } }] }
-    }
+    options = {}
+    if self.story_categories.length > 1
+      options.merge({
+        'Category' => self.category_tags.map { |tag| [tag.name, tag.id, { data: { slug: tag.slug } }] },
+      })
+    end
+    if self.products.length > 1
+      options.merge({
+        'Product' => self.product_tags.map { |tag| [tag.name, tag.id, { data: { slug: tag.slug } }] }
+      })
+    end
   end
 
   #
