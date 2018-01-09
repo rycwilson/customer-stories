@@ -76,9 +76,8 @@ class Company < ActiveRecord::Base
       self.joins(:stories)
           .where(stories: { logo_published: true })
           .distinct
-          .map do |category|
-            [ category.name, category.id, { data: { slug: category.slug } } ]
-          end.sort.unshift ['All', 0]
+          .map { |category| [ category.name, category.id, { data: { slug: category.slug } } ] }
+          .sort
     end
   end
   # alias
@@ -91,13 +90,10 @@ class Company < ActiveRecord::Base
     end
     def public_select_options
       self.joins(:stories)
-        .where(stories: { logo_published: true })
-        .distinct
-        .map do |product|
-          [ product.name, product.id, { data: { slug: product.slug } } ]
-        end
-        .sort
-        .unshift ['All', 0]
+          .where(stories: { logo_published: true })
+          .distinct
+          .map { |product| [ product.name, product.id, { data: { slug: product.slug } } ] }
+          .sort
     end
   end
   # alias
@@ -368,18 +364,25 @@ class Company < ActiveRecord::Base
     Story.find(story_ids).sort_by { |story| story_ids.index(story.id) }
   end
 
-  def stories_filter_grouped_options
+  def stories_filter_public_grouped_options
     options = {}
-    if self.story_categories.length > 1
-      options.merge({
-        'Category' => self.category_tags.map { |tag| [tag.name, tag.id, { data: { slug: tag.slug } }] },
-      })
+    category_options = StoryCategory
+                         .joins(:stories)
+                         .where({ company_id: self.id, stories: { logo_published: true } })
+                         .distinct
+                         .map { |tag| [tag.name, tag.id, { data: { slug: tag.slug } }] }
+    product_options = Product
+                        .joins(:stories)
+                        .where({ company_id: self.id, stories: { logo_published: true } })
+                        .distinct
+                        .map { |tag| [tag.name, tag.id, { data: { slug: tag.slug } }] }
+    if category_options.length > 1
+      options.merge!({ 'Category' => category_options })
     end
-    if self.products.length > 1
-      options.merge({
-        'Product' => self.product_tags.map { |tag| [tag.name, tag.id, { data: { slug: tag.slug } }] }
-      })
+    if product_options.length > 1
+      options.merge!({ 'Product' => product_options })
     end
+    options
   end
 
   #

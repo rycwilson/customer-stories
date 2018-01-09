@@ -54,8 +54,8 @@
 
           <%= select_tag('stories-filter-xs',
                 grouped_options_for_select(
-                  @company.stories_filter_grouped_options,
-                  @pre_selected_filter[:tag] == 'category' ? [@pre_selected_filter[:id]] : []
+                  @company.stories_filter_public_grouped_options,
+                  [ @pre_selected_filter[:id] ]
                 ),
                 { include_blank: true, class: 'grouped-stories-filter form-control', style: 'width: 100%' }
               ) %>
@@ -80,12 +80,12 @@
 
   </ul>
 
-  <% if include_filters?(@company) %>
+  <div class="visible-sm-block">
 
-    <div class="visible-sm-block">
+    <% if include_filters?(@company) %>
 
       <div class="row">
-        <div class="col-xs-12">
+        <div class="col-sm-12">
           <form class="form-inline">
 
             <% if include_category_filter?(@company) %>
@@ -97,7 +97,11 @@
                         @company.story_categories.public_select_options,
                         @pre_selected_filter[:tag] == 'category' ? [@pre_selected_filter[:id]] : []
                       ),
-                      { class: 'stories-filter xs category-select form-control', style: "width: 280px" }
+                      {
+                        include_blank: true,
+                        class: 'stories-filter category-select form-control',
+                        style: "width: 280px"
+                      }
                     ) %>
               </div><!--
 
@@ -112,7 +116,11 @@
                         @company.products.public_select_options,
                         @pre_selected_filter[:tag] == 'product' ? [@pre_selected_filter[:id]] : []
                       ),
-                      { class: 'stories-filter xs product-select form-control', style: "width: 280px" }
+                      {
+                        include_blank: true,
+                        class: 'stories-filter product-select form-control',
+                        style: "width: 280px"
+                      }
                     ) %>
               </div>
 
@@ -122,24 +130,19 @@
         </div>
       </div>
 
-<!--       <div class="row">
-        <div class="col-sm-12"> -->
+    <% end %>
 
-      <ul class="stories-gallery grid sm list-unstyled text-center">
-        <% cache(@stories_index_cache_key, skip_digest: true) do %>
-          <% @stories.each do |story| %>
+    <ul class="stories-gallery grid sm list-unstyled text-center">
+      <% cache(@stories_index_cache_key, skip_digest: true) do %>
+        <% @stories.each do |story| %>
 
-            <%= render 'stories/shared/card', { company: @company, story: story } %>
+          <%= render 'stories/shared/card', { company: @company, story: story } %>
 
-          <% end %>
         <% end %>
-      </ul>
-<!--         </div>
-      </div> -->
+      <% end %>
+    </ul>
 
-    </div>
-
-  <% end %>
+  </div>
 
   <div class="row visible-md-block visible-lg-block">
 
@@ -157,7 +160,11 @@
                       @company.story_categories.public_select_options,
                       @pre_selected_filter[:tag] == 'category' ? [@pre_selected_filter[:id]] : []
                     ),
-                    { class: 'stories-filter category-select form-control', style: 'width: 100%' }
+                    {
+                      include_blank: true,
+                      class: 'stories-filter category-select form-control',
+                      style: 'width: 100%'
+                    }
                   ) %>
             </div>
           <% end %>
@@ -174,7 +181,11 @@
                       @company.products.public_select_options,
                       @pre_selected_filter[:tag] == 'product' ? [@pre_selected_filter[:id]] : []
                     ),
-                    { class: 'stories-filter product-select form-control', style: 'width: 100%' }
+                    {
+                      include_blank: true,
+                      class: 'stories-filter product-select form-control',
+                      style: 'width: 100%'
+                    }
                   ) %>
             </div>
           <% end %>
@@ -204,6 +215,5 @@
     </div>
 
   </div>
-
 
 </div>

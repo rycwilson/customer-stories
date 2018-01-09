@@ -72,15 +72,39 @@ function initSelect2 () {
 
   $('.customer-select, .curator-select, .category-select, .product-select').select2({
     theme: 'bootstrap',
-    width: 'style'
-  });
+    width: 'style',
+    placeholder: 'Select',
+    allowClear: true
+  })
+    .on("select2:unselecting", function (e) {
+      $(this).data('state', 'unselected');
+    })
+    .on("select2:open", function (e) {
+      if ($(this).data('state') === 'unselected') {
+        $(this).removeData('state');
+        var self = $(this);
+        setTimeout(function() { self.select2('close'); }, 0);
+      }
+    });
+
   $('.stories-filter').data('init', true);
 
   $('.grouped-stories-filter').select2({
     theme: 'bootstrap',
     width: 'style',
-    placeholder: 'Filter'
-  });
+    placeholder: 'Filter',
+    allowClear: true
+  })
+    .on("select2:unselecting", function (e) {
+      $(this).data('state', 'unselected');
+    })
+    .on("select2:open", function (e) {
+      if ($(this).data('state') === 'unselected') {
+        $(this).removeData('state');
+        var self = $(this);
+        setTimeout(function() { self.select2('close'); }, 0);
+      }
+    });
 
   // $('.stories-filter').each(function () {
   //   if ($(this)[0].getAttribute('data-init') === null) {

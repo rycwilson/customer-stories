@@ -35,9 +35,10 @@ function storiesIndexListeners () {
     })
 
     .on('change', '.grouped-stories-filter', function () {
-      var filterTag = $(this).find('option:selected').closest('optgroup').attr('label').toLowerCase(),
+      var $option = $(this).find('option:selected'),
+          filterTag = $option.val() ? $option.closest('optgroup').attr('label').toLowerCase() : '',
           filterId = $(this).val(),
-          filterSlug = $(this).find('option:selected').data('slug'),
+          filterSlug = $option.data('slug') || null,
           storiesTemplate = _.template($('#stories-template').html());
 
       updateGallery(
@@ -54,9 +55,10 @@ function storiesIndexListeners () {
     .on('change', '.stories-filter', function () {
       var $categorySelect = $("[name='category_select']"),
           $productSelect = $("[name='product_select']"),
-          filterTag = $(this).attr('name').replace('_select', ''),
+          $option = $(this).find('option:selected'),
+          filterTag = $option.val() ? $(this).attr('name').replace('_select', '') : '',
           filterId = $(this).val(),
-          filterSlug = $(this).find("option[value='" + filterId + "']").data('slug'),
+          filterSlug = $(this).find("option[value='" + filterId + "']").data('slug') || null,
           storiesTemplate = _.template($('#stories-template').html());
 
       updateGallery(
@@ -137,7 +139,7 @@ function updateGallery ($stories) {
 
 // turbolinks will not save filter info to the state, so it's not included
 function replaceStateStoriesIndex (filterTag, filterId, filterSlug) {
-  if (filterId === '0') {  // all
+  if (filterId === '0' || filterId === '') {  // all
     history.replaceState({ turbolinks: true }, null, '/');
   } else if (filterTag === 'category') {
     history.replaceState({ turbolinks: true }, null, '/?category=' + filterSlug);
