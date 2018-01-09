@@ -11,6 +11,7 @@ Rails.application.config.assets.version = '1.0'
 # Rails.application.config.assets.precompile += %w( search.js )
 
 Rails.application.config.assets.precompile += %w(
+  custom.css
   stories/more_stories_rel.css
   adwords/ads_preview.js
   jquery-textfill/source/jquery.textfill.js
