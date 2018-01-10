@@ -2,8 +2,8 @@
 
 /* Wrapper */
 .icon-button {
-  background-color: #fff;
-  border: 1px solid rgba(51, 51, 51, 0.2);
+  background-color: rgba(51, 51, 51, 0.9);
+  border: 0; // 1px solid rgba(51, 51, 51, 0.2);
   border-radius: 3.0rem;
   cursor: pointer;
   display: inline-block;
@@ -68,10 +68,10 @@
 }
 
 .icon-button:hover span {
-  width: 2.8rem;
-  height: 2.8rem;
-  border-radius: 2.8rem;
-  margin: -1.4rem;
+  width: 3.0rem;
+  height: 3.0rem;
+  border-radius: 3.0rem;
+  margin: -1.5rem;
 }
 
 .linkedin-share span {
@@ -90,16 +90,16 @@
 .icon-button i {
   background: none;
   color: white;
-  height: 2.8rem;
+  height: 3.0rem;
   left: 0;
-  line-height: 2.8rem;
+  line-height: 3.0rem;
   position: absolute;
   top: 0;
   -webkit-transition: all 0.1s;
      -moz-transition: all 0.1s;
        -o-transition: all 0.1s;
           transition: all 0.1s;
-  width: 2.8rem;
+  width: 3.0rem;
   z-index: 10;
 }
 
@@ -120,15 +120,15 @@
 }
 
 .icon-button .fa-linkedin {
-  color: #0077b5;
+  color: #fff // #0077b5;
 }
 
 .icon-button .fa-twitter {
-  color: #4099ff;
+  color: #fff // #4099ff;
 }
 
 .icon-button .fa-facebook {
-  color: #3B5998;
+  color: #fff // #3B5998;
 }
 
 .icon-button-xs {
@@ -140,4 +140,5 @@
 .icon-button:hover .fa-linkedin {
   color: white;
 }
+
 
