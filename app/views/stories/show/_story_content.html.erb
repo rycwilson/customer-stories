@@ -35,14 +35,17 @@
             </div>
           </div>
 
-          <ul class="grid list-unstyled text-center">
-            <% @related_stories.each do |story| %>
+          <div class="grid-container">
+            <ul class="grid list-unstyled text-center">
+              <% @related_stories.each do |story| %>
 
-              <%= render 'stories/shared/card',
-                          { company: @company, story: story } %>
+                <%= render 'stories/shared/card',
+                            { company: @company, story: story } %>
 
-            <% end %>
-          </ul>
+              <% end %>
+            </ul>
+
+          </div>
 
         </div>
 
@@ -131,14 +134,16 @@
             </div>
           </div>
 
-          <div class="grid">
-            <% @related_stories.each do |story| %>
+          <div class="grid-container">
+            <ul class="grid list-unstyled text-center">
+              <% @related_stories.each do |story| %>
 
-              <%= render 'stories/shared/card',
-                          { company: @company, story: story,
-                            customer: story.success.customer } %>
+                <%= render 'stories/shared/card',
+                            { company: @company, story: story,
+                              customer: story.success.customer } %>
 
-            <% end %>
+              <% end %>
+            </ul>
           </div>
 
         </div>
