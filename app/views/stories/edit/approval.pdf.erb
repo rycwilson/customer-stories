@@ -4,9 +4,7 @@
   <div>
     <div>
       <%= image_tag(
-            embed_remote_image(
-              story.company.logo_url || asset_url('logo-missing.png'), 'image/png'
-            ),
+            embed_remote_image(story.company.logo_url || LOGO_PLACEHOLDER_URL, 'image/png'),
             id: 'company-logo-pdf'
           ) %>
     </div>
@@ -14,9 +12,7 @@
   </div>
 
   <%= image_tag(
-        embed_remote_image(
-          story.curator.photo_url || asset_url('logo-missing.png'), 'image/png'
-        ),
+        embed_remote_image(story.curator.photo_url || LOGO_PLACEHOLDER_URL, 'image/png'),
         id: 'curator-photo', class: 'pull-right'
       ) %>
 
@@ -45,7 +41,7 @@
 <div class="row logo-quote">
   <div class='col-xs-3 text-center'>
     <%= image_tag(
-          embed_remote_image(story.customer.logo_url || asset_url('logo-missing.png'), 'image/png'),
+          embed_remote_image(story.customer.logo_url || LOGO_PLACEHOLDER_URL, 'image/png'),
           id: 'customer-logo'
         ) %>
   </div>  <!-- logo -->
