@@ -2,7 +2,7 @@
 <ul id='company-nav-dropdowns' class='nav nav-tabs mainnav-menu pull-right' role='tablist'
     style='border-bottom:0'>
 
-  <% if company_curator?(company.id) && !public_view? %>
+  <% if company_curator?(company.id) && !main_gallery? %>
 
     <li class="dropdown company-settings pull-right">
       <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
@@ -24,7 +24,7 @@
 
   <% end %>
 
-  <% if public_view? && curator?(company.id) %>
+  <% if main_gallery? && curator?(company.id) %>
 
     <a href='/curate'>
       <i class='glyphicon glyphicon-home' style='font-size: 18px; '></i>

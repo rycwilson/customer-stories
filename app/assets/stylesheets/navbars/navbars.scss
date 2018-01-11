@@ -1,0 +1,119 @@
+
+@import 'header_1';
+@import 'header_2';
+@import 'landing';
+@import 'company_nav';
+
+.fa-bars {
+  color: #555555;
+}
+
+#company-nav, #header-2 {
+
+}
+
+@media only screen and (max-width: 767px) {
+  #header-2 {
+    .navbar-container {
+      .row {
+        .navbar-header {
+          h3 {
+            font-size: 20px;
+          }
+        }
+      }
+    }
+  }
+}
+@media only screen and (min-width: 768px) {
+  #header-2.index {
+    margin-bottom: 30px;
+  }
+  #header-2.show {
+    margin-bottom: 30px;
+  }
+}
+@media only screen and (min-width: 992px) {
+  #header-2.index {
+    margin-bottom: 20px;
+  }
+}
+@media only screen and (min-width: 1200px) {
+  #header-2.index {
+    margin-bottom: 18px;
+  }
+  #header-2.show {
+    margin-bottom: 40px;
+  }
+}
+
+
+// .companies.edit #company-nav {
+//   #dropdowns-list {
+//     margin: 0;
+//     li.dropdown:first-child {  // first/last are reversed due to being pulled right
+//       > a {
+//         color: #4885ed;
+//         border-color: transparent;
+//         border-bottom: 1px solid #4885ed;
+//       }
+//       > a:hover, a:focus {
+//         color: #4885ed;
+//         border-bottom: 1px solid #4885ed;
+//       }
+//     }
+//   }
+// }
+
+// .profile.edit #company-nav {
+//   #dropdowns-list {
+//     margin: 0;
+//     li.dropdown:last-child {  // first/last are reversed due to being pulled right
+//       > a {
+//         color: #4885ed;
+//         border-color: transparent;
+//         border-bottom: 1px solid #4885ed;
+//       }
+//       > a:hover, a:focus {
+//         color: #4885ed;
+//         border-bottom: 1px solid #4885ed;
+//       }
+//     }
+//   }
+// }
+
+
+
+#primary-cta-btn {
+  // margin-top: 15px;
+  font-weight: 400;
+  border-radius: 2px;
+  border: 1px solid;
+  min-width: 140px
+}
+#primary-cta-btn:hover, #primary-cta-btn:focus {
+  border: 1px solid;
+  box-shadow: 0 0 0 1px #fff inset;
+  outline: none !important;
+}
+
+#primary-cta-btn.compas {
+  font-size: 13px;
+  color: #e41516;
+  border: 1px solid #e41516;
+  border-radius: 20px;
+  line-height: 38px;
+  padding: 0 26px;
+  text-align: center;
+  font-weight: 600;
+  transition: background .25s ease
+}
+#primary-cta-btn.compas:hover {
+  background: #e41516;
+  color: #fff;
+}
+
+
+
+
+

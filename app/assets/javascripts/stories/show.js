@@ -9,7 +9,7 @@ function storiesShow () {
   clickyListeners();
   initMoreStories();
 
-  $(document).on('click', 'a.curate-story', function () {
+  $(document).on('click', '.edit-story a', function () {
     Cookies.set('csp-curate-story', 'content');
   });
 

@@ -4,15 +4,40 @@
     <div class="container navbar-container">
       <div class="row">
 
-        <div class="navbar-header col-xs-12 <%= story ? 'col-sm-8' : '' %>">
-
+        <div class="navbar-header col-xs-12 <%= curator?(company.id) ? 'col-sm-5' : 'col-sm-7' %>">
           <h3 class="<%= company.color_contrast %>">Customer Stories</h3>
-
         </div>
 
-        <% if story.present? %>
+        <% if curator?(company.id) && story.present? %>
 
-          <div class="social-buttons col-sm-4 hidden-xs text-right">
+          <div class="col-sm-2 hidden-xs text-center edit-story">
+            <%= link_to(
+                  curate_story_path(story.customer.slug, story.slug),
+                  { class: "#{company.color_contrast }" }
+                ) do %>
+              <i class="glyphicon glyphicon-pencil"></i>&nbsp;&nbsp;Edit Story
+            <% end %>
+          </div>
+
+        <% else %>
+
+          <div class="col-sm-2">
+            <!-- filler -->
+          </div>
+
+        <% end %>
+
+        <% if curator?(company.id) && main_gallery? %>
+
+          <div class="col-sm-5 home">
+            <a href="/curate" class="<%= company.color_contrast %>">
+              <i class="glyphicon glyphicon-home"></i>
+            </a>
+          </div>
+
+        <% elsif story.present? %>
+
+          <div class="social-buttons col-sm-5 hidden-xs text-right">
             <a href="<%= LINKEDIN_SHARE_URL + story.csp_story_url %>" target="_blank"
                class="icon-button linkedin-share <%= company.color_contrast %>">
               <i class="fa fa-linkedin" style="color:<%= company.color_contrast == 'light' ? company.header_color_2 : '#fff' %>"></i>
@@ -28,6 +53,12 @@
               <i class="fa fa-facebook" style="color:<%= company.color_contrast == 'light' ? company.header_color_2 : '#fff' %>"></i>
               <span></span>
             </a>
+          </div>
+
+        <% else %>
+
+          <div class="col-sm-5">
+            <!-- filler -->
           </div>
 
         <% end %>

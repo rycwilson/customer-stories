@@ -1,0 +1,38 @@
+
+<% if curator_story_view?(company.id) %>
+
+  <style>#company-nav:after{content:none;}#company-nav{margin-bottom:0;}</style>
+
+<% end %>
+
+<nav id='company-nav'>
+  <div class='container company-nav-container'>
+    <div class="row">
+
+      <% if main_gallery? %>
+
+        <div class="col-sm-12">
+          <%= render('companies/shared/company_nav_dropdowns', { company: company }) %>
+        </div>
+
+      <% else %>
+
+        <div class="col-sm-7">
+          <%= render('companies/shared/workflow_tabs', { company: company, workflow_stage: workflow_stage }) %>
+        </div>
+
+        <div class="col-sm-5">
+          <%= render('companies/shared/company_nav_dropdowns', { company: company }) %>
+        </div>
+
+      <% end %>
+
+      <!-- <div id='collapsed-workflow-tabs'
+           class="col-xs-1 <%#= gallery_view? ? '' : 'hidden-xs hidden-sm' %> hidden-md hidden-lg">
+        <%#= render 'companies/shared/collapsed_workflow_tabs', { company: company } %>
+      </div> -->
+
+    </div>
+
+  </div>
+</nav>

@@ -1,10 +1,9 @@
 
-<!-- turbolinks cache control -->
-<!-- seo meta tags -->
 <% content_for :head do %>
 
   <meta name="turbolinks-cache-control" content="no-cache">
 
+  <!-- seo meta tags -->
   <% if production? %>
     <% cache("#{@company.subdomain}/stories-index-meta-tags", expires_in: 1.week) do %>
       <%= render 'stories/index/index_meta_tags', { company: @company } %>
@@ -18,20 +17,7 @@
   <%= render 'companies/crowdsource/contributors/csp_linkedin_widget_template' %>
 <% end %>
 
-<% if curator?(@company.id) %>
-
-  <%= render 'shared/navbars/company_navbar', {
-        company: @company, is_curator: true, workflow_stage: nil,
-        category_select_cache_key: @category_select_cache_key,
-        product_select_cache_key: @product_select_cache_key,
-        pre_selected_filter: @pre_selected_filter
-      } %>
-
-<% else %>
-
-  <%= render('shared/navbars/header_2', { company: @company, action: 'index', story: nil }) %>
-
-<% end %>
+<%= render('shared/navbars/header_2', { company: @company, action: 'index', story: nil }) %>
 
 <div class="container grid-container">
 
