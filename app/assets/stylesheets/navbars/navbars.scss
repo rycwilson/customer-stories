@@ -8,44 +8,6 @@
   color: #555555;
 }
 
-#company-nav, #header-2 {
-
-}
-
-@media only screen and (max-width: 767px) {
-  #header-2 {
-    .navbar-container {
-      .row {
-        .navbar-header {
-          h3 {
-            font-size: 20px;
-          }
-        }
-      }
-    }
-  }
-}
-@media only screen and (min-width: 768px) {
-  #header-2.index {
-    margin-bottom: 30px;
-  }
-  #header-2.show {
-    margin-bottom: 30px;
-  }
-}
-@media only screen and (min-width: 992px) {
-  #header-2.index {
-    margin-bottom: 20px;
-  }
-}
-@media only screen and (min-width: 1200px) {
-  #header-2.index {
-    margin-bottom: 18px;
-  }
-  #header-2.show {
-    margin-bottom: 40px;
-  }
-}
 
 
 // .companies.edit #company-nav {
