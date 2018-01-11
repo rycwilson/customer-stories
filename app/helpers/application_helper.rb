@@ -4,41 +4,6 @@ module ApplicationHelper
     ['companies', 'stories', 'profile'].include?(controller)
   end
 
-  # don't go over 63!
-  def header_title company
-    case company.subdomain
-    when 'retailnext'
-      'max-height:60px;margin-top:-14px'
-    when 'trunity'
-      'max-height:63px'
-    when 'compas'
-      'max-height:56px'
-    when 'varmour'
-      'max-height:63px'
-    when 'centerforcustomerengagement'
-      'max-height:54px'
-    when 'zeniq'
-      'max-height:60px'
-    when 'corefact'
-      'max-height:40px'
-    when 'saucelabs'
-      'max-height:60px'
-    when 'juniper'
-      'max-height:60px'
-    when 'neonova'
-      'max-height:63px'
-    when 'kodacon'
-      'max-height:60px'
-    when 'zoommarketing'
-      'max-height:50px'
-    when 'acme-test'
-      'max-height:60px'
-    else
-      'max-height:60px'
-    end
-
-  end
-
   def include_gon? controller, action
     controller == 'site' && ['index', 'store_front'].include?(action) ||
     controller == 'stories' && ['index', 'show', 'edit'].include?(action) ||
