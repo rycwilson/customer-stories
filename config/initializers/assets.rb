@@ -12,7 +12,8 @@ Rails.application.config.assets.version = '1.0'
 
 Rails.application.config.assets.precompile += %w(
   custom.css
-  stories/more_stories_rel.css
+  stories/show/more_stories_rel.css
+  stories/show/social-share.css
   adwords/ads_preview.js
   jquery-textfill/source/jquery.textfill.js
   adwords/ads_preview.css
@@ -21,7 +22,6 @@ Rails.application.config.assets.precompile += %w(
   cs-widget-rel-exp.css
   cs-widget-varmour.css
   pdf.css
-  social-share.css
   mvpready-landing.css
   mvpready-admin.css
 )

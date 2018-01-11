@@ -1,15 +1,9 @@
 
-@import 'index';
-@import 'gallery';
-@import 'shared/new_story_modal';
-@import 'show';
-@import 'edit/edit';
-@import 'gallery';
-@import 'linkedin_widget';
-@import 'video';
+@import 'shared/*';
+@import 'index/*';
+@import 'show/show';
+@import 'edit/*';
 @import 'bootstrap-horizon/bootstrap-horizon';
-@import 'more_stories_tab';
-@import 'grid_previews';
 
 .stories.show, .stories.index {
   @media only screen and (min-width: 1200px) {

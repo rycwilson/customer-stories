@@ -32,7 +32,7 @@
  *= require bootstrap-switch/dist/css/bootstrap3/bootstrap-switch
  *= require bootstrap-daterangepicker/daterangepicker
  *= require_tree ./plugins
- *= require social-share
+ *= require_tree ./shared
  *= require companies/companies
  *= require stories/stories
  *= require contributions/contributions
@@ -117,57 +117,21 @@ hr {
   border: 1px solid #ccc
 }
 
-// the shadow settings are copied from mvp
-.btn-success {
-  background-color: #4d8664;
-  border-color: #45715a;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
-}
 
-// .note-link-btn is summernote dialog
-.btn-success:hover, .btn-success:focus, .btn-success:active, .btn-success.disabled:hover,
-.btn-success[disabled]:hover, .btn-success.disabled:focus, .btn-success[disabled]:focus,
-.btn-success:active:hover, .btn-success:active:focus {
-  background-color: #456f59;
-  border-color: #395f4e;
-}
 
 .alert-success {
   background-color: #4d8664 !important;
   border-color: #45715a !important;
 }
 
-/*
- *  apply to all columns within a row to center vertically
- *  ref: http://stackoverflow.com/questions/20547819/vertical-align-with-bootstrap-3
- */
-.vcenter {
-  display: inline-block;
-  vertical-align: middle;
-  float: none;
-}
+
 
 .required-input label:not(.radio-inline):after {
   color: #a94442;  // #D9534F;
   content: " *";
 }
 
-.bip-clickable {
-  height: 28px;
-  width: 28px;
-  color: #666;
-  border: 1px solid #e3e3e3;
-  border-radius: 3px;
-  padding: 5px;
-  font-size: 16px;
-  cursor: pointer;
-}
 
-.bip-clickable:hover, .bip-clickable-fa:hover  {
-  color: white !important;
-  background-color: rgb(14, 122, 254); // #4885ed; //#666;
-}
 
 #back-to-top {
   display: none !important;
