@@ -1,0 +1,37 @@
+
+<nav id="header-2" class="navbar navbar-default <%= company.subdomain %> <%= action %>" style="background:<%= company.header_color_2 %>">
+  <div class="container navbar-container">
+    <div class="row">
+
+      <div class="navbar-header col-xs-12 <%= story ? 'col-sm-8' : '' %>">
+
+        <h3 class="<%= company.color_contrast %>">Customer Stories</h3>
+
+      </div>
+
+      <% if story.present? %>
+
+        <div class="social-buttons col-sm-4 hidden-xs text-right">
+          <a href="<%= LINKEDIN_SHARE_URL + story.csp_story_url %>" target="_blank"
+             class="icon-button linkedin-share <%= company.color_contrast %>">
+            <i class="fa fa-linkedin" style="color:<%= company.color_contrast == 'light' ? company.header_color_2 : '#fff' %>"></i>
+            <span></span>
+          </a>
+          <a href="<%= TWITTER_SHARE_URL + story.csp_story_url %>" target="_blank"
+             class="icon-button twitter-share <%= company.color_contrast %>">
+            <i class="fa fa-twitter" style="color:<%= company.color_contrast == 'light' ? company.header_color_2 : '#fff' %>"></i>
+            <span></span>
+          </a>
+          <a href="<%= FACEBOOK_SHARE_URL + story.csp_story_url %>" target="_blank"
+             class="icon-button facebook-share <%= company.color_contrast %>">
+            <i class="fa fa-facebook" style="color:<%= company.color_contrast == 'light' ? company.header_color_2 : '#fff' %>"></i>
+            <span></span>
+          </a>
+        </div>
+
+      <% end %>
+
+    </div>
+    <!-- <div class="collapse navbar-collapse"></div> -->
+  </div>
+</nav>

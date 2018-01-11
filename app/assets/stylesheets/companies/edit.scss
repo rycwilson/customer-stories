@@ -1,9 +1,7 @@
 
 /*
-*= require ./settings/crowdsourcing_templates
-*= require ./settings/ctas
-*= require ./settings/widget_config
-*/
+ *= require_tree ./settings
+ */
 
 .companies.edit {
 
@@ -13,17 +11,6 @@
     display: none;
   }
 
-  /***********************************************/
-  /*      email template editor
-  /***********************************************/
-
-  #email-templates-form .control-label {
-    margin-left: -30px;
-  }
-
-  #email-templates-form > div > div > button {
-    width: 100%;
-  }
 
   /***********************************************/
   /*      summernote

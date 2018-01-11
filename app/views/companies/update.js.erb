@@ -1,8 +1,11 @@
 (function () {
 
-  var isProfileUpdate = $('[href="#company-profile"]').parent().hasClass('active'),
+  var company = <%= raw @company.to_json({
+                  only: [],
+                  methods: [:header_color_1_changed?, :header_color_2_changed?, :color_contrast]
+                }) %>,
+      isProfileUpdate = $('[href="#company-profile"]').parent().hasClass('active'),
       isTagsUpdate = $('[href="#story-tags"]').parent().hasClass('active'),
-      headerStyle = '<%= @company.header_style %>',
       toggleProfileSubmit = function () {
         $('#company-profile-form button[type="submit"]').find('span, .fa-spin').toggle();
       },
@@ -11,11 +14,18 @@
       };
 
   if (isProfileUpdate) {
-    app.company.header_style = headerStyle;
     toggleProfileSubmit();
-    $('.navbar').attr('style', headerStyle);
-    $('.logo-upload .thumbnail')
-      .css('background', 'linear-gradient(45deg, <%= @company.header_color_1 %> 0%, <%= @company.header_color_2 %> 100%)');
+
+    if (company['header_color_1_changed?']) {
+      $('.admin.navbar').css({ background: company.header_color_1 })
+    }
+    if (company['header_color_2_changed?']) {
+      $('#header-2')
+        .css({ background: company.header_color_2 })
+        .find('h3, .icon-button').removeClass('light dark').addClass(company.color_contrast)
+    }
+
+    $('#company-profile-form .logo-upload .thumbnail').css('background', '<%= @company.header_color_1 %>');
     flashDisplay('<%= @flash_mesg %>', '<%= @flash_status %>', toggleProfileForm);
 
   } else if (isTagsUpdate) {

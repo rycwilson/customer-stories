@@ -1,14 +1,5 @@
 module StoriesHelper
 
-  # method allows for insertion of html into best_in_place textarea
-  def story_quote text
-    if text
-      raw "<em id='story-edit-quote'>" + "\"#{text}\"" + "</em>"
-    else
-      "Add a customer quote ..."
-    end
-  end
-
   # extra parameter is necessary because user not connected to customer
   def research_user_query_string contributor, customer_name=nil
     if customer_name.present?
@@ -18,7 +9,7 @@ module StoriesHelper
     end
   end
 
-  def curator_story_view? company_id
+  def curator_story_view? (company_id)
     company_curator?(company_id) && controller_name == 'stories' && action_name == 'show'
   end
 

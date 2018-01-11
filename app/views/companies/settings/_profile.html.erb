@@ -37,66 +37,54 @@
       <div class="form-group logo-upload">
 
         <label>Header Logo</label>
-        <div class="fileinput <%= @company.logo_url.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">
+        <div class="fileinput <%= @company.logo_url.present? ? 'fileinput-exists' : 'fileinput-new' %>" data-provides="fileinput">
 
-            <div class="fileinput-new thumbnail"
-                 style="<%= @company.new_record? ? Company::CSP.header_style : @company.header_style %>">
-              <%= image_tag() "logo-missing.png", alt: 'logo missing' %>
-            </div>
+          <div class="fileinput-new thumbnail" style="background:<%= @company.new_record? ? Company::CSP.header_color_1 : @company.header_color_1 %>">
+            <%= image_tag(LOGO_PLACEHOLDER_URL, alt: 'logo') %>
+          </div>
+          <div class="fileinput-preview fileinput-exists thumbnail"
+               style="background:<%= @company.new_record? ? Company::CSP.header_color_1 : @company.header_color_1 %>"
+               data-trigger="fileinput">
+            <img src="<%= @company.logo_url %>" alt="logo">
+          </div>
+          <div class="btn-file">
+            <%= f.file_field(:logo_url) %>
+          </div>
+          <button type="button" class="btn btn-default">
+            <i class="glyphicon glyphicon-pencil"></i>
+          </button>
 
-            <div class="fileinput-preview fileinput-exists thumbnail"
-                 style="<%= @company.new_record? ? Company::CSP.header_style : @company.header_style %>"
-                 data-trigger="fileinput">
-              <img src="<%= @company.logo_url %>" alt="company logo">
-            </div>
+        </div>
 
-            <div>
-              <span class="btn btn-default btn-file" style='margin-bottom:7px'>
-                <span class="fileinput-new">
-                  Select Logo
-                </span>
-                <span class="fileinput-exists">
-                  Change Logo
-                </span>
-                <%= f.file_field :logo_url %>
-              </span>
+        <div class="header-2" style="background:<%= @company.new_record? ? Company::CSP.header_color_2 : @company.header_color_2 %>">
+          <h3 class="<%= @company.color_contrast %>">Customer Stories</h3>
+          <div style="display:inline-block">
 
-            <!--   <a href="#" class="btn btn-default fileinput-exists" data-dismiss="fileinput">
-                Remove
-              </a> -->
-            </div>
+          <span class="social-buttons pull-right">
+            <a href="javascript:;" class="icon-button linkedin-share <%= @company.color_contrast %>">
+              <i class="fa fa-linkedin" style="color:<%= @company.color_contrast == 'light' ? @company.header_color_2 : '#fff' %>"></i><span></span>
+            </a>
+            <a href="javascript:;" class="icon-button twitter-share <%= @company.color_contrast %>">
+              <i class="fa fa-twitter" style="color:<%= @company.color_contrast == 'light' ? @company.header_color_2 : '#fff' %>"></i><span></span>
+            </a>
+            <a href="javascript:;" class="icon-button facebook-share <%= @company.color_contrast %>">
+              <i class="fa fa-facebook" style="color:<%= @company.color_contrast == 'light' ? @company.header_color_2 : '#fff' %>"></i><span></span>
+            </a>
+          </span>
+          </div>
+        </div>
 
-        </div> <!-- /.fileupload -->
       </div>  <!-- form-group -->
 
       <div class="form-group">
         <div class="row color-picker">
           <div class="col-sm-6">
-            <%= f.label :header_color_1, 'Header color - left', class: 'control-label' %>
-            <%= f.text_field :header_color_1, class: 'form-control mini-colors' %>
+            <%= f.label(:header_color_1, 'Header color - upper', class: 'control-label') %>
+            <%= f.text_field(:header_color_1, class: 'form-control mini-colors upper') %>
           </div>
           <div class="col-sm-6">
-            <%= f.label :header_color_2, 'Header color - right', class: 'control-label' %>
-            <%= f.text_field :header_color_2, class: 'form-control mini-colors' %>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="row">
-          <div class="col-sm-6">
-            <%= f.label :header_text_color, 'Header text', class: 'control-label' %>
-            <%= f.text_field :header_text_color, class: 'form-control mini-colors' %>
-          </div>
-
-          <div class="col-sm-6">
-            <label>Try it</label> <br>
-            <button type='button' id='test-colors-btn' class='btn btn btn-default'>
-              Apply
-            </button>
-            <button type='button' id='restore-colors-btn' class='btn btn btn-default'>
-              Restore
-            </button>
+            <%= f.label(:header_color_2, 'Header color - lower', class: 'control-label') %>
+            <%= f.text_field(:header_color_2, class: 'form-control mini-colors lower') %>
           </div>
         </div>
       </div>

@@ -18,7 +18,7 @@
 
 <% end %>
 
-<nav class="navbar navbar-default admin <%= @company.subdomain == 'compas' ? 'navbar-fixed-top' : '' %>" role="banner" style="<%= @company ? @company.header_style : Company::CSP.header_style %>">
+<nav class="navbar navbar-default admin <%= @company.subdomain == 'compas' ? 'navbar-fixed-top' : '' %>" role="banner" style="background:<%= @company ? @company.header_color_1 : Company::CSP.header_color_1 %>">
   <div class="container navbar-container">
     <div class="row">
 

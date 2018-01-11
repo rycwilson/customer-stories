@@ -293,14 +293,6 @@ class Company < ActiveRecord::Base
   # virtual attributes
   attr_writer :default_adwords_image_url
 
-  def header_style
-    if self.subdomain == 'compas'
-      "background:rgba(255,255,255,0.9)"
-    else
-      "background:linear-gradient(45deg, #{self.header_color_1} 0%, #{self.header_color_2} 100%);color:#{self.header_text_color};"
-    end
-  end
-
   def all_stories
     Rails.cache.fetch("#{self.subdomain}/all_stories") do
       Story.order(Story.company_all(self.id)).pluck(:id)
@@ -1300,6 +1292,17 @@ class Company < ActiveRecord::Base
     end
   end
 
+   # returns "light" or "dark" to indicate font color for a given background color (header_color_2)
+  def color_contrast
+    # method expects hex value in the form of #fafafa (all six digits); see the js implementation for shorthand hex
+    hex = self.header_color_2
+    rgb = { r: hex[1..2].hex, g: hex[3..4].hex, b: hex[5..6].hex }
+
+    # // http://www.w3.org/TR/AERT#color-contrast
+    o = (((rgb[:r] * 299) + (rgb[:g] * 587) + (rgb[:b] * 114)) / 1000).round
+    return (o > 125) ? 'dark' : 'light';
+  end
+
   private
 
   # Creates an instance of AdWords API class
@@ -1402,6 +1405,5 @@ class Company < ActiveRecord::Base
     # get rid of the year
     all_weeks.map { |week| [week[0].sub!(/\/\d+$/, ''), week[1]] }
   end
-
 
 end
