@@ -4,11 +4,11 @@
     <div class="container navbar-container">
       <div class="row">
 
-        <div class="navbar-header col-xs-12 <%= curator?(company.id) ? 'col-sm-5' : 'col-sm-7' %>">
+        <div class="navbar-header col-xs-12 <%= curator?(company) ? 'col-sm-5' : 'col-sm-7' %>">
           <h3 class="<%= company.color_contrast %>">Customer Stories</h3>
         </div>
 
-        <% if curator?(company.id) && story.present? %>
+        <% if curator?(company) && story.present? %>
 
           <div class="col-sm-2 hidden-xs text-center edit-story">
             <%= link_to(
@@ -27,7 +27,7 @@
 
         <% end %>
 
-        <% if curator?(company.id) && main_gallery? %>
+        <% if curator?(company) && main_gallery? %>
 
           <div class="col-sm-5 home">
             <a href="/curate" class="<%= company.color_contrast %>">

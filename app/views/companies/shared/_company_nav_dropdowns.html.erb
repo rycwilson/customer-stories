@@ -1,7 +1,7 @@
 
 <ul id='company-nav-dropdowns' class='nav nav-tabs mainnav-menu pull-right' role='tablist'>
 
-  <% if company_curator?(company.id) && !main_gallery? %>
+  <% if curator?(company) && !main_gallery? %>
 
     <li class="dropdown company-settings pull-right">
       <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:;">
@@ -23,7 +23,7 @@
 
   <% end %>
 
-  <% if main_gallery? && curator?(company.id) %>
+  <% if main_gallery? && curator?(company) %>
 
     <a href='/curate'>
       <i class='glyphicon glyphicon-home' style='font-size: 18px; '></i>
@@ -41,7 +41,7 @@
 
       <ul class="dropdown-menu" style='right:0;left:auto' role="menu">
 
-        <% if curator?(company.id) %>
+        <% if curator?(company) %>
           <li>
             <a href='/user-profile'>
               <%= current_user.full_name %>
