@@ -1,8 +1,9 @@
 
-#cs-varmour-container {
+#cs-rel-exp-container {
 
   @import 'bootstrap-sass/assets/stylesheets/_bootstrap-widget.scss';
   @import 'bootstrap-horizon/bootstrap-horizon.scss';
-  @import 'stories/show/more_stories_varmour.scss';
+  @import 'more_stories_rel_exp.scss';
+  @import 'fontawesome/css/font-awesome-widget.scss'
 
 }

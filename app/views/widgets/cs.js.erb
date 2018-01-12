@@ -27,16 +27,16 @@
 
       if (type === 'tab') {
         $container = $('#cs-container').length ? $('#cs-container') : $('#cs-tab-container');
-        $stylesheet.attr('href', "<%= URI.join(root_url, asset_path('cs-widget-tab.css')) %>");
+        $stylesheet.attr('href', "<%= URI.join(root_url, asset_path('widget/cs-widget-tab.css')) %>");
       } else if (type === 'rel') {
         $container = $('#cs-rel-container');
-        $stylesheet.attr('href', "<%= URI.join(root_url, asset_path('cs-widget-rel.css')) %>");
+        $stylesheet.attr('href', "<%= URI.join(root_url, asset_path('widget/cs-widget-rel.css')) %>");
       } else if (type === 'rel-exp') {
         $container = $('#cs-rel-exp-container');
-        $stylesheet.attr('href', "<%= URI.join(root_url, asset_path('cs-widget-rel-exp.css')) %>");
+        $stylesheet.attr('href', "<%= URI.join(root_url, asset_path('widget/cs-widget-rel-exp.css')) %>");
       } else if (type === 'varmour') {
         $container = $('#cs-varmour-container');
-        $stylesheet.attr('href', "<%= URI.join(root_url, asset_path('cs-widget-varmour.css')) %>");
+        $stylesheet.attr('href', "<%= URI.join(root_url, asset_path('widget/cs-widget-varmour.css')) %>");
       }
 
       // get font awesome if it doesn't exist on host

@@ -11,16 +11,15 @@ Rails.application.config.assets.version = '1.0'
 # Rails.application.config.assets.precompile += %w( search.js )
 
 Rails.application.config.assets.precompile += %w(
-  custom.css
-  stories/show/more_stories_rel.css
+  custom/compas.css
   stories/show/social-share.css
   adwords/ads_preview.js
   jquery-textfill/source/jquery.textfill.js
   adwords/ads_preview.css
-  cs-widget-tab.css
-  cs-widget-rel.css
-  cs-widget-rel-exp.css
-  cs-widget-varmour.css
+  widget/cs-widget-tab.css
+  widget/cs-widget-rel.css
+  widget/cs-widget-rel-exp.css
+  widget/cs-widget-varmour.css
   pdf.css
   mvpready-landing.css
   mvpready-admin.css
