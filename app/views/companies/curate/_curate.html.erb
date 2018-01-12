@@ -16,65 +16,53 @@
 
     <div class="tab-content">
 
-      <div id='curate-stories'
-          class="tab-pane fade <%= curate_view == 'stories' ? 'active in' : '' %>">
+      <div id='curate-stories' class="tab-pane fade <%= curate_view == 'stories' ? 'active in' : '' %>">
 
-        <div class="layout">
+        <div class="row">
 
-          <div class="col-md-3 col-sm-4 layout-sidebar">
+          <div class="col-md-4 col-lg-3">
 
-            <div class='sidebar-contents'>
+            <h4 class='lead' style='margin-bottom:0'>
+              <a href='/'>Customer Stories</a>
+            </h4>
 
-              <h4 class='lead' style='margin-bottom:0'>
-                <a href='/'>Customer Stories</a>
-              </h4>
+            <button type='button' class='btn btn-secondary' data-toggle='modal' data-target='#new-story-modal'><i class='fa fa-plus-circle fa-fw'></i>&nbsp;New Story</button>
 
-              <button type='button' style='width:160px; margin:25px 0;' class='btn btn-secondary' data-toggle='modal' data-target='#new-story-modal'><i class='fa fa-plus-circle fa-fw'></i>&nbsp;New Story</button>
-
-              <%= render 'companies/curate/filters', { company: company } %>
-
-            </div>
+            <%= render('companies/curate/filters', { company: company }) %>
 
           </div>
 
-          <div class="col-md-9 col-sm-8 layout-main">
-            <div class="row" style='margin-top:2px; margin-bottom:20px;'>
+          <div class="col-md-8 col-lg-9">
 
-              <div class="col-sm-10 col-sm-offset-1">
-                <div class="row text-center">
+            <div id="status-filters" class="row">
+              <div class="col-sm-12 text-center">
 
-                  <!-- <div class='col-sm-3'> -->
-                    <label style='margin-right:30px'>
-                      <input class='curate pending-curation' type="checkbox" checked='true'>&nbsp;
-                      Curation started
-                    </label>
-                  <!-- </div> -->
-                  <!-- <div class='col-sm-3'> -->
-                    <label style='margin-right:30px'>
-                      <input class='curate logo-published' type="checkbox" checked='true'>&nbsp;
-                      Logo published
-                    </label>
-                  <!-- </div> -->
-                  <!-- <div class='col-sm-3'> -->
-                    <label style='margin-right:30px'>
-                      <input class='curate preview-published' type="checkbox" checked='true'>&nbsp;
-                      Preview published
-                    </label>
-                  <!-- </div> -->
-                  <!-- <div class='col-sm-3'> -->
-                    <label style='margin-right:30px'>
-                      <input class='curate published' checked='true' type="checkbox">&nbsp;
-                      Story Published
-                    </label>
-                  <!-- </div> -->
+                <label style='margin-right:30px'>
+                  <input class='curate pending-curation' type="checkbox" checked='true'>&nbsp;
+                  Curation started
+                </label>
+                <label style='margin-right:30px'>
+                  <input class='curate logo-published' type="checkbox" checked='true'>&nbsp;
+                  Logo published
+                </label>
+                <label style='margin-right:30px'>
+                  <input class='curate preview-published' type="checkbox" checked='true'>&nbsp;
+                  Preview published
+                </label>
+                <label style='margin-right:30px'>
+                  <input class='curate published' checked='true' type="checkbox">&nbsp;
+                  Story Published
+                </label>
 
-                </div>
               </div>
-
             </div>
 
-            <ul id="curate-gallery" class='grid list-unstyled text-center'>
-            </ul>
+            <div class="grid-container">
+
+              <ul id="curate-gallery" class='grid list-unstyled text-center'>
+              </ul>
+
+            </div>
 
           </div>
 

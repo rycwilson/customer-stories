@@ -112,17 +112,17 @@ function filterCurateGallery () {
       showLogoPublished = $('.curate.logo-published').prop('checked'),
       showPendingCuration = $('.curate.pending-curation').prop('checked');
 
-  var customerStoryIds = (customerId === '0') ? _.pluck(app.stories, 'id') :
+  var customerStoryIds = (customerId === '') ? _.pluck(app.stories, 'id') :
         _.pluck(app.stories.filter(function (story) {
           return story.success.customer.id == customerId;
         }), 'id');
 
-  var curatorStoryIds = (curatorId === '0') ? _.pluck(app.stories, 'id') :
+  var curatorStoryIds = (curatorId === '') ? _.pluck(app.stories, 'id') :
         _.pluck(app.stories.filter(function (story) {
           return story.success.curator_id == curatorId;
         }), 'id');
         // console.log(curatorStoryIds)
-  var categoryStoryIds = (categoryId === '0') ? _.pluck(app.stories, 'id') :
+  var categoryStoryIds = (categoryId === '') ? _.pluck(app.stories, 'id') :
         _.pluck(app.stories.filter(function (story) {
           return story.success.story_categories &&
              story.success.story_categories.some(function (category) {
@@ -130,7 +130,7 @@ function filterCurateGallery () {
              });
         }), 'id');
         // console.log(categoryStoryIds)
-  var productStoryIds = (productId === '0') ? _.pluck(app.stories, 'id') :
+  var productStoryIds = (productId === '') ? _.pluck(app.stories, 'id') :
         _.pluck(app.stories.filter(function (story) {
           return story.success.products &&
             story.success.products.some(function (product) {
@@ -170,18 +170,16 @@ function filterCurateGallery () {
 
   stories = app.stories.filter(function (story) { return storyIds.includes(story.id); });
 
+// console.log('stories: ', stories)
 
   $gallery.empty();
 
   if (stories.length === 0) {
     $gallery.append('<li><h3 class="lead grid-item">No Stories found</h3></li>');
   } else {
-    $gallery.append(
-        $(storiesTemplate({ stories: stories, isCurator: true }))
-      )
-      .hide().show('fast');
+    $gallery.append($(storiesTemplate({ stories: stories, isCurator: true })))
+            .hide().show('fast');
   }
-
 
 }
 

@@ -1,0 +1,55 @@
+
+<div class="col-md-4 col-lg-3">
+
+  <% if include_category_filter?(company) %>
+
+    <% cache(category_select_cache_key, skip_digest: true) do %>
+
+      <div class='form-group'>
+
+        <%= label_tag(:category_select, "Category") %>
+        <%= select_tag(:category_select,
+              options_for_select(
+                company.story_categories.public_select_options,
+                pre_selected_filter[:tag] == 'category' ? [pre_selected_filter[:id]] : []
+              ),
+              {
+                include_blank: true,
+                class: 'stories-filter category-select form-control',
+                style: 'width: 100%'
+              }
+            ) %>
+
+      </div>
+
+    <% end %>
+
+
+  <% end %>
+
+  <% if include_product_filter?(company) %>
+
+    <% cache(product_select_cache_key, skip_digest: true) do %>
+
+      <div class="form-group">
+
+        <%= label_tag(:product_select, "Product") %>
+        <%= select_tag(:product_select,
+              options_for_select(
+                company.products.public_select_options,
+                pre_selected_filter[:tag] == 'product' ? [pre_selected_filter[:id]] : []
+              ),
+              {
+                include_blank: true,
+                class: 'stories-filter product-select form-control',
+                style: 'width: 100%'
+              }
+            ) %>
+
+      </div>
+
+    <% end %>
+
+  <% end %>
+
+</div>

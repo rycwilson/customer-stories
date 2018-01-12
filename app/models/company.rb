@@ -18,32 +18,34 @@ class Company < ActiveRecord::Base
 
   has_many :customers, dependent: :destroy do
     def select_options
-      self.sort_by { |c| c.name }.map() do |customer|
-        [ customer.name, customer.id ]
-      end
+      self.sort_by { |c| c.name }.map { |customer| [ customer.name, customer.id ] }
     end
   end
   has_many :successes, -> { includes(:story) }, through: :customers do
     def select_options
-      self.map() do |success|
+      self.map do |success|
         [ success.name, success.id ]
       end
       .unshift( [""] )  # empty option makes placeholder possible (only needed for single select)
     end
   end
 
-  has_many :curators, class_name: "User"
+  has_many :curators, class_name: "User" do
+    def select_options
+      self.sort_by { |c| c.last_name }.map { |curator| [ curator.full_name, curator.id ] }
+    end
+  end
   has_many :contributions, -> { includes(:contributor, :referrer, success:{customer:{}}) }, through: :successes
   has_many :contributors, -> { distinct }, through: :customers, source: :contributors
   has_many :referrers, -> { distinct }, through: :contributions, source: :referrer
   has_many :stories, through: :successes do
     def select_options
-      self.select() { |story| story.published? }
+      self.select { |story| story.published? }
           .map() { |story| [ story.title, story.id ] }
           .unshift( ['All', 0] )
     end
     def published
-      self.select() { |story| story.published? }
+      self.select { |story| story.published? }
     end
     def with_ads
       # any ads with status 'REMOVED' have .destroy() calls in the delayed job queue
@@ -51,7 +53,7 @@ class Company < ActiveRecord::Base
         story.topic_ad.present? && story.topic_ad.status != 'REMOVED' &&
         story.retarget_ad.present? && story.retarget_ad.status != 'REMOVED'
       end
-      .sort_by() { |story| story.publish_date }.reverse()
+      .sort_by { |story| story.publish_date }.reverse
     end
   end
   has_many :visitor_actions
@@ -100,16 +102,16 @@ class Company < ActiveRecord::Base
   has_many :product_tags, class_name: 'Product'
   has_many :email_templates, dependent: :destroy
   has_many :contributor_questions, dependent: :destroy do
-    def customer ()
+    def customer
       where(role: 'customer')
     end
     def customer_success ()
       where(role: 'customer_success')
     end
-    def sales ()
+    def sales
       where(role: 'sales')
     end
-    def grouped_select_options ()
+    def grouped_select_options
       {
         'Custom' => self.select { |q| q.role.nil? }
                         .map { |q| [q.question, q.id] }
@@ -189,7 +191,7 @@ class Company < ActiveRecord::Base
     def sales
       where(name: 'Sales').take
     end
-    def grouped_select_options ()
+    def grouped_select_options
       {
         'Custom' => self.where.not("name IN ('Customer', 'Customer Success', 'Sales')")
                         .map { |template| [template.name, template.id] }
@@ -198,7 +200,7 @@ class Company < ActiveRecord::Base
                           .map { |template| [template.name, template.id] }
       }
     end
-    def grouped_select2_options ()
+    def grouped_select2_options
       [
         {
           text: 'Custom',
@@ -1006,9 +1008,9 @@ class Company < ActiveRecord::Base
   #       (which will save the associated ad groups and ads.)
   #       Else, the campaigns and ad groups will not be persisted
   #       and attempting to create ads will result in error
-  def adwords_sync ()
+  def adwords_sync
     # destroy the ads, but not the campaigns and ad groups (unlike master seeds)
-    self.ads.each() { |ad| ad.destroy() }
+    self.ads.each { |ad| ad.destroy }
 
     topic_campaign = self.get_adwords_campaign('topic')
     topic_ad_group = self.get_adwords_ad_group(topic_campaign[:id])

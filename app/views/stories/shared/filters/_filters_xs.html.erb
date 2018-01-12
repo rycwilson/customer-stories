@@ -1,0 +1,18 @@
+
+<div class="row stories-filter-xs">
+  <div class="col-xs-12">
+
+    <div class="form-group">
+
+      <%= select_tag('stories-filter-xs',
+            grouped_options_for_select(
+              company.stories_filter_public_grouped_options,
+              [ pre_selected_filter[:id] ]
+            ),
+            { include_blank: true, class: 'grouped-stories-filter form-control', style: 'width: 100%' }
+          ) %>
+
+    </div>
+
+  </div>
+</div>

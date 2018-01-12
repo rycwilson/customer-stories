@@ -1,48 +1,6 @@
 
 .stories.index {
 
-
-  #stories-filters-xs .stories-filter + span {
-    width: 200px;
-  }
-
-  #stories-filters.reader .form-group,
-  #stories-filters.curator .form-group {
-    margin-top: 7px;
-  }
-
-  @media only screen and (min-width: 768px) {
-    #stories-filters.reader {
-      margin-left: 60px;
-    }
-    #stories-filters.reader .stories-filter + span {
-      width: 180px;
-    }
-    #stories-filters.curator .stories-filter + span {
-      width: 150px;
-    }
-
-
-  }
-
-  @media only screen and (min-width: 992px) {
-    #stories-filters.reader {
-      margin-left: 110px;
-    }
-    #stories-filters.reader .stories-filter + span {
-      width: 200px;
-    }
-  }
-
-  @media only screen and (min-width: 1200px) {
-    // #stories-filters.reader {
-    //   margin-left: 30px;
-    // }
-    // #stories-filters.curator .stories-filter + span {
-    //   width: 200px;
-    // }
-  }
-
   #collapsed-workflow-tabs .glyphicon-align-justify {
     padding-left: 5px;
   }
@@ -50,9 +8,8 @@
 }
 
 #curate-gallery {
-  background: #f7f7f7;
-  padding-top: 26px;
-  margin: 0 15px
+  // padding-top: 26px;
+  // margin: 0 15px
 }
 
 .grid-container {

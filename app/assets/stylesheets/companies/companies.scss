@@ -54,6 +54,10 @@
 
 .datatable {
 
+  tr {
+    background: #fff;
+  }
+
   tr.active {
     i:not(.action) {
       color: white;
@@ -148,16 +152,18 @@
       // background-color: rgba(255, 247, 229, 0.95);
       // border: 1px solid #e5dece;
 
-      background: #ccc;
+      background: rgba(239, 239, 239, 0.95);
       border: 1px solid #ccc;
-      opacity: 0.95;
-
+      // opacity: 0.95;
       padding: 15px;
       text-align: right;
       p {
         font-size: 18px;
-        color: #222;
+        color: rgba(51, 51, 51, 0.9);
         margin-bottom: 0;
+      }
+      button {
+        opacity: 1.0;
       }
     }
    }

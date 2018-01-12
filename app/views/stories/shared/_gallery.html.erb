@@ -1,0 +1,14 @@
+
+<ul class="stories-gallery grid list-unstyled text-center">
+
+  <% cache(cache_key, skip_digest: true) do %>
+
+    <% stories.each do |story| %>
+
+      <%= render 'stories/shared/card', { company: company, story: story } %>
+
+    <% end %>
+
+  <% end %>
+
+</ul>

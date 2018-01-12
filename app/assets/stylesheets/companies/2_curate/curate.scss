@@ -9,46 +9,32 @@
 
 #curate {
 
-  .sidebar-contents {
-    margin-top: -10px;
-    .form-group.search {
-      position: relative;
-      i {
-        position: absolute;
-        color: #999;
-        right: 30px;
-        bottom: 11px;
-        z-index: 100;
-        cursor: pointer;
-      }
-    }
-  }
-
   #curate-stories {
-    .layout-sidebar {
-      padding-right: 0;
-      h4 {
-        margin-top: 3px  // so it doesn't get clipped by clip class
+
+    > .row > [class*="col-"]:first-of-type {
+      background: #efefef;
+      padding-top: 15px;
+      button {
+        width: 160px;
+        margin: 15px 0;
       }
-    }
-    .grid-item {  // overrides stories.scss
-      padding: 0;
-      margin: 4px 30px 30px 30px;
-    }
-    #curate-filters  {
-      form {
-        width: 100%;
+      #curate-filters  {
+        margin: 0 -15px;
+        padding: 15px;
         .form-group {
-          margin-bottom: 15px;
-        }
-        .form-group:nth-of-type(4) {
           margin-bottom: 20px;
         }
       }
     }
+
+    #status-filters {
+      margin: 10px;
+    }
+
     #curate-gallery {
       // see gallery.scss
     }
+
   }
 
   #curate-story {

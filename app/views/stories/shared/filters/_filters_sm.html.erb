@@ -1,0 +1,46 @@
+
+<div class="row">
+  <div class="col-sm-12">
+    <form class="form-inline">
+
+      <% if include_category_filter?(company) %>
+
+        <div class="form-group" style="width: 50%">
+          <%= label_tag(:category_select, "Category", class: "control-label") %>&nbsp;&nbsp;<!--
+       --><%= select_tag(:category_select,
+                options_for_select(
+                  company.story_categories.public_select_options,
+                  pre_selected_filter[:tag] == 'category' ? [pre_selected_filter[:id]] : []
+                ),
+                {
+                  include_blank: true,
+                  class: 'stories-filter category-select form-control',
+                  style: "width: 280px"
+                }
+              ) %>
+        </div><!--
+
+   --><% end %><!--
+
+   --><% if include_product_filter?(company) %><!--
+
+     --><div class="form-group" style="width: 50%">
+          <%= label_tag(:product_select, "Product") %>&nbsp;&nbsp;<!--
+       --><%= select_tag(:product_select,
+                options_for_select(
+                  company.products.public_select_options,
+                  pre_selected_filter[:tag] == 'product' ? [pre_selected_filter[:id]] : []
+                ),
+                {
+                  include_blank: true,
+                  class: 'stories-filter product-select form-control',
+                  style: "width: 280px"
+                }
+              ) %>
+        </div>
+
+      <% end %>
+
+    </form>
+  </div>
+</div>
