@@ -89,20 +89,21 @@ function initSelect2 () {
 
   $('.stories-filter').data('init', true);
 
+
+  // ref https://stackoverflow.com/questions/29618382/
   $('.grouped-stories-filter').select2({
     theme: 'bootstrap',
     width: 'style',
     placeholder: 'Filter',
     allowClear: true
   })
-    .on("select2:unselecting", function (e) {
-      $(this).data('state', 'unselected');
+    .on('select2:unselecting', function (e) {
+      $(this).data('unselecting', true);
     })
-    .on("select2:open", function (e) {
-      if ($(this).data('state') === 'unselected') {
-        $(this).removeData('state');
-        var self = $(this);
-        setTimeout(function() { self.select2('close'); }, 0);
+    .on('select2:open', function (e) {
+      if ($(this).data('unselecting')) {
+        $(this).removeData('unselecting');
+        e.preventDefault();
       }
     });
 
