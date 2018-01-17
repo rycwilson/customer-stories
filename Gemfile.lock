@@ -75,7 +75,7 @@ GEM
       debug_inspector (>= 0.0.1)
     bootstrap-tab-history-rails (0.1.0)
       railties (>= 3.1)
-    bower-rails (0.10.0)
+    bower-rails (0.11.0)
     browser-timezone-rails (1.0.1)
       js_cookie_rails
       jstz-rails3-plus
@@ -357,7 +357,7 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   bootstrap-tab-history-rails
-  bower-rails (~> 0.10.0)
+  bower-rails (~> 0.11.0)
   browser-timezone-rails
   connection_pool
   dalli

@@ -1,4 +1,6 @@
 
+//= require jquery-csv/src/jquery.csv
+
 //= require modernizr/modernizr
 
 //= require bootstrap-tab-history

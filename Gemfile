@@ -8,7 +8,7 @@ source 'https://rubygems.org'
 
 gem 'aws-sdk', '~> 2'
 gem 'bootstrap-tab-history-rails'
-gem 'bower-rails', "~> 0.10.0"
+gem 'bower-rails', '~> 0.11.0'
 gem 'browser-timezone-rails'
 gem 'connection_pool'
 gem 'dalli'
