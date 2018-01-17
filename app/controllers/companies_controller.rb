@@ -6,8 +6,8 @@ class CompaniesController < ApplicationController
   before_action :set_s3_direct_post, only: [:new, :edit, :show, :create]
 
   def new
-    @profile_form_options = set_profile_form_options(params)
     @company = Company.new
+    @form_options = set_form_options(params)
   end
 
   def show
@@ -24,7 +24,7 @@ class CompaniesController < ApplicationController
 
   def edit
     redirect_to(company_settings_path) if request.path.match(/\/companies\/\d+/)
-    @profile_form_options = set_profile_form_options(params)
+    @form_options = set_form_options(params, @company)
   end
 
   def create
@@ -39,7 +39,7 @@ class CompaniesController < ApplicationController
     else
       # validation(s): presence / uniqueness of name, presence of subdomain
       flash[:danger] = @company.errors.full_messages.join(', ')
-      redirect_to(new_company_path)
+      redirect_to(register_company_path)
     end
 
   end
@@ -136,7 +136,7 @@ class CompaniesController < ApplicationController
     end
   end
 
-  def set_profile_form_options (params)
+  def set_form_options (params, company=nil)
     options = {
       html: {
         id: 'company-profile-form',
@@ -149,9 +149,9 @@ class CompaniesController < ApplicationController
       }
     }
     if params[:action] == 'edit'
-      options.merge({ method: 'put', remote: 'true', authenticity_token: true })
+      options.merge({ url: company_path(company), method: 'put', remote: 'true', authenticity_token: true })
     else
-      options
+      options.merge({ url: create_company_path })
     end
   end
 

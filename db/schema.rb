@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171220223040) do
+ActiveRecord::Schema.define(version: 20180116200224) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -119,8 +119,8 @@ ActiveRecord::Schema.define(version: 20171220223040) do
     t.string   "logo_url"
     t.string   "subdomain"
     t.string   "feature_flag",                           default: "beta"
-    t.string   "header_color_1",                         default: "#FBFBFB"
-    t.string   "header_color_2",                         default: "#85CEE6"
+    t.string   "header_color_1",                         default: "#ffffff"
+    t.string   "header_color_2",                         default: "#ffffff"
     t.string   "header_text_color",                      default: "#333333"
     t.string   "website"
     t.string   "gtm_id"

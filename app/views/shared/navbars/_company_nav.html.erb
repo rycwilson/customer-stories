@@ -1,6 +1,6 @@
 
-<nav id='company-nav'>
-  <div class='container company-nav-container'>
+<nav id="company-nav" class="<%= company.present? ? '' : 'unregistered' %>">
+  <div class="container company-nav-container">
     <div class="row">
 
       <% if main_gallery? %>
@@ -12,11 +12,22 @@
       <% else %>
 
         <div class="col-sm-7">
-          <%= render('companies/shared/workflow_tabs', { company: company, workflow_stage: workflow_stage }) %>
+
+          <% if controller_name == 'profile' && !current_user.company_registered? %>
+
+            <span>Are you a Customer Reference Program Manager?</span>&nbsp;&nbsp;
+            <%= link_to('Register your Company', register_company_path) %>
+
+          <% else %>
+
+            <%= render('companies/shared/workflow_tabs', { company: company, workflow_stage: workflow_stage }) %>
+
+          <% end %>
+
         </div>
 
         <div class="col-sm-5">
-          <%= render('companies/shared/company_nav_dropdowns', { company: company }) %>
+          <%= render("companies/shared/company_nav_dropdowns", { company: company }) %>
         </div>
 
       <% end %>

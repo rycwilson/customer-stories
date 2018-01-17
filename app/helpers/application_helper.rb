@@ -4,6 +4,13 @@ module ApplicationHelper
     ['companies', 'stories', 'profile'].include?(controller)
   end
 
+  def fixed_navbar? (company, controller, action)
+    company.present? &&
+    company.subdomain == 'compas' &&
+    controller == 'stories' &&
+    (action == 'index' || action == 'show')
+  end
+
   def include_gon? controller, action
     controller == 'site' && ['index', 'store_front'].include?(action) ||
     controller == 'stories' && ['index', 'show', 'edit'].include?(action) ||

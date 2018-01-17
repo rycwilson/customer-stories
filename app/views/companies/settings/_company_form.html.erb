@@ -1,5 +1,5 @@
 
-<%= form_for(@company, @profile_form_options) do |f| %>
+<%= form_for(company, form_options) do |f| %>
 
   <div class="row">
 
@@ -13,7 +13,7 @@
       <div class="form-group required-input">
         <%= f.label :subdomain, class: 'control-label' %>
 
-        <% if @company.persisted? %>
+        <% if company.persisted? %>
           <%= f.text_field :subdomain, class: 'form-control', disabled: true %>
         <% else %>
           <%= f.text_field :subdomain, class: 'form-control' %>
@@ -37,15 +37,15 @@
       <div class="form-group logo-upload">
 
         <label>Header Logo</label>
-        <div class="fileinput <%= @company.logo_url.present? ? 'fileinput-exists' : 'fileinput-new' %>" data-provides="fileinput">
+        <div class="fileinput <%= company.logo_url.present? ? 'fileinput-exists' : 'fileinput-new' %>" data-provides="fileinput">
 
-          <div class="fileinput-new thumbnail" style="background:<%= @company.new_record? ? Company::CSP.header_color_1 : @company.header_color_1 %>">
+          <div class="fileinput-new thumbnail" style="background:<%= company.new_record? ? '#fff' : company.header_color_1 %>">
             <%= image_tag(LOGO_PLACEHOLDER_URL, alt: 'logo') %>
           </div>
           <div class="fileinput-preview fileinput-exists thumbnail"
-               style="background:<%= @company.new_record? ? Company::CSP.header_color_1 : @company.header_color_1 %>"
+               style="background-color:<%= company.new_record? ? 'Company::CSP.header_color_1' : company.header_color_1 %>"
                data-trigger="fileinput">
-            <img src="<%= @company.logo_url %>" alt="logo">
+            <img src="<%= company.logo_url %>" alt="logo">
           </div>
           <div class="btn-file">
             <%= f.file_field(:logo_url) %>
@@ -56,19 +56,19 @@
 
         </div>
 
-        <div class="header-2" style="background:<%= @company.new_record? ? Company::CSP.header_color_2 : @company.header_color_2 %>">
-          <h3 class="<%= @company.color_contrast %>">Customer Stories</h3>
+        <div class="header-2" style="background-color:<%= company.header_color_2 %>">
+          <h3 class="<%= company.color_contrast %>">Customer Stories</h3>
           <div style="display:inline-block">
 
           <span class="social-buttons pull-right">
-            <a href="javascript:;" class="icon-button linkedin-share <%= @company.color_contrast %>">
-              <i class="fa fa-linkedin" style="color:<%= @company.color_contrast == 'light' ? @company.header_color_2 : '#fff' %>"></i><span></span>
+            <a href="javascript:;" class="icon-button linkedin-share <%= company.color_contrast %>">
+              <i class="fa fa-linkedin" style="color:<%= company.color_contrast == 'light' ? company.header_color_2 : '#fff' %>"></i><span></span>
             </a>
-            <a href="javascript:;" class="icon-button twitter-share <%= @company.color_contrast %>">
-              <i class="fa fa-twitter" style="color:<%= @company.color_contrast == 'light' ? @company.header_color_2 : '#fff' %>"></i><span></span>
+            <a href="javascript:;" class="icon-button twitter-share <%= company.color_contrast %>">
+              <i class="fa fa-twitter" style="color:<%= company.color_contrast == 'light' ? company.header_color_2 : '#fff' %>"></i><span></span>
             </a>
-            <a href="javascript:;" class="icon-button facebook-share <%= @company.color_contrast %>">
-              <i class="fa fa-facebook" style="color:<%= @company.color_contrast == 'light' ? @company.header_color_2 : '#fff' %>"></i><span></span>
+            <a href="javascript:;" class="icon-button facebook-share <%= company.color_contrast %>">
+              <i class="fa fa-facebook" style="color:<%= company.color_contrast == 'light' ? company.header_color_2 : '#fff' %>"></i><span></span>
             </a>
           </span>
           </div>
@@ -106,7 +106,7 @@
           Cancel
         </button> -->
         <button type="submit" class="btn btn-success" form="company-profile-form" style="width:114px">
-          <span><%= @company.new_record? ? 'Register' : 'Save changes' %></span>
+          <span><%= company.new_record? ? 'Register' : 'Save changes' %></span>
           <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
           <i class='fa fa-check' style='display:none'></i>
         </button>

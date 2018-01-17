@@ -58,7 +58,7 @@ class User < ActiveRecord::Base
     self.linkedin_photo_url.present?
   end
 
-  def registered_company?
+  def company_registered?
     self.company_id.present?
   end
 

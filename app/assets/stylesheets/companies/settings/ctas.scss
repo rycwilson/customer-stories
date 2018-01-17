@@ -50,7 +50,7 @@
       }
     }
     .list-group-item {
-      background: #f5f5f5;
+      background: #efefef;
       padding: 15px;  // overrides bootstrap 10px 15px
       .cta-description {
         position: relative;
@@ -82,7 +82,7 @@
       }
     }
     .list-group-item:not([data-primary="true"]):hover {
-      background: #e6e6e6;
+      background: #e5e5e5;
     }
 
     #primary-cta, #secondary-ctas {

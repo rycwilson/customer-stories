@@ -1,6 +1,8 @@
 
 .companies.new {
 
+  @import './shared/logo_upload';
+
   .disabled-tab {
     pointer-events: none;
   }
