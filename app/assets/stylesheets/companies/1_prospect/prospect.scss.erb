@@ -114,7 +114,7 @@
     }
 
     // mimic select2
-    input, textarea {
+    input:not([type="file"]), textarea {
       font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
       padding-left: 12px;
     }
@@ -123,6 +123,30 @@
 }
 
 #new-success-modal {
+  .col-sm-3 {
+    width: 20%;
+  }
+  .col-sm-9 {
+    width: 80%
+  }
+  .form-group.source {
+    margin-bottom: 15px;
+  }
+  #csv-file-container {
+    > * {
+      margin-top: 10px;
+    }
+    .fileinput .form-control {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 397px;
+    }
+  }
+  .form-group.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
   .form-group.referrer-email,
   .form-group.description {
     margin-bottom: 0;
