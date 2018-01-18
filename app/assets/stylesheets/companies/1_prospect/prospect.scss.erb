@@ -141,6 +141,12 @@
       overflow: hidden;
       text-overflow: ellipsis;
       width: 397px;
+      // fix for cursor:pointer not working on file inputs: https://stackoverflow.com/questions/572768
+    }
+    label[for="csv-file-input"] {
+      cursor: pointer;
+      margin-bottom: 0;
+      padding: 0;
     }
   }
   .form-group.disabled {

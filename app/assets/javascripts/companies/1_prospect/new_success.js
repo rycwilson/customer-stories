@@ -194,18 +194,6 @@ function newSuccessListeners () {
              .find('input[id*="password"]').val( $(this).val() );
     })
 
-    // reset modal
-    .on('hidden.bs.modal', '#new-success-modal', function () {
-      $(this).find('form')[0].reset();
-      disableContributionAttrs(true);
-      disableReferrerAttrs(true);
-      $(this).find('.create-referrer').addClass('hidden');
-      $(this).find('select').val('').trigger('change');
-      $(this).find('.form-group').removeClass('has-error');
-      $(this).find('.create-referrer input').prop('required', false);
-      $('button[type="submit"][form="new-success-form"] span').css('display', 'inline');
-      $('button[type="submit"][form="new-success-form"] i').css('display', 'none');
-    })
 
     // need to listen for the click on the submit button instead of 'submit' on 'new-success-form'
     // => the button is outside the form, linked to it through form= attribute
@@ -237,7 +225,27 @@ function newSuccessListeners () {
       }
     })
 
-    .on('change.bs.fileinput', '#csv-file-container .fileinput', handleFileSelect);
+    .on('change.bs.fileinput', '#csv-file-container .fileinput', handleFileSelect)
+
+    // reset modal
+    .on('hide.bs.modal', '#new-success-modal', function () {
+      // actions don't work once the modal is hidden, so use a timeout...
+      setTimeout(function () {
+        $(this).find('.fileinput').fileinput('clear');
+        $('#source_create').trigger('click');
+      }, 200);
+    })
+    .on('hidden.bs.modal', '#new-success-modal', function () {
+      $(this).find('form')[0].reset();
+      disableContributionAttrs(true);
+      disableReferrerAttrs(true);
+      $(this).find('.create-referrer').addClass('hidden');
+      $(this).find('select').val('').trigger('change');
+      $(this).find('.form-group').removeClass('has-error');
+      $(this).find('.create-referrer input').prop('required', false);
+      $('button[type="submit"][form="new-success-form"] span').css('display', 'inline');
+      $('button[type="submit"][form="new-success-form"] i').css('display', 'none');
+    });
 
     // .on('submit', '#new-success-form', function () {
     //   console.log( $(this).serializeArray() );

@@ -134,7 +134,7 @@ hr {
 
 
 
-.required-input label:not(.radio-inline):after {
+.required-input label:not(.radio-inline):not([for="csv-file-input"]):after {
   color: #a94442;  // #D9534F;
   content: " *";
 }
