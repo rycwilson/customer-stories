@@ -82,7 +82,7 @@ function newSuccessListeners () {
         reader.readAsText(file);
         reader.onload = function (e) {
           var csv = e.target.result;
-          var data = $.csv.toArrays(csv);
+          var data = $.csv.toObjects(csv);
           // var html = '';
           // for(var row in data) {
           //   html += '<tr>\r\n';
@@ -226,6 +226,13 @@ function newSuccessListeners () {
     })
 
     .on('change.bs.fileinput', '#csv-file-container .fileinput', handleFileSelect)
+
+    // make sure the input is click when its span wrapper is clicked
+    .on('click', '#csv-file-container .btn-file', function (e) {
+      if ($(e.target).is('.btn-file')) {
+        $(this).find('label[for="csv-file-input"]')[0].click();
+      }
+    })
 
     // reset modal
     .on('hide.bs.modal', '#new-success-modal', function () {
