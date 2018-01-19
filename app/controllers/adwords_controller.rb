@@ -133,7 +133,7 @@ class AdwordsController < ApplicationController
     @image_url = @story.ads.adwords_image.try(:image_url) ||
                  @company.adwords_images.default.try(:image_url) ||
                  ADWORDS_IMAGE_PLACEHOLDER_URL
-    @logo_url = @company.adwords_logo_url || ADWORDS_LOGO_PLACEHOLDER_URL
+    @logo_url = @company.adwords_logo_url || LOGO_PLACEHOLDER_URL
     set_ad_dimensions(@long_headline)
     render :ads_preview, layout: false
   end
