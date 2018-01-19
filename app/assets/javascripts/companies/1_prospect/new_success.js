@@ -60,7 +60,6 @@ function newSuccessListeners () {
           // Great success! All the File APIs are supported.
           return true;
         } else {
-          console.log('browser does not support csv import')
           // source: File API availability - http://caniuse.com/#feat=fileapi
           // source: <output> availability - http://html5doctor.com/the-output-element/
           // document.writeln('The HTML5 APIs used in this form are only available in the following browsers:<br />');
@@ -77,39 +76,93 @@ function newSuccessListeners () {
           return false;
         }
       },
-      printTable = function (file) {
+
+      parseCsvData = function (data) {
+        var successes = [],
+            curatorIsValid = function (email) {
+              if (app.company.curators.findIndex(function (curator) { return curator.email === email; }) === -1) {
+                return false;
+              } else {
+                return true;
+              }
+            },
+            // returns false or the id of the contributor
+            contactExists = function (email) {
+              var contributions = $('#prospect-contributors-table').DataTable().toArray(),
+                  contactIndex = contributions.findIndex(function (contribution) {
+                    return contribution.contributor.email === email;
+                  });
+              if (contactIndex !== -1) {
+                return contributions[contactIndex].contributor.id;
+              }
+              else { return false; }
+            },
+            contactIsValid = function (first, last, email) {
+              return contactExists(email) || (first && last && email);
+            },
+            rowIsValid = function (row) {
+              return row.opportunityName !== '' && row.customerName !== '' && curatorIsValid(row.curatorEmail);
+            },
+            formatCustomer = function (name) {
+              var customerIndex = app.company.customers.findIndex(function (customer) {
+                return customer.name === name;
+              });
+              if (customerIndex === -1) {
+                return { new_customer: name };
+              } else {
+                return { customer_id: app.company.customers[customerIndex].id };
+              }
+            },
+            formatRow = function (row) {
+              var success = {}, contactId,
+                  curatorId = app.company.curators.find(function (curator) {
+                    return curator.email === row.curatorEmail;
+                  }).id;
+              success.name = row.opportunityName;
+              success.curator_id = curatorId;
+              Object.assign(success, formatCustomer(row.customerName));
+              if (contactIsValid(row.contactFirstName, row.contactLastName, row.contactEmail)) {
+                contactId = contactExists(row.contactEmail);
+                if (contactId) {
+                  success.contact_id = contactId;
+                } else {
+                  success.new_contact = { first: row.contactFirstName, last: row.contactLastName, email: row.contactEmail };
+                }
+              }
+              return success;
+            };
+        data.forEach(function (row) {
+          if (rowIsValid(row)) {
+            successes.push(formatRow(row));
+          } else {
+            successes.push("error");
+          }
+        });
+        console.log(successes);
+      },
+
+      readFile = function (file) {
         var reader = new FileReader();
         reader.readAsText(file);
         reader.onload = function (e) {
-          var csv = e.target.result;
-          var data = $.csv.toObjects(csv);
-          // var html = '';
-          // for(var row in data) {
-          //   html += '<tr>\r\n';
-          //   for(var item in data[row]) {
-          //     html += '<td>' + data[row][item] + '</td>\r\n';
-          //   }
-          //   html += '</tr>\r\n';
-          // }
-          // $('#contents').html(html);
-          console.log(data)
+          var csv = e.target.result, data = $.csv.toObjects(csv);
+          // console.log(data);
+          parseCsvData(data);
         };
-        reader.onerror = function() { alert('Unable to read ' + file.fileName); };
+        reader.onerror = function () { alert('Unable to read ' + file.fileName); };
       },
       // ref https://stackoverflow.com/questions/30223361
       handleFileSelect = function (e) {
-        console.log('handleFileSelect()');
-        var files = $(e.target).find('input[type="file"]')[0].files; // FileList object
-        var file = files[0];
+        var files = $(e.target).find('input[type="file"]')[0].files, // FileList object
+            file = files[0];
         // read the file metadata
         // var output = ''
         //     output += '<span style="font-weight:bold;">' + escape(file.name) + '</span><br />\n';
         //     output += ' - FileType: ' + (file.type || 'n/a') + '<br />\n';
         //     output += ' - FileSize: ' + file.size + ' bytes<br />\n';
         //     output += ' - LastModified: ' + (file.lastModifiedDate ? file.lastModifiedDate.toLocaleDateString() : 'n/a') + '<br />\n';
-
         // read the file contents
-        printTable(file);
+        readFile(file);
       };
 
   $(document)
@@ -252,11 +305,11 @@ function newSuccessListeners () {
       $(this).find('.create-referrer input').prop('required', false);
       $('button[type="submit"][form="new-success-form"] span').css('display', 'inline');
       $('button[type="submit"][form="new-success-form"] i').css('display', 'none');
-    });
+    })
 
-    // .on('submit', '#new-success-form', function () {
-    //   console.log( $(this).serializeArray() );
-    // });
+    .on('submit', '#new-success-form', function () {
+      console.log( $(this).serializeArray() );
+    });
 }
 
 

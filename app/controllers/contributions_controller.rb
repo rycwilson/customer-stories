@@ -27,7 +27,7 @@ class ContributionsController < ApplicationController
                        methods: [:csp_story_path] }
             }
           },
-          contributor: { only: [:id], methods: [:full_name] },
+          contributor: { only: [:id, :email], methods: [:full_name] },
           referrer: { only: [:id], methods: [:full_name] },
           crowdsourcing_template: { only: [:id, :name] },
         }
@@ -78,7 +78,6 @@ class ContributionsController < ApplicationController
   end
 
   def update
-    pp params
     if params[:data]  # crowdsourcing template (datatables inline editor)
       @contribution.crowdsourcing_template_id =
           params[:data].values[0][:crowdsourcing_template][:id]
@@ -96,7 +95,7 @@ class ContributionsController < ApplicationController
                        methods: [:csp_story_path] }
             }
           },
-          contributor: { only: [:id], methods: [:full_name] },
+          contributor: { only: [:id, :email], methods: [:full_name] },
           referrer: { only: [:id], methods: [:full_name] },
           crowdsourcing_template: { only: [:id, :name] },
         }
