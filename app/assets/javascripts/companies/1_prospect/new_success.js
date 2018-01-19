@@ -267,12 +267,9 @@ function newSuccessListeners () {
     .on('change', '#new-success-form [name="source"]', function () {
       $('#csv-file-container').toggle();
       if ($(this).val() === 'import') {
-        // $('#csv-file-input').prop('disabled', false);
-        $('#new-success-form .form-group:not(.source)').addClass('disabled');
+        $('#new-success-form .form-group:not(.source)').removeClass('has-error').addClass('disabled');
         $('button[type="submit"][form="new-success-form"] span').text('Import CSV File');
       } else {
-        // $('#csv-file-container').collapse('hide');
-        // $('#csv-file-input').prop('disabled', true);
         $('#new-success-form .form-group:not(.source)').removeClass('disabled');
         $('button[type="submit"][form="new-success-form"] span').text('Create Customer Win');
       }
