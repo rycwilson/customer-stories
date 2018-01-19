@@ -37,47 +37,45 @@
                 ) %>
 
           <div class="form-group source">
+            <label class="col-sm-3 control-label">Source</label>
+            <div class="col-sm-9">
 
-            <!-- <div class="row"> -->
-              <label class="col-sm-3 control-label">Source</label>
-              <div class="col-sm-9">
+              <div class="btn-group" data-toggle="buttons" style="margin-bottom: 10px;">
 
-                <div class="btn-group" data-toggle="buttons" style="margin-bottom: 10px;">
+                <%= label_tag(:source, class: 'radio-inline active') do %>
+                  <%= radio_button_tag(:source, 'create', checked: true) %>
+                  Create New
+                <% end %>
 
-                  <%= label_tag(:source, class: 'radio-inline active') do %>
-                    <%= radio_button_tag(:source, 'create', checked: true) %>
-                    Create New
-                  <% end %>
-
-                  <%= label_tag(:source, class: 'radio-inline') do %>
-                    <%= radio_button_tag(:source, 'import') %>
-                    Import CSV File
-                  <% end %>
-
-                </div>
-              </div>
-            <!-- </div> -->
-
-            <div id="csv-file-container" class="required-input" style="display:none;margin-top:15px">
-              <label class="col-sm-3 control-label">File</label>
-              <div class="col-sm-9">
-
-                <div class="fileinput fileinput-new input-group" data-provides="fileinput">
-                  <div class="form-control" data-trigger="fileinput">
-                    <i class="glyphicon glyphicon-file fileinput-exists"></i>
-                    <span class="fileinput-filename"></span>
-                  </div>
-                  <span class="input-group-addon btn btn-default btn-file">
-                    <label for="csv-file-input">
-                      <i class="fa fa-fw fa-upload"></i>
-                      <input type="file" id="csv-file-input" style="display:none">
-                    </label>
-                  </span>
-                </div>
-
-                <span class="help-block"></span>
+                <%= label_tag(:source, class: 'radio-inline') do %>
+                  <%= radio_button_tag(:source, 'import') %>
+                  Import CSV File
+                <% end %>
 
               </div>
+
+            </div>
+          </div>
+
+          <div class="form-group csv-file required-input">
+            <label class="col-sm-3 control-label">File</label>
+            <div class="col-sm-9">
+
+              <div class="fileinput fileinput-new input-group" data-provides="fileinput">
+                <div class="form-control" data-trigger="fileinput">
+                  <i class="glyphicon glyphicon-file fileinput-exists"></i>
+                  <span class="fileinput-filename placeholder">Upload</span>
+                </div>
+                <span class="input-group-addon btn btn-default btn-file">
+                  <label for="csv-file-input">
+                    <i class="fa fa-fw fa-upload"></i>
+                    <input type="file" id="csv-file-input" style="display:none">
+                  </label>
+                </span>
+              </div>
+
+              <span class="help-block"></span>
+
             </div>
           </div>
 

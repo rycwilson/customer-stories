@@ -77,6 +77,22 @@ function newSuccessListeners () {
         }
       },
 
+      displayCsvStatus = function (successes) {
+        var numRecords = successes.length,
+            numErrors = successes.filter(function (success) { return success.status === 'error'; }).length;
+        if (numErrors === numRecords) {
+          $('.form-group.csv-file')
+            .addClass('has-error')
+            .find('.help-block').text(successes.length + ' errors');
+        } else if (numErrors > 0) {
+          $('.form-group.csv-file')
+            .addClass('has-warning')
+            .find('.help-block').text((numRecords - numErrors) + ' ok, ' + numErrors + ' error(s)');
+        } else {
+          $('.form-group.csv-file').addClass('has-success').find('.help-block').text('');
+        }
+      },
+
       parseCsvData = function (data) {
         var successes = [],
             curatorIsValid = function (email) {
@@ -129,16 +145,16 @@ function newSuccessListeners () {
                   success.new_contact = { first: row.contactFirstName, last: row.contactLastName, email: row.contactEmail };
                 }
               }
-              return success;
+              return Object.assign(success, { status: "valid" });
             };
         data.forEach(function (row) {
           if (rowIsValid(row)) {
             successes.push(formatRow(row));
           } else {
-            successes.push("error");
+            successes.push({ status: "error" });
           }
         });
-        console.log(successes);
+        displayCsvStatus(successes);
       },
 
       readFile = function (file) {
@@ -155,6 +171,8 @@ function newSuccessListeners () {
       handleFileSelect = function (e) {
         var files = $(e.target).find('input[type="file"]')[0].files, // FileList object
             file = files[0];
+
+        $(e.target).find('.fileinput-filename').removeClass('placeholder');
         // read the file metadata
         // var output = ''
         //     output += '<span style="font-weight:bold;">' + escape(file.name) + '</span><br />\n';
@@ -265,20 +283,28 @@ function newSuccessListeners () {
     })
 
     .on('change', '#new-success-form [name="source"]', function () {
-      $('#csv-file-container').toggle();
+      $('.form-group.csv-file, .form-group:not(.source)').toggle();
       if ($(this).val() === 'import') {
-        $('#new-success-form .form-group:not(.source)').removeClass('has-error').addClass('disabled');
+        $('#new-success-form .form-group').removeClass('has-error');
         $('button[type="submit"][form="new-success-form"] span').text('Import CSV File');
       } else {
-        $('#new-success-form .form-group:not(.source)').removeClass('disabled');
+        $('#new-success-form').find('.fileinput').fileinput('clear');
+        $('#new-success-form').find('.fileinput-filename').addClass('placeholder').text('Upload');
+        $('#new-success-form .form-group.csv-file')
+          .removeClass('has-error has-warning has-success')
+          .find('.help-block').text('');
         $('button[type="submit"][form="new-success-form"] span').text('Create Customer Win');
       }
     })
 
-    .on('change.bs.fileinput', '#csv-file-container .fileinput', handleFileSelect)
+    .on('change.bs.fileinput', '#new-success-form .fileinput', handleFileSelect)
+
+    .on('clear.bs.fileinput', '#new-success-form .fileinput', function () {
+      $(this).find('.fileinput-filename').addClass('placeholder');
+    })
 
     // make sure the input is click when its span wrapper is clicked
-    .on('click', '#csv-file-container .btn-file', function (e) {
+    .on('click', '#new-success-form .form-group.csv-file .btn-file', function (e) {
       if ($(e.target).is('.btn-file')) {
         $(this).find('label[for="csv-file-input"]')[0].click();
       }

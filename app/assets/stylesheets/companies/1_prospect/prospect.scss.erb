@@ -89,7 +89,7 @@
         display: none;
       }
     }
-    .form-group.has-error {
+    .form-group.has-error, .form-group.has-warning {
       margin-bottom: 0;
       span.help-block {
         display: block;
@@ -132,9 +132,11 @@
   .form-group.source {
     margin-bottom: 15px;
   }
-  #csv-file-container {
+  .form-group.csv-file {
+    display: none;
+    // margin-bottom: 15px;
     > * {
-      margin-top: 10px;
+      // margin-top: 10px;
     }
     // ref: https://stackoverflow.com/questions/19695053
     .fileinput .form-control {
@@ -142,20 +144,25 @@
       overflow: hidden;
       text-overflow: ellipsis;
       width: 397px;
+      // emulate select2
+      padding-left: 12px;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      .fileinput-filename.placeholder {
+        color: #999;
+      }
     }
     // fix for cursor:pointer not working on file inputs: https://stackoverflow.com/questions/572768
     label[for="csv-file-input"] {
       cursor: pointer;
       margin-bottom: 0;
       padding: 0;
+      #csv-file-input {
+        display: none;
+      }
     }
   }
-  .form-group.disabled {
-    pointer-events: none;
-    opacity: 0.5;
-  }
   .form-group.referrer-email,
-  .form-group.description {
+  .form-group.description, .form-group.csv-file {
     margin-bottom: 0;
   }
 }
