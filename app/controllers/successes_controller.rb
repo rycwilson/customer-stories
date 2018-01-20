@@ -20,8 +20,9 @@ class SuccessesController < ApplicationController
   end
 
   def create
-    # pp success_params
+    pp success_params
     @success = Success.new(success_params)
+    binding.remote_pry
     # pp @success
     if @success.save
     else

@@ -102,54 +102,76 @@ function newSuccessListeners () {
                 return true;
               }
             },
-            // returns false or the id of the contributor
-            contactExists = function (email) {
+            // here a 'contributor' is either a
+            getContributorId = function (email) {
               var contributions = $('#prospect-contributors-table').DataTable().toArray(),
-                  contactIndex = contributions.findIndex(function (contribution) {
+                  contributorIndex = contributions.findIndex(function (contribution) {
                     return contribution.contributor.email === email;
                   });
-              if (contactIndex !== -1) {
-                return contributions[contactIndex].contributor.id;
-              }
-              else { return false; }
+              return (contributorIndex !== -1) ? contributions[contributorIndex].contributor.id : '';
             },
-            contactIsValid = function (first, last, email) {
-              return contactExists(email) || (first && last && email);
+            contactIsValid = function (firstName, lastName, email) {
+              return getContributorId(email) || (firstName && lastName && email);
             },
             rowIsValid = function (row) {
               return row.opportunityName !== '' && row.customerName !== '' && curatorIsValid(row.curatorEmail);
             },
-            formatCustomer = function (name) {
+            customerAttrs = function (customerName) {
               var customerIndex = app.company.customers.findIndex(function (customer) {
-                return customer.name === name;
+                return customer.name === customerName;
               });
               if (customerIndex === -1) {
-                return { new_customer: name };
+                return { customer_attributes_id: '', customer_attributes_name: customerName };
               } else {
                 return { customer_id: app.company.customers[customerIndex].id };
               }
             },
-            formatRow = function (row) {
-              var success = {}, contactId,
-                  curatorId = app.company.curators.find(function (curator) {
+            contributionAttrs = function (index, contributorType, email, firstName, lastName) {
+              var attrs = {}, referrerId = contributorId = getContributorId(email);
+
+              // assign the id, whether integer or ''
+              attrs['contributions_attributes_' + index + '_user_id'] = contributorId;
+              if (contributorType === 'referrer') {
+                attrs['contributions_attributes_' + index + '_referrer_id'] = referrerId;
+              }
+
+              // create a new user (contributor or referrer)
+              if (!(referrerId || contributorId)) {
+                // attrs['contributions_attributes_' + index + '_' + contributorType + '_attributes_id'] = '';
+                attrs['contributions_attributes_' + index + '_' + contributorType + '_attributes_email'] = email;
+                attrs['contributions_attributes_' + index + '_' + contributorType + '_attributes_first_name'] = firstName;
+                attrs['contributions_attributes_' + index + '_' + contributorType + '_attributes_last_name'] = lastName;
+                attrs['contributions_attributes_' + index + '_' + contributorType + '_attributes_password'] = email;
+                attrs['contributions_attributes_' + index + '_' + contributorType + '_attributes_sign_up_code'] = 'csp_beta';
+              }
+            },
+            parseRow = function (row) {
+              var success = {},
+                  curator = app.company.curators.find(function (curator) {
                     return curator.email === row.curatorEmail;
-                  }).id;
+                  }),
+                  referrerIsPresent = function () {
+                    return contactIsValid(row.referrerFirstName, row.referrerLastName, row.referrerEmail);
+                  };
               success.name = row.opportunityName;
-              success.curator_id = curatorId;
-              Object.assign(success, formatCustomer(row.customerName));
+              success.curator_id = curator.id || '';
+              Object.assign(success, customerAttrs(row.customerName));
+              if (referrerIsPresent()) {
+                Object.assign(
+                  success,
+                  contributionAttrs(0, 'referrer', row.referrerEmail, row.referrerFirstName, row.referrerLastName)
+                );
+              }
               if (contactIsValid(row.contactFirstName, row.contactLastName, row.contactEmail)) {
-                contactId = contactExists(row.contactEmail);
-                if (contactId) {
-                  success.contact_id = contactId;
-                } else {
-                  success.new_contact = { first: row.contactFirstName, last: row.contactLastName, email: row.contactEmail };
-                }
+                Object.assign(
+                  success,
+                  contributionAttrs(referrerIsPresent() ? 1 : 0, 'contributor', row.contactEmail, row.contactFirstName, row.contactLastName));
               }
               return Object.assign(success, { status: "valid" });
             };
         data.forEach(function (row) {
           if (rowIsValid(row)) {
-            successes.push(formatRow(row));
+            successes.push(parseRow(row));
           } else {
             successes.push({ status: "error" });
           }
