@@ -1,19 +1,37 @@
 
 (function () {
-  var success = <%= raw @success.to_json(
-        only: [:id, :name, :customer_id],
-        methods: [:timestamp],
-        include: {
-          curator: { only: [:id] },
-          customer: { only: [:name], methods: [:previous_changes] },
-          contributions: {
-            only: [:id, :referrer_id],
-            include: {
-              referrer: { only: [], methods: [:full_name, :previous_changes, :errors] }
-            }
-          }
-        }
-      ) %>,
+  var success = <%= @success ? true : false %> &&
+        <%= raw @success.to_json(
+              only: [:id, :name, :customer_id],
+              methods: [:timestamp],
+              include: {
+                curator: { only: [:id] },
+                customer: { only: [:name], methods: [:previous_changes] },
+                contributions: {
+                  only: [:id, :referrer_id],
+                  include: {
+                    referrer: { only: [], methods: [:full_name, :previous_changes, :errors] }
+                  }
+                }
+              }
+            ) %>,
+      successes = <%= @successes ? true : false %> &&
+        <%= raw (@successes.map do |success|
+              JSON.parse(success.to_json(
+                only: [:id, :name, :customer_id],
+                methods: [:timestamp],
+                include: {
+                  curator: { only: [:id] },
+                  customer: { only: [:name], methods: [:previous_changes] },
+                  contributions: {
+                    only: [:id, :referrer_id],
+                    include: {
+                      referrer: { only: [], methods: [:full_name, :previous_changes, :errors] }
+                    }
+                  }
+                }
+              ))
+            end.to_json) %>,
       /**
        * the datatable filter state persists through a reload,
        */
@@ -67,42 +85,48 @@
                   success.contributions[0].referrer.full_name + '</option>')
             )
         }
+      };
+
+  console.log(successes)
+
+  if (<%= @success ? true : false %>) {
+
+    if (errorsPresent(success)) {
+      if (Object.keys(success.contributions.length && success.contributions[0].referrer.errors).length) {
+        $('.form-group.referrer-email')
+          .addClass('has-error')
+          .find('.help-block')
+          .text('Contact with this email already exists')
       }
-
-  if (errorsPresent(success)) {
-    if (Object.keys(success.contributions.length && success.contributions[0].referrer.errors).length) {
-      $('.form-group.referrer-email')
-        .addClass('has-error')
-        .find('.help-block')
-        .text('Contact with this email already exists')
+      toggleFormDone($('#new-success-form'));
+      return;
     }
-    toggleFormDone($('#new-success-form'));
-    return;
-  }
 
-  updateSelectOptions();
+    updateSelectOptions();
 
-  $('#successes-table').DataTable()
-    .ajax.reload(function (successes) {
-      // ref: https://stackoverflow.com/questions/6677035
-      $('html, body')
-        .animate({ scrollTop: 65 }, 200)
-        .promise()
-        .then(function () {
-          $('.successes.curator-select').val(success.curator.id).trigger('change.select2')
-          $('#successes-filter').val('success-' + success.id).trigger('change');
-          $('#successes-table td.success-details').trigger('click');
-          $('#successes-filter').select2('focus');
-          $(document).one('click', function () {
-            $('#successes-filter').next().removeClass('select2-container--focus');
-          })
-          toggleFormDone($('#new-success-form'));
-          $('#new-success-modal').modal('hide')
-        });
-    })
+    $('#successes-table').DataTable()
+      .ajax.reload(function (successes) {
+        // ref: https://stackoverflow.com/questions/6677035
+        $('html, body')
+          .animate({ scrollTop: 65 }, 200)
+          .promise()
+          .then(function () {
+            $('.successes.curator-select').val(success.curator.id).trigger('change.select2')
+            $('#successes-filter').val('success-' + success.id).trigger('change');
+            $('#successes-table td.success-details').trigger('click');
+            $('#successes-filter').select2('focus');
+            $(document).one('click', function () {
+              $('#successes-filter').next().removeClass('select2-container--focus');
+            })
+            toggleFormDone($('#new-success-form'));
+            $('#new-success-modal').modal('hide')
+          });
+      })
 
-  if (success.contributions.length) {
-    reloadContributors();
+    if (success.contributions.length) {
+      reloadContributors();
+    }
+
   }
 
 }());

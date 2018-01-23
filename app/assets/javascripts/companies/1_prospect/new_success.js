@@ -1,6 +1,8 @@
 
 function newSuccessListeners () {
 
+  var importedSuccesses = [];
+
   // ref: https://stackoverflow.com/questions/8597595
   var validateForm = function () {
         var $form = $('#new-success-form'), formIsValid = true;
@@ -76,7 +78,9 @@ function newSuccessListeners () {
           return false;
         }
       },
-
+      importFileIsValid = function (source, importedSuccesses) {
+        return source === 'import' && importedSuccesses.some(function (success) { return success.status === 'valid'; });
+      },
       displayCsvStatus = function (successes) {
         var numRecords = successes.length,
             numErrors = successes.filter(function (success) { return success.status === 'error'; }).length;
@@ -121,29 +125,35 @@ function newSuccessListeners () {
                 return customer.name === customerName;
               });
               if (customerIndex === -1) {
-                return { customer_attributes_id: '', customer_attributes_name: customerName };
+                return { customer_attributes: { name: customerName, company_id: app.company.id } };
               } else {
                 return { customer_id: app.company.customers[customerIndex].id };
               }
             },
             contributionAttrs = function (index, contributorType, email, firstName, lastName) {
-              var attrs = {}, referrerId = contributorId = getContributorId(email);
+              var attrs = { contributions_attributes: {} },
+                  referrerId = contributorId = getContributorId(email);
+              attrs.contributions_attributes[index] = {};
+console.log('attrs', attrs)
 
               // assign the id, whether integer or ''
-              attrs['contributions_attributes_' + index + '_user_id'] = contributorId;
               if (contributorType === 'referrer') {
-                attrs['contributions_attributes_' + index + '_referrer_id'] = referrerId;
+                attrs.referrer_id = referrerId;
+              } else {
+                attrs.user_id = contributorId;
               }
 
               // create a new user (contributor or referrer)
               if (!(referrerId || contributorId)) {
                 // attrs['contributions_attributes_' + index + '_' + contributorType + '_attributes_id'] = '';
-                attrs['contributions_attributes_' + index + '_' + contributorType + '_attributes_email'] = email;
-                attrs['contributions_attributes_' + index + '_' + contributorType + '_attributes_first_name'] = firstName;
-                attrs['contributions_attributes_' + index + '_' + contributorType + '_attributes_last_name'] = lastName;
-                attrs['contributions_attributes_' + index + '_' + contributorType + '_attributes_password'] = email;
-                attrs['contributions_attributes_' + index + '_' + contributorType + '_attributes_sign_up_code'] = 'csp_beta';
+                attrs.contributions_attributes[index][contributorType + '_attributes'] = {};
+                attrs.contributions_attributes[index][contributorType + '_attributes'].email = email;
+                attrs.contributions_attributes[index][contributorType + '_attributes'].first_name = firstName;
+                attrs.contributions_attributes[index][contributorType + '_attributes'].last_name = lastName;
+                attrs.contributions_attributes[index][contributorType + '_attributes'].password = email;
+                attrs.contributions_attributes[index][contributorType + '_attributes'].sign_up_code = 'csp_beta';
               }
+              return attrs;
             },
             parseRow = function (row) {
               var success = {},
@@ -165,7 +175,7 @@ function newSuccessListeners () {
               if (contactIsValid(row.contactFirstName, row.contactLastName, row.contactEmail)) {
                 Object.assign(
                   success,
-                  contributionAttrs(referrerIsPresent() ? 1 : 0, 'contributor', row.contactEmail, row.contactFirstName, row.contactLastName));
+                  contributionAttrs(referrerIsPresent() ? '1' : '0', 'contributor', row.contactEmail, row.contactFirstName, row.contactLastName));
               }
               return Object.assign(success, { status: "valid" });
             };
@@ -176,7 +186,9 @@ function newSuccessListeners () {
             successes.push({ status: "error" });
           }
         });
+        console.log(successes);
         displayCsvStatus(successes);
+        importedSuccesses = successes;
       },
 
       readFile = function (file) {
@@ -218,6 +230,34 @@ function newSuccessListeners () {
         $('select.new-success.curator')
           .val($('.crowdsource.curator-select').val())
           .trigger('change');
+      }
+    })
+
+    .on('change', '#new-success-form [name="source"]', function () {
+      $('.form-group.csv-file, .form-group:not(.source)').toggle();
+      if ($(this).val() === 'import') {
+        $('#new-success-form .form-group').removeClass('has-error');
+        $('button[type="submit"][form="new-success-form"] span').text('Import CSV File');
+      } else {
+        $('#new-success-form').find('.fileinput').fileinput('clear');
+        $('#new-success-form').find('.fileinput-filename').addClass('placeholder').text('Upload');
+        $('#new-success-form .form-group.csv-file')
+          .removeClass('has-error has-warning has-success')
+          .find('.help-block').text('');
+        $('button[type="submit"][form="new-success-form"] span').text('Create Customer Win');
+      }
+    })
+
+    .on('change.bs.fileinput', '#new-success-form .fileinput', handleFileSelect)
+
+    .on('clear.bs.fileinput', '#new-success-form .fileinput', function () {
+      $(this).find('.fileinput-filename').addClass('placeholder');
+    })
+
+    // make sure the input is click when its span wrapper is clicked
+    .on('click', '#new-success-form .form-group.csv-file .btn-file', function (e) {
+      if ($(e.target).is('.btn-file')) {
+        $(this).find('label[for="csv-file-input"]')[0].click();
       }
     })
 
@@ -288,49 +328,7 @@ function newSuccessListeners () {
     })
 
 
-    // need to listen for the click on the submit button instead of 'submit' on 'new-success-form'
-    // => the button is outside the form, linked to it through form= attribute
-    // => submit event doesn't bubble up to form, so e.preventDefault() doesn't work
-    .on('click', 'button[type="submit"][form="new-success-form"]', function (e) {
-      var $form = $('#new-success-form'), $button = $(this);
-      e.preventDefault();
-      if (!$form.data('submitted') && validateForm()) {
-        // if a referrer wasn't selected, hide the contribution attributes so a contribution isn't created
-        if ($('select.new-success.referrer').val() === '') disableContributionAttrs(true);
-        toggleFormWorking($form);
-        $form.submit();
-      } else {
 
-      }
-    })
-
-    .on('change', '#new-success-form [name="source"]', function () {
-      $('.form-group.csv-file, .form-group:not(.source)').toggle();
-      if ($(this).val() === 'import') {
-        $('#new-success-form .form-group').removeClass('has-error');
-        $('button[type="submit"][form="new-success-form"] span').text('Import CSV File');
-      } else {
-        $('#new-success-form').find('.fileinput').fileinput('clear');
-        $('#new-success-form').find('.fileinput-filename').addClass('placeholder').text('Upload');
-        $('#new-success-form .form-group.csv-file')
-          .removeClass('has-error has-warning has-success')
-          .find('.help-block').text('');
-        $('button[type="submit"][form="new-success-form"] span').text('Create Customer Win');
-      }
-    })
-
-    .on('change.bs.fileinput', '#new-success-form .fileinput', handleFileSelect)
-
-    .on('clear.bs.fileinput', '#new-success-form .fileinput', function () {
-      $(this).find('.fileinput-filename').addClass('placeholder');
-    })
-
-    // make sure the input is click when its span wrapper is clicked
-    .on('click', '#new-success-form .form-group.csv-file .btn-file', function (e) {
-      if ($(e.target).is('.btn-file')) {
-        $(this).find('label[for="csv-file-input"]')[0].click();
-      }
-    })
 
     // reset modal
     .on('hide.bs.modal', '#new-success-modal', function () {
@@ -350,6 +348,32 @@ function newSuccessListeners () {
       $(this).find('.create-referrer input').prop('required', false);
       $('button[type="submit"][form="new-success-form"] span').css('display', 'inline');
       $('button[type="submit"][form="new-success-form"] i').css('display', 'none');
+    })
+
+    // need to listen for the click on the submit button instead of 'submit' on 'new-success-form'
+    // => the button is outside the form, linked to it through form= attribute
+    // => submit event doesn't bubble up to form, so e.preventDefault() doesn't work
+    .on('click', 'button[type="submit"][form="new-success-form"]', function (e) {
+      var $button = $(this), $form = $('#new-success-form'), source = $form.find('[name="source"]:checked').val();
+      e.preventDefault();
+      if (importFileIsValid(source, importedSuccesses)) {
+        toggleFormWorking($form);
+        $.ajax({
+          url: '/companies/' + app.company.id + '/successes',
+          method: 'post',
+          data: { successes: importedSuccesses },
+          dataType: 'script'
+        });
+
+      } else if (!$form.data('submitted') && validateForm()) {
+        // if a referrer wasn't selected, hide the contribution attributes so a contribution isn't created
+        if ($('select.new-success.referrer').val() === '') disableContributionAttrs(true);
+        toggleFormWorking($form);
+        $form.submit();
+      } else {
+
+      }
+
     })
 
     .on('submit', '#new-success-form', function () {

@@ -73,23 +73,25 @@ function attachAppListeners () {
         $otherDropdown.removeClass('active');
       })
 
+    /**
+     * some forms excluded as they have their own handler, e.g. #new-success-form
+     */
     .on('click', 'button[type="submit"]', function (e) {
       var $form = ($(this).closest('form').length && $(this).closest('form')) ||
                   $('#' + $(this).attr('form')),
           $button = $(this);
-      if (!$form.is('#new-success-form') &&
-          ($form.is('#contribution-request-form') ||
-           $form.is('[id*="success-form-"]') ||
-           $form.is('[id*="contribution-form-"') ||
-           $form.is('#new-story-form') ||
-           $form.is('#story-settings-form') ||
-           $form.is('#story-content-form') ||
-           $form.is('#promote-settings-form') ||
-           $form.is('#crowdsourcing-template-form') ||
-           $form.is('#adwords-sync-form') ||
-           $form.is('#company-tags-form') ||
-           $form.is('#new-cta-form') ||
-           $form.is('[id*="cta-"]'))) {
+      if ($form.is('#contribution-request-form') ||
+          $form.is('[id*="success-form-"]') ||
+          $form.is('[id*="contribution-form-"') ||
+          $form.is('#new-story-form') ||
+          $form.is('#story-settings-form') ||
+          $form.is('#story-content-form') ||
+          $form.is('#promote-settings-form') ||
+          $form.is('#crowdsourcing-template-form') ||
+          $form.is('#adwords-sync-form') ||
+          $form.is('#company-tags-form') ||
+          $form.is('#new-cta-form') ||
+          $form.is('[id*="cta-"]')) {
         if ($form.data('submitted')) {
           e.preventDefault();
           return false;

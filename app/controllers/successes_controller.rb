@@ -20,14 +20,29 @@ class SuccessesController < ApplicationController
   end
 
   def create
-    pp success_params
-    @success = Success.new(success_params)
-    binding.remote_pry
-    # pp @success
-    if @success.save
+    if params[:successes].present?
+      @successes = []
+      # binding.remote_pry
+      params[:successes].each do |index, success|
+        if success[:status] == 'valid'
+          success.delete(:status)
+          params[:success] = success
+          # binding.remote_pry
+          @successes << Success.create(success_params)
+        end
+      end
+      # binding.remote_pry
     else
-      pp @success.errors.full_messages
+      # pp success_params
+      @success = Success.new(success_params)
+      # pp @success
+      if @success.save
+        # binding.remote_pry
+      else
+        pp @success.errors.full_messages
+      end
     end
+    # binding.remote_pry
     respond_to { |format| format.js {} }
   end
 
@@ -45,6 +60,7 @@ class SuccessesController < ApplicationController
 
   private
 
+  # status will be present in case of csv upload
   def success_params
     params.require(:success).permit(:name, :description, :customer_id, :curator_id,
       customer_attributes: [:id, :name, :company_id],
