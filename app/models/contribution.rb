@@ -33,8 +33,8 @@ class Contribution < ActiveRecord::Base
   has_many :contributor_questions, through: :crowdsourcing_template
 
   accepts_nested_attributes_for(:success, allow_destroy: false)
-  accepts_nested_attributes_for(:contributor, allow_destroy: false)
   accepts_nested_attributes_for(:referrer, allow_destroy: false)
+  accepts_nested_attributes_for(:contributor, allow_destroy: false)
 
   before_create(:generate_access_token)
 
@@ -92,6 +92,7 @@ class Contribution < ActiveRecord::Base
 
   # contributor may have only one contribution per story
   validates_uniqueness_of(:contributor_id, scope: :success_id)
+
 
   # represents number of days between reminder emails
   validates :first_reminder_wait, numericality: { only_integer: true }

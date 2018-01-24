@@ -28,7 +28,7 @@ class SuccessesController < ApplicationController
         # binding.remote_pry
         @successes << Success.new(success_params)
       end
-      # binding.remote_pry
+      binding.remote_pry
       if @successes.all? { |success| success.save }
         binding.remote_pry
       else

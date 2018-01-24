@@ -115,8 +115,7 @@ function newSuccessListeners () {
               return (contributorIndex !== -1) ? contributions[contributorIndex].contributor.id.toString() : '';
             },
             contactIsValid = function (firstName, lastName, email) {
-              console.log(getContributorId(email) || (firstName && lastName && email) || false)
-              return getContributorId(email) || (firstName && lastName && email) || false;
+              return getContributorId(email) || (firstName && lastName && email);
             },
             rowIsValid = function (row) {
               return row.opportunityName !== '' && row.customerName !== '' && curatorIsValid(row.curatorEmail);
@@ -132,14 +131,14 @@ function newSuccessListeners () {
               }
             },
             contributionAttrs = function (index, contributorType, email, firstName, lastName) {
-              var attrs = {}, referrerId = contributorId = getContributorId(email);
+              var attrs = {}, referrerId = getContributorId(email), contributorId = getContributorId(email);
               attrs[index] = {};
 
               // assign the id, whether integer or ''
               if (contributorType === 'referrer') {
-                attrs[index].referrer_id = referrerId || '0';
+                attrs[index].referrer_id = referrerId;
               } else {
-                attrs[index].contributor_id = contributorId || '0';
+                attrs[index].contributor_id = contributorId;
               }
 
               // create a new user (contributor or referrer)
@@ -175,7 +174,8 @@ function newSuccessListeners () {
                 success.contributions_attributes = success.contributions_attributes || {};
                 Object.assign(
                   success.contributions_attributes,
-                  contributionAttrs(referrerIsPresent() ? '1' : '0', 'contributor', row.contactEmail, row.contactFirstName, row.contactLastName));
+                  contributionAttrs(referrerIsPresent() ? '1' : '0', 'contributor', row.contactEmail, row.contactFirstName, row.contactLastName)
+                );
               }
               return Object.assign(success, { status: "valid" });
             };
