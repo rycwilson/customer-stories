@@ -16,7 +16,7 @@
               }
             ) %>,
       successes = <%= @successes ? true : false %> &&
-        <%= raw (@successes.map do |success|
+        <%= raw (@successes.try(:map) do |success|
               JSON.parse(success.to_json(
                 only: [:id, :name, :customer_id],
                 methods: [:timestamp],

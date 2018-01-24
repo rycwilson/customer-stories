@@ -20,24 +20,26 @@ class SuccessesController < ApplicationController
   end
 
   def create
-    if params[:successes].present?
+    if params[:imported_successes].present?
       @successes = []
       # binding.remote_pry
-      params[:successes].each do |index, success|
-        if success[:status] == 'valid'
-          success.delete(:status)
-          params[:success] = success
-          # binding.remote_pry
-          @successes << Success.create(success_params)
-        end
+      params[:imported_successes].each do |index, success|
+        params[:success] = success
+        # binding.remote_pry
+        @successes << Success.new(success_params)
       end
       # binding.remote_pry
+      if @successes.all? { |success| success.save }
+        binding.remote_pry
+      else
+        @successes.each { |success| pp success.errors.full_messages }
+      end
     else
       # pp success_params
       @success = Success.new(success_params)
       # pp @success
       if @success.save
-        # binding.remote_pry
+        binding.remote_pry
       else
         pp @success.errors.full_messages
       end
