@@ -139,7 +139,7 @@ function newSuccessListeners () {
               if (contributorType === 'referrer') {
                 attrs[index].referrer_id = referrerId || '0';
               } else {
-                attrs[index].user_id = contributorId || '0';
+                attrs[index].contributor_id = contributorId || '0';
               }
 
               // create a new user (contributor or referrer)

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180116200224) do
+ActiveRecord::Schema.define(version: 20180124193331) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -136,7 +136,7 @@ ActiveRecord::Schema.define(version: 20180116200224) do
   add_index "companies", ["subdomain"], name: "index_companies_on_subdomain", unique: true, using: :btree
 
   create_table "contributions", force: :cascade do |t|
-    t.integer  "user_id"
+    t.integer  "contributor_id"
     t.integer  "success_id"
     t.string   "role"
     t.text     "contribution"
@@ -162,9 +162,9 @@ ActiveRecord::Schema.define(version: 20180116200224) do
     t.datetime "request_sent_at"
   end
 
+  add_index "contributions", ["contributor_id"], name: "index_contributions_on_contributor_id", using: :btree
   add_index "contributions", ["crowdsourcing_template_id"], name: "index_contributions_on_crowdsourcing_template_id", using: :btree
   add_index "contributions", ["success_id"], name: "index_contributions_on_success_id", using: :btree
-  add_index "contributions", ["user_id"], name: "index_contributions_on_user_id", using: :btree
 
   create_table "contributor_questions", force: :cascade do |t|
     t.integer  "company_id"
@@ -494,7 +494,7 @@ ActiveRecord::Schema.define(version: 20180116200224) do
   add_foreign_key "adwords_images", "companies"
   add_foreign_key "call_to_actions", "companies"
   add_foreign_key "contributions", "successes"
-  add_foreign_key "contributions", "users"
+  add_foreign_key "contributions", "users", column: "contributor_id"
   add_foreign_key "contributor_questions", "companies"
   add_foreign_key "crowdsourcing_templates", "companies"
   add_foreign_key "ctas_successes", "call_to_actions"

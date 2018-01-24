@@ -207,7 +207,7 @@ class ContributionsController < ApplicationController
 
   def contribution_params
     params.require(:contribution).permit(
-      :user_id, :referrer_id, :success_id, :crowdsourcing_template_id,
+      :contributor_id, :referrer_id, :success_id, :crowdsourcing_template_id,
       :status, :contribution, :feedback, :publish_contributor,
       :request_subject, :request_body,
       :contributor_unpublished, :notes, :submitted_at,

@@ -345,7 +345,7 @@ function newContributorListeners() {
         });
 
         // update hidden fields
-        // $form.find('#contribution_user_id').val('');
+        // $form.find('#contribution_contributor_id').val('');
         $form.find('input[id*="contributor_attributes"]').each(function () {
           $(this).prop('disabled', false);
         });
@@ -358,7 +358,7 @@ function newContributorListeners() {
         });
 
         // update hidden fields
-        // $form.find('#contribution_user_id').val($(this).val());
+        // $form.find('#contribution_contributor_id').val($(this).val());
         $form.find('input[id*="contributor_attributes"]').each(function () {
             $(this).prop('disabled', true);
           });

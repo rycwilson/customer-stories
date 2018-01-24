@@ -89,12 +89,12 @@
 
           <div class="form-group contributor required-input">
 
-            <label for="contribution_user_id" class='col-sm-3 control-label'>
+            <label for="contribution_contributor_id" class='col-sm-3 control-label'>
               Contributor
             </label>
             <div class="col-sm-9">
 
-              <%= contribution_form.collection_select(:user_id,
+              <%= contribution_form.collection_select(:contributor_id,
                     company.contributors.sort_by do |contributor|
                       contributor.last_name
                     end.unshift(

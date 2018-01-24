@@ -19,14 +19,10 @@ class Contribution < ActiveRecord::Base
     joins(success: { story: {} })
     .where(stories: { id: story_id })
   }
-  scope :story_all_except_curator, ->(story_id, curator_id) {
-    story_all(story_id)
-    .where.not(user_id: curator_id)
-  }
 
   # associations
   belongs_to :success, inverse_of: :contributions
-  belongs_to :contributor, class_name: 'User', foreign_key: 'user_id'
+  belongs_to :contributor, class_name: 'User', foreign_key: 'contributor_id'
   belongs_to :referrer, class_name: 'User', foreign_key: 'referrer_id'
   has_one :customer, through: :success
   has_one :company, through: :success
@@ -43,14 +39,14 @@ class Contribution < ActiveRecord::Base
   before_create(:generate_access_token)
 
   # when creating a new success with referrer, a contribution is created
-  # with referrer_id == user_id (i.e. contributor and referrer are same)
+  # with referrer_id == contributor_id (i.e. contributor and referrer are same)
   before_create(:set_contributor_id_for_new_success_referrer, if: Proc.new do
       # use a success virtual attribute so we can see from here if it's a new record
       # also note that the inverse_of setting is necessary for the success -> contributions relationship
       # (so self and self.success are related to each other in memory)
       self.success.is_new_record? &&
       self.referrer_id.present? &&
-      self.user_id.nil?
+      self.contributor_id.nil?
     end
   )
   before_update(:set_request_sent_at, if: Proc.new do
@@ -86,7 +82,7 @@ class Contribution < ActiveRecord::Base
     end
   end
 
-  # validates :user_id, presence: true
+  # validates :contributor_id, presence: true
   # validates :success_id, presence: true
   # validates :role, presence: true
   # validates :contribution, presence: true,
@@ -95,7 +91,7 @@ class Contribution < ActiveRecord::Base
   #               if: Proc.new { |contribution| contribution.status == 'feedback'}
 
   # contributor may have only one contribution per story
-  validates_uniqueness_of(:user_id, scope: :success_id)
+  validates_uniqueness_of(:contributor_id, scope: :success_id)
 
   # represents number of days between reminder emails
   validates :first_reminder_wait, numericality: { only_integer: true }
@@ -242,7 +238,7 @@ class Contribution < ActiveRecord::Base
   end
 
   def set_contributor_id_for_new_success_referrer
-    self.user_id = self.referrer_id
+    self.contributor_id = self.referrer_id
   end
 
 end

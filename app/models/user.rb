@@ -21,7 +21,7 @@ class User < ActiveRecord::Base
 
   # a User can have his own contribution(s) (i.e. he is contributor),
   # or he can be the Referrer for contribution(s)
-  has_many :own_contributions, class_name: 'Contribution', foreign_key: 'user_id', dependent: :destroy
+  has_many :own_contributions, class_name: 'Contribution', foreign_key: 'contributor_id', dependent: :destroy
   has_many :referred_contributions, class_name: 'Contribution', foreign_key: 'referrer_id'
 
   has_many :successes, class_name: 'Success', foreign_key: 'curator_id' # curator, no (dependent: :destroy)

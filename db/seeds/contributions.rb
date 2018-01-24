@@ -8,7 +8,7 @@ module ContributionsSeed
     contributor = user || ContributionsSeed::create_contributor
     c = Contribution.new(
           success_id: success_id,
-          user_id: contributor.id,
+          contributor_id: contributor.id,
           role: role,
           status: status,
           feedback: feedback,
