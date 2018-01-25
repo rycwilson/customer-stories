@@ -22,15 +22,11 @@ class SuccessesController < ApplicationController
   def create
     if params[:imported_successes].present?
       @successes = []
-      # binding.remote_pry
       params[:imported_successes].each do |index, success|
         params[:success] = success
-        # binding.remote_pry
         @successes << Success.new(success_params)
       end
-      binding.remote_pry
       if @successes.all? { |success| success.save }
-        binding.remote_pry
       else
         @successes.each { |success| pp success.errors.full_messages }
       end
@@ -44,7 +40,6 @@ class SuccessesController < ApplicationController
         pp @success.errors.full_messages
       end
     end
-    # binding.remote_pry
     respond_to { |format| format.js {} }
   end
 
@@ -67,10 +62,13 @@ class SuccessesController < ApplicationController
     params.require(:success).permit(:name, :description, :customer_id, :curator_id,
       customer_attributes: [:id, :name, :company_id],
       contributions_attributes: [
-        :referrer_id, :crowdsourcing_template_id,
+        :referrer_id, :contributor_id, :crowdsourcing_template_id,
         referrer_attributes: [
-          :id, :first_name, :last_name, :email, :sign_up_code, :password
+          :first_name, :last_name, :email, :sign_up_code, :password
         ],
+        contributor_attributes: [
+          :first_name, :last_name, :email, :sign_up_code, :password
+        ]
       ],
     )
   end

@@ -130,14 +130,14 @@ function newSuccessListeners () {
                 return { customer_id: app.company.customers[customerIndex].id };
               }
             },
-            contributionAttrs = function (index, contributorType, email, firstName, lastName) {
+            contributionsAttrs = function (index, contributorType, email, firstName, lastName) {
               var attrs = {}, referrerId = getContributorId(email), contributorId = getContributorId(email);
               attrs[index] = {};
 
-              // assign the id, whether integer or ''
-              if (contributorType === 'referrer') {
+              if (contributorType === 'referrer' && referrerId) {
                 attrs[index].referrer_id = referrerId;
-              } else {
+              }
+              if (contributorType === 'contributor' && contributorId) {
                 attrs[index].contributor_id = contributorId;
               }
 
@@ -167,14 +167,14 @@ function newSuccessListeners () {
                 success.contributions_attributes = {};
                 Object.assign(
                   success.contributions_attributes,
-                  contributionAttrs('0', 'referrer', row.referrerEmail, row.referrerFirstName, row.referrerLastName)
+                  contributionsAttrs('0', 'referrer', row.referrerEmail, row.referrerFirstName, row.referrerLastName)
                 );
               }
               if (contactIsValid(row.contactFirstName, row.contactLastName, row.contactEmail)) {
                 success.contributions_attributes = success.contributions_attributes || {};
                 Object.assign(
                   success.contributions_attributes,
-                  contributionAttrs(referrerIsPresent() ? '1' : '0', 'contributor', row.contactEmail, row.contactFirstName, row.contactLastName)
+                  contributionsAttrs(referrerIsPresent() ? '1' : '0', 'contributor', row.contactEmail, row.contactFirstName, row.contactLastName)
                 );
               }
               return Object.assign(success, { status: "valid" });
