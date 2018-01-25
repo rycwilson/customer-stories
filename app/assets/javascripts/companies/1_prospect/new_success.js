@@ -237,14 +237,14 @@ function newSuccessListeners () {
       $('.form-group.csv-file, .form-group:not(.source)').toggle();
       if ($(this).val() === 'import') {
         $('#new-success-form .form-group').removeClass('has-error');
-        $('button[type="submit"][form="new-success-form"] span').text('Import CSV File');
+        $('button[type="submit"][form="new-success-form"] span').text('Import CSV');
       } else {
         $('#new-success-form').find('.fileinput').fileinput('clear');
         $('#new-success-form').find('.fileinput-filename').addClass('placeholder').text('Upload');
         $('#new-success-form .form-group.csv-file')
           .removeClass('has-error has-warning has-success')
           .find('.help-block').text('');
-        $('button[type="submit"][form="new-success-form"] span').text('Create Customer Win');
+        $('button[type="submit"][form="new-success-form"] span').text('Create Win');
       }
     })
 
@@ -346,8 +346,9 @@ function newSuccessListeners () {
       $(this).find('select').val('').trigger('change');
       $(this).find('.form-group').removeClass('has-error');
       $(this).find('.create-referrer input').prop('required', false);
-      $('button[type="submit"][form="new-success-form"] span').css('display', 'inline');
-      $('button[type="submit"][form="new-success-form"] i').css('display', 'none');
+      $('button[form="new-success-form"]').attr('type', 'submit');
+      $('button[form="new-success-form"] span').text('Create Win').css('display', 'inline');
+      $('button[form="new-success-form"] i').css('display', 'none');
     })
 
     // need to listen for the click on the submit button instead of 'submit' on 'new-success-form'
@@ -376,6 +377,10 @@ function newSuccessListeners () {
 
       }
 
+    })
+
+    .on('click', 'button[type="button"][form="new-success-form"]', function () {
+      $('#new-success-modal').modal('hide');
     })
 
     .on('submit', '#new-success-form', function () {

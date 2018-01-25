@@ -10,6 +10,11 @@
 
       <div class="modal-body">
 
+        <div class="new-records">
+          <label>Added the following Customer Wins</label>
+          <ul class="list-unstyled"></ul>
+        </div>
+
         <%= form_for(
               Success.new,
               url: company_successes_path(company),
@@ -44,7 +49,7 @@
 
                 <%= label_tag(:source, class: 'radio-inline active') do %>
                   <%= radio_button_tag(:source, 'create', checked: true) %>
-                  Create New
+                  Create New Win
                 <% end %>
 
                 <%= label_tag(:source, class: 'radio-inline') do %>
@@ -168,8 +173,8 @@
       <div class="modal-footer">
 
         <!-- <button type="reset" class="btn btn-default" data-dismiss="modal">Cancel</button> -->
-        <button type="submit" class="btn btn-success text-center" style="width: 166px;" form="new-success-form">
-          <span>Create Customer Win</span>
+        <button type="submit" class="btn btn-success text-center" style="width:100px" form="new-success-form">
+          <span>Create Win</span>
           <i class="fa fa-spin fa-circle-o-notch" style="display:none"></i>
           <i class="fa fa-check" style="display:none"></i>
         </button>

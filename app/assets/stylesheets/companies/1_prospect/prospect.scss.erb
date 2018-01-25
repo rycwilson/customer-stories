@@ -81,6 +81,13 @@
   }
   .modal-body {
     padding: 25px 20px;
+    .new-records {
+      display: none;
+      min-height: 117px;  // matches the file upload view
+      li {
+        margin-bottom: 5px;
+      }
+    }
     label:not(.radio-inline) {
       padding-right: 5px;
     }
@@ -138,8 +145,13 @@
     > * {
       // margin-top: 10px;
     }
+    .fileinput {
+      margin-bottom: 0;
+      padding-bottom: 33px; // leaves space for .help-block
+    }
     // ref: https://stackoverflow.com/questions/19695053
     .fileinput .form-control {
+      margin-bottom: 0;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -159,6 +171,11 @@
       #csv-file-input {
         display: none;
       }
+    }
+  }
+  .form-group.csv-file.has-error, .form-group.csv-file.has-warning, .form-group.csv-file.has-success {
+    .fileinput {
+      padding-bottom: 0;
     }
   }
   .form-group.referrer-email,

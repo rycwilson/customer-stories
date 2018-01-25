@@ -35,7 +35,6 @@ class SuccessesController < ApplicationController
       @success = Success.new(success_params)
       # pp @success
       if @success.save
-        binding.remote_pry
       else
         pp @success.errors.full_messages
       end

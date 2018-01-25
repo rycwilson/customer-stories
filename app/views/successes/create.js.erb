@@ -1,37 +1,36 @@
 
 (function () {
-  var success = <%= @success ? true : false %> &&
-        <%= raw @success.to_json(
-              only: [:id, :name, :customer_id],
-              methods: [:timestamp],
+  var $form = $('#new-success-form'),
+      success = <%= @success ? true : false %> && <%= raw @success.to_json(
+          only: [:id, :name, :customer_id],
+          methods: [:timestamp],
+          include: {
+            curator: { only: [:id] },
+            customer: { only: [:name], methods: [:previous_changes] },
+            contributions: {
+              only: [:id, :referrer_id],
               include: {
-                curator: { only: [:id] },
-                customer: { only: [:name], methods: [:previous_changes] },
-                contributions: {
-                  only: [:id, :referrer_id],
-                  include: {
-                    referrer: { only: [], methods: [:full_name, :previous_changes, :errors] }
-                  }
+                referrer: { only: [], methods: [:full_name, :previous_changes, :errors] }
+              }
+            }
+          }
+        ) %>,
+      successes = <%= @successes ? true : false %> && <%= raw (@successes.try(:map) do |success|
+          JSON.parse(success.to_json(
+            only: [:id, :name, :customer_id],
+            methods: [:timestamp],
+            include: {
+              curator: { only: [:id] },
+              customer: { only: [:name], methods: [:previous_changes] },
+              contributions: {
+                only: [:id, :referrer_id],
+                include: {
+                  referrer: { only: [], methods: [:full_name, :previous_changes, :errors] }
                 }
               }
-            ) %>,
-      successes = <%= @successes ? true : false %> &&
-        <%= raw (@successes.try(:map) do |success|
-              JSON.parse(success.to_json(
-                only: [:id, :name, :customer_id],
-                methods: [:timestamp],
-                include: {
-                  curator: { only: [:id] },
-                  customer: { only: [:name], methods: [:previous_changes] },
-                  contributions: {
-                    only: [:id, :referrer_id],
-                    include: {
-                      referrer: { only: [], methods: [:full_name, :previous_changes, :errors] }
-                    }
-                  }
-                }
-              ))
-            end.to_json) %>,
+            }
+          ))
+        end.to_json) %>,
       /**
        * the datatable filter state persists through a reload,
        */
@@ -85,11 +84,22 @@
                   success.contributions[0].referrer.full_name + '</option>')
             )
         }
-      };
+      },
+      cbNewSuccesses = function (successes) {
+        var $newSuccesses = $('#new-success-modal').find('.new-records ul'),
+            $button = $('#new-success-modal').find('button[type="submit"]');
+        $('#new-success-modal').find('form, .new-records').toggle();
+        $button.attr('type', 'button');
+        $button.find('span').text('Ok')
+        $button[0].blur();
+        successes.forEach(function (success) {
+          if (success.previous_changes.id) {
+            $newSuccesses.append('<li>' + success.name + '</li>')
+          }
+        })
+      }
 
-  console.log(successes)
-
-  if (<%= @success ? true : false %>) {
+  if (success) {
 
     if (errorsPresent(success)) {
       if (Object.keys(success.contributions.length && success.contributions[0].referrer.errors).length) {
@@ -98,7 +108,7 @@
           .find('.help-block')
           .text('Contact with this email already exists')
       }
-      toggleFormDone($('#new-success-form'));
+      toggleFormDone($form);
       return;
     }
 
@@ -127,6 +137,11 @@
       reloadContributors();
     }
 
+  } else if (successes) {
+    $('#successes-table').DataTable().ajax.reload(function (successes) {
+      reloadContributors();
+      toggleFormDone($form, false, cbNewSuccesses(successes))
+    })
   }
 
 }());
