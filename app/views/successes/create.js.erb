@@ -3,13 +3,14 @@
   var $form = $('#new-success-form'),
       success = <%= @success ? true : false %> && <%= raw @success.to_json(
           only: [:id, :name, :customer_id],
-          methods: [:timestamp],
+          methods: [:timestamp, :referrer],
           include: {
             curator: { only: [:id] },
             customer: { only: [:name], methods: [:previous_changes] },
             contributions: {
               only: [:id, :referrer_id],
               include: {
+                contributor: { only: [], methods: [:full_name, :previous_changes, :errors] },
                 referrer: { only: [], methods: [:full_name, :previous_changes, :errors] }
               }
             }
@@ -18,13 +19,14 @@
       successes = <%= @successes ? true : false %> && <%= raw (@successes.try(:map) do |success|
           JSON.parse(success.to_json(
             only: [:id, :name, :customer_id],
-            methods: [:timestamp],
+            methods: [:timestamp, :referrer],
             include: {
               curator: { only: [:id] },
               customer: { only: [:name], methods: [:previous_changes] },
               contributions: {
                 only: [:id, :referrer_id],
                 include: {
+                  contributor: { only: [], methods: [:full_name, :previous_changes, :errors] },
                   referrer: { only: [], methods: [:full_name, :previous_changes, :errors] }
                 }
               }
@@ -41,51 +43,76 @@
             //   .find('.search-all').trigger('click')
           });
       },
-      errorsPresent = function (success) {
-        return success.contributions.length && Object.keys(success.contributions[0].referrer.errors).length;
-      }
-      updateSelectOptions = function () {
-        // new success
-        $('.dt-filter')
-          .find('optgroup[label="Customer Win"]')
-          .prepend(
-            $('<option value="success-' + success.id + '"' +
-                ' data-column="success">' + success.name + '</option>')
-          )
-        $('select.success')
-          .find('option:first-of-type') // empty placeholder option
-          .after($('<option value="' + success.id + '">' + success.name + '</option>'))
-
-        // new customer
-        if (success.customer.previous_changes.id) {
-          $('.dt-filter')
-            .find('optgroup[label="Customer"]')
-            .prepend(
-              $('<option value="customer-' + success.customer_id + '"' +
-                ' data-column="customer">' + success.customer.name + '</option>')
-            )
-          $('select.customer')
-            .find('option:first-of-type') // empty placeholder option
-            .after($('<option value="' + success.customer_id + '">' + success.customer.name + '</option>'))
-        }
-
-        // new referrer
-        if (success.contributions.length && success.contributions[0].referrer.previous_changes.id) {
-          $('#contributors-filter')
-            .find('optgroup[label="Contributor"]')
-            .prepend(
-              $('<option value="contributor-' + success.contributions[0].referrer_id + '"' +
-                  ' data-column="contributor">' + success.contributions[0].referrer.full_name + '</option>')
-            )
-          $('select.referrer')
-            .find('option[value="0"]') // - Create New Contact -
-            .after(
-              $('<option value="' + success.contributions[0].referrer.id + '">' +
-                  success.contributions[0].referrer.full_name + '</option>')
-            )
-        }
+      referrerErrorsPresent = function (success) {
+        return success.referrer && Object.keys(success.referrer.errors).length;
       },
-      cbNewSuccesses = function (successes) {
+      updateSelectOptions = function (successes) {
+        var contact,
+            successContact = function (success) {
+              return (success.contributions &&
+                      success.contributions.length === 1 &&
+                      !success.referrer &&
+                      success.contributions[0].contributor) ||
+                     (success.contributions &&
+                      success.contributions.length === 2 &&
+                      success.contributions[1].contributor)
+            };
+
+        successes.forEach(function (success) {
+          contact = successContact(success)
+
+          // new success
+          $('.dt-filter')
+            .find('optgroup[label="Customer Win"]')
+            .prepend(
+              $('<option value="success-' + success.id + '"' +
+                  ' data-column="success">' + success.name + '</option>')
+            )
+          $('select.success')
+            .find('option:first-of-type') // empty placeholder option
+            .after($('<option value="' + success.id + '">' + success.name + '</option>'))
+
+          // new customer
+          if (success.customer.previous_changes.id) {
+            $('.dt-filter')
+              .find('optgroup[label="Customer"]')
+              .prepend(
+                $('<option value="customer-' + success.customer_id + '"' +
+                  ' data-column="customer">' + success.customer.name + '</option>')
+              )
+            $('select.customer')
+              .find('option:first-of-type') // empty placeholder option
+              .after($('<option value="' + success.customer_id + '">' + success.customer.name + '</option>'))
+          }
+
+          // new referrer
+          if (success.referrer && success.referrer.previous_changes.id) {
+            $('#contributors-filter')
+              .find('optgroup[label="Contributor"]')
+              .prepend(
+                $('<option value="contributor-' + success.referrer.id + '"' +
+                    ' data-column="contributor">' + success.referrer.full_name + '</option>')
+              )
+            $('select.referrer')
+              .find('option[value="0"]') // - Create New Contact -
+              .after(
+                $('<option value="' + success.referrer.id + '">' + success.referrer.full_name + '</option>')
+              )
+          }
+
+          // new contact/contributor
+          if (contact && contact.previous_changes.id) {
+            $('#contributors-filter')
+              .find('optgroup[label="Contributor"]')
+              .prepend(
+                $('<option value="contributor-' + contact.id + '"' +
+                    ' data-column="contributor">' + contact.full_name + '</option>')
+              )
+          }
+        })
+
+      },
+      cbNewSuccesses = function () {
         var $newSuccesses = $('#new-success-modal').find('.new-records ul'),
             $button = $('#new-success-modal').find('button[type="submit"]');
         $('#new-success-modal').find('form, .new-records').toggle();
@@ -93,26 +120,22 @@
         $button.find('span').text('Ok')
         $button[0].blur();
         successes.forEach(function (success) {
-          if (success.previous_changes.id) {
-            $newSuccesses.append('<li>' + success.name + '</li>')
-          }
+          $newSuccesses.append('<li>' + success.name + '</li>')
         })
       }
 
   if (success) {
 
-    if (errorsPresent(success)) {
-      if (Object.keys(success.contributions.length && success.contributions[0].referrer.errors).length) {
-        $('.form-group.referrer-email')
-          .addClass('has-error')
-          .find('.help-block')
-          .text('Contact with this email already exists')
-      }
+    if (referrerErrorsPresent(success)) {
+      $('.form-group.referrer-email')
+        .addClass('has-error')
+        .find('.help-block')
+        .text('Contact with this email already exists')
       toggleFormDone($form);
       return;
     }
 
-    updateSelectOptions();
+    updateSelectOptions([success]);
 
     $('#successes-table').DataTable()
       .ajax.reload(function (successes) {
@@ -138,9 +161,14 @@
     }
 
   } else if (successes) {
-    $('#successes-table').DataTable().ajax.reload(function (successes) {
+    $('#successes-table').DataTable().ajax.reload(function (successesData) {
       reloadContributors();
-      toggleFormDone($form, false, cbNewSuccesses(successes))
+      $('.crowdsource.curator-select').val('0').trigger('change');
+
+      // this must come after the above line
+      console.log(successes)
+      updateSelectOptions(successes);
+      toggleFormDone($form, false, cbNewSuccesses);
     })
   }
 

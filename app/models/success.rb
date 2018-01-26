@@ -96,7 +96,9 @@ class Success < ActiveRecord::Base
     if self.contributions.first.try(:referrer_id) &&
        self.contributions.first.try(:contributor_id) &&
        self.contributions.first.referrer_id == self.contributions.first.contributor_id
-      self.contributions.first.referrer.slice(:id, :first_name, :last_name, :email, :title, :phone, :linkedin_url)
+      self.contributions.first.referrer
+        .slice(:id, :first_name, :last_name, :email, :title, :phone, :linkedin_url)
+        .merge(previous_changes: self.contributions.first.referrer.previous_changes)
     else
       nil
     end
