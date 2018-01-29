@@ -108,6 +108,38 @@ function successActionsListeners () {
 
     })
 
+    .on('click', '.success-actions .add-contributor', function (e) {
+
+      var customerId = $(this).closest('tr').data('customer-id'),
+          successId = $(this).closest('tr').data('success-id');
+
+      $('a[href="#prospect-contributors"]').tab('show');
+      $('#contributors-filter').val('success-' + successId).trigger('change');
+      $('#new-contributor-modal').modal('show');
+      $('select.new-contributor.customer').prop('disabled', true).val(customerId).trigger('change');
+      $('select.new-contributor.success').prop('disabled', true).val(successId).trigger('change');
+
+
+    })
+
+    .on('click',
+      '.success-actions .story-settings, .success-actions .story-content, .success-actions .story-contributors',
+      function (e) {
+        var href = $(this).find('a')[0].href, storyTab;
+        e.preventDefault();
+        if ($(this).hasClass('story-settings')) {
+          storyTab = '#story-settings';
+        } else if ($(this).hasClass('story-content')) {
+          storyTab = '#story-content';
+        } else {
+          storyTab = '#story-contributors';
+        }
+        Cookies.set('csp-story-tab', storyTab);
+        window.location = href;
+      }
+    )
+
+
     .on('click', '.success-actions .remove', function () {
       var successId = $(this).closest('tr').data('success-id');
       bootbox.confirm({
@@ -131,23 +163,7 @@ function successActionsListeners () {
       });
     })
 
-    .on('click', '.success-actions .start-curation', function () {
-      // see stories/shared/new_story.js
-    })
 
-    .on('click', '.success-actions .add-contributor', function (e) {
-
-      var customerId = $(this).closest('tr').data('customer-id'),
-          successId = $(this).closest('tr').data('success-id');
-
-      $('a[href="#prospect-contributors"]').tab('show');
-      $('#contributors-filter').val('success-' + successId).trigger('change');
-      $('#new-contributor-modal').modal('show');
-      $('select.new-contributor.customer').prop('disabled', true).val(customerId).trigger('change');
-      $('select.new-contributor.success').prop('disabled', true).val(successId).trigger('change');
-
-
-    });
 }
 
 

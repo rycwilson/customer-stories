@@ -107,7 +107,7 @@ class StoriesController < ApplicationController
                                     .company_story_views_since(@company.id, 30).count
       @workflow_stage = 'curate'
       @curate_view = 'story'  # instead of 'stories'
-      @curate_story_tab = cookies['csp-curate-story']
+      @curate_story_tab = cookies['csp-story-tab']
       render('companies/show')
     end
   end

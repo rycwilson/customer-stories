@@ -10,7 +10,7 @@ function storiesShow () {
   initMoreStories();
 
   $(document).on('click', '.edit-story a', function () {
-    Cookies.set('csp-curate-story', 'content');
+    Cookies.set('csp-story-tab', '#story-content');
   });
 
 }

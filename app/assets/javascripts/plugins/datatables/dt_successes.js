@@ -79,8 +79,7 @@ function initSuccessesTable (dtSuccessesInit) {
             return _.template($('#success-actions-dropdown-template').html())({
                 status: data,
                 story: row.story,
-                curateStoryPath: row.story &&
-                  '/curate/' + row.customer.slug + '/' + row.story.slug
+                storyPath: row.story && '/curate/' + row.customer.slug + '/' + row.story.slug
               });
           }
       }
