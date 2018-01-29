@@ -82,19 +82,19 @@ function newSuccessListeners () {
         return source === 'import' && importedSuccesses.some(function (success) { return success.status === 'valid'; });
       },
       displayCsvStatus = function (successes) {
-        var numRecords = successes.length,
-            numErrors = successes.filter(function (success) { return success.status === 'error'; }).length;
-        if (numErrors === numRecords) {
-          $('.form-group.csv-file')
-            .addClass('has-error')
-            .find('.help-block').text(successes.length + ' errors');
-        } else if (numErrors > 0) {
-          $('.form-group.csv-file')
-            .addClass('has-warning')
-            .find('.help-block').text((numRecords - numErrors) + ' ok, ' + numErrors + ' error(s)');
+        var numValid = successes.filter(function (success) { return success.status === 'valid'; }).length,
+            numInvalid = successes.length - numValid,
+            status = function (numValid, numInvalid) {
+              return numValid + ' ok, ' + numInvalid + ' errors';
+            };
+        if (numValid === 0) {
+          $('.form-group.csv-file').addClass('has-error');
+        } else if (numValid < successes.length) {
+          $('.form-group.csv-file').addClass('has-warning');
         } else {
-          $('.form-group.csv-file').addClass('has-success').find('.help-block').text('');
+          $('.form-group.csv-file').addClass('has-success');
         }
+        $('.form-group.csv-file').find('.help-block').text(status(numValid, numInvalid));
       },
 
       parseCsvData = function (data) {
@@ -112,7 +112,25 @@ function newSuccessListeners () {
                   contributorIndex = contributions.findIndex(function (contribution) {
                     return contribution.contributor.email === email;
                   });
-              return (contributorIndex !== -1) ? contributions[contributorIndex].contributor.id.toString() : '';
+              if (contributorIndex !== -1) {
+                console.log('User exists:', email);
+                return contributions[contributorIndex].contributor.id.toString();
+              } else {
+                console.log('new User:', email);
+                return '';
+              }
+            },
+            getInvitationTemplateId = function (templateName) {
+              if (!templateName) return null;
+              var template = app.company.crowdsourcing_templates.find(function (template) {
+                return template.name === templateName;
+              });
+              if (template) {
+                console.log('assigning invitation template:', template.name);
+              } else {
+                console.log('could not find template:', templateName);
+              }
+              return template ? template.id : null;
             },
             contactIsValid = function (firstName, lastName, email) {
               return getContributorId(email) || (firstName && lastName && email);
@@ -125,8 +143,10 @@ function newSuccessListeners () {
                 return customer.name === customerName;
               });
               if (customerIndex === -1) {
+                console.log('new Cuatomer:', customerName)
                 return { customer_attributes: { name: customerName, company_id: app.company.id } };
               } else {
+                console.log('Customer exists:', customerName)
                 return { customer_id: app.company.customers[customerIndex].id };
               }
             },
@@ -153,10 +173,12 @@ function newSuccessListeners () {
               return attrs;
             },
             parseRow = function (row) {
+              console.log('parsing row...')
               var success = {},
                   curator = app.company.curators.find(function (curator) {
                     return curator.email === row.curatorEmail;
                   }),
+                  contactContributionsIndex,
                   referrerIsPresent = function () {
                     return contactIsValid(row.referrerFirstName, row.referrerLastName, row.referrerEmail);
                   };
@@ -164,25 +186,35 @@ function newSuccessListeners () {
               success.curator_id = curator.id || '';
               Object.assign(success, customerAttrs(row.customerName));
               if (referrerIsPresent()) {
+                console.log('adding referrer (contributor #1):', row.referrerEmail);
                 success.contributions_attributes = {};
                 Object.assign(
                   success.contributions_attributes,
                   contributionsAttrs('0', 'referrer', row.referrerEmail, row.referrerFirstName, row.referrerLastName)
                 );
+                success.contributions_attributes['0'].crowdsourcing_template_id =
+                  getInvitationTemplateId(row.invitationTemplateNameReferrer);
               }
               if (contactIsValid(row.contactFirstName, row.contactLastName, row.contactEmail)) {
+                console.log('adding contact (contributor #2):', row.contactEmail);
+                contactContributionsIndex = referrerIsPresent() ? '1' : '0';
                 success.contributions_attributes = success.contributions_attributes || {};
                 Object.assign(
                   success.contributions_attributes,
-                  contributionsAttrs(referrerIsPresent() ? '1' : '0', 'contributor', row.contactEmail, row.contactFirstName, row.contactLastName)
+                  contributionsAttrs(contactContributionsIndex, 'contributor', row.contactEmail, row.contactFirstName, row.contactLastName)
                 );
+                success.contributions_attributes[contactContributionsIndex].crowdsourcing_template_id =
+                  getInvitationTemplateId(row.invitationTemplateNameContact);
               }
               return Object.assign(success, { status: "valid" });
             };
-        data.forEach(function (row) {
+        data.forEach(function (row, index) {
+          console.log('importing row', index + 2 + '...');
           if (rowIsValid(row)) {
+            console.log('row is valid');
             successes.push(parseRow(row));
           } else {
+            console.log('row is invalid');
             successes.push({ status: "error" });
           }
         });
