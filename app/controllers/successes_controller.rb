@@ -24,12 +24,12 @@ class SuccessesController < ApplicationController
       @successes = []
       params[:imported_successes].each do |index, success|
         params[:success] = success
-        @successes << Success.new(success_params)
+        @successes << Success.create(success_params)
       end
-      if @successes.all? { |success| success.save }
-      else
-        @successes.each { |success| pp success.errors.full_messages }
-      end
+      # if @successes.all? { |success| success.save! }
+      # else
+      #   @successes.each { |success| pp success.errors.full_messages }
+      # end
     else
       # pp success_params
       @success = Success.new(success_params)

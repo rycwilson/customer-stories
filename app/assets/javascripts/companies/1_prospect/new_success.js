@@ -98,13 +98,9 @@ function newSuccessListeners () {
       },
 
       parseCsvData = function (data) {
-        var successes = [],
+        var successes = [], logSuccesses = []
             curatorIsValid = function (email) {
-              if (app.company.curators.findIndex(function (curator) { return curator.email === email; }) === -1) {
-                return false;
-              } else {
-                return true;
-              }
+              return app.company.curators.find(function (curator) { return curator.email === email; });
             },
             // here a 'contributor' is either a
             getContributorId = function (email) {
@@ -136,7 +132,18 @@ function newSuccessListeners () {
               return getContributorId(email) || (firstName && lastName && email);
             },
             rowIsValid = function (row) {
-              return row.opportunityName !== '' && row.customerName !== '' && curatorIsValid(row.curatorEmail);
+              if (!row.opportunityName) {
+                console.log('Row is invalid: success name is missing');
+                return false;
+              } else if (!row.customerName) {
+                console.log('Row is invalid: customer name is missing');
+                return false;
+              } else if (!curatorIsValid(row.curatorEmail)) {
+                console.log('row is invalid: curator does not exist');
+                return false;
+              } else {
+                return true;
+              }
             },
             customerAttrs = function (customerName) {
               var customerIndex = app.company.customers.findIndex(function (customer) {
@@ -150,7 +157,7 @@ function newSuccessListeners () {
                 return { customer_id: app.company.customers[customerIndex].id };
               }
             },
-            contributionsAttrs = function (index, contributorType, email, firstName, lastName) {
+            contributionsAttrs = function (index, contributorType, email, firstName, lastName, title) {
               var attrs = {}, referrerId = getContributorId(email), contributorId = getContributorId(email);
               attrs[index] = {};
 
@@ -167,6 +174,7 @@ function newSuccessListeners () {
                 attrs[index][contributorType + '_attributes'].email = email;
                 attrs[index][contributorType + '_attributes'].first_name = firstName;
                 attrs[index][contributorType + '_attributes'].last_name = lastName;
+                attrs[index][contributorType + '_attributes'].title = title;
                 attrs[index][contributorType + '_attributes'].password = email;
                 attrs[index][contributorType + '_attributes'].sign_up_code = 'csp_beta';
               }
@@ -179,46 +187,47 @@ function newSuccessListeners () {
                     return curator.email === row.curatorEmail;
                   }),
                   contactContributionsIndex,
-                  referrerIsPresent = function () {
-                    return contactIsValid(row.referrerFirstName, row.referrerLastName, row.referrerEmail);
-                  };
+                  referrerIsPresent = contactIsValid(row.referrerFirstName, row.referrerLastName, row.referrerEmail);
               success.name = row.opportunityName;
-              success.curator_id = curator.id || '';
+              success.description = row.opportunityDescription;
+              success.curator_id = curator.id;
               Object.assign(success, customerAttrs(row.customerName));
-              if (referrerIsPresent()) {
+              if (referrerIsPresent) {
                 console.log('adding referrer (contributor #1):', row.referrerEmail);
                 success.contributions_attributes = {};
                 Object.assign(
                   success.contributions_attributes,
-                  contributionsAttrs('0', 'referrer', row.referrerEmail, row.referrerFirstName, row.referrerLastName)
+                  contributionsAttrs('0', 'referrer', row.referrerEmail, row.referrerFirstName, row.referrerLastName, row.referrerTitle)
                 );
                 success.contributions_attributes['0'].crowdsourcing_template_id =
                   getInvitationTemplateId(row.invitationTemplateNameReferrer);
               }
               if (contactIsValid(row.contactFirstName, row.contactLastName, row.contactEmail)) {
                 console.log('adding contact (contributor #2):', row.contactEmail);
-                contactContributionsIndex = referrerIsPresent() ? '1' : '0';
+                contactContributionsIndex = referrerIsPresent ? '1' : '0';
                 success.contributions_attributes = success.contributions_attributes || {};
                 Object.assign(
                   success.contributions_attributes,
-                  contributionsAttrs(contactContributionsIndex, 'contributor', row.contactEmail, row.contactFirstName, row.contactLastName)
+                  contributionsAttrs(contactContributionsIndex, 'contributor', row.contactEmail, row.contactFirstName, row.contactLastName, row.contactTitle)
                 );
                 success.contributions_attributes[contactContributionsIndex].crowdsourcing_template_id =
                   getInvitationTemplateId(row.invitationTemplateNameContact);
               }
-              return Object.assign(success, { status: "valid" });
+              return success;
             };
         data.forEach(function (row, index) {
           console.log('importing row', index + 2 + '...');
           if (rowIsValid(row)) {
             console.log('row is valid');
-            successes.push(parseRow(row));
+            successes.push(Object.assign(parseRow(row), { status: 'valid' }));
           } else {
             console.log('row is invalid');
             successes.push({ status: "error" });
           }
         });
-        console.log(successes);
+        logSuccesses = successes.slice();  // deep copy
+        logSuccesses.unshift('ignore', 'ignore')
+        console.log(logSuccesses);
         displayCsvStatus(successes);
         importedSuccesses = successes;
       },
