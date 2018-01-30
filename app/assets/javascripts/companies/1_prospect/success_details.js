@@ -19,9 +19,10 @@ function successDetailsListeners () {
       }
       else {
         dtRow.child(
-          _.template( $('#success-details-template').html() )({
+          _.template($('#success-details-template').html())({
             success: success,
             referrer: success.referrer,
+            contact: success.contact,
             successPath: successPath
           })
         ).show();

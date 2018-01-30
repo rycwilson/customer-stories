@@ -3,7 +3,7 @@
   var $form = $('#new-success-form'),
       success = <%= @success ? true : false %> && <%= raw @success.to_json(
           only: [:id, :name, :customer_id],
-          methods: [:timestamp, :referrer],
+          methods: [:timestamp, :referrer, :contact],
           include: {
             curator: { only: [:id] },
             customer: { only: [:name], methods: [:previous_changes] },
@@ -19,7 +19,7 @@
       successes = <%= @successes ? true : false %> && <%= raw (@successes.try(:map) do |success|
           JSON.parse(success.to_json(
             only: [:id, :name, :customer_id],
-            methods: [:timestamp, :referrer],
+            methods: [:timestamp, :referrer, :contact],
             include: {
               curator: { only: [:id] },
               customer: { only: [:name], methods: [:previous_changes] },
@@ -47,20 +47,7 @@
         return success.referrer && Object.keys(success.referrer.errors).length;
       },
       updateSelectOptions = function (successes) {
-        var contact,
-            successContact = function (success) {
-              return (success.contributions &&
-                      success.contributions.length === 1 &&
-                      !success.referrer &&
-                      success.contributions[0].contributor) ||
-                     (success.contributions &&
-                      success.contributions.length === 2 &&
-                      success.contributions[1].contributor)
-            };
-
         successes.forEach(function (success) {
-          contact = successContact(success)
-
           // new success
           $('.dt-filter')
             .find('optgroup[label="Customer Win"]')
@@ -101,12 +88,12 @@
           }
 
           // new contact/contributor
-          if (contact && contact.previous_changes.id) {
+          if (success.contact && success.contact.previous_changes.id) {
             $('#contributors-filter')
               .find('optgroup[label="Contributor"]')
               .prepend(
-                $('<option value="contributor-' + contact.id + '"' +
-                    ' data-column="contributor">' + contact.full_name + '</option>')
+                $('<option value="contributor-' + success.contact.id + '"' +
+                    ' data-column="contributor">' + success.contact.first_name + ' ' + success.contact.last_name + '</option>')
               )
           }
         })

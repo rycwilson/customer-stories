@@ -104,6 +104,16 @@ class Success < ActiveRecord::Base
     end
   end
 
+  def contact
+    customer_contact = self.contributions.select { |contribution| contribution.success_contact? }[0].try(:contributor)
+    if customer_contact.present?
+      return customer_contact.slice(:id, :first_name, :last_name, :email, :title, :phone, :linkedin_url)
+                             .merge(previous_changes: customer_contact.previous_changes)
+    else
+      return nil
+    end
+  end
+
   def timestamp
     self.created_at.to_i
   end

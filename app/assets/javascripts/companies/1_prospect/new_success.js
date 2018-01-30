@@ -109,10 +109,8 @@ function newSuccessListeners () {
                     return contribution.contributor.email === email;
                   });
               if (contributorIndex !== -1) {
-                console.log('User exists:', email);
                 return contributions[contributorIndex].contributor.id.toString();
               } else {
-                console.log('new User:', email);
                 return '';
               }
             },
@@ -129,7 +127,16 @@ function newSuccessListeners () {
               return template ? template.id : null;
             },
             contactIsValid = function (firstName, lastName, email) {
-              return getContributorId(email) || (firstName && lastName && email);
+              var contactId = getContributorId(email);
+              if (contactId) {
+                console.log('User exists:', email);
+                return true;
+              } else if (firstName && lastName && email) {
+                console.log('new User:', email);
+                return true;
+              } else {
+                return false;
+              }
             },
             rowIsValid = function (row) {
               if (!row.opportunityName) {
@@ -163,6 +170,9 @@ function newSuccessListeners () {
 
               if (contributorType === 'referrer' && referrerId) {
                 attrs[index].referrer_id = referrerId;
+              }
+              if (contributorType === 'contributor') {
+                attrs[index].success_contact = true;
               }
               if (contributorType === 'contributor' && contributorId) {
                 attrs[index].contributor_id = contributorId;

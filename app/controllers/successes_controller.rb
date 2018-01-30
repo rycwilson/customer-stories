@@ -8,7 +8,7 @@ class SuccessesController < ApplicationController
     # data = Rails.cache.fetch("#{company.subdomain}/dt-successes") do
     data = company.successes.to_json({
         only: [:id, :name, :description],
-        methods: [:display_status, :referrer, :timestamp],
+        methods: [:display_status, :referrer, :contact, :timestamp],
         include: {
           curator: { only: [:id], methods: [:full_name] },
           customer: { only: [:id, :name, :slug] },
@@ -61,7 +61,7 @@ class SuccessesController < ApplicationController
     params.require(:success).permit(:name, :description, :customer_id, :curator_id,
       customer_attributes: [:id, :name, :company_id],
       contributions_attributes: [
-        :referrer_id, :contributor_id, :crowdsourcing_template_id,
+        :referrer_id, :contributor_id, :crowdsourcing_template_id, :success_contact,
         referrer_attributes: [
           :first_name, :last_name, :email, :sign_up_code, :password
         ],
