@@ -237,7 +237,6 @@ function newSuccessListeners () {
             console.log('row is valid');
             successes.push(Object.assign(parseRow(row), { status: 'valid' }));
           } else {
-            console.log('row is invalid');
             successes.push({ status: "error" });
           }
         });
