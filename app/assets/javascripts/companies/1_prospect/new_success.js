@@ -86,23 +86,29 @@ function newSuccessListeners () {
             numInvalid = successes.length - numValid,
             status = function (numValid, numInvalid) {
               return numValid + ' ok, ' + numInvalid + ' errors';
+            },
+            disableForm = function (disable) {
+              $('button[form="new-success-form"]').prop('disabled', disable);
             };
         if (numValid === 0) {
           $('.form-group.csv-file').addClass('has-error');
+          disableForm(true);
         } else if (numValid < successes.length) {
           $('.form-group.csv-file').addClass('has-warning');
+          disableForm(false);
         } else {
           $('.form-group.csv-file').addClass('has-success');
+          disableForm(false);
         }
         $('.form-group.csv-file').find('.help-block').text(status(numValid, numInvalid));
       },
 
       parseCsvData = function (data) {
-        var successes = [], logSuccesses = []
+        var successes = [], logSuccesses = [];
             curatorIsValid = function (email) {
               return app.company.curators.find(function (curator) { return curator.email === email; });
             },
-            // here a 'contributor' is either a
+            // here a 'contributor' is either a referrer or contact
             getContributorId = function (email) {
               var contributions = $('#prospect-contributors-table').DataTable().rows().data().toArray(),
                   contributorIndex = contributions.findIndex(function (contribution) {
@@ -157,10 +163,10 @@ function newSuccessListeners () {
                 return customer.name === customerName;
               });
               if (customerIndex === -1) {
-                console.log('new Cuatomer:', customerName)
+                console.log('new Cuatomer:', customerName);
                 return { customer_attributes: { name: customerName, company_id: app.company.id } };
               } else {
-                console.log('Customer exists:', customerName)
+                console.log('Customer exists:', customerName);
                 return { customer_id: app.company.customers[customerIndex].id };
               }
             },
@@ -191,7 +197,7 @@ function newSuccessListeners () {
               return attrs;
             },
             parseRow = function (row) {
-              console.log('parsing row...')
+              console.log('parsing row...');
               var success = {},
                   curator = app.company.curators.find(function (curator) {
                     return curator.email === row.curatorEmail;
@@ -236,7 +242,7 @@ function newSuccessListeners () {
           }
         });
         logSuccesses = successes.slice();  // deep copy
-        logSuccesses.unshift('ignore', 'ignore')
+        logSuccesses.unshift('ignore', 'ignore');
         console.log(logSuccesses);
         displayCsvStatus(successes);
         importedSuccesses = successes;
@@ -295,7 +301,9 @@ function newSuccessListeners () {
         $('#new-success-form .form-group.csv-file')
           .removeClass('has-error has-warning has-success')
           .find('.help-block').text('');
-        $('button[type="submit"][form="new-success-form"] span').text('Create Win');
+        $('button[type="submit"][form="new-success-form"')
+          .prop('disabled', false)
+          .find('span').text('Create Win');
       }
     })
 
@@ -398,7 +406,7 @@ function newSuccessListeners () {
       $(this).find('.form-group').removeClass('has-error');
       $(this).find('.create-referrer input').prop('required', false);
       $('button[form="new-success-form"]').attr('type', 'submit');
-      $('button[form="new-success-form"] span').text('Create Win').css('display', 'inline');
+      $('button[form="new-success-form"] span').text('Create Win').css('display', 'inline').prop('disabled', false);
       $('button[form="new-success-form"] i').css('display', 'none');
     })
 
