@@ -36,6 +36,17 @@ function attachContributionsListeners () {
       },
       scrollToNext = function ($formGroup) {
         $('html, body').animate({ scrollTop: ($formGroup.offset().top - 200).toString() + 'px' }, 200);
+      },
+      updateProgress = function () {
+        var numCompleted = 0, percentCompleted;
+        $questions.each(function () {
+          if ($(this).find('textarea').val()) numCompleted++;
+        });
+        pctCompleted = Math.round((numCompleted / $questions.length) * 100).toString() + "%";
+        $('.progress-label').text(numCompleted + ' of ' + $questions.length + ' completed');
+        $('.progress-bar')
+          .attr('style', 'width:' + pctCompleted)
+          .find('.sr-only').text(numCompleted + ' of ' + $questions.length + ' completed');
       };
 
   $(document).on('scroll', function () {
@@ -54,6 +65,7 @@ function attachContributionsListeners () {
     $(this).addClass('active');
     $questions.not($(this)).each(function () { $(this).removeClass('active'); });
     scrollToNext($(this));
+    updateProgress();
   });
 
   $('#submission-form .next-question button').on('click', function () {
@@ -64,6 +76,7 @@ function attachContributionsListeners () {
     } else {
       $(this).closest('.form-group').next().find('textarea').trigger('click').trigger('focus');
     }
+    updateProgress();
   });
 
 

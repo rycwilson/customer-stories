@@ -114,6 +114,38 @@ body.contributions.edit {
     }
   }
 
+  #submission-progress {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 50px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    .row {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      // position: relative;
+      > [class*="col-"] {
+        padding: 0;
+      }
+      .progress {
+        max-width: 100%;
+        height: 15px;
+        background-color: rgba(255, 255, 255, 0.4);
+        .progress-bar {
+          background-color: #fff;
+        }
+      }
+    }
+    .row.hidden-xs {
+      margin: 0 auto;
+      max-width: 28%;
+    }
+  }
+
   @media only screen and (max-width: 599px) {
     #submission-header {
       padding: 0 15px;
@@ -154,17 +186,32 @@ body.contributions.edit {
     .col-sm-10 {
       width: 84%
     }
+    #submission-progress {
+      .row.hidden-xs {
+        max-width: 48%
+      }
+    }
   }
 
   @media only screen and (min-width: 992px) {
     .col-sm-10 {
       width: 66%
     }
+    #submission-progress {
+      .row.hidden-xs {
+        max-width: 38%
+      }
+    }
   }
 
   @media only screen and (min-width: 1200px) {
     .col-lg-8 {
       width: 60%
+    }
+    #submission-progress {
+      .row.hidden-xs {
+        max-width: 30%
+      }
     }
   }
 
