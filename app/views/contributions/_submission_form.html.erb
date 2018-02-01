@@ -46,15 +46,15 @@
   <% else %>
 
     <div class="form-group feedback">
-      <%= f.label(:feedback) %>
-      <%= f.text_area(:feedback, rows: 11, class: 'form-control') %>
+      <%= f.label(:feedback, 'Feedback', style: 'font-weight:600') %>
+      <%= f.text_area(:feedback, rows: 5, class: 'form-control') %>
     </div>
 
   <% end %>
 
   <div class="form-group submit text-center hidden-xs">
     <button type="submit" form="submission-form" class="btn btn-success" style="width: 60%" >
-      <span>Submit Answers</span>
+      <span><%= type == 'contribution'? 'Submit Answers' : 'Submit' %></span>
       <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
       <i class='fa fa-check' style='display:none'></i>
     </button>
@@ -62,7 +62,7 @@
 
   <div class="form-group submit text-center visible-xs" >
     <button type="submit" form="submission-form" class="btn btn-success" style="width: 60%" >
-      <span>Submit Answers</span>
+      <span><%= type == 'contribution'? 'Submit Answers' : 'Submit' %></span>
       <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
       <i class='fa fa-check' style='display:none'></i>
     </button>

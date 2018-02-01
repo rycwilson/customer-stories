@@ -7,21 +7,8 @@ function attachContributionsListeners () {
       currentActiveQ = 0,
       nextActiveQ = 0,
       $questions = $('#submission-form .form-group.question'),
-      qScrollRanges = [];
-
-  for (var i = 0; i < $questions.length; i ++) {
-    if (i === 0) {
-      qScrollRanges.push([ 0, offset ]);
-    } else {
-      qScrollRanges.push([ offset + ((i - 1) * qHeight), offset + (i * qHeight) ]);
-    }
-  }
-  qScrollRanges.push([
-    qScrollRanges[$questions.length - 1][1],
-    qScrollRanges[$questions.length - 1][1] + $('.form-group.linkedin').outerHeight()
-  ]);
-
-  var getActiveQ = function (scrollY) {
+      qScrollRanges = [],
+      getActiveQ = function (scrollY) {
         return qScrollRanges.findIndex(function (range) {
           return scrollY >= range[0] && scrollY <= range[1];
         });
@@ -49,13 +36,28 @@ function attachContributionsListeners () {
           .find('.sr-only').text(numCompleted + ' of ' + $questions.length + ' completed');
       };
 
-  $(document).on('scroll', function () {
-    scrollY = $(document).scrollTop();
-    nextActiveQ = getActiveQ(scrollY);
-    if (currentActiveQ !== nextActiveQ)  {
-      changeActiveQ(currentActiveQ, nextActiveQ);
+  if ($questions.length) {
+    for (var i = 0; i < $questions.length; i ++) {
+      if (i === 0) {
+        qScrollRanges.push([ 0, offset ]);
+      } else {
+        qScrollRanges.push([ offset + ((i - 1) * qHeight), offset + (i * qHeight) ]);
+      }
     }
-  });
+    qScrollRanges.push([
+      qScrollRanges[$questions.length - 1][1],
+      qScrollRanges[$questions.length - 1][1] + $('.form-group.linkedin').outerHeight()
+    ]);
+
+    $(document).on('scroll', function () {
+      scrollY = $(document).scrollTop();
+      nextActiveQ = getActiveQ(scrollY);
+      if (currentActiveQ !== nextActiveQ)  {
+        changeActiveQ(currentActiveQ, nextActiveQ);
+      }
+    });
+
+  }
 
   $questions.on('click', function (e) {
     if ($(this).hasClass('active') || $(e.target).is('button')) {
@@ -80,7 +82,7 @@ function attachContributionsListeners () {
   });
 
 
-  $('#submission-form textarea').on('input', function () {
+  $('#submission-form .form-group.question textarea').on('input', function () {
     $(this).closest('.form-group').find('button').css('display', 'inline-block');
   });
 
