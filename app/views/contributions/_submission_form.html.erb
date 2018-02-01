@@ -1,27 +1,32 @@
 
 <%= form_for(contribution, url: contributor_submission_path(contribution.access_token),
-      method: "put", html: { id: 'submission-form'}) do |f| %>
+      method: "put", html: { id: 'submission-form' }) do |f| %>
 
   <%= hidden_field_tag("submission", true) %>
   <%= f.hidden_field(:status, value: type + '_submitted') %>
 
   <% if type == 'contribution' %>
 
-    <% contribution.contributor_questions.each do |question| %>
+    <% contribution.contributor_questions.each_with_index do |question, index| %>
 
-      <div class="form-group">
-        <%= label_tag("answers[#{question.id}]", question.question) %>
-        <%= text_area_tag("answers[#{question.id}]", nil, rows: 8, class: 'form-control') %>
+      <div class="form-group question <%= index == 0 ? 'active' : '' %>">
+
+        <%= label_tag("answers[#{question.id}]", "#{index + 1}. #{question.question}") %>
+        <%= text_area_tag("answers[#{question.id}]", nil, rows: 5, class: 'form-control') %>
+
+        <div class="next-question hidden-xs">
+          <button class="btn btn-success">Ok</button>
+        </div>
+
+        <div class="next-question visible-xs-block">
+          <button class="btn btn-success btn-sm">Ok</button>
+        </div>
+
       </div>
 
     <% end %>
 
-<!--     <div class="form-group">
-      <%#= label_tag("answers[additional]", 'Any additional thoughts you would like to share?') %>
-      <%#= text_area_tag("answers[additional]", nil, rows: 8, class: 'form-control') %>
-    </div> -->
-
-    <div class="form-group">
+    <div class="form-group linkedin">
 
       <div class="row">
 
@@ -31,7 +36,7 @@
 
         <div class='col-xs-10 col-sm-11 checkbox'>
           <%= f.check_box(:publish_contributor, checked: true) %>
-          Leave this box checked if you would like your LinkedIn profile published as part of the success story. You may return at any point in the future to add or remove your profile.
+          Leave this box checked to have your LinkedIn profile published as part of the success story. You may return at any point in the future to add or remove your profile.
         </div>
 
       </div>
@@ -40,31 +45,31 @@
 
   <% else %>
 
-    <div class="form-group">
+    <div class="form-group feedback">
       <%= f.label(:feedback) %>
       <%= f.text_area(:feedback, rows: 11, class: 'form-control') %>
     </div>
 
   <% end %>
 
-  <div class="form-group text-center hidden-xs">
-    <button type="submit" class="btn btn-success" style='width: 65%'>
-      <span>Submit</span>
+  <div class="form-group submit text-center hidden-xs">
+    <button type="submit" class="btn btn-success" style='width: 60%'>
+      <span>Submit Answers</span>
       <i class='fa fa-spinner fa-pulse' style='display:none'></i>
       <i class='fa fa-check' style='display:none'></i>
     </button>
   </div>
 
-  <div class="form-group text-center visible-xs" >
+  <div class="form-group submit text-center visible-xs" >
     <button type="submit" class="btn btn-success" style='width:100%; max-width:350px'>
-      <span>Submit</span>
+      <span>Submit Answers</span>
       <i class='fa fa-spinner fa-pulse' style='display:none'></i>
       <i class='fa fa-check' style='display:none'></i>
     </button>
   </div>
 
 
-  <div class='form-group text-center'>
+  <div class='form-group tos text-center'>
     <p class='tos'>
       By submitting you are agreeing to the <%= link_to 'Terms of Service', "#{ request.protocol + request.domain + request.port_string + '/tos' }", target: '_blank' %>
     </p>

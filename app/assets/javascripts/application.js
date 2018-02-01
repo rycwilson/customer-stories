@@ -19,7 +19,10 @@ $(document).one('turbolinks:load', function () {
   attachCompaniesListeners();
   attachStoriesListeners();
   attachProfileListeners();
-  attachContributionsListeners();
+  // there's a scroll listener in here that we only want to trigger on the contribution submission page
+  if ($('body').hasClass('contributions edit')) {
+    attachContributionsListeners();
+  }
 });
 
 $(document).on('turbolinks:load', function (e) {
@@ -80,6 +83,7 @@ function attachAppListeners () {
       var $form = ($(this).closest('form').length && $(this).closest('form')) ||
                   $('#' + $(this).attr('form')),
           $button = $(this);
+          console.log('huh?')
       if ($form.is('#contribution-request-form') ||
           $form.is('[id*="success-form-"]') ||
           $form.is('[id*="contribution-form-"') ||

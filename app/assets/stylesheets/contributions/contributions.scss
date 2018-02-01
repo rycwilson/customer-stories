@@ -1,7 +1,26 @@
 
-body.contributions {
+body.contributions.edit {
 
-  background-color: #f5f5f5;
+  background-color: #f9f9f9;
+
+  #submission-header {
+    height: 65px;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    span {
+      font-family: 'Lato', 'Trebuchet MS', 'Open Sans', arial, sans-serif;
+      font-size: 24px;
+      font-weight: 300;
+    }
+    span.light {
+      color: #fff;
+    }
+    span.dark {
+      color: rgba(51, 51, 51, 0.9);
+    }
+  }
 
   .col-centered {
     float: none;
@@ -9,9 +28,45 @@ body.contributions {
     // overflow:hidden needed so height is enough to accommodate floated content (two settings above)
     overflow: hidden;
     background-color: #fff;
-    padding: 30px 50px;
+    padding: 130px 30px 250px 30px;
     border-left: 1px solid #ccc;
     border-right: 1px solid #ccc;
+    .form-group {
+      // margin-bottom: 30px;
+      width: 90%;
+      margin: 0 auto 30px auto;
+      label {
+        margin-bottom: 10px;
+        font-weight: 400;
+      }
+      textarea {
+        margin-bottom: 15px;
+      }
+      .next-question {
+        height: 32px;
+        text-align: right;
+        button {
+          display: none;
+          width: 60px;
+        }
+      }
+    }
+    .form-group.active {
+      // font-size: 16px;
+    }
+    .form-group.question {
+      font-size: 16px;
+      // width: 95%;
+      // margin: 0 auto 30px auto;
+    }
+    .form-group.question:not(.active) {
+      opacity: 0.2;
+    }
+    .form-group.linkedin, .form-group.submit, .form-group.tos {
+      font-size: 13px;
+    }
+    button[type="submit"] {
+    }
     i.fa-linkedin-square {
       color: #006fb3;
       margin-top: -1px;
@@ -25,16 +80,16 @@ body.contributions {
       margin: 6px 0 0 -23px;
     }
     .tos {
-      font-size: 12px;
       margin-top: -10px;
     }
     #footer {
       position: relative;
-      height: 230px;
+      height: 65px;  // 230px;
       img.curator {
         width: 100px;
       }
       div.curator {
+        font-size: 13px;
         position: absolute;
         top: 30px;
         padding: 0 0 0 110px;
@@ -60,9 +115,22 @@ body.contributions {
   }
 
   @media only screen and (max-width: 599px) {
-    .col-xs-12 {
+    #submission-header {
+      padding: 0 15px;
+      span {
+        font-size: 13px;
+      }
+    }
+    .col-centered {
       padding-right: 15px;
       padding-left: 15px;
+      padding-top: 80px;
+      .form-group {
+        margin-bottom: 60px;
+      }
+      .form-group.question {
+        font-size: 14px;
+      }
     }
   }
 
@@ -96,7 +164,7 @@ body.contributions {
 
   @media only screen and (min-width: 1200px) {
     .col-lg-8 {
-      width: 56%
+      width: 60%
     }
   }
 

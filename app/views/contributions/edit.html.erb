@@ -1,22 +1,22 @@
 
+<div id="submission-header" style="background-color:<%= @company.header_color_2 %>">
+
+  <% if @submission_type == 'contribution' %>
+
+    <span class="<%= @company.color_contrast %>">Thank you for contributing to the success story</span>
+
+  <% else %>
+
+    <span class="<%= @company.color_contrast %>">Thank you for your feedback</span>
+
+  <% end %>
+
+</div>
+
 <div class="container">
   <div class="row">
 
     <div class='col-centered col-xs-12 col-sm-10 col-lg-8'>
-
-      <div class="form-group">
-
-        <% if @submission_type == 'contribution' %>
-
-          <p>Thank you for contributing to the success story. Following are some questions intended to help you share your experience.</p>
-
-        <% else %>
-
-          <p>Thank you for your feedback.</p>
-
-        <% end %>
-
-      </div>
 
       <%= render('contributions/submission_form',
             { contribution: @contribution, type: @submission_type }) %>

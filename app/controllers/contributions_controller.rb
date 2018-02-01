@@ -65,6 +65,7 @@ class ContributionsController < ApplicationController
 
   # GET '/contributions/:token/:type'
   def edit
+    @company = Company.find_by(subdomain: request.subdomain)
     @submission_type = params[:type]  # type IN ('contribution', 'feedback')
   end
 
