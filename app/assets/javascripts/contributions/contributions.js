@@ -42,7 +42,6 @@ function attachContributionsListeners () {
     scrollY = $(document).scrollTop();
     nextActiveQ = getActiveQ(scrollY);
     if (currentActiveQ !== nextActiveQ)  {
-      console.log('changing active question:', getActiveQ(scrollY));
       changeActiveQ(currentActiveQ, nextActiveQ);
     }
   });
@@ -60,7 +59,6 @@ function attachContributionsListeners () {
   $('#submission-form .next-question button').on('click', function () {
     $(this).toggle();
     if ($(this).closest('.form-group').is('.form-group:nth-of-type(' + $questions.length + ')')) {
-      console.log('removeClass("active")')
       $(this).closest('.form-group').removeClass('active');
       scrollToNext($('.form-group.linkedin'));
     } else {
@@ -71,12 +69,6 @@ function attachContributionsListeners () {
 
   $('#submission-form textarea').on('input', function () {
     $(this).closest('.form-group').find('button').css('display', 'inline-block');
-  });
-
-  $('#submission-form').on('submit', function (e) {
-    e.preventDefault();
-    $(this).find('button[type="submit"] span').toggle();
-    $(this).find('button[type="submit"] .fa-spinner').toggle();
   });
 
 }

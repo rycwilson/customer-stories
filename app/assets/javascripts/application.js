@@ -83,7 +83,6 @@ function attachAppListeners () {
       var $form = ($(this).closest('form').length && $(this).closest('form')) ||
                   $('#' + $(this).attr('form')),
           $button = $(this);
-          console.log('huh?')
       if ($form.is('#contribution-request-form') ||
           $form.is('[id*="success-form-"]') ||
           $form.is('[id*="contribution-form-"') ||
@@ -95,7 +94,8 @@ function attachAppListeners () {
           $form.is('#adwords-sync-form') ||
           $form.is('#company-tags-form') ||
           $form.is('#new-cta-form') ||
-          $form.is('[id*="cta-"]')) {
+          $form.is('[id*="cta-"]') ||
+          $form.is('#submission-form')) {
         if ($form.data('submitted')) {
           e.preventDefault();
           return false;
