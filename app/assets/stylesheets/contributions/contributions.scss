@@ -99,6 +99,7 @@ body.contributions.edit {
         }
       }
       .logo {
+        mix-blend-mode: multiply; // this makes white background transparent
         position: absolute;
         bottom: 0;
         left: 50%;
