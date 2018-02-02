@@ -126,10 +126,11 @@ body.contributions.edit {
     color: #fff;
     .row {
       height: 100%;
-      display: flex !important;
+      display: flex;
       align-items: center;
       justify-content: center;
       // position: relative;
+      margin: 0 auto;
       [class*="col-"] {
         padding: 0;
       }
@@ -142,14 +143,14 @@ body.contributions.edit {
         }
       }
     }
-    // .row.visible-xs-block {
-    //   // the display
-    //   [class*="col-"] {
-
-    //   }
-    //   margin: 0 auto;
-    //   max-width: 28%;
-    // }
+    .row.visible-xs-block {
+      [class*="col-"] {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
   }
 
   @media only screen and (max-width: 599px) {
