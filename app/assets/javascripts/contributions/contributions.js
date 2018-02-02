@@ -70,6 +70,14 @@ function attachContributionsListeners () {
     updateProgress();
   });
 
+  $questions.each(function () {
+    $(this).find('textarea').on('focus', function () {
+      if (app.screenSize === 'xs') {
+        $('#submission-progress').hide();
+      }
+    });
+  });
+
   $('#submission-form .next-question button').on('click', function () {
     $(this).toggle();
     $(this).closest('.form-group').find('textarea').trigger('blur');
@@ -77,7 +85,10 @@ function attachContributionsListeners () {
       $(this).closest('.form-group').removeClass('active');
       scrollToNext($('.form-group.linkedin'));
     } else {
-      $(this).closest('.form-group').next().find('textarea').trigger('click').trigger('focus');
+      $(this).closest('.form-group').next().find('textarea').trigger('click');
+      if (app.screenSize !== 'xs') {
+        $(this).closest('.form-group').next().find('textarea').trigger('focus');
+      }
     }
     updateProgress();
   });
