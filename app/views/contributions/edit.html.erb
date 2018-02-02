@@ -31,6 +31,9 @@
 <div id="submission-progress" class="container-fluid <%= @submission_type == 'feedback' ? 'hidden' : '' %>">
 
   <div class="row visible-xs-block">
+    <div class="col-xs-12 text-center">
+      <span class="progress-label">0 of <%= @contribution.contributor_questions.length %> completed</span>
+    </div>
   </div>
 
   <div class="row hidden-xs">
