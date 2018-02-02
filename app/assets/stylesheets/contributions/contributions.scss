@@ -27,10 +27,10 @@ body.contributions.edit {
     margin: 0 auto;
     // overflow:hidden needed so height is enough to accommodate floated content (two settings above)
     overflow: hidden;
-    background-color: #fff;
+    background-color: #f9f9f9;
     padding: 130px 30px 250px 30px;
-    border-left: 1px solid #ddd;
-    border-right: 1px solid #ddd;
+    // border-left: 1px solid #ddd;
+    // border-right: 1px solid #ddd;
     .form-group {
       // margin-bottom: 30px;
       width: 90%;
