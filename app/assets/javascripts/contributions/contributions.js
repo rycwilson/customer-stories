@@ -72,6 +72,7 @@ function attachContributionsListeners () {
 
   $('#submission-form .next-question button').on('click', function () {
     $(this).toggle();
+    $(this).closest('.form-group').find('textarea').trigger('blur');
     if ($(this).closest('.form-group').is('.form-group:nth-of-type(' + $questions.length + ')')) {
       $(this).closest('.form-group').removeClass('active');
       scrollToNext($('.form-group.linkedin'));
