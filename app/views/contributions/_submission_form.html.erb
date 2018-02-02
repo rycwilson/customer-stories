@@ -13,14 +13,18 @@
 
         <%= label_tag("answers[#{question.id}]", "#{index + 1}. #{question.question}") %>
 
-        <div class="next-question visible-xs-block">
-          <%= text_area_tag("answers[#{question.id}]", nil, rows: 5, class: 'form-control') %>
-          <button class="btn btn-success btn-sm">Ok</button>
+        <div class="visible-xs-block">
+          <%= text_area_tag("answers[#{question.id}]", nil, rows: 3, class: 'form-control') %>
+          <div class="next-question">
+            <button class="btn btn-success btn-sm">Ok</button>
+          </div>
         </div>
 
-        <div class="next-question hidden-xs">
-          <%= text_area_tag("answers[#{question.id}]", nil, rows: 3, class: 'form-control') %>
-          <button class="btn btn-success">Ok</button>
+        <div class="hidden-xs">
+          <%= text_area_tag("answers[#{question.id}]", nil, rows: 5, class: 'form-control') %>
+          <div class="next-question">
+            <button class="btn btn-success">Ok</button>
+          </div>
         </div>
 
       </div>
