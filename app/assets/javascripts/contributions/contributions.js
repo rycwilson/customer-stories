@@ -2,7 +2,7 @@
 function attachContributionsListeners () {
 
   var scrollY,
-      offset = app.screenSize === 'xs' ? 100 : 200,
+      offset = 200,
       qHeight = $('.form-group.question:first-of-type').outerHeight(true),
       currentActiveQ = 0,
       nextActiveQ = 0,
@@ -23,7 +23,7 @@ function attachContributionsListeners () {
       },
       scrollToNext = function ($formGroup) {
         // var scroll = app.screenSize === 'xs' ? : 200;
-        $('html, body').animate({ scrollTop: ($formGroup.offset().top - scro).toString() + 'px' }, 200);
+        $('html, body').animate({ scrollTop: ($formGroup.offset().top - 200).toString() + 'px' }, 200);
       },
       updateProgress = function () {
         var numCompleted = 0, percentCompleted;
