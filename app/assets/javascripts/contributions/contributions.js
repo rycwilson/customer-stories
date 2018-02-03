@@ -22,7 +22,7 @@ function attachContributionsListeners () {
         }
       },
       scrollToNext = function ($formGroup) {
-        var scrollAmt = app.screenSize === 'xs' ? 80 : 200;
+        var scrollAmt = app.screenSize === 'xs' ? 60 : 200;
         $('html, body').animate({ scrollTop: ($formGroup.offset().top - scrollAmt).toString() + 'px' }, 200);
       },
       updateProgress = function () {
