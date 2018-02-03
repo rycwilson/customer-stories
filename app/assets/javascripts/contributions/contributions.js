@@ -2,7 +2,7 @@
 function attachContributionsListeners () {
 
   var scrollY,
-      offset = 200,
+      offset = app.screenSize === 'xs' ? 100 : 200,
       qHeight = $('.form-group.question:first-of-type').outerHeight(true),
       currentActiveQ = 0,
       nextActiveQ = 0,
