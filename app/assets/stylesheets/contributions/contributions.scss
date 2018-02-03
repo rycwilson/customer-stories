@@ -180,6 +180,9 @@ body.contributions.edit {
       }
       .form-group.linkedin {
         margin-bottom: 40px;
+        .row.visible-xs-block:nth-of-type(2) {
+          text-align: justify;
+        }
       }
       input[type="checkbox"] {
         margin: 6px 6px 0 0;
