@@ -69,7 +69,6 @@ body.contributions.edit {
     .form-group.submit.visible-xs-block {
       margin-bottom: 25px;
     }
-    .form-group.tos.visible-xs-block
     button[type="submit"] {
     }
     i.fa-linkedin-square {
@@ -182,11 +181,14 @@ body.contributions.edit {
       .form-group.linkedin {
         margin-bottom: 40px;
         .row.visible-xs-block:nth-of-type(2) {
-          text-align: justify;
+          // text-align: justify;
         }
       }
       input[type="checkbox"] {
         margin: 6px 6px 0 0;
+      }
+      .form-group.tos {
+        margin-bottom: 15px;
       }
     }
   }
