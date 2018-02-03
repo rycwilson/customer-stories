@@ -22,7 +22,8 @@ function attachContributionsListeners () {
         }
       },
       scrollToNext = function ($formGroup) {
-        $('html, body').animate({ scrollTop: ($formGroup.offset().top - 200).toString() + 'px' }, 200);
+        // var scroll = app.screenSize === 'xs' ? : 200;
+        $('html, body').animate({ scrollTop: ($formGroup.offset().top - scro).toString() + 'px' }, 200);
       },
       updateProgress = function () {
         var numCompleted = 0, percentCompleted;

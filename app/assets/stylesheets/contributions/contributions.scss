@@ -154,6 +154,14 @@ body.contributions.edit {
   }
 
   @media only screen and (max-width: 599px) {
+    .col-centered {
+      padding-right: 15px;
+      padding-left: 15px;
+      padding-top: 80px;
+    }
+  }
+
+  @media only screen and (max-width: 767px) {
     #submission-header {
       padding: 0 15px;
       span {
@@ -161,11 +169,8 @@ body.contributions.edit {
       }
     }
     .col-centered {
-      padding-right: 15px;
-      padding-left: 15px;
-      padding-top: 80px;
       .form-group {
-        margin-bottom: 60px;
+        margin-bottom: 100px;
       }
       .form-group.question {
         font-size: 16px;
