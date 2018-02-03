@@ -66,9 +66,10 @@ body.contributions.edit {
     .form-group.linkedin, .form-group.submit, .form-group.tos {
       font-size: 13px;
     }
-    .form-group.submit.visible-xs {
-      margin-bottom: 30px;
+    .form-group.submit.visible-xs-block {
+      margin-bottom: 25px;
     }
+    .form-group.tos.visible-xs-block
     button[type="submit"] {
     }
     i.fa-linkedin-square {

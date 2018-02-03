@@ -26,7 +26,7 @@ function attachContributionsListeners () {
 
         if (app.screenSize === 'xs') {
           if ($formGroup.is('.linkedin')) {
-            scrollAmt = 80;
+            scrollAmt = 30;
           } else {
             scrollAmt = 120;
           }
