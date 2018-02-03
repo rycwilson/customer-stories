@@ -33,13 +33,26 @@
 
     <div class="form-group linkedin">
 
-      <div class="row">
+      <div class="row visible-xs-block">
+        <div class="text-center">
+          <i class="fa fa-3x fa-linkedin-square"></i>
+        </div>
+      </div>
 
-        <div class='col-xs-2 col-sm-1 text-center'>
+      <div class="row visible-xs-block">
+        <div class="col-xs-12">
+          <%= f.check_box(:publish_contributor, checked: true) %>
+            Leave this box checked to have your LinkedIn profile published as part of the success story. You may return at any point in the future to add or remove your profile.
+        </div>
+      </div>
+
+      <div class="row hidden-xs">
+
+        <div class='col-sm-1 text-center'>
           <i class="fa fa-2x fa-linkedin-square"></i>
         </div>
 
-        <div class='col-xs-10 col-sm-11 checkbox'>
+        <div class='col-sm-11 checkbox'>
           <%= f.check_box(:publish_contributor, checked: true) %>
           Leave this box checked to have your LinkedIn profile published as part of the success story. You may return at any point in the future to add or remove your profile.
         </div>
