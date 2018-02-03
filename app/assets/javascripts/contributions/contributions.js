@@ -22,7 +22,7 @@ function attachContributionsListeners () {
         }
       },
       scrollToNext = function ($formGroup) {
-        var scrollAmt = app.screenSize === 'xs' ? 100 : 200;
+        var scrollAmt = app.screenSize === 'xs' ? 80 : 200;
         $('html, body').animate({ scrollTop: ($formGroup.offset().top - scrollAmt).toString() + 'px' }, 200);
       },
       updateProgress = function () {
@@ -75,6 +75,14 @@ function attachContributionsListeners () {
     $(this).find('textarea').on('focus', function () {
       if (app.screenSize === 'xs') {
         $('#submission-progress').hide();
+      }
+    });
+  });
+
+  $questions.each(function () {
+    $(this).find('textarea').on('blur', function () {
+      if (app.screenSize === 'xs') {
+        $('#submission-progress').show();
       }
     });
   });
