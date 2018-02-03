@@ -22,7 +22,17 @@ function attachContributionsListeners () {
         }
       },
       scrollToNext = function ($formGroup) {
-        var scrollAmt = app.screenSize === 'xs' ? 120 : 200;
+        var scrollAmt;
+
+        if (app.screenSize === 'xs') {
+          if ($formGroup.is('.linkedin')) {
+            scrollAmt = 80;
+          } else {
+            scrollAmt = 120;
+          }
+        } else {
+          scrollAmt = 200;
+        }
         $('html, body').animate({ scrollTop: ($formGroup.offset().top - scrollAmt).toString() + 'px' }, 200);
       },
       updateProgress = function () {
