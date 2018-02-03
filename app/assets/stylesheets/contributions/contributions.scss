@@ -66,6 +66,9 @@ body.contributions.edit {
     .form-group.linkedin, .form-group.submit, .form-group.tos {
       font-size: 13px;
     }
+    .form-group.submit.visible-xs {
+      margin-bottom: 30px;
+    }
     button[type="submit"] {
     }
     i.fa-linkedin-square {
@@ -174,6 +177,12 @@ body.contributions.edit {
       }
       .form-group.question {
         font-size: 16px;
+      }
+      .form-group.linkedin {
+        margin-bottom: 40px;
+      }
+      input[type="checkbox"] {
+        margin: 6px 6px 0 0;
       }
     }
   }
