@@ -397,6 +397,8 @@ function newSuccessListeners () {
       }, 200);
     })
     .on('hidden.bs.modal', '#new-success-modal', function () {
+      $('#new-success-form').show();
+      $(this).find('.new-records').hide();
       $(this).find('form')[0].reset();
       disableContributionAttrs(true);
       disableReferrerAttrs(true);
