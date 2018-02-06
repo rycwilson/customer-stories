@@ -1295,9 +1295,13 @@ class Company < ActiveRecord::Base
   end
 
    # returns "light" or "dark" to indicate font color for a given background color (header_color_2)
-  def color_contrast
+  def color_contrast (background_color=nil)
     # method expects hex value in the form of #fafafa (all six digits); see the js implementation for shorthand hex
-    hex = self.header_color_2
+    if background_color
+      hex = background_color
+    else
+      hex = self.header_color_2
+    end
     rgb = { r: hex[1..2].hex, g: hex[3..4].hex, b: hex[5..6].hex }
 
     # // http://www.w3.org/TR/AERT#color-contrast
