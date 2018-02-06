@@ -385,9 +385,6 @@ function newSuccessListeners () {
              .find('input[id*="password"]').val( $(this).val() );
     })
 
-
-
-
     // reset modal
     .on('hide.bs.modal', '#new-success-modal', function () {
       // actions don't work once the modal is hidden, so use a timeout...
