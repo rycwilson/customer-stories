@@ -2,7 +2,7 @@
 function attachContributionsListeners () {
 
   var scrollY,
-      offset = 200,
+      offset = 190,  // 130px padding + 60 px header
       qHeight = $('.form-group.question:first-of-type').outerHeight(true),
       currentActiveQ = 0,
       nextActiveQ = 0,
@@ -23,7 +23,6 @@ function attachContributionsListeners () {
       },
       scrollToNext = function ($formGroup) {
         var scrollAmt;
-
         if (app.screenSize === 'xs') {
           if ($formGroup.is('.linkedin')) {
             scrollAmt = 30;
@@ -31,7 +30,7 @@ function attachContributionsListeners () {
             scrollAmt = 120;
           }
         } else {
-          scrollAmt = 200;
+          scrollAmt = offset;
         }
         $('html, body').animate({ scrollTop: ($formGroup.offset().top - scrollAmt).toString() + 'px' }, 200);
       },
