@@ -37,7 +37,7 @@ class UserMailer < ApplicationMailer
       Rails.application.routes.url_helpers.company_main_url('prospect')
     subject = "#{contribution.contributor.full_name} submitted #{contribution.status == 'contribution_submitted' ? 'a contribution' : 'feedback'}"
     @body = "<p>#{contribution.curator.first_name},</p>
-      <p style='margin-bottom:25px'>#{contribution.contributor.full_name} of the #{contribution.story.present? ? 'Customer Story' : 'Customer Win' } <a href='#{link}'>#{contribution.story.try(:title) || contribution.success.name}</a> submitted #{contribution.contribution_submitted ? 'a contribution' : 'feedback'}:</p>
+      <p style='margin-bottom:25px'>#{contribution.contributor.full_name} of the #{contribution.story.present? ? 'Customer Story' : 'Customer Win' } <a href='#{link}'>#{contribution.story.try(:title) || contribution.success.name}</a> submitted #{contribution.status == 'contribution_submitted' ? 'a contribution' : 'feedback'}:</p>
       #{contribution.contribution}".html_safe
     send_mail('alert', contribution.curator, contribution.curator, subject)
   end
