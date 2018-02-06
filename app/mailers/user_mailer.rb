@@ -33,7 +33,6 @@ class UserMailer < ApplicationMailer
   end
 
   def contribution_alert (contribution)
-    binding.remote_pry
     link = contribution.story.present? ? contribution.story.csp_story_url :
       Rails.application.routes.url_helpers.company_main_url('prospect')
     subject = "#{contribution.contributor.full_name} submitted #{contribution.status == 'contribution_submitted' ? 'a contribution' : 'feedback'}"
