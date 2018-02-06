@@ -36,9 +36,13 @@ function attachContributionsListeners () {
         $('html, body').animate({ scrollTop: ($formGroup.offset().top - scrollAmt).toString() + 'px' }, 200);
       },
       updateProgress = function () {
-        var numCompleted = 0, percentCompleted;
+        var numCompleted = 0, pctCompleted;
         $questions.each(function () {
-          if ($(this).find('textarea').val()) numCompleted++;
+          if (app.screenSize === 'xs') {
+            if ($(this).find('.visible-xs-block textarea').val()) numCompleted++;
+          } else {
+            if ($(this).find('.hidden-xs textarea').val()) numCompleted++;
+          }
         });
         pctCompleted = Math.round((numCompleted / $questions.length) * 100).toString() + "%";
         $('.progress-label').text(numCompleted + ' of ' + $questions.length + ' completed');
@@ -83,17 +87,13 @@ function attachContributionsListeners () {
 
   $questions.each(function () {
     $(this).find('textarea').on('focus', function () {
-      if (app.screenSize === 'xs') {
-        $('#submission-progress').hide();
-      }
+      if (app.screenSize === 'xs') $('#submission-progress').hide();
     });
   });
 
   $questions.each(function () {
     $(this).find('textarea').on('blur', function () {
-      if (app.screenSize === 'xs') {
-        $('#submission-progress').show();
-      }
+      if (app.screenSize === 'xs') $('#submission-progress').show();
     });
   });
 
