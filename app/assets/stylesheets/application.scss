@@ -42,6 +42,16 @@
  *= require site
  */
 
+/**
+ * this is a fix for summernote's link dialog modal, which opens inside the contributor invitation modal
+ * note a change was made to summernote to add 'modal-open' class to body when link dialog closes
+ * (search for 'csp' in summernote code)
+ * in addition, below is required to stop the background from scrolling while the invitation modal is still open
+ */
+// body.modal-open {
+//   overflow: hidden;
+// }
+
 body:not(.site) {
   background-color: #f9f9f9;
 }
