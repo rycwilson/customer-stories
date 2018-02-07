@@ -290,7 +290,7 @@ function newSuccessListeners () {
     })
 
     .on('change', '#new-success-form [name="source"]', function () {
-      $('.form-group.csv-file, .form-group:not(.source)').toggle();
+      $('.form-group.csv-file, #new-success-form .form-group:not(.source)').toggle();
       if ($(this).val() === 'import') {
         $('#new-success-form .form-group').removeClass('has-error');
         $('button[type="submit"][form="new-success-form"] span').text('Import CSV');
