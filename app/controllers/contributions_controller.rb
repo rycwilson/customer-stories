@@ -73,7 +73,11 @@ class ContributionsController < ApplicationController
     @contribution = Contribution.new(contribution_params)
     if @contribution.save
     else
-      pp @contribution.contributor.errors
+      if @contribution.contributor.errors.full_messages[0] == "Email has already been taken"
+        @contribution.contributor.id = User.find_by(email: @contribution.contributor.email).id
+        @contribution.contributor.reload
+        @contribution.save
+      end
     end
     respond_to { |format| format.js {} }
   end

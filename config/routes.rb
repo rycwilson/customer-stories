@@ -137,8 +137,7 @@ Rails.application.routes.draw do
     # as that will conflict with devise routes declared below
     # 'method' instead of 'action' - latter is keyword with its own params entry
     devise_scope :user do
-      get '/:devise/:method', to: 'users/sessions#new',
-                     constraints: { devise: 'users', method: 'sign_in' }
+      get '/:devise/:method', to: 'users/sessions#new', constraints: { devise: 'users', method: 'sign_in' }
     end
 
     # public story route moved down here so it doesn't hijack any other routes via dynamic segments.

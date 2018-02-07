@@ -426,10 +426,7 @@ function newSuccessListeners () {
         });
 
       } else if (!$form.data('submitted') && validateForm()) {
-        // check to see if new contributor already exists in csp
-        // if ($('.create-contributor').is(':visible')) {
 
-        // }
         // if a referrer wasn't selected, hide the contribution attributes so a contribution isn't created
         if ($('select.new-success.referrer').val() === '') disableContributionAttrs(true);
         toggleFormWorking($form);
