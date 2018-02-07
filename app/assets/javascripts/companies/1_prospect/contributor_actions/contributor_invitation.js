@@ -151,6 +151,12 @@ function contributorInvitationListeners() {
     })
     .on('hidden.bs.modal', '#contribution-request-modal', function () {
       $(document).off('shown.bs.modal', '.link-dialog', modifyLinkDialog);
+    })
+    // when link dialog closes, add .modal-open to body, else scroll will affect body instead of modal
+    .on('hidden.bs.modal', function () {
+      if ($('#contribution-request-modal').hasClass('in')) {
+        $('body').addClass('modal-open');
+      }
     });
 
 }
