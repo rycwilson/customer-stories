@@ -41,7 +41,7 @@
 
       <div class="row visible-xs-block">
         <div class="col-xs-12">
-          <%= f.check_box(:publish_contributor, checked: type == 'contribution' ? true : false) %>
+          <%= f.check_box(:publish_contributor, checked: true) %>
             Leave this box checked to have your LinkedIn profile published as part of the success story. You may return at any point in the future to add or remove your profile.
         </div>
       </div>
@@ -64,6 +64,7 @@
   <% else %>
 
     <div class="form-group feedback">
+      <%= f.hidden_field(:publish_contributor, value: false) %>
       <%= f.label(:feedback, 'Please tell us about your experience and any actions you recommend.') %>
       <%= f.text_area(:feedback, rows: 5, class: 'form-control') %>
     </div>
