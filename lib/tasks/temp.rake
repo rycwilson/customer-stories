@@ -2,6 +2,21 @@ namespace :temp do
 
   desc "temp stuff"
 
+  task copy_default_invitation_templates: :environment do
+    csp = Company::CSP
+    Company.all.each do |company|
+      company.crowdsourcing_templates.customer.update(
+        request_body: csp.crowdsourcing_templates.customer.request_body
+      )
+      company.crowdsourcing_templates.customer_success.update(
+        request_body: csp.crowdsourcing_templates.customer_success.request_body
+      )
+      company.crowdsourcing_templates.sales.update(
+        request_body: csp.crowdsourcing_templates.sales.request_body
+      )
+    end
+  end
+
   # NOTE: disable request-related callbacks in contribution.rb before running
   task crowdsource_update: :environment do
     Rake::Task["temp:success_names"].invoke

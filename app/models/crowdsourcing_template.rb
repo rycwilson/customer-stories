@@ -1,3 +1,4 @@
+
 class CrowdsourcingTemplate < ActiveRecord::Base
 
   default_scope { order(name: :asc) }
