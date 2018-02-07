@@ -29,28 +29,6 @@ function contributorActionsListeners () {
       };
 
   $(document)
-    .on('click', '.contributor-actions .remove', function () {
-      var contributionId = $(this).closest('tr').data('contribution-id');
-      bootbox.confirm({
-        size: 'small',
-        className: 'confirm-remove-contributor',
-        closeButton: false,
-        message: "<i class='fa fa-warning'></i>\xa0\xa0\xa0<span>Are you sure?</span>",
-        buttons: {
-          confirm: {
-            label: 'Remove',
-            className: 'btn-danger'
-          },
-          cancel: {
-            label: 'Cancel',
-            className: 'btn-default'
-          }
-        },
-        callback: function (confirmRemove) {
-          if (confirmRemove) { removeContribution(contributionId); }
-        }
-      });
-    })
 
 
     // BEWARE this will also fire from Successes view
@@ -91,7 +69,7 @@ function contributorActionsListeners () {
 
       }
     )
-    .on('click', '.contributor-actions .view-customer-win', function () {
+    .on('click', '.contributor-actions .view-success', function () {
       var successId = $(this).closest('tr').data('success-id');
       $('#successes-filter').val('success-' + successId).trigger('change');
       $('#successes-filter').select2('focus');
@@ -104,6 +82,22 @@ function contributorActionsListeners () {
         });
       $('a[href="#successes"]').tab('show');
     })
+    .on('click',
+      '.contributor-actions .story-settings, .contributor-actions .story-content, .contributor-actions .story-contributors',
+      function (e) {
+        var href = $(this).find('a')[0].href, storyTab;
+        e.preventDefault();
+        if ($(this).hasClass('story-settings')) {
+          storyTab = '#story-settings';
+        } else if ($(this).hasClass('story-content')) {
+          storyTab = '#story-content';
+        } else {
+          storyTab = '#story-contributors';
+        }
+        Cookies.set('csp-story-tab', storyTab);
+        window.location = href;
+      }
+    )
     .on('click', '.contributor-actions .completed', function () {
       var dt = $(this).closest('table').DataTable(),
           $row = $(this).closest('tr'),
@@ -131,6 +125,28 @@ function contributorActionsListeners () {
             }
           }, 2200);
         });
+    })
+    .on('click', '.contributor-actions .remove', function () {
+      var contributionId = $(this).closest('tr').data('contribution-id');
+      bootbox.confirm({
+        size: 'small',
+        className: 'confirm-remove-contributor',
+        closeButton: false,
+        message: "<i class='fa fa-warning'></i>\xa0\xa0\xa0<span>Are you sure?</span>",
+        buttons: {
+          confirm: {
+            label: 'Remove',
+            className: 'btn-danger'
+          },
+          cancel: {
+            label: 'Cancel',
+            className: 'btn-default'
+          }
+        },
+        callback: function (confirmRemove) {
+          if (confirmRemove) { removeContribution(contributionId); }
+        }
+      });
     });
 
 }

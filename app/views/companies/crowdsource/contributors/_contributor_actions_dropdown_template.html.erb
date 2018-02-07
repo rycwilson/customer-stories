@@ -75,12 +75,28 @@
           </a>
         </li>
 
+        <li role="separator" class="divider"></li>
+
       {{ } else if (story) { }}
 
-        <li>
-          <a href="{{= curateStoryPath }}"}>
-            <i class='fa fa-pencil fa-fw action'></i>&nbsp;&nbsp;
-            <span>Curate Story</span>
+        <li class="story-settings">
+          <a href="{{= editStoryPath }}">
+            <i class='fa fa-gear fa-fw action'></i>&nbsp;&nbsp;
+            <span>Story Settings</span>
+          </a>
+        </li>
+
+        <li class="story-content">
+          <a href="{{= editStoryPath }}">
+            <i class='fa fa-edit fa-fw action'></i>&nbsp;&nbsp;
+            <span>Story Content</span>
+          </a>
+        </li>
+
+        <li class="story-contributors">
+          <a href="{{= editStoryPath }}">
+            <i class='fa fa-users fa-fw action'></i>&nbsp;&nbsp;
+            <span>Story Contributors</span>
           </a>
         </li>
 
@@ -88,7 +104,7 @@
 
       {{ } else { }}
 
-        <li class='view-customer-win'>
+        <li class='view-success'>
           <a href="javascript:;"}>
             <i class='fa fa-rocket fa-fw action'></i>&nbsp;&nbsp;
             <span>View Customer Win</span>

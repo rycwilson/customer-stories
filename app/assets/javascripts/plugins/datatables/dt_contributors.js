@@ -112,9 +112,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
               invitationTemplate: row.crowdsourcing_template,
               story: row.success.story, // might be nil
               viewStoryPath: row.success.story && row.success.story.csp_story_path,
-              curateStoryPath: row.success.story &&
-                '/curate/' + row.success.customer.slug + '/' +
-                row.success.story.slug
+              editStoryPath: row.success.story && '/curate/' + row.success.customer.slug + '/' + row.success.story.slug
             });
           }
       },

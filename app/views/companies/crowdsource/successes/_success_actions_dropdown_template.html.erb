@@ -55,16 +55,7 @@
 
       <li role="separator" class="divider"></li>
 
-      {{ if (!story) { }}
-
-        <li class='start-curation'>
-          <a href="javascript:;">
-            <i class='fa fa-play fa-fw action'></i>&nbsp;&nbsp;
-            <span>Start Story Curation</span>
-          </a>
-        </li>
-
-      {{ } else { }}
+      {{ if (story) { }}
 
         <li class="story-settings">
           <a href="{{= storyPath }}">
@@ -84,6 +75,15 @@
           <a href="{{= storyPath }}">
             <i class='fa fa-users fa-fw action'></i>&nbsp;&nbsp;
             <span>Story Contributors</span>
+          </a>
+        </li>
+
+      {{ } else { }}
+
+        <li class='start-curation'>
+          <a href="javascript:;">
+            <i class='fa fa-play fa-fw action'></i>&nbsp;&nbsp;
+            <span>Start Story Curation</span>
           </a>
         </li>
 
