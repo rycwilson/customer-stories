@@ -48,9 +48,6 @@
  * (search for 'csp' in summernote code)
  * in addition, below is required to stop the background from scrolling while the invitation modal is still open
  */
-// body.modal-open {
-//   overflow: hidden;
-// }
 
 body:not(.site) {
   background-color: #f9f9f9;

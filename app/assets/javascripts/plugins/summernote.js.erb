@@ -40,13 +40,13 @@ function initSummernote () {
 function initEmailRequestEditor () {
 
   var curatorPhotoPlaceholder = "<%= asset_path('user-photo-missing.png') %>",
-      curatorDetailsPlaceholder =
-        '<p>' +
-        '<img id=&quot;curator-img&quot; src=&quot;' + curatorPhotoPlaceholder + '&quot; style=&quot;width:80px;margin-bottom:4px&quot; alt=&quot;curator photo&quot;><br>' +
-        '<span>[curator_full_name]</span><br>' +
-        '<span>[curator_position]</span><br>' +
-        '<span>[company_name]</span><br>' +
-        '<span>[curator_email]</span>\xa0|\xa0<span>[curator_phone]</span>';
+      curatorSignaturePlaceholder =
+        '<p id=&quot;curator-signature&quot;>' +
+          '<img id=&quot;curator-img&quot; src=&quot;' + curatorPhotoPlaceholder + '&quot; alt=&quot;curator photo&quot;><br>' +
+          '<span>[curator_full_name]</span><br>' +
+          '<span>[curator_title]</span><br>' +
+          '<span>[company_name]</span><br>' +
+          '<span>[curator_phone]</span><br>' +
         '</p>'
 
   var PlaceholderDropdown = function (context) {
@@ -79,9 +79,6 @@ function initEmailRequestEditor () {
                     '<li data-placeholder="<span contenteditable=&quot;false&quot;>[referral_intro]</span>">' +
                       '<a href="javascript:;">Referral introduction</a>' +
                     '</li>' +
-                    '<li data-placeholder="' + curatorDetailsPlaceholder + '">' +
-                      '<a href="javascript:;">Curator details</a>' +
-                    '</li>' +
                     '<li data-placeholder="<span>[contribution_submission_button={text:&quot;Button text goes here&quot;,color:&quot;#4d8664&quot;}]</span>">' +
                       '<a href="javascript:;">Contribution submission button</a>' +
                     '</li>' +
@@ -96,6 +93,9 @@ function initEmailRequestEditor () {
                     '</li>' +
                     '<li data-placeholder="<span>[opt_out_link=&quot;Link text goes here&quot;]</span>">' +
                       '<a href="javascript:;">Opt-out link</a>' +
+                    '</li>' +
+                    '<li data-placeholder="' + curatorSignaturePlaceholder + '">' +
+                      '<a href="javascript:;">Curator signature</a>' +
                     '</li>' +
                   '</ul>',
         callback: function ($dropdown) {

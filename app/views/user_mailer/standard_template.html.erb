@@ -17,8 +17,15 @@
       button.cta:hover {
         opacity: 1.0 !important;
       }
-      img {
+      #csp-logo {
         margin: 15px 0;
+      }
+      #curator-signature img {
+        width: 80px;
+        margin-bottom: 4px;
+      }
+      #curator-signature span {
+        line-height: 1.4;
       }
     </style>
   </head>
@@ -26,7 +33,7 @@
 
     <%= @body %> <br>
 
-    <img src="<%= CS_POWERED_LOGO_URL %>" alt="csp-logo">
+    <img id="csp-logo" src="<%= CS_POWERED_LOGO_URL %>" alt="csp-logo">
 
   </body>
 </html>

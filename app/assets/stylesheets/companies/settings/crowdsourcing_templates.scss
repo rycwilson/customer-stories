@@ -70,7 +70,14 @@
   .request-subject:not(.insert-data) {
     margin-bottom: 25px;
   }
-
+  .note-editor {
+    #curator-signature {
+      img {
+        width: 80px;
+        margin-bottom: 4px;
+      }
+    }
+  }
   .contributor-questions {
     position: relative;
     .row {
