@@ -38,7 +38,7 @@ class UserMailer < ApplicationMailer
     subject = "#{contribution.contributor.full_name} submitted #{contribution.status == 'contribution_submitted' ? 'a contribution' : 'feedback'}"
     @body = ("<p>#{contribution.curator.first_name},</p>" +
       "<p>#{contribution.contributor.full_name} of the #{contribution.story.present? ? 'Customer Story' : 'Customer Win' } <a href='#{link}'>#{contribution.story.try(:title) || contribution.success.name}</a> submitted #{contribution.status == 'contribution_submitted' ? 'a contribution' : 'feedback'}:</p>" +
-      "#{contribution.contribution || contribution.feedback}").html_safe
+      "#{contribution.contribution || '<p>' + contribution.feedback + '</p>'}").html_safe
     send_mail('alert', contribution.curator, contribution.curator, subject)
   end
 
