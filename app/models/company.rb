@@ -179,8 +179,7 @@ class Company < ActiveRecord::Base
       ]
     end
   end
-  # alias
-  has_many :ctas, class_name: 'ContributorQuestion', foreign_key: 'company_id'
+  alias_attribute :questions, :contributor_questions
   has_many :crowdsourcing_templates, dependent: :destroy do
     def customer
       where(name: 'Customer').take
@@ -217,8 +216,7 @@ class Company < ActiveRecord::Base
       ]
     end
   end
-  # alias
-  has_many :templates, class_name: 'CrowdsourcingTemplate', foreign_key: 'company_id'
+  alias_attribute :templates, :crowdsourcing_templates
   has_many :outbound_actions, dependent: :destroy
 
   has_many :call_to_actions, dependent: :destroy

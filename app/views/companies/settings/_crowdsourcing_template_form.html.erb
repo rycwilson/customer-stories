@@ -23,8 +23,7 @@
 
       <div class="form-group">
         <%= template_form.label(:name, "Template Name") %>
-        <%= template_form.text_field(:name, class: 'form-control',
-              readonly: template.default?) %>
+        <%= template_form.text_field(:name, class: 'form-control', readonly: template.default?) %>
       </div>
 
       <div class="form-group request-subject">
@@ -57,8 +56,10 @@
     </div>
 
     <div class="form-group contributor-questions col-lg-4">
-      <%= render('companies/settings/contributor_questions',
-            { company: company, template: template, template_form: template_form }) %>
+      <%= render(
+            'companies/settings/contributor_questions',
+            { company: company, template: template, template_form: template_form }
+          ) %>
     </div>
 
   </div>
