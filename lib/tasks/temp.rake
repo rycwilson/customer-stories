@@ -2,6 +2,30 @@ namespace :temp do
 
   desc "temp stuff"
 
+  task reassign_template_questions: :environment do
+    # TemplatesQuestion.destroy_all
+    Company.where.not(name:'CSP').each do |company|
+      company.templates.each do |template|
+        if ['Customer', 'Customer Success', 'Sales'].include?(template.name)
+          template.questions.delete_all
+          if template.name == 'Customer'
+            company.questions.select { |q| q.role == 'customer' }.each do |question|
+              template.questions << question
+            end
+          elsif template.name == 'Customer Success'
+            company.questions.select { |q| q.role == 'customer success' }.each do |question|
+              template.questions << question
+            end
+          elsif template.name == 'Sales'
+            company.questions.select { |q| q.role == 'sales' }.each do |question|
+              template.questions << question
+            end
+          end
+        end
+      end
+    end
+  end
+
   task copy_default_invitation_templates: :environment do
     csp = Company::CSP
     Company.all.each do |company|

@@ -2,9 +2,12 @@
 (function () {
 
   var company = <%= raw @company.to_json({ only: [:id] }) %>,
-      contributorQuestions =
-        <%= raw @template.contributor_questions
-                         .to_json({ only: [:id, :company_id, :role, :question] }) %>;
+      templateQuestions = <%= raw @template.templates_questions.to_json({
+        only: [:id, :crowdsourcing_template_id, :contributor_question_id],
+        include: {
+          contributor_question: { only: [:id, :question] }
+        }
+      }) %>;
 
 
   toggleFormDone($('#crowdsourcing-template-form'), true);
@@ -14,7 +17,7 @@
   $('.contributor-questions ul').empty()
     .append(
       _.template( $('#contributor-questions-template').html() )(
-        { company: company, contributorQuestions: contributorQuestions }
+        { company: company, templateQuestions: templateQuestions }
       )
     );
 

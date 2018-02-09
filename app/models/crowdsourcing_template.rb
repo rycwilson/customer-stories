@@ -7,7 +7,17 @@ class CrowdsourcingTemplate < ActiveRecord::Base
   has_many :contributions
   has_many :templates_questions, dependent: :destroy
   has_many :contributor_questions, through: :templates_questions
-  accepts_nested_attributes_for :contributor_questions, allow_destroy: true
+  alias_attribute :questions, :contributor_questions
+  accepts_nested_attributes_for(
+    :templates_questions,
+    # reject_if: Proc.new { |tq| tq['contributor_question_id'].blank? },
+    allow_destroy: true
+  )
+  accepts_nested_attributes_for(
+    :contributor_questions,
+    # reject_if: Proc.new { |tq| tq['contributor_question_id'].present? },
+    allow_destroy: false
+  )
 
   # after_commit(on: :create) do
   #   self.contributor_questions << self.company.contributor_questions.default

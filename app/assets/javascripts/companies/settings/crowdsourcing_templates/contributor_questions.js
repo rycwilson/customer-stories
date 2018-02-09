@@ -36,10 +36,12 @@ function contributorQuestionsListeners () {
       } else {
         $.when(
           $('.contributor-questions ul').append(
-            template(
-              { company: app.company, index: currentIndex,
-                existingQuestion: { id: questionId, question: questionText } }
-            )
+            template({
+              company: app.company,
+              index: currentIndex,
+              existingQuestion: { id: questionId, question: questionText },
+              invitationTemplateId: $('select.crowdsourcing-template').select2('data')[0].id
+            })
           )
         ).then(function () {
           // disable the selected question option

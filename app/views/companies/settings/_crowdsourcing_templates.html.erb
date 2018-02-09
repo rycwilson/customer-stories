@@ -62,20 +62,20 @@
 
   <script type='text/template' id='contributor-questions-template'>
 
-    {{ _.each(contributorQuestions, function (question, index) { }}
+    {{ _.each(templateQuestions, function (tq, index) { }}
 
       <li class="contributor-question">
 
         <div class="row">
 
           <div class='col-sm-11'>
-            <p>{{= question.question }}</p>
+            <p>{{= tq.contributor_question.question }}</p>
           </div>
 
           <div class="col-sm-1">
             <i class='remove-question fa fa-remove'></i>
-            <input name="crowdsourcing_template[contributor_questions_attributes][{{= index }}][_destroy]" type="hidden" value="false">
-            <input class="hidden" type="checkbox" value="true" name="crowdsourcing_template[contributor_questions_attributes][{{= index }}][_destroy]" id="crowdsourcing_template_contributor_questions_attributes_{{= index }}__destroy">
+            <input name="crowdsourcing_template[templates_questions_attributes][{{= index }}][_destroy]" type="hidden" value="false">
+            <input class="hidden" type="checkbox" value="true" name="crowdsourcing_template[templates_questions_attributes][{{= index }}][_destroy]" id="crowdsourcing_template_templates_questions_attributes_{{= index }}__destroy">
           </div>
 
         </div>
@@ -88,8 +88,7 @@
 
       </li>
 
-      <input type="hidden" value="{{= question.id }}" name="crowdsourcing_template[contributor_questions_attributes][{{= index }}][id]" id="crowdsourcing_template_contributor_questions_attributes_{{= index }}_id">
-      <input type="hidden" value="{{= company.id }}" name="crowdsourcing_template[contributor_questions_attributes][{{= index }}][company_id]" id="crowdsourcing_template_contributor_questions_attributes_{{= index }}_company_id">
+      <input type="hidden" value="{{= tq.id }}" name="crowdsourcing_template[templates_questions_attributes][{{= index }}][id]" id="crowdsourcing_template_templates_questions_attributes_{{= index }}_id">
 
     {{ }) }}
 
@@ -102,15 +101,18 @@
       <div class='row'>
         <div class='col-sm-12'>
 
-          <input type="hidden" value="{{= company.id }}" name="crowdsourcing_template[contributor_questions_attributes][{{= index }}][company_id]" id="crowdsourcing_template_contributor_questions_attributes_{{= index }}_company_id">
 
           {{ if (existingQuestion) { }}
 
             <p>{{= existingQuestion.question }}</p>
 
-            <input type="hidden" value="{{= existingQuestion.id }}" name="crowdsourcing_template[contributor_questions_attributes][{{= index }}][id]" id="crowdsourcing_template_contributor_questions_attributes_{{= index }}_id">
+            <input type="hidden" value="{{= existingQuestion.id }}" name="crowdsourcing_template[templates_questions_attributes][{{= index }}][contributor_question_id]" id="crowdsourcing_template_templates_questions_attributes_{{= index }}_contributor_question_id">
+
+            <input type="hidden" value="{{= invitationTemplateId }}" name="crowdsourcing_template[templates_questions_attributes][{{= index }}][crowdsourcing_template_id]" id="crowdsourcing_template_templates_questions_attributes_{{= index }}_crowdsourcing_template_id">
 
           {{ } else { }}
+
+            <input type="hidden" value="{{= company.id }}" name="crowdsourcing_template[contributor_questions_attributes][{{= index }}][company_id]" id="crowdsourcing_template_contributor_questions_attributes_{{= index }}_company_id">
 
             <textarea class="form-control" rows="3" placeholder="New Question" name="crowdsourcing_template[contributor_questions_attributes][{{= index }}][question]" id="crowdsourcing_template_contributor_questions_attributes_{{= index }}_question"></textarea>
 

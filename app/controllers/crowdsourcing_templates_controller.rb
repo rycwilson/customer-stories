@@ -60,11 +60,8 @@ class CrowdsourcingTemplatesController < ApplicationController
       @selected_or_all = JSON.parse(params[:id]).length == 1 ? 'selected' : 'all'
       respond_to { |format| format.js { render action: 'restore' } }
     else
-      @template.add_contributor_questions(template_params[:contributor_questions_attributes])
+      # binding.remote_pry
       @template.update(template_params)
-      if template_params[:contributor_questions_attributes].present?
-        contributor_questions_cleanup(template_params[:contributor_questions_attributes])
-      end
     end
   end
 
@@ -76,8 +73,11 @@ class CrowdsourcingTemplatesController < ApplicationController
 
   def template_params
     params.require(:crowdsourcing_template)
-          .permit(:name, :request_subject, :request_body, :company_id,
-                  { contributor_questions_attributes: [:id, :company_id, :question, :_destroy] })
+      .permit(
+        :name, :request_subject, :request_body, :company_id,
+        { templates_questions_attributes: [:id, :crowdsourcing_template_id, :contributor_question_id, :_destroy] },
+        { contributor_questions_attributes: [:id, :company_id, :question] }
+      )
   end
 
   def restore_templates (template_ids)
@@ -100,8 +100,9 @@ class CrowdsourcingTemplatesController < ApplicationController
     return
     questions_attrs.each() do |i, q|
       if q['_destroy'] == 'true'
+        binding.remote_pry
         removed_question = ContributorQuestion.find(q['id'])
-        if removed_question.crowdsourcing_templates.count == 0 &&
+        if removed_question.templates.count == 0 &&
            removed_question.role.nil?  # custom question, not a default
           removed_question.destroy()
         end

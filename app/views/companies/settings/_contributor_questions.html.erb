@@ -17,21 +17,22 @@
 
 <ul class='list-unstyled'>
 
-  <%= template_form.fields_for(:contributor_questions) do |question_form|  %>
+  <%= template_form.fields_for(:templates_questions) do |tq_form|  %>
 
-    <%= question_form.hidden_field(:company_id) %>
+    <%#= tq_form.hidden_field(:crowdsourcing_template_id, value: template.id) %>
+    <%#= tq_form.hidden_field(:contributor_question_id, value: qt_form.object.contributor_question.id) %>
 
     <li class="contributor-question">
 
       <div class="row">
 
         <div class='col-sm-11'>
-          <p><%= question_form.object.question %></p>
+          <p><%= tq_form.object.contributor_question.question %></p>
         </div>
 
         <div class="col-sm-1">
           <i class='remove-question fa fa-remove'></i>
-          <%= question_form.check_box(:_destroy, { class: 'hidden' }, 'true', 'false') %>
+          <%= tq_form.check_box(:_destroy, { class: 'hidden' }, 'true', 'false') %>
         </div>
 
       </div>
