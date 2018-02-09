@@ -5,4 +5,6 @@ class TemplatesQuestion < ActiveRecord::Base
 
   after_destroy() { self.contributor_question.destroy if self.contributor_question.templates.length == 0 }
 
+  default_scope { order(created_at: :asc) }
+
 end
