@@ -218,7 +218,6 @@ class Company < ActiveRecord::Base
   end
   alias_attribute :templates, :crowdsourcing_templates
   has_many :outbound_actions, dependent: :destroy
-
   has_many :call_to_actions, dependent: :destroy
   # alias and methods
   has_many :ctas, class_name: 'CallToAction', foreign_key: 'company_id' do
@@ -274,14 +273,18 @@ class Company < ActiveRecord::Base
 
     # default crowdsourcing templates (formerly email templates, futurely invitation templates)
     Company::CSP.crowdsourcing_templates.each do |factory_template|
-      company_template = factory_template.dup
-      self.crowdsourcing_templates << company_template
-      factory_template.contributor_questions.each do |factory_question|
-        new_question = factory_question.dup
-        self.contributor_questions << new_question
-        company_template.contributor_questions << new_question
+      if ['Customer', 'Customer Success', 'Sales'].include?(factory_template.name)
+        company_template = factory_template.dup
+        self.crowdsourcing_templates << company_template
+        factory_template.contributor_questions.each do |factory_question|
+          if factory_question.role.present?
+            new_question = factory_question.dup
+            self.contributor_questions << new_question
+            company_template.contributor_questions << new_question
+          end
+        end
+        company_template.save
       end
-      company_template.save
     end
   end
 
