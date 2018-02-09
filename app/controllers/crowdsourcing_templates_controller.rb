@@ -9,17 +9,18 @@ class CrowdsourcingTemplatesController < ApplicationController
   end
 
   def new
-    if params[:copy_template_id].present?
-      copy_template = CrowdsourcingTemplate.find(params[:copy_template_id])
-      @template = copy_template.dup
-      @template.name = 'Copy: ' + copy_template.name
-      copy_template.contributor_questions.each { |q| @template.contributor_questions << q }
+    if params[:source_template_id].present?
+      source_template = CrowdsourcingTemplate.find(params[:source_template_id])
+      @template = source_template.dup
+      @template.name = 'Copy: ' + source_template.name
+      source_template.contributor_questions.each { |q| @template.contributor_questions << q }
     else
       @template = CrowdsourcingTemplate.new({ company_id: @company.id })
     end
     render({
       partial: 'companies/settings/crowdsourcing_template_form',
       locals: { company: @company, template: @template, method: 'post',
+                template_is_new: false, template_is_copy: params[:source_template_id].present?,
                 url: company_crowdsourcing_templates_path(@company) }
     })
   end
@@ -32,25 +33,13 @@ class CrowdsourcingTemplatesController < ApplicationController
     render({
       partial: 'companies/settings/crowdsourcing_template_form',
       locals: { company: @company, template: @template, method: 'put',
-                template_is_new: params[:new_template].present?,
+                template_is_new: params[:new_template].present?, template_is_copy: false,
                 url: company_crowdsourcing_template_path(@company, @template) }
     })
   end
 
   def create
-    @template = CrowdsourcingTemplate.new(
-        # creating associations in this step will only work when using .build
-        # in the new action, but this presupposes the number of questions.
-        # Since we want to allow an arbitrary number of associated questions,
-        # we'll add them separately below
-        template_params.select { |k, v| k != 'contributor_questions_attributes' }
-      )
-    if @template.save
-      # this adds new contributor question associations - must come before next step
-      @template.add_contributor_questions(template_params[:contributor_questions_attributes])
-      # this handles creation of new contributor questions
-      @template.update(template_params)
-    end
+    @template = CrowdsourcingTemplate.create(template_params)
   end
 
   def update
@@ -60,13 +49,12 @@ class CrowdsourcingTemplatesController < ApplicationController
       @selected_or_all = JSON.parse(params[:id]).length == 1 ? 'selected' : 'all'
       respond_to { |format| format.js { render action: 'restore' } }
     else
-      # binding.remote_pry
       @template.update(template_params)
     end
   end
 
   def destroy
-    @template.destroy()
+    @template.destroy
   end
 
   private
@@ -91,22 +79,6 @@ class CrowdsourcingTemplatesController < ApplicationController
       })
       template.contributor_questions.delete_all()
       default.contributor_questions.each() { |q| template.contributor_questions << q }
-    end
-  end
-
-  # method destroys any contributor questions that are no longer associated with
-  # any crowdsourcing templates (and aren't default questions, which are never deleted)
-  def contributor_questions_cleanup (questions_attrs)
-    return
-    questions_attrs.each() do |i, q|
-      if q['_destroy'] == 'true'
-        binding.remote_pry
-        removed_question = ContributorQuestion.find(q['id'])
-        if removed_question.templates.count == 0 &&
-           removed_question.role.nil?  # custom question, not a default
-          removed_question.destroy()
-        end
-      end
     end
   end
 

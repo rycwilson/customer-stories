@@ -21,20 +21,21 @@ function templateActionsListeners () {
     .on('click', 'button.new-template, button.copy-template', function () {
       $('#crowdsourcing-template-submit').removeClass('show');
       if ($(this).hasClass('copy-template')) {
-        copyTemplateId = $('select.crowdsourcing-template').val();
+        sourceTemplateId = $('select.crowdsourcing-template').val();
       } else {
-        copyTemplateId = undefined;
+        sourceTemplateId = undefined;
       }
       $.ajax({
         url: '/companies/' + app.company.id + '/crowdsourcing_templates/new',
         method: 'get',
-        data: { copy_template_id: copyTemplateId },
+        data: { source_template_id: sourceTemplateId },
         dataType: 'html'
       })
         .done(function (html, status, xhr) {
+
           $.when($('#crowdsourcing-template-container').empty().append(html))
             .then(function () {
-              initEmailRequestEditor();
+              initInvitationEditor();
               $('select.contributor-questions')
                 .select2({
                   theme: 'bootstrap',

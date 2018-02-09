@@ -55,10 +55,21 @@
 
     </div>
 
-    <div class="form-group contributor-questions col-lg-4">
+    <div class="col-lg-4">
+
+      <div class="form-group submission-page-title">
+        <label for="crowdsourcing_template_contribution_page_title">Contribution Page Title</label>
+        <%= template_form.text_area(:contribution_page_title, rows: '2', maxlength: 80, class: 'form-control') %>
+      </div>
+
+      <div class="form-group submission-page-title">
+        <label for="crowdsourcing_template_feedback_page_title">Feedback Page Title</label>
+        <%= template_form.text_area(:feedback_page_title, maxlength: 80, rows: '2', class: 'form-control') %>
+      </div>
+
       <%= render(
             'companies/settings/contributor_questions',
-            { company: company, template: template, template_form: template_form }
+            { company: company, template: template, template_form: template_form, template_is_copy: template_is_copy }
           ) %>
     </div>
 

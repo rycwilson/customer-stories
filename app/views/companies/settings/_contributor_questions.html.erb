@@ -1,50 +1,55 @@
 
-<div>
-  <label>Contributor Questions</label>
+<div class="form-group contributor-questions">
+
+  <div>
+    <label>Contributor Questions</label>
+  </div>
+
+  <div style='margin-bottom:15px; margin-left:-15px; margin-right:-15px'>
+    <%= select_tag('',
+          grouped_options_for_select(
+            company.contributor_questions.grouped_select_options(),
+            { disabled: template.contributor_questions.map { |q| q.id } }
+          ),
+          {
+            include_blank: true,
+            class: 'contributor-questions', style: 'width: 100%'
+          }) %>
+  </div>
+
+  <ul class='list-unstyled'>
+
+    <%= template_form.fields_for(:templates_questions) do |tq_form|  %>
+
+      <% if template_is_copy %>
+        <%= tq_form.hidden_field(:contributor_question_id, value: tq_form.object.contributor_question.id) %>
+      <% end %>
+
+      <li class="contributor-question">
+
+        <div class="row">
+
+          <div class='col-sm-11'>
+            <p><%= tq_form.object.contributor_question.question %></p>
+          </div>
+
+          <div class="col-sm-1">
+            <i class='remove-question fa fa-remove'></i>
+            <%= tq_form.check_box(:_destroy, { class: 'hidden' }, 'true', 'false') %>
+          </div>
+
+        </div>
+
+        <div class="row">
+          <div class="col-sm-12 save-or-cancel text-center hidden">
+            <span>Save changes to remove this Question<br><a class='cancel'>Cancel</a></span>
+          </div>
+        </div>
+
+      </li>
+
+    <% end %>
+
+  </ul>
+
 </div>
-
-<div style='margin-bottom:15px; margin-left:-15px; margin-right:-15px'>
-  <%= select_tag('',
-        grouped_options_for_select(
-          company.contributor_questions.grouped_select_options(),
-          { disabled: template.contributor_questions.map { |q| q.id } }
-        ),
-        {
-          include_blank: true,
-          class: 'contributor-questions', style: 'width: 100%'
-        }) %>
-</div>
-
-<ul class='list-unstyled'>
-
-  <%= template_form.fields_for(:templates_questions) do |tq_form|  %>
-
-    <%#= tq_form.hidden_field(:crowdsourcing_template_id, value: template.id) %>
-    <%#= tq_form.hidden_field(:contributor_question_id, value: qt_form.object.contributor_question.id) %>
-
-    <li class="contributor-question">
-
-      <div class="row">
-
-        <div class='col-sm-11'>
-          <p><%= tq_form.object.contributor_question.question %></p>
-        </div>
-
-        <div class="col-sm-1">
-          <i class='remove-question fa fa-remove'></i>
-          <%= tq_form.check_box(:_destroy, { class: 'hidden' }, 'true', 'false') %>
-        </div>
-
-      </div>
-
-      <div class="row">
-        <div class="col-sm-12 save-or-cancel text-center hidden">
-          <span>Save changes to remove this Question<br><a class='cancel'>Cancel</a></span>
-        </div>
-      </div>
-
-    </li>
-
-  <% end %>
-
-</ul>

@@ -2,7 +2,7 @@
 function selectTemplateListeners () {
   var previousTemplateId, // keep track of previous selection in case a change is canceled
       initTemplate = function () {
-        initEmailRequestEditor();
+        initInvitationEditor();
         $('select.contributor-questions')
           // .prepend('<option selected/>')  // empty option for placeholder
           .select2({

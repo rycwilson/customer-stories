@@ -78,10 +78,19 @@
       }
     }
   }
-  .contributor-questions {
+  .form-group.submission-page-title {
+    margin-left: -15px;
+    margin-right: -15px;
+    // margin-bottom: 15px;
+  }
+  .form-group.contributor-questions {
     position: relative;
     .row {
       background: #efefef;
+    }
+    textarea {
+      margin-left: -15px;
+      margin-right: -15px;
     }
     label {
       margin-left: -15px;
