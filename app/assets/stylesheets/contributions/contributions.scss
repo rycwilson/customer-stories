@@ -38,6 +38,7 @@ body.contributions.edit {
     padding: 130px 30px 250px 30px;
     // border-left: 1px solid #ddd;
     // border-right: 1px solid #ddd;
+    overflow: visible;  // for expanding text boxes
     .form-group {
       // margin-bottom: 30px;
       width: 90%;
