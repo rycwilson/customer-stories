@@ -35,19 +35,19 @@ function attachContributionsListeners () {
         $('html, body').animate({ scrollTop: ($formGroup.offset().top - scrollAmt).toString() + 'px' }, 200);
       },
       updateProgress = function () {
-        var numCompleted = 0, pctCompleted;
+        var numAnswered = 0, pctAnswered;
         $questions.each(function () {
           if (app.screenSize === 'xs') {
-            if ($(this).find('.visible-xs-block textarea').val()) numCompleted++;
+            if ($(this).find('.visible-xs-block textarea').val()) numAnswered++;
           } else {
-            if ($(this).find('.hidden-xs textarea').val()) numCompleted++;
+            if ($(this).find('.hidden-xs textarea').val()) numAnswered++;
           }
         });
-        pctCompleted = Math.round((numCompleted / $questions.length) * 100).toString() + "%";
-        $('.progress-label').text(numCompleted + ' of ' + $questions.length + ' completed');
+        pctAnswered = Math.round((numAnswered / $questions.length) * 100).toString() + "%";
+        $('.progress-label').text(numAnswered + ' of ' + $questions.length + ' answered');
         $('.progress-bar')
-          .attr('style', 'width:' + pctCompleted)
-          .find('.sr-only').text(numCompleted + ' of ' + $questions.length + ' completed');
+          .attr('style', 'width:' + pctAnswered)
+          .find('.sr-only').text(numAnswered + ' of ' + $questions.length + ' answered');
       };
 
   if ($questions.length) {
