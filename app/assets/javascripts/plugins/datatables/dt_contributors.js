@@ -40,6 +40,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
         name: 'contributor',
         data: {
           _: function (row, type, set, meta) {
+            // console.log(row)
             return {
               id: row.contributor.id,
               fullName: row.contributor.full_name,

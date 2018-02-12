@@ -431,7 +431,7 @@ function newSuccessListeners () {
       } else if (!$form.data('submitted') && validateForm()) {
 
         // if a referrer wasn't selected, hide the contribution attributes so a contribution isn't created
-        if ($('select.new-success.referrer').val() === '') disableContributionAttrs(true);
+        if ($('select.new-success.referrer').val() === '') disableContributionAttrs(true, 'referrer');
         toggleFormWorking($form);
         $form.submit();
       } else {
