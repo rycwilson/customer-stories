@@ -2,6 +2,13 @@ namespace :temp do
 
   desc "temp stuff"
 
+  task fix_referral_intro: :environment do
+    CrowdsourcingTemplate.all.each do |template|
+      template.request_body.gsub!('[referral_intro]', '[referral_intro]. ')
+      template.save
+    end
+  end
+
   task reassign_template_questions: :environment do
     # TemplatesQuestion.destroy_all
     Company.where.not(name:'CSP').each do |company|
