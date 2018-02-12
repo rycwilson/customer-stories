@@ -14,6 +14,19 @@ function crowdsourcingTemplatesListeners () {
   $(document)
     .on('input', '#crowdsourcing-template-form input, #crowdsourcing-template-form .note-editable', function () {
       $('#crowdsourcing-template-form').attr('data-dirty', '1');
+    })
+    .on('click', 'button[form="crowdsourcing-template-form"]', function (e) {
+      var $form = $('#' + $(this).attr('form')), $button = $(this);
+      e.preventDefault();
+      if ($form.data('submitted')) {
+        return false;
+      } else {
+        if ($form.find('textarea.note-codable').length) {
+          $form.find('button[data-original-title="Code View"]').click();
+        }
+        toggleFormWorking($form);
+        $form.submit();
+      }
     });
 
 }

@@ -90,7 +90,6 @@ function attachAppListeners () {
           $form.is('#story-settings-form') ||
           $form.is('#story-content-form') ||
           $form.is('#promote-settings-form') ||
-          $form.is('#crowdsourcing-template-form') ||
           $form.is('#adwords-sync-form') ||
           $form.is('#company-tags-form') ||
           $form.is('#new-cta-form') ||
