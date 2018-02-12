@@ -30,16 +30,6 @@
             <%= customer_form.hidden_field(:name) %>
             <%= customer_form.hidden_field(:company_id, value: company.id) %>
           <% end %>
-          <%= success_form.fields_for(
-                :contributions,
-                success_form.object.contributions.build
-              ) do |contribution_form| %>
-            <%= contribution_form.hidden_field(
-                  :crowdsourcing_template_id,
-                  value: company.crowdsourcing_templates.select do |template|
-                      template.name == 'Customer Success'
-                    end[0].id
-                ) %>
 
           <div class="form-group source">
             <label class="col-sm-3 control-label">Source</label>
@@ -130,30 +120,77 @@
 
           </div>
 
-          <div class="form-group referrer">
+          <%= success_form.fields_for(
+                :contributions,
+                success_form.object.contributions.build
+              ) do |contribution_form| %>
+            <%= contribution_form.hidden_field(
+                  :crowdsourcing_template_id,
+                  value: company.crowdsourcing_templates.customer_success.id
+                ) %>
 
-            <%= label_tag(:referrer_id, 'Referred by', class: 'col-sm-3 control-label') %>
-            <div class="col-sm-9">
-              <%= contribution_form.collection_select(:referrer_id,
-                    company.referrers.sort_by do |referrer|
-                      referrer.last_name
-                    end.unshift(
-                      User.new(id: 0, first_name: '- Create New Contact -', last_name:'')
-                    ),
-                    :id, :full_name,
-                    { include_blank: true },
-                    # effectively disabled by default by giving it a blank name
-                    { name: '', class: 'new-success referrer form-control',
-                      style: 'width:100%' }
-                  ) %>
+            <div class="form-group referrer">
+
+              <%= label_tag(:referrer_id, 'Referred by', class: 'col-sm-3 control-label') %>
+              <div class="col-sm-9">
+                <%= contribution_form.collection_select(:referrer_id,
+                      company.referrers.sort_by do |referrer|
+                        referrer.last_name
+                      end.unshift(
+                        User.new(id: 0, first_name: '- Create New Contact -', last_name:'')
+                      ),
+                      :id, :full_name,
+                      { include_blank: true },
+                      # effectively disabled by default by giving it a blank name
+                      { name: '', class: 'new-success referrer form-control',
+                        style: 'width:100%' }
+                    ) %>
+              </div>
+
             </div>
 
-          </div>
+            <%= render(
+                  'companies/shared/create_contact',
+                  { form: 'new-success', contribution_form: contribution_form, contact_type: 'referrer' }
+                ) %>
 
-          <%= render(
-                'companies/shared/create_referrer',
-                { form: 'new-success', contribution_form: contribution_form }
-              ) %>
+          <% end %>  <!-- contribution_form -->
+
+          <%= success_form.fields_for(
+                :contributions,
+                success_form.object.contributions.build
+              ) do |contribution_form| %>
+            <%= contribution_form.hidden_field(
+                  :crowdsourcing_template_id,
+                  value: company.crowdsourcing_templates.customer.id
+                ) %>
+
+            <div class="form-group contributor">
+
+              <%= label_tag(:contributor_id, 'Customer Contact', class: 'col-sm-3 control-label') %>
+              <div class="col-sm-9">
+                <%= contribution_form.collection_select(:contributor_id,
+                      (company.contributors - company.referrers).sort_by do |contributor|
+                        contributor.last_name
+                      end.unshift(
+                        User.new(id: 0, first_name: '- Create New Contact -', last_name:'')
+                      ),
+                      :id, :full_name,
+                      { include_blank: true },
+                      # effectively disabled by default by giving it a blank name
+                      { name: '', class: 'new-success contributor form-control',
+                        style: 'width:100%' }
+                    ) %>
+              </div>
+
+            </div>
+
+            <%= render(
+                  'companies/shared/create_contact',
+                  { form: 'new-success', contribution_form: contribution_form, contact_type: 'contributor' }
+                ) %>
+
+          <% end %>  <!-- contribution_form -->
 
           <div class="form-group description">
             <label for="success_description" class='col-sm-3 control-label'>
@@ -165,8 +202,7 @@
             </div>
           </div>
 
-          <% end %>  <!-- contribution_form -->
-        <% end %>
+        <% end %> <!-- success_form -->
 
       </div>
 

@@ -11,48 +11,50 @@ function newSuccessListeners () {
         });
         return formIsValid;
       },
-      disableContributionAttrs = function (disabled) {
-        ['referrer_id', 'crowdsourcing_template_id']
+      disableContributionAttrs = function (disabled, contactType) {
+        var index = (contactType === 'referrer') ? '0' : '1';
+        [contactType + '_id', 'crowdsourcing_template_id']
           .forEach(function (attribute) {
             // don't disable referrer_id since it's visible, instead blank the [name]
-            if (attribute === 'referrer_id') {
+            if (attribute === 'referrer_id' || attribute === 'contributor_id') {
               if (disabled) {
-                $('#new-success-form #success_contributions_attributes_0_referrer_id').attr('name', '');
+                $('#new-success-form #success_contributions_attributes_' + index + '_' + attribute)
+                  .attr('name', '');
               } else {
-                $('#new-success-form #success_contributions_attributes_0_referrer_id').attr('name',
-                  'success[contributions_attributes][0][referrer_id]');
+                $('#new-success-form #success_contributions_attributes_' + index + '_' + attribute)
+                  .attr('name', 'success[contributions_attributes][' + index + '][' + attribute + ']');
               }
             // all others disabled
             } else {
-              $('#new-success-form #success_contributions_attributes_0_' + attribute).prop('disabled', disabled);
+              $('#new-success-form #success_contributions_attributes_' + index + '_' + attribute).prop('disabled', disabled);
             }
           });
       },
-      disableReferrerAttrs = function (disabled) {
-        var $form = $('#new-success-form');
+      disableContactAttrs = function (disabled, contactType) {
+        var $form = $('#new-success-form'), index = (contactType === 'referrer') ? '0' : '1';
         if (disabled) {
-          $form.find('.create-referrer').addClass('hidden');
+          $form.find('.create-' + contactType).addClass('hidden');
 
-          // don't validate referrer fields
-          $form.find('.create-referrer input:not([type="hidden"])').each(function () {
+          // don't validate contact fields
+          $form.find('.create-' + contactType + ' input:not([type="hidden"])').each(function () {
             $(this).prop('required', false);
           });
         } else {
-          $form.find('.create-referrer').removeClass('hidden');
+          $form.find('.create-' + contactType).removeClass('hidden');
 
-          // validate referrer fields
-          $form.find('.create-referrer input:not([type="hidden"])').each(function () {
+          // validate contact fields
+          $form.find('.create-' + contactType + ' input:not([type="hidden"])').each(function () {
             $(this).prop('required', true);
           });
         }
         ['first_name', 'last_name', 'email', 'sign_up_code', 'password']
           .forEach(function (attribute) {
-            $('#success_contributions_attributes_0_referrer_attributes_' + attribute)
+            $('#success_contributions_attributes_' + index + '_' + contactType + '_attributes_' + attribute)
               .prop('disabled', disabled);
         });
         if (!disabled) {
           setTimeout(function () {
-            $form.find('.create-referrer input[id*="first_name"]')[0].focus();
+            $form.find('.create-' + contactType + ' input[id*="first_name"]')[0].focus();
           }, 0);
         }
       },
@@ -340,26 +342,27 @@ function newSuccessListeners () {
       }
     })
 
-    .on('change', 'select.new-success.referrer', function () {
-      var $form = $('#new-success-form');
+    .on('change', 'select.new-success.referrer, select.new-success.contributor', function () {
+      var $form = $('#new-success-form'),
+          contactType = $(this).hasClass('referrer') ? 'referrer' : 'contributor';
 
-      // if no referrer provided, disable all contribution and referrer attributes
+      // if no contact provided, disable all contribution and referrer/contributor attributes
       // TODO: allow selection of NO referrer after one is selected
       if ($(this).val() === '') {
-        disableContributionAttrs(true);
-        disableReferrerAttrs(true);
+        disableContributionAttrs(true, contactType);
+        disableContactAttrs(true, contactType);
 
-      // if creating a new referrer with this success, enable contribution and referrer attributes
+      // if creating a new contact with this success, enable contribution and referrer/contributor attributes
       } else if ($(this).val() === '0') {
-        disableContributionAttrs(false);
-        disableReferrerAttrs(false);
+        disableContributionAttrs(false, contactType);
+        disableContactAttrs(false, contactType);
 
-      // if existing referrer, disable contributor attributes
+      // if existing contact, disable referrer/contributor attributes
       } else {
-        disableContributionAttrs(false);
-        disableReferrerAttrs(true);
+        disableContributionAttrs(false, contactType);
+        disableContactAttrs(true, contactType);
         // the referrer will be both contributor and referrer for this contribution
-        $form.find('[id*="referrer_id"]').val($(this).val());
+        $form.find('[id*="' + contactType + '_id"]').val($(this).val());
       }
     })
 
@@ -370,7 +373,7 @@ function newSuccessListeners () {
         placeholder = "Search or enter the name of a New Customer";
       } else if ($(this).hasClass('curator')) {
         placeholder = 'Search';
-      } else if ($(this).hasClass('referrer')) {
+      } else if ($(this).hasClass('referrer') || $(this).hasClass('contributor')) {
         placeholder = 'Search or Create New Contact';
       }
       $(".select2-search--dropdown .select2-search__field").attr("placeholder", placeholder);
@@ -380,9 +383,7 @@ function newSuccessListeners () {
     })
 
     .on('change', '#new-success-form input[id*="email"]', function () {
-      var $form = $('#new-contributor-form');
-      $(this).closest('.create-referrer')
-             .find('input[id*="password"]').val( $(this).val() );
+      $(this).closest('.create-contact').find('input[id*="password"]').val( $(this).val() );
     })
 
     // reset modal
@@ -397,12 +398,14 @@ function newSuccessListeners () {
       $('#new-success-form').show();
       $(this).find('.new-records').hide();
       $(this).find('form')[0].reset();
-      disableContributionAttrs(true);
-      disableReferrerAttrs(true);
-      $(this).find('.create-referrer').addClass('hidden');
+      disableContributionAttrs(true, 'referrer');
+      disableContactAttrs(true, 'referrer');
+      disableContributionAttrs(true, 'contributor');
+      disableContactAttrs(true, 'contributor');
+      $(this).find('.create-contact').addClass('hidden');
       $(this).find('select').val('').trigger('change');
       $(this).find('.form-group').removeClass('has-error');
-      $(this).find('.create-referrer input').prop('required', false);
+      $(this).find('.create-contact input').prop('required', false);
       $('button[form="new-success-form"]').attr('type', 'submit');
       $('button[form="new-success-form"] span').text('Create Win').css('display', 'inline').prop('disabled', false);
       $('button[form="new-success-form"] i').css('display', 'none');

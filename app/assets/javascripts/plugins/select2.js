@@ -42,7 +42,7 @@ function initSelect2 () {
   /**
    * referrer
    */
-  $('.new-success.referrer, .new-contributor.referrer').select2({
+  $('.new-success.referrer, .new-success.contributor, .new-contributor.referrer').select2({
     theme: 'bootstrap',
     placeholder: 'Select or Create'
   });

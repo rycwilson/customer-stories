@@ -8,7 +8,7 @@
             curator: { only: [:id] },
             customer: { only: [:name], methods: [:previous_changes] },
             contributions: {
-              only: [:id, :referrer_id],
+              only: [:id, :referrer_id, :contributor_id],
               include: {
                 contributor: { only: [], methods: [:full_name, :previous_changes, :errors] },
                 referrer: { only: [], methods: [:full_name, :previous_changes, :errors] }
@@ -24,7 +24,7 @@
               curator: { only: [:id] },
               customer: { only: [:name], methods: [:previous_changes] },
               contributions: {
-                only: [:id, :referrer_id],
+                only: [:id, :referrer_id, :contributor_id],
                 include: {
                   contributor: { only: [], methods: [:full_name, :previous_changes, :errors] },
                   referrer: { only: [], methods: [:full_name, :previous_changes, :errors] }
@@ -42,9 +42,6 @@
             // $('#prospect-contributors-table').closest('[id*="table_wrapper"]')
             //   .find('.search-all').trigger('click')
           });
-      },
-      referrerErrorsPresent = function (success) {
-        return success.referrer && Object.keys(success.referrer.errors).length;
       },
       updateSelectOptions = function (successes) {
         successes.forEach(function (success) {
@@ -95,6 +92,11 @@
                 $('<option value="contributor-' + success.contact.id + '"' +
                     ' data-column="contributor">' + success.contact.first_name + ' ' + success.contact.last_name + '</option>')
               )
+            $('select.contributor')
+              .find('option[value="0"]') // - Create New Contact -
+              .after(
+                $('<option value="' + success.contact.id + '">' + success.contact.first_name + success.contact.last_name +'</option>')
+              )
           }
         })
 
@@ -112,15 +114,6 @@
       }
 
   if (success) {
-
-    if (referrerErrorsPresent(success)) {
-      $('.form-group.referrer-email')
-        .addClass('has-error')
-        .find('.help-block')
-        .text('Contact with this email already exists')
-      toggleFormDone($form);
-      return;
-    }
 
     updateSelectOptions([success]);
 
