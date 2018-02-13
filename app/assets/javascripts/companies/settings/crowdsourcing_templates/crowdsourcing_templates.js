@@ -21,7 +21,7 @@ function crowdsourcingTemplatesListeners () {
       if ($form.data('submitted')) {
         return false;
       } else {
-        if ($form.find('textarea.note-codable').length) {
+        if ($form.find('textarea.note-codable').css('display') === 'block') {
           $form.find('button[data-original-title="Code View"]').click();
         }
         toggleFormWorking($form);
