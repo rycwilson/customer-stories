@@ -9,51 +9,18 @@
 
     <ul class='success-actions dropdown-menu dropdown-menu-right dropdown-actions'>
 
-      {{ if (status.match(/0.+Contributors\sadded/)) { }}
+      {{ if (status.match(/[^0]\s\w+\ssubmitted/) ) { }}
 
-        <li class='add-contributor'>
+        <li class='view-submissions'>
           <a href="javascript:;">
-            <i class='fa fa-users fa-fw action'></i>&nbsp;&nbsp;
-            <span>Add Contributors</span>
+            <i class='fa fa-comments fa-fw action'></i>&nbsp;&nbsp;
+            <span>Contributions & Feedback</span>
           </a>
         </li>
 
-      {{ } else if (status.match(/0.+Contributors\sinvited/)) { }}
-
-        <li class='manage-contributors'>
-          <a href="javascript:;">
-            <i class='fa fa-users fa-fw action'></i>&nbsp;&nbsp;
-            <span>Invite Contributors</span>
-          </a>
-        </li>
-
-      {{ } else { }}
-
-        {{ if (!status.match(/0.+Contributions\ssubmitted/) ) { }}
-
-          <li class='view-submissions'>
-            <a href="javascript:;">
-              <i class='fa fa-comments fa-fw action'></i>&nbsp;&nbsp;
-              <span>Contributions & Feedback</span>
-            </a>
-          </li>
-
-        {{ } }}
-
-        {{ if (!story) { }}
-
-          <li class='manage-contributors'>
-            <a href="javascript:;">
-              <i class='fa fa-users fa-fw action'></i>&nbsp;&nbsp;
-              <span>Manage Contributors</span>
-            </a>
-          </li>
-
-        {{ } }}
+        <li role="separator" class="divider"></li>
 
       {{ } }}
-
-      <li role="separator" class="divider"></li>
 
       {{ if (story) { }}
 
@@ -79,6 +46,37 @@
         </li>
 
       {{ } else { }}
+
+        {{ if (status.match(/0.+Contributors\sadded/)) { }}
+
+          <li class='add-contributor'>
+            <a href="javascript:;">
+              <i class='fa fa-users fa-fw action'></i>&nbsp;&nbsp;
+              <span>Add Contributors</span>
+            </a>
+          </li>
+
+        {{ } else if (status.match(/0.+Contributors\sinvited/)) { }}
+
+          <li class='manage-contributors'>
+            <a href="javascript:;">
+              <i class='fa fa-users fa-fw action'></i>&nbsp;&nbsp;
+              <span>Invite Contributors</span>
+            </a>
+          </li>
+
+        {{ } else { }}
+
+          <li class='manage-contributors'>
+            <a href="javascript:;">
+              <i class='fa fa-users fa-fw action'></i>&nbsp;&nbsp;
+              <span>Manage Contributors</span>
+            </a>
+          </li>
+
+        {{ } }}
+
+        <li role="separator" class="divider"></li>
 
         <li class='start-curation'>
           <a href="javascript:;">
