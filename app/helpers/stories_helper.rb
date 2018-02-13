@@ -89,36 +89,28 @@ module StoriesHelper
   end
 
   def og_image company, provider
-    provider == 'all' ? (width = '400'; height = '400') :
-                        (width = '300'; height = '160') # linkedin
+    provider == 'all' ? (width = '400'; height = '400') : (width = '300'; height = '160') # linkedin
     case company.subdomain
     when 'trunity'
-      provider == 'all' ? (image = TRUNITY_400X400_URL) :
-                          (image = TRUNITY_300X160_URL) # linkedin
+      provider == 'all' ? (image = TRUNITY_400X400_URL) : (image = TRUNITY_300X160_URL) # linkedin
     when 'compas'
-      provider == 'all' ? (image = COMPAS_400X400_URL) :
-                          (image = COMPAS_300X160_URL) # linkedin
+      provider == 'all' ? (image = COMPAS_400X400_URL) : (image = COMPAS_300X160_URL) # linkedin
     when 'corefact'
-      provider == 'all' ? (image = COREFACT_400X400_URL) :
-                          (image = COREFACT_300X160_URL) # linkedin
+      provider == 'all' ? (image = COREFACT_400X400_URL) : (image = COREFACT_300X160_URL) # linkedin
     when 'varmour'
-      provider == 'all' ? (image = VARMOUR_400X400_URL) :
-                          (image = VARMOUR_300X160_URL) # linkedin
+      provider == 'all' ? (image = VARMOUR_400X400_URL) : (image = VARMOUR_300X160_URL) # linkedin
     when 'zoommarketing'
-      provider == 'all' ? (image = ZOOM_400X400_URL) :
-                          (image = ZOOM_300X160_URL) # linkedin
+      provider == 'all' ? (image = ZOOM_400X400_URL) : (image = ZOOM_300X160_URL) # linkedin
     when 'saucelabs'
-      provider == 'all' ? (image = SAUCELABS_400X400_URL) :
-                          (image = SAUCELABS_300X160_URL) # linkedin
+      provider == 'all' ? (image = SAUCELABS_400X400_URL) : (image = SAUCELABS_300X160_URL) # linkedin
     when 'centerforcustomerengagement'
-      provider == 'all' ? (image = CCE_400X400_URL) :
-                          (image = CCE_300X160_URL) # linkedin
+      provider == 'all' ? (image = CCE_400X400_URL) : (image = CCE_300X160_URL) # linkedin
     when 'zeniq'
-      provider == 'all' ? (image = ZENIQ_400X400_URL) :
-                          (image = ZENIQ_300X160_URL) # linkedin
+      provider == 'all' ? (image = ZENIQ_400X400_URL) : (image = ZENIQ_300X160_URL) # linkedin
     when 'retailnext'
-      provider == 'all' ? (image = RETAILNEXT_400X400_URL) :
-                          (image = RETAILNEXT_300X160_URL) # linkedin
+      provider == 'all' ? (image = RETAILNEXT_400X400_URL) : (image = RETAILNEXT_300X160_URL) # linkedin
+    when 'smartpaymentplan'
+      provider = 'all' ? (image = SPP_400X400_URL) : (image = SPP_300X160_URL)
     else
       width = '1200'
       height = '630'
