@@ -1,9 +1,17 @@
 
 (function () {
 
-  var success = <%= raw @success.to_json %>,
+  var success = <%= raw @success.to_json({
+        only: [:id, :name, :description],
+        methods: [:display_status, :timestamp, :referrer, :contact],
+        include: {
+          curator: { only: [:id], methods: [:full_name] },
+          customer: { only: [:id, :name, :slug] }
+        }
+      }) %>,
       $form = $('#success-form-' + success.id.toString());
 
+  $("#successes-table").DataTable().row('[data-success-id="' + success.id + '"]').data(success);
   toggleFormDone($form, true);
 
 }());
