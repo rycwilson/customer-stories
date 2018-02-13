@@ -164,7 +164,7 @@
                   :crowdsourcing_template_id,
                   value: company.crowdsourcing_templates.customer.id
                 ) %>
-
+            <%= contribution_form.hidden_field(:success_contact, value: true) %>
             <div class="form-group contributor">
 
               <%= label_tag(:contributor_id, 'Customer Contact', class: 'col-sm-3 control-label') %>

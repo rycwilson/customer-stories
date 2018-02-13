@@ -32,6 +32,7 @@ class SuccessesController < ApplicationController
       # end
     else
       # pp success_params
+      binding.remote_pry
       @success = Success.new(success_params)
       # pp @success
       if @success.save
