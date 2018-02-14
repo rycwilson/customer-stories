@@ -169,7 +169,7 @@ class Contribution < ActiveRecord::Base
 
   def copy_crowdsourcing_template
     referral_intro = self.referrer_id.present? ?
-                     self.referrer.full_name + " referred me to you. " :
+                     self.referrer.full_name + " referred me to you" :
                      '<span style="color:#D9534F">[There is no Referrer for this Contributor]</span>'
     self.request_subject = self.crowdsourcing_template.request_subject
       .sub('[customer_name]', self.customer.name)

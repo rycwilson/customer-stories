@@ -4,7 +4,7 @@ namespace :temp do
 
   task fix_referral_intro: :environment do
     CrowdsourcingTemplate.all.each do |template|
-      template.request_body.gsub!('[referral_intro]', '[referral_intro]. ')
+      template.request_body.gsub!('[referral_intro]. . ', '[referral_intro]. ')
       template.save
     end
   end

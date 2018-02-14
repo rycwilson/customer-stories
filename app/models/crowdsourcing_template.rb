@@ -35,7 +35,7 @@ class CrowdsourcingTemplate < ActiveRecord::Base
     # give anchor links a format that allows for editing text of the link
     # don't want to include actual links, as they'll be broken (placeholders instead of actual urls)
     self.request_body.gsub!(/<a\shref=('|\")\[(\w+)_url\]('|\")>(?!<button)(.+?)<\/a>/, '[\2_link="\4"]')
-    self.request_body.gsub!(/<a\shref=('\[(\w+)_url\]')><button\stype='button'\sclass='cta'\sstyle='background-color:(#\w{6}+);border-color:#\w{6};color:#\w{6}'>(.+)<\/button><\/a>/) do |match|
+    self.request_body.gsub!(/<a\shref=('\[(\w+)_url\]')><button\stype='button'\sclass='cta'\sstyle='background-color:(#\w{6}+);border-color:#\w{6};color:#\w{6}'>(.+)&nbsp;&nbsp;&nbsp;&#9658;<\/button><\/a>/) do |match|
       "[#{$2}_button={text:\"#{$4}\",color:\"#{$3}\"}]"
     end
   end
@@ -48,7 +48,7 @@ class CrowdsourcingTemplate < ActiveRecord::Base
     self.request_body.gsub!( /\[(\w+)_link=('|")(.+?)('|")\]/, '<a href="[\1_url]">\3</a>')
     # re-construct buttons
     self.request_body.gsub!(/\[(\w+)_button={text:('|")(.+?)('|"),color:('|")(.+?)('|")}\]/) do |match|
-      "<a href='[#{$1}_url]'><button type='button' class='cta' style='background-color:#{$6};border-color:#{$6};color:#{self.company.color_contrast($6) == "light" ? "#ffffff" : "#333333"}'>#{$3}<\/button><\/a>"
+      "<a href='[#{$1}_url]'><button type='button' class='cta' style='background-color:#{$6};border-color:#{$6};color:#{self.company.color_contrast($6) == "light" ? "#ffffff" : "#333333"}'>#{$3}&nbsp;&nbsp;&nbsp;&#9658;<\/button><\/a>"
     end
   end
 
