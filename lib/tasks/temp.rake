@@ -2,6 +2,12 @@ namespace :temp do
 
   desc "temp stuff"
 
+  task add_onerror_to_curator_img: :environment do
+    CrowdsourcingTemplate.all.each do |template|
+      template.update(request_body: template.request_body.sub(/alt=\"curator photo\"/, 'onerror="this.style.display=\'none\'"'))
+    end
+  end
+
   task fix_referral_intro: :environment do
     CrowdsourcingTemplate.all.each do |template|
       template.request_body.gsub!('[referral_intro]', '[referrer_full_name] referred me to you')

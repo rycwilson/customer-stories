@@ -42,7 +42,7 @@ function initInvitationEditor () {
   var curatorPhotoPlaceholder = "<%= asset_path('user-photo-missing.png') %>",
       curatorSignaturePlaceholder =
         '<p id=&quot;curator-signature&quot;>' +
-          '<img id=&quot;curator-img&quot; src=&quot;' + curatorPhotoPlaceholder + '&quot; style=&quot;width:80px;margin-bottom:4px;&quot; alt=&quot;curator photo&quot;><br>' +
+          '<img id=&quot;curator-img&quot; src=&quot;' + curatorPhotoPlaceholder + '&quot; style=&quot;width:80px;margin-bottom:4px;&quot; onerror=&quot;this.style.display=\'none\'>&quot;><br>' +
           '<span style=&quot;line-height:1.4&quot;>[curator_full_name]</span><br>' +
           '<span style=&quot;line-height:1.4&quot;>[curator_title]</span><br>' +
           '<span style=&quot;line-height:1.4&quot;>[company_name]</span><br>' +
@@ -112,7 +112,7 @@ function initInvitationEditor () {
     return button.render();   // return button as jquery object
   };
 
-  $('#email-request-body-editor').summernote({
+  $('#invitation-template-editor').summernote({
     toolbar: [
       // ['style', ['style']],
       ['font', ['bold', 'italic', 'underline']], //, 'clear']],
@@ -129,6 +129,10 @@ function initInvitationEditor () {
     ],
     buttons: {
       placeholderDropdown: PlaceholderDropdown
+    },
+    callbacks: {
+      onInit: function() {
+      }
     }
   });
 }
