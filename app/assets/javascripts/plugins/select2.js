@@ -61,6 +61,26 @@ function initSelect2 () {
   });
 
 
+  /**
+   * may not be present if datatables not yet rendered
+   * this code duplicated from csp_datatables.js
+   */
+  if ($('.successes-header').length && $('.contributors-header').length) {
+    $('.crowdsource.curator-select')
+       .select2({
+         theme: 'bootstrap',
+         width: 'style',
+         minimumResultsForSearch: -1   // hides text input
+       })
+       // select2 is inserting an empty <option> for some reason
+       .children('option').not('[value]').remove();
+     $('.dt-filter').select2({
+       theme: 'bootstrap',
+       width: 'style',
+       // allowClear: true
+    });
+  }
+
   // story settings has its own init routine
   $('.story-tags:not(.story-settings)').select2({
     theme: 'bootstrap',
@@ -70,7 +90,7 @@ function initSelect2 () {
 // ref: http://stackoverflow.com/questions/36497723
 // console.log('uninitialized s2: ', $(document).find('select.stories-filter').not('.select2-hidden-accessible'));
 
-  $('.customer-select, .curator-select, .category-select, .product-select').select2({
+  $('#curate-filters select').select2({
     theme: 'bootstrap',
     width: 'style',
     placeholder: 'Select',

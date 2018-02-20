@@ -37,8 +37,8 @@ function storiesEditListeners () {
       $('a[href="#curate-stories"]').tab('show');
       setTimeout(function() { window.scrollTo(0, 0); }, 1);
       // TODO: why does the tab switch fail if the below code is absent??
-      $('.curate.curator-select').val(
-        $('.curate.curator-select').children('[value="' + app.current_user.id.toString() + '"]').val()
+      $('#curate-filters .curator').val(
+        $('#curate-filters .curator').children('[value="' + app.current_user.id.toString() + '"]').val()
       ).trigger('change', { auto: true });
 
     });

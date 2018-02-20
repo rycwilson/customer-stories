@@ -4,7 +4,7 @@
 //= require ./dt_promoted_stories
 //= require ./dt_editors
 
-function initDataTables () {
+function initDataTables (isBatch) {
 
   // make sure daterangepicker is initialized prior to datatables,
   // else the prior selected date range will be used instead of default
@@ -91,7 +91,7 @@ function initDataTables () {
             // allowClear: true
           });
           $('.crowdsource.curator-select')
-            .val(app.current_user.id)
+            .val(isBatch ? '0' : app.current_user.id)
             .trigger('change', { auto: true });
         },
         initCheckboxFilters = function () {

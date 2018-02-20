@@ -1,155 +1,117 @@
 
 (function () {
-  var $form = $('#new-success-form'),
-      success = <%= @success ? true : false %> && <%= raw @success.to_json(
-          only: [:id, :name, :customer_id],
-          methods: [:timestamp, :referrer, :contact],
-          include: {
-            curator: { only: [:id] },
-            customer: { only: [:name], methods: [:previous_changes] },
-            contributions: {
-              only: [:id, :referrer_id, :contributor_id],
-              include: {
-                contributor: { only: [], methods: [:full_name, :previous_changes, :errors] },
-                referrer: { only: [], methods: [:full_name, :previous_changes, :errors] }
-              }
-            }
-          }
-        ) %>,
-      successes = <%= @successes ? true : false %> && <%= raw (@successes.try(:map) do |success|
-          JSON.parse(success.to_json(
-            only: [:id, :name, :customer_id],
-            methods: [:timestamp, :referrer, :contact],
-            include: {
-              curator: { only: [:id] },
-              customer: { only: [:name], methods: [:previous_changes] },
-              contributions: {
-                only: [:id, :referrer_id, :contributor_id],
-                include: {
-                  contributor: { only: [], methods: [:full_name, :previous_changes, :errors] },
-                  referrer: { only: [], methods: [:full_name, :previous_changes, :errors] }
-                }
-              }
-            }
-          ))
-        end.to_json) %>,
+  var company = <%= raw @company.to_json({ only: [], include: { referrers: { only: [:id], methods: [:full_name] } } }) %>,
+      newSuccess = <%= @success ? true : false %> && <%= raw @success.to_json({
+          only: [:id],
+          include: { curator: { only: [:id] } }
+        }) %>,
+      newSuccesses = <%= @successes ? true : false %> && <%= raw @successes.to_json({ only: [:id] }) %>
       /**
        * the datatable filter state persists through a reload,
        */
-      reloadContributors = function () {
-        $('#prospect-contributors-table').DataTable()
-          .ajax.reload(function (contributions) {
-            // $('#prospect-contributors-table').closest('[id*="table_wrapper"]')
-            //   .find('.search-all').trigger('click')
-          });
+      updateSelectOptions = function (successes, contributions) {
+        var emptyOptions = function () {
+              $('.dt-filter').find('optgroup').empty();
+              $('#new-success-form select:not(.curator), #new-contributor-form select:not(.invitation-template)')
+                .find('option:not([value=""]):not([value="0"])').remove();
+              $('#curate-filters, #new-story-form').find('select.customer option:not([value=""])').remove();
+              $('#new-story-form').find('select.success option:not([value=""])').remove();
+            },
+            resetSelect2 = function () {
+              $('select').each(function () {
+                if ($(this).data('select2')) {
+                  $(this).select2('destroy');
+                }
+              });
+              initSelect2();
+            }
+            updateSuccessOptions = function () {
+              successes.forEach(function (success) {
+                $('.dt-filter optgroup[label="Customer Win"], select.new-contributor.success, select.new-story.success')
+                  .append(
+                    $('<option value="success-' + success.id + '" data-column="success">' + success.name + '</option>')
+                  )
+              })
+            },
+            updateCustomerOptions = function () {
+              var customers = _.uniq(
+                    $('#successes-table').DataTable().column(2).data().toArray(), false,
+                    function (customer, index) { return customer.id; }
+                  );
+              customers.forEach(function (customer) {
+                $('.dt-filter optgroup[label="Customer"], select.customer').append(
+                  $('<option value="customer-' + customer.id + '" data-column="customer">' + customer.name + '</option>')
+                )
+              })
+            },
+            updateReferrerOptions = function () {
+              company.referrers.forEach(function (referrer) {
+                $('select.referrer').append(
+                  $('<option value="' + referrer.id + '">' + referrer.full_name + '</option>')
+                )
+              })
+            }
+            updateContributorOptions = function () {
+              var contributors = _.uniq(
+                $('#prospect-contributors-table').DataTable().column(1).data().toArray(), false,
+                function (contributor, index) { return contributor.id; }
+              )
+              contributors.forEach(function (contributor) {
+                $('#contributors-filter optgroup[label="Contributor"]').append(
+                  $('<option value="contributor-' + contributor.id + '" data-column="contributor">' + contributor.fullName + '</option>')
+                )
+              })
+            }
+        emptyOptions();
+        updateSuccessOptions();
+        updateCustomerOptions();
+        updateReferrerOptions();
+        updateContributorOptions();
+        resetSelect2();
       },
-      updateSelectOptions = function (successes) {
-        successes.forEach(function (success) {
-          // new success
-          $('.dt-filter')
-            .find('optgroup[label="Customer Win"]')
-            .prepend(
-              $('<option value="success-' + success.id + '"' +
-                  ' data-column="success">' + success.name + '</option>')
-            )
-          $('select.success')
-            .find('option:first-of-type') // empty placeholder option
-            .after($('<option value="' + success.id + '">' + success.name + '</option>'))
-
-          // new customer
-          if (success.customer.previous_changes.id) {
-            $('.dt-filter')
-              .find('optgroup[label="Customer"]')
-              .prepend(
-                $('<option value="customer-' + success.customer_id + '"' +
-                  ' data-column="customer">' + success.customer.name + '</option>')
-              )
-            $('select.customer')
-              .find('option:first-of-type') // empty placeholder option
-              .after($('<option value="' + success.customer_id + '">' + success.customer.name + '</option>'))
+      cbDone = function (successes, isImport) {
+        return function () {
+          if (isImport) {
+            var $newSuccesses = $('#new-success-modal').find('.new-records ul'),
+                $button = $('#new-success-modal').find('button[type="submit"]');
+            $('#new-success-modal').find('form, .new-records').toggle();
+            $button.attr('type', 'button');
+            $button.find('span').text('Ok')
+            $button[0].blur();
+            $('.crowdsource.curator-select').val('0').trigger('change'  );
+            successes.forEach(function (success) {
+              if (newSuccesses.find(function (s) { return s.id === success.id; })) {
+                $newSuccesses.append('<li>' + success.name + '</li>')
+              }
+            })
+          } else {
+            // ref: https://stackoverflow.com/questions/6677035
+            $('html, body')
+              .animate({ scrollTop: 65 }, 200)
+              .promise()
+              .then(function () {
+                $('.successes.curator-select').val(successes[0].curator.id).trigger('change.select2')
+                $('#successes-filter').val('success-' + successes[0].id).trigger('change');
+                $('#successes-table td.success-details').trigger('click');
+                $('#successes-filter').select2('focus');
+                $(document).one('click', function () {
+                  $('#successes-filter').next().removeClass('select2-container--focus');
+                })
+                $('#new-success-modal').modal('hide')
+              });
           }
-
-          // new referrer
-          if (success.referrer && success.referrer.previous_changes.id) {
-            $('#contributors-filter')
-              .find('optgroup[label="Contributor"]')
-              .prepend(
-                $('<option value="contributor-' + success.referrer.id + '"' +
-                    ' data-column="contributor">' + success.referrer.full_name + '</option>')
-              )
-            $('select.referrer')
-              .find('option[value="0"]') // - Create New Contact -
-              .after(
-                $('<option value="' + success.referrer.id + '">' + success.referrer.full_name + '</option>')
-              )
-          }
-
-          // new contact/contributor
-          if (success.contact && success.contact.previous_changes.id) {
-            $('#contributors-filter')
-              .find('optgroup[label="Contributor"]')
-              .prepend(
-                $('<option value="contributor-' + success.contact.id + '"' +
-                    ' data-column="contributor">' + success.contact.first_name + ' ' + success.contact.last_name + '</option>')
-              )
-            $('select.contributor')
-              .find('option[value="0"]') // - Create New Contact -
-              .after(
-                $('<option value="' + success.contact.id + '">' + success.contact.first_name + success.contact.last_name +'</option>')
-              )
-          }
-        })
-
-      },
-      cbNewSuccesses = function () {
-        var $newSuccesses = $('#new-success-modal').find('.new-records ul'),
-            $button = $('#new-success-modal').find('button[type="submit"]');
-        $('#new-success-modal').find('form, .new-records').toggle();
-        $button.attr('type', 'button');
-        $button.find('span').text('Ok')
-        $button[0].blur();
-        successes.forEach(function (success) {
-          $newSuccesses.append('<li>' + success.name + '</li>')
-        })
+        }
       }
 
-  if (success) {
-
-    updateSelectOptions([success]);
-
-    $('#successes-table').DataTable()
-      .ajax.reload(function (successes) {
-        // ref: https://stackoverflow.com/questions/6677035
-        $('html, body')
-          .animate({ scrollTop: 65 }, 200)
-          .promise()
-          .then(function () {
-            $('.successes.curator-select').val(success.curator.id).trigger('change.select2')
-            $('#successes-filter').val('success-' + success.id).trigger('change');
-            $('#successes-table td.success-details').trigger('click');
-            $('#successes-filter').select2('focus');
-            $(document).one('click', function () {
-              $('#successes-filter').next().removeClass('select2-container--focus');
-            })
-            toggleFormDone($('#new-success-form'));
-            $('#new-success-modal').modal('hide')
-          });
-      })
-
-    if (success.contributions.length) {
-      reloadContributors();
-    }
-
-  } else if (successes) {
-    $('#successes-table').DataTable().ajax.reload(function (successesData) {
-      reloadContributors();
-      $('.crowdsource.curator-select').val('0').trigger('change');
-
-      // this must come after the above line
-      console.log(successes)
-      updateSelectOptions(successes);
-      toggleFormDone($form, false, cbNewSuccesses);
+  $('#successes-table').DataTable().ajax.reload(function (successes) {
+    $('#prospect-contributors-table').DataTable().ajax.reload(function (contributions) {
+      updateSelectOptions(successes, contributions);
+      if (newSuccess) {
+        toggleFormDone($('#new-success-form'), false, cbDone([newSuccess], false));
+      } else {
+        toggleFormDone($('#new-success-form'), false, cbDone(successes, true));
+      }
     })
-  }
+  })
 
 }());

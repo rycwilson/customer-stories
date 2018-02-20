@@ -5,7 +5,7 @@
     <label for="">Curator</label>
     <%= select_tag('',
           options_for_select(company.curators.select_options),
-          { include_blank: true, class: "curate curator-select form-control", style: "width:100%" }
+          { include_blank: true, class: "curator form-control", style: "width:100%" }
         ) %>
   </div>
 
@@ -13,7 +13,7 @@
     <label for="">Customer</label>
     <%= select_tag('',
           options_for_select(company.customers.select_options),
-          { include_blank: true, class: "curate customer-select form-control", style: "width:100%" }
+          { include_blank: true, class: "customer form-control", style: "width:100%" }
         ) %>
   </div>
 
@@ -21,7 +21,7 @@
     <label for="">Story Category</label>
     <%= select_tag('',
           options_for_select(company.story_categories.select_options),
-          { include_blank: true, class: "curate category-select form-control", style: "width:100%" }
+          { include_blank: true, class: "category form-control", style: "width:100%" }
         ) %>
   </div>
 
@@ -29,7 +29,7 @@
     <label for="">Product</label>
     <%= select_tag('',
           options_for_select(company.products.select_options),
-          { include_blank: true, class: "curate product-select form-control", style: "width:100%" }
+          { include_blank: true, class: "product form-control", style: "width:100%" }
         ) %>
   </div>
 

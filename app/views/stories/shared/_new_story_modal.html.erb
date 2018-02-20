@@ -29,8 +29,7 @@
 
           </div>
 
-        <%= story_form.fields_for(:success,
-              story_form.object.build_success) do |success_form| %>
+        <%= story_form.fields_for(:success, story_form.object.build_success) do |success_form| %>
 
           <%= success_form.hidden_field(:id) %>
           <%= success_form.hidden_field(:name) %>
@@ -54,12 +53,9 @@
             <div class='col-md-9'>
 
               <%= collection_select(nil, nil,
-                    company.customers.sort_by do |customer|
-                      customer.name
-                    end,
+                    company.customers.sort_by { |customer| customer.name },
                     :id, :name, { include_blank: true },
-                    { class: 'new-story customer form-control',
-                      style: 'width:100%' }
+                    { class: 'new-story customer form-control',style: 'width:100%' }
                   ) %>
 
             </div>
@@ -74,12 +70,9 @@
             <div class='col-md-9'>
 
               <%= collection_select(nil, nil,
-                    company.successes.sort_by do |success|
-                      success.name
-                    end,
+                    company.successes.sort_by { |success| success.name },
                     :id, :name, { include_blank: true },
-                    { class: 'new-story success form-control',
-                      style: 'width:100%' }
+                    { class: 'new-story success form-control', style: 'width:100%' }
                   ) %>
 
             </div>

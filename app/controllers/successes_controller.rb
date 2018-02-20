@@ -20,6 +20,7 @@ class SuccessesController < ApplicationController
   end
 
   def create
+    @company = Company.find_by(subdomain: request.subdomain)
     if params[:imported_successes].present?
       @successes = []
       params[:imported_successes].each do |index, success|

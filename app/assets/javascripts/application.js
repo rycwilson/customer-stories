@@ -121,8 +121,8 @@ function attachAppListeners () {
         // don't scroll to panel
         setTimeout(function() { window.scrollTo(0, 0); }, 1);
         if (curateView === 'stories') {
-          $('.curate.curator-select').val(
-            $('.curate.curator-select').children('[value="' + app.current_user.id.toString() + '"]').val()
+          $('#curate-filters .curator').val(
+            $('#curate-filters .curator').children('[value="' + app.current_user.id.toString() + '"]').val()
           ).trigger('change', { auto: true });
         }
       }
