@@ -95,7 +95,7 @@
             <div class="col-sm-9">
 
               <%= contribution_form.collection_select(:contributor_id,
-                    company.contributors.sort_by do |contributor|
+                    (company.contributors - company.referrers).sort_by do |contributor|
                       contributor.last_name
                     end.unshift(
                       User.new(id: 0, first_name: '- Create New Contributor -', last_name:'')

@@ -1,6 +1,12 @@
 
 (function () {
-  var company = <%= raw @company.to_json({ only: [], include: { referrers: { only: [:id], methods: [:full_name] } } }) %>,
+  var company = <%= raw @company.to_json({
+          only: [],
+          include: {
+            contributors: { only: [:id], methods: [:full_name] },
+            referrers: { only: [:id], methods: [:full_name] }
+          }
+        }) %>,
       newSuccess = <%= @success ? true : false %> && <%= raw @success.to_json({
           only: [:id],
           include: { curator: { only: [:id] } }
@@ -38,6 +44,7 @@
                     $('#successes-table').DataTable().column(2).data().toArray(), false,
                     function (customer, index) { return customer.id; }
                   );
+              console.log(customers)
               customers.forEach(function (customer) {
                 $('.dt-filter optgroup[label="Customer"], select.customer').append(
                   $('<option value="customer-' + customer.id + '" data-column="customer">' + customer.name + '</option>')
@@ -52,15 +59,14 @@
               })
             }
             updateContributorOptions = function () {
-              var contributors = _.uniq(
-                $('#prospect-contributors-table').DataTable().column(1).data().toArray(), false,
-                function (contributor, index) { return contributor.id; }
-              )
-              contributors.forEach(function (contributor) {
-                $('#contributors-filter optgroup[label="Contributor"]').append(
-                  $('<option value="contributor-' + contributor.id + '" data-column="contributor">' + contributor.fullName + '</option>')
-                )
+              _.filter(company.contributors, function (contributor) {
+                return !_.findWhere(company.referrers, contributor);
               })
+                .forEach(function (contributor) {
+                  $('#contributors-filter optgroup[label="Contributor"], select.contributor').append(
+                    $('<option value="contributor-' + contributor.id + '" data-column="contributor">' + contributor.full_name + '</option>')
+                  )
+                })
             }
         emptyOptions();
         updateSuccessOptions();
