@@ -3,7 +3,7 @@
   var company = <%= raw @company.to_json({
           only: [],
           include: {
-            customers: { only: [:id, :name] }
+            customers: { only: [:id, :name] },
             contributors: { only: [:id], methods: [:full_name] },
             referrers: { only: [:id], methods: [:full_name] }
           }
