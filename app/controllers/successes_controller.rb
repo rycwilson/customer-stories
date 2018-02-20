@@ -27,10 +27,6 @@ class SuccessesController < ApplicationController
         params[:success] = success
         @successes << Success.create(success_params)
       end
-      # if @successes.all? { |success| success.save! }
-      # else
-      #   @successes.each { |success| pp success.errors.full_messages }
-      # end
     else
       # pp success_params
       @success = Success.new(success_params)

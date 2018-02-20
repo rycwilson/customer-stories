@@ -3,6 +3,7 @@
   var company = <%= raw @company.to_json({
           only: [],
           include: {
+            customers: { only: [:id, :name] }
             contributors: { only: [:id], methods: [:full_name] },
             referrers: { only: [:id], methods: [:full_name] }
           }
@@ -33,21 +34,21 @@
             }
             updateSuccessOptions = function () {
               successes.forEach(function (success) {
-                $('.dt-filter optgroup[label="Customer Win"], select.new-contributor.success, select.new-story.success')
-                  .append(
-                    $('<option value="success-' + success.id + '" data-column="success">' + success.name + '</option>')
-                  )
+                $('.dt-filter optgroup[label="Customer Win"]').append(
+                  $('<option value="success-' + success.id + '" data-column="success">' + success.name + '</option>')
+                )
+                $('select.success').append(
+                  $('<option value="' + success.id + '">' + success.name + '</option>')
+                )
               })
             },
             updateCustomerOptions = function () {
-              var customers = _.uniq(
-                    $('#successes-table').DataTable().column(2).data().toArray(), false,
-                    function (customer, index) { return customer.id; }
-                  );
-              console.log(customers)
-              customers.forEach(function (customer) {
-                $('.dt-filter optgroup[label="Customer"], select.customer').append(
+              company.customers.forEach(function (customer) {
+                $('.dt-filter optgroup[label="Customer"]').append(
                   $('<option value="customer-' + customer.id + '" data-column="customer">' + customer.name + '</option>')
+                )
+                $('select.customer').append(
+                  $('<option value="' + customer.id + '">' + customer.name + '</option>')
                 )
               })
             },
@@ -63,8 +64,11 @@
                 return !_.findWhere(company.referrers, contributor);
               })
                 .forEach(function (contributor) {
-                  $('#contributors-filter optgroup[label="Contributor"], select.contributor').append(
+                  $('#contributors-filter optgroup[label="Contributor"]').append(
                     $('<option value="contributor-' + contributor.id + '" data-column="contributor">' + contributor.full_name + '</option>')
+                  )
+                  $('select.contributor').append(
+                    $('<option value="' + contributor.id + '">' + contributor.full_name + '</option>')
                   )
                 })
             }
