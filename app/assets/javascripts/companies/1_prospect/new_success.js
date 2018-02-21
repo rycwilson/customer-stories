@@ -111,13 +111,18 @@ function newSuccessListeners () {
               return app.company.curators.find(function (curator) { return curator.email === email; });
             },
             // here a 'contributor' is either a referrer or contact
-            getContributorId = function (email) {
+            getUserId = function (email) {
               var contributions = $('#prospect-contributors-table').DataTable().rows().data().toArray(),
                   contributorIndex = contributions.findIndex(function (contribution) {
                     return contribution.contributor.email === email;
+                  }),
+                  referrerIndex = contributions.findIndex(function (contribution) {
+                    return contribution.referrer.email === email;
                   });
               if (contributorIndex !== -1) {
                 return contributions[contributorIndex].contributor.id.toString();
+              } else if (referrerIndex !== -1 ) {
+                return contributions[referrerIndex].referrer.id.toString();
               } else {
                 return '';
               }
@@ -135,7 +140,7 @@ function newSuccessListeners () {
               return template ? template.id : null;
             },
             contactIsValid = function (firstName, lastName, email) {
-              var contactId = getContributorId(email);
+              var contactId = getUserId(email);
               if (contactId) {
                 console.log('User exists:', email);
                 return true;
@@ -162,37 +167,51 @@ function newSuccessListeners () {
             },
             customerAttrs = function (customerName) {
               var customerIndex = app.company.customers.findIndex(function (customer) {
-                return customer.name === customerName;
-              });
-              if (customerIndex === -1) {
-                console.log('new Cuatomer:', customerName);
-                return { customer_attributes: { name: customerName, company_id: app.company.id } };
-              } else {
-                console.log('Customer exists:', customerName);
-                return { customer_id: app.company.customers[customerIndex].id };
-              }
+                    return customer.name === customerName;
+                  });
+              return {
+                customer_attributes: {
+                  id: customerIndex === -1 ? '' : app.company.customers[customerIndex].id,
+                  name: customerName,
+                  company_id: app.company.id,
+                }
+              };
             },
             contributionsAttrs = function (index, contributorType, email, firstName, lastName, title) {
-              var attrs = {}, referrerId = getContributorId(email), contributorId = getContributorId(email);
+              var contributions = $('#prospect-contributors-table').DataTable().rows().data().toArray(),
+                  user = { id: getUserId(email) },
+                  attrs = {};
               attrs[index] = {};
 
-              if (contributorType === 'referrer' && referrerId) {
-                attrs[index].referrer_id = referrerId;
-              }
+              // if (contributorType === 'referrer') {
+              //   // attrs[index].referrer_id = referrerId;
+              //   // attrs[index].contributor_id = null;  // server will handle this
+              // }
               if (contributorType === 'contributor') {
                 attrs[index].success_contact = true;
+                // attrs[index].contributor_id = contributorId;
+                // attrs[index].referrer_id = null;
+              } else {
+                attrs[index].success_contact = false;
               }
-              if (contributorType === 'contributor' && contributorId) {
-                attrs[index].contributor_id = contributorId;
+
+              if (user.id) {
+                user = (contributions.find(function (c) { return c.contributor.id == user.id; }) &&
+                       contributions.find(function (c) { return c.contributor.id == user.id; }).contributor) ||
+                       (contributions.find(function (c) { return c.referrer.id == user.id; }) &&
+                       contributions.find(function (c) { return c.referrer.id == user.id; }).referrer);
+                delete user.full_name;
               }
 
               // create a new user (contributor or referrer)
-              if (!(referrerId || contributorId)) {
-                attrs[index][contributorType + '_attributes'] = {};
-                attrs[index][contributorType + '_attributes'].email = email;
-                attrs[index][contributorType + '_attributes'].first_name = firstName;
-                attrs[index][contributorType + '_attributes'].last_name = lastName;
-                attrs[index][contributorType + '_attributes'].title = title;
+              attrs[index][contributorType + '_attributes'] = {};
+              attrs[index][contributorType + '_attributes'].email = user.email || email;
+              attrs[index][contributorType + '_attributes'].first_name = user.first_name || firstName;
+              attrs[index][contributorType + '_attributes'].last_name = user.last_name || lastName;
+              attrs[index][contributorType + '_attributes'].title = user.title || title;
+
+              // TODO: differing keys call for batched imports
+              if (!user.id) {
                 attrs[index][contributorType + '_attributes'].password = email;
                 attrs[index][contributorType + '_attributes'].sign_up_code = 'csp_beta';
               }
@@ -210,16 +229,15 @@ function newSuccessListeners () {
               success.description = row.opportunityDescription;
               success.curator_id = curator.id;
               Object.assign(success, customerAttrs(row.customerName));
-              if (referrerIsPresent) {
-                console.log('adding referrer (contributor #1):', row.referrerEmail);
-                success.contributions_attributes = {};
-                Object.assign(
-                  success.contributions_attributes,
-                  contributionsAttrs('0', 'referrer', row.referrerEmail, row.referrerFirstName, row.referrerLastName, row.referrerTitle)
-                );
-                success.contributions_attributes['0'].crowdsourcing_template_id =
-                  getInvitationTemplateId(row.invitationTemplateNameReferrer);
-              }
+
+              success.contributions_attributes = {};
+              console.log('adding referrer (contributor #1):', row.referrerEmail);
+              Object.assign(
+                success.contributions_attributes,
+                contributionsAttrs('0', 'referrer', row.referrerEmail, row.referrerFirstName, row.referrerLastName, row.referrerTitle)
+              );
+              success.contributions_attributes['0'].crowdsourcing_template_id =
+                getInvitationTemplateId(row.invitationTemplateNameReferrer);
               if (contactIsValid(row.contactFirstName, row.contactLastName, row.contactEmail)) {
                 console.log('adding contact (contributor #2):', row.contactEmail);
                 contactContributionsIndex = referrerIsPresent ? '1' : '0';

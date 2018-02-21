@@ -46,7 +46,7 @@ class Contribution < ActiveRecord::Base
       # (so self and self.success are related to each other in memory)
       self.success.is_new_record? &&
       self.referrer_id.present? &&
-      self.contributor_id.nil?
+      self.contributor_id.blank?
     end
   )
   before_update(:set_request_sent_at, if: Proc.new do

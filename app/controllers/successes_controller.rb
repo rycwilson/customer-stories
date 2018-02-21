@@ -22,11 +22,15 @@ class SuccessesController < ApplicationController
   def create
     @company = Company.find_by(subdomain: request.subdomain)
     if params[:imported_successes].present?
-      @successes = []
-      params[:imported_successes].each do |index, success|
-        params[:success] = success
-        @successes << Success.create(success_params)
-      end
+      # binding.remote_pry
+      Success.import(params[:imported_successes].to_a.map { |s| s[1] }, validate: false)
+      # binding.remote_pry
+      # @successes = @company.successes.select { |s| s.previous_changes.id.present? }
+      # @successes = []
+      # params[:imported_successes].each do |index, success|
+      #   params[:success] = success
+      #   @successes << Success.create(success_params)
+      # end
     else
       # pp success_params
       @success = Success.new(success_params)
