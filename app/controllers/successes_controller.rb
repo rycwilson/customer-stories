@@ -22,8 +22,8 @@ class SuccessesController < ApplicationController
   def create
     @company = Company.find_by(subdomain: request.subdomain)
     if params[:imported_successes].present?
-      # binding.remote_pry
-      Success.import(params[:imported_successes].to_a.map { |s| s[1] }, validate: false)
+      binding.remote_pry
+      # Success.import(params[:imported_successes].to_a.map { |s| s[1] }, validate: false)
       # binding.remote_pry
       # @successes = @company.successes.select { |s| s.previous_changes.id.present? }
       # @successes = []
@@ -40,7 +40,7 @@ class SuccessesController < ApplicationController
         pp @success.errors.full_messages
       end
     end
-    respond_to { |format| format.js {} }
+    # respond_to { |format| format.js {} }
   end
 
   def update
