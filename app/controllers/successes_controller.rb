@@ -40,7 +40,7 @@ class SuccessesController < ApplicationController
         pp @success.errors.full_messages
       end
     end
-    # respond_to { |format| format.js {} }
+    respond_to { |format| format.js {} }
   end
 
   def update

@@ -164,11 +164,8 @@ function newSuccessListeners () {
               }
             },
             customerAttrs = function (customerName) {
-              var customer = app.company.customers.find(function (customer) {
-                    return customer.name === customerName;
-                  });
               return {
-                id: customer ? customer.id : '',
+                id: app.company.customers.find(function (customer) { return customer.name === customerName; }) || '',
                 name: customerName,
                 company_id: app.company.id,
               };
