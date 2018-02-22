@@ -164,8 +164,11 @@ function newSuccessListeners () {
               }
             },
             customerAttrs = function (customerName) {
+              var customer = app.company.customers.find(function (customer) {
+                    return customer.name === customerName;
+                  });
               return {
-                id: app.company.customers.find(function (customer) { return customer.name === customerName; }) || '',
+                id: customer ? customer.id : '',
                 name: customerName,
                 company_id: app.company.id,
               };
