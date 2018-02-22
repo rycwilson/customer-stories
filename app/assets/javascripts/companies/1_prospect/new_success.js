@@ -179,17 +179,6 @@ function newSuccessListeners () {
                     crowdsourcing_template_id: getInvitationTemplateId(invitationTemplateName),
                     success_contact: contributorType === 'contributor' ? true : false
                   };
-
-              // if (contributorType === 'referrer') {
-              //   // attrs[index].referrer_id = referrerId;
-              //   // attrs[index].contributor_id = null;  // server will handle this
-              // }
-              // if (contributorType === 'contributor') {
-                // attrs.success_contact = true;
-                // attrs[index].contributor_id = contributorId;
-                // attrs[index].referrer_id = null;
-              // }
-
               if (user.id) {
                 Object.assign(
                     user,

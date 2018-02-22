@@ -42,7 +42,7 @@ class Success < ActiveRecord::Base
 
   accepts_nested_attributes_for(:customer, allow_destroy: false)
   accepts_nested_attributes_for(:results, allow_destroy: true)
-  accepts_nested_attributes_for(:contributions, allow_destroy: false)
+  accepts_nested_attributes_for(:contributions, allow_destroy: false, reject_if: :missing_contributor_or_referrer_attributes?)
 
   # after_commit(on: [:create, :destroy]) do
   # end
@@ -59,17 +59,6 @@ class Success < ActiveRecord::Base
   def contributions_count
     self.contributions.count
   end
-
-  # method adds a new contributor question associations
-  # def add_contributor_questions (question_params)
-  #   if question_params.present?
-  #     question_params.each() do |index, attrs|
-  #       if attrs[:id] && self.contributor_questions.find_by(id: attrs[:id]).nil?
-  #         self.contributor_questions << ContributorQuestion.find(attrs[:id])
-  #       end
-  #     end
-  #   end
-  # end
 
   def display_status
     if (self.contributions.count == 0)
@@ -116,6 +105,29 @@ class Success < ActiveRecord::Base
 
   def timestamp
     self.created_at.to_i
+  end
+
+  # ref: https://stackoverflow.com/questions/6346134
+  def customer_attributes=(attrs)
+    # binding.remote_pry
+    if attrs['id'].present?
+      self.customer = Customer.find(attrs['id'])
+    end
+    super
+  end
+
+  # private
+
+  # reject a nested contribution if required attributes are missing for either contributor or referrer
+  def missing_contributor_or_referrer_attributes? (contribution_attrs)
+    r_attrs = contribution_attrs[:referrer_attributes]
+    c_attrs = contribution_attrs[:contributor_attributes]
+    (r_attrs.present? &&
+    !User.exists?(r_attrs[:id]) &&
+    (r_attrs[:email].blank? || r_attrs[:first_name].blank? || r_attrs[:last_name].blank?)) ||
+    (c_attrs.present? &&
+    !User.exists?(c_attrs[:id]) &&
+    (c_attrs[:email].blank? || c_attrs[:first_name].blank? || c_attrs[:last_name].blank?))
   end
 
 end

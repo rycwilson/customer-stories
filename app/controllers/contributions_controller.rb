@@ -221,10 +221,10 @@ class ContributionsController < ApplicationController
         customer_attributes: [:id, :name, :company_id]
       ],
       contributor_attributes: [
-        :id, :first_name, :last_name, :title, :email, :phone, :linkedin_url, :sign_up_code, :password
+        :id, :email, :first_name, :last_name, :title, :phone, :linkedin_url, :sign_up_code, :password
       ],
       referrer_attributes: [
-        :id, :first_name, :last_name, :email, :sign_up_code, :password
+        :id, :email, :first_name, :last_name, :title, :sign_up_code, :password
       ]
     )
   end

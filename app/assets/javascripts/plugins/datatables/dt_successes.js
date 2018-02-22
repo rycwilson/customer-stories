@@ -27,6 +27,7 @@ function initSuccessesTable (dtSuccessesInit) {
         name: 'success',
         data: {
           _: function (row, type, set, meta) {
+            // console.log(row)
             return {
               id: row.id,
               name: row.name,
