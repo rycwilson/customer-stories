@@ -116,6 +116,16 @@ class Success < ActiveRecord::Base
     super
   end
 
+  # https://stackoverflow.com/questions/38369515
+  # def save_with_nested_attributes (company)
+  #   transaction do
+  #     if self.customer_attributes[:id]
+  #       self.customer = Customer.find(self.customer_attibutes[:id])
+  #     else
+  #       customer = Customer.create(name: self.customer_attributes[:name], company_id: c)
+  #   end
+  # end
+
   # private
 
   # reject a nested contribution if required attributes are missing for either contributor or referrer

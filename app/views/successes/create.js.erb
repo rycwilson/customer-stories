@@ -12,7 +12,7 @@
           only: [:id],
           include: { curator: { only: [:id] } }
         }) %>,
-      newSuccesses = <%= @successes ? true : false %> && <%= raw @successes.to_json({ only: [:id] }) %>
+      newSuccesses = <%= @successes ? true : false %> && <%= raw @successes.to_json({ only: [:id] }) %>,
       /**
        * the datatable filter state persists through a reload,
        */
@@ -89,6 +89,7 @@
             $button.find('span').text('Ok')
             $button[0].blur();
             $('.crowdsource.curator-select').val('0').trigger('change'  );
+            // console.log(newSuccesses)
             successes.forEach(function (success) {
               if (newSuccesses.find(function (s) { return s.id === success.id; })) {
                 $newSuccesses.append('<li>' + success.name + '</li>')
@@ -111,7 +112,7 @@
               });
           }
         }
-      }
+      };
 
   $('#successes-table').DataTable().ajax.reload(function (successes) {
     $('#prospect-contributors-table').DataTable().ajax.reload(function (contributions) {
@@ -121,7 +122,7 @@
       } else {
         toggleFormDone($('#new-success-form'), false, cbDone(successes, true));
       }
-    })
-  })
+    });
+  });
 
 }());
