@@ -27,13 +27,12 @@ class CrowdsourcingTemplate < ActiveRecord::Base
   before_update() { self.format_for_storage() }
 
   def button_style_settings
-    'font-size: 16px !important;' +
+    'font-size: 14px;' +
     'margin: 12px 0;' +
     'line-height: 30px;' +
-    'padding: 6px 18px;' +
+    'padding: 2px 12px;' +
     'box-shadow: inset 0 1px 0 rgba(255,255,255,0.15),0 1px 1px rgba(0,0,0,0.075);' +
     'border-radius: 4px;' +
-    'opacity: 0.85;' +
     'text-decoration: none;'
   end
 
@@ -46,7 +45,7 @@ class CrowdsourcingTemplate < ActiveRecord::Base
     # give anchor links a format that allows for editing text of the link
     # don't want to include actual links, as they'll be broken (placeholders instead of actual urls)
     self.request_body.gsub!(/<a\shref=('|\")\[(\w+)_url\]('|\")>(?!<button)(.+?)<\/a>/, '[\2_link="\4"]')
-    self.request_body.gsub!(/<a\shref=('\[(\w+)_url\]')><button\stype='button'\sclass='cta'\sstyle='background-color:(#\w{6}+);border-color:#\w{6};color:#\w{6};#{Regexp.quote(button_style_settings)}'>(.+)&nbsp;&nbsp;&nbsp;&#9658;<\/button><\/a>/) do |match|
+    self.request_body.gsub!(/<a\shref=('\[(\w+)_url\]')><button\stype='button'\sclass='cta'\sstyle='background-color:(#\w{6}+);border-color:#\w{6};color:#\w{6};#{Regexp.quote(button_style_settings)}'>(.+)&nbsp;&nbsp;&nbsp;<span\sstyle=\'font-size:20px\'>&#8250;<\/span><\/button><\/a>/) do |match|
       "[#{$2}_button={text:\"#{$4}\",color:\"#{$3}\"}]"
     end
   end
@@ -59,7 +58,7 @@ class CrowdsourcingTemplate < ActiveRecord::Base
     self.request_body.gsub!( /\[(\w+)_link=('|")(.+?)('|")\]/, '<a href="[\1_url]">\3</a>')
     # re-construct buttons
     self.request_body.gsub!(/\[(\w+)_button={text:('|")(.+?)('|"),color:('|")(.+?)('|")}\]/) do |match|
-      "<a href='[#{$1}_url]'><button type='button' class='cta' style='background-color:#{$6};border-color:#{$6};color:#{self.company.color_contrast($6) == "light" ? "#ffffff" : "#333333"};#{button_style_settings}'>#{$3.truncate(25)}&nbsp;&nbsp;&nbsp;&#9658;<\/button><\/a>"
+      "<a href='[#{$1}_url]'><button type='button' class='cta' style='background-color:#{$6};border-color:#{$6};color:#{self.company.color_contrast($6) == "light" ? "#ffffff" : "#333333"};#{button_style_settings}'>#{$3.truncate(25)}&nbsp;&nbsp;&nbsp;<span style='font-size:20px'>&#8250;</span><\/button><\/a>"
     end
   end
 
