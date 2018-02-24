@@ -115,6 +115,8 @@ GEM
       warden (~> 1.2.3)
     diff-lcs (1.2.5)
     diffy (3.1.0)
+    doorkeeper (4.3.0)
+      railties (>= 4.2)
     erubis (2.7.0)
     ethon (0.9.0)
       ffi (>= 1.3.0)
@@ -363,6 +365,7 @@ DEPENDENCIES
   dalli
   delayed_job_active_record
   devise
+  doorkeeper
   ffaker
   figaro
   font-awesome-rails

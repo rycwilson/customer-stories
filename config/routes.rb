@@ -9,6 +9,7 @@ Rails.application.routes.default_url_options = {
 
 Rails.application.routes.draw do
 
+  use_doorkeeper
   devise_for :admins
 
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
