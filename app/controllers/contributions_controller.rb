@@ -27,8 +27,8 @@ class ContributionsController < ApplicationController
                        methods: [:csp_story_path] }
             }
           },
-          contributor: { only: [:id, :email], methods: [:full_name] },
-          referrer: { only: [:id], methods: [:full_name] },
+          contributor: { only: [:id, :email, :first_name, :last_name, :title], methods: [:full_name] },
+          referrer: { only: [:id, :email, :first_name, :last_name, :title], methods: [:full_name] },
           crowdsourcing_template: { only: [:id, :name] },
         }
       })
@@ -221,10 +221,10 @@ class ContributionsController < ApplicationController
         customer_attributes: [:id, :name, :company_id]
       ],
       contributor_attributes: [
-        :id, :first_name, :last_name, :title, :email, :phone, :linkedin_url, :sign_up_code, :password
+        :id, :email, :first_name, :last_name, :title, :phone, :linkedin_url, :sign_up_code, :password
       ],
       referrer_attributes: [
-        :id, :first_name, :last_name, :email, :sign_up_code, :password
+        :id, :email, :first_name, :last_name, :title, :sign_up_code, :password
       ]
     )
   end

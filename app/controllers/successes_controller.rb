@@ -22,10 +22,18 @@ class SuccessesController < ApplicationController
   def create
     @company = Company.find_by(subdomain: request.subdomain)
     if params[:imported_successes].present?
+      # binding.remote_pry
+      # 2exp2 signatures for an imported success (each requires its own .import statement)
+      # Success.import(import_signature_1(params[:imported_successes]), on_duplicate_key_updatevalidate: false)
+      # Success.import(import_signature_2(params[:imported_successes]), validate: false)
+      # Success.import(import_signature_3(params[:imported_successes]), validate: false)
+      # Success.import(import_signature_4(params[:imported_successes]), validate: false)
+      # binding.remote_pry
       @successes = []
       params[:imported_successes].each do |index, success|
         params[:success] = success
-        @successes << Success.create(success_params)
+        @successes << Success.new(success_params)
+        @successes.each { |s| s.save(validate: false) }
       end
     else
       # pp success_params
@@ -60,13 +68,73 @@ class SuccessesController < ApplicationController
       contributions_attributes: [
         :referrer_id, :contributor_id, :crowdsourcing_template_id, :success_contact,
         referrer_attributes: [
-          :first_name, :last_name, :email, :sign_up_code, :password
+          :id, :email, :first_name, :last_name, :title, :sign_up_code, :password
         ],
         contributor_attributes: [
-          :first_name, :last_name, :email, :sign_up_code, :password
+          :id, :email, :first_name, :last_name, :title, :sign_up_code, :password
         ]
       ],
     )
+  end
+
+  # both new
+  def import_signature_1 (imported_successes)
+    successes = []
+    imported_successes.to_a.map { |s| s[1] }.keep_if do |s|
+      s[:contributions_attributes]['0'][:referrer_attributes].has_key?(:password) &&
+      s[:contributions_attributes]['1'][:contributor_attributes].has_key?(:password)
+    end
+      .each do |success|
+        # params[:success] = success
+        successes << Success.create(success)
+      end
+    # binding.remote_pry
+    successes
+  end
+
+  # one existing, one new
+  def import_signature_2 (imported_successes)
+    successes = []
+    imported_successes.to_a.map { |s| s[1] }.keep_if do |s|
+      !s[:contributions_attributes]['0'][:referrer_attributes].has_key?(:password) &&
+      s[:contributions_attributes]['1'][:contributor_attributes].has_key?(:password)
+    end
+      .each do |success|
+        # params[:success] = success
+        successes << Success.create(success)
+      end
+    # binding.remote_pry
+    successes
+  end
+
+  # one new, one existing
+  def import_signature_3 (imported_successes)
+    successes = []
+    imported_successes.to_a.map { |s| s[1] }.keep_if do |s|
+      s[:contributions_attributes]['0'][:referrer_attributes].has_key?(:password) &&
+      !s[:contributions_attributes]['1'][:contributor_attributes].has_key?(:password)
+    end
+      .each do |success|
+        # params[:success] = success
+        successes << Success.create(success)
+      end
+    # binding.remote_pry
+    successes
+  end
+
+  # both existing
+  def import_signature_4 (imported_successes)
+    successes = []
+    imported_successes.to_a.map { |s| s[1] }.keep_if do |s|
+      !s[:contributions_attributes]['0'][:referrer_attributes].has_key?(:password) &&
+      !s[:contributions_attributes]['1'][:contributor_attributes].has_key?(:password)
+    end
+      .each do |success|
+        # params[:success] = success
+        successes << Success.create(success)
+      end
+    # binding.remote_pry
+    successes
   end
 
 end

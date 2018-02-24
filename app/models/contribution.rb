@@ -33,7 +33,8 @@ class Contribution < ActiveRecord::Base
   has_many :contributor_questions, through: :crowdsourcing_template
 
   accepts_nested_attributes_for(:success, allow_destroy: false)
-  accepts_nested_attributes_for(:referrer, allow_destroy: false)
+  accepts_nested_attributes_for(:referrer, allow_destroy: false, reject_if: :missing_referrer_attributes?)
+  # don't need reject_if for the contributor, as the contribution would have been rejected already
   accepts_nested_attributes_for(:contributor, allow_destroy: false)
 
   before_create(:generate_access_token)
@@ -46,7 +47,7 @@ class Contribution < ActiveRecord::Base
       # (so self and self.success are related to each other in memory)
       self.success.is_new_record? &&
       self.referrer_id.present? &&
-      self.contributor_id.nil?
+      self.contributor_id.blank?
     end
   )
   before_update(:set_request_sent_at, if: Proc.new do
@@ -194,6 +195,21 @@ class Contribution < ActiveRecord::Base
     self.created_at.to_i
   end
 
+  # ref: https://stackoverflow.com/questions/6346134
+  def contributor_attributes=(attrs)
+    if attrs['id'].present?
+      self.contributor = User.find(attrs['id'])
+    end
+    super
+  end
+
+  def referrer_attributes=(attrs)
+    if attrs['id'].present?
+      self.referrer = User.find(attrs['id'])
+    end
+    super
+  end
+
   protected
 
   def generate_access_token
@@ -236,6 +252,11 @@ class Contribution < ActiveRecord::Base
 
   def set_contributor_id_for_new_success_referrer
     self.contributor_id = self.referrer_id
+  end
+
+  def missing_referrer_attributes? (attrs)
+    # !User.exists?(attrs[:id]) &&
+    # (attrs[:email].blank? || attrs[:first_name].blank? || attrs[:last_name].blank?)
   end
 
 end
