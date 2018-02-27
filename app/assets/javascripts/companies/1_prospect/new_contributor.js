@@ -334,7 +334,7 @@ function newContributorListeners() {
 
       // create contributor
       if ($(this).val() === '0') {
-        $('.create-contributor').removeClass('hidden');
+        $('.new-contributor.create-contributor').removeClass('hidden');
         setTimeout(function () {
           $('.create-contributor input[id*="first_name"]')[0].focus();
         }, 0);
@@ -403,7 +403,6 @@ function newContributorListeners() {
 
     // reset modal
     .on('hidden.bs.modal', '#new-contributor-modal', function () {
-      console.log('reset modal')
       $(this).find('form')[0].reset();
       $(this).find('.create-contributor, .create-referrer').addClass('hidden');
       $(this).find('select').val('').trigger('change.select2');
