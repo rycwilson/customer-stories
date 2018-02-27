@@ -33,7 +33,7 @@ function initSelect2 () {
   /**
    * contributor
    */
-  $('.new-contributor.contributor').select2({
+  $('.new-success.contributor, .new-contributor.contributor').select2({
     theme: 'bootstrap',
     // minimumResultsForSearch: -1,
     placeholder: 'Select or Create'
@@ -42,7 +42,7 @@ function initSelect2 () {
   /**
    * referrer
    */
-  $('.new-success.referrer, .new-success.contributor, .new-contributor.referrer').select2({
+  $('.new-success.referrer, .new-contributor.referrer').select2({
     theme: 'bootstrap',
     placeholder: 'Select or Create'
   });
@@ -74,7 +74,7 @@ function initSelect2 () {
        })
        // select2 is inserting an empty <option> for some reason
        .children('option').not('[value]').remove();
-     $('.dt-filter').select2({
+    $('.dt-filter').select2({
        theme: 'bootstrap',
        width: 'style',
        // allowClear: true

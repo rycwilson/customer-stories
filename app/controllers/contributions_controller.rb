@@ -70,6 +70,7 @@ class ContributionsController < ApplicationController
   end
 
   def create
+    @company = Company.find_by(subdomain: request.subdomain)
     @contribution = Contribution.new(contribution_params)
     if @contribution.save
     else

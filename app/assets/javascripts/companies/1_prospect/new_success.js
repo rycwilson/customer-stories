@@ -13,9 +13,9 @@ function newSuccessListeners () {
       },
       disableContributionAttrs = function (disabled, contactType) {
         var index = (contactType === 'referrer') ? '0' : '1';
-        [contactType + '_id', 'crowdsourcing_template_id']
+        [contactType + '_id', 'crowdsourcing_template_id', 'success_contact']
           .forEach(function (attribute) {
-            // don't disable referrer_id since it's visible, instead blank the [name]
+            // don't disable referrer_id or contributor_id since they're visible, instead blank the [name]
             if (attribute === 'referrer_id' || attribute === 'contributor_id') {
               if (disabled) {
                 $('#new-success-form #success_contributions_attributes_' + index + '_' + attribute)
@@ -24,7 +24,12 @@ function newSuccessListeners () {
                 $('#new-success-form #success_contributions_attributes_' + index + '_' + attribute)
                   .attr('name', 'success[contributions_attributes][' + index + '][' + attribute + ']');
               }
-            // all others disabled
+
+            // success contact field only applies to the contributor
+            } else if (attribute == 'success_contact') {
+              $('#new-success-form #success_contributions_attributes_1_success_contact').prop('disabled', disabled);
+
+            // all others disabled (or enabled)
             } else {
               $('#new-success-form #success_contributions_attributes_' + index + '_' + attribute).prop('disabled', disabled);
             }
@@ -433,6 +438,7 @@ function newSuccessListeners () {
 
         // if a referrer wasn't selected, hide the contribution attributes so a contribution isn't created
         if ($('select.new-success.referrer').val() === '') disableContributionAttrs(true, 'referrer');
+        if ($('select.new-success.contributor').val() === '') disableContributionAttrs(true, 'contributor');
         toggleFormWorking($form);
         $form.submit();
       } else {
