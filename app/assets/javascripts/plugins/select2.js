@@ -8,12 +8,12 @@ function initSelect2 () {
 
   // select2ScrollBoundaries();
 
-  // TODO: What does this do?
-  //  minimumResultsForSearch: -1
+  // for customers, successes, contributors, referrers => don't initialize if the form submission modal is still open
+
   /**
-   * customer
+   * customer (includes new success, new contributor, new story)
    */
-  $(".new-success.customer, .new-contributor.customer, .new-story.customer").select2({
+  $("select.customer:not(.modal.in select)").select2({
     theme: "bootstrap",
     tags: true,  // to allow custom input
     selectOnClose: true,
@@ -21,9 +21,9 @@ function initSelect2 () {
   });
 
   /**
-   * success
+   * success (includes new contributor, new story)
    */
-  $(".new-contributor.success, .new-story.success").select2({
+  $("select.success:not(.modal.in select)").select2({
     theme: "bootstrap",
     tags: true,  // to allow custom input
     selectOnClose: true,
@@ -31,29 +31,29 @@ function initSelect2 () {
   });
 
   /**
-   * contributor
+   * contributor (includes new success, new contributor)
    */
-  $('.new-success.contributor, .new-contributor.contributor').select2({
+  $('select.contributor:not(.modal.in select)').select2({
     theme: 'bootstrap',
     // minimumResultsForSearch: -1,
     placeholder: 'Select or Create'
   });
 
   /**
-   * referrer
+   * referrer (includes new success, new referrer)
    */
-  $('.new-success.referrer, .new-contributor.referrer').select2({
+  $('select.referrer:not(.modal.in)').select2({
     theme: 'bootstrap',
     placeholder: 'Select or Create'
   });
 
   /**
-   * curator
+   * curator (includes new success, new contributor)
    */
    $('.new-success.curator').select2({
-      theme: 'bootstrap',
-      placeholder: 'Select'
-    });
+     theme: 'bootstrap',
+     placeholder: 'Select'
+   });
 
   $('.new-contributor.invitation-template').select2({
     theme: "bootstrap",

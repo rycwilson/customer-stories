@@ -193,61 +193,128 @@ function prospectListeners () {
 
 }
 
+/**
+ * presently, this is only called after a new success, contributor, or story is submitted
+ * (meant to update options to include any new success or contributor)
+ * => expand to new stories?
+ */
 function updateSelectOptions (company, successes) {
-  var emptyOptions = function () {
-        $('.dt-filter').find('optgroup').empty();
-        $('#new-success-form select:not(.curator), #new-contributor-form select:not(.invitation-template)')
-          .find('option:not([value=""]):not([value="0"])').remove();
-        $('#curate-filters, #new-story-form').find('select.customer option:not([value=""])').remove();
-        $('#new-story-form').find('select.success option:not([value=""])').remove();
+  var emptyOptions = function (modalIsOpen, $modal) {
+        if (modalIsOpen) {
+          $('.dt-filter').find('optgroup').empty();
+          $('#curate-filters').find('select.customer option:not([value=""])').remove();
+          $('.modal:not(.in) #new-success-form select:not(.curator), ' +
+            '.modal:not(.in) #new-contributor-form select:not(.invitation-template), ' +
+            '.modal:not(.in) #new-story-form select:not(.story-tags)' )
+            .find('option:not([value=""]):not([value="0"])').remove();
+
+        } else {
+          $modal
+            .find('select:not(.curator):not(.invitation-template):not(.story-tags) option:not([value=""]):not([value="0"])')
+            .remove();
+        }
       },
-      resetSelect2 = function () {
-        $('select').each(function () {
-          if ($(this).data('select2')) {
-            $(this).select2('destroy');
-          }
-        });
-        initSelect2();
+      resetSelect2 = function (modalIsOpen, $modal) {
+        if (modalIsOpen) {
+          $('select:not(.modal.in select)').each(function () {
+            if ($(this).data('select2')) $(this).select2('destroy');
+          });
+          initSelect2();  // will ignore select boxes in an open modal
+        } else {
+          $modal.find('select.customer, select.success').select2({
+            theme: "bootstrap",
+            tags: true,  // to allow custom input
+            selectOnClose: true,
+            placeholder: 'Select or Create',
+          });
+          $modal.find('select.referrer, select.contributor').select2({
+            theme: 'bootstrap',
+            placeholder: 'Select or Create'
+          });
+        }
       },
-      updateSuccessOptions = function () {
-        successes.forEach(function (success) {
-          $('.dt-filter optgroup[label="Customer Win"]')
-            .append('<option value="success-' + success.id + '" data-column="success">' + success.name + '</option>');
-          $('select.success')
-            .append('<option value="' + success.id + '">' + success.name + '</option>');
-        });
+      updateSuccessOptions = function (modalIsOpen, $modal) {
+        if (modalIsOpen) {
+          successes.forEach(function (success) {
+            $('.dt-filter optgroup[label="Customer Win"]')
+              .append('<option value="success-' + success.id + '" data-column="success">' + success.name + '</option>');
+            $('select.success:not(.modal.in select)')
+              .append('<option value="' + success.id + '">' + success.name + '</option>');
+          });
+        } else {
+          var $select = $modal.find('select.success');
+          successes.forEach(function (success) {
+            $select.append('<option value="' + success.id + '">' + success.name + '</option>');
+          });
+        }
       },
-      updateCustomerOptions = function () {
-        company.customers.forEach(function (customer) {
-          $('.dt-filter optgroup[label="Customer"]')
-            .append('<option value="customer-' + customer.id + '" data-column="customer">' + customer.name + '</option>');
-          $('select.customer')
-            .append('<option value="' + customer.id + '">' + customer.name + '</option>');
-        });
+      updateCustomerOptions = function (modalIsOpen, $modal) {
+        if (modalIsOpen) {
+          company.customers.forEach(function (customer) {
+            $('.dt-filter optgroup[label="Customer"]')
+              .append('<option value="customer-' + customer.id + '" data-column="customer">' + customer.name + '</option>');
+            $('select.customer:not(.modal.in select)')
+              .append('<option value="' + customer.id + '">' + customer.name + '</option>');
+          });
+        } else {
+          var $select = $modal.find('select.customer');
+          company.customers.forEach(function (customer) {
+            $select.append('<option value="' + customer.id + '">' + customer.name + '</option>');
+          });
+        }
       },
-      updateReferrerOptions = function () {
-        company.referrers.forEach(function (referrer) {
-          $('select.referrer')
-            .append('<option value="' + referrer.id + '">' + referrer.full_name + '</option>');
-        });
+      updateReferrerOptions = function (modalIsOpen, $modal) {
+        if (modalIsOpen) {
+          company.referrers.forEach(function (referrer) {
+            $('select.referrer:not(.modal.in select)')
+              .append('<option value="' + referrer.id + '">' + referrer.full_name + '</option>');
+          });
+        } else {
+          var $select = $modal.find('select.referrer');
+          company.referrers.forEach(function (referrer) {
+            $select.append('<option value="' + referrer.id + '">' + referrer.full_name + '</option>');
+          });
+        }
       };
-      updateContributorOptions = function () {
-        _.filter(company.contributors, function (contributor) {
-          return !_.findWhere(company.referrers, contributor) && !_.findWhere(company.curators, contributor);
-        })
-          .forEach(function (contributor, index) {
+      updateContributorOptions = function (modalIsOpen, $modal) {
+        var contributors = _.filter(company.contributors, function (contributor) {
+            return !_.findWhere(company.referrers, contributor) && !_.findWhere(company.curators, contributor);
+          });
+        if (modalIsOpen) {
+          contributors.forEach(function (contributor, index) {
             $('#contributors-filter optgroup[label="Contributor"]')
               .append('<option value="contributor-' + contributor.id + '" data-column="contributor">' + contributor.full_name + '</option>');
-            $('select.contributor')
+            $('select.contributor:not(.modal.in select)')
               .append('<option value="' + contributor.id + '">' + contributor.full_name + '</option>');
           });
+        } else {
+          var $select = $modal.find('select.contributor');
+          contributors.forEach(function (contributor, index) {
+            $select.append('<option value="' + contributor.id + '">' + contributor.full_name + '</option>');
+          });
+        }
       };
-  emptyOptions();
-  updateSuccessOptions();
-  updateCustomerOptions();
-  updateReferrerOptions();
-  updateContributorOptions();
-  resetSelect2();
+
+  if ($('.modal.in').length) {
+    emptyOptions(true);
+    updateSuccessOptions(true);
+    updateCustomerOptions(true);
+    updateReferrerOptions(true);
+    updateContributorOptions(true);
+    resetSelect2(true);
+    $('.modal.in').one('hidden.bs.modal', function (e) {
+      e.stopImmediatePropagation();  // halt the usual modal reset actions
+      emptyOptions(false, $('.modal.in'));
+      updateSuccessOptions(false, $('.modal.in'));
+      updateCustomerOptions(false, $('.modal.in'));
+      updateReferrerOptions(false, $('.modal.in'));
+      updateContributorOptions(false, $('.modal.in'));
+      resetSelect2(false, $('.modal.in'));
+      $(this).trigger('hidden.bs.modal');  // trigger usual modal reset actions
+    });
+  } else {
+    // should not get here, only a new success/contributor/story form submission will trigger updateSelectOptions()
+  }
 }
 
 // manipulate table stripes when alternating between row grouping and no row grouping
