@@ -90,6 +90,11 @@ function prospectListeners () {
       });
     })
 
+    .on('click', 'a[href="#prospect-contributors"], a[href="#successes"]', function () {
+      $('#successes-table, #prospect-contributors-table')
+        .find('tr.shown').find('td[class*="-details"]').trigger('click');
+    })
+
     .on('click', 'td.crowdsourcing-template', function (e) {
       var $row = $(this).parent(),
           workflowStage = $(this).closest('table').attr('id').match(/^(\w+)\-/)[1];
