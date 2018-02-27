@@ -6,6 +6,7 @@ source 'https://rubygems.org'
 #  see Bowerfile
 #  run rake bower:install to install assets listed in Bowerfile
 
+gem 'activerecord-import'
 gem 'aws-sdk', '~> 2'
 gem 'bootstrap-tab-history-rails'
 gem 'bower-rails', '~> 0.11.0'

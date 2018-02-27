@@ -2,20 +2,27 @@
 (function () {
 
   // this is a subset of contribution source data; don't need all of it since tables are being ajax.reloaded
-  var contribution = <%= raw @contribution.to_json({
+  var company = <%= raw @company.to_json({
+        only: [],
+        include: {
+          customers: { only: [:id, :name] },
+          contributors: { only: [:id], methods: [:full_name] },
+          referrers: { only: [:id], methods: [:full_name] }
+        }
+      }) %>,
+      contribution = <%= raw @contribution.to_json({
         only: [:id], methods: [:timestamp],
         include: {
           # success source data needed to update successes table (with addition of previous_changes method)
           success: {
-            only: [:id, :name, :description], methods: [:display_status, :referrer, :previous_changes, :timestamp],
+            only: [:id, :name, :description],
+            methods: [:display_status, :referrer, :contact, :previous_changes, :timestamp],
             include: {
               curator: { only: [:id], methods: [:full_name] },
-              customer: { only: [:id, :name, :slug], methods: [:previous_changes] },
+              customer: { only: [:id, :name, :slug] },
               story: { only: [:id, :title, :slug] }
             }
-          },
-          contributor: { only: [:id], methods: [:full_name, :previous_changes, :errors] },
-          referrer: { only: [:id], methods: [:full_name, :previous_changes, :errors] }
+          }
         }
       }) %>,
       isCurateView = function () {
@@ -24,100 +31,25 @@
       openContributorDetails = function ($tr) {
         $tr.find('.contributor-details').trigger('click');
       },
-      errorsPresent = function (contribution) {
-        return Object.keys(contribution.contributor.errors).length ||
-               ( contribution.referrer &&
-                 Object.keys(contribution.referrer.errors).length )
-      }
       updateSuccess = function (success) {
-        delete success.previous_changes
-        $('#successes-table').DataTable()
-          .row('[data-success-id="' + success.id + '"]')
-          .data(success)
-          .draw();
-      },
-      updateSelectOptions = function () {
-        // new customer
-        if (contribution.success.customer.previous_changes.id) {
-          $('.dt-filter')
-            .find('optgroup[label="Customer"]')
-            .prepend(
-              $('<option value="customer-' + contribution.success.customer_id + '"' +
-                ' data-column="customer">' + contribution.success.customer.name + '</option>')
-            )
-          $('select.customer')
-            .find('option:first-of-type')
-            .after(
-              $('<option value="' + success.customer_id + '">' + success.customer.name + '</option>')
-            )
+        if (success.previous_changes.id) {
+          $('#successes-table').DataTable().row.add(success).draw();
+        } else {
+          $('#successes-table').DataTable()
+            .row('[data-success-id="' + success.id + '"]')
+            .data(success)
+            .draw();
         }
-
-        // new success
-        if (contribution.success.previous_changes.id) {
-          $('.dt-filter')
-            .find('optgroup[label="Customer Win"]')
-            .prepend(
-              $('<option value="success-' + contribution.success_id + '"' +
-                ' data-column="success">' + contribution.success.name + '</option>')
-            )
-          $('select.success')
-            .find('option:first-of-type') // empty placeholder option
-            .after($('<option value="' + success.id + '">' + success.name + '</option>'))
-        }
-
-        // new contributor
-        if (contribution.contributor.previous_changes.id) {
-          $('#contributors-filter')
-            .find('optgroup[label="Contributor"]')
-            .prepend(
-              $('<option value="contributor-' + contribution.contributor.id + '"' +
-                ' data-column="contributor">' + contribution.contributor.full_name + '</option>')
-            )
-        }
-
-        // new referrer
-        if (contribution.referrer && contribution.referrer.previous_changes.id) {
-          $('select.referrer')
-            .find('option[value="0"]') // - Create New Contact -
-            .after(
-              $('<option value="' + contribution.referrer.id + '">' +
-                  contribution.referrer.full_name + '</option>')
-            )
-        }
-
       };
 
-  // only possible error is a duplicate contributor (or referrer) email
-  if (errorsPresent(contribution)) {
-    if (Object.keys(contribution.contributor.errors).length) {
-      $('.form-group.contributor-email')
-        .addClass('has-error')
-        .find('.help-block')
-        .text('Contributor with this email already exists')
-    }
-    if (contribution.referrer && Object.keys(contribution.referrer.errors).length) {
-      $('.form-group.referrer-email')
-        .addClass('has-error')
-        .find('.help-block')
-        .text('Contact with this email already exists')
-    }
-    toggleFormDone($('#new-contributor-form'));
-    return;
-  }
-
-  updateSelectOptions();
   updateSuccess(contribution.success);
 
   // reload tables and scroll to new contributor
-  // (reload tables with separate .reload calls to ensure scroll only happens once)
-  $('#prospect-contributors-table').DataTable()
-    .ajax.reload(function (contributions) {
-      var rowsAreGrouped = $('#toggle-group-by-success').prop('checked'), groupIndex;
+  // (reload tables with separate .reload calls to ensure actions only happen once)
+  $('#prospect-contributors-table').DataTable().ajax.reload(function (contributions) {
+      // var rowsAreGrouped = $('#toggle-group-by-success').prop('checked'), groupIndex;
       if (!isCurateView()) {
-        /**
-         * TOFIX: $trContribution isn't found because a filter is keeping it from being displayed
-         * instead, identify the source data and then turn on filters as necessary to expose it
-         */
+        updateSelectOptions(company, $('#successes-table').DataTable().rows().data().toArray());
         $('html, body').animate({ scrollTop: 65 }, 200)
           .promise()
           .then(function () {
@@ -133,12 +65,10 @@
             toggleFormDone($('#new-contributor-form'));
             $('#new-contributor-modal').modal('hide');
           });
-
-      }
+        }
     });
 
-  $('#curate-contributors-table').DataTable()
-    .ajax.reload(function (contributions) {
+  $('#curate-contributors-table').DataTable().ajax.reload(function (contributions) {
       if (isCurateView()) {
         $('html, body').animate({ scrollTop: 65 }, 200)
           .promise()

@@ -193,6 +193,63 @@ function prospectListeners () {
 
 }
 
+function updateSelectOptions (company, successes) {
+  var emptyOptions = function () {
+        $('.dt-filter').find('optgroup').empty();
+        $('#new-success-form select:not(.curator), #new-contributor-form select:not(.invitation-template)')
+          .find('option:not([value=""]):not([value="0"])').remove();
+        $('#curate-filters, #new-story-form').find('select.customer option:not([value=""])').remove();
+        $('#new-story-form').find('select.success option:not([value=""])').remove();
+      },
+      resetSelect2 = function () {
+        $('select').each(function () {
+          if ($(this).data('select2')) {
+            $(this).select2('destroy');
+          }
+        });
+        initSelect2();
+      },
+      updateSuccessOptions = function () {
+        successes.forEach(function (success) {
+          $('.dt-filter optgroup[label="Customer Win"]')
+            .append('<option value="success-' + success.id + '" data-column="success">' + success.name + '</option>');
+          $('select.success')
+            .append('<option value="' + success.id + '">' + success.name + '</option>');
+        });
+      },
+      updateCustomerOptions = function () {
+        company.customers.forEach(function (customer) {
+          $('.dt-filter optgroup[label="Customer"]')
+            .append('<option value="customer-' + customer.id + '" data-column="customer">' + customer.name + '</option>');
+          $('select.customer')
+            .append('<option value="' + customer.id + '">' + customer.name + '</option>');
+        });
+      },
+      updateReferrerOptions = function () {
+        company.referrers.forEach(function (referrer) {
+          $('select.referrer')
+            .append('<option value="' + referrer.id + '">' + referrer.full_name + '</option>');
+        });
+      };
+      updateContributorOptions = function () {
+        _.filter(company.contributors, function (contributor) {
+          return !_.findWhere(company.referrers, contributor) && !_.findWhere(company.curators, contributor);
+        })
+          .forEach(function (contributor, index) {
+            $('#contributors-filter optgroup[label="Contributor"]')
+              .append('<option value="contributor-' + contributor.id + '" data-column="contributor">' + contributor.full_name + '</option>');
+            $('select.contributor')
+              .append('<option value="' + contributor.id + '">' + contributor.full_name + '</option>');
+          });
+      };
+  emptyOptions();
+  updateSuccessOptions();
+  updateCustomerOptions();
+  updateReferrerOptions();
+  updateContributorOptions();
+  resetSelect2();
+}
+
 // manipulate table stripes when alternating between row grouping and no row grouping
 function toggleStriped ($table) {
 

@@ -5,7 +5,28 @@
     <title>Customer Stories</title>
     <style type="text/css">
       button.cta:hover {
-        opacity: 1.0 !important;
+        opacity: 0.85 !important;
+      }
+      @media only screen and (max-width: 767px) {
+       .cta-wrapper {
+        display: block;
+        text-align: center;
+       }
+       .cta-wrapper + br {
+         display: none;
+       }
+       button.cta {
+          font-size: 18px !important;
+          line-height: 44px !important;
+          padding: 2px 16px !important;
+        }
+        button.cta > span {
+          font-size: 26px !important;
+          /*display: none;*/
+        }
+        #csp-logo-wrapper {
+          text-align: center;
+        }
       }
     </style>
   </head>
@@ -13,7 +34,9 @@
 
     <%= @body %> <br>
 
-    <img id="csp-logo" style="margin: 15px 0;" src="<%= CS_POWERED_LOGO_URL %>" alt="Powered by Customer Stories" onerror="this.style.display='none'">
+    <div id="csp-logo-wrapper">
+      <img id="csp-logo" style="margin: 15px 0;" src="<%= CS_POWERED_LOGO_URL %>" alt="Powered by Customer Stories" onerror="this.style.display='none'">
+    </div>
 
   </body>
 </html>
