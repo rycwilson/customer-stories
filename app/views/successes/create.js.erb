@@ -42,11 +42,12 @@
                 $('#successes-filter').val('success-' + successes[0].id).trigger('change');
                 $('#successes-table td.success-details').trigger('click');
                 $('#successes-filter').select2('focus');
+                // don't let modal reset actions trigger the unfocus
+                $(document).one('click', '#new-success-modal *', function (e) {
+                  e.stopPropagation();
+                })
                 $(document).one('click', function (e) {
-                  // don't let modal reset actions trigger this
-                  if (!$(e.target).closest("#new-success-modal").length) {
-                    $('#successes-filter').next().removeClass('select2-container--focus');
-                  }
+                  $('#successes-filter').next().removeClass('select2-container--focus');
                 })
                 $('#new-success-modal').modal('hide')
               });

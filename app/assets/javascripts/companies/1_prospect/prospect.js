@@ -246,7 +246,6 @@ function updateSelectOptions (company, successes) {
               .append('<option value="' + contributor.id + '">' + contributor.full_name + '</option>');
           });
       };
-  // debugger;
   $.when(emptyOptions).then(function () {
     updateSuccessOptions();
     updateCustomerOptions();
@@ -254,7 +253,6 @@ function updateSelectOptions (company, successes) {
     updateContributorOptions();
     resetSelect2();
   });
-
 }
 
 // manipulate table stripes when alternating between row grouping and no row grouping
