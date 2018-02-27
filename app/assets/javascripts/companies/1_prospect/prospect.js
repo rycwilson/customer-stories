@@ -194,10 +194,7 @@ function prospectListeners () {
 }
 
 function updateSelectOptions (company, successes) {
-  console.log('updateSelectOptions()');
-  console.log('successes: ', successes);
   var emptyOptions = function () {
-    console.log(emptyOptions())
         $('.dt-filter').find('optgroup').empty();
         $('#new-success-form select:not(.curator), #new-contributor-form select:not(.invitation-template)')
           .find('option:not([value=""]):not([value="0"])').remove();
@@ -207,7 +204,6 @@ function updateSelectOptions (company, successes) {
       resetSelect2 = function () {
         $('select').each(function () {
           if ($(this).data('select2')) {
-            console.log($(this));
             $(this).select2('destroy');
           }
         });
@@ -237,22 +233,21 @@ function updateSelectOptions (company, successes) {
       };
       updateContributorOptions = function () {
         _.filter(company.contributors, function (contributor) {
-          return !_.findWhere(company.referrers, contributor);
+          return !_.findWhere(company.referrers, contributor) && !_.findWhere(company.curators, contributor);
         })
-          .forEach(function (contributor) {
+          .forEach(function (contributor, index) {
             $('#contributors-filter optgroup[label="Contributor"]')
               .append('<option value="contributor-' + contributor.id + '" data-column="contributor">' + contributor.full_name + '</option>');
             $('select.contributor')
               .append('<option value="' + contributor.id + '">' + contributor.full_name + '</option>');
           });
       };
-  $.when(emptyOptions).then(function () {
-    updateSuccessOptions();
-    updateCustomerOptions();
-    updateReferrerOptions();
-    updateContributorOptions();
-    resetSelect2();
-  });
+  emptyOptions();
+  updateSuccessOptions();
+  updateCustomerOptions();
+  updateReferrerOptions();
+  updateContributorOptions();
+  resetSelect2();
 }
 
 // manipulate table stripes when alternating between row grouping and no row grouping

@@ -452,7 +452,7 @@ function newSuccessListeners () {
     })
 
     .on('submit', '#new-success-form', function () {
-      console.log( $(this).serializeArray() );
+      // console.log( $(this).serializeArray() );
     });
 }
 

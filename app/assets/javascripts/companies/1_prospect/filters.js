@@ -58,6 +58,7 @@ function prospectFiltersListeners () {
       },
       // showCurator is boolean, true => show curator-specific options
       showCuratorOptions = function ($filter, showCurator) {
+        console.log('showCuratorOptions()')
         var curatorSuccessIds = [], curatorCustomerIds = [], curatorContributorIds = [],
             successId, customerId, contributorId;
         $('.select2-results').css('display', 'none'); // avoid flicker (see below)

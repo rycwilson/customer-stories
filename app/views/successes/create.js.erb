@@ -3,6 +3,7 @@
   var company = <%= raw @company.to_json({
           only: [],
           include: {
+            curators: { only: [:id], methods: [:full_name] },
             customers: { only: [:id, :name] },
             contributors: { only: [:id], methods: [:full_name] },
             referrers: { only: [:id], methods: [:full_name] }
@@ -38,16 +39,16 @@
               .animate({ scrollTop: 65 }, 200)
               .promise()
               .then(function () {
-                $('.successes.curator-select').val(successes[0].curator.id).trigger('change.select2')
+                var ignoreClick = function (e) { e.stopPropagation(); }
+                $('.successes.curator-select').val(successes[0].curator.id).trigger('change')
                 $('#successes-filter').val('success-' + successes[0].id).trigger('change');
                 $('#successes-table td.success-details').trigger('click');
                 $('#successes-filter').select2('focus');
                 // don't let modal reset actions trigger the unfocus
-                $(document).one('click', '#new-success-modal *', function (e) {
-                  e.stopPropagation();
-                })
+                $(document).on('click', '#new-success-modal *', ignoreClick);
                 $(document).one('click', function (e) {
                   $('#successes-filter').next().removeClass('select2-container--focus');
+                  $(document).off('click', ignoreClick)
                 })
                 $('#new-success-modal').modal('hide')
               });
