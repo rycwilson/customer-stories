@@ -120,14 +120,11 @@ Rails.application.routes.draw do
     end
 
     # token needed for access outside of user-authorized routes
-    # type IN ('contribution', 'feedback', 'unsubscribe', 'opt_out')
+    # type IN ('contribution', 'feedback', 'opt_out', 'remove')
     get '/contributions/:token/confirm', to: 'contributions#confirm_submission', as: 'confirm_submission'
-    get '/contributions/:token/:type', to: 'contributions#edit', as: 'edit_contribution',
-                constraints: { type: /(contribution|feedback)/ }
-    get '/contributions/:token/:type', to: 'contributions#update',
-                constraints: { type: /(unsubscribe|opt_out)/ }
-    put '/contributions/:token', to: 'contributions#update', as: 'contributor_submission',
-                constraints: { submission: true }
+    get '/contributions/:token/:type', to: 'contributions#edit', as: 'edit_contribution', constraints: { type: /(contribution|feedback)/ }
+    get '/contributions/:token/:type', to: 'contributions#update', constraints: { type: /(opt_out|remove)/ }
+    put '/contributions/:token', to: 'contributions#update', as: 'contributor_submission', constraints: { submission: true }
 
     # linkedin
     get '/user-profile/linkedin_connect', to: 'profile#linkedin_connect', as: 'linkedin_connect'

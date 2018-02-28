@@ -223,7 +223,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
               }),
           showTable = function () { $table.css('visibility', 'visible'); };
 
-      // this is for the question mark icons that go with status= unsubscribe or opt_out
+      // this is for the question mark icons that go with status= opt_out or remove
       $('[data-toggle="tooltip"]').tooltip();
 
       if (workflowStage === 'prospect') {

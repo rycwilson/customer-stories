@@ -2,6 +2,16 @@ namespace :temp do
 
   desc "temp stuff"
 
+  task change_contribution_status: :environment do
+    Contribution.all.each do |c|
+      if (c.status == 'unsubscribed')
+        c.update(status: 'opted_out')
+      elsif (c.status == 'opted_out')
+        c.update(status: 'removed')
+      end
+    end
+  end
+
   task add_onerror_to_curator_img: :environment do
     CrowdsourcingTemplate.all.each do |template|
       template.update(request_body: template.request_body.sub(/alt=\"curator photo\"/, 'onerror="this.style.display=\'none\'"'))

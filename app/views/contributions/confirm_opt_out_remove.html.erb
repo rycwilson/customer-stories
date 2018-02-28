@@ -1,0 +1,27 @@
+
+<div class="container">
+  <div class="row">
+
+    <div class='col-centered confirmation col-xs-12 col-sm-10 col-lg-8'>
+
+      <h3>Thanks for your response.</h3>
+
+      <% if @contribution.status == 'opted_out' %>
+
+        <p>
+          <%= "We won't contact you again about this invitation." %>
+        </p>
+        <p>
+          <%= "If you would prefer not to receive any emails from us in the future, you can <a href='#{@contribution.invitation_link('remove') }'>remove</a> yourself from our mailing list.".html_safe %>
+        </p>
+
+      <% else %>
+
+        <p>You have been removed from our mailing list.</p>
+
+      <% end %>
+
+    </div>
+
+  </div>
+</div>
