@@ -116,7 +116,7 @@ class ContributionsController < ApplicationController
       # assign any edits to request_subject and request_body
       @contribution.assign_attributes(contribution_params)
       if ['request_sent', 'request_re_sent'].exclude?(@contribution.status) &&
-          UserMailer.contribution_request(@contribution).deliver_now
+          UserMailer.contribution_invitation(@contribution).deliver_now
         if @contribution.status == 'pre_request'
           params[:contribution][:status] = 'request_sent'
         elsif @contribution.status == 'did_not_respond'

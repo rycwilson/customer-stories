@@ -210,15 +210,8 @@ class Contribution < ActiveRecord::Base
     super
   end
 
-  protected
-
-  def generate_access_token
-    self.access_token = SecureRandom.urlsafe_base64
-    # recursive call to ensure uniqueness
-    generate_access_token if Contribution.exists?(access_token: self.access_token)
-  end
-
   # this works because the route in question is aliased to 'edit_contribution'
+  # type is in ['contribution', 'feedback', 'unsubscribe', 'opt_out']
   def invitation_link (type)
     Rails.application.routes.url_helpers.url_for({
       subdomain: self.company.subdomain,
@@ -227,6 +220,15 @@ class Contribution < ActiveRecord::Base
       token: self.access_token, type: type
     })
   end
+
+  protected
+
+  def generate_access_token
+    self.access_token = SecureRandom.urlsafe_base64
+    # recursive call to ensure uniqueness
+    generate_access_token if Contribution.exists?(access_token: self.access_token)
+  end
+
 
   def set_request_sent_at
     self.request_sent_at = Time.now;

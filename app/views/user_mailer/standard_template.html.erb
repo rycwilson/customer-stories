@@ -24,7 +24,7 @@
           font-size: 26px !important;
           /*display: none;*/
         }
-        #csp-logo-wrapper {
+        #csp-footer > div:last-of-type {
           text-align: center;
         }
       }
@@ -32,10 +32,16 @@
   </head>
   <body>
 
-    <%= @body %> <br>
+    <%= @body %>
 
-    <div id="csp-logo-wrapper">
-      <img id="csp-logo" style="margin: 15px 0;" src="<%= CS_POWERED_LOGO_URL %>" alt="Powered by Customer Stories" onerror="this.style.display='none'">
+    <div id="csp-footer" style="line-height: 1.0rem; font-size: 0.7rem; color: #999; margin-top: 25px">
+
+      <p >You can <a href="<%= @contribution.invitation_link('unsubscribe') %>">opt out</a> of this invitation or <a href="<%= @contribution.invitation_link('opt_out') %>">remove</a> yourself from any future invitations</p>
+
+      <div>
+        <span>Powered by <a href="<%= Rails.application.routes.url_helpers.root_url %>">customerstories.net</a></span>
+      </div>
+
     </div>
 
   </body>

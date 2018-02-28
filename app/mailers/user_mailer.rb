@@ -6,7 +6,7 @@ class UserMailer < ApplicationMailer
 
   CSP_EMAILS = ['***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***']
 
-  def contribution_request (contribution)
+  def contribution_invitation (contribution)
     # don't track emails sent from dev or staging ...
     headers['X-SMTPAPI'] = {
       unique_args: {
@@ -14,7 +14,8 @@ class UserMailer < ApplicationMailer
       }
     }.to_json if production?
     @body = contribution.request_body.html_safe
-    send_mail('contribution_request', contribution.curator, contribution.contributor, contribution.request_subject)
+    @contribution = contribution
+    send_mail('contribution_invitation', contribution.curator, contribution.contributor, contribution.request_subject)
   end
 
   def contribution_reminder (contribution)
