@@ -31,51 +31,62 @@ function prospectFiltersListeners () {
               .map(function (contribution) {
                 return contribution.contributor.id.toString();
               });
-        $filter.find('optgroup[label="Customer Win"] option').each(function () {
-          successId = $(this).val().match(/-(\d+)$/)[1];
-          if (curatorId !== '0' && curatorSuccessIds.includes(successId)) {
-            $(this).data('curator', true);
-          } else {
-            $(this).data('curator', false);
-          }
-        });
-        $filter.find('optgroup[label="Contributor"] option').each(function () {
-          contributorId = $(this).val().match(/-(\d+)$/)[1];
-          if (curatorId !== '0' && curatorContributorIds.includes(contributorId)) {
-            $(this).data('curator', true);
-          } else {
-            $(this).data('curator', false);
-          }
-        });
-        $filter.find('optgroup[label="Customer"] option').each(function () {
-          customerId = $(this).val().match(/-(\d+)$/)[1];
-          if (curatorId !== '0' && curatorCustomerIds.includes(customerId)) {
-            $(this).data('curator', true);
-          } else {
-            $(this).data('curator', false);
-          }
-        });
+        $filter
+          .find('optgroup[label="Customer Win"] option')
+            .each(function () {
+              successId = $(this).val().match(/-(\d+)$/)[1];
+              if (curatorId !== '0' && curatorSuccessIds.includes(successId)) {
+                $(this).data('curator', true);
+              } else {
+                $(this).data('curator', false);
+              }
+            })
+            .end()
+          .find('optgroup[label="Contributor"] option')
+            .each(function () {
+              contributorId = $(this).val().match(/-(\d+)$/)[1];
+              if (curatorId !== '0' && curatorContributorIds.includes(contributorId)) {
+                $(this).data('curator', true);
+              } else {
+                $(this).data('curator', false);
+              }
+            })
+            .end()
+          .find('optgroup[label="Customer"] option')
+            .each(function () {
+              customerId = $(this).val().match(/-(\d+)$/)[1];
+              if (curatorId !== '0' && curatorCustomerIds.includes(customerId)) {
+                $(this).data('curator', true);
+              } else {
+                $(this).data('curator', false);
+              }
+            });
       },
       // showCurator is boolean, true => show curator-specific options
       showCuratorOptions = function ($filter, showCurator) {
-        console.log('showCuratorOptions()')
         var curatorSuccessIds = [], curatorCustomerIds = [], curatorContributorIds = [],
             successId, customerId, contributorId;
         $('.select2-results').css('display', 'none'); // avoid flicker (see below)
 
         // gather tagged ids for comparison to .select2-results__option data
-        $filter.find('optgroup[label="Customer Win"] option').each(function () {
-          successId = $(this).val().match(/-(\d+)$/)[1];
-          if ($(this).data('curator')) curatorSuccessIds.push(successId);
-        });
-        $filter.find('optgroup[label="Customer"] option').each(function () {
-          customerId = $(this).val().match(/-(\d+)$/)[1];
-          if ($(this).data('curator')) curatorCustomerIds.push(customerId);
-        });
-        $filter.find('optgroup[label="Contributor"] option').each(function () {
-          contributorId = $(this).val().match(/-(\d+)$/)[1];
-          if ($(this).data('curator')) curatorContributorIds.push(contributorId);
-        });
+        $filter
+          .find('optgroup[label="Customer Win"] option')
+            .each(function () {
+              successId = $(this).val().match(/-(\d+)$/)[1];
+              if ($(this).data('curator')) curatorSuccessIds.push(successId);
+            })
+            .end()
+          .find('optgroup[label="Customer"] option')
+            .each(function () {
+              customerId = $(this).val().match(/-(\d+)$/)[1];
+              if ($(this).data('curator')) curatorCustomerIds.push(customerId);
+            })
+            .end()
+          .find('optgroup[label="Contributor"] option')
+            .each(function () {
+              contributorId = $(this).val().match(/-(\d+)$/)[1];
+              if ($(this).data('curator')) curatorContributorIds.push(contributorId);
+            });
 
         // (timeout needed since options are still loading at this point)
         setTimeout(function () {
