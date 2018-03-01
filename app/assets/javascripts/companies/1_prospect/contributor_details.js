@@ -62,7 +62,7 @@ function contributorDetailsListeners () {
       }
       $(this).children().toggle();  // toggle caret icons
 
-    })
+    });
 
 }
 
