@@ -34,7 +34,10 @@
 
     <%= @body %>
 
-    <%= render('user_mailer/standard_footer', { contribution: @contribution }) %>
+    <!-- contribution won't be present for the alert email -->
+    <% if @contribution.present? %>
+      <%= render('user_mailer/standard_footer', { contribution: @contribution }) %>
+    <% end %>
 
   </body>
 </html>
