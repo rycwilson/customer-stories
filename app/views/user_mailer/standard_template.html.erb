@@ -4,8 +4,8 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
     <title>Customer Stories</title>
     <style type="text/css">
-      button.cta:hover {
-        opacity: 0.85 !important;
+      button.cta:hover, .csp-cta:hover {
+        opacity: 0.9 !important;
       }
       @media only screen and (max-width: 575px) {
        .cta-wrapper {
@@ -35,6 +35,8 @@
     <%= @body %>
 
     <%= render('user_mailer/standard_footer', { contribution: @contribution }) %>
+
+    <a href="http://fark.com" class="csp-cta" style="color:#fff;background-color:#4d8664;border-color:#4d8664;border-radius:4px;line-height:1.1em;font-size:1.1em;letter-spacing:0.02rem;text-decoration:none;font-weight:bold;padding:12px 22px;">Share Your Story</a>
 
   </body>
 </html>
