@@ -20,8 +20,10 @@ class SuccessesController < ApplicationController
   end
 
   def create
-    @company = Company.find_by(subdomain: request.subdomain)
-    if params[:imported_successes].present?
+    @company = Company.find_by(subdomain: request.subdomain) || current_user.company
+    if params[:zap].present?
+      # binding.remote_pry
+    elsif params[:imported_successes].present?
       # binding.remote_pry
       # 2exp2 signatures for an imported success (each requires its own .import statement)
       # Success.import(import_signature_1(params[:imported_successes]), on_duplicate_key_updatevalidate: false)

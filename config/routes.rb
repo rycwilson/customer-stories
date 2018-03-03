@@ -9,10 +9,14 @@ Rails.application.routes.default_url_options = {
 
 Rails.application.routes.draw do
 
-  use_doorkeeper
   devise_for :admins
-
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
+
+  use_doorkeeper
+
+  authenticate(:user) do
+    post '/successes', to: 'successes#create', constraints: { zap: 'true' }
+  end
 
   get '/sitemap', to: 'site#sitemap'
   get '/:google', to: 'site#google_verify', constraints: { google: /google\w+/ }
