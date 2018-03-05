@@ -4,7 +4,7 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
     <title>Customer Stories</title>
     <style type="text/css">
-      button.cta:hover, .csp-cta:hover {
+      .csp-cta:hover {
         opacity: 0.9 !important;
       }
       @media only screen and (max-width: 575px) {
@@ -15,15 +15,6 @@
        .cta-wrapper + br {
          display: none;
        }
-       button.cta {
-          font-size: 18px !important;
-          line-height: 44px !important;
-          padding: 2px 16px !important;
-        }
-        button.cta > span {
-          font-size: 26px !important;
-          /*display: none;*/
-        }
         #csp-footer > div:last-of-type {
           text-align: center;
         }
@@ -35,8 +26,6 @@
     <%= @body %>
 
     <%= render('user_mailer/standard_footer', { contribution: @contribution }) %>
-
-    <a href="http://fark.com" class="csp-cta" style="color:#fff;background-color:#4d8664;border-color:#4d8664;border-radius:4px;line-height:1.1em;font-size:1.1em;letter-spacing:0.02rem;text-decoration:none;font-weight:bold;padding:12px 22px;">Share Your Story</a>
 
   </body>
 </html>

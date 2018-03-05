@@ -176,7 +176,7 @@ class Contribution < ActiveRecord::Base
       .sub('[contributor_full_name]', self.contributor.full_name)
     self.request_body = self.crowdsourcing_template.request_body
       .gsub('[customer_name]', self.customer.name)
-      .gsub('[company_name]', "<a href='#{self.company.website}'>#{self.company.name}</a>")
+      .gsub('[company_name]', "<a href='#{self.company.website}' target='_blank'>#{self.company.name}</a>")
       .gsub('[contributor_first_name]', self.contributor.first_name)
       .gsub('[contributor_last_name]', self.contributor.last_name)
       .gsub('[referrer_full_name]', self.referrer.try(:full_name) || '<span style="color:#D9534F">Unknown Referrer</span>')
