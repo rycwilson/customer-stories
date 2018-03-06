@@ -116,7 +116,7 @@ class ContributionsController < ApplicationController
       # assign any edits to request_subject and request_body
       @contribution.assign_attributes(contribution_params)
       if ['request_sent', 'request_re_sent'].exclude?(@contribution.status) &&
-          UserMailer.contribution_request(@contribution).deliver_now
+          UserMailer.contribution_invitation(@contribution).deliver_now
         if @contribution.status == 'pre_request'
           params[:contribution][:status] = 'request_sent'
         elsif @contribution.status == 'did_not_respond'
@@ -150,24 +150,19 @@ class ContributionsController < ApplicationController
         render :edit
       end
 
-    elsif ['unsubscribe', 'opt_out'].include?(params[:type])
-      if params[:type] == 'opt_out'
-        @contribution.update(status: 'opted_out')
-        # add to the opt out list
+    elsif ['opt_out', 'remove'].include?(params[:type])
+      if params[:type] == 'remove'
+        @contribution.update(status: 'removed')
+        # NOTE: OptOut is the old model name, original term used for removal
         unless OptOut.find_by(email: @contribution.contributor.email)
           OptOut.create(email: @contribution.contributor.email)
           # update all contributions for this contributor
           Contribution.update_opt_out_status(@contribution.contributor.email)
         end
       else
-        @contribution.update(status: 'unsubscribed')
-        @opt_out_link = url_for({
-          subdomain: @contribution.company.subdomain,
-          controller: 'contributions', action: 'update',
-          token: @contribution.access_token, type: 'opt_out'
-        })
+        @contribution.update(status: 'opted_out')
       end
-      render :confirm_unsubscribe_opt_out
+      render :confirm_opt_out_remove
 
     elsif params[:completed]
       if @contribution.contribution.present?

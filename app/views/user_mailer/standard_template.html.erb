@@ -4,10 +4,13 @@
     <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
     <title>Customer Stories</title>
     <style type="text/css">
-      button.cta:hover {
-        opacity: 0.85 !important;
+      .csp-cta:hover {
+        opacity: 0.9 !important;
       }
-      @media only screen and (max-width: 767px) {
+      @media only screen and (max-width: 575px) {
+        .csp-cta {
+          padding: 14px 20px !important;
+        }
        .cta-wrapper {
         display: block;
         text-align: center;
@@ -15,16 +18,7 @@
        .cta-wrapper + br {
          display: none;
        }
-       button.cta {
-          font-size: 18px !important;
-          line-height: 44px !important;
-          padding: 2px 16px !important;
-        }
-        button.cta > span {
-          font-size: 26px !important;
-          /*display: none;*/
-        }
-        #csp-logo-wrapper {
+        #csp-footer {
           text-align: center;
         }
       }
@@ -32,11 +26,12 @@
   </head>
   <body>
 
-    <%= @body %> <br>
+    <%= @body %>
 
-    <div id="csp-logo-wrapper">
-      <img id="csp-logo" style="margin: 15px 0;" src="<%= CS_POWERED_LOGO_URL %>" alt="Powered by Customer Stories" onerror="this.style.display='none'">
-    </div>
+    <!-- contribution won't be present for the alert email -->
+    <% if @contribution.present? %>
+      <%= render('user_mailer/standard_footer', { contribution: @contribution }) %>
+    <% end %>
 
   </body>
 </html>

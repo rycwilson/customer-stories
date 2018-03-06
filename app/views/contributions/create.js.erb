@@ -53,7 +53,7 @@
         $('html, body').animate({ scrollTop: 65 }, 200)
           .promise()
           .then(function () {
-            $('.contributors.curator-select').val(contribution.success.curator.id).trigger('change.select2')
+            $('.contributors.curator-select').val(contribution.success.curator.id).trigger('<change></change>')
             $('#contributors-filter').val('success-' + contribution.success.id).trigger('change');
             openContributorDetails(
               $('#prospect-contributors-table tr[data-contribution-id="' + contribution.id + '"]')

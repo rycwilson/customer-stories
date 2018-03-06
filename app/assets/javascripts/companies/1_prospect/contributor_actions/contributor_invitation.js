@@ -36,28 +36,25 @@ function contributorInvitationListeners() {
           } else {
             $modal.find('.modal-content').removeClass('send');
           }
-          // set the readonly title (null is ok; formattedDate returns "Invalid")
-          $modal.find('.readonly.modal-title span:last-child')
-            .text(formattedDate(invitation.sent_at));
-          // set the path
-          $modal.find('form')
-            .attr('action', contributionPath(invitation.contributionId));
-          // recipient
-          $modal.find('#to-contributor span:last-child').html(
-            invitation.contributor.full_name + '&nbsp;&nbsp;' +
-            '&lt' + invitation.contributor.email + '&gt'
-          );
-          // request subject
-          $modal.find('[name="contribution[request_subject]"]')
-            .val(invitation.subject)
-            .attr('readonly', type === 'readonly' ? true : false);
+          $modal
+            // set the readonly title (null is ok; formattedDate returns "Invalid")
+            .find('.readonly.modal-title span:last-child').text(formattedDate(invitation.sent_at)).end()
+            // set the path
+            .find('form').attr('action', contributionPath(invitation.contributionId)).end()
+            // recipient
+            .find('#to-contributor span:last-child')
+              .html(invitation.contributor.full_name + '&nbsp;&nbsp;' + '&lt' + invitation.contributor.email + '&gt')
+              .end()
+            // request subject
+            .find('[name="contribution[request_subject]"]')
+              .val(invitation.subject)
+              .attr('readonly', type === 'readonly' ? true : false);
           // request body
           $editor.summernote('code', invitation.body);
-          // enable or disable editor
-          $editor.summernote(
-            type === 'readonly' ? 'disable' : 'enable'
-          );
-          $modal.find('#to-contributor, .modal-body, .modal-footer').css('visibility', 'visible');
+          $editor.summernote(type === 'readonly' ? 'disable' : 'enable');
+          $modal
+            .find('.submit-link').attr('contenteditable', 'false').end()
+            .find('#to-contributor, .modal-body, .modal-footer').css('visibility', 'visible');
         });
         $modal.modal('show');
       },

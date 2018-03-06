@@ -1,13 +1,14 @@
 
 (function () {
 
-  var contribution = <%= raw @contribution.to_json({ only: [:id] }) %>,
+  var contribution = <%= raw @contribution.to_json({ only: [:id, :publish_contributor] }) %>,
       contributor = <%= raw @contribution.contributor.to_json({
-                      only: [:id, :first_name, :last_name, :linkedin_url],
+                      only: [:id, :first_name, :last_name, :email, :title],
                       methods: [:full_name, :previous_changes]
                     }) %>,
-      $trContribution = $('tr[data-contribution-id="' + contribution.id + '"]'),
+      $trContribution = $('tr.shown')
       $trContributor = $trContribution.next();
+      rowData = $trContribution.closest('table').DataTable().row($trContribution).data();
 
   // linkedin profile
   // .. removed
@@ -24,12 +25,14 @@
     $trContributor.find('.linkedin-profile').removeClass('hidden');
   }
 
+  delete contributor.previous_changes;
+
   // update datatables
   $('#prospect-contributors-table, #curate-contributors-table').DataTable()
-    .rows('[data-contributor-id="' + contributor.id + '"]')
-    .every(function (rowIndex, tableLoop, rowLoop) {
-      this.data( Object.assign(this.data(), { contributor: contributor }) )
-    })
+    .row('[data-contribution-id="' + contribution.id + '"]')
+      .data(
+        Object.assign(rowData, { contributor: contributor }, { publish_contributor: contribution.publish_contributor })
+      ).draw()
 
   toggleFormDone($('#contribution-form-' + contribution.id), true);
 

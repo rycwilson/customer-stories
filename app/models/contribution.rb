@@ -119,10 +119,10 @@ class Contribution < ActiveRecord::Base
         return '<span><a href="javascript:;" class="view-contribution">Contribution</a> completed<i class="fa fa-check pull-right"></i></span>'.html_safe
       when 'feedback_completed'
         return '<span><a href="javascript:;" class="view-contribution">Feedback</a> completed<i class="fa fa-check pull-right"></i></span>'.html_safe
-      when 'unsubscribed'
-        return "unsubscribed&nbsp;&nbsp;<i data-toggle='tooltip' data-placement='top' title='Contributor has unsubscribed from emails related to this Customer Win/Story' style='font-size:16px;color:#666' class='fa fa-question-circle-o'></i>".html_safe
       when 'opted_out'
-        return "opted out&nbsp;&nbsp;<i data-toggle='tooltip' data-placement='top' title='Contributor has opted out of all Customer Stories emails' style='font-size:16px;color:#666' class='fa fa-question-circle-o'></i>".html_safe
+        return "opted out&nbsp;&nbsp;<i data-toggle='tooltip' data-placement='top' title='Contributor has opted out of participating in this Customer Win/Story' style='font-size:16px;color:#666' class='fa fa-question-circle-o'></i>".html_safe
+      when 'removed'
+        return "removed&nbsp;&nbsp;<i data-toggle='tooltip' data-placement='top' title='Contributor has removed himself from all future invitations' style='font-size:16px;color:#666' class='fa fa-question-circle-o'></i>".html_safe
       when 'request_re_sent'
         return "request re-sent #{self.request_sent_at.strftime('%-m/%-d/%y')}"
     end
@@ -161,7 +161,7 @@ class Contribution < ActiveRecord::Base
   def self.update_opt_out_status (opt_out_email)
     Contribution.joins(:contributor)
                 .where(users: { email: opt_out_email })
-                .each { |c| c.update status: 'opted_out' }
+                .each { |c| c.update status: 'removed' }
   end
 
   def expire_published_contributor_cache
@@ -176,7 +176,7 @@ class Contribution < ActiveRecord::Base
       .sub('[contributor_full_name]', self.contributor.full_name)
     self.request_body = self.crowdsourcing_template.request_body
       .gsub('[customer_name]', self.customer.name)
-      .gsub('[company_name]', "<a href='#{self.company.website}'>#{self.company.name}</a>")
+      .gsub('[company_name]', "<a href='#{self.company.website}' target='_blank'>#{self.company.name}</a>")
       .gsub('[contributor_first_name]', self.contributor.first_name)
       .gsub('[contributor_last_name]', self.contributor.last_name)
       .gsub('[referrer_full_name]', self.referrer.try(:full_name) || '<span style="color:#D9534F">Unknown Referrer</span>')
@@ -186,8 +186,6 @@ class Contribution < ActiveRecord::Base
       .gsub('[curator_img_url]', self.curator.photo_url || '')
       .gsub('[contribution_submission_url]', invitation_link('contribution'))
       .gsub('[feedback_submission_url]', invitation_link('feedback'))
-      .gsub('[unsubscribe_url]', invitation_link('unsubscribe'))
-      .gsub('[opt_out_url]', invitation_link('opt_out'))
       .html_safe
   end
 
@@ -210,15 +208,8 @@ class Contribution < ActiveRecord::Base
     super
   end
 
-  protected
-
-  def generate_access_token
-    self.access_token = SecureRandom.urlsafe_base64
-    # recursive call to ensure uniqueness
-    generate_access_token if Contribution.exists?(access_token: self.access_token)
-  end
-
   # this works because the route in question is aliased to 'edit_contribution'
+  # type is in ['contribution', 'feedback', 'opt_out', 'remove']
   def invitation_link (type)
     Rails.application.routes.url_helpers.url_for({
       subdomain: self.company.subdomain,
@@ -227,6 +218,15 @@ class Contribution < ActiveRecord::Base
       token: self.access_token, type: type
     })
   end
+
+  protected
+
+  def generate_access_token
+    self.access_token = SecureRandom.urlsafe_base64
+    # recursive call to ensure uniqueness
+    generate_access_token if Contribution.exists?(access_token: self.access_token)
+  end
+
 
   def set_request_sent_at
     self.request_sent_at = Time.now;

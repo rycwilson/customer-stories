@@ -124,7 +124,7 @@
                 :contributions,
                 success_form.object.contributions.build
               ) do |contribution_form| %>
-            <%= contribution_form.hidden_field(
+            <%#= contribution_form.hidden_field(
                   :crowdsourcing_template_id,
                   value: company.crowdsourcing_templates.customer_success.id
                 ) %>
@@ -160,7 +160,7 @@
                 :contributions,
                 success_form.object.contributions.build
               ) do |contribution_form| %>
-            <%= contribution_form.hidden_field(
+            <%#= contribution_form.hidden_field(
                   :crowdsourcing_template_id,
                   value: company.crowdsourcing_templates.customer.id
                 ) %>

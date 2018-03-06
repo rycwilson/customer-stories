@@ -334,7 +334,7 @@ function newContributorListeners() {
 
       // create contributor
       if ($(this).val() === '0') {
-        $('.create-contributor').removeClass('hidden');
+        $('.new-contributor.create-contributor').removeClass('hidden');
         setTimeout(function () {
           $('.create-contributor input[id*="first_name"]')[0].focus();
         }, 0);
