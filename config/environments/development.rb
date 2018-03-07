@@ -78,6 +78,6 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 
   # allow render on local network
-  # config.web_console.whitelisted_ips = '73.231.35.0/16'
+  config.web_console.whitelisted_ips = '73.15.227.206'
 
 end
