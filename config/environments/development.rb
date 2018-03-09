@@ -3,7 +3,10 @@
 
 Rails.application.configure do
 
-  config.log_level = :info
+  config.force_ssl = true
+  config.ssl_options = { redirect: { port: 3000 }, hsts: { subdomains: true } }
+
+  config.log_level = :debug
 
   # config.cache_store = :null_store
   # global memcached enable/disable
@@ -78,6 +81,7 @@ Rails.application.configure do
   # config.action_view.raise_on_missing_translations = true
 
   # allow render on local network
+  # (localtunnel)
   config.web_console.whitelisted_ips = '73.15.227.206'
 
 end

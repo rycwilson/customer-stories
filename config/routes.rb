@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   devise_for :admins
   mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
 
+  use_doorkeeper
+
   authenticate(:user) do
     post '/successes', to: 'successes#create', constraints: { zap: 'true' }
   end
@@ -26,8 +28,8 @@ Rails.application.routes.draw do
   # sendgrid events (currently tracking open and click)
   post '/esp/notifications', to: 'site#esp_notifications'
 
-  constraints(AuthSubdomain) do
-    use_doorkeeper
+  constraints(DevSubdomain) do
+    get '/', to: 'application#dev'
   end
 
   # valid subdomains (company/subdomain exists, excludes www)

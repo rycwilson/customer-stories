@@ -115,6 +115,10 @@ GEM
       railties (>= 4.1.0, < 5.1)
       responders
       warden (~> 1.2.3)
+    devise-doorkeeper (1.1.2)
+      devise
+      doorkeeper
+      rails
     diff-lcs (1.2.5)
     diffy (3.1.0)
     doorkeeper (4.3.0)
@@ -368,6 +372,7 @@ DEPENDENCIES
   dalli
   delayed_job_active_record
   devise
+  devise-doorkeeper
   doorkeeper
   ffaker
   figaro

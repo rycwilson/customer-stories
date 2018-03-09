@@ -1,7 +1,6 @@
 # TODO: check validations - client and server side
 # use Bootstrap Validator on client side if necessary
 class User < ActiveRecord::Base
-
   # RYAN = self.find_by(email:'***REMOVED***')
 
   belongs_to :company
@@ -47,6 +46,7 @@ class User < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable,
          :lockable#, :confirmable
+  devise :doorkeeper
 
   # doorkeeper
   has_many :access_grants, class_name: "Doorkeeper::AccessGrant", foreign_key: :resource_owner_id, dependent: :delete_all # or :destroy if you need callbacks
