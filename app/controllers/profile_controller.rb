@@ -48,10 +48,7 @@ class ProfileController < ApplicationController
       # also linkedin_authenticated? confirms presence of contribution id
       company = contribution.success.customer.company
       if request.subdomain.empty?  # insert subdomain and re-direct
-        redirect_to url_for({
-                      subdomain: company.subdomain,
-                      params: request.params
-                    }) and return
+        redirect_to url_for({ subdomain: company.subdomain, params: request.params }) and return
       end
       if params[:error]
         redirect_to confirm_submission_path(contribution.access_token),
@@ -152,7 +149,7 @@ class ProfileController < ApplicationController
   def update_user_linkedin_data user, linkedin_data
     user.update({
       linkedin_url: linkedin_data['publicProfileUrl'],
-      linkedin_photo_url: linkedin_data['pictureUrls']['values'].try(:[], 0),
+      linkedin_photo_url: linkedin_data['pictureUrls'].try(:[], 'values').try(:[], 0),
       linkedin_company: linkedin_data['positions']['values'].try(:[], 0)['company']['name'],
       linkedin_title: linkedin_data['positions']['values'].try(:[], 0)['title'],
       linkedin_location: linkedin_data['location']['name']
