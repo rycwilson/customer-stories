@@ -62,7 +62,7 @@ class CrowdsourcingTemplatesController < ApplicationController
   def template_params
     params.require(:crowdsourcing_template)
       .permit(
-        :name, :request_subject, :request_body, :company_id,
+        :name, :request_subject, :request_body, :company_id, :contribution_page_title, :feedback_page_title,
         { templates_questions_attributes: [:id, :crowdsourcing_template_id, :contributor_question_id, :_destroy] },
         { contributor_questions_attributes: [:id, :company_id, :question] }
       )
