@@ -54,6 +54,8 @@ end
 
 group :development, :test do
 
+  gem 'oauth2'
+
   # gem 'rack-mini-profiler'
   # gem 'flamegraph'
   # gem 'stackprof'
