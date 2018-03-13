@@ -127,16 +127,17 @@ function initSelect2 () {
       }
     });
 
-  // $('.stories-filter').each(function () {
-  //   if ($(this)[0].getAttribute('data-init') === null) {
-  //     console.log("init'ing select2");
-  //     $(this).select2({
-  //       theme: 'bootstrap',
-  //       width: 'style'   // get the width from stories.scss
-  //     });
-  //     $(this)[0].setAttribute('data-init', true);
-  //   }
-  // });
+  $('.stories-filter').each(function () {
+    if ($(this)[0].getAttribute('data-init') === null) {
+      console.log("init'ing select2");
+      $(this).select2({
+        theme: 'bootstrap',
+        placeholder: 'Select',
+        width: 'style'   // get the width from stories.scss
+      });
+      $(this)[0].setAttribute('data-init', true);
+    }
+  });
 
 // }
 

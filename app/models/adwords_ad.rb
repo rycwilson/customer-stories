@@ -1,7 +1,7 @@
 class AdwordsAd < ActiveRecord::Base
 
   require 'adwords_api'
-  ADWORDS_API_VERSION = :v201710
+  ADWORDS_API_VERSION = :v201702
 
   belongs_to :adwords_ad_group
   alias_attribute :ad_group, :adwords_ad_group
