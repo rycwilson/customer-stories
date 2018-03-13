@@ -1,7 +1,7 @@
 class AdwordsAd < ActiveRecord::Base
 
   require 'adwords_api'
-  ADWORDS_API_VERSION = :v201702
+  ADWORDS_API_VERSION = :v201802
 
   belongs_to :adwords_ad_group
   alias_attribute :ad_group, :adwords_ad_group
@@ -9,6 +9,7 @@ class AdwordsAd < ActiveRecord::Base
   alias_attribute :campaign, :adwords_campaign
   has_one :company, through: :adwords_campaign
   belongs_to :story
+  has_one :adwords_ads_image, dependent: :destroy
   has_one :adwords_ads_image, dependent: :destroy
   has_one :adwords_image, through: :adwords_ads_image\
 
