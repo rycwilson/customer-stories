@@ -50,6 +50,11 @@ class Contribution < ActiveRecord::Base
       self.contributor_id.blank?
     end
   )
+  before_create(:set_referrer_id_for_new_success_contact, if: Proc.new do
+      self.success.is_new_record? &&
+      self.success.referrer.present?
+    end
+  )
   before_update(:set_request_sent_at, if: Proc.new do
       self.status_changed? && (self.status == 'request_sent' || self.status == 'request_re_sent')
     end
@@ -252,6 +257,10 @@ class Contribution < ActiveRecord::Base
 
   def set_contributor_id_for_new_success_referrer
     self.contributor_id = self.referrer_id
+  end
+
+  def set_referrer_id_for_new_success_contact
+    self.referrer_id = self.success.referrer[:id]
   end
 
   def missing_referrer_attributes? (attrs)
