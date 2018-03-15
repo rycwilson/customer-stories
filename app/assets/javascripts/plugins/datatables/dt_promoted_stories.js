@@ -115,6 +115,7 @@ function initPromotedStoriesTable () {
       initTooltips();
       promotedStoriesEditor = newPromotedStoriesEditor();
       promotedStoriesEditor.on('open', function() {
+        $('#DTE_Field_long_headline').attr('maxlength', '90');
         $('.DTE_Form_Buttons')
           .prepend('<span class="help-block">' + storyTitleRequirements + '</span>');
       });

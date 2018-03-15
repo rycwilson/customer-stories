@@ -55,8 +55,8 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
-    addressable (2.5.1)
-      public_suffix (~> 2.0, >= 2.0.2)
+    addressable (2.5.2)
+      public_suffix (>= 2.0.2, < 4.0)
     akami (1.3.1)
       gyoku (>= 0.4.0)
       nokogiri
@@ -121,7 +121,7 @@ GEM
     ethon (0.9.0)
       ffi (>= 1.3.0)
     execjs (2.7.0)
-    faraday (0.11.0)
+    faraday (0.14.0)
       multipart-post (>= 1.2, < 3)
     ffaker (2.2.0)
     ffi (1.9.14)
@@ -139,21 +139,21 @@ GEM
       json
       multi_json
       request_store (>= 1.0)
-    google-ads-common (0.13.0)
-      google-ads-savon (~> 1.0.2)
+    google-ads-common (1.0.1)
+      google-ads-savon (~> 1.0, >= 1.0.2)
       httpclient (~> 2.7)
       httpi (~> 2.3)
-      signet (~> 0.7.0)
-    google-ads-savon (1.0.2)
+      signet (~> 0.7)
+    google-ads-savon (1.0.3)
       akami (~> 1.2)
-      builder (~> 3.2)
+      builder (~> 3.0)
       gyoku (~> 1.2)
       httpi (~> 2.3)
       nokogiri (~> 1.6)
       nori (~> 2.6)
       wasabi (~> 3.4)
-    google-adwords-api (0.24.0)
-      google-ads-common (~> 0.13.0)
+    google-adwords-api (1.1.1)
+      google-ads-common (~> 1.0.0)
       nori (~> 2.6)
     googlecharts (1.6.12)
     grit (2.5.0)
@@ -168,7 +168,7 @@ GEM
     html_to_plain_text (1.0.5)
       nokogiri (>= 1.4.0)
     httpclient (2.8.3)
-    httpi (2.4.2)
+    httpi (2.4.3)
       rack
       socksify
     i18n (0.8.1)
@@ -187,7 +187,7 @@ GEM
     json (1.8.6)
     jstz-rails3-plus (1.0.5)
       railties (>= 3.1)
-    jwt (1.5.6)
+    jwt (2.1.0)
     kaminari (0.17.0)
       actionpack (>= 3.0.0)
       activesupport (>= 3.0.0)
@@ -239,7 +239,7 @@ GEM
     pry-theme (1.1.3)
       coderay (~> 1.1)
       json (~> 1.8)
-    public_suffix (2.0.5)
+    public_suffix (3.0.2)
     puma (3.6.0)
     rack (1.6.5)
     rack-contrib (1.4.0)
@@ -305,10 +305,10 @@ GEM
       sprockets (>= 2.8, < 4.0)
       sprockets-rails (>= 2.0, < 4.0)
       tilt (>= 1.1, < 3)
-    signet (0.7.3)
+    signet (0.8.1)
       addressable (~> 2.3)
       faraday (~> 0.9)
-      jwt (~> 1.5)
+      jwt (>= 1.5, < 3.0)
       multi_json (~> 1.10)
     slop (3.6.0)
     socksify (1.7.1)
@@ -371,7 +371,7 @@ DEPENDENCIES
   font-awesome-rails
   friendly_id (~> 5.1.0)
   gon
-  google-adwords-api
+  google-adwords-api (= 1.1.1)
   googlecharts
   html_to_plain_text
   jazz_hands!
