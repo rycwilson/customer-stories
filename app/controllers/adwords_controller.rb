@@ -6,7 +6,7 @@ class AdwordsController < ApplicationController
   after_action({ except: [:preview, :sync_company] }) { flash.discard if request.xhr? }
 
   def create_story_ads
-    if @promote_enabled && @story.ads.all? { |ad| ad.delay.create }
+    if @promote_enabled && @story.ads.all? { |ad| ad.delay.adwords_create }
       flash[:notice] = 'Story published and Promoted Story created'
     else
       # TODO: attach errors to @story
@@ -21,17 +21,17 @@ class AdwordsController < ApplicationController
     @long_headline_changed = params[:long_headline_changed].present?
 
     if @promote_enabled && @status_changed
-      if @story.ads.all?() { |ad| ad.delay.update_status() }
+      if @story.ads.all?() { |ad| ad.delay.adwords_update }
         flash[:notice] = "Promoted Story #{@story.ads.enabled? ? 'enabled' : 'paused'}"
       else
         # TODO: attach errors to @story
       end
 
     elsif @promote_enabled && (@image_changed || @long_headline_changed)
-      if @story.ads.all?() { |ad| ad.delay.remove() }
-        if @story.ads.all?() { |ad| ad.delay.create() }
+      if @story.ads.all?() { |ad| ad.delay.adwords_remove }
+        if @story.ads.all?() { |ad| ad.delay.adwords_create }
           # reload to get the new ad_id
-          if @story.ads.reload.all? { |ad| ad.delay.update_status() }
+          if @story.ads.reload.all? { |ad| ad.delay.adwords_update }
             flash[:notice] = 'Promoted Story updated'
           else
             # TODO: attach errors to @story
@@ -48,7 +48,7 @@ class AdwordsController < ApplicationController
 
   def remove_story_ads
     if @promote_enabled
-      @story.ads.each { |ad| ad.delay.remove }
+      @story.ads.each { |ad| ad.delay.adwords_remove }
     end
     respond_to { |format| format.json { head :no_content } }
   end
@@ -85,9 +85,9 @@ class AdwordsController < ApplicationController
           @removed_images_stories << { csp_image_id: ad.adwords_image.id, story_id: ad.story.id }
           if @promote_enabled
             puts "removing and re-creating ad #{ad.id} associated with destroyed image #{ad_params[:csp_image_id]}..."
-            ad.delay.remove()
-            ad.delay.create()
-            ad.delay.update_status()
+            ad.delay.adwords_remove
+            ad.delay.adwords_create
+            ad.delay.adwords_update
           end
         end
       end
@@ -104,10 +104,10 @@ class AdwordsController < ApplicationController
     if @promote_enabled &&
        ( params[:company].dig(:previous_changes, :adwords_short_headline) ||
          params[:company][:adwords_logo_url] )
-      @company.ads.each() do |ad|
-        ad.delay.remove()
-        ad.delay.create()
-        ad.delay.update_status()
+      @company.ads.each do |ad|
+        ad.delay.adwords_remove
+        ad.delay.adwords_create
+        ad.delay.adwords_update
       end
     end
 

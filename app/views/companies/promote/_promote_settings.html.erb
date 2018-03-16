@@ -157,17 +157,10 @@
   </div>
 
   <div style='display:flex; align-items:center; margin-bottom:16px'>
-    <% if company.adwords_images.default.blank? %>
-      <span class='disabled new-adwords-image-icon fa-stack fa-lg' style='margin-right:5px'>
-        <i class='fa fa-circle fa-stack-2x'></i>
-        <i class='fa fa-plus fa-stack-1x fa-inverse'></i>
-      </span>
-    <% else %>
-      <span class='new-adwords-image-icon fa-stack fa-lg' style='margin-right:5px'>
-        <i class='fa fa-circle fa-stack-2x'></i>
-        <i class='fa fa-plus fa-stack-1x fa-inverse'></i>
-      </span>
-    <% end %>
+    <span class="<%= company.adwords_images.default.blank? ? 'disabled' : '' %> new-adwords-image-icon fa-stack fa-lg" style='margin-right:5px'>
+      <i class='fa fa-circle fa-stack-2x'></i>
+      <i class='fa fa-plus fa-stack-1x fa-inverse'></i>
+    </span>
     <div style='display:inline-block'>
       <div>
         <label style='margin:0' for="">Additional Images for Promoted Stories</label>&nbsp;&nbsp;
@@ -183,7 +176,7 @@
 
   <ul class='adwords-images list-inline text-center'>
 
-    <%= f.fields_for :adwords_images do |image_f| %>
+    <%= f.fields_for(:adwords_images) do |image_f| %>
 
       <li class="well adwords-image <%= image_f.object.company_default? ? 'hidden' : '' %>">
 

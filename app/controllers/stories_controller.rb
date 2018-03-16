@@ -226,7 +226,7 @@ class StoriesController < ApplicationController
     elsif request.method == 'DELETE'  # js response
       if @story.ads.all? do |ad|
         ad.update(status:'REMOVED')
-        # this must go in the delayed job queue, so it happens after ad.remove() (already queued)
+        # this must go in the delayed job queue, so it happens after ad.adwords_remove (already queued)
         ad.delay.destroy
       end
         flash.now[:notice] = 'Story unpublished and Promoted Story removed'
