@@ -49,7 +49,7 @@ class Company < ActiveRecord::Base
     end
     def with_ads
       # any ads with status 'REMOVED' have .destroy() calls in the delayed job queue
-      self.select() do |story|
+      self.select do |story|
         story.topic_ad.present? && story.topic_ad.status != 'REMOVED' &&
         story.retarget_ad.present? && story.retarget_ad.status != 'REMOVED'
       end
@@ -1053,13 +1053,12 @@ class Company < ActiveRecord::Base
   ##  if a story wasn't given a story id label, remove it
   ##
   #
-  # NOTE: campaigns haven't been saved when this method is called,
-  # but able to access via self.campaigns?
+
   def create_csp_ads (topic_ads, retarget_ads)
     return false if (topic_ads.nil? || retarget_ads.nil?)  # no ads
     self.campaigns.reload.each do |campaign|
       aw_ads = (campaign.type == 'TopicCampaign') ? topic_ads : retarget_ads
-      aw_ads.each() do |aw_ad|
+      aw_ads.each do |aw_ad|
         # ads are tagged with story id
         # if no story id label, try the long headline
         story = Story.find_by(id: aw_ad[:labels].try(:[], 0).try(:[], :name)) ||
@@ -1080,7 +1079,7 @@ class Company < ActiveRecord::Base
             )
         else
           # remove the ad if story can't be found OR story isn't published
-          campaign.ad_group.ads.build({ ad_id: aw_ad[:ad][:id] }).remove_adwords_ad
+          campaign.ad_group.ads.build({ ad_id: aw_ad[:ad][:id] }).adwords_remove
         end
       end
     end
