@@ -75,7 +75,6 @@ class CompaniesController < ApplicationController
     if removed_adwords_images?(params[:company][:adwords_images_attributes])
       params[:company][:removed_images_ads] =
         removed_images_ads(@company, params[:company][:adwords_images_attributes])
-      binding.remote_pry
     end
     # make this check before updating anything
     # this will check for either uploaded or swapped default image
