@@ -95,7 +95,7 @@ class AdwordsController < ApplicationController
 
     # upload any new images
     if @promote_enabled && new_images?(params[:company])
-      get_new_images(params[:company]).each() do |image_params|  # { type: , url: }
+      get_new_images(params[:company]).each do |image_params|  # { type: , url: }
         @company.delay.upload_adwords_image_or_logo(image_params) or return # return if error
       end
     end

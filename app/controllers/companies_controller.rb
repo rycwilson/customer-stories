@@ -81,6 +81,7 @@ class CompaniesController < ApplicationController
     default_image_changed = default_adwords_image_changed?(company_params, @company.adwords_images.default.try(:id))
     if @company.update(company_params)
       # if a new default image was uploaded (param won't be present if it wasn't)
+      # TODO: what about a new logo?
       if default_image_changed && company_params[:default_adwords_image_url].present?
         @company.update_uploaded_default_adwords_image(company_params[:default_adwords_image_url])
         params[:company][:uploaded_default_image] = true
