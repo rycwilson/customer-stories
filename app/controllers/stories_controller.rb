@@ -186,11 +186,11 @@ class StoriesController < ApplicationController
       @company.create_shell_campaigns if @company.campaigns.empty?
       @story.ads.create({
         adwords_ad_group_id: @company.campaigns.topic.ad_group.id,
-        long_headline: @story.title
+        long_headline: @story.title.truncate(ADWORDS_LONG_HEADLINE_CHAR_LIMIT, { omission: '' })
       })
       @story.ads.create({
         adwords_ad_group_id: @company.campaigns.retarget.ad_group.id,
-        long_headline: @story.title
+        long_headline: @story.title.truncate(ADWORDS_LONG_HEADLINE_CHAR_LIMIT, { omission: '' })
       })
       @story.ads.adwords_image = @company.adwords_images.default
     elsif request.method == 'PUT'

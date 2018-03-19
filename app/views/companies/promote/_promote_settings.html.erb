@@ -55,7 +55,7 @@
 
       <%= f.label :adwords_short_headline, "Headline", class: 'control-label' %>
       <%= f.text_field :adwords_short_headline, class: 'form-control',
-            style: 'width:300px', maxlength: '25', required: true,
+            style: 'width:300px', maxlength: ADWORDS_SHORT_HEADLINE_CHAR_LIMIT.to_s, required: true,
             data: { 'required-error': 'Required field' } %>
       <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
       <div class="help-block with-errors" style='padding-left:75px'>Max 25 characters</div>
