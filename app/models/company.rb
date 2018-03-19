@@ -1300,6 +1300,7 @@ class Company < ActiveRecord::Base
               image_url: aw_ad[:ad][:marketing_image][:urls]['FULL']
             )
         else
+          # binding.remote_pry
           # remove the ad if story can't be found OR story isn't published
           ad_group.ads.build({ ad_id: aw_ad[:ad][:id] }).adwords_remove
         end

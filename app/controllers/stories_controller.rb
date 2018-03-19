@@ -124,7 +124,7 @@ class StoriesController < ApplicationController
 
   def update
     if params[:settings]
-      pp params
+      # pp params
       @story.success.cta_ids = params[:ctas]
       @story.update(story_params)
       # html response necessary for uploading customer logo image
