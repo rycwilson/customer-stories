@@ -1310,7 +1310,9 @@ class Company < ActiveRecord::Base
 
   def create_csp_and_aw_ads (topic_ad_group, retarget_ad_group, story)
     [topic_ad_group, retarget_ad_group].each do |ad_group|
-      csp_ad = ad_group.ads.create(story_id: story.id, long_headline: story.title)
+      csp_ad = ad_group.ads.create(
+        story_id: story.id, long_headline: story.title.truncate(ADWORDS_LONG_HEADLINE_CHAR_LIMIT, { omission: '' })
+      )
       csp_ad.adwords_image = self.adwords_images.default
       csp_ad.adwords_create
     end
