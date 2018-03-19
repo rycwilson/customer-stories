@@ -1279,10 +1279,8 @@ class Company < ActiveRecord::Base
     return false if (aw_topic_ads.nil? || aw_retarget_ads.nil?)  # no ads
     [topic_ad_group, retarget_ad_group].each do |ad_group|
       aw_ads = (ad_group.campaign.type == 'TopicCampaign') ? aw_topic_ads : aw_retarget_ads
-      # binding.remote_pry
       aw_ads.each do |aw_ad|
-        # ads are tagged with story id
-        # if no story id label, try the long headline
+        # ads are tagged with story id; if not, try the long headline
         story = Story.find_by(id: aw_ad[:labels].try(:[], 0).try(:[], :name)) ||
                 Story.find_by(title: aw_ad[:ad][:long_headline])
         if story.present? && story.published?
@@ -1300,8 +1298,7 @@ class Company < ActiveRecord::Base
               image_url: aw_ad[:ad][:marketing_image][:urls]['FULL']
             )
         else
-          # binding.remote_pry
-          # remove the ad if story can't be found OR story isn't published
+          # remove the ad if story can't be found or isn't published
           ad_group.ads.build({ ad_id: aw_ad[:ad][:id] }).adwords_remove
         end
       end
@@ -1319,7 +1316,7 @@ class Company < ActiveRecord::Base
   end
 
   # Creates an instance of AdWords API class
-  def create_adwords_api ()
+  def create_adwords_api
     if ENV['ADWORDS_ENV'] == 'test'
       config_file = File.join(Rails.root, 'config', 'adwords_api_test.yml')
     elsif ENV['ADWORDS_ENV'] == 'production'
