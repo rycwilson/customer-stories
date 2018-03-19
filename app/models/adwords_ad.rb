@@ -1,7 +1,7 @@
 class AdwordsAd < ActiveRecord::Base
 
   require 'adwords_api'
-  ADWORDS_API_VERSION = :v201702
+  ADWORDS_API_VERSION = :v201802
 
   belongs_to :adwords_ad_group
   alias_attribute :ad_group, :adwords_ad_group
@@ -10,10 +10,11 @@ class AdwordsAd < ActiveRecord::Base
   has_one :company, through: :adwords_campaign
   belongs_to :story
   has_one :adwords_ads_image, dependent: :destroy
+  has_one :adwords_ads_image, dependent: :destroy
   has_one :adwords_image, through: :adwords_ads_image\
 
-  def create ()
-    api = create_adwords_api()
+  def adwords_create
+    api = create_adwords_api
     service = api.service(:AdGroupAdService, ADWORDS_API_VERSION)
     campaign_type = self.campaign.type == 'TopicCampaign' ? 'topic' : 'retarget'
     responsive_display_ad = {
@@ -78,53 +79,7 @@ class AdwordsAd < ActiveRecord::Base
     end
   end
 
-  def update_status ()
-    api = create_adwords_api()
-    service = api.service(:AdGroupAdService, ADWORDS_API_VERSION)
-    operation =  {
-      operator: 'SET',
-      operand: {
-        ad_group_id: self.ad_group.ad_group_id,
-        status: self.status,
-        ad: { id: self.ad_id }
-      }
-    }
-    begin
-      response = service.mutate([operation])
-
-    # Authorization error.
-    rescue AdsCommon::Errors::OAuth2VerificationRequired => e
-      # flash[:alert] = Rails.env.development? ? 'Invalid Adwords API credentials' : 'Error updating Promoted Story status'
-    # HTTP errors.
-    rescue AdsCommon::Errors::HttpError => e
-      puts "HTTP Error: %s" % e
-      # flash[:alert] = Rails.env.development? ? "HTTP error: #{e}" : 'Error updating Promoted Story status'
-    # API errors.
-    rescue AdwordsApi::Errors::ApiException => e
-      puts "Message: %s" % e.message
-      puts 'Errors:'
-      e.errors.each_with_index do |error, index|
-        puts "\tError [%d]:" % (index + 1)
-        error.each do |field, value|
-          puts "\t\t%s: %s" % [field, value]
-        end
-      end
-      # flash[:alert] = Rails.env.development? ? "Adwords API error: #{e.message}" : 'Error updating Promoted Story status'
-    end
-
-    # response
-    if response and response[:value]
-      adwords_ad = response[:value].first
-      puts "Ad ID %d was successfully updated, status set to '%s'." %
-          [adwords_ad[:ad][:id], adwords_ad[:status]]
-      return true
-    else
-      puts 'No ads were updated.'
-      return false
-    end
-  end
-
-  def remove ()
+  def adwords_remove
     api = create_adwords_api()
     service = api.service(:AdGroupAdService, ADWORDS_API_VERSION)
     operation = {
@@ -169,10 +124,56 @@ class AdwordsAd < ActiveRecord::Base
     end
   end
 
+  def adwords_update
+    api = create_adwords_api
+    service = api.service(:AdGroupAdService, ADWORDS_API_VERSION)
+    operation =  {
+      operator: 'SET',
+      operand: {
+        ad_group_id: self.ad_group.ad_group_id,
+        status: self.status,
+        ad: { id: self.ad_id }
+      }
+    }
+    begin
+      response = service.mutate([operation])
+
+    # Authorization error.
+    rescue AdsCommon::Errors::OAuth2VerificationRequired => e
+      # flash[:alert] = Rails.env.development? ? 'Invalid Adwords API credentials' : 'Error updating Promoted Story status'
+    # HTTP errors.
+    rescue AdsCommon::Errors::HttpError => e
+      puts "HTTP Error: %s" % e
+      # flash[:alert] = Rails.env.development? ? "HTTP error: #{e}" : 'Error updating Promoted Story status'
+    # API errors.
+    rescue AdwordsApi::Errors::ApiException => e
+      puts "Message: %s" % e.message
+      puts 'Errors:'
+      e.errors.each_with_index do |error, index|
+        puts "\tError [%d]:" % (index + 1)
+        error.each do |field, value|
+          puts "\t\t%s: %s" % [field, value]
+        end
+      end
+      # flash[:alert] = Rails.env.development? ? "Adwords API error: #{e.message}" : 'Error updating Promoted Story status'
+    end
+
+    # response
+    if response and response[:value]
+      adwords_ad = response[:value].first
+      puts "Ad ID %d was successfully updated, status set to '%s'." %
+          [adwords_ad[:ad][:id], adwords_ad[:status]]
+      return true
+    else
+      puts 'No ads were updated.'
+      return false
+    end
+  end
+
   private
 
   # Creates an instance of AdWords API class
-  def create_adwords_api ()
+  def create_adwords_api
     if ENV['ADWORDS_ENV'] == 'test'
       config_file = File.join(Rails.root, 'config', 'adwords_api_test.yml')
     elsif ENV['ADWORDS_ENV'] == 'production'
@@ -181,8 +182,8 @@ class AdwordsAd < ActiveRecord::Base
     AdwordsApi::Api.new(config_file)
   end
 
-  def get_story_label ()
-    api = create_adwords_api()
+  def get_story_label
+    api = create_adwords_api
     service = api.service(:LabelService, ADWORDS_API_VERSION)
     selector = {
       fields: ['LabelName'],
@@ -200,7 +201,7 @@ class AdwordsAd < ActiveRecord::Base
     result[:entries].try(:[], 0) || nil
   end
 
-  def create_story_label ()
+  def create_story_label
     api = create_adwords_api()
     service = api.service(:LabelService, ADWORDS_API_VERSION)
     operation = {

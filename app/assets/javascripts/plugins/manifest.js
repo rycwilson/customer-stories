@@ -1,5 +1,5 @@
 
-//= require jquery-csv/src/jquery.csv
+/* require jquery-csv/src/jquery.csv */
 
 //= require modernizr/modernizr
 

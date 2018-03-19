@@ -124,7 +124,7 @@ class StoriesController < ApplicationController
 
   def update
     if params[:settings]
-      pp params
+      # pp params
       @story.success.cta_ids = params[:ctas]
       @story.update(story_params)
       # html response necessary for uploading customer logo image
@@ -186,11 +186,11 @@ class StoriesController < ApplicationController
       @company.create_shell_campaigns if @company.campaigns.empty?
       @story.ads.create({
         adwords_ad_group_id: @company.campaigns.topic.ad_group.id,
-        long_headline: @story.title
+        long_headline: @story.title.truncate(ADWORDS_LONG_HEADLINE_CHAR_LIMIT, { omission: '' })
       })
       @story.ads.create({
         adwords_ad_group_id: @company.campaigns.retarget.ad_group.id,
-        long_headline: @story.title
+        long_headline: @story.title.truncate(ADWORDS_LONG_HEADLINE_CHAR_LIMIT, { omission: '' })
       })
       @story.ads.adwords_image = @company.adwords_images.default
     elsif request.method == 'PUT'
@@ -226,7 +226,7 @@ class StoriesController < ApplicationController
     elsif request.method == 'DELETE'  # js response
       if @story.ads.all? do |ad|
         ad.update(status:'REMOVED')
-        # this must go in the delayed job queue, so it happens after ad.remove() (already queued)
+        # this must go in the delayed job queue, so it happens after ad.adwords_remove (already queued)
         ad.delay.destroy
       end
         flash.now[:notice] = 'Story unpublished and Promoted Story removed'

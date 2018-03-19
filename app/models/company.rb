@@ -1,7 +1,7 @@
 class Company < ActiveRecord::Base
 
   require 'adwords_api'
-  ADWORDS_API_VERSION = :v201702
+  ADWORDS_API_VERSION = :v201802
 
   CSP = self.find(5)
 
@@ -49,7 +49,7 @@ class Company < ActiveRecord::Base
     end
     def with_ads
       # any ads with status 'REMOVED' have .destroy() calls in the delayed job queue
-      self.select() do |story|
+      self.select do |story|
         story.topic_ad.present? && story.topic_ad.status != 'REMOVED' &&
         story.retarget_ad.present? && story.retarget_ad.status != 'REMOVED'
       end
@@ -1003,54 +1003,59 @@ class Company < ActiveRecord::Base
   end
 
 
-  # accepts adwords objects and creates csp campaigns / ad groups / ads
+  # gets adwords objects and creates csp campaigns / ad groups / ads
   # NOTE: We need to build up the campaigns and associated ad groups and
   #       ads, then when everything is built, save the campaign
   #       (which will save the associated ad groups and ads.)
   #       Else, the campaigns and ad groups will not be persisted
   #       and attempting to create ads will result in error
   def adwords_sync
-    # destroy the ads, but not the campaigns and ad groups (unlike master seeds)
-    self.ads.each { |ad| ad.destroy }
+    self.campaigns.each { |campaign| campaign.destroy }
 
-    topic_campaign = self.get_adwords_campaign('topic')
-    topic_ad_group = self.get_adwords_ad_group(topic_campaign[:id])
-    topic_ads = self.get_adwords_ads(topic_ad_group[:id]) || []
-    retarget_campaign = self.get_adwords_campaign('retarget')
-    retarget_ad_group = self.get_adwords_ad_group(retarget_campaign[:id])
-    retarget_ads = self.get_adwords_ads(retarget_ad_group[:id]) || []
+    aw_topic_campaign = self.get_adwords_campaign('topic')
+    aw_topic_ad_group = self.get_adwords_ad_group(aw_topic_campaign[:id])
+    aw_topic_ads = self.get_adwords_ads(aw_topic_ad_group[:id]) || []
+    aw_retarget_campaign = self.get_adwords_campaign('retarget')
+    aw_retarget_ad_group = self.get_adwords_ad_group(aw_retarget_campaign[:id])
+    aw_retarget_ads = self.get_adwords_ads(aw_retarget_ad_group[:id]) || []
 
-    # topic campaign / ad group / ads
-    self.campaigns.topic.update(
-      campaign_id: topic_campaign[:id], status: topic_campaign[:status],
-      name: topic_campaign[:name]
+    # topic campaign
+    self.campaigns.create(
+      type: 'TopicCampaign', campaign_id: aw_topic_campaign[:id], status: aw_topic_campaign[:status], name: aw_topic_campaign[:name]
     )
-    self.campaigns.topic.ad_group.update(
-      ad_group_id: topic_ad_group[:id], status: topic_ad_group[:status],
-      name: topic_ad_group[:name]
+    self.campaigns.topic.create_adwords_ad_group(
+      ad_group_id: aw_topic_ad_group[:id], status: aw_topic_ad_group[:status], name: aw_topic_ad_group[:name]
     )
-    # retarget campaign / ad group / ads
-    self.campaigns.retarget.update(
-      campaign_id: retarget_campaign[:id], status: retarget_campaign[:status],
-      name: retarget_campaign[:name]
+    # retarget campaign
+    self.campaigns.create(
+      type: 'RetargetCampaign', campaign_id: aw_retarget_campaign[:id], status: aw_retarget_campaign[:status], name: aw_retarget_campaign[:name]
     )
-    self.campaigns.retarget.ad_group.update(
-      ad_group_id: retarget_ad_group[:id], status: retarget_ad_group[:status],
-      name: retarget_ad_group[:name]
+    self.campaigns.retarget.create_adwords_ad_group(
+      ad_group_id: aw_retarget_ad_group[:id], status: aw_retarget_ad_group[:status], name: aw_retarget_ad_group[:name]
     )
 
-    # create csp ads to mirror adwords ads
-    self.create_csp_ads(topic_ads, retarget_ads)
+    # # create csp ads to mirror adwords ads
+    create_csp_ads(
+      self.campaigns.topic.ad_group, aw_topic_ads, self.campaigns.retarget.ad_group, aw_retarget_ads
+    )
 
-    # for any stories that are published but don't have an ad ...
-    # save ids in an array, as the ad must first be persisted in order for
-    # ActionController::create_ad to work correctly
     self.stories.published.each do |story|
-      unless story.ads.present?
-        create_csp_and_aw_ads(story)
+      if story.ads.blank?
+        create_csp_and_aw_ads(
+          self.campaigns.topic.ad_group, self.campaigns.retarget.ad_group, story
+        )
       end
     end
-  end  # sync_with_adwords
+  end
+
+  ##
+  ##  method creates csp ads and associated adwords image (if image doesn't already exist)
+  ##  from adwords ads (topic_ads and retarget_ads)
+  ##
+  ##  if a story isn't published, remove the adwords ad and don't create a csp ad
+  ##  if a story wasn't given a story id label, remove it
+  ##
+  #
 
   def ready_for_adwords_sync?
     self.promote_tr? &&
@@ -1252,48 +1257,6 @@ class Company < ActiveRecord::Base
     return true
   end
 
-  ##
-  ##  method creates csp ads and associated adwords image (if image doesn't already exist)
-  ##  from adwords ads (topic_ads and retarget_ads)
-  ##
-  ##  if a story isn't published, remove the adwords ad and don't create a csp ad
-  ##  if a story wasn't given a story id label, remove it
-  ##
-  #
-  # NOTE: campaigns haven't been saved when this method is called,
-  # but able to access via self.campaigns?
-  def create_csp_ads (topic_ads, retarget_ads)
-    return false if (topic_ads.nil? || retarget_ads.nil?)  # no ads
-    self.campaigns.each() do |campaign|
-      aw_ads = (campaign.type == 'TopicCampaign') ? topic_ads : retarget_ads
-      aw_ads.each() do |aw_ad|
-        # ads are tagged with story id
-        # if no story id label, try the long headline
-        story = Story.find_by(id: aw_ad[:labels].try(:[], 0).try(:[], :name)) ||
-                Story.find_by(title: aw_ad[:ad][:long_headline])
-        if story.present? && story.published?
-          csp_ad = campaign.ad_group.ads.create(
-            story_id: story.id,
-            ad_id: aw_ad[:ad][:id],
-            long_headline: aw_ad[:ad][:long_headline],
-            status: aw_ad[:status],
-            approval_status: aw_ad[:approval_status]
-          )
-          csp_ad.adwords_image =
-            self.adwords_images.find() do |image|
-              image.media_id == aw_ad[:ad][:marketing_image][:media_id]
-            end ||
-            self.adwords_images.create(
-              media_id: aw_ad[:ad][:marketing_image][:media_id],
-              image_url: aw_ad[:ad][:marketing_image][:urls]['FULL']
-            )
-        else
-          # remove the ad if story can't be found OR story isn't published
-          campaign.ad_group.ads.build({ ad_id: aw_ad[:ad][:id] }).remove()
-        end
-      end
-    end
-  end
 
    # returns "light" or "dark" to indicate font color for a given background color (header_color_2)
   def color_contrast (background_color=nil)
@@ -1312,24 +1275,54 @@ class Company < ActiveRecord::Base
 
   private
 
+  def create_csp_ads (topic_ad_group, aw_topic_ads, retarget_ad_group, aw_retarget_ads)
+    return false if (aw_topic_ads.nil? || aw_retarget_ads.nil?)  # no ads
+    [topic_ad_group, retarget_ad_group].each do |ad_group|
+      aw_ads = (ad_group.campaign.type == 'TopicCampaign') ? aw_topic_ads : aw_retarget_ads
+      aw_ads.each do |aw_ad|
+        # ads are tagged with story id; if not, try the long headline
+        story = Story.find_by(id: aw_ad[:labels].try(:[], 0).try(:[], :name)) ||
+                Story.find_by(title: aw_ad[:ad][:long_headline])
+        if story.present? && story.published?
+          csp_ad = ad_group.ads.create(
+            story_id: story.id,
+            ad_id: aw_ad[:ad][:id],
+            long_headline: aw_ad[:ad][:long_headline],
+            status: aw_ad[:status],
+            approval_status: aw_ad[:approval_status]
+          )
+          csp_ad.adwords_image =
+            self.adwords_images.find { |i| i.media_id == aw_ad[:ad][:marketing_image][:media_id] } ||
+            self.adwords_images.create(
+              media_id: aw_ad[:ad][:marketing_image][:media_id],
+              image_url: aw_ad[:ad][:marketing_image][:urls]['FULL']
+            )
+        else
+          # remove the ad if story can't be found or isn't published
+          ad_group.ads.build({ ad_id: aw_ad[:ad][:id] }).adwords_remove
+        end
+      end
+    end
+  end
+
+  def create_csp_and_aw_ads (topic_ad_group, retarget_ad_group, story)
+    [topic_ad_group, retarget_ad_group].each do |ad_group|
+      csp_ad = ad_group.ads.create(
+        story_id: story.id, long_headline: story.title.truncate(ADWORDS_LONG_HEADLINE_CHAR_LIMIT, { omission: '' })
+      )
+      csp_ad.adwords_image = self.adwords_images.default
+      csp_ad.adwords_create
+    end
+  end
+
   # Creates an instance of AdWords API class
-  def create_adwords_api ()
+  def create_adwords_api
     if ENV['ADWORDS_ENV'] == 'test'
       config_file = File.join(Rails.root, 'config', 'adwords_api_test.yml')
     elsif ENV['ADWORDS_ENV'] == 'production'
       config_file = File.join(Rails.root, 'config', 'adwords_api_prod.yml')
     end
     AdwordsApi::Api.new(config_file)
-  end
-
-  def create_csp_and_aw_ads (story)
-    self.campaigns.each() do |campaign|
-      csp_ad = campaign.ad_group.ads.create(
-        story_id: story.id, long_headline: story.title
-      )
-      csp_ad.adwords_image = self.adwords_images.default
-      csp_ad.create()
-    end
   end
 
   def fill_daily_gaps visitors, start_date, end_date
