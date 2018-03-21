@@ -29,6 +29,7 @@ gem 'jazz_hands', github: 'nixme/jazz_hands', branch: 'bring-your-own-debugger'
 gem 'jquery-minicolors-rails'
 gem 'local_time'
 gem 'multi_json'
+gem 'oauth2'
 gem 'pg'
 gem 'pry-byebug'
 gem 'pry-theme'
@@ -54,7 +55,6 @@ end
 
 group :development, :test do
 
-  gem 'oauth2'
 
   # gem 'rack-mini-profiler'
   # gem 'flamegraph'
