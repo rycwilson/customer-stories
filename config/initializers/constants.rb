@@ -1,4 +1,6 @@
 
+DEV_TUNNEL_SUBDOMAIN = "cspdev"
+
 INDUSTRIES = ['Education', 'Government', 'Financial Services', 'Healthcare', 'Hospitality', 'Manufacturing', 'Media and Entertainment', 'Service Provider', 'Technology', 'IT', 'Telecommunications'];
 
 LOGO_PLACEHOLDER_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/shared/logo-placeholder.png"

@@ -7,8 +7,8 @@ class Users::SessionsController < Devise::SessionsController
   # if attempting to log in through a subdomain (in the url, not in the form),
   # validate that request.subdomain matches the user.company.subdomain
   # this callback assumes the user exists.
-  before_action only: :create do
-    if request.subdomain.present?
+  before_action(only: :create) do
+    if request.subdomain.present? && request.subdomain != DEV_TUNNEL_SUBDOMAIN
       validate_user_subdomain(request.subdomain, params[:user][:email])
     end
   end
@@ -25,7 +25,7 @@ class Users::SessionsController < Devise::SessionsController
     flash[:notice] = "Signed in" if is_flashing_format?
     sign_in(resource_name, resource)
     yield resource if block_given?
-    respond_with resource, location: after_sign_in_path_for(resource)
+    respond_with(resource, location: after_sign_in_path_for(resource))
   end
 
   # DELETE /resource/sign_out

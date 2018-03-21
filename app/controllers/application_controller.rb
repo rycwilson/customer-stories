@@ -2,7 +2,6 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
-
   # before_action() { binding.remote_pry }
 
   # Devise - whitelist User params
@@ -105,7 +104,11 @@ class ApplicationController < ActionController::Base
 
   # change devise redirect on sign in
   def after_sign_in_path_for resource
-    if resource.class.name == 'User'
+    if session[:user_return_to].present?
+      # binding.remote_pry
+      session[:user_return_to]
+    elsif resource.class.name == 'User'
+      # binding.remote_pry
       if resource.company_id.present?  # returning users
         url_for({
             subdomain: resource.company.subdomain,
@@ -137,6 +140,10 @@ class ApplicationController < ActionController::Base
   def company_curator? company_id
     user_signed_in? &&
     current_user.company_id == company_id
+  end
+
+  def handle_unverified_request
+    # binding.remote_pry
   end
 
 end

@@ -3,7 +3,7 @@
 # request.env['warden'].user(:user)
 #
 Rails.application.routes.default_url_options = {
-    protocol: Rails.env.development? ? 'http' : 'https',
+    protocol: 'https',
     host: ENV['HOST_NAME']
 }
 
@@ -30,6 +30,13 @@ Rails.application.routes.draw do
 
   constraints(DevSubdomain) do
     get '/', to: 'application#dev'
+    # need to pick up on devise routes here, without doing so explicitly
+    # as that will conflict with devise routes declared below
+    # 'method' instead of 'action' - latter is keyword with its own params entry
+    devise_scope :user do
+      get '/:devise/:method', to: 'users/sessions#new', constraints: { devise: 'users', method: 'sign_in' }
+      post '/:devise/:method', to: 'users/sessions#create', constraints: { devise: 'users', method: 'sign_in' }
+    end
   end
 
   # valid subdomains (company/subdomain exists, excludes www)
