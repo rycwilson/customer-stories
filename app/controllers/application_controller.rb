@@ -7,10 +7,11 @@ class ApplicationController < ActionController::Base
   # Devise - whitelist User params
   before_action :configure_permitted_parameters, if: :devise_controller?
 
-  before_action :check_subdomain,
-                  if: Proc.new { user_signed_in? },
-              unless: Proc.new { devise_controller? || invalid_subdomain? ||
-                                 params[:controller] == 'widgets' }
+  before_action(
+    :check_subdomain,
+    if: Proc.new { user_signed_in? },
+    unless: Proc.new { devise_controller? || invalid_subdomain? || params[:controller] == 'widgets' }
+  )
 
   helper_method :company_curator?
 
@@ -142,8 +143,8 @@ class ApplicationController < ActionController::Base
     current_user.company_id == company_id
   end
 
-  def handle_unverified_request
-    # binding.remote_pry
-  end
+  # def handle_unverified_request
+  #   # binding.remote_pry
+  # end
 
 end

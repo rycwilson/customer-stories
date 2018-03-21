@@ -12,7 +12,7 @@ Doorkeeper.configure do
       current_user
     else
       session[:user_return_to] = request.original_url
-      # binding.remote_pry
+      binding.remote_pry
       warden.authenticate!(:scope => :user)
     end
     # fail "Please configure doorkeeper resource_owner_authenticator block located in #{__FILE__}"
