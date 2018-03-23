@@ -15,6 +15,7 @@ Rails.application.routes.draw do
   use_doorkeeper
 
   authenticate(:user) do
+    get '/auth-test', to: 'application#auth_test'
     post '/successes', to: 'successes#create', constraints: { zap: 'true' }
   end
 
