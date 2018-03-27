@@ -7,17 +7,12 @@ Doorkeeper.configure do
   # This block will be called to check whether the resource owner is authenticated or not.
   resource_owner_authenticator do
     # ref: https://stackoverflow.com/questions/14504739
-    # session[:previous_url] = request.original_url
     if current_user
       current_user
     else
       session[:user_return_to] = request.original_url
-      # binding.remote_pry
       warden.authenticate!(:scope => :user)
     end
-    # fail "Please configure doorkeeper resource_owner_authenticator block located in #{__FILE__}"
-    # Put your resource owner authentication logic here.
-    # current_user || warden.authenticate!(:scope => :user)
   end
 
   # If you want to restrict access to the web interface for adding oauth authorized applications, you need to declare the block below.
@@ -64,7 +59,7 @@ Doorkeeper.configure do
   # Define access token scopes for your provider
   # For more information go to
   # https://github.com/doorkeeper-gem/doorkeeper/wiki/Using-Scopes
-  default_scopes  :public
+  default_scopes  :curator
   # optional_scopes :write, :update
 
   # Change the way client credentials are retrieved from the request object.
