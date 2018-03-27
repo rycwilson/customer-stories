@@ -16,11 +16,6 @@ class ApplicationController < ActionController::Base
 
   helper_method :company_curator?
 
-  # just for testing
-  def dev
-    head :ok
-  end
-
   protected
 
   def set_gon company=nil
