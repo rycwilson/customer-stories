@@ -15,7 +15,6 @@ Rails.application.routes.draw do
   use_doorkeeper
 
   authenticate(:user) do
-    get '/auth-test', to: 'application#auth_test'
     post '/successes', to: 'successes#create', constraints: { zap: 'true' }
   end
 
@@ -30,7 +29,9 @@ Rails.application.routes.draw do
   post '/esp/notifications', to: 'site#esp_notifications'
 
   constraints(DevSubdomain) do
-    get '/', to: 'application#dev'
+    authenticate(:user) do
+      get '/auth-test', to: 'application#auth_test'
+    end
     # need to pick up on devise routes here, without doing so explicitly
     # as that will conflict with devise routes declared below
     # 'method' instead of 'action' - latter is keyword with its own params entry
