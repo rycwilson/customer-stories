@@ -11,7 +11,7 @@ function promoteSettingsListeners () {
           imageIndex: $imagesList.find('li').length
         })
       );
-      initS3Upload(); // init S3 for dynamically added file input
+
       $('li.new-adwords-image input[type="file"]')[0].click();
     })
 
@@ -56,13 +56,21 @@ function promoteSettingsListeners () {
             if (img.complete) {
               window.clearTimeout(waitForImage);
               if (meetsSizeRequirements(img)) {
+                /**
+                 * To avoid non-valid images from being uploaded (and s3 dropping an input into the DOM hosing up the works),
+                 # only init S3 if size requirements are met. Pass data to skip validation and avoid infinite loop
+                 * Alternatively, autoUpload in the S3 initializer could be set to false and the upload could be
+                 * manually triggered, but it's not clear how to do this
+                 * No danger of infinite loop, as trigger ing change != triggering change.bs.fileinput
+                 *
+                 */
+                initS3Upload();
+                $newImage.find('input[type="file"]').trigger('change');
                 $newImage
                   .removeClass('hidden new-adwords-image')
                   .find('input[type="file"]').addClass('hidden');  // doesn't work if the input has class: hidden from the get-go
               } else {
                 $newImage.remove();
-                // remove the hidden input for the image_url that AWS S3 added
-                $('#promote-settings-form > input:last-child').remove();
                 flashDisplay("Image doesn't meet size requirements", 'danger');
               }
               return true;
