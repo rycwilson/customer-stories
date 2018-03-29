@@ -16,6 +16,7 @@ Rails.application.routes.draw do
 
   authenticate(:user) do
     post '/successes', to: 'successes#create', constraints: { zap: 'true' }
+    get '/auth-test', to: 'application#auth_test'
   end
 
   get '/sitemap', to: 'site#sitemap'
