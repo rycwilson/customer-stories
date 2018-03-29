@@ -3,8 +3,8 @@
 # request.env['warden'].user(:user)
 #
 Rails.application.routes.default_url_options = {
-    protocol: 'https',
-    host: ENV['HOST_NAME']
+  protocol: Rails.env.development? ? 'http' : 'https',
+  host: ENV['HOST_NAME']
 }
 
 Rails.application.routes.draw do

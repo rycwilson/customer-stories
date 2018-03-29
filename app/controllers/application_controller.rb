@@ -16,6 +16,10 @@ class ApplicationController < ActionController::Base
 
   helper_method :company_curator?
 
+  def auth_test
+    head :ok
+  end
+
   protected
 
   def set_gon company=nil

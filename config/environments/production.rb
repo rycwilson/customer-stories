@@ -2,11 +2,11 @@
 Rails.application.configure do
 
   # restrict access to staging site
-  if ENV['HOST_NAME'] == 'customerstories.org'
-    config.middleware.insert_after(::Rack::Runtime, "::Rack::Auth::Basic", "Staging") do |u, p|
-      [u, p] == ['csp', 'csp-stag!ng']
-    end
-  end
+  # if ENV['HOST_NAME'] == 'customerstories.org'
+  #   config.middleware.insert_after(::Rack::Runtime, "::Rack::Auth::Basic", "Staging") do |u, p|
+  #     [u, p] == ['csp', 'csp-stag!ng']
+  #   end
+  # end
 
   # moved from session_store.rb
   if ENV['HOST_NAME'] == 'customerstories.net'
