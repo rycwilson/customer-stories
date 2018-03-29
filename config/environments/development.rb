@@ -3,8 +3,8 @@
 
 Rails.application.configure do
 
-  config.force_ssl = true
-  config.ssl_options = { redirect: { port: 3000 }, hsts: { subdomains: true } }
+  # config.force_ssl = true
+  # config.ssl_options = { redirect: { port: 3000 }, hsts: { subdomains: true } }
 
   config.log_level = :debug
 
