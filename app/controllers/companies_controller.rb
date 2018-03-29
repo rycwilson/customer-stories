@@ -185,10 +185,9 @@ class CompaniesController < ApplicationController
   end
 
   def default_adwords_image_changed? (company_params, default_image_id)
-    company_params[:default_adwords_image_url].present? ||  # uploaded
-    company_params[:adwords_images_attributes]
-      .select { |index, image| image[:company_default] == 'true' }
-      .values[0][:id].to_i != default_image_id
+      company_params[:default_adwords_image_url].present? ||  # uploaded
+    (company_params[:adwords_images_attributes]
+      .try(:select) { |index, image| image[:company_default] == 'true' }[:id] != default_image_id)
   end
 
 end

@@ -5,7 +5,7 @@ class Result < ActiveRecord::Base
   validates :description, presence: true
   validates :description, length: { maximum: 70 }
 
-  after_commit :expire_results_fragment_cache, on: [:update, :destroy]
+  after_commit :expire_results_fragment_cache, on: [:create, :update, :destroy]
 
   def expire_results_fragment_cache
     story = self.success.story
