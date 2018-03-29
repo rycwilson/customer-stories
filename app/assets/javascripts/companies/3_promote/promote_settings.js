@@ -57,12 +57,11 @@ function promoteSettingsListeners () {
               window.clearTimeout(waitForImage);
               if (meetsSizeRequirements(img)) {
                 /**
-                 * To avoid non-valid images from being uploaded (and s3 dropping an input into the DOM hosing up the works),
-                 # only init S3 if size requirements are met. Pass data to skip validation and avoid infinite loop
+                 * To avoid invalid images (size/ratio requirement) from being uploaded (and s3 dropping an input
+                 * into the DOM hosing up the works), only init S3 if size requirements are met.
                  * Alternatively, autoUpload in the S3 initializer could be set to false and the upload could be
                  * manually triggered, but it's not clear how to do this
-                 * No danger of infinite loop, as trigger ing change != triggering change.bs.fileinput
-                 *
+                 * No danger of infinite loop, as triggering change != triggering change.bs.fileinput
                  */
                 initS3Upload();
                 $newImage.find('input[type="file"]').trigger('change');
