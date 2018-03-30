@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
     respond_to do |format|
       format.json do
         render({
-          json: { userEmail: current_user.email },
+          json: { userEmail: current_user.email, foo: 'bar' },
           status: 200
         })
       end
