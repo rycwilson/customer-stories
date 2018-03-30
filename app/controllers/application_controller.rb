@@ -17,7 +17,14 @@ class ApplicationController < ActionController::Base
   helper_method :company_curator?
 
   def auth_test
-    head :ok
+    respond_to do |format|
+      format.json do
+        render({
+          json: { userEmail: current_user.email },
+          status: 200
+        })
+      end
+    end
   end
 
   protected

@@ -30,6 +30,7 @@ Rails.application.routes.draw do
   post '/esp/notifications', to: 'site#esp_notifications'
 
   constraints(DevSubdomain) do
+    post '/successes', to: 'successes#zap_create', constraints: { zap: 'true' }
     authenticate(:user) do
       get '/auth-test', to: 'application#auth_test'
     end

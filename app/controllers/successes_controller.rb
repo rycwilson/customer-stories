@@ -49,6 +49,10 @@ class SuccessesController < ApplicationController
     respond_to { |format| format.js {} }
   end
 
+  def zap_create
+    # binding.remote_pry
+  end
+
   def update
     @success.update(success_params)
     respond_to { |format| format.js {} }
