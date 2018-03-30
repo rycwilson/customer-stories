@@ -16,6 +16,8 @@ class ApplicationController < ActionController::Base
 
   helper_method :company_curator?
 
+  respond_to(:json)
+
   def auth_test
     respond_to do |format|
       format.json do
