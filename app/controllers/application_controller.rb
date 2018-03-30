@@ -26,7 +26,7 @@ class ApplicationController < ActionController::Base
       format.any do  # zapier sends GET request with Accept = */* (any format permissable)
         render({
           # content_type: 'application/json',  # not necessary
-          user_email: current_user.email,
+          json: { user_email: current_user.email },
           status: 200
         })
       end
