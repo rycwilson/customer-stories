@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
-  # before_action { binding.remote_pry }
+  before_action { binding.remote_pry }
 
   # Devise - whitelist User params
   before_action :configure_permitted_parameters, if: :devise_controller?
@@ -11,7 +11,12 @@ class ApplicationController < ActionController::Base
   before_action(
     :check_subdomain,
     if: Proc.new { user_signed_in? },
-    unless: Proc.new { devise_controller? || invalid_subdomain? || params[:controller] == 'widgets' }
+    unless: Proc.new do
+      devise_controller? ||
+      invalid_subdomain? ||
+      params[:controller] == 'widgets' ||
+      request.subdomain == 'cspdev'
+    end
   )
 
   helper_method :company_curator?
@@ -21,7 +26,7 @@ class ApplicationController < ActionController::Base
       format.any do  # zapier sends GET request with Accept = */* (any format permissable)
         render({
           # content_type: 'application/json',  # not necessary
-          json: { user_email: current_user.email, foo: 'bar' },
+          json: { user_email: current_user.email },
           status: 200
         })
       end
