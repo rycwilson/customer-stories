@@ -16,13 +16,12 @@ class ApplicationController < ActionController::Base
 
   helper_method :company_curator?
 
-  respond_to(:json)
-
   def auth_test
     respond_to do |format|
-      format.json do
+      format.any do  # zapier sends GET request with Accept = */* (any format permissable)
         render({
-          json: { userEmail: current_user.email, foo: 'bar' },
+          # content_type: 'application/json',  # not necessary
+          json: { user_email: current_user.email, foo: 'bar' },
           status: 200
         })
       end
