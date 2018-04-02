@@ -110,6 +110,17 @@ class CompaniesController < ApplicationController
     respond_to { |format| format.js }
   end
 
+  # for zapier
+  def get_curators
+    respond_to do |format|
+      format.any do
+        render({
+          json: self.curators.to_json({ only: [:id], methods: [:full_name] })
+        )}
+      end
+    end
+  end
+
   private
 
   def company_params

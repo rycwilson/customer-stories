@@ -14,9 +14,11 @@ Rails.application.routes.draw do
 
   use_doorkeeper
 
+  # zapier
   authenticate(:user) do
-    post '/successes', to: 'successes#create', constraints: { zap: 'true' }
     get '/auth-test', to: 'application#auth_test'
+    get '/curators', to: 'companies#get_curators'
+    post '/successes', to: 'successes#create', constraints: { zap: 'true' }
   end
 
   get '/sitemap', to: 'site#sitemap'
