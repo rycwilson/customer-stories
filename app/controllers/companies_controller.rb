@@ -115,7 +115,7 @@ class CompaniesController < ApplicationController
     respond_to do |format|
       format.any do
         render({
-          json: self.curators.to_json({ only: [:id], methods: [:full_name] })
+          json: current_user.company.curators.to_json({ only: [:id], methods: [:full_name] })
         })
       end
     end
