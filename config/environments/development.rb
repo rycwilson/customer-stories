@@ -82,6 +82,6 @@ Rails.application.configure do
 
   # allow render on local network
   # (localtunnel)
-  config.web_console.whitelisted_ips = '73.15.227.206'  # ngrok 66.102.6.117!  ?
+  config.web_console.whitelisted_ips = ['73.15.227.206']
 
 end

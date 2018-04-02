@@ -1,7 +1,7 @@
 class CompaniesController < ApplicationController
 
   before_action :user_authorized?, only: [:edit, :show]
-  before_action :set_company, except: [:new, :create]
+  before_action :set_company, except: [:new, :create, :get_curators]
   before_action only: [:show, :edit] { set_gon(@company) }
   before_action :set_s3_direct_post, only: [:new, :edit, :show, :create]
 
@@ -116,7 +116,7 @@ class CompaniesController < ApplicationController
       format.any do
         render({
           json: self.curators.to_json({ only: [:id], methods: [:full_name] })
-        )}
+        })
       end
     end
   end
