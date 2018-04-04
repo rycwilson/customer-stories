@@ -27,7 +27,9 @@ class SuccessesController < ApplicationController
   def create
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
     if params[:zap].present?
+      populate_customer_attrs(params)
       binding.remote_pry
+
     elsif params[:imported_successes].present?
       # binding.remote_pry
       # 2exp2 signatures for an imported success (each requires its own .import statement)
@@ -53,10 +55,6 @@ class SuccessesController < ApplicationController
       end
     end
     respond_to { |format| format.js {} }
-  end
-
-  def zap_create
-    # binding.remote_pry
   end
 
   def update
@@ -147,6 +145,11 @@ class SuccessesController < ApplicationController
       end
     # binding.remote_pry
     successes
+  end
+
+  def populate_customer_attrs (params)
+    params[:success][:customer_attributes][:id] = Customer.find_by_name(params[:success][:customer_attributes][:name]).try(:id) || ''
+    params[:success][:customer_attributes][:company_id] = current_user.company_id
   end
 
 end

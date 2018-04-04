@@ -31,19 +31,19 @@ Rails.application.routes.draw do
   # sendgrid events (currently tracking open and click)
   post '/esp/notifications', to: 'site#esp_notifications'
 
-  constraints(DevSubdomain) do
-    post '/successes', to: 'successes#zap_create', constraints: { zap: 'true' }
-    authenticate(:user) do
-      get '/auth-test', to: 'application#auth_test'
-    end
-    # need to pick up on devise routes here, without doing so explicitly
-    # as that will conflict with devise routes declared below
-    # 'method' instead of 'action' - latter is keyword with its own params entry
-    devise_scope :user do
-      get '/:devise/:method', to: 'users/sessions#new', constraints: { devise: 'users', method: 'sign_in' }
-      post '/:devise/:method', to: 'users/sessions#create', constraints: { devise: 'users', method: 'sign_in' }
-    end
-  end
+  # constraints(DevSubdomain) do
+  #   authenticate(:user) do
+  #     get '/auth-test', to: 'application#auth_test'
+  #     post '/successes', to: 'successes#create', constraints: { zap: 'true' }
+  #   end
+  #   # need to pick up on devise routes here, without doing so explicitly
+  #   # as that will conflict with devise routes declared below
+  #   # 'method' instead of 'action' - latter is keyword with its own params entry
+  #   devise_scope :user do
+  #     get '/:devise/:method', to: 'users/sessions#new', constraints: { devise: 'users', method: 'sign_in' }
+  #     post '/:devise/:method', to: 'users/sessions#create', constraints: { devise: 'users', method: 'sign_in' }
+  #   end
+  # end
 
   # valid subdomains (company/subdomain exists, excludes www)
   constraints(CompanySubdomain) do
