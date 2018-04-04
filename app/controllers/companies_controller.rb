@@ -106,8 +106,8 @@ class CompaniesController < ApplicationController
   end
 
   def widget
-    @company.widget.update( widget_params )
-    respond_to { |format| format.js }
+    @company.widget.update(widget_params)
+    respond_to { |format| format.js {} }
   end
 
   # for zapier

@@ -28,14 +28,7 @@ class SuccessesController < ApplicationController
 
   def create
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
-    if params[:zap].present?
-      find_existing_customer(params[:success][:customer_attributes])
-      find_existing_users(
-        params[:success][:contributions_attributes]['0'][:referrer_attributes],
-        params[:success][:contributions_attributes]['1'][:contributor_attributes]
-      )
-      @success = Success.create(success_params)
-    elsif params[:imported_successes].present?
+    if params[:imported_successes].present?
       # binding.remote_pry
       # 2exp2 signatures for an imported success (each requires its own .import statement)
       # Success.import(import_signature_1(params[:imported_successes]), on_duplicate_key_updatevalidate: false)
@@ -50,6 +43,14 @@ class SuccessesController < ApplicationController
         @successes.each { |s| s.save(validate: false) }
       end
     else
+      if params[:zap].present?
+        # use customer name and user emails to find id attributes
+        find_existing_customer(params[:success][:customer_attributes])
+        find_existing_users(
+          params[:success][:contributions_attributes]['0'][:referrer_attributes],
+          params[:success][:contributions_attributes]['1'][:contributor_attributes]
+        )
+      end
       @success = Success.new(success_params)
       if @success.save
       else
@@ -57,7 +58,9 @@ class SuccessesController < ApplicationController
       end
     end
     if params[:zap].present?
-      respond_to { |format| format.any { render({ json: { status: "success" } }) } }
+      respond_to do |format|
+        format.any { render({ json: { status: @success.persisted? ? "success" : "error" } }) }
+      end
     else
       respond_to { |format| format.js {} }
     end
