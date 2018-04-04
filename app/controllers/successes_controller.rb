@@ -2,6 +2,11 @@
 class SuccessesController < ApplicationController
 
   before_action(except: [:index, :create]) { @success = Success.find(params[:id]) }
+  skip_before_action(
+    :verify_authenticity_token,
+    only: [:create],
+    if: -> { params[:zap].present? }
+  )
 
   def index
     company = Company.find_by(subdomain: request.subdomain)
@@ -22,7 +27,7 @@ class SuccessesController < ApplicationController
   def create
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
     if params[:zap].present?
-      # binding.remote_pry
+      binding.remote_pry
     elsif params[:imported_successes].present?
       # binding.remote_pry
       # 2exp2 signatures for an imported success (each requires its own .import statement)
@@ -38,6 +43,7 @@ class SuccessesController < ApplicationController
         @successes.each { |s| s.save(validate: false) }
       end
     else
+      binding.remote_pry
       # pp success_params
       @success = Success.new(success_params)
       # pp @success
