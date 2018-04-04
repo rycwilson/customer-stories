@@ -57,7 +57,7 @@ class SuccessesController < ApplicationController
       end
     end
     if params[:zap].present?
-      respond_to { |format| format.any { render({ json: { status: "ok" } }) } }
+      respond_to { |format| format.any { render({ json: { status: "success" } }) } }
     else
       respond_to { |format| format.js {} }
     end
