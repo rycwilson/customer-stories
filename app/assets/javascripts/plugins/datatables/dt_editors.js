@@ -4,7 +4,7 @@ function newPromotedStoriesEditor() {
     table: '#promoted-stories-table',
     ajax: {
       url: '/stories/_id_/promote',
-      type: 'put',
+      type: 'PUT',
       data: function (data) {
         var storyId = Object.keys(data.data)[0];
         return {
