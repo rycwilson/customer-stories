@@ -1,6 +1,8 @@
 
 class SuccessesController < ApplicationController
 
+  # respond_to(:html, :js, :json)
+
   before_action(except: [:index, :create]) { @success = Success.find(params[:id]) }
   skip_before_action(
     :verify_authenticity_token,
@@ -32,8 +34,7 @@ class SuccessesController < ApplicationController
         params[:success][:contributions_attributes]['0'][:referrer_attributes],
         params[:success][:contributions_attributes]['1'][:contributor_attributes]
       )
-      success = Success.create(success_params)
-binding.remote_pry
+      @success = Success.create(success_params)
     elsif params[:imported_successes].present?
       # binding.remote_pry
       # 2exp2 signatures for an imported success (each requires its own .import statement)
@@ -49,16 +50,17 @@ binding.remote_pry
         @successes.each { |s| s.save(validate: false) }
       end
     else
-      binding.remote_pry
-      # pp success_params
       @success = Success.new(success_params)
-      # pp @success
       if @success.save
       else
         pp @success.errors.full_messages
       end
     end
-    respond_to { |format| format.js {} }
+    if params[:zap].present?
+      respond_to { |format| format.any { render({ json: { status: "ok" } }) } }
+    else
+      respond_to { |format| format.js {} }
+    end
   end
 
   def update
@@ -152,16 +154,22 @@ binding.remote_pry
   end
 
   def find_existing_customer (customer_params)
-    customer_params[:id] = Customer.find_by_name(customer_params[:name]).try(:id) || ''
-    customer_params[:company_id] = current_user.company_id
+    if (customer = Customer.find_by_name(customer_params[:name]))
+      customer_params[:id] = customer.id
+      customer_params.delete_if { |k, v| k != 'id' }
+    else
+      customer_params[:company_id] = current_user.company_id
+    end
   end
 
   def find_existing_users (referrer_params, contributor_params)
-    [referrer_params, contributor_params].each do |user_params|
-      if (user = User.find_by_email(user_params[:email]))
-        user_params[:id] = user.id
-        user_params.delete_if { |k, v| !['id', 'title', 'phone'].include?(k) }
-      end
+    if (referrer = User.find_by_email(referrer_params[:email]))
+      referrer_params[:id] = referrer.id
+      referrer_params.delete_if { |k, v| !['id', 'title', 'phone'].include?(k) }
+    end
+    if (contributor = User.find_by_email(contributor_params[:email]))
+      contributor_params[:id] = contributor.id
+      contributor_params.delete_if { |k, v| !['id', 'title', 'phone'].include?(k) }
     end
   end
 
