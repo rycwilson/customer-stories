@@ -27,8 +27,12 @@ class SuccessesController < ApplicationController
   def create
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
     if params[:zap].present?
-      find_existing_customer(params[:customer_attributes])
-      find_existing_users(params[:referrer_attributes], params[:contributor_attributes])
+      find_existing_customer(params[:success][:customer_attributes])
+      find_existing_users(
+        params[:success][:contributions_attributes]['0'][:referrer_attributes],
+        params[:success][:contributions_attributes]['1'][:contributor_attributes]
+      )
+      success = Success.create(success_params)
 binding.remote_pry
     elsif params[:imported_successes].present?
       # binding.remote_pry
@@ -78,10 +82,10 @@ binding.remote_pry
       contributions_attributes: [
         :referrer_id, :contributor_id, :crowdsourcing_template_id, :success_contact,
         referrer_attributes: [
-          :id, :email, :first_name, :last_name, :title, :sign_up_code, :password
+          :id, :email, :first_name, :last_name, :title, :phone, :sign_up_code, :password
         ],
         contributor_attributes: [
-          :id, :email, :first_name, :last_name, :title, :sign_up_code, :password
+          :id, :email, :first_name, :last_name, :title, :phone, :sign_up_code, :password
         ]
       ],
     )
