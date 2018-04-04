@@ -27,9 +27,9 @@ class SuccessesController < ApplicationController
   def create
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
     if params[:zap].present?
-      populate_customer_attrs(params)
-      binding.remote_pry
-
+      find_existing_customer(params[:customer_attributes])
+      find_existing_users(params[:referrer_attributes], params[:contributor_attributes])
+binding.remote_pry
     elsif params[:imported_successes].present?
       # binding.remote_pry
       # 2exp2 signatures for an imported success (each requires its own .import statement)
@@ -147,9 +147,18 @@ class SuccessesController < ApplicationController
     successes
   end
 
-  def populate_customer_attrs (params)
-    params[:success][:customer_attributes][:id] = Customer.find_by_name(params[:success][:customer_attributes][:name]).try(:id) || ''
-    params[:success][:customer_attributes][:company_id] = current_user.company_id
+  def find_existing_customer (customer_params)
+    customer_params[:id] = Customer.find_by_name(customer_params[:name]).try(:id) || ''
+    customer_params[:company_id] = current_user.company_id
+  end
+
+  def find_existing_users (referrer_params, contributor_params)
+    [referrer_params, contributor_params].each do |user_params|
+      if (user = User.find_by_email(user_params[:email]))
+        user_params[:id] = user.id
+        user_params.delete_if { |k, v| !['id', 'title', 'phone'].include?(k) }
+      end
+    end
   end
 
 end
