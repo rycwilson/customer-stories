@@ -55,16 +55,18 @@ class SuccessesController < ApplicationController
         referrer_email = get_contact_email(success, 0) || ''
         # remove referrer_attributes to prevent a dup user from being created
         if user_lookup.any? do |success|
-          [success[:referrer][:email], success[:contributor][:email]].include?(referrer_email)
-        end
+            [success[:referrer][:email], success[:contributor][:email]].include?(referrer_email)
+          end
           success.except!(:referrer_attributes)
+        end
 
         contributor_email = get_contact_email(success, 1) || ''
         # remove contributor_attributes to prevent a dup user from being created
         if user_lookup.any? do |success|
-          [success[:referrer][:email], success[:contributor][:email]].include?(contributor_email)
-        end
+            [success[:referrer][:email], success[:contributor][:email]].include?(contributor_email)
+          end
           success.except!(:contributor_attributes)
+        end
 
         params[:success] = success
         @successes << Success.new(success_params)
@@ -83,8 +85,8 @@ class SuccessesController < ApplicationController
         success = identify_dup_users(success, success_index, user_lookup)
         pp success
         success.save(validate: false)  # no validate makes for faster execution
-        user_lookup = update_user_lookup(success, success_index, user_lookup)
-        pp email_id_lookup
+        user_lookup = update_user_lookup(success_index, success, user_lookup)
+        pp user_lookup
       end
 
     else
@@ -218,15 +220,20 @@ class SuccessesController < ApplicationController
     success
   end
 
-  # method keeps track of newly created users so their id can be used to avoid
-  # a duplicate attempt to create the same user
+  # method keeps track of newly created users so their id can stored and
+  # duplicate create attempts avoided
   # (try to avoid unneccesary db hits!)
-  def update_user_lookup (success, success_index, user_lookup)
+  def update_user_lookup (success_index, success, user_lookup)
+    user_lookup[success_index] = {}
     if success.referrer.present?
-      user_lookup[success_index][:referrer][:id] = success.referrer[:id]
+      user_lookup[success_index].merge({
+        referrer: { id: success.referrer[:id], email: success.referrer[:email] }
+      })
     end
-    if success.contact.present? &&
-      user_lookup[success_index][:contributor][:id] = success.contact[:id]
+    if success.contact.present?
+      user_lookup[success_index].merge({
+        contributor: { id: success.contact[:id], email: success.contact[:email] }
+      })
     end
     user_lookup
   end
