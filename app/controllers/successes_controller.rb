@@ -53,28 +53,30 @@ class SuccessesController < ApplicationController
       params[:imported_successes].each do |success_index, success|
 
         referrer_email = get_contact_email(success, 0) || ''
-        # remove referrer_attributes to prevent a dup user from being created
         if user_lookup.any? do |success|
-            [success[:referrer][:email], success[:contributor][:email]].include?(referrer_email)
+            [success[:referrer].try(:[], 'email'], success[:contributor].try(:[], 'email')]
+              .include?(referrer_email)
           end
-          success.except!(:referrer_attributes)
+          # remove referrer_attributes to prevent a dup user from being created
+          params[:imported_successes][success_index].except!(:referrer_attributes)
         end
 
         contributor_email = get_contact_email(success, 1) || ''
-        # remove contributor_attributes to prevent a dup user from being created
         if user_lookup.any? do |success|
-            [success[:referrer][:email], success[:contributor][:email]].include?(contributor_email)
+            [success[:referrer].try(:[], 'email'), success[:contributor].try(:[], 'email')]
+              .include?(contributor_email)
           end
-          success.except!(:contributor_attributes)
+          # remove contributor_attributes to prevent a dup user from being created
+          params[:imported_successes][success_index].except!(:contributor_attributes)
         end
 
         params[:success] = success
         @successes << Success.new(success_params)
 
         # add data to the lookup table
-        [referrer_email, contributor_email].each do |email, email_index|
-          contact_type = email_index == 0 ? 'referrer' : 'contributor'
+        [referrer_email, contributor_email].each_with_index do |email, email_index|
           if email.present?
+            contact_type = email_index == 0 ? 'referrer' : 'contributor'
             user_lookup[success_index][contact_type][:id] = ''
             user_lookup[success_index][contact_type][:email] = email
           end
@@ -83,9 +85,17 @@ class SuccessesController < ApplicationController
 
       @successes.each_with_index do |success, success_index|
         success = identify_dup_users(success, success_index, user_lookup)
+        puts "CREATING SUCCESS"
         pp success
+        puts "CREATING CONTRIBUTIONS"
+        pp success.contributions
+        puts "CREATING REFERRER"
+        pp success.contributions[0].try(:referrer)
+        puts "CREATING CONTACT"
+        pp success.contributions[1].try(:contributor)
         success.save(validate: false)  # no validate makes for faster execution
         user_lookup = update_user_lookup(success_index, success, user_lookup)
+        puts "UPDATED USER LOOKUP"
         pp user_lookup
       end
 
@@ -220,8 +230,7 @@ class SuccessesController < ApplicationController
     success
   end
 
-  # method keeps track of newly created users so their id can stored and
-  # duplicate create attempts avoided
+  # method keeps track of newly created users so no dup creates happen
   # (try to avoid unneccesary db hits!)
   def update_user_lookup (success_index, success, user_lookup)
     user_lookup[success_index] = {}
