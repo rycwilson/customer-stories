@@ -94,12 +94,14 @@ class Success < ActiveRecord::Base
   end
 
   def contact
-    customer_contact = self.contributions.select { |contribution| contribution.success_contact? }[0].try(:contributor)
+    customer_contact = self.contributions.find { |c| c.success_contact? }
+                           .try(:contributor)
     if customer_contact.present?
-      return customer_contact.slice(:id, :first_name, :last_name, :email, :title, :phone, :linkedin_url)
-                             .merge(previous_changes: customer_contact.previous_changes)
+      customer_contact
+        .slice(:id, :first_name, :last_name, :email, :title, :phone, :linkedin_url)
+        .merge(previous_changes: customer_contact.previous_changes)
     else
-      return nil
+      nil
     end
   end
 
