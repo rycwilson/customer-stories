@@ -24,23 +24,8 @@ class SuccessesController < ApplicationController
 
     if params[:imported_successes].present?
       @successes = []
-
-      # for avoiding duplicates (indexed with success index)
-      # [
-      #   ...,
-      #   {
-      #     contributor: {
-      #       id: 1
-      #       email: "joe@mail.com",
-      #     },
-      #     referrer: {
-      #       id: 2
-      #       email: "sue@mail.com",
-      #     }
-      #   }
-      #   ...
-      # ]
-      user_lookup = []
+      customer_lookup = {}
+      user_lookup = {}
 
       # binding.remote_pry
       # 2exp2 signatures for an imported success (each requires its own .import statement)
@@ -50,55 +35,52 @@ class SuccessesController < ApplicationController
       # Success.import(import_signature_4(params[:imported_successes]), validate: false)
       # binding.remote_pry
 
-      params[:imported_successes].each do |success_index, success|
+      params[:imported_successes].each do |success_index, imported_success|
 
-        referrer_email = get_contact_email(success, 0) || ''
-        if user_lookup.any? do |success|
-            [success[:referrer].try(:[], 'email'], success[:contributor].try(:[], 'email')]
-              .include?(referrer_email)
-          end
-          # remove referrer_attributes to prevent a dup user from being created
-          params[:imported_successes][success_index].except!(:referrer_attributes)
+        customer_name = imported_success[:customer_attributes][:name]
+        if (customer_id = customer_lookup[customer_name])
+          imported_success[:customer_id] = customer_id
+          imported_success.except!(:customer_attributes)
         end
 
-        contributor_email = get_contact_email(success, 1) || ''
-        if user_lookup.any? do |success|
-            [success[:referrer].try(:[], 'email'), success[:contributor].try(:[], 'email')]
-              .include?(contributor_email)
-          end
-          # remove contributor_attributes to prevent a dup user from being created
-          params[:imported_successes][success_index].except!(:contributor_attributes)
+        referrer_email = get_contact_email(imported_success, 'referrer') || ''
+        if (user_id = user_lookup[referrer_email])
+          imported_success[:contributions_attributes]['0'][:referrer_id] = user_id
+          imported_success[:contributions_attributes]['0'].except!(:referrer_attributes)
         end
 
-        params[:success] = success
-        @successes << Success.new(success_params)
-
-        # add data to the lookup table
-        [referrer_email, contributor_email].each_with_index do |email, email_index|
-          if email.present?
-            contact_type = email_index == 0 ? 'referrer' : 'contributor'
-            user_lookup[success_index][contact_type][:id] = ''
-            user_lookup[success_index][contact_type][:email] = email
-          end
+        contributor_email = get_contact_email(imported_success, 'contributor') || ''
+        if (user_id = user_lookup[contributor_email])
+          imported_success[:contributions_attributes]['1'][:contributor_id] = user_id
+          imported_success[:contributions_attributes]['1']  .except!(:contributor_attributes)
         end
-      end
 
-      @successes.each_with_index do |success, success_index|
-        success = identify_dup_users(success, success_index, user_lookup)
-        puts "CREATING SUCCESS"
-        pp success
-        puts "CREATING CONTRIBUTIONS"
-        pp success.contributions
-        puts "CREATING REFERRER"
-        pp success.contributions[0].try(:referrer)
-        puts "CREATING CONTACT"
-        pp success.contributions[1].try(:contributor)
+        params[:success] = imported_success
+        success = Success.new(success_params)
+
+        # puts "CREATING SUCCESS"
+        # pp success
+        # puts "CREATING CONTRIBUTIONS"
+        # pp success.contributions
+        # puts "CREATING REFERRER"
+        # pp success.contributions[0].try(:referrer)
+        # puts "CREATING CONTACT"
+        # pp success.contributions[1].try(:contributor)
+
         success.save(validate: false)  # no validate makes for faster execution
-        user_lookup = update_user_lookup(success_index, success, user_lookup)
-        puts "UPDATED USER LOOKUP"
-        pp user_lookup
-      end
+        @successes << success
 
+        # add entries to the lookup tables
+        customer_lookup[customer_name] ||= success.customer.id
+        [referrer_email, contributor_email].each_with_index do |email, index|
+          if email.present? && !user_lookup.has_key?(email)
+            user_lookup[email] = (index == 0 ? success.referrer[:id] : success.contact[:id])
+          end
+        end
+        # puts "UPDATED LOOKUPS"
+        # pp customer_lookup
+        # pp user_lookup
+      end
     else
       # pp success_params
       @success = Success.new(success_params)
@@ -201,58 +183,18 @@ class SuccessesController < ApplicationController
     successes
   end
 
-  # (try to avoid unneccesary db hits!)
-  def identify_dup_users (success, success_index, user_lookup)
-    # perform these steps for referrers/contributors that are present
-    # (the contributions imply their existence),
-    # but have had their attributes removed to avoid creation of dup records
-    # (i.e. the contribution is there, but the referrer/contributor is not)
-    if success.contributions[0].present? && success.contributions[0].referrer.blank?
-      referrer_email = user_lookup[success_index][:referrer][:email]
-
-      # find the user id and add it
-      success.contributions[0].referrer_id = user_lookup.find do |success|
-        success[:referrer][:email] == referrer_email ||
-        success[:contributor][:email] == referrer_email
-      end
-        .select { |contact_type, contact_data| contact_data[:email] == referrer_email }[:id]
-    end
-    if success.contributions[1].present? && success.contributions[1].contributor.blank?
-      contributor_email = user_lookup[success_index][:contributor][:email]
-
-      # find the user id and add it
-      success.contributions[1].contributor_id = user_lookup.find do |success|
-        success[:referrer][:email] == contributor_email ||
-        success[:contributor][:email] == contributor_email
-      end
-        .select { |contact_type, contact_data| contact_data[:email] == contributor_email }[:id]
-    end
-    success
-  end
-
-  # method keeps track of newly created users so no dup creates happen
-  # (try to avoid unneccesary db hits!)
-  def update_user_lookup (success_index, success, user_lookup)
-    user_lookup[success_index] = {}
-    if success.referrer.present?
-      user_lookup[success_index].merge({
-        referrer: { id: success.referrer[:id], email: success.referrer[:email] }
-      })
-    end
-    if success.contact.present?
-      user_lookup[success_index].merge({
-        contributor: { id: success.contact[:id], email: success.contact[:email] }
-      })
-    end
-    user_lookup
-  end
-
   # takes an imported success and extracts referrer/contributor email (if it exists)
-  # index is 0 (referrer) or 1 (contributor)
-  def get_contact_email (success, index)
-    success[:contributions_attributes].present? &&
-    success[:contributions_attributes].try(:[], index) &&
-    success[:contributions][index.to_s]["#{type}_attributes"][:email]
+  def get_contact_email (success, contact_type)
+    success.dig(
+      :contributions_attributes,
+      "#{contact_type == 'referrer' ? '0' : '1'}",
+      "#{contact_type}_attributes",
+      :email
+    )
+    # success[:contributions_attributes].present? &&
+    # success[:contributions_attributes].try(:[], index.to_s) &&
+    # success[:contributions][index.to_s]
+    #   ["#{index == 0 ? 'referrer' : 'contributor'}_attributes"][:email]
   end
 
 end
