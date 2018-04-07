@@ -92,6 +92,7 @@ class SuccessesController < ApplicationController
         end
         [referrer_template, contact_template].each do |template|
           if template.present? && !template_lookup.has_key?(template)
+            binding.remote_pry
             template_lookup[template] = CrowdsourcingTemplate.where(name: template, company_id: @company.id).take.id
           end
         end
@@ -213,8 +214,16 @@ class SuccessesController < ApplicationController
   end
 
   def dig_contact_template (success, contact_type)
-    success.dig(:contributions_attributes, '0', "#{contact_type}_attributes", :email) ||
-    success.dig(:contributions_attributes, '1', "#{contact_type}_attributes", :email)
+    contribution_index = success[:contributions_attributes].select do |index, contribution|
+      contribution.has_key?("#{contact_type}_id") ||
+      contribution.has_key?("#{contact_type}_attributes")
+    end.keys[0]
+    success.dig(
+      :contributions_attributes,
+      contribution_index,
+      :crowdsourcing_template_attributes,
+      :name
+    )
   end
 
   # method fills in the id of an existing user, and removes the referrer/contributor_attributes hash
