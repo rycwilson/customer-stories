@@ -1,15 +1,22 @@
 
 (function () {
+
   var company = <%= raw @company.to_json({
           only: [],
           include: {
             curators: { only: [:id], methods: [:full_name] },
             customers: { only: [:id, :name] },
             contributors: { only: [:id], methods: [:full_name] },
-            referrers: { only: [:id], methods: [:full_name] }
+            referrers: { only: [:id], methods: [:full_name] },
+            crowdsourcing_templates: { only: [:id, :name] }
           }
-        }) %>,
-      newSuccess = <%= @success ? true : false %> && <%= raw @success.to_json({
+        }) %>;
+
+  // update the app object (company data also used for updateSelectOptions() below)
+  app.company.customers = company.customers
+  app.company.crowdsourcing_templates = company.crowdsourcing_templates
+
+  var newSuccess = <%= @success ? true : false %> && <%= raw @success.to_json({
           only: [:id],
           include: { curator: { only: [:id] } }
         }) %>,

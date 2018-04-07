@@ -80,7 +80,7 @@ class SuccessesController < ApplicationController
         # puts "CREATING CONTACT"
         # pp success.contributions[1].try(:contributor)
 
-        # success.save(validate: false)  # no validate makes for faster execution
+        success.save(validate: false)  # no validate makes for faster execution
         @successes << success
 
         # add entries to the lookup tables
@@ -92,7 +92,6 @@ class SuccessesController < ApplicationController
         end
         [referrer_template, contact_template].each do |template|
           if template.present? && !template_lookup.has_key?(template)
-            binding.remote_pry
             template_lookup[template] = CrowdsourcingTemplate.where(name: template, company_id: @company.id).take.id
           end
         end
@@ -111,7 +110,7 @@ class SuccessesController < ApplicationController
       end
     end
     # need to update new customers and templates
-    gon.company = JSON.parse(company.to_json({
+    gon.company = JSON.parse(@company.to_json({
       methods: [:curators, :customers, :crowdsourcing_templates, :widget]
     }))
     respond_to { |format| format.js {} }
