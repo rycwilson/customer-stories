@@ -145,69 +145,68 @@ function newSuccessListeners () {
               }
               return template ? template.id : null;
             },
-            contactStatus = function (contributorType, email, firstName, lastName) {
+            contactIsValid = function (contactType, email, firstName, lastName) {
+              console.log('adding ' + (contactType === 'referrer' ? 'referrer' : 'customer contact'));
               if (getUserId(email)) {
-                console.log('User exists:', email);
+                console.log('user exists:', email);
+                return true;
               } else if (firstName && lastName && email) {
-                console.log('new User:', email);
+                console.log('new user:', email);
+                return true;
               } else {
-                console.log('contact details missing, ' + contributorType + ' ignored');
+                console.log('contact details missing, ' + contactType + ' ignored');
+                return false;
               }
             },
             rowIsValid = function (row) {
               if (!row.opportunityName) {
-                console.log('Row is invalid: success name is missing');
+                console.log('row is invalid: success name is missing');
                 return false;
               } else if (!row.customerName) {
-                console.log('Row is invalid: customer name is missing');
+                console.log('row is invalid: customer name is missing');
                 return false;
               } else if (!curatorIsValid(row.curatorEmail)) {
                 console.log('row is invalid: curator email does not exist');
                 return false;
               } else {
+                console.log('row is valid');
                 return true;
               }
             },
-            customerAttrs = function (customerName) {
-              var customer = app.company.customers.find(function (customer) {
-                    return customer.name === customerName;
-                  });
-              return {
-                id: customer ? customer.id : '',
-                name: customerName,
-                company_id: app.company.id,
-              };
-            },
-            contributionsAttrs = function (contributorType, invitationTemplateName, email, firstName, lastName, title) {
-              var user = { id: getUserId(email) },
+            contributionsAttrs = function (contactType, invitationTemplateName, email, firstName, lastName, title, phone) {
+              var userId = getUserId(email),
                   attrs = {
+                    success_contact: contactType === 'contributor' ? true : false,
                     crowdsourcing_template_id: getInvitationTemplateId(invitationTemplateName),
-                    success_contact: contributorType === 'contributor' ? true : false
                   };
-              if (user.id) {
-                Object.assign(
-                    user,
-                    (contributions.find(function (c) { return c.contributor.id == user.id; }) &&
-                    contributions.find(function (c) { return c.contributor.id == user.id; }).contributor) ||
-                    (contributions.find(function (c) { return c.referrer.id == user.id; }) &&
-                    contributions.find(function (c) { return c.referrer.id == user.id; }).referrer)
-                  );
-                delete user.full_name;
+
+              // new or existing user
+              attrs[contactType + '_id'] = userId || null
+
+              /**
+               * include invitation template attributes if a template name was passed
+               * but no such template exists
+               */
+              if (invitationTemplateName && !attrs.crowdsourcing_template_id) {
+                Object.assign(attrs, {
+                  crowdsourcing_template_attributes: {
+                    name: invitationTemplateName,
+                    company_id: app.company.id
+                  }
+                })
               }
 
-              // create a new user (contributor or referrer)
-              attrs[contributorType + '_attributes'] = {};
-              attrs[contributorType + '_attributes'].id = user.id;
-              attrs[contributorType + '_attributes'].email = user.email || email;
-              attrs[contributorType + '_attributes'].first_name = user.first_name || firstName;
-              attrs[contributorType + '_attributes'].last_name = user.last_name || lastName;
-              attrs[contributorType + '_attributes'].title = user.title || title;
-
-              // TODO: differing keys call for batched imports
-              // keep these attributes separate to avoid overwriting passwords
-              if (!user.id) {
-                attrs[contributorType + '_attributes'].password = email;
-                attrs[contributorType + '_attributes'].sign_up_code = 'csp_beta';
+              // new user
+              if (!userId) {
+                attrs[contactType + '_attributes'] = {
+                  first_name: firstName,
+                  last_name: lastName,
+                  title: title,
+                  email: email,
+                  phone: phone,
+                  password: email,
+                  sign_up_code: 'csp_beta'
+                };
               }
               return attrs;
             },
@@ -216,30 +215,48 @@ function newSuccessListeners () {
               var curator = app.company.curators.find(function (curator) {
                     return curator.email === row.curatorEmail;
                   }),
+                  customer = app.company.customers.find(function (customer) {
+                    return customer.name === row.customerName;
+                  }),
                   success = {
                     name: row.opportunityName,
                     description: row.opportunityDescription,
                     curator_id: (curator && curator.id) || '',
-                    customer_attributes: {},
-                    contributions_attributes: []
+                    customer_id: (customer && customer.id) || ''
                   };
-              Object.assign(success.customer_attributes, customerAttrs(row.customerName));
-              console.log('adding referrer (contributor #1)');
-              contactStatus('referrer', row.referrerEmail, row.referrerFirstName, row.referrerLastName);
-              success.contributions_attributes.push(
-                contributionsAttrs('referrer', row.invitationTemplateNameReferrer, row.referrerEmail, row.referrerFirstName, row.referrerLastName, row.referrerTitle)
-              );
-              console.log('adding contact (contributor #2): ', row.contactEmail);
-              contactStatus('contributor', row.contactEmail, row.contactFirstName, row.contactLastName);
-              success.contributions_attributes.push(
-                contributionsAttrs('contributor', row.invitationTemplateNameContact, row.contactEmail, row.contactFirstName, row.contactLastName, row.contactTitle)
-              );
+
+              // new customer
+              if (!success.customer_id) {
+                success.customer_attributes = {
+                  name: row.customerName,
+                  company_id: app.company.id
+                }
+              }
+
+              // referrer (if present)
+              if (contactIsValid('referrer', row.referrerEmail, row.referrerFirstName, row.referrerLastName)) {
+                success.contributions_attributes = success.contributions_attributes || []
+                success.contributions_attributes.push(
+                  contributionsAttrs(
+                    'referrer', row.invitationTemplateNameReferrer, row.referrerEmail, row.referrerFirstName, row.referrerLastName, row.referrerTitle, row.referrerPhone
+                  )
+                );
+              }
+
+              // customer contact (if present)
+              if (contactIsValid('contributor', row.contactEmail, row.contactFirstName, row.contactLastName)) {
+                success.contributions_attributes = success.contributions_attributes || []
+                success.contributions_attributes.push(
+                  contributionsAttrs(
+                    'contributor', row.invitationTemplateNameContact, row.contactEmail, row.contactFirstName, row.contactLastName, row.contactTitle, row.contactPhone
+                  )
+                );
+              }
               return success;
             };
         data.forEach(function (row, index) {
           console.log('importing row', index + 2 + '...');
           if (rowIsValid(row)) {
-            console.log('row is valid');
             successes.push(Object.assign(parseRow(row), { status: 'valid' }));
           } else {
             successes.push({ status: "error" });

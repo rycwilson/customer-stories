@@ -26,6 +26,7 @@ class SuccessesController < ApplicationController
       @successes = []
       customer_lookup = {}
       user_lookup = {}
+      template_lookup = {}
 
       # binding.remote_pry
       # 2exp2 signatures for an imported success (each requires its own .import statement)
@@ -37,22 +38,34 @@ class SuccessesController < ApplicationController
 
       params[:imported_successes].each do |success_index, imported_success|
 
-        customer_name = imported_success[:customer_attributes][:name]
-        if (customer_id = customer_lookup[customer_name])
-          imported_success[:customer_id] = customer_id
-          imported_success.except!(:customer_attributes)
+        # if a new customer, look for id in customer_lookup
+        if (customer_name = imported_success[:customer_attributes][:name])
+          if (customer_id = customer_lookup[customer_name])
+            imported_success[:customer_id] = customer_id
+            imported_success.except!(:customer_attributes)
+          end
         end
 
-        referrer_email = get_contact_email(imported_success, 'referrer') || ''
-        if (user_id = user_lookup[referrer_email])
-          imported_success[:contributions_attributes]['0'][:referrer_id] = user_id
-          imported_success[:contributions_attributes]['0'].except!(:referrer_attributes)
-        end
+        referrer_email = contact_email = ''
+        referrer_template = contact_template = ''
+        ['referrer', 'contributor'].each do |contact_type|
 
-        contributor_email = get_contact_email(imported_success, 'contributor') || ''
-        if (user_id = user_lookup[contributor_email])
-          imported_success[:contributions_attributes]['1'][:contributor_id] = user_id
-          imported_success[:contributions_attributes]['1']  .except!(:contributor_attributes)
+          # if a new referrer/contact, look for id in user_lookup
+          if (email = dig_contact_email(imported_success, contact_type))
+            contact_type == 'referrer' ? referrer_email = email : contact_email = email
+            if (user_id = user_lookup[email])
+              imported_success = add_dup_contact(imported_success, contact_type, user_id)
+            end
+          end
+
+          # if a new invitation template, look for in in template_lookup
+          if (template = dig_contact_template(imported_success, contact_type))
+            contact_type == 'referrer' ? referrer_template = template : contact_template = template
+            if (template_id = template_lookup[template])
+              imported_success = add_dup_template(imported_success, contact_type, template_id)
+            end
+          end
+
         end
 
         params[:success] = imported_success
@@ -67,16 +80,22 @@ class SuccessesController < ApplicationController
         # puts "CREATING CONTACT"
         # pp success.contributions[1].try(:contributor)
 
-        success.save(validate: false)  # no validate makes for faster execution
+        # success.save(validate: false)  # no validate makes for faster execution
         @successes << success
 
         # add entries to the lookup tables
-        customer_lookup[customer_name] ||= success.customer.id
-        [referrer_email, contributor_email].each_with_index do |email, index|
+        customer_lookup[customer_name] ||= success.customer_id
+        [referrer_email, contact_email].each_with_index do |email, index|
           if email.present? && !user_lookup.has_key?(email)
             user_lookup[email] = (index == 0 ? success.referrer[:id] : success.contact[:id])
           end
         end
+        [referrer_template, contact_template].each do |template|
+          if template.present? && !template_lookup.has_key?(template)
+            template_lookup[template] = CrowdsourcingTemplate.where(name: template, company_id: @company.id).take.id
+          end
+        end
+
         # puts "UPDATED LOOKUPS"
         # pp customer_lookup
         # pp user_lookup
@@ -90,6 +109,10 @@ class SuccessesController < ApplicationController
         pp @success.errors.full_messages
       end
     end
+    # need to update new customers and templates
+    gon.company = JSON.parse(company.to_json({
+      methods: [:curators, :customers, :crowdsourcing_templates, :widget]
+    }))
     respond_to { |format| format.js {} }
   end
 
@@ -184,17 +207,33 @@ class SuccessesController < ApplicationController
   end
 
   # takes an imported success and extracts referrer/contributor email (if it exists)
-  def get_contact_email (success, contact_type)
-    success.dig(
-      :contributions_attributes,
-      "#{contact_type == 'referrer' ? '0' : '1'}",
-      "#{contact_type}_attributes",
-      :email
-    )
-    # success[:contributions_attributes].present? &&
-    # success[:contributions_attributes].try(:[], index.to_s) &&
-    # success[:contributions][index.to_s]
-    #   ["#{index == 0 ? 'referrer' : 'contributor'}_attributes"][:email]
+  def dig_contact_email (success, contact_type)
+    success.dig(:contributions_attributes, '0', "#{contact_type}_attributes", :email) ||
+    success.dig(:contributions_attributes, '1', "#{contact_type}_attributes", :email)
+  end
+
+  def dig_contact_template (success, contact_type)
+    success.dig(:contributions_attributes, '0', "#{contact_type}_attributes", :email) ||
+    success.dig(:contributions_attributes, '1', "#{contact_type}_attributes", :email)
+  end
+
+  # method fills in the id of an existing user, and removes the referrer/contributor_attributes hash
+  def add_dup_contact (success, contact_type, user_id)
+    contribution_index = success[:contributions_attributes].select do |index, contribution|
+      contribution.has_key?("#{contact_type}_attributes")
+    end.keys[0]
+    success[:contributions_attributes][contribution_index]["#{contact_type}_id"] = user_id
+    success[:contributions_attributes][contribution_index].except!("#{contact_type}_attributes")
+    success
+  end
+
+  def add_dup_template (success, contact_type, template_id)
+    contribution_index = success[:contributions_attributes].select do |index, contribution|
+      contribution.has_key?("#{contact_type}_attributes")
+    end.keys[0]
+    success[:contributions_attributes][contribution_index][:crowdsourcing_template_id] = template_id
+    success[:contributions_attributes][contribution_index].except!([:crowdsourcing_template_attributes])
+    success
   end
 
 end
