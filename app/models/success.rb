@@ -43,6 +43,7 @@ class Success < ActiveRecord::Base
   accepts_nested_attributes_for(:customer, allow_destroy: false)
   accepts_nested_attributes_for(:results, allow_destroy: true)
   # accepts_nested_attributes_for(:contributions, allow_destroy: false, reject_if: :missing_contributor_or_referrer_attributes?)
+  accepts_nested_attributes_for(:contributions, allow_destroy: false)
 
   # after_commit(on: [:create, :destroy]) do
   # end
@@ -131,16 +132,16 @@ class Success < ActiveRecord::Base
   # private
 
   # reject a nested contribution if required attributes are missing for either contributor or referrer
-  # def missing_contributor_or_referrer_attributes? (contribution_attrs)
-  #   r_attrs = contribution_attrs[:referrer_attributes]
-  #   c_attrs = contribution_attrs[:contributor_attributes]
-  #   (r_attrs.present? &&
-  #   !User.exists?(r_attrs[:id]) &&
-  #   (r_attrs[:email].blank? || r_attrs[:first_name].blank? || r_attrs[:last_name].blank?)) ||
-  #   (c_attrs.present? &&
-  #   !User.exists?(c_attrs[:id]) &&
-  #   (c_attrs[:email].blank? || c_attrs[:first_name].blank? || c_attrs[:last_name].blank?))
-  # end
+  def missing_contributor_or_referrer_attributes? (contribution_attrs)
+    r_attrs = contribution_attrs[:referrer_attributes]
+    c_attrs = contribution_attrs[:contributor_attributes]
+    (r_attrs.present? &&
+    !User.exists?(r_attrs[:id]) &&
+    (r_attrs[:email].blank? || r_attrs[:first_name].blank? || r_attrs[:last_name].blank?)) ||
+    (c_attrs.present? &&
+    !User.exists?(c_attrs[:id]) &&
+    (c_attrs[:email].blank? || c_attrs[:first_name].blank? || c_attrs[:last_name].blank?))
+  end
 
 end
 
