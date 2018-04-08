@@ -140,7 +140,7 @@ class SuccessesController < ApplicationController
       customer_attributes: [:id, :name, :company_id],
       contributions_attributes: [
         :referrer_id, :contributor_id, :crowdsourcing_template_id, :success_contact,
-        crowdsourcing_template_attributes: { :name, :company_id },
+        crowdsourcing_template_attributes: [ :name, :company_id ],
         referrer_attributes: [
           :id, :email, :first_name, :last_name, :title, :phone, :sign_up_code, :password
         ],
