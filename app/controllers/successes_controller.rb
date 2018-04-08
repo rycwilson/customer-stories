@@ -70,16 +70,6 @@ class SuccessesController < ApplicationController
 
         params[:success] = imported_success
         success = Success.new(success_params)
-
-        # puts "CREATING SUCCESS"
-        # pp success
-        # puts "CREATING CONTRIBUTIONS"
-        # pp success.contributions
-        # puts "CREATING REFERRER"
-        # pp success.contributions[0].try(:referrer)
-        # puts "CREATING CONTACT"
-        # pp success.contributions[1].try(:contributor)
-
         success.save(validate: false)  # no validate makes for faster execution
         @successes << success
 
@@ -96,23 +86,14 @@ class SuccessesController < ApplicationController
           end
         end
 
-        # puts "UPDATED LOOKUPS"
-        # pp customer_lookup
-        # pp user_lookup
       end
     else
-      # pp success_params
       @success = Success.new(success_params)
-      # pp @success
       if @success.save
       else
         pp @success.errors.full_messages
       end
     end
-    # need to update new customers and templates
-    gon.company = JSON.parse(@company.to_json({
-      methods: [:curators, :customers, :crowdsourcing_templates, :widget]
-    }))
     respond_to { |format| format.js {} }
   end
 
@@ -132,15 +113,17 @@ class SuccessesController < ApplicationController
 
   # status will be present in case of csv upload
   def success_params
-    params.require(:success).permit(:name, :description, :customer_id, :curator_id,
+    params.require(:success).permit(
+      :name, :description, :customer_id, :curator_id,
       customer_attributes: [:id, :name, :company_id],
       contributions_attributes: [
         :referrer_id, :contributor_id, :crowdsourcing_template_id, :success_contact,
+        crowdsourcing_template_attributes: { :name, :company_id },
         referrer_attributes: [
-          :id, :email, :first_name, :last_name, :title, :sign_up_code, :password
+          :id, :email, :first_name, :last_name, :title, :phone, :sign_up_code, :password
         ],
         contributor_attributes: [
-          :id, :email, :first_name, :last_name, :title, :sign_up_code, :password
+          :id, :email, :first_name, :last_name, :title, :phone, :sign_up_code, :password
         ]
       ],
     )

@@ -113,9 +113,6 @@ function newSuccessListeners () {
       parseCsvData = function (data) {
         var successes = [], logSuccesses = [],
             contributions = $('#prospect-contributors-table').DataTable().rows().data().toArray(),
-            curatorIsValid = function (email) {
-              return app.company.curators.find(function (curator) { return curator.email === email; });
-            },
             // here a 'contributor' is either a referrer or contact
             getUserId = function (email) {
               // need to separately identify the matching user so we know which to reference below (contributor or referrer)
@@ -144,6 +141,9 @@ function newSuccessListeners () {
                 console.log('could not find template:', templateName);
               }
               return template ? template.id : null;
+            },
+            curatorIsValid = function (email) {
+              return app.company.curators.find(function (curator) { return curator.email === email; });
             },
             contactIsValid = function (contactType, email, firstName, lastName) {
               console.log('adding ' + (contactType === 'referrer' ? 'referrer' : 'customer contact'));
