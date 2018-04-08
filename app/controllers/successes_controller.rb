@@ -266,7 +266,7 @@ class SuccessesController < ApplicationController
     success[:contributions_attributes][contribution_index][:crowdsourcing_template_id] = template_id
     success[:contributions_attributes][contribution_index].except!([:crowdsourcing_template_attributes])
     success
->>>>>>> master
+
   end
 
 end
