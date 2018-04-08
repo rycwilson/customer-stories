@@ -37,10 +37,10 @@ class Contribution < ActiveRecord::Base
   # don't need reject_if for the contributor, as the contribution would have been rejected already
   accepts_nested_attributes_for(:contributor, allow_destroy: false)
 
-  before_create(:generate_access_token)
+  # before_create(:generate_access_token)
 
-  # when creating a new success with referrer, a contribution is created
-  # with referrer_id == contributor_id (i.e. contributor and referrer are same)
+  # # when creating a new success with referrer, a contribution is created
+  # # with referrer_id == contributor_id (i.e. contributor and referrer are same)
   before_create(:set_contributor_id_for_new_success_referrer, if: Proc.new do
       # use a success virtual attribute so we can see from here if it's a new record
       # also note that the inverse_of setting is necessary for the success -> contributions relationship

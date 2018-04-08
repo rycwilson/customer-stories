@@ -201,17 +201,17 @@ class StoriesController < ApplicationController
       else
         # errors
       end
-      # this is the datatables data needed for a promoted story row
+      # this is the datatables data needed for a promoted story row (see promoted method above)
       dt_data = [
         JSON.parse(
           @story.to_json({
-            only: [:id, :title],
-            methods: [:ads_status, :ads_long_headline, :ads_image_url],
+            only: [:id, :title, :slug],
+            methods: [:ads_status, :ads_long_headline, :ads_image_url, :csp_story_path],
             include: {
               success: {
                 only: [],
                 include: {
-                  customer: { only: [:name] }
+                  customer: { only: [:name, :slug] }
                 }
               }
             }

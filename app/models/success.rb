@@ -42,7 +42,8 @@ class Success < ActiveRecord::Base
 
   accepts_nested_attributes_for(:customer, allow_destroy: false)
   accepts_nested_attributes_for(:results, allow_destroy: true)
-  accepts_nested_attributes_for(:contributions, allow_destroy: false, reject_if: :missing_contributor_or_referrer_attributes?)
+  # accepts_nested_attributes_for(:contributions, allow_destroy: false, reject_if: :missing_contributor_or_referrer_attributes?)
+  accepts_nested_attributes_for(:contributions, allow_destroy: false)
 
   # after_commit(on: [:create, :destroy]) do
   # end
@@ -94,12 +95,14 @@ class Success < ActiveRecord::Base
   end
 
   def contact
-    customer_contact = self.contributions.select { |contribution| contribution.success_contact? }[0].try(:contributor)
+    customer_contact = self.contributions.find { |c| c.success_contact? }
+                           .try(:contributor)
     if customer_contact.present?
-      return customer_contact.slice(:id, :first_name, :last_name, :email, :title, :phone, :linkedin_url)
-                             .merge(previous_changes: customer_contact.previous_changes)
+      customer_contact
+        .slice(:id, :first_name, :last_name, :email, :title, :phone, :linkedin_url)
+        .merge(previous_changes: customer_contact.previous_changes)
     else
-      return nil
+      nil
     end
   end
 
