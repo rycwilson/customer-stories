@@ -98,8 +98,8 @@ class SuccessesController < ApplicationController
     else
       if params[:zap].present?
         # use customer name and user emails to find id attributes
-        find_existing_customer(params[:success][:customer_attributes])
-        find_existing_users(
+        find_existing_customer_from_zap(params[:success][:customer_attributes])
+        find_existing_users_from_zap(
           params[:success][:contributions_attributes]['0'][:referrer_attributes],
           params[:success][:contributions_attributes]['1'][:contributor_attributes]
         )
@@ -211,8 +211,11 @@ class SuccessesController < ApplicationController
     successes
   end
 
-  def find_existing_customer (customer_params)
-    if (customer = Customer.find_by_name(customer_params[:name]))
+  # method receives params[:success][:customer_attributes] and either
+  # - finds customer, or
+  # - provides company_id for the new customer
+  def find_existing_customer_from_zap (customer_params)
+    if (customer = Customer.where(name: customer_params[:name], company_id: current_user.company_id).take)
       customer_params[:id] = customer.id
       customer_params.delete_if { |k, v| k != 'id' }
     else
@@ -220,7 +223,7 @@ class SuccessesController < ApplicationController
     end
   end
 
-  def find_existing_users (referrer_params, contributor_params)
+  def find_existing_users_from_zap (referrer_params, contributor_params)
     if (referrer = User.find_by_email(referrer_params[:email]))
       referrer_params[:id] = referrer.id
       referrer_params.delete_if { |k, v| !['id', 'title', 'phone'].include?(k) }
