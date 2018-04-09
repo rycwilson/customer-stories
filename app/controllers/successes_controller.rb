@@ -229,6 +229,7 @@ class SuccessesController < ApplicationController
       contributor_params[:id] = contributor.id
       contributor_params.delete_if { |k, v| !['id', 'title', 'phone'].include?(k) }
     end
+  end
 
   # takes an imported success and extracts referrer/contributor email (if it exists)
   def dig_contact_email (success, contact_type)
