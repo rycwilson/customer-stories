@@ -104,10 +104,12 @@ class SuccessesController < ApplicationController
           params[:success][:contributions_attributes]['1'][:contributor_attributes]
         )
       end
-      @success = Success.new(success_params)
-      if @success.save
-      else
-        pp @success.errors.full_messages
+      unless params[:zap].present? && ignore_zap?(params[:success])
+        @success = Success.new(success_params)
+        if @success.save
+        else
+          pp @success.errors.full_messages
+        end
       end
     end
     if params[:zap].present?
@@ -270,6 +272,19 @@ class SuccessesController < ApplicationController
     success[:contributions_attributes][contribution_index][:crowdsourcing_template_id] = template_id
     success[:contributions_attributes][contribution_index].except!([:crowdsourcing_template_attributes])
     success
+  end
+
+  def ignore_zap? (success)
+    # dup success (name) and customer combination
+    # (customer_id is available since this runs after find_existing_customer_from_zap
+    if Success.joins(:customer)
+              .where(name: success[:name])
+              .where(customers: { id: success[:customer_id] })
+              .present?
+      true
+    else
+      false
+    end
   end
 
 end

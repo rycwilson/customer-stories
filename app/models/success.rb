@@ -42,8 +42,9 @@ class Success < ActiveRecord::Base
 
   accepts_nested_attributes_for(:customer, allow_destroy: false)
   accepts_nested_attributes_for(:results, allow_destroy: true)
-  # accepts_nested_attributes_for(:contributions, allow_destroy: false, reject_if: :missing_contributor_or_referrer_attributes?)
-  accepts_nested_attributes_for(:contributions, allow_destroy: false)
+  # contribution must be rejected if its contributor or referrer is missing required attributes
+  # this may happen with a zap (no such validation in the zapier app)
+  accepts_nested_attributes_for(:contributions, allow_destroy: false, reject_if: :missing_contributor_or_referrer_attributes?)
 
   # after_commit(on: [:create, :destroy]) do
   # end
@@ -132,9 +133,9 @@ class Success < ActiveRecord::Base
   # private
 
   # reject a nested contribution if required attributes are missing for either contributor or referrer
-  def missing_contributor_or_referrer_attributes? (contribution_attrs)
-    r_attrs = contribution_attrs[:referrer_attributes]
-    c_attrs = contribution_attrs[:contributor_attributes]
+  def missing_contributor_or_referrer_attributes? (contribution)
+    r_attrs = contribution[:referrer_attributes]
+    c_attrs = contribution[:contributor_attributes]
     (r_attrs.present? &&
     !User.exists?(r_attrs[:id]) &&
     (r_attrs[:email].blank? || r_attrs[:first_name].blank? || r_attrs[:last_name].blank?)) ||
