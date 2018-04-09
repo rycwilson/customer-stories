@@ -36,6 +36,7 @@ class Contribution < ActiveRecord::Base
   accepts_nested_attributes_for(:referrer, allow_destroy: false, reject_if: :missing_referrer_attributes?)
   # don't need reject_if for the contributor, as the contribution would have been rejected already
   accepts_nested_attributes_for(:contributor, allow_destroy: false)
+  accepts_nested_attributes_for(:crowdsourcing_template)
 
   # before_create(:generate_access_token)
 

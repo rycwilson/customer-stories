@@ -23,7 +23,9 @@ class CrowdsourcingTemplate < ActiveRecord::Base
   #   self.contributor_questions << self.company.contributor_questions.default
   # end
 
-  before_create() { self.format_for_storage() }
+  before_create(unless: Proc.new { |template| template.request_body.blank? }) do
+    self.format_for_storage()
+  end
   before_update() { self.format_for_storage() }
 
   def button_style_settings

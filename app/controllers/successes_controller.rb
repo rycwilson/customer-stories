@@ -47,8 +47,8 @@ class SuccessesController < ApplicationController
       params[:imported_successes].each do |success_index, imported_success|
 
         # if a new customer, look for id in customer_lookup
-        if (customer_name = imported_success[:customer_attributes][:name])
-          if (customer_id = customer_lookup[customer_name])
+        if (customer_name = imported_success.dig(:customer_attributes, :name))
+          if customer_name.present? && (customer_id = customer_lookup[customer_name])
             imported_success[:customer_id] = customer_id
             imported_success.except!(:customer_attributes)
           end
