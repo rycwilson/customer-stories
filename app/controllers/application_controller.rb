@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
       devise_controller? ||
       invalid_subdomain? ||
       params[:controller] == 'widgets'
-      # request.subdomain == 'cspdev'
+      request.subdomain == 'cspdev'
     end
   )
 
