@@ -11,6 +11,7 @@ class SuccessesController < ApplicationController
   )
 
   def index
+    puts params
     company = Company.find_by(subdomain: request.subdomain)
     # data = Rails.cache.fetch("#{company.subdomain}/dt-successes") do
     data = company.successes.to_json({
