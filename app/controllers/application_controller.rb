@@ -14,8 +14,8 @@ class ApplicationController < ActionController::Base
     unless: Proc.new do
       devise_controller? ||
       invalid_subdomain? ||
-      params[:controller] == 'widgets' ||
-      request.subdomain == 'cspdev'
+      params[:controller] == 'widgets'
+      # request.subdomain == 'cspdev'
     end
   )
 
@@ -67,32 +67,36 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  #  this method ensures signed in users can't jump to a subdomain they don't belong to
+  # method only called if user_signed_in?
   def check_subdomain
     user_subdomain = current_user.company.try(:subdomain)
-    if user_subdomain.nil?
-      # user without a company may proceed so long as he doesn't insert
-      # a legit subdomain that isn't his ...
-      if request.subdomain.blank?
+    if user_subdomain == request.subdomain  # all good
+      true
+    # zaps will be with subdomain in dev (cspdev) and without in production
+    # account for both by sending the necessary parameter
+    elsif params[:zap].present?
+      true
+    elsif request.subdomain.blank? &&
+          params[:controller] == 'site' &&
+          (['index', 'store_front'].include?(params[:action]))
+      # logged in, navigating to store front
+      true
+    elsif user_subdomain.nil?  # user not associated with a company
+      if request.subdomain.blank? &&
+          params[:controller] == 'site' &&
+          (['index', 'store_front'].include?(params[:action])) # store front
         true
       else
         # ok to access public pages (story, stories index, or contributions)
         if (params[:controller] == 'stories' && (['index', 'show'].include? params[:action])) ||
             params[:controller] == 'contributions'
           true
-        else # strip the subdomain
+        else # strip the subdomain, TODO: this should be a 401
           redirect_to url_for({ subdomain: nil,
                                 controller: params[:controller],
                                 action: params[:action] })
         end
       end
-    elsif user_subdomain == request.subdomain  # all good
-      true
-    elsif request.subdomain.blank? &&
-          params[:controller] == 'site' &&
-          (['index', 'store_front'].include? params[:action])
-      # logged in, navigating to store front
-      true
     else  # re-direction required
       if params[:action] == 'linkedin_callback'
          # linkedin_callback won't have subdomain, insert it and include params
