@@ -115,7 +115,11 @@ class SuccessesController < ApplicationController
     if params[:zap].present?
       puts "FORMAT.ANY"
       respond_to do |format|
-        format.any { render({ json: { status: @success && @success.persisted? ? "success" : "error" } }) }
+        format.any do
+          render({ json: {
+            status: @success && @success.persisted? ? "success" : "error"
+          } })
+        end
       end
     else
       puts "FORMAT.JS"
