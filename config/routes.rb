@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   authenticate(:user) do
     get '/auth-test', to: 'application#auth_test'
     get '/curators', to: 'companies#get_curators'
+    get '/invitation_templates', to: 'companies#get_invitation_templates'
     post '/successes', to: 'successes#create', constraints: { zap: 'true' }
   end
 
