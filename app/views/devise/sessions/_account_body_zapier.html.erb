@@ -1,0 +1,70 @@
+
+<div class="account-body col-xs-8 col-xs-offset-2">
+
+  <!-- row images -->
+  <div class="row hidden-xs" style="height: 50px; margin-bottom: 30px; font-size: 2em; display:flex; align-items: center">
+    <div class="col-sm-5">
+      <%= image_tag(ZAPIER_LOGO_URL, alt: 'Zapier', style: 'max-height:50px') %>
+    </div>
+    <div class="col-sm-2">
+      <span>&#8594;</span>
+    </div>
+    <div class="col-sm-5">
+      <%= image_tag(CS_LOGO_URL, alt: 'Customer Stories', style: 'max-height:50px') %>
+    </div>
+  </div>
+
+  <div style="text-align: left; padding: 0 25px;">
+    <div style="font-size: 15px; font-weight: 600; margin-bottom: 10px;">Zapier wants to</div>
+    <ul style="font-size: 14px; padding-left: 20px;">
+      <li><%= I18n.t('doorkeeper.scopes.curator') %></li>
+    </ul>
+  </div>
+
+  <%= form_for(resource, as: resource_name,
+      url: session_path(resource_name),
+      html: { class: 'form account-form' }) do |f| %>
+
+    <div class='form-group'>
+      <%= f.label :email %><br />
+      <%= f.email_field :email, { autofocus: true,
+        class: 'form-control', id: 'login-username',
+        placeholder: 'email', tabindex: '1' } %>
+    </div>
+
+    <div class='form-group' style="margin-bottom: 40px;">
+      <%= f.label :password %><br />
+      <%= f.password_field :password, { autocomplete: "off",
+        class: 'form-control', id: 'login-password',
+        placeholder: 'password', tabindex: '2' } %>
+    </div>
+
+    <%# if devise_mapping.rememberable? -%>
+      <!-- <div class="form-group clearfix">
+        <div class='checkbox-inline pull-left'>
+          <%#= f.check_box :remember_me, { tabindex: '3' } %>
+          <%#= f.label :remember_me %>
+        </div>
+      </div> -->
+    <%# end -%>
+
+    <div class="form-group">
+      <div class="row">
+        <div class="col-xs-6">
+          <%= button_tag(type: 'button', tabindex: '5',
+              class: "btn btn-danger btn-block") do %>
+            Deny
+          <% end %>
+        </div>
+        <div class="col-xs-6">
+          <%= button_tag(type: 'submit', tabindex: '4',
+              class: "btn btn-success btn-block") do %>
+            Allow
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+  <% end %>
+
+</div> <!-- /.account-body -->

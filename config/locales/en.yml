@@ -23,4 +23,4 @@ en:
   hello: "Hello world"
   doorkeeper:
     scopes:
-      curator: 'Create a Customer Win record and associated Customer/Contact/Referrer records'
+      curator: 'Create Customer Win data'

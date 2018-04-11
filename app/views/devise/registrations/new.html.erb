@@ -110,8 +110,9 @@
             </div>
 
             <% if request.path == '/users/sign_up' %>
-              <div class="form-group">
-                Please review the <a href="/tos">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>. By creating an account you are agreeing to these terms and conditions.
+              <div class="form-group text-center">
+                <p>Please review the <a href="/tos">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>.</p>
+                <p>By creating an account you are agreeing to these terms and conditions.</p>
               </div>
             <% end %>
 
@@ -145,7 +146,7 @@
   </div> <!-- /.content -->
 
   <% if request.path == '/users/sign_up' || request.path == '/users' %>
-    <%= render 'shared/csp_landing_footer' %>
+    <%= render 'shared/landing_footer' %>
   <% end %>
 
 </div> <!-- /#wrapper -->
