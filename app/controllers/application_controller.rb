@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
     unless: Proc.new do
       devise_controller? ||
       invalid_subdomain? ||
-      params[:controller] == 'widgets'
+      params[:controller] == 'widgets' ||
       request.subdomain == 'cspdev'
     end
   )
@@ -123,7 +123,6 @@ class ApplicationController < ActionController::Base
   # change devise redirect on sign in
   def after_sign_in_path_for resource
     if session[:user_return_to].present?
-      # binding.remote_pry
       session[:user_return_to]
     elsif resource.class.name == 'User'
       # binding.remote_pry
