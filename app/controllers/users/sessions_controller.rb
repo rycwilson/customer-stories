@@ -15,6 +15,7 @@ class Users::SessionsController < Devise::SessionsController
 
   # GET /resource/sign_in
   def new
+    puts request.referrer
     super
   end
 
