@@ -16,6 +16,7 @@ class Users::SessionsController < Devise::SessionsController
   # GET /resource/sign_in
   def new
     # @zapier_authorize = true
+    puts request.referrer
     @zapier_authorize = true if request.referer.try(:include?, 'zapier')
     super
   end
