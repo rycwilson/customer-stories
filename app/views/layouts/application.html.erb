@@ -31,18 +31,14 @@
 
   <%= include_gon if include_gon?(controller_name, action_name) %>
 
-  <% if @zapier_authorize %>
+  <% if controller_name == 'contributions' || @zapier_authorize %>
 
-    <!-- nothing -->
+    <!-- nothing (just flash) -->
+    <%= render('shared/flash') if flash.any? %>
 
   <% elsif admin_navbar?(controller_name) %>
 
     <%= render('shared/navbars/mvp_admin_navbar', { company: @company }) %>
-
-  <% elsif controller_name == 'contributions' %>
-
-    <!-- nothing (just flash) -->
-    <%= render('shared/flash') if flash.any? %>
 
   <% else %>
 
