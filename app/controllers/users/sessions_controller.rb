@@ -14,6 +14,15 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   # GET /resource/sign_in
+  # a sign_in form submitted as zap auth request will have:
+  # params[:user][:zap_auth_submitted] == true (hidden field)
+  # ... and that param will appear here if a validation failure results in re-render
+  # Why is this necessary?
+  # 1 - Since the form may be rendered repeatedly (validation failure), we need to keep track of
+  # whether to display the zap auth sign in form or the regular sign in form.
+  # 2 - But @zap_auth_initial_req will only be true on the initial connection,
+  # after that we need another way to keep track.
+  # (see also application.html.erb)
   def new
     @zap_auth_initial_req = true if request.referer.try(:include?, 'zapier')
     # @zap_auth_initial_req = true
