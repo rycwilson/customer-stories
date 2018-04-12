@@ -8,8 +8,8 @@
           <div class="row">
 
             <%= render(
-                  @zapier_authorize ? 'account_body_zapier' : 'account_body_default',
-                  { path: request.path, resource: resource }
+                  @zap_auth_initial_req || @zap_auth_retry ? 'account_body_zapier' : 'account_body_default',
+                  { path: request.path, resource: resource, zap_auth_initial_req: @zap_auth_initial_req }
                 ) %>
 
           </div>

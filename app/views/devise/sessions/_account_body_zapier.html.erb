@@ -25,6 +25,8 @@
       url: session_path(resource_name),
       html: { class: 'form account-form' }) do |f| %>
 
+    <%= f.hidden_field(:zap_auth_submitted, value: true) %>
+
     <div class='form-group'>
       <%= f.label :email %><br />
       <%= f.email_field :email, { autofocus: true,

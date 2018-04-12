@@ -31,15 +31,15 @@
 
   <%= include_gon if include_gon?(controller_name, action_name) %>
 
-  <% if @zapier_authorize %>
-
-    <!-- nothing -->
-
-  <% elsif admin_navbar?(controller_name) %>
+  <% if admin_navbar?(controller_name) %>
 
     <%= render('shared/navbars/mvp_admin_navbar', { company: @company }) %>
 
-  <% elsif controller_name == 'contributions' %>
+  <% elsif @zap_auth_initial_req %>
+
+    <!-- nothing -->
+
+  <% elsif controller_name == 'contributions' || @zap_auth_retry %>
 
     <!-- nothing (just flash) -->
     <%= render('shared/flash') if flash.any? %>
@@ -55,13 +55,14 @@
 
   <%= yield(:underscore_templates) %>
 
-  <% if !@zapier_authorize && (devise_controller? || controller_name == 'site') %>
+  <% if !(@zap_auth_initial_req || @zap_auth_retry) &&
+        (devise_controller? || controller_name == 'site') %>
+
     <%= render('shared/landing_footer') %>
+
   <% end %>
 
-  <% unless devise_controller? || @zapier_authorize %>
-    <%= render('shared/analytics', { company: @company }) %>
-  <% end %>
+  <%= render('shared/analytics', { company: @company }) %>
 
 </body>
 </html>
