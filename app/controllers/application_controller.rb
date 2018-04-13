@@ -85,9 +85,7 @@ class ApplicationController < ActionController::Base
       # logged in, navigating to store front
       true
     elsif user_subdomain.nil?  # user not associated with a company
-      if request.subdomain.blank? &&
-          params[:controller] == 'site' &&
-          (['index', 'store_front'].include?(params[:action])) # store front
+      if request.subdomain.blank?
         true
       else
         # ok to access public pages (story, stories index, or contributions)
