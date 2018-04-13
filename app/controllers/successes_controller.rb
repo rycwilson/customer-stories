@@ -3,7 +3,7 @@ class SuccessesController < ApplicationController
 
   # respond_to(:html, :js, :json)
 
-  before_action(except: [:index, :create]) { @success = Success.find(params[:id]) }
+  before_action(except: [:index, :create, :import]) { @success = Success.find(params[:id]) }
   skip_before_action(
     :verify_authenticity_token,
     only: [:create],
@@ -11,7 +11,6 @@ class SuccessesController < ApplicationController
   )
 
   def index
-    puts params
     company = Company.find_by(subdomain: request.subdomain)
     # data = Rails.cache.fetch("#{company.subdomain}/dt-successes") do
     data = company.successes.to_json({
@@ -28,104 +27,95 @@ class SuccessesController < ApplicationController
   end
 
   def create
-    @company = Company.find_by(subdomain: request.subdomain) || current_user.company
-    @company = Company.find_by(subdomain: request.subdomain)
-
-    if params[:imported_successes].present?
-      @successes = []
-      customer_lookup = {}
-      user_lookup = {}
-      template_lookup = {}
-
-      # binding.remote_pry
-      # 2exp2 signatures for an imported success (each requires its own .import statement)
-      # Success.import(import_signature_1(params[:imported_successes]), on_duplicate_key_updatevalidate: false)
-      # Success.import(import_signature_2(params[:imported_successes]), validate: false)
-      # Success.import(import_signature_3(params[:imported_successes]), validate: false)
-      # Success.import(import_signature_4(params[:imported_successes]), validate: false)
-      # binding.remote_pry
-
-      params[:imported_successes].each do |success_index, imported_success|
-
-        # if a new customer, look for id in customer_lookup
-        if (customer_name = imported_success.dig(:customer_attributes, :name))
-          if customer_name.present? && (customer_id = customer_lookup[customer_name])
-            imported_success[:customer_id] = customer_id
-            imported_success.except!(:customer_attributes)
-          end
-        end
-
-        referrer_email = contact_email = ''
-        referrer_template = contact_template = ''
-        ['referrer', 'contributor'].each do |contact_type|
-
-          # if a new referrer/contact, look for id in user_lookup
-          if (email = dig_contact_email(imported_success, contact_type))
-            contact_type == 'referrer' ? referrer_email = email : contact_email = email
-            if (user_id = user_lookup[email])
-              imported_success = add_dup_contact(imported_success, contact_type, user_id)
-            end
-          end
-
-          # if a new invitation template, look for in in template_lookup
-          if (template = dig_contact_template(imported_success, contact_type))
-            contact_type == 'referrer' ? referrer_template = template : contact_template = template
-            if (template_id = template_lookup[template])
-              imported_success = add_dup_template(imported_success, contact_type, template_id)
-            end
-          end
-
-        end
-
-        params[:success] = imported_success
-        success = Success.new(success_params)
-        success.save(validate: false)  # no validate makes for faster execution
-        @successes << success
-
-        # add entries to the lookup tables
-        customer_lookup[customer_name] ||= success.customer_id
-        [referrer_email, contact_email].each_with_index do |email, index|
-          if email.present? && !user_lookup.has_key?(email)
-            user_lookup[email] = (index == 0 ? success.referrer[:id] : success.contact[:id])
-          end
-        end
-        [referrer_template, contact_template].each do |template|
-          if template.present? && !template_lookup.has_key?(template)
-            template_lookup[template] = CrowdsourcingTemplate.where(name: template, company_id: @company.id).take.id
-          end
-        end
-
-      end
-    else
-      if params[:zap].present?
-        # use customer name and user emails to find id attributes
-        find_existing_customer_from_zap(params[:success][:customer_attributes])
-        find_existing_users_from_zap(
-          params[:success][:contributions_attributes]['0'][:referrer_attributes],
-          params[:success][:contributions_attributes]['1'][:contributor_attributes]
-        )
-      end
-      unless params[:zap].present? && ignore_zap?(params[:success])
-        @success = Success.new(success_params)
-        if @success.save
-        else
-          pp @success.errors.full_messages
-        end
+    @company = Company.find(_by(subdomain: request.subdomain) || current_user.company)
+    if params[:zap].present?
+      # use customer name and user emails to find id attributes
+      find_existing_customer_from_zap(params[:success][:customer_attributes])
+      find_existing_users_from_zap(
+        params[:success][:contributions_attributes]['0'][:referrer_attributes],
+        params[:success][:contributions_attributes]['1'][:contributor_attributes]
+      )
+    end
+    unless params[:zap].present? && ignore_zap?(params[:success])
+      @success = Success.new(success_params)
+      if @success.save
+      else
+        pp @success.errors.full_messages
       end
     end
     if params[:zap].present?
-      puts "FORMAT.ANY"
       respond_to do |format|
         format.any do
-          render({ json: {
-            status: @success && @success.persisted? ? "success" : "error"
-          } })
+          render({
+            json: {
+              status: @success && @success.persisted? ? "success" : "error"
+            }
+          })
         end
       end
     else
-      puts "FORMAT.JS"
       respond_to { |format| format.js {} }
     end
+  end
+
+  def import
+    @company = Company.find(params[:id])
+    @successes = []
+    customer_lookup = {}
+    user_lookup = {}
+    template_lookup = {}
+
+    params[:imported_successes].each do |success_index, imported_success|
+
+      # if a new customer, look for id in customer_lookup
+      if (customer_name = imported_success.dig(:customer_attributes, :name))
+        if customer_name.present? && (customer_id = customer_lookup[customer_name])
+          imported_success[:customer_id] = customer_id
+          imported_success.except!(:customer_attributes)
+        end
+      end
+
+      referrer_email = contact_email = ''
+      referrer_template = contact_template = ''
+      ['referrer', 'contributor'].each do |contact_type|
+
+        # if a new referrer/contact, look for id in user_lookup
+        if (email = dig_contact_email(imported_success, contact_type))
+          contact_type == 'referrer' ? referrer_email = email : contact_email = email
+          if (user_id = user_lookup[email])
+            imported_success = add_dup_contact(imported_success, contact_type, user_id)
+          end
+        end
+
+        # if a new invitation template, look for in in template_lookup
+        if (template = dig_contact_template(imported_success, contact_type))
+          contact_type == 'referrer' ? referrer_template = template : contact_template = template
+          if (template_id = template_lookup[template])
+            imported_success = add_dup_template(imported_success, contact_type, template_id)
+          end
+        end
+
+      end
+
+      params[:success] = imported_success
+      success = Success.new(success_params)
+      success.save(validate: false)  # no validate makes for faster execution
+      @successes << success
+
+      # add entries to the lookup tables
+      customer_lookup[customer_name] ||= success.customer_id
+      [referrer_email, contact_email].each_with_index do |email, index|
+        if email.present? && !user_lookup.has_key?(email)
+          user_lookup[email] = (index == 0 ? success.referrer[:id] : success.contact[:id])
+        end
+      end
+      [referrer_template, contact_template].each do |template|
+        if template.present? && !template_lookup.has_key?(template)
+          template_lookup[template] = CrowdsourcingTemplate.where(name: template, company_id: @company.id).take.id
+        end
+      end
+    end
+    respond_to { |format| format.js { render({ action: 'import' }) } }
   end
 
   def update
@@ -160,6 +150,13 @@ class SuccessesController < ApplicationController
     )
   end
 
+  # for activerecord-import ...
+  # 2exp2 signatures for an imported success (each requires its own .import statement)
+  # Success.import(import_signature_1(params[:imported_successes]), on_duplicate_key_updatevalidate: false)
+  # Success.import(import_signature_2(params[:imported_successes]), validate: false)
+  # Success.import(import_signature_3(params[:imported_successes]), validate: false)
+  # Success.import(import_signature_4(params[:imported_successes]), validate: false)
+  #
   # both new
   def import_signature_1 (imported_successes)
     successes = []

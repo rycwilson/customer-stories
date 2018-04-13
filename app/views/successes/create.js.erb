@@ -2,75 +2,53 @@
 (function () {
 
   var company = <%= raw @company.to_json({
-          only: [],
-          include: {
-            curators: { only: [:id], methods: [:full_name] },
-            customers: { only: [:id, :name] },
-            contributors: { only: [:id], methods: [:full_name] },
-            referrers: { only: [:id], methods: [:full_name] },
-            crowdsourcing_templates: { only: [:id, :name] }
-          }
-        }) %>;
-
-  // update the app object (company data also used for updateSelectOptions() below)
-  app.company.customers = company.customers
-  app.company.crowdsourcing_templates = company.crowdsourcing_templates
-
-  var newSuccess = <%= @success ? true : false %> && <%= raw @success.to_json({
-          only: [:id],
-          include: { curator: { only: [:id] } }
-        }) %>,
-      newSuccesses = <%= @successes ? true : false %> && <%= raw @successes.to_json({ only: [:id] }) %>,
-      /**
-       * the datatable filter state persists through a reload,
-       */
-      cbDone = function (successes, isImport) {
+                      only: [],
+                      include: {
+                        curators: { only: [:id], methods: [:full_name] },
+                        customers: { only: [:id, :name] },
+                        contributors: { only: [:id], methods: [:full_name] },
+                        referrers: { only: [:id], methods: [:full_name] },
+                        crowdsourcing_templates: { only: [:id, :name] }
+                      }
+                    }) %>,
+      newSuccess = <%= raw @success.to_json({
+                          only: [:id],
+                          include: { curator: { only: [:id] } }
+                        }) %>,
+      cbDone = function (success) {
         return function () {
-          if (isImport) {
-            var $newSuccesses = $('#new-success-modal').find('.new-records ul'),
-                $button = $('#new-success-modal').find('button[type="submit"]');
-            $('#new-success-modal').find('form, .new-records').toggle();
-            $button.attr('type', 'button');
-            $button.find('span').text('Ok')
-            $button[0].blur();
-            $('.crowdsource.curator-select').val('0').trigger('change'  );
-            // console.log(newSuccesses)
-            successes.forEach(function (success) {
-              if (newSuccesses.find(function (s) { return s.id === success.id; })) {
-                $newSuccesses.append('<li>' + success.name + '</li>')
-              }
-            })
-          } else {
-            // ref: https://stackoverflow.com/questions/6677035
-            $('html, body')
-              .animate({ scrollTop: 65 }, 200)
-              .promise()
-              .then(function () {
-                var ignoreClick = function (e) { e.stopPropagation(); }
-                $('.successes.curator-select').val(successes[0].curator.id).trigger('change')
-                $('#successes-filter').val('success-' + successes[0].id).trigger('change');
-                $('#successes-table td.success-details').trigger('click');
-                $('#successes-filter').select2('focus');
-                // don't let modal reset actions trigger the unfocus
-                $(document).on('click', '#new-success-modal *', ignoreClick);
-                $(document).one('click', function (e) {
-                  $('#successes-filter').next().removeClass('select2-container--focus');
-                  $(document).off('click', ignoreClick)
-                })
-                $('#new-success-modal').modal('hide')
-              });
-          }
+          // ref: https://stackoverflow.com/questions/6677035
+          $('html, body')
+            .animate({ scrollTop: 65 }, 200)
+            .promise()
+            .then(function () {
+              var ignoreClick = function (e) { e.stopPropagation(); }
+              $('.successes.curator-select').val(success.curator.id).trigger('change')
+              $('#successes-filter').val('success-' + success.id).trigger('change');
+              $('#successes-table td.success-details').trigger('click');
+              $('#successes-filter').select2('focus');
+              // don't let modal reset actions trigger the unfocus
+              $(document).on('click', '#new-success-modal *', ignoreClick);
+              $(document).one('click', function (e) {
+                $('#successes-filter').next().removeClass('select2-container--focus');
+                $(document).off('click', ignoreClick)
+              })
+              $('#new-success-modal').modal('hide')
+            });
         }
       };
 
+  // update the app object
+  app.company.customers = company.customers
+  app.company.crowdsourcing_templates = company.crowdsourcing_templates
+
+  /**
+   * the datatable filter state persists through a reload,
+   */
   $('#successes-table').DataTable().ajax.reload(function (successes) {
     $('#prospect-contributors-table').DataTable().ajax.reload(function (contributions) {
       updateSelectOptions(company, successes);
-      if (newSuccess) {
-        toggleFormDone($('#new-success-form'), false, cbDone([newSuccess], false));
-      } else {
-        toggleFormDone($('#new-success-form'), false, cbDone(successes, true));
-      }
+      toggleFormDone($('#new-success-form'), false, cbDone(newSuccess, false));
     });
   });
 

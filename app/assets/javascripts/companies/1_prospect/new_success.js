@@ -230,12 +230,12 @@ function newSuccessListeners () {
                 success.customer_attributes = {
                   name: row.customerName,
                   company_id: app.company.id
-                }
+                };
               }
 
               // referrer (if present)
               if (contactIsValid('referrer', row.referrerEmail, row.referrerFirstName, row.referrerLastName)) {
-                success.contributions_attributes = success.contributions_attributes || []
+                success.contributions_attributes = success.contributions_attributes || [];
                 success.contributions_attributes.push(
                   contributionsAttrs(
                     'referrer', row.invitationTemplateNameReferrer, row.referrerEmail, row.referrerFirstName, row.referrerLastName, row.referrerTitle, row.referrerPhone
@@ -245,7 +245,7 @@ function newSuccessListeners () {
 
               // customer contact (if present)
               if (contactIsValid('contributor', row.contactEmail, row.contactFirstName, row.contactLastName)) {
-                success.contributions_attributes = success.contributions_attributes || []
+                success.contributions_attributes = success.contributions_attributes || [];
                 success.contributions_attributes.push(
                   contributionsAttrs(
                     'contributor', row.invitationTemplateNameContact, row.contactEmail, row.contactFirstName, row.contactLastName, row.contactTitle, row.contactPhone
@@ -441,7 +441,7 @@ function newSuccessListeners () {
       if (!$form.data('submitted') && importFileIsValid(source, importedSuccesses)) {
         toggleFormWorking($form);
         $.ajax({
-          url: '/companies/' + app.company.id + '/successes',
+          url: '/companies/' + app.company.id + '/successes/import',
           method: 'post',
           data: {
             imported_successes: importedSuccesses

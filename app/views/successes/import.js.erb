@@ -1,0 +1,47 @@
+
+(function () {
+
+      company = <%= raw @company.to_json({
+                      only: [],
+                      include: {
+                        curators: { only: [:id], methods: [:full_name] },
+                        customers: { only: [:id, :name] },
+                        contributors: { only: [:id], methods: [:full_name] },
+                        referrers: { only: [:id], methods: [:full_name] },
+                        crowdsourcing_templates: { only: [:id, :name] }
+                      }
+                    }) %>,
+      newSuccesses = <%= raw @successes.to_json({ only: [:id] }) %>,
+      cbDone = function (successes) {
+        return function () {
+          var $newSuccesses = $('#new-success-modal').find('.new-records ul'),
+              $button = $('#new-success-modal').find('button[type="submit"]');
+          $('#new-success-modal').find('form, .new-records').toggle();
+          $button.attr('type', 'button');
+          $button.find('span').text('Ok')
+          $button[0].blur();
+          $('.crowdsource.curator-select').val('0').trigger('change'  );
+          // console.log(newSuccesses)
+          successes.forEach(function (success) {
+            if (newSuccesses.find(function (s) { return s.id === success.id; })) {
+              $newSuccesses.append('<li>' + success.name + '</li>')
+            }
+          })
+        }
+      };
+
+  // update the app object
+  app.company.customers = company.customers
+  app.company.crowdsourcing_templates = company.crowdsourcing_templates
+
+  /**
+   * the datatable filter state persists through a reload,
+   */
+  $('#successes-table').DataTable().ajax.reload(function (successes) {
+    $('#prospect-contributors-table').DataTable().ajax.reload(function (contributions) {
+      updateSelectOptions(company, successes);
+      toggleFormDone($('#new-success-form'), false, cbDone(successes, true));
+    });
+  });
+
+}());
