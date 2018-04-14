@@ -61,15 +61,16 @@ class SuccessesController < ApplicationController
   def import
     @company = Company.find(params[:id])
     @successes = []
-    customer_lookup = {}
-    user_lookup = {}
-    template_lookup = {}
+    success_lookup = {}   # { name: { id: 1, customer_id: 1 } }
+    customer_lookup = {}  # { name: id }
+    user_lookup = {}      # { email: id }
+    template_lookup = {}  # { name: id }
 
     params[:imported_successes].each do |success_index, imported_success|
 
       # if a new customer, look for id in customer_lookup
       if (customer_name = imported_success.dig(:customer_attributes, :name))
-        if customer_name.present? && (customer_id = customer_lookup[customer_name])
+        if (customer_id = customer_lookup[customer_name])
           imported_success[:customer_id] = customer_id
           imported_success.except!(:customer_attributes)
         end
@@ -78,31 +79,35 @@ class SuccessesController < ApplicationController
       referrer_email = contact_email = ''
       referrer_template = contact_template = ''
       ['referrer', 'contributor'].each do |contact_type|
-
-        # if a new referrer/contact, look for id in user_lookup
-        if (email = dig_contact_email(imported_success, contact_type))
+        # if a referrer/contact, look for id in user_lookup
+        if (email = dig_contact_email(success, contact_type))
           contact_type == 'referrer' ? referrer_email = email : contact_email = email
-          if (user_id = user_lookup[email])
-            imported_success = add_dup_contact(imported_success, contact_type, user_id)
-          end
         end
-
-        # if a new invitation template, look for in in template_lookup
-        if (template = dig_contact_template(imported_success, contact_type))
+        if (template = dig_contact_template(success, contact_type))
           contact_type == 'referrer' ? referrer_template = template : contact_template = template
-          if (template_id = template_lookup[template])
-            imported_success = add_dup_template(imported_success, contact_type, template_id)
-          end
         end
-
       end
 
-      params[:success] = imported_success
-      success = Success.new(success_params)
-      success.save(validate: false)  # no validate makes for faster execution
-      @successes << success
+      imported_success = add_dup_data(imported_success, user_lookup, template_lookup)
+
+      if (imported_success_id = dup_success?(imported_success, success_lookup))
+        imported_success[:contributions_attributes].each do |index, contribution_attrs|
+          Contribution.create(
+            contribution_attrs.merge({ success_id: imported_success_id })
+          )
+        end
+      else
+        params[:success] = imported_success
+        success = Success.new(success_params)
+        success.save(validate: false)  # no validate makes for faster execution
+        @successes << success
+      end
+
+      # reload to capture any additional contributions
+      @successes.each { |s| s.reload }
 
       # add entries to the lookup tables
+      success_lookup[success.try(:name)] ||= success.try(:id)
       customer_lookup[customer_name] ||= success.customer_id
       [referrer_email, contact_email].each_with_index do |email, index|
         if email.present? && !user_lookup.has_key?(email)
@@ -240,6 +245,12 @@ class SuccessesController < ApplicationController
     end
   end
 
+  def dup_success? (success, success_lookup)
+    success[:customer_id].present? &&
+    success[:customer_id] == success_lookup.dig(success[:name], :customer_id) &&
+    success_lookup[success[:name]][:id]  # return the id
+  end
+
   # takes an imported success and extracts referrer/contributor email (if it exists)
   def dig_contact_email (success, contact_type)
     success.dig(:contributions_attributes, '0', "#{contact_type}_attributes", :email) ||
@@ -275,6 +286,20 @@ class SuccessesController < ApplicationController
     end.keys[0]
     success[:contributions_attributes][contribution_index][:crowdsourcing_template_id] = template_id
     success[:contributions_attributes][contribution_index].except!([:crowdsourcing_template_attributes])
+    success
+  end
+
+  def add_dup_data (success, user_lookup, template_lookup, referrer_email, contact_email, referrer_template, contact_template)
+    ['referrer', 'contributor'].each do |contact_type|
+      email = contact_type == 'referrer' ? referrer_email : contact_email
+      template = contact_type == 'referrer' ? referrer_template: contact_template
+      if (user_id = user_lookup[email])
+        success = add_dup_contact(success, contact_type, user_id)
+      end
+      if (template_id = template_lookup[template])
+        success = add_dup_template(success, contact_type, template_id)
+      end
+    end
     success
   end
 
