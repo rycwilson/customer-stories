@@ -27,7 +27,7 @@ class SuccessesController < ApplicationController
   end
 
   def create
-    @company = Company.find(_by(subdomain: request.subdomain) || current_user.company)
+    @company = Company.find_by(subdomain: request.subdomain) || current_user.company
     if params[:zap].present?
       # use customer name and user emails to find id attributes
       find_existing_customer_from_zap(params[:success][:customer_attributes])
