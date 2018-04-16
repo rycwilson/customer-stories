@@ -30,10 +30,10 @@ class SuccessesController < ApplicationController
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
     unless params[:zap].present? && ignore_zap?(params[:success])
       # use customer name and user emails to find id attributes
-      find_existing_customer(params[:success][:customer_attributes], params[:zap].present?)
+      find_existing_customer(params[:success].dig(:customer_attributes), params[:zap].present?)
       find_existing_users(
-        params[:success][:contributions_attributes]['0'][:referrer_attributes],
-        params[:success][:contributions_attributes]['1'][:contributor_attributes],
+        params[:success].dig(:contributions_attributes, '0', :referrer_attributes),
+        params[:success].dig(:contributions_attributes, '1', :contributor_attributes),
         params[:zap].present?
       )
       @success = Success.new(success_params)
@@ -222,7 +222,8 @@ class SuccessesController < ApplicationController
   # - provides company_id for the new customer
   def find_existing_customer (customer_params, is_zap)
     if is_zap || !is_zap  # works for either
-      if (customer = Customer.where(name: customer_params[:name], company_id: current_user.company_id).take)
+      binding.remote_pry
+      if (customer = Customer.where(name: customer_params.try(:[], :name), company_id: current_user.company_id).take)
         customer_params[:id] = customer.id
         customer_params.delete_if { |k, v| k != 'id' }
       else
@@ -234,12 +235,12 @@ class SuccessesController < ApplicationController
 
   def find_existing_users (referrer_params, contributor_params, is_zap)
     if is_zap || !is_zap  # works for either
-      if (referrer = User.find_by_email(referrer_params[:email]))
+      if (referrer = User.find_by_email(referrer_params.try(:[], :email)))
         referrer_params[:id] = referrer.id
         # allow certain attribute updates
         referrer_params.delete_if { |k, v| !['id', 'title', 'phone'].include?(k) }
       end
-      if (contributor = User.find_by_email(contributor_params[:email]))
+      if (contributor = User.find_by_email(contributor_params.try(:[], :email)))
         contributor_params[:id] = contributor.id
         contributor_params.delete_if { |k, v| !['id', 'title', 'phone'].include?(k) }
       end
