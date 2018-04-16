@@ -24,7 +24,7 @@ class Story < ActiveRecord::Base
       self.where(type: 'CTAForm')
     end
   end
-  has_many :adwords_ads do  # topic and retarget
+  has_many :adwords_ads, dependent: :destroy do  # topic and retarget
     def enabled?
       self.all? { |ad| ad.status == 'ENABLED' }
     end
