@@ -308,14 +308,19 @@ class SuccessesController < ApplicationController
     end
   end
 
-  # find a success previously created in this import and return id
+  # find a success previously created in this import (or in db) and return id
   def find_dup_imported_success (success, success_lookup)
-    if success[:customer_id].present?  # dup success implies a dup customer
-      ( ( success[:customer_id] == success_lookup.dig(success[:name], :customer_id) &&
-          success_lookup[success[:name]][:id] })||
-        Success.joins(:customer)
+    if success[:customer_id].present? &&
+        success[:customer_id] == success_lookup.dig(success[:name], :customer_id)
+      success_lookup[success[:name]][:id]
+    elsif success_id = Success.where({
+                                name: success.name,
+                                customer_id: success[:customer_id]
+                              })
+                              .take.try(:id)
+      success_id
     else
-      false
+      nil
     end
   end
 
