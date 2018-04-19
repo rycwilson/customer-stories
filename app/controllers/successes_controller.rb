@@ -38,7 +38,7 @@ class SuccessesController < ApplicationController
       )
       @success = Success.new(success_params)
       if params[:zap].present?
-        # allow for new contributors added to a dup success
+        # allow for new contributors added to a dup success (which would otherwise be invalid)
         @success.save(validate: false)
       else
         if @success.save
@@ -95,7 +95,6 @@ class SuccessesController < ApplicationController
         imported_success, user_lookup, template_lookup, referrer_email, contact_email, referrer_template, contact_template
       )
 
-      # TODO: expand find_dup_imported_success to include successes created before the import
       if (imported_success_id = find_dup_imported_success(imported_success, success_lookup))
         # going to add a contribution (assuming a contributor is included with imported_success)
         contribution_attrs = {
@@ -125,9 +124,10 @@ class SuccessesController < ApplicationController
           contribution_attrs[:contributor_attributes].merge!(contributor_attributes)
         end
 
+        # create a new contribution if a contributor is present (new or existing)
         if contribution_attrs[:contributor_attributes].present?
           params[:contribution] = contribution_attrs
-          contribution = Contribution.create(contribution_params)
+          Contribution.create(contribution_params)
         else
           # ignore this imported success
         end
@@ -324,7 +324,8 @@ class SuccessesController < ApplicationController
     end
   end
 
-  # find a customer previously created in this import and return id
+  # find a customer previously created in this import and return id;
+  # customers existing prior to the import are id'ed in the client
   def find_dup_imported_customer (success, customer_lookup)
     success.dig(:customer_attributes, :name) &&
     customer_lookup[success.dig(:customer_attributes, :name)]
@@ -383,23 +384,18 @@ class SuccessesController < ApplicationController
     )
   end
 
-  # duplicate successes are allowed for a zap => new contributors
-  # but not allowed if also dup users
+  # duplicate successes are allowed for a zap; they will contain new contributors
+  # but not allowed if also a dup contributor (dup referrer ok)
   def ignore_zap? (success)
-    # dup success (name) and customer combination
-    # (customer_id is available since this runs after find_existing_customer_from_zap
     if existing_success = Success.includes(:contributions)
                                  .joins(:customer)
                                  .where({ name: success[:name] })
-                                 .where({
-                                   customers: {
-                                     id: success[:customer_id], company_id: current_user.company_id
-                                   }
-                                 }).take
+                                 .where({ customers: { id: success[:customer_id] }})
+                                 .take
       # this is a dup success; check for new contributor
       contributor_id = success.dig(:contributions_attributes, '1', :contributor_id)
       if (User.find_by_id(contributor_id) &&
-          existing_success.contributions.select { |c| c.contributor_id == contributor_id }.empty?)
+          existing_success.contributions.none? { |c| c.contributor_id == contributor_id })
         true
       else
         false
