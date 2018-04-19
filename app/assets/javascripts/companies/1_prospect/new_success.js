@@ -239,7 +239,7 @@ function newSuccessListeners () {
                 success.contributions_attributes = success.contributions_attributes || [];
                 success.contributions_attributes.push(
                   contributionsAttrs(
-                    'referrer', row.invitationTemplateNameReferrer, row.referrerEmail, row.referrerFirstName, row.referrerLastName, row.referrerTitle, row.referrerPhone
+                    'referrer', row.referrerInvitationTemplateName, row.referrerEmail, row.referrerFirstName, row.referrerLastName, row.referrerTitle, row.referrerPhone
                   )
                 );
               }
@@ -249,12 +249,13 @@ function newSuccessListeners () {
                 success.contributions_attributes = success.contributions_attributes || [];
                 success.contributions_attributes.push(
                   contributionsAttrs(
-                    'contributor', row.invitationTemplateNameContact, row.contactEmail, row.contactFirstName, row.contactLastName, row.contactTitle, row.contactPhone
+                    'contributor', row.contactInvitationTemplateName, row.contactEmail, row.contactFirstName, row.contactLastName, row.contactTitle, row.contactPhone
                   )
                 );
               }
               return success;
             };
+
         data.forEach(function (row, index) {
           console.log('importing row', index + 2 + '...');
           if (rowIsValid(row)) {
@@ -268,6 +269,7 @@ function newSuccessListeners () {
         console.log(logSuccesses);
         displayCsvStatus(successes);
         importedSuccesses = successes;
+
       },
 
       readFile = function (file) {

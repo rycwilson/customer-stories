@@ -78,8 +78,6 @@ class SuccessesController < ApplicationController
       else
         imported_success.except!(:customer_id)
       end
-      puts "FIND CUSTOMER"
-      pp imported_success
       referrer_email = contact_email = ''
       referrer_template = contact_template = ''
       ['referrer', 'contributor'].each do |contact_type|
@@ -117,7 +115,7 @@ class SuccessesController < ApplicationController
         if referrer_id.present?
           contribution_attrs[:referrer_attributes][:id] = referrer_id
         elsif referrer_attrs.present?
-          contribution_attrs[:referrer_attributes].merge!(referrer_attributes)
+          contribution_attrs[:referrer_attributes].merge!(referrer_attrs)
         end
         if contributor_id.present?
           contribution_attrs[:contributor_attributes][:id] = contributor_id
@@ -342,6 +340,7 @@ class SuccessesController < ApplicationController
   # fill in the id of an existing user, and removes the referrer/contributor_attributes hash
   def add_dup_contact (success, contact_type, user_id)
     contribution_index = success[:contributions_attributes].select do |index, contribution|
+      contribution.has_key?("#{contact_type}_id") ||
       contribution.has_key?("#{contact_type}_attributes")
     end.keys[0]
     success[:contributions_attributes][contribution_index]["#{contact_type}_id"] = user_id
@@ -352,8 +351,10 @@ class SuccessesController < ApplicationController
   # fill in the id of an existing template, and remove crowdsourcing_template_attributes hash
   def add_dup_template (success, contact_type, template_id)
     contribution_index = success[:contributions_attributes].select do |index, contribution|
+      contribution.has_key?("#{contact_type}_id") ||
       contribution.has_key?("#{contact_type}_attributes")
     end.keys[0]
+    # binding.remote_pry if success[:name] == 'TestCo Win 7'
     success[:contributions_attributes][contribution_index][:crowdsourcing_template_id] = template_id
     success[:contributions_attributes][contribution_index].except!([:crowdsourcing_template_attributes])
     success

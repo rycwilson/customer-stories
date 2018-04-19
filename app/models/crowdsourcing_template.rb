@@ -23,6 +23,8 @@ class CrowdsourcingTemplate < ActiveRecord::Base
   #   self.contributor_questions << self.company.contributor_questions.default
   # end
 
+  validates_uniqueness_of :name, scope: :company_id
+
   before_create(unless: Proc.new { |template| template.request_body.blank? }) do
     self.format_for_storage()
   end
