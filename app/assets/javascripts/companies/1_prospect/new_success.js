@@ -180,8 +180,8 @@ function newSuccessListeners () {
                     crowdsourcing_template_id: getInvitationTemplateId(invitationTemplateName),
                   };
 
-              // new or existing user
-              attrs[contactType + '_id'] = userId || null
+              // existing user
+              if (userId) attrs[contactType + '_id'] = userId;
 
               /**
                * include invitation template attributes if a template name was passed
@@ -193,7 +193,8 @@ function newSuccessListeners () {
                     name: invitationTemplateName,
                     company_id: app.company.id
                   }
-                })
+                });
+                delete attrs.crowdsourcing_template_id;
               }
 
               // new user

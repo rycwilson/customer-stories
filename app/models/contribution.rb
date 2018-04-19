@@ -97,7 +97,7 @@ class Contribution < ActiveRecord::Base
   # validates :feedback, presence: true,
   #               if: Proc.new { |contribution| contribution.status == 'feedback'}
 
-  # contributor may have only one contribution per story
+  # contributor may have only one contribution per success
   validates_uniqueness_of(:contributor_id, scope: :success_id)
 
   # represents number of days between reminder emails

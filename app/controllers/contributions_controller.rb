@@ -206,6 +206,7 @@ class ContributionsController < ApplicationController
 
   private
 
+  # NOTE these are in the successes controller also
   def contribution_params
     params.require(:contribution).permit(
       :contributor_id, :referrer_id, :success_id, :crowdsourcing_template_id,
@@ -220,7 +221,7 @@ class ContributionsController < ApplicationController
         :id, :email, :first_name, :last_name, :title, :phone, :linkedin_url, :sign_up_code, :password
       ],
       referrer_attributes: [
-        :id, :email, :first_name, :last_name, :title, :sign_up_code, :password
+        :id, :email, :first_name, :last_name, :title, :phone, :sign_up_code, :password
       ]
     )
   end

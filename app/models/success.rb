@@ -40,6 +40,8 @@ class Success < ActiveRecord::Base
   has_many :ctas_successes, dependent: :destroy
   has_many :ctas, through: :ctas_successes, source: :call_to_action
 
+  validates_uniqueness_of(:name, scope: :customer_id)
+
   accepts_nested_attributes_for(:customer, allow_destroy: false)
   accepts_nested_attributes_for(:results, allow_destroy: true)
   # contribution must be rejected if its contributor or referrer is missing required attributes
