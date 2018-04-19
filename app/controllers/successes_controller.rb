@@ -78,7 +78,8 @@ class SuccessesController < ApplicationController
       else
         imported_success.except!(:customer_id)
       end
-
+      puts "FIND CUSTOMER"
+      pp imported_success
       referrer_email = contact_email = ''
       referrer_template = contact_template = ''
       ['referrer', 'contributor'].each do |contact_type|
@@ -121,7 +122,7 @@ class SuccessesController < ApplicationController
         if contributor_id.present?
           contribution_attrs[:contributor_attributes][:id] = contributor_id
         elsif contributor_attrs.present?
-          contribution_attrs[:contributor_attributes].merge!(contributor_attributes)
+          contribution_attrs[:contributor_attributes].merge!(contributor_attrs)
         end
 
         # create a new contribution if a contributor is present (new or existing)
@@ -312,14 +313,17 @@ class SuccessesController < ApplicationController
   def find_dup_imported_success (success, success_lookup)
     if success[:customer_id].present? &&
         success[:customer_id] == success_lookup.dig(success[:name], :customer_id)
+      # binding.remote_pry
       success_lookup[success[:name]][:id]
     elsif success_id = Success.where({
-                                name: success.name,
+                                name: success[:name],
                                 customer_id: success[:customer_id]
                               })
                               .take.try(:id)
+      # binding.remote_pry
       success_id
     else
+      # binding.remote_pry
       nil
     end
   end
@@ -327,8 +331,12 @@ class SuccessesController < ApplicationController
   # find a customer previously created in this import and return id;
   # customers existing prior to the import are id'ed in the client
   def find_dup_imported_customer (success, customer_lookup)
-    success.dig(:customer_attributes, :name) &&
-    customer_lookup[success.dig(:customer_attributes, :name)]
+    if success[:customer_id].present?  # dup customer id'ed in the client
+      success[:customer_id]
+    else
+      success.dig(:customer_attributes, :name) &&
+      customer_lookup[success.dig(:customer_attributes, :name)]
+    end
   end
 
   # fill in the id of an existing user, and removes the referrer/contributor_attributes hash
@@ -372,16 +380,20 @@ class SuccessesController < ApplicationController
   end
 
   def dig_contact_template (success, contact_type)
-    contribution_index = success[:contributions_attributes].select do |index, contribution|
-      contribution.has_key?("#{contact_type}_id") ||
-      contribution.has_key?("#{contact_type}_attributes")
-    end.keys[0]
-    success.dig(
-      :contributions_attributes,
-      contribution_index,
-      :crowdsourcing_template_attributes,
-      :name
-    )
+    if success[:contributions_attributes].present?
+      contribution_index = success[:contributions_attributes].select do |index, contribution|
+        contribution.has_key?("#{contact_type}_id") ||
+        contribution.has_key?("#{contact_type}_attributes")
+      end.keys[0]
+      success.dig(
+        :contributions_attributes,
+        contribution_index,
+        :crowdsourcing_template_attributes,
+        :name
+      )
+    else
+      nil
+    end
   end
 
   # duplicate successes are allowed for a zap; they will contain new contributors
