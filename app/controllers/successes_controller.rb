@@ -94,6 +94,9 @@ class SuccessesController < ApplicationController
         imported_success, user_lookup, template_lookup, referrer_email, contact_email, referrer_template, contact_template
       )
 
+      puts "IMPORTED SUCCESS"
+      puts imported_success
+
       if (imported_success_id = find_dup_imported_success(imported_success, success_lookup))
         # going to add a contribution (assuming a contributor is included with imported_success)
         contribution_attrs = {
@@ -165,11 +168,12 @@ class SuccessesController < ApplicationController
 
       [referrer_template, contact_template].each do |template|
         if template.present?
+          # binding.remote_pry if imported_success[:name] == "Amazon Wins with Acme"
           template_lookup[template] ||= CrowdsourcingTemplate.where(name: template, company_id: @company.id).take.id
         end
       end
-      puts "TEMPLATE LOOKUP"
-      puts template_lookup
+      # puts "TEMPLATE LOOKUP"
+      # puts template_lookup
     end
     respond_to { |format| format.js { render({ action: 'import' }) } }
   end
@@ -366,18 +370,24 @@ class SuccessesController < ApplicationController
     end.keys[0]
     # binding.remote_pry if success[:name] == 'TestCo Win 7'
     success[:contributions_attributes][contribution_index][:crowdsourcing_template_id] = template_id
-    success[:contributions_attributes][contribution_index].except!([:crowdsourcing_template_attributes])
+    success[:contributions_attributes][contribution_index].except!(:crowdsourcing_template_attributes)
     success
   end
 
   def find_dup_imported_users_and_templates (success, user_lookup, template_lookup, referrer_email, contact_email, referrer_template, contact_template)
+    # puts "find_dup_imported_users_and_templates()"
+    # puts template_lookup
     ['referrer', 'contributor'].each do |contact_type|
       email = contact_type == 'referrer' ? referrer_email : contact_email
       template = contact_type == 'referrer' ? referrer_template : contact_template
       if (user_id = (user_lookup[email] || User.find_by_email(email).try(:id)))
         success = add_dup_contact(success, contact_type, user_id)
       end
-      if (template_id = (template_lookup[template] || CrowdsourcingTemplate.find_by_name(template).try(:id)))
+      if (template_id = (template_lookup[template] || CrowdsourcingTemplate.where({
+                                                          name: template,
+                                                          company_id: @company.id
+                                                        }).take.try(:id) ))
+        # puts "DUP TEMPLATE #{template_id}"
         success = add_dup_template(success, contact_type, template_id)
       end
     end
