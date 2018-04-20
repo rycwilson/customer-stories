@@ -26,7 +26,7 @@ function newSuccessListeners () {
               }
 
             // success contact field only applies to the contributor
-            } else if (attribute == 'success_contact') {
+            } else if (contactType == 'contributor' && attribute == 'success_contact') {
               $('#new-success-form #success_contributions_attributes_1_success_contact').prop('disabled', disabled);
 
             // all others disabled (or enabled)
@@ -439,7 +439,9 @@ function newSuccessListeners () {
     // => the button is outside the form, linked to it through form= attribute
     // => submit event doesn't bubble up to form, so e.preventDefault() doesn't work
     .on('click', 'button[type="submit"][form="new-success-form"]', function (e) {
-      var $button = $(this), $form = $('#new-success-form'), source = $form.find('[name="source"]:checked').val();
+      var $button = $(this),
+          $form = $('#new-success-form'),
+          source = $form.find('[name="source"]:checked').val();
       e.preventDefault();
       if (!$form.data('submitted') && importFileIsValid(source, importedSuccesses)) {
         toggleFormWorking($form);

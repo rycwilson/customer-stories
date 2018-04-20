@@ -27,6 +27,7 @@ class SuccessesController < ApplicationController
   end
 
   def create
+    pp params[:success]
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
     unless params[:zap].present? && ignore_zap?(params[:success])
       # use customer name and user emails to find id attributes
