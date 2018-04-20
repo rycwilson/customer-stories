@@ -116,11 +116,15 @@ class SuccessesController < ApplicationController
           contribution_attrs[:referrer_attributes][:id] = referrer_id
         elsif referrer_attrs.present?
           contribution_attrs[:referrer_attributes].merge!(referrer_attrs)
+        else
+          contribution_attrs.except!(:referrer_attributes)
         end
         if contributor_id.present?
           contribution_attrs[:contributor_attributes][:id] = contributor_id
         elsif contributor_attrs.present?
           contribution_attrs[:contributor_attributes].merge!(contributor_attrs)
+        else
+          contribution_attrs.except!(:contributor_attributes)
         end
 
         # create a new contribution if a contributor is present (new or existing)
@@ -141,6 +145,7 @@ class SuccessesController < ApplicationController
       # reload to capture any additional contributions
       @successes.each { |s| s.reload }
 
+
       # add entries to the lookup tables
       # if a success wasn't saved, that implies duplicate success/customer => no lookup addition necessary
       if success.present? && !success_lookup.has_key?(success.name)
@@ -148,18 +153,23 @@ class SuccessesController < ApplicationController
         # this one needs to be conditional since possible this is dup customer
         customer_lookup[success.customer.name] ||= success.customer_id
       end
+
       [referrer_email, contact_email].each_with_index do |email, index|
         if success.present? && email.present?
           user_lookup[email] ||= (index == 0 ? success.referrer[:id] : success.contact[:id])
         elsif email.present?
-          user_lookup[email] ||= (index == 0 ? User.find_by_email(referrer_email).id : User.find_by_email(contact_email).id)
+          # binding.remote_pry
+          user_lookup[email] ||= User.find_by_email(email).id
         end
       end
+
       [referrer_template, contact_template].each do |template|
         if template.present?
           template_lookup[template] ||= CrowdsourcingTemplate.where(name: template, company_id: @company.id).take.id
         end
       end
+      puts "TEMPLATE LOOKUP"
+      puts template_lookup
     end
     respond_to { |format| format.js { render({ action: 'import' }) } }
   end
