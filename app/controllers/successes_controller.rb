@@ -95,8 +95,8 @@ class SuccessesController < ApplicationController
         imported_success, user_lookup, template_lookup, referrer_email, contact_email, referrer_template, contact_template
       )
 
-      puts "IMPORTED SUCCESS"
-      puts imported_success
+      # puts "IMPORTED SUCCESS"
+      # puts imported_success
 
       if (imported_success_id = find_dup_imported_success(imported_success, success_lookup))
         # going to add a contribution (assuming a contributor is included with imported_success)
