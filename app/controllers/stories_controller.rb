@@ -92,7 +92,7 @@ class StoriesController < ApplicationController
           company: @company,
           story: @story,
           workflow_stage: 'curate',
-          tab: 'settings'
+          tab: '#story-settings'
         }
       })
     else
