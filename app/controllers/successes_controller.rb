@@ -95,50 +95,15 @@ class SuccessesController < ApplicationController
         imported_success, user_lookup, template_lookup, referrer_email, contact_email, referrer_template, contact_template
       )
 
-      # puts "IMPORTED SUCCESS"
-      # puts imported_success
-
       if (imported_success_id = find_dup_imported_success(imported_success, success_lookup))
-        # going to add a contribution (assuming a contributor is included with imported_success)
-        contribution_attrs = {
-          success_id: imported_success_id,
-          contributor_attributes: {},
-          referrer_attributes: {}
-        }
-        referrer_id =
-          imported_success.dig(:contributions_attributes, '0', :referrer_id)
-        referrer_attrs =
-          imported_success.dig(:contributions_attributes, '0', :referrer_attributes)
-        contributor_id =
-          imported_success.dig(:contributions_attributes, '0', :contributor_id) ||
-          imported_success.dig(:contributions_attributes, '1', :contributor_id)
-        contributor_attrs =
-          imported_success.dig(:contributions_attributes, '0', :contributor_attributes) ||
-          imported_success.dig(:contributions_attributes, '1', :contributor_attributes)
-
-        if referrer_id.present?
-          contribution_attrs[:referrer_attributes][:id] = referrer_id
-        elsif referrer_attrs.present?
-          contribution_attrs[:referrer_attributes].merge!(referrer_attrs)
-        else
-          contribution_attrs.except!(:referrer_attributes)
-        end
-        if contributor_id.present?
-          contribution_attrs[:contributor_attributes][:id] = contributor_id
-        elsif contributor_attrs.present?
-          contribution_attrs[:contributor_attributes].merge!(contributor_attrs)
-        else
-          contribution_attrs.except!(:contributor_attributes)
-        end
-
+        new_contribution = build_contribution_from_import(imported_success, imported_success_id)
         # create a new contribution if a contributor is present (new or existing)
-        if contribution_attrs[:contributor_attributes].present?
-          params[:contribution] = contribution_attrs
+        if new_contribution[:contributor_attributes].present?
+          params[:contribution] = new_contribution
           Contribution.create(contribution_params)
         else
           # ignore this imported success
         end
-
       else
         params[:success] = imported_success
         success = Success.new(success_params)
@@ -148,7 +113,6 @@ class SuccessesController < ApplicationController
 
       # reload to capture any additional contributions
       @successes.each { |s| s.reload }
-
 
       # add entries to the lookup tables
       # if a success wasn't saved, that implies duplicate success/customer => no lookup addition necessary
@@ -173,8 +137,6 @@ class SuccessesController < ApplicationController
           template_lookup[template] ||= CrowdsourcingTemplate.where(name: template, company_id: @company.id).take.id
         end
       end
-      # puts "TEMPLATE LOOKUP"
-      # puts template_lookup
     end
     respond_to { |format| format.js { render({ action: 'import' }) } }
   end
@@ -230,69 +192,6 @@ class SuccessesController < ApplicationController
     )
   end
 
-  # for activerecord-import ...
-  # 2exp2 signatures for an imported success (each requires its own .import statement)
-  # Success.import(import_signature_1(params[:imported_successes]), on_duplicate_key_updatevalidate: false)
-  # Success.import(import_signature_2(params[:imported_successes]), validate: false)
-  # Success.import(import_signature_3(params[:imported_successes]), validate: false)
-  # Success.import(import_signature_4(params[:imported_successes]), validate: false)
-  #
-  # both new
-  def import_signature_1 (imported_successes)
-    successes = []
-    imported_successes.to_a.map { |s| s[1] }.keep_if do |s|
-      s[:contributions_attributes]['0'][:referrer_attributes].has_key?(:password) &&
-      s[:contributions_attributes]['1'][:contributor_attributes].has_key?(:password)
-    end
-      .each do |success|
-        # params[:success] = success
-        successes << Success.create(success)
-      end
-    successes
-  end
-
-  # one existing, one new
-  def import_signature_2 (imported_successes)
-    successes = []
-    imported_successes.to_a.map { |s| s[1] }.keep_if do |s|
-      !s[:contributions_attributes]['0'][:referrer_attributes].has_key?(:password) &&
-      s[:contributions_attributes]['1'][:contributor_attributes].has_key?(:password)
-    end
-      .each do |success|
-        # params[:success] = success
-        successes << Success.create(success)
-      end
-    successes
-  end
-
-  # one new, one existing
-  def import_signature_3 (imported_successes)
-    successes = []
-    imported_successes.to_a.map { |s| s[1] }.keep_if do |s|
-      s[:contributions_attributes]['0'][:referrer_attributes].has_key?(:password) &&
-      !s[:contributions_attributes]['1'][:contributor_attributes].has_key?(:password)
-    end
-      .each do |success|
-        # params[:success] = success
-        successes << Success.create(success)
-      end
-    successes
-  end
-
-  # both existing
-  def import_signature_4 (imported_successes)
-    successes = []
-    imported_successes.to_a.map { |s| s[1] }.keep_if do |s|
-      !s[:contributions_attributes]['0'][:referrer_attributes].has_key?(:password) &&
-      !s[:contributions_attributes]['1'][:contributor_attributes].has_key?(:password)
-    end
-      .each do |success|
-        # params[:success] = success
-        successes << Success.create(success)
-      end
-    successes
-  end
-
   # method receives params[:success][:customer_attributes] and either
   # - finds customer, or
   # - provides company_id for the new customer
@@ -333,10 +232,8 @@ class SuccessesController < ApplicationController
                                 customer_id: success[:customer_id]
                               })
                               .take.try(:id)
-      # binding.remote_pry
       success_id
     else
-      # binding.remote_pry
       nil
     end
   end
@@ -376,8 +273,6 @@ class SuccessesController < ApplicationController
   end
 
   def find_dup_imported_users_and_templates (success, user_lookup, template_lookup, referrer_email, contact_email, referrer_template, contact_template)
-    # puts "find_dup_imported_users_and_templates()"
-    # puts template_lookup
     ['referrer', 'contributor'].each do |contact_type|
       email = contact_type == 'referrer' ? referrer_email : contact_email
       template = contact_type == 'referrer' ? referrer_template : contact_template
@@ -388,7 +283,6 @@ class SuccessesController < ApplicationController
                                                           name: template,
                                                           company_id: @company.id
                                                         }).take.try(:id) ))
-        # puts "DUP TEMPLATE #{template_id}"
         success = add_dup_template(success, contact_type, template_id)
       end
     end
@@ -438,5 +332,118 @@ class SuccessesController < ApplicationController
       false
     end
   end
+
+
+  def build_contribution_from_import (success, success_id)
+    contribution = {
+      success_id: success_id,
+      contributor_attributes: {},
+      referrer_attributes: {},
+      crowdsourcing_template_attributes: {}
+    }
+
+    contact_index = success[:contributions_attributes].select do |index, c|
+      c.has_key?("contributor_id") || c.has_key?("contributor_attributes")
+    end.keys[0]
+    referrer_index = success[:contributions_attributes].select do |index, c|
+      c.has_key?("referrer_id") || c.has_key?("referrer_attributes")
+    end.keys[0]
+
+    referrer_id = success.dig(:contributions_attributes, referrer_index, :referrer_id)
+    referrer_attrs = success.dig(:contributions_attributes, referrer_index, :referrer_attributes)
+    contributor_id = success.dig(:contributions_attributes, contact_index, :contributor_id)
+    contributor_attrs = success.dig(:contributions_attributes, contact_index, :contributor_attributes)
+    crowdsourcing_template_id = success.dig(:contributions_attributes, contact_index, :crowdsourcing_template_id)
+    crowdsourcing_template_attrs = success.dig(:contributions_attributes, contact_index, :crowdsourcing_template_attributes)
+
+    if referrer_id.present?
+      contribution[:referrer_id] = referrer_id
+      contribution.except!(:referrer_attributes)
+    elsif referrer_attrs.present?
+      contribution[:referrer_attributes].merge!(referrer_attrs)
+    else
+      contribution.except!(:referrer_attributes)
+    end
+    if contributor_id.present?
+      contribution[:contributor_id] = contributor_id
+      contribution.except!(:contributor_attributes)
+    elsif contributor_attrs.present?
+      contribution[:contributor_attributes].merge!(contributor_attrs)
+    else
+      contribution.except!(:contributor_attributes)
+    end
+    if crowdsourcing_template_id.present?
+      contribution[:crowdsourcing_template_id] = crowdsourcing_template_id
+      contribution.except!(:crowdsourcing_template_attributes)
+    elsif crowdsourcing_template_attrs.present?
+      contribution[:crowdsourcing_template_attributes].merge!(crowdsourcing_template_attrs)
+    else
+      contribution.except!(:crowdsourcing_template_attributes)
+    end
+    contribution
+  end
+
+  # for activerecord-import ...
+  # 2exp2 signatures for an imported success (each requires its own .import statement)
+  # Success.import(import_signature_1(params[:imported_successes]), on_duplicate_key_updatevalidate: false)
+  # Success.import(import_signature_2(params[:imported_successes]), validate: false)
+  # Success.import(import_signature_3(params[:imported_successes]), validate: false)
+  # Success.import(import_signature_4(params[:imported_successes]), validate: false)
+  #
+  # both new
+  # def import_signature_1 (imported_successes)
+  #   successes = []
+  #   imported_successes.to_a.map { |s| s[1] }.keep_if do |s|
+  #     s[:contributions_attributes]['0'][:referrer_attributes].has_key?(:password) &&
+  #     s[:contributions_attributes]['1'][:contributor_attributes].has_key?(:password)
+  #   end
+  #     .each do |success|
+  #       # params[:success] = success
+  #       successes << Success.create(success)
+  #     end
+  #   successes
+  # end
+
+  # # one existing, one new
+  # def import_signature_2 (imported_successes)
+  #   successes = []
+  #   imported_successes.to_a.map { |s| s[1] }.keep_if do |s|
+  #     !s[:contributions_attributes]['0'][:referrer_attributes].has_key?(:password) &&
+  #     s[:contributions_attributes]['1'][:contributor_attributes].has_key?(:password)
+  #   end
+  #     .each do |success|
+  #       # params[:success] = success
+  #       successes << Success.create(success)
+  #     end
+  #   successes
+  # end
+
+  # # one new, one existing
+  # def import_signature_3 (imported_successes)
+  #   successes = []
+  #   imported_successes.to_a.map { |s| s[1] }.keep_if do |s|
+  #     s[:contributions_attributes]['0'][:referrer_attributes].has_key?(:password) &&
+  #     !s[:contributions_attributes]['1'][:contributor_attributes].has_key?(:password)
+  #   end
+  #     .each do |success|
+  #       # params[:success] = success
+  #       successes << Success.create(success)
+  #     end
+  #   successes
+  # end
+
+  # # both existing
+  # def import_signature_4 (imported_successes)
+  #   successes = []
+  #   imported_successes.to_a.map { |s| s[1] }.keep_if do |s|
+  #     !s[:contributions_attributes]['0'][:referrer_attributes].has_key?(:password) &&
+  #     !s[:contributions_attributes]['1'][:contributor_attributes].has_key?(:password)
+  #   end
+  #     .each do |success|
+  #       # params[:success] = success
+  #       successes << Success.create(success)
+  #     end
+  #   successes
+  # end
 
 end
