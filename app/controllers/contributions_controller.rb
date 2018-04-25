@@ -71,18 +71,16 @@ class ContributionsController < ApplicationController
 
   def create
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
-    SuccessesController
-      .find_dup_customer(
-        params[:contribution].dig(:success_attributes, :customer_attributes),
-        params[:zap].present?,
-        current_user
-      )
-    SuccessesController
-      .find_dup_users(
-        params[:contribution].dig(:referrer_attributes),
-        params[:contribution].dig(:contributor_attributes),
-        params[:zap].present?
-      )
+    SuccessesController.find_dup_customer(
+      params[:contribution].dig(:success_attributes, :customer_attributes),
+      params[:zap].present?,
+      current_user
+    )
+    SuccessesController.find_dup_users(
+      params[:contribution].dig(:referrer_attributes),
+      params[:contribution].dig(:contributor_attributes),
+      params[:zap].present?
+    )
     @contribution = Contribution.new(contribution_params)
     if @contribution.save
     else

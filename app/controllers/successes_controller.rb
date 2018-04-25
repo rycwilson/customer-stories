@@ -30,18 +30,16 @@ class SuccessesController < ApplicationController
     # pp params[:success]
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
     # unless params[:zap].present? && ignore_zap?(params[:success])
-    SuccessesController
-      .find_dup_customer(
-        params[:success].dig(:customer_attributes),
-        params[:zap].present?,
-        current_user
-      )
-    SuccessesController
-      .find_dup_users(
-        params[:success].dig(:contributions_attributes, '0', :referrer_attributes),
-        params[:success].dig(:contributions_attributes, '1', :contributor_attributes),
-        params[:zap].present?
-      )
+    SuccessesController.find_dup_customer(
+      params[:success].dig(:customer_attributes),
+      params[:zap].present?,
+      current_user
+    )
+    SuccessesController.find_dup_users(
+      params[:success].dig(:contributions_attributes, '0', :referrer_attributes),
+      params[:success].dig(:contributions_attributes, '1', :contributor_attributes),
+      params[:zap].present?
+    )
     if params[:zap].present? && (@success = Success.find_by_id(find_dup_success(params[:success])))
       # a new success entails two contributions, one for the contact and one for the referrer;
       # dup success means a new contributor, i.e. one contribution only;
