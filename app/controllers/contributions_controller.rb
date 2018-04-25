@@ -70,15 +70,20 @@ class ContributionsController < ApplicationController
   end
 
   def create
-    @company = Company.find_by(subdomain: request.subdomain)
+    @company = Company.find_by(subdomain: request.subdomain) || current_user.company
+    SuccessesController
+      .find_dup_customer(params[:contribution].dig(:success_attributes, :customer_attributes), params[:zap].present?)
+    SuccessesController
+      .find_dup_users(params[:contribution], params[:zap].present?)
     @contribution = Contribution.new(contribution_params)
     if @contribution.save
     else
-      if @contribution.contributor.errors.full_messages[0] == "Email has already been taken"
-        @contribution.contributor.id = User.find_by(email: @contribution.contributor.email).id
-        @contribution.contributor.reload
-        @contribution.save
-      end
+      # this should be necessary with addition of .find_dup_users
+      # if @contribution.contributor.errors.full_messages[0] == "Email has already been taken"
+      #   @contribution.contributor.id = User.find_by(email: @contribution.contributor.email).id
+      #   @contribution.contributor.reload
+      #   @contribution.save
+      # end
     end
     respond_to { |format| format.js {} }
   end
@@ -274,6 +279,21 @@ class ContributionsController < ApplicationController
       controller: 'profile', action: 'linkedin_connect',
       params: { contribution_id: contribution.id }
     })
+  end
+
+  def find_dup_customer (customer_params, is_zap)
+    if is_zap || !is_zap  # works for either
+      if (customer = Customer.where(name: customer_params.try(:[], :name), company_id: current_user.company_id).take)
+        customer_params[:id] = customer.id
+        customer_params.delete_if { |k, v| k != 'id' }
+      else
+        customer_params[:company_id] = current_user.company_id
+      end
+    else
+    end
+  end
+
+  def find_dup_users (contribution)
   end
 
 end

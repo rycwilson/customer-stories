@@ -27,33 +27,35 @@ class SuccessesController < ApplicationController
   end
 
   def create
-    pp params[:success]
+    # pp params[:success]
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
-    unless params[:zap].present? && ignore_zap?(params[:success])
-      # use customer name and user emails to find id attributes
-      find_dup_customer(params[:success].dig(:customer_attributes), params[:zap].present?)
-      find_dup_users(
-        params[:success].dig(:contributions_attributes, '0', :referrer_attributes),
-        params[:success].dig(:contributions_attributes, '1', :contributor_attributes),
-        params[:zap].present?
-      )
+    # unless params[:zap].present? && ignore_zap?(params[:success])
+    find_dup_customer(params[:success].dig(:customer_attributes), params[:zap].present?)
+    find_dup_users(
+      params[:success].dig(:contributions_attributes, '0', :referrer_attributes),
+      params[:success].dig(:contributions_attributes, '1', :contributor_attributes),
+      params[:zap].present?
+    )
+    if params[:zap].present? && (@success = Success.find_by_id(find_dup_success(params[:success])))
+      # a new success entails two contributions, one for the contact and one for the referrer;
+      # dup success means a new contributor, i.e. one contribution only;
+      # referrers only get a contribution when they refer the original customer contact
+      @success = consolidate_contributions(@success)
+      zap_status = 'success' if @success.update(success_params)
+    else
       @success = Success.new(success_params)
-      if params[:zap].present?
-        # allow for new contributors added to a dup success (which would otherwise be invalid)
-        @success.save(validate: false)
+      if @success.save
       else
-        if @success.save
-        else
-          pp @success.errors.full_messages
-        end
+        pp @success.errors.full_messages
       end
     end
+    # end
     if params[:zap].present?
       respond_to do |format|
         format.any do
           render({
             json: {
-              status: @success && @success.persisted? ? "success" : "error"
+              status: (@success && @success.persisted?) || zap_status == 'success' ? 'success' : 'error'
             }
           })
         end
@@ -95,7 +97,7 @@ class SuccessesController < ApplicationController
         imported_success, user_lookup, template_lookup, referrer_email, contact_email, referrer_template, contact_template
       )
 
-      if (imported_success_id = find_dup_imported_success(imported_success, success_lookup))
+      if (imported_success_id = find_dup_success(imported_success, success_lookup))
         new_contribution = build_contribution_from_import(imported_success, imported_success_id)
         # create a new contribution if a contributor is present (new or existing)
         if new_contribution[:contributor_attributes].present?
@@ -195,7 +197,7 @@ class SuccessesController < ApplicationController
   # method receives params[:success][:customer_attributes] and either
   # - finds customer, or
   # - provides company_id for the new customer
-  def find_dup_customer (customer_params, is_zap)
+  def self.find_dup_customer (customer_params, is_zap)
     if is_zap || !is_zap  # works for either
       if (customer = Customer.where(name: customer_params.try(:[], :name), company_id: current_user.company_id).take)
         customer_params[:id] = customer.id
@@ -207,7 +209,7 @@ class SuccessesController < ApplicationController
     end
   end
 
-  def find_dup_users (referrer_params, contributor_params, is_zap)
+  def self.find_dup_users (referrer_params, contributor_params, is_zap)
     if is_zap || !is_zap  # works for either
       if (referrer = User.find_by_email(referrer_params.try(:[], :email)))
         referrer_params[:id] = referrer.id
@@ -222,10 +224,9 @@ class SuccessesController < ApplicationController
   end
 
   # find a success previously created in this import (or in db) and return id
-  def find_dup_imported_success (success, success_lookup)
+  def find_dup_success (success, success_lookup=nil)
     if success[:customer_id].present? &&
         success[:customer_id] == success_lookup.dig(success[:name], :customer_id)
-      # binding.remote_pry
       success_lookup[success[:name]][:id]
     elsif success_id = Success.where({
                                 name: success[:name],
@@ -314,24 +315,30 @@ class SuccessesController < ApplicationController
 
   # duplicate successes are allowed for a zap; they will contain new contributors
   # but not allowed if also a dup contributor (dup referrer ok)
-  def ignore_zap? (success)
-    if existing_success = Success.includes(:contributions)
-                                 .joins(:customer)
-                                 .where({ name: success[:name] })
-                                 .where({ customers: { id: success[:customer_id] }})
-                                 .take
-      # this is a dup success; check for new contributor
-      contributor_id = success.dig(:contributions_attributes, '1', :contributor_id)
-      if (User.find_by_id(contributor_id) &&
-          existing_success.contributions.none? { |c| c.contributor_id == contributor_id })
-        true
-      else
-        false
-      end
-    else
-      false
-    end
-  end
+  # NOTE no id values will be available in a zap
+  # def ignore_zap? (success)
+  #   if existing_success = Success.includes(:contributions)
+  #                                .joins(:customer)
+  #                                .where({ name: success[:name] })
+  #                                .where({
+  #                                   customers: {
+  #                                     name: success.dig(:customer_attributes, :name),
+  #                                     company_id: current_user.company_id
+  #                                   },
+  #                                 })
+  #                                .take
+  #     # this is a dup success; check for new contributor
+  #     contributor_email = success.dig(:contributions_attributes, '1', :contributor_attributes, :email)
+  #     if (User.find_by_email(contributor_email) &&
+  #         existing_success.contributions.any? { |c| c.contributor.email == contributor_email })
+  #       true  # user already has a contribution for this success
+  #     else
+  #       false
+  #     end
+  #   else
+  #     false
+  #   end
+  # end
 
 
   def build_contribution_from_import (success, success_id)
@@ -381,6 +388,16 @@ class SuccessesController < ApplicationController
       contribution.except!(:crowdsourcing_template_attributes)
     end
     contribution
+  end
+
+  # method takes a success from a zap and combines data from each of two possible contributions
+  # into a single contribution.
+  def consolidate_contributions (success)
+    success[:contributions_attributes]['1'][:success_contact] = false
+    success[:contributions_attributes]['1'][:referrer_attributes] =
+      success[:contributions_attributes]['0'][:referrer_attributes]
+    success[:contributions_attributes].except!('0')
+    success
   end
 
   # for activerecord-import ...
