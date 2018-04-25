@@ -2,6 +2,11 @@ class ContributionsController < ApplicationController
 
   before_action :set_contribution, except: [:index, :create]
   # before_action :check_opt_out_list, only: [:confirm_request]
+  skip_before_action(
+    :verify_authenticity_token,
+    only: [:create],
+    if: -> { params[:zap].present? }
+  )
 
   respond_to(:html, :json, :js)
 
@@ -81,6 +86,7 @@ class ContributionsController < ApplicationController
       params[:contribution].dig(:contributor_attributes),
       params[:zap].present?
     )
+    pp params[:contribution]
     @contribution = Contribution.new(contribution_params)
     if @contribution.save
     else
