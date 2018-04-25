@@ -72,9 +72,17 @@ class ContributionsController < ApplicationController
   def create
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
     SuccessesController
-      .find_dup_customer(params[:contribution].dig(:success_attributes, :customer_attributes), params[:zap].present?)
+      .find_dup_customer(
+        params[:contribution].dig(:success_attributes, :customer_attributes),
+        params[:zap].present?,
+        current_user
+      )
     SuccessesController
-      .find_dup_users(params[:contribution], params[:zap].present?)
+      .find_dup_users(
+        params[:contribution].dig(:referrer_attributes),
+        params[:contribution].dig(:contributor_attributes),
+        params[:zap].present?
+      )
     @contribution = Contribution.new(contribution_params)
     if @contribution.save
     else
@@ -85,13 +93,24 @@ class ContributionsController < ApplicationController
       #   @contribution.save
       # end
     end
-    respond_to { |format| format.js {} }
+    if params[:zap].present?
+      respond_to do |format|
+        format.any do
+          render({
+            json: {
+              status: (@contribution.persisted?) || zap_status == 'success' ? 'success' : 'error'
+            }
+          })
+        end
+      end
+    else
+      respond_to { |format| format.js {} }
+    end
   end
 
   def update
     if params[:data]  # crowdsourcing template (datatables inline editor)
-      @contribution.crowdsourcing_template_id =
-          params[:data].values[0][:crowdsourcing_template][:id]
+      @contribution.crowdsourcing_template_id = params[:data].values[0][:crowdsourcing_template][:id]
       @contribution.save
       dt_data = [ JSON.parse(@contribution.to_json({
         only: [:id, :status, :publish_contributor, :contributor_unpublished],

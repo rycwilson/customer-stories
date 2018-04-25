@@ -197,7 +197,7 @@ class SuccessesController < ApplicationController
   # method receives params[:success][:customer_attributes] and either
   # - finds customer, or
   # - provides company_id for the new customer
-  def self.find_dup_customer (customer_params, is_zap)
+  def self.find_dup_customer (customer_params, is_zap, current_user)
     if is_zap || !is_zap  # works for either
       if (customer = Customer.where(name: customer_params.try(:[], :name), company_id: current_user.company_id).take)
         customer_params[:id] = customer.id
