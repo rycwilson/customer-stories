@@ -86,7 +86,7 @@ class ContributionsController < ApplicationController
     @contribution = Contribution.new(contribution_params)
     if @contribution.save
     else
-      # this should be necessary with addition of .find_dup_users
+      # this should not be necessary with addition of .find_dup_users
       # if @contribution.contributor.errors.full_messages[0] == "Email has already been taken"
       #   @contribution.contributor.id = User.find_by(email: @contribution.contributor.email).id
       #   @contribution.contributor.reload
