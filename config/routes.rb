@@ -20,6 +20,7 @@ Rails.application.routes.draw do
     get '/curators', to: 'companies#get_curators'
     get '/invitation_templates', to: 'companies#get_invitation_templates'
     post '/successes', to: 'successes#create', constraints: { zap: 'true' }
+    post '/contributions', to: 'contributions#create', constraints: { zap: 'true' }
   end
 
   get '/sitemap', to: 'site#sitemap'
