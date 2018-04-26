@@ -1,5 +1,6 @@
-
+require 'successes_and_contributions'
 class SuccessesController < ApplicationController
+  include SuccessesAndContributions
 
   # respond_to(:html, :js, :json)
 
@@ -30,19 +31,19 @@ class SuccessesController < ApplicationController
     # pp params[:success]
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
     # unless params[:zap].present? && ignore_zap?(params[:success])
-    SuccessesController.find_dup_customer(
+    find_dup_customer(
       params[:success].dig(:customer_attributes),
       params[:zap].present?,
       current_user
     )
-    SuccessesController.find_dup_users(
+    find_dup_users_and_check_name_format(
       params[:success].dig(:contributions_attributes, '0', :referrer_attributes),
       params[:success].dig(:contributions_attributes, '1', :contributor_attributes),
       params[:zap].present?
     )
     if params[:zap].present? && (@success = Success.find_by_id(find_dup_success(params[:success])))
       # a new success entails two contributions, one for the contact and one for the referrer;
-      # dup success means a new contributor, i.e. one contribution only;
+      # a duplicate success means a new contributor, i.e. one contribution only;
       # referrers only get a contribution when they refer the original customer contact
       @success = consolidate_contributions(@success)
       zap_status = 'success' if @success.update(success_params)
@@ -201,31 +202,31 @@ class SuccessesController < ApplicationController
   # method receives params[:success][:customer_attributes] and either
   # - finds customer, or
   # - provides company_id for the new customer
-  def self.find_dup_customer (customer_params, is_zap, current_user)
-    if is_zap || !is_zap  # works for either
-      if (customer = Customer.where(name: customer_params.try(:[], :name), company_id: current_user.company_id).take)
-        customer_params[:id] = customer.id
-        customer_params.delete_if { |k, v| k != 'id' }
-      else
-        customer_params[:company_id] = current_user.company_id
-      end
-    else
-    end
-  end
+  # def self.find_dup_customer (customer_params, is_zap, current_user)
+  #   if is_zap || !is_zap  # works for either
+  #     if (customer = Customer.where(name: customer_params.try(:[], :name), company_id: current_user.company_id).take)
+  #       customer_params[:id] = customer.id
+  #       customer_params.delete_if { |k, v| k != 'id' }
+  #     else
+  #       customer_params[:company_id] = current_user.company_id
+  #     end
+  #   else
+  #   end
+  # end
 
-  def self.find_dup_users (referrer_params, contributor_params, is_zap)
-    if is_zap || !is_zap  # works for either
-      if (referrer = User.find_by_email(referrer_params.try(:[], :email)))
-        referrer_params[:id] = referrer.id
-        # allow certain attribute updates
-        referrer_params.delete_if { |k, v| !['id', 'title', 'phone'].include?(k) }
-      end
-      if (contributor = User.find_by_email(contributor_params.try(:[], :email)))
-        contributor_params[:id] = contributor.id
-        contributor_params.delete_if { |k, v| !['id', 'title', 'phone'].include?(k) }
-      end
-    end
-  end
+  # def self.find_dup_users (referrer_params, contributor_params, is_zap)
+  #   if is_zap || !is_zap  # works for either
+  #     if (referrer = User.find_by_email(referrer_params.try(:[], :email)))
+  #       referrer_params[:id] = referrer.id
+  #       # allow certain attribute updates
+  #       referrer_params.delete_if { |k, v| !['id', 'title', 'phone'].include?(k) }
+  #     end
+  #     if (contributor = User.find_by_email(contributor_params.try(:[], :email)))
+  #       contributor_params[:id] = contributor.id
+  #       contributor_params.delete_if { |k, v| !['id', 'title', 'phone'].include?(k) }
+  #     end
+  #   end
+  # end
 
   # find a success previously created in this import (or in db) and return id
   def find_dup_success (success, success_lookup=nil)

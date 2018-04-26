@@ -230,16 +230,16 @@ function newSuccessListeners () {
               if (row.referrerFirstName && row.referrerLastName) {
                 referrerFirstName = row.referrerFirstName;
                 referrerLastName = row.referrerLastName;
-              } else {
-                referrerFirstName = row.referrerFullName.split(' ').slice(0, str.split(' ').length - 1);
+              } else if (row.referrerFullName) {
+                referrerFirstName = row.referrerFullName.split(' ').slice(0, str.split(' ').length - 1).join(' ');
                 referrerLastName = row.referrerFullName.split(' ').pop();
               }
               if (row.contactFirstName && row.contactLastName) {
                 contactFirstName = row.contactFirstName;
                 contactLastName = row.contactLastName;
-              } else {
+              } else if (row.contactFullName) {
                 contactFirstName = row.contactFullName &&
-                  row.contactFullName.split(' ').slice(0, str.split(' ').length - 1);
+                  row.contactFullName.split(' ').slice(0, str.split(' ').length - 1).join(' ');
                 contactLastName = row.contactFullName &&
                   row.contactFullName.split(' ').pop();
               }

@@ -1,4 +1,6 @@
+require 'successes_and_contributions'
 class ContributionsController < ApplicationController
+  include SuccessesAndContributions
 
   before_action :set_contribution, except: [:index, :create]
   # before_action :check_opt_out_list, only: [:confirm_request]
@@ -76,12 +78,12 @@ class ContributionsController < ApplicationController
 
   def create
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
-    SuccessesController.find_dup_customer(
+    find_dup_customer(
       params[:contribution].dig(:success_attributes, :customer_attributes),
       params[:zap].present?,
       current_user
     )
-    SuccessesController.find_dup_users(
+    find_dup_users(
       params[:contribution].dig(:referrer_attributes),
       params[:contribution].dig(:contributor_attributes),
       params[:zap].present?
