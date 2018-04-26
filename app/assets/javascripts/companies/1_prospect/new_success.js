@@ -224,7 +224,23 @@ function newSuccessListeners () {
                     description: row.opportunityDescription,
                     curator_id: (curator && curator.id) || '',
                     customer_id: (customer && customer.id) || ''
-                  };
+                  },
+                  contactFirstName, contactlastName, referrerFirstName, referrerlastName;
+
+              if (row.contactFullName) {
+                contactFirstName = row.contactFullName.split(' ').slice(0, str.split(' ').length - 1);
+                contactLastName = row.contactFullName.split(' ').pop();
+              } else {
+                contactFirstName = row.contactFirstName;
+                contactLastName = row.contactLastName;
+              }
+              if (row.referrerFullName) {
+                referrerFirstName = row.referrerFullName.split(' ').slice(0, str.split(' ').length - 1);
+                referrerLastName = row.referrerFullName.split(' ').pop();
+              } else {
+                referrerFirstName = row.referrerFirstName;
+                referrerLastName = row.referrerLastName;
+              }
 
               // new customer
               if (!success.customer_id) {
@@ -235,21 +251,21 @@ function newSuccessListeners () {
               }
 
               // referrer (if present)
-              if (contactIsValid('referrer', row.referrerEmail, row.referrerFirstName, row.referrerLastName)) {
+              if (contactIsValid('referrer', row.referrerEmail, referrerFirstName, referrerLastName)) {
                 success.contributions_attributes = success.contributions_attributes || [];
                 success.contributions_attributes.push(
                   contributionsAttrs(
-                    'referrer', row.referrerInvitationTemplateName, row.referrerEmail, row.referrerFirstName, row.referrerLastName, row.referrerTitle, row.referrerPhone
+                    'referrer', row.referrerInvitationTemplateName, row.referrerEmail, referrerFirstName, referrerLastName, row.referrerTitle, row.referrerPhone
                   )
                 );
               }
 
               // customer contact (if present)
-              if (contactIsValid('contributor', row.contactEmail, row.contactFirstName, row.contactLastName)) {
+              if (contactIsValid('contributor', row.contactEmail, contactFirstName, contactLastName)) {
                 success.contributions_attributes = success.contributions_attributes || [];
                 success.contributions_attributes.push(
                   contributionsAttrs(
-                    'contributor', row.contactInvitationTemplateName, row.contactEmail, row.contactFirstName, row.contactLastName, row.contactTitle, row.contactPhone
+                    'contributor', row.contactInvitationTemplateName, row.contactEmail, contactFirstName, contactLastName, row.contactTitle, row.contactPhone
                   )
                 );
               }

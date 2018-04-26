@@ -86,7 +86,6 @@ class ContributionsController < ApplicationController
       params[:contribution].dig(:contributor_attributes),
       params[:zap].present?
     )
-    pp params[:contribution]
     @contribution = Contribution.new(contribution_params)
     if @contribution.save
     else
@@ -102,7 +101,7 @@ class ContributionsController < ApplicationController
         format.any do
           render({
             json: {
-              status: (@contribution.persisted?) || zap_status == 'success' ? 'success' : 'error'
+              status: @contribution.persisted? ? 'success' : 'error'
             }
           })
         end
