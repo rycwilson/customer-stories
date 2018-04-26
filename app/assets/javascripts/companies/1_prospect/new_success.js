@@ -225,21 +225,23 @@ function newSuccessListeners () {
                     curator_id: (curator && curator.id) || '',
                     customer_id: (customer && customer.id) || ''
                   },
-                  contactFirstName, contactlastName, referrerFirstName, referrerlastName;
+                  referrerFirstName, referrerlastName, contactFirstName, contactlastName;
 
-              if (row.contactFullName) {
-                contactFirstName = row.contactFullName.split(' ').slice(0, str.split(' ').length - 1);
-                contactLastName = row.contactFullName.split(' ').pop();
-              } else {
-                contactFirstName = row.contactFirstName;
-                contactLastName = row.contactLastName;
-              }
-              if (row.referrerFullName) {
-                referrerFirstName = row.referrerFullName.split(' ').slice(0, str.split(' ').length - 1);
-                referrerLastName = row.referrerFullName.split(' ').pop();
-              } else {
+              if (row.referrerFirstName && row.referrerLastName) {
                 referrerFirstName = row.referrerFirstName;
                 referrerLastName = row.referrerLastName;
+              } else {
+                referrerFirstName = row.referrerFullName.split(' ').slice(0, str.split(' ').length - 1);
+                referrerLastName = row.referrerFullName.split(' ').pop();
+              }
+              if (row.contactFirstName && row.contactLastName) {
+                contactFirstName = row.contactFirstName;
+                contactLastName = row.contactLastName;
+              } else {
+                contactFirstName = row.contactFullName &&
+                  row.contactFullName.split(' ').slice(0, str.split(' ').length - 1);
+                contactLastName = row.contactFullName &&
+                  row.contactFullName.split(' ').pop();
               }
 
               // new customer
