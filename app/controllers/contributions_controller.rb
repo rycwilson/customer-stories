@@ -83,7 +83,7 @@ class ContributionsController < ApplicationController
       params[:zap].present?,
       current_user
     )
-    find_dup_users(
+    find_dup_users_and_split_full_name(
       params[:contribution].dig(:referrer_attributes),
       params[:contribution].dig(:contributor_attributes),
       params[:zap].present?
@@ -303,21 +303,6 @@ class ContributionsController < ApplicationController
       controller: 'profile', action: 'linkedin_connect',
       params: { contribution_id: contribution.id }
     })
-  end
-
-  def find_dup_customer (customer_params, is_zap, current_user)
-    if is_zap || !is_zap  # works for either
-      if (customer = Customer.where(name: customer_params.try(:[], :name), company_id: current_user.company_id).take)
-        customer_params[:id] = customer.id
-        customer_params.delete_if { |k, v| k != 'id' }
-      else
-        customer_params[:company_id] = current_user.company_id
-      end
-    else
-    end
-  end
-
-  def find_dup_users (contribution)
   end
 
 end
