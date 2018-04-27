@@ -305,7 +305,7 @@ class ContributionsController < ApplicationController
     })
   end
 
-  def find_dup_customer (customer_params, is_zap)
+  def find_dup_customer (customer_params, is_zap, current_user)
     if is_zap || !is_zap  # works for either
       if (customer = Customer.where(name: customer_params.try(:[], :name), company_id: current_user.company_id).take)
         customer_params[:id] = customer.id
