@@ -23,4 +23,4 @@ en:
   hello: "Hello world"
   doorkeeper:
     scopes:
-      curator: 'Create Customer Win data'
+      curator: 'Create Customer Win data, Create Story Contributor data'

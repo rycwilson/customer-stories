@@ -28,7 +28,7 @@ class SuccessesController < ApplicationController
   end
 
   def create
-    # pp params[:success]
+    pp params[:success]
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
     # unless params[:zap].present? && ignore_zap?(params[:success])
     find_dup_customer(
@@ -36,7 +36,7 @@ class SuccessesController < ApplicationController
       params[:zap].present?,
       current_user
     )
-    find_dup_users_and_check_name_format(
+    find_dup_users_and_split_full_name(
       params[:success].dig(:contributions_attributes, '0', :referrer_attributes),
       params[:success].dig(:contributions_attributes, '1', :contributor_attributes),
       params[:zap].present?
