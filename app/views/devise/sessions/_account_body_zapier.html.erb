@@ -17,7 +17,8 @@
   <div style="text-align: left; padding: 0 25px;">
     <div style="font-size: 15px; font-weight: 600; margin-bottom: 10px;">Zapier wants to</div>
     <ul style="font-size: 14px; padding-left: 20px;">
-      <li><%= I18n.t('doorkeeper.scopes.curator') %></li>
+      <li><%= I18n.t('doorkeeper.scopes.curator').split(', ')[0] %></li>
+      <li><%= I18n.t('doorkeeper.scopes.curator').split(', ')[1] %></li>
     </ul>
   </div>
 
