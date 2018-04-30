@@ -5,7 +5,6 @@ module SuccessesAndContributions
   def split_full_name (user_params)
     if user_params[:first_name].split(' ').length > 1
       user_params[:last_name] = user_params[:first_name].split(' ').pop
-      binding.remote_pry
       user_params[:first_name] = user_params[:first_name]
                                     .split(' ')
                                     .slice(0, user_params[:first_name].split(' ').length - 1)
