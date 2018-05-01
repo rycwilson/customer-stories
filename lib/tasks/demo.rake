@@ -1,16 +1,16 @@
 
 namespace :demo do
 
-  desc "create faux analytics data"
+  desc "create demo analytics data"
 
   task analytics: :environment do
-    PageView.where(company_id: DEMO_COMPANY_ID).destroy_all
+    PageView.where(company_id: 24).destroy_all
     PageView
       .includes(:story)
       .joins(:story).where("stories.id IN (225,227,254,258)")
       .each do |page_view|
         demo_page_view = page_view.dup
-        demo_page_view.company_id = DEMO_COMPANY_ID
+        demo_page_view.company_id = 24
         # create a 1:1 mapping so it's a realistic portrayal of relative story popularity
         demo_page_view.success_id = case page_view.story.id
                                     when 225 then 293
@@ -23,10 +23,10 @@ namespace :demo do
         puts demo_page_view.errors.full_messages
       end
     PageView
-      .joins(:company).where(success_id: nil, companies: { id: SAMPLE_COMPANY_ID })
+      .joins(:company).where(success_id: nil, companies: { id: 10 })
       .each do |page_view|
         demo_page_view = page_view.dup
-        demo_page_view.company_id = DEMO_COMPANY_ID
+        demo_page_view.company_id = 24
         demo_page_view.description = "https://demo.customerstories.net/"
         demo_page_view.save
         puts demo_page_view.errors.full_messages
