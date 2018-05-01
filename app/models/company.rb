@@ -906,7 +906,7 @@ class Company < ActiveRecord::Base
       # create a lookup table { success_id: story title }
       success_list.delete_if { |success_id| success_id.nil? }
       success_story_titles =
-        Success.find(success_list.to_a).map { |success| [ success.id, success.story.title ] }.to_h
+        Success.find(success_list.to_a).map { |success| [ success.id, success.story.try(:title) ] }.to_h
       visitors.each do |org|
         org[3].map! { |success| [ success_story_titles[success[0]] || 'Logo Page', success[1] ] }
               .sort_by! { |story| story[1] }.reverse!
