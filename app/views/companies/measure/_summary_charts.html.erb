@@ -1,10 +1,13 @@
 
-<%= render 'companies/measure/filter_form',
-            { company: company,
-              form_id: 'charts-filter-form',
-              form_path: charts_path,
-              story_select_id: 'charts-story-select',
-              date_range_input_id: 'charts-date-range-input' } %>
+<%= render(
+      'companies/measure/filter_form',
+      {
+        company: company,
+        form_id: 'charts-filter-form',
+        story_select_id: 'charts-story-select',
+        date_range_input_id: 'charts-date-range-input'
+      }
+    ) %>
 
 <div class="row">
 

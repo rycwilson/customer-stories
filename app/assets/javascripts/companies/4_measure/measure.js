@@ -23,11 +23,11 @@ function measureCharts () {
         date_range: $('#charts-date-range-input').val(),
         initial_load: isInitialLoad
       },
-      success: function (data, status, jqxhr) {
-        initGoogleCharts(true, data.charts);
-      },
       dataType: 'json'
-    });
+    })
+      .done(function (data, status, jqxhr) {
+        initGoogleCharts(true, data.charts);
+      });
   };
 
   $(document)

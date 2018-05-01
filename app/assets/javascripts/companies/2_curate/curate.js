@@ -138,7 +138,7 @@ function filterCurateGallery () {
         _.pluck(app.stories.filter(function (story) {
           return story.published;
         }), 'id');
-        // console.log(publishedStoryIds)
+        console.log('published: ', publishedStoryIds)
   var previewStoryIds =
         _.pluck(app.stories.filter(function (story) {
           return !story.published && story.preview_published;
@@ -147,7 +147,7 @@ function filterCurateGallery () {
         _.pluck(app.stories.filter(function (story) {
           return !story.published && !story.preview_published && story.logo_published;
         }), 'id');
-        // console.log(logoStoryIds)
+        console.log('logo published: ', logoStoryIds)
   var pendingStoryIds =
         _.pluck(app.stories.filter(function (story) {
           return !story.published && !story.preview_published && !story.logo_published;
@@ -166,7 +166,7 @@ function filterCurateGallery () {
 
   stories = app.stories.filter(function (story) { return storyIds.includes(story.id); });
 
-// console.log('stories: ', stories)
+console.log('stories: ', stories)
 
   $gallery.empty();
 

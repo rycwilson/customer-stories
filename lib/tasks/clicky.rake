@@ -129,7 +129,8 @@ namespace :clicky do
                            description: session['landing_page'],
                            visitor_session_id: visitor_session.id,
                            success_id: success.try(:id),
-                           company_id: company.id )
+                           company_id: company.id
+                         )
         # update the associations
         visitor.visitor_sessions << visitor_session
         visitor_session.visitor_actions << visitor_action
@@ -142,7 +143,7 @@ namespace :clicky do
     visitor_sessions
   end
 
-  def create_actions sessions
+  def create_actions (sessions)
     # clicky limits api requests to one per ip address per site id at a time
     hydra = Typhoeus::Hydra.new(max_concurrency: 1)
     sessions.each do |session|
@@ -161,6 +162,8 @@ namespace :clicky do
           # first action is already saved landing pageview
           next if index == 0
           create_action(session[:visitor_session_id], action)
+          # create a dup action for demo company
+          create_action(session[:visitor_session_id], action, true) if sample_story?(action)
         end
       end
     end
@@ -184,11 +187,12 @@ namespace :clicky do
       end
   end
 
-  def create_action visitor_session_id, action
+
+  def create_action visitor_session_id, action, is_demo=false
     return nil if (
       visitor_session_id.nil? ||
       !['pageview', 'outbound'].include?(action['action_type']) ||
-      action_exists?(action) ||
+      action_exists?(action, is_demo) ||
       skip_url?(action['action_url'], false)  # false => not a landing pageview
     )
     if (company = company_index_page?(action['action_url']))
@@ -205,8 +209,10 @@ namespace :clicky do
     }
     if action['action_type'] == 'pageview'
       PageView.create(
-        new_action.merge({ success_id: success.try(:id),
-                           company_id: company.id })
+        new_action.merge({
+          success_id: is_demo ? [293, 298, 302, 304].sample : success.try(:id),
+          company_id: is_demo ? 24 : company.id
+        })
       )
     elsif action['action_type'] == 'outbound' #&&   # TOO MANY ISSUES
           # adjust cut-off date as necessary
@@ -315,38 +321,44 @@ namespace :clicky do
            .try(:destroy_all)
   end
 
-  def test_company? subdomain
-    test_companies = ['cisco', 'acme', 'acme-test']
-    test_companies.include?(subdomain)
+  def skip_company? (subdomain)
+    skip_companies = ['cisco', 'acme', 'acme-test', 'demo']
+    skip_companies.include?(subdomain)
   end
 
   # returns the company if action is a company index pageview
-  def company_index_page? url
+  def company_index_page? (url)
     # www may or may not be present
     Company.find_by(subdomain: url.match(/\/\/((\w|-)+)\.customerstories\.net\/?\z/).try(:[], 1)) ||
     Company.find_by(subdomain: url.match(/\/\/www\.((\w|-)+)\.customerstories\.net\/?\z/).try(:[], 1))
   end
 
   # returns the success object if action is a story pageview
-  def story_page? url
+  def story_page? (url)
     slug = url.slice(url.rindex('/') + 1, url.length)
     # get rid of trailing / if one exists
     slug.split('').delete_if { |char| char == '/' }.join('')
     Story.friendly.exists?(slug) && Story.friendly.find(slug).success
   end
 
-  def action_exists? action
+  def sample_story? (action)
+    sample_stories = Story.find(225,227,254,258)
+    sample_stories.find { |story| action['action_url'] == story.csp_story_url }
+  end
+
+  def action_exists? (action, is_demo)
+    return false if is_demo
     VisitorAction.exists?({
       visitor_session_id: VisitorSession.find_by(clicky_session_id: action['session_id']).try(:id),
       timestamp: Time.at(action['time'].to_i)
     })
   end
 
-  def skip_url? url, is_landing
+  def skip_url? (url, is_landing)
     # www may or may not be present
     domain = url.match(/\/\/www\.((\w|-)+)/).try(:[], 1) ||
              url.match(/\/\/((\w|-)+)/)[1]
-    return true if test_company?(domain) ||
+    return true if skip_company?(domain) ||
                    domain == 'customerstories' ||     # store-front pages
                    url.match(/customerstories.org/)   # staging
     if is_landing
@@ -366,7 +378,7 @@ namespace :clicky do
   end
 
   # inserts a www if not present, or removes www if present
-  def alt_url url
+  def alt_url (url)
     if url.match(/\/\/www\./)
       url.sub!(/www\./, '')
     else
