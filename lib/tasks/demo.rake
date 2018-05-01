@@ -4,23 +4,29 @@ namespace :demo do
   desc "create faux analytics data"
 
   task analytics: :environment do
-    demo_success_ids = [293, 298, 302, 304]
     PageView
+      .includes(:story)
       .joins(:story).where("stories.id IN (225,227,254,258)")
-      .each do |action|
-        faux_action = action.dup
-        faux_action.company_id = 24
-        faux_action.success_id = demo_success_ids.sample
-        faux_action.description = nil  # this is normally the story url, but it's not actually used anywhere in csp
-        faux_action.save
+      .each do |page_view|
+        demo_page_view = page_view.dup
+        demo_page_view.company_id = DEMO_COMPANY_ID
+        # create a 1:1 mapping so it's a realistic portrayal of relative story popularity
+        demo_page_view.success_id = case page_view.story.id
+                                    when 225 then 293
+                                    when 227 then 298
+                                    when 254 then 302
+                                    when 258 then 304
+                                    end
+        demo_page_view.description = nil  # this is normally the story url, but it's not actually used anywhere in csp
+        demo_page_view.save
       end
     PageView
-      .joins(:company).where(success_id: nil, companies: { id: 10 })
-      .each do |action|
-        faux_action = action.dup
-        faux_action.company_id = 24
-        faux_action.description = "https://demo.customerstories.net/"  # this is normally the story url, but it's not actually used anywhere in csp
-        faux_action.save
+      .joins(:company).where(success_id: nil, companies: { id: SAMPLE_COMPANY_ID })
+      .each do |page_view|
+        demo_page_view = page_view.dup
+        demo_page_view.company_id = DEMO_COMPANY_ID
+        demo_page_view.description = "https://demo.customerstories.net/"
+        demo_page_view.save
       end
   end
 

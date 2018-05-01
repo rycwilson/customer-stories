@@ -208,10 +208,19 @@ namespace :clicky do
       timestamp: Time.at(action['time'].to_i)
     }
     if action['action_type'] == 'pageview'
+      if is_demo
+        demo_success_id = case success && success.story.id
+                          when 225 then 293
+                          when 227 then 298
+                          when 254 then 302
+                          when 258 then 304
+                          else nil
+                          end
+      end
       PageView.create(
         new_action.merge({
-          success_id: is_demo ? [293, 298, 302, 304].sample : success.try(:id),
-          company_id: is_demo ? 24 : company.id
+          success_id: is_demo ? demo_success_id : success.try(:id),
+          company_id: is_demo ? DEMO_COMPANY_ID : company.id
         })
       )
     elsif action['action_type'] == 'outbound' #&&   # TOO MANY ISSUES

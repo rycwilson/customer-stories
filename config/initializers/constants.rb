@@ -1,5 +1,7 @@
 
 DEV_TUNNEL_SUBDOMAIN = "cspdev"
+DEMO_COMPANY_ID = 24
+SAMPLE_COMPANY_ID = 10  # varmour
 
 INDUSTRIES = ['Education', 'Government', 'Financial Services', 'Healthcare', 'Hospitality', 'Manufacturing', 'Media and Entertainment', 'Service Provider', 'Technology', 'IT', 'Telecommunications'];
 
