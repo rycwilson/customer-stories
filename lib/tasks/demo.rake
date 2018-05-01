@@ -4,6 +4,7 @@ namespace :demo do
   desc "create faux analytics data"
 
   task analytics: :environment do
+    PageView.where(company_id: DEMO_COMPANY_ID).destroy_all
     PageView
       .includes(:story)
       .joins(:story).where("stories.id IN (225,227,254,258)")
