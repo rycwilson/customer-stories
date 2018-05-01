@@ -272,13 +272,15 @@ namespace :clicky do
       GETCLICKY_API_BASE_URL,
       method: :get,
       body: nil,
-      params: { site_id: ENV['GETCLICKY_SITE_ID'],
-                sitekey: ENV['GETCLICKY_SITE_KEY'],
-                type: 'visitors-list',
-                date: range,
-                limit: 'all',
-                output: 'json' },
-      headers: { Accept: "application/json" }
+      headers: { Accept: "application/json" },
+      params: {
+        site_id: ENV['GETCLICKY_SITE_ID'],
+        sitekey: ENV['GETCLICKY_SITE_KEY'],
+        type: 'visitors-list',
+        date: range,
+        limit: 'all',
+        output: 'json'
+      }
     )
     request.run
     JSON.parse(request.response.response_body)[0]['dates'][0]['items']
@@ -289,13 +291,15 @@ namespace :clicky do
       GETCLICKY_API_BASE_URL,
       method: :get,
       body: nil,
-      params: { site_id: ENV['GETCLICKY_SITE_ID'],
-                sitekey: ENV['GETCLICKY_SITE_KEY'],
-                type: type == 'visitors' ? 'visitors-list' : 'actions-list',
-                time_offset: time_offset,
-                limit: 'all',
-                output: 'json' },
-      headers: { Accept: "application/json" }
+      headers: { Accept: "application/json" },
+      params: {
+        site_id: ENV['GETCLICKY_SITE_ID'],
+        sitekey: ENV['GETCLICKY_SITE_KEY'],
+        type: type == 'visitors' ? 'visitors-list' : 'actions-list',
+        time_offset: time_offset,
+        limit: 'all',
+        output: 'json'
+      }
     )
     request.run
     JSON.parse(request.response.response_body)[0]['dates'][0]['items']
@@ -306,12 +310,14 @@ namespace :clicky do
       GETCLICKY_API_BASE_URL,
       method: :get,
       body: nil,
-      params: { site_id: ENV['GETCLICKY_SITE_ID'],
-                sitekey: ENV['GETCLICKY_SITE_KEY'],
-                type: 'actions-list',
-                session_id: session[:clicky_session_id],
-                output: 'json' },
-      headers: { Accept: "application/json" }
+      headers: { Accept: "application/json" },
+      params: {
+        site_id: ENV['GETCLICKY_SITE_ID'],
+        sitekey: ENV['GETCLICKY_SITE_KEY'],
+        type: 'actions-list',
+        session_id: session[:clicky_session_id],
+        output: 'json'
+      }
     )
   end
 
