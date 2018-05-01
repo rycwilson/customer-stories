@@ -38,7 +38,7 @@ class Contribution < ActiveRecord::Base
   accepts_nested_attributes_for(:contributor, allow_destroy: false)
   accepts_nested_attributes_for(:crowdsourcing_template)
 
-  # before_create(:generate_access_token)
+  before_create(:generate_access_token)
 
   # # when creating a new success with referrer, a contribution is created
   # # with referrer_id == contributor_id (i.e. contributor and referrer are same)

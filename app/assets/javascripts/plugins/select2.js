@@ -133,6 +133,7 @@ function initSelect2 () {
       $(this).select2({
         theme: 'bootstrap',
         placeholder: 'Select',
+        allowClear: true,
         width: 'style'   // get the width from stories.scss
       });
       $(this)[0].setAttribute('data-init', true);

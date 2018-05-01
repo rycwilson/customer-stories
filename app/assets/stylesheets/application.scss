@@ -49,6 +49,13 @@
  * in addition, below is required to stop the background from scrolling while the invitation modal is still open
  */
 
+/*
+ * this prevents presence/absence of scroll bar in stories gallery from shfiting the page left/right
+ */
+html {
+  overflow-y: scroll;
+}
+
 body:not(.site) {
   background-color: #f9f9f9;
 }
