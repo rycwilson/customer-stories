@@ -237,54 +237,16 @@
   }
 }
 
-@media only screen and (min-width: 992px) and (max-width: 1199px) {
+@media only screen and (min-width: 992px) {
   .grid-container {
-    [class*="col-"]:first-child:not(.col-md-12) {
-      width: 28%;
+    #filters-md-lg {
+      width: 260px;
+      float: left;
+      min-height: 172px;
+      background-color: #efefef;
+      padding: 15px;
+      margin: 12px -50px 0 70px
     }
-    [class*="col-"]:last-child:not(.col-md-12) {
-      width: 72%;
-    }
-    .grid {
-      margin-right: -15px;  // pull it over a bit;
-      .grid-item {
-        margin: 10px;
-        a.thumbnail {
-          width: 200px;  // 210
-          height: 133px;  // 140
-          .thumbnail-view {
-            height: 109px;  // 133 - ( caption_height=22 + border=2*1px )
-            line-height: 104px;
-            .thumbnail-view-hover p {
-              font-size: 14px;
-              line-height: 19px;
-              font-weight: 400;
-            }
-            img {
-              padding: 18px;
-            }
-          }
-          .caption {
-            font-size: 13px;
-          }
-        }
-        a.thumbnail.public.logo-published {
-          .thumbnail-view {   // adjust dimensions for missing caption
-            height: 131px;
-            line-height: 127px;
-            img {
-              padding: 28px;
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-
-@media only screen and (min-width: 1200px) {
-  .grid-container {
     .grid {
       margin-right: -25px; // pull it over a bit
       .grid-item {
@@ -318,6 +280,16 @@
           }
         }
       }
+    }
+  }
+}
+
+
+@media only screen and (min-width: 1200px) {
+  .grid-container {
+    #filters-md-lg {
+      width: 260px;
+      margin: 12px -12px 0 30px
     }
   }
 }

@@ -59,7 +59,7 @@
 
   </div>
 
-  <div class="row visible-md-block visible-lg-block">
+  <div class="visible-md-block visible-lg-block">
 
     <% if include_filters?(@company) %>
 
@@ -75,8 +75,7 @@
 
     <% end %>
 
-    <div class="<%= include_filters?(@company) ? 'col-md-8 col-lg-9' : 'col-md-12' %>">
-
+    <div>
       <%= render(
             'stories/shared/gallery',
             { company: @company, stories: @stories, cache_key: @stories_index_cache_key }
