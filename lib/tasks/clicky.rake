@@ -163,7 +163,7 @@ namespace :clicky do
           next if index == 0
           create_action(session[:visitor_session_id], action)
           # create a dup action for demo company
-          # create_action(session[:visitor_session_id], action, true) if sample_story?(action)
+          create_action(session[:visitor_session_id], action, true) if sample_story?(action)
         end
       end
     end
