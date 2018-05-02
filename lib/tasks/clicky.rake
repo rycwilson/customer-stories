@@ -323,12 +323,13 @@ namespace :clicky do
 
   # TODO: limit the scope to recently added items
   def destroy_internal_traffic
-    # TODO: This should be modified. Visitors to stories that are subsequently
-    #       unpublished will be lost.
+    # removing this bit so visitors aren't lost when a story is unpublished
+    # also note clicky.js => no analytics when user is signed in
+    #
     # anyone viewing a story prior to publish date is a curator or developer
-    Visitor.joins(:visitor_sessions, :stories)
-           .where('stories.published = ? OR stories.publish_date > visitor_sessions.timestamp', false)
-           .try(:destroy_all)
+    # Visitor.joins(:visitor_sessions, :stories)
+    #        .where('stories.published = ? OR stories.publish_date > visitor_sessions.timestamp', false)
+    #        .try(:destroy_all)
     # # Dan and Ryan
     # # (last one on the list is a random visitor who visits A LOT)
     Visitor.joins(:visitor_sessions)
