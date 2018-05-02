@@ -20,7 +20,7 @@ namespace :demo do
                                     end
         demo_page_view.description = nil  # this is normally the story url, but it's not actually used anywhere in csp
         demo_page_view.save
-        puts demo_page_view.errors.full_messages
+        # puts demo_page_view.errors.full_messages
       end
     PageView
       .joins(:company).where(success_id: nil, companies: { id: SAMPLE_COMPANY_ID })
@@ -29,7 +29,7 @@ namespace :demo do
         demo_page_view.company_id = DEMO_COMPANY_ID
         demo_page_view.description = "https://demo.customerstories.net/"
         demo_page_view.save
-        puts demo_page_view.errors.full_messages
+        # puts demo_page_view.errors.full_messages
       end
   end
 
