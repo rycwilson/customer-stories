@@ -240,12 +240,12 @@
 @media only screen and (min-width: 992px) {
   .grid-container {
     #filters-md-lg {
-      width: 260px;
+      width: 270px;
       float: left;
-      min-height: 172px;
+      min-height: 182px;
       background-color: #efefef;
-      padding: 15px;
-      margin: 12px -50px 0 70px
+      padding: 18px 15px 15px 15px;
+      margin: 8px -56px 0 66px
     }
     .grid {
       margin-right: -25px; // pull it over a bit
@@ -288,8 +288,8 @@
 @media only screen and (min-width: 1200px) {
   .grid-container {
     #filters-md-lg {
-      width: 260px;
-      margin: 12px -12px 0 30px
+      width: 270px;
+      margin: 8px -16px 0 26px
     }
   }
 }
