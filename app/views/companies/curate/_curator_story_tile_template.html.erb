@@ -22,7 +22,7 @@
 
       <div class="caption"
            style="<%= story.published || story.preview_published || story.logo_published ? 'background-color:' + company.header_color_1 + ';color:' + company.header_text_color : '' %>">
-        <%= story.published ? 'Published' : (story.preview_published ? 'Preview published' : (story.logo_published ? 'Logo published' : 'Pending curation')) %>
+        <%= story.published ? 'Story published' : (story.preview_published ? 'Preview published' : (story.logo_published ? 'Logo published' : 'Not published')) %>
       </div>
 
     </a>

@@ -20,13 +20,20 @@
 
         <div class="row">
 
-          <div class="col-md-4 col-lg-3">
+          <div class="col-md-4 col-lg-3" style="position: relative">
 
-            <h4 class='lead' style='margin-bottom:0'>
+            <h4 class="lead">
               <a href='/'>Customer Stories</a>
             </h4>
 
-            <button type='button' class='btn btn-secondary' data-toggle='modal' data-target='#new-story-modal'><i class='fa fa-plus-circle fa-fw'></i>&nbsp;New Story</button>
+            <span data-toggle="modal" data-target="#new-story-modal">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle-o fa-stack-2x"></i>
+                <i class="fa fa-plus fa-stack-1x"></i>
+              </span>
+            </span>
+
+            <!-- <button type='button' class='btn btn-secondary' data-toggle='modal' data-target='#new-story-modal'><i class='fa fa-plus-circle fa-fw'></i>&nbsp;New Story</button> -->
 
             <%= render('companies/curate/filters', { company: company }) %>
 
@@ -34,12 +41,12 @@
 
           <div class="col-md-8 col-lg-9">
 
-            <div id="status-filters" class="row">
+            <!-- <div id="status-filters" class="row">
               <div class="col-sm-12 text-center">
 
                 <label style='margin-right:30px'>
                   <input class='pending' type="checkbox" checked='true'>&nbsp;
-                  Curation started
+                  Not published
                 </label>
                 <label style='margin-right:30px'>
                   <input class='logo-published' type="checkbox" checked='true'>&nbsp;
@@ -55,7 +62,7 @@
                 </label>
 
               </div>
-            </div>
+            </div> -->
 
             <div class="grid-container">
 

@@ -71,7 +71,7 @@ module StoriesHelper
     if story.published?
       "Read story"
     elsif company_curator? company_id
-      story.logo_published? ? "Logo published" : "Curation started"
+      story.logo_published? ? "Logo published" : "Not published"
     end
   end
 
