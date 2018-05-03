@@ -33,7 +33,7 @@
         {{ if (isCurator || story.published || story.preview_published) { }}
 
           <div class="caption"
-            style="{{= (story.published || story.preview_published || story.logo_published) ? 'background-color:' + '<%= company.header_color_1 %>' + ';color:' + '<%= company.header_text_color %>' : '' }}">
+            style="{{= !isCurator && (story.published || story.preview_published) ? 'background-color:' + '<%= company.header_color_1 %>' + ';color:' + '<%= company.header_text_color %>' : 'background-color: #efefef; color: #333;' }}">
             {{= story.published ? (isCurator ? 'Story published' : 'Read story') : (story.preview_published ? (isCurator ? 'Preview published' : 'See more') : (story.logo_published ? 'Logo published' : 'Not published')) }}
           </div>
 

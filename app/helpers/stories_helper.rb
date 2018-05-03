@@ -57,24 +57,6 @@ module StoriesHelper
     end
   end
 
-  def grid_item_caption_style company, story
-    if story.published?
-      "background-color:#{company.header_color_1}; color:#{company.header_text_color}"
-    elsif company_curator? company.id
-      "background-color:#f5f5f5"
-    else
-      "visibility:hidden"
-    end
-  end
-
-  def grid_item_caption_text company_id, story
-    if story.published?
-      "Read story"
-    elsif company_curator? company_id
-      story.logo_published? ? "Logo published" : "Not published"
-    end
-  end
-
   # this is for PDF generation
   # ref: https://github.com/mileszs/wicked_pdf/issues/36
   def embed_remote_image(url, content_type)
