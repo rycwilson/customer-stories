@@ -6,7 +6,6 @@ function initGridPreviews (config, callback) {
   $grid = $('#stories-gallery');
   // the items
   $items = $grid.children('li');
-  // console.log($items)
   // current expanded item´s index
   current = -1;
   // position (top) of the expanded item
@@ -56,8 +55,6 @@ function saveItemInfo( saveheight ) {
     var $item = $( this );
     $item.data( 'offsetTop', $item.offset().top );
     if( saveheight ) {
-      console.log('parent: ', $items.eq(0).closest('[class*="visible"]').attr('class'));
-      console.log('setting $item.data(height) = ', $item.height() )
       $item.data( 'height', $item.height() );
     }
   } );
@@ -333,7 +330,6 @@ Preview.prototype.close = function() {
 
     // the current expanded item (might be different from this.$item)
     var $expandedItem = $items.eq( this.expandedIdx );
-    console.log('on close, $item.data("height"): ', $expandedItem.data( 'height' ))
     $expandedItem.css( 'height', $expandedItem.data( 'height' ) ).on( transEndEventName, onEndFn );
     if( !support ) {
       onEndFn.call();
