@@ -18,7 +18,7 @@ function getQueryString (field, url) {
 */
 function centerLogos () {
 
-  $('.stories-gallery img, #more-stories-container img, #related-stories img')
+  $('#stories-gallery img, #more-stories-container img, #related-stories img')
     .each(function () {
       var height = $(this).outerHeight(),
           maxHeight = parseInt($(this).css('max-height')),

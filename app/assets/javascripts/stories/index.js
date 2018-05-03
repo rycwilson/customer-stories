@@ -17,6 +17,7 @@ function storiesIndex () {
       delete gon.preview_story;
     }
   });
+
 }
 
 function storiesIndexListeners () {
@@ -24,7 +25,7 @@ function storiesIndexListeners () {
   var loading = function ($story) {
         $story.addClass('loading');
         setTimeout(function () { $story.addClass('loading-icon'); }, 1000);
-        $('.stories-gallery li').css('pointer-events', 'none');
+        $('#stories-gallery li').css('pointer-events', 'none');
       };
 
   $(document)
@@ -129,8 +130,8 @@ function selectBoxesTrackQueryString ($categorySelect, categorySlug, $productSel
 }
 
 function updateGallery ($stories) {
-  $('.stories-gallery').imagesLoaded(function () {
-    $('.stories-gallery')
+  $('#stories-gallery').imagesLoaded(function () {
+    $('#stories-gallery')
       .empty()
       .append($stories)
       .hide().show('fast', function () { initGridPreviews(); });

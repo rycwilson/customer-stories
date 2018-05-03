@@ -3,16 +3,17 @@
 
 function initGridPreviews (config, callback) {
   // set the global variables
-  $grids = $('.stories-gallery');
+  $grid = $('#stories-gallery');
   // the items
-  $items = $grids.children( 'li' );
+  $items = $grid.children('li');
+  // console.log($items)
   // current expanded item´s index
   current = -1;
   // position (top) of the expanded item
   // used to know if the preview will expand in a different row
   previewPos = -1;
   // extra amount of pixels to scroll the window
-  scrollExtra = 0;
+  scrollExtra = 100;
   // extra margin when expanded (between the preview element and the next item row)
   marginExpanded = 10;
   $window = $( window );
@@ -39,7 +40,7 @@ function initGridPreviews (config, callback) {
   settings = $.extend( true, {}, settings, config );
 
   // preload all images
-  $grids.imagesLoaded( function() {
+  $grid.imagesLoaded( function() {
     // save item´s size and offset
     saveItemInfo( true );
     // get window´s size
@@ -55,6 +56,8 @@ function saveItemInfo( saveheight ) {
     var $item = $( this );
     $item.data( 'offsetTop', $item.offset().top );
     if( saveheight ) {
+      console.log('parent: ', $items.eq(0).closest('[class*="visible"]').attr('class'));
+      console.log('setting $item.data(height) = ', $item.height() )
       $item.data( 'height', $item.height() );
     }
   } );
@@ -327,10 +330,11 @@ Preview.prototype.close = function() {
       this.$largeImg.fadeOut( 'fast' );
     }
     this.$previewEl.css( 'height', 0 );
+
     // the current expanded item (might be different from this.$item)
     var $expandedItem = $items.eq( this.expandedIdx );
+    console.log('on close, $item.data("height"): ', $expandedItem.data( 'height' ))
     $expandedItem.css( 'height', $expandedItem.data( 'height' ) ).on( transEndEventName, onEndFn );
-
     if( !support ) {
       onEndFn.call();
     }
