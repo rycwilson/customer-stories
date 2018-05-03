@@ -50,12 +50,12 @@
             { company: @company, pre_selected_filter: @pre_selected_filter }
           ) %>
 
-      <%= render(
-            'stories/shared/gallery',
-            { company: @company, stories: @stories, cache_key: @stories_index_cache_key }
-          ) %>
-
     <% end %>
+
+    <%= render(
+          'stories/shared/gallery',
+          { company: @company, stories: @stories, cache_key: @stories_index_cache_key }
+        ) %>
 
   </div>
 
