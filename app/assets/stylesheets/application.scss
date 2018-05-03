@@ -52,8 +52,8 @@
 /*
  * this prevents presence/absence of scroll bar in stories gallery from shfiting the page left/right
  */
-html {
-  // overflow-y: scroll;
+.stories.index {
+  overflow-y: scroll;
 }
 
 body:not(.site) {
