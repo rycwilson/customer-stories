@@ -199,7 +199,7 @@ Preview.prototype.update = function( $item ) {
   current = this.$item.index();
   // update preview´s content
   var $itemEl = this.$item.children( 'a' ),
-    eldata = {
+      eldata = {
       logosrc : $itemEl.data( 'logosrc' ),
       customer : JSON.parse( $itemEl.data( 'customer' ) ),
       summary : JSON.parse( $itemEl.data( 'summary' ) ),

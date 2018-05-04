@@ -134,7 +134,7 @@ function updateGallery ($stories) {
     $('#stories-gallery')
       .empty()
       .append($stories)
-      .hide().show('fast', function () { initGridPreviews(); });
+      .hide().show('fast', initGridPreviews);
   });
 }
 
