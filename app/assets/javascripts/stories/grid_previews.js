@@ -223,16 +223,16 @@ Preview.prototype.update = function( $item ) {
       );
   }
 
-  if (eldata.contributor !== null) {
-    this.$contributorProfile
-      .html( contributorProfileTemplate({
-                contributor: eldata.contributor,
-                widgetWidth: widgetWidth
-             }) )
-      .imagesLoaded(function () {
-         self.$contributorProfile.find('.csp-linkedin-widget').removeClass('hidden');
-       });
-  }
+  // if (eldata.contributor !== null) {
+  //   this.$contributorProfile
+  //     .html( contributorProfileTemplate({
+  //               contributor: eldata.contributor,
+  //               widgetWidth: widgetWidth
+  //            }) )
+  //     .imagesLoaded(function () {
+  //        self.$contributorProfile.find('.csp-linkedin-widget').removeClass('hidden');
+  //      });
+  // }
 
   // remove the current image in the preview
   if( typeof self.$logoImg != 'undefined' ) {
