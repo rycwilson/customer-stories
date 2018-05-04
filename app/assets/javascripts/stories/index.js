@@ -30,6 +30,13 @@ function storiesIndexListeners () {
 
   $(document)
 
+    .on('input', '#search-stories-form input:not([type="hidden"])', function () {
+      $('#search-stories-form input[name="search"]').val($(this).val());
+    })
+    .on('click', '#search-stories-form i.fa-search', function () {
+      $('#search-stories-form').submit();
+    })
+
     .on('click', 'a.published', function (e) {
       var $story = $(this).closest('li');
       loading($story);

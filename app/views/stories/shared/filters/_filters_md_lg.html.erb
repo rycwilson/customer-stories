@@ -1,6 +1,22 @@
 
 <div id="filters-md-lg" class="visible-md-block visible-lg-block">
 
+  <%= form_tag(search_company_stories_path(company.id), method: :GET, remote: true, id: 'search-stories-form') do %>
+
+    <%= hidden_field_tag(:search, '') %>
+
+    <div class="form-group" style="position: relative">
+
+      <a href="javascript:;" style="position: absolute; padding: 6px 8px; top: -1px; right: 2px; font-size: 16px; color: #666">
+        <i class="fa fa-search"></i>
+      </a>
+
+      <%= text_field_tag(nil, nil, class: 'form-control', style: 'padding-right: 34px', placeholder: 'Search') %>
+
+    </div>
+
+  <% end %>
+
   <% if include_category_filter?(company) %>
 
     <% cache(category_select_cache_key, skip_digest: true) do %>

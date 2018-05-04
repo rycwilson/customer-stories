@@ -167,11 +167,14 @@ class StoriesController < ApplicationController
     end
   end
 
-
   def destroy
     @story.expire_cache_on_destroy
     @story.destroy
     respond_to { |format| format.js }
+  end
+
+  def search
+    respond_to { |format| format.js {} }
   end
 
   ##

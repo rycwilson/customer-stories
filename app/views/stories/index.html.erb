@@ -23,7 +23,8 @@
 
 <div class="container grid-container">
 
-  <% if include_filters?(@company) %>
+  <%# if include_filters?(@company) %>
+
 
     <%= render(
           'stories/shared/filters/filters_xs',
@@ -45,7 +46,7 @@
           }
         ) %>
 
-  <% end %>
+  <%# end %>
 
   <%= render(
         'stories/shared/gallery',

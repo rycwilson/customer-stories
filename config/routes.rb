@@ -98,6 +98,7 @@ Rails.application.routes.draw do
           collection { post '/import', to: 'successes#import' }
         end
         resources :stories, only: [:edit, :create, :update, :destroy], shallow: true do
+          get '/search', on: :collection, to: 'stories#search'
           get '/promoted', on: :collection, to: 'stories#promoted'
           member do
             post '/promote', to: 'stories#promote'
@@ -137,7 +138,7 @@ Rails.application.routes.draw do
       get '/analytics/stories', to: 'analytics#stories', as: 'measure_stories'
 
       # user profile
-      get   '/user-profile', to: 'profile#edit', as: 'edit_profile'
+      get '/user-profile', to: 'profile#edit', as: 'edit_profile'
 
       # approval PDF
       get '/stories/:id/approval', to: 'stories#approval', as: 'story_approval'
