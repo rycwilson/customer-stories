@@ -174,6 +174,21 @@ class StoriesController < ApplicationController
   end
 
   def search
+    @story_ids = Story.joins(:customer)
+                      .where(customers: { company_id: @company.id })
+                      .where("logo_published = TRUE OR preview_published = TRUE")
+                      .where(
+                         "title LIKE ? OR content LIKE ?",
+                         "%#{params[:search_string]}%", "%#{params[:search_string]}%"
+                       )
+                      .map { |s| s.id }
+    Customer.where("company_id = ? AND name LIKE ?", @company.id, "%#{params[:search_string]}%")
+            .each { |customer| @story_ids.concat(customer.story_ids) }
+    StoryCategory.where("company_id = ? AND name LIKE ?", @company.id, "%#{params[:search_string]}%")
+                 .each { |tag| @story_ids.concat(tag.story_ids) }
+    Product.where("company_id = ? AND name LIKE ?", @company.id, "%#{params[:search_string]}%")
+           .each { |tag| @story_ids.concat(tag.story_ids) }
+    @story_ids.uniq!
     respond_to { |format| format.js {} }
   end
 

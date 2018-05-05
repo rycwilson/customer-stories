@@ -3,19 +3,24 @@
 
   <%= form_tag(search_company_stories_path(company.id), method: :GET, remote: true, id: 'search-stories-form') do %>
 
-    <%= hidden_field_tag(:search, '') %>
+    <%= hidden_field_tag(:search_string, '') %>
 
-    <div class="form-group" style="position: relative">
+    <div class="form-group" style="position: relative; margin-bottom: 15px;">
 
-      <a href="javascript:;" style="position: absolute; padding: 6px 8px; top: -1px; right: 2px; font-size: 16px; color: #666">
-        <i class="fa fa-search"></i>
+      <a href="javascript:;" style="position: absolute; padding: 6px 10px; top: 1px; right: 1px; font-size: 14px; color: #666; border-top-right-radius: 3px; border-bottom-right-radius: 3px;">
+        <i class="fa fa-search fa-fw"></i>
       </a>
 
-      <%= text_field_tag(nil, nil, class: 'form-control', style: 'padding-right: 34px', placeholder: 'Search') %>
+      <%= text_field_tag(:search_input, nil, class: 'form-control', style: 'padding-right: 34px', placeholder: 'Search') %>
 
     </div>
 
+
   <% end %>
+
+  <div style="margin-bottom: 15px; text-align: right">
+    <a href="javascript:;">Clear filters</a>
+  </div>
 
   <% if include_category_filter?(company) %>
 

@@ -1,6 +1,13 @@
 
 (function () {
 
-  console.log('search.js');
+  var story_ids = <%= raw @story_ids.to_json %>;
+
+  updateGallery($(
+    _.template($('#stories-template').html())({
+      stories: app.stories.filter(function (story) { return story_ids.includes(story.id); }),
+      isCurator: false
+    })
+  ));
 
 }());

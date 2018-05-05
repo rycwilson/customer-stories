@@ -30,12 +30,15 @@ function storiesIndexListeners () {
 
   $(document)
 
-    .on('input', '#search-stories-form input:not([type="hidden"])', function () {
-      $('#search-stories-form input[name="search"]').val($(this).val());
+    .on('input', '#search-stories-form [name="search_input"]', function () {
+      $('#search-stories-form [name="search_string"]').val($(this).val());
     })
-    .on('click', '#search-stories-form i.fa-search', function () {
+    .on('click', '#search-stories-form a', function () {
       $('#search-stories-form').submit();
     })
+    .on('submit', '#search-stories-form', function () {
+    })
+    .on('click')
 
     .on('click', 'a.published', function (e) {
       var $story = $(this).closest('li');
@@ -46,18 +49,15 @@ function storiesIndexListeners () {
       var $option = $(this).find('option:selected'),
           filterTag = $option.val() ? $option.closest('optgroup').attr('label').toLowerCase() : '',
           filterId = $(this).val(),
-          filterSlug = $option.data('slug') || null,
-          storiesTemplate = _.template($('#stories-template').html());
+          filterSlug = $option.data('slug') || null;
 
-      updateGallery(
-        $(storiesTemplate({
-            stories: filterStories(filterTag, filterId, filterSlug),
-            isCurator: false
-          }))
-      );
-
+      updateGallery($(
+        _.template($('#stories-template').html())({
+          stories: filterStories(filterTag, filterId, filterSlug),
+          isCurator: false
+        })
+      ));
       replaceStateStoriesIndex(filterTag, filterId, filterSlug);
-
     })
 
     .on('change', '.stories-filter', function () {
@@ -66,19 +66,17 @@ function storiesIndexListeners () {
           $option = $(this).find('option:selected'),
           filterTag = $option.val() ? $(this).attr('name').replace('_select', '') : '',
           filterId = $(this).val(),
-          filterSlug = $(this).find("option[value='" + filterId + "']").data('slug') || null,
-          storiesTemplate = _.template($('#stories-template').html());
+          filterSlug = $(this).find("option[value='" + filterId + "']").data('slug') || null;
 
-      updateGallery(
-        $(storiesTemplate({
-            stories: filterStories(filterTag, filterId, filterSlug),
-            isCurator: false
-          }))
-      );
+      $('[name="search_input"]').val('').trigger('input');
 
+      updateGallery($(
+        _.template($('#stories-template').html())({
+          stories: filterStories(filterTag, filterId, filterSlug),
+          isCurator: false
+        })
+      ));
       replaceStateStoriesIndex(filterTag, filterId, filterSlug);
-      mutuallyExcludeFilters(filterTag, filterId, $categorySelect, $productSelect);
-
     });
 }
 
@@ -107,15 +105,6 @@ function filterStories (filterTag, filterId, filterSlug) {
   });
 }
 
-function mutuallyExcludeFilters (filterTag, filterId, $categorySelect, $productSelect) {
-  if (filterTag === 'category' && $productSelect.length) {
-    // change the selected option without triggering the 'change' event
-    $productSelect.val('0').trigger('change.select2');
-  } else if (filterTag === 'product' && $categorySelect.length) {
-    $categorySelect.val('0').trigger('change.select2');
-  }
-}
-
 function selectBoxesTrackQueryString ($categorySelect, categorySlug, $productSelect, productSlug) {
   var filterId = null;
   if (categorySlug) {
@@ -130,10 +119,12 @@ function selectBoxesTrackQueryString ($categorySelect, categorySlug, $productSel
     $categorySelect.val('0').trigger('change.select2');
     $productSelect.val('0').trigger('change.select2');
   }
-  $("[name='category_select'] + span").find('.select2-selection')
-                                        .each(function () { $(this).blur(); });
-  $("[name='product_select'] + span").find('.select2-selection')
-                                       .each(function () { $(this).blur(); });
+  $("[name='category_select'] + span")
+    .find('.select2-selection')
+    .each(function () { $(this).blur(); });
+  $("[name='product_select'] + span")
+    .find('.select2-selection')
+    .each(function () { $(this).blur(); });
 }
 
 function updateGallery ($stories) {

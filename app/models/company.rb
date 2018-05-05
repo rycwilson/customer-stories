@@ -314,7 +314,6 @@ class Company < ActiveRecord::Base
     Story.order(Story.company_published_filter_product(self.id, product_id)).pluck(:id)
   end
 
-  # public stories are logo_published or published
   def public_stories
     Story.order(Story.company_public(self.id)).pluck(:id)
   end
