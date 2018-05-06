@@ -1,5 +1,6 @@
-
+require 'stories_and_widgets'
 class WidgetsController < ApplicationController
+  include StoriesAndWidgets
 
   skip_before_action :verify_authenticity_token, only: [:script, :html]
   before_action except: [:track] { @company = Company.find_by(subdomain: request.subdomain) }
@@ -34,34 +35,28 @@ class WidgetsController < ApplicationController
   private
 
   # if invalid category or product filters, return all stories
-  def widget_html params
-    # TODO: allow for both category and product filters
-    filter_attributes = params[:category].present? ?
-                            { tag: 'category', slug: params[:category] } :
-                        (params[:product].present? ?
-                            { tag: 'product', slug: params[:product] } : nil)
-    filter_params = filter_attributes ?
-        validate_and_convert_filter_attributes(filter_attributes, @company) : nil
-    stories =
-      @company.filter_stories_by_tag(filter_params || { tag: 'all', id: '0' })
-              .map do |story|
-                if story.published?
-                  target_url = story.csp_story_url
-                elsif story.preview_published?
-                  target_url = root_url(subdomain: @company.subdomain) + "?preview=#{story.slug}"
-                elsif story.logo_published?
-                  target_url = 'javascript:;'
+  def widget_html (params)
+    filter_params = get_filters_from_query_or_widget(@company, params)
+    stories = @company
+                .filter_stories_by_tag(filter_params)
+                .map do |story|
+                  if story.published?
+                    target_url = story.csp_story_url
+                  elsif story.preview_published?
+                    target_url = root_url(subdomain: @company.subdomain) + "?preview=#{story.slug}"
+                  elsif story.logo_published?
+                    target_url = 'javascript:;'
+                  end
+                  {
+                    title: story.title,
+                    customer: story.customer.name,
+                    logo: story.customer.logo_url,
+                    url: target_url,
+                    published: story.published?,
+                    preview_published: story.preview_published?,
+                    updated_at: story.updated_at
+                  }
                 end
-                {
-                  title: story.title,
-                  customer: story.customer.name,
-                  logo: story.customer.logo_url,
-                  url: target_url,
-                  published: story.published?,
-                  preview_published: story.preview_published?,
-                  updated_at: story.updated_at
-                }
-              end
     if @company.subdomain == 'varmour'
       # ref: https://stackoverflow.com/questions/33732208
       stories = stories.sort_by { |s| [ !s[:published] ? 0 : 1, s[:updated_at] ] }.reverse
@@ -84,24 +79,6 @@ class WidgetsController < ApplicationController
         title: 'Customer Stories', native: false
       }
     )
-  end
-
-  # filter attributes = { tag: ... , slug: ... }
-  def validate_and_convert_filter_attributes filter_attributes, company
-    case filter_attributes[:tag]
-      when 'category'
-        category_id = StoryCategory.joins(successes: { customer: {} })
-                                   .where(slug: filter_attributes[:slug],
-                                          customers: { company_id: company.id } )
-                                   .take.try(:id)
-        return category_id ? { tag: 'category', id:  category_id } : nil
-      when 'product'
-        product_id = Product.joins(successes: { customer: {} })
-                            .where(slug: filter_attributes[:slug],
-                                   customers: { company_id: company.id } )
-                            .take.try(:id)
-        return product_id ? { tag: 'product', id: product_id } : nil
-    end
   end
 
 end

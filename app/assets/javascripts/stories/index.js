@@ -81,8 +81,7 @@ function storiesIndexListeners () {
 }
 
 function filterStories (filterTag, filterId, filterSlug) {
-
-  if (filterId === '0' || filterSlug === null) {  // all stories
+  if (filterId === '0' || filterSlug === null) {  // all public stories
     return app.stories.filter(function (story) {
              return story.logo_published || story.preview_published;
            });

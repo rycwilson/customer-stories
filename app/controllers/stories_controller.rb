@@ -1,6 +1,7 @@
+require 'stories_and_widgets'
 class StoriesController < ApplicationController
-
   include StoriesHelper
+  include StoriesAndWidgets
 
   before_action :set_company
   before_action :set_story, only: [:edit, :update, :ctas, :tags, :promote, :approval, :destroy]
@@ -31,9 +32,8 @@ class StoriesController < ApplicationController
       end
     end
 
-    if valid_filter_params?(@company, params)
+    if (filter_params = get_filters_from_query_or_widget(@company, params))
       # ?category=automotive  =>  { tag: 'category', id: '42' }
-      filter_params = get_filter_params_from_query(params)
       @stories_index_cache_key = @company.stories_index_cache_key(filter_params)
       unless fragment_exist?(@stories_index_cache_key)
         @stories = @company.filter_stories_by_tag(filter_params)
@@ -72,15 +72,16 @@ class StoriesController < ApplicationController
     # convert the story content to plain text (for SEO tags)
     @story_content_text = HtmlToPlainText.plain_text(@story.content)
     @related_stories = @story.related_stories
-    @more_stories =
-      @company.filter_stories_by_tag({ tag: 'all', id: '0' })
-              .delete_if { |story| story.id == @story.id || story.customer.logo_url.blank? }
-              .map do |story|
-                { title: story.title,
-                  logo: story.customer.logo_url,
-                  path: story.published ? story.csp_story_path : root_path,
-                  published: story.published }
-              end
+    @more_stories = @company.public_stories
+        .delete_if { |story| story.id == @story.id || story.customer.logo_url.blank? }
+        .map do |story|
+          {
+            title: story.title,
+            logo: story.customer.logo_url,
+            path: story.published ? story.csp_story_path : root_path,
+            published: story.published
+          }
+        end
   end
 
   def edit
@@ -386,46 +387,6 @@ class StoriesController < ApplicationController
     else
       # error
     end
-  end
-
-  # check validity of query string parameters
-  # at this point, only category or product are acceptable
-  def valid_filter_params? (company, params)
-    return false if request.query_string.blank? || params[:preview].present?
-    company = Company.find_by(subdomain: request.subdomain)
-    query_hash = Rack::Utils.parse_nested_query request.query_string
-    valid_category = params.try(:[], :category) &&
-                     StoryCategory.joins(successes: { customer: {} })
-                                  .where(slug: params[:category],
-                                         customers: { company_id: company.id } )
-                                  .present?
-    valid_product = params.try(:[], :product) &&
-                    Product.joins(successes: { customer: {} })
-                           .where(slug: params[:product],
-                                  customers: { company_id: company.id } )
-                           .present?
-    if query_hash.length === 1 && (valid_category || valid_product)
-      true
-    else
-      redirect_to(root_path, flash: { warning: "Page doesn't exist" }) and return false
-    end
-  end
-
-  # since we've already passed valid_query_string? method,
-  # we know params and data are legit
-  def get_filter_params_from_query params
-    filter = {}
-    if params[:category]
-      filter[:tag] = 'category'
-      filter[:id] = StoryCategory.friendly.find(params[:category]).id
-    elsif params[:product]
-      filter[:tag] = 'product'
-      filter[:id] = Product.friendly.find(params[:product]).id
-    else
-      # error - should only be in this method if there was
-      # a query string with category= or product=
-    end
-    filter
   end
 
   def remove_video? ()

@@ -327,8 +327,8 @@ class Company < ActiveRecord::Base
   end
 
   # TODO: faster? http://stackoverflow.com/questions/20014292
-  def filter_stories_by_tag filter_params
-    if filter_params[:id] == '0'  # all stories
+  def filter_stories_by_tag (filter_params)
+    if filter_params.nil?  # all stories
       story_ids = self.public_stories
     else
       case filter_params[:tag]  # all || category || product
@@ -382,16 +382,17 @@ class Company < ActiveRecord::Base
   #
   # method returns a fragment cache key that looks like this:
   #
-  #   #{self.subdomain}/stories-index-{tag}-xx-memcache-iterator-yy
+  #   #{self.subdomain}/stories-index-[category-{tag_id}-product-{tag_id}-]memcache-iterator-xx
   #
-  # tag is 'all', 'category', or 'product'
-  # xx is the selected filter id (0 if none selected)
-  # yy is the memcache iterator
+  # category tag and product tag are optional
+  # xx is the memcache iterator
   #
   def stories_index_cache_key (filter_params)
     memcache_iterator = self.stories_index_fragments_memcache_iterator
+    category_key = filter_params[:category].present? ? "category-#{filter_params[:category]}-" : ''
+    product_key = filter_params[:product].present? ? "product-#{filter_params[:product]}-" : ''
     "#{self.subdomain}/" +
-    "stories-index-#{filter_params[:tag]}-#{filter_params[:id]}-" +  # id = 0 -> all
+    "stories-index-#{category_key}#{product_key}" +
     "memcache-iterator-#{memcache_iterator}"
   end
 

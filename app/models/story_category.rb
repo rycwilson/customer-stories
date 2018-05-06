@@ -7,6 +7,7 @@ class StoryCategory < ActiveRecord::Base
   has_many :story_categories_successes, dependent: :destroy
   has_many :successes, through: :story_categories_successes
   has_many :stories, through: :successes
+  has_many :customers, through: :successes
 
   validates :name, presence: true
   validates_uniqueness_of :name, scope: :company_id

@@ -21,8 +21,6 @@
       var type = '<%= @type %>', $container,
           $script = (type === 'tab') ? $('script[src*="tab"]') :
                       (type === 'rel' ? $('script[src*="rel/"]') : $('script[src*="rel-exp"]')),
-          category = $script.data('category'),
-          product = $script.data('product'),
           $stylesheet = $("<link>", { rel: "stylesheet", type: "text/css" });
 
       if (type === 'tab') {
@@ -53,8 +51,8 @@
           url: "<%= URI.join(root_url, widget_html_path(@type)) %>",
           dataType: 'jsonp',
           data: {
-            category: category,
-            product: product
+            category: $script.data('category'),
+            product: $script.data('product')
           },
           success: function (data) {
             $container.html(data.html);
