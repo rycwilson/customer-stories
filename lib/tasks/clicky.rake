@@ -162,8 +162,6 @@ namespace :clicky do
           # first action is already saved landing pageview
           next if index == 0
           create_action(session[:visitor_session_id], action)
-          # create a dup action for demo company
-          create_action(session[:visitor_session_id], action, true) if sample_story?(action)
         end
       end
     end
@@ -182,6 +180,8 @@ namespace :clicky do
           unless skip_url?(action['action_url'], false)
             visitor_session = VisitorSession.find_by(clicky_session_id: session[0])
             create_action(visitor_session.id, action.stringify_keys)
+            # create a dup action for demo company
+            create_action(visitor_session.id, action.stringify_keys, true) if sample_story?(action.stringify_keys)
           end
         end
       end
