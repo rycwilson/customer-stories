@@ -14,8 +14,8 @@ class StoriesController < ApplicationController
 
   def index
     # these instance variables will get overwritten below if there's a query filter
-    @pre_selected_filter = { tag: 'all', id: 0 }
-    @stories_index_cache_key = @company.stories_index_cache_key(@pre_selected_filter)
+    @pre_selected_filters = { category: '', product: '' }
+    @stories_index_cache_key = @company.stories_index_cache_key(@pre_selected_filters)
     @category_select_cache_key = @company.category_select_cache_key(0)
     @product_select_cache_key = @company.product_select_cache_key(0)
 
@@ -31,18 +31,19 @@ class StoriesController < ApplicationController
         session.delete(:preview_story_slug)
       end
     end
-
     if (filter_params = get_filters_from_query_or_widget(@company, params))
       # ?category=automotive  =>  { tag: 'category', id: '42' }
       @stories_index_cache_key = @company.stories_index_cache_key(filter_params)
       unless fragment_exist?(@stories_index_cache_key)
         @stories = @company.filter_stories(filter_params)
       end
-      @pre_selected_filter = filter_params # needed for options_for_select()
-      if filter_params[:tag] == 'category'
-        @category_select_cache_key = @company.category_select_cache_key(filter_params[:id])
-      elsif filter_params[:tag] == 'product'
-        @product_select_cache_key = @company.product_select_cache_key(filter_params[:id])
+      @pre_selected_filters = filter_params
+      puts "PRE_SELECTED"
+      puts @pre_selected_filters
+      if filter_params[:category].present?
+        @category_select_cache_key = @company.category_select_cache_key(filter_params[:category])
+      elsif filter_params[:product].present?
+        @product_select_cache_key = @company.product_select_cache_key(filter_params[:product])
       end
     else
       unless fragment_exist?(@stories_index_cache_key)
@@ -72,7 +73,7 @@ class StoriesController < ApplicationController
     # convert the story content to plain text (for SEO tags)
     @story_content_text = HtmlToPlainText.plain_text(@story.content)
     @related_stories = @story.related_stories
-    @more_stories = @company.public_stories
+    @more_stories = Story.find(@company.public_stories)
         .delete_if { |story| story.id == @story.id || story.customer.logo_url.blank? }
         .map do |story|
           {

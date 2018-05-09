@@ -28,12 +28,12 @@
 
     <%= render(
           'stories/shared/filters/filters_xs',
-          { company: @company, pre_selected_filter: @pre_selected_filter }
+          { company: @company, pre_selected_filters: @pre_selected_filters }
         ) %>
 
     <%= render(
           'stories/shared/filters/filters_sm',
-          { company: @company, pre_selected_filter: @pre_selected_filter }
+          { company: @company, pre_selected_filters: @pre_selected_filters }
         ) %>
 
     <%= render(
@@ -42,7 +42,7 @@
             company: @company,
             category_select_cache_key: @category_select_cache_key,
             product_select_cache_key: @product_select_cache_key,
-            pre_selected_filter: @pre_selected_filter
+            pre_selected_filters: @pre_selected_filters
           }
         ) %>
 
