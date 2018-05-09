@@ -327,33 +327,13 @@ class Company < ActiveRecord::Base
   end
 
   # TODO: faster? http://stackoverflow.com/questions/20014292
-  def filter_stories_by_tag (filter_params)
-    if filter_params.nil?  # all stories
-      story_ids = self.public_stories
-    else
-      case filter_params[:tag]  # all || category || product
-        when 'all'
-          story_ids = self.public_stories
-        when 'category'
-          # use the slug to look up the category id,
-          # unless filter_params[:id] already represents the id
-          category_id = (StoryCategory
-                           .friendly
-                           .find(filter_params[:id]) # will find whether id or slug
-                           .id unless filter_params[:id].to_i != 0).try(:to_i) ||
-                        filter_params[:id].to_i
-          story_ids = self.public_stories_filter_category(category_id)
-        when 'product'
-          # use the slug to look up the product id,
-          # unless filter_params[:id] already represents the id
-          product_id = (Product
-                          .friendly
-                          .find(filter_params[:id])
-                          .id unless filter_params[:id].to_i != 0).try(:to_i) ||
-                       filter_params[:id].to_i
-          story_ids = self.public_stories_filter_product(product_id)
-        else
-      end
+  def filter_stories (filter_params)
+    story_ids = filter_params.empty? ? self.public_stories : []
+    if filter_params['category'].present?
+      story_ids.concat(self.public_stories_filter_category(filter_params['category']))
+    end
+    if filter_params['product'].present?
+      story_ids.concat(self.public_stories_filter_product(filter_params['product']))
     end
     Story.find(story_ids).sort_by { |story| story_ids.index(story.id) }
   end
@@ -362,14 +342,16 @@ class Company < ActiveRecord::Base
     options = {}
     category_options = StoryCategory
                          .joins(:stories)
-                         .where({ company_id: self.id, stories: { logo_published: true } })
+                         .where({ company_id: self.id })
+                         .where("stories.logo_published = TRUE OR stories.preview_published = TRUE")
                          .distinct
-                         .map { |tag| [tag.name, tag.id, { data: { slug: tag.slug } }] }
+                         .map { |tag| [tag.name, "c#{tag.id}", { data: { slug: tag.slug } }] }
     product_options = Product
                         .joins(:stories)
-                        .where({ company_id: self.id, stories: { logo_published: true } })
+                        .where({ company_id: self.id })
+                        .where("stories.logo_published = TRUE OR stories.preview_published = TRUE")
                         .distinct
-                        .map { |tag| [tag.name, tag.id, { data: { slug: tag.slug } }] }
+                        .map { |tag| [tag.name, "p#{tag.id}", { data: { slug: tag.slug } }] }
     if category_options.length > 1
       options.merge!({ 'Category' => category_options })
     end

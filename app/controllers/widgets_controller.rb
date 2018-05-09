@@ -38,7 +38,7 @@ class WidgetsController < ApplicationController
   def widget_html (params)
     filter_params = get_filters_from_query_or_widget(@company, params)
     stories = @company
-                .filter_stories_by_tag(filter_params)
+                .filter_stories(filter_params)
                 .map do |story|
                   if story.published?
                     target_url = story.csp_story_url

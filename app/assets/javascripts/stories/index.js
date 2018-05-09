@@ -1,14 +1,5 @@
 
 function storiesIndex () {
-  var $categorySelect = $("[name='category_select']"),
-      categorySlug = getQueryString('category'),
-      $productSelect = $("[name='product_select']"),
-      productSlug = getQueryString('product'),
-      storiesTemplate = _.template($('#stories-template').html()),
-      filterTag = categorySlug ? 'category' : (productSlug ? 'product' : null),
-      filterSlug = categorySlug ? categorySlug : (productSlug ? productSlug : null),
-      previewStorySlug = getQueryString('preview');
-
   // there's a timing issue if trying to click immediately per gon.preview_story,
   // so pass a callback to initGridPreviews
   initGridPreviews({}, function () {
@@ -17,7 +8,9 @@ function storiesIndex () {
       delete gon.preview_story;
     }
   });
-
+  // for a sync load, this isn't necessary => server will provide pre select
+  // but what about a turbolinks restore?
+  // preSelectFilters(getQueryString('category'), getQueryString('product'));
 }
 
 function storiesIndexListeners () {
@@ -26,6 +19,16 @@ function storiesIndexListeners () {
         $story.addClass('loading');
         setTimeout(function () { $story.addClass('loading-icon'); }, 1000);
         $('#stories-gallery li').css('pointer-events', 'none');
+      },
+      // when selecting a filter, sync select tags across different views (xs, sm, md-lg)
+      // change.select2 => prevents the change event from triggering
+      syncSelectTags = function (categoryId, productId) {
+        var multiSelectFilterVal = [];
+        if (categoryId) multiSelectFilterVal.push('c' + categoryId);
+        if (productId) multiSelectFilterVal.push('p' + productId);
+        $('[name="category_select"]').val(categoryId).trigger('change.select2');
+        $('[name="product_select"]').val(productId).trigger('change.select2');
+        $('[name="filter_select[]"]').val(multiSelectFilterVal).trigger('change.select2');
       };
 
   $(document)
@@ -45,85 +48,101 @@ function storiesIndexListeners () {
       loading($story);
     })
 
-    .on('change', '.grouped-stories-filter', function () {
-      var $option = $(this).find('option:selected'),
-          filterTag = $option.val() ? $option.closest('optgroup').attr('label').toLowerCase() : '',
-          filterId = $(this).val(),
-          filterSlug = $option.data('slug') || null;
+    .on('change', '#grouped-stories-filter', function () {
+      var categoryRawId = $(this).val() && $(this).val().find(function (tagId) {
+                            return tagId.includes('c');
+                          }),
+          categoryId = categoryRawId && categoryRawId.slice(1, categoryRawId.length),
+          categorySlug = categoryId &&
+            $(this).find('optgroup[label="Category"] option:selected').data('slug'),
+          productRawId = $(this).val() && $(this).val().find(function (tagId) {
+                            return tagId.includes('p');
+                          }),
+          productId = productRawId && productRawId.slice(1, productRawId.length),
+          productSlug = productId &&
+            $(this).find('optgroup[label="Product"] option:selected').data('slug');
 
+      syncSelectTags(categoryId, productId);
+
+      // reset search
+      $('[name="search_input"]').val('').trigger('input');
       updateGallery($(
         _.template($('#stories-template').html())({
-          stories: filterStories(filterTag, filterId, filterSlug),
+          stories: filterStories(categoryId, productId),
           isCurator: false
         })
       ));
-      replaceStateStoriesIndex(filterTag, filterId, filterSlug);
+      replaceStateStoriesIndex(categorySlug, productSlug);
     })
 
     .on('change', '.stories-filter', function () {
-      var $categorySelect = $("[name='category_select']"),
-          $productSelect = $("[name='product_select']"),
-          $option = $(this).find('option:selected'),
-          filterTag = $option.val() ? $(this).attr('name').replace('_select', '') : '',
-          filterId = $(this).val(),
-          filterSlug = $(this).find("option[value='" + filterId + "']").data('slug') || null;
+      var $categorySelect = $(this).closest('.filters-container').find("[name='category_select']"),
+          categoryId = $categorySelect.val(),
+          categorySlug = categoryId && $categorySelect.find('option:selected').data('slug'),
+          $productSelect = $(this).closest('.filters-container').find("[name='product_select']"),
+          productId = $productSelect.val(),
+          productSlug = productId && $productSelect.find('option:selected').data('slug');
 
+      syncSelectTags(categoryId, productId);
+
+      // reset search
       $('[name="search_input"]').val('').trigger('input');
-
       updateGallery($(
         _.template($('#stories-template').html())({
-          stories: filterStories(filterTag, filterId, filterSlug),
+          stories: filterStories(categoryId, productId),
           isCurator: false
         })
       ));
-      replaceStateStoriesIndex(filterTag, filterId, filterSlug);
+      replaceStateStoriesIndex(categorySlug, productSlug);
     });
 }
 
-function filterStories (filterTag, filterId, filterSlug) {
-  if (filterId === '0' || filterSlug === null) {  // all public stories
-    return app.stories.filter(function (story) {
-             return story.logo_published || story.preview_published;
-           });
-  }
-  return app.stories.filter(function (story, index) {
-    if (filterTag === 'category') {
-      return (story.preview_published || story.logo_published) &&
-        story.success.story_categories.some(function (category) {
-          // loosely typed because former is string, latter is number ...
-          return category.id == filterId || category.slug == filterSlug;
-        });
-    } else if (filterTag === 'product') {
-      return (story.preview_published || story.logo_published) &&
-        story.success.products.some(function (product) {
-          return product.id == filterId || product.slug == filterSlug;
-        });
-    } else {
-      // TODO: error
-    }
+function filterStories (categoryId, productId) {
+  var publicStories = app.stories.filter(function (story) {
+          return story.logo_published || story.preview_published;
+        }),
+      categoryStoryIds = (!categoryId) ? _.pluck(publicStories, 'id') :
+        _.pluck(publicStories.filter(function (story) {
+          return story.success.story_categories &&
+             story.success.story_categories.some(function (category) {
+               return category.id == categoryId;
+             });
+        }), 'id'),
+      productStoryIds = (!productId) ? _.pluck(publicStories, 'id') :
+        _.pluck(publicStories.filter(function (story) {
+          return story.success.products &&
+            story.success.products.some(function (product) {
+              return product.id == productId;
+            });
+        }), 'id'),
+      storyIds = _.intersection(categoryStoryIds, productStoryIds);
+  return publicStories.filter(function (story) {
+    return storyIds.includes(story.id);
   });
 }
 
-function selectBoxesTrackQueryString ($categorySelect, categorySlug, $productSelect, productSlug) {
-  var filterId = null;
-  if (categorySlug) {
-    filterId = $categorySelect.find("option[data-slug='" + categorySlug + "']").val();
-    $categorySelect.val(filterId).trigger('change.select2');
-    if ($productSelect.length) { $productSelect.val('0').trigger('change.select2'); }
-  } else if (productSlug) {
-    filterId = $productSelect.find("option[data-slug='" + productSlug + "']").val();
-    $productSelect.val(filterId).trigger('change.select2');
-    if ($categorySelect.length) { $categorySelect.val('0').trigger('change.select2'); }
-  } else {
-    $categorySelect.val('0').trigger('change.select2');
-    $productSelect.val('0').trigger('change.select2');
-  }
-  $("[name='category_select'] + span")
-    .find('.select2-selection')
-    .each(function () { $(this).blur(); });
-  $("[name='product_select'] + span")
-    .find('.select2-selection')
-    .each(function () { $(this).blur(); });
+// in progress; may not be necessary at all
+function preSelectFilters (categorySlug, productSlug) {
+  // var $categorySelect =
+  // var categoryRawId = null, categoryId =productId = null;
+  // if (categorySlug) {
+  //   categoryRawId = $categorySelect.find("option[data-slug='" + categorySlug + "']").val();
+  //   $categorySelect.val(categoryRawId).trigger('change.select2');
+  // }
+  // if (productSlug) {
+  //   filterId = $productSelect.find("option[data-slug='" + productSlug + "']").val();
+  //   $productSelect.val(filterId).trigger('change.select2');
+  //   if ($categorySelect.length) { $categorySelect.val('0').trigger('change.select2'); }
+  // } else {
+  //   $categorySelect.val('0').trigger('change.select2');
+  //   $productSelect.val('0').trigger('change.select2');
+  // }
+  // $("[name='category_select'] + span")
+  //   .find('.select2-selection')
+  //   .each(function () { $(this).blur(); });
+  // $("[name='product_select'] + span")
+  //   .find('.select2-selection')
+  //   .each(function () { $(this).blur(); });
 }
 
 function updateGallery ($stories) {
@@ -131,18 +150,21 @@ function updateGallery ($stories) {
     $('#stories-gallery')
       .empty()
       .append($stories)
-      .hide().show('fast', initGridPreviews);
+      .hide()
+      .show('fast', initGridPreviews);
   });
 }
 
 // turbolinks will not save filter info to the state, so it's not included
-function replaceStateStoriesIndex (filterTag, filterId, filterSlug) {
-  if (filterId === '0' || filterId === '') {  // all
+function replaceStateStoriesIndex (categorySlug, productSlug) {
+  if (!categorySlug && !productSlug) {
     history.replaceState({ turbolinks: true }, null, '/');
-  } else if (filterTag === 'category') {
-    history.replaceState({ turbolinks: true }, null, '/?category=' + filterSlug);
-  } else if (filterTag === 'product') {
-    history.replaceState({ turbolinks: true }, null, '/?product=' + filterSlug);
+  } else if (categorySlug && !productSlug) {
+    history.replaceState({ turbolinks: true }, null, '/?category=' + categorySlug);
+  } else if (!categorySlug && productSlug) {
+    history.replaceState({ turbolinks: true }, null, '/?product=' + productSlug);
+  } else if (categorySlug && productSlug) {
+    history.replaceState({ turbolinks: true }, null, '/?category=' + categorySlug + '&product=' + productSlug);
   } else {
     // error
   }

@@ -1,15 +1,22 @@
 
-<div id="stories-filter-xs" class="row visible-xs-block">
+<div class="filters-container row visible-xs-block">
   <div class="col-xs-12">
 
     <div class="form-group">
 
-      <%= select_tag('stories-filter-xs',
+      <%= label_tag(:filter_select, "Filter", class: "control-label") %>
+      <%= select_tag(:filter_select,
             grouped_options_for_select(
               company.stories_filter_public_grouped_options,
               [ pre_selected_filter[:id] ]
             ),
-            { include_blank: true, class: 'grouped-stories-filter form-control', style: 'width: 100%' }
+            {
+              include_blank: true,
+              id: 'grouped-stories-filter',
+              multiple: true,
+              class: 'form-control',
+              style: 'width: 100%'
+            }
           ) %>
 
     </div>

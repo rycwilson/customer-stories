@@ -96,9 +96,9 @@ function curateListeners () {
 
 }
 
-function filterCurateGallery () {
+function filterCurateGallery (context) {
   var stories = [],
-      $gallery= $('#curate-gallery'),
+      $gallery = $('#curate-gallery'),
       storiesTemplate = _.template($('#stories-template').html()),
       customerId = $('#curate-filters .customer').val(),
       curatorId = $('#curate-filters .curator').val(),

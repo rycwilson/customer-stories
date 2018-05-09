@@ -110,22 +110,30 @@ function initSelect2 () {
   $('.stories-filter').data('init', true);
 
 
-  // ref https://stackoverflow.com/questions/29618382/
-  $('.grouped-stories-filter').select2({
+  $('#grouped-stories-filter').select2({
     theme: 'bootstrap',
+    placeholder: 'Select',
+    tags: true,
     width: 'style',
-    placeholder: 'Filter',
-    allowClear: true
   })
-    .on('select2:unselecting', function (e) {
-      $(this).data('unselecting', true);
-    })
-    .on('select2:open', function (e) {
-      if ($(this).data('unselecting')) {
-        $(this).removeData('unselecting');
-        e.preventDefault();
+    // ref https://github.com/select2/select2/issues/4589
+    .on('select2:selecting', function (e) {
+      var siblings = e.params.args.data.element.parentElement.children;
+      for(var i = 0; i < siblings.length; i++) {
+        siblings[i].selected = false;
       }
     });
+    // ref https://stackoverflow.com/questions/29618382/
+    // (not working!)
+    // .on('select2:unselecting', function (e) {
+    //   $(this).data('unselecting', true);
+    // })
+    // .on('select2:open', function (e) {
+    //   if ($(this).data('unselecting')) {
+    //     $(this).removeData('unselecting');
+    //     e.preventDefault();
+    //   }
+    // });
 
   $('.stories-filter').each(function () {
     if ($(this)[0].getAttribute('data-init') === null) {

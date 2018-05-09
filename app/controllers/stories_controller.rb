@@ -36,7 +36,7 @@ class StoriesController < ApplicationController
       # ?category=automotive  =>  { tag: 'category', id: '42' }
       @stories_index_cache_key = @company.stories_index_cache_key(filter_params)
       unless fragment_exist?(@stories_index_cache_key)
-        @stories = @company.filter_stories_by_tag(filter_params)
+        @stories = @company.filter_stories(filter_params)
       end
       @pre_selected_filter = filter_params # needed for options_for_select()
       if filter_params[:tag] == 'category'
