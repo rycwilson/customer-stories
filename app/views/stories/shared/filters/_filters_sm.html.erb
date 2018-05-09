@@ -10,7 +10,7 @@
        --><%= select_tag(:category_select,
                 options_for_select(
                   company.story_categories.public_select_options,
-                  pre_selected_filters[:category].present? ? [pre_selected_filters[:category]] : []
+                  pre_selected_filters['category'].present? ? [pre_selected_filters['category']] : []
                 ),
                 {
                   include_blank: true,
@@ -29,7 +29,7 @@
        --><%= select_tag(:product_select,
                 options_for_select(
                   company.products.public_select_options,
-                  pre_selected_filters[:product].present? ? [pre_selected_filters[:product]] : []
+                  pre_selected_filters['product'].present? ? [pre_selected_filters['[product]']] : []
                 ),
                 {
                   include_blank: true,

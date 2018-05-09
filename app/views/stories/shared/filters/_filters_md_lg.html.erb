@@ -1,9 +1,9 @@
 
 <div class="filters-container visible-md-block visible-lg-block">
 
-  <%= form_tag(search_company_stories_path(company.id), method: :GET, remote: true, id: 'search-stories-form') do %>
+  <%= form_tag(search_stories_path, method: :GET, remote: true, id: 'search-stories-form') do %>
 
-    <%= hidden_field_tag(:search_string, '') %>
+    <%= hidden_field_tag(:search, '') %>
 
     <div class="form-group" style="position: relative; margin-bottom: 15px;">
 
@@ -11,14 +11,14 @@
         <i class="fa fa-search fa-fw"></i>
       </a>
 
-      <%= text_field_tag(:search_input, nil, class: 'form-control', style: 'padding-right: 34px', placeholder: 'Search') %>
+      <%= text_field_tag(nil, nil, class: 'stories-search form-control', style: 'padding-right: 34px', placeholder: 'Search') %>
 
     </div>
 
 
   <% end %>
 
-  <div style="margin-bottom: 15px; text-align: right">
+  <div class="clear-filters" style="margin-bottom: 15px; text-align: right">
     <a href="javascript:;">Clear filters</a>
   </div>
 

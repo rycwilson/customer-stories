@@ -33,11 +33,20 @@ function storiesIndexListeners () {
 
   $(document)
 
-    .on('input', '#search-stories-form [name="search_input"]', function () {
-      $('#search-stories-form [name="search_string"]').val($(this).val());
+    .on('input', '#search-stories-form .stories-search', function () {
+      $('#search-stories-form [name="search"]').val($(this).val());
     })
     .on('click', '#search-stories-form a', function () {
       $('#search-stories-form').submit();
+    })
+    .on('click', '.clear-filters a', function () {
+      $(this).closest('.filters-container')
+             .find('.stories-search')
+               .val('').trigger('input')
+               .end()
+             .find('.stories-filter').each(function () {
+                  $(this).val('').trigger('change');
+               });
     })
     .on('submit', '#search-stories-form', function () {
     })
@@ -65,7 +74,7 @@ function storiesIndexListeners () {
       syncSelectTags(categoryId, productId);
 
       // reset search
-      $('[name="search_input"]').val('').trigger('input');
+      $('.stories-search').val('').trigger('input');
       updateGallery($(
         _.template($('#stories-template').html())({
           stories: filterStories(categoryId, productId),
@@ -86,7 +95,7 @@ function storiesIndexListeners () {
       syncSelectTags(categoryId, productId);
 
       // reset search
-      $('[name="search_input"]').val('').trigger('input');
+      $('.stories-search').val('').trigger('input');
       updateGallery($(
         _.template($('#stories-template').html())({
           stories: filterStories(categoryId, productId),

@@ -9,8 +9,8 @@
             grouped_options_for_select(
               company.stories_filter_public_grouped_options,
               [
-                pre_selected_filters[:category].present? ? 'c' + pre_selected_filters[:category] : '',
-                pre_selected_filters[:product].present? ? 'p' + pre_selected_filters[:product] : ''
+                pre_selected_filters['category'].present? ? "c#{pre_selected_filters['category']}" : '',
+                pre_selected_filters['product'].present? ? "p#{pre_selected_filters['product']}" : ''
               ].delete_if { |item| item.blank? }
             ),
             {

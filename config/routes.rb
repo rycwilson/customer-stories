@@ -60,8 +60,10 @@ Rails.application.routes.draw do
      # legacy widgets
     get '/widget/cs', to: 'widgets#script'
 
-    resources :stories, only: :index
     # see below for route to public story page
+    resources :stories, only: :index do
+      get '/search', on: :collection, to: 'stories#search'
+    end
 
     authenticate :user do
 
@@ -98,7 +100,6 @@ Rails.application.routes.draw do
           collection { post '/import', to: 'successes#import' }
         end
         resources :stories, only: [:edit, :create, :update, :destroy], shallow: true do
-          get '/search', on: :collection, to: 'stories#search'
           get '/promoted', on: :collection, to: 'stories#promoted'
           member do
             post '/promote', to: 'stories#promote'

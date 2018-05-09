@@ -1,6 +1,8 @@
 class Result < ActiveRecord::Base
 
   belongs_to :success
+  has_one :story, through: :success
+  has_one :customer, through: :success
 
   validates :description, presence: true
   validates :description, length: { maximum: 70 }

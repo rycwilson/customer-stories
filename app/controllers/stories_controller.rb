@@ -180,16 +180,21 @@ class StoriesController < ApplicationController
                       .where(customers: { company_id: @company.id })
                       .where("logo_published = TRUE OR preview_published = TRUE")
                       .where(
-                         "title LIKE ? OR content LIKE ?",
-                         "%#{params[:search_string]}%", "%#{params[:search_string]}%"
+                         "lower(title) LIKE ? OR lower(content) LIKE ?",
+                         "%#{params[:search].downcase}%", "%#{params[:search].downcase}%"
                        )
                       .map { |s| s.id }
-    Customer.where("company_id = ? AND name LIKE ?", @company.id, "%#{params[:search_string]}%")
+    Customer.where("company_id = ? AND lower(name) LIKE ?", @company.id, "%#{params[:search].downcase}%")
             .each { |customer| @story_ids.concat(customer.story_ids) }
-    StoryCategory.where("company_id = ? AND name LIKE ?", @company.id, "%#{params[:search_string]}%")
+    StoryCategory.where("company_id = ? AND lower(name) LIKE ?", @company.id, "%#{params[:search].downcase}%")
                  .each { |tag| @story_ids.concat(tag.story_ids) }
-    Product.where("company_id = ? AND name LIKE ?", @company.id, "%#{params[:search_string]}%")
+    Product.where("company_id = ? AND lower(name) LIKE ?", @company.id, "%#{params[:search].downcase}%")
            .each { |tag| @story_ids.concat(tag.story_ids) }
+    Result.joins(:customer)
+          .where("customers.company_id = ? AND lower(results.description) LIKE ?", @company.id, "%#{params[:search].downcase}%")
+          .each { |result| @story_ids << result.story.id }
+    CallToAction.where("company_id = ? AND lower(display_text) LIKE ?", @company.id, "%#{params[:search].downcase}%")
+                .each { |cta| @story_ids.concat(cta.story_ids) }
     @story_ids.uniq!
     respond_to { |format| format.js {} }
   end
