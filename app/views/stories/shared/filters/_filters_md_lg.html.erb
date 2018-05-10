@@ -7,7 +7,7 @@
 
     <% cache(category_select_cache_key, skip_digest: true) do %>
 
-      <div class="form-group" style="margin-bottom: 15px">
+      <div class="form-group">
 
         <%= label_tag(:category_select, "Category") %>
         <%= select_tag(:category_select,
@@ -32,7 +32,7 @@
 
     <% cache(product_select_cache_key, skip_digest: true) do %>
 
-      <div class="form-group" style="margin-bottom: 10px">
+      <div class="form-group">
 
         <%= label_tag(:product_select, "Product") %>
         <%= select_tag(:product_select,

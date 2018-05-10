@@ -47,6 +47,7 @@ function storiesIndexListeners () {
     })
     .on('click', '.clear-search', function () {
       $('.stories-search').val('').trigger('input');
+      $('.search-results').hide();
       updateGallery($(
         _.template($('#stories-template').html())({
           stories: filterStories('', ''),
@@ -83,6 +84,8 @@ function storiesIndexListeners () {
 
       // reset search
       $('.stories-search').val('').trigger('input');
+      $('.search-results').hide();
+
       updateGallery($(
         _.template($('#stories-template').html())({
           stories: filterStories(categoryId, productId),
@@ -99,10 +102,13 @@ function storiesIndexListeners () {
           $productSelect = $(this).closest('.filters-container').find("[name='product_select']"),
           productId = $productSelect.val(),
           productSlug = productId && $productSelect.find('option:selected').data('slug');
+
       syncSelectTags(categoryId, productId);
 
       // reset search
       $('.stories-search').val('').trigger('input');
+      $('.search-results').hide();
+
       updateGallery($(
         _.template($('#stories-template').html())({
           stories: filterStories(categoryId, productId),
