@@ -1,7 +1,7 @@
 
 <div class="filters-container visible-md-block visible-lg-block <%= include_category_filter?(company) && include_product_filter?(company) ? 'tall' : 'short' %>">
 
-  <%= render('stories/shared/filters/search_form') %>
+  <%= render('stories/shared/filters/search_form', { company: company }) %>
 
   <% if include_category_filter?(company) %>
 

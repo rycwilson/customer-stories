@@ -3,7 +3,7 @@
 
   <%= hidden_field_tag(:search, '') %>
 
-  <div class="form-group" style="position: relative;">
+  <div class="form-group">
 
 <!--   <a href="javascript:;" style="position: absolute; padding: 6px 10px; top: 1px; right: 1px; font-size: 14px; color: #666; border-top-right-radius: 3px; border-bottom-right-radius: 3px;">
       <i class="fa fa-search fa-fw"></i>
@@ -29,4 +29,6 @@
 
 <% end %>
 
-<hr>
+<% if include_category_filter?(company) && include_product_filter?(company) %>
+  <hr>
+<% end %>

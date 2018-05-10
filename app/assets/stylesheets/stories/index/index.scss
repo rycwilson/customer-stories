@@ -61,9 +61,8 @@
       .filters-container.visible-md-block {
         width: 300px;
         float: left;
-        min-height: 182px;
         background-color: #efefef;
-        padding: 18px 15px 15px 15px;
+        padding: 15px;
         margin: 15px -60px 0 36px;
       }
       .filters-container.visible-md-block.tall {
@@ -77,12 +76,16 @@
         }
       }
       .filters-container.visible-md-block:not(.tall) {
-        form > .form-group {
+        height: 160px;
+        position: relative;
+        form > .form-group {  // search form
           margin-bottom: 10px;
         }
-        hr {
-          margin-top: 40px;
-          margin-bottom: 30px;
+        form + .form-group {  // single filter
+          position: absolute;
+          bottom: 20px;
+          width: 270px;  // 300 - 15*2
+          margin-bottom: 0;
         }
       }
     }
@@ -90,9 +93,7 @@
   @media only screen and (min-width: 1200px) {
     .grid-container {
       .filters-container.visible-md-block {
-        width: 300px;
         margin: 15px -26px 0 0;
-
       }
       .filters-container.visible-md-block.tall {
         // height: 350px;
