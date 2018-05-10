@@ -40,13 +40,16 @@ function storiesIndexListeners () {
       $('#search-stories-form').submit();
     })
     .on('click', '.clear-filters a', function () {
-      $(this).closest('.filters-container')
-             .find('.stories-search')
-               .val('').trigger('input')
-               .end()
-             .find('.stories-filter').each(function () {
-                  $(this).val('').trigger('change');
-               });
+      var $container = $(this).closest('.filters-container');
+      if ($container.find('.stories-search').val() === '' &&
+          $container.find('.stories-filter').toArray()
+                    .every(function (filter) { return filter.value === ''; })) {
+        return false;
+      }
+      $container
+        .find('.stories-search').val('').trigger('input')
+          .end()
+        .find('.stories-filter').each(function () { $(this).val('').trigger('change'); });
     })
     .on('submit', '#search-stories-form', function () {
     })
