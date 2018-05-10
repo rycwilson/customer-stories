@@ -33,27 +33,32 @@ function storiesIndexListeners () {
 
   $(document)
 
-    .on('input', '#search-stories-form .stories-search', function () {
-      $('#search-stories-form [name="search"]').val($(this).val());
+    .on('input', '.stories-search', function () {
+      $('.stories-search').not($(this)).val($(this).val());
+      $('.stories-search-form [name="search"]').val($(this).val());
+      $('.clear-search').hide();
+      // with hidden .clear-search, .submit search will need border radius added
+      // (using .css will fail to override bootstrap; use inline styling instead)
+      $('.submit-search')
+        .attr('style', 'border-top-right-radius: 4px; border-bottom-right-radius: 4px');
     })
-    .on('click', '#search-stories-form a', function () {
-      $('#search-stories-form').submit();
+    .on('click', '.submit-search', function () {
+      $(this).closest('form').submit();
     })
-    .on('click', '.clear-filters a', function () {
-      var $container = $(this).closest('.filters-container');
-      if ($container.find('.stories-search').val() === '' &&
-          $container.find('.stories-filter').toArray()
-                    .every(function (filter) { return filter.value === ''; })) {
-        return false;
-      }
-      $container
-        .find('.stories-search').val('').trigger('input')
-          .end()
-        .find('.stories-filter').each(function () { $(this).val('').trigger('change'); });
+    .on('click', '.clear-search', function () {
+      $('.stories-search').val('').trigger('input');
+      updateGallery($(
+        _.template($('#stories-template').html())({
+          stories: filterStories('', ''),
+          isCurator: false
+        })
+      ));
     })
-    .on('submit', '#search-stories-form', function () {
+    .on('submit', '.stories-search-form', function () {
+      $('.clear-search').show();
+      $('.submit-search')
+        .attr('style', 'border-top-right-radius: 0; border-bottom-right-radius: 0');
     })
-    .on('click')
 
     .on('click', 'a.published', function (e) {
       var $story = $(this).closest('li');
@@ -94,7 +99,6 @@ function storiesIndexListeners () {
           $productSelect = $(this).closest('.filters-container').find("[name='product_select']"),
           productId = $productSelect.val(),
           productSlug = productId && $productSelect.find('option:selected').data('slug');
-
       syncSelectTags(categoryId, productId);
 
       // reset search

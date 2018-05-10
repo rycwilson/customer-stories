@@ -1,6 +1,10 @@
 
 .stories.index {
 
+  #collapsed-workflow-tabs .glyphicon-align-justify {
+    padding-left: 5px;
+  }
+
   .mainnav, .company-nav {
     margin-bottom: 18px;
   }
@@ -10,6 +14,21 @@
     margin-bottom: 20px;
     .form-group * {
       text-align: left;
+    }
+  }
+
+  .stories-search-form {
+    button {
+      color: #666;
+      padding: 6px 8px;  // overrides bootstrap 6px 12px
+    }
+
+    button.submit-search {
+      border-top-right-radius: 3px;
+      border-bottom-right-radius: 3px;
+    }
+    button.clear-search {
+      display: none;
     }
   }
 
@@ -40,24 +59,29 @@
   }
   @media only screen and (min-width: 992px) {
     .grid-container {
-      [class*="col-"]:first-child:not(.col-md-12) {
-        background: #efefef;
-        padding: 15px;
-        margin-top: 10px;  // mirrors .grid-item margin
-        margin-right: -15px;
-        .form-group {
-          margin-bottom: 20px;
-        }
+      .filters-container.visible-md-block {
+        width: 270px;
+        float: left;
+        min-height: 182px;
+        background-color: #efefef;
+        padding: 18px 15px 15px 15px;
+        margin: 8px -56px 0 66px
       }
     }
-
   }
   @media only screen and (min-width: 1200px) {
     .grid-container {
-      [class*="col-"]:first-child:not(.col-md-12) {
-        margin-top: 18px;  // mirrors .grid-item margin
+      .filters-container.visible-md-block {
+        width: 295px;
+        margin: 15px -26px 0 5px
+
+      }
+      .filters-container.visible-md-block.tall {
+        height: 350px;
+      }
+      .filters-container.visible-md-block.short {
+
       }
     }
   }
-
 }

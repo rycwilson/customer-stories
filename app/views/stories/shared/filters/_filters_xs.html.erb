@@ -1,10 +1,11 @@
 
-<div class="filters-container row visible-xs-block">
-  <div class="col-xs-12">
+<div class="filters-container visible-xs-block" style="max-width: 350px; margin: 0 auto">
 
-    <div class="form-group">
+  <%= render('stories/shared/filters/search_form') %>
 
-      <%= label_tag(:filter_select, "Filter", class: "control-label") %>
+  <form>
+    <div class="form-group" style="margin-bottom: 15px;">
+      <%= label_tag(:filter_select, "Filters") %>
       <%= select_tag(:filter_select,
             grouped_options_for_select(
               company.stories_filter_public_grouped_options,
@@ -23,6 +24,9 @@
           ) %>
 
     </div>
+    <div class="clear-filters" style="text-align: right; margin-bottom: 15px;">
+        <a href="javascript:;">Clear search + filters</a>
+      </div>
+  </form>
 
-  </div>
 </div>

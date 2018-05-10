@@ -1,26 +1,7 @@
 
-<div class="filters-container visible-md-block visible-lg-block">
+<div class="filters-container visible-md-block visible-lg-block <%= include_category_filter?(company) && include_product_filter?(company) ? 'tall' : 'short' %>">
 
-  <%= form_tag(search_stories_path, method: :GET, remote: true, id: 'search-stories-form') do %>
-
-    <%= hidden_field_tag(:search, '') %>
-
-    <div class="form-group" style="position: relative; margin-bottom: 15px;">
-
-      <a href="javascript:;" style="position: absolute; padding: 6px 10px; top: 1px; right: 1px; font-size: 14px; color: #666; border-top-right-radius: 3px; border-bottom-right-radius: 3px;">
-        <i class="fa fa-search fa-fw"></i>
-      </a>
-
-      <%= text_field_tag(nil, nil, class: 'stories-search form-control', style: 'padding-right: 34px', placeholder: 'Search') %>
-
-    </div>
-
-
-  <% end %>
-
-  <div class="clear-filters" style="margin-bottom: 15px; text-align: right">
-    <a href="javascript:;">Clear filters</a>
-  </div>
+  <%= render('stories/shared/filters/search_form') %>
 
   <% if include_category_filter?(company) %>
 
@@ -51,7 +32,7 @@
 
     <% cache(product_select_cache_key, skip_digest: true) do %>
 
-      <div class="form-group" style="margin-bottom: 15px">
+      <div class="form-group" style="margin-bottom: 10px">
 
         <%= label_tag(:product_select, "Product") %>
         <%= select_tag(:product_select,
@@ -71,5 +52,9 @@
     <% end %>
 
   <% end %>
+
+<!--   <div class="clear-filters" style="margin-bottom: 15px; text-align: right">
+    <a href="javascript:;">Clear filters</a>
+  </div> -->
 
 </div>

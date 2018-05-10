@@ -87,9 +87,6 @@ function initSelect2 () {
     placeholder: 'Select'
   });
 
-// ref: http://stackoverflow.com/questions/36497723
-// console.log('uninitialized s2: ', $(document).find('select.stories-filter').not('.select2-hidden-accessible'));
-
   $('#curate-filters select').select2({
     theme: 'bootstrap',
     width: 'style',
@@ -107,8 +104,22 @@ function initSelect2 () {
       }
     });
 
-  $('.stories-filter').data('init', true);
-
+  $('.stories-filter').select2({
+      theme: 'bootstrap',
+      placeholder: 'Select',
+      allowClear: true,
+      width: 'style'   // get the width from stories.scss
+    })
+    // ref https://stackoverflow.com/questions/29618382/disable-dropdown-opening-on-select2-clear
+    .on('select2:unselecting', function() {
+        $(this).data('unselecting', true);
+      })
+    .on('select2:opening', function(e) {
+       if ($(this).data('unselecting')) {
+         $(this).removeData('unselecting');
+         e.preventDefault();
+        }
+      });
 
   $('#grouped-stories-filter').select2({
     theme: 'bootstrap',
@@ -116,6 +127,14 @@ function initSelect2 () {
     tags: true,
     width: 'style',
   })
+    // ref https://stackoverflow.com/questions/29618382/disable-dropdown-opening-on-select2-clear
+    // the answer that worked above did not work for this one, but this one does:
+    .on('select2:unselecting', function (e) {
+      var self = $(this);
+      setTimeout(function () {
+        self.select2('close');
+      }, 0);
+    })
     // ref https://github.com/select2/select2/issues/4589
     .on('select2:selecting', function (e) {
       var siblings = e.params.args.data.element.parentElement.children;
@@ -123,32 +142,30 @@ function initSelect2 () {
         siblings[i].selected = false;
       }
     });
-    // ref https://stackoverflow.com/questions/29618382/
-    // (not working!)
-    // .on('select2:unselecting', function (e) {
-    //   $(this).data('unselecting', true);
-    // })
-    // .on('select2:open', function (e) {
-    //   if ($(this).data('unselecting')) {
-    //     $(this).removeData('unselecting');
-    //     e.preventDefault();
-    //   }
-    // });
 
-  $('.stories-filter').each(function () {
-    if ($(this)[0].getAttribute('data-init') === null) {
-      console.log("init'ing select2");
-      $(this).select2({
-        theme: 'bootstrap',
-        placeholder: 'Select',
-        allowClear: true,
-        width: 'style'   // get the width from stories.scss
-      });
-      $(this)[0].setAttribute('data-init', true);
-    }
-  });
-
-// }
+  // TODO Is this an issue?  http://stackoverflow.com/questions/36497723
+  // $('.stories-filter').data('init', true);
+  // $('.stories-filter').each(function () {
+  //   if ($(this)[0].getAttribute('data-init') === null) {
+  //     // console.log("init'ing select2");
+  //     $(this).select2({
+  //       theme: 'bootstrap',
+  //       placeholder: 'Select',
+  //       allowClear: true,
+  //       width: 'style'   // get the width from stories.scss
+  //     })
+  //       .on('select2:unselecting', function() {
+  //           $(this).data('unselecting', true);
+  //         })
+  //       .on('select2:opening', function(e) {
+  //          if ($(this).data('unselecting')) {
+  //            $(this).removeData('unselecting');
+  //            e.preventDefault();
+  //           }
+  //         });
+  //     $(this)[0].setAttribute('data-init', true);
+  //   }
+  // });
 
 /*
   Company tags are for maintaining a list of options for Story tagging

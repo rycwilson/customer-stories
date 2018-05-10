@@ -1,12 +1,4 @@
 
-.stories.index {
-
-  #collapsed-workflow-tabs .glyphicon-align-justify {
-    padding-left: 5px;
-  }
-
-}
-
 #curate-gallery {
   margin-top: -17px;
 }
@@ -238,18 +230,10 @@
 
 @media only screen and (min-width: 992px) {
   .grid-container {
-    .filters-container.visible-md-block {
-      width: 270px;
-      float: left;
-      min-height: 182px;
-      background-color: #efefef;
-      padding: 18px 15px 15px 15px;
-      margin: 8px -56px 0 66px
-    }
     .grid {
-      margin-right: -25px; // pull it over a bit
+      margin-right: -40px; // pull it over a bit
       .grid-item {
-        margin: 18px;
+        margin: 15px;
         a.thumbnail {
           width: 240px;  // 210
           height: 160px;  // 140
@@ -285,10 +269,4 @@
 
 
 @media only screen and (min-width: 1200px) {
-  .grid-container {
-    .filters-container.visible-md-block {
-      width: 270px;
-      margin: 8px -16px 0 26px
-    }
-  }
 }

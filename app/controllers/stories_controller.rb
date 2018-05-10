@@ -190,11 +190,13 @@ class StoriesController < ApplicationController
                  .each { |tag| @story_ids.concat(tag.story_ids) }
     Product.where("company_id = ? AND lower(name) LIKE ?", @company.id, "%#{params[:search].downcase}%")
            .each { |tag| @story_ids.concat(tag.story_ids) }
+    # it's possible a matching Result or CallToAction doesn't have an associated story,
+    # since they're associated with the Success model
     Result.joins(:customer)
           .where("customers.company_id = ? AND lower(results.description) LIKE ?", @company.id, "%#{params[:search].downcase}%")
-          .each { |result| @story_ids << result.story.id }
+          .each { |result| @story_ids << result.story.id if result.story.present? }
     CallToAction.where("company_id = ? AND lower(display_text) LIKE ?", @company.id, "%#{params[:search].downcase}%")
-                .each { |cta| @story_ids.concat(cta.story_ids) }
+                .each { |cta| @story_ids.concat(cta.story_ids) if cta.stories.present? }
     @story_ids.uniq!
     respond_to { |format| format.js {} }
   end
