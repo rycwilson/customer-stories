@@ -47,7 +47,7 @@ function storiesIndexListeners () {
     })
     .on('click', '.clear-search', function () {
       $('.stories-search').val('').trigger('input');
-      $('.search-results').hide();
+      $('.search-results').text('');
       updateGallery($(
         _.template($('#stories-template').html())({
           stories: filterStories('', ''),
@@ -59,6 +59,8 @@ function storiesIndexListeners () {
       $('.clear-search').show();
       $('.submit-search')
         .attr('style', 'border-top-right-radius: 0; border-bottom-right-radius: 0');
+      $('#grouped-stories-filter').val(null).trigger('change.select2');
+      $('.stories-filter').val('').trigger('change.select2');
     })
 
     .on('click', 'a.published', function (e) {
@@ -78,17 +80,25 @@ function storiesIndexListeners () {
                           }),
           productId = productRawId && productRawId.slice(1, productRawId.length),
           productSlug = productId &&
-            $(this).find('optgroup[label="Product"] option:selected').data('slug');
+            $(this).find('optgroup[label="Product"] option:selected').data('slug'),
+          filteredStories = filterStories(categoryId, productId);
 
       syncSelectTags(categoryId, productId);
 
       // reset search
       $('.stories-search').val('').trigger('input');
-      $('.search-results').hide();
+      $('.search-results').text('');
+
+      // show results
+      if ($('#grouped-stories-filter').val()) {
+        $('.filter-results').text(filteredStories.length.toString() + " stories found").show();
+      } else {
+        $('.filter-results').text('');
+      }
 
       updateGallery($(
         _.template($('#stories-template').html())({
-          stories: filterStories(categoryId, productId),
+          stories: filteredStories,
           isCurator: false
         })
       ));

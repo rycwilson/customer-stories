@@ -4,7 +4,7 @@
   <%= render('stories/shared/filters/search_form', { company: company }) %>
 
   <form>
-    <div class="form-group" style="margin-bottom: 15px;">
+    <div class="form-group">
       <%= label_tag(:filter_select, "Filters") %>
       <%= select_tag(:filter_select,
             grouped_options_for_select(
@@ -22,11 +22,10 @@
               style: 'width: 100%'
             }
           ) %>
-
     </div>
-    <div class="clear-filters" style="text-align: right; margin-bottom: 15px;">
-        <a href="javascript:;">Clear search + filters</a>
-      </div>
+
+    <span class="filter-results pull-right"></span>
+
   </form>
 
 </div>
