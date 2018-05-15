@@ -121,6 +121,8 @@ function initSelect2 () {
         }
       });
 
+  $('.filters-container.visible-md-block select').css('visibility', 'visible');
+
   var prependTagType = function () {
     $('.select2-selection__rendered li:not(:last-of-type)')
       .each(function (index, tag) {
@@ -159,6 +161,7 @@ function initSelect2 () {
     .on('select2:select', prependTagType);
 
   prependTagType();
+  $('.filters-container.visible-xs-block').css('visibility', 'visible');
 
   // TODO Is this an issue?  http://stackoverflow.com/questions/36497723
   // $('.stories-filter').data('init', true);

@@ -39,6 +39,7 @@
     }
 
     .filters-container.visible-xs-block {
+      visibility: hidden;  // wait for select2 to init (see select2.js)
       max-width: 350px;
       margin: 0 auto;
       form:first-of-type {
@@ -68,6 +69,9 @@
       float: left;
       background-color: #efefef;
       padding: 15px;
+      select {
+        visibility: hidden;  // wait for select2 to init (see select2.js)
+      }
     }
     .filters-container.visible-md-block.short {
       height: 190px;
