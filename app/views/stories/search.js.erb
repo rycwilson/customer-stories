@@ -12,7 +12,10 @@
   ));
 
   $('.clear-search').show();
-  $('.filter-results').text('');
   $('.search-results').text(searchResults).show();
+  $('.filters-container.tall .combined-results > span').hide();
+  $('.filter-results > span').text('');
+  $('.stories-filter').val('').trigger('change.select2');
+  $('#grouped-stories-filter').val(null).trigger('change.select2');
 
 }());

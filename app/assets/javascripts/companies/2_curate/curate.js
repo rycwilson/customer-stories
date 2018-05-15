@@ -80,7 +80,6 @@ function curateListeners () {
 
         // toggle the X icon
         // if ($(this).val() === '') {
-        //   console.log('fart', $(this).prev())
         //   $(this).prev().css('display', 'none');
         // } else {
         //   $(this).prev().css('display', 'inline-block');

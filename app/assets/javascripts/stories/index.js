@@ -60,8 +60,6 @@ function storiesIndexListeners () {
       $('.search-results').text('');
       $('.submit-search')
         .attr('style', 'border-top-right-radius: 0; border-bottom-right-radius: 0');
-      $('#grouped-stories-filter').val(null).trigger('change.select2');
-      $('.stories-filter').val('').trigger('change.select2');
     })
 
     .on('click', 'a.published', function (e) {
@@ -124,21 +122,22 @@ function storiesIndexListeners () {
       $('.stories-search').val('').trigger('input');
       $('.search-results').hide();
 
-      // show combined filter results
+      // show combined filter results (only when both filters are shown)
       if (categoryId || productId) {
-        $('.combined-results > span > span:last-child').text(filterResults);
-        $('.combined-results > span').show();
+        $('.filters-container.tall .combined-results')
+          .find('> span > span:last-child').text(filterResults).end()
+          .find('> span').show();
       } else {
-        $('.combined-results > span').hide();
+        $('.filters-container.tall .combined-results > span').hide();
       }
 
       // show individual filter results
       if ($(this).val()) {
         $(this).closest('.form-group')
-               .find('.filter-results')
+               .find('.filter-results > span')
                .text($(this).hasClass('category-select') ? categoryFilterResults : productFilterResults);
       } else {
-        $(this).closest('.form-group').find('.filter-results').text('');
+        $(this).closest('.form-group').find('.filter-results > span').text('');
       }
 
       updateGallery($(

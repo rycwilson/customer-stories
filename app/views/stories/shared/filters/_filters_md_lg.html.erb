@@ -1,14 +1,18 @@
 
-<div class="filters-container visible-md-block visible-lg-block <%= include_category_filter?(company) && include_product_filter?(company) ? 'tall' : 'short' %>">
+<div class="filters-container visible-md-block visible-lg-block <%= show_both_filters ? 'tall' : 'short' %>">
 
   <%= render('stories/shared/filters/search_form', { company: company }) %>
 
-  <div class="combined-results text-right" style="height: 18px; margin-bottom: 10px;">
-    <span style="<%= pre_selected_filters['category'].present? || pre_selected_filters['product'].present? ? 'display: inline' : 'display: none' %>">
-      <span style="font-weight: 600">Applied filters:&nbsp;&nbsp;</span>
-      <span><%= "#{pluralize(stories.length, 'story', 'stories')} found" %></span>
-    </span>
-  </div>
+  <% if show_both_filters %>
+
+    <div class="combined-results text-right">
+      <span style="<%= pre_selected_filters['category'].present? || pre_selected_filters['product'].present? ? 'display: inline' : 'display: none' %>">
+        <span style="font-weight: 600">Applied filters:&nbsp;&nbsp;</span>
+        <span><%= "#{pluralize(stories.length, 'story', 'stories')} found" %></span>
+      </span>
+    </div>
+
+  <% end %>
 
   <% if include_category_filter?(company) %>
 
@@ -29,11 +33,15 @@
               }
             ) %>
 
-        <span class="filter-results pull-right">
-          <% if pre_selected_filters['category'].present? %>
-            <%= "#{pluralize(Story.company_public_filter_category(company.id, pre_selected_filters['category']).length, 'story', 'stories')} found" %>
-          <% end %>
-        </span>
+        <div class="filter-results text-right">
+          <span>
+
+            <% if pre_selected_filters['category'].present? %>
+              <%= "#{pluralize(Story.company_public_filter_category(company.id, pre_selected_filters['category']).length, 'story', 'stories')} found" %>
+            <% end %>
+
+          </span>
+        </div>
 
       </div>
 
@@ -60,11 +68,15 @@
               }
             ) %>
 
-        <span class="filter-results pull-right">
-          <% if pre_selected_filters['product'].present? %>
-            <%= "#{pluralize(Story.company_public_filter_product(company.id, pre_selected_filters['product']).length, 'story', 'stories')} found" %>
-          <% end %>
-        </span>
+        <div class="filter-results text-right">
+          <span>
+
+            <% if pre_selected_filters['product'].present? %>
+              <%= "#{pluralize(Story.company_public_filter_product(company.id, pre_selected_filters['product']).length, 'story', 'stories')} found" %>
+            <% end %>
+
+          </span>
+        </div>
 
       </div>
 

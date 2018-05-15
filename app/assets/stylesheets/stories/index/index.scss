@@ -12,18 +12,6 @@
   .grid-container {
 
     .filters-container {
-      .fart {
-        width: 600px;
-      }
-      .form-group .select2-container {
-        position: relative;
-        z-index: 2;
-        float: left;
-        width: 100%;
-        margin-bottom: 0;
-        display: table;
-        table-layout: fixed;
-      }
       .stories-search-form {
         .input-group {
           margin-bottom: 10px;
@@ -36,15 +24,17 @@
           }
         }
         .search-results {
-          // font-weight: 600;
         }
+      }
+      .combined-results {
+        height: 18px;
+        margin-bottom: 15px;
       }
       .form-group > select + span {
         margin-bottom: 10px;
       }
       .filter-results {
         height: 18px;
-        // font-weight: 600;
       }
     }
 
@@ -96,7 +86,7 @@
         margin-bottom: 10px;
       }
       .form-group:not(:first-of-type) {
-        margin-bottom: 30px;
+        margin-bottom: 5px;
       }
     }
 
