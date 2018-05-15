@@ -54,7 +54,15 @@
 
     <% end %>
 
-    <span class="filter-results pull-right"></span>
+    <div class="filter-results text-right">
+      <span>
+
+        <% if pre_selected_filters['category'].present? || pre_selected_filters['product'].present? %>
+          <%= "#{pluralize(Story.company_public_filter_category(company.id, pre_selected_filters['category']).length + Story.company_public_filter_product(company.id, pre_selected_filters['product']).length, 'story', 'stories')} found" %>
+        <% end %>
+
+      </span>
+    </div>
 
   </div>
 </form>

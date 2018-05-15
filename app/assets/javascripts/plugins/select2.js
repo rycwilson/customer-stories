@@ -121,6 +121,19 @@ function initSelect2 () {
         }
       });
 
+  var prependTagType = function () {
+    $('.select2-selection__rendered li:not(:last-of-type)')
+      .each(function (index, tag) {
+        tagId = $('#grouped-stories-filter').select2('data')[index].id;
+        tagText = $('#grouped-stories-filter').select2('data')[index].text;
+        tag.innerHTML =
+          tag.innerHTML.replace(
+              tagText,
+              tagId.includes('c') ? 'Category:\xa0' + tagText : 'Product:\xa0' + tagText
+            );
+      });
+  };
+
   $('#grouped-stories-filter').select2({
     theme: 'bootstrap',
     placeholder: 'Select Category and/or Product',
@@ -143,22 +156,9 @@ function initSelect2 () {
         siblings[i].selected = false;
       }
     })
-    .on('select2:select', function (e) {
-      // var tagId = '', tagText = '';
-      // // for the tag just selected...
-      // // var tagId = e.params.data.id, tagText = e.params.data.text;
-      $('.select2-selection__rendered li:not(:last-of-type)')
-        .each(function (index, tag) {
-        console.log($(this));
-          tagId = $('#grouped-stories-filter').select2('data')[index].id;
-          tagText = $('#grouped-stories-filter').select2('data')[index].text;
-          tag.innerHTML =
-            tag.innerHTML.replace(
-                tagText,
-                tagId.includes('c') ? 'Category:\xa0' + tagText : 'Product:\xa0' + tagText
-              );
-        });
-    });
+    .on('select2:select', prependTagType);
+
+  prependTagType();
 
   // TODO Is this an issue?  http://stackoverflow.com/questions/36497723
   // $('.stories-filter').data('init', true);

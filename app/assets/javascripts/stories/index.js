@@ -58,8 +58,8 @@ function storiesIndexListeners () {
     })
     .on('submit', '.stories-search-form', function () {
       $('.search-results').text('');
-      $('.submit-search')
-        .attr('style', 'border-top-right-radius: 0; border-bottom-right-radius: 0');
+      $('.submit-search').attr('style', 'border-top-right-radius: 0; border-bottom-right-radius: 0');
+      replaceStateStoriesIndex('', '');
     })
 
     .on('click', 'a.published', function (e) {
@@ -91,9 +91,9 @@ function storiesIndexListeners () {
 
       // show results
       if ($('#grouped-stories-filter').val()) {
-        $('.filter-results').text(filterResults);
+        $('.filter-results > span').text(filterResults);
       } else {
-        $('.filter-results').text('');
+        $('.filter-results > span').text('');
       }
 
       updateGallery($(
