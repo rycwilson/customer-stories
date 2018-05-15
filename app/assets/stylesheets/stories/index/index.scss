@@ -25,17 +25,20 @@
         }
         .search-results {
           font-weight: 600;
-          // display: none;
         }
+      }
+      .form-group > select + span {
+        margin-bottom: 10px;
+      }
+      .filter-results {
+        height: 18px;
+        font-weight: 600;
       }
     }
 
     .filters-container.visible-xs-block {
       max-width: 350px;
       margin: 0 auto;
-      .form-group > select + span {
-        margin-bottom: 10px;
-      }
       form:first-of-type {
         .form-group {
           margin-bottom: 30px;
@@ -45,9 +48,6 @@
         .form-group {
           margin-bottom: 35px;
         }
-      }
-      .filter-results {
-        font-weight: 600;
       }
     }
 
@@ -66,17 +66,9 @@
       float: left;
       background-color: #efefef;
       padding: 15px;
-      margin: 15px -60px 0 36px;
-    }
-    .filters-container.visible-md-block.tall {
-      height: 350px;
-      hr {
-        margin-top: 40px;
-        margin-bottom: 30px;
-      }
     }
     .filters-container.visible-md-block.short {
-      height: 160px;
+      height: 190px;
       position: relative;
       form + .form-group {  // single filter
         position: absolute;
@@ -85,6 +77,14 @@
         margin-bottom: 0;
       }
     }
+    .filters-container.visible-md-block.tall {
+      height: 364px;
+      hr {
+        margin-top: 40px;
+        margin-bottom: 30px;
+      }
+    }
+
   }
 
   @media only screen and (max-width: 767px) {
@@ -92,13 +92,19 @@
   @media only screen and (min-width: 768px) {
   }
   @media only screen and (min-width: 992px) {
-
+    .filters-container.visible-md-block.short {
+      margin: 5px -64px 0 48px;
+    }
+    .filters-container.visible-md-block.tall {
+      margin: 18px -64px 0 48px;
+    }
   }
   @media only screen and (min-width: 1200px) {
-    .filters-container.visible-md-block.tall {
-      margin: 15px -26px 0 0;
-    }
     .filters-container.visible-md-block.short {
+      margin: 5px -18px 0 0;
+    }
+    .filters-container.visible-md-block.tall {
+      margin: 18px -20px 0 5px;
     }
   }
 }

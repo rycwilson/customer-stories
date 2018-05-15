@@ -3,9 +3,13 @@
 
   <%= render('stories/shared/filters/search_form', { company: company }) %>
 
-  <%= render(
-        'stories/shared/filters/grouped_filters',
-        { company: company, pre_selected_filters: pre_selected_filters }
-      ) %>
+  <% if include_category_filter?(company) || include_product_filter?(company) %>
+
+    <%= render(
+          'stories/shared/filters/grouped_filters',
+          { company: company, pre_selected_filters: pre_selected_filters }
+        ) %>
+
+  <% end %>
 
 </div>

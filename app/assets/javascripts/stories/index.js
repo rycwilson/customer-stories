@@ -92,7 +92,7 @@ function storiesIndexListeners () {
 
       // show results
       if ($('#grouped-stories-filter').val()) {
-        $('.filter-results').text(filteredStories.length.toString() + " stories found").show();
+        $('.filter-results').text(filteredStories.length.toString() + " stories found");
       } else {
         $('.filter-results').text('');
       }
@@ -112,7 +112,8 @@ function storiesIndexListeners () {
           categorySlug = categoryId && $categorySelect.find('option:selected').data('slug'),
           $productSelect = $(this).closest('.filters-container').find("[name='product_select']"),
           productId = $productSelect.val(),
-          productSlug = productId && $productSelect.find('option:selected').data('slug');
+          productSlug = productId && $productSelect.find('option:selected').data('slug'),
+          filteredStories = filterStories(categoryId, productId);
 
       syncSelectTags(categoryId, productId);
 
@@ -120,9 +121,16 @@ function storiesIndexListeners () {
       $('.stories-search').val('').trigger('input');
       $('.search-results').hide();
 
+      // show results
+      if ($(this).val()) {
+        $('.filter-results').text(filteredStories.length.toString() + " stories found");
+      } else {
+        $('.filter-results').text('');
+      }
+
       updateGallery($(
         _.template($('#stories-template').html())({
-          stories: filterStories(categoryId, productId),
+          stories: filteredStories,
           isCurator: false
         })
       ));
