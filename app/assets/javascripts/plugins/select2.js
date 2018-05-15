@@ -145,12 +145,19 @@ function initSelect2 () {
     })
     .on('select2:select', function (e) {
       var tagId = '', tagText = '';
+      // for the tag just selected...
       // var tagId = e.params.data.id, tagText = e.params.data.text;
       $('.select2-selection__rendered li:not(:last-of-type)')
         .each(function (index, tag) {
           tagId = $('#grouped-stories-filter').select2('data')[index].id;
           tagText = $('#grouped-stories-filter').select2('data')[index].text;
-          $(this).text(tagId.includes('c') ? 'Category: ' + tagText : 'Product: ' + tagText);
+          $(this).text(
+            $(this).text()
+                   .replace(
+                      tagText,
+                      tagId.includes('c') ? '\xa0Category:\xa0' + tagText : '\xa0Product:\xa0' + tagText
+                    )
+          );
         });
     });
 
