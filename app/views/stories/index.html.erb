@@ -32,9 +32,12 @@
         'stories/shared/filters/filters_md_lg',
         {
           company: @company,
+          stories: @stories,
           category_select_cache_key: @category_select_cache_key,
           product_select_cache_key: @product_select_cache_key,
-          pre_selected_filters: @pre_selected_filters
+          pre_selected_filters: @pre_selected_filters,
+          both_filters_pre_selected:
+            @pre_selected_filters['category'].present? && @pre_selected_filters['product'].present?
         }
       ) %>
 

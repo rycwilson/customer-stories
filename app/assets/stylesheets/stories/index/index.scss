@@ -36,7 +36,7 @@
           }
         }
         .search-results {
-          font-weight: 600;
+          // font-weight: 600;
         }
       }
       .form-group > select + span {
@@ -44,7 +44,7 @@
       }
       .filter-results {
         height: 18px;
-        font-weight: 600;
+        // font-weight: 600;
       }
     }
 
@@ -92,7 +92,10 @@
     .filters-container.visible-md-block.tall {
       height: 364px;
       hr {
-        margin-top: 40px;
+        margin-top: 42px;
+        margin-bottom: 10px;
+      }
+      .form-group:not(:first-of-type) {
         margin-bottom: 30px;
       }
     }

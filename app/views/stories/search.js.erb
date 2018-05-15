@@ -1,17 +1,18 @@
 
 (function () {
 
-  var story_ids = <%= raw @story_ids.to_json %>;
+  var storyIds = <%= raw @story_ids.to_json %>,
+      searchResults = storyIds.length === 1 ? "1 story found" : storyIds.length.toString() + " stories found";
 
   updateGallery($(
     _.template($('#stories-template').html())({
-      stories: app.stories.filter(function (story) { return story_ids.includes(story.id); }),
+      stories: app.stories.filter(function (story) { return storyIds.includes(story.id); }),
       isCurator: false
     })
   ));
 
   $('.clear-search').show();
   $('.filter-results').text('');
-  $('.search-results').text(story_ids.length.toString() + " stories found").show();
+  $('.search-results').text(searchResults).show();
 
 }());

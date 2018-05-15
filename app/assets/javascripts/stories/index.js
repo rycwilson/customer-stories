@@ -113,7 +113,10 @@ function storiesIndexListeners () {
           $productSelect = $(this).closest('.filters-container').find("[name='product_select']"),
           productId = $productSelect.val(),
           productSlug = productId && $productSelect.find('option:selected').data('slug'),
-          filteredStories = filterStories(categoryId, productId);
+          filteredStories = filterStories(categoryId, productId),
+          filterResults = filteredStories.length === 1 ? "1 story found" : filteredStories.length.toString() + " stories found",
+          categoryFilterResults = filterStories(categoryId, '').length === 1 ? "1 story found" : filterStories(categoryId, '').length.toString() + " stories found",
+          productFilterResults = filterStories('', productId).length === 1 ? "1 story found" : filterStories('', productId).length.toString() + " stories found";
 
       syncSelectTags(categoryId, productId);
 
@@ -121,11 +124,21 @@ function storiesIndexListeners () {
       $('.stories-search').val('').trigger('input');
       $('.search-results').hide();
 
-      // show results
-      if ($(this).val()) {
-        $('.filter-results').text(filteredStories.length.toString() + " stories found");
+      // show combined filter results
+      if (categoryId || productId) {
+        $('.combined-results > span > span:last-child').text(filterResults);
+        $('.combined-results > span').show();
       } else {
-        $('.filter-results').text('');
+        $('.combined-results > span').hide();
+      }
+
+      // show individual filter results
+      if ($(this).val()) {
+        $(this).closest('.form-group')
+               .find('.filter-results')
+               .text($(this).hasClass('category-select') ? categoryFilterResults : productFilterResults);
+      } else {
+        $(this).closest('.form-group').find('.filter-results').text('');
       }
 
       updateGallery($(

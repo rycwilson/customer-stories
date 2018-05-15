@@ -3,6 +3,13 @@
 
   <%= render('stories/shared/filters/search_form', { company: company }) %>
 
+  <div class="combined-results text-right" style="height: 18px; margin-bottom: 10px;">
+    <span style="<%= pre_selected_filters['category'].present? || pre_selected_filters['product'].present? ? 'display: inline' : 'display: none' %>">
+      <span style="font-weight: 600">Applied filters:&nbsp;&nbsp;</span>
+      <span><%= "#{pluralize(stories.length, 'story', 'stories')} found" %></span>
+    </span>
+  </div>
+
   <% if include_category_filter?(company) %>
 
     <% cache(category_select_cache_key, skip_digest: true) do %>
@@ -21,6 +28,12 @@
                 style: 'width: 100%'
               }
             ) %>
+
+        <span class="filter-results pull-right">
+          <% if pre_selected_filters['category'].present? %>
+            <%= "#{pluralize(Story.company_public_filter_category(company.id, pre_selected_filters['category']).length, 'story', 'stories')} found" %>
+          <% end %>
+        </span>
 
       </div>
 
@@ -47,16 +60,16 @@
               }
             ) %>
 
-        <span class="filter-results pull-right"></span>
+        <span class="filter-results pull-right">
+          <% if pre_selected_filters['product'].present? %>
+            <%= "#{pluralize(Story.company_public_filter_product(company.id, pre_selected_filters['product']).length, 'story', 'stories')} found" %>
+          <% end %>
+        </span>
 
       </div>
 
     <% end %>
 
   <% end %>
-
-<!--   <div class="clear-filters" style="margin-bottom: 15px; text-align: right">
-    <a href="javascript:;">Clear filters</a>
-  </div> -->
 
 </div>
