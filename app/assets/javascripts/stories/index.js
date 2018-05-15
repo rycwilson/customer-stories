@@ -80,7 +80,8 @@ function storiesIndexListeners () {
           productId = productRawId && productRawId.slice(1, productRawId.length),
           productSlug = productId &&
             $(this).find('optgroup[label="Product"] option:selected').data('slug'),
-          filteredStories = filterStories(categoryId, productId);
+          filteredStories = filterStories(categoryId, productId),
+          filterResults = filteredStories.length === 1 ? "1 story found" : filteredStories.length.toString() + " stories found";
 
       syncSelectTags(categoryId, productId);
 
@@ -90,7 +91,7 @@ function storiesIndexListeners () {
 
       // show results
       if ($('#grouped-stories-filter').val()) {
-        $('.filter-results').text(filteredStories.length.toString() + " stories found");
+        $('.filter-results').text(filterResults);
       } else {
         $('.filter-results').text('');
       }
