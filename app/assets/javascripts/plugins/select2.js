@@ -124,6 +124,7 @@ function initSelect2 () {
   $('#grouped-stories-filter').select2({
     theme: 'bootstrap',
     placeholder: 'Select Category and/or Product',
+    createTag: function (tag) { console.log(tag); },
     tags: true,
     width: 'style',
   })
@@ -141,6 +142,16 @@ function initSelect2 () {
       for(var i = 0; i < siblings.length; i++) {
         siblings[i].selected = false;
       }
+    })
+    .on('select2:select', function (e) {
+      var tagId = '', tagText = '';
+      // var tagId = e.params.data.id, tagText = e.params.data.text;
+      $('.select2-selection__rendered li:not(:last-of-type)')
+        .each(function (index, tag) {
+          tagId = $('#grouped-stories-filter').select2('data')[index].id;
+          tagText = $('#grouped-stories-filter').select2('data')[index].text;
+          $(this).text(tagId.includes('c') ? 'Category: ' + tagText : 'Product: ' + tagText);
+        });
     });
 
   // TODO Is this an issue?  http://stackoverflow.com/questions/36497723
