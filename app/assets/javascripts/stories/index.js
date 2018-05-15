@@ -43,6 +43,7 @@ function storiesIndexListeners () {
         .attr('style', 'border-top-right-radius: 4px; border-bottom-right-radius: 4px');
     })
     .on('click', '.submit-search', function () {
+      if ($(this).closest('form').find('.stories-search').val() === '') return false;
       $(this).closest('form').submit();
     })
     .on('click', '.clear-search', function () {
@@ -56,7 +57,7 @@ function storiesIndexListeners () {
       ));
     })
     .on('submit', '.stories-search-form', function () {
-      $('.clear-search').show();
+      $('.search-results').text('');
       $('.submit-search')
         .attr('style', 'border-top-right-radius: 0; border-bottom-right-radius: 0');
       $('#grouped-stories-filter').val(null).trigger('change.select2');

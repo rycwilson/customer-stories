@@ -1,0 +1,11 @@
+
+<div class="filters-container visible-xs-block visible-sm-block">
+
+  <%= render('stories/shared/filters/search_form', { company: company }) %>
+
+  <%= render(
+        'stories/shared/filters/grouped_filters',
+        { company: company, pre_selected_filters: pre_selected_filters }
+      ) %>
+
+</div>

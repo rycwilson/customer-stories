@@ -123,7 +123,7 @@ function initSelect2 () {
 
   $('#grouped-stories-filter').select2({
     theme: 'bootstrap',
-    placeholder: 'Select',
+    placeholder: 'Select Category and/or Product',
     tags: true,
     width: 'style',
   })
