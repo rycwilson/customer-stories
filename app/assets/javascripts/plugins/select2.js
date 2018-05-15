@@ -107,6 +107,7 @@ function initSelect2 () {
   $('.stories-filter').select2({
       theme: 'bootstrap',
       placeholder: 'Select',
+      dropdownCssClass: 'fart',
       allowClear: true,
       width: 'style'   // get the width from stories.scss
     })

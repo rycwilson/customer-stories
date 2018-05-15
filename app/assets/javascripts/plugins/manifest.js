@@ -21,7 +21,7 @@
 // require mvpready-admin
 // require mvpready-landing
 
-//= require select2/dist/js/select2
+//= require select2/dist/js/select2.full
 //= require summernote
 // = require masonry/dist/masonry.pkgd
 //= require imagesloaded/imagesloaded
