@@ -4,7 +4,7 @@
 
     <% if include_category_filter?(company) && include_product_filter?(company) %>
 
-      <%= label_tag(:filter_select, "Filters") %>
+      <%= label_tag(:filter_select, "Filter") %>
       <%= select_tag(:filter_select,
             grouped_options_for_select(
               company.stories_filter_public_grouped_options,
