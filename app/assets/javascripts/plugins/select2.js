@@ -128,11 +128,13 @@ function initSelect2 () {
       .each(function (index, tag) {
         tagId = $('#grouped-stories-filter').select2('data')[index].id;
         tagText = $('#grouped-stories-filter').select2('data')[index].text;
-        tag.innerHTML =
-          tag.innerHTML.replace(
-              tagText,
-              tagId.includes('c') ? 'Category:\xa0' + tagText : 'Product:\xa0' + tagText
-            );
+        if (!tag.innerHTML.includes('Category:') && !tag.innerHTML.includes('Product:')) {
+          tag.innerHTML =
+            tag.innerHTML.replace(
+                tagText,
+                tagId.includes('c') ? 'Category:\xa0' + tagText : 'Product:\xa0' + tagText
+              );
+        }
       });
   };
 

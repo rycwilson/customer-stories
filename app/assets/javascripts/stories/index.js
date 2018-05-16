@@ -20,6 +20,22 @@ function storiesIndexListeners () {
         setTimeout(function () { $story.addClass('loading-icon'); }, 1000);
         $('#stories-gallery li').css('pointer-events', 'none');
       },
+
+      // this function is copied over from select2.js
+      prependTagType = function () {
+        $('.select2-selection__rendered li:not(:last-of-type)')
+          .each(function (index, tag) {
+            tagId = $('#grouped-stories-filter').select2('data')[index].id;
+            tagText = $('#grouped-stories-filter').select2('data')[index].text;
+            if (!tag.innerHTML.includes('Category:') && !tag.innerHTML.includes('Product:')) {
+              tag.innerHTML =
+                tag.innerHTML.replace(
+                    tagText,
+                    tagId.includes('c') ? 'Category:\xa0' + tagText : 'Product:\xa0' + tagText
+                  );
+            }
+          });
+      },
       // when selecting a filter, sync select tags across different views (xs, sm, md-lg)
       // change.select2 => prevents the change event from triggering
       syncSelectTags = function (categoryId, productId) {
@@ -29,6 +45,7 @@ function storiesIndexListeners () {
         $('[name="category_select"]').val(categoryId).trigger('change.select2');
         $('[name="product_select"]').val(productId).trigger('change.select2');
         $('[name="filter_select[]"]').val(multiSelectFilterVal).trigger('change.select2');
+        prependTagType();
       };
 
   $(document)
@@ -91,9 +108,13 @@ function storiesIndexListeners () {
 
       // show results
       if ($('#grouped-stories-filter').val()) {
-        $('.filter-results > span').text(filterResults);
+        $('.filters-container.visible-xs-block .filter-results > span').text(filterResults);
+        $('.filters-container.tall .combined-results')
+          .find('> span > span:last-child').text(filterResults).end()
+          .find('> span').show();
       } else {
-        $('.filter-results > span').text('');
+        $('.filters-container.visible-xs-block .filter-results > span').text('');
+        $('.filters-container.tall .combined-results > span').hide();
       }
 
       updateGallery($(
@@ -128,17 +149,28 @@ function storiesIndexListeners () {
         $('.filters-container.tall .combined-results')
           .find('> span > span:last-child').text(filterResults).end()
           .find('> span').show();
+        $('.filters-container.visible-xs-block .filter-results > span').text(filterResults);
       } else {
         $('.filters-container.tall .combined-results > span').hide();
+        $('.filters-container.visible-xs-block .filter-results > span').text('');
       }
 
       // show individual filter results
-      if ($(this).val()) {
-        $(this).closest('.form-group')
-               .find('.filter-results > span')
-               .text($(this).hasClass('category-select') ? categoryFilterResults : productFilterResults);
+      $('.stories-filter').each(function () {
+        if ($(this).val()) {
+          $(this).closest('.form-group')
+                 .find('.filter-results > span')
+                 .text($(this).hasClass('category-select') ? categoryFilterResults : productFilterResults);
+        } else {
+          $(this).closest('.form-group').find('.filter-results > span').text('');
+        }
+      });
+
+      // show results for grouped stories filter
+      if ($('#grouped-stories-filter').val()) {
+        $('#filters-container.visible-xs-block .filter-results > span').text(filterResults);
       } else {
-        $(this).closest('.form-group').find('.filter-results > span').text('');
+        $('#filters-container.visible-xs-block .filter-results > span').text('');
       }
 
       updateGallery($(
