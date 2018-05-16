@@ -37,7 +37,8 @@
         height: 18px;
       }
 
-      //select2: fixes word text wrap issues on long select values
+      // select2: fixes word text wrap issues on long select values
+      // ref https://github.com/select2/select2/issues/4585
       li.select2-selection__choice {
           max-width: 100%;
           overflow: hidden;
