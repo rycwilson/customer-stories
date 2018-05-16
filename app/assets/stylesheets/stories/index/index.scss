@@ -36,6 +36,16 @@
       .filter-results {
         height: 18px;
       }
+
+      //select2: fixes word text wrap issues on long select values
+      li.select2-selection__choice {
+          max-width: 100%;
+          overflow: hidden;
+          text-overflow: ellipsis; //use this if you want to shorten
+      }
+      ul.select2-selection__rendered {
+          padding-right: 12px !important; //overrides select2 style
+      }
     }
 
     .filters-container.visible-xs-block {

@@ -158,7 +158,8 @@ function initSelect2 () {
         siblings[i].selected = false;
       }
     })
-    .on('select2:select', prependTagType);
+    .on('select2:select', prependTagType)
+    .on('select2:unselect', prependTagType);
 
   prependTagType();
   $('.filters-container.visible-xs-block').css('visibility', 'visible');
