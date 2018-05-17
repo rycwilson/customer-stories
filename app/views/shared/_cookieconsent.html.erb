@@ -1,0 +1,64 @@
+<script>
+
+  $("<link>", { rel: "stylesheet", type: "text/css", href: "//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" })
+    .appendTo('head')
+    .on('load', function () {
+
+      window.cookieconsent.initialise({
+        palette: {
+          popup: {
+            background: "rgba(0, 0, 0, 0.9)"
+          },
+        },
+        cookie: {
+          domain: ".lvh.me"
+        },
+        showLink: true,
+        theme: "classic",
+        position: 'bottom-right',
+        type: "opt-in",
+        content: {
+          message: "This website uses cookies for the purpose of serving targeted ads.",
+          dismiss: "Decline",
+          allow: "Accept",
+          link: "Learn more",
+          href: "https://customerstories.net/privacy"
+        },
+        onInitialise: function (status) {
+          var type = this.options.type;
+          var didConsent = this.hasConsented();
+          if (type == 'opt-in' && didConsent) {
+
+            // agile crm
+            console.log('load agile')
+            // $.getScript('//customerstories.agilecrm.com/stats/min/agile-min.js', function () {
+            //   _agile.set_account('1g26nfs2fgphtg7vp574pelpdi', 'customerstories');
+            //   _agile.track_page_view();
+            //   _agile_execute_web_rules();
+            // });
+            if (<%= controller == 'stories' %>) {
+              console.log('load adwords')
+              // google adwords
+              // google_conversion_id = 919156278;
+              // google_custom_params = window.google_tag_params;
+              // google_remarketing_only = true;
+              // $.getScript('//www.googleadservices.com/pagead/conversion.js');
+              // // for browsers with js disabled
+              // $('body').append(
+              //     '<noscript>' +
+              //       '<div style="display:inline;">' +
+              //         '<img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/919156278/?guid=ON&amp;script=0"/>' +
+              //       '</div>' +
+              //     '</noscript>'
+              //   );
+            }
+          }
+          if (type == 'opt-out' && !didConsent) {
+            // disable cookies
+          }
+        }
+      });
+
+    });
+
+</script>
