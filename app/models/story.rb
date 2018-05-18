@@ -111,12 +111,12 @@ class Story < ActiveRecord::Base
     .where('stories.logo_publish_date >= ?', days_ago.days.ago)
   }
   scope :company_public_filter_category, ->(company_id, category_id) {
-    joins(:customer, :story_categories)
+    joins(:customer, :category_tags)
     .where(customers: { company_id: company_id }, story_categories: { id: category_id })
     .where('preview_published = TRUE OR logo_published = TRUE')
   }
   scope :company_public_filter_product, ->(company_id, product_id) {
-    joins(:customer, :products)
+    joins(:customer, :product_tags)
     .where(customers: { company_id: company_id }, products: { id: product_id })
     .where('preview_published = TRUE OR logo_published = TRUE')
   }
