@@ -57,8 +57,12 @@
     <div class="filter-results text-right">
       <span>
 
-        <% if pre_selected_filters['category'].present? || pre_selected_filters['product'].present? %>
-          <%= "#{pluralize(Story.company_public_filter_category(company.id, pre_selected_filters['category']).length + Story.company_public_filter_product(company.id, pre_selected_filters['product']).length, 'story', 'stories')} found" %>
+        <% if pre_selected_filters['category'].present? && pre_selected_filters['product'].present? %>
+          <%= applied_filters_results %>
+        <% elsif pre_selected_filters['category'].present? %>
+          <%= category_results %>
+        <% else %>
+          <%= product_results %>
         <% end %>
 
       </span>

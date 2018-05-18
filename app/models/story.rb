@@ -111,16 +111,14 @@ class Story < ActiveRecord::Base
     .where('stories.logo_publish_date >= ?', days_ago.days.ago)
   }
   scope :company_public_filter_category, ->(company_id, category_id) {
-    joins(success: { customer: {}, story_categories: {} })
-    .where('preview_published = ? OR logo_published = ?', true, true)
-    .where(customers: { company_id: company_id },
-           story_categories: { id: category_id })
+    joins(:customer, :story_categories)
+    .where(customers: { company_id: company_id }, story_categories: { id: category_id })
+    .where('preview_published = TRUE OR logo_published = TRUE')
   }
   scope :company_public_filter_product, ->(company_id, product_id) {
-    joins(success: { customer: {}, products: {} })
-    .where('preview_published = ? OR logo_published = ?', true, true)
-    .where(customers: { company_id: company_id },
-           products: { id: product_id })
+    joins(:customer, :products)
+    .where(customers: { company_id: company_id }, products: { id: product_id })
+    .where('preview_published = TRUE OR logo_published = TRUE')
   }
 
   # scrub user-supplied html input using whitelist
@@ -142,7 +140,7 @@ class Story < ActiveRecord::Base
   # on change of publish state
   after_commit on: :update do
     expire_story_tile_fragment_cache
-    expire_stories_index_fragment_cache
+    expire_stories_gallery_fragment_cache
     expire_filter_select_fragment_cache
     expire_all_stories_cache(true)
   end if Proc.new { |story|
@@ -155,7 +153,7 @@ class Story < ActiveRecord::Base
   # also json cache
   after_commit on: :update do
     expire_story_tile_fragment_cache
-    expire_stories_index_fragment_cache
+    expire_stories_gallery_fragment_cache
     expire_all_stories_cache(true)
   end if Proc.new { |story|
            ( (story.published? || story.preview_published?) &&
@@ -341,9 +339,9 @@ class Story < ActiveRecord::Base
   end
 
   # expire fragment cache for the stories index
-  def expire_stories_index_fragment_cache
+  def expire_stories_gallery_fragment_cache
     mi = "memcache-iterator-" +
-          "#{self.company.stories_index_fragments_memcache_iterator}"
+          "#{self.company.stories_gallery_fragments_memcache_iterator}"
     # expire stories-index-all-0 (all story tiles)
     self.expire_fragment("#{self.company.subdomain}/stories-index-all-0-#{mi}")
     self.category_tags.each do |category|
@@ -374,16 +372,19 @@ class Story < ActiveRecord::Base
       self.expire_story_tile_fragment_cache
       self.expire_fragment(
         "#{self.company.subdomain}/stories-index-all-0-memcache-iterator-" +
-        "#{self.company.stories_index_fragments_memcache_iterator}")
+        "#{self.company.stories_gallery_fragments_memcache_iterator}"
+      )
       self.category_tags.each do |category|
         self.expire_fragment(
           "#{self.company.subdomain}/stories-index-category-#{category.id}-" +
-          "memcache-iterator-#{self.company.stories_index_fragments_memcache_iterator}")
+          "memcache-iterator-#{self.company.stories_gallery_fragments_memcache_iterator}"
+        )
       end
       self.product_tags.each do |product|
         self.expire_fragment(
           "#{self.company.subdomain}/stories-index-product-#{product.id}-" +
-          "memcache-iterator-#{self.company.stories_index_fragments_memcache_iterator}")
+          "memcache-iterator-#{self.company.stories_gallery_fragments_memcache_iterator}"
+        )
       end
     end
   end
@@ -413,7 +414,7 @@ class Story < ActiveRecord::Base
   end
 
   def expire_cache_on_destroy
-    self.expire_stories_index_fragment_cache
+    self.expire_stories_gallery_fragment_cache
     self.expire_filter_select_fragment_cache
     self.company.expire_all_stories_cache(false)
   end

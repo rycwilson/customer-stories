@@ -85,7 +85,7 @@ class Contribution < ActiveRecord::Base
       # expire the story tile and index as a whole
       self.company.expire_all_stories_cache(true)
       self.story.expire_story_tile_fragment_cache
-      self.company.increment_stories_index_fragments_memcache_iterator
+      self.company.increment_stories_gallery_fragments_memcache_iterator
     end
   end
 

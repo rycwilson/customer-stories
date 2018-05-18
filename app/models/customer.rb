@@ -27,7 +27,7 @@ class Customer < ActiveRecord::Base
 
   def expire_fragment_cache_on_logo_change
     # memcache iterator necessary in case change in company colors expires all index cache
-    mi = self.company.stories_index_fragments_memcache_iterator
+    mi = self.company.stories_gallery_fragments_memcache_iterator
     # expire stories-index-all-0 if any logo_published stories exist for this customer
     if Story.joins(success: {})
             .where(logo_published: true, successes: { customer_id: self.id })

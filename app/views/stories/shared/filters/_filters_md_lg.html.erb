@@ -8,7 +8,7 @@
     <div class="combined-results text-right">
       <span style="<%= pre_selected_filters['category'].present? || pre_selected_filters['product'].present? ? 'display: inline' : 'display: none' %>">
         <span style="font-weight: 600">Applied filters:&nbsp;&nbsp;</span>
-        <span><%= "#{pluralize(stories.length, 'story', 'stories')} found" %></span>
+        <span><%= applied_filters_results %></span>
       </span>
     </div>
 
@@ -37,7 +37,7 @@
           <span>
 
             <% if pre_selected_filters['category'].present? %>
-              <%= "#{pluralize(Story.company_public_filter_category(company.id, pre_selected_filters['category']).length, 'story', 'stories')} found" %>
+              <%= category_results %>
             <% end %>
 
           </span>
@@ -72,7 +72,7 @@
           <span>
 
             <% if pre_selected_filters['product'].present? %>
-              <%= "#{pluralize(Story.company_public_filter_product(company.id, pre_selected_filters['product']).length, 'story', 'stories')} found" %>
+              <%= product_results %>
             <% end %>
 
           </span>

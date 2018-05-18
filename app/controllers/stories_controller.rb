@@ -13,9 +13,8 @@ class StoriesController < ApplicationController
   before_action :set_s3_direct_post, only: :edit
 
   def index
-    # these instance variables will get overwritten below if there's a query filter
     @pre_selected_filters = { category: '', product: '' }
-    @stories_index_cache_key = @company.stories_index_cache_key(@pre_selected_filters)
+    @stories_gallery_cache_key = @company.stories_gallery_cache_key(@pre_selected_filters)
     @category_select_cache_key = @company.category_select_cache_key(0)
     @product_select_cache_key = @company.product_select_cache_key(0)
 
@@ -33,18 +32,25 @@ class StoriesController < ApplicationController
     end
     filter_params = get_filters_from_query_or_widget(@company, params)
     if filter_params.present?
-      @stories_index_cache_key = @company.stories_index_cache_key(filter_params)
-      unless fragment_exist?(@stories_index_cache_key)
+      @pre_selected_filters = filter_params
+      @stories_gallery_cache_key = @company.stories_gallery_cache_key(filter_params)
+      unless fragment_exist?(@stories_gallery_cache_key)
         @stories = @company.filter_stories(filter_params)
       end
-      @pre_selected_filters = filter_params
+      category_stories = product_stories = 0
       if filter_params[:category].present?
         @category_select_cache_key = @company.category_select_cache_key(filter_params[:category])
+        category_stories = Story.company_public_filter_category(company.id, filter_params['category'])
+        @category_results = "#{pluralize(category_stories.count, 'story', 'stories')} found"
       elsif filter_params[:product].present?
         @product_select_cache_key = @company.product_select_cache_key(filter_params[:product])
+        product_stories = Story.company_public_filter_product(company.id, filter_params['product'])
+        @product_results = "#{pluralize(product_stories.count, 'story', 'stories')} found"
       end
+      @filters_results = filters_results(category_stories, product_stories, false)
+      @grouped_filters_results = filters_results(category_stories, product_stories, true)
     else
-      unless fragment_exist?(@stories_index_cache_key)
+      unless fragment_exist?(@stories_gallery_cache_key)
         public_story_ids = @company.public_stories
         # sort order is lost when .find takes an array of ids, so need to re-sort;
         # ref: http://stackoverflow.com/questions/1680627
@@ -411,6 +417,17 @@ class StoriesController < ApplicationController
 
   def remove_video? ()
     # request.xhr? &&  && params[:remove_video].present?
+  end
+
+  # one or both will be present
+  def filters_results (category_stories, product_stories)
+    if category_stories.empty?
+      "#{pluralize(product_stories.count, 'story', 'stories')} found"
+    elsif product_stories.empty?
+      "#{pluralize(category_stories.count, 'story', 'stories')} found"
+    else
+      "#{pluralize((category_stories & product_stories).count, 'story', 'stories')} found"
+    end
   end
 
 end

@@ -369,10 +369,10 @@ class Company < ActiveRecord::Base
   # category tag and product tag are optional
   # xx is the memcache iterator
   #
-  def stories_index_cache_key (filter_params)
-    memcache_iterator = self.stories_index_fragments_memcache_iterator
-    category_key = filter_params[:category].present? ? "category-#{filter_params[:category]}-" : ''
-    product_key = filter_params[:product].present? ? "product-#{filter_params[:product]}-" : ''
+  def stories_gallery_cache_key (filter_params)
+    memcache_iterator = self.stories_gallery_fragments_memcache_iterator
+    category_key = filter_params['category'].present? ? "category-#{filter_params[:category]}-" : ''
+    product_key = filter_params['product'].present? ? "product-#{filter_params[:product]}-" : ''
     "#{self.subdomain}/" +
     "stories-index-#{category_key}#{product_key}" +
     "memcache-iterator-#{memcache_iterator}"
@@ -563,21 +563,22 @@ class Company < ActiveRecord::Base
 
   # changes to company colors expires all gallery fragments
   def expire_fragment_cache
-    self.increment_stories_index_fragments_memcache_iterator
+    self.increment_stories_gallery_fragments_memcache_iterator
     self.increment_story_tile_fragments_memcache_iterator
   end
 
   # expiration of a story tile fragment with logo published
   # expires all stories index fragments
   # rand(10) provides an initial value if none exists
-  def stories_index_fragments_memcache_iterator
+  def stories_gallery_fragments_memcache_iterator
     Rails.cache.fetch("#{self.subdomain}/stories-index-fragments-memcache-iterator") { rand(10) }
   end
 
-  def increment_stories_index_fragments_memcache_iterator
+  def increment_stories_gallery_fragments_memcache_iterator
     Rails.cache.write(
       "#{self.subdomain}/stories-index-fragments-memcache-iterator",
-      self.stories_index_fragments_memcache_iterator + 1)
+      self.stories_gallery_fragments_memcache_iterator + 1
+    )
   end
 
   # all story fragments must be expired if these attributes change: header_color_1, header_text_color
