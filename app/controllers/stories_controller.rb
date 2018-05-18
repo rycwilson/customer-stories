@@ -37,7 +37,7 @@ class StoriesController < ApplicationController
       unless fragment_exist?(@stories_gallery_cache_key)
         @stories = @company.filter_stories(filter_params)
       end
-      category_stories = product_stories = 0
+      category_stories = product_stories = []
       if filter_params[:category].present?
         @category_select_cache_key = @company.category_select_cache_key(filter_params[:category])
         category_stories = Story.company_public_filter_category(company.id, filter_params['category'])
