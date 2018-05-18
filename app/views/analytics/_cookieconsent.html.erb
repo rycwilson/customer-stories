@@ -52,10 +52,6 @@
   };
 
   var removeCookies = function () {
-
-    var agileCookies = document.cookie.split(';')
-                          .filter(function (cookie) { return cookie.includes('agile'); });
-    agileCookies.each()
     // console.log('removing cookies from ' + domain + '...');
     // var cookies = document.cookie.split("; ");
     // console.log('cookies before:')
@@ -72,10 +68,10 @@
     //     }
     //     d.shift();
     //   }
-    }
-    var cookiesAfter = document.cookie.split("; ");
-    console.log('cookies after:')
-    console.log(cookies)
+    // }
+    // var cookiesAfter = document.cookie.split("; ");
+    // console.log('cookies after:')
+    // console.log(cookies)
   };
 
   $("<link>", { rel: "stylesheet", type: "text/css", href: "//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" })
@@ -108,7 +104,7 @@
           var type = this.options.type;
           var didConsent = this.hasConsented();
           if (type == 'opt-in' && didConsent) {
-            console.log('loading tags...')
+            console.log('loading tags...');
             loadTags();
           }
           if (type == 'opt-out' && !didConsent) {
@@ -121,10 +117,10 @@
           if (type == 'opt-in') {
             // disable cookies
             if (status === 'allow') {
-              console.log('allow');
+              // console.log('allow');
               loadTags();
             } else if (status === 'dismiss') {
-              console.log('dismiss');
+              // console.log('dismiss');
               removeCookies('customerstories.agilecrm.com');
               // removeCookies('google.com');
               // removeCookies('doubleclick.net');
