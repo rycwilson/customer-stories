@@ -47,8 +47,8 @@ class StoriesController < ApplicationController
         product_stories = Story.company_public_filter_product(company.id, filter_params['product'])
         @product_results = "#{pluralize(product_stories.count, 'story', 'stories')} found"
       end
-      @filters_results = filters_results(category_stories, product_stories, false)
-      @grouped_filters_results = filters_results(category_stories, product_stories, true)
+      @filters_results = filters_results(category_stories, product_stories)
+      @grouped_filters_results = filters_results(category_stories, product_stories)
     else
       unless fragment_exist?(@stories_gallery_cache_key)
         public_story_ids = @company.public_stories
