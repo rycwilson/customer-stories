@@ -31,15 +31,13 @@ class StoriesController < ApplicationController
         session.delete(:preview_story_slug)
       end
     end
-    if (filter_params = get_filters_from_query_or_widget(@company, params))
-      # ?category=automotive  =>  { tag: 'category', id: '42' }
+    filter_params = get_filters_from_query_or_widget(@company, params)
+    if filter_params.present?
       @stories_index_cache_key = @company.stories_index_cache_key(filter_params)
       unless fragment_exist?(@stories_index_cache_key)
         @stories = @company.filter_stories(filter_params)
       end
       @pre_selected_filters = filter_params
-      puts "PRE_SELECTED"
-      puts @pre_selected_filters
       if filter_params[:category].present?
         @category_select_cache_key = @company.category_select_cache_key(filter_params[:category])
       elsif filter_params[:product].present?

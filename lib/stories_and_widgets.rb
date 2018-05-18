@@ -1,11 +1,13 @@
 
 module StoriesAndWidgets
 
-  def get_filters_from_query_or_widget (company, params)
+  def get_filters_from_query_or_widget (company, params, is_widget=false)
+    return {} if params[:preview].present?
+    unless is_widget
+      query_params = Rack::Utils.parse_nested_query(request.query_string)
+      return {} if query_params.blank? || query_params.length > 2
+    end
     filters = {}
-    query_params = Rack::Utils.parse_nested_query(request.query_string)
-    # TODO This won't work for the widget!
-    return nil if query_params.blank? || query_params.length > 2 || params[:preview].present?
     category_tag = params.try(:[], :category) &&
                    StoryCategory.joins(:customers)
                                 .where(
@@ -20,7 +22,7 @@ module StoriesAndWidgets
                           ).take
     filters['category'] = category_tag.id if category_tag.present?
     filters['product'] = product_tag.id if product_tag.present?
-    filters.present? ? filters : nil
+    filters
   end
 
 end

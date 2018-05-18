@@ -102,9 +102,9 @@ class Story < ActiveRecord::Base
            products: { id: product_id })
   }
   scope :company_public, ->(company_id) {
-    joins(success: { customer: {} })
-    .where('preview_published = ? OR logo_published = ?', true, true)
+    joins(:customer)
     .where(customers: { company_id: company_id })
+    .where('preview_published = TRUE OR logo_published = TRUE')
   }
   scope :company_public_since, ->(company_id, days_ago) {
     company_public(company_id)

@@ -36,27 +36,25 @@ class WidgetsController < ApplicationController
 
   # if invalid category or product filters, return all stories
   def widget_html (params)
-    filter_params = get_filters_from_query_or_widget(@company, params)
-    stories = @company
-                .filter_stories(filter_params)
-                .map do |story|
-                  if story.published?
-                    target_url = story.csp_story_url
-                  elsif story.preview_published?
-                    target_url = root_url(subdomain: @company.subdomain) + "?preview=#{story.slug}"
-                  elsif story.logo_published?
-                    target_url = 'javascript:;'
-                  end
-                  {
-                    title: story.title,
-                    customer: story.customer.name,
-                    logo: story.customer.logo_url,
-                    url: target_url,
-                    published: story.published?,
-                    preview_published: story.preview_published?,
-                    updated_at: story.updated_at
-                  }
-                end
+    filter_params = get_filters_from_query_or_widget(@company, params, true)
+    stories = @company.filter_stories(filter_params).map! do |story|
+      if story.published?
+        target_url = story.csp_story_url
+      elsif story.preview_published?
+        target_url = root_url(subdomain: @company.subdomain) + "?preview=#{story.slug}"
+      elsif story.logo_published?
+        target_url = 'javascript:;'
+      end
+      {
+        title: story.title,
+        customer: story.customer.name,
+        logo: story.customer.logo_url,
+        url: target_url,
+        published: story.published?,
+        preview_published: story.preview_published?,
+        updated_at: story.updated_at
+      }
+    end
     if @company.subdomain == 'varmour'
       # ref: https://stackoverflow.com/questions/33732208
       stories = stories.sort_by { |s| [ !s[:published] ? 0 : 1, s[:updated_at] ] }.reverse
