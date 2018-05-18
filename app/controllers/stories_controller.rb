@@ -38,17 +38,17 @@ class StoriesController < ApplicationController
         @stories = @company.filter_stories(filter_params)
       end
       category_stories = product_stories = []
-      if filter_params[:category].present?
-        @category_select_cache_key = @company.category_select_cache_key(filter_params[:category])
-        category_stories = Story.company_public_filter_category(company.id, filter_params['category'])
-        @category_results = "#{pluralize(category_stories.count, 'story', 'stories')} found"
-      elsif filter_params[:product].present?
-        @product_select_cache_key = @company.product_select_cache_key(filter_params[:product])
-        product_stories = Story.company_public_filter_product(company.id, filter_params['product'])
-        @product_results = "#{pluralize(product_stories.count, 'story', 'stories')} found"
+      if filter_params['category'].present?
+        @category_select_cache_key = @company.category_select_cache_key(filter_params['category'])
+        category_stories = Story.company_public_filter_category(@company.id, filter_params['category'])
+        # binding.remote_pry
+        @category_results = "#{category_stories.size} #{'story'.pluralize(category_stories.size)} found"
+      elsif filter_params['product'].present?
+        @product_select_cache_key = @company.product_select_cache_key(filter_params['product'])
+        product_stories = Story.company_public_filter_product(@company.id, filter_params['product'])
+        @product_results = "#{product_stories.size} #{'story'.pluralize(product_stories.size)} found"
       end
-      @filters_results = filters_results(category_stories, product_stories)
-      @grouped_filters_results = filters_results(category_stories, product_stories)
+      @applied_filters_results = filters_results(category_stories, product_stories)
     else
       unless fragment_exist?(@stories_gallery_cache_key)
         public_story_ids = @company.public_stories
@@ -422,11 +422,11 @@ class StoriesController < ApplicationController
   # one or both will be present
   def filters_results (category_stories, product_stories)
     if category_stories.empty?
-      "#{pluralize(product_stories.count, 'story', 'stories')} found"
+      "#{product_stories.size} #{'story'.pluralize(product_stories.size)} found"
     elsif product_stories.empty?
-      "#{pluralize(category_stories.count, 'story', 'stories')} found"
+      "#{category_stories.size} #{'story'.pluralize(category_stories.size)} found"
     else
-      "#{pluralize((category_stories & product_stories).count, 'story', 'stories')} found"
+      "#{(category_stories & product_stories).size} #{'story'.pluralize((category_stories & product_stories).size)} found"
     end
   end
 
