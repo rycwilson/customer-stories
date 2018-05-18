@@ -1,6 +1,6 @@
 
-.site.index {
 
+.site {
   .cc-window {
     font-family: inherit;
     .cc-btn {
@@ -20,6 +20,14 @@
       border-color: #3d5267;
     }
   }
+  // instead of displaying the default tab,
+  // include a link on privacy page that triggers a click of .cc-revoke
+  .cc-revoke {
+    display: none !important;
+  }
+}
+
+.site.index {
 
   #cs-rel-container {
     margin: 0 160px;

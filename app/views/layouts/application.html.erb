@@ -62,7 +62,9 @@
 
   <% end %>
 
-  <%= render('shared/analytics', { company: @company }) %>
+  <% if !user_signed_in? %> <!--  user_signed_in? && production? -->
+    <%= render('analytics/analytics', { company: @company }) %>
+  <% end %>
 
 </body>
 </html>

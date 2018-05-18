@@ -27,6 +27,11 @@
       border-color: #adadad;
     }
   }
+  // instead of displaying the default tab,
+  // include a link on privacy page that triggers a click of .cc-revoke
+  .cc-revoke {
+    display: none !important;
+  }
 
   @media only screen and (min-width: 1200px) {
     .container:not(.navbar-container):not(.grid-container):not(.company-nav-container) {

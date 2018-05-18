@@ -1,0 +1,153 @@
+<script>
+
+  var loadAgileCrm = function () {
+    console.log('loading agile...');
+    $.getScript('//customerstories.agilecrm.com/stats/min/agile-min.js', function () {
+      _agile.set_account('1g26nfs2fgphtg7vp574pelpdi', 'customerstories');
+      _agile.track_page_view();
+      _agile_execute_web_rules();
+    });
+  };
+
+  var loadGoogleTagManager = function () {
+    if (<%= !include_gtm?(company, controller_name) %>) return false;
+    console.log('loading gtm...');
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer', 'GTM-' + "<%= company.try(:gtm_id) %>");
+    // for browsers with js disabled
+    $('body').append(
+        '<noscript>' +
+          '<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-<%= company.try(:gtm_id) %>" height="0" width="0" style="display:none;visibility:hidden">' +
+          '</iframe>' +
+        '</noscript>'
+      );
+  };
+
+  var loadGoogleAdwords = function () {
+    console.log('loading adwords...');
+    // google adwords
+    google_conversion_id = 919156278;
+    google_custom_params = window.google_tag_params;
+    google_remarketing_only = true;
+    $.getScript('//www.googleadservices.com/pagead/conversion.js');
+    // for browsers with js disabled
+    $('body').append(
+        '<noscript>' +
+          '<div style="display:inline;">' +
+            '<img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/919156278/?guid=ON&amp;script=0"/>' +
+          '</div>' +
+        '</noscript>'
+      );
+  };
+
+  var loadTags = function () {
+    loadAgileCrm();
+    if (<%= controller == 'stories' %>) {
+      loadGoogleTagManager();
+      loadGoogleAdwords();
+    }
+  };
+
+  var removeCookies = function () {
+
+    var agileCookies = document.cookie.split(';')
+                          .filter(function (cookie) { return cookie.includes('agile'); });
+    agileCookies.each()
+    // console.log('removing cookies from ' + domain + '...');
+    // var cookies = document.cookie.split("; ");
+    // console.log('cookies before:')
+    // console.log(cookies)
+    // for (var c = 0; c < cookies.length; c++) {
+    //   var d = domain.split(".");
+    //   while (d.length > 0) {
+    //     var cookieBase = encodeURIComponent(cookies[c].split(";")[0].split("=")[0]) + '=; expires=Thu, 01-Jan-1970 00:00:01 GMT; domain=' + d.join('.') + ' ;path=';
+    //     var p = location.pathname.split('/');
+    //     document.cookie = cookieBase + '/';
+    //     while (p.length > 0) {
+    //       document.cookie = cookieBase + p.join('/');
+    //       p.pop();
+    //     }
+    //     d.shift();
+    //   }
+    }
+    var cookiesAfter = document.cookie.split("; ");
+    console.log('cookies after:')
+    console.log(cookies)
+  };
+
+  $("<link>", { rel: "stylesheet", type: "text/css", href: "//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" })
+    .appendTo('head')
+    .on('load', function () {
+
+      window.cookieconsent.initialise({
+        revokable: true,
+        animateRevokable: false,
+        palette: {
+          popup: {
+            background: "rgba(0, 0, 0, 0.9)"
+          },
+        },
+        cookie: {
+          domain: ".lvh.me"
+        },
+        showLink: true,
+        theme: "classic",
+        position: "bottom-right",
+        type: "opt-in",
+        content: {
+          message: "This website uses cookies for the purpose of serving targeted ads.",
+          dismiss: "Decline",
+          allow: "Accept",
+          link: "Learn more",
+          href: "https://customerstories.net/privacy"
+        },
+        onInitialise: function (status) {
+          var type = this.options.type;
+          var didConsent = this.hasConsented();
+          if (type == 'opt-in' && didConsent) {
+            console.log('loading tags...')
+            loadTags();
+          }
+          if (type == 'opt-out' && !didConsent) {
+            // disable cookies
+          }
+        },
+        onStatusChange: function (status, chosenBefore) {
+          var type = this.options.type;
+          console.log('onStatusChange()');
+          if (type == 'opt-in') {
+            // disable cookies
+            if (status === 'allow') {
+              console.log('allow');
+              loadTags();
+            } else if (status === 'dismiss') {
+              console.log('dismiss');
+              removeCookies('customerstories.agilecrm.com');
+              // removeCookies('google.com');
+              // removeCookies('doubleclick.net');
+              // removeCookies('customerstories.agilecrm.com');
+            }
+          }
+          if (type == 'opt-out') {
+            // enable cookies
+          }
+        },
+        // this is invoked when user clicks on the Cookie Policy link (.cc-revoke)
+        onRevokeChoice: function () {
+          console.log('onRevokeChoice()');
+          var type = this.options.type;
+          if (type == 'opt-in') {
+            // disable cookies
+          }
+          if (type == 'opt-out') {
+            // enable cookies
+          }
+        }
+      });
+
+    });
+
+</script>

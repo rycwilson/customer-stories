@@ -10,6 +10,7 @@
 //= require stories/stories
 //= require contributions/contributions
 //= require profile/profile
+//= require site
 //= require init
 
 // attach listeners BEFORE running any page-specific js

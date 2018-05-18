@@ -51,11 +51,19 @@ module ApplicationHelper
     end
   end
 
-  def include_gtm? company=nil, current_user=nil, controller, action
-    ENV['HOST_NAME'] == 'customerstories.net' &&
+  def production?
+    ENV['HOST_NAME'] == 'customerstories.net'
+  end
+
+  def staging?
+    ENV['HOST_NAME'] == 'customerstories.org'
+  end
+
+  def include_gtm? (company=nil, controller)
+    !user_signed_in? &&
+    production? &&
     controller == 'stories' &&
-    (['index', 'show'].include? action) &&
-    company.try(:gtm_id).present? && !user_signed_in?
+    company.try(:gtm_id).present?
   end
 
   def mvp_stylesheet
@@ -66,13 +74,6 @@ module ApplicationHelper
     end
   end
 
-  def production?
-    ENV['HOST_NAME'] == 'customerstories.net'
-  end
-
-  def staging?
-    ENV['HOST_NAME'] == 'customerstories.org'
-  end
 
   # method determines if title 'Customer Stories' should be displayed as plural
   def stories?
