@@ -104,7 +104,7 @@ class Story < ActiveRecord::Base
   scope :company_public, ->(company_id) {
     joins(:customer)
     .where(customers: { company_id: company_id })
-    .where('preview_published = TRUE OR logo_published = TRUE')
+    .where('logo_published IS TRUE OR preview_published IS TRUE')
   }
   scope :company_public_since, ->(company_id, days_ago) {
     company_public(company_id)
@@ -113,12 +113,12 @@ class Story < ActiveRecord::Base
   scope :company_public_filter_category, ->(company_id, category_id) {
     joins(:customer, :category_tags)
     .where(customers: { company_id: company_id }, story_categories: { id: category_id })
-    .where('preview_published = TRUE OR logo_published = TRUE')
+    .where('preview_published IS TRUE OR logo_published IS TRUE')
   }
   scope :company_public_filter_product, ->(company_id, product_id) {
     joins(:customer, :product_tags)
     .where(customers: { company_id: company_id }, products: { id: product_id })
-    .where('preview_published = TRUE OR logo_published = TRUE')
+    .where('preview_published IS TRUE OR logo_published IS TRUE')
   }
 
   # scrub user-supplied html input using whitelist
