@@ -2,14 +2,17 @@
 <!-- ref: http://stackoverflow.com/questions/10808109/script-tag-async-defer -->
 <!-- ref: http://stackoverflow.com/questions/6026645/document-readyfunction-vs-script-at-the-bottom-of-page -->
 
-<% if company.try(:subdomain) == 'varmour' && include_gtm?(company, controller_name) %>
+<% if company.try(:subdomain) == 'varmour' && company.try(:gtm_id).present? %>
 
-  <%= render('analytics/google_tag_manager', { company: company}) %>
+  <%= render('analytics/google_tag_manager', { company: company }) %>
+  <%= render('analytics/google_adwords', { company: company }) %>
+
+<% elsif company.try(:subdomain) == 'varmour' %>
+
+  <%= render('analytics/google_adwords', { company: company }) %>
 
 <% else %>
 
-  <!-- cookie consent -->
-  <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
   <%= render('analytics/cookieconsent', { company: company, controller: controller_name }) %>
 
 <% end %>

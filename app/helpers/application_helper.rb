@@ -59,13 +59,6 @@ module ApplicationHelper
     ENV['HOST_NAME'] == 'customerstories.org'
   end
 
-  def include_gtm? (company=nil, controller)
-    !user_signed_in? &&
-    production? &&
-    controller == 'stories' &&
-    company.try(:gtm_id).present?
-  end
-
   def mvp_stylesheet
     if ['companies', 'stories', 'profile', 'contributions'].include?(controller_name)
       stylesheet_link_tag('mvpready-admin', media: 'all', 'data-turbolinks-track' => 'reload')

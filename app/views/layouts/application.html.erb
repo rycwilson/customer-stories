@@ -62,8 +62,9 @@
 
   <% end %>
 
-  <% if !user_signed_in? %> <!--  user_signed_in? && production? -->
+  <% if !user_signed_in? && ['site', 'stories'].include?(controller_name) %> <!--  user_signed_in? && production? -->
     <%= render('analytics/analytics', { company: @company }) %>
+
   <% end %>
 
 </body>
