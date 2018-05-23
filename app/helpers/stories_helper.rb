@@ -1,5 +1,18 @@
 module StoriesHelper
 
+  def stories_header_title_width (company)
+    if curator?(company) && current_page?(action: 'index')
+      'col-sm-6'
+    elsif curator?(company) && current_page(action: 'show')
+      # leave room for Edit Story button
+      'col-sm-5'
+    elsif company.category_tags.blank? && company.product_tags.blank?
+      'col-sm-6'
+    else
+      'col-sm-12'
+    end
+  end
+
   # extra parameter is necessary because user not connected to customer
   def research_user_query_string contributor, customer_name=nil
     if customer_name.present?
@@ -11,10 +24,6 @@ module StoriesHelper
 
   def curator_story_view? (company_id)
     company_curator?(company_id) && controller_name == 'stories' && action_name == 'show'
-  end
-
-  def main_gallery?
-    controller_name == 'stories' && action_name == 'index'
   end
 
   def primary_cta_style (company)

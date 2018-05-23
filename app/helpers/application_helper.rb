@@ -76,7 +76,7 @@ module ApplicationHelper
   end
 
   def curator?(company)
-    company && user_signed_in? && (current_user.company_id == company.id)
+    company.present? && user_signed_in? && (current_user.company_id == company.id)
   end
 
   def registered_user_without_company?

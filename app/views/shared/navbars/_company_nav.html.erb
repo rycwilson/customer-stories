@@ -3,7 +3,7 @@
   <div class="container company-nav-container">
     <div class="row">
 
-      <% if main_gallery? %>
+      <% if current_page?(controller: 'stories', action: 'index') %>
 
         <div class="col-sm-12">
           <%= render('companies/shared/company_nav_dropdowns', { company: company }) %>
