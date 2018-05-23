@@ -2,7 +2,7 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
 <script>
   var loadAgileCrm = function () {
-    console.log('loading agile...');
+    // console.log('loading agile...');
     $.getScript('//customerstories.agilecrm.com/stats/min/agile-min.js', function () {
       _agile.set_account('1g26nfs2fgphtg7vp574pelpdi', 'customerstories');
       _agile.track_page_view();
@@ -11,7 +11,7 @@
   };
 
   var loadGoogleTagManager = function () {
-    console.log('loading gtm...');
+    // console.log('loading gtm...');
     (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
     j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
@@ -27,7 +27,7 @@
   };
 
   var loadGoogleAdwords = function () {
-    console.log('loading adwords...');
+    // console.log('loading adwords...');
     // google adwords
     google_conversion_id = 919156278;
     google_custom_params = window.google_tag_params;
@@ -89,7 +89,7 @@
           var type = this.options.type;
           var didConsent = this.hasConsented();
           if (type == 'opt-in' && didConsent) {
-            console.log('loading tags...');
+            // console.log('loading tags...');
             loadTags();
           }
           if (type == 'opt-out' && !didConsent) {
@@ -98,7 +98,6 @@
         },
         onStatusChange: function (status, chosenBefore) {
           var type = this.options.type;
-          console.log('onStatusChange()');
           if (type == 'opt-in') {
             // disable cookies
             if (status === 'allow') {
@@ -115,7 +114,6 @@
         },
         // this is invoked when user clicks on the Cookie Policy link (.cc-revoke)
         onRevokeChoice: function () {
-          console.log('onRevokeChoice()');
           var type = this.options.type;
           if (type == 'opt-in') {
             // disable cookies
