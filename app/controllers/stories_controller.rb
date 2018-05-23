@@ -84,7 +84,8 @@ class StoriesController < ApplicationController
             title: story.title,
             customer: story.customer.name,
             logo: story.customer.logo_url,
-            path: story.published ? story.csp_story_path : root_path,
+            path: story.published ? story.csp_story_path :
+                  (story.preview_published? ? root_path + "?preview=#{story.slug}" : root_path),
             published: story.published,
             preview_published: story.preview_published?,
           }
