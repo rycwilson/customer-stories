@@ -2,14 +2,21 @@
 (function () {
 
   var storyIds = <%= raw @story_ids.to_json %>,
+      searchString = "<%= @search_string %>",
       searchResults = storyIds.length === 1 ? "1 story found" : storyIds.length.toString() + " stories found";
 
-  updateGallery($(
-    _.template($('#stories-template').html())({
-      stories: app.stories.filter(function (story) { return storyIds.includes(story.id); }),
-      isCurator: false
-    })
-  ));
+  if (storyIds.length === 0) {
+    $('#stories-gallery')
+      .empty()
+      .append('<li><h4 id="no-search-results">Sorry, we couldn\'t find any results matching "' + searchString + '"</h4></li>');
+  } else {
+    updateGallery($(
+      _.template($('#stories-template').html())({
+        stories: app.stories.filter(function (story) { return storyIds.includes(story.id); }),
+        isCurator: false
+      })
+    ));
+  }
 
   $('.clear-search').show();
   // don't show search results for stories-header

@@ -183,32 +183,33 @@ class StoriesController < ApplicationController
   end
 
   def search
+    @search_string = params[:search]
     @story_ids = Story.company_public(@company.id)
                       .where(
                         "lower(title) LIKE ? OR lower(content) LIKE ?",
-                        "%#{params[:search].downcase}%",
-                        "%#{params[:search].downcase}%"
+                        "%#{@search_string.downcase}%",
+                        "%#{@search_string.downcase}%"
                       )
                       .pluck(:id)
     @story_ids.concat(
       Story.company_public(@company.id)
            .joins(:customer)
-           .where("lower(customers.name) LIKE ?", "%#{params[:search].downcase}%")
+           .where("lower(customers.name) LIKE ?", "%#{@search_string.downcase}%")
            .pluck(:id)
     )
     # Customer
     #   .joins(:stories)
     #   .where("stories.logo_published IS TRUE OR stories.preview_published IS TRUE")
-    #   .where("company_id = ? AND lower(customers.name) LIKE ?", @company.id, "%#{params[:search].downcase}%")
+    #   .where("company_id = ? AND lower(customers.name) LIKE ?", @company.id, "%#{@search_string.downcase}%")
     #   .each { |customer| @story_ids.concat(customer.story_ids) }
     @story_ids.concat(
       Story.company_public(@company.id)
            .joins(:category_tags)
-           .where("lower(story_categories.name) LIKE ?", "%#{params[:search].downcase}%")
+           .where("lower(story_categories.name) LIKE ?", "%#{@search_string.downcase}%")
            .pluck(:id)
     )
     # StoryCategory
-    #   .where("company_id = ? AND lower(story_categories.name) LIKE ?", @company.id, "%#{params[:search].downcase}%")
+    #   .where("company_id = ? AND lower(story_categories.name) LIKE ?", @company.id, "%#{@search_string.downcase}%")
     #   .each do |tag|
     #     @story_ids.concat(
     #       tag.stories.where("logo_published IS TRUE OR preview_published IS TRUE").pluck(:id)
@@ -218,11 +219,11 @@ class StoriesController < ApplicationController
     @story_ids.concat(
       Story.company_public(@company.id)
            .joins(:product_tags)
-           .where("lower(products.name) LIKE ?", "%#{params[:search].downcase}%")
+           .where("lower(products.name) LIKE ?", "%#{@search_string.downcase}%")
            .pluck(:id)
     )
     # Product
-    #   .where("company_id = ? AND lower(products.name) LIKE ?", cce.id, "%#{params[:search].downcase}%")
+    #   .where("company_id = ? AND lower(products.name) LIKE ?", cce.id, "%#{@search_string.downcase}%")
     #   .each do |tag|
     #     @story_ids.concat(
     #       tag.stories.where("logo_published IS TRUE OR preview_published IS TRUE").pluck(:id)
@@ -232,7 +233,7 @@ class StoriesController < ApplicationController
     @story_ids.concat(
       Story.company_public(@company.id)
            .joins(:results)
-           .where("lower(results.description) LIKE ?", "%#{params[:search].downcase}%")
+           .where("lower(results.description) LIKE ?", "%#{@search_string.downcase}%")
            .pluck(:id)
     )
     # it's possible a matching Result or CallToAction doesn't have an associated story,
@@ -246,7 +247,7 @@ class StoriesController < ApplicationController
     @story_ids.concat(
       Story.company_public(@company.id)
            .joins(:ctas)
-           .where("lower(call_to_actions.display_text) LIKE ?", "%#{params[:search].downcase}%")
+           .where("lower(call_to_actions.display_text) LIKE ?", "%#{@search_string.downcase}%")
            .pluck(:id)
     )
     # CallToAction

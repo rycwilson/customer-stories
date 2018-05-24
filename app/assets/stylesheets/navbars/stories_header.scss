@@ -42,11 +42,18 @@
               }
               button {
                 height: 30px;
-                color: #666;
+                color: #999;
                 padding: 4px 6px;  // overrides bootstrap 6px 12px
               }
+              button:hover {
+                color: #666;
+              }
               .clear-search {
+                color: #999;
                 display: none;
+              }
+              .clear-search:hover {
+                color: #666;
               }
             }
           }
