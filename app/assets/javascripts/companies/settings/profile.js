@@ -41,7 +41,7 @@ function companyProfileListeners() {
     })
 
     .on('change', '.color-picker .lower', function () {
-      var $nav = $('#company-profile-form .header-2');
+      var $nav = $('#company-profile-form .stories-header');
       $nav.css({ background: $(this).val() });
       if (colorContrast(hexToRgb($(this).val())) === 'light') {
         $nav.find('h3, .icon-button').addClass('light').removeClass('dark');

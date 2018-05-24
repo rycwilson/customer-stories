@@ -12,7 +12,8 @@
   ));
 
   $('.clear-search').show();
-  $('.search-results').text(searchResults).show();
+  // don't show search results for stories-header
+  $('.filters-container .search-results').text(searchResults).show();
   $('.filters-container.tall .combined-results > span').hide();
   $('.filter-results > span').text('');
   $('.stories-filter').val('').trigger('change.select2');

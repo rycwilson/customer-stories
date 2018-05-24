@@ -1,5 +1,5 @@
 
-<div class="filters-container visible-xs-block visible-sm-block">
+<div class="filters-container visible-xs-block <%= company.category_tags.blank? && company.product_tags.blank? ? '' : 'visible-sm-block' %>">
 
   <%= render('stories/shared/filters/search_form', { company: company }) %>
 

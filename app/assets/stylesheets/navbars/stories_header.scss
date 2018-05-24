@@ -8,12 +8,16 @@
     box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 1px -1px rgba(0, 0, 0, 0.08);
     .navbar-container {
       height: 100%;
+      .visible-xs-block {
+        height: 100%;
+      }
       .row {
         height: 100%;
         display: flex;
         align-items: center;
         .navbar-header {
           h3 {
+            padding-top: 1px;  // push it down just a bit
             font-size: 22px;
             margin-bottom: 0;
             opacity: 0.9;
@@ -23,6 +27,28 @@
           }
           h3.dark {
             color: #333;
+          }
+        }
+        .stories-search-form {
+          max-width: 280px;
+          float: right;
+          .form-group {
+            margin-bottom: 0;
+            .input-group {
+              margin-bottom: 0;
+              input {
+                height: 30px;
+                font-size: 13px;
+              }
+              button {
+                height: 30px;
+                color: #666;
+                padding: 4px 6px;  // overrides bootstrap 6px 12px
+              }
+              .clear-search {
+                display: none;
+              }
+            }
           }
         }
         .social-buttons {
@@ -101,7 +127,7 @@
 }
 
 @media only screen and (max-width: 767px) {
-  #header-2 {
+  #stories-header {
     .navbar-container {
       .row {
         .navbar-header {
@@ -112,34 +138,34 @@
       }
     }
   }
-  #header-2.index {
+  #stories-header.index {
     margin-bottom: 30px;
   }
-  #header-2.show {
+  #stories-header.show {
     margin-bottom: 25px;
   }
 }
 
 @media only screen and (min-width: 768px) {
-  #header-2.index {
+  #stories-header.index {
     margin-bottom: 30px;
   }
-  #header-2.show {
+  #stories-header.show {
     margin-bottom: 35px;
   }
 }
 
 @media only screen and (min-width: 992px) {
-  #header-2.index {
+  #stories-header.index {
     margin-bottom: 20px;
   }
 }
 
 @media only screen and (min-width: 1200px) {
-  #header-2.index {
+  #stories-header.index {
     margin-bottom: 18px;
   }
-  #header-2.show {
+  #stories-header.show {
     margin-bottom: 40px;
   }
 }

@@ -4,10 +4,8 @@
 
   <meta name="turbolinks-cache-control" content="no-cache">
 
-
   <% if production? %>
-    <% cache("#{@company.subdomain}/story-#{@story.id}-meta-tags",
-             skip_digest: true, expires_in: 1.week) do %>
+    <% cache("#{@company.subdomain}/story-#{@story.id}-meta-tags", skip_digest: true, expires_in: 1.week) do %>
       <%= render 'stories/show/story_meta_tags',
             { company: @company, success: @story.success, story: @story } %>
     <% end %>
@@ -21,27 +19,6 @@
 
 <%= render 'stories/show/video_modal' %>
 
-<!-- <div id='social-share-side-btns'>
-  <div>
-    <a href="<%#= LINKEDIN_SHARE_URL + @story.csp_story_url %>" target="_blank"
-       class="icon-button linkedin-share">
-      <i class="fa fa-linkedin"></i><span></span>
-    </a>
-  </div>
-  <div>
-    <a href="<%#= TWITTER_SHARE_URL + @story.csp_story_url %>" target="_blank"
-       class="icon-button twitter-share">
-      <i class="fa fa-twitter"></i><span></span>
-    </a>
-  </div>
-  <div>
-    <a href="<%#= FACEBOOK_SHARE_URL + @story.csp_story_url %>" target="_blank"
-       class="icon-button facebook-share">
-      <i class="fa fa-facebook"></i><span></span>
-    </a>
-  </div>
-</div> -->
-
 <% if @more_stories.present? && @company.subdomain != 'varmour' %>
   <div id='more-stories-container'>
     <%= render 'widgets/more_stories_tab',
@@ -50,17 +27,11 @@
   </div>
 <% end %>
 
-
 <% @story.ctas.forms.each do |form| %>
   <%= render 'ctas/cta_form_modal', { form: form } %>
 <% end %>
 
-
-<% if @is_curator %>
-  <%#= render 'shared/navbars/company_nav', { company: @company, workflow_tab: nil } %>
-<% end %>
-
-<%= render('shared/navbars/header_2', { company: @company, action: 'show', story: @story }) %>
+<%= render('shared/navbars/stories_header', { company: @company, action: 'show', story: @story }) %>
 
 <div class="story-wrapper hidden">
 

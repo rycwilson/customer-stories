@@ -143,6 +143,7 @@ function initSelect2 () {
     placeholder: 'Select Category and/or Product',
     createTag: function (tag) { console.log(tag); },
     tags: true,
+    containerCssClass: ':all:',
     width: 'style',
   })
     // ref https://stackoverflow.com/questions/29618382/disable-dropdown-opening-on-select2-clear

@@ -4,7 +4,7 @@
 
 .stories.show {
 
-  #header-2 {
+  #stories-header {
     position: relative;
     .social-buttons {
       padding-right: 25px;
@@ -14,7 +14,7 @@
     }
   }
 
-  #header-2:after {
+  #stories-header:after {
     content: '';
     position: absolute;
     top: 100%;
