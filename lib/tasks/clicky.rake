@@ -181,7 +181,7 @@ namespace :clicky do
             visitor_session = VisitorSession.find_by(clicky_session_id: session[0])
             create_action(visitor_session.id, action.stringify_keys)
             # create a dup action for demo company
-            create_action(visitor_session.id, action.stringify_keys, true) if sample_story?(action.stringify_keys)
+            # create_action(visitor_session.id, action.stringify_keys, true) if sample_story?(action.stringify_keys)
           end
         end
       end
