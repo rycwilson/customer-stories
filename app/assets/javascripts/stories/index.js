@@ -98,7 +98,9 @@ function storiesIndexListeners () {
           productSlug = productId &&
             $(this).find('optgroup[label="Product"] option:selected').data('slug'),
           filteredStories = filterStories(categoryId, productId),
-          filterResults = filteredStories.length === 1 ? "1 story found" : filteredStories.length.toString() + " stories found";
+          filterResults = filteredStories.length === 1 ? "1 story found" : filteredStories.length.toString() + " stories found",
+          categoryFilterResults = filterStories(categoryId, '').length === 1 ? "1 story found" : filterStories(categoryId, '').length.toString() + " stories found",
+          productFilterResults = filterStories('', productId).length === 1 ? "1 story found" : filterStories('', productId).length.toString() + " stories found";
 
       syncSelectTags(categoryId, productId);
 
@@ -107,11 +109,25 @@ function storiesIndexListeners () {
       $('.search-results').text('');
 
       // show results
-      if ($('#grouped-stories-filter').val()) {
+      if (categoryId || productId) {
         $('.filters-container.visible-xs-block .filter-results > span').text(filterResults);
         $('.filters-container.tall .combined-results')
           .find('> span > span:last-child').text(filterResults).end()
           .find('> span').show();
+        if (categoryId) {
+          $('.stories-filter.category-select')
+            .nextAll('.filter-results').children('span').text(categoryFilterResults);
+        } else {
+          $('.stories-filter.category-select')
+            .nextAll('.filter-results').children('span').text('');
+        }
+        if (productId) {
+          $('.stories-filter.product-select')
+            .nextAll('.filter-results').children('span').text(productFilterResults);
+        } else {
+          $('.stories-filter.product-select')
+            .nextAll('.filter-results').children('span').text('');
+        }
       } else {
         $('.filters-container.visible-xs-block .filter-results > span').text('');
         $('.filters-container.tall .combined-results > span').hide();

@@ -43,7 +43,8 @@ class StoriesController < ApplicationController
         category_stories = Story.company_public_filter_category(@company.id, filter_params['category'])
         # binding.remote_pry
         @category_results = "#{category_stories.size} #{'story'.pluralize(category_stories.size)} found"
-      elsif filter_params['product'].present?
+      end
+      if filter_params['product'].present?
         @product_select_cache_key = @company.product_select_cache_key(filter_params['product'])
         product_stories = Story.company_public_filter_product(@company.id, filter_params['product'])
         @product_results = "#{product_stories.size} #{'story'.pluralize(product_stories.size)} found"
@@ -197,39 +198,18 @@ class StoriesController < ApplicationController
            .where("lower(customers.name) LIKE ?", "%#{@search_string.downcase}%")
            .pluck(:id)
     )
-    # Customer
-    #   .joins(:stories)
-    #   .where("stories.logo_published IS TRUE OR stories.preview_published IS TRUE")
-    #   .where("company_id = ? AND lower(customers.name) LIKE ?", @company.id, "%#{@search_string.downcase}%")
-    #   .each { |customer| @story_ids.concat(customer.story_ids) }
     @story_ids.concat(
       Story.company_public(@company.id)
            .joins(:category_tags)
            .where("lower(story_categories.name) LIKE ?", "%#{@search_string.downcase}%")
            .pluck(:id)
     )
-    # StoryCategory
-    #   .where("company_id = ? AND lower(story_categories.name) LIKE ?", @company.id, "%#{@search_string.downcase}%")
-    #   .each do |tag|
-    #     @story_ids.concat(
-    #       tag.stories.where("logo_published IS TRUE OR preview_published IS TRUE").pluck(:id)
-    #     )
-    #   end
-
     @story_ids.concat(
       Story.company_public(@company.id)
            .joins(:product_tags)
            .where("lower(products.name) LIKE ?", "%#{@search_string.downcase}%")
            .pluck(:id)
     )
-    # Product
-    #   .where("company_id = ? AND lower(products.name) LIKE ?", cce.id, "%#{@search_string.downcase}%")
-    #   .each do |tag|
-    #     @story_ids.concat(
-    #       tag.stories.where("logo_published IS TRUE OR preview_published IS TRUE").pluck(:id)
-    #     )
-    #   end
-
     @story_ids.concat(
       Story.company_public(@company.id)
            .joins(:results)
@@ -238,24 +218,12 @@ class StoriesController < ApplicationController
     )
     # it's possible a matching Result or CallToAction doesn't have an associated story,
     # since they're associated with the Success model
-    # Result
-    #   .joins(:story, :customer)
-    #   .where("stories.logo_published IS TRUE OR stories.preview_published IS TRUE")
-    #   .where("customers.company_id = ? AND lower(results.description) LIKE ?", @company.id, "%#{params[:search].downcase}%")
-    #   .each { |result| @story_ids << result.story.id if result.story.present? }
-
     @story_ids.concat(
       Story.company_public(@company.id)
            .joins(:ctas)
            .where("lower(call_to_actions.display_text) LIKE ?", "%#{@search_string.downcase}%")
            .pluck(:id)
     )
-    # CallToAction
-    #   .joins(:stories)
-    #   .where("stories.logo_published IS TRUE OR stories.preview_published IS TRUE")
-    #   .where("company_id = ? AND lower(display_text) LIKE ?", @company.id, "%#{params[:search].downcase}%")
-    #   .each { |cta| @story_ids.concat(cta.story_ids) if cta.stories.present? }
-
     @story_ids.uniq!
     respond_to { |format| format.js {} }
   end
