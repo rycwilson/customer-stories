@@ -1,16 +1,8 @@
 
 .stories.index {
 
-  // this prevents presence/absence of scroll bar in stories gallery from shfiting the page left/right
+  // this prevents presence/absence of scroll bar from shfiting the page left/right
   overflow-y: scroll;
-
-  #collapsed-workflow-tabs .glyphicon-align-justify {
-    padding-left: 5px;
-  }
-
-  .mainnav, .company-nav {
-    margin-bottom: 18px;
-  }
 
   .grid-container {
 
@@ -26,9 +18,7 @@
             color: #999;
             height: 30px;
             padding: 4px 6px;  // overrides bootstrap 6px 12px
-          }
-          button:hover {
-            color: #666;
+            &:hover { color: #666; }
           }
           .clear-search {
             display: none;
@@ -54,6 +44,12 @@
       }
 
       // some adjustments on top of select2-bootstrap-theme
+      .select2-container--bootstrap .select2-selection {
+        font: {
+          family: inherit;
+          size: 13px;
+        }
+      }
       .select2-container--bootstrap .select2-selection--single {
         height: 30px;
         // kinda hackey; 6px 12px should match bootstap (e.g. the search input),
@@ -78,19 +74,11 @@
       .select2-container--bootstrap .select2-selection__clear {
         margin-left: 8px;
         margin-right: 24px;
-      }
-      .select2-container--bootstrap .select2-selection__clear:hover {
-        color: #666;
+        &:hover { color: #666; }
       }
       .select2-container--bootstrap .select2-selection--single .select2-selection__arrow b {
         margin-left: -6px;
-      }
-      .select2-container--bootstrap .select2-selection--single .select2-selection__arrow b:hover {
-        border-color: #666 transparent transparent transparent;
-      }
-      .select2-container--bootstrap .select2-selection {
-        font-family: inherit;
-        font-size: 13px;
+        &:hover { border-color: #666 transparent transparent transparent; }
       }
 
       // select2: fixes word text wrap issues on long select values
@@ -168,7 +156,6 @@
       padding: 30px 0;
     }
   }
-
   @media only screen and (max-width: 767px) {
     #no-search-results {
       font-size: 16px;
