@@ -1,6 +1,9 @@
 
 .stories.index {
 
+  // this prevents presence/absence of scroll bar in stories gallery from shfiting the page left/right
+  overflow-y: scroll;
+
   #collapsed-workflow-tabs .glyphicon-align-justify {
     padding-left: 5px;
   }

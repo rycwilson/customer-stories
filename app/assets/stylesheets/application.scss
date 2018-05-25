@@ -33,142 +33,25 @@
  *= require bootstrap-daterangepicker/daterangepicker
  *= require_tree ./plugins
  *= require_tree ./shared
+ *= require body
  *= require companies/companies
  *= require stories/stories
  *= require contributions/contributions
  *= require profile/profile
+ *= require modals/modals
  *= require navbars/navbars
- *= require_tree ./custom
  *= require site
+ *= require mvp_override
+ *= require misc
+ *= require_tree ./custom
  */
 
 /**
- * this is a fix for summernote's link dialog modal, which opens inside the contributor invitation modal
- * note a change was made to summernote to add 'modal-open' class to body when link dialog closes
- * (search for 'csp' in summernote code)
- * in addition, below is required to stop the background from scrolling while the invitation modal is still open
- */
-
-/*
- * this prevents presence/absence of scroll bar in stories gallery from shfiting the page left/right
- */
-.stories.index {
-  overflow-y: scroll;
-}
-
-body:not(.site) {
-  background-color: #f9f9f9;
-}
-
-body.stories.show {
-  background-color: #fff;  /* :not(.stories.show) doesn't work, ref https://stackoverflow.com/questions/10711730 */
-}
-
-// had to change from require to this due to the error described here:
- // https://github.com/summernote/summernote-rails/issues/46
- // comports with summernote docs
- @import "summernote";
-
-// .stories.edit essentially falls under .companies.show
-.companies, .stories.edit {
-  .layout-sidebar {
-    @media only screen and (min-width: 992px) {
-      width: 22%
-    }
-    .disabled-tab { color: #ccc; }
-  }
-  .layout-main {
-    @media only screen and (min-width: 992px) {
-      width: 78%
-    }
-  }
-}
-
-.modal:not(#video-modal):not(.bootbox) {
-  .modal-content {
-    overflow: hidden;
-    .modal-header {
-      background: #f9f9f9;
-      color: #555;
-    }
-    .modal-footer {
-      background: #f9f9f9;
-    }
-  }
-}
-
-.dropdown-menu.dropdown-actions > li > a {
-  padding: 6px 12px 6px 6px;
-}
-.dropdown-menu.dropdown-actions > li:not(.disabled) > a {
-  color: #444;
-  i.action {
-    color: #666;
-  }
-}
-
-.turbolinks-progress-bar {
-  height: 1px;
-  background-color: #00fbff;
-}
-
-.progress-bar-info, .alert-info {
-  background-color: #6685a4;  // btn-secondary
-  border-color: #54718d;
-  color: #fff;
-}
-
-hr {
-  border-top: 1px solid #dfdfdf;
-}
-
-// this gets rid of the vertical portion of the first tab for views
-// that employ the mvp tabbed content layout
-.container.clip {
-  margin-top: 30px;
-  overflow: hidden;
-  padding-bottom: 100px;  // this leaves room for dropdowns in Crowdsource
-}
-
-.content h3 {
-  font-weight: 700;
-}
-
-// summernote mirrors bootstrap
-.note-editor.note-frame {
-  border: 1px solid #ccc
-}
+* had to change from require to this due to the error described here:
+* https://github.com/summernote/summernote-rails/issues/46 comports with summernote docs
+* Careful where you put this:
+* https://github.com/twbs/bootstrap-sass/issues/69
+*/
+@import "summernote";
 
 
-
-.alert-success {
-  background-color: #4d8664 !important;
-  border-color: #45715a !important;
-}
-
-
-
-.required-input label:not(.radio-inline):not([for="csv-file-input"]):after {
-  color: #a94442;  // #D9534F;
-  content: " *";
-}
-
-
-
-#back-to-top {
-  display: none !important;
-}
-/*
- *  below related to S3 upload
- */
-.progress {
-  max-width: 600px;
-  margin:    0.2em 0 0.2em 0;
-}
-
-.progress .bar {
-  height:  1.2em;
-  padding-left: 0.2em;
-  color:   white;
-  display: none;
-}

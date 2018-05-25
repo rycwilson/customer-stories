@@ -1,0 +1,8 @@
+
+body:not(.site) {
+  background-color: #f9f9f9;
+}
+
+body.stories.show {
+  background-color: #fff;  /* :not(.stories.show) doesn't work, ref https://stackoverflow.com/questions/10711730 */
+}
