@@ -1,6 +1,67 @@
 
-body.varmour.stories.index {
-  background-color: #fafcfd;
+@font-face {
+  font-family: 'Metropolis';
+  src: url(/assets/metropolis.light.otf) format('truetype');
+}
+$metropolis: 'Metropolis', 'Lato', sans-serif;
+
+body.varmour {
+
+  // @import url(http://fonts.googleapis.com/css?family=Montserrat:400);
+
+  &.stories.index {
+    background-color: #fafcfd;
+  }
+
+  #stories-header-wrapper #stories-header {
+    box-shadow: 0 9px 22px -6px rgba(0, 0, 0, 0.07);
+    .navbar-container {
+      .visible-xs-block {
+      }
+      .row {
+        .navbar-header {
+          h3 {
+            font-family: $metropolis;
+            text-transform: uppercase;
+            &.light { }
+            &.dark { color: #434343; }
+          }
+        }
+        .stories-search-form {
+          max-width: 250px;
+          // float: right;
+          .form-group {
+            // margin-bottom: 0;
+            .input-group {
+              // margin-bottom: 0;
+              input {
+                height: 30px;
+                font-size: 13px;
+              }
+              button {
+                height: 30px;
+                color: #999;
+                padding: 4px 6px;  // overrides bootstrap 6px 12px
+                &:hover { color: #666; }
+              }
+
+              .clear-search {
+                color: #999;
+                display: none;
+              }
+              .clear-search:hover {
+                color: #666;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+
+
+
 }
 
 

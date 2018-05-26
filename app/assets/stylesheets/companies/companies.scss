@@ -1,12 +1,11 @@
-/*
-*= require ./new
-*= require ./show
-*= require ./edit
-*= require ./1_prospect/prospect
-*= require ./2_curate/curate
-*= require ./3_promote/promote
-*= require ./4_measure/measure
-*/
+
+@import 'new';
+@import 'show';
+@import 'edit';
+@import '1_prospect/prospect';
+@import '2_curate/curate';
+@import '3_promote/promote';
+@import '4_measure/measure';
 
 .companies, .stories.edit {
 

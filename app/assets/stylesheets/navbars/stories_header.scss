@@ -44,9 +44,7 @@
                 height: 30px;
                 color: #999;
                 padding: 4px 6px;  // overrides bootstrap 6px 12px
-              }
-              button:hover {
-                color: #666;
+                &:hover { color: #666; }
               }
               .clear-search {
                 color: #999;
