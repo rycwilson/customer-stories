@@ -1,5 +1,5 @@
 
-<ul id="stories-gallery" class="grid list-unstyled text-center">
+<ul id="stories-gallery" class="grid list-unstyled text-center <%= no_filters_present ? 'no-filters' : '' %>">
 
   <% cache(cache_key, skip_digest: true) do %>
 

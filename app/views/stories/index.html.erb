@@ -46,7 +46,7 @@
             applied_filters_results: @applied_filters_results,
             category_results: @category_results,
             product_results: @product_results,
-            show_both_filters: include_category_filter?(@company) && include_product_filter?(@company)
+            both_filters_present: include_category_filter?(@company) && include_product_filter?(@company)
           }
         ) %>
 
@@ -54,7 +54,12 @@
 
   <%= render(
         'stories/shared/gallery',
-        { company: @company, stories: @stories, cache_key: @stories_gallery_cache_key }
+        {
+          company: @company,
+          stories: @stories,
+          cache_key: @stories_gallery_cache_key,
+          no_filters_present: !include_category_filter?(@company) && !include_product_filter?(@company)
+        }
       ) %>
 
 </div>

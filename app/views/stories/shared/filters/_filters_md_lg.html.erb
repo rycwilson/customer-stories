@@ -1,9 +1,9 @@
 
-<div class="filters-container visible-md-block visible-lg-block <%= show_both_filters ? 'tall' : 'short' %>">
+<div class="filters-container visible-md-block visible-lg-block <%= both_filters_present ? 'tall' : 'short' %>">
 
   <%= render('stories/shared/filters/search_form', { company: company }) %>
 
-  <% if show_both_filters %>
+  <% if both_filters_present %>
 
     <div class="combined-results text-right">
       <span style="<%= pre_selected_filters['category'].present? || pre_selected_filters['product'].present? ? 'display: inline' : 'display: none' %>">
