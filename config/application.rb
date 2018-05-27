@@ -33,6 +33,7 @@ module Csp
     config.active_record.raise_in_transactional_callbacks = true
 
     # custom fonts
+    # ref https://gist.github.com/anotheruiguy/7379570
     config.assets.paths << Rails.root.join("app", "assets", "fonts")
 
     # Bower asset paths
