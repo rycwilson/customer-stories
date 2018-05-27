@@ -1,0 +1,197 @@
+
+@font-face {
+  font-family: 'Metropolis';
+  src: font-url("metropolis.light.otf") format('opentype');
+}
+$metropolis: 'Metropolis', 'Lato', sans-serif;
+
+body.varmour {
+
+  // font: {
+  //   family: $metropolis;
+  // }
+
+  &.stories.index {
+    background-color: #fafcfd;
+  }
+
+  #stories-header-wrapper #stories-header {
+    box-shadow: 0 9px 22px -6px rgba(0, 0, 0, 0.07);
+    .navbar-container {
+      .visible-xs-block {
+      }
+      .row {
+        .navbar-header {
+          h3 {
+            font-family: $metropolis;
+            text-transform: uppercase;
+            padding-top: 4px;
+            &.light { }
+            // &.dark { color: #434343; }
+          }
+        }
+        .stories-search-form {
+          max-width: 270px;
+          text-transform: uppercase;
+          .form-group {
+            .input-group {
+              input {
+                text-transform: uppercase;
+                background-color: #f5f6f7;
+                color: #a2a1a1;
+                border-radius: 0;
+                text-align: center;
+                padding: 8px 12px 6px 12px;
+                border: transparent;
+                &.form-control {
+                  box-shadow: 0 0 0;
+                  -webkit-box-shadow: 0 0 0;
+                }
+              }
+              .input-group-btn {
+                button {
+                  height: 30px;
+                  background-color: #f5f6f7;
+                  color: #999;
+                  padding: 4px 6px;  // overrides bootstrap 6px 12px
+                  border: transparent;
+                  border-top-right-radius: 0;
+                  border-bottom-right-radius: 0;
+                  &:hover { color: #666; }
+                }
+
+                .clear-search {
+                  color: #999;
+                  display: none;
+                }
+                .clear-search:hover {
+                  color: #666;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  #stories-gallery, #related-stories {
+
+    // gallery.scss structure
+    a.thumbnail {
+      .thumbnail-view {
+        .thumbnail-view-hover {
+          p { font-family: $metropolis; }
+        }
+      }
+    }
+
+
+    // from more_stories_varmour.scss
+    // a.thumbnail {
+    //   width: 270px;
+    //   height: 100%;  // 190px column height
+    //   position: absolute;
+    //   left: 0;
+    //   right: 0;
+    //   margin: 0 auto;
+    //   background-color: #fff;
+    //   transition: background-color 0.5s ease-in-out;
+    //   border: 1px solid #999;
+    //   padding: 0;
+    //   text-align: center;
+    //   // border-color: rgba(0, 0, 0, 0.7);
+    //   border-radius: 0;
+    //   .thumbnail-view {
+    //     position: relative;
+    //     // display: inline-block;
+    //     height: 154px;
+    //     width: 100%;
+    //     // overflow: hidden;
+    //     line-height: 152px;
+    //     cursor: pointer;
+    //     .thumbnail-view-hover {
+    //       position: absolute;
+    //       display: flex;
+    //       align-items: center;
+    //       justify-content: center;
+    //       z-index: 10;
+    //       height: 154px;
+    //       width: 100%;
+    //       padding: 8px 10px;
+    //       border-radius: 0;
+    //       -webkit-transform: translateY(-100%);
+    //       -moz-transform: translateY(-100%);
+    //       -ms-transform: translateY(-100%);
+    //       -o-transform: translateY(-100%);
+    //       transform: translateY(-100%);
+    //       transition: all 0.3s ease-in-out;
+    //       p {
+    //         font-family: inherit !important;
+    //         font-size: 16px !important;
+    //         text-align: center;
+    //         line-height: 28px !important;
+    //         font-weight: 600;
+    //         letter-spacing: normal;
+    //         color: #333 !important;
+    //         margin-bottom: 0;
+    //       }
+    //     }
+    //     img {
+    //       display: inline-block;
+    //       vertical-align: middle;
+    //       max-height: 100%;
+    //       max-width: 100%;
+    //       padding: 24px;
+    //       opacity: 1;
+    //       transition: opacity 0.3s ease-in-out;
+    //       -moz-transition: opacity 0.3s ease-in-out;
+    //       -webkit-transition: opacity 0.3s ease-in-out;
+    //       // this compensates for a bug in chrome, which causes images of a
+    //       // certain aspect ratio to expand and contract very slightly on
+    //       // hover and opacity transition
+    //       // ref: https://stackoverflow.com/questions/20886991
+    //       -webkit-transform: translateZ(0);
+    //     }
+    //   }
+    //   .caption {
+    //     position: absolute;
+    //     bottom: 0;
+    //     height: 60px;
+    //     display: flex;
+    //     align-items: center;
+    //     justify-content: center;
+    //     font-size: 12px;
+    //     font-weight: 300;
+    //     padding: 0 10px;
+    //     width: 100%;
+    //     border-radius: 0;
+    //     background: transparent;
+    //     color: #000;
+    //     span:last-child:not(:only-child) {
+    //       display: none;
+    //     }
+    //   }
+    // }
+    // a.thumbnail:hover {
+    //   background-color: #edf5f8;
+    //   border-color: #999;  // override bootstrap .thumbnail
+    // }
+    // a.thumbnail:not(.logo-published):hover {
+    //   .thumbnail-view .thumbnail-view-hover {
+    //     -webkit-transform: translateY(0%);
+    //     -moz-transform: translateY(0%);
+    //     -ms-transform: translateY(0%);
+    //     -o-transform: translateY(0%);
+    //     transform: translateY(0%);
+    //   }
+    //   img {
+    //     opacity: 0.1;
+    //   }
+    // }
+  }
+
+}
+
+
+

@@ -54,10 +54,7 @@ function storiesIndexListeners () {
       $('.stories-search').not($(this)).val($(this).val());
       $('.stories-search-form [name="search"]').val($(this).val());
       $('.clear-search').hide();
-      // with hidden .clear-search, .submit search will need border radius added
-      // (using .css will fail to override bootstrap; use inline styling instead)
-      $('.submit-search')
-        .attr('style', 'border-top-right-radius: 4px; border-bottom-right-radius: 4px');
+      $(this).next().removeClass('show-clear');
     })
     .on('click', '.submit-search', function () {
       if ($(this).closest('form').find('.stories-search').val() === '') return false;
@@ -75,8 +72,8 @@ function storiesIndexListeners () {
     })
     .on('submit', '.stories-search-form', function () {
       $('.search-results').text('');
-      $('.submit-search').attr('style', 'border-top-right-radius: 0; border-bottom-right-radius: 0');
       replaceStateStoriesIndex('', '');
+      $(this).find('.input-group-btn').addClass('show-clear');
     })
 
     .on('click', 'a.published', function (e) {

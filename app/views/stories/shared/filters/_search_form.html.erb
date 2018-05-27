@@ -5,16 +5,12 @@
 
   <div class="form-group">
 
-<!--   <a href="javascript:;" style="position: absolute; padding: 6px 10px; top: 1px; right: 1px; font-size: 14px; color: #666; border-top-right-radius: 3px; border-bottom-right-radius: 3px;">
-      <i class="fa fa-search fa-fw"></i>
-    </a> -->
-
     <div class="input-group">
       <%= text_field_tag(nil, nil, class: 'stories-search form-control', type: 'search', placeholder: 'Search') %>
       <span class="input-group-btn">
         <!-- with hidden .clear-search, .submit search will need border radius added -->
         <!-- (easier to override bootstrap with inline styling) -->
-        <button class="submit-search btn btn-default" type="button" style="border-top-right-radius: 4px; border-bottom-right-radius: 4px">
+        <button class="submit-search btn btn-default" type="button">
           <i class="fa fa-search fa-fw"></i>
         </button>
         <button class="clear-search btn btn-default" type="button">

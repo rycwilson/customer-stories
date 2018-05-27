@@ -32,6 +32,9 @@ module Csp
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
 
+    # custom fonts
+    config.assets.paths << Rails.root.join("app", "assets", "fonts")
+
     # Bower asset paths
     # (lines 37-47 per bootstrap-sass docs re: using bower package)
     Rails.root.join('vendor', 'assets', 'bower_components').to_s.tap do |bower_path|
