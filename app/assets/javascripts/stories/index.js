@@ -11,6 +11,8 @@ function storiesIndex () {
   // for a sync load, this isn't necessary => server will provide pre select
   // but what about a turbolinks restore?
   // preSelectFilters(getQueryString('category'), getQueryString('product'));
+
+  storyHoverHandler($('#stories-gallery li').children());
 }
 
 function storiesIndexListeners () {
@@ -251,6 +253,7 @@ function updateGallery ($stories) {
       .append($stories)
       .hide()
       .show('fast', initGridPreviews);
+    storyHoverHandler($('#stories-gallery li').children());
   });
 }
 

@@ -24,12 +24,12 @@
         <img src="<%= story.customer.logo_url || LOGO_PLACEHOLDER_URL %>">
       </div>
 
-      <% if story.published? || story.preview_published? %>
-        <div class="caption"
-             style="<%= 'background-color:' + company.header_color_1 + ';color:' + company.header_text_color %>">
-          <%= story.published ? 'Read story' : 'See more' %>
-        </div>
-      <% end %>
+      <div class="caption">
+        <span><%= story.customer.name %></span>
+        <% if story.published? || story.preview_published? %>
+          <span><%= story.published? ? 'Read Story' : 'See More' %></span>
+        <% end %>
+      </div>
 
       <div class='loading-icon-container'>
         <i class='fa fa-spin fa-circle-o-notch'></i>

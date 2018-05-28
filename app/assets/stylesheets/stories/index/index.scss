@@ -14,25 +14,37 @@
             height: 30px;
             font-size: 13px;
           }
-          button {
-            color: #999;
-            height: 30px;
-            padding: 4px 6px;  // overrides bootstrap 6px 12px
-            &:hover { color: #666; }
-          }
-          .clear-search {
-            display: none;
+          .input-group-btn {
+            button {
+              color: #999;
+              height: 30px;
+              padding: 4px 6px;  // overrides bootstrap 6px 12px
+              &:hover { color: #666; }
+            }
+            .submit-search {
+              border-top-right-radius: 4px;
+              border-bottom-right-radius: 4px;
+            }
+            &.show-clear .submit-search {
+                border-top-right-radius: 0;
+                border-bottom-right-radius: 0;
+            }
+            .clear-search {
+              color: #999;
+              display: none;
+              &:hover { color: #666; }
+            }
           }
         }
         .search-results {
-          color: #555;
+          color: #666;
         }
       }
       .combined-results {
         height: 18px;
         margin-bottom: 15px;
         > span > span:last-of-type {
-          color: #555;
+          color: #666;
         }
       }
       .form-group > select + span {
@@ -123,21 +135,21 @@
     // }
 
     .filters-container.visible-md-block {
-      width: 300px;
+      width: 284px;
       float: left;
       background-color: #efefef;
-      padding: 15px;
+      padding: 20px 15px;
       select {
         visibility: hidden;  // wait for select2 to init (see select2.js)
       }
     }
     .filters-container.visible-md-block.short {
-      height: 190px;
+      height: 210px;
       position: relative;
       form + .form-group {  // single filter
         position: absolute;
         bottom: 20px;
-        width: 270px;  // 300 - 15*2
+        width: 254px;  // 284 - 15*2
         margin-bottom: 0;
       }
     }
@@ -173,7 +185,7 @@
   }
   @media only screen and (min-width: 1200px) {
     .filters-container.visible-md-block.short {
-      margin: 5px -18px 0 0;
+      margin: 0;
     }
     .filters-container.visible-md-block.tall {
       margin: 18px -20px 0 5px;

@@ -30,6 +30,20 @@ function attachStoriesListeners () {
 
 }
 
+// doing this in js so we can have timeout delay in one direction only
+function storyHoverHandler ($stories) {
+  $stories.hover(
+    function () {
+      var $story = $(this);
+      setTimeout(function () {
+        $story.find('.caption').children().toggle();
+      }, 300);
+    },
+    function () {
+      $(this).find('.caption').children().toggle();
+    }
+  );
+}
 
 
 

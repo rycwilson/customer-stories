@@ -7,7 +7,7 @@
   margin: 0 auto;
 }
 
-#stories-gallery, #curate-gallery {
+#stories-gallery, #curate-gallery, #related-stories {
 
   .grid-item {
     display: inline-block;
@@ -29,7 +29,7 @@
   a.thumbnail {
     position: relative;  // this is for positioning the caption at the bottom
     width: 210px;        // matches masonry column width
-    height: 140px;       // 3/2 ratio
+    height: 148px;       // 3/2 ratio
     text-align: center;  // centers image horizontally
     padding: 0;
     margin-bottom: 0;
@@ -37,7 +37,7 @@
     border-radius: 0;
     // following settings lifted from chrome new tab page
     box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
-    transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     .thumbnail-view {
       position: relative;   // for thumbnail-view-hover
       height: 114px;
@@ -49,17 +49,16 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        // z-index: 10;
         height: 100%;
         width: 100%;
-        padding: 10px;
+        padding: 15px;
         background: transparent;
         border-radius: 3px 3px 0 0;
         -webkit-transform: translateY(-100%);
         -moz-transform: translateY(-100%);
         -ms-transform: translateY(-100%);
         -o-transform: translateY(-100%);
-        transition: all 0.2s ease-in-out;
+        transition: all 0.3s ease-in-out;
         p {
           font-family: 'Lato', 'Trebuchet MS', 'Open Sans', arial, sans-serif;
           color: #444;
@@ -75,11 +74,11 @@
         vertical-align: middle;
         max-height: 100%;
         max-width: 100%;
-        padding: 16px;
+        padding: 20px;
         opacity: 1;
-        transition: opacity 0.2s ease-in-out;
-        // -moz-transition: opacity 0.3s ease-in-out;
-        // -webkit-transition: opacity 0.3s ease-in-out;
+        transition: opacity 0.3s ease-in-out;
+        -moz-transition: opacity 0.3s ease-in-out;
+        -webkit-transition: opacity 0.3s ease-in-out;
         // this compensates for a bug in chrome, which causes images of a
         // certain aspect ratio to expand and contract very slightly on
         // hover and opacity transition
@@ -89,12 +88,24 @@
     }
     .caption {
       position: absolute;
-      font-size: 14px;
-      text-align: left;
-      padding: 2px 0 2px 6px;
       bottom: 0;
       width: 100%;
-      // border-radius: 0 0 3px 3px;
+      height: 35%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font: {
+        family: 'Lato';
+        size: 13px;
+
+      }
+      padding: 0 10px;
+      border-radius: 0;
+      background: transparent;
+      color: #888;
+      span:last-child:not(:only-child) {
+        display: none;
+      }
     }
   }
   a.thumbnail:hover {
@@ -225,26 +236,29 @@
 
 @media only screen and (min-width: 992px) {
   #stories-gallery, #curate-gallery {
-    margin-right: -40px; // pull it over a bit
+    // margin-right: -40px; // pull it over a bit (only apply if filters present)
+    // &.no-filters { margin-right: 0; }
     .grid-item {
       margin: 20px;
       a.thumbnail {
-        width: 240px;  // 210
-        height: 160px;  // 140
+        width: 242px;
+        height: 170px;
         .thumbnail-view {
-          height: 136px;  // 133 - ( caption_height=22 + border=2*1px )
-          line-height: 132px;
+          height: 80%;
+          line-height: 130px;
           .thumbnail-view-hover p {
-            font-size: 16px;
-            line-height: 23px;
-            font-weight: 400;
+            line-height: 26px;
+            font: {
+              size: 16px;
+              weight: 400;
+            }
           }
           img {
-            padding: 23px;
+            padding: 20px;
           }
         }
         .caption {
-          font-size: 13px;
+          font-size: 14px;
         }
       }
       a.thumbnail.public.logo-published {
