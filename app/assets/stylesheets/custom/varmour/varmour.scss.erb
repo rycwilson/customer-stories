@@ -1,16 +1,17 @@
 
 // ref: https://gist.github.com/anotheruiguy/7379570
 @font-face {
-  font-family: 'Metropolis';
+  font-family: 'Metropolis Light';
   src: font-url("metropolis.light.otf") format('opentype');
 }
-$metropolis: 'Metropolis', 'Lato', sans-serif;
+@font-face {
+  font-family: 'Metropolis Medium';
+  src: font-url("Metropolis-Medium.otf") format('opentype');
+}
+$metropolis-light: 'Metropolis', 'Lato', sans-serif;
+$metropolis-medium: 'Metropolis Medium', 'Lato', sans-serif;
 
 body.varmour {
-
-  // font: {
-  //   family: $metropolis;
-  // }
 
   &.stories.index {
     background-color: #fafcfd;
@@ -24,7 +25,7 @@ body.varmour {
       .row {
         .navbar-header {
           h3 {
-            font-family: $metropolis;
+            font-family: $metropolis-light;
             text-transform: uppercase;
             padding-top: 4px;
             &.light { }
@@ -82,110 +83,65 @@ body.varmour {
     a.thumbnail {
       .thumbnail-view {
         .thumbnail-view-hover {
-          p { font-family: $metropolis; }
+          p {  }
         }
       }
     }
 
-
-    // from more_stories_varmour.scss
     a.thumbnail {
-      width: 242px;
-      height: 170px;  // 190px column height
-      margin: 0 auto;
-      background-color: #fff;
       transition: background-color 0.5s ease-in-out;
       border: 1px solid #999;
-      padding: 0;
-      text-align: center;
-      // border-color: rgba(0, 0, 0, 0.7);
       border-radius: 0;
       box-shadow: 0 0;
       .thumbnail-view {
-        position: relative;
-        // display: inline-block;
-        height: 80%;
-        width: 100%;
-        // overflow: hidden;
-        line-height: 130px;
-        cursor: pointer;
         .thumbnail-view-hover {
-          position: absolute;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          z-index: 10;
-          height: 154px;
-          width: 100%;
-          padding: 8px 10px;
+          padding: 10px;
           border-radius: 0;
           -webkit-transform: translateY(-100%);
           -moz-transform: translateY(-100%);
           -ms-transform: translateY(-100%);
           -o-transform: translateY(-100%);
           transform: translateY(-100%);
-          transition: all 0.3s ease-in-out;
+          transition: all 0.2s ease-in-out;
           p {
-            font-family: inherit !important;
-            font-size: 16px !important;
-            text-align: center;
-            line-height: 28px !important;
-            font-weight: 600;
-            letter-spacing: normal;
-            color: #333 !important;
-            margin-bottom: 0;
+            font: {
+              family: $metropolis-medium;
+              size: 14px;
+              weight: normal;
+            }
+            color: #000;
           }
         }
         img {
-          display: inline-block;
-          vertical-align: middle;
-          max-height: 100%;
-          max-width: 100%;
           padding: 24px;
-          opacity: 1;
-          transition: opacity 0.3s ease-in-out;
-          -moz-transition: opacity 0.3s ease-in-out;
-          -webkit-transition: opacity 0.3s ease-in-out;
-          // this compensates for a bug in chrome, which causes images of a
-          // certain aspect ratio to expand and contract very slightly on
-          // hover and opacity transition
-          // ref: https://stackoverflow.com/questions/20886991
-          -webkit-transform: translateZ(0);
         }
       }
       .caption {
-        position: absolute;
-        bottom: 0;
-        height: 35%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 12px;
-        font-weight: 300;
-        padding: 0 10px;
-        width: 100%;
-        border-radius: 0;
-        background: transparent;
+        font: {
+          family: $metropolis-light;
+          size: 10px;
+          weight: 300;
+        }
+        text-transform: uppercase;
         color: #000;
         span:last-child:not(:only-child) {
-          display: none;
+          text-decoration: none;
         }
       }
-    }
-    a.thumbnail:hover {
-      background-color: #edf5f8;
-      border-color: #999;  // override bootstrap .thumbnail
-    }
-    a.thumbnail:not(.logo-published):hover {
-      .thumbnail-view .thumbnail-view-hover {
-        -webkit-transform: translateY(0%);
-        -moz-transform: translateY(0%);
-        -ms-transform: translateY(0%);
-        -o-transform: translateY(0%);
-        transform: translateY(0%);
+      &:hover {
+        background-color: #edf5f8;
+        border-color: #999;  // override bootstrap .thumbnail
       }
-      img {
-        opacity: 0.1;
+      &.title-present:hover {
+        .thumbnail-view-hover {
+          -webkit-transform: translateY(0%);
+          -moz-transform: translateY(0%);
+          -ms-transform: translateY(0%);
+          -o-transform: translateY(0%);
+        }
+        img {
+          opacity: 0.1;
+        }
       }
     }
   }

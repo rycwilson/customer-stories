@@ -57,7 +57,7 @@
     border-radius: 0;
     // following settings lifted from chrome new tab page
     box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
-    transition: box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
     .thumbnail-view {
       position: relative;
       height: 80%;
@@ -71,14 +71,14 @@
         justify-content: center;
         height: 100%;
         width: 100%;
-        padding: 15px;
+        padding: 12px;
         background: transparent;
         border-radius: 3px 3px 0 0;
         -webkit-transform: translateY(-100%);
         -moz-transform: translateY(-100%);
         -ms-transform: translateY(-100%);
         -o-transform: translateY(-100%);
-        transition: all 0.3s ease-in-out;
+        transition: all 0.2s ease-in-out;
         p {
           font: {
             family: 'Lato', 'Trebuchet MS', 'Open Sans', arial, sans-serif;
@@ -97,9 +97,9 @@
         max-width: 100%;
         padding: 20px;
         opacity: 1;
-        transition: opacity 0.3s ease-in-out;
-        -moz-transition: opacity 0.3s ease-in-out;
-        -webkit-transition: opacity 0.3s ease-in-out;
+        transition: opacity 0.2s ease-in-out;
+        -moz-transition: opacity 0.2s ease-in-out;
+        -webkit-transition: opacity 0.2s ease-in-out;
         // this compensates for a bug in chrome, which causes images of a
         // certain aspect ratio to expand and contract very slightly on
         // hover and opacity transition
@@ -120,7 +120,6 @@
         size: 14px;
       }
       color: #444;
-      padding: 0 10px;
       border-radius: 0;
       background: transparent;
       span:last-child:not(:only-child) {

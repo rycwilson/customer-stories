@@ -80,7 +80,7 @@
         -ms-transform: translateY(-100%);
         -o-transform: translateY(-100%);
         transform: translateY(-100%);
-        transition: all 0.3s ease-in-out;
+        transition: all 0.2s ease-in-out;
         p {
           font-family: inherit !important;
           font-size: 16px !important;
@@ -99,9 +99,9 @@
         max-width: 100%;
         padding: 24px;
         opacity: 1;
-        transition: opacity 0.3s ease-in-out;
-        -moz-transition: opacity 0.3s ease-in-out;
-        -webkit-transition: opacity 0.3s ease-in-out;
+        transition: opacity 0.2s ease-in-out;
+        -moz-transition: opacity 0.2s ease-in-out;
+        -webkit-transition: opacity 0.2s ease-in-out;
         // this compensates for a bug in chrome, which causes images of a
         // certain aspect ratio to expand and contract very slightly on
         // hover and opacity transition
