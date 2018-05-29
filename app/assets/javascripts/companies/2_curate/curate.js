@@ -26,12 +26,12 @@ function curateListeners () {
 
   var loading = function ($story) {
         $story.addClass('loading');
-        setTimeout(function () { $story.addClass('loading-icon'); }, 1000);
+        setTimeout(function () { $story.addClass('still-loading'); }, 1000);
         $('#curate-gallery li').css('pointer-events', 'none');
       },
       cancelLoading = function () {
         $('#curate-stories li').each(function () {
-          $(this).removeClass('loading loading-icon');
+          $(this).removeClass('loading still-loading');
           $(this).css('pointer-events', 'auto');
         });
       };

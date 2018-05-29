@@ -12,14 +12,14 @@ function storiesIndex () {
   // but what about a turbolinks restore?
   // preSelectFilters(getQueryString('category'), getQueryString('product'));
 
-  storyHoverHandler($('#stories-gallery li').children());
+  storyHoverHandler($('#stories-gallery').children('li'));
 }
 
 function storiesIndexListeners () {
 
   var loading = function ($story) {
         $story.addClass('loading');
-        setTimeout(function () { $story.addClass('loading-icon'); }, 1000);
+        setTimeout(function () { $story.addClass('still-loading'); }, 1000);
         $('#stories-gallery li').css('pointer-events', 'none');
       },
 
@@ -253,7 +253,7 @@ function updateGallery ($stories) {
       .append($stories)
       .hide()
       .show('fast', initGridPreviews);
-    storyHoverHandler($('#stories-gallery li').children());
+    storyHoverHandler($('#stories-gallery').children());
   });
 }
 

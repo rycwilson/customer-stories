@@ -94,6 +94,7 @@
       padding: 2px 0 2px 6px;
       bottom: 0;
       width: 100%;
+      span:last-child
       // border-radius: 0 0 3px 3px;
     }
   }
@@ -119,7 +120,7 @@
   }
 
 
-  li:not(.loading-icon) {
+  li:not(.still-loading) {
     i.fa-spin {
       display: none;
     }
@@ -137,13 +138,13 @@
       }
     }
   }
-  li.loading.loading-icon {
+  li.loading.still-loading {
     .thumbnail-view, .caption {
       opacity: 0.05;
     }
     // the icon needs to be wrapped in a div in order for the transform to work
     // (center if element is centered, not top-left of element)
-    .loading-icon-container {
+    .still-loading-container {
       position: absolute;
       top: 50%;
       left: 50%;
