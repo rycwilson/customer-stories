@@ -41,7 +41,7 @@ function storyHoverHandler ($stories) {
       }
       setTimeout(function () {
         $story.find('.caption').children().toggle();
-      }, 200);
+      }, 230);
     },
     function () {
       var $story = $(this);
