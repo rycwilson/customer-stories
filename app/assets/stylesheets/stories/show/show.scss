@@ -1,18 +1,8 @@
 
-@import 'social-share';
-@import 'more_stories_tab';
-
 .stories.show {
 
-  #stories-header {
-    position: relative;
-    .social-buttons {
-      padding-right: 25px;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
-    }
-  }
+  @import 'social-share';
+  @import 'more_stories_tab';
 
   #stories-header:after {
     content: '';
@@ -27,40 +17,8 @@
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f2f2f2', endColorstr='#ffffff', GradientType=0);
   }
 
-  .story-header {
-    position: relative;
-    display: flex;
-    align-items: center;
-    height: 42px;
-    color: #cacaca;
-    font-size: 0;
-    h3 {
-      margin-bottom: -6px;
-      font-weight: 300;
-      font-size: 24px;
-    }
-    a.curate-story {
-      position: absolute;
-      left: 200px;
-      top: 50%;
-      transform: translate(0, -50%)
-    }
-    .hidden-xs {
-      padding-left: 15px;
-      .social-buttons {
-        a { margin-right: 4px; }
-      }
-    }
-  }
-
   .mainnav.company-nav {
     margin-bottom: 0;
-  }
-
-  #social-share-side-btns {
-    position: fixed;
-    width: 38px;
-    right: 50px;
   }
 
   #related-stories {
@@ -112,16 +70,9 @@
     }
   }
 
-
   #social-buttons-xs {
     background-color: #f2f2f2;
     padding: 15px 25px 15px 15px;
-  }
-
-  // nav links
-  .story-nav {
-   color: #337ab7;
-   padding: 0;
   }
 
   #testimonial {

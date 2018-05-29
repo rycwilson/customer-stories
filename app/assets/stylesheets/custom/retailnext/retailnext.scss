@@ -1,29 +1,13 @@
 
 body.retailnext {
 
-  #stories-header-wrapper {
-    #stories-header {
-      box-shadow: 0 0 0 0;
-      .navbar-container {
-        .visible-xs-block {
-        }
-        .row {
-          height: 100%;
-          display: flex;
-          align-items: center;
-          .navbar-header {
-            h3 {
-              font-family: $metropolis-medium;
-              text-transform: uppercase;
-              padding-top: 4px;
-              &.light, &.dark { color: #fff; }
-            }
-          }
-          .stories-search-form {
-          }
-        }
-      }
-    }
+  @import 'company_header';
+  @import 'stories_header';
+  @import 'index';
+  @import 'show';
+
+  h3 {
+    font-family: $metropolis-medium;
   }
 
   &.stories.index {
