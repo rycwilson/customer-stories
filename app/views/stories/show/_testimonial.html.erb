@@ -9,16 +9,19 @@
 -->
 <div class="container">
 
-  <div class="row testimonial">
-    <div class="col-xs-12 <%= include_video ? 'col-sm-6 col-md-7' : 'no-video' %>">
+  <div class="row">
+    <div class="col-xs-12 <%= video_present ? 'col-sm-6 col-md-7' : 'no-video' %>">
 
-      <div class="row customer-logo customer-quote hidden-xs">
+      <div class="hidden-xs">
 
-        <div class='customer-logo text-center <%= include_video ? 'col-sm-12' : 'col-sm-3' %>'>
+        <div class='customer-logo text-center <%= video_present ? 'col-sm-12' : 'col-sm-3' %>'>
           <%= image_tag (story.customer.logo_url || LOGO_PLACEHOLDER_URL), class: 'img-responsive' %>
+          <div>
+            <span><%= story.customer.name %></span>
+          </div>
         </div>
 
-        <div class='customer-quote <%= include_video ? 'col-sm-12' : 'col-sm-8' %> '>
+        <div class='customer-quote <%= video_present ? 'col-sm-12' : 'col-sm-8' %> '>
 
           <p class='lead'><em>"<%= story.quote %>"</em></p>
 
@@ -31,32 +34,36 @@
         </div>
 
         <!-- filler -->
-        <div class="<%= include_video ? 'hidden' : 'col-sm-1' %>"></div>
+        <div class="<%= video_present ? 'hidden' : 'col-sm-1' %>"></div>
 
       </div>
 
-      <div class="row customer-quote visible-xs-block">
-        <div class='col-xs-12'>
+      <div class="visible-xs-block">
 
-          <p class='lead'><em>"<%= story.quote %>"</em></p>
-
+        <div class="customer-logo" style="display:flex; align-items: center;">
+            <%= image_tag (story.customer.logo_url || LOGO_PLACEHOLDER_URL), class: 'img-responsive', style: 'display: inline-block; mix-blend-mode: multiply' %>
+          <!-- </div> -->
+          <!-- <div class="col-xs-7"> -->
+            <span><%= story.customer.name %></span>
         </div>
+
+        <div class="customer-quote">
+          <p class="lead"><em>"<%= story.quote %>"</em></p>
+        </div>
+
+        <div class="customer-quote-attr">
+          <div class="text-right">
+            <span><%= story.quote_attr_name %></span>
+          </div>
+          <div class="text-right">
+            <span><%= story.quote_attr_title %></span>
+          </div>
+        </div>
+
       </div>
-
-      <!-- visible-xs on columns so as not to collide with display: flex -->
-      <div class="row customer-quote-attr-xs">
-        <div class='customer-logo col-xs-5 text-center visible-xs-block'>
-          <%= image_tag (story.customer.logo_url || LOGO_PLACEHOLDER_URL), class: 'img-responsive' %>
-        </div>
-        <div class='customer-quote-attr col-xs-7 visible-xs-block'>
-          <p><%= story.quote_attr_name %></p>
-          <p><%= story.quote_attr_title %></p>
-        </div>
-      </div>
-
     </div>
 
-    <div class="story-video <%= include_video ? 'hidden-xs col-sm-6 col-md-5' : 'hidden' %>">
+    <div class="story-video <%= video_present ? 'hidden-xs col-sm-6 col-md-5' : 'hidden' %>">
 
       <!-- <div itemprop='video' itemscope itemtype='//schema.org/VideoObject'> -->
         <!-- <meta itemprop='' content='' -->

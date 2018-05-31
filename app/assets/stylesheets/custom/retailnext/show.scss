@@ -1,4 +1,6 @@
 
+// Why is this rule so convoluted?
+// => the specificity must match the original setting in order to override
 .stories.show #testimonial .testimonial > div:first-child .row.customer-quote .lead,
 #story-section-content {
   font-family: "Open Sans", Arial, Helvetica, sans-serif;
