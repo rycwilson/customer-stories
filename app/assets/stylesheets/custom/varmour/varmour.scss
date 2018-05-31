@@ -1,70 +1,15 @@
 
 
-
 body.varmour {
+
+  font-family: $metropolis-regular;
+
+  @import 'stories_header';
+
+  &.stories.show { @import 'show'; }
 
   &.stories.index {
     background-color: #fafcfd;
-  }
-
-  #stories-header-wrapper #stories-header {
-    box-shadow: 0 9px 22px -6px rgba(0, 0, 0, 0.07);
-    .navbar-container {
-      .visible-xs-block {
-      }
-      .row {
-        .navbar-header {
-          h3 {
-            font-family: $metropolis-light;
-            text-transform: uppercase;
-            padding-top: 4px;
-            &.light { }
-            // &.dark { color: #434343; }
-          }
-        }
-        .stories-search-form {
-          max-width: 285px;
-          text-transform: uppercase;
-          .form-group {
-            .input-group {
-              input {
-                text-transform: uppercase;
-                background-color: #f5f6f7;
-                color: #a2a1a1;
-                border-radius: 0;
-                text-align: center;
-                padding: 8px 12px 6px 12px;
-                border: transparent;
-                &.form-control {
-                  box-shadow: 0 0 0;
-                  -webkit-box-shadow: 0 0 0;
-                }
-              }
-              .input-group-btn {
-                button {
-                  height: 30px;
-                  background-color: #f5f6f7;
-                  color: #999;
-                  padding: 4px 6px;  // overrides bootstrap 6px 12px
-                  border: transparent;
-                  border-top-right-radius: 0;
-                  border-bottom-right-radius: 0;
-                  &:hover { color: #666; }
-                }
-
-                .clear-search {
-                  color: #999;
-                  display: none;
-                }
-                .clear-search:hover {
-                  color: #666;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
   }
 
   #stories-gallery, #related-stories {

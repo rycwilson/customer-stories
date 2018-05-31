@@ -67,7 +67,6 @@ module ApplicationHelper
     end
   end
 
-
   # method determines if title 'Customer Stories' should be displayed as plural
   def stories?
     (controller_name == 'companies' && action_name != 'new') ||

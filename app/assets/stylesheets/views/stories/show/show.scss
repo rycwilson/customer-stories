@@ -1,13 +1,72 @@
 
 .stories.show {
 
-  @import 'social-share';
+  @import 'social_share';
   @import 'more_stories_tab';
 
-
-
-  .mainnav.company-nav {
-    margin-bottom: 0;
+  #testimonial {
+    position: relative;
+    color: #888;
+    .customer-logo-quote.hidden-xs {
+      .customer-logo {
+        img {
+          margin: 0 auto;
+          max-height: 65px;
+          max-width: 80%;
+        }
+        span {
+          font-size: 16px;
+          line-height: 50px;
+        }
+      }
+      .customer-quote {
+        p {
+          margin-bottom: 15px;
+        }
+      }
+    }
+    .customer-logo-quote.visible-xs-block {
+      .customer-logo {
+        margin-bottom: 20px;
+        img {
+          max-height: 55px;
+          max-width: 30%;
+          margin: 0 20px 0 10px;
+        }
+        span {
+          font-size: 14px;
+        }
+      }
+      .customer-quote {
+        p.lead {
+          margin-bottom: 15px;
+          font: {
+            family: 'Open Sans';
+            size: 14px;
+          }
+        }
+      }
+      .customer-quote-attr {
+        // margin-bottom: 20px;
+        span { line-height: 1.6; }
+      }
+    }
+    .story-video.hidden-xs {
+      margin: 0 0 10px 0;
+    }
+    &:after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      z-index: -1;
+      width: 100%;
+      // margin-top: -20px;
+      height: 90px;
+      // margin-top: 2px;
+      background-image: linear-gradient(to top, #f2f2f2 0%, #ffffff 100%);  //f2f2f2
+      background-repeat: repeat-x;
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2f2f2', endColorstr='#ffffffff', GradientType=0);
+    }
   }
 
   #related-stories {
@@ -36,99 +95,12 @@
     }
   }
 
-  .modal[id^='cta-form'] {
-    .modal-header {
-      height: 50px;
-      padding: 10px;
-      img {
-        max-height: 100%;
-      }
-    }
-    // size the modal to fit content
-    // ref: http://stackoverflow.com/questions/16152275
-    .modal-dialog {
-      position: relative;
-      display: table; //This is important
-      overflow-y: auto;
-      overflow-x: auto;
-      width: auto;
-    }
-    .modal-body {
-      height: calc(100vh - 200px);
-      // overflow-y: scroll;
-    }
-  }
 
   #social-buttons-xs {
     background-color: #f2f2f2;
     padding: 15px 25px 15px 15px;
   }
 
-  #testimonial {
-    position: relative;
-    color: #888;
-    .hidden-xs {
-      .customer-logo {
-        img {
-          margin: 0 auto;
-          max-height: 65px;
-          max-width: 80%;
-        }
-        span {
-          font: {
-            family: 'Lato';
-            size: 16px;
-          }
-          line-height: 50px;
-        }
-      }
-      .customer-quote {
-        p.lead {
-          font-family: 'Open Sans';
-          margin-bottom: 15px;
-        }
-      }
-    }
-    .visible-xs-block {
-      .customer-logo {
-        margin-bottom: 20px;
-        img {
-          max-height: 55px;
-          max-width: 30%;
-          margin: 0 20px 0 10px;
-        }
-        span {
-          font-size: 14px;
-        }
-      }
-      .customer-quote {
-        p.lead {
-          margin-bottom: 15px;
-          font: {
-            family: 'Open Sans';
-            size: 14px;
-          }
-        }
-      }
-      .customer-quote-attr {
-        margin-bottom: 20px;
-        span { line-height: 1.6; }
-      }
-    }
-  }
-  #testimonial:after {
-    content: '';
-    position: absolute;
-    top: 100%;
-    z-index: -1;
-    width: 100%;
-    // margin-top: -20px;
-    height: 90px;
-    // margin-top: 2px;
-    background-image: linear-gradient(to top, #f2f2f2 0%, #ffffff 100%);  //f2f2f2
-    background-repeat: repeat-x;
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2f2f2', endColorstr='#ffffffff', GradientType=0);
-  }
 
 
 
@@ -188,15 +160,10 @@
   }
 
   @media only screen and (max-width: 767px) {
-    .mainnav {
-      margin-bottom: 36px;
-    }
-    .mainnav:after {
-      height: 40px;
-      margin-top: -10px;
-    }
     #testimonial {
       margin-bottom: 40px;
+      .customer-logo-quote.visible-xs-block {
+      }
       &:after {
         height: 40px;
       }
@@ -216,28 +183,26 @@
   }
 
   @media only screen and (min-width: 768px) {
-    .mainnav {
-      margin-bottom: 42px;
-    }
     #testimonial {
-      &.no-video { padding-bottom: 30px; }
       margin-bottom: 90px;
-      .no-video {
+      .customer-logo-quote.hidden-xs {
+        .customer-logo {
+          span {
+            font-size: 15px;
+            line-height: 45px;
+          }
+        }
+        .customer-quote {
+          .lead {
+            font-size: 16px;
+          }
+        }
+      }
+      .no-video.hidden-xs {
         padding: 15px 30px 0 30px;
       }
-      .customer-logo {
-        span {
-          font-size: 15px;
-          line-height: 45px;
-        }
-      }
-      .customer-quote {
-        .lead {
-          font-size: 16px;
-        }
-      }
-      .story-video {
-        margin: 0 0 10px 0;
+      &.no-video {
+        padding-bottom: 30px;
       }
     }
     #story-section-content {
@@ -253,19 +218,19 @@
   @media only screen and (min-width: 992px) {
     #testimonial {
       margin-bottom: 90px;
-      .no-video {
+      .customer-logo-quote.hidden-xs {
+        .customer-logo {
+          span {
+            font-size: 16px;
+            line-height: 45px;
+          }
+        }
+        .customer-quote {
+          p.lead { font-size: 16px; }
+        }
+      }
+      .no-video.hidden-xs {
         padding: 15px 30px 0 30px;
-      }
-      .customer-logo {
-        span {
-          font-size: 16px;
-          line-height: 50px;
-        }
-      }
-      .customer-quote {
-        .lead {
-          font-size: 18px;
-        }
       }
     }
     #story-section-content {
@@ -276,18 +241,21 @@
   }
 
   @media only screen and (min-width: 1200px) {
-    #social-buttons {
-      padding-right: 34px;
-    }
     #testimonial {
-      .customer-quote {
-        p.lead {
-          font-size: 20px;
+      .customer-logo-quote.hidden-xs {
+        .customer-logo {
+          span {
+            font-size: 18px;
+            line-height: 50px;
+          }
+        }
+        .customer-quote {
+          p.lead {font-size: 18px; }
         }
       }
-    }
-    #testimonial.no-video {
-      padding-bottom: 30px;
+      &.no-video {
+        padding-bottom: 30px;
+      }
     }
     #story-section-content {
     }

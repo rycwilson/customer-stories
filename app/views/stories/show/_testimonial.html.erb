@@ -1,18 +1,11 @@
-<!--
-  locals: @story
--->
 
-<!--
-  data-no-turbolink attribute is necessary for linkedin widgets
-  to properly load
-  http://stackoverflow.com/questions/17600093/rails-javascript-not-loading-after-clicking-through-link-to-helper
--->
 <div class="container">
 
   <div class="row">
+
     <div class="col-xs-12 <%= video_present ? 'col-sm-6 col-md-7' : 'no-video' %>">
 
-      <div class="hidden-xs">
+      <div class="customer-logo-quote hidden-xs">
 
         <div class='customer-logo text-center <%= video_present ? 'col-sm-12' : 'col-sm-3' %>'>
           <%= image_tag (story.customer.logo_url || LOGO_PLACEHOLDER_URL), class: 'img-responsive' %>
@@ -27,7 +20,7 @@
 
           <div class="row <%= story.quote_attr_name.blank? ? 'hidden' : '' %>">
             <div class='col-sm-12 col-lg-11 text-right'>
-              <p>&#8211;&nbsp;<%= story.quote_attr_name %>,&nbsp;<%= story.quote_attr_title %></p>
+              <span>&#8211;&nbsp;<%= story.quote_attr_name %>,&nbsp;<%= story.quote_attr_title %></span>
             </div>
           </div>
 
@@ -38,7 +31,7 @@
 
       </div>
 
-      <div class="visible-xs-block">
+      <div class="customer-logo-quote visible-xs-block">
 
         <div class="customer-logo" style="display:flex; align-items: center;">
             <%= image_tag (story.customer.logo_url || LOGO_PLACEHOLDER_URL), class: 'img-responsive', style: 'display: inline-block; mix-blend-mode: multiply' %>
@@ -96,6 +89,7 @@
 
       <!-- </div> -->  <!-- meta VideoObject -->
     </div>
+
   </div>
 
 </div>

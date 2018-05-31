@@ -1,0 +1,117 @@
+
+#testimonial {
+  position: relative;
+  .hidden-xs {
+    .customer-logo {
+      span {
+        font: {
+          family: $metropolis-regular;
+        }
+        line-height: 50px;
+      }
+    }
+    .customer-quote {
+      p {
+        font-family: $metropolis-regular;
+        margin-bottom: 15px;
+      }
+    }
+  }
+  .visible-xs-block {
+    .customer-logo {
+      span {
+        font: {
+          family: $metropolis-light;
+          size: 14px;
+        }
+      }
+    }
+    .customer-quote {
+      p.lead {
+        margin-bottom: 15px;
+        font: {
+          family: 'Open Sans';
+          size: 14px;
+        }
+      }
+    }
+    .customer-quote-attr {
+      margin-bottom: 20px;
+      span { line-height: 1.6; }
+    }
+  }
+  &:after {
+    background-image: linear-gradient(to top, #f5f6f7 0%, #ffffff 100%);  //f2f2f2
+  }
+}
+
+
+#story-section-content {
+  h3 { font-family: $metropolis-regular; }
+  background-color: #f5f6f7;
+  .well {
+    border-color: #e6e9ec;
+    border-radius: 0;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+    #testimonial .visible-xs-block {
+    }
+    #story-section-video-xs {
+    }
+    #social-buttons-xs {
+    }
+    #story-section-content {
+    }
+  }
+
+  @media only screen and (min-width: 768px) {
+    #testimonial .hidden-xs {
+      .customer-logo {
+        span {
+          font-size: 15px;
+          line-height: 45px;
+        }
+      }
+      .customer-quote {
+        .lead {
+          font-size: 16px;
+        }
+      }
+    }
+    #story-section-content {
+    }
+  }
+
+  @media only screen and (min-width: 992px) {
+    #testimonial .hidden-xs {
+      .customer-logo {
+        span {
+          font-size: 16px;
+          line-height: 50px;
+        }
+      }
+      .customer-quote {
+        .lead {
+          font-size: 16px;
+        }
+      }
+    }
+    #story-section-content {
+    }
+  }
+
+  @media only screen and (min-width: 1200px) {
+    #testimonial .hidden-xs {
+      .customer-logo {
+        span { font-size: 18px; }
+      }
+      .customer-quote {
+        p { font-size: 18px; }
+      }
+
+    }
+    #story-section-content {
+    }
+  }
