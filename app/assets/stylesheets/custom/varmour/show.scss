@@ -1,33 +1,19 @@
 
 #testimonial {
   position: relative;
-        font-family: $metropolis-regular;
+  font-family: $metropolis-regular;
   .customer-logo-quote.visible-xs-block {
     .customer-logo {
-      span {
-      }
     }
     .customer-quote p {
-      // font-family: $metropolis-regular;
-
     }
     .customer-quote-attr {
-      margin-bottom: 20px;
-      span { line-height: 1.6; }
     }
   }
-  .hidden-xs {
+  .customer-logo-quote.hidden-xs {
     .customer-logo {
-      span {
-        font-family: $metropolis-regular;
-        line-height: 50px;
-      }
     }
     .customer-quote {
-      p {
-        font-family: $metropolis-regular;
-        margin-bottom: 15px;
-      }
     }
   }
   &:after {
@@ -35,9 +21,13 @@
   }
 }
 
+#story-section-video-xs, #social-buttons-xs {
+  background-color: #f5f6f7;
+}
 
 #story-section-content {
-  h3 { font-family: $metropolis-regular; }
+  h4 { font-family: $metropolis-regular; }
+  font-family: $metropolis-regular;
   background-color: #f5f6f7;
   .well {
     border-color: #e6e9ec;

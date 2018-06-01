@@ -14,15 +14,6 @@ body.varmour {
 
   #stories-gallery, #related-stories {
 
-    // gallery.scss structure
-    a.thumbnail {
-      .thumbnail-view {
-        .thumbnail-view-hover {
-          p {  }
-        }
-      }
-    }
-
     a.thumbnail {
       transition: background-color 0.5s ease-in-out;
       border: 1px solid #999;
