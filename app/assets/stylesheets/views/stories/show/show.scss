@@ -171,7 +171,7 @@
 
   @media only screen and (min-width: 768px) {
     #testimonial {
-      margin-bottom: 90px;
+      margin-bottom: 70px;
       .customer-logo-quote.hidden-xs {
         .customer-logo span {
           font-size: 15px;
@@ -182,10 +182,14 @@
         }
         .customer-quote p {
           font-size: 16px;
+          padding: 0 20px;
         }
       }
       .no-video.hidden-xs {
         padding: 15px 30px 0 30px;
+      }
+      &:after {
+        height: 70px;
       }
       &.no-video {
         padding-bottom: 30px;
@@ -206,7 +210,7 @@
     #testimonial {
       .customer-logo-quote.hidden-xs {
         .customer-name {
-          margin: 20px 0;
+          margin: 15px 0;
           span { font-size: 16px; }
         }
         .customer-quote p {
