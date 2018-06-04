@@ -72,8 +72,8 @@ Rails.application.configure do
   # sassc-rails
   # ref: https://stackoverflow.com/questions/23180867
   config.sass.inline_source_maps = true
-  config.sass.debug_info = true
-  config.sass.line_comments = false
+  # config.sass.debug_info = true
+  # config.sass.line_comments = false
 
   # Asset digests allow you to set far-future HTTP expiration dates on all assets,
   # yet still be able to expire them through the digest params.
