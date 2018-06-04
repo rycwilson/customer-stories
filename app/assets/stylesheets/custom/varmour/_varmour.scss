@@ -22,12 +22,6 @@ body.varmour {
         .thumbnail-view-hover {
           padding: 10px;
           border-radius: 0;
-          -webkit-transform: translateY(-100%);
-          -moz-transform: translateY(-100%);
-          -ms-transform: translateY(-100%);
-          -o-transform: translateY(-100%);
-          transform: translateY(-100%);
-          transition: all 0.23s ease-in-out;
           p {
             font: {
               family: $metropolis-medium;
@@ -59,10 +53,6 @@ body.varmour {
       }
       &.title-present:hover {
         .thumbnail-view-hover {
-          -webkit-transform: translateY(0%);
-          -moz-transform: translateY(0%);
-          -ms-transform: translateY(0%);
-          -o-transform: translateY(0%);
         }
         img {
           opacity: 0.1;

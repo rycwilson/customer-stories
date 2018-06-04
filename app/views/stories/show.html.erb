@@ -38,10 +38,17 @@
   <!-- includes video -->
   <div id="testimonial" class="<%= @story.video_url.present? ? '' : 'no-video' %>">
 
-    <% cache("#{@company.subdomain}/story-#{@story.id}-testimonial",
-             skip_digest: true) do %>
-      <%= render 'stories/show/testimonial',
-            { story: @story, video_present: @story.video_url.present? } %>
+    <% cache("#{@company.subdomain}/story-#{@story.id}-testimonial", skip_digest: true) do %>
+
+      <%= render(
+            'stories/show/testimonial',
+            {
+              story: @story,
+              video_present: @story.video_url.present?,
+              long_customer_name: @story.customer.name.length > 20
+            }
+          ) %>
+
     <% end %>
 
   </div>

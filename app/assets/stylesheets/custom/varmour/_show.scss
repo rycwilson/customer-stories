@@ -1,6 +1,5 @@
 
 #testimonial {
-  position: relative;
   font-family: $metropolis-regular;
   .customer-logo-quote.visible-xs-block {
     .customer-logo {
@@ -36,8 +35,7 @@
 }
 
 @media only screen and (max-width: 767px) {
-    #testimonial .visible-xs-block {
-    }
+  #testimonial .visible-xs-block {
     #story-section-video-xs {
     }
     #social-buttons-xs {
@@ -45,53 +43,37 @@
     #story-section-content {
     }
   }
+}
 
-  @media only screen and (min-width: 768px) {
-    #testimonial .hidden-xs {
-      .customer-logo {
-        span {
-          font-size: 15px;
-          line-height: 45px;
-        }
-      }
-      .customer-quote {
-        .lead {
-          font-size: 16px;
-        }
-      }
+@media only screen and (min-width: 768px) {
+  #testimonial .hidden-xs {
+    .customer-logo {
     }
-    #story-section-content {
+    .customer-quote {
     }
   }
+  #story-section-content {
+  }
+}
 
-  @media only screen and (min-width: 992px) {
-    #testimonial .hidden-xs {
-      .customer-logo {
-        span {
-          font-size: 16px;
-          line-height: 50px;
-        }
-      }
-      .customer-quote {
-        .lead {
-          font-size: 16px;
-        }
-      }
+@media only screen and (min-width: 992px) {
+  #testimonial .hidden-xs {
+    .customer-logo {
     }
-    #story-section-content {
+    .customer-quote {
     }
   }
+  #story-section-content {
+  }
+}
 
-  @media only screen and (min-width: 1200px) {
-    #testimonial .hidden-xs {
-      .customer-logo {
-        span { font-size: 18px; }
-      }
-      .customer-quote {
-        p { font-size: 18px; }
-      }
-
+@media only screen and (min-width: 1200px) {
+  #testimonial .hidden-xs {
+    .customer-logo {
     }
-    #story-section-content {
+    .customer-quote {
     }
   }
+  #story-section-content {
+  }
+}

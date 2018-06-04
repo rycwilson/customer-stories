@@ -47,6 +47,9 @@
     .story-video.hidden-xs {
       margin: 0 0 10px 0;
     }
+    &.no-video {
+      padding-top: 15px;
+    }
     &:after {
       content: '';
       position: absolute;
@@ -173,16 +176,19 @@
     #testimonial {
       margin-bottom: 70px;
       .customer-logo-quote.hidden-xs {
-        .customer-logo span {
-          font-size: 15px;
+        .customer-logo {
+
         }
         .customer-name {
           margin: 10px 0;
-          span { }
+          span { font-size: 14px; }
         }
-        .customer-quote p {
-          font-size: 16px;
+        .customer-quote {
           padding: 0 20px;
+          p {
+            font-size: 14px;
+            // padding: 0 40px 0 20px;
+          }
         }
       }
       .no-video.hidden-xs {
@@ -192,7 +198,23 @@
         height: 70px;
       }
       &.no-video {
-        padding-bottom: 30px;
+        margin-bottom: 90px;
+        .customer-logo-quote.hidden-xs {
+          .customer-logo span {
+          }
+          .customer-name {
+          }
+          .customer-quote {
+            padding: 0 80px 0 0;
+            p {
+              font-size: 16px;
+              // padding: 0 40px 0 20px;
+            }
+          }
+        }
+      }
+      &.no-video:after {
+        height: 90px;
       }
     }
     #story-section-content {
@@ -209,16 +231,28 @@
   @media only screen and (min-width: 992px) {
     #testimonial {
       .customer-logo-quote.hidden-xs {
+        .customer-logo {
+        }
         .customer-name {
           margin: 15px 0;
           span { font-size: 16px; }
         }
-        .customer-quote p {
-          font-size: 16px;
+        .customer-quote {
+          padding: 0 40px;
+          p {
+            font-size: 16px;
+          }
         }
       }
       .no-video.hidden-xs {
         padding: 15px 30px 0 30px;
+      }
+      &.no-video {
+        .customer-logo-quote.hidden-xs {
+          .customer-quote {
+            padding: 0 100px 0 0;
+          }
+        }
       }
     }
     #story-section-content {
@@ -235,12 +269,14 @@
         .customer-name {
           span { font-size: 18px; }
         }
-        .customer-quote p {
-          font-size: 18px;
+        .customer-quote {
+          p {
+            font-size: 18px;
+          }
         }
       }
       &.no-video {
-        padding-bottom: 30px;
+        // padding-bottom: 30px;
       }
     }
     #story-section-content {
