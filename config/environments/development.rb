@@ -35,6 +35,7 @@ Rails.application.configure do
   # Do not eager load code on boot.
   config.eager_load = false
 
+
   # Show full error reports
   config.consider_all_requests_local = true
 
@@ -67,6 +68,12 @@ Rails.application.configure do
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
   config.assets.debug = true
+
+  # sassc-rails
+  # ref: https://stackoverflow.com/questions/23180867
+  config.sass.inline_source_maps = true
+  config.sass.debug_info = true
+  config.sass.line_comments = false
 
   # Asset digests allow you to set far-future HTTP expiration dates on all assets,
   # yet still be able to expire them through the digest params.
