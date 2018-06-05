@@ -1,0 +1,19 @@
+
+#company-header {
+  opacity: 0.9;
+  #primary-cta-btn {
+    font-size: 13px;
+    color: #e41516;
+    border: 1px solid #e41516;
+    border-radius: 20px;
+    line-height: 38px;
+    padding: 0 26px;
+    text-align: center;
+    font-weight: 600;
+    transition: background .25s ease;
+  }
+  #primary-cta-btn:hover {
+    background: #e41516;
+    color: #fff;
+  }
+}

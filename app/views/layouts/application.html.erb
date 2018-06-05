@@ -34,7 +34,7 @@
 
   <% if admin_navbar?(controller_name) %>
 
-    <%= render('shared/navbars/mvp_admin_navbar', { company: @company }) %>
+    <%= render('shared/navbars/company_header', { company: @company }) %>
 
   <% elsif @zap_auth_initial_req %>
 

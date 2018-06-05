@@ -5,16 +5,7 @@ body.compas {
   .grid-container .grid a.thumbnail .thumbnail-view .thumbnail-view-hover p {
     font-family: "Open Sans", sans-serif;
   }
-  .admin.navbar {
-    opacity: 0.9;
-  }
-  #stories-header-wrapper {
-    padding-top: 70px;
-    #stories-header {
-      margin-top: 0;
-    }
-  }
-  #company-nav {
-    // margin-top: 65px;
-  }
+
+  @import 'company_header';
+  @import 'stories_header';
 }

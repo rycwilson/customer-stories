@@ -23,6 +23,9 @@
         }
       }
     }
+    &:after {
+      background-image: linear-gradient(to bottom, #f5f6f7 0%, #ffffff 100%);
+    }
   }
 }
 

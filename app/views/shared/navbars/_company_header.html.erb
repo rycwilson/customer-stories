@@ -18,12 +18,12 @@
 
 <% end %>
 
-<nav class="navbar navbar-default admin <%= fixed_navbar?(@company, controller_name, action_name) ? 'navbar-fixed-top' : '' %>" role="banner" style="background:<%= @company ? @company.header_color_1 : Company::CSP.header_color_1 %>">
+<nav id="company-header" class="navbar navbar-default admin <%= fixed_navbar?(@company, controller_name, action_name) ? 'navbar-fixed-top' : '' %>" role="banner" style="background:<%= @company ? @company.header_color_1 : Company::CSP.header_color_1 %>">
   <div class="container navbar-container">
     <div class="row">
 
       <div class="navbar-header <%= controller_name == 'stories' && (['index', 'show'].include?(action_name)) ? 'col-xs-8' : 'col-xs-12' %>">
-        <%= render('shared/navbars/admin_navbar_header', { company: @company }) %>
+        <%= render('shared/navbars/company_logo', { company: @company }) %>
       </div>
 
       <% if controller_name == 'stories' && (['index', 'show'].include?(action_name)) %>
@@ -32,10 +32,13 @@
 
           <% if @company.ctas.primary.present? %>
 
-            <%= link_to(@company.ctas.primary.display_text,
-                  @company.ctas.primary.link_url, target: '_blank',
-                  id: 'primary-cta-btn', class: "btn cta-link #{@company.subdomain}",
-                  style: primary_cta_style(@company)) %>
+            <%= link_to(
+                  @company.ctas.primary.display_text,
+                  @company.ctas.primary.link_url,
+                  target: '_blank',
+                  class: "btn cta-link #{@company.subdomain}",
+                  style: primary_cta_style(@company)
+                ) %>
 
           <% end %>
 

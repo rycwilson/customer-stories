@@ -1,11 +1,5 @@
 
-.stories.index, .stories.show {
-  .navbar.admin {
-    height: 70px;
-  }
-}
-
-.navbar.admin {
+#company-header {
   /* color1, color2, and text color are defined in company model */
   /* background-color set to transparent in mvpready-admin.css */
   background-clip: border-box;
@@ -27,6 +21,15 @@
           }
         }
       }
+      .btn.cta-link, .btn.cta-form {
+        font-weight: 400;
+        &:hover, &:focus {
+          opacity: 0.9;
+        }
+      }
     }
+  }
+  .stories.index &, .stories.show & {
+    height: 70px;
   }
 }

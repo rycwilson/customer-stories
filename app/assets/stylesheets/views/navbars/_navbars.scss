@@ -44,34 +44,7 @@
 
 
 
-#primary-cta-btn {
-  // margin-top: 15px;
-  font-weight: 400;
-  border-radius: 2px;
-  border: 1px solid;
-  min-width: 140px
-}
-#primary-cta-btn:hover, #primary-cta-btn:focus {
-  border: 1px solid;
-  box-shadow: 0 0 0 1px #fff inset;
-  outline: none !important;
-}
 
-#primary-cta-btn.compas {
-  font-size: 13px;
-  color: #e41516;
-  border: 1px solid #e41516;
-  border-radius: 20px;
-  line-height: 38px;
-  padding: 0 26px;
-  text-align: center;
-  font-weight: 600;
-  transition: background .25s ease
-}
-#primary-cta-btn.compas:hover {
-  background: #e41516;
-  color: #fff;
-}
 
 
 

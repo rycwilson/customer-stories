@@ -30,7 +30,7 @@ module StoriesHelper
     if company.subdomain == 'compas'
       ""
     else
-      "background-color:#{company.primary_cta_background_color};color:#{company.primary_cta_text_color};border-color:#{company.primary_cta_background_color}"
+      "background-color:#{company.primary_cta_background_color};color:#{company.primary_cta_text_color}"
     end
   end
 

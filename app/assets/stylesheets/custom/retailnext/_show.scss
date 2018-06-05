@@ -17,15 +17,22 @@
     }
   }
   &:after {
+    background-image: linear-gradient(to top, #f5f5f3 0%, #ffffff 100%);
   }
 }
 
+#related-stories ul {
+  background-color: #f5f5f3;
+}
+
 #story-section-video-xs, #social-buttons-xs {
+  background-color: #f5f5f3;
 }
 
 #story-section-content {
   h4 { font-family: $metropolis-regular; }
   font-family: $metropolis-regular;
+  background-color: #f5f5f3;
   .well {
   }
 }
