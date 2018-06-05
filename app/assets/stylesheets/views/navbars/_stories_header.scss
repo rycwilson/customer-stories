@@ -138,7 +138,7 @@
         // }
       }
     }
-    &:after {
+    &.show:after {
       content: '';
       position: absolute;
       top: 100%;

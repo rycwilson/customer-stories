@@ -12,7 +12,6 @@ function storiesIndex () {
   // but what about a turbolinks restore?
   // preSelectFilters(getQueryString('category'), getQueryString('product'));
 
-  storyHoverHandler($('#stories-gallery').children('li'));
 }
 
 function storiesIndexListeners () {
@@ -253,7 +252,6 @@ function updateGallery ($stories) {
       .append($stories)
       .hide()
       .show('fast', initGridPreviews);
-    storyHoverHandler($('#stories-gallery').children());
   });
 }
 

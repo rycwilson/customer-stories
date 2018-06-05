@@ -1,7 +1,75 @@
 
-// Why is this rule so convoluted?
-// => the specificity must match the original setting in order to override
-.stories.show #testimonial .testimonial > div:first-child .row.customer-quote .lead,
+
+#testimonial {
+  font-family: $metropolis-regular;
+  .customer-logo-quote.visible-xs-block {
+    .customer-logo {
+    }
+    .customer-quote p {
+    }
+    .customer-quote-attr {
+    }
+  }
+  .customer-logo-quote.hidden-xs {
+    .customer-logo {
+    }
+    .customer-quote {
+    }
+  }
+  &:after {
+  }
+}
+
+#story-section-video-xs, #social-buttons-xs {
+}
+
 #story-section-content {
-  font-family: "Open Sans", Arial, Helvetica, sans-serif;
+  h4 { font-family: $metropolis-regular; }
+  font-family: $metropolis-regular;
+  .well {
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  #testimonial .visible-xs-block {
+    #story-section-video-xs {
+    }
+    #social-buttons-xs {
+    }
+    #story-section-content {
+    }
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  #testimonial .hidden-xs {
+    .customer-logo {
+    }
+    .customer-quote {
+    }
+  }
+  #story-section-content {
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  #testimonial .hidden-xs {
+    .customer-logo {
+    }
+    .customer-quote {
+    }
+  }
+  #story-section-content {
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  #testimonial .hidden-xs {
+    .customer-logo {
+    }
+    .customer-quote {
+    }
+  }
+  #story-section-content {
+  }
 }

@@ -29,33 +29,3 @@ function attachStoriesListeners () {
   // });
 
 }
-
-// doing this in js so we can have timeout delay in one direction only
-// (TODO: maybe a transition on display propery?)
-function storyHoverHandler ($stories) {
-  $stories.hover(
-    function () {
-      var $story = $(this);
-      if ($story.hasClass('loading') || $story.find('a').hasClass('logo-published')) {
-        return false;
-      }
-      setTimeout(function () {
-        $story.find('.caption').children().toggle();
-      }, 230);
-    },
-    function () {
-      var $story = $(this);
-      if ($story.hasClass('loading') || $story.find('a').hasClass('logo-published')) {
-        return false;
-      }
-      $story.find('.caption').children().toggle();
-    }
-  );
-}
-
-
-
-
-
-
-

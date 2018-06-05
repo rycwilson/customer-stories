@@ -1,10 +1,14 @@
 
 body.retailnext {
 
+  background: {
+    // color: #fff;
+  }
+
   @import 'company_header';
   @import 'stories_header';
-  @import 'index';
-  @import 'show';
+
+  &.stories.show { @import 'show'; }
 
   h3 {
     font-family: $metropolis-medium;
@@ -45,15 +49,10 @@ body.retailnext {
       }
       .caption {
         font: {
-          family: "Open Sans", Arial, Helvetica, sans-serif;
+          family: $metropolis-light;;
           size: 14px;
-          weight: 300;
         }
         color: #444;
-        span:last-child:not(:only-child) {
-          display: none;
-          text-decoration: underline;
-        }
       }
       &:hover {
         // NOTE: this screws with the story preview

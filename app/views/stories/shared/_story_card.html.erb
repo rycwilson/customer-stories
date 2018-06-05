@@ -25,10 +25,8 @@
       </div>
 
       <div class="caption">
-        <span><%= story.customer.name %></span>
-        <% if story.published? || story.preview_published? %>
-          <span><%= story.published? ? 'Read Story' : 'See More' %></span>
-        <% end %>
+        <span class="customer-name"><%= story.customer.name %></span>
+        <span class="click-action"></span>
       </div>
 
       <div class='still-loading-container'>

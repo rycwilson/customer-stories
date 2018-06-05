@@ -71,8 +71,8 @@ function initEvents(callback) {
   $items.on( 'click', 'span.og-close', function() {
     hidePreview();
     return false;
-  } ).children( 'a.preview-published' ).on( 'click', function(e) {
-    var $item = $( this ).parent();
+  } ).on( 'click', function(e) {
+    var $item = $( this );
     // check if item already opened
     current === $item.index() ? hidePreview() : showPreview( $item );
     return false;
@@ -100,7 +100,6 @@ function initEvents(callback) {
 }
 
 function showPreview( $item ) {
-
   var preview = $.data( this, 'preview' ),
       // item´s offset top
       position = $item.data( 'offsetTop' );
@@ -124,6 +123,7 @@ function showPreview( $item ) {
       return false;
     }
 
+
   }
 
   // update previewPos
@@ -132,7 +132,6 @@ function showPreview( $item ) {
   preview = $.data( this, 'preview', new Preview( $item ) );
   // expand preview overlay
   preview.open();
-
 }
 
 function hidePreview() {
@@ -189,7 +188,6 @@ Preview.prototype.update = function( $item ) {
   // if already expanded, remove class "og-expanded" from current item and add it to new item
   if( current !== -1 ) {
     var $currentItem = $items.eq( current );
-    $currentItem.removeClass( 'og-expanded' );
     this.$item.addClass( 'og-expanded' );
     // position the preview correctly
     this.positionPreview();
@@ -256,14 +254,12 @@ Preview.prototype.update = function( $item ) {
 };
 
 Preview.prototype.open = function() {
-
   setTimeout( $.proxy( function() {
     // set the height for the preview and the item
     this.setHeights();
     // scroll to position the preview in the right place
     this.positionPreview();
   }, this ), 25 );
-
 };
 
 Preview.prototype.setHeights = function() {
