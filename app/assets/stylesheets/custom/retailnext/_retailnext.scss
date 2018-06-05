@@ -2,7 +2,7 @@
 body.retailnext {
 
   background: {
-    // color: #fff;
+    color: #f5f5f3;
   }
 
   @import 'company_header';
@@ -22,6 +22,15 @@ body.retailnext {
       &.short {
       }
     }
+    .og-expander {
+      background: #ebebeb;
+    }
+    .grid-item.og-expanded > a::after {
+      bottom: -12px;
+      border-bottom-color: #ebebeb;
+      border-width: 18px;
+      margin: 0 0 0 -18px;
+    }
   }
 
   #stories-gallery, #related-stories {
@@ -29,11 +38,20 @@ body.retailnext {
     li {
       // NOTE: this screws with the story previews
       // &:hover { margin: 10px; }
+      &.og-expanded {
+        a {
+          background-color: #ebebeb;
+          transition: background-color 0.23s ease-in-out;
+          img { opacity: 0 };
+        }
+      }
     }
 
     a.thumbnail {
-      border: 1px solid #ebebeb;
+      border: 0;
+      border-bottom: 2px solid #ccc;
       box-shadow: 0 0;
+      transition: background-color 0.23s ease-in-out;
       .thumbnail-view {
         .thumbnail-view-hover {
           p {
@@ -45,6 +63,7 @@ body.retailnext {
           }
         }
         img {
+          mix-blend-mode: multiply;
         }
       }
       .caption {
@@ -53,6 +72,9 @@ body.retailnext {
           size: 14px;
         }
         color: #444;
+        .click-action:after {
+          color: #00b1c4
+        }
       }
       &:hover {
         // NOTE: this screws with the story preview
@@ -60,7 +82,10 @@ body.retailnext {
         // width: 262px;
         // height: 190px;
         // border: 10px solid #ebebeb;
+        border: 0;
+        border-bottom: 2px solid #ccc;
         box-shadow: 0 0;
+        background-color: #ebebeb;
       }
       &.title-present:hover {
         .thumbnail-view-hover {
@@ -70,7 +95,7 @@ body.retailnext {
           -o-transform: translateY(0%);
         }
         img {
-          opacity: 0.05;
+          opacity: 0;
         }
       }
       &:active {
@@ -79,6 +104,9 @@ body.retailnext {
       }
       &.public.logo-published {
         pointer-events: none;
+      }
+      &:after {
+        border-bottom-color: #ebebeb;
       }
     }
   }
