@@ -24,16 +24,19 @@
          style="{{= !isCurator && !(story.published || story.preview_published) ? 'pointer-events:none' : ';' }}">
 
         <div class="thumbnail-view">
+
           {{ if (story.title) { }}
-          <div class='thumbnail-view-hover'>
-            <p>{{= story.title }}</p>
-          </div>
+            <div class='thumbnail-view-hover'>
+              <p>{{= story.title }}</p>
+            </div>
           {{ } }}
+
           {{ if (story.success.customer.logo_url) { }}
             <img src="{{= story.success.customer.logo_url }}">
           {{ } else { }}
             <img src="<%= LOGO_PLACEHOLDER_URL %>">
           {{ } }}
+
         </div>
 
         <div class="caption">
