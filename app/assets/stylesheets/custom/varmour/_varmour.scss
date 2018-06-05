@@ -43,13 +43,12 @@ body.varmour {
         }
         text-transform: uppercase;
         color: #000;
-        span:last-child:not(:only-child) {
-          text-decoration: none;
-        }
+        .click-action:after { text-decoration: none; }
       }
       &:hover {
         background-color: #edf5f8;
         border-color: #999;  // override bootstrap .thumbnail
+        box-shadow: 0 0;
       }
       &.title-present:hover {
         .thumbnail-view-hover {
