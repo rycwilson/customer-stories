@@ -65,32 +65,29 @@ Rails.application.routes.draw do
       get '/search', on: :collection, to: 'stories#search'
     end
 
+
+    # routing constraints cause issues within the devise authenticate block
+    # (possible explanation? https://anadea.info/blog/rails-authentication-routing-constraints-considered-harmful)
+    # => bring these routes outside the authenticate block and authenticate in the controller
+    get '/:workflow_stage', to: 'companies#show',
+          constraints: lambda { |params, request|
+            # params[:id] = request.env['warden'].user(:user).try(:company_id).to_s
+            params[:workflow_stage].match(/(prospect|curate|promote|measure)/)
+            # params[:id].present?  # i.e. user signed in
+          }, as: 'company_main'
+    get '/curate/:customer_slug/:story_slug', to: 'stories#edit',
+          constraints: lambda { |params, request|
+            Customer.friendly.exists?(params[:customer_slug]) &&
+            Story.friendly.exists?(params[:story_slug])
+          }, as: 'curate_story'
+    get '/promote/preview/:story_slug', to: 'adwords#preview',
+          constraints: lambda { |params, request|
+            Story.friendly.exists?(params[:story_slug])
+          }
+
     authenticate :user do
 
-      # using constraints to get access to the request object and thereby the signed in user,
-      # this allows us to provide the company_id parameter that's missing from the route
-      get '/:workflow_stage', to: 'companies#show',
-            constraints: lambda { |params, request|
-              params[:id] = request.env['warden'].user(:user).try(:company_id).to_s
-              params[:workflow_stage].match(/(prospect|curate|promote|measure)/) &&
-              params[:id].present?  # i.e. user signed in
-            }, as: 'company_main'
-      get '/curate/:customer_slug/:story_slug', to: 'stories#edit',
-            constraints: lambda { |params, request|
-              Customer.friendly.exists?(params[:customer_slug]) &&
-              Story.friendly.exists?(params[:story_slug]) &&
-              params[:id] = Story.friendly.find(params[:story_slug]).id
-            }, as: 'curate_story'
-      get '/promote/preview/:story_slug', to: 'adwords#preview',
-            constraints: lambda { |params, request|
-              Story.friendly.exists?(params[:story_slug]) &&
-              params[:id] = Story.friendly.find(params[:story_slug]).id
-            }
-      get '/settings', to: 'companies#edit',
-            constraints: lambda { |params, request|
-              params[:id] = request.env['warden'].user(:user).company_id.to_s
-              true
-            }, as: 'company_settings'
+      get '/settings', to: 'companies#edit', as: 'company_settings'
 
       resources :companies, only: [:show, :edit, :update] do
         resources :customers, only: [:create, :update, :destroy], shallow: true
@@ -145,6 +142,29 @@ Rails.application.routes.draw do
       get '/stories/:id/approval', to: 'stories#approval', as: 'story_approval'
 
     end
+
+    # get '/:workflow_stage', to: 'companies#show',
+    #         constraints: lambda { |params, request|
+    #           params[:id] = request.env['warden'].user(:user).try(:company_id).to_s
+    #           params[:workflow_stage].match(/(prospect|curate|promote|measure)/) &&
+    #           params[:id].present?  # i.e. user signed in
+    #         }, as: 'company_main'
+    #   get '/curate/:customer_slug/:story_slug', to: 'stories#edit',
+    #         constraints: lambda { |params, request|
+    #           Customer.friendly.exists?(params[:customer_slug]) &&
+    #           Story.friendly.exists?(params[:story_slug]) &&
+    #           params[:id] = Story.friendly.find(params[:story_slug]).id
+    #         }, as: 'curate_story'
+    #   get '/promote/preview/:story_slug', to: 'adwords#preview',
+    #         constraints: lambda { |params, request|
+    #           Story.friendly.exists?(params[:story_slug]) &&
+    #           params[:id] = Story.friendly.find(params[:story_slug]).id
+    #         }
+    #   get '/settings', to: 'companies#edit',
+    #         constraints: lambda { |params, request|
+    #           params[:id] = request.env['warden'].user(:user).company_id.to_s
+    #           true
+    #         }, as: 'company_settings'
 
     # token needed for access outside of user-authorized routes
     # type IN ('contribution', 'feedback', 'opt_out', 'remove')

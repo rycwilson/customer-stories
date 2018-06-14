@@ -1,6 +1,8 @@
 class CompaniesController < ApplicationController
 
-  before_action :user_authorized?, only: [:edit, :show]
+  before_action :authenticate_user!, only: [:show]
+  # application#check_subdomain takes care of this...
+  # before_action :user_authorized?, only: [:edit, :show]
   before_action :set_company, except: [:new, :create, :get_curators, :get_invitation_templates]
   before_action only: [:show, :edit] { set_gon(@company) }
   before_action :set_s3_direct_post, only: [:new, :edit, :show, :create]
@@ -147,7 +149,7 @@ class CompaniesController < ApplicationController
   end
 
   def set_company
-    @company = Company.find(params[:id])
+    @company = Company.find_by_id(params[:id]) || Company.find_by_subdomain(request.subdomain)
   end
 
   def user_authorized?

@@ -1,8 +1,9 @@
 class AdwordsController < ApplicationController
 
-  before_action() { set_company(params) }
+  before_action(:authenticate_user!, only: [:preview])
+  before_action { set_company(params) }
   before_action({ except: [:update_company, :sync_company] }) { set_story(params) }
-  before_action() { @promote_enabled = @company.promote_tr? }
+  before_action { @promote_enabled = @company.promote_tr? }
   after_action({ except: [:preview, :sync_company] }) { flash.discard if request.xhr? }
 
   def create_story_ads
@@ -54,9 +55,7 @@ class AdwordsController < ApplicationController
   end
 
   def update_company
-    puts "adwords#update_company()"
-    puts "params[:company]:"
-    pp params[:company]
+    # pp params[:company]
     # ajax request performed a JSON.stringify in order to preserve nested arrays
     if request.format == :js
       params[:company] = JSON.parse(params[:company])
@@ -126,6 +125,7 @@ class AdwordsController < ApplicationController
 
   def preview
     # disable the ad links in production
+    @company = @story.company
     @is_production = ENV['HOST_NAME'] == 'customerstories.net'
     @story_url = @story.csp_story_url
     @short_headline = @company.adwords_short_headline
@@ -159,10 +159,12 @@ class AdwordsController < ApplicationController
   end
 
   def set_story (params)
+
     if ['create_story_ads', 'remove_story_ads'].include?(params[:action])
       @story = Story.find(params[:id])
     elsif ['update_story_ads', 'preview'].include?(params[:action])
-      @story = Story.includes(adwords_ads: { adwords_image: {} }).find(params[:id])
+      @story = Story.includes(adwords_ads: { adwords_image: {} }).find_by_id(params[:id]) ||
+               Story.includes(adwords_ads: { adwords_image: {} }).friendly.find(params[:story_slug])
     end
   end
 

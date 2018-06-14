@@ -6,7 +6,10 @@ class StoriesController < ApplicationController
   before_action :set_company
   before_action :set_story, only: [:edit, :update, :ctas, :tags, :promote, :approval, :destroy]
   before_action only: [:show] { @is_curator = @company.curator?(current_user) }
-  before_action only: [:edit] { user_authorized?(@story, current_user) }
+  before_action only: [:edit] do
+    authenticate_user!
+    user_authorized?(@story, current_user)
+  end
   before_action only: [:index, :show, :edit] { set_gon(@company) }
   before_action only: [:show] { set_public_story_or_redirect(@company) }
   before_action only: [:show, :approval] { set_contributors(@story) }
@@ -345,7 +348,7 @@ class StoriesController < ApplicationController
   end
 
   def set_story
-    @story = Story.find(params[:id])
+    @story = Story.find_by_id(params[:id]) || Story.friendly.find(params[:story_slug])
   end
 
   def set_contributors story
