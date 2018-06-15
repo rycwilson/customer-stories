@@ -1,5 +1,5 @@
 
-body.retailnext {
+body.retailnext:not(.companies):not(.profile) {
 
   font-family: "Open Sans", Calibri, Arial, Helvetica, sans-serif;
   background: {

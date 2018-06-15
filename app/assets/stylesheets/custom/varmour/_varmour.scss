@@ -1,6 +1,6 @@
 
 
-body.varmour {
+body.varmour:not(.companies):not(.profile) {
 
   font-family: $metropolis-regular;
 

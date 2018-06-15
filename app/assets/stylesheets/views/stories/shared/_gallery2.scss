@@ -235,6 +235,9 @@
         }
       }
     }
+    &:not(#stories-gallery) li {
+      margin: 15px;
+    }
   }
 }
 

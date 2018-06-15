@@ -1,4 +1,8 @@
 
+body {
+  // this prevents presence/absence of scroll bar from shfiting the page left/right
+  overflow-y: scroll;
+}
 
 body:not(.site) {
   background-color: #f9f9f9;
