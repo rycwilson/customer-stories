@@ -26,7 +26,7 @@
 
       <% if @related_stories.length >= 2 %>
 
-         <div id='related-stories' class='well hidden-xs'>
+        <div id='related-stories' class='well hidden-xs'>
 
           <div class="row">
             <div class="col-sm-12">
@@ -37,14 +37,12 @@
 
           <div class="grid-container">
             <ul class="grid list-unstyled text-center">
+
               <% @related_stories.each do |story| %>
-
-                <%= render 'stories/shared/story_card',
-                            { company: @company, story: story } %>
-
+                <%= render('stories/shared/story_card', { company: @company, story: story }) %>
               <% end %>
-            </ul>
 
+            </ul>
           </div>
 
         </div>
@@ -136,13 +134,11 @@
 
           <div class="grid-container">
             <ul class="grid list-unstyled text-center">
+
               <% @related_stories.each do |story| %>
-
-                <%= render 'stories/shared/story_card',
-                            { company: @company, story: story,
-                              customer: story.success.customer } %>
-
+                <%= render('stories/shared/story_card', { company: @company, story: story }) %>
               <% end %>
+
             </ul>
           </div>
 

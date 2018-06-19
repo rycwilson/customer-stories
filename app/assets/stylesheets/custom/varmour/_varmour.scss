@@ -14,47 +14,55 @@ body.varmour:not(.companies):not(.profile) {
 
   #stories-gallery, #related-stories {
 
-    a.thumbnail {
-      transition: background-color 0.5s ease-in-out;
-      border: 1px solid #999;
-      box-shadow: 0 0;
-      .thumbnail-view {
-        .thumbnail-view-hover {
-          padding: 10px;
-          border-radius: 0;
-          p {
-            font: {
-              family: $metropolis-medium;
-              size: 14px;
-              weight: normal;
+    li {
+      &.loading {
+        a {
+          background-color: #edf5f8;
+        }
+      }
+      a.thumbnail {
+        transition: background-color 0.5s ease-in-out;
+        border: 1px solid #999;
+        box-shadow: 0 0;
+        .thumbnail-view {
+          .thumbnail-view-hover {
+            padding: 10px;
+            border-radius: 0;
+            p {
+              font: {
+                family: $metropolis-medium;
+                size: 14px;
+                weight: normal;
+              }
+              color: #000;
             }
-            color: #000;
+          }
+          img {
+            padding: 24px;
+            mix-blend-mode: multiply;
           }
         }
-        img {
-          padding: 24px;
+        .caption {
+          font: {
+            family: $metropolis-light;
+            size: 10px;
+            weight: 300;
+          }
+          text-transform: uppercase;
+          color: #000;
+          .click-action:after { text-decoration: none; }
         }
-      }
-      .caption {
-        font: {
-          family: $metropolis-light;
-          size: 10px;
-          weight: 300;
+        &:hover, &:active {
+          background-color: #edf5f8;
+          border-color: #999;  // override bootstrap .thumbnail
+          box-shadow: 0 0;
         }
-        text-transform: uppercase;
-        color: #000;
-        .click-action:after { text-decoration: none; }
-      }
-      &:hover {
-        background-color: #edf5f8;
-        border-color: #999;  // override bootstrap .thumbnail
-        box-shadow: 0 0;
-      }
-      &.title-present:hover {
-        .thumbnail-view-hover {
-        }
-        img {
-          opacity: 0.1;
+        &.title-present:hover {
+          .thumbnail-view-hover {
+          }
+          img {
+            opacity: 0.1;
+          }
         }
       }
     }

@@ -13,15 +13,6 @@ module StoriesHelper
     end
   end
 
-  # extra parameter is necessary because user not connected to customer
-  def research_user_query_string contributor, customer_name=nil
-    if customer_name.present?
-      contributor.first_name + "+" + contributor.last_name + "+" + customer_name
-    else
-      contributor.first_name + "+" + contributor.last_name
-    end
-  end
-
   def curator_story_view? (company_id)
     company_curator?(company_id) && controller_name == 'stories' && action_name == 'show'
   end

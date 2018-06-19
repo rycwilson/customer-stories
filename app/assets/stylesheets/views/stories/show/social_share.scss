@@ -56,22 +56,25 @@
   border-radius: 0;
   display: block;
   height: 0;
+  top: 50%;
   left: 50%;
   margin: 0;
   position: absolute;
-  top: 50%;
-  -webkit-transition: all 0.1s;
-     -moz-transition: all 0.1s;
-       -o-transition: all 0.1s;
-          transition: all 0.1s;
+  -webkit-transition: all 0s;
+     -moz-transition: all 0s;
+       -o-transition: all 0s;
+          transition: all 0s;
   width: 0;
 }
 
-.icon-button:hover span {
-  width: 3.2rem;
-  height: 3.2rem;
-  border-radius: 3.2rem;
-  margin: -1.6rem;
+.icon-button:hover {
+  // font-size: 1.9rem;
+  span {
+    width: 3rem;
+    height: 3rem;
+    border-radius: 3rem;
+    margin: -1.5rem;
+  }
 }
 
 .linkedin-share span {

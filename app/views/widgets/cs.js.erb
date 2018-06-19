@@ -18,23 +18,24 @@
   function main () {
 
     $(function () {
-      var type = '<%= @type %>', $container,
-          $script = (type === 'tab') ? $('script[src*="tab"]') :
-                      (type === 'rel' ? $('script[src*="rel/"]') : $('script[src*="rel-exp"]')),
+
+      // type IN ['carousel', 'fixed-carousel', 'gallery']
+      var type = '<%= @type %>', $script, $container,
           $stylesheet = $("<link>", { rel: "stylesheet", type: "text/css" });
 
-      if (type === 'tab') {
-        $container = $('#cs-container').length ? $('#cs-container') : $('#cs-tab-container');
-        $stylesheet.attr('href', "<%= URI.join(root_url, asset_path('widget/cs-widget-tab.css')) %>");
-      } else if (type === 'rel') {
-        $container = $('#cs-rel-container');
-        $stylesheet.attr('href', "<%= URI.join(root_url, asset_path('widget/cs-widget-rel.css')) %>");
-      } else if (type === 'rel-exp') {
-        $container = $('#cs-rel-exp-container');
-        $stylesheet.attr('href', "<%= URI.join(root_url, asset_path('widget/cs-widget-rel-exp.css')) %>");
-      } else if (type === 'varmour') {
-        $container = $('#cs-varmour-container');
-        $stylesheet.attr('href', "<%= URI.join(root_url, asset_path('widget/cs-widget-varmour.css')) %>");
+      if (type === 'carousel') {
+        $script = $('script[src*="carousel/cs"], script[src*="varmour/cs"]').first();
+        $container = $("#cs-carousel, #cs-varmour-container").first();
+        // asset_url doesn't work here because it won't include the subdomain
+        $stylesheet.attr('href', "<%= URI.join(root_url, asset_path('views/widgets/cs_carousel.css')) %>");
+      } else if (type === 'fixed-carousel') {
+        $script = $('script[src*="fixed-carousel/cs"], script[src*="tab/cs"], script[src*="widget/cs"]').first();
+        $container = $("#cs-fixed-carousel, #cs-tab-container, #cs-container").first();
+        $stylesheet.attr('href', "<%= URI.join(root_url, asset_path('views/widgets/cs_fixed_carousel.css')) %>");
+      } else if (type === 'gallery') {
+        $script = $('script[src*="gallery/cs"]');
+        $container = $('#cs-gallery');
+        $stylesheet.attr('href', "<%= URI.join(root_url, asset_path('views/widgets/cs_gallery.css')) %>");
       }
 
       // get font awesome if it doesn't exist on host
@@ -53,99 +54,96 @@
           data: {
             category: $script.data('category'),
             product: $script.data('product')
-          },
-          success: function (data) {
+          }
+        })
+          .done(function (data) {
             $container.html(data.html);
             // wait for all images to load so dimension calculations are correct ...
-            var $images = $container.find('img'), loadedImages = 0;
+            var $images = $container.find('img'),
+                loadedImages = 0;
             $images.on('load', function () {
               if (++loadedImages === $images.length) {
-                if (type === 'tab') {
-                  buildTabWidget($container);
+                if (type === 'fixed-carousel') {
+                  buildFixedCarousel($container);
                   scrollHandlers($container);
-                } else if (type === 'rel') {
-                  buildRelWidget($container);
-                  scrollHandlers($container);
-                } else if (type === 'rel-exp') {
-                  buildRelExpWidget($container);
-                  scrollHandlersExp($container);
-                } else if (type === 'varmour') {
-                  buildVarmourWidget($container);
+                } else if (type == 'carousel') {
+                  buildCarousel($container);
+                } else if (type === 'gallery') {
+
                 }
                 xScrollBoundaries(type);
               }
-            })
-          }
-        }); // ajax
+            });
+          });
 
       });
     });
   }
 
-  function buildRelWidget ($container) {
-    $container.find('.cs-thumbnail.published, .cs-thumbnail.preview-published').hover(
-      function () { $(this).css('border-color', '<%= @company.widget.tab_color %>'); },
-      function () { $(this).css('border-color', '#ddd'); }
-    );
-    // override bootstrap blue borders...
-    $container.find('.cs-thumbnail.logo-published').hover(
-      function () { $(this).css('border-color', '#ddd'); },
-      function () { $(this).css('border-color', '#ddd'); }
-    );
-    $container.find('section').css('visibility', 'visible');
-    if (<%= ENV['HOST_NAME'] == 'customerstories.net' %>) {
-      trackVisitor();
-    }
-  }
+  // function buildRelWidget ($container) {
+  //   $container.find('.cs-thumbnail.published, .cs-thumbnail.preview-published').hover(
+  //     function () { $(this).css('border-color', '<%= @company.widget.tab_color %>'); },
+  //     function () { $(this).css('border-color', '#ddd'); }
+  //   );
+  //   // override bootstrap blue borders...
+  //   $container.find('.cs-thumbnail.logo-published').hover(
+  //     function () { $(this).css('border-color', '#ddd'); },
+  //     function () { $(this).css('border-color', '#ddd'); }
+  //   );
+  //   $container.find('section').css('visibility', 'visible');
+  //   if (<%= ENV['HOST_NAME'] == 'customerstories.net' %>) {
+  //     trackVisitor();
+  //   }
+  // }
 
-  function buildRelExpWidget ($container) {
-    var borderColorHex = '<%= @company.widget.tab_color %>',
-        borderColorRgb = hexToRgb(borderColorHex),
-        borderOpacity = 0.8,
-        borderColorRgba = 'rgba(' + borderColorRgb.r.toString() + ',' + borderColorRgb.g.toString() + ',' + borderColorRgb.b.toString() + ',' + borderOpacity.toString()
+  // function buildRelExpWidget ($container) {
+  //   var borderColorHex = '<%= @company.widget.tab_color %>',
+  //       borderColorRgb = hexToRgb(borderColorHex),
+  //       borderOpacity = 0.8,
+  //       borderColorRgba = 'rgba(' + borderColorRgb.r.toString() + ',' + borderColorRgb.g.toString() + ',' + borderColorRgb.b.toString() + ',' + borderOpacity.toString()
 
-    // disable horizontal scrolling
-    $container.find('.row-horizon').css('overflow-x', 'hidden');
+  //   // disable horizontal scrolling
+  //   $container.find('.row-horizon').css('overflow-x', 'hidden');
 
-    $container.find('.cs-thumbnail').css('border-color', borderColorHex);
-    $container.find('.cs-caption').css('background-color', borderColorHex);
+  //   $container.find('.cs-thumbnail').css('border-color', borderColorHex);
+  //   $container.find('.cs-caption').css('background-color', borderColorHex);
 
-    textfillPlugin();
-    $container.find('.cs-caption').each(function () {
-      $(this).textfill({ minFontPixels: 12, maxFontPixels: 16 });
-    })
+  //   textfillPlugin();
+  //   $container.find('.cs-caption').each(function () {
+  //     $(this).textfill({ minFontPixels: 12, maxFontPixels: 16 });
+  //   })
 
-    // alter caption text on hover
-    $container.find('.cs-thumbnail.published, .cs-thumbnail.preview-published')
-      .hover(
-        function () {
-          var $thumbnail = $(this);
-          setTimeout(function () {
-            $thumbnail.find('.cs-caption').children().toggle();
-          }, 200);  // matches logo transition
-        },
-        function () {
-          var $thumbnail = $(this);
-          // setTimeout(function () {
-            $thumbnail.find('.cs-caption').children().toggle();
-          // }, 200);  // matches logo transition
-        }
-      );
+  //   // alter caption text on hover
+  //   $container.find('.cs-thumbnail.published, .cs-thumbnail.preview-published')
+  //     .hover(
+  //       function () {
+  //         var $thumbnail = $(this);
+  //         setTimeout(function () {
+  //           $thumbnail.find('.cs-caption').children().toggle();
+  //         }, 200);  // matches logo transition
+  //       },
+  //       function () {
+  //         var $thumbnail = $(this);
+  //         // setTimeout(function () {
+  //           $thumbnail.find('.cs-caption').children().toggle();
+  //         // }, 200);  // matches logo transition
+  //       }
+  //     );
 
-    // column widths responsive to screen width;
-    // adjust as necessary on page load and device orientation change
-    adjustColumnsWidth($container);
-    $(window).on('orientationchange', function () {
-      adjustColumnsWidth($container);
-    })
+  //   // column widths responsive to screen width;
+  //   // adjust as necessary on page load and device orientation change
+  //   adjustColumnsWidth($container);
+  //   $(window).on('orientationchange', function () {
+  //     adjustColumnsWidth($container);
+  //   })
 
-    $container.find('section').css('visibility', 'visible');
-    if (<%= ENV['HOST_NAME'] == 'customerstories.net' %>) {
-      trackVisitor();
-    }
-  }
+  //   $container.find('section').css('visibility', 'visible');
+  //   if (<%= ENV['HOST_NAME'] == 'customerstories.net' %>) {
+  //     trackVisitor();
+  //   }
+  // }
 
-  function buildVarmourWidget ($container) {
+  function buildCarousel ($container) {
     // alternative font for test environment
     varmourAltFont();
     // disable horizontal mouse/trackpad scrolling
@@ -279,7 +277,7 @@
               $container.find('.cs-scroll div').hide();
             }
             // adjust column size
-            $columns.css('width', Math.floor($carousel.width() / 2).toString() + 'px')
+            $columns.css('width', Math.floor($carousel.width() / 2).toString() + 'px');
             // adjust story margins (squish them together) if gutter too big
             var minGutterWidth = 70, marginShift = minGutterWidth / 2,
                 actualGutterWidth = $columns.first().outerWidth() - $stories.first().width();
@@ -304,7 +302,7 @@
             }
 
           } else {
-            $columns.css('width', $carousel.css('width'))
+            $columns.css('width', $carousel.css('width'));
             if ($columns.length === 1) {
               $container.find('.cs-scroll div').hide();
             }
@@ -396,6 +394,8 @@
 
     // turn on the widget, enable tracking
     $container.find('section').css('visibility', 'visible');
+
+    // enable tracking
     if (<%= ENV['HOST_NAME'] == 'customerstories.net' %>) {
       trackVisitor();
     }
@@ -429,7 +429,7 @@
     )
   }
 
-  function buildTabWidget ($container) {
+  function buildFixedCarousel ($container) {
     slideDrawerPlugin($container);
     var $header = $container.find('.cs-header'),
         widgetShowTimer = null, widgetHideTimer = null;
@@ -606,7 +606,7 @@
     // constraign trackpad scrolling (don't go forward/back in browser)
     var maxX = null;
     $(document).on('wheel',
-      '#cs-container .row-horizon, #cs-tab-container .row-horizon, #cs-rel-container .row-horizon',
+      '#cs-container .row-horizon, #cs-tab-container .row-horizon, #cs-fixed-carousel .row-horizon',
       function (event) {
         maxX = $(this).prop('scrollWidth') - $(this).prop('offsetWidth');
         // If this event looks like it will scroll beyond the bounds of the element,

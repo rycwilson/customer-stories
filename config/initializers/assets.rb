@@ -14,10 +14,9 @@ Rails.application.config.assets.precompile += %w(
   adwords/ads_preview.js
   jquery-textfill/source/jquery.textfill.js
   adwords/ads_preview.css
-  widget/cs-widget-tab.css
-  widget/cs-widget-rel.css
-  widget/cs-widget-rel-exp.css
-  widget/cs-widget-varmour.css
+  views/widgets/cs_carousel.css
+  views/widgets/cs_fixed_carousel.css
+  views/widgets/cs_gallery.css
   pdf.css
   mvpready-landing.css
   mvpready-admin.css

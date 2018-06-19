@@ -81,19 +81,20 @@ class StoriesController < ApplicationController
     # convert the story content to plain text (for SEO tags)
     @story_content_text = HtmlToPlainText.plain_text(@story.content)
     @related_stories = @story.related_stories
-    @more_stories = Story.find(@company.public_stories).sort_by { |story| @company.public_stories.index(story.id) }
-        .delete_if { |story| story.id == @story.id || story.customer.logo_url.blank? }
-        .map do |story|
-          {
-            title: story.title,
-            customer: story.customer.name,
-            logo: story.customer.logo_url,
-            path: story.published ? story.csp_story_path :
-                  (story.preview_published? ? root_path + "?preview=#{story.slug}" : root_path),
-            published: story.published,
-            preview_published: story.preview_published?,
-          }
-        end
+    @more_stories = Story.find(@company.public_stories)
+                         .sort_by { |story| @company.public_stories.index(story.id) }
+                         .delete_if { |story| story.id == @story.id || story.customer.logo_url.blank? }
+        # .map do |story|
+        #   {
+        #     title: story.title,
+        #     customer: story.customer.name,
+        #     logo: story.customer.logo_url,
+        #     path: story.published ? story.csp_story_path :
+        #           (story.preview_published? ? root_path + "?preview=#{story.slug}" : root_path),
+        #     published: story.published,
+        #     preview_published: story.preview_published?,
+        #   }
+        # end
   end
 
   def edit

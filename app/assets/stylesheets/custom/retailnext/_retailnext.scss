@@ -13,7 +13,11 @@ body.retailnext:not(.companies):not(.profile) {
   @import 'stories_header';
   @import 'gallery';
 
-  &.stories.show { @import 'show'; }
+  &.stories.show {
+    @import 'show';
+    background-color: #fff;
+  }
+
   &.stories.index { @import 'index'; }
 
   @media only screen and (max-width: 767px) {

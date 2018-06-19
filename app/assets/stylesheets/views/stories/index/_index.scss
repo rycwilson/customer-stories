@@ -11,6 +11,7 @@
         }
         .input-group-btn {
           button {
+            line-height: 1;  // effectively centers the icon
             color: #999;
             height: 30px;
             padding: 4px 6px;  // overrides bootstrap 6px 12px

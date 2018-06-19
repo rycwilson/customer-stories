@@ -5,7 +5,11 @@
 
     <% stories.each do |story| %>
 
-      <%= render 'stories/shared/story_card', { company: company, story: story } %>
+      <li class="grid-item" data-story-id="<%= story.id %>">
+
+        <%= render('stories/shared/story_card', { company: company, story: story }) %>
+
+      </li>
 
     <% end %>
 

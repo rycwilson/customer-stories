@@ -221,11 +221,19 @@ class Story < ActiveRecord::Base
   # method returns a friendly id path that either contains or omits a product
   def csp_story_path
     Rails.cache.fetch("#{self.company.subdomain}/csp-story-#{self.id}-path") do
-      url_helpers = Rails.application.routes.url_helpers
-      if success.products.present?
-        url_helpers.public_story_path(self.customer.slug, self.product_tags.take.slug, self.slug)
+      if self.product_tags.present?
+        Rails.application.routes.url_helpers.public_story_path(
+          self.customer.slug,
+          self.product_tags.take.slug,
+          self.slug,
+          subdomain: company.subdomain
+        )
       else
-        url_helpers.public_story_no_product_path(self.customer.slug, self.slug)
+        Rails.application.routes.url_helpers.public_story_no_product_path(
+          self.customer.slug,
+          self.slug,
+          subdomain: company.subdomain
+        )
       end
     end
   end
@@ -240,14 +248,31 @@ class Story < ActiveRecord::Base
   def csp_story_url
     if self.product_tags.present?
       Rails.application.routes.url_helpers.public_story_url(
-        self.customer.slug, self.product_tags.take.slug, self.slug,
+        self.customer.slug,
+        self.product_tags.take.slug,
+        self.slug,
         subdomain: company.subdomain
       )
     else
       Rails.application.routes.url_helpers.public_story_no_product_url(
-        self.customer.slug, self.slug,
+        self.customer.slug,
+        self.slug,
         subdomain: company.subdomain
       )
+    end
+  end
+
+  def csp_story_link (is_curator, is_widget, is_external)
+    if is_curator
+      Rails.application.routes.url_helpers.edit_story_path(self.id)
+    elsif self.published?
+      is_external ? self.csp_story_url : self.csp_story_path
+    elsif self.preview_published?
+      if is_widget
+        is_external ? root_url(subdomain: self.company.subdomain) + "?preview=#{story.slug}" : "?preview=#{story.slug}"
+      else
+        'javascript:;'
+      end
     end
   end
 
@@ -266,8 +291,7 @@ class Story < ActiveRecord::Base
   #  "https://fast.wistia.com/embed/medias/#{wistia_id}.jsonp"
   #
   def video_info
-    company = self.success.customer.company
-    Rails.cache.fetch("#{company.subdomain}/story-#{self.id}-video-info") do
+    Rails.cache.fetch("#{self.company.subdomain}/story-#{self.id}-video-info") do
       return { provider: nil, id: nil } if self.video_url.blank?
       if self.video_url.include? "youtube"
         { provider: 'youtube',

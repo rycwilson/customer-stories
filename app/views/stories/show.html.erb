@@ -18,16 +18,27 @@
 <% end %>
 
 <%= render 'stories/show/video_modal' %>
+
 <% @story.ctas.forms.each do |form| %>
   <%= render 'ctas/cta_form_modal', { form: form } %>
 <% end %>
 
 <% if @more_stories.present? && @company.subdomain != 'varmour' %>
+
   <div id='more-stories-container'>
-    <%= render 'widgets/more_stories_tab',
-          { widget: @company.widget, stories: @more_stories,
-            title: 'More Stories', native: true } %>
+    <%= render(
+          'widgets/stories_fixed_carousel',
+          {
+            company: @company,
+            widget: @company.widget,
+            stories: @more_stories,
+            title: 'More Stories',
+            is_widget: true,
+            is_external: false
+          }
+        ) %>
   </div>
+
 <% end %>
 
 

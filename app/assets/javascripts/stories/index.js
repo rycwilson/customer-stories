@@ -55,7 +55,7 @@ function storiesIndexListeners () {
       $('.stories-search').not($(this)).val($(this).val());
       $('.stories-search-form [name="search"]').val($(this).val());
       $('.clear-search').hide();
-      $(this).next().removeClass('show-clear');
+      $('.stories-search-form .input-group-btn').removeClass('show-clear');
     })
     .on('click', '.submit-search', function () {
       if ($(this).closest('form').find('.stories-search').val() === '') return false;
@@ -74,7 +74,7 @@ function storiesIndexListeners () {
     .on('submit', '.stories-search-form', function () {
       $('.search-results').text('');
       replaceStateStoriesIndex('', '');
-      $(this).find('.input-group-btn').addClass('show-clear');
+      $('.stories-search-form .input-group-btn').addClass('show-clear');
     })
 
     .on('click', 'a.published', function (e) {

@@ -6,7 +6,14 @@ class WidgetsController < ApplicationController
   before_action except: [:track] { @company = Company.find_by(subdomain: request.subdomain) }
 
   def script
-    @type = params[:type] || 'tab'
+    # type is either carousel or fixed-carousel
+    if params[:type] == 'varmour'
+      @type = 'carousel'
+    elsif params[:type].blank? || params[:type] == 'tab'
+      @type = 'fixed-carousel'
+    else
+      @type = params[:type]
+    end
     respond_to do |format|
       format.js { render action: 'cs' }
     end
@@ -37,44 +44,45 @@ class WidgetsController < ApplicationController
   # if invalid category or product filters, return all stories
   def widget_html (params)
     filter_params = get_filters_from_query_or_widget(@company, params, true)
-    stories = @company.filter_stories(filter_params).map! do |story|
-      if story.published?
-        target_url = story.csp_story_url
-      elsif story.preview_published?
-        target_url = root_url(subdomain: @company.subdomain) + "?preview=#{story.slug}"
-      elsif story.logo_published?
-        target_url = 'javascript:;'
-      end
-      {
-        title: story.title,
-        customer: story.customer.name,
-        logo: story.customer.logo_url,
-        url: target_url,
-        published: story.published?,
-        preview_published: story.preview_published?,
-        updated_at: story.updated_at
-      }
-    end
+    stories = @company.filter_stories(filter_params)
+      # if story.published?
+      #   target_url = story.csp_story_url
+      # elsif story.preview_published?
+      #   target_url = root_url(subdomain: @company.subdomain) + "?preview=#{story.slug}"
+      # elsif story.logo_published?
+      #   target_url = 'javascript:;'
+      # end
+      # {
+      #   title: story.title,
+      #   customer: story.customer.name,
+      #   logo: story.customer.logo_url,
+      #   url: target_url,
+      #   published: story.published?,
+      #   preview_published: story.preview_published?,
+      #   updated_at: story.updated_at
+      # }
     if @company.subdomain == 'varmour'
       # ref: https://stackoverflow.com/questions/33732208
       stories = stories.sort_by { |s| [ !s[:published] ? 0 : 1, s[:updated_at] ] }.reverse
     end
     case params[:type]
-    when 'tab'
-      partial = 'more_stories_tab'
-    when 'rel'
-      partial = 'more_stories_rel'
-    when 'rel-exp'
-      partial = 'more_stories_rel_exp'
-    when 'varmour'
-      partial = 'more_stories_varmour'
+    when 'carousel'
+      partial = 'stories_carousel'
+    when 'fixed-carousel'
+      partial = 'stories_fixed_carousel'
+    # when 'gallery'
+    #   partial = 'stories_gallery'
     end
     render_to_string(
       partial: partial,
       layout: false,
       locals: {
-        company: @company, widget: @company.widget, stories: stories,
-        title: 'Customer Stories', native: false
+        company: @company,
+        widget: @company.widget,   # applies to fixed carousel (tab style)
+        stories: stories,
+        title: 'Customer Stories',
+        is_widget: true,
+        is_external: true
       }
     )
   end

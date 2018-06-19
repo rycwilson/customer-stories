@@ -1,0 +1,10 @@
+
+// namespace the widget css so as not to interfere with anything on host page
+#cs-fixed-carousel, #cs-tab-container, #cs-container {
+
+  @import '../../../../../vendor/assets/bower_components/bootstrap-sass/assets/stylesheets/_bootstrap-widget';
+  @import '../../../../../vendor/assets/bower_components/bootstrap-horizon/bootstrap-horizon';
+  @import 'stories_fixed_carousel';
+
+}
+

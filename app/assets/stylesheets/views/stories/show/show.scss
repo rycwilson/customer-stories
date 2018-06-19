@@ -2,7 +2,7 @@
 .stories.show {
 
   @import 'social_share';
-  @import 'more_stories_tab';
+  @import '../../widgets/stories_fixed_carousel';
 
   #testimonial {
     position: relative;
