@@ -269,7 +269,7 @@ class Story < ActiveRecord::Base
       is_external ? self.csp_story_url : self.csp_story_path
     elsif self.preview_published?
       if is_widget
-        is_external ? root_url(subdomain: self.company.subdomain) + "?preview=#{story.slug}" : "?preview=#{story.slug}"
+        is_external ? Rails.application.routes.url_helpers.root_url(subdomain: self.company.subdomain) + "?preview=#{self.slug}" : "/?preview=#{self.slug}"
       else
         'javascript:;'
       end

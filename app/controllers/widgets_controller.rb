@@ -81,6 +81,7 @@ class WidgetsController < ApplicationController
         widget: @company.widget,   # applies to fixed carousel (tab style)
         stories: stories,
         title: 'Customer Stories',
+        is_curator: false,
         is_widget: true,
         is_external: true
       }
