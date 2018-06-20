@@ -42,27 +42,37 @@ body.retailnext:not(.companies):not(.profile) {
       li {
         a.thumbnail {
           .thumbnail-view {
-            .thumbnail-view-hover p {
+            .thumbnail-view-hover {
+              p {
+                font-size: 13px;
+                line-height: 20px
+              }
             }
           }
           .caption {
+            font-size: 13px;
+            height: 30%;
           }
         }
       }
     }
   }
 
-  @media only screen and (min-width: 992px) {
-    #stories-gallery, #curate-gallery {
+  @media only screen and (min-width: 992px) and (max-width: 1199px) {
+    #related-stories {
       li {
         a.thumbnail {
           .thumbnail-view {
-            .thumbnail-view-hover p {
-            }
-            img {
+            .thumbnail-view-hover {
+              p {
+                font-size: 13px;
+                line-height: 20px
+              }
             }
           }
           .caption {
+            font-size: 13px;
+            height: 30%;
           }
         }
       }

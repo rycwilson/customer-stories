@@ -5,87 +5,14 @@ body.varmour:not(.companies):not(.profile) {
   font-family: $metropolis-regular;
 
   @import 'stories_header';
+  @import 'gallery';
 
-  &.stories.show { @import 'show'; }
+  &.stories.show {
+    @import 'show';
+  }
 
   &.stories.index {
     background-color: #fafcfd;
-  }
-
-  #stories-gallery, #related-stories {
-
-    li {
-      &.loading {
-        a {
-          background-color: #edf5f8;
-        }
-      }
-      a.thumbnail {
-        transition: background-color 0.5s ease-in-out;
-        border: 1px solid #999;
-        box-shadow: 0 0;
-        .thumbnail-view {
-          .thumbnail-view-hover {
-            padding: 10px;
-            border-radius: 0;
-            p {
-              font: {
-                family: $metropolis-medium;
-                size: 14px;
-                weight: normal;
-              }
-              color: #000;
-            }
-          }
-          img {
-            padding: 24px;
-            mix-blend-mode: multiply;
-          }
-        }
-        .caption {
-          font: {
-            family: $metropolis-light;
-            size: 10px;
-            weight: 300;
-          }
-          text-transform: uppercase;
-          color: #000;
-          .click-action:after { text-decoration: none; }
-        }
-        &:hover, &:active {
-          background-color: #edf5f8;
-          border-color: #999;  // override bootstrap .thumbnail
-          box-shadow: 0 0;
-        }
-        &.title-present:hover {
-          .thumbnail-view-hover {
-          }
-          img {
-            opacity: 0.1;
-          }
-        }
-      }
-    }
-  }
-
-  @media only screen and (max-width: 767px) {
-
-  }
-  @media only screen and (min-width: 768px) {
-  }
-  @media only screen and (min-width: 992px) {
-    #stories-gallery {
-      &.no-filters {
-
-      }
-    }
-  }
-  @media only screen and (min-width: 1200px) {
-    #stories-header {
-      &.index {
-        margin-bottom: 22px;
-      }
-    }
   }
 
 }

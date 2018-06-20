@@ -61,3 +61,11 @@
     background-image: linear-gradient(to bottom, #f5f6f7 0%, #ffffff 100%);
   }
 }
+
+@media only screen and (min-width: 1200px) {
+  #stories-header {
+    &.index {
+      margin-bottom: 22px;
+    }
+  }
+}
