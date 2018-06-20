@@ -12,6 +12,7 @@ body.retailnext:not(.companies):not(.profile) {
   @import 'company_header';
   @import 'stories_header';
   @import 'gallery';
+  @import 'stories_fixed_carousel';
 
   &.stories.show {
     @import 'show';

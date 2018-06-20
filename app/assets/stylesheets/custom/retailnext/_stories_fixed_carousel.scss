@@ -1,0 +1,85 @@
+
+.cs-section {
+  a.thumbnail, a.cs-thumbnail {
+    border: 0;
+    box-shadow: 0 0;
+    transition: background-color 300ms ease;
+    .thumbnail-view {
+      .thumbnail-view-hover {
+        transition: all 0ms step-end;
+        p {
+          font: {
+            family: $metropolis-light;
+            size: 13px;
+            weight: 600;
+          }
+          // line-height: 26px;
+          // line-height: 20px;
+          // color: #444;
+          // // letter-spacing: normal;
+          // margin-bottom: 0;
+        }
+      }
+      img {
+        mix-blend-mode: multiply;
+      }
+    }
+    .caption {
+      font: {
+        family: $metropolis-light;
+        size: 13px;
+      }
+      color: #444;
+      span.customer-name {
+        transition: visibility 0ms step-end;
+      }
+      span.click-action:after {
+        color: #00b1c4;
+        transition: visibility 0ms step-end;
+      }
+    }
+    &:hover {
+      // NOTE: this screws with the story preview
+      // allow for 10px border; margin reduced my 10
+      // width: 262px;
+      // height: 190px;
+      // border: 10px solid #ebebeb;
+      border: 0;
+      box-shadow: 0 0;
+      background-color: #ebebeb;
+      transition: background-color 100ms ease;
+      .caption {
+        span.customer-name {
+          // visibility: hidden;
+          transition: all 0ms step-end;
+        }
+        span.click-action:after {
+          // visibility: visible;
+          transition: all 0ms step-end;
+        }
+      }
+    }
+    &.title-present:hover {
+      .thumbnail-view-hover {
+        -webkit-transform: translateY(0%);
+        -moz-transform: translateY(0%);
+        -ms-transform: translateY(0%);
+        -o-transform: translateY(0%);
+        transition: all 0ms step-end;
+      }
+      img {
+        opacity: 0;
+        transition: all 0s;
+      }
+    }
+    &:active {
+      -webkit-filter: brightness(94%);
+    }
+    &.public.logo-published {
+      pointer-events: none;
+    }
+    &:after {
+      border-bottom-color: #ebebeb;
+    }
+  }
+}

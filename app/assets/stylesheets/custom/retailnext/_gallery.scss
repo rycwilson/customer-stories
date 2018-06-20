@@ -10,6 +10,11 @@
     .og-expander {
       background: #ebebeb;
     }
+    &.loading {
+      a.thumbnail {
+        background-color: #ebebeb;
+      }
+    }
     a.thumbnail {
       border: 0;
       border-bottom: 2px solid #ccc;
@@ -81,7 +86,7 @@
       }
       &:active {
         -webkit-filter: brightness(94%);
-        box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08)
+        // box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08)
       }
       &.public.logo-published {
         pointer-events: none;
