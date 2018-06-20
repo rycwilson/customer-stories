@@ -174,7 +174,7 @@
 }
 
 @media only screen and (max-width: 767px) {
-  #stories-gallery, #curate-gallery {
+  #stories-gallery, #curate-gallery, #related-stories {
     li {
       margin: 15px;
       a.thumbnail {
@@ -212,10 +212,15 @@
       }
     }
   }
+  #related-stories {
+    li {
+      margin: 15px
+    }
+  }
 }
 
 @media only screen and (min-width: 992px) {
-  #stories-gallery, #curate-gallery {
+  #stories-gallery, #curate-gallery, #related-stories {
     // margin-right: -40px; // pull it over a bit (only apply if filters present)
     // &.no-filters { margin-right: 0; }
     li {
@@ -237,6 +242,28 @@
     }
     &:not(#stories-gallery) li {
       margin: 15px;
+    }
+  }
+}
+
+@media only screen and (min-width: 992px) and (max-width: 1199px) {
+  #related-stories {
+    li {
+      margin: 15px;
+      a.thumbnail {
+        width: 200px;  // 210
+        height: 140px;  // 140
+        .thumbnail-view {
+          line-height: 106px;
+          .thumbnail-view-hover p {
+            font-size: 14px;
+            line-height: 22px;
+          }
+        }
+        .caption {
+          font-size: 13px;
+        }
+      }
     }
   }
 }

@@ -39,16 +39,18 @@
             <ul class="grid list-unstyled text-center">
 
               <% @related_stories.each do |story| %>
-                <%= render(
-                      'stories/shared/story_card',
-                      {
-                        company: @company,
-                        story: story,
-                        is_curator: false,
-                        is_widget: false,
-                        is_external: false
-                      }
-                    ) %>
+                <li>
+                  <%= render(
+                        'stories/shared/story_card',
+                        {
+                          company: @company,
+                          story: story,
+                          is_curator: false,
+                          is_widget: false,
+                          is_external: false
+                        }
+                      ) %>
+                </li>
               <% end %>
 
             </ul>
@@ -145,16 +147,18 @@
             <ul class="grid list-unstyled text-center">
 
               <% @related_stories.each do |story| %>
-                <%= render(
-                      'stories/shared/story_card',
-                      {
-                        company: @company,
-                        story: story,
-                        is_curator: false,
-                        is_widget: false,
-                        is_external: false
-                      }
-                    ) %>
+                <li>
+                  <%= render(
+                        'stories/shared/story_card',
+                        {
+                          company: @company,
+                          story: story,
+                          is_curator: false,
+                          is_widget: false,
+                          is_external: false
+                        }
+                      ) %>
+                </li>
               <% end %>
 
             </ul>
