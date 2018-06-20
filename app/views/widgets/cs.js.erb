@@ -208,7 +208,7 @@
           $stories.css('margin', '0 auto');
 
           if ($carousel.width() >= 4 * storyWidth) {
-            $columns.css('width', Math.floor($carousel.width() / 4).toString() + 'px')
+            $columns.css('width', Math.floor($carousel.width() / 4).toString() + 'px');
             if ($columns.length <= 4) {
               $container.find('.cs-scroll div').hide();
             }
@@ -348,7 +348,7 @@
         }; // adjust columns
 
     // animate stories
-    varmourHover($stories);
+    // varmourHover($stories);
 
     // scroll listeners
     $container.find('.cs-scroll-left, .cs-scroll-xs-left').on('click', arrowLeft);
@@ -416,17 +416,6 @@
 
   // doing this in js so we can have timeout delay in one direction only
   function varmourHover ($stories) {
-    $stories.hover(
-      function () {
-        var $story = $(this);
-        setTimeout(function () {
-          $story.find('.cs-caption').children().toggle();
-        }, 300);
-      },
-      function () {
-        $(this).find('.cs-caption').children().toggle();
-      }
-    )
   }
 
   function buildFixedCarousel ($container) {

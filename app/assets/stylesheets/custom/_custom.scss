@@ -1,21 +1,5 @@
 
-// ref: https://gist.github.com/anotheruiguy/7379570
-$metropolis-regular: 'Metropolis Regular', sans-serif;
-@font-face {
-  font-family: 'Metropolis Regular';
-  src: font-url("metropolis.regular.otf") format('opentype');
-}
-@font-face {
-  font-family: 'Metropolis Light';
-  src: font-url("metropolis.light.otf") format('opentype');
-}
-$metropolis-light: 'Metropolis Light', sans-serif;
-@font-face {
-  font-family: 'Metropolis Medium';
-  src: font-url("Metropolis-Medium.otf") format('opentype');
-}
-$metropolis-medium: 'Metropolis Medium', sans-serif;
-
+@import 'fonts';
 @import 'cce/cce';
 @import 'compas/compas';
 @import 'retailnext/retailnext';

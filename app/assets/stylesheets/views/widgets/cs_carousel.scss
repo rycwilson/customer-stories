@@ -1,8 +1,9 @@
 
 #cs-carousel, #cs-varmour-container {
 
-  @import 'bootstrap-sass/assets/stylesheets/_bootstrap-widget.scss';
-  @import 'bootstrap-horizon/bootstrap-horizon.scss';
-  @import 'stories_carousel.scss';
+  @import '../../../../../vendor/assets/bower_components/bootstrap-sass/assets/stylesheets/_bootstrap-widget';
+  @import '../../../../../vendor/assets/bower_components/bootstrap-horizon/bootstrap-horizon';
+  @import '../../custom/fonts';
+  @import 'stories_carousel';
 
 }
