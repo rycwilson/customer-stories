@@ -20,6 +20,8 @@ Rails.application.config.assets.precompile += %w(
   views/widgets/cs_carousel.css
   views/widgets/cs_fixed_carousel.css
   views/widgets/cs_gallery.css
+  custom/retailnext/cs_fixed_carousel.css
+  custom/varmour/cs_carousel.css
   pdf.css
   mvpready-landing.css
   mvpready-admin.css

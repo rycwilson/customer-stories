@@ -220,6 +220,28 @@
         transition: all 0s;
       }
     }
+    &.title-present:hover {
+      border: 1px solid transparent;
+      .thumbnail-view-hover {
+        -webkit-transform: translateY(0%);
+        -moz-transform: translateY(0%);
+        -ms-transform: translateY(0%);
+        -o-transform: translateY(0%);
+      }
+      img {
+        opacity: 0.05;
+      }
+      .caption {
+        span.customer-name {
+          visibility: hidden;
+          transition: all 0.23s step-end;
+        }
+        span.click-action:after {
+          visibility: visible;
+          transition: all 0.23s step-end;
+        }
+      }
+    }
     &.logo-published {
       pointer-events: none;
     }
@@ -256,113 +278,7 @@
         }
       }
     }
-    &.title-present:hover {
-      border: 1px solid transparent;
-      .thumbnail-view-hover {
-        -webkit-transform: translateY(0%);
-        -moz-transform: translateY(0%);
-        -ms-transform: translateY(0%);
-        -o-transform: translateY(0%);
-      }
-      img {
-        opacity: 0.05;
-      }
-      .caption {
-        span.customer-name {
-          visibility: hidden;
-          transition: all 0.23s step-end;
-        }
-        span.click-action:after {
-          visibility: visible;
-          transition: all 0.23s step-end;
-        }
-      }
-    }
   }
-
-  // .cs-thumbnail {
-  //   width: 186px;  // 3/2 aspect ratio for the tile
-  //   height: 100%;  // 124px column height
-  //   position: absolute;  // center in the row-horizon column
-  //   left: 0;
-  //   right: 0;
-  //   margin: 0 auto;
-  //   background-color: white;
-  //   padding: 0;
-  //   text-align: center;
-  //   border-color: rgba(0, 0, 0, 0.7);
-  //   .cs-thumbnail-view {
-  //     position: relative;
-  //     height: 100px;
-  //     width: 100%;
-  //     // overflow: hidden;
-  //     line-height: 98px;
-  //     cursor: pointer;
-  //     .cs-thumbnail-view-hover {
-  //       position: absolute;
-  //       display: flex;
-  //       align-items: center;
-  //       justify-content: center;
-  //       z-index: 10;
-  //       height: 100px;
-  //       width: 100%;
-  //       padding: 0 6px;
-  //       background: transparent;
-  //       border-radius: 3px 3px 0 0;
-  //       -webkit-transform: translateY(-100%);
-  //       -moz-transform: translateY(-100%);
-  //       -ms-transform: translateY(-100%);
-  //       -o-transform: translateY(-100%);
-  //       transition: all 0.3s ease-in-out;
-  //       p {
-  //         color: #ccc;
-  //         font-family: inherit !important;
-  //         font-size: 13px;
-  //         line-height: 19px;
-  //         font-weight: 600;
-  //         letter-spacing: normal;
-  //         color: #444 !important;
-  //         margin-bottom: 0;
-  //       }
-  //     }
-  //     .cs-img {
-  //       display: inline-block;
-  //       vertical-align: middle;
-  //       max-height: 100%;
-  //       max-width: 100%;
-  //       padding: 8px;
-  //       opacity: 1;
-  //       transition: opacity 0.3s ease-in-out;
-  //       -moz-transition: opacity 0.3s ease-in-out;
-  //       -webkit-transition: opacity 0.3s ease-in-out;
-  //       // this compensates for a bug in chrome, which causes images of a
-  //       // certain aspect ratio to expand and contract very slightly on
-  //       // hover and opacity transition
-  //       // ref: https://stackoverflow.com/questions/20886991
-  //       -webkit-transform: translateZ(0);
-  //     }
-  //   }
-  //   .cs-caption {
-  //     font-size: 13px;
-  //     text-align: left;
-  //     padding: 2px 0 2px 6px;
-  //     position: absolute;
-  //     bottom: 0;
-  //     width: 100%;
-  //     border-radius: 0 0 3px 3px;
-  //   }
-  // }
-  // .cs-thumbnail:hover {
-  //   .cs-thumbnail-view .cs-thumbnail-view-hover {
-  //     -webkit-transform: translateY(0%);
-  //     -moz-transform: translateY(0%);
-  //     -ms-transform: translateY(0%);
-  //     -o-transform: translateY(0%);
-  //   }
-  //   .cs-img {
-  //     opacity: 0.1;
-  //   }
-  // }
 
   .cs-scroll-left {
     position: absolute;

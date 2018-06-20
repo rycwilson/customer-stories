@@ -21,21 +21,20 @@
 
       // type IN ['carousel', 'fixed-carousel', 'gallery']
       var type = '<%= @type %>', $script, $container,
-          $stylesheet = $("<link>", { rel: "stylesheet", type: "text/css" });
+          $stylesheet = $("<link>", { rel: "stylesheet", type: "text/css" }),
+          subdomain = '<%= @company.subdomain %>';
+
+      $stylesheet.attr('href', '<%= @stylesheet_url %>');
 
       if (type === 'carousel') {
         $script = $('script[src*="carousel/cs"], script[src*="varmour/cs"]').first();
         $container = $("#cs-carousel, #cs-varmour-container").first();
-        // asset_url doesn't work here because it won't include the subdomain
-        $stylesheet.attr('href', "<%= URI.join(root_url, asset_path('views/widgets/cs_carousel.css')) %>");
       } else if (type === 'fixed-carousel') {
         $script = $('script[src*="fixed-carousel/cs"], script[src*="tab/cs"], script[src*="widget/cs"]').first();
         $container = $("#cs-fixed-carousel, #cs-tab-container, #cs-container").first();
-        $stylesheet.attr('href', "<%= URI.join(root_url, asset_path('views/widgets/cs_fixed_carousel.css')) %>");
       } else if (type === 'gallery') {
         $script = $('script[src*="gallery/cs"]');
         $container = $('#cs-gallery');
-        $stylesheet.attr('href', "<%= URI.join(root_url, asset_path('views/widgets/cs_gallery.css')) %>");
       }
 
       // get font awesome if it doesn't exist on host
@@ -443,14 +442,6 @@
       date.setDate(date.getDate() + <%= @company.widget.show_freq %>);
       setCookie('cs-widget-hide', '1', date.toUTCString())
     }
-    $container.find('.cs-thumbnail.published, .cs-thumbnail.preview-published').hover(
-      function () { $(this).css('border-color', '<%= @company.widget.tab_color %>'); },
-      function () { $(this).css('border-color', 'rgba(0, 0, 0, 0.7)'); }
-    );
-    $container.find('.cs-thumbnail.logo-published').hover(
-      function () { $(this).css('border-color', '#ccc'); },
-      function () { $(this).css('border-color', 'rgba(0, 0, 0, 0.7)'); }
-    );
     $container.find('section')
       .slideDrawer()
       .css({ opacity: 0, visibility: "visible" })

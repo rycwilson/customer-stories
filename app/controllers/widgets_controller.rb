@@ -6,13 +6,23 @@ class WidgetsController < ApplicationController
   before_action except: [:track] { @company = Company.find_by(subdomain: request.subdomain) }
 
   def script
-    # type is either carousel or fixed-carousel
+    # handle legacy naming...
     if params[:type] == 'varmour'
       @type = 'carousel'
     elsif params[:type].blank? || params[:type] == 'tab'
       @type = 'fixed-carousel'
     else
       @type = params[:type]
+    end
+
+    # set the stylesheet url here, as it's impossible to use the asset path helper in cs.js in a company-specific way
+    case @type
+    when 'carousel'
+      @stylesheet_url = custom_stylesheet_url('cs_carousel')
+    when 'fixed-carousel'
+      @stylesheet_url = custom_stylesheet_url('cs_fixed_carousel')
+    when 'gallery'
+      @stylesheet_url = custom_stylesheet_url('cs_gallery')
     end
     respond_to do |format|
       format.js { render action: 'cs' }
@@ -86,6 +96,13 @@ class WidgetsController < ApplicationController
         is_external: true
       }
     )
+  end
+
+  def custom_stylesheet_url (type)
+    URI.join(
+      root_url,
+      ActionController::Base.helpers.asset_path("custom/#{@company.subdomain}/#{type}")
+    ).to_s
   end
 
 end
