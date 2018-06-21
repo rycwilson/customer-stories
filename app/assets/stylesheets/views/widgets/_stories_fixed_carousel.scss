@@ -120,10 +120,21 @@
     padding-bottom: 23px;
     div[class^='col'] {
       position: relative;
-      // width: 210px;
       width: 225px;
       height: 130px;
       box-sizing: border-box;
+    }
+    @media only screen and (max-width: 400px) {
+      .visible-xs-block {
+        text-align: center;
+        .cs-header {
+          float: none;
+          text-align: left;
+        }
+      }
+    }
+    @media only screen and (max-width: 767px) {
+      padding: 0 10px 23px 10px;
     }
     @media only screen and (max-width: 767px) {
       padding: 0 10px 23px 10px;
