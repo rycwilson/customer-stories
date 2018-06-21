@@ -6,14 +6,20 @@
 
       <div class="visible-xs-block col-xs-12">
         <header class="cs-header <%= company.color_contrast(widget.tab_color) %>" style="background-color: <%= widget.tab_color %>">
-          &nbsp;&nbsp;<span>
-            <span><%#= title %></span>&nbsp;
-            <i class="fa fa-chevron-up"></i><i class="fa fa-chevron-down"></i>
-          </span>&nbsp;&nbsp;
+          <span class="cs-remove pull-right">
+            <i class="fa fa-fw fa-remove"></i>
+          </span>
+          <div class="cs-open-close">
+            <span><%= title %></span>
+            <span class="pull-right">
+              <i class="fa fa-fw fa-chevron-up"></i>
+              <i class="fa fa-chevron-down"></i>
+            </span>
+          </div>
         </header>
       </div>
 
-      <div class="hidden-xs col-xs-12 col-sm-5 col-sm-offset-7 col-md-4 col-md-offset-8 col-lg-3 col-lg-offset-9">
+      <div class="hidden-xs col-sm-5 col-sm-offset-7 col-md-4 col-md-offset-8 col-lg-3 col-lg-offset-9">
         <header class="cs-header <%= company.color_contrast(widget.tab_color) %>" style="background-color: <%= widget.tab_color %>">
             <span class="cs-remove pull-right">
               <i class="fa fa-fw fa-remove"></i>
@@ -32,6 +38,9 @@
   </div>
 
   <div class="cs-container-fluid">
+<!--     <div class="cs-row cs-header-row">
+
+    </div> -->
     <div class='cs-drawer-content' style='border-top-color:<%= widget.tab_color %>'>
       <div class='cs-drawer-items'>
 

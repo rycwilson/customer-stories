@@ -29,6 +29,11 @@
     height: 50px;   //  34 + 8 + 8
   }
 
+  .visible-xs-block .cs-header {
+    float: right;
+    max-width: 300px;
+  }
+
   .cs-header {
     display: inline-block;
     width: 100%;
@@ -40,37 +45,38 @@
     line-height: 34px;
     font-size: 18px;
     padding: 8px 12px 8px 15px;
+    box-shadow: 0 2px 8px 0px rgba(0, 0, 0, 0.2);
     -moz-border-radius-topleft: 5px 5px;
     -moz-border-radius-topright: 5px 5px;
     border-top-left-radius: 5px 5px;
     border-top-right-radius: 5px 5px;
     &.light {
       color: #fff;
+      .cs-open-close:hover, .cs-remove:hover {
+        color: #ccc;
+      }
     }
     &.dark {
       color: #555;
-      .cs-open-close {
-        margin-right: 25px;
-        margin-top: -8px;
-        padding-top: 8px;
-        margin-left: -15px;
-        padding-left: 15px;
-        margin-bottom: -8px;
-        padding-bottom: 8px;
-        &:hover {
-          color: #000;
-        }
+      .cs-open-close:hover, .cs-remove:hover {
+        color: #222;
       }
-      .cs-remove {
-        padding: 8px 10px;
-        margin-top: -8px;
-        margin-bottom: -8px;
-        // margin-left: -10px;
-        margin-right: -10px;
-        &:hover {
-          color: #000;
-        }
-      }
+    }
+    .cs-open-close {
+      margin-right: 25px;
+      margin-top: -8px;
+      padding-top: 8px;
+      margin-left: -15px;
+      padding-left: 15px;
+      margin-bottom: -8px;
+      padding-bottom: 8px;
+    }
+    .cs-remove {
+      padding: 8px 10px 8px 0;
+      margin-top: -8px;
+      margin-bottom: -8px;
+      margin-left: 10px;
+      margin-right: -10px;
     }
     i.fa-chevron-up {   // this will get toggled as soon as the widget tab loads
       display: none;
