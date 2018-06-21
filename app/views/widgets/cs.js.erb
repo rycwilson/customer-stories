@@ -520,14 +520,23 @@
           drawer.hide(options, div);
         }
 
-        $container.find('.cs-header').on('click', function () {
-          if ( isXsWidgetAndScreen($(this)) ) {
-            drawer.toggle(options, div);
-          } else if ( isSmWidgetAndScreen($(this)) ) {
-            drawer.toggle(options, div);
-          }
-        });
-
+        $container
+          .find('.cs-header')
+            .on('click', function (e) {
+              if ($(e.target).is('[class*="remove"]')) {
+                return false;
+              }
+              if ( isXsWidgetAndScreen($(this)) ) {
+                drawer.toggle(options, div);
+              } else if ( isSmWidgetAndScreen($(this)) ) {
+                drawer.toggle(options, div);
+              }
+            })
+            .end()
+          .find('.cs-header [class*="remove"]')
+            .on('click', function () {
+              $container.hide();
+            });
       },
       toggle: function (options, div) {
         ($(div).height() + options.borderHeight === options.drawerHeight) ?
