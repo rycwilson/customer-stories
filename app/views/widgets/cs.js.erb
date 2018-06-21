@@ -402,19 +402,15 @@
 
   // on weebly, get the Montserrat font to emulate proxima-nova
   function varmourAltFont () {
-    if (window.location.href.includes('weebly')) {
-      $("<link>", {
-        rel: "stylesheet",
-        type: "text/css",
-        href: "//fonts.googleapis.com/css?family=Montserrat:300,600"
-      }).appendTo('head');
-      // adjust container padding as necessary
-      $('.wsite-section-content > .container').css('padding', '0');
-    }
-  }
-
-  // doing this in js so we can have timeout delay in one direction only
-  function varmourHover ($stories) {
+    // if (window.location.href.includes('weebly')) {
+    //   $("<link>", {
+    //     rel: "stylesheet",
+    //     type: "text/css",
+    //     href: "//fonts.googleapis.com/css?family=Montserrat:300,600"
+    //   }).appendTo('head');
+    //   // adjust container padding as necessary
+    //   $('.wsite-section-content > .container').css('padding', '0');
+    // }
   }
 
   function buildFixedCarousel ($container) {

@@ -79,6 +79,9 @@ function slideDrawerPlugin () {
       // all headers, including the hidden ones.
       // below ensures only one toggle happens
       $('.cs-header').on('click', function (e) {
+        if ($(e.target).is('[class*="remove"]')) {
+          return false;
+        }
         if (app.screenSize === 'xs' && $(this).parent().hasClass('visible-xs-block')) {
           drawer.toggle(options, div);
         } else if (app.screenSize !== 'xs' && $(this).parent().hasClass('hidden-xs')) {
