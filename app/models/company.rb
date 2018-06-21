@@ -1245,11 +1245,19 @@ class Company < ActiveRecord::Base
   def color_contrast (background_color=nil)
     # method expects hex value in the form of #fafafa (all six digits); see the js implementation for shorthand hex
     if background_color
-      hex = background_color
+      hex_color = background_color
     else
-      hex = self.header_color_2
+      hex_color = self.header_color_2
     end
-    rgb = { r: hex[1..2].hex, g: hex[3..4].hex, b: hex[5..6].hex }
+
+    # make sure it's a six-character hex value (not counting #)
+    if hex_color.length < 7
+      loop do
+        hex_color << hex_color.last
+        break if hex_color.length == 7
+      end
+    end
+    rgb = { r: hex_color[1..2].hex, g: hex_color[3..4].hex, b: hex_color[5..6].hex }
 
     # // http://www.w3.org/TR/AERT#color-contrast
     o = (((rgb[:r] * 299) + (rgb[:g] * 587) + (rgb[:b] * 114)) / 1000).round
