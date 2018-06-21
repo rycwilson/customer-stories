@@ -18,11 +18,11 @@ class WidgetsController < ApplicationController
     # set the stylesheet url here, as it's impossible to use the asset path helper in cs.js in a company-specific way
     case @type
     when 'carousel'
-      @stylesheet_url = custom_stylesheet_url('cs_carousel')
+      @stylesheet_url = custom_stylesheet_url(@company, 'cs_carousel')
     when 'fixed-carousel'
-      @stylesheet_url = custom_stylesheet_url('cs_fixed_carousel')
+      @stylesheet_url = custom_stylesheet_url(@company, 'cs_fixed_carousel')
     when 'gallery'
-      @stylesheet_url = custom_stylesheet_url('cs_gallery')
+      @stylesheet_url = custom_stylesheet_url(@company, 'cs_gallery')
     end
     respond_to do |format|
       format.js { render action: 'cs' }
@@ -98,10 +98,10 @@ class WidgetsController < ApplicationController
     )
   end
 
-  def custom_stylesheet_url (type)
+  def custom_stylesheet_url (company, type)
     URI.join(
       root_url,
-      ActionController::Base.helpers.asset_path("custom/#{@company.subdomain}/#{type}")
+      ActionController::Base.helpers.asset_path("custom/#{company.subdomain}/#{type}.css")
     ).to_s
   end
 
