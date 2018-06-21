@@ -1,13 +1,13 @@
 
-#curate-gallery {
-  margin-top: -17px ;
-}
-
-#stories-gallery {
-  margin: 0 auto;
-}
-
 #stories-gallery, #curate-gallery, #related-stories {
+
+  &#curate-gallery {
+    margin-top: -10px;
+  }
+
+  &#stories-gallery {
+    margin: 0 auto;
+  }
 
   li {
     display: inline-block;
@@ -99,11 +99,14 @@
           transition: all 0s;
         }
       }
-      &.published .caption span.click-action:after {
+      &.public.published .caption span.click-action:after {
         content: 'Read Story';
       }
-      &.preview-published .caption span.click-action:after {
+      &.public.preview-published .caption span.click-action:after {
         content: 'See More';
+      }
+      &.curator .caption span.click-action:after {
+        content: 'Configure Story';
       }
       &:active {
         -webkit-filter: brightness(94%);
@@ -141,7 +144,7 @@
       }
     }
     &:hover:not(.og-expanded) {
-      a:not(.logo-published) {
+      a.curator, a.public:not(.logo-published) {
         border: 1px solid transparent;
         box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
         .caption {

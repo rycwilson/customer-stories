@@ -40,9 +40,7 @@ function curateListeners () {
 
     .on('show.bs.tab', 'a[href="#curate-stories"]', cancelLoading)
 
-    .on('click', '#curate-gallery a.logo-published,' +
-                 '#curate-gallery a.preview-published,' +
-                 '#curate-gallery a.pending-curation', function (e) {
+    .on('click', '#curate-gallery > li > a', function (e) {
 
       e.preventDefault();
 
