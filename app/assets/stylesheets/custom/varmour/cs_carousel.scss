@@ -3,8 +3,8 @@
 #cs-carousel, #cs-varmour-container {
 
   @import '../../views/widgets/carousel_bootstrap';
-  // @import '../../views/widgets/stories_carousel';
+  @import '../../views/widgets/stories_carousel';
   @import '../fonts';
-  @import 'stories_carousel';
+  @import './stories_carousel';
 
 }
