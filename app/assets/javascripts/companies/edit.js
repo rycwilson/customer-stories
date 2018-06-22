@@ -11,11 +11,9 @@ function companiesEdit () {
   var url = document.location.toString();
   if (url.match('#')) {
     $('.nav-layout-sidebar a[href="#' + url.split('#')[1] + '"]').tab('show');
-    window.scrollTo(0, 0);
+  } else {
+    $('.layout-main').show();
   }
-  $('.nav-layout-sidebar a').on('shown.bs.tab', function (e) {
-    window.location.hash = e.target.hash;
-  });
 
   $(document)
     .one('turbolinks:before-visit', function () {
@@ -27,6 +25,11 @@ function companiesEdit () {
       if ($('.dropdown.company-settings').hasClass('active')) {
         $('.dropdown.company-settings').removeClass('active');
       }
+    })
+    .on('shown.bs.tab', '.nav-layout-sidebar a', function (e) {
+      window.scrollTo(0, 0);
+      window.location.hash = e.target.hash;
+      $('.layout-main').show();
     });
 }
 
