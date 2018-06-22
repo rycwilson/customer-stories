@@ -4,16 +4,11 @@ body.varmour:not(.companies):not(.profile):not(.edit) {
 
   font-family: $metropolis-regular;
 
+  @import 'company_header';
   @import 'stories_header';
   @import 'gallery';
-
-  &.stories.show {
-    @import 'show';
-  }
-
-  &.stories.index {
-    background-color: #fafcfd;
-  }
+  @import 'index';
+  @import 'show';
 
 }
 
