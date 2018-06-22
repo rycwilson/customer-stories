@@ -4,7 +4,7 @@ body.varmour:not(.companies):not(.profile):not(.edit) {
 
   font-family: $metropolis-regular;
 
-  @import 'company_header';
+  // @import 'company_header';
   @import 'stories_header';
   @import 'gallery';
   @import 'index';
