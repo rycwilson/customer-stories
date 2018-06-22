@@ -74,7 +74,7 @@ function selectTemplateListeners () {
             $.when($('#crowdsourcing-template-container').empty().append(html))
               .then(function () {
                 $('#crowdsourcing-template-form').data('new', '');
-                $('#crowdsourcing-templates .btn-toolbar button').prop('disabled', false);
+                $('#crowdsource-settings .btn-toolbar button').prop('disabled', false);
                 toggleButtons(isDefault);
                 initTemplate();
                 initFormControls();

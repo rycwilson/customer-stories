@@ -1,9 +1,9 @@
 
 function initTooltips () {
 
-  $('[data-toggle="tooltip"]:not(#crowdsourcing-templates [data-toggle="tooltip"])').tooltip();
+  $('[data-toggle="tooltip"]:not(#crowdsource-settings [data-toggle="tooltip"])').tooltip();
 
-  $('#crowdsourcing-templates [data-toggle="tooltip"]').tooltip({
+  $('#crowdsource-settings [data-toggle="tooltip"]').tooltip({
     container: 'body',
     delay: {
       show: 1000,

@@ -8,6 +8,15 @@ function companiesEdit () {
 
   $('.dropdown.company-settings').addClass('active');
 
+  var url = document.location.toString();
+  if (url.match('#')) {
+    $('.nav-layout-sidebar a[href="#' + url.split('#')[1] + '"]').tab('show');
+    window.scrollTo(0, 0);
+  }
+  $('.nav-layout-sidebar a').on('shown.bs.tab', function (e) {
+    window.location.hash = e.target.hash;
+  });
+
   $(document)
     .one('turbolinks:before-visit', function () {
       if ($('.dropdown.company-settings').hasClass('active')) {
