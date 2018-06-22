@@ -1,81 +1,89 @@
 
-#testimonial {
-  font-family: $metropolis-regular;
-  .customer-logo-quote.visible-xs-block {
-    .customer-logo {
+&.stories.show {
+
+  @import 'stories_fixed_carousel';
+
+  background-color: #fff;
+
+  #testimonial {
+    font-family: $metropolis-regular;
+    .customer-logo-quote.visible-xs-block {
+      .customer-logo {
+      }
+      .customer-quote p {
+      }
+      .customer-quote-attr {
+      }
     }
-    .customer-quote p {
+    .customer-logo-quote.hidden-xs {
+      .customer-logo {
+      }
+      .customer-quote {
+      }
     }
-    .customer-quote-attr {
+    &:after {
+      background-image: linear-gradient(to top, #f5f5f3 0%, #ffffff 100%);
     }
   }
-  .customer-logo-quote.hidden-xs {
-    .customer-logo {
-    }
-    .customer-quote {
+
+  #related-stories ul {
+    background-color: #f5f5f3;
+  }
+
+  #story-section-video-xs, #social-buttons-xs {
+    background-color: #f5f5f3;
+  }
+
+  #story-section-content {
+    h4 { font-family: $metropolis-regular; }
+    font-family: $metropolis-regular;
+    background-color: #f5f5f3;
+    .well {
     }
   }
-  &:after {
-    background-image: linear-gradient(to top, #f5f5f3 0%, #ffffff 100%);
-  }
-}
 
-#related-stories ul {
-  background-color: #f5f5f3;
-}
-
-#story-section-video-xs, #social-buttons-xs {
-  background-color: #f5f5f3;
-}
-
-#story-section-content {
-  h4 { font-family: $metropolis-regular; }
-  font-family: $metropolis-regular;
-  background-color: #f5f5f3;
-  .well {
-  }
-}
-
-@media only screen and (max-width: 767px) {
-  #testimonial .visible-xs-block {
-    #story-section-video-xs {
+  @media only screen and (max-width: 767px) {
+    #testimonial .visible-xs-block {
+      #story-section-video-xs {
+      }
+      #social-buttons-xs {
+      }
+      #story-section-content {
+      }
     }
-    #social-buttons-xs {
+  }
+
+  @media only screen and (min-width: 768px) {
+    #testimonial .hidden-xs {
+      .customer-logo {
+      }
+      .customer-quote {
+      }
     }
     #story-section-content {
     }
   }
-}
 
-@media only screen and (min-width: 768px) {
-  #testimonial .hidden-xs {
-    .customer-logo {
+  @media only screen and (min-width: 992px) {
+    #testimonial .hidden-xs {
+      .customer-logo {
+      }
+      .customer-quote {
+      }
     }
-    .customer-quote {
+    #story-section-content {
     }
   }
-  #story-section-content {
-  }
-}
 
-@media only screen and (min-width: 992px) {
-  #testimonial .hidden-xs {
-    .customer-logo {
+  @media only screen and (min-width: 1200px) {
+    #testimonial .hidden-xs {
+      .customer-logo {
+      }
+      .customer-quote {
+      }
     }
-    .customer-quote {
+    #story-section-content {
     }
   }
-  #story-section-content {
-  }
-}
 
-@media only screen and (min-width: 1200px) {
-  #testimonial .hidden-xs {
-    .customer-logo {
-    }
-    .customer-quote {
-    }
-  }
-  #story-section-content {
-  }
 }

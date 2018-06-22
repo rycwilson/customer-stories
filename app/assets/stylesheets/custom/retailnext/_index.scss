@@ -1,9 +1,13 @@
 
-.filters-container.visible-md-block {
-  background-color: #ebebeb;
-  form + .form-group {  // single filter
+&.stories.index {
+
+  .filters-container.visible-md-block {
+    background-color: #ebebeb;
+    form + .form-group {  // single filter
+    }
+    &.short {
+    }
   }
-  &.short {
-  }
+
 }
 

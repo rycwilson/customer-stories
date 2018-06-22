@@ -12,14 +12,8 @@ body.retailnext:not(.companies):not(.profile):not(.edit) {
   @import 'company_header';
   @import 'stories_header';
   @import 'gallery';
-  @import 'stories_fixed_carousel';
-
-  &.stories.show {
-    @import 'show';
-    background-color: #fff;
-  }
-
-  &.stories.index { @import 'index'; }
+  @import 'index';
+  @import 'show';
 
   @media only screen and (max-width: 767px) {
     #stories-gallery, #curate-gallery {
