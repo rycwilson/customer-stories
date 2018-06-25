@@ -63,3 +63,9 @@
       ) %>
 
 </div>
+
+<% unless user_signed_in? %>
+
+  <%= render('stories/shared/sign_in_footer') %>
+
+<% end %>

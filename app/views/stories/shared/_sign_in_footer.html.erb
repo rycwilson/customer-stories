@@ -1,0 +1,22 @@
+
+<div id="sign-in-footer" class="container-fluid hidden-xs" style="background-color: #fff; padding: 0 50px;">
+  <div class="row" style="display: flex; align-items: center; justify-content: center;">
+
+    <div class="col-sm-6">
+
+      <a href="<%= csp_landing %>">
+        <img src="<%= CS_LOGO_URL %>" alt="Powered by Customer Stories" style="height: 50px; margin: 15px 0"></a>&nbsp;&nbsp;
+      <span>Powered by <a href="<%= csp_landing %>">customerstories.net</a></span>
+
+    </div>
+
+    <div class="col-sm-6">
+
+      <span class="pull-right">
+        <%= @company.name %>&nbsp;&nbsp;<%= link_to 'Sign in', new_user_session_path %>
+      </span>
+
+    </div>
+
+  </div>
+</div>
