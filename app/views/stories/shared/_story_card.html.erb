@@ -1,41 +1,32 @@
 
-<% cache("#{company.subdomain}/story-#{story.id}-card" +
-         "memcache-iterator-#{company.story_tile_fragments_memcache_iterator}",
-         skip_digest: true) do %>
+<a href="<%= story.csp_story_link(is_curator, is_widget, is_external) %>"
+   class="public <%= is_external ? 'cs-thumbnail' : 'thumbnail' %> <%= story.published ? 'published' : (story.preview_published ? 'preview-published' : 'logo-published') %> <%= story.title.present? ? 'title-present' : '' %>"
+   target="<%= is_external ? '_blank' : '' %>"
+   data-customer="<%= is_external ? '' : story.customer.name.to_json %>"
+   data-logosrc="<%= is_external ? '' : story.customer.logo_url %>"
+   data-summary="<%= is_external ? '' : story.summary.try(:to_json) %>"
+   data-quote="<%= is_external ? '' : story.quote.try(:to_json) %>"
+   data-quote-attr-name="<%= is_external ? '' : story.quote_attr_name.try(:to_json) %>"
+   data-quote-attr-title="<%= is_external ? '' : story.quote_attr_title.try(:to_json) %>"
+   data-preview-contributor="<%#= is_external ? '' : story.preview_contributor %>">
 
-  <!-- <li class="grid-item" data-story-id="<%= story.id %>"> -->
-
-    <a href="<%= story.csp_story_link(is_curator, is_widget, is_external) %>"
-       class="public <%= is_external ? 'cs-thumbnail' : 'thumbnail' %> <%= story.published ? 'published' : (story.preview_published ? 'preview-published' : 'logo-published') %> <%= story.title.present? ? 'title-present' : '' %>"
-       target="<%= is_external ? '_blank' : '' %>"
-       data-customer="<%= is_external ? '' : story.customer.name.to_json %>"
-       data-logosrc="<%= is_external ? '' : story.customer.logo_url %>"
-       data-summary="<%= is_external ? '' : story.summary.try(:to_json) %>"
-       data-quote="<%= is_external ? '' : story.quote.try(:to_json) %>"
-       data-quote-attr-name="<%= is_external ? '' : story.quote_attr_name.try(:to_json) %>"
-       data-quote-attr-title="<%= is_external ? '' : story.quote_attr_title.try(:to_json) %>"
-       data-preview-contributor="<%#= is_external ? '' : story.preview_contributor %>">
-
-      <div class="thumbnail-view">
-        <% if story.title.present? %>
-          <div class='thumbnail-view-hover'>
-            <p><%= story.title %></p>
-          </div>
-        <% end %>
-        <img src="<%= story.customer.logo_url || LOGO_PLACEHOLDER_URL %>">
+  <div class="thumbnail-view">
+    <% if story.title.present? %>
+      <div class='thumbnail-view-hover'>
+        <p><%= story.title %></p>
       </div>
+    <% end %>
+    <img src="<%= story.customer.logo_url || LOGO_PLACEHOLDER_URL %>">
+  </div>
 
-      <div class="caption">
-        <span class="customer-name"><%= story.customer.name %></span>
-        <span class="click-action"></span>
-      </div>
+  <div class="caption">
+    <span class="customer-name"><%= story.customer.name %></span>
+    <span class="click-action"></span>
+  </div>
 
-      <div class='still-loading-container'>
-        <i class='fa fa-spin fa-circle-o-notch'></i>
-      </div>
+  <div class='still-loading-container'>
+    <i class='fa fa-spin fa-circle-o-notch'></i>
+  </div>
 
-    </a>
+</a>
 
-  <!-- </li> -->
-
-<% end %>
