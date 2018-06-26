@@ -156,6 +156,7 @@ function widgetsMonitor () {
         if ($('body').hasClass('stories show')) {
           // For Chrome, the origin property is in the event.originalEvent object.
           var origin = event.origin || event.originalEvent.origin;
+          console.log(event.data);
           if (event.origin === "https://platform.linkedin.com" &&
               event.data.includes('-ready') && firstWidgetIndex === null) {
             firstWidgetIndex = parseInt(event.data.match(/\w+_(\d+)-ready/)[1], 10);
@@ -163,17 +164,28 @@ function widgetsMonitor () {
               event.data.includes('widgetReady')) {
             currentWidgetIndex = parseInt(event.data.match(/\w+_(\d+)\s/)[1], 10);
             relativeWidgetIndex = currentWidgetIndex - firstWidgetIndex;
-            if (contributors[relativeWidgetIndex] === undefined) {
-              // debugger;
-            }
+
+            /**
+             * Linkedin will report that the widget is loaded even when the profile isn't found.
+             * Since we are checking for all widgets loaded before showing (see below),
+             * mark the widget as loaded, but then check its length to see if it's a case of "Profile not found"
+             */
             contributors[relativeWidgetIndex].widget_loaded = true;
+            setTimeout(function () {
+              if ($('.linkedin-widget').eq(relativeWidgetIndex).prop('clientHeight') === 0) {
+                // profile not found
+                $('.linkedin-widget').eq(relativeWidgetIndex).remove();
+              }
+            }, 0);
             if (!firstWidgetLoaded) {
               firstWidgetLoaded = true;
               setWidgetTimeout(firstWidgetReadyTimeoutDelay, postMessageHandler);
             } else {
-              contributors[relativeWidgetIndex].widget_loaded = true ;
+              if (contributors.every(function (c) { return c.widget_loaded; })) {
+                $('.linkedin-widgets').removeClass('hidden');
+              }
             }
-          }  // widgetReady event
+          }
         }
       };
 
@@ -210,9 +222,10 @@ function setWidgetTimeout (delay, postMessageHandler) {
                  }
                });
          if (failures) {
-           $('.linkedin-widgets').imagesLoaded(function () {
-             $('.csp-linkedin-widget').removeClass('hidden');
-           });
+           // $('.linkedin-widgets').imagesLoaded(function () {
+           //   $('.csp-linkedin-widget').removeClass('hidden');
+           // });
+         } else {
          }
       }
       // keep this listener isolated to stories#show

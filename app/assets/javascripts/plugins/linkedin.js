@@ -10,7 +10,7 @@ function initLinkedIn () {
   }
 
   if (typeof(IN) !== 'object') {
-    console.log('IN not defined')
+    // console.log('IN not defined')
 
     $.ajax({
       url: '//platform.linkedin.com/in.js',
@@ -19,13 +19,13 @@ function initLinkedIn () {
       timeout: 6000
     })
     .done(function () {
-      console.log('in.js downloaded');
+      // console.log('in.js downloaded');
     })
     .fail(function () {
-      console.log('in.js timed out');
+      // console.log('in.js timed out');
     })
     .always(function () {
-      console.log('linkedin always')
+      // console.log('linkedin always')
     });
 
   } else {
