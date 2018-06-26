@@ -32,9 +32,9 @@
     }
     .customer-logo-quote.hidden-xs {
       .customer-logo img {
-        margin: 0 auto ;
+        margin: 0 auto;
         max-height: 65px;
-        max-width: 80%;
+        max-width: 60%;
       }
       .customer-name {
         margin: 20px 0;
@@ -48,7 +48,17 @@
       margin: 0 0 10px 0;
     }
     &.no-video {
-      padding-top: 15px;
+      // padding-top: 10px;
+      .customer-logo-quote.hidden-xs {
+        display: flex;
+        align-items: center;
+        .customer-logo img {
+          margin: 0 auto 25px auto;
+        }
+        .customer-name {
+          margin: 0;
+        }
+      }
     }
     &:after {
       content: '';
@@ -90,9 +100,9 @@
         font-size: 14px;
       }
     }
-    .grid {
-      margin: 15px 0;
-      .grid-item {
+    ul {
+      margin: 15px 0 25px 0;
+      li {
         margin: 18px;
       }
     }
