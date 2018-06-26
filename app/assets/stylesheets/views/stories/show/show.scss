@@ -274,7 +274,7 @@
   }
 
   @media only screen and (min-width: 1200px) {
-    #testimonial {
+    #testimonial, #testimonial.no-video {
       .customer-logo-quote.hidden-xs {
         .customer-name {
           span { font-size: 18px; }
@@ -284,9 +284,6 @@
             font-size: 18px;
           }
         }
-      }
-      &.no-video {
-        // padding-bottom: 30px;
       }
     }
     #story-section-content {
