@@ -1,16 +1,15 @@
 
 #stories-gallery, #curate-gallery, #related-stories {
 
-  // accommodate the sign in footer
-  min-height: 100vh;
-  padding-bottom: 20px;
-
   &#curate-gallery {
     margin-top: -10px;
   }
 
   &#stories-gallery {
     margin: 0 auto;
+    // accommodate the sign in footer
+    min-height: 100vh;
+    padding-bottom: 20px;
   }
 
   li {
