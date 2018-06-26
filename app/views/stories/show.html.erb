@@ -42,8 +42,14 @@
 
 <% end %>
 
-
-<%= render('shared/navbars/stories_header', { company: @company, action: 'show', story: @story }) %>
+<%= render(
+      'shared/navbars/stories_header',
+      { company: @company,
+        action: 'show',
+        story: @story,
+        is_preview: @is_preview
+      }
+    ) %>
 
 <div class="story-wrapper hidden">
 

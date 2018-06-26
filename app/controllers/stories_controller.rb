@@ -65,6 +65,7 @@ class StoriesController < ApplicationController
   end
 
   def show
+    @is_preview = params[:preview].present?
     if params[:remove_video].present?
       if params[:xs_screen]
         render({

@@ -34,12 +34,18 @@
           </div>
 
           <div class="col-sm-2 text-center edit-story">
-            <%= link_to(
-                  curate_story_path(story.customer.slug, story.slug),
-                  { class: "#{company.color_contrast }" }
-                ) do %>
-              <i class="glyphicon glyphicon-pencil"></i>&nbsp;&nbsp;Edit Story
+
+            <% unless is_preview %>
+
+              <%= link_to(
+                    curate_story_path(story.customer.slug, story.slug),
+                    { class: "#{company.color_contrast }" }
+                  ) do %>
+                <i class="glyphicon glyphicon-pencil"></i>&nbsp;&nbsp;Edit Story
+              <% end %>
+
             <% end %>
+
           </div>
 
           <div class="col-sm-5">
