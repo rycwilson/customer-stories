@@ -1,7 +1,7 @@
 
 #stories-header-wrapper {
   #stories-header {
-    height: 40px;
+    height: $stories-header-height;
     min-height: 40px;  // overrides bootstrap 50px
     background: #fff;
     border: 0;
