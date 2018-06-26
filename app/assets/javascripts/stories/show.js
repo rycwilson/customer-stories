@@ -9,9 +9,21 @@ function storiesShow () {
   clickyListeners();
   initMoreStories();
 
-  $(document).on('click', '.edit-story a', function () {
-    Cookies.set('csp-story-tab', '#story-content');
-  });
+  $(document)
+    .on('click', '.edit-story a', function () {
+      Cookies.set('csp-story-tab', '#story-content');
+    })
+    .on('scroll', function () {
+      if ($('body').hasClass('stories show') && !app.current_user) {
+        var scrollBottom = $(document).height() - $(window).height() - $(window).scrollTop();
+        if (scrollBottom < $('#sign-in-footer').height()) {
+          $('#more-stories-container').hide();
+        }
+        else if (!$('#more-stories-container').data('hidden')) {
+          $('#more-stories-container').show();
+        }
+      }
+    });
 
 }
 
@@ -29,7 +41,9 @@ function initMoreStories () {
   });
 
   $('.cs-header [class*="remove"]').on('click', function () {
-    $('#more-stories-container').hide();
+    $('#more-stories-container')
+      .data('hidden', '1')
+      .hide();
   });
 
   slideDrawerPlugin();  // define the jquery plugin
