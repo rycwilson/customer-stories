@@ -128,7 +128,7 @@ class Story < ActiveRecord::Base
   # update timestamps
   before_update(:update_publish_state, on: [:create, :update])
 
-  after_commit on: [:create, :destroy] do
+  after_commit(on: [:create, :destroy]) do
     expire_all_stories_cache(false)
   end
 
@@ -138,7 +138,7 @@ class Story < ActiveRecord::Base
   # that exist in both
 
   # on change of publish state
-  after_commit on: :update do
+  after_commit(on: :update) do
     expire_story_tile_fragment_cache
     expire_stories_gallery_fragment_cache
     expire_filter_select_fragment_cache
@@ -151,7 +151,7 @@ class Story < ActiveRecord::Base
   # for any published (title overlay) or preview-published (summary, quote) stories,
   # expire stories gallery cache on change of title/summary/quote data;
   # also json cache
-  after_commit on: :update do
+  after_commit(on: :update) do
     expire_story_tile_fragment_cache
     expire_stories_gallery_fragment_cache
     expire_all_stories_cache(true)
@@ -160,7 +160,7 @@ class Story < ActiveRecord::Base
              (story.previous_changes.keys & ['title', 'summary', 'quote']).any? )
          }
 
-  after_commit on: :update do
+  after_commit(on: :update) do
     expire_story_video_info_cache
     expire_story_video_xs_fragment_cache
   end if Proc.new { |story|
@@ -349,7 +349,7 @@ class Story < ActiveRecord::Base
   end
 
   def expire_published_contributor_cache(contributor_id)
-    company.expire_all_stories_cache(true)  # json only
+    self.company.expire_all_stories_cache(true)  # json only
     Rails.cache.delete("#{self.company.subdomain}/story-#{self.id}-published-contributors")
     self.expire_fragment("#{self.company.subdomain}/story-#{self.id}-contributors")
     self.expire_fragment("#{self.company.subdomain}/story-#{self.id}-contributor-#{contributor_id}")
