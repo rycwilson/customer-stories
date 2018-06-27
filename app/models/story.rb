@@ -139,9 +139,9 @@ class Story < ActiveRecord::Base
 
   # on change of publish state
   after_commit(on: :update) do
-    expire_story_tile_fragment_cache
     expire_stories_gallery_fragment_cache
     expire_filter_select_fragment_cache
+    expire_story_card_fragment_cache
     expire_all_stories_cache(true)
   end if Proc.new { |story|
            ( story.previous_changes.keys &
@@ -152,7 +152,7 @@ class Story < ActiveRecord::Base
   # expire stories gallery cache on change of title/summary/quote data;
   # also json cache
   after_commit(on: :update) do
-    expire_story_tile_fragment_cache
+    expire_story_card_fragment_cache
     expire_stories_gallery_fragment_cache
     expire_all_stories_cache(true)
   end if Proc.new { |story|
@@ -356,18 +356,17 @@ class Story < ActiveRecord::Base
   end
 
   # expire fragment cache for a single story tile
-  def expire_story_tile_fragment_cache
+  def expire_story_card_fragment_cache
     mi = "memcache-iterator-#{company.story_tile_fragments_memcache_iterator}"
-    tile_fragment = "#{company.subdomain}/story-tile-" + "#{self.id}-#{mi}"
-    self.expire_fragment(tile_fragment) if fragment_exist?(tile_fragment)
+    card_fragment = "#{company.subdomain}/main-gallery-story-#{self.id}-card-#{mi}"
+    self.expire_fragment(card_fragment) if fragment_exist?(card_fragment)
   end
 
   # expire fragment cache for the stories index
   def expire_stories_gallery_fragment_cache
-    mi = "memcache-iterator-" +
-          "#{self.company.stories_gallery_fragments_memcache_iterator}"
-    # expire stories-index-all-0 (all story tiles)
-    self.expire_fragment("#{self.company.subdomain}/stories-index-all-0-#{mi}")
+    mi = "memcache-iterator-#{self.company.stories_gallery_fragments_memcache_iterator}"
+    # expire all story tiles
+    self.expire_fragment("#{self.company.subdomain}/stories-index-#{mi}")
     self.category_tags.each do |category|
       # expire stories-index-category-xx,
       self.expire_fragment(
@@ -393,7 +392,7 @@ class Story < ActiveRecord::Base
 
   def expire_fragment_cache_on_path_change
     if self.logo_published  # implies self.published also true
-      self.expire_story_tile_fragment_cache
+      self.expire_story_card_fragment_cache
       self.expire_fragment(
         "#{self.company.subdomain}/stories-index-all-0-memcache-iterator-" +
         "#{self.company.stories_gallery_fragments_memcache_iterator}"

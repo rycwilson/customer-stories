@@ -58,8 +58,8 @@ class Success < ActiveRecord::Base
     self.is_new_record = true
   end
 
-  before_update(on: :destroy) do
-    self.story.destroy   # need to do this explicitly for cache invalidation callbacks in story.rb
+  before_destroy(prepend: true) do
+    self.story.expire_cache_on_destroy
   end
 
   # method is used for passing the contributions count to datatables / successes dropdown
