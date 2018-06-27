@@ -296,12 +296,6 @@ class Company < ActiveRecord::Base
   # virtual attributes
   attr_writer :default_adwords_image_url
 
-  def all_stories
-    Rails.cache.fetch("#{self.subdomain}/all_stories") do
-      Story.order(Story.company_all(self.id)).pluck(:id)
-    end
-  end
-
   def published_stories
     Story.order(Story.company_published(self.id)).pluck(:id)
   end
@@ -364,18 +358,16 @@ class Company < ActiveRecord::Base
   #
   # method returns a fragment cache key that looks like this:
   #
-  #   #{self.subdomain}/stories-index-[category-{tag_id}-product-{tag_id}-]memcache-iterator-xx
+  #   #{self.subdomain}/stories-gallery-[category-{tag_id}-product-{tag_id}-]memcache-iterator-xx
   #
   # category tag and product tag are optional
   # xx is the memcache iterator
   #
   def stories_gallery_cache_key (filter_params)
-    memcache_iterator = self.stories_gallery_fragments_memcache_iterator
+    mi = self.stories_gallery_fragments_memcache_iterator
     category_key = filter_params['category'].present? ? "category-#{filter_params[:category]}-" : ''
     product_key = filter_params['product'].present? ? "product-#{filter_params[:product]}-" : ''
-    "#{self.subdomain}/" +
-    "stories-index-#{category_key}#{product_key}" +
-    "memcache-iterator-#{memcache_iterator}"
+    "#{self.subdomain}/stories-gallery-#{category_key}#{product_key}memcache-iterator-#{mi}"
   end
 
   #
@@ -447,15 +439,8 @@ class Company < ActiveRecord::Base
     end
   end
 
-  # stories_json contains a bunch of association data;
-  # all_stories is just an array of ids
-  def expire_all_stories_cache json_only
-    if json_only
-      Rails.cache.delete("#{self.subdomain}/stories_json")
-    else
-      Rails.cache.delete("#{self.subdomain}/stories_json")
-      Rails.cache.delete("#{self.subdomain}/all_stories")
-    end
+  def expire_stories_json_cache
+    Rails.cache.delete("#{self.subdomain}/stories_json")
   end
 
   def curator? current_user=nil
@@ -564,32 +549,32 @@ class Company < ActiveRecord::Base
   # changes to company colors expires all gallery fragments
   def expire_fragment_cache
     self.increment_stories_gallery_fragments_memcache_iterator
-    self.increment_story_tile_fragments_memcache_iterator
+    self.increment_story_card_fragments_memcache_iterator
   end
 
-  # expiration of a story tile fragment with logo published
-  # expires all stories index fragments
+  # expiration of a story card fragment with logo published expires all stories gallery fragments
   # rand(10) provides an initial value if none exists
   def stories_gallery_fragments_memcache_iterator
-    Rails.cache.fetch("#{self.subdomain}/stories-index-fragments-memcache-iterator") { rand(10) }
+    Rails.cache.fetch("#{self.subdomain}/stories-gallery-fragments-memcache-iterator") { rand(10) }
   end
 
   def increment_stories_gallery_fragments_memcache_iterator
     Rails.cache.write(
-      "#{self.subdomain}/stories-index-fragments-memcache-iterator",
+      "#{self.subdomain}/stories-gallery-fragments-memcache-iterator",
       self.stories_gallery_fragments_memcache_iterator + 1
     )
   end
 
   # all story fragments must be expired if these attributes change: header_color_1, header_text_color
-  def story_tile_fragments_memcache_iterator
-    Rails.cache.fetch("#{self.subdomain}/stories-tile-fragments-memcache-iterator") { rand(10) }
+  def story_card_fragments_memcache_iterator
+    Rails.cache.fetch("#{self.subdomain}/stories-card-fragments-memcache-iterator") { rand(10) }
   end
 
-  def increment_story_tile_fragments_memcache_iterator
+  def increment_story_card_fragments_memcache_iterator
     Rails.cache.write(
-      "#{self.subdomain}/stories-tile-fragments-memcache-iterator",
-      self.story_tile_fragments_memcache_iterator + 1)
+      "#{self.subdomain}/stories-card-fragments-memcache-iterator",
+      self.story_card_fragments_memcache_iterator + 1
+    )
   end
 
   def recent_activity days_offset  # today = 0

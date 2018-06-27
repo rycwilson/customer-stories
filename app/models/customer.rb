@@ -13,12 +13,13 @@ class Customer < ActiveRecord::Base
 
   friendly_id :name, use: [:slugged, :scoped], scope: :company_id
 
-  after_commit :expire_fragment_cache_on_logo_change,
-               :expire_all_stories_json_cache, on: :update,
-        if: Proc.new { |customer| customer.previous_changes.key?(:logo_url) }
+  after_commit(on: :update) do
+    expire_fragment_cache_on_logo_change
+    self.company.expire_stories_json_cache
+  end if Proc.new { |customer| customer.previous_changes.key?(:logo_url) }
 
-  after_commit(on: [:update]) do  # also calls story.expire_all_stories_cache
-    expire_csp_story_path_cache
+  after_commit(on: [:update]) do
+    self.stories.each { |story| story.expire_csp_story_path_cache }
   end if Proc.new { |customer| customer.previous_changes.key?(:name) }
 
   def should_generate_new_friendly_id?
@@ -26,48 +27,34 @@ class Customer < ActiveRecord::Base
   end
 
   def expire_fragment_cache_on_logo_change
-    # memcache iterator necessary in case change in company colors expires all index cache
-    mi = self.company.stories_gallery_fragments_memcache_iterator
-    # expire stories-index-all-0 if any logo_published stories exist for this customer
-    if Story.joins(success: {})
-            .where(logo_published: true, successes: { customer_id: self.id })
-            .present?
-      self.expire_fragment(
-        "#{company.subdomain}/stories-index-all-0-memcache-iterator-#{mi}"
-      )
-    end
-    self.successes.each do |success|
-      story = success.story
+    self.stories.each do |story|
       self.expire_fragment("#{self.company.subdomain}/story-#{story.id}-testimonial")
       if story.logo_published?
-        # expire story tile fragments ...
+        # expire unfiltered gallery
         self.expire_fragment(
-          "#{self.company.subdomain}/story-tile-#{story.id}-" +
-          "memcache-iterator-#{self.company.story_tile_fragments_memcache_iterator}")
-        # expire stories index fragments for affected filters ...
-        success.story_categories.each do |category|
+          "#{self.company.subdomain}/stories-gallery-" +
+          "memcache-iterator-#{self.company.stories_gallery_fragments_memcache_iterator}"
+        )
+        # expire story card fragments
+        self.expire_fragment(
+          "#{self.company.subdomain}/story-card-#{story.id}-" +
+          "memcache-iterator-#{self.company.story_card_fragments_memcache_iterator}"
+        )
+        # expire stories gallery fragments for affected filters
+        story.category_tags.each do |tag|
           self.expire_fragment(
-            "#{self.company.subdomain}/stories-index-category-#{category.id}-#{mi}"
+            "#{self.company.subdomain}/stories-gallery-category-#{tag.id}-" +
+            "memcache-iterator-#{self.company.stories_gallery_fragments_memcache_iterator}"
           )
         end
-        success.products.each do |product|
+        success.product_tags.each do |tag|
           self.expire_fragment(
-            "#{self.company.subdomain}/stories-index-product-#{product.id}-#{mi}"
+            "#{self.company.subdomain}/stories-gallery-product-#{tag.id}-" +
+            "memcache-iterator-#{self.company.stories_gallery_fragments_memcache_iterator}"
           )
         end
       end
     end
-  end
-
-  def expire_csp_story_path_cache
-    self.successes.each do |success|
-      next if success.story.nil?
-      success.story.expire_csp_story_path_cache
-    end
-  end
-
-  def expire_all_stories_json_cache
-    self.company.expire_all_stories_cache(true)  # true => expire json only
   end
 
 end

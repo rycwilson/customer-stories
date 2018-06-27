@@ -83,7 +83,7 @@ class Contribution < ActiveRecord::Base
     if self.previous_changes.key?('preview_contributor')
       # when selecting or de-selecting a preview contributor,
       # expire the story tile and index as a whole
-      self.company.expire_all_stories_cache(true)
+      self.company.expire_stories_json_cache
       self.story.expire_story_card_fragment_cache
       self.company.increment_stories_gallery_fragments_memcache_iterator
     end

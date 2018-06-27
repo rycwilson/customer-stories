@@ -5,9 +5,11 @@
 
     <% stories.each do |story| %>
 
-      <% cache("#{company.subdomain}/main-gallery-story-#{story.id}-card-" +
-         "memcache-iterator-#{company.story_tile_fragments_memcache_iterator}",
-         skip_digest: true) do %>
+      <% cache(
+            "#{company.subdomain}/story-card-#{story.id}-" +
+            "memcache-iterator-#{company.story_card_fragments_memcache_iterator}",
+            skip_digest: true
+          ) do %>
 
         <li class="grid-item" data-story-id="<%= story.id %>">
 

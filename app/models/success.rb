@@ -58,10 +58,6 @@ class Success < ActiveRecord::Base
     self.is_new_record = true
   end
 
-  before_destroy(prepend: true) do
-    self.story.expire_cache_on_destroy
-  end
-
   # method is used for passing the contributions count to datatables / successes dropdown
   # see successes#index
   def contributions_count
@@ -80,12 +76,12 @@ class Success < ActiveRecord::Base
   end
 
   def expire_category_tags_cache (category)
-    category.company.expire_all_stories_cache(true)  # json only
+    category.company.expire_stories_json_cache
     category.company.increment_category_select_fragments_memcache_iterator
   end
 
   def expire_product_tags_cache (product)
-    product.company.expire_all_stories_cache(true)  # json only
+    product.company.expire_stories_json_cache
     product.company.increment_product_select_fragments_memcache_iterator
   end
 

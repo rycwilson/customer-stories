@@ -129,7 +129,7 @@ class Story < ActiveRecord::Base
   before_update(:update_publish_state, on: [:create, :update])
 
   after_commit(on: [:create, :destroy]) do
-    expire_all_stories_cache(false)
+    self.company.expire_stories_json_cache
   end
 
   # note: the _changed? methods for attributes don't work in the
@@ -139,10 +139,10 @@ class Story < ActiveRecord::Base
 
   # on change of publish state
   after_commit(on: :update) do
-    expire_stories_gallery_fragment_cache
-    expire_filter_select_fragment_cache
     expire_story_card_fragment_cache
-    expire_all_stories_cache(true)
+    expire_filter_select_fragment_cache
+    self.company.increment_stories_gallery_fragments_memcache_iterator
+    self.company.expire_stories_json_cache
   end if Proc.new { |story|
            ( story.previous_changes.keys &
              ['published', 'preview_published', 'logo_published'] ).any?
@@ -153,8 +153,8 @@ class Story < ActiveRecord::Base
   # also json cache
   after_commit(on: :update) do
     expire_story_card_fragment_cache
-    expire_stories_gallery_fragment_cache
-    expire_all_stories_cache(true)
+    self.company.increment_stories_gallery_fragments_memcache_iterator
+    self.company.expire_stories_json_cache
   end if Proc.new { |story|
            ( (story.published? || story.preview_published?) &&
              (story.previous_changes.keys & ['title', 'summary', 'quote']).any? )
@@ -163,25 +163,29 @@ class Story < ActiveRecord::Base
   after_commit(on: :update) do
     expire_story_video_info_cache
     expire_story_video_xs_fragment_cache
-  end if Proc.new { |story|
-           story.previous_changes.key?('video_url')
-         }
+  end if Proc.new { |story| story.previous_changes.key?('video_url') }
 
-  after_commit :expire_story_testimonial_fragment_cache, on: :update, if:
-        Proc.new { |story|
-          (story.previous_changes.keys &
+  after_commit(on: :update) do
+    expire_story_testimonial_fragment_cache
+  end if Proc.new { |story|
+            (story.previous_changes.keys &
             ['video_url', 'quote', 'quote_attr_name', 'quote_attr_title']).any?
-        }
+          }
 
-  after_commit :expire_csp_story_path_cache,
-               :expire_story_narration_fragment_cache,
-               on: :update, if: Proc.new { |story| story.previous_changes.key?('title') }
-
-  after_commit on: :update do
+  after_commit(on: :update) do
+    expire_csp_story_path_cache
     expire_story_narration_fragment_cache
-  end if Proc.new { |story|
-           (story.previous_changes.keys & ['title', 'content']).any?
-         }
+  end if Proc.new { |story| story.previous_changes.key?('title') }
+
+  after_commit(on: :update) do
+    expire_story_narration_fragment_cache
+  end if Proc.new { |story| (story.previous_changes.keys & ['title', 'content']).any? }
+
+  before_destroy do
+    expire_filter_select_fragment_cache
+    self.company.increment_stories_gallery_fragments_memcache_iterator
+    self.company.expire_stories_json_cache
+  end
 
   # method takes an active record relation
   def self.order stories_relation
@@ -239,9 +243,9 @@ class Story < ActiveRecord::Base
   end
 
   def expire_csp_story_path_cache
-    self.company.expire_all_stories_cache(true)  # => json only
     Rails.cache.delete("#{self.company.subdomain}/csp-story-#{self.id}-path")
     self.expire_fragment_cache_on_path_change
+    self.company.expire_stories_json_cache
   end
 
   # method returns a friendly id url that either contains or omits a product
@@ -312,8 +316,7 @@ class Story < ActiveRecord::Base
   # adds contributor linkedin data, which is necessary client-side for widgets
   # that fail to load
   def published_contributors
-    company = self.success.customer.company
-    Rails.cache.fetch("#{company.subdomain}/story-#{self.id}-published-contributors") do
+    Rails.cache.fetch("#{self.company.subdomain}/story-#{self.id}-published-contributors") do
       contributors =
         User.joins(own_contributions: { success: {} })
             .where.not(linkedin_url:'')
@@ -349,36 +352,16 @@ class Story < ActiveRecord::Base
   end
 
   def expire_published_contributor_cache(contributor_id)
-    self.company.expire_all_stories_cache(true)  # json only
     Rails.cache.delete("#{self.company.subdomain}/story-#{self.id}-published-contributors")
+    self.company.expire_stories_json_cache
     self.expire_fragment("#{self.company.subdomain}/story-#{self.id}-contributors")
     self.expire_fragment("#{self.company.subdomain}/story-#{self.id}-contributor-#{contributor_id}")
   end
 
-  # expire fragment cache for a single story tile
   def expire_story_card_fragment_cache
-    mi = "memcache-iterator-#{company.story_tile_fragments_memcache_iterator}"
-    card_fragment = "#{company.subdomain}/main-gallery-story-#{self.id}-card-#{mi}"
+    mi = self.company.story_card_fragments_memcache_iterator
+    card_fragment = "#{company.subdomain}/story-card-#{self.id}-memcache-iterator-#{mi}"
     self.expire_fragment(card_fragment) if fragment_exist?(card_fragment)
-  end
-
-  # expire fragment cache for the stories index
-  def expire_stories_gallery_fragment_cache
-    mi = "memcache-iterator-#{self.company.stories_gallery_fragments_memcache_iterator}"
-    # expire all story tiles
-    self.expire_fragment("#{self.company.subdomain}/stories-index-#{mi}")
-    self.category_tags.each do |category|
-      # expire stories-index-category-xx,
-      self.expire_fragment(
-        "#{company.subdomain}/stories-index-category-#{category.id}-#{mi}"
-      )
-    end
-    self.product_tags.each do |product|
-      # expire stories-index-product-xx,
-      self.expire_fragment(
-        "#{self.company.subdomain}/stories-index-product-#{product.id}-#{mi}"
-      )
-    end
   end
 
   def expire_filter_select_fragment_cache
@@ -391,29 +374,10 @@ class Story < ActiveRecord::Base
   end
 
   def expire_fragment_cache_on_path_change
-    if self.logo_published  # implies self.published also true
+    if self.logo_published?
       self.expire_story_card_fragment_cache
-      self.expire_fragment(
-        "#{self.company.subdomain}/stories-index-all-0-memcache-iterator-" +
-        "#{self.company.stories_gallery_fragments_memcache_iterator}"
-      )
-      self.category_tags.each do |category|
-        self.expire_fragment(
-          "#{self.company.subdomain}/stories-index-category-#{category.id}-" +
-          "memcache-iterator-#{self.company.stories_gallery_fragments_memcache_iterator}"
-        )
-      end
-      self.product_tags.each do |product|
-        self.expire_fragment(
-          "#{self.company.subdomain}/stories-index-product-#{product.id}-" +
-          "memcache-iterator-#{self.company.stories_gallery_fragments_memcache_iterator}"
-        )
-      end
+      self.company.increment_stories_gallery_fragments_memcache_iterator
     end
-  end
-
-  def expire_all_stories_cache (json_only)
-    self.company.expire_all_stories_cache(json_only)
   end
 
   def expire_story_testimonial_fragment_cache
@@ -434,12 +398,6 @@ class Story < ActiveRecord::Base
 
   def expire_results_fragment_cache
     self.expire_fragment("#{self.company.subdomain}/story-#{self.id}-results")
-  end
-
-  def expire_cache_on_destroy
-    self.expire_stories_gallery_fragment_cache
-    self.expire_filter_select_fragment_cache
-    self.company.expire_all_stories_cache(false)
   end
 
   def contributors_jsonld

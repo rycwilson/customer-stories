@@ -4,10 +4,9 @@
 
     <div class='col-sm-6 col-md-7'>
 
-      <div id='story-narration' class='well'>
+      <div class='well'>
 
-        <% cache("#{company.subdomain}/story-#{story.id}-narration",
-                 skip_digest: true) do %>
+        <% cache("#{company.subdomain}/story-#{story.id}-narration", skip_digest: true) do %>
 
           <h4><%= story.title %></h4>
 
@@ -64,8 +63,7 @@
 
     <div class='col-sm-6 col-md-5'>
 
-      <% cache("#{company.subdomain}/story-#{story.id}-results",
-               skip_digest: true) do %>
+      <% cache("#{company.subdomain}/story-#{story.id}-results", skip_digest: true) do %>
 
         <div id='story-results' class="well">
           <h4 class='text-center'>Results</h4>
