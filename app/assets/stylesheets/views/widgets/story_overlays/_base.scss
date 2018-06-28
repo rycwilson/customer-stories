@@ -1,0 +1,186 @@
+
+*, *:after, *:before { -webkit-box-sizing: border-box; box-sizing: border-box; }
+.clearfix:before, .clearfix:after { display: table;  content: ''; }
+.clearfix:after { clear: both; }
+
+body {
+  // background: $color_secondary;
+  // color: #7b7b7b;
+  // font-weight: 400;
+  // font-size: 16px;
+  // font-family: $sansserif;
+  // -webkit-font-smoothing: antialiased;
+  // -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+  overflow-y: scroll; /* force scroll to appear */
+}
+
+/* Sidebar */
+// .sidebar {
+//   text-align: center;
+//   background: $color_primary;
+//   z-index: 1000;
+//   position: fixed;
+//   width: $sidebar_width;
+//   max-width: 100%;
+//   height: 100%;
+//   height: 100vh;
+//   top: 0;
+//   left: 0;
+//   padding: 2em 1em;
+// }
+
+/* Main content */
+.main {
+  position: relative;
+  z-index: 50;
+}
+
+/* Grid container */
+.grid {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Overlay */
+.grid::after {
+  content: '';
+  background: rgba(202,202,202,0.4);
+  opacity: 0;
+  position: absolute;
+  pointer-events: none;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-transition: opacity $anim-time;
+  transition: opacity $anim-time;
+}
+
+.view-single .grid::after {
+  opacity: 1;
+}
+
+.grid__item * {
+  z-index: 10;
+}
+
+
+/* Placeholder element (dummy that gets animated when we click on an item) */
+.placeholder {
+  pointer-events: none;
+  position: absolute;
+  width: calc(100% + 5px);
+  height: calc(100vh + 5px);
+  z-index: 100;
+  top: 0;
+  left: 0;
+  background: $color_secondary;
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+}
+
+.placeholder.placeholder--trans-in {
+  -webkit-transition: -webkit-transform $anim-time;
+  transition: transform $anim-time;
+  -webkit-transition-timing-function: cubic-bezier(0.165,0.84,0.44,1);
+  transition-timing-function: cubic-bezier(0.165,0.84,0.44,1);
+}
+
+.placeholder.placeholder--trans-out {
+  -webkit-transition: -webkit-transform $anim-time;
+  transition: transform $anim-time;
+}
+
+/* main content */
+.content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+  height: 0; /* Avoid second scroll bar in Chrome! */
+  visibility: hidden;
+  z-index: 400;
+  overflow: hidden;
+}
+
+.content.content--show {
+  background-color: $content_background;
+  height: 100vh;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+/* scroll helper wrap */
+.scroll-wrap {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 1;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* single content item */
+.content__item {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  overflow: hidden;
+  height: 0;
+  opacity: 0;
+  padding: 60px 60px 80px 60px;
+  pointer-events: none;
+}
+
+.content__item.content__item--show {
+  height: auto;
+  min-height: 100vh;
+  opacity: 1;
+  pointer-events: auto;
+  -webkit-transition: opacity 0.6s;
+  transition: opacity 0.6s;
+}
+/* close button (for content and sidebar) */
+.close-button {
+  position: absolute;
+  border: none;
+  background: none;
+  margin: 0;
+  z-index: 100;
+  top: 0;
+  right: 10px;
+  font-size: 18px;
+  color: #ccc;
+  cursor: pointer;
+  pointer-events: none;
+  padding: 20px 30px;
+  opacity: 0;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  -webkit-transition: opacity 0.3s;
+  transition: opacity 0.3s;
+}
+
+.close-button span {
+  display: none;
+}
+
+.close-button:hover {
+  color: #666;
+}
+
+/* show class for content close button */
+.close-button--show {
+  opacity: 1;
+  pointer-events: auto;
+}
