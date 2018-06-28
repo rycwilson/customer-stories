@@ -1,0 +1,35 @@
+
+<div class="story-overlay-container">
+
+  <div class="main">
+
+    <section class="grid">
+
+      <% stories.each do |story| %>
+
+        <%= render('stories/shared/story_card', { story: story }) %>
+
+      <% end %>
+
+    </section><!-- /grid -->
+
+    <section class="content">
+
+      <div class="scroll-wrap">
+
+        <% stories.each do |story| %>
+
+          <article class="content__item">
+          </article>
+
+        <% end %>
+
+      </div>
+
+      <button class="close-button"><i class="fa fa-times-thin fa-3x"></i><span>Close</span></button>
+
+    </section><!-- /content -->
+
+  </div><!-- /main -->
+
+</div>
