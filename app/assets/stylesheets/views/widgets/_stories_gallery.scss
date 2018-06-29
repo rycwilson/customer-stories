@@ -2,6 +2,7 @@
 @import '../stories/shared/video';
 
 a.cs-thumbnail {
+  background-color: #fff;
   position: relative;  // this is for positioning the caption at the bottom
   width: 242px;
   height: 170px;
@@ -103,6 +104,28 @@ a.cs-thumbnail {
   }
   &.public.logo-published {
     pointer-events: none;
+  }
+  &.title-present:hover {
+    border: 1px solid transparent;
+    .thumbnail-view-hover {
+      -webkit-transform: translateY(0%);
+      -moz-transform: translateY(0%);
+      -ms-transform: translateY(0%);
+      -o-transform: translateY(0%);
+    }
+    img {
+      opacity: 0.05;
+    }
+    .caption {
+      span.customer-name {
+        visibility: hidden;
+        transition: all 0.23s step-end;
+      }
+      span.click-action:after {
+        visibility: visible;
+        transition: all 0.23s step-end;
+      }
+    }
   }
 }
 
