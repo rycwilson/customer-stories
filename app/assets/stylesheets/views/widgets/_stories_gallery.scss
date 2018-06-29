@@ -2,6 +2,7 @@
 @import '../stories/shared/video';
 
 a.cs-thumbnail {
+  overflow: hidden;
   background-color: #fff;
   position: relative;  // this is for positioning the caption at the bottom
   width: 242px;
