@@ -180,10 +180,9 @@ function widgetsMonitor () {
             if (!firstWidgetLoaded) {
               firstWidgetLoaded = true;
               setWidgetTimeout(firstWidgetReadyTimeoutDelay, postMessageHandler);
-            } else {
-              if (contributors.every(function (c) { return c.widget_loaded; })) {
-                $('.linkedin-widgets').removeClass('hidden');
-              }
+            }
+            if (contributors.every(function (c) { return c.widget_loaded; })) {
+              $('.linkedin-widgets').removeClass('hidden');
             }
           }
         }
