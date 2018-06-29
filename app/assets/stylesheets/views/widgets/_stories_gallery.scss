@@ -7,9 +7,9 @@ a.cs-thumbnail {
   position: relative;  // this is for positioning the caption at the bottom
   width: 242px;
   height: 170px;
+  margin: 20px;
   text-align: center;
   padding: 0;
-  margin-bottom: 0;
   border: 1px solid transparent;
   border-radius: 0;
   // following settings lifted from chrome new tab page
@@ -125,6 +125,30 @@ a.cs-thumbnail {
       span.click-action:after {
         visibility: visible;
         transition: all 0.23s step-end;
+      }
+    }
+  }
+  &:not(.still-loading) {
+    i.fa-spin { display: none; }
+  }
+  &.loading {
+    // border-color: #ccc;
+    -webkit-filter: brightness(95%);
+    .thumbnail-view-hover { transform: none; }
+    img { opacity: 0.05 !important; }
+    &.still-loading {
+      .thumbnail-view, .caption {
+        opacity: 0.05;
+      }
+      // the icon needs to be wrapped in a div in order for the transform to work
+      // (center if element is centered, not top-left of element)
+      .still-loading-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 20px;
+        color: #666;
       }
     }
   }
