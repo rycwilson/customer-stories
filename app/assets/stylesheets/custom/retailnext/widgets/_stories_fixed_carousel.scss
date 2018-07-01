@@ -1,18 +1,25 @@
 
 #more-stories-container, .cs-section {
   header {
-    font-family: $metropolis-medium;
+    font-family: $metropolis-light;
     text-transform: uppercase;
   }
 }
 
 .cs-section {
   .cs-header-row {
-    height: 44px
+    height: 47px
   }
   .cs-header {
+    // width: 240px;
     font-size: 16px;
-    line-height: 28px;
+    line-height: 31px;
+    .cs-open-close {
+      padding-top: 9px
+    }
+    .cs-remove {
+      padding-top: 9px;
+    }
   }
   .cs-drawer-content {
     border-top-color: #f2b600 !important;
