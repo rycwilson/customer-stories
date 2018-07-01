@@ -27,6 +27,12 @@
 
   .cs-header-row {
     height: 48px;   //  32 + 8 + 8
+    // this effectively makes the header less wide;
+    // better than using max-width (on .cs-header), as max-width will remove space starting on the right,
+    // but we want to stay right-aligned
+    > .hidden-xs {
+      padding-left: 30px;
+    }
   }
 
   .visible-xs-block .cs-header {
