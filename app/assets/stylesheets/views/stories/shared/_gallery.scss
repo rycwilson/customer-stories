@@ -208,8 +208,8 @@
   }
 }
 
-@media only screen and (min-width: 768px) and (max-width: 991px) {
-  #stories-gallery, #curate-gallery {
+@media only screen and (max-width: 991px) {
+  #related-stories {
     li {
       margin: 15px;
       a.thumbnail {
@@ -228,9 +228,26 @@
       }
     }
   }
-  #related-stories {
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+  #stories-gallery, #curate-gallery {
     li {
-      margin: 15px
+      margin: 15px;
+      a.thumbnail {
+        width: 200px;  // 210
+        height: 140px;  // 140
+        .thumbnail-view {
+          line-height: 106px;
+          .thumbnail-view-hover p {
+            font-size: 14px;
+            line-height: 22px;
+          }
+        }
+        .caption {
+          font-size: 13px;
+        }
+      }
     }
   }
 }
