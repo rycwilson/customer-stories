@@ -108,6 +108,36 @@
     }
   }
 
+  .linkedin-widgets {
+    > .well:first-child {
+      margin-bottom: 0;
+      position:relative;
+      background-image: linear-gradient(to bottom, #ffffff 70%, #f2f2f2 100%);  //f2f2f2
+      // background-repeat: repeat-x;
+      border-top: 1px solid #e3e3e3;
+      border-left: 0;
+      border-right: 0;
+      border-bottom: 0;
+      &:before, &:after {
+        content: "";
+        position: absolute;
+        // background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#e3e3e3), to(transparent));
+        // background-image: -webkit-linear-gradient(#e3e3e3, transparent);
+        // background-image: -moz-linear-gradient(#e3e3e3, transparent);
+        // background-image: -o-linear-gradient(#e3e3e3, transparent);
+        background-image: linear-gradient(to bottom, #e3e3e3 0, transparent 70%);
+        top: 3px;
+        bottom: -1px;
+        width: 1px;
+      }
+      &:before {
+        left: -1px;
+      }
+      &:after {
+        right: -1px;
+      }
+    }
+  }
 
   #social-buttons-xs {
     background-color: #f2f2f2;
