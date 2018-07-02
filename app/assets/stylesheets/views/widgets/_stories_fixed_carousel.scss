@@ -57,9 +57,9 @@
     border-top-left-radius: 5px 5px;
     border-top-right-radius: 5px 5px;
     &.light {
-      color: #fff;
+      color: #e3e3e3;
       .cs-open-close:hover, .cs-remove:hover {
-        color: #ccc;
+        color: #fff;
       }
     }
     &.dark {
