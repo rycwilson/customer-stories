@@ -74,7 +74,7 @@ class StoriesController < ApplicationController
           json = { html: overlay_html(@story) }.to_json
           callback = params[:callback]
           jsonp = callback + "(" + json + ")"
-          render text: jsonp
+          render(text: jsonp)
         end
       end and return
     end

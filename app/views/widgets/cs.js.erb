@@ -79,69 +79,6 @@
     });
   }
 
-  // function buildRelWidget ($container) {
-  //   $container.find('.cs-thumbnail.published, .cs-thumbnail.preview-published').hover(
-  //     function () { $(this).css('border-color', '<%= @company.widget.tab_color %>'); },
-  //     function () { $(this).css('border-color', '#ddd'); }
-  //   );
-  //   // override bootstrap blue borders...
-  //   $container.find('.cs-thumbnail.logo-published').hover(
-  //     function () { $(this).css('border-color', '#ddd'); },
-  //     function () { $(this).css('border-color', '#ddd'); }
-  //   );
-  //   $container.find('section').css('visibility', 'visible');
-  //   if (<%= ENV['HOST_NAME'] == 'customerstories.net' %>) {
-  //     trackVisitor();
-  //   }
-  // }
-
-  // function buildRelExpWidget ($container) {
-  //   var borderColorHex = '<%= @company.widget.tab_color %>',
-  //       borderColorRgb = hexToRgb(borderColorHex),
-  //       borderOpacity = 0.8,
-  //       borderColorRgba = 'rgba(' + borderColorRgb.r.toString() + ',' + borderColorRgb.g.toString() + ',' + borderColorRgb.b.toString() + ',' + borderOpacity.toString()
-
-  //   // disable horizontal scrolling
-  //   $container.find('.row-horizon').css('overflow-x', 'hidden');
-
-  //   $container.find('.cs-thumbnail').css('border-color', borderColorHex);
-  //   $container.find('.cs-caption').css('background-color', borderColorHex);
-
-  //   textfillPlugin();
-  //   $container.find('.cs-caption').each(function () {
-  //     $(this).textfill({ minFontPixels: 12, maxFontPixels: 16 });
-  //   })
-
-  //   // alter caption text on hover
-  //   $container.find('.cs-thumbnail.published, .cs-thumbnail.preview-published')
-  //     .hover(
-  //       function () {
-  //         var $thumbnail = $(this);
-  //         setTimeout(function () {
-  //           $thumbnail.find('.cs-caption').children().toggle();
-  //         }, 200);  // matches logo transition
-  //       },
-  //       function () {
-  //         var $thumbnail = $(this);
-  //         // setTimeout(function () {
-  //           $thumbnail.find('.cs-caption').children().toggle();
-  //         // }, 200);  // matches logo transition
-  //       }
-  //     );
-
-  //   // column widths responsive to screen width;
-  //   // adjust as necessary on page load and device orientation change
-  //   adjustColumnsWidth($container);
-  //   $(window).on('orientationchange', function () {
-  //     adjustColumnsWidth($container);
-  //   })
-
-  //   $container.find('section').css('visibility', 'visible');
-  //   if (<%= ENV['HOST_NAME'] == 'customerstories.net' %>) {
-  //     trackVisitor();
-  //   }
-  // }
-
   function buildCarousel ($container) {
     // alternative font for test environment
     varmourAltFont();
@@ -402,15 +339,15 @@
 
   // on weebly, get the Montserrat font to emulate proxima-nova
   function varmourAltFont () {
-    // if (window.location.href.includes('weebly')) {
-    //   $("<link>", {
-    //     rel: "stylesheet",
-    //     type: "text/css",
-    //     href: "//fonts.googleapis.com/css?family=Montserrat:300,600"
-    //   }).appendTo('head');
-    //   // adjust container padding as necessary
-    //   $('.wsite-section-content > .container').css('padding', '0');
-    // }
+    if (window.location.href.includes('weebly')) {
+      $("<link>", {
+        rel: "stylesheet",
+        type: "text/css",
+        href: "//fonts.googleapis.com/css?family=Montserrat:300,600"
+      }).appendTo('head');
+      // adjust container padding as necessary
+      $('.wsite-section-content > .container').css('padding', '0');
+    }
   }
 
   function buildFixedCarousel ($container) {
@@ -458,33 +395,39 @@
           }, 1000);
         };
 
+    // modernizr is needed for the plugin
+    $.getScript("<%= asset_url('modernizr/modernizr') %>", function () {
+      $.getScript("<%= asset_url('js/classie') %>");  // helper for the plugin
+      $.getScript("<%= asset_url('plugins/grid_overlays') %>");
+    })
+
     $container
       .on('click', 'a.published', function (e) {
         e.preventDefault();
-        if ($(this).hasClass('loaded')) {
-          $(this).removeClass('loading still-loading')
+        var $story = $(this);
+        if ($story.hasClass('loaded')) {
+          $story.removeClass('loading still-loading')
           return false;
         } else {
-          var $story = $(this);
           loading($story);
-
           $.ajax({
-            url: $(this).attr('href'),
+            url: $story.attr('href'),
             method: 'GET',
             data: {
               is_widget: true
             },
             dataType: 'jsonp'
           })
-            .done(function (html, status, jqxhr) {
+            .done(function (data, status, jqxhr) {
               $.when(
-                  $('.story-overlay-container article:nth-of-type(' + ($story.index() + 1).toString() + ')')
-                    .empty()
-                    .append(html)
-                ).done(function () {
+                $('#cs-gallery article:nth-of-type(' + ($story.index() + 1).toString() + ')')
+                  .html(data.html)
+              )
+                .done(function () {
                   // loadVideoThumbnail();
+                  // console.log($('#cs-gallery article:nth-of-type(' + ($story.index() + 1).toString() + ')').html())
                     $story.addClass('loaded')
-                    $('#stories-gallery a').css('pointer-events', 'auto');
+                    $('#cs-gallery a').css('pointer-events', 'auto');
                     // the grid_overlays.js listener is vanilla js, won't pick up on $story.trigger('click')
                     $story[0].click();
                   // $('.story-overlay-container').imagesLoaded(function () {

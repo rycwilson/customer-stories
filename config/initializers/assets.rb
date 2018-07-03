@@ -25,7 +25,7 @@ Rails.application.config.assets.precompile += %w(
   pdf.css
   mvpready-landing.css
   mvpready-admin.css
-  lib/video.js
   js/classie.js
   plugins/grid_overlays.js
+  modernizr/modernizr.js
 )

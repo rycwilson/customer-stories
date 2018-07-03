@@ -35,14 +35,14 @@ class WidgetsController < ApplicationController
         json = { html: widget_html(params) }.to_json
         callback = params[:callback]
         jsonp = callback + "(" + json + ")"
-        render text: jsonp
+        render(text: jsonp)
       end
     end
   end
 
   def track
     response.headers.delete('X-Frame-Options')
-    render layout: false
+    render(layout: false)
   end
 
   private

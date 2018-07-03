@@ -31,7 +31,7 @@
         onEndCallbackFn();
       }
     },
-    gridEl = document.getElementById('stories-gallery'),
+    gridEl = document.getElementById('cs-gallery'),
     gridItemsContainer = gridEl.querySelector('section.grid'),
     contentItemsContainer = gridEl.querySelector('section.content'),
     gridItems = gridItemsContainer.querySelectorAll('.grid__item'),
