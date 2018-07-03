@@ -65,7 +65,16 @@ class StoriesController < ApplicationController
   end
 
   def show
-    @is_preview = params[:preview].present?
+    if params[:is_widget]
+      respond_to do |format|
+        format.js do
+          json = { html: overlay_html(@story) }.to_json
+          callback = params[:callback]
+          jsonp = callback + "(" + json + ")"
+          render text: jsonp
+        end
+      end and return
+    end
     if params[:remove_video].present?
       if params[:xs_screen]
         render({
@@ -79,6 +88,7 @@ class StoriesController < ApplicationController
         })
       end
     end
+    @is_preview = params[:preview].present?
     # convert the story content to plain text (for SEO tags)
     @story_content_text = HtmlToPlainText.plain_text(@story.content)
     @related_stories = @story.related_stories
@@ -369,6 +379,18 @@ class StoriesController < ApplicationController
                                                   # he goes at the end
     @contributors << curator unless curator.linkedin_url.blank?
     @contributors
+  end
+
+  def overlay_html (story)
+    render_to_string({
+      partial: 'stories/show/story_overlay',
+      locals: {
+        company: story.company,
+        story: story,
+        contributors: story.contributors,
+        related_stories: story.related_stories
+      }
+    })
   end
 
   # new customers can be created on new story creation

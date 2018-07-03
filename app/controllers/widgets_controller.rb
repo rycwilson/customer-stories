@@ -32,13 +32,9 @@ class WidgetsController < ApplicationController
   def html
     respond_to do |format|
       format.js do
-        # Build a JSON object containing our HTML
         json = { html: widget_html(params) }.to_json
-        # Get the name of the JSONP callback created by jQuery
         callback = params[:callback]
-        # Wrap the JSON object with a call to the JSONP callback
         jsonp = callback + "(" + json + ")"
-        # Send result to the browser
         render text: jsonp
       end
     end

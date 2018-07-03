@@ -17,6 +17,7 @@ Rails.application.config.assets.precompile += %w(
   adwords/ads_preview.js
   jquery-textfill/source/jquery.textfill.js
   adwords/ads_preview.css
+  stories/
   custom/trunity/widgets/cs_fixed_carousel.css
   custom/varmour/widgets/cs_carousel.css
   custom/retailnext/widgets/cs_fixed_carousel.css

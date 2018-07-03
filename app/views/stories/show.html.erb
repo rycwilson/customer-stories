@@ -94,8 +94,15 @@
   <!-- story content, results, contributing team -->
   <div id='story-section-content'>
 
-    <%= render 'stories/show/story_content',
-        { company: @company, story: @story, contributors: @contributors } %>
+    <%= render(
+          'stories/show/story_content',
+          {
+            company: @company,
+            story: @story,
+            contributors: @contributors,
+            related_stories: @story.related_stories
+          }
+        ) %>
 
   </div>
 

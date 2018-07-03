@@ -23,7 +23,7 @@
       </div>
 
 
-      <% if @related_stories.length >= 2 %>
+      <% if related_stories.length >= 2 %>
 
         <div id='related-stories' class='well hidden-xs'>
 
@@ -37,7 +37,7 @@
           <div class="grid-container">
             <ul class="grid list-unstyled text-center">
 
-              <% @related_stories.each do |story| %>
+              <% related_stories.each do |story| %>
                 <li>
                   <%= render(
                         'stories/shared/story_card',
@@ -84,9 +84,9 @@
 
       <% end %>
 
-      <% if @story.ctas.present? %>
+      <% if story.ctas.present? %>
 
-        <%= render 'stories/shared/learn_more', { story: @story } %>
+        <%= render 'stories/shared/learn_more', { story: story } %>
 
       <% end %>
 
@@ -125,7 +125,7 @@
         </div>
       <%# end %>
 
-      <% if @related_stories.length >= 2 %>
+      <% if related_stories.length >= 2 %>
 
         <div id='related-stories' class='well visible-xs'>
 
@@ -139,12 +139,12 @@
           <div class="grid-container">
             <ul class="grid list-unstyled text-center">
 
-              <% @related_stories.each do |story| %>
+              <% related_stories.each do |story| %>
                 <li>
                   <%= render(
                         'stories/shared/story_card',
                         {
-                          company: @company,
+                          company: company,
                           story: story,
                           is_curator: false,
                           is_widget: false,
