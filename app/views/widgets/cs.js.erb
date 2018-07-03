@@ -448,6 +448,16 @@
   }
 
   function buildGallery ($container) {
+    var loading = function ($story) {
+          $story.addClass('loading');
+          $('#cs-gallery a').css('pointer-events', 'none');
+          setTimeout(function () {
+            if (!$story.hasClass('loaded')) {
+              $story.addClass('still-loading');
+            }
+          }, 1000);
+        };
+
     $(document)
       .on('click', '#cs-gallery a.published', function (e) {
         if ($(this).hasClass('loaded')) {
