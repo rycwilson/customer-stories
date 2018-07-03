@@ -3,6 +3,9 @@ class StoriesController < ApplicationController
   include StoriesHelper
   include StoriesAndWidgets
 
+  # for widgets
+  skip_before_action :verify_authenticity_token, only: [:show]
+
   before_action :set_company
   before_action :set_story, only: [:edit, :update, :ctas, :tags, :promote, :approval, :destroy]
   before_action only: [:show] { @is_curator = @company.curator?(current_user) }
