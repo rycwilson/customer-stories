@@ -460,6 +460,7 @@
 
     $(document)
       .on('click', '#cs-gallery a.published', function (e) {
+        e.preventDefault();
         if ($(this).hasClass('loaded')) {
           $(this).removeClass('loading still-loading')
           return false;
@@ -468,12 +469,12 @@
           loading($story);
 
           $.ajax({
-            url: $(this).data('url'),
+            url: $(this).attr('href'),
             method: 'GET',
             data: {
               is_widget: true
             },
-            dataType: 'html'
+            dataType: 'jsonp'
           })
             .done(function (html, status, jqxhr) {
               $.when(
