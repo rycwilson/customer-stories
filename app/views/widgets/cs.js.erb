@@ -458,8 +458,8 @@
           }, 1000);
         };
 
-    $(document)
-      .on('click', '#cs-gallery a.published', function (e) {
+    $container
+      .on('click', 'a.published', function (e) {
         e.preventDefault();
         if ($(this).hasClass('loaded')) {
           $(this).removeClass('loading still-loading')
@@ -482,13 +482,13 @@
                     .empty()
                     .append(html)
                 ).done(function () {
-                  loadVideoThumbnail();
-                  $('.story-overlay-container').imagesLoaded(function () {
+                  // loadVideoThumbnail();
                     $story.addClass('loaded')
                     $('#stories-gallery a').css('pointer-events', 'auto');
                     // the grid_overlays.js listener is vanilla js, won't pick up on $story.trigger('click')
                     $story[0].click();
-                  })
+                  // $('.story-overlay-container').imagesLoaded(function () {
+                  // })
                 })
             })
             .fail(function () {
