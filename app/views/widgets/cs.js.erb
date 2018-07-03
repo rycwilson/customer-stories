@@ -448,7 +448,43 @@
   }
 
   function buildGallery ($container) {
+    $(document)
+      .on('click', '#cs-gallery a.published', function (e) {
+        if ($(this).hasClass('loaded')) {
+          $(this).removeClass('loading still-loading')
+          return false;
+        } else {
+          var $story = $(this);
+          loading($story);
 
+          $.ajax({
+            url: $(this).data('url'),
+            method: 'GET',
+            data: {
+              is_widget: true
+            },
+            dataType: 'html'
+          })
+            .done(function (html, status, jqxhr) {
+              $.when(
+                  $('.story-overlay-container article:nth-of-type(' + ($story.index() + 1).toString() + ')')
+                    .empty()
+                    .append(html)
+                ).done(function () {
+                  loadVideoThumbnail();
+                  $('.story-overlay-container').imagesLoaded(function () {
+                    $story.addClass('loaded')
+                    $('#stories-gallery a').css('pointer-events', 'auto');
+                    // the grid_overlays.js listener is vanilla js, won't pick up on $story.trigger('click')
+                    $story[0].click();
+                  })
+                })
+            })
+            .fail(function () {
+
+            })
+        }
+      })
   }
 
   // slideout drawer plugin
