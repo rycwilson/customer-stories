@@ -9,7 +9,8 @@
    data-quote="<%= is_external ? '' : story.quote.try(:to_json) %>"
    data-quote-attr-name="<%= is_external ? '' : story.quote_attr_name.try(:to_json) %>"
    data-quote-attr-title="<%= is_external ? '' : story.quote_attr_title.try(:to_json) %>"
-   data-preview-contributor="<%#= is_external ? '' : story.preview_contributor %>">
+   data-preview-contributor="<%#= is_external ? '' : story.preview_contributor %>"
+   data-url="<%= story.csp_story_url %>">
 
   <div class="thumbnail-view">
     <% if story.title.present? %>
