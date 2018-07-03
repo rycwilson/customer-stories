@@ -17,7 +17,7 @@ function loadVideoThumbnail (cbSuccess) {
       videoQuery = '', thumbSrc = '',
 
       removeVideo = function () {
-        if (app.screenSize === 'xs') {
+        if (CSP.screenSize === 'xs') {
           $.when( $('#video-xs').remove() )
             .then(function () { cbSuccess(); });
         } else {
@@ -150,3 +150,4 @@ function playVideoListener () {
     }
   });
 }
+

@@ -2,7 +2,7 @@
 function initLinkedIn () {
 
   if ($('body').hasClass('stories show')) {
-    if (app.screenSize === 'lg') {
+    if (CSP.screenSize === 'lg') {
       $('.linkedin-widget').not('.linkedin-widget-wide').remove();
     } else {
       $('.linkedin-widget-wide').remove();

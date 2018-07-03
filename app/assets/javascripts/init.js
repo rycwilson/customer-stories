@@ -1,5 +1,5 @@
 
-window.app = window.app || {
+window.CSP = window.CSP || {
 
   browser: {  // ref: http://stackoverflow.com/questions/9847580
     isChrome: !!window.chrome && !!window.chrome.webstore,
@@ -50,15 +50,8 @@ window.app = window.app || {
 
     if ($('#flash').is(':visible')) { flashTimeout(); }
 
-  },
+  }
 
-  // betaFeatures: function () {
-  //   if (this.company.feature_flag !== 'demo') {
-  //     // workflow features block
-  //     $('.tooltip-beta-measure').tooltip({ placement: 'right', container: 'body' });
-  //     $('.tooltip-beta-promote').tooltip({ placement: 'top' });
-  //   }
-  // }
 };
 
 

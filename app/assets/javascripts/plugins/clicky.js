@@ -1,9 +1,9 @@
 
 function initClicky () {
 
-  if (app.env === 'production' &&
+  if (CSP.env === 'production' &&
       typeof(clicky) === 'undefined' &&
-      !app.current_user) {  // don't run clicky for signed-in users
+      !CSP.current_user) {  // don't run clicky for signed-in users
 
     $.getScript('//static.getclicky.com/js', function () {
       try {

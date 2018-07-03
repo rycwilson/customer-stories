@@ -21,12 +21,12 @@
       },
       // update any story attributes that fall under Settings
       updateStory = function () {
-        var storyIndex = app.stories.findIndex(function (st) { return st.id === story.id });
-        app.stories[storyIndex].csp_story_path = story.csp_story_path;
-        app.stories[storyIndex].logo_published = story.logo_published;
-        app.stories[storyIndex].preview_published = story.preview_published;
-        app.stories[storyIndex].published = story.published;
-        app.stories[storyIndex].title = story.title;
+        var storyIndex = CSP.stories.findIndex(function (st) { return st.id === story.id });
+        CSP.stories[storyIndex].csp_story_path = story.csp_story_path;
+        CSP.stories[storyIndex].logo_published = story.logo_published;
+        CSP.stories[storyIndex].preview_published = story.preview_published;
+        CSP.stories[storyIndex].published = story.published;
+        CSP.stories[storyIndex].title = story.title;
         $('a.story-title').text(story.title);
         $('#story-edit-header span.customer').text(story.success.customer.name)
       };

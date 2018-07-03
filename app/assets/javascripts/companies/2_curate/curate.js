@@ -4,13 +4,13 @@ function curate () {
   // don't need to call this here as the auto curator-select change event will trigger it
   // filterCurateGallery();
   $('#curate-filters .curator').val(
-      $('#curate-filters .curator').children('[value="' + app.current_user.id + '"]').val()
+      $('#curate-filters .curator').children('[value="' + CSP.current_user.id + '"]').val()
     ).trigger('change', { auto: true });
 }
 
 // keep track of filters with session cookies
 function preselectFilters () {
-  $('#curate-filters').find('select.curator').val(Cookies.get('csp-curate-filter-curator') || app.current_user.id).trigger('change');
+  $('#curate-filters').find('select.curator').val(Cookies.get('csp-curate-filter-curator') || CSP.current_user.id).trigger('change');
   $('#curate-filters').find('select.customer').val(Cookies.get('csp-curate-filter-customer') || 0).trigger('change');
   $('#curate-filters').find('select.category').val(Cookies.get('csp-curate-filter-category') || 0).trigger('change');
   $('#curate-filters').find('select.product').val(Cookies.get('csp-curate-filter-product') || 0).trigger('change');
@@ -108,26 +108,26 @@ function filterCurateGallery (context) {
       // showPreviewPublished = $('#status-filters .preview-published').prop('checked'),
       // showPublished = $('#status-filters .published').prop('checked');
 
-  var curatorStoryIds = (curatorId === '') ? _.pluck(app.stories, 'id') :
-        _.pluck(app.stories.filter(function (story) {
+  var curatorStoryIds = (curatorId === '') ? _.pluck(CSP.stories, 'id') :
+        _.pluck(CSP.stories.filter(function (story) {
           return story.success.curator_id == curatorId;
         }), 'id');
         // console.log(curatorStoryIds)
-  var customerStoryIds = (customerId === '') ? _.pluck(app.stories, 'id') :
-        _.pluck(app.stories.filter(function (story) {
+  var customerStoryIds = (customerId === '') ? _.pluck(CSP.stories, 'id') :
+        _.pluck(CSP.stories.filter(function (story) {
           return story.success.customer.id == customerId;
         }), 'id');
 
-  var categoryStoryIds = (categoryId === '') ? _.pluck(app.stories, 'id') :
-        _.pluck(app.stories.filter(function (story) {
+  var categoryStoryIds = (categoryId === '') ? _.pluck(CSP.stories, 'id') :
+        _.pluck(CSP.stories.filter(function (story) {
           return story.success.story_categories &&
              story.success.story_categories.some(function (category) {
                return category.id == categoryId;
              });
         }), 'id');
         // console.log(categoryStoryIds)
-  var productStoryIds = (productId === '') ? _.pluck(app.stories, 'id') :
-        _.pluck(app.stories.filter(function (story) {
+  var productStoryIds = (productId === '') ? _.pluck(CSP.stories, 'id') :
+        _.pluck(CSP.stories.filter(function (story) {
           return story.success.products &&
             story.success.products.some(function (product) {
               return product.id == productId;
@@ -136,21 +136,21 @@ function filterCurateGallery (context) {
         // console.log(productStoryIds)
 
   var pendingStoryIds =
-        _.pluck(app.stories.filter(function (story) {
+        _.pluck(CSP.stories.filter(function (story) {
           return !story.published && !story.preview_published && !story.logo_published;
         }), 'id');
       // console.log(pendingStoryIds)
   var logoStoryIds =
-        _.pluck(app.stories.filter(function (story) {
+        _.pluck(CSP.stories.filter(function (story) {
           return !story.published && !story.preview_published && story.logo_published;
         }), 'id');
         // console.log('logo published: ', logoStoryIds)
   var previewStoryIds =
-        _.pluck(app.stories.filter(function (story) {
+        _.pluck(CSP.stories.filter(function (story) {
           return !story.published && story.preview_published;
         }), 'id');
   var publishedStoryIds =
-        _.pluck(app.stories.filter(function (story) {
+        _.pluck(CSP.stories.filter(function (story) {
           return story.published;
         }), 'id');
         // console.log('published: ', publishedStoryIds)
@@ -161,7 +161,7 @@ function filterCurateGallery (context) {
   storyIds = (status === '' || status === '2') ? storyIds : _.difference(storyIds, previewStoryIds);
   storyIds = (status === '' || status === '3') ? storyIds : _.difference(storyIds, publishedStoryIds);
 
-  stories = app.stories.filter(function (story) { return storyIds.includes(story.id); });
+  stories = CSP.stories.filter(function (story) { return storyIds.includes(story.id); });
 
 // console.log('stories: ', stories)
 

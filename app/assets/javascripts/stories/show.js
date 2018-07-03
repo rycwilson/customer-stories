@@ -14,7 +14,7 @@ function storiesShow () {
       Cookies.set('csp-story-tab', '#story-content');
     })
     .on('scroll', function () {
-      if ($('body').hasClass('stories show') && !app.current_user) {
+      if ($('body').hasClass('stories show') && !CSP.current_user) {
         var scrollBottom = $(document).height() - $(window).height() - $(window).scrollTop();
         if (scrollBottom < $('#sign-in-footer').height()) {
           $('#more-stories-container').hide();
@@ -56,19 +56,19 @@ function initMoreStories () {
     //   $('.cs-drawer-content').css('height', '141px');
     //   $('.cs-drawer-items').css('height', '141px');
     // }
-    if ( app.company.widget.show &&
-         !Cookies.get(app.company.subdomain + '-hide-widget') ) {
+    if ( CSP.company.widget.show &&
+         !Cookies.get(CSP.company.subdomain + '-hide-widget') ) {
       widgetShowTimer = setTimeout(function () {
         $('.cs-header').trigger('click', { isAuto: true } );
-        if (app.company.widget.hide) {
+        if (CSP.company.widget.hide) {
           widgetHideTimer = setTimeout(function () {
             $('.cs-header').trigger('click', { isAuto: true } );
-          }, app.company.widget.hide_delay);
+          }, CSP.company.widget.hide_delay);
         }
-      }, app.company.widget.show_delay);
+      }, CSP.company.widget.show_delay);
       // var inOneHour = new Date(new Date().getTime() + 60 * 60 * 1000);
-      Cookies.set(app.company.subdomain + '-hide-widget', '1',
-                  { expires: app.company.widget.show_freq });
+      Cookies.set(CSP.company.subdomain + '-hide-widget', '1',
+                  { expires: CSP.company.widget.show_freq });
     }
     $('.cs-section')
       .slideDrawer()
@@ -146,7 +146,7 @@ function clickyListeners () {
  */
 
 function widgetsMonitor () {
-  var contributors = app.stories.find(function (story) {
+  var contributors = CSP.stories.find(function (story) {
                        return story.csp_story_path === window.location.pathname;
                      }).published_contributors,
       firstWidgetLoaded = false,
@@ -207,7 +207,7 @@ function setWidgetTimeout (delay, postMessageHandler) {
     if ($('body').hasClass('stories show')) {
       // there is potential for timing discrepancy between the above condition and
       // window.location.pathname, so confirm retrieval of a story ...
-      var story = app.stories.find(function (story) {
+      var story = CSP.stories.find(function (story) {
                     return story.csp_story_path === window.location.pathname;
                   });
       if (story && story.published_contributors) {
@@ -237,7 +237,7 @@ function setWidgetTimeout (delay, postMessageHandler) {
 
 function addCspWidget (contributor, index) {
   var template = _.template($('#csp-linkedin-widget-template').html()),
-      widgetWidth = (app.screenSize === 'lg') ? 420 : 340;
+      widgetWidth = (CSP.screenSize === 'lg') ? 420 : 340;
 
   if (contributor.linkedin_photo_url && contributor.linkedin_title &&
       contributor.linkedin_company) {

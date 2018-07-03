@@ -59,7 +59,7 @@ function selectTemplateListeners () {
         $('.btn-toolbar button').prop('disabled', true);
 
         $.ajax({
-          url: '/companies/' + app.company.id + '/crowdsourcing_templates/' + $select.val() + '/edit',
+          url: '/companies/' + CSP.company.id + '/crowdsourcing_templates/' + $select.val() + '/edit',
           method: 'get',
           data: {
             // was this template just created? (if undefined nothing will be sent)

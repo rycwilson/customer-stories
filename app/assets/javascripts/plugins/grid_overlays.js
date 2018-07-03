@@ -69,7 +69,6 @@
     [].slice.call(gridItems).forEach(function(item, pos) {
       item.addEventListener('click', function(ev) {
         ev.preventDefault();
-        console.log($(item))
         if(isAnimating || current === pos || !$(item).hasClass('loaded')) {
           return false;
         }
@@ -137,7 +136,6 @@
       dummy.style.WebkitTransform = 'translate3d(-5px, ' + (scrollY() - 5) + 'px, 0px)';
       dummy.style.transform = 'translate3d(-5px, ' + (scrollY() - 5) + 'px, 0px)';
       // disallow scroll
-      console.log($("article.content__item--show"))
       window.addEventListener('scroll', noscroll);
     }, 25);
 

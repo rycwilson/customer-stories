@@ -132,7 +132,7 @@ function newSuccessListeners () {
             },
             getInvitationTemplateId = function (templateName) {
               if (!templateName) return null;
-              var template = app.company.crowdsourcing_templates.find(function (template) {
+              var template = CSP.company.crowdsourcing_templates.find(function (template) {
                 return template.name === templateName;
               });
               if (template) {
@@ -143,7 +143,7 @@ function newSuccessListeners () {
               return template ? template.id : null;
             },
             curatorIsValid = function (email) {
-              return app.company.curators.find(function (curator) { return curator.email === email; });
+              return CSP.company.curators.find(function (curator) { return curator.email === email; });
             },
             contactIsValid = function (contactType, email, firstName, lastName) {
               console.log('adding ' + (contactType === 'referrer' ? 'referrer' : 'customer contact'));
@@ -191,7 +191,7 @@ function newSuccessListeners () {
                 Object.assign(attrs, {
                   crowdsourcing_template_attributes: {
                     name: invitationTemplateName,
-                    company_id: app.company.id
+                    company_id: CSP.company.id
                   }
                 });
                 delete attrs.crowdsourcing_template_id;
@@ -213,10 +213,10 @@ function newSuccessListeners () {
             },
             parseRow = function (row) {
               console.log('parsing row...');
-              var curator = app.company.curators.find(function (curator) {
+              var curator = CSP.company.curators.find(function (curator) {
                     return curator.email === row.curatorEmail;
                   }),
-                  customer = app.company.customers.find(function (customer) {
+                  customer = CSP.company.customers.find(function (customer) {
                     return customer.name === row.customerName;
                   }),
                   success = {
@@ -248,7 +248,7 @@ function newSuccessListeners () {
               if (!success.customer_id) {
                 success.customer_attributes = {
                   name: row.customerName,
-                  company_id: app.company.id
+                  company_id: CSP.company.id
                 };
               }
 
@@ -464,7 +464,7 @@ function newSuccessListeners () {
       if (!$form.data('submitted') && importFileIsValid(source, importedSuccesses)) {
         toggleFormWorking($form);
         $.ajax({
-          url: '/companies/' + app.company.id + '/successes/import',
+          url: '/companies/' + CSP.company.id + '/successes/import',
           method: 'post',
           data: {
             imported_successes: importedSuccesses

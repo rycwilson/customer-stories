@@ -29,7 +29,7 @@ $(document).one('turbolinks:load', function () {
 $(document).on('turbolinks:load', function (e) {
   setAppData();
   constructPlugins();
-  app.init();
+  CSP.init();
   // ref: https://clicky.com/help/apps-plugins#rails4turbo
   // clicky.log( document.location.pathname + document.location.search, document.title, 'pageview' )
 });
@@ -40,11 +40,11 @@ function setAppData () {
   } else {
     // console.log('gon undefined');
   }
-  app.company = (window.gon && gon.company) || app.company || null;
-  app.stories = (window.gon && gon.stories) || app.stories || null;
-  app.current_user = (window.gon && gon.current_user) || app.current_user || null;
-  app.env = (window.gon && gon.env) || app.env || null;
-  app.charts = (window.gon && gon.charts) || app.charts || null;
+  CSP.company = (window.gon && gon.company) || CSP.company || null;
+  CSP.stories = (window.gon && gon.stories) || CSP.stories || null;
+  CSP.current_user = (window.gon && gon.current_user) || CSP.current_user || null;
+  CSP.env = (window.gon && gon.env) || CSP.env || null;
+  CSP.charts = (window.gon && gon.charts) || CSP.charts || null;
   // console.log('app: ', app);
   getScreenSize();
 }
@@ -123,7 +123,7 @@ function attachAppListeners () {
         setTimeout(function() { window.scrollTo(0, 0); }, 1);
         if (curateView === 'stories') {
           $('#curate-filters .curator').val(
-            $('#curate-filters .curator').children('[value="' + app.current_user.id.toString() + '"]').val()
+            $('#curate-filters .curator').children('[value="' + CSP.current_user.id.toString() + '"]').val()
           ).trigger('change', { auto: true });
         }
       }

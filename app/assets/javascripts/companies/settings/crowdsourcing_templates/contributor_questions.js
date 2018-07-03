@@ -24,7 +24,7 @@ function contributorQuestionsListeners () {
       if (questionId === '0') {
         $.when(
           $('.contributor-questions ul').append(
-            template({ company: app.company, index: currentIndex, existingQuestion: null })
+            template({ company: CSP.company, index: currentIndex, existingQuestion: null })
           )
         ).then(function () {
           $newQuestion = $('.contributor-questions li').last();
@@ -37,7 +37,7 @@ function contributorQuestionsListeners () {
         $.when(
           $('.contributor-questions ul').append(
             template({
-              company: app.company,
+              company: CSP.company,
               index: currentIndex,
               existingQuestion: { id: questionId, question: questionText },
               invitationTemplateId: $('select.crowdsourcing-template').select2('data')[0].id

@@ -212,7 +212,7 @@ Preview.prototype.update = function( $item ) {
   contributorProfileTemplate = _.template($('#csp-linkedin-widget-template').html());
 
   var self = this,
-      widgetWidth = (app.screenSize === 'lg') ? 420 : 320;
+      widgetWidth = (CSP.screenSize === 'lg') ? 420 : 320;
 
   this.$summary.html( eldata.summary );
   this.$quote.find('p').html( eldata.quote );

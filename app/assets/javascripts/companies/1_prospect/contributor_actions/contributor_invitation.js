@@ -8,7 +8,7 @@ function contributorInvitationListeners() {
       missingCuratorInfo = function () {
         return ['first_name', 'last_name', 'photo', 'phone', 'title']
           .filter(function (item) {
-            return app.current_user[item] === '' ;
+            return CSP.current_user[item] === '' ;
           });
       },
       showInvitation = function (invitation, type) { // type is 'send' or 'readonly'

@@ -7,7 +7,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
       successId, contributionsPath;
 
   if (workflowStage === 'prospect') {
-    contributionsPath = '/companies/' + app.company.id + '/contributions';
+    contributionsPath = '/companies/' + CSP.company.id + '/contributions';
   } else {
     successId = $('#curate-story-layout').data('success-id');
     contributionsPath = '/successes/' + successId + '/contributions';
@@ -218,7 +218,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
           $tableWrapper = $table.closest('[id*="table_wrapper"]'),
           dt = $table.DataTable(),
           invitationTemplateSelectOptions =
-              app.company.crowdsourcing_templates.map(function (template) {
+              CSP.company.crowdsourcing_templates.map(function (template) {
                 return { label: template.name, value: template.id };
               }),
           showTable = function () { $table.css('visibility', 'visible'); };

@@ -16,7 +16,7 @@ function initDataTables (isBatch) {
   }
 
   // if curator signed in ...
-  if (app.company) {
+  if (CSP.company) {
 
     var dtSuccessesInit = $.Deferred(),
         dtContributorsInit = $.Deferred(),
@@ -28,7 +28,7 @@ function initDataTables (isBatch) {
         renderTableHeaders = function () {
           var dtSuccesses = $('#successes-table').DataTable(),
               dtContributors = $('#prospect-contributors-table').DataTable(),
-              curators = app.company.curators,
+              curators = CSP.company.curators,
               contributors = _.uniq(
                 dtContributors.column(1).data().toArray(), false,
                 function (contributor, index) { return contributor.id; }
@@ -40,14 +40,14 @@ function initDataTables (isBatch) {
               );
             $('#successes-table').closest('[id*="table_wrapper"]').prepend(
               _.template($('#successes-table-header-template').html())({
-                curators: app.company.curators,
+                curators: CSP.company.curators,
                 successes: successes,
                 customers: customers
               })
             );
             $('#prospect-contributors-table').closest('[id*="table_wrapper"]').prepend(
               _.template($('#contributors-table-header-template').html())({
-                curators: app.company.curators,
+                curators: CSP.company.curators,
                 contributors: contributors,
                 successes: successes,
                 customers: customers
@@ -91,7 +91,7 @@ function initDataTables (isBatch) {
             // allowClear: true
           });
           $('.crowdsource.curator-select')
-            .val(isBatch ? '0' : app.current_user.id)
+            .val(isBatch ? '0' : CSP.current_user.id)
             .trigger('change', { auto: true });
         },
         initCheckboxFilters = function () {

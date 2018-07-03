@@ -7,7 +7,7 @@ function initPromotedStoriesTable () {
   $('#promoted-stories-table').DataTable({
 
     ajax: {
-      url: '/companies/' + app.company.id + '/stories/promoted',
+      url: '/companies/' + CSP.company.id + '/stories/promoted',
       dataSrc: ''
     },
 
@@ -45,7 +45,7 @@ function initPromotedStoriesTable () {
         render: function (data, type, row, meta) {
           if (type === 'display') {
             return _.template( $('#adwords-status-dropdown-template').html() )({
-                     promoteEnabled: app.company.promote_tr,
+                     promoteEnabled: CSP.company.promote_tr,
                      adsEnabled: data === 'ENABLED' ? true : false
                    });
           } else {

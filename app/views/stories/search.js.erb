@@ -12,7 +12,7 @@
   } else {
     updateGallery($(
       _.template($('#stories-template').html())({
-        stories: app.stories.filter(function (story) { return storyIds.includes(story.id); }),
+        stories: CSP.stories.filter(function (story) { return storyIds.includes(story.id); }),
         isCurator: false
       })
     ));

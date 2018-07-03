@@ -2,13 +2,13 @@
 function getScreenSize () {
   (function($, viewport){
     if (viewport.is('xs')) {
-      app.screenSize = 'xs';
+      CSP.screenSize = 'xs';
     } else if (viewport.is('sm')) {
-      app.screenSize = 'sm';
+      CSP.screenSize = 'sm';
     } else if (viewport.is('md')) {
-      app.screenSize = 'md';
+      CSP.screenSize = 'md';
     } else if (viewport.is('lg')) {
-      app.screenSize = 'lg';
+      CSP.screenSize = 'lg';
     }
   })(jQuery, ResponsiveBootstrapToolkit);
 }

@@ -198,7 +198,7 @@ function storiesIndexListeners () {
 }
 
 function filterStories (categoryId, productId) {
-  var publicStories = app.stories.filter(function (story) {
+  var publicStories = CSP.stories.filter(function (story) {
           return story.logo_published || story.preview_published;
         }),
       categoryStoryIds = (!categoryId) ? _.pluck(publicStories, 'id') :
@@ -294,7 +294,7 @@ function replaceStateStoriesIndex (categorySlug, productSlug) {
 //       filteredStories = filterStories(filterTag, filterId);
 //       updateGallery($(storiesTemplate({
 //                          stories: filteredStories,
-//                          isCurator: app.current_user.is_curator })));
+//                          isCurator: CSP.current_user.is_curator })));
 //       selectBoxesTrackQueryString($categorySelect, categorySlug, $productSelect, productSlug);
 
 //     // Safari only (calls window.onpopstate on initial load)

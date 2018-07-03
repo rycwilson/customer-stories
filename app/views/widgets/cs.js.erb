@@ -1136,5 +1136,157 @@
     }
   }
 
+  function loadVideoThumbnail (cbSuccess) {
+
+    // note there are actually two thumb containers: regular and xs
+    var $thumbContainers = $(".video-thumb-container");
+
+    // no video, or wistia video
+    if ( $('#testimonial').hasClass('no-video') ||
+         $thumbContainers.length === 0 ) {
+      if (cbSuccess) { cbSuccess(); }
+      return false;
+    }
+
+    var provider = $thumbContainers.data('provider'),
+        videoId = $thumbContainers.data('video-id'),
+        videoUrl = $thumbContainers.data("video-url"),
+        videoQuery = '', thumbSrc = '',
+
+        removeVideo = function () {
+          if (CSP.screenSize === 'xs') {
+            $.when( $('#video-xs').remove() )
+              .then(function () { cbSuccess(); });
+          } else {
+            $.ajax({
+              url: window.location.pathname,
+              method: 'get',
+              data: { remove_video: true },
+              dataType: 'html',
+              success: function (html, status, xhr) {
+                $.when( $('#testimonial').empty().append(html) )
+                  .then(function () { cbSuccess(); });
+              }
+            });
+          }
+        };
+
+    if (provider === 'youtube') {
+      // ref: http://stackoverflow.com/questions/2068344
+      thumbSrc = '//img.youtube.com/vi/' + videoId + '/hqdefault.jpg';
+      $.when( $thumbContainers.append(
+          "<div><img class='video-thumb' src='" + thumbSrc + "'></div>"
+        )).then(function () {
+          $thumbContainers.imagesLoaded().done(function () {
+            // original width of 120 indicates youtube thumbnail not available
+            if ( $thumbContainers.find('img')[0].naturalWidth === 120 ) {
+              if ( $('body').hasClass('stories show') ) {
+                removeVideo();
+              } else {
+                loadVideoPlaceholder();
+              }
+            } else {
+              $thumbContainers.find('img').after(
+                "<div class='play-button'>" +
+                  "<i class='fa fa-2x fa-inverse fa-play'></i>" +
+                "</div>"
+              );
+              if (cbSuccess) { cbSuccess(); }
+            }
+          });
+        });
+
+    } else if (provider === 'vimeo') {
+
+      $.ajax({
+        url: '//vimeo.com/api/oembed.json?url=https%3A//vimeo.com/' + videoId,
+        method: 'get',
+        dataType: 'json',
+        success: function (data, status, xhr) {
+          thumbSrc = data.thumbnail_url_with_play_button;
+          $.when( $thumbContainers.append(
+            "<div>" +
+              "<img class='video-thumb' src='" + thumbSrc + "'>" +
+            "</div>"
+          )).then(function () {
+            if (cbSuccess) { cbSuccess(); }
+          });
+        },
+        error: function (data, status) {
+          if ( $('body').hasClass('stories show') ) {
+            removeVideo();
+          } else {
+            loadVideoPlaceholder();
+            // strange but necessary css setting adds a huge bottom padding, see video.scss
+            // needs to be removed for the placeholder
+            $thumbContainers.css('padding-bottom', '0');
+          }
+        }
+      });
+
+    }
+  } // loadThumbnail
+
+  function loadVideoPlaceholder () {
+    var placeholderUrl = "<%= asset_path('video_placeholder.jpg') %>";
+    $('.video-thumb-container').empty().append(
+      '<img id="video-placeholder" src="' + placeholderUrl + '" alt="video placeholder">'
+    );
+  }
+
+  function playVideoListener () {
+
+    $(document).on('click',
+      '.video-thumb-container img, .video-thumb-container .play-button',
+      function (e) {
+
+      var $thumbContainers = $('.video-thumb-container'),
+          $modal = $('#story-video-modal'),
+          provider = $thumbContainers.data('provider'),
+          videoId = $thumbContainers.data('video-id'),
+          videoUrl = $thumbContainers.data("video-url"),
+          modalPlayerWindow = $modal.find('iframe')[0].contentWindow,
+          pausePlayer = function () {
+            if (provider === 'youtube') {
+              modalPlayerWindow.postMessage(
+                '{"event":"command","func":"pauseVideo","args":""}', '*'
+              );
+            } else if (provider === 'vimeo') {
+              modalPlayerWindow.postMessage(
+                '{"method":"pause"}', '*'
+              );
+            }
+          };
+
+      if (provider === 'youtube') {
+        videoQuery = '/?autoplay=1&enablejsapi=1&controls=0&iv_load_policy=3&showinfo=0&rel=0';
+      } else if (provider === 'vimeo') {
+        videoQuery = '/?autoplay=1';
+      }
+
+      if ($(document).width() < 600) {
+        e.stopPropagation();  // stop modal from being triggered
+        $(this).parent().replaceWith($("<iframe src='" + videoUrl + videoQuery + "'frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>"));
+
+      } else { // play video in modal
+
+        modalPlayerWindow.location.replace(videoUrl + videoQuery);
+
+        $modal.find('button.close').on('click', function () {
+          pausePlayer();
+        });
+
+        $modal.one('hide.bs.modal', function () {
+          pausePlayer();
+        });
+
+        $modal.one('hidden.bs.modal', function () {
+          // warning: this has historically caused browser to hang
+          // modalPlayerWindow.location.replace('');
+        });
+      }
+    });
+  }
+
 }(window, document));
 

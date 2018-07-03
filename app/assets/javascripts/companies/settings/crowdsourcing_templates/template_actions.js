@@ -5,7 +5,7 @@ function templateActionsListeners () {
     var templateIds = templates.map(function (t) { return t.id; });
     $.ajax({
       // pass array of template ids to the route
-      url: '/companies/' + app.company.id + '/crowdsourcing_templates/' + JSON.stringify(templateIds),
+      url: '/companies/' + CSP.company.id + '/crowdsourcing_templates/' + JSON.stringify(templateIds),
       method: 'put',
       data: {
         restore: true,
@@ -26,7 +26,7 @@ function templateActionsListeners () {
         sourceTemplateId = undefined;
       }
       $.ajax({
-        url: '/companies/' + app.company.id + '/crowdsourcing_templates/new',
+        url: '/companies/' + CSP.company.id + '/crowdsourcing_templates/new',
         method: 'get',
         data: { source_template_id: sourceTemplateId },
         dataType: 'html'
@@ -71,7 +71,7 @@ function templateActionsListeners () {
         callback: function (confirmDelete) {
           if (confirmDelete) {
             $.ajax({
-              url: '/companies/' + app.company.id + '/crowdsourcing_templates/' + deleteTemplateId,
+              url: '/companies/' + CSP.company.id + '/crowdsourcing_templates/' + deleteTemplateId,
               method: 'delete',
               dataType: 'script'
             });

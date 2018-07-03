@@ -23,7 +23,7 @@ function attachContributionsListeners () {
       },
       scrollToNext = function ($formGroup) {
         var scrollAmt;
-        if (app.screenSize === 'xs') {
+        if (CSP.screenSize === 'xs') {
           if ($formGroup.is('.linkedin')) {
             scrollAmt = 30;
           } else {
@@ -37,7 +37,7 @@ function attachContributionsListeners () {
       updateProgress = function () {
         var numAnswered = 0, pctAnswered;
         $questions.each(function () {
-          if (app.screenSize === 'xs') {
+          if (CSP.screenSize === 'xs') {
             if ($(this).find('.visible-xs-block textarea').val()) numAnswered++;
           } else {
             if ($(this).find('.hidden-xs textarea').val()) numAnswered++;
@@ -86,13 +86,13 @@ function attachContributionsListeners () {
 
   $questions.each(function () {
     $(this).find('textarea').on('focus', function () {
-      if (app.screenSize === 'xs') $('#submission-progress').hide();
+      if (CSP.screenSize === 'xs') $('#submission-progress').hide();
     });
   });
 
   $questions.each(function () {
     $(this).find('textarea').on('blur', function () {
-      if (app.screenSize === 'xs') $('#submission-progress').show();
+      if (CSP.screenSize === 'xs') $('#submission-progress').show();
     });
   });
 
@@ -104,7 +104,7 @@ function attachContributionsListeners () {
       scrollToNext($('.form-group.linkedin'));
     } else {
       $(this).closest('.form-group').next().find('textarea').trigger('click');
-      if (app.screenSize !== 'xs') {
+      if (CSP.screenSize !== 'xs') {
         $(this).closest('.form-group').next().find('textarea').trigger('focus');
       }
     }

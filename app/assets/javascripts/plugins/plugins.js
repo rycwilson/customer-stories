@@ -82,9 +82,9 @@ function slideDrawerPlugin () {
         if ($(e.target).is('[class*="remove"]')) {
           return false;
         }
-        if (app.screenSize === 'xs' && $(this).parent().hasClass('visible-xs-block')) {
+        if (CSP.screenSize === 'xs' && $(this).parent().hasClass('visible-xs-block')) {
           drawer.toggle(options, div);
-        } else if (app.screenSize !== 'xs' && $(this).parent().hasClass('hidden-xs')) {
+        } else if (CSP.screenSize !== 'xs' && $(this).parent().hasClass('hidden-xs')) {
           drawer.toggle(options, div);
         }
       });
