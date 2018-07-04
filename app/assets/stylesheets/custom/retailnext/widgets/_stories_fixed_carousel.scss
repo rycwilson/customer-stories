@@ -1,7 +1,7 @@
 
 #more-stories-container, .cs-section {
   header {
-    font-family: $metropolis-light;
+    // font-family: $metropolis-light;
     text-transform: uppercase;
   }
 }
@@ -29,7 +29,7 @@
         transition: all 0ms step-end;
         p {
           font: {
-            family: $metropolis-light;
+            // family: $metropolis-light;
             size: 13px;
             weight: 600;
           }
@@ -41,7 +41,7 @@
     }
     .caption {
       font: {
-        family: $metropolis-light;
+        // family: $metropolis-light;
         size: 13px;
       }
       color: #444;

@@ -39,12 +39,12 @@ a.cs-thumbnail {
       transition: all 0.23s ease-in-out;
       p {
         font: {
-          family: 'Lato', 'Trebuchet MS', 'Open Sans', arial, sans-serif;
+          family: inherit;
           size: 15px;
           weight: 600;
         }
-        line-height: 26px;
-        color: #444;
+        line-height: 26px !important;
+        color: #444 !important;
         // weebly will squish together letters and words in the customer name together without these...
         word-spacing: normal;
         letter-spacing: normal;
@@ -74,7 +74,7 @@ a.cs-thumbnail {
     width: 100%;
     height: 35%;
     font: {
-      family: 'Lato';
+      family: inherit;
       size: 14px;
     }
     color: #444;

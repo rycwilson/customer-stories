@@ -211,14 +211,13 @@
         transition: all 0.23s ease-in-out;
         p {
           font: {
-            family: 'Lato', 'Trebuchet MS', 'Open Sans', arial, sans-serif;
+            family: inherit;
             // size: 15px;
-            size: 14px;
+            size: 14px !important;
             weight: 600;
           }
-          // line-height: 26px;
-          line-height: 20px;
-          color: #444;
+          line-height: 20px !important;
+          color: #444 !important;
           // letter-spacing: normal;
           margin-bottom: 0;
         }
@@ -247,7 +246,7 @@
       width: 100%;
       height: 35%;
       font: {
-        family: 'Lato';
+        family: inherit;
         // size: 14px;
         size: 13px;
       }
