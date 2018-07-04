@@ -405,6 +405,7 @@
           return false;
         } else {
           loading($story);
+                  console.log($story.attr('href'))
           $.ajax({
             url: $story.attr('href'),
             method: 'GET',

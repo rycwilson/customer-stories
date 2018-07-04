@@ -112,7 +112,7 @@
 
     /**
      * csp modification:
-     * if not moved to the top, the overlay will remian confined to the parent container
+     * if not moved to the top, the overlay will remain confined to the parent container
      */
     $(dummy).css('top', ($('section.grid').offset().top * -1).toString() + 'px');
 
