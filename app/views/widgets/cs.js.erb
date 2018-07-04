@@ -393,9 +393,10 @@
           }, 1000);
         };
 
-    // $.getScript("<%= asset_url('widgets/story_overlays') %>", function () {
-    //   console.log(Modernizr);
-    // })
+console.log("<%= asset_url('widgets/story_overlays') %>")
+    $.getScript("<%= asset_url('widgets/story_overlays') %>", function () {
+      console.log(Modernizr);
+    })
 
     $container
       .on('click', 'a.published', function (e) {
