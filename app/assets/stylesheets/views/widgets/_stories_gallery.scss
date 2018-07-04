@@ -45,6 +45,8 @@ a.cs-thumbnail {
         }
         line-height: 26px;
         color: #444;
+        // weebly will squish together letters and words in the customer name together without these...
+        word-spacing: normal;
         letter-spacing: normal;
         margin-bottom: 0;
       }
@@ -84,7 +86,9 @@ a.cs-thumbnail {
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      letter-spacing: normal;  // weebly will squish the letters of the customer name together without this
+      // weebly will squish together letters and words in the customer name together without these...
+      word-spacing: normal;
+      letter-spacing: normal;
     }
     span.click-action:after {
       text-decoration: underline;
