@@ -1,6 +1,7 @@
 (function (window, document) {
   "use strict";
   var jQuery, $; // localize jquery variables
+  var Modernizr; // local version of modernizr (needed for grid overlays plugin)
 
   if (window.jQuery === undefined || isOldVersion(window.jQuery.fn.jquery)) {
     loadScript("https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js",
@@ -21,10 +22,7 @@
 
       // type IN ['carousel', 'fixed-carousel', 'gallery']
       var type = '<%= @type %>', $script, $container,
-          $stylesheet = $("<link>", { rel: "stylesheet", type: "text/css" }),
-          subdomain = '<%= @company.subdomain %>';
-
-      $stylesheet.attr('href', '<%= @stylesheet_url %>');
+          $stylesheet = $("<link>", { rel: "stylesheet", type: "text/css", href: '<%= @stylesheet_url %>' });
 
       if (type === 'carousel') {
         $script = $('script[src*="carousel/cs"], script[src*="varmour/cs"]').first();
@@ -395,8 +393,9 @@
           }, 1000);
         };
 
+
     // modernizr is needed for the plugin
-    $.getScript("<%= asset_url('modernizr/modernizr') %>", function () {
+    $.getScript("<%= asset_url('modernizr/widget_modernizr') %>", function () {
       $.getScript("<%= asset_url('js/classie') %>");  // helper for the plugin
       $.getScript("<%= asset_url('plugins/grid_overlays') %>");
     })

@@ -27,5 +27,5 @@ Rails.application.config.assets.precompile += %w(
   mvpready-admin.css
   js/classie.js
   plugins/grid_overlays.js
-  modernizr/modernizr.js
+  modernizr/widget_modernizr.js
 )
