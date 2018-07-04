@@ -394,7 +394,9 @@
           }, 1000);
         };
 
-    $.getScript("<%= asset_url('widgets/story_overlays') %>")
+    $.getScript("<%= asset_url('widgets/story_overlays') %>", function () {
+      console.log('wtf')
+    })
 
     $container
       .on('click', 'a.published', function (e) {
@@ -415,14 +417,14 @@
           })
             .done(function (data, status, jqxhr) {
               $.when(
-                $('#cs-gallery article:nth-of-type(' + ($story.index() + 1).toString() + ')')
+                $container.find('article:nth-of-type(' + ($story.index() + 1).toString() + ')')
                   .html(data.html)
               )
                 .done(function () {
                   // loadVideoThumbnail();
                   // console.log($('#cs-gallery article:nth-of-type(' + ($story.index() + 1).toString() + ')').html())
                     $story.addClass('loaded')
-                    $('#cs-gallery a').css('pointer-events', 'auto');
+                    $container.find('a'.css('pointer-events', 'auto');
                     // the grid_overlays.js listener is vanilla js, won't pick up on $story.trigger('click')
                     $story[0].click();
                   // $('.story-overlay-container').imagesLoaded(function () {
