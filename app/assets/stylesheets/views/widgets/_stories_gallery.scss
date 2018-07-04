@@ -84,6 +84,7 @@ a.cs-thumbnail {
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      letter-spacing: normal;  // weebly will squish the letters of the customer name together without this
     }
     span.click-action:after {
       text-decoration: underline;
