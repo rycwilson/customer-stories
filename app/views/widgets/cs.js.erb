@@ -1,7 +1,6 @@
 (function (window, document) {
   "use strict";
   var jQuery, $; // localize jquery variables
-  var Modernizr; // local version of modernizr (needed for grid overlays plugin)
 
   if (window.jQuery === undefined || isOldVersion(window.jQuery.fn.jquery)) {
     loadScript("https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js",
@@ -384,7 +383,7 @@
 
   function buildGallery ($container) {
 
-    var loading = function ($story) {
+    var Modernizr, loading = function ($story) {
           $story.addClass('loading');
           $('#cs-gallery a').css('pointer-events', 'none');
           setTimeout(function () {
@@ -395,7 +394,7 @@
         };
 
     $.getScript("<%= asset_url('widgets/story_overlays') %>", function () {
-      console.log(Modernizr)
+      console.log(Modernizr);
     })
 
     $container
@@ -424,7 +423,7 @@
                   // loadVideoThumbnail();
                   // console.log($('#cs-gallery article:nth-of-type(' + ($story.index() + 1).toString() + ')').html())
                     $story.addClass('loaded')
-                    $container.find('a'.css('pointer-events', 'auto'));
+                    $container.find('a').css('pointer-events', 'auto');
                     // the grid_overlays.js listener is vanilla js, won't pick up on $story.trigger('click')
                     $story[0].click();
                   // $('.story-overlay-container').imagesLoaded(function () {
