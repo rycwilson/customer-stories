@@ -77,8 +77,6 @@
   }
 
   function buildCarousel ($container) {
-    // alternative font for test environment
-    varmourAltFont();
     // disable horizontal mouse/trackpad scrolling
     $container.find('.row-horizon').css('overflow-x', 'hidden');
 
@@ -331,19 +329,6 @@
     // enable tracking
     if (<%= ENV['HOST_NAME'] == 'customerstories.net' %>) {
       trackVisitor();
-    }
-  }
-
-  // on weebly, get the Montserrat font to emulate proxima-nova
-  function varmourAltFont () {
-    if (window.location.href.includes('weebly')) {
-      $("<link>", {
-        rel: "stylesheet",
-        type: "text/css",
-        href: "//fonts.googleapis.com/css?family=Montserrat:300,600"
-      }).appendTo('head');
-      // adjust container padding as necessary
-      $('.wsite-section-content > .container').css('padding', '0');
     }
   }
 
