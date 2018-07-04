@@ -1,0 +1,12 @@
+
+// namespace the widget css so as not to interfere with anything on host page
+#cs-gallery {
+
+  // TODO only need bootstrap thumbnail and modal components...
+  @import '../../../views/widgets/carousel_bootstrap';
+  @import '../../../views/widgets/story_overlays/main';
+  @import '../../../views/widgets/stories_gallery';
+  @import '../../fonts';
+  // @import 'stories_gallery';
+
+}
