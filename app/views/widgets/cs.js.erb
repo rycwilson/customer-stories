@@ -59,6 +59,7 @@
                 loadedImages = 0;
             $images.on('load', function () {
               if (++loadedImages === $images.length) {
+                adjustForWeebly();
                 if (type === 'fixed-carousel') {
                   buildFixedCarousel($container);
                   scrollHandlers($container);
@@ -329,6 +330,13 @@
     // enable tracking
     if (<%= ENV['HOST_NAME'] == 'customerstories.net' %>) {
       trackVisitor();
+    }
+  }
+
+  // on weebly, get the Montserrat font to emulate proxima-nova
+  function adjustForWeebly () {
+    if (window.location.href.includes('weebly')) {
+      $('.wsite-section-content > .container').css('padding', '0');
     }
   }
 
