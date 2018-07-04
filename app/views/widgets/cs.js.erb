@@ -393,10 +393,7 @@
           }, 1000);
         };
 
-console.log("<%= asset_url('widgets/story_overlays.js') %>")
-    $.getScript("<%= asset_url('widgets/story_overlays.js') %>", function () {
-      console.log(Modernizr);
-    })
+    $.getScript("<%= asset_url('widgets/story_overlays.js') %>", function () {})
 
     $container
       .on('click', 'a.published', function (e) {
