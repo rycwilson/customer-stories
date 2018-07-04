@@ -394,7 +394,7 @@
           }, 1000);
         };
 
-    $.getScript("<%= asset_url('widgets/story_overlays') %>")
+    $.getScript("<%= URI.join(root_url, asset_path('widgets/story_overlays')) %>")
 
     $container
       .on('click', 'a.published', function (e) {
