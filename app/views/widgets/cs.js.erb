@@ -395,9 +395,9 @@
 
 
     // modernizr is needed for the plugin
-    $.getScript("<%= asset_url('modernizr/widget_modernizr') %>", function () {
-      $.getScript("<%= asset_url('js/classie') %>");  // helper for the plugin
-      $.getScript("<%= asset_url('plugins/grid_overlays') %>");
+    $.getScript("<%= URI.join(root_url, asset_path('modernizr/widget_modernizr')) %>", function () {
+      $.getScript("<%= URI.join(root_url, asset_path('js/classie')) %>");  // helper for the plugin
+      $.getScript("<%= URI.join(root_url, asset_path('plugins/grid_overlays')) %>");
     })
 
     $container
