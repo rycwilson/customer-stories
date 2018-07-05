@@ -69,7 +69,8 @@
     [].slice.call(gridItems).forEach(function(item, pos) {
       item.addEventListener('click', function(ev) {
         ev.preventDefault();
-        if(isAnimating || current === pos || !$(item).hasClass('loaded')) {
+        // csp modification (last expression)
+        if(isAnimating || current === pos || !$(item).hasClass('cs-loaded')) {
           return false;
         }
         isAnimating = true;
@@ -100,27 +101,32 @@
           ev.preventDefault();
           if ("activeElement" in document)
               document.activeElement.blur();
+              document.activeElement.blur();
+              document.activeElement.blur();
+              document.activeElement.blur();
           hideContent();
         }
       }
     } );
   }
 
+  /**
+   * some csp modifications to ensure overlay opens correctly in a container that can be at any y-position on the page
+   */
   function loadContent(item) {
     // add expanding element/placeholder
     var dummy = document.createElement('div');
-
     /**
-     * csp modification:
+     * (old) csp modification:
      * if not moved to the top, the overlay will remain confined to the parent container
      */
-    $(dummy).css('top', ($('section.grid').offset().top * -1).toString() + 'px');
+    // $(dummy).css('top', (($('section.grid').offset().top - $(item).offset().top) * -1).toString() + 'px');
+
 
     dummy.className = 'placeholder';
-
     // set the width/heigth and position
-    dummy.style.WebkitTransform = 'translate3d(' + (item.offsetLeft - 5) + 'px, ' + (item.offsetTop - 5) + 'px, 0px) scale3d(' + item.offsetWidth/gridItemsContainer.offsetWidth + ',' + item.offsetHeight/getViewport('y') + ',1)';
-    dummy.style.transform = 'translate3d(' + (item.offsetLeft - 5) + 'px, ' + (item.offsetTop - 5) + 'px, 0px) scale3d(' + item.offsetWidth/gridItemsContainer.offsetWidth + ',' + item.offsetHeight/getViewport('y') + ',1)';
+    dummy.style.WebkitTransform = 'translate3d(' + (item.offsetLeft - 5) + 'px, ' + (item.offsetTop - 5) + 'px, 0px) scale3d(' + item.offsetWidth/gridItemsContainer.offsetWidth + ',' + (item.offsetHeight)/getViewport('y') + ',1)';
+    dummy.style.transform = 'translate3d(' + (item.offsetLeft - 5) + 'px, ' + (item.offsetTop - 5) + 'px, 0px) scale3d(' + item.offsetWidth/gridItemsContainer.offsetWidth + ',' + (item.offsetHeight)/getViewport('y') + ',1)';
 
     // add transition class
     classie.add(dummy, 'placeholder--trans-in');
@@ -130,11 +136,15 @@
 
     // body overlay
     classie.add(bodyEl, 'view-single');
-
     setTimeout(function() {
+
       // expands the placeholder
-      dummy.style.WebkitTransform = 'translate3d(-5px, ' + (scrollY() - 5) + 'px, 0px)';
-      dummy.style.transform = 'translate3d(-5px, ' + (scrollY() - 5) + 'px, 0px)';
+      // csp removed...
+      // dummy.style.WebkitTransform = 'translate3d(-5px, ' + (scrollY() - 5) + 'px, 0px)';
+      // dummy.style.transform = 'translate3d(-5px, ' + (scrollY() - 5) + 'px, 0px)';
+      // csp modified...
+      dummy.style.WebkitTransform = 'translate3d(-5px, ' + (- 5 - ($('section.grid').offset().top - scrollY())) + 'px, 0px)';
+      dummy.style.transform = 'translate3d(-5px, ' + (- 5 - ($('section.grid').offset().top - scrollY())) + 'px, 0px)';
       // disallow scroll
       window.addEventListener('scroll', noscroll);
     }, 25);
@@ -143,18 +153,22 @@
       // add transition class
       classie.remove(dummy, 'placeholder--trans-in');
       classie.add(dummy, 'placeholder--trans-out');
+
       // position the content container
-      contentItemsContainer.style.top = scrollY() + 'px';
-      // show the main content container
+      // csp removed...
+      // contentItemsContainer.style.top = scrollY() + 'px';
+      // csp modified...
+      contentItemsContainer.style.top = (scrollY() - $('section.grid').offset().top) + 'px';
 
       /**
        * csp modification:
        * with transition complete, and content about to be made visible (.content--show),
        * add mix-blend-mode setting to image (does not play well with translate3d)
        *
-       * => ?
+       * => doesn't work
        */
 
+      // show the main content container
       classie.add(contentItemsContainer, 'content--show');
       // show content item:
       classie.add(contentItems[current], 'content__item--show');
@@ -170,7 +184,7 @@
       $('body').css('overflow-y', 'hidden');
 
       // move content to the top
-      $('section.content').animate({ top: "+=" + ($('section.grid').offset().top * -1).toString() + "px" }, 0);
+      // $('section.content').animate({ top: "+=" + ($('section.grid').offset().top * -1).toString() + "px" }, 0);
 
     });
   }
@@ -188,10 +202,11 @@
       classie.removeClass(bodyEl, 'noscroll');
       dummy.style.WebkitTransform = 'translate3d(' + gridItem.offsetLeft + 'px, ' + gridItem.offsetTop + 'px, 0px) scale3d(' + gridItem.offsetWidth/gridItemsContainer.offsetWidth + ',' + gridItem.offsetHeight/getViewport('y') + ',1)';
       dummy.style.transform = 'translate3d(' + gridItem.offsetLeft + 'px, ' + gridItem.offsetTop + 'px, 0px) scale3d(' + gridItem.offsetWidth/gridItemsContainer.offsetWidth + ',' + gridItem.offsetHeight/getViewport('y') + ',1)';
-
       // csp modification:
       // move back to correct relative position
-      $(dummy).css('top', '0px');
+      // $(dummy).css('top', '0px');
+
+// $(dummy).css('top', ($(gridItem).offset().top * -1).toString() + 'px');
 
       onEndTransition(dummy, function() {
         // reset content scroll..

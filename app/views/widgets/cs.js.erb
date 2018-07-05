@@ -379,11 +379,11 @@
 
     var Modernizr,
         loading = function ($story) {
-          $story.addClass('loading');
+          $story.addClass('cs-loading');
           $('#cs-gallery a').css('pointer-events', 'none');
           setTimeout(function () {
-            if (!$story.hasClass('loaded')) {
-              $story.addClass('still-loading');
+            if (!$story.hasClass('cs-loaded')) {
+              $story.addClass('cs-still-loading');
             }
           }, 1000);
         };
@@ -394,9 +394,9 @@
       .on('click', 'a.published', function (e) {
         e.preventDefault();
         var $story = $(this);
-        if ($story.hasClass('loaded')) {
+        if ($story.hasClass('cs-loaded')) {
           setTimeout(function () {
-            $story.removeClass('loading still-loading');
+            $story.removeClass('cs-loading cs-still-loading');
           }, 400);  // matches overlay animation time
           return false;
         } else {
@@ -417,7 +417,7 @@
                 .done(function () {
                   // loadVideoThumbnail();
                   // console.log($('#cs-gallery article:nth-of-type(' + ($story.index() + 1).toString() + ')').html())
-                    $story.addClass('loaded')
+                    $story.addClass('cs-loaded')
                     $container.find('a').css('pointer-events', 'auto');
                     // the grid_overlays.js listener is vanilla js, won't pick up on $story.trigger('click')
                     $story[0].click();

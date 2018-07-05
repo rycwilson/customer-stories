@@ -1,6 +1,6 @@
 
-@import '../stories/shared/video';
-@import '../stories/show/show';
+// @import '../stories/shared/video';
+// @import '../stories/show/show';
 
 $transition-time: 0s;
 
@@ -137,16 +137,16 @@ a.cs-thumbnail {
       }
     }
   }
-  &:not(.still-loading) {
+  &:not(.cs-still-loading) {
     i.fa-spin { display: none; }
   }
-  &.loading {
+  &.cs-loading {
     border: 1px solid transparent;
     -webkit-filter: brightness(95%);
     box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
     .thumbnail-view-hover { transform: none; }
     img { opacity: 0.05 !important; }
-    &.still-loading {
+    &.cs-still-loading {
       .thumbnail-view, .caption {
         opacity: 0.05;
       }
