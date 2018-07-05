@@ -114,7 +114,7 @@ a.cs-thumbnail {
   &.public.logo-published {
     pointer-events: none;
   }
-  &:hover {
+  &:hover, &.cs-loading {
     border: 1px solid transparent;  // overrides bootstrap
     box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
     .thumbnail-view-hover {
@@ -141,11 +141,11 @@ a.cs-thumbnail {
     i.fa-spin { display: none; }
   }
   &.cs-loading {
-    border: 1px solid transparent;
+    // border: 1px solid transparent;
     -webkit-filter: brightness(95%);
-    box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
+    // box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
     .thumbnail-view-hover { transform: none; }
-    img { opacity: 0.05 !important; }
+    // img { opacity: 0.05 !important; }
     &.cs-still-loading {
       .thumbnail-view, .caption {
         opacity: 0.05;

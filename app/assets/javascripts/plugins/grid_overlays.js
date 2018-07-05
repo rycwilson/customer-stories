@@ -69,7 +69,7 @@
     [].slice.call(gridItems).forEach(function(item, pos) {
       item.addEventListener('click', function(ev) {
         ev.preventDefault();
-        // csp modification (last expression)
+        // csp modify... (last expression)
         if(isAnimating || current === pos || !$(item).hasClass('cs-loaded')) {
           return false;
         }
@@ -88,7 +88,7 @@
     });
 
     closeCtrl.addEventListener('click', function() {
-      // csp modification - return setting to whatever it was
+      // csp modify: return setting to whatever it was...
       $('body').css('overflow-y', 'auto');
       hideContent();
     });
@@ -116,13 +116,6 @@
   function loadContent(item) {
     // add expanding element/placeholder
     var dummy = document.createElement('div');
-    /**
-     * (old) csp modification:
-     * if not moved to the top, the overlay will remain confined to the parent container
-     */
-    // $(dummy).css('top', (($('section.grid').offset().top - $(item).offset().top) * -1).toString() + 'px');
-
-
     dummy.className = 'placeholder';
     // set the width/heigth and position
     dummy.style.WebkitTransform = 'translate3d(' + (item.offsetLeft - 5) + 'px, ' + (item.offsetTop - 5) + 'px, 0px) scale3d(' + item.offsetWidth/gridItemsContainer.offsetWidth + ',' + (item.offsetHeight)/getViewport('y') + ',1)';
@@ -179,12 +172,8 @@
 
       isAnimating = false;
 
-      // csp modifccations:
-      // the overlay will have its own scroll bar
+      // csp modify... (the overlay will have its own scroll bar)...
       $('body').css('overflow-y', 'hidden');
-
-      // move content to the top
-      // $('section.content').animate({ top: "+=" + ($('section.grid').offset().top * -1).toString() + "px" }, 0);
 
     });
   }
@@ -202,12 +191,6 @@
       classie.removeClass(bodyEl, 'noscroll');
       dummy.style.WebkitTransform = 'translate3d(' + gridItem.offsetLeft + 'px, ' + gridItem.offsetTop + 'px, 0px) scale3d(' + gridItem.offsetWidth/gridItemsContainer.offsetWidth + ',' + gridItem.offsetHeight/getViewport('y') + ',1)';
       dummy.style.transform = 'translate3d(' + gridItem.offsetLeft + 'px, ' + gridItem.offsetTop + 'px, 0px) scale3d(' + gridItem.offsetWidth/gridItemsContainer.offsetWidth + ',' + gridItem.offsetHeight/getViewport('y') + ',1)';
-      // csp modification:
-      // move back to correct relative position
-      // $(dummy).css('top', '0px');
-
-// $(dummy).css('top', ($(gridItem).offset().top * -1).toString() + 'px');
-
       onEndTransition(dummy, function() {
         // reset content scroll..
         contentItem.parentNode.scrollTop = 0;
@@ -215,8 +198,6 @@
         classie.remove(gridItem, 'grid__item--loading');
         classie.remove(gridItem, 'grid__item--animate');
         lockScroll = false;
-
-
         window.removeEventListener( 'scroll', noscroll );
       });
 
