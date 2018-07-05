@@ -13,7 +13,7 @@
     <li class='grid-item' data-story-id="{{= story.id }}" data-story-slug="{{= storySlug }}" data-customer-slug="{{= customerSlug }}">
 
       <a href="{{= isCurator ? 'javascript:;' : (story.published && story.csp_story_path) || (story.preview_published && 'javascript:;') || '' }}"
-         class="thumbnail {{= isCurator ? 'curator' : 'public' }} {{= story.published ? 'published' : (story.preview_published ? 'preview-published' : (story.logo_published ? 'logo-published' : 'pending-curation')) }} {{= story.title ? 'title-present' : '' }}"
+         class="thumbnail {{= isCurator ? 'curator' : 'public' }} {{= story.published ? 'published' : (story.preview_published ? 'preview-published' : (story.logo_published ? 'logo-published' : 'pending-curation')) }}"
          data-logosrc="{{= story.success.customer.logo_url }}"
          data-customer='{{= JSON.stringify(story.success.customer.name) }}'
          data-summary='{{= summary }}'

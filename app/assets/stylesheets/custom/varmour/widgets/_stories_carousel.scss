@@ -146,7 +146,7 @@
     &.preview-published .caption span.click-action:after {
       content: 'See More';
     }
-    &.title-present:hover {
+    &:hover {
       background-color: #edf5f8;  // varmour only
       border-color: #999;  // override bootstrap .thumbnail
       // border: 1px solid transparent;
@@ -172,18 +172,6 @@
       }
     }
   }
-  // .cs-thumbnail:not(.logo-published):hover {
-  //   .thumbnail-view .thumbnail-view-hover {
-  //     -webkit-transform: translateY(0%);
-  //     -moz-transform: translateY(0%);
-  //     -ms-transform: translateY(0%);
-  //     -o-transform: translateY(0%);
-  //     transform: translateY(0%);
-  //   }
-  //   img {
-  //     opacity: 0.1;
-  //   }
-  // }
 
   .cs-scroll-xs-container {
     display: none;

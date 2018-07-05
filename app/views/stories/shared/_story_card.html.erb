@@ -1,7 +1,7 @@
 
 <!-- grid__item is for the overlays -->
 <a href="<%= story.csp_story_link(is_curator, is_widget, is_external) %>"
-   class="grid__item public <%= is_external ? 'cs-thumbnail' : 'thumbnail' %> <%= story.published ? 'published' : (story.preview_published ? 'preview-published' : 'logo-published') %> <%= story.title.present? ? 'title-present' : '' %>"
+   class="grid__item public <%= is_external ? 'cs-thumbnail' : 'thumbnail' %> <%= story.published ? 'published' : (story.preview_published ? 'preview-published' : 'logo-published') %>"
    target="<%= is_external ? '_blank' : '' %>"
    data-customer="<%= is_external ? '' : story.customer.name.to_json %>"
    data-logosrc="<%= is_external ? '' : story.customer.logo_url %>"

@@ -44,7 +44,7 @@
         border-color: #999;  // override bootstrap .thumbnail
         box-shadow: 0 0;
       }
-      &.title-present:hover {
+      &:hover {
         .thumbnail-view-hover {
         }
         img {

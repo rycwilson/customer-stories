@@ -265,7 +265,7 @@
         transition: all 0s;
       }
     }
-    &.title-present:hover {
+    &:hover {
       border: 1px solid transparent;
       .thumbnail-view-hover {
         -webkit-transform: translateY(0%);

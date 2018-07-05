@@ -4,7 +4,7 @@
   <li class='grid-item' data-story-id="<%= story.id %>">
 
     <a href="<%= story.published ? story.csp_story_path : (story.preview_published ? 'javascript:;' : edit_story_path(story.id)) %>"
-       class="thumbnail curator <%= story.published ? 'published' : (story.preview_published ? 'preview-published' : (story.logo_published ? 'logo-published' : 'pending-curation')) %> <%= story.title.present? ? 'title-present' : '' %>"
+       class="thumbnail curator <%= story.published ? 'published' : (story.preview_published ? 'preview-published' : (story.logo_published ? 'logo-published' : 'pending-curation')) %>"
        data-logosrc="<%= story.customer.logo_url %>"
        data-company-name="<%= story.customer.name.to_json %>"
        data-summary="<%= story.summary.try(:to_json) %>"
