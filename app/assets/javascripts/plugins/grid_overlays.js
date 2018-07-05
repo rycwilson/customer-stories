@@ -152,6 +152,7 @@
        * with transition complete, and content about to be made visible (.content--show),
        * add mix-blend-mode setting to image (does not play well with translate3d)
        *
+       * => ?
        */
 
       classie.add(contentItemsContainer, 'content--show');

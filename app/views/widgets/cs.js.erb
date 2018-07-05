@@ -395,11 +395,12 @@
         e.preventDefault();
         var $story = $(this);
         if ($story.hasClass('loaded')) {
-          $story.removeClass('loading still-loading')
+          setTimeout(function () {
+            $story.removeClass('loading still-loading');
+          }, 400);  // matches overlay animation time
           return false;
         } else {
           loading($story);
-                  console.log($story.attr('href'))
           $.ajax({
             url: $story.attr('href'),
             method: 'GET',
