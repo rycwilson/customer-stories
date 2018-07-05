@@ -44,6 +44,7 @@
       // wait for stylesheet to load ...
       $stylesheet.appendTo('head').on('load', function () {
 
+
         $.ajax({
           url: "<%= URI.join(root_url, widget_html_path(@type)) %>",
           dataType: 'jsonp',
