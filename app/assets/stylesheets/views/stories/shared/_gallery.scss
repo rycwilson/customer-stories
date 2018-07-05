@@ -171,7 +171,7 @@
       }
     }
     // keep the title in place while the preview window is open
-    &.og-expanded a, a:hover {
+    &.og-expanded a.thumbnail, a.thumbnail:hover {
       .thumbnail-view-hover {
         -webkit-transform: translateY(0%);
         -moz-transform: translateY(0%);
