@@ -42,6 +42,13 @@
     }
   }
 
+  #more-stories-container {
+    font-family: $metropolis-regular;
+    header {
+      font-family: $metropolis-regular;
+    }
+  }
+
   @media only screen and (max-width: 767px) {
     #testimonial .visible-xs-block {
       #story-section-video-xs {
