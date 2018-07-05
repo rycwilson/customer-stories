@@ -2,6 +2,8 @@
 @import '../stories/shared/video';
 @import '../stories/show/show';
 
+$transition-time: 0s;
+
 a.cs-thumbnail {
   overflow: hidden;
   background-color: #fff;
@@ -15,7 +17,7 @@ a.cs-thumbnail {
   border-radius: 0;
   // following settings lifted from chrome new tab page
   box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
-  transition: box-shadow 0.23s ease-in-out;
+  transition: box-shadow $transition-time ease-in-out;
   .thumbnail-view {
     position: relative;
     height: 80%;
@@ -36,7 +38,7 @@ a.cs-thumbnail {
       -moz-transform: translateY(-100%);
       -ms-transform: translateY(-100%);
       -o-transform: translateY(-100%);
-      transition: all 0.23s ease-in-out;
+      transition: all $transition-time ease-in-out;
       p {
         font: {
           family: inherit;
@@ -58,9 +60,9 @@ a.cs-thumbnail {
       max-width: 100%;
       padding: 20px;
       opacity: 1;
-      transition: opacity 0.23s ease-in-out;
-      -moz-transition: opacity 0.23s ease-in-out;
-      -webkit-transition: opacity 0.23s ease-in-out;
+      transition: opacity $transition-time ease-in-out;
+      -moz-transition: opacity $transition-time ease-in-out;
+      -webkit-transition: opacity $transition-time ease-in-out;
       // this compensates for a bug in chrome, which causes images of a
       // certain aspect ratio to expand and contract very slightly on
       // hover and opacity transition
@@ -127,11 +129,11 @@ a.cs-thumbnail {
     .caption {
       span.customer-name {
         visibility: hidden;
-        transition: all 0.23s step-end;
+        transition: all $transition-time step-end;
       }
       span.click-action:after {
         visibility: visible;
-        transition: all 0.23s step-end;
+        transition: all $transition-time step-end;
       }
     }
   }
