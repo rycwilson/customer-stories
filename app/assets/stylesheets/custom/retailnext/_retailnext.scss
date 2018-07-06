@@ -1,14 +1,10 @@
 
 body.retailnext:not(.companies):not(.profile):not(.edit) {
 
-  $custom-font: $metropolis-medium Arial, Helvetica, sans-serif;
   font-family: "Open Sans", Arial, Helvetica, sans-serif;
 
   background: {
     color: #f5f5f3;
-  }
-  h3 {
-    font-family: $custom-font;
   }
 
   @import 'company_header';
