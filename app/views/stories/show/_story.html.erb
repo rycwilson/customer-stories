@@ -2,10 +2,10 @@
 <%= render 'stories/show/video_modal' %>
 
 <!-- <div class="story-wrapper hidden"> -->
-<div class="story-wrapper <%= is_overlay ? 'overlay' : '' %>">
+<div class="<%= is_overlay ? 'cs-story-wrapper' : 'story-wrapper' %>">
 
   <!-- includes video -->
-  <div class="testimonial <%= story.video_url.present? ? '' : 'no-video' %>">
+  <div class="<%= is_overlay ? 'cs-testimonial' : 'testimonial' %> <%= story.video_url.present? ? '' : 'no-video' %>">
 
     <% cache("#{company.subdomain}/story-#{story.id}-testimonial", skip_digest: true) do %>
 
@@ -14,7 +14,8 @@
             {
               story: story,
               video_present: story.video_url.present?,
-              long_customer_name: story.customer.name.length > 20
+              long_customer_name: story.customer.name.length > 20,
+              is_overlay: is_overlay
             }
           ) %>
 
@@ -23,7 +24,7 @@
   </div>
 
   <!-- video (xs only) -->
-  <div class="video-xs visible-xs-block <%= story.video_url.present? ? '' : 'hidden' %>">
+  <div class="visible-xs-block <%= is_overlay ? 'cs-video-xs' : 'video-xs' %> <%= story.video_url.present? ? '' : 'hidden' %>">
 
     <% cache("#{company.subdomain}/story-#{story.id}-video-xs",
              skip_digest: true) do %>
@@ -33,7 +34,7 @@
 
   </div>
 
-  <div class="social-buttons-xs visible-xs-block text-right">
+  <div class="visible-xs-block text-right <%= is_overlay ? 'cs-social-buttons-xs' : 'social-buttons-xs' %>">
 
     <% cache("story-social-buttons-xs", skip_digest: true) do %>
       <%= render 'stories/shared/social_buttons_xs', { story: story } %>
@@ -42,7 +43,7 @@
   </div>
 
   <!-- story content, results, contributing team -->
-  <div class='story-content'>
+  <div class="<%= is_overlay ? 'cs-story-content' : 'story-content' %>">
 
     <%= render(
           'stories/show/story_content',
@@ -50,7 +51,8 @@
             company: company,
             story: story,
             contributors: contributors,
-            related_stories: related_stories
+            related_stories: related_stories,
+            is_overlay: is_overlay
           }
         ) %>
 
