@@ -103,6 +103,10 @@
     &.cs-story-content {
       span, p, h4 {
         font-family: inherit;
+        color: #333 !important;
+      }
+      .story-results p, .learn-more p {
+        line-height: 22px !important;
       }
     }
     background-color: #f2f2f2;
@@ -222,6 +226,17 @@
     margin: 0 0 30px 0;
   }
 
+  @media only screen and (max-width: 991px) {
+    .cs-story-content {
+      span, p {
+        font-size: 13px !important;
+      }
+    }
+  }
+  @media only screen and (min-width: 992px) {
+
+  }
+
   @media only screen and (max-width: 767px) {
     .testimonial, .cs-testimonial {
       margin-bottom: 40px;
@@ -239,6 +254,7 @@
       padding-bottom: 0;
     }
   }
+
 
   @media only screen and (min-width: 768px) {
     .testimonial, .cs-testimonial {
@@ -327,11 +343,22 @@
       }
     }
     .story-content, .cs-story-content {
-      font-size: 14px;
       h4 {
         font-size: 22px;
       }
+      .story-narration p {
+        font-size: 15px !important;
+      }
+      .story-results p, .learn-more p {
+        font-size: 14px !important;
+      }
+      &.cs-story-content {
+        .story-narration p {
+          line-height: 26px !important;
+        }
+      }
     }
+
   }
 
   @media only screen and (min-width: 1200px) {

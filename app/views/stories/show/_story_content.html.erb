@@ -5,7 +5,7 @@
 
     <div class='col-sm-6 col-md-7'>
 
-      <div class="<%= is_widget ? 'cs-well' : 'well' %>">
+      <div class="story-narration <%= is_widget ? 'cs-well' : 'well' %>">
 
         <% cache("#{company.subdomain}/story-#{story.id}-narration", skip_digest: true) do %>
 
@@ -34,7 +34,7 @@
           <div class="<%= is_widget ? 'cs-row' : 'row' %>">
             <div class="col-sm-12">
               <!-- need the container for providing inherited styling -->
-              <div class="section-title-container">
+              <div class="section-title-container" style="display: inline-block">
                 <h4>Related Stories</h4>
               </div>
               <a href='/'>All Stories</a>
