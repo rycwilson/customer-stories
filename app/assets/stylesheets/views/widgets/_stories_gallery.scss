@@ -41,7 +41,7 @@ a.cs-thumbnail {
       transition: all $transition-time ease-in-out;
       p {
         font: {
-          family: inherit;
+          family: inherit !important;
           size: 15px !important;
           weight: 600;
         }
