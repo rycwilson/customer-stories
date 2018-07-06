@@ -1,5 +1,5 @@
 
-#stories-gallery, #curate-gallery, #related-stories {
+#stories-gallery, #curate-gallery, .related-stories {
 
   &#curate-gallery {
     margin-top: -10px;
@@ -188,7 +188,7 @@
 }
 
 @media only screen and (max-width: 767px) {
-  #stories-gallery, #curate-gallery, #related-stories {
+  #stories-gallery, #curate-gallery, .related-stories {
     li {
       margin: 15px;
       a.thumbnail {
@@ -207,7 +207,7 @@
 }
 
 @media only screen and (max-width: 991px) {
-  #related-stories {
+  .related-stories {
     li {
       margin: 15px;
       a.thumbnail {
@@ -251,7 +251,7 @@
 }
 
 @media only screen and (min-width: 992px) {
-  #stories-gallery, #curate-gallery, #related-stories {
+  #stories-gallery, #curate-gallery, .related-stories {
     // margin-right: -40px; // pull it over a bit (only apply if filters present)
     // &.no-filters { margin-right: 0; }
     li {
@@ -278,7 +278,7 @@
 }
 
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
-  #related-stories {
+  .related-stories {
     li {
       margin: 15px;
       a.thumbnail {

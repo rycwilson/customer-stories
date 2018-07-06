@@ -10,7 +10,7 @@ $viewport_xxl:  $item_width * 6 + $sidebar_width; /* 6 columns */
 @media screen and (min-width: $viewport_xs) {
   html,
   body,
-  .story-overlay-container,
+  .cs-overlay-container,
   .main {
     height: 100vh;
   }

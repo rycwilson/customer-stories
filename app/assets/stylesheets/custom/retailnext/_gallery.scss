@@ -1,11 +1,11 @@
 
-#related-stories {
+.related-stories {
   ul {
     padding: 15px 0;
   }
 }
 
-#stories-gallery, #related-stories {
+#stories-gallery, .related-stories {
   li {
     .og-expander {
       background: #ebebeb;

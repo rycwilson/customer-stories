@@ -5,7 +5,7 @@ function loadVideoThumbnail (cbSuccess) {
   var $thumbContainers = $(".video-thumb-container");
 
   // no video, or wistia video
-  if ( $('#testimonial').hasClass('no-video') ||
+  if ( $('.testimonial').hasClass('no-video') ||
        $thumbContainers.length === 0 ) {
     if (cbSuccess) { cbSuccess(); }
     return false;
@@ -18,7 +18,7 @@ function loadVideoThumbnail (cbSuccess) {
 
       removeVideo = function () {
         if (CSP.screenSize === 'xs') {
-          $.when( $('#video-xs').remove() )
+          $.when( $('.video-xs').remove() )
             .then(function () { cbSuccess(); });
         } else {
           $.ajax({
@@ -27,7 +27,7 @@ function loadVideoThumbnail (cbSuccess) {
             data: { remove_video: true },
             dataType: 'html',
             success: function (html, status, xhr) {
-              $.when( $('#testimonial').empty().append(html) )
+              $.when( $('.testimonial').empty().append(html) )
                 .then(function () { cbSuccess(); });
             }
           });

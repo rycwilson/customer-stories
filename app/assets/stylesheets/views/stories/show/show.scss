@@ -1,10 +1,30 @@
 
-.stories.show {
+.stories.show, .cs-overlay-container {
 
   @import 'social_share';
-  @import '../../widgets/stories_fixed_carousel';  // more stories
 
-  #testimonial {
+  &.cs-overlay-container {
+    // skinny up the X icon
+    // ref: https://sridharkatakam.com/thin-font-awesome-close-icon/
+    .fa-times-thin:before {
+      content: '\00d7';
+    }
+    .testimonial {
+      margin-bottom: 0;
+      :after {
+        content: none;
+      }
+    }
+  }
+
+  &.stories.show {
+    @import '../../widgets/stories_fixed_carousel';  // more stories
+  }
+
+  // $font-family: inherit;  // for the overlays
+  text-align: left;   // override weebly
+
+  .testimonial {
     position: relative;
     color: #888;
     .customer-logo-quote.visible-xs-block {
@@ -22,7 +42,7 @@
       .customer-quote p {
         margin-bottom: 15px;
         font: {
-          // family: 'Open Sans';
+          family: inherit;
           size: 14px;
         }
       }
@@ -75,14 +95,14 @@
     }
   }
 
-  #story-section-content {
+  .story-content {
     h4 { line-height: 1.3 }
     font-size: 13px;
     background-color: #f2f2f2;
     padding: 15px 0 26px 0;
   }
 
-  #related-stories {
+  .related-stories {
     padding-bottom: 0;
     .row {
       font-size: 0;
@@ -144,22 +164,22 @@
     }
   }
 
-  #social-buttons-xs {
+  .social-buttons-xs {
     background-color: #f2f2f2;
     padding: 15px 25px 15px 15px;
   }
 
-  #story-section-video-xs {
+  .video-xs {
     background-color: #f2f2f2;
     padding-bottom: 15px;
   }
 
 
-  #story-section-content .well {
+  .story-content .well {
     background-color: #ffffff;
   }
 
-  #story-results {
+  .story-results {
     margin: 0 0 30px 0;
     .row div:first-child {
       text-align: center;
@@ -174,7 +194,7 @@
     padding-top: 4px;
   }
 
-  #learn-more {
+  .learn-more {
     margin: 0 0 30px 0;
     .row div:first-child {
       text-align: center;
@@ -193,12 +213,12 @@
     font-family: 'Lato';
   }
 
-  #story-results + .story-video {
+  .story-results + .story-video {
     margin: 0 0 30px 0;
   }
 
   @media only screen and (max-width: 767px) {
-    #testimonial {
+    .testimonial {
       margin-bottom: 40px;
       .customer-logo-quote.visible-xs-block {
       }
@@ -206,19 +226,19 @@
         height: 40px;
       }
     }
-    #story-section-video-xs {
+    .video-xs {
       padding-bottom: 20px;
     }
-    #social-buttons-xs {
+    .social-buttons-xs {
       padding-top: 0;
       padding-bottom: 0;
     }
-    #story-section-content {
+    .story-content {
     }
   }
 
   @media only screen and (min-width: 768px) {
-    #testimonial {
+    .testimonial {
       margin-bottom: 70px;
       .customer-logo-quote.hidden-xs {
         .customer-logo {
@@ -262,7 +282,7 @@
         height: 90px;
       }
     }
-    #story-section-content {
+    .story-content {
       font-size: 13px;
       > .container > .row > div[class^='col'] {
         margin-top: -42px;
@@ -271,10 +291,15 @@
         font-size: 20px;
       }
     }
+    &.cs-overlay-container {
+      .testimonial {
+        margin-bottom: 0;
+      }
+    }
   }
 
   @media only screen and (min-width: 992px) {
-    #testimonial {
+    .testimonial {
       .customer-logo-quote.hidden-xs {
         .customer-logo {
         }
@@ -300,7 +325,7 @@
         }
       }
     }
-    #story-section-content {
+    .story-content {
       font-size: 14px;
       h4 {
         font-size: 22px;
@@ -309,7 +334,7 @@
   }
 
   @media only screen and (min-width: 1200px) {
-    #testimonial, #testimonial.no-video {
+    .testimonial, .testimonial.no-video {
       .customer-logo-quote.hidden-xs {
         .customer-name {
           span { font-size: 18px; }
@@ -321,7 +346,7 @@
         }
       }
     }
-    #story-section-content {
+    .story-content {
     }
   }
 

@@ -1,5 +1,5 @@
 
-#stories-gallery, #related-stories {
+#stories-gallery, .related-stories {
 
   li {
     &.loading {
@@ -79,7 +79,7 @@
   }
 }
 @media only screen and (min-width: 992px) and (max-width: 1199px) {
-  #related-stories {
+  .related-stories {
     li {
       a.thumbnail {
         .thumbnail-view {

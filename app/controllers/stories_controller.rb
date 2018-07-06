@@ -71,7 +71,7 @@ class StoriesController < ApplicationController
     if params[:is_widget]
       respond_to do |format|
         format.js do
-          json = { html: overlay_html(@story) }.to_json
+          json = { html: render_story_partial(@story) }.to_json
           callback = params[:callback]
           jsonp = callback + "(" + json + ")"
           render(text: jsonp)
@@ -384,14 +384,15 @@ class StoriesController < ApplicationController
     @contributors
   end
 
-  def overlay_html (story)
+  def render_story_partial (story)
     render_to_string({
-      partial: 'stories/show/story_overlay',
+      partial: 'stories/show/story',
       locals: {
         company: story.company,
         story: story,
         contributors: story.contributors,
-        related_stories: story.related_stories
+        related_stories: nil,
+        is_overlay: true
       }
     })
   end

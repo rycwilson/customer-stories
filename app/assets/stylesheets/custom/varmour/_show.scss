@@ -1,7 +1,7 @@
 
 &.stories.show {
 
-  #testimonial {
+  .testimonial {
     font-family: $metropolis-regular;
     .customer-logo-quote.visible-xs-block {
       .customer-logo {
@@ -22,11 +22,11 @@
     }
   }
 
-  #story-section-video-xs, #social-buttons-xs {
+  .video-xs, .social-buttons-xs {
     background-color: #f5f6f7;
   }
 
-  #story-section-content {
+  .story-content {
     h4 { font-family: $metropolis-regular; }
     font-family: $metropolis-regular;
     background-color: #f5f6f7;
@@ -37,46 +37,46 @@
   }
 
   @media only screen and (max-width: 767px) {
-    #testimonial .visible-xs-block {
-      #story-section-video-xs {
+    .testimonial .visible-xs-block {
+      .video-xs {
       }
-      #social-buttons-xs {
+      .social-buttons-xs {
       }
-      #story-section-content {
+      .story-content {
       }
     }
   }
 
   @media only screen and (min-width: 768px) {
-    #testimonial .hidden-xs {
+    .testimonial .hidden-xs {
       .customer-logo {
       }
       .customer-quote {
       }
     }
-    #story-section-content {
+    .story-content {
     }
   }
 
   @media only screen and (min-width: 992px) {
-    #testimonial .hidden-xs {
+    .testimonial .hidden-xs {
       .customer-logo {
       }
       .customer-quote {
       }
     }
-    #story-section-content {
+    .story-content {
     }
   }
 
   @media only screen and (min-width: 1200px) {
-    #testimonial .hidden-xs {
+    .testimonial .hidden-xs {
       .customer-logo {
       }
       .customer-quote {
       }
     }
-    #story-section-content {
+    .story-content {
     }
   }
 

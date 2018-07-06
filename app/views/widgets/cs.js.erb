@@ -1076,7 +1076,7 @@
     var $thumbContainers = $(".video-thumb-container");
 
     // no video, or wistia video
-    if ( $('#testimonial').hasClass('no-video') ||
+    if ( $('.testimonial').hasClass('no-video') ||
          $thumbContainers.length === 0 ) {
       if (cbSuccess) { cbSuccess(); }
       return false;
@@ -1098,7 +1098,7 @@
               data: { remove_video: true },
               dataType: 'html',
               success: function (html, status, xhr) {
-                $.when( $('#testimonial').empty().append(html) )
+                $.when( $('.testimonial').empty().append(html) )
                   .then(function () { cbSuccess(); });
               }
             });

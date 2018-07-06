@@ -14,7 +14,6 @@ class WidgetsController < ApplicationController
     else
       @type = params[:type]
     end
-
     # set the stylesheet url here, as it's impossible to use the asset path helper in cs.js in a company-specific way
     case @type
     when 'carousel'

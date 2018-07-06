@@ -17,11 +17,32 @@
   <%= render 'companies/crowdsource/contributors/csp_linkedin_widget_template' %>
 <% end %>
 
-<%= render 'stories/show/video_modal' %>
-
 <% @story.ctas.forms.each do |form| %>
   <%= render 'ctas/cta_form_modal', { form: form } %>
 <% end %>
+
+<%= render(
+      'shared/navbars/stories_header',
+      {
+        company: @company,
+        action: 'show',
+        story: @story,
+        is_preview: @is_preview
+      }
+    ) %>
+
+<%=  %>
+
+<%= render(
+      'stories/show/story',
+      {
+        company: @company,
+        story: @story,
+        contributors: @contributors,
+        related_stories: @related_stories,
+        is_overlay: false
+      }
+    ) %>
 
 <% if @more_stories.present? && @company.subdomain != 'varmour' %>
 
@@ -42,77 +63,8 @@
 
 <% end %>
 
-<%= render(
-      'shared/navbars/stories_header',
-      { company: @company,
-        action: 'show',
-        story: @story,
-        is_preview: @is_preview
-      }
-    ) %>
 
-<div class="story-wrapper hidden">
 
-  <!-- includes video -->
-  <div id="testimonial" class="<%= @story.video_url.present? ? '' : 'no-video' %>">
-
-    <% cache("#{@company.subdomain}/story-#{@story.id}-testimonial", skip_digest: true) do %>
-
-      <%= render(
-            'stories/show/testimonial',
-            {
-              story: @story,
-              video_present: @story.video_url.present?,
-              long_customer_name: @story.customer.name.length > 20
-            }
-          ) %>
-
-    <% end %>
-
-  </div>
-
-  <!-- video (xs only) -->
-  <div id='story-section-video-xs'
-       class="visible-xs-block <%= @story.video_url.present? ? '' : 'hidden' %>">
-
-    <% cache("#{@company.subdomain}/story-#{@story.id}-video-xs",
-             skip_digest: true) do %>
-      <%= render 'stories/show/video_xs',
-            { story: @story, video_present: @story.video_url.present? } %>
-    <% end %>
-
-  </div>
-
-  <div id='social-buttons-xs' class="visible-xs-block text-right">
-
-    <% cache("story-social-buttons-xs", skip_digest: true) do %>
-      <%= render 'stories/shared/social_buttons_xs', { story: @story } %>
-    <% end %>
-
-  </div>
-
-  <!-- story content, results, contributing team -->
-  <div id='story-section-content'>
-
-    <%= render(
-          'stories/show/story_content',
-          {
-            company: @company,
-            story: @story,
-            contributors: @contributors,
-            related_stories: @story.related_stories
-          }
-        ) %>
-
-  </div>
-
-  <% unless user_signed_in? %>
-
-    <%= render('stories/shared/sign_in_footer') %>
-
-  <% end %>
-
-</div>
 
 
 
