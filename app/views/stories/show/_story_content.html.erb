@@ -1,11 +1,11 @@
 
-<div class="<%= is_overlay ? 'cs-container' : 'container' %>">
+<div class="<%= is_widget ? 'cs-container' : 'container' %>">
 
-  <div class="<%= is_overlay ? 'cs-row' : 'row' %>">
+  <div class="<%= is_widget ? 'cs-row' : 'row' %>">
 
     <div class='col-sm-6 col-md-7'>
 
-      <div class="<%= is_overlay ? 'cs-well' : 'well' %>">
+      <div class="<%= is_widget ? 'cs-well' : 'well' %>">
 
         <% cache("#{company.subdomain}/story-#{story.id}-narration", skip_digest: true) do %>
 
@@ -26,9 +26,9 @@
 
       <% if related_stories.present? && related_stories.length >= 2 %>
 
-        <div class="related-stories hidden-xs <%= is_overlay ? 'cs-well' : 'well' %>">
+        <div class="related-stories hidden-xs <%= is_widget ? 'cs-well' : 'well' %>">
 
-          <div class="<%= is_overlay ? 'cs-row' : 'row' %>">
+          <div class="<%= is_widget ? 'cs-row' : 'row' %>">
             <div class="col-sm-12">
               <h4>Related Stories</h4>
               <a href='/'>All Stories</a>
@@ -65,12 +65,12 @@
 
       <% cache("#{company.subdomain}/story-#{story.id}-results", skip_digest: true) do %>
 
-        <div class="story-results <%= is_overlay ? 'cs-well' : 'well' %>">
+        <div class="story-results <%= is_widget ? 'cs-well' : 'well' %>">
           <h4 class="text-center">Results</h4>
 
           <% story.success.results.each do |result| %>
 
-            <div class="<%= is_overlay ? 'cs-row' : 'row' %>">
+            <div class="<%= is_widget ? 'cs-row' : 'row' %>">
               <div class="col-xs-1">
                 <i class="fa fa-check"></i>
               </div>
@@ -97,7 +97,7 @@
 
           <% if contributors.present? %>
 
-          <div class="<%= is_overlay ? 'cs-well' : 'well' %>">
+          <div class="<%= is_widget ? 'cs-well' : 'well' %>">
             <h4>Success Team</h4>
           </div>
 
@@ -127,9 +127,9 @@
 
       <% if related_stories.present? && related_stories.length >= 2 %>
 
-        <div class="related-stories visible-xs <%= is_overlay ? 'cs-well' : 'well' %>">
+        <div class="related-stories visible-xs <%= is_widget ? 'cs-well' : 'well' %>">
 
-          <div class="<%= is_overlay ? 'cs-row' : 'row' %>">
+          <div class="<%= is_widget ? 'cs-row' : 'row' %>">
             <div class="col-xs-12">
               <h4>Related Stories</h4>
               <a href='/'>All Stories</a>

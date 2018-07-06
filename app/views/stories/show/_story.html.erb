@@ -1,11 +1,9 @@
 
-<%= render 'stories/show/video_modal' %>
-
 <!-- <div class="story-wrapper hidden"> -->
-<div class="<%= is_overlay ? 'cs-story-wrapper' : 'story-wrapper' %>">
+<div class="<%= is_widget ? 'cs-story-wrapper' : 'story-wrapper' %>">
 
   <!-- includes video -->
-  <div class="<%= is_overlay ? 'cs-testimonial' : 'testimonial' %> <%= story.video_url.present? ? '' : 'no-video' %>">
+  <div class="<%= is_widget ? 'cs-testimonial' : 'testimonial' %> <%= story.video_url.present? ? '' : 'no-video' %>">
 
     <% cache("#{company.subdomain}/story-#{story.id}-testimonial", skip_digest: true) do %>
 
@@ -15,7 +13,7 @@
               story: story,
               video_present: story.video_url.present?,
               long_customer_name: story.customer.name.length > 20,
-              is_overlay: is_overlay
+              is_widget: is_widget
             }
           ) %>
 
@@ -24,7 +22,7 @@
   </div>
 
   <!-- video (xs only) -->
-  <div class="visible-xs-block <%= is_overlay ? 'cs-video-xs' : 'video-xs' %> <%= story.video_url.present? ? '' : 'hidden' %>">
+  <div class="visible-xs-block <%= is_widget ? 'cs-video-xs' : 'video-xs' %> <%= story.video_url.present? ? '' : 'hidden' %>">
 
     <% cache("#{company.subdomain}/story-#{story.id}-video-xs",
              skip_digest: true) do %>
@@ -34,7 +32,7 @@
 
   </div>
 
-  <div class="visible-xs-block text-right <%= is_overlay ? 'cs-social-buttons-xs' : 'social-buttons-xs' %>">
+  <div class="visible-xs-block text-right <%= is_widget ? 'cs-social-buttons-xs' : 'social-buttons-xs' %>">
 
     <% cache("story-social-buttons-xs", skip_digest: true) do %>
       <%= render 'stories/shared/social_buttons_xs', { story: story } %>
@@ -43,7 +41,7 @@
   </div>
 
   <!-- story content, results, contributing team -->
-  <div class="<%= is_overlay ? 'cs-story-content' : 'story-content' %>">
+  <div class="<%= is_widget ? 'cs-story-content' : 'story-content' %>">
 
     <%= render(
           'stories/show/story_content',
@@ -52,13 +50,13 @@
             story: story,
             contributors: contributors,
             related_stories: related_stories,
-            is_overlay: is_overlay
+            is_widget: is_widget
           }
         ) %>
 
   </div>
 
-  <% unless is_overlay || user_signed_in? %>
+  <% unless is_widget || user_signed_in? %>
 
     <%= render('stories/shared/sign_in_footer') %>
 

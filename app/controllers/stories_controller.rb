@@ -392,7 +392,7 @@ class StoriesController < ApplicationController
         story: story,
         contributors: story.contributors,
         related_stories: nil,
-        is_overlay: true
+        is_widget: true
       }
     })
   end
