@@ -108,13 +108,13 @@
       }
     }
     .caption {
-      font-family: inherit;
       position: absolute;
       bottom: 0;
       height: 35%;
       width: 100%;
       font: {
-        size: 12px;
+        family: inherit !important;
+        size: 12px !important;
         weight: 300;
       }
       border-radius: 0;

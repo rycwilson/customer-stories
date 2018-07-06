@@ -211,7 +211,7 @@
         transition: all 0.23s ease-in-out;
         p {
           font: {
-            family: inherit;
+            family: inherit !important;
             size: 14px !important;
             weight: 600;
           }
@@ -245,7 +245,7 @@
       width: 100%;
       height: 35%;
       font: {
-        family: inherit;
+        family: inherit !important;
         // size: 14px;
         size: 13px;
       }
