@@ -4,14 +4,14 @@
   font-family: 'Metropolis Regular';
   src: font-url("metropolis.regular.otf") format('opentype');
 }
-$metropolis-regular: 'Metropolis Regular', sans-serif;
+$metropolis-regular: 'Metropolis Regular';
 @font-face {
   font-family: 'Metropolis Light';
   src: font-url("metropolis.light.otf") format('opentype');
 }
-$metropolis-light: 'Metropolis Light', sans-serif;
+$metropolis-light: 'Metropolis Light';
 @font-face {
   font-family: 'Metropolis Medium';
   src: font-url("Metropolis-Medium.otf") format('opentype');
 }
-$metropolis-medium: 'Metropolis Medium', sans-serif;
+$metropolis-medium: 'Metropolis Medium';

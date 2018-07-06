@@ -1,7 +1,12 @@
 
 .stories.show, .cs-overlay-container {
 
-  @import 'social_share';
+  @import 'social_share_buttons';
+  text-align: left;   // override weebly
+
+  &.stories.show {
+    @import '../../widgets/stories_fixed_carousel';  // more stories
+  }
 
   &.cs-overlay-container {
     // skinny up the X icon
@@ -10,13 +15,6 @@
       content: '\00d7';
     }
   }
-
-  &.stories.show {
-    @import '../../widgets/stories_fixed_carousel';  // more stories
-  }
-
-  // $font-family: inherit;  // for the overlays
-  text-align: left;   // override weebly
 
   .testimonial, .cs-testimonial {
     position: relative;
@@ -36,7 +34,6 @@
       .customer-quote p {
         margin-bottom: 15px;
         font: {
-          family: inherit;
           size: 14px;
         }
       }
