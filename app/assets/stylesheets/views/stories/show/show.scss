@@ -2,6 +2,8 @@
 .stories.show, .cs-overlay-container {
 
   @import 'social_share_buttons';
+  @import '../../../custom/fonts';
+
   text-align: left;   // override weebly
 
   &.stories.show {
@@ -57,9 +59,37 @@
         margin: 20px 0;
         span { font-size: 16px; }
       }
-      .customer-quote p {
-        margin-bottom: 15px;
-        line-height: 1.5;
+      .customer-quote {
+        blockquote {
+          &:before {
+            font-family: $metropolis-regular;
+            content: open-quote;
+            position: absolute;
+            top: 0;
+            left: -32px;
+            font-size: 45px;
+            color: #bbb;
+          }
+          position: relative;
+          margin-bottom: 0;
+          border: none;
+          font-style: italic;
+          padding: 0;
+          color: #888;
+          font-weight: 400;
+          line-height: 28px;
+          p {
+            margin-bottom: 15px;
+            font {
+              weight: 400;
+              line-height: 28px;
+            }
+          }
+          .customer-quote-attr {
+            font-style: normal;
+            font-size: 13px;
+          }
+        }
       }
     }
     .story-video.hidden-xs {
@@ -325,7 +355,7 @@
           span { font-size: 16px; }
         }
         .customer-quote {
-          padding: 0 40px;
+          padding: 0 60px;
           p {
             font-size: 16px;
           }
@@ -337,7 +367,7 @@
       &.no-video {
         .customer-logo-quote.hidden-xs {
           .customer-quote {
-            padding: 0 100px 0 0;
+            padding: 0 80px 0 20px;
           }
         }
       }
@@ -346,7 +376,7 @@
       h4 {
         font-size: 22px;
       }
-      .story-narration p {
+      .story-narration {
         font-size: 15px !important;
       }
       .story-results p, .learn-more p {

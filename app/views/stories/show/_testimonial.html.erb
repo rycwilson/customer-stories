@@ -16,15 +16,18 @@
           </div>
         </div>
 
+
         <div class="customer-quote <%= video_present ? 'col-sm-12' : (long_customer_name ? 'col-sm-8' : 'col-sm-8 col-lg-8') %>">
 
-          <p><em>"<%= story.quote %>"</em></p>
-
-          <div class="<%= is_widget ? 'cs-row' : 'row' %> <%= story.quote_attr_name.blank? ? 'hidden' : '' %>">
-            <div class='col-sm-12 col-lg-11 text-right'>
-              <span>&#8211;&nbsp;<%= story.quote_attr_name %>,&nbsp;<%= story.quote_attr_title %></span>
+          <blockquote>
+            <p><%= story.quote %></p>
+            <div class="<%= is_widget ? 'cs-row' : 'row' %> <%= story.quote_attr_name.blank? ? 'hidden' : '' %>">
+              <div class="customer-quote-attr text-right">
+                <span>&#8211;&nbsp;<%= story.quote_attr_name %>,&nbsp;<%= story.quote_attr_title %></span>
+              </div>
             </div>
-          </div>
+          </blockquote>
+
 
         </div>
 
