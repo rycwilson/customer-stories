@@ -17,6 +17,11 @@
   }
 
   .testimonial, .cs-testimonial {
+    &.cs-testimonial {
+      span, p {
+        font-family: inherit;
+      }
+    }
     position: relative;
     color: #888;
     .customer-logo-quote.visible-xs-block {
@@ -95,6 +100,11 @@
   }
 
   .story-content, .cs-story-content {
+    &.cs-story-content {
+      span, p, h4 {
+        font-family: inherit;
+      }
+    }
     background-color: #f2f2f2;
     padding: 15px 0 26px 0;
     line-height: 1.6;
