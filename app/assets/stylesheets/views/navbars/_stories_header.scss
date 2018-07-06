@@ -16,15 +16,15 @@
         display: flex;
         align-items: center;
         .navbar-header {
-          h3 {
+          h4 {
             padding-top: 1px;  // push it down just a bit
             font-size: 22px;
             margin-bottom: 0;
           }
-          h3.light {
+          h4.light {
             color: #fff;
           }
-          h3.dark {
+          h4.dark {
             color: #333;
           }
         }
@@ -159,7 +159,7 @@
     .navbar-container {
       .row {
         .navbar-header {
-          h3 {
+          h4 {
             font-size: 20px;
           }
         }

@@ -17,6 +17,8 @@
   <%= render 'companies/crowdsource/contributors/csp_linkedin_widget_template' %>
 <% end %>
 
+<%= render 'stories/show/video_modal', { is_widget: false } %>
+
 <% @story.ctas.forms.each do |form| %>
   <%= render 'ctas/cta_form_modal', { form: form } %>
 <% end %>

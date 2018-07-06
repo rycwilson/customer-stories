@@ -9,7 +9,10 @@
 
         <% cache("#{company.subdomain}/story-#{story.id}-narration", skip_digest: true) do %>
 
-          <h4><%= story.title %></h4>
+          <!-- need the container for providing inherited styling -->
+          <div class="section-title-container">
+            <h4><%= story.title %></h4>
+          </div>
 
           <div class="visible-md-block visible-lg-block">
             <%= story.content.html_safe %>
@@ -30,7 +33,10 @@
 
           <div class="<%= is_widget ? 'cs-row' : 'row' %>">
             <div class="col-sm-12">
-              <h4>Related Stories</h4>
+              <!-- need the container for providing inherited styling -->
+              <div class="section-title-container">
+                <h4>Related Stories</h4>
+              </div>
               <a href='/'>All Stories</a>
             </div>
           </div>
@@ -66,7 +72,9 @@
       <% cache("#{company.subdomain}/story-#{story.id}-results", skip_digest: true) do %>
 
         <div class="story-results <%= is_widget ? 'cs-well' : 'well' %>">
-          <h4 class="text-center">Results</h4>
+          <div class="section-title-container">
+            <h4 class="text-center">Results</h4>
+          </div>
 
           <% story.success.results.each do |result| %>
 
@@ -87,7 +95,36 @@
 
       <% if story.ctas.present? %>
 
-        <%= render 'stories/show/learn_more', { story: story } %>
+        <div class="learn-more <%= is_widget ? 'cs-well' : 'well' %>" style="margin-top:15px!important">
+          <div class="section-title-container">
+            <h4 class="text-center">Learn More</h4>
+          </div>
+          <ul class="list-unstyled">
+
+            <% story.ctas.each do |cta| %>
+
+              <li>
+                <% if cta.type == "CTALink" %>
+
+                  <a class="cta-link" href="<%= cta.link_url %>" target='_blank'>
+                    <p><%= cta.display_text %></p>
+                  </a>
+
+                <% else %>
+
+                  <a href="#cta-form-<%= cta.id %>-modal"
+                     class="cta-form" data-toggle='modal'
+                     data-target="#cta-form-<%= cta.id %>-modal">
+                    <p><%= cta.display_text %></p>
+                  </a>
+
+                <% end %>
+               </li>
+
+            <% end %>
+
+          </ul>
+        </div>
 
       <% end %>
 
@@ -98,7 +135,9 @@
           <% if contributors.present? %>
 
           <div class="<%= is_widget ? 'cs-well' : 'well' %>">
-            <h4>Success Team</h4>
+            <div class="section-title-container">
+              <h4>Success Team</h4>
+            </div>
           </div>
 
             <% contributors.each do |contributor| %>
@@ -131,8 +170,10 @@
 
           <div class="<%= is_widget ? 'cs-row' : 'row' %>">
             <div class="col-xs-12">
-              <h4>Related Stories</h4>
-              <a href='/'>All Stories</a>
+              <div class="section-title-container">
+                <h4>Related Stories</h4>
+                <a href='/'>All Stories</a>
+              </div>
             </div>
           </div>
 

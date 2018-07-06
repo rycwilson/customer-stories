@@ -7,7 +7,7 @@
         <!-- don't add .visible-xs-block to .row, as the display: flex setting will be overridden -->
         <div class="row">
           <div class="navbar-header col-xs-12">
-            <h3 class="<%= company.color_contrast %>">Customer Stories</h3>
+            <h4 class="<%= company.color_contrast %>">Customer Stories</h4>
           </div>
         </div>
 
@@ -18,7 +18,7 @@
         <% if curator?(company) && current_page?(action: 'index') %>
 
           <div class="col-sm-6 navbar-header">
-            <h3 class="<%= company.color_contrast %>">Customer Stories</h3>
+            <h4 class="<%= company.color_contrast %>">Customer Stories</h4>
           </div>
 
           <div class="col-sm-6 home">
@@ -30,7 +30,7 @@
         <% elsif curator?(company) && current_page?(action: 'show') %>
 
           <div class="col-sm-5 navbar-header">
-            <h3 class="<%= company.color_contrast %>">Customer Stories</h3>
+            <h4 class="<%= company.color_contrast %>">Customer Stories</h4>
           </div>
 
           <div class="col-sm-2 text-center edit-story">
@@ -55,7 +55,7 @@
         <% elsif current_page?(action: 'index') %>
 
           <div class="col-sm-6 navbar-header">
-            <h3 class="<%= company.color_contrast %>">Customer Stories</h3>
+            <h4 class="<%= company.color_contrast %>">Customer Stories</h4>
           </div>
 
           <div class="col-sm-6">
@@ -69,7 +69,7 @@
         <% elsif current_page?(action: 'show') %>
 
           <div class="col-sm-6 navbar-header">
-            <h3 class="<%= company.color_contrast %>">Customer Stories</h3>
+            <h4 class="<%= company.color_contrast %>">Customer Stories</h4>
           </div>
 
           <div class="col-sm-6">
