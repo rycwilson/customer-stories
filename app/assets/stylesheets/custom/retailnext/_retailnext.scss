@@ -3,10 +3,6 @@ body.retailnext:not(.companies):not(.profile):not(.edit) {
 
   font-family: "Open Sans", Arial, Helvetica, sans-serif;
 
-  background: {
-    color: #f5f5f3;
-  }
-
   @import 'company_header';
   @import 'stories_header';
   @import 'gallery';

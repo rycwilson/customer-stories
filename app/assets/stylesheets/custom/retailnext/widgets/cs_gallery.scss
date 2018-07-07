@@ -2,6 +2,8 @@
 // namespace the widget css so as not to interfere with anything on host page
 #cs-gallery {
 
+  // background-color: transparent;
+
   @import '../../fonts';
   @import '../../../views/widgets/widgets_bootstrap';
   @import '../../../views/widgets/story_overlays/main';

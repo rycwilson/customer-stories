@@ -8,9 +8,11 @@
 
   &.stories.show {
     @import '../../widgets/stories_fixed_carousel';  // more stories
+    background-color: #fff;
   }
 
   &.cs-overlay-container {
+    background-color: transparent;
     // skinny up the X icon
     // ref: https://sridharkatakam.com/thin-font-awesome-close-icon/
     .fa-times-thin:before {
@@ -61,7 +63,7 @@
         span {
           font: {
             size: 16px;
-            weight: bold;
+            // weight: bold;
           }
         }
       }
@@ -91,7 +93,7 @@
             p {
               margin-bottom: 0;
               &.cite-name {
-                font-weight: bold;
+                // font-weight: bold;
               }
             }
           }
