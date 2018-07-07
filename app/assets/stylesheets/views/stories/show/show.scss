@@ -26,6 +26,10 @@
     }
     position: relative;
     color: #888;
+    > .container > .row {
+      display: flex;
+      align-items: center;
+    }
     .customer-logo-quote.visible-xs-block {
       .customer-logo {
         margin-bottom: 20px;
@@ -70,30 +74,27 @@
             font-size: 45px;
             color: #bbb;
           }
-          position: relative;
-          margin-bottom: 0;
           border: none;
-          font-style: italic;
-          padding: 0;
           color: #888;
-          font-weight: 400;
-          line-height: 28px;
-          p {
-            margin-bottom: 15px;
-            font {
-              weight: 400;
-              line-height: 28px;
-            }
+          font-style: italic;
+          margin-bottom: 0;
+          padding: 0;
+          position: relative;
+          > p {
+            line-height: 1.5;
           }
           .customer-quote-attr {
             font-style: normal;
             font-size: 13px;
+            p {
+              margin-bottom: 0;
+            }
           }
         }
       }
     }
     .story-video.hidden-xs {
-      margin: 0 0 10px 0;
+      margin: 0;
     }
     &.no-video {
       // padding-top: 10px;
@@ -291,17 +292,27 @@
       margin-bottom: 70px;
       .customer-logo-quote.hidden-xs {
         .customer-logo {
-
         }
         .customer-name {
           margin: 10px 0;
-          span { font-size: 14px; }
+          span {
+            font-size: 14px;
+          }
         }
         .customer-quote {
-          padding: 0 20px;
-          p {
-            font-size: 14px;
-            // padding: 0 40px 0 20px;
+          padding: 0 40px;
+          blockquote {
+            &:before {
+              top: -10px;
+              left: -20px;
+              font-size: 30px;
+            }
+            > p {
+              font-size: 14px;
+              margin-bottom: 10px;
+            }
+            .customer-quote-attr {
+            }
           }
         }
       }
@@ -316,13 +327,27 @@
         .customer-logo-quote.hidden-xs {
           .customer-logo span {
           }
-          .customer-name {
+          .customer-name span {
+            font-size: 16px;
           }
           .customer-quote {
-            padding: 0 80px 0 0;
-            p {
-              font-size: 16px;
-              // padding: 0 40px 0 20px;
+            padding: 0 40px 0 0;
+            blockquote {
+              &:before {
+                top: -12px;
+                left: -26px;
+                font-size: 40px;
+              }
+              > p {
+                font-size: 16px;
+                margin-bottom: 15px;
+                // line-height: 28px;
+              }
+              .customer-quote-attr {
+                p {
+                  // line-height: 1.5;
+                }
+              }
             }
           }
         }
@@ -356,8 +381,22 @@
         }
         .customer-quote {
           padding: 0 60px;
-          p {
-            font-size: 16px;
+          blockquote {
+            &:before {
+              top: -15px;
+              left: -27px;
+              font-size: 40px;
+            }
+            > p {
+              font-size: 16px;
+              margin-bottom: 15px;
+              // line-height: 28px;
+            }
+            .customer-quote-attr {
+              p {
+                // line-height: 1.5;
+              }
+            }
           }
         }
       }
@@ -367,7 +406,24 @@
       &.no-video {
         .customer-logo-quote.hidden-xs {
           .customer-quote {
-            padding: 0 80px 0 20px;
+            padding: 0 100px 0 0;
+            blockquote {
+              &:before {
+                top: -13px;
+                left: -32px;
+                font-size: 45px;
+              }
+              > p {
+                font-size: 16px;
+                // line-height: 28px;
+              }
+              .customer-quote-attr {
+                font-size: 13px;
+                p {
+                  // line-height: 1.5;
+                }
+              }
+            }
           }
         }
       }
@@ -395,19 +451,47 @@
     .container:not(.navbar-container):not(.company-nav-container), .cs-container {
       width: 1120px;
     }
-    .testimonial, .cs-testimonial, .testimonial.no-video, .cs-testimonial.no-video {
+    .testimonial, .cs-testimonial {
       .customer-logo-quote.hidden-xs {
         .customer-name {
-          span { font-size: 18px; }
+          span {
+            font-size: 18px;
+          }
         }
         .customer-quote {
-          p {
-            font-size: 18px;
+          padding: 0 70px;
+          blockquote {
+            &:before {
+              top: -15px;
+              left: -30px;
+              font-size: 45px;
+            }
+            > p {
+              font-size: 18px;
+              // line-height: 28px;
+            }
+            .customer-quote-attr {
+              p {
+                // line-height: 1.5;
+              }
+            }
+          }
+        }
+      }
+      &.no-video {
+        .customer-logo-quote.hidden-xs {
+          .customer-quote {
+            padding: 0 80px 0 10px;
+            blockquote {
+              > p {
+                font-size: 18px;
+              }
+            }
           }
         }
       }
     }
-    .story-content {
+    .story-content, .cs-story-content {
     }
   }
 
