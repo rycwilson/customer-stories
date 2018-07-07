@@ -11,10 +11,10 @@ $viewport_xxl:  $item_width * 6 + $sidebar_width; /* 6 columns */
   html,
   body,
   .cs-overlay-container,
-  .main {
+  .cs-main {
     height: 100vh;
   }
-  .main {
+  .cs-main {
     height: 100%;
     margin-left: $sidebar_width;
   }
@@ -57,7 +57,7 @@ $viewport_xxl:  $item_width * 6 + $sidebar_width; /* 6 columns */
 }
 
 @media screen and (min-width: $viewport_xs) {
-  .grid {
+  .cs-grid {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -141,7 +141,7 @@ $viewport_xxl:  $item_width * 6 + $sidebar_width; /* 6 columns */
     -webkit-transform: translate3d(0,0,0);
     transform: translate3d(0,0,0);
   }
-  .sidebar.sidebar--open ~ .main {
+  .sidebar.sidebar--open ~ .cs-main {
     pointer-events: none;
   }
   .top-bar {
@@ -160,10 +160,10 @@ $viewport_xxl:  $item_width * 6 + $sidebar_width; /* 6 columns */
   .content__item {
     padding: 80px 20px 40px;
   }
-  .content .close-button {
+  .cs-content .close-button {
     padding: 10px 20px;
   }
-  .content .close-button::before {
+  .cs-content .close-button::before {
     content: '';
     position: absolute;
     top: 0;

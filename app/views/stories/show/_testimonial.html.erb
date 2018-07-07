@@ -21,11 +21,11 @@
 
           <blockquote>
             <p><%= story.quote %></p>
-            <div class="<%= is_widget ? 'cs-row' : 'row' %> <%= story.quote_attr_name.blank? ? 'hidden' : '' %>">
-              <div class="customer-quote-attr text-right">
-                <p><%= story.quote_attr_name %></p>
-                <p><%= story.quote_attr_title %></p>
-              </div>
+            <div class="<%= story.quote_attr_name.blank? ? 'hidden' : '' %>">
+              <cite class="text-right">
+                <p class="cite-name"><%= story.quote_attr_name %></p>
+                <p class="cite-title"><%= story.quote_attr_title %></p>
+              </cite>
             </div>
           </blockquote>
 

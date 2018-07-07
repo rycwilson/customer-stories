@@ -32,8 +32,8 @@
       }
     },
     gridEl = document.getElementById('cs-gallery'),
-    gridItemsContainer = gridEl.querySelector('section.grid'),
-    contentItemsContainer = gridEl.querySelector('section.content'),
+    gridItemsContainer = gridEl.querySelector('section.cs-grid'),
+    contentItemsContainer = gridEl.querySelector('section.cs-content'),
     gridItems = gridItemsContainer.querySelectorAll('.grid__item'),
     contentItems = contentItemsContainer.querySelectorAll('.content__item'),
     closeCtrl = contentItemsContainer.querySelector('.close-button'),
@@ -136,8 +136,8 @@
       // dummy.style.WebkitTransform = 'translate3d(-5px, ' + (scrollY() - 5) + 'px, 0px)';
       // dummy.style.transform = 'translate3d(-5px, ' + (scrollY() - 5) + 'px, 0px)';
       // csp modified...
-      dummy.style.WebkitTransform = 'translate3d(-5px, ' + (- 5 - ($('section.grid').offset().top - scrollY())) + 'px, 0px)';
-      dummy.style.transform = 'translate3d(-5px, ' + (- 5 - ($('section.grid').offset().top - scrollY())) + 'px, 0px)';
+      dummy.style.WebkitTransform = 'translate3d(-5px, ' + (- 5 - ($('section.cs-grid').offset().top - scrollY())) + 'px, 0px)';
+      dummy.style.transform = 'translate3d(-5px, ' + (- 5 - ($('section.cs-grid').offset().top - scrollY())) + 'px, 0px)';
       // disallow scroll
       window.addEventListener('scroll', noscroll);
     }, 25);
@@ -151,7 +151,7 @@
       // csp removed...
       // contentItemsContainer.style.top = scrollY() + 'px';
       // csp modified...
-      contentItemsContainer.style.top = (scrollY() - $('section.grid').offset().top) + 'px';
+      contentItemsContainer.style.top = (scrollY() - $('section.cs-grid').offset().top) + 'px';
 
       /**
        * csp modification:

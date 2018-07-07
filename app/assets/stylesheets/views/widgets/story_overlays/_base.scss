@@ -16,13 +16,13 @@ body {
 }
 
 /* Main content */
-.main {
+.cs-main {
   position: relative;
   z-index: 50;
 }
 
 /* Grid container */
-.grid {
+.cs-grid {
   position: relative;
   display: flex;
   align-items: center;
@@ -30,7 +30,7 @@ body {
 }
 
 /* Overlay */
-.grid::after {
+.cs-grid::after {
   content: '';
   background: rgba(202,202,202,0.4);
   opacity: 0;
@@ -44,7 +44,7 @@ body {
   transition: opacity $anim-time;
 }
 
-.view-single .grid::after {
+.view-single .cs-grid::after {
   opacity: 1;
 }
 
@@ -80,7 +80,7 @@ body {
 }
 
 /* main content */
-.content {
+.cs-content {
   position: absolute;
   top: 0;
   left: 0;
@@ -92,7 +92,7 @@ body {
   overflow: hidden;
 }
 
-.content.content--show {
+.cs-content.content--show {
   background-color: $content_background;
   height: 100vh;
   pointer-events: auto;

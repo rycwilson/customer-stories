@@ -20,7 +20,7 @@
 
   .testimonial, .cs-testimonial {
     &.cs-testimonial {
-      span, p {
+      p {
         font-family: inherit;
       }
     }
@@ -49,9 +49,6 @@
           size: 14px;
         }
       }
-      .customer-quote-attr span {
-        // line-height: 1.6;
-      }
     }
     .customer-logo-quote.hidden-xs {
       .customer-logo img {
@@ -61,7 +58,12 @@
       }
       .customer-name {
         margin: 20px 0;
-        span { font-size: 16px; }
+        span {
+          font: {
+            size: 16px;
+            weight: bold;
+          }
+        }
       }
       .customer-quote {
         blockquote {
@@ -83,11 +85,14 @@
           > p {
             line-height: 1.5;
           }
-          .customer-quote-attr {
+          cite {
             font-style: normal;
             font-size: 13px;
             p {
               margin-bottom: 0;
+              &.cite-name {
+                font-weight: bold;
+              }
             }
           }
         }
@@ -264,6 +269,7 @@
       }
     }
   }
+
   @media only screen and (min-width: 992px) {
 
   }
@@ -271,18 +277,33 @@
   @media only screen and (max-width: 767px) {
     .testimonial, .cs-testimonial {
       margin-bottom: 40px;
-      .customer-logo-quote.visible-xs-block {
-      }
       &:after {
         height: 40px;
+      }
+      > .container {
+        max-width: 500px;
+        .customer-logo-quote.visible-xs-block {
+        }
+
       }
     }
     .video-xs, .cs-video-xs {
       padding-bottom: 20px;
+      > .container {
+        max-width: 500px;
+      }
     }
     .social-buttons-xs, .cs-social-buttons-xs {
+      > .container {
+        max-width: 500px;
+      }
       padding-top: 0;
       padding-bottom: 0;
+    }
+    .story-content, .cs-story-content {
+      > .container {
+        max-width: 500px;
+      }
     }
   }
 
@@ -311,7 +332,7 @@
               font-size: 14px;
               margin-bottom: 10px;
             }
-            .customer-quote-attr {
+            cite {
             }
           }
         }
@@ -343,7 +364,7 @@
                 margin-bottom: 15px;
                 // line-height: 28px;
               }
-              .customer-quote-attr {
+              cite {
                 p {
                   // line-height: 1.5;
                 }
@@ -392,7 +413,7 @@
               margin-bottom: 15px;
               // line-height: 28px;
             }
-            .customer-quote-attr {
+            cite {
               p {
                 // line-height: 1.5;
               }
@@ -417,7 +438,7 @@
                 font-size: 16px;
                 // line-height: 28px;
               }
-              .customer-quote-attr {
+              cite {
                 font-size: 13px;
                 p {
                   // line-height: 1.5;
@@ -470,7 +491,7 @@
               font-size: 18px;
               // line-height: 28px;
             }
-            .customer-quote-attr {
+            cite {
               p {
                 // line-height: 1.5;
               }
