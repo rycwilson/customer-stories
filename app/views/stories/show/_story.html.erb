@@ -1,9 +1,9 @@
 
 <!-- <div class="story-wrapper hidden"> -->
-<div class="<%= is_widget ? 'cs-story-wrapper' : 'story-wrapper' %>">
+<article class="<%= is_widget ? 'cs-story-wrapper' : 'story-wrapper' %>">
 
   <!-- includes video -->
-  <div class="<%= is_widget ? 'cs-testimonial' : 'testimonial' %> <%= story.video_url.present? ? '' : 'no-video' %>">
+  <section class="<%= is_widget ? 'cs-testimonial' : 'testimonial' %> <%= story.video_url.present? ? '' : 'no-video' %>">
 
     <% cache("#{company.subdomain}/story-#{story.id}-testimonial", skip_digest: true) do %>
 
@@ -19,10 +19,10 @@
 
     <% end %>
 
-  </div>
+  </section>
 
   <!-- video (xs only) -->
-  <div class="visible-xs-block <%= is_widget ? 'cs-video-xs' : 'video-xs' %> <%= story.video_url.present? ? '' : 'hidden' %>">
+  <section class="visible-xs-block <%= is_widget ? 'cs-video-xs' : 'video-xs' %> <%= story.video_url.present? ? '' : 'hidden' %>">
 
     <% cache("#{company.subdomain}/story-#{story.id}-video-xs",
              skip_digest: true) do %>
@@ -30,7 +30,7 @@
             { story: story, video_present: story.video_url.present? } %>
     <% end %>
 
-  </div>
+  </section>
 
   <div class="visible-xs-block text-right <%= is_widget ? 'cs-social-buttons-xs' : 'social-buttons-xs' %>">
 
@@ -62,4 +62,4 @@
 
   <% end %>
 
-</div>
+</article>
