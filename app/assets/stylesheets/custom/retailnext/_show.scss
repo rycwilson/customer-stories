@@ -36,10 +36,10 @@
         font-family: $metropolis-regular;
       }
     }
-    .related-stories ul, .cs-related-stories ul {
+    .related-stories ul {
       background-color: #f5f5f3;
     }
-    .linkedin-widgets {
+    .story-contributors {
       > .well:first-child, .cs-well:first-child {
         background-image: linear-gradient(to bottom, #ffffff 72%, #f5f5f3 100%);
       }

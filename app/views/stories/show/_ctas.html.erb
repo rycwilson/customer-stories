@@ -1,0 +1,74 @@
+
+<!-- only difference betwee visible-xs and hidden-xs is that former doesn't have .well class applied -->
+<!-- TODO Better way to do this? (without resorting to js) -->
+<section class="story-ctas visible-xs-block">
+
+  <div class="section-title-container">
+    <h4>Learn More</h4>
+  </div>
+
+  <ul class="list-unstyled">
+
+    <% story.ctas.each do |cta| %>
+
+      <li>
+
+        <% if cta.type == "CTALink" %>
+
+          <a class="cta-link" href="<%= cta.link_url %>" target='_blank'>
+            <p><%= cta.display_text %></p>
+          </a>
+
+        <% else %>
+
+          <a href="#cta-form-<%= cta.id %>-modal"
+             class="cta-form" data-toggle='modal'
+             data-target="#cta-form-<%= cta.id %>-modal">
+            <p><%= cta.display_text %></p>
+          </a>
+
+        <% end %>
+
+       </li>
+
+    <% end %>
+
+  </ul>
+
+</section>
+
+<section class="story-ctas hidden-xs <%= is_widget ? 'cs-well' : 'well' %>">
+
+  <div class="section-title-container">
+    <h4 class="text-center">Learn More</h4>
+  </div>
+
+  <ul class="list-unstyled">
+
+    <% story.ctas.each do |cta| %>
+
+      <li>
+
+        <% if cta.type == "CTALink" %>
+
+          <a class="cta-link" href="<%= cta.link_url %>" target='_blank'>
+            <p><%= cta.display_text %></p>
+          </a>
+
+        <% else %>
+
+          <a href="#cta-form-<%= cta.id %>-modal"
+             class="cta-form" data-toggle='modal'
+             data-target="#cta-form-<%= cta.id %>-modal">
+            <p><%= cta.display_text %></p>
+          </a>
+
+        <% end %>
+
+       </li>
+
+    <% end %>
+
+  </ul>
+
+</section>

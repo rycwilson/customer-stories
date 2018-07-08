@@ -182,7 +182,7 @@ function widgetsMonitor () {
               setWidgetTimeout(firstWidgetReadyTimeoutDelay, postMessageHandler);
             }
             if (contributors.every(function (c) { return c.widget_loaded; })) {
-              $('.linkedin-widgets').removeClass('hidden');
+              $('.story-contributors').removeClass('hidden');
             }
           }
         }
@@ -221,7 +221,7 @@ function setWidgetTimeout (delay, postMessageHandler) {
                  }
                });
          if (failures) {
-           // $('.linkedin-widgets').imagesLoaded(function () {
+           // $('.story-contributors').imagesLoaded(function () {
            //   $('.csp-linkedin-widget').removeClass('hidden');
            // });
          } else {

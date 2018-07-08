@@ -3,204 +3,69 @@
 
   <div class="<%= is_widget ? 'cs-row' : 'row' %>">
 
-    <div class='col-sm-6 col-md-7'>
+    <div class="col-xs-12 col-sm-6 col-md-7">
 
-      <section class="story-narration <%= is_widget ? 'cs-well' : 'well' %>">
+      <% cache("#{company.subdomain}/stories/#{story.id}/narration", skip_digest: true) do %>
 
-        <% cache("#{company.subdomain}/story-#{story.id}-narration", skip_digest: true) do %>
+        <%= render(
+              'stories/show/narration',
+              { company: company, story: story, is_widget: is_widget }
+            ) %>
 
-          <!-- need the container for providing inherited styling -->
-          <div class="section-title-container">
-            <h4><%= story.title %></h4>
-          </div>
+      <% end %>
 
-          <div class="visible-md-block visible-lg-block">
-            <%= story.content.html_safe %>
-          </div>
+      <div class="visible-xs-block">
 
-          <div class="hidden-md hidden-lg">
-            <%= story.content.html_safe %>
-          </div>
+        <% cache("#{company.subdomain}/stories/#{story.id}/results", skip_digest: true) do %>
+
+          <%= render(
+                'stories/show/results',
+                { company: company, story: story, is_widget: is_widget }
+              ) %>
 
         <% end %>
 
-      </section>
+        <% if story.ctas.present? %>
 
+          <%= render('stories/show/ctas', { story: story, is_widget: is_widget }) %>
+
+        <% end %>
+
+      </div>
 
       <% if related_stories.present? && related_stories.length >= 2 %>
 
-        <section class="related-stories hidden-xs <%= is_widget ? 'cs-well' : 'well' %>">
-
-          <div class="<%= is_widget ? 'cs-row' : 'row' %>">
-            <div class="col-sm-12">
-              <!-- need the container for providing inherited styling -->
-              <div class="section-title-container" style="display: inline-block">
-                <h4>Related Stories</h4>
-              </div>
-              <a href='/'>All Stories</a>
-            </div>
-          </div>
-
-          <div class="grid-container">
-            <ul class="grid list-unstyled text-center">
-
-              <% related_stories.each do |story| %>
-                <li>
-                  <%= render(
-                        'stories/shared/story_card',
-                        {
-                          story: story,
-                          is_curator: false,
-                          is_widget: false,
-                          is_external: false
-                        }
-                      ) %>
-                </li>
-              <% end %>
-
-            </ul>
-          </div>
-
-        </section>
+        <%= render(
+              'stories/show/related_stories',
+              { company: company, related_stories: related_stories }
+            ) %>
 
       <% end %>
 
     </div>
 
-    <div class="col-sm-6 col-md-5">
+    <div class="hidden-xs col-sm-6 col-md-5">
 
-      <% cache("#{company.subdomain}/story-#{story.id}-results", skip_digest: true) do %>
+      <% cache("#{company.subdomain}/stories/#{story.id}/results", skip_digest: true) do %>
 
-        <section class="story-results <%= is_widget ? 'cs-well' : 'well' %>">
-          <div class="section-title-container">
-            <h4 class="text-center">Results</h4>
-          </div>
-
-          <% story.success.results.each do |result| %>
-
-            <div class="<%= is_widget ? 'cs-row' : 'row' %>">
-              <div class="col-xs-1">
-                <i class="fa fa-check"></i>
-              </div>
-              <div class="col-xs-11">
-                <p><%= result.description %></p>
-              </div>
-            </div>
-
-          <% end %>
-
-        </section>
+        <%= render('stories/show/results', { company: company, story: story, is_widget: is_widget }) %>
 
       <% end %>
 
       <% if story.ctas.present? %>
 
-        <section class="learn-more <%= is_widget ? 'cs-well' : 'well' %>" style="margin-top:15px!important">
-          <div class="section-title-container">
-            <h4 class="text-center">Learn More</h4>
-          </div>
-          <ul class="list-unstyled">
-
-            <% story.ctas.each do |cta| %>
-
-              <li>
-                <% if cta.type == "CTALink" %>
-
-                  <a class="cta-link" href="<%= cta.link_url %>" target='_blank'>
-                    <p><%= cta.display_text %></p>
-                  </a>
-
-                <% else %>
-
-                  <a href="#cta-form-<%= cta.id %>-modal"
-                     class="cta-form" data-toggle='modal'
-                     data-target="#cta-form-<%= cta.id %>-modal">
-                    <p><%= cta.display_text %></p>
-                  </a>
-
-                <% end %>
-               </li>
-
-            <% end %>
-
-          </ul>
-        </section>
+        <%= render('stories/show/ctas', { story: story, is_widget: is_widget }) %>
 
       <% end %>
 
-      <%# cache("#{company.subdomain}/story-#{story.id}-contributors", skip_digest: true) do %>
+      <%# cache("#{company.subdomain}/stories/#{story.id}/contributors", skip_digest: true) do %>
 
-        <section class="linkedin-widgets text-center hidden">
+        <%= render(
+              'stories/show/contributors',
+              { contributors: contributors, is_widget: is_widget }
+            ) %>
 
-          <% if contributors.present? %>
-
-          <div class="<%= is_widget ? 'cs-well' : 'well' %>">
-            <div class="section-title-container">
-              <h4>Success Team</h4>
-            </div>
-          </div>
-
-            <% contributors.each do |contributor| %>
-
-              <div class="linkedin-widget linkedin-widget-wide" data-linkedin-url="<%= contributor.linkedin_url %>">
-                <script type="IN/MemberProfile"
-                        data-id="<%= contributor.linkedin_url %>"
-                        data-format="inline"
-                        data-related="true"
-                        data-width="420"></script>
-              </div>
-
-              <div class="linkedin-widget" data-linkedin-url="<%= contributor.linkedin_url %>">
-                <script type="IN/MemberProfile"
-                        data-id="<%= contributor.linkedin_url %>"
-                        data-format="inline"
-                        data-related="true"
-                        data-width="340"></script>
-              </div>
-
-            <% end %>
-
-          <% end %>
-        </section>
       <%# end %>
-
-      <% if related_stories.present? && related_stories.length >= 2 %>
-
-        <section class="related-stories visible-xs <%= is_widget ? 'cs-well' : 'well' %>">
-
-          <div class="<%= is_widget ? 'cs-row' : 'row' %>">
-            <div class="col-xs-12">
-              <div class="section-title-container">
-                <h4>Related Stories</h4>
-                <a href='/'>All Stories</a>
-              </div>
-            </div>
-          </div>
-
-          <div class="grid-container">
-            <ul class="grid list-unstyled text-center">
-
-              <% related_stories.each do |story| %>
-                <li>
-                  <%= render(
-                        'stories/shared/story_card',
-                        {
-                          company: company,
-                          story: story,
-                          is_curator: false,
-                          is_widget: false,
-                          is_external: false
-                        }
-                      ) %>
-                </li>
-              <% end %>
-
-            </ul>
-          </div>
-
-        </section>
-
-      <% end %>
 
     </div>
 

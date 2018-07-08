@@ -1,0 +1,53 @@
+
+<!-- only difference betwee visible-xs and hidden-xs is that former doesn't have .well class applied -->
+<!-- TODO Better way to do this? (without resorting to js) -->
+<div class="visible-xs-block">
+
+  <section class="story-results">
+
+    <div class="section-title-container">
+      <h4>Results</h4>
+    </div>
+
+    <% story.results.each do |result| %>
+
+      <div class="<%= is_widget ? 'cs-row' : 'row' %>">
+        <div class="col-xs-1">
+          <i class="fa fa-check"></i>
+        </div>
+        <div class="col-xs-11">
+          <p><%= result.description %></p>
+        </div>
+      </div>
+
+    <% end %>
+
+  </section>
+
+</div>
+
+<div class="hidden-xs">
+
+  <section class="story-results <%= is_widget ? 'cs-well' : 'well' %>">
+
+    <div class="section-title-container">
+      <h4 class="text-center">Results</h4>
+    </div>
+
+    <% story.results.each do |result| %>
+
+      <div class="<%= is_widget ? 'cs-row' : 'row' %>">
+        <div class="col-xs-1">
+          <i class="fa fa-check"></i>
+        </div>
+        <div class="col-xs-11">
+          <p><%= result.description %></p>
+        </div>
+      </div>
+
+    <% end %>
+
+  </section>
+
+</div>
+

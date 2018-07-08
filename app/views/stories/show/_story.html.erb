@@ -21,13 +21,18 @@
 
   </section>
 
-  <!-- video (xs only) -->
   <section class="visible-xs-block <%= is_widget ? 'cs-video-xs' : 'video-xs' %> <%= story.video_url.present? ? '' : 'hidden' %>">
 
-    <% cache("#{company.subdomain}/story-#{story.id}-video-xs",
-             skip_digest: true) do %>
-      <%= render 'stories/show/video_xs',
-            { story: story, video_present: story.video_url.present? } %>
+    <% cache("#{company.subdomain}/stories/#{story.id}/video-xs", skip_digest: true) do %>
+
+      <%= render(
+            'stories/show/video_xs',
+            {
+              story: story,
+              video_present: story.video_url.present?
+            }
+          ) %>
+
     <% end %>
 
   </section>
@@ -38,7 +43,6 @@
 
   </div>
 
-  <!-- story content, results, contributing team -->
   <div class="<%= is_widget ? 'cs-story-content' : 'story-content' %>">
 
     <%= render(
@@ -48,7 +52,9 @@
             story: story,
             contributors: contributors,
             related_stories: related_stories,
-            is_widget: is_widget
+            is_widget: is_widget,
+  # TODO this setting won't be necessary when fixed-carousel widget is removed from stories#show
+            is_external: is_external
           }
         ) %>
 

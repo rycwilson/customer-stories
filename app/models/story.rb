@@ -389,19 +389,19 @@ class Story < ActiveRecord::Base
   end
 
   def expire_story_video_xs_fragment_cache
-    self.expire_fragment("#{self.company.subdomain}/story-#{self.id}-video-xs")
+    self.expire_fragment("#{self.company.subdomain}/stories/#{self.id}/video-xs")
   end
 
   def expire_story_narration_fragment_cache
-    self.expire_fragment("#{self.company.subdomain}/story-#{self.id}-narration")
+    self.expire_fragment("#{self.company.subdomain}/stories/#{self.id}/narration")
   end
 
   def expire_results_fragment_cache
-    self.expire_fragment("#{self.company.subdomain}/story-#{self.id}-results")
+    self.expire_fragment("#{self.company.subdomain}/stories/#{self.id}/results")
   end
 
   def contributors_jsonld
-    self.success.contributors.map do |contributor|
+    self.contributors.map do |contributor|
                                 { "@type" => "Person",
                                   "name" => contributor.full_name }
                               end

@@ -1,0 +1,70 @@
+
+<section class="related-stories hidden-xs well">
+
+  <div class="row">
+    <div class="col-sm-12">
+      <!-- need the container for providing inherited styling -->
+      <div class="section-title-container" style="display: inline-block">
+        <h4>Related Stories</h4>
+      </div>
+      <a href='/'>All Stories</a>
+    </div>
+  </div>
+
+  <div class="grid-container">
+    <ul class="grid list-unstyled text-center">
+
+      <% related_stories.each do |story| %>
+
+        <li>
+          <%= render(
+                'stories/shared/story_card',
+                {
+                  story: story,
+                  is_curator: false,
+                  is_widget: false,
+                  is_external: false
+                }
+              ) %>
+        </li>
+
+      <% end %>
+
+    </ul>
+  </div>
+
+</section>
+
+<section class="related-stories visible-xs">
+
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="section-title-container">
+        <h4>Related Stories</h4>
+        <a href='/'>All Stories</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-container">
+    <ul class="grid list-unstyled text-center">
+
+      <% related_stories.each do |story| %>
+        <li>
+          <%= render(
+                'stories/shared/story_card',
+                {
+                  company: company,
+                  story: story,
+                  is_curator: false,
+                  is_widget: false,
+                  is_external: false
+                }
+              ) %>
+        </li>
+      <% end %>
+
+    </ul>
+  </div>
+
+</section>

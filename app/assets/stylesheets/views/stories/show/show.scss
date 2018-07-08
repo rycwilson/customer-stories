@@ -43,7 +43,7 @@
         }
         img {
           display: inline-block;
-          max-height: 60px;
+          max-height: 65px;
           max-width: 30%;
           margin: 0 25px 0 10px;
           mix-blend-mode: multiply;
@@ -128,13 +128,13 @@
     &:after {
       content: '';
       position: absolute;
-      top: 100%;
+      height: 90px;   // mirrors margin-bottom
+      // bottom: -90px;  // mirrors margin-bottom
       z-index: -1;
       width: 100%;
       // margin-top: -20px;
-      height: 90px;
       // margin-top: 2px;
-      background-image: linear-gradient(to top, #f2f2f2 0%, #ffffff 100%);  //f2f2f2
+      background-image: linear-gradient(to bottom, #ffffff 0%, #f2f2f2 100%);  //f2f2f2
       background-repeat: repeat-x;
       filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2f2f2', endColorstr='#ffffffff', GradientType=0);
     }
@@ -152,7 +152,7 @@
         font-family: inherit;
         color: #333 !important;
       }
-      .story-results p, .learn-more p {
+      .story-results p, .story-ctas p {
         line-height: 22px !important;
       }
     }
@@ -167,8 +167,11 @@
     .well, .cs-well {
       background-color: #ffffff;
     }
+    .story-narration {
+      margin-bottom: 25px;
+    }
     .story-results {
-      margin: 0 0 30px 0;
+      margin-bottom: 25px;
       line-height: 1.5;
       .row div:first-child, .cs-row div:first-child {
         text-align: center;
@@ -204,7 +207,7 @@
         }
       }
     }
-    .linkedin-widgets {
+    .story-contributors {
       > .well:first-child, .cs-well:first-child {
         margin-bottom: 0;
         position:relative;
@@ -219,6 +222,7 @@
         h4 {
           margin-bottom: 6px;
         }
+        // the fading borders...
         &:before, &:after {
           content: "";
           position: absolute;
@@ -241,19 +245,32 @@
     }
   }
 
-  .social-buttons-xs, .cs-social-buttons-xs {
-    background-color: #f2f2f2;
-    padding: 15px 25px 15px 15px;
-  }
-
   .video-xs, .cs-video-xs {
     background-color: #f2f2f2;
     padding-bottom: 15px;
+    position: relative;
+    &:after {
+      content: '';
+      position: absolute;
+      top: 100%;
+      z-index: -1;
+      width: 100%;
+      // margin-top: -20px;
+      height: 90px;
+      // margin-top: 2px;
+      background-image: linear-gradient(to bottom, #f2f2f2 0%, #ffffff 100%);  //f2f2f2
+      background-repeat: repeat-x;
+      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2f2f2', endColorstr='#ffffffff', GradientType=0);
+    }
   }
 
+  .social-buttons-xs, .cs-social-buttons-xs {
+    &.social-buttons-xs, &.cs-social-buttons-xs {
+      margin: 15px 0;
+    }
+  }
 
-
-  .learn-more {
+  .story-ctas {
     margin: 0 0 30px 0;
     .row div:first-child, .cs-row div:first-child {
       text-align: center;
@@ -261,7 +278,7 @@
     }
   }
 
-  .linkedin-widgets {
+  .story-contributors {
     margin-bottom: 20px;
   }
 
@@ -287,9 +304,9 @@
 
   @media only screen and (max-width: 767px) {
     .testimonial, .cs-testimonial {
-      margin-bottom: 40px;
+      margin-bottom: 50px;
       &:after {
-        height: 40px;
+        bottom: -50px;
       }
       > .container {
         max-width: 500px;
@@ -299,9 +316,13 @@
       }
     }
     .video-xs, .cs-video-xs {
-      padding-bottom: 20px;
       > .container {
         max-width: 500px;
+        // since .testimonial has a margin-bottom that accommodates the :after element,
+        // pull these elements user-select: none;
+        > .row > [class*='col-'] {
+          margin-top: -20px;
+        }
       }
     }
     .social-buttons-xs, .cs-social-buttons-xs {
@@ -312,8 +333,13 @@
       padding-bottom: 0;
     }
     .story-content, .cs-story-content {
+      background-color: transparent;
       > .container {
         max-width: 500px;
+        .well {
+          padding: 19px 0 0 0;
+          border: 0
+        }
       }
     }
   }
@@ -321,7 +347,10 @@
 
   @media only screen and (min-width: 768px) {
     .testimonial, .cs-testimonial {
-      margin-bottom: 70px;
+      margin-bottom: 90px;
+      &:after {
+        bottom: -90px;  // mirrors margin-bottom (above)
+      }
       .customer-logo-quote.hidden-xs {
         .customer-logo {
         }
@@ -350,9 +379,6 @@
       }
       .no-video.hidden-xs {
         padding: 15px 30px 0 30px;
-      }
-      &:after {
-        height: 70px;
       }
       &.no-video {
         margin-bottom: 90px;
@@ -390,8 +416,10 @@
     }
     .story-content, .cs-story-content {
       font-size: 13px;
-      > .container > .row > div[class^='col'] {
-        margin-top: -42px;
+      // since .testimonial has a margin-bottom that accommodates the :after element,
+      // pull these elements user-select: none;
+      > .container > .row > [class*='col-'] {
+        margin-top: -50px;
       }
       h4 {
         font-size: 20px;
@@ -467,7 +495,7 @@
       .story-narration {
         font-size: 15px !important;
       }
-      .story-results p, .learn-more p {
+      .story-results p, .story-ctas p {
         font-size: 14px !important;
       }
       &.cs-story-content {

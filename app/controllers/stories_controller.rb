@@ -69,6 +69,7 @@ class StoriesController < ApplicationController
 
   def show
     if params[:is_widget]
+      @is_widget = @is_external = true
       respond_to do |format|
         format.js do
           json = { html: render_story_partial(@story) }.to_json

@@ -10,7 +10,7 @@ class Result < ActiveRecord::Base
   after_commit :expire_results_fragment_cache, on: [:create, :update, :destroy]
 
   def expire_results_fragment_cache
-    story = self.success.story
+    story = self.story
     story.expire_results_fragment_cache
   end
 

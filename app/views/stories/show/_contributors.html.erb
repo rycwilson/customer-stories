@@ -1,0 +1,34 @@
+
+<section class="story-contributors text-center hidden">
+
+  <% if contributors.present? %>
+
+    <div class="<%= is_widget ? 'cs-well' : 'well' %>">
+      <div class="section-title-container">
+        <h4>Success Team</h4>
+      </div>
+    </div>
+
+    <% contributors.each do |contributor| %>
+
+      <div class="linkedin-widget linkedin-widget-wide" data-linkedin-url="<%= contributor.linkedin_url %>">
+        <script type="IN/MemberProfile"
+                data-id="<%= contributor.linkedin_url %>"
+                data-format="inline"
+                data-related="true"
+                data-width="420"></script>
+      </div>
+
+      <div class="linkedin-widget" data-linkedin-url="<%= contributor.linkedin_url %>">
+        <script type="IN/MemberProfile"
+                data-id="<%= contributor.linkedin_url %>"
+                data-format="inline"
+                data-related="true"
+                data-width="340"></script>
+      </div>
+
+    <% end %>
+
+  <% end %>
+
+</section>
