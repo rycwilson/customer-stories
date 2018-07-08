@@ -21,7 +21,7 @@
 
   </section>
 
-  <section class="visible-xs-block <%= is_widget ? 'cs-video-xs' : 'video-xs' %> <%= story.video_url.present? ? '' : 'hidden' %>">
+  <section class="<%= story.video_url.present? ? 'visible-xs-block' : 'hidden' %> <%= is_widget ? 'cs-video-xs' : 'video-xs' %>">
 
     <% cache("#{company.subdomain}/stories/#{story.id}/video-xs", skip_digest: true) do %>
 
@@ -37,7 +37,7 @@
 
   </section>
 
-  <div class="visible-xs-block text-right <%= is_widget ? 'cs-social-buttons-xs' : 'social-buttons-xs' %>">
+  <div class="visible-xs-block <%= is_widget ? 'cs-social-buttons-xs' : 'social-buttons-xs' %>">
 
     <%= render 'stories/shared/social_buttons_xs', { story: story } %>
 

@@ -113,7 +113,6 @@
       margin: 0;
     }
     &.no-video {
-      // padding-top: 10px;
       .customer-logo-quote.hidden-xs {
         display: flex;
         align-items: center;
@@ -266,7 +265,7 @@
 
   .social-buttons-xs, .cs-social-buttons-xs {
     &.social-buttons-xs, &.cs-social-buttons-xs {
-      margin: 15px 0;
+      // margin: 15px 0;
     }
   }
 
@@ -305,6 +304,12 @@
   @media only screen and (max-width: 767px) {
     .testimonial, .cs-testimonial {
       margin-bottom: 50px;
+      &.no-video {
+        margin-bottom: 30px;
+        &:after {
+          content: none;
+        }
+      }
       &:after {
         bottom: -50px;
       }
