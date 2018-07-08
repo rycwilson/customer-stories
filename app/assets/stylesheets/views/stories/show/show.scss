@@ -34,12 +34,21 @@
     }
     .customer-logo-quote.visible-xs-block {
       .customer-logo {
+        display: flex;
+        align-items: center;
         margin-bottom: 20px;
-        img {
-          max-height: 55px;
-          max-width: 30%;
-          margin: 0 20px 0 10px;
+        .customer-name {
+          display: inline-block;
+          width: 100%;
         }
+        img {
+          display: inline-block;
+          max-height: 60px;
+          max-width: 30%;
+          margin: 0 25px 0 10px;
+          mix-blend-mode: multiply;
+        }
+
         span {
           font-size: 16px;
         }

@@ -29,7 +29,6 @@
             </div>
           </blockquote>
 
-
         </div>
 
         <!-- filler -->
@@ -39,11 +38,13 @@
 
       <div class="customer-logo-quote visible-xs-block">
 
-        <div class="customer-logo" style="display:flex; align-items: center;">
-            <%= image_tag (story.customer.logo_url || LOGO_PLACEHOLDER_URL), class: 'img-responsive', style: 'display: inline-block; mix-blend-mode: multiply' %>
-          <!-- </div> -->
-          <!-- <div class="col-xs-7"> -->
-            <span><%= story.customer.name %></span>
+        <div class="customer-logo">
+            <%= image_tag (story.customer.logo_url || LOGO_PLACEHOLDER_URL), class: 'img-responsive' %>
+
+            <div class="customer-name text-center">
+              <span><%= story.customer.name %></span>
+
+            </div>
         </div>
 
         <div class="customer-quote">
