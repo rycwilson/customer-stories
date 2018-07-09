@@ -228,8 +228,11 @@
         }
       }
       &.visible-xs {
-        ul {
-          margin: 0
+        .section-title-container {
+          margin-bottom: 5px;
+          h4 {
+            margin-bottom: 2px;
+          }
         }
       }
     }
