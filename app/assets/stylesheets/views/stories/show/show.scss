@@ -4,6 +4,8 @@
   @import 'social_share_buttons';
   @import '../../../custom/fonts';
 
+  $max-xs-width: 500px;
+
   text-align: left;   // override weebly
 
   &.stories.show {
@@ -45,7 +47,7 @@
           display: inline-block;
           max-height: 65px;
           max-width: 30%;
-          margin: 0 25px 0 10px;
+          margin: 0 30px 0 10px;
           mix-blend-mode: multiply;
         }
 
@@ -172,15 +174,42 @@
     .story-results {
       margin-bottom: 25px;
       line-height: 1.5;
-      .row div:first-child, .cs-row div:first-child {
-        text-align: center;
-        padding-right: 0;
+      .row {
+        margin-bottom: 10px;
+        div:first-child {
+          text-align: center;
+          padding-right: 0;
+        }
       }
-      i.fa-check {
-        padding-top: 4px;
+      &.visible-xs-block {
+        .ul-container {
+          display: flex;
+          justify-content: center;
+          ul {
+            margin-bottom: 0;
+            display: inline-block;
+            li {
+              padding-left: 6px;
+            }
+          }
+        }
+      }
+    }
+    .story-ctas {
+      margin-bottom: 25px;
+      &.visible-xs-block {
+        .ul-container {
+          display: flex;
+          justify-content: center;
+          ul {
+            margin-bottom: 0;
+            display: inline-block;
+          }
+        }
       }
     }
     .related-stories {
+      margin-bottom: 25px;
       padding-bottom: 0;
       line-height: 1.5;
       .row, .cs-row {
@@ -203,6 +232,11 @@
         margin: 15px 0 25px 0;
         li {
           margin: 18px;
+        }
+      }
+      &.visible-xs {
+        ul {
+          margin: 0
         }
       }
     }
@@ -246,7 +280,7 @@
 
   .video-xs, .cs-video-xs {
     background-color: #f2f2f2;
-    padding-bottom: 15px;
+    padding-bottom: 25px;
     position: relative;
     &:after {
       content: '';
@@ -278,15 +312,11 @@
   }
 
   .story-contributors {
-    margin-bottom: 20px;
+    margin-bottom: 25px;
   }
 
   #more-stories-container header {
     font-family: 'Lato';
-  }
-
-  .story-results + .story-video, .cs-story-results + .cs-story-video {
-    margin: 0 0 30px 0;
   }
 
   @media only screen and (max-width: 991px) {
@@ -344,6 +374,21 @@
         .well {
           padding: 19px 0 0 0;
           border: 0
+        }
+        .story-results {
+          ul {
+            // list-style: none;
+            // li:before {
+            //   font-family: 'FontAwesome';
+            //   content: '\f00c';
+            //   margin-right: 20px;
+            //   color: #333;
+            // }
+            li {
+              // list-style-position: outside;
+              margin-bottom: 10px;
+            }
+          }
         }
       }
     }
