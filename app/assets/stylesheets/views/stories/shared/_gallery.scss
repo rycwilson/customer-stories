@@ -52,7 +52,7 @@
             font: {
               family: 'Lato', 'Trebuchet MS', 'Open Sans', arial, sans-serif;
               size: 15px;
-              weight: 600;
+              weight: 600 ;
             }
             line-height: 26px;
             color: #444;
@@ -128,7 +128,7 @@
         border: 1px solid transparent;
         box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
         .thumbnail-view-hover { transform: none; }
-        img { opacity: 0; }
+        img { opacity: 0.05; }
         .caption {
           span.customer-name {
             visibility: hidden;
@@ -141,6 +141,9 @@
       &.still-loading {
         .thumbnail-view, .caption {
           opacity: 0.05;
+        }
+        img {
+          opacity: 0;
         }
         // the icon needs to be wrapped in a div in order for the transform to work
         // (center if element is centered, not top-left of element)

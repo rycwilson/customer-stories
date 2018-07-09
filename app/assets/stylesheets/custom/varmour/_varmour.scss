@@ -2,6 +2,7 @@
 
 body.varmour:not(.companies):not(.profile):not(.edit) {
 
+  $varmour-gray: #f5f6f7;
   font-family: $metropolis-regular;
 
   // @import 'company_header';

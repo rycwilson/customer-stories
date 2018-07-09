@@ -316,12 +316,10 @@
       margin-bottom: 50px;
       &.no-video {
         margin-bottom: 30px;
-        &:after {
-          content: none;
-        }
       }
       &:after {
-        bottom: -50px;
+        content: none;
+        // bottom: -50px;
       }
       > .container {
         max-width: 500px;

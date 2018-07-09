@@ -1,7 +1,7 @@
 
 &.stories.show {
 
-  .testimonial {
+  .testimonial, .cs-testimonial {
     font-family: $metropolis-regular;
     .customer-logo-quote.visible-xs-block {
       .customer-logo {
@@ -18,18 +18,18 @@
       }
     }
     &:after {
-      background-image: linear-gradient(to top, #f5f6f7 0%, #ffffff 100%);  //f2f2f2
+      background-image: linear-gradient(to top, $varmour-gray 0%, #ffffff 100%);  //f2f2f2
     }
   }
 
-  .video-xs, .social-buttons-xs {
-    background-color: #f5f6f7;
+  .video-xs, .cs-video-xs, .social-buttons-xs, .cs-social-buttons-xs {
+    background-color: $varmour-gray;
   }
 
-  .story-content {
-    h4 { font-family: $metropolis-regular; }
+  .story-content, .cs-story-content {
+    background-color: $varmour-gray;
     font-family: $metropolis-regular;
-    background-color: #f5f6f7;
+    h4 { font-family: $metropolis-regular; }
     .well {
       border-color: #e6e9ec;
       border-radius: 0;
@@ -37,13 +37,16 @@
   }
 
   @media only screen and (max-width: 767px) {
-    .testimonial .visible-xs-block {
-      .video-xs {
+    .testimonial, .cs-testimonial {
+      &.after {
+        content: none;
       }
-      .social-buttons-xs {
-      }
-      .story-content {
-      }
+    }
+    .video-xs, .cs-video-xs, .social-buttons-xs, .cs-social-buttons-xs {
+      background-color: #fff;
+    }
+    .story-content, .cs-story-content {
+      background-color: #fff;
     }
   }
 
