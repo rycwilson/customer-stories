@@ -1,0 +1,73 @@
+
+body.trunity:not(.companies):not(.profile):not(.edit) {
+
+  // @import 'company_header';
+  // @import 'stories_header';
+  // @import 'gallery';
+  // @import 'index';
+  @import 'show';
+
+  @media only screen and (max-width: 767px) {
+    #stories-gallery, #curate-gallery {
+      li {
+        a.thumbnail {
+          .thumbnail-view {
+            .thumbnail-view-hover p {
+            }
+            img {
+            }
+          }
+          .caption {
+          }
+        }
+      }
+    }
+  }
+
+  @media only screen and (min-width: 768px) and (max-width: 991px) {
+    #stories-gallery, #curate-gallery {
+      li {
+        a.thumbnail {
+          .thumbnail-view {
+            .thumbnail-view-hover {
+              p {
+              }
+            }
+          }
+          .caption {
+          }
+        }
+      }
+    }
+  }
+
+  @media only screen and (min-width: 992px) and (max-width: 1199px) {
+    .related-stories {
+      li {
+        a.thumbnail {
+          .thumbnail-view {
+            .thumbnail-view-hover {
+              p {
+              }
+            }
+          }
+          .caption {
+          }
+        }
+      }
+    }
+  }
+
+  @media only screen and (min-width: 1200px) {
+    &.stories.index {
+      .filters-container.visible-md-block.short {
+        // margin: 10px 2px 0 0;
+      }
+      .filters-container.visible-md-block.tall {
+      }
+    }
+  }
+
+}
+
+
