@@ -13,7 +13,7 @@
     &.loading {
       a.thumbnail {
         background-color: #ebebeb;
-
+        img { opacity: 0; }
       }
     }
     a.thumbnail {
