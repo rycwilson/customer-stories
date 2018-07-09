@@ -54,13 +54,16 @@
   }
 
   @media only screen and (max-width: 767px) {
-    .testimonial .visible-xs-block {
-      .video-xs {
+    .testimonial, .cs-testimonial {
+      &.after {
+        content: none;
       }
-      .social-buttons-xs {
-      }
-      .story-content {
-      }
+    }
+    .video-xs, .cs-video-xs, .social-buttons-xs, .cs-social-buttons-xs {
+      background-color: #fff;
+    }
+    .story-content, .cs-story-content {
+      background-color: #fff;
     }
   }
 
