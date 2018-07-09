@@ -50,7 +50,6 @@
           margin: 0 30px 0 10px;
           mix-blend-mode: multiply;
         }
-
         span {
           font-size: 16px;
         }
@@ -59,7 +58,7 @@
         margin-bottom: 15px;
         line-height: 1.5;
         font: {
-          size: 14px;
+          size: 16px;
         }
       }
     }
@@ -170,6 +169,9 @@
     }
     .story-narration {
       margin-bottom: 25px;
+      &.visible-xs-block {
+        font-size: 14px;
+      }
     }
     .story-results {
       margin-bottom: 25px;
@@ -182,6 +184,7 @@
         }
       }
       &.visible-xs-block {
+        font-size: 14px;
         .ul-container {
           display: flex;
           justify-content: center;
@@ -212,22 +215,6 @@
       margin-bottom: 25px;
       padding-bottom: 0;
       line-height: 1.5;
-      .row, .cs-row {
-        font-size: 0;
-        div[class^='col-'] {
-          float: none;
-          display: inline-block;
-          vertical-align: bottom;
-        }
-        h4 {
-          display: inline-block;
-          margin-bottom: 0;
-          margin-right: 10px;
-        }
-        a {
-          font-size: 14px;
-        }
-      }
       ul {
         margin: 15px 0 25px 0;
         li {
@@ -374,6 +361,8 @@
         .well {
           padding: 19px 0 0 0;
           border: 0
+        }
+        .story-narration {
         }
         .story-results {
           ul {
