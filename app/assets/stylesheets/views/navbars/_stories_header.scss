@@ -18,7 +18,6 @@
         .navbar-header {
           h4 {
             padding-top: 1px;  // push it down just a bit
-            font-size: 22px;
             margin-bottom: 0;
           }
           h4.light {
@@ -176,6 +175,15 @@
 
 @media only screen and (min-width: 768px) {
   #stories-header {
+    .navbar-container {
+      .row {
+        .navbar-header {
+          h4 {
+            font-size: 22px;
+          }
+        }
+      }
+    }
     &.index {
       margin-bottom: 30px;
     }

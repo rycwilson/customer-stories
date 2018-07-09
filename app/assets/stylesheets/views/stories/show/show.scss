@@ -356,6 +356,9 @@
     }
     .story-content, .cs-story-content {
       background-color: transparent;
+      h4 {
+        font-size: 20px;
+      }
       > .container {
         max-width: 500px;
         .well {
@@ -459,9 +462,6 @@
       // pull these elements user-select: none;
       > .container > .row > [class*='col-'] {
         margin-top: -50px;
-      }
-      h4 {
-        font-size: 20px;
       }
     }
     &.cs-testimonial {
