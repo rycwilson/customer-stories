@@ -15,11 +15,14 @@
 
   &.cs-overlay-container {
     background-color: transparent;
-    // skinny up the X icon
-    // ref: https://sridharkatakam.com/thin-font-awesome-close-icon/
+    // skinny up the X icon (ref: https://sridharkatakam.com/thin-font-awesome-close-icon/)
     .fa-times-thin:before {
       content: '\00d7';
     }
+  }
+
+  .well, .cs-well {
+    background-color: #fff;
   }
 
   .testimonial, .cs-testimonial {
@@ -164,9 +167,6 @@
       margin-bottom: 15px;
       line-height: 1.3
     }
-    .well, .cs-well {
-      background-color: #ffffff;
-    }
     .story-narration {
       margin-bottom: 25px;
       &.visible-xs-block {
@@ -210,15 +210,21 @@
           }
         }
       }
+      &.hidden-xs {
+        .row div:first-child, .cs-row div:first-child {
+          text-align: center;
+          padding-right: 0;
+        }
+      }
     }
     .related-stories {
       margin-bottom: 25px;
-      padding-bottom: 0;
-      line-height: 1.5;
+      // padding-bottom: 0;
+      // line-height: 1.5;
       ul {
-        margin: 15px 0 25px 0;
+        // margin: 15px 0 25px 0;
         li {
-          margin: 18px;
+          // margin: 18px;
         }
       }
       &.visible-xs {
@@ -228,6 +234,7 @@
       }
     }
     .story-contributors {
+      margin-bottom: 25px;
       > .well:first-child, .cs-well:first-child {
         margin-bottom: 0;
         position:relative;
@@ -286,20 +293,7 @@
 
   .social-buttons-xs, .cs-social-buttons-xs {
     &.social-buttons-xs, &.cs-social-buttons-xs {
-      // margin: 15px 0;
     }
-  }
-
-  .story-ctas {
-    margin: 0 0 30px 0;
-    .row div:first-child, .cs-row div:first-child {
-      text-align: center;
-      padding-right: 0;
-    }
-  }
-
-  .story-contributors {
-    margin-bottom: 25px;
   }
 
   #more-stories-container header {
@@ -312,10 +306,6 @@
         font-size: 13px !important;
       }
     }
-  }
-
-  @media only screen and (min-width: 992px) {
-
   }
 
   @media only screen and (max-width: 767px) {
