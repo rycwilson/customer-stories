@@ -19,7 +19,6 @@
 
           <div class="col-sm-6 navbar-header">
             <h4 class="<%= company.color_contrast %>">Customer Stories</h4>
-            <div id="google_translate_element"></div>
           </div>
 
           <div class="col-sm-6 home">
@@ -73,6 +72,7 @@
             <h4 class="<%= company.color_contrast %>">Customer Stories</h4>
 
             <% if ENV['HOST_NAME'] == 'customerstories.org' %>
+              <div id="google_translate_element"></div>
               <script type="text/javascript">
                 function googleTranslateElementInit() {
                   new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement. InlineLayout.SIMPLE}, 'google_translate_element');
