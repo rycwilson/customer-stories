@@ -71,12 +71,16 @@
 
           <div class="col-sm-6 navbar-header">
             <h4 class="<%= company.color_contrast %>">Customer Stories</h4>
-            <script type="text/javascript">
-              function googleTranslateElementInit() {
-                new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement. InlineLayout.SIMPLE}, 'google_translate_element');
-              }
-            </script>
-            <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+            <% if ENV['HOST_NAME'] == 'customerstories.org' %>
+              <script type="text/javascript">
+                function googleTranslateElementInit() {
+                  new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement. InlineLayout.SIMPLE}, 'google_translate_element');
+                }
+              </script>
+              <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+            <% end %>
+
           </div>
 
           <div class="col-sm-6">
