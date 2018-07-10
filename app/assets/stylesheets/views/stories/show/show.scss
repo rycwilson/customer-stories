@@ -570,6 +570,11 @@
       }
       &.no-video {
         .customer-logo-quote.hidden-xs {
+          .customer-logo {
+            img {
+              max-width: 65%;
+            }
+          }
           .customer-quote {
             padding: 0 80px 0 30px;
             blockquote {
