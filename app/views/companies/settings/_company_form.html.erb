@@ -76,16 +76,32 @@
 
       </div>  <!-- form-group -->
 
-      <div class="form-group">
-        <div class="row color-picker">
-          <div class="col-sm-6">
-            <%= f.label(:header_color_1, 'Header color - upper', class: 'control-label') %>
+      <div class="form-group color-picker">
+        <div class="row">
+          <div class="col-sm-12">
+          <%= f.label(nil, 'Header Colors', class: 'control-label') %>
+
+          </div>
+          <div class="col-sm-4">
+            <%= f.label(:header_color_1, 'Upper', class: 'control-label') %>
             <%= f.text_field(:header_color_1, class: 'form-control mini-colors upper') %>
           </div>
-          <div class="col-sm-6">
-            <%= f.label(:header_color_2, 'Header color - lower', class: 'control-label') %>
+          <div class="col-sm-4">
+            <%= f.label(:header_color_2, 'Lower', class: 'control-label') %>
             <%= f.text_field(:header_color_2, class: 'form-control mini-colors lower') %>
           </div>
+          <div class="col-sm-4">
+              <%= f.label(:header_text_color, 'Text', class: 'control-label') %>
+            <%= f.text_field(:header_text_color, class: 'form-control mini-colors text') %>
+
+          </div>
+<!--             <div class="col-sm-12">
+              <p class="help-block">Text color is selected automatically to provide sufficient contrast. You may override the selection below.</p>
+
+            </div>
+            <div class="col-sm-6 col-sm-offset-6">
+
+            </div> -->
         </div>
       </div>
 

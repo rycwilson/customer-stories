@@ -19,12 +19,7 @@
           h4 {
             padding-top: 1px;  // push it down just a bit
             margin-bottom: 0;
-          }
-          h4.light {
-            color: #fff;
-          }
-          h4.dark {
-            color: #333;
+            opacity: 0.9;
           }
         }
         .stories-search-form {
@@ -133,9 +128,6 @@
             color: rgba(51, 51, 51, 1.0);
           }
         }
-        // i.glyphicon-home:hover {
-        //   color: #222;
-        // }
       }
     }
     &.show:after {

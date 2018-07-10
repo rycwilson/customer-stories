@@ -44,12 +44,18 @@ function companyProfileListeners() {
       var $nav = $('#company-profile-form .stories-header');
       $nav.css({ background: $(this).val() });
       if (colorContrast(hexToRgb($(this).val())) === 'light') {
-        $nav.find('h3, .icon-button').addClass('light').removeClass('dark');
+        $nav.find('h3').addClass('light').removeClass('dark');
         $nav.find('i').css({ color: $(this).val() });
+        $('input[name="company[header_text_color]"]').minicolors('value', { color: '#ffffff' });
       } else {
         $nav.find('i').css({ color: 'rgba(255, 255, 255, 0.9)' });
-        $nav.find('h3, .icon-button').addClass('dark').removeClass('light');
+        $nav.find('h3').addClass('dark').removeClass('light');
+        $('input[name="company[header_text_color]"]').minicolors('value', { color: '#333333' });
       }
+    })
+
+    .on('change', '.color-picker .text', function () {
+      $('#company-profile-form .stories-header h3').css('color', $(this).val());
     })
 
     // Dynamically change the max-height of the select box
