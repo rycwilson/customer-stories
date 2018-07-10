@@ -68,11 +68,11 @@
 
         <% elsif current_page?(action: 'show') %>
 
-          <div class="col-sm-6 navbar-header">
+          <div class="col-sm-6 navbar-header" style="<%= !production? ? 'display:flex; align-items: center' : ''; %>">
             <h4 style="display: inline-block" class="<%= company.color_contrast %>">Customer Stories</h4>
 
-            <% if ENV['HOST_NAME'] == 'customerstories.org' %>
-              <div style="display: inline-block" id="google_translate_element"></div>
+            <% if !production? %>
+              <div style="display: inline-block; margin: 0 20px" id="google_translate_element"></div>
               <script type="text/javascript">
                 function googleTranslateElementInit() {
                   new google.translate.TranslateElement({pageLanguage: 'en', layout: google.translate.TranslateElement. InlineLayout.SIMPLE}, 'google_translate_element');
