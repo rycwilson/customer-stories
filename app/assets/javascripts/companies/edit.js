@@ -12,8 +12,9 @@ function companiesEdit () {
   if (url.match('#')) {
     $('.nav-layout-sidebar a[href="#' + url.split('#')[1] + '"]').tab('show');
   } else {
-    $('.layout-main').show();
+    $('.nav-layout-sidebar a[href="#company-profile"]').tab('show');
   }
+  $('.layout-main').show();
 
   $(document)
     .one('turbolinks:before-visit', function () {
