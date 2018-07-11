@@ -279,19 +279,6 @@
     background-color: #f2f2f2;
     padding-bottom: 25px;
     position: relative;
-    &:after {
-      content: '';
-      position: absolute;
-      top: 100%;
-      z-index: -1;
-      width: 100%;
-      // margin-top: -20px;
-      height: 90px;
-      // margin-top: 2px;
-      background-image: linear-gradient(to bottom, #f2f2f2 0%, #ffffff 100%);  //f2f2f2
-      background-repeat: repeat-x;
-      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2f2f2', endColorstr='#ffffffff', GradientType=0);
-    }
   }
 
   .social-buttons-xs, .cs-social-buttons-xs {
@@ -329,6 +316,7 @@
       }
     }
     .video-xs, .cs-video-xs {
+      background-color: #fff;
       > .container {
         max-width: 500px;
         // since .testimonial has a margin-bottom that accommodates the :after element,
