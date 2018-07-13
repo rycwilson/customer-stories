@@ -81,7 +81,8 @@
           position: relative;
           > p {
             &:before {
-              font-family: $metropolis-regular;
+              // choosing a web safe font here
+              font-family: 'Georgia' !important;
               content: open-quote;
               position: absolute;
               top: 0;
@@ -121,6 +122,9 @@
         }
         &.cs-customer-quote {
           blockquote {
+            &:before {  // overrides weebly
+              content: none
+            }
             > p {
               color: #666 !important;
               &:before {
@@ -160,8 +164,6 @@
       // bottom: -90px;  // mirrors margin-bottom
       z-index: -1;
       width: 100%;
-      // margin-top: -20px;
-      // margin-top: 2px;
       background-image: linear-gradient(to bottom, #ffffff 0%, #f2f2f2 100%);  //f2f2f2
       background-repeat: repeat-x;
       filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2f2f2', endColorstr='#ffffffff', GradientType=0);
@@ -385,15 +387,7 @@
         }
         .story-results {
           ul {
-            // list-style: none;
-            // li:before {
-            //   font-family: 'FontAwesome';
-            //   content: '\f00c';
-            //   margin-right: 20px;
-            //   color: #333;
-            // }
             li {
-              // list-style-position: outside;
               margin-bottom: 10px;
             }
           }
@@ -427,15 +421,15 @@
         .customer-quote, .cs-customer-quote {
           padding: 0 40px;
           blockquote {
-            &:before {  // overrides weebly
-              content: none
-            }
+            // &:before {  // overrides weebly
+            //   content: none
+            // }
             > p {
               font-size: 14px !important;
               margin-bottom: 10px;
               &:before {
                 top: -10px;
-                left: -22px;
+                left: -20px;
                 font-size: 34px !important;
               }
             }
@@ -444,29 +438,26 @@
           }
         }
       }
-      .no-video.hidden-xs {
-        padding: 15px 30px 0 30px;
-      }
       &.no-video {
         margin-bottom: 90px;
         .customer-logo-quote.hidden-xs {
           .customer-logo {
           }
           .customer-name span {
-            font-size: 16px;
+            font-size: 16px !important;
           }
           .customer-quote, .cs-customer-quote {
             padding: 0 40px 0 0;
             blockquote {
-              &:before {  // overrides weebly
-                content: none
-              }
+              // &:before {  // overrides weebly
+              //   content: none
+              // }
               > p {
-                font-size: 16px;
+                font-size: 16px !important;
                 margin-bottom: 15px;
                 &:before {
                   top: -10px;
-                  left: -22px;
+                  left: -20px;
                   font-size: 34px !important;
                 }
               }
@@ -513,11 +504,11 @@
               content: none
             }
             > p {
-              font-size: 16px;
+              font-size: 16px !important;
               margin-bottom: 15px;
               &:before {
                 top: -15px;
-                left: -26px;
+                left: -23px;
                 font-size: 40px !important;
               }
             }
@@ -528,27 +519,23 @@
           }
         }
       }
-      .no-video.hidden-xs {
-        padding: 15px 30px 0 30px;
-      }
       &.no-video {
         .customer-logo-quote.hidden-xs {
           .customer-quote, .cs-customer-quote {
             padding: 0 100px 0 0;
             blockquote {
-              &:before {  // overrides weebly
-                content: none
-              }
+              // &:before {  // overrides weebly
+              //   content: none
+              // }
               > p {
                 font-size: 16px !important;
                 &:before {
                   top: -15px;
-                  left: -26px;
+                  left: -23px;
                   font-size: 40px !important;
                 }
               }
               cite {
-                font-size: 13px;
                 p {
                 }
               }
@@ -590,15 +577,15 @@
         .customer-quote, .cs-customer-quote {
           padding: 0 70px;
           blockquote {
-            &:before {  // overrides weebly
-                content: none
-              }
+            // &:before {  // overrides weebly
+            //     content: none
+            //   }
             > p {
-              font-size: 19px !important;
+              font-size: 18px !important;
               &:before {
                 top: -18px;
-                left: -33px;
-                font-size: 50px !important;
+                left: -28px;
+                font-size: 48px !important;
               }
             }
             cite {
@@ -618,15 +605,12 @@
           .customer-quote, .cs-customer-quote {
             padding: 0 80px 0 30px;
             blockquote {
-              &:before {  // overrides weebly
-                content: none
-              }
               > p {
                 font-size: 18px !important;
                 &:before {
-                  top: -19px;
-                  left: -33px;
-                  font-size: 50px !important;
+                  top: -18px;
+                  left: -28px;
+                  font-size: 48px !important;
                 }
               }
             }

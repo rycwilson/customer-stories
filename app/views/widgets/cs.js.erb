@@ -402,9 +402,10 @@
         e.preventDefault();
         var $story = $(this);
         if ($story.hasClass('cs-loaded')) {
+
           setTimeout(function () {
             $story.removeClass('cs-loading cs-still-loading');
-          }, 400);  // matches overlay animation time
+          }, 300);  // matches overlay animation time
           return false;
         } else {
           loading($story);
@@ -417,8 +418,9 @@
             dataType: 'jsonp'
           })
             .done(function (data, status, jqxhr) {
+              console.log($story.index() + 1)
               $.when(
-                $container.find('article:nth-of-type(' + ($story.index() + 1).toString() + ')')
+                $container.find('.content__item:nth-of-type(' + ($story.index() + 1).toString() + ')')
                   .html(data.html)
               )
                 .done(function () {

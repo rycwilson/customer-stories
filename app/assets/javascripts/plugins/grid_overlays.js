@@ -176,10 +176,6 @@
 
       // csp modify... (the overlay will have its own scroll bar)...
       $('body').css('overflow-y', 'hidden');
-        // $('article.content__tem.content__item--show').css('visibility', 'visible');
-      // setTimeout(function () {
-
-      // }, 5000);
 
     });
   }
