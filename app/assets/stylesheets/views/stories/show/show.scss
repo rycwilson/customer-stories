@@ -143,8 +143,10 @@
       .customer-logo-quote.hidden-xs {
         display: flex;
         align-items: center;
-        .customer-logo img {
-          margin: 0 auto 25px auto;
+        .customer-logo {
+          img {
+            margin: 0 auto 25px auto;
+          }
         }
         .customer-name {
           margin: 0;
@@ -176,7 +178,6 @@
         .customer-logo {
           background-color: #f2f2f2;
           img {
-            margin: 0 auto;
             max-height: 65px;
             max-width: 60%;
           }
@@ -449,7 +450,7 @@
       &.no-video {
         margin-bottom: 90px;
         .customer-logo-quote.hidden-xs {
-          .customer-logo span {
+          .customer-logo {
           }
           .customer-name span {
             font-size: 16px;
