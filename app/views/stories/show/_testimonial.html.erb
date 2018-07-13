@@ -3,11 +3,11 @@
 
   <div class="<%= is_widget ? 'cs-row' : 'row' %>">
 
-    <div class="col-xs-12 <%= video_present ? 'col-sm-6 col-md-7' : 'no-video' %>">
+    <div class="col-xs-12 <%= story.video_url.present? ? 'col-sm-6 col-md-7' : 'no-video' %>">
 
-      <div class="customer-logo-quote row hidden-xs">
+      <div class="customer-logo-quote hidden-xs <%= is_widget ? 'cs-row' : 'row' %>">
 
-        <div class="text-center <%= video_present ? 'col-sm-12' : (long_customer_name ? 'col-sm-4' : 'col-sm-4 col-lg-3') %>">
+        <div class="text-center <%= story.video_url.present? ? 'col-sm-12' : (long_customer_name ? 'col-sm-4' : 'col-sm-4 col-lg-3') %>">
           <div class="customer-logo">
             <%= image_tag (story.customer.logo_url || LOGO_PLACEHOLDER_URL), class: 'img-responsive' %>
           </div>
@@ -17,7 +17,7 @@
         </div>
 
 
-        <div class="customer-quote <%= video_present ? 'col-sm-12' : (long_customer_name ? 'col-sm-8' : 'col-sm-8 col-lg-8') %>">
+        <div class="<%= is_widget ? 'cs-customer-quote' : 'customer-quote' %> <%= story.video_url.present? ? 'col-sm-12' : (long_customer_name ? 'col-sm-8' : 'col-sm-8 col-lg-8') %>">
 
           <blockquote>
             <p><%= story.quote %></p>
@@ -32,7 +32,7 @@
         </div>
 
         <!-- filler -->
-        <div class="<%= video_present ? 'hidden' : 'col-lg-1' %>"></div>
+        <div class="<%= story.video_url.present? ? 'hidden' : 'col-lg-1' %>"></div>
 
       </div>
 
@@ -63,7 +63,7 @@
       </div>
     </div>
 
-    <div class="<%= is_widget ? 'cs-story-video' : 'story-video' %> <%= video_present ? 'hidden-xs col-sm-6 col-md-5' : 'hidden' %>">
+    <div class="<%= is_widget ? 'cs-story-video' : 'story-video' %> <%= story.video_url.present? ? 'hidden-xs col-sm-6 col-md-5' : 'hidden' %>">
 
       <!-- <div itemprop='video' itemscope itemtype='//schema.org/VideoObject'> -->
         <!-- <meta itemprop='' content='' -->

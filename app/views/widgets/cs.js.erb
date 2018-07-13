@@ -41,9 +41,16 @@
         href: "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
       }).appendTo('head');
 
+      // reset the css (none of this works with weebly, gah!)
+      // ref: https://stackoverflow.com/questions/15901030/reset-remove-css-styles-for-element-only
+      //
+      // $container.css('all', 'initial');
+      // $container.find('*').css('all', 'unset');
+      //
+      // $container.css('all', 'revert');
+
       // wait for stylesheet to load ...
       $stylesheet.appendTo('head').on('load', function () {
-
 
         $.ajax({
           url: "<%= URI.join(root_url, widget_html_path(@type)) %>",
@@ -417,9 +424,14 @@
                 .done(function () {
                   // loadVideoThumbnail();
                   // console.log($('#cs-gallery article:nth-of-type(' + ($story.index() + 1).toString() + ')').html())
-                    $story.addClass('cs-loaded')
-                    $container.find('a').css('pointer-events', 'auto');
-                    // the grid_overlays.js listener is vanilla js, won't pick up on $story.trigger('click')
+                    $story.addClass('cs-loaded');
+
+                    // when loading, all cards were set to pointer-events: none
+                    // now undo that...
+                    $container.find('a').removeAttr('style');
+
+                    // the grid_overlays.js listener is vanilla js,
+                    // won't pick up on $story.trigger('click')
                     $story[0].click();
                   // $('.story-overlay-container').imagesLoaded(function () {
                   // })

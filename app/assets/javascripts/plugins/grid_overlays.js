@@ -39,7 +39,9 @@
     closeCtrl = contentItemsContainer.querySelector('.close-button'),
     current = -1,
     lockScroll = false, xscroll, yscroll,
-    isAnimating = false;
+    isAnimating = false,
+    // csp...
+    bodyScrollSetting = $('body').css('overflow-y');
 
   /**
    * gets the viewport width and height
@@ -88,8 +90,8 @@
     });
 
     closeCtrl.addEventListener('click', function() {
-      // csp modify: return setting to whatever it was...
-      $('body').css('overflow-y', 'auto');
+      // csp modify: return setting to whatever it was before overlay was opened
+      $('body').css('overflow-y', bodyScrollSetting);
       hideContent();
     });
 
@@ -118,8 +120,8 @@
     var dummy = document.createElement('div');
     dummy.className = 'placeholder';
     // set the width/heigth and position
-    dummy.style.WebkitTransform = 'translate3d(' + (item.offsetLeft - 5) + 'px, ' + (item.offsetTop - 5) + 'px, 0px) scale3d(' + item.offsetWidth/gridItemsContainer.offsetWidth + ',' + (item.offsetHeight)/getViewport('y') + ',1)';
-    dummy.style.transform = 'translate3d(' + (item.offsetLeft - 5) + 'px, ' + (item.offsetTop - 5) + 'px, 0px) scale3d(' + item.offsetWidth/gridItemsContainer.offsetWidth + ',' + (item.offsetHeight)/getViewport('y') + ',1)';
+    dummy.style.WebkitTransform = 'translate3d(' + item.offsetLeft + 'px, ' + item.offsetTop + 'px, 0px) scale3d(' + item.offsetWidth/gridItemsContainer.offsetWidth + ',' + (item.offsetHeight)/getViewport('y') + ',1)';
+    dummy.style.transform = 'translate3d(' + item.offsetLeft + 'px, ' + item.offsetTop + 'px, 0px) scale3d(' + item.offsetWidth/gridItemsContainer.offsetWidth + ',' + (item.offsetHeight)/getViewport('y') + ',1)';
 
     // add transition class
     classie.add(dummy, 'placeholder--trans-in');
@@ -174,6 +176,10 @@
 
       // csp modify... (the overlay will have its own scroll bar)...
       $('body').css('overflow-y', 'hidden');
+        // $('article.content__tem.content__item--show').css('visibility', 'visible');
+      // setTimeout(function () {
+
+      // }, 5000);
 
     });
   }
@@ -199,6 +205,7 @@
         classie.remove(gridItem, 'grid__item--animate');
         lockScroll = false;
         window.removeEventListener( 'scroll', noscroll );
+
       });
 
       // reset current

@@ -26,11 +26,6 @@
   }
 
   .testimonial, .cs-testimonial {
-    &.cs-testimonial {
-      p {
-        font-family: inherit;
-      }
-    }
     position: relative;
     color: #888;
     > .container > .row {
@@ -54,66 +49,94 @@
           mix-blend-mode: multiply;
         }
         span {
-          font-size: 16px;
+          font-size: 16px !important;
         }
       }
-      .customer-quote p {
-        margin-bottom: 15px;
-        line-height: 1.5;
-        font: {
-          size: 16px;
+      .customer-quote, .cs-customer-quote {
+        p {
+          margin-bottom: 15px;
+          line-height: 1.5;
+          font-size: 16px !important;
         }
       }
     }
     .customer-logo-quote.hidden-xs {
-      .customer-logo img {
-        margin: 0 auto;
-        max-height: 65px;
-        max-width: 60%;
+      .customer-logo {
+        img {
+          margin: 0 auto;
+          max-height: 65px;
+          max-width: 60%;
+        }
       }
       .customer-name {
         margin: 20px 0;
-        span {
-          font: {
-            size: 16px;
-            // weight: bold;
-          }
-        }
       }
-      .customer-quote {
+      .customer-quote, .cs-customer-quote {
         blockquote {
-          &:before {
-            font-family: $metropolis-regular;
-            content: open-quote;
-            position: absolute;
-            top: 0;
-            left: -32px;
-            font-size: 45px;
-            color: #bbb;
-          }
+          background: transparent;  // overrides weebly
           border: none;
-          color: #888;
           font-style: italic;
           margin-bottom: 0;
           padding: 0;
           position: relative;
           > p {
-            line-height: 1.5;
+            &:before {
+              font-family: $metropolis-regular;
+              content: open-quote;
+              position: absolute;
+              top: 0;
+              left: -32px;
+              font-size: 45px !important;
+              color: #bbb;
+            }
+            line-height: 1.5 !important;
+            font-weight: 400 !important;
           }
           cite {
-            font-style: normal;
-            font-size: 13px;
             p {
+              font-style: normal;
+              font: {
+                size: 13px !important;
+                weight: 400 !important;
+              }
+              line-height: 1.5 !important;
               margin-bottom: 0;
-              &.cite-name {
-                // font-weight: bold;
+            }
+          }
+        }
+        &.customer-quote {
+          blockquote {
+            > p {
+              color: #888 !important;
+              &:before {
+                color: #bbb !important;
+              }
+            }
+            cite {
+              p {
+                color: #888 !important;
+              }
+            }
+          }
+        }
+        &.cs-customer-quote {
+          blockquote {
+            > p {
+              color: #666 !important;
+              &:before {
+                color: #999 !important;
+              }
+            }
+            cite {
+              p {
+                color: #666 !important;
               }
             }
           }
         }
       }
     }
-    .story-video.hidden-xs {
+    .story-video.hidden-xs, .cs-story-video.hidden-xs {
       margin: 0;
     }
     &.no-video {
@@ -142,9 +165,22 @@
       filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2f2f2', endColorstr='#ffffffff', GradientType=0);
     }
     &.cs-testimonial {
-      margin-bottom: 0;
-      :after {
+      // margin-bottom: 0;
+      p, span {
+        font-family: inherit;
+      }
+      &:after {
         content: none;
+      }
+      .customer-logo-quote.hidden-xs {
+        .customer-logo {
+          background-color: #f2f2f2;
+          img {
+            margin: 0 auto;
+            max-height: 65px;
+            max-width: 60%;
+          }
+        }
       }
     }
   }
@@ -293,7 +329,7 @@
   @media only screen and (max-width: 991px) {
     .cs-story-content {
       span, p {
-        font-size: 13px !important;
+        // font-size: 13px !important;
       }
     }
   }
@@ -372,26 +408,35 @@
       &:after {
         bottom: -90px;  // mirrors margin-bottom (above)
       }
+      &.cs-testimonial {
+        margin-bottom: 30px;
+        &.no-video {
+          margin-bottom: 30px;
+        }
+      }
       .customer-logo-quote.hidden-xs {
         .customer-logo {
         }
         .customer-name {
           margin: 10px 0;
           span {
-            font-size: 14px;
+            font-size: 14px !important;
           }
         }
-        .customer-quote {
+        .customer-quote, .cs-customer-quote {
           padding: 0 40px;
           blockquote {
-            &:before {
-              top: -10px;
-              left: -20px;
-              font-size: 30px;
+            &:before {  // overrides weebly
+              content: none
             }
             > p {
-              font-size: 14px;
+              font-size: 14px !important;
               margin-bottom: 10px;
+              &:before {
+                top: -10px;
+                left: -22px;
+                font-size: 34px !important;
+              }
             }
             cite {
             }
@@ -409,22 +454,23 @@
           .customer-name span {
             font-size: 16px;
           }
-          .customer-quote {
+          .customer-quote, .cs-customer-quote {
             padding: 0 40px 0 0;
             blockquote {
-              &:before {
-                top: -12px;
-                left: -26px;
-                font-size: 40px;
+              &:before {  // overrides weebly
+                content: none
               }
               > p {
                 font-size: 16px;
                 margin-bottom: 15px;
-                // line-height: 28px;
+                &:before {
+                  top: -10px;
+                  left: -22px;
+                  font-size: 34px !important;
+                }
               }
               cite {
                 p {
-                  // line-height: 1.5;
                 }
               }
             }
@@ -455,24 +501,27 @@
         }
         .customer-name {
           margin: 15px 0;
-          span { font-size: 16px; }
+          span {
+            font-size: 16px !important;
+          }
         }
-        .customer-quote {
+        .customer-quote, .cs-customer-quote {
           padding: 0 60px;
           blockquote {
-            &:before {
-              top: -15px;
-              left: -27px;
-              font-size: 40px;
+            &:before {  // overrides weebly
+              content: none
             }
             > p {
               font-size: 16px;
               margin-bottom: 15px;
-              // line-height: 28px;
+              &:before {
+                top: -15px;
+                left: -26px;
+                font-size: 40px !important;
+              }
             }
             cite {
               p {
-                // line-height: 1.5;
               }
             }
           }
@@ -483,22 +532,23 @@
       }
       &.no-video {
         .customer-logo-quote.hidden-xs {
-          .customer-quote {
+          .customer-quote, .cs-customer-quote {
             padding: 0 100px 0 0;
             blockquote {
-              &:before {
-                top: -13px;
-                left: -32px;
-                font-size: 45px;
+              &:before {  // overrides weebly
+                content: none
               }
               > p {
-                font-size: 16px;
-                // line-height: 28px;
+                font-size: 16px !important;
+                &:before {
+                  top: -15px;
+                  left: -26px;
+                  font-size: 40px !important;
+                }
               }
               cite {
                 font-size: 13px;
                 p {
-                  // line-height: 1.5;
                 }
               }
             }
@@ -533,24 +583,25 @@
       .customer-logo-quote.hidden-xs {
         .customer-name {
           span {
-            font-size: 18px;
+            font-size: 18px !important;
           }
         }
-        .customer-quote {
+        .customer-quote, .cs-customer-quote {
           padding: 0 70px;
           blockquote {
-            &:before {
-              top: -15px;
-              left: -30px;
-              font-size: 45px;
-            }
+            &:before {  // overrides weebly
+                content: none
+              }
             > p {
-              font-size: 18px;
-              // line-height: 28px;
+              font-size: 19px !important;
+              &:before {
+                top: -18px;
+                left: -33px;
+                font-size: 50px !important;
+              }
             }
             cite {
               p {
-                // line-height: 1.5;
               }
             }
           }
@@ -563,11 +614,19 @@
               max-width: 70%;
             }
           }
-          .customer-quote {
+          .customer-quote, .cs-customer-quote {
             padding: 0 80px 0 30px;
             blockquote {
+              &:before {  // overrides weebly
+                content: none
+              }
               > p {
-                font-size: 18px;
+                font-size: 18px !important;
+                &:before {
+                  top: -19px;
+                  left: -33px;
+                  font-size: 50px !important;
+                }
               }
             }
           }
