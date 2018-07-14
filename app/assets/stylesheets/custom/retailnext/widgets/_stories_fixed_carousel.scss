@@ -1,11 +1,4 @@
 
-#more-stories-container, .cs-section {
-  header {
-    // font-family: $metropolis-light;
-    text-transform: uppercase;
-  }
-}
-
 .cs-section {
   .cs-header-row {
     height: 44px;
@@ -13,6 +6,7 @@
   .cs-header {
     font-size: 16px;
     line-height: 28px;
+    text-transform: uppercase;
     .cs-open-close {
       padding-top: 9px
     }

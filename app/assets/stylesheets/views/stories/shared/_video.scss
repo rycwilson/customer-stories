@@ -1,48 +1,45 @@
 
 // note body class on story / edit content page may be .stories.edit (sync load)
 // or .companies.show (async load)
-.stories.show, .stories.edit, .companies.show {
 
-  // ref: http://www.labnol.org/internet/light-youtube-embeds/27941/
-  .video-thumb-container {
-    position: relative;
-    padding-bottom: 56.25%;  // ??  but apparently necessary
-    overflow: hidden;
-    cursor: pointer;
-    img {
-      width: 100%;
-    }
-    img, .play-button, .fa-play {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-    }
-    .play-button {
-      width: 70px;
-      height: 45px;
-      background-color: rgba(0,0,0,0.6);
-      border-radius: 4px;
-    }
+// ref: http://www.labnol.org/internet/light-youtube-embeds/27941/
+.video-thumb-container {
+  position: relative;
+  padding-bottom: 56.25%;  // ??  but apparently necessary
+  overflow: hidden;
+  cursor: pointer;
+  img {
+    width: 100%;
   }
+  img, .play-button, .fa-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .play-button {
+    width: 70px;
+    height: 45px;
+    background-color: rgba(0,0,0,0.6);
+    border-radius: 4px;
+  }
+}
 
-  @media only screen and (max-width: 767px) {
-    #video-modal iframe {
-      height: 260px;
-    }
+@media only screen and (max-width: 767px) {
+  #video-modal iframe {
+    height: 260px;
   }
-  @media only screen and (min-width: 768px) {
-    #video-modal iframe {
-      height: 330px;
-    }
+}
+@media only screen and (min-width: 768px) {
+  #video-modal iframe {
+    height: 330px;
   }
-  @media only screen and (min-width: 992px) {
-    #video-modal iframe {
-      height: 490px;
-    }
+}
+@media only screen and (min-width: 992px) {
+  #video-modal iframe {
+    height: 490px;
   }
-  @media only screen and (min-width: 1200px) {
-
-  }
+}
+@media only screen and (min-width: 1200px) {
 
 }

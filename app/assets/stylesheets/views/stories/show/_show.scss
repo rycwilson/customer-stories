@@ -2,15 +2,20 @@
 .stories.show, .cs-overlay-container {
 
   @import 'social_share_buttons';
-  @import '../../../custom/fonts';
+  @import '../shared/cookie_consent';
+  @import '../shared/video';
+  // @import '../shared/linkedin_widget';  // not using these presently
 
   $max-xs-width: 500px;
 
   text-align: left;   // override weebly
 
   &.stories.show {
-    @import '../../widgets/stories_fixed_carousel';  // more stories
     background-color: #fff;
+    #more-stories-container {
+      @import '../../widgets/widgets_bootstrap';
+      @import '../../widgets/stories_fixed_carousel';
+    }
   }
 
   &.cs-overlay-container {

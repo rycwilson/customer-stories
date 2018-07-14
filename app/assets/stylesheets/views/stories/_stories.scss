@@ -1,54 +1,18 @@
 
-@import 'shared/*';
-@import 'index/*';
+@import 'index/index';
 @import 'show/show';
 @import 'edit/edit';
-@import 'bootstrap-horizon/bootstrap-horizon';
 
-.stories.show, .stories.index {
-
-  // cookie consent
-  .cc-window {
-    font-family: inherit;
-    .cc-btn {
-      font-weight: 600;
-      color: #fff;
-      text-decoration: none;
-    }
-    .cc-btn.cc-allow {
-      background-color: #fff;
-      border-color: #ccc;
-      color: #333;
-      border-width: 1px;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
-    }
-    .cc-btn.cc-allow:hover {
-      background-color: #e6e6e6;
-      border-color: #adadad;
-    }
-  }
-  // instead of displaying the default tab,
-  // include a link on privacy page that triggers a click of .cc-revoke
-  .cc-revoke {
-    display: none !important;
-  }
-
+.stories.show, .stories.index, .companies.show {
+  @import 'shared/cookie_consent';
+  @import 'shared/gallery';
 }
 
-
-#stories-gallery {
-
-  // @media only screen and (min-width: 768px) {
-
-  // }
-  // @media only screen and (min-width: 992px) {
-
-  // }
-  // @media only screen and (min-width: 1200px) {
-
-  // }
-
+// .stories.show imports its own copy, since also needed for overlay
+.stories.edit, .companies.show {
+  @import 'shared/video';
 }
+
 
 
 

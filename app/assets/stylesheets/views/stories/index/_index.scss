@@ -1,6 +1,8 @@
 
 .stories.index {
 
+  @import 'grid_previews';
+
   .filters-container {
     .stories-search-form {
       .input-group {

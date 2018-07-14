@@ -1,7 +1,14 @@
 
 &.stories.show, .cs-overlay-container {
 
-  @import 'widgets/stories_fixed_carousel';
+  &.stories.show {
+    #more-stories-container {
+      @import 'widgets/stories_fixed_carousel';
+      .cs-header {
+        font-family: $metropolis-regular;  // don't apply this to external widget
+      }
+    }
+  }
 
   .testimonial, .cs-testimonial {
     .customer-logo-quote.visible-xs-block {
@@ -22,7 +29,6 @@
       background-image: linear-gradient(to top, #f5f5f3 0%, #ffffff 100%);
     }
   }
-
 
   .video-xs, .cs-video-xs, .social-buttons-xs, .cs-social-buttons-xs {
     background-color: #f5f5f3;
