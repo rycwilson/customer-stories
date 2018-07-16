@@ -122,16 +122,17 @@ function playVideoListener () {
         };
 
     if (provider === 'youtube') {
-      videoQuery = '/?autoplay=1&enablejsapi=1&controls=0&iv_load_policy=3&showinfo=0&rel=0';
+      videoQuery = (videoUrl.includes('?') ? '&' : '?') + 'autoplay=1&enablejsapi=1&controls=0&iv_load_policy=3&showinfo=0&rel=0';
     } else if (provider === 'vimeo') {
-      videoQuery = '/?autoplay=1';
+      videoQuery = (videoUrl.includes('?') ? '&' : '?') + 'autoplay=1';
     }
 
-    if ($(document).width() < 600) {
+    if ($(document).width() < 768) {
       e.stopPropagation();  // stop modal from being triggered
       $(this).parent().replaceWith($("<iframe src='" + videoUrl + videoQuery + "'frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>"));
 
     } else { // play video in modal
+console.log('loading video, ', videoUrl + videoQuery);
 
       modalPlayerWindow.location.replace(videoUrl + videoQuery);
 

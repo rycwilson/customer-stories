@@ -25,21 +25,18 @@
   }
 }
 
-@media only screen and (max-width: 767px) {
-  #video-modal iframe {
-    height: 260px;
-  }
-}
 @media only screen and (min-width: 768px) {
-  #video-modal iframe {
+  #video-modal iframe, #cs-video-modal iframe {
     height: 330px;
   }
 }
+
 @media only screen and (min-width: 992px) {
-  #video-modal iframe {
+  #video-modal iframe, #cs-video-modal iframe {
     height: 490px;
   }
 }
+
 @media only screen and (min-width: 1200px) {
 
 }

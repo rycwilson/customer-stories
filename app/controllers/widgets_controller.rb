@@ -40,7 +40,7 @@ class WidgetsController < ApplicationController
   end
 
   def track
-    response.headers.delete('X-Frame-Options')
+    response.headers.delete('X-Frame-Options')  # allows the tracking iframe to be rendered on host site
     render(layout: false)
   end
 

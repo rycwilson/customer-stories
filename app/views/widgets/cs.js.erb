@@ -62,7 +62,8 @@
         })
           .done(function (data) {
             $container.html(data.html);
-            // wait for all images to load so dimension calculations are correct ...
+            // wait for all images to load
+            // so dimension calculations are correct ...
             var $images = $container.find('img'),
                 loadedImages = 0;
             $images.on('load', function () {

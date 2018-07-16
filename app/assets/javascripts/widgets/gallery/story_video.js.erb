@@ -12,7 +12,7 @@
       videoQueryString,
       thumbSrc;
 
-      console.log($modal);
+  console.log(provider, videoId, videoUrl);
 
   loadVideoThumbnail();
 
@@ -73,9 +73,9 @@
             } else {
               $.when(
                 $thumbContainers.find('img').after(
-                  "<div class='play-button'>" +
-                    "<i class='fa fa-2x fa-inverse fa-play'></i>" +
-                  "</div>"
+                  '<div class="play-button">' +
+                    '<i class="fa fa-2x fa-inverse fa-play"></i>' +
+                  '</div>'
                 )
               )
                 .then(function () { videoListener(); });
@@ -110,6 +110,9 @@
   function videoListener () {
 
     $(document)
+      .on('click', '.cs-content .close-button', function () {
+
+      })
       .on('click', '.video-thumb-container img, .video-thumb-container .play-button', function (e) {
 
         var pausePlayer = function () {
@@ -124,10 +127,11 @@
               }
             };
 
+
         if (provider === 'youtube') {
-          videoQueryString = '/?autoplay=1&enablejsapi=1&controls=0&iv_load_policy=3&showinfo=0&rel=0';
+          videoQueryString = (videoUrl.includes('?') ? '&' : '?') + 'autoplay=1&enablejsapi=1&controls=0&iv_load_policy=3&showinfo=0&rel=0';
         } else if (provider === 'vimeo') {
-          videoQueryString = '/?autoplay=1';
+          videoQueryString = (videoUrl.includes('?') ? '&' : '?') + '';
         }
 
         if ($(document).width() < 768) {
@@ -135,21 +139,23 @@
           $(this).parent().replaceWith($("<iframe src='" + videoUrl + videoQueryString + "'frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>"));
 
         } else { // play video in modal
+          console.log('loading', videoUrl + videoQueryString)
+          window.addEventListener("message", function (a) { console.log(a); }, false);
 
-          videoPlayerWindow.location.replace(videoUrl + videoQueryString);
+          // videoPlayerWindow.location.replace(videoUrl + videoQueryString);
+          $modal.find('iframe').attr('src', videoUrl + videoQueryString);
 
-          $modal.find('button.close').on('click', function () {
-            pausePlayer();
-          });
+          $modal
+            .find('button.close').on('click', pausePlayer)
+              .end()
+            .one('hide.bs.modal', pausePlayer);
 
-          $modal.one('hide.bs.modal', function () {
-            pausePlayer();
-          });
 
-          $modal.one('hidden.bs.modal', function () {
-            // warning: this has historically caused browser to hang
-            // videoPlayerWindow.location.replace('');
-          });
+          // $modal.one('hidden.bs.modal', function () {
+          //   // warning: this has historically caused browser to hang
+          //   // videoPlayerWindow.location.replace('');
+          //   $modal.find('iframe').attr('src', 'about:blank');
+          // });
         }
       });
   }

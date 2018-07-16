@@ -70,6 +70,7 @@ class StoriesController < ApplicationController
   def show
     if params[:is_widget]
       @is_widget = @is_external = true
+      response.headers.delete('X-Frame-Options')  # allows the video iframe to be rendered on host site
       respond_to do |format|
         format.js do
           json = { html: render_story_partial(@story) }.to_json

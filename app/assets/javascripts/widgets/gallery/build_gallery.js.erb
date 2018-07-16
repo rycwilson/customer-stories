@@ -17,7 +17,6 @@ function cspBuildGalleryWidget ($container, cspRootUrl) {
    * but in this file (served outside asset pipeline), asset_url returns only the path.
    * solution: pass in root_url from cs.js.erb
    */
-  $.getScript(cspRootUrl + "<%= asset_path('widgets/gallery/bootstrap_modal') %>");
   $.getScript(cspRootUrl + "<%= asset_path('widgets/gallery/story_overlays') %>");
 
   $container

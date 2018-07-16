@@ -156,7 +156,7 @@ function widgetsMonitor () {
         if ($('body').hasClass('stories show')) {
           // For Chrome, the origin property is in the event.originalEvent object.
           var origin = event.origin || event.originalEvent.origin;
-          console.log(event.data);
+          // console.log(event.data);
           if (event.origin === "https://platform.linkedin.com" &&
               event.data.includes('-ready') && firstWidgetIndex === null) {
             firstWidgetIndex = parseInt(event.data.match(/\w+_(\d+)-ready/)[1], 10);
