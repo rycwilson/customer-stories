@@ -1,9 +1,10 @@
 
-function initCspVideo ($storyCard) {
+function cspInitVideo ($storyCard) {
 
   // two containers: regular and xs
   var $story = $('.content__item:nth-of-type(' + ($storyCard.index() + 1) + ')'),
-      $iframe = $('#cs-video-modal iframe'),
+      // $iframe = $('#cs-video-modal iframe'),
+      $iframe = $story.find('iframe'),
       videoPlayerWindow = $iframe[0].contentWindow,
       $thumbContainers = $story.find('.video-thumb-container'),
       provider = $thumbContainers.data('provider'),
@@ -19,7 +20,7 @@ function initCspVideo ($storyCard) {
     // no video, or wistia video
     if ($story.find('.cs-testimonial').hasClass('no-video') ||
         $thumbContainers.length === 0 ||
-        $thumbContainers.children().length !== 0) {
+        $thumbContainers.find('img').not('#cs-video-placeholder').length !== 0) {
       console.log('loadVIdeoThumbnail() return false');
       return false;
     }
@@ -79,7 +80,7 @@ function initCspVideo ($storyCard) {
                   '</div>'
                 )
               )
-                .then(function () { videoListener(); });
+                .then(videoListeners);
             }
           });
         });
@@ -108,7 +109,7 @@ function initCspVideo ($storyCard) {
     }
   }
 
-  function pausePlayer () {
+  function pauseVideo () {
     if (provider === 'youtube') {
       videoPlayerWindow.postMessage(
         '{"event":"command","func":"pauseVideo","args":""}', '*'
@@ -123,25 +124,28 @@ function initCspVideo ($storyCard) {
   function videoListeners () {
 
     // listen for iframe post messages
-    window.addEventListener("message", function (mesg) { console.log(mesg); }, false);
+    // window.addEventListener("message", function (mesg) { console.log(mesg); }, false);
 
     $(document)
-      // empty the video iframe when the story is closed
+
+      // disable modal video
+      .on('show.bs.modal', '#cs-video-modal', function (e) {
+        e.preventDefault();
+      })
+
+      // empty the modal iframe when the story is closed
       .on(
         'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend',
         '.cs-content',
         function () {
-          console.log('transition');
-          // if a story was closed, empty the video iframe
-          if ($('.content__item--show').length === 0) {
-            $iframe.attr('src', '');
-          }
+          // console.log('transition');
+          // if ($('.content__item--show').length === 0) {
+          //   $iframe.attr('src', '');
+          // }
         }
       )
-      .on('click', '#cs-video-modal button.close', pausePlayer)
-      .on('hide.bs.modal', '#cs-video-modal', pausePlayer)
-      .on('click', '.cs-content .close-button', function () {
-      })
+      .on('hide.bs.modal', '#cs-video-modal', pauseVideo)
+      .on('click', '.cs-content .close-button', pauseVideo)
       .on('click', '.video-thumb-container img, .video-thumb-container .play-button', function (e) {
 
         if (provider === 'youtube') {
@@ -154,17 +158,23 @@ function initCspVideo ($storyCard) {
           e.stopPropagation();  // stop modal from being triggered
           $(this).parent().replaceWith($("<iframe src='" + videoUrl + videoQueryString + "'frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>"));
 
-        } else { // play video in modal
+        } else {
           // console.log('loading', videoUrl + videoQueryString)
 
+          $iframe
+            .one('load', function () {
+                $(this).next().remove().end()  // remove thumbnail image
+                       .removeClass('hidden');
+              })
+            .attr('src', videoUrl + videoQueryString);
 
-// $('.cs-story-video img').replaceWith(
-//     '<iframe class="embed-responsive-item" src="' + videoUrl + videoQueryString + '" allowfullscreen></iframe>'
-//   );
+          // this will cause browser to hang
           // videoPlayerWindow.location.replace(videoUrl + videoQueryString);
-          if ($iframe.attr('src') !== videoUrl + videoQueryString) {
-            $iframe.attr('src', videoUrl + videoQueryString);
-          }
+          //
+
+          // if ($iframe.attr('src') !== videoUrl + videoQueryString) {
+          //   $iframe.attr('src', videoUrl + videoQueryString);
+          // }
 
         }
       });

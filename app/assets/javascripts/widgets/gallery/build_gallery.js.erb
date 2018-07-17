@@ -47,12 +47,12 @@ function cspBuildGalleryWidget ($container, cspRootUrl) {
             )
               .done(function () {
                 $storyCard.addClass('cs-loaded');
-                if (typeof initCspVideo !== 'function') {
+                if (typeof cspInitVideo !== 'function') {
                   $.getScript(cspRootUrl + "<%= asset_path('widgets/gallery/story_video') %>", function () {
-                    initCspVideo($storyCard);
+                    cspInitVideo($storyCard);
                   });
                 } else {
-                  initCspVideo($storyCard);
+                  cspInitVideo($storyCard);
                 }
 
                 // when loading, all cards were set to pointer-events: none
