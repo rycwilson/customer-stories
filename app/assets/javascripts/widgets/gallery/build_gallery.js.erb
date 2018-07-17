@@ -2,12 +2,13 @@
 function cspBuildGalleryWidget ($container, cspRootUrl) {
 
   var Modernizr,
-      loading = function ($story) {
-        $story.addClass('cs-loading');
+      $story,
+      loading = function ($storyCard) {
+        $storyCard.addClass('cs-loading');
         $('#cs-gallery a').css('pointer-events', 'none');
         setTimeout(function () {
-          if (!$story.hasClass('cs-loaded')) {
-            $story.addClass('cs-still-loading');
+          if (!$storyCard.hasClass('cs-loaded')) {
+            $storyCard.addClass('cs-still-loading');
           }
         }, 1000);
       };
@@ -22,16 +23,16 @@ function cspBuildGalleryWidget ($container, cspRootUrl) {
   $container
     .on('click', 'a.published', function (e) {
       e.preventDefault();
-      var $story = $(this);
-      if ($story.hasClass('cs-loaded')) {
+      var $storyCard = $(this);
+      if ($storyCard.hasClass('cs-loaded')) {
         setTimeout(function () {
-          $story.removeClass('cs-loading cs-still-loading');
+          $storyCard.removeClass('cs-loading cs-still-loading');
         }, 300);  // matches overlay animation time
         return false;
       } else {
-        loading($story);
+        loading($storyCard);
         $.ajax({
-          url: $story.attr('href'),
+          url: $storyCard.attr('href'),
           method: 'GET',
           data: {
             is_widget: true
@@ -40,21 +41,29 @@ function cspBuildGalleryWidget ($container, cspRootUrl) {
         })
           .done(function (data, status, jqxhr) {
             $.when(
-              $container.find('.content__item:nth-of-type(' + ($story.index() + 1).toString() + ')')
+              $container
+                .find('.content__item:nth-of-type(' + ($storyCard.index() + 1) + ')')
                 .html(data.html)
             )
               .done(function () {
-                $story.addClass('cs-loaded');
-                $.getScript(cspRootUrl + "<%= asset_path('widgets/gallery/story_video') %>", function () {
+                $storyCard.addClass('cs-loaded');
+                if (typeof initCspVideo !== 'function') {
+                  $.getScript(cspRootUrl + "<%= asset_path('widgets/gallery/story_video') %>", function () {
+                    initCspVideo($storyCard);
+                  });
+                } else {
+                  initCspVideo($storyCard);
+                }
 
-                  // when loading, all cards were set to pointer-events: none
-                  // now undo that...
-                  $container.find('a').removeAttr('style');
+                // when loading, all cards were set to pointer-events: none
+                // now undo that...
+                $container.find('a').removeAttr('style');
 
-                  // the grid_overlays.js listener is vanilla js,
-                  // won't pick up on $story.trigger('click')
-                  $story[0].click();
-                });
+                // the grid_overlays.js listener is vanilla js,
+                // won't pick up on $storyCard.trigger('click')
+                $storyCard[0].click();
+
+
               });
           })
           .fail(function () {

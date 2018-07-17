@@ -4,14 +4,14 @@
 
 // ref: http://www.labnol.org/internet/light-youtube-embeds/27941/
 .video-thumb-container {
-  position: relative;
-  padding-bottom: 56.25%;  // ??  but apparently necessary
-  overflow: hidden;
+  // position: relative;
+  // padding-bottom: 56.25%;  // ??  but apparently necessary
+  // overflow: hidden;
   cursor: pointer;
   img {
     width: 100%;
   }
-  img, .play-button, .fa-play {
+  .play-button, .fa-play {
     position: absolute;
     top: 50%;
     left: 50%;

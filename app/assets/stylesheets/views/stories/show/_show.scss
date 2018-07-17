@@ -33,7 +33,7 @@
   .testimonial, .cs-testimonial {
     position: relative;
     color: #888;
-    > .container > .row {
+    > .container > .row, > .cs-container > .cs-row {
       display: flex;
       align-items: center;
     }
@@ -71,6 +71,7 @@
           margin: 0 auto;
           max-height: 65px;
           max-width: 60%;
+          mix-blend-mode: multiply;
         }
       }
       .customer-name {
@@ -131,9 +132,9 @@
               content: none
             }
             > p {
-              color: #666 !important;
+              color: #777 !important;
               &:before {
-                color: #999 !important;
+                color: #aaa !important;
               }
             }
             cite {
@@ -189,23 +190,26 @@
             max-width: 60%;
           }
         }
+        .customer-name {
+          color: #777 !important;
+        }
       }
     }
   }
 
   .story-content, .cs-story-content {
-    &.cs-story-content {
-      span, p, h4 {
-        font-family: inherit;
-        color: #333 !important;
-      }
-      .story-results p, .story-ctas p {
-        line-height: 22px !important;
-      }
-    }
     background-color: #f2f2f2;
     padding: 15px 0 26px 0;
     line-height: 1.6;
+    &.cs-story-content {
+      span, p, h4 {
+        font: {
+          family: inherit;
+          weight: 400 !important;
+        }
+        color: #333 !important;
+      }
+    }
     h4 {
       margin-top: 0;
       margin-bottom: 15px;
@@ -219,16 +223,18 @@
     }
     .story-results {
       margin-bottom: 25px;
-      line-height: 1.5;
-      .row {
+      .row, .cs-row {
         margin-bottom: 10px;
         div:first-child {
           text-align: center;
           padding-right: 0;
         }
+        span {
+          line-height: 1.5 !important;
+        }
       }
       &.visible-xs-block {
-        font-size: 14px;
+        font-size: 14px !important;
         .ul-container {
           display: flex;
           justify-content: center;
@@ -244,6 +250,12 @@
     }
     .story-ctas {
       margin-bottom: 25px;
+      li {
+        margin-bottom: 10px;
+        a {
+          line-height: 1.5 !important;
+        }
+      }
       &.visible-xs-block {
         .ul-container {
           display: flex;
@@ -352,7 +364,7 @@
         content: none;
         // bottom: -50px;
       }
-      > .container {
+      > .container, > .cs-container {
         max-width: 500px;
         .customer-logo-quote.visible-xs-block {
         }
@@ -361,17 +373,18 @@
     }
     .video-xs, .cs-video-xs {
       background-color: #fff;
-      > .container {
+      > .container, > .cs-container {
         max-width: 500px;
         // since .testimonial has a margin-bottom that accommodates the :after element,
         // pull these elements user-select: none;
-        > .row > [class*='col-'] {
+        // (don't apply these to overlay)
+        > .row > [class*='col-'], {
           margin-top: -20px;
         }
       }
     }
     .social-buttons-xs, .cs-social-buttons-xs {
-      > .container {
+      > .container, > .cs-container {
         max-width: 500px;
       }
       padding-top: 0;
@@ -382,7 +395,7 @@
       h4 {
         font-size: 20px;
       }
-      > .container {
+      > .container, > .cs-container {
         max-width: 500px;
         .well {
           padding: 19px 0 0 0;
@@ -482,6 +495,7 @@
       font-size: 13px;
       // since .testimonial has a margin-bottom that accommodates the :after element,
       // pull these elements user-select: none;
+      // (don't apply this to overlays)
       > .container > .row > [class*='col-'] {
         margin-top: -50px;
       }
@@ -556,7 +570,7 @@
       .story-narration {
         font-size: 15px !important;
       }
-      .story-results span, .story-ctas p {
+      .story-results span, .story-ctas a {
         font-size: 14px !important;
       }
       &.cs-story-content {
@@ -602,6 +616,11 @@
       }
       &.no-video {
         .customer-logo-quote.hidden-xs {
+          .customer-name {
+            span {
+              font-size: 18px !important;
+            }
+          }
           .customer-logo {
             img {
               max-width: 70%;

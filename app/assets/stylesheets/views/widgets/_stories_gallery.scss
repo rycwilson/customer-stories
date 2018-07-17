@@ -55,7 +55,7 @@ a.cs-thumbnail {
       vertical-align: middle;
       max-height: 100%;
       max-width: 100%;
-      padding: 20px;
+      padding: 24px;
       opacity: 1;
       transition: opacity $transition-time ease-in-out;
       -moz-transition: opacity $transition-time ease-in-out;
@@ -160,5 +160,17 @@ a.cs-thumbnail {
     }
   }
 }
+
+// @media only screen and (max-width: 767px) {
+// }
+
+// @media only screen and (min-width: 768px) {
+// }
+
+// @media only screen and (min-width: 992px) {
+// }
+
+// @media only screen and (min-width: 1200px) {
+// }
 
 

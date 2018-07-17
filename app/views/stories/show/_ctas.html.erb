@@ -17,7 +17,7 @@
           <% if cta.type == "CTALink" %>
 
             <a class="cta-link" href="<%= cta.link_url %>" target='_blank'>
-              <p><%= cta.display_text %></p>
+              <%= cta.display_text %>
             </a>
 
           <% else %>
@@ -25,7 +25,7 @@
             <a href="#cta-form-<%= cta.id %>-modal"
                class="cta-form" data-toggle='modal'
                data-target="#cta-form-<%= cta.id %>-modal">
-              <p><%= cta.display_text %></p>
+              <%= cta.display_text %>
             </a>
 
           <% end %>
@@ -54,7 +54,7 @@
         <% if cta.type == "CTALink" %>
 
           <a class="cta-link" href="<%= cta.link_url %>" target='_blank'>
-            <p><%= cta.display_text %></p>
+            <%= cta.display_text %>
           </a>
 
         <% else %>
@@ -62,7 +62,7 @@
           <a href="#cta-form-<%= cta.id %>-modal"
              class="cta-form" data-toggle='modal'
              data-target="#cta-form-<%= cta.id %>-modal">
-            <p><%= cta.display_text %></p>
+            <%= cta.display_text %>
           </a>
 
         <% end %>

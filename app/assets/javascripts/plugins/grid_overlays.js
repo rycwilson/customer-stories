@@ -117,7 +117,7 @@
    */
   function loadContent(item) {
     // add expanding element/placeholder
-    var dummy = document.createElement('div');
+    var dummy = document.createElement('div.fart');
     dummy.className = 'placeholder';
     // set the width/heigth and position
     dummy.style.WebkitTransform = 'translate3d(' + item.offsetLeft + 'px, ' + item.offsetTop + 'px, 0px) scale3d(' + item.offsetWidth/gridItemsContainer.offsetWidth + ',' + (item.offsetHeight)/getViewport('y') + ',1)';
