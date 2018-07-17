@@ -4,7 +4,7 @@ function cspInitVideo ($storyCard) {
   // two containers: regular and xs
   var $story = $('.content__item:nth-of-type(' + ($storyCard.index() + 1) + ')'),
       // $iframe = $('#cs-video-modal iframe'),
-      $iframe = $story.find('iframe'),
+      $iframe = $(window).width() < 768 ? $story.find('.cs-story-video-xs iframe') : $story.find('.cs-story-video iframe'),
       videoPlayerWindow = $iframe[0].contentWindow,
       $thumbContainers = $story.find('.video-thumb-container'),
       provider = $thumbContainers.data('provider'),
@@ -145,11 +145,10 @@ function cspInitVideo ($storyCard) {
       }
       videoUrl = videoUrl + videoQueryString;
 
-      if ($(document).width() < 768) {
-        e.stopPropagation();  // stop modal from being triggered
-        $(this).parent().replaceWith($("<iframe src='" + videoUrl + "'frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>"));
+      // if ($(document).width() < 768) {
+      //   $(this).parent().replaceWith($('<iframe src="' + videoUrl + '" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>'));
 
-      } else {
+      // } else {
         // console.log('loading', videoUrl)
         $iframe
           .one('load', function () {
@@ -167,7 +166,7 @@ function cspInitVideo ($storyCard) {
         //   $iframe.attr('src', videoUrl + videoQueryString);
         // }
 
-      }
+      // }
     });
   }
 
