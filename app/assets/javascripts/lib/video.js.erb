@@ -125,10 +125,16 @@ function playVideoListener () {
     } else if (provider === 'vimeo') {
       videoQuery = (videoUrl.includes('?') ? '&' : '?') + 'autoplay=1';
     }
+    videoUrl = videoUrl + videoQuery;
 
     if ($(document).width() < 768) {
-      e.stopPropagation();  // stop modal from being triggered
-      $(this).parent().replaceWith($("<iframe src='" + videoUrl + videoQuery + "'frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>"));
+      $('.story-video-xs iframe')
+        .one('load', function () {
+            $(this).closest('.video-thumb-container')
+                   .children(':not(iframe)').remove();  // remove thumbnail image and play button
+            $(this).removeClass('hidden');
+          })
+        .attr('src', videoUrl);
 
     } else { // play video in modal
 // console.log('loading video, ', videoUrl + videoQuery);
