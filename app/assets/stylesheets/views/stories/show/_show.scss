@@ -567,8 +567,10 @@
       h4 {
         font-size: 22px !important;
       }
-      .story-narration * {
-        font-size: 15px !important;
+      .story-narration {
+        p, span {
+          font-size: 15px !important;
+        }
       }
       .story-results span, .story-ctas a {
         font-size: 14px !important;
