@@ -98,6 +98,9 @@
             }
             line-height: 1.5 !important;
             font-weight: 400 !important;
+            &:after {
+              content: no-close-quote;
+            }
           }
           cite {
             p {
@@ -200,9 +203,8 @@
   .story-content, .cs-story-content {
     background-color: #f2f2f2;
     padding: 15px 0 26px 0;
-    line-height: 1.6;
     &.cs-story-content {
-      span, p, h4 {
+      span, li, p, h4 {
         font: {
           family: inherit;
           weight: 400 !important;
@@ -213,10 +215,13 @@
     h4 {
       margin-top: 0;
       margin-bottom: 15px;
-      line-height: 1.3
+      line-height: 1.3 !important;
     }
     .story-narration {
       margin-bottom: 25px;
+      span, li, p {
+        line-height: 1.5 !important;
+      }
       &.visible-xs-block {
         font-size: 14px;
       }
@@ -577,7 +582,7 @@
       }
       &.cs-story-content {
         .story-narration p {
-          line-height: 26px !important;
+          // line-height: 26px !important;
         }
       }
     }
