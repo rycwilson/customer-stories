@@ -3,7 +3,8 @@ function cspInitVideo ($storyCard) {
 
   // two containers: regular and xs
   var $story = $('.content__item:nth-of-type(' + ($storyCard.index() + 1) + ')');
-  console.log($story);
+  // console.log($story);
+  debugger;
       // $iframe = $('#cs-video-modal iframe'),
      var $iframe = $(window).width() < 768 ? $story.find('.cs-story-video-xs iframe') : $story.find('.cs-story-video iframe'),
       videoPlayerWindow = $iframe[0].contentWindow,
