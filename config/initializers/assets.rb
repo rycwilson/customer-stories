@@ -19,6 +19,7 @@ Rails.application.config.assets.precompile += %w(
   adwords/ads_preview.css
   widgets/gallery/build_gallery.js
   widgets/gallery/story_overlays.js
+  widgets/gallery/story_video.js
   custom/trunity/widgets/cs_carousel.css
   custom/trunity/widgets/cs_fixed_carousel.css
   custom/trunity/widgets/cs_gallery.css
