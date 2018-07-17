@@ -37,9 +37,8 @@ function loadVideoThumbnail (cbSuccess) {
   if (provider === 'youtube') {
     // ref: http://stackoverflow.com/questions/2068344
     thumbSrc = '//img.youtube.com/vi/' + videoId + '/hqdefault.jpg';
-    $.when( $thumbContainers.append(
-        "<div><img class='video-thumb' src='" + thumbSrc + "'></div>"
-      )).then(function () {
+    $.when($thumbContainers.append("<img src='" + thumbSrc + "'>"))
+      .then(function () {
         $thumbContainers.imagesLoaded().done(function () {
           // original width of 120 indicates youtube thumbnail not available
           if ( $thumbContainers.find('img')[0].naturalWidth === 120 ) {
@@ -132,7 +131,7 @@ function playVideoListener () {
       $(this).parent().replaceWith($("<iframe src='" + videoUrl + videoQuery + "'frameborder='0' webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>"));
 
     } else { // play video in modal
-console.log('loading video, ', videoUrl + videoQuery);
+// console.log('loading video, ', videoUrl + videoQuery);
 
       modalPlayerWindow.location.replace(videoUrl + videoQuery);
 
