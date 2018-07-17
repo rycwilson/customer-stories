@@ -565,9 +565,9 @@
     }
     .story-content, .cs-story-content {
       h4 {
-        font-size: 22px;
+        font-size: 22px !important;
       }
-      .story-narration {
+      .story-narration * {
         font-size: 15px !important;
       }
       .story-results span, .story-ctas a {
