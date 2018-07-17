@@ -1,66 +1,71 @@
 
-<!-- <div class="story-wrapper hidden"> -->
-<article class="<%= is_widget ? 'cs-story-wrapper' : 'story-wrapper' %>">
+<div class="<%= is_widget ? 'cs-story-wrapper' : 'story-wrapper hidden' %>">
 
-  <!-- includes video -->
-  <section class="<%= is_widget ? 'cs-testimonial' : 'testimonial' %> <%= story.video_url.present? ? '' : 'no-video' %>">
+  <article>
 
-    <% cache("#{company.subdomain}/story-#{story.id}-testimonial", skip_digest: true) do %>
+    <!-- includes video -->
+    <section class="<%= is_widget ? 'cs-testimonial' : 'testimonial' %> <%= story.video_url.present? ? '' : 'no-video' %>">
+
+      <% cache("#{company.subdomain}/story-#{story.id}-testimonial", skip_digest: true) do %>
+
+        <%= render(
+              'stories/show/testimonial',
+              {
+                story: story,
+                long_customer_name: story.customer.name.length > 20,
+  # include_video necessary in the event video fails and must be removed; see stories#show
+                include_video: story.video_url.present?,
+                is_widget: is_widget
+              }
+            ) %>
+
+      <% end %>
+
+    </section>
+
+    <section class="<%= story.video_url.present? ? 'visible-xs-block' : 'hidden' %> <%= is_widget ? 'cs-story-video-xs' : 'story-video-xs' %>">
+
+      <% cache("#{company.subdomain}/stories/#{story.id}/video-xs", skip_digest: true) do %>
+
+        <%= render(
+              'stories/show/video_xs',
+              {
+                story: story,
+                is_widget: is_widget
+              }
+            ) %>
+
+      <% end %>
+
+    </section>
+
+    <div class="visible-xs-block <%= is_widget ? 'cs-social-buttons-xs' : 'social-buttons-xs' %>">
+
+      <%= render 'stories/shared/social_buttons_xs', { story: story } %>
+
+    </div>
+
+    <div class="<%= is_widget ? 'cs-story-content' : 'story-content' %>">
 
       <%= render(
-            'stories/show/testimonial',
+            'stories/show/story_content',
             {
+              company: company,
               story: story,
-              long_customer_name: story.customer.name.length > 20,
-              is_widget: is_widget
+              contributors: contributors,
+              related_stories: related_stories,
+              is_widget: is_widget,
             }
           ) %>
 
-    <% end %>
+    </div>
 
-  </section>
+    <% unless is_widget || user_signed_in? %>
 
-  <section class="<%= story.video_url.present? ? 'visible-xs-block' : 'hidden' %> <%= is_widget ? 'cs-video-xs' : 'video-xs' %>">
-
-    <% cache("#{company.subdomain}/stories/#{story.id}/video-xs", skip_digest: true) do %>
-
-      <%= render(
-            'stories/show/video_xs',
-            {
-              story: story,
-              is_widget: is_widget
-            }
-          ) %>
+      <%= render('stories/shared/sign_in_footer') %>
 
     <% end %>
 
-  </section>
+  </article>
 
-  <div class="visible-xs-block <%= is_widget ? 'cs-social-buttons-xs' : 'social-buttons-xs' %>">
-
-    <%= render 'stories/shared/social_buttons_xs', { story: story } %>
-
-  </div>
-
-  <div class="<%= is_widget ? 'cs-story-content' : 'story-content' %>">
-
-    <%= render(
-          'stories/show/story_content',
-          {
-            company: company,
-            story: story,
-            contributors: contributors,
-            related_stories: related_stories,
-            is_widget: is_widget,
-          }
-        ) %>
-
-  </div>
-
-  <% unless is_widget || user_signed_in? %>
-
-    <%= render('stories/shared/sign_in_footer') %>
-
-  <% end %>
-
-</article>
+</div>

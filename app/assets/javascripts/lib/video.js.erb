@@ -18,7 +18,7 @@ function loadVideoThumbnail (cbSuccess) {
 
       removeVideo = function () {
         if (CSP.screenSize === 'xs') {
-          $.when( $('.video-xs').remove() )
+          $.when( $('.story-video-xs').remove() )
             .then(function () { cbSuccess(); });
         } else {
           $.ajax({

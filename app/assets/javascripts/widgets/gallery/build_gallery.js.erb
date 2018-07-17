@@ -25,6 +25,13 @@ function cspBuildGalleryWidget ($container, cspRootUrl) {
       e.preventDefault();
       var $storyCard = $(this);
       if ($storyCard.hasClass('cs-loaded')) {
+        // if (typeof cspInitVideo !== 'function') {
+        //   $.getScript(cspRootUrl + "<%= asset_path('widgets/gallery/story_video') %>", function () {
+        //     cspInitVideo($storyCard);
+        //   });
+        // } else {
+        //   cspInitVideo($storyCard);
+        // }
         setTimeout(function () {
           $storyCard.removeClass('cs-loading cs-still-loading');
         }, 300);  // matches overlay animation time
@@ -63,13 +70,14 @@ function cspBuildGalleryWidget ($container, cspRootUrl) {
                 // won't pick up on $storyCard.trigger('click')
                 $storyCard[0].click();
 
-
               });
           })
           .fail(function () {
 
           });
       }
-    });
+    })
+    .find('.cs-grid').removeClass('hidden');
+
 }
 

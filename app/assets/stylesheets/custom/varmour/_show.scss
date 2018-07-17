@@ -22,15 +22,17 @@
     }
   }
 
-  .video-xs, .cs-video-xs, .social-buttons-xs, .cs-social-buttons-xs {
+  .story-video-xs, .cs-story-video-xs, .social-buttons-xs, .cs-social-buttons-xs {
     background-color: $varmour-gray;
   }
 
   .story-content, .cs-story-content {
     background-color: $varmour-gray;
     font-family: $metropolis-regular;
-    h4 { font-family: $metropolis-regular; }
-    .well {
+    h4 {
+      font-family: $metropolis-regular;
+    }
+    .well, .cs-well {
       border-color: #e6e9ec;
       border-radius: 0;
     }
@@ -42,7 +44,7 @@
         content: none;
       }
     }
-    .video-xs, .cs-video-xs, .social-buttons-xs, .cs-social-buttons-xs {
+    .story-video-xs, .cs-story-video-xs, .social-buttons-xs, .cs-social-buttons-xs {
       background-color: #fff;
     }
     .story-content, .cs-story-content {

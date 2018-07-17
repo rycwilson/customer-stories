@@ -82,17 +82,10 @@ class StoriesController < ApplicationController
       end and return
     end
     if params[:remove_video].present?
-      if params[:xs_screen]
-        render({
-          partial: 'stories/show/video_xs',
-          locals: { story: @story, include_video: false }
-        })
-      else
-        render({
-          partial: 'stories/show/testimonial',
-          locals: { story: @story, include_video: false }
-        })
-      end
+      render(
+        'stories/show/testimonial',
+        { story: @story, include_video: false }
+      )
     end
     @is_preview = params[:preview].present?
     # convert the story content to plain text (for SEO tags)
@@ -101,17 +94,6 @@ class StoriesController < ApplicationController
     @more_stories = Story.find(@company.public_stories)
                          .sort_by { |story| @company.public_stories.index(story.id) }
                          .delete_if { |story| story.id == @story.id || story.customer.logo_url.blank? }
-        # .map do |story|
-        #   {
-        #     title: story.title,
-        #     customer: story.customer.name,
-        #     logo: story.customer.logo_url,
-        #     path: story.published ? story.csp_story_path :
-        #           (story.preview_published? ? root_path + "?preview=#{story.slug}" : root_path),
-        #     published: story.published,
-        #     preview_published: story.preview_published?,
-        #   }
-        # end
   end
 
   def edit
