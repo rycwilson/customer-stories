@@ -16,12 +16,17 @@
   }
 
   function main () {
-
+// console.log('main()');
     $(function () {
 
       // type IN ['carousel', 'fixed-carousel', 'gallery']
       var type = '<%= @type %>', $script, $container,
           $stylesheet = $("<link>", { rel: "stylesheet", type: "text/css", href: '<%= @stylesheet_url %>' });
+
+      // no stylesheet means type couldn't be id'ed => fatal
+      if (!"<%= @stylesheet_url %>") {
+        return false;
+      }
 
       if (type === 'carousel') {
         $script = $('script[src*="carousel/cs"], script[src*="varmour/cs"]').first();
