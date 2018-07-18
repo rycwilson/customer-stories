@@ -185,6 +185,11 @@
       &:after {
         content: none;
       }
+      .customer-logo-quote.visible-xs-block {
+        .customer-logo {
+          background-color: #f2f2f2;
+        }
+      }
       .customer-logo-quote.hidden-xs {
         .customer-logo {
           background-color: #f2f2f2;

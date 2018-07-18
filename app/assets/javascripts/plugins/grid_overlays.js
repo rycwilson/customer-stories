@@ -36,7 +36,7 @@
     contentItemsContainer = gridEl.querySelector('section.cs-content'),
     gridItems = gridItemsContainer.querySelectorAll('.grid__item'),
     contentItems = contentItemsContainer.querySelectorAll('.content__item'),
-    closeCtrl = contentItemsContainer.querySelector('.close-button'),
+    closeCtrl = contentItemsContainer.querySelector('.close-button, .close-button-xs'),
     current = -1,
     lockScroll = false, xscroll, yscroll,
     isAnimating = false,
@@ -117,7 +117,7 @@
    */
   function loadContent(item) {
     // add expanding element/placeholder
-    var dummy = document.createElement('div.fart');
+    var dummy = document.createElement('div');
     dummy.className = 'placeholder';
     // set the width/heigth and position
     dummy.style.WebkitTransform = 'translate3d(' + item.offsetLeft + 'px, ' + item.offsetTop + 'px, 0px) scale3d(' + item.offsetWidth/gridItemsContainer.offsetWidth + ',' + (item.offsetHeight)/getViewport('y') + ',1)';

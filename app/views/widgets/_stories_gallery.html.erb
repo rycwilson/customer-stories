@@ -36,7 +36,20 @@
 
       </div>
 
-      <button class="close-button"><i class="fa fa-times-thin fa-3x"></i><span>Close</span></button>
+      <button class="hidden-xs close-button">
+
+        <i class="fa fa-fw fa-times-thin fa-3x"></i>
+        <!-- <span>Close</span> -->
+      </button>
+
+      <div class="visible-xs close-button-xs" style="position: absolute; top: 12px; right: 24px;">
+        <span style="color: #888; font-size: 2.1em; z-index: 500; position: relative; cursor: pointer" class="fa-stack fa-5x">
+          <i style="opacity: 0.5" class="fa fa-circle fa-stack-2x"></i>
+
+          <i style="font-size: 1.5em; position: absolute; top: -5px; opacity: 1" class="fa fa-times-thin fa-inverse fa-stack-1x"></i>
+        </span>
+        <!-- <i style="color: white" class="fa fa-fw fa-times-thin fa-3x"></i> -->
+      </div>
 
     </section><!-- /content -->
 
