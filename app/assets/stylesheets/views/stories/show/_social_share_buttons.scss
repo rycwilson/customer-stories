@@ -34,12 +34,12 @@
 
 .icon-button-xs {
   border: 1px solid transparent;
-  border-radius: 4rem;
+  border-radius: 40px;
   cursor: pointer;
   display: inline-block;
-  font-size: 2rem;
-  height: 4rem;
-  line-height: 4rem;
+  font-size: 20px;
+  height: 40px;
+  line-height: 40px;
   margin: 0 8px;
   position: relative;
   text-align: center;
@@ -47,7 +47,7 @@
   //    -moz-user-select: none;
   //     -ms-user-select: none;
   //         user-select: none;
-  width: 4rem;
+  width: 40px;
 }
 
 /* Circle */
@@ -109,16 +109,16 @@
 .icon-button-xs i {
   background: none;
   color: white;
-  height: 3.8rem;
+  height: 38px;
   left: 0;
-  line-height: 3.8rem;
+  line-height: 38px;
   position: absolute;
   top: 0;
   // -webkit-transition: all 0.1s;
   //    -moz-transition: all 0.1s;
   //      -o-transition: all 0.1s;
   //         transition: all 0.1s;
-  width: 3.8rem;
+  width: 38px;
   z-index: 10;
 }
 
