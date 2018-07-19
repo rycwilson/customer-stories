@@ -66,6 +66,10 @@ function cspBuildGalleryWidget ($container, cspRootUrl) {
                 // now undo that...
                 $container.find('a').removeAttr('style');
 
+                $container.on('click', '.close-button-xs', function () {
+                  $(this).closest('.cs-content').find('.close-button').trigger('click');
+                });
+
                 // the grid_overlays.js listener is vanilla js,
                 // won't pick up on $storyCard.trigger('click')
                 $storyCard[0].click();
