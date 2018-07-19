@@ -56,17 +56,11 @@
     -moz-border-radius-topright: 5px 5px;
     border-top-left-radius: 5px 5px;
     border-top-right-radius: 5px 5px;
-    &.light {
-      color: #e8e8e8;
-      .cs-open-close:hover, .cs-remove:hover {
-        color: #fff;
-      }
+    .cs-open-close, .cs-remove {
+      opacity: 0.87;
     }
-    &.dark {
-      color: #555;
-      .cs-open-close:hover, .cs-remove:hover {
-        color: #222;
-      }
+    .cs-open-close:hover, .cs-remove:hover {
+      opacity: 1;
     }
     .cs-open-close {
       margin-right: 25px;
