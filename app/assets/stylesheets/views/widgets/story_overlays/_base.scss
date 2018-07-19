@@ -3,18 +3,6 @@
 .clearfix:before, .clearfix:after { display: table;  content: ''; }
 .clearfix:after { clear: both; }
 
-body {
-  // background: $color_secondary;
-  // color: #7b7b7b;
-  // font-weight: 400;
-  // font-size: 16px;
-  // font-family: $sansserif;
-  // -webkit-font-smoothing: antialiased;
-  // -moz-osx-font-smoothing: grayscale;
-  overflow: hidden;
-  overflow-y: scroll; /* force scroll to appear */
-}
-
 /* Main content */
 .cs-main {
   position: relative;

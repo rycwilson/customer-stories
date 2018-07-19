@@ -10,3 +10,8 @@ $anim-time: 0.3s;
 @import "base";
 @import "mediaqueries";
 @import "../../stories/show/show";
+
+.cs-overlay-container {
+  height: auto;
+  padding: 20px 0;
+}

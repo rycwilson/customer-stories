@@ -62,7 +62,7 @@ class WidgetsController < ApplicationController
     when 'fixed-carousel'
       partial = 'stories_fixed_carousel'
     when 'gallery'
-      stories = stories.first(12)
+      # stories = stories.first(12)
       partial = 'stories_gallery'
     end
     render_to_string(
