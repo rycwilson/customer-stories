@@ -15,6 +15,7 @@ a.cs-thumbnail {
   // following settings lifted from chrome new tab page
   box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
   transition: box-shadow $transition-time ease-in-out;
+  -webkit-tap-highlight-color: transparent;
   .thumbnail-view {
     position: relative;
     height: 80%;
