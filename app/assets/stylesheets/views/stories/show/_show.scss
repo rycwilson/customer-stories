@@ -4,6 +4,8 @@
   @import 'social_share_buttons';
   @import '../shared/cookie_consent';
   @import '../shared/video';
+  @import 'blockquote';
+
   // @import '../shared/linkedin_widget';  // not using these presently
 
   $max-xs-width: 500px;
@@ -45,10 +47,6 @@
         display: flex;
         align-items: center;
         margin-bottom: 20px;
-        .customer-name {
-          display: inline-block;
-          width: 100%;
-        }
         img {
           display: inline-block;
           max-height: 65px;
@@ -56,15 +54,10 @@
           margin: 0 30px 0 10px;
           mix-blend-mode: multiply;
         }
-        span {
-          font-size: 16px !important;
-        }
-      }
-      .customer-quote, .cs-customer-quote {
-        p {
-          margin-bottom: 15px;
-          line-height: 1.5;
-          font-size: 16px !important;
+        .customer-name {
+          display: inline-block;
+          width: 100%;
+          span { font-size: 16px !important; }
         }
       }
     }
@@ -79,77 +72,6 @@
       }
       .customer-name {
         margin: 20px 0;
-      }
-      .customer-quote, .cs-customer-quote {
-        blockquote {
-          background: transparent;  // overrides weebly
-          border: none;
-          font-style: italic;
-          margin-bottom: 0;
-          padding: 0;
-          position: relative;
-          > p {
-            &:before {
-              // choosing a web safe font here
-              font-family: 'Georgia' !important;
-              content: open-quote;
-              position: absolute;
-              top: 0;
-              left: -32px;
-              font-size: 45px !important;
-              color: #bbb;
-            }
-            line-height: 1.5 !important;
-            font-weight: 400 !important;
-            &:after {
-              content: no-close-quote;
-            }
-          }
-          cite {
-            p {
-              font-style: normal;
-              font: {
-                size: 13px !important;
-                weight: 400 !important;
-              }
-              line-height: 1.5 !important;
-              margin-bottom: 0;
-            }
-          }
-        }
-        &.customer-quote {
-          blockquote {
-            > p {
-              color: #888 !important;
-              &:before {
-                color: #bbb !important;
-              }
-            }
-            cite {
-              p {
-                color: #888 !important;
-              }
-            }
-          }
-        }
-        &.cs-customer-quote {
-          blockquote {
-            &:before {  // overrides weebly
-              content: none
-            }
-            > p {
-              color: #777 !important;
-              &:before {
-                color: #aaa !important;
-              }
-            }
-            cite {
-              p {
-                color: #666 !important;
-              }
-            }
-          }
-        }
       }
     }
     .story-video.hidden-xs, .cs-story-video.hidden-xs {
@@ -379,9 +301,6 @@
       }
       > .container, > .cs-container {
         max-width: 500px;
-        .customer-logo-quote.visible-xs-block {
-        }
-
       }
     }
     .story-video-xs, .cs-story-video-xs {
@@ -449,25 +368,6 @@
             font-size: 14px !important;
           }
         }
-        .customer-quote, .cs-customer-quote {
-          padding: 0 40px;
-          blockquote {
-            // &:before {  // overrides weebly
-            //   content: none
-            // }
-            > p {
-              font-size: 14px !important;
-              margin-bottom: 10px;
-              &:before {
-                top: -10px;
-                left: -20px;
-                font-size: 34px !important;
-              }
-            }
-            cite {
-            }
-          }
-        }
       }
       &.no-video {
         margin-bottom: 90px;
@@ -477,27 +377,7 @@
           .customer-name span {
             font-size: 16px !important;
           }
-          .customer-quote, .cs-customer-quote {
-            padding: 0 40px 0 0;
-            blockquote {
-              // &:before {  // overrides weebly
-              //   content: none
-              // }
-              > p {
-                font-size: 16px !important;
-                margin-bottom: 15px;
-                &:before {
-                  top: -10px;
-                  left: -20px;
-                  font-size: 34px !important;
-                }
-              }
-              cite {
-                p {
-                }
-              }
-            }
-          }
+
         }
       }
       &.no-video:after {
@@ -527,51 +407,6 @@
           margin: 15px 0;
           span {
             font-size: 16px !important;
-          }
-        }
-        .customer-quote, .cs-customer-quote {
-          padding: 0 60px;
-          blockquote {
-            &:before {  // overrides weebly
-              content: none
-            }
-            > p {
-              font-size: 16px !important;
-              margin-bottom: 15px;
-              &:before {
-                top: -15px;
-                left: -23px;
-                font-size: 40px !important;
-              }
-            }
-            cite {
-              p {
-              }
-            }
-          }
-        }
-      }
-      &.no-video {
-        .customer-logo-quote.hidden-xs {
-          .customer-quote, .cs-customer-quote {
-            padding: 0 100px 0 0;
-            blockquote {
-              // &:before {  // overrides weebly
-              //   content: none
-              // }
-              > p {
-                font-size: 16px !important;
-                &:before {
-                  top: -15px;
-                  left: -23px;
-                  font-size: 40px !important;
-                }
-              }
-              cite {
-                p {
-                }
-              }
-            }
           }
         }
       }
@@ -608,26 +443,6 @@
             font-size: 18px !important;
           }
         }
-        .customer-quote, .cs-customer-quote {
-          padding: 0 70px;
-          blockquote {
-            // &:before {  // overrides weebly
-            //     content: none
-            //   }
-            > p {
-              font-size: 18px !important;
-              &:before {
-                top: -18px;
-                left: -28px;
-                font-size: 48px !important;
-              }
-            }
-            cite {
-              p {
-              }
-            }
-          }
-        }
       }
       &.no-video {
         .customer-logo-quote.hidden-xs {
@@ -639,19 +454,6 @@
           .customer-logo {
             img {
               max-width: 70%;
-            }
-          }
-          .customer-quote, .cs-customer-quote {
-            padding: 0 80px 0 30px;
-            blockquote {
-              > p {
-                font-size: 18px !important;
-                &:before {
-                  top: -18px;
-                  left: -28px;
-                  font-size: 48px !important;
-                }
-              }
             }
           }
         }

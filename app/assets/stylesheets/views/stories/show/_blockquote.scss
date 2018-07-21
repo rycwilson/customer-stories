@@ -1,0 +1,200 @@
+
+.testimonial, .cs-testimonial {
+  .customer-logo-quote {
+    .customer-quote, .cs-customer-quote {
+
+      blockquote {
+        background: transparent;  // overrides weebly
+        border: none;
+        font-style: italic;
+        margin-bottom: 0;
+        padding: 0;
+        position: relative;
+        > p {
+          &:before {
+            // choosing a web safe font here
+            font-family: 'Georgia' !important;
+            content: open-quote;
+            position: absolute;
+            top: -10px;
+            left: -20px;
+            font-size: 34px !important;
+            color: #bbb;
+          }
+          font-size: 16px !important;
+          line-height: 1.5 !important;
+          font-weight: 400 !important;
+          &:after {
+            content: no-close-quote;
+          }
+        }
+        cite {
+          p {
+            font-style: normal;
+            font: {
+              size: 13px !important;
+              weight: 400 !important;
+            }
+            line-height: 1.5 !important;
+            margin-bottom: 0;
+          }
+        }
+      }
+
+      &.customer-quote {
+        blockquote {
+          > p {
+            color: #888 !important;
+            &:before {
+              color: #bbb !important;
+            }
+          }
+          cite {
+            p {
+              color: #888 !important;
+            }
+          }
+        }
+      }
+      &.cs-customer-quote {
+        blockquote {
+          &:before {  // overrides weebly
+            content: none
+          }
+          > p {
+            color: #777 !important;
+            &:before {
+              color: #aaa !important;
+            }
+          }
+          cite {
+            p {
+              color: #666 !important;
+            }
+          }
+        }
+      }
+
+    }
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .testimonial, .cs-testimonial {
+    .customer-logo-quote {
+      .customer-quote, .cs-customer-quote {
+        blockquote {
+          > p {
+            text-indent: 17px;  // half the font size of the open quote
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .testimonial, .cs-testimonial {
+    .customer-logo-quote {
+      .customer-quote, .cs-customer-quote {
+        padding: 0 40px;
+        blockquote {
+          > p {
+            // font-size: 14px !important;
+            margin-bottom: 10px;
+          }
+        }
+      }
+    }
+    &.no-video {
+      .customer-quote, .cs-customer-quote {
+        padding: 0 40px 0 0;
+        blockquote {
+          > p {
+            // font-size: 16px !important;
+            margin-bottom: 15px;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  .testimonial, .cs-testimonial {
+    .customer-logo-quote {
+      .customer-quote, .cs-customer-quote {
+        padding: 0 60px;
+        blockquote {
+          &:before {  // overrides weebly
+            content: none
+          }
+          > p {
+            // font-size: 16px !important;
+            margin-bottom: 15px;
+            &:before {
+              top: -15px;
+              left: -23px;
+              font-size: 40px !important;
+            }
+          }
+        }
+      }
+    }
+    &.no-video {
+      .customer-quote, .cs-customer-quote {
+        padding: 0 100px 0 0;
+        blockquote {
+          > p {
+            // font-size: 16px !important;
+            &:before {
+              top: -15px;
+              left: -23px;
+              font-size: 40px !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .testimonial, .cs-testimonial {
+    .customer-logo-quote {
+      .customer-quote, .cs-customer-quote {
+        padding: 0 70px;
+        blockquote {
+          // &:before {  // overrides weebly
+          //     content: none
+          //   }
+          > p {
+            font-size: 18px !important;
+            &:before {
+              top: -18px;
+              left: -28px;
+              font-size: 48px !important;
+            }
+          }
+        }
+      }
+    }
+    &.no-video {
+      .customer-quote, .cs-customer-quote {
+        padding: 0 80px 0 30px;
+        blockquote {
+          > p {
+            font-size: 18px !important;
+            &:before {
+              top: -18px;
+              left: -28px;
+              font-size: 48px !important;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
