@@ -44,7 +44,7 @@ function cspBuildGallery ($container, cspRootUrl) {
           method: 'GET',
           data: {
             is_widget: true,
-            screen: ResponsiveBootstrapToolkit.current()
+            window_width: $(window).width()
           },
           dataType: 'jsonp'
         })

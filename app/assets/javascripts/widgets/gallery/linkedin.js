@@ -61,6 +61,7 @@ function widgetsListener ($story) {
           // run this through a timeout to ensure the widget has rendered
           setTimeout((function ($w) { removeProfileNotFound($w); }($widget)), 0);
 
+
           // set a timeout from the moment the first widget loads
           if (!firstWidgetLoaded) {
             firstWidgetLoaded = true;

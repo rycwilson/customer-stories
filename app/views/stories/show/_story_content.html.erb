@@ -35,6 +35,17 @@
 
         <% end %>
 
+        <% if contributors.present? && (window_width.nil? || window_width.to_i < 768) %>
+
+          <hr>
+
+          <%= render(
+              'stories/show/contributors',
+              { contributors: contributors, is_widget: is_widget, window_width: window_width }
+            ) %>
+
+        <% end %>
+
       </div>
 
       <% if related_stories.present? && related_stories.length >= 2 %>
@@ -64,14 +75,17 @@
 
       <% end %>
 
-      <%# cache("#{company.subdomain}/stories/#{story.id}/contributors", skip_digest: true) do %>
 
+      <% if contributors.present? && (window_width.nil? || window_width.to_i >= 768) %>
+
+        <%# cache("#{company.subdomain}/stories/#{story.id}/contributors", skip_digest: true) do %>
         <%= render(
               'stories/show/contributors',
-              { contributors: contributors, is_widget: is_widget, screen: screen }
+              { contributors: contributors, is_widget: is_widget, window_width: window_width }
             ) %>
+        <%# end %>
 
-      <%# end %>
+      <% end %>
 
     </div>
 

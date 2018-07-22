@@ -1,5 +1,22 @@
 module StoriesHelper
 
+  def linkedin_widget_width (window_width)
+    case window_width.to_i
+    when 0...370
+      '340'
+    when 370...500
+      (window_width.to_i - 30).to_s  # 30 = padding * 2
+    when 500...768
+      '470'
+    when 768...992
+      '345'
+    when 992...1200
+      '370'
+    else
+      '436'
+    end
+  end
+
   def stories_header_title_width (company)
     if curator?(company) && current_page?(action: 'index')
       'col-sm-6'
