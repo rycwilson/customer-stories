@@ -385,7 +385,7 @@
       }
     }
     .story-content, .cs-story-content {
-      font-size: 13px;
+      font-size: 13px !important;
       // since .testimonial has a margin-bottom that accommodates the :after element,
       // pull these elements user-select: none;
       // (don't apply this to overlays)
