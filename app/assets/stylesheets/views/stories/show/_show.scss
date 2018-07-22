@@ -153,7 +153,7 @@
         line-height: 1.5 !important;
       }
       &.visible-xs-block {
-        font-size: 14px;
+        font-size: 14px !important;
       }
     }
     .story-results {
@@ -325,7 +325,7 @@
     .story-content, .cs-story-content {
       background-color: transparent;
       h4 {
-        font-size: 20px;
+        font-size: 20px !important;
       }
       > .container, > .cs-container {
         max-width: 500px;
@@ -385,12 +385,18 @@
       }
     }
     .story-content, .cs-story-content {
-      font-size: 13px !important;
       // since .testimonial has a margin-bottom that accommodates the :after element,
-      // pull these elements user-select: none;
-      // (don't apply this to overlays)
+      // pull these elements up (don't apply this to overlays)
       > .container > .row > [class*='col-'] {
         margin-top: -50px;
+      }
+      .story-narration {
+        p, span, li {
+          font-size: 13px !important;
+        }
+      }
+      .story-results span, .story-ctas a {
+        font-size: 13px !important;
       }
     }
     &.cs-testimonial {
