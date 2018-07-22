@@ -1,10 +1,9 @@
 
-function cspInitVideo ($storyCard) {
+function cspInitVideo ($story) {
 
   // two containers: regular and xs
-  var $story = $('.content__item:nth-of-type(' + ($storyCard.index() + 1) + ')'),
-      // $iframe = $('#cs-video-modal iframe'),
-      $iframe = $(window).width() < 768 ? $story.find('.cs-story-video-xs iframe') : $story.find('.cs-story-video iframe'),
+  // var $iframe = $('#cs-video-modal iframe'),
+  var $iframe = $(window).width() < 768 ? $story.find('.cs-story-video-xs iframe') : $story.find('.cs-story-video iframe'),
       videoPlayerWindow = $iframe[0].contentWindow,
       $thumbContainers = $story.find('.video-thumb-container'),
       provider = $thumbContainers.data('provider'),

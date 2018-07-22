@@ -72,7 +72,7 @@ class StoriesController < ApplicationController
       @is_widget = @is_external = true
       respond_to do |format|
         format.js do
-          json = { html: render_story_partial(@story) }.to_json
+          json = { html: render_story_partial(@story, params[:screen]) }.to_json
           callback = params[:callback]
           jsonp = callback + "(" + json + ")"
           render(text: jsonp)
@@ -367,7 +367,7 @@ class StoriesController < ApplicationController
     @contributors
   end
 
-  def render_story_partial (story)
+  def render_story_partial (story, screen)
     render_to_string({
       partial: 'stories/show/story',
       locals: {
@@ -375,7 +375,8 @@ class StoriesController < ApplicationController
         story: story,
         contributors: story.contributors,
         related_stories: nil,
-        is_widget: true
+        is_widget: true,
+        screen: screen
       }
     })
   end

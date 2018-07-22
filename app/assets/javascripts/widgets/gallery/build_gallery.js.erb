@@ -1,8 +1,7 @@
 
 function cspBuildGallery ($container, cspRootUrl) {
 
-  var Modernizr,
-      $story,
+  var Modernizr, $story,
       loading = function ($storyCard) {
         $storyCard.addClass('cs-loading');
         $('#cs-gallery a').css('pointer-events', 'none');
@@ -12,13 +11,13 @@ function cspBuildGallery ($container, cspRootUrl) {
           }
         }, 1000);
       },
-      initVideo = function ($storyCard) {
+      initVideo = function ($story) {
         if (typeof cspInitVideo !== 'function') {
           $.getScript(cspRootUrl + "<%= asset_path('widgets/gallery/story_video') %>", function () {
-            cspInitVideo($storyCard);
+            cspInitVideo($story);
           });
         } else {
-          cspInitVideo($storyCard);
+          cspInitVideo($story);
         }
       };
 
@@ -34,39 +33,30 @@ function cspBuildGallery ($container, cspRootUrl) {
       e.preventDefault();
       var $storyCard = $(this);
       if ($storyCard.hasClass('cs-loaded')) {
-        // if (typeof cspInitVideo !== 'function') {
-        //   $.getScript(cspRootUrl + "<%= asset_path('widgets/gallery/story_video') %>", function () {
-        //     cspInitVideo($storyCard);
-        //   });
-        // } else {
-        //   cspInitVideo($storyCard);
-        // }
         setTimeout(function () {
           $storyCard.removeClass('cs-loading cs-still-loading');
         }, 300);  // matches overlay animation time
         return false;
       } else {
         loading($storyCard);
-        // call widgetsListener when a story is opened, as each story will listen and then clear the listener
-        widgetsListener();
         $.ajax({
           url: $storyCard.attr('href'),
           method: 'GET',
           data: {
             is_widget: true,
-            window_width: $(window).width()
+            screen: ResponsiveBootstrapToolkit.current()
           },
           dataType: 'jsonp'
         })
           .done(function (data, status, jqxhr) {
+            $story = $container.find('.content__item:nth-of-type(' + ($storyCard.index() + 1) + ')');
             $.when(
-              $container
-                .find('.content__item:nth-of-type(' + ($storyCard.index() + 1) + ')')
-                .html(data.html)
+              $story.html(data.html),
+              $storyCard.addClass('cs-loaded')
             )
-              .done(function () {
-                $storyCard.addClass('cs-loaded');
-                initVideo($storyCard);
+              .then(function () { widgetsListener($story); })
+              .then(function () {
+                initVideo($story);
                 initLinkedIn();
 
                 // when loading, all cards were set to pointer-events: none
