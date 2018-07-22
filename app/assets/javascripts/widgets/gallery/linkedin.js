@@ -29,13 +29,12 @@ function widgetsListener ($story) {
           window.removeEventListener('message', handler, false);
         }, timeout);
       },
-      removeProfileNotFound = function ($widget) {
-        return function () {
-          if ($widget.find('iframe').width() !==
-              $widget.find('script[type*="MemberProfile"]').data('width')) {
-            $widget.remove();
-          }
-        };
+      removeProfileNotFound = function () {
+        var $widget = arguments[0];
+        if ($widget.find('iframe').width() !==
+            $widget.find('script[type*="MemberProfile"]').data('width')) {
+          $widget.remove();
+        }
       },
       postMessageHandler = function (event) {
         // For Chrome, the origin property is in the event.originalEvent object.
@@ -59,8 +58,7 @@ function widgetsListener ($story) {
           $widget.addClass('cs-loaded');
 
           // run this through a timeout to ensure the widget has rendered
-          setTimeout((function ($w) { removeProfileNotFound($w); }($widget)), 0);
-
+          setTimeout(removeProfileNotFound, 0, $widget);
 
           // set a timeout from the moment the first widget loads
           if (!firstWidgetLoaded) {

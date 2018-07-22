@@ -148,18 +148,16 @@ function clickyListeners () {
 function widgetsMonitor () {
   var contributors = CSP.stories.find(function (story) {
                        return story.csp_story_path === window.location.pathname;
-                     }).published_contributors;
-  console.log(contributors)
-      var firstWidgetLoaded = false,
+                     }).published_contributors,
+      firstWidgetLoaded = false,
       firstWidgetIndex = null, currentWidgetIndex = null, relativeWidgetIndex = null,
       pageLoadTimeoutDelay = 10000, firstWidgetReadyTimeoutDelay = 10000,
-      removeProfileNotFound = function ($widget) {
-        return function () {
-          if ($widget.find('iframe').width() !==
-              $widget.find('script[type*="MemberProfile"]').data('width')) {
-            $widget.remove();
-          }
-        };
+      removeProfileNotFound = function () {
+        var $widget = arguments[0];
+        if ($widget.find('iframe').width() !==
+            $widget.find('script[type*="MemberProfile"]').data('width')) {
+          $widget.remove();
+        }
       },
       postMessageHandler = function (event) {
         if ($('body').hasClass('stories show')) {
@@ -181,10 +179,13 @@ function widgetsMonitor () {
              * Since we are checking for all widgets loaded before showing (see below),
              * mark the widget as loaded, but then check its length to see if it's a case of "Profile not found"
              */
+             console.log(event.data);
+            console.log('currentWidgetIndex: ', currentWidgetIndex);
+
             contributors[relativeWidgetIndex].widget_loaded = true;
 
             // run this through a timeout to ensure the widget has rendered
-            setTimeout((function ($w) { removeProfileNotFound($w); }($widget)), 0);
+            setTimeout(removeProfileNotFound, 0, $widget);
 
             if (!firstWidgetLoaded) {
               firstWidgetLoaded = true;

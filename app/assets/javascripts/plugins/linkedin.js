@@ -2,6 +2,12 @@
 function initLinkedIn () {
 
   if ($('body').hasClass('stories show')) {
+    if (CSP.screenSize === 'xs') {
+      $('.hidden-xs .linkedin-widget').remove();
+
+    } else {
+      $('.visible-xs-block .linkedin-widget').remove();
+    }
     if (CSP.screenSize === 'lg') {
       $('.linkedin-widget').not('.linkedin-widget-wide').remove();
     } else {
