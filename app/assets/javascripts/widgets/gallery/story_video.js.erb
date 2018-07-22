@@ -4,7 +4,7 @@ function cspInitVideo ($story) {
   // two containers: regular and xs
   // var $iframe = $('#cs-video-modal iframe'),
   var $iframe = $(window).width() < 768 ? $story.find('.cs-story-video-xs iframe') : $story.find('.cs-story-video iframe'),
-      // videoPlayerWindow = $iframe[0].contentWindow,
+      videoPlayerWindow = $iframe[0].contentWindow,
       $thumbContainers = $story.find('.video-thumb-container'),
       provider = $thumbContainers.data('provider'),
       videoId = $thumbContainers.data('video-id'),
@@ -116,9 +116,8 @@ function cspInitVideo ($story) {
     // listen for iframe post messages
     // window.addEventListener("message", function (mesg) { console.log(mesg); }, false);
 
-    // disable modal video
     $('#cs-video-modal')
-      .on('show.bs.modal', function (e) { e.preventDefault(); })
+      .on('show.bs.modal', function (e) { e.preventDefault(); })  // disable modal video
       .on('hide.bs.modal', pauseVideo);
 
     // empty the modal iframe when any story is closed
