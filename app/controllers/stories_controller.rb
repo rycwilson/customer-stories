@@ -367,6 +367,7 @@ class StoriesController < ApplicationController
   end
 
   def render_story_partial (story, contributors, window_width)
+    puts "MOTHERFUCKER"
     render_to_string({
       partial: 'stories/show/story',
       locals: {
