@@ -5,27 +5,27 @@
 
     <div class="col-xs-12 col-sm-6 col-md-7">
 
-      <%# cache("#{company.subdomain}/stories/#{story.id}/narration", skip_digest: true) do %>
+      <% cache("#{company.subdomain}/stories/#{story.id}/#{is_widget ? 'cs-' : ''}narration", skip_digest: true) do %>
 
         <%= render(
               'stories/show/narration',
               { company: company, story: story, is_widget: is_widget }
             ) %>
 
-      <%# end %>
+      <% end %>
 
       <div class="visible-xs-block">
 
         <hr>
 
-        <%# cache("#{company.subdomain}/stories/#{story.id}/results", skip_digest: true) do %>
+        <% cache("#{company.subdomain}/stories/#{story.id}/#{is_widget ? 'cs-' : ''}results", skip_digest: true) do %>
 
           <%= render(
                 'stories/show/results',
                 { company: company, story: story, is_widget: is_widget }
               ) %>
 
-        <%# end %>
+        <% end %>
 
         <% if story.ctas.present? %>
 
@@ -63,7 +63,7 @@
 
     <div class="hidden-xs col-sm-6 col-md-5">
 
-      <% cache("#{company.subdomain}/stories/#{story.id}/results", skip_digest: true) do %>
+      <% cache("#{company.subdomain}/stories/#{story.id}/#{is_widget ? 'cs-' : ''}results", skip_digest: true) do %>
 
         <%= render('stories/show/results', { company: company, story: story, is_widget: is_widget }) %>
 
@@ -79,10 +79,12 @@
       <% if contributors.present? && (window_width.nil? || window_width.to_i >= 768) %>
 
         <%# cache("#{company.subdomain}/stories/#{story.id}/contributors", skip_digest: true) do %>
-        <%= render(
-              'stories/show/contributors',
-              { contributors: contributors, is_widget: is_widget, window_width: window_width }
-            ) %>
+
+          <%= render(
+                'stories/show/contributors',
+                { contributors: contributors, is_widget: is_widget, window_width: window_width }
+              ) %>
+
         <%# end %>
 
       <% end %>
