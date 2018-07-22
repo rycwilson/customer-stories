@@ -32,11 +32,5 @@ function initLinkedIn () {
     IN.parse();
   }
 
-  //  give the  widgets a second to load, then disable their tabbing behavior
-  window.setTimeout(function () {
-    $("#contribution-connections iframe").each(function () {
-      $(this).prop('tabIndex', '-1');
-    });
-  }, 1000);
 
 }

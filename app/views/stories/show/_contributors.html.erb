@@ -1,5 +1,5 @@
 
-<section class="story-contributors text-center hidden">
+<section class="story-contributors text-center">
 
   <% if contributors.present? %>
 
@@ -11,7 +11,8 @@
 
     <% contributors.each do |contributor| %>
 
-      <div class="linkedin-widget linkedin-widget-wide" data-linkedin-url="<%= contributor.linkedin_url %>">
+      <div class="linkedin-widget linkedin-widget-wide visible-lg-block" data-linkedin-url="<%= contributor.linkedin_url %>">
+        <!-- <script src="//platform.linkedin.com/in.js" type="text/javascript"></script> -->
         <script type="IN/MemberProfile"
                 data-id="<%= contributor.linkedin_url %>"
                 data-format="inline"
@@ -19,7 +20,8 @@
                 data-width="420"></script>
       </div>
 
-      <div class="linkedin-widget" data-linkedin-url="<%= contributor.linkedin_url %>">
+      <div class="linkedin-widget hidden-lg" data-linkedin-url="<%= contributor.linkedin_url %>">
+        <!-- <script src="//platform.linkedin.com/in.js" type="text/javascript"></script> -->
         <script type="IN/MemberProfile"
                 data-id="<%= contributor.linkedin_url %>"
                 data-format="inline"

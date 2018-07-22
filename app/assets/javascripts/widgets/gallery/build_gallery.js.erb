@@ -1,5 +1,5 @@
 
-function cspBuildGalleryWidget ($container, cspRootUrl) {
+function cspBuildGallery ($container, cspRootUrl) {
 
   var Modernizr,
       $story,
@@ -11,6 +11,15 @@ function cspBuildGalleryWidget ($container, cspRootUrl) {
             $storyCard.addClass('cs-still-loading');
           }
         }, 1000);
+      },
+      initVideo = function ($storyCard) {
+        if (typeof cspInitVideo !== 'function') {
+          $.getScript(cspRootUrl + "<%= asset_path('widgets/gallery/story_video') %>", function () {
+            cspInitVideo($storyCard);
+          });
+        } else {
+          cspInitVideo($storyCard);
+        }
       };
 
   /**
@@ -54,13 +63,8 @@ function cspBuildGalleryWidget ($container, cspRootUrl) {
             )
               .done(function () {
                 $storyCard.addClass('cs-loaded');
-                if (typeof cspInitVideo !== 'function') {
-                  $.getScript(cspRootUrl + "<%= asset_path('widgets/gallery/story_video') %>", function () {
-                    cspInitVideo($storyCard);
-                  });
-                } else {
-                  cspInitVideo($storyCard);
-                }
+                initVideo($storyCard);
+                initLinkedIn();
 
                 // when loading, all cards were set to pointer-events: none
                 // now undo that...

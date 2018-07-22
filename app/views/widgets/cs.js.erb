@@ -389,8 +389,9 @@
   }
 
   function buildGallery ($container) {
+    // $.getScript("//platform.linkedin.com/in.js", function () );
     $.getScript("<%= asset_url('widgets/gallery/build_gallery.js') %>", function () {
-      cspBuildGalleryWidget($container, "<%= root_url %>");
+      cspBuildGallery($container, "<%= root_url %>");
     });
   }
 
