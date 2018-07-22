@@ -179,13 +179,11 @@ function widgetsMonitor () {
              * Since we are checking for all widgets loaded before showing (see below),
              * mark the widget as loaded, but then check its length to see if it's a case of "Profile not found"
              */
-             console.log(event.data);
-            console.log('currentWidgetIndex: ', currentWidgetIndex);
 
             contributors[relativeWidgetIndex].widget_loaded = true;
 
             // run this through a timeout to ensure the widget has rendered
-            setTimeout(removeProfileNotFound, 0, $widget);
+            setTimeout(removeProfileNotFound, 1000, $widget);
 
             if (!firstWidgetLoaded) {
               firstWidgetLoaded = true;

@@ -58,7 +58,7 @@ function widgetsListener ($story) {
           $widget.addClass('cs-loaded');
 
           // run this through a timeout to ensure the widget has rendered
-          setTimeout(removeProfileNotFound, 0, $widget);
+          setTimeout(removeProfileNotFound, 1000, $widget);
 
           // set a timeout from the moment the first widget loads
           if (!firstWidgetLoaded) {
