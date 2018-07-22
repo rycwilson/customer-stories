@@ -47,11 +47,14 @@ function cspBuildGallery ($container, cspRootUrl) {
         return false;
       } else {
         loading($storyCard);
+        // call widgetsListener when a story is opened, as each story will listen and then clear the listener
+        widgetsListener();
         $.ajax({
           url: $storyCard.attr('href'),
           method: 'GET',
           data: {
-            is_widget: true
+            is_widget: true,
+            window_width: $(window).width()
           },
           dataType: 'jsonp'
         })

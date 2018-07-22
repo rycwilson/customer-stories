@@ -1,16 +1,13 @@
 
-(function () {
-
+function selectWidgets() {
   if ($(window).width() > 1200) {
-    $('.linkedin-widget').not('.linkedin-widget-wide').remove();
-    console.log('removing non-wide widgets')
+    $('.cs-content.content--show .linkedin-widget').not('.linkedin-widget-wide').remove();
+    // console.log('removing non-wide widgets')
   } else {
     $('.linkedin-widget-wide').remove();
-    console.log('removing wide widgets')
+    // console.log('removing wide widgets' )
   }
-
-}());
-
+}
 
 function initLinkedIn () {
   if (typeof(IN) !== 'object') {
@@ -29,16 +26,14 @@ function initLinkedIn () {
       });
   } else {
     console.log('IN already defined');
+    // IN.parse();
   }
 }
 
 function widgetsListener () {
-  // var contributors = CSP.stories.find(function (story) {
-  //                      return story.csp_story_path === window.location.pathname;
-  //                    }).published_contributors,
   var firstWidgetLoaded = false,
       firstWidgetIndex = null, currentWidgetIndex = null, relativeWidgetIndex = null,
-      pageLoadTimeout = 10000, firstWidgetReadyTimeout = 10000,
+      overlayLoadTimeout = 10000, firstWidgetReadyTimeout = 10000,
       setWidgetTimeout = function (timeout, handler) {
         setTimeout(function () {
           window.removeEventListener('message', handler, false);
@@ -47,7 +42,7 @@ function widgetsListener () {
       profileNotFound = function (index) {
         // timeout to ensure the widget has had a change to load
         setTimeout(function () {
-          if ($('.linkedin-widget').eq(relativeWidgetIndex).prop('clientHeight') === 0) {
+          if ($('.linkedin-widget').eq(index).prop('clientHeight') === 0) {
             return true;
           } else {
             return false;
@@ -56,7 +51,7 @@ function widgetsListener () {
       },
       postMessageHandler = function (event) {
         // For Chrome, the origin property is in the event.originalEvent object.
-        var origin = event.origin || event.originalEvent.origin;
+        var $widget, origin = event.origin || event.originalEvent.origin;
         // console.log(event.data);
         if (event.origin.includes('linkedin') &&
             event.data.includes('-ready') &&
@@ -71,22 +66,26 @@ function widgetsListener () {
            * Since we are checking for all widgets loaded before showing (see below),
            * mark the widget as loaded, but then check its length to see if it's a case of "Profile not found"
            */
-          contributors[relativeWidgetIndex].widget_loaded = true;
+          // contributors[relativeWidgetIndex].widget_loaded = true;
+          console.log('relativeWidgetIndex', relativeWidgetIndex);
+
           if (profileNotFound(relativeWidgetIndex)) {
             $('.linkedin-widget').eq(relativeWidgetIndex).remove();
           }
 
           if (!firstWidgetLoaded) {
             firstWidgetLoaded = true;
-            // setWidgetTimeout(firstWidgetReadyTimeout, postMessageHandler);
+            setWidgetTimeout(firstWidgetReadyTimeout, postMessageHandler);
           }
-          if (contributors.every(function (c) { return c.widget_loaded; })) {
-            $('.story-contributors').removeClass('hidden');
+
+          if ($('.cs-content.content--show .linkedin-widget').toArray()
+                .every(function (widget) { return $(widget).data('cs-loaded'); })) {
+            $('.cs-content.content--show .story-contributors').removeClass('hidden');
           }
         }
       };
 
-  // setWidgetTimeout(pageLoadTimeout, postMessageHandler);
+  setWidgetTimeout(overlayLoadTimeout, postMessageHandler);
   window.addEventListener("message", postMessageHandler, false);
 
 }
