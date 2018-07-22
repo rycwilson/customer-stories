@@ -1,7 +1,7 @@
 
 function initLinkedIn () {
   if (typeof(IN) !== 'object') {
-    console.log('IN not defined')
+    // console.log('IN not defined')
     $.ajax({
       url: 'https://platform.linkedin.com/in.js',
       method: 'get',
@@ -15,7 +15,7 @@ function initLinkedIn () {
         // console.log('in.js timed out');
       });
   } else {
-    console.log('IN already defined');
+    // console.log('IN already defined');
     IN.parse();
   }
 }
