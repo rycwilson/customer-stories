@@ -316,7 +316,7 @@ class Story < ActiveRecord::Base
   # adds contributor linkedin data, which is necessary client-side for widgets
   # that fail to load
   def published_contributors
-    Rails.cache.fetch("#{self.company.subdomain}/story-#{self.id}-published-contributors") do
+    # Rails.cache.fetch("#{self.company.subdomain}/story-#{self.id}-published-contributors") do
       contributors =
         User.joins(own_contributions: { success: {} })
             .where.not(linkedin_url:'')
@@ -348,7 +348,7 @@ class Story < ActiveRecord::Base
                       :linkedin_title, :linkedin_company, :linkedin_location )))
       end
       contributors
-    end
+    # end
   end
 
   def expire_published_contributor_cache(contributor_id)

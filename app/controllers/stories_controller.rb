@@ -72,7 +72,7 @@ class StoriesController < ApplicationController
       @is_widget = @is_external = true
       respond_to do |format|
         format.js do
-          json = { html: render_story_partial(@story, params[:screen]) }.to_json
+          json = { html: render_story_partial(@story, @contributors, params[:screen]) }.to_json
           callback = params[:callback]
           jsonp = callback + "(" + json + ")"
           render(text: jsonp)
@@ -348,8 +348,7 @@ class StoriesController < ApplicationController
     @story = Story.find_by_id(params[:id]) || Story.friendly.find(params[:story_slug])
   end
 
-  def set_contributors story
-    curator = story.success.curator
+  def set_contributors (story)
     @contributors =
         User.joins(own_contributions: { success: {} })
             .where.not(linkedin_url:'')
@@ -361,19 +360,19 @@ class StoriesController < ApplicationController
                       WHEN 'sales' THEN '3'
                     END")
             .to_a
-            .delete_if { |c| c.id == curator.id } # remove the contributor;
+            .delete_if { |c| c.id == story.curator.id } # remove the contributor;
                                                   # he goes at the end
-    @contributors << curator unless curator.linkedin_url.blank?
+    @contributors << story.curator unless story.curator.linkedin_url.blank?
     @contributors
   end
 
-  def render_story_partial (story, screen)
+  def render_story_partial (story, contributors, screen)
     render_to_string({
       partial: 'stories/show/story',
       locals: {
         company: story.company,
         story: story,
-        contributors: story.contributors,
+        contributors: contributors,
         related_stories: nil,
         is_widget: true,
         screen: screen

@@ -148,14 +148,24 @@ function clickyListeners () {
 function widgetsMonitor () {
   var contributors = CSP.stories.find(function (story) {
                        return story.csp_story_path === window.location.pathname;
-                     }).published_contributors,
-      firstWidgetLoaded = false,
+                     }).published_contributors;
+  console.log(contributors)
+      var firstWidgetLoaded = false,
       firstWidgetIndex = null, currentWidgetIndex = null, relativeWidgetIndex = null,
       pageLoadTimeoutDelay = 10000, firstWidgetReadyTimeoutDelay = 10000,
+      removeProfileNotFound = function ($widget) {
+        return function () {
+          if ($widget.find('iframe').width() !==
+              $widget.find('script[type*="MemberProfile"]').data('width')) {
+            $widget.remove();
+          }
+        };
+      },
       postMessageHandler = function (event) {
         if ($('body').hasClass('stories show')) {
           // For Chrome, the origin property is in the event.originalEvent object.
-          var origin = event.origin || event.originalEvent.origin;
+          var $widget,
+              origin = event.origin || event.originalEvent.origin;
           // console.log(event.data);
           if (event.origin === "https://platform.linkedin.com" &&
               event.data.includes('-ready') && firstWidgetIndex === null) {
@@ -164,6 +174,7 @@ function widgetsMonitor () {
               event.data.includes('widgetReady')) {
             currentWidgetIndex = parseInt(event.data.match(/\w+_(\d+)\s/)[1], 10);
             relativeWidgetIndex = currentWidgetIndex - firstWidgetIndex;
+            $widget = $('.linkedin-widget').eq(relativeWidgetIndex);
 
             /**
              * Linkedin will report that the widget is loaded even when the profile isn't found.
@@ -171,12 +182,10 @@ function widgetsMonitor () {
              * mark the widget as loaded, but then check its length to see if it's a case of "Profile not found"
              */
             contributors[relativeWidgetIndex].widget_loaded = true;
-            setTimeout(function () {
-              if ($('.linkedin-widget').eq(relativeWidgetIndex).prop('clientHeight') === 0) {
-                // profile not found
-                $('.linkedin-widget').eq(relativeWidgetIndex).remove();
-              }
-            }, 0);
+
+            // run this through a timeout to ensure the widget has rendered
+            setTimeout((function ($w) { removeProfileNotFound($w); }($widget)), 0);
+
             if (!firstWidgetLoaded) {
               firstWidgetLoaded = true;
               setWidgetTimeout(firstWidgetReadyTimeoutDelay, postMessageHandler);
