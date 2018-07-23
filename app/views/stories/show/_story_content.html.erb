@@ -59,6 +59,19 @@
 
       </div>
 
+      <div class="hidden-xs">
+
+        <% if related_stories.present? && related_stories.length >= 2 %>
+
+          <%= render(
+                'stories/show/related_stories',
+                { company: company, related_stories: related_stories }
+              ) %>
+
+        <% end %>
+
+      </div>
+
     </div>
 
     <div class="hidden-xs col-sm-6 col-md-5">
