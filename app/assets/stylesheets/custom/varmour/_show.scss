@@ -40,9 +40,6 @@
 
   @media only screen and (max-width: 767px) {
     .testimonial, .cs-testimonial {
-      &.after {
-        content: none;
-      }
     }
     .story-video-xs, .cs-story-video-xs, .social-buttons-xs, .cs-social-buttons-xs {
       background-color: #fff;

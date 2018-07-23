@@ -35,6 +35,17 @@
 
         <% end %>
 
+        <% if related_stories.present? && related_stories.length >= 2 %>
+
+          <hr>
+
+          <%= render(
+                'stories/show/related_stories',
+                { company: company, related_stories: related_stories }
+              ) %>
+
+        <% end %>
+
         <% if contributors.present? && (window_width.nil? || window_width.to_i < 768) %>
 
           <hr>
@@ -47,17 +58,6 @@
         <% end %>
 
       </div>
-
-      <% if related_stories.present? && related_stories.length >= 2 %>
-
-        <div class="visible-xs-block"><hr></div>
-
-        <%= render(
-              'stories/show/related_stories',
-              { company: company, related_stories: related_stories }
-            ) %>
-
-      <% end %>
 
     </div>
 
