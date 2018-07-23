@@ -163,6 +163,9 @@
         div:first-child {
           text-align: center;
           padding-right: 0;
+          i.fa-check {
+            font-size: 13px !important;
+          }
         }
         span {
           line-height: 1.5 !important;
