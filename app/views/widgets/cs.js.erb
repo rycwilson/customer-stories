@@ -355,29 +355,44 @@
   }
 
   function buildFixedCarousel ($container) {
-    slideDrawerPlugin($container);
-    var $header = $container.find('.cs-header'),
-        widgetShowTimer = null, widgetHideTimer = null;
-    // cancel the timers if user interacts with widget
-    $header.on('click', function (e, data) {
-      var auto = data && data.isAuto;
-      if (!auto) {
-        if (widgetShowTimer) { clearTimeout(widgetShowTimer); }
-        if (widgetHideTimer) { clearTimeout(widgetHideTimer); }
-      }
+    if (getCookie('cs-fixed-carousel-removed')) return false;
+    var widgetShowTimer, widgetHideTimer,
+        attachListeners = function () {
+          $container
+            .on('click', '.cs-header', function (e, data) {
+              var auto = data && data.isAuto;
+              if ($(e.target).is('[class*="remove"]')) {
+                $container.hide();
+                // set a cookie to keep the widget hidden for a day
+                var date = new Date();
+                setCookie('cs-fixed-carousel-removed', '1', date.setDate(date.getDate() + 1));
+                return false;
+              }
+              if (!auto) {
+                // cancel the timers if user interacts with widget
+                if (widgetShowTimer) { clearTimeout(widgetShowTimer); }
+                if (widgetHideTimer) { clearTimeout(widgetHideTimer); }
+              }
+            });
+        };
+
+    $.when(slideDrawerPlugin($container)).done(function () {
+      attachListeners();
     });
-    if ( <%= @company.widget.show %> && !getCookie('cs-widget-hide') ) {
+
+    if ( <%= @company.widget.show %> && !getCookie('cs-fixed-carousel-hide') ) {
       widgetShowTimer = setTimeout(function () {
-        $header.trigger('click', { isAuto: true } );
+        $container.find('header').trigger('click', { isAuto: true } );
         if (<%= @company.widget.hide %>) {
           widgetHideTimer = setTimeout(function () {
-            $header.trigger('click', { isAuto: true } );
+            $container.find('header').trigger('click', { isAuto: true } );
           }, <%= @company.widget.hide_delay %>);
         }
       }, <%= @company.widget.show_delay %>);
+      // widget is configured to auto-open once per widget.show_freq days ...
       var date = new Date();
       date.setDate(date.getDate() + <%= @company.widget.show_freq %>);
-      setCookie('cs-widget-hide', '1', date.toUTCString())
+      setCookie('cs-fixed-carousel-hide', '1', date.toUTCString());
     }
     $container.find('section')
       .slideDrawer()
@@ -466,24 +481,13 @@
           // Set drawer to hide
           drawer.hide(options, div);
         }
-
-        $container
-          .find('.cs-header')
-            .on('click', function (e) {
-              if ($(e.target).is('[class*="remove"]')) {
-                return false;
-              }
-              if ( isXsWidgetAndScreen($(this)) ) {
-                drawer.toggle(options, div);
-              } else if ( isSmWidgetAndScreen($(this)) ) {
-                drawer.toggle(options, div);
-              }
-            })
-            .end()
-          .find('.cs-header [class*="remove"]')
-            .on('click', function () {
-              $container.hide();
-            });
+        $container.on('click', '.cs-header:not([class*="remove"])', function () {
+          if ( isXsWidgetAndScreen($(this)) ) {
+            drawer.toggle(options, div);
+          } else if ( isSmWidgetAndScreen($(this)) ) {
+            drawer.toggle(options, div);
+          }
+        })
       },
       toggle: function (options, div) {
         ($(div).height() + options.borderHeight === options.drawerHeight) ?
@@ -500,6 +504,8 @@
       },
 
     };
+
+
     // Function wrapper
     $.fn.slideDrawer = function (options) {
 
