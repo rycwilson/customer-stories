@@ -365,7 +365,7 @@
                 $container.hide();
                 // set a cookie to keep the widget hidden for a day
                 var date = new Date();
-                setCookie('cs-fixed-carousel-removed', '1', date.setDate(date.getDate() + 1));
+                setCookie('cs-fixed-carousel-removed', '1', date.setDate(date.getDate() + 1), null, window.location.hostname);
                 return false;
               }
               if (!auto) {
