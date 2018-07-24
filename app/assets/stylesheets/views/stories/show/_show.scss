@@ -231,6 +231,9 @@
             margin-bottom: 2px;
           }
         }
+        li a.thumbnail .thumbnail-view .thumbnail-view-hover p {
+          font-size: 13px !important;
+        }
       }
     }
     .story-contributors {
@@ -291,6 +294,11 @@
     .cs-story-content {
       span, p {
         // font-size: 13px !important;
+      }
+    }
+    .related-stories {
+      li a.thumbnail .thumbnail-view .thumbnail-view-hover p {
+        font-size: 13px !important;
       }
     }
   }
