@@ -392,7 +392,6 @@
       // widget is configured to auto-open once per widget.show_freq days ...
       var date = new Date();
       date.setDate(date.getDate() + <%= @company.widget.show_freq %>);
-      setCookie('cs-fixed-carousel-hide', '1', date.toUTCString());
     }
     $container.find('section')
       .slideDrawer()
