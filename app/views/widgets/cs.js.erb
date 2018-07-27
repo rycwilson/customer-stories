@@ -489,9 +489,9 @@
         }
         $container.on('click', '.cs-header:not([class*="remove"])', function () {
           if ( isXsWidgetAndScreen($(this)) ) {
-            drawer.toggle(options, div, true);
+            drawer.toggle(options, div);
           } else if ( isSmWidgetAndScreen($(this)) ) {
-            drawer.toggle(options, div), true;
+            drawer.toggle(options, div);
           }
         })
       },
