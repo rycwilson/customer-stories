@@ -99,6 +99,62 @@
     }
   }
 
+  // attempt to bring back hover effects
+  // .cs-header {
+  //   display: inline-block;
+  //   text-align: left;  // needed to counter text-center for xs
+  //   width: 100%;
+  //   height: 100%;
+  //   box-sizing: content-box !important;
+  //   cursor: pointer;
+  //   background: #000000;
+  //   color: #ffffff;
+  //   line-height: 32px;
+  //   font-size: 18px;
+  //   padding: 0;
+  //   box-shadow: 0 2px 8px 0px rgba(0, 0, 0, 0.2);
+  //   -moz-border-radius-topleft: 5px 5px;
+  //   -moz-border-radius-topright: 5px 5px;
+  //   border-top-left-radius: 5px 5px;
+  //   border-top-right-radius: 5px 5px;
+  //   .cs-flexbox-outer {
+  //     height: 100%;
+  //     display: flex;
+  //     align-items: center;
+  //     justify-content: space-between;
+  //     .cs-flexbox-inner, .cs-flexbox-inner-xs {
+  //       width: 100%;
+  //       display: flex;
+  //       align-items: center;
+  //       justify-content: space-between;
+  //       .cs-title {
+  //         padding-left: 15px;
+  //         opacity: 0.87;
+  //       }
+  //       .cs-chevrons {
+  //         padding: 0 6px;
+  //         opacity: 0.87;
+  //         .fa-chevron-up {
+  //           display: none;
+  //         }
+  //       }
+  //       &:not(.cs-flexbox-inner-xs):hover {
+  //         .cs-title, .cs-chevrons {
+  //           opacity: 1;
+  //         }
+  //       }
+  //     }
+  //     .cs-remove, .cs-remove-xs {
+  //       display: inline-block;
+  //       padding: 7px 10px 7px 2px;
+  //       opacity: 0.87;
+  //       &:not(.cs-remove-xs):hover {
+  //         opacity: 1;
+  //       }
+  //     }
+  //   }
+  // }
+
   .cs-drawer-content {
     position: relative;
     // height: 160px;
