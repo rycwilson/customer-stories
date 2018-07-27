@@ -374,8 +374,15 @@
                 if (widgetHideTimer) { clearTimeout(widgetHideTimer); }
               }
             });
+            // .find('header .cs-open-close').hover(
+            //   function () {
+            //     $(this).closest('header').find('.cs-open-close').css('opacity', '1');
+            //   },
+            //   function () {
+            //     $(this).closest('header').find('.cs-open-close').css('opacity', '0.87');
+            //   }
+            // );
         };
-
     $.when(slideDrawerPlugin($container)).done(function () {
       attachListeners();
     });
@@ -482,9 +489,9 @@
         }
         $container.on('click', '.cs-header:not([class*="remove"])', function () {
           if ( isXsWidgetAndScreen($(this)) ) {
-            drawer.toggle(options, div);
+            drawer.toggle(options, div, true);
           } else if ( isSmWidgetAndScreen($(this)) ) {
-            drawer.toggle(options, div);
+            drawer.toggle(options, div), true;
           }
         })
       },
@@ -493,9 +500,10 @@
           drawer.slide( div, options.drawerHiddenHeight, options.slideSpeed ) :
           drawer.slide( div, options.drawerHeight-options.borderHeight, options.slideSpeed );
       },
-      slide: function (div, height, speed) {
+      slide: function (div, height, speed, userClicked) {
         $(div).animate({ 'height': height }, speed, 'swing', function () {
           $container.find('.cs-header i[class*="fa-chevron"]').toggle();
+          $container.find('header').toggleClass('open closed');
         });
       },
       hide: function (options, div) {

@@ -34,16 +34,18 @@
     // better than using max-width (on .cs-header), as max-width will remove space starting on the right,
     // but we want to stay right-aligned
     > .hidden-xs {
-      padding-left: 30px;
+      // padding-left: 30px;
     }
   }
 
   .visible-xs-block .cs-header {
-    max-width: 220px;
+    max-width: 265px;
   }
 
   .cs-header {
-    display: inline-block;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     text-align: left;  // needed to counter text-center for xs
     width: 100%;
     height: 100%;
@@ -53,37 +55,46 @@
     color: #ffffff;
     line-height: 32px;
     font-size: 18px;
-    padding: 8px 12px 8px 15px;
+    padding: 0;
     box-shadow: 0 2px 8px 0px rgba(0, 0, 0, 0.2);
     -moz-border-radius-topleft: 5px 5px;
     -moz-border-radius-topright: 5px 5px;
     border-top-left-radius: 5px 5px;
     border-top-right-radius: 5px 5px;
-    .cs-open-close, .cs-remove {
-      opacity: 0.87;
+    // need to provide slightly different padding due to delta in chevron up/down icon width
+    // => actually this approach is not going to work, because a different font will change everything
+    // => just give up text highlighting for now
+    &.closed > .cs-open-close {
+      // margin: -7px 0;
+      // padding: 7px 38px 7px 15px;
     }
-    .cs-open-close:hover, .cs-remove:hover {
-      opacity: 1;
+    &.open > .cs-open-close {
+      // margin: -7px 0;
+      // padding: 7px 33px 7px 15px;
     }
-    .cs-open-close {
-      margin-right: 25px;
-      margin-top: -8px;
-      padding-top: 8px;
-      margin-left: -15px;
+    > .cs-open-close {
       padding-left: 15px;
-      margin-bottom: -8px;
-      padding-bottom: 8px;
+    }
+    .cs-header-icons {
+      .cs-open-close {
+        // margin: -12px 0;
+        // padding: 12px 2px;
+      }
+      .fa-chevron-up {
+        display: none;
+      }
+    }
+    .cs-open-close, .cs-remove {
+      // opacity: 0.87;
     }
     .cs-remove {
-      padding: 8px 10px 8px 0;
-      margin-top: -8px;
-      margin-bottom: -8px;
-      margin-left: 10px;
-      margin-right: -10px;
+      display: inline-block;
+      padding: 7px 12px 7px 4px;
+      &:hover {
+        // opacity: 1
+      }
     }
-    i.fa-chevron-up {   // this will get toggled as soon as the widget tab loads
-      display: none;
-    }
+    // see cs.js.erb for hover handlers
   }
 
   .cs-drawer-content {
