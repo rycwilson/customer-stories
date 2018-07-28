@@ -1,10 +1,12 @@
 
 .stories.show, .cs-overlay-container {
 
-  @import 'social_share_buttons';
-  @import '../shared/cookie_consent';
   @import '../shared/video';
   @import 'blockquote';
+  &:not(.cs-overlay-container) {
+    @import 'social_share_buttons';
+    @import '../shared/cookie_consent';
+  }
 
   // @import '../shared/linkedin_widget';  // not using these presently
 

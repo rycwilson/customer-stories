@@ -69,10 +69,10 @@ class StoriesController < ApplicationController
 
   def show
     if params[:is_widget]
-      @is_widget = @is_external = true
+      # @is_widget = @is_external = true
       respond_to do |format|
         format.js do
-          json = { html: render_story_partial(@story, @contributors, params[:window_width]) }.to_json
+          json = { html: render_story_partial(@story, @contributors, params[:status], params[:window_width]) }.to_json
           callback = params[:callback]
           jsonp = callback + "(" + json + ")"
           render(text: jsonp)
@@ -366,9 +366,9 @@ class StoriesController < ApplicationController
     @contributors
   end
 
-  def render_story_partial (story, contributors, window_width)
+  def render_story_partial (story, contributors, status, window_width)
     render_to_string({
-      partial: 'stories/show/story',
+      partial: status == 'published' ? 'stories/show/story' : 'stories/show/preview',
       locals: {
         company: story.company,
         story: story,

@@ -29,7 +29,7 @@ function cspBuildGallery ($container, cspRootUrl) {
   $.getScript(cspRootUrl + "<%= asset_path('widgets/gallery/story_overlays') %>");
 
   $container
-    .on('click', 'a.published', function (e) {
+    .on('click', 'a.published, a.preview-published', function (e) {
       e.preventDefault();
       var $storyCard = $(this);
       if ($storyCard.hasClass('cs-loaded')) {
@@ -44,6 +44,7 @@ function cspBuildGallery ($container, cspRootUrl) {
           method: 'GET',
           data: {
             is_widget: true,
+            status: $(this).hasClass('published') ? 'published' : 'preview-published',
             window_width: $(window).width()
           },
           dataType: 'jsonp'
