@@ -119,6 +119,9 @@
               $p.children().eq(currentPage).addClass('cs-current-page-dot');
             });
             $carousel.animate({ scrollLeft: '-=' + $carousel.css('width') }, scrollTime);
+            $('.cs-current-page-num').empty().append(
+                (currentPage + 1).toString() + ' of ' + numPages.toString()
+              );
           }
         },
         arrowRight = function () {
@@ -130,6 +133,9 @@
               $p.children().eq(currentPage).addClass('cs-current-page-dot');
             });
             $carousel.animate({ scrollLeft: '+=' + $carousel.css('width') }, scrollTime);
+            $('.cs-current-page-num').empty().append(
+                (currentPage + 1).toString() + ' of ' + numPages.toString()
+              );
           }
         },
         adjustColumns = function () {
@@ -307,7 +313,7 @@
     numPages = Math.ceil($carousel.prop('scrollWidth') / $carousel.width());
     if (numPages > 8 && $(window).width() <= 500) {
       $paginationXs
-        .append('<span style="color:#999">' +
+        .append('<span class="cs-current-page-num" style="color:#999">' +
                   (currentPage + 1).toString() + ' of ' + numPages.toString() +
                 '</span>');
     } else if ($(window).width() <= 500) {
@@ -374,14 +380,6 @@
                 if (widgetHideTimer) { clearTimeout(widgetHideTimer); }
               }
             });
-            // .find('header .cs-open-close').hover(
-            //   function () {
-            //     $(this).closest('header').find('.cs-open-close').css('opacity', '1');
-            //   },
-            //   function () {
-            //     $(this).closest('header').find('.cs-open-close').css('opacity', '0.87');
-            //   }
-            // );
         };
     $.when(slideDrawerPlugin($container)).done(function () {
       attachListeners();
