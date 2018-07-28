@@ -2,10 +2,10 @@
 <div class="cs-container cs-story-preview">
 
   <div class="cs-row">
-    <div class="col-sm-12 text-center">
+    <div class="col-sm-12">
 
-      <div class="customer-logo">
-        <%= image_tag (story.customer.logo_url || LOGO_PLACEHOLDER_URL), class: 'img-responsive' %>
+      <div class="customer-logo text-center">
+        <%= image_tag (story.customer.logo_url || LOGO_PLACEHOLDER_URL)  %>
       </div>
     <!--   <div class="customer-name">
         <span><%#= story.customer.name %></span>
@@ -15,14 +15,23 @@
   </div>
 
   <div class="cs-row">
-    <div class="col-sm-6">
+    <div class="col-sm-6 cs-story-summary">
 
-
+      <p><%= story.summary.html_safe %></p>
 
     </div>
     <div class="col-sm-6">
+
+      <blockquote>
+        <p><%= story.quote %></p>
+        <div class="<%= story.quote_attr_name.blank? ? 'hidden' : '' %>">
+          <cite class="text-right">
+            <p class="cite-name"><%= story.quote_attr_name %></p>
+            <p class="cite-title"><%= story.quote_attr_title %></p>
+          </cite>
+        </div>
+      </blockquote>
 
     </div>
   </div>
-
 </div>

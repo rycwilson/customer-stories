@@ -1,6 +1,91 @@
 
 .cs-story-preview {
 
-  @import 'blockquote';
+  margin-top: -25px;
 
+  blockquote {
+    &:before {
+      content: none;
+    }
+    background: transparent;  // overrides weebly
+    border-left: none;
+    font-style: italic;
+    margin-bottom: 0;
+    padding: 0;
+    position: relative;
+    > p {
+      &:before {
+        // choosing a web safe font here
+        font-family: 'Georgia' !important;
+        content: open-quote;
+        position: absolute;
+        top: -10px;
+        left: -20px;
+        font-size: 34px !important;
+        color: #aaa !important;
+      }
+      font-size: 16px !important;
+      margin-bottom: 15px;
+      line-height: 1.5 !important;
+      font-weight: 400 !important;
+      color: #777 !important;
+      &:after {
+        content: no-close-quote;
+      }
+    }
+    cite {
+      p {
+        font-style: normal;
+        color: #666 !important;
+        font: {
+          size: 13px !important;
+          weight: 400 !important;
+        }
+        line-height: 1.5 !important;
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .cs-story-preview {
+    blockquote {
+      > p {
+        text-indent: 17px;  // half the font size of the open quote
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 768px) {
+}
+
+@media only screen and (min-width: 992px) {
+  .cs-story-preview {
+    blockquote {
+      > p {
+        &:before {
+          top: -15px;
+          left: -23px;
+          font-size: 40px !important;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .cs-story-preview {
+    blockquote {
+      > p {
+        font-size: 18px !important;
+        &:before {
+          top: -18px;
+          left: -28px;
+          font-size: 48px !important;
+        }
+      }
+    }
+  }
 }

@@ -44,7 +44,7 @@ function cspBuildGallery ($container, cspRootUrl) {
           method: 'GET',
           data: {
             is_widget: true,
-            status: $(this).hasClass('published') ? 'published' : 'preview-published',
+            story_status: $storyCard.hasClass('published') ? 'published' : 'preview-published',
             window_width: $(window).width()
           },
           dataType: 'jsonp'
@@ -57,8 +57,10 @@ function cspBuildGallery ($container, cspRootUrl) {
             )
               .then(function () { widgetsListener($story); })
               .then(function () {
-                initVideo($story);
-                // initLinkedIn();
+                if ($storyCard.hasClass('published has-video')) {
+                  initVideo($story);
+                }
+                initLinkedIn();
 
                 // when loading, all cards were set to pointer-events: none
                 // now undo that...

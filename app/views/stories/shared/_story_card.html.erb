@@ -1,7 +1,9 @@
 
+<% widget_type = widget_type || nil %>
+
 <!-- grid__item is for the overlays; not implemented internally -->
-<a href="<%= story.csp_story_link(is_curator, is_widget, is_external) %>"
-   class="grid__item public <%= is_external ? 'cs-thumbnail' : 'thumbnail' %> <%= story.published ? 'published' : (story.preview_published ? 'preview-published' : 'logo-published') %>"
+<a href="<%= story.csp_story_link(is_curator, is_widget, is_external, widget_type) %>"
+   class="grid__item public <%= is_external ? 'cs-thumbnail' : 'thumbnail' %> <%= story.published ? 'published' : (story.preview_published ? 'preview-published' : 'logo-published') %> <%= story.video_url.present? ? 'has-video' : '' %>"
    target="<%= is_external ? '_blank' : '' %>"
    data-customer="<%= is_external ? '' : story.customer.name.to_json %>"
    data-logosrc="<%= is_external ? '' : story.customer.logo_url %>"

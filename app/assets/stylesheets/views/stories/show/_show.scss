@@ -3,9 +3,12 @@
 
   @import '../shared/video';
   @import 'blockquote';
-  &:not(.cs-overlay-container) {
+  &.stories.show {
     @import 'social_share_buttons';
     @import '../shared/cookie_consent';
+  }
+  &.cs-overlay-container {
+    @import 'show_preview';
   }
 
   // @import '../shared/linkedin_widget';  // not using these presently

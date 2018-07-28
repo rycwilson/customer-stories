@@ -4,7 +4,7 @@ class StoriesController < ApplicationController
   include StoriesAndWidgets
 
   # jsonp request for widgets
-  skip_before_action(:verify_authenticity_token, only: [:show], if: Proc.new { params[:is_widget].present? })
+  skip_before_action(:verify_authenticity_token, only: [:show], if: Proc.new { params[:is_widget] })
 
   before_action :set_company
   before_action :set_story, only: [:edit, :update, :ctas, :tags, :promote, :approval, :destroy]
@@ -72,7 +72,7 @@ class StoriesController < ApplicationController
       # @is_widget = @is_external = true
       respond_to do |format|
         format.js do
-          json = { html: render_story_partial(@story, @contributors, params[:status], params[:window_width]) }.to_json
+          json = { html: render_story_partial(@story, @contributors, params[:story_status], params[:window_width]) }.to_json
           callback = params[:callback]
           jsonp = callback + "(" + json + ")"
           render(text: jsonp)
@@ -366,15 +366,16 @@ class StoriesController < ApplicationController
     @contributors
   end
 
-  def render_story_partial (story, contributors, status, window_width)
+  def render_story_partial (story, contributors, story_status, window_width)
     render_to_string({
-      partial: status == 'published' ? 'stories/show/story' : 'stories/show/preview',
+      partial: story_status == 'published' ? 'stories/show/story' : 'stories/show/preview',
       locals: {
         company: story.company,
         story: story,
         contributors: contributors,
         related_stories: nil,
         is_widget: true,
+        widget_type: 'gallery',
         window_width: window_width
       }
     })

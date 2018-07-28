@@ -60,7 +60,7 @@
       &.cs-customer-quote {
         blockquote {
           &:before {  // overrides weebly
-            content: none
+            content: none;
           }
           > p {
             color: #777 !important;
