@@ -403,7 +403,7 @@ class StoriesController < ApplicationController
   #   - company's story index if not published or not curator
   def set_public_story_or_redirect company
     @story = Story.friendly.find params[:title]
-    if request.format == 'application/pdf'
+    if request.format == 'application/pdf' || params[:is_widget]
       @story
     elsif request.path != @story.csp_story_path  # friendly path changed
       # old story title slug requested, redirect to current
