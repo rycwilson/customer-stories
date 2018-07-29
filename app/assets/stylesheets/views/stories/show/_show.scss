@@ -1,5 +1,6 @@
 
 .stories.show, .cs-overlay-container {
+  $max-xs-width: 500px;
 
   @import '../shared/video';
   @import 'blockquote';
@@ -12,8 +13,6 @@
   }
 
   // @import '../shared/linkedin_widget';  // not using these presently
-
-  $max-xs-width: 500px;
 
   text-align: left;   // override weebly
 
