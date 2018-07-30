@@ -47,7 +47,6 @@ class StoriesController < ApplicationController
       if filter_params['category'].present?
         @category_select_cache_key = @company.category_select_cache_key(filter_params['category'])
         category_stories = Story.company_public_filter_category(@company.id, filter_params['category'])
-        # binding.remote_pry
         @category_results = "#{category_stories.size} #{'story'.pluralize(category_stories.size)} found"
       end
       if filter_params['product'].present?
@@ -72,7 +71,7 @@ class StoriesController < ApplicationController
       # @is_widget = @is_external = true
       respond_to do |format|
         format.js do
-          json = { html: render_story_partial(@story, @contributors, params[:story_status], params[:window_width]) }.to_json
+          json = { html: render_story_partial(@story, @contributors, params[:window_width]) }.to_json
           callback = params[:callback]
           jsonp = callback + "(" + json + ")"
           render(text: jsonp)
@@ -366,9 +365,9 @@ class StoriesController < ApplicationController
     @contributors
   end
 
-  def render_story_partial (story, contributors, story_status, window_width)
+  def render_story_partial (story, contributors, window_width)
     render_to_string({
-      partial: story_status == 'published' ? 'stories/show/story' : 'stories/show/preview',
+      partial: story.status == 'published' ? 'stories/show/story' : 'stories/show/preview',
       locals: {
         company: story.company,
         story: story,
@@ -403,11 +402,11 @@ class StoriesController < ApplicationController
   #   - company's story index if not published or not curator
   def set_public_story_or_redirect company
     @story = Story.friendly.find params[:title]
-    if request.format == 'application/pdf' || params[:is_widget]
-      @story
-    elsif request.path != @story.csp_story_path  # friendly path changed
+    if request.path != @story.csp_story_path  # friendly path changed
       # old story title slug requested, redirect to current
       return redirect_to @story.csp_story_path, status: :moved_permanently
+    elsif request.format == 'application/pdf' || params[:is_widget]
+      @story
     elsif !@story.published? && !company_curator?(company.id)
       return redirect_to root_url(subdomain:request.subdomain, host:request.domain)
     end

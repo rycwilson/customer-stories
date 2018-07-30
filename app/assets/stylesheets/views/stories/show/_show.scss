@@ -139,11 +139,9 @@
     background-color: $csp-gray;
     padding: 15px 0 26px 0;
     &.cs-story-content {
-      span, li, p, h4 {
-        font: {
-          family: inherit;
-          weight: 400 !important;
-        }
+      span, li, p, a, h4 {
+        font-family: inherit !important;
+        font-weight: 400 !important;
         color: #333 !important;
       }
     }
@@ -156,9 +154,6 @@
       margin-bottom: 25px;
       span, li, p {
         line-height: 1.5 !important;
-      }
-      &.visible-xs-block {
-        font-size: 14px !important;
       }
     }
     .story-results {
@@ -310,19 +305,18 @@
 
   @media only screen and (max-width: 767px) {
     .testimonial, .cs-testimonial {
-      margin-bottom: 30px;
+      margin-bottom: 0;
       &:after {
         content: none;
-        // bottom: -50px;
       }
       > .container, > .cs-container {
-        max-width: 500px;
+        max-width: $max-xs-width;
       }
     }
     .story-video-xs, .cs-story-video-xs {
-      background-color: #fff;
+      &:not(.cs-story-video-xs) { background-color: #fff; }
       > .container, > .cs-container {
-        max-width: 500px;
+        max-width: $max-xs-width;
         // since .testimonial has a margin-bottom that accommodates the :after element,
         // pull these elements user-select: none;
         // (don't apply these to overlay)
@@ -330,13 +324,10 @@
           margin-top: -20px;
         }
       }
-      &.cs-story-video-xs {
-        background-color: $csp-gray;
-      }
     }
     .social-buttons-xs, .cs-social-buttons-xs {
       > .container, > .cs-container {
-        max-width: 500px;
+        max-width: $max-xs-width;
       }
       padding-top: 0;
       padding-bottom: 0;
@@ -347,12 +338,15 @@
         font-size: 20px !important;
       }
       > .container, > .cs-container {
-        max-width: 500px;
-        .well {
+        max-width: $max-xs-width;
+        .well, .cs-well {
           padding: 19px 0 0 0;
           border: 0
         }
         .story-narration {
+          span, p, li, a {
+            font-size: 14px !important;
+          }
         }
         .story-results {
           ul {

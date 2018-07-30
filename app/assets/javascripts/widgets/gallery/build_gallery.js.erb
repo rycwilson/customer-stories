@@ -44,7 +44,6 @@ function cspBuildGallery ($container, cspRootUrl) {
           method: 'GET',
           data: {
             is_widget: true,
-            story_status: $storyCard.hasClass('published') ? 'published' : 'preview-published',
             window_width: $(window).width()
           },
           dataType: 'jsonp'

@@ -198,6 +198,18 @@ class Story < ActiveRecord::Base
     new_record? || title_changed? || slug.blank?
   end
 
+  def status
+    if self.published?
+      'published'
+    elsif self.preview_published?
+      'preview-published'
+    elsif self.logo_published?
+      'logo-published'
+    else
+      'not-published'
+    end
+  end
+
   def scrub_html_input
     white_list_sanitizer = Rails::Html::WhiteListSanitizer.new
     self.content = white_list_sanitizer.sanitize(content, tags: %w(a p span strong i u blockquote pre font h1 h2 h3 h4 h5 h6 table tr td ol ul li hr img), attributes: %w(id class style face href src))
