@@ -25,7 +25,9 @@ function widgetsListener ($story) {
       firstWidgetIndex = null, currentWidgetIndex = null, relativeWidgetIndex = null,
       overlayLoadTimeout = 10000, firstWidgetReadyTimeout = 10000,
       setWidgetTimeout = function (timeout, handler) {
+        console.log('1', typeof handler)
         setTimeout(function () {
+          console.log('2', handler)
           window.removeEventListener('message', handler, false);
         }, timeout);
       },
