@@ -79,7 +79,7 @@ function widgetsListener ($story) {
 
   window.addEventListener("message", postMessageHandler, false);
   $(document).one('click', '.cs-content.content--show .close-button', function () {
-    window.removeEventListener('message', handler, false);
+    window.removeEventListener('message', postMessageHandler, false);
   });
 
 }
