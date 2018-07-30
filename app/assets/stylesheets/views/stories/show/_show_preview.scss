@@ -71,6 +71,7 @@
       margin-bottom: 30px;
     }
     blockquote {
+      margin-bottom: 25px;
       > p {
         text-indent: 17px;  // half the font size of the open quote
       }
@@ -80,10 +81,10 @@
 
 @media only screen and (min-width: 768px) {
   .cs-story-preview {
-    [class*="col-"]:first-child {
+    .cs-story-summary {
       padding: 0 30px 0 15px;
     }
-    [class*="col-"]:last-child {
+    .cs-customer-quote {
       padding: 0 15px 0 30px;
     }
   }
@@ -91,7 +92,7 @@
 
 @media only screen and (min-width: 992px) {
   .cs-story-preview {
-    [class*="col-"] {
+    .cs-story-summary, .cs-customer-quote {
       padding: 0 40px;
     }
     .cs-story-summary {
