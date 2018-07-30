@@ -198,6 +198,18 @@ class Story < ActiveRecord::Base
     new_record? || title_changed? || slug.blank?
   end
 
+  def status
+    if self.published?
+      'published'
+    elsif self.preview_published?
+      'preview-published'
+    elsif self.logo_published?
+      'logo-published'
+    else
+      'not-published'
+    end
+  end
+
   def scrub_html_input
     white_list_sanitizer = Rails::Html::WhiteListSanitizer.new
     self.content = white_list_sanitizer.sanitize(content, tags: %w(a p span strong i u blockquote pre font h1 h2 h3 h4 h5 h6 table tr td ol ul li hr img), attributes: %w(id class style face href src))
@@ -266,14 +278,16 @@ class Story < ActiveRecord::Base
     end
   end
 
-  def csp_story_link (is_curator, is_widget, is_external)
+  def csp_story_link (is_curator, is_widget, is_external, widget_type)
     if is_curator
       Rails.application.routes.url_helpers.edit_story_path(self.id)
     elsif self.published?
       is_external ? self.csp_story_url : self.csp_story_path
     elsif self.preview_published?
-      if is_widget
+      if is_widget && widget_type == 'fixed-carousel'
         is_external ? Rails.application.routes.url_helpers.root_url(subdomain: self.company.subdomain) + "?preview=#{self.slug}" : "/?preview=#{self.slug}"
+      elsif is_widget && widget_type == 'gallery'
+        self.csp_story_url
       else
         'javascript:;'
       end

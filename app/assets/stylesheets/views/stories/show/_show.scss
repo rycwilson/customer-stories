@@ -1,14 +1,19 @@
 
 .stories.show, .cs-overlay-container {
+  $max-xs-width: 500px;
+  $csp-gray: #f2f2f2;
 
-  @import 'social_share_buttons';
-  @import '../shared/cookie_consent';
   @import '../shared/video';
+  @import 'social_share_buttons';
   @import 'blockquote';
+  &.stories.show {
+    @import '../shared/cookie_consent';
+  }
+  &.cs-overlay-container {
+    @import 'show_preview';
+  }
 
   // @import '../shared/linkedin_widget';  // not using these presently
-
-  $max-xs-width: 500px;
 
   text-align: left;   // override weebly
 
@@ -78,6 +83,7 @@
       margin: 0;
     }
     &.no-video {
+      margin-bottom: 30px;
       .customer-logo-quote.hidden-xs {
         display: flex;
         align-items: center;
@@ -98,12 +104,12 @@
       // bottom: -90px;  // mirrors margin-bottom
       z-index: -1;
       width: 100%;
-      background-image: linear-gradient(to bottom, #ffffff 0%, #f2f2f2 100%);  //f2f2f2
+      background-image: linear-gradient(to bottom, #ffffff 0%, $csp-gray 100%);
       background-repeat: repeat-x;
-      filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2f2f2', endColorstr='#ffffffff', GradientType=0);
+      // filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2f2f2', endColorstr='#ffffffff', GradientType=0);
     }
     &.cs-testimonial {
-      // margin-bottom: 0;
+
       p, span {
         font-family: inherit;
       }
@@ -112,12 +118,12 @@
       }
       .customer-logo-quote.visible-xs-block {
         .customer-logo {
-          background-color: #f2f2f2;
+          background-color: $csp-gray;
         }
       }
       .customer-logo-quote.hidden-xs {
         .customer-logo {
-          background-color: #f2f2f2;
+          background-color: $csp-gray;
           img {
             max-height: 65px;
             max-width: 60%;
@@ -131,15 +137,13 @@
   }
 
   .story-content, .cs-story-content {
-    background-color: #f2f2f2;
+    background-color: $csp-gray;
     padding: 15px 0 26px 0;
     &.cs-story-content {
-      span, li, p, h4 {
-        font: {
-          family: inherit;
-          weight: 400 !important;
-        }
-        color: #333 !important;
+      span, li, p, a, h4 {
+        font-family: inherit !important;
+        font-weight: 400 !important;
+        &:not(a) { color: #333 !important; }
       }
     }
     h4 {
@@ -149,11 +153,8 @@
     }
     .story-narration {
       margin-bottom: 25px;
-      span, li, p {
+      span, li, p, a {
         line-height: 1.5 !important;
-      }
-      &.visible-xs-block {
-        font-size: 14px !important;
       }
     }
     .story-results {
@@ -241,7 +242,7 @@
       > .well:first-child, .cs-well:first-child {
         margin-bottom: 0;
         position:relative;
-        background-image: linear-gradient(to bottom, #ffffff 72%, #f2f2f2 100%);  //f2f2f2
+        background-image: linear-gradient(to bottom, #ffffff 72%, $csp-gray 100%);  //f2f2f2
         // background-repeat: repeat-x;
         border-top: 1px solid #e3e3e3;
         border-left: 0;
@@ -276,7 +277,7 @@
   }
 
   .story-video-xs, .cs-story-video-xs {
-    background-color: #f2f2f2;
+    background-color: $csp-gray;
     padding: 25px 0;
     position: relative;
   }
@@ -305,33 +306,24 @@
 
   @media only screen and (max-width: 767px) {
     .testimonial, .cs-testimonial {
-      margin-bottom: 30px;
+      margin-bottom: 0;
       &:after {
         content: none;
-        // bottom: -50px;
       }
       > .container, > .cs-container {
-        max-width: 500px;
+        max-width: $max-xs-width;
       }
     }
     .story-video-xs, .cs-story-video-xs {
-      background-color: #fff;
+      &:not(.cs-story-video-xs) { background-color: #fff; }
       > .container, > .cs-container {
-        max-width: 500px;
-        // since .testimonial has a margin-bottom that accommodates the :after element,
-        // pull these elements user-select: none;
-        // (don't apply these to overlay)
-        > .row > [class*='col-'], {
-          margin-top: -20px;
-        }
-      }
-      &.cs-story-video-xs {
-        background-color: #f2f2f2;
+        max-width: $max-xs-width;
+
       }
     }
     .social-buttons-xs, .cs-social-buttons-xs {
       > .container, > .cs-container {
-        max-width: 500px;
+        max-width: $max-xs-width;
       }
       padding-top: 0;
       padding-bottom: 0;
@@ -342,15 +334,19 @@
         font-size: 20px !important;
       }
       > .container, > .cs-container {
-        max-width: 500px;
-        .well {
+        max-width: $max-xs-width;
+        .well, .cs-well {
           padding: 19px 0 0 0;
           border: 0
         }
         .story-narration {
+          span, p, li, a {
+            font-size: 14px !important;
+          }
         }
         .story-results {
           ul {
+            padding-right: 5px;
             li {
               margin-bottom: 10px;
             }
