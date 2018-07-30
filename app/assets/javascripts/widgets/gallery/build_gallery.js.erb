@@ -56,7 +56,7 @@ function cspBuildGallery ($container, cspRootUrl) {
             )
               .then(function () { widgetsListener($story); })
               .then(function () {
-                if ($storyCard.hasClass('published has-video')) {
+                if ($storyCard.hasClass('has-video')) {
                   initVideo($story);
                 }
                 initLinkedIn();
@@ -65,12 +65,12 @@ function cspBuildGallery ($container, cspRootUrl) {
                 // now undo that...
                 $container.find('a').removeAttr('style');
 
+                // avoid double-tap behavior
                 $container.on('click touchend', '.close-button-xs', function () {
                   $(this).closest('.cs-content').find('.close-button').trigger('click');
                 });
 
-                // the grid_overlays.js listener is vanilla js,
-                // won't pick up on $storyCard.trigger('click')
+                // the grid_overlays.js listener is vanilla js, won't pick up on $storyCard.trigger('click')
                 $storyCard[0].click();
 
               });
