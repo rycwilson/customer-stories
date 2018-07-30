@@ -176,9 +176,6 @@
         .ul-container {
           display: flex;
           justify-content: center;
-          // the centering will be off a touch because the empty space around the check mark
-          // is included in the calculation. To compensate...
-          padding-right: 14px;
           ul {
             margin-bottom: 0;
             display: inline-block;
