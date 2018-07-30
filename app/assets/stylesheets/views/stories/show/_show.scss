@@ -324,7 +324,7 @@
         // since .testimonial has a margin-bottom that accommodates the :after element,
         // pull these elements user-select: none;
         // (don't apply these to overlay)
-        > .row > [class*='col-'], {
+        &:not(.cs-container) > .row > [class*='col-'], {
           margin-top: -20px;
         }
       }
