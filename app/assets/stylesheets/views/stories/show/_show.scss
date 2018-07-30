@@ -321,12 +321,7 @@
       &:not(.cs-story-video-xs) { background-color: #fff; }
       > .container, > .cs-container {
         max-width: $max-xs-width;
-        // since .testimonial has a margin-bottom that accommodates the :after element,
-        // pull these elements user-select: none;
-        // (don't apply these to overlay)
-        &:not(.cs-container) > .row > [class*='col-'], {
-          margin-top: -20px;
-        }
+
       }
     }
     .social-buttons-xs, .cs-social-buttons-xs {
