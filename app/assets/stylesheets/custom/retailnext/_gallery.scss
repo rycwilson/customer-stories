@@ -23,7 +23,7 @@
       transition: background-color 300ms ease;
       .thumbnail-view {
         .thumbnail-view-hover {
-          transition: all 0ms step-end;
+          transition: all 0s step-end;
           p {
             font: {
               family: $metropolis-light;
@@ -78,7 +78,7 @@
           -moz-transform: translateY(0%);
           -ms-transform: translateY(0%);
           -o-transform: translateY(0%);
-          transition: all 0ms step-end;
+          transition: all 0s step-end;
         }
         img {
           opacity: 0;
