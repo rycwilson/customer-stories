@@ -28,23 +28,25 @@ function storiesShow () {
 }
 
 function initMoreStories () {
-
+  if (Cookies.get('cs-fixed-carousel-removed')) return false;
   var widgetShowTimer = null, widgetHideTimer = null;
 
-  // cancel the timers if user interacts with widget
-  $('.cs-header').on('click', function (e, data) {
-    var auto = data && data.isAuto;
-    if (!auto) {
-      if (widgetShowTimer) { clearTimeout(widgetShowTimer); }
-      if (widgetHideTimer) { clearTimeout(widgetHideTimer); }
-    }
-  });
-
-  $('.cs-header [class*="remove"]').on('click', function () {
-    $('#more-stories-container')
-      .data('hidden', '1')
-      .hide();
-  });
+  $('.cs-header')
+    .on('click', function (e, data) {
+        var auto = data && data.isAuto;
+        if ($(e.target).is('[class*="remove"]')) {
+          $('#more-stories-container')
+            .data('hidden', '1')
+            .hide();
+          Cookies.set('cs-fixed-carousel-removed', '1', { expires: 1, path: '/' });
+          return false;
+        }
+        // cancel the timers if user interacts with widget
+        if (!auto) {
+          if (widgetShowTimer) { clearTimeout(widgetShowTimer); }
+          if (widgetHideTimer) { clearTimeout(widgetHideTimer); }
+        }
+      });
 
   slideDrawerPlugin();  // define the jquery plugin
   $('#more-stories-container').imagesLoaded(function () {
