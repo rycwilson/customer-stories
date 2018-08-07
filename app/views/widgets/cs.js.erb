@@ -1,42 +1,44 @@
-(function (window, document) {
-  "use strict";
-  var jQuery, $; // localize jquery variables
 
-  if (window.jQuery === undefined || isOldVersion(window.jQuery.fn.jquery)) {
+(function (window, document) {
+
+  "use strict";
+
+  var $; // localize jquery
+
+  if (window.jQuery === undefined || jQueryIsOld(window.jQuery.fn.jquery)) {
     loadScript("https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js",
       function () {
-        /* Restore $ and window.jQuery to their previous values and store the
-           new jQuery in our local jQuery variables. */
-        $ = jQuery = window.jQuery.noConflict(true);
+        $ = window.jQuery.noConflict(true);
         main();
       });
   } else {
-    $ = jQuery = window.jQuery;
+    $ = window.jQuery;
     main();
   }
 
   function main () {
-// console.log('main()');
+
     $(function () {
 
-      // type IN ['carousel', 'fixed-carousel', 'gallery']
-      var type = '<%= @type %>', $script, $container,
+      var type = '<%= @type %>',
+          $container, $script,
           $stylesheet = $("<link>", { rel: "stylesheet", type: "text/css", href: '<%= @stylesheet_url %>' });
 
       // no stylesheet means type couldn't be id'ed => fatal
-      if (!"<%= @stylesheet_url %>") {
+      if (!'<%= @stylesheet_url %>') {
         return false;
       }
 
-      if (type === 'carousel') {
+      // type IN ['carousel', 'fixed-carousel', 'gallery']
+      if (type === 'gallery') {
+        $script = $('script[src*="gallery/cs"]');
+        $container = $('#cs-gallery');
+      } else if (type === 'carousel') {
         $script = $('script[src*="carousel/cs"], script[src*="varmour/cs"]').first();
         $container = $("#cs-carousel, #cs-varmour-container").first();
       } else if (type === 'fixed-carousel') {
         $script = $('script[src*="fixed-carousel/cs"], script[src*="tab/cs"], script[src*="widget/cs"]').first();
         $container = $("#cs-fixed-carousel, #cs-tab-container, #cs-container").first();
-      } else if (type === 'gallery') {
-        $script = $('script[src*="gallery/cs"]');
-        $container = $('#cs-gallery');
       }
 
       // get font awesome if it doesn't exist on host
@@ -55,302 +57,66 @@
       // $container.css('all', 'revert');
 
       // wait for stylesheet to load ...
-      $stylesheet.appendTo('head').on('load', function () {
+      $stylesheet.appendTo('head').on('load', getWidget($container, $script));
 
-        $.ajax({
-          url: "<%= URI.join(root_url, widget_html_path(@type)) %>",
-          dataType: 'jsonp',
-          data: {
-            category: $script.data('category'),
-            product: $script.data('product')
-          }
-        })
-          .done(function (data) {
-            $container.html(data.html);
-            // wait for all images to load
-            // so dimension calculations are correct ...
-            var $images = $container.find('img'),
-                loadedImages = 0;
-            $images.on('load', function () {
-              if (++loadedImages === $images.length) {
-                adjustForWeebly();
-                if (type === 'fixed-carousel') {
-                  buildFixedCarousel($container);
-                  scrollHandlers($container);
-                } else if (type == 'carousel') {
-                  buildCarousel($container);
-                } else if (type === 'gallery') {
-                  buildGallery($container);
-                }
-                xScrollBoundaries(type);
-              }
-            });
-          });
-
-      });
     });
   }
 
-  function buildCarousel ($container) {
-    // disable horizontal mouse/trackpad scrolling
-    $container.find('.row-horizon').css('overflow-x', 'hidden');
-
-    var $carousel = $container.find('.row-horizon'),
-        $columns = $carousel.children(),
-        $stories = $columns.children(),
-        storyWidth = parseInt( $stories.first().css('width'), 10 ) +
-                     parseInt( $columns.first().css('padding-left'), 10 ) +
-                     parseInt( $columns.first().css('padding-right'), 10 ),
-        $pagination = $container.find('.cs-pagination'),
-        $paginationXs = $container.find('.cs-pagination-xs'),
-        currentStoryIndex,  // this is set before adjusting
-        numPages, pageWidth,  // these are set after adjusting
-        currentPage = 0,  // 0-based paging
-        initialAdjust = true,
-        currentDevice = $(window).width() < 768 ? 'xs' :
-                         ( $(window).width() < 992 ? 'sm' :
-                           ( $(window).width() < 1200 ? 'md' : 'lg' ) ),
-        arrowLeft = function () {
-          if (currentPage !== 0) {
-            currentPage -= 1;
-            var scrollTime = Math.round($carousel.width() / 2);
-            [ $pagination, $paginationXs ].forEach(function ($p) {
-              $p.children('.cs-current-page-dot').removeClass('cs-current-page-dot');
-              $p.children().eq(currentPage).addClass('cs-current-page-dot');
-            });
-            $carousel.animate({ scrollLeft: '-=' + $carousel.css('width') }, scrollTime);
-            $('.cs-current-page-num').empty().append(
-                (currentPage + 1).toString() + ' of ' + numPages.toString()
-              );
-          }
-        },
-        arrowRight = function () {
-          if (currentPage !== numPages - 1) {
-            currentPage += 1;
-            var scrollTime = Math.round($carousel.width() / 2);
-            [ $pagination, $paginationXs ].forEach(function ($p) {
-              $p.children('.cs-current-page-dot').removeClass('cs-current-page-dot');
-              $p.children().eq(currentPage).addClass('cs-current-page-dot');
-            });
-            $carousel.animate({ scrollLeft: '+=' + $carousel.css('width') }, scrollTime);
-            $('.cs-current-page-num').empty().append(
-                (currentPage + 1).toString() + ' of ' + numPages.toString()
-              );
-          }
-        },
-        adjustColumns = function () {
-          // reset auto margins when crossing a bootstrap breakpoint
-          var device = $(window).width() < 768 ? 'xs' :
-                     ( $(window).width() < 992 ? 'sm' :
-                       ( $(window).width() < 1200 ? 'md' : 'lg' ) );
-          if (device !== currentDevice) {
-            currentDevice = device;
-            $stories.css('margin', '0 auto');
-          }
-
-          // if margins are adjusted per max gutter, we need to keep track of situations
-          // in which the last frame does not have a full number of stories
-          // (1 when space for 2 is available, 2 when space for 3)
-          var lastIsShortSingle, lastIsShortDouble;
-
-          // need to capture the current story so we can scroll to it after adjusting
-          var currentStoryIndex = Math.floor($carousel.prop('scrollLeft') / $columns.first().outerWidth());
-
-          // in case margins were adjusted due to max gutter width, reset them
-          $stories.css('margin', '0 auto');
-
-          if ($carousel.width() >= 4 * storyWidth) {
-            $columns.css('width', Math.floor($carousel.width() / 4).toString() + 'px');
-            if ($columns.length <= 4) {
-              $container.find('.cs-scroll div').hide();
-            }
-
-          } else if ($carousel.width() >= 3 * storyWidth) {
-            lastIsShortSingle = $columns.length % 3 === 1, lastIsShortDouble = $columns.length % 3 === 2;
-            // no scroll arrow if not needed
-            if ($columns.length <= 3) {
-              $container.find('.cs-scroll div').hide();
-            }
-            // adjust columns
-            $columns.css('width', Math.floor($carousel.width() / 3).toString() + 'px');
-            // adjust story margins (squish them together) if gutter too big
-            var minGutterWidth = 70,
-                actualGutterWidth = $columns.first().outerWidth() - $stories.first().width(),
-                gutterDelta = actualGutterWidth - minGutterWidth;
-            if (actualGutterWidth > minGutterWidth) {
-              if (lastIsShortSingle) {
-                $columns.last().css('width', $carousel.width());
-              } else if (lastIsShortDouble) {
-                $columns.slice(-2).css('width', Math.round($carousel.width() / 2).toString() + 'px');
-              }
-              $stories.each(function (index, column) {
-                if (lastIsShortSingle && index === $stories.length - 1) {
-                  // last frame single, do nothing
-                } else if (lastIsShortDouble && index >= $stories.length - 2) {
-                  // last frame double
-                  $(this).css('margin-' + (index === $stories.length - 1 ? 'left' : 'right'),
-                              Math.round(minGutterWidth / 2) + 'px');
-                } else if (index / 3 < 1) {  // first frame
-                  if (index === 1) {
-                    // center story, do nothing
-                  } else {
-                    $(this).css('margin-' + (index === 0 ? 'right' : 'left'),
-                                '-=' + gutterDelta.toString() + 'px');
-                  }
-                } else {  // all other groups of three
-                  if (index % 3 === 1) {
-                    // center story, do nothing
-                  } else {
-                    $(this).css('margin-' + (index % 3 === 0 ? 'right' : 'left'),
-                                '-=' + gutterDelta.toString() + 'px');
-                  }
-                }
-              });
-            }
-
-            // make sure currentStoryIndex is valid
-            if (lastIsShortSingle && currentStoryIndex > $stories.length - 4) {
-              currentStoryIndex = $stories.length - 4;
-            }
-            else if (lastIsShortDouble && currentStoryIndex > $stories.length - 5) {
-              currentStoryIndex = $stories.length - 5;
-            }
-            else if (currentStoryIndex % 3 === 1) {
-              currentStoryIndex -= 1;
-            }
-            else if (currentStoryIndex % 3 === 2) {
-              currentStoryIndex -= 2;
-            }
-
-          } else if ($carousel.width() >= 2 * storyWidth) {
-            lastIsShortSingle = $columns.length % 2 !== 0;
-            // no scroll arrow if not needed
-            if ($columns.length <= 2) {
-              $container.find('.cs-scroll div').hide();
-            }
-            // adjust column size
-            $columns.css('width', Math.floor($carousel.width() / 2).toString() + 'px');
-            // adjust story margins (squish them together) if gutter too big
-            var minGutterWidth = 70, marginShift = minGutterWidth / 2,
-                actualGutterWidth = $columns.first().outerWidth() - $stories.first().width();
-            if (actualGutterWidth > minGutterWidth) {
-              // if odd number of stories, give last one full width and don't adjust margin below
-              if (lastIsShortSingle) {
-                $columns.last().css('width', $carousel.width());
-              }
-              $stories.each(function (index, column) {
-                if (lastIsShortSingle && index === $stories.length - 1) {
-                  // do nothing
-                } else {  // per specs of max gutter 70px
-                  $(this).css('margin-' + (index % 2 === 0 ? 'right' : 'left'), marginShift + 'px');
-                }
-              });
-            }
-
-            if (lastIsShortSingle && currentStoryIndex > $stories.length - 3) {
-              currentStoryIndex = $stories.length - 3;
-            } else if (currentStoryIndex % 2 === 1) {
-              currentStoryIndex -= 1;
-            }
-
-          } else {
-            $columns.css('width', $carousel.css('width'));
-            if ($columns.length === 1) {
-              $container.find('.cs-scroll div').hide();
-            }
-          }
-
-          // scroll to current story (wherever previous scroll was)
-          // console.log($stories.eq(currentStoryIndex).find('.cs-caption span:first-child').text())
-          $carousel.prop('scrollLeft', currentStoryIndex * $columns.first().outerWidth());
-
-          // update number of pages
-          numPages = Math.ceil($carousel.prop('scrollWidth') / $carousel.width());
-          // reset pagination if this is a resize
-          if (!initialAdjust) {
-            pageWidth = Math.floor($carousel.prop('scrollWidth') / numPages);
-            currentPage = Math.floor($carousel.prop('scrollLeft') / pageWidth);
-            [ $pagination, $paginationXs ].forEach(function ($p) {
-              $p.empty();
-            });
-            if (numPages > 8 && $(window).width() <= 500) {
-              $paginationXs
-                .append('<span style="color: #999">' +
-                          (currentPage + 1).toString() + ' of ' + numPages.toString() +
-                        '</span>');
-            } else if ($(window).width() <= 500) {
-              for (var i = 0; i < numPages; i++) {
-                if (i === currentPage) {
-                  $paginationXs.append("<div class='cs-page-dot cs-current-page-dot'></div>");
-                } else {
-                  $paginationXs.append("<div class='cs-page-dot'></div>");
-                }
-              }
-            } else {
-              for (var i = 0; i < numPages; i++) {
-                if (i === currentPage) {
-                  $pagination.append("<div class='cs-page-dot cs-current-page-dot'></div>");
-                } else {
-                  $pagination.append("<div class='cs-page-dot'></div>");
-                }
-              }
-            }
-          }
-          initialAdjust = false;
-        }; // adjust columns
-
-    // animate stories
-    // varmourHover($stories);
-
-    // scroll listeners
-    $container.find('.cs-scroll-left, .cs-scroll-xs-left').on('click', arrowLeft);
-    $container.find('.cs-scroll-right, .cs-scroll-xs-right').on('click', arrowRight);
-
-    // initial adjustment
-    adjustColumns();
-
-    // set up pagination (numPages calculation needs to be after adjustment)
-    numPages = Math.ceil($carousel.prop('scrollWidth') / $carousel.width());
-    if (numPages > 8 && $(window).width() <= 500) {
-      $paginationXs
-        .append('<span class="cs-current-page-num" style="color:#999">' +
-                  (currentPage + 1).toString() + ' of ' + numPages.toString() +
-                '</span>');
-    } else if ($(window).width() <= 500) {
-      for (var i = 0; i < numPages; i++) {
-        if (i === 0) {
-          $paginationXs.append("<div class='cs-page-dot cs-current-page-dot'></div>");
-        } else {
-          $paginationXs.append("<div class='cs-page-dot'></div>");
+  function getWidget ($container, $script) {
+    return function () {
+      $.ajax({
+        url: "<%= URI.join(root_url, widget_view_path(@type)) %>",
+        dataType: 'jsonp',
+        data: {
+          category: $script.data('category'),
+          product: $script.data('product')
         }
-      }
-    } else {
-      for (var i = 0; i < numPages; i++) {
-        if (i === 0) {
-          $pagination.append("<div class='cs-page-dot cs-current-page-dot'></div>");
-        } else {
-          $pagination.append("<div class='cs-page-dot'></div>");
-        }
-      }
-    }
-
-    // make adjustments on window resize
-    // ref: https://stackoverflow.com/questions/599288
-    var resizeTimer;
-    var resizeCallback = function () {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(adjustColumns, 100);
+      })
+        .done(function (data) {
+          $container.html(data.html);
+          // wait for all images to load
+          // so dimension calculations are correct ...
+          var $images = $container.find('img'), loadedImages = 0;
+          $images.on('load', function () {
+            if (++loadedImages === $images.length) {
+              adjustForWeebly();
+              initWidget('<%= @type %>', $container);
+              xScrollBoundaries('<%= @type %>');
+            }
+          });
+        });
     };
-    $(window).on('resize', resizeCallback);
-    $(window).on('orientationchange', adjustColumns);
+  }
 
-    // turn on the widget, enable tracking
-    $container.find('section').css('visibility', 'visible');
+  function initWidget (type, $container) {
+    var Modernizr, // will be defined in cs_overlays.js
+        getVideoScript = $.Deferred(),
+        getOverlaysScript = $.Deferred();
 
-    // enable tracking
-    if (<%= ENV['HOST_NAME'] == 'customerstories.net' %>) {
-      trackVisitor();
-    }
+    $.getScript("<%= asset_url('widgets/shared/cs_video.js') %>", function () {
+        getVideoScript.resolve();
+      });
+    $.getScript("<%= asset_url('widgets/shared/cs_overlays.js') %>", function () {
+        getOverlaysScript.resolve();
+      });
+    $.when(getVideoScript, getOverlaysScript).done(function () {
+      if (type === 'gallery') {
+        $.getScript("<%= asset_url('widgets/cs_gallery.js') %>", function () {
+            cspInitOverlays($container);
+            cspInitGallery($container);
+          });
+      } else if (type === 'carousel') {
+        $.getScript("<%= asset_url('widgets/cs_carousel.js') %>", function () {
+            cspInitCarousel($container);
+          });
+      } else if (type == 'fixed-carousel') {
+        $.getScript("<%= asset_url('widgets/cs_fixed_carousel.js') %>", function () {
+            cspInitFixedCarousel($container, "<%= root_url %>");
+            scrollHandlers($container);
+          });
+      }
+    });
+
   }
 
   // on weebly, get the Montserrat font to emulate proxima-nova
@@ -407,12 +173,6 @@
     }
   }
 
-  function buildGallery ($container) {
-    $.getScript("<%= asset_url('widgets/gallery/build_gallery.js') %>", function () {
-      cspBuildGallery($container, "<%= root_url %>");
-    });
-  }
-
   function loadScript (url, callback) {
     var scriptTag = document.createElement('script');
     scriptTag.setAttribute("type", "text/javascript");
@@ -433,7 +193,7 @@
   }
 
   // bootstrap requires >= v1.9 of jquery
-  function isOldVersion (jqVer) {
+  function jQueryIsOld (jqVer) {
     var majorRel = jqVer.split('.')[0],
         minorRel = jqVer.split('.')[1];
     if (majorRel === '1' && parseInt(minorRel, 10) < 9) {

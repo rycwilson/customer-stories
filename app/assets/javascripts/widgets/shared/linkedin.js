@@ -20,7 +20,7 @@ function initLinkedIn () {
   }
 }
 
-function widgetsListener ($story) {
+function linkedinListener ($story) {
   var firstWidgetLoaded = false,
       firstWidgetIndex = null, currentWidgetIndex = null, relativeWidgetIndex = null,
       overlayLoadTimeout = 10000, firstWidgetReadyTimeout = 10000,

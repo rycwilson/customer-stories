@@ -2,10 +2,10 @@ require 'stories_and_widgets'
 class WidgetsController < ApplicationController
   include StoriesAndWidgets
 
-  skip_before_action :verify_authenticity_token, only: [:script, :html]
+  skip_before_action :verify_authenticity_token, only: [:init, :show]
   before_action except: [:track] { @company = Company.find_by(subdomain: request.subdomain) }
 
-  def script
+  def init
     # handle legacy naming...
     if params[:type] == 'varmour'
       @type = 'carousel'
@@ -30,10 +30,10 @@ class WidgetsController < ApplicationController
     end
   end
 
-  def html
+  def show
     respond_to do |format|
       format.js do
-        json = { html: widget_html(params) }.to_json
+        json = { html: widget_view(params) }.to_json
         callback = params[:callback]
         jsonp = callback + "(" + json + ")"
         render(text: jsonp)
@@ -49,7 +49,7 @@ class WidgetsController < ApplicationController
   private
 
   # if invalid category or product filters, return all stories
-  def widget_html (params)
+  def widget_view (params)
     filter_params = get_filters_from_query_or_widget(@company, params, true)
     stories = @company.filter_stories(filter_params)
     if @company.subdomain == 'varmour'
