@@ -90,17 +90,17 @@
 
   function initWidget (type, $container) {
     var Modernizr, // will be defined in cs_overlays.js
-        getVideoScript = $.Deferred(),
-        getOverlaysScript = $.Deferred();
+        initVideo = $.Deferred(),
+        initOverlays = $.Deferred();
 
     trackVisitor($container);
 
     $.getScript("<%= asset_url('widgets/cs_video.js') %>", function () {
-        getVideoScript.resolve();
+        initVideo.resolve();
       });
     $.getScript("<%= asset_url('widgets/cs_overlays.js') %>", function () {
-        getOverlaysScript.resolve();
         cspInitOverlays($container);
+        initOverlays.resolve();
       });
 
     $.when(getVideoScript, getOverlaysScript).done(function () {
