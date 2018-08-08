@@ -1,6 +1,5 @@
 
 function cspInitCarousel ($container) {
-
   // disable horizontal mouse/trackpad scrolling
   $container.find('.row-horizon').css('overflow-x', 'hidden');
 
@@ -254,7 +253,7 @@ function cspInitCarousel ($container) {
   $(window).on('orientationchange', adjustColumns);
 
   // turn on the widget, enable tracking
-  $container.find('section').css('visibility', 'visible');
+  $container.find('> .cs-container-fluid').css('visibility', 'visible');
 
   // enable tracking
   if (<%= ENV['HOST_NAME'] == 'customerstories.net' %>) {

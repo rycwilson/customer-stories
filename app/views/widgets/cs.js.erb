@@ -23,7 +23,7 @@
       var type = '<%= @type %>',
           $container, $script,
           $stylesheet = $("<link>", { rel: "stylesheet", type: "text/css", href: '<%= @stylesheet_url %>' });
-
+console.log($stylesheet)
       // no stylesheet means type couldn't be id'ed => fatal
       if (!'<%= @stylesheet_url %>') {
         return false;
@@ -35,7 +35,7 @@
         $container = $('#cs-gallery');
       } else if (type === 'carousel') {
         $script = $('script[src*="carousel/cs"], script[src*="varmour/cs"]').first();
-        $container = $("#cs-carousel, #cs-varmour-container").first();
+        $container = $(".cs-carousel, #cs-varmour-container").first();
       } else if (type === 'fixed-carousel') {
         $script = $('script[src*="fixed-carousel/cs"], script[src*="tab/cs"], script[src*="widget/cs"]').first();
         $container = $("#cs-fixed-carousel, #cs-tab-container, #cs-container").first();
@@ -89,20 +89,20 @@
   }
 
   function initWidget (type, $container) {
-    var Modernizr, // will be defined in cs_overlays.js
-        getVideoScript = $.Deferred(),
-        getOverlaysScript = $.Deferred();
+    var Modernizr; // will be defined in cs_overlays.js
+        // getVideoScript = $.Deferred(),
+        // getOverlaysScript = $.Deferred();
 
     $.getScript("<%= asset_url('widgets/shared/cs_video.js') %>", function () {
-        getVideoScript.resolve();
+        // getVideoScript.resolve();
       });
-    $.getScript("<%= asset_url('widgets/shared/cs_overlays.js') %>", function () {
-        getOverlaysScript.resolve();
-      });
-    $.when(getVideoScript, getOverlaysScript).done(function () {
+    // $.getScript("<%= asset_url('widgets/shared/cs_overlays.js') %>", function () {
+    //     getOverlaysScript.resolve();
+    //   });
+    // $.when(getVideoScript, getOverlaysScript).done(function () {
+      // cspInitOverlays($container);
       if (type === 'gallery') {
         $.getScript("<%= asset_url('widgets/cs_gallery.js') %>", function () {
-            cspInitOverlays($container);
             cspInitGallery($container);
           });
       } else if (type === 'carousel') {
@@ -115,7 +115,7 @@
             scrollHandlers($container);
           });
       }
-    });
+    // });
 
   }
 
@@ -123,6 +123,9 @@
   function adjustForWeebly () {
     if (window.location.href.includes('weebly')) {
       $('.wsite-section-content > .container').css('padding', '0');
+      $('#wsite-content p').each(function () {
+        $(this)[0].style.setProperty('color', '#444', 'important');
+      });
     }
   }
 
