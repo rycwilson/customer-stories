@@ -103,7 +103,7 @@
         initOverlays.resolve();
       });
 
-    $.when(getVideoScript, getOverlaysScript).done(function () {
+    $.when(initVideo, initOverlays).done(function () {
         $.ajax({
           url: "<%= URI.join(root_url, widget_init_path(@type)) %>",
           method: 'GET',
