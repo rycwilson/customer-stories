@@ -52,13 +52,14 @@ Rails.application.routes.draw do
 
     get '/', to: 'stories#index'
 
-    get '/widgets/:type/cs', to: 'widgets#init'
-    # specifying a default format here because (for unknown reason) ajax jsonp
+    get '/widgets/:type/cs', to: 'widgets#main'
+    # specifying a default format for widgets#show because (for unknown reason) ajax jsonp
     # request sent from IE11 was resulting in request interpreted as html
     get '/widgets/:type/show', to: 'widgets#show', as: 'widget_view', format: 'js'
+    get '/widgets/:type/init', to: 'widgets#init', as: 'widget_init'
     get '/widgets/track', to: 'widgets#track'
      # legacy widgets
-    get '/widget/cs', to: 'widgets#init'
+    get '/widget/cs', to: 'widgets#main'
 
     # see below for route to public story page
     resources :stories, only: :index do

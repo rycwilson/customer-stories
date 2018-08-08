@@ -2,15 +2,15 @@ require 'stories_and_widgets'
 class WidgetsController < ApplicationController
   include StoriesAndWidgets
 
-  skip_before_action :verify_authenticity_token, only: [:init, :show]
+  skip_before_action :verify_authenticity_token, only: [:main, :show, :init]
   before_action except: [:track] { @company = Company.find_by(subdomain: request.subdomain) }
 
-  def init
+  def main
     # handle legacy naming...
     if params[:type] == 'varmour'
       @type = 'carousel'
     elsif params[:type].blank? || params[:type] == 'tab'
-      @type = 'fixed-carousel'
+      @type = 'fixed_carousel'
     else
       @type = params[:type]
     end
@@ -18,7 +18,7 @@ class WidgetsController < ApplicationController
     @stylesheet_url = case @type
     when 'carousel'
       custom_stylesheet_url(@company, 'cs_carousel')
-    when 'fixed-carousel'
+    when 'fixed_carousel'
       custom_stylesheet_url(@company, 'cs_fixed_carousel')
     when 'gallery'
       custom_stylesheet_url(@company, 'cs_gallery')
@@ -30,6 +30,7 @@ class WidgetsController < ApplicationController
     end
   end
 
+
   def show
     respond_to do |format|
       format.js do
@@ -38,6 +39,12 @@ class WidgetsController < ApplicationController
         jsonp = callback + "(" + json + ")"
         render(text: jsonp)
       end
+    end
+  end
+
+  def init
+    respond_to do |format|
+      format.js { render action: params[:type] }
     end
   end
 
@@ -58,15 +65,11 @@ class WidgetsController < ApplicationController
     end
     case params[:type]
     when 'carousel'
-      partial = 'stories_carousel'
-    when 'fixed-carousel'
-      partial = 'stories_fixed_carousel'
+    when 'fixed_carousel'
     when 'gallery'
-      # stories = stories.first(12)
-      partial = 'stories_gallery'
     end
     render_to_string(
-      partial: partial,
+      partial: params[:type],
       layout: false,
       locals: {
         company: @company,

@@ -2,9 +2,10 @@
 // namespace the widget css so as not to interfere with anything on host page
 #cs-fixed-carousel, #cs-tab-container, #cs-container {
 
-  @import '../../../views/widgets/widgets_bootstrap';
-  @import '../../../views/widgets/stories_fixed_carousel';
   @import '../../fonts';
-  // @import 'stories_fixed_carousel';
+  @import '../../../views/widgets/widgets_bootstrap';
+  // @import '../../../views/widgets/overlays/main';
+  @import '../../../views/widgets/fixed_carousel';
+  @import 'fixed_carousel';
 
 }

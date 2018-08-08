@@ -2,9 +2,10 @@
 // namespace the widget css so as not to interfere with anything on host page
 #cs-carousel {
 
-  @import '../../../views/widgets/widgets_bootstrap';
-  @import '../../../views/widgets/stories_carousel';
   @import '../../fonts';
-  // @import 'stories_carousel';
+  @import '../../../views/widgets/widgets_bootstrap';
+  // @import '../../../views/widgets/overlays/main';
+  @import '../../../views/widgets/carousel';
+  @import 'carousel';
 
 }

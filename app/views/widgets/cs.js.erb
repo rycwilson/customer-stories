@@ -6,7 +6,7 @@
   var $; // localize jquery
 
   if (window.jQuery === undefined || jQueryIsOld(window.jQuery.fn.jquery)) {
-    loadScript("https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js",
+    createScriptTag("https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js",
       function () {
         $ = window.jQuery.noConflict(true);
         main();
@@ -23,20 +23,18 @@
       var type = '<%= @type %>',
           $container, $script,
           $stylesheet = $("<link>", { rel: "stylesheet", type: "text/css", href: '<%= @stylesheet_url %>' });
-console.log($stylesheet)
-      // no stylesheet means type couldn't be id'ed => fatal
-      if (!'<%= @stylesheet_url %>') {
-        return false;
-      }
 
-      // type IN ['carousel', 'fixed-carousel', 'gallery']
+      // no stylesheet means type couldn't be id'ed => fatal
+      if (!'<%= @stylesheet_url %>') return false;
+
+      // type IN ['gallery', 'carousel', 'fixed_carousel']
       if (type === 'gallery') {
         $script = $('script[src*="gallery/cs"]');
         $container = $('#cs-gallery');
       } else if (type === 'carousel') {
         $script = $('script[src*="carousel/cs"], script[src*="varmour/cs"]').first();
-        $container = $(".cs-carousel, #cs-varmour-container").first();
-      } else if (type === 'fixed-carousel') {
+        $container = $("#cs-carousel, #cs-varmour-container").first();
+      } else if (type === 'fixed_carousel') {
         $script = $('script[src*="fixed-carousel/cs"], script[src*="tab/cs"], script[src*="widget/cs"]').first();
         $container = $("#cs-fixed-carousel, #cs-tab-container, #cs-container").first();
       }
@@ -57,31 +55,33 @@ console.log($stylesheet)
       // $container.css('all', 'revert');
 
       // wait for stylesheet to load ...
-      $stylesheet.appendTo('head').on('load', getWidget($container, $script));
+      $stylesheet.appendTo('head')
+        .on('load', getWidget($container, $script.data('category'), $script.data('product')));
 
     });
   }
 
-  function getWidget ($container, $script) {
+  // root_url provides a company-specific url (via subdomain)
+  function getWidget ($container, category, product) {
     return function () {
       $.ajax({
         url: "<%= URI.join(root_url, widget_view_path(@type)) %>",
+        method: 'GET',
         dataType: 'jsonp',
         data: {
-          category: $script.data('category'),
-          product: $script.data('product')
+          category: category,
+          product: product
         }
       })
         .done(function (data) {
           $container.html(data.html);
-          // wait for all images to load
-          // so dimension calculations are correct ...
+          adjustForWeebly();
+
+          // wait for all images to load so dimension calculations are correct
           var $images = $container.find('img'), loadedImages = 0;
           $images.on('load', function () {
             if (++loadedImages === $images.length) {
-              adjustForWeebly();
               initWidget('<%= @type %>', $container);
-              xScrollBoundaries('<%= @type %>');
             }
           });
         });
@@ -89,34 +89,36 @@ console.log($stylesheet)
   }
 
   function initWidget (type, $container) {
-    var Modernizr; // will be defined in cs_overlays.js
-        // getVideoScript = $.Deferred(),
-        // getOverlaysScript = $.Deferred();
+    var Modernizr, // will be defined in cs_overlays.js
+        getVideoScript = $.Deferred(),
+        getOverlaysScript = $.Deferred();
 
-    $.getScript("<%= asset_url('widgets/shared/cs_video.js') %>", function () {
-        // getVideoScript.resolve();
+    trackVisitor($container);
+
+    $.getScript("<%= asset_url('widgets/cs_video.js') %>", function () {
+        getVideoScript.resolve();
       });
-    // $.getScript("<%= asset_url('widgets/shared/cs_overlays.js') %>", function () {
-    //     getOverlaysScript.resolve();
-    //   });
-    // $.when(getVideoScript, getOverlaysScript).done(function () {
-      // cspInitOverlays($container);
-      if (type === 'gallery') {
-        $.getScript("<%= asset_url('widgets/cs_gallery.js') %>", function () {
-            cspInitGallery($container);
-          });
-      } else if (type === 'carousel') {
-        $.getScript("<%= asset_url('widgets/cs_carousel.js') %>", function () {
-            cspInitCarousel($container);
-          });
-      } else if (type == 'fixed-carousel') {
-        $.getScript("<%= asset_url('widgets/cs_fixed_carousel.js') %>", function () {
-            cspInitFixedCarousel($container, "<%= root_url %>");
-            scrollHandlers($container);
-          });
-      }
-    // });
+    $.getScript("<%= asset_url('widgets/cs_overlays.js') %>", function () {
+        getOverlaysScript.resolve();
+        cspInitOverlays($container);
+      });
 
+    $.when(getVideoScript, getOverlaysScript).done(function () {
+        $.ajax({
+          url: "<%= URI.join(root_url, widget_init_path(@type)) %>",
+          method: 'GET',
+          dataType: 'script'
+        })
+          .done(function () {
+            if (type === 'gallery') cspInitGallery($container);
+            else if (type === 'carousel') cspInitCarousel($container);
+            else if (type == 'fixed_carousel') {
+              // plugin must be defined and called in this scope
+              slideDrawerPlugin($container);
+              cspInitFixedCarousel($container);
+            }
+          });
+      });
   }
 
   // on weebly, get the Montserrat font to emulate proxima-nova
@@ -129,54 +131,120 @@ console.log($stylesheet)
     }
   }
 
-  function buildFixedCarousel ($container) {
-    if (getCookie('cs-fixed-carousel-removed')) return false;
-    var widgetShowTimer, widgetHideTimer,
-        attachListeners = function () {
-          $container
-            .on('click', '.cs-header', function (e, data) {
-              var auto = data && data.isAuto;
-              if ($(e.target).is('[class*="remove"]')) {
-                $container.hide();
-                // set a cookie to keep the widget hidden for a day
-                var date = new Date();
-                setCookie('cs-fixed-carousel-removed', '1', date.setDate(date.getDate() + 1), '/', window.location.hostname);
-                return false;
-              }
-              if (!auto) {
-                // cancel the timers if user interacts with widget
-                if (widgetShowTimer) { clearTimeout(widgetShowTimer); }
-                if (widgetHideTimer) { clearTimeout(widgetHideTimer); }
-              }
-            });
-        };
-    $.when(slideDrawerPlugin($container)).done(function () {
-      attachListeners();
-    });
-
-    if ( <%= @company.widget.show %> && !getCookie('cs-fixed-carousel-hide') ) {
-      widgetShowTimer = setTimeout(function () {
-        $container.find('header').trigger('click', { isAuto: true } );
-        if (<%= @company.widget.hide %>) {
-          widgetHideTimer = setTimeout(function () {
-            $container.find('header').trigger('click', { isAuto: true } );
-          }, <%= @company.widget.hide_delay %>);
-        }
-      }, <%= @company.widget.show_delay %>);
-      // widget is configured to auto-open once per widget.show_freq days ...
-      var date = new Date();
-      date.setDate(date.getDate() + <%= @company.widget.show_freq %>);
-    }
-    $container.find('section')
-      .slideDrawer()
-      .css({ opacity: 0, visibility: "visible" })
-      .animate({ opacity: 1 }, 200);
+  function trackVisitor ($container) {
     if (<%= ENV['HOST_NAME'] == 'customerstories.net' %>) {
-      trackVisitor();
+      $container.append(
+          '<iframe class="cs-iframe" height="0" width="0" style="display:none" ' +
+              'src="https://' + '<%= @company.subdomain %>' + '.customerstories.net/widgets/track"></iframe>'
+        );
+
+      // old approach:
+      // var trackingDoc = $('#cs-container').find('iframe')[0].contentWindow.document,
+      //     trackingHost = (("https:" == document.location.protocol) ? "https://s.adroll.com" : "http://a.adroll.com"),
+      //     trackingUrl = trackingHost + '/j/roundtrip.js';
+      // trackingDoc.open();
+      // trackingDoc.write("<html><head><script>adroll_adv_id='" + advId + "';adroll_pix_id='" + pixId + "';</script><script src='" + trackingUrl + "'></script><script>setTimeout(function(){try{__adroll.record_user({'adroll_segments':'" + segmentId + "'})}catch(err){};},1000);</script></head></html>");
+      // trackingDoc.close();
     }
   }
 
-  function loadScript (url, callback) {
+  function slideDrawerPlugin ($container) {
+
+    /**
+     * there are two headers: visible-xs-block and hidden-xs
+     * for auto-show behavior, the click event will be triggered on all headers, including the hidden ones.
+     * below two functions ensure only one toggle happens
+     */
+    var isXsWidgetAndScreen = function ($clickTarget) {
+          var parent = $clickTarget.parent(),
+              screenWidth = parseInt($clickTarget.closest('.cs-row').css('width'), 10);
+          if (screenWidth <= 767 && parent.hasClass('visible-xs-block')) {
+            return true;
+          } else {
+            return false;
+          }
+        },
+        isSmWidgetAndScreen = function ($clickTarget) {
+          var parent = $clickTarget.parent(),
+              screenWidth = parseInt($clickTarget.closest('.cs-row').css('width'), 10);
+          if (screenWidth > 767 && parent.hasClass('hidden-xs')) {
+            return true;
+          } else {
+            return false;
+          }
+        };
+
+    var drawer = {
+
+      init: function (options, div) {
+
+        if (options.showDrawer === true && options.slideTimeout === true) {
+          setTimeout(function() {
+            drawer.slide(div, options.drawerHiddenHeight, options.slideSpeed);
+          }, options.slideTimeoutCount);
+        } else if (options.showDrawer === 'slide') {
+          // Set drawer hidden with slide effect
+          drawer.slide(div, options.drawerHiddenHeight, options.slideSpeed);
+        } else if (options.showDrawer === false) {
+          // Set drawer to hide
+          drawer.hide(options, div);
+        }
+        $container.on('click', '.cs-header:not([class*="remove"])', function () {
+          if ( isXsWidgetAndScreen($(this)) ) {
+            drawer.toggle(options, div);
+          } else if ( isSmWidgetAndScreen($(this)) ) {
+            drawer.toggle(options, div);
+          }
+        });
+      },
+      toggle: function (options, div) {
+        ($(div).height() + options.borderHeight === options.drawerHeight) ?
+          drawer.slide( div, options.drawerHiddenHeight, options.slideSpeed ) :
+          drawer.slide( div, options.drawerHeight - options.borderHeight, options.slideSpeed );
+      },
+      slide: function (div, height, speed, userClicked) {
+        $(div).animate({ 'height': height }, speed, 'swing', function () {
+          $container.find('.cs-header i[class*="fa-chevron"]').toggle();
+          $container.find('header').toggleClass('open closed');
+        });
+      },
+      hide: function (options, div) {
+        $(div).css('height', options.drawerHiddenHeight);
+      },
+
+    };
+
+    // Function wrapper
+    $.fn.slideDrawer = function (options) {
+
+      var $drawerContent = $container.find('.cs-drawer-content'),  /* Content height of drawer */
+          borderHeight = parseInt($drawerContent.css('border-top-width')); /* Border height of content */
+
+      var drawerHeight = this.height() + borderHeight; /* Total drawer height + border height */
+      var drawerContentHeight = $drawerContent.outerHeight(); //- borderHeight; /* Total drawer content height minus border top */
+      var drawerHiddenHeight = (drawerHeight - drawerContentHeight) - borderHeight; /* How much to hide the drawer, total height minus content height */
+      var defaults = {
+        showDrawer: 'slide', /* Drawer hidden on load by default, options (true, false, slide) */
+        slideSpeed: 700, /* Slide drawer speed 3 secs by default */
+        slideTimeout: true, /* Sets time out if set to true showDrawer false will be ignored */
+        slideTimeoutCount: 5000, /* How long to wait before sliding drawer */
+        drawerContentHeight: drawerContentHeight, /* Div content height no including tab or border */
+        drawerHeight: drawerHeight, /* Full div height */
+        drawerHiddenHeight: drawerHiddenHeight, /* Height of div when hidden full height minus content height */
+        borderHeight: borderHeight /* border height if set in css you cann overwrite but best just leave alone */
+      };
+
+      /* Overwrite defaults */
+      var pluginOptions = $.extend(defaults, options);
+
+      return this.each(function () {
+        drawer.init(pluginOptions, this);
+      });
+    };
+
+  }
+
+  function createScriptTag (url, callback) {
     var scriptTag = document.createElement('script');
     scriptTag.setAttribute("type", "text/javascript");
     scriptTag.setAttribute("src", url);
@@ -206,324 +274,6 @@ console.log($stylesheet)
     }
   }
 
-  // there are two headers: visible-xs-block and hidden-xs
-  // for auto-show behavior, the click event will be triggered on
-  // all headers, including the hidden ones.
-  // below two functions ensure only one toggle happens
-  function isXsWidgetAndScreen($clickTarget) {
-    var parent = $clickTarget.parent(),
-        screenWidth = parseInt($clickTarget.closest('.cs-row').css('width'), 10);
-    if (screenWidth <= 767 && parent.hasClass('visible-xs-block')) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  function isSmWidgetAndScreen($clickTarget) {
-    var parent = $clickTarget.parent(),
-        screenWidth = parseInt($clickTarget.closest('.cs-row').css('width'), 10);
-    if (screenWidth > 767 && parent.hasClass('hidden-xs')) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  function slideDrawerPlugin ($container) {
-
-    var drawer = {
-
-      init: function (options, div) {
-
-        if (options.showDrawer === true && options.slideTimeout === true) {
-          setTimeout(function() {
-            drawer.slide(div, options.drawerHiddenHeight, options.slideSpeed);
-          }, options.slideTimeoutCount);
-        } else if (options.showDrawer === 'slide') {
-          // Set drawer hidden with slide effect
-          drawer.slide(div, options.drawerHiddenHeight, options.slideSpeed);
-        } else if (options.showDrawer === false) {
-          // Set drawer to hide
-          drawer.hide(options, div);
-        }
-        $container.on('click', '.cs-header:not([class*="remove"])', function () {
-          if ( isXsWidgetAndScreen($(this)) ) {
-            drawer.toggle(options, div);
-          } else if ( isSmWidgetAndScreen($(this)) ) {
-            drawer.toggle(options, div);
-          }
-        })
-      },
-      toggle: function (options, div) {
-        ($(div).height() + options.borderHeight === options.drawerHeight) ?
-          drawer.slide( div, options.drawerHiddenHeight, options.slideSpeed ) :
-          drawer.slide( div, options.drawerHeight-options.borderHeight, options.slideSpeed );
-      },
-      slide: function (div, height, speed, userClicked) {
-        $(div).animate({ 'height': height }, speed, 'swing', function () {
-          $container.find('.cs-header i[class*="fa-chevron"]').toggle();
-          $container.find('header').toggleClass('open closed');
-        });
-      },
-      hide: function (options, div) {
-        $(div).css('height', options.drawerHiddenHeight);
-      },
-
-    };
-
-
-    // Function wrapper
-    $.fn.slideDrawer = function (options) {
-
-      var $drawerContent = $container.find('.cs-drawer-content'),  /* Content height of drawer */
-          borderHeight = parseInt($drawerContent.css('border-top-width')); /* Border height of content */
-
-      var drawerHeight = this.height() + borderHeight; /* Total drawer height + border height */
-      var drawerContentHeight = $drawerContent.outerHeight() //- borderHeight; /* Total drawer content height minus border top */
-      var drawerHiddenHeight = (drawerHeight - drawerContentHeight) - borderHeight; /* How much to hide the drawer, total height minus content height */
-      var defaults = {
-        showDrawer: 'slide', /* Drawer hidden on load by default, options (true, false, slide) */
-        slideSpeed: 700, /* Slide drawer speed 3 secs by default */
-        slideTimeout: true, /* Sets time out if set to true showDrawer false will be ignored */
-        slideTimeoutCount: 5000, /* How long to wait before sliding drawer */
-        drawerContentHeight: drawerContentHeight, /* Div content height no including tab or border */
-        drawerHeight: drawerHeight, /* Full div height */
-        drawerHiddenHeight: drawerHiddenHeight, /* Height of div when hidden full height minus content height */
-        borderHeight: borderHeight /* border height if set in css you cann overwrite but best just leave alone */
-      };
-
-      /* Overwrite defaults */
-      var pluginOptions = $.extend(defaults, options);
-
-      return this.each(function () {
-        drawer.init(pluginOptions, this);
-      });
-    };
-
-  }
-
-  /*
-    when scrolling past boundaries with trackpad, prevent default browser behavior
-    (back/forward navigation)
-  */
-  function xScrollBoundaries (type) {
-    // constraign trackpad scrolling (don't go forward/back in browser)
-    var maxX = null;
-    $(document).on('wheel',
-      '#cs-container .row-horizon, #cs-tab-container .row-horizon, #cs-fixed-carousel .row-horizon',
-      function (event) {
-        maxX = $(this).prop('scrollWidth') - $(this).prop('offsetWidth');
-        // If this event looks like it will scroll beyond the bounds of the element,
-        //  prevent it and set the scroll to the boundary manually
-        if ($(this).prop('scrollLeft') + event.originalEvent.deltaX < 0 ||
-            $(this).prop('scrollLeft') + event.originalEvent.deltaX > maxX) {
-          event.preventDefault();
-          $(this).prop('scrollLeft', Math.max(0, Math.min(maxX, $(this).prop('scrollLeft') + event.originalEvent.deltaX)));
-        }
-      }
-    );
-  }
-
-  function scrollHandlers ($container) {
-
-    var $carousel = $container.find('.row-horizon'),
-        $paginationContainer = $container.find('.cs-pagination-row'),
-        scrollWidth = $carousel.prop('scrollWidth'),
-        maxScrollPosition = scrollWidth - $carousel.width(),
-        numPages = Math.ceil(scrollWidth / $carousel.width()),
-        pageWidth = Math.ceil(scrollWidth / numPages),
-        currentPage = 1,
-        scrollPosition = null, scrollRemaining = null,
-        dynamicPage = null, lastPage = null,
-        calculateDynamicPage = function (position, numPages, pageWidth, carouselWidth) {
-          for (var i = 1; i <= numPages; i++) {
-            if (position + (carouselWidth / 2) < pageWidth * i) { return i; }
-          }
-        },
-        paginationTrackScroll = function () {
-          dynamicPage =
-            calculateDynamicPage($(this).scrollLeft(), numPages, pageWidth, $(this).width());
-          if (dynamicPage !== currentPage) {
-            lastPage = currentPage;
-            currentPage = dynamicPage;
-            $paginationContainer.find('div:nth-of-type(' + lastPage.toString() + ')')
-                                .removeClass('cs-current-page-dot');
-            $paginationContainer.find('div:nth-of-type(' + currentPage.toString() + ')')
-                                .addClass('cs-current-page-dot');
-          }
-        },
-        paginationScroll = function ($carousel, pageWidth, paginationTrackScroll) {
-          // $(this) refers to the div.page-dot clicked
-          return function (e) {
-            var goToPage = null, scrollTo = null;
-
-            if ($(this).hasClass('cs-current-page-dot')) { e.preventDefault(); }
-
-            // turn off other handlers until animation is complete
-            $carousel.off('scroll', paginationTrackScroll);
-            // .. but not the currently executing handler ... things get weird
-            // $('.cs-page-dot').off('click', paginationScroll)
-
-            $(this).addClass('goto-page-dot');
-            $container.find('.cs-current-page-dot').removeClass('cs-current-page-dot');
-            $container.find('.cs-page-dot').each(function (index, pageDot) {
-              if ($(this).hasClass('goto-page-dot')) {
-                scrollTo = index * pageWidth;
-                $(this).addClass('cs-current-page-dot')
-                       .removeClass('goto-page-dot');
-                return false;
-              }
-            });
-            $carousel.animate({ scrollLeft: scrollTo }, 1000, function () {
-              $carousel.on('scroll', paginationTrackScroll);
-            });
-          };
-        },
-        arrowScrollLeft = function ($carousel, pageWidth) {
-          return function (e) {
-            var scrollPosition = $carousel.scrollLeft(),
-                $pageDots = $container.find('.cs-page-dot');
-            $pageDots.off('click', paginationScroll);
-            if (scrollPosition >= pageWidth) {
-              $carousel.animate({ scrollLeft: '-=' + pageWidth.toString() }, 1000,
-                function () { $pageDots.on('click', paginationScroll); });
-            }
-            else {
-              $carousel.animate({ scrollLeft: '-=' + scrollPosition.toString() }, 1000,
-                function () { $pageDots.on('click', paginationScroll); });
-            }
-          };
-        },
-        arrowScrollRight = function ($carousel, pageWidth, scrollWidth) {
-          return function (e) {
-            var scrollPosition = $carousel.scrollLeft(),
-                scrollRemaining = scrollWidth - (scrollPosition + $carousel.width()),
-                $pageDots = $container.find('.cs-page-dot');
-            $pageDots.off('click', paginationScroll);
-            if (scrollRemaining >= pageWidth) {
-              $carousel.animate({ scrollLeft: '+=' + pageWidth.toString() }, 1000,
-                function () { $pageDots.on('click', paginationScroll); });
-            } else {
-              $carousel.animate({ scrollLeft: '+=' + scrollRemaining.toString() }, 1000,
-                function () { $pageDots.on('click', paginationScroll); });
-            }
-          };
-        };
-
-    // set up pagination
-    for (var i = 0; i < numPages; i++) {
-      if (i === 0) {
-        $paginationContainer
-          .append("<div class='cs-page-dot cs-current-page-dot'></div>");
-      } else {
-        $paginationContainer
-          .append("<div class='cs-page-dot'></div>");
-      }
-    }
-
-    if (numPages > 1) {
-
-      $carousel.on('scroll', paginationTrackScroll);
-      $container.find('.cs-scroll-left')
-        .on('click', arrowScrollLeft($carousel, pageWidth));
-      $container.find('.cs-scroll-right')
-        .on('click', arrowScrollRight($carousel, pageWidth, scrollWidth));
-      $container.find('.cs-page-dot')
-        .on('click', paginationScroll($carousel, pageWidth, paginationTrackScroll));
-
-    } else {
-      $container.find('.cs-pagination-row, .cs-scroll-left, .cs-scroll-right')
-        .css('visibility', 'hidden');
-    }
-  }
-
-  function scrollHandlersExp ($container) {
-
-    var $carousel = $container.find('.row-horizon'),
-        scrollWidth = $carousel.prop('scrollWidth'),
-        numPages = Math.ceil(scrollWidth / $carousel.width()),
-        arrowScrollLeft = function ($carousel, pageWidth) {
-          return function (e) {
-            $carousel.animate({ scrollLeft: '-=' + $carousel.css('width') }, 500);
-          };
-        },
-        arrowScrollRight = function ($carousel, pageWidth, scrollWidth) {
-          return function (e) {
-            $carousel.animate({ scrollLeft: '+=' + $carousel.css('width') }, 500)
-          };
-        };
-
-    if (numPages > 1) {
-
-      $container.find('.cs-scroll-left, .cs-scroll-left-xs')
-                .on('click', arrowScrollLeft($carousel));
-      $container.find('.cs-scroll-right, .cs-scroll-right-xs')
-                .on('click', arrowScrollRight($carousel));
-
-    } else {
-      $container.find('.cs-scroll-left, .cs-scroll-left-xs, .cs-scroll-right, .cs-scroll-right-xs')
-                .css('visibility', 'hidden');
-    }
-  }
-
-  function trackVisitor () {
-
-    $('#cs-container, #cs-tab-container, #cs-rel-container, #cs-rel-exp-container, #cs-varmour-container')
-      .append('<iframe class="cs-iframe" height="0" width="0" style="display:none" ' +
-              'src="https://' + '<%= @company.subdomain %>' + '.customerstories.net/widgets/track"></iframe>');
-
-    // old approach:
-    // var trackingDoc = $('#cs-container').find('iframe')[0].contentWindow.document,
-    //     trackingHost = (("https:" == document.location.protocol) ? "https://s.adroll.com" : "http://a.adroll.com"),
-    //     trackingUrl = trackingHost + '/j/roundtrip.js';
-    // trackingDoc.open();
-    // trackingDoc.write("<html><head><script>adroll_adv_id='" + advId + "';adroll_pix_id='" + pixId + "';</script><script src='" + trackingUrl + "'></script><script>setTimeout(function(){try{__adroll.record_user({'adroll_segments':'" + segmentId + "'})}catch(err){};},1000);</script></head></html>");
-    // trackingDoc.close();
-  }
-
-  function setCookie (name, value, expires, path, domain, secure) {
-    document.cookie = name + "=" + escape(value) +
-      ((expires) ? "; expires=" + expires : "") +
-      ((path) ? "; path=" + path : "") +
-      ((domain) ? "; domain=" + domain : "") +
-      ((secure) ? "; secure" : "");
-  }
-
-  function getCookie (name) {
-    var cookie = " " + document.cookie;
-    var search = " " + name + "=";
-    var setStr = null;
-    var offset = 0;
-    var end = 0;
-    if (cookie.length > 0) {
-      offset = cookie.indexOf(search);
-      if (offset != -1) {
-        offset += search.length;
-        end = cookie.indexOf(";", offset)
-        if (end == -1) {
-          end = cookie.length;
-        }
-        setStr = unescape(cookie.substring(offset, end));
-      }
-    }
-    return(setStr);
-  }
-
-  // ref: https://stackoverflow.com/questions/5623838/rgb-to-hex-and-hex-to-rgb
-  function hexToRgb (hex) {
-    // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-    hex = hex.replace(shorthandRegex, function(m, r, g, b) {
-        return r + r + g + g + b + b;
-    });
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? {
-        r: parseInt(result[1], 16),
-        g: parseInt(result[2], 16),
-        b: parseInt(result[3], 16)
-    } : null;
-  }
 
 }(window, document));
 
