@@ -57,7 +57,7 @@ $viewport_xxl:  $item_width * 6 + $sidebar_width; /* 6 columns */
 }
 
 @media screen and (min-width: $viewport_xs) {
-  .cs-grid {
+  #cs-gallery .cs-grid {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
@@ -67,7 +67,7 @@ $viewport_xxl:  $item_width * 6 + $sidebar_width; /* 6 columns */
     flex-wrap: wrap;
   }
   /* 1 column */
-  .grid__item {
+  #cs-gallery .grid__item {
     max-width: 100%;
     // border: none;
   }
@@ -76,7 +76,7 @@ $viewport_xxl:  $item_width * 6 + $sidebar_width; /* 6 columns */
 @media screen and (min-width: $viewport_s) {
 
   /* 2 columns */
-  .grid__item {
+  #cs-gallery .grid__item {
     max-width: 50%;
     // border: none;
   }
@@ -103,28 +103,28 @@ $viewport_xxl:  $item_width * 6 + $sidebar_width; /* 6 columns */
 
 @media screen and (min-width: $viewport_m) {
   /* 3 columns */
-  .grid__item {
+  #cs-gallery .grid__item {
     max-width: 33.333%;
   }
 }
 
 @media screen and (min-width: $viewport_l) {
   /* 4 columns */
-  .grid__item {
+  #cs-gallery .grid__item {
     max-width: 25%;
   }
 }
 
 @media screen and (min-width: $viewport_xl) {
   /* 5 columns */
-  .grid__item {
+  #cs-gallery .grid__item {
     max-width: 20%;
   }
 }
 
 @media screen and (min-width: $viewport_xxl) {
   /* 6 columns */
-  .grid__item {
+  #cs-gallery  .grid__item {
     max-width: 16.66%;
   }
 }

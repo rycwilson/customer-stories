@@ -11,7 +11,7 @@
       <div class="cs-rh-container col-xs-8 col-sm-10">
 
         <!-- text-center in case not enough stories to fill carousel -->
-        <div class="cs-row row-horizon text-center">
+        <div class="cs-row cs-grid row-horizon text-center">
 
         <!-- the bootstrap styling starts to break down after 30 stories -->
         <% stories.first(20).each do |story|  %>
@@ -35,6 +35,34 @@
         <% end %>
 
         </div>
+
+        <section class="cs-content">
+
+          <div class="scroll-wrap">
+
+            <% stories.first(20).each do |story| %>
+
+              <div class="content__item">
+              </div>
+
+            <% end %>
+
+          </div>
+
+          <button class="hidden-xs close-button"><i class="fa fa-times-thin fa-3x"></i><span>Close</span></button>
+
+          <button class="visible-xs close-button-xs">
+            <span class="fa-stack">
+              <i class="fa fa-circle fa-stack-2x"></i>
+
+              <i class="fa fa-times-thin fa-inverse fa-stack-1x"></i>
+            </span>
+            <!-- <i style="color: white" class="fa fa-fw fa-times-thin fa-3x"></i> -->
+          </button>
+
+        </section><!-- /content -->
+
+
       </div>
 
       <div class="cs-scroll col-xs-2 col-sm-1">
