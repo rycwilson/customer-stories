@@ -1,13 +1,10 @@
 
-.cs-section {
+> .cs-container-fluid {
   position: relative;
+  padding: 0;
   -webkit-backface-visibility: hidden;  // ref: http://stackoverflow.com/questions/19254146
   ::-webkit-scrollbar {
     display: none;
-  }
-
-  .cs-container-fluid {
-    padding: 0;
   }
 
   .cs-row {
