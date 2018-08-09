@@ -41,7 +41,8 @@ a.cs-thumbnail {
       -moz-transform: translateY(-100%);
       -ms-transform: translateY(-100%);
       -o-transform: translateY(-100%);
-      transition: all $transition-time ease-in-out;
+      // transition: all $transition-time ease-in-out;
+      transition: all 0s step-end;
       p {
         font: {
           family: inherit !important;
@@ -63,9 +64,12 @@ a.cs-thumbnail {
       max-width: 100%;
       padding: 24px;
       opacity: 1;
-      transition: opacity $transition-time ease-in-out;
-      -moz-transition: opacity $transition-time ease-in-out;
-      -webkit-transition: opacity $transition-time ease-in-out;
+      // transition: opacity $transition-time ease-in-out;
+      // -moz-transition: opacity $transition-time ease-in-out;
+      // -webkit-transition: opacity $transition-time ease-in-out;
+      transition: opacity 0s step-end;
+      -moz-transition: opacity 0s step-end;
+      -webkit-transition: opacity 0s step-end;
       // this compensates for a bug in chrome, which causes images of a
       // certain aspect ratio to expand and contract very slightly on
       // hover and opacity transition
@@ -132,11 +136,11 @@ a.cs-thumbnail {
     .caption {
       span.customer-name {
         visibility: hidden;
-        transition: all $transition-time step-end;
+        transition: all 0s step-end;
       }
       span.click-action:after {
         visibility: visible;
-        transition: all $transition-time step-end;
+        transition: all 0s step-end;
       }
     }
   }
