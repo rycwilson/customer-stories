@@ -151,7 +151,7 @@ a.cs-thumbnail {
     // img { opacity: 0.05 !important; }
     &.cs-still-loading {
       .thumbnail-view, .caption {
-        opacity: 0.05;
+        opacity: 0.04;
       }
       // the icon needs to be wrapped in a div in order for the transform to work
       // (center if element is centered, not top-left of element)

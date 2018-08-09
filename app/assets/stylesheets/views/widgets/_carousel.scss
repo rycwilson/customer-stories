@@ -98,14 +98,14 @@
       bottom: 0;
       height: 35%;
       width: 100%;
-      font: {
-        family: inherit !important;
-        size: 14px !important;
-        weight: 400 !important;
-      }
       border-radius: 0;
       background: transparent;
       span {
+        font: {
+          family: inherit !important;
+          size: 14px !important;
+          weight: 400 !important;
+        }
         color: #444 !important;
         position: absolute;
         width: 90%;
@@ -128,7 +128,7 @@
     &.preview-published .caption span.click-action:after {
       content: 'Read More';
     }
-    &:hover {
+    &:hover, &.cs-loading {
       border: 1px solid transparent;  // override bootstrap .thumbnail
       box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
       .thumbnail-view-hover {
@@ -148,6 +148,30 @@
         span.click-action:after {
           visibility: visible;
           transition: all 0s step-end;
+        }
+      }
+    }
+    &:not(.cs-still-loading) {
+      i.fa-spin { display: none; }
+    }
+    &.cs-loading {
+      // border-color: #ccc;
+      -webkit-filter: brightness(95%);
+      .thumbnail-view-hover { transform: none; }
+      // img { opacity: 0.05 !important; }
+      &.cs-still-loading {
+        .thumbnail-view, .caption {
+          opacity: 0.04;
+        }
+        // the icon needs to be wrapped in a div in order for the transform to work
+        // (center if element is centered, not top-left of element)
+        .still-loading-container {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          font-size: 20px;
+          color: #666;
         }
       }
     }
