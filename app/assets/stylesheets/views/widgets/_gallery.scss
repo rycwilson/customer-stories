@@ -4,8 +4,6 @@
   margin: 0 auto;
 }
 
-$transition-time: 0.23s;
-
 a.cs-thumbnail {
   overflow: hidden;
   background-color: #fff;
@@ -19,7 +17,7 @@ a.cs-thumbnail {
   border-radius: 0;
   // following settings lifted from chrome new tab page
   box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
-  transition: box-shadow $transition-time ease-in-out;
+  transition: box-shadow 0.1s ease-in-out;
   // -webkit-tap-highlight-color: transparent;
   .thumbnail-view {
     position: relative;
