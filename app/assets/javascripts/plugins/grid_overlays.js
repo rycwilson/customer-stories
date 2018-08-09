@@ -122,12 +122,18 @@
     // add expanding element/placeholder
     var dummy = document.createElement('div');
     dummy.className = 'placeholder';
+
+    var itemOffsetLeft, itemOffsetTop;
     // set the width/heigth and position
-    console.log('item', item)
-    console.log('offsetLeft', item.offsetLeft)
-    console.log('offsetTop', item.offsetTop)
-    dummy.style.WebkitTransform = 'translate3d(' + item.offsetLeft + 'px, ' + item.offsetTop + 'px, 0px) scale3d(' + item.offsetWidth/gridItemsContainer.offsetWidth + ',' + (item.offsetHeight)/getViewport('y') + ',1)';
-    dummy.style.transform = 'translate3d(' + item.offsetLeft + 'px, ' + item.offsetTop + 'px, 0px) scale3d(' + item.offsetWidth/gridItemsContainer.offsetWidth + ',' + (item.offsetHeight)/getViewport('y') + ',1)';
+    if ($(item).hasClass('grid__item--carousel')) {
+      itemOffsetLeft = $(item).offset().left;
+      itemOffsetTop = ($('.cs-rh-container').offset().top + parseInt($('.row-horizon').css('padding-top'))) - $(gridEl).offset().top;
+    } else {
+      itemOffsetLeft = item.offsetLeft;
+      itemOffsetTop = item.offsetTop;
+    }
+    dummy.style.WebkitTransform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/gridItemsContainer.offsetWidth + ',' + (item.offsetHeight)/getViewport('y') + ',1)';
+    dummy.style.transform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/gridItemsContainer.offsetWidth + ',' + (item.offsetHeight)/getViewport('y') + ',1)';
 
     // add transition class
     classie.add(dummy, 'placeholder--trans-in');
@@ -197,8 +203,15 @@
     setTimeout(function() {
       var dummy = gridItemsContainer.querySelector('.placeholder');
       classie.removeClass(bodyEl, 'noscroll');
-      dummy.style.WebkitTransform = 'translate3d(' + gridItem.offsetLeft + 'px, ' + gridItem.offsetTop + 'px, 0px) scale3d(' + gridItem.offsetWidth/gridItemsContainer.offsetWidth + ',' + gridItem.offsetHeight/getViewport('y') + ',1)';
-      dummy.style.transform = 'translate3d(' + gridItem.offsetLeft + 'px, ' + gridItem.offsetTop + 'px, 0px) scale3d(' + gridItem.offsetWidth/gridItemsContainer.offsetWidth + ',' + gridItem.offsetHeight/getViewport('y') + ',1)';
+      if ($(gridItem).hasClass('grid__item--carousel')) {
+        itemOffsetLeft = $(gridItem).offset().left;
+        itemOffsetTop = ($('.cs-rh-container').offset().top + parseInt($('.row-horizon').css('padding-top'))) - $(gridEl).offset().top;
+      } else {
+        itemOffsetLeft = gridItem.offsetLeft;
+        itemOffsetTop = gridItem.offsetTop;
+      }
+      dummy.style.WebkitTransform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + gridItem.offsetWidth/gridItemsContainer.offsetWidth + ',' + gridItem.offsetHeight/getViewport('y') + ',1)';
+      dummy.style.transform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + gridItem.offsetWidth/gridItemsContainer.offsetWidth + ',' + gridItem.offsetHeight/getViewport('y') + ',1)';
       onEndTransition(dummy, function() {
         // reset content scroll..
         contentItem.parentNode.scrollTop = 0;
