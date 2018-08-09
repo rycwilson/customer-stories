@@ -253,8 +253,7 @@ function cspInitCarousel ($container) {
   $(window).on('resize', resizeCallback);
   $(window).on('orientationchange', adjustColumns);
 
-  // turn on the widget, enable tracking
-  $container.find('> .cs-container-fluid').css('visibility', 'visible');
+  $container.find('.cs-container-fluid').css('visibility', 'visible');
 
 }
 

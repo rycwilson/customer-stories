@@ -32,11 +32,11 @@
       }
     },
     gridEl = document.getElementById('cs-gallery') || document.getElementById('cs-carousel');
-    console.log(gridEl)
+    // console.log(gridEl)
     var gridItemsContainer = gridEl.querySelector('.cs-grid');
-    console.log(gridItemsContainer)
+    // console.log(gridItemsContainer)
     var contentItemsContainer = gridEl.querySelector('.cs-content');
-    console.log(contentItemsContainer)
+    // console.log(contentItemsContainer)
     var gridItems = gridItemsContainer.querySelectorAll('.grid__item'),
     contentItems = contentItemsContainer.querySelectorAll('.content__item'),
     closeCtrl = contentItemsContainer.querySelector('.close-button'),
@@ -123,6 +123,9 @@
     var dummy = document.createElement('div');
     dummy.className = 'placeholder';
     // set the width/heigth and position
+    console.log('item', item)
+    console.log('offsetLeft', item.offsetLeft)
+    console.log('offsetTop', item.offsetTop)
     dummy.style.WebkitTransform = 'translate3d(' + item.offsetLeft + 'px, ' + item.offsetTop + 'px, 0px) scale3d(' + item.offsetWidth/gridItemsContainer.offsetWidth + ',' + (item.offsetHeight)/getViewport('y') + ',1)';
     dummy.style.transform = 'translate3d(' + item.offsetLeft + 'px, ' + item.offsetTop + 'px, 0px) scale3d(' + item.offsetWidth/gridItemsContainer.offsetWidth + ',' + (item.offsetHeight)/getViewport('y') + ',1)';
 
@@ -141,8 +144,8 @@
       // dummy.style.WebkitTransform = 'translate3d(-5px, ' + (scrollY() - 5) + 'px, 0px)';
       // dummy.style.transform = 'translate3d(-5px, ' + (scrollY() - 5) + 'px, 0px)';
       // csp modified...
-      dummy.style.WebkitTransform = 'translate3d(-5px, ' + (- 5 - ($('section.cs-grid').offset().top - scrollY())) + 'px, 0px)';
-      dummy.style.transform = 'translate3d(-5px, ' + (- 5 - ($('section.cs-grid').offset().top - scrollY())) + 'px, 0px)';
+      dummy.style.WebkitTransform = 'translate3d(-5px, ' + (- 5 - ($('.cs-grid').offset().top - scrollY())) + 'px, 0px)';
+      dummy.style.transform = 'translate3d(-5px, ' + (- 5 - ($('.cs-grid').offset().top - scrollY())) + 'px, 0px)';
       // disallow scroll
       window.addEventListener('scroll', noscroll);
     }, 25);
@@ -156,7 +159,7 @@
       // csp removed...
       // contentItemsContainer.style.top = scrollY() + 'px';
       // csp modified...
-      contentItemsContainer.style.top = (scrollY() - $('section.cs-grid').offset().top) + 'px';
+      contentItemsContainer.style.top = (scrollY() - $('.cs-grid').offset().top) + 'px';
 
       /**
        * csp modification:

@@ -10,7 +10,7 @@
 }
 
 /* Grid container */
-#cs-gallery .cs-grid {
+.cs-grid:not(.cs-grid-carousel) {
   position: relative;
   display: flex;
   align-items: center;

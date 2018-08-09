@@ -35,7 +35,8 @@ function cspInitOverlays ($container) {
         dataType: 'jsonp'
       })
         .done(function (data, status, jqxhr) {
-          $story = $container.find('.content__item:nth-of-type(' + ($storyCard.index() + 1) + ')');
+          var storyIndex = $container.is('#cs-gallery') ? $storyCard.index() + 1 : $storyCard.parent().index() + 1;
+          $story = $container.find('.content__item:nth-of-type(' + storyIndex + ')');
           $.when(
             $story.html(data.html),
             $storyCard.addClass('cs-loaded')

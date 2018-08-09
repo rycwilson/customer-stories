@@ -284,10 +284,10 @@ class Story < ActiveRecord::Base
     elsif self.published?
       is_external ? self.csp_story_url : self.csp_story_path
     elsif self.preview_published?
-      if is_widget && widget_type == 'fixed-carousel'
-        is_external ? Rails.application.routes.url_helpers.root_url(subdomain: self.company.subdomain) + "?preview=#{self.slug}" : "/?preview=#{self.slug}"
-      elsif is_widget && widget_type == 'gallery'
+      if is_widget && (widget_type == 'gallery' || widget_type == 'carousel')
         self.csp_story_url
+      elsif is_widget && widget_type == 'fixed_carousel'
+        is_external ? Rails.application.routes.url_helpers.root_url(subdomain: self.company.subdomain) + "?preview=#{self.slug}" : "/?preview=#{self.slug}"
       else
         'javascript:;'
       end

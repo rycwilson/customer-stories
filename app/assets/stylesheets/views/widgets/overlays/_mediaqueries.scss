@@ -57,7 +57,7 @@ $viewport_xxl:  $item_width * 6 + $sidebar_width; /* 6 columns */
 }
 
 @media screen and (min-width: $viewport_xs) {
-  #cs-gallery .cs-grid {
+  .cs-grid:not(.cs-grid-carousel) {
     display: -webkit-box;
     display: -webkit-flex;
     display: -ms-flexbox;
