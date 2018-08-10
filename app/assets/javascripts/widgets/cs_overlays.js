@@ -3,7 +3,7 @@
 //= require js/classie
 //= require plugins/grid_overlays
 
-function cspInitOverlays ($container) {
+function cspInitOverlays ($, $container) {
 
   loading = function ($storyCard) {
       $storyCard.addClass('cs-loading');
@@ -44,7 +44,7 @@ function cspInitOverlays ($container) {
             .then(function () { linkedinListener($story); })
             .then(function () {
               if ($storyCard.hasClass('has-video')) {
-                cspInitVideo($story);
+                cspInitVideo($, $story);
               }
               initLinkedIn();
 
