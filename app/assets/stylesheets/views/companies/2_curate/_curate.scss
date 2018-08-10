@@ -11,6 +11,8 @@
 
   #curate-stories {
 
+    @import 'gallery';
+
     > .row > [class*="col-"]:first-of-type {
       background: #efefef;
       padding-top: 15px;
@@ -47,10 +49,6 @@
 
     #status-filters {
       margin: 10px;
-    }
-
-    #curate-gallery {
-      // see gallery.scss
     }
 
   }

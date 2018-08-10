@@ -24,9 +24,9 @@ function preselectFilters () {
 
 function curateListeners () {
 
-  var loading = function ($story) {
-        $story.addClass('loading');
-        setTimeout(function () { $story.addClass('still-loading'); }, 1000);
+  var loading = function ($storyCard) {
+        $storyCard.addClass('loading');
+        setTimeout(function () { $storyCard.addClass('still-loading'); }, 1000);
         $('#curate-gallery li').css('pointer-events', 'none');
       },
       cancelLoading = function () {
@@ -44,9 +44,10 @@ function curateListeners () {
 
       e.preventDefault();
 
-      var $story = $(this).closest('li'), storySlug = $story.data('story-slug'),
-          customerSlug = $story.data('customer-slug');
-      loading($story);
+      var $storyCard = $(this).closest('li'), storySlug = $storyCard.data('story-slug'),
+          customerSlug = $storyCard.data('customer-slug');
+
+      loading($storyCard);
 
   // replacing state ensure turbolinks:false for the first tab state
       window.history.replaceState(
@@ -60,14 +61,14 @@ function curateListeners () {
       );
 
       $.ajax({
-        url: '/stories/' + $story.data('story-id') + '/edit',
+        url: '/stories/' + $storyCard.data('story-id') + '/edit',
         method: 'get',
         dataType: 'html'
       })
         .done(function (html, status, xhr) {
-          var cbShowTab = function () { $('a[href="#curate-story"]').tab('show'); };
+          var showTab = function () { $('a[href="#curate-story"]').tab('show'); };
           $.when( $('#curate-story').empty().append(html) )
-            .then(function () { initStoriesEdit(cbShowTab); });
+            .done(function () { initStoriesEdit(showTab); });
         });
     })
 
