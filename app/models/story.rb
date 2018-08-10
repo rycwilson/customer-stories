@@ -1,4 +1,4 @@
-class Story < ActiveRecord::Base
+class Story < ApplicationRecord
 
   include FriendlyId
 

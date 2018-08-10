@@ -1,4 +1,4 @@
-class AdwordsImage < ActiveRecord::Base
+class AdwordsImage < ApplicationRecord
 
   belongs_to :company
   has_many :adwords_ads_images, dependent: :destroy

@@ -1,4 +1,4 @@
-class AdwordsAd < ActiveRecord::Base
+class AdwordsAd < ApplicationRecord
 
   require 'adwords_api'
   ADWORDS_API_VERSION = :v201802

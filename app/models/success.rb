@@ -1,4 +1,4 @@
-class Success < ActiveRecord::Base
+class Success < ApplicationRecord
 
   # virtual attribute for keeping track of a new Success that is also created with
   # new contribution (as when a referrer is specified);

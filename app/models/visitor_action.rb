@@ -1,4 +1,4 @@
-class VisitorAction < ActiveRecord::Base
+class VisitorAction < ApplicationRecord
 
   belongs_to :company
   belongs_to :success  # could be nil if index page view

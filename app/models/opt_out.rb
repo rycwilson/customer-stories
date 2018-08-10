@@ -1,2 +1,2 @@
-class OptOut < ActiveRecord::Base
+class OptOut < ApplicationRecord
 end

@@ -1,4 +1,4 @@
-class Visitor < ActiveRecord::Base
+class Visitor < ApplicationRecord
 
   has_many :visitor_sessions, dependent: :destroy
   has_many :visitor_actions, through: :visitor_sessions
