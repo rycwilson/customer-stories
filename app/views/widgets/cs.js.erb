@@ -56,21 +56,21 @@
 
       // wait for stylesheet to load ...
       $stylesheet.appendTo('head')
-        .on('load', getWidget($container, $script.data('category'), $script.data('product')));
+        .on('load', getWidget($container, $script));
 
     });
   }
 
   // root_url provides a company-specific url (via subdomain)
-  function getWidget ($container, category, product) {
+  function getWidget ($container, $script, category, product) {
     return function () {
       $.ajax({
         url: "<%= URI.join(root_url, widget_view_path(@type)) %>",
         method: 'GET',
         dataType: 'jsonp',
         data: {
-          category: category,
-          product: product
+          category: $script.data('category'),
+          product: $script.data('product')
         }
       })
         .done(function (data) {
@@ -81,27 +81,33 @@
           var $images = $container.find('img'), loadedImages = 0;
           $images.on('load', function () {
             if (++loadedImages === $images.length) {
-              initWidget('<%= @type %>', $container);
+              initWidget('<%= @type %>', $container, $script);
             }
           });
         });
     };
   }
 
-  function initWidget (type, $container) {
+  function initWidget (type, $container, $script) {
     var Modernizr, // will be defined in cs_overlays.js
         initVideo = $.Deferred(),
         initOverlays = $.Deferred();
 
     trackVisitor($container);
 
-    $.getScript("<%= asset_url('widgets/cs_video.js') %>", function () {
-        initVideo.resolve();
-      });
-    $.getScript("<%= asset_url('widgets/cs_overlays.js') %>", function () {
-        cspInitOverlays($container);
-        initOverlays.resolve();
-      });
+    // do not apply overlays to varmour
+    if ($script.attr('src').includes('varmour')) {
+      initVideo.resolve();
+      initOverlays.resolve();
+    } else {
+      $.getScript("<%= asset_url('widgets/cs_video.js') %>", function () {
+          initVideo.resolve();
+        });
+      $.getScript("<%= asset_url('widgets/cs_overlays.js') %>", function () {
+          cspInitOverlays($container);
+          initOverlays.resolve();
+        });
+    }
 
     $.when(initVideo, initOverlays).done(function () {
         $.ajax({

@@ -1,8 +1,12 @@
 
+<% if company.subdomain != 'varmour' %>
+
 <div class="cs-overlay-container">
   <div class="cs-main">
 
     <div class="cs-grid cs-grid-carousel">
+
+<% end %>
 
       <div class="cs-container-fluid" style="visibility: hidden">
 
@@ -69,6 +73,8 @@
 
       </div>
 
+<% if company.subdomain != 'varmour' %>
+
     </div>  <!-- .cs-grid -->
 
     <section class="cs-content">
@@ -99,3 +105,4 @@
   </div>
 </div>
 
+ <% end %>
