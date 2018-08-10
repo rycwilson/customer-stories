@@ -44,10 +44,10 @@
     right: 0;
     margin: 0 auto;
     background-color: #fff;
-    transition: background-color 0.5s ease-in-out;
     border: 1px solid #999;
     padding: 0;
     text-align: center;
+    transition: background-color 0s;
     // border-color: rgba(0, 0, 0, 0.7);
     border-radius: 0;
     .thumbnail-view {
@@ -63,7 +63,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        z-index: 10;
+        // z-index: 10;
         width: 100%;
         height: 100%;
         padding: 8px 10px;
@@ -73,7 +73,7 @@
         -ms-transform: translateY(-100%);
         -o-transform: translateY(-100%);
         transform: translateY(-100%);
-        transition: all 0.23s ease-in-out;
+        transition: all 0s step-end;  // ease-in-out;
         // important setting is for weebly
         p {
           font-family: inherit !important;
@@ -93,9 +93,9 @@
         max-width: 100%;
         padding: 24px;
         opacity: 1;
-        transition: opacity 0.23s ease-in-out;
-        -moz-transition: opacity 0.23s ease-in-out;
-        -webkit-transition: opacity 0.23s ease-in-out;
+        transition: opacity 0s step-end;
+        -moz-transition: opacity 0s step-end;
+        -webkit-transition: opacity 0s step-end;
         // this compensates for a bug in chrome, which causes images of a
         // certain aspect ratio to expand and contract very slightly on
         // hover and opacity transition
@@ -144,8 +144,9 @@
       content: 'Read More';
     }
     &:hover {
-      background-color: #edf5f8;  // varmour only
       border-color: #999;  // override bootstrap .thumbnail
+      background-color: #edf5f8;
+      transition: background-color 0.5s;
       // border: 1px solid transparent;
       // box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
       .thumbnail-view-hover {
@@ -155,16 +156,16 @@
         -o-transform: translateY(0%);
       }
       img {
-        opacity: 0.05;
+        opacity: 0.04;
       }
       .caption {
         span.customer-name {
           visibility: hidden;
-          transition: all 0.23s step-end;
+          transition: all 0s step-end;
         }
         span.click-action:after {
           visibility: visible;
-          transition: all 0.23s step-end;
+          transition: all 0s step-end;
         }
       }
     }
