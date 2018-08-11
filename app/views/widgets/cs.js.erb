@@ -104,7 +104,7 @@
           initVideo.resolve();
         });
       $.getScript("<%= asset_url('widgets/cs_overlays.js') %>", function () {
-          cspInitOverlays($container);
+          cspInitOverlays($, $container);
           initOverlays.resolve();
         });
     }
@@ -116,12 +116,12 @@
           dataType: 'script'
         })
           .done(function () {
-            if (type === 'gallery') cspInitGallery($container);
-            else if (type === 'carousel') cspInitCarousel($container);
+            if (type === 'gallery') cspInitGallery($, $container);
+            else if (type === 'carousel') cspInitCarousel($, $container);
             else if (type == 'fixed_carousel') {
               // plugin must be defined and called in this scope
               slideDrawerPlugin($container);
-              cspInitFixedCarousel($container);
+              cspInitFixedCarousel($, $container);
             }
           });
       });
