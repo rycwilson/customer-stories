@@ -1,5 +1,4 @@
 Rails.application.configure do
-  # Settings specified here will take precedence over those in config/application.rb.
 
   # config.force_ssl = true
   # config.ssl_options = { redirect: { port: 3000 }, hsts: { subdomains: true } }
@@ -41,7 +40,6 @@ Rails.application.configure do
     }
   else
     config.action_controller.perform_caching = false
-
     config.cache_store = :null_store
   end
 
