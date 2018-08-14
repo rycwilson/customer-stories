@@ -20,19 +20,19 @@ Rails.application.config.assets.precompile += %w(
   widgets/cs_video.js
   widgets/cs_overlays.js
   custom/trunity/widgets/cs_carousel.css
-  custom/trunity/widgets/cs_fixed_carousel.css
+  custom/trunity/widgets/cs_tabbed_carousel.css
   custom/trunity/widgets/cs_gallery.css
   custom/varmour/widgets/cs_carousel.css
-  custom/varmour/widgets/cs_fixed_carousel.css
+  custom/varmour/widgets/cs_tabbed_carousel.css
   custom/varmour/widgets/cs_gallery.css
   custom/retailnext/widgets/cs_carousel.css
-  custom/retailnext/widgets/cs_fixed_carousel.css
+  custom/retailnext/widgets/cs_tabbed_carousel.css
   custom/retailnext/widgets/cs_gallery.css
   custom/compas/widgets/cs_carousel.css
-  custom/compas/widgets/cs_fixed_carousel.css
+  custom/compas/widgets/cs_tabbed_carousel.css
   custom/compas/widgets/cs_gallery.css
   custom/centerforcustomerengagement/widgets/cs_carousel.css
-  custom/centerforcustomerengagement/widgets/cs_fixed_carousel.css
+  custom/centerforcustomerengagement/widgets/cs_tabbed_carousel.css
   custom/centerforcustomerengagement/widgets/cs_gallery.css
   pdf.css
   mvpready-landing.css

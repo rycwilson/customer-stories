@@ -28,7 +28,7 @@ function storiesShow () {
 }
 
 function initMoreStories () {
-  if (Cookies.get('cs-fixed-carousel-removed')) return false;
+  if (Cookies.get('cs-tabbed-carousel-removed')) return false;
   var widgetShowTimer = null, widgetHideTimer = null;
 
   $('.cs-header')
@@ -38,7 +38,7 @@ function initMoreStories () {
           $('#more-stories-container')
             .data('hidden', '1')
             .hide();
-          Cookies.set('cs-fixed-carousel-removed', '1', { expires: 1, path: '/' });
+          Cookies.set('cs-tabbed-carousel-removed', '1', { expires: 1, path: '/' });
           return false;
         }
         // cancel the timers if user interacts with widget

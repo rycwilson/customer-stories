@@ -3,7 +3,7 @@
 
   &.stories.show {
     #more-stories-container {
-      @import 'widgets/fixed_carousel';
+      @import 'widgets/tabbed_carousel';
       .cs-header {
         font-family: $metropolis-regular;  // don't apply this to external widget
       }

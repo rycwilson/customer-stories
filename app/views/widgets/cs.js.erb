@@ -27,16 +27,16 @@
       // no stylesheet means type couldn't be id'ed => fatal
       if (!'<%= @stylesheet_url %>') return false;
 
-      // type IN ['gallery', 'carousel', 'fixed_carousel']
+      // type IN ['gallery', 'carousel', 'tabbed_carousel']
       if (type === 'gallery') {
         $script = $('script[src*="gallery/cs"]');
         $container = $('#cs-gallery');
       } else if (type === 'carousel') {
         $script = $('script[src*="carousel/cs"], script[src*="varmour/cs"]').first();
         $container = $("#cs-carousel, #cs-varmour-container").first();
-      } else if (type === 'fixed_carousel') {
-        $script = $('script[src*="fixed-carousel/cs"], script[src*="tab/cs"], script[src*="widget/cs"]').first();
-        $container = $("#cs-fixed-carousel, #cs-tab-container, #cs-container").first();
+      } else if (type === 'tabbed_carousel') {
+        $script = $('script[src*="tabbed_carousel/cs"], script[src*="tab/cs"], script[src*="widget/cs"]').first();
+        $container = $("#cs-tabbed-carousel, #cs-tab-container, #cs-container").first();
       }
 
       // get font awesome if it doesn't exist on host
@@ -118,7 +118,7 @@
           .done(function () {
             if (type === 'gallery') cspInitGallery($, $container);
             else if (type === 'carousel') cspInitCarousel($, $container);
-            else if (type == 'fixed_carousel') {
+            else if (type == 'tabbed_carousel') {
               // plugin must be defined and called in this scope
               slideDrawerPlugin($container);
               cspInitFixedCarousel($, $container);
