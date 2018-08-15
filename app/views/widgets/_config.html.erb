@@ -1,5 +1,155 @@
 
 <div class="row">
+
+  <div class="col-sm-12">
+
+    <p class="lead">Configure a <span style="font-weight: 600">Customer Stories Plugin</span> for your website</p>
+
+    <form class="form-horizontal">
+
+      <div class="form-group" style="height: 40px; display: flex; align-items: center">
+
+        <label class="col-sm-2 control-label">Type</label>
+        <div class="col-sm-10">
+          <div class="btn-group" data-toggle="buttons">
+            <%= label_tag 'widget[type]', class: 'radio-inline' do %>
+              <%= radio_button_tag 'widget[type]', 'gallery', true, checked: true %>
+              Gallery
+            <% end %>
+            <%= label_tag 'widget[type]', class: 'radio-inline' do %>
+              <%= radio_button_tag 'widget[type]', 'carousel', false %>
+              Carousel
+            <% end %>
+            <%= label_tag 'widget[type]', class: 'radio-inline' do %>
+              <%= radio_button_tag 'widget[type]', 'tabbed_carousel', false %>
+              Tabbed Carousel
+            <% end %>
+          </div>
+
+          <button type="button" class="btn btn-secondary" style="margin: 0 20px">Demo</button>
+
+        </div>
+
+      </div>
+
+      <div class="form-group settings collapse">
+
+        <div class="carousel">
+
+          <div class="col-sm-2"></div>
+          <div class="col-sm-10">
+            <div class="row">
+              <label class="col-sm-2 control-label"><span style="float: left">Background<span></label>
+              <div class="col-sm-10">
+
+                <div class="btn-group" data-toggle="buttons">
+                  <%= label_tag 'widget[type]', class: 'radio-inline' do %>
+                    <%= radio_button_tag 'widget[background]', 'light', true, checked: true %>
+                    Light
+                  <% end %>
+                  <%= label_tag 'widget[type]', class: 'radio-inline' do %>
+                    <%= radio_button_tag 'widget[background]', 'dark', false %>
+                    Dark
+                  <% end %>
+                </div>
+
+              </div>
+
+              <span class="help-block">The carousel has a transparent background in order to match your website. Selecting 'Light' background will result in dark typography, and vice versa.</span>
+            </div>
+
+          </div>
+
+        </div>
+
+        <div class="tabbed-carousel">
+
+          <div class="col-sm-2"></div>
+          <div class="col-sm-10">
+
+            <div class="form-inline">
+              <div class="form-group">
+
+                <%= label_tag(nil, 'Delay', class: 'control-label') %>
+                <div class="input-group spinner">
+
+                  <%= text_field_tag(nil, '5', min: '0', class: 'form-control') %>
+                  <div class="input-group-btn-vertical">
+                    <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+                    <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+                  </div>
+
+                </div>
+
+              </div>
+              <div class="form-group">
+
+                <%= label_tag(nil, 'Tab Color', class: 'control-label') %>
+                <%= text_field_tag(nil, '#f2f2f2', class: 'form-control mini-colors') %>
+
+              </div>
+              <div class="form-group">
+
+                <%= label_tag(nil, 'Text Color', class: 'control-label') %>
+                <%= text_field_tag(nil, '#333333', class: 'form-control mini-colors') %>
+
+              </div>
+              <span class="help-block">Delay is the time from page load to appearance of the carousel tab, in seconds.</span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <div class="form-group">
+
+        <label class="col-sm-2 control-label">Content</label>
+        <div class="col-sm-10">
+          <div class="btn-group" data-toggle="buttons">
+            <%= label_tag('widget[type]', class: 'radio-inline') do %>
+              <%= radio_button_tag('widget[filter]', 'gallery', true, checked: true) %>
+              Select Stories
+            <% end %>
+            <%= label_tag('widget[type]', class: 'radio-inline') do %>
+              <%= radio_button_tag('widget[filter]', 'carousel', false, disabled: company.story_categories.empty? && company.products.empty?) %>
+              Filter Stories by Tag
+            <% end %>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="form-group">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-10">
+          <div style="max-width: 500px">
+
+          <%= select_tag(
+                'widget[stories][]',
+                grouped_options_for_select(
+                  company.stories_grouped_options,
+                  []
+                ),
+                {
+                  include_blank: true,
+                  multiple: 'true',
+                  class: 'widget-stories',
+                  style: 'width: 100%'
+                }
+              ) %>
+          </div>
+
+        </div>
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+
+<div class="row hidden">
   <!-- appearance and behavior -->
   <div class="col-sm-6">
 

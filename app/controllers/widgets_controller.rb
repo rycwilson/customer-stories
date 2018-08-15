@@ -64,9 +64,9 @@ class WidgetsController < ApplicationController
       stories = stories.sort_by { |s| [ !s[:published] ? 0 : 1, s[:updated_at] ] }.reverse
     end
     case params[:type]
+    when 'gallery'
     when 'carousel'
     when 'tabbed_carousel'
-    when 'gallery'
     end
     render_to_string(
       partial: params[:type],

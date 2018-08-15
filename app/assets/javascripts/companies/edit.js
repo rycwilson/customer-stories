@@ -2,7 +2,7 @@
 //= require ./settings/profile
 //= require ./settings/crowdsourcing_templates/crowdsourcing_templates
 //= require ./settings/tags_and_ctas
-//= require ./settings/widget_config
+//= require ../widgets/config
 
 function companiesEdit () {
 

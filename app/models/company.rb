@@ -355,6 +355,23 @@ class Company < ActiveRecord::Base
     options
   end
 
+  def stories_grouped_options
+    options = {}
+    self.stories.select { |story| story.logo_published? || story.preview_published? }
+        .each do |story|
+          if options.has_key?(story.customer.name)
+            options[story.customer.name].push(
+              [ story.title, "#{story.id}", { data: { slug: story.slug } } ]
+            )
+          else
+            options.merge!({
+              story.customer.name => [ [ story.title, "#{story.id}", { data: { customer: story.customer.name.to_json } } ] ]
+            })
+          end
+        end
+    options
+  end
+
   #
   # method returns a fragment cache key that looks like this:
   #

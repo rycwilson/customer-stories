@@ -6,17 +6,14 @@
   <div class="form-group">
 
     <div class='btn-group' data-toggle="buttons">
-      <label>New CTA</label>
-      <span class='pull-right'>
-        <label id='link-radio' class="active radio-inline">
-          <%= radio_button_tag('cta[type]', 'link', true) %>
-          Web link
-        </label>
-        <label id='html-radio' class="radio-inline">
-          <%= radio_button_tag('cta[type]', 'form', false) %>
-          Web form
-        </label>
-      </span>
+      <label id='link-radio' class="active radio-inline">
+        <%= radio_button_tag('cta[type]', 'link', true) %>
+        Web link
+      </label>
+      <label id='html-radio' class="radio-inline">
+        <%= radio_button_tag('cta[type]', 'form', false) %>
+        Web form
+      </label>
     </div>
 
     <div class="row">

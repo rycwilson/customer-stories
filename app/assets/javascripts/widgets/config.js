@@ -3,6 +3,35 @@ function widgetConfigListeners () {
 
   $(document)
 
+    .on('change', '[name="widget[type]"]', function () {
+
+      var type = $(this).val();
+          // openSettings = function (callback) {
+          //   if ($('.settings.collapse').hasClass('in') {
+          //     callback
+          //   })
+          // };
+      // prev = $input.data('prev'),
+      //       curr = $input.val();
+
+      if (type === 'gallery') {
+        $('.settings.collapse').one('hidden.bs.collapse', function () {
+          $('.settings.collapse .carousel, .settings.collapse .tabbed-carousel').show();
+        });
+        $('.settings.collapse').collapse('hide');
+      } else if (type === 'carousel') {
+        $('.settings.collapse .tabbed-carousel').hide();
+        $('.settings.collapse .carousel').show();
+        $('.settings.collapse').collapse('show');
+      } else if (type === 'tabbed_carousel') {
+        $('.settings.collapse .carousel').hide();
+        $('.settings.collapse .tabbed-carousel').show();
+        $('.settings.collapse').collapse('show');
+      }
+    })
+
+    .on('hidden.bs.collapse')
+
     .on('change', '[name="widget[show]"]',
       function () {
         if ($(this).val() === 'true') {

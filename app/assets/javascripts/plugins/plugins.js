@@ -21,7 +21,9 @@ function constructPlugins () {
   initClicky();
 
   $("input[type='tel']").inputmask("999-999-9999");
-  $('.mini-colors').minicolors({ theme: 'bootstrap' });
+  $('.mini-colors').not('#stories-plugin .minicolors').minicolors({ theme: 'bootstrap' });
+  $('#stories-plugin .mini-colors').minicolors({ theme: 'bootstrap', inline: false });
+
   /*
     dirtyFields() plugin will apply .dirtyField class to label on input change
     (allows for color change)
