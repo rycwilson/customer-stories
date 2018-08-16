@@ -4,16 +4,7 @@ function widgetConfigListeners () {
   $(document)
 
     .on('change', '[name="widget[type]"]', function () {
-
       var type = $(this).val();
-          // openSettings = function (callback) {
-          //   if ($('.settings.collapse').hasClass('in') {
-          //     callback
-          //   })
-          // };
-      // prev = $input.data('prev'),
-      //       curr = $input.val();
-
       if (type === 'gallery') {
         $('.settings.collapse').one('hidden.bs.collapse', function () {
           $('.settings.collapse .carousel, .settings.collapse .tabbed-carousel').show();
@@ -30,7 +21,19 @@ function widgetConfigListeners () {
       }
     })
 
-    .on('hidden.bs.collapse')
+    .on('change', '[name="widget[content]"]', function () {
+      var content = $(this).val();
+      if (content === 'select') {
+        $('.content__select--category, .content__select--product').hide();
+        $('.content__select--stories').show();
+      } else if (content === 'category') {
+        $('.content__select--stories, .content__select--product').hide();
+        $('.content__select--category').show();
+      } else if (content === 'product') {
+        $('.content__select--stories, .content__select--category').hide();
+        $('.content__select--product').show();
+      }
+    })
 
     .on('change', '[name="widget[show]"]',
       function () {

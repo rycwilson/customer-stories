@@ -24,21 +24,18 @@ function initSelect2 () {
   };
 
   var prependCustomerName = function() {
-    console.log('prependCustomerName()');
     var storyId, storyTitle, storyCustomer;
     $('.select2-selection__rendered li:not(:last-of-type)')
       .each(function (index, story) {
         storyId = $('select.widget-stories').select2('data')[index].id;
         storyTitle = $('select.widget-stories').select2('data')[index].text;
-        // console.log($('select.widget-stories'))
         customerName = JSON.parse(
           $('select.widget-stories').find('option[value="' + storyId + '"]').data('customer')
         );
-        console.log(customerName);
         if (!story.innerHTML.match(new RegExp('^' + customerName))) {
           story.innerHTML = story.innerHTML.replace(
               storyTitle,
-              customerName + ': ' + storyTitle
+              '<span style="font-weight: 600">' + customerName + '</span>: ' + storyTitle
             );
         }
       });
@@ -234,24 +231,25 @@ function initSelect2 () {
   /**
    * widget configuration
    */
-  $('.widget-stories').select2({
+  $('.content__select--stories select').select2({
     theme: 'bootstrap',
-    placeholder: 'Select',
-    tags: true
+    placeholder: 'Select Stories',
+    tags: true,
+    width: 'style'
   })
     .on('select2:select', prependCustomerName)
     .on('select2:unselect', prependCustomerName);
 
 
-  $('.widget-filter-category').select2({
+  $('.content__select--category select').select2({
     theme: 'bootstrap',
-    placeholder: 'Select category',
+    placeholder: 'Select Category',
     width: 'style'
   });
 
-  $('.widget-filter-product').select2({
+  $('.content__select--product select').select2({
     theme: 'bootstrap',
-    placeholder: 'Select product',
+    placeholder: 'Select Product',
     width: 'style'
   });
 
