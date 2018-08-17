@@ -3,6 +3,11 @@ function widgetConfigListeners () {
 
   $(document)
 
+    .on('click', 'button.demo', function () {
+      var type = $('[name="widget[type]"]').val();
+      window.open('/plugins/' + type + '/demo', '_blank');
+    })
+
     .on('change', '[name="widget[type]"]', function () {
       var type = $(this).val();
       if (type === 'gallery') {

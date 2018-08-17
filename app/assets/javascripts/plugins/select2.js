@@ -7,8 +7,6 @@
 function initSelect2 () {
 
   var prependTagType = function () {
-    // console.log('prepend.()')
-    // console.log($('.select2-selection__rendered li:not(:last-of-type)'))
     var tagId, tagText;
     $('.select2-selection__rendered li:not(:last-of-type)')
       .each(function (index, tag) {

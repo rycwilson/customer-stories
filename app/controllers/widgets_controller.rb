@@ -53,6 +53,11 @@ class WidgetsController < ApplicationController
     render(layout: false)
   end
 
+  def demo
+    @type = params[:type]
+    render(layout: false)
+  end
+
   private
 
   # if invalid category or product filters, return all stories

@@ -19,21 +19,25 @@ Rails.application.config.assets.precompile += %w(
   adwords/ads_preview.css
   widgets/cs_video.js
   widgets/cs_overlays.js
-  custom/trunity/widgets/cs_carousel.css
-  custom/trunity/widgets/cs_tabbed_carousel.css
-  custom/trunity/widgets/cs_gallery.css
-  custom/varmour/widgets/cs_carousel.css
-  custom/varmour/widgets/cs_tabbed_carousel.css
-  custom/varmour/widgets/cs_gallery.css
-  custom/retailnext/widgets/cs_carousel.css
-  custom/retailnext/widgets/cs_tabbed_carousel.css
-  custom/retailnext/widgets/cs_gallery.css
-  custom/compas/widgets/cs_carousel.css
-  custom/compas/widgets/cs_tabbed_carousel.css
-  custom/compas/widgets/cs_gallery.css
+  views/widgets/demo.css
+  custom/acme-test/widgets/cs_gallery.css
+  custom/acme-test/widgets/cs_carousel.css
+  custom/acme-test/widgets/cs_tabbed_carousel.css
+  custom/centerforcustomerengagement/widgets/cs_gallery.css
   custom/centerforcustomerengagement/widgets/cs_carousel.css
   custom/centerforcustomerengagement/widgets/cs_tabbed_carousel.css
-  custom/centerforcustomerengagement/widgets/cs_gallery.css
+  custom/compas/widgets/cs_gallery.css
+  custom/compas/widgets/cs_carousel.css
+  custom/compas/widgets/cs_tabbed_carousel.css
+  custom/retailnext/widgets/cs_gallery.css
+  custom/retailnext/widgets/cs_carousel.css
+  custom/retailnext/widgets/cs_tabbed_carousel.css
+  custom/trunity/widgets/cs_gallery.css
+  custom/trunity/widgets/cs_carousel.css
+  custom/trunity/widgets/cs_tabbed_carousel.css
+  custom/varmour/widgets/cs_gallery.css
+  custom/varmour/widgets/cs_carousel.css
+  custom/varmour/widgets/cs_tabbed_carousel.css
   pdf.css
   mvpready-landing.css
   mvpready-admin.css

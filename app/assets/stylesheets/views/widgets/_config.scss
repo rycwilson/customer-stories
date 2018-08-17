@@ -208,16 +208,21 @@
         }
       }
       .form-group.content__select {
+        .content__select--all {
+          width: $settings-width;
+        }
         // https://github.com/select2/select2-bootstrap-theme/issues/77
         .select2-container .select2-selection__rendered > *:first-child.select2-search--inline {
           width: 100% !important;
         }
         .select2-container .select2-selection__rendered > *:first-child.select2-search--inline .select2-search__field {
+          cursor: pointer;
           width: 100% !important;
         }
         .content__select--category, .content__select--product {
           display: none;
         }
+
       }
 
       // select2: fixes word text wrap issues on long select values

@@ -1,6 +1,5 @@
 
 <div class="row">
-
   <div class="col-sm-12">
 
     <p class="lead">Configure a <span style="font-weight: 600">Customer Stories Plugin</span> for your website</p>
@@ -12,16 +11,16 @@
         <label class="col-sm-2 control-label">Type</label>
         <div class="col-sm-10">
           <div class="btn-group" data-toggle="buttons">
-            <%= label_tag 'widget[type]', class: 'radio-inline' do %>
-              <%= radio_button_tag 'widget[type]', 'gallery', true %>
+            <%= label_tag('widget[type]', class: 'radio-inline') do %>
+              <%= radio_button_tag('widget[type]', 'gallery', true) %>
               Gallery
             <% end %>
-            <%= label_tag 'widget[type]', class: 'radio-inline' do %>
-              <%= radio_button_tag 'widget[type]', 'carousel', false %>
+            <%= label_tag('widget[type]', class: 'radio-inline') do %>
+              <%= radio_button_tag('widget[type]', 'carousel', false) %>
               Carousel
             <% end %>
-            <%= label_tag 'widget[type]', class: 'radio-inline' do %>
-              <%= radio_button_tag 'widget[type]', 'tabbed_carousel', false %>
+            <%= label_tag('widget[type]', class: 'radio-inline') do %>
+              <%= radio_button_tag('widget[type]', 'tabbed_carousel', false) %>
               Tabbed Carousel
             <% end %>
           </div>
@@ -133,7 +132,7 @@
       <div class="form-group content__select">
         <div class="col-sm-2"></div>
         <div class="col-sm-10">
-          <div style="max-width: 570px">
+          <div class="content__select--all">
 
             <div class="content__select--stories">
               <%= select_tag(

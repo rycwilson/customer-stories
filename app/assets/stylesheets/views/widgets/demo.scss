@@ -1,0 +1,19 @@
+
+body.widgets.demo {
+
+  @import 'widgets_bootstrap';
+  @import 'overlays/main';
+
+  #cs-carousel {
+    @import 'carousel';
+  }
+
+  #cs-gallery {
+    @import 'gallery';
+  }
+
+  #cs-tabbed-carousel {
+    @import 'tabbed_carousel';
+  }
+
+}

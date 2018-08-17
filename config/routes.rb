@@ -58,6 +58,7 @@ Rails.application.routes.draw do
     get '/widgets/:type/show', to: 'widgets#show', as: 'widget_view', format: 'js'
     get '/widgets/:type/init', to: 'widgets#init', as: 'widget_init'
     get '/widgets/track', to: 'widgets#track'
+    get '/plugins/:type/demo', to: 'widgets#demo'
      # legacy widgets
     get '/widget/cs', to: 'widgets#main'
 
