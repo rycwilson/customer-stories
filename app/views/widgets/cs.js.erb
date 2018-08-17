@@ -111,13 +111,19 @@
       $.getScript("<%= asset_url('widgets/cs_video.js') %>", function () {
           initVideo.resolve();
         });
-      $.getScript("<%= asset_url('widgets/cs_overlays.js') %>", function () {
-          cspInitOverlays($, $container);
-          initOverlays.resolve();
-        });
+
+      if (type !== 'tabbed_carousel') {
+        $.getScript("<%= asset_url('widgets/cs_overlays.js') %>", function () {
+            cspInitOverlays($, $container);
+            initOverlays.resolve();
+          });
+      } else {
+        initOverlays.resolve();
+      }
     }
 
     $.when(initVideo, initOverlays).done(function () {
+      console.log('inited widget');
         $.ajax({
           url: "<%= URI.join(root_url, widget_init_path(@type)) %>",
           method: 'GET',
