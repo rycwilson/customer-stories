@@ -4,6 +4,25 @@ body.widgets.demo {
   @import 'widgets_bootstrap';
   @import 'overlays/main';
 
+  font-family: 'Open Sans';
+
+  .nav-links {
+    padding: 40px 20px 20px 20px;
+    a {
+      font-family: 'Lato';
+      font-size: 21px;
+      margin: 0 20px;
+      padding: 20px
+    }
+    a.active {
+      background-color: #efefef;
+    }
+  }
+
+  .thumbnail-view-hover, .caption {
+    font-family: 'Lato';
+  }
+
   #cs-carousel {
     @import 'carousel';
   }

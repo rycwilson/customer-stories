@@ -9,10 +9,9 @@
  * http://www.codrops.com
  */
 
-(function (jQuery) {
-  var $ = jQuery,
-    bodyEl = document.body,
-     docElem = window.document.documentElement,
+(function ($) {
+    var bodyEl = document.body,
+    docElem = window.document.documentElement,
     support = { transitions: Modernizr.csstransitions },
     // transition end event name
     transEndEventNames = { 'WebkitTransition': 'webkitTransitionEnd', 'MozTransition': 'transitionend', 'OTransition': 'oTransitionEnd', 'msTransition': 'MSTransitionEnd', 'transition': 'transitionend' },
@@ -32,10 +31,10 @@
         onEndCallbackFn();
       }
     },
-    gridEl = document.getElementById('cs-gallery') || document.getElementById('cs-carousel');
-    var gridItemsContainer = gridEl.querySelector('.cs-grid');
-    var contentItemsContainer = gridEl.querySelector('.cs-content');
-    var gridItems = gridItemsContainer.querySelectorAll('.grid__item'),
+    gridEl = document.getElementById('cs-gallery') || document.getElementById('cs-carousel'),
+    gridItemsContainer = gridEl.querySelector('.cs-grid'),
+    contentItemsContainer = gridEl.querySelector('.cs-content'),
+    gridItems = gridItemsContainer.querySelectorAll('.grid__item'),
     contentItems = contentItemsContainer.querySelectorAll('.content__item'),
     closeCtrl = contentItemsContainer.querySelector('.close-button'),
     current = -1,

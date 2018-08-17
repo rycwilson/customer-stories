@@ -4,8 +4,8 @@ function widgetConfigListeners () {
   $(document)
 
     .on('click', 'button.demo', function () {
-      var type = $('[name="widget[type]"]').val();
-      window.open('/plugins/' + type + '/demo', '_blank');
+      var type = $('[name="widget[type]"]:checked').val();
+      window.open('/plugins/demo/?type=' + type, '_blank');
     })
 
     .on('change', '[name="widget[type]"]', function () {

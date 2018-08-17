@@ -19,6 +19,7 @@ Rails.application.config.assets.precompile += %w(
   adwords/ads_preview.css
   widgets/cs_video.js
   widgets/cs_overlays.js
+  widgets/demo.js
   views/widgets/demo.css
   custom/acme-test/widgets/cs_gallery.css
   custom/acme-test/widgets/cs_carousel.css
