@@ -8,7 +8,7 @@ function initSelect2 () {
 
   var prependTagType = function () {
     var tagId, tagText;
-    $('.select2-selection__rendered li:not(:last-of-type)')
+    $('.filters-container .select2-selection__rendered li:not(:last-of-type)')
       .each(function (index, tag) {
         tagId = $('#grouped-stories-filter').select2('data')[index].id;
         tagText = $('#grouped-stories-filter').select2('data')[index].text;
@@ -21,12 +21,14 @@ function initSelect2 () {
       });
   };
 
-  var prependCustomerName = function() {
+  var prependCustomerName = function () {
     var storyId, storyTitle, storyCustomer;
-    $('.select2-selection__rendered li:not(:last-of-type)')
+    $('#stories-plugin .select2-selection__rendered li:not(:last-of-type)')
       .each(function (index, story) {
+        console.log(index, story)
         storyId = $('select.widget-stories').select2('data')[index].id;
         storyTitle = $('select.widget-stories').select2('data')[index].text;
+console.log(storyId)
         customerName = JSON.parse(
           $('select.widget-stories').find('option[value="' + storyId + '"]').data('customer')
         );
@@ -229,7 +231,7 @@ function initSelect2 () {
   /**
    * widget configuration
    */
-  $('.content__select--stories select').select2({
+  $('select.widget-stories').select2({
     theme: 'bootstrap',
     placeholder: 'Select Stories',
     tags: true,

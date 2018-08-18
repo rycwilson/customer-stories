@@ -359,14 +359,11 @@ class Company < ActiveRecord::Base
     options = {}
     self.stories.select { |story| story.logo_published? || story.preview_published? }
         .each do |story|
+          option_data = [ story.title, "#{story.id}", { data: { customer: story.customer.name.to_json } } ]
           if options.has_key?(story.customer.name)
-            options[story.customer.name].push(
-              [ story.title, "#{story.id}", { data: { slug: story.slug } } ]
-            )
+            options[story.customer.name] << option_data
           else
-            options.merge!({
-              story.customer.name => [ [ story.title, "#{story.id}", { data: { customer: story.customer.name.to_json } } ] ]
-            })
+            options.merge!({ story.customer.name => [ option_data ] })
           end
         end
     options

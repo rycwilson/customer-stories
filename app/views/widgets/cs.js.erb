@@ -123,7 +123,6 @@
     }
 
     $.when(initVideo, initOverlays).done(function () {
-      console.log('inited widget');
         $.ajax({
           url: "<%= URI.join(root_url, widget_init_path(@type)) %>",
           method: 'GET',

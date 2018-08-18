@@ -40,38 +40,38 @@ function widgetConfigListeners () {
       }
     })
 
-    .on('change', '[name="widget[show]"]',
-      function () {
-        if ($(this).val() === 'true') {
-          $('.row.widget-show-freq').removeClass('disabled');
-          $('.row.widget-show-delay').removeClass('disabled');
-          $('.row.widget-hide').removeClass('disabled');
-          $('#widget_show_delay').prop('disabled', false);
-          $('#widget_show_freq').prop('disabled', false);
-          $('[name="widget[hide]"]').prop('disabled', false);
-        } else {
-          $('.row.widget-show-freq').addClass('disabled');
-          $('.row.widget-show-delay').addClass('disabled');
-          $('.row.widget-hide').addClass('disabled');
-          $('.row.widget-hide-delay').addClass('disabled');
-          $('#widget_show_delay').prop('disabled', true);
-          $('#widget_show_freq').prop('disabled', true);
-          $('#widget_hide_false').click();
-          $('[name="widget[hide]"]').prop('disabled', true);
-          $('#widget_hide_delay').prop('disabled', true);
-        }
-      })
+    // .on('change', '[name="widget[show]"]',
+    //   function () {
+    //     if ($(this).val() === 'true') {
+    //       $('.row.widget-show-freq').removeClass('disabled');
+    //       $('.row.widget-show-delay').removeClass('disabled');
+    //       $('.row.widget-hide').removeClass('disabled');
+    //       $('#widget_show_delay').prop('disabled', false);
+    //       $('#widget_show_freq').prop('disabled', false);
+    //       $('[name="widget[hide]"]').prop('disabled', false);
+    //     } else {
+    //       $('.row.widget-show-freq').addClass('disabled');
+    //       $('.row.widget-show-delay').addClass('disabled');
+    //       $('.row.widget-hide').addClass('disabled');
+    //       $('.row.widget-hide-delay').addClass('disabled');
+    //       $('#widget_show_delay').prop('disabled', true);
+    //       $('#widget_show_freq').prop('disabled', true);
+    //       $('#widget_hide_false').click();
+    //       $('[name="widget[hide]"]').prop('disabled', true);
+    //       $('#widget_hide_delay').prop('disabled', true);
+    //     }
+    //   })
 
-    .on('change', '[name="widget[hide]"]',
-      function () {
-        if ($(this).val() === 'true') {
-          $('.row.widget-hide-delay').removeClass('disabled');
-          $('#widget_hide_delay').prop('disabled', false);
-        } else {
-          $('.row.widget-hide-delay').addClass('disabled');
-          $('#widget_hide_delay').prop('disabled', true);
-        }
-      })
+    // .on('change', '[name="widget[hide]"]',
+    //   function () {
+    //     if ($(this).val() === 'true') {
+    //       $('.row.widget-hide-delay').removeClass('disabled');
+    //       $('#widget_hide_delay').prop('disabled', false);
+    //     } else {
+    //       $('.row.widget-hide-delay').addClass('disabled');
+    //       $('#widget_hide_delay').prop('disabled', true);
+    //     }
+    //   })
 
     .on('change', '[name="widget[filter]"]',
       function () {
