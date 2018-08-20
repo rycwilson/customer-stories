@@ -25,10 +25,8 @@ function initSelect2 () {
     var storyId, storyTitle, storyCustomer;
     $('#stories-plugin .select2-selection__rendered li:not(:last-of-type)')
       .each(function (index, story) {
-        console.log(index, story)
         storyId = $('select.widget-stories').select2('data')[index].id;
         storyTitle = $('select.widget-stories').select2('data')[index].text;
-console.log(storyId)
         customerName = JSON.parse(
           $('select.widget-stories').find('option[value="' + storyId + '"]').data('customer')
         );

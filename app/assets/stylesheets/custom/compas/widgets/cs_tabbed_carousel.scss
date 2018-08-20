@@ -1,10 +1,9 @@
 
-// namespace the widget css so as not to interfere with anything on host page
 #cs-tabbed-carousel, #cs-tab-container, #cs-container {
 
-  @import '../../../views/widgets/widgets_bootstrap';
   @import '../../../views/widgets/tabbed_carousel';
+
   @import '../../fonts';
-  // @import 'tabbed_carousel';
+  @import 'tabbed_carousel';
 
 }
