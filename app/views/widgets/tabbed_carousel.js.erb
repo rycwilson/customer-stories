@@ -26,11 +26,14 @@ function cspInitTabbedCarousel ($, $container) {
 
   setScrollBoundaries();
   attachListeners();
-  initWidgetAuto();
+  // initWidgetAuto();
+
+  // the opacity animation is necessary for the transition to visible to work
   $container.find('section')
             .slideDrawer()
             .css({ opacity: 0, visibility: "visible" })
-            .animate({ opacity: 1 }, 200);
+            .animate({ opacity: 1 }, 200)
+            .animate({ bottom: 0 }, 'fast');
 
   function initWidgetAuto () {
     if (<%= @company.widget.show %> && !getCookie('cs-tabbed-carousel-removed') ) {

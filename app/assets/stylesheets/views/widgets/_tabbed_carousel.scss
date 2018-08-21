@@ -5,7 +5,7 @@
 
 .cs-section {
   position: fixed;
-  bottom: 0;
+  bottom: -48px;   // matches height .cs-header-row
   overflow: hidden;
   z-index: 1000;
   width: 100%;
@@ -253,9 +253,7 @@
     margin: 0 auto;
     border: 1px solid transparent;
     border-radius: 0;
-    // following settings lifted from chrome new tab page
-    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
-    transition: box-shadow 0.23s cubic-bezier(0.4, 0, 0.2, 1);
+
     .thumbnail-view {
       position: relative;
       height: 80%;
@@ -278,7 +276,7 @@
         -moz-transform: translateY(-100%);
         -ms-transform: translateY(-100%);
         -o-transform: translateY(-100%);
-        transition: all 0.23s ease-in-out;
+        transition: all 0s step-end;
         p {
           font: {
             family: inherit !important;
@@ -299,9 +297,9 @@
         // padding: 20px;
         padding: 16px;
         opacity: 1;
-        transition: opacity 0.23s ease-in-out;
-        -moz-transition: opacity 0.23s ease-in-out;
-        -webkit-transition: opacity 0.23s ease-in-out;
+        transition: opacity 0s step-end;
+        -moz-transition: opacity 0s step-end;
+        -webkit-transition: opacity 0s step-end;
         // this compensates for a bug in chrome, which causes images of a
         // certain aspect ratio to expand and contract very slightly on
         // hover and opacity transition
@@ -349,11 +347,11 @@
       .caption {
         span.customer-name {
           visibility: hidden;
-          transition: all 0.23s step-end;
+          transition: all 0s step-end;
         }
         span.click-action:after {
           visibility: visible;
-          transition: all 0.23s step-end;
+          transition: all 0s step-end;
         }
       }
     }
