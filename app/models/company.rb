@@ -355,6 +355,20 @@ class Company < ApplicationRecord
     options
   end
 
+  def stories_grouped_options
+    options = {}
+    self.stories.select { |story| story.logo_published? || story.preview_published? }
+        .each do |story|
+          option_data = [ story.title, "#{story.id}", { data: { customer: story.customer.name.to_json } } ]
+          if options.has_key?(story.customer.name)
+            options[story.customer.name] << option_data
+          else
+            options.merge!({ story.customer.name => [ option_data ] })
+          end
+        end
+    options
+  end
+
   #
   # method returns a fragment cache key that looks like this:
   #

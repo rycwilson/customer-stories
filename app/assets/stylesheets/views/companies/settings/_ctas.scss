@@ -30,6 +30,7 @@
         margin-bottom: 10px;
       }
     }
+
     li label {
       margin-bottom: 7px;
     }
@@ -53,32 +54,30 @@
       background: #efefef;
       padding: 15px;  // overrides bootstrap 10px 15px
       .cta-description {
+        cursor: pointer;
         position: relative;
+        // padding-right: 30px;
+        margin: -15px -15px -15px -15px;  // expand clickable area for .collapse
+        padding: 15px 45px 15px 15px;
         span {
           padding: 0 6px;
+          line-height: 1.6;
         }
-        a.edit, a.delete {
+        a.remove {
           position: absolute;
+          top: 5px;  // -10 + 15  (account for negative margins above)
+          right: 5px;  // -10 + 15
           font-size: 16px;
           color: #666;
-          cursor: pointer;
           padding: 8px;
-        }
-        a.edit:hover, a.delete:hover {
-          color: #222;
-        }
-        a.edit {
-          right: 20px;
-          top: -12px;
-          padding: 10px;
-        }
-        a.delete {
-          top: -10px;
-          right: -10px;
+          &:hover {
+            color: #222;
+          }
         }
       }
       div.collapse {
         // note the inline styles that are necessary for preventing jerky collapse
+        cursor: auto;
       }
     }
     .list-group-item:not([data-primary="true"]):hover {

@@ -2,32 +2,27 @@
 <%= content_for(:underscore_templates) { render('ctas/cta_template') } %>
 
 <div class="row">
-
   <div class="col-sm-6">
 
-    <%= render 'ctas/new_cta_form', { company: company } %>
-
-  </div>
-
-  <div class="col-sm-6">
+    <p class="lead">Saved CTAs</p>
 
     <!-- primary CTA -->
     <div class="form-group cta-links" style='margin-bottom:20px'>
 
-      <%= label_tag nil, 'Primary CTA', class: 'control-label' %>
+      <%= label_tag nil, 'Primary', class: 'control-label' %>
 
-      <ul id='primary-cta' class='list-group'>
-        <li class="list-group-item" data-primary="true" data-cta-id='<%= company.ctas.primary.try(:id) %>'>
+      <ul id="primary-cta" class="list-group">
+        <li class="list-group-item" data-primary="true" data-cta-id="<%= company.ctas.primary.try(:id) %>">
 
-        <% if company.ctas.primary %>
+          <% if company.ctas.primary %>
 
-          <%= render 'ctas/cta', { company: company, cta: company.ctas.primary, is_primary: true } %>
+            <%= render 'ctas/cta', { company: company, cta: company.ctas.primary, is_primary: true } %>
 
-        <% else %>
+          <% else %>
 
-          <em>Add a primary CTA</em>
+            <em>Add a Primary CTA</em>
 
-        <% end %>
+          <% end %>
 
         </li>
       </ul>
@@ -36,12 +31,12 @@
 
     <!-- additional CTAs -->
     <div>
-      <label>Additional CTAs</label>
+      <label>Additional</label>
       <ul id='secondary-ctas' class='list-group'>
 
       <% company.ctas.secondary.order(created_at: :desc).each do |cta| %>
 
-        <li class="list-group-item" data-cta-id='<%= cta.id %>'>
+        <li class="list-group-item" data-cta-id="<%= cta.id %>">
 
           <%= render 'ctas/cta', { cta: cta, is_primary: false } %>
 
@@ -53,6 +48,15 @@
     </div>
 
   </div>
+
+  <div class="col-sm-6">
+
+    <p class="lead">New CTA</p>
+
+    <%= render 'ctas/new_cta_form', { company: company } %>
+
+  </div>
+
 
 </div>
 

@@ -1,19 +1,10 @@
 
-// namespace the widget css so as not to interfere with anything on host page
 #cs-gallery {
 
-  background-color: #f5f5f3;
+  @import '../../../views/widgets/gallery';
 
   @import '../../fonts';
-  @import '../../../views/widgets/widgets_bootstrap';
-  @import '../../../views/widgets/overlays/main';
-  @import '../../../views/widgets/gallery';
   @import 'gallery';
-  @import '../../../views/stories/show/show';
   @import '../show';
-
-  .cs-content.content--show {
-    background-color: #f5f5f3
-  }
 
 }

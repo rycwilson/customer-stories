@@ -9,8 +9,8 @@
  * http://www.codrops.com
  */
 
-(function() {
-  var bodyEl = document.body,
+(function ($) {
+    var bodyEl = document.body,
     docElem = window.document.documentElement,
     support = { transitions: Modernizr.csstransitions },
     // transition end event name
@@ -31,13 +31,10 @@
         onEndCallbackFn();
       }
     },
-    gridEl = document.getElementById('cs-gallery') || document.getElementById('cs-carousel');
-    // console.log(gridEl)
-    var gridItemsContainer = gridEl.querySelector('.cs-grid');
-    // console.log(gridItemsContainer)
-    var contentItemsContainer = gridEl.querySelector('.cs-content');
-    // console.log(contentItemsContainer)
-    var gridItems = gridItemsContainer.querySelectorAll('.grid__item'),
+    gridEl = document.getElementById('cs-gallery') || document.getElementById('cs-carousel'),
+    gridItemsContainer = gridEl.querySelector('.cs-grid'),
+    contentItemsContainer = gridEl.querySelector('.cs-content'),
+    gridItems = gridItemsContainer.querySelectorAll('.grid__item'),
     contentItems = contentItemsContainer.querySelectorAll('.content__item'),
     closeCtrl = contentItemsContainer.querySelector('.close-button'),
     current = -1,
@@ -239,4 +236,4 @@
 
   init();
 
-})();
+})(jQuery);

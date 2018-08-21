@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" class="no-js"> <!--<![endif]-->
+<html>
+<head>
+  <title>Customer Stories Plugin Demo</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400italic,600,600italic,800,800italic">
+  <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
+  <!-- csp assets -->
+  <link rel="stylesheet" href="<%= asset_path('views/widgets/demo.css') %>">
+  <script src="<%= asset_path('widgets/demo.js') %>"></script>
+  <%= favicon_link_tag 'favicon.ico' %>
+</head>
+<body class="<%= controller_name %> <%= action_name %>">
+
+  <div class="nav-links">
+    <a href="javascript:;" data-plugin-type="gallery" class="<%= @type == 'gallery' ? 'active' : '' %>">Gallery</a>
+    <a href="javascript:;" data-plugin-type="carousel" class="<%= @type == 'carousel' ? 'active' : '' %>">Carousel</a>
+    <a href="javascript:;" data-plugin-type="tabbed_carousel" class="<%= @type == 'tabbed_carousel' ? 'active' : '' %>">Tabbed Carousel</a>
+  </div>
+
+  <!-- <p class="lead">Blah blah blah something about the plugin</p> -->
+
+  <% if @type == 'gallery' %>
+
+    <div id="cs-gallery"></div>
+    <script type="text/javascript" src="<%= root_url + 'widgets/gallery/cs.js' %>" data-category="" data-product=""></script>
+
+  <% elsif @type == 'carousel' %>
+
+    <div id="cs-carousel"></div>
+    <script type="text/javascript" src="<%= root_url + 'widgets/carousel/cs.js' %>" data-category="" data-product=""></script>
+
+  <% elsif @type == 'tabbed_carousel' %>
+
+    <div id="cs-tabbed-carousel"></div>
+    <script type="text/javascript" src="<%= root_url + 'widgets/tabbed_carousel/cs.js' %>" data-category="" data-product=""></script>
+
+  <% end %>
+
+</body>

@@ -6,7 +6,38 @@
 */
 function initSelect2 () {
 
-  // select2ScrollBoundaries();
+  var prependTagType = function () {
+    var tagId, tagText;
+    $('.filters-container .select2-selection__rendered li:not(:last-of-type)')
+      .each(function (index, tag) {
+        tagId = $('#grouped-stories-filter').select2('data')[index].id;
+        tagText = $('#grouped-stories-filter').select2('data')[index].text;
+        if (!tag.innerHTML.includes('Category:') && !tag.innerHTML.includes('Product:')) {
+          tag.innerHTML = tag.innerHTML.replace(
+              tagText,
+              tagId.includes('c') ? 'Category:\xa0' + tagText : 'Product:\xa0' + tagText
+            );
+        }
+      });
+  };
+
+  var prependCustomerName = function () {
+    var storyId, storyTitle, storyCustomer;
+    $('#stories-plugin .select2-selection__rendered li:not(:last-of-type)')
+      .each(function (index, story) {
+        storyId = $('select.widget-stories').select2('data')[index].id;
+        storyTitle = $('select.widget-stories').select2('data')[index].text;
+        customerName = JSON.parse(
+          $('select.widget-stories').find('option[value="' + storyId + '"]').data('customer')
+        );
+        if (!story.innerHTML.match(new RegExp('^' + customerName))) {
+          story.innerHTML = story.innerHTML.replace(
+              storyTitle,
+              '<span style="font-weight: 600">' + customerName + '</span>: ' + storyTitle
+            );
+        }
+      });
+  };
 
   // for customers, successes, contributors, referrers => don't initialize if the form submission modal is still open
 
@@ -123,20 +154,6 @@ function initSelect2 () {
 
   $('.filters-container.visible-md-block select').css('visibility', 'visible');
 
-  var prependTagType = function () {
-    $('.select2-selection__rendered li:not(:last-of-type)')
-      .each(function (index, tag) {
-        tagId = $('#grouped-stories-filter').select2('data')[index].id;
-        tagText = $('#grouped-stories-filter').select2('data')[index].text;
-        if (!tag.innerHTML.includes('Category:') && !tag.innerHTML.includes('Product:')) {
-          tag.innerHTML =
-            tag.innerHTML.replace(
-                tagText,
-                tagId.includes('c') ? 'Category:\xa0' + tagText : 'Product:\xa0' + tagText
-              );
-        }
-      });
-  };
 
   $('#grouped-stories-filter').select2({
     theme: 'bootstrap',
@@ -162,8 +179,11 @@ function initSelect2 () {
     .on('select2:select', prependTagType)
     .on('select2:unselect', prependTagType);
 
-  prependTagType();
-  $('.filters-container.visible-xs-block').css('visibility', 'visible');
+
+  if ($('body').hasClass('stories index')) {
+    prependTagType();
+    $('.filters-container.visible-xs-block').css('visibility', 'visible');
+  }
 
   // TODO Is this an issue?  http://stackoverflow.com/questions/36497723
   // $('.stories-filter').data('init', true);
@@ -206,15 +226,28 @@ function initSelect2 () {
     placeholder: 'Select'
   });
 
-  $('.widget-filter-category').select2({
+  /**
+   * widget configuration
+   */
+  $('select.widget-stories').select2({
     theme: 'bootstrap',
-    placeholder: 'Select category',
+    placeholder: 'Select Stories',
+    tags: true,
+    width: 'style'
+  })
+    .on('select2:select', prependCustomerName)
+    .on('select2:unselect', prependCustomerName);
+
+
+  $('.content__select--category select').select2({
+    theme: 'bootstrap',
+    placeholder: 'Select Category',
     width: 'style'
   });
 
-  $('.widget-filter-product').select2({
+  $('.content__select--product select').select2({
     theme: 'bootstrap',
-    placeholder: 'Select product',
+    placeholder: 'Select Product',
     width: 'style'
   });
 
@@ -233,37 +266,37 @@ function initSelect2 () {
       width: 'style'
     });
 
-}
+  // this works, but only hides options on removing a tag
+  // for hiding options whether adding or removing a tag, css is used to hide the results
+  // ref: https://github.com/select2/select2/issues/3320
+  function select2Listeners () {
+      // .on('select2:unselecting', function (e) {
+      //   $(this).data('unselecting', true);
+      // })
+      // .on('select2:open', function (e) { // note the open event is important
+      //   if ($(this).data('unselecting')) {
+      //     $(this).removeData('unselecting'); // you need to unset this before close
+      //     $(this).select2('close');
+      //   }
+      // });
+  }
 
-// this works, but only hides options on removing a tag
-// for hiding options whether adding or removing a tag, css is used to hide the results
-// ref: https://github.com/select2/select2/issues/3320
-function select2Listeners () {
-    // .on('select2:unselecting', function (e) {
-    //   $(this).data('unselecting', true);
-    // })
-    // .on('select2:open', function (e) { // note the open event is important
-    //   if ($(this).data('unselecting')) {
-    //     $(this).removeData('unselecting'); // you need to unset this before close
-    //     $(this).select2('close');
-    //   }
-    // });
-}
+  // ref: http://stackoverflow.com/questions/8737709
+  function scrollBoundaries () {
+    var maxY = null;
+    $(document).on('wheel', '.select2-results__options', function (event) {
 
-// ref: http://stackoverflow.com/questions/8737709
-function select2ScrollBoundaries () {
-  var maxY = null;
-  $(document).on('wheel', '.select2-results__options', function (event) {
+      maxY = $(this).prop('scrollHeight') - $(this).prop('offsetHeight');
+      // console.log('scrollHeight: ', $(this).prop('scrollHeight'))
+      // console.log('offsetHeight: ', $(this).prop('offsetHeight'))
+      // If this event looks like it will scroll beyond the bounds of the element,
+      // prevent it and set the scroll to the boundary manually
+      if ($(this).prop('scrollTop') + event.originalEvent.deltaY < 0 ||
+          $(this).prop('scrollTop') + event.originalEvent.deltaY > maxY) {
+        event.preventDefault();
+        $(this).prop('scrollTop', Math.max(0, Math.min(maxY, $(this).prop('scrollTop') + event.originalEvent.deltaY)));
+      }
+    });
+  }
 
-    maxY = $(this).prop('scrollHeight') - $(this).prop('offsetHeight');
-    // console.log('scrollHeight: ', $(this).prop('scrollHeight'))
-    // console.log('offsetHeight: ', $(this).prop('offsetHeight'))
-    // If this event looks like it will scroll beyond the bounds of the element,
-    // prevent it and set the scroll to the boundary manually
-    if ($(this).prop('scrollTop') + event.originalEvent.deltaY < 0 ||
-        $(this).prop('scrollTop') + event.originalEvent.deltaY > maxY) {
-      event.preventDefault();
-      $(this).prop('scrollTop', Math.max(0, Math.min(maxY, $(this).prop('scrollTop') + event.originalEvent.deltaY)));
-    }
-  });
 }

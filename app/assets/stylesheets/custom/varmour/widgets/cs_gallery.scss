@@ -1,12 +1,9 @@
 
-// namespace the widget css so as not to interfere with anything on host page
 #cs-gallery {
 
-  // TODO only need bootstrap thumbnail and modal components...
-  @import '../../../views/widgets/widgets_bootstrap';
-  @import '../../../views/widgets/overlays/main';
   @import '../../../views/widgets/gallery';
+
   @import '../../fonts';
-  // @import 'gallery';
+  @import 'gallery';
 
 }

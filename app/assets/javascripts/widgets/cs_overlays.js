@@ -5,15 +5,15 @@
 
 function cspInitOverlays ($, $container) {
 
-  loading = function ($storyCard) {
-      $storyCard.addClass('cs-loading');
-      $container.find('a').css('pointer-events', 'none');
-      setTimeout(function () {
-        if (!$storyCard.hasClass('cs-loaded')) {
-          $storyCard.addClass('cs-still-loading');
-        }
-      }, 1000);
-    };
+  var loading = function ($storyCard) {
+          $storyCard.addClass('cs-loading');
+          $container.find('a').css('pointer-events', 'none');
+          setTimeout(function () {
+            if (!$storyCard.hasClass('cs-loaded')) {
+              $storyCard.addClass('cs-still-loading');
+            }
+          }, 1000);
+        };
 
   $container.on('click', 'a.published, a.preview-published', function (e) {
     e.preventDefault();
@@ -56,7 +56,6 @@ function cspInitOverlays ($, $container) {
               $container.on('click touchend', '.close-button-xs', function () {
                 $(this).closest('.cs-content').find('.close-button').trigger('click');
               });
-
               // the grid_overlays.js listener is vanilla js, won't pick up on $storyCard.trigger('click')
               $storyCard[0].click();
 

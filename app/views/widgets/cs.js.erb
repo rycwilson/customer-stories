@@ -3,11 +3,20 @@
 
   "use strict";
 
-  var $; // localize jquery
+  var $, jqUrl = "https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js";
 
-  if (window.jQuery === undefined || jQueryIsOld(window.jQuery.fn.jquery)) {
-    createScriptTag("https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js",
-      function () {
+  if (window.jQuery === undefined) {
+    createScriptTag(jqUrl, function () {
+        // at this point jQuery (global) is defined and local $ is not
+        $ = window.jQuery.noConflict(false);
+        main();
+      });
+  } else if (jQueryIsOld(window.jQuery.fn.jquery)) {
+    createScriptTag(jqUrl, function () {
+        /**
+         * grid_overlays will end up using the old version of jQuery,
+         * but that's ok because it's bootstrap that needs a min. version of jQuery
+         */
         $ = window.jQuery.noConflict(true);
         main();
       });
@@ -27,16 +36,16 @@
       // no stylesheet means type couldn't be id'ed => fatal
       if (!'<%= @stylesheet_url %>') return false;
 
-      // type IN ['gallery', 'carousel', 'fixed_carousel']
+      // type IN ['gallery', 'carousel', 'tabbed_carousel']
       if (type === 'gallery') {
         $script = $('script[src*="gallery/cs"]');
         $container = $('#cs-gallery');
       } else if (type === 'carousel') {
         $script = $('script[src*="carousel/cs"], script[src*="varmour/cs"]').first();
         $container = $("#cs-carousel, #cs-varmour-container").first();
-      } else if (type === 'fixed_carousel') {
-        $script = $('script[src*="fixed-carousel/cs"], script[src*="tab/cs"], script[src*="widget/cs"]').first();
-        $container = $("#cs-fixed-carousel, #cs-tab-container, #cs-container").first();
+      } else if (type === 'tabbed_carousel') {
+        $script = $('script[src*="tabbed_carousel/cs"], script[src*="tab/cs"], script[src*="widget/cs"]').first();
+        $container = $("#cs-tabbed-carousel, #cs-tab-container, #cs-container").first();
       }
 
       // get font awesome if it doesn't exist on host
@@ -89,8 +98,7 @@
   }
 
   function initWidget (type, $container, $script) {
-    var Modernizr, // will be defined in cs_overlays.js
-        initVideo = $.Deferred(),
+    var initVideo = $.Deferred(),
         initOverlays = $.Deferred();
 
     trackVisitor($container);
@@ -103,10 +111,15 @@
       $.getScript("<%= asset_url('widgets/cs_video.js') %>", function () {
           initVideo.resolve();
         });
-      $.getScript("<%= asset_url('widgets/cs_overlays.js') %>", function () {
-          cspInitOverlays($, $container);
-          initOverlays.resolve();
-        });
+
+      if (type !== 'tabbed_carousel') {
+        $.getScript("<%= asset_url('widgets/cs_overlays.js') %>", function () {
+            cspInitOverlays($, $container);
+            initOverlays.resolve();
+          });
+      } else {
+        initOverlays.resolve();
+      }
     }
 
     $.when(initVideo, initOverlays).done(function () {
@@ -118,10 +131,10 @@
           .done(function () {
             if (type === 'gallery') cspInitGallery($, $container);
             else if (type === 'carousel') cspInitCarousel($, $container);
-            else if (type == 'fixed_carousel') {
+            else if (type == 'tabbed_carousel') {
               // plugin must be defined and called in this scope
               slideDrawerPlugin($container);
-              cspInitFixedCarousel($, $container);
+              cspInitTabbedCarousel($, $container);
             }
           });
       });
@@ -138,7 +151,8 @@
   }
 
   function trackVisitor ($container) {
-    if (<%= ENV['HOST_NAME'] == 'customerstories.net' %>) {
+    if (<%= ENV['HOST_NAME'] == 'customerstories.net' %> &&
+        !window.location.href.match(/plugins\/(gallery|carousel|tabbed_carousel)\/demo/)) {
       $container.append(
           '<iframe class="cs-iframe" height="0" width="0" style="display:none" ' +
               'src="https://' + '<%= @company.subdomain %>' + '.customerstories.net/widgets/track"></iframe>'
@@ -231,7 +245,7 @@
       var drawerHiddenHeight = (drawerHeight - drawerContentHeight) - borderHeight; /* How much to hide the drawer, total height minus content height */
       var defaults = {
         showDrawer: 'slide', /* Drawer hidden on load by default, options (true, false, slide) */
-        slideSpeed: 700, /* Slide drawer speed 3 secs by default */
+        slideSpeed: 400, /* Slide drawer speed 3 secs by default */
         slideTimeout: true, /* Sets time out if set to true showDrawer false will be ignored */
         slideTimeoutCount: 5000, /* How long to wait before sliding drawer */
         drawerContentHeight: drawerContentHeight, /* Div content height no including tab or border */

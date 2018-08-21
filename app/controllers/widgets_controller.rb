@@ -10,7 +10,7 @@ class WidgetsController < ApplicationController
     if params[:type] == 'varmour'
       @type = 'carousel'
     elsif params[:type].blank? || params[:type] == 'tab'
-      @type = 'fixed_carousel'
+      @type = 'tabbed_carousel'
     else
       @type = params[:type]
     end
@@ -18,8 +18,8 @@ class WidgetsController < ApplicationController
     @stylesheet_url = case @type
     when 'carousel'
       custom_stylesheet_url(@company, 'cs_carousel')
-    when 'fixed_carousel'
-      custom_stylesheet_url(@company, 'cs_fixed_carousel')
+    when 'tabbed_carousel'
+      custom_stylesheet_url(@company, 'cs_tabbed_carousel')
     when 'gallery'
       custom_stylesheet_url(@company, 'cs_gallery')
     else
@@ -53,6 +53,11 @@ class WidgetsController < ApplicationController
     render(layout: false)
   end
 
+  def demo
+    @type = params[:type]
+    render(layout: false)
+  end
+
   private
 
   # if invalid category or product filters, return all stories
@@ -64,16 +69,16 @@ class WidgetsController < ApplicationController
       stories = stories.sort_by { |s| [ !s[:published] ? 0 : 1, s[:updated_at] ] }.reverse
     end
     case params[:type]
-    when 'carousel'
-    when 'fixed_carousel'
     when 'gallery'
+    when 'carousel'
+    when 'tabbed_carousel'
     end
     render_to_string(
       partial: params[:type],
       layout: false,
       locals: {
         company: @company,
-        widget: @company.widget,   # applies to fixed carousel (tab style)
+        widget: @company.widget,   # applies to tabbed carousel (tab style)
         stories: stories,
         title: 'Customer Stories',
         is_curator: false,

@@ -1,0 +1,1 @@
+!function(t,e){e.addEventListener("DOMContentLoaded",function(){var n="/plugins/demo",i=e.querySelectorAll("a[data-plugin-type]");i.forEach(function(e){e.addEventListener("click",function(e){t.location.href=n+"/?type="+e.target.getAttribute("data-plugin-type")})})})}(window,document);
