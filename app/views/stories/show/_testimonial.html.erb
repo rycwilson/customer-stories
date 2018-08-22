@@ -38,13 +38,11 @@
 
       <div class="customer-logo-quote visible-xs-block">
 
-        <div class="customer-logo">
-            <%= image_tag (story.customer.logo_url || LOGO_PLACEHOLDER_URL), class: 'img-responsive' %>
-
-            <div class="customer-name">
-              <span><%= story.customer.name %></span>
-
-            </div>
+        <div class="customer-logo text-center">
+          <%= image_tag (story.customer.logo_url || LOGO_PLACEHOLDER_URL), class: 'img-responsive' %>
+          <div class="customer-name">
+            <span><%= story.customer.name %></span>
+          </div>
         </div>
 
         <div class="<%= is_widget ? 'cs-customer-quote' : 'customer-quote' %>">

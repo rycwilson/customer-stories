@@ -36,7 +36,8 @@
     contentItemsContainer = gridEl.querySelector('.cs-content'),
     gridItems = gridItemsContainer.querySelectorAll('.grid__item'),
     contentItems = contentItemsContainer.querySelectorAll('.content__item'),
-    closeCtrl = contentItemsContainer.querySelector('.close-button-xs'),
+    // csp - removed since each story now has its own close button
+    // closeCtrl = contentItemsContainer.querySelectorAll('.cs-close'),
     current = -1,
     lockScroll = false, xscroll, yscroll,
     isAnimating = false,
@@ -89,11 +90,12 @@
       });
     });
 
-    closeCtrl.addEventListener('click', function() {
-      // csp modify: return setting to whatever it was before overlay was opened
-      $('body').css('overflow-y', bodyScrollSetting);
-      hideContent();
-    });
+    // csp - removed
+    // closeCtrl.addEventListener('click', function() {
+    //   // csp modify: return setting to whatever it was before overlay was opened
+    //   $('body').css('overflow-y', bodyScrollSetting);
+    //   hideContent();
+    // });
 
     // keyboard esc - hide content
     document.addEventListener('keydown', function(ev) {
@@ -158,6 +160,8 @@
       classie.remove(dummy, 'placeholder--trans-in');
       classie.add(dummy, 'placeholder--trans-out');
 
+      contentItemsContainer.querySelectorAll('.cs-close');
+
       // position the content container
       // csp removed...
       // contentItemsContainer.style.top = scrollY() + 'px';
@@ -176,12 +180,21 @@
       classie.add(contentItemsContainer, 'content--show');
       // show content item:
       classie.add(contentItems[current], 'content__item--show');
-      // show close control
-      classie.add(closeCtrl, 'close-button--show');
+
+      // show close control - removed since each story now has its own close button
+      // classie.add(closeCtrl, 'close-button--show');
+
       // sets overflow hidden to the body and allows the switch to the content scroll
       classie.addClass(bodyEl, 'noscroll');
 
       isAnimating = false;
+
+      // close button
+      $('.content__item:nth-of-type(' + ($(item).index() + 1) + ') .cs-close').one('click', function() {
+        // csp modify: return setting to whatever it was before overlay was opened
+        $('body').css('overflow-y', bodyScrollSetting);
+        hideContent();
+      });
 
       // csp modify... (the overlay will have its own scroll bar)...
       $('body').css('overflow-y', 'hidden');
@@ -194,7 +207,7 @@
 
     classie.remove(contentItem, 'content__item--show');
     classie.remove(contentItemsContainer, 'content--show');
-    classie.remove(closeCtrl, 'close-button--show');
+    // classie.remove(closeCtrl, 'close-button--show');
     classie.remove(bodyEl, 'view-single');
 
     setTimeout(function() {
