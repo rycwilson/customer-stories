@@ -160,7 +160,7 @@
 .close-button-xs {
   position: absolute;
   top: 5px;
-  right: 10px;
+  right: 3%;
   border: none;
   background: none;
   padding: 5px; // not really necessary, but prevents the focus highlight from looking goofy
@@ -169,7 +169,7 @@
     color: black;
     font-size: 32px !important;
     i.fa-circle {
-      opacity: 0.3;
+      opacity: 0.4;
     }
     i.fa-times-thin {
       position: absolute;

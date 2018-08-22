@@ -36,7 +36,7 @@
     contentItemsContainer = gridEl.querySelector('.cs-content'),
     gridItems = gridItemsContainer.querySelectorAll('.grid__item'),
     contentItems = contentItemsContainer.querySelectorAll('.content__item'),
-    closeCtrl = contentItemsContainer.querySelector('.close-button'),
+    closeCtrl = contentItemsContainer.querySelector('.close-button-xs'),
     current = -1,
     lockScroll = false, xscroll, yscroll,
     isAnimating = false,

@@ -53,9 +53,10 @@ function cspInitOverlays ($, $container) {
               $container.find('a').removeAttr('style');
 
               // avoid double-tap behavior
-              $container.on('click touchend', '.close-button-xs', function () {
-                $(this).closest('.cs-content').find('.close-button').trigger('click');
-              });
+              // $container.on('click touchend', '.close-button-xs', function () {
+              //   $(this).closest('.cs-content').find('.close-button').trigger('click');
+              // });
+
               // the grid_overlays.js listener is vanilla js, won't pick up on $storyCard.trigger('click')
               $storyCard[0].click();
 

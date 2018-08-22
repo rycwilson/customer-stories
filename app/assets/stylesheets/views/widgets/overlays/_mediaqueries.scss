@@ -7,6 +7,25 @@ $viewport_l:  $item_width * 4 + $sidebar_width; /* 4 columns */
 $viewport_xl:   $item_width * 5 + $sidebar_width; /* 5 columns */
 $viewport_xxl:  $item_width * 6 + $sidebar_width; /* 6 columns */
 
+@media screen and (min-width: 768px) {
+  .close-button-xs {
+    top: 15px;
+    right: 30px;
+  }
+}
+@media screen and (min-width: 992px) {
+  .close-button-xs {
+    top: 20px;
+    right: 35px;
+  }
+}
+@media screen and (min-width: 1200px) {
+  .close-button-xs {
+    top: 25px;
+    right: 40px;
+  }
+}
+
 @media screen and (min-width: $viewport_xs) {
   html,
   body,
