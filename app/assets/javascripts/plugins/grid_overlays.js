@@ -190,11 +190,10 @@
       isAnimating = false;
 
       // close button
-      $('.content__item:nth-of-type(' + ($(item).index() + 1) + ') .cs-close').one('click', function() {
-        // csp modify: return setting to whatever it was before overlay was opened
-        $('body').css('overflow-y', bodyScrollSetting);
-        hideContent();
-      });
+      $('.content__item--show .cs-close').one('click', hideContent);
+
+      // csp modify: return setting to whatever it was before overlay was opened
+      $('body').css('overflow-y', bodyScrollSetting);
 
       // csp modify... (the overlay will have its own scroll bar)...
       $('body').css('overflow-y', 'hidden');
