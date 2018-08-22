@@ -30,7 +30,7 @@ function cspInitOverlays ($, $container) {
         method: 'GET',
         data: {
           is_widget: true,
-          window_width: $(window).width()
+          window_width: window.innerWidth
         },
         dataType: 'jsonp'
       })

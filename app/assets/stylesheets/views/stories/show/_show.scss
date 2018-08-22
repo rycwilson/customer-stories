@@ -27,6 +27,9 @@
 
   &.cs-overlay-container {
     background-color: transparent;
+    article {
+      background-color: $csp-gray;
+    }
     // skinny up the X icon (ref: https://sridharkatakam.com/thin-font-awesome-close-icon/)
     .fa-times-thin:before {
       content: '\00d7';
@@ -109,7 +112,7 @@
       // filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2f2f2', endColorstr='#ffffffff', GradientType=0);
     }
     &.cs-testimonial {
-
+      padding-top: 65px;
       p, span {
         font-family: inherit;
       }
@@ -358,6 +361,19 @@
 
 
   @media only screen and (min-width: 768px) {
+    // add a gutter to overlays
+    .cs-story-wrapper {
+      margin: 2%;
+      article {
+        background-color: $csp-gray;
+      }
+      .cs-testimonial, .cs-story-content {
+        // compensate for the 2% margin added to story wrapper
+        > .cs-container {
+          max-width: 100%;
+        }
+      }
+    }
     .testimonial, .cs-testimonial {
       margin-bottom: 90px;
       &:after {
@@ -438,11 +454,6 @@
       }
       .story-results span, .story-ctas a {
         font-size: 14px !important;
-      }
-      &.cs-story-content {
-        .story-narration p {
-          // line-height: 26px !important;
-        }
       }
     }
 

@@ -2,8 +2,8 @@
 $item_width: 242px;
 $sidebar_width: 0px;
 $color_primary: #f2f2f2;
-$color_secondary: #f2f2f2;
-$content_background: #f2f2f2;
+$color_secondary: rgba(0, 0, 0, 0.7);  // don't apply to mobile; see .placeholder rule
+$content_background: transparent;
 $color_link: #81c483;
 $anim-time: 0.3s;
 
