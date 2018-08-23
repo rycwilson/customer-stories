@@ -1,13 +1,9 @@
 
 function cspInitGallery ($, $container) {
 
-  var scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+  // var scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
 
-  // the padding will compensate for the margin that toggles with presence/absence of scrollbar
-  // => avoids a change in gallery width and wrapping story cards when an overlay is opened/closed
-  $container.find('.cs-grid')
-    .css('padding', '0 calc(' + scrollBarWidth.toString() + 'px - (100vw - 100%))')
-    .css('visibility', 'visible');
+  $container.find('.cs-grid').css('visibility', 'visible');
 
   // avoid double-tap behavior
   $container.on('click touchend', '.cs-close-xs', function () {

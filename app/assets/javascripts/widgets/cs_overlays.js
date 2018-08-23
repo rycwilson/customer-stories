@@ -19,8 +19,7 @@ function cspInitOverlays ($, $container) {
     e.preventDefault();
     var $story, $storyCard = $(this);
     if ($storyCard.hasClass('cs-loaded')) {
-      // overlays handler
-      return false;
+      return false;  // overlays handler
     } else {
       loading($storyCard);
       $.ajax({

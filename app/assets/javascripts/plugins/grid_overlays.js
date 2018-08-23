@@ -42,7 +42,7 @@
     lockScroll = false, xscroll, yscroll,
     isAnimating = false,
     // csp...
-    bodyScrollSetting = $('body').css('overflow-y');
+    scrollBarWidth, bodyScrollSetting;
 
   /**
    * gets the viewport width and height
@@ -189,41 +189,17 @@
       });
 
       // csp modify... (the overlay will have its own scroll bar)...
-      $('body').css('overflow-y', 'hidden');
+      $('html, body').css('overflow-y', 'hidden');
+      $('.scroll-wrap').css('overflow-y', 'auto');
 
     });
   }
 
-  function getScrollBarWidth() {
-    var inner = document.createElement('p');
-    inner.style.width = "100%";
-    inner.style.height = "200px";
-
-    var outer = document.createElement('div');
-    outer.style.position = "absolute";
-    outer.style.top = "0px";
-    outer.style.left = "0px";
-    outer.style.visibility = "hidden";
-    outer.style.width = "200px";
-    outer.style.height = "150px";
-    outer.style.overflow = "hidden";
-    outer.appendChild(inner);
-
-    document.body.appendChild(outer);
-    var w1 = inner.offsetWidth;
-    outer.style.overflow = 'scroll';
-    var w2 = inner.offsetWidth;
-
-    if (w1 == w2) {
-      w2 = outer.clientWidth;
-    }
-
-    document.body.removeChild(outer);
-
-    return (w1 - w2);
-  }
-
   function hideContent() {
+    // csp modify: return setting to whatever it was before overlay was opened
+    $('.scroll-wrap').css('overflow-y', 'hidden');
+    $('html, body').css('overflow-y', 'auto');
+
     var gridItem = gridItems[current], contentItem = contentItems[current];
 
     classie.remove(contentItem, 'content__item--show');
@@ -251,10 +227,6 @@
         classie.remove(gridItem, 'grid__item--animate');
         lockScroll = false;
         window.removeEventListener( 'scroll', noscroll );
-
-        // csp modify: return setting to whatever it was before overlay was opened
-        $('body').css('overflow-y', bodyScrollSetting);
-
       });
 
       // reset current
