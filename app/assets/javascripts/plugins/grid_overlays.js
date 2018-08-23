@@ -160,21 +160,11 @@
       classie.remove(dummy, 'placeholder--trans-in');
       classie.add(dummy, 'placeholder--trans-out');
 
-      contentItemsContainer.querySelectorAll('.cs-close');
-
       // position the content container
       // csp removed...
       // contentItemsContainer.style.top = scrollY() + 'px';
       // csp modified...
       contentItemsContainer.style.top = (scrollY() - $('.cs-grid').offset().top) + 'px';
-
-      /**
-       * csp modification:
-       * with transition complete, and content about to be made visible (.content--show),
-       * add mix-blend-mode setting to image (does not play well with translate3d)
-       *
-       * => doesn't work
-       */
 
       // show the main content container
       classie.add(contentItemsContainer, 'content--show');
@@ -192,13 +182,45 @@
       // close button
       $('.content__item--show .cs-close').one('click', hideContent);
 
-      // csp modify: return setting to whatever it was before overlay was opened
-      $('body').css('overflow-y', bodyScrollSetting);
+      // reset gallery
+      $(gridEl).find('a').each(function () {
+        $(this).removeClass('cs-loading cs-still-loading')
+               .removeAttr('style');  // this gets rid of pointer-events: none
+      });
 
       // csp modify... (the overlay will have its own scroll bar)...
       $('body').css('overflow-y', 'hidden');
 
     });
+  }
+
+  function getScrollBarWidth() {
+    var inner = document.createElement('p');
+    inner.style.width = "100%";
+    inner.style.height = "200px";
+
+    var outer = document.createElement('div');
+    outer.style.position = "absolute";
+    outer.style.top = "0px";
+    outer.style.left = "0px";
+    outer.style.visibility = "hidden";
+    outer.style.width = "200px";
+    outer.style.height = "150px";
+    outer.style.overflow = "hidden";
+    outer.appendChild(inner);
+
+    document.body.appendChild(outer);
+    var w1 = inner.offsetWidth;
+    outer.style.overflow = 'scroll';
+    var w2 = inner.offsetWidth;
+
+    if (w1 == w2) {
+      w2 = outer.clientWidth;
+    }
+
+    document.body.removeChild(outer);
+
+    return (w1 - w2);
   }
 
   function hideContent() {
@@ -229,6 +251,9 @@
         classie.remove(gridItem, 'grid__item--animate');
         lockScroll = false;
         window.removeEventListener( 'scroll', noscroll );
+
+        // csp modify: return setting to whatever it was before overlay was opened
+        $('body').css('overflow-y', bodyScrollSetting);
 
       });
 

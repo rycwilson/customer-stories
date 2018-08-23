@@ -6,6 +6,12 @@
 & {
   max-width: 1300px;
   margin: 0 auto;
+  margin-left: calc(100vw - 100%);  // adjust for scroll bar
+}
+
+.cs-grid {
+  // this prevents wrapping of story cards when closing an overlay
+  // padding: 0 calc(17px - (100vw - 100%));
 }
 
 a.cs-thumbnail {
