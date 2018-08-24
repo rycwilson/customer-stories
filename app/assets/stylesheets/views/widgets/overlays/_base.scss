@@ -40,7 +40,6 @@
   z-index: 10;
 }
 
-
 /* Placeholder element (dummy that gets animated when we click on an item) */
 .placeholder {
   pointer-events: none;
@@ -124,38 +123,6 @@
   -webkit-transition: opacity 0s;
   transition: opacity 0s;
 }
-/* close button (for content and sidebar) */
-// .close-button {
-//   position: absolute;
-//   border: none;
-//   background: none;
-//   margin: 0;
-//   z-index: 100;
-//   top: 5px;
-//   right: 2%;
-//   font-size: 18px;
-//   color: #bbb;
-//   cursor: pointer;
-//   pointer-events: none;
-//   padding: 20px 30px;
-//   opacity: 0;
-//   -webkit-touch-callout: none;
-//   -webkit-user-select: none;
-//   -khtml-user-select: none;
-//   -moz-user-select: none;
-//   -ms-user-select: none;
-//   user-select: none;
-//   -webkit-transition: opacity 0.3s;
-//   transition: opacity 0.3s;
-// }
-
-// .close-button span {
-//   display: none;
-// }
-
-// .close-button:hover {
-//   color: #666;
-// }
 
 .cs-close-xs {
   position: absolute;
@@ -180,8 +147,3 @@
   }
 }
 
-/* show class for content close button */
-// .close-button--show {
-//   opacity: 1;
-//   pointer-events: auto;
-// }

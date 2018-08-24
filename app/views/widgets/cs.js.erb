@@ -71,7 +71,7 @@
   }
 
   // root_url provides a company-specific url (via subdomain)
-  function getWidget ($container, $script, category, product) {
+  function getWidget ($container, $script) {
     return function () {
       $.ajax({
         url: "<%= URI.join(root_url, widget_view_path(@type)) %>",

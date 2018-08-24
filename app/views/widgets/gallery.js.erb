@@ -5,6 +5,7 @@ function cspInitGallery ($, $container) {
 
   // the padding will compensate for the margin that toggles with presence/absence of scrollbar
   // => avoids a change in gallery width and wrapping story cards when an overlay is opened/closed
+  // => need to fix the space this creates in .cs-content
   $container.find('.cs-grid')
     // .css('padding', '0 calc(' + scrollBarWidth.toString() + 'px - (100vw - 100%))')
     .css('visibility', 'visible');
