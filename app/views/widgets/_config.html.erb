@@ -25,8 +25,6 @@
             <% end %>
           </div>
 
-          <button type="button" class="demo btn btn-secondary">Demo</button>
-
         </div>
 
       </div>
@@ -172,6 +170,28 @@
 
           </div>
 
+        </div>
+      </div>
+
+      <div class="row form-group submit">
+        <div class="col-sm-10 col-sm-offset-2">
+          <button class="demo btn btn-secondary" style="width: 100px">Demo</button>
+          <button class="get-html btn btn-success" style="width: 100px">Get HTML</button>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-10">
+          <div class="script-tag">
+            <button type="button">
+              <i class="fa fa-fw fa-clipboard"></i>
+            </button>
+            <textarea class="form-control" id="widget-html"
+                style="width:100%;" rows="5" readonly><div id=""></div>
+<script src="<%= Rails.env.development? ? 'http' : 'https' %>://<%= company.subdomain %>.<%= ENV["HOST_NAME"] %>/widgets/tab/cs.js" data-stories="" data-category="" data-product=""></script></textarea>
+          </div>
         </div>
       </div>
 

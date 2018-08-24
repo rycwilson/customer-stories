@@ -224,6 +224,33 @@
         }
 
       }
+      .form-group.submit {
+        .btn + .btn {
+          margin-left: 5px;
+        }
+      }
+      .script-tag {
+        width: $settings-width;
+        position: relative;
+        textarea {
+          padding: 10px 12px;
+        }
+        button {
+          border: none;
+          background: none;
+          position: absolute;
+          right: 0;
+          top: 2px;
+          padding: 8px;
+          .fa-clipboard {
+            font-size: 16px;
+            color: #666;
+          }
+          &:hover .fa-clipboard {
+            color: #222;
+          }
+        }
+      }
 
       // select2: fixes word text wrap issues on long select values
       // ref https://github.com/select2/select2/issues/4585
