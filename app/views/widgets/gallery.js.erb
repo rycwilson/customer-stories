@@ -12,7 +12,7 @@ function cspInitGallery ($, $container) {
 
   // avoid double-tap behavior
   $container.on('click touchend', '.cs-close-xs', function () {
-    $('.cs-close').first().trigger('click');  // there are multiple close buttons - don't trigger them all
+    $('.content__item--show .cs-close').first().trigger('click');  // there are multiple close buttons - don't trigger them all
   });
 
 }
