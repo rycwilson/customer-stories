@@ -74,10 +74,11 @@
   function getWidget ($container, $script) {
     return function () {
       $.ajax({
-        url: "<%= URI.join(root_url, widget_view_path(@type)) %>",
+        url: "<%= URI.join(root_url, plugin_view_path(@type)) %>",
         method: 'GET',
         dataType: 'jsonp',
         data: {
+          stories: $script.data('stories'),
           category: $script.data('category'),
           product: $script.data('product')
         }
@@ -124,7 +125,7 @@
 
     $.when(initVideo, initOverlays).done(function () {
         $.ajax({
-          url: "<%= URI.join(root_url, widget_init_path(@type)) %>",
+          url: "<%= URI.join(root_url, plugin_init_path(@type)) %>",
           method: 'GET',
           dataType: 'script'
         })
@@ -155,7 +156,7 @@
         !window.location.href.match(/plugins\/(gallery|carousel|tabbed_carousel)\/demo/)) {
       $container.append(
           '<iframe class="cs-iframe" height="0" width="0" style="display:none" ' +
-              'src="https://' + '<%= @company.subdomain %>' + '.customerstories.net/widgets/track"></iframe>'
+              'src="https://' + '<%= @company.subdomain %>' + '.customerstories.net/plugins/track"></iframe>'
         );
 
       // old approach:

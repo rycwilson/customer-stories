@@ -1,15 +1,44 @@
 
 function widgetConfigListeners () {
 
+  var storiesToJson = function () {
+        var stories = [];
+        $('[name="plugin[stories][]').find('option:selected').each(function () {
+          stories.push(parseInt($(this).val(), 10));
+        });
+        return JSON.stringify(stories);
+      };
+
   $(document)
 
-    .on('click', 'button.demo', function () {
-      var type = $('[name="widget[type]"]:checked').val();
-      window.open('/plugins/demo/?type=' + type, '_blank');
-    })
+    .on('change', '[name="plugin[type]"]', function () {
+      var type = $(this).val(),
+          tabbedCarouselAttrs = '\xa0data-delay="' + $('[name="tabbed_carousel[delay]"]').val() + '"\xa0data-tab="' + $('[name="tabbed_carousel[tab_color]"]').val() + '"\xa0data-text="' + $('[name="tabbed_carousel[text_color]"]').val() + '"';
 
-    .on('change', '[name="widget[type]"]', function () {
-      var type = $(this).val();
+      $('.script-tag textarea').text(
+        $('.script-tag textarea').text()
+          .replace(/id="(cs-gallery|cs-carousel|cs-tabbed-carousel)"/, function () {
+            // for working on the server, input values for plugin[type] use underscore (namely: tabbed_carousel),
+            // but id attributes (and attributes in general) use hyphen
+            return (type === 'tabbed_carousel') ? 'id="cs-tabbed-carousel"' : 'id="cs-' + type + '"';
+          })
+          .replace(/\/plugins\/(gallery|carousel|tabbed_carousel)/, '/plugins/' + type)
+
+          // remove the carousel attributes
+          .replace(/\sdata-background="\w+"/, '')
+          // re-add them if carousel was selected
+          .replace(/><\/script>/, function () {
+            return (type === 'carousel') ? '\xa0data-background="' + $('[name="carousel[background]"]').val() + '"></script>' : '></script>';
+          })
+
+          // remove the tabbed carousel attributes
+          .replace(/\sdata-delay="\d+"\sdata-tab="#\w+"\sdata-text="#\w+"/, '')
+          // re-add them if tabbed carousel was selected
+          .replace(/><\/script>/, function () {
+            return (type === 'tabbed_carousel') ? tabbedCarouselAttrs + '></script>' : '></script>';
+          })
+      );
+
       if (type === 'gallery') {
         $('.settings.collapse').one('hidden.bs.collapse', function () {
           $('.settings.collapse .carousel, .settings.collapse .tabbed-carousel').show();
@@ -26,152 +55,137 @@ function widgetConfigListeners () {
       }
     })
 
-    .on('change', '[name="widget[content]"]', function () {
-      var content = $(this).val();
-      if (content === 'select') {
+    .on('change', '[name="carousel[background]"]', function () {
+      $('.script-tag textarea').text(
+        $('.script-tag textarea').text()
+          .replace(/data-background="\w+"/, 'data-background="' + $(this).val() + '"')
+      );
+    })
+
+    .on('change', '[name="tabbed_carousel[tab_color]"]', function () {
+      $('.script-tag textarea').text(
+        $('.script-tag textarea').text()
+          .replace(/data-tab="#\w+"/, 'data-tab="' + $(this).val() + '"')
+      );
+    })
+
+    .on('change', '[name="tabbed_carousel[text_color]"]', function () {
+      $('.script-tag textarea').text(
+        $('.script-tag textarea').text()
+          .replace(/data-text="#\w+"/, 'data-text="' + $(this).val() + '"')
+      );
+    })
+
+    .on('change', '[name="tabbed_carousel[delay]"]', function () {
+      $('.script-tag textarea').text(
+        $('.script-tag textarea').text()
+          .replace(/data-delay="\d+"/, 'data-delay="' + $(this).val() + '"')
+      );
+    })
+
+    .on('change', '[name="plugin[content]"]', function () {
+      var content = $(this).val();  // IN [custom, category, product]
+
+      $('.script-tag textarea').text(
+        $('.script-tag textarea').text()
+
+          // remove data-stories
+          .replace(/\sdata-stories="\[((\d+(,)?)+)?\]"/, '')
+          // re-add if custom was selected
+          .replace(/><\/script>/, function () {
+            return (content === 'custom') ? '\xa0data-stories="' + storiesToJson() + '"></script>' : '></script>';
+          })
+
+          // remove data-category
+          .replace(/\sdata-category="((\w|-)+)?"/, '')
+          // re-add if category was selected
+          .replace(/><\/script>/, function () {
+            return (content === 'category') ? '\xa0data-category="' + ($('[name="plugin[category]"]').find('option:selected').data('slug') || '') + '"></script>' : '></script>';
+          })
+
+          // remove data-product
+          .replace(/\sdata-product="((\w|-)+)?"/, '')
+          // re-add if product was selected
+          .replace(/><\/script>/, function () {
+            return (content === 'product') ? '\xa0data-product="' + ($('[name="plugin[product]"]').find('option:selected').data('slug') || '') + '"></script>' : '></script>';
+          })
+      );
+
+      if (content === 'custom') {
         $('.content__select--category, .content__select--product').hide();
-        $('.content__select--stories').show();
+        $('.content__select--custom').show();
       } else if (content === 'category') {
-        $('.content__select--stories, .content__select--product').hide();
+        $('.content__select--custom, .content__select--product').hide();
         $('.content__select--category').show();
       } else if (content === 'product') {
-        $('.content__select--stories, .content__select--category').hide();
+        $('.content__select--custom, .content__select--category').hide();
         $('.content__select--product').show();
+      }
+
+    })
+
+    .on('change', '[name="plugin[stories][]"]', function () {
+      $('.script-tag textarea').text(
+        $('.script-tag textarea').text()
+          .replace(/data-stories="\[((\d+(,)?)+)?\]"/, 'data-stories="' + storiesToJson() + '"')
+      );
+    })
+
+    .on('change', '[name="plugin[category]"]', function () {
+      $('.script-tag textarea').text(
+        $('.script-tag textarea').text()
+          .replace(/data-category="(\w|-)*"/, 'data-category="' + $(this).find('option:selected').data('slug') + '"')
+      );
+    })
+
+    .on('change', '[name="plugin[product]"]', function () {
+      $('.script-tag textarea').text(
+        $('.script-tag textarea').text()
+          .replace(/data-product="(\w|-)*"/, 'data-product="' + $(this).find('option:selected').data('slug') + '"')
+      );
+    })
+
+    .on('click', '.demo', function () {
+      var type = $('[name="plugin[type]"]:checked').val(),
+          params = '';
+
+      $('.script-tag textarea').text().match(/data-(\w+)="(((\w|-)*)|\[.*\])"/g)
+          .forEach(function (param) {
+            params += param.split('=')[0].replace('data-', '').replace(/"/g, '') + '=' + param.split('=')[1].replace('data-', '').replace(/"/g, '') + '&';
+          });
+      params = params.substring(0, params.length - 1);  // remove the last &
+      params = params.replace(/(\w+)=((\[\])|"")/, '');  // remove params with no value
+          console.log(params)
+      // window.open('/plugins/demo/?' + params, '_blank');
+    })
+
+    // ref http://bootsnipp.com/snippets/featured/input-spinner-with-min-and-max-values
+    .on('click', '.spinner .btn:first-of-type', function () {
+      var step = 1, $input = $(this).closest('.spinner').find('input');
+      if ($input.attr('max') === undefined || parseInt($input.val()) < parseInt($input.attr('max'))) {
+        $input.val(parseInt($input.val(), 10) + step);
+        $input.trigger('change');
+      } else {
+        $(this).next("disabled", true);
+      }
+    })
+    .on('click', '.spinner .btn:last-of-type', function () {
+      var step = 1, $input = $(this).closest('.spinner').find('input');
+      if ($input.attr('min') === undefined || parseInt($input.val()) > parseInt($input.attr('min'))) {
+        $input.val(parseInt($input.val(), 10) - step);
+        $input.trigger('change');
+      } else {
+        $(this).prev("disabled", true);
       }
     })
 
-    // .on('change', '[name="widget[show]"]',
-    //   function () {
-    //     if ($(this).val() === 'true') {
-    //       $('.row.widget-show-freq').removeClass('disabled');
-    //       $('.row.widget-show-delay').removeClass('disabled');
-    //       $('.row.widget-hide').removeClass('disabled');
-    //       $('#widget_show_delay').prop('disabled', false);
-    //       $('#widget_show_freq').prop('disabled', false);
-    //       $('[name="widget[hide]"]').prop('disabled', false);
-    //     } else {
-    //       $('.row.widget-show-freq').addClass('disabled');
-    //       $('.row.widget-show-delay').addClass('disabled');
-    //       $('.row.widget-hide').addClass('disabled');
-    //       $('.row.widget-hide-delay').addClass('disabled');
-    //       $('#widget_show_delay').prop('disabled', true);
-    //       $('#widget_show_freq').prop('disabled', true);
-    //       $('#widget_hide_false').click();
-    //       $('[name="widget[hide]"]').prop('disabled', true);
-    //       $('#widget_hide_delay').prop('disabled', true);
-    //     }
-    //   })
-
-    // .on('change', '[name="widget[hide]"]',
-    //   function () {
-    //     if ($(this).val() === 'true') {
-    //       $('.row.widget-hide-delay').removeClass('disabled');
-    //       $('#widget_hide_delay').prop('disabled', false);
-    //     } else {
-    //       $('.row.widget-hide-delay').addClass('disabled');
-    //       $('#widget_hide_delay').prop('disabled', true);
-    //     }
-    //   })
-
-    .on('change', '[name="widget[filter]"]',
-      function () {
-        if ($(this).val() === 'none') {
-          $('[id^="widget-filter"]').hide();
-        } else if ($(this).val() === 'category') {
-          $('[id="widget-filter-category-container"]').show();
-          $('[id="widget-filter-product-container"]').hide();
-        } else if ($(this).val() === 'product') {
-          $('[id="widget-filter-product-container"]').show();
-          $('[id="widget-filter-category-container"]').hide();
-        }
-      })
-
-    // ref http://bootsnipp.com/snippets/featured/input-spinner-with-min-and-max-values
-    .on('click', '.spinner .btn:first-of-type',
-      function () {
-        var widgetAttr = $(this).parent().prev().attr('id');
-        var disabledInput =
-          ( widgetAttr === 'widget_hide_delay' &&
-            $('#widget_hide_delay').prop('disabled') === true ) ||
-          ( widgetAttr === 'widget_show_delay' &&
-            $('#widget_show_delay').prop('disabled') === true ) ||
-          ( widgetAttr === 'widget_show_freq' &&
-            $('#widget_show_freq').prop('disabled') === true );
-        if (disabledInput) { return false; }
-        var btn = $(this);
-        var step = (widgetAttr === 'widget_show_freq') ? 1 : 100;
-        var input = btn.closest('.spinner').find('input');
-        if (input.attr('max') === undefined || parseInt(input.val()) < parseInt(input.attr('max'))) {
-          input.val(parseInt(input.val(), 10) + step);
-        } else {
-          btn.next("disabled", true);
-        }
-      })
-
-    .on('click', '.spinner .btn:last-of-type',
-      function () {
-        var widgetAttr = $(this).parent().prev().attr('id');
-        var disabledInput =
-          ( widgetAttr === 'widget_hide_delay' &&
-            $('#widget_hide_delay').prop('disabled') === true ) ||
-          ( widgetAttr === 'widget_show_delay' &&
-            $('#widget_show_delay').prop('disabled') === true ) ||
-          ( widgetAttr === 'widget_show_freq' &&
-            $('#widget_show_freq').prop('disabled') === true );
-        if (disabledInput) { return false; }
-        var btn = $(this);
-        var step = (widgetAttr === 'widget_show_freq') ? 1 : 100;
-        var input = btn.closest('.spinner').find('input');
-        if (input.attr('min') === undefined || parseInt(input.val()) > parseInt(input.attr('min'))) {
-          input.val(parseInt(input.val(), 10) - step);
-        } else {
-          btn.prev("disabled", true);
-        }
-      })
-
-    .on('click', '#widget-html-btn',
-      function () {
-        var filterValue = function (type) {
-          if (type === 'category' &&
-              $('[name="widget[filter]"]:checked').val() === 'category') {
-            return $('.widget-filter-category').find(':selected').data('slug');
-          } else if (type === 'product' &&
-                     $('[name="widget[filter]"]:checked').val() === 'product') {
-            return $('.widget-filter-product').find(':selected').data('slug');
-          } else {
-            return "";
-          }
-        };
-        $('#widget-html').text(
-          $('#widget-html').text()
-            // .replace(/data-tab-size='.*?'/,
-            //   "data-tab-size='" + $('[name="widget[tab_size]"]:checked').val() + "'")
-            // .replace(/data-tab-color='.*?'/,
-            //   "data-tab-color='" + $('#widget_tab_color').val() + "'")
-            // .replace(/data-text-color='.*?'/,
-            //   "data-text-color='" + $('#widget_text_color').val() + "'")
-            // .replace(/data-delay='.*?'/,
-            //   "data-delay='" + $('#widget_delay').val() + "'")
-            // .replace(/data-show='.*?'/, "data-show='" +
-            //   $('[name="widget[show]"]:checked').val() + "'")
-            // .replace(/data-timeout='.*?'/, "data-timeout='" +
-            //   $('[name="widget[timeout]"]:checked').val() + "'")
-            // .replace(/data-timeout-count='.*?'/,
-            //   "data-timeout-count='" + $('#widget_timeout_count').val() + "'")
-            .replace(/data-category='.*?'/, "data-category='" + filterValue('category') + "'")
-            .replace(/data-product='.*?'/, "data-product='" + filterValue('product') + "'")
-        ).css('visibility', 'visible');
-        $('#widget-html').parent().find('i').css('visibility', 'visible');
-      })
-
-    .on('click', '#html-to-clipboard',
-      function () {
-        var htmlText = $(this).parent().find('textarea').text();
-            $temp = $("<textarea></textarea>");
-        $("body").append($temp);
-        $temp.text(htmlText).select();
-        document.execCommand("copy");
-        $temp.remove();
-      });
+    .on('click', 'button.clipboard', function () {
+      var htmlText = $(this).parent().find('textarea').text();
+          $temp = $("<textarea></textarea>");
+      $("body").append($temp);
+      $temp.text(htmlText).select();
+      document.execCommand("copy");
+      $temp.remove();
+    });
 
 }

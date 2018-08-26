@@ -62,8 +62,17 @@ class WidgetsController < ApplicationController
 
   # if invalid category or product filters, return all stories
   def widget_view (params)
-    filter_params = get_filters_from_query_or_widget(@company, params, true)
-    stories = @company.filter_stories(filter_params)
+    if params[:stories].present?
+
+      stories = Story.find(params[:stories])
+                     .delete_if do |story|
+                        story.company.id != @company.id ||
+                        !story.logo_published?
+                      end
+    elsif
+      filter_params = get_filters_from_query_or_widget(@company, params, true)
+      stories = @company.filter_stories(filter_params)
+    end
     if @company.subdomain == 'varmour'
       # ref: https://stackoverflow.com/questions/33732208
       stories = stories.sort_by { |s| [ !s[:published] ? 0 : 1, s[:updated_at] ] }.reverse
