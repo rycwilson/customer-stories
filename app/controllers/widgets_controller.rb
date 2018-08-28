@@ -71,15 +71,16 @@ class WidgetsController < ApplicationController
       layout: false,
       locals: {
         company: @company,
-        widget: @company.widget,   # applies to tabbed carousel (tab style)
+        # widget: @company.widget,   # applies to tabbed carousel (tab style)
         stories: stories.first(16),
         title: 'Customer Stories',
+        is_demo: !!params[:is_demo],
         background: params[:background],
         tab_color: params[:tab_color],
         text_color: params[:text_color],
         is_curator: false,
         is_widget: true,
-        is_external: true
+        is_external: true,
       }
     )
   end

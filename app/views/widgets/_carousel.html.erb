@@ -1,5 +1,5 @@
 
-<% if company.subdomain != 'varmour' %>
+<% if company.subdomain != 'varmour' || is_demo %>
 
 <div class="cs-overlay-container" "<%= background %>">
   <div class="cs-main">
@@ -73,7 +73,7 @@
 
       </div>
 
-<% if company.subdomain != 'varmour' %>
+<% if company.subdomain != 'varmour' || is_demo %>
 
     </div>  <!-- .cs-grid -->
 
@@ -81,7 +81,7 @@
 
       <div class="scroll-wrap">
 
-        <% stories.first(20).each do |story| %>
+        <% stories.first(16).each do |story| %>
 
           <div class="content__item content__item--carousel">
           </div>

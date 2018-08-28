@@ -27,17 +27,17 @@
   <% if params[:type] == 'gallery' %>
 
     <div id="cs-gallery"></div>
-    <script src="<%= root_url + 'widgets/gallery/cs.js' %>" <%= params_to_data_attrs(params) %>></script>
+    <script src="<%= root_url + 'widgets/gallery/cs.js' %>" data-demo="1" <%= params_to_data_attrs(params) %>></script>
 
   <% elsif params[:type] == 'carousel' %>
 
     <div id="cs-carousel"></div>
-    <script src="<%= root_url + 'widgets/carousel/cs.js' %>" <%= params_to_data_attrs(params) %>></script>
+    <script src="<%= root_url + 'widgets/carousel/cs.js' %>" data-demo="1" <%= params_to_data_attrs(params) %>></script>
 
   <% elsif params[:type] == 'tabbed_carousel' %>
 
     <div id="cs-tabbed-carousel"></div>
-    <script src="<%= root_url + 'widgets/tabbed_carousel/cs.js' %>" <%= params_to_data_attrs(params) %>></script>
+    <script src="<%= root_url + 'widgets/tabbed_carousel/cs.js' %>" data-demo="1" <%= params_to_data_attrs(params) %>></script>
 
   <% end %>
 
