@@ -13,10 +13,11 @@
   <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
   <!-- csp assets -->
   <link rel="stylesheet" href="<%= asset_path('views/widgets/demo.css') %>">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700&amp;lang=en" rel="stylesheet" type="text/css">
   <script src="<%= asset_path('widgets/demo.js') %>"></script>
   <%= favicon_link_tag 'favicon.ico' %>
 </head>
-<body class="<%= controller_name %> <%= action_name %> <%= params[:type] %>">
+<body class="<%= controller_name %> <%= action_name %> <%= @company.subdomain %> <%= params[:type] %>">
 
 <!--   <div class="nav-links">
     <a href="javascript:;" data-plugin-type="gallery" class="<%#= @params[:type] == 'gallery' ? 'active' : '' %>">Gallery</a>

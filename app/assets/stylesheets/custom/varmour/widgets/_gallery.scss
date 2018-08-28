@@ -9,8 +9,9 @@ a.cs-thumbnail {
       border-radius: 0;
       p {
         font: {
+          family: inherit !important;
           size: 14px !important;
-          weight: normal !important;
+          weight: 600 !important;
         }
         color: #000;
       }
@@ -22,13 +23,13 @@ a.cs-thumbnail {
   }
   .caption {
     font: {
-      // family: $metropolis-light;
-      size: 10px;
-      weight: 300;
+      family: inherit !important;
+      size: 10px !important;
+      weight: 300 !important;
     }
     text-transform: uppercase;
     color: #000;
-    .click-action:after { text-decoration: none; }
+    span.click-action:after { text-decoration: none; }
   }
   &:hover, &:active {
     background-color: #edf5f8;
@@ -46,3 +47,4 @@ a.cs-thumbnail {
     background-color: #edf5f8;
   }
 }
+

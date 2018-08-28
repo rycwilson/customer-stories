@@ -1,5 +1,6 @@
 
 body.widgets.demo {
+
   height: 100vh;
   margin: 0;
   font-family: 'Open Sans';
@@ -23,6 +24,17 @@ body.widgets.demo {
 
   .thumbnail-view-hover, .caption {
     font-family: 'Lato';
+  }
+
+  &.varmour {
+    .thumbnail-view-hover {
+      font-family: 'Montserrat';
+      font-weight: 600;
+    }
+    .caption {
+      font-family: 'Montserrat';
+      font-weight: 400;
+    }
   }
 
 }
