@@ -15,8 +15,8 @@ module WidgetsHelper
   end
 
   # method provides for auto-populating settings for legacy widgets
-  def tabbedCarouselStyle (company, tab_color, text_color, is_external=true)
-    return "" if !is_external
+  def tabbedCarouselStyle (company, tab_color, text_color)
+    return "" if tab_color.nil? && text_color.nil?  # internal more stories carousel => company css
     case company.subdomain
     when 'trunity'
       tab_color = '#FEBE57' if tab_color.blank?

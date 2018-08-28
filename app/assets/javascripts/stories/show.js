@@ -1,7 +1,6 @@
 
 function storiesShow () {
 
-  var moreStoriesDelay = 4000;
   // story is initially hidden in case video failure prompts removal
   var cbSuccess = function () { $('.story-wrapper').removeClass('hidden'); };
   loadVideoThumbnail(cbSuccess);
@@ -18,25 +17,25 @@ function storiesShow () {
       if ($('body').hasClass('stories show') && !CSP.current_user) {
         var scrollBottom = $(document).height() - $(window).height() - $(window).scrollTop();
         if (scrollBottom < $('#sign-in-footer').height()) {
-          $('#more-stories-container').hide();
+          $('#cs-tabbed-carousel').hide();
         }
-        else if (!$('#more-stories-container').data('hidden')) {
-          $('#more-stories-container').show();
+        else if (!getCookie('cs-tabbed-carousel-removed')) {
+          $('#cs-tabbed-carousel').show();
         }
       }
     });
-
 }
 
 function initMoreStories () {
+  var moreStoriesDelay = 5000;
   if (Cookies.get('cs-tabbed-carousel-removed')) return false;
   $('.cs-header [class*="remove"]').on('click', function (e) {
-    $('#more-stories-container').hide();
+    $('#cs-tabbed-carousel').hide();
     Cookies.set('cs-tabbed-carousel-removed', '1', { expires: 1, path: '/' });
     return false;
   });
-  slideDrawerPlugin($('#more-stories-container'));  // define the jquery plugin
-  $('#more-stories-container').imagesLoaded(function () {
+  slideDrawerPlugin($('#cs-tabbed-carousel'));  // define the jquery plugin
+  $('#cs-tabbed-carousel').imagesLoaded(function () {
     moreStoriesScrollHandlers();
     setTimeout(function () {
       $('.cs-section')
