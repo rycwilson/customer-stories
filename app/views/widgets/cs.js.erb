@@ -110,7 +110,7 @@
     trackVisitor($container);
 
     // do not apply overlays to varmour
-    if ($script.attr('src').includes('varmour') && !$('body').hasClass('widgets demo')) {
+    if ($script.attr('src').includes('varmour') && !$('body').hasClass('widgets demo') && !window.location.href.includes('weebly')) {
       initVideo.resolve();
       initOverlays.resolve();
     } else {
