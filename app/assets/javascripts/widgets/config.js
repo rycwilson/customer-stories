@@ -172,14 +172,14 @@ function widgetConfigListeners () {
           product = $('[name="plugin[product]"]').find('option:selected').data('slug');
       params += 'type=' + type +
         (content === 'custom' && $('[name="plugin[stories][]"]').val() ? '&stories=' + stories : '') +
-        (content === 'category' ? '&category=' + category : '') +
-        (content === 'product' ? '&product=' + product : '') +
+        (content === 'category' && category ? '&category=' + category : '') +
+        (content === 'product' && product ? '&product=' + product : '') +
         (type === 'carousel' ? '&background=' + background : '') +
         (type === 'tabbed_carousel' ? '&tab_color=' + tabColor.replace('#', '%23') : '') +
         (type === 'tabbed_carousel' ? '&text_color=' + textColor.replace('#', '%23') : '') +
         (type === 'tabbed_carousel' ? '&delay=' + delay : '');
-
       if (params.length === 1) params = '';   // no params
+// console.log('GET', demoPath + params)
       $(this).attr('href', demoPath + params);
       $(this).popupWindow(e, window.innerWidth * 0.85, window.innerHeight * 0.85);
     })

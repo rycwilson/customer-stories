@@ -24,22 +24,20 @@
     <a href="javascript:;" data-plugin-type="tabbed_carousel" class="<%#= @params[:type] == 'tabbed_carousel' ? 'active' : '' %>">Tabbed Carousel</a>
   </div> -->
 
-  <!-- <p class="lead">Blah blah blah something about the plugin</p> -->
-
   <% if @params[:type] == 'gallery' %>
 
     <div id="cs-gallery"></div>
-    <script src="<%= root_url + 'widgets/gallery/cs.js' %>" <%= paramsToDataAttrs(@params) %>></script>
+    <script src="<%= root_url + 'widgets/gallery/cs.js' %>" <%= params_to_data_attrs(@params) %>></script>
 
   <% elsif @params[:type] == 'carousel' %>
 
     <div id="cs-carousel"></div>
-    <script src="<%= root_url + 'widgets/carousel/cs.js' %>" <%= paramsToDataAttrs(@params) %>></script>
+    <script src="<%= root_url + 'widgets/carousel/cs.js' %>" <%= params_to_data_attrs(@params) %>></script>
 
   <% elsif @params[:type] == 'tabbed_carousel' %>
 
     <div id="cs-tabbed-carousel"></div>
-    <script src="<%= root_url + 'widgets/tabbed_carousel/cs.js' %>" <%= paramsToDataAttrs(@params) %>></script>
+    <script src="<%= root_url + 'widgets/tabbed_carousel/cs.js' %>" <%= params_to_data_attrs(@params) %>></script>
 
   <% end %>
 

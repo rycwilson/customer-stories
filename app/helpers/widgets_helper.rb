@@ -1,10 +1,10 @@
 module WidgetsHelper
 
-  def paramsToDataAttrs (params)
+  def params_to_data_attrs (params)
     [
       params[:stories].present? ? "data-stories=#{params[:stories]}" : '',
       params[:category].present? ? "data-category=#{params[:category]}" : '',
-      params[:category].present? ? "data-category=#{params[:product]}" : '',
+      params[:product].present? ? "data-product=#{params[:product]}" : '',
       params[:background].present? ? "data-background=#{params[:background]}" : '',
       params[:tab_color].present? ? "data-tab-color=#{params[:tab_color]}" : '',
       params[:text_color].present? ? "data-text-color=#{params[:text_color]}" : '',
@@ -27,7 +27,6 @@ module WidgetsHelper
       tab_color = tab_color || "#efefef"
       text_color = text_color || "#333333"
     end
-
     "background-color: #{tab_color}; color: #{text_color}"
   end
 
