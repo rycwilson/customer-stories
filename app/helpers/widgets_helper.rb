@@ -15,7 +15,8 @@ module WidgetsHelper
   end
 
   # method provides for auto-populating settings for legacy widgets
-  def tabbedCarouselStyle (company, tab_color, text_color)
+  def tabbedCarouselStyle (company, tab_color, text_color, is_external=true)
+    return "" if !is_external
     case company.subdomain
     when 'trunity'
       tab_color = '#FEBE57' if tab_color.blank?

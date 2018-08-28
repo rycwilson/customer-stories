@@ -54,7 +54,6 @@ class WidgetsController < ApplicationController
   end
 
   def demo
-    @params = params
     render(layout: false)
   end
 

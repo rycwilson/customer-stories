@@ -1,6 +1,7 @@
 
 function storiesShow () {
 
+  var moreStoriesDelay = 4000;
   // story is initially hidden in case video failure prompts removal
   var cbSuccess = function () { $('.story-wrapper').removeClass('hidden'); };
   loadVideoThumbnail(cbSuccess);
@@ -29,56 +30,23 @@ function storiesShow () {
 
 function initMoreStories () {
   if (Cookies.get('cs-tabbed-carousel-removed')) return false;
-  var widgetShowTimer = null, widgetHideTimer = null;
-
-  $('.cs-header')
-    .on('click', function (e, data) {
-        var auto = data && data.isAuto;
-        if ($(e.target).is('[class*="remove"]')) {
-          $('#more-stories-container')
-            .data('hidden', '1')
-            .hide();
-          Cookies.set('cs-tabbed-carousel-removed', '1', { expires: 1, path: '/' });
-          return false;
-        }
-        // cancel the timers if user interacts with widget
-        if (!auto) {
-          if (widgetShowTimer) { clearTimeout(widgetShowTimer); }
-          if (widgetHideTimer) { clearTimeout(widgetHideTimer); }
-        }
-      });
-
-  slideDrawerPlugin();  // define the jquery plugin
+  $('.cs-header [class*="remove"]').on('click', function (e) {
+    $('#more-stories-container').hide();
+    Cookies.set('cs-tabbed-carousel-removed', '1', { expires: 1, path: '/' });
+    return false;
+  });
+  slideDrawerPlugin($('#more-stories-container'));  // define the jquery plugin
   $('#more-stories-container').imagesLoaded(function () {
     moreStoriesScrollHandlers();
-    // if user is using a mouse, this will hose dimensions
-    // (in a somewhat random way)
-    // compensate for this ...
-    // if ($('.cs-drawer-content').css('height') !== '141px') {
-    //   $('.cs-drawer-content').css('height', '141px');
-    //   $('.cs-drawer-items').css('height', '141px');
-    // }
-    if ( CSP.company.widget.show &&
-         !Cookies.get(CSP.company.subdomain + '-hide-widget') ) {
-      widgetShowTimer = setTimeout(function () {
-        $('.cs-header').trigger('click', { isAuto: true } );
-        if (CSP.company.widget.hide) {
-          widgetHideTimer = setTimeout(function () {
-            $('.cs-header').trigger('click', { isAuto: true } );
-          }, CSP.company.widget.hide_delay);
-        }
-      }, CSP.company.widget.show_delay);
-      // var inOneHour = new Date(new Date().getTime() + 60 * 60 * 1000);
-      Cookies.set(CSP.company.subdomain + '-hide-widget', '1',
-                  { expires: CSP.company.widget.show_freq });
-    }
-    $('.cs-section')
-      .slideDrawer()
-      .css({ opacity: 0, visibility: "visible" })
-      .animate({ opacity: 1 }, 200);
+    setTimeout(function () {
+      $('.cs-section')
+        .slideDrawer()
+        .css({ opacity: 0, visibility: "visible" })
+        .animate({ opacity: 1 }, 200)
+        .animate({ bottom: 0 }, 'fast');
+    }, moreStoriesDelay);
   });
 }
-
 
 // NOTE: the contributor data must be passed to the callback as shown;
 // if passed via argument, with a 'contributor' parameter in the callback
