@@ -1,0 +1,48 @@
+
+a.cs-thumbnail {
+  transition: background-color 0s;
+  border: 1px solid #999;
+  box-shadow: 0 0;
+  .thumbnail-view {
+    .thumbnail-view-hover {
+      padding: 10px;
+      border-radius: 0;
+      p {
+        font: {
+          size: 14px !important;
+          weight: normal !important;
+        }
+        color: #000;
+      }
+    }
+    img {
+      padding: 24px;
+      mix-blend-mode: multiply;
+    }
+  }
+  .caption {
+    font: {
+      // family: $metropolis-light;
+      size: 10px;
+      weight: 300;
+    }
+    text-transform: uppercase;
+    color: #000;
+    .click-action:after { text-decoration: none; }
+  }
+  &:hover, &:active {
+    background-color: #edf5f8;
+    transition: background-color 0.5s;
+    border-color: #999;  // override bootstrap .thumbnail
+    box-shadow: 0 0;
+  }
+  &:hover {
+    .thumbnail-view-hover {
+    }
+    img {
+    }
+  }
+  &.loading {
+    background-color: #edf5f8;
+  }
+}

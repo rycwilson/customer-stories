@@ -3,7 +3,7 @@ function cspInitTabbedCarousel ($, $container, delay) {
 
   if (getCookie('cs-tabbed-carousel-removed')) return false;
 
-  var isDemo = $('body').hasClass('demo'),
+  var isDemo = $('body').hasClass('widgets demo'),
       // widgetShowTimer, widgetHideTimer,
       attachListeners = function () {
         scrollListeners($container);

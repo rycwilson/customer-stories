@@ -72,14 +72,7 @@
 
   // root_url provides a company-specific url (via subdomain)
   function getWidget ($container, $script) {
-
     return function () {
-      console.log($script.data('stories'))
-      console.log($script.data('category'))
-      console.log($script.data('product'))
-      console.log($script.data('background'))
-      console.log($script.data('tab-color'))
-      console.log($script.data('text-color'))
       $.ajax({
         url: "<%= URI.join(root_url, plugin_view_path(@type)) %>",
         method: 'GET',
@@ -116,7 +109,7 @@
     trackVisitor($container);
 
     // do not apply overlays to varmour
-    if ($script.attr('src').includes('varmour')) {
+    if ($script.attr('src').includes('varmour') && !$('body').hasClass('widgets demo')) {
       initVideo.resolve();
       initOverlays.resolve();
     } else {
