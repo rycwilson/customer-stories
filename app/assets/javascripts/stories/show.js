@@ -114,11 +114,11 @@ function clickyListeners () {
     .on('click', '.linkedin-share, .twitter-share, .facebook-share',
         { type: 'social-share', title: $('title').text() }, clickyLog)
     .on('click', '.linkedin-share',
-      function (e) { $(this).socialSharePopup(e, 550, 544); })
+      function (e) { $(this).popupWindow(e, 550, 544); })
     .on('click', '.twitter-share',
-      function (e) { $(this).socialSharePopup(e, 500, 260); })
+      function (e) { $(this).popupWindow(e, 500, 260); })
     .on('click', '.facebook-share',
-      function (e) { $(this).socialSharePopup(e, 600, 424); })
+      function (e) { $(this).popupWindow(e, 600, 424); })
     .on('mouseover', '.linkedin-widget',
       function () {
         window.focus();

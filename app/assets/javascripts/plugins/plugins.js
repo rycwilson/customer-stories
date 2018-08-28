@@ -194,7 +194,7 @@ function slideDrawerPlugin () {
     }));
 
 // social sharing
-$.fn.socialSharePopup = function (e, width, height) {
+$.fn.popupWindow = function (e, width, height) {
   // Prevent default anchor event
   e.preventDefault();
   // Fixes dual-screen position                         Most browsers      Firefox

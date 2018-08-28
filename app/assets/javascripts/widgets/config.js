@@ -13,7 +13,7 @@ function widgetConfigListeners () {
 
     .on('change', '[name="plugin[type]"]', function () {
       var type = $(this).val(),
-          tabbedCarouselAttrs = '\xa0data-delay="' + $('[name="tabbed_carousel[delay]"]').val() + '"\xa0data-tab="' + $('[name="tabbed_carousel[tab_color]"]').val() + '"\xa0data-text="' + $('[name="tabbed_carousel[text_color]"]').val() + '"';
+          tabbedCarouselAttrs = '\xa0data-delay="' + $('[name="tabbed_carousel[delay]"]').val() + '"\xa0data-tab-color="' + $('[name="tabbed_carousel[tab_color]"]').val() + '"\xa0data-text-color="' + $('[name="tabbed_carousel[text_color]"]').val() + '"';
 
       $('.script-tag textarea').text(
         $('.script-tag textarea').text()
@@ -32,7 +32,7 @@ function widgetConfigListeners () {
           })
 
           // remove the tabbed carousel attributes
-          .replace(/\sdata-delay="\d+"\sdata-tab="#\w+"\sdata-text="#\w+"/, '')
+          .replace(/\sdata-delay="\d+"\sdata-tab-color="#\w+"\sdata-text-color="#\w+"/, '')
           // re-add them if tabbed carousel was selected
           .replace(/><\/script>/, function () {
             return (type === 'tabbed_carousel') ? tabbedCarouselAttrs + '></script>' : '></script>';
@@ -65,14 +65,14 @@ function widgetConfigListeners () {
     .on('change', '[name="tabbed_carousel[tab_color]"]', function () {
       $('.script-tag textarea').text(
         $('.script-tag textarea').text()
-          .replace(/data-tab="#\w+"/, 'data-tab="' + $(this).val() + '"')
+          .replace(/data-tab-color="#\w+"/, 'data-tab-color="' + $(this).val() + '"')
       );
     })
 
     .on('change', '[name="tabbed_carousel[text_color]"]', function () {
       $('.script-tag textarea').text(
         $('.script-tag textarea').text()
-          .replace(/data-text="#\w+"/, 'data-text="' + $(this).val() + '"')
+          .replace(/data-text-color="#\w+"/, 'data-text-color="' + $(this).val() + '"')
       );
     })
 
@@ -91,23 +91,24 @@ function widgetConfigListeners () {
 
           // remove data-stories
           .replace(/\sdata-stories="\[((\d+(,)?)+)?\]"/, '')
-          // re-add if custom was selected
+          // re-add if custom was selected and a selection exists
+          // the multiple select option makes .val() behave different
           .replace(/><\/script>/, function () {
-            return (content === 'custom') ? '\xa0data-stories="' + storiesToJson() + '"></script>' : '></script>';
+            return (content === 'custom' && $('[name="plugin[stories][]"]').val() !== null) ? '\xa0data-stories="' + storiesToJson() + '"></script>' : '></script>';
           })
 
           // remove data-category
           .replace(/\sdata-category="((\w|-)+)?"/, '')
-          // re-add if category was selected
+          // re-add if category was selected and a selection exists
           .replace(/><\/script>/, function () {
-            return (content === 'category') ? '\xa0data-category="' + ($('[name="plugin[category]"]').find('option:selected').data('slug') || '') + '"></script>' : '></script>';
+            return (content === 'category' && $('[name="plugin[category]"]').val() !== '') ? '\xa0data-category="' + ($('[name="plugin[category]"]').find('option:selected').data('slug') || '') + '"></script>' : '></script>';
           })
 
           // remove data-product
           .replace(/\sdata-product="((\w|-)+)?"/, '')
-          // re-add if product was selected
+          // re-add if product was selected and a selection exists
           .replace(/><\/script>/, function () {
-            return (content === 'product') ? '\xa0data-product="' + ($('[name="plugin[product]"]').find('option:selected').data('slug') || '') + '"></script>' : '></script>';
+            return (content === 'product' && $('[name="plugin[product]"]').val() !== '') ? '\xa0data-product="' + ($('[name="plugin[product]"]').find('option:selected').data('slug') || '') + '"></script>' : '></script>';
           })
       );
 
@@ -125,38 +126,62 @@ function widgetConfigListeners () {
     })
 
     .on('change', '[name="plugin[stories][]"]', function () {
+      var isFirstSelection = !$('.script-tag textarea').text().match(/data-stories/);
       $('.script-tag textarea').text(
         $('.script-tag textarea').text()
-          .replace(/data-stories="\[((\d+(,)?)+)?\]"/, 'data-stories="' + storiesToJson() + '"')
+          .replace(
+            isFirstSelection ? /><\/script>/ : /\xa0data-stories="\[((\d+(,)?)+)?\]"/,
+            '\xa0data-stories="' + storiesToJson() + '"' + (isFirstSelection ? '></script>' : '')
+          )
       );
     })
 
     .on('change', '[name="plugin[category]"]', function () {
+      var isFirstSelection = !$('.script-tag textarea').text().match(/data-category/);
       $('.script-tag textarea').text(
         $('.script-tag textarea').text()
-          .replace(/data-category="(\w|-)*"/, 'data-category="' + $(this).find('option:selected').data('slug') + '"')
+          .replace(
+            isFirstSelection ? /><\/script>/ : /\xa0data-category="(\w|-)*"/,
+            '\xa0data-category="' + $(this).find('option:selected').data('slug') + '"' + (isFirstSelection ? '></script>' : '')
+          )
       );
     })
 
     .on('change', '[name="plugin[product]"]', function () {
+      var isFirstSelection = !$('.script-tag textarea').text().match(/data-product/);
       $('.script-tag textarea').text(
         $('.script-tag textarea').text()
-          .replace(/data-product="(\w|-)*"/, 'data-product="' + $(this).find('option:selected').data('slug') + '"')
+          .replace(
+            isFirstSelection ? /><\/script>/ : /\xa0data-product="(\w|-)*"/,
+            '\xa0data-product="' + $(this).find('option:selected').data('slug') + '"' + (isFirstSelection ? '></script>' : '')
+          )
       );
     })
 
-    .on('click', '.demo', function () {
-      var type = $('[name="plugin[type]"]:checked').val(),
-          params = '';
+    .on('click', '.demo', function (e) {
+      var demoPath = '/plugins/demo',
+          params = '?',
+          type = $('[name="plugin[type]"]:checked').val(),
+          content = $('[name="plugin[content]"]:checked').val(),
+          background = $('[name="carousel[background]"]:checked').val(),
+          tabColor = $('[name="tabbed_carousel[tab_color]"]').val(),
+          textColor = $('[name="tabbed_carousel[text_color]"]').val(),
+          delay = $('[name="tabbed_carousel[delay]"]').val(),
+          stories = storiesToJson().replace('[', '%5B').replace(']', '%5D'),
+          category = $('[name="plugin[category]"]').find('option:selected').data('slug'),
+          product = $('[name="plugin[product]"]').find('option:selected').data('slug');
+      params += 'type=' + type +
+        (content === 'custom' && $('[name="plugin[stories][]"]').val() ? '&stories=' + stories : '') +
+        (content === 'category' ? '&category=' + category : '') +
+        (content === 'product' ? '&product=' + product : '') +
+        (type === 'carousel' ? '&background=' + background : '') +
+        (type === 'tabbed_carousel' ? '&tab_color=' + tabColor.replace('#', '%23') : '') +
+        (type === 'tabbed_carousel' ? '&text_color=' + textColor.replace('#', '%23') : '') +
+        (type === 'tabbed_carousel' ? '&delay=' + delay : '');
 
-      $('.script-tag textarea').text().match(/data-(\w+)="(((\w|-)*)|\[.*\])"/g)
-          .forEach(function (param) {
-            params += param.split('=')[0].replace('data-', '').replace(/"/g, '') + '=' + param.split('=')[1].replace('data-', '').replace(/"/g, '') + '&';
-          });
-      params = params.substring(0, params.length - 1);  // remove the last &
-      params = params.replace(/(\w+)=((\[\])|"")/, '');  // remove params with no value
-          console.log(params)
-      // window.open('/plugins/demo/?' + params, '_blank');
+      if (params.length === 1) params = '';   // no params
+      $(this).attr('href', demoPath + params);
+      $(this).popupWindow(e, window.innerWidth * 0.85, window.innerHeight * 0.85);
     })
 
     // ref http://bootsnipp.com/snippets/featured/input-spinner-with-min-and-max-values
@@ -179,13 +204,17 @@ function widgetConfigListeners () {
       }
     })
 
-    .on('click', 'button.clipboard', function () {
+    .on('click', '.copy', function () {
       var htmlText = $(this).parent().find('textarea').text();
           $temp = $("<textarea></textarea>");
       $("body").append($temp);
       $temp.text(htmlText).select();
       document.execCommand("copy");
       $temp.remove();
+      $('button.copy span').toggle();
+      setTimeout(function () {
+        $('button.copy span').toggle();
+      }, 1500);
     });
 
 }

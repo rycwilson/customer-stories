@@ -101,10 +101,6 @@
       }
       .form-group.type {
         margin-bottom: 0;
-        button.demo {
-          width: 90px;
-          margin: 0 50px;
-        }
       }
       .settings-container {
         // collapse is jumpy when padding in collapsed element or margins in surrounding elements
@@ -207,8 +203,15 @@
 
         }
       }
-      .form-group.content {
-        .content__select {
+      .form-group.content__btn-group {
+        margin-bottom: 5px;
+        .btn-group {
+          display: block;
+          margin-bottom: 5px;
+        }
+      }
+      .form-group.content__select {
+        .content__select--custom, .content__select--category, .content__select--product {
           width: $settings-width;
         }
         // https://github.com/select2/select2-bootstrap-theme/issues/77
@@ -224,32 +227,36 @@
         }
 
       }
-      .form-group.submit {
-        .btn + .btn {
-          margin-left: 5px;
+      .form-group.code {
+        margin-bottom: 10px;
+        .btn {
+          width: 90px;
+          & + .btn {
+            margin-left: 5px;
+          }
         }
       }
       .script-tag {
         width: $settings-width;
-        position: relative;
-        textarea {
-          padding: 10px 12px;
-        }
-        button {
-          border: none;
-          background: none;
-          position: absolute;
-          right: 0;
-          top: 2px;
-          padding: 8px;
-          .fa-clipboard {
-            font-size: 16px;
-            color: #666;
-          }
-          &:hover .fa-clipboard {
-            color: #222;
-          }
-        }
+        // position: relative;
+        // textarea {
+          // padding: 10px 12px;
+        // }
+        // button {
+        //   border: none;
+        //   background: none;
+        //   position: absolute;
+        //   right: 0;
+        //   top: 2px;
+        //   padding: 8px;
+        //   .fa-clipboard {
+        //     font-size: 16px;
+        //     color: #666;
+        //   }
+        //   &:hover .fa-clipboard {
+        //     color: #222;
+        //   }
+        // }
       }
 
       // select2: fixes word text wrap issues on long select values

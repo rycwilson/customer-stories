@@ -231,7 +231,7 @@ function initSelect2 () {
    */
   $('select.widget-stories').select2({
     theme: 'bootstrap',
-    placeholder: 'Select Stories',
+    placeholder: 'Select Stories or leave blank for default sort',
     tags: true,
     width: 'style'
   })

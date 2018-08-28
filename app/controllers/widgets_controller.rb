@@ -34,7 +34,7 @@ class WidgetsController < ApplicationController
   def show
     respond_to do |format|
       format.js do
-        json = { html: widget_view(params) }.to_json
+        json = { html: plugin_view(@company, params) }.to_json
         callback = params[:callback]
         jsonp = callback + "(" + json + ")"
         render(text: jsonp)
@@ -54,33 +54,18 @@ class WidgetsController < ApplicationController
   end
 
   def demo
-    @type = params[:type]
+    @params = params
     render(layout: false)
   end
 
   private
 
   # if invalid category or product filters, return all stories
-  def widget_view (params)
-    if params[:stories].present?
-
-      stories = Story.find(params[:stories])
-                     .delete_if do |story|
-                        story.company.id != @company.id ||
-                        !story.logo_published?
-                      end
-    elsif
-      filter_params = get_filters_from_query_or_widget(@company, params, true)
-      stories = @company.filter_stories(filter_params)
-    end
-    if @company.subdomain == 'varmour'
+  def plugin_view (company, params)
+    stories = plugin_stories(company, params)
+    if company.subdomain == 'varmour'  # varmour custom sort
       # ref: https://stackoverflow.com/questions/33732208
       stories = stories.sort_by { |s| [ !s[:published] ? 0 : 1, s[:updated_at] ] }.reverse
-    end
-    case params[:type]
-    when 'gallery'
-    when 'carousel'
-    when 'tabbed_carousel'
     end
     render_to_string(
       partial: params[:type],
@@ -88,13 +73,35 @@ class WidgetsController < ApplicationController
       locals: {
         company: @company,
         widget: @company.widget,   # applies to tabbed carousel (tab style)
-        stories: stories,
+        stories: stories.first(16),
         title: 'Customer Stories',
+        background: params[:background],
+        tab_color: params[:tab_color],
+        text_color: params[:text_color],
         is_curator: false,
         is_widget: true,
         is_external: true
       }
     )
+  end
+
+  def plugin_stories (company, params)
+    if params[:stories].present?
+      # remove any that don't exist
+      stories = Story.find( params[:stories].delete_if { |story_id| !Story.exists?(story_id) } )
+                     .delete_if do |story|
+                        # remove unauthorized stories or stories not published
+                        story.company.id != company.id || !story.logo_published?
+                      end
+    elsif params[:category].present? || params[:product].present?
+      filter_params = get_filters_from_query_or_widget(company, params, true)
+      stories = company.filter_stories(filter_params)
+    else
+      stories = Story.find(company.public_stories)
+                     .sort_by { |story| company.public_stories.index(story.id) }
+                     .delete_if { |story| story.customer.logo_url.blank? }
+    end
+    stories
   end
 
   def custom_stylesheet_url (company, type)

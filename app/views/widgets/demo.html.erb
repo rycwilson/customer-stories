@@ -16,30 +16,30 @@
   <script src="<%= asset_path('widgets/demo.js') %>"></script>
   <%= favicon_link_tag 'favicon.ico' %>
 </head>
-<body class="<%= controller_name %> <%= action_name %>">
+<body class="<%= controller_name %> <%= action_name %> <%= @params[:type] %>">
 
-  <div class="nav-links">
-    <a href="javascript:;" data-plugin-type="gallery" class="<%= @type == 'gallery' ? 'active' : '' %>">Gallery</a>
-    <a href="javascript:;" data-plugin-type="carousel" class="<%= @type == 'carousel' ? 'active' : '' %>">Carousel</a>
-    <a href="javascript:;" data-plugin-type="tabbed_carousel" class="<%= @type == 'tabbed_carousel' ? 'active' : '' %>">Tabbed Carousel</a>
-  </div>
+<!--   <div class="nav-links">
+    <a href="javascript:;" data-plugin-type="gallery" class="<%#= @params[:type] == 'gallery' ? 'active' : '' %>">Gallery</a>
+    <a href="javascript:;" data-plugin-type="carousel" class="<%#= @params[:type] == 'carousel' ? 'active' : '' %>">Carousel</a>
+    <a href="javascript:;" data-plugin-type="tabbed_carousel" class="<%#= @params[:type] == 'tabbed_carousel' ? 'active' : '' %>">Tabbed Carousel</a>
+  </div> -->
 
   <!-- <p class="lead">Blah blah blah something about the plugin</p> -->
 
-  <% if @type == 'gallery' %>
+  <% if @params[:type] == 'gallery' %>
 
     <div id="cs-gallery"></div>
-    <script type="text/javascript" src="<%= root_url + 'widgets/gallery/cs.js' %>" data-category="" data-product=""></script>
+    <script src="<%= root_url + 'widgets/gallery/cs.js' %>" <%= paramsToDataAttrs(@params) %>></script>
 
-  <% elsif @type == 'carousel' %>
+  <% elsif @params[:type] == 'carousel' %>
 
     <div id="cs-carousel"></div>
-    <script type="text/javascript" src="<%= root_url + 'widgets/carousel/cs.js' %>" data-category="" data-product=""></script>
+    <script src="<%= root_url + 'widgets/carousel/cs.js' %>" <%= paramsToDataAttrs(@params) %>></script>
 
-  <% elsif @type == 'tabbed_carousel' %>
+  <% elsif @params[:type] == 'tabbed_carousel' %>
 
     <div id="cs-tabbed-carousel"></div>
-    <script type="text/javascript" src="<%= root_url + 'widgets/tabbed_carousel/cs.js' %>" data-category="" data-product=""></script>
+    <script src="<%= root_url + 'widgets/tabbed_carousel/cs.js' %>" <%= paramsToDataAttrs(@params) %>></script>
 
   <% end %>
 

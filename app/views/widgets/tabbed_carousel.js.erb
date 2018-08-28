@@ -1,26 +1,29 @@
 
-function cspInitTabbedCarousel ($, $container) {
+function cspInitTabbedCarousel ($, $container, delay) {
 
   if (getCookie('cs-tabbed-carousel-removed')) return false;
 
-  var widgetShowTimer, widgetHideTimer,
+  var isDemo = $('body').hasClass('demo'),
+      // widgetShowTimer, widgetHideTimer,
       attachListeners = function () {
         scrollListeners($container);
         $container
-          .on('click', '.cs-header', function (e, data) {
-            var auto = data && data.isAuto;
-            if ($(e.target).is('[class*="remove"]')) {
+          .on('click', '.cs-header [class*="remove"]', function (e, data) {
+            // var auto = data && data.isAuto;
+            // if ($(e.target).is('[class*="remove"]')) {
               $container.hide();
-              // set a cookie to keep the widget hidden for a day
-              var date = new Date();
-              setCookie('cs-tabbed-carousel-removed', '1', date.setDate(date.getDate() + 1), '/', window.location.hostname);
+              if (!isDemo) {
+                // set a cookie to keep the widget hidden for a day
+                var date = new Date();
+                setCookie('cs-tabbed-carousel-removed', '1', date.setDate(date.getDate() + 1), '/', window.location.hostname);
+              }
               return false;
-            }
-            if (!auto) {
-              // cancel the timers if user interacts with widget
-              if (widgetShowTimer) { clearTimeout(widgetShowTimer); }
-              if (widgetHideTimer) { clearTimeout(widgetHideTimer); }
-            }
+            // }
+            // if (!auto) {
+            //   // cancel the timers if user interacts with widget
+            //   if (widgetShowTimer) { clearTimeout(widgetShowTimer); }
+            //   if (widgetHideTimer) { clearTimeout(widgetHideTimer); }
+            // }
           });
       };
 
@@ -29,27 +32,29 @@ function cspInitTabbedCarousel ($, $container) {
   // initWidgetAuto();
 
   // the opacity animation is necessary for the transition to visible to work
-  $container.find('section')
-            .slideDrawer()
-            .css({ opacity: 0, visibility: "visible" })
-            .animate({ opacity: 1 }, 200)
-            .animate({ bottom: 0 }, 'fast');
+  setTimeout(function () {
+    $container.find('section')
+              .slideDrawer()
+              .css({ opacity: 0, visibility: "visible" })
+              .animate({ opacity: 1 }, 200)
+              .animate({ bottom: 0 }, 'fast');
+  }, isDemo ? 0 : delay * 1000);
 
-  function initWidgetAuto () {
-    if (<%= @company.widget.show %> && !getCookie('cs-tabbed-carousel-removed') ) {
-      widgetShowTimer = setTimeout(function () {
-        $container.find('header').trigger('click', { isAuto: true } );
-        if (<%= @company.widget.hide %>) {
-          widgetHideTimer = setTimeout(function () {
-            $container.find('header').trigger('click', { isAuto: true } );
-          }, <%= @company.widget.hide_delay %>);
-        }
-      }, <%= @company.widget.show_delay %>);
-      // widget is configured to auto-open once per widget.show_freq days ...
-      var date = new Date();
-      date.setDate(date.getDate() + <%= @company.widget.show_freq %>);
-    }
-  }
+  // function initWidgetAuto () {
+  //   if (<%= @company.widget.show %> && !getCookie('cs-tabbed-carousel-removed') ) {
+  //     widgetShowTimer = setTimeout(function () {
+  //       $container.find('header').trigger('click', { isAuto: true } );
+  //       if (<%= @company.widget.hide %>) {
+  //         widgetHideTimer = setTimeout(function () {
+  //           $container.find('header').trigger('click', { isAuto: true } );
+  //         }, <%= @company.widget.hide_delay %>);
+  //       }
+  //     }, <%= @company.widget.show_delay %>);
+  //     // widget is configured to auto-open once per widget.show_freq days ...
+  //     var date = new Date();
+  //     date.setDate(date.getDate() + <%= @company.widget.show_freq %>);
+  //   }
+  // }
 
   function setCookie (name, value, expires, path, domain, secure) {
     document.cookie = name + "=" + escape(value) +
@@ -129,7 +134,7 @@ function cspInitTabbedCarousel ($, $container) {
                 return false;
               }
             });
-            $carousel.animate({ scrollLeft: scrollTo }, 1000, function () {
+            $carousel.animate({ scrollLeft: scrollTo }, 400, function () {
               $carousel.on('scroll', paginationTrackScroll);
             });
           };
@@ -140,11 +145,11 @@ function cspInitTabbedCarousel ($, $container) {
                 $pageDots = $container.find('.cs-page-dot');
             $pageDots.off('click', paginationScroll);
             if (scrollPosition >= pageWidth) {
-              $carousel.animate({ scrollLeft: '-=' + pageWidth.toString() }, 1000,
+              $carousel.animate({ scrollLeft: '-=' + pageWidth.toString() }, 400,
                 function () { $pageDots.on('click', paginationScroll); });
             }
             else {
-              $carousel.animate({ scrollLeft: '-=' + scrollPosition.toString() }, 1000,
+              $carousel.animate({ scrollLeft: '-=' + scrollPosition.toString() }, 400,
                 function () { $pageDots.on('click', paginationScroll); });
             }
           };
@@ -156,10 +161,10 @@ function cspInitTabbedCarousel ($, $container) {
                 $pageDots = $container.find('.cs-page-dot');
             $pageDots.off('click', paginationScroll);
             if (scrollRemaining >= pageWidth) {
-              $carousel.animate({ scrollLeft: '+=' + pageWidth.toString() }, 1000,
+              $carousel.animate({ scrollLeft: '+=' + pageWidth.toString() }, 400,
                 function () { $pageDots.on('click', paginationScroll); });
             } else {
-              $carousel.animate({ scrollLeft: '+=' + scrollRemaining.toString() }, 1000,
+              $carousel.animate({ scrollLeft: '+=' + scrollRemaining.toString() }, 400,
                 function () { $pageDots.on('click', paginationScroll); });
             }
           };

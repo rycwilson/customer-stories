@@ -1,7 +1,7 @@
 
 <% if company.subdomain != 'varmour' %>
 
-<div class="cs-overlay-container">
+<div class="cs-overlay-container" "<%= background %>">
   <div class="cs-main">
 
     <div class="cs-grid cs-grid-carousel">
@@ -24,7 +24,7 @@
 
               <!-- <div class="cs-overlay-container"> -->
               <!-- the bootstrap styling starts to break down after 30 stories -->
-              <% stories.first(20).each do |story|  %>
+              <% stories.each do |story|  %>
 
                 <div class="col-xs-8 col-sm-5 col-md-3">
 
