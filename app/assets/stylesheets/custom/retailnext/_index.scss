@@ -1,10 +1,10 @@
 
 &.stories.index {
 
-  background-color: #f5f5f3;
+  background-color: $retailnext-background;
 
   .filters-container.visible-md-block {
-    background-color: #ebebeb;
+    background-color: $retailnext-foreground;
     form + .form-group {  // single filter
     }
     &.short {

@@ -10,50 +10,49 @@
     }
   }
 
+  &.cs-overlay-container {
+    article {
+      background-color: $retailnext-background;
+    }
+  }
+
   .testimonial, .cs-testimonial {
     &:after {
-      background-image: linear-gradient(to top, #f5f5f3 0%, #ffffff 100%);
+      background-image: linear-gradient(to top, $retailnext-background 0%, #ffffff 100%);
     }
     &.cs-testimonial {
       .customer-logo-quote.visible-xs-block {
         .customer-logo {
-          background-color: #f5f5f3;
+          background-color: $retailnext-background;
         }
       }
       .customer-logo-quote.hidden-xs {
         .customer-logo {
-          background-color: #f5f5f3;
+          background-color: $retailnext-background;
         }
       }
     }
   }
 
   .story-video-xs, .cs-story-video-xs, .social-buttons-xs, .cs-social-buttons-xs {
-    background-color: #f5f5f3;
+    background-color: $retailnext-background;
   }
 
   .story-content, .cs-story-content {
-    background-color: #f5f5f3;
+    background-color: $retailnext-background;
     font-weight: 300;
+    .related-stories ul {
+      background-color: $retailnext-background;
+    }
+    .story-contributors {
+      > .well:first-child, .cs-well:first-child {
+        background-image: linear-gradient(to bottom, #ffffff 72%, $retailnext-background 100%);
+      }
+    }
     &.story-content {
       h4 {
         font-family: $metropolis-regular;
       }
-    }
-    .related-stories ul {
-      background-color: #f5f5f3;
-    }
-    .story-contributors {
-      > .well:first-child, .cs-well:first-child {
-        background-image: linear-gradient(to bottom, #ffffff 72%, #f5f5f3 100%);
-      }
-    }
-  }
-
-  #more-stories-container {
-    font-family: $metropolis-regular;
-    header {
-      font-family: $metropolis-regular;
     }
   }
 

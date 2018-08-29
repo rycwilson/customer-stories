@@ -8,11 +8,11 @@
 #stories-gallery, .related-stories {
   li {
     .og-expander {
-      background: #ebebeb;
+      background: $retailnext-foreground;
     }
     &.loading {
       a.thumbnail {
-        background-color: #ebebeb;
+        background-color: $retailnext-foreground;
         img { opacity: 0; }
       }
     }
@@ -55,11 +55,11 @@
         // allow for 10px border; margin reduced my 10
         // width: 262px;
         // height: 190px;
-        // border: 10px solid #ebebeb;
+        // border: 10px solid $retailnext-foreground;
         border: 0;
         border-bottom: 2px solid #ccc;
         box-shadow: 0 0;
-        background-color: #ebebeb;
+        background-color: $retailnext-foreground;
         transition: background-color 100ms ease;
         .caption {
           span.customer-name {
@@ -93,14 +93,14 @@
         pointer-events: none;
       }
       &:after {
-        border-bottom-color: #ebebeb;
+        border-bottom-color: $retailnext-foreground;
       }
     }
     // NOTE: this screws with the story previews
     // &:hover { margin: 10px; }
     &.og-expanded {
       a {
-        background-color: #ebebeb;
+        background-color: $retailnext-foreground;
         transition: background-color 300ms ease;
         img {
           opacity: 0;
@@ -109,7 +109,7 @@
       }
       > a::after {
         bottom: -12px;
-        border-bottom-color: #ebebeb;
+        border-bottom-color: $retailnext-foreground;
         border-width: 10px;
         margin: 0 0 0 -10px;
       }
