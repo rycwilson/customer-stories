@@ -1,10 +1,11 @@
 
+@import '../variables';
+
 #cs-carousel, #cs-varmour-container {
-
+  // varmour was the original, so doesn't need to inherit from the standard carousel
   // @import '../../../views/widgets/carousel';
-
-  @import '../../fonts';
   @import 'carousel';
-
 }
 
+// override settings for demo as necessary
+@import 'demo';

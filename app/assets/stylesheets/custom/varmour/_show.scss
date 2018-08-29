@@ -18,16 +18,16 @@
       }
     }
     &:after {
-      background-image: linear-gradient(to top, $varmour-gray 0%, #ffffff 100%);  //f2f2f2
+      background-image: linear-gradient(to top, $varmour-background 0%, #ffffff 100%);  //f2f2f2
     }
   }
 
   .story-video-xs, .cs-story-video-xs, .social-buttons-xs, .cs-social-buttons-xs {
-    background-color: $varmour-gray;
+    background-color: $varmour-background;
   }
 
   .story-content, .cs-story-content {
-    background-color: $varmour-gray;
+    background-color: $varmour-background;
     font-family: $metropolis-regular;
     h4 {
       font-family: $metropolis-regular;

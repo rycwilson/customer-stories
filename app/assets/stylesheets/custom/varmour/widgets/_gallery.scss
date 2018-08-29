@@ -32,7 +32,7 @@ a.cs-thumbnail {
     span.click-action:after { text-decoration: none; }
   }
   &:hover, &:active {
-    background-color: #edf5f8;
+    background-color: $varmour-story-hover;
     transition: background-color 0.5s;
     border-color: #999;  // override bootstrap .thumbnail
     box-shadow: 0 0;
@@ -43,8 +43,10 @@ a.cs-thumbnail {
     img {
     }
   }
-  &.loading {
-    background-color: #edf5f8;
+  &.cs-loading {
+    border: 1px solid #999;
+    box-shadow: 0 0;
+    background-color: $varmour-story-hover;
   }
 }
 

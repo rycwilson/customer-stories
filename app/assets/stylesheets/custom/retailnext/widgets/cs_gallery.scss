@@ -1,16 +1,11 @@
 
+@import '../variables';
+
 #cs-gallery {
-
   @import '../../../views/widgets/gallery';
-
-  // TOFIX
-  // custom fonts accessed via this precompiled file not working, apparently not being precompiled themselves
-  // custom fonts accessed natively in csp working fine though (??)
-  // @import '../../fonts';
-
-  @import '../variables';
   @import 'gallery';
-
   @import '../show';
-
 }
+
+// override settings for demo as necessary
+@import 'demo';

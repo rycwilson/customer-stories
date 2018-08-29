@@ -1,10 +1,9 @@
 
-
 body.varmour:not(.companies):not(.profile):not(.edit) {
 
-  $varmour-gray: #f5f6f7;
   font-family: $metropolis-regular;
 
+  @import 'variables';
   // @import 'company_header';
   @import 'stories_header';
   @import 'gallery';

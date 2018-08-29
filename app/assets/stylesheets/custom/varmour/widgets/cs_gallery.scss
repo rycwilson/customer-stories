@@ -1,9 +1,11 @@
 
+@import '../variables';
+
 #cs-gallery {
-
   @import '../../../views/widgets/gallery';
-
   // @import '../../fonts';
   @import 'gallery';
-
 }
+
+// override settings for demo as necessary
+@import 'demo';

@@ -4,7 +4,7 @@
   li {
     &.loading {
       a {
-        background-color: #edf5f8;
+        background-color: $varmour-story-hover;
       }
     }
     a.thumbnail {
@@ -40,7 +40,7 @@
         .click-action:after { text-decoration: none; }
       }
       &:hover, &:active {
-        background-color: #edf5f8;
+        background-color: $varmour-story-hover;
         transition: background-color 0.5s;
         border-color: #999;  // override bootstrap .thumbnail
         box-shadow: 0 0;
