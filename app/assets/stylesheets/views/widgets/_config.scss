@@ -230,9 +230,12 @@
       .form-group.code {
         margin-bottom: 10px;
         .btn {
-          width: 90px;
+          width: 100px;
           & + .btn {
             margin-left: 5px;
+          }
+          &.copy i:last-of-type {
+            display: none;
           }
         }
       }

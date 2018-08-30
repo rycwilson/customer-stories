@@ -7,7 +7,30 @@ function widgetConfigListeners () {
           stories.push(parseInt($(this).val(), 10));
         });
         return JSON.stringify(stories);
+      },
+      // following two functions copied over from companies/edit/profile.js
+      hexToRgb = function (hex) {
+        // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+        var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+        hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+          return r + r + g + g + b + b;
+        });
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16)
+        } : null;
+      },
+      // ref: https://stackoverflow.com/questions/11867545/
+      colorContrast = function (bgRgb) {
+        // http://www.w3.org/TR/AERT#color-contrast
+        var o = Math.round(((parseInt(bgRgb.r) * 299) +
+                            (parseInt(bgRgb.g) * 587) +
+                            (parseInt(bgRgb.b) * 114)) / 1000);
+        return (o > 125) ? 'dark' : 'light';
       };
+
 
   $(document)
 
@@ -67,6 +90,11 @@ function widgetConfigListeners () {
         $('.script-tag textarea').text()
           .replace(/data-tab-color="#\w+"/, 'data-tab-color="' + $(this).val() + '"')
       );
+      if (colorContrast(hexToRgb($(this).val())) === 'light') {
+        $('[name="tabbed_carousel[text_color]"]').minicolors('value', { color: '#ffffff' });
+      } else {
+        $('[name="tabbed_carousel[text_color]"]').minicolors('value', { color: '#333333' });
+      }
     })
 
     .on('change', '[name="tabbed_carousel[text_color]"]', function () {
@@ -211,9 +239,9 @@ function widgetConfigListeners () {
       $temp.text(htmlText).select();
       document.execCommand("copy");
       $temp.remove();
-      $('button.copy span').toggle();
+      $('button.copy span, button.copy i').toggle();
       setTimeout(function () {
-        $('button.copy span').toggle();
+        $('button.copy span, button.copy i').toggle();
       }, 1500);
     });
 
