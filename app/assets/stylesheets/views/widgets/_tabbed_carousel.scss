@@ -5,7 +5,7 @@
 
 .cs-section {
   position: fixed;
-  bottom: -48px;   // matches height .cs-header-row
+  bottom: -46px;   // matches height .cs-header-row
   overflow: hidden;
   z-index: 1000;
   width: 100%;
@@ -30,7 +30,7 @@
   }
 
   .cs-header-row {
-    height: 48px;   //  32 + 8 + 8
+    height: 46px;   //  30 + 8 + 8
     > [class*="col-"] {
       height: 100%;
     }
@@ -55,8 +55,8 @@
     cursor: pointer;
     background: #000000;
     color: #ffffff;
-    line-height: 32px;
-    font-size: 18px;
+    line-height: 30px;
+    font-size: 16px;
     padding: 0;
     box-shadow: 0 2px 8px 0px rgba(0, 0, 0, 0.2);
     -moz-border-radius-topleft: 5px 5px;
