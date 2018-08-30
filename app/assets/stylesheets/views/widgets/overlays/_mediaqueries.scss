@@ -7,6 +7,11 @@ $viewport_l:  $item_width * 4 + $sidebar_width; /* 4 columns */
 $viewport_xl:   $item_width * 5 + $sidebar_width; /* 5 columns */
 $viewport_xxl:  $item_width * 6 + $sidebar_width; /* 6 columns */
 
+@media screen and (max-width: 767px) {
+  .cs-content.content--show {
+    background-color: $color_primary;
+  }
+}
 @media screen and (min-width: 768px) {
 }
 @media screen and (min-width: 992px) {

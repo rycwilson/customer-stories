@@ -27,6 +27,7 @@
   &.cs-overlay-container {
     background-color: transparent;
     article {
+      min-height: 100vh;
       background-color: $csp-gray;
       .cs-story-header {
         height: 55px;
@@ -401,10 +402,10 @@
       position: relative;
       margin: 4% 3% 0 3%;
       box-shadow: 0 0 5px 1px rgba(0,0,0,.25);
-      article {
-      min-height: 100vh;
-        background-color: $csp-gray;
-      }
+      // article {
+      //   min-height: 100vh;
+      //   background-color: $csp-gray;
+      // }
       .cs-testimonial, .cs-story-content {
         // compensate for the margin added to story wrapper
         > .cs-container {

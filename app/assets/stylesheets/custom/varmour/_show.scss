@@ -39,6 +39,11 @@
   }
 
   @media only screen and (max-width: 767px) {
+    &.cs-overlay-container {
+      .cs-content.content--show {
+        background: $varmour-background;
+      }
+    }
     .testimonial, .cs-testimonial {
     }
     .story-video-xs, .cs-story-video-xs, .social-buttons-xs, .cs-social-buttons-xs {

@@ -57,6 +57,11 @@
   }
 
   @media only screen and (max-width: 767px) {
+    &.cs-overlay-container {
+      .cs-content.content--show {
+        background: $retailnext-background;
+      }
+    }
     .testimonial, .cs-testimonial {
       &.after {
         content: none;

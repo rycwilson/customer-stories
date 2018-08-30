@@ -49,24 +49,16 @@
   z-index: 100;
   top: 0;
   left: 0;
-
-
-
   // background: $color_secondary;
   -webkit-transform-origin: 0 0;
   transform-origin: 0 0;
-
   @media only screen and (max-width: 767px) {
     background: #f2f2f2;
   }
-
 }
 
 .placeholder.placeholder--trans-in {
   background-color: rgba(0, 0, 0, 0.6);
-
-  // background: $color_secondary;
-
   -webkit-transition: -webkit-transform $anim-time;
   transition: transform $anim-time;
   -webkit-transition-timing-function: cubic-bezier(0.165,0.84,0.44,1);
@@ -75,7 +67,6 @@
 
 .placeholder.placeholder--trans-out {
   background-color: $color_secondary;
-
   -webkit-transition: -webkit-transform $anim-time;
   transition: transform $anim-time;
 }
