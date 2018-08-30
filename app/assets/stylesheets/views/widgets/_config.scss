@@ -104,7 +104,7 @@
       }
       .settings-container {
         // collapse is jumpy when padding in collapsed element or margins in surrounding elements
-        padding: 5px 0 20px 0;
+        padding: 10px 0 20px 0;
         .form-group.settings {
           margin-bottom: 0;  // margin makes the collapse jumpy
           .carousel .row {
