@@ -10,9 +10,4 @@ function cspInitGallery ($, $container) {
     // .css('padding', '0 calc(' + scrollBarWidth.toString() + 'px - (100vw - 100%))')
     .css('visibility', 'visible');
 
-  // avoid double-tap behavior
-  $container.on('click touchend', '.cs-close-xs', function () {
-    $('.content__item--show .cs-close').first().trigger('click');  // there are multiple close buttons - don't trigger them all
-  });
-
 }

@@ -45,6 +45,11 @@ function cspInitOverlays ($, $container) {
               }
               initLinkedIn();
 
+              // avoid double-tap behavior
+              $container.on('click touchend', '.cs-close-xs', function () {
+                $('.content__item--show .cs-close').first().trigger('click');  // there are multiple close buttons - don't trigger them all
+              });
+
               // the grid_overlays.js listener is vanilla js, won't pick up on $storyCard.trigger('click')
               $storyCard[0].click();
             });
