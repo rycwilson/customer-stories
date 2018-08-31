@@ -11,24 +11,11 @@
   }
 
   .cs-story-header {
-    margin-bottom: 40px;
+    margin: 0;
   }
 
   .cs-customer-logo {
-    display: flex;
-    margin-bottom: 30px;
-    background-color: #f5f5f3;  // this needs to be set by company custom css
-    .cs-logo-container {
-      max-width: 50%;
-      img {
-        margin: 0 auto;
-        max-height: 65px;
-        mix-blend-mode: multiply;
-      }
-    }
-    .cs-customer-name {
-      color: #888;
-    }
+    @include customer-logo
   }
 
   .cs-story-summary {
@@ -86,15 +73,7 @@
   .preview-wrapper, .cs-preview-wrapper {
     .container, .cs-container {
       max-width: $max-xs-width;
-      .cs-customer-logo {
-        margin: 25px 0;
-        .cs-customer-name {
-          margin-top: 15px;
-          span {
-            font-size: 16px !important;
-          }
-        }
-      }
+
       .cs-story-summary {
         margin-bottom: 30px;
       }
@@ -115,12 +94,6 @@
       max-width: 100%;
       .cs-customer-logo {
         justify-content: center;
-        .cs-customer-name {
-          margin: 10px 0;
-          span {
-            font-size: 14px !important;
-          }
-        }
       }
       .cs-story-summary {
         padding: 0 15px;
@@ -161,38 +134,33 @@
   }
 }
 
-@media only screen and (min-width: 768pxpx) {
-  .cs-customer-name {
-    margin: 10px 0;
-    span {
-      font-size: 14px !important;
-    }
-  }
-}
-
 @media only screen and (min-width: 992px) {
 }
 
 @media only screen and (min-width: 1200px) {
   .preview-wrapper, .cs-preview-wrapper {
-    .cs-customer-name {
-      span {
-        font-size: 18px !important;
-      }
-    }
-    .cs-story-summary {
-      span, p, li, a {
-        font-size: 16px !important;
-      }
-    }
-    blockquote {
-      > p {
-        &:before {
-          top: -18px;
-          left: -28px;
-          font-size: 48px !important;
+    .cs-container {
+      .cs-customer-logo {
+        .cs-customer-name {
+          span {
+            font-size: 18px !important;
+          }
         }
-        font-size: 16px !important;
+      }
+      .cs-story-summary {
+        span, p, li, a {
+          font-size: 16px !important;
+        }
+      }
+      blockquote {
+        > p {
+          &:before {
+            top: -18px;
+            left: -28px;
+            font-size: 48px !important;
+          }
+          font-size: 16px !important;
+        }
       }
     }
   }

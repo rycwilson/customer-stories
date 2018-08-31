@@ -1,7 +1,6 @@
 
 .stories.show, .cs-overlay-container {
   $max-xs-width: 500px;
-  $csp-gray: #f2f2f2;
 
   @import '../shared/video';
   @import 'social_share_buttons';
@@ -28,7 +27,7 @@
     background-color: transparent;
     article {
       min-height: 100vh;
-      background-color: $csp-gray;
+      background-color: $csp-bg-color;
       .cs-story-header {
         height: 55px;
         margin-bottom: 50px;
@@ -141,7 +140,7 @@
       // bottom: -90px;  // mirrors margin-bottom
       z-index: -1;
       width: 100%;
-      background-image: linear-gradient(to bottom, #ffffff 0%, $csp-gray 100%);
+      background-image: linear-gradient(to bottom, #ffffff 0%, $csp-bg-color 100%);
       background-repeat: repeat-x;
       // filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2f2f2', endColorstr='#ffffffff', GradientType=0);
     }
@@ -154,12 +153,12 @@
       }
       .customer-logo-quote.visible-xs-block {
         .customer-logo {
-          background-color: $csp-gray;
+          background-color: $csp-bg-color;
         }
       }
       .customer-logo-quote.hidden-xs {
         .customer-logo {
-          background-color: $csp-gray;
+          background-color: $csp-bg-color;
           img {
             max-height: 65px;
             max-width: 60%;
@@ -173,7 +172,7 @@
   }
 
   .story-content, .cs-story-content {
-    background-color: $csp-gray;
+    background-color: $csp-bg-color;
     padding: 15px 0 26px 0;
     &.cs-story-content {
       span, li, p, a, h4 {
@@ -278,7 +277,7 @@
       > .well:first-child, .cs-well:first-child {
         margin-bottom: 0;
         position:relative;
-        background-image: linear-gradient(to bottom, #ffffff 72%, $csp-gray 100%);  //f2f2f2
+        background-image: linear-gradient(to bottom, #ffffff 72%, $csp-bg-color 100%);  //f2f2f2
         // background-repeat: repeat-x;
         border-top: 1px solid #e3e3e3;
         border-left: 0;
@@ -313,7 +312,7 @@
   }
 
   .story-video-xs, .cs-story-video-xs {
-    background-color: $csp-gray;
+    background-color: $csp-bg-color;
     padding: 25px 0;
     position: relative;
   }
@@ -404,7 +403,7 @@
       box-shadow: 0 0 5px 1px rgba(0,0,0,.25);
       // article {
       //   min-height: 100vh;
-      //   background-color: $csp-gray;
+      //   background-color: $csp-bg-color;
       // }
       .cs-testimonial, .cs-story-content {
         // compensate for the margin added to story wrapper

@@ -12,41 +12,41 @@
 
   &.cs-overlay-container {
     article {
-      background-color: $retailnext-background;
+      background-color: $bg-color;
     }
   }
 
   .testimonial, .cs-testimonial {
     &:after {
-      background-image: linear-gradient(to top, $retailnext-background 0%, #ffffff 100%);
+      background-image: linear-gradient(to top, $bg-color 0%, #ffffff 100%);
     }
     &.cs-testimonial {
       .customer-logo-quote.visible-xs-block {
         .customer-logo {
-          background-color: $retailnext-background;
+          background-color: $bg-color;
         }
       }
       .customer-logo-quote.hidden-xs {
         .customer-logo {
-          background-color: $retailnext-background;
+          background-color: $bg-color;
         }
       }
     }
   }
 
   .story-video-xs, .cs-story-video-xs, .social-buttons-xs, .cs-social-buttons-xs {
-    background-color: $retailnext-background;
+    background-color: $bg-color;
   }
 
   .story-content, .cs-story-content {
-    background-color: $retailnext-background;
+    background-color: $bg-color;
     font-weight: 300;
     .related-stories ul {
-      background-color: $retailnext-background;
+      background-color: $bg-color;
     }
     .story-contributors {
       > .well:first-child, .cs-well:first-child {
-        background-image: linear-gradient(to bottom, #ffffff 72%, $retailnext-background 100%);
+        background-image: linear-gradient(to bottom, #ffffff 72%, $bg-color 100%);
       }
     }
     &.story-content {
@@ -59,7 +59,7 @@
   @media only screen and (max-width: 767px) {
     &.cs-overlay-container {
       .cs-content.content--show {
-        background: $retailnext-background;
+        background: $bg-color;
       }
     }
     .testimonial, .cs-testimonial {

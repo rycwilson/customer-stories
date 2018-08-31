@@ -8,7 +8,7 @@ body.retailnext:not(.companies):not(.profile):not(.edit) {
   @import 'index';
   @import 'show';
 
-  font-family: $retailnext-body-font;
+  font-family: $body-font;
 
   @media only screen and (max-width: 767px) {
     #stories-gallery, #curate-gallery {

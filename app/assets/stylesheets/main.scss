@@ -1,7 +1,4 @@
 
-$company-header-height: 65px;
-$stories-header-height: 40px;
-
 /* bootstrap-sass */
 $icon-font-path: "bootstrap-sass/assets/fonts/bootstrap/";
 @import "bootstrap-sass/assets/stylesheets/bootstrap-sprockets";
@@ -12,6 +9,7 @@ $icon-font-path: "bootstrap-sass/assets/fonts/bootstrap/";
 @import 'base/mixins';
 @import 'base/normalize';
 @import 'base/globals';
+@import 'base/misc';
 
 @import 'animate.css/animate';
 @import 'bootstrap-jasny/dist/css/jasny-bootstrap';
