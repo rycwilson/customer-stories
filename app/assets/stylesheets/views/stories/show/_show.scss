@@ -398,7 +398,7 @@
 
   @media only screen and (min-width: 768px) {
     // add a gutter to overlays
-    .cs-story-wrapper {
+    .cs-story-wrapper, .cs-preview-wrapper {
       position: relative;
       margin: 4% 3% 0 3%;
       box-shadow: 0 0 5px 1px rgba(0,0,0,.25);

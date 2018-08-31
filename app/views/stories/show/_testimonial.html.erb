@@ -5,36 +5,6 @@
 
     <div class="col-xs-12 <%= include_video ? 'col-sm-6 col-md-7' : 'no-video' %>">
 
-      <div class="customer-logo-quote hidden-xs <%= is_widget ? 'cs-row' : 'row' %>">
-
-        <div class="text-center <%= include_video ? 'col-sm-12' : (long_customer_name ? 'col-sm-4' : 'col-sm-4 col-lg-3') %>">
-          <div class="customer-logo">
-            <%= image_tag (story.customer.logo_url || LOGO_PLACEHOLDER_URL), class: 'img-responsive' %>
-          </div>
-          <div class="customer-name">
-            <span><%= story.customer.name %></span>
-          </div>
-        </div>
-
-        <div class="<%= is_widget ? 'cs-customer-quote' : 'customer-quote' %> <%= include_video ? 'col-sm-12' : (long_customer_name ? 'col-sm-8' : 'col-sm-8 col-lg-8') %>">
-
-          <blockquote>
-            <p><%= story.quote %></p>
-            <div class="<%= story.quote_attr_name.blank? ? 'hidden' : '' %>">
-              <cite class="text-right">
-                <p class="cite-name"><%= story.quote_attr_name %></p>
-                <p class="cite-title"><%= story.quote_attr_title %></p>
-              </cite>
-            </div>
-          </blockquote>
-
-        </div>
-
-        <!-- filler -->
-        <div class="<%= include_video ? 'hidden' : 'col-lg-1' %>"></div>
-
-      </div>
-
       <div class="customer-logo-quote visible-xs-block">
 
         <div class="customer-logo text-center">
@@ -59,6 +29,37 @@
         </div>
 
       </div>
+
+      <div class="customer-logo-quote hidden-xs <%= is_widget ? 'cs-row' : 'row' %>">
+
+        <div class="text-center <%= include_video ? 'col-sm-12' : (long_customer_name ? 'col-sm-4' : 'col-sm-4 col-lg-3') %>">
+          <div class="customer-logo">
+            <%= image_tag (story.customer.logo_url || LOGO_PLACEHOLDER_URL), class: 'img-responsive' %>
+            <div class="customer-name">
+              <span><%= story.customer.name %></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="<%= is_widget ? 'cs-customer-quote' : 'customer-quote' %> <%= include_video ? 'col-sm-12' : (long_customer_name ? 'col-sm-8' : 'col-sm-8 col-lg-8') %>">
+
+          <blockquote>
+            <p><%= story.quote %></p>
+            <div class="<%= story.quote_attr_name.blank? ? 'hidden' : '' %>">
+              <cite class="text-right">
+                <p class="cite-name"><%= story.quote_attr_name %></p>
+                <p class="cite-title"><%= story.quote_attr_title %></p>
+              </cite>
+            </div>
+          </blockquote>
+
+        </div>
+
+        <!-- filler -->
+        <div class="<%= include_video ? 'hidden' : 'col-lg-1' %>"></div>
+
+      </div>
+
     </div>
 
     <div class="<%= is_widget ? 'cs-story-video' : 'story-video' %> <%= include_video ? 'hidden-xs col-sm-6 col-md-5' : 'hidden' %>">

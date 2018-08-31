@@ -1,67 +1,97 @@
 
-<div class="cs-container cs-story-preview">
+<div class="<%= is_widget ? 'cs-preview-wrapper' : 'preview-wrapper' %>">
 
-  <div class="cs-row">
-    <div class="col-sm-12">
+  <article>
 
-      <div class="cs-customer-logo text-center">
-        <%= image_tag (story.customer.logo_url || LOGO_PLACEHOLDER_URL)  %>
-      </div>
-    <!--   <div class="customer-name">
-        <span><%#= story.customer.name %></span>
-      </div> -->
+  <% if is_widget %>
+
+    <div class="cs-story-header hidden-xs">
+
+      <button type="button" class="cs-close">
+        <i class="fa fa-fw fa-arrow-left-thin fa-2x"></i>
+      </button>
+      <button type="button" class="cs-close">
+        <i class="fa fa-fw fa-times-thin fa-2x"></i>
+      </button>
 
     </div>
-  </div>
 
-  <div class="hidden-xs">
-    <div class="cs-row">
+  <% end %>
 
-      <div class="col-sm-6 cs-story-summary">
+    <div class="<%= is_widget ? 'cs-container' : 'container' %>">
 
-        <p><%= story.summary.html_safe %></p>
+      <div class="<%= is_widget ? 'cs-row' : 'row' %>">
+        <div class="col-xs-12">
 
-      </div>
-
-      <div class="col-sm-6 cs-customer-quote">
-
-        <blockquote>
-          <p><%= story.quote %></p>
-          <div class="<%= story.quote_attr_name.blank? ? 'hidden' : '' %>">
-            <cite class="text-right">
-              <p class="cite-name"><%= story.quote_attr_name %></p>
-              <p class="cite-title"><%= story.quote_attr_title %></p>
-            </cite>
+          <div class="cs-customer-logo">
+            <div class="cs-logo-container text-center">
+              <%= image_tag(story.customer.logo_url || LOGO_PLACEHOLDER_URL, class: 'img-responsive') %>
+              <div class="cs-customer-name">
+                <span><%= story.customer.name %></span>
+              </div>
+            </div>
           </div>
-        </blockquote>
+
+        </div>
+      </div>
+
+      <div class="visible-xs-block">
+        <div class="<%= is_widget ? 'cs-row' : 'row' %>">
+          <div class="col-xs-12">
+
+            <section class="cs-customer-quote">
+
+              <blockquote>
+                <p><%= story.quote %></p>
+                <div class="<%= story.quote_attr_name.blank? ? 'hidden' : '' %>">
+                  <cite class="text-right">
+                    <p class="cite-name"><%= story.quote_attr_name %></p>
+                    <p class="cite-title"><%= story.quote_attr_title %></p>
+                  </cite>
+                </div>
+              </blockquote>
+
+            </section>
+
+            <section class="cs-story-summary">
+
+              <p><%= story.summary.html_safe %></p>
+
+            </section>
+
+          </div>
+        </div>
 
       </div>
 
-    </div>
-  </div>
+      <div class="hidden-xs">
+        <div class="<%= is_widget ? 'cs-row' : 'row' %>">
 
-  <div class="visible-xs-block">
+          <section class="col-sm-6 cs-story-summary">
 
-    <div class="cs-customer-quote">
+            <p><%= story.summary.html_safe %></p>
 
-      <blockquote>
-        <p><%= story.quote %></p>
-        <div class="<%= story.quote_attr_name.blank? ? 'hidden' : '' %>">
-          <cite class="text-right">
-            <p class="cite-name"><%= story.quote_attr_name %></p>
-            <p class="cite-title"><%= story.quote_attr_title %></p>
-          </cite>
+          </section>
+
+          <div class="col-sm-6 cs-customer-quote">
+
+            <blockquote>
+              <p><%= story.quote %></p>
+              <div class="<%= story.quote_attr_name.blank? ? 'hidden' : '' %>">
+                <cite class="text-right">
+                  <p class="cite-name"><%= story.quote_attr_name %></p>
+                  <p class="cite-title"><%= story.quote_attr_title %></p>
+                </cite>
+              </div>
+            </blockquote>
+
+          </div>
+
         </div>
-      </blockquote>
+      </div>
 
     </div>
 
-    <div class="cs-story-summary">
-
-      <p><%= story.summary.html_safe %></p>
-
-    </div>
-
-  </div>
+  </article>
 
 </div>
