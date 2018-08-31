@@ -149,6 +149,7 @@
       // dummy.style.WebkitTransform = 'translate3d(-5px, ' + (scrollY() - 5) + 'px, 0px)';
       // dummy.style.transform = 'translate3d(-5px, ' + (scrollY() - 5) + 'px, 0px)';
       // csp modified...
+      // console.log($('.cs-grid').offset().top - scrollY())
       dummy.style.WebkitTransform = 'translate3d(-5px, ' + (- 5 - ($('.cs-grid').offset().top - scrollY())) + 'px, 0px)';
       dummy.style.transform = 'translate3d(-5px, ' + (- 5 - ($('.cs-grid').offset().top - scrollY())) + 'px, 0px)';
       // disallow scroll
