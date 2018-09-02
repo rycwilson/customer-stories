@@ -2,31 +2,64 @@
 $company-header-height: 65px;
 $stories-header-height: 40px;
 
-$csp-bg-color: #f2f2f2;
-$csp-fg-color: #efefef;
+$csp-bg-gray: #f2f2f2;
+$csp-fg-gray: #efefef;
 
-@mixin customer-logo {
+@mixin bs-xs {
+  @media screen and (max-width: 767px) {
+    @content;
+  }
+}
+
+@mixin bs-sm {
+  @media screen and (min-width: 768px) {
+    @content;
+  }
+}
+
+@mixin bs-md {
+  @media screen and (min-width: 992px) {
+    @content;
+  }
+}
+
+@mixin bs-lg {
+  @media screen and (min-width: 1200px) {
+    @content;
+  }
+}
+
+@mixin customer-logo ($bg-color) {
   display: flex;
   margin: 30px 0;
-
-  // need the background color for the mix-blend-mode to work correctly
-  background-color: $csp-bg-color;
-  @if variable-exists(bg-color) {
-    background-color: $bg-color;
-  }
+  background-color: $bg-color;  // need this for the mix-blend-mode to work correctly
   > div {
-    max-width: 50%;
+    max-width: 50%;  // this can be wider for the quote-logo horizontal layout
     img {
       margin: 0 auto;
       max-height: 65px;
       mix-blend-mode: multiply;
     }
   }
-  .cs-customer-name {
+  .customer-name, .cs-customer-name {
     color: #888;
     margin-top: 20px;
     span {
       font-size: 16px !important;
     }
   }
+  @include bs-sm {
+    justify-content: center;
+  }
+  @include bs-lg {
+    .customer-name, .cs-customer-name {
+      margin-top: 25px;
+      span {
+        font-size: 18px !important;
+      }
+    }
+  }
+
 }
+
+

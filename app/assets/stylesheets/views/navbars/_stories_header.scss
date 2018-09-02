@@ -147,6 +147,7 @@
 
 @media only screen and (max-width: 767px) {
   #stories-header {
+    margin-bottom: 0;
     .navbar-container {
       .row {
         .navbar-header {
@@ -160,7 +161,7 @@
       margin-bottom: 30px;
     }
     &.show {
-      margin-bottom: 30px;
+      // margin-bottom: 30px;
     }
   }
 }

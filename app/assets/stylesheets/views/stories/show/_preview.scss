@@ -15,7 +15,7 @@
   }
 
   .cs-customer-logo {
-    @include customer-logo
+    @include customer-logo(if(variable-exists(bg-color), $bg-color, $csp-bg-gray))
   }
 
   .cs-story-summary {

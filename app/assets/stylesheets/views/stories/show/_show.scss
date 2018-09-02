@@ -1,22 +1,20 @@
 
 .stories.show, .cs-overlay-container {
+  text-align: left;   // override weebly
   $max-xs-width: 500px;
 
   @import '../shared/video';
   @import 'social_share_buttons';
+  @import 'testimonial';
   @import 'blockquote';
-  &.stories.show {
-    @import '../shared/cookie_consent';
-  }
   &.cs-overlay-container {
-    @import 'show_preview';
+    @import 'preview';
   }
 
   // @import '../shared/linkedin_widget';  // not using these presently
 
-  text-align: left;   // override weebly
-
   &.stories.show {
+    @import '../shared/cookie_consent';
     background-color: #fff;
     #cs-tabbed-carousel {
       @import '../../widgets/tabbed_carousel';
@@ -27,7 +25,7 @@
     background-color: transparent;
     article {
       min-height: 100vh;
-      background-color: $csp-bg-color;
+      background-color: $csp-bg-gray;
       .cs-story-header {
         height: 55px;
         margin-bottom: 50px;
@@ -74,105 +72,8 @@
     background-color: #fff;
   }
 
-  .testimonial, .cs-testimonial {
-    position: relative;
-    color: #888;
-    > .container > .row, > .cs-container > .cs-row {
-      display: flex;
-      align-items: center;
-    }
-    .customer-logo-quote.visible-xs-block {
-
-      .customer-logo {
-        display: inline-block;
-        max-width: 50%;
-        margin-bottom: 25px;
-        img {
-          // display: inline-block;
-          max-height: 65px;
-          margin: 0 auto;
-          mix-blend-mode: multiply;
-        }
-        .customer-name {
-          margin-top: 15px;
-          span {
-            font-size: 16px !important;
-          }
-        }
-      }
-
-    }
-    .customer-logo-quote.hidden-xs {
-      .customer-logo {
-        img {
-          margin: 0 auto;
-          max-height: 65px;
-          max-width: 60%;
-          mix-blend-mode: multiply;
-        }
-      }
-      .customer-name {
-        margin: 20px 0;
-      }
-    }
-    .story-video.hidden-xs, .cs-story-video.hidden-xs {
-      margin: 0;
-    }
-    &.no-video {
-      margin-bottom: 35px;
-      .customer-logo-quote.hidden-xs {
-        display: flex;
-        align-items: center;
-        .customer-logo {
-          img {
-            margin: 0 auto 25px auto;
-          }
-        }
-        .customer-name {
-          margin: 0;
-        }
-      }
-    }
-    &:after {
-      content: '';
-      position: absolute;
-      height: 90px;   // mirrors margin-bottom
-      // bottom: -90px;  // mirrors margin-bottom
-      z-index: -1;
-      width: 100%;
-      background-image: linear-gradient(to bottom, #ffffff 0%, $csp-bg-color 100%);
-      background-repeat: repeat-x;
-      // filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2f2f2', endColorstr='#ffffffff', GradientType=0);
-    }
-    &.cs-testimonial {
-      p, span {
-        font-family: inherit;
-      }
-      &:after {
-        content: none;
-      }
-      .customer-logo-quote.visible-xs-block {
-        .customer-logo {
-          background-color: $csp-bg-color;
-        }
-      }
-      .customer-logo-quote.hidden-xs {
-        .customer-logo {
-          background-color: $csp-bg-color;
-          img {
-            max-height: 65px;
-            max-width: 60%;
-          }
-        }
-        .customer-name {
-          color: #777 !important;
-        }
-      }
-    }
-  }
-
   .story-content, .cs-story-content {
-    background-color: $csp-bg-color;
+    background-color: $csp-bg-gray;
     padding: 15px 0 26px 0;
     &.cs-story-content {
       span, li, p, a, h4 {
@@ -277,7 +178,8 @@
       > .well:first-child, .cs-well:first-child {
         margin-bottom: 0;
         position:relative;
-        background-image: linear-gradient(to bottom, #ffffff 72%, $csp-bg-color 100%);  //f2f2f2
+        background-image: linear-gradient(to bottom, #ffffff 72%, $csp-bg-gray
+  100%);  //f2f2f2
         // background-repeat: repeat-x;
         border-top: 1px solid #e3e3e3;
         border-left: 0;
@@ -312,7 +214,7 @@
   }
 
   .story-video-xs, .cs-story-video-xs {
-    background-color: $csp-bg-color;
+    background-color: $csp-bg-gray;
     padding: 25px 0;
     position: relative;
   }
@@ -403,7 +305,7 @@
       box-shadow: 0 0 5px 1px rgba(0,0,0,.25);
       // article {
       //   min-height: 100vh;
-      //   background-color: $csp-bg-color;
+      //   background-color: $csp-bg-gray;
       // }
       .cs-testimonial, .cs-story-content {
         // compensate for the margin added to story wrapper
@@ -425,11 +327,11 @@
       }
       .customer-logo-quote.hidden-xs {
         .customer-logo {
-        }
-        .customer-name {
-          margin: 10px 0;
-          span {
-            font-size: 14px !important;
+          margin-bottom: 20px;
+          .customer-name {
+            span {
+              font-size: 14px !important;
+            }
           }
         }
       }
@@ -437,6 +339,7 @@
         margin-bottom: 90px;
         .customer-logo-quote.hidden-xs {
           .customer-logo {
+            margin-bottom: 0;
           }
           .customer-name span {
             font-size: 16px !important;
@@ -474,7 +377,6 @@
         .customer-logo {
         }
         .customer-name {
-          margin: 15px 0;
           span {
             font-size: 16px !important;
           }
@@ -503,22 +405,27 @@
     }
     .testimonial, .cs-testimonial {
       .customer-logo-quote.hidden-xs {
-        .customer-name {
-          span {
-            font-size: 18px !important;
+        .customer-logo {
+          margin-bottom: 25px;
+          .customer-name {
+            margin-top: 25px;
+            span {
+              font-size: 18px !important;
+            }
           }
         }
       }
       &.no-video {
         .customer-logo-quote.hidden-xs {
-          .customer-name {
-            span {
-              font-size: 18px !important;
-            }
-          }
           .customer-logo {
             img {
               max-width: 70%;
+            }
+            .customer-name {
+              margin-top: 25px;
+              span {
+                font-size: 18px !important;
+              }
             }
           }
         }
