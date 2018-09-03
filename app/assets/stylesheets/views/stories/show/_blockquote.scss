@@ -45,14 +45,14 @@
       &.customer-quote {
         blockquote {
           > p {
-            color: #888 !important;
+            // color: #888 !important;
             &:before {
-              color: #bbb !important;
+              color: #999 !important;
             }
           }
           cite {
             p {
-              color: #888 !important;
+              // color: #888 !important;
             }
           }
         }
@@ -63,14 +63,14 @@
             content: none;
           }
           > p {
-            color: #777 !important;
+            // color: #777 !important;
             &:before {
-              color: #aaa !important;
+              color: #888 !important;
             }
           }
           cite {
             p {
-              color: #666 !important;
+              // color: #666 !important;
             }
           }
         }

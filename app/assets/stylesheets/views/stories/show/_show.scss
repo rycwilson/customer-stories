@@ -1,5 +1,7 @@
 
 .stories.show, .cs-overlay-container {
+
+
   text-align: left;   // override weebly
   $max-xs-width: 500px;
 
@@ -76,10 +78,21 @@
     background-color: $csp-bg-gray;
     padding: 15px 0 26px 0;
     &.cs-story-content {
-      span, li, p, a, h4 {
-        font-family: inherit !important;
-        font-weight: 400 !important;
-        &:not(a) { color: #333 !important; }
+      span, li, p, a, h4, i {
+        &:not(i) {
+          font: {
+            family: inherit !important;
+            weight: normal !important;
+          }
+        }
+        &:not(a) {
+          color: #444 !important;
+        }
+        @media screen and (min-width: 768px) {
+          &:not(a) {
+            color: #333 !important;
+          }
+        }
       }
     }
     h4 {
@@ -224,7 +237,7 @@
     }
   }
 
-  #more-stories-container header {
+  #cs-tabbed-carousel header {
     font-family: 'Lato';
   }
 

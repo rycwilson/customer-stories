@@ -1,7 +1,7 @@
 
 .testimonial, .cs-testimonial {
   position: relative;
-  color: #888;
+  // color: #888;
   > .container > .row, > .cs-container > .cs-row {
     display: flex;
     align-items: center;
@@ -55,9 +55,15 @@
     background-repeat: repeat-x;
     // filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2f2f2', endColorstr='#ffffffff', GradientType=0);
   }
+  &.testimonial {
+    p, span {
+      color: #666 !important;
+    }
+  }
   &.cs-testimonial {
     p, span {
-      font-family: inherit;
+      font-family: inherit !important;
+      color: #444 !important;
     }
     &:after {
       content: none;
@@ -76,7 +82,7 @@
         }
       }
       .customer-name {
-        color: #777 !important;
+        // color: #777 !important;
       }
     }
   }
