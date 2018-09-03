@@ -110,6 +110,8 @@
       .customer-quote, .cs-customer-quote {
         padding: 0 40px 0 0;
         blockquote {
+          // compenstates for absolutely positioned open quote (in cases where the customer name or logo occupies full width of its column)
+          margin-left: 25px;
           > p {
             font-size: 16px !important;
           }
