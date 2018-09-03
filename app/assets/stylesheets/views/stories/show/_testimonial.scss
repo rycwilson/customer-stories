@@ -24,7 +24,10 @@
       }
     }
     .customer-name {
-      margin-top: 20px;
+      margin: 20px 0;
+      &.no-video {
+        margin-top: 20px;
+      }
     }
   }
   .story-video.hidden-xs, .cs-story-video.hidden-xs {
