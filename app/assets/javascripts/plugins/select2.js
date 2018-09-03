@@ -242,14 +242,36 @@ function initSelect2 () {
   $('.content__select--category select').select2({
     theme: 'bootstrap',
     placeholder: 'Select Category',
+    allowClear: true,
     width: 'style'
-  });
+  })
+    // ref https://stackoverflow.com/questions/29618382/disable-dropdown-opening-on-select2-clear
+    .on('select2:unselecting', function() {
+        $(this).data('unselecting', true);
+      })
+    .on('select2:opening', function(e) {
+       if ($(this).data('unselecting')) {
+         $(this).removeData('unselecting');
+         e.preventDefault();
+        }
+      });
 
   $('.content__select--product select').select2({
     theme: 'bootstrap',
     placeholder: 'Select Product',
+    allowClear: true,
     width: 'style'
-  });
+  })
+    // ref https://stackoverflow.com/questions/29618382/disable-dropdown-opening-on-select2-clear
+    .on('select2:unselecting', function() {
+        $(this).data('unselecting', true);
+      })
+    .on('select2:opening', function(e) {
+       if ($(this).data('unselecting')) {
+         $(this).removeData('unselecting');
+         e.preventDefault();
+        }
+      });
 
   // restore last selected value
   // change the selected item, but avoid 'change' event

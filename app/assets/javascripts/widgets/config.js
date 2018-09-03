@@ -165,23 +165,25 @@ function widgetConfigListeners () {
     })
 
     .on('change', '[name="plugin[category]"]', function () {
-      var isFirstSelection = !$('.script-tag textarea').text().match(/data-category/);
+      var isFirstSelection = !$('.script-tag textarea').text().match(/data-category/),
+          isClear = ($(this).val() === '');
       $('.script-tag textarea').text(
         $('.script-tag textarea').text()
           .replace(
             isFirstSelection ? /><\/script>/ : /\xa0data-category="(\w|-)*"/,
-            '\xa0data-category="' + $(this).find('option:selected').data('slug') + '"' + (isFirstSelection ? '></script>' : '')
+            isClear ? '' : '\xa0data-category="' + $(this).find('option:selected').data('slug') + '"' + (isFirstSelection ? '></script>' : '')
           )
       );
     })
 
     .on('change', '[name="plugin[product]"]', function () {
-      var isFirstSelection = !$('.script-tag textarea').text().match(/data-product/);
+      var isFirstSelection = !$('.script-tag textarea').text().match(/data-product/),
+          isClear = ($(this).val() === '');
       $('.script-tag textarea').text(
         $('.script-tag textarea').text()
           .replace(
             isFirstSelection ? /><\/script>/ : /\xa0data-product="(\w|-)*"/,
-            '\xa0data-product="' + $(this).find('option:selected').data('slug') + '"' + (isFirstSelection ? '></script>' : '')
+            isClear ? '' : '\xa0data-product="' + $(this).find('option:selected').data('slug') + '"' + (isFirstSelection ? '></script>' : '')
           )
       );
     })
