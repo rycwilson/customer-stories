@@ -15,11 +15,11 @@
     }
   }
   .customer-logo-quote.hidden-xs {
-    .customer-logo {
+    .customer-logo, .cs-customer-logo {
       img {
         margin: 0 auto;
         max-height: 65px;
-        max-width: 60%;
+        max-width: 50%;
         mix-blend-mode: multiply;
       }
     }
