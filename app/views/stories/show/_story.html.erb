@@ -3,6 +3,22 @@
 
   <article>
 
+    <% if is_widget %>
+
+      <div class="cs-story-header hidden-xs">
+
+        <button type="button" class="cs-close">
+          <i class="fa fa-fw fa-arrow-left-thin fa-2x"></i>
+        </button>
+
+        <button type="button" class="cs-close">
+          <i class="fa fa-fw fa-times-thin fa-2x"></i>
+        </button>
+
+      </div>
+
+    <% end %>
+
     <!-- includes video -->
     <section class="<%= is_widget ? 'cs-testimonial' : 'testimonial' %> <%= story.video_url.present? ? '' : 'no-video' %>">
 

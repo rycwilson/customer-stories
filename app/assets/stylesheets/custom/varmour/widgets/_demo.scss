@@ -1,0 +1,15 @@
+
+body.widgets.demo.varmour {
+
+  font-family: 'Montserrat';
+  .thumbnail-view-hover, .caption {
+    font-family: 'Montserrat';
+  }
+
+  #cs-gallery, #cs-carousel, #cs-tabbed-carousel {
+    a.cs-thumbnail .thumbnail-view .thumbnail-view-hover p {
+      font-size: 13px !important;
+    }
+  }
+
+}

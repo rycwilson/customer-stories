@@ -1,7 +1,7 @@
 
-<% if company.subdomain != 'varmour' %>
+<% if company.subdomain != 'varmour' || is_demo %>
 
-<div class="cs-overlay-container">
+<div class="cs-overlay-container" "<%= background %>">
   <div class="cs-main">
 
     <div class="cs-grid cs-grid-carousel">
@@ -24,7 +24,7 @@
 
               <!-- <div class="cs-overlay-container"> -->
               <!-- the bootstrap styling starts to break down after 30 stories -->
-              <% stories.first(20).each do |story|  %>
+              <% stories.each do |story|  %>
 
                 <div class="col-xs-8 col-sm-5 col-md-3">
 
@@ -73,7 +73,7 @@
 
       </div>
 
-<% if company.subdomain != 'varmour' %>
+<% if company.subdomain != 'varmour' || is_demo %>
 
     </div>  <!-- .cs-grid -->
 
@@ -81,7 +81,7 @@
 
       <div class="scroll-wrap">
 
-        <% stories.first(20).each do |story| %>
+        <% stories.first(16).each do |story| %>
 
           <div class="content__item content__item--carousel">
           </div>
@@ -90,12 +90,11 @@
 
       </div>
 
-      <button class="hidden-xs close-button"><i class="fa fa-times-thin fa-3x"></i><span>Close</span></button>
+      <!-- <button class="hidden-xs close-button"><i class="fa fa-times-thin fa-3x"></i><span>Close</span></button> -->
 
-      <button class="visible-xs close-button-xs">
+      <button class="visible-xs-inline cs-close-xs">
         <span class="fa-stack">
           <i class="fa fa-circle fa-stack-2x"></i>
-
           <i class="fa fa-times-thin fa-inverse fa-stack-1x"></i>
         </span>
       </button>

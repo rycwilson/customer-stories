@@ -36,12 +36,13 @@
     contentItemsContainer = gridEl.querySelector('.cs-content'),
     gridItems = gridItemsContainer.querySelectorAll('.grid__item'),
     contentItems = contentItemsContainer.querySelectorAll('.content__item'),
-    closeCtrl = contentItemsContainer.querySelector('.close-button'),
+    // csp - removed since each story now has its own close button
+    // closeCtrl = contentItemsContainer.querySelectorAll('.cs-close'),
     current = -1,
     lockScroll = false, xscroll, yscroll,
     isAnimating = false,
     // csp...
-    bodyScrollSetting = $('body').css('overflow-y');
+    scrollBarWidth, bodyScrollSetting;
 
   /**
    * gets the viewport width and height
@@ -89,11 +90,12 @@
       });
     });
 
-    closeCtrl.addEventListener('click', function() {
-      // csp modify: return setting to whatever it was before overlay was opened
-      $('body').css('overflow-y', bodyScrollSetting);
-      hideContent();
-    });
+    // csp - removed
+    // closeCtrl.addEventListener('click', function() {
+    //   // csp modify: return setting to whatever it was before overlay was opened
+    //   $('body').css('overflow-y', bodyScrollSetting);
+    //   hideContent();
+    // });
 
     // keyboard esc - hide content
     document.addEventListener('keydown', function(ev) {
@@ -147,6 +149,7 @@
       // dummy.style.WebkitTransform = 'translate3d(-5px, ' + (scrollY() - 5) + 'px, 0px)';
       // dummy.style.transform = 'translate3d(-5px, ' + (scrollY() - 5) + 'px, 0px)';
       // csp modified...
+      // console.log($('.cs-grid').offset().top - scrollY())
       dummy.style.WebkitTransform = 'translate3d(-5px, ' + (- 5 - ($('.cs-grid').offset().top - scrollY())) + 'px, 0px)';
       dummy.style.transform = 'translate3d(-5px, ' + (- 5 - ($('.cs-grid').offset().top - scrollY())) + 'px, 0px)';
       // disallow scroll
@@ -164,37 +167,45 @@
       // csp modified...
       contentItemsContainer.style.top = (scrollY() - $('.cs-grid').offset().top) + 'px';
 
-      /**
-       * csp modification:
-       * with transition complete, and content about to be made visible (.content--show),
-       * add mix-blend-mode setting to image (does not play well with translate3d)
-       *
-       * => doesn't work
-       */
-
       // show the main content container
       classie.add(contentItemsContainer, 'content--show');
       // show content item:
       classie.add(contentItems[current], 'content__item--show');
-      // show close control
-      classie.add(closeCtrl, 'close-button--show');
+
+      // show close control - removed since each story now has its own close button
+      // classie.add(closeCtrl, 'close-button--show');
+
       // sets overflow hidden to the body and allows the switch to the content scroll
       classie.addClass(bodyEl, 'noscroll');
 
       isAnimating = false;
 
+      // close button
+      $('.content__item--show .cs-close').one('click', hideContent);
+
+      // reset gallery
+      $(gridEl).find('a').each(function () {
+        $(this).removeClass('cs-loading cs-still-loading')
+               .removeAttr('style');  // this gets rid of pointer-events: none
+      });
+
       // csp modify... (the overlay will have its own scroll bar)...
-      $('body').css('overflow-y', 'hidden');
+      $('html, body').css('overflow-y', 'hidden');
+      $('.scroll-wrap').css('overflow-y', 'auto');
 
     });
   }
 
   function hideContent() {
+    // csp modify: return setting to whatever it was before overlay was opened
+    $('.scroll-wrap').css('overflow-y', 'hidden');
+    $('html, body').css('overflow-y', 'auto');
+
     var gridItem = gridItems[current], contentItem = contentItems[current];
 
     classie.remove(contentItem, 'content__item--show');
     classie.remove(contentItemsContainer, 'content--show');
-    classie.remove(closeCtrl, 'close-button--show');
+    // classie.remove(closeCtrl, 'close-button--show');
     classie.remove(bodyEl, 'view-single');
 
     setTimeout(function() {
@@ -209,6 +220,7 @@
       }
       dummy.style.WebkitTransform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + gridItem.offsetWidth/gridItemsContainer.offsetWidth + ',' + gridItem.offsetHeight/getViewport('y') + ',1)';
       dummy.style.transform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + gridItem.offsetWidth/gridItemsContainer.offsetWidth + ',' + gridItem.offsetHeight/getViewport('y') + ',1)';
+      dummy.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
       onEndTransition(dummy, function() {
         // reset content scroll..
         contentItem.parentNode.scrollTop = 0;
@@ -217,7 +229,6 @@
         classie.remove(gridItem, 'grid__item--animate');
         lockScroll = false;
         window.removeEventListener( 'scroll', noscroll );
-
       });
 
       // reset current

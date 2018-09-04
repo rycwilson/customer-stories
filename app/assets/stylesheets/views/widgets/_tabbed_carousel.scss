@@ -1,4 +1,6 @@
 
+@import '../../base/globals';
+@import 'variables';
 @import 'widgets_bootstrap';
 // @import 'overlays/main';
 // @import '..//stories/show/show';
@@ -30,7 +32,7 @@
   }
 
   .cs-header-row {
-    height: 48px;   //  32 + 8 + 8
+    height: 48px;   //  30 + 8 + 8
     > [class*="col-"] {
       height: 100%;
     }

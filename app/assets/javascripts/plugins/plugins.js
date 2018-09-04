@@ -58,7 +58,8 @@ function deconstructPlugins () {
 
 }
 
-function slideDrawerPlugin () {
+// this mirrors the function in cs.js.erb
+function slideDrawerPlugin ($container) {
 
   var drawer = {
 
@@ -75,45 +76,35 @@ function slideDrawerPlugin () {
         // Set drawer to hide
         drawer.hide(options, div);
       }
-
-      // there are two headers: visible-xs-block and hidden-xs
-      // for auto-show behavior, the click event will be triggered on
-      // all headers, including the hidden ones.
-      // below ensures only one toggle happens
-      $('.cs-header').on('click', function (e) {
-        if ($(e.target).is('[class*="remove"]')) {
-          return false;
-        }
-        if (CSP.screenSize === 'xs' && $(this).parent().hasClass('visible-xs-block')) {
-          drawer.toggle(options, div);
-        } else if (CSP.screenSize !== 'xs' && $(this).parent().hasClass('hidden-xs')) {
+      $container.on(
+        'click',
+        '.visible-xs-block .cs-header:not([class*="remove"]), .hidden-xs .cs-header:not([class*="remove"])',
+        function () {
           drawer.toggle(options, div);
         }
-      });
+      );
     },
-
-    //Toggle function
     toggle: function (options, div) {
       ($(div).height() + options.borderHeight === options.drawerHeight) ?
         drawer.slide( div, options.drawerHiddenHeight, options.slideSpeed ) :
         drawer.slide( div, options.drawerHeight - options.borderHeight, options.slideSpeed );
     },
-
-    // Slide animation function
     slide: function (div, height, speed) {
-      $(div).animate({ 'height': height }, speed, 'swing',
-        function () {
-          $('.cs-header i[class*="fa-chevron"]').toggle();
-        });
+      $(div).animate({ 'height': height }, speed, 'swing', function () {
+        $container.find('.cs-header i[class*="fa-chevron"]').toggle();
+        $container.find('header').toggleClass('open closed');
+      });
     },
-
     hide: function (options, div) {
       $(div).css('height', options.drawerHiddenHeight);
     },
+
   };
 
+  // Function wrapper
   $.fn.slideDrawer = function (options) {
-    var $drawerContent = $('#more-stories-container .cs-drawer-content'),  /* Content height of drawer */
+
+    var $drawerContent = $container.find('.cs-drawer-content'),  /* Content height of drawer */
         borderHeight = parseInt($drawerContent.css('border-top-width')); /* Border height of content */
 
     var drawerHeight = this.height() + borderHeight; /* Total drawer height + border height */
@@ -121,7 +112,7 @@ function slideDrawerPlugin () {
     var drawerHiddenHeight = (drawerHeight - drawerContentHeight) - borderHeight; /* How much to hide the drawer, total height minus content height */
     var defaults = {
       showDrawer: 'slide', /* Drawer hidden on load by default, options (true, false, slide) */
-      slideSpeed: 700, /* Slide drawer speed 3 secs by default */
+      slideSpeed: 400, /* Slide drawer speed 3 secs by default */
       slideTimeout: true, /* Sets time out if set to true showDrawer false will be ignored */
       slideTimeoutCount: 5000, /* How long to wait before sliding drawer */
       drawerContentHeight: drawerContentHeight, /* Div content height no including tab or border */
@@ -129,8 +120,10 @@ function slideDrawerPlugin () {
       drawerHiddenHeight: drawerHiddenHeight, /* Height of div when hidden full height minus content height */
       borderHeight: borderHeight /* border height if set in css you cann overwrite but best just leave alone */
     };
+
     /* Overwrite defaults */
     var pluginOptions = $.extend(defaults, options);
+
     return this.each(function () {
       drawer.init(pluginOptions, this);
     });
@@ -194,7 +187,7 @@ function slideDrawerPlugin () {
     }));
 
 // social sharing
-$.fn.socialSharePopup = function (e, width, height) {
+$.fn.popupWindow = function (e, width, height) {
   // Prevent default anchor event
   e.preventDefault();
   // Fixes dual-screen position                         Most browsers      Firefox

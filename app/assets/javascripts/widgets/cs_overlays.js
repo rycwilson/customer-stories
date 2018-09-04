@@ -19,10 +19,7 @@ function cspInitOverlays ($, $container) {
     e.preventDefault();
     var $story, $storyCard = $(this);
     if ($storyCard.hasClass('cs-loaded')) {
-      setTimeout(function () {
-        $storyCard.removeClass('cs-loading cs-still-loading');
-      }, 300);  // matches overlay animation time
-      return false;
+      return false;  // overlays handler
     } else {
       loading($storyCard);
       $.ajax({
@@ -30,7 +27,7 @@ function cspInitOverlays ($, $container) {
         method: 'GET',
         data: {
           is_widget: true,
-          window_width: $(window).width()
+          window_width: window.innerWidth
         },
         dataType: 'jsonp'
       })
@@ -39,7 +36,7 @@ function cspInitOverlays ($, $container) {
           $story = $container.find('.content__item:nth-of-type(' + storyIndex + ')');
           $.when(
             $story.html(data.html),
-            $storyCard.addClass('cs-loaded')
+            $storyCard.removeClass('cs-still-loading').addClass('cs-loaded')
           )
             .then(function () { linkedinListener($story); })
             .then(function () {
@@ -48,17 +45,14 @@ function cspInitOverlays ($, $container) {
               }
               initLinkedIn();
 
-              // when loading, all cards were set to pointer-events: none
-              // now undo that...
-              $container.find('a').removeAttr('style');
-
               // avoid double-tap behavior
-              $container.on('click touchend', '.close-button-xs', function () {
-                $(this).closest('.cs-content').find('.close-button').trigger('click');
+              $container.on('click touchend', '.cs-close-xs', function () {
+                // there are multiple close buttons in the story header; don't trigger them all
+                $('.content__item--show .cs-close').first().trigger('click');
               });
+
               // the grid_overlays.js listener is vanilla js, won't pick up on $storyCard.trigger('click')
               $storyCard[0].click();
-
             });
         })
         .fail(function () {

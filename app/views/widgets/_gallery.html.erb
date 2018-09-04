@@ -1,11 +1,9 @@
 
 <div class="cs-overlay-container">
 
-  <%#= render('stories/show/video_modal', { is_widget: true }) %>
-
   <div class="cs-main">
 
-    <section class="cs-grid hidden">
+    <section class="cs-grid" style="visibility: hidden">
 
       <% stories.each do |story| %>
 
@@ -37,15 +35,13 @@
 
       </div>
 
-      <button class="hidden-xs close-button"><i class="fa fa-times-thin fa-3x"></i><span>Close</span></button>
+      <!-- <button class="close-button"><i class="fa fa-times-thin fa-3x"></i><span>Close</span></button> -->
 
-      <button class="visible-xs close-button-xs">
+      <button class="visible-xs-inline cs-close-xs">
         <span class="fa-stack">
           <i class="fa fa-circle fa-stack-2x"></i>
-
           <i class="fa fa-times-thin fa-inverse fa-stack-1x"></i>
         </span>
-        <!-- <i style="color: white" class="fa fa-fw fa-times-thin fa-3x"></i> -->
       </button>
 
     </section><!-- /content -->

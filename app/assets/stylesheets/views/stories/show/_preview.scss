@@ -1,26 +1,32 @@
 
-.cs-story-preview {
-  margin-top: -20px;
+.preview-wrapper, .cs-preview-wrapper {
+
   span, p, li, a {
     font-family: inherit !important;
-  }
-  p {
-    line-height: 1.5 !important;
-    font-weight: 400 !important;
-  }
-  .cs-customer-logo {
-    margin-bottom: 40px;
-    background-color: #f5f5f3;
-    img {
-      max-height: 80px;
-      max-width: 50%;
-      mix-blend-mode: multiply;
+    &:not(a) {
+      color: #444 !important;  // preview is always on gray background;
     }
   }
+
+  p {
+    line-height: 1.5 !important;
+    font-weight: normal !important;
+  }
+
+  .cs-story-header {
+    margin: 0;
+  }
+
+  .cs-customer-logo {
+    @include customer-logo(if(variable-exists(bg-color), $bg-color, $csp-bg-gray))
+  }
+
   .cs-story-summary {
     span, p, li, a {
       font-size: 14px !important;
     }
+  }
+  .hidden-xs {
   }
   blockquote {
     &:before {
@@ -41,12 +47,11 @@
         top: -10px;
         left: -20px;
         font-size: 34px !important;
-        color: #aaa !important;
+        color: #888 !important;
       }
       font-size: 14px !important;
       margin-bottom: 15px;
       font-weight: 400 !important;
-      color: #777 !important;
       &:after {
         content: no-close-quote;
       }
@@ -54,7 +59,6 @@
     cite {
       p {
         font-style: normal;
-        color: #666 !important;
         font: {
           size: 13px !important;
           weight: 400 !important;
@@ -67,33 +71,43 @@
 }
 
 @media only screen and (max-width: 767px) {
-  .cs-story-preview {
-    max-width: $max-xs-width;
-    .cs-story-summary {
-      margin-bottom: 30px;
-    }
-    blockquote {
-      margin-bottom: 25px;
-      > p {
-        text-indent: 17px;  // half the font size of the open quote
+  .preview-wrapper, .cs-preview-wrapper {
+    .container, .cs-container {
+      max-width: $max-xs-width;
+      .cs-story-summary {
+        margin-bottom: 30px;
+      }
+      blockquote {
+        margin-bottom: 25px;
+        > p {
+          font-size: 16px !important;
+          text-indent: 17px;  // half the font size of the open quote
+        }
       }
     }
   }
 }
 
 @media only screen and (min-width: 768px) {
-  .cs-story-preview {
-    .cs-story-summary {
-      padding: 0 30px 0 15px;
-    }
-    .cs-customer-quote {
-      padding: 0 15px 0 30px;
+  .preview-wrapper, .cs-preview-wrapper {
+    .cs-container {
+      max-width: 100%;
+      .cs-customer-logo {
+        justify-content: center;
+      }
+      .cs-story-summary {
+      }
+      .cs-customer-quote {
+        blockquote {
+          margin-left: 15px;  // adjust for the absolutely positioned open quote
+        }
+      }
     }
   }
 }
 
 @media only screen and (min-width: 992px) {
-  .cs-story-preview {
+  .preview-wrapper, .cs-preview-wrapper {
     .cs-story-summary, .cs-customer-quote {
       padding: 0 40px;
     }
@@ -115,21 +129,26 @@
   }
 }
 
+@media only screen and (min-width: 992px) {
+}
+
 @media only screen and (min-width: 1200px) {
-  .cs-story-preview {
-    .cs-story-summary {
-      span, p, li, a {
-        font-size: 16px !important;
-      }
-    }
-    blockquote {
-      > p {
-        &:before {
-          top: -18px;
-          left: -28px;
-          font-size: 48px !important;
+  .preview-wrapper, .cs-preview-wrapper {
+    .cs-container {
+      .cs-story-summary {
+        span, p, li, a {
+          font-size: 16px !important;
         }
-        font-size: 16px !important;
+      }
+      blockquote {
+        > p {
+          &:before {
+            top: -18px;
+            left: -28px;
+            font-size: 48px !important;
+          }
+          font-size: 16px !important;
+        }
       }
     }
   }

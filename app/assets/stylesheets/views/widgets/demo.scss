@@ -1,24 +1,28 @@
 
 body.widgets.demo {
 
+  height: 100vh;
   margin: 0;
-  font-family: 'Open Sans';
-
-  .nav-links {
-    padding: 40px 20px 20px 20px;
-    a {
-      font-family: 'Lato';
-      font-size: 21px;
-      margin: 0 20px;
-      padding: 20px
-    }
-    a.active {
-      background-color: #efefef;
-    }
+  font-family: 'Open Sans', Arial, Helvetica, sans-serif;
+  .thumbnail-view-hover, .caption {
+    font-family: 'Lato', 'Open Sans', Arial, Helvetica, sans-serif;
   }
 
-  .thumbnail-view-hover, .caption {
-    font-family: 'Lato';
+  // .nav-links {
+  //   padding: 40px 20px 20px 20px;
+  //   a {
+  //     font-family: 'Lato';
+  //     font-size: 16px;
+  //     // margin: 0 20px;
+  //     padding: 20px
+  //   }
+  //   a.active {
+  //     background-color: #efefef;
+  //   }
+  // }
+
+  #cs-carousel {
+    margin-top: 30px;
   }
 
 }

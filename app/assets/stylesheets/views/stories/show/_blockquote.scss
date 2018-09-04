@@ -21,7 +21,7 @@
             font-size: 34px !important;
             color: #bbb;
           }
-          // font-size: 16px !important;
+          font-size: 16px !important;
           margin-bottom: 15px;
           line-height: 1.5 !important;
           font-weight: 400 !important;
@@ -45,14 +45,14 @@
       &.customer-quote {
         blockquote {
           > p {
-            color: #888 !important;
+            // color: #888 !important;
             &:before {
-              color: #bbb !important;
+              color: #999 !important;
             }
           }
           cite {
             p {
-              color: #888 !important;
+              // color: #888 !important;
             }
           }
         }
@@ -63,14 +63,14 @@
             content: none;
           }
           > p {
-            color: #777 !important;
+            // color: #777 !important;
             &:before {
-              color: #aaa !important;
+              color: #888 !important;
             }
           }
           cite {
             p {
-              color: #666 !important;
+              // color: #666 !important;
             }
           }
         }
@@ -110,6 +110,8 @@
       .customer-quote, .cs-customer-quote {
         padding: 0 40px 0 0;
         blockquote {
+          // compenstates for absolutely positioned open quote (in cases where the customer name or logo occupies full width of its column)
+          margin-left: 25px;
           > p {
             font-size: 16px !important;
           }

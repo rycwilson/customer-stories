@@ -9,9 +9,9 @@ module StoriesHelper
     when 500...768
       '470'
     when 768...992
-      '345'
+      '330'
     when 992...1200
-      '370'
+      '360'
     else
       '436'
     end

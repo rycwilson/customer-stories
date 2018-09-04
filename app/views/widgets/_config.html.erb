@@ -4,28 +4,31 @@
 
     <p class="lead">Configure a <span style="font-weight: 600">Customer Stories Plugin</span> for your website</p>
 
-    <form class="form-horizontal">
+    <form id="plugin-config-form" class="form-horizontal">
 
-      <div class="form-group type" style="height: 40px; display: flex; align-items: center">
+      <div class="form-group type">
 
         <label class="col-sm-2 control-label">Type</label>
         <div class="col-sm-10">
-          <div class="btn-group" data-toggle="buttons">
-            <%= label_tag('widget[type]', class: 'radio-inline') do %>
-              <%= radio_button_tag('widget[type]', 'gallery', true) %>
+
+          <div class="btn-group">
+            <!-- <label class="radio-inline" for="plugin_type_gallery">
+              <input type="radio" id="plugin_type_gallery" name="plugin[type]" value="gallery">Gallery
+            </label> -->
+            <%= label_tag('plugin_type_gallery', class: 'radio-inline') do %>
+              <%= radio_button_tag('plugin[type]', 'gallery', true) %>
               Gallery
             <% end %>
-            <%= label_tag('widget[type]', class: 'radio-inline') do %>
-              <%= radio_button_tag('widget[type]', 'carousel', false) %>
+            <%= label_tag('plugin_type_carousel', class: 'radio-inline') do %>
+              <%= radio_button_tag('plugin[type]', 'carousel', false) %>
               Carousel
             <% end %>
-            <%= label_tag('widget[type]', class: 'radio-inline') do %>
-              <%= radio_button_tag('widget[type]', 'tabbed_carousel', false)   %>
+            <%= label_tag('plugin_type_tabbed_carousel', class: 'radio-inline') do %>
+              <%= radio_button_tag('plugin[type]', 'tabbed_carousel', false)   %>
               Tabbed Carousel
             <% end %>
-          </div>
 
-          <button type="button" class="demo btn btn-secondary">Demo</button>
+          </div>
 
         </div>
 
@@ -42,13 +45,13 @@
                 <label class="col-sm-6 col-md-3 control-label"><span style="float: left">Page Background<span></label>
                 <div class="col-sm-6 col-md-9">
 
-                  <div class="btn-group" data-toggle="buttons">
-                    <%= label_tag 'widget[type]', class: 'radio-inline' do %>
-                      <%= radio_button_tag 'widget[background]', 'light', true %>
+                  <div class="btn-group">
+                    <%= label_tag('carousel_background_light', class: 'radio-inline') do %>
+                      <%= radio_button_tag('carousel[background]', 'light', true) %>
                       Light
                     <% end %>
-                    <%= label_tag 'widget[type]', class: 'radio-inline' do %>
-                      <%= radio_button_tag 'widget[background]', 'dark', false %>
+                    <%= label_tag('carousel_background_dark', class: 'radio-inline') do %>
+                      <%= radio_button_tag('carousel[background]', 'dark', false) %>
                       Dark
                     <% end %>
                   </div>
@@ -69,14 +72,14 @@
               <div class="form-inline">
                 <div class="form-group">
 
-                  <%= label_tag(nil, 'Tab Color', class: 'control-label') %>
-                  <%= text_field_tag(nil, '#dddddd', class: 'form-control mini-colors') %>
+                  <%= label_tag('tabbed_carousel[tab_color]', 'Tab Color', class: 'control-label') %>
+                  <%= text_field_tag('tabbed_carousel[tab_color]', '#dddddd', class: 'form-control mini-colors') %>
 
                 </div>
                 <div class="form-group">
 
-                  <%= label_tag(nil, 'Text Color', class: 'control-label') %>
-                  <%= text_field_tag(nil, '#333333', class: 'form-control mini-colors') %>
+                  <%= label_tag('tabbed_carousel[text_color]', 'Text Color', class: 'control-label') %>
+                  <%= text_field_tag('tabbed_carousel[text_color]', '#333333', class: 'form-control mini-colors') %>
 
                 </div>
               </div>
@@ -85,10 +88,10 @@
 
                 <div class="form-group delay">
 
-                  <%= label_tag(nil, 'Delay', class: 'control-label') %>
+                  <%= label_tag('tabbed_carousel[delay]', 'Delay', class: 'control-label') %>
                   <div class="input-group spinner">
 
-                    <%= text_field_tag(nil, '5', min: '0', class: 'form-control') %>
+                    <%= text_field_tag('tabbed_carousel[delay]', '5', min: '0', class: 'form-control') %>
                     <div class="input-group-btn-vertical">
                       <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
                       <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
@@ -106,25 +109,27 @@
         </div>
       </div>
 
-      <div class="form-group content__radio">
+      <div class="form-group content__btn-group">
 
         <label class="col-sm-2 control-label">Content</label>
         <div class="col-sm-10">
 
-          <div class="btn-group" data-toggle="buttons">
-            <%= label_tag('widget[content]', class: 'radio-inline') do %>
-              <%= radio_button_tag('widget[content]', 'select', true) %>
+          <div class="btn-group">
+            <%= label_tag('plugin_content_custom', class: 'radio-inline') do %>
+              <%= radio_button_tag('plugin[content]', 'custom', true) %>
               Select Stories
             <% end %>
-            <%= label_tag('widget[content]', class: 'radio-inline') do %>
-              <%= radio_button_tag('widget[content]', 'category', false) %>
+            <%= label_tag('plugin_content_category', class: 'radio-inline') do %>
+              <%= radio_button_tag('plugin[content]', 'category', false) %>
               Filter by Category
             <% end %>
-            <%= label_tag('widget[content]', class: 'radio-inline') do %>
-              <%= radio_button_tag('widget[content]', 'product', false) %>
+            <%= label_tag('plugin_content_product', class: 'radio-inline') do %>
+              <%= radio_button_tag('plugin[content]', 'product', false) %>
               Filter by Product
             <% end %>
           </div>
+
+          <span class="help-block">Maximum 16 stories</span>
 
         </div>
       </div>
@@ -132,11 +137,11 @@
       <div class="form-group content__select">
         <div class="col-sm-2"></div>
         <div class="col-sm-10">
-          <div class="content__select--all">
+          <!-- <div class="content__select"> -->
 
-            <div class="content__select--stories">
+            <div class="content__select--custom">
               <%= select_tag(
-                    'widget[stories][]',
+                    'plugin[stories][]',
                     grouped_options_for_select(
                       company.stories_grouped_options,
                       []
@@ -152,7 +157,7 @@
 
             <div class="content__select--category">
               <%= select_tag(
-                    'category',
+                    'plugin[category]',
                     options_for_select(
                       company.story_categories.select_options.unshift([""])
                     )
@@ -162,7 +167,7 @@
 
             <div class="content__select--product">
               <%= select_tag(
-                    'product',
+                    'plugin[product]',
                     options_for_select(
                       company.products.select_options.unshift([""])
                     )
@@ -170,8 +175,36 @@
 
             </div>
 
-          </div>
+          <!-- </div> -->
 
+        </div>
+      </div>
+
+      <div class="row form-group code">
+        <label class="col-sm-2 control-label">Code</label>
+        <div class="col-sm-10">
+          <a href="/plugins/demo" class="demo btn btn-secondary">
+            <i class="fa fa-fw fa-external-link"></i>
+            <span>Demo</span>
+          </a>
+          <button type="button" class="copy btn btn-secondary">
+            <i class="fa fa-fw fa-clipboard"></i>
+            <span>Copy</span>
+            <i class="fa fa-fw fa-check"></i>
+          </button>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-10">
+          <div class="script-tag">
+<!--             <button type="button" class="clipboard">
+              <i class="fa fa-fw fa-clipboard"></i>
+            </button> -->
+            <textarea class="form-control" style="width:100%;" rows="6" readonly><div id="cs-gallery"></div>
+<script src="<%= Rails.env.development? ? 'http' : 'https' %>://<%= company.subdomain %>.<%= ENV["HOST_NAME"] %>/plugins/gallery/cs.js"></script></textarea>
+          </div>
         </div>
       </div>
 

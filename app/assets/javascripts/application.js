@@ -131,7 +131,7 @@ function attachAppListeners () {
 
   };
 
-  window.onorientationchange = function () { window.location.reload(); };
+  // window.onorientationchange = function () { window.location.reload(); };
 
   $(document)
     .on('turbolinks:click', function () {

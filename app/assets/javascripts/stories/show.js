@@ -17,68 +17,35 @@ function storiesShow () {
       if ($('body').hasClass('stories show') && !CSP.current_user) {
         var scrollBottom = $(document).height() - $(window).height() - $(window).scrollTop();
         if (scrollBottom < $('#sign-in-footer').height()) {
-          $('#more-stories-container').hide();
+          $('#cs-tabbed-carousel').hide();
         }
-        else if (!$('#more-stories-container').data('hidden')) {
-          $('#more-stories-container').show();
+        else if (!getCookie('cs-tabbed-carousel-removed')) {
+          $('#cs-tabbed-carousel').show();
         }
       }
     });
-
 }
 
 function initMoreStories () {
+  var moreStoriesDelay = 5000;
   if (Cookies.get('cs-tabbed-carousel-removed')) return false;
-  var widgetShowTimer = null, widgetHideTimer = null;
-
-  $('.cs-header')
-    .on('click', function (e, data) {
-        var auto = data && data.isAuto;
-        if ($(e.target).is('[class*="remove"]')) {
-          $('#more-stories-container')
-            .data('hidden', '1')
-            .hide();
-          Cookies.set('cs-tabbed-carousel-removed', '1', { expires: 1, path: '/' });
-          return false;
-        }
-        // cancel the timers if user interacts with widget
-        if (!auto) {
-          if (widgetShowTimer) { clearTimeout(widgetShowTimer); }
-          if (widgetHideTimer) { clearTimeout(widgetHideTimer); }
-        }
-      });
-
-  slideDrawerPlugin();  // define the jquery plugin
-  $('#more-stories-container').imagesLoaded(function () {
+  $('.cs-header [class*="remove"]').on('click', function (e) {
+    $('#cs-tabbed-carousel').hide();
+    Cookies.set('cs-tabbed-carousel-removed', '1', { expires: 1, path: '/' });
+    return false;
+  });
+  slideDrawerPlugin($('#cs-tabbed-carousel'));  // define the jquery plugin
+  $('#cs-tabbed-carousel').imagesLoaded(function () {
     moreStoriesScrollHandlers();
-    // if user is using a mouse, this will hose dimensions
-    // (in a somewhat random way)
-    // compensate for this ...
-    // if ($('.cs-drawer-content').css('height') !== '141px') {
-    //   $('.cs-drawer-content').css('height', '141px');
-    //   $('.cs-drawer-items').css('height', '141px');
-    // }
-    if ( CSP.company.widget.show &&
-         !Cookies.get(CSP.company.subdomain + '-hide-widget') ) {
-      widgetShowTimer = setTimeout(function () {
-        $('.cs-header').trigger('click', { isAuto: true } );
-        if (CSP.company.widget.hide) {
-          widgetHideTimer = setTimeout(function () {
-            $('.cs-header').trigger('click', { isAuto: true } );
-          }, CSP.company.widget.hide_delay);
-        }
-      }, CSP.company.widget.show_delay);
-      // var inOneHour = new Date(new Date().getTime() + 60 * 60 * 1000);
-      Cookies.set(CSP.company.subdomain + '-hide-widget', '1',
-                  { expires: CSP.company.widget.show_freq });
-    }
-    $('.cs-section')
-      .slideDrawer()
-      .css({ opacity: 0, visibility: "visible" })
-      .animate({ opacity: 1 }, 200);
+    setTimeout(function () {
+      $('.cs-section')
+        .slideDrawer()
+        .css({ opacity: 0, visibility: "visible" })
+        .animate({ opacity: 1 }, 200)
+        .animate({ bottom: 0 }, 'fast');
+    }, moreStoriesDelay);
   });
 }
-
 
 // NOTE: the contributor data must be passed to the callback as shown;
 // if passed via argument, with a 'contributor' parameter in the callback
@@ -114,11 +81,11 @@ function clickyListeners () {
     .on('click', '.linkedin-share, .twitter-share, .facebook-share',
         { type: 'social-share', title: $('title').text() }, clickyLog)
     .on('click', '.linkedin-share',
-      function (e) { $(this).socialSharePopup(e, 550, 544); })
+      function (e) { $(this).popupWindow(e, 550, 544); })
     .on('click', '.twitter-share',
-      function (e) { $(this).socialSharePopup(e, 500, 260); })
+      function (e) { $(this).popupWindow(e, 500, 260); })
     .on('click', '.facebook-share',
-      function (e) { $(this).socialSharePopup(e, 600, 424); })
+      function (e) { $(this).popupWindow(e, 600, 424); })
     .on('mouseover', '.linkedin-widget',
       function () {
         window.focus();

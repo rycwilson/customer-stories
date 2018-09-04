@@ -122,7 +122,7 @@ function cspInitVideo ($, $story) {
 
     // empty the modal iframe when any story is closed
     $('.cs-content')
-      .on('click', '.close-button', pauseVideo)
+      .on('click', '.cs-close', pauseVideo)
       .on(
         'webkitTransitionEnd otransitionend oTransitionEnd msTransitionEnd transitionend',
         function () {

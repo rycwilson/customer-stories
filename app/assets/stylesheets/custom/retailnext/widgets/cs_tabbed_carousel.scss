@@ -1,9 +1,11 @@
 
+@import '../variables';
+
 #cs-tabbed-carousel, #cs-tab-container, #cs-container {
-
   @import '../../../views/widgets/tabbed_carousel';
-
-  @import '../../fonts';
   @import 'tabbed_carousel';
-
+  // @import '../show';
 }
+
+// override settings for demo as necessary
+@import 'demo';

@@ -1,96 +1,65 @@
 
-body {
-  // this prevents presence/absence of scroll bar from shfiting the page left/right
-  overflow-y: scroll;
+$company-header-height: 65px;
+$stories-header-height: 40px;
+
+$csp-bg-gray: #f2f2f2;
+$csp-fg-gray: #efefef;
+
+@mixin bs-xs {
+  @media screen and (max-width: 767px) {
+    @content;
+  }
 }
 
-body:not(.site) {
-  background-color: #f9f9f9;
+@mixin bs-sm {
+  @media screen and (min-width: 768px) {
+    @content;
+  }
 }
 
-body.stories.show {
-  background-color: #fff;  /* :not(.stories.show) doesn't work, ref https://stackoverflow.com/questions/10711730 */
+@mixin bs-md {
+  @media screen and (min-width: 992px) {
+    @content;
+  }
+}
+
+@mixin bs-lg {
+  @media screen and (min-width: 1200px) {
+    @content;
+  }
+}
+
+@mixin customer-logo ($bg-color) {
+  display: flex;
+  margin: 30px 0;
+  background-color: $bg-color;  // need this for the mix-blend-mode to work correctly
+  > div {
+    max-width: 50%;  // this can be wider for the quote-logo horizontal layout
+    img {
+      margin: 0 auto;
+      max-height: 65px;
+      mix-blend-mode: multiply;
+    }
+  }
+  .customer-name, .cs-customer-name {
+    color: #888;
+    margin-top: 20px;
+    span {
+      font-size: 16px !important;
+    }
+  }
+  @include bs-sm {
+    justify-content: center;
+  }
+  @include bs-lg {
+    .customer-name, .cs-customer-name {
+      margin-top: 25px;
+      span {
+        font-size: 18px !important;
+      }
+    }
+  }
+
 }
 
 
-// the shadow settings are copied from mvp
-.btn-success {
-  background-color: #4d8664;
-  border-color: #45715a;
-  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);
-}
-
-// .note-link-btn is summernote dialog
-.btn-success:hover, .btn-success:focus, .btn-success:active, .btn-success.disabled:hover,
-.btn-success[disabled]:hover, .btn-success.disabled:focus, .btn-success[disabled]:focus,
-.btn-success:active:hover, .btn-success:active:focus {
-  background-color: #456f59;
-  border-color: #395f4e;
-}
-
-.bip-clickable {
-  height: 28px;
-  width: 28px;
-  color: #666;
-  border: 1px solid #e3e3e3;
-  border-radius: 3px;
-  padding: 5px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-.bip-clickable:hover, .bip-clickable-fa:hover  {
-  color: white !important;
-  background-color: rgb(14, 122, 254); // #4885ed; //#666;
-}
-
-.progress-bar-info, .alert-info {
-  background-color: #6685a4;  // btn-secondary
-  border-color: #54718d;
-  color: #fff;
-}
-
-hr {
-  border-top: 1px solid #dfdfdf;
-}
-
-// this gets rid of the vertical portion of the first tab for views
-// that employ the mvp tabbed content layout
-.container.clip {
-  margin-top: 30px;
-  overflow: hidden;
-  padding-bottom: 100px;  // this leaves room for dropdowns in Crowdsource
-}
-
-.content h3 {
-  font-weight: 700;
-}
-
-.alert-success {
-  background-color: #4d8664 !important;
-  border-color: #45715a !important;
-}
-
-.required-input label:not(.radio-inline):not([for="csv-file-input"]):after {
-  color: #a94442;  // #D9534F;
-  content: " *";
-}
-
-#back-to-top {
-  display: none !important;
-}
-/*
- *  below related to S3 upload
- */
-.progress {
-  max-width: 600px;
-  margin:    0.2em 0 0.2em 0;
-}
-
-.progress .bar {
-  height:  1.2em;
-  padding-left: 0.2em;
-  color:   white;
-  display: none;
-}

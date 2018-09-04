@@ -40,7 +40,6 @@
   z-index: 10;
 }
 
-
 /* Placeholder element (dummy that gets animated when we click on an item) */
 .placeholder {
   pointer-events: none;
@@ -50,12 +49,16 @@
   z-index: 100;
   top: 0;
   left: 0;
-  background: $color_secondary;
+  // background: $color_secondary;
   -webkit-transform-origin: 0 0;
   transform-origin: 0 0;
+  @media only screen and (max-width: 767px) {
+    background: #f2f2f2;  // TODO set this is company custom file
+  }
 }
 
 .placeholder.placeholder--trans-in {
+  background-color: rgba(0, 0, 0, 0.6);
   -webkit-transition: -webkit-transform $anim-time;
   transition: transform $anim-time;
   -webkit-transition-timing-function: cubic-bezier(0.165,0.84,0.44,1);
@@ -63,6 +66,7 @@
 }
 
 .placeholder.placeholder--trans-out {
+  background-color: $color_secondary;
   -webkit-transition: -webkit-transform $anim-time;
   transition: transform $anim-time;
 }
@@ -97,6 +101,7 @@
   z-index: 1;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
 }
 
 /* single content item */
@@ -107,7 +112,7 @@
   overflow: hidden;
   height: 0;
   opacity: 0;
-  padding: 80px 0;
+  padding: 0;
   pointer-events: none;
 }
 
@@ -119,43 +124,11 @@
   -webkit-transition: opacity 0s;
   transition: opacity 0s;
 }
-/* close button (for content and sidebar) */
-.close-button {
+
+.cs-close-xs {
   position: absolute;
-  border: none;
-  background: none;
-  margin: 0;
-  z-index: 100;
-  top: 0;
-  right: 10px;
-  font-size: 18px;
-  color: #bbb;
-  cursor: pointer;
-  pointer-events: none;
-  padding: 20px 30px;
-  opacity: 0;
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  -webkit-transition: opacity 0.3s;
-  transition: opacity 0.3s;
-}
-
-.close-button span {
-  display: none;
-}
-
-.close-button:hover {
-  color: #666;
-}
-
-.close-button-xs {
-  position: absolute;
-  top: 5px;
-  right: 10px;
+  top: 15px;
+  right: 2%;
   border: none;
   background: none;
   padding: 5px; // not really necessary, but prevents the focus highlight from looking goofy
@@ -164,7 +137,7 @@
     color: black;
     font-size: 32px !important;
     i.fa-circle {
-      opacity: 0.3;
+      opacity: 0.4;
     }
     i.fa-times-thin {
       position: absolute;
@@ -175,8 +148,3 @@
   }
 }
 
-/* show class for content close button */
-.close-button--show {
-  opacity: 1;
-  pointer-events: auto;
-}

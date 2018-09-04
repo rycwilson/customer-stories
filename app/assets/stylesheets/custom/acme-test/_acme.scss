@@ -1,0 +1,19 @@
+
+body.acme-test:not(.companies):not(.profile):not(.edit) {
+
+  &.stories.show {
+
+    #cs-tabbed-carousel {
+      .cs-section {
+        .cs-header {
+          background-color: #ff0000;
+        }
+        .cs-drawer-content {
+          border-top-color: #fff;
+        }
+      }
+    }
+
+  }
+
+}

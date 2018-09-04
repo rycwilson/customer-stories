@@ -5,13 +5,13 @@
 function initSocialShare() {
 
   $(document).on('click', '#social-buttons .linkedin-share', function (e) {
-    $(this).socialSharePopup(e, 550, 544);
+    $(this).popupWindow(e, 550, 544);
   });
-  $(document).on(''#social-buttons .twitter-share').on('click', function (e) {
-    $(this).socialSharePopup(e, 500, 260);
+  $(document).on('#social-buttons .twitter-share').on('click', function (e) {
+    $(this).popupWindow(e, 500, 260);
   });
   $('#social-buttons .facebook-share').on('click', function (e) {
-    $(this).socialSharePopup(e, 600, 424);
+    $(this).popupWindow(e, 600, 424);
   });
 
 

@@ -3,7 +3,8 @@
 
   "use strict";
 
-  var $, jqUrl = "https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js";
+  var $, jqUrl = "https://ajax.googleapis.com/ajax/libs/jquery/1.12.3/jquery.min.js",
+      isDemoHost = window.location.href.match(/(\/plugins\/demo|weebly)/);
 
   if (window.jQuery === undefined) {
     createScriptTag(jqUrl, function () {
@@ -71,15 +72,20 @@
   }
 
   // root_url provides a company-specific url (via subdomain)
-  function getWidget ($container, $script, category, product) {
+  function getWidget ($container, $script) {
     return function () {
       $.ajax({
-        url: "<%= URI.join(root_url, widget_view_path(@type)) %>",
+        url: "<%= URI.join(root_url, plugin_view_path(@type)) %>",
         method: 'GET',
         dataType: 'jsonp',
         data: {
+          is_demo: $script.data('demo'),
+          stories: $script.data('stories'),
           category: $script.data('category'),
-          product: $script.data('product')
+          product: $script.data('product'),
+          background: $script.data('background'),
+          tab_color: $script.data('tab-color'),
+          text_color: $script.data('text-color'),
         }
       })
         .done(function (data) {
@@ -99,12 +105,13 @@
 
   function initWidget (type, $container, $script) {
     var initVideo = $.Deferred(),
-        initOverlays = $.Deferred();
+        initOverlays = $.Deferred(),
+        tabbedCarouselDelay = ((type === 'tabbed_carousel') && parseInt($script.data('delay'), 10) || 0);
 
     trackVisitor($container);
 
-    // do not apply overlays to varmour
-    if ($script.attr('src').includes('varmour')) {
+    // do not apply overlays to varmour.com
+    if ($container.is('#cs-varmour-container') && !isDemoHost) {
       initVideo.resolve();
       initOverlays.resolve();
     } else {
@@ -124,7 +131,7 @@
 
     $.when(initVideo, initOverlays).done(function () {
         $.ajax({
-          url: "<%= URI.join(root_url, widget_init_path(@type)) %>",
+          url: "<%= URI.join(root_url, plugin_init_path(@type)) %>",
           method: 'GET',
           dataType: 'script'
         })
@@ -134,7 +141,7 @@
             else if (type == 'tabbed_carousel') {
               // plugin must be defined and called in this scope
               slideDrawerPlugin($container);
-              cspInitTabbedCarousel($, $container);
+              cspInitTabbedCarousel($, $container, tabbedCarouselDelay);
             }
           });
       });
@@ -151,11 +158,10 @@
   }
 
   function trackVisitor ($container) {
-    if (<%= ENV['HOST_NAME'] == 'customerstories.net' %> &&
-        !window.location.href.match(/plugins\/(gallery|carousel|tabbed_carousel)\/demo/)) {
+    if (<%= ENV['HOST_NAME'] == 'customerstories.net' %> && !isDemoHost) {
       $container.append(
           '<iframe class="cs-iframe" height="0" width="0" style="display:none" ' +
-              'src="https://' + '<%= @company.subdomain %>' + '.customerstories.net/widgets/track"></iframe>'
+              'src="https://' + '<%= @company.subdomain %>' + '.customerstories.net/plugins/track"></iframe>'
         );
 
       // old approach:
@@ -169,30 +175,6 @@
   }
 
   function slideDrawerPlugin ($container) {
-
-    /**
-     * there are two headers: visible-xs-block and hidden-xs
-     * for auto-show behavior, the click event will be triggered on all headers, including the hidden ones.
-     * below two functions ensure only one toggle happens
-     */
-    var isXsWidgetAndScreen = function ($clickTarget) {
-          var parent = $clickTarget.parent(),
-              screenWidth = parseInt($clickTarget.closest('.cs-row').css('width'), 10);
-          if (screenWidth <= 767 && parent.hasClass('visible-xs-block')) {
-            return true;
-          } else {
-            return false;
-          }
-        },
-        isSmWidgetAndScreen = function ($clickTarget) {
-          var parent = $clickTarget.parent(),
-              screenWidth = parseInt($clickTarget.closest('.cs-row').css('width'), 10);
-          if (screenWidth > 767 && parent.hasClass('hidden-xs')) {
-            return true;
-          } else {
-            return false;
-          }
-        };
 
     var drawer = {
 
@@ -209,20 +191,20 @@
           // Set drawer to hide
           drawer.hide(options, div);
         }
-        $container.on('click', '.cs-header:not([class*="remove"])', function () {
-          if ( isXsWidgetAndScreen($(this)) ) {
-            drawer.toggle(options, div);
-          } else if ( isSmWidgetAndScreen($(this)) ) {
+        $container.on(
+          'click',
+          '.visible-xs-block .cs-header:not([class*="remove"]), .hidden-xs .cs-header:not([class*="remove"])',
+          function () {
             drawer.toggle(options, div);
           }
-        });
+        );
       },
       toggle: function (options, div) {
         ($(div).height() + options.borderHeight === options.drawerHeight) ?
           drawer.slide( div, options.drawerHiddenHeight, options.slideSpeed ) :
           drawer.slide( div, options.drawerHeight - options.borderHeight, options.slideSpeed );
       },
-      slide: function (div, height, speed, userClicked) {
+      slide: function (div, height, speed) {
         $(div).animate({ 'height': height }, speed, 'swing', function () {
           $container.find('.cs-header i[class*="fa-chevron"]').toggle();
           $container.find('header').toggleClass('open closed');
