@@ -1,7 +1,6 @@
 
 .testimonial, .cs-testimonial {
   position: relative;
-  // color: #888;
   > .container > .row, > .cs-container > .cs-row {
     display: flex;
     align-items: center;
@@ -54,7 +53,7 @@
     // bottom: -90px;  // mirrors margin-bottom
     z-index: -1;
     width: 100%;
-    background-image: linear-gradient(to bottom, #ffffff 0%, $csp-bg-gray 100%);
+    background-image: linear-gradient(to bottom, #ffffff 0%, if(variable-exists(bg-color), $bg-color, $csp-bg-gray) 100%);
     background-repeat: repeat-x;
     // filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fff2f2f2', endColorstr='#ffffffff', GradientType=0);
   }
@@ -73,19 +72,18 @@
     }
     .customer-logo-quote.visible-xs-block {
       .customer-logo {
-        background-color: $csp-bg-gray;
+        background-color: if(variable-exists(bg-color), $bg-color, $csp-bg-gray);
       }
     }
     .customer-logo-quote.hidden-xs {
       .customer-logo {
-        background-color: $csp-bg-gray;
+        background-color: if(variable-exists(bg-color), $bg-color, $csp-bg-gray);
         img {
           max-height: 65px;
           max-width: 60%;
         }
       }
       .customer-name {
-        // color: #777 !important;
       }
     }
   }

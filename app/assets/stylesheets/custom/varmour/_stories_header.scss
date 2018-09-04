@@ -21,7 +21,7 @@
           .input-group {
             input {
               text-transform: uppercase;
-              background-color: #f5f6f7;
+              background-color: $bg-color;
               color: #a2a1a1;
               border-radius: 0;
               text-align: center;
@@ -35,7 +35,7 @@
             .input-group-btn {
               button {
                 height: 30px;
-                background-color: #f5f6f7;
+                background-color: $bg-color;
                 color: #999;
                 padding: 4px 6px;  // overrides bootstrap 6px 12px
                 border: transparent;
@@ -58,7 +58,7 @@
     }
   }
   &:after {
-    background-image: linear-gradient(to bottom, #f5f6f7 0%, #ffffff 100%);
+    background-image: linear-gradient(to bottom, $bg-color 0%, #ffffff 100%);
   }
 }
 

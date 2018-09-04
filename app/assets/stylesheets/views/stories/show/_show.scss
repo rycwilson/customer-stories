@@ -27,7 +27,7 @@
     background-color: transparent;
     article {
       min-height: 100vh;
-      background-color: $csp-bg-gray;
+      background-color: if(variable-exists(bg-color), $bg-color, $csp-bg-gray);
       .cs-story-header {
         height: 55px;
         margin-bottom: 50px;
@@ -75,7 +75,7 @@
   }
 
   .story-content, .cs-story-content {
-    background-color: $csp-bg-gray;
+    background-color: if(variable-exists(bg-color), $bg-color, $csp-bg-gray);
     padding: 15px 0 26px 0;
     &.cs-story-content {
       span, li, p, a, h4, i {
@@ -191,8 +191,7 @@
       > .well:first-child, .cs-well:first-child {
         margin-bottom: 0;
         position:relative;
-        background-image: linear-gradient(to bottom, #ffffff 72%, $csp-bg-gray
-  100%);  //f2f2f2
+        background-image: linear-gradient(to bottom, #ffffff 72%, if(variable-exists(bg-color), $bg-color, $csp-bg-gray) 100%);
         // background-repeat: repeat-x;
         border-top: 1px solid #e3e3e3;
         border-left: 0;
@@ -227,7 +226,7 @@
   }
 
   .story-video-xs, .cs-story-video-xs {
-    background-color: $csp-bg-gray;
+    background-color: if(variable-exists(bg-color), $bg-color, $csp-bg-gray);
     padding: 25px 0;
     position: relative;
   }
@@ -318,7 +317,7 @@
       box-shadow: 0 0 5px 1px rgba(0,0,0,.25);
       // article {
       //   min-height: 100vh;
-      //   background-color: $csp-bg-gray;
+      //   background-color: if(variable-exists(bg-color), $bg-color, $csp-bg-gray);
       // }
       .cs-testimonial, .cs-story-content {
         // compensate for the margin added to story wrapper
