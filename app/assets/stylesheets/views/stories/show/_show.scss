@@ -352,11 +352,10 @@
         .customer-logo-quote.hidden-xs {
           .customer-logo {
             margin-bottom: 0;
+            .customer-name span {
+              font-size: 16px !important;
+            }
           }
-          .customer-name span {
-            font-size: 16px !important;
-          }
-
         }
       }
       &.no-video:after {
@@ -387,10 +386,10 @@
     .testimonial, .cs-testimonial {
       .customer-logo-quote.hidden-xs {
         .customer-logo {
-        }
-        .customer-name {
-          span {
-            font-size: 16px !important;
+          .customer-name {
+            span {
+              font-size: 16px !important;
+            }
           }
         }
       }
