@@ -9,6 +9,7 @@ function widgetConfigListeners () {
         return JSON.stringify(stories);
       },
       // following two functions copied over from companies/edit/profile.js
+      // TODO better way to do this with css?  https://revelry.co/css-font-color/
       hexToRgb = function (hex) {
         // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
         var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
