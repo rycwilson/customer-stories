@@ -15,7 +15,7 @@ module WidgetsHelper
   end
 
   # method provides for auto-populating settings for legacy widgets
-  def tabbed_carousel_style (company, tab_color, text_color)
+  def tabbed_carousel_style (company, tab_color, text_color, border_only=false)
     # return "" if tab_color.nil? && text_color.nil?  # internal more stories carousel => company css
     case company.subdomain
     when 'trunity'
@@ -28,7 +28,11 @@ module WidgetsHelper
       tab_color = tab_color || "#efefef"
       text_color = text_color || "#333333"
     end
-    "background-color: #{tab_color}; color: #{text_color}"
+    if border_only
+      "border-top-color: #{tab_color}"
+    else
+      "background-color: #{tab_color}; color: #{text_color}"
+    end
   end
 
 end
