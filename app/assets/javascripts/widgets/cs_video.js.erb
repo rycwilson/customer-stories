@@ -2,16 +2,20 @@
 function cspInitVideo ($, $story) {
 
   // two containers: regular and xs
-  // var $iframe = $('#cs-video-modal iframe'),
-  var $iframe = $(window).width() < 768 ? $story.find('.cs-story-video-xs iframe') : $story.find('.cs-story-video iframe'),
-      videoPlayerWindow = $iframe[0].contentWindow,
-      $thumbContainers = $story.find('.video-thumb-container'),
+  var $thumbContainers = $story.find('.video-thumb-container'),
       provider = $thumbContainers.data('provider'),
       videoId = $thumbContainers.data('video-id'),
       videoUrl = $thumbContainers.data('video-url'),
       placeholderUrl = "<%= asset_path('video_placeholder.jpg') %>",
       videoQueryString,
       thumbSrc;
+
+  if (['youtube', 'vimeo'].includes(provider)) {
+    // var $iframe = $('#cs-video-modal iframe'),
+    var $iframe = $(window).width() < 768 ? $story.find('.cs-story-video-xs iframe') : $story.find('.cs-story-video iframe'),
+        videoPlayerWindow = $iframe[0].contentWindow;
+
+  }
 
   loadVideoThumbnail();
 
