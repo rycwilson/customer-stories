@@ -14,10 +14,10 @@
 
   <div class="well fileinput customer-logo <%= story.customer.logo_url.present? ? 'fileinput-exists' : 'fileinput-new' %>" data-provides="fileinput">
 
-<!--     <label class="checkbox-inline" style="position: absolute; top: 8px; left: 10px">
-      <%#= customer_form.check_box(:show_name_with_logo, {}, 'true', 'false') %>
+    <label class="checkbox-inline">
+      <%= customer_form.check_box(:show_name_with_logo, {}, 'true', 'false') %>
       Show name with logo
-    </label> -->
+    </label>
 
     <div class="text-center">
 
@@ -27,7 +27,11 @@
 
       <div class="fileinput-preview fileinput-exists thumbnail" data-trigger="fileinput">
         <%= image_tag(story.customer.logo_url, alt: "logo") %>
+        <div class="customer-name" style="line-height: 18px !important; <%= story.customer.show_name_with_logo ? '' : 'display: none' %>">
+          <span><%= story.customer.name %></span>
+        </div>
       </div>
+
 
     </div>
 

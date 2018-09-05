@@ -16,7 +16,11 @@ class Customer < ActiveRecord::Base
   after_commit(on: :update) do
     expire_fragment_cache_on_logo_change
     self.company.expire_stories_json_cache
-  end if Proc.new { |customer| customer.previous_changes.key?(:logo_url) }
+  end if Proc.new do |customer|
+      customer.previous_changes.any? do |k, v|
+        [:logo_url, :show_name_with_logo].include?(k)
+      end
+    end
 
   after_commit(on: [:update]) do
     self.stories.each { |story| story.expire_csp_story_path_cache }
@@ -47,7 +51,7 @@ class Customer < ActiveRecord::Base
             "memcache-iterator-#{self.company.stories_gallery_fragments_memcache_iterator}"
           )
         end
-        success.product_tags.each do |tag|
+        story.product_tags.each do |tag|
           self.expire_fragment(
             "#{self.company.subdomain}/stories-gallery-product-#{tag.id}-" +
             "memcache-iterator-#{self.company.stories_gallery_fragments_memcache_iterator}"
