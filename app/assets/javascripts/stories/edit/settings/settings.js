@@ -9,14 +9,8 @@ function storiesEditSettingsListeners () {
 
   $(document)
 
-    .on("DOMSubtreeModified", '[data-trigger="fileinput"]', function () {
-      console.log('change')
-    })
-
     .on('change', '.customer-logo input[name*="show_name_with_logo"]', function () {
-      // console.log($(this).closest('.customer-logo').find('.customer-name'))
       $(this).closest('.customer-logo').find('.customer-name').toggle();
-
     })
 
     // ensure only valid logo/story publish states
