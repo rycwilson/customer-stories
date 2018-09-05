@@ -73,9 +73,9 @@
 
   // root_url provides a company-specific url (via subdomain)
   function getWidget ($container, $script) {
-    var isDemo = $script.data('demo') ||
-                (<%= @company.subdomain == 'varmour' %> && !$container.is('#cs-varmour-container'))
     return function () {
+      var isDemo = $script.data('demo') ||
+                  (<%= @company.subdomain == 'varmour' %> && !$container.is('#cs-varmour-container'));
       $.ajax({
         url: "<%= URI.join(root_url, plugin_view_path(@type)) %>",
         method: 'GET',
