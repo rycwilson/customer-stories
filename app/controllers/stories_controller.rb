@@ -326,7 +326,7 @@ class StoriesController < ApplicationController
           :id, :name, :customer_id, :curator_id,
           product_ids: [], story_category_ids: [],
           results_attributes: [:id, :description, :_destroy] ,
-          customer_attributes: [:id, :name, :logo_url, :company_id]
+          customer_attributes: [:id, :name, :logo_url, :show_name_with_logo, :company_id]
         ]
       )
   end
