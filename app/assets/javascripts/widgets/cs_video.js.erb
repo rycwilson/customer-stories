@@ -43,7 +43,7 @@ function cspInitVideo ($, $story) {
 
     if (provider === 'youtube') {
       // ref: http://stackoverflow.com/questions/2068344
-      thumbSrc = '//img.youtube.com/vi/' + videoId + '/hqdefault.jpg';
+      thumbSrc = 'https://img.youtube.com/vi/' + videoId + '/hqdefault.jpg';
       $.when(appendThumbnail())
         .done(function () {
           var $images = $story.find('.cs-story-video-xs img, .cs-story-video img'),
@@ -68,7 +68,7 @@ function cspInitVideo ($, $story) {
 
     } else if (provider === 'vimeo') {
       $.ajax({
-        url: '//vimeo.com/api/oembed.json?url=https%3A//vimeo.com/' + videoId,
+        url: 'https://vimeo.com/api/oembed.json?url=https%3A//vimeo.com/' + videoId,
         method: 'GET',
         dataType: 'json',
       })
