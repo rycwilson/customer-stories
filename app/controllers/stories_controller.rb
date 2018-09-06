@@ -182,6 +182,11 @@ class StoriesController < ApplicationController
     respond_to { |format| format.js }
   end
 
+  def track
+    response.headers.delete('X-Frame-Options')  # allows the tracking iframe to be rendered on host site
+    render(layout: false)
+  end
+
   def search
     @search_string = params[:search]
     @story_ids = Story.company_public(@company.id)

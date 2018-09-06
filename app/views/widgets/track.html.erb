@@ -2,30 +2,26 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>CSP Widget Tracking</title>
+  <title>CSP Plugin Tracking</title>
 </head>
 <body>
 
-  <% if production? %>
+  <!-- Google Code for Remarketing Tag -->
+  <script type="text/javascript">
+  /* <![CDATA[ */
+  var google_conversion_id = 919156278;
+  var google_custom_params = window.google_tag_params;
+  var google_remarketing_only = true;
+  /* ]]> */
+  </script>
+  <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
+  </script>
 
-    <!-- Google Code for Remarketing Tag -->
-    <script type="text/javascript">
-    /* <![CDATA[ */
-    var google_conversion_id = 919156278;
-    var google_custom_params = window.google_tag_params;
-    var google_remarketing_only = true;
-    /* ]]> */
-    </script>
-    <script type="text/javascript" src="//www.googleadservices.com/pagead/conversion.js">
-    </script>
-
-    <noscript>
-    <div style="display:inline;">
-    <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/919156278/?guid=ON&amp;script=0"/>
-    </div>
-    </noscript>
-
-  <% end %>
+  <noscript>
+  <div style="display:inline;">
+  <img height="1" width="1" style="border-style:none;" alt="" src="//googleads.g.doubleclick.net/pagead/viewthroughconversion/919156278/?guid=ON&amp;script=0"/>
+  </div>
+  </noscript>
 
 </body>
 </html>

@@ -110,7 +110,7 @@
         initOverlays = $.Deferred(),
         tabbedCarouselDelay = ((type === 'tabbed_carousel') && parseInt($script.data('delay'), 10) || 0);
 
-    trackVisitor($container);
+    trackPluginVisitor($container);
 
     // do not apply overlays to varmour.com
     if ($container.is('#cs-varmour-container') && !isDemoHost) {
@@ -120,10 +120,9 @@
       $.getScript("<%= asset_url('widgets/cs_video.js') %>", function () {
           initVideo.resolve();
         });
-
       if (type !== 'tabbed_carousel') {
         $.getScript("<%= asset_url('widgets/cs_overlays.js') %>", function () {
-            cspInitOverlays($, $container);
+            cspInitOverlays($, $container, '<%= @company.subdomain %>');
             initOverlays.resolve();
           });
       } else {
@@ -159,7 +158,7 @@
     }
   }
 
-  function trackVisitor ($container) {
+  function trackPluginVisitor ($container) {
     if (<%= ENV['HOST_NAME'] == 'customerstories.net' %> && !isDemoHost) {
       $container.append(
           '<iframe class="cs-iframe" height="0" width="0" style="display:none" ' +

@@ -191,6 +191,16 @@ Rails.application.routes.draw do
     # don't call this route 'story' or it will leave the PUT and DELETE routes (above)
     # without an alias
     constraints(StoryPathConstraint) do
+      get(
+        '/:customer/:product/:title',
+        to: 'stories#track',
+        constraints: -> (request) { request.query_parameters[:track].present? }
+      )
+      get(
+        '/:customer/:title',
+        to: 'stories#track',
+        constraints: -> (request) { request.query_parameters[:track].present? }
+      )
       get '/:customer/:product/:title', to: 'stories#show', as: 'public_story'
       get '/:customer/:title', to: 'stories#show', as: 'public_story_no_product'
     end

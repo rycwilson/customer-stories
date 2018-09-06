@@ -3,9 +3,10 @@
 //= require js/classie
 //= require plugins/grid_overlays
 
-function cspInitOverlays ($, $container) {
+function cspInitOverlays ($, $container, subdomain) {
 
-  var loading = function ($storyCard) {
+  var isDemoHost = window.location.href.match(/(\/plugins\/demo|weebly)/),
+      loading = function ($storyCard) {
           $storyCard.addClass('cs-loading');
           $container.find('a').css('pointer-events', 'none');
           setTimeout(function () {
@@ -34,6 +35,7 @@ function cspInitOverlays ($, $container) {
         .done(function (data, status, jqxhr) {
           var storyIndex = $container.is('#cs-gallery') ? $storyCard.index() + 1 : $storyCard.parent().index() + 1;
           $story = $container.find('.content__item:nth-of-type(' + storyIndex + ')');
+          trackStoryVisitor($storyCard);
           $.when(
             $story.html(data.html),
             $storyCard.removeClass('cs-still-loading').addClass('cs-loaded')
@@ -61,6 +63,16 @@ function cspInitOverlays ($, $container) {
     }
 
   });
+
+  function trackStoryVisitor ($storyCard) {
+    if (<%= ENV['HOST_NAME'] == 'customerstories.net' %> && !isDemoHost) {
+      $storyCard.append(
+        '<iframe class="cs-iframe" height="0" width="0" style="display:none" ' +
+          'src="' + $storyCard.attr('href') + '?track=1"' +
+        '></iframe>'
+      );
+    }
+  }
 
   function initLinkedIn () {
     if (typeof(IN) !== 'object') {
