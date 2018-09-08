@@ -42,7 +42,12 @@
     lockScroll = false, xscroll, yscroll,
     isAnimating = false,
     // csp...
-    scrollBarWidth, bodyScrollSetting;
+    htmlScrollSetting = $('html').css('overflow-y');
+    // htmlHeightSetting = $('html').css('height');
+    // htmlOverscrollSetting = $('html').css('overscroll-behavior-y');
+    bodyScrollSetting = $('body').css('overflow-y');
+    // bodyHeightSetting = $('body').css('height');
+    // bodyOverscrollSetting = $('body').css('overscroll-behavior-y');
 
   /**
    * gets the viewport width and height
@@ -189,9 +194,9 @@
                .removeAttr('style');  // this gets rid of pointer-events: none
       });
 
-      // csp modify... (the overlay will have its own scroll bar)...
+      // csp: the overlay will have its own scroll bar
       $('html, body').css('overflow-y', 'hidden');
-      $('.scroll-wrap').css('overflow-y', 'auto');
+      $('.scroll-wrap').css('overflow-y', 'scroll');
 
     });
   }
@@ -199,7 +204,8 @@
   function hideContent() {
     // csp modify: return setting to whatever it was before overlay was opened
     $('.scroll-wrap').css('overflow-y', 'hidden');
-    $('html, body').css('overflow-y', 'auto');
+    $('html').css('overflow-y', htmlScrollSetting);
+    $('body').css('overflow-y', bodyScrollSetting);
 
     var gridItem = gridItems[current], contentItem = contentItems[current];
 

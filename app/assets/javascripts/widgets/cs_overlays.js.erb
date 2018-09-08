@@ -14,7 +14,27 @@ function cspInitOverlays ($, $container, subdomain) {
               $storyCard.addClass('cs-still-loading');
             }
           }, 1000);
-        };
+        },
+      applyScrollBoundaries = function () {
+          var maxY, startY = 0;
+          $container
+            .find('.scroll-wrap').on('touchstart', function (event) {
+                startY = event.originalEvent.touches[0].pageY;
+              })
+              .end()
+            .find('.scroll-wrap').on('touchmove', function (event) {
+              var offsetY;
+              maxY = $(this).prop('scrollHeight') - $(this).prop('offsetHeight');
+              offsetY = startY - event.originalEvent.touches[0].pageY;
+              // prevent scroll if it's going past the boundary
+              if ($(this).prop('scrollTop') + offsetY < 0 || $(this).prop('scrollTop') + offsetY > maxY) {
+                event.preventDefault();
+                $(this).prop('scrollTop', Math.max(0, Math.min(maxY, $(this).prop('scrollTop') + offsetY)));
+              }
+            });
+          };
+
+  applyScrollBoundaries();
 
   $container.on('click', 'a.published, a.preview-published', function (e) {
     e.preventDefault();
