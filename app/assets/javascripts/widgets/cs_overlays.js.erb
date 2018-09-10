@@ -16,9 +16,6 @@ function cspInitOverlays ($, $container, subdomain) {
           }, 1000);
         },
       applyScrollBoundaries = function () {
-        $('.fart').on('scroll', function () {
-          console.log('fart scroll')
-        })
           var maxY, startY = 0;
           $container
             .find('.scroll-wrap').on('touchstart', function (event) {
