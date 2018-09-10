@@ -16,6 +16,9 @@ function cspInitOverlays ($, $container, subdomain) {
           }, 1000);
         },
       applyScrollBoundaries = function () {
+        $('.fart').on('scroll', function () {
+          console.log('fart scroll')
+        })
           var maxY, startY = 0;
           $container
             .find('.scroll-wrap').on('touchstart', function (event) {
@@ -163,7 +166,8 @@ function cspInitOverlays ($, $container, subdomain) {
 
             if ($story.find('.linkedin-widget').toArray()
                   .every(function (widget) { return $(widget).hasClass('cs-loaded'); })) {
-              $story.find('.story-contributors').removeClass('hidden');
+              // $story.find('.story-contributors').removeClass('hidden');
+            $story.find('.story-contributors').css('visibility', 'visible');
             }
           }
         };
