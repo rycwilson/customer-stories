@@ -1,4 +1,18 @@
 
+// TODO try this:
+// blockquote {
+//   z-index: 600;
+//   p {
+//     &:before {
+//       font-size: 8em;
+//       top: -58px;
+//       left: -26px;
+//       z-index: 300;
+//       color: #e6e6e6;  // looked decent on varmour background, maybe generalize with rgba(0, 0, 0, x)
+//     }
+//   }
+// }
+
 .testimonial, .cs-testimonial {
   .customer-logo-quote {
     .customer-quote, .cs-customer-quote {
