@@ -127,15 +127,19 @@
     var dummy = document.createElement('div');
     dummy.className = 'placeholder';
 
+    // console.log('grid offset', $(gridEl).offset().top)
     var itemOffsetLeft, itemOffsetTop;
     // set the width/heigth and position
     if ($(item).hasClass('grid__item--carousel')) {
       itemOffsetLeft = $(item).offset().left;
+      // console.log('offset left', itemOffsetLeft)
       itemOffsetTop = ($('.cs-rh-container').offset().top + parseInt($('.row-horizon').css('padding-top'))) - $(gridEl).offset().top;
+      // console.log('offset top', itemOffsetTop)
     } else {
       itemOffsetLeft = item.offsetLeft;
       itemOffsetTop = item.offsetTop;
     }
+
     dummy.style.WebkitTransform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/gridItemsContainer.offsetWidth + ',' + (item.offsetHeight)/getViewport('y') + ',1)';
     dummy.style.transform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/gridItemsContainer.offsetWidth + ',' + (item.offsetHeight)/getViewport('y') + ',1)';
 
