@@ -152,7 +152,7 @@
     // body overlay
     classie.add(bodyEl, 'view-single');
     setTimeout(function() {
-
+      $('.cs-main').css('z-index', '100000');
       // expands the placeholder
       // csp removed...
       // dummy.style.WebkitTransform = 'translate3d(-5px, ' + (scrollY() - 5) + 'px, 0px)';
@@ -202,6 +202,7 @@
       $('html, body').css('overflow-y', 'hidden');
       $('.scroll-wrap').css('overflow-y', 'scroll');
 
+
     });
   }
 
@@ -232,6 +233,9 @@
       dummy.style.transform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + gridItem.offsetWidth/gridItemsContainer.offsetWidth + ',' + gridItem.offsetHeight/getViewport('y') + ',1)';
       dummy.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
       onEndTransition(dummy, function() {
+        // csp
+        $('.cs-main').css('z-index', '50');
+
         // reset content scroll..
         contentItem.parentNode.scrollTop = 0;
         gridItemsContainer.removeChild(dummy);
