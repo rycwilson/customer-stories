@@ -127,15 +127,19 @@
     var dummy = document.createElement('div');
     dummy.className = 'placeholder';
 
+    // console.log('grid offset', $(gridEl).offset().top)
     var itemOffsetLeft, itemOffsetTop;
     // set the width/heigth and position
     if ($(item).hasClass('grid__item--carousel')) {
       itemOffsetLeft = $(item).offset().left;
+      // console.log('offset left', itemOffsetLeft)
       itemOffsetTop = ($('.cs-rh-container').offset().top + parseInt($('.row-horizon').css('padding-top'))) - $(gridEl).offset().top;
+      // console.log('offset top', itemOffsetTop)
     } else {
       itemOffsetLeft = item.offsetLeft;
       itemOffsetTop = item.offsetTop;
     }
+
     dummy.style.WebkitTransform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/gridItemsContainer.offsetWidth + ',' + (item.offsetHeight)/getViewport('y') + ',1)';
     dummy.style.transform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/gridItemsContainer.offsetWidth + ',' + (item.offsetHeight)/getViewport('y') + ',1)';
 
@@ -148,7 +152,7 @@
     // body overlay
     classie.add(bodyEl, 'view-single');
     setTimeout(function() {
-
+      $('.cs-main').css('z-index', '100000');
       // expands the placeholder
       // csp removed...
       // dummy.style.WebkitTransform = 'translate3d(-5px, ' + (scrollY() - 5) + 'px, 0px)';
@@ -198,6 +202,7 @@
       $('html, body').css('overflow-y', 'hidden');
       $('.scroll-wrap').css('overflow-y', 'scroll');
 
+
     });
   }
 
@@ -228,6 +233,9 @@
       dummy.style.transform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + gridItem.offsetWidth/gridItemsContainer.offsetWidth + ',' + gridItem.offsetHeight/getViewport('y') + ',1)';
       dummy.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
       onEndTransition(dummy, function() {
+        // csp
+        $('.cs-main').css('z-index', '50');
+
         // reset content scroll..
         contentItem.parentNode.scrollTop = 0;
         gridItemsContainer.removeChild(dummy);
