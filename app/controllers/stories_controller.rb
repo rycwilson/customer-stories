@@ -68,6 +68,7 @@ class StoriesController < ApplicationController
 
   def show
     if params[:is_widget]
+      sleep 5
       # @is_widget = @is_external = true
       respond_to do |format|
         format.js do
