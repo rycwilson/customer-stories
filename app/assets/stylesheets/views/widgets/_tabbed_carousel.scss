@@ -167,8 +167,10 @@
     // height: 160px;
     width: 100%;
     background: rgba(0, 0, 0, 0.7);
-    background-clip: content-box;
     border-top: 3px solid rgba(0, 0, 0, 0.7);
+    &.native {
+      background-clip: content-box;  // prevents overlapping backgrounds from creating a dark intersection
+    }
   }
 
   .cs-drawer-items {

@@ -63,7 +63,7 @@
 
   <div class="cs-container-fluid">
 
-    <div class="cs-drawer-content" style="<%= tabbed_carousel_style(company, tab_color, text_color, true) %>">
+    <div class="cs-drawer-content <%= is_external ? '' : 'native' %>" style="<%= tabbed_carousel_style(company, tab_color, text_color, true) %>">
       <div class="cs-drawer-items">
 
         <div class="cs-row cs-pagination-row text-center">
