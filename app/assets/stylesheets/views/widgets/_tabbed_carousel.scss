@@ -167,8 +167,8 @@
     // height: 160px;
     width: 100%;
     background: rgba(0, 0, 0, 0.7);
-    border-collapse: collapse;
-    // border-top: 3px solid #000000;
+    background-clip: content-box;
+    border-top: 3px solid rgba(0, 0, 0, 0.7);
   }
 
   .cs-drawer-items {
