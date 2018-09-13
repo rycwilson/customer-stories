@@ -19,7 +19,7 @@ function storiesShow () {
         if (scrollBottom < $('#sign-in-footer').height()) {
           $('#cs-tabbed-carousel').hide();
         }
-        else if (!getCookie('cs-tabbed-carousel-removed')) {
+        else if (!Cookies.get('cs-tabbed-carousel-removed')) {
           $('#cs-tabbed-carousel').show();
         }
       }
