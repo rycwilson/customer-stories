@@ -9,9 +9,14 @@ function cspInitTabbedCarousel ($, $container, delay, isDemo) {
           .on('click', '.cs-header [class*="remove"]', function (e, data) {
             $container.hide();
             if (!isDemo) {
-              // set a cookie to keep the widget hidden for a day
+              // set a cookie to keep the plugin hidden for a day
               var date = new Date();
-              setCookie('cs-tabbed-carousel-removed', '1', date.setDate(date.getDate() + 1), '/', window.location.hostname);
+              setCookie(
+                'cs-tabbed-carousel-removed',
+                '1',
+                new Date(date.setDate(date.getDate() + 1)).toUTCString(),
+                '/',
+                window.location.hostname);
             }
             return false;
           });
