@@ -28,10 +28,10 @@ function storiesShow () {
 
 function initMoreStories () {
   var moreStoriesDelay = 5000;
-  if (Cookies.get('cs-tabbed-carousel-removed')) return false;
+  if (Cookies.get('cs-carousel-removed')) return false;
   $('.cs-header [class*="remove"]').on('click', function (e) {
     $('#cs-tabbed-carousel').hide();
-    Cookies.set('cs-tabbed-carousel-removed', '1', { expires: 1, path: '/' });
+    Cookies.set('cs-carousel-removed', '1', { expires: 1, path: '/' });
     return false;
   });
   slideDrawerPlugin($('#cs-tabbed-carousel'));  // define the jquery plugin
