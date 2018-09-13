@@ -166,8 +166,8 @@
     position: relative;
     // height: 160px;
     width: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    border-top: 3px solid rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.75);
+    border-top: 3px solid rgba(0, 0, 0, 0.75);
     &.native {
       background-clip: content-box;  // prevents overlapping backgrounds from creating a dark intersection
     }
