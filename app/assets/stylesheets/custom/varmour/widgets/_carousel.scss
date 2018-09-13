@@ -5,6 +5,11 @@
 @import '../../../views/widgets/widgets_bootstrap';
 @import '../../../views/widgets/overlays/main';
 @import '../../../views/stories/show/show';
+// @import '../show';
+
+.cs-well {
+  border-radius: 0;
+}
 
 .cs-container-fluid {
   position: relative;

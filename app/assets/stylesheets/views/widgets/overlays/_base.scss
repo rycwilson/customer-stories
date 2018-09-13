@@ -58,7 +58,6 @@
 }
 
 .placeholder.placeholder--trans-in {
-  // left: -20px;
   background-color: rgba(0, 0, 0, 0.6);
   -webkit-transition: -webkit-transform $anim-time;
   transition: transform $anim-time;  // , left $anim-time;
@@ -67,7 +66,6 @@
 }
 
 .placeholder.placeholder--trans-out {
-  // width: 100vw;
   background-color: $color_secondary;
   -webkit-transition: -webkit-transform $anim-time;
   transition: transform $anim-time;
