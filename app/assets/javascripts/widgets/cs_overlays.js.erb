@@ -53,7 +53,6 @@ function cspInitOverlays ($, $container, subdomain) {
         dataType: 'jsonp'
       })
         .done(function (data, status, jqxhr) {
-          console.log(data)
           var storyIndex = $container.is('#cs-gallery') ? $storyCard.index() + 1 : $storyCard.parent().index() + 1;
           $story = $container.find('.content__item:nth-of-type(' + storyIndex + ')');
           trackStoryVisitor($storyCard);

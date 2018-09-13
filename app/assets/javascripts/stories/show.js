@@ -14,6 +14,7 @@ function storiesShow () {
       Cookies.set('csp-story-tab', '#story-content');
     })
     .on('scroll', function () {
+      if (CSP.screenSize === 'xs') return false;
       if ($('body').hasClass('stories show') && !CSP.current_user) {
         var scrollBottom = $(document).height() - $(window).height() - $(window).scrollTop();
         if (scrollBottom < $('#sign-in-footer').height()) {
@@ -159,7 +160,7 @@ function widgetsMonitor () {
               setWidgetTimeout(firstWidgetReadyTimeoutDelay, postMessageHandler);
             }
             if (contributors.every(function (c) { return c.widget_loaded; })) {
-              $('.story-contributors').removeClass('hidden');
+              $('.story-contributors').css('visibility', 'visible');
             }
           }
         }
