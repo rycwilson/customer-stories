@@ -35,14 +35,6 @@ function cspInitTabbedCarousel ($, $container, delay, isDemo) {
   }, isDemo ? 0 : delay * 1000);
 
   function setCookie (name, value, expires, path, domain, secure) {
-    console.log(
-      name + "=" + escape(value) +
-      ((expires) ? "; expires=" + expires : "") +
-      ((path) ? "; path=" + path : "") +
-      ((domain) ? "; domain=" + domain : "") +
-      ((secure) ? "; secure" : "")
-    );
-
     document.cookie = name + "=" + escape(value) +
       ((expires) ? "; expires=" + expires : "") +
       ((path) ? "; path=" + path : "") +
