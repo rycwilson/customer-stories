@@ -1,5 +1,13 @@
 &.stories.show, .cs-overlay-container {
 
-  @import 'widgets/tabbed_carousel';
+  #cs-tabbed-carousel {
+    @import 'plugins/tabbed_carousel';
+    .cs-header {
+      background-color: #febe57;
+    }
+    .cs-drawer-content {
+      border-top-color: #febe57;
+    }
+  }
 
 }
