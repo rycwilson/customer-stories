@@ -73,6 +73,10 @@ function cspInitOverlays ($, $container, subdomain) {
                 $('.content__item--show .cs-close').first().trigger('click');
               });
 
+              $container.on('click touchend', '.linkedin-widget', function () {
+                window.open($(this).data('linkedin-url'), '_blank');
+              });
+
               // the grid_overlays.js listener is vanilla js, won't pick up on $storyCard.trigger('click')
               $storyCard[0].click();
             });
