@@ -146,6 +146,10 @@
         transition: all 0s;
       }
     }
+    &:active {
+      -webkit-filter: brightness(94%);
+      box-shadow: 0 0;
+    }
     &.logo-published {
       pointer-events: none;
     }

@@ -125,6 +125,10 @@
         transition: all 0s;
       }
     }
+    &:active {
+      -webkit-filter: brightness(94%);
+      box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08)
+    }
     &.logo-published {
       pointer-events: none;
     }

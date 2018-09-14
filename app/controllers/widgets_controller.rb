@@ -107,7 +107,7 @@ class WidgetsController < ApplicationController
   def custom_stylesheet_url (company, type)
     URI.join(
       root_url,
-      ActionController::Base.helpers.asset_path("custom/#{company.subdomain}/widgets/#{type}.css")
+      ActionController::Base.helpers.asset_path("custom/#{company.subdomain}/plugins/#{type}.css")
     ).to_s
   end
 

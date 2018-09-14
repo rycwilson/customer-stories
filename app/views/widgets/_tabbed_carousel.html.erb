@@ -6,7 +6,7 @@
 
       <div class="visible-xs-block col-xs-12 text-center">
         <!-- the widget toggles on initial display, so start with "open" -->
-        <header class="cs-header open" style="<%= tabbed_carousel_style(company, tab_color, text_color) %>">
+        <header class="cs-header open" style="<%= is_external ? tabbed_carousel_style(company, tab_color, text_color) : '' %>">
           <div class="cs-flexbox">
             <span class="cs-open-close"><%= title %></span>
             <span class="cs-header-icons">
@@ -24,7 +24,7 @@
 
       <div class="hidden-xs col-sm-5 col-sm-offset-7 col-md-4 col-md-offset-8 col-lg-3 col-lg-offset-9">
         <!-- the widget toggles on initial display, so start with "open" -->
-        <header class="cs-header open" style="<%= tabbed_carousel_style(company, tab_color, text_color) %>">
+        <header class="cs-header open" style="<%= is_external ? tabbed_carousel_style(company, tab_color, text_color) : '' %>">
           <div class="cs-flexbox">
             <span class="cs-open-close"><%= title %></span>
             <span class="cs-header-icons">
@@ -63,7 +63,18 @@
 
   <div class="cs-container-fluid">
 
-    <div class="cs-drawer-content <%= is_external ? '' : 'native' %>" style="<%= tabbed_carousel_style(company, tab_color, text_color, true) %>">
+    <div class="cs-drawer-content" style="<%= is_external ? tabbed_carousel_style(company, tab_color, text_color, true) : '' %>">
+
+<!-- this approach is needed if a uniform background color *with opacity* across drawer content and header is desired -->
+<!-- reason: overlapping backgrounds with some transparency will necessitate background-clip setting and this causes screwy animation  -->
+<!--     <div class="container" style="position: absolute; top: -51px; left: 0; right: 0; margin: 0 auto; height: 48px; background: transparent">
+      <div class="row" style="height: 100%">
+        <div class="col-xs-12" style="height: 100%">
+          <div style="height: 100%; width: 200px; background: rgba(0,0,0, 0.8)"></div>
+        </div>
+      </div>
+    </div> -->
+
       <div class="cs-drawer-items">
 
         <div class="cs-row cs-pagination-row text-center">

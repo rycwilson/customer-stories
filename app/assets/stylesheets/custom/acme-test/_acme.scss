@@ -6,10 +6,10 @@ body.acme-test:not(.companies):not(.profile):not(.edit) {
     #cs-tabbed-carousel {
       .cs-section {
         .cs-header {
-          background-color: #ff0000;
+          background-color: red;
         }
         .cs-drawer-content {
-          border-top-color: #fff;
+          border-top-color: red;
         }
       }
     }

@@ -47,24 +47,24 @@
       }
     ) %>
 
-<%# if @more_stories.present? && @company.subdomain != 'varmour' %>
+<% if @more_stories.present? && @company.subdomain != 'varmour' %>
 
-  <!-- <div id="cs-tabbed-carousel">
-    <%#= render(
+  <div id="cs-tabbed-carousel">
+    <%= render(
           'widgets/tabbed_carousel',
           {
             company: @company,
             stories: @more_stories,
             title: 'More Stories',
-            tab_color: 'rgba(0, 0, 0, 0.8)',
-            text_color: '#fff',
+            tab_color: nil,
+            text_color: nil,
             is_widget: true,
             is_external: false
           }
         ) %>
-  </div> -->
+  </div>
 
-<%# end %>
+<% end %>
 
 
 
