@@ -1,7 +1,7 @@
 
 <% if company.subdomain != 'varmour' || is_demo %>
 
-<div class="cs-overlay-container" "<%= background %>">
+<div class="cs-overlay-container">
   <div class="cs-main">
 
     <div class="cs-grid cs-grid-carousel">
@@ -12,7 +12,7 @@
 
         <div class="cs-row">
 
-          <div class="cs-scroll col-xs-2 col-sm-1">
+          <div class="cs-scroll col-xs-2 col-sm-1 <%= 'bg-' + background %>">
             <div class="cs-scroll-left">
             </div>
           </div>
@@ -36,6 +36,7 @@
                           is_curator: false,
                           is_widget: true,
                           is_external: true,
+                          background: background,
                           widget_type: 'carousel'
                         }
                       ) %>
@@ -48,7 +49,7 @@
 
           </div>
 
-          <div class="cs-scroll col-xs-2 col-sm-1">
+          <div class="cs-scroll col-xs-2 col-sm-1 <%= 'bg-' + background %>">
             <div class="cs-scroll-right">
             </div>
           </div>
@@ -68,7 +69,7 @@
 
         </div>
 
-        <div class="cs-row cs-pagination">
+        <div class="cs-row cs-pagination <%= 'bg-' + background %>">
         </div>
 
       </div>

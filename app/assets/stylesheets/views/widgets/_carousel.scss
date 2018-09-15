@@ -43,6 +43,9 @@
     margin: 0 auto;
     background-color: #fff;
     border: 1px solid transparent;
+    &.bg-dark {
+      border: 1px solid #fff;
+    }
     // following settings lifted from chrome new tab page
     box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
     transition: box-shadow 0.1s ease-in-out;
@@ -140,6 +143,9 @@
     }
     &:hover, &.cs-loading {
       border: 1px solid transparent;  // override bootstrap .thumbnail
+      &.bg-dark {
+        border: 1px solid #fff;
+      }
       box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
       .thumbnail-view-hover {
         -webkit-transform: translateY(0%);
@@ -229,17 +235,30 @@
       left: 0;
       right: 0;
       margin: auto;
-      height: 32px;
-      width: 35px;
-      line-height: 48px;
-      border-radius: 5px;
-      background-size: cover;
+      height: 100px;
+      width: 50px;
+      padding: 15px;
     }
-    .cs-scroll-left {
-      background-image: url('https://s3-us-west-1.amazonaws.com/csp-production-assets/varmour/nav-arrow-left.png');
+    &.bg-light {
+      .cs-scroll-left {
+        background: url('https://s3-us-west-1.amazonaws.com/csp-production-assets/shared/chevron-gray-left.png') no-repeat center;
+      }
+      .cs-scroll-right {
+        background: url('https://s3-us-west-1.amazonaws.com/csp-production-assets/shared/chevron-gray-right.png') no-repeat center;
+      }
     }
-    .cs-scroll-right {
-      background-image: url('https://s3-us-west-1.amazonaws.com/csp-production-assets/varmour/nav-arrow-right.png');
+    &.bg-dark {
+      .cs-scroll-left {
+        background: url('https://s3-us-west-1.amazonaws.com/csp-production-assets/shared/chevron-white-left.png') no-repeat center;
+      }
+      .cs-scroll-right {
+        background: url('https://s3-us-west-1.amazonaws.com/csp-production-assets/shared/chevron-white-right.png') no-repeat center;
+      }
+    }
+    // this requires same specifiticy as above settings, also must come after above settings
+    &[class*="bg-"] [class*="scroll"] {
+      background-size: contain;
+      background-origin: content-box; // this allows insertion of padding to increase clickable area
     }
   }
   .cs-scroll-xs-container {
@@ -259,11 +278,24 @@
       height: 10px;
       width: 10px;
       margin: 0 4px;
-      background-color: #ccc;
       border-radius: 8px;
     }
-    .cs-current-page-dot {
-      background-color: #444;
+    &.bg-light {
+      .cs-page-dot {
+        background-color: #bbb;
+      }
+      .cs-current-page-dot {
+        background-color: #333;
+      }
+    }
+    &.bg-dark {
+      .cs-page-dot {
+        border: 1px solid #fff;
+        background-color: transparent;
+      }
+      .cs-current-page-dot {
+        background-color: #fff;
+      }
     }
   }
 

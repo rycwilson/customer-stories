@@ -15,21 +15,11 @@ class WidgetsController < ApplicationController
       @type = params[:type]
     end
     # set the stylesheet url here, as it's impossible to use the asset path helper in cs.js in a company-specific way
-    @stylesheet_url = case @type
-    when 'carousel'
-      custom_stylesheet_url(@company, 'cs_carousel')
-    when 'tabbed_carousel'
-      custom_stylesheet_url(@company, 'cs_tabbed_carousel')
-    when 'gallery'
-      custom_stylesheet_url(@company, 'cs_gallery')
-    else
-      ''
-    end
+    @stylesheet_url = custom_stylesheet_url(@company, "cs_#{@type}")
     respond_to do |format|
       format.js { render action: 'cs' }
     end
   end
-
 
   def show
     respond_to do |format|
