@@ -17,7 +17,7 @@
   <script src="<%= asset_path('widgets/demo.js') %>"></script>
   <%= favicon_link_tag 'favicon.ico' %>
 </head>
-<body class="<%= controller_name %> <%= action_name %> <%= @company.subdomain %> <%= params[:type] %> <%= background ? 'bg-' + params[:background] : '' %>">
+<body class="<%= controller_name %> <%= action_name %> <%= @company.subdomain %> <%= params[:type] %> <%= params[:background] ? 'bg-' + params[:background] : '' %>">
 
 <!--   <div class="nav-links">
     <a href="javascript:;" data-plugin-type="gallery" class="<%#= @params[:type] == 'gallery' ? 'active' : '' %>">Gallery</a>

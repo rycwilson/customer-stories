@@ -4,9 +4,7 @@ body.widgets.demo {
   height: 100vh;
   margin: 0;
   font-family: 'Open Sans', Arial, Helvetica, sans-serif;
-  &.bg-light {
-    background-color: #f2f2f2;
-  }
+  background-color: #f2f2f2;
   &.bg-dark {
     background-color: #888;
   }
