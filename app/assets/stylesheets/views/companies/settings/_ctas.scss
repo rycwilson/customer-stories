@@ -26,8 +26,12 @@
       .html-input {
         display: none;   // to be toggled
       }
-      .checkbox {
-        margin-bottom: 10px;
+    }
+
+    .checkbox {
+      margin: 10px 0;
+      label {
+        margin-bottom: 0;
       }
     }
 

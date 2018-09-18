@@ -38,7 +38,7 @@ function storyCTAsListeners () {
     })
 
     .on('click', '#story-ctas [class*="remove"]', function (e) {
-      e.stopPropagation();
+      e.stopPropagation();  // don't trigger collapse
       var id = $(this).closest('li').data('cta-id');
       $.ajax({
         url: '/ctas/' + id,

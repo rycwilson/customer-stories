@@ -11,13 +11,13 @@
 
   <hr style="margin-bottom: 15px;border-top: 1px solid #ddd">
 
-  <%= form_tag(cta_path(cta), id: "cta-#{cta.id}-form", method: "put", remote: true) do %>
+  <%= form_tag(cta_path(cta), id: "cta-#{cta.id}-form", method: 'PUT', remote: true) do %>
 
     <%= hidden_field_tag('cta[type]', cta.type) %>
 
-    <% if is_primary %>
+    <% if cta.primary? %>
 
-      <%= hidden_field_tag(:is_primary, true) %>
+      <%= hidden_field_tag(:make_primary, true) %>
 
       <div id='primary-cta-colors' class="form-group row">
         <%= label_tag 'primary_cta[background_color]', 'Button',
@@ -70,6 +70,13 @@
       </div>
 
     <% end %>
+
+    <div class="checkbox text-right">
+      <label>
+        <%= check_box_tag('cta[make_primary]', true, false) %>
+        <span><%= cta.primary ? 'Remove primary' : 'Make primary' %></span>
+      </label>
+    </div>
 
     <div class="form-group text-right">
       <button type="submit" class="btn btn-sm btn-success" form="cta-<%= cta.id %>-form" style="width: 98px">

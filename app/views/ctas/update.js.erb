@@ -1,12 +1,28 @@
 (function () {
 
-  var id = '<%= @cta.id %>',
-      description = '<%= @cta.description %>',
-      hideCta = function () { $('#edit-cta-' + id).collapse('hide'); };
+  var template = _.template($('#cta-template').html()),
+      cta = <%= raw @cta.to_json({ methods: [:type] }) %>,
+      oldPrimaryCta = <%= raw @old_primary_cta.to_json({ methods: [:type] }) %>,
+      makePrimary = <%= @make_primary %>,
+      removePrimary = <%= @remove_primary %>;
 
-  // update description field
-  $('li[data-cta-id="' + id + '"] .cta-description span').text(description);
+  if (removePrimary) {
+    console.log('removePrimary')
+    $('#primary-cta li').empty().append('<em>Add a primary CTA</em>');
+  }
 
-  toggleFormDone($('#cta-' + id + '-form'), true);
+  if (makePrimary) {
+    console.log('makePrimary')
+    $('#primary-cta').empty().append(template({ cta: cta, isPrimary: true }));
+    $('#secondary-ctas').find('[data-cta-id="' + cta.id + '"]').remove();
+  }
+
+  if (makePrimary || removePrimary) {
+    window.scrollTo(0, 0);
+    $('#secondary-ctas').append(template({ cta: oldPrimaryCta, isPrimary: false }));
+  } else {
+    $('li[data-cta-id="' + cta.id + '"] .cta-description span').text(cta.description);
+    toggleFormDone($('#cta-' + cta.id + '-form'), true);
+  }
 
 }());

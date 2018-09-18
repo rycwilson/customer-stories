@@ -1,7 +1,7 @@
 
 <script type="text/template" id="cta-template">
 
-  <li class="list-group-item" data-primary="{{= isPrimary }}" data-cta-id="{{= cta.id }}">
+  <li class="list-group-item" data-cta-id="{{= cta.id }}">
 
     <div class="cta-description">
       <i class="fa fa-fw fa-{{= cta.type == 'CTALink' ? 'link' : 'wpforms' }}"></i>
@@ -71,6 +71,13 @@
           </div>
 
         {{ } }}
+
+        <div class="checkbox text-right">
+          <label>
+            <input type="checkbox" value="true" name="{{= cta.primary ? 'cta[remove_primary]' : 'cta[make_primary]' }}" id="{{= cta.primary ? 'cta_remove_primary' : 'cta_make_primary' }}"
+            <span>{{= cta.primary ? 'Remove primary' : 'Make primary' }}</span>
+          </label>
+        </div>
 
         <div class="form-group text-right">
           <button type="submit" class="btn btn-sm btn-success" form="cta-{{= cta.id }}-form" style="width: 98px">

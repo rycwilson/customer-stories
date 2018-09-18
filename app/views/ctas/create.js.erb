@@ -12,7 +12,7 @@
     $('#primary-cta').empty().append(template({ cta: cta, isPrimary: true }) );
     $('#primary-cta .mini-colors').minicolors({ theme: 'bootstrap' });
     $('[id="cta_is_primary"]').prop('checked', false);
-    $('#primary-cta .collapse').collapse('show');
+    // $('#primary-cta .collapse').collapse('show');
   } else {
     $('#secondary-ctas').prepend(template({ cta: cta, isPrimary: false }));
   }
