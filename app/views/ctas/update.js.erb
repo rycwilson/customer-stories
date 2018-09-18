@@ -2,11 +2,11 @@
 
   var id = '<%= @cta.id %>',
       description = '<%= @cta.description %>',
-      hideCta = function () { $('#edit-cta-' + id).collapse('hide'); }
+      hideCta = function () { $('#edit-cta-' + id).collapse('hide'); };
 
   // update description field
   $('li[data-cta-id="' + id + '"] .cta-description span').text(description);
 
-  toggleFormDone($('#cta-' + id + '-form'), true, hideCta)
+  toggleFormDone($('#cta-' + id + '-form'), true);
 
 }());

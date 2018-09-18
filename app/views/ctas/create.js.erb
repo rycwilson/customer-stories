@@ -7,9 +7,12 @@
 
   if (cta.primary) {
     if (prevPrimary) {
-      $('#secondary-ctas').prepend(template({ cta: prevPrimary, isPrimary: false }))
+      $('#secondary-ctas').prepend(template({ cta: prevPrimary, isPrimary: false }));
     }
     $('#primary-cta').empty().append(template({ cta: cta, isPrimary: true }) );
+    $('#primary-cta .mini-colors').minicolors({ theme: 'bootstrap' });
+    $('[id="cta_is_primary"]').prop('checked', false);
+    $('#primary-cta .collapse').collapse('show');
   } else {
     $('#secondary-ctas').prepend(template({ cta: cta, isPrimary: false }));
   }
@@ -17,14 +20,13 @@
   // add the form html via $.text so it's properly html-escaped
   // (the underscore template will leave the field blank)
   if (cta.type === 'CTAForm') {
-    $('li[data-cta-id="' + cta.id + '"] textarea').text(cta.form_html)
+    $('li[data-cta-id="' + cta.id + '"] textarea').text(cta.form_html);
   }
 
   // reset everything except the radio buttons (don't want toggle action)
   $('#new-cta-form').find('input, textarea').not('[name="cta[type]"]')
-      .each(function () { this.value = this.defaultValue; })
+      .each(function () { this.value = this.defaultValue; });
 
   toggleFormDone($('#new-cta-form'), true);
-  $('[id="cta_is_primary"]').prop('checked', false);
 
 }());

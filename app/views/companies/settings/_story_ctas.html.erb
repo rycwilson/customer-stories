@@ -14,15 +14,15 @@
       <ul id="primary-cta" class="list-group">
         <li class="list-group-item" data-primary="true" data-cta-id="<%= company.ctas.primary.try(:id) %>">
 
-          <% if company.ctas.primary %>
+        <% if company.ctas.primary %>
 
-            <%= render 'ctas/cta', { company: company, cta: company.ctas.primary, is_primary: true } %>
+          <%= render 'ctas/cta', { company: company, cta: company.ctas.primary, is_primary: true } %>
 
-          <% else %>
+        <% else %>
 
-            <em>Add a Primary CTA</em>
+          <em>Add a Primary CTA</em>
 
-          <% end %>
+        <% end %>
 
         </li>
       </ul>

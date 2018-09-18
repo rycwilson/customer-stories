@@ -35,11 +35,7 @@ module StoriesHelper
   end
 
   def primary_cta_style (company)
-    if company.subdomain == 'compas'
-      ""
-    else
-      "background-color:#{company.primary_cta_background_color};color:#{company.primary_cta_text_color}"
-    end
+    "background-color:#{company.primary_cta_background_color}; color:#{company.primary_cta_text_color}"
   end
 
   def include_filters? (company)

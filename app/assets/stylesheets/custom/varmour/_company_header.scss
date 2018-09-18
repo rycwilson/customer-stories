@@ -1,1 +1,14 @@
 
+#company-header {
+
+  button.primary-cta {
+    border-radius: 0;
+    text-transform: uppercase;
+    padding: 11px 32px 9px 32px;  // adjust for the font family
+    border-width: 2px;
+    &:hover {
+      background-color: transparent !important;
+    }
+  }
+
+}

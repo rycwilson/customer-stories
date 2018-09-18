@@ -37,7 +37,8 @@ function storyCTAsListeners () {
       }
     })
 
-    .on('click', '#story-ctas [class*="remove"]', function () {
+    .on('click', '#story-ctas [class*="remove"]', function (e) {
+      e.stopPropagation();
       var id = $(this).closest('li').data('cta-id');
       $.ajax({
         url: '/ctas/' + id,

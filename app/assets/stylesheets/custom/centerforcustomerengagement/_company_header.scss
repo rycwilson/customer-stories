@@ -1,0 +1,21 @@
+
+#company-header {
+
+  button.primary-cta {
+    border-radius: 2px;
+    text-transform: uppercase;
+    opacity: 1;
+    padding: 12px 24px;
+    &:hover {
+      background-color: #003464 !important;
+    }
+    a {
+      span {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 1px;
+      }
+    }
+  }
+
+}
