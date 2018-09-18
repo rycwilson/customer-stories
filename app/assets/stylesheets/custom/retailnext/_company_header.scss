@@ -6,12 +6,13 @@
 
       button.primary-cta  {
         font-size: 13px;
+        background: #ffd400 !important;
+        box-shadow: 0 3px 0 #f2b600;
         height: 36px;
         padding: 8px 12px;
         text-transform: uppercase;
         border-radius: 5px;
         border-width: 0;
-        box-shadow: 0 3px 0 #f2b600;
         transition: background-color 300ms, box-shadow 300ms;
         &:hover, &:focus {
           // opacity: 1;
