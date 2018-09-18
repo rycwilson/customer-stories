@@ -17,9 +17,7 @@
 
     <% if cta.primary? %>
 
-      <%= hidden_field_tag(:make_primary, true) %>
-
-      <div id='primary-cta-colors' class="form-group row">
+      <div id="primary-cta-colors" class="form-group row" data-toggle="tooltip" data-placement="top" data-container="body" data-title="Contact Customer Stories">
         <%= label_tag 'primary_cta[background_color]', 'Button',
               class: 'col-sm-2 control-label' %>
         <div class='col-sm-4'>
@@ -73,7 +71,12 @@
 
     <div class="checkbox text-right">
       <label>
-        <%= check_box_tag('cta[make_primary]', true, false) %>
+        <!--
+        note that an input to represent the false value would be necesseary here if we wanted to
+        see the parameter with false value on the server. however in this case we're only interested
+        if the value is true
+        -->
+        <%= check_box_tag(cta.primary ? 'cta[remove_primary]' : 'cta[make_primary]', true, false) %>
         <span><%= cta.primary ? 'Remove primary' : 'Make primary' %></span>
       </label>
     </div>

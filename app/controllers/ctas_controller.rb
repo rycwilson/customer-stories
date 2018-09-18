@@ -8,9 +8,9 @@ class CtasController < ApplicationController
 
   def create
     @company = Company.find(params[:company_id])
-    if params[:cta][:make_primary]
-      @prev_primary = @company.ctas.primary
-      @prev_primary.try(:update, { primary: false })
+    if params[:cta][:make_primary].present?
+      @old_primary_cta = @company.ctas.primary
+      @old_primary_cta.try(:update, { primary: false })
     end
     case params[:cta][:type]
     when 'link'
@@ -19,7 +19,7 @@ class CtasController < ApplicationController
         display_text: params[:cta][:link_display_text],
         link_url: params[:cta][:link_url],
         company_id: @company.id,
-        primary: params[:cta][:make_primary]
+        primary: params[:cta][:make_primary].present?
       )
     when 'form'
       @cta = CTAForm.create(
@@ -27,7 +27,7 @@ class CtasController < ApplicationController
         display_text: params[:cta][:form_display_text],
         form_html: params[:cta][:form_html],
         company_id: @company.id,
-        primary: params[:cta][:make_primary]
+        primary: params[:cta][:make_primary].present?
       )
     else
       # error
@@ -36,6 +36,8 @@ class CtasController < ApplicationController
   end
 
   def update
+    puts "PARAMS"
+    puts params
     @cta = CallToAction.find(params[:id])
     @make_primary = params['cta']['make_primary'].present?
     @remove_primary = params['cta']['remove_primary'].present?
@@ -43,7 +45,7 @@ class CtasController < ApplicationController
       @old_primary_cta = @cta.company.ctas.primary
       @old_primary_cta.try(:update, { primary: false })
     end
-    if @cta.primary?
+    if @cta.reload.primary?
       @cta.company.update(
         primary_cta_background_color: params['primary_cta']['background_color'],
         primary_cta_text_color: params['primary_cta']['text_color']

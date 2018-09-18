@@ -2,16 +2,20 @@
 (function () {
 
   var cta = <%= raw @cta.to_json({ methods: [:type] }) %>,
-      prevPrimary = <%= @prev_primary.present? %> && <%= raw @prev_primary.to_json({ methods: [:type] }) %>,
+      oldPrimaryCta = <%= @old_primary_cta.present? %> && <%= raw @old_primary_cta.to_json({ methods: [:type] }) %>,
       template = _.template($('#cta-template').html());
 
   if (cta.primary) {
-    if (prevPrimary) {
-      $('#secondary-ctas').prepend(template({ cta: prevPrimary, isPrimary: false }));
+    if (oldPrimaryCta) {
+      $('#secondary-ctas').prepend(template({ cta: oldPrimaryCta, isPrimary: false }));
     }
-    $('#primary-cta').empty().append(template({ cta: cta, isPrimary: true }) );
-    $('#primary-cta .mini-colors').minicolors({ theme: 'bootstrap' });
-    $('[id="cta_is_primary"]').prop('checked', false);
+    $.when(
+      $('#primary-cta').empty().append(template({ cta: cta, isPrimary: true }) )
+    )
+      .done(function () {
+        $('#primary-cta .mini-colors').minicolors({ theme: 'bootstrap' });
+      });
+    $('#new-cta-form [name="cta[make_primary]"]').prop('checked', false);
     // $('#primary-cta .collapse').collapse('show');
   } else {
     $('#secondary-ctas').prepend(template({ cta: cta, isPrimary: false }));
