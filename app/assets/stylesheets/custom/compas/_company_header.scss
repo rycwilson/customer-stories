@@ -5,9 +5,9 @@
     .row {
       .navbar-header { }
       button.primary-cta  {
-        background-color: transparent;
-        border-color: #e41516;
-        color: #e41516;
+        background-color: transparent !important;
+        border-color: #e41516 !important;
+        color: #e41516 !important;
         font-size: 13px;
         border-radius: 20px;
         line-height: 38px;
