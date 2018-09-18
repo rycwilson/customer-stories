@@ -4,6 +4,9 @@
   @import '../../../views/widgets/tabbed_carousel';
 
   @import '../../fonts';
-  @import 'tabbed_carousel';
+
+  // customization only in native csp
+  // TODO - resolve design conflict between allowing self-customization and offering csp customization
+  // @import 'tabbed_carousel';
 
 }

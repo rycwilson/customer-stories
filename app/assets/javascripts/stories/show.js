@@ -28,7 +28,23 @@ function storiesShow () {
 }
 
 function initMoreStories () {
-  var moreStoriesDelay = 5000;
+  var moreStoriesDelay = 5000,
+      // better to do this in css, but sometimes not possible
+      companyCustomization = function () {
+        if ($('body').hasClass('centerforcustomerengagement')) {
+          $('.cs-header, .cs-drawer-content').hover(
+            function () {
+              $('.cs-header').css('background-color', '#003464');
+              $('.cs-drawer-content').css('border-top-color', '#003464');
+            },
+            function () {
+              $('.cs-header').css('background-color', '#333');
+              $('.cs-drawer-content').css('border-top-color', '#333');
+            }
+          );
+        }
+      };
+
   if (Cookies.get('cs-carousel-removed')) return false;
   $('.cs-header [class*="remove"]').on('click', function (e) {
     $('#cs-tabbed-carousel').hide();
@@ -44,6 +60,7 @@ function initMoreStories () {
         .css({ opacity: 0, visibility: "visible" })
         .animate({ opacity: 1 }, 200)
         .animate({ bottom: 0 }, 'fast');
+      companyCustomization();
     }, moreStoriesDelay);
   });
 }

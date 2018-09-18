@@ -2,14 +2,7 @@
 &.stories.show {
 
   #cs-tabbed-carousel {
-    .cs-section {
-      .cs-header {
-        background-color: #38b4d6;
-      }
-      .cs-drawer-content {
-        border-top-color: #38b4d6;
-      }
-    }
+    @import 'plugins/tabbed_carousel';
   }
 
 }
