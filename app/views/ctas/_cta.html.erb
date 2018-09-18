@@ -17,22 +17,39 @@
 
     <% if cta.primary? %>
 
-      <div id="primary-cta-colors" class="form-group row" data-toggle="tooltip" data-placement="top" data-container="body" data-title="Contact Customer Stories">
-        <%= label_tag 'primary_cta[background_color]', 'Button',
-              class: 'col-sm-2 control-label' %>
+<% prevent_changes = ['varmour', 'retailnext', 'centerforcustomerengagement', 'compas'].include?(company.subdomain )%>
+<% if prevent_changes %>
+<div style="margin-bottom: 10px; background: transparent; opacity: 0.5" data-toggle="tooltip" data-placement="top" data-container="body" data-title="Contact Customer Stories">
+<% end %>
+
+      <div id="primary-cta-colors" class="form-group row" style="<%= prevent_changes ? 'pointer-events: none;' : '' %>">
+        <%= label_tag(
+              'primary_cta[background_color]',
+              'Button',
+              class: 'col-sm-2 control-label'
+            ) %>
         <div class='col-sm-4'>
-          <%= text_field_tag 'primary_cta[background_color]',
+          <%= text_field_tag(
+                'primary_cta[background_color]',
                 company.primary_cta_background_color,
-                class: 'form-control mini-colors' %>
+                class: 'form-control mini-colors'
+              ) %>
         </div>
         <%= label_tag 'primary_cta[text_color]', 'Text',
               class: 'col-sm-2 control-label text-right' %>
         <div class='col-sm-4'>
-          <%= text_field_tag 'primary_cta[text_color]',
+          <%= text_field_tag(
+                'primary_cta[text_color]',
                 company.primary_cta_text_color,
-                class: 'form-control mini-colors' %>
+                class: 'form-control mini-colors'
+              ) %>
         </div>
       </div>
+
+<% if prevent_changes %>
+</div>
+<% end %>
+
 
     <% end %>
 

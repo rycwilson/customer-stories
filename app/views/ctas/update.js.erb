@@ -1,6 +1,8 @@
 (function () {
 
-  var template = _.template($('#cta-template').html()),
+  // need the subdomain in order to determine whether to allow changes to primary cta colors
+  var company = <%= raw @company.to_json({ only: [:subdomain, :primary_cta_background_color, :primary_cta_text_color] }) %>;
+      template = _.template($('#cta-template').html()),
       cta = <%= raw @cta.to_json({ methods: [:type] }) %>,
       oldPrimaryCta = <%= @old_primary_cta.present? %> && <%= raw @old_primary_cta.to_json({ methods: [:type] }) %>,
       makePrimary = <%= @make_primary %>,
@@ -11,7 +13,7 @@
 
     // move old primary (if it exists) to the secondary list
     if (oldPrimaryCta) {
-      $('#secondary-ctas').prepend(template({ cta: oldPrimaryCta, isPrimary: false }));
+      $('#secondary-ctas').prepend(template({ company: company, cta: oldPrimaryCta, isPrimary: false }));
     }
 
     if (removePrimary) {
@@ -21,11 +23,12 @@
     if (makePrimary) {
       $('#secondary-ctas').find('[data-cta-id="' + cta.id + '"]').remove();
       $.when(
-        $('#primary-cta').empty().append(template({ cta: cta, isPrimary: true }))
+        $('#primary-cta').empty().append(template({ company: company, cta: cta, isPrimary: true }))
       )
         .done(function () {
           // init minicolors
           $('#primary-cta .mini-colors').minicolors({ theme: 'bootstrap' });
+          $('[data-toggle="tooltip"]').tooltip();
         });
     }
 

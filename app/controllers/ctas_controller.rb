@@ -36,9 +36,8 @@ class CtasController < ApplicationController
   end
 
   def update
-    puts "PARAMS"
-    puts params
     @cta = CallToAction.find(params[:id])
+    @company = @cta.company
     @make_primary = params['cta']['make_primary'].present?
     @remove_primary = params['cta']['remove_primary'].present?
     if @make_primary || @remove_primary

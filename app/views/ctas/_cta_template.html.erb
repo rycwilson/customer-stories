@@ -20,20 +20,30 @@
 
         {{ if (isPrimary) { }}
 
-          <div id="primary-cta-colors" class="form-group row">
+    {{ var preventChanges = ['varmour', 'retailnext', 'centerforcustomerengagement', 'compas'].includes(company.subdomain); }}
+
+    {{ if (preventChanges) { }}
+      <div style="margin-bottom: 10px; background: transparent; opacity: 0.5" data-toggle="tooltip" data-placement="top" data-container="body" data-title="Contact Customer Stories">
+    {{ } }}
+
+          <div id="primary-cta-colors" class="form-group row" style="{{= preventChanges ? 'pointer-events: none' : '' }}">
             <label class="col-sm-2 control-label" for="primary_cta_background_color">
               Button
             </label>
             <div class="col-sm-4">
-              <input type="text" name="primary_cta[background_color]" id="primary_cta_background_color" value="#337ab7" class="form-control mini-colors">
+              <input type="text" name="primary_cta[background_color]" id="primary_cta_background_color" value="{{= company.primary_cta_background_color || '#337ab7' }}" class="form-control mini-colors">
             </div>
             <label class="col-sm-2 control-label text-right" for="primary_cta_text_color">
               Text
             </label>
             <div class="col-sm-4">
-              <input type="text" name="primary_cta[text_color]" id="primary_cta_text_color" value="#ffffff" class="form-control mini-colors minicolors-input">
+              <input type="text" name="primary_cta[text_color]" id="primary_cta_text_color" value="{{= company.primary_cta_text_color || '#ffffff' }}" class="form-control mini-colors minicolors-input">
             </div>
           </div>
+
+    {{ if (preventChanges) { }}
+      </div>
+    {{ } }}
 
         {{ } }}
 

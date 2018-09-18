@@ -1,24 +1,27 @@
 
 (function () {
 
-  var cta = <%= raw @cta.to_json({ methods: [:type] }) %>,
+  // need the subdomain in order to determine whether to allow changes to primary cta colors
+  var company = <%= raw @company.to_json({ only: [:subdomain, :primary_cta_background_color, :primary_cta_text_color] }) %>,
+      cta = <%= raw @cta.to_json({ methods: [:type] }) %>,
       oldPrimaryCta = <%= @old_primary_cta.present? %> && <%= raw @old_primary_cta.to_json({ methods: [:type] }) %>,
       template = _.template($('#cta-template').html());
 
   if (cta.primary) {
     if (oldPrimaryCta) {
-      $('#secondary-ctas').prepend(template({ cta: oldPrimaryCta, isPrimary: false }));
+      $('#secondary-ctas').prepend(template({ company: company, cta: oldPrimaryCta, isPrimary: false }));
     }
     $.when(
-      $('#primary-cta').empty().append(template({ cta: cta, isPrimary: true }) )
+      $('#primary-cta').empty().append(template({ company: company, cta: cta, isPrimary: true }) )
     )
       .done(function () {
         $('#primary-cta .mini-colors').minicolors({ theme: 'bootstrap' });
+        $('[data-toggle="tooltip"]').tooltip();
       });
     $('#new-cta-form [name="cta[make_primary]"]').prop('checked', false);
     // $('#primary-cta .collapse').collapse('show');
   } else {
-    $('#secondary-ctas').prepend(template({ cta: cta, isPrimary: false }));
+    $('#secondary-ctas').prepend(template({ company: company, cta: cta, isPrimary: false }));
   }
 
   // add the form html via $.text so it's properly html-escaped
