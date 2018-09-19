@@ -1,7 +1,6 @@
 
 <%= form_tag(company_ctas_path(company), id: 'new-cta-form', remote: true) do %>
 
-  <%= hidden_field_tag('cta[is_primary]', false) %>
 
   <div class="form-group">
 
@@ -45,7 +44,8 @@
     <div class="col-sm-12">
       <div class="checkbox">
         <label>
-          <%= check_box_tag('cta[is_primary]', true, false) %>
+          <%= hidden_field_tag('cta[make_primary]', false) %>
+          <%= check_box_tag('cta[make_primary]', true, false) %>
           Make primary
         </label>
       </div>

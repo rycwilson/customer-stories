@@ -30,7 +30,6 @@
       background-color: if(variable-exists(bg-color), $bg-color, $csp-bg-gray);
       .cs-story-header {
         height: 55px;
-        margin-bottom: 50px;
         background-color: #fff;
         box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05);
         button {
@@ -327,6 +326,7 @@
       }
     }
     .testimonial, .cs-testimonial {
+      margin-top: 45px;
       margin-bottom: 90px;
       &:after {
         bottom: -90px;  // mirrors margin-bottom (above)
@@ -415,6 +415,7 @@
       width: 1120px;
     }
     .testimonial, .cs-testimonial {
+      margin-top: 50px;
       .customer-logo-quote.hidden-xs {
         .customer-logo {
           margin-bottom: 25px;

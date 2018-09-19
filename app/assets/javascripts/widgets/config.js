@@ -236,9 +236,10 @@ function widgetConfigListeners () {
     })
 
     .on('click', '.copy', function () {
-      var htmlText = $(this).parent().find('textarea').text();
+      var htmlText = $('#plugin-config-form').find('textarea[readonly]').text();
           $temp = $("<textarea></textarea>");
       $("body").append($temp);
+      console.log($temp.text());
       $temp.text(htmlText).select();
       document.execCommand("copy");
       $temp.remove();

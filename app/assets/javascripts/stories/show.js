@@ -14,12 +14,13 @@ function storiesShow () {
       Cookies.set('csp-story-tab', '#story-content');
     })
     .on('scroll', function () {
+      if (CSP.screenSize === 'xs') return false;
       if ($('body').hasClass('stories show') && !CSP.current_user) {
         var scrollBottom = $(document).height() - $(window).height() - $(window).scrollTop();
         if (scrollBottom < $('#sign-in-footer').height()) {
           $('#cs-tabbed-carousel').hide();
         }
-        else if (!getCookie('cs-tabbed-carousel-removed')) {
+        else if (!Cookies.get('cs-tabbed-carousel-removed')) {
           $('#cs-tabbed-carousel').show();
         }
       }
@@ -27,11 +28,27 @@ function storiesShow () {
 }
 
 function initMoreStories () {
-  var moreStoriesDelay = 5000;
-  if (Cookies.get('cs-tabbed-carousel-removed')) return false;
+  var moreStoriesDelay = 5000,
+      // better to do this in css, but sometimes not possible
+      companyCustomization = function () {
+        if ($('body').hasClass('centerforcustomerengagement')) {
+          $('.cs-header, .cs-drawer-content').hover(
+            function () {
+              $('.cs-header').css('background-color', '#003464');
+              $('.cs-drawer-content').css('border-top-color', '#003464');
+            },
+            function () {
+              $('.cs-header').css('background-color', '#333');
+              $('.cs-drawer-content').css('border-top-color', '#333');
+            }
+          );
+        }
+      };
+
+  if (Cookies.get('cs-carousel-removed')) return false;
   $('.cs-header [class*="remove"]').on('click', function (e) {
     $('#cs-tabbed-carousel').hide();
-    Cookies.set('cs-tabbed-carousel-removed', '1', { expires: 1, path: '/' });
+    Cookies.set('cs-carousel-removed', '1', { expires: 1, path: '/' });
     return false;
   });
   slideDrawerPlugin($('#cs-tabbed-carousel'));  // define the jquery plugin
@@ -43,6 +60,7 @@ function initMoreStories () {
         .css({ opacity: 0, visibility: "visible" })
         .animate({ opacity: 1 }, 200)
         .animate({ bottom: 0 }, 'fast');
+      companyCustomization();
     }, moreStoriesDelay);
   });
 }
@@ -159,7 +177,7 @@ function widgetsMonitor () {
               setWidgetTimeout(firstWidgetReadyTimeoutDelay, postMessageHandler);
             }
             if (contributors.every(function (c) { return c.widget_loaded; })) {
-              $('.story-contributors').removeClass('hidden');
+              $('.story-contributors').css('visibility', 'visible');
             }
           }
         }

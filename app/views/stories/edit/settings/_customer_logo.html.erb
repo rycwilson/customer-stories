@@ -14,12 +14,10 @@
 
   <div class="well fileinput customer-logo <%= story.customer.logo_url.present? ? 'fileinput-exists' : 'fileinput-new' %>" data-provides="fileinput">
 
-<!--     <div class='image-requirements'>
-      <a tabindex='0' class='customer-logo image-requirements' role='button'
-         data-toggle='popover' data-placement='top' data-trigger='focus'
-         title='Requirements - Promoted Stories Logo'
-         data-min='128x128' data-ratio='1:1' data-suggest='1200x1200'>Requirements</a>
-    </div> -->
+    <label class="checkbox-inline">
+      <%= customer_form.check_box(:show_name_with_logo, {}, 'true', 'false') %>
+      Show name with logo
+    </label>
 
     <div class="text-center">
 
@@ -29,6 +27,10 @@
 
       <div class="fileinput-preview fileinput-exists thumbnail" data-trigger="fileinput">
         <%= image_tag(story.customer.logo_url, alt: "logo") %>
+        <!-- setting the line height prevents the jasny bootstrap js from assigning a bogus line height to .customer-name -->
+        <div class="customer-name" style="line-height: 18px !important; <%= story.customer.show_name_with_logo ? '' : 'display: none' %>">
+          <span><%= story.customer.name %></span>
+        </div>
       </div>
 
     </div>

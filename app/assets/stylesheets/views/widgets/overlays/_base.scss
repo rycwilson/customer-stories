@@ -44,8 +44,8 @@
 .placeholder {
   pointer-events: none;
   position: absolute;
-  width: calc(100% + 5px);
-  height: calc(100vh + 5px);
+  width: 100vw;
+  height: 100vh;
   z-index: 100;
   top: 0;
   left: 0;
@@ -60,7 +60,7 @@
 .placeholder.placeholder--trans-in {
   background-color: rgba(0, 0, 0, 0.6);
   -webkit-transition: -webkit-transform $anim-time;
-  transition: transform $anim-time;
+  transition: transform $anim-time;  // , left $anim-time;
   -webkit-transition-timing-function: cubic-bezier(0.165,0.84,0.44,1);
   transition-timing-function: cubic-bezier(0.165,0.84,0.44,1);
 }
@@ -76,7 +76,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
+  width: 100vw;
   pointer-events: none;
   height: 0; /* Avoid second scroll bar in Chrome! */
   visibility: hidden;
@@ -101,7 +101,7 @@
   z-index: 1;
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
+  overscroll-behavior-y: none;
 }
 
 /* single content item */

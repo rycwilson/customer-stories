@@ -4,10 +4,11 @@
   .navbar-container {
     .row {
       .navbar-header { }
-      .btn.cta-link, .btn.cta-form  {
+      button.primary-cta  {
+        background-color: transparent !important;
+        border-color: #e41516 !important;
+        color: #e41516 !important;
         font-size: 13px;
-        color: #e41516;
-        border: 1px solid #e41516;
         border-radius: 20px;
         line-height: 38px;
         padding: 0 26px;
@@ -15,8 +16,8 @@
         font-weight: 600;
         transition: background .25s ease;
         &:hover, &:focus {
-          background: #e41516;
-          color: #fff;
+          background: #e41516 !important;
+          color: #fff !important;
         }
       }
     }

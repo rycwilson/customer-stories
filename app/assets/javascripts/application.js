@@ -86,7 +86,7 @@ function attachAppListeners () {
           $button = $(this);
       if ($form.is('#contribution-request-form') ||
           $form.is('[id*="success-form-"]') ||
-          $form.is('[id*="contribution-form-"') ||
+          $form.is('[id*="contribution-form-"]') ||
           $form.is('#new-story-form') ||
           $form.is('#story-settings-form') ||
           $form.is('#story-content-form') ||

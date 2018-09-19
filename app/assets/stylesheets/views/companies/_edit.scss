@@ -4,6 +4,15 @@
 
 .companies.edit {
 
+  // for safari
+  input::-webkit-contacts-auto-fill-button {
+    visibility: hidden;
+    display: none !important;
+    pointer-events: none;
+    position: absolute;
+    right: 0;
+  }
+
   // don't show tabbed content until tab is selected
   .layout-main {
     display: none

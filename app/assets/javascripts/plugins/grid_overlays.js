@@ -10,45 +10,52 @@
  */
 
 (function ($) {
-    var bodyEl = document.body,
-    docElem = window.document.documentElement,
-    support = { transitions: Modernizr.csstransitions },
-    // transition end event name
-    transEndEventNames = { 'WebkitTransition': 'webkitTransitionEnd', 'MozTransition': 'transitionend', 'OTransition': 'oTransitionEnd', 'msTransition': 'MSTransitionEnd', 'transition': 'transitionend' },
-    transEndEventName = transEndEventNames[ Modernizr.prefixed( 'transition' ) ],
-    onEndTransition = function( el, callback ) {
-      var onEndCallbackFn = function( ev ) {
-        if( support.transitions ) {
-          if( ev.target != this ) return;
-          this.removeEventListener( transEndEventName, onEndCallbackFn );
-        }
-        if( callback && typeof callback === 'function' ) { callback.call(this); }
-      };
+  var bodyEl = document.body,
+  docElem = window.document.documentElement,
+  support = { transitions: Modernizr.csstransitions },
+  // transition end event name
+  transEndEventNames = { 'WebkitTransition': 'webkitTransitionEnd', 'MozTransition': 'transitionend', 'OTransition': 'oTransitionEnd', 'msTransition': 'MSTransitionEnd', 'transition': 'transitionend' },
+  transEndEventName = transEndEventNames[ Modernizr.prefixed( 'transition' ) ],
+  onEndTransition = function( el, callback ) {
+    var onEndCallbackFn = function( ev ) {
       if( support.transitions ) {
-        el.addEventListener( transEndEventName, onEndCallbackFn );
+        if( ev.target != this ) return;
+        this.removeEventListener( transEndEventName, onEndCallbackFn );
       }
-      else {
-        onEndCallbackFn();
-      }
-    },
-    gridEl = document.getElementById('cs-gallery') || document.getElementById('cs-carousel'),
-    gridItemsContainer = gridEl.querySelector('.cs-grid'),
-    contentItemsContainer = gridEl.querySelector('.cs-content'),
-    gridItems = gridItemsContainer.querySelectorAll('.grid__item'),
-    contentItems = contentItemsContainer.querySelectorAll('.content__item'),
-    // csp - removed since each story now has its own close button
-    // closeCtrl = contentItemsContainer.querySelectorAll('.cs-close'),
-    current = -1,
-    lockScroll = false, xscroll, yscroll,
-    isAnimating = false,
-    // csp...
-    scrollBarWidth, bodyScrollSetting;
+      if( callback && typeof callback === 'function' ) { callback.call(this); }
+    };
+    if( support.transitions ) {
+      el.addEventListener( transEndEventName, onEndCallbackFn );
+    }
+    else {
+      onEndCallbackFn();
+    }
+  },
+  gridEl = document.getElementById('cs-gallery') || document.getElementById('cs-carousel'),
+  gridItemsContainer = gridEl.querySelector('.cs-grid'),
+  contentItemsContainer = gridEl.querySelector('.cs-content'),
+  gridItems = gridItemsContainer.querySelectorAll('.grid__item'),
+  contentItems = contentItemsContainer.querySelectorAll('.content__item'),
+  // csp - removed since each story now has its own close button
+  // closeCtrl = contentItemsContainer.querySelectorAll('.cs-close'),
+  current = -1,
+  lockScroll = false, xscroll, yscroll,
+  isAnimating = false,
+  // csp...
+  bodyScrollY = $('body').css('overflow-y'),
+  bodyScrollX = $('body').css('overflow-x'),
+  scrollbarWidth = window.innerWidth - $(document).width(),
+  gridOffsetLeft = $(gridEl).offset().left,
+  gridOffsetRight = ($(window).width() - ($(gridEl).offset().left + $(gridEl).outerWidth())),
+  itemOffsetLeft, itemOffsetTop;  // will be assigned when an item is clicked
+
+  $('.cs-content').css('margin-left', '-' + gridOffsetLeft + 'px');
 
   /**
    * gets the viewport width and height
    * based on http://responsejs.com/labs/dimensions/
    */
-  function getViewport( axis ) {
+  function getViewport (axis) {
     var client, inner;
     if( axis === 'x' ) {
       client = docElem['clientWidth'];
@@ -58,7 +65,6 @@
       client = docElem['clientHeight'];
       inner = window['innerHeight'];
     }
-
     return client < inner ? inner : client;
   }
   function scrollX() { return window.pageXOffset || docElem.scrollLeft; }
@@ -68,7 +74,7 @@
     initEvents();
   }
 
-  function initEvents() {
+  function initEvents () {
     [].slice.call(gridItems).forEach(function(item, pos) {
       item.addEventListener('click', function(ev) {
         ev.preventDefault();
@@ -93,7 +99,7 @@
     // csp - removed
     // closeCtrl.addEventListener('click', function() {
     //   // csp modify: return setting to whatever it was before overlay was opened
-    //   $('body').css('overflow-y', bodyScrollSetting);
+    //   $('body').css('overflow-y', bodyScrollY);
     //   hideContent();
     // });
 
@@ -117,22 +123,23 @@
   /**
    * some csp modifications to ensure overlay opens correctly in a container that can be at any y-position on the page
    */
-  function loadContent(item) {
+  function loadContent (item) {
     // add expanding element/placeholder
     var dummy = document.createElement('div');
     dummy.className = 'placeholder';
 
-    var itemOffsetLeft, itemOffsetTop;
+
+
     // set the width/heigth and position
+    itemOffsetLeft = $(item).offset().left - gridOffsetLeft;
     if ($(item).hasClass('grid__item--carousel')) {
-      itemOffsetLeft = $(item).offset().left;
       itemOffsetTop = ($('.cs-rh-container').offset().top + parseInt($('.row-horizon').css('padding-top'))) - $(gridEl).offset().top;
+      // console.log('offset top', itemOffsetTop)
     } else {
-      itemOffsetLeft = item.offsetLeft;
       itemOffsetTop = item.offsetTop;
     }
-    dummy.style.WebkitTransform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/gridItemsContainer.offsetWidth + ',' + (item.offsetHeight)/getViewport('y') + ',1)';
-    dummy.style.transform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/gridItemsContainer.offsetWidth + ',' + (item.offsetHeight)/getViewport('y') + ',1)';
+    dummy.style.WebkitTransform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + item.offsetHeight/getViewport('y') + ',1)';
+    dummy.style.transform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + item.offsetHeight/getViewport('y') + ',1)';
 
     // add transition class
     classie.add(dummy, 'placeholder--trans-in');
@@ -143,15 +150,16 @@
     // body overlay
     classie.add(bodyEl, 'view-single');
     setTimeout(function() {
-
+      // csp
+      $('.cs-main').css('z-index', '100000');
+      $('body').css('overflow-x', 'hidden');  // prevents horizontal scrollbar from appearing on transform
       // expands the placeholder
       // csp removed...
       // dummy.style.WebkitTransform = 'translate3d(-5px, ' + (scrollY() - 5) + 'px, 0px)';
       // dummy.style.transform = 'translate3d(-5px, ' + (scrollY() - 5) + 'px, 0px)';
       // csp modified...
-      // console.log($('.cs-grid').offset().top - scrollY())
-      dummy.style.WebkitTransform = 'translate3d(-5px, ' + (- 5 - ($('.cs-grid').offset().top - scrollY())) + 'px, 0px)';
-      dummy.style.transform = 'translate3d(-5px, ' + (- 5 - ($('.cs-grid').offset().top - scrollY())) + 'px, 0px)';
+      dummy.style.WebkitTransform = 'translate3d(' + (-1 * gridOffsetLeft) + 'px,' + (-1 * ($('.cs-grid').offset().top - scrollY())) + 'px, 0px)';
+      dummy.style.transform = 'translate3d(' + (-1 * gridOffsetLeft) + 'px,' + (-1 * ($('.cs-grid').offset().top - scrollY())) + 'px, 0px)';
       // disallow scroll
       window.addEventListener('scroll', noscroll);
     }, 25);
@@ -189,9 +197,11 @@
                .removeAttr('style');  // this gets rid of pointer-events: none
       });
 
-      // csp modify... (the overlay will have its own scroll bar)...
-      $('html, body').css('overflow-y', 'hidden');
-      $('.scroll-wrap').css('overflow-y', 'auto');
+      // csp: the overlay will have its own scroll bar
+      $('body').css('overflow-y', 'hidden');
+      $('body').css('overflow-x', bodyScrollX);  // return to original setting
+      $('.scroll-wrap').css('overflow-y', 'scroll');
+
 
     });
   }
@@ -199,7 +209,7 @@
   function hideContent() {
     // csp modify: return setting to whatever it was before overlay was opened
     $('.scroll-wrap').css('overflow-y', 'hidden');
-    $('html, body').css('overflow-y', 'auto');
+    $('body').css('overflow-y', bodyScrollY);
 
     var gridItem = gridItems[current], contentItem = contentItems[current];
 
@@ -211,24 +221,20 @@
     setTimeout(function() {
       var dummy = gridItemsContainer.querySelector('.placeholder');
       classie.removeClass(bodyEl, 'noscroll');
-      if ($(gridItem).hasClass('grid__item--carousel')) {
-        itemOffsetLeft = $(gridItem).offset().left;
-        itemOffsetTop = ($('.cs-rh-container').offset().top + parseInt($('.row-horizon').css('padding-top'))) - $(gridEl).offset().top;
-      } else {
-        itemOffsetLeft = gridItem.offsetLeft;
-        itemOffsetTop = gridItem.offsetTop;
-      }
-      dummy.style.WebkitTransform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + gridItem.offsetWidth/gridItemsContainer.offsetWidth + ',' + gridItem.offsetHeight/getViewport('y') + ',1)';
-      dummy.style.transform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + gridItem.offsetWidth/gridItemsContainer.offsetWidth + ',' + gridItem.offsetHeight/getViewport('y') + ',1)';
+      dummy.style.WebkitTransform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + gridItem.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + gridItem.offsetHeight/getViewport('y') + ',1)';
+      dummy.style.transform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + gridItem.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + gridItem.offsetHeight/getViewport('y') + ',1)';
       dummy.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
       onEndTransition(dummy, function() {
+        // csp
+        $('.cs-main').css('z-index', '50');
+
         // reset content scroll..
         contentItem.parentNode.scrollTop = 0;
         gridItemsContainer.removeChild(dummy);
         classie.remove(gridItem, 'grid__item--loading');
         classie.remove(gridItem, 'grid__item--animate');
         lockScroll = false;
-        window.removeEventListener( 'scroll', noscroll );
+        window.removeEventListener('scroll', noscroll);
       });
 
       // reset current
@@ -236,7 +242,7 @@
     }, 25);
   }
 
-  function noscroll() {
+  function noscroll () {
     if(!lockScroll) {
       lockScroll = true;
       xscroll = scrollX();

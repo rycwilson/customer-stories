@@ -1,7 +1,7 @@
 
 <script type="text/template" id="cta-template">
 
-  <li class="list-group-item" data-primary="{{= isPrimary }}" data-cta-id="{{= cta.id }}">
+  <li class="list-group-item" data-cta-id="{{= cta.id }}">
 
     <div class="cta-description">
       <i class="fa fa-fw fa-{{= cta.type == 'CTALink' ? 'link' : 'wpforms' }}"></i>
@@ -20,76 +20,30 @@
 
         {{ if (isPrimary) { }}
 
-          <input type="hidden" name="is_primary" id="is_primary" value="true">
+    {{ var preventChanges = ['varmour', 'retailnext', 'centerforcustomerengagement', 'compas'].includes(company.subdomain); }}
 
-          <div id="primary-cta-colors" class="form-group row">
+    {{ if (preventChanges) { }}
+      <div style="margin-bottom: 10px; background: transparent; opacity: 0.5" data-toggle="tooltip" data-placement="top" data-container="body" data-title="Contact Customer Stories">
+    {{ } }}
+
+          <div id="primary-cta-colors" class="form-group row" style="{{= preventChanges ? 'pointer-events: none' : '' }}">
             <label class="col-sm-2 control-label" for="primary_cta_background_color">
               Button
             </label>
             <div class="col-sm-4">
-              <div class="minicolors minicolors-theme-bootstrap minicolors-position-bottom minicolors-position-left">
-                <input type="text" name="primary_cta[background_color]"
-                       id="primary_cta_background_color" value="#ffffff"
-                       class="form-control mini-colors minicolors-input" size="7">
-                <span class="minicolors-swatch minicolors-sprite minicolors-input-swatch">
-                  <span class="minicolors-swatch-color"
-                        style="background-color: rgb(255, 255, 255);"></span>
-                </span>
-                <div class="minicolors-panel minicolors-slider-hue">
-                  <div class="minicolors-slider minicolors-sprite">
-                    <div class="minicolors-picker" style="top: 0px;">
-                    </div>
-                  </div>
-                  <div class="minicolors-opacity-slider minicolors-sprite">
-                    <div class="minicolors-picker">
-                    </div>
-                  </div>
-                  <div class="minicolors-grid minicolors-sprite"
-                       style="background-color: rgb(255, 0, 0);">
-                    <div class="minicolors-grid-inner">
-                    </div>
-                    <div class="minicolors-picker" style="top: 0px; left: 0px;">
-                      <div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <input type="text" name="primary_cta[background_color]" id="primary_cta_background_color" value="{{= company.primary_cta_background_color || '#337ab7' }}" class="form-control mini-colors">
             </div>
             <label class="col-sm-2 control-label text-right" for="primary_cta_text_color">
               Text
             </label>
             <div class="col-sm-4">
-              <div class="minicolors minicolors-theme-bootstrap minicolors-position-bottom minicolors-position-left">
-                <input type="text" name="primary_cta[text_color]"
-                       id="primary_cta_text_color" value="#ffffff"
-                       class="form-control mini-colors minicolors-input" size="7">
-                <span class="minicolors-swatch minicolors-sprite minicolors-input-swatch">
-                  <span class="minicolors-swatch-color"
-                        style="background-color: rgb(255, 255, 255);"></span>
-                </span>
-                <div class="minicolors-panel minicolors-slider-hue">
-                  <div class="minicolors-slider minicolors-sprite">
-                    <div class="minicolors-picker" style="top: 0px;">
-                    </div>
-                  </div>
-                  <div class="minicolors-opacity-slider minicolors-sprite">
-                    <div class="minicolors-picker">
-                    </div>
-                  </div>
-                  <div class="minicolors-grid minicolors-sprite"
-                       style="background-color: rgb(255, 0, 0);">
-                    <div class="minicolors-grid-inner">
-                    </div>
-                    <div class="minicolors-picker" style="top: 0px; left: 0px;">
-                      <div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <input type="text" name="primary_cta[text_color]" id="primary_cta_text_color" value="{{= company.primary_cta_text_color || '#ffffff' }}" class="form-control mini-colors minicolors-input">
             </div>
           </div>
+
+    {{ if (preventChanges) { }}
+      </div>
+    {{ } }}
 
         {{ } }}
 
@@ -125,6 +79,18 @@
           </div>
 
         {{ } }}
+
+        <div class="checkbox text-right">
+          <label>
+            <!--
+            note that an input to represent the false value would be necesseary here if we wanted to
+            see the parameter with false value on the server. however in this case we're only interested
+            if the value is true
+            -->
+            <input type="checkbox" value="true" name="{{= cta.primary ? 'cta[remove_primary]' : 'cta[make_primary]' }}" id="{{= cta.primary ? 'cta_remove_primary' : 'cta_make_primary' }}"
+            <span>{{= cta.primary ? 'Remove primary' : 'Make primary' }}</span>
+          </label>
+        </div>
 
         <div class="form-group text-right">
           <button type="submit" class="btn btn-sm btn-success" form="cta-{{= cta.id }}-form" style="width: 98px">

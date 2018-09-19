@@ -251,6 +251,10 @@ function cspInitCarousel ($, $container) {
     resizeTimer = setTimeout(adjustColumns, 100);
   };
   $(window).on('resize', resizeCallback);
+
+  // an open overlay causes adjustment settings to be lost? so we need this...
+  $(document).on('click', '.cs-close', adjustColumns);
+
   $(window).on('orientationchange', adjustColumns);
 
   $container.find('.cs-container-fluid').css('visibility', 'visible');

@@ -21,10 +21,19 @@
           }
         }
       }
-      .btn.cta-link, .btn.cta-form {
-        font-weight: 400;
+      button.primary-cta {
+        padding: 10px 32px;  // doubles bootstrap horizontal padding
+        opacity: 0.9;
+        border: 1px solid transparent;
         &:hover, &:focus {
-          opacity: 0.9;
+          opacity: 1;
+        }
+        a {
+          text-decoration: none;
+          color: unset;  // let the style attribute on the button define the color
+          span {
+            // font-weight: 600;
+          }
         }
       }
     }

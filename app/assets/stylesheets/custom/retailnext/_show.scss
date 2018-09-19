@@ -3,9 +3,14 @@
 
   &.stories.show {
     #cs-tabbed-carousel {
-      @import 'widgets/tabbed_carousel';
+      @import 'plugins/tabbed_carousel';
       .cs-header {
         font-family: $metropolis-regular;  // don't apply this to external widget
+        background-color: #ffd400;
+        color: #333;
+      }
+      .cs-drawer-content {
+        border-top-color: #ffd400;
       }
     }
   }

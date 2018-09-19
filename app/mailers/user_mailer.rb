@@ -45,7 +45,7 @@ class UserMailer < ApplicationMailer
 
   # type is one of: request, remind, alert, test
   def send_mail (type, sender, recipient, subject)
-    if Rails.env == 'development'
+    if Rails.env.development?
       recipient_address = "#{recipient.full_name} <***REMOVED***>"
       sender_address = "#{sender.full_name} <dev-test@customerstories.net>"
     elsif ENV['HOST_NAME'] == 'customerstories.org'  # staging
