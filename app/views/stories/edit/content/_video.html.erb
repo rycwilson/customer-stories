@@ -27,7 +27,7 @@
 
   <% elsif story.video_url.present? %>
 
-    <div class="video-thumb-container"
+    <div class="video-thumb-container embed-responsive embed-responsive-16by9"
          data-toggle='modal' data-target='#video-modal'
          data-provider="<%= story.video_info[:provider] %>"
          data-video-id="<%= story.video_info[:id] %>"
