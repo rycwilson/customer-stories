@@ -50,7 +50,7 @@
         $container = $("#cs-tabbed-carousel, #cs-tab-container, #cs-container").first();
       }
 
-      if ($script.data('demo') || (isVarmour && !$container.is('#cs-varmour-container'))) {
+      if ($script.data('demo')) {
         isDemo = true;
       }
 
@@ -109,29 +109,23 @@
     };
   }
 
-  function initWidget (type, $container, $script) {
+  function initWidget (type, $container, $script, isDemo) {
     var initVideo = $.Deferred(),
         initOverlays = $.Deferred(),
         tabbedCarouselDelay = ((type === 'tabbed_carousel') && parseInt($script.data('delay'), 10) || 0);
 
     trackPluginVisitor($container);
 
-    // do not apply overlays to varmour.com
-    if ($container.is('#cs-varmour-container') && !isDemo) {
-      initVideo.resolve();
-      initOverlays.resolve();
-    } else {
-      $.getScript("<%= asset_url('widgets/cs_video.js') %>", function () {
-          initVideo.resolve();
+    $.getScript("<%= asset_url('widgets/cs_video.js') %>", function () {
+        initVideo.resolve();
+      });
+    if (type !== 'tabbed_carousel') {
+      $.getScript("<%= asset_url('widgets/cs_overlays.js') %>", function () {
+          cspInitOverlays($, $container, '<%= @company.subdomain %>', isDemo);
+          initOverlays.resolve();
         });
-      if (type !== 'tabbed_carousel') {
-        $.getScript("<%= asset_url('widgets/cs_overlays.js') %>", function () {
-            cspInitOverlays($, $container, '<%= @company.subdomain %>');
-            initOverlays.resolve();
-          });
-      } else {
-        initOverlays.resolve();
-      }
+    } else {
+      initOverlays.resolve();
     }
 
     $.when(initVideo, initOverlays).done(function () {

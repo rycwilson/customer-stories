@@ -64,7 +64,7 @@ class WidgetsController < ApplicationController
         # widget: @company.widget,   # applies to tabbed carousel (tab style)
         stories: stories.first(16),
         title: 'Customer Stories',
-        is_demo: !!params[:is_demo],
+        is_demo: params[:is_demo].present?,
         background: params[:background],
         tab_color: params[:tab_color],
         text_color: params[:text_color],

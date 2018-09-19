@@ -3,10 +3,9 @@
 //= require js/classie
 //= require plugins/grid_overlays
 
-function cspInitOverlays ($, $container, subdomain) {
+function cspInitOverlays ($, $container, subdomain, isDemo) {
 
-  var isDemoHost = window.location.href.match(/(\/plugins\/demo|weebly)/),
-      loading = function ($storyCard) {
+  var loading = function ($storyCard) {
           $storyCard.addClass('cs-loading');
           $container.find('a').css('pointer-events', 'none');
           setTimeout(function () {
@@ -89,7 +88,7 @@ function cspInitOverlays ($, $container, subdomain) {
   });
 
   function trackStoryVisitor ($storyCard) {
-    if (<%= ENV['HOST_NAME'] == 'customerstories.net' %> && !isDemoHost) {
+    if (<%= ENV['HOST_NAME'] == 'customerstories.net' %> && !isDemo) {
       $storyCard.append(
         '<iframe class="cs-iframe" height="0" width="0" style="display:none" ' +
           'src="' + $storyCard.attr('href') + '?track=1"' +
