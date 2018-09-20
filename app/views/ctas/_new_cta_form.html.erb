@@ -1,10 +1,9 @@
 
 <%= form_tag(company_ctas_path(company), id: 'new-cta-form', remote: true) do %>
 
-
   <div class="form-group">
 
-    <div class='btn-group' data-toggle="buttons">
+    <div class="btn-group">
       <label id='link-radio' class="active radio-inline">
         <%= radio_button_tag('cta[type]', 'link', true) %>
         Web link
@@ -17,22 +16,22 @@
 
     <div class="row">
       <div class="col-sm-12">
-        <%= text_field_tag 'cta[link_description]', nil,
+        <%= text_field_tag 'new_cta[link_description]', nil,
               class: 'form-control link-input', autocomplete: 'off',
               placeholder: 'description' %>
-        <%= text_field_tag 'cta[link_display_text]', nil,
+        <%= text_field_tag 'new_cta[link_display_text]', nil,
               class: 'form-control link-input', autocomplete: 'off',
               placeholder: 'display text' %>
-        <%= text_field_tag 'cta[link_url]', nil,
+        <%= text_field_tag 'new_cta[link_url]', nil,
               class: 'form-control link-input', autocomplete: 'off',
               placeholder: 'website address' %>
-        <%= text_field_tag 'cta[form_description]', nil,
+        <%= text_field_tag 'new_cta[form_description]', nil,
               class: 'form-control html-input', autocomplete: 'off',
               placeholder: 'description' %>
-        <%= text_field_tag 'cta[form_display_text]', nil,
+        <%= text_field_tag 'new_cta[form_display_text]', nil,
               class: 'form-control html-input', autocomplete: 'off',
               placeholder: 'display text' %>
-        <%= text_area_tag 'cta[form_html]', nil,
+        <%= text_area_tag 'new_cta[form_html]', nil,
               class: 'form-control html-input', rows: 3,
               placeholder: 'html, e.g. <script> and <form> tags' %>
       </div>
@@ -44,8 +43,12 @@
     <div class="col-sm-12">
       <div class="checkbox">
         <label>
-          <%= hidden_field_tag('cta[make_primary]', false) %>
-          <%= check_box_tag('cta[make_primary]', true, false) %>
+          <!--
+        note that an input to represent the false value would be necesseary here if we wanted to
+        see the parameter with false value on the server. however in this case we're only interested
+        if the value is true
+        -->
+          <%= check_box_tag('new_cta[make_primary]', true, false) %>
           Make primary
         </label>
       </div>
