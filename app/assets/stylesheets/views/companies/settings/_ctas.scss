@@ -1,9 +1,18 @@
 
 .companies.edit {
 
-  #story-ctas {
+  #ctas {
     .form-group {
       margin-bottom: 10px;
+    }
+
+    [data-target="#new-cta-modal"] {
+      cursor: pointer;
+      color: #666;
+      i {
+        // TODO: Font Awesome 5 has font variants that allow different weights
+        -webkit-text-stroke: 1px #efefef;
+      }
     }
 
     #new-cta-form {
@@ -40,6 +49,9 @@
     }
     .list-group {
       margin-bottom: 30px;
+      .list-group-item.open {
+        background-color: #e5e5e5;
+      }
     }
     #primary-cta-colors {
       // padding: 0 10px 0 10px;

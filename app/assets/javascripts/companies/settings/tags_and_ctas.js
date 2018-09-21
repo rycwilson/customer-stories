@@ -29,7 +29,7 @@ function storyCTAsListeners () {
         return (o > 125) ? 'bg-light' : 'bg-dark';
       },
       closeOpenAccordions = function () {
-        $('#story-ctas .edit-cta.collapse').each(function () {
+        $('#ctas .edit-cta.collapse').each(function () {
           if ($(this).is('.in')) {
             $(this).find('form')[0].reset();
             $(this).collapse('hide');
@@ -40,9 +40,10 @@ function storyCTAsListeners () {
   $(document)
 
     .on('click', '.section-header .help-block a', function () {
-      $(this).closest('.help-block').find('span').each(function () {
+      $(this).closest('.help-block').find('a').each(function () {
         $(this).toggle();
       });
+      $(this).closest('.section-header').find('p.help-block').toggle();
     })
 
     .on('click', '.cta-description', function () {
@@ -57,10 +58,14 @@ function storyCTAsListeners () {
     .on('shown.bs.collapse', '.edit-cta.collapse', function () {
       var top = $(this).prev().offset().top - (window.innerHeight / 2) + (($(this).outerHeight() + $(this).prev().outerHeight()) / 2);
       window.scrollTo(0, top);
+      $(this).closest('.list-group-item').addClass('open');
       // $(this).prev()[0].scrollIntoView();
     })
+    .on('hidden.bs.collapse', '.edit-cta.collapse', function () {
+      $(this).closest('.list-group-item').removeClass('open');
+    })
 
-    .on('click', '#story-ctas [class*="remove"]', function (e) {
+    .on('click', '#ctas [class*="remove"]', function (e) {
       e.stopPropagation();  // don't trigger collapse
       var id = $(this).closest('li').data('cta-id');
       $.ajax({

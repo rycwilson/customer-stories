@@ -5,6 +5,8 @@
 
 <% end %>
 
+<%= render('companies/settings/new_cta_modal', { company: @company, }) %>
+
 <div class="wrapper">
 
   <%= render 'shared/navbars/company_nav', { company: @company, workflow_stage: @workflow_stage } %>
@@ -34,8 +36,8 @@
             <%= render 'companies/settings/story_tags', { company: @company } %>
           </div>
 
-          <div class="tab-pane fade" id="story-ctas" role="tabpanel"  >
-            <%= render 'companies/settings/story_ctas', { company: @company } %>
+          <div class="tab-pane fade" id="ctas" role="tabpanel"  >
+            <%= render 'companies/settings/ctas', { company: @company } %>
           </div>
 
           <div class="tab-pane fade" id="stories-plugin">
