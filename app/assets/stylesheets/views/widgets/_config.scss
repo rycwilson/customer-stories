@@ -3,6 +3,9 @@
 
   #stories-plugin {
 
+    @import '../../../../../vendor/assets/jquery-ui-1.12.1.custom/jquery-ui';
+    @import '../../../../../vendor/assets/jquery-ui-1.12.1.custom/jquery-ui.structure';
+
     $form-width: 550px;
 
     p.lead {
@@ -130,6 +133,9 @@
         .content__select--custom, .content__select--category, .content__select--product {
           width: $form-width;
         }
+        .content__select--custom li.select2-selection__choice {
+          cursor: pointer;  // drag and drop
+        }
         // https://github.com/select2/select2-bootstrap-theme/issues/77
         .select2-container .select2-selection__rendered > *:first-child.select2-search--inline {
           width: 100% !important;
@@ -141,7 +147,6 @@
         .content__select--category, .content__select--product {
           display: none;
         }
-
       }
       .form-group.code {
         margin-bottom: 10px;

@@ -1,4 +1,6 @@
 
+//= require jquery-ui
+
 //= require jquery-csv/src/jquery.csv
 
 //= require modernizr/modernizr

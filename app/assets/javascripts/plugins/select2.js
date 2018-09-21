@@ -23,12 +23,12 @@ function initSelect2 () {
 
   var prependCustomerName = function () {
     var storyId, storyTitle, storyCustomer;
-    $('#stories-plugin .select2-selection__rendered li:not(:last-of-type)')
+    $('#stories-plugin ul.select2-selection__rendered li.select2-selection__choice')
       .each(function (index, story) {
-        storyId = $('select.widget-stories').select2('data')[index].id;
-        storyTitle = $('select.widget-stories').select2('data')[index].text;
+        storyId = $('select.plugin-stories').select2('data')[index].id;
+        storyTitle = $('select.plugin-stories').select2('data')[index].text;
         customerName = JSON.parse(
-          $('select.widget-stories').find('option[value="' + storyId + '"]').data('customer')
+          $('select.plugin-stories').find('option[value="' + storyId + '"]').data('customer')
         );
         if (!story.innerHTML.match(new RegExp('^' + customerName))) {
           story.innerHTML = story.innerHTML.replace(
@@ -229,15 +229,24 @@ function initSelect2 () {
   /**
    * widget configuration
    */
-  $('select.widget-stories').select2({
+  $('select.plugin-stories').select2({
     theme: 'bootstrap',
     placeholder: 'Select Stories or leave blank for default sort',
     tags: true,
     width: 'style'
   })
     .on('select2:select', prependCustomerName)
-    .on('select2:unselect', prependCustomerName);
-
+    .on('select2:unselect', prependCustomerName)
+    // ref https://stackoverflow.com/questions/29618382/disable-dropdown-opening-on-select2-clear
+    .on('select2:unselecting', function() {
+        $(this).data('unselecting', true);
+      })
+    .on('select2:opening', function(e) {
+       if ($(this).data('unselecting')) {
+         $(this).removeData('unselecting');
+         e.preventDefault();
+        }
+      });
 
   $('.content__select--category select').select2({
     theme: 'bootstrap',
