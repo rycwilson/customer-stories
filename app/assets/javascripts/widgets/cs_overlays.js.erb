@@ -72,7 +72,7 @@ function cspInitOverlays ($, $container, subdomain, isDemo) {
                 $('.content__item--show .cs-close').first().trigger('click');
               });
 
-              $container.on('click touchend', '.linkedin-widget', function () {
+              $container.on('click', '.linkedin-widget', function () {
                 window.open($(this).data('linkedin-url'), '_blank');
               });
 
