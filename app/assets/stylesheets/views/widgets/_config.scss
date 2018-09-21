@@ -3,6 +3,7 @@
 
   #stories-plugin {
 
+    // @import '../../../../../vendor/assets/bower_components/select2.sortable/select2.sortable';
     @import '../../../../../vendor/assets/jquery-ui-1.12.1.custom/jquery-ui';
     @import '../../../../../vendor/assets/jquery-ui-1.12.1.custom/jquery-ui.structure';
 
@@ -133,8 +134,20 @@
         .content__select--custom, .content__select--category, .content__select--product {
           width: $form-width;
         }
-        .content__select--custom li.select2-selection__choice {
+        // overrride select bootstrap theme settings
+        .select2-container--bootstrap .select2-selection--multiple {
+          .select2-selection__choice__remove {
+            margin: 0 6px;
+          }
+          .select2-selection__choice {
+            border-color: transparent;
+            background-color: #eee;
+          }
+        }
+        .content__select--custom .select2-selection__choice {
           cursor: pointer;  // drag and drop
+          width: 100%;
+          padding: 5px 0;
         }
         // https://github.com/select2/select2-bootstrap-theme/issues/77
         .select2-container .select2-selection__rendered > *:first-child.select2-search--inline {

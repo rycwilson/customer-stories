@@ -229,24 +229,49 @@ function initSelect2 () {
   /**
    * widget configuration
    */
-  $('select.plugin-stories').select2({
-    theme: 'bootstrap',
-    placeholder: 'Select Stories or leave blank for default sort',
-    tags: true,
-    width: 'style'
-  })
-    .on('select2:select', prependCustomerName)
-    .on('select2:unselect', prependCustomerName)
-    // ref https://stackoverflow.com/questions/29618382/disable-dropdown-opening-on-select2-clear
-    .on('select2:unselecting', function() {
-        $(this).data('unselecting', true);
+  $.fn.extend({
+
+    select2Sortable: function (cbAfter) {
+      var select = $(this);
+      $(select).select2({
+        theme: 'bootstrap',
+        placeholder: 'Select Stories or leave blank for default sort',
+        tags: true,
+        width: 'style',
+        createTag: function(params) {
+            return undefined;
+        }
       })
-    .on('select2:opening', function(e) {
-       if ($(this).data('unselecting')) {
-         $(this).removeData('unselecting');
-         e.preventDefault();
+        .on('select2:select', prependCustomerName)
+        .on('select2:unselect', prependCustomerName)
+        .on('select2:unselecting', function() {
+            $(this).data('unselecting', true);
+          })
+        .on('select2:opening', function(e) {
+           if ($(this).data('unselecting')) {
+             $(this).removeData('unselecting');
+             e.preventDefault();
+            }
+          });
+
+      var ul = $(select).next('.select2-container').first('ul.select2-selection__rendered');
+      ul.sortable({
+        // placeholder doesn't appear to be working properly; ok - don't need it
+        // placeholder : 'ui-state-highlight',
+        // forcePlaceholderSize: true,
+        items       : 'li:not(.select2-search__field)',
+        tolerance   : 'pointer',
+        stop: function() {
+          $($(ul).find('.select2-selection__choice').get().reverse()).each(function() {
+            var id = $(this).data('data').id;
+            var option = select.find('option[value="' + id + '"]')[0];
+            $(select).prepend(option);
+          });
+          if (cbAfter) cbAfter();
         }
       });
+    }
+  });
 
   $('.content__select--category select').select2({
     theme: 'bootstrap',
