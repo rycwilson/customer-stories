@@ -42,6 +42,7 @@ function widgetConfigListeners () {
           setTimeout(initSelect2Sortable, 25);
         } else {
           $('select.plugin-stories').select2Sortable(updateScriptTag);
+          $('select.plugin-stories').show();
         }
       };
 

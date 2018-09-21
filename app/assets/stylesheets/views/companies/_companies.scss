@@ -16,10 +16,10 @@
   }
   #company-profile > form >, #story-tags > form >, #story-ctas >, #stories-plugin > {
     .row > {
-      div:first-of-type {
+      div[class*="col-"]:first-of-type:not(.story-header) {
         padding: 0 15px 0 25px;
       }
-      div:last-of-type, div:only-child {
+      div[class*="col-"]:last-of-type, div:only-child {
         padding: 0 25px 0 15px;
       }
     }

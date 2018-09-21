@@ -39,6 +39,12 @@ function storyCTAsListeners () {
 
   $(document)
 
+    .on('click', '.section-header .help-block a', function () {
+      $(this).closest('.help-block').find('span').each(function () {
+        $(this).toggle();
+      });
+    })
+
     .on('click', '.cta-description', function () {
       if (!$(this).is('[class*="remove"]')) {
         if (!$(this).is('.in')) {
