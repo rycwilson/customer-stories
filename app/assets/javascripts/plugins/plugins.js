@@ -12,7 +12,6 @@
 function constructPlugins () {
 
   var updateScriptTag = function () {
-        console.log('updateScriptTag()');
         var isFirstSelection = !$('.script-tag textarea').text().match(/data-stories/);
         $('.script-tag textarea').text(
           $('.script-tag textarea').text()

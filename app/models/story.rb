@@ -1,5 +1,5 @@
 class Story < ActiveRecord::Base
-
+  extend OrderAsSpecified
   include FriendlyId
 
   belongs_to :success
@@ -188,7 +188,7 @@ class Story < ActiveRecord::Base
   end
 
   # method takes an active record relation
-  def self.order stories_relation
+  def self.default_order stories_relation
     stories_relation
       .order("stories.published DESC, stories.publish_date ASC")
       .order("stories.updated_at DESC")

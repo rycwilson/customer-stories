@@ -76,13 +76,16 @@ class WidgetsController < ApplicationController
   end
 
   def plugin_stories (company, params)
+    puts params
     if params[:stories].present?
-      # remove any that don't exist
-      stories = Story.find( params[:stories].delete_if { |story_id| !Story.exists?(story_id) } )
-                     .delete_if do |story|
-                        # remove unauthorized stories or stories not published
-                        story.company.id != company.id || !story.logo_published?
-                      end
+      # remove any that don't exist, unauthorized, or unpublished
+      story_ids = params[:stories]
+                   .delete_if { |story_id| !Story.exists?(story_id) }
+                   .delete_if do |story_id|
+                      story = Story.find(story_id)
+                      (story.company.id != company.id) || !story.logo_published?
+                    end
+      stories = Story.where(id: story_ids).order_as_specified(id: story_ids)  # preserve original order
     elsif params[:category].present? || params[:product].present?
       filter_params = get_filters_from_query_or_widget(company, params, true)
       stories = company.filter_stories(filter_params)
