@@ -80,6 +80,7 @@
   function getWidget ($container, $script, isDemo) {
     return function () {
 
+      console.log('getWidget isDemo', isDemo)
       $.ajax({
         url: "<%= URI.join(root_url, plugin_view_path(@type)) %>",
         method: 'GET',
@@ -102,7 +103,7 @@
           var $images = $container.find('img'), loadedImages = 0;
           $images.on('load', function () {
             if (++loadedImages === $images.length) {
-              initWidget('<%= @type %>', $container, $script);
+              initWidget('<%= @type %>', $container, $script, isDemo);
             }
           });
         });
@@ -110,6 +111,7 @@
   }
 
   function initWidget (type, $container, $script, isDemo) {
+    console.log('initWidget isDemo', isDemo)
     var initVideo = $.Deferred(),
         initOverlays = $.Deferred(),
         tabbedCarouselDelay = ((type === 'tabbed_carousel') && parseInt($script.data('delay'), 10) || 0);
