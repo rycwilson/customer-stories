@@ -53,10 +53,10 @@ class WidgetsController < ApplicationController
   def plugin_view (company, params)
     stories = plugin_stories(company, params)
 
-    # if company.subdomain == 'varmour'  # varmour custom sort
+    if company.subdomain == 'varmour'  # varmour custom sort
       # ref: https://stackoverflow.com/questions/33732208
-      # stories = stories.sort_by { |s| [ !s[:published] ? 0 : 1, s[:updated_at] ] }.reverse
-    # end
+      stories = stories.sort_by { |s| [ !s[:published] ? 0 : 1, s[:updated_at] ] }.reverse
+    end
 
     render_to_string(
       partial: params[:type],
