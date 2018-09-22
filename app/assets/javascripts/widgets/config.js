@@ -2,7 +2,9 @@
 function widgetConfigListeners () {
 
   var customStoriesToJson = function () {
-        var storyIds = $('select.plugin-stories').val().map(function (id) { return +id; });
+        var storyIds = $('select.plugin-stories').val() ?
+                         $('select.plugin-stories').val().map(function (id) { return +id; }) :
+                         [];
         return JSON.stringify(storyIds);
       },
       hexToRgb = function (hex) {
@@ -195,7 +197,7 @@ function widgetConfigListeners () {
       );
     })
 
-    .on('click', 'button.demo', function (e) {
+    .on('click', 'a.plugin-demo', function (e) {
       var demoPath = '/plugins/demo',
           params = '?',
           type = $('[name="plugin[type]"]:checked').val(),

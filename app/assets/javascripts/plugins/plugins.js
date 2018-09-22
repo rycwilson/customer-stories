@@ -11,7 +11,28 @@
 
 function constructPlugins () {
 
+  var updateScriptTag = function () {
+        console.log('updateScriptTag()');
+        var isFirstSelection = !$('.script-tag textarea').text().match(/data-stories/);
+        $('.script-tag textarea').text(
+          $('.script-tag textarea').text()
+            .replace(
+              isFirstSelection ? /><\/script>/ : /\xa0data-stories="\[((\d+(,)?)+)?\]"/,
+              '\xa0data-stories="' + customStoriesToJson() + '"' + (isFirstSelection ? '></script>' : '')
+            )
+        );
+      },
+      initSelect2Sortable = function () {
+        if (typeof $.fn.select2Sortable !== 'function') {
+          setTimeout(initSelect2Sortable, 25);
+        } else {
+          $('select.plugin-stories').select2Sortable(updateScriptTag);
+          $('select.plugin-stories').show();
+        }
+      };
+
   initSelect2();
+  initSelect2Sortable();
   initLinkedIn();
   initDateRangePicker();
   initGoogleCharts(false, null);  // false => just load library; don't draw any charts
