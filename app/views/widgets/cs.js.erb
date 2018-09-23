@@ -111,7 +111,6 @@
   }
 
   function initWidget (type, $container, $script, isDemo) {
-    console.log('initWidget isDemo', isDemo)
     var initVideo = $.Deferred(),
         initOverlays = $.Deferred(),
         tabbedCarouselDelay = ((type === 'tabbed_carousel') && parseInt($script.data('delay'), 10) || 0);

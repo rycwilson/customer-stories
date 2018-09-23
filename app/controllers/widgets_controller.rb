@@ -53,10 +53,10 @@ class WidgetsController < ApplicationController
   def plugin_view (company, params)
     stories = plugin_stories(company, params)
 
-    if company.subdomain == 'varmour'  # varmour custom sort
+    # if company.subdomain == 'varmour'  # varmour custom sort
       # ref: https://stackoverflow.com/questions/33732208
-      stories = stories.sort_by { |s| [ !s[:published] ? 0 : 1, s[:updated_at] ] }.reverse
-    end
+      # stories = stories.sort_by { |s| [ s[:published] ? 1 : 0, s[:updated_at] ] }.reverse
+    # end
 
     render_to_string(
       partial: params[:type],
@@ -84,16 +84,16 @@ class WidgetsController < ApplicationController
                    .delete_if { |story_id| !Story.exists?(story_id) }
                    .delete_if do |story_id|
                       story = Story.find(story_id)
-                      (story.company.id != company.id) || !story.logo_published?
+                      (story.company.id != company.id) ||
+                      !story.logo_published? ||
+                      story.customer.logo_url.blank?
                     end
       stories = Story.where(id: story_ids).order_as_specified(id: story_ids)  # preserve original order
     elsif params[:category].present? || params[:product].present?
       filter_params = get_filters_from_query_or_widget(company, params, true)
       stories = company.filter_stories(filter_params)
     else
-      stories = Story.find(company.public_stories)
-                     .sort_by { |story| company.public_stories.index(story.id) }
-                     .delete_if { |story| story.customer.logo_url.blank? }
+      stories = company.public_stories
     end
     stories
   end
