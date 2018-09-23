@@ -11,7 +11,17 @@
 
 function constructPlugins () {
 
-  var updateScriptTag = function () {
+  initSelect2();
+
+  // these funtions all copied over from config.js (plugin configuration)
+  // (make sure initSelect2() is called first - it defines $.fn.select2Sortable)
+  var customStoriesToJson = function () {
+        var storyIds = $('select.plugin-stories').val() ?
+                         $('select.plugin-stories').val().map(function (id) { return +id; }) :
+                         [];
+        return JSON.stringify(storyIds);
+      },
+      updateScriptTag = function () {
         var isFirstSelection = !$('.script-tag textarea').text().match(/data-stories/);
         $('.script-tag textarea').text(
           $('.script-tag textarea').text()
@@ -30,8 +40,8 @@ function constructPlugins () {
         }
       };
 
-  initSelect2();
   initSelect2Sortable();
+
   initLinkedIn();
   initDateRangePicker();
   initGoogleCharts(false, null);  // false => just load library; don't draw any charts

@@ -38,17 +38,7 @@ function widgetConfigListeners () {
               '\xa0data-stories="' + customStoriesToJson() + '"' + (isFirstSelection ? '></script>' : '')
             )
         );
-      },
-      initSelect2Sortable = function () {
-        if (typeof $.fn.select2Sortable !== 'function') {
-          setTimeout(initSelect2Sortable, 25);
-        } else {
-          $('select.plugin-stories').select2Sortable(updateScriptTag);
-          $('select.plugin-stories').show();
-        }
       };
-
-  initSelect2Sortable();
 
   $(document)
 
