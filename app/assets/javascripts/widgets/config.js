@@ -29,7 +29,6 @@ function widgetConfigListeners () {
         return (o > 125) ? 'dark' : 'light';
       },
       updateScriptTag = function updateScriptTagOnCustomStoryChange () {
-        console.log('updateScriptTag()');
         var isFirstSelection = !$('.script-tag textarea').text().match(/data-stories/);
         $('.script-tag textarea').text(
           $('.script-tag textarea').text()

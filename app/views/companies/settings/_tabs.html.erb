@@ -2,14 +2,14 @@
 <ul class="nav nav-layout-sidebar nav-stacked">
 
   <li>
-    <a href="#company-profile" data-toggle="tab">
+    <a href="#edit-company-profile" data-toggle="tab">
       <i class="fa fa-fw fa-globe"></i>
       &nbsp;&nbsp;Company Profile
     </a>
   </li>
 
   <li>
-    <a href="#crowdsource-settings" data-toggle="tab"
+    <a href="#edit-crowdsource" data-toggle="tab"
        class='<%= @company.new_record? ? 'disabled-tab' : '' %>'>
       <i class="fa fa-fw fa-users"></i>
       &nbsp;&nbsp;Crowdsource Settings
@@ -17,7 +17,7 @@
   </li>
 
   <li>
-    <a href="#story-tags" data-toggle="tab"
+    <a href="#edit-tags" data-toggle="tab"
        class='<%= @company.new_record? ? 'disabled-tab' : '' %>'>
       <i class="fa fa-fw fa-tags"></i>
       &nbsp;&nbsp;Story Tags
@@ -25,15 +25,15 @@
   </li>
 
   <li>
-    <a href="#story-ctas" aria-controls="story-ctas" role="tab" data-toggle="tab"
+    <a href="#edit-ctas" data-toggle="tab"
        class='<%= @company.new_record? ? 'disabled-tab' : '' %>'>
       <i class="fa fa-fw fa-hand-pointer-o"></i>
-      &nbsp;&nbsp;CTAs, Web Forms, Links
+      &nbsp;&nbsp;<span>Link &amp Form CTAs</span>
     </a>
   </li>
 
   <li>
-    <a href="#stories-plugin" data-toggle="tab"
+    <a href="#edit-plugins" data-toggle="tab"
        class='<%= @company.new_record? ? 'disabled-tab' : '' %>'>
       <i class='fa fa-fw fa-plug' style='font-size:15px; top:2px; margin-left:2px'></i>
       &nbsp;&nbsp;&nbsp;Stories Plugin

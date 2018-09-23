@@ -29,7 +29,7 @@ function storyCTAsListeners () {
         return (o > 125) ? 'bg-light' : 'bg-dark';
       },
       closeOpenAccordions = function () {
-        $('#story-ctas .edit-cta.collapse').each(function () {
+        $('#edit-ctas .edit-cta.collapse').each(function () {
           if ($(this).is('.in')) {
             $(this).find('form')[0].reset();
             $(this).collapse('hide');
@@ -60,7 +60,7 @@ function storyCTAsListeners () {
       // $(this).prev()[0].scrollIntoView();
     })
 
-    .on('click', '#story-ctas [class*="remove"]', function (e) {
+    .on('click', '#edit-ctas [class*="remove"]', function (e) {
       e.stopPropagation();  // don't trigger collapse
       var id = $(this).closest('li').data('cta-id');
       $.ajax({

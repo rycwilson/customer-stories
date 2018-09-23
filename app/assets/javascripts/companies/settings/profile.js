@@ -60,7 +60,7 @@ function companyProfileListeners() {
 
     // Dynamically change the max-height of the select box
     //   (a static setting doesn't work for some reason)
-    .on('select2:open', '#company-profile',
+    .on('select2:open', '#edit-company-profile',
       function () {
         $(".select2-container--bootstrap .select2-results > .select2-results__options").css('max-height', 0);
       })
