@@ -23,12 +23,12 @@ function initSelect2 () {
 
   var prependCustomerName = function () {
     var storyId, storyTitle, storyCustomer;
-    $('#stories-plugin .select2-selection__rendered li:not(:last-of-type)')
+    $('#edit-plugins ul.select2-selection__rendered li.select2-selection__choice')
       .each(function (index, story) {
-        storyId = $('select.widget-stories').select2('data')[index].id;
-        storyTitle = $('select.widget-stories').select2('data')[index].text;
+        storyId = $('select.plugin-stories').select2('data')[index].id;
+        storyTitle = $('select.plugin-stories').select2('data')[index].text;
         customerName = JSON.parse(
-          $('select.widget-stories').find('option[value="' + storyId + '"]').data('customer')
+          $('select.plugin-stories').find('option[value="' + storyId + '"]').data('customer')
         );
         if (!story.innerHTML.match(new RegExp('^' + customerName))) {
           story.innerHTML = story.innerHTML.replace(
@@ -229,15 +229,49 @@ function initSelect2 () {
   /**
    * widget configuration
    */
-  $('select.widget-stories').select2({
-    theme: 'bootstrap',
-    placeholder: 'Select Stories or leave blank for default sort',
-    tags: true,
-    width: 'style'
-  })
-    .on('select2:select', prependCustomerName)
-    .on('select2:unselect', prependCustomerName);
+  $.fn.extend({
 
+    select2Sortable: function (cbAfter) {
+      var select = $(this);
+      $(select).select2({
+        theme: 'bootstrap',
+        placeholder: 'Select Stories or leave blank for default sort',
+        tags: true,
+        width: 'style',
+        createTag: function(params) {
+            return undefined;
+        }
+      })
+        .on('select2:select', prependCustomerName)
+        .on('select2:unselect', prependCustomerName)
+        .on('select2:unselecting', function() {
+            $(this).data('unselecting', true);
+          })
+        .on('select2:opening', function(e) {
+           if ($(this).data('unselecting')) {
+             $(this).removeData('unselecting');
+             e.preventDefault();
+            }
+          });
+
+      var ul = $(select).next('.select2-container').first('ul.select2-selection__rendered');
+      ul.sortable({
+        // placeholder doesn't appear to be working properly; ok - don't need it
+        // placeholder : 'ui-state-highlight',
+        // forcePlaceholderSize: true,
+        items       : 'li:not(.select2-search__field)',
+        tolerance   : 'pointer',
+        stop: function() {
+          $($(ul).find('.select2-selection__choice').get().reverse()).each(function() {
+            var id = $(this).data('data').id;
+            var option = select.find('option[value="' + id + '"]')[0];
+            $(select).prepend(option);
+          });
+          if (cbAfter) cbAfter();
+        }
+      });
+    }
+  });
 
   $('.content__select--category select').select2({
     theme: 'bootstrap',

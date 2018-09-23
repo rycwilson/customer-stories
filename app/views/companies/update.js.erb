@@ -4,8 +4,8 @@
                   only: [],
                   methods: [:header_color_1_changed?, :header_color_2_changed?, :color_contrast]
                 }) %>,
-      isProfileUpdate = $('[href="#company-profile"]').parent().hasClass('active'),
-      isTagsUpdate = $('[href="#story-tags"]').parent().hasClass('active'),
+      isProfileUpdate = $('[href="#edit-company-profile"]').parent().hasClass('active'),
+      isTagsUpdate = $('[href="#edit-tags"]').parent().hasClass('active'),
       toggleProfileSubmit = function () {
         $('#company-profile-form button[type="submit"]').find('span, .fa-spin').toggle();
       },

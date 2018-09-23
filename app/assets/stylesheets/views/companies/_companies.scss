@@ -14,12 +14,12 @@
       padding: 50px 40px 0 30px;
     }
   }
-  #company-profile > form >, #story-tags > form >, #story-ctas >, #stories-plugin > {
+  #edit-company-profile > form >, #edit-tags > form >, #edit-ctas >, #edit-plugins > {
     .row > {
-      div:first-of-type {
+      div[class*="col-"]:first-of-type:not(.story-header) {
         padding: 0 15px 0 25px;
       }
-      div:last-of-type, div:only-child {
+      div[class*="col-"]:last-of-type, div:only-child {
         padding: 0 25px 0 15px;
       }
     }

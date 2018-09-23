@@ -27,17 +27,40 @@ function storyCTAsListeners () {
                             (parseInt(bgRgb.g) * 587) +
                             (parseInt(bgRgb.b) * 114)) / 1000);
         return (o > 125) ? 'bg-light' : 'bg-dark';
+      },
+      closeOpenAccordions = function () {
+        $('#edit-ctas .edit-cta.collapse').each(function () {
+          if ($(this).is('.in')) {
+            $(this).find('form')[0].reset();
+            $(this).collapse('hide');
+          }
+        });
       };
 
   $(document)
 
+    .on('click', '.section-header .help-block a', function () {
+      $(this).closest('.help-block').find('span').each(function () {
+        $(this).toggle();
+      });
+    })
+
     .on('click', '.cta-description', function () {
       if (!$(this).is('[class*="remove"]')) {
+        if (!$(this).is('.in')) {
+          closeOpenAccordions();
+        }
         $(this).next().collapse('toggle');
       }
     })
 
-    .on('click', '#story-ctas [class*="remove"]', function (e) {
+    .on('shown.bs.collapse', '.edit-cta.collapse', function () {
+      var top = $(this).prev().offset().top - (window.innerHeight / 2) + (($(this).outerHeight() + $(this).prev().outerHeight()) / 2);
+      window.scrollTo(0, top);
+      // $(this).prev()[0].scrollIntoView();
+    })
+
+    .on('click', '#edit-ctas [class*="remove"]', function (e) {
       e.stopPropagation();  // don't trigger collapse
       var id = $(this).closest('li').data('cta-id');
       $.ajax({

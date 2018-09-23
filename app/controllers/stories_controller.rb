@@ -57,11 +57,7 @@ class StoriesController < ApplicationController
       @applied_filters_results = filters_results(category_stories, product_stories)
     else
       unless fragment_exist?(@stories_gallery_cache_key)
-        public_story_ids = @company.public_stories
-        # sort order is lost when .find takes an array of ids, so need to re-sort;
-        # ref: http://stackoverflow.com/questions/1680627
-        @stories = Story.find(public_story_ids)
-                        .sort_by { |story| public_story_ids.index(story.id) }
+        @stories = @company.public_stories
       end
     end
   end
@@ -88,9 +84,7 @@ class StoriesController < ApplicationController
     # convert the story content to plain text (for SEO tags)
     @story_content_text = HtmlToPlainText.plain_text(@story.content)
     @related_stories = @story.related_stories
-    @more_stories = Story.find(@company.public_stories)
-                         .sort_by { |story| @company.public_stories.index(story.id) }
-                         .delete_if { |story| story.id == @story.id || story.customer.logo_url.blank? }
+    @more_stories = @company.public_stories
   end
 
   def edit

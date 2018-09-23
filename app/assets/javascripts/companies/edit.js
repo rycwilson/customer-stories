@@ -10,9 +10,9 @@ function companiesEdit () {
 
   var url = document.location.toString();
   if (url.match('#')) {
-    $('.nav-layout-sidebar a[href="#' + url.split('#')[1] + '"]').tab('show');
+    $('.nav-layout-sidebar a[href="#edit-' + url.split('#')[1] + '"]').tab('show');
   } else {
-    $('.nav-layout-sidebar a[href="#company-profile"]').tab('show');
+    $('.nav-layout-sidebar a[href="#edit-company-profile"]').tab('show');
   }
   $('.layout-main').show();
 
@@ -28,9 +28,9 @@ function companiesEdit () {
       }
     })
     .on('shown.bs.tab', '.nav-layout-sidebar a', function (e) {
+      console.log('hey')
+      window.location.hash = e.target.hash.replace('edit-', '');
       window.scrollTo(0, 0);
-      window.location.hash = e.target.hash;
-      $('.layout-main').show();
     });
 }
 

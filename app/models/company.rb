@@ -297,39 +297,46 @@ class Company < ApplicationRecord
   attr_writer :default_adwords_image_url
 
   def published_stories
-    Story.order(Story.company_published(self.id)).pluck(:id)
+    Story.default_order(Story.company_published(self.id)).pluck(:id)
   end
 
   def published_stories_filter_category category_id
-    Story.order(Story.company_published_filter_category(self.id, category_id)).pluck(:id)
+    Story.default_order(Story.company_published_filter_category(self.id, category_id)).pluck(:id)
   end
 
   def published_stories_filter_product product_id
-    Story.order(Story.company_published_filter_product(self.id, product_id)).pluck(:id)
+    Story.default_order(Story.company_published_filter_product(self.id, product_id)).pluck(:id)
   end
 
   def public_stories
-    Story.order(Story.company_public(self.id)).pluck(:id)
+    story_ids = Story.default_order(Story.company_public(self.id)).pluck(:id)
+    Story.where(id: story_ids).order_as_specified(id: story_ids)
   end
 
   def public_stories_filter_category (category_id)
-    Story.order(Story.company_public_filter_category(self.id, category_id)).pluck(:id)
+    story_ids = Story.default_order(Story.company_public_filter_category(self.id, category_id)).pluck(:id)
+    Story.where(id: story_ids).order_as_specified(id: story_ids)
   end
 
   def public_stories_filter_product (product_id)
-    Story.order(Story.company_public_filter_product(self.id, product_id)).pluck(:id)
+    story_ids = Story.default_order(Story.company_public_filter_product(self.id, product_id)).pluck(:id)
+    Story.where(id: story_ids).order_as_specified(id: story_ids)
   end
 
   # TODO: faster? http://stackoverflow.com/questions/20014292
   def filter_stories (filter_params)
-    story_ids = filter_params.empty? ? self.public_stories : []
-    if filter_params['category'].present?
-      story_ids.concat(self.public_stories_filter_category(filter_params['category']))
+    story_ids = []
+    if filter_params.empty?
+      self.public_stories
+    else
+      if filter_params['category'].present?
+        story_ids.concat(self.public_stories_filter_category(filter_params['category']))
+      end
+      if filter_params['product'].present?
+        story_ids.concat(self.public_stories_filter_product(filter_params['product']))
+      end
+      Story.where(id: story_ids).order_as_specified(id: story_ids)
     end
-    if filter_params['product'].present?
-      story_ids.concat(self.public_stories_filter_product(filter_params['product']))
-    end
-    Story.find(story_ids).sort_by { |story| story_ids.index(story.id) }
   end
 
   def stories_filter_public_grouped_options
@@ -437,7 +444,7 @@ class Company < ApplicationRecord
   def stories_json
     Rails.cache.fetch("#{self.subdomain}/stories_json") do
       JSON.parse(
-        Story.order(Story.company_all(self.id))
+        Story.default_order(Story.company_all(self.id))
         .to_json({
           only: [:id, :title, :summary, :quote, :quote_attr_name, :quote_attr_title, :published, :logo_published, :preview_published, :publish_date, :updated_at],
           methods: [:csp_story_path, :published_contributors, :preview_contributor],

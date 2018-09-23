@@ -52,10 +52,12 @@ class WidgetsController < ApplicationController
   # if invalid category or product filters, return all stories
   def plugin_view (company, params)
     stories = plugin_stories(company, params)
-    if company.subdomain == 'varmour'  # varmour custom sort
+
+    # if company.subdomain == 'varmour'  # varmour custom sort
       # ref: https://stackoverflow.com/questions/33732208
-      stories = stories.sort_by { |s| [ !s[:published] ? 0 : 1, s[:updated_at] ] }.reverse
-    end
+      # stories = stories.sort_by { |s| [ s[:published] ? 1 : 0, s[:updated_at] ] }.reverse
+    # end
+
     render_to_string(
       partial: params[:type],
       layout: false,
@@ -77,19 +79,21 @@ class WidgetsController < ApplicationController
 
   def plugin_stories (company, params)
     if params[:stories].present?
-      # remove any that don't exist
-      stories = Story.find( params[:stories].delete_if { |story_id| !Story.exists?(story_id) } )
-                     .delete_if do |story|
-                        # remove unauthorized stories or stories not published
-                        story.company.id != company.id || !story.logo_published?
-                      end
+      # remove any that don't exist or aren't published, or if not authorized
+      story_ids = params[:stories]
+                   .delete_if { |story_id| !Story.exists?(story_id) }
+                   .delete_if do |story_id|
+                      story = Story.find(story_id)
+                      (story.company.id != company.id) ||
+                      !story.logo_published? ||
+                      story.customer.logo_url.blank?
+                    end
+      stories = Story.where(id: story_ids).order_as_specified(id: story_ids)  # preserve original order
     elsif params[:category].present? || params[:product].present?
       filter_params = get_filters_from_query_or_widget(company, params, true)
       stories = company.filter_stories(filter_params)
     else
-      stories = Story.find(company.public_stories)
-                     .sort_by { |story| company.public_stories.index(story.id) }
-                     .delete_if { |story| story.customer.logo_url.blank? }
+      stories = company.public_stories
     end
     stories
   end

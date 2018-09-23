@@ -1,7 +1,7 @@
 
 .companies.edit {
 
-  #story-ctas {
+  #edit-ctas {
     .form-group {
       margin-bottom: 10px;
     }
@@ -20,7 +20,7 @@
       input {
         margin-bottom: 15px;
       }
-      #cta_link_url, #cta_form_html {  // last input
+      #new_cta_link_url, #new_cta_form_html {  // last input
         margin-bottom: 0;
       }
       .html-input {

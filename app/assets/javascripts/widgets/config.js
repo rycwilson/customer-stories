@@ -1,15 +1,12 @@
 
 function widgetConfigListeners () {
 
-  var storiesToJson = function () {
-        var stories = [];
-        $('[name="plugin[stories][]').find('option:selected').each(function () {
-          stories.push(parseInt($(this).val(), 10));
-        });
-        return JSON.stringify(stories);
+  var customStoriesToJson = function () {
+        var storyIds = $('select.plugin-stories').val() ?
+                         $('select.plugin-stories').val().map(function (id) { return +id; }) :
+                         [];
+        return JSON.stringify(storyIds);
       },
-      // following two functions copied over from companies/edit/profile.js
-      // TODO better way to do this with css?  https://revelry.co/css-font-color/
       hexToRgb = function (hex) {
         // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
         var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
@@ -30,8 +27,17 @@ function widgetConfigListeners () {
                             (parseInt(bgRgb.g) * 587) +
                             (parseInt(bgRgb.b) * 114)) / 1000);
         return (o > 125) ? 'dark' : 'light';
+      },
+      updateScriptTag = function updateScriptTagOnCustomStoryChange () {
+        var isFirstSelection = !$('.script-tag textarea').text().match(/data-stories/);
+        $('.script-tag textarea').text(
+          $('.script-tag textarea').text()
+            .replace(
+              isFirstSelection ? /><\/script>/ : /\xa0data-stories="\[((\d+(,)?)+)?\]"/,
+              '\xa0data-stories="' + customStoriesToJson() + '"' + (isFirstSelection ? '></script>' : '')
+            )
+        );
       };
-
 
   $(document)
 
@@ -123,7 +129,7 @@ function widgetConfigListeners () {
           // re-add if custom was selected and a selection exists
           // the multiple select option makes .val() behave different
           .replace(/><\/script>/, function () {
-            return (content === 'custom' && $('[name="plugin[stories][]"]').val() !== null) ? '\xa0data-stories="' + storiesToJson() + '"></script>' : '></script>';
+            return (content === 'custom' && $('[name="plugin[stories][]"]').val() !== null) ? '\xa0data-stories="' + customStoriesToJson() + '"></script>' : '></script>';
           })
 
           // remove data-category
@@ -154,16 +160,7 @@ function widgetConfigListeners () {
 
     })
 
-    .on('change', '[name="plugin[stories][]"]', function () {
-      var isFirstSelection = !$('.script-tag textarea').text().match(/data-stories/);
-      $('.script-tag textarea').text(
-        $('.script-tag textarea').text()
-          .replace(
-            isFirstSelection ? /><\/script>/ : /\xa0data-stories="\[((\d+(,)?)+)?\]"/,
-            '\xa0data-stories="' + storiesToJson() + '"' + (isFirstSelection ? '></script>' : '')
-          )
-      );
-    })
+    .on('change', '[name="plugin[stories][]"]', updateScriptTag)
 
     .on('change', '[name="plugin[category]"]', function () {
       var isFirstSelection = !$('.script-tag textarea').text().match(/data-category/),
@@ -189,7 +186,7 @@ function widgetConfigListeners () {
       );
     })
 
-    .on('click', '.demo', function (e) {
+    .on('click', 'a.plugin-demo', function (e) {
       var demoPath = '/plugins/demo',
           params = '?',
           type = $('[name="plugin[type]"]:checked').val(),
@@ -198,7 +195,7 @@ function widgetConfigListeners () {
           tabColor = $('[name="tabbed_carousel[tab_color]"]').val(),
           textColor = $('[name="tabbed_carousel[text_color]"]').val(),
           delay = $('[name="tabbed_carousel[delay]"]').val(),
-          stories = storiesToJson().replace('[', '%5B').replace(']', '%5D'),
+          stories = customStoriesToJson().replace('[', '%5B').replace(']', '%5D'),
           category = $('[name="plugin[category]"]').find('option:selected').data('slug'),
           product = $('[name="plugin[product]"]').find('option:selected').data('slug');
       params += 'type=' + type +

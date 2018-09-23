@@ -18,7 +18,7 @@
         $('#primary-cta .mini-colors').minicolors({ theme: 'bootstrap' });
         $('[data-toggle="tooltip"]').tooltip();
       });
-    $('#new-cta-form [name="cta[make_primary]"]').prop('checked', false);
+    $('#new-cta-form [name="new_cta[make_primary]"]').prop('checked', false);
     // $('#primary-cta .collapse').collapse('show');
   } else {
     $('#secondary-ctas').prepend(template({ company: company, cta: cta, isPrimary: false }));
@@ -31,7 +31,7 @@
   }
 
   // reset everything except the radio buttons (don't want toggle action)
-  $('#new-cta-form').find('input, textarea').not('[name="cta[type]"]')
+  $('#new-cta-form').find('input, textarea').not('[name="new_cta[type]"]')
       .each(function () { this.value = this.defaultValue; });
 
   toggleFormDone($('#new-cta-form'), true);

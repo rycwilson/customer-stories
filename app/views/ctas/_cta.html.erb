@@ -13,7 +13,7 @@
 
   <%= form_tag(cta_path(cta), id: "cta-#{cta.id}-form", method: 'PUT', remote: true) do %>
 
-    <%= hidden_field_tag('cta[type]', cta.type) %>
+    <%= hidden_field_tag("cta_#{cta.id}[type]", cta.type) %>
 
     <% if cta.primary? %>
 
@@ -56,30 +56,30 @@
   <!-- note: the inline styling is necessary to prevent jerky collapse behavior -->
 
     <div class="form-group" style='margin-bottom: 15px'>
-      <%= label_tag 'cta[description]', 'Description' %>
-      <%= text_field_tag 'cta[description]', cta.description,
+      <%= label_tag "cta_#{cta.id}[description]", 'Description' %>
+      <%= text_field_tag "cta_#{cta.id}[description]", cta.description,
             placeholder: 'description', class: 'form-control' %>
     </div>
 
     <div class="form-group" style='margin-bottom: 15px'>
-      <%= label_tag 'cta[display_text]', 'Display text' %>
-      <%= text_field_tag 'cta[display_text]', cta.display_text,
+      <%= label_tag "cta_#{cta.id}[display_text]", 'Display text' %>
+      <%= text_field_tag "cta_#{cta.id}[display_text]", cta.display_text,
             placeholder: 'display text', class: 'form-control' %>
     </div>
 
     <% if cta.type == 'CTALink' %>
 
       <div class="form-group" style='margin-bottom: 15px'>
-        <%= label_tag 'cta[link_url]', 'Website address' %>
-        <%= text_field_tag 'cta[link_url]', cta.link_url,
+        <%= label_tag "cta_#{cta.id}[link_url]", 'Website address' %>
+        <%= text_field_tag "cta_#{cta.id}[link_url]", cta.link_url,
               placeholder: 'website address', class: 'form-control' %>
       </div>
 
     <% elsif cta.type == 'CTAForm' %>
 
       <div class="form-group" style='margin-bottom: 15px'>
-        <%= label_tag 'cta[form_html]', 'HTML' %>
-        <%= text_area_tag 'cta[form_html]', cta.form_html, rows: 3,
+        <%= label_tag "cta_#{cta.id}[form_html]", 'HTML' %>
+        <%= text_area_tag "cta_#{cta.id}[form_html]", cta.form_html, rows: 3,
               placeholder: 'html, e.g. <script> and <form> tags',
               class: 'form-control' %>
       </div>
@@ -93,7 +93,13 @@
         see the parameter with false value on the server. however in this case we're only interested
         if the value is true
         -->
-        <%= check_box_tag(cta.primary ? 'cta[remove_primary]' : 'cta[make_primary]', true, false) %>
+        <%= check_box_tag(
+              cta.primary ?
+                "cta_#{cta.id}[remove_primary]" :
+                "cta_#{cta.id}[make_primary]",
+              true,
+              false
+            ) %>
         <span><%= cta.primary ? 'Remove primary' : 'Make primary' %></span>
       </label>
     </div>
@@ -101,8 +107,8 @@
     <div class="form-group text-right">
       <button type="submit" class="btn btn-sm btn-success" form="cta-<%= cta.id %>-form" style="width: 98px">
         <span>Save changes</span>
-        <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
-        <i class='fa fa-check' style='display:none'></i>
+        <i class="fa fa-spin fa-circle-o-notch" style="display:none"></i>
+        <i class="fa fa-check" style="display:none"></i>
       </button>
     </div>
 

@@ -8,26 +8,26 @@ class CtasController < ApplicationController
 
   def create
     @company = Company.find(params[:company_id])
-    if params[:cta][:make_primary].present?
+    if params[:new_cta][:make_primary].present?
       @old_primary_cta = @company.ctas.primary
       @old_primary_cta.try(:update, { primary: false })
     end
     case params[:cta][:type]
     when 'link'
       @cta = CTALink.create(
-        description: params[:cta][:link_description],
-        display_text: params[:cta][:link_display_text],
-        link_url: params[:cta][:link_url],
+        description: params[:new_cta][:link_description],
+        display_text: params[:new_cta][:link_display_text],
+        link_url: params[:new_cta][:link_url],
         company_id: @company.id,
-        primary: params[:cta][:make_primary].present?
+        primary: params[:new_cta][:make_primary].present?
       )
     when 'form'
       @cta = CTAForm.create(
-        description: params[:cta][:form_description],
-        display_text: params[:cta][:form_display_text],
-        form_html: params[:cta][:form_html],
+        description: params[:new_cta][:form_description],
+        display_text: params[:new_cta][:form_display_text],
+        form_html: params[:new_cta][:form_html],
         company_id: @company.id,
-        primary: params[:cta][:make_primary].present?
+        primary: params[:new_cta][:make_primary].present?
       )
     else
       # error
@@ -37,9 +37,10 @@ class CtasController < ApplicationController
 
   def update
     @cta = CallToAction.find(params[:id])
+    cta_params = params["cta_#{@cta.id}"]
     @company = @cta.company
-    @make_primary = params['cta']['make_primary'].present?
-    @remove_primary = params['cta']['remove_primary'].present?
+    @make_primary = cta_params['make_primary'].present?
+    @remove_primary = cta_params['remove_primary'].present?
     if @make_primary || @remove_primary
       @old_primary_cta = @cta.company.ctas.primary
       @old_primary_cta.try(:update, { primary: false })
@@ -51,10 +52,10 @@ class CtasController < ApplicationController
       )
     end
     @cta.update(
-      description: params['cta']['description'],
-      display_text: params['cta']['display_text'],
-      link_url: params.dig('cta', 'link_url'),
-      form_html: params.dig('cta', 'form_html'),
+      description: cta_params['description'],
+      display_text: cta_params['display_text'],
+      link_url: params.dig("cta_#{@cta.id}", 'link_url'),
+      form_html: params.dig("cta_#{@cta.id}", 'form_html'),
       primary: @remove_primary ? false : (@make_primary ? true : @cta.primary?)
     )
     respond_to { |format| format.js }
