@@ -13,6 +13,9 @@
         // TODO: Font Awesome 5 has font variants that allow different weights
         -webkit-text-stroke: 1px #efefef;
       }
+      &:hover {
+        color: #222;
+      }
     }
 
     #new-cta-form {
