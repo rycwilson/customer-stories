@@ -29,7 +29,7 @@ function storyCTAsListeners () {
         return (o > 125) ? 'bg-light' : 'bg-dark';
       },
       closeOpenAccordions = function () {
-        $('#ctas-forms-links .edit-cta.collapse').each(function () {
+        $('#edit-ctas .edit-cta.collapse').each(function () {
           if ($(this).is('.in')) {
             $(this).find('form')[0].reset();
             $(this).collapse('hide');
@@ -65,7 +65,7 @@ function storyCTAsListeners () {
       $(this).closest('.list-group-item').removeClass('open');
     })
 
-    .on('click', '#ctas-forms-links [class*="remove"]', function (e) {
+    .on('click', '#edit-ctas [class*="remove"]', function (e) {
       e.stopPropagation();  // don't trigger collapse
       var id = $(this).closest('li').data('cta-id');
       $.ajax({

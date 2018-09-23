@@ -2,7 +2,9 @@
 function widgetConfigListeners () {
 
   var customStoriesToJson = function () {
-        var storyIds = $('select.plugin-stories').val().map(function (id) { return +id; });
+        var storyIds = $('select.plugin-stories').val() ?
+                         $('select.plugin-stories').val().map(function (id) { return +id; }) :
+                         [];
         return JSON.stringify(storyIds);
       },
       hexToRgb = function (hex) {
@@ -27,7 +29,6 @@ function widgetConfigListeners () {
         return (o > 125) ? 'dark' : 'light';
       },
       updateScriptTag = function updateScriptTagOnCustomStoryChange () {
-        console.log('updateScriptTag()');
         var isFirstSelection = !$('.script-tag textarea').text().match(/data-stories/);
         $('.script-tag textarea').text(
           $('.script-tag textarea').text()
@@ -36,17 +37,7 @@ function widgetConfigListeners () {
               '\xa0data-stories="' + customStoriesToJson() + '"' + (isFirstSelection ? '></script>' : '')
             )
         );
-      },
-      initSelect2Sortable = function () {
-        if (typeof $.fn.select2Sortable !== 'function') {
-          setTimeout(initSelect2Sortable, 25);
-        } else {
-          $('select.plugin-stories').select2Sortable(updateScriptTag);
-          $('select.plugin-stories').show();
-        }
       };
-
-  initSelect2Sortable();
 
   $(document)
 
@@ -195,7 +186,7 @@ function widgetConfigListeners () {
       );
     })
 
-    .on('click', '.demo', function (e) {
+    .on('click', 'a.plugin-demo', function (e) {
       var demoPath = '/plugins/demo',
           params = '?',
           type = $('[name="plugin[type]"]:checked').val(),

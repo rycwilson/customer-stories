@@ -1,5 +1,5 @@
 class Story < ActiveRecord::Base
-
+  extend OrderAsSpecified
   include FriendlyId
 
   belongs_to :success
@@ -104,6 +104,7 @@ class Story < ActiveRecord::Base
   scope :company_public, ->(company_id) {
     joins(:customer)
     .where(customers: { company_id: company_id })
+    .where.not(customers: { logo_url: [nil, ''] })
     .where('logo_published IS TRUE OR preview_published IS TRUE')
   }
   scope :company_public_since, ->(company_id, days_ago) {
@@ -113,12 +114,14 @@ class Story < ActiveRecord::Base
   scope :company_public_filter_category, ->(company_id, category_id) {
     joins(:customer, :category_tags)
     .where(customers: { company_id: company_id }, story_categories: { id: category_id })
-    .where('preview_published IS TRUE OR logo_published IS TRUE')
+    .where.not(customers: { logo_url: [nil, ''] })
+    .where('logo_published IS TRUE OR preview_published IS TRUE')
   }
   scope :company_public_filter_product, ->(company_id, product_id) {
     joins(:customer, :product_tags)
     .where(customers: { company_id: company_id }, products: { id: product_id })
-    .where('preview_published IS TRUE OR logo_published IS TRUE')
+    .where.not(customers: { logo_url: [nil, ''] })
+    .where('logo_published IS TRUE OR preview_published IS TRUE')
   }
 
   # scrub user-supplied html input using whitelist
@@ -188,10 +191,9 @@ class Story < ActiveRecord::Base
   end
 
   # method takes an active record relation
-  def self.order stories_relation
+  def self.default_order stories_relation
     stories_relation
-      .order("stories.published DESC, stories.publish_date ASC")
-      .order("stories.updated_at DESC")
+      .order("stories.published DESC, stories.preview_published DESC, stories.updated_at DESC")
   end
 
   def should_generate_new_friendly_id?

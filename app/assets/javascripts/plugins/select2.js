@@ -23,7 +23,7 @@ function initSelect2 () {
 
   var prependCustomerName = function () {
     var storyId, storyTitle, storyCustomer;
-    $('#stories-plugin ul.select2-selection__rendered li.select2-selection__choice')
+    $('#edit-plugins ul.select2-selection__rendered li.select2-selection__choice')
       .each(function (index, story) {
         storyId = $('select.plugin-stories').select2('data')[index].id;
         storyTitle = $('select.plugin-stories').select2('data')[index].text;

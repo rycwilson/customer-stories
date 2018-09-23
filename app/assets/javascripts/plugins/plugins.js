@@ -12,6 +12,36 @@
 function constructPlugins () {
 
   initSelect2();
+
+  // these funtions all copied over from config.js (plugin configuration)
+  // (make sure initSelect2() is called first - it defines $.fn.select2Sortable)
+  var customStoriesToJson = function () {
+        var storyIds = $('select.plugin-stories').val() ?
+                         $('select.plugin-stories').val().map(function (id) { return +id; }) :
+                         [];
+        return JSON.stringify(storyIds);
+      },
+      updateScriptTag = function () {
+        var isFirstSelection = !$('.script-tag textarea').text().match(/data-stories/);
+        $('.script-tag textarea').text(
+          $('.script-tag textarea').text()
+            .replace(
+              isFirstSelection ? /><\/script>/ : /\xa0data-stories="\[((\d+(,)?)+)?\]"/,
+              '\xa0data-stories="' + customStoriesToJson() + '"' + (isFirstSelection ? '></script>' : '')
+            )
+        );
+      },
+      initSelect2Sortable = function () {
+        if (typeof $.fn.select2Sortable !== 'function') {
+          setTimeout(initSelect2Sortable, 25);
+        } else {
+          $('select.plugin-stories').select2Sortable(updateScriptTag);
+          $('select.plugin-stories').show();
+        }
+      };
+
+  initSelect2Sortable();
+
   initLinkedIn();
   initDateRangePicker();
   initGoogleCharts(false, null);  // false => just load library; don't draw any charts
@@ -21,8 +51,8 @@ function constructPlugins () {
   initClicky();
 
   $("input[type='tel']").inputmask("999-999-9999");
-  $('.mini-colors').not('#stories-plugin .minicolors').minicolors({ theme: 'bootstrap' });
-  $('#stories-plugin .mini-colors').minicolors({ theme: 'bootstrap', inline: false });
+  $('.mini-colors').not('#edit-plugins .minicolors').minicolors({ theme: 'bootstrap' });
+  $('#edit-plugins .mini-colors').minicolors({ theme: 'bootstrap', inline: false });
 
   /*
     dirtyFields() plugin will apply .dirtyField class to label on input change
