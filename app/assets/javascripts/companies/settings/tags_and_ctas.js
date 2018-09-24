@@ -65,6 +65,18 @@ function storyCTAsListeners () {
       $(this).closest('.list-group-item').removeClass('open');
     })
 
+    // reset the new cta form
+    .on('hidden.bs.modal', '#new-cta-modal', function () {
+      $('#new-cta-form')
+        .find('input, textarea')
+        .not('[name="new_cta[type]"]')
+        .each(function () { this.value = this.defaultValue; });
+      $('#new-cta-form [name="new_cta[make_primary]"]').prop('checked', false);
+      if ($('#new_cta_type_form').prop('checked')) {
+        $('#new_cta_type_link').trigger('click');
+      }
+    })
+
     .on('click', '#edit-ctas [class*="remove"]', function (e) {
       e.stopPropagation();  // don't trigger collapse
       var id = $(this).closest('li').data('cta-id');
@@ -91,8 +103,8 @@ function storyCTAsListeners () {
     })
 
     .on('click', '#new-cta-form .btn-group input', function () {
-      $('.link-input, .html-input').toggle();
-      $('.link-input, .html-input').val('');
+      $(this).closest('form').find('.form-group.cta-link, .form-group.cta-form').toggle();
+      $(this).closest('form').find('input, textarea').val();
     });
 
 }

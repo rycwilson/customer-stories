@@ -1,46 +1,72 @@
 
-<%= form_tag(company_ctas_path(company), id: 'new-cta-form', remote: true) do %>
+<%= form_tag(
+      company_ctas_path(company),
+      { id: 'new-cta-form', class: 'form-horizontal', remote: true }
+    ) do %>
 
   <div class="form-group">
 
-    <div class="btn-group">
-      <label id='link-radio' class="active radio-inline">
-        <%= radio_button_tag('cta[type]', 'link', true) %>
-        Web link
-      </label>
-      <label id='html-radio' class="radio-inline">
-        <%= radio_button_tag('cta[type]', 'form', false) %>
-        Web form
-      </label>
-    </div>
-
-    <div class="row">
-      <div class="col-sm-12">
-        <%= text_field_tag 'new_cta[link_description]', nil,
-              class: 'form-control link-input', autocomplete: 'off',
-              placeholder: 'description' %>
-        <%= text_field_tag 'new_cta[link_display_text]', nil,
-              class: 'form-control link-input', autocomplete: 'off',
-              placeholder: 'display text' %>
-        <%= text_field_tag 'new_cta[link_url]', nil,
-              class: 'form-control link-input', autocomplete: 'off',
-              placeholder: 'website address' %>
-        <%= text_field_tag 'new_cta[form_description]', nil,
-              class: 'form-control html-input', autocomplete: 'off',
-              placeholder: 'description' %>
-        <%= text_field_tag 'new_cta[form_display_text]', nil,
-              class: 'form-control html-input', autocomplete: 'off',
-              placeholder: 'display text' %>
-        <%= text_area_tag 'new_cta[form_html]', nil,
-              class: 'form-control html-input', rows: 3,
-              placeholder: 'html, e.g. <script> and <form> tags' %>
+    <label class="col-sm-3 control-label">Type</label>
+    <div class="col-sm-9">
+      <div class="btn-group">
+        <label class="active radio-inline">
+          <%= radio_button_tag('new_cta[type]', 'link', true) %>
+          Web link
+        </label>
+        <label class="radio-inline">
+          <%= radio_button_tag('new_cta[type]', 'form', false) %>
+          Web form
+        </label>
       </div>
     </div>
 
   </div>
 
-  <div class="row text-right">
-    <div class="col-sm-12">
+  <% [
+       { type: 'link', label: 'Name', name: 'link_description' },
+       { type: 'form', label: 'Name', name: 'form_description' },
+       { type: 'link', label: 'Display Text', name: 'link_display_text' },
+       { type: 'form', label: 'Display Text', name: 'form-display_text' },
+       { type: 'link', label: 'Link URL', name: 'link_url' }
+     ].each do |input_field| %>
+
+    <div class="form-group cta-<%= input_field[:type] %>">
+      <%= label_tag(
+            "new_cta[#{input_field[:name]}]",
+            input_field[:label],
+            class: 'col-sm-3 control-label'
+          ) %>
+      <div class="col-sm-9">
+        <%= text_field_tag(
+              "new_cta[#{input_field[:name]}]",
+              nil,
+              {
+                class: "form-control",
+                autocomplete: 'off',
+              }
+            ) %>
+      </div>
+    </div>
+
+  <% end %>
+
+  <div class="form-group cta-form">
+    <%= label_tag(
+          'new_cta[form_html]',
+          'Form HTML',
+          class: 'col-sm-3 control-label'
+        ) %>
+    <div class="col-sm-9">
+      <%= text_area_tag(
+            'new_cta[form_html]',
+            nil,
+            { class: 'form-control', rows: 3, placeholder: 'html, e.g. <script> and <form> tags' }
+          ) %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-offset-3 col-sm-9">
       <div class="checkbox">
         <label>
           <!--
@@ -49,20 +75,9 @@
         if the value is true
         -->
           <%= check_box_tag('new_cta[make_primary]', true, false) %>
-          Make primary
+          Make this the Primary CTA
         </label>
       </div>
-    </div>
-  </div>
-
-  <div class="row text-right">
-    <div class="col-sm-12">
-      <!-- <button type="reset" class="btn btn-default">Clear</button> -->
-      <button type="submit" class="btn btn-success pull-right" form="new-cta-form" style="width:82px">
-        <span>Add CTA</span>
-        <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
-        <i class='fa fa-check' style='display:none'></i>
-      </button>
     </div>
   </div>
 

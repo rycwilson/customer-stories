@@ -2,8 +2,37 @@
 .companies.edit {
 
   #edit-ctas {
-    .form-group {
-      margin-bottom: 10px;
+
+    #new-cta-modal {
+      .modal-body {
+        padding: 20px 15px 0 15px;
+      }
+    }
+
+    #new-cta-form {
+      label {
+        padding-right: 5px;
+      }
+      .form-group {
+        .radio-inline {
+          margin-right: 15px;
+        }
+        .col-sm-3 {
+          width: 18%;
+        }
+        .col-sm-9 {
+          width: 82%;
+        }
+        .col-sm-offset-3.col-sm-9 {
+          margin-left: 18%;
+        }
+        &.cta-form {
+          display: none;
+        }
+        .checkbox {
+          padding-top: 0;
+        }
+      }
     }
 
     [data-target="#new-cta-modal"] {
@@ -18,34 +47,8 @@
       }
     }
 
-    #new-cta-form {
-      .form-group {
-        margin-bottom: 5px;
-      }
-      .btn-group {
-        width: 100%;
-        margin-bottom: 5px;
-        label {
-          margin-bottom: 5px;
-        }
-      }
-      input {
-        margin-bottom: 15px;
-      }
-      #new_cta_link_url, #new_cta_form_html {  // last input
-        margin-bottom: 0;
-      }
-      .html-input {
-        display: none;   // to be toggled
-      }
-    }
 
-    .checkbox {
-      margin: 10px 0;
-      label {
-        margin-bottom: 0;
-      }
-    }
+
 
     li label {
       margin-bottom: 7px;

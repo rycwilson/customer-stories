@@ -12,7 +12,7 @@ class CtasController < ApplicationController
       @old_primary_cta = @company.ctas.primary
       @old_primary_cta.try(:update, { primary: false })
     end
-    case params[:cta][:type]
+    case params[:new_cta][:type]
     when 'link'
       @cta = CTALink.create(
         description: params[:new_cta][:link_description],
