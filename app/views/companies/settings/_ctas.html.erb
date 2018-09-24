@@ -9,13 +9,21 @@
 
     <p class="lead" style="margin-bottom: 6px;">Manage CTAs, inlcuding web forms and links to other actions or resources...&nbsp;<span class="help-block" style="display: inline-block; font-size: 13px; font-weight: 500; margin: 0"><a href="javascript:;">Show more</a><a href="javascript:;" style="display: none;">Show less</a></span></p>
 
-    <p class="help-block" style="display: none">The Primary CTA will appear as a button in the header of your main gallery and all published stories. Other links will appear adjacent to the story to which they've been assigned. You can also include links (not forms) directly in your story narrative.</p>
+    <p class="help-block" style="display: none">The Primary CTA will appear as a button in the header of your main gallery and all published stories. Other links will appear adjacent to the story to which they've been assigned. You can also include links (but not forms) directly in your story narrative.</p>
 
   </div>
 
 </div>
 
-<div class="row">
+<div class="row" style="margin-bottom: 30px;">
+  <div class="col-sm-12">
+    <button type='button' class='btn btn-secondary' data-toggle='modal' data-target='#new-cta-modal'>
+        <i class='fa fa-plus-circle fa-fw'></i>&nbsp;New CTA&nbsp;
+    </button>
+  </div>
+</div>
+
+<!-- <div class="row" style="margin-bottom: 30px;">
   <div class="col-sm-12">
     <span data-toggle="modal" data-target="#new-cta-modal">
       <span class="fa-stack fa-lg">
@@ -27,45 +35,56 @@
       Add a CTA
     </span>
   </div>
-</div>
+</div> -->
 
 <div class="row">
   <div class="col-sm-12">
     <div class="form-horizontal">
 
-      <label class="col-sm-2 control-label">Primary</label>
-      <div class="col-sm-10">
+      <label class="col-sm-3 col-md-2 control-label">
+        Primary
+      </label>
+      <div class="col-sm-9 col-md-10">
 
-    <!-- primary CTA -->
-    <div class="form-group cta-links" style='margin-bottom:20px'>
+        <ul id="primary-cta" class="list-group">
+          <li class="list-group-item" data-cta-id="<%= company.ctas.primary.try(:id) %>">
 
-      <ul id="primary-cta" class="list-group">
-        <li class="list-group-item" data-cta-id="<%= company.ctas.primary.try(:id) %>">
+          <% if company.ctas.primary %>
 
-        <% if company.ctas.primary %>
+            <%= render 'ctas/cta', { company: company, cta: company.ctas.primary, make_primary: true } %>
 
-          <%= render 'ctas/cta', { company: company, cta: company.ctas.primary, make_primary: true } %>
+          <% else %>
 
-        <% else %>
+            <a href="javascript:;" data-toggle="modal" data-target="#new-cta-modal"><em>Add a Primary CTA</em></a>
 
-          <em>Add a Primary CTA</em>
+          <% end %>
+
+          </li>
+        </ul>
+
+
+      </div>
+
+      <label class="col-sm-3 col-md-2 control-label">
+        Additional
+      </label>
+      <div class="col-sm-9 col-md-10">
+
+        <ul id='secondary-ctas' class='list-group'>
+
+        <% company.ctas.secondary.order(created_at: :desc).each do |cta| %>
+
+          <li class="list-group-item" data-cta-id="<%= cta.id %>">
+
+            <%= render 'ctas/cta', { company: company, cta: cta } %>
+
+          </li>
 
         <% end %>
 
-        </li>
-      </ul>
-
-    </div>
+        </ul>
 
       </div>
-
-      <label class="col-sm-2 control-label">Additional</label>
-      <div class="col-sm-10">
-
-
-      </div>
-
-
 
     </div>
   </div>

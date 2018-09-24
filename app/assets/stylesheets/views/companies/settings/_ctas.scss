@@ -34,83 +34,83 @@
         }
       }
     }
-
-    [data-target="#new-cta-modal"] {
-      cursor: pointer;
-      color: #666;
-      i {
-        // TODO: Font Awesome 5 has font variants that allow different weights
-        -webkit-text-stroke: 1px #efefef;
+    // [data-target="#new-cta-modal"] {
+    //   cursor: pointer;
+    //   color: #666;
+    //   i {
+    //     // TODO: Font Awesome 5 has font variants that allow different weights
+    //     -webkit-text-stroke: 1px #efefef;
+    //   }
+    //   &:hover {
+    //     color: #222;
+    //   }
+    // }
+    .form-horizontal {
+      .col-md-2 {
+        width: 12%;
       }
-      &:hover {
-        color: #222;
+      .col-md-10 {
+        width: 88%
       }
-    }
-
-
-
-
-    li label {
-      margin-bottom: 7px;
-    }
-    .list-group {
-      margin-bottom: 30px;
-      .list-group-item.open {
-        background-color: #e5e5e5;
-      }
-    }
-    #primary-cta-colors {
-      // padding: 0 10px 0 10px;
-      label {
-        margin-top: 7px;
-      }
-      // // margin-bottom: 10px;
-      div.col-sm-4:first-of-type {
-        padding-right: 0;
-      }
-      div.col-sm-4:last-of-type {
-        padding-left: 0;
-      }
-    }
-    .list-group-item {
-      background: #efefef;
-      padding: 15px;  // overrides bootstrap 10px 15px
-      .cta-description {
-        cursor: pointer;
-        position: relative;
-        // padding-right: 30px;
-        margin: -15px -15px -15px -15px;  // expand clickable area for .collapse
-        padding: 15px 45px 15px 15px;
-        span {
-          padding: 0 6px;
-          line-height: 1.6;
-        }
-        a.remove {
-          position: absolute;
-          top: 5px;  // -10 + 15  (account for negative margins above)
-          right: 5px;  // -10 + 15
-          font-size: 16px;
-          color: #666;
-          padding: 8px;
-          &:hover {
-            color: #222;
+      #primary-cta, #secondary-ctas {
+        width: 500px;
+        // .form-group:last-of-type {
+        //   margin-bottom: 0
+        // }
+        &#primary-cta {
+          #primary-cta-colors {
+            // padding: 0 10px 0 10px;
+            label {
+              margin-top: 7px;
+            }
+            // // margin-bottom: 10px;
+            div.col-sm-4:first-of-type {
+              padding-right: 0;
+            }
+            div.col-sm-4:last-of-type {
+              padding-left: 0;
+            }
           }
         }
       }
-      div.collapse {
-        // note the inline styles that are necessary for preventing jerky collapse
-        cursor: auto;
+      .list-group-item {
+        background: #efefef;
+        padding: 15px;  // overrides bootstrap 10px 15px
+        .cta-description {
+          cursor: pointer;
+          position: relative;
+          // padding-right: 30px;
+          margin: -15px -15px -15px -15px;  // expand clickable area for .collapse
+          padding: 15px 45px 15px 15px;
+          span {
+            padding: 0 6px;
+            line-height: 1.6;
+          }
+          a.remove {
+            position: absolute;
+            top: 5px;  // -10 + 15  (account for negative margins above)
+            right: 5px;  // -10 + 15
+            font-size: 16px;
+            color: #666;
+            padding: 8px;
+            &:hover {
+              color: #222;
+            }
+          }
+        }
+        .collapse.edit-cta {
+          // note the inline styles that are necessary for preventing jerky collapse
+          cursor: auto;
+        }
+        &:hover, &.open {
+          background-color: #e5e5e5;
+        }
+        .checkbox {
+          margin-bottom: 10px;
+        }
       }
-    }
-    .list-group-item:hover {
-      background: #e5e5e5;
     }
 
-    #primary-cta, #secondary-ctas {
-      .form-group:last-of-type {
-        margin-bottom: 0
-      }
-    }
   }
 
 }

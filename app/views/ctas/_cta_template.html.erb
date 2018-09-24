@@ -47,12 +47,12 @@
 
         {{ } }}
 
-        <div class="form-group" style='margin-bottom: 15px'>
+        <div class="form-group" style="margin: 0 0 15px 0">
           <label for="{{= 'cta_' + cta.id + '_description' }}">Description</label>
           <input type="text" id="{{= 'cta_' + cta.id + '_description' }}" class="form-control" name="{{= 'cta_' + cta.id + '[description]' }}" placeholder="description" value="{{= cta.description }}">
         </div>
 
-        <div class="form-group" style='margin-bottom: 15px'>
+        <div class="form-group" style="margin: 0 0 15px 0">
           <label for="{{= 'cta_' + cta.id + '_display_text' }}">Display text</label>
           <input type="text" id="{{= 'cta_' + cta.id + '_display_text' }}" class="form-control"
                  name="{{= 'cta_' + cta.id + '[display_text]' }}" placeholder="display text"
@@ -61,7 +61,7 @@
 
         {{ if (cta.type == 'CTALink') { }}
 
-          <div class="form-group" style='margin-bottom: 15px'>
+          <div class="form-group" style="margin: 0 0 15px 0">
             <label for="{{= 'cta_' + cta.id + '_link_url' }}">Website address</label>
             <input type="text" id="{{= 'cta_' + cta.id + '_link_url' }}" class="form-control"
                    name="{{= 'cta_' + cta.id + '[link_url]' }}" placeholder="website address"
@@ -70,7 +70,7 @@
 
         {{ } else if (cta.type == 'CTAForm') { }}
 
-          <div class="form-group" style='margin-bottom: 10px'>
+          <div class="form-group" style="margin: 0 0 10px 0">
             <label for="{{= 'cta_' + cta.id + '_form_html' }}">HTML</label>
             <textarea id="{{= 'cta_' + cta.id + '_form_html' }}" class="form-control" rows="3"
                       name="{{= 'cta_' + cta.id + '[form_html]' }}" value=""
@@ -92,7 +92,7 @@
           </label>
         </div>
 
-        <div class="form-group text-right">
+        <div class="form-group text-right" style="margin: 0;">
           <button type="submit" class="btn btn-sm btn-success" form="cta-{{= cta.id }}-form" style="width: 98px">
             <span>Save changes</span>
             <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
