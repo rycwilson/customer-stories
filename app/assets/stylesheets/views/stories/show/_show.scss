@@ -75,7 +75,7 @@
 
   .story-content, .cs-story-content {
     background-color: if(variable-exists(bg-color), $bg-color, $csp-bg-gray);
-    padding: 15px 0 100px 0;
+    padding: 15px 0 60px 0;
     &.cs-story-content {
       span, li, p, a, h4, i {
         &:not(i) {
