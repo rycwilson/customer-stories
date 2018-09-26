@@ -19,7 +19,7 @@ function initLinkedIn () {
     // console.log('IN not defined')
 
     $.ajax({
-      url: '//platform.linkedin.com/in.js',
+      url: 'https://platform.linkedin.com/in.js',
       method: 'get',
       dataType: 'script',
       timeout: 6000
