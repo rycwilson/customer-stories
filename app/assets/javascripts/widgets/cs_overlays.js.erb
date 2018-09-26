@@ -104,7 +104,7 @@ function cspInitOverlays ($, $container, subdomain, isDemo) {
         url: 'https://platform.linkedin.com/in.js',
         method: 'get',
         dataType: 'script',
-        timeout: 6000
+        timeout: 5000
       })
         .done(function () {
           // console.log('IN loaded')
@@ -119,66 +119,69 @@ function cspInitOverlays ($, $container, subdomain, isDemo) {
   }
 
   function linkedinListener ($story) {
-    var firstWidgetLoaded = false,
+    var $contributors = $story.find('.story-contributors'),
+        $widgets = $contributors.find('.linkedin-widget'),
+        firstWidgetLoaded = false,
         firstWidgetIndex = null, currentWidgetIndex = null, relativeWidgetIndex = null,
-        overlayLoadTimeout = 10000, firstWidgetReadyTimeout = 10000,
-        setWidgetTimeout = function (timeout, handler) {
-          setTimeout(function () {
+        numLoadedWidgets = 0,
+        widgetTimeoutId, widgetTimeoutDelay = 10000,
+        setWidgetTimeout = function (delay, handler) {
+          widgetTimeoutId = setTimeout(function () {
             window.removeEventListener('message', handler, false);
-          }, timeout);
+            $contributors.remove();
+          }, delay);
         },
-        removeProfileNotFound = function () {
-          var $widget = arguments[0];
-          if ($widget.find('iframe').width() !==
-              $widget.find('script[type*="MemberProfile"]').data('width')) {
-            $widget.remove();
-          }
+        // profiles that linkedin can't find will still load, need to detect and remove them
+        removeIfNotFound = function ($widget) {
+          var $iframe = $widget.find('iframe');
+          $iframe.one('load', function () {
+            var $iframe = $(this);
+            setTimeout(function () {
+// console.log('iframe width', $iframe.width());
+// console.log('script data-width', $iframe.closest('.linkedin-widget').find('script[type*="MemberProfile"]').data('width'));
+              if ($iframe.width() !== $iframe.closest('.linkedin-widget')
+                                             .find('script[type*="MemberProfile"]').data('width')) {
+                $iframe.remove();
+              }
+            }, 3000);  // the iframes are not fully rendered until some time after the load event
+          });
         },
         postMessageHandler = function (event) {
           // For Chrome, the origin property is in the event.originalEvent object.
-          var $widget,
-              origin = event.origin || event.originalEvent.origin;
-          // console.log(event.data);
+          var $widget, origin = event.origin || event.originalEvent.origin;
+// console.log(event.data);
           if (event.origin.includes('linkedin') &&
               event.data.includes('-ready') &&
               firstWidgetIndex === null) {
             firstWidgetIndex = parseInt(event.data.match(/\w+_(\d+)-ready/)[1], 10);
+// console.log('first', firstWidgetIndex);
           } else if (event.origin.includes('linkedin') && event.data.includes('widgetReady')) {
+            if (!firstWidgetLoaded) firstWidgetLoaded = true;
+            numLoadedWidgets++;
             currentWidgetIndex = parseInt(event.data.match(/\w+_(\d+)\s/)[1], 10);
             relativeWidgetIndex = currentWidgetIndex - firstWidgetIndex;
-            $widget = $story.find('.linkedin-widget').eq(relativeWidgetIndex);
+            $widget = $widgets.eq(relativeWidgetIndex);
 
-            /**
-             * Linkedin will report that the widget is loaded even when the profile isn't found.
-             * Since we are checking for all widgets loaded before showing (see below),
-             * mark the widget as loaded, but then check its height to see if it should be removed
-             */
-            $widget.addClass('cs-loaded');
+            removeIfNotFound($widget);
 
-            // run this through a timeout to ensure the widget has rendered
-            setTimeout(removeProfileNotFound, 1000, $widget);
+// console.log('a widget is ready');
+// console.log('it is, ', $widget[0]);
+// console.log('current', currentWidgetIndex);
+// console.log('relative', relativeWidgetIndex);
 
-            // set a timeout from the moment the first widget loads
-            if (!firstWidgetLoaded) {
-              firstWidgetLoaded = true;
-              setWidgetTimeout(firstWidgetReadyTimeout, postMessageHandler);
-            }
-
-            if ($story.find('.linkedin-widget').toArray()
-                  .every(function (widget) { return $(widget).hasClass('cs-loaded'); })) {
-              // $story.find('.story-contributors').removeClass('hidden');
-            $story.find('.story-contributors').css('visibility', 'visible');
+            if ((numLoadedWidgets === $widgets.length) && $widgets.length !== 1)  {
+              clearTimeout(widgetTimeoutId);
+              $contributors.css('visibility', 'visible');
+            } else if ($widgets.length === 1) {
+              $contributors.remove();
             }
           }
         };
-
-    setWidgetTimeout(overlayLoadTimeout, postMessageHandler);
-
+    setWidgetTimeout(widgetTimeoutDelay, postMessageHandler);
     window.addEventListener("message", postMessageHandler, false);
     $(document).one('click', '.cs-content.content--show .close-button', function () {
       window.removeEventListener('message', postMessageHandler, false);
     });
-
   }
 
 }
