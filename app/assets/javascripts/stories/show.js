@@ -5,7 +5,7 @@ function storiesShow () {
   var cbSuccess = function () { $('.story-wrapper').removeClass('hidden'); };
   loadVideoThumbnail(cbSuccess);
 
-  widgetsMonitor();
+  linkedinListener($('.story-wrapper'));
   clickyListeners();
   initMoreStories();
 
@@ -132,102 +132,71 @@ function clickyListeners () {
  *      replace a widget that could still potentially load successfully
  */
 
-function widgetsMonitor () {
-  var contributors = CSP.stories.find(function (story) {
-                       return story.csp_story_path === window.location.pathname;
-                     }).published_contributors,
+// this function is a copy the one in cs_overlays
+function linkedinListener ($story) {
+  var $contributors = $story.find('.story-contributors'),
+      $widgets = $contributors.find('.linkedin-widget'),
       firstWidgetLoaded = false,
       firstWidgetIndex = null, currentWidgetIndex = null, relativeWidgetIndex = null,
-      pageLoadTimeoutDelay = 10000, firstWidgetReadyTimeoutDelay = 10000,
-      removeProfileNotFound = function () {
-        var $widget = arguments[0];
-        if ($widget.find('iframe').width() !==
-            $widget.find('script[type*="MemberProfile"]').data('width')) {
-          $widget.remove();
-        }
+      numLoadedWidgets = 0,
+      widgetTimeoutId, widgetTimeoutDelay = 10000,
+      setWidgetTimeout = function (delay, handler) {
+        widgetTimeoutId = setTimeout(function () {
+          window.removeEventListener('message', handler, false);
+          $contributors.remove();
+        }, delay);
+      },
+      // profiles that linkedin can't find will still load, need to detect and remove them
+      removeIfNotFound = function ($widget) {
+        var $iframe = $widget.find('iframe');
+        $iframe.one('load', function () {
+          var $iframe = $(this);
+          setTimeout(function () {
+// console.log('iframe width', $iframe.width());
+// console.log('script data-width', $iframe.closest('.linkedin-widget').find('script[type*="MemberProfile"]').data('width'));
+            if ($iframe.width() !== $iframe.closest('.linkedin-widget')
+                                           .find('script[type*="MemberProfile"]').data('width')) {
+              $iframe.remove();
+            }
+          }, 3000);  // the iframes are not fully rendered until some time after the load event
+        });
       },
       postMessageHandler = function (event) {
-        if ($('body').hasClass('stories show')) {
-          // For Chrome, the origin property is in the event.originalEvent object.
-          var $widget,
-              origin = event.origin || event.originalEvent.origin;
-          // console.log(event.data);
-          if (event.origin === "https://platform.linkedin.com" &&
-              event.data.includes('-ready') && firstWidgetIndex === null) {
-            firstWidgetIndex = parseInt(event.data.match(/\w+_(\d+)-ready/)[1], 10);
-          } else if (event.origin === "https://platform.linkedin.com" &&
-              event.data.includes('widgetReady')) {
-            currentWidgetIndex = parseInt(event.data.match(/\w+_(\d+)\s/)[1], 10);
-            relativeWidgetIndex = currentWidgetIndex - firstWidgetIndex;
-            $widget = $('.linkedin-widget').eq(relativeWidgetIndex);
+        // For Chrome, the origin property is in the event.originalEvent object.
+        var $widget, origin = event.origin || event.originalEvent.origin;
+// console.log(event.data);
+        if (event.origin.includes('linkedin') &&
+            event.data.includes('-ready') &&
+            firstWidgetIndex === null) {
+          firstWidgetIndex = parseInt(event.data.match(/\w+_(\d+)-ready/)[1], 10);
+// console.log('first', firstWidgetIndex);
+        } else if (event.origin.includes('linkedin') && event.data.includes('widgetReady')) {
+          if (!firstWidgetLoaded) firstWidgetLoaded = true;
+          numLoadedWidgets++;
+          currentWidgetIndex = parseInt(event.data.match(/\w+_(\d+)\s/)[1], 10);
+          relativeWidgetIndex = currentWidgetIndex - firstWidgetIndex;
+          $widget = $widgets.eq(relativeWidgetIndex);
 
-            /**
-             * Linkedin will report that the widget is loaded even when the profile isn't found.
-             * Since we are checking for all widgets loaded before showing (see below),
-             * mark the widget as loaded, but then check its length to see if it's a case of "Profile not found"
-             */
+          removeIfNotFound($widget);
 
-            contributors[relativeWidgetIndex].widget_loaded = true;
+// console.log('a widget is ready');
+// console.log('it is, ', $widget[0]);
+// console.log('current', currentWidgetIndex);
+// console.log('relative', relativeWidgetIndex);
 
-            // run this through a timeout to ensure the widget has rendered
-            setTimeout(removeProfileNotFound, 1000, $widget);
-
-            if (!firstWidgetLoaded) {
-              firstWidgetLoaded = true;
-              setWidgetTimeout(firstWidgetReadyTimeoutDelay, postMessageHandler);
-            }
-            if (contributors.every(function (c) { return c.widget_loaded; })) {
-              $('.story-contributors').css('visibility', 'visible');
-            }
+          if ((numLoadedWidgets === $widgets.length) && $widgets.length !== 1)  {
+            clearTimeout(widgetTimeoutId);
+            $contributors.css('visibility', 'visible');
+          } else if ($widgets.length === 1) {
+            $contributors.remove();
           }
         }
       };
-
-  setWidgetTimeout(pageLoadTimeoutDelay, postMessageHandler);
-
+  setWidgetTimeout(widgetTimeoutDelay, postMessageHandler);
   window.addEventListener("message", postMessageHandler, false);
-
-  // remove the listener when navigating away from this page
-  $(document).one('turbolinks:before-visit', function () {
-    window.removeEventListener('message', postMessageHandler, false);
-    contributors.forEach(function (contributor) {
-      contributor.widget_loaded = false;
-    });
-  });
-
-}
-
-function setWidgetTimeout (delay, postMessageHandler) {
-  setTimeout(function () {
-    if ($('body').hasClass('stories show')) {
-      // there is potential for timing discrepancy between the above condition and
-      // window.location.pathname, so confirm retrieval of a story ...
-      var story = CSP.stories.find(function (story) {
-                    return story.csp_story_path === window.location.pathname;
-                  });
-      if (story && story.published_contributors) {
-         var failures = false;
-         story.published_contributors
-              .forEach(function (contributor, index) {
-                 if (!contributor.widget_loaded) {
-                   failures = true;
-                   // console.log('widget did not load: ', delay, contributor.linkedin_url);
-                   contributor.widget_loaded = addCspWidget(contributor, index);
-                 }
-               });
-         if (failures) {
-           // $('.story-contributors').imagesLoaded(function () {
-           //   $('.csp-linkedin-widget').removeClass('hidden');
-           // });
-         } else {
-         }
-      }
-      // keep this listener isolated to stories#show
-      window.removeEventListener('message', postMessageHandler, false);
-    } else {
-      window.removeEventListener('message', postMessageHandler, false);
-    }
-  }, delay);
+  // $(document).one('click', '.cs-content.content--show .close-button', function () {
+  //   window.removeEventListener('message', postMessageHandler, false);
+  // });
 }
 
 function addCspWidget (contributor, index) {

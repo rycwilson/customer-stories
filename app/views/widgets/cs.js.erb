@@ -80,7 +80,6 @@
   function getWidget ($container, $script, isDemo) {
     return function () {
 
-      console.log('getWidget isDemo', isDemo)
       $.ajax({
         url: "<%= URI.join(root_url, plugin_view_path(@type)) %>",
         method: 'GET',
