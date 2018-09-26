@@ -156,7 +156,7 @@ function linkedinListener ($story) {
 // console.log('script data-width', $iframe.closest('.linkedin-widget').find('script[type*="MemberProfile"]').data('width'));
             if ($iframe.width() !== $iframe.closest('.linkedin-widget')
                                            .find('script[type*="MemberProfile"]').data('width')) {
-              $iframe.remove();
+              $iframe.closest('.linkedin-widget').remove();
             }
           }, 3000);  // the iframes are not fully rendered until some time after the load event
         });
