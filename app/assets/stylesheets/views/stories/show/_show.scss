@@ -186,6 +186,7 @@
       }
     }
     .story-contributors {
+      visibility: hidden;  // can't use display: none because it will preclude ResizeSensor
       margin-bottom: 25px;
       > .well:first-child, .cs-well:first-child {
         margin-bottom: 0;

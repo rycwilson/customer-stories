@@ -1,4 +1,6 @@
 
+//= require css-element-queries/src/ResizeSensor
+
 //= require jquery-ui
 
 //= require jquery-csv/src/jquery.csv
