@@ -54,14 +54,6 @@ function constructPlugins () {
   $('.mini-colors').not('#edit-plugins .minicolors').minicolors({ theme: 'bootstrap' });
   $('#edit-plugins .mini-colors').minicolors({ theme: 'bootstrap', inline: false });
 
-  /*
-    dirtyFields() plugin will apply .dirtyField class to label on input change
-    (allows for color change)
-    Ensure "for" attribute is present on label tag
-    and matches the id attribute of the corresponding input field.
-  */
-  $('#outbound-links-form').dirtyFields();
-
 }
 
 function deconstructPlugins () {

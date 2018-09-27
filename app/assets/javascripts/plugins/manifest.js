@@ -41,7 +41,6 @@
 //= require jquery.inputmask/dist/inputmask/jquery.inputmask
 
 //= require jquery.minicolors
-//= require dirtyFields/jquery.dirtyFields
 //= require flot/jquery.flot
 
 //= require responsive-toolkit/dist/bootstrap-toolkit
