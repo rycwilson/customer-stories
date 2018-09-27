@@ -35,6 +35,7 @@ module Csp
     # custom fonts
     # ref https://gist.github.com/anotheruiguy/7379570
     config.assets.paths << Rails.root.join("app", "assets", "fonts")
+    config.assets.paths << Rails.root.join('vendor', 'assets' 'node_modules')
 
     # Bower asset paths
     # (lines 37-47 per bootstrap-sass docs re: using bower package)
