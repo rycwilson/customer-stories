@@ -55,7 +55,7 @@ function contributorDetailsListeners () {
           });
           $("input[type='tel']").inputmask("999-999-9999");
           if (contributor.linkedin_url) {
-            loadCspOrPlaceholderWidget($trContributor, contributor);
+            // loadCspOrPlaceholderWidget($trContributor, contributor);
             loadLinkedinWidget($trContributor, contributor);
           }
         });
