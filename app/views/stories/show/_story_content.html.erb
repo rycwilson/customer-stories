@@ -5,10 +5,10 @@
 
     <div class="col-xs-12 col-sm-6 col-md-7">
 
-      <% cache("#{company.subdomain}/stories/#{story.id}/#{is_widget ? 'cs-' : ''}narration", skip_digest: true) do %>
+      <% cache("#{company.subdomain}/stories/#{story.id}/#{is_widget ? 'cs-' : ''}narrative", skip_digest: true) do %>
 
         <%= render(
-              'stories/show/narration',
+              'stories/show/narrative',
               { company: company, story: story, is_widget: is_widget }
             ) %>
 

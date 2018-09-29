@@ -177,11 +177,11 @@ class Story < ActiveRecord::Base
 
   after_commit(on: :update) do
     expire_csp_story_path_cache
-    expire_story_narration_fragment_cache
+    expire_story_narrative_fragment_cache
   end if Proc.new { |story| story.previous_changes.key?('title') }
 
   after_commit(on: :update) do
-    expire_story_narration_fragment_cache
+    expire_story_narrative_fragment_cache
   end if Proc.new { |story| (story.previous_changes.keys & ['title', 'content']).any? }
 
   before_destroy do
@@ -408,8 +408,8 @@ class Story < ActiveRecord::Base
     self.expire_fragment("#{self.company.subdomain}/stories/#{self.id}/video-xs")
   end
 
-  def expire_story_narration_fragment_cache
-    self.expire_fragment("#{self.company.subdomain}/stories/#{self.id}/narration")
+  def expire_story_narrative_fragment_cache
+    self.expire_fragment("#{self.company.subdomain}/stories/#{self.id}/narrative")
   end
 
   def expire_results_fragment_cache
