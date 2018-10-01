@@ -61,22 +61,22 @@
 
     </div> -->
 
-    <div class="visible-xs-block">
+    <!-- <div class="visible-xs-block">
 
-    <% if @company.ctas.primary.present? %>
+    <%# if @company.ctas.primary.present? %>
 
-      <button type="button" class="primary-cta btn btn-default" style="<%= primary_cta_style(@company) %>">
-        <%= link_to(
+      <button type="button" class="primary-cta btn btn-default" style="<%#= primary_cta_style(@company) %>">
+        <%#= link_to(
               @company.ctas.primary.link_url,
               target: '_blank'
             ) do %>
-          <span><%= @company.ctas.primary.display_text %></span>
-        <% end %>
+          <span><%#= @company.ctas.primary.display_text %></span>
+        <%# end %>
       </button>
 
-    <% end %>
+    <%# end %>
 
-    </div>
+    </div> -->
 
     <div class="<%= is_widget ? 'cs-story-content' : 'story-content' %>">
 

@@ -32,6 +32,10 @@
   background-color: #3B5998
 }
 
+.icon-button-xs.mailto {
+  background-color: #555
+}
+
 .icon-button-xs {
   border: 1px solid transparent;
   border-radius: 40px;
@@ -60,10 +64,7 @@
   left: 50%;
   margin: 0;
   position: absolute;
-  -webkit-transition: all 0s;
-     -moz-transition: all 0s;
-       -o-transition: all 0s;
-          transition: all 0s;
+  transition: all 0s;
   width: 0;
 }
 

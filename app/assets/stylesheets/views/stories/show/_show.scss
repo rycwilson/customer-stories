@@ -101,8 +101,14 @@
     }
     .narrative {
       margin-bottom: 25px;
-      span, li, p, a {
+      // exclude the share buttons, see social_share_buttons.css
+      span:not(a[class*="share"] span), li, p, a:not([class*="share"]) {
         line-height: 1.5 !important;
+      }
+      @media only screen and (max-width: 500px) {
+        .story-title {
+          text-align: center;
+        }
       }
     }
     .story-results {
@@ -308,7 +314,7 @@
           border: 0
         }
         .narrative {
-          span, p, li, a {
+          span:not(a[class*="share"] span), li, p, a:not([class*="share"]) {
             font-size: 14px !important;
           }
         }
@@ -386,7 +392,7 @@
         margin-top: -50px;
       }
       .narrative {
-        p, span, li {
+        span:not(a[class*="share"] span), li, p, a:not([class*="share"]) {
           font-size: 13px !important;
         }
       }
@@ -416,7 +422,7 @@
         font-size: 22px !important;
       }
       .narrative {
-        p, span, li {
+        span:not(a[class*="share"] span), li, p, a:not([class*="share"]) {
           font-size: 15px !important;
         }
       }
