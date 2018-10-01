@@ -45,12 +45,18 @@
     //     color: #222;
     //   }
     // }
-    .form-horizontal {
+    .form-horizontal.cta-list {
+      #new-cta-button {
+        margin: 0 0 20px 0;
+      }
+      .control-label {
+        padding-top: 12px;
+      }
       .col-md-2 {
-        width: 12%;
+        width: 15%;
       }
       .col-md-10 {
-        width: 88%
+        width: 85%
       }
       #primary-cta, #secondary-ctas {
         width: 500px;
