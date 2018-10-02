@@ -3,9 +3,9 @@ Rails.application.configure do
 
   # restrict access to staging site
   if ENV['HOST_NAME'] == 'customerstories.org'
-    config.middleware.insert_after(::Rack::Runtime, "::Rack::Auth::Basic", "Staging") do |u, p|
-      [u, p] == ['csp', 'csp-stag!ng']
-    end
+    config.middleware.use RackPassword::Block,
+      auth_codes: ['csp-stag!ng'],
+      path_whitelist: /(widgets|plugins)/
   end
 
   # moved from session_store.rb
