@@ -4,7 +4,7 @@ class StoriesController < ApplicationController
   include StoriesAndWidgets
 
   # jsonp request for widgets
-  skip_before_action(:verify_authenticity_token, only: [:show], if: Proc.new { params[:is_widget] })
+  skip_before_action(:verify_authenticity_token, only: [:show], if: Proc.new { params[:is_plugin] })
 
   before_action :set_company
   before_action :set_story, only: [:edit, :update, :ctas, :tags, :promote, :approval, :destroy]
@@ -63,8 +63,7 @@ class StoriesController < ApplicationController
   end
 
   def show
-    if params[:is_widget]
-      # @is_widget = @is_external = true
+    if params[:is_plugin]
       respond_to do |format|
         format.js do
           json = { html: render_story_partial(@story, @contributors, params[:window_width]) }.to_json
@@ -404,7 +403,7 @@ class StoriesController < ApplicationController
     if request.path != @story.csp_story_path  # friendly path changed
       # old story title slug requested, redirect to current
       return redirect_to @story.csp_story_path, status: :moved_permanently
-    elsif request.format == 'application/pdf' || params[:is_widget]
+    elsif request.format == 'application/pdf' || params[:is_plugin]
       @story
     elsif !@story.published? && !company_curator?(company.id)
       return redirect_to root_url(subdomain:request.subdomain, host:request.domain)
