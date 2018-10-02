@@ -5,7 +5,8 @@ Rails.application.configure do
   if ENV['HOST_NAME'] == 'customerstories.org'
     config.middleware.use RackPassword::Block,
       auth_codes: ['csp-stag!ng'],
-      path_whitelist: /(widgets|plugins)/
+      path_whitelist: /(widgets|plugins)/,
+      custom_rule: proc { |request| request.params.keys.include?('is_plugin') }
   end
 
   # moved from session_store.rb
