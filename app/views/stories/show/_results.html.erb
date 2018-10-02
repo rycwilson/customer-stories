@@ -24,7 +24,7 @@
 
 </section>
 
-<section class="story-results hidden-xs <%= is_widget ? 'cs-well' : 'well' %>">
+<section class="story-results hidden-xs <%= is_plugin ? 'cs-well' : 'well' %>">
 
   <div class="section-title-container">
     <h4 class="text-center">Results</h4>
@@ -32,7 +32,7 @@
 
   <% story.results.each do |result| %>
 
-    <div class="<%= is_widget ? 'cs-row' : 'row' %>">
+    <div class="<%= is_plugin ? 'cs-row' : 'row' %>">
       <div class="col-sm-1">
         <i class="fa fa-check"></i>
       </div>

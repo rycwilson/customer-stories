@@ -1,10 +1,10 @@
 
-<% widget_type = widget_type || nil %>
+<% plugin_type = plugin_type || nil %>
 <% background = background || nil %>
 
 <!-- grid__item is for the overlays; not implemented internally -->
-<a href="<%= story.csp_story_link(is_curator, is_widget, is_external, widget_type) %>"
-   class="public grid__item <%= widget_type === 'gallery' ? 'grid__item--gallery' : (widget_type === 'carousel' ? 'grid__item--carousel' : '') %> <%= is_external ? 'cs-thumbnail' : 'thumbnail' %> <%= story.status %> <%= story.video_url.present? ? 'has-video' : '' %> <%= background ? 'bg-' + background : '' %>"
+<a href="<%= story.csp_story_link(is_curator, is_plugin, is_external, plugin_type) %>"
+   class="public grid__item <%= plugin_type === 'gallery' ? 'grid__item--gallery' : (plugin_type === 'carousel' ? 'grid__item--carousel' : '') %> <%= is_external ? 'cs-thumbnail' : 'thumbnail' %> <%= story.status %> <%= story.video_url.present? ? 'has-video' : '' %> <%= background ? 'bg-' + background : '' %>"
    target="<%= is_external ? '_blank' : '' %>"
    data-customer="<%= is_external ? '' : story.customer.name.to_json %>"
    data-logosrc="<%= is_external ? '' : story.customer.logo_url %>"

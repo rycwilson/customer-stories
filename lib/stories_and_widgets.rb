@@ -1,9 +1,9 @@
 
 module StoriesAndWidgets
 
-  def get_filters_from_query_or_widget (company, params, is_widget=false)
+  def get_filters_from_query_or_plugin (company, params, is_plugin=false)
     return {} if params[:preview].present?
-    unless is_widget
+    unless is_plugin
       query_params = Rack::Utils.parse_nested_query(request.query_string)
       return {} if query_params.blank? || query_params.length > 2
     end

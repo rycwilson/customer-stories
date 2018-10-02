@@ -239,10 +239,22 @@
     font-family: 'Lato';
   }
 
+  @media only screen and (max-width: 991px) {
+    .cs-story-content {
+      span, p {
+        // font-size: 13px !important;
+      }
+    }
+    .related-stories {
+      li a.thumbnail .thumbnail-view .thumbnail-view-hover p {
+        font-size: 13px !important;
+      }
+    }
+  }
 
   @media only screen and (max-width: 767px) {
     .testimonial, .cs-testimonial {
-      margin-bottom: 25px;
+      margin-bottom: 20px;
       &:after {
         content: none;
       }
@@ -256,12 +268,16 @@
     .title-xs {
       h4 {
         line-height: 1.3 !important;
+        font-size: 20px !important;
       }
       .social-share-buttons {
         display: flex;
         justify-content: space-between;
         margin: 20px auto 0 auto;
-        width: 230px;
+        width: 250px;
+        &.no-video {
+          margin-bottom: 25px;
+        }
       }
     }
     .story-video-xs, .cs-story-video-xs {
@@ -306,7 +322,7 @@
           border: 0
         }
         .narrative {
-          span:not(a[class*="share"] span), li, p, a:not([class*="share"]) {
+          span, li, p, a {
             font-size: 14px !important;
           }
         }
@@ -322,18 +338,6 @@
     }
   }
 
-  @media only screen and (max-width: 991px) {
-    .cs-story-content {
-      span, p {
-        // font-size: 13px !important;
-      }
-    }
-    .related-stories {
-      li a.thumbnail .thumbnail-view .thumbnail-view-hover p {
-        font-size: 13px !important;
-      }
-    }
-  }
 
   @media only screen and (min-width: 768px) {
     // add a gutter to overlays
@@ -396,7 +400,7 @@
         margin-top: -50px;
       }
       .narrative {
-        span:not(a[class*="share"] span), li, p, a:not([class*="share"]) {
+        span, li, p, a {
           font-size: 13px !important;
         }
       }
@@ -426,7 +430,7 @@
         font-size: 22px !important;
       }
       .narrative {
-        span:not(a[class*="share"] span), li, p, a:not([class*="share"]) {
+        span, li, p, a {
           font-size: 15px !important;
         }
       }

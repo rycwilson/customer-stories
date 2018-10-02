@@ -17,7 +17,7 @@
   <%= render 'companies/crowdsource/contributors/csp_linkedin_widget_template' %>
 <% end %>
 
-<%= render 'stories/show/video_modal', { is_widget: false } %>
+<%= render 'stories/show/video_modal', { is_plugin: false } %>
 
 <% @story.ctas.forms.each do |form| %>
   <%= render 'ctas/cta_form_modal', { form: form } %>
@@ -42,7 +42,7 @@
         story: @story,
         contributors: @contributors,
         related_stories: @related_stories,
-        is_widget: false,
+        is_plugin: false,
         is_external: false
       }
     ) %>
@@ -62,7 +62,7 @@
             title: 'More Stories',
             tab_color: nil,
             text_color: nil,
-            is_widget: true,
+            is_plugin: true,
             is_external: false
           }
         ) %>

@@ -1,9 +1,9 @@
 
-<div class="<%= is_widget ? 'cs-story-wrapper' : 'story-wrapper hidden' %>">
+<div class="<%= is_plugin ? 'cs-story-wrapper' : 'story-wrapper hidden' %>">
 
   <article>
 
-    <% if is_widget %>
+    <% if is_plugin %>
 
       <div class="cs-story-header hidden-xs">
 
@@ -20,9 +20,9 @@
     <% end %>
 
     <!-- includes video -->
-    <section class="<%= is_widget ? 'cs-testimonial' : 'testimonial' %> <%= story.video_url.present? ? '' : 'no-video' %>">
+    <section class="<%= is_plugin ? 'cs-testimonial' : 'testimonial' %> <%= story.video_url.present? ? '' : 'no-video' %>">
 
-      <% cache("#{company.subdomain}/story-#{story.id}-#{is_widget ? 'cs-' : ''}testimonial", skip_digest: true) do %>
+      <% cache("#{company.subdomain}/story-#{story.id}-#{is_plugin ? 'cs-' : ''}testimonial", skip_digest: true) do %>
 
         <%= render(
               'stories/show/testimonial',
@@ -31,7 +31,7 @@
                 long_customer_name: story.customer.name.length > 20,
   # include_video necessary in the event video fails and must be removed; see stories#show
                 include_video: story.video_url.present?,
-                is_widget: is_widget
+                is_plugin: is_plugin
               }
             ) %>
 
@@ -40,18 +40,18 @@
     </section>
 
     <div class="visible-xs-block title-xs">
-      <%= render('/stories/show/title_xs', { story: story }) %>
+      <%= render('/stories/show/title_xs', { story: story, is_plugin: is_plugin }) %>
     </div>
 
-    <section class="<%= story.video_url.present? ? 'visible-xs-block' : 'hidden' %> <%= is_widget ? 'cs-story-video-xs' : 'story-video-xs' %>">
+    <section class="<%= story.video_url.present? ? 'visible-xs-block' : 'hidden' %> <%= is_plugin ? 'cs-story-video-xs' : 'story-video-xs' %>">
 
-      <% cache("#{company.subdomain}/stories/#{story.id}/#{is_widget ? 'cs-' : ''}video-xs", skip_digest: true) do %>
+      <% cache("#{company.subdomain}/stories/#{story.id}/#{is_plugin ? 'cs-' : ''}video-xs", skip_digest: true) do %>
 
         <%= render(
               'stories/show/video_xs',
               {
                 story: story,
-                is_widget: is_widget
+                is_plugin: is_plugin
               }
             ) %>
 
@@ -59,9 +59,9 @@
 
     </section>
 
-<!--     <div class="visible-xs-block <%#= is_widget ? 'cs-social-buttons-xs' : 'social-buttons-xs' %>">
+<!--     <div class="visible-xs-block <%#= is_plugin ? 'cs-social-buttons-xs' : 'social-buttons-xs' %>">
 
-      <%#= render 'stories/shared/social_buttons_xs', { story: story, is_widget: is_widget } %>
+      <%#= render 'stories/shared/social_buttons_xs', { story: story, is_plugin: is_plugin } %>
 
     </div> -->
 
@@ -82,7 +82,7 @@
 
     </div> -->
 
-    <div class="<%= is_widget ? 'cs-story-content' : 'story-content' %>">
+    <div class="<%= is_plugin ? 'cs-story-content' : 'story-content' %>">
 
       <%= render(
             'stories/show/story_content',
@@ -91,14 +91,14 @@
               story: story,
               contributors: contributors,
               related_stories: related_stories,
-              is_widget: is_widget,
-              window_width: is_widget ? window_width : nil
+              is_plugin: is_plugin,
+              window_width: is_plugin ? window_width : nil
             }
           ) %>
 
     </div>
 
-    <% unless is_widget || user_signed_in? %>
+    <% unless is_plugin || user_signed_in? %>
 
       <%= render('stories/shared/sign_in_footer') %>
 
