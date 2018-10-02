@@ -253,6 +253,44 @@
   }
 
   @media only screen and (max-width: 767px) {
+    #primary-cta-xs {
+      display: flex;
+      align-items: center;
+      // justify-content: center;
+      font-size: 16px;
+      position: fixed;
+      height: 48px;
+      bottom: -48px;
+      left: 0;
+      right: 0;
+      padding-left: 15px;
+      background: yellow;
+      z-index: 100;
+      min-width: 300px;
+      max-width: 400px;
+      transform: translateY(0%);
+      transition: all 0.4s;
+      a, button {
+        color: #333;
+      }
+      a, a i {
+        font-weight: 600;
+      }
+      button {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        margin: auto;
+        background: none;
+        border: 0;
+        padding: 12px 15px;
+      }
+      &.open {
+        transform: translateY(-100%);
+        transition: all 0.4s;
+      }
+    }
     .testimonial, .cs-testimonial {
       margin-bottom: 20px;
       &:after {

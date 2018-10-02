@@ -47,28 +47,45 @@
       }
     ) %>
 
+<% if @company.ctas.try(:primary).present? && @company.ctas.primary.type == 'CTALink' %>
+  <div class="visible-xs-block">
+    <div id="primary-cta-xs">
+      <a href="<%= @company.ctas.primary.link_url %>">
+        <span><%= @company.ctas.primary.display_text %></span>
+        <span>
+          <i class="fa fa-fw fa-caret-right"></i>
+        </span>
+      </a>
+      <button type="button" class="remove">
+        <i class="fa fa-fw fa-remove"></i>
+      </button>
+    </div>
+  </div>
+<% end %>
+
 <div class="hidden-xs">
+
+  <% if @more_stories.present? && @company.subdomain != 'varmour' %>
+
+    <div id="cs-tabbed-carousel">
+      <%= render(
+            'widgets/tabbed_carousel',
+            {
+              company: @company,
+              stories: @more_stories,
+              title: 'More Stories',
+              tab_color: nil,
+              text_color: nil,
+              is_plugin: true,
+              is_external: false
+            }
+          ) %>
+    </div>
+
+  <% end %>
 
 </div>
 
-<% if @more_stories.present? && @company.subdomain != 'varmour' %>
-
-  <div id="cs-tabbed-carousel">
-    <%= render(
-          'widgets/tabbed_carousel',
-          {
-            company: @company,
-            stories: @more_stories,
-            title: 'More Stories',
-            tab_color: nil,
-            text_color: nil,
-            is_plugin: true,
-            is_external: false
-          }
-        ) %>
-  </div>
-
-<% end %>
 
 
 
