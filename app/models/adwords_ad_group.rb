@@ -1,4 +1,4 @@
-class AdwordsAdGroup < ActiveRecord::Base
+class AdwordsAdGroup < ApplicationRecord
 
   belongs_to :adwords_campaign
   alias_attribute :campaign, :adwords_campaign

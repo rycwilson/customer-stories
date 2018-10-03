@@ -1,4 +1,4 @@
-class Prompt < ActiveRecord::Base
+class Prompt < ApplicationRecord
 
   belongs_to :success
 

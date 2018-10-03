@@ -1,4 +1,4 @@
-class Widget < ActiveRecord::Base
+class Widget < ApplicationRecord
 
   belongs_to :company
 

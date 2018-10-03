@@ -1,6 +1,6 @@
 # TODO: check validations - client and server side
 # use Bootstrap Validator on client side if necessary
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   # RYAN = self.find_by(email:'***REMOVED***')
 
   belongs_to :company

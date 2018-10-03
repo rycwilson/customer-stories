@@ -1,5 +1,5 @@
 
-class CrowdsourcingTemplate < ActiveRecord::Base
+class CrowdsourcingTemplate < ApplicationRecord
 
   default_scope { order(name: :asc) }
 

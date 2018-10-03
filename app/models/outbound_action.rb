@@ -1,4 +1,4 @@
-class OutboundAction < ActiveRecord::Base
+class OutboundAction < ApplicationRecord
 
   belongs_to :company
   has_many :outbound_actions_stories, dependent: :destroy

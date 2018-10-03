@@ -34,7 +34,8 @@ gem 'order_as_specified'
 gem 'pg'
 gem 'pry-byebug'
 gem 'pry-theme'
-gem 'rails', '4.2.1' # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem 'rails', '>= 5.0.0.rc2', '< 5.1'
+# gem 'rails', '4.2.1' # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails_admin'
 gem 'rails-html-sanitizer'
 gem 'rack_password'
@@ -62,8 +63,7 @@ group :development, :test do
   # gem 'rack-mini-profiler'
   # gem 'flamegraph'
   # gem 'stackprof'
-  gem 'meta_request'  # rails panel chrome extension
-  gem 'whenever', require: false
+  # gem 'whenever', require: false
   gem 'better_errors'
   # Access an IRB console on exception pages or by using <%= console %> in views
 

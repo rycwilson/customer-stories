@@ -64,7 +64,10 @@ class StoriesController < ApplicationController
 
   def show
     if params[:is_plugin]
+<<<<<<< HEAD
       # @is_plugin = @is_external = true
+=======
+>>>>>>> master
       respond_to do |format|
         format.js do
           json = { html: render_story_partial(@story, @contributors, params[:window_width]) }.to_json

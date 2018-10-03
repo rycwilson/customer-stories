@@ -1,4 +1,4 @@
-class Result < ActiveRecord::Base
+class Result < ApplicationRecord
 
   belongs_to :success
   has_one :story, through: :success

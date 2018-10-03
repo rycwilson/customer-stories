@@ -1,4 +1,4 @@
-class Company < ActiveRecord::Base
+class Company < ApplicationRecord
 
   require 'adwords_api'
   ADWORDS_API_VERSION = :v201802
