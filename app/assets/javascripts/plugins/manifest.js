@@ -1,4 +1,6 @@
 
+//= require css-element-queries/src/ResizeSensor
+
 //= require jquery-ui
 
 //= require jquery-csv/src/jquery.csv
@@ -39,7 +41,6 @@
 //= require jquery.inputmask/dist/inputmask/jquery.inputmask
 
 //= require jquery.minicolors
-//= require dirtyFields/jquery.dirtyFields
 //= require flot/jquery.flot
 
 //= require responsive-toolkit/dist/bootstrap-toolkit
