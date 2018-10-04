@@ -227,7 +227,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
       $('[data-toggle="tooltip"]').tooltip();
 
       if (workflowStage === 'prospect') {
-        // global so can be accessed from crowdsourceListeners
+        // global so can be accessed from prospectListeners
         prospectContributorsEditor = newContributorsEditor(
           'prospect', invitationTemplateSelectOptions
         );
@@ -236,7 +236,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
       // workflowStage == curate
       // contributors under a Story don't have curator and filter selects
       } else {
-        // global so can be accessed from crowdsourceListeners
+        // global so can be accessed from prospectListeners
         curateContributorsEditor = newContributorsEditor(
           'curate', invitationTemplateSelectOptions
         );

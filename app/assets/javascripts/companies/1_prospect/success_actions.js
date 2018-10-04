@@ -58,6 +58,10 @@ function successActionsListeners () {
 
   $(document)
 
+    .on('click', '.success-actions .compose-win-story', function () {
+
+    })
+
     .on('click', '.success-actions .manage-contributors', function (e) {
       var successId = $(this).closest('tr').data('success-id');
       $('#contributors-filter').val('success-' + successId).trigger('change');
@@ -161,7 +165,7 @@ function successActionsListeners () {
           if (confirmRemove) { removeSuccess(successId); }
         }
       });
-    })
+    });
 
 
 }
