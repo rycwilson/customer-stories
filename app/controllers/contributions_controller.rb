@@ -36,7 +36,7 @@ class ContributionsController < ApplicationController
           },
           contributor: { only: [:id, :email, :first_name, :last_name, :title], methods: [:full_name] },
           referrer: { only: [:id, :email, :first_name, :last_name, :title], methods: [:full_name] },
-          crowdsourcing_template: { only: [:id, :name] },
+          invitation_template: { only: [:id, :name] },
         }
       })
     # pp(JSON.parse(data))
@@ -45,7 +45,7 @@ class ContributionsController < ApplicationController
 
   def show
     if params[:get_invitation]
-      @contribution.copy_crowdsourcing_template if params[:send]
+      @contribution.copy_invitation_template if params[:send]
       respond_with(
         @contribution,
         only: [:id, :request_subject, :request_body, :request_sent_at],
@@ -114,8 +114,8 @@ class ContributionsController < ApplicationController
   end
 
   def update
-    if params[:data]  # crowdsourcing template (datatables inline editor)
-      @contribution.crowdsourcing_template_id = params[:data].values[0][:crowdsourcing_template][:id]
+    if params[:data]  # invitation template (datatables inline editor)
+      @contribution.invitation_template_id = params[:data].values[0][:invitation_template][:id]
       @contribution.save
       dt_data = [ JSON.parse(@contribution.to_json({
         only: [:id, :status, :publish_contributor, :contributor_unpublished],
@@ -132,7 +132,7 @@ class ContributionsController < ApplicationController
           },
           contributor: { only: [:id, :email], methods: [:full_name] },
           referrer: { only: [:id], methods: [:full_name] },
-          crowdsourcing_template: { only: [:id, :name] },
+          invitation_template: { only: [:id, :name] },
         }
       })) ]
       respond_to do |format|
@@ -238,7 +238,7 @@ class ContributionsController < ApplicationController
   # NOTE these are in the successes controller also
   def contribution_params
     params.require(:contribution).permit(
-      :contributor_id, :referrer_id, :success_id, :crowdsourcing_template_id,
+      :contributor_id, :referrer_id, :success_id, :invitation_template_id,
       :status, :contribution, :feedback, :publish_contributor, :success_contact,
       :request_subject, :request_body,
       :contributor_unpublished, :notes, :submitted_at,

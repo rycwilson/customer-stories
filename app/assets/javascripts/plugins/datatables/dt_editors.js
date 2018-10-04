@@ -82,10 +82,10 @@ function newContributorsEditor (workflowStage, templateSelectOptions) {
     fields: [
       {
         label: 'Invitation Template',
-        name: 'crowdsourcing_template.id',  // should match columns.data
+        name: 'invitation_template.id',  // should match columns.data
         data: {
-          _: 'crowdsourcing_template.id',
-          display: 'crowdsourcing_template.name'
+          _: 'invitation_template.id',
+          display: 'invitation_template.name'
         },
         type: 'select2',
         options: templateSelectOptions
@@ -97,8 +97,8 @@ function newContributorsEditor (workflowStage, templateSelectOptions) {
 
 function openContributorsEditor (contributorsEditor, $row) {
   contributorsEditor.inline(
-    $row.find('td.crowdsourcing-template')[0],
-    'crowdsourcing_template.id',
+    $row.find('td.invitation-template')[0],
+    'invitation_template.id',
     { // default options: https://editor.datatables.net/reference/option/formOptions.inline
       onComplete: function (editor) {
         var contributionId = $row.data('contribution-id'),
@@ -112,12 +112,12 @@ function openContributorsEditor (contributorsEditor, $row) {
         // the drawType option isn't forcing a re-draw (?), so re-draw the individual row(s)
         // forum discussion: https://datatables.net/forums/discussion/45189
         dt.row($row).data(rowData).draw();
-        $row.find('td.crowdsourcing-template').append(
+        $row.find('td.invitation-template').append(
           '<i class="fa fa-check" style="color:#456f59"></i>' +
           '<i class="fa fa-caret-down" style="display:none"></i>'
         );
         setTimeout(function () {
-          $row.find('td.crowdsourcing-template i').toggle();
+          $row.find('td.invitation-template i').toggle();
         }, 2000);
         // re-draw the other table (if present)
         if ($tableOther.length) {

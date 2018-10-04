@@ -1,6 +1,6 @@
 
 //= require ./settings/profile
-//= require ./settings/crowdsourcing_templates/crowdsourcing_templates
+//= require ./settings/invitation_templates/invitation_templates
 //= require ./settings/tags_and_ctas
 //= require ../widgets/config
 
@@ -37,7 +37,7 @@ function companiesEdit () {
 function companiesEditListeners () {
 
   companyProfileListeners();
-  crowdsourcingTemplatesListeners();
+  invitationTemplatesListeners();
   storyCTAsListeners();
   widgetConfigListeners();
 

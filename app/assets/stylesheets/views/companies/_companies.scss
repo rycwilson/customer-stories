@@ -119,7 +119,7 @@ table.dataTable tr.group td {
 /**
  * this needs to be in global scope due to fixed position
  */
-#story-content-submit, #crowdsourcing-template-submit {
+#story-content-submit, #invitation-template-submit {
   position: fixed;
   bottom: -66px;
   left: 0;
@@ -160,7 +160,7 @@ table.dataTable tr.group td {
    transition: bottom 0s;
 }
 
-#story-content-submit.show, #crowdsourcing-template-submit.show {
+#story-content-submit.show, #invitation-template-submit.show {
   bottom: 0;
   transition: bottom 0.3s ease-out;
 }

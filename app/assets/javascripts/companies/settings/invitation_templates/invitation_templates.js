@@ -4,7 +4,7 @@
 //= require ./contributor_questions
 //= require ./data_placeholders
 
-function crowdsourcingTemplatesListeners () {
+function invitationTemplatesListeners () {
 
   selectTemplateListeners();
   templateActionsListeners();
@@ -12,10 +12,10 @@ function crowdsourcingTemplatesListeners () {
   dataPlaceholdersListeners();
 
   $(document)
-    .on('input', '#crowdsourcing-template-form input, #crowdsourcing-template-form .note-editable', function () {
-      $('#crowdsourcing-template-form').attr('data-dirty', '1');
+    .on('input', '#invitation-template-form input, #invitation-template-form .note-editable', function () {
+      $('#invitation-template-form').attr('data-dirty', '1');
     })
-    .on('click', 'button[form="crowdsourcing-template-form"]', function (e) {
+    .on('click', 'button[form="invitation-template-form"]', function (e) {
       var $form = $('#' + $(this).attr('form')), $button = $(this);
       e.preventDefault();
       if ($form.data('submitted')) {

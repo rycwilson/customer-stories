@@ -190,7 +190,7 @@ function prospectFiltersListeners () {
 
   $(document)
 
-    .on('change', '.crowdsource.curator-select', function (e, data) {
+    .on('change', '.prospect.curator-select', function (e, data) {
       var $tableWrapper = $(this).closest('[id*="table_wrapper"]'),
           $table = $tableWrapper.find('table'),
           $filter = $tableWrapper.find('.dt-filter'),
@@ -204,7 +204,7 @@ function prospectFiltersListeners () {
 
       // update the other curator select (if auto, halt the chain)
       if (!(data && data.auto)) {
-        var $other = $('.crowdsource.curator-select').not($(this));
+        var $other = $('.prospect.curator-select').not($(this));
         $other.val($(this).val()).trigger('change', { auto: true });
       }
     })

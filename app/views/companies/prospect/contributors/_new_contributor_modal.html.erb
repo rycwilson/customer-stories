@@ -119,13 +119,13 @@
 
           <div class="form-group invitation-template">
 
-            <label for="contribution_crowdsourcing_template_id" class='col-sm-3 control-label'>
+            <label for="contribution_invitation_template_id" class='col-sm-3 control-label'>
               <span>Invitation Template</span>
             </label>
 
             <div class="col-sm-9">
-              <%= contribution_form.collection_select(:crowdsourcing_template_id,
-                    company.crowdsourcing_templates.sort_by() { |t| t.name },
+              <%= contribution_form.collection_select(:invitation_template_id,
+                    company.invitation_templates.sort_by() { |t| t.name },
                     :id, :name, { include_blank: true },
                     { class: 'new-contributor invitation-template form-control',
                       style: 'width:100%' }) %>

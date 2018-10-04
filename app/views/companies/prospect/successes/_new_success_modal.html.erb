@@ -125,8 +125,8 @@
                 success_form.object.contributions.build
               ) do |contribution_form| %>
             <%#= contribution_form.hidden_field(
-                  :crowdsourcing_template_id,
-                  value: company.crowdsourcing_templates.customer_success.id
+                  :invitation_template_id,
+                  value: company.invitation_templates.customer_success.id
                 ) %>
 
             <div class="form-group referrer">
@@ -161,8 +161,8 @@
                 success_form.object.contributions.build
               ) do |contribution_form| %>
             <%#= contribution_form.hidden_field(
-                  :crowdsourcing_template_id,
-                  value: company.crowdsourcing_templates.customer.id
+                  :invitation_template_id,
+                  value: company.invitation_templates.customer.id
                 ) %>
             <%= contribution_form.hidden_field(:success_contact, value: true) %>
             <div class="form-group contributor">

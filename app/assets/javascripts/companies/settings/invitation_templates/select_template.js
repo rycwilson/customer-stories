@@ -30,20 +30,20 @@ function selectTemplateListeners () {
                             .attr('label') == 'Defaults' ? true : false,
             initFormControls = function () {
               setTimeout(function () {
-                var $form = $('#crowdsourcing-template-form'),
-                    $button = $('button[type="submit"][form="crowdsourcing-template-form"]'),
+                var $form = $('#invitation-template-form'),
+                    $button = $('button[type="submit"][form="invitation-template-form"]'),
                     isNewTemplate = $form.find('input[name="_method"][value="put"]').length === 0;
-                $('#crowdsourcing-template-submit p').empty();
+                $('#invitation-template-submit p').empty();
                 if (isNewTemplate) {
                   $button.css('width', '135px').find('span').text('Create template');
-                  $('#crowdsourcing-template-submit p').append('New template');
+                  $('#invitation-template-submit p').append('New template');
                 } else {
                   $button.css('width', '114px').find('span').text('Save changes');
-                  $('#crowdsourcing-template-submit p').append(
-                    'Template:\xa0\xa0' + $('select.crowdsourcing-template').find('option:selected').text()
+                  $('#invitation-template-submit p').append(
+                    'Template:\xa0\xa0' + $('select.invitation-template').find('option:selected').text()
                   );
                 }
-                $('#crowdsourcing-template-submit').addClass('show');
+                $('#invitation-template-submit').addClass('show');
               }, 200);
             };
 
@@ -59,21 +59,21 @@ function selectTemplateListeners () {
         $('.btn-toolbar button').prop('disabled', true);
 
         $.ajax({
-          url: '/companies/' + CSP.company.id + '/crowdsourcing_templates/' + $select.val() + '/edit',
+          url: '/companies/' + CSP.company.id + '/invitation_templates/' + $select.val() + '/edit',
           method: 'get',
           data: {
             // was this template just created? (if undefined nothing will be sent)
-            new_template: $('#crowdsourcing-template-form').data('new')
+            new_template: $('#invitation-template-form').data('new')
           },
           dataType: 'html'
         })
           .done(function (html, status, xhr) {
-            if ($('button[type="submit"][form="crowdsourcing-template-form"]').find('span').css('display') === 'none') {
-              $('button[type="submit"][form="crowdsourcing-template-form"]').find('span, .fa-spin').toggle();
+            if ($('button[type="submit"][form="invitation-template-form"]').find('span').css('display') === 'none') {
+              $('button[type="submit"][form="invitation-template-form"]').find('span, .fa-spin').toggle();
             }
-            $.when($('#crowdsourcing-template-container').empty().append(html))
+            $.when($('#invitation-template-container').empty().append(html))
               .then(function () {
-                $('#crowdsourcing-template-form').data('new', '');
+                $('#invitation-template-form').data('new', '');
                 $('#edit-crowdsource .btn-toolbar button').prop('disabled', false);
                 toggleButtons(isDefault);
                 initTemplate();
@@ -84,21 +84,21 @@ function selectTemplateListeners () {
       };
 
   $(document)
-    .on('focus', 'select.crowdsourcing-template', function () {
+    .on('focus', 'select.invitation-template', function () {
       previousTemplateId = $(this).val();
     })
 
-    .on('change', 'select.crowdsourcing-template', function () {
+    .on('change', 'select.invitation-template', function () {
       var $select = $(this);
       // keep the existing selection in place pending confirmation
       var templateId = $select.val();
 
-      $('#crowdsourcing-template-submit').removeClass('show');
+      $('#invitation-template-submit').removeClass('show');
       // why is the timeout necessary??
-      // setTimeout(function () { $('#crowdsourcing-template-submit').removeClass('show'); }, 0);
+      // setTimeout(function () { $('#invitation-template-submit').removeClass('show'); }, 0);
       $select.val(previousTemplateId).trigger('change.select2');
 
-      if ( $('#crowdsourcing-template-form').data('dirty') ) {
+      if ( $('#invitation-template-form').data('dirty') ) {
         bootbox.confirm({
           size: 'small',
           className: 'confirm-unsaved-changes',

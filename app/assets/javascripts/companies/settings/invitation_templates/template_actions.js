@@ -5,12 +5,12 @@ function templateActionsListeners () {
     var templateIds = templates.map(function (t) { return t.id; });
     $.ajax({
       // pass array of template ids to the route
-      url: '/companies/' + CSP.company.id + '/crowdsourcing_templates/' + JSON.stringify(templateIds),
+      url: '/companies/' + CSP.company.id + '/invitation_templates/' + JSON.stringify(templateIds),
       method: 'put',
       data: {
         restore: true,
         template_ids: templateIds,
-        needs_refresh: templateIds.indexOf($('select.crowdsourcing-template').select2('data')[0].id) !== -1
+        needs_refresh: templateIds.indexOf($('select.invitation-template').select2('data')[0].id) !== -1
       },
       dataType: 'script'
     });
@@ -19,21 +19,21 @@ function templateActionsListeners () {
   $(document)
 
     .on('click', 'button.new-template, button.copy-template', function () {
-      $('#crowdsourcing-template-submit').removeClass('show');
+      $('#invitation-template-submit').removeClass('show');
       if ($(this).hasClass('copy-template')) {
-        sourceTemplateId = $('select.crowdsourcing-template').val();
+        sourceTemplateId = $('select.invitation-template').val();
       } else {
         sourceTemplateId = undefined;
       }
       $.ajax({
-        url: '/companies/' + CSP.company.id + '/crowdsourcing_templates/new',
+        url: '/companies/' + CSP.company.id + '/invitation_templates/new',
         method: 'get',
         data: { source_template_id: sourceTemplateId },
         dataType: 'html'
       })
         .done(function (html, status, xhr) {
 
-          $.when($('#crowdsourcing-template-container').empty().append(html))
+          $.when($('#invitation-template-container').empty().append(html))
             .then(function () {
               initInvitationEditor();
               $('select.contributor-questions')
@@ -41,18 +41,18 @@ function templateActionsListeners () {
                   theme: 'bootstrap',
                   placeholder: 'Add a Question'
                 });
-              $('#crowdsourcing-template-form input[id="crowdsourcing_template_name"]')[0].focus();
+              $('#invitation-template-form input[id="invitation_template_name"]')[0].focus();
               // reset select to placeholder
-              $('select.crowdsourcing-template').val('').trigger('change.select2');
-              $('#crowdsourcing-template-submit p').empty().append('New template');
-              $('#crowdsourcing-template-submit').find('button').css('width', '135px').find('span').text('Create template');
-              $('#crowdsourcing-template-submit').addClass('show');
+              $('select.invitation-template').val('').trigger('change.select2');
+              $('#invitation-template-submit p').empty().append('New template');
+              $('#invitation-template-submit').find('button').css('width', '135px').find('span').text('Create template');
+              $('#invitation-template-submit').addClass('show');
             });
         });
     })
 
     .on('click', 'button.delete-template', function () {
-      var deleteTemplateId = $('select.crowdsourcing-template').select2('data')[0].id;
+      var deleteTemplateId = $('select.invitation-template').select2('data')[0].id;
       bootbox.confirm({
         size: 'small',
         className: 'confirm-delete-template',
@@ -71,7 +71,7 @@ function templateActionsListeners () {
         callback: function (confirmDelete) {
           if (confirmDelete) {
             $.ajax({
-              url: '/companies/' + CSP.company.id + '/crowdsourcing_templates/' + deleteTemplateId,
+              url: '/companies/' + CSP.company.id + '/invitation_templates/' + deleteTemplateId,
               method: 'delete',
               dataType: 'script'
             });
@@ -83,7 +83,7 @@ function templateActionsListeners () {
     .on('click', 'button.restore-template', function () {
       // removed 'restore-selected' and 'restore-all'
       var $action = $(this),
-          $select = $('select.crowdsourcing-template'),
+          $select = $('select.invitation-template'),
           templates = [],
           confirmMesg = '<p>This action will restore the following invitation templates to factory default content</p>';
 

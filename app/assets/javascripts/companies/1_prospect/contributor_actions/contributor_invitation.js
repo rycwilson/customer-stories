@@ -117,7 +117,7 @@ function contributorInvitationListeners() {
       }
 
     })
-    .on('click', '.contributor-actions .view-request, td.crowdsourcing-template.view-request a',
+    .on('click', '.contributor-actions .view-request, td.invitation-template.view-request a',
       function () {
         var contributionId = $(this).closest('tr').data('contribution-id');
         getInvitation(contributionId, 'readonly');

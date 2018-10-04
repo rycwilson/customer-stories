@@ -39,12 +39,12 @@
 
           <div id='successes'
               class="tab-pane fade <%= tab == '#successes' ? 'active in' : ''%>">
-            <%= render 'companies/crowdsource/successes/successes_table', { company: company } %>
+            <%= render 'companies/prospect/successes/successes_table', { company: company } %>
           </div>
 
           <div id='prospect-contributors'
               class="tab-pane fade <%= tab == '#prospect-contributors' ? 'active in' : ''%>">
-            <%= render 'companies/crowdsource/contributors/contributors_table',
+            <%= render 'companies/prospect/contributors/contributors_table',
                     { company: company, workflow_stage: 'prospect' } %>
           </div>
 

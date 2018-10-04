@@ -7,10 +7,10 @@
     </label>
     <%= select_tag('',
           grouped_options_for_select(
-            company.crowdsourcing_templates.grouped_select_options
+            company.invitation_templates.grouped_select_options
           ), {
             include_blank: true,
-            class: 'crowdsourcing-template form-control', style: 'width:100%'
+            class: 'invitation-template form-control', style: 'width:100%'
           }) %>
   </div>
 
@@ -35,10 +35,10 @@
 
 </div>
 
-<div id='crowdsourcing-template-container'>
+<div id='invitation-template-container'>
 </div>
 
-<div id='crowdsourcing-template-submit' class="container">
+<div id='invitation-template-submit' class="container">
   <div class="row">
     <div class="col-sm-4 col-md-3 layout-sidebar"></div>
     <div class="col-sm-8 col-md-9 layout-main">
@@ -47,7 +47,7 @@
       <!--   <button type="reset" form="story-content-form" class="btn btn-default">
           Clear changes
         </button> -->
-        <button type="submit" form="crowdsourcing-template-form" class="btn btn-success text-center">
+        <button type="submit" form="invitation-template-form" class="btn btn-success text-center">
           <span></span>
           <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
           <i class='fa fa-check' style='display:none'></i>
@@ -74,8 +74,8 @@
 
           <div class="col-sm-1">
             <i class='remove-question fa fa-remove'></i>
-            <input name="crowdsourcing_template[templates_questions_attributes][{{= index }}][_destroy]" type="hidden" value="false">
-            <input class="hidden" type="checkbox" value="true" name="crowdsourcing_template[templates_questions_attributes][{{= index }}][_destroy]" id="crowdsourcing_template_templates_questions_attributes_{{= index }}__destroy">
+            <input name="invitation_template[templates_questions_attributes][{{= index }}][_destroy]" type="hidden" value="false">
+            <input class="hidden" type="checkbox" value="true" name="invitation_template[templates_questions_attributes][{{= index }}][_destroy]" id="invitation_template_templates_questions_attributes_{{= index }}__destroy">
           </div>
 
         </div>
@@ -88,7 +88,7 @@
 
       </li>
 
-      <input type="hidden" value="{{= tq.id }}" name="crowdsourcing_template[templates_questions_attributes][{{= index }}][id]" id="crowdsourcing_template_templates_questions_attributes_{{= index }}_id">
+      <input type="hidden" value="{{= tq.id }}" name="invitation_template[templates_questions_attributes][{{= index }}][id]" id="invitation_template_templates_questions_attributes_{{= index }}_id">
 
     {{ }) }}
 
@@ -106,15 +106,15 @@
 
             <p>{{= existingQuestion.question }}</p>
 
-            <input type="hidden" value="{{= existingQuestion.id }}" name="crowdsourcing_template[templates_questions_attributes][{{= index }}][contributor_question_id]" id="crowdsourcing_template_templates_questions_attributes_{{= index }}_contributor_question_id">
+            <input type="hidden" value="{{= existingQuestion.id }}" name="invitation_template[templates_questions_attributes][{{= index }}][contributor_question_id]" id="invitation_template_templates_questions_attributes_{{= index }}_contributor_question_id">
 
-            <input type="hidden" value="{{= invitationTemplateId }}" name="crowdsourcing_template[templates_questions_attributes][{{= index }}][crowdsourcing_template_id]" id="crowdsourcing_template_templates_questions_attributes_{{= index }}_crowdsourcing_template_id">
+            <input type="hidden" value="{{= invitationTemplateId }}" name="invitation_template[templates_questions_attributes][{{= index }}][invitation_template_id]" id="invitation_template_templates_questions_attributes_{{= index }}_invitation_template_id">
 
           {{ } else { }}
 
-            <input type="hidden" value="{{= company.id }}" name="crowdsourcing_template[contributor_questions_attributes][{{= index }}][company_id]" id="crowdsourcing_template_contributor_questions_attributes_{{= index }}_company_id">
+            <input type="hidden" value="{{= company.id }}" name="invitation_template[contributor_questions_attributes][{{= index }}][company_id]" id="invitation_template_contributor_questions_attributes_{{= index }}_company_id">
 
-            <textarea class="form-control" rows="3" placeholder="New Question" name="crowdsourcing_template[contributor_questions_attributes][{{= index }}][question]" id="crowdsourcing_template_contributor_questions_attributes_{{= index }}_question"></textarea>
+            <textarea class="form-control" rows="3" placeholder="New Question" name="invitation_template[contributor_questions_attributes][{{= index }}][question]" id="invitation_template_contributor_questions_attributes_{{= index }}_question"></textarea>
 
           {{ } }}
 

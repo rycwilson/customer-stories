@@ -5,7 +5,7 @@ function dataPlaceholdersListeners () {
 
   $(document)
     .on('click', '.request-subject .data-placeholders li', function () {
-      insertText('crowdsourcing_template_request_subject', $(this).data('placeholder'));
+      insertText('invitation_template_request_subject', $(this).data('placeholder'));
     });
 
 }

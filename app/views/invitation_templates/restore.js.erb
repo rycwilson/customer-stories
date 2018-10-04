@@ -3,15 +3,15 @@
 
   var flashMesg = '<%= @selected_or_all %>' === 'all' ?
         'Templates restored: Customer, Customer Success, Sales' :
-        'Template restored: ' + $('select.crowdsourcing-template').select2('data')[0].text;
+        'Template restored: ' + $('select.invitation-template').select2('data')[0].text;
 
   if (<%= @needs_refresh %>) {
 
     // don't trigger an unsaved changes warning
-    $('#crowdsourcing-template-form').data('dirty', '');
+    $('#invitation-template-form').data('dirty', '');
 
     $.when(
-      $('select.crowdsourcing-template').trigger('change')
+      $('select.invitation-template').trigger('change')
     ).then(function () {
       // would be good to make sure the bootbox modal has closed first
       flashDisplay(flashMesg, 'success');

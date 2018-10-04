@@ -120,7 +120,7 @@ Rails.application.routes.draw do
           member { put :update, constraints: { id: /\d+/ } }
         end
         resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
-        resources :crowdsourcing_templates, except: [:index]
+        resources :invitation_templates, except: [:index]
         member { get '/promote-settings', to: 'companies#show' }
         member { put :widget }
         member { put :promote }

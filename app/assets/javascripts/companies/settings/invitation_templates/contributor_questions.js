@@ -40,7 +40,7 @@ function contributorQuestionsListeners () {
               company: CSP.company,
               index: currentIndex,
               existingQuestion: { id: questionId, question: questionText },
-              invitationTemplateId: $('select.crowdsourcing-template').select2('data')[0].id
+              invitationTemplateId: $('select.invitation-template').select2('data')[0].id
             })
           )
         ).then(function () {

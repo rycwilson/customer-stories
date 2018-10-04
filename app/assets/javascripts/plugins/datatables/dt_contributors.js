@@ -64,12 +64,12 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
           sort: 'success.name'
         }
       },
-      // <td data-search="t<%#= contribution.crowdsourcing_template_id  %>" class='crowdsourcing-template'>
+      // <td data-search="t<%#= contribution.invitation_template_id  %>" class='invitation-template'>
       {
-        name: 'crowdsourcing_template',
+        name: 'invitation_template',
         data: {
-          _: 'crowdsourcing_template.id',
-          display: 'crowdsourcing_template.name'
+          _: 'invitation_template.id',
+          display: 'invitation_template.name'
         },
         defaultContent: '<span class="placeholder">Select</span>'
       },
@@ -110,7 +110,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
             return _.template( $('#contributor-actions-dropdown-template').html() )({
               status: data,
               workflowStage: workflowStage,
-              invitationTemplate: row.crowdsourcing_template,
+              invitationTemplate: row.invitation_template,
               story: row.success.story, // might be nil
               viewStoryPath: row.success.story && row.success.story.csp_story_path,
               editStoryPath: row.success.story && '/curate/' + row.success.customer.slug + '/' + row.success.story.slug
@@ -194,7 +194,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
       $(row).children().eq(0).addClass('contributor-details');
       $(row).children().eq(1).addClass('contributor');
       $(row).children().eq(2)
-        .addClass('crowdsourcing-template')
+        .addClass('invitation-template')
         .append('<i class="fa fa-caret-down"></i>');
       $(row).children().eq(3).addClass('status');
       $(row).children().eq(4).addClass('actions dropdown');
@@ -218,7 +218,7 @@ function initContributorsTable (workflowStage, dtContributorsInit) {
           $tableWrapper = $table.closest('[id*="table_wrapper"]'),
           dt = $table.DataTable(),
           invitationTemplateSelectOptions =
-              CSP.company.crowdsourcing_templates.map(function (template) {
+              CSP.company.invitation_templates.map(function (template) {
                 return { label: template.name, value: template.id };
               }),
           showTable = function () { $table.css('visibility', 'visible'); };

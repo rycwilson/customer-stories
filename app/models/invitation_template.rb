@@ -1,5 +1,4 @@
-
-class CrowdsourcingTemplate < ApplicationRecord
+class InvitationTemplate < ApplicationRecord
 
   default_scope { order(name: :asc) }
 

@@ -42,7 +42,7 @@ class ApplicationController < ActionController::Base
     is_curator = (user_signed_in? && (current_user.company_id == company.try(:id)))
     gon.push({
       company: company.present? ? JSON.parse(company.to_json({
-        methods: [:curators, :customers, :crowdsourcing_templates, :widget],
+        methods: [:curators, :customers, :invitation_templates, :widget],
       })) : nil,
       current_user: user_signed_in? ? {
         id: current_user.id,

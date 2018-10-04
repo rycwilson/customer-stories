@@ -13,7 +13,7 @@ function newSuccessListeners () {
       },
       disableContributionAttrs = function (disabled, contactType) {
         var index = (contactType === 'referrer') ? '0' : '1';
-        [contactType + '_id', 'crowdsourcing_template_id', 'success_contact']
+        [contactType + '_id', 'invitation_template_id', 'success_contact']
           .forEach(function (attribute) {
             // don't disable referrer_id or contributor_id since they're visible, instead blank the [name]
             if (attribute === 'referrer_id' || attribute === 'contributor_id') {
@@ -132,7 +132,7 @@ function newSuccessListeners () {
             },
             getInvitationTemplateId = function (templateName) {
               if (!templateName) return null;
-              var template = CSP.company.crowdsourcing_templates.find(function (template) {
+              var template = CSP.company.invitation_templates.find(function (template) {
                 return template.name === templateName;
               });
               if (template) {
@@ -177,7 +177,7 @@ function newSuccessListeners () {
               var userId = getUserId(email),
                   attrs = {
                     success_contact: contactType === 'contributor' ? true : false,
-                    crowdsourcing_template_id: getInvitationTemplateId(invitationTemplateName),
+                    invitation_template_id: getInvitationTemplateId(invitationTemplateName),
                   };
 
               // existing user
@@ -187,14 +187,14 @@ function newSuccessListeners () {
                * include invitation template attributes if a template name was passed
                * but no such template exists
                */
-              if (invitationTemplateName && !attrs.crowdsourcing_template_id) {
+              if (invitationTemplateName && !attrs.invitation_template_id) {
                 Object.assign(attrs, {
-                  crowdsourcing_template_attributes: {
+                  invitation_template_attributes: {
                     name: invitationTemplateName,
                     company_id: CSP.company.id
                   }
                 });
-                delete attrs.crowdsourcing_template_id;
+                delete attrs.invitation_template_id;
               }
 
               // new user
@@ -328,7 +328,7 @@ function newSuccessListeners () {
       }
       if (curatorId !== '0') {
         $('select.new-success.curator')
-          .val($('.crowdsource.curator-select').val())
+          .val($('.prospect.curator-select').val())
           .trigger('change');
       }
     })

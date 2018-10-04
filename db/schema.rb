@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181004033326) do
+ActiveRecord::Schema.define(version: 20181004201239) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -132,28 +132,28 @@ ActiveRecord::Schema.define(version: 20181004033326) do
     t.string   "role"
     t.text     "contribution"
     t.text     "feedback"
-    t.string   "status",                    default: "pre_request"
-    t.boolean  "linkedin",                  default: false
-    t.datetime "created_at",                                        null: false
-    t.datetime "updated_at",                                        null: false
+    t.string   "status",                  default: "pre_request"
+    t.boolean  "linkedin",                default: false
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
     t.datetime "request_remind_at"
-    t.integer  "first_reminder_wait",       default: 2
-    t.integer  "second_reminder_wait",      default: 3
+    t.integer  "first_reminder_wait",     default: 2
+    t.integer  "second_reminder_wait",    default: 3
     t.string   "access_token"
     t.integer  "referrer_id"
     t.text     "notes"
     t.datetime "submitted_at"
     t.datetime "request_received_at"
-    t.boolean  "publish_contributor",       default: true
-    t.boolean  "contributor_unpublished",   default: false
-    t.boolean  "preview_contributor",       default: false
-    t.integer  "crowdsourcing_template_id"
+    t.boolean  "publish_contributor",     default: true
+    t.boolean  "contributor_unpublished", default: false
+    t.boolean  "preview_contributor",     default: false
+    t.integer  "invitation_template_id"
     t.string   "request_subject"
     t.text     "request_body"
     t.datetime "request_sent_at"
-    t.boolean  "success_contact",           default: false
+    t.boolean  "success_contact",         default: false
     t.index ["contributor_id"], name: "index_contributions_on_contributor_id", using: :btree
-    t.index ["crowdsourcing_template_id"], name: "index_contributions_on_crowdsourcing_template_id", using: :btree
+    t.index ["invitation_template_id"], name: "index_contributions_on_invitation_template_id", using: :btree
     t.index ["success_id"], name: "index_contributions_on_success_id", using: :btree
   end
 
@@ -174,18 +174,6 @@ ActiveRecord::Schema.define(version: 20181004033326) do
     t.datetime "updated_at", null: false
     t.string   "role"
     t.index ["company_id"], name: "index_contributor_questions_on_company_id", using: :btree
-  end
-
-  create_table "crowdsourcing_templates", force: :cascade do |t|
-    t.integer  "company_id"
-    t.string   "name"
-    t.string   "request_subject"
-    t.string   "request_body"
-    t.datetime "created_at",                                                                   null: false
-    t.datetime "updated_at",                                                                   null: false
-    t.string   "contribution_page_title", default: "Thank you for contributing your insights"
-    t.string   "feedback_page_title",     default: "Thank you for your feedback"
-    t.index ["company_id"], name: "index_crowdsourcing_templates_on_company_id", using: :btree
   end
 
   create_table "ctas_successes", force: :cascade do |t|
@@ -253,6 +241,18 @@ ActiveRecord::Schema.define(version: 20181004033326) do
     t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type", using: :btree
     t.index ["sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_id", using: :btree
     t.index ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type", using: :btree
+  end
+
+  create_table "invitation_templates", force: :cascade do |t|
+    t.integer  "company_id"
+    t.string   "name"
+    t.string   "request_subject"
+    t.string   "request_body"
+    t.datetime "created_at",                                                                   null: false
+    t.datetime "updated_at",                                                                   null: false
+    t.string   "contribution_page_title", default: "Thank you for contributing your insights"
+    t.string   "feedback_page_title",     default: "Thank you for your feedback"
+    t.index ["company_id"], name: "index_invitation_templates_on_company_id", using: :btree
   end
 
   create_table "oauth_access_grants", force: :cascade do |t|
@@ -411,10 +411,10 @@ ActiveRecord::Schema.define(version: 20181004033326) do
   end
 
   create_table "templates_questions", force: :cascade do |t|
-    t.integer  "crowdsourcing_template_id"
+    t.integer  "invitation_template_id"
     t.integer  "contributor_question_id"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
   end
 
   create_table "users", force: :cascade do |t|
@@ -517,12 +517,12 @@ ActiveRecord::Schema.define(version: 20181004033326) do
   add_foreign_key "contributor_answers", "contributions"
   add_foreign_key "contributor_answers", "contributor_questions"
   add_foreign_key "contributor_questions", "companies"
-  add_foreign_key "crowdsourcing_templates", "companies"
   add_foreign_key "ctas_successes", "call_to_actions"
   add_foreign_key "ctas_successes", "successes"
   add_foreign_key "customers", "companies"
   add_foreign_key "email_contribution_requests", "contributions"
   add_foreign_key "email_templates", "companies"
+  add_foreign_key "invitation_templates", "companies"
   add_foreign_key "oauth_access_grants", "oauth_applications", column: "application_id"
   add_foreign_key "oauth_access_tokens", "oauth_applications", column: "application_id"
   add_foreign_key "outbound_actions", "companies"

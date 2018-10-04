@@ -1,6 +1,6 @@
 class TemplatesQuestion < ApplicationRecord
 
-  belongs_to :crowdsourcing_template
+  belongs_to :invitation_template
   belongs_to :contributor_question
 
   after_destroy { self.contributor_question.destroy if self.contributor_question.present? && self.contributor_question.templates.length == 0 }

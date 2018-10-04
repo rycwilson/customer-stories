@@ -8,13 +8,13 @@
 
 <!-- include templates for both companies#show and stories#edit -->
 <% content_for :underscore_templates do %>
-  <%= render 'companies/crowdsource//successes/successes_table_header_template' %>
-  <%= render 'companies/crowdsource/successes/success_details_template' %>
-  <%= render 'companies/crowdsource/successes/success_actions_dropdown_template' %>
-  <%= render 'companies/crowdsource/contributors/contributors_table_header_template' %>
-  <%= render 'companies/crowdsource/contributors/contributor_details_template' %>
-  <%= render 'companies/crowdsource/contributors/contributor_actions_dropdown_template' %>
-  <%= render 'companies/crowdsource/contributors/csp_linkedin_widget_template' %>
+  <%= render 'companies/prospect//successes/successes_table_header_template' %>
+  <%= render 'companies/prospect/successes/success_details_template' %>
+  <%= render 'companies/prospect/successes/success_actions_dropdown_template' %>
+  <%= render 'companies/prospect/contributors/contributors_table_header_template' %>
+  <%= render 'companies/prospect/contributors/contributor_details_template' %>
+  <%= render 'companies/prospect/contributors/contributor_actions_dropdown_template' %>
+  <%= render 'companies/prospect/contributors/csp_linkedin_widget_template' %>
   <%= render 'companies/promote/adwords_status_dropdown_template' %>
   <%= render 'companies/promote/promoted_story_actions_dropdown_template' %>
   <%= render 'stories/index/index_template', { company: @company } %>
@@ -23,10 +23,10 @@
 <% end %>
 
 <!-- include modals for both companies#show and stories#edit -->
-<%= render 'companies/crowdsource/successes/new_success_modal', { company: @company } %>
-<%= render 'companies/crowdsource/contributors/new_contributor_modal', { company: @company } %>
-<%= render 'companies/crowdsource/contributors/contribution_request_modal', { company: @company} %>
-<%= render 'companies/crowdsource/contribution_content_modal' %>
+<%= render 'companies/prospect/successes/new_success_modal', { company: @company } %>
+<%= render 'companies/prospect/contributors/new_contributor_modal', { company: @company } %>
+<%= render 'companies/prospect/contributors/contribution_request_modal', { company: @company} %>
+<%= render 'companies/prospect/contribution_content_modal' %>
 <%= render 'stories/shared/new_story_modal', { company: @company } %>
 <%= render 'stories/show/video_modal', { is_widget: false } %>
 
@@ -37,7 +37,7 @@
 
   <div class='tab-content'>
 
-    <%= render 'companies/crowdsource/crowdsource',
+    <%= render 'companies/prospect/prospect',
           { company: @company, workflow_stage: @workflow_stage, tab: @prospect_tab } %>
 
     <%= render 'companies/curate/curate', { company: @company, story: @story,

@@ -3,15 +3,15 @@
 
   var company = <%= raw @company.to_json({ only: [:id] }) %>,
       templateQuestions = <%= raw @template.templates_questions.to_json({
-        only: [:id, :crowdsourcing_template_id, :contributor_question_id],
+        only: [:id, :invitation_template_id, :contributor_question_id],
         include: {
           contributor_question: { only: [:id, :question] }
         }
       }) %>;
 
 
-  toggleFormDone($('#crowdsourcing-template-form'), true);
-  $('#crowdsourcing-template-form').data('dirty', '');
+  toggleFormDone($('#invitation-template-form'), true);
+  $('#invitation-template-form').data('dirty', '');
 
   // update questions list
   $('.contributor-questions ul').empty()
