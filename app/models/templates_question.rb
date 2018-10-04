@@ -1,4 +1,4 @@
-class TemplatesQuestion < ActiveRecord::Base
+class TemplatesQuestion < ApplicationRecord
 
   belongs_to :crowdsourcing_template
   belongs_to :contributor_question

@@ -1,4 +1,4 @@
-class Contribution < ActiveRecord::Base
+class Contribution < ApplicationRecord
 
   # the default_scope introduces difficulty to, e.g., this:
   # has_many :contributors, -> { distinct }, through: :contributions, source: :contributor

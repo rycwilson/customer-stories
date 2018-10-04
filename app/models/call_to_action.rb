@@ -1,4 +1,4 @@
-class CallToAction < ActiveRecord::Base
+class CallToAction < ApplicationRecord
 
   belongs_to :company
   has_many :ctas_successes, dependent: :destroy

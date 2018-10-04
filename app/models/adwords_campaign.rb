@@ -1,4 +1,4 @@
-class AdwordsCampaign < ActiveRecord::Base
+class AdwordsCampaign < ApplicationRecord
 
   belongs_to :company
   has_one :adwords_ad_group, dependent: :destroy

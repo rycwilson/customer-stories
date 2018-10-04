@@ -1,4 +1,4 @@
-class ContributorQuestion < ActiveRecord::Base
+class ContributorQuestion < ApplicationRecord
 
   belongs_to :company
   has_many :templates_questions, dependent: :destroy

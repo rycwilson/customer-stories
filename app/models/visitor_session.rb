@@ -1,4 +1,4 @@
-class VisitorSession < ActiveRecord::Base
+class VisitorSession < ApplicationRecord
 
   belongs_to :visitor, counter_cache: true
   has_many :visitor_actions, dependent: :destroy

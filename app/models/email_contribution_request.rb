@@ -1,4 +1,4 @@
-class EmailContributionRequest < ActiveRecord::Base
+class EmailContributionRequest < ApplicationRecord
 
   belongs_to :contribution
 
