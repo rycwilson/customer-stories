@@ -164,9 +164,9 @@ class ContributionsController < ApplicationController
       respond_to { |format| format.js { render action: 'update_contributor' } }
 
     elsif params[:submission]
-      if contribution_params[:status] == 'contribution_submitted'
-        params[:contribution][:contribution] = consolidate_answers(params[:answers])
-      end
+      # if contribution_params[:status] == 'contribution_submitted'
+      #   params[:contribution][:contribution] = consolidate_answers(params[:answers])
+      # end
       if @contribution.update(contribution_params)
         if connect_to_linkedin?(@contribution)
           redirect_to(connect_to_linkedin_url(@contribution))
@@ -252,7 +252,7 @@ class ContributionsController < ApplicationController
       referrer_attributes: [
         :id, :email, :first_name, :last_name, :title, :phone, :sign_up_code, :password
       ],
-      contributor_answer_attributes: [
+      contributor_answers_attributes: [
         :answer, :contribution_id, :contributor_question_id
       ]
     )

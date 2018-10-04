@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180904232859) do
+ActiveRecord::Schema.define(version: 20181004033326) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -157,6 +157,16 @@ ActiveRecord::Schema.define(version: 20180904232859) do
     t.index ["success_id"], name: "index_contributions_on_success_id", using: :btree
   end
 
+  create_table "contributor_answers", force: :cascade do |t|
+    t.text     "answer"
+    t.integer  "contribution_id"
+    t.integer  "contributor_question_id"
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+    t.index ["contribution_id"], name: "index_contributor_answers_on_contribution_id", using: :btree
+    t.index ["contributor_question_id"], name: "index_contributor_answers_on_contributor_question_id", using: :btree
+  end
+
   create_table "contributor_questions", force: :cascade do |t|
     t.integer  "company_id"
     t.string   "question"
@@ -194,9 +204,9 @@ ActiveRecord::Schema.define(version: 20180904232859) do
     t.datetime "created_at",                         null: false
     t.datetime "updated_at",                         null: false
     t.string   "slug"
+    t.boolean  "show_name_with_logo", default: true
     t.index ["company_id"], name: "index_customers_on_company_id", using: :btree
     t.index ["name", "company_id"], name: "index_customers_on_name_and_company_id", unique: true, using: :btree
-    t.boolean  "show_name_with_logo", default: true
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
@@ -504,6 +514,8 @@ ActiveRecord::Schema.define(version: 20180904232859) do
   add_foreign_key "call_to_actions", "companies"
   add_foreign_key "contributions", "successes"
   add_foreign_key "contributions", "users", column: "contributor_id"
+  add_foreign_key "contributor_answers", "contributions"
+  add_foreign_key "contributor_answers", "contributor_questions"
   add_foreign_key "contributor_questions", "companies"
   add_foreign_key "crowdsourcing_templates", "companies"
   add_foreign_key "ctas_successes", "call_to_actions"
