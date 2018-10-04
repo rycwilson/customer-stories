@@ -2,6 +2,22 @@ namespace :temp do
 
   desc "temp stuff"
 
+  task migrate_answers: :environment do
+    ContributorAnswer.destroy_all
+    ActiveRecord::Base.connection.execute('ALTER SEQUENCE contributor_answers_id_seq RESTART WITH 1')
+    Contribution.where.not(contribution:[nil, '']).each do |c|
+      unless c.scan(/<em>(.*?)<\/em>/).length == 0   # earlier contributions are not based on questions
+        c.contribution.scan(/<em>(.*?)<\/em>/).flatten.each_with_index do |answer, index|
+          ContributorAnswer.create(
+            answer: answer,
+            contribution_id: c.id,
+            contributor_question_id: c.company.questions[index].id
+          )
+        end
+      end
+    end
+  end
+
   task change_contribution_status: :environment do
     Contribution.all.each do |c|
       if (c.status == 'unsubscribed')

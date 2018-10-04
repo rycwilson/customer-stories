@@ -31,6 +31,7 @@ class Contribution < ApplicationRecord
   has_one :email_contribution_request, dependent: :destroy
   belongs_to :invitation_template
   has_many :contributor_questions, through: :invitation_template
+  alias_attribute :questions, :contributor_questions
   has_many :contributor_answers
   alias_attribute :answers, :contributor_answers
 
