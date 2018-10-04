@@ -31,12 +31,15 @@ class Contribution < ActiveRecord::Base
   has_one :email_contribution_request, dependent: :destroy
   belongs_to :crowdsourcing_template
   has_many :contributor_questions, through: :crowdsourcing_template
+  has_many :contributor_answers
+  alias_attribute :answers, :contributor_answers
 
   accepts_nested_attributes_for(:success, allow_destroy: false)
   accepts_nested_attributes_for(:referrer, allow_destroy: false, reject_if: :missing_referrer_attributes?)
   # don't need reject_if for the contributor, as the contribution would have been rejected already
   accepts_nested_attributes_for(:contributor, allow_destroy: false)
   accepts_nested_attributes_for(:crowdsourcing_template)
+  accepts_nested_attributes_for(:contributor_answers)
 
   before_create(:generate_access_token)
 
