@@ -98,6 +98,7 @@ Rails.application.routes.draw do
           resources :contributions, only: [:index]
           resources :results, only: [:create, :destroy]
           collection { post '/import', to: 'successes#import' }
+          member { get '/win_story', to: 'successes#win_story' }
         end
         resources :stories, only: [:edit, :create, :update, :destroy], shallow: true do
           get '/promoted', on: :collection, to: 'stories#promoted'

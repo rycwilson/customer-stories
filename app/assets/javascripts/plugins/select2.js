@@ -39,6 +39,15 @@ function initSelect2 () {
       });
   };
 
+  /**
+   * win story
+   */
+  $('select[name="win_story_templates"]').select2({
+    theme: "bootstrap",
+    tags: true,
+    placeholder: 'Select templates',
+  });
+
   // for customers, successes, contributors, referrers => don't initialize if the form submission modal is still open
 
   /**

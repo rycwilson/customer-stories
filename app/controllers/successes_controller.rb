@@ -160,6 +160,12 @@ class SuccessesController < ApplicationController
     end
   end
 
+  def win_story
+
+    puts params.permit(params.keys).to_h
+
+  end
+
   private
 
   # status will be present in case of csv upload

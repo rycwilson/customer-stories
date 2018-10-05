@@ -190,6 +190,9 @@ class Company < ApplicationRecord
     def sales
       where(name: 'Sales').take
     end
+    def select_options
+      self.sort_by { |t| t.name }.map { |template| [ template.name, template.id ] }
+    end
     def grouped_select_options
       {
         'Custom' => self.where.not("name IN ('Customer', 'Customer Success', 'Sales')")

@@ -51,21 +51,21 @@
         <div id="settings-content" class="tab-content stacked-content">
 
           <div class="tab-pane fade in active" id="measure-summary-container">
-            <%= render 'companies/measure/summary_charts', { company: company } %>
+            <%= render 'companies/4_measure/summary_charts', { company: company } %>
           </div>
 
           <div class="tab-pane fade" id="measure-stories-container">
-            <%= render 'companies/measure/stories_table' %>
+            <%= render 'companies/4_measure/stories_table' %>
           </div>
 
           <div class="tab-pane fade" id="measure-visitors-container">
-            <%= render 'companies/measure/visitors_table', { company: company } %>
+            <%= render 'companies/4_measure/visitors_table', { company: company } %>
           </div>
 
           <div class="tab-pane fade" id="measure-activity-container">
 
             <% cache("#{company.subdomain}/recent-activity", skip_digest: true) do %>
-              <%= render 'companies/measure/activity_table',
+              <%= render 'companies/4_measure/activity_table',
                     { recent_activity: recent_activity,
                       story_views_30_day_count: @story_views_30_day_count } %>
             <% end %>
