@@ -131,7 +131,7 @@
             <%= image_tag ADWORDS_IMAGE_PLACEHOLDER_URL, alt: 'marketing image placeholder' %>
           </div>
           <div class="fileinput-preview fileinput-exists thumbnail" data-trigger="fileinput">
-            <%= image_tag company.adwords_images.default.try(:image_url),
+            <%= image_tag company.adwords_images.default.try(:image_url) || ADWORDS_IMAGE_PLACEHOLDER_URL,
                   data: { id: company.adwords_images.default.try(:id) },
                   alt: 'marketing image' %>
           </div>
