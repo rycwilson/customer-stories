@@ -26,6 +26,7 @@
         padding: 10px 32px;  // doubles bootstrap horizontal padding
         border: 1px solid transparent;
         opacity: 0.9;
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);  // copied from mvp
         &:hover, &:focus {
           opacity: 1;
         }
