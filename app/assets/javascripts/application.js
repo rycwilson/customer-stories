@@ -1,5 +1,6 @@
 
-/* make sure jquery-ui appears before bootstrap, per https://stackoverflow.com/questions/13731400 */
+/* jquery-ui must appear before bootstrap, per https://stackoverflow.com/questions/13731400 */
+
 //= require jquery/dist/jquery
 //= require jquery-ui
 //= require jquery-ujs/src/rails
