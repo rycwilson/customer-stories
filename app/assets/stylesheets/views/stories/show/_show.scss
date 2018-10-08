@@ -263,15 +263,20 @@
       bottom: -48px;
       left: 0;
       right: 0;
+      // these two set inline with company helper
+      // background-color: ;
+      // color: ;
+      margin: 0 auto;
       padding-left: 15px;
-      background: yellow;
       z-index: 100;
       min-width: 300px;
       max-width: 400px;
       transform: translateY(0%);
       transition: all 0.4s;
+          box-shadow: 0 2px 8px 0px rgba(0, 0, 0, 0.2);
       a, button {
-        color: #333;
+        text-decoration: none;
+        color: unset;  // let the parent container set the color
       }
       a, a i {
         font-weight: 600;
@@ -290,31 +295,40 @@
         transform: translateY(-100%);
         transition: all 0.4s;
       }
+      @media only screen and (min-width: 400px) {
+        & {
+          border-top-left-radius: 3px;
+          border-top-right-radius: 3px;
+        }
+      }
     }
     .testimonial, .cs-testimonial {
       margin-bottom: 20px;
-      &:after {
-        content: none;
-      }
       > .container, > .cs-container {
         max-width: $max-xs-width;
+      }
+      &:after {
+        content: none;
       }
       &.cs-testimonial {
         // margin-top: 25px;
       }
     }
     .title-xs {
-      h4 {
-        line-height: 1.3 !important;
-        font-size: 20px !important;
-      }
-      .social-share-buttons {
-        display: flex;
-        justify-content: space-between;
-        margin: 20px auto 0 auto;
-        width: 250px;
-        &.no-video {
-          margin-bottom: 25px;
+      > .container, .cs-container {
+        max-width: $max-xs-width;
+        h4 {
+          line-height: 1.3 !important;
+          font-size: 20px !important;
+        }
+        .social-share-buttons {
+          display: flex;
+          justify-content: space-between;
+          margin: 20px auto 0 auto;
+          width: 250px;
+          &.no-video {
+            margin-bottom: 25px;
+          }
         }
       }
     }

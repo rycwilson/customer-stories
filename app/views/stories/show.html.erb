@@ -47,9 +47,10 @@
       }
     ) %>
 
+<!-- web form not presently supported for mobile view -->
 <% if @company.ctas.try(:primary).present? && @company.ctas.primary.type == 'CTALink' %>
   <div class="visible-xs-block">
-    <div id="primary-cta-xs">
+    <div id="primary-cta-xs" style="<%= primary_cta_style(@company) %>">
       <a href="<%= @company.ctas.primary.link_url %>">
         <span><%= @company.ctas.primary.display_text %></span>
         <span>

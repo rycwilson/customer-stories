@@ -49,8 +49,8 @@
       #new-cta-button {
         margin: 0 0 20px 0;
       }
-      .control-label {
-        padding-top: 12px;
+      > .control-label {
+        padding-top: 15px;
       }
       .col-md-2 {
         width: 15%;
@@ -60,16 +60,8 @@
       }
       #primary-cta, #secondary-ctas {
         width: 500px;
-        // .form-group:last-of-type {
-        //   margin-bottom: 0
-        // }
         &#primary-cta {
           #primary-cta-colors {
-            // padding: 0 10px 0 10px;
-            label {
-              margin-top: 7px;
-            }
-            // // margin-bottom: 10px;
             div.col-sm-4:first-of-type {
               padding-right: 0;
             }

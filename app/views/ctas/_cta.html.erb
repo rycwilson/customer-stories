@@ -56,7 +56,7 @@
   <!-- note: the inline styling is necessary to prevent jerky collapse behavior -->
 
     <div class="form-group" style="margin: 0 0 15px 0">
-      <%= label_tag "cta_#{cta.id}[description]", 'Name' %>
+      <%= label_tag "cta_#{cta.id}[description]", 'Description' %>
       <%= text_field_tag "cta_#{cta.id}[description]", cta.description,
             placeholder: 'description', class: 'form-control' %>
     </div>
