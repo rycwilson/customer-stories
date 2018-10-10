@@ -39,10 +39,7 @@
           padding: 12px;
           background: transparent;
           border-radius: 3px 3px 0 0;
-          -webkit-transform: translateY(-100%);
-          -moz-transform: translateY(-100%);
-          -ms-transform: translateY(-100%);
-          -o-transform: translateY(-100%);
+          transform: translateY(-100%);
           transition: all 0s step-end;  // ease-in-out
           p {
             font: {
@@ -115,7 +112,7 @@
         pointer-events: none;
       }
     }
-    &:hover:not(.og-expanded), &.loading {
+    &:hover:not(.og-expanded), &.hover:not(.og-expanded), &.loading {
       a.curator, a.public:not(.logo-published) {
         border: 1px solid transparent;
         box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
@@ -135,12 +132,9 @@
       }
     }
     // keep the title in place while the preview window is open
-    &.og-expanded a.thumbnail, a.thumbnail:hover {
+    &.og-expanded a.thumbnail, a.thumbnail:hover, &.hover {
       .thumbnail-view-hover {
-        -webkit-transform: translateY(0%);
-        -moz-transform: translateY(0%);
-        -ms-transform: translateY(0%);
-        -o-transform: translateY(0%);
+        transform: translateY(0%);
       }
       img {
         opacity: 0.04;

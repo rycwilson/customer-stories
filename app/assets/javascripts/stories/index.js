@@ -16,9 +16,9 @@ function storiesIndex () {
 
 function storiesIndexListeners () {
 
-  var loading = function ($story) {
-        $story.addClass('loading');
-        setTimeout(function () { $story.addClass('still-loading'); }, 1000);
+  var loading = function ($storyCard) {
+        $storyCard.addClass('loading');
+        setTimeout(function () { $storyCard.addClass('still-loading'); }, 1000);
         $('#stories-gallery li').css('pointer-events', 'none');
       },
 
@@ -77,9 +77,37 @@ function storiesIndexListeners () {
       $('.stories-search-form .input-group-btn').addClass('show-clear');
     })
 
-    .on('click', 'a.published', function (e) {
-      var $story = $(this).closest('li');
-      loading($story);
+    .on('click', 'li[data-story-id]:not(.hover) a.published', function (e) {
+      if (CSP.screenSize === 'xs') {
+        e.preventDefault();
+        var $storyLink = $(this),
+            $storyCard = $(this).parent(),
+            storyLoading = function () { loading($storyCard); };
+        $storyCard.addClass('hover');
+
+        // next click => load story
+        $storyLink.one('click', storyLoading);
+
+        // undo hover and click listener if clicking anywhere outside the story card
+        $('body').one(
+          'touchstart',
+          // this selector is still allowing a click on the title <p> to trigger this listener => check in the function instead
+          // ':not(li[data-story-id]:nth-of-type(' + $storyCard.index() + 1 + '), li[data-story-id]:nth-of-type(' + $storyCard.index() + 1 + ') *)',
+          function (e) {
+            if ($(e.target).is($storyCard) || $storyCard.has(e.target).length ) {
+              // do nothing (link will be followed)
+            } else {
+              $storyCard.removeClass('hover');
+              $storyLink.off('click', storyLoading);
+            }
+          }
+        );
+
+        // remove hover from other cards
+        $('#stories-gallery').find('li').not($storyCard).each(function () {
+          $(this).removeClass('hover');
+        });
+      }
     })
 
     .on('change', '#grouped-stories-filter', function () {
