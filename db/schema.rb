@@ -194,9 +194,9 @@ ActiveRecord::Schema.define(version: 20180904232859) do
     t.datetime "created_at",                         null: false
     t.datetime "updated_at",                         null: false
     t.string   "slug"
+    t.boolean  "show_name_with_logo", default: true
     t.index ["company_id"], name: "index_customers_on_company_id", using: :btree
     t.index ["name", "company_id"], name: "index_customers_on_name_and_company_id", unique: true, using: :btree
-    t.boolean  "show_name_with_logo", default: true
   end
 
   create_table "delayed_jobs", force: :cascade do |t|
