@@ -1,7 +1,7 @@
 
 #company-header {
 
-  button.primary-cta {
+  a.primary-cta {
     border-radius: 2px;
     text-transform: uppercase;
     opacity: 1;
@@ -9,12 +9,10 @@
     &:hover {
       background-color: #003464 !important;
     }
-    a {
-      span {
-        font-size: 13px;
-        font-weight: 600;
-        letter-spacing: 1px;
-      }
+    span {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 1px;
     }
   }
 
