@@ -1,13 +1,13 @@
 
-<div class="<%= is_widget ? 'cs-container' : 'container' %>">
+<div class="<%= is_plugin ? 'cs-container' : 'container' %>">
 
-  <div class="<%= is_widget ? 'cs-row' : 'row' %>">
+  <div class="<%= is_plugin ? 'cs-row' : 'row' %>">
 
     <div class="col-xs-12 <%= include_video ? 'col-sm-6 col-md-7' : 'no-video' %>">
 
       <div class="customer-logo-quote visible-xs-block">
 
-        <div class="<%= is_widget ? 'cs-customer-logo' : 'customer-logo' %>">
+        <div class="<%= is_plugin ? 'cs-customer-logo' : 'customer-logo' %>">
           <div class="text-center">
             <%= image_tag(story.customer.logo_url || LOGO_PLACEHOLDER_URL, class: 'img-responsive') %>
 
@@ -20,7 +20,7 @@
           </div>
         </div>
 
-        <div class="<%= is_widget ? 'cs-customer-quote' : 'customer-quote' %>">
+        <div class="<%= is_plugin ? 'cs-customer-quote' : 'customer-quote' %>">
 
           <blockquote>
             <p><%= story.quote %></p>
@@ -36,7 +36,7 @@
 
       </div>
 
-      <div class="customer-logo-quote hidden-xs <%= is_widget ? 'cs-row' : 'row' %>">
+      <div class="customer-logo-quote hidden-xs <%= is_plugin ? 'cs-row' : 'row' %>">
 
         <div>
 
@@ -53,7 +53,7 @@
             </div>
           </div>
 
-          <div class="<%= is_widget ? 'cs-customer-quote' : 'customer-quote' %> <%= include_video ? 'col-sm-12' : (long_customer_name ? 'col-sm-8' : 'col-sm-8 col-lg-8') %>">
+          <div class="<%= is_plugin ? 'cs-customer-quote' : 'customer-quote' %> <%= include_video ? 'col-sm-12' : (long_customer_name ? 'col-sm-8' : 'col-sm-8 col-lg-8') %>">
 
             <blockquote>
               <p><%= story.quote %></p>
@@ -76,7 +76,7 @@
 
     </div>
 
-    <div class="<%= is_widget ? 'cs-story-video' : 'story-video' %> <%= include_video ? 'hidden-xs col-sm-6 col-md-5' : 'hidden' %>">
+    <div class="<%= is_plugin ? 'cs-story-video' : 'story-video' %> <%= include_video ? 'hidden-xs col-sm-6 col-md-5' : 'hidden' %>">
 
         <% if story.video_info[:provider] == 'wistia' %>
 
@@ -96,12 +96,12 @@
         <% else %>
 
           <div class="video-thumb-container embed-responsive embed-responsive-16by9"
-               data-toggle="modal" data-target="<%= is_widget ? '#cs-video-modal' : '#video-modal' %>"
+               data-toggle="modal" data-target="<%= is_plugin ? '#cs-video-modal' : '#video-modal' %>"
                data-provider="<%= story.video_info[:provider] %>"
                data-video-id="<%= story.video_info[:id] %>"
                data-video-url="<%= story.video_url %>">
 
-            <% if is_widget %>
+            <% if is_plugin %>
               <iframe class="embed-responsive-item hidden" src=""></iframe>
             <% end %>
 

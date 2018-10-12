@@ -3,8 +3,7 @@
 
   &#stories-gallery {
     margin: 0 auto;
-    // accommodate the sign in footer
-    min-height: 100vh;
+    min-height: 100vh;  // accommodate the sign-in footer
     padding-bottom: 20px;
   }
 
@@ -39,10 +38,7 @@
           padding: 12px;
           background: transparent;
           border-radius: 3px 3px 0 0;
-          -webkit-transform: translateY(-100%);
-          -moz-transform: translateY(-100%);
-          -ms-transform: translateY(-100%);
-          -o-transform: translateY(-100%);
+          transform: translateY(-100%);
           transition: all 0s step-end;  // ease-in-out
           p {
             font: {
@@ -115,7 +111,7 @@
         pointer-events: none;
       }
     }
-    &:hover:not(.og-expanded), &.loading {
+    &:hover:not(.og-expanded), &.hover:not(.og-expanded), &.loading {
       a.curator, a.public:not(.logo-published) {
         border: 1px solid transparent;
         box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
@@ -135,22 +131,24 @@
       }
     }
     // keep the title in place while the preview window is open
-    &.og-expanded a.thumbnail, a.thumbnail:hover {
+    &.og-expanded a.thumbnail, a.thumbnail:hover, &.hover {
       .thumbnail-view-hover {
-        -webkit-transform: translateY(0%);
-        -moz-transform: translateY(0%);
-        -ms-transform: translateY(0%);
-        -o-transform: translateY(0%);
+        transform: translateY(0%);
       }
       img {
         opacity: 0.04;
       }
     }
+
     &:not(.still-loading) {
-      i.fa-spin { display: none; }
+      i.fa-spin {
+        opacity: 0;
+      }
     }
+
     &.loading {
       a.thumbnail {
+        filter: brightness(95%);
         -webkit-filter: brightness(95%);
         .thumbnail-view-hover {
           transform: none;
@@ -167,19 +165,28 @@
       &.still-loading {
         .thumbnail-view, .caption {
           opacity: 0.05;
+          transition: opacity 1s step-end;
+          // -webkit-transition: opacity 1s step-end;
         }
         img {
           opacity: 0;
+          transition: opacity 1s step-end;
+          // -webkit-transition: opacity 1s step-end;
         }
         // the icon needs to be wrapped in a div in order for the transform to work
         // (center if element is centered, not top-left of element)
-        .still-loading-container {
+        .icon-container {
           position: absolute;
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          font-size: 20px;
-          color: #666;
+          i {
+            font-size: 20px;
+            color: #666;
+            opacity: 1;
+            transition: opacity 1s step-end;
+            // -webkit-transition: opacity 1s step-end;
+          }
         }
       }
     }

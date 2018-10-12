@@ -6,10 +6,17 @@ function storiesShow () {
   loadVideoThumbnail(cbSuccess);
 
   linkedinListener($('.story-wrapper'));
-  clickyListeners();
+  // clickyListeners();
   initMoreStories();
 
+  setTimeout(function () {
+    $('#primary-cta-xs').addClass('open');
+  }, 5000);
+
   $(document)
+    .on('click', '#primary-cta-xs button.remove', function () {
+      $('#primary-cta-xs').remove();
+    })
     .on('click', '.edit-story a', function () {
       Cookies.set('csp-story-tab', '#story-content');
     })
@@ -24,6 +31,19 @@ function storiesShow () {
           $('#cs-tabbed-carousel').show();
         }
       }
+    })
+
+    // ref: https://codepen.io/patrickkahl/pen/DxmfG
+    // ref: http://stackoverflow.com/questions/4068373
+    // ref: http://stackoverflow.com/questions/24046807
+    .on('click', '.linkedin-share', function (e) {
+      CSP.screenSize === 'xs' ? $(this).popupWindow(e) : $(this).popupWindow(e, 550, 540);
+    })
+    .on('click', '.twitter-share', function (e) {
+      CSP.screenSize === 'xs' ? $(this).popupWindow(e) : $(this).popupWindow(e, 500, 446);
+    })
+    .on('click', '.facebook-share', function (e) {
+      CSP.screenSize === 'xs' ? $(this).popupWindow(e) : $(this).popupWindow(e, 600, 424);
     });
 }
 
@@ -92,28 +112,32 @@ function clickyListeners () {
     }
   };
 
-  $(document)
-    .on('click', '.company-logo-clicky', { type: 'logo' }, clickyLog)
-    .on('click', '.cta-link', { type: 'cta-link' }, clickyLog)
-    .on('click', '.cta-form', { type: 'cta-form' }, clickyLog)
-    .on('click', '.linkedin-share, .twitter-share, .facebook-share',
-        { type: 'social-share', title: $('title').text() }, clickyLog)
-    .on('click', '.linkedin-share',
-      function (e) { $(this).popupWindow(e, 550, 544); })
-    .on('click', '.twitter-share',
-      function (e) { $(this).popupWindow(e, 500, 260); })
-    .on('click', '.facebook-share',
-      function (e) { $(this).popupWindow(e, 600, 424); })
-    .on('mouseover', '.linkedin-widget',
-      function () {
-        window.focus();
-        $(window).on('blur',
-          { type: 'linkedin', href: $(this).data('linkedin-url') }, clickyLog);
-      })
-    .on('mouseout', '.linkedin-widget',
-      function () {
-        $(window).off('blur', clickyLog);
-      });
+  // $(document)
+    // .on('click', '.company-logo-clicky', { type: 'logo' }, clickyLog)
+    // .on('click', '.cta-link', { type: 'cta-link' }, clickyLog)
+    // .on('click', '.cta-form', { type: 'cta-form' }, clickyLog)
+    // .on('click', '.linkedin-share, .twitter-share, .facebook-share',
+    //     { type: 'social-share', title: $('title').text() }, clickyLog)
+    // .on('click', '.linkedin-share', function (e) {
+    //   if (CSP.screenSize === 'xs')
+    //   $(this).popupWindow(e, 550, 540);
+    // })
+    // .on('click', '.twitter-share', function (e) {
+    //   $(this).popupWindow(e, 500, 446);
+    // })
+    // .on('click', '.facebook-share', function (e) {
+    //   $(this).popupWindow(e, 600, 424);
+    // });
+    // .on('mouseover', '.linkedin-widget',
+    //   function () {
+    //     window.focus();
+    //     $(window).on('blur',
+    //       { type: 'linkedin', href: $(this).data('linkedin-url') }, clickyLog);
+    //   })
+    // .on('mouseout', '.linkedin-widget',
+    //   function () {
+    //     $(window).off('blur', clickyLog);
+    //   });
 }
 
 /*

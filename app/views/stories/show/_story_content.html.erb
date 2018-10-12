@@ -1,15 +1,15 @@
 
-<div class="<%= is_widget ? 'cs-container' : 'container' %>">
+<div class="<%= is_plugin ? 'cs-container' : 'container' %>">
 
-  <div class="<%= is_widget ? 'cs-row' : 'row' %>">
+  <div class="<%= is_plugin ? 'cs-row' : 'row' %>">
 
     <div class="col-xs-12 col-sm-6 col-md-7">
 
-      <% cache("#{company.subdomain}/stories/#{story.id}/#{is_widget ? 'cs-' : ''}narration", skip_digest: true) do %>
+      <% cache("#{company.subdomain}/stories/#{story.id}/#{is_plugin ? 'cs-' : ''}narrative", skip_digest: true) do %>
 
         <%= render(
-              'stories/show/narration',
-              { company: company, story: story, is_widget: is_widget }
+              'stories/show/narrative',
+              { company: company, story: story, is_plugin: is_plugin }
             ) %>
 
       <% end %>
@@ -18,11 +18,11 @@
 
         <hr>
 
-        <% cache("#{company.subdomain}/stories/#{story.id}/#{is_widget ? 'cs-' : ''}results", skip_digest: true) do %>
+        <% cache("#{company.subdomain}/stories/#{story.id}/#{is_plugin ? 'cs-' : ''}results", skip_digest: true) do %>
 
           <%= render(
                 'stories/show/results',
-                { company: company, story: story, is_widget: is_widget }
+                { company: company, story: story, is_plugin: is_plugin }
               ) %>
 
         <% end %>
@@ -31,7 +31,7 @@
 
           <hr>
 
-          <%= render('stories/show/ctas', { story: story, is_widget: is_widget }) %>
+          <%= render('stories/show/ctas', { story: story, is_plugin: is_plugin }) %>
 
         <% end %>
 
@@ -52,7 +52,7 @@
 
           <%= render(
               'stories/show/contributors',
-              { contributors: contributors, is_widget: is_widget, window_width: window_width }
+              { contributors: contributors, is_plugin: is_plugin, window_width: window_width }
             ) %>
 
         <% end %>
@@ -76,15 +76,15 @@
 
     <div class="hidden-xs col-sm-6 col-md-5">
 
-      <% cache("#{company.subdomain}/stories/#{story.id}/#{is_widget ? 'cs-' : ''}results", skip_digest: true) do %>
+      <% cache("#{company.subdomain}/stories/#{story.id}/#{is_plugin ? 'cs-' : ''}results", skip_digest: true) do %>
 
-        <%= render('stories/show/results', { company: company, story: story, is_widget: is_widget }) %>
+        <%= render('stories/show/results', { company: company, story: story, is_plugin: is_plugin }) %>
 
       <% end %>
 
       <% if story.ctas.present? %>
 
-        <%= render('stories/show/ctas', { story: story, is_widget: is_widget }) %>
+        <%= render('stories/show/ctas', { story: story, is_plugin: is_plugin }) %>
 
       <% end %>
 
@@ -95,7 +95,7 @@
 
           <%= render(
                 'stories/show/contributors',
-                { contributors: contributors, is_widget: is_widget, window_width: window_width }
+                { contributors: contributors, is_plugin: is_plugin, window_width: window_width }
               ) %>
 
         <%# end %>

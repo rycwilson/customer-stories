@@ -7,7 +7,7 @@
   border-radius: 3.0rem;
   cursor: pointer;
   display: inline-block;
-  font-size: 1.7rem;
+  font-size: 1.5rem;
   height: 3.0rem;
   line-height: 3.0rem;
   margin: 0 7px;
@@ -30,6 +30,10 @@
 
 .icon-button-xs.facebook-share {
   background-color: #3B5998
+}
+
+.icon-button-xs.mailto {
+  background-color: #555
 }
 
 .icon-button-xs {
@@ -60,10 +64,7 @@
   left: 50%;
   margin: 0;
   position: absolute;
-  -webkit-transition: all 0s;
-     -moz-transition: all 0s;
-       -o-transition: all 0s;
-          transition: all 0s;
+  transition: all 0s;
   width: 0;
 }
 
@@ -87,6 +88,10 @@
 
 .facebook-share span {
   background-color: #3B5998;
+}
+
+.mailto span {
+  background-color: #333
 }
 
 /* Icons */

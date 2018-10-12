@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180904232859) do
+ActiveRecord::Schema.define(version: 20181008202313) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -116,8 +116,8 @@ ActiveRecord::Schema.define(version: 20180904232859) do
     t.string   "header_text_color",            default: "#333333"
     t.string   "website"
     t.string   "gtm_id"
-    t.string   "primary_cta_background_color"
-    t.string   "primary_cta_text_color"
+    t.string   "primary_cta_background_color", default: "#337ab7"
+    t.string   "primary_cta_text_color",       default: "#ffffff"
     t.string   "adwords_logo_url"
     t.string   "adwords_short_headline"
     t.boolean  "promote_tr",                   default: false

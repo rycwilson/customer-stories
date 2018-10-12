@@ -28,7 +28,6 @@ function companiesEdit () {
       }
     })
     .on('shown.bs.tab', '.nav-layout-sidebar a', function (e) {
-      console.log('hey')
       window.location.hash = e.target.hash.replace('edit-', '');
       window.scrollTo(0, 0);
     });

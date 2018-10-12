@@ -5,6 +5,8 @@ function storyTagsListeners () {
 
 function storyCTAsListeners () {
 
+  var makeNewCtaPrimary = false;
+
   // following two functions copied over from companies/edit/profile.js
   // TODO better way to do this with css?  https://revelry.co/css-font-color/
   var hexToRgb = function (hex) {
@@ -40,9 +42,14 @@ function storyCTAsListeners () {
   $(document)
 
     .on('click', '.section-header .help-block a', function () {
-      $(this).closest('.help-block').find('span').each(function () {
+      $(this).closest('.help-block').find('a').each(function () {
         $(this).toggle();
       });
+      $(this).closest('.section-header').find('p.help-block').toggle();
+    })
+
+    .on('click', '#primary-cta [data-target="#new-cta-modal"]', function () {
+      makeNewCtaPrimary = true;
     })
 
     .on('click', '.cta-description', function () {
@@ -57,7 +64,30 @@ function storyCTAsListeners () {
     .on('shown.bs.collapse', '.edit-cta.collapse', function () {
       var top = $(this).prev().offset().top - (window.innerHeight / 2) + (($(this).outerHeight() + $(this).prev().outerHeight()) / 2);
       window.scrollTo(0, top);
+      $(this).closest('.list-group-item').addClass('open');
       // $(this).prev()[0].scrollIntoView();
+    })
+    .on('hidden.bs.collapse', '.edit-cta.collapse', function () {
+      $(this).closest('.list-group-item').removeClass('open');
+    })
+
+    .on('shown.bs.modal', '#new-cta-modal', function () {
+      if (makeNewCtaPrimary) {
+        $('#new-cta-form [name="new_cta[make_primary]"]').prop('checked', true);
+      }
+    })
+
+    // reset the new cta form
+    .on('hidden.bs.modal', '#new-cta-modal', function () {
+      $('#new-cta-form')
+        .find('input, textarea')
+        .not('[name="new_cta[type]"]')
+        .each(function () { this.value = this.defaultValue; });
+      makeNewCtaPrimary = false;
+      $('#new-cta-form [name="new_cta[make_primary]"]').prop('checked', false);
+      if ($('#new_cta_type_form').prop('checked')) {
+        $('#new_cta_type_link').trigger('click');
+      }
     })
 
     .on('click', '#edit-ctas [class*="remove"]', function (e) {
@@ -86,8 +116,8 @@ function storyCTAsListeners () {
     })
 
     .on('click', '#new-cta-form .btn-group input', function () {
-      $('.link-input, .html-input').toggle();
-      $('.link-input, .html-input').val('');
+      $(this).closest('form').find('.form-group.cta-link, .form-group.cta-form').toggle();
+      $(this).closest('form').find('input, textarea').val();
     });
 
 }

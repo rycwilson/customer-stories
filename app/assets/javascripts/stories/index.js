@@ -16,14 +16,12 @@ function storiesIndex () {
 
 function storiesIndexListeners () {
 
-  var loading = function ($story) {
-        $story.addClass('loading');
-        setTimeout(function () { $story.addClass('still-loading'); }, 1000);
-        $('#stories-gallery li').css('pointer-events', 'none');
-      },
+  $.fn.forceRedraw = function() {
+    return this.hide(0, function() { $(this).show(); });
+  };
 
-      // this function is copied over from select2.js
-      prependTagType = function () {
+  // this function is copied over from select2.js
+  var prependTagType = function () {
         $('.select2-selection__rendered li:not(:last-of-type)')
           .each(function (index, tag) {
             tagId = $('#grouped-stories-filter').select2('data')[index].id;
@@ -77,10 +75,65 @@ function storiesIndexListeners () {
       $('.stories-search-form .input-group-btn').addClass('show-clear');
     })
 
-    .on('click', 'a.published', function (e) {
-      var $story = $(this).closest('li');
-      loading($story);
+
+    .on('click touchstart', 'li[data-story-id]:not(.hover) a.published', function (e) {
+      var $storyLink = $(this),
+          $storyCard = $(this).parent(),
+          storyLoading = function () {
+// the forceRedraw is necessary because the style changes won't take affect while the link is being followed
+            $storyCard.addClass('loading still-loading').forceRedraw();
+            // setTimeout(function () { $storyCard.forceRedraw(); }, 1500);
+
+            // don't appy this change to current $storyCard or link won't be followed
+            // $('#stories-gallery li').not($storyCard).css('pointer-events', 'none');
+          };
+
+      if (e.type === 'click') {
+        // console.log('click')
+        storyLoading();
+      } else {
+        // console.log('touchstart')
+        e.preventDefault();
+        $storyCard.addClass('hover');
+
+        // stop the subsequent touchend event from triggering the <a> tag
+        $storyLink.one('touchend', function (e) {
+          // console.log('touchend');
+          e.preventDefault();
+        });
+
+        // next click => load story
+        $storyLink.one('touchstart', storyLoading);
+
+        // undo style changes when navigating away
+        // TODO: doesn't work
+        window.addEventListener('beforeunload', function (e) {
+          $storyCard.removeClass('loading still-loading');
+          $('#stories-gallery li').css('pointer-events', 'auto');
+        }, { once: true });
+
+        // undo hover and click listener if clicking anywhere outside the story card
+        $('body').one(
+          'touchstart',
+          // this selector is still allowing a click on the title <p> to trigger this listener => check in the function instead
+          // ':not(li[data-story-id]:nth-of-type(' + $storyCard.index() + 1 + '), li[data-story-id]:nth-of-type(' + $storyCard.index() + 1 + ') *)',
+          function (e) {
+            if ($(e.target).is($storyCard) || $storyCard.has(e.target).length ) {
+              // do nothing (link will be followed)
+            } else {
+              $storyCard.removeClass('hover');
+              $storyLink.off('touchstart', storyLoading);
+            }
+          }
+        );
+
+        // remove hover from other cards
+        $('#stories-gallery').find('li').not($storyCard).each(function () {
+          $(this).removeClass('hover');
+        });
+      }
     })
+
 
     .on('change', '#grouped-stories-filter', function () {
       var categoryRawId = $(this).val() && $(this).val().find(function (tagId) {

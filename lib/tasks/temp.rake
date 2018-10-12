@@ -18,6 +18,12 @@ namespace :temp do
     end
   end
 
+  task add_default_cta_colors: :environment do
+    Company.where(primary_cta_background_color: [nil, '']).each do |c|
+      c.update(primary_cta_background_color: '#337ab7', primary_cta_text_color: '#ffffff')
+    end
+  end
+
   task change_contribution_status: :environment do
     Contribution.all.each do |c|
       if (c.status == 'unsubscribed')

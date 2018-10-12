@@ -220,8 +220,8 @@ $.fn.popupWindow = function (e, width, height) {
   var windowHeight = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
 
   // Set values for window
-  width = width || '550';
-  height = height || '442';
+  width = width || windowWidth;
+  height = height || windowHeight;
 
   var left = ((windowWidth / 2) - (width / 2)) + dualScreenLeft;
   var top = ((windowHeight / 2) - (height / 2)) + dualScreenTop;

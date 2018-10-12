@@ -1,9 +1,9 @@
 
 <div class="social-buttons text-right">
 
-  <a href="<%= LINKEDIN_SHARE_URL + story.csp_story_url %>" target="_blank"
-     class="icon-button linkedin-share <%= company.color_contrast %>">
-    <i class="fa fa-linkedin" style="color:<%= company.color_contrast == 'light' ? company.header_color_2 : '#fff' %>"></i>
+  <a href="<%= FACEBOOK_SHARE_URL + story.csp_story_url %>" target="_blank"
+     class="icon-button facebook-share <%= company.color_contrast %>">
+    <i class="fa fa-facebook" style="color:<%= company.color_contrast == 'light' ? company.header_color_2 : '#fff' %>"></i>
     <span></span>
   </a>
 
@@ -13,9 +13,14 @@
     <span></span>
   </a>
 
-  <a href="<%= FACEBOOK_SHARE_URL + story.csp_story_url %>" target="_blank"
-     class="icon-button facebook-share <%= company.color_contrast %>">
-    <i class="fa fa-facebook" style="color:<%= company.color_contrast == 'light' ? company.header_color_2 : '#fff' %>"></i>
+  <a href="<%= LINKEDIN_SHARE_URL + story.csp_story_url %>" target="_blank"
+     class="icon-button linkedin-share <%= company.color_contrast %>">
+    <i class="fa fa-linkedin" style="color:<%= company.color_contrast == 'light' ? company.header_color_2 : '#fff' %>"></i>
+    <span></span>
+  </a>
+
+  <a href="mailto:?subject=<%= story.title %>&body=<%= story.csp_story_url %>" class="icon-button mailto">
+    <i class="fa fa-envelope"></i>
     <span></span>
   </a>
 
