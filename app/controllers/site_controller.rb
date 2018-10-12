@@ -47,7 +47,7 @@ class SiteController < ApplicationController
     @published_companies = Company.joins(successes: { story: {} })
                                   .where(stories: { published: true })
                                   .where.not("subdomain IN ('csp', 'acme-test')")
-                                  .uniq
+                                  .distinct
                                   .map do |company|
                                     { id: company.id,
                                       subdomain: company.subdomain }
