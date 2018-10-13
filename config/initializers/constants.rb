@@ -27,9 +27,9 @@ LINKEDIN_AUTHORIZE_BASE_URL = "https://www.linkedin.com/oauth/v2/authorization?\
 LINKEDIN_GETTOKEN_BASE_URL = "https://www.linkedin.com/oauth/v2/accessToken"
 LINKEDIN_PEOPLE_BASE_URL = "https://api.linkedin.com/v1/people/~"
 
-LINKEDIN_SHARE_URL = "//www.linkedin.com/shareArticle?mini=true&url="
-TWITTER_SHARE_URL = "//twitter.com/share?url="
-FACEBOOK_SHARE_URL = "//www.facebook.com/sharer.php?u="
+LINKEDIN_SHARE_URL = "https://www.linkedin.com/shareArticle?mini=true&url="
+TWITTER_SHARE_URL = "https://twitter.com/share?url="
+FACEBOOK_SHARE_URL = "https://www.facebook.com/sharer.php?u="
 
 GETCLICKY_API_BASE_URL = "http://api.clicky.com/api/stats/4"
 GETCLICKY_TRACKING_URL = "http://in.getclicky.com/in.php"

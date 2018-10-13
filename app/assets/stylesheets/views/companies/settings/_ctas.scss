@@ -2,97 +2,113 @@
 .companies.edit {
 
   #edit-ctas {
-    .form-group {
-      margin-bottom: 10px;
+
+    #new-cta-modal {
+      .modal-body {
+        padding: 20px 15px 0 15px;
+      }
     }
 
     #new-cta-form {
+      label {
+        padding-right: 5px;
+      }
       .form-group {
-        margin-bottom: 5px;
-      }
-      .btn-group {
-        width: 100%;
-        margin-bottom: 5px;
-        label {
-          margin-bottom: 5px;
+        .radio-inline {
+          margin-right: 15px;
+        }
+        .col-sm-3 {
+          width: 18%;
+        }
+        .col-sm-9 {
+          width: 82%;
+        }
+        .col-sm-offset-3.col-sm-9 {
+          margin-left: 18%;
+        }
+        &.cta-form {
+          display: none;
+        }
+        .checkbox {
+          padding-top: 0;
         }
       }
-      input {
-        margin-bottom: 15px;
-      }
-      #new_cta_link_url, #new_cta_form_html {  // last input
-        margin-bottom: 0;
-      }
-      .html-input {
-        display: none;   // to be toggled
-      }
     }
-
-    .checkbox {
-      margin: 10px 0;
-      label {
-        margin-bottom: 0;
+    // [data-target="#new-cta-modal"] {
+    //   cursor: pointer;
+    //   color: #666;
+    //   i {
+    //     // TODO: Font Awesome 5 has font variants that allow different weights
+    //     -webkit-text-stroke: 1px #efefef;
+    //   }
+    //   &:hover {
+    //     color: #222;
+    //   }
+    // }
+    .form-horizontal.cta-list {
+      #new-cta-button {
+        margin: 0 0 20px 0;
       }
-    }
-
-    li label {
-      margin-bottom: 7px;
-    }
-    .list-group {
-      margin-bottom: 30px;
-    }
-    #primary-cta-colors {
-      // padding: 0 10px 0 10px;
-      label {
-        margin-top: 7px;
+      > .control-label {
+        padding-top: 15px;
       }
-      // // margin-bottom: 10px;
-      div.col-sm-4:first-of-type {
-        padding-right: 0;
+      .col-md-2 {
+        width: 15%;
       }
-      div.col-sm-4:last-of-type {
-        padding-left: 0;
+      .col-md-10 {
+        width: 85%
       }
-    }
-    .list-group-item {
-      background: #efefef;
-      padding: 15px;  // overrides bootstrap 10px 15px
-      .cta-description {
-        cursor: pointer;
-        position: relative;
-        // padding-right: 30px;
-        margin: -15px -15px -15px -15px;  // expand clickable area for .collapse
-        padding: 15px 45px 15px 15px;
-        span {
-          padding: 0 6px;
-          line-height: 1.6;
-        }
-        a.remove {
-          position: absolute;
-          top: 5px;  // -10 + 15  (account for negative margins above)
-          right: 5px;  // -10 + 15
-          font-size: 16px;
-          color: #666;
-          padding: 8px;
-          &:hover {
-            color: #222;
+      #primary-cta, #secondary-ctas {
+        width: 500px;
+        &#primary-cta {
+          #primary-cta-colors {
+            div.col-sm-4:first-of-type {
+              padding-right: 0;
+            }
+            div.col-sm-4:last-of-type {
+              padding-left: 0;
+            }
           }
         }
       }
-      div.collapse {
-        // note the inline styles that are necessary for preventing jerky collapse
-        cursor: auto;
+      .list-group-item {
+        background: #efefef;
+        padding: 15px;  // overrides bootstrap 10px 15px
+        .cta-description {
+          cursor: pointer;
+          position: relative;
+          // padding-right: 30px;
+          margin: -15px -15px -15px -15px;  // expand clickable area for .collapse
+          padding: 15px 45px 15px 15px;
+          span {
+            padding: 0 6px;
+            line-height: 1.6;
+          }
+          a.remove {
+            position: absolute;
+            top: 5px;  // -10 + 15  (account for negative margins above)
+            right: 5px;  // -10 + 15
+            font-size: 16px;
+            color: #666;
+            padding: 8px;
+            &:hover {
+              color: #222;
+            }
+          }
+        }
+        .collapse.edit-cta {
+          // note the inline styles that are necessary for preventing jerky collapse
+          cursor: auto;
+        }
+        &:hover, &.open {
+          background-color: #e5e5e5;
+        }
+        .checkbox {
+          margin-bottom: 10px;
+        }
       }
-    }
-    .list-group-item:hover {
-      background: #e5e5e5;
     }
 
-    #primary-cta, #secondary-ctas {
-      .form-group:last-of-type {
-        margin-bottom: 0
-      }
-    }
   }
 
 }

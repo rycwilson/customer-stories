@@ -36,7 +36,7 @@ class StoriesController < ApplicationController
         session.delete(:preview_story_slug)
       end
     end
-    filter_params = get_filters_from_query_or_widget(@company, params)
+    filter_params = get_filters_from_query_or_plugin(@company, params)
     if filter_params.present?
       @pre_selected_filters = filter_params
       @stories_gallery_cache_key = @company.stories_gallery_cache_key(filter_params)
@@ -64,6 +64,7 @@ class StoriesController < ApplicationController
 
   def show
     if params[:is_plugin]
+      # @is_plugin = @is_external = true
       respond_to do |format|
         format.js do
           json = { html: render_story_partial(@story, @contributors, params[:window_width]) }.to_json
@@ -371,8 +372,8 @@ class StoriesController < ApplicationController
         story: story,
         contributors: contributors,
         related_stories: nil,
-        is_widget: true,
-        widget_type: 'gallery',
+        is_plugin: true,
+        plugin_type: 'gallery',
         window_width: window_width
       }
     })

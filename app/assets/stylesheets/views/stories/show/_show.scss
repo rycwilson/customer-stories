@@ -1,7 +1,6 @@
 
 .stories.show, .cs-overlay-container {
 
-
   text-align: left;   // override weebly
   $max-xs-width: 500px;
 
@@ -75,7 +74,7 @@
 
   .story-content, .cs-story-content {
     background-color: if(variable-exists(bg-color), $bg-color, $csp-bg-gray);
-    padding: 15px 0 60px 0;
+    padding-bottom: 60px;
     &.cs-story-content {
       span, li, p, a, h4, i {
         &:not(i) {
@@ -99,10 +98,15 @@
       margin-bottom: 15px;
       line-height: 1.3 !important;
     }
-    .story-narration {
+    .narrative {
       margin-bottom: 25px;
       span, li, p, a {
         line-height: 1.5 !important;
+      }
+      @media only screen and (max-width: 500px) {
+        .story-title {
+          text-align: center;
+        }
       }
     }
     .story-results {
@@ -231,11 +235,6 @@
     position: relative;
   }
 
-  .social-buttons-xs, .cs-social-buttons-xs {
-    &.social-buttons-xs, &.cs-social-buttons-xs {
-    }
-  }
-
   #cs-tabbed-carousel header {
     font-family: 'Lato';
   }
@@ -254,16 +253,83 @@
   }
 
   @media only screen and (max-width: 767px) {
-    .testimonial, .cs-testimonial {
-      margin-bottom: 0;
-      &:after {
-        content: none;
+    #primary-cta-xs {
+      display: flex;
+      align-items: center;
+      // justify-content: center;
+      font-size: 16px;
+      position: fixed;
+      height: 50px;
+      bottom: -50px;
+      left: 0;
+      right: 0;
+      // these two set inline with helper
+      // background-color: ;
+      // color: ;
+      margin: 0 auto;
+      padding-left: 15px;
+      z-index: 100;
+      min-width: 300px;
+      max-width: 400px;
+      transform: translateY(0%);
+      transition: all 0.4s;
+          box-shadow: 0 2px 8px 0px rgba(0, 0, 0, 0.2);
+      a, button {
+        text-decoration: none;
+        color: unset;  // let the parent container set the color
       }
+      a, a i {
+        font-weight: 600;
+      }
+      button {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        margin: auto;
+        background: none;
+        border: 0;
+        padding: 12px 15px;
+      }
+      &.open {
+        transform: translateY(-100%);
+        transition: all 0.4s;
+      }
+      @media only screen and (min-width: 400px) {
+        & {
+          border-top-left-radius: 3px;
+          border-top-right-radius: 3px;
+        }
+      }
+    }
+    .testimonial, .cs-testimonial {
+      margin-bottom: 20px;
       > .container, > .cs-container {
         max-width: $max-xs-width;
       }
+      &:after {
+        content: none;
+      }
       &.cs-testimonial {
         // margin-top: 25px;
+      }
+    }
+    .title-xs {
+      > .container, .cs-container {
+        max-width: $max-xs-width;
+        h4 {
+          line-height: 1.3 !important;
+          font-size: 20px !important;
+        }
+        .social-share-buttons {
+          display: flex;
+          justify-content: space-between;
+          margin: 20px auto 0 auto;
+          width: 250px;
+          &.no-video {
+            margin-bottom: 25px;
+          }
+        }
       }
     }
     .story-video-xs, .cs-story-video-xs {
@@ -273,17 +339,33 @@
 
       }
     }
-    .social-buttons-xs, .cs-social-buttons-xs {
-      > .container, > .cs-container {
-        max-width: $max-xs-width;
+    button.primary-cta {
+      padding: 10px 32px;  // doubles bootstrap horizontal padding
+      opacity: 0.9;
+      border: 1px solid transparent;
+      &:hover, &:focus {
+        opacity: 1;
       }
-      padding-top: 0;
-      padding-bottom: 0;
+      a {
+        text-decoration: none;
+        color: unset;  // let the style attribute on the button define the color
+        span {
+          // font-weight: 600;
+        }
+      }
     }
+    // .social-buttons-xs, .cs-social-buttons-xs {
+    //   > .container, > .cs-container {
+    //     max-width: $max-xs-width;
+    //   }
+    //   padding-top: 0;
+    //   padding-bottom: 0;
+    // }
     .story-content, .cs-story-content {
       background-color: transparent;
       h4 {
         font-size: 20px !important;
+        margin-bottom: 10px;
       }
       > .container, > .cs-container {
         max-width: $max-xs-width;
@@ -291,8 +373,8 @@
           padding: 19px 0 0 0;
           border: 0
         }
-        .story-narration {
-          span, p, li, a {
+        .narrative {
+          span, li, p, a {
             font-size: 14px !important;
           }
         }
@@ -369,8 +451,8 @@
       > .container > .row > [class*='col-'] {
         margin-top: -50px;
       }
-      .story-narration {
-        p, span, li {
+      .narrative {
+        span, li, p, a {
           font-size: 13px !important;
         }
       }
@@ -399,8 +481,8 @@
       h4 {
         font-size: 22px !important;
       }
-      .story-narration {
-        p, span, li {
+      .narrative {
+        span, li, p, a {
           font-size: 15px !important;
         }
       }

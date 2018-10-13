@@ -30,16 +30,15 @@
 
         <div class='hidden-xs col-sm-4 text-right'>
 
-        <% if @company.ctas.primary.present? %>
+        <% if @company.ctas.try(:primary).present? %>
 
-          <button type="button" class="primary-cta btn btn-default" style="<%= primary_cta_style(@company) %>">
-            <%= link_to(
-                  @company.ctas.primary.link_url,
-                  target: '_blank'
-                ) do %>
-              <span><%= @company.ctas.primary.display_text %></span>
-            <% end %>
-          </button>
+          <%= link_to(
+                @company.ctas.primary.link_url,
+                class: 'primary-cta btn',
+                style: primary_cta_style(@company)
+              ) do %>
+            <span><%= @company.ctas.primary.display_text %></span>
+          <% end %>
 
         <% end %>
 

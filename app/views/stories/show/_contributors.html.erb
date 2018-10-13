@@ -1,7 +1,7 @@
 
 <section class="story-contributors text-center">
 
-  <div class="hidden-xs <%= is_widget ? 'cs-well' : 'well' %>">
+  <div class="hidden-xs <%= is_plugin ? 'cs-well' : 'well' %>">
     <div class="section-title-container">
       <h4>Success Team</h4>
     </div>
@@ -16,7 +16,7 @@
   <!-- TODO http://jsfiddle.net/ashkyd/6ut8qf45/ -->
   <% contributors.each do |contributor, index| %>
 
-    <% if is_widget %>
+    <% if is_plugin %>
 
       <div class="linkedin-widget" data-linkedin-url="<%= contributor.linkedin_url %>">
         <!-- this div helps to manage the overscroll behavior of the overlays' .scroll-wrap -->

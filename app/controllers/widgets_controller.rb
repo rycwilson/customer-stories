@@ -71,7 +71,7 @@ class WidgetsController < ApplicationController
         tab_color: params[:tab_color],
         text_color: params[:text_color],
         is_curator: false,
-        is_widget: true,
+        is_plugin: true,
         is_external: true,
       }
     )
@@ -90,7 +90,7 @@ class WidgetsController < ApplicationController
                     end
       stories = Story.where(id: story_ids).order_as_specified(id: story_ids)  # preserve original order
     elsif params[:category].present? || params[:product].present?
-      filter_params = get_filters_from_query_or_widget(company, params, true)
+      filter_params = get_filters_from_query_or_plugin(company, params, true)
       stories = company.filter_stories(filter_params)
     else
       stories = company.public_stories

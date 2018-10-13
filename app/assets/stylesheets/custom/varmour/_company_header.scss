@@ -1,24 +1,20 @@
 
 #company-header {
 
-  button.primary-cta {
+  a.primary-cta {
     font-size: 12px;
     background-color: #fc6621 !important;
     border-radius: 0;
     text-transform: uppercase;
     // padding: 11px 32px 9px 32px;  // adjust for the font family - only needed for larger font size eg 14
     border: 2px solid #fc6621;
-    a {
-      span {
-        color: #fff !important;
-      }
+    span {
+      color: #fff !important;
     }
     &:hover {
       background-color: transparent !important;
-      a {
-        span {
-          color: #fc6621 !important;
-        }
+      span {
+        color: #fc6621 !important;
       }
     }
   }
