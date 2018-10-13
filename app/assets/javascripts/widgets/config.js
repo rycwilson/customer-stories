@@ -186,7 +186,7 @@ function widgetConfigListeners () {
       );
     })
 
-    .on('click', 'a.plugin-demo', function (e) {
+    .on('click', 'a.plugin-demo:not([disabled])', function (e) {
       var demoPath = '/plugins/demo',
           params = '?',
           type = $('[name="plugin[type]"]:checked').val(),
