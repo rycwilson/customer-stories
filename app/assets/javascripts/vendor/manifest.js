@@ -47,7 +47,7 @@
 
 //= require js-cookie/src/js.cookie
 
-//= require local_time
+//= require local-time
 
 //= require moment/moment
 //= require bootstrap-daterangepicker/daterangepicker

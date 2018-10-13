@@ -1,5 +1,5 @@
 
-ruby '2.3.0'
+ruby '2.5.0'
 source 'https://rubygems.org'
 
 # NOTE: Front-end assets are all managed through the bower-rails gem
@@ -8,6 +8,7 @@ source 'https://rubygems.org'
 
 gem 'activerecord-import'
 gem 'aws-sdk', '~> 2'
+gem 'awesome_print'
 gem 'bootstrap-tab-history-rails'
 gem 'bower-rails', '~> 0.11.0'
 gem 'browser-timezone-rails'
@@ -25,7 +26,7 @@ gem 'gon'
 gem 'googlecharts'
 gem 'google-adwords-api', '1.4.0'
 gem 'html_to_plain_text'
-gem 'jazz_hands', github: 'nixme/jazz_hands', branch: 'bring-your-own-debugger'
+# gem 'jazz_hands', github: 'nixme/jazz_hands', branch: 'bring-your-own-debugger'
 gem 'jquery-minicolors-rails'
 gem 'local_time'
 # gem 'miro'
@@ -33,13 +34,18 @@ gem 'multi_json'
 # gem 'oauth2'
 gem 'order_as_specified'
 gem 'pg'
+gem 'pry'
 gem 'pry-byebug'
+gem 'pry-rails'
+gem 'pry-remote'
+gem 'pry-rescue'
 gem 'pry-theme'
-gem 'rails', '>= 5.0.0.rc2', '< 5.1'
+gem 'rails', '5.2.1'
+# gem 'rails', '4.2.1' # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails_admin'
 gem 'rails-html-sanitizer'
 gem 'rack_password'
-gem 'rack-timeout'
+# gem 'rack-timeout'
 gem 'reverse_markdown'
 # gem 'sass-rails', '~> 5.0'
 gem 'sassc-rails'
@@ -55,11 +61,11 @@ group :production do
 
   gem 'puma'
   gem 'rails_12factor'
+  gem 'rack-timeout'
 
 end
 
 group :development, :test do
-
 
   # gem 'rack-mini-profiler'
   # gem 'flamegraph'

@@ -49,8 +49,7 @@
             <div class="col-sm-9">
 
               <%= collection_select(nil, nil,
-                    company.customers(current_user.id)
-                      .sort_by { |customer| customer.name.downcase },
+                    company.customers.sort_by { |customer| customer.name.downcase },
                     :id, :name,
                     { include_blank: true,
                           # disabled: lambda { |customer| customer.successes.blank? }
@@ -73,8 +72,7 @@
             <div class="col-sm-9">
 
               <%= collection_select(nil, nil,
-                    company.successes(current_user.id)
-                      .sort_by { |success| success.name },
+                    company.successes.sort_by { |success| success.name },
                     :id, :name,
                     { include_blank: true },
                     { class: 'new-contributor success form-control',
