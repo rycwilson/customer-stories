@@ -33,6 +33,9 @@ Rails.application.config.assets.precompile += %w(
   custom/demo/plugins/cs_gallery.css
   custom/demo/plugins/cs_carousel.css
   custom/demo/plugins/cs_tabbed_carousel.css
+  custom/pixlee/plugins/cs_gallery.css
+  custom/pixlee/plugins/cs_carousel.css
+  custom/pixlee/plugins/cs_tabbed_carousel.css
   custom/retailnext/plugins/cs_gallery.css
   custom/retailnext/plugins/cs_carousel.css
   custom/retailnext/plugins/cs_tabbed_carousel.css
