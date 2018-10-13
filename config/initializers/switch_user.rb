@@ -33,9 +33,6 @@ SwitchUser.setup do |config|
   # else the select box will not be shown
   # if you switch from admin to "user", the current_user param is "user"
   config.view_guard = ->(current_user, request, original_user) {
-    puts current_user
-    puts request
-    puts original_user
     current_user.admin? || original_user.try(:admin?)
   }
 
