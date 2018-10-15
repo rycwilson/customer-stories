@@ -347,11 +347,13 @@ class StoriesController < ApplicationController
   end
 
   def set_contributors (story)
-    @contributors =
+    # @contributors =
         User.joins(own_contributions: { success: {} })
-            .where.not(linkedin_url:'')
-            .where(successes: { id: story.success_id },
-                   contributions: { publish_contributor: true })
+            .where.not(linkedin_url: [nil, ''])
+            .where(
+              successes: { id: story.success_id },
+              contributions: { publish_contributor: true }
+            )
             .order("CASE contributions.role
                       WHEN 'customer' THEN '1'
                       WHEN 'customer success' THEN '2'
@@ -360,8 +362,8 @@ class StoriesController < ApplicationController
             .to_a
             .delete_if { |c| c.id == story.curator.id } # remove the contributor;
                                                   # he goes at the end
-    @contributors << story.curator unless story.curator.linkedin_url.blank?
-    @contributors
+    # @contributors << story.curator unless story.curator.linkedin_url.blank?
+    # @contributors
   end
 
   def render_story_partial (story, contributors, window_width)
