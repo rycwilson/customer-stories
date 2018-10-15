@@ -45,7 +45,7 @@
           <div class="fileinput-preview fileinput-exists thumbnail"
                style="background-color:<%= company.new_record? ? 'Company::CSP.header_color_1' : company.header_color_1 %>"
                data-trigger="fileinput">
-            <img src="<%= company.logo_url %>" alt="logo">
+            <%= image_tag(company.logo_url, alt: 'logo') if company.logo_url.present? %>
           </div>
           <div class="btn-file">
             <%= f.file_field(:logo_url) %>
