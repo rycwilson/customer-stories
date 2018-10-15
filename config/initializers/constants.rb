@@ -76,3 +76,6 @@ RETAILNEXT_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-asse
 SPP_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/spp/spp_400x400.jpeg"
 SPP_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/spp/spp_300x160.png"
 
+PIXLEE_400X400_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/pixlee/pixlee_400x400.png"
+PIXLEE_300X160_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/pixlee/pixlee_300x160.png"
+
