@@ -106,6 +106,8 @@ module StoriesHelper
       provider == 'all' ? (image = RETAILNEXT_400X400_URL) : (image = RETAILNEXT_300X160_URL) # linkedin
     when 'smartpaymentplan'
       provider == 'all' ? (image = SPP_400X400_URL) : (image = SPP_300X160_URL)
+    when 'pixlee'
+      provider == 'all' ? (image = PIXLEE_400X400_URL) : (image = PIXLEE_300X160_URL)
     else
       width = '1200'
       height = '630'
