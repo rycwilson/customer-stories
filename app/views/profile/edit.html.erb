@@ -48,12 +48,11 @@
       <div class="fileinput <%= @user.photo_url.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">
 
         <div class="fileinput-new thumbnail">
-          <%= image_tag "user-photo-missing.png", alt: 'photo missing' %>
+          <%= image_tag('user-photo-missing.png', alt: 'photo placeholder') %>
         </div>
 
-        <div class="fileinput-preview fileinput-exists thumbnail"
-            data-trigger="fileinput">
-          <img id='user-photo' src="<%= @user.photo_url %>" alt="Profile Photo">
+        <div class="fileinput-preview fileinput-exists thumbnail" data-trigger="fileinput">
+          <%= image_tag(@user.photo_url, alt: 'photo missing') if @user.photo_url.present? %>
         </div>
 
         <div class="photo-btns">

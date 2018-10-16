@@ -13,7 +13,7 @@
 
     <%= link_to(root_path, class: 'navbar-brand navbar-brand-img') do %>
 
-      <%= image_tag(company.logo_url, alt: "#{company.name} logo", class: 'img-responsive') unless company.logo_url.blank? %>
+      <%= image_tag(company.logo_url || LOGO_PLACEHOLDER_URL, alt: "#{company.name} logo", class: 'img-responsive') unless company.logo_url.blank? %>
 
     <% end %>
 
@@ -29,7 +29,7 @@
 
   <%= link_to(company.website, class: "navbar-brand navbar-brand-img company-logo-clicky", target: '_blank') do %>
 
-    <%= image_tag company.logo_url, alt: "#{company.name} logo", class: 'img-responsive' %>
+    <%= image_tag company.logo_url || LOGO_PLACEHOLDER_URL, alt: "#{company.name} logo", class: 'img-responsive' %>
 
   <% end unless company.logo_url.blank? %>
 

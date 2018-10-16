@@ -52,7 +52,7 @@
 
           <%= render(
               'stories/show/contributors',
-              { contributors: contributors, is_plugin: is_plugin, window_width: window_width }
+              { company: company, contributors: contributors, is_plugin: is_plugin, window_width: window_width }
             ) %>
 
         <% end %>
@@ -95,7 +95,7 @@
 
           <%= render(
                 'stories/show/contributors',
-                { contributors: contributors, is_plugin: is_plugin, window_width: window_width }
+                { company: company, contributors: contributors, is_plugin: is_plugin, window_width: window_width }
               ) %>
 
         <%# end %>

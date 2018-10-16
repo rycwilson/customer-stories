@@ -22,11 +22,11 @@
     <div class="text-center">
 
       <div class="fileinput-new thumbnail" data-trigger='fileinput'>
-        <%= image_tag(LOGO_PLACEHOLDER_URL, alt: 'logo') %>
+        <%= image_tag(LOGO_PLACEHOLDER_URL, alt: 'customer logo placeholder') %>
       </div>
 
       <div class="fileinput-preview fileinput-exists thumbnail" data-trigger="fileinput">
-        <%= image_tag(story.customer.logo_url, alt: "logo") %>
+        <%= image_tag(story.customer.logo_url, alt: "customer logo") if story.customer.logo_url.present? %>
         <!-- setting the line height prevents the jasny bootstrap js from assigning a bogus line height to .customer-name -->
         <div class="customer-name" style="line-height: 18px !important; <%= story.customer.show_name_with_logo ? '' : 'display: none' %>">
           <span><%= story.customer.name %></span>
