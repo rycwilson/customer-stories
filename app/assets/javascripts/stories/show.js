@@ -201,13 +201,14 @@ function linkedinListener ($story) {
           // this is a reliable indicator that the widget has rendered
           new ResizeSensor($widget, function() {
             numWidgetsRendered++;
-            if ((numWidgetsRendered === numWidgets) && (numWidgets !== 1)) {
+            // if ((numWidgetsRendered === numWidgets) && (numWidgets !== 1)) {
+            if ((numWidgetsRendered === numWidgets)) {
               clearTimeout(widgetTimeoutId);
               $contributors.css('visibility', 'visible');
 
-            // don't render if there's only a single contributor
-            } else if ((numWidgetsRendered === numWidgets) && (numWidgets === 1)) {
-              $contributors.remove();
+            // // don't render if there's only a single contributor
+            // } else if ((numWidgetsRendered === numWidgets) && (numWidgets === 1)) {
+            //   $contributors.remove();
             }
           });
         }
