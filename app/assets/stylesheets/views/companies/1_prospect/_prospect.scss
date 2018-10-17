@@ -40,8 +40,8 @@
   // child rows
   tr:not(.group) > td[colspan]:not(.dataTables_empty) {
     padding: 20px 10px;
-    background-color: #f9f9f9;
-    border: 1px solid #08c;
+    background-color: #efefef;
+    // border: 1px solid #08c;
     .form-group {
       width: 100%;
       margin-bottom: 15px;

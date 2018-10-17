@@ -6,6 +6,7 @@ function successDetailsListeners () {
 
       var $table = $(this).closest('table'),
           $tr = $(this).closest('tr'),
+          $trChild,
           dt = $table.DataTable(),
           dtRow = dt.row($tr),
           successId = $tr.data('success-id'),
@@ -26,10 +27,21 @@ function successDetailsListeners () {
             successPath: successPath
           })
         ).show();
+        $trChild = $tr.next();
         $tr.next().one('input', function (e) {
           $(this).find('button[type="submit"]').prop('disabled', false);
         });
         $tr.addClass('shown active');
+        $table.find('tr').not($tr).each(function () {
+          dt.row($(this)).child.hide();
+          if ($(this).hasClass('shown active')) {
+            $(this).removeClass('shown active');
+            $(this).find('td.success-details').children().toggle();
+          }
+        });
+
+        var top = $tr.offset().top - (window.innerHeight / 2) + (($trChild.outerHeight() + $tr.outerHeight()) / 2);
+          window.scrollTo(0, top);
       }
       $(this).children().toggle();  // toggle caret icons
     });

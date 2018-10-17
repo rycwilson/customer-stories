@@ -11,38 +11,42 @@
       <input type="hidden" name="authenticity_token" value="{{= AUTH_TOKEN }}">
 
       <div class="row">
-        <div class='col-sm-6'>
+        <div class="col-sm-8">
 
           <div class='form-group' style='width:100%'>
-            <label for='curator_name'>Curator</label>
-            <input type="text" id='curator_name' class="form-control" value="{{= success.curator.full_name }}" style='width:100%' readonly>
+            <label for='success_description'>Win Story Template</label>
+              <textarea id='success_description' name="success[description]" class="form-control" rows='9' style='width:100%'>{{= success.description }}</textarea>
           </div>
+
+        </div>
+
+        <div class="col-sm-4">
+
+          <!-- <div class='form-group' style='width:100%'> -->
+            <label for='curator_name'>Curator</label>
+            <p style="margin-bottom: 15px">{{= success.curator.full_name }}</p>
+    <!--         <input type="text" id='curator_name' class="form-control" value="{{= success.curator.full_name }}" style='width:100%' readonly> -->
+          <!-- </div> -->
 
           {{ if (success.referrer) { }}
 
-            <div class='form-group' style='width:100%'>
+            <!-- <div class='form-group' style='width:100%'> -->
               <label>Referrer</label>
-              <input type="text" class="form-control" value="{{= success.referrer.first_name + ' ' + success.referrer.last_name }}" style='width:100%' readonly>
-            </div>
+              <p style="margin-bottom: 15px">{{= success.referrer.first_name + ' ' + success.referrer.last_name }}</p>
+  <!--             <input type="text" class="form-control" value="{{= success.referrer.first_name + ' ' + success.referrer.last_name }}" style='width:100%' readonly> -->
+            <!-- </div> -->
 
           {{ } }}
 
           {{ if (success.contact) { }}
 
-            <div class='form-group' style='width:100%'>
+            <!-- <div class='form-group' style='width:100%'> -->
               <label>Customer Contact</label>
-              <input type="text" class="form-control" value="{{= success.contact.first_name + ' ' + success.contact.last_name }}" style='width:100%' readonly>
-            </div>
+              <p style="margin-bottom: 15px">{{= success.contact.first_name + ' ' + success.contact.last_name }}</p>
+     <!--          <input type="text" class="form-control" value="{{= success.contact.first_name + ' ' + success.contact.last_name }}" style='width:100%' readonly> -->
+            <!-- </div> -->
 
           {{ } }}
-
-        </div>
-        <div class='col-sm-6'>
-
-          <div class='form-group' style='width:100%'>
-            <label for='success_description'>Description</label>
-              <textarea id='success_description' name="success[description]" class="form-control" rows='9' style='width:100%'>{{= success.description }}</textarea>
-          </div>
 
         </div>
       </div>

@@ -1,4 +1,8 @@
 
+<p class="summary">
+  <%= @success.description %>
+</p>
+
 <ul id="questions-list">
 
 <% @templates.each do |template| %>
@@ -13,11 +17,13 @@
         <p><%= question.question %></p>
         <ul>
 
-        <%= ContributorAnswer
+        <% ContributorAnswer
               .joins(:success, :invitation_template, :contributor_question)
-              .where(successes: { id: @success.id })
-              .where(invitation_templates: { id: template.id })
-              .where(contributor_questions: { id: question.id })
+              .where({
+                successes: { id: @success.id },
+                invitation_templates: { id: template.id },
+                contributor_questions: { id: question.id }
+              })
               .each do |answer| %>
 
           <li><%= answer.answer %></li>

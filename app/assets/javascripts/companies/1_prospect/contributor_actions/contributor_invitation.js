@@ -90,7 +90,7 @@ function contributorInvitationListeners() {
       };
 
   $(document)
-    .on('click', '.contributor-actions .send-invitation', function (e) {
+    .on('click', '.contributor-actions .compose-invitation', function (e) {
       if ($(this).hasClass('disabled')) {
         return false;
       }

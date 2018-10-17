@@ -28,7 +28,7 @@ class SuccessesController < ApplicationController
   end
 
   def show
-    puts params.permit(params.keys).to_h
+    # puts params.permit(params.keys).to_h
     @templates = InvitationTemplate.find(params[:templates])
     render(:win_story, layout: false)
   end
