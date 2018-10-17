@@ -1,4 +1,6 @@
 
+//= require ./win_story
+
 function successActionsListeners () {
 
   var successPath = function (successId) {

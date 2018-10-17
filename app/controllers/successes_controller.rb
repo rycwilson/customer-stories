@@ -27,6 +27,12 @@ class SuccessesController < ApplicationController
     respond_to { |format| format.json { render({ json: data }) } }
   end
 
+  def show
+    puts params.permit(params.keys).to_h
+    @templates = InvitationTemplate.find(params[:templates])
+    render(:win_story, layout: false)
+  end
+
   def create
     # pp params[:success]
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
@@ -158,12 +164,6 @@ class SuccessesController < ApplicationController
     respond_to do |format|
       format.json { render({ json: @success.to_json({ only: [:id] }) }) }
     end
-  end
-
-  def win_story
-
-    puts params.permit(params.keys).to_h
-
   end
 
   private

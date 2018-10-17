@@ -1,0 +1,40 @@
+
+<ul id="questions-list">
+
+<% @templates.each do |template| %>
+
+  <li>
+    <p><%= template.name %></p>
+    <ul>
+
+    <% template.questions.each do |question| %>
+
+      <li>
+        <p><%= question.question %></p>
+        <ul>
+
+        <%= ContributorAnswer
+              .joins(:success, :invitation_template, :contributor_question)
+              .where(successes: { id: @success.id })
+              .where(invitation_templates: { id: template.id })
+              .where(contributor_questions: { id: question.id })
+              .each do |answer| %>
+
+          <li><%= answer.answer %></li>
+
+        <% end %>
+
+
+        </ul>
+      </li>
+
+
+    <% end %>
+
+    </ul>
+  </li>
+
+<% end %>
+
+
+</ul>

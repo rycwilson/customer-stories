@@ -3,7 +3,7 @@
 //= require ./new_success
 //= require ./new_contributor
 //= require ./success_details
-//= require ./success_actions
+//= require ./success_actions/success_actions
 //= require ./contributor_details
 //= require ./contributor_actions/contributor_actions
 //= require ./linkedin_util
@@ -48,6 +48,7 @@ function prospectListeners () {
   newContributorListeners();
   successDetailsListeners();
   successActionsListeners();
+  winStoryListeners();
   contributorDetailsListeners();
   contributorActionsListeners();
   contributorInvitationListeners();

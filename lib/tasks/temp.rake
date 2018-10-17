@@ -6,7 +6,7 @@ namespace :temp do
     ContributorAnswer.destroy_all
     ActiveRecord::Base.connection.execute('ALTER SEQUENCE contributor_answers_id_seq RESTART WITH 1')
     Contribution.where.not(contribution:[nil, '']).each do |c|
-      unless c.contribution.scan(/<em>(.*?)<\/em>/).length == 0   # earlier contributions are not based on questions
+      if c.contribution.scan(/<em>(.*?)<\/em>/).present?   # earlier contributions are not based on questions
         c.contribution.scan(/<em>(.*?)<\/em>/).flatten.each_with_index do |answer, index|
           ContributorAnswer.create(
             answer: answer,

@@ -1,6 +1,6 @@
 
 
-<div class="modal fade" id="win-story-modal" role="dialog">
+<div id="win-story-modal" class="modal fade" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
 
@@ -29,27 +29,28 @@
           <!-- select a template -->
           <!-- limit it to templates sent for this success -->
           <%= select_tag(
-                'win_story_templates',
+                :win_story_templates,
                 # TODO: limit these to templates deployed for the success
-                options_for_select(company.invitation_templates.select_options
-                ),
+                options_for_select(company.invitation_templates.select_options),
                 {
                   include_blank: true,
-                  multiple: 'true',
+                  multiple: true,
+                  class: 'invitation-templates',
+                  autocomplete: 'off',
                   style: 'width: 100%'
                 }
               ) %>
 
-          <button type="button" class="btn btn-success" style="float: right">
+         <!--  <button type="button" class="btn btn-success" style="float: right">
             Get Contributions
-          </button>
+          </button> -->
 
       </div>
 
 
       <!-- <div class="modal-footer" style='visibility:hidden'> -->
       <div class="modal-footer">
-        <button type="button" class="readonly btn btn-default" data-dismiss="modal">
+       <!--  <button type="button" class="readonly btn btn-default" data-dismiss="modal">
           Close
         </button>
         <button type="button" class="send btn btn-default" data-dismiss="modal">
@@ -59,7 +60,7 @@
           <span>Send</span>
           <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
           <i class='fa fa-check' style='display:none'></i>
-        </button>
+        </button> -->
       </div>
 
     </div>

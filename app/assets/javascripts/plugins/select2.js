@@ -42,7 +42,7 @@ function initSelect2 () {
   /**
    * win story
    */
-  $('select[name="win_story_templates"]').select2({
+  $('#win-story-modal select.invitation-templates').select2({
     theme: "bootstrap",
     tags: true,
     placeholder: 'Select templates',
