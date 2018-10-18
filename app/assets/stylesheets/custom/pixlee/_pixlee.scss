@@ -1,0 +1,15 @@
+
+// body.pixlee:not(.companies):not(.profile):not(.edit) {
+
+body.pixlee.stories {
+
+  @import 'variables';
+  // @import 'company_header';
+  // @import 'stories_header';
+  // @import 'gallery';
+  // @import 'index';
+  // @import 'show';
+
+  font-family: $body-font;
+
+}
