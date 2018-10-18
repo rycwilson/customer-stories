@@ -1,18 +1,62 @@
 
-<!-- only difference betwee visible-xs and hidden-xs is that former doesn't have .well class applied -->
-<!-- TODO Better way to do this? (without resorting to js) -->
 <section class="story-ctas visible-xs-block">
 
   <div class="section-title-container">
     <h4 class="text-center">Learn More</h4>
   </div>
 
-  <div class="ul-container">
-    <ul class="list-unstyled">
+  <!-- <div class="ul-container"> -->
+  <ul class="fa-ul">
 
-      <% story.ctas.each do |cta| %>
+  <% story.ctas.each do |cta| %>
 
-        <li>
+    <li>
+
+      <i class="fa fa-li fa-chevron-right"></i>
+
+      <% if cta.type == "CTALink" %>
+
+        <a class="cta-link" href="<%= cta.link_url %>" target="_blank">
+          <%= cta.display_text %>
+        </a>
+
+      <% else %>
+
+        <a href="#cta-form-<%= cta.id %>-modal"
+           class="cta-form" data-toggle='modal'
+           data-target="#cta-form-<%= cta.id %>-modal">
+          <%= cta.display_text %>
+        </a>
+
+      <% end %>
+
+    </li>
+
+  <% end %>
+
+  </ul>
+  <!-- </div> -->
+
+</section>
+
+<section class="story-ctas hidden-xs <%= is_plugin ? 'cs-well' : 'well' %>">
+
+  <div class="section-title-container">
+    <h4 class="text-center">Learn More</h4>
+  </div>
+
+  <ul class="list-unstyled">
+
+  <% story.ctas.each do |cta| %>
+
+    <li>
+      <div class="<%= is_plugin ? 'cs-row' : 'row' %>">
+
+        <div class="col-sm-1">
+          <i class="fa fa-fw fa-chevron-right"></i>
+        </div>
+
+        <div class="col-sm-11">
 
           <% if cta.type == "CTALink" %>
 
@@ -30,46 +74,12 @@
 
           <% end %>
 
-        </li>
+        </div>
 
-      <% end %>
+      </div>
+    </li>
 
-    </ul>
-  </div>
-
-</section>
-
-<section class="story-ctas hidden-xs <%= is_plugin ? 'cs-well' : 'well' %>">
-
-  <div class="section-title-container">
-    <h4 class="text-center">Learn More</h4>
-  </div>
-
-  <ul class="list-unstyled">
-
-    <% story.ctas.each do |cta| %>
-
-      <li>
-
-        <% if cta.type == "CTALink" %>
-
-          <a class="cta-link" href="<%= cta.link_url %>" target='_blank'>
-            <%= cta.display_text %>
-          </a>
-
-        <% else %>
-
-          <a href="#cta-form-<%= cta.id %>-modal"
-             class="cta-form" data-toggle='modal'
-             data-target="#cta-form-<%= cta.id %>-modal">
-            <%= cta.display_text %>
-          </a>
-
-        <% end %>
-
-       </li>
-
-    <% end %>
+  <% end %>
 
   </ul>
 
