@@ -1,13 +1,18 @@
 module ApplicationHelper
 
-  def custom_google_font(company)
-    link_tag = case company.subdomain
+  def custom_google_fonts(company)
+    link_tags = ''
+    fonts = case company.subdomain
       when 'pixlee'
-        'Muli'
+        ['Muli', 'Bowlby+One+SC']
       else
-        ''
       end
-    link_tag
+    fonts.each do |font|
+      link_tags.concat(
+        "<link href='https://fonts.googleapis.com/css?family=#{font}' rel='stylesheet'>\n"
+      )
+    end
+    link_tags.html_safe if link_tags.present?
   end
 
   def admin_navbar? controller
