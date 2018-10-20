@@ -29,7 +29,7 @@
     <% if admin_signed_in? %>
 
       <div class="text-center">
-        <%= form_tag adwords_sync_company_path, method: :put, id: 'adwords-sync-form' do %>
+        <%= form_tag adwords_sync_company_path(company.id), method: :put, id: 'adwords-sync-form' do %>
 
           <% if company.ready_for_adwords_sync? %>
             <button type="submit" class="btn btn-success text-center" style='width:152px'>
