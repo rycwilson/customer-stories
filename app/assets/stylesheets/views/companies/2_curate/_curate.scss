@@ -57,6 +57,20 @@
     // settings for this table are in crowdsource.scss
     #curate-contributors-table {
     }
+    #narrative-editor {
+
+    }
+    #narrative-editor + .note-editor {
+      .modal.link-dialog {
+
+      }
+      .modal.link-dialog + .modal {  // this is the image insert modal (summernote doens't provide descriptive class in this case)
+        .form-group.note-group-select-from-files {
+          display: none;
+        }
+
+      }
+    }
   }
 
 }
