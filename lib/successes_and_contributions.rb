@@ -12,34 +12,35 @@ module SuccessesAndContributions
     else
       user_params[:last_name] = 'not provided'
     end
+    user_params
   end
 
   def find_dup_customer (customer_params, is_zap, current_user)
+    return {} if customer_params.blank?
     if is_zap || !is_zap  # works for either
       if (customer = Customer.where(name: customer_params.try(:[], :name), company_id: current_user.company_id).take)
+        # puts existing customer
         customer_params[:id] = customer.id
         customer_params.delete_if { |k, v| k != 'id' }
       else
+        # puts 'new customer'
         customer_params[:company_id] = current_user.company_id
+        customer_params
       end
     else
     end
   end
 
-  def find_dup_users_and_split_full_name (referrer_params, contributor_params, is_zap)
+  def find_dup_user_and_split_full_name (user_params, is_zap)
+    # puts 'find_dup_user_and_split_full_name'
+    return {} if user_params.blank?
     if is_zap || !is_zap  # works for either
-      if (referrer = User.find_by_email(referrer_params.try(:[], :email)))
-        referrer_params[:id] = referrer.id
-        # allow certain attribute updates
-        referrer_params.delete_if { |k, v| !['id', 'title', 'phone'].include?(k) }
+      if (user = User.find_by_email(user_params.try(:[], :email)))
+        user_params[:id] = user.id
+        user_params.delete_if { |k, v| !['id', 'title', 'phone'].include?(k) }
       else
-        split_full_name(referrer_params) if (is_zap && referrer_params[:last_name].blank?)
-      end
-      if (contributor = User.find_by_email(contributor_params.try(:[], :email)))
-        contributor_params[:id] = contributor.id
-        contributor_params.delete_if { |k, v| !['id', 'title', 'phone'].include?(k) }
-      else
-        split_full_name(contributor_params) if (is_zap && contributor_params[:last_name].blank?)
+        user_params = split_full_name(user_params) if (is_zap && user_params[:last_name].blank?)
+        user_params
       end
     end
   end

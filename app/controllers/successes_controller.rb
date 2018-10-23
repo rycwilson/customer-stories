@@ -28,20 +28,26 @@ class SuccessesController < ApplicationController
   end
 
   def create
-    # pp params[:success]
+    # puts 'successes#create'
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
-    # unless params[:zap].present? && ignore_zap?(params[:success])
-    find_dup_customer(
-      params[:success].dig(:customer_attributes),
+
+    params[:success][:customer_attributes] = find_dup_customer(
+      success_params.to_h.dig(:customer_attributes),
       params[:zap].present?,
       current_user
     )
-    find_dup_users_and_split_full_name(
-      params[:success].dig(:contributions_attributes, '0', :referrer_attributes),
-      params[:success].dig(:contributions_attributes, '1', :contributor_attributes),
-      params[:zap].present?
-    )
-    if params[:zap].present? && (@success = Success.find_by_id(find_dup_success(params[:success])))
+
+    params[:success][:contributions_attributes]['0'][:referrer_attributes] = find_dup_user_and_split_full_name(
+        success_params.to_h.dig(:contributions_attributes, '0', :referrer_attributes),
+        params[:zap].present?
+      )
+
+    params[:success][:contributions_attributes]['1'][:contributor_attributes] = find_dup_user_and_split_full_name(
+        success_params.to_h.dig(:contributions_attributes, '1', :contributor_attributes),
+        params[:zap].present?
+      )
+
+    if params[:zap].present? && (@success = Success.find_by_id(find_dup_success(success_params.to_h)))
       # a new success entails two contributions, one for the contact and one for the referrer;
       # a duplicate success means a new contributor, i.e. one contribution only;
       # referrers only get a contribution when they refer the original customer contact

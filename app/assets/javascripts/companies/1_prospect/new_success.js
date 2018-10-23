@@ -225,7 +225,7 @@ function newSuccessListeners () {
                     curator_id: (curator && curator.id) || '',
                     customer_id: (customer && customer.id) || ''
                   },
-                  referrerFirstName, referrerlastName, contactFirstName, contactlastName;
+                  referrerFirstName, referrerLastName, contactFirstName, contactLastName;
 
               if (row.referrerFirstName && row.referrerLastName) {
                 referrerFirstName = row.referrerFirstName;
