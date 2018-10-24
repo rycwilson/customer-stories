@@ -57,6 +57,7 @@ a.cs-thumbnail {
         }
         line-height: 26px !important;
         color: #444 !important;
+        padding: 0;  // inspired by pixlee conflict
         // weebly will squish together letters and words in the customer name together without these...
         word-spacing: normal;
         letter-spacing: normal;
