@@ -6,7 +6,6 @@ function cspInitVideo ($, $story) {
       provider = $thumbContainers.data('provider'),
       videoId = $thumbContainers.data('video-id'),
       videoUrl = $thumbContainers.data('video-url'),
-      placeholderUrl = "<%= asset_path('video_placeholder.jpg') %>",
       videoQueryString,
       thumbSrc;
 
@@ -37,7 +36,7 @@ function cspInitVideo ($, $story) {
         },
         loadPlaceholder = function () {
           $thumbContainers.empty().append(
-            '<img id="cs-video-placeholder" src="' + placeholderUrl + '" alt="video placeholder">'
+            '<img id="cs-video-placeholder" src="' + VIDEO_PLACEHOLDER_URL + '" alt="video placeholder">'
           );
         };
 

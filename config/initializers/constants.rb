@@ -6,6 +6,7 @@ SAMPLE_COMPANY_ID = 10  # varmour
 INDUSTRIES = ['Education', 'Government', 'Financial Services', 'Healthcare', 'Hospitality', 'Manufacturing', 'Media and Entertainment', 'Service Provider', 'Technology', 'IT', 'Telecommunications'];
 
 LOGO_PLACEHOLDER_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/shared/logo-placeholder.png"
+VIDEO_PLACEHOLDER_URL = "https://s3-us-west-1.amazonaws.com/csp-production-assets/video_placeholder.jpg"
 
 # AdWords accounts
 ADWORDS_CSP_TEST_MANAGER_CUSTOMER_ID = '811-996-7666'

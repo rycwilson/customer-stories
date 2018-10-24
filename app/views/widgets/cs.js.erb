@@ -31,6 +31,7 @@
     $(function () {
 
       var $container, $script,
+          env = "<%= ENV['HOST_NAME'] %>",
           type = '<%= @type %>',
           $stylesheet = $("<link>", { rel: "stylesheet", type: "text/css", href: '<%= @stylesheet_url %>' }),
           isVarmour = <%= @company.subdomain === 'varmour' %>;
@@ -71,13 +72,13 @@
 
       // wait for stylesheet to load ...
       $stylesheet.appendTo('head')
-        .on('load', getWidget($container, $script, isDemo));
+        .on('load', getWidget($container, $script, isDemo, env));
 
     });
   }
 
   // root_url provides a company-specific url (via subdomain)
-  function getWidget ($container, $script, isDemo) {
+  function getWidget ($container, $script, isDemo, env) {
     return function () {
 
       $.ajax({
@@ -102,26 +103,26 @@
           var $images = $container.find('img'), loadedImages = 0;
           $images.on('load', function () {
             if (++loadedImages === $images.length) {
-              initWidget('<%= @type %>', $container, $script, isDemo);
+              initWidget('<%= @type %>', $container, $script, isDemo, env);
             }
           });
         });
     };
   }
 
-  function initWidget (type, $container, $script, isDemo) {
+  function initWidget (type, $container, $script, isDemo, env) {
     var initVideo = $.Deferred(),
         initOverlays = $.Deferred(),
         tabbedCarouselDelay = ((type === 'tabbed_carousel') && parseInt($script.data('delay'), 10) || 0);
 
-    trackPluginVisitor($container);
+    trackPluginVisitor($container, isDemo, env);
 
     $.getScript("<%= asset_url('widgets/cs_video.js') %>", function () {
         initVideo.resolve();
       });
     if (type !== 'tabbed_carousel') {
       $.getScript("<%= asset_url('widgets/cs_overlays.js') %>", function () {
-          cspInitOverlays($, $container, '<%= @company.subdomain %>', isDemo);
+          cspInitOverlays($, $container, '<%= @company.subdomain %>', isDemo, env);
           initOverlays.resolve();
         });
     } else {
@@ -156,8 +157,8 @@
     }
   }
 
-  function trackPluginVisitor ($container) {
-    if (<%= ENV['HOST_NAME'] == 'customerstories.net' %> && !isDemo) {
+  function trackPluginVisitor ($container, isDemo, env) {
+    if (env === 'customerstories.net' && !isDemo) {
       $container.append(
           '<iframe class="cs-iframe" height="0" width="0" style="display:none" ' +
               'src="https://' + '<%= @company.subdomain %>' + '.customerstories.net/plugins/track"></iframe>'

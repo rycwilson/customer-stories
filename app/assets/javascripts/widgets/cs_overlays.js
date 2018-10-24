@@ -4,7 +4,7 @@
 //= require plugins/grid_overlays
 //= require css-element-queries/src/ResizeSensor
 
-function cspInitOverlays ($, $container, subdomain, isDemo) {
+function cspInitOverlays ($, $container, subdomain, isDemo, env) {
 
   var loading = function ($storyCard) {
           $storyCard.addClass('cs-loading');
@@ -89,7 +89,7 @@ function cspInitOverlays ($, $container, subdomain, isDemo) {
   });
 
   function trackStoryVisitor ($storyCard) {
-    if (<%= ENV['HOST_NAME'] == 'customerstories.net' %> && !isDemo) {
+    if (env === 'customerstories.net' && !isDemo) {
       $storyCard.append(
         '<iframe class="cs-iframe" height="0" width="0" style="display:none" ' +
           'src="' + $storyCard.attr('href') + '?track=1"' +
