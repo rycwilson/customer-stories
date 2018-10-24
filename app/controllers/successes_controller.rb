@@ -41,11 +41,15 @@ class SuccessesController < ApplicationController
         success_params.to_h.dig(:contributions_attributes, '0', :referrer_attributes),
         params[:zap].present?
       )
+    params[:success][:contributions_attributes].except!('0') if params[:success][:contributions_attributes]['0'][:referrer_attributes].blank?
 
     params[:success][:contributions_attributes]['1'][:contributor_attributes] = find_dup_user_and_split_full_name(
         success_params.to_h.dig(:contributions_attributes, '1', :contributor_attributes),
         params[:zap].present?
       )
+    params[:success][:contributions_attributes].except!('1') if params[:success][:contributions_attributes]['1'][:contributor_attributes].blank?
+
+    # pp success_params.to_h
 
     if params[:zap].present? && (@success = Success.find_by_id(find_dup_success(success_params.to_h)))
       # a new success entails two contributions, one for the contact and one for the referrer;
