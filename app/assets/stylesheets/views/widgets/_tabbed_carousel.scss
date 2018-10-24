@@ -260,8 +260,9 @@
       position: relative;
       height: 80%;
       width: 100%;
-      // line-height: 130px;
-      line-height: 98px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
       .thumbnail-view-hover {
         position: absolute;
@@ -270,7 +271,6 @@
         justify-content: center;
         height: 100%;
         width: 100%;
-        // padding: 12px;
         padding: 8px;
         background: transparent;
         border-radius: 3px 3px 0 0;
@@ -292,12 +292,8 @@
         }
       }
       img {
-        display: inline-block;
-        vertical-align: middle;
-        max-height: 100%;
-        max-width: 100%;
-        // padding: 20px;
-        padding: 16px;
+        max-height: 70%;
+        max-width: 70%;
         opacity: 1;
         transition: opacity 0s step-end;
         -moz-transition: opacity 0s step-end;

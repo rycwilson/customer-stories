@@ -56,7 +56,9 @@
       position: relative;
       height: 80%;
       width: 100%;
-      line-height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
       .thumbnail-view-hover {
         position: absolute;
@@ -87,9 +89,8 @@
       img {
         display: inline-block;
         vertical-align: middle;
-        max-height: 100%;
-        max-width: 100%;
-        padding: 24px;
+        max-height: 70%;
+        max-width: 70%;
         opacity: 1;
         transition: opacity 0s step-end;
         -moz-transition: opacity 0s step-end;
