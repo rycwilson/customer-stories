@@ -75,6 +75,9 @@
 }
 
 #new-success-modal, #new-contributor-modal {
+  &#new-success-modal.in {
+    overflow-y: scroll;  // force scroll so create/import are consistent
+  }
   .modal-header {
     .close {
       font-size: 26px;

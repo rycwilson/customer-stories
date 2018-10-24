@@ -35,15 +35,15 @@
             <label class="col-sm-3 control-label">Source</label>
             <div class="col-sm-9">
 
-              <div class="btn-group" data-toggle="buttons" style="margin-bottom: 10px;">
+              <div class="btn-group" style="margin-bottom: 10px;">
 
-                <%= label_tag(:source, class: 'radio-inline active') do %>
-                  <%= radio_button_tag(:source, 'create', checked: true) %>
+                <%= label_tag('source_create', class: 'radio-inline') do %>
+                  <%= radio_button_tag('source', 'create', true) %>
                   Create New Win
                 <% end %>
 
-                <%= label_tag(:source, class: 'radio-inline') do %>
-                  <%= radio_button_tag(:source, 'import') %>
+                <%= label_tag('source_import', class: 'radio-inline') do %>
+                  <%= radio_button_tag('source', 'import') %>
                   Import CSV File
                 <% end %>
 
