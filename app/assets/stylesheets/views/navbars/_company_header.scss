@@ -20,6 +20,13 @@
             max-height: 50px;
           }
         }
+        &.pixlee {
+          a {
+            img {
+              max-height: 20px;
+            }
+          }
+        }
       }
       .primary-cta {
         text-decoration: none;
