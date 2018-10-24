@@ -34,7 +34,7 @@
 
     <div class="col-sm-6">
 
-      <div class="form-group logo-upload">
+      <div class="form-group logo-upload <%= company.subdomain %>">
 
         <label>Header Logo</label>
         <div class="fileinput <%= company.logo_url.present? ? 'fileinput-exists' : 'fileinput-new' %>" data-provides="fileinput">

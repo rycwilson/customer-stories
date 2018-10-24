@@ -34,6 +34,10 @@
     }
   }
 
+  &.pixlee .fileinput .thumbnail img {
+    max-height: 20px !important;
+  }
+
   .stories-header {
     height: 41px;
     padding: 0 15px;
