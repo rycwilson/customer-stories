@@ -22,7 +22,7 @@
   <div class="container navbar-container">
     <div class="row">
 
-      <div class="navbar-header <%= @company.subdomain %> <%= controller_name == 'stories' && (['index', 'show'].include?(action_name)) ? 'col-xs-8' : 'col-xs-12' %>">
+      <div class="navbar-header <%= @company.try(:subdomain) %> <%= controller_name == 'stories' && (['index', 'show'].include?(action_name)) ? 'col-xs-8' : 'col-xs-12' %>">
         <%= render('shared/navbars/company_logo', { company: @company }) %>
       </div>
 
