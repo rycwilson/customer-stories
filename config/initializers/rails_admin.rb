@@ -23,6 +23,26 @@ RailsAdmin.config do |config|
 
   ### More at https://github.com/sferik/rails_admin/wiki/Base-configuration
 
+  config.included_models = %w[
+    User
+    Admin
+    Company
+    Customer
+    Success
+    Contribution
+    AdwordsCampaign
+    AdwordsAdGroup
+    AdwordsAd
+    AdwordsImage
+    Story
+    StoryCategory
+    Product
+    Result
+    CrowdsourcingTemplate
+    ContributorQuestion
+    CallToAction
+  ]
+
   config.actions do
     dashboard                     # mandatory
     index                         # mandatory
