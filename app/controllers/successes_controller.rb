@@ -37,17 +37,21 @@ class SuccessesController < ApplicationController
       current_user
     )
 
-    params[:success][:contributions_attributes]['0'][:referrer_attributes] = find_dup_user_and_split_full_name(
-        success_params.to_h.dig(:contributions_attributes, '0', :referrer_attributes),
-        params[:zap].present?
-      )
-    params[:success][:contributions_attributes].except!('0') if params[:success][:contributions_attributes]['0'][:referrer_attributes].blank?
+    if params[:success].dig(:contributions_attributes, '0', :referrer_attributes).present?
+      params[:success][:contributions_attributes]['0'][:referrer_attributes] = find_dup_user_and_split_full_name(
+          success_params.to_h.dig(:contributions_attributes, '0', :referrer_attributes),
+          params[:zap].present?
+        )
+      params[:success][:contributions_attributes].except!('0') if params[:success][:contributions_attributes]['0'][:referrer_attributes].blank?
+    end
 
-    params[:success][:contributions_attributes]['1'][:contributor_attributes] = find_dup_user_and_split_full_name(
-        success_params.to_h.dig(:contributions_attributes, '1', :contributor_attributes),
-        params[:zap].present?
-      )
-    params[:success][:contributions_attributes].except!('1') if params[:success][:contributions_attributes]['1'][:contributor_attributes].blank?
+    if params[:success].dig(:contributions_attributes, '1', :contributor_attributes).present?
+      params[:success][:contributions_attributes]['1'][:contributor_attributes] = find_dup_user_and_split_full_name(
+          success_params.to_h.dig(:contributions_attributes, '1', :contributor_attributes),
+          params[:zap].present?
+        )
+      params[:success][:contributions_attributes].except!('1') if params[:success][:contributions_attributes]['1'][:contributor_attributes].blank?
+    end
 
     # pp success_params.to_h
 
