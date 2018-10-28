@@ -2,6 +2,22 @@ namespace :temp do
 
   desc "temp stuff"
 
+  task migrate_answers: :environment do
+    ContributorAnswer.destroy_all
+    ActiveRecord::Base.connection.execute('ALTER SEQUENCE contributor_answers_id_seq RESTART WITH 1')
+    Contribution.where.not(contribution:[nil, '']).each do |c|
+      if c.contribution.scan(/<em>(.*?)<\/em>/).present?   # earlier contributions are not based on questions
+        c.contribution.scan(/<em>(.*?)<\/em>/).flatten.each_with_index do |answer, index|
+          ContributorAnswer.create(
+            answer: answer,
+            contribution_id: c.id,
+            contributor_question_id: c.company.questions[index].id
+          )
+        end
+      end
+    end
+  end
+
   task add_default_cta_colors: :environment do
     Company.where(primary_cta_background_color: [nil, '']).each do |c|
       c.update(primary_cta_background_color: '#337ab7', primary_cta_text_color: '#ffffff')
@@ -58,14 +74,14 @@ namespace :temp do
   task copy_default_invitation_templates: :environment do
     csp = Company::CSP
     Company.all.each do |company|
-      company.crowdsourcing_templates.customer.update(
-        request_body: csp.crowdsourcing_templates.customer.request_body
+      company.invitation_templates.customer.update(
+        request_body: csp.invitation_templates.customer.request_body
       )
-      company.crowdsourcing_templates.customer_success.update(
-        request_body: csp.crowdsourcing_templates.customer_success.request_body
+      company.invitation_templates.customer_success.update(
+        request_body: csp.invitation_templates.customer_success.request_body
       )
-      company.crowdsourcing_templates.sales.update(
-        request_body: csp.crowdsourcing_templates.sales.request_body
+      company.invitation_templates.sales.update(
+        request_body: csp.invitation_templates.sales.request_body
       )
     end
   end
@@ -76,7 +92,7 @@ namespace :temp do
     Rake::Task["temp:update_contributions"].invoke
     Rake::Task["temp:partner_to_customer_success"].invoke
     Rake::Task["temp:create_contributor_questions"].invoke
-    Rake::Task["temp:create_crowdsourcing_templates"].invoke
+    Rake::Task["temp:create_invitation_templates"].invoke
     Rake::Task["temp:copy_old_contribution_requests"].invoke
     Rake::Task["temp:db_fixes"].invoke
     Rake::Task["temp:change_reminder_wait"].invoke
@@ -97,7 +113,7 @@ namespace :temp do
   task copy_old_contribution_requests: :environment do
     EmailContributionRequest.all.each do |contribution_request|
       contribution_request.contribution.update(
-        # crowdsourcing_template_id: nil,
+        # invitation_template_id: nil,
         request_subject: contribution_request.subject,
         request_body: contribution_request.body,
         request_sent_at: contribution_request.created_at
@@ -105,9 +121,9 @@ namespace :temp do
     end
   end
 
-  task create_crowdsourcing_templates: :environment do
+  task create_invitation_templates: :environment do
     CrowdsourcingTemplate.destroy_all
-    ActiveRecord::Base.connection.execute('ALTER SEQUENCE crowdsourcing_templates_id_seq RESTART WITH 1')
+    ActiveRecord::Base.connection.execute('ALTER SEQUENCE invitation_templates_id_seq RESTART WITH 1')
     EmailTemplate.all.each do |email_template|
       CrowdsourcingTemplate.create(
         name: email_template.name,
@@ -121,9 +137,9 @@ namespace :temp do
       )
     end
     Company.all.each do |company|
-      customer_template = company.crowdsourcing_templates.select { |t| t.name == 'Customer' }[0]
-      customer_success_template = company.crowdsourcing_templates.select { |t| t.name == 'Customer Success' }[0]
-      sales_template = company.crowdsourcing_templates.select { |t| t.name == 'Sales' }[0]
+      customer_template = company.invitation_templates.select { |t| t.name == 'Customer' }[0]
+      customer_success_template = company.invitation_templates.select { |t| t.name == 'Customer Success' }[0]
+      sales_template = company.invitation_templates.select { |t| t.name == 'Sales' }[0]
       company.contributor_questions.each do |q|
         if q.role == 'customer'
           customer_template.contributor_questions << q
@@ -135,11 +151,11 @@ namespace :temp do
       end
       company.contributions.each do |contribution|
         if contribution.role == 'customer'
-          contribution.update(crowdsourcing_template_id: customer_template.id)
+          contribution.update(invitation_template_id: customer_template.id)
         elsif contribution.role == 'customer success'
-          contribution.update(crowdsourcing_template_id: customer_success_template.id)
+          contribution.update(invitation_template_id: customer_success_template.id)
         elsif contribution.role == 'sales'
-          contribution.update(crowdsourcing_template_id: sales_template.id)
+          contribution.update(invitation_template_id: sales_template.id)
         end
       end
     end

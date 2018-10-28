@@ -27,6 +27,12 @@ class SuccessesController < ApplicationController
     respond_to { |format| format.json { render({ json: data }) } }
   end
 
+  def show
+    # puts params.permit(params.keys).to_h
+    @templates = InvitationTemplate.find(params[:templates])
+    render(:win_story, layout: false)
+  end
+
   def create
     # puts 'successes#create'
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
@@ -155,7 +161,7 @@ class SuccessesController < ApplicationController
       [referrer_template, contact_template].each do |template|
         if template.present?
           # binding.remote_pry if imported_success[:name] == "Amazon Wins with Acme"
-          template_lookup[template] ||= CrowdsourcingTemplate.where(name: template, company_id: @company.id).take.id
+          template_lookup[template] ||= InvitationTemplate.where(name: template, company_id: @company.id).take.id
         end
       end
     end
@@ -182,8 +188,8 @@ class SuccessesController < ApplicationController
       :name, :description, :customer_id, :curator_id,
       customer_attributes: [:id, :name, :company_id],
       contributions_attributes: [
-        :referrer_id, :contributor_id, :crowdsourcing_template_id, :success_contact,
-        crowdsourcing_template_attributes: [:name, :company_id],
+        :referrer_id, :contributor_id, :invitation_template_id, :success_contact,
+        invitation_template_attributes: [:name, :company_id],
         referrer_attributes: [
           :id, :email, :first_name, :last_name, :title, :phone, :sign_up_code, :password
         ],
@@ -196,7 +202,7 @@ class SuccessesController < ApplicationController
 
   def contribution_params
     params.require(:contribution).permit(
-      :contributor_id, :referrer_id, :success_id, :crowdsourcing_template_id,
+      :contributor_id, :referrer_id, :success_id, :invitation_template_id,
       :status, :contribution, :feedback, :publish_contributor, :success_contact,
       :request_subject, :request_body,
       :contributor_unpublished, :notes, :submitted_at,
@@ -280,15 +286,15 @@ class SuccessesController < ApplicationController
     success
   end
 
-  # fill in the id of an existing template, and remove crowdsourcing_template_attributes hash
+  # fill in the id of an existing template, and remove invitation_template_attributes hash
   def add_dup_template (success, contact_type, template_id)
     contribution_index = success[:contributions_attributes].select do |index, contribution|
       contribution.has_key?("#{contact_type}_id") ||
       contribution.has_key?("#{contact_type}_attributes")
     end.keys[0]
     # binding.remote_pry if success[:name] == 'TestCo Win 7'
-    success[:contributions_attributes][contribution_index][:crowdsourcing_template_id] = template_id
-    success[:contributions_attributes][contribution_index].except!(:crowdsourcing_template_attributes)
+    success[:contributions_attributes][contribution_index][:invitation_template_id] = template_id
+    success[:contributions_attributes][contribution_index].except!(:invitation_template_attributes)
     success
   end
 
@@ -299,7 +305,7 @@ class SuccessesController < ApplicationController
       if (user_id = (user_lookup[email] || User.find_by_email(email).try(:id)))
         success = add_dup_contact(success, contact_type, user_id)
       end
-      if (template_id = (template_lookup[template] || CrowdsourcingTemplate.where({
+      if (template_id = (template_lookup[template] || InvitationTemplate.where({
                                                           name: template,
                                                           company_id: @company.id
                                                         }).take.try(:id) ))
@@ -324,7 +330,7 @@ class SuccessesController < ApplicationController
       success.dig(
         :contributions_attributes,
         contribution_index,
-        :crowdsourcing_template_attributes,
+        :invitation_template_attributes,
         :name
       )
     else
@@ -365,7 +371,7 @@ class SuccessesController < ApplicationController
       success_id: success_id,
       contributor_attributes: {},
       referrer_attributes: {},
-      crowdsourcing_template_attributes: {}
+      invitation_template_attributes: {}
     }
 
     contact_index = success[:contributions_attributes].select do |index, c|
@@ -379,8 +385,8 @@ class SuccessesController < ApplicationController
     referrer_attrs = success.dig(:contributions_attributes, referrer_index, :referrer_attributes)
     contributor_id = success.dig(:contributions_attributes, contact_index, :contributor_id)
     contributor_attrs = success.dig(:contributions_attributes, contact_index, :contributor_attributes)
-    crowdsourcing_template_id = success.dig(:contributions_attributes, contact_index, :crowdsourcing_template_id)
-    crowdsourcing_template_attrs = success.dig(:contributions_attributes, contact_index, :crowdsourcing_template_attributes)
+    invitation_template_id = success.dig(:contributions_attributes, contact_index, :invitation_template_id)
+    invitation_template_attrs = success.dig(:contributions_attributes, contact_index, :invitation_template_attributes)
 
     if referrer_id.present?
       contribution[:referrer_id] = referrer_id
@@ -398,13 +404,13 @@ class SuccessesController < ApplicationController
     else
       contribution.except!(:contributor_attributes)
     end
-    if crowdsourcing_template_id.present?
-      contribution[:crowdsourcing_template_id] = crowdsourcing_template_id
-      contribution.except!(:crowdsourcing_template_attributes)
-    elsif crowdsourcing_template_attrs.present?
-      contribution[:crowdsourcing_template_attributes].merge!(crowdsourcing_template_attrs)
+    if invitation_template_id.present?
+      contribution[:invitation_template_id] = invitation_template_id
+      contribution.except!(:invitation_template_attributes)
+    elsif invitation_template_attrs.present?
+      contribution[:invitation_template_attributes].merge!(invitation_template_attrs)
     else
-      contribution.except!(:crowdsourcing_template_attributes)
+      contribution.except!(:invitation_template_attributes)
     end
     contribution
   end

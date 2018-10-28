@@ -180,7 +180,7 @@ class Company < ApplicationRecord
     end
   end
   alias_attribute :questions, :contributor_questions
-  has_many :crowdsourcing_templates, dependent: :destroy do
+  has_many :invitation_templates, dependent: :destroy do
     def customer
       where(name: 'Customer').take
     end
@@ -189,6 +189,9 @@ class Company < ApplicationRecord
     end
     def sales
       where(name: 'Sales').take
+    end
+    def select_options
+      self.sort_by { |t| t.name }.map { |template| [ template.name, template.id ] }
     end
     def grouped_select_options
       {
@@ -216,7 +219,7 @@ class Company < ApplicationRecord
       ]
     end
   end
-  alias_attribute :templates, :crowdsourcing_templates
+  alias_attribute :templates, :invitation_templates
   has_many :outbound_actions, dependent: :destroy
   has_many :call_to_actions, dependent: :destroy
   # alias and methods
@@ -271,11 +274,11 @@ class Company < ApplicationRecord
   after_commit(on: [:create]) do
     self.create_widget
 
-    # default crowdsourcing templates (formerly email templates, futurely invitation templates)
-    Company::CSP.crowdsourcing_templates.each do |factory_template|
+    # default invitation templates (formerly email templates, futurely invitation templates)
+    Company::CSP.invitation_templates.each do |factory_template|
       if ['Customer', 'Customer Success', 'Sales'].include?(factory_template.name)
         company_template = factory_template.dup
-        self.crowdsourcing_templates << company_template
+        self.invitation_templates << company_template
         factory_template.contributor_questions.each do |factory_question|
           if factory_question.role.present?
             new_question = factory_question.dup

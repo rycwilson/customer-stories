@@ -128,7 +128,7 @@ class CompaniesController < ApplicationController
     respond_to do |format|
       format.any do
         render({
-          json: current_user.company.crowdsourcing_templates.to_json({ only: [:id, :name] })
+          json: current_user.company.invitation_templates.to_json({ only: [:id, :name] })
         })
       end
     end

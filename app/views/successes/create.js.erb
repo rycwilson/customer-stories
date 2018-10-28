@@ -8,7 +8,7 @@
                         customers: { only: [:id, :name] },
                         contributors: { only: [:id], methods: [:full_name] },
                         referrers: { only: [:id], methods: [:full_name] },
-                        crowdsourcing_templates: { only: [:id, :name] }
+                        invitation_templates: { only: [:id, :name] }
                       }
                     }) %>,
       newSuccess = <%= raw @success.to_json({
@@ -40,7 +40,7 @@
 
   // update the app object
   CSP.company.customers = company.customers
-  CSP.company.crowdsourcing_templates = company.crowdsourcing_templates
+  CSP.company.invitation_templates = company.invitation_templates
 
   /**
    * the datatable filter state persists through a reload,

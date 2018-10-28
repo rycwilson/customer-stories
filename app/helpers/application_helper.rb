@@ -1,5 +1,18 @@
 module ApplicationHelper
 
+  def custom_google_fonts(company)
+    return nil if company.blank? || controller_name != 'stories'
+    link_tags = ''
+    fonts = case company.subdomain
+      when 'pixlee'
+        ['Muli', 'Bowlby+One+SC']
+      else
+        []
+      end
+    fonts.each { |f| link_tags.concat("<link href='https://fonts.googleapis.com/css?family=#{f}' rel='stylesheet'>\n") }
+    link_tags.html_safe if link_tags.present?
+  end
+
   def admin_navbar? controller
     ['companies', 'stories', 'profile'].include?(controller)
   end
@@ -16,39 +29,6 @@ module ApplicationHelper
     controller == 'stories' && ['index', 'show', 'edit'].include?(action) ||
     controller == 'companies' && ['show', 'edit'].include?(action) ||
     controller == 'profile' && action == 'edit'
-  end
-
-  def company_widget_color company
-    case company.subdomain
-    when 'trunity'
-      '#FEBE57'
-    when 'compas'
-      '#e55f53'
-    when 'varmour'
-      '#60ccf3'
-    when 'centerforcustomerengagement'
-      '#007fc5'
-    when 'zeniq'
-      '#364150'
-    when 'corefact'
-      '#1f9421'
-    when 'saucelabs'
-      '#e2231a'
-    when 'juniper'
-      '#3493c1'
-    when 'neonova'
-      '#669bb2'
-    when 'kodacon'
-      '#85cee6'
-    when 'zoommarketing'
-      '#9e61a8'
-    when 'modeanalytics'
-      '#37b067'
-    when 'acme-test'
-      '#ff0000'
-    else
-      'rgb(14, 122, 254)'
-    end
   end
 
   def production?

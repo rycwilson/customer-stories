@@ -77,7 +77,7 @@ function initDataTables (isBatch) {
           });
         },
         initSelectFilters = function ($tableWrapper) {
-          $('.crowdsource.curator-select')
+          $('.prospect.curator-select')
             .select2({
               theme: 'bootstrap',
               width: 'style',
@@ -90,7 +90,7 @@ function initDataTables (isBatch) {
             width: 'style',
             // allowClear: true
           });
-          $('.crowdsource.curator-select')
+          $('.prospect.curator-select')
             .val(isBatch ? '0' : CSP.current_user.id)
             .trigger('change', { auto: true });
         },
