@@ -1,17 +1,15 @@
 module ApplicationHelper
 
   def custom_google_fonts(company)
+    return nil if company.blank? || controller_name != 'stories'
     link_tags = ''
     fonts = case company.subdomain
       when 'pixlee'
         ['Muli', 'Bowlby+One+SC']
       else
+        []
       end
-    fonts.each do |font|
-      link_tags.concat(
-        "<link href='https://fonts.googleapis.com/css?family=#{font}' rel='stylesheet'>\n"
-      )
-    end
+    fonts.each { |f| link_tags.concat("<link href='https://fonts.googleapis.com/css?family=#{f}' rel='stylesheet'>\n") }
     link_tags.html_safe if link_tags.present?
   end
 

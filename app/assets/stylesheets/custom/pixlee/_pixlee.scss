@@ -3,18 +3,17 @@
 
 body.pixlee {
 
+  @import 'variables';
   @import 'company_header';
 
-}
+  &.stories {
 
-body.pixlee.stories {
+    @import 'stories_header';
+    // @import 'gallery';
+    // @import 'index';
+    // @import 'show';
 
-  @import 'variables';
-  @import 'stories_header';
-  // @import 'gallery';
-  // @import 'index';
-  // @import 'show';
+    font-family: $body-font;
 
-  // font-family: $body-font;
-
+  }
 }

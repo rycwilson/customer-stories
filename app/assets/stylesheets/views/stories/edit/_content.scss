@@ -1,29 +1,35 @@
 
 #story-content {
 
-  .form-group {
-    margin-bottom: 20px
-  }
-  .form-group.video {
-    margin-bottom: 15px;
-  }
-  #story_quote {
-    font-style: italic;
-  }
-  #story_quote::-webkit-input-placeholder {
-    font-style: normal;
-  }
+  #story-content-form {
 
-  #video-container {
-    min-height: 234px;
-    img#video-placeholder {
-      width: 100%;
+    .form-group {
+      margin-bottom: 20px
     }
+    .form-group.video {
+      margin-bottom: 15px;
+    }
+    #story_quote {
+      font-style: italic;
+    }
+    #story_quote::-webkit-input-placeholder {
+      font-style: normal;
+    }
+
+    #video-container {
+      min-height: 234px;
+      img#video-placeholder {
+        width: 100%;
+      }
+    }
+
+    .note-editor {
+      border-color: #ccc;
+    }
+
+
   }
 
-  .note-editor {
-    border-color: #ccc;
-  }
 
 }
 
