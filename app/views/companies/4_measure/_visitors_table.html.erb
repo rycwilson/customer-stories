@@ -1,0 +1,82 @@
+
+<div id='measure-visitors'>
+
+  <%= render 'companies/4_measure/filter_form',
+              { company: company,
+                form_id: 'visitors-filter-form',
+                form_path: measure_visitors_path,
+                story_select_id: 'visitors-story-select',
+                date_range_input_id: 'visitors-date-range-input' } %>
+
+  <table id='measure-visitors-table' width='100%'
+         class="datatable table table-hover table-bordered"
+         style='visibility:hidden'>
+
+    <thead>
+      <tr>
+        <th></th>
+        <th>Organization</th>
+        <th>Unique visitors</th>
+      </tr>
+    </thead>
+
+    <!-- <tbody> -->
+
+      <%# @orgs_visitors.each_with_index do |org, index| %>
+
+
+<!--             <tr class='parentRow'>
+              <td class='accordion-toggle org-details' data-toggle='collapse'
+                  data-parent='#measure-visitors'
+                  data-target='#org-<%#= index %>'>
+                <i class='fa fa-chevron-right'></i>
+              </td>
+              <td><%#= org[:name] %></td>
+              <td><%#= org[:visitors] %></td>
+              <td><%#= org[:visits] %></td>
+            </tr>
+
+            <tr class=''>
+              <td class=''></td>
+              <td colspan='3' class='hiddenRow'>
+                <span style='visibility:hidden'><%#= org[:name] %></span>
+                <div id='org-<%#= index %>' class='accordion-body collapse'>
+                  <table class='table' width='100%'>
+
+                    <thead>
+                      <tr>
+                        <th>Story</th>
+                        <th></th>
+                        <th></th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <tr>
+                        <td>Story1</td>
+                        <td>4</td>
+                        <td>7</td>
+                      </tr>
+                      <tr>
+                        <td>Story2</td>
+                        <td>3</td>
+                        <td>5</td>
+                      </tr>
+                    </tbody>
+
+                  </table>
+                </div>
+              </td>
+              <td class='hidden'></td>
+              <td class='hidden'></td>
+
+            </tr> -->
+
+
+      <%# end %>
+
+    <!-- </tbody> -->
+
+  </table>
+
+</div>

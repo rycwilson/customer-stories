@@ -1,0 +1,226 @@
+
+<!-- adwords image template -->
+<% content_for :underscore_templates do %>
+
+  <script id='adwords-image-template' type="text/template">
+
+    <!-- // locals: image_index -->
+    <li class='well adwords-image new-adwords-image to-be-added hidden'>
+
+      <div class='adwords-image-form-control-top'>
+        <label class="checkbox-inline">
+          <input name="company[adwords_images_attributes][{{= imageIndex }}][company_default]" type="hidden" value="false">
+          <input type="checkbox" value="true" name="company[adwords_images_attributes][{{= imageIndex }}][company_default]" id="company_adwords_images_attributes_{{= imageIndex }}_company_default">
+          Make default
+        </label>
+        <i class='remove-image glyphicon glyphicon-remove'></i>
+      </div>
+
+      <div class="fileinput fileinput-exists" data-provides="fileinput">
+        <div class="fileinput-preview thumbnail"></div>
+        <input type="file"
+               name="company[adwords_images_attributes][{{= imageIndex }}][image_url]"
+               id="company_adwords_images_attributes_{{= imageIndex }}_image_url">
+      </div>
+
+      <div class='adwords-image-form-control-bottom'>
+        <span>Save changes below or <a class='cancel-add-image'>Cancel</a></span>
+      </div>
+
+    </li>
+
+  </script>
+<% end %>
+
+<!-- <div class="row enable-promote-type form-group">
+  <div class="col-sm-12">
+
+    <%#= render 'companies/3_promote/enable_promote_type', { company: company } %>
+
+  </div>
+</div> -->
+
+<%= form_for company, url: promote_company_path(company),
+      method: 'put', remote: 'true', authenticity_token: true,
+      html: {
+        id: 'promote-settings-form',
+        class: 'directUpload',
+        data: {
+          'form-data' => (@s3_direct_post.fields),
+          'url' => @s3_direct_post.url,
+          'host' => URI.parse(@s3_direct_post.url).host } } do |f| %>
+
+  <div class="form-inline">
+    <div class="form-group">
+
+      <%= f.label :adwords_short_headline, "Headline", class: 'control-label' %>
+      <%= f.text_field :adwords_short_headline, class: 'form-control',
+            style: 'width:300px', maxlength: ADWORDS_SHORT_HEADLINE_CHAR_LIMIT.to_s, required: true,
+            data: { 'required-error': 'Required field' } %>
+      <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+      <div class="help-block with-errors" style='padding-left:75px'>Max 25 characters</div>
+
+    </div>
+  </div>
+
+  <div class="row">
+
+    <div class="col-sm-4 form-group has-feedback">
+
+      <div>
+        <%= f.label(:adwords_logo_url, 'Promoted Stories Logo',
+              class: 'adwords-logo control-label',
+              for: 'adwords-logo-input') %>&nbsp;&nbsp;
+      </div>
+
+      <div class="well fileinput adwords-default adwords-logo <%= company.adwords_logo_url.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">
+
+        <div class='image-requirements'>
+          <a tabindex='0' class='adwords-logo image-requirements' role='button'
+             data-toggle='popover' data-placement='top' data-trigger='focus'
+             title='Requirements - Promoted Stories Logo'
+             data-min='128x128' data-ratio='1:1' data-suggest='1200x1200'>Requirements</a>
+        </div>
+
+        <div class="text-center">
+          <div class="fileinput-new thumbnail" data-trigger="fileinput">
+            <%= image_tag LOGO_PLACEHOLDER_URL, alt: 'logo placeholder' %>
+          </div>
+          <div class="fileinput-preview fileinput-exists thumbnail" data-trigger="fileinput">
+            <%= image_tag company.adwords_logo_url || LOGO_PLACEHOLDER_URL, alt: 'logo image' %>
+          </div>
+        </div>
+
+        <!-- set required attribute conditionally, since the input field is
+        empty even if an image exists, thus triggering invalidation -->
+        <div class="btn-file">
+          <%= f.file_field :adwords_logo_url,
+                id: 'adwords-logo-input',
+                required: company.adwords_logo_url.present? ? false : true,
+                    data: { 'image-requirements': '128x128',
+                            'required-error': 'Select an image' } %>
+        </div>
+
+        <i class='change-image glyphicon glyphicon-pencil'></i>
+
+        <!-- bootstrap validator -->
+        <div style='height:20px' class="help-block with-errors"></div>
+
+      </div>  <!-- /.fileupload -->
+
+    </div>
+
+    <div class="col-sm-8 form-group has-feedback">
+
+      <div>
+        <%= f.label 'default_adwords_image_url', 'Promoted Stories Image (default)',
+              class: 'adwords-image control-label', for: 'default-adwords-image-input' %>&nbsp;&nbsp;
+      </div>
+
+      <div class="well fileinput adwords-default adwords-image <%= company.adwords_images.default.blank? ? 'fileinput-new' : 'fileinput-exists' %>" data-provides="fileinput">
+
+        <div class="image-requirements">
+          <a tabindex='0' class='adwords-image image-requirements' role='button'
+             data-toggle='popover' data-placement='top' data-trigger='focus'
+             title='Requirements - Promoted Stories Image'
+             data-min='600x314' data-ratio='1.91:1' data-suggest='1200x628'>Requirements</a>
+        </div>
+
+        <div class="text-center">
+          <div class="fileinput-new thumbnail" data-trigger='fileinput'>
+            <%= image_tag ADWORDS_IMAGE_PLACEHOLDER_URL, alt: 'marketing image placeholder' %>
+          </div>
+          <div class="fileinput-preview fileinput-exists thumbnail" data-trigger="fileinput">
+            <%= image_tag company.adwords_images.default.try(:image_url) || ADWORDS_IMAGE_PLACEHOLDER_URL,
+                  data: { id: company.adwords_images.default.try(:id) },
+                  alt: 'marketing image' %>
+          </div>
+        </div>
+
+        <!-- set required attribute conditionally, since the input field is
+        empty even if an image exists, thus triggering invalidation -->
+        <div class="btn-file">
+          <%= f.file_field 'default_adwords_image_url',
+                id: 'default-adwords-image-input',
+                required: company.adwords_images.default.present? ? false : true,
+                    data: { 'image-requirements': '600x314',
+                            'required-error': 'Select an image' } %>
+        </div>
+
+        <i class='change-image glyphicon glyphicon-pencil'></i>
+
+        <div style='height:20px' class="help-block with-errors"></div>
+
+      </div>  <!-- /.fileupload -->
+
+    </div>
+  </div>
+
+  <div style='display:flex; align-items:center; margin-bottom:16px'>
+    <span class="<%= company.adwords_images.default.blank? ? 'disabled' : '' %> new-adwords-image-icon fa-stack fa-lg" style='margin-right:5px'>
+      <i class='fa fa-circle fa-stack-2x'></i>
+      <i class='fa fa-plus fa-stack-1x fa-inverse'></i>
+    </span>
+    <div style='display:inline-block'>
+      <div>
+        <label style='margin:0' for="">Additional Images for Promoted Stories</label>&nbsp;&nbsp;
+      </div>
+      <div>
+        <a tabindex='0' class='adwords-image image-requirements' role='button'
+           data-toggle='popover' data-placement='top' data-trigger='focus'
+           title='Requirements - Promoted Stories Image'
+           data-min='600x314' data-ratio='1.91:1' data-suggest='1200x628'>Requirements</a>
+      </div>
+    </div>
+  </div>
+
+  <ul class='adwords-images list-inline text-center'>
+
+    <%= f.fields_for(:adwords_images) do |image_f| %>
+
+      <li class="well adwords-image <%= image_f.object.company_default? ? 'hidden' : '' %>">
+
+        <div class='adwords-image-form-control-top'>
+          <label class="checkbox-inline">
+            <%= image_f.check_box(:company_default, {}, 'true', 'false') %>
+            Make default
+          </label>
+          <i class='remove-image glyphicon glyphicon-remove'></i>
+        </div>
+
+        <div class="fileinput fileinput-exists" data-provides="fileinput">
+          <div class="fileinput-preview thumbnail">
+            <%= image_tag image_f.object.image_url, alt: 'adwords image' %>
+          </div>
+          <%= image_f.file_field(:image_url, class: 'hidden') %>
+          <%= image_f.check_box(:_destroy, { class: 'hidden' }, 'true', 'false') %>
+        </div>
+
+        <div class='adwords-image-form-control-bottom'></div>
+
+      </li>
+
+    <% end %>
+
+  </ul>
+
+  <hr>
+
+  <div class="row">
+    <div class="col-sm-12 text-right">
+<!--       <button type="reset" class="btn btn-default">
+        Cancel
+      </button> -->
+      <button type="submit" class="btn btn-success text-center" style="width:114px">
+        <span class="submit-toggle">Save changes</span>
+        <i class="fa fa-spin fa-circle-o-notch" style="display:none"></i>
+      </button>&nbsp;
+    </div>
+  </div>
+
+<% end %>
+
+
+
+
+

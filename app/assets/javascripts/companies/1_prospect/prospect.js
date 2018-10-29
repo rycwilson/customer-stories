@@ -3,7 +3,7 @@
 //= require ./new_success
 //= require ./new_contributor
 //= require ./success_details
-//= require ./success_actions
+//= require ./success_actions/success_actions
 //= require ./contributor_details
 //= require ./contributor_actions/contributor_actions
 //= require ./linkedin_util
@@ -48,6 +48,7 @@ function prospectListeners () {
   newContributorListeners();
   successDetailsListeners();
   successActionsListeners();
+  winStoryListeners();
   contributorDetailsListeners();
   contributorActionsListeners();
   contributorInvitationListeners();
@@ -78,7 +79,7 @@ function prospectListeners () {
     })
 
     // the close event happens shortly after blur; to ensure smooth transition...
-    .on('blur', 'td.crowdsourcing-template', function () {
+    .on('blur', 'td.invitation-template', function () {
       var $td = $(this), editor;
       if ( $td.closest('table').is('#prospect-contributors-table') ) {
         editor = prospectContributorsEditor;
@@ -95,7 +96,7 @@ function prospectListeners () {
         .find('tr.shown').find('td[class*="-details"]').trigger('click');
     })
 
-    .on('click', 'td.crowdsourcing-template', function (e) {
+    .on('click', 'td.invitation-template', function (e) {
       var $row = $(this).parent(),
           workflowStage = $(this).closest('table').attr('id').match(/^(\w+)\-/)[1];
       // don't allow template change if request already sent (or re-sent)
@@ -192,7 +193,7 @@ function prospectListeners () {
       $tableWrapper.find('.curator-select').val('0').trigger('change');
       $tableWrapper.find('.dt-filter').val(filterVal).trigger('change');
     })
-    .on('click', 'td.crowdsourcing-template .DTE_Form_Buttons :first-child', function () {
+    .on('click', 'td.invitation-template .DTE_Form_Buttons :first-child', function () {
       $(this).find('span, .fa-spin').toggle();
     });
 

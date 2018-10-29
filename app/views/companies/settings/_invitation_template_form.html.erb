@@ -1,0 +1,78 @@
+
+<% if method == 'put' && template_is_new %>
+
+  <script>
+    var templateName = "<%= template.name %>";
+    flashDisplay('Created new template: ' + templateName, 'success', function () {
+      $('#invitation-template-form').data('submitted', '');
+    });
+  </script>
+
+<% end %>
+
+<%= form_for(template, url: url,
+      html: { method: method, remote: true,
+              id: 'invitation-template-form' }) do |template_form| %>
+
+  <%= template_form.hidden_field(:company_id) %>
+
+
+  <div class="row">
+
+    <div class="col-lg-8">
+
+      <div class="form-group">
+        <%= template_form.label(:name, "Template Name") %>
+        <%= template_form.text_field(:name, class: 'form-control', readonly: template.default?) %>
+      </div>
+
+      <div class="form-group request-subject">
+        <%= template_form.label(:request_subject, "Invitation Subject") %>
+        <div class="input-group">
+          <%= template_form.text_field(:request_subject, class: 'form-control') %>
+          <div class="input-group-btn">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Insert&nbsp;&nbsp;<span class="caret"></span></button>
+            <ul class="dropdown-menu dropdown-menu-right data-placeholders">
+              <li data-placeholder='[customer_name]'>
+                <a href="javascript:;">Customer name</a>
+              </li>
+              <li data-placeholder='[contributor_first_name]'>
+                <a href="javascript:;">Contributor first name</a>
+              </li>
+              <li data-placeholder='[contributor_full_name]'>
+                <a href="javascript:;">Contributor full name</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group request-body">
+        <%= template_form.label(:request_body, "Invitation Body") %>
+        <%= template_form.text_area(:request_body, id: 'invitation-template-editor',
+                data: { provider: 'summernote' }) %>
+      </div>
+
+    </div>
+
+    <div class="col-lg-4">
+
+      <div class="form-group submission-page-title">
+        <label for="invitation_template_contribution_page_title">Contribution Page Title</label>
+        <%= template_form.text_area(:contribution_page_title, rows: '2', maxlength: 80, class: 'form-control') %>
+      </div>
+
+      <div class="form-group submission-page-title">
+        <label for="invitation_template_feedback_page_title">Feedback Page Title</label>
+        <%= template_form.text_area(:feedback_page_title, maxlength: 80, rows: '2', class: 'form-control') %>
+      </div>
+
+      <%= render(
+            'companies/settings/contributor_questions',
+            { company: company, template: template, template_form: template_form, template_is_copy: template_is_copy }
+          ) %>
+    </div>
+
+  </div>
+
+<% end %>

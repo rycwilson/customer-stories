@@ -8,7 +8,7 @@
                         customers: { only: [:id, :name] },
                         contributors: { only: [:id], methods: [:full_name] },
                         referrers: { only: [:id], methods: [:full_name] },
-                        crowdsourcing_templates: { only: [:id, :name] }
+                        invitation_templates: { only: [:id, :name] }
                       }
                     }) %>,
       newSuccesses = <%= raw @successes.to_json({ only: [:id] }) %>,
@@ -20,7 +20,7 @@
           $button.attr('type', 'button');
           $button.find('span').text('Ok')
           $button[0].blur();
-          $('.crowdsource.curator-select').val('0').trigger('change'  );
+          $('.prospect.curator-select').val('0').trigger('change'  );
           // console.log(newSuccesses)
           successes.forEach(function (success) {
             if (newSuccesses.find(function (s) { return s.id === success.id; })) {
@@ -32,7 +32,7 @@
 
   // update the app object
   CSP.company.customers = company.customers
-  CSP.company.crowdsourcing_templates = company.crowdsourcing_templates
+  CSP.company.invitation_templates = company.invitation_templates
 
   /**
    * the datatable filter state persists through a reload,

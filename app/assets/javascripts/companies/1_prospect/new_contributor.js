@@ -114,12 +114,12 @@ function newContributorListeners() {
       tagSuggestedContributors = function (customerId) {
         var companyContributions = $('#prospect-contributors-table').DataTable().rows().data().toArray(),
             customerSuccessContributions = companyContributions.filter(function (contribution) {
-                return contribution.crowdsourcing_template &&
-                       contribution.crowdsourcing_template.name === 'Customer Success';
+                return contribution.invitation_template &&
+                       contribution.invitation_template.name === 'Customer Success';
               }),
             salesContributions = companyContributions.filter(function (contribution) {
-                return contribution.crowdsourcing_template &&
-                       contribution.crowdsourcing_template.name === 'Sales';
+                return contribution.invitation_template &&
+                       contribution.invitation_template.name === 'Sales';
               }),
             customerContributions = companyContributions.filter(function (contribution) {
                 return contribution.success.customer_id == customerId;

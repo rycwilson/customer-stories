@@ -4,13 +4,13 @@
   <% if @submission_type == 'contribution' %>
 
     <span class="<%= @company.color_contrast %>">
-      <%= @contribution.crowdsourcing_template.contribution_page_title %>
+      <%= @contribution.invitation_template.contribution_page_title %>
     </span>
 
   <% else %>
 
     <span class="<%= @company.color_contrast %>">
-      <%= @contribution.crowdsourcing_template.feedback_page_title %>
+      <%= @contribution.invitation_template.feedback_page_title %>
     </span>
 
   <% end %>

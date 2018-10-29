@@ -76,7 +76,7 @@
     background-color: if(variable-exists(bg-color), $bg-color, $csp-bg-gray);
     padding-bottom: 60px;
     &.cs-story-content {
-      span, li, p, a, h4, i {
+      h1, h2, h3, h4, h5, h6, span, li, p, a, i {
         &:not(i) {
           font: {
             family: inherit !important;
@@ -109,61 +109,61 @@
         }
       }
     }
-    .story-results {
+    .story-results, .story-ctas {
       margin-bottom: 25px;
+      a {
+        font-weight: 600;
+        color: #999;
+        text-decoration: none;
+        &:hover {
+          color: #333;
+        }
+      }
       .row, .cs-row {
+        display: flex;
+        align-items: center;
+        min-height: 30px;
         margin-bottom: 10px;
         div:first-child {
           text-align: center;
           padding-right: 0;
-          i.fa-check {
-            font-size: 13px !important;
+          i {
+            font-size: 14px !important;
           }
         }
-        span {
+        span, a {
           line-height: 1.5 !important;
         }
       }
       &.visible-xs-block {
-        .ul-container {
-          display: flex;
-          justify-content: center;
-          ul {
-            margin-bottom: 0;
-            display: inline-block;
-            li {
-              font-size: 14px !important;
-              padding-left: 6px;
-            }
+        .section-title-container {
+          margin-bottom: 15px;
+        }
+        ul {
+          // display: inline-block;  // so it can be centered
+          margin-bottom: 0;
+          li {
+            font-size: 14px !important;
+            margin-bottom: 10px;
+            padding-left: 6px;
           }
         }
+        // .ul-container {
+          // display: flex;
+          // justify-content: center;
+        // }
       }
-    }
-    .story-ctas {
-      margin-bottom: 25px;
-      li {
-        margin-bottom: 10px;
-        a {
-          line-height: 1.5 !important;
+      @media only screen and (min-width: 768px) {
+        span, a {
+          font-size: 13px !important;
         }
       }
-      &.visible-xs-block {
-        .ul-container {
-          display: flex;
-          justify-content: center;
-          ul {
-            margin-bottom: 0;
-            display: inline-block;
-            li {
-              font-size: 14px !important;
-            }
-          }
+      @media only screen and (min-width: 992px) {
+        i {
+          font-size: 15px !important;
         }
-      }
-      &.hidden-xs {
-        .row div:first-child, .cs-row div:first-child {
-          text-align: center;
-          padding-right: 0;
+        span, a {
+          font-size: 14px !important;
         }
       }
     }
@@ -180,9 +180,9 @@
       &.visible-xs {
         .section-title-container {
           margin-bottom: 5px;
-          h4 {
-            margin-bottom: 2px;
-          }
+          // h4 {
+          //   margin-bottom: 2px;
+          // }
         }
         li a.thumbnail .thumbnail-view .thumbnail-view-hover p {
           font-size: 13px !important;
@@ -378,14 +378,6 @@
             font-size: 14px !important;
           }
         }
-        .story-results {
-          ul {
-            padding-right: 5px;
-            li {
-              margin-bottom: 10px;
-            }
-          }
-        }
       }
     }
   }
@@ -456,9 +448,6 @@
           font-size: 13px !important;
         }
       }
-      .story-results span, .story-ctas a {
-        font-size: 13px !important;
-      }
     }
     &.cs-testimonial {
       margin-bottom: 0;
@@ -478,16 +467,13 @@
       }
     }
     .story-content, .cs-story-content {
-      h4 {
-        font-size: 22px !important;
-      }
+      // h4 {
+      //   font-size: 22px !important;
+      // }
       .narrative {
         span, li, p, a {
           font-size: 15px !important;
         }
-      }
-      .story-results span, .story-ctas a {
-        font-size: 14px !important;
       }
     }
 

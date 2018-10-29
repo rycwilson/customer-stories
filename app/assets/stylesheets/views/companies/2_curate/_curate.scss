@@ -54,13 +54,15 @@
   }
 
   #curate-story {
-    // settings for this table are in crowdsource.scss
+    // settings for this table are in prospect.scss
     #curate-contributors-table {
     }
-    #story-content-editor {
+
+
+    #narrative-editor {
 
     }
-    #story-content-editor + .note-editor {
+    #narrative-editor + .note-editor {
       .modal.link-dialog {
 
       }
@@ -71,6 +73,7 @@
 
       }
     }
+
   }
 
 }

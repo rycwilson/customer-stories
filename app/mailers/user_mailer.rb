@@ -6,6 +6,10 @@ class UserMailer < ApplicationMailer
 
   CSP_EMAILS = ['***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***']
 
+  def win_story
+    send_mail('win_story')
+  end
+
   def contribution_invitation (contribution)
     # don't track emails sent from dev or staging ...
     headers['X-SMTPAPI'] = {
