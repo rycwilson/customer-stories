@@ -10,6 +10,8 @@
         input {
           height: 30px;
           font-size: 13px;
+          padding-right: 12px;  // overrides .form-control (trying to match select2)
+          padding-left: 12px;
         }
         .input-group-btn {
           button {

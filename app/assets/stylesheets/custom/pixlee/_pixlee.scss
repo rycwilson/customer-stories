@@ -9,8 +9,8 @@ body.pixlee {
   &.stories {
 
     @import 'stories_header';
-    // @import 'gallery';
-    // @import 'index';
+    @import 'index';
+    @import 'gallery';
     // @import 'show';
 
     font-family: $body-font;

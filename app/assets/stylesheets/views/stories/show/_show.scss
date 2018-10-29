@@ -76,7 +76,7 @@
     background-color: if(variable-exists(bg-color), $bg-color, $csp-bg-gray);
     padding-bottom: 60px;
     &.cs-story-content {
-      span, li, p, a, h4, i {
+      h1, h2, h3, h4, h5, h6, span, li, p, a, i {
         &:not(i) {
           font: {
             family: inherit !important;
@@ -180,9 +180,9 @@
       &.visible-xs {
         .section-title-container {
           margin-bottom: 5px;
-          h4 {
-            margin-bottom: 2px;
-          }
+          // h4 {
+          //   margin-bottom: 2px;
+          // }
         }
         li a.thumbnail .thumbnail-view .thumbnail-view-hover p {
           font-size: 13px !important;
@@ -467,9 +467,9 @@
       }
     }
     .story-content, .cs-story-content {
-      h4 {
-        font-size: 22px !important;
-      }
+      // h4 {
+      //   font-size: 22px !important;
+      // }
       .narrative {
         span, li, p, a {
           font-size: 15px !important;

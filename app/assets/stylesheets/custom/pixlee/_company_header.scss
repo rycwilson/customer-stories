@@ -33,8 +33,10 @@
         //   transform: translate(-50%, -50%);
         //   white-space: nowrap;  // ensure button expands with text
           span {
+            text-transform: uppercase;
             font-size: 12px;
-            font-family: 'Muli Regular', 'Open Sans', sans-serif; ;
+            font-weight: 700;
+            // font-family: $body-font;
         //     font-weight: 600;
         //     letter-spacing: 0.02rem;
           }
