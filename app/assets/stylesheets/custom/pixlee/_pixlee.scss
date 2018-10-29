@@ -6,12 +6,12 @@ body.pixlee {
   @import 'variables';
   @import 'company_header';
 
-  &.stories {
+  &.stories:not(.edit) {
 
     @import 'stories_header';
     @import 'index';
     @import 'gallery';
-    // @import 'show';
+    @import 'show';
 
     font-family: $body-font;
 
