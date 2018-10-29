@@ -84,6 +84,11 @@ function attachAppListeners () {
      * some forms excluded as they have their own handler, e.g. #new-success-form
      */
     .on('click', 'button[type="submit"]', function (e) {
+      if ($(this).hasClass('disabled')) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        return false;
+      }
       var $form = ($(this).closest('form').length && $(this).closest('form')) ||
                   $('#' + $(this).attr('form')),
           $button = $(this);

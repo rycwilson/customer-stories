@@ -29,6 +29,10 @@ function promote () {
               } else if ( type === 'landscape' && (ratio < 1.8909 || ratio > 1.929) ||
                           type === 'logo' && (ratio < 0.99 || ratio > 1.01) ) {
                 return "Bad aspect ratio";
+
+              // catch all (e.g. space in file name)
+              } else if ($img.attr('src') === "<%= ADWORDS_IMAGE_PLACEHOLDER_URL %>") {
+                return "Error";
               }
             }
           }
