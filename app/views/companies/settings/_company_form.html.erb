@@ -39,7 +39,7 @@
         <label>Header Logo</label>
         <div class="fileinput <%= company.logo_url.present? ? 'fileinput-exists' : 'fileinput-new' %>" data-provides="fileinput">
 
-          <div class="fileinput-new thumbnail" style="background:<%= company.new_record? ? '#fff' : company.header_color_1 %>">
+          <div class="fileinput-new thumbnail" style="background:<%= company.new_record? ? '#fff' : company.header_color_1 %>" data-trigger="fileinput">
             <%= image_tag(LOGO_PLACEHOLDER_URL, alt: 'logo') %>
           </div>
           <div class="fileinput-preview fileinput-exists thumbnail"
