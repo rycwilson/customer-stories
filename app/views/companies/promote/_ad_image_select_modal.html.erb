@@ -17,7 +17,7 @@
 
               <div class="fileinput fileinput-exists" data-provides="fileinput">
                 <div class="fileinput-preview thumbnail">
-                  <%= image_tag image.image_url, alt: 'adwords image' %>
+                  <%= image_tag(image.image_url || ADWORDS_IMAGE_PLACEHOLDER_URL, alt: 'adwords image') %>
                 </div>
                 <!-- won't render properly without this -->
                 <%= file_field_tag(:image_url, class: 'hidden') %>
