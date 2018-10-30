@@ -1,0 +1,125 @@
+
+&.stories.show, .cs-overlay-container {
+
+  &.stories.show {
+    #cs-tabbed-carousel {
+      display: none !important;
+      // @import 'plugins/tabbed_carousel';
+      .cs-header {
+        font-family: $body-font;  // don't apply this to external widget
+        background-color: $pixlee-blue;
+        color: #fff;
+      }
+      .cs-drawer-content {
+        border-top-color: $pixlee-blue;
+      }
+    }
+  }
+
+  &.cs-overlay-container {
+    article {
+      background-color: $bg-color;
+    }
+  }
+
+  .testimonial, .cs-testimonial {
+    &:after {
+      background-image: linear-gradient(to top, $bg-color 0%, #ffffff 100%);
+    }
+    &.cs-testimonial {
+      .customer-logo-quote.visible-xs-block {
+        .customer-logo {
+          background-color: $bg-color;
+        }
+      }
+      .customer-logo-quote.hidden-xs {
+        .customer-logo {
+          background-color: $bg-color;
+        }
+      }
+    }
+  }
+
+  .story-video-xs, .cs-story-video-xs, .social-buttons-xs, .cs-social-buttons-xs {
+    background-color: $bg-color;
+  }
+
+  .well, .cs-well {
+    border-radius: 0;
+  }
+
+  .story-content, .cs-story-content {
+    background-color: $bg-color;
+    .section-title h4 {
+      font-size: 22px !important
+    }
+    .related-stories ul {
+      background-color: $bg-color;
+    }
+    .story-contributors {
+      > .well:first-child, .cs-well:first-child {
+        background-image: linear-gradient(to bottom, #ffffff 72%, $bg-color 100%);
+      }
+    }
+    &.story-content {
+      .narrative {
+        .story-title h3 {
+          font-family: $body-font;
+        }
+      }
+    }
+  }
+
+  @media only screen and (max-width: 767px) {
+    &.cs-overlay-container {
+      .cs-content.content--show {
+        background: $bg-color;
+      }
+    }
+    .testimonial, .cs-testimonial {
+      &.after {
+        content: none;
+      }
+    }
+    .story-video-xs, .social-buttons-xs {
+      background-color: #fff;
+    }
+    .story-content {
+      background-color: #fff;
+    }
+  }
+
+  @media only screen and (min-width: 768px) {
+    .testimonial .hidden-xs {
+      .customer-logo {
+      }
+      .customer-quote {
+      }
+    }
+    .story-content {
+    }
+  }
+
+  @media only screen and (min-width: 992px) {
+    .testimonial .hidden-xs {
+      .customer-logo {
+      }
+      .customer-quote {
+      }
+    }
+    .story-content {
+    }
+  }
+
+  @media only screen and (min-width: 1200px) {
+    .testimonial .hidden-xs {
+      .customer-logo {
+      }
+      .customer-quote {
+      }
+    }
+    .story-content {
+    }
+  }
+
+}
