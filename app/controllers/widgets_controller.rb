@@ -51,13 +51,8 @@ class WidgetsController < ApplicationController
 
   # if invalid category or product filters, return all stories
   def plugin_view (company, params)
+    # puts params.permit(params.keys).to_h
     stories = plugin_stories(company, params)
-
-    # if company.subdomain == 'varmour'  # varmour custom sort
-      # ref: https://stackoverflow.com/questions/33732208
-      # stories = stories.sort_by { |s| [ s[:published] ? 1 : 0, s[:updated_at] ] }.reverse
-    # end
-
     render_to_string(
       partial: params[:type],
       layout: false,
@@ -70,6 +65,9 @@ class WidgetsController < ApplicationController
         background: params[:background],
         tab_color: params[:tab_color],
         text_color: params[:text_color],
+        grayscale: params[:grayscale].present? && params[:grayscale] != 'false',
+        logos_only: params[:logos_only].present? && params[:logos_only] != 'false',
+        # max_stories: params[:max_stories].to_i,
         is_curator: false,
         is_plugin: true,
         is_external: true,

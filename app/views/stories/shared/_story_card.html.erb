@@ -1,10 +1,12 @@
 
 <% plugin_type = plugin_type || nil %>
 <% background = background || nil %>
+<% logo_only = logo_only || nil %>
+<% grayscale = grayscale || nil %>
 
 <!-- grid__item is for the overlays; not implemented internally -->
 <a href="<%= story.csp_story_link(is_curator, is_plugin, is_external, plugin_type) %>"
-   class="public grid__item <%= plugin_type === 'gallery' ? 'grid__item--gallery' : (plugin_type === 'carousel' ? 'grid__item--carousel' : '') %> <%= is_external ? 'cs-thumbnail' : 'thumbnail' %> <%= story.status %> <%= story.video_url.present? ? 'has-video' : '' %> <%= background ? 'bg-' + background : '' %>"
+   class="public grid__item <%= plugin_type === 'gallery' ? 'grid__item--gallery' : (plugin_type === 'carousel' ? 'grid__item--carousel' : '') %> <%= is_external ? 'cs-thumbnail' : 'thumbnail' %> <%= story.status %> <%= story.video_url.present? ? 'has-video' : '' %> <%= background ? 'bg-' + background : '' %> <%= logo_only ? 'logo-only' : '' %>"
    target="<%= is_external ? '_blank' : '' %>"
    data-customer="<%= is_external ? '' : story.customer.name.to_json %>"
    data-logosrc="<%= is_external ? '' : story.customer.logo_url %>"
@@ -15,16 +17,18 @@
    data-preview-contributor="<%#= is_external ? '' : story.preview_contributor %>">
 
   <div class="thumbnail-view">
-    <% if story.title.present? %>
+    <% if story.title.present? && !logo_only %>
       <div class='thumbnail-view-hover'>
         <p><%= story.title %></p>
       </div>
     <% end %>
-    <img src="<%= story.customer.logo_url || LOGO_PLACEHOLDER_URL %>">
+    <img class="<%= grayscale ? 'grayscale' : '' %>" src="<%= story.customer.logo_url || LOGO_PLACEHOLDER_URL %>">
   </div>
 
   <div class="caption">
-    <span class="customer-name"><%= story.customer.name %></span>
+    <% unless logo_only %>
+      <span class="customer-name"><%= story.customer.name %></span>
+    <% end %>
     <span class="click-action"></span>
   </div>
 

@@ -6,6 +6,8 @@ module WidgetsHelper
       params[:category].present? ? "data-category=#{params[:category]}" : '',
       params[:product].present? ? "data-product=#{params[:product]}" : '',
       params[:background].present? ? "data-background=#{params[:background]}" : '',
+      params[:logos_only].present? ? "data-logos-only=true" : '',
+      params[:grayscale].present? ? "data-grayscale=true" : '',
       params[:tab_color].present? ? "data-tab-color=#{params[:tab_color]}" : '',
       params[:text_color].present? ? "data-text-color=#{params[:text_color]}" : '',
       params[:delay].present? ? "data-delay=#{params[:delay]}" : '',

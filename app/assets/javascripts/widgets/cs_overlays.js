@@ -7,13 +7,8 @@
 function cspInitOverlays ($, $container, subdomain, isDemo, env) {
 
   var loading = function ($storyCard) {
-          $storyCard.addClass('cs-loading');
+          $storyCard.addClass('cs-loading cs-still-loading');
           $container.find('a').css('pointer-events', 'none');
-          setTimeout(function () {
-            if (!$storyCard.hasClass('cs-loaded')) {
-              $storyCard.addClass('cs-still-loading');
-            }
-          }, 1000);
         },
       applyScrollBoundaries = function () {
           var maxY, startY = 0;

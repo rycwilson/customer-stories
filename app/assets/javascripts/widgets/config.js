@@ -70,15 +70,24 @@ function widgetConfigListeners () {
       );
 
       if (type === 'gallery') {
+        $('div.checkbox.logos-only input[type="checkbox"]').prop('disabled', false);
         $('.settings.collapse').one('hidden.bs.collapse', function () {
           $('.settings.collapse .carousel, .settings.collapse .tabbed-carousel').show();
         });
         $('.settings.collapse').collapse('hide');
       } else if (type === 'carousel') {
+        if ($('div.checkbox.logos-only input[type="checkbox"]').prop('checked')) {
+          $('div.checkbox.logos-only input[type="checkbox"]').trigger('click');
+        }
+        $('div.checkbox.logos-only input[type="checkbox"]').prop('disabled', true);
         $('.settings.collapse .tabbed-carousel').hide();
         $('.settings.collapse .carousel').show();
         $('.settings.collapse').collapse('show');
       } else if (type === 'tabbed_carousel') {
+        if ($('div.checkbox.logos-only input[type="checkbox"]').prop('checked')) {
+          $('div.checkbox.logos-only input[type="checkbox"]').trigger('click');
+        }
+        $('div.checkbox.logos-only input[type="checkbox"]').prop('disabled', true);
         $('.settings.collapse .carousel').hide();
         $('.settings.collapse .tabbed-carousel').show();
         $('.settings.collapse').collapse('show');
@@ -186,6 +195,29 @@ function widgetConfigListeners () {
       );
     })
 
+    .on('change', '[name="plugin[logos_only]"]', function () {
+      var isFirstSelection = !$('.script-tag textarea').text().match(/data-logos-only/);
+      $('.script-tag textarea').text(
+        $('.script-tag textarea').text()
+          .replace(
+            isFirstSelection ? /><\/script>/ : /\xa0data-logos-only="true"/,
+            $(this).prop('checked') ? '\xa0data-logos-only="true"' + (isFirstSelection ? '></script>' : '') : ''
+          )
+      );
+    })
+
+    .on('change', '[name="plugin[grayscale]"]', function () {
+      var isFirstSelection = !$('.script-tag textarea').text().match(/data-grayscale/);
+      $('.script-tag textarea').text(
+        $('.script-tag textarea').text()
+          .replace(
+            isFirstSelection ? /><\/script>/ : /\xa0data-grayscale="true"/,
+            $(this).prop('checked') ? '\xa0data-grayscale="true"' + (isFirstSelection ? '></script>' : '') : ''
+          )
+      );
+
+    })
+
     .on('click', 'a.plugin-demo:not([disabled])', function (e) {
       var demoPath = '/plugins/demo',
           params = '?',
@@ -194,6 +226,8 @@ function widgetConfigListeners () {
           background = $('[name="carousel[background]"]:checked').val(),
           tabColor = $('[name="tabbed_carousel[tab_color]"]').val(),
           textColor = $('[name="tabbed_carousel[text_color]"]').val(),
+          logosOnly = $('[name="plugin[logos_only]"]').prop('checked'),
+          grayscale = $('[name="plugin[grayscale]"]').prop('checked'),
           delay = $('[name="tabbed_carousel[delay]"]').val(),
           stories = customStoriesToJson().replace('[', '%5B').replace(']', '%5D'),
           category = $('[name="plugin[category]"]').find('option:selected').data('slug'),
@@ -203,6 +237,8 @@ function widgetConfigListeners () {
         (content === 'category' && category ? '&category=' + category : '') +
         (content === 'product' && product ? '&product=' + product : '') +
         (type === 'carousel' ? '&background=' + background : '') +
+        (logosOnly ? '&logos_only=true' : '') +
+        (grayscale ? '&grayscale=true' : '') +
         (type === 'tabbed_carousel' ? '&tab_color=' + tabColor.replace('#', '%23') : '') +
         (type === 'tabbed_carousel' ? '&text_color=' + textColor.replace('#', '%23') : '') +
         (type === 'tabbed_carousel' ? '&delay=' + delay : '');

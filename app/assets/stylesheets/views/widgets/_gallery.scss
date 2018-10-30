@@ -79,6 +79,9 @@ a.cs-thumbnail {
       // hover and opacity transition
       // ref: https://stackoverflow.com/questions/20886991
       -webkit-transform: translateZ(0);
+      &.grayscale {
+        filter: grayscale(100%);
+      }
     }
   }
   .caption {
@@ -146,6 +149,23 @@ a.cs-thumbnail {
         visibility: visible;
         transition: all 0s step-end;
       }
+    }
+    &.logo-only {
+      border: none;
+      box-shadow: 0 0;
+    }
+  }
+  &.logo-only {
+    width: 150px;
+    height: 75px;
+    background-color: transparent;
+    border: none;
+    box-shadow: 0 0;
+    .thumbnail-view, .caption {
+      height: 100%;
+    }
+    img {
+      mix-blend-mode: multiply;
     }
   }
   &:not(.cs-still-loading) {

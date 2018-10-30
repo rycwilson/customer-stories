@@ -102,6 +102,9 @@
         // ref: https://stackoverflow.com/questions/20886991
         -webkit-transform: translateZ(0);
         mix-blend-mode: multiply;
+        &.grayscale {
+          filter: grayscale(100%);
+        }
       }
     }
     .caption {
@@ -167,6 +170,22 @@
           visibility: visible;
           transition: all 0s step-end;
         }
+      }
+    }
+    &.logo-only {
+      width: 150px;
+      height: 75px;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: transparent;
+      border: none;
+      box-shadow: 0 0;
+      .thumbnail-view, .caption {
+        height: 100%;
+      }
+      img {
+        mix-blend-mode: multiply;
       }
     }
     &:not(.cs-still-loading) {
