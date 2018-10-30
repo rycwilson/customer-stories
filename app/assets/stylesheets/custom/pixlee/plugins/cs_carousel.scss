@@ -1,9 +1,8 @@
 
 #cs-carousel {
 
+  @import '../variables';
   @import '../../../views/widgets/carousel';
-
-  @import '../../fonts';
-  // @import 'carousel';
+  @import 'carousel';
 
 }

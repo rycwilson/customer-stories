@@ -1,0 +1,56 @@
+
+$bg-color: transparent;
+
+& {
+  background-color: $bg-color;
+
+  a.cs-thumbnail {
+    .thumbnail-view {
+      .thumbnail-view-hover {
+        p {
+        }
+      }
+      img {
+        mix-blend-mode: multiply;
+      }
+    }
+    .caption {
+      span {
+      }
+      span.click-action:after {
+        color: $pixlee-blue;
+        font-weight: 700;
+        text-decoration: none;
+        text-transform: uppercase;
+      }
+    }
+    &:hover, &.cs-loading {
+      .thumbnail-view-hover {
+      }
+      img {
+      }
+      .caption {
+        span.customer-name {
+        }
+        span.click-action:after {
+        }
+      }
+    }
+  }
+
+}
+
+
+// @media only screen and (max-width: 767px) {
+// }
+
+// @media only screen and (min-width: 768px) {
+// }
+
+// @media only screen and (min-width: 992px) {
+// }
+
+// @media only screen and (min-width: 1200px) {
+// }
+
+
