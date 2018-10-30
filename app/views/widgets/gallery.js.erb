@@ -1,7 +1,16 @@
 
-function cspInitGallery ($, $container) {
+function cspInitGallery ($, $container, maxRows) {
 
   var scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+  if (maxRows) {
+    var maxGalleryHeight = maxRows * $container.find('a.cs-thumbnail').first().outerHeight(true);
+    $container.find('a.cs-thumbnail').each(function () {
+      if (($(this).offset().top - $container.find('.cs-grid').offset().top) > maxGalleryHeight) {
+        $(this).css('display', 'none');
+      }
+    })
+  }
 
   // the padding will compensate for the margin that toggles with presence/absence of scrollbar
   // => avoids a change in gallery width and wrapping story cards when an overlay is opened/closed

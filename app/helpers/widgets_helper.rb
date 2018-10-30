@@ -5,6 +5,7 @@ module WidgetsHelper
       params[:stories].present? ? "data-stories=#{params[:stories]}" : '',
       params[:category].present? ? "data-category=#{params[:category]}" : '',
       params[:product].present? ? "data-product=#{params[:product]}" : '',
+      params[:max_rows].present? ? "data-max-rows=#{params[:max_rows]}" : '',
       params[:background].present? ? "data-background=#{params[:background]}" : '',
       params[:logos_only].present? ? "data-logos-only=true" : '',
       params[:grayscale].present? ? "data-grayscale=true" : '',

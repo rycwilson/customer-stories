@@ -90,6 +90,7 @@
           stories: $script.data('stories'),
           category: $script.data('category'),
           product: $script.data('product'),
+          // max_rows: $script.data('max-rows'),
           background: $script.data('background'),
           tab_color: $script.data('tab-color'),
           text_color: $script.data('text-color'),
@@ -115,6 +116,7 @@
   function initWidget (type, $container, $script, isDemo, env) {
     var initVideo = $.Deferred(),
         initOverlays = $.Deferred(),
+        maxGalleryRows = $script.data('max-rows'),
         tabbedCarouselDelay = ((type === 'tabbed_carousel') && parseInt($script.data('delay'), 10) || 0);
 
     trackPluginVisitor($container, isDemo, env);
@@ -138,7 +140,7 @@
           dataType: 'script'
         })
           .done(function () {
-            if (type === 'gallery') cspInitGallery($, $container);
+            if (type === 'gallery') cspInitGallery($, $container, maxGalleryRows);
             else if (type === 'carousel') cspInitCarousel($, $container);
             else if (type == 'tabbed_carousel') {
               // plugin must be defined and called in this scope

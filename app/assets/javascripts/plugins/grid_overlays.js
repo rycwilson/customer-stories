@@ -192,7 +192,8 @@
       $('.content__item--show .cs-close').one('click', hideContent);
 
       // reset gallery
-      $(gridEl).find('a').each(function () {
+      // (for the gallery: some story cards aren't display due to max rows - see gallery.js.erb)
+      $(gridEl).find('.cs-grid > a:not([style*="display: none"])').each(function () {
         $(this).removeClass('cs-loading cs-still-loading')
                .removeAttr('style');  // this gets rid of pointer-events: none
       });
@@ -201,7 +202,6 @@
       $('body').css('overflow-y', 'hidden');
       $('body').css('overflow-x', bodyScrollX);  // return to original setting
       $('.scroll-wrap').css('overflow-y', 'scroll');
-
 
     });
   }
