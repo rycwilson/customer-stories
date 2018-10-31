@@ -34,10 +34,6 @@
     }
   }
 
-  &.pixlee .fileinput .thumbnail img {
-    max-height: 20px !important;
-  }
-
   .stories-header {
     height: 41px;
     padding: 0 15px;
@@ -48,15 +44,15 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    h3 {
+    h4 {
       font-size: 22px;
       margin-bottom: 0;
       opacity: 0.9;
     }
-    h3.light {
+    h4.light {
       color: #fff;
     }
-    h3.dark {
+    h4.dark {
       color: rgba(51, 51, 51, 0.9)
     }
     span.social-buttons {

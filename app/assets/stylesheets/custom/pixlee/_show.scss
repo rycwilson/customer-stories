@@ -45,19 +45,27 @@
   }
 
   .well, .cs-well {
-    border-radius: 0;
+    border: none;
+    box-shadow: 0 0;
+    &.story-results, &.story-ctas, &.related-stories {
+      border: 1px solid $border-color;
+      border-radius: 0;
+      background-color: $fg-color;
+    }
   }
 
   .story-content, .cs-story-content {
     background-color: $bg-color;
     .section-title h4 {
-      font-size: 22px !important
     }
     .related-stories ul {
-      background-color: $bg-color;
+      background-color: $fg-color;
     }
     .story-contributors {
       > .well:first-child, .cs-well:first-child {
+        &:before, &:after {
+          content: none;
+        }
         background-image: linear-gradient(to bottom, #ffffff 72%, $bg-color 100%);
       }
     }

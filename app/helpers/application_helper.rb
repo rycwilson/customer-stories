@@ -1,7 +1,7 @@
 module ApplicationHelper
 
   def custom_google_fonts(company)
-    return nil if company.blank? || !['stories', 'widgets'].include?(controller_name)
+    return nil if company.blank? || !['stories', 'widgets', 'companies'].include?(controller_name)
     fonts = case company.subdomain
       when 'pixlee'
         'Muli:400,600,700|Bowlby+One'
@@ -17,7 +17,7 @@ module ApplicationHelper
 
   def fixed_navbar? (company, controller, action)
     company.present? &&
-    company.subdomain == 'compas' &&
+    ['compas', 'pixlee'].include?(company.subdomain) &&
     controller == 'stories' &&
     (action == 'index' || action == 'show')
   end

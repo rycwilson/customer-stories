@@ -8,6 +8,10 @@ body.pixlee {
 
   &.stories:not(.edit) {
 
+    #company-header {
+      border-bottom: 1px solid $border-color;  // don't apply this above
+    }
+
     @import 'stories_header';
     @import 'index';
     @import 'gallery';
@@ -15,6 +19,22 @@ body.pixlee {
 
     font-family: $body-font;
 
+  }
+
+  &.companies.edit {
+    .form-group.logo-upload {
+      h4 {
+        font-family: 'Bowlby One';
+        text-transform: uppercase;
+        padding-top: 2px;
+      }
+      .fileinput {
+        border-bottom: 1px solid $bg-color;
+        img {
+          max-height: 20px !important;  // override .fileinput
+        }
+      }
+    }
   }
 
 }
