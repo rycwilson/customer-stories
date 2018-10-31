@@ -47,10 +47,14 @@
   .well, .cs-well {
     border: none;
     box-shadow: 0 0;
-    &.story-results, &.story-ctas, &.related-stories {
-      border: 1px solid $border-color;
-      border-radius: 0;
+    border-radius: 0;
+    &:not(.narrative) {
       background-color: $fg-color;
+      // border: 1px solid $border-color;
+    }
+    &.contributors {
+      // border: none;
+      // border-top: 1px solid $border-color;
     }
   }
 
@@ -63,10 +67,11 @@
     }
     .story-contributors {
       > .well:first-child, .cs-well:first-child {
+        background-image: linear-gradient(to bottom, $fg-color 72%, #ffffff 100%);
         &:before, &:after {
           content: none;
+          // background-image: linear-gradient(to bottom, $border-color 0, transparent 90%);
         }
-        background-image: linear-gradient(to bottom, #ffffff 72%, $bg-color 100%);
       }
     }
     &.story-content {
