@@ -59,7 +59,7 @@ class WidgetsController < ApplicationController
       locals: {
         company: @company,
         # widget: @company.widget,   # applies to tabbed carousel (tab style)
-        stories: stories.first(20),
+        stories: stories.first(16),
         title: 'Customer Stories',
         is_demo: params[:is_demo].present?,
         max_rows: params[:max_rows].to_i,
