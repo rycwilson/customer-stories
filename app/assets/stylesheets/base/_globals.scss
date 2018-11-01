@@ -37,7 +37,7 @@ $csp-fg-gray: #efefef;
     max-width: 50%;  // this can be wider for the quote-logo horizontal layout
     img {
       margin: 0 auto;
-      max-height: 70px;
+      max-height: 65px;
       mix-blend-mode: multiply;
     }
   }
@@ -50,6 +50,11 @@ $csp-fg-gray: #efefef;
   }
   @include bs-sm {
     justify-content: center;
+    > div {
+      img {
+        max-height: 80px;
+      }
+    }
   }
   @include bs-lg {
     .customer-name, .cs-customer-name {
