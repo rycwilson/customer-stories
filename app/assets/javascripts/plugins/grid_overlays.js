@@ -193,18 +193,10 @@
 
       // reset gallery
       // (for the gallery: some story cards aren't display due to max rows - see gallery.js.erb)
-      // if ($gridEl).is('#cs-gallery') {
-        $(gridEl).find('a.cs-thumbnail:not([style*="display: none"])').each(function () {
-          $(this).removeClass('cs-loading cs-still-loading')
-                 .removeAttr('style');  // this gets rid of pointer-events: none
-        });
-      // } else {
-      //   // carousel
-      //   $(gridEl).find('.cs-grid [class*="col-"] > a').each(function () {
-      //     $(this).removeClass('cs-loading cs-still-loading')
-      //            .removeAttr('style');  // this gets rid of pointer-events: none
-      //   });
-      // }
+      $(gridEl).find('a.cs-thumbnail:not([style*="display: none"])').each(function () {
+        $(this).removeClass('cs-loading cs-still-loading')
+               .removeAttr('style');  // this gets rid of pointer-events: none
+      });
 
       // csp: the overlay will have its own scroll bar
       $('body').css('overflow-y', 'hidden');

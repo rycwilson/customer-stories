@@ -19,6 +19,11 @@
   &.cs-overlay-container {
     article {
       background-color: $bg-color;
+      .cs-story-header {
+        background-color: $stories-header-color;
+        border-bottom: 1px solid $border-color;
+        box-shadow: 0 0;
+      }
     }
   }
 
@@ -40,10 +45,6 @@
     }
   }
 
-  .story-video-xs, .cs-story-video-xs, .social-buttons-xs, .cs-social-buttons-xs {
-    background-color: $bg-color;
-  }
-
   .well, .cs-well {
     border: none;
     box-shadow: 0 0;
@@ -62,6 +63,9 @@
     background-color: $bg-color;
     .section-title h4 {
     }
+    .narrative {
+      padding-top: 0;
+    }
     .related-stories ul {
       background-color: $fg-color;
     }
@@ -76,7 +80,6 @@
     }
     &.story-content {
       .narrative {
-        padding-top: 0;
         .story-title h3 {
           font-family: $body-font;
         }
