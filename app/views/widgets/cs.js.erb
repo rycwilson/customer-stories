@@ -32,28 +32,30 @@
 
       var $container, $script,
           env = "<%= ENV['HOST_NAME'] %>",
+          uid = "<%= @uid %>",
           type = '<%= @type %>',
-          $stylesheet = $("<link>", { rel: "stylesheet", type: "text/css", href: '<%= @stylesheet_url %>' }),
-          isVarmour = <%= @company.subdomain === 'varmour' %>;
-
+          $stylesheet = $("<link>", { rel: "stylesheet", type: "text/css", href: '<%= @stylesheet_url %>' });
 
       // no stylesheet means type couldn't be id'ed => fatal
       if (!'<%= @stylesheet_url %>') return false;
 
-      // type IN ['gallery', 'carousel', 'tabbed_carousel']
-      if (type === 'gallery') {
-        $script = $('script[src*="gallery/cs"]');
-        $container = $('#cs-gallery');
-      } else if (type === 'carousel') {
-        $script = $('script[src*="carousel/cs"], script[src*="varmour/cs"]').first();
-        $container = $("#cs-carousel, #cs-varmour-container").first();
-      } else if (type === 'tabbed_carousel') {
-        $script = $('script[src*="tabbed_carousel/cs"], script[src*="tab/cs"], script[src*="widget/cs"]').first();
-        $container = $("#cs-tabbed-carousel, #cs-tab-container, #cs-container").first();
+      if (uid) {
+        // need to grab the last because (inexplicably) multiple script tags may be returned and only the last will have data attributes
+        $script = $('script[src*="' + uid + '"]').last();
+        $container = $script.prev();
+      } else {
+        // type IN ['gallery', 'carousel', 'tabbed_carousel']
+        if (type === 'gallery') {
+          $script = $('script[src*="gallery/cs"]').last();
+          $container = $('#cs-gallery');
+        } else if (type === 'carousel') {
+          $script = $('script[src*="carousel/cs"], script[src*="varmour/cs"]').last();
+          $container = $("#cs-carousel, #cs-varmour-container").first();
+        } else if (type === 'tabbed_carousel') {
+          $script = $('script[src*="tabbed_carousel/cs"], script[src*="tab/cs"], script[src*="widget/cs"]').last();
+          $container = $("#cs-tabbed-carousel, #cs-tab-container, #cs-container").first();
+        }
       }
-
-          console.log('$script', $script)
-          console.log('data', $script.eq(1).data())
 
       if ($script.data('demo')) {
         isDemo = true;

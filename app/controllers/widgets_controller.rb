@@ -14,6 +14,7 @@ class WidgetsController < ApplicationController
     else
       @type = params[:type]
     end
+    @uid = params[:uid]
     # set the stylesheet url here, as it's impossible to use the asset path helper in cs.js in a company-specific way
     @stylesheet_url = custom_stylesheet_url(@company, "cs_#{@type}")
     respond_to do |format|
@@ -22,10 +23,9 @@ class WidgetsController < ApplicationController
   end
 
   def show
-    puts 'widgets#show'
-    puts params
-    puts params.permit(params.keys).to_h
-
+    # puts 'widgets#show'
+    # puts params
+    # puts params.permit(params.keys).to_h
     respond_to do |format|
       format.js do
         json = { html: plugin_view(@company, params) }.to_json
