@@ -36,6 +36,7 @@
           $stylesheet = $("<link>", { rel: "stylesheet", type: "text/css", href: '<%= @stylesheet_url %>' }),
           isVarmour = <%= @company.subdomain === 'varmour' %>;
 
+
       // no stylesheet means type couldn't be id'ed => fatal
       if (!'<%= @stylesheet_url %>') return false;
 
@@ -50,6 +51,9 @@
         $script = $('script[src*="tabbed_carousel/cs"], script[src*="tab/cs"], script[src*="widget/cs"]').first();
         $container = $("#cs-tabbed-carousel, #cs-tab-container, #cs-container").first();
       }
+
+          console.log('$script', $script)
+          console.log('data', $script.eq(1).data())
 
       if ($script.data('demo')) {
         isDemo = true;
@@ -79,8 +83,8 @@
 
   // root_url provides a company-specific url (via subdomain)
   function getWidget ($container, $script, isDemo, env) {
-    return function () {
 
+    return function () {
       $.ajax({
         url: "<%= URI.join(root_url, plugin_view_path(@type)) %>",
         method: 'GET',
@@ -88,14 +92,14 @@
         data: {
           is_demo: isDemo,
           stories: $script.data('stories'),
-          category: $script.data('category'),
+          category: console.log('category', $script.data('category')) ? '' : $script.data('category'),
           product: $script.data('product'),
           // max_rows: $script.data('max-rows'),
           background: $script.data('background'),
           tab_color: $script.data('tab-color'),
           text_color: $script.data('text-color'),
-          logos_only: $script.data('logos-only'),
-          grayscale: $script.data('grayscale')
+          logos_only: console.log('logos_only', $script.data('logos-only')) ? '' : $script.data('logos-only'),
+          grayscale: console.log('grayscale', $script.data('grayscale')) ? '' : $script.data('grayscale')
         }
       })
         .done(function (data) {

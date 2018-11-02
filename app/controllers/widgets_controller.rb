@@ -22,6 +22,10 @@ class WidgetsController < ApplicationController
   end
 
   def show
+    puts 'widgets#show'
+    puts params
+    puts params.permit(params.keys).to_h
+
     respond_to do |format|
       format.js do
         json = { html: plugin_view(@company, params) }.to_json
@@ -51,6 +55,9 @@ class WidgetsController < ApplicationController
 
   # if invalid category or product filters, return all stories
   def plugin_view (company, params)
+    puts params.permit(params.keys).to_h
+    puts "logos_only #{params.permit(params.keys).to_h[:logos_only].present? && params.permit(params.keys).to_h[:logos_only] != 'false'}"
+    puts "grayscale #{params[:grayscale].present? && params[:grayscale] != 'false'}"
     # puts params.permit(params.keys).to_h
     stories = plugin_stories(company, params)
     render_to_string(
