@@ -1,4 +1,10 @@
 
+body.pixlee.plugin-demo {
+  .thumbnail-view-hover, .caption {
+    font-family: 'Muli', 'Open Sans', sans-serif;
+  }
+}
+
 #cs-carousel {
 
   @import '../variables';

@@ -89,14 +89,14 @@ a.cs-thumbnail {
     bottom: 0;
     width: 100%;
     height: 35%;
-    font: {
-      family: inherit !important;
-      size: 14px !important;
-    }
     color: #444;
     border-radius: 0;
     background: transparent;
     span {
+      font: {
+        family: inherit !important;
+        size: 14px !important;
+      }
       position: absolute;
       width: 90%;
       top: 50%;

@@ -1,6 +1,8 @@
 
 body.pixlee.plugin-demo {
-  font-family: 'Muli'
+  .thumbnail-view-hover, .caption {
+    font-family: 'Muli', 'Open Sans', sans-serif;
+  }
 }
 
 #cs-gallery {
