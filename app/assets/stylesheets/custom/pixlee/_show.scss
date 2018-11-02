@@ -28,6 +28,7 @@
   }
 
   .testimonial, .cs-testimonial {
+    margin-bottom: 100px;
     &:after {
       background-image: linear-gradient(to top, $bg-color 0%, #ffffff 100%);
     }
@@ -94,6 +95,7 @@
       }
     }
     .testimonial, .cs-testimonial {
+      margin-bottom: 25px;
       &.after {
         content: none;
       }
