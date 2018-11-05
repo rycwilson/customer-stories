@@ -1079,8 +1079,8 @@ class Company < ApplicationRecord
           'API request failed with an error, see logs for details'
     end
     result[:entries].find do |campaign|
-      campaign[:labels].any? { |label| label[:name] == self.subdomain } &&
-      campaign[:labels].any? { |label| label[:name] == campaign_type }
+      campaign[:labels].try(:any?) { |label| label[:name] == self.subdomain } &&
+      campaign[:labels].try(:any?) { |label| label[:name] == campaign_type }
     end
   end
 
