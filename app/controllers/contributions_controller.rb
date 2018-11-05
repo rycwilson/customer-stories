@@ -34,7 +34,7 @@ class ContributionsController < ApplicationController
                        methods: [:csp_story_path] }
             }
           },
-          contributor: { only: [:id, :email, :first_name, :last_name, :title], methods: [:full_name] },
+          contributor: { only: [:id, :email, :first_name, :last_name, :phone, :title, :linkedin_url], methods: [:full_name] },
           referrer: { only: [:id, :email, :first_name, :last_name, :title], methods: [:full_name] },
           invitation_template: { only: [:id, :name] },
         }

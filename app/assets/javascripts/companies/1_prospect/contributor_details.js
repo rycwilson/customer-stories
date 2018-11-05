@@ -24,6 +24,7 @@ function contributorDetailsListeners () {
           dtRow = dt.row($trContribution),
           contribution = dtRow.data(),
           workflowStage = $table.attr('id').slice(0, $table.attr('id').indexOf('-'));
+          console.log(contribution)
       if (dtRow.child.isShown()) {
         dtRow.child.hide();
         $trContribution.find('td.contributor-name > span').removeClass('shown');

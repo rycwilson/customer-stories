@@ -94,14 +94,14 @@
         data: {
           is_demo: isDemo,
           stories: $script.data('stories'),
-          category: console.log('category', $script.data('category')) ? '' : $script.data('category'),
+          category: $script.data('category'),
           product: $script.data('product'),
           // max_rows: $script.data('max-rows'),
           background: $script.data('background'),
           tab_color: $script.data('tab-color'),
           text_color: $script.data('text-color'),
-          logos_only: console.log('logos_only', $script.data('logos-only')) ? '' : $script.data('logos-only'),
-          grayscale: console.log('grayscale', $script.data('grayscale')) ? '' : $script.data('grayscale')
+          logos_only: $script.data('logos-only'),
+          grayscale: $script.data('grayscale')
         }
       })
         .done(function (data) {
