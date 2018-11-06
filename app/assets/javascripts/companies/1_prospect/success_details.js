@@ -13,6 +13,8 @@ function successDetailsListeners () {
           successPath = '/successes/' + successId,
           success = dt.row($tr).data();
 
+      $(this).children().toggle();  // toggle caret icons
+
       if (dtRow.child.isShown()) {
         dtRow.child.hide();
         $tr.removeClass('shown active');
@@ -46,6 +48,6 @@ function successDetailsListeners () {
           $(this).find('button[type="submit"]').prop('disabled', false);
         });
       }
-      $(this).children().toggle();  // toggle caret icons
+
     });
 }

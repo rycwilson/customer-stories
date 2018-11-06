@@ -122,7 +122,6 @@ function successActionsListeners () {
       $('select.new-contributor.customer').prop('disabled', true).val(customerId).trigger('change');
       $('select.new-contributor.success').prop('disabled', true).val(successId).trigger('change');
 
-
     })
 
     .on('click',
