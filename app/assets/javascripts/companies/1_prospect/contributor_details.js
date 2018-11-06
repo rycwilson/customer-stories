@@ -24,11 +24,14 @@ function contributorDetailsListeners () {
           dtRow = dt.row($trContribution),
           contribution = dtRow.data(),
           workflowStage = $table.attr('id').slice(0, $table.attr('id').indexOf('-'));
-          console.log(contribution)
+
+      $(this).children().toggle();  // toggle caret icons
+
       if (dtRow.child.isShown()) {
         dtRow.child.hide();
         $trContribution.find('td.contributor-name > span').removeClass('shown');
         $trContribution.removeClass('shown active');
+        // dt.draw();
       } else {
         dtRow.child(
           _.template($('#contributor-details-template').html())({
@@ -68,8 +71,11 @@ function contributorDetailsListeners () {
           $("input[type='tel']").inputmask("999-999-9999");
         });
       }
-      $(this).children().toggle();  // toggle caret icons
-    });
+    })
+
+    // .on('change', '[name="contribution[contributor_attributes][linkedin_url]"]', function () {
+
+    // })
 
 }
 
