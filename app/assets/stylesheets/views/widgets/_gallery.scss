@@ -79,6 +79,7 @@ a.cs-thumbnail {
       // hover and opacity transition
       // ref: https://stackoverflow.com/questions/20886991
       -webkit-transform: translateZ(0);
+      mix-blend-mode: multiply;
       &.grayscale {
         filter: grayscale(100%);
       }
@@ -166,6 +167,9 @@ a.cs-thumbnail {
     }
     img {
       mix-blend-mode: multiply;
+    }
+    @media only screen and (max-width: 767px) {
+      margin: 20px 0;
     }
   }
   &:not(.cs-still-loading) {
