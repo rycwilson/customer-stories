@@ -1,4 +1,4 @@
-
+<span>Invitation Template:&nbsp;&nbsp;{{= contribution.invitation_template.name }}</span>
 <script type='text/template' id='contributor-actions-dropdown-template'>
 
   <a href="javascript:;" class="dropdown-toggle" data-toggle='dropdown'>
@@ -39,14 +39,14 @@
     {{ } }}
 
 
-    {{ if (status && status.match(/(contribution|feedback)/)) { }}
+<!--     {{ if (status && status.match(/(contribution|feedback)/)) { }}
 
       <li class='view-contribution'>
         <a href="#contribution-content-modal" data-toggle='modal'>
           <i class='fa fa-search fa-fw action'></i>&nbsp;&nbsp;
           <span>View {{= status.includes('contribution') ? 'Contribution' : 'Feedback' }}</span>
         </a>
-      </li>
+      </li> -->
 
       {{ if (status && status.match(/submitted/)) { }}
 
@@ -60,7 +60,7 @@
       {{ } }}
 
 
-    {{ } }}
+<!--     {{ } }} -->
 
     <li role="separator" class="divider"></li>
 

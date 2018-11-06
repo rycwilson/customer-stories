@@ -55,8 +55,11 @@ class ContributionsController < ApplicationController
       respond_with(
         @contribution, only: [:id, :status, :contribution, :feedback, :submitted_at],
         include: {
+          customer: { only: [:name] },
           contributor: { only: [:title], methods: [:full_name] },
-          customer: { only: [:name] }
+          invitation_template: { only: [:name] },
+          questions: { only: [:question] },
+          answers: { only: [:answer] }
         }
       )
     elsif params[:get_contributor]

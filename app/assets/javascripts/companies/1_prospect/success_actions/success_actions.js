@@ -102,6 +102,7 @@ function successActionsListeners () {
           .done(function (contribution, status, xhr) {
             contributions.push(contribution);
             if (contributionIds.length === contributions.length) {
+              console.log('contributions', contributions)
               showSuccessContributions(successId, contributions);
             }
           });
