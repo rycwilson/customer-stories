@@ -32,7 +32,7 @@ class Contribution < ApplicationRecord
   belongs_to :invitation_template
   has_many :contributor_questions, through: :invitation_template
   alias_attribute :questions, :contributor_questions
-  has_many :contributor_answers
+  has_many :contributor_answers, dependent: :destroy
   alias_attribute :answers, :contributor_answers
 
   accepts_nested_attributes_for(:success, allow_destroy: false)

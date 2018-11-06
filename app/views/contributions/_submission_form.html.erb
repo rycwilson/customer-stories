@@ -11,37 +11,39 @@
 
   <% if type == 'contribution' %>
 
-    <% contribution.contributor_questions.each_with_index do |question, index| %>
+    <!-- ref https://stackoverflow.com/questions/4853373 -->
+    <% contribution.questions.each_with_index do |question, index| %>
 
-      <input type="hidden"
-        name="contribution[contributor_answers_attributes][<%= index %>][contribution_id]"
-        value="<%= contribution.id %>">
-      <input type="hidden"
-        name="contribution[contributor_answers_attributes][<%= index %>][contributor_question_id]"
-        value="<%= question.id %>">
+      <%= contribution_form.fields_for(
+            :contributor_answers,
+            contribution.answers.try(:[], index) || ContributorAnswer.new
+          ) do |answer_fields| %>
 
-      <div class="form-group question <%= index == 0 ? 'active' : '' %>">
-
-        <%= label_tag(
-              "contribution[contributor_answers_attributes][#{index}][answer]",
-              "#{index + 1}. #{question.question}"
+        <%= answer_fields.hidden_field(:id, value: answer_fields.object.try(:id) || '') %>
+        <%= answer_fields.hidden_field(:contribution_id, value: contribution.id) %>
+        <%= answer_fields.hidden_field(
+              :contributor_question_id,
+              value: answer_fields.object.try(:contributor_question_id) || question.id
             ) %>
 
-        <div class="visible-xs-block">
-          <%= text_area_tag("contribution[contributor_answers_attributes][#{index}][answer]", nil, rows: 3, class: 'form-control') %>
+        <div class="form-group question <%= index == 0 ? 'active' : '' %>">
+
+          <%= answer_fields.label(:answer, question.question) %>
+
+          <%= answer_fields.text_area(:answer, rows: 3, class: 'form-control') %>
+
           <div class="next-question">
-            <button class="btn btn-success btn-sm">Ok</button>
+            <div class="visible-xs-block">
+              <button class="btn btn-success btn-sm">Ok</button>
+            </div>
+            <div class="hidden-xs">
+              <button class="btn btn-success">Ok</button>
+            </div>
           </div>
+
         </div>
 
-        <div class="hidden-xs">
-          <%= text_area_tag("contribution[contributor_answers_attributes][#{index}][answer]", nil, rows: 5, class: 'form-control') %>
-          <div class="next-question">
-            <button class="btn btn-success">Ok</button>
-          </div>
-        </div>
-
-      </div>
+      <% end %>
 
     <% end %>
 

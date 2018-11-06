@@ -266,7 +266,7 @@ class ContributionsController < ApplicationController
         :id, :email, :first_name, :last_name, :title, :phone, :sign_up_code, :password
       ],
       contributor_answers_attributes: [
-        :answer, :contribution_id, :contributor_question_id
+        :id, :answer, :contribution_id, :contributor_question_id
       ]
     )
   end
