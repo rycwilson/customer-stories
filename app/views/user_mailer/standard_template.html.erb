@@ -26,7 +26,7 @@
   </head>
   <body>
 
-    <%= @body %>
+    <%= @body.html_safe %>
 
     <!-- contribution won't be present for the alert email -->
     <% if @contribution.present? %>

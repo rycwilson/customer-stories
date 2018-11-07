@@ -30,8 +30,8 @@
       openContributorForm = function ($tr) {
         $tr.find('td.contributor-details').trigger('click');
         // scroll to center (but only for the current table view)
-        if ($tr.closest('table').is('#prospect-contributors-table') && !isCurateView() ||
-            $tr.closest('table').is('#curate-contributors-table') && isCurateView()) {
+        if ($tr.closest('table').is('#prospect-contributors-table') && !isCurateView ||
+            $tr.closest('table').is('#curate-contributors-table') && isCurateView) {
           window.scrollTo(0, $tr.offset().top - (window.innerHeight / 2) + (($tr.next().outerHeight() + $tr.outerHeight()) / 2));
         }
       },
