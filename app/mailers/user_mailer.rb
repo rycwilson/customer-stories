@@ -45,11 +45,11 @@ class UserMailer < ApplicationMailer
       "<p>#{contribution.contributor.full_name} of the #{contribution.story.present? ? 'Customer Story' : 'Customer Win' } <a href='#{link}'>#{contribution.story.try(:title) || contribution.success.name}</a> submitted #{contribution.status == 'contribution_submitted' ? 'a contribution' : 'feedback'}:</p>"
     if (contribution.answers.present?)
       @body.concat('<ul>')
-      contribution.questions.each_with_index do |question, index|
+      contribution.answers.each do |answer|
         @body.concat(
           "<li style='margin-bottom: 5px'>" +
-            "<p style='margin: 0 2px;'>#{question.question}</p>" +
-            "<p style='margin: 0 2px; font-style: italic'>#{contribution.answers[index].answer}</p>" +
+            "<p style='margin: 0 2px;'>#{answer.question.question}</p>" +
+            "<p style='margin: 0 2px; font-style: italic'>#{answer.answer}</p>" +
           "</li>"
         )
       end

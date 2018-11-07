@@ -58,11 +58,11 @@
 
           <ul>
 
-          {{ contribution.questions.forEach(function (question, index) { }}
+          {{ contribution.answers.sort(function (a, b) { return a.contributor_question_id - b.contributor_question_id; }).forEach(function (answer) { }}
 
             <li style="margin-bottom: 5px">
-              <p style="margin-bottom: 2px">{{= question.question }}</p>
-              <p style="margin-bottom: 2px; font-style: italic;">{{= contribution.answers[index].answer }}</p>
+              <p style="margin-bottom: 2px">{{= answer.question.question }}</p>
+              <p style="margin-bottom: 2px; font-style: italic;">{{= answer.answer }}</p>
             </li>
 
           {{ }); }}

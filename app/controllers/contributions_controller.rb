@@ -58,8 +58,12 @@ class ContributionsController < ApplicationController
           customer: { only: [:name] },
           contributor: { only: [:title], methods: [:full_name] },
           invitation_template: { only: [:name] },
-          questions: { only: [:question] },
-          answers: { only: [:answer] }
+          answers: {
+            only: [:answer, :contributor_question_id],
+            include: {
+              question: { only: [:question] }
+            }
+          }
         }
       )
     elsif params[:get_contributor]
@@ -180,6 +184,7 @@ class ContributionsController < ApplicationController
       respond_to { |format| format.js { render action: 'update_contributor' } }
 
     elsif params[:submission]
+      pp params.permit(params.keys).to_h
       # if contribution_params[:status] == 'contribution_submitted'
       #   params[:contribution][:contribution] = consolidate_answers(params[:answers])
       # end

@@ -16,15 +16,12 @@
 
       <%= contribution_form.fields_for(
             :contributor_answers,
-            contribution.answers.try(:[], index) || ContributorAnswer.new
+            contribution.answers.to_question(question.id).take || ContributorAnswer.new
           ) do |answer_fields| %>
 
         <%= answer_fields.hidden_field(:id, value: answer_fields.object.try(:id) || '') %>
         <%= answer_fields.hidden_field(:contribution_id, value: contribution.id) %>
-        <%= answer_fields.hidden_field(
-              :contributor_question_id,
-              value: answer_fields.object.try(:contributor_question_id) || question.id
-            ) %>
+        <%= answer_fields.hidden_field(:contributor_question_id, value: question.id) %>
 
         <div class="form-group question <%= index == 0 ? 'active' : '' %>">
 

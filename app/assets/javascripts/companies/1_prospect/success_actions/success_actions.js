@@ -103,6 +103,7 @@ function successActionsListeners () {
             contributions.push(contribution);
             if (contributionIds.length === contributions.length) {
               // console.log('contributions', contributions)
+              console.log('contributions', contributions)
               showSuccessContributions(successId, contributions);
             }
           });
