@@ -20,8 +20,11 @@ function companiesShowListeners () {
         $(this).closest('tr').addClass('active');
       })
     .on('hidden.bs.dropdown', '.status.dropdown, .actions.dropdown', function () {
+      // don't remove .active if the child row is open
+      if (!$(this).closest('tr').hasClass('shown')) {
         $(this).closest('tr').removeClass('active');
-      });
+      }
+    });
 
 }
 

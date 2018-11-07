@@ -25,11 +25,15 @@
           }
         }
       }) %>,
-      isCurateView = function () {
-        return $('a[href="#curate-contributors"]').parent().hasClass('active')
-      },
-      openContributorDetails = function ($tr) {
-        $tr.find('.contributor-details').trigger('click');
+      $modal = $('#new-contributor-modal'),
+      isCurateView = $('a[href="#story-contributors"]').parent().hasClass('active'),
+      openContributorForm = function ($tr) {
+        $tr.find('td.contributor-details').trigger('click');
+        // scroll to center (but only for the current table view)
+        if ($tr.closest('table').is('#prospect-contributors-table') && !isCurateView() ||
+            $tr.closest('table').is('#curate-contributors-table') && isCurateView()) {
+          window.scrollTo(0, $tr.offset().top - (window.innerHeight / 2) + (($tr.next().outerHeight() + $tr.outerHeight()) / 2));
+        }
       },
       updateSuccess = function (success) {
         if (success.previous_changes.id) {
@@ -48,37 +52,32 @@
   // (reload tables with separate .reload calls to ensure actions only happen once)
   $('#prospect-contributors-table').DataTable().ajax.reload(function (contributions) {
       // var rowsAreGrouped = $('#toggle-group-by-success').prop('checked'), groupIndex;
-      if (!isCurateView()) {
+      if (!isCurateView) {
         updateSelectOptions(company, $('#successes-table').DataTable().rows().data().toArray());
-        $('html, body').animate({ scrollTop: 65 }, 200)
-          .promise()
-          .then(function () {
-            $('.contributors.curator-select').val(contribution.success.curator.id).trigger('<change></change>')
-            $('#contributors-filter').val('success-' + contribution.success.id).trigger('change');
-            openContributorDetails(
+        $('.contributors.curator-select').val(contribution.success.curator.id).trigger('change')
+        $('#contributors-filter').val('success-' + contribution.success.id).trigger('change');
+        $('#contributors-filter').select2('focus');
+        toggleFormDone($('#new-contributor-form'));
+        $modal
+          .one('hidden.bs.modal', function () {
+            openContributorForm(
               $('#prospect-contributors-table tr[data-contribution-id="' + contribution.id + '"]')
             );
-            $('#contributors-filter').select2('focus');
-            $(document).one('click', function () {
-              $('#contributors-filter').next().removeClass('select2-container--focus');
-            })
-            toggleFormDone($('#new-contributor-form'));
-            $('#new-contributor-modal').modal('hide');
-          });
-        }
+          })
+          .modal('hide');
+      }
     });
 
   $('#curate-contributors-table').DataTable().ajax.reload(function (contributions) {
-      if (isCurateView()) {
-        $('html, body').animate({ scrollTop: 65 }, 200)
-          .promise()
-          .then(function () {
-            openContributorDetails(
-              $('#prospect-contributors-table tr[data-contribution-id="' + contribution.id + '"]')
+      if (isCurateView) {
+        toggleFormDone($('#new-contributor-form'));
+        $modal
+          .one('hidden.bs.modal', function () {
+            openContributorForm(
+              $('#curate-contributors-table tr[data-contribution-id="' + contribution.id + '"]')
             );
-            toggleFormDone($('#new-contributor-form'));
-            $('#new-contributor-modal').modal('hide');
-          });
+          })
+          .modal('hide');
       }
     })
 

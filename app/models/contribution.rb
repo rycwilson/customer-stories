@@ -71,8 +71,7 @@ class Contribution < ApplicationRecord
   )
   before_update(:set_submitted_at, :send_alert, if: Proc.new do
       self.status_changed? &&
-      # ['contribution_submitted', 'feedback_submitted'].include?(self.status)
-      ['feedback_submitted'].include?(self.status)
+      ['contribution_submitted', 'feedback_submitted'].include?(self.status)
     end
   )
 

@@ -40,7 +40,7 @@
 
           <h5 style="margin-bottom: 5px;">
             <span>{{= contribution.answers.length || contribution.contribution ? 'Contribution' : 'Feedback' }}&nbsp;&nbsp;&#8212;&nbsp;&nbsp;submitted </span>
-            <span>{{= formattedDate(new Date(contributions[0].submitted_at)) }}</span>
+            <span>{{= formattedDate(new Date(contribution.submitted_at)) }}</span>
           </h5>
           <p>Invitation Template:&nbsp;&nbsp;{{= contribution.invitation_template.name }}</p>
 

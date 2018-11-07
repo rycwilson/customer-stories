@@ -3,7 +3,6 @@ function successDetailsListeners () {
 
   $(document)
     .on('click', 'td.success-details', function () {
-
       var $table = $(this).closest('table'),
           $tr = $(this).closest('tr'),
           $trChild,

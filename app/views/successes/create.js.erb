@@ -15,26 +15,26 @@
                           only: [:id],
                           include: { curator: { only: [:id] } }
                         }) %>,
+      openSuccessForm = function () {
+        // this assumes the filter has been applied and this is the only tr in the table
+        $('#successes-table td.success-details').trigger('click');
+      },
       cbDone = function (success) {
         return function () {
-          // ref: https://stackoverflow.com/questions/6677035
-          $('html, body')
-            .animate({ scrollTop: 65 }, 200)
-            .promise()
-            .then(function () {
-              var ignoreClick = function (e) { e.stopPropagation(); }
-              $('.successes.curator-select').val(success.curator.id).trigger('change')
-              $('#successes-filter').val('success-' + success.id).trigger('change');
-              $('#successes-table td.success-details').trigger('click');
-              $('#successes-filter').select2('focus');
-              // don't let modal reset actions trigger the unfocus
-              $(document).on('click', '#new-success-modal *', ignoreClick);
-              $(document).one('click', function (e) {
-                $('#successes-filter').next().removeClass('select2-container--focus');
-                $(document).off('click', ignoreClick)
-              })
-              $('#new-success-modal').modal('hide')
-            });
+          var ignoreClick = function (e) { e.stopPropagation(); };
+          $('.successes.curator-select').val(success.curator.id).trigger('change')
+          $('#successes-filter').val('success-' + success.id).trigger('change');
+
+          $('#successes-filter').select2('focus');
+          // don't let modal reset actions trigger the unfocus
+          $(document).on('click', '#new-success-modal *', ignoreClick);
+          $(document).one('click', function (e) {
+            $('#successes-filter').next().removeClass('select2-container--focus');
+            $(document).off('click', ignoreClick)
+          })
+          $('#new-success-modal')
+            .one('hidden.bs.modal', openSuccessForm)
+            .modal('hide')
         }
       };
 
@@ -48,7 +48,7 @@
   $('#successes-table').DataTable().ajax.reload(function (successes) {
     $('#prospect-contributors-table').DataTable().ajax.reload(function (contributions) {
       updateSelectOptions(company, successes);
-      toggleFormDone($('#new-success-form'), false, cbDone(newSuccess, false));
+      toggleFormDone($('#new-success-form'), false, cbDone(newSuccess));
     });
   });
 
