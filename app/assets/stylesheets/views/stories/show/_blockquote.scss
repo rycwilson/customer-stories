@@ -24,6 +24,7 @@
         margin-bottom: 0;
         padding: 0;
         position: relative;
+        quotes: initial;  // stops host site from setting quotes: none
         > p {
           &:before {
             // choosing a web safe font here
