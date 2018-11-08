@@ -182,7 +182,7 @@ class Story < ApplicationRecord
 
   after_commit(on: :update) do
     expire_story_narrative_fragment_cache
-  end if Proc.new { |story| (story.previous_changes.keys & ['title', 'content']).any? }
+  end if Proc.new { |story| (story.previous_changes.keys & ['title', 'narrative']).any? }
 
   before_destroy do
     expire_filter_select_fragment_cache
