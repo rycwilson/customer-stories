@@ -54,7 +54,7 @@
     box-shadow: 0 0;
     border-radius: 0;
     &.narrative {
-      padding: 5px 0 0 0;
+      padding: 5px 10px;
     }
     &:not(.narrative) {
       background-color: $fg-color;
