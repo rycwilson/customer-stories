@@ -94,10 +94,11 @@ Rails.application.routes.draw do
 
       resources :companies, only: [:show, :edit, :update] do
         resources :customers, only: [:create, :update, :destroy], shallow: true
-        resources :successes, only: [:create, :update, :destroy], shallow: true do
+        resources :successes, only: [:show, :create, :update, :destroy], shallow: true do
           resources :contributions, only: [:index]
           resources :results, only: [:create, :destroy]
           collection { post '/import', to: 'successes#import' }
+          member { get '/win_story', to: 'successes#win_story' }
         end
         resources :stories, only: [:edit, :create, :update, :destroy], shallow: true do
           get '/promoted', on: :collection, to: 'stories#promoted'
@@ -120,7 +121,7 @@ Rails.application.routes.draw do
           member { put :update, constraints: { id: /\d+/ } }
         end
         resources :ctas, only: [:show, :create, :update, :destroy], shallow: true
-        resources :crowdsourcing_templates, except: [:index]
+        resources :invitation_templates, except: [:index]
         member { get '/promote-settings', to: 'companies#show' }
         member { put :widget }
         member { put :promote }

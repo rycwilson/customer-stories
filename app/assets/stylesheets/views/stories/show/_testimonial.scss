@@ -17,7 +17,7 @@
     .customer-logo, .cs-customer-logo {
       img {
         margin: 0 auto;
-        max-height: 65px;
+        max-height: 80px;
         max-width: 50%;
         mix-blend-mode: multiply;
       }
@@ -33,7 +33,7 @@
     margin: 0;
   }
   &.no-video {
-    margin-bottom: 25px;
+    margin-bottom: 15px;
     .customer-logo-quote.hidden-xs {
       > div {
         display: flex;
@@ -81,7 +81,7 @@
       .customer-logo {
         background-color: if(variable-exists(bg-color), $bg-color, $csp-bg-gray);
         img {
-          max-height: 65px;
+          max-height: 80px;
           max-width: 60%;
         }
       }

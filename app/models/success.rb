@@ -25,13 +25,14 @@ class Success < ApplicationRecord
       where.not(status: 'pre_request')
     end
     def submitted
-      where.not(contribution: nil)
+      where(status: 'contribution_submitted')
     end
   end
   has_many :results, -> { order(created_at: :asc) }, dependent: :destroy
   # alias the association to user -> Success.find(id).contributors
   # note: contributor is an alias - see contribution.rb
   has_many :contributors, through: :contributions, source: :contributor
+  has_many :contributor_answers, through: :contributions
   has_many :page_views, class_name: 'PageView'
   has_many :story_shares, class_name: 'StoryShare'
   has_many :visitor_actions

@@ -32,13 +32,23 @@
 
         <% if @company.ctas.try(:primary).present? %>
 
-          <%= link_to(
-                @company.ctas.primary.link_url,
-                class: 'primary-cta btn',
-                style: primary_cta_style(@company)
-              ) do %>
-            <span><%= @company.ctas.primary.display_text %></span>
-          <% end %>
+          <div class="primary-cta">
+
+            <%= link_to(
+                  @company.ctas.primary.link_url,
+                  class: 'btn',
+                  style: "background-color: #{@company.primary_cta_background_color}"
+                ) do %>
+              <span><%= @company.ctas.primary.display_text %></span>
+            <% end %>
+
+            <div>
+              <span style="color: <%= @company.primary_cta_text_color %>">
+                <%= @company.ctas.primary.display_text %>
+              </span>
+            </div>
+
+          </div>
 
         <% end %>
 

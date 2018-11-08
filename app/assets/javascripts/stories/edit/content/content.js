@@ -50,7 +50,7 @@ function storiesEditContentListeners () {
       if (!$('a[href="#story-content"]').parent().hasClass('active')) {
         return false;
       }
-      if ($(document).scrollTop() > (($('.main-content').offset().top + 200) - $(window).height())) {
+      if ($(document).scrollTop() > (($('.narrative').offset().top + 200) - $(window).height())) {
         openFormControls();
       }
     });

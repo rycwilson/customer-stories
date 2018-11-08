@@ -16,8 +16,9 @@
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700&amp;lang=en" rel="stylesheet" type="text/css">
   <script src="<%= asset_path('widgets/demo.js') %>"></script>
   <%= favicon_link_tag 'favicon.ico' %>
+  <%= custom_google_fonts(@company) %>
 </head>
-<body class="<%= controller_name %> plugin-demo <%= @company.subdomain %> <%= params[:type] %> <%= params[:background] ? 'bg-' + params[:background] : '' %>">
+<body class="<%= @company.subdomain %> plugin-demo <%= params[:type] %> <%= params[:background] ? 'bg-' + params[:background] : '' %>">
 
 <!--   <div class="nav-links">
     <a href="javascript:;" data-plugin-type="gallery" class="<%#= @params[:type] == 'gallery' ? 'active' : '' %>">Gallery</a>

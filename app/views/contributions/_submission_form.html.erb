@@ -1,33 +1,46 @@
 
-<%= form_for(contribution, url: contributor_submission_path(contribution.access_token),
-      method: "put", html: { id: 'submission-form' }) do |f| %>
+<%= form_for(
+      contribution,
+      url: contributor_submission_path(contribution.access_token),
+      method: 'PUT',
+      html: { id: 'submission-form' }
+    ) do |contribution_form| %>
 
   <%= hidden_field_tag("submission", true) %>
-  <%= f.hidden_field(:status, value: type + '_submitted') %>
+  <%= contribution_form.hidden_field(:status, value: type + '_submitted') %>
 
   <% if type == 'contribution' %>
 
-    <% contribution.contributor_questions.each_with_index do |question, index| %>
+    <!-- ref https://stackoverflow.com/questions/4853373 -->
+    <% contribution.questions.each_with_index do |question, index| %>
 
-      <div class="form-group question <%= index == 0 ? 'active' : '' %>">
+      <%= contribution_form.fields_for(
+            :contributor_answers,
+            contribution.answers.to_question(question.id).take || ContributorAnswer.new
+          ) do |answer_fields| %>
 
-        <%= label_tag("answers[#{question.id}]", "#{index + 1}. #{question.question}") %>
+        <%= answer_fields.hidden_field(:id, value: answer_fields.object.try(:id) || '') %>
+        <%= answer_fields.hidden_field(:contribution_id, value: contribution.id) %>
+        <%= answer_fields.hidden_field(:contributor_question_id, value: question.id) %>
 
-        <div class="visible-xs-block">
-          <%= text_area_tag("answers[#{question.id}]", nil, rows: 3, class: 'form-control') %>
+        <div class="form-group question <%= index == 0 ? 'active' : '' %>">
+
+          <%= answer_fields.label(:answer, question.question) %>
+
+          <%= answer_fields.text_area(:answer, rows: 3, class: 'form-control') %>
+
           <div class="next-question">
-            <button class="btn btn-success btn-sm">Ok</button>
+            <div class="visible-xs-block">
+              <button class="btn btn-success btn-sm">Ok</button>
+            </div>
+            <div class="hidden-xs">
+              <button class="btn btn-success">Ok</button>
+            </div>
           </div>
+
         </div>
 
-        <div class="hidden-xs">
-          <%= text_area_tag("answers[#{question.id}]", nil, rows: 5, class: 'form-control') %>
-          <div class="next-question">
-            <button class="btn btn-success">Ok</button>
-          </div>
-        </div>
-
-      </div>
+      <% end %>
 
     <% end %>
 
@@ -41,7 +54,7 @@
 
       <div class="row visible-xs-block">
         <div class="col-xs-12">
-          <%= f.check_box(:publish_contributor, checked: true) %>
+          <%= contribution_form.check_box(:publish_contributor, checked: true) %>
             Leave this box checked to have your LinkedIn profile published as part of the success story. You may return at any point in the future to add or remove your profile.
         </div>
       </div>
@@ -53,7 +66,7 @@
         </div>
 
         <div class='col-sm-11 checkbox'>
-          <%= f.check_box(:publish_contributor, checked: true) %>
+          <%= contribution_form.check_box(:publish_contributor, checked: true) %>
           Leave this box checked to have your LinkedIn profile published as part of the success story. You may return at any point in the future to add or remove your profile.
         </div>
 
@@ -64,9 +77,9 @@
   <% else %>
 
     <div class="form-group feedback">
-      <%= f.hidden_field(:publish_contributor, value: false) %>
-      <%= f.label(:feedback, 'Please tell us about your experience and any actions you recommend.') %>
-      <%= f.text_area(:feedback, rows: 5, class: 'form-control') %>
+      <%= contribution_form.hidden_field(:publish_contributor, value: false) %>
+      <%= contribution_form.label(:feedback, 'Please tell us about your experience and any actions you recommend.') %>
+      <%= contribution_form.text_area(:feedback, rows: 5, class: 'form-control') %>
     </div>
 
   <% end %>

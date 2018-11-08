@@ -1,0 +1,15 @@
+
+&.stories.index {
+
+  background-color: $bg-color;
+
+  .filters-container.visible-md-block {
+    background-color: $fg-color;
+    border: 1px solid $border-color;
+    form + .form-group {  // single filter
+    }
+    &.short {
+    }
+  }
+
+}

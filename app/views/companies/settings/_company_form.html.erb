@@ -34,7 +34,7 @@
 
     <div class="col-sm-6">
 
-      <div class="form-group logo-upload <%= company.subdomain %>">
+      <div class="form-group logo-upload">
 
         <label>Header Logo</label>
         <div class="fileinput <%= company.logo_url.present? ? 'fileinput-exists' : 'fileinput-new' %>" data-provides="fileinput">
@@ -57,7 +57,7 @@
         </div>
 
         <div class="stories-header" style="background-color:<%= company.header_color_2 %>">
-          <h3 class="<%= company.color_contrast %>">Customer Stories</h3>
+          <h4 class="<%= company.color_contrast %>">Customer Stories</h3>
           <!-- <div style="display:inline-block">
 
           <span class="social-buttons pull-right">

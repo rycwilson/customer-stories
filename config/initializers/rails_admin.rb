@@ -38,8 +38,9 @@ RailsAdmin.config do |config|
     StoryCategory
     Product
     Result
-    CrowdsourcingTemplate
+    InvitationTemplate
     ContributorQuestion
+    ContributorAnswer
     CallToAction
   ]
 

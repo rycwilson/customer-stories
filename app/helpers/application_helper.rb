@@ -1,12 +1,23 @@
 module ApplicationHelper
 
+  def custom_google_fonts(company)
+    return nil if company.blank? || !['stories', 'widgets', 'companies'].include?(controller_name)
+    fonts = case company.subdomain
+      when 'pixlee'
+        'Muli:400,600,700|Bowlby+One'
+      else
+        ''
+      end
+    fonts.present? ? "<link href='https://fonts.googleapis.com/css?family=#{fonts}' rel='stylesheet'>".html_safe : nil
+  end
+
   def admin_navbar? controller
     ['companies', 'stories', 'profile'].include?(controller)
   end
 
   def fixed_navbar? (company, controller, action)
     company.present? &&
-    company.subdomain == 'compas' &&
+    ['compas', 'pixlee'].include?(company.subdomain) &&
     controller == 'stories' &&
     (action == 'index' || action == 'show')
   end
@@ -16,39 +27,6 @@ module ApplicationHelper
     controller == 'stories' && ['index', 'show', 'edit'].include?(action) ||
     controller == 'companies' && ['show', 'edit'].include?(action) ||
     controller == 'profile' && action == 'edit'
-  end
-
-  def company_widget_color company
-    case company.subdomain
-    when 'trunity'
-      '#FEBE57'
-    when 'compas'
-      '#e55f53'
-    when 'varmour'
-      '#60ccf3'
-    when 'centerforcustomerengagement'
-      '#007fc5'
-    when 'zeniq'
-      '#364150'
-    when 'corefact'
-      '#1f9421'
-    when 'saucelabs'
-      '#e2231a'
-    when 'juniper'
-      '#3493c1'
-    when 'neonova'
-      '#669bb2'
-    when 'kodacon'
-      '#85cee6'
-    when 'zoommarketing'
-      '#9e61a8'
-    when 'modeanalytics'
-      '#37b067'
-    when 'acme-test'
-      '#ff0000'
-    else
-      'rgb(14, 122, 254)'
-    end
   end
 
   def production?

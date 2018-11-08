@@ -14,6 +14,7 @@ class WidgetsController < ApplicationController
     else
       @type = params[:type]
     end
+    @uid = params[:uid]
     # set the stylesheet url here, as it's impossible to use the asset path helper in cs.js in a company-specific way
     @stylesheet_url = custom_stylesheet_url(@company, "cs_#{@type}")
     respond_to do |format|
@@ -22,6 +23,9 @@ class WidgetsController < ApplicationController
   end
 
   def show
+    # puts 'widgets#show'
+    # puts params
+    # puts params.permit(params.keys).to_h
     respond_to do |format|
       format.js do
         json = { html: plugin_view(@company, params) }.to_json
@@ -51,13 +55,11 @@ class WidgetsController < ApplicationController
 
   # if invalid category or product filters, return all stories
   def plugin_view (company, params)
+    # puts params.permit(params.keys).to_h
+    # puts "logos_only #{params.permit(params.keys).to_h[:logos_only].present? && params.permit(params.keys).to_h[:logos_only] != 'false'}"
+    # puts "grayscale #{params[:grayscale].present? && params[:grayscale] != 'false'}"
+    # puts params.permit(params.keys).to_h
     stories = plugin_stories(company, params)
-
-    # if company.subdomain == 'varmour'  # varmour custom sort
-      # ref: https://stackoverflow.com/questions/33732208
-      # stories = stories.sort_by { |s| [ s[:published] ? 1 : 0, s[:updated_at] ] }.reverse
-    # end
-
     render_to_string(
       partial: params[:type],
       layout: false,
@@ -67,9 +69,12 @@ class WidgetsController < ApplicationController
         stories: stories.first(16),
         title: 'Customer Stories',
         is_demo: params[:is_demo].present?,
+        max_rows: params[:max_rows].to_i,
         background: params[:background],
         tab_color: params[:tab_color],
         text_color: params[:text_color],
+        grayscale: params[:grayscale].present? && params[:grayscale] != 'false',
+        logos_only: params[:logos_only].present? && params[:logos_only] != 'false',
         is_curator: false,
         is_plugin: true,
         is_external: true,

@@ -22,6 +22,7 @@ function attachContributionsListeners () {
         }
       },
       scrollToNext = function ($formGroup) {
+        console.log('scrollToNext()')
         var scrollAmt;
         if (CSP.screenSize === 'xs') {
           if ($formGroup.is('.linkedin')) {
@@ -32,6 +33,7 @@ function attachContributionsListeners () {
         } else {
           scrollAmt = offset;
         }
+        console.log('scrollAmt', scrollAmt)
         $('html, body').animate({ scrollTop: ($formGroup.offset().top - scrollAmt).toString() + 'px' }, 200);
       },
       updateProgress = function () {
@@ -103,9 +105,9 @@ function attachContributionsListeners () {
       $(this).closest('.form-group').removeClass('active');
       scrollToNext($('.form-group.linkedin'));
     } else {
-      $(this).closest('.form-group').next().find('textarea').trigger('click');
+      $(this).closest('.form-group').nextAll('.form-group').first().find('textarea').trigger('click');
       if (CSP.screenSize !== 'xs') {
-        $(this).closest('.form-group').next().find('textarea').trigger('focus');
+        $(this).closest('.form-group').nextAll('.form-group').first().find('textarea').trigger('focus');
       }
     }
     updateProgress();

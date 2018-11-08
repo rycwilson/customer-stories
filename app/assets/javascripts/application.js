@@ -72,7 +72,7 @@ function attachAppListeners () {
       }
     })
     // apply styling when clicking on a company nav dropdown option,
-    .on('click', 'a[href="/settings"], a[href="/user-profile"]',
+    .on('click', 'a[href*="/settings"], a[href="/user-profile"]',
       function () {
         var $thisDropdown = $(this).closest('li.dropdown'),
             $otherDropdown = $thisDropdown.parent().find('li.dropdown:not(.open)');

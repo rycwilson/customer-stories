@@ -16,7 +16,7 @@
           },
           contributor: { only: [:id], methods: [:full_name] },
           referrer: { only: [:id], methods: [:full_name] },
-          crowdsourcing_template: { only: [:id, :name] },
+          invitation_template: { only: [:id, :name] },
         }
       }) %>,
       success = <%= raw @contribution.success.to_json({

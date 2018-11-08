@@ -35,7 +35,8 @@ module StoriesHelper
   end
 
   def primary_cta_style (company)
-    "background-color:#{company.primary_cta_background_color}; color:#{company.primary_cta_text_color}"
+
+    "position: relative; background-color:#{company.primary_cta_background_color}; color:#{company.primary_cta_text_color}"
   end
 
   def include_filters? (company)

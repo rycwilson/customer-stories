@@ -26,6 +26,80 @@
         padding: 10px 0 20px 0;
         .form-group.settings {
           margin-bottom: 0;  // margin makes the collapse jumpy
+          .gallery .form-group.max-rows {
+            width: 100%;
+            .input-group.spinner {
+              width: 60px;
+              input {
+                text-align: right;
+              }
+              .input-group-btn-vertical {
+                position: relative;
+                white-space: nowrap;
+                width: 2%;
+                vertical-align: middle;
+                display: table-cell;
+              }
+              .input-group-btn-vertical > .btn {
+                display: block;
+                float: none;
+                width: 100%;
+                max-width: 100%;
+                padding: 8px;
+                margin-left: -1px;
+                position: relative;
+                border-radius: 0;
+              }
+              .input-group-btn-vertical > .btn:first-child {
+                border-top-right-radius: 4px;
+              }
+              .input-group-btn-vertical > .btn:last-child {
+                margin-top: -2px;
+                border-bottom-right-radius: 4px;
+              }
+              .input-group-btn-vertical i {
+                position: absolute;
+                top: 0;
+                left: 4px;
+              }
+              &.disabled {
+                opacity: 0.5;
+                pointer-events: none;
+              }
+            }
+            .checkbox {
+              padding-top: 3px;
+              margin-left: 15px;
+              label {
+                margin-top: 0;    // these get it to match the other checkboxes
+                margin-right: 4px;
+                input {
+                  margin-right: 4px;
+                }
+              }
+            }
+            .help-block {
+              margin-top: 15px;
+            }
+          }
+          .gallery {
+            .form-inline {
+              height: 128px;
+              width: $form-width;
+              display: inline-block;  // only as wide as contents allows for background shading
+              padding: 20px 15px;
+              background: #efefef;
+              .form-group {
+                margin-left: 0;
+                margin-right: 0;
+                label.control-label {
+                  padding-top: 2px;
+                  margin-bottom: 5px;
+                  margin-right: 10px;
+                }
+              }
+            }
+          }
           .carousel .row {
             margin-left: 0;
             margin-right: 0;
@@ -129,8 +203,10 @@
           margin-bottom: 5px;
         }
       }
+
+
       .form-group.content__select {
-        margin-bottom: 30px;
+        margin-bottom: 25px;
         .content__select--custom, .content__select--category, .content__select--product {
           width: $form-width;
         }

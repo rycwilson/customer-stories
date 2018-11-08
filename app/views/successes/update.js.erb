@@ -9,9 +9,18 @@
           customer: { only: [:id, :name, :slug] }
         }
       }) %>,
-      $form = $('#success-form-' + success.id.toString());
+      $trSuccess = $('tr.shown[data-success-id="' + success.id + '"]'),
+      $form = $('#success-form-' + success.id);
 
-  $("#successes-table").DataTable().row('[data-success-id="' + success.id + '"]').data(success);
   toggleFormDone($form, true);
+
+  // update datatables
+  // don't update until the child row is closed, or the re-draw will hose things
+  // timeout is necessary because this appears to step on the normal open/close behavior (success_details.js)
+  $trSuccess.one('click', 'td.success-details', function (e) {
+    setTimeout(function () {
+      $('#successes-table').DataTable().row($trSuccess).data(success);
+    }, 100);
+  })
 
 }());

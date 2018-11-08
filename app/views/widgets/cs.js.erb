@@ -32,23 +32,29 @@
 
       var $container, $script,
           env = "<%= ENV['HOST_NAME'] %>",
+          uid = "<%= @uid %>",
           type = '<%= @type %>',
-          $stylesheet = $("<link>", { rel: "stylesheet", type: "text/css", href: '<%= @stylesheet_url %>' }),
-          isVarmour = <%= @company.subdomain === 'varmour' %>;
+          $stylesheet = $("<link>", { rel: "stylesheet", type: "text/css", href: '<%= @stylesheet_url %>' });
 
       // no stylesheet means type couldn't be id'ed => fatal
       if (!'<%= @stylesheet_url %>') return false;
 
-      // type IN ['gallery', 'carousel', 'tabbed_carousel']
-      if (type === 'gallery') {
-        $script = $('script[src*="gallery/cs"]');
-        $container = $('#cs-gallery');
-      } else if (type === 'carousel') {
-        $script = $('script[src*="carousel/cs"], script[src*="varmour/cs"]').first();
-        $container = $("#cs-carousel, #cs-varmour-container").first();
-      } else if (type === 'tabbed_carousel') {
-        $script = $('script[src*="tabbed_carousel/cs"], script[src*="tab/cs"], script[src*="widget/cs"]').first();
-        $container = $("#cs-tabbed-carousel, #cs-tab-container, #cs-container").first();
+      if (uid) {
+        // need to grab the last because (inexplicably) multiple script tags may be returned and only the last will have data attributes
+        $script = $('script[src*="' + uid + '"]').last();
+        $container = $script.prev();
+      } else {
+        // type IN ['gallery', 'carousel', 'tabbed_carousel']
+        if (type === 'gallery') {
+          $script = $('script[src*="gallery/cs"]').last();
+          $container = $('#cs-gallery');
+        } else if (type === 'carousel') {
+          $script = $('script[src*="carousel/cs"], script[src*="varmour/cs"]').last();
+          $container = $("#cs-carousel, #cs-varmour-container").first();
+        } else if (type === 'tabbed_carousel') {
+          $script = $('script[src*="tabbed_carousel/cs"], script[src*="tab/cs"], script[src*="widget/cs"]').last();
+          $container = $("#cs-tabbed-carousel, #cs-tab-container, #cs-container").first();
+        }
       }
 
       if ($script.data('demo')) {
@@ -79,8 +85,8 @@
 
   // root_url provides a company-specific url (via subdomain)
   function getWidget ($container, $script, isDemo, env) {
-    return function () {
 
+    return function () {
       $.ajax({
         url: "<%= URI.join(root_url, plugin_view_path(@type)) %>",
         method: 'GET',
@@ -90,9 +96,12 @@
           stories: $script.data('stories'),
           category: $script.data('category'),
           product: $script.data('product'),
+          // max_rows: $script.data('max-rows'),
           background: $script.data('background'),
           tab_color: $script.data('tab-color'),
           text_color: $script.data('text-color'),
+          logos_only: $script.data('logos-only'),
+          grayscale: $script.data('grayscale')
         }
       })
         .done(function (data) {
@@ -113,6 +122,7 @@
   function initWidget (type, $container, $script, isDemo, env) {
     var initVideo = $.Deferred(),
         initOverlays = $.Deferred(),
+        maxGalleryRows = $script.data('max-rows'),
         tabbedCarouselDelay = ((type === 'tabbed_carousel') && parseInt($script.data('delay'), 10) || 0);
 
     trackPluginVisitor($container, isDemo, env);
@@ -136,7 +146,7 @@
           dataType: 'script'
         })
           .done(function () {
-            if (type === 'gallery') cspInitGallery($, $container);
+            if (type === 'gallery') cspInitGallery($, $container, maxGalleryRows);
             else if (type === 'carousel') cspInitCarousel($, $container);
             else if (type == 'tabbed_carousel') {
               // plugin must be defined and called in this scope

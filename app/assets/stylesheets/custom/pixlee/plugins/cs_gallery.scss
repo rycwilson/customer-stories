@@ -1,9 +1,15 @@
 
+body.pixlee.plugin-demo {
+  .thumbnail-view-hover, .caption {
+    font-family: 'Muli', 'Open Sans', sans-serif;
+  }
+}
+
 #cs-gallery {
 
+  @import '../variables';
   @import '../../../views/widgets/gallery';
-
-  @import '../../fonts';
-  // @import 'gallery';
+  @import 'gallery';
+  @import '../show';
 
 }

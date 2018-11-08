@@ -29,14 +29,22 @@ class Contribution < ApplicationRecord
   has_one :curator, through: :success
   has_one :story, through: :success
   has_one :email_contribution_request, dependent: :destroy
-  belongs_to :crowdsourcing_template
-  has_many :contributor_questions, through: :crowdsourcing_template
+  belongs_to :invitation_template
+  has_many :contributor_questions, through: :invitation_template
+  alias_attribute :questions, :contributor_questions
+  has_many :contributor_answers, dependent: :destroy do
+    def to_question (question_id)
+      where(contributor_question_id: question_id)
+    end
+  end
+  alias_attribute :answers, :contributor_answers
 
   accepts_nested_attributes_for(:success, allow_destroy: false)
   accepts_nested_attributes_for(:referrer, allow_destroy: false, reject_if: :missing_referrer_attributes?)
   # don't need reject_if for the contributor, as the contribution would have been rejected already
   accepts_nested_attributes_for(:contributor, allow_destroy: false)
-  accepts_nested_attributes_for(:crowdsourcing_template)
+  accepts_nested_attributes_for(:invitation_template)
+  accepts_nested_attributes_for(:contributor_answers)
 
   before_create(:generate_access_token)
 
@@ -174,13 +182,13 @@ class Contribution < ApplicationRecord
     self.story && self.story.expire_published_contributor_cache(self.contributor.id)
   end
 
-  def copy_crowdsourcing_template
-    self.request_subject = self.crowdsourcing_template.request_subject
+  def copy_invitation_template
+    self.request_subject = self.invitation_template.request_subject
       .sub('[customer_name]', self.customer.name)
       .sub('[company_name]', self.company.name)
       .sub('[contributor_first_name]', self.contributor.first_name)
       .sub('[contributor_full_name]', self.contributor.full_name)
-    self.request_body = self.crowdsourcing_template.request_body
+    self.request_body = self.invitation_template.request_body
       .gsub('[customer_name]', self.customer.name)
       .gsub('[company_name]', self.company.name)
       .gsub('[contributor_first_name]', self.contributor.first_name)

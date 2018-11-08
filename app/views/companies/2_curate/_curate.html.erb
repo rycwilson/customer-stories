@@ -1,0 +1,103 @@
+
+<div id='curate' role='tabpanel' class="<%= workflow_stage == 'curate' ? 'active tab-pane fade in' : 'tab-pane fade' %>">
+
+  <div class='container clip'>
+
+    <div class="hidden">
+      <ul class="nav nav-tabs">
+        <li class="<%= curate_view == 'stories' ? 'active' : '' %>">
+          <a href="#curate-stories" data-toggle='tab' data-target='#curate-stories'></a>
+        </li>
+        <li class="<%= curate_view == 'story' ? 'active' : '' %>">
+          <a href="#curate-story" data-toggle='tab' data-target='#curate-story'></a>
+        </li>
+      </ul>
+    </div>
+
+    <div class="tab-content">
+
+      <div id='curate-stories' class="tab-pane fade <%= curate_view == 'stories' ? 'active in' : '' %>">
+
+        <div class="row">
+
+          <div class="col-md-4 col-lg-3" style="position: relative">
+
+            <h4 class="lead">
+              <a href='/'>Customer Stories</a>
+            </h4>
+
+            <span data-toggle="modal" data-target="#new-story-modal">
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle-o fa-stack-2x"></i>
+                <i class="fa fa-plus fa-stack-1x"></i>
+              </span>
+            </span>
+
+<!-- // skinny up the X icon
+  // ref: https://sridharkatakam.com/thin-font-awesome-close-icon/
+  .fa-times-thin:before {
+    content: '\00d7';
+  } -->
+            <!-- <button type='button' class='btn btn-secondary' data-toggle='modal' data-target='#new-story-modal'><i class='fa fa-plus-circle fa-fw'></i>&nbsp;New Story</button> -->
+
+            <%= render('companies/2_curate/filters', { company: company }) %>
+
+          </div>
+
+          <div class="col-md-8 col-lg-9">
+
+            <!-- <div id="status-filters" class="row">
+              <div class="col-sm-12 text-center">
+
+                <label style='margin-right:30px'>
+                  <input class='pending' type="checkbox" checked='true'>&nbsp;
+                  Not published
+                </label>
+                <label style='margin-right:30px'>
+                  <input class='logo-published' type="checkbox" checked='true'>&nbsp;
+                  Logo published
+                </label>
+                <label style='margin-right:30px'>
+                  <input class='preview-published' type="checkbox" checked='true'>&nbsp;
+                  Preview published
+                </label>
+                <label style='margin-right:30px'>
+                  <input class='published' type="checkbox" checked='true'>&nbsp;
+                  Story Published
+                </label>
+
+              </div>
+            </div> -->
+
+            <div class="grid-container">
+
+              <ul id="curate-gallery" class="grid list-unstyled text-center">
+              </ul>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+
+      <div id='curate-story' class="tab-pane fade <%= curate_view == 'story' ? 'active in' : '' %>">
+
+        <% if curate_view == 'story' %>
+
+          <%= render({
+                partial: 'stories/edit/edit',
+                locals: { company: company, story: story, tab: curate_story_tab }
+              }) %>
+
+        <% end %>
+
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+

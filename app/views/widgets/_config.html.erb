@@ -35,9 +35,46 @@
       </div>
 
       <div class="settings-container">
-        <div class="form-group settings collapse">
+        <div class="form-group settings collapse in">
 
-          <div class="carousel">
+          <div class="gallery">
+
+            <div class="col-sm-2"></div>
+            <div class="col-sm-10">
+
+              <div class="form-inline">
+
+                <div class="form-group max-rows">
+
+                  <%= label_tag('gallery[max_rows]', 'Max Rows', class: 'control-label') %>
+                  <div class="input-group spinner">
+
+                    <%= text_field_tag('gallery[max_rows]', '4', min: '0', class: 'form-control') %>
+                    <div class="input-group-btn-vertical">
+                      <button class="btn btn-default" type="button"><i class="fa fa-caret-up"></i></button>
+                      <button class="btn btn-default" type="button"><i class="fa fa-caret-down"></i></button>
+                    </div>
+
+
+                  </div>
+
+                  <div class="checkbox">
+                    <label>
+                      <%= check_box_tag('gallery[no_max_rows]', true, false) %>
+                      No Max
+                    </label>
+                  </div>
+
+                  <span class="help-block">As device size decreases, limit the number of items displayed. This allows you to maintain a consistent vertical space for your gallery.</span>
+
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+          <div class="carousel" style="display: none">
 
             <div class="col-sm-2"></div>
             <div class="col-sm-10">
@@ -64,7 +101,7 @@
             </div>
           </div>
 
-          <div class="tabbed-carousel">
+          <div class="tabbed-carousel" style="display: none">
 
             <div class="col-sm-2"></div>
             <div class="col-sm-10">
@@ -180,6 +217,28 @@
         </div>
       </div>
 
+      <div class="form-group appearance">
+
+        <label class="col-sm-2 control-label">Appearance</label>
+        <div class="col-sm-10">
+
+          <div class="checkbox logos-only">
+            <label>
+              <%= check_box_tag('plugin[logos_only]', true, false) %>
+              Logos Only
+            </label>
+          </div>
+
+          <div class="checkbox grayscale">
+            <label>
+              <%= check_box_tag('plugin[grayscale]', true, false) %>
+              Grayscale
+            </label>
+          </div>
+
+        </div>
+      </div>
+
       <div class="row form-group code">
         <label class="col-sm-2 control-label">Code</label>
         <div class="col-sm-10">
@@ -203,7 +262,7 @@
               <i class="fa fa-fw fa-clipboard"></i>
             </button> -->
             <textarea class="form-control" style="width:100%;" rows="6" readonly><div id="cs-gallery"></div>
-<script src="<%= Rails.env.development? ? 'http' : 'https' %>://<%= company.subdomain %>.<%= ENV["HOST_NAME"] %>/plugins/gallery/cs.js"></script></textarea>
+<script src="<%= Rails.env.development? ? 'http' : 'https' %>://<%= company.subdomain %>.<%= ENV["HOST_NAME"] %>/plugins/gallery/cs.js" data-max-rows="4"></script></textarea>
           </div>
         </div>
       </div>

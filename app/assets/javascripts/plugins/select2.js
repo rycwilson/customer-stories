@@ -39,6 +39,15 @@ function initSelect2 () {
       });
   };
 
+  /**
+   * win story
+   */
+  $('#win-story-modal select.invitation-templates').select2({
+    theme: "bootstrap",
+    tags: true,
+    placeholder: 'Select templates',
+  });
+
   // for customers, successes, contributors, referrers => don't initialize if the form submission modal is still open
 
   /**
@@ -97,7 +106,7 @@ function initSelect2 () {
    * this code duplicated from csp_datatables.js
    */
   if ($('.successes-header').length && $('.contributors-header').length) {
-    $('.crowdsource.curator-select')
+    $('.prospect.curator-select')
        .select2({
          theme: 'bootstrap',
          width: 'style',
@@ -221,7 +230,7 @@ function initSelect2 () {
     selectOnClose: true
   });
 
-  $('select.crowdsourcing-template').select2({
+  $('select.invitation-template').select2({
     theme: 'bootstrap',
     placeholder: 'Select'
   });

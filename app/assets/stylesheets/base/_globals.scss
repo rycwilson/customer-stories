@@ -50,6 +50,11 @@ $csp-fg-gray: #efefef;
   }
   @include bs-sm {
     justify-content: center;
+    > div {
+      img {
+        max-height: 80px;
+      }
+    }
   }
   @include bs-lg {
     .customer-name, .cs-customer-name {

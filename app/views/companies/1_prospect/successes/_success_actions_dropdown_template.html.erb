@@ -1,0 +1,111 @@
+
+<% content_for(:underscore_templates) do %>
+
+  <script type="text/template" id="success-actions-dropdown-template">
+
+    <a href="javascript:;" class="dropdown-toggle" data-toggle="dropdown">
+      <i class="fa fa-caret-down"></i>
+    </a>
+
+    <ul class="success-actions dropdown-menu dropdown-menu-right dropdown-actions">
+
+      {{ if (status.match(/[^0]&nbsp;&nbsp;Contributions\ssubmitted/) ) { }}
+
+        <li class="view-submissions">
+          <a href="javascript:;">
+            <i class="fa fa-comments fa-fw action"></i>&nbsp;&nbsp;
+            <!-- <span>Contributions &amp Feedback</span> -->
+            <span>View Contributions</span>
+          </a>
+        </li>
+
+        <!-- <li class="compose-win-story">
+          <a href="#win-story-modal" data-toggle="modal">
+            <i class="fa fa-envelope fa-fw action"></i>&nbsp;&nbsp;
+            <span>Compose Win Story</span>
+          </a>
+        </li> -->
+
+        <li role="separator" class="divider"></li>
+
+      {{ } }}
+
+      {{ if (story) { }}
+
+        <li class="story-settings">
+          <a href="{{= storyPath }}">
+            <i class="fa fa-gear fa-fw action"></i>&nbsp;&nbsp;
+            <span>Customer Story Settings</span>
+          </a>
+        </li>
+
+        <li class="story-content">
+          <a href="{{= storyPath }}">
+            <i class="fa fa-edit fa-fw action"></i>&nbsp;&nbsp;
+            <span>Customer Story Content</span>
+          </a>
+        </li>
+
+        <li class="story-contributors">
+          <a href="{{= storyPath }}">
+            <i class="fa fa-users fa-fw action"></i>&nbsp;&nbsp;
+            <span>Customer Story Contributors</span>
+          </a>
+        </li>
+
+      {{ } else { }}
+
+        {{ if (status.match(/0.+Contributors\sadded/)) { }}
+
+          <li class="add-contributor">
+            <a href="javascript:;">
+              <i class="fa fa-users fa-fw action"></i>&nbsp;&nbsp;
+              <span>Add Contributors</span>
+            </a>
+          </li>
+
+        {{ } else if (status.match(/0.+Contributors\sinvited/)) { }}
+
+          <li class="manage-contributors">
+            <a href="javascript:;">
+              <i class="fa fa-users fa-fw action"></i>&nbsp;&nbsp;
+              <span>Invite Contributors</span>
+            </a>
+          </li>
+
+        {{ } else { }}
+
+          <li class="manage-contributors">
+            <a href="javascript:;">
+              <i class="fa fa-users fa-fw action"></i>&nbsp;&nbsp;
+              <span>Manage Contributors</span>
+            </a>
+          </li>
+
+        {{ } }}
+
+        <li role="separator" class="divider"></li>
+
+        <li class="start-curation">
+          <a href="javascript:;">
+            <i class="fa fa-play fa-fw action"></i>&nbsp;&nbsp;
+            <span>Start Customer Story</span>
+          </a>
+        </li>
+
+      {{ } }}
+
+      <li role="separator" class="divider"></li>
+
+      <li class="remove">
+        <a href="javascript:;">
+          <i class="fa fa-remove fa-fw action"></i>&nbsp;&nbsp;
+          <span>Remove</span>
+        </a>
+      </li>
+
+    </ul>
+
+  </script>
+
+<% end %>

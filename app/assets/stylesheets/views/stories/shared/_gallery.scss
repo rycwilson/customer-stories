@@ -149,7 +149,7 @@
     &.loading {
       a.thumbnail {
         filter: brightness(95%);
-        -webkit-filter: brightness(95%);
+        // -webkit-filter: brightness(95%);
         .thumbnail-view-hover {
           transform: none;
         }

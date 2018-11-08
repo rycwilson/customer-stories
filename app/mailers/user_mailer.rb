@@ -6,6 +6,10 @@ class UserMailer < ApplicationMailer
 
   CSP_EMAILS = ['***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***', '***REMOVED***']
 
+  def win_story
+    send_mail('win_story')
+  end
+
   def contribution_invitation (contribution)
     # don't track emails sent from dev or staging ...
     headers['X-SMTPAPI'] = {
@@ -13,7 +17,7 @@ class UserMailer < ApplicationMailer
         contribution_id: contribution.id
       }
     }.to_json if production?
-    @body = contribution.request_body.html_safe
+    @body = contribution.request_body
     @contribution = contribution
     send_mail('contribution_invitation', contribution.curator, contribution.contributor, contribution.request_subject)
   end
@@ -29,7 +33,7 @@ class UserMailer < ApplicationMailer
     else
       subject = "Final reminder: " + contribution.request_subject
     end
-    @body = contribution.request_body.html_safe
+    @body = contribution.request_body
     send_mail('remind', contribution.curator, contribution.contributor, subject)
   end
 
@@ -37,9 +41,24 @@ class UserMailer < ApplicationMailer
     link = contribution.story.present? ? contribution.story.csp_story_url :
       Rails.application.routes.url_helpers.company_main_url('prospect')
     subject = "#{contribution.contributor.full_name} submitted #{contribution.status == 'contribution_submitted' ? 'a contribution' : 'feedback'}"
-    @body = ("<p>#{contribution.curator.first_name},</p>" +
-      "<p>#{contribution.contributor.full_name} of the #{contribution.story.present? ? 'Customer Story' : 'Customer Win' } <a href='#{link}'>#{contribution.story.try(:title) || contribution.success.name}</a> submitted #{contribution.status == 'contribution_submitted' ? 'a contribution' : 'feedback'}:</p>" +
-      "#{contribution.contribution || '<p>' + contribution.feedback + '</p>'}").html_safe
+    @body = "<p>#{contribution.curator.first_name},</p>" +
+      "<p>#{contribution.contributor.full_name} of the #{contribution.story.present? ? 'Customer Story' : 'Customer Win' } <a href='#{link}'>#{contribution.story.try(:title) || contribution.success.name}</a> submitted #{contribution.status == 'contribution_submitted' ? 'a contribution' : 'feedback'}:</p>"
+    if (contribution.answers.present?)
+      @body.concat('<ul>')
+      contribution.answers.each do |answer|
+        @body.concat(
+          "<li style='margin-bottom: 5px'>" +
+            "<p style='margin: 0 2px;'>#{answer.question.question}</p>" +
+            "<p style='margin: 0 2px; font-style: italic'>#{answer.answer}</p>" +
+          "</li>"
+        )
+      end
+      @body.concat('</ul>')
+    elsif contribution.contribution.present?
+      @body.concat("<p>#{contribution.contribution}</p>")
+    else
+      @body.concat("<p>#{contribution.feedback}</p>")
+    end
     send_mail('alert', contribution.curator, contribution.curator, subject)
   end
 

@@ -24,12 +24,12 @@
   }
 
   tr.active {
-    td.crowdsourcing-template .placeholder {
+    td.invitation-template .placeholder {
       color: #fff !important;
     }
   }
 
-  td.crowdsourcing-template:not(.disabled) {
+  td.invitation-template:not(.disabled) {
     cursor: pointer;
     position: relative;
     padding-right: 40px;
@@ -41,7 +41,7 @@
     }
   }
 
-  td.crowdsourcing-template.editor-open {
+  td.invitation-template.editor-open {
     padding-right: 8px;
     .DTE_Form_Buttons {
       .btn {
@@ -56,7 +56,7 @@
     }
   }
 
-  td.crowdsourcing-template {
+  td.invitation-template {
     span.select2 {
       margin-bottom: 8px;
     }

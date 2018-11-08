@@ -1,0 +1,151 @@
+
+#stories-gallery, .related-stories {
+
+  li {
+    &.loading {
+      a {
+        // background-color: $story-hover-color;
+        background-color: $fg-color;
+        -webkit-filter: brightness(97%);
+      }
+    }
+    a.thumbnail {
+      // transition: background-color 0.2s ease;
+      // border: 1px solid $fg-color;
+      // box-shadow: 0 0;
+
+      .thumbnail-view {
+
+        .thumbnail-view-hover {
+          p {
+            font: {
+              family: $body-font;
+              // size: 15px;
+              // weight: 600 ;
+            }
+
+          }
+        }
+        img {
+          mix-blend-mode: multiply;
+        }
+      }
+      .caption {
+
+        span {
+          font-family: $body-font;
+          // position: absolute;
+          // width: 90%;
+          // top: 50%;
+          // left: 50%;
+          // transform: translate(-50%, -50%);
+        }
+        span.click-action:after {
+          color: $pixlee-blue;
+          font-weight: 700;
+          text-decoration: none;
+          text-transform: uppercase;
+          // visibility: hidden;
+        }
+      }
+      &.public.published .caption span.click-action:after {
+        // content: 'Read Story';
+      }
+      &.public.preview-published .caption span.click-action:after {
+        // content: 'Read More';
+      }
+      &.curator .caption span.click-action:after {
+        // content: 'Configure Story';
+      }
+      &:active {
+
+        background-color: $fg-color;
+        -webkit-filter: brightness(94%);
+        // box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08)
+      }
+      &.public.logo-published {
+        // pointer-events: none;
+      }
+    }
+    &:hover:not(.og-expanded), &.hover:not(.og-expanded), &.loading {
+      a.curator, a.public:not(.logo-published) {
+        &.loading {
+          background-color: $fg-color;
+        }
+        // transition: background-color 0.2s ease;
+
+        // border-color: $fg-color;  // override bootstrap .thumbnail
+        // box-shadow: 0 0;
+        img {
+          // opacity: 0.04;
+          // transition: opacity 0.25s step-end;
+        }
+        // .caption {
+        //   span.customer-name {
+        //     visibility: hidden;
+        //     transition: all 0s step-end;
+        //   }
+        //   span.click-action:after {
+        //     visibility: visible;
+        //     transition: all 0s step-end;
+        //   }
+        // }
+      }
+    }
+
+
+    &:not(.still-loading) {
+      i.fa-spin {
+        // opacity: 0;
+      }
+    }
+
+    &.loading {
+      a.thumbnail {
+        // filter: brightness(95%);
+        // -webkit-filter: brightness(95%);
+        // .thumbnail-view-hover {
+        //   transform: none;
+        // }
+        // .caption {
+        //   span.customer-name {
+        //     visibility: hidden;
+        //   }
+        //   span.click-action:after {
+        //     visibility: visible;
+        //   }
+        // }
+      }
+      &.still-loading {
+        // .thumbnail-view, .caption {
+        //   opacity: 0.05;
+        //   transition: opacity 1s step-end;
+        //   // -webkit-transition: opacity 1s step-end;
+        // }
+        // img {
+        //   opacity: 0;
+        //   transition: opacity 1s step-end;
+        //   // -webkit-transition: opacity 1s step-end;
+        // }
+        // // the icon needs to be wrapped in a div in order for the transform to work
+        // // (center if element is centered, not top-left of element)
+        // .icon-container {
+        //   position: absolute;
+        //   top: 50%;
+        //   left: 50%;
+        //   transform: translate(-50%, -50%);
+        //   i {
+        //     font-size: 20px;
+        //     color: #666;
+        //     opacity: 1;
+        //     transition: opacity 1s step-end;
+        //     // -webkit-transition: opacity 1s step-end;
+        //   }
+        // }
+      }
+    }
+  }
+
+
+}
+

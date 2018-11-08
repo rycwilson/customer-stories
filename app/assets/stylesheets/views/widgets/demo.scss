@@ -1,5 +1,5 @@
 
-body.widgets.plugin-demo {
+body.plugin-demo {
 
   height: 100vh;
   margin: 0;
@@ -27,6 +27,10 @@ body.widgets.plugin-demo {
 
   #cs-carousel {
     margin-top: 30px;
+  }
+
+  &.pixlee.gallery {
+    background-color: #fff;
   }
 
 }

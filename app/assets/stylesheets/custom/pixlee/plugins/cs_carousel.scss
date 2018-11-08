@@ -1,9 +1,15 @@
 
+body.pixlee.plugin-demo {
+  .thumbnail-view-hover, .caption {
+    font-family: 'Muli', 'Open Sans', sans-serif;
+  }
+}
+
 #cs-carousel {
 
+  @import '../variables';
   @import '../../../views/widgets/carousel';
-
-  @import '../../fonts';
-  // @import 'carousel';
+  @import 'carousel';
+  @import '../show';
 
 }

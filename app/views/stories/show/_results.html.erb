@@ -1,11 +1,11 @@
 
 <section class="story-results visible-xs-block">
 
-  <div class="section-title-container">
-    <h4 class="text-center">Results</h4>
+  <div class="section-title text-center">
+    <h4>Results</h4>
   </div>
 
-  <div class="ul-container">
+  <!-- <div class="ul-container"> -->
 
     <ul class="fa-ul">
 
@@ -20,26 +20,32 @@
 
     </ul>
 
-  </div>
+  <!-- </div> -->
 
 </section>
 
 <section class="story-results hidden-xs <%= is_plugin ? 'cs-well' : 'well' %>">
 
-  <div class="section-title-container">
-    <h4 class="text-center">Results</h4>
+  <div class="section-title text-center">
+    <h4>Results</h4>
   </div>
+
+  <ul class="list-unstyled">
 
   <% story.results.each do |result| %>
 
-    <div class="<%= is_plugin ? 'cs-row' : 'row' %>">
-      <div class="col-sm-1">
-        <i class="fa fa-check"></i>
+    <li>
+
+      <div class="<%= is_plugin ? 'cs-row' : 'row' %>">
+        <div class="col-sm-1">
+          <i class="fa fa-check"></i>
+        </div>
+        <div class="col-sm-11">
+          <span><%= result.description %></span>
+        </div>
       </div>
-      <div class="col-sm-11">
-        <span><%= result.description %></span>
-      </div>
-    </div>
+
+    </li>
 
   <% end %>
 

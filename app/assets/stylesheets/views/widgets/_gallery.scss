@@ -79,6 +79,10 @@ a.cs-thumbnail {
       // hover and opacity transition
       // ref: https://stackoverflow.com/questions/20886991
       -webkit-transform: translateZ(0);
+      mix-blend-mode: multiply;
+      &.grayscale {
+        filter: grayscale(100%);
+      }
     }
   }
   .caption {
@@ -86,14 +90,14 @@ a.cs-thumbnail {
     bottom: 0;
     width: 100%;
     height: 35%;
-    font: {
-      family: inherit !important;
-      size: 14px !important;
-    }
     color: #444;
     border-radius: 0;
     background: transparent;
     span {
+      font: {
+        family: inherit !important;
+        size: 14px !important;
+      }
       position: absolute;
       width: 90%;
       top: 50%;
@@ -146,6 +150,26 @@ a.cs-thumbnail {
         visibility: visible;
         transition: all 0s step-end;
       }
+    }
+    &.logo-only {
+      border: none;
+      box-shadow: 0 0;
+    }
+  }
+  &.logo-only {
+    width: 150px;
+    height: 75px;
+    background-color: transparent;
+    border: none;
+    box-shadow: 0 0;
+    .thumbnail-view, .caption {
+      height: 100%;
+    }
+    img {
+      mix-blend-mode: multiply;
+    }
+    @media only screen and (max-width: 767px) {
+      margin: 20px 0;
     }
   }
   &:not(.cs-still-loading) {

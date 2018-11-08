@@ -44,7 +44,6 @@ function widgetConfigListeners () {
     .on('change', '[name="plugin[type]"]', function () {
       var type = $(this).val(),
           tabbedCarouselAttrs = '\xa0data-delay="' + $('[name="tabbed_carousel[delay]"]').val() + '"\xa0data-tab-color="' + $('[name="tabbed_carousel[tab_color]"]').val() + '"\xa0data-text-color="' + $('[name="tabbed_carousel[text_color]"]').val() + '"';
-
       $('.script-tag textarea').text(
         $('.script-tag textarea').text()
           .replace(/id="(cs-gallery|cs-carousel|cs-tabbed-carousel)"/, function () {
@@ -54,11 +53,20 @@ function widgetConfigListeners () {
           })
           .replace(/\/plugins\/(gallery|carousel|tabbed_carousel)/, '/plugins/' + type)
 
+          // remove the gallery attributes
+          .replace(/\sdata-max-rows="\d+"/, '')
+          // re-add them if gallery was selected
+          .replace(/><\/script>/, function () {
+            return (type === 'gallery' && $('[name="gallery[max_rows]"]').val()) ?
+              '\xa0data-max-rows="' + $('[name="gallery[max_rows]"]').val() + '"></script>' :
+              '></script>';
+          })
+
           // remove the carousel attributes
           .replace(/\sdata-background="\w+"/, '')
           // re-add them if carousel was selected
           .replace(/><\/script>/, function () {
-            return (type === 'carousel') ? '\xa0data-background="' + $('[name="carousel[background]"]').val() + '"></script>' : '></script>';
+            return (type === 'carousel') ? '\xa0data-background="' + $('[name="carousel[background]"]:checked').val() + '"></script>' : '></script>';
           })
 
           // remove the tabbed carousel attributes
@@ -70,18 +78,53 @@ function widgetConfigListeners () {
       );
 
       if (type === 'gallery') {
+        $('div.checkbox.logos-only input[type="checkbox"]').prop('disabled', false);
         $('.settings.collapse').one('hidden.bs.collapse', function () {
           $('.settings.collapse .carousel, .settings.collapse .tabbed-carousel').show();
         });
-        $('.settings.collapse').collapse('hide');
+        $('.settings.collapse .tabbed-carousel, .settings.collapse .carousel').hide();
+        $('.settings.collapse .gallery').show();
+        // $('.settings.collapse').collapse('hide');
       } else if (type === 'carousel') {
-        $('.settings.collapse .tabbed-carousel').hide();
+        if ($('div.checkbox.logos-only input[type="checkbox"]').prop('checked')) {
+          $('div.checkbox.logos-only input[type="checkbox"]').trigger('click');
+        }
+        $('div.checkbox.logos-only input[type="checkbox"]').prop('disabled', true);
+        $('.settings.collapse .gallery, .settings.collapse .tabbed-carousel').hide();
         $('.settings.collapse .carousel').show();
-        $('.settings.collapse').collapse('show');
+        // $('.settings.collapse').collapse('show');
       } else if (type === 'tabbed_carousel') {
-        $('.settings.collapse .carousel').hide();
+        if ($('div.checkbox.logos-only input[type="checkbox"]').prop('checked')) {
+          $('div.checkbox.logos-only input[type="checkbox"]').trigger('click');
+        }
+        $('div.checkbox.logos-only input[type="checkbox"]').prop('disabled', true);
+        $('.settings.collapse .gallery, .settings.collapse .carousel').hide();
         $('.settings.collapse .tabbed-carousel').show();
-        $('.settings.collapse').collapse('show');
+        // $('.settings.collapse').collapse('show');
+      }
+    })
+
+    .on('change', '[name="gallery[max_rows]"]', function () {
+      $('.script-tag textarea').text(
+        $('.script-tag textarea').text()
+          .replace(/\sdata-max-rows="\d+"/, '\xa0data-max-rows="' + $(this).val() + '"')
+      );
+    })
+
+    .on('change', '[name="gallery[no_max_rows]"]', function () {
+      if ($(this).prop('checked')) {
+        $('[name="gallery[max_rows]"]').val('')
+        $('.form-group.max-rows .spinner').addClass('disabled')
+        $('.script-tag textarea').text(
+          $('.script-tag textarea').text().replace(/\sdata-max-rows="\d+"/, '')
+        );
+      } else {
+        $('[name="gallery[max_rows]"]').val('4')
+        $('.form-group.max-rows .spinner').removeClass('disabled')
+        $('.script-tag textarea').text(
+          $('.script-tag textarea').text()
+            .replace(/><\/script>/, '\xa0data-max-rows="4"></script>')
+        );
       }
     })
 
@@ -120,7 +163,6 @@ function widgetConfigListeners () {
 
     .on('change', '[name="plugin[content]"]', function () {
       var content = $(this).val();  // IN [custom, category, product]
-
       $('.script-tag textarea').text(
         $('.script-tag textarea').text()
 
@@ -186,14 +228,40 @@ function widgetConfigListeners () {
       );
     })
 
+    .on('change', '[name="plugin[logos_only]"]', function () {
+      // var isFirstSelection = !$('.script-tag textarea').text().match(/data-logos-only/);
+      $('.script-tag textarea').text(
+        $('.script-tag textarea').text()
+          .replace(
+            $(this).prop('checked') ? /><\/script>/ : /\xa0data-logos-only="true"/,
+            $(this).prop('checked') ? '\xa0data-logos-only="true"></script>' : ''
+          )
+      );
+    })
+
+    .on('change', '[name="plugin[grayscale]"]', function () {
+      var isFirstSelection = !$('.script-tag textarea').text().match(/data-grayscale/);
+      $('.script-tag textarea').text(
+        $('.script-tag textarea').text()
+          .replace(
+            $(this).prop('checked') ? /><\/script>/ : /\xa0data-grayscale="true"/,
+            $(this).prop('checked') ? '\xa0data-grayscale="true"></script>' : ''
+          )
+      );
+
+    })
+
     .on('click', 'a.plugin-demo:not([disabled])', function (e) {
       var demoPath = '/plugins/demo',
           params = '?',
           type = $('[name="plugin[type]"]:checked').val(),
           content = $('[name="plugin[content]"]:checked').val(),
+          maxRows = $('[name="gallery[max_rows]"]').val(),
           background = $('[name="carousel[background]"]:checked').val(),
           tabColor = $('[name="tabbed_carousel[tab_color]"]').val(),
           textColor = $('[name="tabbed_carousel[text_color]"]').val(),
+          logosOnly = $('[name="plugin[logos_only]"]').prop('checked'),
+          grayscale = $('[name="plugin[grayscale]"]').prop('checked'),
           delay = $('[name="tabbed_carousel[delay]"]').val(),
           stories = customStoriesToJson().replace('[', '%5B').replace(']', '%5D'),
           category = $('[name="plugin[category]"]').find('option:selected').data('slug'),
@@ -202,10 +270,14 @@ function widgetConfigListeners () {
         (content === 'custom' && $('[name="plugin[stories][]"]').val() ? '&stories=' + stories : '') +
         (content === 'category' && category ? '&category=' + category : '') +
         (content === 'product' && product ? '&product=' + product : '') +
+        (type === 'gallery' && maxRows ? '&max_rows=' + maxRows : '') +
         (type === 'carousel' ? '&background=' + background : '') +
+        (logosOnly ? '&logos_only=true' : '') +
+        (grayscale ? '&grayscale=true' : '') +
         (type === 'tabbed_carousel' ? '&tab_color=' + tabColor.replace('#', '%23') : '') +
         (type === 'tabbed_carousel' ? '&text_color=' + textColor.replace('#', '%23') : '') +
         (type === 'tabbed_carousel' ? '&delay=' + delay : '');
+        console.log('params', params)
       if (params.length === 1) params = '';   // no params
 // console.log('GET', demoPath + params)
       $(this).attr('href', demoPath + params);

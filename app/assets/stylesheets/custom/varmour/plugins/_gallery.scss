@@ -25,14 +25,18 @@ a.cs-thumbnail {
     }
   }
   .caption {
-    font: {
-      family: inherit !important;
-      size: 10px !important;
-      weight: 300 !important;
+    span {
+      font: {
+        family: inherit !important;
+        size: 10px !important;
+        weight: 300 !important;
+      }
     }
     text-transform: uppercase;
     color: #000;
-    span.click-action:after { text-decoration: none; }
+    span.click-action:after {
+      text-decoration: none;
+    }
   }
   &:hover, &:active {
     background-color: $story-hover-color;

@@ -7,7 +7,7 @@
       .csp-cta:hover {
         opacity: 0.9 !important;
       }
-      @media only screen and (max-width: 575px) {
+      @media only screen and (max-width: 500px) {
         .csp-cta {
           padding: 14px 20px !important;
         }
@@ -26,7 +26,7 @@
   </head>
   <body>
 
-    <%= @body %>
+    <%= @body.html_safe %>
 
     <!-- contribution won't be present for the alert email -->
     <% if @contribution.present? %>
