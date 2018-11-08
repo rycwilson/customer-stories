@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181008202313) do
+ActiveRecord::Schema.define(version: 20181108193152) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -370,7 +370,7 @@ ActiveRecord::Schema.define(version: 20181008202313) do
     t.datetime "publish_date"
     t.datetime "logo_publish_date"
     t.string   "slug"
-    t.text     "content",              default: "<p><strong>Situation</strong></p><p>Situation description</p><p><strong>Challenge</strong></p><p>Challenge description</p><p><strong>Solution</strong></p><p>Solution description</p><p><strong>Benefits</strong></p><p>Benefits description</p>"
+    t.text     "narrative",            default: "<p><strong>Situation</strong></p><p>Situation description</p><p><strong>Challenge</strong></p><p>Challenge description</p><p><strong>Solution</strong></p><p>Solution description</p><p><strong>Benefits</strong></p><p>Benefits description</p>"
     t.string   "quote_attr_name"
     t.string   "quote_attr_title"
     t.boolean  "preview_published",    default: false

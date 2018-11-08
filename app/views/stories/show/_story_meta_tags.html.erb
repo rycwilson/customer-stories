@@ -66,7 +66,7 @@
     "about": <%= raw story.about_jsonld.to_json %>,
     "headline": "<%= story.title %>",
     "alternativeHeadline": <%= raw success.results.pluck('description').to_json %>,
-    "articleBody": "<%= story.content %>",
+    "articleBody": "<%= story.narrative %>",
     // "url": "<%= story.csp_story_url %>",
     "genre": "<%= success.story_categories.take.try(:name) %>",
     "keywords": "<%= meta_keywords(success) %>",

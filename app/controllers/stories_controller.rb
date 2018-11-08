@@ -81,8 +81,8 @@ class StoriesController < ApplicationController
       )
     end
     @is_preview = params[:preview].present?
-    # convert the story content to plain text (for SEO tags)
-    @story_content_text = HtmlToPlainText.plain_text(@story.content)
+    # convert the story narrative to plain text (for SEO tags)
+    # @story_narrative = HtmlToPlainText.plain_text(@story.narrative)
     @related_stories = @story.related_stories
     @more_stories = @company.public_stories
   end
@@ -185,7 +185,7 @@ class StoriesController < ApplicationController
     @search_string = params[:search]
     @story_ids = Story.company_public(@company.id)
                       .where(
-                        "lower(title) LIKE ? OR lower(content) LIKE ?",
+                        "lower(title) LIKE ? OR lower(narrative) LIKE ?",
                         "%#{@search_string.downcase}%",
                         "%#{@search_string.downcase}%"
                       )
@@ -320,7 +320,7 @@ class StoriesController < ApplicationController
     params.require(:story)
       .permit(
         :title, :summary, :quote, :quote_attr_name, :quote_attr_title, :video_url, :success_id,
-        :formatted_video_url, :content, :published, :logo_published, :preview_published,
+        :formatted_video_url, :narrative, :published, :logo_published, :preview_published,
         success_attributes: [
           :id, :name, :customer_id, :curator_id,
           product_ids: [], story_category_ids: [],

@@ -126,7 +126,7 @@ class Story < ApplicationRecord
 
   # scrub user-supplied html input using whitelist
   before_update(:scrub_html_input, on: [:create, :update],
-    if: Proc.new { self.content.present? && self.content_changed? })
+    if: Proc.new { self.narrative.present? && self.narrative_changed? })
 
   # update timestamps
   before_update(:update_publish_state, on: [:create, :update])
@@ -214,7 +214,7 @@ class Story < ApplicationRecord
 
   def scrub_html_input
     # white_list_sanitizer = Rails::Html::WhiteListSanitizer.new
-    # self.content = white_list_sanitizer.sanitize(content, tags: %w(a p span div strong i u em section blockquote cite br pre font h1 h2 h3 h4 h5 h6 table tr td ol ul li hr img), attributes: %w(id class style face href src))
+    # self.narrative = white_list_sanitizer.sanitize(content, tags: %w(a p span div strong i u em section blockquote cite br pre font h1 h2 h3 h4 h5 h6 table tr td ol ul li hr img), attributes: %w(id class style face href src))
   end
 
   def assign_tags new_story

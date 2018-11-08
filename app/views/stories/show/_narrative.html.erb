@@ -1,4 +1,16 @@
 
+<div class="visible-xs-block">
+
+  <section class="narrative">
+
+    <div>
+      <%= story.narrative.html_safe %>
+    </div>
+
+  </section>
+
+</div>
+
 <div class="hidden-xs">
 
   <section class="narrative <%= is_plugin ? 'cs-well' : 'well' %>">
@@ -9,19 +21,7 @@
     </div>
 
     <div>
-      <%= story.content.html_safe %>
-    </div>
-
-  </section>
-
-</div>
-
-<div class="visible-xs-block">
-
-  <section class="narrative">
-
-    <div>
-      <%= story.content.html_safe %>
+      <%= story.narrative.html_safe %>
     </div>
 
   </section>
