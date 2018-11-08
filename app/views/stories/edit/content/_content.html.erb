@@ -64,7 +64,7 @@
 
   <div class="form-group narrative" style="width: 624px">
 
-    <%= story_form.label(:content, 'Narrative') %>
+    <%= story_form.label(:narrative, 'Narrative') %>
 
     <% if story.contributions.submissions.present? %>
       <label class='contributions-collapse pull-right'>
@@ -75,7 +75,7 @@
       </label>
     <% end %>
 
-    <%= story_form.text_area(:content, id: 'narrative-editor',
+    <%= story_form.text_area(:narrative, id: 'narrative-editor',
             data: { provider: 'summernote' }) %>
   </div>
 
