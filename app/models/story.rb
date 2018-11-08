@@ -397,7 +397,8 @@ class Story < ApplicationRecord
   end
 
   def expire_story_testimonial_fragment_cache
-    self.expire_fragment("#{self.company.subdomain}/story-#{self.id}-testimonial")
+    self.expire_fragment("#{self.company.subdomain}/stories/#{self.id}/testimonial")
+    self.expire_fragment("#{self.company.subdomain}/stories/#{self.id}/cs-testimonial")
   end
 
   def expire_story_video_info_cache
@@ -406,14 +407,17 @@ class Story < ApplicationRecord
 
   def expire_story_video_xs_fragment_cache
     self.expire_fragment("#{self.company.subdomain}/stories/#{self.id}/video-xs")
+    self.expire_fragment("#{self.company.subdomain}/stories/#{self.id}/cs-video-xs")
   end
 
   def expire_story_narrative_fragment_cache
     self.expire_fragment("#{self.company.subdomain}/stories/#{self.id}/narrative")
+    self.expire_fragment("#{self.company.subdomain}/stories/#{self.id}/cs-narrative")
   end
 
   def expire_results_fragment_cache
     self.expire_fragment("#{self.company.subdomain}/stories/#{self.id}/results")
+    self.expire_fragment("#{self.company.subdomain}/stories/#{self.id}/cs-results")
   end
 
   def contributors_jsonld

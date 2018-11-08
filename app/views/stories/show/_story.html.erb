@@ -22,7 +22,7 @@
     <!-- includes video -->
     <section class="<%= is_plugin ? 'cs-testimonial' : 'testimonial' %> <%= story.video_url.present? ? '' : 'no-video' %>">
 
-      <% cache("#{company.subdomain}/story-#{story.id}-#{is_plugin ? 'cs-' : ''}testimonial", skip_digest: true) do %>
+      <% cache("#{company.subdomain}/stories/#{story.id}/#{is_plugin ? 'cs-' : ''}testimonial", skip_digest: true) do %>
 
         <%= render(
               'stories/show/testimonial',
