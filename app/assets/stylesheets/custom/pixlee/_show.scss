@@ -76,6 +76,7 @@
     .story-contributors {
       > .well:first-child, .cs-well:first-child {
         background-image: linear-gradient(to bottom, $fg-color 72%, #ffffff 100%);
+        border-top: none;
         &:before, &:after {
           content: none;
           // background-image: linear-gradient(to bottom, $border-color 0, transparent 90%);
