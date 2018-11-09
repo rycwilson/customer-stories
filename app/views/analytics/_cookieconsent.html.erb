@@ -20,7 +20,7 @@
     // for browsers with js disabled
     $('body').append(
         '<noscript>' +
-          '<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-<%= company.try(:gsub, /(GTM-|gtm-)/, '') %>" height="0" width="0" style="display:none;visibility:hidden">' +
+          '<iframe src="https://www.googletagmanager.com/ns.html?id=GTM-<%= company.try(:gtm_id).try(:gsub, /(GTM-|gtm-)/, '') %>" height="0" width="0" style="display:none;visibility:hidden">' +
           '</iframe>' +
         '</noscript>'
       );
@@ -44,7 +44,6 @@
   };
 
   var loadTags = function () {
-    console.log('loadTags()')
     loadAgileCrm();
     if (<%= controller == 'stories' %>) {
       loadGoogleAdwords();
