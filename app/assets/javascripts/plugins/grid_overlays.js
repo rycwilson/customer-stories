@@ -44,13 +44,16 @@
   // csp...
   bodyScrollY = $('body').css('overflow-y'),
   bodyScrollX = $('body').css('overflow-x'),
-  scrollbarWidth = window.innerWidth - $(document).width(),
+  scrollbarWidth = window.innerWidth - document.body.clientWidth,
   gridOffsetLeft = $(gridEl).offset().left,
   gridOffsetRight = ($(window).width() - ($(gridEl).offset().left + $(gridEl).outerWidth())),
   itemOffsetLeft, itemOffsetTop;  // will be assigned when an item is clicked
 
   $('.cs-content').css('margin-left', '-' + gridOffsetLeft + 'px');
 
+  // console.log('gridOffsetLeft', gridOffsetLeft)
+  // console.log('gridOffsetRight', gridOffsetRight)
+  // console.log('scrollbarWidth', scrollbarWidth)
   /**
    * gets the viewport width and height
    * based on http://responsejs.com/labs/dimensions/
@@ -128,16 +131,18 @@
     var dummy = document.createElement('div');
     dummy.className = 'placeholder';
 
-
-
     // set the width/heigth and position
     itemOffsetLeft = $(item).offset().left - gridOffsetLeft;
+    // console.log('itemOffsetLeft', itemOffsetLeft)
     if ($(item).hasClass('grid__item--carousel')) {
       itemOffsetTop = ($('.cs-rh-container').offset().top + parseInt($('.row-horizon').css('padding-top'))) - $(gridEl).offset().top;
       // console.log('offset top', itemOffsetTop)
     } else {
       itemOffsetTop = item.offsetTop;
+      // console.log('itemOffsetTop', itemOffsetTop)
     }
+    // console.log('scale3d arg1', item.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth))
+    // console.log('itemOffsetHeight', item.offsetHeight)
     dummy.style.WebkitTransform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + item.offsetHeight/getViewport('y') + ',1)';
     dummy.style.transform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + item.offsetHeight/getViewport('y') + ',1)';
 
