@@ -4,7 +4,7 @@ module ApplicationHelper
     return nil if company.blank? || !['stories', 'widgets', 'companies'].include?(controller_name)
     fonts = case company.subdomain
       when 'pixlee'
-        'Muli:400,600,700|Bowlby+One'
+        'Muli:300,400,600,700|Bowlby+One'
       else
         ''
       end

@@ -122,8 +122,11 @@
   function initWidget (type, $container, $script, isDemo, env) {
     var initVideo = $.Deferred(),
         initOverlays = $.Deferred(),
-        maxGalleryRows = $script.data('max-rows'),
+        maxGalleryRows = parseInt($script.data('max-rows'), 10),
         tabbedCarouselDelay = ((type === 'tabbed_carousel') && parseInt($script.data('delay'), 10) || 0);
+
+    // console.log($script.data('max-rows'))
+    // console.log('maxGalleryRows', maxGalleryRows)
 
     trackPluginVisitor($container, isDemo, env);
 

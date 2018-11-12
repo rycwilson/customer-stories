@@ -66,6 +66,109 @@
     }
   }
 
+
+  .cta__image {
+    height: 200px;
+    background: url('http://assets.pixlee.com/website/webinar/webinar-hero.png') center / cover no-repeat;
+  }
+  .cta__wrapper {
+    height: 200px;
+    position: relative;
+    background: linear-gradient(135deg, #81429f 25%, #3586c6 100%);
+    overflow: hidden;
+    margin-bottom: 25px;
+    .cta__text {
+      position: absolute;
+      top: 0;
+      background: transparent;
+      height: 115px;
+      width: 100%;
+      z-index: 100;
+      > div {
+        position: absolute;
+        width: 80%;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        display: flex;
+        align-items: center;
+        img {
+          height: 45px;
+        }
+        span {
+          color: #fff;
+          padding-left: 15px;
+          font-size: 22px !important;
+          font-weight: 300;
+          line-height: 28px !important;
+        }
+      }
+    }
+    .cta__button {
+      position: absolute;
+      background: transparent;
+      z-index: 100;
+      bottom: 0;
+      height: 125px;
+      width: 100%;
+      > div {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        .primary-cta {
+          position: relative;
+          display: inline-block;
+          cursor: pointer;
+          a {
+            background-color: $pixlee-blue;
+            text-decoration: none;
+            padding: 12px 32px;  // doubles bootstrap horizontal padding
+            border: 1px solid transparent;
+            border-radius: 0;
+            transition: filter 0.25s ease;
+            // box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 1px 1px rgba(0, 0, 0, 0.075);  // copied from mvp
+            // display text is rendered (but not shown thanks to opacity) in this span
+            // in order to establish button dimensions
+            span {
+              opacity: 0;
+            }
+          }
+          > div:last-child {
+            padding-bottom: 2px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            white-space: nowrap;  // ensure button expands with text
+            span {
+              font-weight: 700;
+              letter-spacing: 0.02rem;
+              text-transform: uppercase;
+              font-size: 12px !important;
+            }
+          }
+          &:hover {
+            a {
+              transition: all 0.25s ease;
+              filter: brightness(90%);
+            }
+          }
+        }
+
+      }
+    }
+    .cta__topography {
+      background: url('https://assets.pixlee.com/bnw_website_images/images/topography.png') center / cover repeat transparent;
+      display: block;
+      position: absolute;
+      margin-bottom: 25px;
+      width: 100%;
+      height: 100%;
+    }
+  }
+
   .story-content, .cs-story-content {
     background-color: $bg-color;
     .section-title h4 {
