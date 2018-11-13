@@ -27,7 +27,18 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
                 $(this).prop('scrollTop', Math.max(0, Math.min(maxY, $(this).prop('scrollTop') + offsetY)));
               }
             });
-          };
+          },
+      showPixleeTab = function (showTheTab) {
+        if (subdomain === 'pixlee' && showTheTab) {
+          // console.log('showTab')
+          setTimeout(function () {
+            $('button.olark-launch-button').css('opacity', '1');
+          }, 200)
+        } else if (subdomain === 'pixlee' && !showTheTab) {
+          // console.log('!showTab')
+          $('button.olark-launch-button').css('opacity', '0');
+        }
+      };
 
   applyScrollBoundaries();
 
@@ -36,12 +47,10 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
     .on('click touchend', '.cs-close-xs', function () {
       // there are multiple close buttons in the story header; don't trigger them all
       $('.content__item--show .cs-close').first().trigger('click');
-
-      if (subdomain === 'pixlee') {
-        setTimeout(function () {
-          $('button.olark-launch-button').show();
-        }, 200)
-      }
+      showPixleeTab(true);
+    })
+    .on('click', '.cs-close', function () {
+      showPixleeTab(true);
     })
 
     .on('click', '.linkedin-widget', function () {
@@ -103,9 +112,7 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
                   $story.find('.primary-cta-xs').addClass('open');
                 }, 3000);
 
-                if (subdomain === 'pixlee') {
-                  $('button.olark-launch-button').hide()
-                }
+                showPixleeTab(false);
 
               });
           })
