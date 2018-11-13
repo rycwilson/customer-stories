@@ -14,8 +14,12 @@ function storiesShow () {
   }, 3000);
 
   $(document)
-    .on('click', '#primary-cta-xs button.remove', function () {
-      $('#primary-cta-xs').remove();
+    .on('click touchend', '#primary-cta-xs.open', function (e) {
+      if ($(e.target).is('button.remove')) {
+        $(this).remove();
+      } else if (!$(e.target).is('a')) {
+        $(this).find('a')[0].click();
+      }
     })
     .on('click', '.edit-story a', function () {
       Cookies.set('csp-story-tab', '#story-content');

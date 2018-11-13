@@ -49,6 +49,7 @@
         }
         > div:last-child {
           position: absolute;
+          pointer-events: none;  // allow click to pass through to <a>
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
@@ -60,8 +61,14 @@
         }
         &:hover {
           a {
-            transition: all 0.25s ease;
+            transition: filter 0.25s ease;
             filter: brightness(90%);
+            &:active {
+              outline: none;  // get rid of the box shadow on click
+              box-shadow: 0 0;
+              filter: brightness(85%);
+              transition: filter 0s;
+            }
           }
         }
       }
