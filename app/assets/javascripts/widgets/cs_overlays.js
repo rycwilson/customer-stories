@@ -27,7 +27,18 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
                 $(this).prop('scrollTop', Math.max(0, Math.min(maxY, $(this).prop('scrollTop') + offsetY)));
               }
             });
-          };
+          },
+      showPixleeTab = function (showTheTab) {
+        if (subdomain === 'pixlee' && showTheTab) {
+          // console.log('showTab')
+          setTimeout(function () {
+            $('button.olark-launch-button').css('opacity', '1');
+          }, 200)
+        } else if (subdomain === 'pixlee' && !showTheTab) {
+          // console.log('!showTab')
+          $('button.olark-launch-button').css('opacity', '0');
+        }
+      };
 
   applyScrollBoundaries();
 
@@ -36,21 +47,31 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
     .on('click touchend', '.cs-close-xs', function () {
       // there are multiple close buttons in the story header; don't trigger them all
       $('.content__item--show .cs-close').first().trigger('click');
-
-      if (subodmain === 'pixlee') {
-        setTimeout(function () {
-          $('button.olark-launch-button').show();
-        }, 200)
-      }
+      showPixleeTab(true);
+    })
+    .on('click', '.cs-close', function () {
+      showPixleeTab(true);
     })
 
     .on('click', '.linkedin-widget', function () {
       window.open($(this).data('linkedin-url'), '_blank');
     })
 
+    .on('click touchend', '.primary-cta-xs.open', function (e) {
+      if ($(e.target).is('button.remove')) {
+        $(this).remove();
+      } else if (!$(e.target).is('a')) {
+        $(this).find('a')[0].click();
+      }
+    })
+
     .on('click', '.primary-cta-xs button.remove', function () {
       $('.primary-cta-xs').each(function () { $(this).remove(); });
       // TODO add a cookie
+    })
+
+    .on('click', '.primary-cta-xs:not(a)', function () {
+      $(this).find('a').trigger('click');
     })
 
     .on('click', 'a.published, a.preview-published', function (e) {
@@ -91,9 +112,7 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
                   $story.find('.primary-cta-xs').addClass('open');
                 }, 3000);
 
-                if (subodmain === 'pixlee') {
-                  $('button.olark-launch-button').hide()
-                }
+                showPixleeTab(false);
 
               });
           })

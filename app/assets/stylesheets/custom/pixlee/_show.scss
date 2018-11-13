@@ -96,7 +96,7 @@
           height: 45px;
         }
         span {
-          color: #fff;
+          color: #fff !important;
           padding-left: 15px;
           font-size: 22px !important;
           font-weight: 300;
@@ -116,7 +116,6 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-
         .primary-cta {
           position: relative;
           display: inline-block;
@@ -136,6 +135,7 @@
             }
           }
           > div:last-child {
+            pointer-events: none;
             padding-bottom: 2px;
             position: absolute;
             top: 50%;
@@ -143,7 +143,8 @@
             transform: translate(-50%, -50%);
             white-space: nowrap;  // ensure button expands with text
             span {
-              font-weight: 700;
+              color: #fff !important;
+              font-weight: 700 !important;
               letter-spacing: 0.02rem;
               text-transform: uppercase;
               font-size: 12px !important;
@@ -151,8 +152,14 @@
           }
           &:hover {
             a {
-              transition: all 0.25s ease;
+              transition: filter 0.25s ease;
               filter: brightness(90%);
+              &:active {
+                outline: none;  // get rid of the box shadow on click
+                box-shadow: 0 0;
+                filter: brightness(85%);
+                transition: filter 0s;
+              }
             }
           }
         }
