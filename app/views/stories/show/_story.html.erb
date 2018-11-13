@@ -106,4 +106,21 @@
 
   </article>
 
+  <!-- web form not presently supported for mobile view -->
+  <% if is_plugin && company.ctas.try(:primary).present? && company.ctas.primary.type == 'CTALink' %>
+    <div class="visible-xs-block">
+      <div class="primary-cta-xs" style="<%= primary_cta_style(company, true) %>">
+        <a href="<%= company.ctas.primary.link_url %>">
+          <span><%= company.ctas.primary.display_text %></span>
+          <span>
+            <i class="fa fa-fw fa-caret-right"></i>
+          </span>
+        </a>
+        <button type="button" class="remove">
+          <i class="fa fa-fw fa-remove"></i>
+        </button>
+      </div>
+    </div>
+  <% end %>
+
 </div>

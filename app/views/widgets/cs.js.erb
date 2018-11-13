@@ -85,7 +85,6 @@
 
   // root_url provides a company-specific url (via subdomain)
   function getWidget ($container, $script, isDemo, env) {
-
     return function () {
       $.ajax({
         url: "<%= URI.join(root_url, plugin_view_path(@type)) %>",
@@ -124,7 +123,6 @@
         initOverlays = $.Deferred(),
         maxGalleryRows = parseInt($script.data('max-rows'), 10),
         tabbedCarouselDelay = ((type === 'tabbed_carousel') && parseInt($script.data('delay'), 10) || 0);
-
     // console.log($script.data('max-rows'))
     // console.log('maxGalleryRows', maxGalleryRows)
 

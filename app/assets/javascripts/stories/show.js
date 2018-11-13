@@ -11,7 +11,7 @@ function storiesShow () {
 
   setTimeout(function () {
     $('#primary-cta-xs').addClass('open');
-  }, 5000);
+  }, 3000);
 
   $(document)
     .on('click', '#primary-cta-xs button.remove', function () {

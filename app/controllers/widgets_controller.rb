@@ -34,6 +34,10 @@ class WidgetsController < ApplicationController
         render(text: jsonp)
       end
     end
+    # DEPRECATION WARNING: `render :text` is deprecated because it does not actually render a `text/plain` response.
+    # Switch to `render plain: 'plain text'` to render as `text/plain`, `render html: '<strong>HTML</strong>'` to render as `text/html`,
+    # or `render body: 'raw'` to match the deprecated behavior and render with the default Content-Type, which is `text/plain`.
+    # (called from block (2 levels) in show at /Users/wilson/dev/csp/app/controllers/widgets_controller.rb:34)
   end
 
   def init

@@ -31,57 +31,68 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
 
   applyScrollBoundaries();
 
-  $container.on('click', 'a.published, a.preview-published', function (e) {
-    e.preventDefault();
-    var $story, $storyCard = $(this);
-    if ($storyCard.hasClass('cs-loaded')) {
-      return false;  // overlays handler
-    } else {
-      loading($storyCard);
-      $.ajax({
-        url: $storyCard.attr('href'),
-        method: 'GET',
-        data: {
-          is_plugin: true,
-          window_width: window.innerWidth
-        },
-        dataType: 'jsonp'
-      })
-        .done(function (data, status, jqxhr) {
-          var storyIndex = $container.is('#cs-gallery') ? $storyCard.index() + 1 : $storyCard.parent().index() + 1;
-          $story = $container.find('.content__item:nth-of-type(' + storyIndex + ')');
-          trackStoryVisitor($storyCard);
-          $.when(
-            $story.html(data.html),
-            $storyCard.removeClass('cs-still-loading').addClass('cs-loaded')
-          )
-            .then(function () { linkedinListener($story); })
-            .then(function () {
-              if ($storyCard.hasClass('has-video')) {
-                cspInitVideo($, $story);
-              }
-              initLinkedIn();
+  $container
+    // avoid double-tap behavior
+    .on('click touchend', '.cs-close-xs', function () {
+      // there are multiple close buttons in the story header; don't trigger them all
+      $('.content__item--show .cs-close').first().trigger('click');
+    })
 
-              // avoid double-tap behavior
-              $container.on('click touchend', '.cs-close-xs', function () {
-                // there are multiple close buttons in the story header; don't trigger them all
-                $('.content__item--show .cs-close').first().trigger('click');
-              });
+    .on('click', '.linkedin-widget', function () {
+      window.open($(this).data('linkedin-url'), '_blank');
+    })
 
-              $container.on('click', '.linkedin-widget', function () {
-                window.open($(this).data('linkedin-url'), '_blank');
-              });
+    .on('click', '.primary-cta-xs button.remove', function () {
+      $('.primary-cta-xs').each(function () { $(this).remove(); });
+      // TODO add a cookie
+    })
 
-              // the grid_overlays.js listener is vanilla js, won't pick up on $storyCard.trigger('click')
-              $storyCard[0].click();
-            });
+    .on('click', 'a.published, a.preview-published', function (e) {
+      e.preventDefault();
+      var $story, $storyCard = $(this);
+      if ($storyCard.hasClass('cs-loaded')) {
+        return false;  // overlays handler
+      } else {
+        loading($storyCard);
+        $.ajax({
+          url: $storyCard.attr('href'),
+          method: 'GET',
+          data: {
+            is_plugin: true,
+            window_width: window.innerWidth
+          },
+          dataType: 'jsonp'
         })
-        .fail(function () {
+          .done(function (data, status, jqxhr) {
+            var storyIndex = $container.is('#cs-gallery') ? $storyCard.index() + 1 : $storyCard.parent().index() + 1;
+            $story = $container.find('.content__item:nth-of-type(' + storyIndex + ')');
+            trackStoryVisitor($storyCard);
+            $.when(
+              $story.html(data.html),
+              $storyCard.removeClass('cs-still-loading').addClass('cs-loaded')
+            )
+              .then(function () { linkedinListener($story); })
+              .then(function () {
+                if ($storyCard.hasClass('has-video')) {
+                  cspInitVideo($, $story);
+                }
+                initLinkedIn();
 
-        });
-    }
+                // the grid_overlays.js listener is vanilla js, won't pick up on $storyCard.trigger('click')
+                $storyCard[0].click();
 
-  });
+                setTimeout(function () {
+                  $story.find('.primary-cta-xs').addClass('open');
+                }, 3000);
+
+              });
+          })
+          .fail(function () {
+
+          });
+      }
+
+    });
 
   function trackStoryVisitor ($storyCard) {
     if (env === 'customerstories.net' && !isDemo) {
