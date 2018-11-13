@@ -36,6 +36,12 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
     .on('click touchend', '.cs-close-xs', function () {
       // there are multiple close buttons in the story header; don't trigger them all
       $('.content__item--show .cs-close').first().trigger('click');
+
+      if (subodmain === 'pixlee') {
+        setTimeout(function () {
+          $('button.olark-launch-button').show();
+        }, 200)
+      }
     })
 
     .on('click', '.linkedin-widget', function () {
@@ -84,6 +90,10 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
                 setTimeout(function () {
                   $story.find('.primary-cta-xs').addClass('open');
                 }, 3000);
+
+                if (subodmain === 'pixlee') {
+                  $('button.olark-launch-button').hide()
+                }
 
               });
           })
