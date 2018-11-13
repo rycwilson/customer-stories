@@ -34,9 +34,8 @@ module StoriesHelper
     company_curator?(company_id) && controller_name == 'stories' && action_name == 'show'
   end
 
-  def primary_cta_style (company)
-
-    "position: relative; background-color:#{company.primary_cta_background_color}; color:#{company.primary_cta_text_color}"
+  def primary_cta_style (company, is_xs=false)
+    "position: #{is_xs ? 'fixed' : 'relative' }; background-color: #{company.primary_cta_background_color}; color:#{company.primary_cta_text_color}"
   end
 
   def include_filters? (company)
