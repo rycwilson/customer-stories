@@ -96,7 +96,7 @@
           height: 45px;
         }
         span {
-          color: #fff;
+          color: #fff !important;
           padding-left: 15px;
           font-size: 22px !important;
           font-weight: 300;
@@ -143,6 +143,7 @@
             transform: translate(-50%, -50%);
             white-space: nowrap;  // ensure button expands with text
             span {
+              color: #fff!important;
               font-weight: 700;
               letter-spacing: 0.02rem;
               text-transform: uppercase;
