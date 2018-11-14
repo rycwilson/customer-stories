@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181108193152) do
+ActiveRecord::Schema.define(version: 20181114151742) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -320,6 +320,20 @@ ActiveRecord::Schema.define(version: 20181108193152) do
     t.index ["story_id"], name: "index_outbound_actions_stories_on_story_id", using: :btree
   end
 
+  create_table "plugins", force: :cascade do |t|
+    t.integer  "company_id"
+    t.boolean  "show",       default: false
+    t.integer  "show_delay", default: 5000
+    t.boolean  "hide",       default: false
+    t.integer  "hide_delay", default: 5000
+    t.string   "tab_color",  default: "#ddd"
+    t.string   "text_color", default: "#333"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.integer  "show_freq",  default: 7
+    t.index ["company_id"], name: "index_plugins_on_company_id", using: :btree
+  end
+
   create_table "products", force: :cascade do |t|
     t.string   "name",        null: false
     t.text     "description"
@@ -490,20 +504,6 @@ ActiveRecord::Schema.define(version: 20181108193152) do
     t.index ["clicky_uid"], name: "index_visitors_on_clicky_uid", unique: true, using: :btree
   end
 
-  create_table "widgets", force: :cascade do |t|
-    t.integer  "company_id"
-    t.boolean  "show",       default: false
-    t.integer  "show_delay", default: 5000
-    t.boolean  "hide",       default: false
-    t.integer  "hide_delay", default: 5000
-    t.string   "tab_color",  default: "#ddd"
-    t.string   "text_color", default: "#333"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
-    t.integer  "show_freq",  default: 7
-    t.index ["company_id"], name: "index_widgets_on_company_id", using: :btree
-  end
-
   add_foreign_key "adwords_ad_groups", "adwords_campaigns"
   add_foreign_key "adwords_ads", "adwords_ad_groups"
   add_foreign_key "adwords_ads", "stories"
@@ -528,6 +528,7 @@ ActiveRecord::Schema.define(version: 20181108193152) do
   add_foreign_key "outbound_actions", "companies"
   add_foreign_key "outbound_actions_stories", "outbound_actions"
   add_foreign_key "outbound_actions_stories", "stories"
+  add_foreign_key "plugins", "companies"
   add_foreign_key "products", "companies"
   add_foreign_key "products_successes", "products"
   add_foreign_key "products_successes", "successes"
@@ -544,5 +545,4 @@ ActiveRecord::Schema.define(version: 20181108193152) do
   add_foreign_key "visitor_actions", "successes"
   add_foreign_key "visitor_actions", "visitor_sessions"
   add_foreign_key "visitor_sessions", "visitors"
-  add_foreign_key "widgets", "companies"
 end

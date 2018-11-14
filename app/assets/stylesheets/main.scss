@@ -15,7 +15,7 @@ $icon-font-path: "bootstrap-sass/assets/fonts/bootstrap/";
 @import 'bootstrap-jasny/dist/css/jasny-bootstrap';
 // @import 'magnific-popup/dist/magnific-popup';
 
-@import 'plugins/plugins';
+@import 'vendor/vendor';
 
 @import 'views/site';
 @import 'views/navbars/navbars';

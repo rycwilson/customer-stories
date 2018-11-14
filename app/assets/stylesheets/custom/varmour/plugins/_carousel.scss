@@ -2,8 +2,8 @@
 // varmour was the original carousel which means standard carousel settings aren't imported,
 // so need to import the constituent parts directly
 @import '../../../base/globals';
-@import '../../../views/widgets/widgets_bootstrap';
-@import '../../../views/widgets/overlays/main';
+@import '../../../views/plugins/plugins_bootstrap';
+@import '../../../views/plugins/overlays/main';
 @import '../../../views/stories/show/show';
 // @import '../show';
 

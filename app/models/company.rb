@@ -252,7 +252,7 @@ class Company < ApplicationRecord
       grouped_options
     end
   end
-  has_one :widget, dependent: :destroy
+  has_one :plugin, dependent: :destroy
   has_many :adwords_campaigns, dependent: :destroy do
     def topic
       where(type:'TopicCampaign').take
@@ -272,7 +272,7 @@ class Company < ApplicationRecord
   accepts_nested_attributes_for :adwords_images, allow_destroy: true
 
   after_commit(on: [:create]) do
-    self.create_widget
+    self.create_plugin
 
     # default invitation templates (formerly email templates, futurely invitation templates)
     Company::CSP.invitation_templates.each do |factory_template|

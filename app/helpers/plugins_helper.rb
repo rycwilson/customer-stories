@@ -1,4 +1,4 @@
-module WidgetsHelper
+module PluginsHelper
 
   def params_to_data_attrs (params)
     [
@@ -17,7 +17,7 @@ module WidgetsHelper
       .join(' ')
   end
 
-  # method provides for auto-populating settings for legacy widgets that won't
+  # method provides for auto-populating settings for legacy plugins that won't
   # necessarily have the expected data attributes
   def tabbed_carousel_style (company, tab_color, text_color, border_only=false)
     case company.subdomain

@@ -1,5 +1,5 @@
 
-// see also plugins/summernote.js
+// see also vendor/summernote.js
 
 function dataPlaceholdersListeners () {
 

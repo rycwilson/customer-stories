@@ -52,16 +52,16 @@ Rails.application.routes.draw do
 
     get '/', to: 'stories#index'
 
-    get '/plugins/:type/cs', to: 'widgets#main'
-    get '/widgets/:type/cs', to: 'widgets#main'  # legacy
-    get '/widget/cs', to: 'widgets#main'  # legacy
+    get '/plugins/:type/cs', to: 'plugins#main'
+    get '/widgets/:type/cs', to: 'plugins#main'  # legacy
+    get '/widget/cs', to: 'plugins#main'  # legacy
 
-    # specifying a default format for widgets#show because (for unknown reason) ajax jsonp
+    # specifying a default format for plugins#show because (for unknown reason) ajax jsonp
     # request sent from IE11 was resulting in request interpreted as html
-    get '/plugins/:type/show', to: 'widgets#show', as: 'plugin_view', format: 'js'
-    get '/plugins/:type/init', to: 'widgets#init', as: 'plugin_init'
-    get '/plugins/track', to: 'widgets#track'
-    get '/plugins/demo', to: 'widgets#demo'
+    get '/plugins/:type/show', to: 'plugins#show', as: 'plugin_view', format: 'js'
+    get '/plugins/:type/init', to: 'plugins#init', as: 'plugin_init'
+    get '/plugins/track', to: 'plugins#track'
+    get '/plugins/demo', to: 'plugins#demo'
 
     # see below for route to public story page
     resources :stories, only: :index do

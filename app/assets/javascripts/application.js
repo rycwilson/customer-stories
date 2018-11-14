@@ -8,7 +8,7 @@
 //= require underscore/underscore
 //= require bootstrap-sass/assets/javascripts/bootstrap-sprockets
 //= require_tree ./lib
-//= require plugins/plugins
+//= require vendor/vendor
 //= require companies/companies
 //= require stories/stories
 //= require contributions/contributions

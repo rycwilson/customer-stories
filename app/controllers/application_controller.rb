@@ -18,7 +18,7 @@ class ApplicationController < ActionController::Base
     unless: Proc.new do
       devise_controller? ||
       invalid_subdomain? ||
-      params[:controller] == 'widgets' ||
+      params[:controller] == 'plugins' ||
       request.subdomain == 'cspdev'
     end
   )
@@ -43,7 +43,7 @@ class ApplicationController < ActionController::Base
     is_curator = (user_signed_in? && (current_user.company_id == company.try(:id)))
     gon.push({
       company: company.present? ? JSON.parse(company.to_json({
-        methods: [:curators, :customers, :invitation_templates, :widget],
+        methods: [:curators, :customers, :invitation_templates, :plugin],
       })) : nil,
       current_user: user_signed_in? ? {
         id: current_user.id,

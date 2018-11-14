@@ -1,9 +1,9 @@
-require 'stories_and_widgets'
+require 'stories_and_plugins'
 class StoriesController < ApplicationController
   include StoriesHelper
-  include StoriesAndWidgets
+  include StoriesAndPlugins
 
-  # jsonp request for widgets
+  # jsonp request for plugins
   skip_before_action(:verify_authenticity_token, only: [:show], if: Proc.new { params[:is_plugin] })
 
   before_action :set_company
@@ -24,7 +24,7 @@ class StoriesController < ApplicationController
     @category_select_cache_key = @company.category_select_cache_key(0)
     @product_select_cache_key = @company.product_select_cache_key(0)
 
-    # from widget clicks on a preview-published story
+    # from plugin clicks on a preview-published story
     if params[:preview].present?
       session[:preview_story_slug] = params[:preview]
       redirect_to(root_url(subdomain: @company.subdomain))

@@ -1,6 +1,6 @@
-require 'stories_and_widgets'
-class WidgetsController < ApplicationController
-  include StoriesAndWidgets
+require 'stories_and_plugins'
+class PluginsController < ApplicationController
+  include StoriesAndPlugins
 
   skip_before_action :verify_authenticity_token, only: [:main, :show, :init]
   before_action except: [:track] { @company = Company.find_by(subdomain: request.subdomain) }
@@ -23,7 +23,7 @@ class WidgetsController < ApplicationController
   end
 
   def show
-    # puts 'widgets#show'
+    # puts 'plugins#show'
     # puts params
     # puts params.permit(params.keys).to_h
     respond_to do |format|
@@ -37,7 +37,7 @@ class WidgetsController < ApplicationController
     # DEPRECATION WARNING: `render :text` is deprecated because it does not actually render a `text/plain` response.
     # Switch to `render plain: 'plain text'` to render as `text/plain`, `render html: '<strong>HTML</strong>'` to render as `text/html`,
     # or `render body: 'raw'` to match the deprecated behavior and render with the default Content-Type, which is `text/plain`.
-    # (called from block (2 levels) in show at /Users/wilson/dev/csp/app/controllers/widgets_controller.rb:34)
+    # (called from block (2 levels) in show at /Users/wilson/dev/csp/app/controllers/plugins_controller.rb:34)
   end
 
   def init
@@ -69,7 +69,7 @@ class WidgetsController < ApplicationController
       layout: false,
       locals: {
         company: @company,
-        # widget: @company.widget,   # applies to tabbed carousel (tab style)
+        # widget: @company.plugin,   # applies to tabbed carousel (tab style)
         stories: stories.first(16),
         title: 'Customer Stories',
         is_demo: params[:is_demo].present?,

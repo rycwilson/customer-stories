@@ -1,7 +1,7 @@
 module ApplicationHelper
 
   def custom_google_fonts(company)
-    return nil if company.blank? || !['stories', 'widgets', 'companies'].include?(controller_name)
+    return nil if company.blank? || !['stories', 'plugins', 'companies'].include?(controller_name)
     fonts = case company.subdomain
       when 'pixlee'
         'Muli:300,400,600,700|Bowlby+One'

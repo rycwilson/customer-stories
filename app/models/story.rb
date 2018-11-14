@@ -329,7 +329,7 @@ class Story < ApplicationRecord
   end
 
   # this method closely resembles the 'set_contributors' method in stories controller;
-  # adds contributor linkedin data, which is necessary client-side for widgets
+  # adds contributor linkedin data, which is necessary client-side for plugins
   # that fail to load
   def published_contributors
     # Rails.cache.fetch("#{self.company.subdomain}/story-#{self.id}-published-contributors") do

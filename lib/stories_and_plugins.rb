@@ -1,5 +1,5 @@
 
-module StoriesAndWidgets
+module StoriesAndPlugins
 
   def get_filters_from_query_or_plugin (company, params, is_plugin=false)
     return {} if params[:preview].present?

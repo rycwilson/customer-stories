@@ -3,7 +3,7 @@
 
 #cs-carousel, #cs-varmour-container {
   // varmour was the original, so doesn't need to inherit from the standard carousel
-  // @import '../../../views/widgets/carousel';
+  // @import '../../../views/plugins/carousel';
   @import 'carousel';
 }
 

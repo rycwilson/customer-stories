@@ -2,7 +2,7 @@
 //= require ./settings/profile
 //= require ./settings/invitation_templates/invitation_templates
 //= require ./settings/tags_and_ctas
-//= require ../widgets/config
+//= require ../plugins/config
 
 function companiesEdit () {
 
@@ -38,7 +38,7 @@ function companiesEditListeners () {
   companyProfileListeners();
   invitationTemplatesListeners();
   storyCTAsListeners();
-  widgetConfigListeners();
+  pluginConfigListeners();
 
 }
 

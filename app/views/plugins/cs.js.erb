@@ -78,13 +78,13 @@
 
       // wait for stylesheet to load ...
       $stylesheet.appendTo('head')
-        .on('load', getWidget($container, $script, isDemo, env));
+        .on('load', getPlugin($container, $script, isDemo, env));
 
     });
   }
 
   // root_url provides a company-specific url (via subdomain)
-  function getWidget ($container, $script, isDemo, env) {
+  function getPlugin ($container, $script, isDemo, env) {
     return function () {
       $.ajax({
         url: "<%= URI.join(root_url, plugin_view_path(@type)) %>",
@@ -95,6 +95,7 @@
           stories: $script.data('stories'),
           category: $script.data('category'),
           product: $script.data('product'),
+          pre_selected_story: getQueryParam('csTitle'),
           // max_rows: $script.data('max-rows'),
           background: $script.data('background'),
           tab_color: $script.data('tab-color'),
@@ -111,14 +112,14 @@
           var $images = $container.find('img'), loadedImages = 0;
           $images.on('load', function () {
             if (++loadedImages === $images.length) {
-              initWidget('<%= @type %>', $container, $script, isDemo, env);
+              initPlugin('<%= @type %>', $container, $script, isDemo, env);
             }
           });
         });
     };
   }
 
-  function initWidget (type, $container, $script, isDemo, env) {
+  function initPlugin (type, $container, $script, isDemo, env) {
     var initVideo = $.Deferred(),
         initOverlays = $.Deferred(),
         maxGalleryRows = parseInt($script.data('max-rows'), 10),
@@ -128,11 +129,11 @@
 
     trackPluginVisitor($container, isDemo, env);
 
-    $.getScript("<%= asset_url('widgets/cs_video.js') %>", function () {
+    $.getScript("<%= asset_url('plugins/cs_video.js') %>", function () {
         initVideo.resolve();
       });
     if (type !== 'tabbed_carousel') {
-      $.getScript("<%= asset_url('widgets/cs_overlays.js') %>", function () {
+      $.getScript("<%= asset_url('plugins/cs_overlays.js') %>", function () {
           cspInitOverlays($, $container, '<%= @company.subdomain %>', isDemo, env);
           initOverlays.resolve();
         });
@@ -285,6 +286,13 @@
     } else {
       return false;
     }
+  }
+
+  function getQueryParam (param, url) {
+    var href = url ? url : window.location.href;
+    var reg = new RegExp( '[?&]' + param + '=([^&#]*)', 'i' );
+    var string = reg.exec(href);
+    return string ? string[1] : null;
   }
 
 

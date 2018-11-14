@@ -2,7 +2,7 @@
 @import '../variables';
 
 #cs-gallery {
-  @import '../../../views/widgets/gallery';
+  @import '../../../views/plugins/gallery';
   @import 'gallery';
   @import '../show';
 }

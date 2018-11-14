@@ -108,7 +108,7 @@ class CompaniesController < ApplicationController
   end
 
   def widget
-    @company.widget.update(widget_params)
+    @company.plugin.update(plugin_params)
     respond_to { |format| format.js {} }
   end
 
@@ -143,8 +143,8 @@ class CompaniesController < ApplicationController
               { adwords_images_attributes: [:id, :image_url, :company_default, :_destroy] } )
   end
 
-  def widget_params
-    params.require(:widget)
+  def plugin_params
+    params.require(:plugin)
           .permit(:tab_color, :text_color, :show, :show_delay, :show_freq, :hide, :hide_delay)
   end
 

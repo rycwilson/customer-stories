@@ -1,5 +1,5 @@
 
-function widgetConfigListeners () {
+function pluginConfigListeners () {
 
   var customStoriesToJson = function () {
         var storyIds = $('select.plugin-stories').val() ?

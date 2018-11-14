@@ -7,14 +7,14 @@
 <head>
   <title>Customer Stories Plugin Demo</title>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Google Fonts -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,400italic,600,600italic,800,800italic">
   <link href='https://fonts.googleapis.com/css?family=Lato:300,400,700' rel='stylesheet' type='text/css'>
   <!-- csp assets -->
-  <link rel="stylesheet" href="<%= asset_path('views/widgets/demo.css') %>">
+  <link rel="stylesheet" href="<%= asset_path('views/plugins/demo.css') %>">
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700&amp;lang=en" rel="stylesheet" type="text/css">
-  <script src="<%= asset_path('widgets/demo.js') %>"></script>
+  <script src="<%= asset_path('plugins/demo.js') %>"></script>
   <%= favicon_link_tag 'favicon.ico' %>
   <%= custom_google_fonts(@company) %>
 </head>
@@ -29,17 +29,17 @@
   <% if params[:type] == 'gallery' %>
 
     <div id="cs-gallery"></div>
-    <script src="<%= root_url + 'widgets/gallery/cs.js' %>" data-demo="1" <%= params_to_data_attrs(params) %>></script>
+    <script src="<%= root_url + 'plugins/gallery/cs.js' %>" data-demo="1" <%= params_to_data_attrs(params) %>></script>
 
   <% elsif params[:type] == 'carousel' %>
 
     <div id="cs-carousel"></div>
-    <script src="<%= root_url + 'widgets/carousel/cs.js' %>" data-demo="1" <%= params_to_data_attrs(params) %>></script>
+    <script src="<%= root_url + 'plugins/carousel/cs.js' %>" data-demo="1" <%= params_to_data_attrs(params) %>></script>
 
   <% elsif params[:type] == 'tabbed_carousel' %>
 
     <div id="cs-tabbed-carousel"></div>
-    <script src="<%= root_url + 'widgets/tabbed_carousel/cs.js' %>" data-demo="1" <%= params_to_data_attrs(params) %>></script>
+    <script src="<%= root_url + 'plugins/tabbed_carousel/cs.js' %>" data-demo="1" <%= params_to_data_attrs(params) %>></script>
 
   <% end %>
 
