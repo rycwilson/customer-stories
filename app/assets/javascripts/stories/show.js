@@ -2,7 +2,13 @@
 function storiesShow () {
 
   // story is initially hidden in case video failure prompts removal
-  var cbSuccess = function () { $('.story-wrapper').removeClass('hidden'); };
+  var cbSuccess = function () { $('.story-wrapper').removeClass('hidden'); },
+      pixleeCtaTop;
+
+  $(window).on('load', function () {
+    pixleeCtaTop = $('.pixlee-cta').offset().top;
+  })
+
   loadVideoThumbnail(cbSuccess);
 
   linkedinListener($('.story-wrapper'));
@@ -26,16 +32,39 @@ function storiesShow () {
     })
     .on('scroll', function () {
       if (CSP.screenSize === 'xs') return false;
-      if ($('body').hasClass('stories show') && !CSP.current_user) {
-        var scrollBottom = $(document).height() - $(window).height() - $(window).scrollTop();
-        if (scrollBottom < $('#sign-in-footer').height()) {
-          $('#cs-tabbed-carousel').hide();
+      if ($('body').hasClass('stories show')) {
+
+        // pixless fixed cta
+        if (window.location.href.includes('pixlee')) {
+          var currentScroll = $(window).scrollTop();
+          if (currentScroll > pixleeCtaTop - 95) {
+            $('.pixlee-cta').css({    // scroll to that element or below it
+              position: 'fixed',
+              height: '400px',
+              width: $('.story-sidebar').width().toString() + 'px',
+              top: '95px',  // header height + margin
+              left: ($('.story-sidebar').offset().left + parseInt($('.story-sidebar').css('padding-left'), 10)).toString() + 'px'
+            });
+          } else {
+            $('.pixlee-cta').css({
+              position: 'static'
+            });
+          }
         }
-        else if (!Cookies.get('cs-tabbed-carousel-removed')) {
-          $('#cs-tabbed-carousel').show();
+
+        // prevent More Stories from covering curator sign in
+        if (!CSP.current_user) {
+          var scrollBottom = $(document).height() - $(window).height() - $(window).scrollTop();
+          if (scrollBottom < $('#sign-in-footer').height()) {
+            $('#cs-tabbed-carousel').hide();
+          }
+          else if (!Cookies.get('cs-tabbed-carousel-removed')) {
+            $('#cs-tabbed-carousel').show();
+          }
         }
       }
     })
+
 
     // ref: https://codepen.io/patrickkahl/pen/DxmfG
     // ref: http://stackoverflow.com/questions/4068373

@@ -38,9 +38,34 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
           // console.log('!showTab')
           $('button.olark-launch-button').css('opacity', '0');
         }
-      };
+      },
+      pixleeCtaTop;
 
   applyScrollBoundaries();
+
+  if (subdomain === 'pixlee') {
+    // ref https://stackoverflow.com/questions/24270036
+    document.addEventListener('scroll', function (e) {
+      if ($(e.target).is('section.content--show .scroll-wrap')) {
+        var currentScroll = $(e.target).scrollTop();
+        if (currentScroll > pixleeCtaTop) {
+          console.log('ok')
+          $('.pixlee-cta').css({    // scroll to that element or below it
+            position: 'fixed',
+            height: '400px',
+            width: $('.story-sidebar').width().toString() + 'px',
+            top: '25px',  // header height + margin
+            left: ($('.story-sidebar').offset().left + parseInt($('.story-sidebar').css('padding-left'), 10)).toString() + 'px'
+          });
+        } else {
+          $('.pixlee-cta').css({
+            position: 'static'
+          });
+        }
+      }
+    }, true);
+
+  }
 
   $container
     // avoid double-tap behavior
@@ -59,20 +84,13 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
 
     .on('click touchend', '.primary-cta-xs.open', function (e) {
       if ($(e.target).is('button.remove')) {
-        $(this).remove();
+        $('.primary-cta-xs').each(function () { $(this).remove(); });
+        // TODO add a cookie
       } else if (!$(e.target).is('a')) {
         $(this).find('a')[0].click();
       }
     })
 
-    .on('click', '.primary-cta-xs button.remove', function () {
-      $('.primary-cta-xs').each(function () { $(this).remove(); });
-      // TODO add a cookie
-    })
-
-    .on('click', '.primary-cta-xs:not(a)', function () {
-      $(this).find('a').trigger('click');
-    })
 
     .on('click', 'a.published, a.preview-published', function (e) {
       e.preventDefault();
@@ -113,6 +131,21 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
                 }, 3000);
 
                 showPixleeTab(false);
+                // console.log('margin', parseInt($story.find('.cs-story-wrapper').css('margin-top'), 10))
+                // console.log('header', $story.find('.cs-story-header').outerHeight(true))
+                // console.log('testimonial', $story.find('.cs-testimonial').outerHeight(true))
+                // console.log('results', ($story.find('.story-results.hidden-xs:not(.visible-xs-block .story-results)').length ? $story.find('.story-results.hidden-xs:not(.visible-xs-block .story-results)').outerHeight(true) : 0))
+                // console.log('ctas', ($story.find('.story-ctas.hidden-xs:not(.visible-xs-block .story-ctas)').length ? $story.find('.story-ctas.hidden-xs:not(.visible-xs-block .story-ctas)').outerHeight(true) : 0))
+                pixleeCtaTop =
+                  parseInt($story.find('.cs-story-wrapper').css('margin-top'), 10) +
+                  $story.find('.cs-story-header').outerHeight(true) +
+                  $story.find('.cs-testimonial').outerHeight(true) +
+                  ($story.find('.story-results.hidden-xs:not(.visible-xs-block .story-results)').length ? $story.find('.story-results.hidden-xs:not(.visible-xs-block .story-results)').outerHeight(true) : 0) +
+                  ($story.find('.story-ctas.hidden-xs:not(.visible-xs-block .story-ctas)').length ? $story.find('.story-ctas.hidden-xs:not(.visible-xs-block .story-ctas)').outerHeight(true) : 0);
+
+                pixleeCtaTop -= 25;  // margin-bottom
+
+                // console.log('pixleeCtaTop', pixleeCtaTop)
 
               });
           })

@@ -74,7 +74,7 @@
 
     </div>
 
-    <div class="hidden-xs col-sm-6 col-md-5">
+    <div class="story-sidebar hidden-xs col-sm-6 col-md-5">
 
       <% cache("#{company.subdomain}/stories/#{story.id}/#{is_plugin ? 'cs-' : ''}results", skip_digest: true) do %>
 
@@ -91,37 +91,43 @@
 
       <% if company.subdomain == 'pixlee' %>
 
-        <div class="cta__image"></div>
+        <div class="pixlee-cta">
+<!-- <div> -->
 
-        <div class="cta__wrapper">
-          <div class="cta__text">
-            <div>
-              <img src="https://s3-us-west-1.amazonaws.com/csp-production-assets/pixlee/square_20logo_2_3_1.png" alt="">
-              <span>Inspire purchases with real customer stories.</span>
+          <div class="cta__image"></div>
+
+          <div class="cta__wrapper">
+            <div class="cta__text">
+              <div>
+                <img src="https://s3-us-west-1.amazonaws.com/csp-production-assets/pixlee/square_20logo_2_3_1.png" alt="">
+                <span>Inspire purchases with real customer stories.</span>
+              </div>
             </div>
-          </div>
 
-          <div class="cta__button">
-            <div>
-              <div class="primary-cta">
+            <div class="cta__button">
+              <div>
+                <div class="primary-cta">
 
-                <a href="https://www.pixlee.com/request-demo" class="btn">
-                  <span>REQUEST DEMO</span>
-                </a>
+                  <a href="https://www.pixlee.com/request-demo" class="btn">
+                    <span>REQUEST DEMO</span>
+                  </a>
 
-                <div>
-                  <span>REQUEST DEMO</span>
+                  <div>
+                    <span>REQUEST DEMO</span>
+                  </div>
+
                 </div>
 
               </div>
+            </div>
+
+            <div class="cta__topography">
 
             </div>
           </div>
-
-          <div class="cta__topography">
-
-          </div>
+<!-- </div> -->
         </div>
+
 
       <% end %>
 
