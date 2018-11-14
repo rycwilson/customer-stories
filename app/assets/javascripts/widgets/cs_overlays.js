@@ -49,7 +49,6 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
       if ($(e.target).is('section.content--show .scroll-wrap')) {
         var currentScroll = $(e.target).scrollTop();
         if (currentScroll > pixleeCtaTop) {
-          console.log('ok')
           $('.pixlee-cta').css({    // scroll to that element or below it
             position: 'fixed',
             height: '400px',
