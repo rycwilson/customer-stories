@@ -16,14 +16,18 @@
 
       <div class="visible-xs-block">
 
-        <hr>
+        <% if story.results.present? %>
 
-        <% cache("#{company.subdomain}/stories/#{story.id}/#{is_plugin ? 'cs-' : ''}results", skip_digest: true) do %>
+          <hr>
 
-          <%= render(
-                'stories/show/results',
-                { company: company, story: story, is_plugin: is_plugin }
-              ) %>
+          <% cache("#{company.subdomain}/stories/#{story.id}/#{is_plugin ? 'cs-' : ''}results", skip_digest: true) do %>
+
+            <%= render(
+                  'stories/show/results',
+                  { company: company, story: story, is_plugin: is_plugin }
+                ) %>
+
+          <% end %>
 
         <% end %>
 
@@ -76,9 +80,13 @@
 
     <div class="story-sidebar hidden-xs col-sm-6 col-md-5">
 
-      <% cache("#{company.subdomain}/stories/#{story.id}/#{is_plugin ? 'cs-' : ''}results", skip_digest: true) do %>
+      <% if story.results.present? %>
 
-        <%= render('stories/show/results', { company: company, story: story, is_plugin: is_plugin }) %>
+        <% cache("#{company.subdomain}/stories/#{story.id}/#{is_plugin ? 'cs-' : ''}results", skip_digest: true) do %>
+
+          <%= render('stories/show/results', { company: company, story: story, is_plugin: is_plugin }) %>
+
+        <% end %>
 
       <% end %>
 

@@ -33,7 +33,6 @@ function attachContributionsListeners () {
         } else {
           scrollAmt = offset;
         }
-        console.log('scrollAmt', scrollAmt)
         $('html, body').animate({ scrollTop: ($formGroup.offset().top - scrollAmt).toString() + 'px' }, 200);
       },
       updateProgress = function () {
@@ -112,7 +111,6 @@ function attachContributionsListeners () {
     }
     updateProgress();
   });
-
 
   $('#submission-form .form-group.question textarea').on('input', function () {
     $(this).closest('.form-group').find('button').css('display', 'inline-block');

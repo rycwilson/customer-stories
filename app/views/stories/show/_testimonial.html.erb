@@ -22,6 +22,8 @@
 
         <div class="<%= is_plugin ? 'cs-customer-quote' : 'customer-quote' %>">
 
+        <% if story.quote.present? %>
+
           <blockquote>
             <p><%= story.quote %></p>
             <div class="<%= story.quote_attr_name.blank? ? 'hidden' : '' %>">
@@ -31,6 +33,8 @@
               </cite>
             </div>
           </blockquote>
+
+        <% end %>
 
         </div>
 
@@ -55,6 +59,8 @@
 
           <div class="<%= is_plugin ? 'cs-customer-quote' : 'customer-quote' %> <%= include_video ? 'col-sm-12' : (long_customer_name ? 'col-sm-8' : 'col-sm-8 col-lg-8') %>">
 
+          <% if story.quote.present? %>
+
             <blockquote>
               <p><%= story.quote %></p>
               <div class="<%= story.quote_attr_name.blank? ? 'hidden' : '' %>">
@@ -64,6 +70,8 @@
                 </cite>
               </div>
             </blockquote>
+
+          <% end %>
 
           </div>
 
