@@ -1,93 +1,85 @@
 
 function attachContributionsListeners () {
 
-  var scrollY,
-      offset = 190,  // 130px padding + 60 px header
-      qHeight = $('.form-group.question:first-of-type').outerHeight(true),
+  var $questions = $('#submission-form .form-group.question'),
+      qHeight = $questions.eq(0).outerHeight(true),
+      offsetTop = $questions.eq(0).offset().top,
       currentActiveQ = 0,
-      nextActiveQ = 0,
-      $questions = $('#submission-form .form-group.question'),
-      qScrollRanges = [],
-      getActiveQ = function (scrollY) {
-        return qScrollRanges.findIndex(function (range) {
-          return scrollY >= range[0] && scrollY <= range[1];
-        });
-      },
-      changeActiveQ = function (currentQ, nextQ) {
-        $questions.eq(currentQ).removeClass('active');
-        $questions.find('button').css('display', 'none');
-        if (nextQ !== -1) {
-          $questions.eq(nextQ).addClass('active');
-          currentActiveQ = nextQ;
-        }
-      },
-      scrollToNext = function ($formGroup) {
-        console.log('scrollToNext()')
-        var scrollAmt;
-        if (CSP.screenSize === 'xs') {
-          if ($formGroup.is('.linkedin')) {
-            scrollAmt = 30;
-          } else {
-            scrollAmt = 120;
-          }
-        } else {
-          scrollAmt = offset;
-        }
-        $('html, body').animate({ scrollTop: ($formGroup.offset().top - scrollAmt).toString() + 'px' }, 200);
-      },
       updateProgress = function () {
         var numAnswered = 0, pctAnswered;
         $questions.each(function () {
-          if (CSP.screenSize === 'xs') {
-            if ($(this).find('.visible-xs-block textarea').val()) numAnswered++;
-          } else {
-            if ($(this).find('.hidden-xs textarea').val()) numAnswered++;
-          }
+          if ($(this).find('textarea').val()) numAnswered++;
         });
         pctAnswered = Math.round((numAnswered / $questions.length) * 100).toString() + "%";
         $('.progress-label').text(numAnswered + ' of ' + $questions.length + ' answered');
         $('.progress-bar')
           .attr('style', 'width:' + pctAnswered)
           .find('.sr-only').text(numAnswered + ' of ' + $questions.length + ' answered');
+      },
+      changeActiveQ = function (nextQ) {
+        $questions.eq(nextQ).addClass('active');
+        $questions.not($questions.eq(nextQ)).each(function () {
+          $(this).removeClass('active')
+                 .find('textarea').trigger('blur')
+                   .end()
+                 .find('button').hide();
+        });
+        currentActiveQ = nextQ;
+        if ($questions.eq(currentActiveQ).find('textarea').val()) {
+          $questions.eq(currentActiveQ).find('button').show();
+        }
+        updateProgress()
+      },
+      scrollHandler = function (e) {
+        // console.log('scroll')
+        var nextActiveQ = Math.floor($(document).scrollTop() / qHeight);
+        if (currentActiveQ !== nextActiveQ)  {
+          changeActiveQ(nextActiveQ);
+        }
+      }
+      scrollToQ = function ($question) {
+        var scrollAmt;
+        if (CSP.screenSize === 'xs') {
+          if ($question.is('.linkedin')) {
+            scrollAmt = 30;
+          } else {
+            scrollAmt = 120;
+          }
+        } else {
+          scrollAmt = offsetTop;
+        }
+        changeActiveQ($questions.index($question))
+        $(document).off('scroll', scrollHandler);  // turn off scroll listener while animating
+        $('html, body').animate(
+          { scrollTop: ($question.offset().top - scrollAmt).toString() + 'px' },
+          200,
+          function () {
+            $(document).on('scroll', scrollHandler);
+          }
+        );
       };
 
-  if ($questions.length) {
-    for (var i = 0; i < $questions.length; i ++) {
-      if (i === 0) {
-        qScrollRanges.push([ 0, offset ]);
-      } else {
-        qScrollRanges.push([ offset + ((i - 1) * qHeight), offset + (i * qHeight) ]);
-      }
-    }
-    qScrollRanges.push([
-      qScrollRanges[$questions.length - 1][1],
-      qScrollRanges[$questions.length - 1][1] + $('.form-group.linkedin').outerHeight()
-    ]);
-
-    $(document).on('scroll', function () {
-      scrollY = $(document).scrollTop();
-      nextActiveQ = getActiveQ(scrollY);
-      if (currentActiveQ !== nextActiveQ)  {
-        changeActiveQ(currentActiveQ, nextActiveQ);
-      }
-    });
-
+  // monitor scrolling and adjust active question as necessary
+  if ($questions.length && $('body').hasClass('contributions edit')) {
+    $(document).on('scroll', scrollHandler);
   }
 
   $questions.on('click', function (e) {
     if ($(this).hasClass('active') || $(e.target).is('button')) {
       return false;
     }
-    $questions.find('button').css('display', 'none');
-    $(this).addClass('active');
-    $questions.not($(this)).each(function () { $(this).removeClass('active'); });
-    scrollToNext($(this));
-    updateProgress();
+    $(this).find('textarea').trigger('focus')
   });
 
   $questions.each(function () {
-    $(this).find('textarea').on('focus', function () {
-      if (CSP.screenSize === 'xs') $('#submission-progress').hide();
+    $(this).on('focusin', function () {
+      if (CSP.screenSize === 'xs') {
+        $('#submission-progress').hide();
+      } else {
+        if (!$(this).hasClass('active')) {
+          scrollToQ($(this));
+        }
+      }
     });
   });
 
@@ -99,21 +91,19 @@ function attachContributionsListeners () {
 
   $('#submission-form .next-question button').on('click', function () {
     $(this).toggle();
-    $(this).closest('.form-group').find('textarea').trigger('blur');
-    if ($(this).closest('.form-group').is('.form-group:nth-of-type(' + $questions.length + ')')) {
-      $(this).closest('.form-group').removeClass('active');
-      scrollToNext($('.form-group.linkedin'));
+    if (currentActiveQ === $questions.length - 1) {
+      scrollToQ($('.form-group.linkedin'));
     } else {
-      $(this).closest('.form-group').nextAll('.form-group').first().find('textarea').trigger('click');
-      if (CSP.screenSize !== 'xs') {
-        $(this).closest('.form-group').nextAll('.form-group').first().find('textarea').trigger('focus');
-      }
+      $questions.eq(currentActiveQ + 1).find('textarea').trigger('focus')
     }
-    updateProgress();
   });
 
   $('#submission-form .form-group.question textarea').on('input', function () {
-    $(this).closest('.form-group').find('button').css('display', 'inline-block');
+    if ($(this).val()) {
+      $(this).next().find('button').show();
+    } else {
+      $(this).next().find('button').hide();
+    }
   });
 
 }

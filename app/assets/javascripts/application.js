@@ -23,10 +23,7 @@ $(document).one('turbolinks:load', function () {
   attachCompaniesListeners();
   attachStoriesListeners();
   attachProfileListeners();
-  // there's a scroll listener in here that we only want to trigger on the contribution submission page
-  if ($('body').hasClass('contributions edit')) {
-    attachContributionsListeners();
-  }
+  attachContributionsListeners();
 });
 
 $(document).on('turbolinks:load', function (e) {

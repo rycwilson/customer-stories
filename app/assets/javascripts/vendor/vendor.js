@@ -10,7 +10,7 @@
 //= require ./google_charts
 
 function constructPlugins () {
-  console.log('constructPlugins()')
+  // console.log('constructPlugins()')
 
   initSelect2();
 
@@ -55,6 +55,8 @@ function constructPlugins () {
   $('.mini-colors').not('#edit-plugins .minicolors').minicolors({ theme: 'bootstrap' });
   $('#edit-plugins .mini-colors').minicolors({ theme: 'bootstrap', inline: false });
 
+  // pixlee fixed cta
+  // (note order matters in the hasClass arguments)
   if ($('body').hasClass('stories show pixlee') && CSP.screenSize !== 'xs') {
     var pixleeCtaTop,
         pixleeImg = new Image();
