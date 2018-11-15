@@ -183,7 +183,6 @@ function attachAppListeners () {
         // console.log('preview rendered');
         constructPlugins();
       }
-
     });
 }
 

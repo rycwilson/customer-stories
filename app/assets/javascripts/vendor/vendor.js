@@ -10,6 +10,7 @@
 //= require ./google_charts
 
 function constructPlugins () {
+  console.log('constructPlugins()')
 
   initSelect2();
 
@@ -53,6 +54,35 @@ function constructPlugins () {
   $("input[type='tel']").inputmask("999-999-9999");
   $('.mini-colors').not('#edit-plugins .minicolors').minicolors({ theme: 'bootstrap' });
   $('#edit-plugins .mini-colors').minicolors({ theme: 'bootstrap', inline: false });
+
+  if ($('body').hasClass('stories show pixlee') && CSP.screenSize !== 'xs') {
+    var pixleeCtaTop,
+        pixleeImg = new Image();
+
+    pixleeImg.onload = function () {
+      $('.pixlee-cta .cta__image').css('background', 'url("http://assets.pixlee.com/website/webinar/webinar-hero.png") center / cover no-repeat');
+      pixleeCtaTop = $('.pixlee-cta').offset().top;
+    };
+    pixleeImg.src = 'http://assets.pixlee.com/website/webinar/webinar-hero.png';
+
+    $(document).on('scroll', function () {
+      var currentScroll = $(window).scrollTop();
+      if (currentScroll > pixleeCtaTop - 95) {
+        $('.pixlee-cta').css({
+          position: 'fixed',
+          height: '400px',
+          width: $('.story-sidebar').width().toString() + 'px',
+          top: '95px',
+          left: ($('.story-sidebar').offset().left + parseInt($('.story-sidebar').css('padding-left'), 10)).toString() + 'px'
+        });
+      } else {
+        $('.pixlee-cta').css({
+          position: 'static'
+        });
+      }
+    });
+
+  }
 
 }
 

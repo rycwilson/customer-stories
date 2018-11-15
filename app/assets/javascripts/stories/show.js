@@ -2,18 +2,12 @@
 function storiesShow () {
 
   // story is initially hidden in case video failure prompts removal
-  var cbSuccess = function () { $('.story-wrapper').removeClass('hidden'); },
-      pixleeCtaTop;
+  loadVideoThumbnail(function () { $('.story-wrapper').removeClass('hidden'); });
 
-  $(window).on('load', function () {
-    pixleeCtaTop = $('.pixlee-cta').offset().top;
-  })
-
-  loadVideoThumbnail(cbSuccess);
-
-  linkedinListener($('.story-wrapper'));
-  // clickyListeners();
-  initMoreStories();
+  if (!$('body').hasClass('pixlee')) {
+    linkedinListener($('.story-wrapper'));
+    initMoreStories();
+  }
 
   setTimeout(function () {
     $('#primary-cta-xs').addClass('open');
@@ -34,23 +28,23 @@ function storiesShow () {
       if (CSP.screenSize === 'xs') return false;
       if ($('body').hasClass('stories show')) {
 
-        // pixless fixed cta
-        if (window.location.href.includes('pixlee')) {
-          var currentScroll = $(window).scrollTop();
-          if (currentScroll > pixleeCtaTop - 95) {
-            $('.pixlee-cta').css({    // scroll to that element or below it
-              position: 'fixed',
-              height: '400px',
-              width: $('.story-sidebar').width().toString() + 'px',
-              top: '95px',  // header height + margin
-              left: ($('.story-sidebar').offset().left + parseInt($('.story-sidebar').css('padding-left'), 10)).toString() + 'px'
-            });
-          } else {
-            $('.pixlee-cta').css({
-              position: 'static'
-            });
-          }
-        }
+    //     // pixlee fixed cta
+    //     if (window.location.href.includes('pixlee')) {
+    //       var currentScroll = $(window).scrollTop();
+    //       if (currentScroll > pixleeCtaTop - 95) {
+    //         $('.pixlee-cta').css({
+    //           position: 'fixed',
+    //           height: '400px',
+    //           width: $('.story-sidebar').width().toString() + 'px',
+    //           top: '95px',  // header height + margin
+    //           left: ($('.story-sidebar').offset().left + parseInt($('.story-sidebar').css('padding-left'), 10)).toString() + 'px'
+    //         });
+    //       } else {
+    //         $('.pixlee-cta').css({
+    //           position: 'static'
+    //         });
+    //       }
+    //     }
 
         // prevent More Stories from covering curator sign in
         if (!CSP.current_user) {
@@ -65,7 +59,6 @@ function storiesShow () {
       }
     })
 
-
     // ref: https://codepen.io/patrickkahl/pen/DxmfG
     // ref: http://stackoverflow.com/questions/4068373
     // ref: http://stackoverflow.com/questions/24046807
@@ -78,6 +71,9 @@ function storiesShow () {
     .on('click', '.facebook-share', function (e) {
       CSP.screenSize === 'xs' ? $(this).popupWindow(e) : $(this).popupWindow(e, 600, 424);
     });
+
+  // clickyListeners();
+
 }
 
 function initMoreStories () {
