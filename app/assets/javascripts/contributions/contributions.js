@@ -3,7 +3,7 @@ function attachContributionsListeners () {
 
   var $questions = $('#submission-form .form-group.question'),
       qHeight = $questions.eq(0).outerHeight(true),
-      offsetTop = $questions.eq(0).offset().top,
+      offsetTop = $questions.length && $questions.eq(0).offset().top,
       currentActiveQ = 0,
       updateProgress = function () {
         var numAnswered = 0, pctAnswered;
@@ -61,6 +61,7 @@ function attachContributionsListeners () {
 
   // monitor scrolling and adjust active question as necessary
   if ($questions.length && $('body').hasClass('contributions edit')) {
+    console.log('test')
     $(document).on('scroll', scrollHandler);
   }
 
