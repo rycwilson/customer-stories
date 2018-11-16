@@ -25,9 +25,9 @@ function attachContributionsListeners () {
                  .find('button').hide();
         });
         currentActiveQ = nextQ;
-        if ($questions.eq(currentActiveQ).find('textarea').val()) {
-          $questions.eq(currentActiveQ).find('button').show();
-        }
+        // if ($questions.eq(currentActiveQ).find('textarea').val()) {
+        //   $questions.eq(currentActiveQ).find('button').show();
+        // }
         updateProgress()
       },
       scrollHandler = function (e) {
@@ -59,9 +59,12 @@ function attachContributionsListeners () {
         );
       };
 
+  // remove form inputs depending on screen size
+  $('#submission-form .linkedin-container:not(:visible)').remove();
+
   // monitor scrolling and adjust active question as necessary
   if ($questions.length && $('body').hasClass('contributions edit')) {
-    console.log('test')
+    updateProgress();
     $(document).on('scroll', scrollHandler);
   }
 
@@ -106,5 +109,13 @@ function attachContributionsListeners () {
       $(this).next().find('button').hide();
     }
   });
+
+  $('#submission-form [name="contribution[publish_contributor]"]').on('change', function () {
+    if ($(this).prop('checked')) {
+      $('[name="contribution[publish_contributor]"][type="checkbox"]').not($(this)).prop('checked', true);
+    } else {
+      $('[name="contribution[publish_contributor]"][type="checkbox"]').not($(this)).prop('checked', false);
+    }
+  })
 
 }

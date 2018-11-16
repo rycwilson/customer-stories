@@ -134,6 +134,8 @@ class ContributionsController < ApplicationController
   end
 
   def update
+    puts params.permit(params.keys).to_h
+
     if params[:data]  # invitation template (datatables inline editor)
       @contribution.invitation_template_id = params[:data].values[0][:invitation_template][:id]
       @contribution.save
@@ -184,7 +186,7 @@ class ContributionsController < ApplicationController
       respond_to { |format| format.js { render action: 'update_contributor' } }
 
     elsif params[:submission]
-      pp params.permit(params.keys).to_h
+      pp contribution_params.to_h
       # if contribution_params[:status] == 'contribution_submitted'
       #   params[:contribution][:contribution] = consolidate_answers(params[:answers])
       # end
