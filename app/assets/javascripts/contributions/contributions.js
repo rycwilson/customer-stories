@@ -3,8 +3,12 @@ function attachContributionsListeners () {
 
   var $questions = $('#submission-form .form-group.question'),
       qHeight = $questions.eq(0).outerHeight(true),
+      qHeightMax = Math.max.apply(null, $questions.map(function () {
+                      return $(this).outerHeight(true);
+                    }).get()),
       offsetTop = $questions.length && $questions.eq(0).offset().top,
       currentActiveQ = 0,
+      nextActiveQ = 0,
       updateProgress = function () {
         var numAnswered = 0, pctAnswered;
         $questions.each(function () {
@@ -31,8 +35,11 @@ function attachContributionsListeners () {
         updateProgress()
       },
       scrollHandler = function (e) {
-        // console.log('scroll')
-        var nextActiveQ = Math.floor($(document).scrollTop() / qHeight);
+        nextActiveQ = $questions.filter(function (index, question) {
+                        return ($(document).scrollTop() > $(this).offset().top - qHeightMax) &&
+                               ($(document).scrollTop() < $(this).offset().top);
+                      }).index('#submission-form .form-group.question')
+        // console.log('next', nextActiveQ)
         if (currentActiveQ !== nextActiveQ)  {
           changeActiveQ(nextActiveQ);
         }
