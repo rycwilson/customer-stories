@@ -2,11 +2,15 @@
 function attachContributionsListeners () {
 
   var $questions = $('#submission-form .form-group.question'),
-      qHeight = $questions.eq(0).outerHeight(true),
-      qHeightMax = Math.max.apply(null, $questions.map(function () {
-                      return $(this).outerHeight(true);
-                    }).get()),
       offsetTop = $questions.length && $questions.eq(0).offset().top,
+      qHeights = $questions.map(function (index) {
+        return $(this).outerHeight(true);
+      }).get(),
+      qBreakpoints = qHeights.map(function (height, index, arr) {
+        return arr.slice(0, index + 1).reduce(function (a, b) {
+          return a + b;
+        }, offsetTop);
+      }),
       currentActiveQ = 0,
       nextActiveQ = 0,
       updateProgress = function () {
@@ -35,11 +39,22 @@ function attachContributionsListeners () {
         updateProgress()
       },
       scrollHandler = function (e) {
-        nextActiveQ = $questions.filter(function (index, question) {
-                        return ($(document).scrollTop() > $(this).offset().top - qHeightMax) &&
-                               ($(document).scrollTop() < $(this).offset().top);
-                      }).index('#submission-form .form-group.question')
+        // console.log('scroll')
+        nextActiveQ = qBreakpoints.findIndex(function (breakpoint) {
+          return $(document).scrollTop() < breakpoint;
+        })
+
+        console.log(nextActiveQ)
+        // nextActiveQ = $questions.filter(function (index, question) {
+        //                 if index === 0 {
+
+        //                 }
+        //                 return ($(document).scrollTop() > $(this).offset().top - qHeightMax) &&
+        //                        ($(document).scrollTop() < $(this).offset().top);
+        //               }).index('#submission-form .form-group.question')
         // console.log('next', nextActiveQ)
+
+
         if (currentActiveQ !== nextActiveQ)  {
           changeActiveQ(nextActiveQ);
         }
@@ -58,7 +73,7 @@ function attachContributionsListeners () {
         changeActiveQ($questions.index($question))
         $(document).off('scroll', scrollHandler);  // turn off scroll listener while animating
         $('html, body').animate(
-          { scrollTop: ($question.offset().top - scrollAmt).toString() + 'px' },
+          { scrollTop: $question.offset().top - (currentActiveQ > 0 ? Math.min(offsetTop, qHeights[currentActiveQ - 1]) : offsetTop).toString() + 'px' },
           200,
           function () {
             $(document).on('scroll', scrollHandler);
@@ -66,13 +81,18 @@ function attachContributionsListeners () {
         );
       };
 
-  // remove form inputs depending on screen size
-  $('#submission-form .linkedin-container:not(:visible)').remove();
-
-  // monitor scrolling and adjust active question as necessary
   if ($questions.length && $('body').hasClass('contributions edit')) {
-    updateProgress();
+    // remove form inputs depending on screen size
+    $('#submission-form .linkedin-container:not(:visible)').remove();
+
+    // add the first breakpoint
+    qBreakpoints.unshift(offsetTop);
+
+    // monitor scrolling and adjust active question as necessary
     $(document).on('scroll', scrollHandler);
+
+    // update the progress bar
+    updateProgress();
   }
 
   $questions.on('click', function (e) {
