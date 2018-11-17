@@ -39,37 +39,14 @@ function attachContributionsListeners () {
         updateProgress()
       },
       scrollHandler = function (e) {
-        // console.log('scroll')
         nextActiveQ = qBreakpoints.findIndex(function (breakpoint) {
           return $(document).scrollTop() < breakpoint;
         })
-
-        console.log(nextActiveQ)
-        // nextActiveQ = $questions.filter(function (index, question) {
-        //                 if index === 0 {
-
-        //                 }
-        //                 return ($(document).scrollTop() > $(this).offset().top - qHeightMax) &&
-        //                        ($(document).scrollTop() < $(this).offset().top);
-        //               }).index('#submission-form .form-group.question')
-        // console.log('next', nextActiveQ)
-
-
         if (currentActiveQ !== nextActiveQ)  {
           changeActiveQ(nextActiveQ);
         }
       }
       scrollToQ = function ($question) {
-        var scrollAmt;
-        if (CSP.screenSize === 'xs') {
-          if ($question.is('.linkedin')) {
-            scrollAmt = 30;
-          } else {
-            scrollAmt = 120;
-          }
-        } else {
-          scrollAmt = offsetTop;
-        }
         changeActiveQ($questions.index($question))
         $(document).off('scroll', scrollHandler);  // turn off scroll listener while animating
         $('html, body').animate(
@@ -82,7 +59,7 @@ function attachContributionsListeners () {
       };
 
   if ($questions.length && $('body').hasClass('contributions edit')) {
-    // remove form inputs depending on screen size
+    // remove duplicate form input depending on screen size
     $('#submission-form .linkedin-container:not(:visible)').remove();
 
     // add the first breakpoint
@@ -114,11 +91,13 @@ function attachContributionsListeners () {
     });
   });
 
-  $questions.each(function () {
-    $(this).find('textarea').on('blur', function () {
-      if (CSP.screenSize === 'xs') $('#submission-progress').show();
+  if (CSP.screenSize === 'xs') {
+    $questions.each(function () {
+      $(this).find('textarea').on('blur', function () {
+         $('#submission-progress').show();
+      });
     });
-  });
+  }
 
   $('#submission-form .next-question button').on('click', function () {
     $(this).toggle();
