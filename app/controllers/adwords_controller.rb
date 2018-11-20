@@ -55,18 +55,8 @@ class AdwordsController < ApplicationController
   end
 
   def update_company
-    puts 'adwords#update_company'
-    # params[:company] = JSON.parse(params.permit(:company)[:company])
-    # pp params.permit(:company).to_h
+    # puts 'adwords#update_company'
     company_params = JSON.parse(params.permit(:company)[:company])
-
-    # binding.remote_pry
-    # ajax request performed a JSON.stringify in order to preserve nested arrays
-    # if request.format == :js
-    #   puts 'js format'
-    #   params[:company] = JSON.parse(params[:company])
-    #   pp params.permit(params.keys).to_h
-    # end
 
     # changes to default image
     @swapped_default_image = company_params['swapped_default_image'].present?

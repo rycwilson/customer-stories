@@ -23,9 +23,6 @@ class PluginsController < ApplicationController
   end
 
   def show
-    # puts 'plugins#show'
-    # puts params
-    # puts params.permit(params.keys).to_h
     respond_to do |format|
       format.js do
         json = { html: plugin_view(@company, params) }.to_json
