@@ -2,6 +2,19 @@ namespace :temp do
 
   desc "temp stuff"
 
+  task remove_pixlee_cta: :environment do
+    pixlee = Company.find_by subdomain: 'pixlee'
+    cta = /<a\shref="https:\/\/www\.pixlee\.com\/request-demo".+Blog-CTA_Request-Demo\.png'\);"><\/a>/
+    pixlee.published_stories.reverse.each do |story_id|
+      story = Story.find(story_id)
+      if story.narrative.match(cta)
+        story.update(narrative: story.narrative.sub(cta, ''))
+      else
+        story.touch
+      end
+    end
+  end
+
   task migrate_answers: :environment do
     ContributorAnswer.destroy_all
     ActiveRecord::Base.connection.execute('ALTER SEQUENCE contributor_answers_id_seq RESTART WITH 1')
