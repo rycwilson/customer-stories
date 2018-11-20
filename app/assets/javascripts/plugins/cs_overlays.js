@@ -39,6 +39,13 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
           $('button.olark-launch-button').css('opacity', '0');
         }
       },
+      getPixleeCtaTop = function ($story) {
+        return parseInt($story.find('.cs-story-wrapper').css('margin-top'), 10) +
+               $story.find('.cs-story-header').outerHeight(true) +
+               $story.find('.cs-testimonial').outerHeight(true) +
+               ($story.find('.story-results.hidden-xs:not(.visible-xs-block .story-results)').length ? $story.find('.story-results.hidden-xs:not(.visible-xs-block .story-results)').outerHeight(true) : 0) +
+               ($story.find('.story-ctas.hidden-xs:not(.visible-xs-block .story-ctas)').length ? $story.find('.story-ctas.hidden-xs:not(.visible-xs-block .story-ctas)').outerHeight(true) : 0) - 25;  // 25 is margin between header and cta
+      },
       pixleeCtaTop;
 
   applyScrollBoundaries();
@@ -135,14 +142,7 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
                 // console.log('testimonial', $story.find('.cs-testimonial').outerHeight(true))
                 // console.log('results', ($story.find('.story-results.hidden-xs:not(.visible-xs-block .story-results)').length ? $story.find('.story-results.hidden-xs:not(.visible-xs-block .story-results)').outerHeight(true) : 0))
                 // console.log('ctas', ($story.find('.story-ctas.hidden-xs:not(.visible-xs-block .story-ctas)').length ? $story.find('.story-ctas.hidden-xs:not(.visible-xs-block .story-ctas)').outerHeight(true) : 0))
-                pixleeCtaTop =
-                  parseInt($story.find('.cs-story-wrapper').css('margin-top'), 10) +
-                  $story.find('.cs-story-header').outerHeight(true) +
-                  $story.find('.cs-testimonial').outerHeight(true) +
-                  ($story.find('.story-results.hidden-xs:not(.visible-xs-block .story-results)').length ? $story.find('.story-results.hidden-xs:not(.visible-xs-block .story-results)').outerHeight(true) : 0) +
-                  ($story.find('.story-ctas.hidden-xs:not(.visible-xs-block .story-ctas)').length ? $story.find('.story-ctas.hidden-xs:not(.visible-xs-block .story-ctas)').outerHeight(true) : 0);
-
-                pixleeCtaTop -= 25;  // margin-bottom
+                pixleeCtaTop = getPixleeCtaTop($story);
 
                 // console.log('pixleeCtaTop', pixleeCtaTop)
 
