@@ -147,7 +147,7 @@
           <%= render(
                 'stories/show/contributors',
                 { company: company, contributors: contributors, is_plugin: is_plugin, window_width: window_width }
-              ) %>
+              ) unless company.subdomain == 'pixlee' %>
 
         <%# end %>
 
