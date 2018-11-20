@@ -77,7 +77,8 @@
       // $container.css('all', 'revert');
 
       // wait for stylesheet to load ...
-      $stylesheet.appendTo('head')
+      $stylesheet
+        .appendTo('head')
         .on('load', getPlugin($container, $script, isDemo, env));
 
     });
@@ -95,7 +96,7 @@
           stories: $script.data('stories'),
           category: $script.data('category'),
           product: $script.data('product'),
-          pre_selected_story: getQueryParam('csTitle'),
+          pre_selected_story: getQueryParam('customerStory'),
           // max_rows: $script.data('max-rows'),
           background: $script.data('background'),
           tab_color: $script.data('tab-color'),
