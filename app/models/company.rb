@@ -1185,6 +1185,8 @@ class Company < ApplicationRecord
 
   # image_params = { type: 'landscape' || 'logo', url: url }
   def upload_adwords_image_or_logo (image_params)
+    puts 'upload_adwords_image_or_logo()'
+    pp image_params
     api = create_adwords_api()
     service = api.service(:MediaService, ADWORDS_API_VERSION)
     # if image_url is nil: Invalid URL: #<ActionDispatch::Http::UploadedFile:0x007f8615701348>
@@ -1199,6 +1201,7 @@ class Company < ApplicationRecord
 
     begin
       response = service.upload([image])
+      puts response
 
     rescue AdsCommon::Errors::HttpError => e
       puts "HTTP Error: %s" % e
