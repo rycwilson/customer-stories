@@ -165,7 +165,6 @@ class StoriesController < ApplicationController
                     }
                   }
                 })
-
         })
       end
     end

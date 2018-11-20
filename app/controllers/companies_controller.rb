@@ -97,8 +97,6 @@ class CompaniesController < ApplicationController
     respond_to do |format|
       # image uploads are always synchronous
       format.html do
-        puts 'company_params'
-        pp company_params
         # forward params so new image urls can be uploaded to adwords api
         redirect_to(adwords_company_path(@company, company: company_params.to_h.to_json))
       end
