@@ -51,6 +51,10 @@
 
   $('.cs-content').css('margin-left', '-' + gridOffsetLeft + 'px');
 
+  init();
+
+
+
   // console.log('gridOffsetLeft', gridOffsetLeft)
   // console.log('gridOffsetRight', gridOffsetRight)
   // console.log('scrollbarWidth', scrollbarWidth)
@@ -208,6 +212,9 @@
       $('body').css('overflow-x', bodyScrollX);  // return to original setting
       $('.scroll-wrap').css('overflow-y', 'scroll');
 
+      // direct urls
+      history.replaceState({}, null, window.location.pathname + '?cs=' + item.href.slice(item.href.lastIndexOf('/') + 1, item.href.length))
+
     });
   }
 
@@ -240,6 +247,10 @@
         classie.remove(gridItem, 'grid__item--animate');
         lockScroll = false;
         window.removeEventListener('scroll', noscroll);
+
+        // direct urls
+        history.replaceState({}, null, window.location.pathname)
+
       });
 
       // reset current
@@ -255,7 +266,5 @@
     }
     window.scrollTo(xscroll, yscroll);
   }
-
-  init();
 
 })(jQuery);

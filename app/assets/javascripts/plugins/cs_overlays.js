@@ -136,16 +136,9 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
                   $story.find('.primary-cta-xs').addClass('open');
                 }, 3000);
 
+                // hide the footer tab on pixlee.com
                 showPixleeTab(false);
-                // console.log('margin', parseInt($story.find('.cs-story-wrapper').css('margin-top'), 10))
-                // console.log('header', $story.find('.cs-story-header').outerHeight(true))
-                // console.log('testimonial', $story.find('.cs-testimonial').outerHeight(true))
-                // console.log('results', ($story.find('.story-results.hidden-xs:not(.visible-xs-block .story-results)').length ? $story.find('.story-results.hidden-xs:not(.visible-xs-block .story-results)').outerHeight(true) : 0))
-                // console.log('ctas', ($story.find('.story-ctas.hidden-xs:not(.visible-xs-block .story-ctas)').length ? $story.find('.story-ctas.hidden-xs:not(.visible-xs-block .story-ctas)').outerHeight(true) : 0))
                 pixleeCtaTop = getPixleeCtaTop($story);
-
-                // console.log('pixleeCtaTop', pixleeCtaTop)
-
               });
           })
           .fail(function () {
@@ -154,6 +147,8 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
       }
 
     });
+
+
 
   function trackStoryVisitor ($storyCard) {
     if (env === 'customerstories.net' && !isDemo) {
@@ -252,6 +247,13 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
     $(document).one('click', '.cs-content.content--show .close-button', function () {
       window.removeEventListener('message', postMessageHandler, false);
     });
+  }
+
+  function getQueryParam (param, url) {
+    var href = url ? url : window.location.href;
+    var reg = new RegExp( '[?&]' + param + '=([^&#]*)', 'i' );
+    var string = reg.exec(href);
+    return string ? string[1] : null;
   }
 
 }
