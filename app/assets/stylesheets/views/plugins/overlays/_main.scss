@@ -14,4 +14,19 @@ $anim-time: 0.2s;
 .cs-overlay-container {
   height: auto;
   padding: 20px 0;
+
+  &.pre-selected {
+
+    .cs-grid::after {
+      transition: opacity 0s step-end;
+    }
+
+    .placeholder.placeholder--trans-in {
+      transition: transform 0s step-end;
+    }
+
+  }
+
 }
+
+

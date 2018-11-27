@@ -1,5 +1,5 @@
 
-<div class="cs-overlay-container">
+<div class="cs-overlay-container <%= pre_selected_story.present? ? 'pre-selected' : '' %>">
 
   <div class="cs-main">
 
@@ -16,7 +16,8 @@
                 is_external: true,
                 grayscale: grayscale,
                 logo_only: logos_only,
-                plugin_type: 'gallery'
+                plugin_type: 'gallery',
+                is_pre_selected: pre_selected_story.try(:id) == story.id
               }
             ) %>
 
@@ -31,6 +32,24 @@
         <% stories.each do |story| %>
 
           <div class="content__item">
+
+            <% if pre_selected_story.try(:id) == story.id %>
+
+              <%= render(
+                    story.published? ? 'stories/show/story' : 'stories/show/preview',
+                    {
+                      company: story.company,
+                      story: story,
+                      contributors: contributors,
+                      related_stories: nil,
+                      is_plugin: true,
+                      plugin_type: 'gallery',
+                      window_width: window_width
+                    }
+                  ) %>
+
+            <% end %>
+
           </div>
 
         <% end %>

@@ -23,11 +23,11 @@ $viewport_xxl:  $item_width * 6 + $sidebar_width; /* 6 columns */
   html,
   body,
   .cs-overlay-container,
-  .cs-main {
-    height: 100vh;
+  .main {
+    // height: 100vh;
   }
   .cs-main {
-    height: 100%;
+    height: auto;
     margin-left: $sidebar_width;
   }
 
