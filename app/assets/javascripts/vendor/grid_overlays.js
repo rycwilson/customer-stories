@@ -162,6 +162,7 @@
       // csp
       $('.cs-main').css('z-index', '100000');
       $('body').css('overflow-x', 'hidden');  // prevents horizontal scrollbar from appearing on transform
+
       // expands the placeholder
       // csp removed...
       // dummy.style.WebkitTransform = 'translate3d(-5px, ' + (scrollY() - 5) + 'px, 0px)';
@@ -169,6 +170,7 @@
       // csp modified...
       dummy.style.WebkitTransform = 'translate3d(' + (-1 * gridOffsetLeft) + 'px,' + (-1 * ($('.cs-grid').offset().top - scrollY())) + 'px, 0px)';
       dummy.style.transform = 'translate3d(' + (-1 * gridOffsetLeft) + 'px,' + (-1 * ($('.cs-grid').offset().top - scrollY())) + 'px, 0px)';
+
       // disallow scroll
       window.addEventListener('scroll', noscroll);
     }, 25);
@@ -214,7 +216,7 @@
 
       // direct urls
       history.replaceState({}, null, window.location.pathname + '?story=' + item.href.slice(item.href.lastIndexOf('/') + 1, item.href.length))
-      $('body').find('div.cs-loading').remove();
+      $('body').find('#cs-loading-pre-select').remove();
 
     });
   }

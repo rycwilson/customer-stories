@@ -66,12 +66,18 @@
         rel: "stylesheet",
         type: "text/css",
         href: "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-      }).appendTo('head')
+      })
+        .appendTo('head')
         .on('load', function () {
           if ((new URL(window.location)).searchParams.get('story')) {
-            // note z-index is just a touch greater than the 100000 that is set on .cs-main when an overlay is opened
+            // z-index is just a touch greater than the 100000 that is set on .cs-main when an overlay is opened
+            // TODO: constantize this number
             $('body').append(
-              '<div class="cs-loading" style="z-index:100001; display: block; position:absolute; height: 100%; top:0;left:0;right:0; background:rgba(0, 0, 0, 0.75)"</div>'
+              '<div id="cs-loading-pre-select" style="z-index:100001; display:block; position:absolute; height:100vh; top:0; left:0; right:0; background:rgba(0, 0, 0, 0.75)">' +
+                '<div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%)">' +
+                  '<i class="fa fa-spin fa-circle-o-notch" style="font-size: 36px !important; color: rgba(255, 255, 255, 0.7) !important"></i>' +
+                '</div>' +
+              '</div>'
             );
           }
         });

@@ -1,5 +1,5 @@
 
-<div class="cs-overlay-container">
+<div class="cs-overlay-container <%= pre_selected_story.present? ? 'pre-selected' : '' %>">
   <div class="cs-main">
 
     <div class="cs-grid cs-grid-carousel">
@@ -35,7 +35,8 @@
                           grayscale: grayscale,
                           logo_only: logos_only,
                           background: background,
-                          plugin_type: 'carousel'
+                          plugin_type: 'carousel',
+                          is_pre_selected: pre_selected_story.try(:id) == story.id
                         }
                       ) %>
 
@@ -81,6 +82,24 @@
         <% stories.first(16).each do |story| %>
 
           <div class="content__item content__item--carousel">
+
+            <% if pre_selected_story.try(:id) == story.id %>
+
+              <%= render(
+                    story.published? ? 'stories/show/story' : 'stories/show/preview',
+                    {
+                      company: story.company,
+                      story: story,
+                      contributors: contributors,
+                      related_stories: nil,
+                      is_plugin: true,
+                      plugin_type: 'carousel',
+                      window_width: window_width
+                    }
+                  ) %>
+
+            <% end %>
+
           </div>
 
         <% end %>

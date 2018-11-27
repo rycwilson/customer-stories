@@ -18,7 +18,7 @@ class PluginsController < ApplicationController
     # set the stylesheet url here, as it's impossible to use the asset path helper in cs.js in a company-specific way
     @stylesheet_url = custom_stylesheet_url(@company, "cs_#{@type}")
     respond_to do |format|
-      format.js { render action: 'cs', cached: true }
+      format.js { render action: 'cs' }
     end
   end
 
@@ -61,14 +61,7 @@ class PluginsController < ApplicationController
     # puts "grayscale #{params[:grayscale].present? && params[:grayscale] != 'false'}"
     # puts params.permit(params.keys).to_h
     stories = plugin_stories(company, params)
-    pre_selected_story =
-      params[:pre_selected_story].present? &&
-      Story.friendly.find(params[:pre_selected_story]).try(:company).try(:id) == company.id &&
-      (
-        Story.friendly.find(params[:pre_selected_story]).try(:published?) ||
-        Story.friendly.find(params[:pre_selected_story]).try(:preview_published?)
-      ) &&
-      Story.friendly.find(params[:pre_selected_story])
+    pre_selected_story = get_pre_selected_story(company, params)
     render_to_string(
       partial: params[:type],
       layout: false,
@@ -91,6 +84,15 @@ class PluginsController < ApplicationController
         contributors: pre_selected_story && set_contributors(pre_selected_story)
       }
     )
+  end
+
+  def get_pre_selected_story (company, params)
+    story = params[:pre_selected_story].present? &&
+            Story.friendly.exists?(params[:pre_selected_story]) &&
+            Story.friendly.find(params[:pre_selected_story])
+    return story.try(:company).try(:id) == company.id &&
+      ( story.try(:published?) || story.try(:preview_published?) ) &&
+      story
   end
 
   def plugin_stories (company, params)

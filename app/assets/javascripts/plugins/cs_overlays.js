@@ -85,7 +85,6 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
     .on('click', '.cs-close', function () {
       // for pre-selected stories, animation time is reduced to zero on opening;
       // remove this setting when an overlay is closed
-      console.log('HELLO')
       $('.cs-overlay-container').removeClass('pre-selected')
 
       // show Pixlee's tab on their home page
@@ -131,9 +130,7 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
             )
               .then(function () { linkedinListener($story); })
               .then(function () {
-                if ($storyCard.hasClass('has-video')) {
-                  cspInitVideo($, $story);
-                }
+                if ($storyCard.hasClass('has-video')) cspInitVideo($, $story);
                 initLinkedIn();
                 $storyCard[0].click();
                 setTimeout(function () {
