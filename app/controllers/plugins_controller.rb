@@ -18,7 +18,7 @@ class PluginsController < ApplicationController
     # set the stylesheet url here, as it's impossible to use the asset path helper in cs.js in a company-specific way
     @stylesheet_url = custom_stylesheet_url(@company, "cs_#{@type}")
     respond_to do |format|
-      format.js { render action: 'cs' }
+      format.js { render action: 'cs', cached: true }
     end
   end
 
@@ -74,7 +74,6 @@ class PluginsController < ApplicationController
       layout: false,
       locals: {
         company: @company,
-        # widget: @company.plugin,   # applies to tabbed carousel (tab style)
         stories: stories.first(16),
         title: 'Customer Stories',
         is_demo: params[:is_demo].present?,

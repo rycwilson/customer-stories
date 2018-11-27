@@ -16,15 +16,10 @@ $anim-time: 0.2s;
   padding: 20px 0;
 
   &.pre-selected {
-
-    .cs-grid::after {
-      transition: opacity 0s step-end;
-    }
-
     .placeholder.placeholder--trans-in {
-      transition: transform 0s step-end;
+      transition: transform 0.1s;   // doesn't work if 0, not sure why
+      transition-timing-function: step-end;
     }
-
   }
 
 }

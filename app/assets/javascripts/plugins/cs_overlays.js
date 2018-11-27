@@ -134,10 +134,7 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
                   cspInitVideo($, $story);
                 }
                 initLinkedIn();
-
-                // the grid_overlays.js listener is vanilla js, won't pick up on $storyCard.trigger('click')
                 $storyCard[0].click();
-
                 setTimeout(function () {
                   $story.find('.primary-cta-xs').addClass('open');
                 }, 3000);
@@ -153,8 +150,6 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
       }
 
     });
-
-
 
   function trackStoryVisitor ($storyCard) {
     if (env === 'customerstories.net' && !isDemo) {

@@ -66,7 +66,15 @@
         rel: "stylesheet",
         type: "text/css",
         href: "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-      }).appendTo('head');
+      }).appendTo('head')
+        .on('load', function () {
+          if ((new URL(window.location)).searchParams.get('story')) {
+            // note z-index is just a touch greater than the 100000 that is set on .cs-main when an overlay is opened
+            $('body').append(
+              '<div class="cs-loading" style="z-index:100001; display: block; position:absolute; height: 100%; top:0;left:0;right:0; background:rgba(0, 0, 0, 0.75)"</div>'
+            );
+          }
+        });
 
       // reset the css (none of this works with weebly, gah!)
       // ref: https://stackoverflow.com/questions/15901030/reset-remove-css-styles-for-element-only
@@ -158,9 +166,10 @@
               cspInitTabbedCarousel($, $container, tabbedCarouselDelay, isDemo);
             }
 
-            // open any pre-selected story
-            $container.find('a.cs-loaded').first()[0].click();
-
+            // open pre-selected story
+            if ($container.find('a.cs-loaded').length) {
+              $container.find('a.cs-loaded').first()[0].click();
+            }
           });
       });
   }
