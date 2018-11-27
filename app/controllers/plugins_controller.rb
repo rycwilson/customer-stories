@@ -61,6 +61,14 @@ class PluginsController < ApplicationController
     # puts "grayscale #{params[:grayscale].present? && params[:grayscale] != 'false'}"
     # puts params.permit(params.keys).to_h
     stories = plugin_stories(company, params)
+    pre_selected_story =
+      params[:pre_selected_story].present? &&
+      Story.friendly.find(params[:pre_selected_story]).try(:company).try(:id) == company.id &&
+      (
+        Story.friendly.find(params[:pre_selected_story]).try(:published?) ||
+        Story.friendly.find(params[:pre_selected_story]).try(:preview_published?)
+      ) &&
+      Story.friendly.find(params[:pre_selected_story])
     render_to_string(
       partial: params[:type],
       layout: false,
@@ -79,6 +87,9 @@ class PluginsController < ApplicationController
         is_curator: false,
         is_plugin: true,
         is_external: true,
+        window_width: params[:window_width],
+        pre_selected_story: pre_selected_story,
+        contributors: pre_selected_story && set_contributors(pre_selected_story)
       }
     )
   end

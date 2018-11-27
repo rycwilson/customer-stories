@@ -345,22 +345,22 @@ class StoriesController < ApplicationController
     @story = Story.find_by_id(params[:id]) || Story.friendly.find(params[:story_slug])
   end
 
-  def set_contributors (story)
-    @contributors =
-      User.joins(own_contributions: { success: {} })
-          .where.not(linkedin_url: [nil, ''])
-          .where(
-            successes: { id: story.success_id },
-            contributions: { publish_contributor: true }
-          )
-          .order("CASE contributions.role
-                    WHEN 'customer' THEN '1'
-                    WHEN 'customer success' THEN '2'
-                    WHEN 'sales' THEN '3'
-                  END")
-          .to_a
-          .delete_if { |c| c.id == story.curator.id }
-  end
+  # def set_contributors (story)
+  #   @contributors =
+  #     User.joins(own_contributions: { success: {} })
+  #         .where.not(linkedin_url: [nil, ''])
+  #         .where(
+  #           successes: { id: story.success_id },
+  #           contributions: { publish_contributor: true }
+  #         )
+  #         .order("CASE contributions.role
+  #                   WHEN 'customer' THEN '1'
+  #                   WHEN 'customer success' THEN '2'
+  #                   WHEN 'sales' THEN '3'
+  #                 END")
+  #         .to_a
+  #         .delete_if { |c| c.id == story.curator.id }
+  # end
 
   def render_story_partial (story, contributors, window_width)
     render_to_string({

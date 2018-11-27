@@ -28,7 +28,6 @@
   left: 0;
   width: 100%;
   height: 100%;
-  -webkit-transition: opacity $anim-time;
   transition: opacity $anim-time;
 }
 
@@ -59,15 +58,13 @@
 
 .placeholder.placeholder--trans-in {
   background-color: rgba(0, 0, 0, 0.6);
-  -webkit-transition: -webkit-transform $anim-time;
-  transition: transform $anim-time;  // , left $anim-time;
-  -webkit-transition-timing-function: cubic-bezier(0.165,0.84,0.44,1);
+  transition: transform $anim-time;
+  // -webkit-transition-timing-function: cubic-bezier(0.165,0.84,0.44,1);
   transition-timing-function: cubic-bezier(0.165,0.84,0.44,1);
 }
 
 .placeholder.placeholder--trans-out {
   background-color: $color_secondary;
-  -webkit-transition: -webkit-transform $anim-time;
   transition: transform $anim-time;
 }
 

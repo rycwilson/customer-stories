@@ -95,13 +95,14 @@
           stories: $script.data('stories'),
           category: $script.data('category'),
           product: $script.data('product'),
-          pre_selected_story: getQueryParam('csTitle'),
+          pre_selected_story: (new URL(window.location)).searchParams.get('story'),
           // max_rows: $script.data('max-rows'),
           background: $script.data('background'),
           tab_color: $script.data('tab-color'),
           text_color: $script.data('text-color'),
           logos_only: $script.data('logos-only'),
-          grayscale: $script.data('grayscale')
+          grayscale: $script.data('grayscale'),
+          window_width: window.innerWidth
         }
       })
         .done(function (data) {
@@ -155,6 +156,10 @@
               slideDrawerPlugin($container);
               cspInitTabbedCarousel($, $container, tabbedCarouselDelay, isDemo);
             }
+
+            // open any pre-selected story
+            $container.find('a.cs-loaded').first()[0].click();
+
           });
       });
   }
@@ -286,13 +291,6 @@
     } else {
       return false;
     }
-  }
-
-  function getQueryParam (param, url) {
-    var href = url ? url : window.location.href;
-    var reg = new RegExp( '[?&]' + param + '=([^&#]*)', 'i' );
-    var string = reg.exec(href);
-    return string ? string[1] : null;
   }
 
 

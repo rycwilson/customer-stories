@@ -71,9 +71,16 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
     .on('click touchend', '.cs-close-xs', function () {
       // there are multiple close buttons in the story header; don't trigger them all
       $('.content__item--show .cs-close').first().trigger('click');
+
+      // show Pixlee's tab on their home page
       showPixleeTab(true);
     })
     .on('click', '.cs-close', function () {
+      // for pre-selected stories, animation time is reduced to zero on opening;
+      // remove this setting when an overlay is closed
+      $(this).closest('.cs-overlay-container').removeClass('pre_selected')
+
+      // show Pixlee's tab on their home page
       showPixleeTab(true);
     })
 
@@ -89,7 +96,6 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
         $(this).find('a')[0].click();
       }
     })
-
 
     .on('click', 'a.published, a.preview-published', function (e) {
       e.preventDefault();
