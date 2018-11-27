@@ -85,6 +85,7 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
     .on('click', '.cs-close', function () {
       // for pre-selected stories, animation time is reduced to zero on opening;
       // remove this setting when an overlay is closed
+      console.log('HELLO')
       $('.cs-overlay-container').removeClass('pre-selected')
 
       // show Pixlee's tab on their home page
