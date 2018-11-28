@@ -43,11 +43,11 @@
 .placeholder {
   pointer-events: none;
   position: absolute;
-  width: 100vw;
+  width: calc(100vw + 1px);  // pixlee fudge factor
   height: 100vh;
   z-index: 100;
   top: 0;
-  left: -1px;
+  left: -1px;  // pixlee fudge factor
   // background: $color_secondary;
   -webkit-transform-origin: 0 0;
   transform-origin: 0 0;
