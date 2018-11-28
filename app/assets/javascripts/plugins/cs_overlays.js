@@ -112,6 +112,11 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
           showPixleeTab(false);
           if (pixleeCtaTop === undefined) pixleeCtaTop = getPixleeCtaTop($story);
         }
+        if ($storyCard.hasClass('has-video')) cspInitVideo($, $story);
+        initLinkedIn();
+        setTimeout(function () {
+          $story.find('.primary-cta-xs').addClass('open');
+        }, 3000);
         return false;  // overlays handler
       } else {
         loading($storyCard);
