@@ -108,9 +108,9 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
           storyIndex = $container.is('#cs-gallery') ? $storyCard.index() + 1 : $storyCard.parent().index() + 1,
           $story = $container.find('.content__item:nth-of-type(' + storyIndex + ')');
       if ($storyCard.hasClass('cs-loaded')) {
-        if (subdomain === 'pixlee' && pixleeCtaTop === undefined) {
-          pixleeCtaTop = getPixleeCtaTop($story);
+        if (subdomain === 'pixlee') {
           showPixleeTab(false);
+          if (pixleeCtaTop === undefined) pixleeCtaTop = getPixleeCtaTop($story);
         }
         return false;  // overlays handler
       } else {
