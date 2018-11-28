@@ -73,20 +73,15 @@
             // z-index is just a touch greater than the 100000 that is set on .cs-main when an overlay is opened
             // TODO: constantize this number
             $('body').append(
-              '<div id="cs-loading-pre-select" style="z-index:100001; display:block; position:absolute; height:100vh; top:0; left:0; right:0; background:rgba(0, 0, 0, 0.75)">' +
+              '<div id="cs-loading-pre-select" style="z-index:100001; display:block; position:fixed; height:100vh; top:0; left:0; right:0; background:rgba(0, 0, 0, 0.75)">' +
                 '<div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%)">' +
                   '<i class="fa fa-spin fa-circle-o-notch" style="font-size: 36px !important; color: rgba(255, 255, 255, 0.7) !important"></i>' +
                 '</div>' +
               '</div>'
             );
-            var bodyScrollY = $('body').css('overflow-y');
-            $('body').css('overflow-y', 'hidden');
             setTimeout(function () {
-              if ($('#cs-loading-pre-select').length) {
-                $('#cs-loading-pre-select').remove();
-                $('body').css('overflow-y', bodyScrollY);
-              }
-            }, 7000)
+              if ($('#cs-loading-pre-select').length) $('#cs-loading-pre-select').remove();
+            }, 10000)
           }
         });
 
@@ -192,7 +187,7 @@
 
             // open pre-selected story
             if ($container.find('a.cs-loaded').length) {
-              $container.find('a.cs-loaded').first()[0].click();
+              // $container.find('a.cs-loaded').first()[0].click();
             }
 
           });
