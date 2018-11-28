@@ -110,6 +110,7 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
       if ($storyCard.hasClass('cs-loaded')) {
         if (subdomain === 'pixlee' && pixleeCtaTop === undefined) {
           pixleeCtaTop = getPixleeCtaTop($story);
+          showPixleeTab(false);
         }
         return false;  // overlays handler
       } else {
