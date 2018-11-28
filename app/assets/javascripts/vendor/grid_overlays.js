@@ -63,11 +63,13 @@
   function getViewport (axis) {
     var client, inner;
     if( axis === 'x' ) {
-      client = docElem['clientWidth'];
+      // client = docElem['clientWidth'];
+      client = document.body.clientWidth;  // pixlee fix
       inner = window['innerWidth'];
     }
     else if( axis === 'y' ) {
-      client = docElem['clientHeight'];
+      // client = docElem['clientHeight'];
+      client = document.body.clientHeight;
       inner = window['innerHeight'];
     }
     return client < inner ? inner : client;
@@ -145,6 +147,8 @@
     }
     // console.log('scale3d arg1', item.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth))
     // console.log('itemOffsetHeight', item.offsetHeight)
+    // console.log('translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + item.offsetHeight/getViewport('y') + ',1)')
+    // console.log(getViewport('y'))
     dummy.style.WebkitTransform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + item.offsetHeight/getViewport('y') + ',1)';
     dummy.style.transform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + item.offsetHeight/getViewport('y') + ',1)';
 
@@ -157,7 +161,7 @@
     // body overlay
     classie.add(bodyEl, 'view-single');
     setTimeout(function() {
-      // csp
+    //   // csp
       $('.cs-main').css('z-index', '100000');
       $('body').css('overflow-x', 'hidden');  // prevents horizontal scrollbar from appearing on transform
 
@@ -167,7 +171,7 @@
       // dummy.style.transform = 'translate3d(-5px, ' + (scrollY() - 5) + 'px, 0px)';
       // csp modified...
 
-      $('#cs-loading-pre-select').css('opacity', '0')  // see transitio time cs.js.erb
+      $('#cs-loading-pre-select').css('opacity', '0')  // see transition time cs.js.erb; see remove below
       dummy.style.WebkitTransform = 'translate3d(' + (-1 * gridOffsetLeft) + 'px,' + (-1 * ($('.cs-grid').offset().top - scrollY())) + 'px, 0px)';
       dummy.style.transform = 'translate3d(' + (-1 * gridOffsetLeft) + 'px,' + (-1 * ($('.cs-grid').offset().top - scrollY())) + 'px, 0px)';
 
