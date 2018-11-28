@@ -80,7 +80,12 @@
               '</div>'
             );
             setTimeout(function () {
-              if ($('#cs-loading-pre-select').length) $('#cs-loading-pre-select').remove();
+              if ($('#cs-loading-pre-select').length) {
+                $('#cs-loading-pre-select').remove();
+
+                // get rid of ?story=
+                history.replaceState({}, null, window.location.pathname)
+              };
             }, 10000)
           }
         });
