@@ -166,11 +166,14 @@
       // dummy.style.WebkitTransform = 'translate3d(-5px, ' + (scrollY() - 5) + 'px, 0px)';
       // dummy.style.transform = 'translate3d(-5px, ' + (scrollY() - 5) + 'px, 0px)';
       // csp modified...
+
+      $('#cs-loading-pre-select').css('opacity', '0')  // see transitio time cs.js.erb
       dummy.style.WebkitTransform = 'translate3d(' + (-1 * gridOffsetLeft) + 'px,' + (-1 * ($('.cs-grid').offset().top - scrollY())) + 'px, 0px)';
       dummy.style.transform = 'translate3d(' + (-1 * gridOffsetLeft) + 'px,' + (-1 * ($('.cs-grid').offset().top - scrollY())) + 'px, 0px)';
 
       // disallow scroll
       window.addEventListener('scroll', noscroll);
+
     }, 25);
 
     onEndTransition(dummy, function() {
@@ -214,7 +217,6 @@
 
       // direct urls
       history.replaceState({}, null, window.location.pathname + '?story=' + item.href.slice(item.href.lastIndexOf('/') + 1, item.href.length))
-      $('#cs-loading-pre-select').remove();
 
     });
   }
