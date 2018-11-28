@@ -223,7 +223,9 @@
       $('.scroll-wrap').css('overflow-y', 'scroll');
 
       // direct urls
-      history.replaceState({}, null, window.location.pathname + '?story=' + item.href.slice(item.href.lastIndexOf('/') + 1, item.href.length))
+      if (window.location.href.includes('pixlee')) {
+        history.replaceState({}, null, window.location.pathname + '?story=' + item.href.slice(item.href.lastIndexOf('/') + 1, item.href.length))
+      }
 
     });
   }
@@ -259,7 +261,9 @@
         window.removeEventListener('scroll', noscroll);
 
         // direct urls
-        history.replaceState({}, null, window.location.pathname)
+        if (window.location.href.includes('pixlee')) {
+          history.replaceState({}, null, window.location.pathname)
+        }
 
       });
 
