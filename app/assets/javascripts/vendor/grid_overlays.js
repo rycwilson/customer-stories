@@ -177,6 +177,9 @@
     }, 25);
 
     onEndTransition(dummy, function() {
+
+      $('#cs-loading-pre-select').remove();
+
       // add transition class
       classie.remove(dummy, 'placeholder--trans-in');
       classie.add(dummy, 'placeholder--trans-out');
