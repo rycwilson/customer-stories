@@ -69,26 +69,30 @@
       })
         .appendTo('head')
         .on('load', function () {
-          if ((new URL(window.location)).searchParams.get('story')) {
-            // z-index is just a touch greater than the 100000 that is set on .cs-main when an overlay is opened
-            // TODO: constantize this number
-            $('body').append(
-              '<div id="cs-loading-pre-select" style="z-index:100001; display:block; position:fixed; height:100vh; top:0; left:0; right:0; background:rgba(0, 0, 0, 0.75); transition: opacity 0.12s">' +
-                '<div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%)">' +
-                  '<i class="fa fa-spin fa-circle-o-notch" style="font-size: 36px !important; color: rgba(255, 255, 255, 0.7) !important"></i>' +
-                '</div>' +
-              '</div>'
-            );
+          if (window.location.href.includes('pixlee')) {
 
-            // remove loading screen and query param on timeout
-            setTimeout(function () {
-              if ($('#cs-loading-pre-select').length) {
-                $('#cs-loading-pre-select').remove();
+            if ((new URL(window.location)).searchParams.get('story')) {
+              // z-index is just a touch greater than the 100000 that is set on .cs-main when an overlay is opened
+              // TODO: constantize this number
+              $('body').append(
+                '<div id="cs-loading-pre-select" style="z-index:100001; display:block; position:fixed; height:100vh; top:0; left:0; right:0; background:rgba(0, 0, 0, 0.75); transition: opacity 0.12s">' +
+                  '<div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%)">' +
+                    '<i class="fa fa-spin fa-circle-o-notch" style="font-size: 36px !important; color: rgba(255, 255, 255, 0.7) !important"></i>' +
+                  '</div>' +
+                '</div>'
+              );
 
-                // get rid of ?story=
-                history.replaceState({}, null, window.location.pathname)
-              };
-            }, 10000)
+              // remove loading screen and query param on timeout
+              setTimeout(function () {
+                if ($('#cs-loading-pre-select').length) {
+                  $('#cs-loading-pre-select').remove();
+
+                  // get rid of ?story=
+                  history.replaceState({}, null, window.location.pathname)
+                };
+              }, 10000)
+            }
+
           }
         });
 
@@ -120,7 +124,7 @@
           stories: $script.data('stories'),
           category: $script.data('category'),
           product: $script.data('product'),
-          pre_selected_story: (new URL(window.location)).searchParams.get('story'),
+          pre_selected_story: window.location.href.includes('pixlee') ? (new URL(window.location)).searchParams.get('story') : null,
           // max_rows: $script.data('max-rows'),
           background: $script.data('background'),
           tab_color: $script.data('tab-color'),
