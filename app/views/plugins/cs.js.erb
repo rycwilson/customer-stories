@@ -79,6 +79,11 @@
                 '</div>' +
               '</div>'
             );
+
+            // hide pixlee tab
+            $('button.olark-launch-button').css({ opacity: '0', 'pointer-events': 'none' });
+
+            // remove loading screen and query param on timeout
             setTimeout(function () {
               if ($('#cs-loading-pre-select').length) {
                 $('#cs-loading-pre-select').remove();
