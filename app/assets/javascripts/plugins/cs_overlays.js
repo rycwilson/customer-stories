@@ -31,12 +31,10 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
       showPixleeTab = function (showTheTab) {
         if (subdomain === 'pixlee' && showTheTab) {
           setTimeout(function () {
-            $('button.olark-launch-button').css('display', 'inline-block !important');
-            $('button.olark-launch-button').css('opacity', '1');
+            $('button.olark-launch-button').css({ opacity: '1', 'pointer-events': 'auto' });
           }, 200)
         } else if (subdomain === 'pixlee' && !showTheTab) {
-          $('button.olark-launch-button').css('opacity', '0');
-          $('button.olark-launch-button').css('display', 'none');
+          $('button.olark-launch-button').css({ opacity: '0', 'pointer-events': 'none' });
         }
       },
       getPixleeCtaTop = function ($story) {
