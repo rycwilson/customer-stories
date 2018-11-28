@@ -53,8 +53,6 @@
 
   init();
 
-
-
   // console.log('gridOffsetLeft', gridOffsetLeft)
   // console.log('gridOffsetRight', gridOffsetRight)
   // console.log('scrollbarWidth', scrollbarWidth)
@@ -216,7 +214,7 @@
 
       // direct urls
       history.replaceState({}, null, window.location.pathname + '?story=' + item.href.slice(item.href.lastIndexOf('/') + 1, item.href.length))
-      $('body').find('#cs-loading-pre-select').remove();
+      $('#cs-loading-pre-select').remove();
 
     });
   }

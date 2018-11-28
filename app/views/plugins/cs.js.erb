@@ -79,6 +79,14 @@
                 '</div>' +
               '</div>'
             );
+            var bodyScrollY = $('body').css('overflow-y');
+            $('body').css('overflow-y', 'hidden');
+            setTimeout(function () {
+              if ($('#cs-loading-pre-select').length) {
+                $('#cs-loading-pre-select').remove();
+                $('body').css('overflow-y', bodyScrollY);
+              }
+            }, 7000)
           }
         });
 
@@ -126,10 +134,20 @@
 
           // wait for all images to load so dimension calculations are correct
           var $images = $container.find('img'), loadedImages = 0;
-          $images.on('load', function () {
+          $images.on('load', function (e) {
             if (++loadedImages === $images.length) {
               initPlugin('<%= @type %>', $container, $script, isDemo, env);
             }
+          });
+
+          // if images are coming from cache they won't trigger the load event;
+          // changing the src will trigger load;
+          // img.src = '' necessary for webkit if it previously held a value, per comments here:
+          // https://stackoverflow.com/questions/12354865
+          $images.each(function () {
+            var temp = this.src
+            this.src = '';
+            this.src = temp;
           });
         });
     };
@@ -166,7 +184,7 @@
           .done(function () {
             if (type === 'gallery') cspInitGallery($, $container, maxGalleryRows);
             else if (type === 'carousel') cspInitCarousel($, $container);
-            else if (type == 'tabbed_carousel') {
+            else if (type === 'tabbed_carousel') {
               // plugin must be defined and called in this scope
               slideDrawerPlugin($container);
               cspInitTabbedCarousel($, $container, tabbedCarouselDelay, isDemo);
@@ -176,6 +194,7 @@
             if ($container.find('a.cs-loaded').length) {
               $container.find('a.cs-loaded').first()[0].click();
             }
+
           });
       });
   }

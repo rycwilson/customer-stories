@@ -106,8 +106,13 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
 
     .on('click', 'a.published, a.preview-published', function (e) {
       e.preventDefault();
-      var $story, $storyCard = $(this);
+      var $storyCard = $(this),
+          storyIndex = $container.is('#cs-gallery') ? $storyCard.index() + 1 : $storyCard.parent().index() + 1,
+          $story = $container.find('.content__item:nth-of-type(' + storyIndex + ')');
       if ($storyCard.hasClass('cs-loaded')) {
+        if (subdomain === 'pixlee' && pixleeCtaTop === undefined) {
+          pixleeCtaTop = getPixleeCtaTop($story);
+        }
         return false;  // overlays handler
       } else {
         loading($storyCard);
@@ -121,8 +126,6 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
           dataType: 'jsonp'
         })
           .done(function (data, status, jqxhr) {
-            var storyIndex = $container.is('#cs-gallery') ? $storyCard.index() + 1 : $storyCard.parent().index() + 1;
-            $story = $container.find('.content__item:nth-of-type(' + storyIndex + ')');
             trackStoryVisitor($storyCard);
             $.when(
               $story.html(data.html),
