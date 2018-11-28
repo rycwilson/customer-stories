@@ -69,7 +69,7 @@
       })
         .appendTo('head')
         .on('load', function () {
-          if (window.location.href.includes('pixlee')) {
+          // if (window.location.href.includes('pixlee')) {
 
             if ((new URL(window.location)).searchParams.get('story')) {
               // z-index is just a touch greater than the 100000 that is set on .cs-main when an overlay is opened
@@ -90,10 +90,10 @@
                   // get rid of ?story=
                   history.replaceState({}, null, window.location.pathname)
                 };
-              }, 10000)
+              }, 7000)
             }
 
-          }
+          // }
         });
 
       // reset the css (none of this works with weebly, gah!)
@@ -124,7 +124,7 @@
           stories: $script.data('stories'),
           category: $script.data('category'),
           product: $script.data('product'),
-          pre_selected_story: window.location.href.includes('pixlee') ? (new URL(window.location)).searchParams.get('story') : null,
+          pre_selected_story: (new URL(window.location)).searchParams.get('story'),
           // max_rows: $script.data('max-rows'),
           background: $script.data('background'),
           tab_color: $script.data('tab-color'),
