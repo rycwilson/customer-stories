@@ -80,8 +80,7 @@
               '</div>'
             );
 
-            // hide pixlee tab
-            $('button.olark-launch-button').css({ opacity: '0', 'pointer-events': 'none' });
+            $container[0].scrollIntoView({ behavior:'smooth', block:'center' });
 
             // remove loading screen and query param on timeout
             setTimeout(function () {
