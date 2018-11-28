@@ -30,12 +30,10 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
           },
       showPixleeTab = function (showTheTab) {
         if (subdomain === 'pixlee' && showTheTab) {
-          // console.log('showTab')
           setTimeout(function () {
             $('button.olark-launch-button').css('opacity', '1');
           }, 200)
         } else if (subdomain === 'pixlee' && !showTheTab) {
-          // console.log('!showTab')
           $('button.olark-launch-button').css('opacity', '0');
         }
       },

@@ -9,25 +9,25 @@
 
       <div class="social-share-buttons <%= story.video_url.present? ? '' : 'no-video' %>">
 
-        <a href="<%= FACEBOOK_SHARE_URL + story.csp_story_url %>" target="_blank"
+        <a href="<%= FACEBOOK_SHARE_URL + (is_plugin ? request.referer + '?story=' + story.slug : request.url) %>" target="_blank"
            class="icon-button-xs facebook-share">
           <i class="fa fa-facebook"></i>
           <span></span>
         </a>
 
-        <a href="<%= TWITTER_SHARE_URL + story.csp_story_url %>" target="_blank"
+        <a href="<%= TWITTER_SHARE_URL + (is_plugin ? request.referer + '?story=' + story.slug : request.url) %>" target="_blank"
            class="icon-button-xs twitter-share">
           <i class="fa fa-twitter"></i>
           <span></span>
         </a>
 
-        <a href="<%= LINKEDIN_SHARE_URL + story.csp_story_url %>" target="_blank"
+        <a href="<%= LINKEDIN_SHARE_URL + (is_plugin ? request.referer + '?story=' + story.slug : request.url) %>" target="_blank"
            class="icon-button-xs linkedin-share">
           <i class="fa fa-linkedin"></i>
           <span></span>
         </a>
 
-        <a href="mailto:?subject=<%= story.title %>&body=<%= story.csp_story_url %>" class="icon-button-xs mailto">
+        <a href="mailto:?subject=<%= story.title %>&body=<%= is_plugin ? request.referer + '?story=' + story.slug : request.url %>" class="icon-button-xs mailto">
           <i class="fa fa-envelope"></i>
           <span></span>
         </a>
