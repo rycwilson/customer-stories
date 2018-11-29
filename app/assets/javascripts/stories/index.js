@@ -77,15 +77,15 @@ function storiesIndexListeners () {
 
 
     .on('click touchstart', 'li[data-story-id]:not(.hover) a.published', function (e) {
+      console.log('click touchstart')
       var $storyLink = $(this),
           $storyCard = $(this).parent(),
           storyLoading = function () {
-// the forceRedraw is necessary because the style changes won't take affect while the link is being followed
+            // the forceRedraw is necessary because the style changes won't take affect while the link is being followed
             $storyCard.addClass('loading still-loading').forceRedraw();
-            // setTimeout(function () { $storyCard.forceRedraw(); }, 1500);
 
             // don't appy this change to current $storyCard or link won't be followed
-            // $('#stories-gallery li').not($storyCard).css('pointer-events', 'none');
+            $('#stories-gallery li').not($storyCard).css('pointer-events', 'none');
           };
 
       if (e.type === 'click') {
@@ -98,11 +98,11 @@ function storiesIndexListeners () {
 
         // stop the subsequent touchend event from triggering the <a> tag
         $storyLink.one('touchend', function (e) {
-          // console.log('touchend');
+          console.log('touchend');
           e.preventDefault();
         });
 
-        // next click => load story
+        // next tap => load story
         $storyLink.one('touchstart', storyLoading);
 
         // undo style changes when navigating away
@@ -118,9 +118,12 @@ function storiesIndexListeners () {
           // this selector is still allowing a click on the title <p> to trigger this listener => check in the function instead
           // ':not(li[data-story-id]:nth-of-type(' + $storyCard.index() + 1 + '), li[data-story-id]:nth-of-type(' + $storyCard.index() + 1 + ') *)',
           function (e) {
+            console.log('body touchstart')
             if ($(e.target).is($storyCard) || $storyCard.has(e.target).length ) {
+              console.log('story card')
               // do nothing (link will be followed)
             } else {
+              console.log('not story card')
               $storyCard.removeClass('hover');
               $storyLink.off('touchstart', storyLoading);
             }

@@ -87,6 +87,7 @@
         ev.preventDefault();
         // csp modify... (last expression)
         if(isAnimating || current === pos || !$(item).hasClass('cs-loaded')) {
+          console.log('grid overlays return false')
           return false;
         }
         isAnimating = true;
@@ -213,9 +214,12 @@
       // reset gallery
       // (for the gallery: some story cards aren't display due to max rows - see gallery.js.erb)
       $(gridEl).find('a.cs-thumbnail:not([style*="display: none"])').each(function () {
-        $(this).removeClass('cs-loading cs-still-loading')
+        $(this).removeClass('cs-hover cs-loading cs-still-loading')
                .removeAttr('style');  // this gets rid of pointer-events: none
       });
+
+      // for sync. loaded stories, animation time is reduced to zero on opening
+      $('.cs-overlay-container').removeClass('pre-selected')
 
       // csp: the overlay will have its own scroll bar
       $('body').css('overflow-y', 'hidden');
@@ -223,18 +227,11 @@
       $('.scroll-wrap').css('overflow-y', 'scroll');
 
       // direct urls
-      // if (window.location.href.includes('pixlee')) {
-        history.replaceState({}, null, window.location.pathname + '?story=' + item.href.slice(item.href.lastIndexOf('/') + 1, item.href.length))
-      // }
-
+      history.replaceState({}, null, window.location.pathname + '?story=' + item.href.slice(item.href.lastIndexOf('/') + 1, item.href.length))
     });
   }
 
   function hideContent() {
-    // csp modify: return setting to whatever it was before overlay was opened
-    $('.scroll-wrap').css('overflow-y', 'hidden');
-    $('body').css('overflow-y', bodyScrollY);
-
     var gridItem = gridItems[current], contentItem = contentItems[current];
 
     classie.remove(contentItem, 'content__item--show');
@@ -249,8 +246,6 @@
       dummy.style.transform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + gridItem.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + gridItem.offsetHeight/getViewport('y') + ',1)';
       dummy.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
       onEndTransition(dummy, function() {
-        // csp
-        $('.cs-main').css('z-index', '50');
 
         // reset content scroll..
         contentItem.parentNode.scrollTop = 0;
@@ -260,11 +255,19 @@
         lockScroll = false;
         window.removeEventListener('scroll', noscroll);
 
-        // direct urls
-        // if (window.location.href.includes('pixlee')) {
-          history.replaceState({}, null, window.location.pathname)
-        // }
+        // csp
+        $('.cs-main').css('z-index', '50');
 
+        // return setting to whatever it was before overlay was opened
+        $('.scroll-wrap').css('overflow-y', 'hidden');
+        $('body').css('overflow-y', bodyScrollY);
+
+        // direct urls
+        history.replaceState({}, null, window.location.pathname)
+
+        $('.primary-cta-xs').each(function () {
+          $(this).removeClass('open');
+        })
       });
 
       // reset current

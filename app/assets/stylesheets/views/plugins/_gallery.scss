@@ -123,13 +123,13 @@ a.cs-thumbnail {
     content: 'Configure Story';
   }
   &:active {
-    -webkit-filter: brightness(94%);
+    filter: brightness(94%);
     box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08)
   }
   &.public.logo-published {
     pointer-events: none;
   }
-  &:hover, &.cs-loading {
+  &:hover, &.cs-hover, &.cs-loading {
     border: 1px solid transparent;  // overrides bootstrap
     box-shadow: 0 3px 8px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(0,0,0,0.08);
     .thumbnail-view-hover {
@@ -178,7 +178,7 @@ a.cs-thumbnail {
     }
   }
   &.cs-loading {
-    -webkit-filter: brightness(95%);
+    filter: brightness(95%);
     .thumbnail-view-hover {
       transform: none;
     }

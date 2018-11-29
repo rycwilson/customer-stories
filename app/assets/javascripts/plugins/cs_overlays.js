@@ -6,11 +6,7 @@
 
 function cspInitOverlays ($, $container, subdomain, isDemo, env) {
 
-  var loading = function ($storyCard) {
-          $storyCard.addClass('cs-loading cs-still-loading');
-          $container.find('a').css('pointer-events', 'none');
-        },
-      applyScrollBoundaries = function () {
+  var applyScrollBoundaries = function () {
           var maxY, startY = 0;
           $container
             .find('.scroll-wrap').on('touchstart', function (event) {
@@ -46,6 +42,10 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
       },
       pixleeCtaTop;
 
+  $.fn.forceRedraw = function() {
+    return this.hide(0, function() { $(this).show(); });
+  };
+
   applyScrollBoundaries();
 
   if (subdomain === 'pixlee') {
@@ -76,17 +76,10 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
     .on('click touchend', '.cs-close-xs', function () {
       // there are multiple close buttons in the story header; don't trigger them all
       $('.content__item--show .cs-close').first().trigger('click');
-
-      // show Pixlee's tab on their home page
-      showPixleeTab(true);
+      showPixleeTab(true);  // show Pixlee's tab on their home page
     })
     .on('click', '.cs-close', function () {
-      // for pre-selected stories, animation time is reduced to zero on opening;
-      // remove this setting when an overlay is closed
-      $('.cs-overlay-container').removeClass('pre-selected')
-
-      // show Pixlee's tab on their home page
-      showPixleeTab(true);
+      showPixleeTab(true);  // show Pixlee's tab on their home page
     })
 
     .on('click', '.linkedin-widget', function () {
@@ -102,58 +95,116 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
       }
     })
 
-    .on('click', 'a.published, a.preview-published', function (e) {
-      e.preventDefault();
+    .on('click touchstart', 'a.published, a.preview-published', function (e) {
+      console.log('click touchstart')
       var $storyCard = $(this),
           storyIndex = $container.is('#cs-gallery') ? $storyCard.index() + 1 : $storyCard.parent().index() + 1,
-          $story = $container.find('.content__item:nth-of-type(' + storyIndex + ')');
-      if ($storyCard.hasClass('cs-loaded')) {
-        if (subdomain === 'pixlee') {
-          showPixleeTab(false);
-          if (pixleeCtaTop === undefined) pixleeCtaTop = getPixleeCtaTop($story);
-        }
-        if ($storyCard.hasClass('has-video')) cspInitVideo($, $story);
-        initLinkedIn();
-        setTimeout(function () {
-          $story.find('.primary-cta-xs').addClass('open');
-        }, 3000);
-        return false;  // overlays handler
-      } else {
-        loading($storyCard);
-        $.ajax({
-          url: $storyCard.attr('href'),
-          method: 'GET',
-          data: {
-            is_plugin: true,
-            window_width: window.innerWidth
+          $story = $container.find('.content__item:nth-of-type(' + storyIndex + ')'),
+          storyLoading = function () {
+            console.log('storyLoading()')
+            // the forceRedraw() isn't necessary as in index.js because default is always prevented
+            $storyCard.addClass('cs-loading cs-still-loading');  // .forceRedraw();
+            $container.find('a.published, a.preview-published').css('pointer-events', 'none');
           },
-          dataType: 'jsonp'
-        })
-          .done(function (data, status, jqxhr) {
-            trackStoryVisitor($storyCard);
-            $.when(
-              $story.html(data.html),
-              $storyCard.removeClass('cs-still-loading').addClass('cs-loaded')
-            )
-              .then(function () { linkedinListener($story); })
-              .then(function () {
-                if ($storyCard.hasClass('has-video')) cspInitVideo($, $story);
-                initLinkedIn();
-                $storyCard[0].click();
-                setTimeout(function () {
-                  $story.find('.primary-cta-xs').addClass('open');
-                }, 3000);
+          showPrimaryCta = function () {
+            setTimeout(function () {
+              $story.find('.primary-cta-xs').addClass('open');
+            }, 3000);
+          }
+          initOverlay = function () {
+            console.log('initOverlay()')
+            if (subdomain === 'pixlee') {
+              showPixleeTab(false);
+              // no fixed cta on mobile
+            }
+            if ($storyCard.hasClass('has-video')) cspInitVideo($, $story);
+            initLinkedIn();
+          },
+          getStory = function () {
+            $.ajax({
+              url: $storyCard.attr('href'),
+              method: 'GET',
+              data: {
+                is_plugin: true,
+                window_width: window.innerWidth
+              },
+              dataType: 'jsonp'
+            })
+              .done(function (data, status, jqxhr) {
+                trackStoryVisitor($storyCard);
+                $.when(
+                  $story.html(data.html),
+                  $storyCard.removeClass('cs-still-loading').addClass('cs-loaded')
+                )
+                  .then(function () { linkedinListener($story); })
+                  .then(function () {
+                    initOverlay();
+                    $storyCard[0].click();
+                    showPrimaryCta();
+                  })
 
-                // hide the footer tab on pixlee.com
-                showPixleeTab(false);
-                pixleeCtaTop = getPixleeCtaTop($story);
-              });
-          })
-          .fail(function () {
+              })
+              .fail(function () {});
+          },
+          openOrGetStory = function () {
+            console.log('openOrGetStory()')
+            if ($storyCard.hasClass('cs-loaded')) {
+              // grid overlays handler will open overlay
+              showPrimaryCta();
+            } else {
+              storyLoading();
+              getStory();
+            }
+          };
 
+      e.preventDefault();
+
+      if (e.type === 'click') {
+        openOrGetStory();
+
+      } else {  // touchstart
+        if ($storyCard.hasClass('cs-hover')) {
+          // grid overlays handler will open overlay
+          $storyCard[0].click();
+        } else {
+          $storyCard.addClass('cs-hover');
+
+          // stop the subsequent touchend event from triggering the <a> tag
+          $storyCard.one('touchend', function (e) {
+            // console.log('touchend')
+            e.preventDefault();
           });
-      }
 
+          // next tap => load story
+          $storyCard.one('touchstart', openOrGetStory);
+
+          // undo hover and click listener if clicking anywhere outside the story card
+          // the callback function here was executing on initial tap - why? and why isn't this an issue in index.js?
+          // => prevent this with a timeout
+          setTimeout(function () {
+            $('body').one(
+              'touchstart',
+              function (e) {
+                // console.log('body touchstart')
+                if ($(e.target).is($storyCard) || $storyCard.has(e.target).length ) {
+                  // console.log('story card')
+                  // do nothing (link will be followed)
+                } else {
+                  $storyCard.removeClass('cs-hover')
+                  // console.log('not story card')
+                  $storyCard.off('touchstart', openOrGetStory);
+                }
+              }
+            );
+          }, 100)
+
+          // remove hover from other cards
+          $container.find('a.published, a.preview-published').not($storyCard).each(function () {
+            $(this).removeClass('hover');
+          });
+
+        }
+      }
     });
 
   function trackStoryVisitor ($storyCard) {
