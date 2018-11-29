@@ -155,7 +155,8 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
               storyLoading();
               getStory();
             }
-          };
+          },
+          clickStoryCard = function () { $storyCard[0].click(); };
 
       e.preventDefault();
 
@@ -164,10 +165,12 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
 
       } else {  // touchstart
         if ($storyCard.hasClass('cs-hover')) {
-          // grid overlays handler will open overlay
-          $storyCard[0].click();
+          clickStoryCard()
         } else {
           $storyCard.addClass('cs-hover');
+          $container.find('a.published, a.preview-published').not($storyCard).each(function () {
+            $(this).removeClass('cs-hover');
+          });
 
           // stop the subsequent touchend event from triggering the <a> tag
           $storyCard.one('touchend', function (e) {
@@ -176,7 +179,7 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
           });
 
           // next tap => load story
-          $storyCard.one('touchstart', openOrGetStory);
+          // $storyCard.one('touchstart', clickStoryCard);
 
           // undo hover and click listener if clicking anywhere outside the story card
           // the callback function here was executing on initial tap - why? and why isn't this an issue in index.js?
@@ -192,16 +195,13 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
                 } else {
                   $storyCard.removeClass('cs-hover')
                   // console.log('not story card')
-                  $storyCard.off('touchstart', openOrGetStory);
+                  // $storyCard.off('touchstart', clickStoryCard);
                 }
               }
             );
           }, 100)
 
-          // remove hover from other cards
-          $container.find('a.published, a.preview-published').not($storyCard).each(function () {
-            $(this).removeClass('hover');
-          });
+
 
         }
       }
