@@ -34,7 +34,8 @@
           env = "<%= ENV['HOST_NAME'] %>",
           uid = "<%= @uid %>",
           type = '<%= @type %>',
-          $stylesheet = $("<link>", { rel: "stylesheet", type: "text/css", href: '<%= @stylesheet_url %>' });
+          $stylesheet = $("<link>", { rel: "stylesheet", type: "text/css", href: '<%= @stylesheet_url %>' }),
+          xsBreakpoint = 768;
 
       // no stylesheet means type couldn't be id'ed => fatal
       if (!'<%= @stylesheet_url %>') return false;
@@ -74,9 +75,9 @@
             // z-index is just a touch greater than the 100000 that is set on .cs-main when an overlay is opened
             // TODO: constantize this number
             $('body').append(
-              '<div id="cs-loading-pre-select" style="z-index:100001; display:block; position:fixed; height:' + window.innerHeight + 'px; top:0; left:0; right:0; background-color:rgba(242, 242, 242, 0.9); transition: opacity 0.12s">' +
+              '<div id="cs-loading-pre-select" style="z-index:100001; display:block; position:fixed; height:' + window.innerHeight + 'px; top:0; left:0; right:0; background-color:' + (window.innerWidth < xsBreakpoint ? 'rgba(242,242,242,0.9)' : 'rgba(0,0,0,0.75)') + '; transition: opacity 0.12s">' +
                 '<div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%)">' +
-                  '<i class="fa fa-spin fa-circle-o-notch" style="font-size: 36px !important; color: #555 !important"></i>' +
+                  '<i class="fa fa-spin fa-circle-o-notch" style="font-size: 36px !important; color:' + (window.innerWidth < xsBreakpoint ? '#555' : 'rgba(255,255,255,0.7)') + ' !important"></i>' +
                 '</div>' +
               '</div>'
             );
