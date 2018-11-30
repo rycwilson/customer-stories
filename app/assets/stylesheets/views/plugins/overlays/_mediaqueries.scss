@@ -11,8 +11,8 @@ $viewport_xxl:  $item_width * 6 + $sidebar_width; /* 6 columns */
   .cs-content.content--show {
     background-color: $color_primary;
   }
-  .placeholder {
-    background-color: rgba(242, 242, 242, 0.6);
+  .placeholder.placeholder--trans-in, .placeholder.placeholder--trans-out {
+    background-color: rgba(242, 242, 242, 0.75);
   }
 }
 @media screen and (min-width: 768px) {

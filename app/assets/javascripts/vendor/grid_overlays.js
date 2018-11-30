@@ -85,9 +85,8 @@
     [].slice.call(gridItems).forEach(function(item, pos) {
       item.addEventListener('click', function(ev) {
         ev.preventDefault();
-        // csp modify... (last expression)
+        // csp (last expression was added)
         if(isAnimating || current === pos || !$(item).hasClass('cs-loaded')) {
-          console.log('grid overlays return false')
           return false;
         }
         isAnimating = true;
@@ -249,7 +248,7 @@
       classie.removeClass(bodyEl, 'noscroll');
       dummy.style.WebkitTransform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + gridItem.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + gridItem.offsetHeight/getViewport('y') + ',1)';
       dummy.style.transform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + gridItem.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + gridItem.offsetHeight/getViewport('y') + ',1)';
-      dummy.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
+      // dummy.style.backgroundColor = 'rgba(0, 0, 0, 0.6)';
       onEndTransition(dummy, function() {
 
         // reset content scroll..

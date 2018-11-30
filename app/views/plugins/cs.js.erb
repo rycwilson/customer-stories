@@ -69,33 +69,31 @@
       })
         .appendTo('head')
         .on('load', function () {
-          // if (window.location.href.includes('pixlee')) {
 
-            if ((new URL(window.location)).searchParams.get('story')) {
-              // z-index is just a touch greater than the 100000 that is set on .cs-main when an overlay is opened
-              // TODO: constantize this number
-              $('body').append(
-                '<div id="cs-loading-pre-select" style="z-index:100001; display:block; position:fixed; height:100vh; top:0; left:0; right:0; background:rgba(0, 0, 0, 0.75); transition: opacity 0.12s">' +
-                  '<div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%)">' +
-                    '<i class="fa fa-spin fa-circle-o-notch" style="font-size: 36px !important; color: rgba(255, 255, 255, 0.7) !important"></i>' +
-                  '</div>' +
-                '</div>'
-              );
+          if ((new URL(window.location)).searchParams.get('story')) {
+            // z-index is just a touch greater than the 100000 that is set on .cs-main when an overlay is opened
+            // TODO: constantize this number
+            $('body').append(
+              '<div id="cs-loading-pre-select" style="z-index:100001; display:block; position:fixed; height:' + window.innerHeight + 'px; top:0; left:0; right:0; background-color:rgba(242, 242, 242, 0.9); transition: opacity 0.12s">' +
+                '<div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%)">' +
+                  '<i class="fa fa-spin fa-circle-o-notch" style="font-size: 36px !important; color: #555 !important"></i>' +
+                '</div>' +
+              '</div>'
+            );
 
-              $container[0].scrollIntoView({ block:'center' });
+            $container[0].scrollIntoView({ block:'center' });
 
-              // remove loading screen and query param on timeout
-              setTimeout(function () {
-                if ($('#cs-loading-pre-select').length) {
-                  $('#cs-loading-pre-select').remove();
+            // remove loading screen and query param on timeout
+            setTimeout(function () {
+              if ($('#cs-loading-pre-select').length) {
+                $('#cs-loading-pre-select').remove();
 
-                  // get rid of ?story=
-                  history.replaceState({}, null, window.location.pathname)
-                };
-              }, 7000)
-            }
+                // get rid of ?story=
+                history.replaceState({}, null, window.location.pathname)
+              };
+            }, 7000)
+          }
 
-          // }
         });
 
       // reset the css (none of this works with weebly, gah!)
