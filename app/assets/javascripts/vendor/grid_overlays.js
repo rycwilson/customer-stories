@@ -182,7 +182,10 @@
 
     onEndTransition(dummy, function() {
 
-      $('#cs-loading-pre-select').remove();
+      // the transition is supposedly done at this point; avoid flicker with a bit of timeout
+      setTimeout(function () {
+        $('#cs-loading-pre-select').remove();
+      }, 200)
 
       // add transition class
       classie.remove(dummy, 'placeholder--trans-in');
