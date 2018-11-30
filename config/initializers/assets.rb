@@ -30,6 +30,9 @@ Rails.application.config.assets.precompile += %w(
   custom/compas/plugins/cs_gallery.css
   custom/compas/plugins/cs_carousel.css
   custom/compas/plugins/cs_tabbed_carousel.css
+  custom/coupa/plugins/cs_gallery.css
+  custom/coupa/plugins/cs_carousel.css
+  custom/coupa/plugins/cs_tabbed_carousel.css
   custom/demo/plugins/cs_gallery.css
   custom/demo/plugins/cs_carousel.css
   custom/demo/plugins/cs_tabbed_carousel.css
