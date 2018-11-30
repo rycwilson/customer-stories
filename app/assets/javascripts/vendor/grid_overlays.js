@@ -234,6 +234,11 @@
   function hideContent() {
     var gridItem = gridItems[current], contentItem = contentItems[current];
 
+    // return setting to whatever it was before overlay was opened;
+    // do this immediately instead of after transition so the "shift" isn't seen
+    $('.scroll-wrap').css('overflow-y', 'hidden');
+    $('body').css('overflow-y', bodyScrollY);
+
     classie.remove(contentItem, 'content__item--show');
     classie.remove(contentItemsContainer, 'content--show');
     // classie.remove(closeCtrl, 'close-button--show');
@@ -257,10 +262,6 @@
 
         // csp
         $('.cs-main').css('z-index', '50');
-
-        // return setting to whatever it was before overlay was opened
-        $('.scroll-wrap').css('overflow-y', 'hidden');
-        $('body').css('overflow-y', bodyScrollY);
 
         // direct urls
         history.replaceState({}, null, window.location.pathname)
