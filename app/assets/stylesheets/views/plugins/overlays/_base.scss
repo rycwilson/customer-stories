@@ -48,12 +48,8 @@
   z-index: 100;
   top: 0;
   left: -1px;  // pixlee fudge factor
-  // background: $color_secondary;
   -webkit-transform-origin: 0 0;
   transform-origin: 0 0;
-  @media only screen and (max-width: 767px) {
-    background: #f2f2f2;  // TODO set this is company custom file
-  }
 }
 
 .placeholder.placeholder--trans-in {
