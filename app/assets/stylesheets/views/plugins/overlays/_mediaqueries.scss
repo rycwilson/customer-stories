@@ -11,6 +11,9 @@ $viewport_xxl:  $item_width * 6 + $sidebar_width; /* 6 columns */
   .cs-content.content--show {
     background-color: $color_primary;
   }
+  .placeholder.placeholder--trans-in {
+    background-color: rgba(242, 242, 242, 0.7);
+  }
 }
 @media screen and (min-width: 768px) {
 }
@@ -172,21 +175,21 @@ $viewport_xxl:  $item_width * 6 + $sidebar_width; /* 6 columns */
   .content__item {
     padding: 80px 20px 40px;
   }
-  .cs-content .close-button {
-    padding: 10px 20px;
-  }
-  .cs-content .close-button::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    background: $color_secondary;
-    border-bottom: 1px solid $color_primary;
-    width: 100vw;
-    height: 50px;
-    pointer-events: none;
-    z-index: -1;
-  }
+  // .cs-content .close-button {
+  //   padding: 10px 20px;
+  // }
+  // .cs-content .close-button::before {
+  //   content: '';
+  //   position: absolute;
+  //   top: 0;
+  //   right: 0;
+  //   background: $color_secondary;
+  //   border-bottom: 1px solid $color_primary;
+  //   width: 100vw;
+  //   height: 50px;
+  //   pointer-events: none;
+  //   z-index: -1;
+  // }
 }
 
 @media screen and (max-height: 580px) {
