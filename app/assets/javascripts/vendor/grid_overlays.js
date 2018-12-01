@@ -69,8 +69,8 @@
       inner = window['innerWidth'];
     }
     else if( axis === 'y' ) {
-      // client = docElem['clientHeight'];
-      client = document.body.clientHeight;
+      client = docElem['clientHeight'];
+      // client = document.body.clientHeight;
       inner = window['innerHeight'];
     }
     return client < inner ? inner : client;
