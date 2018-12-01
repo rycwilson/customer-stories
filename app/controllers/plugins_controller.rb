@@ -71,7 +71,7 @@ class PluginsController < ApplicationController
         title: 'Customer Stories',
         is_demo: params[:is_demo].present?,
         max_rows: params[:max_rows].to_i,
-        background: params[:background],
+        background: params[:background] || 'light',
         tab_color: params[:tab_color],
         text_color: params[:text_color],
         grayscale: params[:grayscale].present? && params[:grayscale] != 'false',

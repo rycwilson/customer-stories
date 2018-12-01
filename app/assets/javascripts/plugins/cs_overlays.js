@@ -133,14 +133,11 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
                 // do nothing
               } else {
                 $storyCard.removeClass('cs-hover')
-                // $storyCard.off('touchstart', clickStoryCard);
               }
             }
           );
         }, 100)
       };
-
-  applyScrollBoundaries();
 
   if (subdomain === 'pixlee') doPixleeStuff();
 

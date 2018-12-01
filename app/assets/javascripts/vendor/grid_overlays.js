@@ -64,8 +64,8 @@
   function getViewport (axis) {
     var client, inner;
     if( axis === 'x' ) {
-      // client = docElem['clientWidth'];
-      client = document.body.clientWidth;  // pixlee fix
+      client = docElem['clientWidth'];
+      // client = document.body.clientWidth;  // pixlee fix
       inner = window['innerWidth'];
     }
     else if( axis === 'y' ) {
@@ -150,8 +150,10 @@
     // console.log('itemOffsetHeight', item.offsetHeight)
     // console.log('translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + item.offsetHeight/getViewport('y') + ',1)')
     // console.log(getViewport('y'))
-    dummy.style.WebkitTransform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + item.offsetHeight/getViewport('y') + ',1)';
-    dummy.style.transform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + item.offsetHeight/getViewport('y') + ',1)';
+    console.log('translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + item.offsetHeight/getViewport('y') + ',1)')
+    // dummy.style.WebkitTransform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + item.offsetHeight/getViewport('y') + ',1)',
+    dummy.style.transform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + item.offsetHeight/getViewport('y') + ',1)'
+    // dummy.style.transform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px)'
 
     // add transition class
     classie.add(dummy, 'placeholder--trans-in');
@@ -159,10 +161,11 @@
     // insert it after all the grid items
     gridItemsContainer.appendChild(dummy);
 
-    // body overlay
-    classie.add(bodyEl, 'view-single');
+
+    // // body overlay
+    // classie.add(bodyEl, 'view-single');
     setTimeout(function() {
-    //   // csp
+      // csp
       $('.cs-main').css('z-index', '100000');
       $('body').css('overflow-x', 'hidden');  // prevents horizontal scrollbar from appearing on transform
 
@@ -171,11 +174,6 @@
       // dummy.style.WebkitTransform = 'translate3d(-5px, ' + (scrollY() - 5) + 'px, 0px)';
       // dummy.style.transform = 'translate3d(-5px, ' + (scrollY() - 5) + 'px, 0px)';
       // csp modified...
-
-      if (window.innerWidth >= xsBreakpoint) {
-        $('#cs-loading-pre-select').css('opacity', '0')  // see transition time cs.js.erb; see remove below
-      }
-
       dummy.style.WebkitTransform = 'translate3d(' + (-1 * gridOffsetLeft) + 'px,' + (-1 * ($('.cs-grid').offset().top - scrollY())) + 'px, 0px)';
       dummy.style.transform = 'translate3d(' + (-1 * gridOffsetLeft) + 'px,' + (-1 * ($('.cs-grid').offset().top - scrollY())) + 'px, 0px)';
 
@@ -185,6 +183,8 @@
     }, 25);
 
     onEndTransition(dummy, function() {
+
+      console.log('onEndTransition')
 
       $('#cs-loading-pre-select').remove();
 
@@ -223,7 +223,6 @@
         $(this).removeClass('cs-hover cs-loading cs-still-loading')
                .removeAttr('style');  // this gets rid of pointer-events: none
       });
-
 
       // csp: the overlay will have its own scroll bar
       $('body').css('overflow-y', 'hidden');
