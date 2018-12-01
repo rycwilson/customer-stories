@@ -35,7 +35,8 @@
           uid = "<%= @uid %>",
           type = '<%= @type %>',
           $stylesheet = $("<link>", { rel: "stylesheet", type: "text/css", href: '<%= @stylesheet_url %>' }),
-          xsBreakpoint = 768;
+          xsBreakpoint = 768,
+          preSelectedStorySlug = (new URL(window.location)).searchParams.get('story');
 
       // no stylesheet means type couldn't be id'ed => fatal
       if (!'<%= @stylesheet_url %>') return false;
@@ -71,7 +72,7 @@
         .appendTo('head')
         .on('load', function () {
 
-          if ((new URL(window.location)).searchParams.get('story')) {
+          if (preSelectedStorySlug) {
             // z-index is just a touch greater than the 100000 that is set on .cs-main when an overlay is opened
             // TODO: constantize this number
             $('body').append(
@@ -82,7 +83,7 @@
               '</div>'
             );
 
-            $container[0].scrollIntoView({ block:'center' });
+            // $container[0].scrollIntoView({ block:'center' });
 
             // remove loading screen and query param on timeout
             setTimeout(function () {
@@ -108,13 +109,13 @@
       // wait for stylesheet to load ...
       $stylesheet
         .appendTo('head')
-        .on('load', getPlugin($container, $script, isDemo, env));
+        .on('load', getPlugin($container, $script, isDemo, env, preSelectedStorySlug));
 
     });
   }
 
   // root_url provides a company-specific url (via subdomain)
-  function getPlugin ($container, $script, isDemo, env) {
+  function getPlugin ($container, $script, isDemo, env, preSelectedStorySlug) {
     return function () {
       $.ajax({
         url: "<%= URI.join(root_url, plugin_view_path(@type)) %>",
@@ -137,13 +138,20 @@
       })
         .done(function (data) {
           $container.html(data.html);
+          if (preSelectedStorySlug) {
+            var $preSelectedStoryCard = $container.find('a[href*="' + preSelectedStorySlug + '"]'),
+                preSelectedStoryIndex = $container.is('#cs-gallery') ? $preSelectedStoryCard.index() : $preSelectedStoryCard.parent().index();
+          }
+
           adjustForWeebly();
+
+          console.log('preSelectedStoryIndex', preSelectedStoryIndex)
 
           // wait for all images to load so dimension calculations are correct
           var $images = $container.find('img'), loadedImages = 0;
           $images.on('load', function (e) {
             if (++loadedImages === $images.length) {
-              initPlugin('<%= @type %>', $container, $script, isDemo, env);
+              initPlugin('<%= @type %>', $container, $script, isDemo, env, preSelectedStoryIndex);
             }
           });
 
@@ -160,7 +168,7 @@
     };
   }
 
-  function initPlugin (type, $container, $script, isDemo, env) {
+  function initPlugin (type, $container, $script, isDemo, env, preSelectedStoryIndex) {
     var initVideo = $.Deferred(),
         initOverlays = $.Deferred(),
         maxGalleryRows = parseInt($script.data('max-rows'), 10),
@@ -189,8 +197,8 @@
           dataType: 'script'
         })
           .done(function () {
-            if (type === 'gallery') cspInitGallery($, $container, maxGalleryRows);
-            else if (type === 'carousel') cspInitCarousel($, $container);
+            if (type === 'gallery') cspInitGallery($, $container, maxGalleryRows, preSelectedStoryIndex);
+            else if (type === 'carousel') cspInitCarousel($, $container, preSelectedStoryIndex);
             else if (type === 'tabbed_carousel') {
               // plugin must be defined and called in this scope
               slideDrawerPlugin($container);

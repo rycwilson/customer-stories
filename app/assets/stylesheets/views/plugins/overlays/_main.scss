@@ -17,8 +17,8 @@ $anim-time: 0.2s;
 
   &.pre-selected {
     .placeholder.placeholder--trans-in {
-      transition: transform 0.03s;   // doesn't work if 0, not sure why
-      transition-timing-function: step-end;
+      transition: transform 0.05s;   // doesn't work if 0, not sure why
+      // transition-timing-function: step-end;
     }
   }
 

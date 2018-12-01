@@ -191,16 +191,11 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
 
           // stop the subsequent touchend event from triggering the <a> tag
           $storyCard.one('touchend', function (e) {
-            // console.log('touchend')
             e.preventDefault();
           });
 
           // undo hover style when clicking anywhere outside the story card
           resetStoryCardListener($storyCard);
-
-          // next tap => load story
-          // $storyCard.one('touchstart', clickStoryCard);
-
         }
       }
     });

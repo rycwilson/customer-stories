@@ -1,5 +1,5 @@
 
-function cspInitCarousel ($, $container) {
+function cspInitCarousel ($, $container, preSelectedStoryIndex) {
 
   // disable horizontal mouse/trackpad scrolling
   $container.find('.row-horizon').css('overflow-x', 'hidden');
@@ -19,6 +19,7 @@ function cspInitCarousel ($, $container) {
       currentDevice = $(window).width() < 768 ? 'xs' :
                        ( $(window).width() < 992 ? 'sm' :
                          ( $(window).width() < 1200 ? 'md' : 'lg' ) ),
+      scrollToStory = $.Deferred(),
       arrowLeft = function () {
         if (currentPage !== 0) {
           currentPage -= 1;
@@ -33,7 +34,10 @@ function cspInitCarousel ($, $container) {
             );
         }
       },
-      arrowRight = function () {
+      // need to have the ability to scroll to a pre-selected story here, else the closing action
+      // is wonky because the story card isn't on the screen
+      arrowRight = function (e, toIndex) {
+        var $preSelectedStoryCard = toIndex && $carousel.find('a').eq(toIndex);
         if (currentPage !== numPages - 1) {
           currentPage += 1;
           var scrollTime = Math.round($carousel.width() / 2);
@@ -41,7 +45,17 @@ function cspInitCarousel ($, $container) {
             $p.children('.cs-current-page-dot').removeClass('cs-current-page-dot');
             $p.children().eq(currentPage).addClass('cs-current-page-dot');
           });
-          $carousel.animate({ scrollLeft: '+=' + $carousel.css('width') }, scrollTime);
+          $carousel.animate(
+            { scrollLeft: '+=' + $carousel.css('width') },
+            toIndex ? 0 : scrollTime,
+            function () {
+              if (toIndex && $preSelectedStoryCard.parent().position().left + $preSelectedStoryCard.outerHeight(true) > $carousel.width()) {
+                arrowRight(null, toIndex);
+              } else if (toIndex) {
+                scrollToStory.resolve();
+              }
+            }
+          );
           $('.cs-current-page-num').empty().append(
               (currentPage + 1).toString() + ' of ' + numPages.toString()
             );
@@ -257,7 +271,18 @@ function cspInitCarousel ($, $container) {
 
   $(window).on('orientationchange', adjustColumns);
 
-  $container.find('.cs-container-fluid').css('visibility', 'visible');
+  if (preSelectedStoryIndex) {
+    var $preSelectedStoryCard = $carousel.find('a').eq(preSelectedStoryIndex);
+    if ($preSelectedStoryCard.parent().position().left + $preSelectedStoryCard.outerWidth(true) > $carousel.width()) {
+      $.when(scrollToStory).done(function () {
+        $container.find('.cs-container-fluid').css('visibility', 'visible');
+      });
+      arrowRight(null, preSelectedStoryIndex);
+    } else {
+      $container.find('.cs-container-fluid').css('visibility', 'visible');
+    }
+  }
+
 
 }
 

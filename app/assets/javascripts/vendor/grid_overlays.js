@@ -47,6 +47,7 @@
   scrollbarWidth = window.innerWidth - document.body.clientWidth,
   gridOffsetLeft = $(gridEl).offset().left,
   gridOffsetRight = ($(window).width() - ($(gridEl).offset().left + $(gridEl).outerWidth())),
+  xsBreakpoint = 768,
   itemOffsetLeft, itemOffsetTop;  // will be assigned when an item is clicked
 
   $('.cs-content').css('margin-left', '-' + gridOffsetLeft + 'px');
@@ -171,7 +172,10 @@
       // dummy.style.transform = 'translate3d(-5px, ' + (scrollY() - 5) + 'px, 0px)';
       // csp modified...
 
-      $('#cs-loading-pre-select').css('opacity', '0')  // see transition time cs.js.erb; see remove below
+      if (window.innerWidth >= xsBreakpoint) {
+        $('#cs-loading-pre-select').css('opacity', '0')  // see transition time cs.js.erb; see remove below
+      }
+
       dummy.style.WebkitTransform = 'translate3d(' + (-1 * gridOffsetLeft) + 'px,' + (-1 * ($('.cs-grid').offset().top - scrollY())) + 'px, 0px)';
       dummy.style.transform = 'translate3d(' + (-1 * gridOffsetLeft) + 'px,' + (-1 * ($('.cs-grid').offset().top - scrollY())) + 'px, 0px)';
 
@@ -182,10 +186,10 @@
 
     onEndTransition(dummy, function() {
 
-      // the transition is supposedly done at this point; avoid flicker with a bit of timeout
-      setTimeout(function () {
-        $('#cs-loading-pre-select').remove();
-      }, 200)
+      $('#cs-loading-pre-select').remove();
+
+      // for sync. loaded stories, animation time is reduced to zero on opening
+      $('.cs-overlay-container').removeClass('pre-selected')
 
       // add transition class
       classie.remove(dummy, 'placeholder--trans-in');
@@ -220,8 +224,6 @@
                .removeAttr('style');  // this gets rid of pointer-events: none
       });
 
-      // for sync. loaded stories, animation time is reduced to zero on opening
-      $('.cs-overlay-container').removeClass('pre-selected')
 
       // csp: the overlay will have its own scroll bar
       $('body').css('overflow-y', 'hidden');
