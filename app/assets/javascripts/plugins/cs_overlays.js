@@ -137,6 +137,8 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
         }, 100)
       };
 
+  applyScrollBoundaries();
+
   if (subdomain === 'pixlee') doPixleeStuff();
 
   // event listeners
