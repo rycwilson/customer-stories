@@ -64,7 +64,6 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
           });
       },
       storyLoading = function ($storyCard) {
-        // console.log('storyLoading()')
         $container.find('a.published, a.preview-published').css('pointer-events', 'none');
         // the forceRedraw() isn't necessary as in index.js because default is always prevented
         $storyCard.addClass('cs-loading cs-still-loading');  // .forceRedraw();
@@ -75,7 +74,6 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
         }, 3000);
       },
       initOverlay = function ($storyCard, $storyOverlay) {
-        // console.log('initOverlay()')
         if ($storyCard.hasClass('has-video')) cspInitVideo($, $storyOverlay);
         initLinkedIn();
         trackStoryVisitor($storyCard);

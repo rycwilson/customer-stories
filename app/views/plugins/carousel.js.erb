@@ -184,7 +184,6 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex) {
         }
 
         // scroll to current story (wherever previous scroll was)
-        // console.log($stories.eq(currentStoryIndex).find('.cs-caption span:first-child').text())
         $carousel.prop('scrollLeft', currentStoryIndex * $columns.first().outerWidth());
 
         // update number of pages
@@ -275,7 +274,6 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex) {
     var $preSelectedStoryCard = $carousel.find('a').eq(preSelectedStoryIndex);
     if ($preSelectedStoryCard.parent().position().left + $preSelectedStoryCard.outerWidth(true) > $carousel.width()) {
       $.when(scrollToStory).done(function () {
-        console.log('well?? 1')
         $container.find('.cs-container-fluid').css('visibility', 'visible');
       });
       arrowRight(null, preSelectedStoryIndex);
@@ -283,7 +281,6 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex) {
       $container.find('.cs-container-fluid').css('visibility', 'visible');
     }
   } else {
-    console.log('well?? 2')
     $container.find('.cs-container-fluid').css('visibility', 'visible');
   }
 

@@ -64,16 +64,19 @@
   function getViewport (axis) {
     var client, inner;
     if( axis === 'x' ) {
-      client = docElem['clientWidth'];
+      // client = docElem['clientWidth'];
       // client = document.body.clientWidth;  // pixlee fix
       inner = window['innerWidth'];
     }
     else if( axis === 'y' ) {
-      client = docElem['clientHeight'];
+      // client = docElem['clientHeight'];
+      // console.log('y client', client)
       // client = document.body.clientHeight;
       inner = window['innerHeight'];
+      // console.log('y inner', inner)
     }
-    return client < inner ? inner : client;
+    return inner
+    // return client < inner ? inner : client;
   }
   function scrollX() { return window.pageXOffset || docElem.scrollLeft; }
   function scrollY() { return window.pageYOffset || docElem.scrollTop; }
@@ -150,8 +153,9 @@
     // console.log('itemOffsetHeight', item.offsetHeight)
     // console.log('translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + item.offsetHeight/getViewport('y') + ',1)')
     // console.log(getViewport('y'))
+    console.log(getViewport('y'))
     console.log('translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + item.offsetHeight/getViewport('y') + ',1)')
-    // dummy.style.WebkitTransform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + item.offsetHeight/getViewport('y') + ',1)',
+    dummy.style.WebkitTransform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + item.offsetHeight/getViewport('y') + ',1)',
     dummy.style.transform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px) scale3d(' + item.offsetWidth/(gridItemsContainer.offsetWidth + gridOffsetLeft + gridOffsetRight + scrollbarWidth) + ',' + item.offsetHeight/getViewport('y') + ',1)'
     // dummy.style.transform = 'translate3d(' + itemOffsetLeft + 'px, ' + itemOffsetTop + 'px, 0px)'
 
@@ -183,8 +187,6 @@
     }, 25);
 
     onEndTransition(dummy, function() {
-
-      console.log('onEndTransition')
 
       $('#cs-loading-pre-select').remove();
 
