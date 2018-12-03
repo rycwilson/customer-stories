@@ -29,9 +29,7 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex) {
             $p.children().eq(currentPage).addClass('cs-current-page-dot');
           });
           $carousel.animate({ scrollLeft: '-=' + $carousel.css('width') }, scrollTime);
-          $('.cs-current-page-num').empty().append(
-              (currentPage + 1).toString() + ' of ' + numPages.toString()
-            );
+          $('.cs-current-page-num').text((currentPage + 1).toString() + ' of ' + numPages.toString());
         }
       },
       // need to have the ability to scroll to a pre-selected story here, else the closing action
@@ -56,9 +54,7 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex) {
               }
             }
           );
-          $('.cs-current-page-num').empty().append(
-              (currentPage + 1).toString() + ' of ' + numPages.toString()
-            );
+          $('.cs-current-page-num').text((currentPage + 1).toString() + ' of ' + numPages.toString());
         }
       },
       adjustColumns = function () {
@@ -266,7 +262,8 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex) {
   $(window).on('resize', resizeCallback);
 
   // an open overlay causes adjustment settings to be lost? so we need this...
-  $(document).on('click', '.cs-close', adjustColumns);
+  // => removed because it was hosing the story counter; doesn't appear to be doing anything anyway, not sure what this was originally about
+  // $(document).on('click', '.cs-close', adjustColumns);
 
   $(window).on('orientationchange', adjustColumns);
 

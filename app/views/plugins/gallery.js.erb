@@ -1,16 +1,13 @@
 
 function cspInitGallery ($, $container, maxRows) {
   // console.log('cspInitGallery')
-  // console.log('maxRows', maxRows)
 
   var scrollBarWidth = window.innerWidth - document.documentElement.clientWidth;
 
   if (maxRows) {
     var maxGalleryHeight = maxRows * $container.find('a.cs-thumbnail').first().outerHeight(true);
-    // console.log('maxGalleryHeight', maxGalleryHeight)
     $container.find('a.cs-thumbnail').each(function () {
       if (($(this).offset().top - $container.find('.cs-grid').offset().top) > maxGalleryHeight) {
-        // console.log('do not display', $(this))
         $(this).css('display', 'none');
       }
     })
