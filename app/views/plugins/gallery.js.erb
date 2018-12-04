@@ -13,9 +13,9 @@ function cspInitGallery ($, $container, maxRows, preSelectedStoryIndex) {
     })
   }
 
+  $container.find('.cs-grid').css('visibility', 'visible');
   if (preSelectedStoryIndex) {
     $container[0].scrollIntoView({ block: 'center' });
   }
-  $container.find('.cs-grid').css('visibility', 'visible');
 
 }
