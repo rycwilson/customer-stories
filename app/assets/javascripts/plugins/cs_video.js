@@ -1,5 +1,6 @@
 
 function cspInitVideo ($, $story) {
+  console.log('cspInitVideo')
 
   // two containers: regular and xs
   var $thumbContainers = $story.find('.video-thumb-container'),

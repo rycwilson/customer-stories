@@ -74,9 +74,19 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
         }, 3000);
       },
       initOverlay = function ($storyCard, $storyOverlay) {
-        if ($storyCard.hasClass('has-video')) cspInitVideo($, $storyOverlay);
+        if ($storyCard.hasClass('has-video')) {
+          cspInitVideo($, $storyOverlay);
+        }
         initLinkedIn();
         trackStoryVisitor($storyCard);
+      },
+      initPreselected = function () {
+        if ($container.find('a.cs-loaded').length) {
+          var $storyCard = $('a.cs-loaded'),
+              storyIndex = $container.is('#cs-gallery') ? $storyCard.index() + 1 : $storyCard.parent().index() + 1,
+              $storyOverlay = $container.find('.content__item:nth-of-type(' + storyIndex + ')');
+          initOverlay($storyCard, $storyOverlay);
+        }
       },
       getStory = function ($storyCard, $storyOverlay) {
         $.ajax({
@@ -138,17 +148,16 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
       };
 
   applyScrollBoundaries();
-
+  initPreselected();
   if (subdomain === 'pixlee') doPixleeStuff();
 
   // event listeners
   $container
-    // avoid double-tap behavior
-    .on('click touchend', '.cs-close-xs', function () {
+    .on('click', '.cs-close-xs', function (e) {
       // there are multiple close buttons in the story header; don't trigger them all
       $('.content__item--show .cs-close').first().trigger('click');
     })
-    .on('click', '.cs-close', function () {
+    .on('click', '.cs-close', function (e) {
       if (subdomain === 'pixlee') showPixleeTab(true);  // show Pixlee's tab on their home page
     })
 

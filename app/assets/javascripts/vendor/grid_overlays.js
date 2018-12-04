@@ -253,7 +253,7 @@
 
       // reset current
       current = -1;
-    }, 25);
+    }, 200);
   }
 
   function noscroll () {

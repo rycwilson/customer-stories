@@ -29,7 +29,9 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex) {
             $p.children().eq(currentPage).addClass('cs-current-page-dot');
           });
           $carousel.animate({ scrollLeft: '-=' + $carousel.css('width') }, scrollTime);
-          $('.cs-current-page-num').text((currentPage + 1).toString() + ' of ' + numPages.toString());
+          $container
+            .find('.cs-current-page-num')
+            .text((currentPage + 1).toString() + ' of ' + numPages.toString())
         }
       },
       // need to have the ability to scroll to a pre-selected story here, else the closing action
@@ -54,7 +56,9 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex) {
               }
             }
           );
-          $('.cs-current-page-num').text((currentPage + 1).toString() + ' of ' + numPages.toString());
+          $container
+            .find('.cs-current-page-num')
+            .text((currentPage + 1).toString() + ' of ' + numPages.toString())
         }
       },
       adjustColumns = function () {
@@ -192,10 +196,9 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex) {
             $p.empty();
           });
           if (numPages > 8 && $(window).width() <= 500) {
-            $paginationXs
-              .append('<span style="color: #999">' +
-                        (currentPage + 1).toString() + ' of ' + numPages.toString() +
-                      '</span>');
+            $paginationXs.append(
+              '<span class="cs-current-page-num" style="color: #999">' + (currentPage + 1).toString() + ' of ' + numPages.toString() + '</span>'
+            );
           } else if ($(window).width() <= 500) {
             for (var i = 0; i < numPages; i++) {
               if (i === currentPage) {
@@ -216,9 +219,6 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex) {
         }
         initialAdjust = false;
       }; // adjust columns
-
-  // animate stories
-  // varmourHover($stories);
 
   // scroll listeners
   $container.find('.cs-scroll-left, .cs-scroll-xs-left').on('click', arrowLeft);
@@ -272,10 +272,12 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex) {
     if ($preSelectedStoryCard.parent().position().left + $preSelectedStoryCard.outerWidth(true) > $carousel.width()) {
       $.when(scrollToStory).done(function () {
         $container.find('.cs-container-fluid').css('visibility', 'visible');
+        $container[0].scrollIntoView({ block: 'center' });
       });
       arrowRight(null, preSelectedStoryIndex);
     } else {
       $container.find('.cs-container-fluid').css('visibility', 'visible');
+      $container[0].scrollIntoView({ block: 'center' });
     }
   } else {
     $container.find('.cs-container-fluid').css('visibility', 'visible');

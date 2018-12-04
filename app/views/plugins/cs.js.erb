@@ -127,7 +127,6 @@
           category: $script.data('category'),
           product: $script.data('product'),
           pre_selected_story: (new URL(window.location)).searchParams.get('story'),
-          // max_rows: $script.data('max-rows'),
           background: $script.data('background'),
           tab_color: $script.data('tab-color'),
           text_color: $script.data('text-color'),
@@ -203,7 +202,6 @@
 
             // open pre-selected story
             if ($container.find('a.cs-loaded').length) {
-              // $container[0].scrollIntoView({ behavior:'smooth', block:'center' });
               $container.find('a.cs-loaded').first()[0].click();
             }
 
