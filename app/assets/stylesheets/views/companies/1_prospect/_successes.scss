@@ -22,4 +22,42 @@
   th[aria-label*="Customer Win"]:after {
     content: "" !important;
   }
+
+  tr.group {
+    td:first-of-type {
+      border-right-width: 0;
+    }
+    td:last-of-type {
+      padding: 0;
+      button[data-target="#edit-customer-modal"] {
+        display: none;
+        width: 100%;
+        height: 100%;
+        background: none;
+        border: none;
+        cursor: pointer;
+        // unable to overcome top/bottom padding of 8px set by datatables, so...
+        margin-top: -8px;
+        padding-top: 8px;
+        margin-bottom: -8px;
+        padding-bottom: 8px;
+        i {
+          color: #777;
+        }
+        &:hover {
+          i {
+            color: #333;
+          }
+        }
+      }
+    }
+    &:hover {
+      td:last-of-type {
+        button[data-target="#edit-customer-modal"] {
+          display: block;
+        }
+      }
+    }
+  }
+
 }

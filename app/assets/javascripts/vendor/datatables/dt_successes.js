@@ -108,12 +108,22 @@ function initSuccessesTable (dtSuccessesInit) {
       dataSrc: 'customer.name',
       startRender: function (groupRows, successName) {
         // console.log($(this))   //  [RowGroup]
+        var customerId = $('#successes-table').DataTable()
+                           .rows( groupRows[0][0] )
+                           .data()[0]
+                           .customer.id;
         return $('<tr/>').append(
-                  '<td colspan="4">' +
-                     '<span style="font-weight:600">' +
-                        groupRows.data()[0].customer.name +
-                     '</span>' +
-                  '</td>');
+          '<td colspan="3">' +
+             '<span style="font-weight:600">' +
+                groupRows.data()[0].customer.name +
+             '</span>' +
+          '</td>' +
+          '<td colspan="1">' +
+             '<button data-toggle="modal" data-target="#edit-customer-modal" data-customer-id="' + customerId + '">' +
+                '<i class="glyphicon glyphicon-pencil"></i>' +
+             '</button>' +
+          '</td>'
+        );
       }
     },
     createdRow: function (row, data, index) {

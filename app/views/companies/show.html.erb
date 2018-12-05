@@ -23,6 +23,7 @@
 <% end %>
 
 <!-- include modals for both companies#show and stories#edit -->
+<%= render 'customers/edit_customer_modal', { company: @company } %>
 <%= render 'companies/1_prospect/successes/new_success_modal', { company: @company } %>
 <%= render 'companies/1_prospect/successes/win_story_modal', { company: @company } %>
 <%= render 'companies/1_prospect/contributors/new_contributor_modal', { company: @company } %>

@@ -1,0 +1,60 @@
+
+#edit-customer-modal {
+  #customer-form {
+
+    .col-sm-2 {
+      width: 20%;
+    }
+    .col-sm-10 {
+      width: 80%;
+    }
+
+    .fileinput.customer-logo {
+      position: relative;
+      width: 100%;
+      padding: 36px;
+      .checkbox-inline {
+        position: absolute;
+        top: 8px;
+        left: 12px;
+      }
+      .thumbnail {
+        padding: 20px 0;
+        width: 100%;
+        img {
+          max-height: 80px;
+          max-width: 50%;
+        }
+        .customer-name {
+          color: #666;
+          font-size: 16px;
+          margin-top: 20px;
+        }
+      }
+      div.image-requirements {
+        margin-bottom: 10px;
+      }
+      .change-image {
+        position: absolute;
+        top: 0;
+        right: 0;
+        padding: 10px;
+        font-size: 18px;
+        color: #666;
+        cursor: pointer;
+        &:hover {
+          color: #222;
+        }
+      }
+      .change-image:hover {
+      }
+      .thumbnail {
+        // margin: 0;
+      }
+      .help-block {
+        margin: 6px 0;
+      }
+    }
+
+  }
+}

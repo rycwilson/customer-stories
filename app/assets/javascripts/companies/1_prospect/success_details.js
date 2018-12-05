@@ -2,6 +2,32 @@
 function successDetailsListeners () {
 
   $(document)
+
+    .on('click', 'button[data-target="#edit-customer-modal"]', function (e) {
+      // clicking a row group will normally sort alphabetically - prevent this
+      e.stopImmediatePropagation();
+
+      $.ajax({
+        url: '/customers/' + $(this).data('customer-id'),
+        method: 'GET',
+        dataType: 'json'
+      })
+        .done(function (customer, status, xhr) {
+          console.log('customer', customer)
+          $('#edit-customer-modal .modal-body').append(
+            _.template($('#customer-form-template').html())({
+              customer: customer
+            })
+          )
+        })
+
+
+    })
+
+    .on('hidden.bs.modal', '#edit-customer-modal', function () {
+      $(this).find('.modal-body').empty();
+    })
+
     .on('click', 'td.success-details', function () {
       var $table = $(this).closest('table'),
           $tr = $(this).closest('tr'),

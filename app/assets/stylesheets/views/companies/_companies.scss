@@ -93,16 +93,23 @@ table.dataTable tr.group td {
 
   td.status.dropdown, td.actions.dropdown {
     text-align: center;
-
+    padding: 0;
     // ref: http://stackoverflow.com/questions/11078509/how-to-increase-the-clickable-area-of-a-a-tag-button
     > a {
-      position: relative;
-      display: inline-block;
-      background: transparent;
-      border: transparent;
-      z-index: 1;
-      padding: 2em;
-      margin: -2em;
+      display: block;
+      width: 100%;
+      height: 100%;
+      margin-top: -8px;
+      padding-top: 8px;
+      margin-bottom: -8px;
+      padding-bottom: 8px;
+      // position: relative;
+      // display: inline-block;
+      // background: transparent;
+      // border: transparent;
+      // z-index: 1;
+      // padding: 2em;
+      // margin: -2em;
     }
     .dropdown-menu {
       padding: 9px 0;
