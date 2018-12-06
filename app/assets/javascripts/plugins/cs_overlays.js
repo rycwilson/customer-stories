@@ -165,8 +165,8 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
       window.open($(this).data('linkedin-url'), '_blank');
     })
 
-    .on('click touchend', '.primary-cta-xs.open', function (e) {
-      if ($(e.target).is('button.remove')) {
+    .on('click', '.primary-cta-xs.open', function (e) {
+      if ($(e.target).is('[class*="remove"]')) {  // the target may be the icon
         $('.primary-cta-xs').each(function () { $(this).remove(); });
         // TODO add a cookie
       } else if (!$(e.target).is('a')) {
