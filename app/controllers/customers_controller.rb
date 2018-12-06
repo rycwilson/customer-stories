@@ -8,6 +8,8 @@ class CustomersController < ApplicationController
   end
 
   def update
+    puts params
+
   end
 
   private

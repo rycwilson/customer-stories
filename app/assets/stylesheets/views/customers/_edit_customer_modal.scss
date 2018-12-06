@@ -10,13 +10,43 @@
     }
 
     .fileinput.customer-logo {
+      background-color: #efefef;
       position: relative;
       width: 100%;
+      margin-bottom: 0;
       padding: 36px;
-      .checkbox-inline {
+      .fileinput-new, .fileinput-preview {
+        margin-bottom: 0;
+      }
+      div.upload-image, div.show-name {
+        display: flex;
+        align-items: center;
+        justify-content: center;
         position: absolute;
-        top: 8px;
-        left: 12px;
+        left: 0;
+        width: 100%;
+        height: 36px;  // matches padding
+        &.upload-image {
+          top: 0;
+          span {
+            cursor: pointer;
+            i {
+              font-size: 16px;
+              margin-right: 2px;
+              color: #666;
+            }
+            &.hover {
+              i { color: #222; }
+            }
+          }
+        }
+        &.show-name {
+          bottom: 0;
+          .checkbox-inline {
+            margin-right: 0;
+            padding-top: 0;
+          }
+        }
       }
       .thumbnail {
         padding: 20px 0;
@@ -33,20 +63,6 @@
       }
       div.image-requirements {
         margin-bottom: 10px;
-      }
-      .change-image {
-        position: absolute;
-        top: 0;
-        right: 0;
-        padding: 10px;
-        font-size: 18px;
-        color: #666;
-        cursor: pointer;
-        &:hover {
-          color: #222;
-        }
-      }
-      .change-image:hover {
       }
       .thumbnail {
         // margin: 0;

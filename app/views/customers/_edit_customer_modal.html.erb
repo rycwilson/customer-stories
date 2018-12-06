@@ -31,7 +31,10 @@
 
   <script id="customer-form-template" type="text/template">
 
-    <form id="customer-form" class="form-horizontal" action="/customers/{{= customer.id }}/update" accept-charset="UTF-8" method="PUT" data-remote="true" data-type="json">
+    <form id="customer-form" class="form-horizontal" action="/customers/{{= customer.id }}/update" accept-charset="UTF-8" method="POST" data-remote="true" data-type="json">
+
+      <input type="hidden" name="_method" value="PUT">
+      <input type="hidden" name="authenticity_token" value="{{= document.querySelectorAll('meta[name=csrf-token]')[0].getAttribute('content') }}">
 
       <div class="form-group">
         <label for="customer_name" class="col-sm-2 control-label">Name</label>
@@ -43,28 +46,32 @@
       <div class="form-group">
         <label for="customer_logo_url" class="col-sm-2 control-label">Description</label>
         <div class="col-sm-10">
-          <textarea name="customer[description]" class="form-control" style="width:100%" rows="6"></textarea>
+          <textarea name="customer[description]" class="form-control" style="width:100%" rows="4"></textarea>
         </div>
       </div>
-
 
       <div class="form-group">
 
         <label for="customer_logo_url" class="col-sm-2 control-label">Logo</label>
 
         <div class="col-sm-10">
-          <div class="well fileinput customer-logo {{= customer.logo_url ? 'fileinput-exists' : 'fileinput-new' }}" data-provides="fileinput">
+          <div class="fileinput customer-logo {{= customer.logo_url ? 'fileinput-exists' : 'fileinput-new' }}" data-provides="fileinput">
 
-            <label class="checkbox-inline">
-              <input name="customer[show_name_with_logo]" type="hidden" value="false">
-              <input type="checkbox" value="true" checked="{{= customer.show_name_with_logo ? 'checked' : '' }}" name="customer[show_name_with_logo]">
-              Show name with logo
-            </label>
+            <div class="upload-image text-center">
+              <span>
+                <i class="fa fa-fw fa-upload"></i>
+                <span>Upload an image</span>
+              </span>
+            </div>
 
             <div class="text-center">
 
               <div class="fileinput-new thumbnail" data-trigger='fileinput'>
                 <img src="<%= LOGO_PLACEHOLDER_URL %>" alt="customer logo placeholder">
+                <!-- setting the line height inline prevents the jasny bootstrap js from assigning a bogus line height to .customer-name -->
+                <div class="customer-name" style="line-height: 18px !important; {{= customer.show_name_with_logo ? '' : 'display: none' }}">
+                  <span>{{= customer.name }}</span>
+                </div>
               </div>
 
               <div class="fileinput-preview fileinput-exists thumbnail" data-trigger="fileinput">
@@ -72,7 +79,7 @@
                 {{ if (customer.logo_url) { }}
                   <img src="{{= customer.logo_url }}" alt="customer logo url">
                 {{ } }}
-                <!-- setting the line height prevents the jasny bootstrap js from assigning a bogus line height to .customer-name -->
+                <!-- setting the line height inline prevents the jasny bootstrap js from assigning a bogus line height to .customer-name -->
                 <div class="customer-name" style="line-height: 18px !important; {{= customer.show_name_with_logo ? '' : 'display: none' }}">
                   <span>{{= customer.name }}</span>
                 </div>
@@ -84,7 +91,15 @@
               <input type="file" name="customer[logo_url]">
             </div>
 
-            <i class="change-image glyphicon glyphicon-pencil"></i>
+            <div class="show-name text-center">
+              <label class="checkbox-inline">
+                <input name="customer[show_name_with_logo]" type="hidden" value="false">
+                <input type="checkbox" value="true" checked="{{= customer.show_name_with_logo ? 'checked' : '' }}" name="customer[show_name_with_logo]">
+                Show name with logo
+              </label>
+            </div>
+
+            <!-- <i class="change-image glyphicon glyphicon-pencil"></i> -->
 
           </div>
         </div>

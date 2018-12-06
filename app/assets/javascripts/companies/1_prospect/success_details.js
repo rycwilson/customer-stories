@@ -1,10 +1,17 @@
 
 function successDetailsListeners () {
 
+  // win story expand / collapse
+  var defaultHeight = "150px",
+      expandedHeight = function ($tr, isEditMode) {
+        // factor in height of the summernote toolbar
+        return window.innerHeight - ((isEditMode ? 41.3 : 0) + $tr.height() + $tr.next().height() - $('#win-story-editor').height());
+      };
+
   $(document)
 
     .on('click', 'button[data-target="#edit-customer-modal"]', function (e) {
-      // clicking a row group will normally sort alphabetically - prevent this
+      // clicking a row group will normally sort alphabetically; prevent this
       e.stopImmediatePropagation();
 
       $.ajax({
@@ -20,8 +27,62 @@ function successDetailsListeners () {
             })
           )
         })
+    })
 
+    .on('click', '.win-story-actions__expand', function () {
+      var $tr = $('tr.shown'),
+          $trChild = $tr.next(),
+          $editBtn = $('button.win-story-actions__edit'),
+          editorIsOpen = $('#win-story-editor[contenteditable="true"]').length;
+      $('#win-story-editor').css(
+        'height',
+        $('#win-story-editor').hasClass('expanded') ? defaultHeight : expandedHeight($tr, false)
+      );
+      $('#win-story-editor').toggleClass('expanded');
+      $editBtn.prop('disabled', $('#win-story-editor').hasClass('expanded'))
+      $(this)[0].blur();
+      $(this).find('span').toggle();
+      window.scrollTo(0, $tr.offset().top - (window.innerHeight / 2) + (($trChild.outerHeight() + $tr.outerHeight()) / 2));
+    })
 
+    .on('click', '.win-story-actions__edit', function () {
+      var $tr = $('tr.shown'),
+          $trChild = $tr.next(),
+          $expandBtn = $('button.win-story-actions__expand'),
+          openEditor = typeof $('#win-story-editor').data('summernote') !== 'object';
+      if (openEditor) {
+        // use contenteditable instead of textarea because html can't be renderd in textarea
+        $('#win-story-editor')
+          .prop('contenteditiable', true)
+          .summernote({
+            height: expandedHeight($tr, true),
+            dialogsInBody: true,
+            focus: true,
+            toolbar: [
+              ['font', ['bold', 'italic', 'underline']], //, 'clear']],
+              ['para', ['ul', 'ol', 'paragraph']],
+            ],
+          });
+      } else {
+        $('#win-story-editor').prop('contenteditable', false)
+                              .summernote('destroy')
+        $(this)[0].blur();
+      }
+      $expandBtn.prop('disabled', openEditor)
+                .find('span').toggle();
+      $('#win-story-editor').toggleClass('expanded');
+      window.scrollTo(0, $tr.offset().top - (window.innerHeight / 2) + (($trChild.outerHeight() + $tr.outerHeight()) / 2));
+    })
+
+    .on('click', '.customer-logo .upload-image', function () {
+      var $previewImg = $(this).closest('.fileinput').find('.fileinput-preview img');
+      if ($previewImg.attr('src')) {
+        // click on the preview
+        $(this).closest('.fileinput').find('.thumbnail')[1].click();
+      } else {
+        // click on the placeholder
+        $(this).closest('.fileinput').find('.thumbnail')[0].click();
+      }
     })
 
     .on('hidden.bs.modal', '#edit-customer-modal', function () {

@@ -1,54 +1,68 @@
 
 <script type="text/template" id="success-details-template">
 
-  {{ var AUTH_TOKEN = $('meta[name=csrf-token]').attr('content'); }}
+  <div class="container success-details" style="width:100%">
 
-  <div class="container success-details" style='width:100%'>
+    <form id="success-form-{{= success.id }}" action="{{= successPath }}" method="POST" data-remote="true" data-type="script" class='success-form'>
 
-    <form id="success-form-{{= success.id }}" action='{{= successPath }}' method='post' data-remote='true' data-type='script' class='success-form'>
-
-      <input type="hidden" name="_method" value="put">
-      <input type="hidden" name="authenticity_token" value="{{= AUTH_TOKEN }}">
+      <input type="hidden" name="_method" value="PUT">
+      <input type="hidden" name="authenticity_token" value="{{= document.querySelectorAll('meta[name=csrf-token]')[0].getAttribute('content') }}">
 
       <div class="row">
-        <div class="col-sm-8">
+        <div class="col-sm-12" style="display:flex; padding: 0 5px;">
 
-          <div class="form-group" style="width:100%">
-            <label for='success_description'>Win Story</label>
-              <textarea id="success_description" name="success[description]" class="form-control" rows="9" style="width:100%" >{{= success.description }}</textarea>
+          <div class="form-group win-story" style="position:relative; width: 570px; margin-bottom: 0; display:inline-block">
+            <label for="win-story-editor">Win Story</label>
+            <div id="win-story-editor" name="success[description]" class="form-control" data-provider="summernote" contenteditable="false">{{= success.description }}</div>
+
+            <span class="win-story-actions" style="position:absolute; top:-4px; right:0">
+
+              <!-- height is a hack to keep the focus outline consistent; compensated with top (above) -->
+              <button type="button" style="height:22px" class="win-story-actions__expand">
+                <i class="fa fa-fw fa-expand"></i>
+                <span>Expand</span>
+                <span style="display:none">Collapse</span>
+              </button>
+              <button type="button" class="win-story-actions__edit">
+                <i class="fa fa-fw fa-edit"></i>
+                Edit
+              </button>
+              <button type="button" class="win-story-actions__email">
+                <i class="fa fa-fw fa-envelope-o"></i>
+                Email
+              </button>
+              <button type="button" class="win-story-actions__pdf">
+                <i class="fa fa-fw fa-file-pdf-o"></i>
+                PDF
+              </button>
+
+            </span>
+
+          </div>
+
+          <div style="display:inline-block; flex-grow:1; padding: 0 18px;">
+
+            <label for="curator_name">Curator</label>
+            <p style="margin-bottom: 15px">{{= success.curator.full_name }}</p>
+
+            {{ if (success.referrer) { }}
+
+                <label>Referrer</label>
+                <p style="margin-bottom: 15px">{{= success.referrer.first_name + ' ' + success.referrer.last_name }}</p>
+
+            {{ } }}
+
+            {{ if (success.contact) { }}
+
+                <label>Customer Contact</label>
+                <p style="margin-bottom: 15px">{{= success.contact.first_name + ' ' + success.contact.last_name }}</p>
+
+            {{ } }}
+
           </div>
 
         </div>
 
-        <div class="col-sm-4">
-
-          <!-- <div class='form-group' style='width:100%'> -->
-            <label for='curator_name'>Curator</label>
-            <p style="margin-bottom: 15px">{{= success.curator.full_name }}</p>
-    <!--         <input type="text" id='curator_name' class="form-control" value="{{= success.curator.full_name }}" style='width:100%' readonly> -->
-          <!-- </div> -->
-
-          {{ if (success.referrer) { }}
-
-            <!-- <div class='form-group' style='width:100%'> -->
-              <label>Referrer</label>
-              <p style="margin-bottom: 15px">{{= success.referrer.first_name + ' ' + success.referrer.last_name }}</p>
-  <!--             <input type="text" class="form-control" value="{{= success.referrer.first_name + ' ' + success.referrer.last_name }}" style='width:100%' readonly> -->
-            <!-- </div> -->
-
-          {{ } }}
-
-          {{ if (success.contact) { }}
-
-            <!-- <div class='form-group' style='width:100%'> -->
-              <label>Customer Contact</label>
-              <p style="margin-bottom: 15px">{{= success.contact.first_name + ' ' + success.contact.last_name }}</p>
-     <!--          <input type="text" class="form-control" value="{{= success.contact.first_name + ' ' + success.contact.last_name }}" style='width:100%' readonly> -->
-            <!-- </div> -->
-
-          {{ } }}
-
-        </div>
       </div>
 
       <hr>

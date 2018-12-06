@@ -64,19 +64,17 @@ function storiesEditSettingsListeners () {
 
     })
 
-    .on('click', '.customer-logo .change-image', function () {
-
-      var $previewImg = $(this).closest('.fileinput').find('.fileinput-preview img');
-
-      if ($previewImg.attr('src')) {
-        // click on the preview
-        $(this).closest('.fileinput').find('.thumbnail')[1].click();
-      } else {
-        // click on the placeholder
-        $(this).closest('.fileinput').find('.thumbnail')[0].click();
-      }
-
-    });
+    // moved to #edit-customer-modal
+    // .on('click', '.customer-logo .change-image', function () {
+    //   var $previewImg = $(this).closest('.fileinput').find('.fileinput-preview img');
+    //   if ($previewImg.attr('src')) {
+    //     // click on the preview
+    //     $(this).closest('.fileinput').find('.thumbnail')[1].click();
+    //   } else {
+    //     // click on the placeholder
+    //     $(this).closest('.fileinput').find('.thumbnail')[0].click();
+    //   }
+    // });
 }
 
 // the select2 boxes initialize synchronously, i.e. subsequent code doesn't

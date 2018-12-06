@@ -23,11 +23,48 @@
     content: "" !important;
   }
 
+  #win-story-editor {
+    height: 150px;
+    max-width: 100%;  // don't allow to expand horizontally
+    background-color: #f9f9f9;
+    overflow-y: scroll;
+    & + .note-editor {
+
+      margin-bottom: 0;
+    }
+  }
+
+  button[class*="win-story-actions"] {
+    background: none;
+    border: none;
+    color: #555;
+    padding: 0;
+    margin-right: 6px;
+    &:hover:not(:disabled) {
+      color: #222;
+    }
+    &[class*="__expand"] {
+      i {
+        transform: rotate(-45deg);
+        margin-right: -3px;
+      }
+    }
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    &:not(:last-of-type) {
+      border-right: 1px solid #ccc;
+      padding-right: 10px;
+    }
+
+  }
+
   tr.group {
-    td:first-of-type {
+    td:first-of-type {  // customer name
       border-right-width: 0;
     }
-    td:last-of-type {
+    td:last-of-type {  // edit
       padding: 0;
       button[data-target="#edit-customer-modal"] {
         display: none;
@@ -58,6 +95,7 @@
         }
       }
     }
+
   }
 
 }
