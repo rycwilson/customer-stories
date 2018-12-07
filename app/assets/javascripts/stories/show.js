@@ -15,9 +15,9 @@ function storiesShow () {
 
   $(document)
     .on('click touchend', '#primary-cta-xs.open', function (e) {
-      if ($(e.target).is('button.remove')) {
+      if ($(e.target).is('[class*="remove"]')) {  // target might be the icon
         $(this).remove();
-      } else if (!$(e.target).is('a')) {
+      } else if (!$(e.target).is('a')) {  // any part of the buttion that isn't the <a> or X
         $(this).find('a')[0].click();
       }
     })
