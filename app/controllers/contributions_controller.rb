@@ -12,16 +12,26 @@ class ContributionsController < ApplicationController
 
   respond_to(:html, :json, :js)
 
-  # datatables source data (contributors)
   def index
     company = Company.find_by(subdomain: request.subdomain)
-    if params[:success_id]
-      contributions = Success.find(params[:success_id]).contributions
-    else
-      contributions = company.contributions
-    end
-    # data = Rails.cache.fetch("#{company.subdomain}/dt-contributors") do
-      data = contributions.to_json({
+
+    # Get contributions data for a win story. Success and contributor data already exist in the client.
+    if params[:win_story]
+      success = Success.find(params[:success_id])
+      contributions = {
+        invitation_templates: JSON.parse(success.invitation_templates.to_json({ only: [:id, :name] })),
+        questions: JSON.parse(success.questions.distinct.to_json({ only: [:id, :question, :invitation_template_id] })),
+        answers: JSON.parse(success.answers.to_json({ only: [:answer, :contribution_id, :contributor_question_id] }))
+      }
+      res = contributions.to_json
+
+    else  # datatables source data (contributors)
+      if params[:success_id]
+        contributions = Success.find(params[:success_id]).contributions
+      else
+        contributions = company.contributions
+      end
+      res = contributions.to_json({
         only: [:id, :status, :publish_contributor, :contributor_unpublished],
         methods: [:display_status, :timestamp],
         include: {
@@ -39,8 +49,9 @@ class ContributionsController < ApplicationController
           invitation_template: { only: [:id, :name] },
         }
       })
-    # pp(JSON.parse(data))
-    respond_to { |format| format.json { render({ json: data }) } }
+    end
+    # pp(JSON.parse(res))
+    respond_to { |format| format.json { render({ json: res }) } }
   end
 
   def show

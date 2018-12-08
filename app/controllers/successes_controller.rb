@@ -2,7 +2,7 @@ require 'successes_and_contributions'
 class SuccessesController < ApplicationController
   include SuccessesAndContributions
 
-  # respond_to(:html, :js, :json)
+  respond_to(:html, :js, :json)
 
   before_action(except: [:index, :create, :import]) { @success = Success.find(params[:id]) }
   skip_before_action(
@@ -28,9 +28,18 @@ class SuccessesController < ApplicationController
   end
 
   def show
-    # puts params.permit(params.keys).to_h
-    @templates = InvitationTemplate.find(params[:templates])
-    render(:win_story, layout: false)
+    success = Success.find(params[:id])
+    data = {
+      success: {
+        id: success.id,
+        win_story: success.description
+      }
+    }
+    respond_to { |format| format.json { render({ json: data }) } }
+
+    # The win story rendering will be done in the client, because we don't want to request
+    # this template every time an edit is made
+    # render(:win_story, layout: false)
   end
 
   def create

@@ -10,6 +10,8 @@ function successDetailsListeners () {
 
   $(document)
 
+    .on('clicl')
+
     .on('click', 'button[data-target="#edit-customer-modal"]', function (e) {
       // clicking a row group will normally sort alphabetically; prevent this
       e.stopImmediatePropagation();
@@ -98,6 +100,18 @@ function successDetailsListeners () {
           successId = $tr.data('success-id'),
           successPath = '/successes/' + successId,
           success = dt.row($tr).data();
+
+      $.ajax({
+        url: '/successes/' + successId + '/contributions',
+        method: 'get',
+        data: {
+          win_story: true
+        },
+        dataType: 'json',
+      })
+        .done(function (res, status, xhr) {
+          console.log(res)
+        })
 
       $(this).children().toggle();  // toggle caret icons
 

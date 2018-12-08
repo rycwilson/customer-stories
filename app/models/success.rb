@@ -28,16 +28,23 @@ class Success < ApplicationRecord
       where(status: 'contribution_submitted')
     end
   end
-  has_many :results, -> { order(created_at: :asc) }, dependent: :destroy
   # alias the association to user -> Success.find(id).contributors
   # note: contributor is an alias - see contribution.rb
   has_many :contributors, through: :contributions, source: :contributor
+  has_many :invitation_templates, -> { distinct }, through: :contributions
+
+  # there is an issue using -> { distinct } here, I think due to there being a default order on ContributorQuestion
+  # => works ok if .distinct method is used; see contributions#index
+  has_many :contributor_questions, through: :invitation_templates
+  alias_attribute :questions, :contributor_questions
   has_many :contributor_answers, through: :contributions
+  alias_attribute :answers, :contributor_answers
   has_many :page_views, class_name: 'PageView'
   has_many :story_shares, class_name: 'StoryShare'
   has_many :visitor_actions
   has_many :visitors, through: :visitor_actions
 
+  has_many :results, -> { order(created_at: :asc) }, dependent: :destroy
   has_many :ctas_successes, dependent: :destroy
   has_many :ctas, through: :ctas_successes, source: :call_to_action
 
