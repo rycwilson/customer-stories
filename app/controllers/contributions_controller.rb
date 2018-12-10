@@ -18,12 +18,13 @@ class ContributionsController < ApplicationController
     # Get contributions data for a win story. Success and contributor data already exist in the client.
     if params[:win_story]
       success = Success.find(params[:success_id])
-      contributions = {
-        invitation_templates: JSON.parse(success.invitation_templates.to_json({ only: [:id, :name] })),
-        questions: JSON.parse(success.questions.distinct.to_json({ only: [:id, :question, :invitation_template_id] })),
-        answers: JSON.parse(success.answers.to_json({ only: [:answer, :contribution_id, :contributor_question_id] }))
-      }
-      res = contributions.to_json
+      res = {
+        contributions_data: {
+          invitation_templates: JSON.parse(success.invitation_templates.to_json({ only: [:id, :name] })),
+          questions: JSON.parse(success.questions.distinct.to_json({ only: [:id, :question, :invitation_template_id] })),
+          answers: JSON.parse(success.answers.to_json({ only: [:answer, :contribution_id, :contributor_question_id] }))
+        }
+      }.to_json
 
     else  # datatables source data (contributors)
       if params[:success_id]

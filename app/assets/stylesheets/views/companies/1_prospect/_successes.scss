@@ -33,6 +33,23 @@
     }
     & + .note-editor {
       margin-bottom: 0;
+      .note-customButton {
+        float: right;
+      }
+      .summernote-custom {
+        // max-height: set via js when editor is initiated
+        overflow-x: hidden;
+        overflow-y: scroll;
+        li {
+          a {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-wrap: break-word;
+          }
+        }
+      }
+
     }
   }
 
