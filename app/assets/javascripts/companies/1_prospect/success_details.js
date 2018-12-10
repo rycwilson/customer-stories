@@ -3,6 +3,7 @@ function successDetailsListeners () {
 
   var defaultHeight = "150px",  // win story expand / collapse
       contributionsData,  // data returned when the child row is opened; includes invitation templates, questions and answers
+      winStory,  // success.description
       expandedHeight = function ($tr, isEditMode) {
         // factor in height of the summernote toolbar
         return window.innerHeight - ((isEditMode ? 41.3 : 0) + $tr.height() + $tr.next().height() - $('#win-story-editor').height());
@@ -31,6 +32,7 @@ function successDetailsListeners () {
                       context.invoke('editor.saveRange');
                       context.invoke('editor.pasteHTML', $(this).data('placeholder'));
                       context.invoke('editor.restoreRange');
+                      $('.success-form').trigger('input');  // enable Save button
                     });
                   });
                 }
@@ -54,7 +56,7 @@ function successDetailsListeners () {
       initWinStoryEditor = function ($tr, contributions) {
         // use contenteditable instead of textarea because html can't be renderd in textarea
         $('#win-story-editor')
-          .prop('contenteditiable', true)
+          .prop('contenteditable', true)
           .summernote({
             height: expandedHeight($tr, true),
             dialogsInBody: true,
@@ -69,14 +71,64 @@ function successDetailsListeners () {
             },
             callbacks: {
               onInit: function() {
+                applyDropdownScrollBoundaries();
+
+                // unable to set this via stylesheets due to dynamic handling by summernote
                 $('.note-editor .dropdown-menu.summernote-custom').css({
                   'max-height': 0.95 * $('.note-editable').last().outerHeight() + 'px',
                   'max-width': 0.95 * $('.note-editable').last().outerWidth() + 'px'
                 });
-                applyDropdownScrollBoundaries();
               }
             }
           });
+      },
+      // getWinStory = function (successId) {
+      //   $.ajax({
+      //     url: '/successes/' + successId,
+      //     method: 'get',
+      //     dataType: 'json'
+      //   })
+      //     .done(function (res, status, xhr) {
+      //       console.log('getWinStory response', res);
+      //       winStory = res.success.win_story
+      //     })
+      // },
+      // getContributionsData = function (successId) {
+      //   $.ajax({
+      //     url: '/successes/' + successId + '/contributions',
+      //     method: 'get',
+      //     data: {
+      //       win_story: true
+      //     },
+      //     dataType: 'json'
+      //   })
+      //     .done(function (res, status, xhr) {
+      //       console.log('getContributionsData response', res)
+      //       contributionsData = res.contributions_data
+      //     })
+      // },
+      renderWinStory = function () {
+
+        $('#win-story-editor').html(_.unescape(winStory))
+
+        // self.request_subject = self.invitation_template.request_subject
+        //   .sub('[customer_name]', self.customer.name)
+        //   .sub('[company_name]', self.company.name)
+        //   .sub('[contributor_first_name]', self.contributor.first_name)
+        //   .sub('[contributor_full_name]', self.contributor.full_name)
+        // self.request_body = self.invitation_template.request_body
+        //   .gsub('[customer_name]', self.customer.name)
+        //   .gsub('[company_name]', self.company.name)
+        //   .gsub('[contributor_first_name]', self.contributor.first_name)
+        //   .gsub('[contributor_last_name]', self.contributor.last_name)
+        //   .gsub('[referrer_full_name]', self.referrer.try(:full_name) || '<span style="color:#D9534F">Unknown Referrer</span>')
+        //   .gsub('[curator_full_name]', "<span style='font-weight:bold'>#{self.curator.full_name}</span>")
+        //   .gsub('[curator_phone]', self.curator.phone || '')
+        //   .gsub('[curator_title]', self.curator.title || '')
+        //   .gsub('[curator_img_url]', self.curator.photo_url || '')
+        //   .gsub('[contribution_submission_url]', invitation_link('contribution'))
+        //   .gsub('[feedback_submission_url]', invitation_link('feedback'))
+        //   .html_safe
       };
 
   $(document)
@@ -148,6 +200,10 @@ function successDetailsListeners () {
       $(this).find('.modal-body').empty();
     })
 
+    .on('input', '#win-story-editor + .note-editor > .note-editing-area > .note-editable', function (e) {
+      $('input[type="hidden"][name="success[description]"]').val(_.escape($(this).html()));
+    })
+
     .on('click', 'td.success-details', function () {
       var $table = $(this).closest('table'),
           $tr = $(this).closest('tr'),
@@ -156,40 +212,7 @@ function successDetailsListeners () {
           dtRow = dt.row($tr),
           successId = $tr.data('success-id'),
           successPath = '/successes/' + successId,
-          success = dt.row($tr).data(),
-          winStory,
-          getWinStory = $.Deferred(),
-          getContributionsData = $.Deferred();
-
-      $.ajax({
-        url: '/successes/' + successId,
-        method: 'get',
-        dataType: 'json',
-      })
-        .done(function (res, status, xhr) {
-          winStory = res.success.win_story;
-          getWinStory.resolve();
-        })
-
-      $.ajax({
-        url: '/successes/' + successId + '/contributions',
-        method: 'get',
-        data: {
-          win_story: true
-        },
-        dataType: 'json',
-      })
-        .done(function (res, status, xhr) {
-          contributionsData = res.contributions_data;
-          getContributionsData.resolve();
-        })
-
-
-      $.when(getWinStory, getContributionsData).done(function () {
-        // console.log(winStory)
-        // console.log(contributions)
-      })
-
+          success = dt.row($tr).data();
 
       $(this).children().toggle();  // toggle caret icons
 
@@ -198,11 +221,42 @@ function successDetailsListeners () {
         $tr.removeClass('shown active');
       }
       else {
+        $.when(
+          $.ajax({
+            url: '/successes/' + successId,
+            method: 'get',
+            dataType: 'json'
+          }),
+          $.ajax({
+            url: '/successes/' + successId + '/contributions',
+            method: 'get',
+            data: {
+              win_story: true
+            },
+            dataType: 'json'
+          })
+        )
+          .done(function (res1, res2) {
+            winStory = res1[0].success.win_story
+            contributionsData = res2[0].contributions_data
+            // console.log('winStory', winStory);
+            // console.log('contributionsData', contributionsData);
+            renderWinStory();
+          })
+
+        // why doesn't this work? it's the same thing! or is it...
+        // $.when(getWinStory(successId), getContributionsData(successId))
+        //   .done(function (data1, data2) {
+        //     console.log('data1', data1)
+        //     console.log('data2', data2)
+        //     console.log('winStory', winStory);
+        //     console.log('contributionsData', contributionsData);
+        //     renderWinStory()
+        //   })
+
         dtRow.child(
           _.template($('#success-details-template').html())({
             success: success,
-            referrer: success.referrer,
-            contact: success.contact,
             successPath: successPath
           })
         ).show();
@@ -225,6 +279,7 @@ function successDetailsListeners () {
         $tr.next().one('input', function (e) {
           $(this).find('button[type="submit"]').prop('disabled', false);
         });
+
       }
 
     });

@@ -15,7 +15,7 @@ class SuccessesController < ApplicationController
     company = Company.find_by(subdomain: request.subdomain)
     # data = Rails.cache.fetch("#{company.subdomain}/dt-successes") do
     data = company.successes.to_json({
-        only: [:id, :name, :description],
+        only: [:id, :name],
         methods: [:display_status, :referrer, :contact, :timestamp],
         include: {
           curator: { only: [:id], methods: [:full_name] },
@@ -28,6 +28,7 @@ class SuccessesController < ApplicationController
   end
 
   def show
+    # binding.remote_pry
     success = Success.find(params[:id])
     data = {
       success: {
@@ -35,6 +36,7 @@ class SuccessesController < ApplicationController
         win_story: success.description
       }
     }
+    # binding.remote_pry
     respond_to { |format| format.json { render({ json: data }) } }
 
     # The win story rendering will be done in the client, because we don't want to request
@@ -178,6 +180,7 @@ class SuccessesController < ApplicationController
   end
 
   def update
+    # binding.remote_pry
     @success.update(success_params)
     respond_to { |format| format.js {} }
   end

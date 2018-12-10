@@ -21,8 +21,8 @@
 
       {{ var contributor = dtContributors.rows('[data-contribution-id="' + answer.contribution_id + '"]').data()[0].contributor; }}
 
-      <li data-contribution-id="{{= answer.contribution_id }}" data-placeholder="<span contenteditable=&quot;false&quot;>[Contributor Q&A: {{= contributor.full_name }}]</span>">
-        <a href="javascript:;">{{= contributor.full_name }}</a>
+      <li data-placeholder="<div data-contribution-id='{{= answer.contribution_id }}' contenteditable='false'>[Contributor Q&A: {{= contributor.full_name }}]</div>">
+        <span>{{= contributor.full_name }}</span>
       </li>
 
     {{   }); }}
@@ -31,8 +31,8 @@
 
     {{ contributionsData.questions.forEach(function (question) { }}
 
-      <li data-question-id="{{= question.id }}" data-placeholder="<span contenteditable=&quot;false&quot;>[Group Q&A: {{= question.question }}]</span>">
-        <a href="javascript:;">{{= question.question }}</a>
+      <li data-question-id="{{= question.id }}" data-placeholder="<div contenteditable='false'>[Group Q&A: {{= question.question }}]</div>">
+        <span>{{= question.question }}</span>
       </li>
 
     {{ }) }}

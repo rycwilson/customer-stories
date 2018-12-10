@@ -3,17 +3,19 @@
 
   <div class="container success-details" style="width:100%">
 
-    <form id="success-form-{{= success.id }}" action="{{= successPath }}" method="POST" data-remote="true" data-type="script" class='success-form'>
+    <form id="success-form-{{= success.id }}" action="{{= successPath }}" method="post" data-remote="true" data-type="script" class='success-form'>
 
-      <input type="hidden" name="_method" value="PUT">
+      <input type="hidden" name="_method" value="put">
       <input type="hidden" name="authenticity_token" value="{{= document.querySelectorAll('meta[name=csrf-token]')[0].getAttribute('content') }}">
+      <input type="hidden" name="success[description]">
 
       <div class="row">
         <div class="col-sm-12" style="display:flex; padding: 0 5px;">
-
           <div class="form-group win-story" style="position:relative; width: 570px; margin-bottom: 0; display:inline-block">
+
             <label for="win-story-editor">Win Story</label>
-            <div id="win-story-editor" name="success[description]" class="form-control" data-provider="summernote" contenteditable="false">{{= success.description }}</div>
+
+            <div id="win-story-editor" class="form-control" data-provider="summernote" contenteditable="false"></div>
 
             <span class="win-story-actions" style="position:absolute; top:-4px; right:0">
 
