@@ -197,7 +197,7 @@ class SuccessesController < ApplicationController
   # status will be present in case of csv upload
   def success_params
     params.require(:success).permit(
-      :name, :description, :customer_id, :curator_id,
+      :name, :win_story, :customer_id, :curator_id,
       customer_attributes: [:id, :name, :company_id],
       contributions_attributes: [
         :referrer_id, :contributor_id, :invitation_template_id, :success_contact,

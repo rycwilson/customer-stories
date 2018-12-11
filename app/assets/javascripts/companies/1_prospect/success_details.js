@@ -12,7 +12,8 @@ function successDetailsListeners () {
       contributionsDataPath = function (successId) { return '/successes/' + successId + '/contributions'; },
       expandedViewHeight = function ($tr, editorIsOpen) {
         // factor in height of the summernote toolbar
-        return window.innerHeight - ((editorIsOpen ? summernoteToolbarHeight : 0) + $tr.height() + $tr.next().height() - $('#win-story-editor').height());
+        console.log('test', $('#win-story-editor').height())
+        return window.innerHeight - ((editorIsOpen ? summernoteToolbarHeight : 0) + $tr.height() + $tr.next().height() - parseInt(defaultViewHeight, 10));
       },
       placeholderDropdown = function (context) {
         var ui = $.summernote.ui,
@@ -58,7 +59,8 @@ function successDetailsListeners () {
             toolbar: [
               ['font', ['bold', 'italic', 'underline']], //, 'clear']],
               ['para', ['ul', 'ol', 'paragraph']],
-              ['customButton', ['placeholderDropdown']]
+              ['customButton', ['placeholderDropdown']],
+              ['view', ['codeview']],
             ],
             buttons: {
               placeholderDropdown: placeholderDropdown
@@ -182,8 +184,9 @@ function successDetailsListeners () {
         initWinStoryEditor($tr, expandedViewHeight($tr, true), depopulatePlaceholders);
       } else {
         // can't use .note-editor height because it will be 0
+        // why do I need to do the .last thing for win story??
         $('#win-story-editor')
-          .css('height', isExpandedView ? (parseInt($('.form-group.win-story').css('height'), 10) - winStoryLabelHeight).toString() + 'px' : defaultViewHeight)
+          .css('height', isExpandedView ? (parseInt($('.form-group.win-story').last().css('height'), 10) - winStoryLabelHeight).toString() + 'px' : defaultViewHeight)
           .prop('contenteditable', false)
           .summernote('destroy')
         populatePlaceholders();

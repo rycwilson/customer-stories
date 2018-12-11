@@ -2,7 +2,7 @@
 (function () {
 
   var success = <%= raw @success.to_json({
-        only: [:id, :name, :description],
+        only: [:id, :name, :win_story],
         methods: [:display_status, :timestamp, :referrer, :contact],
         include: {
           curator: { only: [:id], methods: [:full_name] },
