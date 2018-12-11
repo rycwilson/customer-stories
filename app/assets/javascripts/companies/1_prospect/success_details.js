@@ -2,6 +2,9 @@
 function successDetailsListeners () {
 
   var defaultViewHeight = "150px",  // win story expand / collapse
+      summernoteToolbarHeight = 41.3,
+      summernoteResizebarHeight = 8,
+      winStoryLabelHeight = 23,
       contributionsData,  // data returned when the child row is opened; includes invitation templates, questions and answers
       winStory,  // success.description
       customerPath = function (customerId) { return '/customers/' + customerId; },
@@ -9,7 +12,7 @@ function successDetailsListeners () {
       contributionsDataPath = function (successId) { return '/successes/' + successId + '/contributions'; },
       expandedViewHeight = function ($tr, editorIsOpen) {
         // factor in height of the summernote toolbar
-        return window.innerHeight - ((editorIsOpen ? 41.3 : 0) + $tr.height() + $tr.next().height() - $('#win-story-editor').height());
+        return window.innerHeight - ((editorIsOpen ? summernoteToolbarHeight : 0) + $tr.height() + $tr.next().height() - $('#win-story-editor').height());
       },
       placeholderDropdown = function (context) {
         var ui = $.summernote.ui,
@@ -152,7 +155,7 @@ function successDetailsListeners () {
         $('#win-story-editor').summernote('destroy')
         initWinStoryEditor(
           $tr,
-          expandView ? expandedViewHeight($tr, true) : parseInt(defaultViewHeight, 10),
+          expandView ? expandedViewHeight($tr, true) : parseInt(defaultViewHeight, 10) - (summernoteToolbarHeight + summernoteResizebarHeight),
           depopulatePlaceholders
         )
       } else {
@@ -179,10 +182,12 @@ function successDetailsListeners () {
         initWinStoryEditor($tr, expandedViewHeight($tr, true), depopulatePlaceholders);
       } else {
         // can't use .note-editor height because it will be 0
-        $('#win-story-editor').css('height', $('.form-group.win-story').css('height'))
-                              .prop('contenteditable', false)
-                              .summernote('destroy')
+        $('#win-story-editor')
+          .css('height', isExpandedView ? (parseInt($('.form-group.win-story').css('height'), 10) - winStoryLabelHeight).toString() + 'px' : defaultViewHeight)
+          .prop('contenteditable', false)
+          .summernote('destroy')
         populatePlaceholders();
+        window.scrollTo(0, $tr.offset().top - (window.innerHeight / 2) + (($trChild.outerHeight() + $tr.outerHeight()) / 2));
       }
       if (initEditor && !isExpandedView) {
         $expandBtn.trigger('click', [{ editClick: true }])

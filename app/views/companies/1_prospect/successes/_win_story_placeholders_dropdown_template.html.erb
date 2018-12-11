@@ -31,7 +31,7 @@
 
     {{ contributionsData.questions.forEach(function (question) { }}
 
-      <li data-question-id="{{= question.id }}" data-placeholder="<div contenteditable='false'>[Group Contribution: {{= question.question }}]</div>">
+      <li  data-placeholder="<div data-question-id='{{= question.id }}' contenteditable='false'>[Group Contribution: {{= question.question }}]</div>">
         <a>{{= question.question }}</a>
       </li>
 
