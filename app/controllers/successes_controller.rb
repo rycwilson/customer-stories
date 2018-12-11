@@ -33,7 +33,7 @@ class SuccessesController < ApplicationController
     data = {
       success: {
         id: success.id,
-        win_story: success.description
+        win_story: success.win_story
       }
     }
     # binding.remote_pry

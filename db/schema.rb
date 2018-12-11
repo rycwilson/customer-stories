@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181205021058) do
+ActiveRecord::Schema.define(version: 20181211215916) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -420,7 +420,7 @@ ActiveRecord::Schema.define(version: 20181205021058) do
     t.datetime "updated_at",  null: false
     t.integer  "curator_id"
     t.string   "name"
-    t.text     "description"
+    t.text     "win_story"
     t.index ["curator_id"], name: "index_successes_on_curator_id", using: :btree
     t.index ["customer_id"], name: "index_successes_on_customer_id", using: :btree
   end

@@ -2,6 +2,10 @@ namespace :temp do
 
   desc "temp stuff"
 
+  task add_default_win_story: :environment do
+
+  end
+
   task remove_pixlee_cta: :environment do
     pixlee = Company.find_by subdomain: 'pixlee'
     cta = /<a\shref="https:\/\/www\.pixlee\.com\/request-demo".+Blog-CTA_Request-Demo\.png'\);"><\/a>/

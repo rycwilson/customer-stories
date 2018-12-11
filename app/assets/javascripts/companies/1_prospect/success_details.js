@@ -6,7 +6,7 @@ function successDetailsListeners () {
       summernoteResizebarHeight = 8,
       winStoryLabelHeight = 23,
       contributionsData,  // data returned when the child row is opened; includes invitation templates, questions and answers
-      winStory,  // success.description
+      winStory,
       customerPath = function (customerId) { return '/customers/' + customerId; },
       successPath = function (successId) { return '/successes/' + successId; },
       contributionsDataPath = function (successId) { return '/successes/' + successId + '/contributions'; },
@@ -212,7 +212,7 @@ function successDetailsListeners () {
     })
 
     .on('input', '#win-story-editor + .note-editor > .note-editing-area > .note-editable', function (e) {
-      $('input[type="hidden"][name="success[description]"]').val(_.escape($(this).html()));
+      $('input[type="hidden"][name="success[win_story]"]').val(_.escape($(this).html()));
     })
 
     .on('click', 'td.success-details', function () {
