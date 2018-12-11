@@ -1,0 +1,24 @@
+
+<script type="text/template" id="individual-contribution-template">
+
+  <div class="individual-contribution" data-contribution-id="{{= contributionId }}">
+
+    <p>{{= contributor.full_name }}</p>
+    <p>{{= contributor.title }}</p>
+
+    <ul>
+
+    {{ qAndA.forEach(function (pair) { }}
+
+      <li>
+        <p class="question">{{= pair.question }}</p>
+        <p class="answer">{{= pair.answer }}</p>
+      </li>
+
+    {{ }); }}
+
+    </ul>
+
+  </div>
+
+</script>

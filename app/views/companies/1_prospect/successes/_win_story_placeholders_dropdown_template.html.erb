@@ -15,24 +15,24 @@
       <a href="javascript:;">All Contributions</a>
     </li>
 
-    <li style="font-weight: bold; pointer-events: none">Contributor Q&amp;A</li>
+    <li style="font-weight: bold; pointer-events: none">Individual Contributions</li>
 
     {{ _.uniq(contributionsData.answers, false, function (answer) { return answer.contribution_id; }).forEach(function (answer) { }}
 
       {{ var contributor = dtContributors.rows('[data-contribution-id="' + answer.contribution_id + '"]').data()[0].contributor; }}
 
-      <li data-placeholder="<div data-contribution-id='{{= answer.contribution_id }}' contenteditable='false'>[Contributor Q&A: {{= contributor.full_name }}]</div>">
-        <span>{{= contributor.full_name }}</span>
+      <li data-placeholder="<div data-contribution-id='{{= answer.contribution_id }}' contenteditable='false'>[Individual Contribution: {{= contributor.full_name }}]</div>">
+        <a>{{= contributor.full_name }}</a>
       </li>
 
     {{   }); }}
 
-    <li style="font-weight: bold; pointer-events: none">Group Q&amp;A</li>
+    <li style="font-weight: bold; pointer-events: none">Group Contributions</li>
 
     {{ contributionsData.questions.forEach(function (question) { }}
 
-      <li data-question-id="{{= question.id }}" data-placeholder="<div contenteditable='false'>[Group Q&A: {{= question.question }}]</div>">
-        <span>{{= question.question }}</span>
+      <li data-question-id="{{= question.id }}" data-placeholder="<div contenteditable='false'>[Group Contribution: {{= question.question }}]</div>">
+        <a>{{= question.question }}</a>
       </li>
 
     {{ }) }}

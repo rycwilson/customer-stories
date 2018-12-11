@@ -4,6 +4,15 @@ function successDetailsListeners () {
   var defaultHeight = "150px",  // win story expand / collapse
       contributionsData,  // data returned when the child row is opened; includes invitation templates, questions and answers
       winStory,  // success.description
+      customerPath = function (customerId) {
+        return '/customers/' + customerId;
+      },
+      successPath = function (successId) {
+        return '/successes/' + successId;
+      },
+      contributionsDataPath = function (successId) {
+        return '/successes/' + successId + '/contributions';
+      }
       expandedHeight = function ($tr, isEditMode) {
         // factor in height of the summernote toolbar
         return window.innerHeight - ((isEditMode ? 41.3 : 0) + $tr.height() + $tr.next().height() - $('#win-story-editor').height());
@@ -40,20 +49,7 @@ function successDetailsListeners () {
             ]);
         return button.render();   // return button as jquery object
       },
-      applyDropdownScrollBoundaries = function () {
-        var maxY = null;
-        $(document).on('wheel', '.dropdown-menu.summernote-custom', function (e) {
-          maxY = $(this).prop('scrollHeight') - $(this).prop('offsetHeight');
-          // If this event looks like it will scroll beyond the bounds of the element,
-          // prevent it and set the scroll to the boundary manually
-          if ($(this).prop('scrollTop') + e.originalEvent.deltaY < 0 ||
-              $(this).prop('scrollTop') + e.originalEvent.deltaY > maxY) {
-            e.preventDefault();
-            $(this).prop('scrollTop', Math.max(0, Math.min(maxY, $(this).prop('scrollTop') + e.originalEvent.deltaY)));
-          }
-        });
-      }
-      initWinStoryEditor = function ($tr, contributions) {
+      initWinStoryEditor = function ($tr, callback) {
         // use contenteditable instead of textarea because html can't be renderd in textarea
         $('#win-story-editor')
           .prop('contenteditable', true)
@@ -71,64 +67,61 @@ function successDetailsListeners () {
             },
             callbacks: {
               onInit: function() {
-                applyDropdownScrollBoundaries();
-
                 // unable to set this via stylesheets due to dynamic handling by summernote
                 $('.note-editor .dropdown-menu.summernote-custom').css({
                   'max-height': 0.95 * $('.note-editable').last().outerHeight() + 'px',
                   'max-width': 0.95 * $('.note-editable').last().outerWidth() + 'px'
                 });
+                callback();
               }
             }
           });
       },
-      // getWinStory = function (successId) {
-      //   $.ajax({
-      //     url: '/successes/' + successId,
-      //     method: 'get',
-      //     dataType: 'json'
-      //   })
-      //     .done(function (res, status, xhr) {
-      //       console.log('getWinStory response', res);
-      //       winStory = res.success.win_story
-      //     })
-      // },
-      // getContributionsData = function (successId) {
-      //   $.ajax({
-      //     url: '/successes/' + successId + '/contributions',
-      //     method: 'get',
-      //     data: {
-      //       win_story: true
-      //     },
-      //     dataType: 'json'
-      //   })
-      //     .done(function (res, status, xhr) {
-      //       console.log('getContributionsData response', res)
-      //       contributionsData = res.contributions_data
-      //     })
-      // },
+      populatePlaceholders = function () {
+        var dtContributors = $('#prospect-contributors-table').DataTable();
+        $('#win-story-editor').find('[data-contribution-id]').each(function () {
+          var contributionId = $(this).data('contribution-id'),
+              contributor = dtContributors.rows('[data-contribution-id="' + contributionId + '"]').data()[0].contributor,
+              qAndA = [];
+
+          // set the Q&A for this contribution
+          contributionsData.answers.filter(function (answer) {
+            return answer.contribution_id == contributionId;
+          })
+            .forEach(function (answer) {
+              qAndA.push({
+                question: contributionsData.questions.find(function (q) {
+                            return q.id === answer.contributor_question_id;
+                          }).question,
+                answer: answer.answer
+              })
+            });
+          $(this).replaceWith(
+            _.template($('#individual-contribution-template').html())({
+              contributionId: contributionId,
+              contributor: contributor,
+              qAndA: qAndA
+            })
+          );
+
+        })
+      },
+      depopulatePlaceholders = function () {
+        var dtContributors = $('#prospect-contributors-table').DataTable();
+        $('.note-editable').find('[data-contribution-id]').each(function () {
+          var contributionId = $(this).data('contribution-id'),
+              contributor = dtContributors.rows('[data-contribution-id="' + contributionId + '"]').data()[0].contributor;
+          $(this).replaceWith(
+            '<div data-contribution-id="' + contributionId + '" contenteditable="false">' +
+              '[Individual Contribution: ' + contributor.full_name + ']' +
+            '</div>'
+          )
+        });
+      }
       renderWinStory = function () {
-
         $('#win-story-editor').html(_.unescape(winStory))
+        populatePlaceholders()
 
-        // self.request_subject = self.invitation_template.request_subject
-        //   .sub('[customer_name]', self.customer.name)
-        //   .sub('[company_name]', self.company.name)
-        //   .sub('[contributor_first_name]', self.contributor.first_name)
-        //   .sub('[contributor_full_name]', self.contributor.full_name)
-        // self.request_body = self.invitation_template.request_body
-        //   .gsub('[customer_name]', self.customer.name)
-        //   .gsub('[company_name]', self.company.name)
-        //   .gsub('[contributor_first_name]', self.contributor.first_name)
-        //   .gsub('[contributor_last_name]', self.contributor.last_name)
-        //   .gsub('[referrer_full_name]', self.referrer.try(:full_name) || '<span style="color:#D9534F">Unknown Referrer</span>')
-        //   .gsub('[curator_full_name]', "<span style='font-weight:bold'>#{self.curator.full_name}</span>")
-        //   .gsub('[curator_phone]', self.curator.phone || '')
-        //   .gsub('[curator_title]', self.curator.title || '')
-        //   .gsub('[curator_img_url]', self.curator.photo_url || '')
-        //   .gsub('[contribution_submission_url]', invitation_link('contribution'))
-        //   .gsub('[feedback_submission_url]', invitation_link('feedback'))
-        //   .html_safe
       };
 
   $(document)
@@ -136,10 +129,9 @@ function successDetailsListeners () {
     .on('click', 'button[data-target="#edit-customer-modal"]', function (e) {
       // clicking a row group will normally sort alphabetically; prevent this
       e.stopImmediatePropagation();
-
       $.ajax({
-        url: '/customers/' + $(this).data('customer-id'),
-        method: 'GET',
+        url: customerPath($(this).data('customer-id')),
+        method: 'get',
         dataType: 'json'
       })
         .done(function (customer, status, xhr) {
@@ -173,10 +165,11 @@ function successDetailsListeners () {
           $expandBtn = $('button.win-story-actions__expand'),
           openEditor = typeof $('#win-story-editor').data('summernote') !== 'object';
       if (openEditor) {
-        initWinStoryEditor($tr);
+        initWinStoryEditor($tr, depopulatePlaceholders);
       } else {
         $('#win-story-editor').prop('contenteditable', false)
                               .summernote('destroy')
+        populatePlaceholders();
         $(this)[0].blur();
       }
       $expandBtn.prop('disabled', openEditor)
@@ -211,7 +204,6 @@ function successDetailsListeners () {
           dt = $table.DataTable(),
           dtRow = dt.row($tr),
           successId = $tr.data('success-id'),
-          successPath = '/successes/' + successId,
           success = dt.row($tr).data();
 
       $(this).children().toggle();  // toggle caret icons
@@ -223,12 +215,12 @@ function successDetailsListeners () {
       else {
         $.when(
           $.ajax({
-            url: '/successes/' + successId,
+            url: successPath(successId),
             method: 'get',
             dataType: 'json'
           }),
           $.ajax({
-            url: '/successes/' + successId + '/contributions',
+            url: contributionsDataPath(successId),
             method: 'get',
             data: {
               win_story: true
@@ -239,8 +231,8 @@ function successDetailsListeners () {
           .done(function (res1, res2) {
             winStory = res1[0].success.win_story
             contributionsData = res2[0].contributions_data
-            // console.log('winStory', winStory);
-            // console.log('contributionsData', contributionsData);
+            console.log('winStory', winStory);
+            console.log('contributionsData', contributionsData);
             renderWinStory();
           })
 
@@ -257,7 +249,7 @@ function successDetailsListeners () {
         dtRow.child(
           _.template($('#success-details-template').html())({
             success: success,
-            successPath: successPath
+            successPath: successPath(successId)
           })
         ).show();
         $trChild = $tr.next();
@@ -282,5 +274,17 @@ function successDetailsListeners () {
 
       }
 
+    })
+
+    // scroll boundaries
+    .on('wheel', '#win-story-editor, .note-editable, .dropdown-menu.summernote-custom', function (e) {
+      var maxY = $(this).prop('scrollHeight') - $(this).prop('offsetHeight');
+      // If this event looks like it will scroll beyond the bounds of the element,
+      // prevent it and set the scroll to the boundary manually
+      if ($(this).prop('scrollTop') + e.originalEvent.deltaY < 0 ||
+          $(this).prop('scrollTop') + e.originalEvent.deltaY > maxY) {
+        e.preventDefault();
+        $(this).prop('scrollTop', Math.max(0, Math.min(maxY, $(this).prop('scrollTop') + e.originalEvent.deltaY)));
+      }
     });
 }

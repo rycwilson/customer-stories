@@ -27,9 +27,17 @@
     height: 150px;
     max-width: 100%;  // don't allow to expand horizontally
     background-color: #f9f9f9;
-    overflow-y: hidden;
+    overflow-y: scroll;
+    .individual-contribution, .group-contribution {
+      p {
+        margin-bottom: 0;
+        &.answer {
+          font-style: italic;
+        }
+      }
+    }
     &.expanded {
-      overflow-y: scroll;
+      // overflow-y: scroll;
     }
     & + .note-editor {
       margin-bottom: 0;
@@ -41,7 +49,7 @@
         overflow-x: hidden;
         overflow-y: scroll;
         li {
-          span {
+          a {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
