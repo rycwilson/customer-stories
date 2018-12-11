@@ -13,26 +13,36 @@
         <div class="col-sm-12" style="display:flex; padding: 0 5px;">
           <div class="form-group win-story" style="position:relative; width: 570px; margin-bottom: 0; display:inline-block">
 
-            <label for="win-story-editor">Win Story</label>
+
+            <button type="button" class="win-story-actions__expand">
+              <i class="fa fa-fw fa-expand"></i>
+              <i class="fa fa-fw fa-compress" style="display:none"></i>
+            </button>
+            <label for="win-story-editor">
+              Win Story
+            </label>
 
             <div id="win-story-editor" class="form-control" data-provider="summernote" contenteditable="false"></div>
 
-            <span class="win-story-actions" style="position:absolute; top:-4px; right:0; padding-right: 5px">
+            <span class="win-story-actions" style="position:absolute; top:0; right:0; padding-right: 5px">
 
               <!-- height is a hack to keep the focus outline consistent; compensated with top (above) -->
-              <button type="button" style="height:22px" class="win-story-actions__expand">
+              <!-- <button type="button" style="height:22px" class="win-story-actions__expand">
                 <i class="fa fa-fw fa-expand"></i>
                 <span>Expand</span>
                 <span style="display:none">Collapse</span>
-              </button>
+              </button> -->
               <button type="button" class="win-story-actions__edit">
                 <i class="fa fa-fw fa-edit"></i>
-                Edit
+                <i class="fa fa-fw fa-search" style="display:none"></i>
+                <span>Edit</span>
+                <span style="display:none">View</span>
               </button>
               <button type="button" class="win-story-actions__email">
                 <i class="fa fa-fw fa-envelope-o"></i>
                 Email
               </button>
+
            <!--    <button type="button" class="win-story-actions__pdf">
                 <i class="fa fa-fw fa-file-pdf-o"></i>
                 PDF

@@ -71,16 +71,16 @@
       color: #222;
     }
     &[class*="__expand"] {
+      margin-right: 0;
       i {
         transform: rotate(-45deg);
-        margin-right: -3px;
       }
     }
     &:disabled {
       opacity: 0.5;
       cursor: not-allowed;
     }
-    &:not(:last-of-type) {
+    &:not(:only-of-type):not(:last-of-type) {  // only-of-type excludes the expand button
       border-right: 1px solid #ccc;
       padding-right: 10px;
     }

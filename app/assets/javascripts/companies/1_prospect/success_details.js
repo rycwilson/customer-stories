@@ -1,21 +1,15 @@
 
 function successDetailsListeners () {
 
-  var defaultHeight = "150px",  // win story expand / collapse
+  var defaultViewHeight = "150px",  // win story expand / collapse
       contributionsData,  // data returned when the child row is opened; includes invitation templates, questions and answers
       winStory,  // success.description
-      customerPath = function (customerId) {
-        return '/customers/' + customerId;
-      },
-      successPath = function (successId) {
-        return '/successes/' + successId;
-      },
-      contributionsDataPath = function (successId) {
-        return '/successes/' + successId + '/contributions';
-      }
-      expandedHeight = function ($tr, isEditMode) {
+      customerPath = function (customerId) { return '/customers/' + customerId; },
+      successPath = function (successId) { return '/successes/' + successId; },
+      contributionsDataPath = function (successId) { return '/successes/' + successId + '/contributions'; },
+      expandedViewHeight = function ($tr, editorIsOpen) {
         // factor in height of the summernote toolbar
-        return window.innerHeight - ((isEditMode ? 41.3 : 0) + $tr.height() + $tr.next().height() - $('#win-story-editor').height());
+        return window.innerHeight - ((editorIsOpen ? 41.3 : 0) + $tr.height() + $tr.next().height() - $('#win-story-editor').height());
       },
       placeholderDropdown = function (context) {
         var ui = $.summernote.ui,
@@ -49,12 +43,13 @@ function successDetailsListeners () {
             ]);
         return button.render();   // return button as jquery object
       },
-      initWinStoryEditor = function ($tr, callback) {
+      initWinStoryEditor = function ($tr, height, callback) {
+        console.log('initWinStoryEditor() height', height)
         // use contenteditable instead of textarea because html can't be renderd in textarea
         $('#win-story-editor')
           .prop('contenteditable', true)
           .summernote({
-            height: expandedHeight($tr, true),
+            height: height,// expandedViewHeight($tr, true),
             dialogsInBody: true,
             focus: true,
             toolbar: [
@@ -81,7 +76,9 @@ function successDetailsListeners () {
         var dtContributors = $('#prospect-contributors-table').DataTable();
         $('#win-story-editor').find('[data-contribution-id]').each(function () {
           var contributionId = $(this).data('contribution-id'),
-              contributor = dtContributors.rows('[data-contribution-id="' + contributionId + '"]').data()[0].contributor,
+              contributor = dtContributors.rows('[data-contribution-id="' + contributionId + '"]')
+                                          .data()[0]
+                                          .contributor,
               qAndA = [];
 
           // set the Q&A for this contribution
@@ -143,39 +140,55 @@ function successDetailsListeners () {
         })
     })
 
-    .on('click', '.win-story-actions__expand', function () {
+    .on('click', '.win-story-actions__expand', function (e, isEditClick) {
       var $tr = $('tr.shown'),
           $trChild = $tr.next(),
-          $editBtn = $('button.win-story-actions__edit'),
+          expandView = !$('#win-story-editor').hasClass('expanded'),
           editorIsOpen = $('#win-story-editor[contenteditable="true"]').length;
-      $('#win-story-editor').css(
-        'height',
-        $('#win-story-editor').hasClass('expanded') ? defaultHeight : expandedHeight($tr, false)
-      );
-      $('#win-story-editor').toggleClass('expanded');
-      $editBtn.prop('disabled', $('#win-story-editor').hasClass('expanded'))
-      $(this)[0].blur();
-      $(this).find('span').toggle();
+
+      // the only way to resize with the editor open is to destroy and reinit
+      // (but don't proceed if this is an automatic expansion due to clicking Edit button)
+      if (editorIsOpen && !isEditClick) {
+        $('#win-story-editor').summernote('destroy')
+        initWinStoryEditor(
+          $tr,
+          expandView ? expandedViewHeight($tr, true) : parseInt(defaultViewHeight, 10),
+          depopulatePlaceholders
+        )
+      } else {
+        $('#win-story-editor').css(
+          'height',
+          expandView ? expandedViewHeight($tr, editorIsOpen) : defaultViewHeight
+        );
+      }
+
+      // center
       window.scrollTo(0, $tr.offset().top - (window.innerHeight / 2) + (($trChild.outerHeight() + $tr.outerHeight()) / 2));
+      $('#win-story-editor').toggleClass('expanded');
+      $(this).find('i').toggle();
+      $(this)[0].blur();
     })
 
     .on('click', '.win-story-actions__edit', function () {
       var $tr = $('tr.shown'),
           $trChild = $tr.next(),
-          $expandBtn = $('button.win-story-actions__expand'),
-          openEditor = typeof $('#win-story-editor').data('summernote') !== 'object';
-      if (openEditor) {
-        initWinStoryEditor($tr, depopulatePlaceholders);
+          $expandBtn = $('.win-story-actions__expand'),
+          isExpandedView = $('#win-story-editor').hasClass('expanded'),
+          initEditor = typeof $('#win-story-editor').data('summernote') !== 'object';
+      if (initEditor) {
+        initWinStoryEditor($tr, expandedViewHeight($tr, true), depopulatePlaceholders);
       } else {
-        $('#win-story-editor').prop('contenteditable', false)
+        // can't use .note-editor height because it will be 0
+        $('#win-story-editor').css('height', $('.form-group.win-story').css('height'))
+                              .prop('contenteditable', false)
                               .summernote('destroy')
         populatePlaceholders();
-        $(this)[0].blur();
       }
-      $expandBtn.prop('disabled', openEditor)
-                .find('span').toggle();
-      $('#win-story-editor').toggleClass('expanded');
-      window.scrollTo(0, $tr.offset().top - (window.innerHeight / 2) + (($trChild.outerHeight() + $tr.outerHeight()) / 2));
+      if (initEditor && !isExpandedView) {
+        $expandBtn.trigger('click', [{ editClick: true }])
+      }
+      $(this).find('i, span').toggle();
+      $(this)[0].blur();
     })
 
     .on('click', '.customer-logo .upload-image', function () {
