@@ -12,8 +12,7 @@ function successDetailsListeners () {
       contributionsDataPath = function (successId) { return '/successes/' + successId + '/contributions'; },
       expandedViewHeight = function ($tr, editorIsOpen) {
         // factor in height of the summernote toolbar
-        console.log('test', $('#win-story-editor').height())
-        return window.innerHeight - ((editorIsOpen ? summernoteToolbarHeight : 0) + $tr.height() + $tr.next().height() - parseInt(defaultViewHeight, 10));
+        return window.innerHeight - ((editorIsOpen ? summernoteToolbarHeight : 0) + $tr.height() + $tr.next().height() - $('#win-story-editor').height());
       },
       placeholderDropdown = function (context) {
         var ui = $.summernote.ui,
@@ -121,9 +120,11 @@ function successDetailsListeners () {
         });
       }
       renderWinStory = function () {
-        $('#win-story-editor').html(_.unescape(winStory))
-        populatePlaceholders()
-
+        if (winStory) {  // might be null or blank => will cause JSON error
+          $('#win-story-editor').html(JSON.parse(winStory))
+          $('input[type="hidden"][name="success[win_story]"]').val(winStory)
+          populatePlaceholders()
+        }
       };
 
   $(document)
@@ -181,7 +182,11 @@ function successDetailsListeners () {
           isExpandedView = $('#win-story-editor').hasClass('expanded'),
           initEditor = typeof $('#win-story-editor').data('summernote') !== 'object';
       if (initEditor) {
-        initWinStoryEditor($tr, expandedViewHeight($tr, true), depopulatePlaceholders);
+        initWinStoryEditor(
+          $tr,
+          expandedViewHeight($tr, true),
+          depopulatePlaceholders
+        );
       } else {
         // can't use .note-editor height because it will be 0
         // why do I need to do the .last thing for win story??
@@ -215,7 +220,8 @@ function successDetailsListeners () {
     })
 
     .on('input', '#win-story-editor + .note-editor > .note-editing-area > .note-editable', function (e) {
-      $('input[type="hidden"][name="success[win_story]"]').val(_.escape($(this).html()));
+      console.log(JSON.stringify($(this).html()))
+      $('input[type="hidden"][name="success[win_story]"]').val(JSON.stringify($(this).html()));
     })
 
     .on('click', 'td.success-details', function () {
