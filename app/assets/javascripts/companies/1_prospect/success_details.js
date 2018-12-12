@@ -35,6 +35,7 @@ function successDetailsListeners () {
                             }),
                   callback: function ($dropdown) {
                     $dropdown.find('li').each(function () {
+                      console.log($(this).data('placeholder'))
                       $(this).on('click', function () {
                         context.invoke('editor.restoreRange');   // restore cursor position
                         context.invoke('editor.pasteHTML', $(this).data('placeholder'))
@@ -86,11 +87,15 @@ function successDetailsListeners () {
               onPaste: function () {
               },
               onChange: function (content) {
+                $('form[id*="success-form"]').find('button[type="submit"]').prop('disabled', false);
                 $('input[type="hidden"][name="success[win_story]"]')
                   .val(JSON.stringify(content));
               }
             }
           });
+
+
+
       },
       populatePlaceholders = function () {
         var dtContributors = $('#prospect-contributors-table').DataTable();
@@ -325,4 +330,41 @@ function successDetailsListeners () {
         $(this).prop('scrollTop', Math.max(0, Math.min(maxY, $(this).prop('scrollTop') + e.originalEvent.deltaY)));
       }
     });
+
+  // https://github.com/summernote/summernote/issues/702
+  // function pasteHtmlAtCaret(html) {
+  //   var sel, range;
+  //   if (window.getSelection) {
+  //       // IE9 and non-IE
+  //       sel = window.getSelection();
+  //       if (sel.getRangeAt && sel.rangeCount) {
+  //           range = sel.getRangeAt(0);
+  //           range.deleteContents();
+
+  //           // Range.createContextualFragment() would be useful here but is
+  //           // only relatively recently standardized and is not supported in
+  //           // some browsers (IE9, for one)
+  //           var el = document.createElement("div");
+  //           el.innerHTML = html;
+  //           var frag = document.createDocumentFragment(), node, lastNode;
+  //           while ( (node = el.firstChild) ) {
+  //               lastNode = frag.appendChild(node);
+  //           }
+  //           range.insertNode(frag);
+
+  //           // Preserve the selection
+  //           if (lastNode) {
+  //               range = range.cloneRange();
+  //               range.setStartAfter(lastNode);
+  //               range.collapse(true);
+  //               sel.removeAllRanges();
+  //               sel.addRange(range);
+  //           }
+  //       }
+  //   } else if (document.selection && document.selection.type != "Control") {
+  //       // IE < 9
+  //       document.selection.createRange().pasteHTML(html);
+  //   }
+  // }
+
 }

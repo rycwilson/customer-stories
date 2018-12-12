@@ -5,13 +5,13 @@
 
   <ul class="list-unstyled" style="margin-bottom:0">
 
-    <li data-placeholder="<p data-customer-id='{{= customerId }}' class='logo-left' contenteditable='false'>[Customer Logo - left]</p></br>">
+    <li data-placeholder="<div class='placeholder customer-logo-left' data-customer-id='{{= customerId }}' contenteditable='false'>[Customer Logo - left]</div></br>">
       <a href="javascript:;">Customer Logo - left</a>
     </li>
-    <li data-placeholder="<p data-customer-id='{{= customerId }}' class='logo-center' contenteditable='false'>[Customer Logo - center]</p></br>">
+    <li data-placeholder="<div class='placeholder customer-logo-center' data-customer-id='{{= customerId }}' contenteditable='false'>[Customer Logo - center]</div></br>">
       <a href="javascript:;">Customer Logo - center</a>
     </li>
-    <li data-placeholder="<p data-customer-id='{{= customerId }}' contenteditable='false'>[Customer Description]</p></br>">
+    <li data-placeholder="<div class='placeholder customer-description' data-customer-id='{{= customerId }}' contenteditable='false'>[Customer Description]</div></br>">
       <a href="javascript:;">Customer Description</a>
     </li>
 <!--     <li data-placeholder="<span contenteditable=&quot;false&quot;>[all contributions]</span>">
@@ -24,7 +24,7 @@
 
       {{ var contributor = dtContributors.rows('[data-contribution-id="' + answer.contribution_id + '"]').data()[0].contributor; }}
 
-      <li data-placeholder="<div data-contribution-id='{{= answer.contribution_id }}' contenteditable='false'>[Individual Contribution: {{= contributor.full_name }}]</div></br>">
+      <li data-placeholder="<div class='placeholder' data-contribution-id='{{= answer.contribution_id }}' contenteditable='false'>[Individual Contribution: {{= contributor.full_name }}]</div></br>">
         <a>{{= contributor.full_name }}</a>
       </li>
 
@@ -34,7 +34,7 @@
 
     {{ contributionsData.questions.forEach(function (question) { }}
 
-      <li data-placeholder="<p data-question-id='{{= question.id }}' contenteditable='false'>[Group Contribution: {{= question.question }}]</p></br>">
+      <li data-placeholder="<div class='placeholder' data-question-id='{{= question.id }}' contenteditable='false'>[Group Contribution: {{= question.question }}]</div></br>">
         <a>{{= question.question }}</a>
       </li>
 
