@@ -35,10 +35,12 @@ function successDetailsListeners () {
                 callback: function ($dropdown) {
                   $dropdown.find('li').each(function () {
                     $(this).on('click', function () {
-                      context.invoke('editor.saveRange');
-                      context.invoke('editor.pasteHTML', $(this).data('placeholder'));
+                      var node = document.createElement('p');
+                      node.setAttribute('contenteditable', 'false');
+                      node.setAttribute('data-contribution-id', $(this).data('contribution-id'))
+                      node.textContent = $(this).data('placeholder');
                       context.invoke('editor.restoreRange');
-                      $('.success-form').trigger('input');  // enable Save button
+                      context.invoke('editor.insertNode', node);
                     });
                   });
                 }
@@ -47,7 +49,7 @@ function successDetailsListeners () {
         return button.render();   // return button as jquery object
       },
       initWinStoryEditor = function ($tr, height, callback) {
-        console.log('initWinStoryEditor() height', height)
+        // console.log('initWinStoryEditor() height', height)
         // use contenteditable instead of textarea because html can't be renderd in textarea
         $('#win-story-editor')
           .prop('contenteditable', true)
@@ -65,6 +67,10 @@ function successDetailsListeners () {
               placeholderDropdown: placeholderDropdown
             },
             callbacks: {
+              // without this, insertion of a new line doesn't trigger input; critical for inserting placeholders
+              onEnter: function () {
+                $(this).trigger('input');
+              },
               onInit: function() {
                 // unable to set this via stylesheets due to dynamic handling by summernote
                 $('.note-editor .dropdown-menu.summernote-custom').css({
@@ -219,8 +225,9 @@ function successDetailsListeners () {
       $(this).find('.modal-body').empty();
     })
 
-    .on('input', '#win-story-editor + .note-editor > .note-editing-area > .note-editable', function (e) {
-      console.log(JSON.stringify($(this).html()))
+    // the #win-story-editor seletor is necessary to capture the input event from onEnter callback
+    .on('input', '#win-story-editor, #win-story-editor + .note-editor > .note-editing-area > .note-editable', function (e) {
+      $('#win-story-editor').summernote('saveRange');
       $('input[type="hidden"][name="success[win_story]"]').val(JSON.stringify($(this).html()));
     })
 

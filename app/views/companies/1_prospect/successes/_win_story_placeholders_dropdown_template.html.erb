@@ -21,7 +21,7 @@
 
       {{ var contributor = dtContributors.rows('[data-contribution-id="' + answer.contribution_id + '"]').data()[0].contributor; }}
 
-      <li data-placeholder="<div data-contribution-id='{{= answer.contribution_id }}' contenteditable='false'>[Individual Contribution: {{= contributor.full_name }}]</div>">
+      <li data-contribution-id="{{= answer.contribution_id }}" data-placeholder="[Individual Contribution: {{= contributor.full_name }}]">
         <a>{{= contributor.full_name }}</a>
       </li>
 
