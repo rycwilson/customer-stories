@@ -14,39 +14,38 @@ function successDetailsListeners () {
         // factor in height of the summernote toolbar
         return window.innerHeight - ((editorIsOpen ? summernoteToolbarHeight : 0) + $tr.height() + $tr.next().height() - $('#win-story-editor').height());
       },
-      placeholderDropdown = function (context) {
-        var ui = $.summernote.ui,
-            button = ui.buttonGroup([
-              ui.button({
-                className: 'btn btn-default dropdown-toggle',
-                data: {
-                  toggle: 'dropdown',
-                  placement: 'top'
-                },
-                contents: 'Insert Placeholder\xa0\xa0<span class="caret"></span>',
-                // tooltip: 'Insert a data placeholder'
-              }),
-              ui.dropdown({
-                className: 'summernote-custom dropdown-menu-right',
-                contents: _.template($('#win-story-placeholders-dropdown-template').html())({
-                            // customer:
-                            contributionsData: contributionsData
-                          }),
-                callback: function ($dropdown) {
-                  $dropdown.find('li').each(function () {
-                    $(this).on('click', function () {
-                      var node = document.createElement('p');
-                      node.setAttribute('contenteditable', 'false');
-                      node.setAttribute('data-contribution-id', $(this).data('contribution-id'))
-                      node.textContent = $(this).data('placeholder');
-                      context.invoke('editor.restoreRange');
-                      context.invoke('editor.insertNode', node);
+      placeholderDropdown = function (customerId) {
+        return function (context) {
+          var ui = $.summernote.ui,
+              button = ui.buttonGroup([
+                ui.button({
+                  className: 'btn btn-default dropdown-toggle',
+                  data: {
+                    toggle: 'dropdown',
+                    placement: 'top'
+                  },
+                  contents: 'Insert Placeholder\xa0\xa0<span class="caret"></span>',
+                  // tooltip: 'Insert a data placeholder'
+                }),
+                ui.dropdown({
+                  className: 'summernote-custom dropdown-menu-right',
+                  contents: _.template($('#win-story-placeholders-dropdown-template').html())({
+                              customerId: customerId,
+                              contributionsData: contributionsData
+                            }),
+                  callback: function ($dropdown) {
+                    $dropdown.find('li').each(function () {
+                      $(this).on('click', function () {
+                        context.invoke('editor.restoreRange');   // restore cursor position
+                        context.invoke('editor.pasteHTML', $(this).data('placeholder'))
+                        context.invoke('editor.saveRange');  // save cursor position
+                      });
                     });
-                  });
-                }
-              })
-            ]);
-        return button.render();   // return button as jquery object
+                  }
+                })
+              ]);
+          return button.render();   // return button as jquery object
+        }
       },
       initWinStoryEditor = function ($tr, height, callback) {
         // console.log('initWinStoryEditor() height', height)
@@ -64,20 +63,31 @@ function successDetailsListeners () {
               ['view', ['codeview']],
             ],
             buttons: {
-              placeholderDropdown: placeholderDropdown
+              placeholderDropdown: placeholderDropdown($tr.data('customer-id'))
             },
             callbacks: {
               // without this, insertion of a new line doesn't trigger input; critical for inserting placeholders
-              onEnter: function () {
-                $(this).trigger('input');
-              },
-              onInit: function() {
+              onInit: function (summernote) {
+                // console.log('summernote', summernote)
                 // unable to set this via stylesheets due to dynamic handling by summernote
                 $('.note-editor .dropdown-menu.summernote-custom').css({
                   'max-height': 0.95 * $('.note-editable').last().outerHeight() + 'px',
                   'max-width': 0.95 * $('.note-editable').last().outerWidth() + 'px'
                 });
+                summernote.editable.on('click', function (e) {
+                  summernote.note.summernote('saveRange');
+                })
                 callback();
+              },
+              onEnter: function () {
+              },
+              onFocus: function (e) {
+              },
+              onPaste: function () {
+              },
+              onChange: function (content) {
+                $('input[type="hidden"][name="success[win_story]"]')
+                  .val(JSON.stringify(content));
               }
             }
           });
@@ -225,12 +235,6 @@ function successDetailsListeners () {
       $(this).find('.modal-body').empty();
     })
 
-    // the #win-story-editor seletor is necessary to capture the input event from onEnter callback
-    .on('input', '#win-story-editor, #win-story-editor + .note-editor > .note-editing-area > .note-editable', function (e) {
-      $('#win-story-editor').summernote('saveRange');
-      $('input[type="hidden"][name="success[win_story]"]').val(JSON.stringify($(this).html()));
-    })
-
     .on('click', 'td.success-details', function () {
       var $table = $(this).closest('table'),
           $tr = $(this).closest('tr'),
@@ -265,8 +269,8 @@ function successDetailsListeners () {
           .done(function (res1, res2) {
             winStory = res1[0].success.win_story
             contributionsData = res2[0].contributions_data
-            console.log('winStory', winStory);
-            console.log('contributionsData', contributionsData);
+            // console.log('winStory', winStory);
+            // console.log('contributionsData', contributionsData);
             renderWinStory();
           })
 
