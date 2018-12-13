@@ -1,6 +1,6 @@
 class CustomersController < ApplicationController
 
-  respond_to(:html, :json, :js)
+  respond_to(:html, :js, :json)
 
   def show
     customer = Customer.find(params[:id])
@@ -13,17 +13,8 @@ class CustomersController < ApplicationController
     respond_to do |format|
       format.html { redirect_to('/prospect', flash: { success: "Customer updated" }) }
       format.js {}
+      # format.json { render({ json: @customer.to_json }) }
     end
-    # json response (but we need to update some things in the client so let's send a script)
-    # respond_to do |format|
-    #   format.json do
-    #     render({
-    #       # data needed to update datatables
-    #       json: customer.to_json({ only: [:id, :name, :slug] }),
-    #       status: 200
-    #     })
-    #   end
-    # end
   end
 
   private

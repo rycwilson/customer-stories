@@ -1,8 +1,22 @@
 
 <script type="text/template" id="group-contribution-template">
 
-  <div class="group-contribution" data-question-id="{{= question.id }}">
+  <div class="group-contribution" data-question-id="{{= question.id }}" data-placeholder="{{= placeholder }}">
 
+    <p>{{= question.question }}</p>
+
+    <ul>
+
+    {{ theQandA.forEach(function (pair) { }}
+
+      <li>
+        <p class="question">{{= pair.question }}</p>
+        <p class="answer">{{= pair.answer }}</p>
+      </li>
+
+    {{ }); }}
+
+    </ul>
 
   </div>
 

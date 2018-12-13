@@ -34,7 +34,7 @@ class SuccessesController < ApplicationController
       only: [:id, :win_story],
       include: {
         customer: {
-          only: [:id, :name, :logo_url, :show_name_with_logo]
+          only: [:id, :name, :description, :logo_url, :show_name_with_logo]
         }
       }
     )

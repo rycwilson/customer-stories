@@ -87,71 +87,97 @@ function successDetailsListeners () {
               onPaste: function () {
               },
               onChange: function (content) {
-                $('form[id*="success-form"]').find('button[type="submit"]').prop('disabled', false);
+                $('form[id*="success-form"]')
+                  .find('button[type="submit"]').prop('disabled', false);
                 $('input[type="hidden"][name="success[win_story]"]')
                   .val(JSON.stringify(content));
               }
             }
           });
-
-
-
+      },
+      // get Q&A associated with a give question (group contribution) or contribution (individual contribution)
+      getQandA = function ($placeholder) {
+        var theQandA = [],
+            // only one of these exist
+            questionId = $placeholder.data('question-id'),
+            contributionId = $placeholder.data('contribution-id');
+        contributionsData.answers.filter(function (answer) {
+          if (questionId) {
+            return answer.contributor_question_id == questionId;
+          } else if (contributionId) {
+            return answer.contribution_id == contributionId
+          }
+        })
+          .forEach(function (answer) {
+            theQandA.push({
+              question: contributionsData.questions.find(function (q) {
+                          return q.id === answer.contributor_question_id;
+                        }).question,
+              answer: answer.answer
+            })
+          });
+        return theQandA;
       },
       populatePlaceholders = function () {
-        var dtContributors = $('#prospect-contributors-table').DataTable();
-
+        var $placeholder = $(this),
+            dtContributors = $('#prospect-contributors-table').DataTable()
         // customer logo
         $('#win-story-editor').find('.placeholder.customer-logo').each(function () {
-          // var customerd = $(this).data('customer-id');
-          $(this).replaceWith(
+          var $placeholder = $(this);
+          $placeholder.replaceWith(
             _.template($('#win-story-customer-logo-template').html())({
-              customer: customer
+              customer: customer,
+              placeholder: _.escape($placeholder.wrap('<p/>').parent().html()),
+              className: $placeholder.attr('class').replace('placeholder', '')
             })
           );
         });
-
+        // customer description
+        $('#win-story-editor').find('.placeholder.customer-description').each(function () {
+          var $placeholder = $(this);
+          $placeholder.replaceWith(
+            '<p class="customer-description" data-placeholder="' + _.escape($placeholder.wrap('<p/>').parent().html()) + '">' +
+              customer.description +
+            '</p>'
+          );
+        });
+        // group contributions
+        $('#win-story-editor').find('.placeholder[data-question-id]').each(function () {
+          var $placeholder = $(this),
+              questionId = $placeholder.data('question-id');
+          $placeholder.replaceWith(
+            _.template($('#group-contribution-template').html())({
+              questionId: questionId,
+              contributor: contributor,
+              qAndA: getQandA($placeholder),
+              placeholder: _.escape($placeholder.wrap('<p/>').parent().html())
+            })
+          );
+        })
         // individual contributions
-        $('#win-story-editor').find('[data-contribution-id]').each(function () {
-          var contributionId = $(this).data('contribution-id'),
+        $('#win-story-editor').find('.placeholder[data-contribution-id]').each(function () {
+          var $placeholder = $(this),
+              contributionId = $placeholder.data('contribution-id'),
               contributor = dtContributors.rows('[data-contribution-id="' + contributionId + '"]')
                                           .data()[0]
-                                          .contributor,
-              qAndA = [];
-
-          // set the Q&A for this contribution
-          contributionsData.answers.filter(function (answer) {
-            return answer.contribution_id == contributionId;
-          })
-            .forEach(function (answer) {
-              qAndA.push({
-                question: contributionsData.questions.find(function (q) {
-                            return q.id === answer.contributor_question_id;
-                          }).question,
-                answer: answer.answer
-              })
-            });
-          $(this).replaceWith(
+                                          .contributor;
+          $placeholder.replaceWith(
             _.template($('#individual-contribution-template').html())({
               contributionId: contributionId,
               contributor: contributor,
-              qAndA: qAndA
+              qAndA: getQandA($placeholder),
+              placeholder: _.escape($placeholder.wrap('<p/>').parent().html())
             })
           );
-
         })
       },
       depopulatePlaceholders = function () {
-        var dtContributors = $('#prospect-contributors-table').DataTable();
-        $('.note-editable').find('[data-contribution-id]').each(function () {
-          var contributionId = $(this).data('contribution-id'),
-              contributor = dtContributors.rows('[data-contribution-id="' + contributionId + '"]').data()[0].contributor;
-          $(this).replaceWith(
-            '<div data-contribution-id="' + contributionId + '" contenteditable="false">' +
-              '[Individual Contribution: ' + contributor.full_name + ']' +
-            '</div>'
-          )
-        });
-      }
+        $('.note-editable')
+          .find('.customer-logo, .customer-description, [data-contribution-id], [data-question-id]')
+          .each(function () {
+            $(this).replaceWith(_.unescape($(this).data('placeholder')));
+          });
+      },
       renderWinStory = function () {
         if (winStory) {  // might be null or blank => will cause JSON error
           $('#win-story-editor').html(JSON.parse(winStory))
