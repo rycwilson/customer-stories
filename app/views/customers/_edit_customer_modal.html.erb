@@ -30,8 +30,9 @@
 
   <script id="customer-form-template" type="text/template">
 
-    <form id="customer-form" class="form-horizontal" action="/customers/{{= customer.id }}" accept-charset="UTF-8" method="post" data-remote="true" data-type="script">
+    <form id="customer-form" class="directUpload form-horizontal" data-form-data="<%= @s3_direct_post.fields.to_json %>" data-url="<%= @s3_direct_post.url %>" data-host="<%= URI.parse(@s3_direct_post.url).host %>" enctype="multipart/form-data" action="/customers/{{= customer.id }}" accept-charset="UTF-8" method="post" data-remote="true">
 
+      <input name="utf8" type="hidden" value="✓">
       <input type="hidden" name="_method" value="put">
       <input type="hidden" name="authenticity_token" value="{{= document.querySelectorAll('meta[name=csrf-token]')[0].getAttribute('content') }}">
       <input type="hidden" name="customer[id]" value="{{= customer.id }}">

@@ -171,11 +171,13 @@ function successDetailsListeners () {
         dataType: 'json'
       })
         .done(function (customer, status, xhr) {
-          $('#edit-customer-modal .modal-body').append(
-            _.template($('#customer-form-template').html())({
-              customer: customer
-            })
-          )
+          $.when(
+            $('#edit-customer-modal .modal-body').append(
+              _.template($('#customer-form-template').html())({
+                customer: customer
+              })
+            )
+          ).done(function () { initS3Upload(true) })
         })
     })
 
