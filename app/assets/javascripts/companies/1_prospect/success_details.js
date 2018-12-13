@@ -5,8 +5,9 @@ function successDetailsListeners () {
       summernoteToolbarHeight = 41.3,
       summernoteResizebarHeight = 8,
       winStoryLabelHeight = 23,
-      contributionsData,  // data returned when the child row is opened; includes invitation templates, questions and answers
+      customer,
       winStory,
+      contributionsData,  // data returned when the child row is opened; includes invitation templates, questions and answers
       customerPath = function (customerId) { return '/customers/' + customerId; },
       successPath = function (successId) { return '/successes/' + successId; },
       contributionsDataPath = function (successId) { return '/successes/' + successId + '/contributions'; },
@@ -35,7 +36,6 @@ function successDetailsListeners () {
                             }),
                   callback: function ($dropdown) {
                     $dropdown.find('li').each(function () {
-                      console.log($(this).data('placeholder'))
                       $(this).on('click', function () {
                         context.invoke('editor.restoreRange');   // restore cursor position
                         context.invoke('editor.pasteHTML', $(this).data('placeholder'))
@@ -99,6 +99,18 @@ function successDetailsListeners () {
       },
       populatePlaceholders = function () {
         var dtContributors = $('#prospect-contributors-table').DataTable();
+
+        // customer logo
+        $('#win-story-editor').find('.placeholder.customer-logo').each(function () {
+          // var customerd = $(this).data('customer-id');
+          $(this).replaceWith(
+            _.template($('#win-story-customer-logo-template').html())({
+              customer: customer
+            })
+          );
+        });
+
+        // individual contributions
         $('#win-story-editor').find('[data-contribution-id]').each(function () {
           var contributionId = $(this).data('contribution-id'),
               contributor = dtContributors.rows('[data-contribution-id="' + contributionId + '"]')
@@ -236,8 +248,29 @@ function successDetailsListeners () {
       }
     })
 
+    // remove the templated form
     .on('hidden.bs.modal', '#edit-customer-modal', function () {
       $(this).find('.modal-body').empty();
+    })
+
+    // on file upload, the customer name will get removed by jasny js => replace it
+    .on('change.bs.fileinput', '#customer-form .fileinput', function (e) {
+      var customerName = $(this).find('.fileinput-new .customer-name').text().trim(),
+          showName = $(this).find('input[type="checkbox"][name="customer[show_name_with_logo]"]')
+                            .prop('checked');
+      // execute on file upload only
+      if ($(e.target).is(':not([type="checkbox"])')) {
+        $(this)
+          .find('.fileinput-preview')
+          .append(
+            '<div class="customer-name" style="line-height: 18px !important; ' + (showName ? '' : 'display:none') +  '">' +
+              '<span>' + customerName + '</span>' +
+            '</div>'
+          )
+      }
+    })
+    .on('change', '.customer-logo input[name*="show_name_with_logo"]', function () {
+      $(this).closest('.customer-logo').find('.customer-name').toggle();
     })
 
     .on('click', 'td.success-details', function () {
@@ -272,8 +305,9 @@ function successDetailsListeners () {
           })
         )
           .done(function (res1, res2) {
-            winStory = res1[0].success.win_story
-            contributionsData = res2[0].contributions_data
+            customer = res1[0].customer;
+            winStory = res1[0].win_story;
+            contributionsData = res2[0].contributions_data;
             // console.log('winStory', winStory);
             // console.log('contributionsData', contributionsData);
             renderWinStory();

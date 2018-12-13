@@ -14,7 +14,7 @@ class SuccessesController < ApplicationController
   def index
     company = Company.find_by(subdomain: request.subdomain)
     # data = Rails.cache.fetch("#{company.subdomain}/dt-successes") do
-    data = company.successes.to_json({
+    res = company.successes.to_json({
         only: [:id, :name],
         methods: [:display_status, :referrer, :contact, :timestamp],
         include: {
@@ -24,24 +24,20 @@ class SuccessesController < ApplicationController
         }
       })
     # end
-    respond_to { |format| format.json { render({ json: data }) } }
+    respond_to { |format| format.json { render({ json: res }) } }
   end
 
   def show
-    # binding.remote_pry
-    success = Success.find(params[:id])
-    data = {
-      success: {
-        id: success.id,
-        win_story: success.win_story
+    success = Success.includes(:customer).find(params[:id])
+    respond_with(
+      success,
+      only: [:id, :win_story],
+      include: {
+        customer: {
+          only: [:id, :name, :logo_url, :show_name_with_logo]
+        }
       }
-    }
-    # binding.remote_pry
-    respond_to { |format| format.json { render({ json: data }) } }
-
-    # The win story rendering will be done in the client, because we don't want to request
-    # this template every time an edit is made
-    # render(:win_story, layout: false)
+    )
   end
 
   def create
