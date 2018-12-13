@@ -12,7 +12,7 @@ class CustomersController < ApplicationController
     @customer.update(customer_params)
     respond_to do |format|
       format.html { redirect_to('/prospect', flash: { success: "Customer updated" }) }
-      format.js { render({ action: 'customers/update' }) }
+      format.js {}
     end
     # json response (but we need to update some things in the client so let's send a script)
     # respond_to do |format|
