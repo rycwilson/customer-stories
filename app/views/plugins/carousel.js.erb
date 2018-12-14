@@ -299,6 +299,10 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex, subdomain) {
     $container.find('.cs-container-fluid').css('visibility', 'visible');
   }
 
+  if (subdomain === 'pixlee') {
+    $container.parent().next().remove();
+  }
+
 
 }
 
