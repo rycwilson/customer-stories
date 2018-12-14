@@ -7,11 +7,11 @@
 
     <ul>
 
-    {{ theQandA.forEach(function (pair) { }}
+    {{ answers.forEach(function (answer) { }}
 
       <li>
-        <p class="question">{{= pair.question }}</p>
-        <p class="answer">{{= pair.answer }}</p>
+        <p>{{= answer.contributor.full_name }}</p>
+        <p style="font-style:italic">{{= answer.answer }}</p>
       </li>
 
     {{ }); }}

@@ -95,28 +95,12 @@ function successDetailsListeners () {
             }
           });
       },
-      // get Q&A associated with a give question (group contribution) or contribution (individual contribution)
-      getQandA = function ($placeholder) {
-        var theQandA = [],
-            // only one of these exist
-            questionId = $placeholder.data('question-id'),
-            contributionId = $placeholder.data('contribution-id');
-        contributionsData.answers.filter(function (answer) {
-          if (questionId) {
-            return answer.contributor_question_id == questionId;
-          } else if (contributionId) {
-            return answer.contribution_id == contributionId
-          }
-        })
-          .forEach(function (answer) {
-            theQandA.push({
-              question: contributionsData.questions.find(function (q) {
-                          return q.id === answer.contributor_question_id;
-                        }).question,
-              answer: answer.answer
-            })
-          });
-        return theQandA;
+      getContributor = function (contributionId) {
+        return $('#prospect-contributors-table')
+                  .DataTable()
+                  .rows('[data-contribution-id="' + contributionId + '"]')
+                  .data()[0]
+                  .contributor;
       },
       populatePlaceholders = function () {
         var $placeholder = $(this),
@@ -147,9 +131,18 @@ function successDetailsListeners () {
               questionId = $placeholder.data('question-id');
           $placeholder.replaceWith(
             _.template($('#group-contribution-template').html())({
-              questionId: questionId,
-              contributor: contributor,
-              qAndA: getQandA($placeholder),
+              question: contributionsData.questions.filter(function (q) {
+                          return q.id == questionId;
+                        }),
+              answers: contributionsData.answers.filter(function (a) {
+                         return a.contributor_question_id == questionId;
+                       })
+                         .map(function (a) {
+                           return {
+                             answer: a.answer,
+                             contributor: getContributor(a.contribution_id)
+                           }
+                         }),
               placeholder: _.escape($placeholder.wrap('<p/>').parent().html())
             })
           );
@@ -157,16 +150,23 @@ function successDetailsListeners () {
         // individual contributions
         $('#win-story-editor').find('.placeholder[data-contribution-id]').each(function () {
           var $placeholder = $(this),
-              contributionId = $placeholder.data('contribution-id'),
-              contributor = dtContributors.rows('[data-contribution-id="' + contributionId + '"]')
-                                          .data()[0]
-                                          .contributor;
+              contributionId = $placeholder.data('contribution-id');
           $placeholder.replaceWith(
             _.template($('#individual-contribution-template').html())({
               contributionId: contributionId,
-              contributor: contributor,
-              qAndA: getQandA($placeholder),
-              placeholder: _.escape($placeholder.wrap('<p/>').parent().html())
+              contributor: getContributor(contributionId),
+              placeholder: _.escape($placeholder.wrap('<p/>').parent().html()),
+              theQandA: contributionsData.answers.filter(function (a) {
+                          return a.contribution_id == contributionId;
+                        })
+                          .map(function (a) {
+                            return {
+                              question: contributionsData.questions.find(function (q) {
+                                          return q.id === a.contributor_question_id;
+                                        }).question,
+                              answer: a.answer
+                            };
+                          })
             })
           );
         })
