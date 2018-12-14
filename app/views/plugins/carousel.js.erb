@@ -1,5 +1,5 @@
 
-function cspInitCarousel ($, $container, preSelectedStoryIndex) {
+function cspInitCarousel ($, $container, preSelectedStoryIndex, subdomain) {
 
   // disable horizontal mouse/trackpad scrolling
   $container.find('.row-horizon').css('overflow-x', 'hidden');
@@ -7,9 +7,9 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex) {
   var $carousel = $container.find('.row-horizon'),
       $columns = $carousel.children(),
       $stories = $columns.children(),
-      storyWidth = parseInt( $stories.first().css('width'), 10 ) +
-                   parseInt( $columns.first().css('padding-left'), 10 ) +
-                   parseInt( $columns.first().css('padding-right'), 10 ),
+      storyWidth = $stories.first().width() + 15, // +
+                   // parseInt( $columns.first().css('padding-left'), 10 ) +
+                   // parseInt( $columns.first().css('padding-right'), 10 ),
       $pagination = $container.find('.cs-pagination'),
       $paginationXs = $container.find('.cs-pagination-xs'),
       currentStoryIndex,  // this is set before adjusting
@@ -97,7 +97,7 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex) {
           // adjust columns
           $columns.css('width', Math.floor($carousel.width() / 3).toString() + 'px');
           // adjust story margins (squish them together) if gutter too big
-          var minGutterWidth = 70,
+          var minGutterWidth = (subdomain === 'pixlee') ? 30 : 70,
               actualGutterWidth = $columns.first().outerWidth() - $stories.first().width(),
               gutterDelta = actualGutterWidth - minGutterWidth;
           if (actualGutterWidth > minGutterWidth) {
@@ -154,7 +154,7 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex) {
           // adjust column size
           $columns.css('width', Math.floor($carousel.width() / 2).toString() + 'px');
           // adjust story margins (squish them together) if gutter too big
-          var minGutterWidth = 70, marginShift = minGutterWidth / 2,
+          var minGutterWidth = (subdomain === 'pixlee') ? 30 : 70, marginShift = minGutterWidth / 2,
               actualGutterWidth = $columns.first().outerWidth() - $stories.first().width();
           if (actualGutterWidth > minGutterWidth) {
             // if odd number of stories, give last one full width and don't adjust margin below
@@ -220,6 +220,7 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex) {
         initialAdjust = false;
       }; // adjust columns
 
+console.log('storyWidth', storyWidth)
   // scroll listeners
   $container.find('.cs-scroll-left, .cs-scroll-xs-left').on('click', arrowLeft);
   $container.find('.cs-scroll-right, .cs-scroll-xs-right').on('click', arrowRight);

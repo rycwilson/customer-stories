@@ -1,9 +1,19 @@
 
 .cs-container-fluid {
+  .cs-rh-container {
+    .row-horizon {
+      div[class^='col-'] {
+        height: 150px;
+      }
+    }
+  }
   .cs-thumbnail {
+    width: 240px;
     .thumbnail-view {
       .thumbnail-view-hover {
         p {
+          font-size: 13px !important;
+          line-height: 22px !important;
         }
       }
       img {

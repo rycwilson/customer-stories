@@ -193,7 +193,7 @@
         })
           .done(function () {
             if (type === 'gallery') cspInitGallery($, $container, maxGalleryRows, preSelectedStoryIndex);
-            else if (type === 'carousel') cspInitCarousel($, $container, preSelectedStoryIndex);
+            else if (type === 'carousel') cspInitCarousel($, $container, preSelectedStoryIndex, '<%= @company.subdomain %>');
             else if (type === 'tabbed_carousel') {
               // plugin must be defined and called in this scope
               slideDrawerPlugin($container);
