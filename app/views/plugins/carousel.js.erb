@@ -219,14 +219,33 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex, subdomain) {
         }
         initialAdjust = false;
       }; // adjust columns
-
-console.log('storyWidth', storyWidth)
   // scroll listeners
   $container.find('.cs-scroll-left, .cs-scroll-xs-left').on('click', arrowLeft);
   $container.find('.cs-scroll-right, .cs-scroll-xs-right').on('click', arrowRight);
 
   // initial adjustment
   adjustColumns();
+console.log('numPages', numPages)
+
+
+  // prev / next navigation
+  $('.cs-prev').on('click', function (e) {
+    $('.cs-next').removeClass('bookend');
+    $('.cs-scroll-left').trigger('click');
+    if (currentPage === 0) {
+      $(this).addClass('bookend')
+    }
+    console.log(currentPage)
+  })
+
+  $('.cs-next').on('click', function (e) {
+    $('.cs-prev').removeClass('bookend')
+    $('.cs-scroll-right').trigger('click');
+    if (currentPage === numPages - 1) {
+      $(this).addClass('bookend')
+    }
+    console.log(currentPage)
+  })
 
   // set up pagination (numPages calculation needs to be after adjustment)
   numPages = Math.ceil($carousel.prop('scrollWidth') / $carousel.width());

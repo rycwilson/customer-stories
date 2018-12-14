@@ -67,8 +67,20 @@
 
         </div>
 
-        <div class="cs-row cs-pagination <%= background ? 'bg-' + background : '' %>">
-        </div>
+        <% if company.subdomain != 'pixlee' %>
+
+          <div class="cs-row cs-pagination <%= background ? 'bg-' + background : '' %>">
+          </div>
+
+        <% elsif stories.length > 1 %>
+
+          <div class="cs-nav">
+            <span style="float: right">
+              <span class="cs-prev bookend">Prev</span>&nbsp;&nbsp;/&nbsp;&nbsp;<span class="cs-next">Next</span>
+            </span>
+          </div>
+
+        <% end %>
 
       </div>
 
