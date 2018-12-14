@@ -225,8 +225,6 @@ function cspInitCarousel ($, $container, preSelectedStoryIndex, subdomain) {
 
   // initial adjustment
   adjustColumns();
-console.log('numPages', numPages)
-
 
   // prev / next navigation
   $('.cs-prev').on('click', function (e) {
@@ -235,7 +233,6 @@ console.log('numPages', numPages)
     if (currentPage === 0) {
       $(this).addClass('bookend')
     }
-    console.log(currentPage)
   })
 
   $('.cs-next').on('click', function (e) {
@@ -244,7 +241,6 @@ console.log('numPages', numPages)
     if (currentPage === numPages - 1) {
       $(this).addClass('bookend')
     }
-    console.log(currentPage)
   })
 
   // set up pagination (numPages calculation needs to be after adjustment)
