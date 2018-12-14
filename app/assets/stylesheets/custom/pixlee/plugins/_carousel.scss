@@ -14,7 +14,7 @@
       .thumbnail-view-hover {
         p {
           font-size: 13px !important;
-          line-height: 22px !important;
+          line-height: 24px !important;
         }
       }
       img {
@@ -30,6 +30,9 @@
         text-decoration: none;
         text-transform: uppercase;
       }
+    }
+    &.published .caption span.click-action:after {
+      content: 'Read Case Study';
     }
     &:hover, &.cs-loading {
       .thumbnail-view-hover {
