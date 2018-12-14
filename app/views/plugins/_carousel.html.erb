@@ -52,18 +52,22 @@
             </div>
           </div>
 
-          <div class="col-xs-12 cs-scroll-xs-container">
-            <div class="cs-row">
-              <div class="col-xs-2 cs-scroll-xs text-center">
-                <div class="cs-scroll-xs-left"></div>
-              </div>
-              <div class="col-xs-8 cs-pagination-xs">
-              </div>
-              <div class="col-xs-2 cs-scroll-xs text-center">
-                <div class="cs-scroll-xs-right"></div>
+          <% if company.subdomain != 'pixlee' %>
+
+            <div class="col-xs-12 cs-scroll-xs-container">
+              <div class="cs-row">
+                <div class="col-xs-2 cs-scroll-xs text-center">
+                  <div class="cs-scroll-xs-left"></div>
+                </div>
+                <div class="col-xs-8 cs-pagination-xs">
+                </div>
+                <div class="col-xs-2 cs-scroll-xs text-center">
+                  <div class="cs-scroll-xs-right"></div>
+                </div>
               </div>
             </div>
-          </div>
+
+          <% end %>
 
         </div>
 
