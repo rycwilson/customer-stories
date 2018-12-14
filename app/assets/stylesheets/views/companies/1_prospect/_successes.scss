@@ -41,6 +41,16 @@
     }
     & + .note-editor {
       margin-bottom: 0;
+      .note-toolbar .note-para {
+        .note-btn:nth-of-type(2) {
+          border-top-right-radius: 3px;
+          border-bottom-right-radius: 3px;
+        }
+        // don't need paragraph alignment options
+        .btn-group {
+          display: none;
+        }
+      }
       .placeholder {
         background-color: #f2f2f2;
         line-height: 2;
