@@ -71,6 +71,11 @@
             text-overflow: ellipsis;
             word-wrap: break-word;
           }
+          &.dropdown-section {
+            font-weight: bold;
+            pointer-events: none;
+            padding: 3px 10px;
+          }
         }
       }
 

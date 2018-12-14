@@ -18,7 +18,7 @@
       <a href="javascript:;">All Contributions</a>
     </li> -->
 
-    <li style="font-weight: bold; pointer-events: none">Individual Contributions</li>
+    <li class="dropdown-section">Individual Contributions</li>
 
     {{ _.uniq(contributionsData.answers, false, function (answer) { return answer.contribution_id; }).forEach(function (answer) { }}
 
@@ -30,7 +30,7 @@
 
     {{   }); }}
 
-    <li style="font-weight: bold; pointer-events: none">Group Contributions</li>
+    <li class="dropdown-section">Group Contributions</li>
 
     {{ contributionsData.questions.forEach(function (question) { }}
 
