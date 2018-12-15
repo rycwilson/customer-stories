@@ -13,7 +13,7 @@
     .thumbnail-view {
       .thumbnail-view-hover {
         p {
-          color: #667282;
+          color: #667282 !important;
           font-size: 13px !important;
           line-height: 24px !important;
         }
@@ -23,7 +23,7 @@
     }
     .caption {
       span {
-        color: #667282;
+        color: #667282 !important;
         font-size: 13px !important;
       }
       span.click-action:after {
