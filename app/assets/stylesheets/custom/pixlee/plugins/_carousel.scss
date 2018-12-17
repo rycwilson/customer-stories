@@ -2,6 +2,7 @@
 .cs-container-fluid {
   .cs-rh-container {
     .row-horizon {
+      margin: 0 0 30px 0;
       div[class^='col-'] {
         height: 150px;
       }
@@ -12,8 +13,9 @@
     .thumbnail-view {
       .thumbnail-view-hover {
         p {
+          color: #667282 !important;
           font-size: 13px !important;
-          line-height: 22px !important;
+          line-height: 24px !important;
         }
       }
       img {
@@ -21,6 +23,7 @@
     }
     .caption {
       span {
+        color: #667282 !important;
         font-size: 13px !important;
       }
       span.click-action:after {
@@ -29,6 +32,9 @@
         text-decoration: none;
         text-transform: uppercase;
       }
+    }
+    &.published .caption span.click-action:after {
+      content: 'Read Case Study';
     }
     &:hover, &.cs-loading {
       .thumbnail-view-hover {
@@ -48,7 +54,7 @@
     color: #667282;
     span.cs-prev, span.cs-next {
       cursor: pointer;
-      font-size: 14px !important;
+      font-size: 13px !important;
       transition: color 0.25s ease;
       &.bookend {
         pointer-events: none;
