@@ -28,16 +28,17 @@
     max-width: 100%;  // don't allow to expand horizontally
     background-color: #f9f9f9;
     overflow-y: scroll;
-    .individual-contribution, .group-contribution {
+    &.expanded {
+      // overflow-y: scroll;
+    }
+    & .individual-contribution, & .group-contribution,
+    & + .note-editor .individual-contribution, & + .note-editor .group-contribution {
       p {
         margin-bottom: 0;
         &.answer {
           font-style: italic;
         }
       }
-    }
-    &.expanded {
-      // overflow-y: scroll;
     }
     & + .note-editor {
       margin-bottom: 0;
