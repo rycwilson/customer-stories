@@ -54,7 +54,7 @@
           }
         }
         .summernote-custom.contributions {
-          right: -140px;
+          right: -107px;
         }
       }
       .placeholder {
@@ -65,6 +65,13 @@
       }
       .note-customButton {
         float: right;
+        label.insert-contributions {
+          position: absolute;
+          left: -44px;
+          top: 50%;
+          transform: translate(0, -50%);
+          margin-bottom: 0;
+        }
       }
       .summernote-custom {
         // max-height: set via js when editor is initiated

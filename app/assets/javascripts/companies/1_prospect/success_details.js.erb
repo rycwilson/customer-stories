@@ -67,7 +67,7 @@ function successDetailsListeners () {
                     toggle: 'dropdown',
                     placement: 'top'
                   },
-                  contents: (type === 'contributions' ? 'Insert Contributions\xa0\xa0' : 'Insert Placeholders\xa0\xa0') + '<span class="caret"></span>',
+                  contents: (type === 'contributions' ? 'Contributions\xa0\xa0' : 'Placeholders\xa0\xa0') + '<span class="caret"></span>',
                   // tooltip: 'Insert a data placeholder'
                 }),
                 ui.dropdown({
@@ -285,7 +285,10 @@ function successDetailsListeners () {
         initWinStoryEditor(
           $tr,
           expandedViewHeight($tr, true),
-          depopulatePlaceholders
+          function () {
+            depopulatePlaceholders
+            $('.note-customButton').append('<label class="insert-contributions">Insert</label>')
+          }
         );
       } else {
         // can't use .note-editor height because it will be 0
