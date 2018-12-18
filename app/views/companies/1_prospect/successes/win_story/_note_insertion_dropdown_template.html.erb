@@ -13,7 +13,7 @@
       <a href="javascript:;">Customer Description</a>
     </li> -->
 
-    <li class="dropdown-section">Individual Contributions</li>
+    <li class="dropdown-section"><span>Individual Contributions</span>&nbsp;<span>{{= type === 'placeholders' ? '(placeholders)' : '' }}<span</li>
 
     {{ _.uniq(contributionsData.answers, false, function (answer) { return answer.contribution_id; }).forEach(function (answer) { }}
 
@@ -35,7 +35,7 @@
 
     {{   }); }}
 
-    <li class="dropdown-section">Group Contributions</li>
+    <li class="dropdown-section"><span>Group Contributions</span>&nbsp;<span>{{= type === 'placeholders' ? '(placeholders)' : '' }}</span></li>
 
     {{ contributionsData.questions.forEach(function (question) { }}
 

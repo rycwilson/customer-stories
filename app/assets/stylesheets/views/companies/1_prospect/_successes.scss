@@ -78,9 +78,11 @@
             word-wrap: break-word;
           }
           &.dropdown-section {
-            font-weight: bold;
             pointer-events: none;
             padding: 3px 10px;
+            span:first-of-type {
+              font-weight: bold;
+            }
           }
         }
       }
