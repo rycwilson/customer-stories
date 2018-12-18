@@ -31,7 +31,7 @@ function successDetailsListeners () {
                           answer: a.answer
                         };
                       })
-        })
+        });
       },
       groupContributionTemplate = function (questionId, contributionsData, $placeholder) {
         return _.template($('#group-contribution-template').html())({
@@ -48,7 +48,7 @@ function successDetailsListeners () {
                          contributor: getContributor(a.contribution_id)
                        }
                      })
-        })
+        });
       },
       noteInsertionDropdownTemplate = function (customerId, contributionsData, type) {
         return _.template($('#note-insertion-dropdown-template').html())({
