@@ -14,13 +14,13 @@
 
   toggleFormDone($form, true);
 
-  // update datatables
+  // update datatables => not necessary as we're not keeping Success.win_story in datatables
   // don't update until the child row is closed, or the re-draw will hose things
   // timeout is necessary because this appears to step on the normal open/close behavior (success_details.js)
-  $trSuccess.one('click', 'td.success-details', function (e) {
-    setTimeout(function () {
-      $('#successes-table').DataTable().row($trSuccess).data(success);
-    }, 100);
-  })
+  // $trSuccess.one('click', 'td.success-details', function (e) {
+  //   setTimeout(function () {
+  //     $('#successes-table').DataTable().row($trSuccess).data(success);
+  //   }, 100);
+  // })
 
 }());

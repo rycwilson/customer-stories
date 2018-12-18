@@ -177,7 +177,7 @@ class SuccessesController < ApplicationController
 
   def update
     # binding.remote_pry
-    puts success_params.to_h
+    # puts success_params.to_h
     @success.update(success_params)
     respond_to { |format| format.js {} }
   end
