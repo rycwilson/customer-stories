@@ -151,8 +151,6 @@ function successDetailsListeners () {
                   .find('button[type="submit"]').prop('disabled', false);
                 $('input[type="hidden"][name="success[win_story]"]')
                   .val(JSON.stringify(content));
-
-                console.log($('input[type="hidden"][name="success[win_story]"]').val())
               }
             }
           });
@@ -297,9 +295,13 @@ function successDetailsListeners () {
           .prop('contenteditable', false)
           .summernote('destroy')
 
-          $('#win-story-editor').html(populatePlaceholders())
+        $('#win-story-editor').html(populatePlaceholders())
 
-        populatePlaceholders();
+        // update hidden input => don't save placeholders
+        $('input[type="hidden"][name="success[win_story]"]')
+          .val(JSON.stringify($('#win-story-editor').html()));
+
+        // scroll to center
         window.scrollTo(0, $tr.offset().top - (window.innerHeight / 2) + (($trChild.outerHeight() + $tr.outerHeight()) / 2));
       }
       if (initEditor && !isExpandedView) {
@@ -447,7 +449,8 @@ function successDetailsListeners () {
     })
 
     // scroll boundaries
-    .on('wheel', '#win-story-editor, .note-editable, .dropdown-menu.summernote-custom', function (e) {
+    // (removed these: #win-story-editor, .note-editable)
+    .on('wheel', '.dropdown-menu.summernote-custom', function (e) {
       var maxY = $(this).prop('scrollHeight') - $(this).prop('offsetHeight');
       // If this event looks like it will scroll beyond the bounds of the element,
       // prevent it and set the scroll to the boundary manually
