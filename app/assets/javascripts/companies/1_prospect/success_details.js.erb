@@ -286,8 +286,8 @@ function successDetailsListeners () {
           $tr,
           expandedViewHeight($tr, true),
           function () {
-            depopulatePlaceholders
-            $('.note-customButton').append('<label class="insert-contributions">Insert</label>')
+            depopulatePlaceholders();
+            $('.note-customButton').append('<label class="insert-contributions">Insert</label>');
           }
         );
       } else {
