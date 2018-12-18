@@ -146,7 +146,6 @@ function successDetailsListeners () {
               onPaste: function () {
               },
               onChange: function (content) {
-                console.log('change')
                 $('form[id*="success-form"]')
                   .find('button[type="submit"]').prop('disabled', false);
                 $('input[type="hidden"][name="success[win_story]"]')
