@@ -42,14 +42,19 @@
     }
     & + .note-editor {
       margin-bottom: 0;
-      .note-toolbar .note-para {
-        .note-btn:nth-of-type(2) {
-          border-top-right-radius: 3px;
-          border-bottom-right-radius: 3px;
+      .note-toolbar {
+        .note-para {
+          .note-btn:nth-of-type(2) {
+            border-top-right-radius: 3px;
+            border-bottom-right-radius: 3px;
+          }
+          // don't need paragraph alignment options
+          .btn-group {
+            display: none;
+          }
         }
-        // don't need paragraph alignment options
-        .btn-group {
-          display: none;
+        .summernote-custom.contributions {
+          right: -107px;
         }
       }
       .placeholder {
