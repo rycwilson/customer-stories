@@ -32,6 +32,7 @@ class SuccessesController < ApplicationController
     respond_with(
       success,
       only: [:id, :win_story],
+      methods: [:win_story_recipients],
       include: {
         customer: {
           only: [:id, :name, :description, :logo_url, :show_name_with_logo]

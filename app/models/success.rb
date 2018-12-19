@@ -66,6 +66,31 @@ class Success < ApplicationRecord
     self.is_new_record = true
   end
 
+  def win_story_recipients
+    referrers = self.company.referrers.map do |referrer|
+                  {
+                    id: referrer.id,
+                    name: referrer.full_name,
+                    email: referrer.email
+                  }
+                end
+    # need to check the invitation template, so search on contributions and map to contributors
+    contributors = Contribution
+                      .includes(:contributor)
+                      .joins(:customer, :invitation_template)
+                      .where({ customers: { company_id: self.customer.company_id } })
+                      .where.not({ invitation_templates: { name: 'Customer' } })
+                      .map do |contribution|
+                        {
+                          id: contribution.contributor.id,
+                          name: contribution.contributor.full_name,
+                          email: contribution.contributor.email
+                        }
+                      end
+                      .uniq { |contributor| contributor[:email] }
+    referrers.concat(contributors)
+  end
+
   # method is used for passing the contributions count to datatables / successes dropdown
   # see successes#index
   def contributions_count
