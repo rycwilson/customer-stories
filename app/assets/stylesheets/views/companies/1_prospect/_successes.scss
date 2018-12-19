@@ -33,12 +33,7 @@
     }
     & .individual-contribution, & .group-contribution,
     & + .note-editor .individual-contribution, & + .note-editor .group-contribution {
-      p {
-        margin-bottom: 0;
-        &.answer {
-          font-style: italic;
-        }
-      }
+      // styles are set via <style> tag for Copy feature to work
     }
     & + .note-editor {
       margin-bottom: 0;

@@ -3,16 +3,16 @@
 
   <div class="individual-contribution" data-contribution-id="{{= contributionId }}" {{= placeholder ? 'data-placeholder="' + placeholder + '"' : '' }}>
 
-    <p>{{= contributor.full_name }}</p>
-    <p>{{= contributor.title }}</p>
+    <p style="margin-bottom: 0">{{= contributor.full_name }}</p>
+    <p style="margin-bottom: 0">{{= contributor.title }}</p>
 
     <ul>
 
     {{ theQandA.forEach(function (pair) { }}
 
       <li>
-        <p class="question">{{= pair.question }}</p>
-        <p class="answer">{{= pair.answer }}</p>
+        <p style="margin-bottom: 0;">{{= pair.question }}</p>
+        <p style="margin-bottom: 0; font-style: italic">{{= pair.answer }}</p>
       </li>
 
     {{ }); }}

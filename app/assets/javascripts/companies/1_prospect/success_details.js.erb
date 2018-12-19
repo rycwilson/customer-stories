@@ -287,6 +287,7 @@ function successDetailsListeners () {
           function () {
             depopulatePlaceholders();
             $('.note-customButton').append('<label class="insert-contributions">Insert</label>');
+            $('.win-story-actions__copy').prop('disabled', true);
           }
         );
       } else {
@@ -296,8 +297,8 @@ function successDetailsListeners () {
           .css('height', isExpandedView ? (parseInt($('.form-group.win-story').last().css('height'), 10) - winStoryLabelHeight).toString() + 'px' : defaultViewHeight)
           .prop('contenteditable', false)
           .summernote('destroy')
-
         $('#win-story-editor').html(populatePlaceholders())
+        $('.win-story-actions__copy').prop('disabled', false);
 
         // update hidden input => don't save placeholders
         $('input[type="hidden"][name="success[win_story]"]')
@@ -312,6 +313,19 @@ function successDetailsListeners () {
       $('#win-story-editor').toggleClass('edit')
       $(this).find('i, span').toggle();
       $(this)[0].blur();
+    })
+
+    .on('click', '.win-story-actions__copy', function () {
+      var $editor = $('#win-story-editor'),
+          copyStr = $editor.hasClass('edit') ? $editor.summernote('code') : $editor.html(),
+          listener = function (e) {
+            e.clipboardData.setData("text/html", copyStr);
+            e.clipboardData.setData("text/plain", copyStr);
+            e.preventDefault();
+          };
+      document.addEventListener("copy", listener);
+      document.execCommand("copy");
+      document.removeEventListener("copy", listener);
     })
 
     .on('click', '[id*="success-form"] button[type="submit"]', function (e) {
