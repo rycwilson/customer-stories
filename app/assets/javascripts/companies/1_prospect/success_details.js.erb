@@ -224,16 +224,67 @@ function successDetailsListeners () {
           // populatePlaceholders()  => shouldn't be necessary since we're not saving placeholders
         }
       },
-      initWinStoryRecipientsSelect = function (options) {
-        $('#win-story-email-modal select.recipients').select2({
+      initWinStoryRecipientsSelect = function (options, contributionsData) {
+        $('select[name="win_story_email[recipients]"]').select2({
           theme: "bootstrap",
           tags: true,
           data: options,
           placeholder: 'Select Recipients',
         });
+        $('#win-story-email-modal #add-template-recipients').empty()
+        contributionsData
+          .invitation_templates
+          .filter(function (template) { return template.name !== 'Customer' })
+          .forEach(function (template) {
+            $('#win-story-email-modal #add-template-recipients').append(
+              '<div>' +
+                '<label>' +
+                  '<input type="checkbox" value="' + template.id + '">' +
+                  '<span>&nbsp;&nbsp;' + template.name + '</span>' +
+                '</label>' +
+              '</div>'
+            )
+          })
+
       };
 
+// <label for="contribution-publish-contributor-{{= contributor.id }}">
+//   <input type="hidden" name="contribution[publish_contributor]" value="false">
+//   <input type="checkbox" id="contribution-publish-contributor-{{= contributor.id }}" name="contribution[publish_contributor]" value="true" {{= contribution.publish_contributor ? 'checked' : '' }}>
+//   <span>&nbsp;&nbsp;Publish profile with this Story</span>
+// </label>
+
+
+
   $(document)
+
+    .on('click', '[data-target="#add-template-recipients"]', function (e) {
+      $(this).find('i').toggle();
+    })
+
+    .on('change', '#win-story-email-modal input[type="checkbox"]', function (e) {
+      var dtContributors = $('#prospect-contributors-table').DataTable().rows().data().toArray(),
+          templateId = $(this).val(),
+          successId = $('tr.shown').data('success-id'),
+          recipientIds = $('select[name="win_story_email[recipients]"]').val(),
+          templateContributorIds = dtContributors.filter(function (contribution) {
+                                     return contribution.invitation_template &&
+                                            contribution.invitation_template.id == templateId &&
+                                            contribution.success.id == successId;
+                                   })
+                                     .map(function (contribution) {
+                                       return contribution.contributor.id.toString();  //  select2 wants a string
+                                     })
+      if ($(this).prop('checked')) {
+        // console.log('recipientIds', recipientIds)
+        recipientIds = _.union(recipientIds, templateContributorIds)
+        console.log(recipientIds)
+      } else {
+        recipientIds = _.difference(recipientIds, templateContributorIds)
+        console.log(recipientIds)
+      }
+      $('select[name="win_story_email[recipients]"]').val(recipientIds).trigger('change.select2')
+    })
 
     .on('click', 'button[data-target="#edit-customer-modal"]', function (e) {
       // clicking a row group will normally sort alphabetically; prevent this
@@ -429,9 +480,9 @@ function successDetailsListeners () {
             winStory = res1[0].win_story;
             contributionsData = res2[0].contributions_data;
             // console.log('winStory', winStory);
-            // console.log('contributionsData', contributionsData);
+            console.log('contributionsData', contributionsData);
             renderWinStory();
-            initWinStoryRecipientsSelect(res1[0].win_story_recipients_select_options);
+            initWinStoryRecipientsSelect(res1[0].win_story_recipients_select_options, contributionsData);
           })
 
         // why doesn't this work? it's the same thing! or is it...

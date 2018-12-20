@@ -42,11 +42,6 @@ function initSelect2 () {
   /**
    * win story
    */
-  // $('#win-story-email-modal select.recipients').select2({
-  //   theme: "bootstrap",
-  //   tags: true,
-  //   placeholder: 'Select templates',
-  // });
   $('#win-story-email-modal select.invitation-templates').select2({
     theme: "bootstrap",
     tags: true,

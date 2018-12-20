@@ -80,7 +80,8 @@ class Success < ApplicationRecord
         if contribution.referrer_id
           referrer_option = {
               id: contribution.referrer.id,
-              text: "#{contribution.referrer.full_name} (#{contribution.referrer.email})"
+              text: "#{contribution.referrer.full_name} (#{contribution.referrer.email})",
+              data: { contribution_id: contribution.id }
             }
           contribution.success_id == self.id ?
             recipients_options_self << referrer_option :
@@ -89,13 +90,15 @@ class Success < ApplicationRecord
         if contribution.contributor_id
           contributor_option = {
               id: contribution.contributor.id,
-              text: "#{contribution.contributor.full_name} (#{contribution.contributor.email})"
+              text: "#{contribution.contributor.full_name} (#{contribution.contributor.email})",
+              data: { contribution_id: contribution.id }
             }
           contribution.success_id == self.id ?
             recipients_options_self << contributor_option :
             recipients_options_more << contributor_option
         end
       end
+    # recipients_options_self.each { |option| option[:invitation_template_id] = }
     [
       {
         text: self.name,

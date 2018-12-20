@@ -5,4 +5,27 @@
     width: 100% !important;   // because placeholder getting cut off (known select2 issue)
   }
 
+  [data-target="#add-template-recipients"] {
+    &:hover {
+      color: #333;
+    }
+  }
+  #add-template-recipients {
+    // padding: 10px;  don't add padding here => makes collapse jumpy
+    background-color: #eee;
+    > div {
+      padding-left: 10px;
+      &:first-of-type {
+        padding-top: 10px;
+      }
+      &:last-of-type {
+        padding-bottom: 10px;
+      }
+      label {
+        cursor: pointer;
+        font-weight: 400;
+      }
+    }
+  }
+
 }
