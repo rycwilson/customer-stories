@@ -67,8 +67,8 @@ class Success < ApplicationRecord
   end
 
   def win_story_recipients_select_options
-    recipients_options_self = []
-    recipients_options_more = []
+    recipients_options_self = []  # contributors and referrers tied to this success
+    recipients_options_more = []  # all company contributors and referrers
 
     # need to check the invitation template, so search on contributions
     Contribution
@@ -80,8 +80,7 @@ class Success < ApplicationRecord
         if contribution.referrer_id
           referrer_option = {
               id: contribution.referrer.id,
-              text: "#{contribution.referrer.full_name} (#{contribution.referrer.email})",
-              data: { contribution_id: contribution.id }
+              text: "#{contribution.referrer.full_name} (#{contribution.referrer.email})"
             }
           contribution.success_id == self.id ?
             recipients_options_self << referrer_option :
@@ -90,15 +89,13 @@ class Success < ApplicationRecord
         if contribution.contributor_id
           contributor_option = {
               id: contribution.contributor.id,
-              text: "#{contribution.contributor.full_name} (#{contribution.contributor.email})",
-              data: { contribution_id: contribution.id }
+              text: "#{contribution.contributor.full_name} (#{contribution.contributor.email})"
             }
           contribution.success_id == self.id ?
             recipients_options_self << contributor_option :
             recipients_options_more << contributor_option
         end
       end
-    # recipients_options_self.each { |option| option[:invitation_template_id] = }
     [
       {
         text: self.name,

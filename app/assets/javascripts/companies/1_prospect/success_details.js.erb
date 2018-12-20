@@ -229,7 +229,7 @@ function successDetailsListeners () {
           theme: "bootstrap",
           tags: true,
           data: options,
-          placeholder: 'Select Recipients',
+          placeholder: 'Add Recipients',
         });
         $('#win-story-email-modal #add-template-recipients').empty()
         contributionsData
@@ -245,16 +245,9 @@ function successDetailsListeners () {
               '</div>'
             )
           })
+        $('[name="win_story_email[subject]').val($('tr.shown > td:nth-of-type(2)').text())
 
       };
-
-// <label for="contribution-publish-contributor-{{= contributor.id }}">
-//   <input type="hidden" name="contribution[publish_contributor]" value="false">
-//   <input type="checkbox" id="contribution-publish-contributor-{{= contributor.id }}" name="contribution[publish_contributor]" value="true" {{= contribution.publish_contributor ? 'checked' : '' }}>
-//   <span>&nbsp;&nbsp;Publish profile with this Story</span>
-// </label>
-
-
 
   $(document)
 
@@ -276,12 +269,9 @@ function successDetailsListeners () {
                                        return contribution.contributor.id.toString();  //  select2 wants a string
                                      })
       if ($(this).prop('checked')) {
-        // console.log('recipientIds', recipientIds)
         recipientIds = _.union(recipientIds, templateContributorIds)
-        console.log(recipientIds)
       } else {
         recipientIds = _.difference(recipientIds, templateContributorIds)
-        console.log(recipientIds)
       }
       $('select[name="win_story_email[recipients]"]').val(recipientIds).trigger('change.select2')
     })

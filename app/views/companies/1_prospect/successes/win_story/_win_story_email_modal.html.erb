@@ -5,7 +5,7 @@
     <div class="modal-content">
 
       <div class="modal-header" style="display: flex; align-items: center">
-        <span style="margin-right: 12px">
+        <span style="margin-right: 8px">
           <i class="fa fa-fw fa-envelope-o" style="font-size: 16px"></i>
         </span>
         <h4 class="modal-title">Customer Win Story</h4>
@@ -16,8 +16,8 @@
 
         <div class="form-horizontal">
           <div class="form-group">
-            <label class="col-sm-2 control-label">To</label>
-            <div class="col-sm-10">
+            <label class="col-sm-1 control-label">To</label>
+            <div class="col-sm-11">
 
               <select name="win_story_email[recipients]" multiple></select>
               <span class="help-block" style="cursor: pointer" data-toggle="collapse" data-target="#add-template-recipients">
@@ -30,32 +30,12 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Subject</label>
-            <div class="col-sm-10">
+            <label class="col-sm-1 control-label">Subject</label>
+            <div class="col-sm-11">
               <input class="form-control" name="win_story_email[subject]">
             </div>
           </div>
         </div>
-
-
-          <!-- select a template -->
-          <!-- limit it to templates sent for this success -->
-          <%= select_tag(
-                :win_story_templates,
-                # TODO: limit these to templates deployed for the success
-                options_for_select(company.invitation_templates.select_options),
-                {
-                  include_blank: true,
-                  multiple: true,
-                  class: 'invitation-templates',
-                  autocomplete: 'off',
-                  style: 'width: 100%'
-                }
-              ) %>
-
-         <!--  <button type="button" class="btn btn-success" style="float: right">
-            Get Contributions
-          </button> -->
 
       </div>
 
