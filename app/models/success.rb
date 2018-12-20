@@ -66,29 +66,46 @@ class Success < ApplicationRecord
     self.is_new_record = true
   end
 
-  def win_story_recipients
-    referrers = self.company.referrers.map do |referrer|
-                  {
-                    id: referrer.id,
-                    name: referrer.full_name,
-                    email: referrer.email
-                  }
-                end
-    # need to check the invitation template, so search on contributions and map to contributors
-    contributors = Contribution
-                      .includes(:contributor)
-                      .joins(:customer, :invitation_template)
-                      .where({ customers: { company_id: self.customer.company_id } })
-                      .where.not({ invitation_templates: { name: 'Customer' } })
-                      .map do |contribution|
-                        {
-                          id: contribution.contributor.id,
-                          name: contribution.contributor.full_name,
-                          email: contribution.contributor.email
-                        }
-                      end
-                      .uniq { |contributor| contributor[:email] }
-    referrers.concat(contributors)
+  def win_story_recipients_select_options
+    recipients_options_self = []
+    recipients_options_more = []
+
+    # need to check the invitation template, so search on contributions
+    Contribution
+      .includes(:contributor, :referrer)
+      .joins(:customer, :invitation_template)
+      .where({ customers: { company_id: self.customer.company_id } })
+      .where.not({ invitation_templates: { name: 'Customer' } })
+      .each do |contribution|
+        if contribution.referrer_id
+          referrer_option = {
+              id: contribution.referrer.id,
+              text: "#{contribution.referrer.full_name} (#{contribution.referrer.email})"
+            }
+          contribution.success_id == self.id ?
+            recipients_options_self << referrer_option :
+            recipients_options_more << referrer_option
+        end
+        if contribution.contributor_id
+          contributor_option = {
+              id: contribution.contributor.id,
+              text: "#{contribution.contributor.full_name} (#{contribution.contributor.email})"
+            }
+          contribution.success_id == self.id ?
+            recipients_options_self << contributor_option :
+            recipients_options_more << contributor_option
+        end
+      end
+    [
+      {
+        text: self.name,
+        children: recipients_options_self.uniq { |recipient| recipient[:text] }
+      },
+      {
+        text: 'More Contacts',
+        children: recipients_options_more.uniq { |recipient| recipient[:text] }
+      }
+    ]
   end
 
   # method is used for passing the contributions count to datatables / successes dropdown

@@ -7,6 +7,7 @@ function successDetailsListeners () {
       winStoryLabelHeight = 23,
       customer,
       winStory,
+      winStoryRecipientsSelectOptions,
       contributionsData,  // data returned when the child row is opened; includes invitation templates, questions and answers
       customerPath = function (customerId) { return '/customers/' + customerId; },
       successPath = function (successId) { return '/successes/' + successId; },
@@ -222,6 +223,14 @@ function successDetailsListeners () {
           $('input[type="hidden"][name="success[win_story]"]').val(winStory)
           // populatePlaceholders()  => shouldn't be necessary since we're not saving placeholders
         }
+      },
+      initWinStoryRecipientsSelect = function (options) {
+        $('#win-story-email-modal select.recipients').select2({
+          theme: "bootstrap",
+          tags: true,
+          data: options,
+          placeholder: 'Select Recipients',
+        });
       };
 
   $(document)
@@ -419,10 +428,10 @@ function successDetailsListeners () {
             customer = res1[0].customer;
             winStory = res1[0].win_story;
             contributionsData = res2[0].contributions_data;
-            console.log(res1[0].win_story_recipients)
             // console.log('winStory', winStory);
             // console.log('contributionsData', contributionsData);
             renderWinStory();
+            initWinStoryRecipientsSelect(res1[0].win_story_recipients_select_options);
           })
 
         // why doesn't this work? it's the same thing! or is it...

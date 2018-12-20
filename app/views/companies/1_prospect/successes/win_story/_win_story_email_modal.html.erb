@@ -19,6 +19,7 @@
             <label class="col-sm-2 control-label">To</label>
             <div class="col-sm-10">
 
+              <select class="recipients" multiple></select>
               <%#= select_tag(
                 :win_story_recipients,
                 # TODO: limit these to templates deployed for the success
@@ -26,8 +27,7 @@
                 {
                   include_blank: true,
                   multiple: true,
-                  class: 'email-recipients',
-                  # autocomplete: 'off',
+                  class: 'recipients',
                   style: 'width: 100%'
                 }
               ) %>
