@@ -113,7 +113,7 @@ function successDetailsListeners () {
           .prop('contenteditable', true)
           .summernote({
             height: height,// expandedViewHeight($tr, true),
-            dialogsInBody: true,
+            // dialogsInBody: true,
             focus: true,
             toolbar: [
               ['font', ['bold', 'italic', 'underline']], //, 'clear']],
@@ -156,6 +156,28 @@ function successDetailsListeners () {
             }
           });
       },
+      initWinStoryEmailEditor = function () {
+        $('#win-story-email-editor')
+          .summernote({
+            // focus: true,
+            toolbar: [
+              ['font', ['bold', 'italic', 'underline']], //, 'clear']],
+              ['para', ['ul', 'ol', 'paragraph']],
+            ],
+            callbacks: {
+              onInit: function (summernote) {
+              },
+              onChange: function (content) {
+                // what to do with changes??
+                // $('form[id*="success-form"]')
+                //   .find('button[type="submit"]').prop('disabled', false);
+                // $('input[type="hidden"][name="success[win_story]"]')
+                //   // .val(JSON.stringify(content));
+                //   .val(content);
+              }
+            }
+          });
+      }
       getContributor = function (contributionId) {
         return $('#prospect-contributors-table')
                   .DataTable()
@@ -251,6 +273,9 @@ function successDetailsListeners () {
         $('[name="win_story_email[subject]').val($('tr.shown > td:nth-of-type(2)').text())
 
       };
+
+  // initialize the win story email editor
+  initWinStoryEmailEditor();
 
   $(document)
 
@@ -367,6 +392,17 @@ function successDetailsListeners () {
       $('#win-story-editor').toggleClass('edit')
       $(this).find('i, span').toggle();
       $(this)[0].blur();
+    })
+
+    .on('click', '.win-story-actions__email', function () {
+      var winStoryHtml;
+      if ($('#win-story-editor').hasClass('edit')) {
+        winStoryHtml = $('#win-story-editor').summernote('code');
+      } else {
+        winStoryHtml = $('#win-story-editor').html();
+      }
+      $('#win-story-email-editor').summernote('code', winStoryHtml);
+      $('#win-story-email-modal').modal('show');
     })
 
     .on('click', '.win-story-actions__copy', function () {
