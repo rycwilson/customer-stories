@@ -150,7 +150,8 @@ function successDetailsListeners () {
                 $('form[id*="success-form"]')
                   .find('button[type="submit"]').prop('disabled', false);
                 $('input[type="hidden"][name="success[win_story]"]')
-                  .val(JSON.stringify(content));
+                  // .val(JSON.stringify(content));
+                  .val(content);
               }
             }
           });
@@ -163,7 +164,8 @@ function successDetailsListeners () {
                   .contributor;
       },
       populatePlaceholders = function () {
-        var $wrapper = $(JSON.parse($('input[type="hidden"][name="success[win_story]"]').val()))
+        // var $wrapper = $(JSON.parse($('input[type="hidden"][name="success[win_story]"]').val()))
+        var $wrapper = $($('input[type="hidden"][name="success[win_story]"]').val())
                         .wrapAll('<div class="wrapper"></div>')
                         .parent(),
             dtContributors = $('#prospect-contributors-table').DataTable();
@@ -219,7 +221,8 @@ function successDetailsListeners () {
       },
       renderWinStory = function () {
         if (winStory) {  // might be null or blank => will cause JSON error
-          $('#win-story-editor').html(JSON.parse(winStory))
+          // $('#win-story-editor').html(JSON.parse(winStory))
+          $('#win-story-editor').html(winStory)
           $('input[type="hidden"][name="success[win_story]"]').val(winStory)
           // populatePlaceholders()  => shouldn't be necessary since we're not saving placeholders
         }
@@ -352,7 +355,8 @@ function successDetailsListeners () {
 
         // update hidden input => don't save placeholders
         $('input[type="hidden"][name="success[win_story]"]')
-          .val(JSON.stringify($('#win-story-editor').html()));
+          // .val(JSON.stringify($('#win-story-editor').html())
+          .val($('#win-story-editor').html());
 
         // scroll to center
         window.scrollTo(0, $tr.offset().top - (window.innerHeight / 2) + (($trChild.outerHeight() + $tr.outerHeight()) / 2));
@@ -390,7 +394,8 @@ function successDetailsListeners () {
         e.stopImmediatePropagation();
         $(this).closest('form')
                .find('input[type="hidden"][name="success[win_story]"]')
-               .val(JSON.stringify(populatePlaceholders()))
+               // .val(JSON.stringify(populatePlaceholders()))
+               .val(populatePlaceholders())
                .submit()
         toggleFormWorking($form);
       } else {

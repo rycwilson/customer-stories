@@ -4,7 +4,8 @@ class SuccessesController < ApplicationController
 
   respond_to(:html, :js, :json)
 
-  before_action(except: [:index, :create, :import]) { @success = Success.find(params[:id]) }
+  before_action({ only: [:create] }) { convert_description_to_html }
+  before_action({ except: [:index, :create, :import] }) { @success = Success.find(params[:id]) }
   skip_before_action(
     :verify_authenticity_token,
     only: [:create],
@@ -43,6 +44,7 @@ class SuccessesController < ApplicationController
 
   def create
     # puts 'successes#create'
+    puts success_params.to_h
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
 
     params[:success][:customer_attributes] = find_dup_customer(
@@ -227,6 +229,16 @@ class SuccessesController < ApplicationController
         :id, :email, :first_name, :last_name, :title, :phone, :sign_up_code, :password
       ]
     )
+  end
+
+  def convert_description_to_html
+    # just squash everything into a single paragraph
+    success_params["win_story"]
+      .prepend('<p>')
+      .sub!(/(\r\n)+$/, '')
+      .gsub!(/(\r\n)+/, '</p><p>')
+      .concat('</p>')
+    success_params["win_story"] = success_params["win_story"].to_json
   end
 
   # method receives params[:success][:customer_attributes] and either

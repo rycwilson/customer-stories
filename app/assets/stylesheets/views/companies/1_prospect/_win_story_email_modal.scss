@@ -17,6 +17,7 @@
           width: 100% !important;   // because placeholder getting cut off (known select2 issue)
         }
         [data-target="#add-template-recipients"] {
+          margin-bottom: 8px;
           &:hover {
             color: #333;
           }
