@@ -123,7 +123,7 @@ class ContributionsController < ApplicationController
         format.any do
           render({
             json: {
-              status: @contribution.persisted? ? 'success' : 'error'
+              status: @contribution.persisted? ? 'success' : @contribution.errors.full_messages
             }
           })
         end
