@@ -95,14 +95,14 @@ class ContributionsController < ApplicationController
     end
 
     if contribution_params.to_h.has_key?(:referrer_attributes)
-      find_dup_user_and_split_full_name(
+      params[:contribution][:referrer_attributes] = find_dup_user_and_split_full_name(
         contribution_params.to_h[:referrer_attributes],
         params[:zap].present?
       )
     end
 
     if contribution_params.to_h.has_key?(:contributor_attributes)
-      find_dup_user_and_split_full_name(
+      params[:contribution][:contributor_attributes] = find_dup_user_and_split_full_name(
         contribution_params.to_h[:contributor_attributes],
         params[:zap].present?
       )
