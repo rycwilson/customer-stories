@@ -336,7 +336,11 @@ function successDetailsListeners () {
         initWinStoryEditor(
           $tr,
           expandView ? expandedViewHeight($tr, true) : parseInt(defaultViewHeight, 10) - (summernoteToolbarHeight + summernoteResizebarHeight),
-          depopulatePlaceholders
+          function () {
+            depopulatePlaceholders();
+            $('.note-customButton').append('<label class="insert-contributions">Insert</label>');
+            $('.win-story-actions__copy').prop('disabled', true);
+          }
         )
       } else {
         $('#win-story-editor').css(
