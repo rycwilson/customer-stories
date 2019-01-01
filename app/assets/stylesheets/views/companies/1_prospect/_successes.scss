@@ -107,6 +107,23 @@
         transform: rotate(-45deg);
       }
     }
+    &[class*="__zapier"] {
+      position: relative;
+      img {
+        height: 13px;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translate(0, -50%);
+        opacity: 0.7;
+      }
+      span {
+        padding-left: 18px;
+      }
+      &:hover img {
+        opacity: 0.9;
+      }
+    }
     &:disabled {
       opacity: 0.5;
       cursor: not-allowed;
