@@ -13,9 +13,19 @@ class SuccessesController < ApplicationController
   )
 
   def index
-    company = Company.find_by(subdomain: request.subdomain)
+    company = Company.find_by(subdomain: request.subdomain) || current_user.company
     # data = Rails.cache.fetch("#{company.subdomain}/dt-successes") do
-    res = company.successes.to_json({
+    if params[:zap_win_story]
+      data = company.successes.select { |s| s.win_story_completed? }.to_json({
+        only: [:id, :name, :win_story],
+        include: {
+          customer: {
+            only: [:name, :description, :logo_url]
+          }
+        }
+      })
+    else
+      data = company.successes.to_json({
         only: [:id, :name],
         methods: [:display_status, :referrer, :contact, :timestamp],
         include: {
@@ -24,8 +34,8 @@ class SuccessesController < ApplicationController
           story: { only: [:id, :title, :slug] }
         }
       })
-    # end
-    respond_to { |format| format.json { render({ json: res }) } }
+    end
+    respond_to { |format| format.json { render({ json: data }) } }
   end
 
   def show

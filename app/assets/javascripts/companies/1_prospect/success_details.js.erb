@@ -422,6 +422,54 @@ function successDetailsListeners () {
       document.removeEventListener("copy", listener);
     })
 
+    // Catch Hook to Sheets: https://hooks.zapier.com/hooks/catch/***REMOVED***/***REMOVED***/
+    // Catch Hook to Slack: https://hooks.zapier.com/hooks/catch/***REMOVED***/***REMOVED***/
+    .on('click', '.win-story-actions__zapier', function () {
+      $.ajax({
+        url: 'https://hooks.zapier.com/hooks/catch/***REMOVED***/***REMOVED***/',
+        method: 'POST',
+        data: {
+          "attachments": [
+              {
+                  "fallback": "Required plain-text summary of the attachment.",
+                  "color": "#36a64f",
+                  "pretext": "Optional text that appears above the attachment block",
+                  "author_name": "Bobby Tables",
+                  "author_link": "http://flickr.com/bobby/",
+                  "author_icon": "http://flickr.com/icons/bobby.jpg",
+                  "title": "Slack API Documentation",
+                  "title_link": "https://api.slack.com/",
+                  "text": "Optional text that appears within the attachment",
+                  "fields": [
+                      {
+                          "title": "This is the Title",
+                          "value": "High",
+                          "short": false
+                      }
+                  ],
+                  "image_url": customer.logo_url,
+                  "thumb_url": "http://example.com/path/to/thumb.png",
+                  "footer": "Slack API",
+                  "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
+                  "ts": 123456789
+              }
+          ]
+      }
+          // customer: {
+          //   name: customer.name,
+          //   description: customer.description,
+          //   logo_url: customer.logo_url
+          // },
+          // win_story: winStory,
+        // }
+      })
+        .done(function (data, status, xhr) {
+          console.log(data)
+          console.log(status)
+          console.log(xhr)
+        })
+    })
+
     .on('click', '[id*="success-form"] button[type="submit"]', function (e) {
       var $form = $(this).closest('form');
       if ($(this).hasClass('disabled') || $form.data('submitted')) {
@@ -514,8 +562,9 @@ function successDetailsListeners () {
             customer = res1[0].customer;
             winStory = res1[0].win_story;
             contributionsData = res2[0].contributions_data;
-            // console.log('winStory', winStory);
-            console.log('contributionsData', contributionsData);
+            console.log('winStory', winStory);
+            console.log('customer', customer)
+            // console.log('contributionsData', contributionsData);
             renderWinStory();
             initWinStoryRecipientsSelect(res1[0].win_story_recipients_select_options, contributionsData);
           })
