@@ -147,11 +147,14 @@ function successDetailsListeners () {
               onPaste: function () {
               },
               onChange: function (content) {
+                var textContent = $(content).wrapAll('<div class="wrapper"></div>').parent().text();
                 $('form[id*="success-form"]')
                   .find('button[type="submit"]').prop('disabled', false);
                 $('input[type="hidden"][name="success[win_story]"]')
                   // .val(JSON.stringify(content));
                   .val(content);
+                $('input[type="hidden"][name="success[win_story_text]"]')
+                  .val(textContent);
               }
             }
           });
@@ -246,6 +249,7 @@ function successDetailsListeners () {
           // $('#win-story-editor').html(JSON.parse(winStory))
           $('#win-story-editor').html(winStory)
           $('input[type="hidden"][name="success[win_story]"]').val(winStory)
+          $('input[type="hidden"][name="success[win_story_text]"]').val($(winStory).text())
           // populatePlaceholders()  => shouldn't be necessary since we're not saving placeholders
         }
       },

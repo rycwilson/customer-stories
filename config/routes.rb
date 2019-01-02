@@ -19,7 +19,7 @@ Rails.application.routes.draw do
     get '/auth-test', to: 'application#auth_test'
     get '/curators', to: 'companies#get_curators'
     get '/invitation_templates', to: 'companies#get_invitation_templates'
-    get '/successes', to: 'successes#index', constraints: { win_story_completed: 'true' }
+    get '/successes', to: 'successes#index', constraints: { zap_win_story: 'true' }
     post '/successes', to: 'successes#create', constraints: { zap: 'true' }
     post '/contributions', to: 'contributions#create', constraints: { zap: 'true' }
   end

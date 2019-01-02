@@ -4,7 +4,8 @@ class SuccessesController < ApplicationController
 
   respond_to(:html, :js, :json)
 
-  before_action({ only: [:create] }) { convert_description_to_html }
+  before_action({ only: [:create] }) { convert_description_to_win_story_html }
+  before_action({ only: [:update] }) { remove_excess_newlines_from_win_story_text }
   before_action({ except: [:index, :create, :import] }) { @success = Success.find(params[:id]) }
   skip_before_action(
     :verify_authenticity_token,
@@ -207,7 +208,7 @@ class SuccessesController < ApplicationController
   # status will be present in case of csv upload
   def success_params
     params.require(:success).permit(
-      :name, :win_story, :customer_id, :curator_id,
+      :name, :win_story, :win_story_text, :customer_id, :curator_id,
       customer_attributes: [:id, :name, :company_id],
       contributions_attributes: [
         :referrer_id, :contributor_id, :invitation_template_id, :success_contact,
@@ -241,14 +242,19 @@ class SuccessesController < ApplicationController
     )
   end
 
-  def convert_description_to_html
+  def convert_description_to_win_story_html
     # just squash everything into a single paragraph
     success_params["win_story"]
       .prepend('<p>')
       .sub!(/(\r\n)+$/, '')
       .gsub!(/(\r\n)+/, '</p><p>')
       .concat('</p>')
-    success_params["win_story"] = success_params["win_story"].to_json
+    # success_params["win_story"] = success_params["win_story"].to_json
+  end
+
+  def remove_excess_newlines_from_win_story_text
+    # binding.remote_pry
+    success_params["win_story_text"].gsub!(/\s\r\n\r\n\s/, '')
   end
 
   # method receives params[:success][:customer_attributes] and either
