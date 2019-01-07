@@ -14,6 +14,7 @@ class SuccessesController < ApplicationController
   )
 
   def zapier_trigger
+    puts params.to_h
     company = current_user.company
     data = company.successes.select { |s| s.win_story_completed? }.to_json({
       only: [:id, :name, :win_story, :win_story_text],
