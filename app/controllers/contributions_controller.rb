@@ -7,7 +7,7 @@ class ContributionsController < ApplicationController
   skip_before_action(
     :verify_authenticity_token,
     only: [:create],
-    if: -> { params[:zap].present? }
+    if: -> { params[:zapier_create].present? }
   )
 
   respond_to(:html, :json, :js)
@@ -101,7 +101,7 @@ class ContributionsController < ApplicationController
     if contribution_params[:success_attributes].to_h.has_key?(:customer_attributes)
       params[:contribution][:success_attributes][:customer_attributes] = find_dup_customer(
         contribution_params.to_h[:success_attributes],
-        params[:zap].present?,
+        params[:zapier_create].present?,
         current_user
       )
     end
@@ -109,14 +109,14 @@ class ContributionsController < ApplicationController
     if contribution_params.to_h.has_key?(:referrer_attributes)
       params[:contribution][:referrer_attributes] = find_dup_user_and_split_full_name(
         contribution_params.to_h[:referrer_attributes],
-        params[:zap].present?
+        params[:zapier_create].present?
       )
     end
 
     if contribution_params.to_h.has_key?(:contributor_attributes)
       params[:contribution][:contributor_attributes] = find_dup_user_and_split_full_name(
         contribution_params.to_h[:contributor_attributes],
-        params[:zap].present?
+        params[:zapier_create].present?
       )
     end
 
@@ -130,7 +130,7 @@ class ContributionsController < ApplicationController
       #   @contribution.save
       # end
     end
-    if params[:zap].present?
+    if params[:zapier_create].present?
       respond_to do |format|
         format.any do
           render({

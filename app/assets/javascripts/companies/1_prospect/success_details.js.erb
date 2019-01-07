@@ -6,7 +6,7 @@ function successDetailsListeners () {
       summernoteResizebarHeight = 8,
       winStoryLabelHeight = 23,
       customer,
-      winStory,
+      winStory, winStoryText, winStoryCompleted,
       winStoryRecipientsSelectOptions,
       contributionsData,  // data returned when the child row is opened; includes invitation templates, questions and answers
       customerPath = function (customerId) { return '/customers/' + customerId; },
@@ -247,9 +247,10 @@ function successDetailsListeners () {
       renderWinStory = function () {
         if (winStory) {  // might be null or blank => will cause JSON error
           // $('#win-story-editor').html(JSON.parse(winStory))
-          $('#win-story-editor').html(winStory)
-          $('input[type="hidden"][name="success[win_story]"]').val(winStory)
-          $('input[type="hidden"][name="success[win_story_text]"]').val($(winStory).text())
+          $('#win-story-editor').html(winStory);
+          $('input[type="checkbox"][name="success[win_story_completed]"]').prop('checked', winStoryCompleted);
+          $('input[type="hidden"][name="success[win_story]"]').val(winStory);
+          $('input[type="hidden"][name="success[win_story_text]"]').val(winStoryText);
           // populatePlaceholders()  => shouldn't be necessary since we're not saving placeholders
         }
       },
@@ -433,39 +434,14 @@ function successDetailsListeners () {
         url: 'https://hooks.zapier.com/hooks/catch/***REMOVED***/***REMOVED***/',
         method: 'POST',
         data: {
-          "attachments": [
-              {
-                  "fallback": "Required plain-text summary of the attachment.",
-                  "color": "#36a64f",
-                  "pretext": "Optional text that appears above the attachment block",
-                  "author_name": "Bobby Tables",
-                  "author_link": "http://flickr.com/bobby/",
-                  "author_icon": "http://flickr.com/icons/bobby.jpg",
-                  "title": "Slack API Documentation",
-                  "title_link": "https://api.slack.com/",
-                  "text": "Optional text that appears within the attachment",
-                  "fields": [
-                      {
-                          "title": "This is the Title",
-                          "value": "High",
-                          "short": false
-                      }
-                  ],
-                  "image_url": customer.logo_url,
-                  "thumb_url": "http://example.com/path/to/thumb.png",
-                  "footer": "Slack API",
-                  "footer_icon": "https://platform.slack-edge.com/img/default_application_icon.png",
-                  "ts": 123456789
-              }
-          ]
-      }
-          // customer: {
-          //   name: customer.name,
-          //   description: customer.description,
-          //   logo_url: customer.logo_url
-          // },
-          // win_story: winStory,
-        // }
+          customer: {
+            name: customer.name,
+            description: customer.description,
+            logo_url: customer.logo_url
+          },
+          win_story: winStory,
+          win_story_text: winStoryText // if this doesn't go through the server first, it will still have extra \r\n\r\n
+        }
       })
         .done(function (data, status, xhr) {
           console.log(data)
@@ -565,6 +541,8 @@ function successDetailsListeners () {
           .done(function (res1, res2) {
             customer = res1[0].customer;
             winStory = res1[0].win_story;
+            winStoryText = res1[0].win_story_text;
+            winStoryCompleted = res1[0].win_story_completed;
             contributionsData = res2[0].contributions_data;
             console.log('winStory', winStory);
             console.log('customer', customer)

@@ -12,43 +12,63 @@
 
       <div class="row">
         <div class="col-sm-12" style="display:flex; padding: 0 5px;">
-          <div class="form-group win-story" style="position:relative; width: 570px; margin-bottom: 0; display:inline-block">
+          <div style="display:inline-block">
 
-            <button type="button" class="win-story-actions__expand">
-              <i class="fa fa-fw fa-expand"></i>
-              <i class="fa fa-fw fa-compress" style="display:none"></i>
-            </button>
-            <label for="win-story-editor">
-              Win Story
-            </label>
+            <div class="form-group win-story" style="position:relative; width: 600px; margin-bottom: 0;">
 
-            <div id="win-story-editor" class="form-control" contenteditable="false"></div>
+              <button type="button" class="win-story-actions__expand">
+                <i class="fa fa-fw fa-expand"></i>
+                <i class="fa fa-fw fa-compress" style="display:none"></i>
+              </button>
+              <label for="win-story-editor">
+                Win Story
+              </label>
 
-            <span class="win-story-actions" style="position:absolute; top:0; right:0; padding-right: 5px">
+              <div id="win-story-editor" class="form-control" contenteditable="false"></div>
 
-              <button type="button" class="win-story-actions__edit">
-                <i class="fa fa-fw fa-edit"></i>
-                <i class="fa fa-fw fa-search" style="display:none"></i>
-                <span>Edit</span>
-                <span style="display:none">View</span>
+              <span class="win-story-actions" style="position:absolute; top:0; right:0; padding-right: 5px">
+
+                <button type="button" class="win-story-actions__edit">
+                  <i class="fa fa-fw fa-edit"></i>
+                  <i class="fa fa-fw fa-search" style="display:none"></i>
+                  <span>Edit</span>
+                  <span style="display:none">View</span>
+                </button>
+                <button type="button" class="win-story-actions__email" data-toggle="modal" data-target="#win-story-email-modal">
+                  <i class="fa fa-fw fa-envelope-o"></i>
+                  Email
+                </button>
+                <button type="button" class="win-story-actions__copy">
+                  <i class="fa fa-fw fa-clipboard"></i>
+                  Copy
+                </button>
+                <button type="button" class="win-story-actions__pdf" disabled>
+                  <i class="fa fa-fw fa-file-pdf-o"></i>
+                  PDF
+                </button>
+                <button type="button" class="win-story-actions__zapier" style="position:relative">
+                  <img src="https://s3-us-west-1.amazonaws.com/csp-production-assets/zapier/zapier-brand.png" alt="zapier">
+                  <span>Zapier</span>
+                </button>
+              </span>
+            </div>
+
+            <div class="text-right">
+              <label style="font-weight:normal; cursor:pointer; margin: 10px 0">
+                <input type="hidden" value="false" name="success[win_story_completed]">
+                <input type="checkbox" value="true" name="success[win_story_completed]" style="margin-right:5px">
+                Mark as Completed
+              </label>
+
+            </div>
+            <div class="text-right">
+
+              <button type="submit" disabled class="btn btn-sm btn-success text-center" style="width:97px;">
+                <span>Save changes</span>
+                <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
+                <i class='fa fa-check' style='display:none'></i>
               </button>
-              <button type="button" class="win-story-actions__email" data-toggle="modal" data-target="#win-story-email-modal">
-                <i class="fa fa-fw fa-envelope-o"></i>
-                Email
-              </button>
-              <button type="button" class="win-story-actions__copy">
-                <i class="fa fa-fw fa-clipboard"></i>
-                Copy
-              </button>
-              <button type="button" class="win-story-actions__pdf" disabled>
-                <i class="fa fa-fw fa-file-pdf-o"></i>
-                PDF
-              </button>
-              <button type="button" class="win-story-actions__zapier" style="position:relative">
-                <img src="https://s3-us-west-1.amazonaws.com/csp-production-assets/zapier/zapier-brand.png" alt="zapier">
-                <span>Zapier</span>
-              </button>
-            </span>
+            </div>
 
           </div>
 
@@ -77,23 +97,22 @@
 
       </div>
 
-      <hr>
+
+<!--       <hr>
 
       <div class='row'>
         <div class="col-sm-12 text-right">
-          <button type="button" class="btn btn-sm btn-secondary">
-            <span>Mark as Completed</span>
-          </button>
-    <!--       <button type="reset" class="btn btn-sm btn-default">
+
+         <button type="reset" class="btn btn-sm btn-default">
             Close
-          </button> -->
-          <button type="submit" disabled class="btn btn-sm btn-success text-center" style="width:97px">
+          </button>
+           <button type="submit" disabled class="btn btn-sm btn-success text-center" style="width:97px">
             <span>Save changes</span>
             <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
             <i class='fa fa-check' style='display:none'></i>
           </button>&nbsp;
         </div>
-      </div>
+      </div> -->
 
     </form>
 
