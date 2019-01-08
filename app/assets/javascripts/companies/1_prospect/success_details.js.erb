@@ -6,6 +6,7 @@ function successDetailsListeners () {
       summernoteResizebarHeight = 8,
       winStoryLabelHeight = 23,
       customer,
+      customButtonHelpPopoverContent = "You can insert contributions in their original form or with a placeholder. The latter is useful for organizing your document while in Edit mode, but will preclude any changes to the underlying content. Toggle to the View mode to see the populated/saved content.",
       winStory, winStoryText, winStoryCompleted,
       winStoryRecipientsSelectOptions,
       contributionsData,  // data returned when the child row is opened; includes invitation templates, questions and answers
@@ -277,7 +278,23 @@ function successDetailsListeners () {
           })
         $('[name="win_story_email[subject]').val($('tr.shown > td:nth-of-type(2)').text())
 
-      };
+      },
+      // initPopovers = function () {
+      //   $('.adwords-logo.image-requirements, .adwords-image.image-requirements')
+      //     .popover({
+      //       // html: true,
+      //       container: 'body',
+      //       template: '<div class="popover" style="max-width:500px" role="tooltip"><div class="arrow"></div><h3 class="popover-title label-secondary"></h3><div class="popover-content"></div></div>',
+      //       content: function () {
+      //         return '<ul>' +
+      //                  '<li><strong>Minimum dimensions</strong>: ' + $(this).data('min') + ' pixels</li>' +
+      //                  '<li><strong>Greater than minimum dimensions</strong>: Within 1% of the ' + $(this).data('ratio') + ' ratio</li>' +
+      //                  '<li><strong>Suggested dimensions</strong>: ' + $(this).data('suggest') + ' pixels</li>' +
+      //                  '<li><strong>Maximum size</strong>: 1MB (1,048,576 bytes)</li>' +
+      //                '</ul>';
+      //       }
+      //     });
+      // }
 
   // initialize the win story email editor
   initWinStoryEmailEditor();
@@ -343,7 +360,16 @@ function successDetailsListeners () {
           expandView ? expandedViewHeight($tr, true) : parseInt(defaultViewHeight, 10) - (summernoteToolbarHeight + summernoteResizebarHeight),
           function () {
             depopulatePlaceholders();
-            $('.note-customButton').append('<label class="insert-contributions">Insert</label>');
+            $('.note-customButton').append(
+              '<label class="insert-contributions">Insert</label><button type="button" class="help" data-toggle="popover"><i class="fa fa-fw fa-question-circle-o"></i></button>'
+            );
+            $('.note-customButton button.help').popover({
+              container: 'body',
+              trigger: 'focus',
+              placement: 'left',
+              content: customButtonHelpPopoverContent,
+              template: '<div class="popover" style="min-width: 400px; role="tooltip"><div class="arrow"></div><div class="popover-content"></div></div>'
+            });
             $('.win-story-actions__copy').prop('disabled', true);
           }
         )
@@ -373,7 +399,16 @@ function successDetailsListeners () {
           expandedViewHeight($tr, true),
           function () {
             depopulatePlaceholders();
-            $('.note-customButton').append('<label class="insert-contributions">Insert</label>');
+            $('.note-customButton').append(
+              '<label class="insert-contributions">Insert</label><button type="button" class="help" data-toggle="popover"><i class="fa fa-fw fa-question-circle-o"></i></button>'
+            );
+            $('.note-customButton button.help').popover({
+              container: 'body',
+              trigger: 'focus',
+              placement: 'left',
+              content: customButtonHelpPopoverContent,
+              template: '<div class="popover" style="min-width: 400px; role="tooltip"><div class="arrow"></div><div class="popover-content"></div></div>'
+            });
             $('.win-story-actions__copy').prop('disabled', true);
           }
         );

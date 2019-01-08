@@ -60,12 +60,32 @@
       }
       .note-customButton {
         float: right;
+        padding-right: 38px;
+        margin-right: 0;
         label.insert-contributions {
           position: absolute;
           left: -44px;
           top: 50%;
           transform: translate(0, -50%);
           margin-bottom: 0;
+        }
+        button.help {
+          position: absolute;
+          background: none;
+          border: none;
+          right: 0;
+          padding: 6px;
+          top: 50%;
+          transform: translate(0, -50%);
+          i {
+            font-size: 20px;
+            color: #555;
+          }
+          &:hover {
+            i {
+              color: #222;
+            }
+          }
         }
       }
       .summernote-custom {
