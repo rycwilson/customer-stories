@@ -134,7 +134,7 @@ function successDetailsListeners () {
                 // unable to set this via stylesheets due to dynamic handling by summernote
                 $('.note-editor .dropdown-menu.summernote-custom').css({
                   'max-height': 0.95 * $('.note-editable').last().outerHeight() + 'px',
-                  'max-width': 0.95 * $('.note-editable').last().outerWidth() + 'px'
+                  'max-width': 0.9 * $('.note-editable').last().outerWidth() + 'px'
                 });
                 summernote.editable.on('click', function (e) {
                   summernote.note.summernote('saveRange');
