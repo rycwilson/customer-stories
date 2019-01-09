@@ -245,13 +245,9 @@ class SuccessesController < ApplicationController
   end
 
   def convert_description_to_win_story_html
-    # just squash everything into a single paragraph
-    success_params["win_story"]
-      .prepend('<p>')
-      .sub!(/(\r\n)+$/, '')
-      .gsub!(/(\r\n)+/, '</p><p>')
-      .concat('</p>')
-    # success_params["win_story"] = success_params["win_story"].to_json
+    success_params["win_story"].sub!(/(\r\n)+$/, '')
+    success_params["win_story"].gsub!(/(\r\n)+/, '</p><p>')
+    success_params["win_story"].prepend('<p>').concat('</p>')
   end
 
   def remove_excess_newlines_from_win_story_text
