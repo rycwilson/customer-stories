@@ -20,11 +20,20 @@ function storiesEditContentListeners () {
   };
 
   $(document)
-    .on('shown.bs.collapse', '#contributions-carousel', function () {
-      $('[href="#contributions-carousel"][data-toggle="collapse"] > span').toggle();
-    })
-    .on('hidden.bs.collapse', '#contributions-carousel', function () {
-      $('[href="#contributions-carousel"][data-toggle="collapse"] > span').toggle();
+
+    // show contributions
+    .on('click', 'button[data-original-title="Show/Hide Contributions"]', function () {
+      $.ajax({
+        url: window.location.pathname,
+        method: 'get',
+        dataType: 'json'
+      })
+        .done(function (data, status, xhr) {
+          console.log('status', status)
+          console.log(data)
+        });
+      $('#show-contributions').collapse('toggle');
+
     })
 
     // form changes

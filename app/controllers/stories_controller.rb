@@ -74,6 +74,17 @@ class StoriesController < ApplicationController
         end
       end and return
     end
+    if params[:contributions]
+      success = @story.success
+      data = {
+        contributions_data: {
+          invitation_templates: JSON.parse(success.invitation_templates.to_json({ only: [:id, :name] })),
+          questions: JSON.parse(success.questions.distinct.to_json({ only: [:id, :question, :invitation_template_id] })),
+          answers: JSON.parse(success.answers.to_json({ only: [:answer, :contribution_id, :contributor_question_id] }))
+        }
+      }.to_json
+      respond_to { |format| format.json { render({ json: data }) } }
+    end
     if params[:remove_video].present?
       render(
         'stories/show/testimonial',
@@ -88,17 +99,55 @@ class StoriesController < ApplicationController
   end
 
   def edit
-    # want to catch an ajax request for _edit partial, but ignore tubolinks ajax requests
+    # want to catch an ajax requests but ignore tubolinks ajax requests
     if request.xhr? && !request.env["HTTP_TURBOLINKS_REFERRER"]
-      render({
-        partial: 'stories/edit/edit',
-        locals: {
-          company: @company,
-          story: @story,
-          workflow_stage: 'curate',
-          tab: '#story-settings'
-        }
-      })
+
+      respond_to do |format|
+        format.html do
+          render({
+            partial: 'stories/edit/edit',
+            locals: {
+              company: @company,
+              story: @story,
+              workflow_stage: 'curate',
+              tab: '#story-settings'
+            }
+          })
+        end
+        format.json do
+          render({
+            json: {
+              contributions_data: {
+                invitation_templates: JSON.parse(@story.success.invitation_templates.to_json({ only: [:id, :name] })),
+                questions: JSON.parse(@story.success.questions.distinct.to_json({ only: [:id, :question, :invitation_template_id] })),
+                answers: JSON.parse(@story.success.answers.to_json({ only: [:answer, :contribution_id, :contributor_question_id] }))
+              }
+            }.to_json
+          })
+        end
+      end
+
+      # binding.remote_pry
+      # if request.format.json?  # contributions data
+      #   data = {
+      #     contributions_data: {
+      #       invitation_templates: JSON.parse(@story.success.invitation_templates.to_json({ only: [:id, :name] })),
+      #       questions: JSON.parse(@story.success.questions.distinct.to_json({ only: [:id, :question, :invitation_template_id] })),
+      #       answers: JSON.parse(@story.success.answers.to_json({ only: [:answer, :contribution_id, :contributor_question_id] }))
+      #     }
+      #   }.to_json
+      #   respond_to { |format| format.json { render({ json: data }) } }
+      # else
+      #   render({
+      #     partial: 'stories/edit/edit',
+      #     locals: {
+      #       company: @company,
+      #       story: @story,
+      #       workflow_stage: 'curate',
+      #       tab: '#story-settings'
+      #     }
+      #   })
+      # end
     else
       # provide data for both stories#edit and companies#show views
       @customer = @story.success.customer

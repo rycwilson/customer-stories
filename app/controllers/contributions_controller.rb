@@ -18,7 +18,7 @@ class ContributionsController < ApplicationController
     # Get contributions data for a win story. Success and contributor data already exist in the client.
     if params[:win_story]
       success = Success.find(params[:success_id])
-      res = {
+      data = {
         contributions_data: {
           invitation_templates: JSON.parse(success.invitation_templates.to_json({ only: [:id, :name] })),
           questions: JSON.parse(success.questions.distinct.to_json({ only: [:id, :question, :invitation_template_id] })),
@@ -32,7 +32,7 @@ class ContributionsController < ApplicationController
       else
         contributions = company.contributions
       end
-      res = contributions.to_json({
+      data = contributions.to_json({
         only: [:id, :status, :publish_contributor, :contributor_unpublished],
         methods: [:display_status, :timestamp],
         include: {
@@ -51,8 +51,8 @@ class ContributionsController < ApplicationController
         }
       })
     end
-    # pp(JSON.parse(res))
-    respond_to { |format| format.json { render({ json: res }) } }
+    # pp(JSON.parse(data))
+    respond_to { |format| format.json { render({ json: data }) } }
   end
 
   def show
