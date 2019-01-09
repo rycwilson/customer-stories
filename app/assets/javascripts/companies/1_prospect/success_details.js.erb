@@ -189,7 +189,7 @@ function successDetailsListeners () {
                   .data()[0]
                   .contributor;
       },
-      populatePlaceholders = function () {
+      populatePlaceholders = function (html) {
         // var $wrapper = $(JSON.parse($('input[type="hidden"][name="success[win_story]"]').val()))
         var $wrapper = $($('input[type="hidden"][name="success[win_story]"]').val())
                         .wrapAll('<div class="wrapper"></div>')
@@ -236,7 +236,7 @@ function successDetailsListeners () {
           );
         })
 
-        return $wrapper.html();
+        return html ? $wrapper.html() : $wrapper.text();
       },
       depopulatePlaceholders = function () {
         $('.note-editable')
@@ -419,7 +419,7 @@ function successDetailsListeners () {
           .css('height', isExpandedView ? (parseInt($('.form-group.win-story').last().css('height'), 10) - winStoryLabelHeight).toString() + 'px' : defaultViewHeight)
           .prop('contenteditable', false)
           .summernote('destroy')
-        $('#win-story-editor').html(populatePlaceholders())
+        $('#win-story-editor').html(populatePlaceholders(true))
         $('.win-story-actions__copy').prop('disabled', false);
 
         // update hidden input => don't save placeholders
@@ -500,8 +500,11 @@ function successDetailsListeners () {
         e.stopImmediatePropagation();
         $(this).closest('form')
                .find('input[type="hidden"][name="success[win_story]"]')
-               // .val(JSON.stringify(populatePlaceholders()))
-               .val(populatePlaceholders())
+                 .val(populatePlaceholders(true))
+                 .end()
+               .find('input[type="hidden"][name="success[win_story_text]"]')
+                 .val(populatePlaceholders(false))
+                 .end()
                .submit()
         toggleFormWorking($form);
       } else {
