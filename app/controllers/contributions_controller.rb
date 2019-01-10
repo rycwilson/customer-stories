@@ -7,20 +7,31 @@ class ContributionsController < ApplicationController
   skip_before_action(
     :verify_authenticity_token,
     only: [:create],
-    if: -> { params[:zap].present? }
+    if: -> { params[:zapier_create].present? }
   )
 
   respond_to(:html, :json, :js)
 
-  # datatables source data (contributors)
   def index
     company = Company.find_by(subdomain: request.subdomain)
-    if params[:success_id]
-      contributions = Success.find(params[:success_id]).contributions
-    else
-      contributions = company.contributions
-    end
-    # data = Rails.cache.fetch("#{company.subdomain}/dt-contributors") do
+
+    # Get contributions data for a win story. Success and contributor data already exist in the client.
+    if params[:win_story]
+      success = Success.find(params[:success_id])
+      data = {
+        contributions_data: {
+          invitation_templates: JSON.parse(success.invitation_templates.to_json({ only: [:id, :name] })),
+          questions: JSON.parse(success.questions.distinct.to_json({ only: [:id, :question, :invitation_template_id] })),
+          answers: JSON.parse(success.answers.to_json({ only: [:answer, :contribution_id, :contributor_question_id] }))
+        }
+      }.to_json
+
+    else  # datatables source data (contributors)
+      if params[:success_id]
+        contributions = Success.find(params[:success_id]).contributions
+      else
+        contributions = company.contributions
+      end
       data = contributions.to_json({
         only: [:id, :status, :publish_contributor, :contributor_unpublished],
         methods: [:display_status, :timestamp],
@@ -39,6 +50,7 @@ class ContributionsController < ApplicationController
           invitation_template: { only: [:id, :name] },
         }
       })
+    end
     # pp(JSON.parse(data))
     respond_to { |format| format.json { render({ json: data }) } }
   end
@@ -89,7 +101,7 @@ class ContributionsController < ApplicationController
     if contribution_params[:success_attributes].to_h.has_key?(:customer_attributes)
       params[:contribution][:success_attributes][:customer_attributes] = find_dup_customer(
         contribution_params.to_h[:success_attributes],
-        params[:zap].present?,
+        params[:zapier_create].present?,
         current_user
       )
     end
@@ -97,14 +109,14 @@ class ContributionsController < ApplicationController
     if contribution_params.to_h.has_key?(:referrer_attributes)
       params[:contribution][:referrer_attributes] = find_dup_user_and_split_full_name(
         contribution_params.to_h[:referrer_attributes],
-        params[:zap].present?
+        params[:zapier_create].present?
       )
     end
 
     if contribution_params.to_h.has_key?(:contributor_attributes)
       params[:contribution][:contributor_attributes] = find_dup_user_and_split_full_name(
         contribution_params.to_h[:contributor_attributes],
-        params[:zap].present?
+        params[:zapier_create].present?
       )
     end
 
@@ -118,7 +130,7 @@ class ContributionsController < ApplicationController
       #   @contribution.save
       # end
     end
-    if params[:zap].present?
+    if params[:zapier_create].present?
       respond_to do |format|
         format.any do
           render({

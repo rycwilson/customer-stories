@@ -3,7 +3,8 @@
 @import 'contributors';
 @import 'contributor_invitation_modal';
 @import 'contribution_content_modal';
-@import 'win_story_modal';
+@import '../../customers/edit_customer_modal';
+@import 'win_story_email_modal';
 @import 'bootbox_modals';
 
 #prospect {
@@ -208,7 +209,7 @@
     }
   }
   .form-group.contact-email,
-  .form-group.description, .form-group.csv-file {
+  .form-group.win-story, .form-group.csv-file {
     margin-bottom: 0;
   }
 }

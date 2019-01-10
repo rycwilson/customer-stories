@@ -48,7 +48,6 @@ function prospectListeners () {
   newContributorListeners();
   successDetailsListeners();
   successActionsListeners();
-  winStoryListeners();
   contributorDetailsListeners();
   contributorActionsListeners();
   contributorInvitationListeners();

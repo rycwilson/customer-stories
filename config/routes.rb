@@ -19,8 +19,10 @@ Rails.application.routes.draw do
     get '/auth-test', to: 'application#auth_test'
     get '/curators', to: 'companies#get_curators'
     get '/invitation_templates', to: 'companies#get_invitation_templates'
-    post '/successes', to: 'successes#create', constraints: { zap: 'true' }
-    post '/contributions', to: 'contributions#create', constraints: { zap: 'true' }
+    # was going to do this via successes#index but zapier trigger setup was not sending ?zapier_trigger=true
+    get '/win_stories', to: 'successes#zapier_trigger'
+    post '/successes', to: 'successes#create', constraints: { zapier_create: 'true' }
+    post '/contributions', to: 'contributions#create', constraints: { zapier_create: 'true' }
   end
 
   get '/sitemap', to: 'site#sitemap'
@@ -93,12 +95,11 @@ Rails.application.routes.draw do
       get '/settings', to: 'companies#edit', as: 'company_settings'
 
       resources :companies, only: [:show, :edit, :update] do
-        resources :customers, only: [:create, :update, :destroy], shallow: true
+        resources :customers, only: [:show, :create, :update, :destroy], shallow: true
         resources :successes, only: [:show, :create, :update, :destroy], shallow: true do
           resources :contributions, only: [:index]
           resources :results, only: [:create, :destroy]
           collection { post '/import', to: 'successes#import' }
-          member { get '/win_story', to: 'successes#win_story' }
         end
         resources :stories, only: [:edit, :create, :update, :destroy], shallow: true do
           get '/promoted', on: :collection, to: 'stories#promoted'

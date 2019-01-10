@@ -28,16 +28,23 @@ class Success < ApplicationRecord
       where(status: 'contribution_submitted')
     end
   end
-  has_many :results, -> { order(created_at: :asc) }, dependent: :destroy
   # alias the association to user -> Success.find(id).contributors
   # note: contributor is an alias - see contribution.rb
   has_many :contributors, through: :contributions, source: :contributor
+  has_many :invitation_templates, -> { distinct }, through: :contributions
+
+  # there is an issue using -> { distinct } here, I think due to there being a default order on ContributorQuestion
+  # => works ok if .distinct method is used; see contributions#index
+  has_many :contributor_questions, through: :invitation_templates
+  alias_attribute :questions, :contributor_questions
   has_many :contributor_answers, through: :contributions
+  alias_attribute :answers, :contributor_answers
   has_many :page_views, class_name: 'PageView'
   has_many :story_shares, class_name: 'StoryShare'
   has_many :visitor_actions
   has_many :visitors, through: :visitor_actions
 
+  has_many :results, -> { order(created_at: :asc) }, dependent: :destroy
   has_many :ctas_successes, dependent: :destroy
   has_many :ctas, through: :ctas_successes, source: :call_to_action
 
@@ -57,6 +64,48 @@ class Success < ApplicationRecord
 
   before_save(on: :create) do
     self.is_new_record = true
+  end
+
+  def win_story_recipients_select_options
+    recipients_options_self = []  # contributors and referrers tied to this success
+    recipients_options_more = []  # all company contributors and referrers
+
+    # need to check the invitation template, so search on contributions
+    Contribution
+      .includes(:contributor, :referrer)
+      .joins(:customer, :invitation_template)
+      .where({ customers: { company_id: self.customer.company_id } })
+      .where.not({ invitation_templates: { name: 'Customer' } })
+      .each do |contribution|
+        if contribution.referrer_id
+          referrer_option = {
+              id: contribution.referrer.id,
+              text: "#{contribution.referrer.full_name} (#{contribution.referrer.email})"
+            }
+          contribution.success_id == self.id ?
+            recipients_options_self << referrer_option :
+            recipients_options_more << referrer_option
+        end
+        if contribution.contributor_id
+          contributor_option = {
+              id: contribution.contributor.id,
+              text: "#{contribution.contributor.full_name} (#{contribution.contributor.email})"
+            }
+          contribution.success_id == self.id ?
+            recipients_options_self << contributor_option :
+            recipients_options_more << contributor_option
+        end
+      end
+    [
+      {
+        text: self.name,
+        children: recipients_options_self.uniq { |recipient| recipient[:text] }
+      },
+      {
+        text: 'More Contacts',
+        children: recipients_options_more.uniq { |recipient| recipient[:text] }
+      }
+    ]
   end
 
   # method is used for passing the contributions count to datatables / successes dropdown

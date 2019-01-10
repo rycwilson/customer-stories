@@ -1,12 +1,12 @@
 
 // need to vlidate input file name
 // http://stackoverflow.com/questions/22387874/jquery-validate-plugin-bootstrap-jasny-bootstrap-file-input-regex-validation
-function initS3Upload () {
-
+function initS3Upload (isCustomerForm) {
+  // console.log('initS3Upload()')
   $('.directUpload').find("input:file").each(function (i, elem) {
     var fileInput    = $(elem);
     var form         = $(fileInput.parents('form:first'));
-    var submitButton = form.find('input[type="submit"]');
+    var submitButton = isCustomerForm ? $('button[type="submit"][form="' + form.attr('id') + '"]') : form.find('input[type="submit"]');
     var progressBar  = $("<div class='bar'></div>");
     var barContainer = $("<div class='progress'></div>").append(progressBar);
     // fileInput.after(barContainer);
@@ -51,7 +51,7 @@ function initS3Upload () {
         // extract key and generate URL from response
         var key   = $(data.jqXHR.responseXML).find("Key").text();
         var url   = 'https://' + form.data('host') + '/' + key;
-
+console.log('key', key)
         // create hidden field
         var input = $("<input />", { type:'hidden', name: fileInput.attr('name'), value: url });
         form.append(input);

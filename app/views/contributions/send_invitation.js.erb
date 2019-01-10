@@ -20,7 +20,7 @@
         }
       }) %>,
       success = <%= raw @contribution.success.to_json({
-        only: [:id, :name, :description],
+        only: [:id, :name, :win_story],
         methods: [:display_status, :referrer, :timestamp],
         include: {
           curator: { only: [:id], methods: [:full_name] },

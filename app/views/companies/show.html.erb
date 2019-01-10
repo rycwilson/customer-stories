@@ -10,6 +10,10 @@
 <% content_for :underscore_templates do %>
   <%= render 'companies/1_prospect//successes/successes_table_header_template' %>
   <%= render 'companies/1_prospect/successes/success_details_template' %>
+  <%= render 'companies/1_prospect/successes/win_story/note_insertion_dropdown_template' %>
+  <%= render 'companies/1_prospect/successes/win_story/individual_contribution_template' %>
+  <%= render 'companies/1_prospect/successes/win_story/group_contribution_template' %>
+  <%= render 'companies/1_prospect/successes/win_story/customer_logo_template' %>
   <%= render 'companies/1_prospect/successes/success_actions_dropdown_template' %>
   <%= render 'companies/1_prospect/contributors/contributors_table_header_template' %>
   <%= render 'companies/1_prospect/contributors/contributor_details_template' %>
@@ -20,11 +24,14 @@
   <%= render 'stories/index/index_template', { company: @company } %>
   <%= render 'stories/edit/content/results_templates' %>
   <%= render 'stories/edit/content/video_templates' %>
+  <%= render 'stories/edit/content/show_contributions_template' %>
 <% end %>
 
 <!-- include modals for both companies#show and stories#edit -->
+<%= render 'customers/edit_customer_modal', { company: @company } %>
 <%= render 'companies/1_prospect/successes/new_success_modal', { company: @company } %>
-<%= render 'companies/1_prospect/successes/win_story_modal', { company: @company } %>
+<%= render 'companies/1_prospect/successes/win_story/win_story_email_modal', { company: @company } %>
+<%= render 'companies/1_prospect/successes/win_story/win_story_zapier_modal', { company: @company } %>
 <%= render 'companies/1_prospect/contributors/new_contributor_modal', { company: @company } %>
 <%= render 'companies/1_prospect/contributors/contribution_request_modal', { company: @company} %>
 <%= render 'companies/1_prospect/contribution_content_modal' %>

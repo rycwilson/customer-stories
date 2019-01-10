@@ -1,0 +1,20 @@
+
+<script type="text/template" id="win-story-customer-logo-template">
+
+  <div class="{{= className }}" data-placeholder="{{= placeholder }}">
+    <div>
+
+      <img style="max-height:65px" src="{{= customer.logo_url || '<%= LOGO_PLACEHOLDER_URL %>' }}" alt="Customer Logo">
+
+      {{ if (customer.show_name_with_logo) { }}
+
+        <div>
+          <span>{{= customer.name }}</span>
+        </div>
+
+      {{ } }}
+
+    </div>
+  </div>
+
+</script>

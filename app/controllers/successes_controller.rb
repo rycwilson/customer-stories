@@ -2,51 +2,74 @@ require 'successes_and_contributions'
 class SuccessesController < ApplicationController
   include SuccessesAndContributions
 
-  # respond_to(:html, :js, :json)
+  respond_to(:html, :js, :json)
 
-  before_action(except: [:index, :create, :import]) { @success = Success.find(params[:id]) }
+  before_action({ only: [:create] }) { convert_description_to_win_story_html }
+  before_action({ only: [:update] }) { remove_excess_newlines_from_win_story_text }
+  before_action({ except: [:zapier_trigger, :index, :create, :import] }) { @success = Success.find(params[:id]) }
   skip_before_action(
     :verify_authenticity_token,
     only: [:create],
-    if: -> { params[:zap].present? }
+    if: -> { params[:zapier_create].present? }
   )
 
+  def zapier_trigger
+    company = current_user.company
+    data = company.successes.select { |s| s.win_story_completed? && s.curator_id == params['curator_id'].to_i }
+                  .to_json({
+                    only: [:id, :name, :win_story, :win_story_text],
+                    include: {
+                      customer: {
+                        only: [:name, :description, :logo_url]
+                      }
+                    }
+                  })
+    respond_to { |format| format.json { render({ json: data }) } }
+  end
+
   def index
-    company = Company.find_by(subdomain: request.subdomain)
-    # data = Rails.cache.fetch("#{company.subdomain}/dt-successes") do
+    company = Company.find_by(subdomain: request.subdomain) || current_user.company
     data = company.successes.to_json({
-        only: [:id, :name, :description],
-        methods: [:display_status, :referrer, :contact, :timestamp],
-        include: {
-          curator: { only: [:id], methods: [:full_name] },
-          customer: { only: [:id, :name, :slug] },
-          story: { only: [:id, :title, :slug] }
-        }
-      })
-    # end
+      only: [:id, :name],
+      methods: [:display_status, :referrer, :contact, :timestamp],
+      include: {
+        curator: { only: [:id], methods: [:full_name] },
+        customer: { only: [:id, :name, :slug] },
+        story: { only: [:id, :title, :slug] }
+      }
+    })
     respond_to { |format| format.json { render({ json: data }) } }
   end
 
   def show
-    # puts params.permit(params.keys).to_h
-    @templates = InvitationTemplate.find(params[:templates])
-    render(:win_story, layout: false)
+    success = Success.includes(:customer).find(params[:id])
+    respond_with(
+      success,
+      only: [:id, :win_story, :win_story_text, :win_story_completed],
+      methods: [:win_story_recipients_select_options],
+      include: {
+        customer: {
+          only: [:id, :name, :description, :logo_url, :show_name_with_logo]
+        }
+      }
+    )
   end
 
   def create
     # puts 'successes#create'
+    # puts success_params.to_h
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
 
     params[:success][:customer_attributes] = find_dup_customer(
       success_params.to_h.dig(:customer_attributes),
-      params[:zap].present?,
+      params[:zapier_create].present?,
       current_user
     )
 
     if params[:success].dig(:contributions_attributes, '0', :referrer_attributes).present?
       params[:success][:contributions_attributes]['0'][:referrer_attributes] = find_dup_user_and_split_full_name(
           success_params.to_h.dig(:contributions_attributes, '0', :referrer_attributes),
-          params[:zap].present?
+          params[:zapier_create].present?
         )
       params[:success][:contributions_attributes].except!('0') if params[:success][:contributions_attributes]['0'][:referrer_attributes].blank?
     end
@@ -54,14 +77,14 @@ class SuccessesController < ApplicationController
     if params[:success].dig(:contributions_attributes, '1', :contributor_attributes).present?
       params[:success][:contributions_attributes]['1'][:contributor_attributes] = find_dup_user_and_split_full_name(
           success_params.to_h.dig(:contributions_attributes, '1', :contributor_attributes),
-          params[:zap].present?
+          params[:zapier_create].present?
         )
       params[:success][:contributions_attributes].except!('1') if params[:success][:contributions_attributes]['1'][:contributor_attributes].blank?
     end
 
     # pp success_params.to_h
 
-    if params[:zap].present? && (@success = Success.find_by_id(find_dup_success(success_params.to_h)))
+    if params[:zapier_create].present? && (@success = Success.find_by_id(find_dup_success(success_params.to_h)))
       # a new success entails two contributions, one for the contact and one for the referrer;
       # a duplicate success means a new contributor, i.e. one contribution only;
       # referrers only get a contribution when they refer the original customer contact
@@ -75,7 +98,7 @@ class SuccessesController < ApplicationController
       end
     end
     # end
-    if params[:zap].present?
+    if params[:zapier_create].present?
       respond_to do |format|
         format.any do
           render({
@@ -169,6 +192,8 @@ class SuccessesController < ApplicationController
   end
 
   def update
+    # puts success_params.to_h
+    params[:success][:win_story_completed] = ActiveRecord::Type::Boolean.new.cast(success_params[:win_story_completed])
     @success.update(success_params)
     respond_to { |format| format.js {} }
   end
@@ -185,7 +210,7 @@ class SuccessesController < ApplicationController
   # status will be present in case of csv upload
   def success_params
     params.require(:success).permit(
-      :name, :description, :customer_id, :curator_id,
+      :name, :win_story, :win_story_text, :win_story_completed, :customer_id, :curator_id,
       customer_attributes: [:id, :name, :company_id],
       contributions_attributes: [
         :referrer_id, :contributor_id, :invitation_template_id, :success_contact,
@@ -219,34 +244,15 @@ class SuccessesController < ApplicationController
     )
   end
 
-  # method receives params[:success][:customer_attributes] and either
-  # - finds customer, or
-  # - provides company_id for the new customer
-  # def self.find_dup_customer (customer_params, is_zap, current_user)
-  #   if is_zap || !is_zap  # works for either
-  #     if (customer = Customer.where(name: customer_params.try(:[], :name), company_id: current_user.company_id).take)
-  #       customer_params[:id] = customer.id
-  #       customer_params.delete_if { |k, v| k != 'id' }
-  #     else
-  #       customer_params[:company_id] = current_user.company_id
-  #     end
-  #   else
-  #   end
-  # end
+  def convert_description_to_win_story_html
+    success_params["win_story"].sub!(/(\r\n)+$/, '')
+    success_params["win_story"].gsub!(/(\r\n)+/, '</p><p>')
+    success_params["win_story"].prepend('<p>').concat('</p>')
+  end
 
-  # def self.find_dup_users (referrer_params, contributor_params, is_zap)
-  #   if is_zap || !is_zap  # works for either
-  #     if (referrer = User.find_by_email(referrer_params.try(:[], :email)))
-  #       referrer_params[:id] = referrer.id
-  #       # allow certain attribute updates
-  #       referrer_params.delete_if { |k, v| !['id', 'title', 'phone'].include?(k) }
-  #     end
-  #     if (contributor = User.find_by_email(contributor_params.try(:[], :email)))
-  #       contributor_params[:id] = contributor.id
-  #       contributor_params.delete_if { |k, v| !['id', 'title', 'phone'].include?(k) }
-  #     end
-  #   end
-  # end
+  def remove_excess_newlines_from_win_story_text
+    success_params["win_story_text"].gsub!(/\s\r\n\r\n\s/, '')
+  end
 
   # find a success previously created in this import (or in db) and return id
   def find_dup_success (success, success_lookup=nil)

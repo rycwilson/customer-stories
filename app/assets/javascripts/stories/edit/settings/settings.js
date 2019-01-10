@@ -9,10 +9,6 @@ function storiesEditSettingsListeners () {
 
   $(document)
 
-    .on('change', '.customer-logo input[name*="show_name_with_logo"]', function () {
-      $(this).closest('.customer-logo').find('.customer-name').toggle();
-    })
-
     // ensure only valid logo/story publish states
     .on('switchChange.bootstrapSwitch', 'input', function (e, data) {
       // note the jquery indexing => necessary for bootstrap switch to work properly
@@ -64,19 +60,17 @@ function storiesEditSettingsListeners () {
 
     })
 
-    .on('click', '.customer-logo .change-image', function () {
-
-      var $previewImg = $(this).closest('.fileinput').find('.fileinput-preview img');
-
-      if ($previewImg.attr('src')) {
-        // click on the preview
-        $(this).closest('.fileinput').find('.thumbnail')[1].click();
-      } else {
-        // click on the placeholder
-        $(this).closest('.fileinput').find('.thumbnail')[0].click();
-      }
-
-    });
+    // moved to #edit-customer-modal
+    // .on('click', '.customer-logo .change-image', function () {
+    //   var $previewImg = $(this).closest('.fileinput').find('.fileinput-preview img');
+    //   if ($previewImg.attr('src')) {
+    //     // click on the preview
+    //     $(this).closest('.fileinput').find('.thumbnail')[1].click();
+    //   } else {
+    //     // click on the placeholder
+    //     $(this).closest('.fileinput').find('.thumbnail')[0].click();
+    //   }
+    // });
 }
 
 // the select2 boxes initialize synchronously, i.e. subsequent code doesn't

@@ -18,8 +18,31 @@ function initSummernote () {
     ],
   });
 
+  if ($('#narrative-editor').length) {
+    initNarrativeEditor();
+  }
+
+}
+
+function initNarrativeEditor () {
+
+  var showContributions = function (context) {
+    var ui = $.summernote.ui;
+    var button = ui.buttonGroup([
+      ui.button({
+        className: 'btn btn-default',
+        data: {},
+        disabled: true,
+        tooltip: 'Show/Hide Contributions',
+        contents: '<i class="fa fa-fw fa-comments-o"></i>',
+        // tooltip: 'Insert a data placeholder'
+      })
+    ]);
+    return button.render();   // return button as jquery object
+  };
+
   $('#narrative-editor').summernote({
-    // maxHeight: 400,
+    minHeight: 500,
     toolbar: [
       ['style', ['style']],
       ['font', ['bold', 'italic', 'underline']], //, 'clear']],
@@ -31,9 +54,17 @@ function initSummernote () {
       ['table', ['table']],
       ['insert', ['link', 'picture', 'hr']],
       ['view', ['codeview']],
-      ['help', ['help']]
+      ['help', ['help']],
+      ['customButton', ['showContributions']]
     ],
+    buttons: {
+      showContributions: showContributions
+    },
   });
+
+    $('#narrative-editor').next().find('.note-editing-area').prepend(
+      _.template($('#show-contributions-template').html())()
+    )
 
 }
 

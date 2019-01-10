@@ -15,7 +15,7 @@
         include: {
           # success source data needed to update successes table (with addition of previous_changes method)
           success: {
-            only: [:id, :name, :description],
+            only: [:id, :name, :win_story],
             methods: [:display_status, :referrer, :contact, :previous_changes, :timestamp],
             include: {
               curator: { only: [:id], methods: [:full_name] },

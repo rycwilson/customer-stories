@@ -19,6 +19,7 @@ class ApplicationController < ActionController::Base
       devise_controller? ||
       invalid_subdomain? ||
       params[:controller] == 'plugins' ||
+      params[:action] == 'zapier_trigger' ||
       request.subdomain == 'cspdev'
     end
   )

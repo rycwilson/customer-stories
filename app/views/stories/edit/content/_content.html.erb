@@ -66,15 +66,6 @@
 
     <%= story_form.label(:narrative, 'Narrative') %>
 
-    <% if story.contributions.submissions.present? %>
-      <label class='contributions-collapse pull-right'>
-        <a href="#contributions-carousel" data-toggle='collapse'>
-          <span >Show Contributions</span><span style='display:none'>Hide Contributions</span>
-        </a>&nbsp;&nbsp;
-        <i class='pull-right fa fa-info-circle' data-toggle='tooltip' data-container='body' title='Contributions are not published. They are provided here for your reference.'></i>
-      </label>
-    <% end %>
-
     <%= story_form.text_area(:narrative, id: 'narrative-editor',
             data: { provider: 'summernote' }) %>
   </div>

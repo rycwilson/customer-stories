@@ -28,8 +28,57 @@
     }
 
 
+
   }
 
+  #show-contributions {
+    background-color: #efefef;
+    > div {    // need an inner div to allow for padding (which will screw up the div.collapse)
+      padding: 15px;
+      div.btn-group {
+        margin-bottom: 12px;
+        label {
+          margin-right: 20px;
+          &:not(:first-of-type) {
+            margin-bottom: 3px;
+          }
+        }
+      }
+      div.contributions {
+        height: 200px;
+        overflow-y: scroll;
+        background-color: #f9f9f9;
+        padding-left: 4px;
+        ul.fa-ul > li {
+          > span {
+            padding: 5px 0;
+            pointer-events: none;  // so only the paragraph hover effect happens
+          }
+          > p {
+            padding-top: 5px;
+            padding-bottom: 5px;
+            cursor: pointer;
+            margin-bottom: 0;
+            margin-left: -32px;
+            padding-left: 32px;
+            &:hover {
+              background-color: #efefef;
+            }
+          }
+          div.collapse ul {
+            list-style-type: disc;
+          }
+          &.disabled {
+            pointer-events: none;
+            opacity: 0.5;
+            cursor: not-allowed;
+          }
+        }
+      }
+
+    }
+  }
 
 }
+
 

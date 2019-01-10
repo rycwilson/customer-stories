@@ -1,12 +1,12 @@
 Rails.application.configure do
 
   # restrict access to staging site
-  if ENV['HOST_NAME'] == 'customerstories.org'
-    config.middleware.use RackPassword::Block,
-      auth_codes: ['csp-stag!ng'],
-      path_whitelist: /(widgets|plugins)/,
-      custom_rule: proc { |request| request.params.keys.include?('is_plugin') }
-  end
+  # if ENV['HOST_NAME'] == 'customerstories.org'
+  #   config.middleware.use RackPassword::Block,
+  #     auth_codes: ['csp-stag!ng'],
+  #     path_whitelist: /(widgets|plugins)/,
+  #     custom_rule: proc { |request| request.params.keys.include?('is_plugin') }
+  # end
 
   if ENV['HOST_NAME'] == 'customerstories.net'
     config.session_store(:cookie_store, key: '_csp_session', domain: 'customerstories.net', tld_length: 2)

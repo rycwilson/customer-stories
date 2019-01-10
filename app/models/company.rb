@@ -35,7 +35,7 @@ class Company < ApplicationRecord
       self.sort_by { |c| c.last_name }.map { |curator| [ curator.full_name, curator.id ] }
     end
   end
-  has_many :contributions, -> { includes(:contributor, :referrer, success:{customer:{}}) }, through: :successes
+  has_many :contributions, -> { includes(:contributor, :referrer, success: { customer: {} }) }, through: :successes
   has_many :contributors, -> { distinct }, through: :customers, source: :contributors
   has_many :referrers, -> { distinct }, through: :contributions, source: :referrer
   has_many :stories, through: :successes do
