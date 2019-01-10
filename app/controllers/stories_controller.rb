@@ -118,9 +118,15 @@ class StoriesController < ApplicationController
           render({
             json: {
               contributions_data: {
-                invitation_templates: JSON.parse(@story.success.invitation_templates.to_json({ only: [:id, :name] })),
-                questions: JSON.parse(@story.success.questions.distinct.to_json({ only: [:id, :question, :invitation_template_id] })),
-                answers: JSON.parse(@story.success.answers.to_json({ only: [:answer, :contribution_id, :contributor_question_id] }))
+                invitation_templates: JSON.parse(
+                  @story.success.invitation_templates.to_json({ only: [:id, :name] })
+                ),
+                questions: JSON.parse(
+                  @story.success.questions.distinct.to_json({ only: [:id, :question] })
+                ),
+                answers: JSON.parse(
+                  @story.success.answers.to_json({ only: [:answer, :contribution_id, :contributor_question_id] })
+                )
               }
             }.to_json
           })

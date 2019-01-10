@@ -18,7 +18,9 @@ function initSummernote () {
     ],
   });
 
-  initNarrativeEditor();
+  if ($('#narrative-editor').length) {
+    initNarrativeEditor();
+  }
 
 }
 
@@ -29,55 +31,12 @@ function initNarrativeEditor () {
     var button = ui.buttonGroup([
       ui.button({
         className: 'btn btn-default',
-        data: {
-          // toggle: 'dropdown',
-          // placement: 'top'
-        },
+        data: {},
+        disabled: true,
         tooltip: 'Show/Hide Contributions',
         contents: '<i class="fa fa-fw fa-comments-o"></i>',
         // tooltip: 'Insert a data placeholder'
-      }),
-      // ui.dropdown({
-      //   className: 'summernote-custom',
-      //   contents: '<ul class="list-unstyled" style="margin-bottom:0">' +
-      //               '<li data-placeholder="<span contenteditable=&quot;false&quot;>[company_name]</span>">' +
-      //                 '<a href="javascript:;">Company name</a>' +
-      //               '</li>' +
-      //               '<li data-placeholder="<span contenteditable=&quot;false&quot;>[customer_name]</span>">' +
-      //                 '<a href="javascript:;">Customer name</a>' +
-      //               '</li>' +
-      //               '<li data-placeholder="<span contenteditable=&quot;false&quot;>[referrer_full_name]</span>">' +
-      //                 '<a href="javascript:;">Referrer name</a>' +
-      //               '</li>' +
-      //               '<li data-placeholder="<span contenteditable=&quot;false&quot;>[contributor_first_name]</span>">' +
-      //                 '<a href="javascript:;">Contributor first name</a>' +
-      //               '</li>' +
-      //               '<li data-placeholder="<span contenteditable=&quot;false&quot;>[contributor_full_name]</span>">' +
-      //                 '<a href="javascript:;">Contributor full name</a>' +
-      //               '</li>' +
-      //               '<li data-placeholder="<span class=&quot;cta-wrapper submit-link&quot;>[contribution_submission_button={text:&quot;Button text goes here&quot;,color:&quot;#4d8664&quot;}]</span>">' +
-      //                 '<a href="javascript:;">Contribution submission button</a>' +
-      //               '</li>' +
-      //               '<li data-placeholder="<span class=&quot;submit-link&quot;>[contribution_submission_link=&quot;Link text goes here&quot;]</span>">' +
-      //                 '<a href="javascript:;">Contribution submission link</a>' +
-      //               '</li>' +
-      //               '<li data-placeholder="<span class=&quot;submit-link&quot;>[feedback_submission_link=&quot;Link text goes here&quot;]</span>">' +
-      //                 '<a href="javascript:;">Feedback submission link</a>' +
-      //               '</li>' +
-      //               '<li data-placeholder="' + curatorSignaturePlaceholder + '">' +
-      //                 '<a href="javascript:;">Curator signature</a>' +
-      //               '</li>' +
-      //             '</ul>',
-      //   callback: function ($dropdown) {
-      //     $dropdown.find('li').each(function () {
-      //       $(this).on('click', function () {
-      //         context.invoke('editor.saveRange');
-      //         context.invoke('editor.pasteHTML', $(this).data('placeholder'));
-      //         context.invoke('editor.restoreRange');
-      //       });
-      //     });
-      //   }
-      // })
+      })
     ]);
     return button.render();   // return button as jquery object
   };
@@ -104,16 +63,9 @@ function initNarrativeEditor () {
   });
 
     $('#narrative-editor').next().find('.note-editing-area').prepend(
-      '<div id="show-contributions" class="collapse" style="background-color:#efefef;">' +
-        '<div style="height:100%; padding: 15px; height:200px">' +
-          '<p>Here is some content</p>' +
-        '</div>' +
-      '</div>'
+      _.template($('#show-contributions-template').html())()
     )
-  // if ($('#show-contributions').length === 0) {
 
-  // } else {
-  // }
 }
 
 function initInvitationEditor () {
