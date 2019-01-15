@@ -309,6 +309,8 @@ GEM
     request_store (1.3.1)
     responders (2.3.0)
       railties (>= 4.2.0, < 5.1)
+    reverse_markdown (1.1.0)
+      nokogiri
     sass (3.4.23)
     sass-rails (5.0.6)
       railties (>= 4.0.0, < 6)
@@ -414,6 +416,7 @@ DEPENDENCIES
   rails-html-sanitizer
   rails_12factor
   rails_admin
+  reverse_markdown
   sassc-rails
   spring
   summernote-rails
