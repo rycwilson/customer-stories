@@ -549,21 +549,52 @@ function successDetailsListeners () {
     })
 
     .on('click', 'td.success-details', function () {
-      var $table = $(this).closest('table'),
+      var toggleButton = $(this),
+          $table = $(this).closest('table'),
           $tr = $(this).closest('tr'),
           $trChild,
           dt = $table.DataTable(),
-          dtRow = dt.row($tr),
           successId = $tr.data('success-id'),
-          success = dt.row($tr).data();
+          success = dt.row($tr).data(),
+          closeForm = function () {
+            toggleButton.children().toggle();  // toggle caret icons
+            dt.row($tr).child.hide();
+            $tr.removeClass('shown active');
+          }
 
-      $(this).children().toggle();  // toggle caret icons
+      if (dt.row($tr).child.isShown()) {
 
-      if (dtRow.child.isShown()) {
-        dtRow.child.hide();
-        $tr.removeClass('shown active');
-      }
-      else {
+        var unsavedChanges = !$('[id*="success-form"] button[type="submit"]').prop('disabled');
+        if (unsavedChanges) {
+          bootbox.confirm({
+            size: 'small',
+            className: 'confirm-unsaved-changes',
+            closeButton: false,
+            message: "<i class='fa fa-warning'></i>\xa0\xa0\xa0<span>Unsaved changes will be lost</span>",
+            buttons: {
+              confirm: {
+                label: 'Continue',
+                className: 'btn-default'
+              },
+              cancel: {
+                label: 'Cancel',
+                className: 'btn-default'
+              }
+            },
+            callback: function (continueWithoutSave) {
+              if (continueWithoutSave) {
+                closeForm();
+              }
+            }
+          });
+
+        // form is clean
+        } else {
+          closeForm();
+        }
+
+      } else {
+        $(this).children().toggle();  // toggle caret icons
         $.when(
           $.ajax({
             url: successPath(successId),
@@ -602,7 +633,7 @@ function successDetailsListeners () {
         //     renderWinStory()
         //   })
 
-        dtRow.child(
+        dt.row($tr).child(
           _.template($('#success-details-template').html())({
             success: success,
             successPath: successPath(successId)

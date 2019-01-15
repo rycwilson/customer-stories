@@ -12,7 +12,9 @@
       $trSuccess = $('tr.shown[data-success-id="' + success.id + '"]'),
       $form = $('#success-form-' + success.id);
 
-  toggleFormDone($form, true);
+  toggleFormDone($form, true, function () {
+    $form.find('button[type="submit"]').prop('disabled', true)
+  });
 
   // update datatables => not necessary as we're not keeping Success.win_story in datatables
   // don't update until the child row is closed, or the re-draw will hose things

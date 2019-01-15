@@ -11,7 +11,7 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
         var overlayAnimationTime = 200;
         showPixleeTab = function (showTheTab) {
           if (showTheTab) {
-            setTimeout(function () {
+             setTimeout(function () {
               $('button.olark-launch-button').css({ opacity: '1', 'pointer-events': 'auto' });
             }, overlayAnimationTime)
           } else {
