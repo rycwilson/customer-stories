@@ -6,12 +6,14 @@
           id: 'story-settings-form',
           method: 'put',
           remote: true,
-          class: 'directUpload',
-          data: {
-            'form-data' => (@s3_direct_post.fields),
-            'url' => @s3_direct_post.url,
-            'host' => URI.parse(@s3_direct_post.url).host
-          }
+          class: 'form-horizontal'
+          # customer logo removed, but may eventually want to allow for a custom story image
+          # class: 'directUpload',
+          # data: {
+          #   'form-data' => (@s3_direct_post.fields),
+          #   'url' => @s3_direct_post.url,
+          #   'host' => URI.parse(@s3_direct_post.url).host
+          # }
         }
       ) do |story_form| %>
 
@@ -21,98 +23,126 @@
     <%= hidden_field_tag('settings', true) %>
 
     <div class="row">
-      <div class="col-sm-6">
 
-        <div class="form-group required-input">
-          <%= story_form.label(:title) %>
+      <div class="form-group required-input">
+        <%= story_form.label(:title, class: 'control-label col-sm-2') %>
+        <div class="col-sm-8">
           <%= story_form.text_field(:title, class: 'form-control') %>
         </div>
-
-        <div class="form-group required-input">
-          <%= customer_form.label(:name, 'Customer Name') %>
-          <%= customer_form.text_field(:name, class: 'form-control') %>
-        </div>
-
-        <div class="form-group required-input">
-          <%= render(
-                'stories/edit/settings/customer_logo',
-                { story: story, customer_form: customer_form },
-              ) %>
-        </div>
-
+        <div class="col-sm-2"></div>
       </div>
-      <div class="col-sm-6">
 
-        <div id='publish-control' class="form-inline text-center">
-
-          <div class="form-group text-center">
-            <div>
-              <label for="logo_published">Publish Logo</label>
-            </div>
-            <%= story_form.check_box(:logo_published, class: 'bs-switch form-control') %>
-          </div>
-
-          <div class="form-group text-center">
-            <div>
-              <label for='preview_published'>Publish Preview</label>
-            </div>
-            <%= story_form.check_box(:preview_published, class: "bs-switch form-control") %>
-          </div>
-
-          <div class="form-group text-center">
-            <div>
-              <label for='published'>Publish Story</label>
-            </div>
-            <%= story_form.check_box(:published, class: "bs-switch form-control") %>
-            <%= link_to('Approval', story_approval_path(story.id, format: :pdf),
-                  id: 'approval-pdf', target: '_blank',
-                  data: { missing_curator_info: story.curator.missing_info.to_json,
-                          missing_company_info: company.missing_info.to_json,
-                          turbolinks: false },
-                  ) %>
-          </div>
-        </div>  <!-- publish control -->
-
-
-        <div class="form-group tags">
-          <label for='story_success_attributes_story_category_ids'>
-            Category Tags
-          </label>
-          <%= success_form.collection_select(:story_category_ids,
-                company.story_categories, :id, :name, {},
-                { class: 'story-settings story-tags form-control',
-                  multiple: true, style: 'width:100%' }
+      <div class="form-group tags">
+        <label class="control-label col-sm-2" for='story_success_attributes_story_category_ids'>
+          Category Tags
+        </label>
+        <div class="col-sm-8">
+          <%= success_form.collection_select(
+                :story_category_ids,
+                company.story_categories,
+                :id,
+                :name,
+                {},
+                {
+                  class: 'story-settings story-tags form-control',
+                  multiple: true,
+                  style: 'width:100%'
+                }
               ) %>
         </div>
+        <div class="col-sm-2"></div>
+      </div>
 
-        <div class="form-group tags">
-          <label for='story_success_attributes_product_ids'>
-            Product Tags
-          </label>
-          <%= success_form.collection_select(:product_ids, company.products,
-                :id, :name, {},
-                { class: 'story-settings story-tags form-control',
-                  multiple: true, style: 'width:100%' }
+      <div class="form-group tags">
+        <label class="control-label col-sm-2" for='story_success_attributes_product_ids'>
+          Product Tags
+        </label>
+        <div class="col-sm-8">
+          <%= success_form.collection_select(
+                :product_ids,
+                company.products,
+                :id,
+                :name,
+                {},
+                {
+                  class: 'story-settings story-tags form-control',
+                  multiple: true,
+                  style: 'width:100%'
+                }
               ) %>
         </div>
+        <div class="col-sm-2"></div>
+      </div>
 
-        <div class="form-group">
-          <label for="#story-ctas-select">CTAs</label>
-          <%= select_tag('ctas[]', grouped_options_for_select(
+      <div class="form-group">
+        <label class="col-sm-2 control-label" for="#story-ctas-select">CTAs</label>
+        <div class="col-sm-8">
+          <%= select_tag(
+                'ctas[]',
+                grouped_options_for_select(
                   company.ctas.select_options,
                   { selected: story.ctas.pluck(:id), disabled: ['none available'] }
                 ),
-                { id: 'story-ctas-select', class: 'form-control', multiple: true,
-                  style: 'width:100%' }
+                {
+                  id: 'story-ctas-select',
+                  class: 'form-control',
+                  multiple: true,
+                  style: 'width:100%'
+                }
               ) %>
         </div>
+        <div class="col-sm-2"></div>
+      </div>
 
+      <div class="form-group publish">
+        <label class="col-sm-2 control-label">Publish</label>
+        <div class="col-sm-8">
+          <div class="publish-control">
+            <label>Logo</label>
+            <%= story_form.check_box(:logo_published, class: 'bs-switch form-control') %>
+          </div>
+          <div class="publish-control">
+            <label>Preview</label>
+            <%= story_form.check_box(:preview_published, class: "bs-switch form-control") %>
+          </div>
+          <div class="publish-control" style="position: relative">
+            <label>Story</label>
+            <%= story_form.check_box(:published, class: "bs-switch form-control") %>
+
+            <span style="position: absolute; top: 1px; right: 0">
+              <%= link_to('Approval', story_approval_path(story.id, format: :pdf),
+                    id: 'approval-pdf', target: '_blank',
+                    data: { missing_curator_info: story.curator.missing_info.to_json,
+                            missing_company_info: company.missing_info.to_json,
+                            turbolinks: false },
+                    ) %>
+            </span>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="row">
+      <div class="col-sm-8 col-sm-offset-2" style="padding: 0">
+        <hr style="margin-top:0">
       </div>
     </div>
 
-    <hr style="margin-top:0">
+    <div class="row">
+      <div class="col-sm-8 col-sm-offset-2">
+        <div class="form-group text-right">
 
-    <%= render 'shared/form_submit' %>
+          <button type="submit" class="btn btn-success text-center" style="width: 114px">
+            <span>Save changes</span>
+            <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
+            <i class='fa fa-check' style='display:none'></i>
+          </button>
+
+        </div>
+      </div>
+    </div>
 
     <% end %>
     <% end %>

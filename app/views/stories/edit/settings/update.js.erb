@@ -27,8 +27,7 @@
         CSP.stories[storyIndex].preview_published = story.preview_published;
         CSP.stories[storyIndex].published = story.published;
         CSP.stories[storyIndex].title = story.title;
-        $('a.story-title').text(story.title);
-        $('#story-edit-header span.customer').text(story.success.customer.name)
+        $('#story-edit-header > div.story-title > span:nth-of-type(2)').text(story.title);
       };
 
   updateStory();

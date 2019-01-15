@@ -11,41 +11,30 @@
   <div class="col-md-9 col-sm-8 layout-main">
     <div class="tab-content stacked-content">
 
-      <div id='story-edit-header' class='row'>
-        <div class="col-sm-2">
-
-          <div>
-            <span><label>Customer</label></span>
-          </div>
-          <div>
-            <span><label>Story Title</label></span>
-          </div>
-
+      <div id="story-edit-header">
+        <div class="customer">
+          <span><label>Customer</label></span>
+          <span><%= story.customer.name %></span>
+          <span>
+            <button type="button" data-toggle="modal" data-target="#edit-customer-modal" data-customer-id="<%= story.customer.id %>" class="btn btn-sm btn-secondary" style="width: 100%">
+              <i class='fa fa-fw fa-pencil fa-fw'></i>&nbsp;&nbsp;Edit Customer&nbsp;
+            </button>
+          </span>
         </div>
-        <div class="col-sm-7">
 
-          <div>
-            <span class="customer"><%= story.customer.name %></span>
-          </div>
-          <div>
-          <!-- no turbolinks, so linkedin widgets load properly -->
-          <!-- ref: http://stackoverflow.com/questions/17600093/rails-javascript-not-loading-after-clicking-through-link-to-helper -->
-            <a href="<%= story.csp_story_path %>" class='story-title' data-turbolinks='false'>
-              <%= story.try(:title) %>
-            </a>
-          </div>
-
+        <div class="story-title">
+          <span><label>Story Title</label></span>
+          <span><%= story.title %></span>
+          <span>
+            <%= link_to(
+                  story.csp_story_path + "?preview=true",
+                  { class: "btn btn-sm btn-secondary pull-right", style: "width: 100%", target: "_blank" }
+                ) do %>
+              <i class='fa fa-fw fa-search fa-fw'></i>&nbsp;&nbsp;View Story&nbsp;
+            <% end %>
+          </span>
         </div>
-        <div class="col-sm-3 text-center">
 
-          <%= link_to(
-                story.csp_story_path + "/?preview=1",
-                { class: "btn btn-secondary preview", target: "_blank" }
-              ) do %>
-            <i class='fa fa-search fa-fw'></i>&nbsp;&nbsp;View Story&nbsp;
-          <% end %>
-
-        </div>
       </div>
 
       <div id='story-settings' class="tab-pane fade <%= (tab == '#story-settings' || tab.nil?) ? 'in active' : '' %>">
