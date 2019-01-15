@@ -17,7 +17,7 @@ class SuccessesController < ApplicationController
     company = current_user.company
     data = company.successes.select { |s| s.win_story_completed? && s.curator_id == params['curator_id'].to_i }
                   .to_json({
-                    only: [:id, :name, :win_story, :win_story_text],
+                    only: [:id, :name, :win_story_html, :win_story_text],
                     include: {
                       customer: {
                         only: [:name, :description, :logo_url]
@@ -45,7 +45,7 @@ class SuccessesController < ApplicationController
     success = Success.includes(:customer).find(params[:id])
     respond_with(
       success,
-      only: [:id, :win_story, :win_story_text, :win_story_completed],
+      only: [:id, :win_story_html, :win_story_text, :win_story_completed],
       methods: [:win_story_recipients_select_options],
       include: {
         customer: {
@@ -210,7 +210,7 @@ class SuccessesController < ApplicationController
   # status will be present in case of csv upload
   def success_params
     params.require(:success).permit(
-      :name, :win_story, :win_story_text, :win_story_completed, :customer_id, :curator_id,
+      :name, :win_story_html, :win_story_text, :win_story_completed, :customer_id, :curator_id,
       customer_attributes: [:id, :name, :company_id],
       contributions_attributes: [
         :referrer_id, :contributor_id, :invitation_template_id, :success_contact,
@@ -245,9 +245,9 @@ class SuccessesController < ApplicationController
   end
 
   def convert_description_to_win_story_html
-    success_params["win_story"].sub!(/(\r\n)+$/, '')
-    success_params["win_story"].gsub!(/(\r\n)+/, '</p><p>')
-    success_params["win_story"].prepend('<p>').concat('</p>')
+    success_params["win_story_html"].sub!(/(\r\n)+$/, '')
+    success_params["win_story_html"].gsub!(/(\r\n)+/, '</p><p>')
+    success_params["win_story_html"].prepend('<p>').concat('</p>')
   end
 
   def remove_excess_newlines_from_win_story_text

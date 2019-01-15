@@ -151,7 +151,7 @@ function successDetailsListeners () {
                 var textContent = $(content).wrapAll('<div class="wrapper"></div>').parent().text();
                 $('form[id*="success-form"]')
                   .find('button[type="submit"]').prop('disabled', false);
-                $('input[type="hidden"][name="success[win_story]"]')
+                $('input[type="hidden"][name="success[win_story_html]"]')
                   // .val(JSON.stringify(content));
                   .val(content);
                 $('input[type="hidden"][name="success[win_story_text]"]')
@@ -175,7 +175,7 @@ function successDetailsListeners () {
                 // what to do with changes??
                 // $('form[id*="success-form"]')
                 //   .find('button[type="submit"]').prop('disabled', false);
-                // $('input[type="hidden"][name="success[win_story]"]')
+                // $('input[type="hidden"][name="success[win_story_html]"]')
                 //   // .val(JSON.stringify(content));
                 //   .val(content);
               }
@@ -190,8 +190,7 @@ function successDetailsListeners () {
                   .contributor;
       },
       populatePlaceholders = function (html) {
-        // var $wrapper = $(JSON.parse($('input[type="hidden"][name="success[win_story]"]').val()))
-        var $wrapper = $($('input[type="hidden"][name="success[win_story]"]').val())
+        var $wrapper = $($('input[type="hidden"][name="success[win_story_html]"]').val())
                         .wrapAll('<div class="wrapper"></div>')
                         .parent(),
             dtContributors = $('#prospect-contributors-table').DataTable();
@@ -246,13 +245,11 @@ function successDetailsListeners () {
           });
       },
       renderWinStory = function () {
-        if (winStory) {  // might be null or blank => will cause JSON error
-          // $('#win-story-editor').html(JSON.parse(winStory))
+        if (winStory) {
           $('#win-story-editor').html(winStory);
           $('input[type="checkbox"][name="success[win_story_completed]"]').prop('checked', winStoryCompleted);
-          $('input[type="hidden"][name="success[win_story]"]').val(winStory);
+          $('input[type="hidden"][name="success[win_story_html]"]').val(winStory);
           $('input[type="hidden"][name="success[win_story_text]"]').val(winStoryText);
-          // populatePlaceholders()  => shouldn't be necessary since we're not saving placeholders
         }
       },
       initWinStoryRecipientsSelect = function (options, contributionsData) {
@@ -419,12 +416,9 @@ function successDetailsListeners () {
           .css('height', isExpandedView ? (parseInt($('.form-group.win-story').last().css('height'), 10) - winStoryLabelHeight).toString() + 'px' : defaultViewHeight)
           .prop('contenteditable', false)
           .summernote('destroy')
-        $('#win-story-editor').html(populatePlaceholders(true))
+        $('#win-story-editor').html(populatePlaceholders(true));  // don't save placeholders
         $('.win-story-actions__copy').prop('disabled', false);
-
-        // update hidden input => don't save placeholders
-        $('input[type="hidden"][name="success[win_story]"]')
-          // .val(JSON.stringify($('#win-story-editor').html())
+        $('input[type="hidden"][name="success[win_story_html]"]')
           .val($('#win-story-editor').html());
 
         // save changes
@@ -499,7 +493,7 @@ function successDetailsListeners () {
         e.preventDefault();
         e.stopImmediatePropagation();
         $(this).closest('form')
-               .find('input[type="hidden"][name="success[win_story]"]')
+               .find('input[type="hidden"][name="success[win_story_html]"]')
                  .val(populatePlaceholders(true))
                  .end()
                .find('input[type="hidden"][name="success[win_story_text]"]')
