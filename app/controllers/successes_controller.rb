@@ -246,7 +246,7 @@ class SuccessesController < ApplicationController
 
   def convert_description_to_win_story_html
     success_params["win_story_html"].sub!(/(\r\n)+$/, '')
-    success_params["win_story_html"].gsub!(/(\r\n)+/, '</p><p>')
+    success_params["win_story_html"].gsub!(/(\r\n)+/, "</p>\r\n<p>")
     success_params["win_story_html"].prepend('<p>').concat('</p>')
   end
 
