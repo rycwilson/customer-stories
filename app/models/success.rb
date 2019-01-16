@@ -70,6 +70,12 @@ class Success < ApplicationRecord
 
   def convert_win_story_html_to_markdown
     # binding.remote_pry
+    # due to browser behavior (described here https://stackoverflow.com/questions/39362247),
+    # data-placeholder attributes aren't fully escaped, and this seems to cause issues when
+    # converting to markdown
+    self.win_story_markdown = ReverseMarkdown.convert(
+      self.win_story_markdown.gsub(/data-placeholder=\".+?<\/div>"/, '')
+    )
   end
 
   def win_story_recipients_select_options

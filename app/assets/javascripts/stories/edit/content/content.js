@@ -132,8 +132,7 @@ function storiesEditContentListeners () {
         method: 'get',
         dataType: 'json'
       })
-        .done(function (data, status, xhr) {
-          var contributionsData = data.contributions_data;
+        .done(function (contributionsData, status, xhr) {
           console.log(contributionsData)
           $('#show-contributions input[type="radio"]')
             .prop('disabled', false)

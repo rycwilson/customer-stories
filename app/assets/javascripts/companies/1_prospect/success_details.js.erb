@@ -1,7 +1,10 @@
 
 function successDetailsListeners () {
 
-  var defaultViewHeight = "200px",  // win story expand / collapse
+  var $form,    // the active success form, assigned when a child row is opened
+      $editor,  // the active $('#win-story-editor'), assigned when a child row is opened
+      contributionsData,  // invitation templates, questions and answers associated with active success
+      defaultViewHeight = "200px",  // win story expand / collapse
       summernoteToolbarHeight = 41.3,
       summernoteResizebarHeight = 8,
       winStoryLabelHeight = 23,
@@ -9,7 +12,6 @@ function successDetailsListeners () {
       customButtonHelpPopoverContent = "You can insert contributions in their original form or with a placeholder. The latter is useful for organizing your document while in Edit mode, but will preclude any changes to the underlying content. Toggle to the View mode to see the populated/saved content.",
       winStory, winStoryText, winStoryCompleted,
       winStoryRecipientsSelectOptions,
-      contributionsData,  // data returned when the child row is opened; includes invitation templates, questions and answers
       customerPath = function (customerId) { return '/customers/' + customerId; },
       successPath = function (successId) { return '/successes/' + successId; },
       contributionsDataPath = function (successId) { return '/successes/' + successId + '/contributions'; },
@@ -143,7 +145,7 @@ function successDetailsListeners () {
                 callback();
               },
               onEnter: function (e) {
-                // $(this).summernote('pasteHTML', '<br><br>');
+                // $(this).summernote('pasteHTML', '<br></br>');
                 // e.preventDefault();
               },
               onFocus: function (e) {
@@ -151,21 +153,6 @@ function successDetailsListeners () {
               onPaste: function () {
               },
               onChange: function (content) {
-                // console.log(content)
-                var $form = $('form[id*="success-form"]'),
-                    $win_story_html = $('input[type="hidden"][name="success[win_story_html]"]'),
-                    $win_story_text = $('input[type="hidden"][name="success[win_story_text]"]'),
-                    $win_story_markdown = $('input[type="hidden"][name="success[win_story_markdown]"]'),
-
-          // for the text conversion step, insert newlines between paragraphs (summernote shortcoming)
-          // for the markdown conversion step (happens in server), clean whitespace and newlines from html
-                    textContent = $(content.replace(/<\/p><p>/g, "</p>\r\n<p>"))
-                                    .wrapAll('<div class="wrapper"></div>').parent().text();
-                    markdownContent = $(content)
-                                    .wrapAll('<div class="wrapper"></div>').parent().htmlClean().html();
-                $win_story_html.val(content);
-                $win_story_text.val(textContent);
-                $win_story_markdown.val(markdownContent);
                 $form.find('button[type="submit"]').prop('disabled', false);
               }
             }
@@ -201,32 +188,30 @@ function successDetailsListeners () {
                   .contributor;
       },
       populatePlaceholders = function (html) {
-        var $wrapper = $($('input[type="hidden"][name="success[win_story_html]"]').val())
-                         .wrapAll('<div class="wrapper"></div>')
-                         .parent(),
+        var $wrapper = $(html).wrapAll('<div class="wrapper"></div>').parent();
             dtContributors = $('#prospect-contributors-table').DataTable();
 
         // customer logo
-        $wrapper.find('.placeholder.customer-logo').each(function () {
-          var $placeholder = $(this);
-          $placeholder.replaceWith(
-            _.template($('#win-story-customer-logo-template').html())({
-              customer: customer,
-              placeholder: _.escape($placeholder.wrap('<p/>').parent().html()),
-              className: $placeholder.attr('class').replace('placeholder', '')
-            })
-          );
-        });
+        // $wrapper.find('.placeholder.customer-logo').each(function () {
+        //   var $placeholder = $(this);
+        //   $placeholder.replaceWith(
+        //     _.template($('#win-story-customer-logo-template').html())({
+        //       customer: customer,
+        //       placeholder: _.escape($placeholder.wrap('<p/>').parent().html()),
+        //       className: $placeholder.attr('class').replace('placeholder', '')
+        //     })
+        //   );
+        // });
 
         // customer description
-        $wrapper.find('.placeholder.customer-description').each(function () {
-          var $placeholder = $(this);
-          $placeholder.replaceWith(
-            '<p class="customer-description" data-placeholder="' + _.escape($placeholder.wrap('<p/>').parent().html()) + '">' +
-              customer.description +
-            '</p>'
-          );
-        });
+        // $wrapper.find('.placeholder.customer-description').each(function () {
+        //   var $placeholder = $(this);
+        //   $placeholder.replaceWith(
+        //     '<p class="customer-description" data-placeholder="' + _.escape($placeholder.wrap('<p/>').parent().html()) + '">' +
+        //       customer.description +
+        //     '</p>'
+        //   );
+        // });
 
         // group contributions
         $wrapper.find('.placeholder[data-question-id]').each(function () {
@@ -246,7 +231,7 @@ function successDetailsListeners () {
           );
         })
 
-        return html ? $wrapper.html() : $wrapper.text();
+        return $wrapper.html();
       },
       depopulatePlaceholders = function () {
         $('.note-editable')
@@ -255,24 +240,26 @@ function successDetailsListeners () {
             $(this).replaceWith(_.unescape($(this).data('placeholder')));
           });
       },
-      renderWinStory = function () {
+      renderWinStory = function (winStory, winStoryCompleted) {
         if (winStory) {
-          $('#win-story-editor').html(winStory);
-          $('input[type="checkbox"][name="success[win_story_completed]"]').prop('checked', winStoryCompleted);
-          $('input[type="hidden"][name="success[win_story_html]"]').val(winStory);
-          $('input[type="hidden"][name="success[win_story_text]"]').val(winStoryText);
+          $editor.html(winStory);
+          $form.find('input[type="checkbox"][name="success[win_story_completed]"]')
+               .prop('checked', winStoryCompleted);
+
+          // this doesn't need to happen until submitting the form...
+          // $('input[type="hidden"][name="success[win_story_html]"]').val(winStory);
+          // $('input[type="hidden"][name="success[win_story_text]"]').val(winStoryText);
         }
       },
-      initWinStoryRecipientsSelect = function (options, contributionsData) {
+      initWinStoryRecipientsSelect = function (selectOptions, invitationTemplates) {
         $('select[name="win_story_email[recipients]"]').select2({
           theme: "bootstrap",
           tags: true,
-          data: options,
+          data: selectOptions,
           placeholder: 'Add Recipients',
         });
-        $('#win-story-email-modal #add-template-recipients').empty()
-        contributionsData
-          .invitation_templates
+        $('#win-story-email-modal #add-template-recipients').empty();
+        invitationTemplates
           .filter(function (template) { return template.name !== 'Customer' })
           .forEach(function (template) {
             $('#win-story-email-modal #add-template-recipients').append(
@@ -285,7 +272,6 @@ function successDetailsListeners () {
             )
           })
         $('[name="win_story_email[subject]').val($('tr.shown > td:nth-of-type(2)').text())
-
       };
 
   // conversion to markdown calls for removal of all whitespace and newlines
@@ -420,19 +406,18 @@ function successDetailsListeners () {
           }
         );
       } else {
+        // save changes
+        // do this first so the populatePlaceholders step when submitting the form is predictably via edit mode
+        $form.find('button[type="submit"]').trigger('click');
+
         // can't use .note-editor height because it will be 0
         // why do I need to do the .last thing for win story??
-        $('#win-story-editor')
+        $editor
           .css('height', isExpandedView ? (parseInt($('.form-group.win-story').last().css('height'), 10) - winStoryLabelHeight).toString() + 'px' : defaultViewHeight)
           .prop('contenteditable', false)
-          .summernote('destroy')
-        $('#win-story-editor').html(populatePlaceholders(true));  // don't save placeholders
+          .summernote('destroy')  // note this doesn't return $editor => can't chain
+        $editor.html( populatePlaceholders( $('#win-story-editor').html() ) );
         $('.win-story-actions__copy').prop('disabled', false);
-        $('input[type="hidden"][name="success[win_story_html]"]')
-          .val($('#win-story-editor').html());
-
-        // save changes
-        $('[id*="success-form"] button[type="submit"]').trigger('click');
 
         // scroll to center
         window.scrollTo(0, $tr.offset().top - (window.innerHeight / 2) + (($trChild.outerHeight() + $tr.outerHeight()) / 2));
@@ -440,25 +425,23 @@ function successDetailsListeners () {
       if (initEditor && !isExpandedView) {
         $expandBtn.trigger('click', [{ editClick: true }])
       }
-      $('#win-story-editor').toggleClass('edit')
+      $editor.toggleClass('edit-mode')
       $(this).find('i, span').toggle();
       $(this)[0].blur();
     })
 
     .on('click', '.win-story-actions__email', function () {
-      var winStoryHtml;
-      if ($('#win-story-editor').hasClass('edit')) {
-        winStoryHtml = $('#win-story-editor').summernote('code');
-      } else {
-        winStoryHtml = $('#win-story-editor').html();
-      }
+      var winStoryHtml = $editor.hasClass('edit-mode') ?
+                           $editor.summernote('code') :
+                           $editor.html();
       $('#win-story-email-editor').summernote('code', winStoryHtml);
       $('#win-story-email-modal').modal('show');
     })
 
     .on('click', '.win-story-actions__copy', function () {
-      var $editor = $('#win-story-editor'),
-          copyStr = $editor.hasClass('edit') ? $editor.summernote('code') : $editor.html(),
+      var copyStr = $editor.hasClass('edit-mode') ?
+                      $editor.summernote('code') :
+                      $editor.html(),
           listener = function (e) {
             e.clipboardData.setData("text/html", copyStr);
             e.clipboardData.setData("text/plain", copyStr);
@@ -493,32 +476,32 @@ function successDetailsListeners () {
     })
 
     .on('click', '[id*="success-form"] button[type="submit"]', function (e) {
-      var $form = $(this).closest('form');
+      e.preventDefault();
+      e.stopImmediatePropagation();
+
+      // ignore if the button is disabled or has already been submitted
       if ($(this).hasClass('disabled') || $form.data('submitted')) {
         e.preventDefault();
         e.stopImmediatePropagation();
         return false;
       }
-      else if ($('#win-story-editor').hasClass('edit')) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        // console.log($(populatePlaceholders(true)))
-        // console.log($(populatePlaceholders(true)).wrapAll('<div class="wrapper"></div>').parent().htmlClean().html())
-        $(this).closest('form')
-               .find('input[type="hidden"][name="success[win_story_html]"]')
-                 .val(populatePlaceholders(true))
-                 .end()
-               .find('input[type="hidden"][name="success[win_story_text]"]')
-                 .val(populatePlaceholders(false))
-                 .end()
-               .find('input[type="hidden"][name="success[win_story_markdown]"]')
-                 .val($(populatePlaceholders(true)).wrapAll('<div class="wrapper"></div>').parent().htmlClean().html())
-                 .end()
-               .submit()
-        toggleFormWorking($form);
-      } else {
-        toggleFormWorking($form);
-      }
+      var winStoryHtml = populatePlaceholders($editor.summernote('code')),
+          $htmlInput = $form.find('input[type="hidden"][name="success[win_story_html]"]'),
+          $textInput = $form.find('input[type="hidden"][name="success[win_story_text]"]'),
+          $markdownInput = $form.find('input[type="hidden"][name="success[win_story_markdown]"]');
+      $htmlInput.val( winStoryHtml );
+      $textInput.val(
+        $(winStoryHtml.replace(/<\/p>/g, "</p>\r\n"))    // add line breaks after paragraphs (summernote doesn't)
+          .wrapAll('<div class="wrapper"></div>').parent()
+          .text()
+      );
+      $markdownInput.val(
+        $(winStoryHtml).wrapAll('<div class="wrapper"></div>').parent()
+          .htmlClean()
+          .html()
+      );
+      toggleFormWorking($form);
+      $form.submit();
     })
 
     .on('click', '.customer-logo .upload-image', function () {
@@ -559,51 +542,51 @@ function successDetailsListeners () {
 
     .on('click', 'td.success-details', function () {
       var toggleButton = $(this),
-          $table = $(this).closest('table'),
+          $table = $('#successes-table'),
+          dt = $table.DataTable(),
           $tr = $(this).closest('tr'),
           $trChild,
-          dt = $table.DataTable(),
           successId = $tr.data('success-id'),
           success = dt.row($tr).data(),
-          closeForm = function () {
+          childRowIsOpen = function () { return dt.row($tr).child.isShown(); },
+          closeChildRow = function () {
             toggleButton.children().toggle();  // toggle caret icons
             dt.row($tr).child.hide();
             $tr.removeClass('shown active');
           }
+      if (childRowIsOpen()) {
+        closeChildRow();
+        // var unsavedChanges = !$('[id*="success-form"] button[type="submit"]').prop('disabled');
+        // if (unsavedChanges) {
+        //   bootbox.confirm({
+        //     size: 'small',
+        //     className: 'confirm-unsaved-changes',
+        //     closeButton: false,
+        //     message: "<i class='fa fa-warning'></i>\xa0\xa0\xa0<span>Unsaved changes will be lost</span>",
+        //     buttons: {
+        //       confirm: {
+        //         label: 'Continue',
+        //         className: 'btn-default'
+        //       },
+        //       cancel: {
+        //         label: 'Cancel',
+        //         className: 'btn-default'
+        //       }
+        //     },
+        //     callback: function (continueWithoutSave) {
+        //       if (continueWithoutSave) {
+        //         closeChildRow();
+        //       }
+        //     }
+        //   });
 
-      if (dt.row($tr).child.isShown()) {
-
-        var unsavedChanges = !$('[id*="success-form"] button[type="submit"]').prop('disabled');
-        if (unsavedChanges) {
-          bootbox.confirm({
-            size: 'small',
-            className: 'confirm-unsaved-changes',
-            closeButton: false,
-            message: "<i class='fa fa-warning'></i>\xa0\xa0\xa0<span>Unsaved changes will be lost</span>",
-            buttons: {
-              confirm: {
-                label: 'Continue',
-                className: 'btn-default'
-              },
-              cancel: {
-                label: 'Cancel',
-                className: 'btn-default'
-              }
-            },
-            callback: function (continueWithoutSave) {
-              if (continueWithoutSave) {
-                closeForm();
-              }
-            }
-          });
-
-        // form is clean
-        } else {
-          closeForm();
-        }
+        // // form is clean
+        // } else {
+        //   closeChildRow();
+        // }
 
       } else {
-        $(this).children().toggle();  // toggle caret icons
+        toggleButton.children().toggle();  // caret icons
         $.when(
           $.ajax({
             url: successPath(successId),
@@ -613,34 +596,20 @@ function successDetailsListeners () {
           $.ajax({
             url: contributionsDataPath(successId),
             method: 'get',
-            data: {
-              win_story: true
-            },
+            data: { win_story: true },
             dataType: 'json'
           })
         )
           .done(function (res1, res2) {
-            customer = res1[0].customer;
-            winStory = res1[0].win_story_html;
-            winStoryText = res1[0].win_story_text;
-            winStoryCompleted = res1[0].win_story_completed;
-            contributionsData = res2[0].contributions_data;
-            // console.log('winStory', winStory);
-            // console.log('customer', customer)
-            // console.log('contributionsData', contributionsData);
-            renderWinStory();
-            initWinStoryRecipientsSelect(res1[0].win_story_recipients_select_options, contributionsData);
+            // console.log(res1[0])
+            contributionsData = res2[0];
+            // console.log(res2[0])
+            renderWinStory(res1[0].win_story_html, res1[0].win_story_completed);
+            initWinStoryRecipientsSelect(
+              res1[0].win_story_recipients_select_options,
+              contributionsData.invitation_templates
+            );
           })
-
-        // why doesn't this work? it's the same thing! or is it...
-        // $.when(getWinStory(successId), getContributionsData(successId))
-        //   .done(function (data1, data2) {
-        //     console.log('data1', data1)
-        //     console.log('data2', data2)
-        //     console.log('winStory', winStory);
-        //     console.log('contributionsData', contributionsData);
-        //     renderWinStory()
-        //   })
 
         dt.row($tr).child(
           _.template($('#success-details-template').html())({
@@ -650,6 +619,8 @@ function successDetailsListeners () {
         ).show();
         $trChild = $tr.next();
         $tr.addClass('shown active');
+        $form = $trChild.find('form');
+        $editor = $('#win-story-editor');
 
         // close other open child rows
         $table.find('tr[data-success-id]').not($tr).each(function () {

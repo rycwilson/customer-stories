@@ -45,7 +45,7 @@ class SuccessesController < ApplicationController
     success = Success.includes(:customer).find(params[:id])
     respond_with(
       success,
-      only: [:id, :win_story_html, :win_story_text, :win_story_completed],
+      only: [:id, :win_story_html, :win_story_completed],
       methods: [:win_story_recipients_select_options],
       include: {
         customer: {
@@ -192,9 +192,8 @@ class SuccessesController < ApplicationController
   end
 
   def update
-    # puts success_params.to_h
+    puts success_params.to_h
     params[:success][:win_story_completed] = ActiveRecord::Type::Boolean.new.cast(success_params[:win_story_completed])
-    # binding.remote_pry
     @success.update(success_params)
     respond_to { |format| format.js {} }
   end
@@ -252,7 +251,7 @@ class SuccessesController < ApplicationController
   end
 
   def remove_excess_newlines_from_win_story_text
-    success_params["win_story_text"].gsub!(/\s\r\n\r\n\s/, '')
+    # success_params["win_story_text"].gsub!(/\s\r\n\r\n\s/, '')
   end
 
   # find a success previously created in this import (or in db) and return id
