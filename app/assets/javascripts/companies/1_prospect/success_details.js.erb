@@ -499,6 +499,9 @@ function successDetailsListeners () {
         $(winStoryHtml).wrapAll('<div class="wrapper"></div>').parent()
           .htmlClean()
           .html()
+          .replace(/<i>/, " <i>")       // preserve spaces around italicized text (htmlClean will have removed)
+          .replace(/<\/i>/, "<\/i> ")
+
       );
       toggleFormWorking($form);
       $form.submit();

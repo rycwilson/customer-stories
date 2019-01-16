@@ -76,6 +76,8 @@ class Success < ApplicationRecord
     self.win_story_markdown = ReverseMarkdown.convert(
       self.win_story_markdown.gsub(/data-placeholder=\".+?<\/div>"/, '')
     )
+      .gsub(/-\s\n\n/, "- ")    # remove pointless newlines (or do they have a point?)
+      .gsub(/\n\n_/, "\n\n _")  # insert a space in front of answers
   end
 
   def win_story_recipients_select_options
