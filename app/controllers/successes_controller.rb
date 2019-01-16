@@ -194,6 +194,7 @@ class SuccessesController < ApplicationController
   def update
     # puts success_params.to_h
     params[:success][:win_story_completed] = ActiveRecord::Type::Boolean.new.cast(success_params[:win_story_completed])
+    # binding.remote_pry
     @success.update(success_params)
     respond_to { |format| format.js {} }
   end
@@ -210,7 +211,7 @@ class SuccessesController < ApplicationController
   # status will be present in case of csv upload
   def success_params
     params.require(:success).permit(
-      :name, :win_story_html, :win_story_text, :win_story_completed, :customer_id, :curator_id,
+      :name, :win_story_html, :win_story_text, :win_story_markdown, :win_story_completed, :customer_id, :curator_id,
       customer_attributes: [:id, :name, :company_id],
       contributions_attributes: [
         :referrer_id, :contributor_id, :invitation_template_id, :success_contact,

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190115125009) do
+ActiveRecord::Schema.define(version: 20190116022249) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -423,6 +423,7 @@ ActiveRecord::Schema.define(version: 20190115125009) do
     t.text     "win_story_html"
     t.boolean  "win_story_completed", default: false
     t.text     "win_story_text"
+    t.text     "win_story_markdown"
     t.index ["curator_id"], name: "index_successes_on_curator_id", using: :btree
     t.index ["customer_id"], name: "index_successes_on_customer_id", using: :btree
   end

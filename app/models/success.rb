@@ -66,6 +66,12 @@ class Success < ApplicationRecord
     self.is_new_record = true
   end
 
+  before_update() { convert_win_story_html_to_markdown }
+
+  def convert_win_story_html_to_markdown
+    # binding.remote_pry
+  end
+
   def win_story_recipients_select_options
     recipients_options_self = []  # contributors and referrers tied to this success
     recipients_options_more = []  # all company contributors and referrers

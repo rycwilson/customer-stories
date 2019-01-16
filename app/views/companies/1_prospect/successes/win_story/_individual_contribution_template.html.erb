@@ -1,18 +1,20 @@
 
 <script type="text/template" id="individual-contribution-template">
 
+  {{ console.log(placeholder) }}
+
   <div class="individual-contribution" data-contribution-id="{{= contributionId }}" {{= placeholder ? 'data-placeholder="' + placeholder + '"' : '' }}>
 
-    <p style="margin-bottom: 0">{{= contributor.full_name }}</p>
-    <p style="margin-bottom: 0">{{= contributor.title }}</p>
+    <p>{{= contributor.full_name }}</p>
+    <p>{{= contributor.title }}</p>
 
     <ul>
 
     {{ theQandA.forEach(function (pair) { }}
 
       <li>
-        <p style="margin-bottom: 0;">{{= pair.question }}</p>
-        <p style="margin-bottom: 0; font-style: italic">{{= pair.answer }}</p>
+        <p>{{= pair.question }}</p>
+        <p><em>{{= pair.answer }}</em></p>
       </li>
 
     {{ }); }}

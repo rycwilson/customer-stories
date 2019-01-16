@@ -96,6 +96,7 @@ function successDetailsListeners () {
                         } else if (isPlaceholdersDropdown) {
                           pasteHtml = $(this).data('placeholder');
                         }
+                        // console.log('pasteHtml', pasteHtml)
                         context.invoke('editor.restoreRange');   // restore cursor position
                         context.invoke('editor.pasteHTML', pasteHtml)
                         context.invoke('editor.saveRange');  // save cursor position
@@ -150,14 +151,22 @@ function successDetailsListeners () {
               onPaste: function () {
               },
               onChange: function (content) {
+                // console.log(content)
                 var $form = $('form[id*="success-form"]'),
                     $win_story_html = $('input[type="hidden"][name="success[win_story_html]"]'),
                     $win_story_text = $('input[type="hidden"][name="success[win_story_text]"]'),
-                    htmlContent = content.replace(/<\/p><p>/g, "</p>\r\n<p>"),
-                    textContent = $(htmlContent).wrapAll('<div class="wrapper"></div>').parent().text();
-                $form.find('button[type="submit"]').prop('disabled', false);
-                $win_story_html.val(htmlContent);
+                    $win_story_markdown = $('input[type="hidden"][name="success[win_story_markdown]"]'),
+
+          // for the text conversion step, insert newlines between paragraphs (summernote shortcoming)
+          // for the markdown conversion step (happens in server), clean whitespace and newlines from html
+                    textContent = $(content.replace(/<\/p><p>/g, "</p>\r\n<p>"))
+                                    .wrapAll('<div class="wrapper"></div>').parent().text();
+                    markdownContent = $(content)
+                                    .wrapAll('<div class="wrapper"></div>').parent().htmlClean().html();
+                $win_story_html.val(content);
                 $win_story_text.val(textContent);
+                $win_story_markdown.val(markdownContent);
+                $form.find('button[type="submit"]').prop('disabled', false);
               }
             }
           });
@@ -193,8 +202,8 @@ function successDetailsListeners () {
       },
       populatePlaceholders = function (html) {
         var $wrapper = $($('input[type="hidden"][name="success[win_story_html]"]').val())
-                        .wrapAll('<div class="wrapper"></div>')
-                        .parent(),
+                         .wrapAll('<div class="wrapper"></div>')
+                         .parent(),
             dtContributors = $('#prospect-contributors-table').DataTable();
 
         // customer logo
@@ -278,6 +287,21 @@ function successDetailsListeners () {
         $('[name="win_story_email[subject]').val($('tr.shown > td:nth-of-type(2)').text())
 
       };
+
+  // conversion to markdown calls for removal of all whitespace and newlines
+  // ref https://stackoverflow.com/questions/1539367
+  jQuery.fn.htmlClean = function() {
+    this.contents().filter(function() {
+      if (this.nodeType != 3) {
+        $(this).htmlClean();
+        return false;
+      } else {
+        this.textContent = $.trim(this.textContent);
+        return !/\S/.test(this.nodeValue);
+      }
+    }).remove();
+    return this;
+  }
 
   // initialize the win story email editor
   initWinStoryEmailEditor();
@@ -478,12 +502,17 @@ function successDetailsListeners () {
       else if ($('#win-story-editor').hasClass('edit')) {
         e.preventDefault();
         e.stopImmediatePropagation();
+        // console.log($(populatePlaceholders(true)))
+        // console.log($(populatePlaceholders(true)).wrapAll('<div class="wrapper"></div>').parent().htmlClean().html())
         $(this).closest('form')
                .find('input[type="hidden"][name="success[win_story_html]"]')
                  .val(populatePlaceholders(true))
                  .end()
                .find('input[type="hidden"][name="success[win_story_text]"]')
                  .val(populatePlaceholders(false))
+                 .end()
+               .find('input[type="hidden"][name="success[win_story_markdown]"]')
+                 .val($(populatePlaceholders(true)).wrapAll('<div class="wrapper"></div>').parent().htmlClean().html())
                  .end()
                .submit()
         toggleFormWorking($form);
@@ -655,41 +684,5 @@ function successDetailsListeners () {
         $(this).prop('scrollTop', Math.max(0, Math.min(maxY, $(this).prop('scrollTop') + e.originalEvent.deltaY)));
       }
     });
-
-  // https://github.com/summernote/summernote/issues/702
-  // function pasteHtmlAtCaret(html) {
-  //   var sel, range;
-  //   if (window.getSelection) {
-  //       // IE9 and non-IE
-  //       sel = window.getSelection();
-  //       if (sel.getRangeAt && sel.rangeCount) {
-  //           range = sel.getRangeAt(0);
-  //           range.deleteContents();
-
-  //           // Range.createContextualFragment() would be useful here but is
-  //           // only relatively recently standardized and is not supported in
-  //           // some browsers (IE9, for one)
-  //           var el = document.createElement("div");
-  //           el.innerHTML = html;
-  //           var frag = document.createDocumentFragment(), node, lastNode;
-  //           while ( (node = el.firstChild) ) {
-  //               lastNode = frag.appendChild(node);
-  //           }
-  //           range.insertNode(frag);
-
-  //           // Preserve the selection
-  //           if (lastNode) {
-  //               range = range.cloneRange();
-  //               range.setStartAfter(lastNode);
-  //               range.collapse(true);
-  //               sel.removeAllRanges();
-  //               sel.addRange(range);
-  //           }
-  //       }
-  //   } else if (document.selection && document.selection.type != "Control") {
-  //       // IE < 9
-  //       document.selection.createRange().pasteHTML(html);
-  //   }
-  // }
 
 }

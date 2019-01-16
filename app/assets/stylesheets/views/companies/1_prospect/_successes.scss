@@ -28,6 +28,9 @@
     max-width: 100%;  // don't allow to expand horizontally
     background-color: #f9f9f9;
     overflow-y: scroll;
+    p, & + .note-editor p {
+      margin-bottom: 0;
+    }
     &.expanded {
       // overflow-y: scroll;
     }
