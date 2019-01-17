@@ -573,35 +573,34 @@ function successDetailsListeners () {
             $tr.removeClass('shown active');
           }
       if (childRowIsOpen()) {
-        closeChildRow();
-        // var unsavedChanges = !$('[id*="success-form"] button[type="submit"]').prop('disabled');
-        // if (unsavedChanges) {
-        //   bootbox.confirm({
-        //     size: 'small',
-        //     className: 'confirm-unsaved-changes',
-        //     closeButton: false,
-        //     message: "<i class='fa fa-warning'></i>\xa0\xa0\xa0<span>Unsaved changes will be lost</span>",
-        //     buttons: {
-        //       confirm: {
-        //         label: 'Continue',
-        //         className: 'btn-default'
-        //       },
-        //       cancel: {
-        //         label: 'Cancel',
-        //         className: 'btn-default'
-        //       }
-        //     },
-        //     callback: function (continueWithoutSave) {
-        //       if (continueWithoutSave) {
-        //         closeChildRow();
-        //       }
-        //     }
-        //   });
+        var unsavedChanges = !$form.find('button[type="submit"]').prop('disabled');
+        if (unsavedChanges) {
+          bootbox.confirm({
+            size: 'small',
+            className: 'confirm-unsaved-changes',
+            closeButton: false,
+            message: "<i class='fa fa-warning'></i>\xa0\xa0\xa0<span>Unsaved changes will be lost</span>",
+            buttons: {
+              confirm: {
+                label: 'Continue',
+                className: 'btn-default'
+              },
+              cancel: {
+                label: 'Cancel',
+                className: 'btn-default'
+              }
+            },
+            callback: function (continueWithoutSave) {
+              if (continueWithoutSave) {
+                closeChildRow();
+              }
+            }
+          });
 
-        // // form is clean
-        // } else {
-        //   closeChildRow();
-        // }
+        // form is clean
+        } else {
+          closeChildRow();
+        }
 
       } else {
         toggleButton.children().toggle();  // caret icons
