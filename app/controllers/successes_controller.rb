@@ -17,7 +17,7 @@ class SuccessesController < ApplicationController
     company = current_user.company
     data = company.successes.select { |s| s.win_story_completed? && s.curator_id == params['curator_id'].to_i }
                   .to_json({
-                    only: [:id, :name, :win_story_html, :win_story_text],
+                    only: [:id, :name, :win_story_html, :win_story_text, :win_story_markdown],
                     include: {
                       customer: {
                         only: [:name, :description, :logo_url]
