@@ -20,6 +20,7 @@
         ) %>
   </div>
 
-  <%= submit_tag 'Submit', class: 'btn btn-success' %>
+  <!-- ref https://stackoverflow.com/questions/42016113 -->
+  <%= submit_tag('Submit', class: 'btn btn-success', data: { disable_with: false }) %>
 
 <% end %>
