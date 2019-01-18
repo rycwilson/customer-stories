@@ -69,15 +69,16 @@ class Success < ApplicationRecord
   before_update() { convert_win_story_html_to_markdown }
 
   def convert_win_story_html_to_markdown
-    # binding.remote_pry
     # due to browser behavior (described here https://stackoverflow.com/questions/39362247),
     # data-placeholder attributes aren't fully escaped, and this seems to cause issues when
     # converting to markdown
-    self.win_story_markdown = ReverseMarkdown.convert(
-      self.win_story_markdown.gsub(/data-placeholder=\".+?<\/div>"/, '')
-    )
-      .gsub(/-\s\n\n/, "- ")    # remove pointless newlines (or do they have a point?)
-      .gsub(/\n\n_/, "\n\n _")  # insert a space in front of answers
+    if self.win_story_markdown.present?
+      self.win_story_markdown = ReverseMarkdown.convert(
+        self.win_story_markdown.gsub(/data-placeholder=\".+?<\/div>"/, '')
+      )
+        .gsub(/-\s\n\n/, "- ")    # remove pointless newlines (or do they have a point?)
+        .gsub(/\n\n_/, "\n\n _")  # insert a space in front of answers
+    end
   end
 
   def win_story_recipients_select_options
