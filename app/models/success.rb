@@ -56,15 +56,9 @@ class Success < ApplicationRecord
   # this may happen with a zap (no such validation in the zapier app)
   accepts_nested_attributes_for(:contributions, allow_destroy: false, reject_if: :missing_contributor_or_referrer_attributes?)
 
-  # after_commit(on: [:create, :destroy]) do
-  # end
-
-  # after_commit(on: [:update]) do
-  # end
-
   before_save(on: :create) do
     self.is_new_record = true
-    convert_description_to_win_story_html()
+    convert_description_to_win_story_html
   end
 
   before_update do
@@ -72,15 +66,20 @@ class Success < ApplicationRecord
     remove_excess_newlines_from_win_story_text if self.win_story_text.present?
   end
 
+  # after_commit(on: [:create, :destroy]) do
+  # end
+
+  # after_commit(on: [:update]) do
+  # end
+
   def convert_description_to_win_story_html
-      self.win_story_html.sub!(/(\r\n)+$/, '')
-      self.win_story_html.gsub!(/(\r\n)+/, "</p>\r\n<p>")
-      self.win_story_html.prepend('<p>').concat('</p>')
-    end
+    self.win_story_html.sub!(/(\r\n)+$/, '')
+    self.win_story_html.gsub!(/(\r\n)+/, "</p>\r\n<p>")
+    self.win_story_html.prepend('<p>').concat('</p>')
   end
 
   def remove_excess_newlines_from_win_story_text
-      self.win_story_text.gsub!(/\s\r\n\r\n\s/, '')
+    self.win_story_text.gsub!(/\s\r\n\r\n\s/, '')
   end
 
   def convert_win_story_html_to_markdown
