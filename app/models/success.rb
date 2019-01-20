@@ -58,7 +58,7 @@ class Success < ApplicationRecord
 
   before_save(on: :create) do
     self.is_new_record = true
-    convert_description_to_win_story_html
+    convert_description_to_win_story_html if self.win_story_html.present?
   end
 
   before_update do
