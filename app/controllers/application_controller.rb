@@ -79,7 +79,7 @@ class ApplicationController < ActionController::Base
       true
     # zaps will be with subdomain in dev (cspdev) and without in production
     # account for both by sending the necessary parameter
-    elsif params[:zapier_trigger].present? || params[:zapier_create].present?
+    elsif params[:zapier_auth].present? || params[:zapier_trigger].present? || params[:zapier_create].present?
       true
     elsif request.subdomain.blank? &&
           params[:controller] == 'site' &&
