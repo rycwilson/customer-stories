@@ -91,13 +91,11 @@ class Success < ApplicationRecord
     # due to browser behavior (described here https://stackoverflow.com/questions/39362247),
     # data-placeholder attributes aren't fully escaped, and this seems to cause issues when
     # converting to markdown
-    if self.win_story_markdown.present?
-      self.win_story_markdown = ReverseMarkdown.convert(
-        self.win_story_markdown.gsub(/data-placeholder=\".+?<\/div>"/, '')
-      )
-        .gsub(/-\s\n\n/, "- ")    # remove pointless newlines (or do they have a point?)
-        .gsub(/\n\n_/, "\n\n _")  # insert a space in front of answers
-    end
+    self.win_story_markdown = ReverseMarkdown.convert(
+      self.win_story_markdown.gsub(/data-placeholder=\".+?<\/div>"/, '')
+    )
+      .gsub(/-\s\n\n/, "- ")    # remove pointless newlines (or do they have a point?)
+      .gsub(/\n\n_/, "\n\n _")  # insert a space in front of answers
   end
 
   def win_story_recipients_select_options
