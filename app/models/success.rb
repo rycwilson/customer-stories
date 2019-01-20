@@ -64,9 +64,24 @@ class Success < ApplicationRecord
 
   before_save(on: :create) do
     self.is_new_record = true
+    convert_description_to_win_story_html()
   end
 
-  before_update() { convert_win_story_html_to_markdown }
+  before_update do
+    convert_win_story_html_to_markdown if self.win_story_html.present?
+    remove_excess_newlines_from_win_story_text if self.win_story_text.present?
+  end
+
+  def convert_description_to_win_story_html
+      self.win_story_html.sub!(/(\r\n)+$/, '')
+      self.win_story_html.gsub!(/(\r\n)+/, "</p>\r\n<p>")
+      self.win_story_html.prepend('<p>').concat('</p>')
+    end
+  end
+
+  def remove_excess_newlines_from_win_story_text
+      self.win_story_text.gsub!(/\s\r\n\r\n\s/, '')
+  end
 
   def convert_win_story_html_to_markdown
     # due to browser behavior (described here https://stackoverflow.com/questions/39362247),

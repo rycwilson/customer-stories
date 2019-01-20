@@ -4,9 +4,9 @@ class SuccessesController < ApplicationController
 
   respond_to(:html, :js, :json)
 
-  before_action({ only: [:create] }) { convert_description_to_win_story_html }
-  before_action({ only: [:update] }) { remove_excess_newlines_from_win_story_text }
-  before_action({ except: [:zapier_trigger, :index, :create, :import] }) { @success = Success.find(params[:id]) }
+  before_action({ except: [:zapier_trigger, :index, :create, :import] }) do
+    @success = Success.find(params[:id])
+  end
   skip_before_action(
     :verify_authenticity_token,
     only: [:create],
@@ -244,15 +244,7 @@ class SuccessesController < ApplicationController
     )
   end
 
-  def convert_description_to_win_story_html
-    success_params["win_story_html"].sub!(/(\r\n)+$/, '')
-    success_params["win_story_html"].gsub!(/(\r\n)+/, "</p>\r\n<p>")
-    success_params["win_story_html"].prepend('<p>').concat('</p>')
-  end
 
-  def remove_excess_newlines_from_win_story_text
-    success_params["win_story_text"].gsub!(/\s\r\n\r\n\s/, '')
-  end
 
   # find a success previously created in this import (or in db) and return id
   def find_dup_success (success, success_lookup=nil)
