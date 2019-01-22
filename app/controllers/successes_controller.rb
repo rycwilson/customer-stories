@@ -57,7 +57,7 @@ class SuccessesController < ApplicationController
 
   def create
     # puts 'successes#create'
-    # puts success_params.to_h
+    puts success_params.to_h
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
 
     params[:success][:customer_attributes] = find_dup_customer(
