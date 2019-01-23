@@ -67,6 +67,7 @@ class Success < ApplicationRecord
 
   before_update do
     puts "BEFORE_UPDATE"
+    puts self.new_record?
     convert_win_story_html_to_markdown if self.win_story_html.present?
     remove_excess_newlines_from_win_story_text if self.win_story_text.present?
   end
