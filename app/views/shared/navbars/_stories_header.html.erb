@@ -33,17 +33,13 @@
             <h4>Customer Stories</h4>
           </div>
 
-          <div class="col-sm-2 text-center edit-story">
+          <div class="col-sm-2 text-center edit-story <%= 'preview' if is_preview %>">
 
-            <% unless is_preview %>
-
-              <%= link_to(
-                    curate_story_path(story.customer.slug, story.slug),
-                    { class: "#{company.color_contrast }" }
-                  ) do %>
-                <i class="glyphicon glyphicon-pencil"></i>&nbsp;&nbsp;Edit Story
-              <% end %>
-
+            <%= link_to(
+                  curate_story_path(story.customer.slug, story.slug),
+                  { class: "#{company.color_contrast }" }
+                ) do %>
+              <i class="glyphicon glyphicon-pencil"></i>&nbsp;&nbsp;Edit Story
             <% end %>
 
           </div>

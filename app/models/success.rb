@@ -61,8 +61,6 @@ class Success < ApplicationRecord
   end
 
   before_create do
-    puts 'before_create()'
-    puts self
     convert_description_to_win_story_html if self.win_story_html.present?
   end
 
