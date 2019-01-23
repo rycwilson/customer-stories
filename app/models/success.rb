@@ -61,12 +61,12 @@ class Success < ApplicationRecord
   end
 
   before_create do
-    "BEFORE_CREATE"
+    puts "BEFORE_CREATE"
     convert_description_to_win_story_html if self.win_story_html.present?
   end
 
   before_update do
-    "BEFORE_UPDATE"
+    puts "BEFORE_UPDATE"
     convert_win_story_html_to_markdown if self.win_story_html.present?
     remove_excess_newlines_from_win_story_text if self.win_story_text.present?
   end
