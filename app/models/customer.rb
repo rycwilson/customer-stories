@@ -13,7 +13,7 @@ class Customer < ApplicationRecord
 
   friendly_id :name, use: [:slugged, :scoped], scope: :company_id
 
-  after_commit(on: :update) do
+  after_commit(on: [:update]) do
     expire_fragment_cache_on_logo_change
     self.company.expire_stories_json_cache
   end if Proc.new do |customer|
@@ -32,23 +32,21 @@ class Customer < ApplicationRecord
 
   def expire_fragment_cache_on_logo_change
     self.stories.each do |story|
-      self.expire_fragment("#{self.company.subdomain}/story-#{story.id}-testimonial")
+      self.expire_fragment("#{self.company.subdomain}/stories/#{story.id}/testimonial")
+      self.expire_fragment("#{self.company.subdomain}/stories/#{story.id}/cs-testimonial")
       if story.logo_published?
         # expire unfiltered gallery
         self.expire_fragment(
-          "#{self.company.subdomain}/stories-gallery-" +
-          "memcache-iterator-#{self.company.stories_gallery_fragments_memcache_iterator}"
+          "#{self.company.subdomain}/stories-gallery-memcache-iterator-#{self.company.stories_gallery_fragments_memcache_iterator}"
         )
         # expire story card fragments
         self.expire_fragment(
-          "#{self.company.subdomain}/story-card-#{story.id}-" +
-          "memcache-iterator-#{self.company.story_card_fragments_memcache_iterator}"
+          "#{self.company.subdomain}/story-card-#{story.id}-memcache-iterator-#{self.company.story_card_fragments_memcache_iterator}"
         )
         # expire stories gallery fragments for affected filters
         story.category_tags.each do |tag|
           self.expire_fragment(
-            "#{self.company.subdomain}/stories-gallery-category-#{tag.id}-" +
-            "memcache-iterator-#{self.company.stories_gallery_fragments_memcache_iterator}"
+            "#{self.company.subdomain}/stories-gallery-category-#{tag.id}-memcache-iterator-#{self.company.stories_gallery_fragments_memcache_iterator}"
           )
         end
         story.product_tags.each do |tag|
