@@ -66,11 +66,12 @@ class Success < ApplicationRecord
   end
 
   before_update do
-    puts "BEFORE_UPDATE"
-    puts "new_record? #{self.new_record?}"
-    puts "is_new_record #{self.is_new_record}"
-    convert_win_story_html_to_markdown if self.win_story_html.present?
-    remove_excess_newlines_from_win_story_text if self.win_story_text.present?
+    # because associations are saved and self foreign key is updated, this gets run
+    # on a create action - which we don't want to happen!
+    unless self.is_new_record
+      convert_win_story_html_to_markdown if self.win_story_html.present?
+      remove_excess_newlines_from_win_story_text if self.win_story_text.present?
+    end
   end
 
   # after_commit(on: [:create, :destroy]) do
