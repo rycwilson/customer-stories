@@ -58,21 +58,18 @@ class Success < ApplicationRecord
 
   before_save(on: [:create]) do
     self.is_new_record = true
+  end
+
+  before_create do
+    "BEFORE_CREATE"
     convert_description_to_win_story_html if self.win_story_html.present?
   end
 
-  before_save(on: [:update]) do
-    puts "WHY ARE WE HERE"
-    puts self
+  before_update do
+    "BEFORE_UPDATE"
     convert_win_story_html_to_markdown if self.win_story_html.present?
     remove_excess_newlines_from_win_story_text if self.win_story_text.present?
   end
-
-  # before_create do
-  # end
-
-  # before_update do
-  # end
 
   # after_commit(on: [:create, :destroy]) do
   # end
