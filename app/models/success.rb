@@ -65,6 +65,7 @@ class Success < ApplicationRecord
   end
 
   before_update do
+    puts "WHY ARE WE HERE"
     convert_win_story_html_to_markdown if self.win_story_html.present?
     remove_excess_newlines_from_win_story_text if self.win_story_text.present?
   end
