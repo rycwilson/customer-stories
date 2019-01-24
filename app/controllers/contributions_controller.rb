@@ -94,8 +94,8 @@ class ContributionsController < ApplicationController
   end
 
   def create
-    puts "contributions#create"
-    puts contribution_params.to_h
+    # puts "contributions#create"
+    # puts contribution_params.to_h
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
 
     if contribution_params[:success_attributes].to_h.has_key?(:customer_attributes)
@@ -106,11 +106,20 @@ class ContributionsController < ApplicationController
       )
     end
 
-    if contribution_params.to_h.has_key?(:referrer_attributes)
+    # find an existing sucess
+    if params[:zapier_create] && (success = Success.where(name: contribution_params.to_h[:success_attributes][:name]).take)
+      params[:contribution][:success_id] = success.id
+      params[:contribution].delete(:success_attributes)
+    end
+
+    if referrer_included?(contribution_params.to_h)
       params[:contribution][:referrer_attributes] = find_dup_user_and_split_full_name(
         contribution_params.to_h[:referrer_attributes],
-        params[:zapier_create].present?
+        params[:zap].present?
       )
+    else
+      # remove empty data else validations will fail
+      params[:contribution].delete(:referrer_attributes)
     end
 
     if contribution_params.to_h.has_key?(:contributor_attributes)
@@ -343,6 +352,14 @@ class ContributionsController < ApplicationController
       controller: 'profile', action: 'linkedin_connect',
       params: { contribution_id: contribution.id }
     })
+  end
+
+  def referrer_included?(contribution)
+    contribution.has_key?(:referrer_attributes) &&
+    # if given no data, zapier will still include this:
+    # "referrer_attributes" => { "id" => "", "sign_up_code" => "csp_beta"}
+    contribution[:referrer_attributes][:email].present? &&
+    contribution[:referrer_attributes][:first_name].present?
   end
 
 end
