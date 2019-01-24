@@ -94,6 +94,7 @@ class ContributionsController < ApplicationController
   end
 
   def create
+    puts "contributions#create"
     puts contribution_params.to_h
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
 
