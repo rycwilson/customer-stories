@@ -131,6 +131,8 @@ class ContributionsController < ApplicationController
       # end
     end
     if params[:zapier_create].present?
+      puts "CSP"
+      puts contribution_params.to_h
       respond_to do |format|
         format.any do
           render({
