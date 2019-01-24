@@ -67,6 +67,7 @@ class Success < ApplicationRecord
   before_update do
     # because associations are saved and self foreign key is updated, this gets run
     # on a create action - which we don't want to happen!
+    # ref https://github.com/rails/rails/issues/29864
     unless self.is_new_record
       convert_win_story_html_to_markdown if self.win_story_html.present?
       remove_excess_newlines_from_win_story_text if self.win_story_text.present?
