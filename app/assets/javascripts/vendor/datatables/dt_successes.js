@@ -92,7 +92,7 @@ function initSuccessesTable (dtSuccessesInit) {
         searchable: false,
         createdCell: function (td, cellData, rowData, row, col) {
           if (col === 0) {
-            $(td).addClass('success-details');
+            $(td).addClass('toggle-success-child');
           } else {
             $(td).addClass('actions dropdown');
           }
@@ -129,7 +129,7 @@ function initSuccessesTable (dtSuccessesInit) {
     createdRow: function (row, data, index) {
       $(row).attr('data-customer-id', data.customer.id);
       $(row).attr('data-success-id', data.id);
-      $(row).children().eq(0).addClass('success-details');
+      $(row).children().eq(0).addClass('toggle-success-child');
       $(row).children().eq(1).attr('data-filter', data.id);
       $(row).children().eq(2).addClass('status');
       $(row).children().eq(3).addClass('actions dropdown');

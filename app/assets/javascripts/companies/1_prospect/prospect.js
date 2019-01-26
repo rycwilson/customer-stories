@@ -2,7 +2,7 @@
 //= require ./filters
 //= require ./new_success
 //= require ./new_contributor
-//= require ./success_details
+//= require ./success_child_row
 //= require ./success_actions/success_actions
 //= require ./contributor_details
 //= require ./contributor_actions/contributor_actions
@@ -174,9 +174,9 @@ function prospectListeners () {
       })
 
     // close a child row
-    .on('click', 'div.success-details button[type="reset"], ' +
+    .on('click', 'div.success-child-row button[type="reset"], ' +
                  'div.contributor-details button[type="reset"]', function () {
-        $(this).closest('tr').prev().find('td[class*="details"]').trigger('click');
+        $(this).closest('tr').prev().find('td.toggle-success-child, td[class*="details"]').trigger('click');
       })
 
     // validate form inputs

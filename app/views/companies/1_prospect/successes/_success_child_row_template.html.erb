@@ -1,21 +1,22 @@
 
-<script type="text/template" id="success-details-template">
+<script type="text/template" id="success-child-row-template">
 
-  <div class="container success-details" style="width:100%">
+  <div class="container success-child-row" style="width: 100%">
 
-    <form id="success-form-{{= success.id }}" action="{{= successPath }}" method="post" data-remote="true" data-type="script" class='success-form'>
+    <form id="success-form-{{= success.id }}" action="{{= successPath }}" method="POST" data-remote="true" data-type="script" class='success-form'>
 
-      <input type="hidden" name="_method" value="put">
+      <input type="hidden" name="_method" value="PUT">
       <input type="hidden" name="authenticity_token" value="{{= document.querySelectorAll('meta[name=csrf-token]')[0].getAttribute('content') }}">
       <input type="hidden" name="success[win_story_html]">
       <input type="hidden" name="success[win_story_text]">
       <input type="hidden" name="success[win_story_markdown]">
+      <input type="hidden" name="success[win_story_completed]">
 
       <div class="row">
         <div class="col-sm-12" style="display:flex; padding: 0 5px;">
           <div style="display:inline-block">
 
-            <div class="form-group win-story" style="position:relative; width: 600px; margin-bottom: 0;">
+            <div class="form-group win-story" style="position:relative; width: 600px;">
 
               <button type="button" class="win-story-actions__expand">
                 <i class="fa fa-fw fa-expand"></i>
@@ -63,21 +64,23 @@
             </div>
 
             <div class="text-right">
-              <label style="font-weight:normal; cursor:pointer; margin: 15px 0">
+
+              <button type="submit" class="btn btn-sm btn-success text-center mark-completed" style="display: none;" disabled>
+                <span class="mark-completed">Mark as Completed</span>
+                <span class="save-changes" style="display: none;">Save changes</span>
+                <i class="fa fa-spin fa-circle-o-notch" style="display: none"></i>
+                <i class="fa fa-check" style="display: none"></i>
+              </button>
+
+            </div>
+
+         <!--    <div class="text-right mark-completed">
+              <label>
                 <input type="hidden" value="false" name="success[win_story_completed]">
-                <input type="checkbox" value="true" name="success[win_story_completed]" style="margin-right:5px">
+                <input type="checkbox" value="true" name="success[win_story_completed]">
                 Mark as Completed
               </label>
-
-            </div>
-            <div class="text-right">
-
-              <button type="submit" disabled class="btn btn-sm btn-success text-center" style="width:97px;">
-                <span>Save changes</span>
-                <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
-                <i class='fa fa-check' style='display:none'></i>
-              </button>
-            </div>
+            </div> -->
 
           </div>
 

@@ -17,7 +17,7 @@
                         }) %>,
       openSuccessForm = function () {
         // this assumes the filter has been applied and this is the only tr in the table
-        $('#successes-table td.success-details').trigger('click');
+        $('#successes-table td.toggle-success-child').trigger('click');
       },
       cbDone = function (success) {
         return function () {

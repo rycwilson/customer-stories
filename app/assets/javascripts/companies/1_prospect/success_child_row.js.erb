@@ -7,7 +7,7 @@ function successDetailsListeners () {
       defaultViewHeight = "200px",  // win story expand / collapse
       summernoteToolbarHeight = 41.3,
       summernoteResizebarHeight = 8,
-      winStoryLabelHeight = 23,
+      winStoryHeaderHeight = 23,
       customButtonHelpPopoverContent = "You can insert contributions in their original form or with a placeholder. The latter is useful for organizing your document while in Edit mode, but will preclude any changes to the underlying content. Toggle to the View mode to see the populated/saved content.",
       winStory, winStoryText, winStoryCompleted,
       winStoryRecipientsSelectOptions,
@@ -16,7 +16,7 @@ function successDetailsListeners () {
       contributionsDataPath = function (successId) { return '/successes/' + successId + '/contributions'; },
       expandedViewHeight = function ($tr, editorIsOpen) {
         // factor in height of the summernote toolbar
-        return window.innerHeight - ((editorIsOpen ? summernoteToolbarHeight : 0) + $tr.height() + $tr.next().height() - $('#win-story-editor').height());
+        return window.innerHeight - ($tr.height() + $tr.next().height() + (editorIsOpen ? summernoteToolbarHeight : 0) + winStoryHeaderHeight - $('#win-story-editor').height());
       },
       individualContributionTemplate = function (contributionId, contributionsData, $placeholder) {
         return _.template($('#individual-contribution-template').html())({
@@ -242,8 +242,16 @@ function successDetailsListeners () {
       renderWinStory = function (winStory, winStoryCompleted) {
         if (winStory) {
           $editor.html(winStory);
-          $form.find('input[type="checkbox"][name="success[win_story_completed]"]')
-               .prop('checked', winStoryCompleted);
+          $form.find('input[name="success[win_story_completed]"]').val(winStoryCompleted);
+          if (!winStoryCompleted) {
+            $form.find('button[type="submit"]')
+                 .prop('disabled', false)
+                 .show();
+          }
+
+          // don't need this anymore
+          // $form.find('input[type="checkbox"][name="success[win_story_completed]"]')
+          //      .prop('checked', winStoryCompleted);
 
           // this doesn't need to happen until submitting the form...
           // $('input[type="hidden"][name="success[win_story_html]"]').val(winStory);
@@ -323,7 +331,7 @@ function successDetailsListeners () {
       e.stopImmediatePropagation();
       $.ajax({
         url: customerPath($(this).data('customer-id')),
-        method: 'get',
+        method: 'GET',
         dataType: 'json'
       })
         .done(function (customer, status, xhr) {
@@ -387,7 +395,9 @@ function successDetailsListeners () {
           $trChild = $tr.next(),
           $expandBtn = $('.win-story-actions__expand'),
           isExpandedView = $('#win-story-editor').hasClass('expanded'),
-          initEditor = typeof $('#win-story-editor').data('summernote') !== 'object';
+          initEditor = typeof $('#win-story-editor').data('summernote') !== 'object',
+          $submitBtn = $form.find('button[type="submit"]');
+
       if (initEditor) {
         initWinStoryEditor(
           $tr,
@@ -405,21 +415,41 @@ function successDetailsListeners () {
               template: '<div class="popover" style="min-width: 400px; role="tooltip"><div class="arrow"></div><div class="popover-content"></div></div>'
             });
             $('.win-story-actions__copy').prop('disabled', true);
+
+            // $('.mark-completed').addClass('disabled');
+            $submitBtn.prop('disabled', true)
+                      .toggleClass('mark-completed save-changes')
+                      .find('span.save-changes, span.mark-completed').toggle()
+                        .end()
+                      .show();
+
           }
         );
+
       } else {
-        // save changes
-        // do this first so the populatePlaceholders step when submitting the form is predictably via edit mode
-        $form.find('button[type="submit"]').trigger('click');
+
+        // save changes (if there are any)
+        if ($submitBtn.prop('disabled')) {
+          $submitBtn.toggleClass('mark-completed save-changes')
+          $submitBtn.find('span.mark-completed, span.save-changes').toggle();
+          if ($form.find('input[name="success[win_story_completed]"]').val() === 'true') {
+            $submitBtn.hide();
+          } else {
+            $submitBtn.prop('disabled', false)
+          }
+        } else {
+          $submitBtn.trigger('click');
+        }
 
         // can't use .note-editor height because it will be 0
         // why do I need to do the .last thing for win story??
         $editor
-          .css('height', isExpandedView ? (parseInt($('.form-group.win-story').last().css('height'), 10) - winStoryLabelHeight).toString() + 'px' : defaultViewHeight)
+          .css('height', isExpandedView ? (parseInt($('.form-group.win-story').last().css('height'), 10) - winStoryHeaderHeight).toString() + 'px' : defaultViewHeight)
           .prop('contenteditable', false)
           .summernote('destroy')  // note this doesn't return $editor => can't chain
         $editor.html( populatePlaceholders( $('#win-story-editor').html() ) );
         $('.win-story-actions__copy').prop('disabled', false);
+        // $('.mark-completed').removeClass('disabled');
 
         // scroll to center
         window.scrollTo(0, $tr.offset().top - (window.innerHeight / 2) + (($trChild.outerHeight() + $tr.outerHeight()) / 2));
@@ -467,7 +497,7 @@ function successDetailsListeners () {
         dataType: 'json'
       })
         .done(function (data, status, xhr) {
-          console.log(data)
+          // console.log(data)
           $.ajax({
             url: webhookUrl,
             method: 'post',
@@ -490,7 +520,7 @@ function successDetailsListeners () {
         })
     })
 
-    .on('click', '[id*="success-form"] button[type="submit"]', function (e) {
+    .on('click', '[id*="success-form-"] button[type="submit"]', function (e) {
       e.preventDefault();
       e.stopImmediatePropagation();
 
@@ -500,11 +530,18 @@ function successDetailsListeners () {
         e.stopImmediatePropagation();
         return false;
       }
-      var winStoryHtml = populatePlaceholders($editor.summernote('code')),
+
+      var isEditMode = typeof $editor.data('summernote') === "object",
+          markedAsCompleted = !isEditMode,  // submitting from view mode = marking as completed
+          winStoryHtml = isEditMode ?
+                           populatePlaceholders($editor.summernote('code')) :
+                           $editor.html(),
           $htmlInput = $form.find('input[type="hidden"][name="success[win_story_html]"]'),
           $textInput = $form.find('input[type="hidden"][name="success[win_story_text]"]'),
           $markdownInput = $form.find('input[type="hidden"][name="success[win_story_markdown]"]');
-      $htmlInput.val( winStoryHtml );
+
+      // set hidden input fields
+      $htmlInput.val(winStoryHtml);
       $textInput.val(
         $(winStoryHtml.replace(/<\/p>/g, "</p>\r\n"))    // add line breaks after paragraphs (summernote doesn't)
           .wrapAll('<div class="wrapper"></div>').parent()
@@ -516,9 +553,20 @@ function successDetailsListeners () {
           .html()
           .replace(/<i>/, " <i>")       // preserve spaces around italicized text (htmlClean will have removed)
           .replace(/<\/i>/, "<\/i> ")
-
       );
-      toggleFormWorking($form);
+
+      if (markedAsCompleted) {
+        $('input[name="success[win_story_completed]"]').val('true');
+        $form.find('span.mark-completed, i.fa-spin').toggle();
+      } else {
+        $form.find('span.save-changes, i.fa-spin').toggle();
+      }
+
+      // disallow toggling either the child row or view/edit mode
+      $('td.toggle-success-child').addClass('disabled');
+      $('button.win-story-actions__edit').prop('disabled', true);
+
+      $form.attr('data-submitted', 'true');
       $form.submit();
     })
 
@@ -558,7 +606,7 @@ function successDetailsListeners () {
       $(this).closest('.customer-logo').find('.customer-name').toggle();
     })
 
-    .on('click', 'td.success-details', function () {
+    .on('click', 'td.toggle-success-child', function () {
       var toggleButton = $(this),
           $table = $('#successes-table'),
           dt = $table.DataTable(),
@@ -573,34 +621,36 @@ function successDetailsListeners () {
             $tr.removeClass('shown active');
           }
       if (childRowIsOpen()) {
-        var unsavedChanges = !$form.find('button[type="submit"]').prop('disabled');
-        if (unsavedChanges) {
-          bootbox.confirm({
-            size: 'small',
-            className: 'confirm-unsaved-changes',
-            closeButton: false,
-            message: "<i class='fa fa-warning'></i>\xa0\xa0\xa0<span>Unsaved changes will be lost</span>",
-            buttons: {
-              confirm: {
-                label: 'Continue',
-                className: 'btn-default'
-              },
-              cancel: {
-                label: 'Cancel',
-                className: 'btn-default'
-              }
-            },
-            callback: function (continueWithoutSave) {
-              if (continueWithoutSave) {
-                closeChildRow();
-              }
-            }
-          });
+        // var unsavedChanges = !$form.find('button[type="submit"]').prop('disabled');
+        // if (unsavedChanges) {
+        //   bootbox.confirm({
+        //     size: 'small',
+        //     className: 'confirm-unsaved-changes',
+        //     closeButton: false,
+        //     message: "<i class='fa fa-warning'></i>\xa0\xa0\xa0<span>Unsaved changes will be lost</span>",
+        //     buttons: {
+        //       confirm: {
+        //         label: 'Continue',
+        //         className: 'btn-default'
+        //       },
+        //       cancel: {
+        //         label: 'Cancel',
+        //         className: 'btn-default'
+        //       }
+        //     },
+        //     callback: function (continueWithoutSave) {
+        //       if (continueWithoutSave) {
+        //         closeChildRow();
+        //       }
+        //     }
+        //   });
 
         // form is clean
-        } else {
-          closeChildRow();
-        }
+        // } else {
+        //   closeChildRow();
+        // }
+
+        closeChildRow();
 
       } else {
         toggleButton.children().toggle();  // caret icons
@@ -629,7 +679,7 @@ function successDetailsListeners () {
           })
 
         dt.row($tr).child(
-          _.template($('#success-details-template').html())({
+          _.template($('#success-child-row-template').html())({
             success: success,
             successPath: successPath(successId)
           })
@@ -644,7 +694,7 @@ function successDetailsListeners () {
           if (dt.row($(this)).child.isShown()) {
             dt.row($(this)).child.hide();
             $(this).removeClass('shown active');
-            $(this).children('td.success-details').children().toggle();
+            $(this).children('td.toggle-success-child').children().toggle();
           }
         });
 

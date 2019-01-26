@@ -23,6 +23,10 @@
     content: "" !important;
   }
 
+  td.toggle-success-child.disabled {
+    pointer-events: none;
+  }
+
   #win-story-editor {
     height: 200px;
     max-width: 100%;  // don't allow to expand horizontally
@@ -118,6 +122,24 @@
         }
       }
 
+    }
+  }
+
+  form[id*="success-form-"] {
+    .form-group.win-story {
+      margin-bottom: 15px;
+    }
+    .form-group.submit {
+      max-width: 100%;
+    }
+    button[type="submit"] {
+      // make the widths explicit so width doesn't collapse when toggling icons
+      &.mark-completed {
+        width: 130.77px;
+      }
+      &.save-changes {
+        width: 97.28px;
+      }
     }
   }
 

@@ -1,25 +1,34 @@
 
 (function () {
 
-  var success = <%= raw @success.to_json({
-        only: [:id, :name, :win_story],
-        methods: [:display_status, :timestamp, :referrer, :contact],
-        include: {
-          curator: { only: [:id], methods: [:full_name] },
-          customer: { only: [:id, :name, :slug] }
-        }
-      }) %>,
-      $trSuccess = $('tr.shown[data-success-id="' + success.id + '"]'),
-      $form = $('#success-form-' + success.id);
+  var $form = $('form[id*="success-form-"]'),
+      $submitBtn = $form.find('button[type="submit"]'),
+      isEditMode = typeof $('#win-story-editor').data('summernote') === 'object',
+      winStoryCompleted = !isEditMode;  // submitting from view mode = marking as completed
 
-  toggleFormDone($form, true, function () {
-    $form.find('button[type="submit"]').prop('disabled', true)
-  });
 
+  // toggle button icons
+  $submitBtn.find('i.fa-spin, i.fa-check').toggle();
+
+  setTimeout(function () {
+    // re-enable items disabled during form submission
+    $('td.toggle-success-child').removeClass('disabled');
+    $('button.win-story-actions__edit').prop('disabled', false);
+    $form.attr('data-submitted', '');
+    if (isEditMode) {
+      $submitBtn.find('.fa-check, span.save-changes').toggle();
+      $submitBtn.prop('disabled', true);
+    } else {
+      $submitBtn.find('.fa-check, span.mark-completed').toggle();
+      $submitBtn.hide();
+    }
+  }, 2000)
+
+  // maybe include sucess.win_story_udpated in the datatable
   // update datatables => not necessary as we're not keeping Success.win_story in datatables
   // don't update until the child row is closed, or the re-draw will hose things
-  // timeout is necessary because this appears to step on the normal open/close behavior (success_details.js)
-  // $trSuccess.one('click', 'td.success-details', function (e) {
+  // timeout is necessary because this appears to step on the normal open/close behavior (success_child_row.js)
+  // $trSuccess.one('click', 'td.toggle-success-child', function (e) {
   //   setTimeout(function () {
   //     $('#successes-table').DataTable().row($trSuccess).data(success);
   //   }, 100);
