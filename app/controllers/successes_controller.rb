@@ -56,7 +56,7 @@ class SuccessesController < ApplicationController
   end
 
   def create
-    # puts 'successes#create'
+    puts "CSP"
     puts success_params.to_h
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
 

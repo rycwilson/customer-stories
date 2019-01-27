@@ -1,11 +1,11 @@
 
 (function () {
 
-  var $form = $('form[id*="success-form-"]'),
+  var success = <%= raw @success.to_json({ only: [:id, :win_story_completed] }) %>,
+      winStoryCompleted = success.win_story_completed,
+      $form = $('form[id*="success-form-"]'),
       $submitBtn = $form.find('button[type="submit"]'),
-      isEditMode = typeof $('#win-story-editor').data('summernote') === 'object',
-      winStoryCompleted = !isEditMode;  // submitting from view mode = marking as completed
-
+      isEditMode = typeof $('#win-story-editor').data('summernote') === 'object';
 
   // toggle button icons
   $submitBtn.find('i.fa-spin, i.fa-check').toggle();
@@ -14,13 +14,15 @@
     // re-enable items disabled during form submission
     $('td.toggle-success-child').removeClass('disabled');
     $('button.win-story-actions__edit').prop('disabled', false);
+
     $form.attr('data-submitted', '');
     if (isEditMode) {
-      $submitBtn.find('.fa-check, span.save-changes').toggle();
+      $submitBtn.find('.fa-check, .save-changes').toggle();
       $submitBtn.prop('disabled', true);
     } else {
-      $submitBtn.find('.fa-check, span.mark-completed').toggle();
-      $submitBtn.hide();
+      $submitBtn.toggleClass('save-changes mark-completed')
+                .find('.fa-check, .mark-completed').toggle();
+      if (winStoryCompleted) $submitBtn.hide();
     }
   }, 2000)
 
