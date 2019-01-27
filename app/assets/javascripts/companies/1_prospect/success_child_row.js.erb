@@ -366,7 +366,7 @@ function successDetailsListeners () {
         $('#win-story-editor').summernote('destroy')
         initWinStoryEditor(
           $tr,
-          isExpansion ? expandedViewHeight($tr, true) : collapseViewHeight(),
+          isExpansion ? expandedViewHeight($tr, true) : collapsedViewHeight(),
           function () {
             depopulatePlaceholders();
             $('.note-customButton').append(
