@@ -56,8 +56,10 @@ class SuccessesController < ApplicationController
   end
 
   def create
-    puts "CSP"
-    puts success_params.to_h
+    if params[:zapier_create].present?
+      puts "Zapier -> CSP, create success"
+      puts success_params.to_h
+    end
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
 
     params[:success][:customer_attributes] = find_dup_customer(
@@ -82,8 +84,6 @@ class SuccessesController < ApplicationController
       params[:success][:contributions_attributes].except!('1') if params[:success][:contributions_attributes]['1'][:contributor_attributes].blank?
     end
 
-    # pp success_params.to_h
-
     if params[:zapier_create].present? && (@success = Success.find_by_id(find_dup_success(success_params.to_h)))
       # a new success entails two contributions, one for the contact and one for the referrer;
       # a duplicate success means a new contributor, i.e. one contribution only;
@@ -99,6 +99,8 @@ class SuccessesController < ApplicationController
     end
     # end
     if params[:zapier_create].present?
+      puts "Zapier -> CSP, create success (after processing)"
+      puts success_params.to_h
       respond_to do |format|
         format.any do
           render({
