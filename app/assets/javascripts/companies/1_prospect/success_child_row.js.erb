@@ -8,17 +8,24 @@ function successDetailsListeners () {
       summernoteToolbarHeight = 41.3,
       summernoteResizebarHeight = 8,
       winStoryHeaderHeight = 23,
-      submitButtonHeight = 30,
+      submitButtonHeight = 45,
       customButtonHelpPopoverContent = "You can insert contributions in their original form or with a placeholder. The latter is useful for organizing your document while in Edit mode, but will preclude any changes to the underlying content. Toggle to the View mode to see the populated/saved content.",
       winStory, winStoryText, winStoryCompleted,
       winStoryRecipientsSelectOptions,
       customerPath = function (customerId) { return '/customers/' + customerId; },
       successPath = function (successId) { return '/successes/' + successId; },
       contributionsDataPath = function (successId) { return '/successes/' + successId + '/contributions'; },
-      expandedViewHeight = function ($tr, editorIsOpen) {
-        // factor in height of the summernote toolbar
-        return window.innerHeight - ($tr.height() + $tr.next().height() + (editorIsOpen ? summernoteToolbarHeight : 0) + winStoryHeaderHeight - ($('#win-story-editor').height() + submitButtonHeight));
+      expandedViewHeight = function ($tr, isEditMode) {
+        var totalHeight = window.innerHeight,  // the total height available
+            childRowPadding = parseInt($('tr.shown').next().children().css('padding-top'), 10) +
+                              parseInt($('tr.shown').next().children().css('padding-bottom'), 10),
+            reservedHeight = $tr.height() + childRowPadding + winStoryHeaderHeight + submitButtonHeight +
+                             (isEditMode ? summernoteToolbarHeight + summernoteResizebarHeight : 0);
+        return totalHeight - reservedHeight;
       },
+      collapsedViewHeight = function () {
+        return parseInt(defaultViewHeight, 10) - (summernoteToolbarHeight + summernoteResizebarHeight);
+      }
       individualContributionTemplate = function (contributionId, contributionsData, $placeholder) {
         return _.template($('#individual-contribution-template').html())({
           placeholder: $placeholder ? _.escape($placeholder.wrap('<p/>').parent().html()) : null,
@@ -349,16 +356,17 @@ function successDetailsListeners () {
     .on('click', '.win-story-actions__expand', function (e, isEditClick) {
       var $tr = $('tr.shown'),
           $trChild = $tr.next(),
-          expandView = !$('#win-story-editor').hasClass('expanded'),
-          editorIsOpen = $('#win-story-editor[contenteditable="true"]').length;
+          isCollapse = $('#win-story-editor').hasClass('expanded'),
+          isExpansion = !isCollapse,
+          isEditMode = typeof $('#win-story-editor').data('summernote') === 'object';
 
       // the only way to resize with the editor open is to destroy and reinit
       // (but don't proceed if this is an automatic expansion due to clicking Edit button)
-      if (editorIsOpen && !isEditClick) {
+      if (isEditMode && !isEditClick) {
         $('#win-story-editor').summernote('destroy')
         initWinStoryEditor(
           $tr,
-          expandView ? expandedViewHeight($tr, true) : parseInt(defaultViewHeight, 10) - (summernoteToolbarHeight + summernoteResizebarHeight),
+          isExpansion ? expandedViewHeight($tr, true) : collapseViewHeight(),
           function () {
             depopulatePlaceholders();
             $('.note-customButton').append(
@@ -380,7 +388,7 @@ function successDetailsListeners () {
       } else {
         $('#win-story-editor').css(
           'height',
-          expandView ? expandedViewHeight($tr, editorIsOpen) : defaultViewHeight
+          isExpansion ? expandedViewHeight($tr, isEditMode) : defaultViewHeight
         );
       }
 
