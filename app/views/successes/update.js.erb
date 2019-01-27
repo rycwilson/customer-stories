@@ -7,6 +7,7 @@
       $submitBtn = $form.find('button[type="submit"]'),
       isEditMode = typeof $('#win-story-editor').data('summernote') === 'object';
 
+console.log(success.previous_changes)
   // toggle button icons
   $submitBtn.find('i.fa-spin, i.fa-check').toggle();
 
@@ -20,7 +21,8 @@
       $submitBtn.find('.fa-check, .save-changes').toggle();
       $submitBtn.prop('disabled', true);
     } else {
-      $submitBtn.toggleClass('save-changes mark-completed')
+      $submitBtn.removeClass('save-changes')
+                .addClass('mark-completed')
                 .find('.fa-check, .mark-completed').toggle();
       if (winStoryCompleted) $submitBtn.hide();
     }
