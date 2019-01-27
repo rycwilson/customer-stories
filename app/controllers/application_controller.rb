@@ -74,6 +74,7 @@ class ApplicationController < ActionController::Base
 
   # method only called if user_signed_in?
   def check_subdomain
+    puts params
     user_subdomain = current_user.company.try(:subdomain)
     if user_subdomain == request.subdomain  # all good
       true
