@@ -8,6 +8,7 @@ function successDetailsListeners () {
       summernoteToolbarHeight = 41.3,
       summernoteResizebarHeight = 8,
       winStoryHeaderHeight = 23,
+      submitButtonHeight = 30,
       customButtonHelpPopoverContent = "You can insert contributions in their original form or with a placeholder. The latter is useful for organizing your document while in Edit mode, but will preclude any changes to the underlying content. Toggle to the View mode to see the populated/saved content.",
       winStory, winStoryText, winStoryCompleted,
       winStoryRecipientsSelectOptions,
@@ -16,7 +17,7 @@ function successDetailsListeners () {
       contributionsDataPath = function (successId) { return '/successes/' + successId + '/contributions'; },
       expandedViewHeight = function ($tr, editorIsOpen) {
         // factor in height of the summernote toolbar
-        return window.innerHeight - ($tr.height() + $tr.next().height() + (editorIsOpen ? summernoteToolbarHeight : 0) + winStoryHeaderHeight - $('#win-story-editor').height());
+        return window.innerHeight - ($tr.height() + $tr.next().height() + (editorIsOpen ? summernoteToolbarHeight : 0) + winStoryHeaderHeight - ($('#win-story-editor').height() + submitButtonHeight));
       },
       individualContributionTemplate = function (contributionId, contributionsData, $placeholder) {
         return _.template($('#individual-contribution-template').html())({

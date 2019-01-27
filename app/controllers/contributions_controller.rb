@@ -94,8 +94,8 @@ class ContributionsController < ApplicationController
   end
 
   def create
-    # puts "contributions#create"
-    # puts contribution_params.to_h
+    puts "CSP"
+    puts contribution_params.to_h
     @company = Company.find_by(subdomain: request.subdomain) || current_user.company
 
     if contribution_params[:success_attributes].to_h.has_key?(:customer_attributes)
