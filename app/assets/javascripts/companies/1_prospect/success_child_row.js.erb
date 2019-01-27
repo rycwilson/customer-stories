@@ -131,7 +131,7 @@ function successDetailsListeners () {
               ['para', ['ul', 'ol', 'paragraph']],
               ['customButton', ['contributionsDropdown', 'placeholdersDropdown']],
               // code editor is handy in development
-              ['view', <%= ENV['HOST_NAME'] != 'customerstories.net' ? ['codeview'] : [] %>],
+              ['view', <%= Rails.env.development? ? ['codeview'] : [] %>],
             ],
             buttons: {
               contributionsDropdown: noteInsertionDropdown($tr.data('customer-id'), contributionsData, 'contributions'),
