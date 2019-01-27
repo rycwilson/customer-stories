@@ -56,6 +56,8 @@ class SuccessesController < ApplicationController
   end
 
   def create
+    puts "successes#create incoming params"
+    puts params.to_h
     if params[:zapier_create].present?
       puts "Zapier -> CSP, create success"
       puts success_params.to_h
