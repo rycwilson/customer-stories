@@ -56,9 +56,7 @@ class Success < ApplicationRecord
   # this may happen with a zap (no such validation in the zapier app)
   accepts_nested_attributes_for(:contributions, allow_destroy: false, reject_if: :missing_contributor_or_referrer_attributes?)
 
-  before_save(on: [:create]) do
-    self.is_new_record = true
-  end
+  before_save { self.is_new_record = true if self.new_record? }
 
   before_create do
     convert_description_to_win_story_html if self.win_story_html.present?
