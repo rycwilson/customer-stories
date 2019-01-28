@@ -1,13 +1,13 @@
 
 (function () {
 
-  var success = <%= raw @success.to_json({ only: [:id, :win_story_completed] }) %>,
+  var success = <%= raw @success.to_json({ only: [:id, :win_story_completed], methods: [:previous_changes, :display_status] }) %>,
+      $tr = $('#successes-table tr[data-success-id="' + success.id + '"]'),
       winStoryCompleted = success.win_story_completed,
       $form = $('form[id*="success-form-"]'),
       $submitBtn = $form.find('button[type="submit"]'),
       isEditMode = typeof $('#win-story-editor').data('summernote') === 'object';
 
-console.log(success.previous_changes)
   // toggle button icons
   $submitBtn.find('i.fa-spin, i.fa-check').toggle();
 
@@ -26,9 +26,14 @@ console.log(success.previous_changes)
                 .find('.fa-check, .mark-completed').toggle();
       if (winStoryCompleted) $submitBtn.hide();
     }
+
+    // update status if win story was marked completed
+    if (success.previous_changes.win_story_completed) {
+      $tr.find('td.status').html(success.display_status)
+    }
+
   }, 2000)
 
-  // maybe include sucess.win_story_udpated in the datatable
   // update datatables => not necessary as we're not keeping Success.win_story in datatables
   // don't update until the child row is closed, or the re-draw will hose things
   // timeout is necessary because this appears to step on the normal open/close behavior (success_child_row.js)
