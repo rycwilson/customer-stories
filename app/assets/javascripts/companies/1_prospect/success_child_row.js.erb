@@ -466,23 +466,20 @@ function successDetailsListeners () {
       if (initEditor && !isExpandedView) {
         $expandBtn.trigger('click', [{ editClick: true }])
       }
-      $editor.toggleClass('edit-mode')
       $(this).find('i, span').toggle();
       $(this)[0].blur();
     })
 
     .on('click', '.win-story-actions__email', function () {
-      var winStoryHtml = $editor.hasClass('edit-mode') ?
-                           $editor.summernote('code') :
-                           $editor.html();
+      var isEditMode = typeof $('#win-story-editor').data('summernote') === 'object',
+          winStoryHtml = isEditMode ? $editor.summernote('code') : $editor.html();
       $('#win-story-email-editor').summernote('code', winStoryHtml);
       $('#win-story-email-modal').modal('show');
     })
 
     .on('click', '.win-story-actions__copy', function () {
-      var copyStr = $editor.hasClass('edit-mode') ?
-                      $editor.summernote('code') :
-                      $editor.html(),
+      var isEditMode = typeof $('#win-story-editor').data('summernote') === 'object',
+          copyStr = isEditMode ? $editor.summernote('code') : $editor.html(),
           listener = function (e) {
             e.clipboardData.setData("text/html", copyStr);
             e.clipboardData.setData("text/plain", copyStr);
