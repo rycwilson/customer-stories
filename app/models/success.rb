@@ -149,12 +149,17 @@ class Success < ApplicationRecord
 
   def display_status
     if (self.contributions.count == 0)
-      return "0&nbsp;&nbsp;Contributors added".html_safe
+      return ("0&nbsp;&nbsp;Contributors added" + (self.win_story_completed ? "\nWin Story completed" : '')).html_safe
     elsif (self.contributions.invitation_sent.length == 0)
-      return "0&nbsp;&nbsp;Contributors invited".html_safe
+      return ("0&nbsp;&nbsp;Contributors invited" + (self.win_story_completed ? "\nWin Story completed" : '')).html_safe
     else
-      return "#{self.contributions.invitation_sent.length}&nbsp;&nbsp;Contributors invited\n" +
-             "#{self.contributions.submitted.length}&nbsp;&nbsp;Contributions submitted".html_safe
+      if self.win_story_completed?
+        return "#{self.contributions.submitted.length}&nbsp;&nbsp;Contributions submitted\n" +
+               "Win Story completed".html_safe
+      else
+        return "#{self.contributions.invitation_sent.length}&nbsp;&nbsp;Contributors invited\n" +
+               "#{self.contributions.submitted.length}&nbsp;&nbsp;Contributions submitted".html_safe
+      end
     end
   end
 

@@ -23,6 +23,10 @@
     content: "" !important;
   }
 
+  td.status {
+    line-height: 1.6
+  }
+
   td.toggle-success-child.disabled {
     pointer-events: none;
   }
