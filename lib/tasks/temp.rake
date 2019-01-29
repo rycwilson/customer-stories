@@ -2,6 +2,16 @@ namespace :temp do
 
   desc "temp stuff"
 
+  task convert_win_story_html: :environment do
+    Success.where.not(win_story_html: [nil, '']).each do |success|
+      html = success.win_story_html
+      html.sub!(/(\r\n)+$/, '')
+      html.gsub!(/(\r\n)+/, "</p>\r\n<p>")
+      html.prepend('<p>').concat('</p>')
+      success.update(win_story_html: html)
+    end
+  end
+
   task remove_pixlee_cta: :environment do
     pixlee = Company.find_by subdomain: 'pixlee'
     cta = /<a\shref="https:\/\/www\.pixlee\.com\/request-demo".+Blog-CTA_Request-Demo\.png'\);"><\/a>/
