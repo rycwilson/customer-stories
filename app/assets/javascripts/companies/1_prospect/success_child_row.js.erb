@@ -628,7 +628,8 @@ function successDetailsListeners () {
           };
 
       if (childRowIsOpen()) {
-        var unsavedChanges = !$form.find('button[type="submit"]').prop('disabled');
+        var unsavedChanges = typeof $('#win-story-editor').data('summernote') === 'object' &&
+                             !$form.find('button[type="submit"]').prop('disabled');
         if (unsavedChanges) {
           bootbox.confirm({
             size: 'small',
