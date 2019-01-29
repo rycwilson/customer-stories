@@ -625,7 +625,8 @@ function successDetailsListeners () {
             toggleButton.children().toggle();  // toggle caret icons
             dt.row($tr).child.hide();
             $tr.removeClass('shown active');
-          }
+          };
+
       if (childRowIsOpen()) {
         var unsavedChanges = !$form.find('button[type="submit"]').prop('disabled');
         if (unsavedChanges) {
