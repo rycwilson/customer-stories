@@ -1,15 +1,32 @@
 
-<div class="cta-description">
-  <i class="fa fa-fw fa-<%= cta.type == 'CTALink' ? 'link' : 'wpforms' %>"></i>
-  <span><%= cta.description %></span>
-  <a href="javascript:;" class="remove">
+<div class="cta-header">
+
+  <span class="icon">
+    <i class="fa fa-fw fa-<%= cta.type == 'CTALink' ? 'link' : 'wpforms' %>"></i>
+  </span>
+  <span class="description">
+    <%= cta.description %>
+  </span>
+  <button type="button">
+    <i class="fa fa-fw fa-chevron-down"></i>
+    <i class="fa fa-fw fa-chevron-up" style="display: none;"></i>
+  </button>
+  <button type="button" class="remove"">
     <i class="fa fa-fw fa-remove"></i>
-  </a>
+  </button>
+
+  <div class="confirm-removal">
+    <span>Are you sure?</span>
+    <button class="confirm-removal__button">
+      <i class="fa fa-fw fa-remove"></i>
+    </button>
+  </div>
+
 </div>
 
-<div id="edit-cta-<%= cta.id %>" class='collapse edit-cta'>
+<div id="edit-cta-<%= cta.id %>" class="collapse" style="padding: 0 15px 15px 15px">
 
-  <hr style="margin-bottom: 15px;border-top: 1px solid #ddd">
+  <hr>
 
   <%= form_tag(cta_path(cta), id: "cta-#{cta.id}-form", method: 'PUT', remote: true) do %>
 
@@ -55,13 +72,13 @@
 
   <!-- note: the inline styling is necessary to prevent jerky collapse behavior -->
 
-    <div class="form-group" style="margin: 0 0 15px 0">
+    <div class="form-group" style="margin: 0 0 25px 0">
       <%= label_tag "cta_#{cta.id}[description]", 'Description' %>
       <%= text_field_tag "cta_#{cta.id}[description]", cta.description,
             placeholder: 'description', class: 'form-control' %>
     </div>
 
-    <div class="form-group" style="margin: 0 0 15px 0">
+    <div class="form-group" style="margin: 0 0 25px 0">
       <%= label_tag "cta_#{cta.id}[display_text]", 'Display text' %>
       <%= text_field_tag "cta_#{cta.id}[display_text]", cta.display_text,
             placeholder: 'display text', class: 'form-control' %>
@@ -69,7 +86,7 @@
 
     <% if cta.type == 'CTALink' %>
 
-      <div class="form-group" style="margin: 0 0 15px 0">
+      <div class="form-group" style="margin: 0 0 25px 0">
         <%= label_tag "cta_#{cta.id}[link_url]", 'Website address' %>
         <%= text_field_tag "cta_#{cta.id}[link_url]", cta.link_url,
               placeholder: 'website address', class: 'form-control' %>
@@ -77,7 +94,7 @@
 
     <% elsif cta.type == 'CTAForm' %>
 
-      <div class="form-group" style="margin: 0 0 15px 0">
+      <div class="form-group" style="margin: 0 0 25px 0">
         <%= label_tag "cta_#{cta.id}[form_html]", 'HTML' %>
         <%= text_area_tag "cta_#{cta.id}[form_html]", cta.form_html, rows: 3,
               placeholder: 'html, e.g. <script> and <form> tags',

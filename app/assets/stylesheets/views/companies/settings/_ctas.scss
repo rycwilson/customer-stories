@@ -1,114 +1,171 @@
 
-.companies.edit {
-
-  #edit-ctas {
-
-    #new-cta-modal {
-      .modal-body {
-        padding: 20px 15px 0 15px;
-      }
-    }
-
-    #new-cta-form {
-      label {
-        padding-right: 5px;
-      }
-      .form-group {
-        .radio-inline {
-          margin-right: 15px;
-        }
-        .col-sm-3 {
-          width: 18%;
-        }
-        .col-sm-9 {
-          width: 82%;
-        }
-        .col-sm-offset-3.col-sm-9 {
-          margin-left: 18%;
-        }
-        &.cta-form {
-          display: none;
-        }
-        .checkbox {
-          padding-top: 0;
-        }
-      }
-    }
-    // [data-target="#new-cta-modal"] {
-    //   cursor: pointer;
-    //   color: #666;
-    //   i {
-    //     // TODO: Font Awesome 5 has font variants that allow different weights
-    //     -webkit-text-stroke: 1px #efefef;
-    //   }
-    //   &:hover {
-    //     color: #222;
-    //   }
-    // }
-    .form-horizontal.cta-list {
-      #new-cta-button {
-        margin: 0 0 20px 0;
-      }
-      > .control-label {
-        padding-top: 15px;
-      }
-      .col-md-2 {
-        width: 15%;
-      }
-      .col-md-10 {
-        width: 85%
-      }
-      #primary-cta, #secondary-ctas {
-        width: 500px;
-        &#primary-cta {
-          #primary-cta-colors {
-            div.col-sm-4:first-of-type {
-              padding-right: 0;
-            }
-            div.col-sm-4:last-of-type {
-              padding-left: 0;
-            }
-          }
-        }
-      }
-      .list-group-item {
-        background: #efefef;
-        padding: 15px;  // overrides bootstrap 10px 15px
-        .cta-description {
-          cursor: pointer;
-          position: relative;
-          // padding-right: 30px;
-          margin: -15px -15px -15px -15px;  // expand clickable area for .collapse
-          padding: 15px 45px 15px 15px;
-          span {
-            padding: 0 6px;
-            line-height: 1.6;
-          }
-          a.remove {
-            position: absolute;
-            top: 5px;  // -10 + 15  (account for negative margins above)
-            right: 5px;  // -10 + 15
-            font-size: 16px;
-            color: #666;
-            padding: 8px;
-            &:hover {
-              color: #222;
-            }
-          }
-        }
-        .collapse.edit-cta {
-          // note the inline styles that are necessary for preventing jerky collapse
-          cursor: auto;
-        }
-        &:hover, &.open {
-          background-color: #e5e5e5;
-        }
-        .checkbox {
-          margin-bottom: 10px;
-        }
-      }
-    }
-
+#new-cta-modal {
+  .modal-body {
+    padding: 20px 15px 0 15px;
   }
-
 }
+
+#new-cta-form {
+  label {
+    padding-right: 5px;
+  }
+  .form-group {
+    .radio-inline {
+      margin-right: 15px;
+    }
+    .col-sm-3 {
+      width: 18%;
+    }
+    .col-sm-9 {
+      width: 82%;
+    }
+    .col-sm-offset-3.col-sm-9 {
+      margin-left: 18%;
+    }
+    &.cta-form {
+      display: none;
+    }
+    .checkbox {
+      padding-top: 0;
+    }
+  }
+}
+// [data-target="#new-cta-modal"] {
+//   cursor: pointer;
+//   color: #666;
+//   i {
+//     // TODO: Font Awesome 5 has font variants that allow different weights
+//     -webkit-text-stroke: 1px #efefef;
+//   }
+//   &:hover {
+//     color: #222;
+//   }
+// }
+
+#configure-ctas {
+  #new-cta-button {
+    margin: 0 0 20px 0;
+  }
+  > .control-label {
+    padding-top: 15px;
+  }
+  .col-md-2 {
+    width: 15%;
+  }
+  .col-md-10 {
+    width: 85%
+  }
+  #primary-cta, #secondary-ctas {
+    width: 500px;
+    &#primary-cta {
+      #primary-cta-colors {
+        div.col-sm-4:first-of-type {
+          padding-right: 0;
+        }
+        div.col-sm-4:last-of-type {
+          padding-left: 0;
+        }
+      }
+    }
+  }
+  .list-group-item {
+    background: #efefef;
+    padding: 0;  // overrides bootstrap 10px 15px
+    overflow: hidden;  // ensure border-radius is obeyed on child elements
+    .cta-header {
+      height: 50px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      padding: 0;
+      position: relative;
+      span {
+        display: inline-block;
+      }
+      span.icon {
+        padding: 0 15px;
+        text-align: center;
+      }
+      span.description {
+        flex-grow: 1;
+      }
+      button {
+        font-size: 16px;
+        padding: 14px 15px 16px 15px;
+        background: none;
+        border: none;
+        &:first-of-type {
+          padding-right: 7px;
+        }
+        &:last-of-type {
+          padding-left: 7px
+        }
+        &:focus {
+          outline: 0;
+        }
+        &:not(.confirm-removal__button) {
+          display: none;
+          color: #666;
+          &:hover {
+            color: #222;
+          }
+        }
+      }
+      .confirm-removal {
+        display: none;
+        height: 100%;
+        width: 100%;
+        text-align: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: #d9534f;
+        color: white;
+        line-height: 50px;
+        z-index: 100;
+        button {
+          display: flex;
+          position: absolute;
+          top: 0;
+          right: 0;
+          height: 100%;
+          padding: 15px;
+          font-size: 20px;
+        }
+      }
+    }
+    &.remove {
+      .cta-header {
+      // border-color: #d43f3a;
+        cursor: auto;
+      }
+      .confirm-removal {
+        display: block;
+      }
+    }
+    &[data-cta-id=""] {
+      height: 50px;
+      display: flex;
+      align-items: center;
+      padding: 0 15px;
+    }
+    .collapse {
+      // note the inline styles that are necessary for preventing jerky collapse
+      cursor: auto;
+      hr {
+        border-top: 1px solid #ddd;
+        margin: 0 0 15px 0;
+      }
+    }
+    &:hover, &.shown {
+      background-color: #e5e5e5;
+      .cta-header > button {
+        display: block;
+      }
+    }
+    .checkbox {
+      margin-bottom: 10px;
+    }
+  }
+}
+

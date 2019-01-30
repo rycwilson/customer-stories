@@ -16,7 +16,7 @@
 </div>
 
 <div class="row">
-  <div class="form-horizontal cta-list">
+  <div id="configure-ctas" class="form-horizontal">
 
     <div class="col-sm-3 col-md-2">
     </div>
@@ -33,7 +33,7 @@
     <div class="col-sm-9 col-md-10">
 
       <ul id="primary-cta" class="list-group">
-        <li class="list-group-item" data-cta-id="<%= company.ctas.primary.try(:id) %>">
+        <li class="list-group-item" data-cta-id="<%= company.ctas.primary.try(:id) || '' %>">
 
         <% if company.ctas.primary %>
 

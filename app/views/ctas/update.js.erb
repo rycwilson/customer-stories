@@ -13,11 +13,22 @@
 
     // move old primary (if it exists) to the secondary list
     if (oldPrimaryCta) {
-      $('#secondary-ctas').prepend(template({ company: company, cta: oldPrimaryCta, isPrimary: false }));
+      $('#secondary-ctas').prepend(
+        _.template($('#cta-template').html())({
+          company: company,
+          cta: oldPrimaryCta,
+          isPrimary: false
+        })
+      );
     }
 
     if (removePrimary) {
-      $('#primary-cta li').empty().append('<em>Add a primary CTA</em>');
+      $('#primary-cta li')
+        .attr('data-cta-id', '')
+        .empty()
+        .append(
+          '<a href="javascript:;" data-toggle="modal" data-target="#new-cta-modal"><em>Add a Primary CTA</em></a>'
+        );
     }
 
     if (makePrimary) {
@@ -34,7 +45,7 @@
 
   } else {
     // update the description field (not tied to the form)
-    $('li[data-cta-id="' + cta.id + '"] .cta-description span').text(cta.description);
+    $('li[data-cta-id="' + cta.id + '"] span.description').text(cta.description);
     toggleFormDone($('#cta-' + cta.id + '-form'), true);
   }
 

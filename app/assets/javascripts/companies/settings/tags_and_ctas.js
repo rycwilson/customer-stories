@@ -30,8 +30,8 @@ function storyCTAsListeners () {
                             (parseInt(bgRgb.b) * 114)) / 1000);
         return (o > 125) ? 'bg-light' : 'bg-dark';
       },
-      closeOpenAccordions = function () {
-        $('#edit-ctas .edit-cta.collapse').each(function () {
+      hideShownCtas = function () {
+        $('[id*="edit-cta-"]').each(function () {
           if ($(this).is('.in')) {
             $(this).find('form')[0].reset();
             $(this).collapse('hide');
@@ -52,23 +52,58 @@ function storyCTAsListeners () {
       makeNewCtaPrimary = true;
     })
 
-    .on('click', '.cta-description', function () {
-      if (!$(this).is('[class*="remove"]')) {
-        if (!$(this).is('.in')) {
-          closeOpenAccordions();
-        }
-        $(this).next().collapse('toggle');
+    .on('click', '.cta-header', function (e) {
+      e.preventDefault();
+      var awaitingRemovalConfirmation = $(this).find('.confirm-removal').is(':visible'),
+          isRemoveBtn = $(e.target).is('[class*="remove"]');
+      if (awaitingRemovalConfirmation) {
+        return false;
+      } else if (isRemoveBtn) {  // removal confirmation handled separately (see below)
+        console.log('well?')
+        $(this).closest('.list-group-item').addClass('remove');
+        return false;
+      } else {
+        $(this).next().collapse('toggle')
       }
     })
-
-    .on('shown.bs.collapse', '.edit-cta.collapse', function () {
+    .on('shown.bs.collapse hidden.bs.collapse', '[id*="edit-cta-"]', function (e) {
+      $(this).prev().find('> button:first-of-type i').toggle();
+      e.type === 'shown' ?
+        $(this).closest('.list-group-item').addClass('shown') :
+        $(this).closest('.list-group-item').removeClass('shown');
+    })
+    .on('show.bs.collapse', '[id*="edit-cta-"]', function (e) {
+      hideShownCtas();
+    })
+    .on('shown.bs.collapse', '[id*="edit-cta-"]', function () {
       var top = $(this).prev().offset().top - (window.innerHeight / 2) + (($(this).outerHeight() + $(this).prev().outerHeight()) / 2);
       window.scrollTo(0, top);
-      $(this).closest('.list-group-item').addClass('open');
-      // $(this).prev()[0].scrollIntoView();
     })
-    .on('hidden.bs.collapse', '.edit-cta.collapse', function () {
-      $(this).closest('.list-group-item').removeClass('open');
+    .on('click', 'body:not(.list-group-item.remove)', function () {
+      $('.list-group-item.remove').removeClass('remove');
+    })
+    .on('click', '#configure-ctas .confirm-removal__button', function (e) {
+      var $li = $(this).closest('li'),
+          id = $li.data('cta-id');
+      if ($(this).closest('ul').is('#primary-cta')) {
+        $('#primary-cta li')
+          .removeClass('remove')
+          .attr('data-cta-id', '')
+          .empty()
+          .append(
+            '<a href="javascript:;" data-toggle="modal" data-target="#new-cta-modal"><em>Add a Primary CTA</em></a>'
+          );
+      } else {
+        $li.remove();
+      }
+      $.ajax({
+        url: '/ctas/' + id,
+        method: 'DELETE',
+        dataType: 'json'
+      })
+        .done(function (data, status, xhr) {
+          // already removed elements
+        });
     })
 
     .on('shown.bs.modal', '#new-cta-modal', function () {
@@ -90,22 +125,6 @@ function storyCTAsListeners () {
       }
     })
 
-    .on('click', '#edit-ctas [class*="remove"]', function (e) {
-      e.stopPropagation();  // don't trigger collapse
-      var id = $(this).closest('li').data('cta-id');
-      $.ajax({
-        url: '/ctas/' + id,
-        method: 'delete',
-        dataType: 'json'
-      })
-        .done(function (data, status, xhr) {
-          if (data.isPrimary) {
-            $('#primary-cta li').empty().append('<em>Add a primary CTA</em>');
-          } else {
-            $('li[data-cta-id="' + data.id + '"]').remove();
-          }
-        });
-    })
 
     .on('change', '[name="primary_cta[background_color]"]', function () {
       if (colorContrast(hexToRgb($(this).val())) === 'bg-light') {
