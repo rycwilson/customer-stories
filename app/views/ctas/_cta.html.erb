@@ -72,13 +72,13 @@
 
   <!-- note: the inline styling is necessary to prevent jerky collapse behavior -->
 
-    <div class="form-group" style="margin: 0 0 25px 0">
+    <div class="form-group" style="margin: 0 0 20px 0">
       <%= label_tag "cta_#{cta.id}[description]", 'Description' %>
       <%= text_field_tag "cta_#{cta.id}[description]", cta.description,
             placeholder: 'description', class: 'form-control' %>
     </div>
 
-    <div class="form-group" style="margin: 0 0 25px 0">
+    <div class="form-group" style="margin: 0 0 20px 0">
       <%= label_tag "cta_#{cta.id}[display_text]", 'Display text' %>
       <%= text_field_tag "cta_#{cta.id}[display_text]", cta.display_text,
             placeholder: 'display text', class: 'form-control' %>
@@ -86,15 +86,15 @@
 
     <% if cta.type == 'CTALink' %>
 
-      <div class="form-group" style="margin: 0 0 25px 0">
-        <%= label_tag "cta_#{cta.id}[link_url]", 'Website address' %>
+      <div class="form-group" style="margin: 0 0 20px 0">
+        <%= label_tag "cta_#{cta.id}[link_url]", 'URL' %>
         <%= text_field_tag "cta_#{cta.id}[link_url]", cta.link_url,
               placeholder: 'website address', class: 'form-control' %>
       </div>
 
     <% elsif cta.type == 'CTAForm' %>
 
-      <div class="form-group" style="margin: 0 0 25px 0">
+      <div class="form-group" style="margin: 0 0 20px 0">
         <%= label_tag "cta_#{cta.id}[form_html]", 'HTML' %>
         <%= text_area_tag "cta_#{cta.id}[form_html]", cta.form_html, rows: 3,
               placeholder: 'html, e.g. <script> and <form> tags',
