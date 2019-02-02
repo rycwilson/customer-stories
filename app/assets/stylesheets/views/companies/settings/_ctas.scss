@@ -55,8 +55,78 @@
   .col-md-10 {
     width: 85%
   }
+
+  .cta-actions {
+    display: flex;
+    flex-direction: row-reverse;
+    margin-bottom: 10px;
+    height: 30px;
+    width: 500px;
+    button {
+      background: none;
+      border: none;
+      color: #555;
+      padding: 6px 12px;
+      // border-radius: 4px;
+      &:hover:not(:disabled) {
+        background-color: #efefef;
+        color: #222;
+      }
+      &:focus {
+        outline: none;
+      }
+    }
+    div.separator {
+      display: inline-block;
+      height: 100%;
+      width: 1px;
+      margin: 0;
+      border-right: 1px solid #ccc;
+    }
+  }
+
+  #cta-url-params {
+    width: 500px;
+    > div {
+      padding: 15px 7.5px;
+      background-color: #efefef;
+      margin-bottom: 15px;
+    }
+    .cta-url-params__param {
+      display: flex;
+      .cta-url-params__key, .cta-url-params__value {
+        flex-basis: 0;
+        flex-grow: 1;
+        margin: 0 7.5px
+      }
+      &:not(.last-item) {
+        margin-bottom: 10px;
+      }
+    }
+    .cta-url-params__new {
+      button {
+        background: none;
+        padding: 12px;
+        margin-bottom: -12px;
+        border: none;
+        color: #666;
+        i {
+          // lessen the icon weight
+          -webkit-text-stroke: 1px #efefef;
+        }
+        &:hover {
+          color: #333;
+        }
+        &:focus {
+          outline: none;
+        }
+      }
+    }
+  }
+
   #primary-cta, #secondary-ctas {
     width: 500px;
+    margin-bottom: 15px;
     &#primary-cta {
       #primary-cta-colors {
         div.col-sm-4:first-of-type {
@@ -69,6 +139,8 @@
     }
   }
   .list-group-item {
+    border: none;
+    border-radius: 0;
     background: #efefef;
     padding: 0;  // overrides bootstrap 10px 15px
     overflow: hidden;  // ensure border-radius is obeyed on child elements

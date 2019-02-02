@@ -22,10 +22,42 @@
     </div>
 
     <div class="col-sm-9 col-md-10">
-      <button id="new-cta-button" type='button' class='btn btn-secondary' data-toggle='modal' data-target='#new-cta-modal'>
+<!--       <button id="new-cta-button" type='button' class='btn btn-secondary' data-toggle='modal' data-target='#new-cta-modal'>
           <i class='fa fa-plus-circle fa-fw'></i>&nbsp;New CTA&nbsp;
-      </button>
+      </button> -->
+
+      <div class="cta-actions">
+        <button class="cta-actions__params" data-toggle="collapse" data-target="#cta-url-params">
+          <i class="fa fa-fw fa-chevron-down"></i>
+          <i class="fa fa-fw fa-chevron-up" style="display: none;"></i>
+          <span>URL Parameters</span>
+        </button>
+        <div class="separator"></div>
+        <button class="cta-actions__new" data-toggle='modal' data-target='#new-cta-modal'>
+          <i class="fa fa-fw fa-plus"></i>
+          <span>New CTA</span>
+        </button>
+      </div>
+
+      <div id="cta-url-params" class="collapse">
+        <div>
+
+          <!-- existing params will be rendered in the client here -->
+
+          <div class="cta-url-params__new">
+            <button type="button">
+              <!-- <i class="fa fa-fw fa-plus-circle"></i> -->
+              <span class="fa-stack fa-lg">
+                <i class="fa fa-circle-o fa-stack-2x"></i>
+                <i class="fa fa-plus fa-stack-1x"></i>
+              </span>
+            </button>
+          </div>
+
+        </div>
+      </div>
     </div>
+
 
     <label class="col-sm-3 col-md-2 control-label">
       Primary

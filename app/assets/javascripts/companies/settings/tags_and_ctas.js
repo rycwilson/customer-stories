@@ -37,7 +37,18 @@ function storyCTAsListeners () {
             $(this).collapse('hide');
           }
         });
+      },
+
+      renderCtaUrlParams = function () {
+        $('#cta-url-params > div').prepend(
+          _.template($('#cta-url-params-template').html())({
+            isNew: false,
+            params: [ { key: 'foo', value: 'bar' }, { key: 'lorem', value: 'ipsum' } ]
+          })
+        );
       };
+
+  renderCtaUrlParams();
 
   $(document)
 
@@ -59,7 +70,6 @@ function storyCTAsListeners () {
       if (awaitingRemovalConfirmation) {
         return false;
       } else if (isRemoveBtn) {  // removal confirmation handled separately (see below)
-        console.log('well?')
         $(this).closest('.list-group-item').addClass('remove');
         return false;
       } else {
@@ -106,10 +116,29 @@ function storyCTAsListeners () {
         });
     })
 
+    .on('shown.bs.collapse hidden.bs.collapse', '#cta-url-params', function () {
+      $('button[class*="__params"] i').toggle();
+    })
+
     .on('shown.bs.modal', '#new-cta-modal', function () {
       if (makeNewCtaPrimary) {
         $('#new-cta-form [name="new_cta[make_primary]"]').prop('checked', true);
       }
+    })
+
+    .on('click', '.cta-url-params__new button', function () {
+      $('#cta-url-params .last-item').removeClass('last-item');
+      $.when(
+        $(this).closest('div').before(
+          _.template($('#cta-url-params-template').html())({
+            isNew: true,
+            params: [ { key: '', value: '' } ]
+          })
+        )
+      )
+        .done(function () {
+          $('.last-item input:first-of-type')[0].focus();
+        })
     })
 
     // reset the new cta form

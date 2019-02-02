@@ -1,0 +1,37 @@
+
+<script type="text/template" id="cta-url-params-template">
+
+  {{ params.forEach(function (param, index) { }}
+
+    <div class="cta-url-params__param {{= (index === params.length - 1) || isNew  ? 'last-item' : '' }}" style="{{= isNew ? 'margin-top: 10px' : '' }}">
+      <div class="cta-url-params__key">
+        {{ if (index === 0 && !isNew) { }}
+          <label>Parameter</label>
+        {{ } }}
+        <input class="form-control" value="{{= param.key }}">
+      </div>
+      <div class="cta-url-params__value">
+        {{ if (index === 0 && !isNew) { }}
+          <label>Value</label>
+        {{ } }}
+        <div class="input-group">
+          <input type="text" class="form-control" value="{{= param.value }}">
+          <div class="input-group-btn">
+            <!-- style hack below; issue: https://github.com/twbs/bootstrap-sass/issues/409 -->
+            <button style="height: 34px; padding: 5px 12px 7px 12px" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li><a href="#">Action</a></li>
+              <li><a href="#">Another action</a></li>
+              <li><a href="#">Something else here</a></li>
+              <li role="separator" class="divider"></li>
+              <li><a href="#">Separated link</a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  {{ }) }}
+
+</script>

@@ -32,5 +32,6 @@ module Csp
     config.autoload_paths += Dir["#{config.root}/lib/**/"]
 
     # config.active_job.queue_adapter = :delayed_job
+
   end
 end
