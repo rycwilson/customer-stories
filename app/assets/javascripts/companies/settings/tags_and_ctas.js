@@ -125,8 +125,23 @@ function storyCTAsListeners () {
         $('#new-cta-form [name="new_cta[make_primary]"]').prop('checked', true);
       }
     })
+    // reset the new cta form
+    .on('hidden.bs.modal', '#new-cta-modal', function () {
+      $('#new-cta-form')
+        .find('input, textarea')
+        .not('[name="new_cta[type]"]')
+        .each(function () { this.value = this.defaultValue; });
+      makeNewCtaPrimary = false;
+      $('#new-cta-form [name="new_cta[make_primary]"]').prop('checked', false);
+      if ($('#new_cta_type_form').prop('checked')) {
+        $('#new_cta_type_link').trigger('click');
+      }
+    })
 
-    .on('click', '.cta-url-params__new button', function () {
+    .on('show.bs.collapse hidden.bs.collapse', '#cta-url-params', function () {
+      $('.cta-actions__params').toggleClass('params-shown');
+    })
+    .on('click', 'button.cta-url-params__new', function () {
       $('#cta-url-params .last-item').removeClass('last-item');
       $.when(
         $(this).closest('div').before(
@@ -140,18 +155,8 @@ function storyCTAsListeners () {
           $('.last-item input:first-of-type')[0].focus();
         })
     })
-
-    // reset the new cta form
-    .on('hidden.bs.modal', '#new-cta-modal', function () {
-      $('#new-cta-form')
-        .find('input, textarea')
-        .not('[name="new_cta[type]"]')
-        .each(function () { this.value = this.defaultValue; });
-      makeNewCtaPrimary = false;
-      $('#new-cta-form [name="new_cta[make_primary]"]').prop('checked', false);
-      if ($('#new_cta_type_form').prop('checked')) {
-        $('#new_cta_type_link').trigger('click');
-      }
+    .on('click', 'button.cta-url-params__apply', function () {
+      $(this).find('span, i').toggle();
     })
 
 

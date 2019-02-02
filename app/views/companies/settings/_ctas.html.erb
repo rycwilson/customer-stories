@@ -22,39 +22,51 @@
     </div>
 
     <div class="col-sm-9 col-md-10">
-<!--       <button id="new-cta-button" type='button' class='btn btn-secondary' data-toggle='modal' data-target='#new-cta-modal'>
-          <i class='fa fa-plus-circle fa-fw'></i>&nbsp;New CTA&nbsp;
-      </button> -->
 
       <div class="cta-actions">
+        <button type="button" class="cta-actions__new new-item" data-toggle='modal' data-target='#new-cta-modal'>
+          <span class="fa-stack fa-lg">
+            <i class="fa fa-circle-o fa-stack-2x"></i>
+            <i class="fa fa-plus fa-stack-1x"></i>
+          </span>&nbsp;&nbsp;
+          <span>New CTA</span>
+        </button>
+        <!-- </button> -->
         <button class="cta-actions__params" data-toggle="collapse" data-target="#cta-url-params">
           <i class="fa fa-fw fa-chevron-down"></i>
           <i class="fa fa-fw fa-chevron-up" style="display: none;"></i>
           <span>URL Parameters</span>
         </button>
-        <div class="separator"></div>
-        <button class="cta-actions__new" data-toggle='modal' data-target='#new-cta-modal'>
-          <i class="fa fa-fw fa-plus"></i>
-          <span>New CTA</span>
-        </button>
       </div>
 
       <div id="cta-url-params" class="collapse">
+
+
         <div>
 
           <!-- existing params will be rendered in the client here -->
 
-          <div class="cta-url-params__new">
-            <button type="button">
-              <!-- <i class="fa fa-fw fa-plus-circle"></i> -->
+          <div style="display: flex; justify-content: space-between; align-items: center">
+
+            <button type="button" class="cta-url-params__new new-item">
               <span class="fa-stack fa-lg">
                 <i class="fa fa-circle-o fa-stack-2x"></i>
                 <i class="fa fa-plus fa-stack-1x"></i>
-              </span>
+              </span>&nbsp;&nbsp;
+              <span>New Parameter</span>
             </button>
+
+            <button type="button" class="cta-url-params__apply btn btn-sm btn-success text-center">
+              <span>Apply</span>
+              <i class="fa fa-fw fa-check" style="display:none"></i>
+            </button>
+
+
           </div>
 
+
         </div>
+
       </div>
     </div>
 

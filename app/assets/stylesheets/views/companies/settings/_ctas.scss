@@ -43,9 +43,9 @@
 // }
 
 #configure-ctas {
-  #new-cta-button {
-    margin: 0 0 20px 0;
-  }
+  // #new-cta-button {
+  //   margin: 0 0 20px 0;
+  // }
   > .control-label {
     padding-top: 15px;
   }
@@ -56,71 +56,79 @@
     width: 85%
   }
 
+  button.new-item {
+    background: none;
+    border: none;
+    color: #666;
+    display: flex;
+    align-items: center;
+    font-size: 11px;
+    i {
+      // lessen the icon weight
+      -webkit-text-stroke: 1px #efefef;
+    }
+    span:last-child {
+      font-size: 13px;
+    }
+    &:hover {
+      color: #333;
+    }
+    &:focus {
+      outline: none;
+    }
+  }
+
   .cta-actions {
     display: flex;
-    flex-direction: row-reverse;
-    margin-bottom: 10px;
-    height: 30px;
+    justify-content: space-between;
+    margin-bottom: 0;
     width: 500px;
-    button {
+    button.cta-action__new {
+      padding: 12px;
+    }
+    button.cta-actions__params {
       background: none;
       border: none;
       color: #555;
-      padding: 6px 12px;
-      // border-radius: 4px;
-      &:hover:not(:disabled) {
-        background-color: #efefef;
+      padding: 12px;
+      &:hover {
         color: #222;
+        // background-color: #efefef;
       }
       &:focus {
         outline: none;
       }
-    }
-    div.separator {
-      display: inline-block;
-      height: 100%;
-      width: 1px;
-      margin: 0;
-      border-right: 1px solid #ccc;
+      &.params-shown {
+        background-color: #efefef;
+      }
     }
   }
 
   #cta-url-params {
     width: 500px;
     > div {
-      padding: 15px 7.5px;
+      padding: 15px 7.5px 10px 7.5px;
       background-color: #efefef;
       margin-bottom: 15px;
     }
     .cta-url-params__param {
       display: flex;
+      margin-bottom: 10px;
       .cta-url-params__key, .cta-url-params__value {
         flex-basis: 0;
         flex-grow: 1;
         margin: 0 7.5px
       }
-      &:not(.last-item) {
-        margin-bottom: 10px;
-      }
+      // &:not(.last-item) {
+      //   margin-bottom: 10px;
+      // }
     }
-    .cta-url-params__new {
-      button {
-        background: none;
-        padding: 12px;
-        margin-bottom: -12px;
-        border: none;
-        color: #666;
-        i {
-          // lessen the icon weight
-          -webkit-text-stroke: 1px #efefef;
-        }
-        &:hover {
-          color: #333;
-        }
-        &:focus {
-          outline: none;
-        }
-      }
+    button.cta-url-params__new {
+      // margin-bottom: -12px;
+      padding: 8px;
+    }
+    button.cta-url-params__apply {
+      margin: 0 7.5px
     }
   }
 
