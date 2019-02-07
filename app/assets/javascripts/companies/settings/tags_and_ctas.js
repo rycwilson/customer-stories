@@ -38,39 +38,88 @@ function storyCTAsListeners () {
           }
         });
       },
+      // parseQueryString = function (queryString) {
+      //   var query = {},
+      //       pairs = (queryString[0] === '?' ? queryString.substr(1) : queryString).split('&');
+      //   for (var i = 0, max = pairs.length; i < max; i++) {
+      //     var pair = pairs[i].split('=');
+      //     query[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1] || '');
+      //   }
+      //   return query;
+      // },
+      parseExistingParams = function ($urlInputs) {
+        var params = {};
+        $urlInputs.each(function () {
+          queryString = $(this).val().includes('?') &&
+            $(this).val().slice($(this).val().indexOf('?'), $(this).val().length),
+          params = queryString ? new URLSearchParams(queryString) : null;
+          if (params) {
+            for (var param of params) {
+              console.log(key, params[key]);
+            }
+          }
 
-      renderCtaUrlParams = function () {
+        })
+
+        return { foo: 'bar', lorem: 'ipsum' };
+        // return params;
+      }
+      renderCtaUrlParams = function ($urlInputs) {
         $('#cta-url-params > div').prepend(
           _.template($('#cta-url-params-template').html())({
             isNew: false,
-            params: [ { key: 'foo', value: 'bar' }, { key: 'lorem', value: 'ipsum' } ]
+            params: parseExistingParams($urlInputs)
           })
         );
       };
 
-  renderCtaUrlParams();
-
   $(document)
-
-    .on('click', '.section-header .help-block a', function () {
-      $(this).closest('.help-block').find('a').each(function () {
-        $(this).toggle();
-      });
-      $(this).closest('.section-header').find('p.help-block').toggle();
+    .on('shown.bs.tab', 'a[href="#edit-ctas"]', function () {
+      var $urlInputs = $('[name*="cta"][name*="[link_url]"]');
+      if ($urlInputs.length) renderCtaUrlParams($urlInputs);
     })
 
+    /**
+     *  help text
+     */
+    .on('click', '.section-header .help-block a', function () {
+      $(this).closest('.help-block').find('a').toggle()
+             .closest('.section-header').find('p.help-block').toggle();
+    })
+
+    /**
+     *  New CTA
+     */
     .on('click', '#primary-cta [data-target="#new-cta-modal"]', function () {
       makeNewCtaPrimary = true;
     })
+    .on('shown.bs.modal', '#new-cta-modal', function () {
+      if (makeNewCtaPrimary) {
+        $('#new-cta-form [name="new_cta[make_primary]"]').prop('checked', true);
+      }
+    })
+    // reset the form
+    .on('hidden.bs.modal', '#new-cta-modal', function () {
+      $('#new-cta-form')
+        .find('input, textarea')
+        .not('[name="new_cta[type]"]')
+        .each(function () { this.value = this.defaultValue; });
+      makeNewCtaPrimary = false;
+      $('#new-cta-form [name="new_cta[make_primary]"]').prop('checked', false);
+      if ($('#new_cta_type_form').prop('checked')) {
+        $('#new_cta_type_link').trigger('click');
+      }
+    })
 
+
+    /**
+     *  accordion behavior
+     */
     .on('click', '.cta-header', function (e) {
       e.preventDefault();
-      var awaitingRemovalConfirmation = $(this).find('.confirm-removal').is(':visible'),
-          isRemoveBtn = $(e.target).is('[class*="remove"]');
-      if (awaitingRemovalConfirmation) {
-        return false;
-      } else if (isRemoveBtn) {  // removal confirmation handled separately (see below)
-        $(this).closest('.list-group-item').addClass('remove');
+      var isRemoveBtn = $(e.target).is('[class*="remove"]'),
+          awaitingRemovalConfirmation = $(this).find('.confirm-removal').is(':visible');
+      if (isRemoveBtn || awaitingRemovalConfirmation) {
         return false;
       } else {
         $(this).next().collapse('toggle')
@@ -88,6 +137,14 @@ function storyCTAsListeners () {
     .on('shown.bs.collapse', '[id*="edit-cta-"]', function () {
       var top = $(this).prev().offset().top - (window.innerHeight / 2) + (($(this).outerHeight() + $(this).prev().outerHeight()) / 2);
       window.scrollTo(0, top);
+    })
+
+
+    /**
+     *  remove CTA
+     */
+    .on('click', '.cta-header button.remove', function () {
+      $(this).closest('.list-group-item').addClass('remove');
     })
     .on('click', 'body:not(.list-group-item.remove)', function () {
       $('.list-group-item.remove').removeClass('remove');
@@ -116,49 +173,49 @@ function storyCTAsListeners () {
         });
     })
 
+
+    /**
+     *  URL Params
+     */
     .on('shown.bs.collapse hidden.bs.collapse', '#cta-url-params', function () {
       $('button[class*="__params"] i').toggle();
     })
-
-    .on('shown.bs.modal', '#new-cta-modal', function () {
-      if (makeNewCtaPrimary) {
-        $('#new-cta-form [name="new_cta[make_primary]"]').prop('checked', true);
-      }
-    })
-    // reset the new cta form
-    .on('hidden.bs.modal', '#new-cta-modal', function () {
-      $('#new-cta-form')
-        .find('input, textarea')
-        .not('[name="new_cta[type]"]')
-        .each(function () { this.value = this.defaultValue; });
-      makeNewCtaPrimary = false;
-      $('#new-cta-form [name="new_cta[make_primary]"]').prop('checked', false);
-      if ($('#new_cta_type_form').prop('checked')) {
-        $('#new_cta_type_link').trigger('click');
-      }
-    })
-
     .on('show.bs.collapse hidden.bs.collapse', '#cta-url-params', function () {
       $('.cta-actions__params').toggleClass('params-shown');
     })
+    .on('click', '.cta-url-params__checkbox .dropdown-menu a', function () {
+      if ($(this).is(':contains("All")')) {
+        $('.cta-url-params__checkbox input').prop('checked', true)
+      } else if ($(this).is(':contains("None")')) {
+        $('.cta-url-params__checkbox input').prop('checked', false)
+      } else {
+
+      }
+    })
     .on('click', 'button.cta-url-params__new', function () {
-      $('#cta-url-params .last-item').removeClass('last-item');
       $.when(
         $(this).closest('div').before(
           _.template($('#cta-url-params-template').html())({
             isNew: true,
-            params: [ { key: '', value: '' } ]
+            params: { '': '' }
           })
         )
       )
         .done(function () {
-          $('.last-item input:first-of-type')[0].focus();
+          $('.cta-url-params__param').last().find('input:first-of-type')[0].focus();
         })
     })
     .on('click', 'button.cta-url-params__apply', function () {
       $(this).find('span, i').toggle();
     })
 
+
+    /**
+     *  form management
+     */
+    .on('input', '[id*="edit-cta-"] form', function () {
+      $(this).find('button[type="submit"]').prop('disabled', false);
+    })
 
     .on('change', '[name="primary_cta[background_color]"]', function () {
       if (colorContrast(hexToRgb($(this).val())) === 'bg-light') {

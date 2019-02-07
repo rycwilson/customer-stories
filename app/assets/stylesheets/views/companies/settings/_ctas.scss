@@ -114,14 +114,22 @@
     .cta-url-params__param {
       display: flex;
       margin-bottom: 10px;
+      .cta-url-params__checkbox {
+        display: flex;
+        align-items: center;
+        label {
+          margin-bottom: 0;
+          padding: 8px;
+          &:hover, input:hover {
+            cursor: pointer;
+          }
+        }
+      }
       .cta-url-params__key, .cta-url-params__value {
         flex-basis: 0;
         flex-grow: 1;
         margin: 0 7.5px
       }
-      // &:not(.last-item) {
-      //   margin-bottom: 10px;
-      // }
     }
     button.cta-url-params__new {
       // margin-bottom: -12px;

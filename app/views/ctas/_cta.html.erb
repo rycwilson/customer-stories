@@ -7,7 +7,7 @@
   <span class="description">
     <%= cta.description %>
   </span>
-  <button type="button">
+  <button type="button" class="remove">
     <i class="fa fa-fw fa-chevron-down"></i>
     <i class="fa fa-fw fa-chevron-up" style="display: none;"></i>
   </button>
@@ -73,32 +73,44 @@
   <!-- note: the inline styling is necessary to prevent jerky collapse behavior -->
 
     <div class="form-group" style="margin: 0 0 20px 0">
-      <%= label_tag "cta_#{cta.id}[description]", 'Description' %>
-      <%= text_field_tag "cta_#{cta.id}[description]", cta.description,
-            placeholder: 'description', class: 'form-control' %>
+      <%= label_tag("cta_#{cta.id}[description]", 'Description') %>
+      <%= text_field_tag("cta_#{cta.id}[description]", cta.description, class: 'form-control') %>
     </div>
 
     <div class="form-group" style="margin: 0 0 20px 0">
-      <%= label_tag "cta_#{cta.id}[display_text]", 'Display text' %>
-      <%= text_field_tag "cta_#{cta.id}[display_text]", cta.display_text,
-            placeholder: 'display text', class: 'form-control' %>
+      <%= label_tag("cta_#{cta.id}[display_text]", 'Display text') %>
+      <%= text_field_tag("cta_#{cta.id}[display_text]", cta.display_text, class: 'form-control') %>
     </div>
 
     <% if cta.type == 'CTALink' %>
 
       <div class="form-group" style="margin: 0 0 20px 0">
-        <%= label_tag "cta_#{cta.id}[link_url]", 'URL' %>
-        <%= text_field_tag "cta_#{cta.id}[link_url]", cta.link_url,
-              placeholder: 'website address', class: 'form-control' %>
+        <%= label_tag(nil, 'Base URL') %>
+        <%= text_field_tag(
+              nil,
+              cta.link_url.slice(0, cta.link_url.index('?') || cta.link_url.length).sub(/\/$/, ''),
+              class: 'form-control'
+            ) %>
+      </div>
+
+      <div class="form-group" style="margin: 0 0 20px 0">
+        <%= label_tag("cta_#{cta.id}[link_url]", 'Final URL') %>
+        <%= text_field_tag(
+              "cta_#{cta.id}[link_url]",
+              cta.link_url,
+              { class: 'form-control', readonly: true }
+            ) %>
       </div>
 
     <% elsif cta.type == 'CTAForm' %>
 
       <div class="form-group" style="margin: 0 0 20px 0">
-        <%= label_tag "cta_#{cta.id}[form_html]", 'HTML' %>
-        <%= text_area_tag "cta_#{cta.id}[form_html]", cta.form_html, rows: 3,
-              placeholder: 'html, e.g. <script> and <form> tags',
-              class: 'form-control' %>
+        <%= label_tag("cta_#{cta.id}[form_html]", 'HTML') %>
+        <%= text_area_tag(
+              "cta_#{cta.id}[form_html]",
+              cta.form_html,
+              { class: 'form-control', rows: 3, placeholder: 'html, e.g. <script> and <form> tags' }
+            ) %>
       </div>
 
     <% end %>
@@ -123,7 +135,7 @@
 
     <!-- note: the inline styling is necessary to prevent jerky collapse behavior -->
     <div class="form-group text-right" style="margin: 0">
-      <button type="submit" class="btn btn-sm btn-success" form="cta-<%= cta.id %>-form" style="width: 98px">
+      <button type="submit" class="btn btn-sm btn-success" form="cta-<%= cta.id %>-form" style="width: 98px" disabled>
         <span>Save changes</span>
         <i class="fa fa-spin fa-circle-o-notch" style="display:none"></i>
         <i class="fa fa-check" style="display:none"></i>

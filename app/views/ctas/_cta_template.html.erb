@@ -64,23 +64,30 @@
 
         <div class="form-group" style="margin: 0 0 15px 0">
           <label for="{{= 'cta_' + cta.id + '_description' }}">Description</label>
-          <input type="text" id="{{= 'cta_' + cta.id + '_description' }}" class="form-control" name="{{= 'cta_' + cta.id + '[description]' }}" placeholder="description" value="{{= cta.description }}">
+          <input type="text" id="{{= 'cta_' + cta.id + '_description' }}" class="form-control" name="{{= 'cta_' + cta.id + '[description]' }}" value="{{= cta.description }}">
         </div>
 
         <div class="form-group" style="margin: 0 0 15px 0">
           <label for="{{= 'cta_' + cta.id + '_display_text' }}">Display text</label>
           <input type="text" id="{{= 'cta_' + cta.id + '_display_text' }}" class="form-control"
-                 name="{{= 'cta_' + cta.id + '[display_text]' }}" placeholder="display text"
+                 name="{{= 'cta_' + cta.id + '[display_text]' }}"
                  value="{{= cta.display_text }}">
         </div>
 
         {{ if (cta.type == 'CTALink') { }}
 
           <div class="form-group" style="margin: 0 0 15px 0">
-            <label for="{{= 'cta_' + cta.id + '_link_url' }}">Website address</label>
+            <label>Base URL</label>
+            <input type="text" class="form-control"
+                   value="{{= cta.link_url.slice(0, cta.link_url.indexOf('?') !== -1 ? cta.link_url.indexOf('?') : cta.link_url.length) }}">
+          </div>
+
+          <div class="form-group" style="margin: 0 0 15px 0">
+            <label for="{{= 'cta_' + cta.id + '_link_url' }}">Final URL</label>
             <input type="text" id="{{= 'cta_' + cta.id + '_link_url' }}" class="form-control"
-                   name="{{= 'cta_' + cta.id + '[link_url]' }}" placeholder="website address"
-                   value="{{= cta.link_url }}">
+                   name="{{= 'cta_' + cta.id + '[link_url]' }}"
+                   value="{{= cta.link_url }}"
+                   readonly>
           </div>
 
         {{ } else if (cta.type == 'CTAForm') { }}
