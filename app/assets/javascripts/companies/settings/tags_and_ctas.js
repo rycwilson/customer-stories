@@ -48,26 +48,25 @@ function storyCTAsListeners () {
       //   return query;
       // },
       parseExistingParams = function ($urlInputs) {
-        var params = {};
+        var params = {}, queryString;
         $urlInputs.each(function () {
           queryString = $(this).val().includes('?') &&
-            $(this).val().slice($(this).val().indexOf('?'), $(this).val().length),
-          params = queryString ? new URLSearchParams(queryString) : null;
-          if (params) {
-            for (var param of params) {
-              console.log(key, params[key]);
-            }
+            $(this).val().slice($(this).val().indexOf('?'), $(this).val().length);
+          if (queryString) {
+            (new URLSearchParams(queryString)).forEach(function (value, key) {
+              if (!Object.keys(params).includes(key)) {
+                params[key] = value;
+              }
+            })
           }
-
         })
-
-        return { foo: 'bar', lorem: 'ipsum' };
-        // return params;
+        return params;
       }
       renderCtaUrlParams = function ($urlInputs) {
         $('#cta-url-params > div').prepend(
           _.template($('#cta-url-params-template').html())({
             isNew: false,
+            isFirstParam: $('.cta-url-params__param').length === 0,
             params: parseExistingParams($urlInputs)
           })
         );
@@ -184,19 +183,26 @@ function storyCTAsListeners () {
       $('.cta-actions__params').toggleClass('params-shown');
     })
     .on('click', '.cta-url-params__checkbox .dropdown-menu a', function () {
-      if ($(this).is(':contains("All")')) {
-        $('.cta-url-params__checkbox input').prop('checked', true)
-      } else if ($(this).is(':contains("None")')) {
-        $('.cta-url-params__checkbox input').prop('checked', false)
-      } else {
-
-      }
+      (({
+        'All': function () {
+          $('.cta-url-params__checkbox input').prop('checked', true);
+        },
+        'None': function () {
+          $('.cta-url-params__checkbox input').prop('checked', false);
+        },
+        'Remove': function () {
+          $('.cta-url-params__checkbox input:checked').each(function () {
+            $(this).closest('.cta-url-params__param').remove();
+          })
+        },
+      })[$(this).text()])();
     })
     .on('click', 'button.cta-url-params__new', function () {
       $.when(
         $(this).closest('div').before(
           _.template($('#cta-url-params-template').html())({
             isNew: true,
+            isFirstParam: $('.cta-url-params__param').length === 0,
             params: { '': '' }
           })
         )
@@ -205,8 +211,56 @@ function storyCTAsListeners () {
           $('.cta-url-params__param').last().find('input:first-of-type')[0].focus();
         })
     })
+
+    .on('click', '[id*="cta-form-"] [type="submit"]', function (e) {
+      // console.log('well?')
+      // e.preventDefault();
+      // var $form = $(this).closest('form');
+      // $.ajax({
+      //   url: $form.attr('action'),
+      //   method: 'POST',
+      //   data: $form.serialize(),
+      //   dataType: 'script'
+      // })
+    })
+
     .on('click', 'button.cta-url-params__apply', function () {
-      $(this).find('span, i').toggle();
+      var params = new URLSearchParams(),
+          updatedUrls = [];
+      // $(this).find('span, i').toggle();
+
+      $('.cta-url-params__param').each(function () {
+        params.append(
+          $(this).find('.cta-url-params__key input').val(),
+          $(this).find('.cta-url-params__value input').val()
+        )
+      })
+      $('[name*="cta"][name*="[link_url]"]').each(function () {
+        var updatedUrl = $(this).val().replace(/($|\?.+$)/, '?' + params.toString())
+        // requests.push(
+        //   $.ajax({
+        //     url: $(this).attr('action'),
+        //     data:
+        //   })
+        // )
+        $(this)
+          .val( updatedUrls )
+          .trigger('input')
+          // .closest('form')[0]
+          // .submit()
+
+      })
+
+//       var urls = [
+//          '/url/to/script1.js',
+//          '/url/to/script2.js',
+//          '/url/to/script3.js',
+//          '/url/to/script4.js'
+//       ];
+
+// var requests = urls.map(function(url){ return $.getScript(url); });
+
+
     })
 
 

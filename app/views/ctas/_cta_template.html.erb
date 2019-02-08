@@ -29,9 +29,10 @@
 
       <hr>
 
-      <form id="cta-{{= cta.id }}-form" action="/ctas/{{= cta.id }}" accept-charset="UTF-8" data-remote="true" method="post">
+      <form id="cta-form-{{= cta.id }}" action="/ctas/{{= cta.id }}" accept-charset="UTF-8" method="POST" data-remote="true" data-type="script">
         <input name="utf8" type="hidden" value="✓">
-        <input type="hidden" name="_method" value="put">
+        <input type="hidden" name="_method" value="PUT">
+
 
         {{ if (isPrimary) { }}
 
@@ -42,17 +43,17 @@
     {{ } }}
 
           <div id="primary-cta-colors" class="form-group row" style="{{= preventChanges ? 'pointer-events: none' : '' }}">
-            <label class="col-sm-2 control-label" for="primary_cta_background_color">
+            <label class="col-sm-2 control-label">
               Button
             </label>
             <div class="col-sm-4">
-              <input type="text" name="primary_cta[background_color]" id="primary_cta_background_color" value="{{= company.primary_cta_background_color }}" class="form-control mini-colors">
+              <input type="text" name="header_cta_button[background_color]" value="{{= company.primary_cta_background_color }}" class="form-control mini-colors">
             </div>
-            <label class="col-sm-2 control-label text-right" for="primary_cta_text_color">
+            <label class="col-sm-2 control-label text-right">
               Text
             </label>
             <div class="col-sm-4">
-              <input type="text" name="primary_cta[text_color]" id="primary_cta_text_color" value="{{= company.primary_cta_text_color }}" class="form-control mini-colors minicolors-input">
+              <input type="text" name="header_cta_button[text_color]" value="{{= company.primary_cta_text_color }}" class="form-control mini-colors minicolors-input">
             </div>
           </div>
 
@@ -63,40 +64,33 @@
         {{ } }}
 
         <div class="form-group" style="margin: 0 0 15px 0">
-          <label for="{{= 'cta_' + cta.id + '_description' }}">Description</label>
-          <input type="text" id="{{= 'cta_' + cta.id + '_description' }}" class="form-control" name="{{= 'cta_' + cta.id + '[description]' }}" value="{{= cta.description }}">
+          <label>Description</label>
+          <input type="text" class="form-control" name="cta[description]" value="{{= cta.description }}">
         </div>
 
         <div class="form-group" style="margin: 0 0 15px 0">
-          <label for="{{= 'cta_' + cta.id + '_display_text' }}">Display text</label>
-          <input type="text" id="{{= 'cta_' + cta.id + '_display_text' }}" class="form-control"
-                 name="{{= 'cta_' + cta.id + '[display_text]' }}"
-                 value="{{= cta.display_text }}">
+          <label>Display text</label>
+          <input type="text" class="form-control" name="cta[display_text]" value="{{= cta.display_text }}">
         </div>
 
         {{ if (cta.type == 'CTALink') { }}
 
-          <div class="form-group" style="margin: 0 0 15px 0">
+          <!-- <div class="form-group" style="margin: 0 0 15px 0">
             <label>Base URL</label>
             <input type="text" class="form-control"
                    value="{{= cta.link_url.slice(0, cta.link_url.indexOf('?') !== -1 ? cta.link_url.indexOf('?') : cta.link_url.length) }}">
-          </div>
+          </div> -->
 
           <div class="form-group" style="margin: 0 0 15px 0">
-            <label for="{{= 'cta_' + cta.id + '_link_url' }}">Final URL</label>
-            <input type="text" id="{{= 'cta_' + cta.id + '_link_url' }}" class="form-control"
-                   name="{{= 'cta_' + cta.id + '[link_url]' }}"
-                   value="{{= cta.link_url }}"
-                   readonly>
+            <label>URL</label>
+            <input type="text" class="form-control" name="cta[link_url]" value="{{= cta.link_url }}">
           </div>
 
         {{ } else if (cta.type == 'CTAForm') { }}
 
           <div class="form-group" style="margin: 0 0 10px 0">
-            <label for="{{= 'cta_' + cta.id + '_form_html' }}">HTML</label>
-            <textarea id="{{= 'cta_' + cta.id + '_form_html' }}" class="form-control" rows="3"
-                      name="{{= 'cta_' + cta.id + '[form_html]' }}" value=""
-                      placeholder="html, e.g. <script> and <form> tags">
+            <label>HTML</label>
+            <textarea name="cta[form_html]" class="form-control" rows="3" value="{{= cta.form_html }}" placeholder="Markup that defines your form, e.g. <form> and <script> tags">
             </textarea>
           </div>
 
@@ -107,15 +101,15 @@
             <!--
             note that an input to represent the false value would be necesseary here if we wanted to
             see the parameter with false value on the server. however in this case we're only interested
-            if the value is true
+            if the value is true (i.e. is checked)
             -->
-            <input type="checkbox" value="true" name="{{= cta.primary ? 'cta_' + cta.id + '[remove_primary]' : 'cta_' + cta.id + '[make_primary]' }}" id="{{= cta.primary ? 'cta_' + cta.id + '_remove_primary' : 'cta_' + cta.id + '_make_primary' }}"
+            <input type="checkbox" name="{{= cta.primary ? 'cta[remove_primary]' : 'cta[make_primary]' }}" value="true">
             <span>{{= cta.primary ? 'Remove primary' : 'Make primary' }}</span>
           </label>
         </div>
 
         <div class="form-group text-right" style="margin: 0;">
-          <button type="submit" class="btn btn-sm btn-success" form="cta-{{= cta.id }}-form" style="width: 98px">
+          <button type="submit" class="btn btn-sm btn-success" form="cta-form-{{= cta.id }}" style="width: 98px">
             <span>Save changes</span>
             <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
             <i class='fa fa-check' style='display:none'></i>

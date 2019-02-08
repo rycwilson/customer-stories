@@ -1,15 +1,22 @@
 (function () {
 
   // need the subdomain in order to determine whether to allow changes to primary cta colors
-  var company = <%= raw @company.to_json({ only: [:subdomain, :primary_cta_background_color, :primary_cta_text_color] }) %>;
+  var company = <%= raw @cta.company.to_json({ only: [:subdomain, :primary_cta_background_color, :primary_cta_text_color] }) %>;
       template = _.template($('#cta-template').html()),
       cta = <%= raw @cta.to_json({ methods: [:type] }) %>,
-      oldPrimaryCta = <%= @old_primary_cta.present? %> && <%= raw @old_primary_cta.to_json({ methods: [:type] }) %>,
       makePrimary = <%= @make_primary %>,
       removePrimary = <%= @remove_primary %>;
 
+
+console.log('removePrimary', removePrimary)
+console.log('oldPrimaryCta', oldPrimaryCta)
+
+
+
   if (makePrimary || removePrimary) {
     window.scrollTo(0, 0);
+    var oldPrimaryCta = (<%= @old_primary_cta.present? %> && <%= raw @old_primary_cta.to_json({ methods: [:type] }) %>) ||
+                        (removePrimary ? cta : null);
 
     // move old primary (if it exists) to the secondary list
     if (oldPrimaryCta) {
@@ -20,15 +27,6 @@
           isPrimary: false
         })
       );
-    }
-
-    if (removePrimary) {
-      $('#primary-cta li')
-        .attr('data-cta-id', '')
-        .empty()
-        .append(
-          '<a href="javascript:;" data-toggle="modal" data-target="#new-cta-modal"><em>Add a Primary CTA</em></a>'
-        );
     }
 
     if (makePrimary) {
@@ -43,10 +41,20 @@
         });
     }
 
+    if (removePrimary) {
+      $('#primary-cta li')
+        .attr('data-cta-id', '')
+        .empty()
+        .append(
+          '<a href="javascript:;" data-toggle="modal" data-target="#new-cta-modal"><em>Add a Primary CTA</em></a>'
+        );
+    }
+
+
   } else {
     // update the description field (not tied to the form)
     $('li[data-cta-id="' + cta.id + '"] span.description').text(cta.description);
-    toggleFormDone($('#cta-' + cta.id + '-form'), true);
+    toggleFormDone($('#cta-form-' + cta.id), true);
   }
 
 }());

@@ -36,28 +36,35 @@ class CtasController < ApplicationController
   end
 
   def update
+    # binding.remote_pry
+    puts params.to_h
+    puts cta_params.to_h
     @cta = CallToAction.find(params[:id])
-    cta_params = params["cta_#{@cta.id}"]
-    @company = @cta.company
-    @make_primary = cta_params['make_primary'].present?
-    @remove_primary = cta_params['remove_primary'].present?
-    if @make_primary || @remove_primary
-      @old_primary_cta = @cta.company.ctas.primary
-      @old_primary_cta.try(:update, { primary: false })
-    end
-    if @cta.reload.primary?
+    if @cta.primary?
       @cta.company.update(
-        primary_cta_background_color: params['primary_cta']['background_color'],
-        primary_cta_text_color: params['primary_cta']['text_color']
+        primary_cta_background_color: params[:header_cta_button][:background_color],
+        primary_cta_text_color: params[:header_cta_button][:text_color]
       )
     end
-    @cta.update(
-      description: cta_params['description'],
-      display_text: cta_params['display_text'],
-      link_url: params.dig("cta_#{@cta.id}", 'link_url'),
-      form_html: params.dig("cta_#{@cta.id}", 'form_html'),
-      primary: @remove_primary ? false : (@make_primary ? true : @cta.primary?)
-    )
+    @make_primary = params.dig(:cta, :make_primary).present?
+    @remove_primary = params.dig(:cta, :remove_primary).present?
+    if @make_primary
+      params[:cta][:primary] = true
+      @old_primary_cta = @cta.company.ctas.primary
+      @old_primary_cta.try(:update, { primary: false })
+    elsif @remove_primary
+      params[:cta][:primary] = false
+    else
+      # don't include primary field in the update
+    end
+    @cta.update(cta_params)
+
+    # if @make_primary || @remove_primary
+    #   @old_primary_cta = @cta.company.ctas.primary
+    #   @old_primary_cta.try(:update, { primary: false })
+    # end
+    # params[:cta][:primary] = (@make_primary || @cta.reload.primary) ? true : false
+
     respond_to { |format| format.js }
   end
 
@@ -69,6 +76,12 @@ class CtasController < ApplicationController
         render json: { id: cta.id, isPrimary: cta.primary? }
       end
     end
+  end
+
+  private
+
+  def cta_params
+    params.require(:cta).permit(:description, :display_text, :link_url, :form_html, :primary)
   end
 
 end

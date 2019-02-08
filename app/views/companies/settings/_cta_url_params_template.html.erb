@@ -1,0 +1,57 @@
+
+<script type="text/template" id="cta-url-params-template">
+
+
+  {{ Object.keys(params).forEach(function (key, index) { }}
+
+    {{ if (index > 0) isFirstParam = false; }}
+
+    <div class="cta-url-params__param {{= isNew ? 'new' : '' }}">
+
+      <div class="cta-url-params__checkbox" style="{{= index === 0 ? 'height: 34px; margin: auto auto 0 auto; position: relative;' : '' }}">
+        {{ if (isFirstParam) { }}
+          <div class="btn-group" style="position: absolute; top: -32px;">
+            <button type="button" class="dropdown-toggle" style="background: none; border: none; padding: 7px" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+              <li><a href="javascript:;">All</a></li>
+              <li><a href="javascript:;">None</a></li>
+              <li><a href="javascript:;">Remove</a></li>
+            </ul>
+          </div>
+        {{ } }}
+        <label><input type="checkbox"></label>
+      </div>
+
+      <div class="cta-url-params__key">
+        {{ if (isFirstParam) { }}
+          <label>Parameter</label>
+        {{ } }}
+        <input class="form-control" value="{{= key }}">
+      </div>
+
+      <div class="cta-url-params__value">
+        {{ if (isFirstParam) { }}
+          <label>Value</label>
+        {{ } }}
+        <div class="input-group">
+          <input type="text" class="form-control" value="{{= params[key] }}">
+          <div class="input-group-btn">
+            <!-- style hack below; issue: https://github.com/twbs/bootstrap-sass/issues/409 -->
+            <button style="height: 34px; padding: 5px 12px 7px 12px" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="caret"></span></button>
+            <ul class="dropdown-menu dropdown-menu-right">
+              <li><a href="javascript:;">Story Title</a></li>
+              <li><a href="javascript:;">Story Category</a></li>
+              <li><a href="javascript:;">Story Product</a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  {{ }) }}
+
+</script>
