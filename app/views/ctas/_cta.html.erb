@@ -24,90 +24,93 @@
 
 </div>
 
-<div id="edit-cta-<%= cta.id %>" class="collapse" style="padding: 0 15px 15px 15px">
+<div id="edit-cta-<%= cta.id %>" class="collapse" >
 
-  <hr>
+  <div style="padding: 0 15px 15px 15px">
 
-  <form id="cta-form-<%= cta.id %>" action="/ctas/<%= cta.id %>" method="POST" data-remote="true" data-type="script" accept-charset="UTF-8">
-    <input name="utf8" type="hidden" value="✓">
-    <input type="hidden" name="_method" value="PUT">
-    <input type="hidden" name="authenticity_token" value="{{= document.querySelectorAll('meta[name=csrf-token]')[0].getAttribute('content') }}">
-    <input type="hidden" name="cta[type]" value="<%= cta.type %>">
+    <hr style="margin: 0 0 15px 0">
 
-    <% if cta.primary? %>
+    <form id="cta-form-<%= cta.id %>" action="/ctas/<%= cta.id %>" method="POST" data-remote="true" data-type="script" accept-charset="UTF-8">
+      <input name="utf8" type="hidden" value="✓">
+      <input type="hidden" name="_method" value="PUT">
+      <input type="hidden" name="authenticity_token" value="{{= document.querySelectorAll('meta[name=csrf-token]')[0].getAttribute('content') }}">
+      <input type="hidden" name="cta[type]" value="<%= cta.type %>">
 
-<% prevent_changes = ['varmour', 'retailnext', 'centerforcustomerengagement', 'compas'].include?(company.subdomain)%>
-<% if prevent_changes %>
-<div style="margin-bottom: 10px; background: transparent; opacity: 0.5" data-toggle="tooltip" data-placement="top" data-container="body" data-title="Contact Customer Stories">
-<% end %>
+      <% if cta.primary? %>
 
-      <div id="primary-cta-colors" class="form-group row" style="<%= prevent_changes ? 'pointer-events: none;' : '' %>">
-        <label class="col-sm-2 control-label">Button</label>
-        <div class='col-sm-4'>
-          <input type="text" name="header_cta_button[background_color]" value="<%= company.primary_cta_background_color %>" class="form-control mini-colors">
+  <% prevent_changes = ['varmour', 'retailnext', 'centerforcustomerengagement', 'compas'].include?(company.subdomain)%>
+  <% if prevent_changes %>
+  <div style="margin-bottom: 10px; background: transparent; opacity: 0.5" data-toggle="tooltip" data-placement="top" data-container="body" data-title="Contact Customer Stories">
+  <% end %>
+
+        <div id="primary-cta-colors" class="form-group row" style="<%= prevent_changes ? 'pointer-events: none;' : '' %>">
+          <label class="col-sm-2 control-label">Button</label>
+          <div class='col-sm-4'>
+            <input type="text" name="header_cta_button[background_color]" value="<%= company.primary_cta_background_color %>" class="form-control mini-colors">
+          </div>
+          <label class="col-sm-2 control-label text-right">Text</label>
+          <div class='col-sm-4'>
+            <input type="text" name="header_cta_button[text_color]" value="<%= company.primary_cta_text_color %>" class="form-control mini-colors">
+          </div>
         </div>
-        <label class="col-sm-2 control-label text-right">Text</label>
-        <div class='col-sm-4'>
-          <input type="text" name="header_cta_button[text_color]" value="<%= company.primary_cta_text_color %>" class="form-control mini-colors">
-        </div>
-      </div>
 
-<% if prevent_changes %>
-</div>
-<% end %>
+  <% if prevent_changes %>
+  </div>
+  <% end %>
 
-    <% end %>
-
-  <!-- note: the inline styling is necessary to prevent jerky collapse behavior -->
-
-    <div class="form-group" style="margin: 0 0 20px 0">
-      <label>Description</label>
-      <input type="text" name="cta[description]" class="form-control" value="<%= cta.description %>">
-    </div>
-
-    <div class="form-group" style="margin: 0 0 20px 0">
-      <label>Display Text</label>
-      <input type="text" name="cta[display_text]" class="form-control" value="<%= cta.display_text %>">
-    </div>
-
-    <% if cta.type == 'CTALink' %>
-
-      <div class="form-group" style="margin: 0 0 20px 0">
-        <label>URL</label>
-        <input type="text" name="cta[link_url]" class="form-control" value="<%= cta.link_url %>">
-      </div>
-
-    <% elsif cta.type == 'CTAForm' %>
-
-      <div class="form-group" style="margin: 0 0 20px 0">
-        <label>HTML</label>
-        <textarea type="text" name="cta[form_html]" value="<%= cta.form_html %>" class="form-control" rows="3" placeholder="Markup that defines your form, e.g. <form> and <script> tags"></textarea>
-      </div>
-
-    <% end %>
-
-    <div class="checkbox text-right">
-      <label>
-        <!--
-        note that an input to represent the false value would be necesseary here if we wanted to
-        see the parameter with false value on the server. however in this case we're only interested
-        if the value is true
-        -->
-        <input type="checkbox" name="<%= cta.primary ? 'cta[remove_primary]' : 'cta[make_primary]' %>" value="true">
-        <span><%= cta.primary ? 'Remove primary' : 'Make primary' %></span>
-      </label>
-    </div>
+      <% end %>
 
     <!-- note: the inline styling is necessary to prevent jerky collapse behavior -->
-    <div class="form-group text-right" style="margin: 0">
-      <button type="submit" class="btn btn-sm btn-success" form="cta-form-<%= cta.id %>" style="width: 98px" disabled>
-        <span>Save changes</span>
-        <i class="fa fa-spin fa-circle-o-notch" style="display:none"></i>
-        <i class="fa fa-check" style="display:none"></i>
-      </button>
-    </div>
 
-  </form>
+      <div class="form-group" style="margin: 0 0 20px 0">
+        <label>Description</label>
+        <input type="text" name="cta[description]" class="form-control" value="<%= cta.description %>">
+      </div>
+
+      <div class="form-group" style="margin: 0 0 20px 0">
+        <label>Display Text</label>
+        <input type="text" name="cta[display_text]" class="form-control" value="<%= cta.display_text %>">
+      </div>
+
+      <% if cta.type == 'CTALink' %>
+
+        <div class="form-group" style="margin: 0 0 20px 0">
+          <label>URL</label>
+          <input type="text" name="cta[link_url]" class="form-control" value="<%= cta.link_url %>">
+        </div>
+
+      <% elsif cta.type == 'CTAForm' %>
+
+        <div class="form-group" style="margin: 0 0 20px 0">
+          <label>HTML</label>
+          <textarea type="text" name="cta[form_html]" value="<%= cta.form_html %>" class="form-control" rows="3" placeholder="Markup that defines your form, e.g. <form> and <script> tags"></textarea>
+        </div>
+
+      <% end %>
+
+      <div class="checkbox text-right">
+        <label>
+          <!--
+          note that an input to represent the false value would be necesseary here if we wanted to
+          see the parameter with false value on the server. however in this case we're only interested
+          if the value is true
+          -->
+          <input type="checkbox" name="<%= cta.primary ? 'cta[remove_primary]' : 'cta[make_primary]' %>" value="true">
+          <span><%= cta.primary ? 'Remove primary' : 'Make primary' %></span>
+        </label>
+      </div>
+
+      <!-- note: the inline styling is necessary to prevent jerky collapse behavior -->
+      <div class="form-group text-right" style="margin: 0">
+        <button type="submit" class="btn btn-sm btn-success" form="cta-form-<%= cta.id %>" style="width: 98px" disabled>
+          <span>Save changes</span>
+          <i class="fa fa-spin fa-circle-o-notch" style="display:none"></i>
+          <i class="fa fa-check" style="display:none"></i>
+        </button>
+      </div>
+
+    </form>
+  </div>
 
 </div>
 

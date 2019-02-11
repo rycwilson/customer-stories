@@ -25,98 +25,102 @@
       </div>
     </div>
 
-    <div id="edit-cta-{{= cta.id }}" class="collapse" style="padding: 0 15px 15px 15px">
+    <div id="edit-cta-{{= cta.id }}" class="collapse">
 
-      <hr>
+      <div style="padding: 0 15px 15px 15px">
 
-      <form id="cta-form-{{= cta.id }}" action="/ctas/{{= cta.id }}" accept-charset="UTF-8" method="POST" data-remote="true" data-type="script">
-        <input name="utf8" type="hidden" value="✓">
-        <input type="hidden" name="_method" value="PUT">
+        <hr style="margin: 0 0 15px 0">
+
+        <form id="cta-form-{{= cta.id }}" action="/ctas/{{= cta.id }}" accept-charset="UTF-8" method="POST" data-remote="true" data-type="script">
+          <input name="utf8" type="hidden" value="✓">
+          <input type="hidden" name="_method" value="PUT">
 
 
-        {{ if (isPrimary) { }}
+          {{ if (isPrimary) { }}
 
-    {{ var preventChanges = ['varmour', 'retailnext', 'centerforcustomerengagement', 'compas'].includes(company.subdomain); }}
+      {{ var preventChanges = ['varmour', 'retailnext', 'centerforcustomerengagement', 'compas'].includes(company.subdomain); }}
 
-    {{ if (preventChanges) { }}
-      <div style="margin-bottom: 10px; background: transparent; opacity: 0.5" data-toggle="tooltip" data-placement="top" data-container="body" data-title="Contact Customer Stories">
-    {{ } }}
+      {{ if (preventChanges) { }}
+        <div style="margin-bottom: 10px; background: transparent; opacity: 0.5" data-toggle="tooltip" data-placement="top" data-container="body" data-title="Contact Customer Stories">
+      {{ } }}
 
-          <div id="primary-cta-colors" class="form-group row" style="{{= preventChanges ? 'pointer-events: none' : '' }}">
-            <label class="col-sm-2 control-label">
-              Button
-            </label>
-            <div class="col-sm-4">
-              <input type="text" name="header_cta_button[background_color]" value="{{= company.primary_cta_background_color }}" class="form-control mini-colors">
+            <div id="primary-cta-colors" class="form-group row" style="{{= preventChanges ? 'pointer-events: none' : '' }}">
+              <label class="col-sm-2 control-label">
+                Button
+              </label>
+              <div class="col-sm-4">
+                <input type="text" name="header_cta_button[background_color]" value="{{= company.primary_cta_background_color }}" class="form-control mini-colors">
+              </div>
+              <label class="col-sm-2 control-label text-right">
+                Text
+              </label>
+              <div class="col-sm-4">
+                <input type="text" name="header_cta_button[text_color]" value="{{= company.primary_cta_text_color }}" class="form-control mini-colors minicolors-input">
+              </div>
             </div>
-            <label class="col-sm-2 control-label text-right">
-              Text
-            </label>
-            <div class="col-sm-4">
-              <input type="text" name="header_cta_button[text_color]" value="{{= company.primary_cta_text_color }}" class="form-control mini-colors minicolors-input">
-            </div>
-          </div>
 
-    {{ if (preventChanges) { }}
-      </div>
-    {{ } }}
-
-        {{ } }}
-
-        <div class="form-group" style="margin: 0 0 15px 0">
-          <label>Description</label>
-          <input type="text" class="form-control" name="cta[description]" value="{{= cta.description }}">
+      {{ if (preventChanges) { }}
         </div>
+      {{ } }}
 
-        <div class="form-group" style="margin: 0 0 15px 0">
-          <label>Display text</label>
-          <input type="text" class="form-control" name="cta[display_text]" value="{{= cta.display_text }}">
-        </div>
-
-        {{ if (cta.type == 'CTALink') { }}
-
-          <!-- <div class="form-group" style="margin: 0 0 15px 0">
-            <label>Base URL</label>
-            <input type="text" class="form-control"
-                   value="{{= cta.link_url.slice(0, cta.link_url.indexOf('?') !== -1 ? cta.link_url.indexOf('?') : cta.link_url.length) }}">
-          </div> -->
+          {{ } }}
 
           <div class="form-group" style="margin: 0 0 15px 0">
-            <label>URL</label>
-            <input type="text" class="form-control" name="cta[link_url]" value="{{= cta.link_url }}">
+            <label>Description</label>
+            <input type="text" class="form-control" name="cta[description]" value="{{= cta.description }}">
           </div>
 
-        {{ } else if (cta.type == 'CTAForm') { }}
-
-          <div class="form-group" style="margin: 0 0 10px 0">
-            <label>HTML</label>
-            <textarea name="cta[form_html]" class="form-control" rows="3" value="{{= cta.form_html }}" placeholder="Markup that defines your form, e.g. <form> and <script> tags">
-            </textarea>
+          <div class="form-group" style="margin: 0 0 15px 0">
+            <label>Display text</label>
+            <input type="text" class="form-control" name="cta[display_text]" value="{{= cta.display_text }}">
           </div>
 
-        {{ } }}
+          {{ if (cta.type == 'CTALink') { }}
 
-        <div class="checkbox text-right">
-          <label>
-            <!--
-            note that an input to represent the false value would be necesseary here if we wanted to
-            see the parameter with false value on the server. however in this case we're only interested
-            if the value is true (i.e. is checked)
-            -->
-            <input type="checkbox" name="{{= cta.primary ? 'cta[remove_primary]' : 'cta[make_primary]' }}" value="true">
-            <span>{{= cta.primary ? 'Remove primary' : 'Make primary' }}</span>
-          </label>
-        </div>
+            <!-- <div class="form-group" style="margin: 0 0 15px 0">
+              <label>Base URL</label>
+              <input type="text" class="form-control"
+                     value="{{= cta.link_url.slice(0, cta.link_url.indexOf('?') !== -1 ? cta.link_url.indexOf('?') : cta.link_url.length) }}">
+            </div> -->
 
-        <div class="form-group text-right" style="margin: 0;">
-          <button type="submit" class="btn btn-sm btn-success" form="cta-form-{{= cta.id }}" style="width: 98px">
-            <span>Save changes</span>
-            <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
-            <i class='fa fa-check' style='display:none'></i>
-          </button>
-        </div>
+            <div class="form-group" style="margin: 0 0 15px 0">
+              <label>URL</label>
+              <input type="text" class="form-control" name="cta[link_url]" value="{{= cta.link_url }}">
+            </div>
 
-      </form>
+          {{ } else if (cta.type == 'CTAForm') { }}
+
+            <div class="form-group" style="margin: 0 0 10px 0">
+              <label>HTML</label>
+              <textarea name="cta[form_html]" class="form-control" rows="3" value="{{= cta.form_html }}" placeholder="Markup that defines your form, e.g. <form> and <script> tags">
+              </textarea>
+            </div>
+
+          {{ } }}
+
+          <div class="checkbox text-right">
+            <label>
+              <!--
+              note that an input to represent the false value would be necesseary here if we wanted to
+              see the parameter with false value on the server. however in this case we're only interested
+              if the value is true (i.e. is checked)
+              -->
+              <input type="checkbox" name="{{= cta.primary ? 'cta[remove_primary]' : 'cta[make_primary]' }}" value="true">
+              <span>{{= cta.primary ? 'Remove primary' : 'Make primary' }}</span>
+            </label>
+          </div>
+
+          <div class="form-group text-right" style="margin: 0;">
+            <button type="submit" class="btn btn-sm btn-success" form="cta-form-{{= cta.id }}" style="width: 98px">
+              <span>Save changes</span>
+              <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
+              <i class='fa fa-check' style='display:none'></i>
+            </button>
+          </div>
+
+        </form>
+      </div>
+
 
     </div>
 
