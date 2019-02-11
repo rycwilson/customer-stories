@@ -1,12 +1,11 @@
 
 <script type="text/template" id="cta-url-params-template">
 
-
   {{ Object.keys(params).forEach(function (key, index) { }}
 
     {{ if (index > 0) isFirstParam = false; }}
 
-    <div class="cta-url-params__param {{= isNew ? 'new' : '' }}">
+    <div class="cta-url-params__param">
 
       <div class="cta-url-params__checkbox" style="{{= index === 0 ? 'height: 34px; margin: auto auto 0 auto; position: relative;' : '' }}">
         {{ if (isFirstParam) { }}

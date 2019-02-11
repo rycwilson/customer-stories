@@ -177,10 +177,15 @@ function storyCTAsListeners () {
      *  URL Params
      */
     .on('shown.bs.collapse hidden.bs.collapse', '#cta-url-params', function () {
-      $('button[class*="__params"] i').toggle();
+      $('button[class*="__params"] >  i').toggle();
     })
     .on('show.bs.collapse hidden.bs.collapse', '#cta-url-params', function () {
       $('.cta-actions__params').toggleClass('params-shown');
+    })
+    .on('input', '#cta-url-params input', function () {
+      if (!$(this).is('[type="checkbox"]')) {
+        $('.cta-url-params__apply').prop('disabled', false);
+      }
     })
     .on('click', '.cta-url-params__checkbox .dropdown-menu a', function () {
       (({
@@ -191,8 +196,30 @@ function storyCTAsListeners () {
           $('.cta-url-params__checkbox input').prop('checked', false);
         },
         'Remove': function () {
+          if ($('.cta-url-params__checkbox input:checked').length > 0) {
+            $('.cta-url-params__apply').prop('disabled', false);
+          }
           $('.cta-url-params__checkbox input:checked').each(function () {
-            $(this).closest('.cta-url-params__param').remove();
+            var $param = $(this).closest('.cta-url-params__param');
+
+            // if removing the first from among > 1 params, avoid removing the header (dropdown, labels);
+            // (but don't bother if all are being removed)
+            if ($param.is(':first-of-type') &&
+                $('.cta-url-params__param').length > 1 &&
+                $('.cta-url-params__checkbox input:checked').length !== $('.cta-url-params__param').length) {
+
+              // copy the second param's values into the first, then remove the second
+              $param.find('[type="checkbox"]').prop('checked', $param.next().find('[type="checkbox"]').prop('checked'));
+              // [1, 2] => the 1-index (key) and 2-index (value) inputs
+              [1, 2].forEach(function (index) {
+                $param.find('input').eq(index).val(
+                  $param.next().find('input').eq(index).val()
+                )
+              });
+              $param.next().remove();
+            } else {
+              $param.remove();
+            }
           })
         },
       })[$(this).text()])();
@@ -208,61 +235,69 @@ function storyCTAsListeners () {
         )
       )
         .done(function () {
-          $('.cta-url-params__param').last().find('input:first-of-type')[0].focus();
+          $('.cta-url-params__param').last().find('[class*="__key"] input')[0].focus();
         })
     })
 
     .on('click', '[id*="cta-form-"] [type="submit"]', function (e) {
       // console.log('well?')
-      // e.preventDefault();
-      // var $form = $(this).closest('form');
-      // $.ajax({
-      //   url: $form.attr('action'),
-      //   method: 'POST',
-      //   data: $form.serialize(),
-      //   dataType: 'script'
-      // })
+      e.preventDefault();
+      var $form = $(this).closest('form');
+      $.ajax({
+        url: $form.attr('action'),
+        method: 'POST',
+        data: $form.serialize(),
+        dataType: 'script'
+      })
     })
 
-    .on('click', 'button.cta-url-params__apply', function () {
-      var params = new URLSearchParams(),
-          updatedUrls = [];
-      // $(this).find('span, i').toggle();
+    .on('click', '.cta-url-params__apply', function () {
+      var $applyBtn = $(this),
+          params = new URLSearchParams(),
+          requests = [];
 
+      // add the params to a URLSearchParams object
       $('.cta-url-params__param').each(function () {
-        params.append(
-          $(this).find('.cta-url-params__key input').val(),
-          $(this).find('.cta-url-params__value input').val()
+        var key = $(this).find('[class*="__key"] input').val(),
+            value = $(this).find('[class*="__value"] input').val();
+        if (key && value) params.append(key, value);
+      })
+
+      if (Array.from(params.entries()).length === 0) return false;
+      $applyBtn.find('span, .fa-spin').toggle();
+
+      // update each CTA and prepare parallel ajax requests
+      $('[name="cta[link_url]"]').each(function () {
+        // skip if this is a web form CTA
+        var $input = $(this),
+            $form = $input.closest('form'),
+            ctaId = Number( $form.attr('id').match(/\d+/)[0] );
+        $input.val( $input.val().replace(/($|\?.+$)/, '?' + params.toString()) );
+        requests.push(
+          $.ajax({
+            url: '/ctas/' + ctaId,
+            method: 'POST',
+            data: $form.serialize(),
+            dataType: 'json'
+          })
         )
       })
-      $('[name*="cta"][name*="[link_url]"]').each(function () {
-        var updatedUrl = $(this).val().replace(/($|\?.+$)/, '?' + params.toString())
-        // requests.push(
-        //   $.ajax({
-        //     url: $(this).attr('action'),
-        //     data:
-        //   })
-        // )
-        $(this)
-          .val( updatedUrls )
-          .trigger('input')
-          // .closest('form')[0]
-          // .submit()
 
-      })
-
-//       var urls = [
-//          '/url/to/script1.js',
-//          '/url/to/script2.js',
-//          '/url/to/script3.js',
-//          '/url/to/script4.js'
-//       ];
-
-// var requests = urls.map(function(url){ return $.getScript(url); });
-
-
+      // parallel ajax requests
+      $.when.apply($, requests)
+        .then(function () {
+          // console.log(arguments); // logs all results, arguments is the results here
+          return [].slice.call(arguments);
+        })
+        .then(function(responses){
+          // console.log(responses)
+          $applyBtn.find('.fa-spin, .fa-check').toggle();
+          setTimeout(function () {
+            $applyBtn.find('.fa-check, span').toggle();
+            $applyBtn.prop('disabled', true);
+          }, 2000)
+        });
     })
-
 
     /**
      *  form management

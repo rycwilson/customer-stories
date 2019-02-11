@@ -39,10 +39,7 @@
       </div>
 
       <div id="cta-url-params" class="collapse">
-
         <div>
-
-
 
           <!-- existing params will be rendered in the client here -->
 
@@ -56,20 +53,18 @@
               <span>New Parameter</span>
             </button>
 
-            <button type="button" class="cta-url-params__apply btn btn-sm btn-success text-center">
+            <button type="button" class="cta-url-params__apply btn btn-sm btn-success text-center" style="width: 54px" disabled>
               <span>Apply</span>
+              <i class='fa fa-spin fa-circle-o-notch' style='display:none'></i>
               <i class="fa fa-fw fa-check" style="display:none"></i>
             </button>
 
-
           </div>
 
-
         </div>
-
       </div>
-    </div>
 
+    </div>
 
     <label class="col-sm-3 col-md-2 control-label">
       Primary
@@ -81,7 +76,7 @@
 
         <% if company.ctas.primary %>
 
-          <%= render 'ctas/cta', { company: company, cta: company.ctas.primary, make_primary: true } %>
+          <%= render 'ctas/cta', { company: company, cta: company.ctas.primary } %>
 
         <% else %>
 

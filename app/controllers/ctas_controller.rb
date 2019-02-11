@@ -36,9 +36,6 @@ class CtasController < ApplicationController
   end
 
   def update
-    # binding.remote_pry
-    puts params.to_h
-    puts cta_params.to_h
     @cta = CallToAction.find(params[:id])
     if @cta.primary?
       @cta.company.update(
@@ -64,6 +61,10 @@ class CtasController < ApplicationController
     #   @old_primary_cta.try(:update, { primary: false })
     # end
     # params[:cta][:primary] = (@make_primary || @cta.reload.primary) ? true : false
+    respond_to do |format|
+      format.json { render({ json: { id: @cta.id } }) }
+      format.js {}
+    end
 
     respond_to { |format| format.js }
   end

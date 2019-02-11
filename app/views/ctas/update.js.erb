@@ -7,12 +7,6 @@
       makePrimary = <%= @make_primary %>,
       removePrimary = <%= @remove_primary %>;
 
-
-console.log('removePrimary', removePrimary)
-console.log('oldPrimaryCta', oldPrimaryCta)
-
-
-
   if (makePrimary || removePrimary) {
     window.scrollTo(0, 0);
     var oldPrimaryCta = (<%= @old_primary_cta.present? %> && <%= raw @old_primary_cta.to_json({ methods: [:type] }) %>) ||

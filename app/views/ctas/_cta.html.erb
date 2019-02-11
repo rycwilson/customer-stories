@@ -7,7 +7,7 @@
   <span class="description">
     <%= cta.description %>
   </span>
-  <button type="button" class="remove">
+  <button type="button">
     <i class="fa fa-fw fa-chevron-down"></i>
     <i class="fa fa-fw fa-chevron-up" style="display: none;"></i>
   </button>
@@ -63,37 +63,18 @@
     <div class="form-group" style="margin: 0 0 20px 0">
       <label>Description</label>
       <input type="text" name="cta[description]" class="form-control" value="<%= cta.description %>">
-      <%#= label_tag("cta[description]", 'Description') %>
-      <%#= text_field_tag("cta_#{cta.id}[description]", cta.description, class: 'form-control') %>
     </div>
 
     <div class="form-group" style="margin: 0 0 20px 0">
       <label>Display Text</label>
       <input type="text" name="cta[display_text]" class="form-control" value="<%= cta.display_text %>">
-      <%#= label_tag("cta_#{cta.id}[display_text]", 'Display text') %>
-      <%#= text_field_tag("cta_#{cta.id}[display_text]", cta.display_text, class: 'form-control') %>
     </div>
 
     <% if cta.type == 'CTALink' %>
 
-      <!-- div class="form-group" style="margin: 0 0 20px 0">
-        <%#= label_tag(nil, 'Base URL') %>
-        <%#= text_field_tag(
-              nil,
-              cta.link_url.slice(0, cta.link_url.index('?') || cta.link_url.length).sub(/\/$/, ''),
-              class: 'form-control'
-            ) %>
-      </div> -->
-
       <div class="form-group" style="margin: 0 0 20px 0">
         <label>URL</label>
         <input type="text" name="cta[link_url]" class="form-control" value="<%= cta.link_url %>">
-        <%#= label_tag("cta_#{cta.id}[link_url]", 'URL') %>
-        <%#= text_field_tag(
-              "cta_#{cta.id}[link_url]",
-              cta.link_url,
-              { class: 'form-control' }
-            ) %>
       </div>
 
     <% elsif cta.type == 'CTAForm' %>
@@ -101,12 +82,6 @@
       <div class="form-group" style="margin: 0 0 20px 0">
         <label>HTML</label>
         <textarea type="text" name="cta[form_html]" value="<%= cta.form_html %>" class="form-control" rows="3" placeholder="Markup that defines your form, e.g. <form> and <script> tags"></textarea>
-        <%#= label_tag("cta_#{cta.id}[form_html]", 'HTML') %>
-        <%#= text_area_tag(
-              "cta_#{cta.id}[form_html]",
-              cta.form_html,
-              { class: 'form-control', rows: 3, placeholder: 'html, e.g. <script> and <form> tags' }
-            ) %>
       </div>
 
     <% end %>
@@ -118,14 +93,6 @@
         see the parameter with false value on the server. however in this case we're only interested
         if the value is true
         -->
-        <%#= check_box_tag(
-              cta.primary ?
-                "cta_#{cta.id}[remove_primary]" :
-                "cta_#{cta.id}[make_primary]",
-              true,
-              false
-            ) %>
-
         <input type="checkbox" name="<%= cta.primary ? 'cta[remove_primary]' : 'cta[make_primary]' %>" value="true">
         <span><%= cta.primary ? 'Remove primary' : 'Make primary' %></span>
       </label>
@@ -141,6 +108,6 @@
     </div>
 
   </form>
-  <%# end %>
+
 </div>
 
