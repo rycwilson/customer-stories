@@ -73,7 +73,50 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
           $storyOverlay.find('.primary-cta-xs').addClass('open');
         }, 3000);
       },
+
+
+      /**
+       *  Added this hoping that dynamic changes to og data would be picked up in a share. Doesn't work
+       */
+      // initShareOnLinkedin = function ($link) {
+      //   var $article = $link.closest('article'),
+      //       $originalMetaTags = $('meta[property="og:url"], meta[property="og:title"], meta[property="og:description"], meta[property="og:image"], meta[property="og:image:height"] meta[property="og:image:width"] meta[property="type"]'),
+      //       $newMetaTags = $(
+      //         Object.entries({
+      //           'og:url': location.href,
+      //           'og:title': $article.data('title'),
+      //           'og:description': $article.data('description') || 'og-description',
+      //           'og:image': $article.data('og-image') || 'og-image',
+      //           'og:image:height': $article.data('og-image-height') || 400,
+      //           'og:image:width': $article.data('og-image-width') || 400,
+      //           'og:type': 'article'
+      //         })
+      //           .map(function (entry) {
+      //             return '<meta property="' + entry[0] + '" content="' + entry[1] + '" class="cs-og-tags">'
+      //           })
+      //             .join('')
+      //       )
+
+      //   $originalMetaTags.remove();
+      //   $('head').append($newMetaTags)
+      //   $(document).one('click', '.content__item--show .cs-close', function () {
+      //     console.log('remove story meta tags')
+      //     $('.cs-og-tags').remove();
+      //     $('head').append($originalMetaTags);
+      //   })
+
+      //   $link.attr(
+      //     'href',
+      //     $link.attr('href') + encodeURIComponent(location.href) + '&foo=bar'
+      //   )
+
+      // },
       initOverlay = function ($storyCard, $storyOverlay) {
+
+        // initShareOnFacebook($storyOverlay.find('.share__button--facebook a'))
+        // initShareOnTwitter($storyOverlay.find('.share__button--twitter a'))
+        // initShareOnLinkedin($storyOverlay.find('.share__button--linkedin a'))
+
         if ($storyCard.hasClass('has-video')) {
           cspInitVideo($, $storyOverlay);
         }
@@ -149,6 +192,8 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
 
   applyScrollBoundaries();
   initPreselected();
+  // defineJqueryPlugins();
+
   if (subdomain === 'pixlee') doPixleeStuff();
 
   // event listeners
@@ -205,6 +250,16 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
         }
       }
     });
+
+    // .on('click', '.share__button--linkedin a', function (e) {
+    //   window.width < 768 ? $(this).popupWindow(e) : $(this).popupWindow(e, 550, 540);
+    // })
+    // .on('click', '.share__button--twitter a', function (e) {
+    //   window.width < 768 ? $(this).popupWindow(e) : $(this).popupWindow(e, 500, 446);
+    // })
+    // .on('click', '.share__button--facebook a', function (e) {
+    //   window.width < 768 ? $(this).popupWindow(e) : $(this).popupWindow(e, 600, 424);
+    // });
 
   function trackStoryVisitor ($storyCard) {
     if (env === 'customerstories.net' && !isDemo) {
@@ -304,5 +359,31 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
       window.removeEventListener('message', postMessageHandler, false);
     });
   }
+
+//   function defineJqueryPlugins () {
+//     $.fn.popupWindow = function (e, width, height) {
+//       // Prevent default anchor event
+//       e.preventDefault();
+// console.log(this.attr('href'))
+//       // Fixes dual-screen position                         Most browsers      Firefox
+//       var dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : screen.left;
+//       var dualScreenTop = window.screenTop !== undefined ? window.screenTop : screen.top;
+
+//       var windowWidth = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+//       var windowHeight = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+
+//       // Set values for window
+//       width = width || windowWidth;
+//       height = height || windowHeight;
+
+//       var left = ((windowWidth / 2) - (width / 2)) + dualScreenLeft;
+//       var top = ((windowHeight / 2) - (height / 2)) + dualScreenTop;
+
+//       // Set title and open popup with focus on it
+//       var strTitle = ((typeof this.attr('title') !== 'undefined') ? this.attr('title') : 'Social Share'),
+//           strParam = 'width=' + width + ',height=' + height + ',top=' + top + ',left=' + left + ',resizable=no',
+//           objWindow = window.open(this.attr('href'), 'shareWindow', strParam).focus();
+//     };
+//   }
 
 }

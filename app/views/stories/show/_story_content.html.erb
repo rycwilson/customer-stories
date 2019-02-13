@@ -99,8 +99,40 @@
 
       <% if company.subdomain == 'pixlee' %>
 
+
+
         <div class="pixlee-cta">
 <!-- <div> -->
+
+          <% if is_plugin %>
+          <div class="social-share">
+
+            <div class="share__button--facebook">
+              <a onclick="return false;" href="<%= FACEBOOK_SHARE_URL %>" target="_blank">
+                <i class="fa fa-fw fa-facebook" style="color: inherit !important"></i>
+              </a>
+            </div>
+
+            <div class="share__button--twitter">
+              <a onclick="return false;" href="<%= TWITTER_SHARE_URL %>" target="_blank">
+                <i class="fa fa-fw fa-twitter" style="color: inherit !important"></i>
+              </a>
+            </div>
+
+            <div class="share__button--linkedin">
+              <a onclick="return false;" href="<%= LINKEDIN_SHARE_URL %>" target="_blank">
+                <i class="fa fa-fw fa-linkedin" style="color: inherit !important"></i>
+              </a>
+            </div>
+
+            <div class="share__button--email">
+              <a onclick="return false;" href="javascript:;">
+                <i class="fa fa-fw fa-envelope" style="padding-bottom: 1px; color: inherit !important"></i>
+              </a>
+            </div>
+
+          </div>
+          <% end %>
 
           <div class="cta__image"></div>
 

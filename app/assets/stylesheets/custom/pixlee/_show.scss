@@ -1,6 +1,7 @@
 
 &.stories.show, .cs-overlay-container {
 
+
   &.stories.show {
     #cs-tabbed-carousel {
       display: none !important;
@@ -27,6 +28,10 @@
       p {
         padding-top: 0;  // overrides a host setting
       }
+
+
+
+
     }
   }
 
