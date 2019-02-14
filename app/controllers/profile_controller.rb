@@ -89,6 +89,8 @@ class ProfileController < ApplicationController
       redirect_to linkedin_authorize_base_url + @linkedin_callback
     else  # signed in user
       # if user already has a token, go ahead and request the data, else ...
+      # puts "CSP"
+      # puts "#{LINKEDIN_AUTHORIZE_BASE_URL + @linkedin_callback}"
       redirect_to LINKEDIN_AUTHORIZE_BASE_URL + @linkedin_callback
     end
   end
@@ -120,12 +122,14 @@ class ProfileController < ApplicationController
   def get_linkedin_token code, callback
     token_request = Typhoeus::Request.new(
       LINKEDIN_GETTOKEN_BASE_URL,
-      method: :post,
-      params: { grant_type: 'authorization_code',
-                code: code,
-                client_id: ENV['LINKEDIN_KEY'],
-                client_secret: ENV['LINKEDIN_SECRET'],
-                redirect_uri: callback }
+      method: 'POST',
+      params: {
+        grant_type: 'authorization_code',
+        code: code,
+        client_id: ENV['LINKEDIN_KEY'],
+        client_secret: ENV['LINKEDIN_SECRET'],
+        redirect_uri: callback
+      }
     )
     token_request.run
     JSON.parse(token_request.response.response_body)
@@ -138,7 +142,7 @@ class ProfileController < ApplicationController
            positions,\
            public-profile-url,\
            picture-urls::(original))".gsub(/\s+/, ''),
-      method: :get,
+      method: 'GET',
       params: { format: 'json' },
       headers: { Authorization: "Bearer #{token}" }
     )

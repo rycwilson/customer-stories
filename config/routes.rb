@@ -66,8 +66,9 @@ Rails.application.routes.draw do
     get '/plugins/demo', to: 'plugins#demo'
 
     # see below for route to public story page
-    resources :stories, only: :index do
+    resources(:stories, { only: [:index] }) do
       get '/search', on: :collection, to: 'stories#search'
+      get '/share_on_linkedin', on: :member, to: 'stories#share_on_linkedin'
     end
 
 
@@ -182,6 +183,9 @@ Rails.application.routes.draw do
     get '/user-profile/linkedin_connect', to: 'profile#linkedin_connect', as: 'linkedin_connect'
     get '/user-profile/linkedin_callback', to: 'profile#linkedin_callback'
 
+    get '/linkedin_auth', to: 'application#linkedin_auth'
+
+
     # need to pick up on devise sign-in route here, without doing so explicitly
     # as that will conflict with devise routes declared below
     # 'method' instead of 'action' - latter is keyword with its own params entry
@@ -234,6 +238,8 @@ Rails.application.routes.draw do
   get   '/user-profile', to: 'profile#edit', as: 'edit_profile_no_company'
   get   '/user-profile/linkedin_connect', to: 'profile#linkedin_connect', as: 'linkedin_connect_no_company'
   get   '/user-profile/linkedin_callback', to: 'profile#linkedin_callback'
+
+  get '/linkedin_auth_callback', to: 'application#linkedin_auth_callback'
 
   # above comments about distinguishing the route apply to below as well
   #

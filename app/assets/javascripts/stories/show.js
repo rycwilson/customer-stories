@@ -27,25 +27,6 @@ function storiesShow () {
     .on('scroll', function () {
       if (CSP.screenSize === 'xs') return false;
       if ($('body').hasClass('stories show')) {
-
-    //     // pixlee fixed cta
-    //     if (window.location.href.includes('pixlee')) {
-    //       var currentScroll = $(window).scrollTop();
-    //       if (currentScroll > pixleeCtaTop - 95) {
-    //         $('.pixlee-cta').css({
-    //           position: 'fixed',
-    //           height: '400px',
-    //           width: $('.story-sidebar').width().toString() + 'px',
-    //           top: '95px',  // header height + margin
-    //           left: ($('.story-sidebar').offset().left + parseInt($('.story-sidebar').css('padding-left'), 10)).toString() + 'px'
-    //         });
-    //       } else {
-    //         $('.pixlee-cta').css({
-    //           position: 'static'
-    //         });
-    //       }
-    //     }
-
         // prevent More Stories from covering curator sign in
         if (!CSP.current_user) {
           var scrollBottom = $(document).height() - $(window).height() - $(window).scrollTop();
@@ -63,7 +44,10 @@ function storiesShow () {
     // ref: http://stackoverflow.com/questions/4068373
     // ref: http://stackoverflow.com/questions/24046807
     .on('click', '.linkedin-share', function (e) {
-      CSP.screenSize === 'xs' ? $(this).popupWindow(e) : $(this).popupWindow(e, 550, 540);
+      // link goes directly to stories#share_on_linkedin (experimental feature)
+
+      // old:
+      // CSP.screenSize === 'xs' ? $(this).popupWindow(e) : $(this).popupWindow(e, 550, 540);
     })
     .on('click', '.twitter-share', function (e) {
       CSP.screenSize === 'xs' ? $(this).popupWindow(e) : $(this).popupWindow(e, 500, 446);

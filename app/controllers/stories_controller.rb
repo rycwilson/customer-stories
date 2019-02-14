@@ -314,6 +314,10 @@ class StoriesController < ApplicationController
     end
   end
 
+  def share_on_linkedin
+    redirect_to linkedin_auth_path(share_url: request.referer)
+  end
+
   def approval
     respond_to do |format|
       format.pdf do

@@ -24,6 +24,15 @@ LINKEDIN_AUTHORIZE_BASE_URL = "https://www.linkedin.com/oauth/v2/authorization?\
                                state=#{ENV['LINKEDIN_STATE']}&".gsub(/\s+/, '')
                                # redirect_uri=  included by profile/contributions controller
 
+# separate url needed for companies because specifics information is displayed
+# "Pixlee would like to access your data..."
+PIXLEE_LINKEDIN_AUTHORIZE_BASE_URL = "https://www.linkedin.com/oauth/v2/authorization?\
+                                      client_id=#{ ENV['PIXLEE_LINKEDIN_KEY'] }&\
+                                      response_type=code&\
+                                      scope=r_liteprofile%20w_share%20w_member_social&\
+                                      state=#{ENV['LINKEDIN_STATE']}&".gsub(/\s+/, '')
+
+
 # the parameters must be defined in the typhoeus request (see profile controller)
 LINKEDIN_GETTOKEN_BASE_URL = "https://www.linkedin.com/oauth/v2/accessToken"
 LINKEDIN_PEOPLE_BASE_URL = "https://api.linkedin.com/v1/people/~"

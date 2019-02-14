@@ -77,7 +77,7 @@ function storiesIndexListeners () {
 
 
     .on('click touchstart', 'li[data-story-id]:not(.hover) a.published', function (e) {
-      console.log('click touchstart')
+      // console.log('click touchstart')
       var $storyLink = $(this),
           $storyCard = $(this).parent(),
           storyLoading = function () {

@@ -38,6 +38,90 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def linkedin_auth
+    auth_url = PIXLEE_LINKEDIN_AUTHORIZE_BASE_URL
+    if params[:share_url].present?
+      auth_url.sub!(
+        /state=(\w+)&$/,
+        'state=\1' + "cs-share#{ ERB::Util.url_encode(params[:share_url]) }cs-share&" +
+        "redirect_uri=#{ ERB::Util.url_encode('https://customerstories.org/linkedin_auth_callback') }"
+      )
+    end
+    puts auth_url
+    redirect_to auth_url
+  end
+
+  def linkedin_auth_callback
+    # puts params.permit(params.keys).to_h
+    if share_url = params[:state].match(/cs-share(.+)cs-share/).try(:[], 1)
+      redirect_url = share_url
+    else
+      # ...
+    end
+    if params[:code]
+      token_response = get_linkedin_token(
+                         params[:code],
+                         url_for({
+                           subdomain: nil,
+                           controller: 'application',
+                           action: 'linkedin_auth_callback'
+                         })
+                       )
+      if token_response['error']
+        puts "TOKEN ERROR"
+        puts token_response['error']
+        redirect_to redirect_url
+        # flash messaging depends on source
+      else
+        token = token_response['access_token']
+        puts "TOKEN SUCCESS"
+        puts token
+        puts token_response
+        if share_url
+          profile_request = Typhoeus::Request.new(
+            'https://api.linkedin.com/v2/me',
+            method: 'GET',
+            headers: { Authorization: "Bearer #{token}" }
+          )
+          profile_request.run
+          profile_response = JSON.parse(profile_request.response.response_body)
+          puts "PROFILE"
+          puts profile_response
+          share_request = Typhoeus::Request.new(
+            'https://api.linkedin.com/v2/ugcPosts',
+            method: 'POST',
+            headers: {
+              Authorization: "Bearer #{token}",
+              'X-Restli-Protocol-Version': '2.0.0'
+            },
+            body: {
+              "author": profile_response[:id],
+              "lifecycleState": "PUBLISHED",
+              "specificContent": {
+                "com.linkedin.ugc.ShareContent": {
+                  "shareCommentary": {
+                    "text": "This is share commentary"
+                  },
+                  "shareMediaCategory": "NONE"
+                }
+              },
+              "visibility": {
+                "com.linkedin.ugc.MemberNetworkVisibility": "PUBLIC"
+              }
+            }
+          )
+          share_request.run
+          share_response = JSON.parse(share_request.response.response_body)
+          puts "SHARE"
+          puts share_response
+        end
+      end
+      redirect_to redirect_url
+    else
+      # error?
+    end
+  end
+
   protected
 
   def set_gon (company=nil)
@@ -74,13 +158,15 @@ class ApplicationController < ActionController::Base
 
   # method only called if user_signed_in?
   def check_subdomain
-    puts params
     user_subdomain = current_user.company.try(:subdomain)
     if user_subdomain == request.subdomain  # all good
       true
     # zaps will be with subdomain in dev (cspdev) and without in production
     # account for both by sending the necessary parameter
     elsif params[:zapier_auth].present? || params[:zapier_trigger].present? || params[:zapier_create].present?
+      true
+    # no subdomain for the linkedin auth callback
+    elsif params[:action] == 'linkedin_auth_callback'
       true
     elsif request.subdomain.blank? &&
           params[:controller] == 'site' &&
@@ -180,6 +266,7 @@ class ApplicationController < ActionController::Base
           .delete_if { |c| c.id == story.curator.id }
   end
 
+
   private
 
   def layout
@@ -190,6 +277,22 @@ class ApplicationController < ActionController::Base
     # else
       "application"
     # end
+  end
+
+  def get_linkedin_token(code, callback)
+    token_request = Typhoeus::Request.new(
+      LINKEDIN_GETTOKEN_BASE_URL,
+      method: 'POST',
+      params: {
+        grant_type: 'authorization_code',
+        code: code,
+        client_id: ENV['PIXLEE_LINKEDIN_KEY'],
+        client_secret: ENV['PIXLEE_LINKEDIN_SECRET'],
+        redirect_uri: callback
+      }
+    )
+    token_request.run
+    JSON.parse(token_request.response.response_body)
   end
 
 end
