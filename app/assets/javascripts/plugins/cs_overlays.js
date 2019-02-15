@@ -74,15 +74,19 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
         }, 3000);
       },
       initOverlay = function ($storyCard, $storyOverlay) {
-
-        $storyOverlay.find('[class*="share__button"] a').each(function () {
+        $storyOverlay.find('.social-sharing a').each(function () {
           var regex;
-          if ($(this).parent().is('[class*="--facebook')) {
+          if ($(this).is('[href*="facebook"]')) {
             regex = new RegExp(/sharer.php\?u=.+$/);
-          } else if ($(this).parent().is('[class*="--twitter')) {
+          } else if ($(this).is('[href*="twitter"]')) {
             regex = new RegExp(/intent\/tweet\?url=.+$/)
-          } else if ($(this).parent().is('[class*="--linkedin')) {
+          } else if ($(this).is('[href*="linkedin"]')) {
             regex = new RegExp(/shareArticle\?mini=true&url=.+$/)
+          } else if ($(this).is('[href*="mailto"]')) {
+            $(this).attr(
+              'href',
+              $(this).attr('href').replace(/&body=.+$/, '&body=' + encodeURIComponent(location.href))
+            )
           }
           $(this).attr(
             'href',

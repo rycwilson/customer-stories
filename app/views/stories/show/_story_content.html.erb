@@ -112,7 +112,6 @@
               <div class="col-sm-11" style="padding: 0">
                 <div class="social-sharing">
 
-
                   <div class="share__button--facebook">
                     <a href="<%= FACEBOOK_SHARE_URL + url_encode(story.csp_story_url) %>">
                       <i class="fa fa-fw fa-facebook" style="color: inherit !important"></i>
@@ -132,8 +131,8 @@
                   </div>
 
                   <div class="share__button--email">
-                    <a onclick="return false;" href="javascript:;">
-                      <i class="fa fa-fw fa-envelope" style="padding-bottom: 1px; color: inherit !important"></i>
+                    <a href="mailto:?subject=<%= url_encode(story.title) %>&body=<%= url_encode(story.csp_story_url) %>">
+                      <i class="fa fa-fw fa-envelope mailto" style="padding-bottom: 1px; color: inherit !important"></i>
                     </a>
                   </div>
 
@@ -209,7 +208,7 @@
                   </div>
 
                   <div class="share__button--email">
-                    <a onclick="return false;" href="javascript:;">
+                    <a href="mailto:?subject=<%= url_encode(story.title) %>&body=<%= url_encode(story.csp_story_url) %>" class="icon-button-xs mailto">
                       <i class="fa fa-fw fa-envelope" style="padding-bottom: 1px; color: inherit !important"></i>
                     </a>
                   </div>
