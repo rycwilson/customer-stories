@@ -73,53 +73,20 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
           $storyOverlay.find('.primary-cta-xs').addClass('open');
         }, 3000);
       },
-
-
-      /**
-       *  Added this hoping that dynamic changes to og data would be picked up in a share. Doesn't work
-       */
-      // initShareOnLinkedin = function ($link) {
-      //   var $article = $link.closest('article'),
-      //       $originalMetaTags = $('meta[property="og:url"], meta[property="og:title"], meta[property="og:description"], meta[property="og:image"], meta[property="og:image:height"] meta[property="og:image:width"] meta[property="type"]'),
-      //       $newMetaTags = $(
-      //         Object.entries({
-      //           'og:url': location.href,
-      //           'og:title': $article.data('title'),
-      //           'og:description': $article.data('description') || 'og-description',
-      //           'og:image': $article.data('og-image') || 'og-image',
-      //           'og:image:height': $article.data('og-image-height') || 400,
-      //           'og:image:width': $article.data('og-image-width') || 400,
-      //           'og:type': 'article'
-      //         })
-      //           .map(function (entry) {
-      //             return '<meta property="' + entry[0] + '" content="' + entry[1] + '" class="cs-og-tags">'
-      //           })
-      //             .join('')
-      //       )
-
-      //   $originalMetaTags.remove();
-      //   $('head').append($newMetaTags)
-      //   $(document).one('click', '.content__item--show .cs-close', function () {
-      //     console.log('remove story meta tags')
-      //     $('.cs-og-tags').remove();
-      //     $('head').append($originalMetaTags);
-      //   })
-
-      //   $link.attr(
-      //     'href',
-      //     $link.attr('href') + encodeURIComponent(location.href) + '&foo=bar'
-      //   )
-
-      // },
       initOverlay = function ($storyCard, $storyOverlay) {
 
-        // initShareOnFacebook($storyOverlay.find('.share__button--facebook a'))
-        // initShareOnTwitter($storyOverlay.find('.share__button--twitter a'))
-        // initShareOnLinkedin($storyOverlay.find('.share__button--linkedin a'))
         $storyOverlay.find('[class*="share__button"] a').each(function () {
+          var regex;
+          if ($(this).parent().is('[class*="--facebook')) {
+            regex = new RegExp(/sharer.php\?u=.+$/);
+          } else if ($(this).parent().is('[class*="--twitter')) {
+            regex = new RegExp(/intent\/tweet\?url=.+$/)
+          } else if ($(this).parent().is('[class*="--linkedin')) {
+            regex = new RegExp(/shareArticle\?mini=true&url=.+$/)
+          }
           $(this).attr(
             'href',
-            $(this).attr('href').replace(/\?url=.+$/, function (match, index) {
+            $(this).attr('href').replace(regex, function (match, index) {
               return match + encodeURIComponent('?redirect_uri=' + location.href)
             })
           )

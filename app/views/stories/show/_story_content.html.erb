@@ -102,16 +102,15 @@
 
 
         <div class="pixlee-cta">
-<!-- <div> -->
 
-          <% if is_plugin %>
+        <% if is_plugin %>
 
-          <div class="social-share">
+          <div class="social-sharing">
 
             <i class="fa fa-fw fa-share" style="position: absolute; left: 35px; font-size: 14px;"></i>
 
             <div class="share__button--facebook">
-              <a onclick="return false;" href="<%= FACEBOOK_SHARE_URL %>" target="_blank">
+              <a href="<%= FACEBOOK_SHARE_URL + url_encode(story.csp_story_url) %>">
                 <i class="fa fa-fw fa-facebook" style="color: inherit !important"></i>
               </a>
             </div>
@@ -123,7 +122,7 @@
             </div>
 
             <div class="share__button--linkedin">
-              <a onclick="return false;" href="<%= LINKEDIN_SHARE_URL %>" target="_blank">
+              <a href="<%= LINKEDIN_SHARE_URL + url_encode(story.csp_story_url) %>">
                 <i class="fa fa-fw fa-linkedin" style="color: inherit !important"></i>
               </a>
             </div>
@@ -135,7 +134,7 @@
             </div>
 
           </div>
-          <% end %>
+        <% end %>
 
           <div class="cta__image"></div>
 
@@ -168,9 +167,8 @@
 
             </div>
           </div>
-<!-- </div> -->
-        </div>
 
+        </div>
 
       <% end %>
 
