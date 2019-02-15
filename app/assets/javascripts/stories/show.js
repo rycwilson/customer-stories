@@ -1,6 +1,9 @@
 
 function storiesShow () {
 
+  var socialShareRedirectURI = (new URL(location)).searchParams.get('redirect_uri');
+  if (socialShareRedirectURI) location.href = socialShareRedirectURI;
+
   // story is initially hidden in case video failure prompts removal
   loadVideoThumbnail(function () { $('.story-wrapper').removeClass('hidden'); });
 
@@ -44,10 +47,7 @@ function storiesShow () {
     // ref: http://stackoverflow.com/questions/4068373
     // ref: http://stackoverflow.com/questions/24046807
     .on('click', '.linkedin-share', function (e) {
-      // link goes directly to stories#share_on_linkedin (experimental feature)
-
-      // old:
-      // CSP.screenSize === 'xs' ? $(this).popupWindow(e) : $(this).popupWindow(e, 550, 540);
+      CSP.screenSize === 'xs' ? $(this).popupWindow(e) : $(this).popupWindow(e, 550, 540);
     })
     .on('click', '.twitter-share', function (e) {
       CSP.screenSize === 'xs' ? $(this).popupWindow(e) : $(this).popupWindow(e, 500, 446);

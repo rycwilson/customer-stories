@@ -36,7 +36,8 @@
           type = '<%= @type %>',
           $stylesheet = $("<link>", { rel: "stylesheet", type: "text/css", href: '<%= @stylesheet_url %>' }),
           xsBreakpoint = 768,
-          preSelectedStorySlug = (new URL(window.location)).searchParams.get('story');
+          preSelectedStorySlug = (new URL(window.location)).searchParams.get('cs') ||
+                                 (new URL(window.location)).searchParams.get('story');
 
       // no stylesheet means type couldn't be id'ed => fatal
       if (!'<%= @stylesheet_url %>') return false;
@@ -78,7 +79,7 @@
             $('body').append(
               '<div id="cs-loading-pre-select" style="z-index:100001; display:block; position:fixed; height:' + window.innerHeight + 'px; top:0; left:0; right:0; background-color:' + (window.innerWidth < xsBreakpoint ? 'rgba(242,242,242,0.9)' : 'rgba(0,0,0,0.75)') + '; transition: opacity 0.12s">' +
                 '<div style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%)">' +
-                  '<i class="fa fa-spin fa-circle-o-notch" style="font-size: 36px !important; color:' + (window.innerWidth < xsBreakpoint ? '#555' : 'rgba(255,255,255,0.7)') + ' !important"></i>' +
+                  '<i class="fa fa-spin fa-circle-o-notch" style="font-size: 36px !important; color:' + (window.innerWidth < xsBreakpoint ? '#555' : 'rgba(255,255,255,0.85)') + ' !important"></i>' +
                 '</div>' +
               '</div>'
             );
@@ -90,7 +91,7 @@
               if ($('#cs-loading-pre-select').length) {
                 $('#cs-loading-pre-select').remove();
 
-                // get rid of ?story=
+                // get rid of ?cs==
                 history.replaceState({}, null, window.location.pathname)
               };
             }, 7000)
@@ -126,7 +127,8 @@
           stories: $script.data('stories'),
           category: $script.data('category'),
           product: $script.data('product'),
-          pre_selected_story: (new URL(window.location)).searchParams.get('story'),
+          pre_selected_story: (new URL(window.location)).searchParams.get('cs') ||
+                              (new URL(window.location)).searchParams.get('story'),
           background: $script.data('background'),
           tab_color: $script.data('tab-color'),
           text_color: $script.data('text-color'),

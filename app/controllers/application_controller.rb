@@ -47,7 +47,7 @@ class ApplicationController < ActionController::Base
         "redirect_uri=#{ ERB::Util.url_encode('https://customerstories.org/linkedin_auth_callback') }"
       )
     end
-    puts auth_url
+    # puts auth_url
     redirect_to auth_url
   end
 
@@ -68,15 +68,15 @@ class ApplicationController < ActionController::Base
                          })
                        )
       if token_response['error']
-        puts "TOKEN ERROR"
-        puts token_response['error']
-        redirect_to redirect_url
+        # puts "TOKEN ERROR"
+        # puts token_response['error']
+        # redirect_to redirect_url
         # flash messaging depends on source
       else
         token = token_response['access_token']
-        puts "TOKEN SUCCESS"
-        puts token
-        puts token_response
+        # puts "TOKEN SUCCESS"
+        # puts token
+        # puts token_response
         if share_url
           profile_request = Typhoeus::Request.new(
             'https://api.linkedin.com/v2/me',
@@ -85,8 +85,8 @@ class ApplicationController < ActionController::Base
           )
           profile_request.run
           profile_response = JSON.parse(profile_request.response.response_body)
-          puts "PROFILE"
-          puts profile_response
+          # puts "PROFILE"
+          # puts profile_response
           share_request = Typhoeus::Request.new(
             'https://api.linkedin.com/v2/ugcPosts',
             method: 'POST',
@@ -112,8 +112,8 @@ class ApplicationController < ActionController::Base
           )
           share_request.run
           share_response = JSON.parse(share_request.response.response_body)
-          puts "SHARE"
-          puts share_response
+          # puts "SHARE"
+          # puts share_response
         end
       end
       redirect_to redirect_url

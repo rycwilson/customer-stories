@@ -210,7 +210,7 @@
       $('.scroll-wrap').css('overflow-y', 'scroll');
 
       // direct urls
-      history.replaceState({}, null, window.location.pathname + '?story=' + item.href.slice(item.href.lastIndexOf('/') + 1, item.href.length))
+      history.replaceState({}, null, window.location.pathname + '?cs=' + item.href.slice(item.href.lastIndexOf('/') + 1, item.href.length))
     });
   }
 

@@ -28,7 +28,7 @@
 </head>
 <!-- TODO: fixed navbar - leave padding as below (false is temp. blocker) -->
 <body class="<%= controller_name %> <%= action_name %> <%= @company ? @company.subdomain : '' %>"
-      style="<%= admin_navbar?(controller_name) && false ? 'padding-top:65px' : '' %>">
+      style="<%= @is_social_share_redirect ? 'visibility:hidden;' : '' %> <%= admin_navbar?(controller_name) && false ? 'padding-top:65px;' : '' %>">
 
   <%= include_gon if include_gon?(controller_name, action_name) %>
 

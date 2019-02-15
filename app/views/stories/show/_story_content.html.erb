@@ -105,7 +105,10 @@
 <!-- <div> -->
 
           <% if is_plugin %>
+
           <div class="social-share">
+
+            <i class="fa fa-fw fa-share" style="position: absolute; left: 35px; font-size: 14px;"></i>
 
             <div class="share__button--facebook">
               <a onclick="return false;" href="<%= FACEBOOK_SHARE_URL %>" target="_blank">
@@ -114,7 +117,7 @@
             </div>
 
             <div class="share__button--twitter">
-              <a onclick="return false;" href="<%= TWITTER_SHARE_URL %>" target="_blank">
+              <a href="<%= TWITTER_SHARE_URL + url_encode(story.csp_story_url) %>">
                 <i class="fa fa-fw fa-twitter" style="color: inherit !important"></i>
               </a>
             </div>

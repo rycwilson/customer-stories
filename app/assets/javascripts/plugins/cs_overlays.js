@@ -116,6 +116,14 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
         // initShareOnFacebook($storyOverlay.find('.share__button--facebook a'))
         // initShareOnTwitter($storyOverlay.find('.share__button--twitter a'))
         // initShareOnLinkedin($storyOverlay.find('.share__button--linkedin a'))
+        $storyOverlay.find('[class*="share__button"] a').each(function () {
+          $(this).attr(
+            'href',
+            $(this).attr('href').replace(/\?url=.+$/, function (match, index) {
+              return match + encodeURIComponent('?redirect_uri=' + location.href)
+            })
+          )
+        });
 
         if ($storyCard.hasClass('has-video')) {
           cspInitVideo($, $storyOverlay);
@@ -192,7 +200,7 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
 
   applyScrollBoundaries();
   initPreselected();
-  // defineJqueryPlugins();
+  defineJqueryPlugins();
 
   if (subdomain === 'pixlee') doPixleeStuff();
 
@@ -249,17 +257,20 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
           resetStoryCardListener($storyCard);
         }
       }
-    });
+    })
 
-    // .on('click', '.share__button--linkedin a', function (e) {
-    //   window.width < 768 ? $(this).popupWindow(e) : $(this).popupWindow(e, 550, 540);
-    // })
-    // .on('click', '.share__button--twitter a', function (e) {
-    //   window.width < 768 ? $(this).popupWindow(e) : $(this).popupWindow(e, 500, 446);
-    // })
-    // .on('click', '.share__button--facebook a', function (e) {
-    //   window.width < 768 ? $(this).popupWindow(e) : $(this).popupWindow(e, 600, 424);
-    // });
+    /**
+     *  social sharing buttons
+     */
+    .on('click', '.share__button--linkedin a', function (e) {
+      window.width < 768 ? $(this).popupWindow(e) : $(this).popupWindow(e, 550, 540);
+    })
+    .on('click', '.share__button--twitter a', function (e) {
+      window.width < 768 ? $(this).popupWindow(e) : $(this).popupWindow(e, 500, 448);
+    })
+    .on('click', '.share__button--facebook a', function (e) {
+      window.width < 768 ? $(this).popupWindow(e) : $(this).popupWindow(e, 600, 424);
+    });
 
   function trackStoryVisitor ($storyCard) {
     if (env === 'customerstories.net' && !isDemo) {
@@ -360,30 +371,29 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
     });
   }
 
-//   function defineJqueryPlugins () {
-//     $.fn.popupWindow = function (e, width, height) {
-//       // Prevent default anchor event
-//       e.preventDefault();
-// console.log(this.attr('href'))
-//       // Fixes dual-screen position                         Most browsers      Firefox
-//       var dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : screen.left;
-//       var dualScreenTop = window.screenTop !== undefined ? window.screenTop : screen.top;
+  function defineJqueryPlugins () {
+    $.fn.popupWindow = function (e, width, height) {
+      // Prevent default anchor event
+      e.preventDefault();
+      // Fixes dual-screen position                         Most browsers      Firefox
+      var dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : screen.left;
+      var dualScreenTop = window.screenTop !== undefined ? window.screenTop : screen.top;
 
-//       var windowWidth = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
-//       var windowHeight = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
+      var windowWidth = window.innerWidth ? window.innerWidth : document.documentElement.clientWidth ? document.documentElement.clientWidth : screen.width;
+      var windowHeight = window.innerHeight ? window.innerHeight : document.documentElement.clientHeight ? document.documentElement.clientHeight : screen.height;
 
-//       // Set values for window
-//       width = width || windowWidth;
-//       height = height || windowHeight;
+      // Set values for window
+      width = width || windowWidth;
+      height = height || windowHeight;
 
-//       var left = ((windowWidth / 2) - (width / 2)) + dualScreenLeft;
-//       var top = ((windowHeight / 2) - (height / 2)) + dualScreenTop;
+      var left = ((windowWidth / 2) - (width / 2)) + dualScreenLeft;
+      var top = ((windowHeight / 2) - (height / 2)) + dualScreenTop;
 
-//       // Set title and open popup with focus on it
-//       var strTitle = ((typeof this.attr('title') !== 'undefined') ? this.attr('title') : 'Social Share'),
-//           strParam = 'width=' + width + ',height=' + height + ',top=' + top + ',left=' + left + ',resizable=no',
-//           objWindow = window.open(this.attr('href'), 'shareWindow', strParam).focus();
-//     };
-//   }
+      // Set title and open popup with focus on it
+      var strTitle = ((typeof this.attr('title') !== 'undefined') ? this.attr('title') : 'Social Share'),
+          strParam = 'width=' + width + ',height=' + height + ',top=' + top + ',left=' + left + ',resizable=no',
+          objWindow = window.open(this.attr('href'), 'shareWindow', strParam).focus();
+    };
+  }
 
 }
