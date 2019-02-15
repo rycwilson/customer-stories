@@ -9,8 +9,8 @@ class StoriesController < ApplicationController
   before_action :set_company
   before_action :set_story, only: [:edit, :update, :ctas, :tags, :promote, :approval, :destroy]
   before_action only: [:show] do
+    @is_social_share_redirect = true if params[:redirect_uri].present?
     @is_curator = @company.curator?(current_user)
-    @is_social_share_redirect = params[:redirect_uri].present?
   end
   before_action only: [:edit] do
     authenticate_user!

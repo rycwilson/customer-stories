@@ -13,6 +13,7 @@
 
   <%= javascript_include_tag 'application', 'data-turbolinks-track' => 'reload' %>
   <%= csrf_meta_tags %>
+
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <!-- Google Fonts -->
@@ -30,42 +31,50 @@
 <body class="<%= controller_name %> <%= action_name %> <%= @company ? @company.subdomain : '' %>"
       style="<%= @is_social_share_redirect ? 'visibility:hidden;' : '' %> <%= admin_navbar?(controller_name) && false ? 'padding-top:65px;' : '' %>">
 
-  <%= include_gon if include_gon?(controller_name, action_name) %>
+  <% if @is_social_share_redirect %>
 
-  <% if admin_navbar?(controller_name) %>
-
-    <%= render('shared/navbars/company_header', { company: @company }) %>
-
-  <% elsif @zap_auth_initial_req %>
-
-    <!-- nothing -->
-
-  <% elsif controller_name == 'contributions' || @zap_auth_retry %>
-
-    <!-- nothing (just flash) -->
-    <%= render('shared/flash') if flash.any? %>
+    <%= yield %>
 
   <% else %>
 
-    <!-- more logic within the navbar to handle signed in users... -->
-    <%= render('shared/navbars/mvp_landing_navbar') %>
+    <%= include_gon if include_gon?(controller_name, action_name) %>
 
-  <% end %>
+    <% if admin_navbar?(controller_name) %>
 
-  <%= yield %>
+      <%= render('shared/navbars/company_header', { company: @company }) %>
 
-  <%= yield(:underscore_templates) %>
+    <% elsif @zap_auth_initial_req %>
 
-  <% if !(@zap_auth_initial_req || @zap_auth_retry) &&
-        (devise_controller? || controller_name == 'site') %>
+      <!-- nothing -->
 
-    <%= render('shared/landing_footer') %>
+    <% elsif controller_name == 'contributions' || @zap_auth_retry %>
 
-  <% end %>
+      <!-- nothing (just flash) -->
+      <%= render('shared/flash') if flash.any? %>
 
-  <% if production? && !user_signed_in? && ['site', 'stories'].include?(controller_name) %>
+    <% else %>
 
-    <%= render('analytics/analytics', { company: @company }) %>
+      <!-- more logic within the navbar to handle signed in users... -->
+      <%= render('shared/navbars/mvp_landing_navbar') %>
+
+    <% end %>
+
+    <%= yield %>
+
+    <%= yield(:underscore_templates) %>
+
+    <% if !(@zap_auth_initial_req || @zap_auth_retry) &&
+          (devise_controller? || controller_name == 'site') %>
+
+      <%= render('shared/landing_footer') %>
+
+    <% end %>
+
+    <% if production? && !user_signed_in? && ['site', 'stories'].include?(controller_name) %>
+
+      <%= render('analytics/analytics', { company: @company }) %>
+
+    <% end %>
 
   <% end %>
 
