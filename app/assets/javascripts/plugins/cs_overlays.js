@@ -74,7 +74,7 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
         }, 3000);
       },
       initOverlay = function ($storyCard, $storyOverlay) {
-        console.log('initOverlay()')
+        // console.log('initOverlay()')
         $storyOverlay.find('.social-sharing a').each(function () {
           var redirectUrl, replaceRegex, replacement;
 
@@ -90,8 +90,6 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
                              );
             redirectUrl = location.href + '?cs=' + storySlug;
           }
-console.log('storySlug', storySlug)
-console.log('redirectUrl', redirectUrl)
 
           // set provider-specific regex to be matched
           if ($(this).is('[href*="facebook"]')) {
@@ -113,13 +111,12 @@ console.log('redirectUrl', redirectUrl)
 
           // modify the share url to include the encoded redirect_url
           $(this).attr('href', $(this).attr('href').replace(replaceRegex, replacement))
-
-          console.log($(this).attr('href'))
         });
 
         if ($storyCard.hasClass('has-video')) {
           cspInitVideo($, $storyOverlay);
         }
+        linkedinListener($storyOverlay);
         initLinkedIn();
         trackStoryVisitor($storyCard);
       },
@@ -146,7 +143,6 @@ console.log('redirectUrl', redirectUrl)
               $storyOverlay.html(data.html),
               $storyCard.removeClass('cs-still-loading').addClass('cs-loaded')
             )
-              .then(function () { linkedinListener($storyOverlay); })
               .then(function () {
                 initOverlay($storyCard, $storyOverlay);
                 $storyCard[0].click();
@@ -298,8 +294,7 @@ console.log('redirectUrl', redirectUrl)
   function linkedinListener ($storyOverlay) {
     var $contributors = $storyOverlay.find('.story-contributors'),
         $widgets = $contributors.find('.linkedin-widget'),
-        firstWidgetLoaded = false,
-        firstWidgetIndex = null, currentWidgetIndex = null, relativeWidgetIndex = null,
+        widgetStore = {},
         numWidgets = $widgets.length,
         numWidgetsRendered = 0,
         widgetTimeoutId, widgetTimeoutDelay = 10000,
@@ -311,51 +306,45 @@ console.log('redirectUrl', redirectUrl)
         },
         // profiles that linkedin can't find will still load, need to detect and remove them
         removeIfNotFound = function ($widget, resizedWidgetWidth) {
-          if (resizedWidgetWidth !== $widget.find('script[type*="MemberProfile"]').data('width')) {
+          if (resizedWidgetWidth !== $widget.data('width')) {
             $widget.remove();
             numWidgets--;
+          } else {
           }
         },
         postMessageHandler = function (mesg) {
           var origin = mesg.origin || mesg.originalEvent.origin,  // latter for chrome
-              firstWidgetStart = origin.includes('linkedin') && mesg.data.includes('-ready') && (firstWidgetIndex === null),
-              widgetReady = origin.includes('linkedin') && mesg.data.includes('widgetReady'),
-              widgetResize = origin.includes('linkedin') && mesg.data.includes('resize'),
-              $widget,
+              isLinkedIn = origin.includes('linkedin'),
+              mesgData = JSON.parse(mesg.data),
+              widgetId = mesgData['rpc.channel'],
+              isReady = isLinkedIn && mesgData.method === 'ready',
+              isResize = isLinkedIn && mesgData.method === 'resize',
+              publicProfileUrl = isReady && decodeURIComponent(
+                  mesgData.params[0].source.match(
+                    /\?public_profile_url=(https%3A%2F%2Fwww\.linkedin\.com%2Fin%2F\w+)&format=/
+                  )[1]
+                ),
+              $widget = $widgets.filter(
+                  '[data-linkedin-url="' + (publicProfileUrl ? publicProfileUrl : widgetStore[widgetId]) + '"]'
+                ),
               resizedWidgetWidth;
 
-          firstWidgetIndex = firstWidgetStart && parseInt(mesg.data.match(/\w+_(\d+)-ready/)[1], 10);
-
-          if (widgetReady || widgetResize) {
-            currentWidgetIndex = parseInt(mesg.data.match(/\w+_(\d+)\s/)[1], 10);
-            relativeWidgetIndex = currentWidgetIndex - firstWidgetIndex;
-            $widget = $widgets.eq(relativeWidgetIndex);
-// console.log($widget)
-          }
-          if (widgetReady) {
-// console.log('widgetReady', currentWidgetIndex);
-            firstWidgetLoaded = true;  // indempotent assignment
+          if (isReady) {
+            widgetStore[widgetId] = publicProfileUrl;
 
             // this is a reliable indicator that the widget has rendered
             new ResizeSensor($widget, function() {
-              numWidgetsRendered++;
-              // if ((numWidgetsRendered === numWidgets) && (numWidgets !== 1)) {
-              if ((numWidgetsRendered === numWidgets)) {
+              if ((++numWidgetsRendered === numWidgets)) {
                 clearTimeout(widgetTimeoutId);
                 $contributors.css('visibility', 'visible');
-
-              // don't render if there's only a single contributor
-              // } else if ((numWidgetsRendered === numWidgets) && (numWidgets === 1)) {
-                // $contributors.remove();
               }
             });
           }
-          if (widgetResize) {
-            resizedWidgetWidth = JSON.parse(mesg.data.split(' ')[1]).params[0];
+          if (isResize) {
+            resizedWidgetWidth = mesgData.params[0].width;
             removeIfNotFound($widget, resizedWidgetWidth);
           }
         };
-
     window.addEventListener("message", postMessageHandler, false);
     setWidgetTimeout(widgetTimeoutDelay, postMessageHandler);
     $(document).one('click', '.cs-content.content--show .close-button', function () {

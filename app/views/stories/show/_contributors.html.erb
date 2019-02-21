@@ -18,7 +18,7 @@
 
     <% if is_plugin %>
 
-      <div class="linkedin-widget" data-linkedin-url="<%= contributor.linkedin_url %>">
+      <div class="linkedin-widget" data-linkedin-url="<%= contributor.linkedin_url %>" data-width="<%= linkedin_widget_width(window_width) %>">
         <!-- this div helps to manage the overscroll behavior of the overlays' .scroll-wrap -->
         <% if window_width.to_i < 768 %>
           <div style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; cursor:pointer"></div>
@@ -32,7 +32,7 @@
 
     <% else %>
 
-      <div class="linkedin-widget linkedin-widget-wide" data-linkedin-url="<%= contributor.linkedin_url %>">
+      <div class="linkedin-widget linkedin-widget-wide" data-linkedin-url="<%= contributor.linkedin_url %>" data-width="420">
         <script type="IN/MemberProfile"
                 data-id="<%= contributor.linkedin_url %>"
                 data-format="inline"
@@ -40,7 +40,7 @@
                 data-width="420"></script>
       </div>
 
-      <div class="linkedin-widget" data-linkedin-url="<%= contributor.linkedin_url %>">
+      <div class="linkedin-widget" data-linkedin-url="<%= contributor.linkedin_url %>" data-width="340">
         <script type="IN/MemberProfile"
                 data-id="<%= contributor.linkedin_url %>"
                 data-format="inline"
