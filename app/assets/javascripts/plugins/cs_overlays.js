@@ -74,26 +74,47 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
         }, 3000);
       },
       initOverlay = function ($storyCard, $storyOverlay) {
+        console.log('initOverlay()')
         $storyOverlay.find('.social-sharing a').each(function () {
-          var regex;
-          if ($(this).is('[href*="facebook"]')) {
-            regex = new RegExp(/sharer.php\?u=.+$/);
-          } else if ($(this).is('[href*="twitter"]')) {
-            regex = new RegExp(/intent\/tweet\?url=.+$/)
-          } else if ($(this).is('[href*="linkedin"]')) {
-            regex = new RegExp(/shareArticle\?mini=true&url=.+$/)
-          } else if ($(this).is('[href*="mailto"]')) {
-            $(this).attr(
-              'href',
-              $(this).attr('href').replace(/&body=.+$/, '&body=' + encodeURIComponent(location.href))
-            )
+          var redirectUrl, replaceRegex, replacement;
+
+          // the query param identifying the story locally (?cs=) won't yet be present
+          // if the story is loaded async'ly
+          if (location.href.match(/\?cs=/)) {
+            redirectUrl = location.href
+          } else {
+            // grab the story slug from the encoded href (%2F = /)
+            var storySlug = $(this).attr('href').slice(
+                               $(this).attr('href').lastIndexOf('%2F') + 3,
+                               $(this).attr('href').length
+                             );
+            redirectUrl = location.href + '?cs=' + storySlug;
           }
-          $(this).attr(
-            'href',
-            $(this).attr('href').replace(regex, function (match, index) {
-              return match + encodeURIComponent('?redirect_uri=' + location.href)
-            })
-          )
+console.log('storySlug', storySlug)
+console.log('redirectUrl', redirectUrl)
+
+          // set provider-specific regex to be matched
+          if ($(this).is('[href*="facebook"]')) {
+            replaceRegex = new RegExp(/sharer.php\?u=.+$/);
+          } else if ($(this).is('[href*="twitter"]')) {
+            replaceRegex = new RegExp(/share\?url=.+$/)
+          } else if ($(this).is('[href*="linkedin"]')) {
+            replaceRegex = new RegExp(/shareArticle\?mini=true&url=.+$/)
+          }
+
+          if ($(this).is('[href*="mailto"]')) {
+            replaceRegex = /&body=.+$/;
+            replacement = '&body=' + encodeURIComponent(redirectUrl)
+          } else {
+            replacement = function (match, index) {
+                return match + encodeURIComponent('?redirect_uri=' + redirectUrl)
+              }
+          }
+
+          // modify the share url to include the encoded redirect_url
+          $(this).attr('href', $(this).attr('href').replace(replaceRegex, replacement))
+
+          console.log($(this).attr('href'))
         });
 
         if ($storyCard.hasClass('has-video')) {
