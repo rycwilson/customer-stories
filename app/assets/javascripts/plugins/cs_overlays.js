@@ -321,7 +321,7 @@ function cspInitOverlays ($, $container, subdomain, isDemo, env) {
               isResize = isLinkedIn && mesgData.method === 'resize',
               publicProfileUrl = isReady && decodeURIComponent(
                   mesgData.params[0].source.match(
-                    /\?public_profile_url=(https%3A%2F%2Fwww\.linkedin\.com%2Fin%2F\w+)&format=/
+                    /\?public_profile_url=(https%3A%2F%2Fwww\.linkedin\.com%2Fin%2F.+)&format=/
                   )[1]
                 ),
               $widget = $widgets.filter(
