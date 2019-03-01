@@ -101,49 +101,6 @@
 
         <div class="pixlee-cta">
 
-        <% if is_plugin %>
-
-        <!--   <div style="width: 100%; background-color: #f8f9fd"> -->
-            <div class="cs-row" style="margin: auto; background-color: #f8f9fd; height: 72px; padding: 15px; margin-bottom: 25px">
-              <div class="col-sm-1" style="display: flex; align-items: center; justify-content: center; height: 100%; padding: 0">
-                <i class="fa fa-fw fa-share" style="font-size: 14px;"></i>
-              </div>
-
-              <div class="col-sm-11" style="padding: 0">
-                <div class="social-sharing">
-
-                  <div class="share__button--facebook">
-                    <a href="<%= FACEBOOK_SHARE_URL + url_encode(story.csp_story_url) %>">
-                      <i class="fa fa-fw fa-facebook" style="color: inherit !important"></i>
-                    </a>
-                  </div>
-
-                  <div class="share__button--twitter">
-                    <a href="<%= TWITTER_SHARE_URL + url_encode(story.csp_story_url) %>">
-                      <i class="fa fa-fw fa-twitter" style="color: inherit !important"></i>
-                    </a>
-                  </div>
-
-                  <div class="share__button--linkedin">
-                    <a href="<%= LINKEDIN_SHARE_URL + url_encode(story.csp_story_url) %>">
-                      <i class="fa fa-fw fa-linkedin" style="color: inherit !important"></i>
-                    </a>
-                  </div>
-
-                  <div class="share__button--email">
-                    <a href="mailto:?subject=<%= url_encode(story.title) %>&body=<%= url_encode(story.csp_story_url) %>">
-                      <i class="fa fa-fw fa-envelope mailto" style="padding-bottom: 1px; color: inherit !important"></i>
-                    </a>
-                  </div>
-
-                </div>
-
-              </div>
-            </div>
-
-       <!--    </div> -->
-        <% end %>
-
           <div class="cta__image"></div>
 
           <div class="cta__wrapper">
